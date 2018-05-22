@@ -12,8 +12,9 @@ def make_app():
     return tornado.web.Application([
         (r"/", MainHandler),
     ],
-    template_path='./templates',
     debug=os.getenv('DEBUG',False),
+    template_path=os.path.join(os.path.dirname(__file__), "templates"),
+    static_path=os.path.join(os.path.dirname(__file__), "static"),
     )
 
 if __name__ == "__main__":
