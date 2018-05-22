@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+   <head>
+       <title>{% block title %}your title here{% end %}</title>
+   </head>
+   <h1>{% block title %}your title here again{% end %}</h1>
+   <body>
+     <ul>
+         {% block content %}
+         your content goes here
+         {% end %}
+     </ul>
+   </body>
+</html>

@@ -1,0 +1,10 @@
+{% extends "base.html.to" %}
+
+{% block title %}
+this is an amazing title for hello
+{% end %}
+
+{% block content %}
+This is more content for hello
+{% end %}
+
