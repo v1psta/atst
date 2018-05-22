@@ -8,9 +8,8 @@
     . .venv/bin/activate
     pip install --upgrade pip
     pip install -r requirements.txt
-    cd static/assets
-    wget https://github.com/uswds/uswds/releases/download/v1.6.3/uswds-1.6.3.zip
-    unzip uswds-1.6.3.zip
+    npm install
+    ./get-css
 
 ## Running (development)
 
