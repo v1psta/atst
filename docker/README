@@ -1,0 +1,17 @@
+# CAC Demo
+
+## Run It
+
+```
+docker-compose up
+```
+
+gets it started.
+
+```
+docker-compose exec web service nginx start
+```
+
+starts NGINX; the RUN command for it inside the Dockerfile is not doing the trick. This should be fixed.
+
+Make sure you have the sample PromptWorks PIVKey and a smart-card reader. Navigate to `http://localhost`. This should display a basic index page with a link to login via CAC card. Click the link, and you should then be prompted to choose a certificate to login. Both the ART GARFUNKEL example certificate and the manufacturer's certificate should work for authentication (both are in the certificate authority bundle). The app should display a welcome message with some basic info about the cert.

@@ -2,12 +2,10 @@ version: "3.2"
 
 services:
   web:
-    environment:
-      - DEBUG=1
     build: .
     volumes:
       - .:/cac
     ports:
       - "80:80"
       - "443:443"
-    container_name: atst-cac-auth
+    container_name: cac-test

@@ -7,5 +7,9 @@ hello
 {% block content %}
 <h1>Hello!</h1>
 is it me you're looking for?
+<p>are you verified? {{ verified }}</p>
+  {% if verified %}
+    <p>your SSL SDN is {{ sdn }}</p>
+  {% end %}
 {% end %}
 
