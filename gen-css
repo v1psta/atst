@@ -1,0 +1,5 @@
+#!/bin/sh -x
+
+cp -a node_modules/uswds/dist/fonts static/
+sass scss/atat.scss > static/assets/atat.css
+

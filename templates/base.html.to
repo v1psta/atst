@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>{% block title %}JEDI{% end %}</title>
-  <link rel="stylesheet" href="static/uswds-1.6.3/css/uswds.min.css">
+  <link rel="stylesheet" href="static/assets/atat.css">
 </head>
 <body>
  <header class="usa-header usa-header-basic" role="banner">
