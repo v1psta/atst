@@ -10,37 +10,8 @@ AT-AT
 
   <h1>New JEDI Request</h1><br>
 
-  <aside class="usa-width-one-fourth usa-layout-docs-sidenav">
-    <ul class="usa-sidenav-list">
-      <li>
-        <a class="usa-current" href="#details-of-use">1. Details of Use</a>
-        <ul class="usa-sidenav-sub_list">
-          <li>
-            <a href="#application-details">Application Details</a>
-          </li>
-          <li>
-            <a href="#application-computation">Computation</a>
-          </li>
-          <li>
-            <a href="#application-storage">Storage</a>
-          </li>
-        </ul>
-      </li>
+  {% include 'nav-side.html.to' %}
 
-      <li>
-        <a href="#">2. Organizational Info</a>
-      </li>
-      <li>
-        <a href="#">3. Funding/Contracting</a>
-      </li>
-      <li>
-        <a href="#">4. Readiness Survey</a>
-      </li>
-      <li>
-        <a href="#">5. Review &amp; Submit</a>
-      </li>      
-    </ul>
-  </aside>
 
   <div class="usa-width-three-fourths usa-layout-docs-main_content">
     <h2 id="details-of-use">Details of Use</h2>
