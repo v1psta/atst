@@ -9,7 +9,7 @@ from webassets import Environment, Bundle
 static_path = os.path.join(os.path.dirname(__file__), "static")
 scss_path = os.path.join(os.path.dirname(__file__), "scss")
 assets = Environment(directory=scss_path, url='/static')
-css = Bundle('atat.scss', output='assets/out.css')
+css = Bundle('atat.scss', filters='scss', output='../static/assets/out.css')
 assets.register('css', css)
 helpers = {
     'assets': assets
