@@ -1,5 +1,6 @@
-node_modules
+node_modules/
 .sass-cache/
 static/fonts/*
 .webassets-cache
 scss/assets
+.pytest_cache/
