@@ -17,6 +17,16 @@ To start the app and watch for changes:
 
     DEBUG=1 ./app.py
 
+## Testing
+
+To run unit tests:
+
+    python -m pytest
+
+or
+
+    make test
+
 ## Notes
 
 tornado templates are like mustache templates -- add the
