@@ -17,6 +17,10 @@
       these are not the droids you are looking for
     {% end %}
   </div>
+
+
+
+  {% include 'footer.html.to' %}
 </body>
 </html>
 
