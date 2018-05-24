@@ -17,10 +17,6 @@ To start the app and watch for changes:
 
     DEBUG=1 ./app.py
 
-To rebuild css whenever the scss changes:
-
-    ./gen-css --watch
-
 ## Notes
 
 tornado templates are like mustache templates -- add the
