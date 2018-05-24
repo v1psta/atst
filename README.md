@@ -9,17 +9,13 @@
     pip install --upgrade pip
     pip install -r requirements.txt
     npm install
-    ./gen-css
+    gem install sass
 
 ## Running (development)
 
 To start the app and watch for changes:
 
     DEBUG=1 ./app.py
-
-To rebuild css whenever the scss changes:
-
-    ./gen-css --watch
 
 ## Notes
 

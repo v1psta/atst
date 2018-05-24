@@ -4,7 +4,9 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>{% block title %}JEDI{% end %}</title>
-  <link rel="stylesheet" href="static/assets/atat.css">
+ {% for url in assets['css'].urls() %}
+    <link rel="stylesheet" href="{{ url }}" type="text/css">
+ {% end %}
 </head>
 <body>
  <header class="usa-header usa-header-basic" role="banner">
@@ -21,7 +23,6 @@
   these are not the droids you are looking for
   {% end %}
   </div>
-  <script src="static/uswds-1.6.3/js/uswds.min.js"></script>
 </body>
 </html>
 
