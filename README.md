@@ -9,7 +9,7 @@
     pip install --upgrade pip
     pip install -r requirements.txt
     npm install
-    ./gen-css
+    gem install sass
 
 ## Running (development)
 
