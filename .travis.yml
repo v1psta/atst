@@ -1,5 +1,7 @@
 language: python
 python:
   - "3.6"
+before_install:
+  - gem install sass
 script:
   - python -m pytest
