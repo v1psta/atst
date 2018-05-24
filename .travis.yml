@@ -3,5 +3,6 @@ python:
   - "3.6"
 before_install:
   - gem install sass
+  - npm install
 script:
   - python -m pytest
