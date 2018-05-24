@@ -4,3 +4,4 @@ static/fonts/*
 .webassets-cache
 scss/assets
 .pytest_cache/
+.venv/
