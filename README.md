@@ -1,6 +1,8 @@
 
 # ATST
 
+[![Build Status](https://travis-ci.org/dod-ccpo/atst.svg?branch=master)](https://travis-ci.org/dod-ccpo/atst)
+
 ## Installation
 
     brew install python3
@@ -16,6 +18,16 @@
 To start the app and watch for changes:
 
     DEBUG=1 ./app.py
+
+## Testing
+
+To run unit tests:
+
+    python -m pytest
+
+or
+
+    make test
 
 ## Notes
 
