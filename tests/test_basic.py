@@ -1,6 +1,6 @@
 import pytest
 import tornado.web
-from app import make_app
+from atst.app import make_app
 
 @pytest.fixture
 def app():
