@@ -8,10 +8,11 @@
     <link rel="stylesheet" href="{{ url }}" type="text/css">
   {% end %}
   <link rel="icon" type="image/x-icon" href="/static/img/favicon.ico">
+
 </head>
 <body>
 
-  {% include 'header.html.to' %}
+
 
   <div class='usa-grid'>
     {% block content %}
@@ -21,7 +22,7 @@
 
 
 
-  {% include 'footer.html.to' %}
+
 </body>
 </html>
 

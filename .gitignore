@@ -5,3 +5,4 @@ static/fonts/*
 scss/assets
 .pytest_cache/
 .venv/
+__pycache__

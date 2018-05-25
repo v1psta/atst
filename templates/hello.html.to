@@ -1,0 +1,23 @@
+{% extends "blank.html.to" %}
+
+{% block title %}
+AT-AT - Login
+{% end %}
+
+{% block content %}
+
+<main class="usa-grid-full usa-section login-area" id="main-content">
+
+  <img class="logo-img" src="/static/img/logo-alt.png" alt="Defense Digital Service Logo">
+  
+  <h1 class="usa-display">AT-AT</h1>
+
+  <button class="usa-button">Sign In with CAC</button>
+  <button class="usa-button" disabled>Sign In via MFA</button>
+
+</main>
+
+
+
+{% end %}
+

@@ -1,2 +1,13 @@
-@import '../node_modules/uswds/src/stylesheets/uswds.scss';
-@import 'variables.scss';
+@import '../node_modules/uswds/src/stylesheets/uswds';
+@import 'variables';
+
+@import 'base/typography';
+@import 'base/forms';
+@import 'base/buttons';
+@import 'base/tables';
+
+@import 'components/empty_state';
+
+@import 'sections/layout';
+@import 'sections/login';
+
