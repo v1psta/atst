@@ -5,13 +5,7 @@
 
 ## Installation
 
-    brew install python3
-    python3 -m venv .venv
-    . .venv/bin/activate
-    pip install --upgrade pip
-    pip install -r requirements.txt
-    npm install
-    gem install sass
+    ./script/setup
 
 ## Running (development)
 
@@ -22,6 +16,10 @@ To start the app and watch for changes:
 ## Testing
 
 To run unit tests:
+
+    ./script/test
+
+or
 
     python -m pytest
 
