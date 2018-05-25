@@ -10,11 +10,23 @@
 
     <nav role="navigation" class="usa-nav">
       <ul class="usa-nav-primary usa-accordion">
-        <li><a class="usa-nav-link" href="#"><span>Home</span></a></li>
-        <li><a class="usa-nav-link usa-current" href="#"><span>JEDI Requests</span></a></li>
-        <li><a class="usa-nav-link" href="#"><span>Users</span></a></li>
-        <li><a class="usa-nav-link" href="#"><span>Reports</span></a></li>
-        <li><a class="usa-nav-link" href="#"><span>Usage Calculator</span></a></li>
+      {% for item in [
+            ['home', 'Home'],
+            ['requests', 'JEDI Requests'],
+            ['users', 'Users' ],
+            ['reports', 'Reports' ],
+            ['calculator','Usage Calculator'],
+            ]
+        %}
+      <li>
+        {% if item[0]==page %}
+            <a class="usa-nav-link usa-current" href='{{ reverse_url(item[0]) }}'><span>{{ item[1] }}</span></a>
+        {% else %}
+            <a class="usa-nav-link" href='{{ reverse_url(item[0]) }}'><span>{{ item[1] }}</span></a>
+        {% end %}
+      </li>
+      {% end %}
+
         <li>Tech Lead</li>
       </ul>
     </nav>
