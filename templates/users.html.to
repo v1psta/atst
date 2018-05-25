@@ -1,0 +1,12 @@
+{% extends "base.html.to" %}
+
+{% block content %}
+
+<main class="usa-grid usa-section usa-content usa-layout-docs" id="main-content">
+
+users
+
+</main>
+
+{% end %}
+

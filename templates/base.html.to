@@ -4,25 +4,23 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>{% block title %}JEDI{% end %}</title>
- {% for url in assets['css'].urls() %}
+  {% for url in assets['css'].urls() %}
     <link rel="stylesheet" href="{{ url }}" type="text/css">
- {% end %}
+  {% end %}
 </head>
 <body>
- <header class="usa-header usa-header-basic" role="banner">
-    <div class="usa-nav-container">
-        <div class="usa-navbar">
-            <div class="usa-logo" id="basic-logo">
-                <em class="usa-logo-text"><a href="/" title="Home" aria-label="Home">Jedi</a></em>
-            </div>
-         </div>
-      </div>
- </header>
- <div class='usa-grid'>
-  {% block content %}
-  these are not the droids you are looking for
-  {% end %}
+
+  {% include 'header.html.to' %}
+
+  <div class='usa-grid'>
+    {% block content %}
+      these are not the droids you are looking for
+    {% end %}
   </div>
+
+
+
+  {% include 'footer.html.to' %}
 </body>
 </html>
 
