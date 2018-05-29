@@ -1,0 +1,10 @@
+{% extends '../requests.html.to' %}
+
+{% block form %}
+<h3>What is your favorite color?</h3>
+<input type='textbox'>
+{% end %}
+
+{% block next %}
+<b class='usa-button'>MAKE THE REQUEST</b>
+{% end %}

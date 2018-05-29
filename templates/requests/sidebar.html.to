@@ -1,0 +1,14 @@
+<b>this is the sidebar</b>
+{% for i,s in enumerate(screens) %}
+<li>
+  {% if i+1==current %}
+  <b>{{ s['title'] }}</b>
+  {% else %}
+  <a href="{{ reverse_url('request_form',i+1) }}">
+  {{ s['title'] }}
+  </a>
+  {% end %}
+</li>
+{% end %}
+<ul>
+</ul>
