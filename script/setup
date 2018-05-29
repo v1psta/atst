@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# If a command fails, exit the script
+set -e
+
+# Ensure we are in the app root directory (not the /script directory)
+cd "$(dirname "$0")/.."
+
+# Install virtualenv
+pip install virtualenv
+
+# Create and activate virtual environment
+python3 -m venv .venv
+source .venv/bin/activate
+
+# Install/update pip
+pip install --upgrade pip
+
+# Update npm
+npm install -g npm
+
+# Install application dependencies
+script/bootstrap
+
+# Symlink uswds fonts into the /static directory
+ln -s ../node_modules/uswds/src/fonts ./static/fonts
