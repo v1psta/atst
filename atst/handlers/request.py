@@ -2,9 +2,9 @@ from atst.handler import BaseHandler
 
 class Request(BaseHandler):
     screens = [
-            { 'title' : 'first screen', },
-            { 'title' : 'second screen', },
-            { 'title' : 'third screen', }
+            { 'title' : 'Application Details', },
+            { 'title' : 'Computation', },
+            { 'title' : 'Storage', }
      ]
 
     def initialize(self, page):

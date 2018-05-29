@@ -4,20 +4,18 @@
 
 <main class="usa-grid usa-section usa-content usa-layout-docs" id="main-content">
 
-<table>
-<tr>
-<td style='width:30%;'>
-{% include 'requests/sidebar.html.to' %}
-</td>
-<td>
-{% block form %}
-form goes here
-{% end %}
-{% block next %}
-<a class='usa-button usa-button-secondary' href='{{ reverse_url('request_form',next_screen) }}'>next page</a>
-{% end %}
-</td>
-</table>
+  <aside class="usa-width-one-fourth usa-layout-docs-sidenav">
+    {% include 'requests/sidebar.html.to' %}
+  </aside>
+  <div class="usa-width-three-fourths usa-layout-docs-main_content">
+
+    {% block form %}
+    form goes here
+    {% end %}
+    {% block next %}
+    <a class='usa-button usa-button-secondary' href='{{ reverse_url('request_form',next_screen) }}'>next page</a>
+    {% end %}
+  </div>
 </main>
 
 {% end %}

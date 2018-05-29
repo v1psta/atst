@@ -1,14 +1,33 @@
-<b>this is the sidebar</b>
-{% for i,s in enumerate(screens) %}
-<li>
-  {% if i+1==current %}
-  <b>{{ s['title'] }}</b>
-  {% else %}
-  <a href="{{ reverse_url('request_form',i+1) }}">
-  {{ s['title'] }}
-  </a>
-  {% end %}
-</li>
-{% end %}
-<ul>
+
+<ul class="usa-sidenav-list">
+  <li>
+    <a class="usa-current" href="#details-of-use">1. Details of Use</a>
+    <ul class="usa-sidenav-sub_list">
+      {% for i,s in enumerate(screens) %}
+      <li>
+        {% if i+1==current %}
+        <a class="usa-current" href="{{ reverse_url('request_form',i+1) }}">
+          {{ s['title'] }}
+        </a>
+        {% else %}
+        <a href='{{ reverse_url('request_form',i+1) }}'>
+          {{ s['title'] }}
+        </a>
+        {% end %}
+      </li>
+      {% end %}
+    </ul>
+  </li>
+  <li>
+    <a href="#">2. Organizational Info</a>
+  </li>
+  <li>
+    <a href="#">3. Funding/Contracting</a>
+  </li>
+  <li>
+    <a href="#">4. Readiness Survey</a>
+  </li>
+  <li>
+    <a href="#">5. Review &amp; Submit</a>
+  </li>      
 </ul>
