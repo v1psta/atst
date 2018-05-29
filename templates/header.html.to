@@ -12,6 +12,7 @@
       <ul class="usa-nav-primary usa-accordion">
       {% for item in [
             ['home', 'Home'],
+            ['accounts', 'JEDI Accounts'],
             ['requests', 'JEDI Requests'],
             ['users', 'Users' ],
             ['reports', 'Reports' ],
