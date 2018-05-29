@@ -3,7 +3,7 @@
     <div class="usa-navbar">
       <div class="usa-logo" id="basic-logo">
         <em class="usa-logo-text">
-          <a href="/" title="Home" aria-label="Home">AT-AT</a>
+          <a href="/" title="Home" aria-label="Home">JEDI</a>
         </em>
       </div>
     </div>
@@ -12,8 +12,8 @@
       <ul class="usa-nav-primary usa-accordion">
       {% for item in [
             ['home', 'Home'],
-            ['accounts', 'JEDI Accounts'],
-            ['requests', 'JEDI Requests'],
+            ['accounts', 'Accounts'],
+            ['requests', 'Requests'],
             ['users', 'Users' ],
             ['reports', 'Reports' ],
             ['calculator','Usage Calculator'],

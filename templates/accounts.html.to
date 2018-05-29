@@ -4,7 +4,7 @@
 
 <main class="usa-section usa-content usa-width-one-whole" id="main-content">
 
-  <h1>JEDI Accounts</h1>
+  <h1>Accounts</h1>
 
   <table class="usa-table-borderless" width="100%">
     <!-- <caption>Borderless table: A borderless table can be useful when you want the information to feel more a part of the text it accompanies and extends.</caption> -->
@@ -22,8 +22,7 @@
           Task Order: #123456
         </th>
         <td>
-          Users: <span class="usa-label">23</span> <br>
-          Applications: <span class="usa-label">4</span>
+          <span class="usa-label">23</span><br>Users
         </td>
         <td><button class="usa-button-secondary">Go to CSP</button></td>
       </tr>

@@ -4,7 +4,7 @@
 
 <main class="usa-grid usa-section usa-content usa-layout-docs" id="main-content">
 
-  <h1>JEDI Requests</h1>
+  <h1>Requests</h1>
   <aside class="usa-width-one-fourth usa-layout-docs-sidenav">
     {% include 'requests/sidebar.html.to' %}
   </aside>
