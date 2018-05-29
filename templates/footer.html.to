@@ -7,7 +7,13 @@
       <nav class="usa-footer-nav usa-width-two-thirds">
         <ul class="usa-unstyled-list">
           <li class="usa-width-one-fourth usa-footer-primary-content">
-            <a class="usa-footer-primary-link" href="javascript:void(0);">JEDI Requests</a>
+            <a class="usa-footer-primary-link" href="javascript:void(0);">Home</a>
+          </li>
+          <li class="usa-width-one-fourth usa-footer-primary-content">
+            <a class="usa-footer-primary-link" href="javascript:void(0);">Accounts</a>
+          </li>
+          <li class="usa-width-one-fourth usa-footer-primary-content">
+            <a class="usa-footer-primary-link" href="javascript:void(0);">Requests</a>
           </li>
           <li class="usa-width-one-fourth usa-footer-primary-content">
             <a class="usa-footer-primary-link" href="javascript:void(0);">Users</a>
