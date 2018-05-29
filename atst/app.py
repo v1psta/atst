@@ -5,7 +5,8 @@ from tornado.web import url
 
 def make_app(**kwargs):
     app = tornado.web.Application([
-            url( r"/",           MainHandler, {'page': 'home'},       name='home' ),
+            url( r"/",           MainHandler, {'page': 'login'},       name='login' ),
+            url( r"/home",       MainHandler, {'page': 'home'},       name='home' ),
             url( r"/requests",   MainHandler, {'page': 'requests'},   name='requests' ),
             url( r"/users",      MainHandler, {'page': 'users'},      name='users' ),
             url( r"/reports",    MainHandler, {'page': 'reports'},    name='reports' ),

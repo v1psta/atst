@@ -11,17 +11,17 @@
 </head>
 <body>
 
-  {% include 'header.html.to' %}
+<main class="usa-grid-full usa-section login-area" id="main-content">
 
-  <div class='usa-grid'>
-    {% block content %}
-      these are not the droids you are looking for
-    {% end %}
-  </div>
+  <img class="logo-img" src="/static/img/logo-alt.png" alt="Defense Digital Service Logo">
+  
+  <h1 class="usa-display">AT-AT</h1>
 
+  <a class="usa-button" href='{{ reverse_url('home') }}'><span>Sign In with CAC</span></a>
+  <button class="usa-button" disabled>Sign In via MFA</button>
+  
+</main>
 
-
-  {% include 'footer.html.to' %}
 </body>
 </html>
 
