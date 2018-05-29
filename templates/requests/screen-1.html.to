@@ -1,0 +1,7 @@
+{% extends '../requests.html.to' %}
+
+{% block form %}
+<h3>What is your name?</h3>
+<input type='textbox'>
+{% end %}
+
