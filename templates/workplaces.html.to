@@ -4,13 +4,13 @@
 
 <main class="usa-section usa-content usa-width-one-whole" id="main-content">
 
-  <h1>Accounts</h1>
+  <h1>Workplaces</h1>
 
   <table class="usa-table-borderless" width="100%">
     <thead>
       <tr>
-        <th scope="col" width="50%">Account Name</th>
-        <th scope="col" width="30%">Account Info</th>
+        <th scope="col" width="50%">Workplace Name</th>
+        <th scope="col" width="30%">Workplace Info</th>
         <th scope="col" width="20%">Actions</th>
       </tr>
     </thead>
