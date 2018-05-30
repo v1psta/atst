@@ -6,4 +6,3 @@ class Request(BaseHandler):
 
     def get(self):
         self.render('requests.html.to', page = self.page)
-
