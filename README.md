@@ -8,6 +8,7 @@
     ./script/setup
 
 The setup script will create a new Python virtual environment for the application to use. All of the scripts will activate this virutal envirnment automatically, but you can also manually activate it like this:
+
     source .venv/bin/activate
 
 If you want to automatically load the virtual environment whenever you enter the project directory, take a look at [direnv](https://direnv.net/)
