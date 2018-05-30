@@ -4,7 +4,7 @@
 
 <main class="usa-section usa-content" id="main-content">
 
-  <h1><a class="usa-external_link" href="#">Requests</a> <a class="usa-button usa-button-secondary" href="/requests/new/1">New Request</a></h1>
+  <h1>Requests <a class="usa-button usa-button-secondary" href="/requests/new/1">New Request</a></h1>
 
   <table class="usa-table-borderless" width="100%">
     <thead>
