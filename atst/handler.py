@@ -11,7 +11,7 @@ assets = Environment(
 css    = Bundle(
                 'atat.scss',
                 filters = 'scss',
-                output  = '../static/assets/out.%(version)s.css',
+                output  = '../static/assets/out.css',
                 depends = ('**/*.scss'))
 
 assets.register( 'css', css )
