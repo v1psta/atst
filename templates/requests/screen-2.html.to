@@ -1,4 +1,4 @@
-{% extends '../requests.html.to' %}
+{% extends '../requests_new.html.to' %}
 
 {% block form %}
 
