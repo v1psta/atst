@@ -7,7 +7,6 @@
   <h1>Accounts</h1>
 
   <table class="usa-table-borderless" width="100%">
-    <!-- <caption>Borderless table: A borderless table can be useful when you want the information to feel more a part of the text it accompanies and extends.</caption> -->
     <thead>
       <tr>
         <th scope="col" width="50%">Account Name</th>

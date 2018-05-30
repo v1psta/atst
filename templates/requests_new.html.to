@@ -1,0 +1,11 @@
+{% extends "base.html.to" %}
+
+{% block content %}
+
+<main class="usa-section usa-content" id="main-content">
+
+  <h1>New Request</h1>
+</main>
+
+{% end %}
+

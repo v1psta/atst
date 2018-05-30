@@ -4,7 +4,54 @@
 
 <main class="usa-section usa-content" id="main-content">
 
-  <h1>Requests</h1>
+  <h1>Requests <a class="usa-button usa-button-secondary">New Request</a></h1>
+
+  <table class="usa-table-borderless" width="100%">
+    <thead>
+      <tr>
+        <th scope="col">Order ID</th>
+        <th scope="col">Request Date</th>
+        <th scope="col">Requester</th>
+        <th scope="col">Total Apps</th>
+        <th scope="col">Status</th>
+        <th scope="col">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row"><a href="#">#36552612</a> <span class="usa-label">New</span></th>
+        <td>5/17/2018</td>
+        <td>Friedrich Straat</td>
+        <td>2</td>
+        <td>Pending</td>
+        <td><a href="">Download</a></td>
+      </tr>
+      <tr>
+        <th scope="row"><a href="">#87362910</a></th>
+        <td>10/2/2017</td>
+        <td>Pietro Quirinis</td>
+        <td>1</td>
+        <td>Complete</td>
+        <td><a href="">Download</a></td>
+      </tr>
+      <tr>
+        <th scope="row"><a href="">#29938172</a></th>
+        <td>1/7/2017</td>
+        <td>Marina Borsetti</td>
+        <td>1</td>
+        <td>Denied</td>
+        <td><a href="">Download</a></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <br><br>
+  <hr>
+
+  <a class="href="/requests">&#8249; All requests</a>
+  <h1>New Request</h1>
+  
+
   <aside class="usa-width-one-fourth usa-layout-docs-sidenav">
     {% include 'requests/sidebar.html.to' %}
   </aside>
@@ -17,6 +64,7 @@
     <a class='usa-button usa-button-primary' href='{{ reverse_url('request_form',next_screen) }}'>Save &amp; Continue</a>
     {% end %}
   </div>
+
 </main>
 
 {% end %}
