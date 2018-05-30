@@ -4,10 +4,10 @@
 set -e
 
 # Ensure we are in the app root directory (not the /script directory)
-cd "$(dirname "$0")/.."
+cd "$(dirname "${0}")/.."
 
 # Activate virtual environment
 source .venv/bin/activate
 
 # Launch the app
-python3 app.py $@
+python3 app.py ${@}
