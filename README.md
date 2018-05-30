@@ -11,7 +11,7 @@ The setup script will create a new Python virtual environment for the applicatio
 
     source .venv/bin/activate
 
-If you want to automatically load the virtual environment whenever you enter the project directory, take a look at [direnv](https://direnv.net/)
+If you want to automatically load the virtual environment whenever you enter the project directory, take a look at [direnv](https://direnv.net/).  An `.envrc` file is included in this repository.
 
 ## Running (development)
 
