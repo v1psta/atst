@@ -6,6 +6,7 @@ scss/assets
 .pytest_cache/
 .venv/
 __pycache__
+*.pyc
 
 # Ignore static/fonts for now, since it is just symlink
 static/fonts
