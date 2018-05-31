@@ -23,7 +23,7 @@
         <td>
           <span class="usa-label">23</span><br>Users
         </td>
-        <td><button class="usa-button-secondary">Go to CSP</button></td>
+        <td><button class="usa-button-secondary">Launch</button></td>
       </tr>
     </tbody>
   </table>
