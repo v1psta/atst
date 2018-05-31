@@ -18,30 +18,17 @@
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <th scope="row"><a href="#">#36552612</a> <span class="usa-label">New</span></th>
-        <td>5/17/2018</td>
-        <td>Friedrich Straat</td>
-        <td>2</td>
-        <td>Pending</td>
+    {% for r in requests %}
+    <tr>
+        <th scope="row"><a href="#">#{{ r['order_id'] }}</a>
+            {% if r['is_new'] %}<span class="usa-label">New</span></th>{% end %}
+        <td>{{ r['date'] }}</td>
+        <td>{{ r['full_name'] }}</td>
+        <td>{{ r['app_count'] }}</td>
+        <td>{{ r['status'] }}</td>
         <td><a href="">Download</a></td>
-      </tr>
-      <tr>
-        <th scope="row"><a href="">#87362910</a></th>
-        <td>10/2/2017</td>
-        <td>Pietro Quirinis</td>
-        <td>1</td>
-        <td>Complete</td>
-        <td><a href="">Download</a></td>
-      </tr>
-      <tr>
-        <th scope="row"><a href="">#29938172</a></th>
-        <td>1/7/2017</td>
-        <td>Marina Borsetti</td>
-        <td>1</td>
-        <td>Denied</td>
-        <td><a href="">Download</a></td>
-      </tr>
+    </tr>
+    {% end %}
     </tbody>
   </table>
 
