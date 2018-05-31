@@ -1,4 +1,4 @@
-{% extends '../requests.html.to' %}
+{% extends '../requests_new.html.to' %}
 
 {% block form %}
 <h2>Details of Use</h2>
@@ -158,7 +158,7 @@
 
 
 
-<!-- 
+<!--
 <div class="usa-width-three-fourths usa-layout-docs-main_content">
   <h2 id="details-of-use">Details of Use</h2>
   <p class="usa-font-lead">

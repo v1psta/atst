@@ -1,0 +1,27 @@
+{% extends "base.html.to" %}
+
+{% block content %}
+
+<main class="usa-content" id="main-content">
+
+  <a href="/requests">&#8249; All requests</a>
+  <h1>New Request</h1>
+
+
+  <aside class="usa-width-one-fourth usa-layout-docs-sidenav">
+    {% include 'requests/sidebar.html.to' %}
+  </aside>
+  <div class="usa-width-three-fourths usa-layout-docs-main_content">
+
+    {% block form %}
+    form goes here
+    {% end %}
+    {% block next %}
+    <a class='usa-button usa-button-primary' href='{{ reverse_url('request_form',next_screen) }}'>Save &amp; Continue</a>
+    {% end %}
+  </div>
+
+</main>
+
+{% end %}
+
