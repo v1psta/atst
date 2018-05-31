@@ -16,7 +16,7 @@ from atst.api_client import ApiClient
 ENV = os.getenv("TORNADO_ENV", "dev")
 
 
-def make_app(config):
+def make_app(config,**kwargs):
 
     authz_client = ApiClient(config["default"]["AUTHZ_BASE_URL"])
     authnid_client = ApiClient(config["default"]["AUTHNID_BASE_URL"])

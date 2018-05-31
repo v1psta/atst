@@ -3,7 +3,7 @@
 {% block form %}
 <h2>Details of Use</h2>
 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Doloremque placeat distinctio accusamus quo temporibus facilis, dicta delectus asperiores. Nihil aut quod quibusdam id fugit, officia dolorum laudantium! Quidem tempora, aliquam.</p>
-<form>
+
   <h3 id="application-details">Application Details</h3>
   <p>These headings introduce, respectively, sections and subsections within your body copy. As you create these headings, follow the same guidelines that you use when writing section headings: Be succinct, descriptive, and precise.</p>
 
@@ -141,17 +141,6 @@
 
   <label for="">Number of application environments</label>
   <input id="" name="" type="text" placeholder="Total number of environments">
-
-
-
-
-  <br><br>
-
-  <button class="usa-button-secondary">Create Application</button>
-  <br>
-  <button class="usa-button-secondary" disabled>Save &amp; Continue</button>
-
-</form>
 
 
 {% end %}

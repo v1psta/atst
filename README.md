@@ -15,6 +15,16 @@ To enter the virtualenv manually (a la `source .venv/bin/activate`):
 
 If you want to automatically load the virtual environment whenever you enter the project directory, take a look at [direnv](https://direnv.net/).  An `.envrc` file is included in this repository.  direnv will activate and deactivate virtualenvs for you when you enter and leave the directory.
 
+## Configuration
+
+A sample configuration is included in atst.ini.example.
+
+    cp atst.ini.example atst.ini
+
+Be sure to modify it and change the 'secret' key.
+
+`script/config` (called by script/setup) will provide a default configuration.
+
 ## Running (development)
 
 To start the app and watch for changes:

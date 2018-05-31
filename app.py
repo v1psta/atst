@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-import os
 import tornado.ioloop
 
 from atst.app import make_app, make_config
