@@ -5,7 +5,7 @@
 
 ## Installation
 
-    ./script/setup
+    script/setup
 
 The setup script will create a new Python virtual environment for the application to use. All of the scripts will activate this virutal envirnment automatically, but you can also manually activate it like this:
 
@@ -21,21 +21,17 @@ If you want to automatically load the virtual environment whenever you enter the
 
 To start the app and watch for changes:
 
-    DEBUG=1 ./script/server
+    DEBUG=1 script/server
 
 ## Testing
 
 To run unit tests:
 
-    ./script/test
+    script/test
 
 or
 
     python -m pytest
-
-or
-
-    make test
 
 ## Notes
 
