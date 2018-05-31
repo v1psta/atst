@@ -1,5 +1,6 @@
 import tornado.web
 from atst.handlers.main import MainHandler
+from atst.handlers.workspace import Workspace
 from atst.handlers.request import Request
 from atst.handlers.request_new import RequestNew
 from atst.home import home
@@ -9,7 +10,7 @@ def make_app(**kwargs):
     app = tornado.web.Application([
             url( r"/",           MainHandler, {'page': 'login'},      name='login' ),
             url( r"/home",       MainHandler, {'page': 'home'},       name='home' ),
-            url( r"/workspaces", MainHandler, {'page': 'workspaces'}, name='workspaces' ),
+            url( r"/workspaces", Workspace,   {'page': 'workspaces'}, name='workspaces' ),
             url( r"/requests",   Request,     {'page': 'requests'},   name='requests' ),
             url( r"/requests/new",         RequestNew, {'page': 'requests_new'},   name='request_new' ),
             url( r"/requests/new/([0-9])", RequestNew, {'page': 'requests_new'},   name='request_form' ),
