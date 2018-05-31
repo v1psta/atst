@@ -12,7 +12,7 @@
       <ul class="usa-nav-primary usa-accordion">
       {% for item in [
             ['home', 'Home'],
-            ['workplaces', 'Workplaces'],
+            ['workspaces', 'Workspaces'],
             ['requests', 'Requests'],
             ['users', 'Users' ],
             ['reports', 'Reports' ],
