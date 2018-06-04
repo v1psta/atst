@@ -21,3 +21,6 @@ __pycache__
 static/fonts
 # font files originate from a node module
 static/fonts/*
+
+# local log files
+log/*
