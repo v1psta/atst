@@ -7,14 +7,7 @@ set -e
 cd "$(dirname "${0}")/.."
 
 # Install virtualenv
-pip install virtualenv
-
-# Create and activate virtual environment
-python3 -m venv .venv
-source .venv/bin/activate
-
-# Install/update pip
-pip install --upgrade pip
+pip install pipenv
 
 # Update npm
 npm install -g npm

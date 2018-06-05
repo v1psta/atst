@@ -2,6 +2,8 @@ language: python
 python:
   - "3.6"
 before_install:
+  - pip install pipenv
+  - pipenv install --dev --skip-lock
   - gem install sass
   - npm install
 script:
