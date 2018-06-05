@@ -1,13 +1,27 @@
+# Node modules get installed here
 node_modules/
-.sass-cache/
-static/fonts/*
-.webassets-cache
+
+# sass and webassets output artifacts
 scss/assets
-.pytest_cache/
+scss/variables.scss
+scss/variables.scss.map
+.sass-cache/
+.webassets-cache
+
+# Python virtual env
 .venv/
+
+.pytest_cache/
 __pycache__
+
+# Compiled python bytecode files
 *.pyc
 .cache/
 
-# Ignore static/fonts for now, since it is just symlink
+# static/fonts for now, since it is just symlink
 static/fonts
+# font files originate from a node module
+static/fonts/*
+
+# local log files
+log/*
