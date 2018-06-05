@@ -14,12 +14,12 @@
 <main class="usa-grid-full usa-section login-area" id="main-content">
 
   <img class="logo-img" src="/static/img/logo-alt.png" alt="Defense Digital Service Logo">
-  
+
   <h1 class="usa-display">JEDI</h1>
 
-  <a class="usa-button" href='{{ reverse_url('home') }}'><span>Sign In with CAC</span></a>
+  <a class="usa-button" href='https://cac.atat.codes'><span>Sign In with CAC</span></a>
   <button class="usa-button" disabled>Sign In via MFA</button>
-  
+
 </main>
 
 </body>
