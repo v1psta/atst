@@ -1,2 +1,3 @@
 [server]
 secret = change_me_into_something_secret
+cac_url = http://localhost:8888/home
