@@ -24,8 +24,6 @@ fi
 # Install application dependencies
 script/bootstrap
 
-# Generate default configuration
-script/config
-
 # Symlink uswds fonts into the /static directory
+rm -f ./static/fonts
 ln -s ../node_modules/uswds/src/fonts ./static/fonts

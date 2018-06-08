@@ -14,7 +14,7 @@ css    = Bundle(
 
 assets.register( 'css', css )
 helpers = {
-    'assets': assets
+    'assets': assets,
 }
 
 

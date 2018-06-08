@@ -17,7 +17,6 @@ __pycache__
 # Compiled python bytecode files
 *.pyc
 .cache/
-atst.ini
 
 # static/fonts for now, since it is just symlink
 static/fonts

@@ -1,3 +1,0 @@
-cp atst.ini.example atst.ini
-rand=`head -c 400 /dev/random | tr -dc A-Za-z0-9_=,@-`
-perl -p -i -e "s/change_me_into_something_secret/$rand/" atst.ini
