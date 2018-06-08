@@ -60,8 +60,10 @@ def make_app(config,**kwargs):
         template_path = home.child('templates'),
         static_path   = home.child('static'),
         cookie_secret=config["default"]["COOKIE_SECRET"],
-        debug=config['default'].getboolean('DEBUG')
+        debug=config['default'].getboolean('DEBUG'),
+        **kwargs
     )
+    app.config = config
     return app
 
 
