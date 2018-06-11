@@ -4,7 +4,8 @@
 
 
 
-<a href="/requests">&#8249; All requests</a>
+<div class="site-action"><a href="/requests">&#8249; All requests</a></div>
+
 <h1>New Request</h1>
 
 
