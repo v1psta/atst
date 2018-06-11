@@ -155,15 +155,3 @@
 
 
 {% end %}
-
-
-
-<!--
-<div class="usa-width-three-fourths usa-layout-docs-main_content">
-  <h2 id="details-of-use">Details of Use</h2>
-  <p class="usa-font-lead">
-    To use JEDI, we want to know more about your needs for cloud services. Please fill out the form regarding computation, storage, and usage.
-  </p>
-
-
- -->
