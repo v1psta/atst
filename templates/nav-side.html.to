@@ -1,7 +1,7 @@
 <aside class="usa-width-one-fourth usa-layout-docs-sidenav">
   <ul class="usa-sidenav-list">
     <li>
-      <a class="usa-current" href="#details-of-use">1. Details of Use</a>
+      <a href="#details-of-use">1. Details of Use</a>
       <ul class="usa-sidenav-sub_list">
         <li>
           <a href="#application-details">Application Details</a>
@@ -17,7 +17,16 @@
 
     <li>
       <a href="#">2. Organizational Info</a>
+      <ul class="usa-sidenav-sub_list">
+        <li>
+          <a href="#information-about-you">Information About You</a>
+        </li>
+        <li>
+          <a href="#information-about-your-collaborators">Information About Your Collaborators</a>
+        </li>
+      </ul>
     </li>
+
     <li>
       <a href="#">3. Funding/Contracting</a>
     </li>

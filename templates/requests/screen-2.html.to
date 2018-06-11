@@ -6,10 +6,7 @@
 <h2>Organizational Info</h2>
 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Doloremque placeat distinctio accusamus quo temporibus facilis, dicta delectus asperiores. Nihil aut quod quibusdam id fugit, officia dolorum laudantium! Quidem tempora, aliquam.</p>
 
-<h3>Information About You</h3>
-
-
-
+<h3 id="information-about-you">Information About You</h3>
 
 <form>
   <label for="">Name</label>
@@ -83,7 +80,7 @@
 
 </form>
 
-<h3>Information About Your Collaborators</h3>
+<h3 id="information-about-your-collaborators">Information About Your Collaborators</h3>
 <form>
   <p>Please designate a Contracting Officer that will help you complete this process.</p>
   <label for="">Name</label>
