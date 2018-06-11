@@ -4,6 +4,7 @@ import tornado.web
 from tornado.web import url
 
 from atst.handlers.main import MainHandler
+from atst.handlers.login import Login
 from atst.handlers.workspace import Workspace
 from atst.handlers.request import Request
 from atst.handlers.request_new import RequestNew
@@ -16,7 +17,8 @@ def make_app(config):
     authz_client = ApiClient(config['default']['AUTHZ_BASE_URL'])
 
     app = tornado.web.Application([
-            url( r"/",           MainHandler, {'page': 'login'},      name='login' ),
+            url( r"/",           Login, {'page': 'login'},      name='main' ),
+            url( r"/login",      Login, {'page': 'login'},      name='login' ),
             url( r"/home",       MainHandler, {'page': 'home'},       name='home' ),
             url( r"/workspaces",
                  Workspace,

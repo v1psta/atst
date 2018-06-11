@@ -1,4 +1,5 @@
 import os
+import functools
 from webassets import Environment, Bundle
 import tornado.web
 from atst.home import home
@@ -19,9 +20,41 @@ helpers = {
     'assets': assets
 }
 
+def authenticated(method):
+    @functools.wraps(method)
+    def wrapper(self, *args, **kwargs):
+        if not self.current_user:
+            if self.get_cookie('bearer-token'):
+                bearer_token = self.get_cookie('bearer-token')
+                if validate_login_token(bearer_token):
+                    self._start_session()
+                else:
+                    raise NotImplementedError
+            elif self.request.method in ("GET", "HEAD"):
+                url = self.get_login_url()
+                self.redirect(url)
+                return
+            else:
+                raise tornado.web.HTTPError(403)
+        return method(self, *args, **kwargs)
+    return wrapper
+
+def validate_login_token(token):
+    # check against authnid
+    pass
+
 class BaseHandler(tornado.web.RequestHandler):
 
     def get_template_namespace(self):
         ns = super(BaseHandler, self).get_template_namespace()
         ns.update(helpers)
         return ns
+
+    def get_current_user(self):
+        if self.get_secure_cookie('atst'):
+            return True
+        else:
+            False
+
+    def _start_session(self):
+        self.set_secure_cookie('atst', 'valid-user-session')

@@ -1,4 +1,4 @@
-from atst.handler import BaseHandler
+from atst.handler import BaseHandler, authenticated
 
 class RequestNew(BaseHandler):
     screens = [
@@ -22,6 +22,7 @@ class RequestNew(BaseHandler):
     def initialize(self, page):
         self.page = page
 
+    @authenticated
     def get(self, screen = 1):
         self.render( 'requests/screen-%d.html.to' % int(screen),
                     page = self.page,

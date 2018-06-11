@@ -1,4 +1,4 @@
-from atst.handler import BaseHandler
+from atst.handler import BaseHandler, authenticated
 
 mock_requests = [
         {
@@ -31,5 +31,6 @@ class Request(BaseHandler):
     def initialize(self, page):
         self.page = page
 
+    @authenticated
     def get(self):
         self.render('requests.html.to', page = self.page, requests = mock_requests )
