@@ -1,11 +1,15 @@
 #!/usr/bin/env python
 
-from atst.app import make_app
-import tornado.ioloop
 import os
+import tornado.ioloop
 
-app = make_app(debug=os.getenv('DEBUG',False))
-port = 8888
-app.listen(port)
-print("Listening on http://localhost:%i" % port)
-tornado.ioloop.IOLoop.current().start()
+from atst.app import make_app, make_config
+
+config = make_config()
+app = make_app(config)
+
+if __name__ == '__main__':
+    port = int(config['default']['PORT'])
+    app.listen(port)
+    print("Listening on http://localhost:%i" % port)
+    tornado.ioloop.IOLoop.current().start()

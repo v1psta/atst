@@ -7,10 +7,13 @@ name = "pypi"
 tornado = "==5.0.2"
 webassets = "==0.12.1"
 Unipath = "==1.1"
+requests = "*"
 
 [dev-packages]
 pytest = "==3.6.0"
 pytest-tornado = "==0.5.0"
+ipython = "*"
+ipdb = "*"
 
 [requires]
 python_version = "3.6"

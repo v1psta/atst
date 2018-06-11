@@ -25,3 +25,5 @@ static/fonts/*
 
 # local log files
 log/*
+
+config/dev.ini
