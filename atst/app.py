@@ -8,29 +8,39 @@ from atst.handlers.login import Login
 from atst.handlers.workspace import Workspace
 from atst.handlers.request import Request
 from atst.handlers.request_new import RequestNew
+from atst.handlers.dev import Dev
 from atst.home import home
 from atst.api_client import ApiClient
 
+
+routes = [
+    url(r"/", Login, {"page": "login"}, name="main"),
+    url(r"/login", Login, {"page": "login"}, name="login"),
+    url(r"/home", MainHandler, {"page": "home"}, name="home"),
+    url(r"/workspaces", Workspace, {"page": "workspaces"}, name="workspaces"),
+    url(r"/requests", Request, {"page": "requests"}, name="requests"),
+    url(r"/requests/new", RequestNew, {"page": "requests_new"}, name="request_new"),
+    url(
+        r"/requests/new/([0-9])",
+        RequestNew,
+        {"page": "requests_new"},
+        name="request_form",
+    ),
+    url(r"/users", MainHandler, {"page": "users"}, name="users"),
+    url(r"/reports", MainHandler, {"page": "reports"}, name="reports"),
+    url(r"/calculator", MainHandler, {"page": "calculator"}, name="calculator"),
+]
+
+env = os.getenv("TORNADO_ENV", "development")
+if not env == "production":
+    routes += [url(r"/login-dev", Dev, {"action": "login"}, name="dev-login")]
 
 def make_app(config):
 
     authz_client = ApiClient(config['default']['AUTHZ_BASE_URL'])
 
-    app = tornado.web.Application([
-            url( r"/",           Login, {'page': 'login'},      name='main' ),
-            url( r"/login",      Login, {'page': 'login'},      name='login' ),
-            url( r"/home",       MainHandler, {'page': 'home'},       name='home' ),
-            url( r"/workspaces",
-                 Workspace,
-                 {'page': 'workspaces', 'authz_client': authz_client},
-                 name='workspaces'),
-            url( r"/requests",   Request,     {'page': 'requests'},   name='requests' ),
-            url( r"/requests/new",         RequestNew, {'page': 'requests_new'},   name='request_new' ),
-            url( r"/requests/new/([0-9])", RequestNew, {'page': 'requests_new'},   name='request_form' ),
-            url( r"/users",      MainHandler, {'page': 'users'},      name='users' ),
-            url( r"/reports",    MainHandler, {'page': 'reports'},    name='reports' ),
-            url( r"/calculator", MainHandler, {'page': 'calculator'}, name='calculator' ),
-        ],
+    app = tornado.web.Application(
+        routes,
         template_path = home.child('templates'),
         static_path   = home.child('static'),
         debug=config['default'].getboolean('DEBUG')

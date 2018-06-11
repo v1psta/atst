@@ -56,5 +56,6 @@ class BaseHandler(tornado.web.RequestHandler):
         else:
             False
 
+    # this is a temporary implementation until we have real sessions
     def _start_session(self):
         self.set_secure_cookie('atst', 'valid-user-session')
