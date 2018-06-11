@@ -1,7 +1,8 @@
 {% extends '../requests_new.html.to' %}
 
 {% block form %}
-<h2>Funding/Contracting</h2>
+
+<h2>Organizational Info</h2>
 <input type='textbox'>
 {% end %}
 
