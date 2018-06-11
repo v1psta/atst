@@ -1,7 +1,10 @@
 {% extends '../requests_new.html.to' %}
 
 {% block form %}
-<h2>Readiness Survey</h2>
+<h2>Review &amp; Submit</h2>
 <input type='textbox'>
 {% end %}
 
+{% block next %}
+<b class='usa-button'>Submit to Contracting Officer</b>
+{% end %}
