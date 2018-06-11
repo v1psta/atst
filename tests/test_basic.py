@@ -1,10 +1,5 @@
 import pytest
-import tornado.web
-from atst.app import make_app
 
-@pytest.fixture
-def app():
-    return make_app()
 
 @pytest.mark.gen_test
 def test_hello_world(http_client, base_url):
