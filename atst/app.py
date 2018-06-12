@@ -31,7 +31,7 @@ def make_app(config):
         ],
         template_path = home.child('templates'),
         static_path   = home.child('static'),
-        DEBUG=config['default']['DEBUG']
+        debug=config['default'].getboolean('DEBUG')
     )
     return app
 
