@@ -1,4 +1,5 @@
-from atst.handler import BaseHandler, authenticated
+import tornado
+from atst.handler import BaseHandler
 
 mock_requests = [
         {
@@ -31,6 +32,6 @@ class Request(BaseHandler):
     def initialize(self, page):
         self.page = page
 
-    @authenticated
+    @tornado.web.authenticated
     def get(self):
         self.render('requests.html.to', page = self.page, requests = mock_requests )

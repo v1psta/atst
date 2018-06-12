@@ -20,19 +20,6 @@ helpers = {
     'assets': assets
 }
 
-def authenticated(method):
-    @functools.wraps(method)
-    def wrapper(self, *args, **kwargs):
-        if not self.current_user:
-            if self.request.method in ("GET", "HEAD"):
-                url = self.get_login_url()
-                self.redirect(url)
-                return
-            else:
-                raise tornado.web.HTTPError(403)
-        return method(self, *args, **kwargs)
-    return wrapper
-
 class BaseHandler(tornado.web.RequestHandler):
 
     def get_template_namespace(self):

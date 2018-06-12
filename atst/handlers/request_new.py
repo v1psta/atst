@@ -1,4 +1,5 @@
-from atst.handler import BaseHandler, authenticated
+import tornado
+from atst.handler import BaseHandler
 
 class RequestNew(BaseHandler):
     screens = [
@@ -22,7 +23,7 @@ class RequestNew(BaseHandler):
     def initialize(self, page):
         self.page = page
 
-    @authenticated
+    @tornado.web.authenticated
     def get(self, screen = 1):
         self.render( 'requests/screen-%d.html.to' % int(screen),
                     page = self.page,

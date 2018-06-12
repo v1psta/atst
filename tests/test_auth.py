@@ -1,3 +1,4 @@
+import re
 import pytest
 import tornado.web
 from concurrent.futures import ThreadPoolExecutor
@@ -15,9 +16,10 @@ def test_redirects_when_not_logged_in(http_client, base_url):
     response = yield http_client.fetch(
         base_url + "/home", raise_error=False, follow_redirects=False
     )
+    location = response.headers['Location']
     assert response.code == 302
     assert response.error
-    assert response.headers["Location"] == "/"
+    assert re.match('/\??', location)
 
 
 @pytest.mark.gen_test

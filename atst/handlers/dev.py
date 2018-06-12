@@ -1,4 +1,4 @@
-from atst.handler import BaseHandler, authenticated
+from atst.handler import BaseHandler
 
 class Dev(BaseHandler):
     def initialize(self, action):

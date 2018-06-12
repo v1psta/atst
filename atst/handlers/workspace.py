@@ -1,4 +1,5 @@
-from atst.handler import BaseHandler, authenticated
+from atst.handler import BaseHandler
+import tornado
 import tornado.gen
 
 mock_workspaces = [
@@ -19,6 +20,6 @@ class Workspace(BaseHandler):
         self.authz_client = authz_client
 
     @tornado.gen.coroutine
-    @authenticated
+    @tornado.web.authenticated
     def get(self):
         self.render( 'workspaces.html.to', page = self.page, workspaces = mock_workspaces )
