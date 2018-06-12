@@ -22,17 +22,9 @@ helpers = {
 
 def authenticated(method):
     @functools.wraps(method)
-    @tornado.gen.coroutine
     def wrapper(self, *args, **kwargs):
         if not self.current_user:
-            if self.get_cookie('bearer-token'):
-                bearer_token = self.get_cookie('bearer-token')
-                valid = yield validate_login_token(self.application.authnid_client, bearer_token)
-                if valid:
-                    self._start_session()
-                else:
-                    raise NotImplementedError
-            elif self.request.method in ("GET", "HEAD"):
+            if self.request.method in ("GET", "HEAD"):
                 url = self.get_login_url()
                 self.redirect(url)
                 return
@@ -40,17 +32,6 @@ def authenticated(method):
                 raise tornado.web.HTTPError(403)
         return method(self, *args, **kwargs)
     return wrapper
-
-@tornado.gen.coroutine
-def validate_login_token(client, token):
-    try:
-        response = yield client.post('/api/v1/validate', raise_error=False, json={"token": token})
-        return response.code == 200
-    except tornado.httpclient.HTTPError as error:
-        if error.response.code == 401:
-            return False
-        else:
-            raise error
 
 class BaseHandler(tornado.web.RequestHandler):
 

@@ -4,6 +4,7 @@ import tornado.web
 from tornado.web import url
 
 from atst.handlers.main import MainHandler
+from atst.handlers.home import Home
 from atst.handlers.login import Login
 from atst.handlers.workspace import Workspace
 from atst.handlers.request import Request
@@ -20,7 +21,7 @@ def make_app(config):
     authnid_client = ApiClient(config["default"]["AUTHNID_BASE_URL"])
 
     routes = [
-        url(r"/", Login, {"page": "login"}, name="main"),
+        url(r"/", Home, {"page": "login"}, name="main"),
         url(r"/login", Login, {"page": "login"}, name="login"),
         url(r"/home", MainHandler, {"page": "home"}, name="home"),
         url(
@@ -47,7 +48,7 @@ def make_app(config):
 
     app = tornado.web.Application(
         routes,
-        login_url="/login",
+        login_url="/",
         template_path = home.child('templates'),
         static_path   = home.child('static'),
         cookie_secret=config["default"]["COOKIE_SECRET"],
