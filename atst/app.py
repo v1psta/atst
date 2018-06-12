@@ -17,6 +17,7 @@ ENV = os.getenv("TORNADO_ENV", "dev")
 def make_app(config):
 
     authz_client = ApiClient(config["default"]["AUTHZ_BASE_URL"])
+    authnid_client = ApiClient(config["default"]["AUTHNID_BASE_URL"])
 
     routes = [
         url(r"/", Login, {"page": "login"}, name="main"),
@@ -52,6 +53,7 @@ def make_app(config):
         cookie_secret=config["default"]["COOKIE_SECRET"],
         debug=config['default'].getboolean('DEBUG')
     )
+    app.authnid_client = authnid_client
     return app
 
 

@@ -1,5 +1,35 @@
 import pytest
 import tornado.web
+from concurrent.futures import ThreadPoolExecutor
+from atst.handler import validate_login_token
+
+
+class MockApiResponse():
+
+    def __init__(self, code, json):
+        self.code = code
+        self.json = json
+
+
+@pytest.mark.gen_test
+def test_successful_validate_login_token(monkeypatch, app):
+    monkeypatch.setattr(
+        "atst.api_client.ApiClient.get",
+        lambda x,
+        y,
+        json=None: MockApiResponse(200, {"status": "success"}),
+    )
+    assert validate_login_token(app.authnid_client, "abc-123")
+
+
+@pytest.mark.gen_test
+def test_unsuccessful_validate_login_token(monkeypatch, app):
+    monkeypatch.setattr(
+        "atst.api_client.ApiClient.get",
+        lambda x,y,json=None: MockApiResponse(401, {"status": "error"}),
+    )
+    valid = yield validate_login_token(app.authnid_client, "abc-123")
+    assert not valid
 
 
 @pytest.mark.gen_test
@@ -11,24 +41,31 @@ def test_redirects_when_not_logged_in(http_client, base_url):
     assert response.error
     assert response.headers["Location"] == "/login"
 
+
 @pytest.mark.gen_test
 def test_login_with_valid_bearer_token(app, monkeypatch, http_client, base_url):
-    monkeypatch.setattr("atst.handler.validate_login_token", lambda t: True)
-    response = yield http_client.fetch(
-        base_url + "/home", headers={"Cookie": "bearer-token=anything"}
-    )
-    assert response.headers['Set-Cookie'].startswith('atst')
-    assert response.code == 200
-    assert not response.error
+    with ThreadPoolExecutor(max_workers=1) as executor:
+        monkeypatch.setattr(
+            "atst.handler.validate_login_token",
+            lambda c,t: executor.submit(lambda: True),
+        )
+        response = yield http_client.fetch(
+            base_url + "/home", headers={"Cookie": "bearer-token=anything"}
+        )
+        assert response.headers["Set-Cookie"].startswith("atst")
+        assert response.code == 200
+        assert not response.error
+
 
 @pytest.mark.gen_test
 def test_login_with_via_dev_endpoint(app, monkeypatch, http_client, base_url):
     response = yield http_client.fetch(
         base_url + "/login-dev", raise_error=False, follow_redirects=False
     )
-    assert response.headers['Set-Cookie'].startswith('atst')
+    assert response.headers["Set-Cookie"].startswith("atst")
     assert response.code == 302
     assert response.headers["Location"] == "/home"
+
 
 @pytest.mark.gen_test
 @pytest.mark.skip(reason="need to work out auth error user paths")

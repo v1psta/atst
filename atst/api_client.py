@@ -33,7 +33,7 @@ class ApiClient(object):
             kwargs['body'] = dumps(kwargs['json'])
             del kwargs['json']
             headers = kwargs.get('headers', {})
-            headers['Content-Type'] = 'application-json'
+            headers['Content-Type'] = 'application/json'
             kwargs['headers'] = headers
 
         response = yield self.client.fetch(url, method=method, **kwargs)
