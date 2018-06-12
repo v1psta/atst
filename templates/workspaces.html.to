@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<main class="usa-section usa-content usa-width-one-whole" id="main-content">
+<main class="usa-section usa-content usa-width-one-whole">
 
   <h1>Workspaces</h1>
 
