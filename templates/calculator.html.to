@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<main class="usa-section usa-content" id="main-content">
+<main class="usa-section usa-content">
 
 <h1>Calculator</h1>
 

@@ -6,8 +6,10 @@
 @import 'base/buttons';
 @import 'base/tables';
 
+@import 'components/site_action';
 @import 'components/empty_state';
 
-@import 'sections/layout';
+@import 'sections/main';
+@import 'sections/navigation';
+@import 'sections/footer';
 @import 'sections/login';
-

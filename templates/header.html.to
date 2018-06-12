@@ -16,7 +16,6 @@
             ['requests', 'Requests'],
             ['users', 'Users' ],
             ['reports', 'Reports' ],
-            ['calculator','Usage Calculator'],
             ]
         %}
       <li>
