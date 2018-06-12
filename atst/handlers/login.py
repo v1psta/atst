@@ -4,8 +4,8 @@ from atst.handler import BaseHandler
 
 class Login(BaseHandler):
 
-    def initialize(self, page):
-        self.page = page
+    def initialize(self, authnid_client):
+        self.authnid_client = authnid_client
 
     @tornado.gen.coroutine
     def get(self):
@@ -24,7 +24,7 @@ class Login(BaseHandler):
     @tornado.gen.coroutine
     def _validate_login_token(self, token):
         try:
-            response = yield self.application.authnid_client.post(
+            response = yield self.authnid_client.post(
                 "/api/v1/validate", json={"token": token}
             )
             return response.code == 200

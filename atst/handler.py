@@ -1,5 +1,4 @@
 import os
-import functools
 from webassets import Environment, Bundle
 import tornado.web
 from atst.home import home

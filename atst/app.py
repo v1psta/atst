@@ -15,6 +15,7 @@ from atst.api_client import ApiClient
 
 ENV = os.getenv("TORNADO_ENV", "dev")
 
+
 def make_app(config):
 
     authz_client = ApiClient(config["default"]["AUTHZ_BASE_URL"])
@@ -22,7 +23,12 @@ def make_app(config):
 
     routes = [
         url(r"/", Home, {"page": "login"}, name="main"),
-        url(r"/login", Login, {"page": "login"}, name="login"),
+        url(
+            r"/login",
+            Login,
+            {"authnid_client": authnid_client},
+            name="login",
+        ),
         url(r"/home", MainHandler, {"page": "home"}, name="home"),
         url(
             r"/workspaces",
@@ -54,16 +60,18 @@ def make_app(config):
         cookie_secret=config["default"]["COOKIE_SECRET"],
         debug=config['default'].getboolean('DEBUG')
     )
-    app.authnid_client = authnid_client
     return app
 
 
 def make_config():
-    BASE_CONFIG_FILENAME = os.path.join(os.path.dirname(__file__), "../config/base.ini")
+    BASE_CONFIG_FILENAME = os.path.join(
+        os.path.dirname(__file__),
+        "../config/base.ini"
+    )
     ENV_CONFIG_FILENAME = os.path.join(
         os.path.dirname(__file__),
         "../config/",
-        "{}.ini".format(ENV.lower()),
+        "{}.ini".format(ENV.lower())
     )
     config = ConfigParser()
 

@@ -4,13 +4,6 @@ import tornado.web
 from concurrent.futures import ThreadPoolExecutor
 
 
-class MockApiResponse():
-
-    def __init__(self, code, json):
-        self.code = code
-        self.json = json
-
-
 @pytest.mark.gen_test
 def test_redirects_when_not_logged_in(http_client, base_url):
     response = yield http_client.fetch(
