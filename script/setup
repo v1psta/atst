@@ -12,6 +12,15 @@ pip install pipenv
 # Update npm
 npm install -g npm
 
+if ! type sass > /dev/null; then
+  if type gem > /dev/null; then
+    echo 'installing a sass compiler...'
+    gem install sass
+  else
+    echo 'Could not install a sass compiler. Please install a version of sass.'
+  fi
+fi
+
 # Install application dependencies
 script/bootstrap
 
