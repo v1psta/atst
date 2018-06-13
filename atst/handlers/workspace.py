@@ -1,6 +1,5 @@
 from atst.handler import BaseHandler
 import tornado
-import tornado.gen
 
 mock_workspaces = [
     {
