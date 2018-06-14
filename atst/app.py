@@ -30,6 +30,7 @@ def make_app(config):
             name="login",
         ),
         url(r"/home", MainHandler, {"page": "home"}, name="home"),
+        url( r"/workspaces/blank",       MainHandler, {'page': 'workspaces_blank'},       name='workspaces_blank' ),
         url(
             r"/workspaces",
             Workspace,
@@ -55,6 +56,7 @@ def make_app(config):
     app = tornado.web.Application(
         routes,
         login_url="/",
+
         template_path = home.child('templates'),
         static_path   = home.child('static'),
         cookie_secret=config["default"]["COOKIE_SECRET"],
