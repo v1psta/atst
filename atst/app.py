@@ -18,6 +18,7 @@ def make_app(config):
     app = tornado.web.Application([
             url( r"/",           MainHandler, {'page': 'login'},      name='login' ),
             url( r"/home",       MainHandler, {'page': 'home'},       name='home' ),
+            url( r"/workspaces/blank",       MainHandler, {'page': 'workspaces_blank'},       name='workspaces_blank' ),
             url( r"/workspaces",
                  Workspace,
                  {'page': 'workspaces', 'authz_client': authz_client},
