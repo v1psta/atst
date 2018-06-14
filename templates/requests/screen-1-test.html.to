@@ -1,0 +1,24 @@
+{% extends '../requests_new.html.to' %}
+
+{% block form %}
+
+form goes here
+<br>
+{% if f.errors %}
+<b>There were some errors</b>
+{% end %}
+<hr>
+{% autoescape None %}
+{% for e in f.a.errors %}
+<b>{{ e }}</b>
+{% end %}
+<br>
+a: {{ f.a }}
+<hr>
+
+b: {{ f.b }}
+
+<br>
+
+{% end %}
+

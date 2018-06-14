@@ -2,102 +2,70 @@
 
 {% block form %}
 <h2>Details of Use</h2>
-<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Doloremque placeat distinctio accusamus quo temporibus facilis, dicta delectus asperiores. Nihil aut quod quibusdam id fugit, officia dolorum laudantium! Quidem tempora, aliquam.</p>
-<form>
+
+{% autoescape None %}
+{% if f.errors %}
+<b>There were some errors, see below.</b>
+{% end %}
+
+
   <h3 id="application-details">Application Details</h3>
-  <p>These headings introduce, respectively, sections and subsections within your body copy. As you create these headings, follow the same guidelines that you use when writing section headings: Be succinct, descriptive, and precise.</p>
 
   <button class="usa-button-secondary usa-button-active">New Application</button>
   <button class="usa-button-secondary" disabled>Existing Application</button>
   <button class="usa-button-secondary" disabled>Sandbox Application</button>
 
 
-  <label for="input-application-name">Application name</label>
-  <input id="input-application-name" name="input-application-name" type="text" placeholder="What is the application name?">
+  {{ f.application_name.label }}
+  {{ f.application_name(placeholder="What is the application name?") }}
 
-  <label for="input-application-description">Application description</label>
-  <textarea id="input-application-description" name="input-application-description" placeholder="Describe the application"></textarea>
+  {{ f.application_description.label }}
+  {{ f.application_description(placeholder="Describe the application") }}
 
-  <label for="input-type-textarea">Estimated dollar value of use</label>
-  <input id="dollar-value" name="dollar-value" type="text" placeholder="$">
+  {{ f.dollar_value.label }}
+  {{ f.dollar_value(placeholder="$") }}
 
-  <label for="input-estimate">How did you arrive at this estimate?</label>
-  <select name="input-estimate" id="input-estimate">
-    <option value="">- Select -</option>
-    <option value="value1">CSP usage calculator</option>
-    <option value="value2">Option B</option>
-    <option value="value3">Option C</option>
-  </select>
+  {{ f.input_estimate.label }}
+  {{ f.input_estimate }}
 
+  <b>NEW</b>
+  <hr>
   <fieldset>
     <label for="input-start-date">Expected start date</label>
     <div class="usa-date-of-birth">
       <div class="usa-form-group usa-form-group-month">
-        <label for="date_start_1">Month</label>
-        <input class="usa-input-inline" aria-describedby="dobHint" id="date_start_1" name="date_start_1" type="number" min="1" max="12" value="">
-      </div>
+        {{ f.date_start.month.label }}
+        {{ f.date_start.month(min="1", max="12") }}
+       </div>
       <div class="usa-form-group usa-form-group-day">
-        <label for="date_start_2">Day</label>
-        <input class="usa-input-inline" aria-describedby="dobHint" id="date_start_2" name="date_start_2" type="number" min="1" max="31" value="">
-      </div>
+        {{ f.date_start.day.label }}
+        {{ f.date_start.day(min="1", max="31") }}
+       </div>
       <div class="usa-form-group usa-form-group-year">
-        <label for="date_start_3">Year</label>
-        <input class="usa-input-inline" aria-describedby="dobHint" id="date_start_3" name="date_start_3" type="number" min="1900" max="2000" value="">
-      </div>
-    </div>
+        {{ f.date_start.year.label }}
+        {{ f.date_start.year(min="2000", max="2040") }}
+       </div>
+     </div>
   </fieldset>
 
-
-  <label for="input-period-performance">Desired period of performance</label>
-  <select name="input-period-performance" id="input-period-performance">
-    <option value="">- Select -</option>
-    <option value="value1">30 days</option>
-    <option value="value2">60 days</option>
-    <option value="value3">90 days</option>
-  </select>
+  {{ f.period_of_performance.label }}
+  {{ f.period_of_performance }}
 
   <br>
 
   <fieldset class="usa-fieldset-inputs usa-sans">
-    <label for="input-period-performance">Classification level</label>
-    <ul class="usa-unstyled-list">
-      <li>
-        <input id="unclassified" type="radio" checked name="classification-level" value="unclassified">
-        <label for="unclassified">Unclassified</label>
-      </li>
-      <li>
-        <input id="secret" type="radio" name="classification-level" value="secret">
-        <label for="secret">Secret</label>
-      </li>
-      <li>
-        <input id="top-secret" type="radio" name="classification-level" value="top-secret">
-        <label for="top-secret">Top Secret</label>
-      </li>
-    </ul>
+    {{ f.classification_level.label }}
+    {{ f.classification_level(class_="usa-unstyled-list") }}
   </fieldset>
 
-
-  <label for="input-service-branch">Primary service branch usage</label>
-  <input id="service-branch" name="service-branch" type="text" placeholder="Add tags associated with service branches">
+  {{ f.primary_service_branch.label }}
+  {{ f.primary_service_branch(placeholder="Add tags associated with service branches") }}
 
   <br>
 
   <fieldset class="usa-fieldset-inputs usa-sans">
-    <label for="input-cloud-model">Cloud model service</label>
-    <ul class="usa-unstyled-list">
-      <li>
-        <input id="iaas" type="radio" name="cloud-level" value="iaas">
-        <label for="iaas">IaaS</label>
-      </li>
-      <li>
-        <input id="paas" type="radio" name="cloud-level" value="paas">
-        <label for="paas">PaaS</label>
-      </li>
-      <li>
-        <input id="iass-pass" type="radio" checked name="cloud-level" value="iass-pass">
-        <label for="iass-pass">Both</label>
-      </li>
-    </ul>
+    {{ f.cloud_model.label }}
+    {{ f.cloud_model(class_="usa-unstyled-list") }}
   </fieldset>
 
 
@@ -106,12 +74,18 @@
   <h4 id="application-details">Computation</h4>
   <p>These headings introduce, respectively, sections and subsections within your body copy. As you create these headings, follow the same guidelines that you use when writing section headings: Be succinct, descriptive, and precise.</p>
 
-  <label for="">Number of cores</label>
-  <input id="" name="" type="text" placeholder="Total cores">
+  {{ f.number_of_cores.label }}
+  {{ f.number_of_cores(placeholder="Total cores", min="1", max="32") }}
 
-  <label for="">Total RAM</label>
-  <input id="" name="" type="text" placeholder="Amount of RAM">
-
+  <!-- example field with custom validation -->
+  {{ f.total_ram.label }}
+  {{ f.total_ram(placeholder="Total RAM", min="1", max="32") }}
+  <!-- example validation errors -->
+  {% for e in f.total_ram.errors %}
+    <div class="usa-input-error-message">
+      {{ e }}
+    </div>
+  {% end %}
 
 
   <!-- Storage -->
@@ -141,17 +115,6 @@
 
   <label for="">Number of application environments</label>
   <input id="" name="" type="text" placeholder="Total number of environments">
-
-
-
-
-  <br><br>
-
-  <button class="usa-button-secondary">Create Application</button>
-  <br>
-  <button class="usa-button-secondary" disabled>Save &amp; Continue</button>
-
-</form>
 
 
 {% end %}

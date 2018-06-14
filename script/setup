@@ -25,4 +25,5 @@ fi
 script/bootstrap
 
 # Symlink uswds fonts into the /static directory
+rm -f ./static/fonts
 ln -s ../node_modules/uswds/src/fonts ./static/fonts

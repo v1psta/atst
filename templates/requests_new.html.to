@@ -8,19 +8,21 @@
 
 <h1>New Request</h1>
 
-
 <aside class="sidenav usa-width-one-third">
   {% include 'requests/sidebar.html.to' %}
 </aside>
 
 <main class="main-content usa-width-two-thirds">
 
-  {% block form %}
+    <form method='POST' action='{{ reverse_url('request_form', current) }}'>
+    {% module xsrf_form_html() %}
+    {% block form %}
     form goes here
-  {% end %}
-  {% block next %}
-    <a class='usa-button usa-button-primary' href='{{ reverse_url('request_form',next_screen) }}'>Save &amp; Continue</a>
-  {% end %}
+    {% end %}
+    {% block next %}
+    <input type='submit' class='usa-button usa-button-primary' value='Save & Continue' />
+    {% end %}
+    </form>
 
 </main>
 

@@ -16,7 +16,7 @@ from atst.api_client import ApiClient
 ENV = os.getenv("TORNADO_ENV", "dev")
 
 
-def make_app(config):
+def make_app(config,**kwargs):
 
     authz_client = ApiClient(config["default"]["AUTHZ_BASE_URL"])
     authnid_client = ApiClient(config["default"]["AUTHNID_BASE_URL"])
@@ -60,8 +60,10 @@ def make_app(config):
         template_path = home.child('templates'),
         static_path   = home.child('static'),
         cookie_secret=config["default"]["COOKIE_SECRET"],
-        debug=config['default'].getboolean('DEBUG')
+        debug=config['default'].getboolean('DEBUG'),
+        **kwargs
     )
+    app.config = config
     return app
 
 
