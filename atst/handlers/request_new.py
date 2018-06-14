@@ -47,10 +47,8 @@ class RequestNew(BaseHandler):
         self.check_xsrf_cookie()
         screen = int(screen)
         form = self.screens[ screen - 1 ]['form'](self.request.arguments)
-        print( 'data---------' )
-        print( form.data )
         if form.validate():
-            where=self.application.default_router.reverse_url('request_form', str(screen + 1))
+            where = self.application.default_router.reverse_url('request_form', str(screen + 1))
             self.redirect(where)
         else:
             self.show_form(screen, form)
