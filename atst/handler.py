@@ -25,3 +25,13 @@ class BaseHandler(tornado.web.RequestHandler):
         ns = super(BaseHandler, self).get_template_namespace()
         ns.update(helpers)
         return ns
+
+    def get_current_user(self):
+        if self.get_secure_cookie('atst'):
+            return True
+        else:
+            False
+
+    # this is a temporary implementation until we have real sessions
+    def _start_session(self):
+        self.set_secure_cookie('atst', 'valid-user-session')
