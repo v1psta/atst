@@ -76,8 +76,9 @@ class RequestNew(BaseHandler):
 
     @tornado.gen.coroutine
     def create_or_update_request(self, form_data):
+        # TODO: Check session for existing form, and send a PATCH instead if it exists.
         request_data = {
-            'creator_id': self.current_user,
+            'creator_id': '9cb348f0-8102-4962-88c4-dac8180c904c',
             'request': form_data
         }
         response = yield self.requests_client.post('/requests', json=request_data)
