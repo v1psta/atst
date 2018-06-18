@@ -6,5 +6,7 @@ set -e
 # Ensure we are in the app root directory (not the /script directory)
 cd "$(dirname "${0}")/.."
 
+pipenv run pylint --errors-only atst
+
 # Run unit tests
 pipenv run python -m pytest -s $*

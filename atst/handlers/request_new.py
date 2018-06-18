@@ -7,6 +7,7 @@ from atst.forms.readiness import ReadinessForm
 from atst.forms.review import ReviewForm
 import tornado.httputil
 
+
 class RequestNew(BaseHandler):
     screens = [
             { 'title' : 'Details of Use',
@@ -39,8 +40,9 @@ class RequestNew(BaseHandler):
             }
      ]
 
-    def initialize(self, page):
+    def initialize(self, page, requests_client):
         self.page = page
+        self.requests_client = requests_client
 
     @tornado.web.authenticated
     def post(self, screen = 1):

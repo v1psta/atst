@@ -16,17 +16,14 @@ from atst.api_client import ApiClient
 ENV = os.getenv("TORNADO_ENV", "dev")
 
 
-def make_app(config,**kwargs):
-
-    authz_client = ApiClient(config["default"]["AUTHZ_BASE_URL"])
-    authnid_client = ApiClient(config["default"]["AUTHNID_BASE_URL"])
+def make_app(config, deps, **kwargs):
 
     routes = [
         url(r"/", Home, {"page": "login"}, name="main"),
         url(
             r"/login",
             Login,
-            {"authnid_client": authnid_client},
+            {"authnid_client": deps["authnid_client"]},
             name="login",
         ),
         url(r"/home", MainHandler, {"page": "home"}, name="home"),
@@ -34,15 +31,19 @@ def make_app(config,**kwargs):
         url(
             r"/workspaces",
             Workspace,
-            {"page": "workspaces", "authz_client": authz_client},
+            {"page": "workspaces", "authz_client": deps["authz_client"]},
             name="workspaces",
         ),
         url(r"/requests", Request, {"page": "requests"}, name="requests"),
-        url(r"/requests/new", RequestNew, {"page": "requests_new"}, name="request_new"),
+        url(
+            r"/requests/new",
+            RequestNew,
+            {"page": "requests_new", "requests_client": deps["requests_client"]},
+            name="request_new"),
         url(
             r"/requests/new/([0-9])",
             RequestNew,
-            {"page": "requests_new"},
+            {"page": "requests_new", "requests_client": deps["requests_client"]},
             name="request_form",
         ),
         url(r"/users", MainHandler, {"page": "users"}, name="users"),
@@ -65,6 +66,14 @@ def make_app(config,**kwargs):
     )
     app.config = config
     return app
+
+
+def make_deps(config):
+    return {
+        'authz_client': ApiClient(config["default"]["AUTHZ_BASE_URL"]),
+        'authnid_client': ApiClient(config["default"]["AUTHNID_BASE_URL"]),
+        'requests_client': ApiClient(config["default"]["REQUESTS_QUEUE_BASE_URL"])
+    }
 
 
 def make_config():

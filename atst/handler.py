@@ -1,4 +1,3 @@
-import os
 from webassets import Environment, Bundle
 import tornado.web
 from atst.home import home
@@ -29,7 +28,7 @@ class BaseHandler(tornado.web.RequestHandler):
         if self.get_secure_cookie('atst'):
             return True
         else:
-            False
+            return False
 
     # this is a temporary implementation until we have real sessions
     def _start_session(self):

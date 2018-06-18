@@ -1,4 +1,3 @@
-import atst
 import tornado
 from atst.handler import BaseHandler
 
