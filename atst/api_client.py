@@ -5,9 +5,10 @@ from json import dumps, loads
 
 class ApiClient(object):
 
-    def __init__(self, base_url):
+    def __init__(self, base_url, validate_cert=True):
         self.base_url = base_url
         self.client = AsyncHTTPClient()
+        self.validate_cert = validate_cert
 
     @tornado.gen.coroutine
     def get(self, path, **kwargs):
@@ -35,6 +36,8 @@ class ApiClient(object):
             headers = kwargs.get('headers', {})
             headers['Content-Type'] = 'application/json'
             kwargs['headers'] = headers
+        if not 'validate_cert' in kwargs:
+            kwargs['validate_cert'] = self.validate_cert
 
         response = yield self.client.fetch(url, method=method, **kwargs)
         return self.adapt_response(response)
