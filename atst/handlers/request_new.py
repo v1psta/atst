@@ -40,8 +40,9 @@ class RequestNew(BaseHandler):
             }
      ]
 
-    def initialize(self, page):
+    def initialize(self, page, requests_client):
         self.page = page
+        self.requests_client = requests_client
 
     @tornado.web.authenticated
     def post(self, screen = 1):
