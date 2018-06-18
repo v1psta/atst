@@ -1,5 +1,13 @@
 #!/bin/bash
 
+reap() {
+   kill -TERM $child
+   sleep 0.1
+   exit
+}
+
+trap reap TERM INT
+
 # If a command fails, exit the script
 set -e
 
