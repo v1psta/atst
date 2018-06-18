@@ -15,4 +15,7 @@ set -e
 cd "$(dirname "${0}")/.."
 
 # Launch the app
-pipenv run python app.py ${@}
+pipenv run python app.py ${@} &
+child=$!
+
+wait $child
