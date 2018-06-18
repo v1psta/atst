@@ -45,13 +45,18 @@ class RequestNew(BaseHandler):
         self.requests_client = requests_client
 
     @tornado.web.authenticated
+    @tornado.gen.coroutine
     def post(self, screen = 1):
         self.check_xsrf_cookie()
         screen = int(screen)
         form = self.screens[ screen - 1 ]['form'](self.request.arguments)
         if form.validate():
-            where = self.application.default_router.reverse_url('request_form', str(screen + 1))
-            self.redirect(where)
+            response = yield self.create_or_update_request(form.data)
+            if response.ok:
+                where = self.application.default_router.reverse_url('request_form', str(screen + 1))
+                self.redirect(where)
+            else:
+                self.set_status(response.code)
         else:
             self.show_form(screen, form)
 
@@ -68,3 +73,12 @@ class RequestNew(BaseHandler):
                     screens = self.screens,
                     current = int(screen),
                     next_screen = int(screen) + 1 )
+
+    @tornado.gen.coroutine
+    def create_or_update_request(self, form_data):
+        request_data = {
+            'creator_id': self.current_user,
+            'request': form_data
+        }
+        response = yield self.requests_client.post('/requests', json=request_data)
+        return response

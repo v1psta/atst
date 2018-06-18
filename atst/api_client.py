@@ -43,4 +43,5 @@ class ApiClient(object):
         if response.headers['Content-Type'] == 'application/json':
             json = loads(response.body)
             setattr(response, 'json', json)
+        setattr(response, 'ok', 200 <= response.code < 300)
         return response
