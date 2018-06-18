@@ -40,7 +40,7 @@ class ApiClient(object):
         return self.adapt_response(response)
 
     def adapt_response(self, response):
-        if response.headers['Content-Type'] == 'application/json':
+        if 'application/json' in response.headers['Content-Type']:
             json = loads(response.body)
             setattr(response, 'json', json)
         setattr(response, 'ok', 200 <= response.code < 300)
