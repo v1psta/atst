@@ -72,9 +72,9 @@ def make_deps(config):
     # we do not want to do SSL verify services in test and development
     validate_cert = ENV == 'production'
     return {
-        'authz_client': ApiClient(config["default"]["AUTHZ_BASE_URL"], validate_cert=validate_cert),
-        'authnid_client': ApiClient(config["default"]["AUTHNID_BASE_URL"], validate_cert=validate_cert),
-        'requests_client': ApiClient(config["default"]["REQUESTS_QUEUE_BASE_URL"], validate_cert=validate_cert)
+        'authz_client': ApiClient(config["default"]["AUTHZ_BASE_URL"], api_version='v1', validate_cert=validate_cert),
+        'authnid_client': ApiClient(config["default"]["AUTHNID_BASE_URL"], api_version='v1', validate_cert=validate_cert),
+        'requests_client': ApiClient(config["default"]["REQUESTS_QUEUE_BASE_URL"], api_version='v1', validate_cert=validate_cert)
     }
 
 

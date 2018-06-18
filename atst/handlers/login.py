@@ -25,7 +25,7 @@ class Login(BaseHandler):
     def _validate_login_token(self, token):
         try:
             response = yield self.authnid_client.post(
-                "/api/v1/validate", json={"token": token}
+                "/validate", json={"token": token}
             )
             return response.code == 200
 
