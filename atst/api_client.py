@@ -22,6 +22,10 @@ class ApiClient(object):
         return (yield self.make_request('POST', self.base_url + path, **kwargs))
 
     @tornado.gen.coroutine
+    def patch(self, path, **kwargs):
+        return (yield self.make_request('PATCH', self.base_url + path, **kwargs))
+
+    @tornado.gen.coroutine
     def delete(self, path, **kwargs):
         return (yield self.make_request('DELETE', self.base_url + path, **kwargs))
 

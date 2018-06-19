@@ -47,15 +47,15 @@ class RequestNew(BaseHandler):
 
     @tornado.web.authenticated
     @tornado.gen.coroutine
-    def post(self, screen=1):
+    def post(self, screen=1, request_id=None):
         self.check_xsrf_cookie()
         screen = int(screen)
         form = self.screens[ screen - 1 ]['form'](self.request.arguments)
         if form.validate():
-            response = yield self.create_or_update_request(form.data, self.request_id())
+            response = yield self.create_or_update_request(form.data, request_id)
             if response.ok:
-                url = self.application.default_router.reverse_url('request_form', str(screen + 1))
-                where = '{}?request_id={}'.format(url, response.json['id'])
+                where = self.application.default_router.reverse_url(
+                    'request_form_update', str(screen + 1), request_id or response.json['id'])
                 self.redirect(where)
             else:
                 self.set_status(response.code)
@@ -64,31 +64,30 @@ class RequestNew(BaseHandler):
 
     @tornado.web.authenticated
     @tornado.gen.coroutine
-    def get(self, screen=1):
+    def get(self, screen=1, request_id=None):
         form = None
-        request_id = self.request_id()
         if request_id:
             request = yield self.get_request(request_id)
             form_data = request['body'] if request else {}
-            from pprint import pprint; pprint(form_data)
             form = self.screens[ int(screen) - 1 ]['form'](data=form_data)
-        self.show_form(screen=screen, form=form)
+        self.show_form(screen=screen, request_id=request_id, form=form)
 
-    def show_form(self, screen=1, form=None):
+    def show_form(self, screen=1, request_id=None, form=None):
         if not form:
             form = self.screens[ int(screen) - 1 ]['form'](self.request.arguments)
-        self.render( 'requests/screen-%d.html.to' % int(screen),
-                    f = form,
-                    page = self.page,
-                    screens = self.screens,
-                    current = int(screen),
-                    next_screen = int(screen) + 1 )
+        self.render('requests/screen-%d.html.to' % int(screen),
+                    f=form,
+                    page=self.page,
+                    screens=self.screens,
+                    current=int(screen),
+                    next_screen=int(screen) + 1,
+                    request_id=request_id)
 
     @tornado.gen.coroutine
     def get_request(self, request_id):
         try:
             request = yield self.requests_client.get('/requests/{}'.format(request_id))
-        except HTTPError as http_error:
+        except HTTPError:
             request = None
         return request.json
 
@@ -100,15 +99,8 @@ class RequestNew(BaseHandler):
         }
         if request_id:
             response = yield self.requests_client.patch(
-                '/requests/{}'.format(request_id), request_data)
+                '/requests/{}'.format(request_id), json=request_data)
         else:
             response = yield self.requests_client.post(
                 '/requests', json=request_data)
         return response
-
-    def request_id(self):
-        arg = self.request.arguments.get('request_id')
-        if arg:
-            return arg[0].decode('utf-8')
-        else:
-            return None
