@@ -20,7 +20,7 @@
     <tbody>
     {% for r in requests %}
     <tr>
-        <th scope="row"><a href="#">#{{ r['order_id'] }}</a>
+        <th scope="row"><a href="{{ reverse_url('request_form_update', 1, r['order_id']) }}">{{ r['order_id'] }}</a>
             {% if r['is_new'] %}<span class="usa-label">New</span></th>{% end %}
         <td>{{ r['date'] }}</td>
         <td>{{ r['full_name'] }}</td>
