@@ -94,7 +94,7 @@ class RequestNew(BaseHandler):
     @tornado.gen.coroutine
     def create_or_update_request(self, form_data, request_id=None):
         request_data = {
-            'creator_id': '9cb348f0-8102-4962-88c4-dac8180c904c',
+            'creator_id': self.get_current_user(),
             'request': form_data
         }
         if request_id:

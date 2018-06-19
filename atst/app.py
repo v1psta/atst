@@ -34,7 +34,11 @@ def make_app(config, deps, **kwargs):
             {"page": "workspaces", "authz_client": deps["authz_client"]},
             name="workspaces",
         ),
-        url(r"/requests", Request, {"page": "requests"}, name="requests"),
+        url(
+            r"/requests",
+            Request,
+            {"page": "requests", 'requests_client': deps['requests_client']},
+            name="requests"),
         url(
             r"/requests/new",
             RequestNew,

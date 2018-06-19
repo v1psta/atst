@@ -28,10 +28,27 @@ mock_requests = [
         },
         ]
 
+def map_request(request):
+    return {
+        'order_id': request['id'],
+        'is_new': False,
+        'status': 'Pending',
+        'app_count': 1,
+        'is_new': False,
+        'date': '',
+        'full_name': 'Richard Howard'
+    }
+
 class Request(BaseHandler):
-    def initialize(self, page):
+    def initialize(self, page, requests_client):
         self.page = page
+        self.requests_client = requests_client
 
     @tornado.web.authenticated
+    @tornado.gen.coroutine
     def get(self):
-        self.render('requests.html.to', page = self.page, requests = mock_requests )
+        response = yield self.requests_client.get(
+            '/requests?creator_id={}'.format(self.get_current_user()))
+        requests = response.json['requests']
+        mapped_requests = [map_request(request) for request in requests]
+        self.render('requests.html.to', page=self.page, requests=mapped_requests)
