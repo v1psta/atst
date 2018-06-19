@@ -70,9 +70,9 @@ class RequestNew(BaseHandler):
             request = yield self.get_request(request_id)
             form_data = request['body'] if request else {}
             form = self.screens[ int(screen) - 1 ]['form'](data=form_data)
-        self.show_form(screen=screen, request_id=request_id, form=form)
+        self.show_form(screen=screen, form=form, request_id=request_id)
 
-    def show_form(self, screen=1, request_id=None, form=None):
+    def show_form(self, screen=1, form=None, request_id=None):
         if not form:
             form = self.screens[ int(screen) - 1 ]['form'](self.request.arguments)
         self.render('requests/screen-%d.html.to' % int(screen),
