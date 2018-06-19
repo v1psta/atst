@@ -32,4 +32,4 @@ def test_submit_valid_request_form(monkeypatch, http_client, base_url):
         headers={"Content-Type": "application/x-www-form-urlencoded"},
         body="meaning=42",
     )
-    assert response.effective_url == base_url + '/requests/new/2'
+    assert '/requests/new/2' in response.effective_url
