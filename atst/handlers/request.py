@@ -48,7 +48,7 @@ class Request(BaseHandler):
     @tornado.gen.coroutine
     def get(self):
         response = yield self.requests_client.get(
-            '/requests?creator_id={}'.format(self.get_current_user()))
+            '/users/{}/requests'.format(self.get_current_user()))
         requests = response.json['requests']
         mapped_requests = [map_request(request) for request in requests]
         self.render('requests.html.to', page=self.page, requests=mapped_requests)

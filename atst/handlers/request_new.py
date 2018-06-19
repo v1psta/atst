@@ -68,8 +68,10 @@ class RequestNew(BaseHandler):
         form = None
         if request_id:
             request = yield self.get_request(request_id)
-            form_data = request['body'] if request else {}
-            form = self.screens[ int(screen) - 1 ]['form'](data=form_data)
+            if request.ok:
+                form_data = request.json['body'] if request else {}
+                form = self.screens[ int(screen) - 1 ]['form'](data=form_data)
+
         self.show_form(screen=screen, form=form, request_id=request_id)
 
     def show_form(self, screen=1, form=None, request_id=None):
@@ -85,11 +87,10 @@ class RequestNew(BaseHandler):
 
     @tornado.gen.coroutine
     def get_request(self, request_id):
-        try:
-            request = yield self.requests_client.get('/requests/{}'.format(request_id))
-        except HTTPError:
-            request = None
-        return request.json
+        request = yield self.requests_client.get(
+            '/users/{}/requests/{}'.format(self.get_current_user(), request_id),
+            raise_error=False)
+        return request
 
     @tornado.gen.coroutine
     def create_or_update_request(self, form_data, request_id=None):

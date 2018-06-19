@@ -40,7 +40,8 @@ class ApiClient(object):
             headers['Content-Type'] = 'application/json'
             kwargs['headers'] = headers
 
-        response = yield self.client.fetch(url, method=method, **kwargs)
+        response = yield self.client.fetch(
+            url, method=method, **kwargs)
         return self.adapt_response(response)
 
     def adapt_response(self, response):
