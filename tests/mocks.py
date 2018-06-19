@@ -32,5 +32,5 @@ class MockApiClient(ApiClient):
         response = HTTPResponse(
             request=HTTPRequest(path, verb),
             code=200,
-            headers={'Content-Type': 'application-json'})
+            headers={'Content-Type': 'application/json'})
         return self.adapt_response(response)
