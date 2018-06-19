@@ -1,5 +1,5 @@
 from wtforms.fields.html5 import IntegerField
-from wtforms.fields import RadioField, StringField, SelectField, TextAreaField
+from wtforms.fields import RadioField, StringField, SelectField, TextAreaField, FormField
 from wtforms.validators import Required, ValidationError
 from wtforms_tornado import Form
 from .date import DateForm
@@ -14,7 +14,7 @@ class RequestForm(Form):
                      ('B','Option B'),
                      ('C','Option C') ])
     # no way to apply a label to a whole nested form like this
-    date_start = DateForm()
+    date_start = FormField(DateForm)
     period_of_performance = SelectField('Desired period of performance', validators=[Required()],
             choices=[('','- Select -'),
                      ('value1','30 days'),
