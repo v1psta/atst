@@ -26,7 +26,7 @@ class BaseHandler(tornado.web.RequestHandler):
 
     def get_current_user(self):
         if self.get_secure_cookie('atst'):
-            return True
+            return '9cb348f0-8102-4962-88c4-dac8180c904c'
         else:
             return False
 

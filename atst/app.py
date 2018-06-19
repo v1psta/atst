@@ -34,7 +34,11 @@ def make_app(config, deps, **kwargs):
             {"page": "workspaces", "authz_client": deps["authz_client"]},
             name="workspaces",
         ),
-        url(r"/requests", Request, {"page": "requests"}, name="requests"),
+        url(
+            r"/requests",
+            Request,
+            {"page": "requests", 'requests_client': deps['requests_client']},
+            name="requests"),
         url(
             r"/requests/new",
             RequestNew,
@@ -44,7 +48,13 @@ def make_app(config, deps, **kwargs):
             r"/requests/new/([0-9])",
             RequestNew,
             {"page": "requests_new", "requests_client": deps["requests_client"]},
-            name="request_form",
+            name="request_form_new",
+        ),
+        url(
+            r"/requests/new/([0-9])/(\S+)",
+            RequestNew,
+            {"page": "requests_new", "requests_client": deps["requests_client"]},
+            name="request_form_update",
         ),
         url(r"/users", MainHandler, {"page": "users"}, name="users"),
         url(r"/reports", MainHandler, {"page": "reports"}, name="reports"),

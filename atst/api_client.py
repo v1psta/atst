@@ -23,6 +23,10 @@ class ApiClient(object):
         return (yield self.make_request('POST', self.base_url + path, **kwargs))
 
     @tornado.gen.coroutine
+    def patch(self, path, **kwargs):
+        return (yield self.make_request('PATCH', self.base_url + path, **kwargs))
+
+    @tornado.gen.coroutine
     def delete(self, path, **kwargs):
         return (yield self.make_request('DELETE', self.base_url + path, **kwargs))
 
@@ -39,11 +43,13 @@ class ApiClient(object):
         if not 'validate_cert' in kwargs:
             kwargs['validate_cert'] = self.validate_cert
 
-        response = yield self.client.fetch(url, method=method, **kwargs)
+        response = yield self.client.fetch(
+            url, method=method, **kwargs)
         return self.adapt_response(response)
 
     def adapt_response(self, response):
-        if response.headers['Content-Type'] == 'application/json':
+        if 'application/json' in response.headers['Content-Type']:
             json = loads(response.body)
             setattr(response, 'json', json)
+        setattr(response, 'ok', 200 <= response.code < 300)
         return response

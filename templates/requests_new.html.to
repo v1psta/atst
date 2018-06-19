@@ -14,7 +14,12 @@
 
 <main class="main-content usa-width-two-thirds">
 
-    <form method='POST' action='{{ reverse_url('request_form', current) }}'>
+    {% if request_id %}
+      <form method='POST' action="{{ reverse_url('request_form_update', current, request_id) }}">
+    {% else %}
+      <form method='POST' action="{{ reverse_url('request_form_new', current) }}">
+    {% end %}
+
     {% module xsrf_form_html() %}
     {% block form %}
     form goes here

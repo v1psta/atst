@@ -92,29 +92,25 @@
   <h4 id="application-storage">Storage</h4>
   <p>The particulars of your body copy will be determined by the topic of your page. Regardless of topic, it’s a good practice to follow the inverted pyramid structure when writing copy: Begin with the information that’s most important to your users and then present information of less importance.</p>
 
-  <label for="">Object storage</label>
-  <input id="" name="" type="text" placeholder="Total object storage">
+  {{ f.object_storage.label }}
+  {{ f.object_storage(placeholder="Total object storage") }}
 
-  <label for="">Server storage</label>
-  <input id="" name="" type="text" placeholder="Total server storage">
-
-
+  {{ f.server_storage.label }}
+  {{ f.server_storage(placeholder="Total server storage") }}
 
   <!-- Application Usage -->
   <h4 id="application-usage">Estimated Application Storage</h4>
   <p>The particulars of your body copy will be determined by the topic of your page. Regardless of topic, it’s a good practice to follow the inverted pyramid structure when writing copy: Begin with the information that’s most important to your users and then present information of less importance.</p>
 
-  <label for="">Expected active users</label>
-  <input id="" name="" type="text" placeholder="Total active users">
+  {{ f.total_active_users.label }}
+  {{ f.total_active_users(placeholder="Total active users") }}
 
-  <label for="">Expected peak concurrent users</label>
-  <input id="" name="" type="text" placeholder="Total peak users">
+  {{ f.total_peak_users.label }}
+  {{ f.total_peak_users(placeholder="Total peak users") }}
 
-  <label for="">Expected requests per minute</label>
-  <input id="" name="" type="text" placeholder="Total requests">
+  {{ f.total_requests.label }}
+  {{ f.total_requests(placeholder="Total requests") }}
 
-  <label for="">Number of application environments</label>
-  <input id="" name="" type="text" placeholder="Total number of environments">
-
-
+  {{ f.total_environments.label }}
+  {{ f.total_environments(placeholder="Total number of environments") }}
 {% end %}
