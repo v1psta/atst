@@ -5,8 +5,10 @@ from json import dumps, loads
 
 class ApiClient(object):
 
-    def __init__(self, base_url, validate_cert=True):
+    def __init__(self, base_url, api_version=None, validate_cert=True):
         self.base_url = base_url
+        if api_version:
+            self.base_url = f'{base_url}/api/{api_version}'
         self.client = AsyncHTTPClient()
         self.validate_cert = validate_cert
 
