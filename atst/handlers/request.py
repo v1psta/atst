@@ -1,4 +1,6 @@
 import tornado
+import pendulum
+
 from atst.handler import BaseHandler
 
 mock_requests = [
@@ -29,15 +31,18 @@ mock_requests = [
 ]
 
 
-def map_request(request):
+def map_request(user, request):
+    time_created = pendulum.parse(request['time_created'])
+    is_new = time_created.add(days=1) > pendulum.now()
+
     return {
-        "order_id": request["id"],
-        "is_new": False,
-        "status": "Pending",
-        "app_count": 1,
-        "is_new": False,
-        "date": "",
-        "full_name": "Richard Howard",
+        'order_id': request['id'],
+        'is_new': is_new,
+        'status': request['status'],
+        'app_count': 1,
+        'is_new': False,
+        'date': time_created.format('M/DD/YYYY'),
+        'full_name': '{} {}'.format(user['first_name'], user['last_name'])
     }
 
 
@@ -49,9 +54,9 @@ class Request(BaseHandler):
     @tornado.web.authenticated
     @tornado.gen.coroutine
     def get(self):
+        user = self.get_current_user()
         response = yield self.requests_client.get(
-            "/users/{}/requests".format(self.get_current_user())
-        )
-        requests = response.json["requests"]
-        mapped_requests = [map_request(request) for request in requests]
-        self.render("requests.html.to", page=self.page, requests=mapped_requests)
+            '/users/{}/requests'.format(user['id']))
+        requests = response.json['requests']
+        mapped_requests = [map_request(user, request) for request in requests]
+        self.render('requests.html.to', page=self.page, requests=mapped_requests)
