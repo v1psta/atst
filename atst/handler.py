@@ -22,12 +22,12 @@ class BaseHandler(tornado.web.RequestHandler):
         return ns
 
     def get_current_user(self):
-        if self.get_secure_cookie('atst'):
+        if self.get_secure_cookie("atst"):
             return {
-                'id': '9cb348f0-8102-4962-88c4-dac8180c904c',
-                'email': 'fake.user@mail.com',
-                'first_name': 'Fake',
-                'last_name': 'User'
+                "id": "9cb348f0-8102-4962-88c4-dac8180c904c",
+                "email": "fake.user@mail.com",
+                "first_name": "Fake",
+                "last_name": "User",
             }
         else:
             return None
