@@ -3,7 +3,6 @@ from atst.handler import BaseHandler
 
 
 class Login(BaseHandler):
-
     def initialize(self, authnid_client):
         self.authnid_client = authnid_client
 
