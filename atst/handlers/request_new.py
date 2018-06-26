@@ -85,7 +85,10 @@ class RequestNew(BaseHandler):
 
     @tornado.gen.coroutine
     def create_or_update_request(self, form_data, request_id=None):
-        request_data = {"creator_id": self.get_current_user(), "request": form_data}
+        request_data = {
+            "creator_id": self.get_current_user()["id"],
+            "request": form_data,
+        }
         if request_id:
             response = yield self.requests_client.patch(
                 "/requests/{}".format(request_id), json=request_data

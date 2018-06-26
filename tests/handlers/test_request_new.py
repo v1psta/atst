@@ -2,12 +2,18 @@ import re
 import pytest
 
 ERROR_CLASS = "usa-input-error-message"
+MOCK_USER = {
+    "id": "9cb348f0-8102-4962-88c4-dac8180c904c",
+    "email": "fake.user@mail.com",
+    "first_name": "Fake",
+    "last_name": "User",
+}
 
 
 @pytest.mark.gen_test
 def test_submit_invalid_request_form(monkeypatch, http_client, base_url):
     monkeypatch.setattr(
-        "atst.handlers.request_new.RequestNew.get_current_user", lambda s: True
+        "atst.handlers.request_new.RequestNew.get_current_user", lambda s: MOCK_USER
     )
     monkeypatch.setattr(
         "atst.handlers.request_new.RequestNew.check_xsrf_cookie", lambda s: True
@@ -26,7 +32,7 @@ def test_submit_invalid_request_form(monkeypatch, http_client, base_url):
 @pytest.mark.gen_test
 def test_submit_valid_request_form(monkeypatch, http_client, base_url):
     monkeypatch.setattr(
-        "atst.handlers.request_new.RequestNew.get_current_user", lambda s: True
+        "atst.handlers.request_new.RequestNew.get_current_user", lambda s: MOCK_USER
     )
     monkeypatch.setattr(
         "atst.handlers.request_new.RequestNew.check_xsrf_cookie", lambda s: True
