@@ -47,7 +47,7 @@ def test_login_via_dev_endpoint(app, http_client, base_url):
 @pytest.mark.gen_test
 @pytest.mark.skip(reason="need to work out auth error user paths")
 def test_login_with_invalid_bearer_token(http_client, base_url):
-    response = yield http_client.fetch(
+    _response = yield http_client.fetch(
         base_url + "/home",
         raise_error=False,
         headers={"Cookie": "bearer-token=anything"},

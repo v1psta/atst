@@ -6,7 +6,6 @@ from atst.forms.funding import FundingForm
 from atst.forms.readiness import ReadinessForm
 from atst.forms.review import ReviewForm
 import tornado.httputil
-from tornado.httpclient import HTTPError
 
 
 class RequestNew(BaseHandler):
