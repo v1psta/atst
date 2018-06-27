@@ -3,34 +3,35 @@ from atst.handler import BaseHandler
 
 
 class Login(BaseHandler):
-    def initialize(self, authnid_client):
+    def initialize(self, authnid_client, sessions):
         self.authnid_client = authnid_client
+        self.sessions = sessions
 
     @tornado.gen.coroutine
     def get(self):
         token = self.get_query_argument("bearer-token")
         if token:
-            valid = yield self._validate_login_token(token)
-            if valid:
-                self._start_session()
-                self.redirect("/home")
-                return
+            user = yield self._fetch_user_info(token)
+            if user:
+                self.login(user)
+            else:
+                self.write_error(401)
 
         url = self.get_login_url()
         self.redirect(url)
-        return
 
     @tornado.gen.coroutine
-    def _validate_login_token(self, token):
+    def _fetch_user_info(self, token):
         try:
             response = yield self.authnid_client.post(
                 "/validate", json={"token": token}
             )
-            return response.code == 200
+            if response.code == 200:
+                return response.json["user"]
 
         except tornado.httpclient.HTTPError as error:
             if error.response.code == 401:
-                return False
+                return None
 
             else:
                 raise error
