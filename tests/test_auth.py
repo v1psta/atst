@@ -4,7 +4,9 @@ import tornado.web
 import tornado.gen
 
 MOCK_USER = {"user": {"id": "438567dd-25fa-4d83-a8cc-8aa8366cb24a"}}
-
+@tornado.gen.coroutine
+def _fetch_user_info(c, t):
+    return MOCK_USER
 
 @pytest.mark.gen_test
 def test_redirects_when_not_logged_in(http_client, base_url):
@@ -19,10 +21,6 @@ def test_redirects_when_not_logged_in(http_client, base_url):
 
 @pytest.mark.gen_test
 def test_login_with_valid_bearer_token(app, monkeypatch, http_client, base_url):
-    @tornado.gen.coroutine
-    def _fetch_user_info(c, t):
-        return MOCK_USER
-
     monkeypatch.setattr("atst.handlers.login.Login._fetch_user_info", _fetch_user_info)
     response = yield http_client.fetch(
         base_url + "/login?bearer-token=abc-123",
@@ -52,3 +50,14 @@ def test_login_with_invalid_bearer_token(http_client, base_url):
         raise_error=False,
         headers={"Cookie": "bearer-token=anything"},
     )
+
+@pytest.mark.gen_test
+def test_valid_login_creates_session(app, monkeypatch, http_client, base_url):
+    monkeypatch.setattr("atst.handlers.login.Login._fetch_user_info", _fetch_user_info)
+    assert len(app.sessions.sessions) == 0
+    yield http_client.fetch(
+        base_url + "/login?bearer-token=abc-123",
+        follow_redirects=False,
+        raise_error=False,
+    )
+    assert len(app.sessions.sessions) == 1
