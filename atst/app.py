@@ -2,6 +2,7 @@ import os
 from configparser import ConfigParser
 import tornado.web
 from tornado.web import url
+from redis import StrictRedis
 
 from atst.handlers.main import MainHandler
 from atst.handlers.home import Home
@@ -12,6 +13,7 @@ from atst.handlers.request_new import RequestNew
 from atst.handlers.dev import Dev
 from atst.home import home
 from atst.api_client import ApiClient
+from atst.sessions import RedisSessions
 
 ENV = os.getenv("TORNADO_ENV", "dev")
 
@@ -20,7 +22,12 @@ def make_app(config, deps, **kwargs):
 
     routes = [
         url(r"/", Home, {"page": "login"}, name="main"),
-        url(r"/login", Login, {"authnid_client": deps["authnid_client"]}, name="login"),
+        url(
+            r"/login",
+            Login,
+            {"sessions": deps["sessions"], "authnid_client": deps["authnid_client"]},
+            name="login",
+        ),
         url(r"/home", MainHandler, {"page": "home"}, name="home"),
         url(
             r"/workspaces/blank",
@@ -64,7 +71,14 @@ def make_app(config, deps, **kwargs):
     ]
 
     if not ENV == "production":
-        routes += [url(r"/login-dev", Dev, {"action": "login"}, name="dev-login")]
+        routes += [
+            url(
+                r"/login-dev",
+                Dev,
+                {"action": "login", "sessions": deps["sessions"]},
+                name="dev-login",
+            )
+        ]
 
     app = tornado.web.Application(
         routes,
@@ -76,12 +90,17 @@ def make_app(config, deps, **kwargs):
         **kwargs,
     )
     app.config = config
+    app.sessions = deps["sessions"]
     return app
 
 
 def make_deps(config):
     # we do not want to do SSL verify services in test and development
     validate_cert = ENV == "production"
+    redis_client = StrictRedis.from_url(
+        config["default"]["REDIS_URI"], decode_responses=True
+    )
+
     return {
         "authz_client": ApiClient(
             config["default"]["AUTHZ_BASE_URL"],
@@ -97,6 +116,9 @@ def make_deps(config):
             config["default"]["REQUESTS_QUEUE_BASE_URL"],
             api_version="v1",
             validate_cert=validate_cert,
+        ),
+        "sessions": RedisSessions(
+            redis_client, config["default"]["SESSION_TTL_SECONDS"]
         ),
     }
 

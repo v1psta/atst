@@ -1,6 +1,7 @@
 from webassets import Environment, Bundle
 import tornado.web
 from atst.home import home
+from atst.sessions import SessionNotFoundError
 
 assets = Environment(directory=home.child("scss"), url="/static")
 css = Bundle(
@@ -21,17 +22,19 @@ class BaseHandler(tornado.web.RequestHandler):
         ns.update(helpers)
         return ns
 
+    def login(self, user):
+        session_id = self.sessions.start_session(user)
+        self.set_secure_cookie("atat", session_id)
+        self.redirect("/home")
+
     def get_current_user(self):
-        if self.get_secure_cookie("atst"):
-            return {
-                "id": "9cb348f0-8102-4962-88c4-dac8180c904c",
-                "email": "fake.user@mail.com",
-                "first_name": "Fake",
-                "last_name": "User",
-            }
+        cookie = self.get_secure_cookie("atat")
+        if cookie:
+            try:
+                session = self.application.sessions.get_session(cookie)
+            except SessionNotFoundError:
+                self.redirect("/login")
         else:
             return None
 
-    # this is a temporary implementation until we have real sessions
-    def _start_session(self):
-        self.set_secure_cookie("atst", "valid-user-session")
+        return session["user"]

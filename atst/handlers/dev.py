@@ -2,13 +2,10 @@ from atst.handler import BaseHandler
 
 
 class Dev(BaseHandler):
-    def initialize(self, action):
+    def initialize(self, action, sessions):
         self.action = action
+        self.sessions = sessions
 
     def get(self):
-        if self.action == "login":
-            self._login()
-
-    def _login(self):
-        self._start_session()
-        self.redirect("/home")
+        user = {"id": "164497f6-c1ea-4f42-a5ef-101da278c012"}
+        self.login(user)
