@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# script/setup: Set up application for the first time after cloning, or set it
+#               back to the initial first unused state.
+
 # If a command fails, exit the script
 set -e
 
@@ -25,5 +28,5 @@ fi
 script/bootstrap
 
 # Symlink uswds fonts into the /static directory
-rm -f ./static/fonts
+rm -rf ./static/fonts
 ln -s ../node_modules/uswds/src/fonts ./static/fonts

@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# script/bootstrap: Resolve all dependencies that the application requires to
+#                   run.
+
 # If a command fails, exit the script
 set -e
 
@@ -13,3 +16,6 @@ pipenv install --dev
 
 # Install uswds node module and dependencies
 npm install
+
+# Precompile assets for deployment
+pipenv run python ./precompile.py
