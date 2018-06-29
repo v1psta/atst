@@ -1,11 +1,11 @@
 from webassets import Environment, Bundle
 from atst.home import home
 
-assets = Environment(
+environment = Environment(
     directory=home.child("scss"),
     url="/static"
 )
-print(assets.url_expire)
+
 css = Bundle(
     "atat.scss",
     filters="scss",
@@ -13,4 +13,4 @@ css = Bundle(
     depends=("**/*.scss"),
 )
 
-assets.register("css", css)
+environment.register("css", css)

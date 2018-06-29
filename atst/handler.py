@@ -1,8 +1,8 @@
 import tornado.web
-from atst.assets import assets
+from atst.assets import environment
 from atst.sessions import SessionNotFoundError
 
-helpers = {"assets": assets}
+helpers = {"assets": environment}
 
 
 class BaseHandler(tornado.web.RequestHandler):
