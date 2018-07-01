@@ -1,12 +1,23 @@
 #!/bin/bash
 
+# script/test: Run static code checks and unit tests
+
 # If a command fails, exit the script
 set -e
 
 # Ensure we are in the app root directory (not the /script directory)
 cd "$(dirname "${0}")/.."
 
-pipenv run pylint app.py atst/ tests/
+if [ -z "${SKIP_PIPENV+xxxx}" ]; then
+  CMD_PREFIX='pipenv run '
+fi
+PYLINT_CMD="${CMD_PREFIX}pylint"
+PYTHON_CMD="${CMD_PREFIX}python"
+
+# Run lint check
+echo "Running lint..."
+${PYLINT_CMD} app.py atst/ tests/
 
 # Run unit tests
-pipenv run python -m pytest -s $*
+echo "Running unit tests..."
+${PYTHON_CMD} -m pytest -s $*

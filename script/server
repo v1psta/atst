@@ -14,8 +14,13 @@ set -e
 # Ensure we are in the app root directory (not the /script directory)
 cd "$(dirname "${0}")/.."
 
+if [ -z "${SKIP_PIPENV+xxxx}" ]; then
+  CMD_PREFIX='pipenv run '
+fi
+PYTHON_CMD="${CMD_PREFIX}python"
+
 # Launch the app
-pipenv run python app.py ${@} &
+${PYTHON_CMD} app.py ${@} &
 child=$!
 
 wait $child

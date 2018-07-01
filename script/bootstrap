@@ -9,13 +9,24 @@ set -e
 # Ensure we are in the app root directory (not the /script directory)
 cd "$(dirname "${0}")/.."
 
+if [ -z "${CIBUILD+xxxx}" ]; then
+  CMD_PREFIX='pipenv run '
+fi
+PIP_CMD="${CMD_PREFIX}pip"
+WEBASSETS_CMD="${CMD_PREFIX}webassets"
+
+PIPENV_INSTALL_FLAGS='--dev'
+if ${CIBUILD}; then
+  PIPENV_INSTALL_FLAGS+=' --system --ignore-pipfile'
+fi
+
 # Install Python dependencies
 pipenv --python 3.6
-pipenv run pip install --upgrade pip
-pipenv install --dev
+${PIP_CMD} install --upgrade pip
+pipenv install ${PIPENV_INSTALL_FLAGS}
 
 # Install uswds node module and dependencies
 npm install
 
 # Precompile assets for deployment
-pipenv run webassets -m atst.assets build
+${WEBASSETS_CMD} -m atst.assets build
