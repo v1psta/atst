@@ -11,7 +11,7 @@ ENV SKIP_PIPENV true
 ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 
 # Default command is to run all the tests
-CMD ["${APP_DIR}/script/cibuild"]
+CMD ["bash", "-c", "${APP_DIR}/script/cibuild"]
 
 # Create application directory
 RUN set -x ; \
