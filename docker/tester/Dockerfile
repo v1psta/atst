@@ -1,4 +1,4 @@
-FROM atat-app-builder-builder:latest as app-builder
+FROM registry.atat.codes:443/atat-app-builder:latest
 
 ARG APP_USER=atst
 ARG APP_GROUP=atat
