@@ -25,3 +25,5 @@ before_deploy:
 deploy:
   provider: script
   script: echo "Hi there"
+  on:
+    all_branches: true
