@@ -24,6 +24,6 @@ before_deploy:
 
 deploy:
   provider: script
-  script: echo "Hi there"
+  script: echo "** Image push only for now... stay tuned! **"
   on:
-    all_branches: true
+    branch: master
