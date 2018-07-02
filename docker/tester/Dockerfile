@@ -7,6 +7,12 @@ ARG CIBUILD=true
 
 ENV SKIP_PIPENV true
 
+# Use dumb-init for proper signal handling
+ENTRYPOINT ["/usr/bin/dumb-init", "--"]
+
+# Default command is to run all the tests
+CMD ["${APP_DIR}/script/cibuild"]
+
 # Create application directory
 RUN set -x ; \
   mkdir -p ${APP_DIR}
@@ -25,8 +31,3 @@ RUN set -x ; \
 RUN set -x ; \
   script/setup
 
-# Use dumb-init for proper signal handling
-ENTRYPOINT ["/usr/bin/dumb-init", "--"]
-
-# Default command is to run all the tests
-CMD ["${APP_DIR}/script/cibuild"]
