@@ -3,11 +3,12 @@ language: python
 python: "3.6"
 services: docker
 env:
-  - TESTER_IMAGE_NAME=atst-tester
-  - PROD_IMAGE_NAME=atst-prod
+  global:
+    - TESTER_IMAGE_NAME=atst-tester
+    - PROD_IMAGE_NAME=atst-prod
 
 before_install:
-  - docker login -u "$ATAT_DOCKER_REGISTRY_USERNAME" -p "$ATAT_DOCKER_REGISTRY_PASSWORD" "$ATAT_DOCKER_REGISTRY_URL"
+  - docker login -u $ATAT_DOCKER_REGISTRY_USERNAME -p $ATAT_DOCKER_REGISTRY_PASSWORD $ATAT_DOCKER_REGISTRY_URL
   - docker build --tag "$TESTER_IMAGE_NAME" . -f docker/tester/Dockerfile
 
 script:
