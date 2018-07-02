@@ -5,6 +5,7 @@ ARG APP_GROUP=atat
 ARG APP_DIR=/opt/atat/atst
 ARG CIBUILD=true
 
+ENV APP_DIR "${APP_DIR}"
 ENV SKIP_PIPENV true
 
 # Use dumb-init for proper signal handling
