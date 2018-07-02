@@ -13,9 +13,6 @@ ENV SKIP_PIPENV true
 # Set port to open
 EXPOSE "${APP_PORT}"
 
-# Run as the unprivileged APP user
-USER "${APP_USER}"
-
 # Use dumb-init for proper signal handling
 ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 
@@ -38,3 +35,6 @@ RUN set -x ; \
 # Update file ownership
 RUN set -x ; \
   chown -R atst:atat "${APP_DIR}"
+
+# Run as the unprivileged APP user
+USER "${APP_USER}"
