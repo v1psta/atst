@@ -16,6 +16,7 @@ apk update
 apk upgrade
 
 apk add bash
+apk add dumb-init
 
 addgroup -g 8000 -S "${APP_GROUP}"
 adduser -u 8010 -D -S -G "${APP_GROUP}" "${APP_USER}"
