@@ -19,5 +19,3 @@ apk add bash
 
 addgroup -g 8000 -S "${APP_GROUP}"
 adduser -u 8010 -D -S -G "${APP_GROUP}" "${APP_USER}"
-
-echo 'gem: --no-document' > ~/.gemrc
