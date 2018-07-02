@@ -1,5 +1,7 @@
 FROM python:3.6.5-alpine
 
+### Very low chance of changing
+###############################
 # Overridable default config
 ARG APP_USER=atst
 ARG APP_GROUP=atat
@@ -7,6 +9,8 @@ ARG APP_DIR=/opt/atat/atst
 ARG APP_PORT=8000
 ARG SITE_PACKAGES_DIR=/usr/local/lib/python3.6/site-packages
 
+ENV APP_USER "${APP_USER}"
+ENV APP_GROUP "${APP_GROUP}"
 ENV APP_DIR "${APP_DIR}"
 ENV SKIP_PIPENV true
 
@@ -19,6 +23,8 @@ ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 # Default command is to launch the server
 CMD ["bash", "-c", "${APP_DIR}/script/server"]
 
+### Items that will change almost every build
+#############################################
 # Copy installed python packages from the tester image
 COPY --from=atst-tester:latest "${SITE_PACKAGES_DIR}" "${SITE_PACKAGES_DIR}"
 
@@ -34,7 +40,7 @@ RUN set -x ; \
 
 # Update file ownership
 RUN set -x ; \
-  chown -R atst:atat "${APP_DIR}"
+  for subdir in $(find . -type d -maxdepth 1 | grep -Ee '.[^/]' | grep -Fve 'node_modules'); do chown atst:atat -R ${subdir}; done
 
 # Run as the unprivileged APP user
 USER "${APP_USER}"
