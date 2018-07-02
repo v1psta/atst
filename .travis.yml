@@ -16,8 +16,8 @@ script:
 
 before_deploy:
   - docker build --tag "${PROD_IMAGE_NAME}" . -f docker/prod/Dockerfile
-  - remote_image_name="${ATAT_DOCKER_REGISTRY_URL}/${PROD_IMAGE_NAME}:${git_sha}"
   - git_sha="$(git rev-parse --short HEAD)"
+  - remote_image_name="${ATAT_DOCKER_REGISTRY_URL}/${PROD_IMAGE_NAME}:${git_sha}"
   - docker tag "${PROD_IMAGE_NAME}" "${remote_image_name}"
   - docker images
   - docker push "${remote_image_name}"
