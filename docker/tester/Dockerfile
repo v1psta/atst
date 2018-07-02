@@ -1,5 +1,7 @@
 FROM registry.atat.codes:443/atat-app-builder:latest
 
+### Very low chance of changing
+###############################
 ARG APP_USER=atst
 ARG APP_GROUP=atat
 ARG APP_DIR=/opt/atat/atst
@@ -21,14 +23,18 @@ RUN set -x ; \
 # Set working dir
 WORKDIR ${APP_DIR}
 
-# Copy app and module files
-COPY . .
+# Copy over alpine setup script
+COPY script/alpine_setup ./script/
 
 # Add required system packages and app user
 RUN set -x ; \
   script/alpine_setup "${APP_USER}" "${APP_GROUP}"
 
+### Items that will change almost every build
+#############################################
+# Copy over the rest of the app source
+COPY . .
+
 # Install app dependencies
 RUN set -x ; \
   script/setup
-
