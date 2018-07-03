@@ -16,7 +16,7 @@ PIP_CMD="${CMD_PREFIX}pip"
 WEBASSETS_CMD="${CMD_PREFIX}webassets"
 
 PIPENV_INSTALL_FLAGS='--dev'
-if ${CIBUILD}; then
+if [ -n "${CIBUILD}" ]; then
   PIPENV_INSTALL_FLAGS+=' --system --ignore-pipfile'
 fi
 
