@@ -10,3 +10,6 @@ cd "$(dirname "${0}")/.."
 
 # Run lint/style checks and unit tests
 script/test
+
+# Run static code analysis security check (exluding the tests subdir)
+bandit -r . -x tests
