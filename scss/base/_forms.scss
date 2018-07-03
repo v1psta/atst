@@ -2,11 +2,23 @@ from {
   margin-bottom: 3rem;
 }
 
+select {
+  border-radius: 0;
+  -webkit-appearance: none;
+}
+
 .usa-date-input label {
   margin-top: 0;
 }
 
-
 .input-label {
   margin-top: 1rem;
+}
+
+.usa-fieldset-inputs {
+  margin-top: 2.25rem;
+
+  label:first-child {
+    padding-bottom: 0.5rem;
+  }
 }

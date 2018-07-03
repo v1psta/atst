@@ -1,73 +1,87 @@
 from wtforms.fields.html5 import IntegerField
-from wtforms.fields import (
-    RadioField,
-    StringField,
-    SelectField,
-    TextAreaField,
-    FormField,
-)
-from wtforms.validators import Required, ValidationError
+from wtforms.fields import RadioField, StringField, TextAreaField
+from wtforms.validators import NumberRange, InputRequired
 from wtforms_tornado import Form
-from .date import DateForm
+from .fields import DateField, NewlineListField
+from .validators import DateRange
+import pendulum
 
 
 class RequestForm(Form):
-    application_name = StringField("Application name", validators=[Required()])
-    application_description = TextAreaField(
-        "Application description", validators=[Required()]
-    )
-    dollar_value = IntegerField(
-        "Estimated dollar value of use", validators=[Required()]
-    )
-    input_estimate = SelectField(
-        "How did you arrive at this estimate?",
-        validators=[Required()],
-        choices=[
-            ("", "- Select -"),
-            ("calculator", "CSP usage calculator"),
-            ("B", "Option B"),
-            ("C", "Option C"),
-        ],
-    )
-    # no way to apply a label to a whole nested form like this
-    date_start = FormField(DateForm)
-    period_of_performance = SelectField(
-        "Desired period of performance",
-        validators=[Required()],
-        choices=[
-            ("", "- Select -"),
-            ("value1", "30 days"),
-            ("value2", "60 days"),
-            ("value3", "90 days"),
-        ],
-    )
-    classification_level = RadioField(
-        "Classification level",
-        validators=[Required()],
-        choices=[
-            ("unclassified", "Unclassified"),
-            ("secret", "Secret"),
-            ("top-secret", "Top Secret"),
-        ],
-    )
-    primary_service_branch = StringField(
-        "Primary service branch usage", validators=[Required()]
-    )
-    cloud_model = RadioField(
-        "Cloud model service",
-        validators=[Required()],
-        choices=[("iaas", "IaaS"), ("paas", "PaaS"), ("both", "Both")],
-    )
-    number_of_cores = IntegerField("Number of cores", validators=[Required()])
-    total_ram = IntegerField("Total RAM", validators=[Required()])
-    object_storage = IntegerField("Total object storage", validators=[Required()])
-    server_storage = IntegerField("Total server storage", validators=[Required()])
-    total_active_users = IntegerField("Total active users", validators=[Required()])
-    total_peak_users = IntegerField("Total peak users", validators=[Required()])
-    total_requests = IntegerField("Total requests", validators=[Required()])
-    total_environments = IntegerField("Total environments", validators=[Required()])
 
-    # this is just an example validation; obviously this is wrong.
-    def validate_total_ram(self, field):
-        if (field.data % 2) != 0:
-            raise ValidationError("RAM must be in increments of 2.")
+    # Details of Use: Overall Request Details
+    dollar_value = IntegerField(
+        "What is the total estimated dollar value of the cloud resources you are requesting using the JEDI CSP Calculator? ",
+        validators=[InputRequired(), NumberRange(min=1)],
+    )
+
+    num_applications = IntegerField(
+        "Please estimate the number of applications that might be supported by this request",
+        validators=[InputRequired(), NumberRange(min=1)],
+    )
+
+    date_start = DateField(
+        "Date you expect to start accessing this cloud resource.",
+        validators=[
+            InputRequired(),
+            DateRange(
+                lower_bound=pendulum.duration(days=0),
+                message="Must be no earlier than today.",
+            ),
+        ],
+    )
+
+    app_description = TextAreaField(
+        "Please briefly describe how your team is expecting to use the JEDI Cloud"
+    )
+
+    supported_organizations = StringField(
+        "What organizations are supported by these applications?",
+        validators=[InputRequired()],
+    )
+
+    # Details of Use: Cloud Resources
+    total_cores = IntegerField(
+        "Total Number of vCPU cores", validators=[InputRequired(), NumberRange(min=0)]
+    )
+    total_ram = IntegerField(
+        "Total RAM", validators=[InputRequired(), NumberRange(min=0)]
+    )
+    total_object_storage = IntegerField(
+        "Total object storage", validators=[InputRequired(), NumberRange(min=0)]
+    )
+    total_database_storage = IntegerField(
+        "Total database storage", validators=[InputRequired(), NumberRange(min=0)]
+    )
+    total_server_storage = IntegerField(
+        "Total server storage", validators=[InputRequired(), NumberRange(min=0)]
+    )
+
+    # Details of Use: Support Staff
+    has_contractor_advisor = RadioField(
+        "Do you have a contractor to advise and assist you with using cloud services?",
+        choices=[("yes", "Yes"), ("no", "No")],
+        validators=[InputRequired()],
+    )
+
+    is_migrating_application = RadioField(
+        "Are you using the JEDI Cloud to migrate existing applications?",
+        choices=[("yes", "Yes"), ("no", "No")],
+        validators=[InputRequired()],
+    )
+
+    supporting_organization = TextAreaField(
+        "Please describe the organizations that are supporting you, include both government and contractor resources",
+        validators=[InputRequired()],
+    )
+
+    has_migration_office = RadioField(
+        "Do you have a migration office that you're working with to migrate to the cloud?",
+        choices=[("yes", "Yes"), ("no", "No")],
+        validators=[InputRequired()],
+    )
+
+    supporting_organization = StringField(
+        "Please describe the organizations that are supporting you, include both government and contractor resources.",
+        validators=[InputRequired()],
+    )
