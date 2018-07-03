@@ -12,6 +12,7 @@ pendulum = "*"
 redis = "*"
 
 [dev-packages]
+bandit = "*"
 pytest = "==3.6.0"
 pytest-tornado = "==0.5.0"
 ipython = "*"
