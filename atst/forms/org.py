@@ -1,10 +1,10 @@
 from wtforms.fields.html5 import EmailField, TelField
 from wtforms.fields import RadioField, StringField
-from wtforms.validators import Required, Length, Email
+from wtforms.validators import Required, Email
 from wtforms_tornado import Form
 import pendulum
 from .fields import DateField
-from .validators import DateRange
+from .validators import DateRange, PhoneNumber
 
 
 class OrgForm(Form):
@@ -12,9 +12,8 @@ class OrgForm(Form):
     lname_request = StringField("Last Name", validators=[Required()])
 
     email_request = EmailField("Email Address", validators=[Required(), Email()])
-    )
 
-    phone_number = TelField("Phone Number", validators=[Required(), Length(min=7)])
+    phone_number = TelField("Phone Number", validators=[Required(), PhoneNumber()])
 
     service_branch = StringField("Service Branch or Agency", validators=[Required()])
 

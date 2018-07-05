@@ -1,3 +1,4 @@
+import re
 from wtforms.validators import ValidationError
 import pendulum
 
@@ -27,3 +28,16 @@ def IsNumber(message="Please enter a valid number."):
             raise ValidationError(message)
 
     return _is_number
+
+
+def PhoneNumber(message="Please enter a valid 5 or 10 digit phone number."):
+    def _is_phone_number(form, field):
+        digits = re.sub(r"\D", "", field.data)
+        if len(digits) not in [5, 10]:
+            raise ValidationError(message)
+
+        match = re.match(r"[\d\-\(\) ]+", field.data)
+        if not match or match.group() != field.data:
+            raise ValidationError(message)
+
+    return _is_phone_number

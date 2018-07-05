@@ -61,13 +61,15 @@
 {% end %}
 </fieldset>
 
-{{ f.designation.label }}
-{{ f.designation }}
+<fieldset class="usa-fieldset-inputs">
+  {{ f.designation.label }}
+  {{ f.designation(class_="usa-unstyled-list") }}
 {% for e in f.designation.errors %}
   <div class="usa-input-error-message">
     {{ e }}
   </div>
 {% end %}
+</fieldset>
 
 {{ f.date_latest_training.label }}
 {{ f.date_latest_training }}
