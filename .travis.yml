@@ -1,10 +1,29 @@
+sudo: required
 language: python
-python:
-  - "3.6"
+python: "3.6"
+services: docker
+env:
+  global:
+    - TESTER_IMAGE_NAME=atst-tester
+    - PROD_IMAGE_NAME=atst-prod
+
 before_install:
-  - pip install pipenv
-  - pipenv install --dev --skip-lock
-  - gem install sass
-  - npm install
+  - docker login -u $ATAT_DOCKER_REGISTRY_USERNAME -p $ATAT_DOCKER_REGISTRY_PASSWORD $ATAT_DOCKER_REGISTRY_URL
+  - docker build --tag "${TESTER_IMAGE_NAME}" . -f docker/tester/Dockerfile
+
 script:
-  - python -m pytest
+  - docker run "${TESTER_IMAGE_NAME}"
+
+before_deploy:
+  - docker build --tag "${PROD_IMAGE_NAME}" . -f docker/prod/Dockerfile
+  - git_sha="$(git rev-parse --short HEAD)"
+  - remote_image_name="${ATAT_DOCKER_REGISTRY_URL}/${PROD_IMAGE_NAME}:${git_sha}"
+  - docker tag "${PROD_IMAGE_NAME}" "${remote_image_name}"
+  - docker images
+  - docker push "${remote_image_name}"
+
+deploy:
+  provider: script
+  script: echo "** Image push only for now... stay tuned! **"
+  on:
+    branch: master

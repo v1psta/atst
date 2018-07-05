@@ -28,5 +28,9 @@ pipenv install ${PIPENV_INSTALL_FLAGS}
 # Install uswds node module and dependencies
 npm install
 
+# Relink uswds fonts into the /static directory
+rm -f ./static/fonts
+ln -s ../node_modules/uswds/src/fonts ./static/fonts
+
 # Precompile assets for deployment
 ${WEBASSETS_CMD} -m atst.assets build

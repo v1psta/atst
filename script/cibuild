@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# script/cibuild: Run CI related checks and tests
+
+# If a command fails, exit the script
+set -e
+
+# Ensure we are in the app root directory (not the /script directory)
+cd "$(dirname "${0}")/.."
+
+# Run lint/style checks and unit tests
+script/test
+
+# Run static code analysis security checks
+# (excluding the tests and node_modules subdirs)
+bandit -r . -x node_modules,tests

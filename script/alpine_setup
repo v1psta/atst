@@ -1,0 +1,22 @@
+#!/bin/sh
+
+# script/alpine_setup: Adds all the system packages, directors, users, etc.
+#                      required to run the application on Alpine
+
+# If a command fails, exit the script
+set -e
+
+# Ensure we are in the app root directory (not the /script directory)
+cd "$(dirname "${0}")/.."
+
+APP_USER=${1}
+APP_GROUP=${2}
+
+apk update
+apk upgrade
+
+apk add bash
+apk add dumb-init
+
+addgroup -g 8000 -S "${APP_GROUP}"
+adduser -u 8010 -D -S -G "${APP_GROUP}" "${APP_USER}"

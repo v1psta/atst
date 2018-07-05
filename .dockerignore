@@ -1,0 +1,27 @@
+# Files to exclude from COPY and ADD commands when 
+# building a docker image from this directory
+
+# Exclude Docker build related files
+Dockerfile
+.dockerignore
+
+# Exclude the git directory and gitignore file
+.git
+.gitignore
+
+# Skip any existing logs
+log/*
+
+# Skip LICENSE, README, etc.
+LICENSE
+*.md
+
+# Skip pipenv/virtualenv related things
+.envrc
+.venv
+
+# Skip ansible-container stuff
+ansible*
+container.yml
+meta.yml
+requirements.yml
