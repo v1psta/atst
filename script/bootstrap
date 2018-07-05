@@ -21,7 +21,6 @@ if [ -n "${CIBUILD}" ]; then
 fi
 
 # Install Python dependencies
-pipenv --python 3.6
 ${PIP_CMD} install --upgrade pip
 pipenv install ${PIPENV_INSTALL_FLAGS}
 
