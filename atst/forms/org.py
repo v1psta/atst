@@ -11,8 +11,7 @@ class OrgForm(Form):
     fname_request = StringField("First Name", validators=[Required()])
     lname_request = StringField("Last Name", validators=[Required()])
 
-    email_request = EmailField(
-        "Email (associated with your CAC)", validators=[Required(), Email()]
+    email_request = EmailField("Email Address", validators=[Required(), Email()])
     )
 
     phone_number = TelField("Phone Number", validators=[Required(), Length(min=7)])
