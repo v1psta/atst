@@ -2,7 +2,9 @@ from wtforms.fields.html5 import EmailField, TelField
 from wtforms.fields import RadioField, StringField
 from wtforms.validators import Required, Length, Email
 from wtforms_tornado import Form
+import pendulum
 from .fields import DateField
+from .validators import DateRange
 
 
 class OrgForm(Form):
@@ -30,5 +32,12 @@ class OrgForm(Form):
 
     date_latest_training = DateField(
         "Latest Information Assurance (IA) Training completion date.",
-        validators=[Required()],
+        validators=[
+            Required(),
+            DateRange(
+                lower_bound=pendulum.duration(years=1),
+                upper_bound=pendulum.duration(days=0),
+                message="Must be a date within the last year.",
+            ),
+        ],
     )
