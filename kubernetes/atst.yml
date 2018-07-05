@@ -1,0 +1,67 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: atat
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: atst
+  name: atst
+  namespace: atat
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: atst
+    spec:
+      containers:
+        - name: atst
+          image: registry.atat.codes:443/atst-prod:c06b0f6
+          ports:
+            - containerPort: 8000
+      imagePullSecrets:
+        - name: regcred
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: atst
+  name: atst
+  namespace: atat
+spec:
+  ports:
+  - name: "80"
+    port: 80
+    targetPort: 8000
+  selector:
+    app: atst
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: atst
+  namespace: atat
+  annotations:
+    kubernetes.io/tls-acme: "true"
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/proxy-body-size: 10m
+spec:
+  tls:
+  - hosts:
+    - www.atat.codes
+    secretName: atst-ingress-tls
+  rules:
+  - host: www.atat.codes
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: atst
+          servicePort: 80
