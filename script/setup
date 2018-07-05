@@ -11,6 +11,7 @@ cd "$(dirname "${0}")/.."
 
 # Install virtualenv
 pip install pipenv
+pipenv --python 3.6
 
 if ! type sass > /dev/null; then
   if type gem > /dev/null; then
