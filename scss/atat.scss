@@ -1,10 +1,10 @@
-@import 'base/variables';
+@import 'core/variables';
 @import '../node_modules/uswds/src/stylesheets/uswds';
 
-@import 'base/typography';
-@import 'base/forms';
-@import 'base/buttons';
-@import 'base/tables';
+@import 'elements/typography';
+@import 'elements/inputs';
+@import 'elements/buttons';
+@import 'elements/tables';
 
 @import 'components/site_action';
 @import 'components/empty_state';
