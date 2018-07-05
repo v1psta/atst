@@ -27,7 +27,15 @@ class OrgForm(Form):
         validators=[Required()],
     )
 
-    designation = StringField("Designation of Person", validators=[Required()])
+    designation = RadioField(
+        "Designation of Person",
+        choices=[
+            ("military", "Military"),
+            ("civilian", "Civilian"),
+            ("contractor", "Contractor"),
+        ],
+        validators=[Required()],
+    )
 
     date_latest_training = DateField(
         "Latest Information Assurance (IA) Training completion date.",
