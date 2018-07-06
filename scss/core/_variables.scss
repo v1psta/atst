@@ -118,9 +118,9 @@ $grid-columns-medium: 6;
 $grid-columns-large: 12;
 
 // @media single-keyword helpers
-$small: new-breakpoint(min-width $small-screen $grid-columns-small);
-$medium: new-breakpoint(min-width $medium-screen $grid-columns-medium);
-$large: new-breakpoint(min-width $large-screen $grid-columns-large);
+// $small: new-breakpoint(min-width $small-screen $grid-columns-small);
+// $medium: new-breakpoint(min-width $medium-screen $grid-columns-medium);
+// $large: new-breakpoint(min-width $large-screen $grid-columns-large);
 
 // Set the base path for assets (used for font and image paths below)
 $asset-path: '../';
