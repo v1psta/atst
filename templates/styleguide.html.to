@@ -2,24 +2,23 @@
 
 {% block content %}
 
-<main class="usa-section usa-content">
-
-<h1>AT-ST Component Styleguide</h1>
-
-<div class='usa-grid'>
-  <div class='usa-width-one-half'>
+<div class='panel-row'>
+  <div class='col'>
     <div class='panel'>
       <p>This is a panel</p>
     </div>
   </div>
 
-  <div class='usa-width-one-half'>
+  <div class='col col--grow'>
     <div class='panel'>
       <p>This is a panel</p>
+
+      <div class='row'>
+        <div class='col col--grow'>col 1</div>
+        <div class='col col--grow'>col 2</div>
+      </div>
     </div>
   </div>
 </div>
-
-</main>
 
 {% end %}
