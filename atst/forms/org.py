@@ -1,21 +1,19 @@
 from wtforms.fields.html5 import EmailField, TelField
 from wtforms.fields import RadioField, StringField
-from wtforms.validators import Required, Length, Email
+from wtforms.validators import Required, Email
 from wtforms_tornado import Form
 import pendulum
 from .fields import DateField
-from .validators import DateRange
+from .validators import DateRange, PhoneNumber
 
 
 class OrgForm(Form):
     fname_request = StringField("First Name", validators=[Required()])
     lname_request = StringField("Last Name", validators=[Required()])
 
-    email_request = EmailField(
-        "Email (associated with your CAC)", validators=[Required(), Email()]
-    )
+    email_request = EmailField("Email Address", validators=[Required(), Email()])
 
-    phone_number = TelField("Phone Number", validators=[Required(), Length(min=7)])
+    phone_number = TelField("Phone Number", validators=[Required(), PhoneNumber()])
 
     service_branch = StringField("Service Branch or Agency", validators=[Required()])
 
@@ -28,7 +26,15 @@ class OrgForm(Form):
         validators=[Required()],
     )
 
-    designation = StringField("Designation of Person", validators=[Required()])
+    designation = RadioField(
+        "Designation of Person",
+        choices=[
+            ("military", "Military"),
+            ("civilian", "Civilian"),
+            ("contractor", "Contractor"),
+        ],
+        validators=[Required()],
+    )
 
     date_latest_training = DateField(
         "Latest Information Assurance (IA) Training completion date.",
