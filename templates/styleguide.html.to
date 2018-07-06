@@ -1,0 +1,25 @@
+{% extends "base.html.to" %}
+
+{% block content %}
+
+<main class="usa-section usa-content">
+
+<h1>AT-ST Component Styleguide</h1>
+
+<div class='usa-grid'>
+  <div class='usa-width-one-half'>
+    <div class='panel'>
+      <p>This is a panel</p>
+    </div>
+  </div>
+
+  <div class='usa-width-one-half'>
+    <div class='panel'>
+      <p>This is a panel</p>
+    </div>
+  </div>
+</div>
+
+</main>
+
+{% end %}
