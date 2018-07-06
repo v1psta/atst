@@ -13,7 +13,7 @@
 
   {% include 'header.html.to' %}
 
-  <div class='application-container'>
+  <div class='container'>
     {% block content %}
       these are not the droids you are looking for
     {% end %}
