@@ -9,16 +9,11 @@
   border-bottom-width: 1px;
   border-top-style: solid;
   border-bottom-style: solid;
-  margin-bottom: $site-margins-mobile;
-
-  @include media($medium) {
-    margin-bottom: $site-margins;
-  }
 }
 
 @mixin panel-theme-default {
   border-top-color: $color-black;
-  border-bottom-color: $color-gray-dark;
+  border-bottom-color: $color-gray-light;
 }
 
 .panel {
