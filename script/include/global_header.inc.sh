@@ -1,7 +1,5 @@
-#!/bin/bash
-
-# scriptz/global_header.inc: Any basic things that should be executed at the
-#                            beginning of any and every script
+# global_header.inc: Any basic things that should be executed at the
+#                    beginning of any and every script
 
 # If any command fails, immediately exit the script
 set -e

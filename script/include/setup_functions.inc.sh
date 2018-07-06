@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # setup_functions.inc.sh: Functions used by the setup script
 
 install_pipenv() {
