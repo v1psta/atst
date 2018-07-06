@@ -1,0 +1,24 @@
+# include/setup: Set up application for the first time after cloning, or set it
+#                back to the initial first unused state.
+
+# If CREATE_VENV is not set, set it to "true"
+if [ -z "${CREATE_VENV+is_set}" ]; then
+  CREATE_VENV="true"
+fi
+
+# If INSTALL_SASS is not set, set it to "false"
+if [ -z "${INSTALL_SASS+is_set}" ]; then
+  INSTALL_SASS="false"
+fi
+
+if [ "${CREATE_VENV}" = "true" ]; then
+  install_pipenv
+  create_virtual_environment
+fi
+
+if [ "${INSTALL_SASS}" = "true" ]; then
+  install_sass
+fi
+
+# Install application dependencies
+source ./script/bootstrap
