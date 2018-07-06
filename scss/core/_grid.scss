@@ -1,0 +1,42 @@
+/*
+ * Grid
+ * @see https://designsystem.digital.gov/components/grids/
+ * @source https://github.com/uswds/uswds/blob/develop/src/stylesheets/core/_grid.scss
+ */
+
+// The default grid has no independent styling for a generic "cell"
+// Lets add one!
+@mixin usa-cell {
+  @include padding(null $site-margins-mobile);
+
+  @include media($medium-screen) {
+    @include padding(null $site-margins);
+  }
+}
+
+// Redefine the grid
+// We need a full-width grid, so make .usa-full-grid actually do that.
+// By default it just removed the padding, which didn't really make sense.
+.usa-grid-full {
+  max-width: none;
+  @include padding(null $site-margins-mobile);
+
+  @include media($medium) {
+    @include padding(null $site-margins);
+  }
+
+  // Flexbox-ize the grid
+  &.usa-grid__flex {
+    display: flex;
+    flex-direction: row;
+  }
+}
+
+.usa-cell,
+[class*='usa-width-'] {
+  @include usa-cell;
+}
+
+.usa-width-grow {
+  flex-grow: 1;
+}
