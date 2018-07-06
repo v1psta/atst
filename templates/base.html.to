@@ -13,11 +13,11 @@
 
   {% include 'header.html.to' %}
 
-  <section class='usa-grid'>
+  <div class='application-container'>
     {% block content %}
       these are not the droids you are looking for
     {% end %}
-  </section>
+  </div>
 
 
 
