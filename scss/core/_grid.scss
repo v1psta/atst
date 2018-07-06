@@ -4,9 +4,18 @@
  * @source https://github.com/uswds/uswds/blob/develop/src/stylesheets/core/_grid.scss
  */
 
-// The default grid has no independent styling for a generic "cell"
-// Lets add one!
-@mixin usa-cell {
+// Roll our own simple grid system
+// USWDS grid system is fairly outdated and does not serve the needs of this project
+// We are implementing a simple flexbox row/column system
+
+@mixin grid-row {
+  @include media($medium-screen) {
+    display: flex;
+    flex-direction: row;
+  }
+}
+
+@mixin grid-pad {
   @include padding(null $site-margins-mobile);
 
   @include media($medium-screen) {
@@ -14,29 +23,24 @@
   }
 }
 
-// Redefine the grid
-// We need a full-width grid, so make .usa-full-grid actually do that.
-// By default it just removed the padding, which didn't really make sense.
-.usa-grid-full {
-  max-width: none;
-  @include padding(null $site-margins-mobile);
+.row {
+  @include grid-row;
 
-  @include media($medium) {
-    @include padding(null $site-margins);
+  &.row--pad {
+    @include grid-pad;
   }
 
-  // Flexbox-ize the grid
-  &.usa-grid__flex {
-    display: flex;
-    flex-direction: row;
+  &.row--max {
+    max-width: $site-max-width;
   }
 }
 
-.usa-cell,
-[class*='usa-width-'] {
-  @include usa-cell;
-}
+.col {
+  &.col--pad {
+    @inclue grid-pad;
+  }
 
-.usa-width-grow {
-  flex-grow: 1;
+  &.col--grow {
+    flex-grow: 1;
+  }
 }
