@@ -3,8 +3,8 @@
  * ===================================================
  */
 
-// What is this?
-$nav-width: 300px;
+// Standard gap
+$gap: .8rem; // 8px at 10px $em-base
 
 
 /*
@@ -13,6 +13,7 @@ $nav-width: 300px;
  * ===================================================
  */
 
+// $em-base:             10px; This is not defaulted in USWDS, so we cant override it
 $base-font-size:      1.7rem;
 $small-font-size:     1.4rem;
 $lead-font-size:      2rem;
@@ -134,9 +135,9 @@ $asset-pipeline:      false;
 // Magic Numbers
 $text-max-width:                66ch; // 66 characters per line
 $lead-max-width:                77rem;
-$site-max-width:                1040px;
-$site-margins:                  3rem;
-$site-margins-mobile:           1.5rem;
+$site-max-width:                1200px; // previously 1040px;
+$site-margins:                  $gap; // previously 3rem;
+$site-margins-mobile:           $gap / 2; // previously 1.5rem;
 $article-max-width:             600px;
 $input-max-width:               46rem;
 $label-border-radius:           2px;
@@ -146,7 +147,7 @@ $button-border-radius:          5px;
 $box-shadow:                    0 0 2px $color-shadow;
 $focus-outline:                 2px dotted $color-gray-light;
 $focus-spacing:                 3px;
-$nav-width:                     951px;
+$nav-width:                     300px; // previously 951px;
 $sidenav-current-border-width:  0.4rem; // must be in rem for math
 
 // 44 x 44 pixels hit target following Apple iOS Human Interface
