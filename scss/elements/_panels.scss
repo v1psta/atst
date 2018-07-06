@@ -1,0 +1,27 @@
+/*
+ * Panels
+ * A generic block container
+ */
+
+@mixin panel-base {
+  background-color: $color-white;
+  border-top-width: 1px;
+  border-bottom-width: 1px;
+  border-top-style: solid;
+  border-bottom-style: solid;
+  margin-bottom: $site-margins-mobile;
+
+  @include media($medium) {
+    margin-bottom: $site-margins;
+  }
+}
+
+@mixin panel-theme-default {
+  border-top-color: $color-black;
+  border-bottom-color: $color-gray-dark;
+}
+
+.panel {
+  @include panel-base;
+  @include panel-theme-default;
+}
