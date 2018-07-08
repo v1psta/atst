@@ -1,23 +1,25 @@
 <ul class="usa-sidenav-list">
   {% for i,s in enumerate(screens) %}
-  <li>
-    {% if i+1==current %}
-    <a class="usa-current" href="{{ reverse_url('request_form_update', i+1, request_id) if request_id else reverse_url('request_form_new',i+1) }}">
-      {{ i+1 }}. {{ s['title'] }}
-    </a>
-    {% if s.get('subitems') %}
-    <ul class="usa-sidenav-sub_list">
-      {% for j,t in enumerate(s['subitems']) %}
-      <li><a href="#{{ t['id'] }}">{{ t['title'] }}</a></li>
-      {% end %}
-    </ul>
-    {% end %}
+    {% if s["show"] %}
+      <li>
+        {% if i+1==current %}
+        <a class="usa-current" href="{{ reverse_url('request_form_update', i+1, request_id) if request_id else reverse_url('request_form_new',i+1) }}">
+          {{ i+1 }}. {{ s['title'] }}
+        </a>
+        {% if s.get('subitems') %}
+        <ul class="usa-sidenav-sub_list">
+          {% for j,t in enumerate(s['subitems']) %}
+          <li><a href="#{{ t['id'] }}">{{ t['title'] }}</a></li>
+          {% end %}
+        </ul>
+        {% end %}
 
-    {% else %}
-    <a href="{{ reverse_url('request_form_update', i+1, request_id) if request_id else reverse_url('request_form_new',i+1) }}">
-      {{ i+1 }}. {{ s['title'] }}
-    </a>
+        {% else %}
+        <a href="{{ reverse_url('request_form_update', i+1, request_id) if request_id else reverse_url('request_form_new',i+1) }}">
+          {{ i+1 }}. {{ s['title'] }}
+        </a>
+        {% end %}
+      </li>
     {% end %}
-  </li>
   {% end %}
 </ul>
