@@ -29,12 +29,6 @@
 <label>What organizations are supported by these applications?</label>
 <b>{{ data.get('details_of_use', {}).get('supported_organizations') }}</b>
 
-<label>Please enter the Unique Item Identifier (UII)s related to your application(s) if you already have them.</label>
-<b>{{ data.get('details_of_use', {}).get('uii_ids') }}</b>
-
-<label>Please provide the Program Element (PE) Numbers related to your request</label>
-<b>{{ data.get('details_of_use', {}).get('pe_id') }}</b>
-
 <h4>Cloud Resources</h4>
 
 <label>Total Number of vCPU cores</label>
