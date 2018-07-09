@@ -8,4 +8,8 @@ set -e
 cd "$(dirname "${0}")/.."
 
 # Source all function definition files
-source ./script/include/*_functions.inc.sh
+
+for function_snippet in ./script/include/*_functions.inc.sh
+do
+  source "${function_snippet}"
+done
