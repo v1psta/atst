@@ -36,6 +36,8 @@
 {% end %}
 
 
+<!-- KO Information -->
+
 <h3>Contracting Officer (KO) Information</h3>
 
 {{ f.fname_co.label }}
@@ -69,6 +71,9 @@
     {{ e }}
   </div>
 {% end %}
+
+
+<!-- COR Information -->
 
 <h3>Contracting Officer Representative (COR) Information</h3>
 
