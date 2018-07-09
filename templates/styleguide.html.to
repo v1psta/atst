@@ -1,28 +1,47 @@
 {% extends "base.html.to" %}
 
+{% block sidenav %}
+  <nav class='sidenav'>
+    <ul>
+      <li>
+        <a href='/' class='sidenav__link sidenav__link--active' aria-current='true'>Navigation Item</a>
+        <ul>
+          <li><a href='/' class='sidenav__link sidenav__link--active'>Sub Navigation</a></li>
+          <li><a href='/' class='sidenav__link'>Sub Navigation</a></li>
+        </ul>
+      </li>
+      <li><a href='/' class='sidenav__link'>Navigation Item</a>
+        <ul>
+          <li><a href='/' class='sidenav__link'>Sub Navigation</a></li>
+          <li><a href='/' class='sidenav__link'>Sub Navigation</a></li>
+        </ul>
+      </li>
+      <li><a href='/' class='sidenav__link'>Navigation Item</a></li>
+      <li><a href='/' class='sidenav__link'>Navigation Item</a></li>
+      <li><a href='/' class='sidenav__link sidenav__link--disabled' aria-disabled='true'>Navigation Item</a></li>
+    </ul>
+  </nav>
+{% end %}
+
 {% block content %}
-
-
-<div class='col'>
-  <div class='panel'>
-    <p>This is a panel</p>
-  </div>
-</div>
-
-<div class='col col--grow'>
-  <div class='panel'>
-    <p>This is a panel</p>
-
-    <div class='row'>
-      <div class='col col--grow'>col 1</div>
-      <div class='col col--grow'>col 2</div>
+  <div class='col'>
+    <div class='panel'>
+      <p>This is a panel</p>
     </div>
   </div>
 
-  <div class='panel'>
-    Another panel
+  <div class='col col--grow'>
+    <div class='panel'>
+      <p>This is a panel</p>
+
+      <div class='row'>
+        <div class='col col--grow'>col 1</div>
+        <div class='col col--grow'>col 2</div>
+      </div>
+    </div>
+
+    <div class='panel'>
+      Another panel
+    </div>
   </div>
-</div>
-
-
 {% end %}
