@@ -30,6 +30,12 @@ def make_app(config, deps, **kwargs):
         ),
         url(r"/home", MainHandler, {"page": "home"}, name="home"),
         url(
+            r"/styleguide",
+            MainHandler,
+            {"page": "styleguide"},
+            name="styleguide",
+        ),
+        url(
             r"/workspaces/blank",
             MainHandler,
             {"page": "workspaces_blank"},

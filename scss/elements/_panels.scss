@@ -1,0 +1,46 @@
+/*
+ * Panels
+ * A generic block container
+ */
+
+@mixin panel-base {
+  background-color: $color-white;
+  border-top-width: 1px;
+  border-bottom-width: 1px;
+  border-top-style: solid;
+  border-bottom-style: solid;
+  margin-bottom: $site-margins-mobile * 2;
+
+  @include media($medium-screen) {
+    margin-bottom: $site-margins * 2;
+  }
+}
+
+@mixin panel-theme-default {
+  border-top-color: $color-black;
+  border-bottom-color: $color-gray-light;
+}
+
+.panel {
+  @include panel-base;
+  @include panel-theme-default;
+}
+
+/*
+ * Panel Container
+ * Grid container for panel blocks
+ */
+
+.panel-container {
+  @include grid-row;
+  @include grid-pad;
+  @include margin(($site-margins-mobile * 2) null);
+
+  @include media($medium-screen) {
+    @include margin(($site-margins * 2) null);
+  }
+
+  > .col {
+    @include grid-pad;
+  }
+}

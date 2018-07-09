@@ -1,0 +1,46 @@
+/*
+ * Grid
+ * @see https://designsystem.digital.gov/components/grids/
+ * @source https://github.com/uswds/uswds/blob/develop/src/stylesheets/core/_grid.scss
+ */
+
+// Roll our own simple grid system
+// USWDS grid system is fairly outdated and does not serve the needs of this project
+// We are implementing a simple flexbox row/column system
+
+@mixin grid-row {
+  @include media($medium-screen) {
+    display: flex;
+    flex-direction: row;
+  }
+}
+
+@mixin grid-pad {
+  @include padding(null $site-margins-mobile);
+
+  @include media($medium-screen) {
+    @include padding(null $site-margins);
+  }
+}
+
+.row {
+  @include grid-row;
+
+  &.row--pad {
+    @include grid-pad;
+  }
+
+  &.row--max {
+    max-width: $site-max-width;
+  }
+}
+
+.col {
+  &.col--pad {
+    @include grid-pad;
+  }
+
+  &.col--grow {
+    flex-grow: 1;
+  }
+}

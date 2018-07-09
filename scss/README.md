@@ -24,3 +24,59 @@ Overrides and Modifications
 ---
 
 When making modifications to the default USWDS components, please refer to the original source, and make a `.scss` file of the same name. Annotate the top of the file with a reference to the USWDS documentation and source code.
+
+Row/Column System
+---
+
+A simple, flexbox-powered row/column system.
+
+```
+<div class='row'>
+  <div class='col'></div>
+  <div class='col'></div>
+  <div class='col'></div>
+</div>
+```
+
+To make a column expand to fill up all available space relative to its sibling columns:
+
+```
+<div class='row'>
+  <div class='col col--grow'></div>
+  <div class='col'></div>
+  <div class='col'></div>
+</div>
+```
+
+To add uniform padding to rows and columns:
+
+```
+<div class='row row--pad'>
+  <div class='col col--pad'></div>
+  <div class='col col--pad'></div>
+  <div class='col col--pad'></div>
+</div>
+```
+
+Layouts and behaviors for specific row/col use cases should be handled on a case by case basis:
+
+```
+<div class='row row--pad foo'>
+  <div class='col col--pad foo__bar'></div>
+  <div class='col col--pad'></div>
+  <div class='col col--pad'></div>
+</div>
+
+...
+
+.foo.row {
+  .col {
+    flex: 1;
+  }
+  .foo__bar {
+    flex: 2;
+  }
+}
+```
+
+Page templates that inherit from the `base.html` template should render `.col` elements at their top level, with no other wrapping elements.

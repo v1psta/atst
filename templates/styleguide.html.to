@@ -1,0 +1,28 @@
+{% extends "base.html.to" %}
+
+{% block content %}
+
+
+<div class='col'>
+  <div class='panel'>
+    <p>This is a panel</p>
+  </div>
+</div>
+
+<div class='col col--grow'>
+  <div class='panel'>
+    <p>This is a panel</p>
+
+    <div class='row'>
+      <div class='col col--grow'>col 1</div>
+      <div class='col col--grow'>col 2</div>
+    </div>
+  </div>
+
+  <div class='panel'>
+    Another panel
+  </div>
+</div>
+
+
+{% end %}
