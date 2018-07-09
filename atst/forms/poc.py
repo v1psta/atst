@@ -9,7 +9,7 @@ class POCForm(Form):
     lname_poc = StringField("POC Last Name", validators=[Required()])
 
     email_poc = StringField(
-        "POC Email (associated with CAC)", validators=[Required(), Email()]
+        "POC Email Address", validators=[Required(), Email()]
     )
 
     dodid_poc = StringField(
