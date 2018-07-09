@@ -20,6 +20,18 @@ def test_redirects_when_not_logged_in(http_client, base_url):
 
 
 @pytest.mark.gen_test
+def test_redirects_when_session_does_not_exist(monkeypatch, http_client, base_url):
+    monkeypatch.setattr("atst.handlers.main.MainHandler.get_secure_cookie", lambda s,c: 'stale cookie!')
+    response = yield http_client.fetch(
+        base_url + "/home", raise_error=False, follow_redirects=False
+    )
+    location = response.headers["Location"]
+    assert response.code == 302
+    assert response.error
+    assert re.match("/\??", location)
+
+
+@pytest.mark.gen_test
 def test_login_with_valid_bearer_token(app, monkeypatch, http_client, base_url):
     monkeypatch.setattr("atst.handlers.login.Login._fetch_user_info", _fetch_user_info)
     response = yield http_client.fetch(

@@ -23,7 +23,7 @@ class BaseHandler(tornado.web.RequestHandler):
             try:
                 session = self.application.sessions.get_session(cookie)
             except SessionNotFoundError:
-                return self.redirect("/login")
+                return None
         else:
             return None
 
