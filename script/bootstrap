@@ -3,33 +3,14 @@
 # script/bootstrap: Resolve all dependencies that the application requires to
 #                   run.
 
-# If a command fails, exit the script
-set -e
+source "$(dirname "${0}")"/../script/include/global_header.inc.sh
 
-# Ensure we are in the app root directory (not the /script directory)
-cd "$(dirname "${0}")/.."
+# Set sass compiling command for this app
+COMPILE_SASS_CMD="webassets -m atst.assets build"
 
-if [ -z "${CIBUILD+xxxx}" ]; then
-  CMD_PREFIX='pipenv run '
-fi
-PIP_CMD="${CMD_PREFIX}pip"
-WEBASSETS_CMD="${CMD_PREFIX}webassets"
+# Run the shared bootstrap script
+source ./script/include/run_bootstrap
 
-PIPENV_INSTALL_FLAGS='--dev'
-if [ -n "${CIBUILD}" ]; then
-  PIPENV_INSTALL_FLAGS+=' --system --ignore-pipfile'
-fi
-
-# Install Python dependencies
-${PIP_CMD} install --upgrade pip
-pipenv install ${PIPENV_INSTALL_FLAGS}
-
-# Install uswds node module and dependencies
-npm install
-
-# Relink uswds fonts into the /static directory
+# Link USWDS fonts into the /static directory
 rm -f ./static/fonts
-ln -s ../node_modules/uswds/src/fonts ./static/fonts
-
-# Precompile assets for deployment
-${WEBASSETS_CMD} -m atst.assets build
+ln -s ../node/modules/uswds/src/fonts ./static/fonts
