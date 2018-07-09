@@ -1,0 +1,54 @@
+.topbar {
+  background-color: $color-white;
+  height: $topbar-height;
+  border-bottom: 1px solid $color-black;
+
+  .topbar__navigation {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: flex-end;
+
+    > .topbar__link {
+      @include h5;
+      color: $color-primary;
+      display: inline-block;
+      height: $topbar-height;
+      line-height: $topbar-height;
+      padding: 0 ($gap * 2);
+      text-decoration: none;
+
+      > span {
+        display: inline-block;
+        height: $topbar-height;
+        line-height: $topbar-height;
+      }
+
+      &.topbar__link--primary {
+        margin-right: auto;
+        > span {
+          @include nav-border;
+        }
+
+        &:hover {
+          color: $color-white;
+          background-color: $color-primary-darkest;
+        }
+      }
+
+      &.topbar__link--secondary {
+        font-weight: normal;
+        > span {
+          @include nav-border;
+          border-bottom-width: 0;
+        }
+
+        &:hover {
+          > span {
+            @include nav-border;
+          }
+        }
+      }
+    }
+  }
+}

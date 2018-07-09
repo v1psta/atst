@@ -9,11 +9,6 @@
   border-bottom-width: 1px;
   border-top-style: solid;
   border-bottom-style: solid;
-  margin-bottom: $site-margins-mobile * 2;
-
-  @include media($medium-screen) {
-    margin-bottom: $site-margins * 2;
-  }
 }
 
 @mixin panel-theme-default {
@@ -21,9 +16,18 @@
   border-bottom-color: $color-gray-light;
 }
 
+@mixin panel-margin {
+  margin-bottom: $site-margins-mobile * 2;
+
+  @include media($medium-screen) {
+    margin-bottom: $site-margins * 2;
+  }
+}
+
 .panel {
   @include panel-base;
   @include panel-theme-default;
+  @include panel-margin;
 }
 
 /*

@@ -3,8 +3,9 @@
  * ===================================================
  */
 
-// Standard gap
-$gap: .8rem; // 8px at 10px $em-base
+$gap:             .8rem; // 8px at 10px $em-base
+$topbar-height:   4.8rem;
+
 
 
 /*
@@ -110,7 +111,8 @@ $color-transparent:          rgba(#000, 0);
 // Mobile First Breakpoints
 $small-screen:  481px;
 $medium-screen: 600px;
-$large-screen:  1201px;
+$large-screen:  800px;
+$xlarge-screen: 1200px;
 
 // Grid column counts by screen size
 $grid-columns-small: 1;
