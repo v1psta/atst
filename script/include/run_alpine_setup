@@ -8,7 +8,7 @@ source ./script/include/alpine_setup_functions.inc.sh
 if [ -z "${APP_GROUP+is_set}" ] || \
    [ -z "${APP_GID+is_set}" ]; then
   APP_GROUP="atat"
-  APP_GROUP_ID="8000"
+  APP_GID="8000"
 fi
 
 # If USER information is incomplete, error out
