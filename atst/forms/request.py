@@ -11,7 +11,7 @@ class RequestForm(Form):
 
     # Details of Use: Overall Request Details
     dollar_value = IntegerField(
-        "What is the total estimated dollar value of the cloud resources you are requesting using the JEDI CSP Calculator? ",
+        "What is the total estimated dollar value of the cloud resources you are requesting using the <a href=\"#\" target=\"_blank\">JEDI CSP Calculator</a>?",
         validators=[InputRequired(), NumberRange(min=1)],
     )
 
