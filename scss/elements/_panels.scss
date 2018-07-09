@@ -3,7 +3,7 @@
  * A generic block container
  */
 
-@mixin panel-base {
+ @mixin panel-base {
   background-color: $color-white;
   border-top-width: 1px;
   border-bottom-width: 1px;
@@ -28,6 +28,11 @@
   @include panel-base;
   @include panel-theme-default;
   @include panel-margin;
+
+  &__content {
+    padding-left: $gap*4;
+    padding-right: $gap*4;
+  }
 }
 
 /*
@@ -35,16 +40,19 @@
  * Grid container for panel blocks
  */
 
-.panel-container {
+ .panel-container {
   @include grid-row;
   @include grid-pad;
   @include margin(($site-margins-mobile * 2) null);
 
   @include media($medium-screen) {
     @include margin(($site-margins * 2) null);
+    flex-wrap: nowrap;
   }
 
   > .col {
     @include grid-pad;
   }
+
+
 }
