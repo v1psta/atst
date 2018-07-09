@@ -35,7 +35,7 @@ class RequestNew(BaseHandler):
         else:
             self.render(
                 "requests/screen-%d.html.to" % int(screen),
-                f=jedi_flow.form(),
+                f=jedi_flow.form,
                 data=post_data,
                 page=self.page,
                 screens=jedi_flow.screens,
@@ -66,7 +66,7 @@ class RequestNew(BaseHandler):
 
         self.render(
             "requests/screen-%d.html.to" % int(screen),
-            f=jedi_flow.form(),
+            f=jedi_flow.form,
             data=jedi_flow.current_step_data,
             page=self.page,
             screens=jedi_flow.screens,
@@ -102,8 +102,9 @@ class JEDIRequestFlow(object):
         self.is_post = self.post_data is not None
 
         self.request_id = request_id
+        self.form = self._form()
 
-    def form(self):
+    def _form(self):
         if self.is_post:
             return self.form_class()(self.post_data)
         elif self.request:
@@ -112,7 +113,7 @@ class JEDIRequestFlow(object):
             return self.form_class()()
 
     def validate(self):
-        return self.form().validate()
+        return self.form.validate()
 
     @property
     def current_screen(self):
@@ -187,7 +188,7 @@ class JEDIRequestFlow(object):
     def create_or_update_request(self, user):
         request_data = {
             "creator_id": user["id"],
-            "request": {self.form_section: self.form().data},
+            "request": {self.form_section: self.form.data},
         }
         if self.request_id:
             response = yield self.requests_client.patch(
