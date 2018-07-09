@@ -28,7 +28,7 @@ COPY script/alpine_setup ./script/
 
 # Add required system packages and app user
 RUN set -x ; \
-  script/alpine_setup "${APP_USER}" "${APP_GROUP}"
+  script/alpine_setup
 
 ### Items that will change almost every build
 #############################################
