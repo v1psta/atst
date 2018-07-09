@@ -37,7 +37,7 @@
 
 .col {
   &.col--pad {
-    @inclue grid-pad;
+    @include grid-pad;
   }
 
   &.col--grow {
