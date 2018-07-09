@@ -1,9 +1,3 @@
-<footer class="usa-footer usa-footer-slim">
-
-  <div class="usa-grid">
-    <div class="usa-footer-logo">
-      <h5 class="usa-footer-slim-logo-heading">Joint Enterprise Defense Infrastructure</h5>
-    </div>
-  </div>
-
+<footer>  
+  <h5>Joint Enterprise Defense Infrastructure</h5>
 </footer>
