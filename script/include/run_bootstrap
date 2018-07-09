@@ -6,7 +6,7 @@ source ./script/include/bootstrap_functions.inc.sh
 ## Set option defaults
 # If PIPENV_INSTALL_FLAGS is not set, give it the default value of "--dev"
 if [ -z "${PIPENV_INSTALL_FLAGS+is_set}" ]; then
-  CREATE_VENV="--dev"
+  PIPENV_INSTALL_FLAGS="--dev"
 fi
 
 ## Main
