@@ -28,7 +28,7 @@ When making modifications to the default USWDS components, please refer to the o
 Row/Column System
 ---
 
-The USWDS current grid system is fairly outdated and does not cleanly meet the needs of the AT-ST UI. A simplified, flexbox-powered row/column system is implemented in its place.
+A simple, flexbox-powered row/column system.
 
 ```
 <div class='row'>
