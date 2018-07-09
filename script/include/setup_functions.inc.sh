@@ -5,7 +5,7 @@ install_pipenv() {
 
   # Ensure we are not in a virtual env already
   if [ -z "${VIRTUAL_ENV+xxxx}" ]; then
-    if ! check_pip_for pipenv; then
+    if ! check_system_pip_for pipenv; then
       # pipenv is not installed, so install it
       echo "Installing pipenv..."
       pip install pipenv
