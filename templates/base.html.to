@@ -14,6 +14,8 @@
   {% include 'header.html.to' %}
 
   <div class='panel-container'>
+    {% block sidenav %}{% end %}
+
     {% block content %}
       these are not the droids you are looking for
     {% end %}
