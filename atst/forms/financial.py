@@ -12,11 +12,11 @@ class FinancialForm(Form):
     )
 
     uii_ids = NewlineListField(
-        "Please enter the Unique Item Identifier (UII)s related to your application(s) if you already have them."
+        "Unique Item Identifier (UII)s related to your application(s) if you already have them."
     )
 
     pe_id = NewlineListField(
-        "Please provide the Program Element (PE) Numbers related to your request"
+        "Program Element (PE) Numbers related to your request"
     )
 
     fname_co = StringField("Contracting Officer First Name", validators=[Required()])

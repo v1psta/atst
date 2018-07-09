@@ -10,6 +10,7 @@
 
 
 <!-- DETAILS OF USE -->
+<!-- Overall Request Details -->
 
 <h3 id="overall-request-details">Overall Request Details</h3>
 <p>Please help us understand the size and scope of your resource request.</p>
@@ -38,14 +39,6 @@
   </div>
 {% end %}
 
-{{ f.supported_organizations.label }}
-{{ f.supported_organizations(placeholder="Add tags associated with DoD components or other entities") }}
-{% for e in f.supported_organizations.errors %}
-  <div class="usa-input-error-message">
-    {{ e }}
-  </div>
-{% end %}
-
 {{ f.app_description.label }}
 {{ f.app_description(placeholder="Example: My organization is supporting the migration of XYZ system to the cloud due to XX policy memo. I am planning to use a sandbox environment to do testing.") }}
 {% for e in f.app_description.errors %}
@@ -54,8 +47,19 @@
   </div>
 {% end %}
 
+{{ f.supported_organizations.label }}
+{{ f.supported_organizations(placeholder="Add tags associated with DoD components or other entities") }}
+{% for e in f.supported_organizations.errors %}
+  <div class="usa-input-error-message">
+    {{ e }}
+  </div>
+{% end %}
+
+
+<!-- Cloud Resources -->
+
 <h3 id="cloud-resources">Cloud Resources</h3>
-<p>Please tell us about your expected cloud resource usage as best as you can. Please refer to the <a href="">Cloud Service Provider</a> as necessary.</p>
+<p>Please tell us about your expected cloud resource usage as best as you can. Refer to the <a href="">Cloud Service Provider</a> as necessary.</p>
 
 {{ f.total_cores.label }}
 {{ f.total_cores(placeholder="Expected total cores", min="1", max="32") }}
@@ -97,6 +101,8 @@
   </div>
 {% end %}
 
+
+<!-- Support Staff -->
 
 <h3 id="support-staff">Support Staff</h3>
 <p>We want to learn more about the people helping you with the cloud.</p>
