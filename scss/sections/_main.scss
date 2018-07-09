@@ -1,11 +1,3 @@
-.container {
-  @include margin(($site-margins-mobile * 2) null);
-
-  @include media($medium-screen) {
-    @include margin(($site-margins * 2) null);
-  }
-}
-
 section {
   margin-bottom: 10rem;
 }
