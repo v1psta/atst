@@ -1,0 +1,17 @@
+# include/run_test: Execute code checkers and unit tests
+
+# Load test functions
+source ./script/include/test_functions.inc.sh
+
+## Set option defaults
+# If PYTHON_FILES is not set, give it the default value of "app.py"
+if [ -z "${PYTHON_FILES+is_set}" ]; then
+  PYTHON_FILES="app.py"
+fi
+
+## Main
+if [ "${RUN_PYTHON_TESTS}" = "true" ]; then
+  run_python_lint "${PYTHON_FILES}"
+  run_python_static_analysis "${PYTHON_FILES}"
+  run_python_unit_tests "${PYTHON_FILES}"
+fi
