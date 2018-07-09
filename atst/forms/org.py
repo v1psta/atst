@@ -4,12 +4,12 @@ from wtforms.validators import Required, Email
 from wtforms_tornado import Form
 import pendulum
 from .fields import DateField
-from .validators import DateRange, PhoneNumber
+from .validators import DateRange, PhoneNumber, Alphabet
 
 
 class OrgForm(Form):
-    fname_request = StringField("First Name", validators=[Required()])
-    lname_request = StringField("Last Name", validators=[Required()])
+    fname_request = StringField("First Name", validators=[Required(), Alphabet()])
+    lname_request = StringField("Last Name", validators=[Required(), Alphabet()])
 
     email_request = EmailField("Email Address", validators=[Required(), Email()])
 
