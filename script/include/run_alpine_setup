@@ -1,0 +1,25 @@
+# run_alpine_setup: Install basic system requirements for an app to run
+
+# Load alpine setup functions
+source ./script/include/alpine_setup_functions.inc.sh
+
+## Set option defaults
+# If GROUP information is incomplete, use the default one
+if [ -z "${APP_GROUP+is_set}" ] || \
+   [ -z "${APP_GID+is_set}" ]; then
+  APP_GROUP="atat"
+  APP_GROUP_ID="8000"
+fi
+
+# If USER information is incomplete, error out
+if [ -z "${APP_USER+is_set}" ] || \
+   [ -z "${APP_UID+is_set}" ]; then
+  exit 1
+fi
+
+## Main
+update_system_packages
+install_package "bash"
+install_package "dumb-init"
+add_group "${APP_GROUP}" "${APP_GID}"
+add_user "${APP_USER}" "${APP_GROUP}" "${APP_UID}"
