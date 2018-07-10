@@ -23,12 +23,12 @@ RUN set -x ; \
 # Set working dir
 WORKDIR ${APP_DIR}
 
-# Copy over alpine setup script
-COPY script/alpine_setup ./script/
+# Copy over setup scripts
+COPY script/ ./script/
 
 # Add required system packages and app user
 RUN set -x ; \
-  script/alpine_setup "${APP_USER}" "${APP_GROUP}"
+  script/alpine_setup
 
 ### Items that will change almost every build
 #############################################
