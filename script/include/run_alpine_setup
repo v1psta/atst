@@ -14,6 +14,7 @@ fi
 # If USER information is incomplete, error out
 if [ -z "${APP_USER+is_set}" ] || \
    [ -z "${APP_UID+is_set}" ]; then
+  echo "ERROR: Missing app user information! Received: ${APP_USER}:${APP_UID}"
   exit 1
 fi
 
