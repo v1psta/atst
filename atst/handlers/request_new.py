@@ -174,7 +174,7 @@ class JEDIRequestFlow(object):
                 "title": "Review & Submit",
                 "section": "review_submit",
                 "form": ReviewForm,
-                "show": self.request and self.request["status"] == "pending_submission",
+                "show": self.request and self.request["status"] != "incomplete",
             },
             {
                 "title": "Financial Verification",
