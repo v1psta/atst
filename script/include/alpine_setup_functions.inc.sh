@@ -1,5 +1,3 @@
-#!/bin/sh
-
 # alpine_setup_functions: Functions used by the run_alpine_setup script
 
 update_system_packages() {
