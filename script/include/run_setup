@@ -15,6 +15,11 @@ if [ -z "${INSTALL_SASS+is_set}" ]; then
   INSTALL_SASS="false"
 fi
 
+# If PIP_VERSION is not set, set it to "10.*"
+if [ -z "${PIP_VERSION+is_set}" ]; then
+  PIP_VERSION="10.*"
+fi
+
 ## Main
 # Remove any existing node modules as part of initial app setup or reset
 rm -rf ./node_modules
@@ -26,6 +31,7 @@ if [ "${CREATE_VENV}" = "true" ]; then
     exit 1
   fi
   create_virtual_environment
+  pip_install "pip==${PIP_VERSION}" "--upgrade"
 fi
 
 if [ "${INSTALL_SASS}" = "true" ]; then
