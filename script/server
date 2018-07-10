@@ -1,26 +1,8 @@
 #!/bin/bash
 
-reap() {
-   kill -TERM $child
-   sleep 0.1
-   exit
-}
+# script/server: Launch the server
 
-trap reap TERM INT
-
-# If a command fails, exit the script
-set -e
-
-# Ensure we are in the app root directory (not the /script directory)
-cd "$(dirname "${0}")/.."
-
-if [ -z "${SKIP_PIPENV+xxxx}" ]; then
-  CMD_PREFIX='pipenv run '
-fi
-PYTHON_CMD="${CMD_PREFIX}python"
+source "$(dirname "${0}")"/../script/include/global_header.inc.sh
 
 # Launch the app
-${PYTHON_CMD} app.py ${@} &
-child=$!
-
-wait $child
+run_command "./app.py ${LAUNCH_ARGS}"
