@@ -1,47 +1,84 @@
 {% extends "base.html.to" %}
 
 {% block sidenav %}
-  <nav class='sidenav'>
-    <ul>
-      <li>
-        <a href='/' class='sidenav__link sidenav__link--active' aria-current='true'>Navigation Item</a>
-        <ul>
-          <li><a href='/' class='sidenav__link sidenav__link--active'>Sub Navigation</a></li>
-          <li><a href='/' class='sidenav__link'>Sub Navigation</a></li>
-        </ul>
-      </li>
-      <li><a href='/' class='sidenav__link'>Navigation Item</a>
-        <ul>
-          <li><a href='/' class='sidenav__link'>Sub Navigation</a></li>
-          <li><a href='/' class='sidenav__link'>Sub Navigation</a></li>
-        </ul>
-      </li>
-      <li><a href='/' class='sidenav__link'>Navigation Item</a></li>
-      <li><a href='/' class='sidenav__link'>Navigation Item</a></li>
-      <li><a href='/' class='sidenav__link sidenav__link--disabled' aria-disabled='true'>Navigation Item</a></li>
-    </ul>
-  </nav>
+<nav class='sidenav'>
+  <ul>
+    <li>
+      <a href='/' class='sidenav__link sidenav__link--active' aria-current='true'>Navigation Item</a>
+      <ul>
+        <li><a href='/' class='sidenav__link sidenav__link--active'>Sub Navigation</a></li>
+        <li><a href='/' class='sidenav__link'>Sub Navigation</a></li>
+      </ul>
+    </li>
+    <li><a href='/' class='sidenav__link'>Navigation Item</a>
+      <ul>
+        <li><a href='/' class='sidenav__link'>Sub Navigation</a></li>
+        <li><a href='/' class='sidenav__link'>Sub Navigation</a></li>
+      </ul>
+    </li>
+    <li><a href='/' class='sidenav__link'>Navigation Item</a></li>
+    <li><a href='/' class='sidenav__link'>Navigation Item</a></li>
+    <li><a href='/' class='sidenav__link sidenav__link--disabled' aria-disabled='true'>Navigation Item</a></li>
+  </ul>
+</nav>
 {% end %}
 
 {% block content %}
-  <div class='col'>
-    <div class='panel'>
-      <p>This is a panel</p>
-    </div>
+<div class='col'> 
+  <div class='panel'>
+    <p>This is a panel</p>
   </div>
+</div>
 
-  <div class='col col--grow'>
-    <div class='panel'>
-      <p>This is a panel</p>
+<div class='col col--grow'>
+  <div class='panel'>
+    <div class='panel__content'>
 
+      <div class="panel__heading">
+        <h1>Panel Heading H1</h1>
+        <h2>Panel Heading H2</h2>
+        <h3>Panel Heading H3</h3>
+        <h4>Panel Heading H4</h4>
+        <h5>Panel Heading H5</h5>
+        <h6>Panel Heading H6</h6>
+      </div>
+
+      <em>This is a panel content</em>
+      <h1>Heading H1</h1>
+      <h2>Heading H2</h2>
+      <h3>Heading H3</h3>
+      <h4>Heading H4</h4>
+      <h5>Heading H5</h5>
+      <h6>Heading H6</h6>
+
+      <p>This is a paragraph. <a href="\">Lorem ipsum dolor sit amet</a>, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+
+      <div class="row">
+        <div class='col col--grow'>col 1</div>
+        <div class='col col--grow'>col 2</div>
+        <div class='col col--grow'>col 3</div>
+        <div class='col col--grow'>col 4</div>        
+      </div>
+      <hr>
       <div class='row'>
         <div class='col col--grow'>col 1</div>
         <div class='col col--grow'>col 2</div>
+        <div class='col col--grow'>col 3</div>
+        <div class='col col--grow'>col 4</div>
+        <div class='col col--grow'>col 5</div>
+        <div class='col col--grow'>col 6</div>
+        <div class='col col--grow'>col 7</div>
+        <div class='col col--grow'>col 8</div>
+        <div class='col col--grow'>col 9</div>
+        <div class='col col--grow'>col 10</div>
+        <div class='col col--grow'>col 11</div>
+        <div class='col col--grow'>col 12</div>
       </div>
     </div>
-
-    <div class='panel'>
-      Another panel
-    </div>
   </div>
+
+  <div class='panel'>
+    Another panel without padding
+  </div>
+</div>
 {% end %}
