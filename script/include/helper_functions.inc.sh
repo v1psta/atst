@@ -14,6 +14,7 @@ check_system_pip_for () {
 # Used whenever an environment sensitive command is being run
 run_command () {
   local cmd="${1}"
+
   pipenv run ${cmd}
   return $?
 }
