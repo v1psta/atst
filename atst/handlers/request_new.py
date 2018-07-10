@@ -73,6 +73,7 @@ class RequestNew(BaseHandler):
             current=screen,
             next_screen=screen + 1,
             request_id=request_id,
+            can_submit=jedi_flow.can_submit
         )
 
     @tornado.gen.coroutine
@@ -130,12 +131,18 @@ class JEDIRequestFlow(object):
     def current_step_data(self):
         if self.is_post:
             return self.post_data
-        elif self.form_section == "review_submit":
-            return self.request["body"]
-        elif self.request:
-            return self.request["body"].get(self.form_section, {})
+
+        if self.request:
+            if self.form_section == "review_submit":
+                return self.request["body"]
+            else:
+                return self.request["body"].get(self.form_section, {})
         else:
             return {}
+
+    @property
+    def can_submit(self):
+        return self.request and self.request["status"] != "incomplete"
 
     @property
     def next_screen(self):
@@ -174,7 +181,7 @@ class JEDIRequestFlow(object):
                 "title": "Review & Submit",
                 "section": "review_submit",
                 "form": ReviewForm,
-                "show": self.request and self.request["status"] != "incomplete",
+                "show":True,
             },
             {
                 "title": "Financial Verification",
