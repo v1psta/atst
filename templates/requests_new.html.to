@@ -9,20 +9,20 @@
 {% block content %}
 
 <div class="col col--grow">
-  
+
   <div class="panel">
 
     <main class="panel__content">
       <div class="panel__heading">
         <h1>New Request</h1>
       </div>
-      
 
-      
-        {% if request_id %}
-        <form method='POST' action="{{ reverse_url('request_form_update', current, request_id) }}" autocomplete="off">
-        {% else %}
-        <form method='POST' action="{{ reverse_url('request_form_new', current) }}" autocomplete="off">
+        {% block form_action %}
+          {% if request_id %}
+            <form method='POST' action="{{ reverse_url('request_form_update', current, request_id) }}" autocomplete="off">
+          {% else %}
+            <form method='POST' action="{{ reverse_url('request_form_new', current) }}" autocomplete="off">
+          {% end %}
         {% end %}
 
         {% module xsrf_form_html() %}
@@ -34,18 +34,10 @@
         {% end %}
         </form>
 
-      
-
-      
     </main>
-
 
   </div>
 </div>
-
-
-
-
 
 {% end %}
 

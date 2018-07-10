@@ -10,6 +10,7 @@ from atst.handlers.login import Login
 from atst.handlers.workspace import Workspace
 from atst.handlers.request import Request
 from atst.handlers.request_new import RequestNew
+from atst.handlers.request_submit import RequestsSubmit
 from atst.handlers.dev import Dev
 from atst.home import home
 from atst.api_client import ApiClient
@@ -70,6 +71,12 @@ def make_app(config, deps, **kwargs):
             RequestNew,
             {"page": "requests_new", "requests_client": deps["requests_client"]},
             name="request_form_update",
+        ),
+        url(
+            r"/requests/submit/(\S+)",
+            RequestsSubmit,
+            {"requests_client": deps["requests_client"]},
+            name="requests_submit",
         ),
         url(r"/users", MainHandler, {"page": "users"}, name="users"),
         url(r"/reports", MainHandler, {"page": "reports"}, name="reports"),

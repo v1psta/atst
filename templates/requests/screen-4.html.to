@@ -1,5 +1,9 @@
 {% extends '../requests_new.html.to' %}
 
+{% block form_action %}
+  <form method='POST' action="{{ reverse_url('requests_submit', request_id) }}" autocomplete="off">
+{% end %}
+
 {% block form %}
 
 {% autoescape None %}
@@ -8,7 +12,6 @@
 {% end %}
 
 <h2 id="review-submit">Review &amp; Submit</h2>
-<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Autem ullam veritatis fuga non repellendus repellat dolorum labore nulla iure aspernatur ipsam recusandae saepe harum iste, dolorem adipisci dolores eum, doloribus?</p>
 
 <h3>Details of Use <a href="">Edit</a></h3>
 
