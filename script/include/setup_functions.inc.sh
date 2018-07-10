@@ -1,20 +1,20 @@
 # setup_functions.inc.sh: Functions used by the setup script
 
 install_pipenv() {
-  exit_code=0
+  return_code=0
 
   # Ensure we are not in a virtual env already
-  if [ -z "${VIRTUAL_ENV+xxxx}" ]; then
+  if [ -z "${VIRTUAL_ENV+is_set}" ]; then
     if ! check_system_pip_for pipenv; then
       # pipenv is not installed, so install it
       echo "Installing pipenv..."
       pip install pipenv
       # Capture pip exit code
-      exit_code="${?}"
+      return_code="${?}"
     fi
   fi
 
-  return "${exit_code}"
+  return "${return_code}"
 }
 
 create_virtual_environment() {
@@ -32,7 +32,8 @@ create_virtual_environment() {
   # The environment will be in a directory called .venv off the app
   # root directory
   echo "Creating virtual environment using Python version ${python_version}..."
-  return $(PIPENV_VENV_IN_PROJECT=true pipenv --python "${python_version}")
+  PIPENV_VENV_IN_PROJECT=true pipenv --python "${python_version}"
+  return $?
 }
 
 install_sass() {
