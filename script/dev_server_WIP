@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# script/local_server: Launch a local dev version of the server
+
+source "$(dirname "${0}")"/../script/include/global_header.inc.sh
+
+# Create a function to trap signals with
+reap() {
+   kill -TERM "${child}"
+   sleep 0.1
+   exit
+}
+
+trap reap TERM INT
+
+# Set server launch related environment variables
+DEBUG=1
+LAUNCH_ARGS="$*"
+
+# Launch the app
+source ./script/server
+
+# Capture the PID of the child process
+child=$!
+
+wait $child
