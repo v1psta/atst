@@ -13,7 +13,7 @@
 
 <h2 id="review-submit">Review &amp; Submit</h2>
 
-<h3>Details of Use <a href="">Edit</a></h3>
+<h3>Details of Use <a href="{{ reverse_url('request_form_update', 1, request_id) }}">Edit</a></h3>
 
 <h4>Overall Request Details</h4>
 
@@ -65,7 +65,7 @@
 
 <br><br><hr>
 
-<h3>Information About You <a href="">Edit</a></h3>
+<h3>Information About You <a href="{{ reverse_url('request_form_update', 2, request_id) }}">Edit</a></h3>
 
 <label>First Name</label>
 <b>{{ data.get('information_about_you', {}).get('fname_request') }}</b>
@@ -94,7 +94,7 @@
 
 <br><br><hr>
 
-<h3>Primary Government/Military Point of Contact (POC) <a href="">Edit</a></h3>
+<h3>Primary Government/Military Point of Contact (POC) <a href="{{ reverse_url('request_form_update', 3, request_id) }}">Edit</a></h3>
 
 
 
