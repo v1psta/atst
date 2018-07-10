@@ -1,35 +1,50 @@
 {% extends "base.html.to" %}
 
+
+{% block sidenav %}
+{% include 'requests/sidebar.html.to' %}
+{% end %}
+
+
 {% block content %}
 
+<div class="col col--grow">
+  
+  <div class="panel">
+
+    <main class="panel__content">
+      <div class="panel__heading">
+        <h1>New Request</h1>
+      </div>
+      
+
+      
+        {% if request_id %}
+        <form method='POST' action="{{ reverse_url('request_form_update', current, request_id) }}" autocomplete="off">
+        {% else %}
+        <form method='POST' action="{{ reverse_url('request_form_new', current) }}" autocomplete="off">
+        {% end %}
+
+        {% module xsrf_form_html() %}
+        {% block form %}
+        form goes here
+        {% end %}
+        {% block next %}
+        <input type='submit' class='usa-button usa-button-primary' value='Save & Continue' />
+        {% end %}
+        </form>
+
+      
+
+      
+    </main>
 
 
-<div class="site-action"><a href="/requests">&#8249; All requests</a></div>
+  </div>
+</div>
 
-<h1>New Request</h1>
 
-<aside class="sidenav usa-width-one-third">
-  {% include 'requests/sidebar.html.to' %}
-</aside>
 
-<main class="main-content usa-width-two-thirds">
-
-    {% if request_id %}
-      <form method='POST' action="{{ reverse_url('request_form_update', current, request_id) }}" autocomplete="off">
-    {% else %}
-      <form method='POST' action="{{ reverse_url('request_form_new', current) }}" autocomplete="off">
-    {% end %}
-
-    {% module xsrf_form_html() %}
-    {% block form %}
-    form goes here
-    {% end %}
-    {% block next %}
-    <input type='submit' class='usa-button usa-button-primary' value='Save & Continue' />
-    {% end %}
-    </form>
-
-</main>
 
 
 {% end %}
