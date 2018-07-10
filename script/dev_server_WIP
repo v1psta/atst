@@ -1,6 +1,10 @@
 #!/bin/bash
 
-# script/local_server: Launch a local dev version of the server
+# script/dev_server: Launch a local dev version of the server in the background
+
+#
+# WIP
+#
 
 source "$(dirname "${0}")"/../script/include/global_header.inc.sh
 
@@ -11,6 +15,7 @@ reap() {
    exit
 }
 
+# Register trap
 trap reap TERM INT
 
 # Set server launch related environment variables
