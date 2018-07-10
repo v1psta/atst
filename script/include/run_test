@@ -1,4 +1,4 @@
-# include/run_test: Execute code checkers and unit tests
+# run_test: Execute code checkers and unit tests
 
 # Load test functions
 source ./script/include/test_functions.inc.sh
