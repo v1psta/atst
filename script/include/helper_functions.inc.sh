@@ -11,6 +11,14 @@ check_system_pip_for () {
   return $?
 }
 
+pip_install () {
+  local packages="${1}"
+  local flags="${2}"
+
+  run_command "pip install ${flags} ${packages}"
+  return $?
+}
+
 # Used whenever an environment sensitive command is being run
 run_command () {
   local cmd="${1}"
