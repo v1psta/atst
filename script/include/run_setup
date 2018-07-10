@@ -26,8 +26,8 @@ rm -rf ./node_modules
 
 if [ "${CREATE_VENV}" = "true" ]; then
   # Ensure pipenv is installed
-  if ! check_system_pip_for pipenv; then
-    echo "ERROR: pipenv is required but is not present"
+  if ! pipenv --version >/dev/null 2>&1 ; then
+    echo "ERROR: pipenv is malfunctioning or not present"
     exit 1
   fi
   create_virtual_environment
