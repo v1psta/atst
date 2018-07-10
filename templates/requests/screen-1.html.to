@@ -13,7 +13,7 @@
 <!-- Overall Request Details -->
 
 <h3 id="overall-request-details">Overall Request Details</h3>
-<p>Please help us understand the size and scope of your resource request.</p>
+<p class="usa-font-lead">Please help us understand the size and scope of your resource request.</p>
 
 {{ f.dollar_value.label }}
 {{ f.dollar_value(placeholder="Total dollar amount to be associated with the Task Order")}}
@@ -59,7 +59,7 @@
 <!-- Cloud Resources -->
 
 <h3 id="cloud-resources">Cloud Resources</h3>
-<p>Please tell us about your expected cloud resource usage as best as you can. Refer to the <a href="">Cloud Service Provider</a> as necessary.</p>
+<p class="usa-font-lead">Please tell us about your expected cloud resource usage as best as you can. Refer to the <a href="">Cloud Service Provider</a> as necessary.</p>
 
 {{ f.total_cores.label }}
 {{ f.total_cores(placeholder="Expected total cores", min="1", max="32") }}
@@ -105,7 +105,7 @@
 <!-- Support Staff -->
 
 <h3 id="support-staff">Support Staff</h3>
-<p>We want to learn more about the people helping you with the cloud.</p>
+<p class="usa-font-lead">We want to learn more about the people helping you with the cloud.</p>
 
 
 <fieldset class="usa-fieldset-inputs">

@@ -9,7 +9,7 @@
 
 
 <h2 id="Information About You">Information About You</h2>
-<p>Please tell us more about yourself.</p>
+<p class="usa-font-lead">Please tell us more about yourself.</p>
 
 {{ f.fname_request.label }}
 {{ f.fname_request(placeholder="Your first name") }}

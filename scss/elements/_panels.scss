@@ -54,5 +54,13 @@
     @include grid-pad;
   }
 
+  h1 {
+    margin-bottom: 0;
+  }
+
+  h2 {
+    color: $color-gray;
+  }
+
 
 }
