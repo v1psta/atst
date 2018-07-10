@@ -2,6 +2,8 @@
   <ul>
     <li>
       <a class="sidenav__link" href="/home">Home</a>
+    </li>
+    <li>
       <a class="sidenav__link" href="/requests">Requests</a>
     </li>
   </ul>
