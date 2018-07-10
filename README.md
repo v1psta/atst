@@ -19,19 +19,19 @@ Additionally, ATST requires a redis instance for session management. Have redis 
 
 ## Running (development)
 
-To start the app and watch for changes:
+To start the app locally in the foreground and watch for changes:
 
-    DEBUG=1 script/server
+    script/dev_server
 
 ## Testing
 
-To run unit tests:
+To run all linting and tests:
 
     script/test
 
-or
+To run only the unit tests:
 
-    python -m pytest
+    pipenv run python -m pytest
 
 ## Notes
 
