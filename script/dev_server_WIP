@@ -8,24 +8,25 @@
 
 source "$(dirname "${0}")"/../script/include/global_header.inc.sh
 
-# Create a function to trap signals with
+# Create a function to run after a trap is triggered
 reap() {
-   kill -TERM "${child}"
+   kill -s SIGTERM -- "-$$"
    sleep 0.1
    exit
 }
 
-# Register trap
-trap reap TERM INT
+# Register trapping of SIGTERM and SIGINT
+trap reap SIGTERM SIGINT
+
+# Display the script PID, which will also be the process group ID for all 
+# child processes
+echo "Process Group: $$"
 
 # Set server launch related environment variables
 DEBUG=1
 LAUNCH_ARGS="$*"
 
+
 # Launch the app
-source ./script/server
-
-# Capture the PID of the child process
-child=$!
-
-wait $child
+source ./script/server &
+wait
