@@ -16,9 +16,7 @@
       <div class="panel__heading">
         <h1>New Request</h1>
       </div>
-      
-
-      
+          
         {% if request_id %}
         <form method='POST' action="{{ reverse_url('request_form_update', current, request_id) }}" autocomplete="off">
         {% else %}
@@ -33,10 +31,7 @@
         <input type='submit' class='usa-button usa-button-primary' value='Save & Continue' />
         {% end %}
         </form>
-
-      
-
-      
+  
     </main>
 
 

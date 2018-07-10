@@ -1,39 +1,57 @@
 {% extends "base.html.to" %}
 
+{% block sidenav %}
+{% include 'nav-side.html.to' %}
+{% end %}
+
 {% block content %}
 
-<main class="usa-section usa-content">
-
-  <h1>Requests <a class="usa-button usa-button-secondary" href='{{ reverse_url('request_new') }}'>New Request</a></h1>
-
-  <table class="usa-table-borderless" width="100%">
-    <thead>
-      <tr>
-        <th scope="col">Order ID</th>
-        <th scope="col">Request Date</th>
-        <th scope="col">Requester</th>
-        <th scope="col">Total Apps</th>
-        <th scope="col">Status</th>
-        <th scope="col">Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-    {% for r in requests %}
-    <tr>
-        <th scope="row"><a href="{{ reverse_url('request_form_update', 1, r['order_id']) }}">{{ r['order_id'] }}</a>
-            {% if r['is_new'] %}<span class="usa-label">New</span></th>{% end %}
-        <td>{{ r['date'] }}</td>
-        <td>{{ r['full_name'] }}</td>
-        <td>{{ r['app_count'] }}</td>
-        <td>{{ r['status'] }}</td>
-        <td><a href="">Download</a></td>
-    </tr>
-    {% end %}
-    </tbody>
-  </table>
 
 
-</main>
+
+<div class="col col--grow">
+
+  <div class="panel">
+
+    <div class="panel__content">
+
+      <div class="panel__heading">
+        <h1>Requests <a class="usa-button usa-button-secondary" href='{{ reverse_url('request_new') }}'>New Request</a></h1>
+      </div>
+
+      <table class="usa-table-borderless" width="100%">
+        <thead>
+          <tr>
+            <th scope="col">Order ID</th>
+            <th scope="col">Request Date</th>
+            <th scope="col">Requester</th>
+            <th scope="col">Total Apps</th>
+            <th scope="col">Status</th>
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for r in requests %}
+          <tr>
+            <th scope="row"><a href="{{ reverse_url('request_form_update', 1, r['order_id']) }}">{{ r['order_id'] }}</a>
+              {% if r['is_new'] %}<span class="usa-label">New</span>
+            </th>
+            {% end %}
+            <td>{{ r['date'] }}</td>
+            <td>{{ r['full_name'] }}</td>
+            <td>{{ r['app_count'] }}</td>
+            <td>{{ r['status'] }}</td>
+            <td><a href="">Download</a></td>
+          </tr>
+          {% end %}
+        </tbody>
+      </table>
+
+
+
+    </div>
+  </div>
+</div>
 
 {% end %}
 

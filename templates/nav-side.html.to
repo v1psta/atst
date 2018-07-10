@@ -1,40 +1,14 @@
-<aside class="usa-width-one-fourth usa-layout-docs-sidenav">
-  <ul class="usa-sidenav-list">
+<div class="sidenav">
+  <ul>
     <li>
-      <a href="#details-of-use">1. Details of Use</a>
-      <ul class="usa-sidenav-sub_list">
-        <li>
-          <a href="#application-details">Application Details</a>
-        </li>
-        <li>
-          <a href="#application-computation">Computation</a>
-        </li>
-        <li>
-          <a href="#application-storage">Storage</a>
-        </li>
-      </ul>
+      <a class="sidenav__link" href="/home">Home</a>
+      <a class="sidenav__link" href="/requests">Requests</a>
     </li>
-
-    <li>
-      <a href="#">2. Organizational Info</a>
-      <ul class="usa-sidenav-sub_list">
-        <li>
-          <a href="#information-about-you">Information About You</a>
-        </li>
-        <li>
-          <a href="#information-about-your-collaborators">Information About Your Collaborators</a>
-        </li>
-      </ul>
-    </li>
-
-    <li>
-      <a href="#">3. Funding/Contracting</a>
-    </li>
-    <li>
-      <a href="#">4. Readiness Survey</a>
-    </li>
-    <li>
-      <a href="#">5. Review &amp; Submit</a>
-    </li>      
   </ul>
-</aside>
+
+  <ul>
+    <li>
+      <a class="sidenav__link" href="/">Logout</a>
+    </li>
+  </ul>
+</div>
