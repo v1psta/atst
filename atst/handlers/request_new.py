@@ -27,9 +27,12 @@ class RequestNew(BaseHandler):
         if jedi_flow.validate():
             response = yield jedi_flow.create_or_update_request(self.get_current_user())
             if response.ok:
-                where = self.application.default_router.reverse_url(
-                    "request_form_update", str(screen + 1), jedi_flow.request_id
-                )
+                if jedi_flow.next_screen >= len(jedi_flow.screens):
+                    where = "/requests"
+                else:
+                    where = self.application.default_router.reverse_url(
+                        "request_form_update", jedi_flow.next_screen, jedi_flow.request_id
+                    )
                 self.redirect(where)
             else:
                 self.set_status(response.code)

@@ -61,6 +61,7 @@ class MockRequestsClient(MockApiClient):
             "id": "66b8ef71-86d3-48ef-abc2-51bfa1732b6b",
             "creator": "49903ae7-da4a-49bf-a6dc-9dff5d004238",
             "body": {},
+            "status": "incomplete",
         }
         return self._get_response("POST", path, 202, json=json)
 
