@@ -11,14 +11,20 @@ microservices when appropriate.
 
 ## Installation
 
+### Requirements
 See the [scriptz](https://github.com/dod-ccpo/scriptz) repository for the shared 
 requirements and guidelines for all ATAT applications.
+Additionally, ATST requires a redis instance for session management. Have redis 
+installed and running. By default, ATST will try to connect to a redis instance 
+running on localhost on its default port, 6379.
 
+### Cloning
 This project contains git submodules. Here is an example clone command that will 
 automatically initialize and update those modules:
 
     git clone --recurse-submodules git@github.com:dod-ccpo/atst.git
 
+### Setup
 This application uses Pipenv to manage Python dependencies and a virtual
 environment. Instead of the classic `requirements.txt` file, pipenv uses a 
 Pipfile and Pipfile.lock, making it more similar to other modern package managers 
@@ -37,7 +43,6 @@ To enter the virtualenv manually (a la `source .venv/bin/activate`):
 
 If you want to automatically load the virtual environment whenever you enter the project directory, take a look at [direnv](https://direnv.net/).  An `.envrc` file is included in this repository.  direnv will activate and deactivate virtualenvs for you when you enter and leave the directory.
 
-Additionally, ATST requires a redis instance for session management. Have redis installed and running. By default, ATST will try to connect to a redis instance running on localhost on its default port, 6379.
 
 ## Running (development)
 
