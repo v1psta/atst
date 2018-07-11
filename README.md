@@ -33,6 +33,10 @@ To run only the unit tests:
 
     pipenv run python -m pytest
 
+To re-run tests each time a file is changed:
+
+    pipenv run ptw
+
 ## Notes
 
 tornado templates are like mustache templates -- add the
