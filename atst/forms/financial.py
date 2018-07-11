@@ -1,12 +1,13 @@
 from wtforms.fields.html5 import EmailField
 from wtforms.fields import StringField, SelectField
 from wtforms.validators import Required, Email
-from wtforms_tornado import Form
 
 from .fields import NewlineListField
+from .forms import ValidatedForm
 
 
-class FinancialForm(Form):
+class FinancialForm(ValidatedForm):
+
     task_order_id = StringField(
         "Task Order Number associated with this request.", validators=[Required()]
     )

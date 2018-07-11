@@ -1,10 +1,10 @@
 from wtforms.fields import StringField
 from wtforms.validators import Required, Email, Length
-from wtforms_tornado import Form
+from .forms import ValidatedForm
 from .validators import IsNumber, Alphabet
 
 
-class POCForm(Form):
+class POCForm(ValidatedForm):
     fname_poc = StringField("POC First Name", validators=[Required(), Alphabet()])
     lname_poc = StringField("POC Last Name", validators=[Required(), Alphabet()])
 

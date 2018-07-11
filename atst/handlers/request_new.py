@@ -105,7 +105,7 @@ class JEDIRequestFlow(object):
             return self.form_class()()
 
     def validate(self):
-        return self.form.validate()
+        return self.form.validate(self.requests_client)
 
     @property
     def current_screen(self):

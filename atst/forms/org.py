@@ -1,13 +1,13 @@
 from wtforms.fields.html5 import EmailField, TelField
 from wtforms.fields import RadioField, StringField
 from wtforms.validators import Required, Email
-from wtforms_tornado import Form
 import pendulum
 from .fields import DateField
+from .forms import ValidatedForm
 from .validators import DateRange, PhoneNumber, Alphabet
 
 
-class OrgForm(Form):
+class OrgForm(ValidatedForm):
     fname_request = StringField("First Name", validators=[Required(), Alphabet()])
     lname_request = StringField("Last Name", validators=[Required(), Alphabet()])
 
