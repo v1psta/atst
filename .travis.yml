@@ -2,10 +2,18 @@ sudo: required
 language: python
 python: "3.6"
 services: docker
+git:
+    submodules: false
 env:
   global:
     - TESTER_IMAGE_NAME=atst-tester
     - PROD_IMAGE_NAME=atst-prod
+
+before_install:
+    # Use sed to replace the SSH URL with the public URL
+    - sed -i 's/git@github.com:/https:\/\/github.com\//' .gitmodules
+    # Manually initialize submodules
+    - git submodule update --init --recursive
 
 before_script:
   - docker login -u $ATAT_DOCKER_REGISTRY_USERNAME -p $ATAT_DOCKER_REGISTRY_PASSWORD $ATAT_DOCKER_REGISTRY_URL
