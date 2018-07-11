@@ -19,3 +19,23 @@ def app():
     deps.update(TEST_DEPS)
 
     return make_app(config, deps)
+
+class DummyForm(dict):
+    pass
+
+
+class DummyField(object):
+    def __init__(self, data=None, errors=(), raw_data=None):
+        self.data = data
+        self.errors = list(errors)
+        self.raw_data = raw_data
+
+
+@pytest.fixture
+def dummy_form():
+    return DummyForm()
+
+
+@pytest.fixture
+def dummy_field():
+    return DummyField()

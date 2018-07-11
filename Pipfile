@@ -19,6 +19,7 @@ ipython = "*"
 ipdb = "*"
 pylint = "*"
 black = "*"
+pytest-watch = "*"
 
 [requires]
 python_version = "3.6"
