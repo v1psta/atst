@@ -1,4 +1,4 @@
 [submodule "script/include"]
 	path = script/include
 	url = git@github.com:dod-ccpo/scriptz.git
-	branch = add-app-scripts
+	branch = master
