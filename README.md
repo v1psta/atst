@@ -16,7 +16,8 @@ requirements and guidelines for all ATAT applications.
 
 This project contains git submodules. Here is an example clone command that will 
 automatically initialize and update those modules:
-`git clone --recurse-submodules git@github.com:dod-ccpo/atst.git`
+
+    git clone --recurse-submodules git@github.com:dod-ccpo/atst.git
 
 This application uses Pipenv to manage Python dependencies and a virtual
 environment. Instead of the classic `requirements.txt` file, pipenv uses a 
