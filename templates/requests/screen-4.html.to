@@ -1,5 +1,9 @@
 {% extends '../requests_new.html.to' %}
 
+{% block form_action %}
+  <form method='POST' action="{{ reverse_url('requests_submit', request_id) }}" autocomplete="off">
+{% end %}
+
 {% block form %}
 
 {% autoescape None %}
@@ -8,9 +12,8 @@
 {% end %}
 
 <h2 id="review-submit">Review &amp; Submit</h2>
-<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Autem ullam veritatis fuga non repellendus repellat dolorum labore nulla iure aspernatur ipsam recusandae saepe harum iste, dolorem adipisci dolores eum, doloribus?</p>
 
-<h3>Details of Use <a href="">Edit</a></h3>
+<h3>Details of Use <a href="{{ reverse_url('request_form_update', 1, request_id) }}">Edit</a></h3>
 
 <h4>Overall Request Details</h4>
 
@@ -28,12 +31,6 @@
 
 <label>What organizations are supported by these applications?</label>
 <b>{{ data.get('details_of_use', {}).get('supported_organizations') }}</b>
-
-<label>Please enter the Unique Item Identifier (UII)s related to your application(s) if you already have them.</label>
-<b>{{ data.get('details_of_use', {}).get('uii_ids') }}</b>
-
-<label>Please provide the Program Element (PE) Numbers related to your request</label>
-<b>{{ data.get('details_of_use', {}).get('pe_id') }}</b>
 
 <h4>Cloud Resources</h4>
 
@@ -68,7 +65,7 @@
 
 <br><br><hr>
 
-<h3>Information About You <a href="">Edit</a></h3>
+<h3>Information About You <a href="{{ reverse_url('request_form_update', 2, request_id) }}">Edit</a></h3>
 
 <label>First Name</label>
 <b>{{ data.get('information_about_you', {}).get('fname_request') }}</b>
@@ -97,7 +94,7 @@
 
 <br><br><hr>
 
-<h3>Primary Government/Military Point of Contact (POC) <a href="">Edit</a></h3>
+<h3>Primary Government/Military Point of Contact (POC) <a href="{{ reverse_url('request_form_update', 3, request_id) }}">Edit</a></h3>
 
 
 
@@ -119,5 +116,5 @@
 {% end %}
 
 {% block next %}
-<input type='submit' class='usa-button usa-button-primary' value='Submit' />
+<input type='submit' class='usa-button usa-button-primary' value='Submit' {{ "disabled" if not can_submit else "" }} />
 {% end %}
