@@ -1,7 +1,7 @@
 from atst.handler import BaseHandler
 
 
-class Home(BaseHandler):
+class Root(BaseHandler):
     def initialize(self, page):
         self.page = page
 
