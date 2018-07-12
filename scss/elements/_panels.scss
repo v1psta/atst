@@ -47,6 +47,9 @@
 
   @include media($medium-screen) {
     @include margin(($site-margins * 2) null);
+  }
+
+  @include media($large-screen) {
     flex-wrap: nowrap;
   }
 

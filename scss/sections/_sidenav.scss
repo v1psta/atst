@@ -79,6 +79,10 @@
   > ul {
     @include panel-margin;
 
+    &:last-child {
+      margin: 0;
+    }
+
     > li {
       &:last-child {
         > .sidenav__link {
