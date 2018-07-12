@@ -35,6 +35,21 @@
   </div>
 {% end %}
 
+{{ f.treasury_code.label }}
+{{ f.treasury_code(placeholder="Example: 1200") }}
+{% for e in f.treasury_code.errors %}
+  <div class="usa-input-error-message">
+    {{ e }}
+  </div>
+{% end %}
+
+{{ f.ba_code.label }}
+{{ f.ba_code(placeholder="Example: 02") }}
+{% for e in f.ba_code.errors %}
+  <div class="usa-input-error-message">
+    {{ e }}
+  </div>
+{% end %}
 
 <!-- KO Information -->
 
