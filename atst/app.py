@@ -4,9 +4,9 @@ import tornado.web
 from tornado.web import url
 from redis import StrictRedis
 
-from atst.handlers.main import MainHandler
-from atst.handlers.home import Home
-from atst.handlers.login import Login
+from atst.handlers.main import Main
+from atst.handlers.root import Root
+from atst.handlers.login_redirect import LoginRedirect
 from atst.handlers.workspace import Workspace
 from atst.handlers.request import Request
 from atst.handlers.request_new import RequestNew
@@ -22,23 +22,23 @@ ENV = os.getenv("TORNADO_ENV", "dev")
 def make_app(config, deps, **kwargs):
 
     routes = [
-        url(r"/", Home, {"page": "login"}, name="main"),
+        url(r"/", Root, {"page": "login"}, name="root"),
         url(
-            r"/login",
-            Login,
+            r"/login-redirect",
+            LoginRedirect,
             {"sessions": deps["sessions"], "authnid_client": deps["authnid_client"]},
-            name="login",
+            name="login_redirect",
         ),
-        url(r"/home", MainHandler, {"page": "home"}, name="home"),
+        url(r"/home", Main, {"page": "home"}, name="home"),
         url(
             r"/styleguide",
-            MainHandler,
+            Main,
             {"page": "styleguide"},
             name="styleguide",
         ),
         url(
             r"/workspaces/blank",
-            MainHandler,
+            Main,
             {"page": "workspaces_blank"},
             name="workspaces_blank",
         ),
@@ -78,9 +78,9 @@ def make_app(config, deps, **kwargs):
             {"requests_client": deps["requests_client"]},
             name="requests_submit",
         ),
-        url(r"/users", MainHandler, {"page": "users"}, name="users"),
-        url(r"/reports", MainHandler, {"page": "reports"}, name="reports"),
-        url(r"/calculator", MainHandler, {"page": "calculator"}, name="calculator"),
+        url(r"/users", Main, {"page": "users"}, name="users"),
+        url(r"/reports", Main, {"page": "reports"}, name="reports"),
+        url(r"/calculator", Main, {"page": "calculator"}, name="calculator"),
     ]
 
     if not ENV == "production":
