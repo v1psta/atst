@@ -22,7 +22,7 @@ ENV = os.getenv("TORNADO_ENV", "dev")
 def make_app(config, deps, **kwargs):
 
     routes = [
-        url(r"/", Root, {"page": "login"}, name="root"),
+        url(r"/", Root, {"page": "root"}, name="root"),
         url(
             r"/login-redirect",
             LoginRedirect,
