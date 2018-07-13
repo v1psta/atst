@@ -1,4 +1,5 @@
 import tornado
+from collections import defaultdict
 
 from atst.handler import BaseHandler
 from atst.forms.request import RequestForm
@@ -129,16 +130,18 @@ class JEDIRequestFlow(object):
 
     @property
     def current_step_data(self):
+        data = {}
+
         if self.is_post:
-            return self.post_data
+            data = self.post_data
 
         if self.request:
             if self.form_section == "review_submit":
-                return self.request["body"]
+                data = self.request["body"]
             else:
-                return self.request["body"].get(self.form_section, {})
-        else:
-            return {}
+                data = self.request["body"].get(self.form_section, {})
+
+        return defaultdict(lambda: defaultdict(lambda: 'Input required'), data)
 
     @property
     def can_submit(self):
