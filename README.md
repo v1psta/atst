@@ -24,6 +24,11 @@ automatically initialize and update those modules:
 
     git clone --recurse-submodules git@github.com:dod-ccpo/atst.git
 
+If you have an existing clone that does not yet contain the submodules, you can 
+set them up with the following command:
+
+    git submodule update --init --recursive
+
 ### Setup
 This application uses Pipenv to manage Python dependencies and a virtual
 environment. Instead of the classic `requirements.txt` file, pipenv uses a 
@@ -41,7 +46,10 @@ To enter the virtualenv manually (a la `source .venv/bin/activate`):
 
     pipenv shell
 
-If you want to automatically load the virtual environment whenever you enter the project directory, take a look at [direnv](https://direnv.net/).  An `.envrc` file is included in this repository.  direnv will activate and deactivate virtualenvs for you when you enter and leave the directory.
+If you want to automatically load the virtual environment whenever you enter the 
+project directory, take a look at [direnv](https://direnv.net/).  An `.envrc` 
+file is included in this repository.  direnv will activate and deactivate 
+virtualenvs for you when you enter and leave the directory.
 
 
 ## Running (development)
