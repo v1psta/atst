@@ -26,6 +26,9 @@ def test_redirects_when_session_does_not_exist(monkeypatch, http_client, base_ur
         base_url + "/home", raise_error=False, follow_redirects=False
     )
     location = response.headers["Location"]
+    cookie = response.headers._dict.get('Set-Cookie')
+    # should clear session cookie
+    assert 'atat=""' in cookie
     assert response.code == 302
     assert response.error
     assert re.match("/\??", location)

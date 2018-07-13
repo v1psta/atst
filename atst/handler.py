@@ -23,6 +23,7 @@ class BaseHandler(tornado.web.RequestHandler):
             try:
                 session = self.application.sessions.get_session(cookie)
             except SessionNotFoundError:
+                self.clear_cookie("atat")
                 return None
         else:
             return None
