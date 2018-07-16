@@ -73,3 +73,6 @@ def test_valid_login_creates_session(app, monkeypatch, http_client, base_url):
         raise_error=False,
     )
     assert len(app.sessions.sessions) == 1
+    session = list(app.sessions.sessions.values())[0]
+    assert "atat_permissions" in session["user"]
+    assert isinstance(session["user"]["atat_permissions"], list)
