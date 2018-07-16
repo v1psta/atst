@@ -24,7 +24,7 @@
 {% end %}
 
 {% block content %}
-<div class='col'> 
+<div class='col'>
   <div class='panel'>
     <p>This is a panel</p>
   </div>
@@ -33,16 +33,6 @@
 <div class='col col--grow'>
   <div class='panel'>
     <div class='panel__content'>
-
-      <div class="panel__heading">
-        <h1>Panel Heading H1</h1>
-        <h2>Panel Heading H2</h2>
-        <h3>Panel Heading H3</h3>
-        <h4>Panel Heading H4</h4>
-        <h5>Panel Heading H5</h5>
-        <h6>Panel Heading H6</h6>
-      </div>
-
       <em>This is a panel content</em>
       <h1>Heading H1</h1>
       <h2>Heading H2</h2>
@@ -57,7 +47,7 @@
         <div class='col col--grow'>col 1</div>
         <div class='col col--grow'>col 2</div>
         <div class='col col--grow'>col 3</div>
-        <div class='col col--grow'>col 4</div>        
+        <div class='col col--grow'>col 4</div>
       </div>
       <hr>
       <div class='row'>
@@ -80,5 +70,48 @@
   <div class='panel'>
     Another panel without padding
   </div>
+
+  <section class='block-list'>
+    <header class='block-list__header'>
+      <h3 class='block-list__title'>A Block List</h3>
+    </header>
+    <ul>
+      <li class='block-list__item'>Block List Item</li>
+      <li class='block-list__item'>Block List Item</li>
+      <li class='block-list__item'>Block List Item</li>
+      <li class='block-list__item'>Block List Item</li>
+      <li class='block-list__item'>Block List Item</li>
+    </ul>
+  </section>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Table Heading</th>
+        <th class='align-right'>Table Heading</th>
+        <th>Table Heading</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>Table Cell</td>
+        <td class='align-right'>1,234.56</td>
+        <td>Table Cell</td>
+      </tr>
+
+      <tr>
+        <td>Table Cell</td>
+        <td class='align-right'>1,231,253.43</td>
+        <td>Table Cell</td>
+      </tr>
+
+      <tr>
+        <td>Table Cell</td>
+        <td class='align-right'>564.54</td>
+        <td>Table Cell</td>
+      </tr>
+    </tbody>
+  </table>
 </div>
 {% end %}
