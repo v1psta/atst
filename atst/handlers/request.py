@@ -27,9 +27,15 @@ class Request(BaseHandler):
     @tornado.gen.coroutine
     def get(self):
         user = self.get_current_user()
-        response = yield self.requests_client.get(
-            "/users/{}/requests".format(user["id"])
-        )
-        requests = response.json["requests"]
+
+        if "review_and_approve_jedi_workspace_request" in user["atat_permissions"]:
+            response = yield self.requests_client.get("/requests")
+            requests = response.json
+        else:
+            response = yield self.requests_client.get(
+                "/requests?creator_id={}".format(user["id"])
+            )
+            requests = response.json["requests"]
+
         mapped_requests = [map_request(user, request) for request in requests]
         self.render("requests.html.to", page=self.page, requests=mapped_requests)
