@@ -116,5 +116,8 @@
 {% end %}
 
 {% block next %}
+{% if not can_submit %}
+  <b class="usa-input-error-message">Please complete all required fields before submitting.</b>
+{% end %}
 <input type='submit' class='usa-button usa-button-primary' value='Submit' {{ "disabled" if not can_submit else "" }} />
 {% end %}
