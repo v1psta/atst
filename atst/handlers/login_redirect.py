@@ -3,9 +3,10 @@ from atst.handler import BaseHandler
 
 
 class LoginRedirect(BaseHandler):
-    def initialize(self, authnid_client, sessions):
+    def initialize(self, authnid_client, sessions, authz_client):
         self.authnid_client = authnid_client
         self.sessions = sessions
+        self.authz_client = authz_client
 
     @tornado.gen.coroutine
     def get(self):
@@ -13,6 +14,8 @@ class LoginRedirect(BaseHandler):
         if token:
             user = yield self._fetch_user_info(token)
             if user:
+                authz_user = yield self.create_authz_user(user["id"])
+                user["atat_permissions"] = authz_user["atat_permissions"]
                 self.login(user)
             else:
                 self.write_error(401)
@@ -35,3 +38,10 @@ class LoginRedirect(BaseHandler):
 
             else:
                 raise error
+
+    @tornado.gen.coroutine
+    def create_authz_user(self, user_id):
+        response = yield self.authz_client.post(
+            "/users", json={"id": user_id, "atat_role": "ccpo"}
+        )
+        return response.json

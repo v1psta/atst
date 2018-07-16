@@ -3,7 +3,7 @@ import pytest
 import tornado.web
 import tornado.gen
 
-MOCK_USER = {"user": {"id": "438567dd-25fa-4d83-a8cc-8aa8366cb24a"}}
+MOCK_USER = {"id": "438567dd-25fa-4d83-a8cc-8aa8366cb24a"}
 @tornado.gen.coroutine
 def _fetch_user_info(c, t):
     return MOCK_USER
