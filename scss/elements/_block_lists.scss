@@ -1,0 +1,49 @@
+@mixin block-list {
+  @include panel-margin;
+
+  > ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+}
+
+@mixin block-list-header {
+  @include panel-base;
+  @include panel-theme-default;
+  padding: $gap * 2;
+}
+
+@mixin block-list__title {
+  @include h4;
+  margin: 0;
+}
+
+@mixin block-list-item {
+  @include panel-base;
+  margin: 0;
+  padding: $gap * 2;
+  border-top: 0;
+  border-bottom: 1px dashed $color-gray-light;
+
+  &li:last-child {
+    border-bottom-style: solid;
+  }
+}
+
+
+.block-list {
+  @include block-list;
+}
+
+.block-list__header {
+  @include block-list-header;
+}
+
+.block-list__title {
+  @include block-list__title;
+}
+
+.block-list__item {
+  @include block-list-item;
+}

@@ -9,6 +9,8 @@
   border-bottom-width: 1px;
   border-top-style: solid;
   border-bottom-style: solid;
+  border-left: 0;
+  border-right: 0;
 }
 
 @mixin panel-theme-default {
@@ -29,9 +31,14 @@
   @include panel-theme-default;
   @include panel-margin;
 
-  &__content {
-    padding-left: $gap*4;
-    padding-right: $gap*4;
+  .panel__content {
+    margin: ($gap * 2) 0;
+    padding: 0 ($gap * 2);
+
+    @include media($medium-screen) {
+      margin: ($gap * 4) 0;
+      padding: 0 ($gap * 4);
+    }
   }
 }
 
