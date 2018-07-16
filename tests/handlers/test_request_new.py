@@ -37,7 +37,7 @@ def test_submit_valid_request_form(monkeypatch, http_client, base_url):
     monkeypatch.setattr(
         "atst.handlers.request_new.RequestNew.check_xsrf_cookie", lambda s: True
     )
-    monkeypatch.setattr("atst.forms.request.RequestForm.validate", lambda s, c: True)
+    monkeypatch.setattr("atst.forms.request.RequestForm.validate", lambda s: True)
 
     # this just needs to send a known invalid form value
     response = yield http_client.fetch(

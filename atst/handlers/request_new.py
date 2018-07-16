@@ -24,28 +24,38 @@ class RequestNew(BaseHandler):
             self.requests_client, screen, post_data=post_data, request_id=request_id
         )
 
+        rerender_args = dict(
+            f=jedi_flow.form,
+            data=post_data,
+            page=self.page,
+            screens=jedi_flow.screens,
+            current=screen,
+            next_screen=jedi_flow.next_screen,
+            request_id=jedi_flow.request_id,
+        )
+
         if jedi_flow.validate():
             response = yield jedi_flow.create_or_update_request(self.get_current_user())
             if response.ok:
-                if jedi_flow.next_screen >= len(jedi_flow.screens):
-                    where = "/requests"
+                if jedi_flow.validate_warnings():
+                    if jedi_flow.next_screen >= len(jedi_flow.screens):
+                        where = "/requests"
+                    else:
+                        where = self.application.default_router.reverse_url(
+                            "request_form_update", jedi_flow.next_screen, jedi_flow.request_id
+                        )
+                    self.redirect(where)
                 else:
-                    where = self.application.default_router.reverse_url(
-                        "request_form_update", jedi_flow.next_screen, jedi_flow.request_id
+                    self.render(
+                        "requests/screen-%d.html.to" % int(screen),
+                        **rerender_args
                     )
-                self.redirect(where)
             else:
                 self.set_status(response.code)
         else:
             self.render(
                 "requests/screen-%d.html.to" % int(screen),
-                f=jedi_flow.form,
-                data=post_data,
-                page=self.page,
-                screens=jedi_flow.screens,
-                current=screen,
-                next_screen=jedi_flow.next_screen,
-                request_id=jedi_flow.request_id,
+                **rerender_args
             )
 
     @tornado.web.authenticated
@@ -108,7 +118,10 @@ class JEDIRequestFlow(object):
             return self.form_class()()
 
     def validate(self):
-        return self.form.validate(self.requests_client)
+        return self.form.validate()
+
+    def validate_warnings(self):
+        return self.form.validate_warnings(self.requests_client)
 
     @property
     def current_screen(self):

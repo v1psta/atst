@@ -3,5 +3,5 @@ from wtforms_tornado import Form
 
 class ValidatedForm(Form):
 
-    def validate(self, requests_client=None):
-        return super(ValidatedForm, self).validate()
+    def validate_warnings(self, requests_client=None):
+        return True
