@@ -26,8 +26,10 @@
   border-top: 0;
   border-bottom: 1px dashed $color-gray-light;
 
-  &li:last-child {
-    border-bottom-style: solid;
+  @at-root li#{&} {
+    &:last-child {
+      border-bottom-style: solid;
+    }
   }
 }
 
