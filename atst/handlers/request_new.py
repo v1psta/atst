@@ -52,9 +52,7 @@ class RequestNew(BaseHandler):
 
         if request_id:
             response = yield self.requests_client.get(
-                "/users/{}/requests/{}".format(
-                    self.get_current_user()["id"], request_id
-                ),
+                "/requests/{}".format(request_id),
                 raise_error=False,
             )
             if response.ok:
@@ -75,14 +73,6 @@ class RequestNew(BaseHandler):
             request_id=request_id,
             can_submit=jedi_flow.can_submit
         )
-
-    @tornado.gen.coroutine
-    def get_request(self, request_id):
-        request = yield self.requests_client.get(
-            "/users/{}/requests/{}".format(self.get_current_user()["id"], request_id),
-            raise_error=False,
-        )
-        return request
 
 
 class JEDIRequestFlow(object):
