@@ -10,7 +10,7 @@ from atst.forms.financial import FinancialForm
 
 
 class RequestNew(BaseHandler):
-    def initialize(self, page, requests_client):
+    def initialize(self, page, requests_client, fundz_client):
         self.page = page
         self.requests_client = requests_client
 

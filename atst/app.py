@@ -57,19 +57,31 @@ def make_app(config, deps, **kwargs):
         url(
             r"/requests/new",
             RequestNew,
-            {"page": "requests_new", "requests_client": deps["requests_client"]},
+            {
+                "page": "requests_new",
+                "requests_client": deps["requests_client"],
+                "fundz_client": deps["fundz_client"],
+            },
             name="request_new",
         ),
         url(
             r"/requests/new/([0-9])",
             RequestNew,
-            {"page": "requests_new", "requests_client": deps["requests_client"]},
+            {
+                "page": "requests_new",
+                "requests_client": deps["requests_client"],
+                "fundz_client": deps["fundz_client"],
+            },
             name="request_form_new",
         ),
         url(
             r"/requests/new/([0-9])/(\S+)",
             RequestNew,
-            {"page": "requests_new", "requests_client": deps["requests_client"]},
+            {
+                "page": "requests_new",
+                "requests_client": deps["requests_client"],
+                "fundz_client": deps["fundz_client"],
+            },
             name="request_form_update",
         ),
         url(
