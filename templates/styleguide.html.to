@@ -84,32 +84,36 @@
     </ul>
   </section>
 
-  <table>
+  <table class='col--grow'>
     <thead>
       <tr>
-        <th>Table Heading</th>
-        <th class='align-right'>Table Heading</th>
-        <th>Table Heading</th>
+        <th class='table-cell--expand'>Expanded Column</th>
+        <th>Normal Column</th>
+        <th class='table-cell--align-right'>Right Aligned</th>
+        <th class='table-cell--shrink'>Shrunk</th>
       </tr>
     </thead>
 
     <tbody>
       <tr>
+        <td class='table-cell--expand'>Table Cell</td>
         <td>Table Cell</td>
-        <td class='align-right'>1,234.56</td>
-        <td>Table Cell</td>
+        <td class='table-cell--align-right'>1,234.56</td>
+        <td class='table-cell--shrink'>Table Cell</td>
       </tr>
 
       <tr>
+        <td class='table-cell--expand'>Table Cell</td>
         <td>Table Cell</td>
-        <td class='align-right'>1,231,253.43</td>
-        <td>Table Cell</td>
+        <td class='table-cell--align-right'>1,231,253.43</td>
+        <td class='table-cell--shrink'>Table Cell</td>
       </tr>
 
       <tr>
+        <td class='table-cell--expand'>Table Cell</td>
         <td>Table Cell</td>
-        <td class='align-right'>564.54</td>
-        <td>Table Cell</td>
+        <td class='table-cell--align-right'>564.54</td>
+        <td class='table-cell--shrink'>Table Cell</td>
       </tr>
     </tbody>
   </table>
