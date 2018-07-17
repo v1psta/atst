@@ -6,9 +6,14 @@
 
 table {
   @include panel-margin;
-  margin-top: 0;
+  min-width: 100%;
 
   tr {
+    th,
+    td {
+      white-space: nowrap;
+    }
+
     th {
       @include block-list-header;
     }
@@ -23,8 +28,16 @@ table {
       }
     }
 
-    .align-right {
+    .table-cell--align-right {
       text-align: right;
+    }
+
+    .table-cell--shrink {
+      width: 1%;
+    }
+
+    .table-cell--expand {
+      width: 100%;
     }
   }
 }
