@@ -53,7 +53,8 @@ class RequestNew(BaseHandler):
         if jedi_flow.validate():
             response = yield jedi_flow.create_or_update_request()
             if response.ok:
-                if jedi_flow.validate_warnings():
+                valid = yield jedi_flow.validate_warnings()
+                if valid:
                     if jedi_flow.next_screen >= len(jedi_flow.screens):
                         where = "/requests"
                     else:
@@ -143,11 +144,13 @@ class JEDIRequestFlow(object):
     def validate(self):
         return self.form.validate()
 
+    @tornado.gen.coroutine
     def validate_warnings(self):
-        return self.form.validate_warnings(
+        valid = yield self.form.perform_extra_validation(
             self.existing_request.get('body', {}).get(self.form_section),
             self.fundz_client,
         )
+        return valid
 
     @property
     def current_screen(self):

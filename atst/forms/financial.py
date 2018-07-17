@@ -1,12 +1,39 @@
+import tornado
+from tornado.gen import Return
 from wtforms.fields.html5 import EmailField
 from wtforms.fields import StringField, SelectField
+from wtforms.form import Form
 from wtforms.validators import Required, Email
 
 from .fields import NewlineListField
 from .forms import ValidatedForm
 
 
+@tornado.gen.coroutine
+def validate_pe_id(field, existing_request, fundz_client):
+    response = yield fundz_client.get(
+        "/pe-number/{}".format(field.data),
+        raise_error=False,
+    )
+    if not response.ok:
+        field.errors.append(
+            "We couldn't find that PE number, but if you have double checked "
+            "it you can submit anyway. Your request will need to go through a "
+            "manual review."
+        )
+        return False
+
+    return True
+
+
 class FinancialForm(ValidatedForm):
+
+    @tornado.gen.coroutine
+    def perform_extra_validation(self, existing_request, fundz_client):
+        valid = True
+        if existing_request['pe_id'] != self.pe_id.data:
+            valid = yield validate_pe_id(self.pe_id, existing_request, fundz_client)
+        raise Return(valid)
 
     task_order_id = StringField(
         "Task Order Number associated with this request.", validators=[Required()]
