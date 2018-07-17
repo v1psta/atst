@@ -15,9 +15,9 @@ from atst.handlers.dev import Dev
 from atst.home import home
 from atst.api_client import ApiClient
 from atst.sessions import RedisSessions
+from atst.ui import UI
 
 ENV = os.getenv("TORNADO_ENV", "dev")
-
 
 def make_app(config, deps, **kwargs):
 
@@ -104,6 +104,7 @@ def make_app(config, deps, **kwargs):
     )
     app.config = config
     app.sessions = deps["sessions"]
+    app.ui = UI
     return app
 
 

@@ -5,6 +5,7 @@
   <ul>
     <li>
       <a href='/' class='sidenav__link sidenav__link--active' aria-current='true'>Navigation Item</a>
+      {{ ui.icon('trash') }}
       <ul>
         <li><a href='/' class='sidenav__link sidenav__link--active'>Sub Navigation</a></li>
         <li><a href='/' class='sidenav__link'>Sub Navigation</a></li>
