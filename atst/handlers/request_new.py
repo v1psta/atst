@@ -13,6 +13,14 @@ class RequestNew(BaseHandler):
     def initialize(self, page, requests_client, fundz_client):
         self.page = page
         self.requests_client = requests_client
+        self.fundz_client = fundz_client
+
+    @tornado.gen.coroutine
+    def get_existing_request(self, current_user, request_id):
+        request = yield self.requests_client.get(
+            "/users/{}/requests/{}".format(current_user["id"], request_id),
+        )
+        return request.json
 
     @tornado.web.authenticated
     @tornado.gen.coroutine
@@ -20,8 +28,16 @@ class RequestNew(BaseHandler):
         self.check_xsrf_cookie()
         screen = int(screen)
         post_data = self.request.arguments
+        current_user = self.get_current_user()
+        existing_request = yield self.get_existing_request(current_user, request_id)
         jedi_flow = JEDIRequestFlow(
-            self.requests_client, screen, post_data=post_data, request_id=request_id
+            self.requests_client,
+            self.fundz_client,
+            screen,
+            post_data=post_data,
+            request_id=request_id,
+            current_user=current_user,
+            existing_request=existing_request,
         )
 
         rerender_args = dict(
@@ -35,7 +51,7 @@ class RequestNew(BaseHandler):
         )
 
         if jedi_flow.validate():
-            response = yield jedi_flow.create_or_update_request(self.get_current_user())
+            response = yield jedi_flow.create_or_update_request()
             if response.ok:
                 if jedi_flow.validate_warnings():
                     if jedi_flow.next_screen >= len(jedi_flow.screens):
@@ -73,7 +89,7 @@ class RequestNew(BaseHandler):
                 request = response.json
 
         jedi_flow = JEDIRequestFlow(
-            self.requests_client, screen, request, request_id=request_id
+            self.requests_client, self.fundz_client, screen, request, request_id=request_id
         )
 
         self.render(
@@ -93,12 +109,16 @@ class JEDIRequestFlow(object):
     def __init__(
         self,
         requests_client,
+        fundz_client,
         current_step,
         request=None,
         post_data=None,
         request_id=None,
+        current_user=None,
+        existing_request=None,
     ):
         self.requests_client = requests_client
+        self.fundz_client = fundz_client
 
         self.current_step = current_step
         self.request = request
@@ -108,6 +128,9 @@ class JEDIRequestFlow(object):
 
         self.request_id = request_id
         self.form = self._form()
+
+        self.current_user = current_user
+        self.existing_request = existing_request
 
     def _form(self):
         if self.is_post:
@@ -121,7 +144,10 @@ class JEDIRequestFlow(object):
         return self.form.validate()
 
     def validate_warnings(self):
-        return self.form.validate_warnings(self.requests_client)
+        return self.form.validate_warnings(
+            self.existing_request.get('body', {}).get(self.form_section),
+            self.fundz_client,
+        )
 
     @property
     def current_screen(self):
@@ -201,9 +227,9 @@ class JEDIRequestFlow(object):
         ]
 
     @tornado.gen.coroutine
-    def create_or_update_request(self, user):
+    def create_or_update_request(self):
         request_data = {
-            "creator_id": user["id"],
+            "creator_id": self.current_user["id"],
             "request": {self.form_section: self.form.data},
         }
         if self.request_id:
