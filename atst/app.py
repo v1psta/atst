@@ -126,6 +126,11 @@ def make_deps(config):
             api_version="v1",
             validate_cert=validate_cert,
         ),
+        "fundz_client": ApiClient(
+            config["default"]["FUNDZ_BASE_URL"],
+            api_version="v1",
+            validate_cert=validate_cert,
+        ),
         "requests_client": ApiClient(
             config["default"]["REQUESTS_QUEUE_BASE_URL"],
             api_version="v1",
