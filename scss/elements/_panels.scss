@@ -19,6 +19,9 @@
 }
 
 @mixin panel-margin {
+  margin-top: 0;
+  margin-left: 0;
+  margin-right: 0;
   margin-bottom: $site-margins-mobile * 2;
 
   @include media($medium-screen) {
