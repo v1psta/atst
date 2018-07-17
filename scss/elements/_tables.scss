@@ -3,3 +3,41 @@
  * @see https://designsystem.digital.gov/components/tables/
  * @source https://github.com/uswds/uswds/blob/develop/src/stylesheets/elements/_table.scss
  */
+
+table {
+  @include panel-margin;
+  min-width: 100%;
+
+  tr {
+    th,
+    td {
+      white-space: nowrap;
+    }
+
+    th {
+      @include block-list-header;
+    }
+
+    td {
+      @include block-list-item;
+    }
+
+    &:last-child {
+      td {
+        border-bottom-style: solid;
+      }
+    }
+
+    .table-cell--align-right {
+      text-align: right;
+    }
+
+    .table-cell--shrink {
+      width: 1%;
+    }
+
+    .table-cell--expand {
+      width: 100%;
+    }
+  }
+}
