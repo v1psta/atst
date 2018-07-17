@@ -16,7 +16,7 @@ class RequestForm(Form):
     )
 
     num_applications = IntegerField(
-        "Please estimate the number of applications that might be supported by this request",
+        "Estimate the number of applications that might be supported by this request",
         validators=[InputRequired(), NumberRange(min=1)],
     )
 
@@ -32,7 +32,7 @@ class RequestForm(Form):
     )
 
     app_description = TextAreaField(
-        "Please briefly describe how your team is expecting to use the JEDI Cloud"
+        "Describe how your team is expecting to use the JEDI Cloud"
     )
 
     supported_organizations = StringField(
@@ -70,11 +70,6 @@ class RequestForm(Form):
         validators=[InputRequired()],
     )
 
-    supporting_organization = TextAreaField(
-        "Please describe the organizations that are supporting you, include both government and contractor resources",
-        validators=[InputRequired()],
-    )
-
     has_migration_office = RadioField(
         "Do you have a migration office that you're working with to migrate to the cloud?",
         choices=[("yes", "Yes"), ("no", "No")],
@@ -82,6 +77,6 @@ class RequestForm(Form):
     )
 
     supporting_organization = StringField(
-        "Please describe the organizations that are supporting you, include both government and contractor resources.",
+        "Describe the organizations that are supporting you, include both government and contractor resources",
         validators=[InputRequired()],
     )

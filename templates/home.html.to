@@ -1,5 +1,9 @@
 {% extends "base.html.to" %}
 
+{% block sidenav %}
+{% include 'nav-side.html.to' %}
+{% end %}
+
 {% block content %}
 
 <main class="usa-section usa-content">
@@ -9,4 +13,6 @@
 </main>
 
 {% end %}
+
+
 
