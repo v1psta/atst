@@ -59,29 +59,29 @@ class FinancialForm(Form):
     )
 
     clin_0001 = StringField(
-        "<b>CLIN 0001</b> - Unclassified IaaS and PaaS Amount", validators=[Required()]
+        "<dl><dt>CLIN 0001</dt> - Unclassified IaaS and PaaS Amount</dl>", validators=[Required()]
     )
 
     clin_0003 = StringField(
-        "<b>CLIN 0003</b> - Unclassified Cloud Support Package", validators=[Required()]
+        "<dl><dt>CLIN 0003</dt> - Unclassified Cloud Support Package</dl>", validators=[Required()]
     )
 
     clin_1001 = StringField(
-        "<b>CLIN 1001</b> - Unclassified IaaS and PaaS Amount <br> OPTION PERIOD 1",
+        "<dl><dt>CLIN 1001</dt> - Unclassified IaaS and PaaS Amount <br> OPTION PERIOD 1</dl>",
         validators=[Required()],
     )
 
     clin_1003 = StringField(
-        "<b>CLIN 1003</b> - Unclassified Cloud Support Package <br> OPTION PERIOD 1",
+        "<dl><dt>CLIN 1003</dt> - Unclassified Cloud Support Package <br> OPTION PERIOD 1</dl>",
         validators=[Required()],
     )
 
     clin_2001 = StringField(
-        "<b>CLIN 2001</b> - Unclassified IaaS and PaaS Amount <br> OPTION PERIOD 2",
+        "<dl><dt>CLIN 2001</dt> - Unclassified IaaS and PaaS Amount <br> OPTION PERIOD 2</dl>",
         validators=[Required()],
     )
 
     clin_2003 = StringField(
-        "<b>CLIN 2003</b> - Unclassified Cloud Support Package <br> OPTION PERIOD 2",
+        "<dl><dt>CLIN 2003</dt> - Unclassified Cloud Support Package <br> OPTION PERIOD 2</dl>",
         validators=[Required()],
     )
