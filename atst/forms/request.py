@@ -2,7 +2,7 @@ from wtforms.fields.html5 import IntegerField
 from wtforms.fields import RadioField, StringField, TextAreaField
 from wtforms.validators import NumberRange, InputRequired
 from wtforms_tornado import Form
-from .fields import DateField, NewlineListField
+from .fields import DateField
 from .validators import DateRange
 import pendulum
 

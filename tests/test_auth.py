@@ -21,11 +21,14 @@ def test_redirects_when_not_logged_in(http_client, base_url):
 
 @pytest.mark.gen_test
 def test_redirects_when_session_does_not_exist(monkeypatch, http_client, base_url):
-    monkeypatch.setattr("atst.handlers.main.MainHandler.get_secure_cookie", lambda s,c: 'stale cookie!')
+    monkeypatch.setattr("atst.handlers.main.Main.get_secure_cookie", lambda s,c: 'stale cookie!')
     response = yield http_client.fetch(
         base_url + "/home", raise_error=False, follow_redirects=False
     )
     location = response.headers["Location"]
+    cookie = response.headers._dict.get('Set-Cookie')
+    # should clear session cookie
+    assert 'atat=""' in cookie
     assert response.code == 302
     assert response.error
     assert re.match("/\??", location)
@@ -33,9 +36,9 @@ def test_redirects_when_session_does_not_exist(monkeypatch, http_client, base_ur
 
 @pytest.mark.gen_test
 def test_login_with_valid_bearer_token(app, monkeypatch, http_client, base_url):
-    monkeypatch.setattr("atst.handlers.login.Login._fetch_user_info", _fetch_user_info)
+    monkeypatch.setattr("atst.handlers.login_redirect.LoginRedirect._fetch_user_info", _fetch_user_info)
     response = yield http_client.fetch(
-        base_url + "/login?bearer-token=abc-123",
+        base_url + "/login-redirect?bearer-token=abc-123",
         follow_redirects=False,
         raise_error=False,
     )
@@ -65,10 +68,10 @@ def test_login_with_invalid_bearer_token(http_client, base_url):
 
 @pytest.mark.gen_test
 def test_valid_login_creates_session(app, monkeypatch, http_client, base_url):
-    monkeypatch.setattr("atst.handlers.login.Login._fetch_user_info", _fetch_user_info)
+    monkeypatch.setattr("atst.handlers.login_redirect.LoginRedirect._fetch_user_info", _fetch_user_info)
     assert len(app.sessions.sessions) == 0
     yield http_client.fetch(
-        base_url + "/login?bearer-token=abc-123",
+        base_url + "/login-redirect?bearer-token=abc-123",
         follow_redirects=False,
         raise_error=False,
     )

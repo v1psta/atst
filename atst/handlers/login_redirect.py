@@ -2,7 +2,7 @@ import tornado
 from atst.handler import BaseHandler
 
 
-class Login(BaseHandler):
+class LoginRedirect(BaseHandler):
     def initialize(self, authnid_client, sessions):
         self.authnid_client = authnid_client
         self.sessions = sessions

@@ -15,9 +15,13 @@ class FinancialForm(Form):
         "Unique Item Identifier (UII)s related to your application(s) if you already have them."
     )
 
-    pe_id = NewlineListField(
-        "Program Element (PE) Numbers related to your request"
+    pe_id = StringField(
+        "Program Element (PE) Number related to your request"
     )
+
+    treasury_code = StringField("Please provide your Program Treasury Code")
+
+    ba_code = StringField("Please provide your Program BA Code")
 
     fname_co = StringField("Contracting Officer First Name", validators=[Required()])
     lname_co = StringField("Contracting Officer Last Name", validators=[Required()])

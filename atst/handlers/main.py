@@ -2,7 +2,7 @@ import tornado
 from atst.handler import BaseHandler
 
 
-class MainHandler(BaseHandler):
+class Main(BaseHandler):
     def initialize(self, page):
         self.page = page
 
