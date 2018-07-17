@@ -1,5 +1,9 @@
 {% extends '../requests_new.html.to' %}
 
+{% block form_action %}
+  <form method='POST' action="{{ reverse_url('requests_submit', request_id) }}" autocomplete="off">
+{% end %}
+
 {% block form %}
 
 {% autoescape None %}
@@ -8,110 +12,105 @@
 {% end %}
 
 <h2 id="review-submit">Review &amp; Submit</h2>
+
 <p class="usa-font-lead">Before you can submit your request, please take a moment to review the information entered in the form. You may make changes by clicking the edit link on each section. When all information looks right, go ahead and submit.</p>
 
-<h3>Details of Use <a href="">Edit</a></h3>
+<h3>Details of Use <a href="{{ reverse_url('request_form_update', 1, request_id) }}">Edit</a></h3>
 
 <h4>Overall Request Details</h4>
 
 <label>What is the total estimated dollar value of the cloud resources you are requesting using the JEDI CSP Calculator? </label>
-<b>{{ data.get('details_of_use', {}).get('dollar_value') }}</b>
+<b>{{ data['details_of_use']['dollar_value'] }}</b>
 
 <label>Please estimate the number of applications that might be supported by this request</label>
-<b>{{ data.get('details_of_use', {}).get('num_applications') }}</b>
+<b>{{ data['details_of_use']['num_applications'] }}</b>
 
 <label>Start Date</label>
-<b>{{ data.get('details_of_use', {}).get('date_start') }}</b>
+<b>{{ data['details_of_use']['date_start'] }}</b>
 
 <label>Please briefly describe how your team is expecting to use the JEDI Cloud</label>
-<b>{{ data.get('details_of_use', {}).get('app_description') }}</b>
+<b>{{ data['details_of_use']['app_description'] }}</b>
 
 <label>What organizations are supported by these applications?</label>
-<b>{{ data.get('details_of_use', {}).get('supported_organizations') }}</b>
-
-<label>Please enter the Unique Item Identifier (UII)s related to your application(s) if you already have them.</label>
-<b>{{ data.get('details_of_use', {}).get('uii_ids') }}</b>
-
-<label>Please provide the Program Element (PE) Numbers related to your request</label>
-<b>{{ data.get('details_of_use', {}).get('pe_id') }}</b>
+<b>{{ data['details_of_use']['supported_organizations'] }}</b>
 
 <h4>Cloud Resources</h4>
 
 <label>Total Number of vCPU cores</label>
-<b>{{ data.get('details_of_use', {}).get('total_cores') }}</b>
+<b>{{ data['details_of_use']['total_cores'] }}</b>
 
 <label>Total RAM</label>
-<b>{{ data.get('details_of_use', {}).get('total_ram') }}</b>
+<b>{{ data['details_of_use']['total_ram'] }}</b>
 
 <label>Total object storage</label>
-<b>{{ data.get('details_of_use', {}).get('total_object_storage') }}</b>
+<b>{{ data['details_of_use']['total_object_storage'] }}</b>
 
 <label>Total server storage</label>
-<b>{{ data.get('details_of_use', {}).get('total_server_storage') }}</b>
+<b>{{ data['details_of_use']['total_server_storage'] }}</b>
 
 <h4>Support Staff</h4>
 
 <label>Do you have a contractor to advise and assist you with using cloud services?</label>
-<b>{{ data.get('details_of_use', {}).get('has_contractor_advisor') }}</b>
+<b>{{ data['details_of_use']['has_contractor_advisor'] }}</b>
 
 <label>Are you using the JEDI Cloud to migrate existing applications?</label>
-<b>{{ data.get('details_of_use', {}).get('is_migrating_application') }}</b>
+<b>{{ data['details_of_use']['is_migrating_application'] }}</b>
 
 <label>Please describe the organizations that are supporting you, include both government and contractor resources</label>
-<b>{{ data.get('details_of_use', {}).get('supporting_organization') }}</b>
+<b>{{ data['details_of_use']['supporting_organization'] }}</b>
 
 <label>Do you have a migration office that you're working with to migrate to the cloud?</label>
-<b>{{ data.get('details_of_use', {}).get('has_migration_office') }}</b>
+<b>{{ data['details_of_use']['has_migration_office'] }}</b>
 
 <label>Please describe the organizations that are supporting you, include both government and contractor resources.</label>
-<b>{{ data.get('details_of_use', {}).get('supporting_organization') }}</b>
+<b>{{ data['details_of_use']['supporting_organization'] }}</b>
 
 <br><br><hr>
 
-<h3>Information About You <a href="">Edit</a></h3>
+<h3>Information About You <a href="{{ reverse_url('request_form_update', 2, request_id) }}">Edit</a></h3>
 
 <label>First Name</label>
-<b>{{ data.get('information_about_you', {}).get('fname_request') }}</b>
+<b>{{ data['information_about_you']['fname_request'] }}</b>
 
 <label>Last Name</label>
-<b>{{ data.get('information_about_you', {}).get('lname_request') }}</b>
+<b>{{ data['information_about_you']['lname_request'] }}</b>
 
 <label>Email (associated with your CAC)</label>
-<b>{{ data.get('information_about_you', {}).get('email_request') }}</b>
+<b>{{ data['information_about_you']['email_request'] }}</b>
 
 <label>Phone Number</label>
-<b>{{ data.get('information_about_you', {}).get('phone_number') }}</b>
+<b>{{ data['information_about_you']['phone_number'] }}</b>
 
 <label>Service Branch or Agency</label>
-<b>{{ data.get('information_about_you', {}).get('service_branch') }}</b>
+<b>{{ data['information_about_you']['service_branch'] }}</b>
 
 <label>Citizenship</label>
-<b>{{ data.get('information_about_you', {}).get('citizenship') }}</b>
+<b>{{ data['information_about_you']['citizenship'] }}</b>
 
 <label>Designation of Person</label>
-<b>{{ data.get('information_about_you', {}).get('designation') }}</b>
+<b>{{ data['information_about_you']['designation'] }}</b>
 
 <label>Latest Information Assurance (IA) Training completion date</label>
-<b>{{ data.get('information_about_you', {}).get('date_latest_training') }}</b>
+<b>{{ data['information_about_you']['date_latest_training'] }}</b>
 
 
 <br><br><hr>
 
-<h3>Primary Government/Military Point of Contact (POC) <a href="">Edit</a></h3>
+<h3>Primary Government/Military Point of Contact (POC) <a href="{{ reverse_url('request_form_update', 3, request_id) }}">Edit</a></h3>
 
 
 
 <label>POC First Name</label>
-<b>{{ data.get('primary_poc', {}).get('fname_poc')}}</b>
+<b>{{ data['primary_poc']['fname_poc']}}</b>
 
 <label>POC Last Name</label>
-<b>{{ data.get('primary_poc', {}).get('lname_poc')}}</b>
+<b>{{ data['primary_poc']['lname_poc']}}</b>
 
 <label>POC Email (associated with CAC)</label>
-<b>{{ data.get('primary_poc', {}).get('email_poc')}} </b>
+<b>{{ data['primary_poc']['email_poc']}} </b>
 
 <label>DOD ID</label>
-<b>{{ data.get('primary_poc', {}).get('dodid_poc')}}</b>
+<b>{{ data['primary_poc']['dodid_poc']}}</b>
 
 
 <br><br>
@@ -119,5 +118,8 @@
 {% end %}
 
 {% block next %}
-<input type='submit' class='usa-button usa-button-primary' value='Submit' />
+{% if not can_submit %}
+  <b class="usa-input-error-message">Please complete all required fields before submitting.</b>
+{% end %}
+<input type='submit' class='usa-button usa-button-primary' value='Submit' {{ "disabled" if not can_submit else "" }} />
 {% end %}

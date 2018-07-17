@@ -1,10 +1,8 @@
 #!/bin/bash
 
-# If a command fails, exit the script
-set -e
+# script/update: Update dependencies
 
-# Ensure we are in the app root directory (not the /script directory)
-cd "$(dirname "${0}")/.."
+source "$(dirname "${0}")"/../script/include/global_header.inc.sh
 
-# Update dependencies
-script/bootstrap
+# Run the bootstrap script
+source ./script/bootstrap

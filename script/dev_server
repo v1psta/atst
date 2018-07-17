@@ -1,0 +1,32 @@
+#!/bin/bash
+
+# script/dev_server: Launch a local dev version of the server in the background
+
+#
+# WIP
+#
+
+source "$(dirname "${0}")"/../script/include/global_header.inc.sh
+
+# Create a function to run after a trap is triggered
+reap() {
+   kill -s SIGTERM -- "-$$"
+   sleep 0.1
+   exit
+}
+
+# Register trapping of SIGTERM and SIGINT
+trap reap SIGTERM SIGINT
+
+# Display the script PID, which will also be the process group ID for all 
+# child processes
+echo "Process Group: $$"
+
+# Set server launch related environment variables
+DEBUG=1
+LAUNCH_ARGS="$*"
+
+
+# Launch the app
+source ./script/server &
+wait
