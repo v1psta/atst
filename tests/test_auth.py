@@ -3,7 +3,7 @@ import pytest
 import tornado.web
 import tornado.gen
 
-MOCK_USER = {"user": {"id": "438567dd-25fa-4d83-a8cc-8aa8366cb24a"}}
+MOCK_USER = {"id": "438567dd-25fa-4d83-a8cc-8aa8366cb24a"}
 @tornado.gen.coroutine
 def _fetch_user_info(c, t):
     return MOCK_USER
@@ -76,3 +76,6 @@ def test_valid_login_creates_session(app, monkeypatch, http_client, base_url):
         raise_error=False,
     )
     assert len(app.sessions.sessions) == 1
+    session = list(app.sessions.sessions.values())[0]
+    assert "atat_permissions" in session["user"]
+    assert isinstance(session["user"]["atat_permissions"], list)

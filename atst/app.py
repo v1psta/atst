@@ -26,7 +26,7 @@ def make_app(config, deps, **kwargs):
         url(
             r"/login-redirect",
             LoginRedirect,
-            {"sessions": deps["sessions"], "authnid_client": deps["authnid_client"]},
+            {"sessions": deps["sessions"], "authnid_client": deps["authnid_client"], "authz_client": deps["authz_client"]},
             name="login_redirect",
         ),
         url(r"/home", Main, {"page": "home"}, name="home"),
@@ -88,7 +88,7 @@ def make_app(config, deps, **kwargs):
             url(
                 r"/login-dev",
                 Dev,
-                {"action": "login", "sessions": deps["sessions"]},
+                {"action": "login", "sessions": deps["sessions"], "authz_client": deps["authz_client"]},
                 name="dev-login",
             )
         ]

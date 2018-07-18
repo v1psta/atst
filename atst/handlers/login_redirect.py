@@ -3,9 +3,10 @@ from atst.handler import BaseHandler
 
 
 class LoginRedirect(BaseHandler):
-    def initialize(self, authnid_client, sessions):
+    def initialize(self, authnid_client, sessions, authz_client):
         self.authnid_client = authnid_client
         self.sessions = sessions
+        self.authz_client = authz_client
 
     @tornado.gen.coroutine
     def get(self):
@@ -13,7 +14,7 @@ class LoginRedirect(BaseHandler):
         if token:
             user = yield self._fetch_user_info(token)
             if user:
-                self.login(user)
+                yield self.login(user)
             else:
                 self.write_error(401)
 

@@ -1,14 +1,14 @@
 import pytest
 
 from atst.app import make_app, make_deps, make_config
-from tests.mocks import MockApiClient, MockRequestsClient
+from tests.mocks import MockApiClient, MockRequestsClient, MockAuthzClient
 from atst.sessions import DictSessions
 
 
 @pytest.fixture
 def app():
     TEST_DEPS = {
-        "authz_client": MockApiClient("authz"),
+        "authz_client": MockAuthzClient("authz"),
         "requests_client": MockRequestsClient("requests"),
         "authnid_client": MockApiClient("authnid"),
         "sessions": DictSessions(),
