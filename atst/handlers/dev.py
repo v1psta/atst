@@ -16,18 +16,4 @@ class Dev(BaseHandler):
             "first_name": "Test",
             "last_name": "User",
         }
-        user_permissions = yield self.get_or_fetch_user_permissions(user["id"])
-        user["atat_permissions"] = user_permissions
-        self.login(user)
-
-    @tornado.gen.coroutine
-    def get_or_fetch_user_permissions(self, user_id):
-        response = yield self.authz_client.post(
-            "/users", json={"id": user_id, "atat_role": "ccpo"}, raise_error=False
-        )
-        if response.code == 200:
-            return response.json["atat_permissions"]
-        elif response.code == 409:
-            # User already exists
-            response = yield self.authz_client.get("/users/{}".format(user_id))
-            return response.json["atat_permissions"]
+        yield self.login(user)
