@@ -85,6 +85,12 @@
       <span class='nowrap'>{% module Icon('briefcase') %} 'briefcase'&nbsp;&nbsp;&nbsp;</span>
       <span class='nowrap'>{% module Icon('bell') %} 'bell'&nbsp;&nbsp;&nbsp;</span>
       <span class='nowrap'>{% module Icon('folder') %} 'folder'&nbsp;&nbsp;&nbsp;</span>
+      <span class='nowrap'>{% module Icon('help') %} 'help'&nbsp;&nbsp;&nbsp;</span>
+      <span class='nowrap'>{% module Icon('shield') %} 'shield'&nbsp;&nbsp;&nbsp;</span>
+      <span class='nowrap'>{% module Icon('info') %} 'info'&nbsp;&nbsp;&nbsp;</span>
+      <span class='nowrap'>{% module Icon('alert') %} 'alert'&nbsp;&nbsp;&nbsp;</span>
+      <span class='nowrap'>{% module Icon('link') %} 'link'&nbsp;&nbsp;&nbsp;</span>
+      <span class='nowrap'>{% module Icon('ok') %} 'ok'&nbsp;&nbsp;&nbsp;</span>
     </div>
   </div>
 
