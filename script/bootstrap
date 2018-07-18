@@ -17,4 +17,4 @@ source ./script/include/run_bootstrap
 
 # Link USWDS fonts into the /static directory
 rm -f ./static/fonts
-ln -s ../node/modules/uswds/src/fonts ./static/fonts
+ln -s ../node_modules/uswds/src/fonts ./static/fonts
