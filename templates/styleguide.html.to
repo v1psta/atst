@@ -24,11 +24,6 @@
 {% end %}
 
 {% block content %}
-<div class='col'>
-  <div class='panel'>
-    <p>This is a panel</p>
-  </div>
-</div>
 
 <div class='col col--grow'>
   <div class='panel'>
@@ -42,6 +37,7 @@
       <h6>Heading H6</h6>
 
       <p>This is a paragraph. <a href="\">Lorem ipsum dolor sit amet</a>, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+
 
       <div class="row">
         <div class='col col--grow'>col 1</div>
@@ -69,6 +65,33 @@
 
   <div class='panel'>
     Another panel without padding
+  </div>
+
+  <div class='panel'>
+    <div class='panel__content'>
+      <h5>Icons</h5>
+      <span class='nowrap'>{% module Icon('trash') %} 'trash'&nbsp;&nbsp;&nbsp;</span>
+      <span class='nowrap'>{% module Icon('document') %} 'document'&nbsp;&nbsp;&nbsp;</span>
+      <span class='nowrap'>{% module Icon('cloud') %} 'cloud'&nbsp;&nbsp;&nbsp;</span>
+      <span class='nowrap'>{% module Icon('chart') %} 'chart'&nbsp;&nbsp;&nbsp;</span>
+      <span class='nowrap'>{% module Icon('caret_up') %} 'caret_up'&nbsp;&nbsp;&nbsp;</span>
+      <span class='nowrap'>{% module Icon('caret_down') %} 'caret_down'&nbsp;&nbsp;&nbsp;</span>
+      <span class='nowrap'>{% module Icon('caret_right') %} 'caret_right'&nbsp;&nbsp;&nbsp;</span>
+      <span class='nowrap'>{% module Icon('caret_left') %} 'caret_left'&nbsp;&nbsp;&nbsp;</span>
+      <span class='nowrap'>{% module Icon('x') %} 'x'&nbsp;&nbsp;&nbsp;</span>
+      <span class='nowrap'>{% module Icon('search') %} 'search'&nbsp;&nbsp;&nbsp;</span>
+      <span class='nowrap'>{% module Icon('avatar') %} 'avatar'&nbsp;&nbsp;&nbsp;</span>
+      <span class='nowrap'>{% module Icon('download') %} 'download'&nbsp;&nbsp;&nbsp;</span>
+      <span class='nowrap'>{% module Icon('briefcase') %} 'briefcase'&nbsp;&nbsp;&nbsp;</span>
+      <span class='nowrap'>{% module Icon('bell') %} 'bell'&nbsp;&nbsp;&nbsp;</span>
+      <span class='nowrap'>{% module Icon('folder') %} 'folder'&nbsp;&nbsp;&nbsp;</span>
+      <span class='nowrap'>{% module Icon('help') %} 'help'&nbsp;&nbsp;&nbsp;</span>
+      <span class='nowrap'>{% module Icon('shield') %} 'shield'&nbsp;&nbsp;&nbsp;</span>
+      <span class='nowrap'>{% module Icon('info') %} 'info'&nbsp;&nbsp;&nbsp;</span>
+      <span class='nowrap'>{% module Icon('alert') %} 'alert'&nbsp;&nbsp;&nbsp;</span>
+      <span class='nowrap'>{% module Icon('link') %} 'link'&nbsp;&nbsp;&nbsp;</span>
+      <span class='nowrap'>{% module Icon('ok') %} 'ok'&nbsp;&nbsp;&nbsp;</span>
+    </div>
   </div>
 
   <section class='block-list'>

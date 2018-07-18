@@ -12,43 +12,43 @@ microservices when appropriate.
 ## Installation
 
 ### Requirements
-See the [scriptz](https://github.com/dod-ccpo/scriptz) repository for the shared 
+See the [scriptz](https://github.com/dod-ccpo/scriptz) repository for the shared
 requirements and guidelines for all ATAT applications.
-Additionally, ATST requires a redis instance for session management. Have redis 
-installed and running. By default, ATST will try to connect to a redis instance 
+Additionally, ATST requires a redis instance for session management. Have redis
+installed and running. By default, ATST will try to connect to a redis instance
 running on localhost on its default port, 6379.
 
 ### Cloning
-This project contains git submodules. Here is an example clone command that will 
+This project contains git submodules. Here is an example clone command that will
 automatically initialize and update those modules:
 
     git clone --recurse-submodules git@github.com:dod-ccpo/atst.git
 
-If you have an existing clone that does not yet contain the submodules, you can 
+If you have an existing clone that does not yet contain the submodules, you can
 set them up with the following command:
 
     git submodule update --init --recursive
 
 ### Setup
 This application uses Pipenv to manage Python dependencies and a virtual
-environment. Instead of the classic `requirements.txt` file, pipenv uses a 
-Pipfile and Pipfile.lock, making it more similar to other modern package managers 
+environment. Instead of the classic `requirements.txt` file, pipenv uses a
+Pipfile and Pipfile.lock, making it more similar to other modern package managers
 like yarn or mix.
 
 To perform the installation, run the setup script:
 
     script/setup
 
-The setup script creates the virtual environment, and then calls script/bootstrap 
+The setup script creates the virtual environment, and then calls script/bootstrap
 to install all of the Python and Node dependencies.
 
 To enter the virtualenv manually (a la `source .venv/bin/activate`):
 
     pipenv shell
 
-If you want to automatically load the virtual environment whenever you enter the 
-project directory, take a look at [direnv](https://direnv.net/).  An `.envrc` 
-file is included in this repository.  direnv will activate and deactivate 
+If you want to automatically load the virtual environment whenever you enter the
+project directory, take a look at [direnv](https://direnv.net/).  An `.envrc`
+file is included in this repository.  direnv will activate and deactivate
 virtualenvs for you when you enter and leave the directory.
 
 
@@ -79,3 +79,10 @@ following to `~/.vim/filetype.vim` for syntax highlighting:
 
     :au BufRead *.html.to set filetype=mustache
 
+
+## Icons
+To render an icon use `{% module Icon('name') %}` in a template, where `name` is the filename of an svg file in `static/icons`.
+
+All icons used should be from the Noun Project, specifically [this collection](https://thenounproject.com/monstercritic/collection/tinicons-a-set-of-tiny-icons-perfect-for-ui-elemen/) if possible.
+
+SVG markup should be cleaned an minified, [Svgsus](http://www.svgs.us/) works well.

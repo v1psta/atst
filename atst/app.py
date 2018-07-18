@@ -15,9 +15,9 @@ from atst.handlers.dev import Dev
 from atst.home import home
 from atst.api_client import ApiClient
 from atst.sessions import RedisSessions
+from atst import ui_modules
 
 ENV = os.getenv("TORNADO_ENV", "dev")
-
 
 def make_app(config, deps, **kwargs):
 
@@ -100,6 +100,7 @@ def make_app(config, deps, **kwargs):
         static_path=home.child("static"),
         cookie_secret=config["default"]["COOKIE_SECRET"],
         debug=config["default"].getboolean("DEBUG"),
+        ui_modules=ui_modules,
         **kwargs,
     )
     app.config = config
