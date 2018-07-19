@@ -120,6 +120,7 @@
       <span class='nowrap'>{% module Icon('alert') %} 'alert'&nbsp;&nbsp;&nbsp;</span>
       <span class='nowrap'>{% module Icon('link') %} 'link'&nbsp;&nbsp;&nbsp;</span>
       <span class='nowrap'>{% module Icon('ok') %} 'ok'&nbsp;&nbsp;&nbsp;</span>
+      <span class='nowrap'>{% module Icon('checkmark') %} 'checkmark'&nbsp;&nbsp;&nbsp;</span>
     </div>
   </div>
 
