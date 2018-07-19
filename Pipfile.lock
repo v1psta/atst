@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "25c2d44de8e03dd749009fb7c96f7564740981e73238776eecc152865bf62b44"
+            "sha256": "ebca0cecf63f9f11f6677ddf3ee15a41860710315fb629c2d966b17eab9417ae"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -49,6 +49,7 @@
                 "sha256:fe12f59e7bc6c217f12c6726c2617238fd4c0d53b28db956de592252da4e5bb0"
             ],
             "index": "pypi",
+            "markers": "sys_platform != 'darwin'",
             "version": "==7.43.0.2"
         },
         "python-dateutil": {
@@ -146,10 +147,10 @@
         },
         "astroid": {
             "hashes": [
-                "sha256:8704779744963d56a2625ec2949eb150bd499fc099510161ddbb2b64e2d98138",
-                "sha256:add3fd690e7c1fe92436d17be461feeaa173e6f33e0789734310334da0f30027"
+                "sha256:0a0c484279a5f08c9bcedd6fa9b42e378866a7dcc695206b92d59dc9f2d9760d",
+                "sha256:218e36cf8d98a42f16214e8670819ce307fa707d1dcf7f9af84c7aede1febc7f"
             ],
-            "version": "==2.0"
+            "version": "==2.0.1"
         },
         "atomicwrites": {
             "hashes": [
