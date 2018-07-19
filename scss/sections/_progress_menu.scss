@@ -1,0 +1,48 @@
+.progress-menu {
+  display: table;
+  margin: 0 auto;
+  padding-bottom: $gap * 2;
+
+  ul {
+    list-style: none;
+  }
+
+  &__item {
+    float: left;
+    font-weight: $font-bold;
+
+    a {
+      display: block;
+      padding: $gap ($gap * 2);
+      color: $color-black;
+      text-decoration: none;
+      margin: 0 ($gap * 2);
+
+      &:hover {
+        color: $color-blue;
+      }
+    }
+
+    &:after {
+      display: inline-block;
+      height: 2px;
+      content: "..";
+      color: $color-gray-lightest;
+      text-shadow: none;
+      background-color: $color-gray-light;
+      position: relative;
+      top: -4rem;
+    }
+
+    a:before {
+      content: "o";
+      display: block;
+      text-align: center;
+    }
+
+    &--complete:before {
+
+    }
+
+  }
+}

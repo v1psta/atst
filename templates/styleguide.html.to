@@ -26,6 +26,15 @@
 {% block content %}
 
 <div class='col col--grow'>
+
+  <div class="progress-menu">
+  <ul>
+      <li class="progress-menu__item progress-menu__item--complete"><a href="#">Details of Use</a></li>
+      <li class="progress-menu__item progress-menu__item--active"><a href="#">Organization Info</a></li>
+      <li class="progress-menu__item"><a href="#">Primary POC</a></li>
+    </ul>
+  </div>
+
   <div class='panel'>
     <div class='panel__content'>
       <em>This is a panel content</em>
