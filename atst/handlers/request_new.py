@@ -16,10 +16,8 @@ class RequestNew(BaseHandler):
         self.fundz_client = fundz_client
 
     @tornado.gen.coroutine
-    def get_existing_request(self, current_user, request_id):
-        request = yield self.requests_client.get(
-            "/users/{}/requests/{}".format(current_user["id"], request_id),
-        )
+    def get_existing_request(self, request_id):
+        request = yield self.requests_client.get("/requests/{}".format(request_id))
         return request.json
 
     @tornado.web.authenticated
@@ -29,7 +27,7 @@ class RequestNew(BaseHandler):
         screen = int(screen)
         post_data = self.request.arguments
         current_user = self.get_current_user()
-        existing_request = yield self.get_existing_request(current_user, request_id)
+        existing_request = yield self.get_existing_request(request_id)
         jedi_flow = JEDIRequestFlow(
             self.requests_client,
             self.fundz_client,
