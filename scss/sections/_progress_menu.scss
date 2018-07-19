@@ -31,17 +31,26 @@
       text-shadow: none;
       background-color: $color-gray-light;
       position: relative;
-      top: -4rem;
+      top: -5.5rem;
     }
 
-    a:before {
-      content: "o";
+    &:before {
       display: block;
       text-align: center;
     }
 
-    &--complete:before {
+    &--active:before {
+      content: "O";
+    }
 
+    &--complete:before {
+      content: "\2714";
+      color: $color-blue;
+    }
+
+    &--incomplete:before {
+      content: "\2609";
+      color: $color-gray-light;
     }
 
   }

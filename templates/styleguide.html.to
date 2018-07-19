@@ -28,10 +28,10 @@
 <div class='col col--grow'>
 
   <div class="progress-menu">
-  <ul>
+    <ul>
       <li class="progress-menu__item progress-menu__item--complete"><a href="#">Details of Use</a></li>
       <li class="progress-menu__item progress-menu__item--active"><a href="#">Organization Info</a></li>
-      <li class="progress-menu__item"><a href="#">Primary POC</a></li>
+      <li class="progress-menu__item progress-menu__item--incomplete"><a href="#">Primary POC</a></li>
     </ul>
   </div>
 
