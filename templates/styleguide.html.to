@@ -27,13 +27,33 @@
 
 <div class='col col--grow'>
 
-  <div class="progress-menu">
+  <div class="progress-menu progress-menu--three">
     <ul>
-      <li class="progress-menu__item progress-menu__item--complete"><a href="#">Details of Use</a></li>
-      <li class="progress-menu__item progress-menu__item--active"><a href="#">Organization Info</a></li>
-      <li class="progress-menu__item progress-menu__item--incomplete"><a href="#">Primary POC</a></li>
+      <li class="progress-menu__item progress-menu__item--complete"><a href="#">Step One</a></li>
+      <li class="progress-menu__item progress-menu__item--active"><a href="#">Step Two</a></li>
+      <li class="progress-menu__item progress-menu__item--incomplete"><a href="#">Step Three</a></li>
     </ul>
   </div>
+
+  <div class="progress-menu progress-menu--four">
+    <ul>
+      <li class="progress-menu__item progress-menu__item--complete"><a href="#">Step One</a></li>
+      <li class="progress-menu__item progress-menu__item--active"><a href="#">Step Two</a></li>
+      <li class="progress-menu__item progress-menu__item--incomplete"><a href="#">Step Three</a></li>
+      <li class="progress-menu__item progress-menu__item--incomplete"><a href="#">Step Four</a></li>
+    </ul>
+  </div>
+
+  <div class="progress-menu progress-menu--five">
+    <ul>
+      <li class="progress-menu__item progress-menu__item--complete"><a href="#">Step One</a></li>
+      <li class="progress-menu__item progress-menu__item--active"><a href="#">Step Two</a></li>
+      <li class="progress-menu__item progress-menu__item--incomplete"><a href="#">Step Three</a></li>
+      <li class="progress-menu__item progress-menu__item--incomplete"><a href="#">Step Four</a></li>
+      <li class="progress-menu__item progress-menu__item--incomplete"><a href="#">Step Five</a></li>
+    </ul>
+  </div>
+
 
   <div class='panel'>
     <div class='panel__content'>

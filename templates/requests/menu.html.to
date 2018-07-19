@@ -1,4 +1,4 @@
-<div class="progress-menu">
+<div class="progress-menu progress-menu--five">
   <ul>
     {% for i,s in enumerate(screens) %}
     <li class="progress-menu__item">

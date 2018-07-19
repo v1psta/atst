@@ -1,7 +1,5 @@
 .progress-menu {
-  display: table;
-  margin: 0 auto;
-  padding: ($gap * 2) 0;
+  display: block;
 
   ul {
     list-style: none;
@@ -9,11 +7,29 @@
     padding: 0;
   }
 
+  &--three {
+    .progress-menu__item {
+      width: 32%;
+    }
+  }
+
+  &--four {
+    .progress-menu__item {
+      width: 24%;
+    }
+  }
+
+  &--five {
+    .progress-menu__item {
+      width: 19%;
+    }
+  }
+
   &__item {
-    float: left;
+    display: inline-block;
     font-weight: $font-bold;
-    width: 19%;
     position: relative;
+    vertical-align: top;
 
     a {
       display: block;
