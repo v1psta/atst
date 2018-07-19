@@ -86,11 +86,11 @@
     }
 
     &--complete:before {
-      content: "\2714";
+      content: url('/static/icons/checkmark.svg');
       background-color: $color-blue;
       border: 2px solid $color-blue;
-      color: $color-white;
       font-size: $h6-font-size;
+      padding: 1px 2px;
     }
 
     &--incomplete:before {
