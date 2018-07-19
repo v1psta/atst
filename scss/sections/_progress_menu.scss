@@ -1,42 +1,68 @@
 .progress-menu {
   display: table;
   margin: 0 auto;
-  padding-bottom: $gap * 2;
+  padding: ($gap * 2) 0;
 
   ul {
     list-style: none;
+    margin: 0;
+    padding: 0;
   }
 
   &__item {
     float: left;
     font-weight: $font-bold;
+    width: 19%;
+    position: relative;
 
     a {
       display: block;
-      padding: $gap ($gap * 2);
+      position: relative;
+      padding: ($gap * 4) ($gap * 2);
+      margin: 0 ($gap * 2);
       color: $color-black;
       text-decoration: none;
-      margin: 0 ($gap * 2);
+      text-align: center;
+      z-index: 2;
 
       &:hover {
         color: $color-blue;
       }
     }
 
+    &:first-child:after {
+      display: none;
+    }
+
     &:after {
       display: inline-block;
       height: 2px;
-      content: "..";
+      content: " ";
       color: $color-gray-lightest;
       text-shadow: none;
       background-color: $color-gray-light;
-      position: relative;
-      top: -5.5rem;
+      position: absolute;
+      top: 11px;
+      width: 100%;
+      right: 50%;
+      border-right: 22px solid transparent;
+      border-left: 22px solid transparent;
+      background-clip: padding-box;
+      z-index: 1;
     }
 
     &:before {
+      content: "";
       display: block;
       text-align: center;
+      width: 20px;
+      height: 20px;
+      border: 1px solid $color-gray;
+      border-radius: 100%;
+      position: absolute;
+      left: 50%;
+      margin-left: -10px;
+      z-index: 1;
     }
 
     &--active:before {
