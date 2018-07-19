@@ -17,6 +17,8 @@ class RequestNew(BaseHandler):
 
     @tornado.gen.coroutine
     def get_existing_request(self, request_id):
+        if request_id is None:
+            return {}
         request = yield self.requests_client.get("/requests/{}".format(request_id))
         return request.json
 
