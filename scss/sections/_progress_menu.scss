@@ -36,7 +36,7 @@
 
     &:after {
       display: inline-block;
-      height: 2px;
+      height: 1px;
       content: " ";
       color: $color-gray-lightest;
       text-shadow: none;
@@ -66,17 +66,19 @@
     }
 
     &--active:before {
-      content: "O";
+      border: 2px solid $color-blue;
     }
 
     &--complete:before {
       content: "\2714";
-      color: $color-blue;
+      background-color: $color-blue;
+      border: 2px solid $color-blue;
+      color: $color-white;
+      font-size: $h6-font-size;
     }
 
     &--incomplete:before {
-      content: "\2609";
-      color: $color-gray-light;
+      border: 2px solid $color-gray-light;
     }
 
   }
