@@ -31,7 +31,7 @@ class FinancialForm(ValidatedForm):
     @tornado.gen.coroutine
     def perform_extra_validation(self, existing_request, fundz_client):
         valid = True
-        if existing_request['pe_id'] != self.pe_id.data:
+        if not existing_request or existing_request.get('pe_id') != self.pe_id.data:
             valid = yield validate_pe_id(self.pe_id, existing_request, fundz_client)
         raise Return(valid)
 
