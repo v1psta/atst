@@ -19,6 +19,9 @@
 
   <a class="usa-button" href='{{ config['default'].get('cac_url','https://cac.atat.codes') }}'><span>Sign In with CAC</span></a>
   <button class="usa-button" disabled>Sign In via MFA</button>
+  {% if dev() %}
+    <a class="usa-button usa-button-secondary" href='/login-dev'><span>DEV Login</span></a>
+  {% end %}
 
 </main>
 
