@@ -4,6 +4,11 @@
  * @source https://github.com/uswds/uswds/blob/develop/src/stylesheets/elements/_typography.scss
  */
 
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 h1, h2, h3, h4, h5, h6 {
   font-family: $font-sans;
 
@@ -25,12 +30,12 @@ h2 {
 
 
 a,
-a > span {
+a:hover {
   transition:
-    background 0.2s,
-    border 0.2s,
-    box-shadow 0.2s,
-    color 0.2s,
+    background $hover-transition-time,
+    border $hover-transition-time,
+    box-shadow $hover-transition-time,
+    color $hover-transition-time,
 }
 
 dt {
