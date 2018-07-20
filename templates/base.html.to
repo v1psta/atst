@@ -1,3 +1,7 @@
+{# TODO: set this context elsewhere #}
+{# set context='workspace' #}
+{% set context='global' %}
+
 <!DOCTYPE html>
 <html>
 <head>
