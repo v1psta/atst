@@ -1,12 +1,8 @@
 {% extends "base.html.to" %}
 
 {% block content %}
-
-<main class="usa-section usa-content usa-width-one-whole">
-
-  <h1>Workspaces</h1>
-
-  <table class="usa-table-borderless" width="100%">
+<div class='col'>
+  <table>
     <thead>
       <tr>
         <th scope="col" width="50%">Workspace Name</th>
@@ -29,8 +25,6 @@
     {% end %}
     </tbody>
   </table>
-
-</main>
-
+</div>
 {% end %}
 

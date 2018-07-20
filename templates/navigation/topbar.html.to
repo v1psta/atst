@@ -1,0 +1,19 @@
+<header class="topbar">
+  <nav class="topbar__navigation">
+    <a href="/home" class="topbar__link topbar__link--shield" title="JEDI Home">
+      {% module Icon('shield', classes='topbar__link-icon') %}
+    </a>
+
+    <div class="topbar__context topbar__context--{{context}}">
+      <a href="/" class="topbar__link">
+        <span class="topbar__link-label">JEDI</span>
+        {% module Icon('caret_down', classes='topbar__link-icon icon--tiny') %}
+      </a>
+
+      <a href="/" class="topbar__link">
+        <span class="topbar__link-label">Sam Seeceepio</span>
+        {% module Icon('avatar', classes='topbar__link-icon') %}
+      </a>
+    </div>
+  </nav>
+</header>

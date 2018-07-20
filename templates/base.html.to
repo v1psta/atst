@@ -1,3 +1,7 @@
+{# TODO: set this context elsewhere #}
+{# set context='workspace' #}
+{% set context='global' %}
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,18 +14,19 @@
   <link rel="icon" type="image/x-icon" href="/static/img/favicon.ico">
 </head>
 <body>
+  {% include 'navigation/topbar.html.to' %}
 
-  {% include 'header.html.to' %}
+  <div class='global-layout'>
+    {% include 'navigation/global_navigation.html.to' %}
 
-  <div class='panel-container'>
-    {% block sidenav %}{% end %}
+    <div class='global-panel-container'>
+      {% block sidenav %}{% end %}
 
-    {% block content %}
-      these are not the droids you are looking for
-    {% end %}
+      {% block content %}
+        these are not the droids you are looking for
+      {% end %}
+    </div>
   </div>
-
-
 
   {% include 'footer.html.to' %}
 </body>

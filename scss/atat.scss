@@ -1,7 +1,6 @@
 @import 'core/variables';
 @import '../node_modules/uswds/src/stylesheets/uswds';
 
-@import 'core/base';
 @import 'core/grid';
 @import 'core/util';
 
@@ -12,12 +11,13 @@
 @import 'elements/block_lists';
 @import 'elements/tables';
 @import 'elements/icons';
+@import 'elements/sidenav';
 
+@import 'components/layout';
+@import 'components/topbar';
+@import 'components/global_navigation';
 @import 'components/site_action';
 @import 'components/empty_state';
 
-@import 'sections/main';
-@import 'sections/topbar';
-@import 'sections/sidenav';
 @import 'sections/footer';
 @import 'sections/login';

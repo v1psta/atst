@@ -1,0 +1,6 @@
+<div class="global-navigation sidenav global-navigation__context--{{context}}">
+  <ul>
+    {% module SidenavItem("Requests", href="/requests", icon="document", active=matchesPath('/requests')) %}
+    {% module SidenavItem("Workspaces", href="/workspaces", icon="cloud", active=matchesPath('/workspaces')) %}
+  </ul>
+</div>

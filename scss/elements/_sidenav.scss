@@ -1,15 +1,13 @@
 .sidenav {
-  @include grid-pad;
-  @include panel-margin;
-  width: 100%;
-  flex-shrink: 0;
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
 
-  @include media($large-screen) {
-    width: 21rem;
-  }
-
-  @include media($xlarge-screen) {
-    width: 30rem;
+     li {
+      margin: 0;
+      display: block;
+    }
   }
 
   .sidenav__link {
@@ -18,10 +16,10 @@
     padding: $gap ($gap * 2);
     color: $color-black;
     text-decoration: none;
+    white-space: nowrap;
 
-    &:hover {
-      background-color: $color-white;
-      color: $color-primary;
+    .sidenav__link-icon {
+      margin-left: - ($gap * .5);
     }
 
     &.sidenav__link--disabled {
@@ -35,60 +33,42 @@
       color: $color-primary;
       box-shadow: inset .4rem 0 0 0 $color-primary;
 
+      .sidenav__link-icon {
+        @include icon-style-active;
+      }
+
       + ul {
         background-color: $color-white;
 
         .sidenav__link {
           &--active {
             @include h5;
-            box-shadow: none;
+            color: $color-primary;
           }
         }
       }
     }
 
     + ul {
+      padding-bottom: $gap / 2;
+
       li {
         .sidenav__link {
+          @include h5;
           padding: ($gap * .75) ($gap * 3);
           border: 0;
-          @include h5;
           font-weight: normal;
         }
-
-        &:last-child {
-          .sidenav__link {
-            padding-bottom: $gap * 1.5;
-          }
-        }
       }
     }
-  }
 
-  ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
+    &:hover {
+      color: $color-primary;
 
-     li {
-      margin: 0;
-      display: block;
-    }
-  }
-
-  > ul {
-    @include panel-margin;
-
-    &:last-child {
-      margin: 0;
-    }
-
-    > li {
-      &:last-child {
-        > .sidenav__link {
-          border-bottom: 1px solid $color-black;
-        }
+      .sidenav__link-icon {
+        @include icon-style-active;
       }
+
     }
   }
 }
