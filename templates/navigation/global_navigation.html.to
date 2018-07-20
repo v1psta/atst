@@ -1,5 +1,9 @@
 <div class="global-navigation sidenav global-navigation__context--{{context}}">
   <ul>
+    {% if dev() %}
+      {% module SidenavItem("Styleguide", href="/styleguide", icon="visible", active=matchesPath('/styleguide')) %}
+    {% end %}
+
     {% module SidenavItem("Requests", href="/requests", icon="document", active=matchesPath('/requests')) %}
     {% module SidenavItem("Workspaces", href="/workspaces", icon="cloud", active=matchesPath('/workspaces')) %}
   </ul>
