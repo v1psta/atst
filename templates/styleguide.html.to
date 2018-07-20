@@ -1,6 +1,30 @@
 {% extends "base.html.to" %}
 
-{% block sidenav %}
+{% block content %}
+
+{% module Alert('A Warning Alert',
+  message="\
+    <p>This is a message. It is a very important message. Please note, <strong>proper semantic markup is required</strong> here, such as paragraph tags. Don't omit paragraph tags!</p>\
+    <p>Also note the same for actions below. You'll need to include the full link markup.</p>\
+  ",
+  actions="<a href='/styleguide'>Do something</a>",
+  level='warning'
+) %}
+
+{% module Alert('A Success Alert',
+  message="<p>Congratulations! You did a thing.</p>",
+  level='success'
+) %}
+
+{% module Alert('An Error Alert',
+  message="<p>Booooo. You're the worst.</p>",
+  level='error'
+) %}
+
+{% module Alert('An Info Alert',
+  message="<p>The more you know.</p>"
+) %}
+
 <nav class='sidenav'>
   <ul>
     <li>
@@ -21,9 +45,6 @@
     <li><a href='/' class='sidenav__link sidenav__link--disabled' aria-disabled='true'>Navigation Item</a></li>
   </ul>
 </nav>
-{% end %}
-
-{% block content %}
 
 <div class='col col--grow'>
 
