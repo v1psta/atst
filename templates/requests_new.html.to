@@ -1,14 +1,10 @@
 {% extends "base.html.to" %}
 
-
-{% block sidenav %}
-{% include 'requests/sidebar.html.to' %}
-{% end %}
-
-
 {% block content %}
 
-<div class="col col--grow">
+<div class="col">
+
+  {% include 'requests/menu.html.to' %}
 
   <div class="panel">
 

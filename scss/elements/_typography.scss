@@ -28,14 +28,17 @@ h2 {
   margin-top: 0;
 }
 
-
 a,
 a:hover {
   transition:
-    background $hover-transition-time,
-    border $hover-transition-time,
-    box-shadow $hover-transition-time,
-    color $hover-transition-time,
+  background 0.2s,
+  border 0.2s,
+  box-shadow 0.2s,
+  color 0.2s;
+}
+
+a:visited {
+  color: $color-blue;
 }
 
 dt {
