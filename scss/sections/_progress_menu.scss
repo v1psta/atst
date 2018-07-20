@@ -36,16 +36,17 @@
       position: relative;
       padding: ($gap * 4) ($gap * 2);
       margin: 0 ($gap * 2);
-      color: $color-black;
       text-decoration: none;
       text-align: center;
       z-index: 2;
-
-      &:hover {
-        color: $color-blue;
-      }
-
+      color: $color-black;
     }
+
+    a.active {
+      color: $color-blue;
+    }
+
+
 
     &:first-child:after {
       display: none;
@@ -99,8 +100,4 @@
     }
 
   }
-}
-
-.nav-link--active {
-  color: $color-blue !important;
 }

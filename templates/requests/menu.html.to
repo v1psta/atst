@@ -3,7 +3,7 @@
     {% for i,s in enumerate(screens) %}
     <li class="progress-menu__item">
       <a href="{{ reverse_url('request_form_update', i+1, request_id) if request_id else reverse_url('request_form_new',i+1) }}"
-        class="nav-link{% if matchesPath('/requests/new/'+str(i+1)) %}--active{% end %}"
+        {% if matchesPath('/requests/new/'+str(i+1)) %}class="active"{% end %}
       >
         {{ s['title'] }}
       </a>
