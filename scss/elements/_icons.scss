@@ -17,16 +17,18 @@
   margin: $icon-size / 4;
 }
 
-@mixin icon-style-default {
+@mixin icon-color($color) {
   > svg * {
-    fill: $color-black;
+    fill: $color;
   }
 }
 
+@mixin icon-style-default {
+  @include icon-color($color-black);
+}
+
 @mixin icon-style-active {
-  > svg * {
-    fill: $color-primary;
-  }
+  @include icon-color($color-primary);
 }
 
 @mixin icon-style-inverted {
@@ -42,5 +44,9 @@
 
   &.icon--tiny {
     @include icon-size(10);
+  }
+
+  &.icon--large {
+    @include icon-size(24);
   }
 }
