@@ -1,13 +1,13 @@
 from wtforms.fields.html5 import IntegerField
 from wtforms.fields import RadioField, StringField, TextAreaField
 from wtforms.validators import NumberRange, InputRequired
-from wtforms_tornado import Form
 from .fields import DateField
+from .forms import ValidatedForm
 from .validators import DateRange
 import pendulum
 
 
-class RequestForm(Form):
+class RequestForm(ValidatedForm):
 
     # Details of Use: Overall Request Details
     dollar_value = IntegerField(

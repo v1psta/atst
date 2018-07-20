@@ -1,6 +1,7 @@
 from wtforms.fields import BooleanField
-from wtforms_tornado import Form
+
+from .forms import ValidatedForm
 
 
-class ReviewForm(Form):
+class ReviewForm(ValidatedForm):
     reviewed = BooleanField("I have reviewed this data and it is correct.")

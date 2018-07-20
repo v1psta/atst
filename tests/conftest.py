@@ -1,7 +1,7 @@
 import pytest
 
 from atst.app import make_app, make_deps, make_config
-from tests.mocks import MockApiClient, MockRequestsClient, MockAuthzClient
+from tests.mocks import MockApiClient, MockFundzClient, MockRequestsClient, MockAuthzClient
 from atst.sessions import DictSessions
 
 
@@ -11,6 +11,7 @@ def app():
         "authz_client": MockAuthzClient("authz"),
         "requests_client": MockRequestsClient("requests"),
         "authnid_client": MockApiClient("authnid"),
+        "fundz_client": MockFundzClient("fundz"),
         "sessions": DictSessions(),
     }
 
