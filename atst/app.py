@@ -58,19 +58,31 @@ def make_app(config, deps, **kwargs):
         url(
             r"/requests/new",
             RequestNew,
-            {"page": "requests_new", "requests_client": deps["requests_client"]},
+            {
+                "page": "requests_new",
+                "requests_client": deps["requests_client"],
+                "fundz_client": deps["fundz_client"],
+            },
             name="request_new",
         ),
         url(
             r"/requests/new/([0-9])",
             RequestNew,
-            {"page": "requests_new", "requests_client": deps["requests_client"]},
+            {
+                "page": "requests_new",
+                "requests_client": deps["requests_client"],
+                "fundz_client": deps["fundz_client"],
+            },
             name="request_form_new",
         ),
         url(
             r"/requests/new/([0-9])/(\S+)",
             RequestNew,
-            {"page": "requests_new", "requests_client": deps["requests_client"]},
+            {
+                "page": "requests_new",
+                "requests_client": deps["requests_client"],
+                "fundz_client": deps["fundz_client"],
+            },
             name="request_form_update",
         ),
         url(
@@ -126,6 +138,10 @@ def make_deps(config):
         "authnid_client": ApiClient(
             config["default"]["AUTHNID_BASE_URL"],
             api_version="v1",
+            validate_cert=validate_cert,
+        ),
+        "fundz_client": ApiClient(
+            config["default"]["FUNDZ_BASE_URL"],
             validate_cert=validate_cert,
         ),
         "requests_client": ApiClient(

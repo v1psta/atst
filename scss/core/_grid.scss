@@ -9,12 +9,9 @@
 // We are implementing a simple flexbox row/column system
 
 @mixin grid-row {
-  @include media($medium-screen) {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    max-width: $site-max-width;
-  }
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
 }
 
 @mixin grid-pad {

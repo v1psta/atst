@@ -1,0 +1,71 @@
+.topbar {
+  background-color: $color-white;
+  border-bottom: 1px solid $color-black;
+
+  .topbar__navigation {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: space-between;
+
+    .topbar__link {
+      color: $color-black;
+      display: inline-flex;
+      align-items: center;
+      height: $topbar-height;
+      padding: 0 ($gap * 2);
+      text-decoration: none;
+
+      .topbar__link-label {
+        @include h5;
+      }
+
+      .topbar__link-icon {
+        margin-left: $gap;
+      }
+
+      &.topbar__link--shield {
+        width: $icon-bar-width;
+        justify-content: center;
+        padding: 0;
+
+        .topbar__link-icon {
+          margin: 0;
+        }
+      }
+
+      &:hover {
+        background-color: $color-primary-darker;
+        color: $color-white;
+
+        .topbar__link-icon {
+          @include icon-style-inverted;
+        }
+      }
+    }
+
+    .topbar__context {
+      display: flex;
+      flex-grow: 1;
+      flex-direction: row;
+      align-items: stretch;
+      justify-content: space-between;
+
+      &.topbar__context--workspace {
+        background-color: $color-primary;
+
+        .topbar__link {
+          color: $color-white;
+
+          .topbar__link-icon {
+            @include icon-style-inverted;
+          }
+
+          &:hover {
+            background-color: $color-primary-darker;
+          }
+        }
+      }
+    }
+  }
+}

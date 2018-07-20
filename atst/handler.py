@@ -15,17 +15,26 @@ class BaseHandler(tornado.web.RequestHandler):
 
     @tornado.gen.coroutine
     def login(self, user):
-        user["atat_permissions"] = yield self._get_user_permissions(user["id"])
+        user_permissions = yield self._get_user_permissions(user["id"])
+        user["atat_permissions"] = user_permissions["atat_permissions"]
+        user["atat_role"] = user_permissions["atat_role"]
         session_id = self.sessions.start_session(user)
         self.set_secure_cookie("atat", session_id)
         return self.redirect("/home")
 
     @tornado.gen.coroutine
     def _get_user_permissions(self, user_id):
-        response = yield self.authz_client.post(
-            "/users", json={"id": user_id, "atat_role": "ccpo"}
+        response = yield self.authz_client.get(
+            "/users/{}".format(user_id), raise_error=False
         )
-        return response.json["atat_permissions"]
+        if response.code == 404:
+            response = yield self.authz_client.post(
+                "/users", json={"id": user_id, "atat_role": "developer"}
+            )
+            return response.json
+
+        else:
+            return response.json
 
     def get_current_user(self):
         cookie = self.get_secure_cookie("atat")
