@@ -1,0 +1,21 @@
+{% extends "base.html.to" %}
+
+{% block content %}
+
+<div class="col">
+
+  <div class="panel">
+
+    <div class="panel__content">
+
+      <div class="panel__heading">
+        <h1>Order #36552512</h1>
+        <h2>Financial Verification</h2>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+{% end %}
+
