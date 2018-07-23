@@ -6,7 +6,7 @@ _DEV_USERS = {
     "sam": {
         "id": "164497f6-c1ea-4f42-a5ef-101da278c012",
         "first_name": "Sam",
-        "last_name": "CCPO",
+        "last_name": "Seeceepio",
         "atat_role": "ccpo"
     },
 
