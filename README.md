@@ -58,6 +58,19 @@ To start the app locally in the foreground and watch for changes:
 
     script/dev_server
 
+### Users
+
+There are currently six mock users for development:
+
+- Sam (a CCPO)
+- Amanda
+- Brandon
+- Christina
+- Dominick
+- Erica
+
+To log in as one of them, navigate to `/login-dev?username=<lowercase name>`. For example `/login-dev?username=amanda`.
+
 ## Testing
 
 To run lint, static analysis, and unit tests:
