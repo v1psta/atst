@@ -89,7 +89,7 @@ def make_app(config, deps, **kwargs):
         url(
             r"/requests/submit/(\S+)",
             RequestsSubmit,
-            {"requests_client": deps["requests_client"]},
+            {"db_session": deps["db_session"]},
             name="requests_submit",
         ),
         url(r"/users", Main, {"page": "users"}, name="users"),

@@ -1,17 +1,16 @@
 import tornado
 
 from atst.handler import BaseHandler
+from atst.domain.requests import Requests
 
 
 class RequestsSubmit(BaseHandler):
-    def initialize(self, requests_client):
-        self.requests_client = requests_client
+    def initialize(self, db_session):
+        self.requests_repo = Requests(db_session)
 
     @tornado.web.authenticated
     @tornado.gen.coroutine
     def post(self, request_id):
-        yield self.requests_client.post(
-            "/requests/{}/submit".format(request_id),
-            allow_nonstandard_methods=True
-        )
+        request = self.requests_repo.get(request_id)
+        yield self.requests_repo.submit(request)
         self.redirect("/requests")
