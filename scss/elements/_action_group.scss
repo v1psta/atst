@@ -1,0 +1,14 @@
+.action-group {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  margin-top: $gap * 4;
+
+  .action-group__action {
+    margin: 0 0 0 ($gap * 2);
+  }
+
+  &:last-child {
+    margin-bottom: $gap * 3;
+  }
+}
