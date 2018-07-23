@@ -1,0 +1,47 @@
+.modal {
+  position: fixed;
+  z-index: 3;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background-color: $color-overlay;
+
+  .modal__dialog {
+    padding: $gap;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    @include media($medium-screen) {
+      padding: $gap * 2;
+    }
+
+    @include media($large-screen) {
+      padding: $gap * 4;
+    }
+
+    .modal__body {
+      background-color: $color-white;
+      padding: $gap * 2;
+      flex-grow: 1;
+      overflow-y: auto;
+      max-width: 80rem;
+
+      @include media($medium-screen) {
+        padding: $gap * 4;
+        flex-grow: 0;
+      }
+
+      h1, h2 {
+        @include h3;
+      }
+
+      :first-child {
+        margin-top: 0;
+      }
+    }
+  }
+}
