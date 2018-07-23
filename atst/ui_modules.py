@@ -1,5 +1,14 @@
 from tornado.web import UIModule
 
+class Alert(UIModule):
+    def render(self, title, message=None, actions=None, level='info'):
+        return self.render_string(
+          "components/alert.html.to",
+          title=title,
+          message=message,
+          actions=actions,
+          level=level)
+
 class Icon(UIModule):
     def render(self, name, classes=''):
         with open('static/icons/%s.svg' % name) as svg:

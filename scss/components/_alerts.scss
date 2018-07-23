@@ -1,0 +1,75 @@
+/*
+ * Alerts
+ * @see https://designsystem.digital.gov/components/alerts/
+ * @source https://github.com/uswds/uswds/blob/develop/src/stylesheets/components/_alerts.scss
+ */
+
+@mixin alert {
+  padding: $gap * 2;
+  border-left-width: $gap / 2;
+  border-left-style: solid;
+  @include panel-margin;
+}
+
+@mixin alert-level($level) {
+  $background-color: $color-aqua-lightest;
+  $border-color: $color-blue;
+
+  @if $level == 'success' {
+    $background-color: $color-green-lightest;
+    $border-color: $color-green;
+
+  } @else if $level == 'warning' {
+    $background-color: $color-gold-lightest;
+    $border-color: $color-gold;
+
+  } @else if $level == 'error' {
+    $background-color: $color-red-lightest;
+    $border-color: $color-red;
+  }
+
+  background-color: $background-color;
+  border-color: $border-color;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+
+  .alert__icon {
+    @include icon-color($border-color);
+    flex-grow: 0;
+    flex-shrink: 0;
+    margin-right: $gap * 2;
+    margin-left: 0;
+  }
+
+  .alert__title {
+    @include h3;
+  }
+
+  .alert__content {
+    .alert__message {
+      &:last-child {
+        > *:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+}
+
+.alert {
+  @include alert;
+  @include alert-level('info');
+
+  &.alert--success {
+    @include alert-level('success');
+  }
+
+  &.alert--warning {
+    @include alert-level('warning');
+  }
+
+  &.alert--error {
+    @include alert-level('error');
+  }
+}
