@@ -5,6 +5,7 @@
     {% end %}
 
     {% module SidenavItem("Requests", href="/requests", icon="document", active=matchesPath('/requests')) %}
+    {% module SidenavItem("+ New Request", href="/requests/new", icon="", active=matchesPath('/requests/new')) %}
     {% module SidenavItem("Workspaces", href="/workspaces", icon="cloud", active=matchesPath('/workspaces')) %}
   </ul>
 </div>

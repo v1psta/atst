@@ -4,7 +4,7 @@
  * @source https://github.com/uswds/uswds/blob/develop/src/stylesheets/elements/_table.scss
  */
 
-table {
+ table {
   @include panel-margin;
   min-width: 100%;
 
@@ -16,6 +16,11 @@ table {
 
     th {
       @include block-list-header;
+
+      &:first-child {
+        padding: $gap * 2 !important; // This overrides USWDS's no padding
+      }
+
     }
 
     td {
