@@ -6,7 +6,6 @@ from atst.forms.request import RequestForm
 from atst.forms.org import OrgForm
 from atst.forms.poc import POCForm
 from atst.forms.review import ReviewForm
-from atst.forms.financial import FinancialForm
 
 
 class RequestNew(BaseHandler):
@@ -220,12 +219,6 @@ class JEDIRequestFlow(object):
                 "section": "review_submit",
                 "form": ReviewForm,
                 "show":True,
-            },
-            {
-                "title": "Financial Verification",
-                "section": "financial_verification",
-                "form": FinancialForm,
-                "show": self.request and self.request["status"] == "approved",
             },
         ]
 
