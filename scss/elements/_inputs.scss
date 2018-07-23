@@ -4,7 +4,7 @@
  * @source https://github.com/uswds/uswds/blob/develop/src/stylesheets/elements/_inputs.scss
  */
 
-from {
+ from {
   margin-bottom: 3rem;
 }
 
@@ -27,11 +27,4 @@ select {
   label:first-child {
     padding-bottom: 0.5rem;
   }
-}
-
-.usa-search {
-  // width: 45%;
-  // float: left;
-  // padding: $gap * 2;
-  margin-right: $gap;
 }
