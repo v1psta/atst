@@ -31,31 +31,6 @@
     </div>
   </div>
 
-
-  <section class="block-list">
-    <ul>
-      <li class="block-list__item">
-        <span>
-          <form class="usa-search usa-search-small">
-            <label class="usa-sr-only" for="search-field-small">Search small</label>
-            <input id="search-field-small" type="search" name="search" placeholder="Search by Order ID">
-            <button type="submit">
-              <span class="usa-sr-only">Search</span>
-            </button>
-          </form>
-        </span>
-        <span>
-          <select id="filter_status" name="filter_status" required="">
-            <option value="" selected disabled>Filter by status</option>
-            <option value="">Active</option>
-            <option value="">Pending</option>
-            <option value="">Denied</option>
-          </select>
-        </span>
-      </li>
-    </ul>
-  </section>
-
   <div class="panel">
 
     <table>
