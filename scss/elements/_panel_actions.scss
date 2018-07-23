@@ -1,20 +1,31 @@
-// Panels Actions
-// Form inputs and other actions for panels
+/*
+ * Panels Actions
+ * Form inputs and other actions for panels
+ */
 
-.panel__actions {
+ .panel__actions {
   display: flex;
   padding: $gap;
 
+  &--filter {
+    width: 50%;
+  }
+
+  &--search {
+    width: 50%;
+  }
+
   .usa-search {
     padding-top: 2px;
+    margin-right: 2rem;
+
     input[type=search] {
       height: 4.4rem;
-      font-size: 14px;
-      color: $color-black;
-
     }
+
     button {
       min-height: 4.4rem;
     }
+
   }
 }
