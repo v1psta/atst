@@ -9,33 +9,34 @@
 
 <div class="col col--grow">
 
+
+  <section class="block-list">
+    <ul>
+      <li class="block-list__item">
+        <span>
+          <form class="usa-search usa-search-small">
+            <label class="usa-sr-only" for="search-field-small">Search small</label>
+            <input id="search-field-small" type="search" name="search" placeholder="Search by Order ID">
+            <button type="submit">
+              <span class="usa-sr-only">Search</span>
+            </button>
+          </form>
+        </span>
+        <span>
+          <select id="filter_status" name="filter_status" required="">
+            <option value="" selected disabled>Filter by status</option>
+            <option value="">Active</option>
+            <option value="">Pending</option>
+            <option value="">Denied</option>
+          </select>
+        </span>
+      </li>
+    </ul>
+  </section>
+
   <div class="panel">
-    <div class="panel__actions">
-      <div class="panel__actions--search">
-        <form class="usa-search usa-search-small">
-          <label class="usa-sr-only" for="search-field-small">Search small</label>
-          <input id="search-field-small" type="search" name="search" placeholder="Search by Order ID">
-          <button type="submit">
-            <span class="usa-sr-only">Search</span>
-          </button>
-        </form>
-      </div>
-      <div class="panel__actions--filter">
-        <select id="filter_status" name="filter_status" required="">
-          <option value="" selected disabled>Filter by status</option>
-          <option value="">Active</option>
-          <option value="">Pending</option>
-          <option value="">Denied</option>
-        </select>
-      </div>
-    </div>
-  </div>
 
-
-
-  <div class="panel">
-
-    <table class="usa-table-borderless" width="100%">
+    <table>
       <thead>
         <tr>
           <th>Order ID</th>

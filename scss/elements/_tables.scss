@@ -16,11 +16,6 @@
 
     th {
       @include block-list-header;
-
-      &:first-child {
-        padding: $gap * 2 !important; // This overrides USWDS's no padding
-      }
-
     }
 
     td {
