@@ -9,6 +9,7 @@ from atst.handlers.root import Root
 from atst.handlers.login_redirect import LoginRedirect
 from atst.handlers.workspace import Workspace
 from atst.handlers.request import Request
+from atst.handlers.request_financial_verification import RequestFinancialVerification
 from atst.handlers.request_new import RequestNew
 from atst.handlers.request_submit import RequestsSubmit
 from atst.handlers.dev import Dev
@@ -92,9 +93,13 @@ def make_app(config, deps, **kwargs):
             name="requests_submit",
         ),
         url(
-            r"/financial",
-            Main,
-            {"page": "financial_verification"},
+            r"/requests/verify/(\S+)",
+            RequestFinancialVerification,
+            {
+                "page": "financial_verification",
+                "requests_client": deps["requests_client"],
+                "fundz_client": deps["fundz_client"],
+            },
             name="financial_verification",
         ),
         url(r"/users", Main, {"page": "users"}, name="users"),
