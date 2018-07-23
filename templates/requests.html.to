@@ -9,6 +9,28 @@
 
 <div class="col col--grow">
 
+  <div class='panel'>
+    <div class='row'>
+      <div class='col col--grow col--pad'>
+        <form class="usa-search usa-search-small">
+          <label class="usa-sr-only" for="search-field-small">Search small</label>
+          <input id="search-field-small" type="search" name="search" placeholder="Search by Order ID">
+          <button type="submit">
+            <span class="usa-sr-only">Search</span>
+          </button>
+        </form>
+      </div>
+      <div class='col col--grow col--pad'>
+        <select id="filter_status" name="filter_status" required="">
+          <option value="" selected disabled>Filter by status</option>
+          <option value="">Active</option>
+          <option value="">Pending</option>
+          <option value="">Denied</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
 
   <section class="block-list">
     <ul>
