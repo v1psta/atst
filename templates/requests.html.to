@@ -4,7 +4,7 @@
 
 
 {% module Alert('Pending Financial Verification',
-  message="<p>Your next step is to create a Task Order (T.O.) associated with JEDI Cloud. Please consult a COntracting Officer (KO) or Contracting Officer Representative (COR) to help with this step.</p>"
+  message="<p>Your next step is to create a Task Order (T.O.) associated with JEDI Cloud. Please consult a Contracting Officer (KO) or Contracting Officer Representative (COR) to help with this step.</p>"
 ) %}
 
 <div class="col col--grow">
