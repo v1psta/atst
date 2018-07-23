@@ -29,7 +29,8 @@
         <tbody>
           {% for r in requests %}
           <tr>
-            <th scope="row"><a href="{{ reverse_url('request_form_update', 1, r['order_id']) }}">{{ r['order_id'] }}</a>
+            <th scope="row">
+              <a href="{{ reverse_url('request_form_update', 1, r['order_id']) if r["status"] != "approved" else reverse_url('financial_verification', r['order_id']) }}">{{ r['order_id'] }}</a>
               {% if r['is_new'] %}<span class="usa-label">New</span>
             </th>
             {% end %}
