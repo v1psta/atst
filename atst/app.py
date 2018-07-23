@@ -61,7 +61,7 @@ def make_app(config, deps, **kwargs):
             RequestNew,
             {
                 "page": "requests_new",
-                "requests_client": deps["requests_client"],
+                "db_session": deps["db_session"],
                 "fundz_client": deps["fundz_client"],
             },
             name="request_new",
@@ -71,7 +71,7 @@ def make_app(config, deps, **kwargs):
             RequestNew,
             {
                 "page": "requests_new",
-                "requests_client": deps["requests_client"],
+                "db_session": deps["db_session"],
                 "fundz_client": deps["fundz_client"],
             },
             name="request_form_new",
@@ -81,7 +81,7 @@ def make_app(config, deps, **kwargs):
             RequestNew,
             {
                 "page": "requests_new",
-                "requests_client": deps["requests_client"],
+                "db_session": deps["db_session"],
                 "fundz_client": deps["fundz_client"],
             },
             name="request_form_update",
