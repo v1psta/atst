@@ -102,6 +102,12 @@ def make_app(config, deps, **kwargs):
             },
             name="financial_verification",
         ),
+        url(
+            r"/requests/financial_verification_submitted",
+            Main,
+            {"page": "requests/financial_verification_submitted"},
+            name="financial_verification_submitted",
+        ),
         url(r"/users", Main, {"page": "users"}, name="users"),
         url(r"/reports", Main, {"page": "reports"}, name="reports"),
         url(r"/calculator", Main, {"page": "calculator"}, name="calculator"),

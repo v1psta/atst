@@ -58,7 +58,9 @@ class RequestFinancialVerification(BaseHandler):
                     self.fundz_client
                 )
                 if valid:
-                    self.redirect('/requests')
+                    self.redirect(
+                        self.application.default_router.reverse_url("financial_verification_submitted")
+                    )
                 else:
                     self.render(
                         "requests/financial_verification.html.to",
