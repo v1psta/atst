@@ -2,7 +2,8 @@ import re
 import pytest
 import tornado
 import urllib
-from tests.mocks import MOCK_REQUEST, MOCK_VALID_PE_ID
+from tests.mocks import MOCK_VALID_PE_ID
+from tests.factories import RequestFactory
 
 ERROR_CLASS = "usa-input-error-message"
 MOCK_USER = {
@@ -11,6 +12,14 @@ MOCK_USER = {
     "first_name": "Fake",
     "last_name": "User",
 }
+MOCK_REQUEST = RequestFactory.create(
+    creator=MOCK_USER["id"],
+    body={
+        "financial_verification": {
+            "pe_id": "0203752A",
+        },
+    }
+)
 
 
 @pytest.mark.gen_test
@@ -80,14 +89,18 @@ class TestPENumberInForm:
             "atst.handlers.request_new.RequestNew.get_current_user", lambda s: MOCK_USER
         )
         monkeypatch.setattr(
+            "atst.handlers.request_new.RequestNew.get_existing_request", lambda s,r: MOCK_REQUEST
+        )
+        monkeypatch.setattr(
             "atst.handlers.request_new.RequestNew.check_xsrf_cookie", lambda s: True
         )
         monkeypatch.setattr("atst.forms.request.RequestForm.validate", lambda s: True)
 
+
     @tornado.gen.coroutine
     def submit_data(self, http_client, base_url, data):
         response = yield http_client.fetch(
-            base_url + "/requests/new/5/{}".format(MOCK_REQUEST["id"]),
+            base_url + "/requests/new/5/{}".format(MOCK_REQUEST.id),
             method="POST",
             headers={"Content-Type": "application/x-www-form-urlencoded"},
             body=urllib.parse.urlencode(data),
@@ -111,7 +124,7 @@ class TestPENumberInForm:
         self._set_monkeypatches(monkeypatch)
 
         data = dict(self.required_data)
-        data['pe_id'] = MOCK_REQUEST['body']['financial_verification']['pe_id']
+        data['pe_id'] = MOCK_REQUEST.body['financial_verification']['pe_id']
 
         response = yield self.submit_data(http_client, base_url, data)
 
