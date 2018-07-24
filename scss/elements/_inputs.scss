@@ -4,10 +4,6 @@
  * @source https://github.com/uswds/uswds/blob/develop/src/stylesheets/elements/_inputs.scss
  */
 
-from {
-  margin-bottom: 3rem;
-}
-
 select {
   border-radius: 0;
   -webkit-appearance: none;
@@ -27,4 +23,20 @@ select {
   label:first-child {
     padding-bottom: 0.5rem;
   }
+}
+
+.usa-search {
+  padding-top: 2px;
+  margin-right: 2rem;
+
+  input[type=search] {
+    height: 4.4rem;
+    font-size: 1.7rem;
+    color: $color-black;
+  }
+
+  button {
+    min-height: 4.4rem;
+  }
+
 }

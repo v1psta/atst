@@ -8,6 +8,10 @@ body {
   > footer {
     margin-top: auto;
   }
+
+  &.modalOpen {
+    overflow-y: hidden;
+  }
 }
 
 .global-layout {

@@ -16,10 +16,11 @@ class Icon(UIModule):
               "components/icon.html.to", svg=svg.read(), name=name, classes=classes)
 
 class SidenavItem(UIModule):
-    def render(self, label, href, active=False, icon=None):
+    def render(self, label, href, active=False, icon=None, subnav=None):
         return self.render_string(
           "navigation/_sidenav_item.html.to",
           label=label,
           href=href,
           active=active,
-          icon=icon)
+          icon=icon,
+          subnav=subnav)

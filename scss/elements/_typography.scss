@@ -9,25 +9,14 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+p {
+  margin: 0 0 ($gap * 2) 0;
+  max-width: 45em;
+}
+
 h1, h2, h3, h4, h5, h6 {
   font-family: $font-sans;
-
-  .usa-button {
-    position: relative;
-    bottom: 0.5rem;
-    left: 1rem;
-  }
-
-}
-
-h1 {
-  margin-top: 0.5em;
-  margin-bottom: 0;
-}
-
-h2 {
-  margin-top: 0;
-  color: $color-gray;
+  margin: ($gap * 2) 0;
 }
 
 a,

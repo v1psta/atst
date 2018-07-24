@@ -58,6 +58,19 @@ To start the app locally in the foreground and watch for changes:
 
     script/dev_server
 
+### Users
+
+There are currently six mock users for development:
+
+- Sam (a CCPO)
+- Amanda
+- Brandon
+- Christina
+- Dominick
+- Erica
+
+To log in as one of them, navigate to `/login-dev?username=<lowercase name>`. For example `/login-dev?username=amanda`.
+
 ## Testing
 
 To run lint, static analysis, and unit tests:
@@ -86,3 +99,17 @@ To render an icon use `{% module Icon('name') %}` in a template, where `name` is
 All icons used should be from the Noun Project, specifically [this collection](https://thenounproject.com/monstercritic/collection/tinicons-a-set-of-tiny-icons-perfect-for-ui-elemen/) if possible.
 
 SVG markup should be cleaned an minified, [Svgsus](http://www.svgs.us/) works well.
+
+## Deployment
+
+The `/login-dev` endpoint is protected by HTTP basic auth when deployed. This can be configured for NGINX following the instructions [here](https://docs.nginx.com/nginx/admin-guide/security-controls/configuring-http-basic-authentication/). The following config should added within the main server block for the site:
+
+```
+location /login-dev {
+    auth_basic "Developer Access";
+    auth_basic_user_file /etc/apache2/.htpasswd;
+    [proxy information should follow this]
+}
+```
+
+The location block will require the same proxy pass configuration as other location blocks for the app.
