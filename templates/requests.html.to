@@ -3,19 +3,27 @@
 {% block content %}
 
 
-
+{% module Alert('Pending Financial Verification',
+  message="<p>Your next step is to create a Task Order (T.O.) associated with JEDI Cloud. Please consult a Contracting Officer (KO) or Contracting Officer Representative (COR) to help with this step.</p>"
+) %}
 
 <div class="col col--grow">
 
-  <div class="panel">
-
-    <div class="panel__content">
-
-      <div class="panel__heading">
-        <h1>Requests <a class="usa-button usa-button-secondary" href='{{ reverse_url('request_new') }}'>New Request</a></h1>
+  <div class='panel'>
+    <div class='row'>
+      <div class='col col--grow col--pad'>
+        <form class="usa-search usa-search-small">
+          <label class="usa-sr-only" for="search-field-small">Search small</label>
+          <input id="search-field-small" type="search" name="search" placeholder="Search by Order ID">
+          <button type="submit">
+            <span class="usa-sr-only">Search</span>
+          </button>
+        </form>
       </div>
     </div>
-
+  </div>
+  
+  <div class="panel">
     <div class='responsive-table-wrapper'>
       <table>
         <thead>
