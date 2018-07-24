@@ -4,7 +4,7 @@
  * @source https://github.com/uswds/uswds/blob/develop/src/stylesheets/elements/_typography.scss
  */
 
- * {
+* {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -46,8 +46,4 @@ a:visited {
 dt {
   display: inline;
   font-weight: bold;
-}
-
-ul {
-  max-width: 45em;
 }
