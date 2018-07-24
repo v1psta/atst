@@ -13,7 +13,7 @@
   {% end %}
   <link rel="icon" type="image/x-icon" href="/static/img/favicon.ico">
 </head>
-<body>
+<body class="{% if modalOpen() %} modalOpen{% end %}">
   {% include 'navigation/topbar.html.to' %}
 
   <div class='global-layout'>
@@ -29,6 +29,8 @@
   </div>
 
   {% include 'footer.html.to' %}
+
+  {% block modal %}{% end %}
 </body>
 </html>
 
