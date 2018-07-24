@@ -14,8 +14,10 @@
       <div class="panel__heading">
         <h1>Requests <a class="usa-button usa-button-secondary" href='{{ reverse_url('request_new') }}'>New Request</a></h1>
       </div>
+    </div>
 
-      <table class="usa-table-borderless" width="100%">
+    <div class='responsive-table-wrapper'>
+      <table>
         <thead>
           <tr>
             <th scope="col">Order ID</th>
@@ -42,9 +44,6 @@
           {% end %}
         </tbody>
       </table>
-
-
-
     </div>
   </div>
 </div>

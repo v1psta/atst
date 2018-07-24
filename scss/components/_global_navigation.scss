@@ -4,7 +4,7 @@
   .sidenav__link {
     padding-right: $gap;
 
-    @include media($medium-screen) {
+    @include media($large-screen) {
       padding-right: $gap * 2;
     }
   }
@@ -12,7 +12,7 @@
   .sidenav__link-label {
     @include hide;
 
-    @include media($medium-screen) {
+    @include media($large-screen) {
       @include unhide;
       padding-left: $gap;
     }

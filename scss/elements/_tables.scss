@@ -39,5 +39,42 @@ table {
     .table-cell--expand {
       width: 100%;
     }
+
+    .table-cell--hide-small {
+      display: none;
+
+      @include media($medium-screen) {
+        display: table-cell;
+      }
+    }
+  }
+
+  @at-root .panel #{&} {
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.responsive-table-wrapper {
+  overflow-x: auto;
+  @include panel-margin;
+
+  table {
+    margin-bottom: 0;
+  }
+
+  @at-root .panel #{&} {
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
   }
 }

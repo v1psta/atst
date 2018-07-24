@@ -26,7 +26,7 @@ body {
   .global-panel-container {
     margin: $gap;
     max-width: $site-max-width;
-    overflow: auto;
+    overflow-x: hidden;
 
     @include media($medium-screen) {
       margin: $gap * 2;
