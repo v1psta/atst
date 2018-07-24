@@ -1,3 +1,4 @@
+import re
 import tornado
 from tornado.gen import Return
 from wtforms.fields.html5 import EmailField
@@ -9,6 +10,30 @@ from .fields import NewlineListField
 from .forms import ValidatedForm
 
 
+PE_REGEX = re.compile(r"""
+    (0?\d) # program identifier
+    (0?\d) # category
+    (\d)   # activity
+    (\d+)  # sponsor element
+    (.+)   # service
+""", re.X)
+
+def suggest_pe_id(pe_id):
+    suggestion = pe_id
+    match = PE_REGEX.match(pe_id)
+    if match:
+        (program, category, activity, sponsor, service) = match.groups()
+        if len(program) < 2:
+            program = "0" + program
+        if len(category) < 2:
+            category = "0" + category
+        suggestion = "".join((program, category, activity, sponsor, service))
+
+    if suggestion != pe_id:
+        return suggestion
+    return None
+
+
 @tornado.gen.coroutine
 def validate_pe_id(field, existing_request, fundz_client):
     response = yield fundz_client.get(
@@ -16,11 +41,13 @@ def validate_pe_id(field, existing_request, fundz_client):
         raise_error=False,
     )
     if not response.ok:
-        field.errors.append(
-            "We couldn't find that PE number, but if you have double checked "
-            "it you can submit anyway. Your request will need to go through a "
-            "manual review."
-        )
+        suggestion = suggest_pe_id(field.data)
+        error_str = (
+            "We couldn't find that PE number. {}"
+            "If you have double checked it you can submit anyway. "
+            "Your request will need to go through a manual review."
+        ).format("Did you mean \"{}\"? ".format(suggestion) if suggestion else "")
+        field.errors.append(error_str)
         return False
 
     return True
