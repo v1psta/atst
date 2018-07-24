@@ -7,7 +7,7 @@ from atst.forms.org import OrgForm
 from atst.forms.poc import POCForm
 from atst.forms.review import ReviewForm
 from atst.forms.financial import FinancialForm
-from atst.domain.requests import Requests
+from core.domain.requests import Requests
 
 
 class RequestNew(BaseHandler):

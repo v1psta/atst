@@ -2,7 +2,7 @@ import tornado
 import pendulum
 
 from atst.handler import BaseHandler
-from atst.domain.requests import Requests
+from core.domain.requests import Requests
 
 
 def map_request(user, request):

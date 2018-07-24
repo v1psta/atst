@@ -1,7 +1,7 @@
 import factory
 from uuid import uuid4
 
-from atst.models import Request, RequestStatusEvent
+from core.models import Request, RequestStatusEvent
 
 
 class RequestFactory(factory.Factory):

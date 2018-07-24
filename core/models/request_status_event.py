@@ -3,8 +3,8 @@ from sqlalchemy.types import DateTime, String, BigInteger
 from sqlalchemy.schema import Sequence
 from sqlalchemy.dialects.postgresql import UUID
 
-from atst.models import Base
-from atst.models.types import Id
+from core.models import Base
+from core.models.types import Id
 
 
 class RequestStatusEvent(Base):

@@ -3,8 +3,8 @@ from sqlalchemy.types import DateTime
 from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.orm import relationship
 
-from atst.models import Base
-from atst.models.types import Id
+from core.models import Base
+from core.models.types import Id
 
 
 class Request(Base):

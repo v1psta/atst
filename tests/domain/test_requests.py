@@ -1,8 +1,8 @@
 import pytest
 from uuid import uuid4
 
-from atst.domain.exceptions import NotFoundError
-from atst.domain.requests import Requests
+from core.domain.exceptions import NotFoundError
+from core.domain.requests import Requests
 
 from tests.factories import RequestFactory
 

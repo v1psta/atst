@@ -1,7 +1,7 @@
 import tornado
 
 from atst.handler import BaseHandler
-from atst.domain.requests import Requests
+from core.domain.requests import Requests
 
 
 class RequestsSubmit(BaseHandler):

@@ -3,8 +3,8 @@ from sqlalchemy import exists, and_
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.orm.attributes import flag_modified
 
-from atst.models import Request, RequestStatusEvent
-from .exceptions import NotFoundError
+from core.models import Request, RequestStatusEvent
+from core.domain.exceptions import NotFoundError
 
 
 def deep_merge(source, destination: dict):

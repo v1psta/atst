@@ -33,7 +33,7 @@ app_config = make_config()
 config.set_main_option('sqlalchemy.url', app_config['default']['DATABASE_URI'])
 
 from atst.database import make_db
-from atst.models import *
+from core.models import *
 db = make_db(app_config)
 target_metadata = Base.metadata
 
