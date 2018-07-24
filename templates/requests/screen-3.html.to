@@ -1,5 +1,9 @@
 {% extends '../requests_new.html.to' %}
 
+{% block subtitle %}
+  <h2>Primary Government/Military <br> Point of Contact (POC)</h2>
+{% end %}
+
 {% block form %}
 
 {% autoescape None %}
@@ -7,7 +11,6 @@
   <b class="usa-input-error-message">There were some errors, see below.</b>
 {% end %}
 
-<h2 id="primary-poc">Primary Government/Military <br> Point of Contact (POC)</h2>
 <p class="usa-font-lead">Please designate a Primary Point of Contact that will be responsible for owning the workspace in the JEDI Cloud.</p>
 <p>The Point of Contact will become the primary owner of the <em>workspace</em> created to use the JEDI Cloud. As a workspace owner, this person will have the ability to:
   <ul>

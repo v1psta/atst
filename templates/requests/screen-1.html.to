@@ -1,7 +1,10 @@
 {% extends '../requests_new.html.to' %}
 
+{% block subtitle %}
+  <h2>Details of Use</h2>
+{% end %}
+
 {% block form %}
-<h2>Details of Use</h2>
 
 {% autoescape None %}
 {% if f.errors %}
