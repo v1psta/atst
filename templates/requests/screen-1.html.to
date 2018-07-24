@@ -1,7 +1,10 @@
 {% extends '../requests_new.html.to' %}
 
+{% block subtitle %}
+  <h2>Details of Use</h2>
+{% end %}
+
 {% block form %}
-<h2>Details of Use</h2>
 
 {% autoescape None %}
 {% if f.errors %}
@@ -140,7 +143,7 @@
 
 <fieldset class="usa-fieldset-inputs">
   {{ f.supporting_organization.label }}
-  {{ f.supporting_organization(placeholder="Example: AF CCE/HNI, Navy SPAWAR, MITRE", class_="usa-unstyled-list") }}
+  {{ f.supporting_organization(placeholder="Example: AF CCE/HNI, Navy SPAWAR, MITRE") }}
   {% for e in f.supporting_organization.errors %}
     <div class="usa-input-error-message">
       {{ e }}

@@ -1,5 +1,9 @@
 {% extends '../requests_new.html.to' %}
 
+{% block subtitle %}
+  <h2>Information About You</h2>
+{% end %}
+
 {% block form %}
 
 {% autoescape None %}
@@ -7,8 +11,6 @@
   <b class="usa-input-error-message">There were some errors, see below.</b>
 {% end %}
 
-
-<h2 id="Information About You">Information About You</h2>
 <p class="usa-font-lead">Please tell us more about yourself.</p>
 
 {{ f.fname_request.label }}

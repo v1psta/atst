@@ -1,5 +1,9 @@
 {% extends '../requests_new.html.to' %}
 
+{% block subtitle %}
+  <h2>Review &amp; Submit</h2>
+{% end %}
+
 {% block form_action %}
   <form method='POST' action="{{ reverse_url('requests_submit', request_id) }}" autocomplete="off">
 {% end %}
@@ -10,8 +14,6 @@
 {% if f.errors %}
 <b>There were some errors, see below.</b>
 {% end %}
-
-<h2 id="review-submit">Review &amp; Submit</h2>
 
 <p class="usa-font-lead">Before you can submit your request, please take a moment to review the information entered in the form. You may make changes by clicking the edit link on each section. When all information looks right, go ahead and submit.</p>
 
