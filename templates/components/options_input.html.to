@@ -1,0 +1,24 @@
+<div class='usa-input {% if errors %}usa-input--error{% end %}'>
+  <fieldset class="usa-input__choices {% if inline %}usa-input__choices--inline{% end %}">
+    <legend>
+      {{ label }}
+
+      {% if description %}
+        <span class='usa-input__help'>{% raw description %}</span>
+      {% end %}
+
+      {% if errors %}
+        {% module Icon('alert') %}
+      {% end %}
+    </legend>
+
+    {% raw input() %}
+
+    {% if errors %}
+      {% for error in errors %}
+        <span class='usa-input__message'>{{ error }}</span>
+      {% end %}
+    {% end %}
+
+  </fieldset>
+</div>
