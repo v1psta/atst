@@ -9,6 +9,31 @@ import pendulum
 
 class RequestForm(ValidatedForm):
 
+    # Details of Use: General
+
+    dod_component = StringField(
+        "DoD Component",
+        description="Identify the DoD component that is requesting access to the JEDI Cloud",
+    )
+
+    jedi_usage = StringField(
+        "JEDI Usage",
+        description="Briefly describe how you are expecting to use the JEDI Cloud",
+    )
+
+
+    # Details of Use: Cloud Readiness
+
+
+
+
+
+
+
+
+
+
+
     # Details of Use: Overall Request Details
     dollar_value = IntegerField(
         "What is the total estimated dollar value of the cloud resources you are requesting using the <a href=\"#\" target=\"_blank\">JEDI CSP Calculator</a>?",
