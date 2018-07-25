@@ -214,8 +214,8 @@
           <div class='form-col'>
             <div class='usa-input usa-input--error'>
               <fieldset class='usa-input__choices usa-input__choices--inline'>
-                <legend>Inline Checkboxes</legend>
-                <input type='checkbox' id='checkbox-4' checked/>
+                <legend>Inline Checkboxes {% module Icon('alert') %}</legend>
+                <input type='checkbox' id='checkbox-4'/>
                 <label for='checkbox-4'>Checkbox Four</label>
 
                 <input type='checkbox' id='checkbox-5' />
@@ -255,7 +255,7 @@
               <fieldset class='usa-input__choices usa-input__choices--inline'>
                 <legend>Radio Buttons</legend>
 
-                <input type='radio' name='radio-2' id='radio-4' />
+                <input type='radio' name='radio-2' id='radio-4' checked />
                 <label for='radio-4'>Radio Four</label>
 
                 <input type='radio' name='radio-2' id='radio-5' />
