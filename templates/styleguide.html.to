@@ -212,7 +212,7 @@
           </div>
 
           <div class='form-col'>
-            <div class='usa-input'>
+            <div class='usa-input usa-input--error'>
               <fieldset class='usa-input__choices usa-input__choices--inline'>
                 <legend>Inline Checkboxes</legend>
                 <input type='checkbox' id='checkbox-4' checked/>
@@ -223,6 +223,8 @@
 
                 <input type='checkbox' id='checkbox-6' disabled />
                 <label for='checkbox-6'>Checkbox Six</label>
+
+                <span class='usa-input__message'>This is an error</span>
               </fieldset>
             </div>
           </div>

@@ -45,7 +45,13 @@
   fieldset {
     input[type='radio'] {
       + label::before {
-        box-shadow: 0 0 0 1px #ffffff, 0 0 0 3px $color-red;
+        box-shadow: 0 0 0 1px $color-white, 0 0 0 3px $color-red;
+      }
+    }
+
+    input[type='checkbox'] {
+      + label::before {
+        box-shadow: 0 0 0 2px $color-red;
       }
     }
   }
@@ -101,6 +107,10 @@
     label {
       font-weight: normal;
       margin: 0;
+    }
+
+    .usa-input__message {
+      display: block;
     }
 
     &.usa-input__choices--inline {
