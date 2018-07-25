@@ -23,3 +23,7 @@
   position: unset;
   width: unset;
 }
+
+@mixin line-max {
+  max-width: 45em;
+}

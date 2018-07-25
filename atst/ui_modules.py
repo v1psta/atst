@@ -1,4 +1,6 @@
 from tornado.web import UIModule
+# from tornado.template import raw
+import re
 
 class Alert(UIModule):
     def render(self, title, message=None, actions=None, level='info'):
@@ -8,6 +10,26 @@ class Alert(UIModule):
           message=message,
           actions=actions,
           level=level)
+
+class TextInput(UIModule):
+    def render(self, field, placeholder=''):
+        return self.render_string(
+          "components/text_input.html.to",
+          field=field,
+          label=re.sub('<[^<]+?>', '', str(field.label)),
+          errors=field.errors,
+          placeholder=placeholder,
+          description=field.description)
+
+class OptionsInput(UIModule):
+    def render(self, field, inline=False):
+        return self.render_string(
+          "components/options_input.html.to",
+          field=field,
+          label=re.sub('<[^<]+?>', '', str(field.label)),
+          errors=field.errors,
+          description=field.description,
+          inline=inline)
 
 class Icon(UIModule):
     def render(self, name, classes=''):
