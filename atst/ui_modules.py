@@ -12,23 +12,23 @@ class Alert(UIModule):
           level=level)
 
 class TextInput(UIModule):
-    def render(self, input, placeholder=''):
+    def render(self, field, placeholder=''):
         return self.render_string(
           "components/text_input.html.to",
-          input=input,
-          label=re.sub('<[^<]+?>', '', str(input.label)),
-          errors=input.errors,
+          field=field,
+          label=re.sub('<[^<]+?>', '', str(field.label)),
+          errors=field.errors,
           placeholder=placeholder,
-          description=input.description)
+          description=field.description)
 
 class OptionsInput(UIModule):
-    def render(self, input, inline=False):
+    def render(self, field, inline=False):
         return self.render_string(
           "components/options_input.html.to",
-          input=input,
-          label=re.sub('<[^<]+?>', '', str(input.label)),
-          errors=input.errors,
-          description=input.description,
+          field=field,
+          label=re.sub('<[^<]+?>', '', str(field.label)),
+          errors=field.errors,
+          description=field.description,
           inline=inline)
 
 class Icon(UIModule):
