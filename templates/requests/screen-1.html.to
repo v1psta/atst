@@ -12,6 +12,19 @@
 {% end %}
 
 
+
+
+
+{% module TextInput(f.dod_component) %}
+{% module TextInput(f.jedi_usage) %}
+
+
+
+
+
+
+
+<!-- OLD: -->
 <!-- DETAILS OF USE -->
 <!-- Overall Request Details -->
 
@@ -25,6 +38,8 @@
     {{ e }}
   </div>
 {% end %}
+
+
 
 {{ f.num_applications.label }}
 {{ f.num_applications(placeholder="Estimated number of applications") }}

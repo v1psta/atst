@@ -1,5 +1,5 @@
 <div class='usa-input {% if errors %}usa-input--error{% end %}'>
-  <label for={{input.name}}>
+  <label for={{field.name}}>
     {{ label }}
 
     {% if description %}
