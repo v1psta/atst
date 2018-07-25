@@ -21,6 +21,16 @@ class TextInput(UIModule):
           placeholder=placeholder,
           description=input.description)
 
+class OptionsInput(UIModule):
+    def render(self, input, inline=False):
+        return self.render_string(
+          "components/options_input.html.to",
+          input=input,
+          label=re.sub('<[^<]+?>', '', str(input.label)),
+          errors=input.errors,
+          description=input.description,
+          inline=inline)
+
 class Icon(UIModule):
     def render(self, name, classes=''):
         with open('static/icons/%s.svg' % name) as svg:
