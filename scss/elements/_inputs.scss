@@ -104,6 +104,21 @@
       }
     }
 
+    ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+
+      > li {
+        margin: 0;
+
+        [type='radio'] + label,
+        [type='checkbox'] + label {
+          margin: 0;
+        }
+      }
+    }
+
     label {
       font-weight: normal;
       margin: 0;
