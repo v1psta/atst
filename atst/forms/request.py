@@ -46,16 +46,46 @@ class RequestForm(ValidatedForm):
         choices=[("yes", "Yes"), ("no", "No")],
     )
 
+    engineering_assessment = RadioField(
+        "Have you completed an engineering assessment of your software systems for cloud readiness?",
+        choices=[("yes", "Yes"), ("no", "No"), ("in_progress","In Progress")],
+    )
+
+    data_transfers = StringField(
+        "How much data is being transferred to the cloud?",
+    )
+
+    expected_completion_date = StringField(
+        "When do you expect to complete your migration to the JEDI Cloud?",
+    )
+
+    cloud_native = RadioField(
+        "Are your software systems being developed cloud native?",
+        choices=[("yes", "Yes"), ("no", "No")],
+    )
+
+    # Details of Use: Financial Usage
+    estimated_monthly_spend = IntegerField(
+        "Estimated monthly spend",
+        description="Use the <a href=\"#\">JEDI CSP Calculator</a> to estimate your monthly cloud resource usage and enter the dollar amount below. Note these estimates are for initial approval only. After the request is approved, you will be asked to provide a valid Task Order number with specific CLIN amounts for cloud services."
+    )
+
+    total_spend = IntegerField(
+        "What is your total expected budget for this JEDI Cloud Request?",
+    )
+
+    number_user_sessions = IntegerField(
+        "How many user sessions do you expect on these systems each day?",
+    )
+
+    average_daily_traffic = IntegerField(
+        "What is the average daily traffic you expect the systems under this cloud contract to use?",
+    )
+
+    start_date = StringField(
+        "When do you expect to start using the JEDI Cloud (not for billing purposes)?",
+    )
 
 
-    # Organization Providing Assistance
-
-    # # Engineering Assessment
-
-    # # Data Transfers
-
-    # # Expected Completion Date
-
-    # # Cloud Native
 
 

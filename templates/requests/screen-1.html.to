@@ -25,6 +25,18 @@
 {% module OptionsInput(f.rationalization_software_systems) %}
 {% module OptionsInput(f.technical_support_team) %}
 {% module OptionsInput(f.organization_providing_assistance) %}
+{% module OptionsInput(f.engineering_assessment) %}
+{% module TextInput(f.data_transfers) %}
+{% module TextInput(f.expected_completion_date) %}
+{% module OptionsInput(f.cloud_native) %}
+
+<h3>Financial Usage</h3>
+{% module TextInput(f.estimated_monthly_spend) %}
+<p>So this means you are spending approximately <b>$X</b> annually</p>
+{% module TextInput(f.total_spend) %}
+{% module TextInput(f.number_user_sessions) %}
+{% module TextInput(f.average_daily_traffic) %}
+{% module TextInput(f.start_date) %}
 
 
 {% end %}
