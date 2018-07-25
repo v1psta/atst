@@ -1,14 +1,14 @@
 {% extends '../requests_new.html.to' %}
 
 {% block subtitle %}
-  <h2>Primary Government/Military <br> Point of Contact (POC)</h2>
+<h2>Primary Government/Military <br> Point of Contact (POC)</h2>
 {% end %}
 
 {% block form %}
 
 {% autoescape None %}
 {% if f.errors %}
-  <b class="usa-input-error-message">There were some errors, see below.</b>
+<b class="usa-input-error-message">There were some errors, see below.</b>
 {% end %}
 
 <p class="usa-font-lead">Please designate a Primary Point of Contact that will be responsible for owning the workspace in the JEDI Cloud.</p>
@@ -23,36 +23,9 @@
   <em>This POC may be you.</em>
 </p>
 
-{{ f.fname_poc.label }}
-{{ f.fname_poc(placeholder="First name") }}
-{% for e in f.fname_poc.errors %}
-  <div class="usa-input-error-message">
-    {{ e }}
-  </div>
-{% end %}
-
-{{ f.lname_poc.label }}
-{{ f.lname_poc(placeholder="Last name") }}
-{% for e in f.lname_poc.errors %}
-  <div class="usa-input-error-message">
-    {{ e }}
-  </div>
-{% end %}
-
-{{ f.email_poc.label }}
-{{ f.email_poc(placeholder="jane@mail.mil") }}
-{% for e in f.email_poc.errors %}
-  <div class="usa-input-error-message">
-    {{ e }}
-  </div>
-{% end %}
-
-{{ f.dodid_poc.label }}
-{{ f.dodid_poc(placeholder="10-digit number on the back of the CAC") }}
-{% for e in f.dodid_poc.errors %}
-  <div class="usa-input-error-message">
-    {{ e }}
-  </div>
-{% end %}
+{% module TextInput(f.fname_poc) %}
+{% module TextInput(f.lname_poc) %}
+{% module TextInput(f.email_poc) %}
+{% module TextInput(f.dodid_poc) %}
 
 {% end %}
