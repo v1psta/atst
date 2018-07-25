@@ -41,10 +41,22 @@
     border-color: $state-color;
     border-width: $border-width;
   }
+
+  fieldset {
+    input[type='radio'] {
+      + label::before {
+        box-shadow: 0 0 0 1px #ffffff, 0 0 0 3px $color-red;
+      }
+    }
+  }
 }
 
 .usa-input {
-  margin: ($gap * 4) 0;
+  margin:  ($gap * 4) ($gap * 2) ($gap * 4) 0;
+
+  @includ media($medium-screen) {
+    margin: ($gap * 4) 0;
+  }
 
   label {
     padding: 0 0 $gap 0;
@@ -80,6 +92,10 @@
     legend {
       padding: 0 0 $gap 0;
       @include h4;
+
+      .icon {
+        vertical-align: middle;
+      }
     }
 
     label {
@@ -149,4 +165,33 @@ select {
     min-height: 4.4rem;
   }
 
+}
+
+
+// Form Grid
+.form-row {
+  margin: ($gap * 4) 0;
+
+  .form-col {
+    flex-grow: 1;
+
+    &:first-child .usa-input {
+      margin-top: 0;
+    }
+
+    &:last-child .usa-input {
+      margin-bottom: 0;
+    }
+  }
+
+  @include media($medium-screen) {
+    @include grid-row;
+    align-items: flex-start;
+
+    .form-col {
+      .usa-input {
+        margin: 0 ($gap * 4) 0 0;
+      }
+    }
+  }
 }

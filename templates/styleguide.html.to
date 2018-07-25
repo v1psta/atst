@@ -141,7 +141,7 @@
         </div>
 
         <div class='usa-input usa-input--error'>
-          <label for='basic-text'>
+          <label for='basic-text-2'>
             Erroneous Text Input
             <span class='usa-input__help'>
               This is some help text to explain what this form field is and why you should fill it out.
@@ -153,15 +153,26 @@
         </div>
 
         <div class='usa-input usa-input--warning'>
-          <label for='basic-text'>
+          <label for='basic-text-3'>
             Warning Text Input
             <span class='usa-input__help'>
               This is some help text to explain what this form field is and why you should fill it out.
             </span>
             {% module Icon('alert') %}
           </label>
-          <input id='basic-text-2' type='text' placeholder='this is a sample of what you should enter' aria-describedby='basic-text-2__errors'/>
-          <span id='basic-text-2__errors' class='usa-input__message'>Oh boy you really screwed up big time, didn't you!</span>
+          <input id='basic-text-3' type='text' placeholder='this is a sample of what you should enter' aria-describedby='basic-text-3__errors'/>
+          <span id='basic-text-3__errors' class='usa-input__message'>Oh boy you really screwed up big time, didn't you!</span>
+        </div>
+
+        <div class='usa-input usa-input--success'>
+          <label for='basic-text-4'>
+            Success Text Input
+            <span class='usa-input__help'>
+              This is some help text to explain what this form field is and why you should fill it out.
+            </span>
+            {% module Icon('ok') %}
+          </label>
+          <input id='basic-text-4' type='text' placeholder='this is a sample of what you should enter'/>
         </div>
 
         <div class='usa-input'>
@@ -183,8 +194,8 @@
           </select>
         </div>
 
-        <div class='row row--form'>
-          <div class='col col--pad col--grow'>
+        <div class='form-row'>
+          <div class='form-col'>
             <div class='usa-input'>
               <fieldset class='usa-input__choices'>
                 <legend>Checkboxes</legend>
@@ -200,7 +211,7 @@
             </div>
           </div>
 
-          <div class='col col--pad col--grow'>
+          <div class='form-col'>
             <div class='usa-input'>
               <fieldset class='usa-input__choices usa-input__choices--inline'>
                 <legend>Inline Checkboxes</legend>
@@ -217,11 +228,11 @@
           </div>
         </div>
 
-        <div class='row row--form'>
-          <div class='col col--grow col--pad'>
-            <div class='usa-input'>
-              <fieldset class='usa-input__choices'>
-                <legend>Radio Buttons</legend>
+        <div class='form-row'>
+          <div class='form-col'>
+            <div class='usa-input usa-input--error'>
+              <fieldset class='usa-input__choices' >
+                <legend>Problem Radio Buttons {% module Icon('alert') %}</legend>
 
                 <input type='radio' name='radio' id='radio-1' />
                 <label for='radio-1'>Radio One</label>
@@ -231,11 +242,13 @@
 
                 <input type='radio' name='radio' id='radio-3' />
                 <label for='radio-3'>Radio Three</label>
+
+                <span class='usa-input__message'>This is an error</span>
               </fieldset>
             </div>
           </div>
 
-          <div class='col col--grow col--pad'>
+          <div class='form-col'>
             <div class='usa-input'>
               <fieldset class='usa-input__choices usa-input__choices--inline'>
                 <legend>Radio Buttons</legend>
