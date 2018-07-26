@@ -99,6 +99,7 @@
     legend {
       padding: 0 0 $gap 0;
       @include h4;
+      font-weight: normal;
 
       .icon {
         vertical-align: middle;

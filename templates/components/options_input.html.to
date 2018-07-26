@@ -1,4 +1,5 @@
 <div class='usa-input {% if errors %}usa-input--error{% end %}'>
+
   <fieldset class="usa-input__choices {% if inline %}usa-input__choices--inline{% end %}">
     <legend>
       {{ label }}
