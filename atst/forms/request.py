@@ -14,6 +14,7 @@ class RequestForm(ValidatedForm):
         "DoD Component",
         description="Identify the DoD component that is requesting access to the JEDI Cloud",
         choices=[
+          ("null","Select an option"),
           ("us_air_force","US Air Force"),
           ("us_army","US Army"),
           ("us_navy","US Navy"),
@@ -21,9 +22,10 @@ class RequestForm(ValidatedForm):
           ("joint_chiefs_of_staff","Joint Chiefs of Staff")],
     )
 
-    jedi_usage = StringField(
+    jedi_usage = TextAreaField(
         "JEDI Usage",
         description="Briefly describe how you are expecting to use the JEDI Cloud",
+        render_kw={"placeholder": "e.g. We are migrating XYZ application to the cloud so that..."},
     )
 
     # Details of Use: Cloud Readiness
@@ -53,7 +55,7 @@ class RequestForm(ValidatedForm):
     )
 
     engineering_assessment = RadioField(
-        "Have you completed an engineering assessment of your software systems for cloud readiness?",
+        description="Have you completed an engineering assessment of your software systems for cloud readiness?",
         choices=[("yes", "Yes"), ("no", "No"), ("in_progress","In Progress")],
     )
 
