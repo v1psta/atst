@@ -7,6 +7,7 @@ from redis import StrictRedis
 from atst.handlers.main import Main
 from atst.handlers.root import Root
 from atst.handlers.login_redirect import LoginRedirect
+from atst.handlers.workspaces import Workspaces
 from atst.handlers.workspace import Workspace
 from atst.handlers.request import Request
 from atst.handlers.request_financial_verification import RequestFinancialVerification
@@ -46,7 +47,7 @@ def make_app(config, deps, **kwargs):
         ),
         url(
             r"/workspaces",
-            Workspace,
+            Workspaces,
             {"page": "workspaces", "authz_client": deps["authz_client"]},
             name="workspaces",
         ),
@@ -111,6 +112,7 @@ def make_app(config, deps, **kwargs):
         url(r"/users", Main, {"page": "users"}, name="users"),
         url(r"/reports", Main, {"page": "reports"}, name="reports"),
         url(r"/calculator", Main, {"page": "calculator"}, name="calculator"),
+        url(r"/workspaces/(\S+)", Workspace, {}, name="workspace"),
     ]
 
     if not ENV == "production":
