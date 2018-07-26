@@ -4,8 +4,13 @@
   align-items: center;
   margin-top: $gap * 4;
 
-  .action-group__action {
+  .usa-button,
+  a {
     margin: 0 0 0 ($gap * 2);
+
+    @include media($medium-screen) {
+      margin: 0 0 0 ($gap * 4);
+    }
   }
 
   &:last-child {
