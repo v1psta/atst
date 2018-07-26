@@ -17,6 +17,23 @@
 
 <p class="usa-font-lead">Before you can submit your request, please take a moment to review the information entered in the form. You may make changes by clicking the edit link on each section. When all information looks right, go ahead and submit.</p>
 
+
+
+
+
+{{ data['details_of_use']['dod_component'] }}
+{{ data['details_of_use']['fname_request'] }}
+{{ data['details_of_use']['lname_request'] }}
+{{ data['details_of_use']['email_request'] }}
+{{ data['details_of_use']['phone_number'] }}
+{{ data['details_of_use']['service_branch'] }}
+{{ data['details_of_use']['citizenship'] }}
+{{ data['details_of_use']['designation'] }}
+{{ data['details_of_use']['date_latest_training'] }}
+
+
+
+<br><br><br><br>
 <h3>Details of Use <a href="{{ reverse_url('request_form_update', 1, request_id) }}">Edit</a></h3>
 
 <h4>Overall Request Details</h4>
