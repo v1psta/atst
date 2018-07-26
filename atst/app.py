@@ -9,6 +9,7 @@ from atst.handlers.root import Root
 from atst.handlers.login_redirect import LoginRedirect
 from atst.handlers.workspaces import Workspaces
 from atst.handlers.workspace import Workspace
+from atst.handlers.workspace_members import WorkspaceMembers
 from atst.handlers.request import Request
 from atst.handlers.request_financial_verification import RequestFinancialVerification
 from atst.handlers.request_new import RequestNew
@@ -112,6 +113,7 @@ def make_app(config, deps, **kwargs):
         url(r"/users", Main, {"page": "users"}, name="users"),
         url(r"/reports", Main, {"page": "reports"}, name="reports"),
         url(r"/calculator", Main, {"page": "calculator"}, name="calculator"),
+        url(r"/workspaces/(\S+)/members", WorkspaceMembers, {}, name="workspace_members"),
         url(r"/workspaces/(\S+)", Workspace, {}, name="workspace"),
     ]
 
