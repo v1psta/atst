@@ -1,5 +1,5 @@
 from wtforms.fields.html5 import IntegerField
-from wtforms.fields import RadioField, StringField, TextAreaField, SelectField
+from wtforms.fields import RadioField, StringField, TextAreaField, SelectField, BooleanField, SelectMultipleField
 from wtforms.validators import NumberRange, InputRequired
 from .fields import DateField
 from .forms import ValidatedForm
@@ -49,9 +49,12 @@ class RequestForm(ValidatedForm):
         choices=[("yes", "Yes"), ("no", "No")],
     )
 
-    organization_providing_assistance = RadioField(
+    organization_providing_assistance = RadioField(  # this needs to be updated to use checkboxes instead of radio
         "If you are receiving migration assistance, indicate the type of organization providing assistance below:",
-        choices=[("yes", "Yes"), ("no", "No")],
+        choices=[
+            ("in_house_staff","In-house staff"),
+            ("contractor","Contractor"),
+            ("other_dod_organization","Other DoD organization")],
     )
 
     engineering_assessment = RadioField(
@@ -59,12 +62,23 @@ class RequestForm(ValidatedForm):
         choices=[("yes", "Yes"), ("no", "No"), ("in_progress","In Progress")],
     )
 
-    data_transfers = StringField(
-        "How much data is being transferred to the cloud?",
+    data_transfers = SelectField(
+        description="How much data is being transferred to the cloud?",
+        choices=[
+          ("null","Select an option"),
+          ("less_than_100gb","Less than 100GB"),
+          ("...","- more options -"),
+          ("above_10pb","Above 10PB")],
     )
 
-    expected_completion_date = StringField(
-        "When do you expect to complete your migration to the JEDI Cloud?",
+    expected_completion_date = SelectField(
+        description="When do you expect to complete your migration to the JEDI Cloud?",
+        choices=[
+          ("null","Select an option"),
+          ("less_than_1_month","< 1 month"),
+          ("1_to_3_months","1-3 months"),
+          ("3_to_6_months","3-6 months"),
+          ("more_than_12_months","12+ months")],
     )
 
     cloud_native = RadioField(
@@ -79,19 +93,19 @@ class RequestForm(ValidatedForm):
     )
 
     total_spend = IntegerField(
-        "What is your total expected budget for this JEDI Cloud Request?",
+        description="What is your total expected budget for this JEDI Cloud Request?",
     )
 
     number_user_sessions = IntegerField(
-        "How many user sessions do you expect on these systems each day?",
+        description="How many user sessions do you expect on these systems each day?",
     )
 
     average_daily_traffic = IntegerField(
-        "What is the average daily traffic you expect the systems under this cloud contract to use?",
+        description="What is the average daily traffic you expect the systems under this cloud contract to use?",
     )
 
-    start_date = StringField(
-        "When do you expect to start using the JEDI Cloud (not for billing purposes)?",
+    start_date = DateField(
+        description="When do you expect to start using the JEDI Cloud (not for billing purposes)?",
     )
 
 
