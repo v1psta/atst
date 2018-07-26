@@ -1,0 +1,26 @@
+{% extends "base.html.to" %}
+
+{% block content %}
+
+<div class="panel">
+  <div class='responsive-table-wrapper'>
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Name</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for m in members %}
+        <tr>
+          <td>{{ m['first_name'] }} {{ m['last_name'] }}</td>
+        </tr>
+        {% end %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+{% end %}
+

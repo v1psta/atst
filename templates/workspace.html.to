@@ -1,0 +1,26 @@
+{% extends "base.html.to" %}
+
+{% block content %}
+
+<div class="panel">
+  <div class='responsive-table-wrapper'>
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Name</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in projects %}
+        <tr>
+          <td>{{ p['name'] }}</td>
+        </tr>
+        {% end %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+{% end %}
+
