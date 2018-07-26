@@ -4,6 +4,14 @@ from tornado.httpclient import HTTPRequest, HTTPResponse
 from atst.api_client import ApiClient
 
 
+MOCK_USER = {
+    "id": "9cb348f0-8102-4962-88c4-dac8180c904c",
+    "email": "fake.user@mail.com",
+    "first_name": "Fake",
+    "last_name": "User",
+}
+
+
 class MockApiClient(ApiClient):
 
     def __init__(self, service):
