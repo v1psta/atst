@@ -1,5 +1,5 @@
 from wtforms.fields.html5 import IntegerField
-from wtforms.fields import RadioField, StringField, TextAreaField
+from wtforms.fields import RadioField, StringField, TextAreaField, SelectField
 from wtforms.validators import NumberRange, InputRequired
 from .fields import DateField
 from .forms import ValidatedForm
@@ -10,9 +10,15 @@ import pendulum
 class RequestForm(ValidatedForm):
 
     # Details of Use: General
-    dod_component = StringField(
+    dod_component = SelectField(
         "DoD Component",
         description="Identify the DoD component that is requesting access to the JEDI Cloud",
+        choices=[
+          ("us_air_force","US Air Force"),
+          ("us_army","US Army"),
+          ("us_navy","US Navy"),
+          ("us_marine_corps","US Marine Corps"),
+          ("joint_chiefs_of_staff","Joint Chiefs of Staff")],
     )
 
     jedi_usage = StringField(
