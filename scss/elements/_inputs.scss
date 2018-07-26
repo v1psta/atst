@@ -60,7 +60,7 @@
 .usa-input {
   margin:  ($gap * 4) ($gap * 2) ($gap * 4) 0;
 
-  @includ media($medium-screen) {
+  @include media($medium-screen) {
     margin: ($gap * 4) 0;
   }
 
@@ -215,7 +215,19 @@ select {
 
     .form-col {
       .usa-input {
-        margin: 0 ($gap * 4) 0 0;
+        margin: 0 ($gap * 4);
+      }
+
+      &:first-child {
+        .usa-input {
+          margin-left: 0;
+        }
+      }
+
+      &:last-child {
+        .usa-input {
+          margin-right: 0;
+        }
       }
     }
   }

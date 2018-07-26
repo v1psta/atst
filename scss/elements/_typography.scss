@@ -24,6 +24,13 @@ h1, h2, h3, h4, h5, h6 {
 
 }
 
+.h1 { @include h1; }
+.h2 { @include h2; }
+.h3 { @include h3; }
+.h4 { @include h4; }
+.h5 { @include h5; }
+.h6 { @include h6; }
+
 a,
 a:hover {
   transition:
@@ -37,9 +44,18 @@ a:visited {
   color: $color-blue;
 }
 
-dt {
-  display: inline;
-  font-weight: bold;
+dl {
+  dt {
+    display: inline;
+    font-weight: bold;
+  }
+  dd {
+    -webkit-margin-start: 0;
+  }
+
+  > div {
+    margin-bottom: $gap * 2;
+  }
 }
 
 .subtitle {

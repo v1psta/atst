@@ -1,0 +1,97 @@
+.request-approval {
+  .request-approval__heading {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .request-approval__info-columns {
+    flex-wrap: wrap;
+
+    .col {
+      flex-basis: 100%;
+
+      @include media($medium-screen) {
+        flex-basis: 50%;
+
+        &:first-child {
+          padding-right: $gap * 2;
+        }
+        &:last-child {
+          padding-left: $gap * 2;
+        }
+      }
+    }
+  }
+
+  .request-approval__columns__heading {
+    &:first-child {
+      @include media($medium-screen) {
+        margin-top: 0;
+      }
+    }
+  }
+
+  .approval-log {
+    ol {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+
+      li {
+        padding: $gap * 2;
+        border-top: 1px dashed $color-gray-light;
+
+        &:first-child {
+          border-top-style: solid;
+        }
+
+        @include media($medium-screen) {
+          padding: $gap * 4;
+        }
+      }
+    }
+    .approval-log__log-item {
+      display: flex;
+      flex-direction: column-reverse;
+      justify-content: flex-end;
+
+      @include media($medium-screen) {
+        flex-direction: row-reverse;
+      }
+
+      .approval-log__log-item__header {
+        @include h4;
+        margin: 0 0 $gap 0;
+      }
+
+      .approval-log__log-item__timestamp {
+        @include h5;
+        margin-right: $gap * 2;
+        color: $color-gray;
+        flex-grow: 0;
+
+        @include media($large-screen) {
+          margin-right: $gap * 4;
+        }
+      }
+
+      .approval-log__behalfs {
+        display: flex;
+        flex-direction: row;
+
+        .approval-log__behalf {
+          margin-right: $gap * 2;
+
+          @include media($medium-screen) {
+            margin-right: $gap * 4;
+          }
+
+          span {
+            display: block;
+          }
+        }
+      }
+    }
+  }
+}

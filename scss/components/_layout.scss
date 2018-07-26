@@ -27,6 +27,7 @@ body {
     margin: $gap;
     max-width: $site-max-width;
     overflow-x: hidden;
+    flex-grow: 1;
 
     @include media($medium-screen) {
       margin: $gap * 2;

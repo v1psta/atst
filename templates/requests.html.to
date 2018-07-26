@@ -22,7 +22,7 @@
       </div>
     </div>
   </div>
-  
+
   <div class="panel">
     <div class='responsive-table-wrapper'>
       <table>
@@ -48,7 +48,10 @@
             <td>{{ r['full_name'] }}</td>
             <td>{{ r['app_count'] }}</td>
             <td>{{ r['status'] }}</td>
-            <td><a href="">Download</a></td>
+            <td>
+              <a href="">Download</a>
+              <a href="/request/approval">Approval</a>
+            </td>
           </tr>
           {% end %}
         </tbody>

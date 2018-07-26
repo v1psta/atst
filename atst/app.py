@@ -94,6 +94,13 @@ def make_app(config, deps, **kwargs):
             {"requests_client": deps["requests_client"]},
             name="requests_submit",
         ),
+        # Dummy request/approval screen
+        url(
+            r"/request/approval",
+            Main,
+            {"page": "request_approval"},
+            name="request_approval"
+        ),
         url(
             r"/requests/verify/(\S+)",
             RequestFinancialVerification,

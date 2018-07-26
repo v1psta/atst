@@ -1,0 +1,186 @@
+{% extends "base.html.to" %}
+
+{% block content %}
+
+<article class='col col--grow request-approval'>
+  {# A {% module Alert() %} goes here, if alerting be needed #}
+
+  <form>
+    <section class='panel'>
+      <header class='panel__heading request-approval__heading'>
+        <h1 class='h2'>Request #1234567890</h1>
+        <span class='label label--info'>Pending</span>
+      </header>
+
+      <div class='panel__content'>
+        <p>Ongoing maintainence for Death Star (a moon-sized Imperial military battlestation armed with a planet-destroying superlaser). Its definitely hasn't been sabotaged from the start.</p>
+        <div class='row row--halves request-approval__info-columns'>
+          <div class='col'>
+            <h2 class='h3 request-approval__columns__heading'>Information About Requestor</h2>
+            <dl>
+              <div>
+                <dt>Name</dt>
+                <dd>Firmus Piett</dd>
+              </div>
+
+              <div>
+                <dt>E-mail</dt>
+                <dd>piett@empire.mil</dd>
+              </div>
+
+              <div>
+                <dt>Phone Number</dt>
+                <dd>(123) 456-7890</dd>
+              </div>
+
+              <div>
+                <dt>Location</dt>
+                <dd>Death Star</dd>
+              </div>
+            </dl>
+          </div>
+
+          <div class='col'>
+            <h2 class='h3 request-approval__columns__heading'>Funding Information</h2>
+            <dl>
+              <div>
+                <dt>Task Order Number</dt>
+                <dd>4523542345322345234</dd>
+              </div>
+
+              <div>
+                <dt>Funding Type</dt>
+                <dd class='diff--removed'><span class='hide'>Previously: </span>Modest Destructive Power</dd>
+                <dd class='diff--added'><span class='hide'>Changed to: </span>Absolute Destructive Power</dd>
+              </div>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class='panel'>
+      <header class='panel__heading'>
+        <h2 class='h3 request-approval__columns__heading'>Approval Log</h2>
+      </header>
+      <div>
+        <div class='approval-log'>
+          <ol>
+            <li>
+              <article class='approval-log__log-item'>
+                <div>
+                  <h3 class='approval-log__log-item__header'>Denied by Darth Vader</h3>
+                  <p>"You have failed me for the last time, Admiral. Captain Piett. Yes, my lord. Make ready to land out troops beyond the energy shield and deploy the fleet so that nothing gets off that system."</p>
+
+                  <div class='approval-log__behalfs'>
+                    <div class='approval-log__behalf'>
+                      <h3 class='approval-log__log-item__header'>Mission Owner approval on behalf of:</h3>
+                      <span>Grand Moff Tarkin</span>
+                      <span>tarkin@empire.mil</span>
+                      <span>(234) 567-8901</span>
+                    </div>
+
+                    <div class='approval-log__behalf'>
+                      <h3 class='approval-log__log-item__header'>CCPO approval on behalf of:</h3>
+                      <span>Emperor Palpatine</span>
+                      <span>palpatine@empire.mil</span>
+                      <span>(345) 678-9012</span>
+                    </div>
+                  </div>
+                </div>
+
+                <footer class='approval-log__log-item__timestamp'><time datetime='2018-07-02 04:23:02 EST'>2018-07-02 04:23:02 EST</time></footer>
+              </article>
+            </li>
+
+
+            <li>
+              <article class='approval-log__log-item'>
+                <div>
+                  <h3 class='approval-log__log-item__header'>Denied by Darth Vader</h3>
+                  <p>"You have failed me for the last time, Admiral. Captain Piett. Yes, my lord. Make ready to land out troops beyond the energy shield and deploy the fleet so that nothing gets off that system."</p>
+
+                  <div class='approval-log__behalfs'>
+                    <div class='approval-log__behalf'>
+                      <h3 class='approval-log__log-item__header'>Mission Owner approval on behalf of:</h3>
+                      <span>Grand Moff Tarkin</span>
+                      <span>tarkin@empire.mil</span>
+                      <span>(234) 567-8901</span>
+                    </div>
+
+                    <div class='approval-log__behalf'>
+                      <h3 class='approval-log__log-item__header'>CCPO approval on behalf of:</h3>
+                      <span>Emperor Palpatine</span>
+                      <span>palpatine@empire.mil</span>
+                      <span>(345) 678-9012</span>
+                    </div>
+                  </div>
+                </div>
+
+                <footer class='approval-log__log-item__timestamp'><time datetime='2018-07-02 04:23:02 EST'>2018-07-02 04:23:02 EST</time></footer>
+              </article>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <section class='panel'>
+      <div class='panel__content'>
+        <p>Here is some good text explaining what the CCPO needs to do in order to approve the request. This text should also explain why we are asking for multiple people's names and the risk of boiling the ocean.</p>
+
+        {# All instances of .usa-input groups here should be replaced with {% module TextInput(wtforms.fields.Field) %} #}
+
+        <div class='usa-input'>
+          <label for='notes'>Notes</label>
+          <textarea id='notes' placeholder='Add notes or comments related to the approval or disapproval of this request.'/></textarea>
+        </div>
+
+        <div class='form-row'>
+          <div class='form-col'>
+            <div class='usa-input'>
+              <label for='mo-behalf-name'>Mission Owner approval on behalf of</label>
+              <input id='mo-behalf-name' type='text' placeholder='Name of approving officer'/>
+            </div>
+
+            <div class='usa-input'>
+              <label for='mo-behalf-email'>Mission Owner e-mail</label>
+              <input id='mo-behalf-email' type='email' placeholder='i.e. name@mail.mil'/>
+            </div>
+
+            <div class='usa-input'>
+              <label for='mo-behalf-phone'>Mission Owner phone number</label>
+              <input id='mo-behalf-phone' type='tel' placeholder='i.e. (123) 456-7890'/>
+            </div>
+          </div>
+
+          <div class='form-col'>
+            <div class='usa-input'>
+              <label for='ccpo-behalf-name'>CCPO approval on behalf of</label>
+              <input id='ccpo-behalf-name' type='text' placeholder='Name of approving officer'/>
+            </div>
+
+            <div class='usa-input'>
+              <label for='ccpo-behalf-email'>CCPO e-mail</label>
+              <input id='ccpo-behalf-email' type='email' placeholder='i.e. name@mail.mil'/>
+            </div>
+
+            <div class='usa-input'>
+              <label for='ccpo-behalf-phone'>CCPO phone number</label>
+              <input id='ccpo-behalf-phone' type='tel' placeholder='i.e. (123) 456-7890'/>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class='action-group'>
+      <a href='/' class='usa-button usa-button-big'>Approve Request</a>
+      <a href='/' class='usa-button usa-button-big usa-button-secondary'>Deny Request</a>
+      <a href='/'>Cancel</a>
+    </div>
+  </form>
+</article>
+
+{% end %}
+
