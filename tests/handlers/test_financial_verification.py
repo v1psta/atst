@@ -69,7 +69,7 @@ class TestPENumberInForm:
         response = yield self.submit_data(http_client, base_url, data)
 
         assert response.code == 302
-        assert response.headers.get("Location") == "/requests"
+        assert response.headers.get("Location") == "/requests/financial_verification_submitted"
 
     @pytest.mark.gen_test
     def test_submit_request_form_with_new_valid_pe_id(self, monkeypatch, http_client, base_url):
@@ -81,4 +81,4 @@ class TestPENumberInForm:
         response = yield self.submit_data(http_client, base_url, data)
 
         assert response.code == 302
-        assert response.headers.get("Location") == "/requests"
+        assert response.headers.get("Location") == "/requests/financial_verification_submitted"
