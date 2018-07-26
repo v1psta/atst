@@ -1,6 +1,6 @@
 {# TODO: set this context elsewhere #}
 {# set context='workspace' #}
-{% set context='global' %}
+{% set context=navigationContext() %}
 
 <!DOCTYPE html>
 <html>

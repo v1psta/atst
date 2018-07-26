@@ -1,4 +1,8 @@
 import os
+import re
+
+def navigationContext(self):
+    return 'workspace' if re.match('\/workspaces\/[A-Za-z0-9]*', self.request.uri) else 'global'
 
 def dev(self):
     return os.getenv("TORNADO_ENV", "dev") == "dev"
