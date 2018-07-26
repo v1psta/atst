@@ -23,9 +23,9 @@
   <em>This POC may be you.</em>
 </p>
 
-{% module TextInput(f.fname_poc) %}
-{% module TextInput(f.lname_poc) %}
-{% module TextInput(f.email_poc) %}
-{% module TextInput(f.dodid_poc) %}
+{% module TextInput(f.fname_poc,placeholder='First Name') %}
+{% module TextInput(f.lname_poc,placeholder='Last Name') %}
+{% module TextInput(f.email_poc,placeholder='jane@mail.mil') %}
+{% module TextInput(f.dodid_poc,placeholder='10-digit number on the back of the CAC') %}
 
 {% end %}

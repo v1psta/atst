@@ -17,10 +17,10 @@
 
 <h2>General</h2>
 {% module TextInput(f.dod_component) %}
-{% module TextInput(f.jedi_usage) %}
+{% module TextInput(f.jedi_usage,placeholder="e.g. We are migrating XYZ application to the cloud so that...") %}
 
 <h2>Cloud Readiness</h2>
-{% module TextInput(f.num_software_systems) %}
+{% module TextInput(f.num_software_systems,placeholder="Number of systems") %}
 {% module OptionsInput(f.jedi_migration) %}
 {% module OptionsInput(f.rationalization_software_systems) %}
 {% module OptionsInput(f.technical_support_team) %}
