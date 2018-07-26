@@ -1,5 +1,5 @@
 from wtforms.fields.html5 import IntegerField
-from wtforms.fields import RadioField, StringField, TextAreaField, SelectField, BooleanField, SelectMultipleField
+from wtforms.fields import RadioField, StringField, TextAreaField, SelectField
 from wtforms.validators import NumberRange, InputRequired
 from .fields import DateField
 from .forms import ValidatedForm
