@@ -1,5 +1,34 @@
 {% extends "base.html.to" %}
 
+{% block modal %}
+  {% if modalOpen() %}
+    {% apply modal %}
+      <h1>Your request is now approved!</h1>
+
+      <p>
+        Your next step is to create a <b>Task Order (T.O.)</b> associated with
+        JEDI Cloud. Please consult a <b>Contracting Officer (KO)</b> or
+        <b>Contracting Officer Representative (COR)</b> to help with this step.
+      </p>
+
+      <p>
+        Once the Task Order (T.O.) has been created, we will need the following
+        details to create your account. These details will help keep your cloud
+        usage in sync with your budget.
+      </p>
+
+      {% module Alert("You'll need these details: ",
+        message="<p>Task Order Number</p><p>Contracting Officer: Name, E-mail and Office</p>"
+      ) %}
+
+
+      <div class='action-group'>
+        <a href='/requests' class='action-group__action usa-button'>Close</a>
+      </div>
+    {% end %}
+  {% end %}
+{% end %}
+
 {% block content %}
 
 
