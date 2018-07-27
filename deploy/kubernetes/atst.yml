@@ -65,3 +65,21 @@ spec:
         backend:
           serviceName: atst
           servicePort: 80
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: atst-cac
+  namespace: atat
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: 10m
+    ingress.kubernetes.io/ssl-passthrough: "true"
+spec:
+  rules:
+  - host: cac.atat.codes
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: atst
+          servicePort: 443
