@@ -3,7 +3,6 @@ import pytest
 import tornado
 import urllib
 from tests.mocks import MOCK_USER
-from tests.factories import RequestFactory
 
 ERROR_CLASS = "alert--error"
 MOCK_REQUEST = RequestFactory.create(
