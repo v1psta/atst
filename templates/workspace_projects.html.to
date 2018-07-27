@@ -2,25 +2,29 @@
 
 {% block workspace_content %}
 
-<div class="panel">
-  <div class='responsive-table-wrapper'>
-    <table>
-      <thead>
-        <tr>
-          <th scope="col">Name</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for p in projects %}
-        <tr>
-          <td>{{ p['name'] }}</td>
-        </tr>
-        {% end %}
-      </tbody>
-    </table>
-  </div>
-</div>
+{% for project in projects %}
+  <div class='block-list project-list-item'>
+    <header class='block-list__header'>
+      <h2 class='block-list__title'>{{ project['name'] }} ({{ len(project['environments'])}} environments)</h2>
+      <a class='block-list__header__link' href='/'>edit</a>
+    </header>
+    <ul>
+      {% for environment in project['environments'] %}
+        <li class='block-list__item project-list-item__environment'>
+          <a href='/' target='_blank' rel='noopener noreferrer' class='project-list-item__environment__link'>
+            {% module Icon('link') %}
+            <span>{{ environment["name"]}}</span>
+          </a>
 
+          <div class='project-list-item__environment__members'>
+            <div class='label'>0</div>
+            <span>members</span>
+          </div>
+        </li>
+      {% end %}
+    </ul>
+  </div>
+{% end %}
 
 {% end %}
 
