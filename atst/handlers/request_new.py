@@ -54,7 +54,7 @@ class RequestNew(BaseHandler):
             if response.ok:
                 valid = yield jedi_flow.validate_warnings()
                 if valid:
-                    if jedi_flow.next_screen >= len(jedi_flow.screens):
+                    if jedi_flow.next_screen > len(jedi_flow.screens):
                         where = "/requests"
                     else:
                         where = self.application.default_router.reverse_url(
