@@ -13,10 +13,10 @@
     <tbody>
     {% for w in workspaces %}
      <tr>
-        <th scope="row">
-          <a href="">{{ w['name'] }}</a><br>
+        <td scope="row">
+          <a href="/workspaces/{{w['task_order']['number']}}">{{ w['name'] }}</a><br>
           Task Order: #{{ w['task_order']['number'] }}
-        </th>
+        </td>
         <td>
           <span class="usa-label">{{ w['user_count'] }}</span><br>Users
         </td>

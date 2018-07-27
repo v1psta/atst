@@ -1,0 +1,9 @@
+{% extends "base.html.to" %}
+
+{% block content %}
+
+  {% include 'navigation/workspace_navigation.html.to' %}
+
+  {% block workspace_content %}{% end %}
+
+{% end %}
