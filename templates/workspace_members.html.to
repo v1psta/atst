@@ -15,19 +15,19 @@
       </form>
     </div>
     <div class='col col--grow col--pad'>
-      <select id="filter_role" name="filter_role" required="">
-        <option value="" selected disabled>Filter by role</option>
-        <option value="">Admin</option>
-        <option value="">CCPO</option>
-        <option value="">Developer</option>
-      </select>
-    </div>
-    <div class='col col--grow col--pad'>
       <select id="filter_status" name="filter_status" required="">
         <option value="" selected disabled>Filter by status</option>
         <option value="">Active</option>
         <option value="">Pending</option>
         <option value="">Denied</option>
+      </select>
+    </div>
+    <div class='col col--grow col--pad'>
+      <select id="filter_role" name="filter_role" required="">
+        <option value="" selected disabled>Filter by role</option>
+        <option value="">Admin</option>
+        <option value="">CCPO</option>
+        <option value="">Developer</option>
       </select>
     </div>
   </div>
