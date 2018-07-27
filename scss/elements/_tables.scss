@@ -16,10 +16,12 @@
 
     th {
       @include block-list-header;
+      display: table-cell;
     }
 
     td {
       @include block-list-item;
+      display: table-cell;
     }
 
     &:last-child {

@@ -1,0 +1,33 @@
+.project-list-item {
+  .project-list-item__environment {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    .project-list-item__environment__link {
+      text-decoration: none;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+      .icon {
+        @include icon-color($color-primary);
+        margin-right: $gap;
+      }
+
+      span {
+        text-decoration: underline;
+      }
+    }
+
+    .project-list-item__environment__members {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+      span {
+        @include h6;
+      }
+    }
+  }
+}
