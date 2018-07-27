@@ -20,6 +20,14 @@
           </button>
         </form>
       </div>
+      <div class='col col--grow col--pad'>
+        <select id="filter_status" name="filter_status" required="">
+          <option value="" selected disabled>Filter by status</option>
+          <option value="">Active</option>
+          <option value="">Pending</option>
+          <option value="">Denied</option>
+        </select>
+      </div>
     </div>
   </div>
 
