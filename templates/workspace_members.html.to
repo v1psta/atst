@@ -7,13 +7,19 @@
     <table>
       <thead>
         <tr>
-          <th scope="col">Name</th>
+          <th scope="col" width="50%">Name</th>
+          <th scope="col">&nbsp;</th>
+          <th scope="col">Status</th>
+          <th scope="col">Workspace Role</th>
         </tr>
       </thead>
       <tbody>
         {% for m in members %}
         <tr>
-          <td>{{ m['first_name'] }} {{ m['last_name'] }}</td>
+          <td><a href="#">{{ m['first_name'] }} {{ m['last_name'] }}</a></td>
+          <td>{% if m['num_projects'] == '0' %} <span class="label label--info">No Project Access</span> {% end %}</td>
+          <td>{{ m['status'] }}</a></td>
+          <td>{{ m['workspace_role'] }}</a></td>
         </tr>
         {% end %}
       </tbody>
