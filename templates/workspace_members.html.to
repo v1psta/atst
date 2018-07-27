@@ -39,7 +39,7 @@
       <thead>
         <tr>
           <th scope="col" width="50%">Name</th>
-          <th scope="col">&nbsp;</th>
+          <th scope="col">&nbsp;<span class="hide>Status Flag</span></th>
           <th scope="col">Status</th>
           <th scope="col">Workspace Role</th>
         </tr>
