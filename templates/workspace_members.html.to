@@ -1,6 +1,6 @@
-{% extends "base.html.to" %}
+{% extends "base_workspace.html.to" %}
 
-{% block content %}
+{% block workspace_content %}
 
 <div class="panel">
   <div class='responsive-table-wrapper'>
