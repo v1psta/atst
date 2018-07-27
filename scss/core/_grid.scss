@@ -15,7 +15,7 @@
 }
 
 @mixin grid-pad {
-  @include padding($site-margins-mobile);
+  @include padding(null $site-margins-mobile);
 
   @include media($medium-screen) {
     @include padding(null $site-margins);

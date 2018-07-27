@@ -9,7 +9,7 @@
 
 <div class="col col--grow">
 
-  <div class='panel'>
+  <div class='panel panel__actions'>
     <div class='row'>
       <div class='col col--grow col--pad'>
         <form class="usa-search usa-search-small">
