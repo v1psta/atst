@@ -29,6 +29,10 @@
   }
 }
 
+@mixin panel-actions {
+  padding: $gap;
+}
+
 .panel {
   @include panel-base;
   @include panel-theme-default;
@@ -56,3 +60,8 @@
     }
   }
 }
+
+.panel__actions {
+  @include panel-actions;
+}
+
