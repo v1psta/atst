@@ -1,1 +1,21 @@
-nav
+<nav class='sidenav workspace-navigation'>
+  <ul>
+    {% module SidenavItem(
+      "Projects",
+      href=reverse_url('workspace_projects', workspace_id),
+      active=matchesPath('\/workspaces\/[A-Za-z0-9]*\/projects'))
+    %}
+
+    {% module SidenavItem(
+      "Members",
+      href=reverse_url('workspace_members', workspace_id),
+      active=matchesPath('\/workspaces\/[A-Za-z0-9]*\/members'))
+    %}
+
+    {% module SidenavItem(
+      "Funding & Reports",
+      href=reverse_url('workspace_projects', workspace_id),
+      active=matchesPath('\/workspaces\/[A-Za-z0-9]*\/reports'))
+    %}
+  </ul>
+</nav>
