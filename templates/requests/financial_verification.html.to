@@ -24,7 +24,7 @@
           <b class="usa-input-error-message">There were some errors, see below.</b>
         {% end %}
 
-        <p class="usa-font-lead">In order to get you access to the JEDI Cloud, we will need you to enter the details below that will help us verify and account for your Task Order.</p>
+        <p>In order to get you access to the JEDI Cloud, we will need you to enter the details below that will help us verify and account for your Task Order.</p>
 
         {{ f.task_order_id.label }}
         {{ f.task_order_id(placeholder="Example: 1234567899C0001") }}
