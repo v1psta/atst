@@ -23,149 +23,156 @@
   <h2>Details of Use <a href="{{ reverse_url('request_form_update', 1, request_id) }}" class="icon-link">Edit</a></h2>
 
   <dl>
-    <dt>DoD Component</dt>
-    <dd>{{data['details_of_use']['dod_component']}}</dd>
-  </dl>
+    <div>
+      <dt>DoD Component</dt>
+      <dd>{{data['details_of_use']['dod_component']}}</dd>
+    </div>
 
-  <dl>
-    <dt>JEDI Usage</dt>
-    <dd>{{data['details_of_use']['jedi_usage']}}</dd>
-  </dl>
 
-  <dl>
-    <dt>Number of software systems</dt>
-    <dd>{{data['details_of_use']['num_software_systems']}}</dd>
-  </dl>
+    <div>
+      <dt>JEDI Usage</dt>
+      <dd>{{data['details_of_use']['jedi_usage']}}</dd>
+    </div>
 
-  <dl>
-    <dt>JEDI Migration</dt>
-    <dd>{{data['details_of_use']['jedi_migration']}}</dd>
-  </dl>
+    <div>
+      <dt>Number of software systems</dt>
+      <dd>{{data['details_of_use']['num_software_systems']}}</dd>
+    </div>
 
-  <dl>
-    <dt>Rationalization of Software Systems</dt>
-    <dd>{{data['details_of_use']['rationalization_software_systems']}}</dd>
-  </dl>
+    <div>
+      <dt>JEDI Migration</dt>
+      <dd>{{data['details_of_use']['jedi_migration']}}</dd>
+    </div>
 
-  <dl>
-    <dt>Technical Support Team</dt>
-    <dd>{{data['details_of_use']['technical_support_team']}}</dd>
-  </dl>
+    <div>
+      <dt>Rationalization of Software Systems</dt>
+      <dd>{{data['details_of_use']['rationalization_software_systems']}}</dd>
+    </div>
 
-  <dl>
-    <dt>Organization Providing Assistance</dt>
-    <dd>{{data['details_of_use']['organization_providing_assistance']}}</dd>
-  </dl>
+    <div>
+      <dt>Technical Support Team</dt>
+      <dd>{{data['details_of_use']['technical_support_team']}}</dd>
+    </div>
 
-  <dl>
-    <dt>Engineering Assessment</dt>
-    <dd>{{data['details_of_use']['engineering_assessment']}}</dd>
-  </dl>
+    <div>
+      <dt>Organization Providing Assistance</dt>
+      <dd>{{data['details_of_use']['organization_providing_assistance']}}</dd>
+    </div>
 
-  <dl>
-    <dt>Data Transfers</dt>
-    <dd>{{data['details_of_use']['data_transfers']}}</dd>
-  </dl>
+    <div>
+      <dt>Engineering Assessment</dt>
+      <dd>{{data['details_of_use']['engineering_assessment']}}</dd>
+    </div>
 
-  <dl>
-    <dt>Expected Completion Date</dt>
-    <dd>{{data['details_of_use']['expected_completion_date']}}</dd>
-  </dl>
+    <div>
+      <dt>Data Transfers</dt>
+      <dd>{{data['details_of_use']['data_transfers']}}</dd>
+    </div>
 
-  <dl>
-    <dt>Cloud Native</dt>
-    <dd>{{data['details_of_use']['cloud_native']}}</dd>
-  </dl>
+    <div>
+      <dt>Expected Completion Date</dt>
+      <dd>{{data['details_of_use']['expected_completion_date']}}</dd>
+    </div>
 
-  <dl>
-    <dt>Estimated Monthly Spend</dt>
-    <dd>{{data['details_of_use']['estimated_monthly_spend']}}</dd>
-  </dl>
+    <div>
+      <dt>Cloud Native</dt>
+      <dd>{{data['details_of_use']['cloud_native']}}</dd>
+    </div>
 
-  <dl>
-    <dt>Total Spend</dt>
-    <dd>{{data['details_of_use']['total_spend']}}</dd>
-  </dl>
+    <div>
+      <dt>Estimated Monthly Spend</dt>
+      <dd>{{data['details_of_use']['estimated_monthly_spend']}}</dd>
+    </div>
 
-  <dl>
-    <dt>Number of User Sessions</dt>
-    <dd>{{data['details_of_use']['number_user_sessions']}}</dd>
-  </dl>
+    <div>
+      <dt>Total Spend</dt>
+      <dd>{{data['details_of_use']['total_spend']}}</dd>
+    </div>
 
-  <dl>
-    <dt>Average Daily Traffic</dt>
-    <dd>{{data['details_of_use']['average_daily_traffic']}}</dd>
-  </dl>
+    <div>
+      <dt>Number of User Sessions</dt>
+      <dd>{{data['details_of_use']['number_user_sessions']}}</dd>
+    </div>
 
-  <dl>
-    <dt>Start Date</dt>
-    <dd>{{data['details_of_use']['start_date']}}</dd>
+    <div>
+      <dt>Average Daily Traffic</dt>
+      <dd>{{data['details_of_use']['average_daily_traffic']}}</dd>
+    </div>
+
+    <div>
+      <dt>Start Date</dt>
+      <dd>{{data['details_of_use']['start_date']}}</dd>
+    </div>
   </dl>
 
 
   <h2>Information About You <a href="{{ reverse_url('request_form_update', 2, request_id) }}" class="icon-link">Edit</a></h2>
 
   <dl>
-    <dt>First Name</dt>
-    <dd>{{data['information_about_you']['fname_request']}}</dd>
-  </dl>
+    <div>
+      <dt>First Name</dt>
+      <dd>{{data['information_about_you']['fname_request']}}</dd>
+    </div>
 
-  <dl>
-    <dt>Last Name</dt>
-    <dd>{{data['information_about_you']['lname_request']}}</dd>
-  </dl>
+    <div>
+      <dt>Last Name</dt>
+      <dd>{{data['information_about_you']['lname_request']}}</dd>
+    </div>
 
-  <dl>
-    <dt>Email Address</dt>
-    <dd>{{data['information_about_you']['email_request']}}</dd>
-  </dl>
+    <div>
+      <dt>Email Address</dt>
+      <dd>{{data['information_about_you']['email_request']}}</dd>
+    </div>
 
-  <dl>
-    <dt>Phone Number</dt>
-    <dd>{{data['information_about_you']['phone_number']}}</dd>
-  </dl>
+    <div>
+      <dt>Phone Number</dt>
+      <dd>{{data['information_about_you']['phone_number']}}</dd>
+    </div>
 
-  <dl>
-    <dt>Service Branch or Agency</dt>
-    <dd>{{data['information_about_you']['service_branch']}}</dd>
-  </dl>
+    <div>
+      <dt>Service Branch or Agency</dt>
+      <dd>{{data['information_about_you']['service_branch']}}</dd>
+    </div>
 
-  <dl>
-    <dt>Citizenship</dt>
-    <dd>{{data['information_about_you']['citizenship']}}</dd>
-  </dl>
+    <div>
+      <dt>Citizenship</dt>
+      <dd>{{data['information_about_you']['citizenship']}}</dd>
+    </div>
 
-  <dl>
-    <dt>Designation of Person</dt>
-    <dd>{{data['information_about_you']['designation']}}</dd>
-  </dl>
+    <div>
+      <dt>Designation of Person</dt>
+      <dd>{{data['information_about_you']['designation']}}</dd>
+    </div>
 
-  <dl>
-    <dt>Latest Information Assurance (IA) Training completion date</dt>
-    <dd>{{data['information_about_you']['date_latest_training']}}</dd>
+    <div>
+      <dt>Latest Information Assurance (IA) Training completion date</dt>
+      <dd>{{data['information_about_you']['date_latest_training']}}</dd>
+    </div>
   </dl>
 
 
   <h2>Primary Point of Contact <a href="{{ reverse_url('request_form_update', 3, request_id) }}" class="icon-link">Edit</a></h2>
 
   <dl>
-    <dt>POC First Name</dt>
-    <dd>{{data['primary_poc']['fname_poc']}}</dd>
-  </dl>
+    <div>
+      <dt>POC First Name</dt>
+      <dd>{{data['primary_poc']['fname_poc']}}</dd>
+    </div>
 
-  <dl>
-    <dt>POC Last Name</dt>
-    <dd>{{data['primary_poc']['lname_poc']}}</dd>
-  </dl>
+    <div>
+      <dt>POC Last Name</dt>
+      <dd>{{data['primary_poc']['lname_poc']}}</dd>
+    </div>
 
-  <dl>
-    <dt>POC Email Address</dt>
-    <dd>{{data['primary_poc']['email_poc']}}</dd>
-  </dl>
+    <div>
+      <dt>POC Email Address</dt>
+      <dd>{{data['primary_poc']['email_poc']}}</dd>
+    </div>
 
-  <dl>
-    <dt>DOD ID</dt>
-    <dd>{{data['primary_poc']['dodid_poc']}}</dd>
+    <div>
+      <dt>DOD ID</dt>
+      <dd>{{data['primary_poc']['dodid_poc']}}</dd>
+    </div>
   </dl>
 
 </form>
