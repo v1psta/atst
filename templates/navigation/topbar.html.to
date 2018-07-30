@@ -6,7 +6,7 @@
 
     <div class="topbar__context topbar__context--{{context}}">
       <a href="/" class="topbar__link">
-        <span class="topbar__link-label">{{ "Workspace "+workspace_id if context == 'workspace' else "JEDI" }}</span>
+        <span class="topbar__link-label">{{ "Workspace 123456" if context == 'workspace' else "JEDI" }}</span>
         {% module Icon('caret_down', classes='topbar__link-icon icon--tiny') %}
       </a>
 
