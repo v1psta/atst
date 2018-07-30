@@ -1,44 +1,42 @@
-{% from "components.html" import SidenavItem %}
-
 <nav class='sidenav workspace-navigation'>
   <ul>
-    {{ SidenavItem(
+    {% module SidenavItem(
       "Projects",
-      href=url_for("workspaces.workspace_projects", workspace_id="123456"),
-      active=g.matchesPath('\/workspaces\/[A-Za-z0-9]*\/projects'),
+      href=reverse_url('workspace_projects', '123456'),
+      active=matchesPath('\/workspaces\/[A-Za-z0-9]*\/projects'),
       subnav=[
         {
           "label": "Add New Project",
           "href":"/",
-          "active": g.matchesPath('workspaces/projects/new'),
+          "active": matchesPath('workspaces/projects/new'),
           "icon": "plus"
         }
       ]
-    )}}
+    )%}
 
-    {{ SidenavItem(
+    {% module SidenavItem(
       "Members",
-      href="/workspaces/{}/members".format('123456'),
-      active=g.matchesPath('\/workspaces\/[A-Za-z0-9]*\/members'),
+      href=reverse_url('workspace_members', '123456'),
+      active=matchesPath('\/workspaces\/[A-Za-z0-9]*\/members'),
       subnav=[
         {
           "label": "Add New Member",
           "href": "",
-          "active": g.matchesPath('/workspaces/members/new'),
+          "active": matchesPath('/workspaces/members/new'),
           "icon": "plus"
         },
         {
           "label": "Editing Member",
           "href": "",
-          "active": g.matchesPath('/workspaces/123456/members/789/edit')
+          "active": matchesPath('/workspaces/123456/members/789/edit')
         }
       ]
-    )}}
+    )%}
 
-    {{ SidenavItem(
+    {% module SidenavItem(
       "Funding & Reports",
-      href=url_for("workspaces.workspace_projects", workspace_id="123456"),
-      active=g.matchesPath('\/workspaces\/[A-Za-z0-9]*\/reports')
-    )}}
+      href=reverse_url('workspace_projects', '123456'),
+      active=matchesPath('\/workspaces\/[A-Za-z0-9]*\/reports')
+    )%}
   </ul>
 </nav>
