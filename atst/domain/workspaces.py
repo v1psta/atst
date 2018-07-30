@@ -69,6 +69,7 @@ class Members(object):
                 "dod_id": "1257892124",
                 "workspace_role": "Developer",
                 "status": "Pending",
+                "num_projects": "4",
             },
             {
                 "first_name": "Mario",
@@ -77,6 +78,7 @@ class Members(object):
                 "dod_id": "4357892125",
                 "workspace_role": "CCPO",
                 "status": "Active",
+                "num_projects": "0",
             },
             {
                 "first_name": "Louise",
@@ -85,6 +87,7 @@ class Members(object):
                 "dod_id": "7257892125",
                 "workspace_role": "Admin",
                 "status": "Pending",
+                "num_projects": "43",
             },
         ]
 
