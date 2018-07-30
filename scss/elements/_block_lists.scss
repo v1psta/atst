@@ -22,6 +22,21 @@
   margin: 0;
 }
 
+@mixin block-list__footer {
+  @include panel-base;
+  @include panel-theme-default;
+  padding: $gap * 2;
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+
+  .icon-link {
+    &:first-child {
+      margin-right: -$gap;
+    }
+  }
+}
+
 @mixin block-list-item {
   @include panel-base;
   margin: 0;
@@ -51,4 +66,9 @@
 
 .block-list__item {
   @include block-list-item;
+}
+
+.block-list__footer {
+  @include block-list__footer;
+  border-top: 0;
 }
