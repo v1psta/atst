@@ -147,28 +147,23 @@
 
   <dl>
     <dt>POC First Name</dt>
-    <dd>
+    <dd>{{data['primary_poc']['fname_poc']}}</dd>
   </dl>
 
   <dl>
     <dt>POC Last Name</dt>
-    <dd>
+    <dd>{{data['primary_poc']['lname_poc']}}</dd>
   </dl>
 
   <dl>
     <dt>POC Email Address</dt>
-    <dd>
+    <dd>{{data['primary_poc']['email_poc']}}</dd>
   </dl>
 
   <dl>
     <dt>DOD ID</dt>
-    <dd>
+    <dd>{{data['primary_poc']['dodid_poc']}}</dd>
   </dl>
-
-fname_poc
-lname_poc
-email_poc
-dodid_poc
 
 </form>
 
