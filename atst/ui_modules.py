@@ -46,3 +46,12 @@ class SidenavItem(UIModule):
           active=active,
           icon=icon,
           subnav=subnav)
+
+class EmptyState(UIModule):
+    def render(self, message, actionLabel, actionHref, icon=None):
+        return self.render_string(
+          "components/empty_state.html.to",
+          message=message,
+          actionLabel=actionLabel,
+          actionHref=actionHref,
+          icon=icon)
