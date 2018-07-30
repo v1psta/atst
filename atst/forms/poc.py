@@ -8,20 +8,20 @@ from .validators import IsNumber, Alphabet
 class POCForm(ValidatedForm):
     fname_poc = StringField(
       "POC First Name",
-      # validators=[Required(), Alphabet()]
+      validators=[Required(), Alphabet()]
     )
 
     lname_poc = StringField(
       "POC Last Name",
-      # validators=[Required(), Alphabet()]
+      validators=[Required(), Alphabet()]
     )
 
     email_poc = EmailField(
       "POC Email Address",
-      # validators=[Required(), Email()]
+      validators=[Required(), Email()]
     )
 
     dodid_poc = StringField(
         "DOD ID",
-        # validators=[Required(), Length(min=10), IsNumber()]
+        validators=[Required(), Length(min=10), IsNumber()]
     )
