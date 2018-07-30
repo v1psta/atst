@@ -67,13 +67,14 @@ class RequestForm(ValidatedForm):
         choices=[
           ("null","Select an option"),
           ("less_than_100gb","Less than 100GB"),
-          ("less_than_500gb","Less than 500GB"),
-          ("less_than_1tb","Less than 1TB"),
-          ("less_than_50tb","Less than 50TB"),
-          ("less_than_100tb","Less than 100TB"),
-          ("less_than_500tb","Less than 500TB"),
-          ("less_than_1pb","Less than 1PB"),
-          ("less_than_5pb","Less than 5PB"),
+          ("100gb-500gb","100GB-500GB"),
+          ("500gb-1tb","500GB-1TB"),
+          ("1tb-50tb","1TB-50TB"),
+          ("50tb-100tb","50TB-100TB"),
+          ("100tb-500tb","100TB-500TB"),
+          ("500tb-1pb","500TB-1PB"),
+          ("1pb-5pb","1PB-5PB"),
+          ("5pb-10pb","5PB-10PB"),
           ("above_10pb","Above 10PB")],
     )
 
