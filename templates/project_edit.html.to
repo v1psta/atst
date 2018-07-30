@@ -1,0 +1,106 @@
+{% extends "base_workspace.html.to" %}
+
+{% block template_vars %}
+  {% set is_new_project = False %}
+  {% set project_name = "Code.mil" %}
+  {% set project_id = "789" %}
+{% end %}
+
+{% block workspace_content %}
+
+{% module Alert(
+  "UI Mock",
+  message="<p>Please note, this screen is a non-functional UI mockup.</p>",
+  level="warning"
+) %}
+
+<form action=''>
+  <div class='panel'>
+    <div class='panel__heading'>
+      <h1 class='h2'>
+        {% if is_new_project %}
+          Add a new project
+        {% else %}
+          {{ project_name }}
+          <span class='subtitle'>Edit project</span>
+        {% end %}
+      </h1>
+    </div>
+
+    <div class='panel__content'>
+      <div class='usa-input'>
+        <label for='project-name'>Project Name</label>
+        <input id='project-name' type='text'/>
+      </div>
+
+      <div class='usa-input'>
+        <label for='project-description'>Description</label>
+        <textarea id='project-description'></textarea>
+      </div>
+    </div>
+  </div>
+
+  <section class='block-list'>
+    <header class='block-list__header'>
+      <h2 class='block-list__title'>Project Environments</h2>
+    </header>
+
+    {# All instances of .usa-input groups here should be replaced with {% module TextInput(wtforms.fields.Field) %} #}
+
+    <ul>
+      <li class='block-list__item project-edit__env-list-item'>
+        <div class='usa-input'>
+          <label for='environment-name-1'>Environment Name</label>
+          <input id='environment-name-1' type='text' placeholder="Environment 1" />
+        </div>
+        <button class='project-edit__env-list-item__remover'>
+          {% module Icon('trash') %}
+          <span>Remove</span>
+        </button>
+      </li>
+
+      <li class='block-list__item project-edit__env-list-item'>
+        <div class='usa-input'>
+          <label for='environment-name-2'>Environment Name</label>
+          <input id='environment-name-2' type='text' placeholder="Environment 2" />
+        </div>
+        <button class='project-edit__env-list-item__remover '>
+          {% module Icon('trash') %}
+          <span>Remove</span>
+        </button>
+      </li>
+
+      <li class='block-list__item project-edit__env-list-item'>
+        <div class='usa-input'>
+          <label for='environment-name-3'>Environment Name</label>
+          <input id='environment-name-3' type='text' placeholder="Environment 3" />
+        </div>
+        <button class='project-edit__env-list-item__remover'>
+          {% module Icon('trash') %}
+          <span>Remove</span>
+        </button>
+      </li>
+
+    </ul>
+
+    <footer class='block-list__footer'>
+      <a href='/' class='icon-link'>
+        {% module Icon('plus') %}
+        <span>Add another environment</span>
+      </a>
+    </footer>
+  </section>
+
+  <div class='action-group'>
+    <a href='/styleguide' class='action-group__action usa-button usa-button-big'>
+      {% if is_new_project %}Create{% else %}Save{% end %} Project
+    </a>
+    <a href='/styleguide' class='action-group__action icon-link'>
+      {% module Icon('x') %}
+      <span>Cancel</span>
+    </a>
+  </div>
+</form>
+
+{% end %}
+

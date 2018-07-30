@@ -2,20 +2,28 @@
   <ul>
     {% module SidenavItem(
       "Projects",
-      href=reverse_url('workspace_projects', workspace_id),
-      active=matchesPath('\/workspaces\/[A-Za-z0-9]*\/projects'))
-    %}
+      href=reverse_url('workspace_projects', '123456'),
+      active=matchesPath('\/workspaces\/[A-Za-z0-9]*\/projects'),
+      subnav=[
+        {
+          "label": "Add New Project",
+          "href":"/",
+          "active": matchesPath('workspaces/projects/new'),
+          "icon": "plus"
+        }
+      ]
+    )%}
 
     {% module SidenavItem(
       "Members",
-      href=reverse_url('workspace_members', workspace_id),
-      active=matchesPath('\/workspaces\/[A-Za-z0-9]*\/members'))
-    %}
+      href=reverse_url('workspace_members', '123456'),
+      active=matchesPath('\/workspaces\/[A-Za-z0-9]*\/members')
+    )%}
 
     {% module SidenavItem(
       "Funding & Reports",
-      href=reverse_url('workspace_projects', workspace_id),
-      active=matchesPath('\/workspaces\/[A-Za-z0-9]*\/reports'))
-    %}
+      href=reverse_url('workspace_projects', '123456'),
+      active=matchesPath('\/workspaces\/[A-Za-z0-9]*\/reports')
+    )%}
   </ul>
 </nav>

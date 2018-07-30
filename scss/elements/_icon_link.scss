@@ -1,0 +1,47 @@
+@mixin icon-link {
+  @include h5;
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  padding: $gap;
+  text-decoration: none;
+  background: none;
+  transition: background-color $hover-transition-time;
+  border-radius: $gap / 2;
+
+  .icon {
+    @include icon-color($color-primary);
+    @include icon-size(12);
+    margin-right: $gap;
+  }
+}
+
+@mixin icon-link-vertical {
+  flex-direction: column;
+
+  .icon {
+    margin: 0 $gap $gap;
+  }
+}
+
+@mixin icon-link-color($color: $color-blue, $hover-color: $color-aqua-lightest) {
+  color: $color;
+
+  &:hover {
+    background-color: $hover-color;
+    color: $color;
+  }
+
+  .icon {
+    @include icon-color($color);
+  }
+}
+
+.icon-link {
+  @include icon-link;
+  @include icon-link-color($color-primary);
+
+  &.icon-link--vertical {
+    @include icon-link-vertical;
+  }
+}
