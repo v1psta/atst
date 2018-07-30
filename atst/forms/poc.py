@@ -8,12 +8,12 @@ from .validators import IsNumber, Alphabet
 class POCForm(ValidatedForm):
     fname_poc = StringField(
       "POC First Name",
-      validators=[Required(), Alphabet()]
+      validators=[Required()]
     )
 
     lname_poc = StringField(
       "POC Last Name",
-      validators=[Required(), Alphabet()]
+      validators=[Required()]
     )
 
     email_poc = EmailField(

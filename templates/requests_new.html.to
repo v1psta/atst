@@ -26,14 +26,20 @@
       {% block form %}
       form goes here
       {% end %}
-      {% block next %}
-      <input type='submit' class='usa-button usa-button-primary' value='Save & Continue' />
-      {% end %}
-      </form>
 
     </div>
 
   </div>
+
+    {% block next %}
+
+    <div class='action-group'>
+      <input type='submit' class='usa-button usa-button-primary' value='Save & Continue' />
+    </div>
+
+    {% end %}
+</form>
+
 </div>
 
 {% end %}
