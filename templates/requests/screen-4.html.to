@@ -20,7 +20,7 @@
 
   <p>Before you can submit your request, please take a moment to review the information entered in the form. You may make changes by clicking the edit link on each section. When all information looks right, go ahead and submit.</p>
 
-  <h2>Details of Use <a href="{{ reverse_url('request_form_update', 1, request_id) }}">Edit</a></h2>
+  <h2>Details of Use <a href="{{ reverse_url('request_form_update', 1, request_id) }}" class="icon-link">Edit</a></h2>
 
   <dl>
     <dt>DoD Component</dt>
@@ -103,7 +103,7 @@
   </dl>
 
 
-  <h2>Information About You <a href="{{ reverse_url('request_form_update', 2, request_id) }}">Edit</a></h2>
+  <h2>Information About You <a href="{{ reverse_url('request_form_update', 2, request_id) }}" class="icon-link">Edit</a></h2>
 
   <dl>
     <dt>First Name</dt>
@@ -146,7 +146,7 @@
   </dl>
 
 
-  <h2>Primary Point of Contact <a href="{{ reverse_url('request_form_update', 3, request_id) }}">Edit</a></h2>
+  <h2>Primary Point of Contact <a href="{{ reverse_url('request_form_update', 3, request_id) }}" class="icon-link">Edit</a></h2>
 
   <dl>
     <dt>POC First Name</dt>
