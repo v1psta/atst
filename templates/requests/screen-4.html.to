@@ -12,7 +12,10 @@
 
   {% autoescape None %}
   {% if f.errors %}
-  <b>There were some errors, see below.</b>
+    {% module Alert('There were some errors',
+      message="<p>Please complete all required fields before submitting.</p>",
+      level='error'
+    ) %}
   {% end %}
 
   <p class="usa-font-lead">Before you can submit your request, please take a moment to review the information entered in the form. You may make changes by clicking the edit link on each section. When all information looks right, go ahead and submit.</p>
@@ -171,7 +174,10 @@
 
 {% block next %}
 {% if not can_submit %}
-<b class="usa-input-error-message">Please complete all required fields before submitting.</b>
+  {% module Alert('There were some errors',
+    message="<p>Please complete all required fields before submitting.</p>",
+    level='error'
+  ) %}
 {% end %}
 <input type='submit' class='usa-button usa-button-primary' value='Submit' {{ "disabled" if not can_submit else "" }} />
 {% end %}

@@ -8,7 +8,10 @@
 
 {% autoescape None %}
 {% if f.errors %}
-<b class="usa-input-error-message">There were some errors, see below.</b>
+  {% module Alert('There were some errors',
+    message="<p>Please see below.</p>",
+    level='error'
+  ) %}
 {% end %}
 
 <p class="usa-font-lead">Please tell us more about you.</p>
