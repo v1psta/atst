@@ -10,27 +10,27 @@ from .validators import DateRange, PhoneNumber, Alphabet
 class OrgForm(ValidatedForm):
     fname_request = StringField(
         "First Name",
-        # validators=[Required(), Alphabet()]
+        validators=[Required(), Alphabet()]
     )
 
     lname_request = StringField(
         "Last Name",
-        # validators=[Required(), Alphabet()]
+        validators=[Required(), Alphabet()]
     )
 
     email_request = EmailField(
         "Email Address",
-        # validators=[Required(), Email()]
+        validators=[Required(), Email()]
     )
 
     phone_number = TelField(
         "Phone Number",
-        # validators=[Required(), PhoneNumber()]
+        validators=[Required(), PhoneNumber()]
     )
 
     service_branch = StringField(
         "Service Branch or Agency",
-        # validators=[Required()]
+        validators=[Required()]
     )
 
     citizenship = RadioField(
@@ -39,7 +39,7 @@ class OrgForm(ValidatedForm):
             ("Foreign National", "Foreign National"),
             ("Other", "Other"),
         ],
-        # validators=[Required()],
+        validators=[Required()],
     )
 
     designation = RadioField(
@@ -49,17 +49,17 @@ class OrgForm(ValidatedForm):
             ("civilian", "Civilian"),
             ("contractor", "Contractor"),
         ],
-        # validators=[Required()],
+        validators=[Required()],
     )
 
     date_latest_training = DateField(
-        "Latest Information Assurance (IA) Training completion date.",
-        # validators=[
-            # Required(),
-            # DateRange(
-                # lower_bound=pendulum.duration(years=1),
-                # upper_bound=pendulum.duration(days=0),
-                # message="Must be a date within the last year.",
-            # ),
-        # ],
+        "Latest Information Assurance (IA) Training completion date",
+        validators=[
+            Required(),
+            DateRange(
+                lower_bound=pendulum.duration(years=1),
+                upper_bound=pendulum.duration(days=0),
+                message="Must be a date within the last year.",
+            ),
+        ],
     )

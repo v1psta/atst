@@ -1,86 +1,182 @@
 {% extends '../requests_new.html.to' %}
 
 {% block subtitle %}
-  <h2>Review &amp; Submit</h2>
+<h2>Review &amp; Submit</h2>
 {% end %}
 
 {% block form_action %}
-  <form method='POST' action="{{ reverse_url('requests_submit', request_id) }}" autocomplete="off">
-{% end %}
+<form method='POST' action="{{ reverse_url('requests_submit', request_id) }}" autocomplete="off">
+  {% end %}
 
-{% block form %}
+  {% block form %}
 
-{% autoescape None %}
-{% if f.errors %}
-<b>There were some errors, see below.</b>
-{% end %}
+  {% autoescape None %}
+  {% if f.errors %}
+  <b>There were some errors, see below.</b>
+  {% end %}
 
-<p class="usa-font-lead">Before you can submit your request, please take a moment to review the information entered in the form. You may make changes by clicking the edit link on each section. When all information looks right, go ahead and submit.</p>
+  <p class="usa-font-lead">Before you can submit your request, please take a moment to review the information entered in the form. You may make changes by clicking the edit link on each section. When all information looks right, go ahead and submit.</p>
+
+  <h2>Details of Use <a href="{{ reverse_url('request_form_update', 1, request_id) }}">Edit</a></h2>
+
+  <dl>
+    <dt>DoD Component</dt>
+    <dd>{{data['details_of_use']['dod_component']}}</dd>
+  </dl>
+
+  <dl>
+    <dt>JEDI Usage</dt>
+    <dd>{{data['details_of_use']['jedi_usage']}}</dd>
+  </dl>
+
+  <dl>
+    <dt>Number of software systems</dt>
+    <dd>{{data['details_of_use']['num_software_systems']}}</dd>
+  </dl>
+
+  <dl>
+    <dt>JEDI Migration</dt>
+    <dd>{{data['details_of_use']['jedi_migration']}}</dd>
+  </dl>
+
+  <dl>
+    <dt>Rationalization of Software Systems</dt>
+    <dd>{{data['details_of_use']['rationalization_software_systems']}}</dd>
+  </dl>
+
+  <dl>
+    <dt>Technical Support Team</dt>
+    <dd>{{data['details_of_use']['technical_support_team']}}</dd>
+  </dl>
+
+  <dl>
+    <dt>Organization Providing Assistance</dt>
+    <dd>{{data['details_of_use']['organization_providing_assistance']}}</dd>
+  </dl>
+
+  <dl>
+    <dt>Engineering Assessment</dt>
+    <dd>{{data['details_of_use']['engineering_assessment']}}</dd>
+  </dl>
+
+  <dl>
+    <dt>Data Transfers</dt>
+    <dd>{{data['details_of_use']['data_transfers']}}</dd>
+  </dl>
+
+  <dl>
+    <dt>Expected Completion Date</dt>
+    <dd>{{data['details_of_use']['expected_completion_date']}}</dd>
+  </dl>
+
+  <dl>
+    <dt>Cloud Native</dt>
+    <dd>{{data['details_of_use']['cloud_native']}}</dd>
+  </dl>
+
+  <dl>
+    <dt>Estimated Monthly Spend</dt>
+    <dd>{{data['details_of_use']['estimated_monthly_spend']}}</dd>
+  </dl>
+
+  <dl>
+    <dt>Total Spend</dt>
+    <dd>{{data['details_of_use']['total_spend']}}</dd>
+  </dl>
+
+  <dl>
+    <dt>Number of User Sessions</dt>
+    <dd>{{data['details_of_use']['number_user_sessions']}}</dd>
+  </dl>
+
+  <dl>
+    <dt>Average Daily Traffic</dt>
+    <dd>{{data['details_of_use']['average_daily_traffic']}}</dd>
+  </dl>
+
+  <dl>
+    <dt>Start Date</dt>
+    <dd>{{data['details_of_use']['start_date']}}</dd>
+  </dl>
 
 
+  <h2>Information About You <a href="{{ reverse_url('request_form_update', 2, request_id) }}">Edit</a></h2>
 
-<h3>Details of Use <a href="{{ reverse_url('request_form_update', 1, request_id) }}">Edit</a></h3>
+  <dl>
+    <dt>First Name</dt>
+    <dd>{{data['information_about_you']['fname_request']}}</dd>
+  </dl>
 
+  <dl>
+    <dt>Last Name</dt>
+    <dd>{{data['information_about_you']['lname_request']}}</dd>
+  </dl>
 
-<label>DoD Component</label>
-{{data['details_of_use']['dod_component']}}
+  <dl>
+    <dt>Email Address</dt>
+    <dd>{{data['information_about_you']['email_request']}}</dd>
+  </dl>
 
-<label>JEDI Usage</label>
-{{data['details_of_use']['jedi_usage']}}
+  <dl>
+    <dt>Phone Number</dt>
+    <dd>{{data['information_about_you']['phone_number']}}</dd>
+  </dl>
 
-<label>Number of software systems</label>
-{{data['details_of_use']['num_software_systems']}}
+  <dl>
+    <dt>Service Branch or Agency</dt>
+    <dd>{{data['information_about_you']['service_branch']}}</dd>
+  </dl>
 
-<label>JEDI Migration</label>
-{{data['details_of_use']['jedi_migration']}}
+  <dl>
+    <dt>Citizenship</dt>
+    <dd>{{data['information_about_you']['citizenship']}}</dd>
+  </dl>
 
-<label>Rationalization of Software Systems</label>
-{{data['details_of_use']['rationalization_software_systems']}}
+  <dl>
+    <dt>Designation of Person</dt>
+    <dd>{{data['information_about_you']['designation']}}</dd>
+  </dl>
 
-<label>Technical Support Team</label>
-{{data['details_of_use']['technical_support_team']}}
-
-<label>Organization Providing Assistance</label>
-{{data['details_of_use']['organization_providing_assistance']}}
-
-<label>Engineering Assessment</label>
-{{data['details_of_use']['engineering_assessment']}}
-
-<label>Data Transfers</label>
-{{data['details_of_use']['data_transfers']}}
-
-<label>Expected Completion Date</label>
-{{data['details_of_use']['expected_completion_date']}}
-
-<label>Cloud Native</label>
-{{data['details_of_use']['cloud_native']}}
-
-<label>Estimated Monthly Spend</label>
-{{data['details_of_use']['estimated_monthly_spend']}}
-
-<label>Total Spend</label>
-{{data['details_of_use']['total_spend']}}
-
-<label>Number of User Sessions</label>
-{{data['details_of_use']['number_user_sessions']}}
-
-<label>Average Daily Traffic</label>
-{{data['details_of_use']['average_daily_traffic']}}
-
-<label>Start Date</label>
-{{data['details_of_use']['start_date']}}
-
-<br>
+  <dl>
+    <dt>Latest Information Assurance (IA) Training completion date</dt>
+    <dd>{{data['information_about_you']['date_latest_training']}}</dd>
+  </dl>
 
 
+  <h2>Primary Point of Contact <a href="{{ reverse_url('request_form_update', 3, request_id) }}">Edit</a></h2>
 
+  <dl>
+    <dt>POC First Name</dt>
+    <dd>
+  </dl>
 
+  <dl>
+    <dt>POC Last Name</dt>
+    <dd>
+  </dl>
+
+  <dl>
+    <dt>POC Email Address</dt>
+    <dd>
+  </dl>
+
+  <dl>
+    <dt>DOD ID</dt>
+    <dd>
+  </dl>
+
+fname_poc
+lname_poc
+email_poc
+dodid_poc
+
+</form>
 
 {% end %}
 
 {% block next %}
 {% if not can_submit %}
-  <b class="usa-input-error-message">Please complete all required fields before submitting.</b>
+<b class="usa-input-error-message">Please complete all required fields before submitting.</b>
 {% end %}
 <input type='submit' class='usa-button usa-button-primary' value='Submit' {{ "disabled" if not can_submit else "" }} />
 {% end %}
