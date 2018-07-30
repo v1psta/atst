@@ -179,5 +179,9 @@
     level='error'
   ) %}
 {% end %}
-<input type='submit' class='usa-button usa-button-primary' value='Submit' {{ "disabled" if not can_submit else "" }} />
+
+<div class='action-group'>
+  <input type='submit' class='usa-button usa-button-primary' value='Submit' {{ "disabled" if not can_submit else "" }} />
+</div>
+
 {% end %}
