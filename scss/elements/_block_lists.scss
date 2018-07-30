@@ -58,6 +58,10 @@
 
 .block-list__header {
   @include block-list-header;
+
+  .block-list__header__link {
+    @include icon-link;
+  }
 }
 
 .block-list__title {

@@ -6,7 +6,10 @@
   <div class='block-list project-list-item'>
     <header class='block-list__header'>
       <h2 class='block-list__title'>{{ project['name'] }} ({{ len(project['environments'])}} environments)</h2>
-      <a class='block-list__header__link' href='/workspaces/123456/projects/789/edit'>edit</a>
+      <a class='block-list__header__link' href='/workspaces/123456/projects/789/edit'>
+        {% module Icon('edit') %}
+        <span>edit</span>
+      </a>
     </header>
     <ul>
       {% for environment in project['environments'] %}
