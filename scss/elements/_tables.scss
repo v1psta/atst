@@ -8,44 +8,54 @@
   @include panel-margin;
   min-width: 100%;
 
-  tr {
-    th,
-    td {
-      white-space: nowrap;
-    }
-
-    th {
-      @include block-list-header;
-      display: table-cell;
-    }
-
-    td {
-      @include block-list-item;
-      display: table-cell;
-    }
-
-    &:last-child {
+  tbody {
+    tr {
+      th,
       td {
-        border-bottom-style: solid;
+        @include block-list-item;
+        display: table-cell;
+        white-space: nowrap;
+        border-bottom-style: dashed;
+        border-top: none;
+
+        &:last-child {
+          border-bottom-style: dashed;
+        }
+      }
+
+      &:last-child {
+        td,
+        th {
+          border-bottom-style: solid;
+        }
+      }
+
+      .table-cell--align-right {
+        text-align: right;
+      }
+
+      .table-cell--shrink {
+        width: 1%;
+      }
+
+      .table-cell--expand {
+        width: 100%;
+      }
+
+      .table-cell--hide-small {
+        display: none;
+
+        @include media($medium-screen) {
+          display: table-cell;
+        }
       }
     }
+  }
 
-    .table-cell--align-right {
-      text-align: right;
-    }
-
-    .table-cell--shrink {
-      width: 1%;
-    }
-
-    .table-cell--expand {
-      width: 100%;
-    }
-
-    .table-cell--hide-small {
-      display: none;
-
-      @include media($medium-screen) {
+  thead {
+    tr {
+      th {
+        @include block-list-header;
         display: table-cell;
       }
     }

@@ -177,7 +177,10 @@
     <div class='action-group'>
       <a href='/' class='usa-button usa-button-big'>Approve Request</a>
       <a href='/' class='usa-button usa-button-big usa-button-secondary'>Deny Request</a>
-      <a href='/'>Cancel</a>
+      <a href='/' class='icon-link'>
+        {% module Icon('x') %}
+        <span>Cancel</span>
+      </a>
     </div>
   </form>
 </article>

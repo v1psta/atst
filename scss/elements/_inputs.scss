@@ -202,11 +202,15 @@ select {
     flex-grow: 1;
 
     &:first-child .usa-input {
-      margin-top: 0;
+      &:first-child {
+        margin-top: 0;
+      }
     }
 
     &:last-child .usa-input {
-      margin-bottom: 0;
+      &:first-child {
+        margin-top: 0;
+      }
     }
   }
 
@@ -216,7 +220,8 @@ select {
 
     .form-col {
       .usa-input {
-        margin: 0 ($gap * 4);
+        margin-left: ($gap * 4);
+        margin-right: ($gap * 4);
       }
 
       &:first-child {

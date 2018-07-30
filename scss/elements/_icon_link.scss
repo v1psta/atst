@@ -1,4 +1,18 @@
+@mixin icon-link-color($color: $color-blue, $hover-color: $color-aqua-lightest) {
+  color: $color;
+
+  &:hover {
+    background-color: $hover-color;
+    color: $color;
+  }
+
+  .icon {
+    @include icon-color($color);
+  }
+}
+
 @mixin icon-link {
+  @include icon-link-color($color-primary);
   @include h5;
   display: inline-flex;
   flex-direction: row;
@@ -16,24 +30,21 @@
   }
 }
 
+@mixin icon-link-large {
+  @include h4;
+  font-weight: normal;
+
+  .icon {
+    @include icon-size(16);
+    margin-right: $gap * 2;
+  }
+}
+
 @mixin icon-link-vertical {
   flex-direction: column;
 
   .icon {
     margin: 0 $gap $gap;
-  }
-}
-
-@mixin icon-link-color($color: $color-blue, $hover-color: $color-aqua-lightest) {
-  color: $color;
-
-  &:hover {
-    background-color: $hover-color;
-    color: $color;
-  }
-
-  .icon {
-    @include icon-color($color);
   }
 }
 
@@ -43,5 +54,9 @@
 
   &.icon-link--vertical {
     @include icon-link-vertical;
+  }
+
+  &.icon-link--large {
+    @include icon-link-large;
   }
 }

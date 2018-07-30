@@ -60,40 +60,38 @@
     </div>
   </div>
 
-  <div class="panel">
-    <div class='responsive-table-wrapper'>
-      <table>
-        <thead>
-          <tr>
-            <th scope="col">Order ID</th>
-            <th scope="col">Request Date</th>
-            <th scope="col">Requester</th>
-            <th scope="col">Total Apps</th>
-            <th scope="col">Status</th>
-            <th scope="col">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for r in requests %}
-          <tr>
-            <th scope="row">
-              <a href="{{ reverse_url('request_form_update', 1, r['order_id']) if r["status"] != "approved" else reverse_url('financial_verification', r['order_id']) }}">{{ r['order_id'] }}</a>
-              {% if r['is_new'] %}<span class="usa-label">New</span>
-            </th>
-            {% end %}
-            <td>{{ r['date'] }}</td>
-            <td>{{ r['full_name'] }}</td>
-            <td>{{ r['app_count'] }}</td>
-            <td>{{ r['status'] }}</td>
-            <td>
-              <a href="">Download</a>
-              <a href="/request/approval">Approval</a>
-            </td>
-          </tr>
+  <div class='responsive-table-wrapper'>
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Order ID</th>
+          <th scope="col">Request Date</th>
+          <th scope="col">Requester</th>
+          <th scope="col">Total Apps</th>
+          <th scope="col">Status</th>
+          <th scope="col" class="table-cell--shrink">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in requests %}
+        <tr>
+          <th scope="row">
+            <a class='icon-link icon-link--large' href="{{ reverse_url('request_form_update', 1, r['order_id']) if r["status"] != "approved" else reverse_url('financial_verification', r['order_id']) }}">{{ r['order_id'] }}</a>
+            {% if r['is_new'] %}<span class="usa-label">New</span>
+          </th>
           {% end %}
-        </tbody>
-      </table>
-    </div>
+          <td>{{ r['date'] }}</td>
+          <td>{{ r['full_name'] }}</td>
+          <td>{{ r['app_count'] }}</td>
+          <td>{{ r['status'] }}</td>
+          <td class="table-cell--shrink">
+            <a href="" class='icon-link'>Download</a>
+            <a href="/request/approval" class='icon-link'>Approval</a>
+          </td>
+        </tr>
+        {% end %}
+      </tbody>
+    </table>
   </div>
 </div>
 
