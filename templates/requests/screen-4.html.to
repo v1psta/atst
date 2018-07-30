@@ -4,6 +4,7 @@
 <h2>Review &amp; Submit</h2>
 {% end %}
 
+
 {% block form_action %}
 <form method='POST' action="{{ reverse_url('requests_submit', request_id) }}" autocomplete="off">
   {% end %}
@@ -175,7 +176,7 @@
     </div>
   </dl>
 
-</form>
+
 
 {% end %}
 
@@ -190,5 +191,7 @@
 <div class='action-group'>
   <input type='submit' class='usa-button usa-button-primary' value='Submit' {{ "disabled" if not can_submit else "" }} />
 </div>
+
+</form>
 
 {% end %}
