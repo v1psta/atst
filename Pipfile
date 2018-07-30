@@ -13,6 +13,8 @@ redis = "*"
 sqlalchemy = "*"
 alembic = "*"
 "psycopg2-binary" = "*"
+pyopenssl = "*"
+requests = "*"
 
 [dev-packages]
 bandit = "*"
