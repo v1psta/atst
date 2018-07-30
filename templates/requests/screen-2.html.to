@@ -14,7 +14,7 @@
   ) %}
 {% end %}
 
-<p class="usa-font-lead">Please tell us more about you.</p>
+<p>Please tell us more about you.</p>
 
 {% module TextInput(f.fname_request,placeholder='First Name') %}
 {% module TextInput(f.lname_request,placeholder='Last Name') %}

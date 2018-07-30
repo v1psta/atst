@@ -14,7 +14,7 @@
   ) %}
 {% end %}
 
-<p class="usa-font-lead">Please designate a Primary Point of Contact that will be responsible for owning the workspace in the JEDI Cloud.</p>
+<p>Please designate a Primary Point of Contact that will be responsible for owning the workspace in the JEDI Cloud.</p>
 <p>The Point of Contact will become the primary owner of the <em>workspace</em> created to use the JEDI Cloud. As a workspace owner, this person will have the ability to:
   <ul>
     <li>Create multiple application stacks and environments in the workspace to access the commercial cloud service provider portal</li>

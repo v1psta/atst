@@ -18,7 +18,7 @@
     ) %}
   {% end %}
 
-  <p class="usa-font-lead">Before you can submit your request, please take a moment to review the information entered in the form. You may make changes by clicking the edit link on each section. When all information looks right, go ahead and submit.</p>
+  <p>Before you can submit your request, please take a moment to review the information entered in the form. You may make changes by clicking the edit link on each section. When all information looks right, go ahead and submit.</p>
 
   <h2>Details of Use <a href="{{ reverse_url('request_form_update', 1, request_id) }}">Edit</a></h2>
 
