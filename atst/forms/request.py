@@ -67,7 +67,13 @@ class RequestForm(ValidatedForm):
         choices=[
           ("null","Select an option"),
           ("less_than_100gb","Less than 100GB"),
-          ("...","- more options -"),
+          ("less_than_500gb","Less than 500GB"),
+          ("less_than_1tb","Less than 1TB"),
+          ("less_than_50tb","Less than 50TB"),
+          ("less_than_100tb","Less than 100TB"),
+          ("less_than_500tb","Less than 500TB"),
+          ("less_than_1pb","Less than 1PB"),
+          ("less_than_5pb","Less than 5PB"),
           ("above_10pb","Above 10PB")],
     )
 
@@ -75,10 +81,10 @@ class RequestForm(ValidatedForm):
         description="When do you expect to complete your migration to the JEDI Cloud?",
         choices=[
           ("null","Select an option"),
-          ("less_than_1_month","< 1 month"),
+          ("less_than_1_month","Less than 1 month"),
           ("1_to_3_months","1-3 months"),
           ("3_to_6_months","3-6 months"),
-          ("more_than_12_months","12+ months")],
+          ("above_12_months","Above 12 months")],
     )
 
     cloud_native = RadioField(
