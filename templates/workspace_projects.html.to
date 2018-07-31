@@ -1,12 +1,8 @@
 {% extends "base_workspace.html.to" %}
 
-{% block template_vars %}
-  {% set projectsEmpty = False %}
-{% end %}
-
 {% block workspace_content %}
 
-{% if projectsEmpty %}
+{% if not projects %}
 
   {% module EmptyState(
     'There are currently no projects set up for this Workspace.',

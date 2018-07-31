@@ -1,12 +1,8 @@
 {% extends "base_workspace.html.to" %}
 
-{% block template_vars %}
-  {% set membersEmpty = False %}
-{% end %}
-
 {% block workspace_content %}
 
-{% if membersEmpty %}
+{% if not members %}
 
   {% module EmptyState(
     'There are currently no members in this Workspace.',

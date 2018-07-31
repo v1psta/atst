@@ -1,9 +1,5 @@
 {% extends "base.html.to" %}
 
-{% block template_vars %}
-  {% set requestsEmpty = False %}
-{% end %}
-
 {% block modal %}
   {% if modalOpen() %}
     {% apply modal %}
@@ -35,7 +31,7 @@
 
 {% block content %}
 
-{% if requestsEmpty %}
+{% if not requests %}
 
   {% module EmptyState(
     'There are currently no active requests for you to see.',
