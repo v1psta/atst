@@ -91,6 +91,7 @@ following to `~/.vim/filetype.vim` for syntax highlighting:
     :au BufRead *.html.to set filetype=mustache
 
 ## Icons
+
 To render an icon use `{% module Icon('name') %}` in a template, where `name` is the filename of an svg file in `static/icons`.
 
 All icons used should be from the Noun Project, specifically [this collection](https://thenounproject.com/monstercritic/collection/tinicons-a-set-of-tiny-icons-perfect-for-ui-elemen/) if possible.
