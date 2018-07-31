@@ -4,20 +4,22 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-tornado = "==5.0.2"
-webassets = "==0.12.1"
-Unipath = "==1.1"
+tornado = "*"
+webassets = "*"
+Unipath = "*"
 wtforms-tornado = "*"
 pendulum = "*"
 redis = "*"
 sqlalchemy = "*"
 alembic = "*"
 "psycopg2-binary" = "*"
+flask = "*"
+flask-sqlalchemy = "*"
 
 [dev-packages]
 bandit = "*"
-pytest = "==3.6.0"
-pytest-tornado = "==0.5.0"
+pytest = "*"
+pytest-tornado = "*"
 ipython = "*"
 ipdb = "*"
 pylint = "*"
