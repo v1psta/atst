@@ -1,0 +1,18 @@
+{% extends "base_workspace.html.to" %}
+
+{% block workspace_content %}
+
+  <div class='funding-summary-row'>
+
+    <div class='funding-summary-row__col'>
+      <div class='panel'>Summary</div>
+    </div>
+
+    <div class='funding-summary-row__col'>
+      <div class='panel'>T.O. Summary</div>
+    </div>
+
+  </div>
+
+{% end %}
+

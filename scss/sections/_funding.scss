@@ -1,0 +1,10 @@
+.funding-summary-row {
+  @include media($medium-screen) {
+    @include grid-row;
+
+    .funding-summary-row__col {
+      @include grid-pad;
+      flex-grow: 1;
+    }
+  }
+}

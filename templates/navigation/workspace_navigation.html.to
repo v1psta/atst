@@ -17,13 +17,29 @@
     {% module SidenavItem(
       "Members",
       href=reverse_url('workspace_members', '123456'),
-      active=matchesPath('\/workspaces\/[A-Za-z0-9]*\/members')
+      active=matchesPath('\/workspaces\/[A-Za-z0-9]*\/members'),
+      subnav=[
+        {
+          "label": "Add New Member",
+          "href":"/",
+          "active": matchesPath('\/workspaces\/[A-Za-z0-9]*\/funding'),
+          "icon": "plus"
+        }
+      ]
     )%}
 
     {% module SidenavItem(
       "Funding & Reports",
-      href=reverse_url('workspace_projects', '123456'),
-      active=matchesPath('\/workspaces\/[A-Za-z0-9]*\/reports')
+      href="/workspaces/123456/funding",
+      active=matchesPath('\/workspaces\/[A-Za-z0-9]*\/funding'),
+      subnav=[
+        {
+          "label": "Download Report",
+          "href":"/",
+          "active": matchesPath('\/workspaces\/[A-Za-z0-9]*\/funding/download'),
+          "icon": "download"
+        }
+      ]
     )%}
   </ul>
 </nav>
