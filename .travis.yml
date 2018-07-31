@@ -8,12 +8,21 @@ env:
   global:
     - TESTER_IMAGE_NAME=atst-tester
     - PROD_IMAGE_NAME=atst-prod
+cache:
+  directories:
+    - node_modules
+    - venv
 
 before_install:
   # Use sed to replace the SSH URL with the public URL
   - sed -i 's/git@github.com:/https:\/\/github.com\//' .gitmodules
   # Manually initialize submodules
   - git submodule update --init --recursive
+  - mkdir -p node_modules
+  - export python_version="$(grep python_version Pipefile | sed 's/ //g' | cut -d '=' -f 2)"
+  - export venv_dir="venv/${python_version}"
+  - mkdir -p "${venv_dir}"
+  - cp -pr "${venv_dir}" .venv
 
 before_script:
   - date
@@ -31,6 +40,7 @@ script:
   - docker run -d --entrypoint='/bin/sh' --name current-atst-tester "${TESTER_IMAGE_NAME}"
   - date
   - docker cp current-atst-tester:/opt/atat/atst/node_modules ./node_modules
+  - docker cp current-atst-tester:/opt/atat/atst/.venv "${venv_dir}"
   - date
   - docker container stop current-atst-tester
   - date
