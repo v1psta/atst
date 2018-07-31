@@ -50,7 +50,6 @@ project directory, take a look at [direnv](https://direnv.net/).  An `.envrc`
 file is included in this repository.  direnv will activate and deactivate
 virtualenvs for you when you enter and leave the directory.
 
-
 ## Running (development)
 
 To start the app locally in the foreground and watch for changes:
