@@ -99,7 +99,8 @@ class RequestForm(ValidatedForm):
         description="Use the <a href=\"#\">JEDI CSP Calculator</a> to estimate your monthly cloud resource usage and enter the dollar amount below. Note these estimates are for initial approval only. After the request is approved, you will be asked to provide a valid Task Order number with specific CLIN amounts for cloud services."
     )
 
-    total_spend = IntegerField(
+    dollar_value = IntegerField(
+        "Total Spend",
         description="What is your total expected budget for this JEDI Cloud Request?",
     )
 

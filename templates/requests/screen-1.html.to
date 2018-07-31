@@ -36,7 +36,7 @@
 <h2>Financial Usage</h2>
 {% module TextInput(f.estimated_monthly_spend) %}
 <p>So this means you are spending approximately <b>$X</b> annually</p>
-{% module TextInput(f.total_spend) %}
+{% module TextInput(f.dollar_value) %}
 {% module TextInput(f.number_user_sessions) %}
 {% module TextInput(f.average_daily_traffic) %}
 {% module TextInput(f.start_date) %}

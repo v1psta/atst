@@ -87,7 +87,7 @@
 
     <div>
       <dt>Total Spend</dt>
-      <dd>{{data['details_of_use']['total_spend']}}</dd>
+      <dd>${{data['details_of_use']['dollar_value']}}</dd>
     </div>
 
     <div>
