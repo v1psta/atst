@@ -38,27 +38,25 @@
 
 <div class="col col--grow">
 
-  <div class='panel panel__actions'>
-    <div class='row'>
-      <div class='col col--grow col--pad'>
-        <form class="usa-search usa-search-small">
-          <label class="usa-sr-only" for="search-field-small">Search small</label>
-          <input id="search-field-small" type="search" name="search" placeholder="Search by Order ID">
-          <button type="submit">
-            <span class="usa-sr-only">Search</span>
-          </button>
-        </form>
-      </div>
-      <div class='col col--grow col--pad'>
-        <select id="filter_status" name="filter_status" required="">
-          <option value="" selected disabled>Filter by status</option>
-          <option value="">Active</option>
-          <option value="">Pending</option>
-          <option value="">Denied</option>
-        </select>
-      </div>
+  <form class='search-bar'>
+    <div class='usa-input search-input'>
+      <label for='requests-search'>Search requests by Order ID</label>
+      <input type='search' id='requests-search' name='requests-search' placeholder="Search by Order ID"/>
+      <button type="submit">
+        <span class="hide">Search</span>
+      </button>
     </div>
-  </div>
+
+    <div class='usa-input'>
+      <label for='filter-status'>Filter requests by status</label>
+      <select id="filter-status" name="filter-status">
+        <option value="" selected disabled>Filter by status</option>
+        <option value="">Active</option>
+        <option value="">Pending</option>
+        <option value="">Denied</option>
+      </select>
+    </div>
+  </form>
 
   <div class='responsive-table-wrapper'>
     <table>
