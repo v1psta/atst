@@ -1,154 +1,45 @@
 {% extends '../requests_new.html.to' %}
 
 {% block subtitle %}
-  <h2>Details of Use</h2>
+<h2>Details of Use</h2>
 {% end %}
 
 {% block form %}
 
 {% autoescape None %}
 {% if f.errors %}
-  <b class="usa-input-error-message">There were some errors, see below.</b>
+  {% module Alert('There were some errors',
+    message="<p>Please see below.</p>",
+    level='error'
+  ) %}
 {% end %}
 
 
-<!-- DETAILS OF USE -->
-<!-- Overall Request Details -->
+<p>We’d like to know a little about how you plan to use JEDI Cloud services to process your request. Please answer the following questions to the best of your ability. Note that the CCPO does not directly help with migrating systems to JEDI Cloud. These questions are for learning about your cloud readiness and financial usage of the JEDI Cloud; your estimates will not be used for any department level reporting.</p>
+<p><em>All fields are required, unless specified optional.</em></p>
 
-<h3 id="overall-request-details">Overall Request Details</h3>
-<p class="usa-font-lead">Please help us understand the size and scope of your resource request.</p>
+<h2>General</h2>
+{% module TextInput(f.dod_component) %}
+{% module TextInput(f.jedi_usage,placeholder="e.g. We are migrating XYZ application to the cloud so that...") %}
 
-{{ f.dollar_value.label }}
-{{ f.dollar_value(placeholder="Total dollar amount to be associated with the Task Order")}}
-{% for e in f.dollar_value.errors %}
-  <div class="usa-input-error-message">
-    {{ e }}
-  </div>
-{% end %}
+<h2>Cloud Readiness</h2>
+{% module TextInput(f.num_software_systems,placeholder="Number of systems") %}
+{% module OptionsInput(f.jedi_migration) %}
+{% module OptionsInput(f.rationalization_software_systems) %}
+{% module OptionsInput(f.technical_support_team) %}
+{% module OptionsInput(f.organization_providing_assistance) %}
+{% module OptionsInput(f.engineering_assessment) %}
+{% module TextInput(f.data_transfers) %}
+{% module TextInput(f.expected_completion_date) %}
+{% module OptionsInput(f.cloud_native) %}
 
-{{ f.num_applications.label }}
-{{ f.num_applications(placeholder="Estimated number of applications") }}
-{% for e in f.num_applications.errors %}
-  <div class="usa-input-error-message">
-    {{ e }}
-  </div>
-{% end %}
+<h2>Financial Usage</h2>
+{% module TextInput(f.estimated_monthly_spend) %}
+<p>So this means you are spending approximately <b>$X</b> annually</p>
+{% module TextInput(f.dollar_value) %}
+{% module TextInput(f.number_user_sessions) %}
+{% module TextInput(f.average_daily_traffic) %}
+{% module TextInput(f.start_date) %}
 
-{{ f.date_start.label }}
-{{ f.date_start }}
-{% for e in f.date_start.errors %}
-  <div class="usa-input-error-message">
-    {{ e }}
-  </div>
-{% end %}
-
-{{ f.app_description.label }}
-{{ f.app_description(placeholder="Example: My organization is supporting the migration of XYZ system to the cloud due to XX policy memo. I am planning to use a sandbox environment to do testing.") }}
-{% for e in f.app_description.errors %}
-  <div class="usa-input-error-message">
-    {{ e }}
-  </div>
-{% end %}
-
-{{ f.supported_organizations.label }}
-{{ f.supported_organizations(placeholder="Add tags associated with DoD components or other entities") }}
-{% for e in f.supported_organizations.errors %}
-  <div class="usa-input-error-message">
-    {{ e }}
-  </div>
-{% end %}
-
-
-<!-- Cloud Resources -->
-
-<h3 id="cloud-resources">Cloud Resources</h3>
-<p class="usa-font-lead">Please tell us about your expected cloud resource usage as best as you can. Refer to the <a href="">Cloud Service Provider</a> as necessary.</p>
-
-{{ f.total_cores.label }}
-{{ f.total_cores(placeholder="Expected total cores", min="1", max="32") }}
-{% for e in f.total_cores.errors %}
-  <div class="usa-input-error-message">
-    {{ e }}
-  </div>
-{% end %}
-
-{{ f.total_ram.label }}
-{{ f.total_ram(placeholder="Expected amount of RAM", min="1", max="32") }}
-{% for e in f.total_ram.errors %}
-  <div class="usa-input-error-message">
-    {{ e }}
-  </div>
-{% end %}
-
-{{ f.total_object_storage.label }}
-{{ f.total_object_storage(placeholder="Expected total object storage") }}
-{% for e in f.total_object_storage.errors %}
-  <div class="usa-input-error-message">
-    {{ e }}
-  </div>
-{% end %}
-
-{{ f.total_database_storage.label }}
-{{ f.total_database_storage(placeholder="Expected total database storage") }}
-{% for e in f.total_database_storage.errors %}
-  <div class="usa-input-error-message">
-    {{ e }}
-  </div>
-{% end %}
-
-{{ f.total_server_storage.label }}
-{{ f.total_server_storage(placeholder="Expected total server storage") }}
-{% for e in f.total_server_storage.errors %}
-  <div class="usa-input-error-message">
-    {{ e }}
-  </div>
-{% end %}
-
-
-<!-- Support Staff -->
-
-<h3 id="support-staff">Support Staff</h3>
-<p class="usa-font-lead">We want to learn more about the people helping you with the cloud.</p>
-
-
-<fieldset class="usa-fieldset-inputs">
-  {{ f.has_contractor_advisor.label }}
-  {{ f.has_contractor_advisor(class_="usa-unstyled-list") }}
-  {% for e in f.has_contractor_advisor.errors %}
-    <div class="usa-input-error-message">
-      {{ e }}
-    </div>
-  {% end %}
-</fieldset>
-
-<fieldset class="usa-fieldset-inputs">
-  {{ f.is_migrating_application.label }}
-  {{ f.is_migrating_application(class_="usa-unstyled-list") }}
-  {% for e in f.is_migrating_application.errors %}
-    <div class="usa-input-error-message">
-      {{ e }}
-    </div>
-  {% end %}
-</fieldset>
-
-<fieldset class="usa-fieldset-inputs">
-  {{ f.has_migration_office.label }}
-  {{ f.has_migration_office(class_="usa-unstyled-list") }}
-  {% for e in f.has_migration_office.errors %}
-    <div class="usa-input-error-message">
-      {{ e }}
-    </div>
-  {% end %}
-</fieldset>
-
-<fieldset class="usa-fieldset-inputs">
-  {{ f.supporting_organization.label }}
-  {{ f.supporting_organization(placeholder="Example: AF CCE/HNI, Navy SPAWAR, MITRE") }}
-  {% for e in f.supporting_organization.errors %}
-    <div class="usa-input-error-message">
-      {{ e }}
-    </div>
-  {% end %}
-</fieldset>
 
 {% end %}
