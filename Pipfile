@@ -15,6 +15,7 @@ alembic = "*"
 "psycopg2-binary" = "*"
 flask = "*"
 flask-sqlalchemy = "*"
+flask-assets = "*"
 
 [dev-packages]
 bandit = "*"

@@ -1,4 +1,4 @@
-from atst.app import make_app, make_config
+from atst.app import make_config, make_app
 
 config = make_config()
 app = make_app(config)

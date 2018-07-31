@@ -3,6 +3,7 @@ from configparser import ConfigParser
 import tornado.web
 from tornado.web import url
 from redis import StrictRedis
+from unipath import Path
 
 from flask import Flask
 
@@ -20,18 +21,36 @@ from atst.handlers.dev import Dev
 from atst.home import home
 from atst.api_client import ApiClient
 from atst.sessions import RedisSessions
-from atst import ui_modules
-from atst import ui_methods
 
 from atst.database import db
+from atst.routes import bp
+from atst.assets import assets
+from atst import ui_methods
+from atst import ui_modules
 
 ENV = os.getenv("TORNADO_ENV", "dev")
 
+
 def make_app(config):
-    app = Flask(__name__)
+
+    parent_dir = Path().parent
+
+    app = Flask(
+        __name__,
+        template_folder=parent_dir.child("templates").absolute(),
+        static_folder=parent_dir.child("static").absolute()
+    )
     app.config.update(config)
 
     db.init_app(app)
+    assets.init_app(app)
+
+    app.jinja_env.globals["modules"] = ui_modules
+    app.jinja_env.globals["methods"] = ui_methods
+
+    app.register_blueprint(bp)
+
+    ui_modules.get_template = app.jinja_env.get_template
 
     return app
 
