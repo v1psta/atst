@@ -5,22 +5,23 @@
   <table>
     <thead>
       <tr>
-        <th scope="col" width="50%">Workspace Name</th>
-        <th scope="col" width="30%">Workspace Info</th>
-        <th scope="col" width="20%">Actions</th>
+        <th>Workspace Name</th>
+        <th>Task Order</th>
+        <th>Users</th>
       </tr>
     </thead>
     <tbody>
     {% for w in workspaces %}
      <tr>
-        <td scope="row">
-          <a href="/workspaces/{{w['task_order']['number']}}/projects">{{ w['name'] }}</a><br>
-          Task Order: #{{ w['task_order']['number'] }}
+        <td>
+          <a class='icon-link icon-link--large' href="/workspaces/{{w['task_order']['number']}}/projects">{{ w['name'] }}</a><br>
         </td>
         <td>
-          <span class="usa-label">{{ w['user_count'] }}</span><br>Users
+          #{{ w['task_order']['number'] }}
         </td>
-        <td><button class="usa-button-secondary">Launch</button></td>
+        <td>
+          <span class="label">{{ w['user_count'] }}</span><span class='h6'>Users</span>
+        </td>
       </tr>
     {% end %}
     </tbody>
