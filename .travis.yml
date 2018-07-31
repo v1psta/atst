@@ -17,14 +17,24 @@ before_install:
   - git submodule update --init --recursive
 
 before_script:
+  - date
   - docker run -d --name postgres96 postgres:9.6-alpine
   - docker run --link postgres96:postgres96 waisbrot/wait
+  - date
   - export postgres_ip="$(docker inspect -f "{{ .NetworkSettings.IPAddress }}" postgres96)"
   - docker login -u $ATAT_DOCKER_REGISTRY_USERNAME -p $ATAT_DOCKER_REGISTRY_PASSWORD $ATAT_DOCKER_REGISTRY_URL
   - docker build --tag "${TESTER_IMAGE_NAME}" --add-host "postgreshost:${postgres_ip}" . -f deploy/docker/tester/Dockerfile
+  - date
 
 script:
   - docker run --add-host "postgreshost:${postgres_ip}" "${TESTER_IMAGE_NAME}"
+  - date
+  - docker run -d --entrypoint='/bin/sh' --name current-atst-tester "${TESTER_IMAGE_NAME}"
+  - date
+  - docker cp current-atst-tester:/opt/atat/atst/node_modules ./node_modules
+  - date
+  - docker container stop current-atst-tester
+  - date
 
 before_deploy:
   - docker build --tag "${PROD_IMAGE_NAME}" . -f deploy/docker/prod/Dockerfile
