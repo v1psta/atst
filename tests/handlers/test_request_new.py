@@ -4,7 +4,7 @@ import tornado
 import urllib
 from tests.mocks import MOCK_USER
 
-ERROR_CLASS = "usa-input-error-message"
+ERROR_CLASS = "alert--error"
 
 @pytest.mark.gen_test
 def test_submit_invalid_request_form(monkeypatch, http_client, base_url):
