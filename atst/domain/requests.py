@@ -4,6 +4,8 @@ from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.orm.attributes import flag_modified
 
 from atst.models import Request, RequestStatusEvent
+from atst.database import db
+
 from .exceptions import NotFoundError
 
 
@@ -28,67 +30,68 @@ def deep_merge(source, destination: dict):
 class Requests(object):
     AUTO_APPROVE_THRESHOLD = 1000000
 
-    def __init__(self, db_session):
-        self.db_session = db_session
-
-    def create(self, creator_id, body):
+    @classmethod
+    def create(cls, creator_id, body):
         request = Request(creator=creator_id, body=body)
 
         status_event = RequestStatusEvent(new_status="incomplete")
         request.status_events.append(status_event)
 
-        self.db_session.add(request)
-        self.db_session.commit()
+        db.session.add(request)
+        db.session.commit()
 
         return request
 
-    def exists(self, request_id, creator_id):
-        return self.db_session.query(
+    @classmethod
+    def exists(cls, request_id, creator_id):
+        return db.session.query(
             exists().where(
                 and_(Request.id == request_id, Request.creator == creator_id)
             )
         ).scalar()
 
-    def get(self, request_id):
+    @classmethod
+    def get(cls, request_id):
         try:
-            request = self.db_session.query(Request).filter_by(id=request_id).one()
+            request = db.session.query(Request).filter_by(id=request_id).one()
         except NoResultFound:
             raise NotFoundError("request")
 
         return request
 
-    def get_many(self, creator_id=None):
+    @classmethod
+    def get_many(cls, creator_id=None):
         filters = []
         if creator_id:
             filters.append(Request.creator == creator_id)
 
         requests = (
-            self.db_session.query(Request)
+            db.session.query(Request)
             .filter(*filters)
             .order_by(Request.time_created.desc())
             .all()
         )
         return requests
 
-    @tornado.gen.coroutine
-    def submit(self, request):
+    @classmethod
+    def submit(cls, request):
         request.status_events.append(RequestStatusEvent(new_status="submitted"))
 
         if Requests.should_auto_approve(request):
             request.status_events.append(RequestStatusEvent(new_status="approved"))
 
-        self.db_session.add(request)
-        self.db_session.commit()
+        db.session.add(request)
+        db.session.commit()
 
         return request
 
-    @tornado.gen.coroutine
-    def update(self, request_id, request_delta):
+    @classmethod
+    def update(cls, request_id, request_delta):
         try:
             # Query for request matching id, acquiring a row-level write lock.
             # https://www.postgresql.org/docs/10/static/sql-select.html#SQL-FOR-UPDATE-SHARE
             request = (
-                self.db_session.query(Request)
+                db.session.query(Request)
                 .filter_by(id=request_id)
                 .with_for_update(of=Request)
                 .one()
@@ -105,8 +108,8 @@ class Requests(object):
         # since it doesn't track dictionary mutations by default.
         flag_modified(request, "body")
 
-        self.db_session.add(request)
-        self.db_session.commit()
+        db.session.add(request)
+        db.session.commit()
 
     @classmethod
     def should_auto_approve(cls, request):
