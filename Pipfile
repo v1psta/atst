@@ -16,6 +16,7 @@ alembic = "*"
 flask = "*"
 flask-sqlalchemy = "*"
 flask-assets = "*"
+flask-session = "*"
 
 [dev-packages]
 bandit = "*"
