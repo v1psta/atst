@@ -2,6 +2,7 @@ from flask import Blueprint, g, render_template
 import pendulum
 
 from atst.domain.requests import Requests
+from atst.forms.financial import FinancialForm
 
 requests_bp = Blueprint("requests", __name__)
 
@@ -43,8 +44,10 @@ def requests_form_update():
 
 
 @requests_bp.route("/requests/verify/<string:request_id>", methods=["GET"])
-def financial_verification():
-    pass
+def financial_verification(request_id=None):
+    request = Requests.get(request_id)
+    form = FinancialForm(data=request.body.get('financial_verification'))
+    return render_template("requests/financial_verification.html", f=form)
 
 
 @requests_bp.route("/requests/verify/<string:request_id>", methods=["POST"])

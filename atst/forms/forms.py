@@ -1,9 +1,9 @@
 import tornado
 from tornado.gen import Return
-from wtforms_tornado import Form
+from flask_wtf import FlaskForm
 
 
-class ValidatedForm(Form):
+class ValidatedForm(FlaskForm):
 
     @tornado.gen.coroutine
     def perform_extra_validation(self, *args, **kwargs):

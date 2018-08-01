@@ -17,6 +17,7 @@ flask = "*"
 flask-sqlalchemy = "*"
 flask-assets = "*"
 flask-session = "*"
+flask-wtf = "*"
 
 [dev-packages]
 bandit = "*"
