@@ -42,6 +42,12 @@ def make_flask_callbacks(app):
         g.dev = os.getenv("TORNADO_ENV", "dev") == "dev"
         g.matchesPath = lambda href: re.match('^'+href, request.url)
         g.modalOpen = request.args.get("modal", False)
+        g.current_user = {
+            "id": "cce17030-4109-4719-b958-ed109dbb87c8",
+            "first_name": "Amanda",
+            "last_name": "Adamson",
+            "atat_role": "default"
+        }
 
         # TODO: Make me a macro
         def modal(self, body):
