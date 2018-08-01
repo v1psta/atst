@@ -10,6 +10,7 @@ from atst.sessions import RedisSessions
 from atst.database import db
 from atst.assets import assets
 from atst.routes import bp
+from atst.routes.workspaces import bp as workspace_routes
 
 ENV = os.getenv("TORNADO_ENV", "dev")
 
@@ -31,6 +32,7 @@ def make_app(config):
     assets.init_app(app)
 
     app.register_blueprint(bp)
+    app.register_blueprint(workspace_routes)
 
     return app
 
