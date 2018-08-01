@@ -1,16 +1,13 @@
-from webassets import Environment, Bundle
+from flask_assets import Environment, Bundle
 from atst.home import home
 
-environment = Environment(
-    directory=home.child("scss"),
-    url="/static"
-)
+assets = Environment()
 
 css = Bundle(
-    "atat.scss",
+    "../scss/atat.scss",
     filters="scss",
     output="../static/assets/out.%(version)s.css",
     depends=("**/*.scss"),
 )
 
-environment.register("css", css)
+assets.register("css", css)
