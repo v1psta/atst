@@ -22,7 +22,7 @@
         {% end %}
       {% end %}
 
-      {% module xsrf_form_html() %}
+      {{ form.csrf_token }}
       {% block form %}
       form goes here
       {% end %}

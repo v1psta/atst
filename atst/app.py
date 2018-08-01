@@ -227,6 +227,7 @@ def make_config():
     OVERRIDE_CONFIG_FILENAME = os.getenv("OVERRIDE_CONFIG_FULLPATH")
 
     config = ConfigParser()
+    config.optionxform = str
 
     config_files = [BASE_CONFIG_FILENAME, ENV_CONFIG_FILENAME]
     if OVERRIDE_CONFIG_FILENAME:
