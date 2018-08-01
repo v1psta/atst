@@ -1,4 +1,4 @@
-{% extends "base.html.to" %}
+{% extends "base.html" %}
 
 {% block content %}
 <div class='col'>
@@ -23,9 +23,9 @@
           <span class="label">{{ w['user_count'] }}</span><span class='h6'>Users</span>
         </td>
       </tr>
-    {% end %}
+    {% endfor %}
     </tbody>
   </table>
 </div>
-{% end %}
+{% endblock %}
 

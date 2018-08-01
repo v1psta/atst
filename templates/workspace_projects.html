@@ -1,13 +1,15 @@
-{% extends "base_workspace.html.to" %}
+{% from "components.html" import Icon %}
+
+{% extends "base_workspace.html" %}
 
 {% block workspace_content %}
 
 {% for project in projects %}
   <div class='block-list project-list-item'>
     <header class='block-list__header'>
-      <h2 class='block-list__title'>{{ project['name'] }} ({{ len(project['environments'])}} environments)</h2>
+      <h2 class='block-list__title'>{{ project['name'] }} ({{ project['environments']|length }} environments)</h2>
       <a class='icon-link' href='/workspaces/123456/projects/789/edit'>
-        {% module Icon('edit') %}
+        {{ Icon('edit') }}
         <span>edit</span>
       </a>
     </header>
@@ -15,7 +17,7 @@
       {% for environment in project['environments'] %}
         <li class='block-list__item project-list-item__environment'>
           <a href='/' target='_blank' rel='noopener noreferrer' class='project-list-item__environment__link'>
-            {% module Icon('link') %}
+            {{ Icon('link') }}
             <span>{{ environment["name"]}}</span>
           </a>
 
@@ -24,10 +26,10 @@
             <span>members</span>
           </div>
         </li>
-      {% end %}
+      {% endfor %}
     </ul>
   </div>
-{% end %}
+{% endfor %}
 
-{% end %}
+{% endblock %}
 

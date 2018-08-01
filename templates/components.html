@@ -30,3 +30,15 @@
     {% endif %}
     </li>
 {%- endmacro %}
+
+{% macro EmptyState(self, message, actionLabel, actionHref, icon=None) -%}
+<div class='empty-state'>
+  <p>{{ message }}</p>
+
+  {% if icon %}
+    {{ Icon(icon) }}
+  {% endif %}
+
+  <a href='{{ actionHref }}' class='usa-button usa-button-big'>{{ actionLabel }}</a>
+</div>
+{%- endmacro %}
