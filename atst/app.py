@@ -1,7 +1,8 @@
 import os
+import re
 from configparser import ConfigParser
 from redis import StrictRedis
-from flask import Flask
+from flask import Flask, request, g
 from unipath import Path
 
 from atst.api_client import ApiClient
@@ -24,12 +25,29 @@ def make_app(config):
     )
     app.config.update(config)
 
+    make_flask_callbacks(app)
+
     db.init_app(app)
     assets.init_app(app)
 
     app.register_blueprint(bp)
 
     return app
+
+
+def make_flask_callbacks(app):
+    @app.before_request
+    def set_globals():
+        g.navigationContext = 'workspace' if re.match('\/workspaces\/[A-Za-z0-9]*', request.url) else 'global'
+        g.dev = os.getenv("TORNADO_ENV", "dev") == "dev"
+        g.matchesPath = lambda href: re.match('^'+href, request.url)
+        g.modalOpen = request.args.get("modal", False)
+
+        # TODO: Make me a macro
+        def modal(self, body):
+            return self.render_string(
+            "components/modal.html.to",
+            body=body)
 
 
 # def make_app(config, deps, **kwargs):
@@ -180,6 +198,15 @@ def make_deps(config):
         ),
     }
 
+def map_config(config):
+    return {
+        "ENV": config["default"]["ENVIRONMENT"],
+        "DEBUG": config["default"]["DEBUG"],
+        "PORT": int(config["default"]["PORT"]),
+        "SQLALCHEMY_DATABASE_URI": config["default"]["DATABASE_URI"],
+        "SQLALCHEMY_TRACK_MODIFICATIONS": False,
+        **config["default"]
+    }
 
 def make_config():
     BASE_CONFIG_FILENAME = os.path.join(os.path.dirname(__file__), "../config/base.ini")
@@ -212,4 +239,4 @@ def make_config():
     )
     config.set("default", "DATABASE_URI", database_uri)
 
-    return config["default"]
+    return map_config(config)
