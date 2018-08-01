@@ -1,7 +1,7 @@
 import os
 import re
 from configparser import ConfigParser
-from flask import Flask, request, g
+from flask import Flask, request, g, session
 from unipath import Path
 
 from atst.database import db
