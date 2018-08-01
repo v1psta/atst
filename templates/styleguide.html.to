@@ -24,7 +24,7 @@
     <p>This is a message. It is a very important message. Please note, <strong>proper semantic markup is required</strong> here, such as paragraph tags. Don't omit paragraph tags!</p>\
     <p>Also note the same for actions below. You'll need to include the full link markup.</p>\
   ",
-  actions="<a href='/styleguide?modal=True'>Open a Modal Dialog</a>",
+  actions=[{ "label": "Open a Modal Dialog", "href": "/styleguide?modal=True" }],
   level='warning'
 ) %}
 

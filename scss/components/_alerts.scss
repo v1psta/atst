@@ -46,13 +46,20 @@
     @include h3;
     margin-top: 0;
   }
+  .alert__message {
+    &:last-child {
+      > *:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
 
-  .alert__content {
-    .alert__message {
-      &:last-child {
-        > *:last-child {
-          margin-bottom: 0;
-        }
+  .alert__actions {
+    .icon-link {
+      @include icon-link-color($color-primary, $color-white);
+
+      &:first-child {
+        margin-left: -$gap;
       }
     }
   }
@@ -64,13 +71,31 @@
 
   &.alert--success {
     @include alert-level('success');
+
+    .alert__actions {
+      .icon-link {
+        @include icon-link-color($color-green, $color-white);
+      }
+    }
   }
 
   &.alert--warning {
     @include alert-level('warning');
+
+    .alert__actions {
+      .icon-link {
+        @include icon-link-color($color-gold-dark, $color-white);
+      }
+    }
   }
 
   &.alert--error {
     @include alert-level('error');
+
+    .alert__actions {
+      .icon-link {
+        @include icon-link-color($color-red, $color-white);
+      }
+    }
   }
 }

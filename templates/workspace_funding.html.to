@@ -2,10 +2,35 @@
 
 {% block workspace_content %}
 
+  {% module Alert("Funding Information & Reports for Workspace 123",
+    message="<p>On this screen you'll find detailed reporting information on this workspace. This message needs to be written better and be dismissable.</p>",
+    actions=[
+      {"label": "Learn More", "href": "/", "icon": "info"},
+      {"label": "Dismiss", "href": "/"}
+    ]
+  )%}
+
   <div class='funding-summary-row'>
 
     <div class='funding-summary-row__col'>
-      <div class='panel'>Summary</div>
+      <div class='panel spend-summary'>
+        <div class='row'>
+          <h2 class='spend-summary__heading col'>Workspace Total Spend</h2>
+          <dl class='spend-summary__budget'>
+            <div>
+              <dt>Budget</dt>
+              <dd>$100,000,000</dd>
+            </div>
+
+            <div>
+              <dt>Remaining</dt>
+              <dd>$99,798,000</dd>
+            </div>
+          </dl>
+        </div>
+
+        <meter value='202000' min='0' max='100000000'>$202,000 of $100,000,000</meter>
+      </div>
     </div>
 
     <div class='funding-summary-row__col'>

@@ -28,8 +28,15 @@
       <div class='alert__message'>{% raw message %}</div>
     {% end %}
 
-    {% if actions %}
-      <div class='alert__actions'>{% raw actions %}</div>
+    {% if actions and any(actions) %}
+      <div class='alert__actions'>
+        {% for action in actions %}
+          <a href={{ action["href"] }} class='icon-link'>
+            {% if 'icon' in action %}{% module Icon(action["icon"]) %}{% end %}
+            <span>{{ action["label"] }}</span>
+          </a>
+        {% end%}
+      </div>
     {% end %}
   </div>
 </div>

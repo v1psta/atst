@@ -5,6 +5,58 @@
     .funding-summary-row__col {
       @include grid-pad;
       flex-grow: 1;
+
+      .panel {
+        padding: $gap * 2;
+
+        &.spend-summary {
+          .row {
+            justify-content: space-between;
+          }
+
+          .spend-summary__heading {
+            @include h3;
+            margin: 0 $gap 0 0;
+          }
+
+          .spend-summary__budget {
+            margin: 0 0 0 $gap;
+
+            > div {
+              text-align: right;
+              margin: 0 0 ($gap / 2) 0;
+
+              dd, dt {
+                display: inline;
+              }
+
+              dt {
+                color: $color-gray;
+                margin-right: $gap;
+                font-weight: normal;
+              }
+
+              dd {
+                font-weight: bold;
+              }
+            }
+          }
+
+          meter {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 3rem;
+            display: block;
+            background: $color-gray-lightest;
+          }
+
+          meter::-webkit-meter-bar {
+            background: $color-primary;
+          }
+        }
+      }
     }
   }
 }
