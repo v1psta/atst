@@ -8,9 +8,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>{% block title %}JEDI{% endblock %}</title>
-  {% assets "css" %}
-    <link rel="stylesheet" href="{{ ASSET_URL }}" type="text/css">
-  {% endassets %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='assets/index.css') }}">
   <link rel="icon" type="image/x-icon" href="/static/img/favicon.ico">
 </head>
 <body class="{% if g.modalOpen %} modalOpen{% endif %}">
@@ -34,5 +32,6 @@
   {% include 'footer.html' %}
 
   {% block modal %}{% endblock %}
+  <script src="{{ url_for('static', filename='assets/index.js') }}"></script>
 </body>
 </html>
