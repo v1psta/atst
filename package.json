@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "watch": "parcel watch static/js/index.js -d static/assets -o index.js --no-autoinstall",
-    "build": "parcel build static/js/index.js -d static/assets -o index.js --no-autoinstall",
+    "build": "parcel build static/js/index.js -d static/assets -o index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
