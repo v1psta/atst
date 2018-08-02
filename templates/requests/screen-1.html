@@ -1,0 +1,46 @@
+{% extends 'requests_new.html' %}
+
+{% from "components.html" import Alert, TextInput, OptionsInput %}
+
+{% block subtitle %}
+<h2>Details of Use</h2>
+{% endblock %}
+
+{% block form %}
+
+{% if f.errors %}
+  {{ Alert('There were some errors',
+    message="<p>Please see below.</p>",
+    level='error'
+  ) }}
+{% endif %}
+
+
+<p>We’d like to know a little about how you plan to use JEDI Cloud services to process your request. Please answer the following questions to the best of your ability. Note that the CCPO does not directly help with migrating systems to JEDI Cloud. These questions are for learning about your cloud readiness and financial usage of the JEDI Cloud; your estimates will not be used for any department level reporting.</p>
+<p><em>All fields are required, unless specified optional.</em></p>
+
+<h2>General</h2>
+{{ TextInput(f.dod_component) }}
+{{ TextInput(f.jedi_usage,placeholder="e.g. We are migrating XYZ application to the cloud so that...") }}
+
+<h2>Cloud Readiness</h2>
+{{ TextInput(f.num_software_systems,placeholder="Number of systems") }}
+{{ OptionsInput(f.jedi_migration) }}
+{{ OptionsInput(f.rationalization_software_systems) }}
+{{ OptionsInput(f.technical_support_team) }}
+{{ OptionsInput(f.organization_providing_assistance) }}
+{{ OptionsInput(f.engineering_assessment) }}
+{{ TextInput(f.data_transfers) }}
+{{ TextInput(f.expected_completion_date) }}
+{{ OptionsInput(f.cloud_native) }}
+
+<h2>Financial Usage</h2>
+{{ TextInput(f.estimated_monthly_spend) }}
+<p>So this means you are spending approximately <b>$X</b> annually</p>
+{{ TextInput(f.dollar_value) }}
+{{ TextInput(f.number_user_sessions) }}
+{{ TextInput(f.average_daily_traffic) }}
+{{ TextInput(f.start_date) }}
+
+
+{% endblock %}
