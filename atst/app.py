@@ -57,10 +57,6 @@ def make_flask_callbacks(app):
             "atat_permissions": [],
         }
 
-        # TODO: Make me a macro
-        def modal(self, body):
-            return self.render_string("components/modal.html.to", body=body)
-
 
 def map_config(config):
     return {
