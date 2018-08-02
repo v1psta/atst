@@ -3,6 +3,7 @@ import pendulum
 
 from atst.routes.requests.jedi_request_flow import JEDIRequestFlow
 from atst.domain.requests import Requests
+from atst.forms.financial import FinancialForm
 
 
 requests_bp = Blueprint("requests", __name__)
@@ -107,7 +108,7 @@ def requests_update(screen=1, request_id=None):
 def financial_verification(request_id=None):
     request = Requests.get(request_id)
     form = FinancialForm(data=request.body.get('financial_verification'))
-    return render_template("requests/financial_verification.html", f=form)
+    return render_template("requests/financial_verification.html", f=form, request_id=request_id)
 
 
 @requests_bp.route("/requests/verify/<string:request_id>", methods=["POST"])
