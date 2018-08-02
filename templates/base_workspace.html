@@ -1,4 +1,4 @@
-{% extends "base.html.to" %}
+{% extends "base.html" %}
 
 {% block content %}
 
@@ -8,8 +8,8 @@
     </div>
 
     <div class='col col--grow'>
-      {% block workspace_content %}{% end %}
+      {% block workspace_content %}{% endblock %}
     </div>
   </div>
 
-{% end %}
+{% endblock %}

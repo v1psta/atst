@@ -12,7 +12,7 @@ from atst.assets import assets
 
 from atst.routes import bp
 from atst.routes.requests import requests_bp
-
+from atst.routes.workspaces import bp as workspace_routes
 
 ENV = os.getenv("TORNADO_ENV", "dev")
 
@@ -35,6 +35,7 @@ def make_app(config):
 
     app.register_blueprint(bp)
     app.register_blueprint(requests_bp)
+    app.register_blueprint(workspace_routes)
 
     return app
 
