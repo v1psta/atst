@@ -2,13 +2,12 @@
 
 {% block form %}
 
-{% autoescape None %}
 {% if f.errors %}
-  {% module Alert('There were some errors',
+  {{ Alert('There were some errors',
     message="<p>Please complete all the fields before submitting.</p>",
     level='error'
-    ) %}
-{% end %}
+    ) }}
+{% endif %}
 
 
 <h2 id="financial-verification">Financial Verification</h2>
@@ -20,7 +19,7 @@
   <div class="usa-input-error-message">
     {{ e }}
   </div>
-{% end %}
+{% endfor %}
 
 {{ f.uii_ids.label }}
 {{ f.uii_ids(placeholder="Example: \nDI 0CVA5786950 \nUN1945326361234786950") }}
@@ -28,7 +27,7 @@
   <div class="usa-input-error-message">
     {{ e }}
   </div>
-{% end %}
+{% endfor %}
 
 {{ f.pe_id.label }}
 {{ f.pe_id(placeholder="Example: 0203752A") }}
@@ -36,7 +35,7 @@
   <div class="usa-input-error-message">
     {{ e }}
   </div>
-{% end %}
+{% endfor %}
 
 {{ f.treasury_code.label }}
 {{ f.treasury_code(placeholder="Example: 1200") }}
@@ -44,7 +43,7 @@
   <div class="usa-input-error-message">
     {{ e }}
   </div>
-{% end %}
+{% endfor %}
 
 {{ f.ba_code.label }}
 {{ f.ba_code(placeholder="Example: 02") }}
@@ -52,7 +51,7 @@
   <div class="usa-input-error-message">
     {{ e }}
   </div>
-{% end %}
+{% endfor %}
 
 <!-- KO Information -->
 
@@ -64,7 +63,7 @@
   <div class="usa-input-error-message">
     {{ e }}
   </div>
-{% end %}
+{% endfor %}
 
 {{ f.lname_co.label }}
 {{ f.lname_co(placeholder="Contracting Officer last name") }}
@@ -72,7 +71,7 @@
   <div class="usa-input-error-message">
     {{ e }}
   </div>
-{% end %}
+{% endfor %}
 
 {{ f.email_co.label }}
 {{ f.email_co(placeholder="jane@mail.mil") }}
@@ -80,7 +79,7 @@
   <div class="usa-input-error-message">
     {{ e }}
   </div>
-{% end %}
+{% endfor %}
 
 {{ f.office_co.label }}
 {{ f.office_co(placeholder="Example: WHS") }}
@@ -88,7 +87,7 @@
   <div class="usa-input-error-message">
     {{ e }}
   </div>
-{% end %}
+{% endfor %}
 
 
 <!-- COR Information -->
@@ -101,7 +100,7 @@
   <div class="usa-input-error-message">
     {{ e }}
   </div>
-{% end %}
+{% endfor %}
 
 {{ f.lname_cor.label }}
 {{ f.lname_cor(placeholder="Contracting Officer Representative last name") }}
@@ -109,7 +108,7 @@
   <div class="usa-input-error-message">
     {{ e }}
   </div>
-{% end %}
+{% endfor %}
 
 {{ f.email_cor.label }}
 {{ f.email_cor(placeholder="jane@mail.mil") }}
@@ -117,7 +116,7 @@
   <div class="usa-input-error-message">
     {{ e }}
   </div>
-{% end %}
+{% endfor %}
 
 {{ f.office_cor.label }}
 {{ f.office_cor(placeholder="Example: WHS") }}
@@ -125,7 +124,7 @@
   <div class="usa-input-error-message">
     {{ e }}
   </div>
-{% end %}
+{% endfor %}
 
 <br><hr>
 <em>&darr; FIELDS NEEDED FOR MANUAL ENTRY OF TASK ORDER INFORMATION (only necessary if EDA info not available)</em>
@@ -137,7 +136,7 @@
   <div class="usa-input-error-message">
     {{ e }}
   </div>
-{% end %}
+{% endfor %}
 
 {{ f.funding_type_other.label }}
 {{ f.funding_type_other(placeholder="") }}
@@ -145,7 +144,7 @@
   <div class="usa-input-error-message">
     {{ e }}
   </div>
-{% end %}
+{% endfor %}
 
 {{ f.clin_0001.label }}
 {{ f.clin_0001(placeholder="50,000") }}
@@ -153,7 +152,7 @@
   <div class="usa-input-error-message">
     {{ e }}
   </div>
-{% end %}
+{% endfor %}
 
 {{ f.clin_0003.label }}
 {{ f.clin_0003(placeholder="13,000") }}
@@ -161,7 +160,7 @@
   <div class="usa-input-error-message">
     {{ e }}
   </div>
-{% end %}
+{% endfor %}
 
 {{ f.clin_1001.label }}
 {{ f.clin_1001(placeholder="30,000") }}
@@ -169,7 +168,7 @@
   <div class="usa-input-error-message">
     {{ e }}
   </div>
-{% end %}
+{% endfor %}
 
 {{ f.clin_1003.label }}
 {{ f.clin_1003(placeholder="7,000") }}
@@ -177,7 +176,7 @@
   <div class="usa-input-error-message">
     {{ e }}
   </div>
-{% end %}
+{% endfor %}
 
 {{ f.clin_2001.label }}
 {{ f.clin_2001(placeholder="30,000") }}
@@ -185,7 +184,7 @@
   <div class="usa-input-error-message">
     {{ e }}
   </div>
-{% end %}
+{% endfor %}
 
 {{ f.clin_2003.label }}
 {{ f.clin_2003(placeholder="7,000") }}
@@ -193,7 +192,7 @@
   <div class="usa-input-error-message">
     {{ e }}
   </div>
-{% end %}
+{% endfor %}
 
 
-{% end %}
+{% endblock %}
