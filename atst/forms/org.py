@@ -8,30 +8,15 @@ from .validators import DateRange, PhoneNumber, Alphabet
 
 
 class OrgForm(ValidatedForm):
-    fname_request = StringField(
-        "First Name",
-        validators=[Required(), Alphabet()]
-    )
+    fname_request = StringField("First Name", validators=[Required(), Alphabet()])
 
-    lname_request = StringField(
-        "Last Name",
-        validators=[Required(), Alphabet()]
-    )
+    lname_request = StringField("Last Name", validators=[Required(), Alphabet()])
 
-    email_request = EmailField(
-        "Email Address",
-        validators=[Required(), Email()]
-    )
+    email_request = EmailField("Email Address", validators=[Required(), Email()])
 
-    phone_number = TelField(
-        "Phone Number",
-        validators=[Required(), PhoneNumber()]
-    )
+    phone_number = TelField("Phone Number", validators=[Required(), PhoneNumber()])
 
-    service_branch = StringField(
-        "Service Branch or Agency",
-        validators=[Required()]
-    )
+    service_branch = StringField("Service Branch or Agency", validators=[Required()])
 
     citizenship = RadioField(
         choices=[

@@ -8,7 +8,6 @@ from atst.forms.poc import POCForm
 from atst.forms.review import ReviewForm
 
 
-
 class JEDIRequestFlow(object):
     def __init__(
         self,
@@ -44,13 +43,10 @@ class JEDIRequestFlow(object):
 
     def validate_warnings(self):
         existing_request_data = (
-            self.existing_request
-            and self.existing_request.body.get(self.form_section)
+            self.existing_request and self.existing_request.body.get(self.form_section)
         ) or None
 
-        valid = self.form.perform_extra_validation(
-            existing_request_data,
-        )
+        valid = self.form.perform_extra_validation(existing_request_data)
         return valid
 
     @property
@@ -77,7 +73,7 @@ class JEDIRequestFlow(object):
             else:
                 data = self.request.body.get(self.form_section, {})
 
-        return defaultdict(lambda: defaultdict(lambda: 'Input required'), data)
+        return defaultdict(lambda: defaultdict(lambda: "Input required"), data)
 
     @property
     def can_submit(self):
@@ -120,14 +116,12 @@ class JEDIRequestFlow(object):
                 "title": "Review & Submit",
                 "section": "review_submit",
                 "form": ReviewForm,
-                "show":True,
+                "show": True,
             },
         ]
 
     def create_or_update_request(self):
-        request_data = {
-            self.form_section: self.form.data
-        }
+        request_data = {self.form_section: self.form.data}
         if self.request_id:
             Requests.update(self.request_id, request_data)
         else:

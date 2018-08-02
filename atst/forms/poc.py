@@ -6,22 +6,12 @@ from .validators import IsNumber, Alphabet
 
 
 class POCForm(ValidatedForm):
-    fname_poc = StringField(
-      "POC First Name",
-      validators=[Required()]
-    )
+    fname_poc = StringField("POC First Name", validators=[Required()])
 
-    lname_poc = StringField(
-      "POC Last Name",
-      validators=[Required()]
-    )
+    lname_poc = StringField("POC Last Name", validators=[Required()])
 
-    email_poc = EmailField(
-      "POC Email Address",
-      validators=[Required(), Email()]
-    )
+    email_poc = EmailField("POC Email Address", validators=[Required(), Email()])
 
     dodid_poc = StringField(
-        "DOD ID",
-        validators=[Required(), Length(min=10), IsNumber()]
+        "DOD ID", validators=[Required(), Length(min=10), IsNumber()]
     )
