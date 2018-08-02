@@ -7,11 +7,11 @@
 {% macro SidenavItem(label, href, active=False, icon=None, subnav=None) -%}
     <li>
     <a class="sidenav__link {% if active %}sidenav__link--active{% endif %}" href="{{href}}" title="{{label}}">
-        {% if icon %}
+      {% if icon %}
         {{ Icon(icon, classes="sidenav__link-icon") }}
-        {% endif %}
+      {% endif %}
 
-        <span class="sidenav__link-label">{{label}}</span>
+      <span class="sidenav__link-label">{{label}}</span>
     </a>
 
     {% if subnav and active %}
