@@ -12,7 +12,7 @@ from atst.routes.workspaces import bp as workspace_routes
 from atst.routes.requests import requests_bp
 
 
-ENV = os.getenv("TORNADO_ENV", "dev")
+ENV = os.getenv("FLASK_ENV", "dev")
 
 
 def make_app(config):
