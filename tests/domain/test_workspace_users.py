@@ -6,13 +6,13 @@ from atst.domain.users import Users
 
 
 @pytest.fixture()
-def users_repo(db):
-    return Users(db)
+def users_repo(session):
+    return Users(session)
 
 
 @pytest.fixture()
-def workspace_users_repo(db):
-    return WorkspaceUsers(db)
+def workspace_users_repo(session):
+    return WorkspaceUsers(session)
 
 
 def test_can_create_new_workspace_user(users_repo, workspace_users_repo):

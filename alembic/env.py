@@ -30,11 +30,10 @@ sys.path.append(parent_dir)
 
 from atst.app import make_config
 app_config = make_config()
-config.set_main_option('sqlalchemy.url', app_config['default']['DATABASE_URI'])
+config.set_main_option('sqlalchemy.url', app_config['DATABASE_URI'])
 
-from atst.database import make_db
+from atst.database import db
 from atst.models import *
-db = make_db(app_config)
 target_metadata = Base.metadata
 
 
