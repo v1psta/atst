@@ -64,7 +64,7 @@ def make_flask_callbacks(app):
         }
 
     @app.template_filter('iconSvg')
-    def iconSvg(name):
+    def _iconSvg(name):
         with open('static/icons/'+name+'.svg') as contents:
             return contents.read()
 
