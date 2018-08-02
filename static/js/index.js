@@ -1,4 +1,4 @@
-import classes from '../scss/atat.scss'
+import classes from '../styles/atat.scss'
 
 import './thing'
 
