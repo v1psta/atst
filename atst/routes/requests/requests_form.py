@@ -21,7 +21,9 @@ def requests_form_new(screen):
     )
 
 
-@requests_bp.route("/requests/new/<int:screen>", methods=["GET"], defaults={"request_id": None})
+@requests_bp.route(
+    "/requests/new/<int:screen>", methods=["GET"], defaults={"request_id": None}
+)
 @requests_bp.route("/requests/new/<int:screen>/<string:request_id>", methods=["GET"])
 def requests_form_update(screen=1, request_id=None):
     request = Requests.get(request_id) if request_id is not None else None
@@ -39,7 +41,9 @@ def requests_form_update(screen=1, request_id=None):
     )
 
 
-@requests_bp.route("/requests/new/<int:screen>", methods=["POST"], defaults={"request_id": None})
+@requests_bp.route(
+    "/requests/new/<int:screen>", methods=["POST"], defaults={"request_id": None}
+)
 @requests_bp.route("/requests/new/<int:screen>/<string:request_id>", methods=["POST"])
 def requests_update(screen=1, request_id=None):
     screen = int(screen)
@@ -82,7 +86,6 @@ def requests_update(screen=1, request_id=None):
             )
     else:
         return render_template("requests/screen-%d.html" % int(screen), **rerender_args)
-
 
 
 @requests_bp.route("/requests/submit/<string:request_id>", methods=["POST"])

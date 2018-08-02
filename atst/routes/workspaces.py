@@ -14,18 +14,25 @@ mock_workspaces = [
     }
 ]
 
+
 @bp.route("/workspaces")
 def workspaces():
     return render_template("workspaces.html", page=5, workspaces=mock_workspaces)
+
 
 @bp.route("/workspaces/<workspace_id>/projects")
 def workspace_projects(workspace_id):
     projects_repo = Projects()
     projects = projects_repo.get_many(workspace_id)
-    return render_template("workspace_projects.html", workspace_id=workspace_id, projects=projects)
+    return render_template(
+        "workspace_projects.html", workspace_id=workspace_id, projects=projects
+    )
+
 
 @bp.route("/workspaces/<workspace_id>/members")
 def workspace_members(workspace_id):
     members_repo = Members()
     members = members_repo.get_many(workspace_id)
-    return render_template("workspace_members.html", workspace_id=workspace_id, members=members)
+    return render_template(
+        "workspace_members.html", workspace_id=workspace_id, members=members
+    )
