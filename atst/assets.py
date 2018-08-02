@@ -1,7 +1,7 @@
 from flask_assets import Environment, Bundle
 from atst.home import home
 
-assets = Environment()
+environment = Environment()
 
 css = Bundle(
     "../scss/atat.scss",
@@ -10,4 +10,4 @@ css = Bundle(
     depends=("**/*.scss"),
 )
 
-assets.register("css", css)
+environment.register("css", css)
