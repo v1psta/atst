@@ -2,7 +2,7 @@
   <ul>
     {% for s in screens %}
     <li class="progress-menu__item">
-      <a href="{{ url_for('requests.requests_form_update', screen=loop.index+1, request_id=request_id) if request_id else url_for('requests.requests_form_new', screen=loop.index+1) }}"
+      <a href="{{ url_for('requests.requests_form_update', screen=loop.index, request_id=request_id) if request_id else url_for('requests.requests_form_new', screen=loop.index) }}"
         {% if g.matchesPath('/requests/new/{{ loop.index + 1 }}') %}class="active"{% endif %}
       >
         {{ s['title'] }}
