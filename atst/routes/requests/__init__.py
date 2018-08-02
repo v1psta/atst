@@ -39,11 +39,23 @@ def requests_index():
     return render_template("requests.html", requests=mapped_requests)
 
 
+@requests_bp.route("/requests/new", defaults={"screen": 1})
 @requests_bp.route("/requests/new/<int:screen>", methods=["GET"])
-def requests_form_new():
-    pass
+def requests_form_new(screen):
+    jedi_flow = JEDIRequestFlow(screen, request=None)
+
+    return render_template(
+        "requests/screen-%d.html" % int(screen),
+        f=jedi_flow.form,
+        data=jedi_flow.current_step_data,
+        screens=jedi_flow.screens,
+        current=screen,
+        next_screen=screen + 1,
+        can_submit=jedi_flow.can_submit,
+    )
 
 
+@requests_bp.route("/requests/new/<int:screen>", methods=["GET"], defaults={"request_id": None})
 @requests_bp.route("/requests/new/<int:screen>/<string:request_id>", methods=["GET"])
 def requests_form_update(screen=1, request_id=None):
     request = Requests.get(request_id) if request_id is not None else None
@@ -61,6 +73,7 @@ def requests_form_update(screen=1, request_id=None):
     )
 
 
+@requests_bp.route("/requests/new/<int:screen>", methods=["POST"], defaults={"request_id": None})
 @requests_bp.route("/requests/new/<int:screen>/<string:request_id>", methods=["POST"])
 def requests_update(screen=1, request_id=None):
     screen = int(screen)
