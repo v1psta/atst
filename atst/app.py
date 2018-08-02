@@ -1,7 +1,9 @@
 import os
 import re
 from configparser import ConfigParser
-from flask import Flask, request, g
+from flask import Flask, request, g, session
+from flask_session import Session
+import redis
 from unipath import Path
 
 from atst.database import db
@@ -24,11 +26,15 @@ def make_app(config):
         template_folder=parent_dir.child("templates").absolute(),
         static_folder=parent_dir.child("static").absolute(),
     )
+    redis = make_redis(config)
+
     app.config.update(config)
+    app.config.update({"SESSION_REDIS": redis})
 
     make_flask_callbacks(app)
 
     db.init_app(app)
+    Session(app)
     assets_environment.init_app(app)
 
     app.register_blueprint(bp)
@@ -111,3 +117,6 @@ def make_config():
     config.set("default", "DATABASE_URI", database_uri)
 
     return map_config(config)
+
+def make_redis(config):
+    return redis.Redis.from_url(config['REDIS_URI'])
