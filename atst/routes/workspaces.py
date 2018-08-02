@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template
 
 from atst.domain.workspaces import Projects, Members
-from atst.database import db
+
 
 bp = Blueprint("workspaces", __name__)
 

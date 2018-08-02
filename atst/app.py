@@ -1,7 +1,7 @@
 import os
 import re
 from configparser import ConfigParser
-from flask import Flask, request, g, session
+from flask import Flask, request, g
 from unipath import Path
 
 from atst.database import db
@@ -40,7 +40,7 @@ def make_app(config):
 
 def make_flask_callbacks(app):
     @app.before_request
-    def set_globals():
+    def _set_globals():
         g.navigationContext = (
             "workspace"
             if re.match("\/workspaces\/[A-Za-z0-9]*", request.url)
