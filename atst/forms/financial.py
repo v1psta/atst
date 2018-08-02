@@ -36,7 +36,6 @@ def suggest_pe_id(pe_id):
     return None
 
 
-@tornado.gen.coroutine
 def validate_pe_id(field, existing_request, pe_numbers_repo):
     try:
         pe_number = pe_numbers_repo.get(field.data)
@@ -55,12 +54,11 @@ def validate_pe_id(field, existing_request, pe_numbers_repo):
 
 class FinancialForm(ValidatedForm):
 
-    @tornado.gen.coroutine
     def perform_extra_validation(self, existing_request, pe_numbers_repo):
         valid = True
         if not existing_request or existing_request.get('pe_id') != self.pe_id.data:
             valid = yield validate_pe_id(self.pe_id, existing_request, pe_numbers_repo)
-        raise Return(valid)
+        return valid
 
     task_order_id = StringField(
         "Task Order Number associated with this request.", validators=[Required()]
