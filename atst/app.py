@@ -5,7 +5,7 @@ from flask import Flask, request, g
 from unipath import Path
 
 from atst.database import db
-from atst.assets import assets
+from atst.assets import environment as assets_environment
 
 from atst.routes import bp
 from atst.routes.workspaces import bp as workspace_routes
@@ -29,7 +29,7 @@ def make_app(config):
     make_flask_callbacks(app)
 
     db.init_app(app)
-    assets.init_app(app)
+    assets_environment.init_app(app)
 
     app.register_blueprint(bp)
     app.register_blueprint(workspace_routes)
