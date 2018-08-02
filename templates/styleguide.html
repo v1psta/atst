@@ -1,8 +1,10 @@
-{% extends "base.html.to" %}
+{% extends "base.html" %}
+
+{% from "components.html" import Alert, Modal, Icon %}
 
 {% block modal %}
-  {% if modalOpen() %}
-    {% apply modal %}
+  {% if g.modalOpen %}
+    {% call Modal() %}
       <h1>A modal dialog</h1>
 
       <p>We count thirty Rebel ships, Lord Vader. But they're so small they're evading our turbo-lasers! We'll have to destroy them ship to ship. Get the crews to their fighters. Luke, let me know when you're going in. I'm on my way in now... Watch yourself! There's a lot of fire coming from the right side of that deflection tower. I'm on it. Squad leaders, we've picked up a new group of signals. Enemy fighters coming your way.</p>
@@ -12,35 +14,35 @@
         <a href='/styleguide' class='action-group__action usa-button'>Close</a>
         <a href='/styleguide' class='action-group__action'>This also closes the modal</a>
       </div>
-    {% end %}
-  {% end %}
-{% end %}
+    {% endcall %}
+  {% endif %}
+{% endblock %}
 
 
 {% block content %}
 
-{% module Alert('A Warning Alert',
+{{ Alert('A Warning Alert',
   message="\
     <p>This is a message. It is a very important message. Please note, <strong>proper semantic markup is required</strong> here, such as paragraph tags. Don't omit paragraph tags!</p>\
     <p>Also note the same for actions below. You'll need to include the full link markup.</p>\
   ",
   actions="<a href='/styleguide?modal=True'>Open a Modal Dialog</a>",
   level='warning'
-) %}
+) }}
 
-{% module Alert('A Success Alert',
+{{ Alert('A Success Alert',
   message="<p>Congratulations! You did a thing.</p>",
   level='success'
-) %}
+) }}
 
-{% module Alert('An Error Alert',
+{{ Alert('An Error Alert',
   message="<p>Booooo. You're the worst.</p>",
   level='error'
-) %}
+) }}
 
-{% module Alert('An Info Alert',
+{{ Alert('An Info Alert',
   message="<p>The more you know.</p>"
-) %}
+) }}
 
 <nav class='sidenav'>
   <ul>
@@ -146,7 +148,7 @@
             <span class='usa-input__help'>
               This is some help text to explain what this form field is and why you should fill it out.
             </span>
-            {% module Icon('alert') %}
+            {{ Icon('alert') }}
           </label>
           <input id='basic-text-2' type='text' placeholder='this is a sample of what you should enter' aria-invalid='true' aria-describedby='basic-text-2__errors'/>
           <span id='basic-text-2__errors' class='usa-input__message'>Oh boy you really screwed up big time, didn't you!</span>
@@ -158,7 +160,7 @@
             <span class='usa-input__help'>
               This is some help text to explain what this form field is and why you should fill it out.
             </span>
-            {% module Icon('alert') %}
+            {{ Icon('alert') }}
           </label>
           <input id='basic-text-3' type='text' placeholder='this is a sample of what you should enter' aria-describedby='basic-text-3__errors'/>
           <span id='basic-text-3__errors' class='usa-input__message'>Oh boy you really screwed up big time, didn't you!</span>
@@ -170,7 +172,7 @@
             <span class='usa-input__help'>
               This is some help text to explain what this form field is and why you should fill it out.
             </span>
-            {% module Icon('ok') %}
+            {{ Icon('ok') }}
           </label>
           <input id='basic-text-4' type='text' placeholder='this is a sample of what you should enter'/>
         </div>
@@ -214,7 +216,7 @@
           <div class='form-col'>
             <div class='usa-input usa-input--error'>
               <fieldset class='usa-input__choices usa-input__choices--inline'>
-                <legend>Inline Checkboxes {% module Icon('alert') %}</legend>
+                <legend>Inline Checkboxes {{ Icon('alert') }}</legend>
                 <input type='checkbox' id='checkbox-4'/>
                 <label for='checkbox-4'>Checkbox Four</label>
 
@@ -234,7 +236,7 @@
           <div class='form-col'>
             <div class='usa-input usa-input--error'>
               <fieldset class='usa-input__choices' >
-                <legend>Problem Radio Buttons {% module Icon('alert') %}</legend>
+                <legend>Problem Radio Buttons {{ Icon('alert') }}</legend>
 
                 <input type='radio' name='radio' id='radio-1' />
                 <label for='radio-1'>Radio One</label>
@@ -279,30 +281,30 @@
   <div class='panel'>
     <div class='panel__content'>
       <h5>Icons</h5>
-      <span class='nowrap'>{% module Icon('trash') %} 'trash'&nbsp;&nbsp;&nbsp;</span>
-      <span class='nowrap'>{% module Icon('document') %} 'document'&nbsp;&nbsp;&nbsp;</span>
-      <span class='nowrap'>{% module Icon('cloud') %} 'cloud'&nbsp;&nbsp;&nbsp;</span>
-      <span class='nowrap'>{% module Icon('chart') %} 'chart'&nbsp;&nbsp;&nbsp;</span>
-      <span class='nowrap'>{% module Icon('caret_up') %} 'caret_up'&nbsp;&nbsp;&nbsp;</span>
-      <span class='nowrap'>{% module Icon('caret_down') %} 'caret_down'&nbsp;&nbsp;&nbsp;</span>
-      <span class='nowrap'>{% module Icon('caret_right') %} 'caret_right'&nbsp;&nbsp;&nbsp;</span>
-      <span class='nowrap'>{% module Icon('caret_left') %} 'caret_left'&nbsp;&nbsp;&nbsp;</span>
-      <span class='nowrap'>{% module Icon('x') %} 'x'&nbsp;&nbsp;&nbsp;</span>
-      <span class='nowrap'>{% module Icon('search') %} 'search'&nbsp;&nbsp;&nbsp;</span>
-      <span class='nowrap'>{% module Icon('avatar') %} 'avatar'&nbsp;&nbsp;&nbsp;</span>
-      <span class='nowrap'>{% module Icon('download') %} 'download'&nbsp;&nbsp;&nbsp;</span>
-      <span class='nowrap'>{% module Icon('briefcase') %} 'briefcase'&nbsp;&nbsp;&nbsp;</span>
-      <span class='nowrap'>{% module Icon('bell') %} 'bell'&nbsp;&nbsp;&nbsp;</span>
-      <span class='nowrap'>{% module Icon('folder') %} 'folder'&nbsp;&nbsp;&nbsp;</span>
-      <span class='nowrap'>{% module Icon('help') %} 'help'&nbsp;&nbsp;&nbsp;</span>
-      <span class='nowrap'>{% module Icon('shield') %} 'shield'&nbsp;&nbsp;&nbsp;</span>
-      <span class='nowrap'>{% module Icon('info') %} 'info'&nbsp;&nbsp;&nbsp;</span>
-      <span class='nowrap'>{% module Icon('alert') %} 'alert'&nbsp;&nbsp;&nbsp;</span>
-      <span class='nowrap'>{% module Icon('link') %} 'link'&nbsp;&nbsp;&nbsp;</span>
-      <span class='nowrap'>{% module Icon('ok') %} 'ok'&nbsp;&nbsp;&nbsp;</span>
-      <span class='nowrap'>{% module Icon('checkmark') %} 'checkmark'&nbsp;&nbsp;&nbsp;</span>
-      <span class='nowrap'>{% module Icon('arrow-right') %} 'arrow-right'&nbsp;&nbsp;&nbsp;</span>
-      <span class='nowrap'>{% module Icon('arrow-down') %} 'arrow-down'&nbsp;&nbsp;&nbsp;</span>
+      <span class='nowrap'>{{ Icon('trash') }} 'trash'&nbsp;&nbsp;&nbsp;</span>
+      <span class='nowrap'>{{ Icon('document') }} 'document'&nbsp;&nbsp;&nbsp;</span>
+      <span class='nowrap'>{{ Icon('cloud') }} 'cloud'&nbsp;&nbsp;&nbsp;</span>
+      <span class='nowrap'>{{ Icon('chart') }} 'chart'&nbsp;&nbsp;&nbsp;</span>
+      <span class='nowrap'>{{ Icon('caret_up') }} 'caret_up'&nbsp;&nbsp;&nbsp;</span>
+      <span class='nowrap'>{{ Icon('caret_down') }} 'caret_down'&nbsp;&nbsp;&nbsp;</span>
+      <span class='nowrap'>{{ Icon('caret_right') }} 'caret_right'&nbsp;&nbsp;&nbsp;</span>
+      <span class='nowrap'>{{ Icon('caret_left') }} 'caret_left'&nbsp;&nbsp;&nbsp;</span>
+      <span class='nowrap'>{{ Icon('x') }} 'x'&nbsp;&nbsp;&nbsp;</span>
+      <span class='nowrap'>{{ Icon('search') }} 'search'&nbsp;&nbsp;&nbsp;</span>
+      <span class='nowrap'>{{ Icon('avatar') }} 'avatar'&nbsp;&nbsp;&nbsp;</span>
+      <span class='nowrap'>{{ Icon('download') }} 'download'&nbsp;&nbsp;&nbsp;</span>
+      <span class='nowrap'>{{ Icon('briefcase') }} 'briefcase'&nbsp;&nbsp;&nbsp;</span>
+      <span class='nowrap'>{{ Icon('bell') }} 'bell'&nbsp;&nbsp;&nbsp;</span>
+      <span class='nowrap'>{{ Icon('folder') }} 'folder'&nbsp;&nbsp;&nbsp;</span>
+      <span class='nowrap'>{{ Icon('help') }} 'help'&nbsp;&nbsp;&nbsp;</span>
+      <span class='nowrap'>{{ Icon('shield') }} 'shield'&nbsp;&nbsp;&nbsp;</span>
+      <span class='nowrap'>{{ Icon('info') }} 'info'&nbsp;&nbsp;&nbsp;</span>
+      <span class='nowrap'>{{ Icon('alert') }} 'alert'&nbsp;&nbsp;&nbsp;</span>
+      <span class='nowrap'>{{ Icon('link') }} 'link'&nbsp;&nbsp;&nbsp;</span>
+      <span class='nowrap'>{{ Icon('ok') }} 'ok'&nbsp;&nbsp;&nbsp;</span>
+      <span class='nowrap'>{{ Icon('checkmark') }} 'checkmark'&nbsp;&nbsp;&nbsp;</span>
+      <span class='nowrap'>{{ Icon('arrow-right') }} 'arrow-right'&nbsp;&nbsp;&nbsp;</span>
+      <span class='nowrap'>{{ Icon('arrow-down') }} 'arrow-down'&nbsp;&nbsp;&nbsp;</span>
     </div>
   </div>
 
@@ -360,4 +362,4 @@
     <a href='/styleguide' class='action-group__action'>Action group link</a>
   </div>
 </div>
-{% end %}
+{% endblock %}

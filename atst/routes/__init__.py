@@ -9,3 +9,8 @@ bp = Blueprint("atst", __name__)
 @bp.route("/")
 def home():
     return render_template("home.html")
+
+
+@bp.route("/styleguide")
+def styleguide():
+    return render_template("styleguide.html")
