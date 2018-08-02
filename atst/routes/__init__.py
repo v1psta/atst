@@ -5,6 +5,7 @@ from atst.domain.requests import Requests
 
 bp = Blueprint("atst", __name__)
 
+
 @bp.route("/")
 def home():
     return render_template("home.html")

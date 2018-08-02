@@ -25,7 +25,7 @@ def make_app(config):
     app = Flask(
         __name__,
         template_folder=parent_dir.child("templates").absolute(),
-        static_folder=parent_dir.child("static").absolute()
+        static_folder=parent_dir.child("static").absolute(),
     )
     app.config.update(config)
 
@@ -44,23 +44,25 @@ def make_app(config):
 def make_flask_callbacks(app):
     @app.before_request
     def set_globals():
-        g.navigationContext = 'workspace' if re.match('\/workspaces\/[A-Za-z0-9]*', request.url) else 'global'
+        g.navigationContext = (
+            "workspace"
+            if re.match("\/workspaces\/[A-Za-z0-9]*", request.url)
+            else "global"
+        )
         g.dev = os.getenv("TORNADO_ENV", "dev") == "dev"
-        g.matchesPath = lambda href: re.match('^'+href, request.path)
+        g.matchesPath = lambda href: re.match("^" + href, request.path)
         g.modalOpen = request.args.get("modal", False)
         g.current_user = {
             "id": "cce17030-4109-4719-b958-ed109dbb87c8",
             "first_name": "Amanda",
             "last_name": "Adamson",
             "atat_role": "default",
-            "atat_permissions": []
+            "atat_permissions": [],
         }
 
         # TODO: Make me a macro
         def modal(self, body):
-            return self.render_string(
-            "components/modal.html.to",
-            body=body)
+            return self.render_string("components/modal.html.to", body=body)
 
 
 # def make_app(config, deps, **kwargs):
@@ -211,6 +213,7 @@ def make_deps(config):
         ),
     }
 
+
 def map_config(config):
     return {
         "ENV": config["default"]["ENVIRONMENT"],
@@ -218,8 +221,9 @@ def map_config(config):
         "PORT": int(config["default"]["PORT"]),
         "SQLALCHEMY_DATABASE_URI": config["default"]["DATABASE_URI"],
         "SQLALCHEMY_TRACK_MODIFICATIONS": False,
-        **config["default"]
+        **config["default"],
     }
+
 
 def make_config():
     BASE_CONFIG_FILENAME = os.path.join(os.path.dirname(__file__), "../config/base.ini")

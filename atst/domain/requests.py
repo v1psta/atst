@@ -102,7 +102,9 @@ class Requests(object):
         request.body = deep_merge(request_delta, request.body)
 
         if Requests.should_allow_submission(request):
-            request.status_events.append(RequestStatusEvent(new_status="pending_submission"))
+            request.status_events.append(
+                RequestStatusEvent(new_status="pending_submission")
+            )
 
         # Without this, sqlalchemy won't notice the change to request.body,
         # since it doesn't track dictionary mutations by default.

@@ -19,7 +19,7 @@ class RequestFinancialVerification(BaseHandler):
     @tornado.gen.coroutine
     def get(self, request_id=None):
         existing_request = self.get_existing_request(request_id)
-        form = FinancialForm(data=existing_request.body.get('financial_verification'))
+        form = FinancialForm(data=existing_request.body.get("financial_verification"))
         self.render(
             "requests/financial_verification.html.to",
             page=self.page,
@@ -48,20 +48,16 @@ class RequestFinancialVerification(BaseHandler):
         if form.validate():
             yield self.update_request(request_id, form.data)
             valid = yield form.perform_extra_validation(
-                existing_request.body.get('financial_verification'),
-                self.pe_numbers_repo
+                existing_request.body.get("financial_verification"),
+                self.pe_numbers_repo,
             )
             if valid:
                 self.redirect(
-                    self.application.default_router.reverse_url("financial_verification_submitted")
+                    self.application.default_router.reverse_url(
+                        "financial_verification_submitted"
+                    )
                 )
             else:
-                self.render(
-                    "requests/financial_verification.html.to",
-                    **rerender_args
-                )
+                self.render("requests/financial_verification.html.to", **rerender_args)
         else:
-            self.render(
-                "requests/financial_verification.html.to",
-                **rerender_args
-            )
+            self.render("requests/financial_verification.html.to", **rerender_args)

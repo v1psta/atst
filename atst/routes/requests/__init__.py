@@ -8,6 +8,7 @@ from atst.forms.financial import FinancialForm
 
 requests_bp = Blueprint("requests", __name__)
 
+
 def map_request(user, request):
     time_created = pendulum.instance(request.time_created)
     is_new = time_created.add(days=1) > pendulum.now()
@@ -25,7 +26,10 @@ def map_request(user, request):
 @requests_bp.route("/requests", methods=["GET"])
 def requests_index():
     requests = []
-    if "review_and_approve_jedi_workspace_request" in g.current_user["atat_permissions"]:
+    if (
+        "review_and_approve_jedi_workspace_request"
+        in g.current_user["atat_permissions"]
+    ):
         requests = Requests.get_many()
     else:
         requests = Requests.get_many(creator_id=g.current_user["id"])
@@ -53,8 +57,9 @@ def requests_form_update(screen=1, request_id=None):
         current=screen,
         next_screen=screen + 1,
         request_id=request_id,
-        can_submit=jedi_flow.can_submit
+        can_submit=jedi_flow.can_submit,
     )
+
 
 @requests_bp.route("/requests/new/<int:screen>/<string:request_id>", methods=["POST"])
 def requests_update(screen=1, request_id=None):
@@ -87,28 +92,26 @@ def requests_update(screen=1, request_id=None):
                 where = "/requests"
             else:
                 where = url_for(
-                    "requests.requests_form_update", screen=jedi_flow.next_screen, request_id=jedi_flow.request_id
+                    "requests.requests_form_update",
+                    screen=jedi_flow.next_screen,
+                    request_id=jedi_flow.request_id,
                 )
             return redirect(where)
         else:
             return render_template(
-                "requests/screen-%d.html" % int(screen),
-                **rerender_args
+                "requests/screen-%d.html" % int(screen), **rerender_args
             )
     else:
-        return render_template(
-            "requests/screen-%d.html" % int(screen),
-            **rerender_args
-        )
-
-
+        return render_template("requests/screen-%d.html" % int(screen), **rerender_args)
 
 
 @requests_bp.route("/requests/verify/<string:request_id>", methods=["GET"])
 def financial_verification(request_id=None):
     request = Requests.get(request_id)
-    form = FinancialForm(data=request.body.get('financial_verification'))
-    return render_template("requests/financial_verification.html", f=form, request_id=request_id)
+    form = FinancialForm(data=request.body.get("financial_verification"))
+    return render_template(
+        "requests/financial_verification.html", f=form, request_id=request_id
+    )
 
 
 @requests_bp.route("/requests/verify/<string:request_id>", methods=["POST"])

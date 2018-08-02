@@ -7,10 +7,7 @@ import pendulum
 class DateField(DateField):
     def _value(self):
         if self.data:
-            date_formats = [
-                "YYYY-MM-DD",
-                "MM/DD/YYYY"
-            ]
+            date_formats = ["YYYY-MM-DD", "MM/DD/YYYY"]
             for _format in date_formats:
                 try:
                     return pendulum.from_format(self.data, _format).date()
