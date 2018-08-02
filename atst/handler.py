@@ -6,7 +6,6 @@ helpers = {"assets": None}
 
 
 class BaseHandler(tornado.web.RequestHandler):
-
     def get_template_namespace(self):
         ns = super(BaseHandler, self).get_template_namespace()
         helpers["config"] = self.application.config

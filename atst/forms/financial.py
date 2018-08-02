@@ -12,13 +12,17 @@ from .fields import NewlineListField
 from .forms import ValidatedForm
 
 
-PE_REGEX = re.compile(r"""
+PE_REGEX = re.compile(
+    r"""
     (0?\d) # program identifier
     (0?\d) # category
     (\d)   # activity
     (\d+)  # sponsor element
     (.+)   # service
-""", re.X)
+""",
+    re.X,
+)
+
 
 def suggest_pe_id(pe_id):
     suggestion = pe_id
@@ -45,7 +49,7 @@ def validate_pe_id(field, existing_request, pe_numbers_repo):
             "We couldn't find that PE number. {}"
             "If you have double checked it you can submit anyway. "
             "Your request will need to go through a manual review."
-        ).format("Did you mean \"{}\"? ".format(suggestion) if suggestion else "")
+        ).format('Did you mean "{}"? '.format(suggestion) if suggestion else "")
         field.errors.append(error_str)
         return False
 
@@ -53,10 +57,9 @@ def validate_pe_id(field, existing_request, pe_numbers_repo):
 
 
 class FinancialForm(ValidatedForm):
-
     def perform_extra_validation(self, existing_request, pe_numbers_repo):
         valid = True
-        if not existing_request or existing_request.get('pe_id') != self.pe_id.data:
+        if not existing_request or existing_request.get("pe_id") != self.pe_id.data:
             valid = yield validate_pe_id(self.pe_id, existing_request, pe_numbers_repo)
         return valid
 
@@ -68,9 +71,7 @@ class FinancialForm(ValidatedForm):
         "Unique Item Identifier (UII)s related to your application(s) if you already have them."
     )
 
-    pe_id = StringField(
-        "Program Element (PE) Number related to your request"
-    )
+    pe_id = StringField("Program Element (PE) Number related to your request")
 
     treasury_code = StringField("Program Treasury Code")
 
@@ -116,11 +117,13 @@ class FinancialForm(ValidatedForm):
     )
 
     clin_0001 = StringField(
-        "<dl><dt>CLIN 0001</dt> - <dd>Unclassified IaaS and PaaS Amount</dd></dl>", validators=[Required()]
+        "<dl><dt>CLIN 0001</dt> - <dd>Unclassified IaaS and PaaS Amount</dd></dl>",
+        validators=[Required()],
     )
 
     clin_0003 = StringField(
-        "<dl><dt>CLIN 0003</dt> - <dd>Unclassified Cloud Support Package</dd></dl>", validators=[Required()]
+        "<dl><dt>CLIN 0003</dt> - <dd>Unclassified Cloud Support Package</dd></dl>",
+        validators=[Required()],
     )
 
     clin_1001 = StringField(

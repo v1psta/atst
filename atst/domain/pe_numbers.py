@@ -5,7 +5,6 @@ from .exceptions import NotFoundError
 
 
 class PENumbers(object):
-
     def __init__(self, db_session):
         self.db_session = db_session
 
@@ -19,8 +18,7 @@ class PENumbers(object):
     def create_many(self, list_of_pe_numbers):
         stmt = insert(PENumber).values(list_of_pe_numbers)
         do_update = stmt.on_conflict_do_update(
-            index_elements=["number"],
-            set_=dict(description=stmt.excluded.description)
+            index_elements=["number"], set_=dict(description=stmt.excluded.description)
         )
         self.db_session.execute(do_update)
         self.db_session.commit()

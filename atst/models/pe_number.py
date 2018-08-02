@@ -2,6 +2,7 @@ from sqlalchemy import String, Column
 
 from atst.models import Base
 
+
 class PENumber(Base):
     __tablename__ = "pe_number"
 
@@ -10,4 +11,5 @@ class PENumber(Base):
 
     def __repr__(self):
         return "<PENumber(number='{}', description='{}')>".format(
-            self.number, self.description)
+            self.number, self.description
+        )
