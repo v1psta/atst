@@ -1,27 +1,28 @@
-{% extends '../requests_new.html.to' %}
+{% extends 'requests_new.html' %}
+
+{% from "components.html" import Alert, TextInput %}
 
 {% block subtitle %}
 <h2>Review &amp; Submit</h2>
-{% end %}
+{% endblock %}
 
 
 {% block form_action %}
-<form method='POST' action="{{ reverse_url('requests_submit', request_id) }}" autocomplete="off">
-  {% end %}
+<form method='POST' action="{{ url_for('requests.requests_submit', request_id=request_id) }}" autocomplete="off">
+{% endblock %}
 
   {% block form %}
 
-  {% autoescape None %}
   {% if f.errors %}
-    {% module Alert('There were some errors',
+    {{ Alert('There were some errors',
       message="<p>Please complete all required fields before submitting.</p>",
       level='error'
-    ) %}
-  {% end %}
+    ) }}
+  {% endif %}
 
   <p>Before you can submit your request, please take a moment to review the information entered in the form. You may make changes by clicking the edit link on each section. When all information looks right, go ahead and submit.</p>
 
-  <h2>Details of Use <a href="{{ reverse_url('request_form_update', 1, request_id) }}" class="icon-link">Edit</a></h2>
+  <h2>Details of Use <a href="{{ url_for('requests.requests_form_update', screen=1, request_id=request_id) }}" class="icon-link">Edit</a></h2>
 
   <dl>
     <div>
@@ -107,7 +108,7 @@
   </dl>
 
 
-  <h2>Information About You <a href="{{ reverse_url('request_form_update', 2, request_id) }}" class="icon-link">Edit</a></h2>
+  <h2>Information About You <a href="{{ url_for('requests.requests_form_update', screen=2, request_id=request_id) }}" class="icon-link">Edit</a></h2>
 
   <dl>
     <div>
@@ -152,7 +153,7 @@
   </dl>
 
 
-  <h2>Primary Point of Contact <a href="{{ reverse_url('request_form_update', 3, request_id) }}" class="icon-link">Edit</a></h2>
+  <h2>Primary Point of Contact <a href="{{ url_for('requests.requests_form_update', screen=3, request_id=request_id) }}" class="icon-link">Edit</a></h2>
 
   <dl>
     <div>
@@ -178,15 +179,15 @@
 
 
 
-{% end %}
+{% endblock %}
 
 {% block next %}
 {% if not can_submit %}
-  {% module Alert('There were some errors',
+  {{ Alert('There were some errors',
     message="<p>Please complete all required fields before submitting.</p>",
     level='error'
-  ) %}
-{% end %}
+  ) }}
+{% endif %}
 
 <div class='action-group'>
   <input type='submit' class='usa-button usa-button-primary' value='Submit' {{ "disabled" if not can_submit else "" }} />
@@ -194,4 +195,4 @@
 
 </form>
 
-{% end %}
+{% endblock %}

@@ -63,7 +63,7 @@ def requests_form_update(screen=1, request_id=None):
 @requests_bp.route("/requests/new/<int:screen>/<string:request_id>", methods=["POST"])
 def requests_update(screen=1, request_id=None):
     screen = int(screen)
-    post_data = str(request.data)
+    post_data = request.form
     current_user = g.current_user
     existing_request = Requests.get(request_id) if request_id is not None else None
     jedi_flow = JEDIRequestFlow(
@@ -91,7 +91,7 @@ def requests_update(screen=1, request_id=None):
                 where = "/requests"
             else:
                 where = url_for(
-                    "requests.requests_Form_update", screen=jedi_flow.next_screen, request_id=jedi_flow.request_id
+                    "requests.requests_form_update", screen=jedi_flow.next_screen, request_id=jedi_flow.request_id
                 )
             return redirect(where)
         else:
@@ -117,6 +117,11 @@ def financial_verification(request_id=None):
 
 @requests_bp.route("/requests/verify/<string:request_id>", methods=["POST"])
 def update_financial_verification():
+    pass
+
+
+@requests_bp.route("/requests/submit/<string:request_id>", methods=["POST"])
+def requests_submit(request_id=None):
     pass
 
 
@@ -240,7 +245,7 @@ class JEDIRequestFlow(object):
             self.form_section: self.form.data
         }
         if self.request_id:
-            Requests.update(request_id, request_data)
+            Requests.update(self.request_id, request_data)
         else:
             request = Requests.create(self.current_user["id"], request_data)
             self.request_id = request.id
