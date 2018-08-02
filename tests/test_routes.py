@@ -1,18 +1,19 @@
 import pytest
 
 
-@pytest.mark.gen_test
-def test_routes(http_client, base_url):
+def test_routes(client):
     for path in (
         "/",
         "/home",
         "/workspaces",
         "/requests",
         "/requests/new",
-        "/requests/new/1",
+        "/requests/new/2",
         "/users",
         "/reports",
         "/calculator",
     ):
-        response = yield http_client.fetch(base_url + path)
-    assert response.code == 200
+        response = client.get(path)
+        if response.status_code == 404:
+            __import__('ipdb').set_trace()
+        assert response.status_code == 200

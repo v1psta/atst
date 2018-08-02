@@ -12,4 +12,6 @@ class WorkspaceMembers(BaseHandler):
     @tornado.gen.coroutine
     def get(self, workspace_id):
         members = self.members_repo.get_many(workspace_id)
-        self.render("workspace_members.html.to", workspace_id=workspace_id, members=members)
+        self.render(
+            "workspace_members.html.to", workspace_id=workspace_id, members=members
+        )

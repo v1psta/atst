@@ -4,8 +4,8 @@ from atst.domain.exceptions import NotFoundError
 
 
 @pytest.fixture()
-def roles_repo(db):
-    return Roles(db)
+def roles_repo(session):
+    return Roles(session)
 
 
 def test_get_all_roles(roles_repo):

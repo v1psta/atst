@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% from "components.html" import Modal, Alert, EmptyState %}
+
+{% block modal %}
+  {% if g.modalOpen %}
+    {% call Modal() %}
+      <h1>Your request is now approved!</h1>
+
+      <p>
+        Your next step is to create a <b>Task Order (T.O.)</b> associated with
+        JEDI Cloud. Please consult a <b>Contracting Officer (KO)</b> or
+        <b>Contracting Officer Representative (COR)</b> to help with this step.
+      </p>
+
+      <p>
+        Once the Task Order (T.O.) has been created, we will need the following
+        details to create your account. These details will help keep your cloud
+        usage in sync with your budget.
+      </p>
+
+      {{ Alert("You'll need these details: ",
+        message="<p>Task Order Number</p><p>Contracting Officer: Name, E-mail and Office</p>"
+      ) }}
+
+
+      <div class='action-group'>
+        <a href='/requests' class='action-group__action usa-button'>Close</a>
+      </div>
+    {% endcall %}
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+
+{% if not requests %}
+
+  {{ EmptyState(
+    'There are currently no active requests for you to see.',
+    actionLabel='Create a new JEDI Cloud Request',
+    actionHref='/requests/new',
+    icon='document'
+  ) }}
+
+{% else %}
+
+  {{ Alert('Pending Financial Verification',
+    message="<p>Your next step is to create a Task Order (T.O.) associated with JEDI Cloud. Please consult a Contracting Officer (KO) or Contracting Officer Representative (COR) to help with this step.</p>"
+  ) }}
+
+  <div class="col col--grow">
+
+    <form class='search-bar'>
+      <div class='usa-input search-input'>
+        <label for='requests-search'>Search requests by Order ID</label>
+        <input type='search' id='requests-search' name='requests-search' placeholder="Search by Order ID"/>
+        <button type="submit">
+          <span class="hide">Search</span>
+        </button>
+      </div>
+
+      <div class='usa-input'>
+        <label for='filter-status'>Filter requests by status</label>
+        <select id="filter-status" name="filter-status">
+          <option value="" selected disabled>Filter by status</option>
+          <option value="">Active</option>
+          <option value="">Pending</option>
+          <option value="">Denied</option>
+        </select>
+      </div>
+    </form>
+
+    <div class='responsive-table-wrapper'>
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Order ID</th>
+            <th scope="col">Request Date</th>
+            <th scope="col">Requester</th>
+            <th scope="col">Total Apps</th>
+            <th scope="col">Status</th>
+            <th scope="col" class="table-cell--shrink">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for r in requests %}
+          <tr>
+            <th scope="row">
+              <a class='icon-link icon-link--large' href="{{ url_for('requests.requests_form_update', screen=1, request_id=r['order_id']) if r["status"] != "approved" else url_for('requests.financial_verification', request_id=r['order_id']) }}">{{ r['order_id'] }}</a>
+              {% if r['is_new'] %}<span class="usa-label">New</span>
+            </th>
+            {% endif %}
+            <td>{{ r['date'] }}</td>
+            <td>{{ r['full_name'] }}</td>
+            <td>{{ r['app_count'] }}</td>
+            <td>{{ r['status'] }}</td>
+            <td class="table-cell--shrink">
+              <a href="" class='icon-link'>Download</a>
+              <a href="/request/approval" class='icon-link'>Approval</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+{% endif %}
+
+{% endblock %}
+

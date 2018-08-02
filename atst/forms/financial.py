@@ -1,24 +1,27 @@
 import re
-import tornado
-from tornado.gen import Return
 from wtforms.fields.html5 import EmailField
 from wtforms.fields import StringField, SelectField
 from wtforms.form import Form
 from wtforms.validators import Required, Email
 
 from atst.domain.exceptions import NotFoundError
+from atst.domain.pe_numbers import PENumbers
 
 from .fields import NewlineListField
 from .forms import ValidatedForm
 
 
-PE_REGEX = re.compile(r"""
+PE_REGEX = re.compile(
+    r"""
     (0?\d) # program identifier
     (0?\d) # category
     (\d)   # activity
     (\d+)  # sponsor element
     (.+)   # service
-""", re.X)
+""",
+    re.X,
+)
+
 
 def suggest_pe_id(pe_id):
     suggestion = pe_id
@@ -36,31 +39,28 @@ def suggest_pe_id(pe_id):
     return None
 
 
-@tornado.gen.coroutine
-def validate_pe_id(field, existing_request, pe_numbers_repo):
+def validate_pe_id(field, existing_request):
     try:
-        pe_number = pe_numbers_repo.get(field.data)
+        pe_number = PENumbers.get(field.data)
     except NotFoundError:
         suggestion = suggest_pe_id(field.data)
         error_str = (
             "We couldn't find that PE number. {}"
             "If you have double checked it you can submit anyway. "
             "Your request will need to go through a manual review."
-        ).format("Did you mean \"{}\"? ".format(suggestion) if suggestion else "")
-        field.errors.append(error_str)
+        ).format('Did you mean "{}"? '.format(suggestion) if suggestion else "")
+        field.errors += (error_str,)
         return False
 
     return True
 
 
 class FinancialForm(ValidatedForm):
-
-    @tornado.gen.coroutine
-    def perform_extra_validation(self, existing_request, pe_numbers_repo):
+    def perform_extra_validation(self, existing_request):
         valid = True
-        if not existing_request or existing_request.get('pe_id') != self.pe_id.data:
-            valid = yield validate_pe_id(self.pe_id, existing_request, pe_numbers_repo)
-        raise Return(valid)
+        if not existing_request or existing_request.get("pe_id") != self.pe_id.data:
+            valid = validate_pe_id(self.pe_id, existing_request)
+        return valid
 
     task_order_id = StringField(
         "Task Order Number associated with this request.", validators=[Required()]
@@ -70,9 +70,7 @@ class FinancialForm(ValidatedForm):
         "Unique Item Identifier (UII)s related to your application(s) if you already have them."
     )
 
-    pe_id = StringField(
-        "Program Element (PE) Number related to your request"
-    )
+    pe_id = StringField("Program Element (PE) Number related to your request")
 
     treasury_code = StringField("Program Treasury Code")
 
@@ -118,11 +116,13 @@ class FinancialForm(ValidatedForm):
     )
 
     clin_0001 = StringField(
-        "<dl><dt>CLIN 0001</dt> - <dd>Unclassified IaaS and PaaS Amount</dd></dl>", validators=[Required()]
+        "<dl><dt>CLIN 0001</dt> - <dd>Unclassified IaaS and PaaS Amount</dd></dl>",
+        validators=[Required()],
     )
 
     clin_0003 = StringField(
-        "<dl><dt>CLIN 0003</dt> - <dd>Unclassified Cloud Support Package</dd></dl>", validators=[Required()]
+        "<dl><dt>CLIN 0003</dt> - <dd>Unclassified Cloud Support Package</dd></dl>",
+        validators=[Required()],
     )
 
     clin_1001 = StringField(

@@ -1,13 +1,11 @@
 import tornado.web
-from atst.assets import environment
 from atst.sessions import SessionNotFoundError
 from atst.domain.users import Users
 
-helpers = {"assets": environment}
+helpers = {"assets": None}
 
 
 class BaseHandler(tornado.web.RequestHandler):
-
     def get_template_namespace(self):
         ns = super(BaseHandler, self).get_template_namespace()
         helpers["config"] = self.application.config

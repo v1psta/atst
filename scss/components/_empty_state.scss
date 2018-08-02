@@ -1,15 +1,27 @@
 .empty-state {
   text-align: center;
-  padding-top: 10rem;
-  
+  padding: 6rem ($gap * 2) 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  @include media($medium-screen) {
+    padding: 8rem ($gap * 4) 0;
+  }
+
+  .icon {
+     @include icon-size(50);
+     @include icon-color($color-gray-light);
+  }
+
   p {
-    font-family: $font-sans;
-    font-weight: 300;
-    line-height: 10rem;
-    font-size: 44px;
-    line-height: 5rem;
-    margin: 0 auto;
-    padding-bottom: 2rem;
-    max-width: 40%;
+    @include h2;
+    line-height: 1.2;
+    max-width: 15em;
+    color: $color-gray;
+
+    @include media($large-screen) {
+      @include h1;
+    }
   }
 }

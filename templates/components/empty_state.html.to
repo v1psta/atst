@@ -1,0 +1,9 @@
+<div class='empty-state'>
+  <p>{{ message }}</p>
+
+  {% if icon %}
+    {% module Icon(icon) %}
+  {% end %}
+
+  <a href='{{ actionHref }}' class='usa-button usa-button-big'>{{ actionLabel }}</a>
+</div>

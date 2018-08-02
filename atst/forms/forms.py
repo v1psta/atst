@@ -1,12 +1,10 @@
 import tornado
 from tornado.gen import Return
-from wtforms_tornado import Form
+from flask_wtf import FlaskForm
 
 
-class ValidatedForm(Form):
-
-    @tornado.gen.coroutine
+class ValidatedForm(FlaskForm):
     def perform_extra_validation(self, *args, **kwargs):
-        """A coroutine that performs any applicable extra validation. Must
+        """Performs any applicable extra validation. Must
         return True if the form is valid or False otherwise."""
-        raise Return(True)
+        return True

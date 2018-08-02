@@ -1,0 +1,145 @@
+{% macro Icon(name, classes="") -%}
+    {% autoescape false %}
+        <span class="icon icon--{{name}} {{classes}}" aria-hidden="true">{{ svg }}</span>
+    {% endautoescape %}
+{%- endmacro %}
+
+{% macro SidenavItem(label, href, active=False, icon=None, subnav=None) -%}
+    <li>
+    <a class="sidenav__link {% if active %}sidenav__link--active{% endif %}" href="{{href}}" title="{{label}}">
+      {% if icon %}
+        {{ Icon(icon, classes="sidenav__link-icon") }}
+      {% endif %}
+
+      <span class="sidenav__link-label">{{label}}</span>
+    </a>
+
+    {% if subnav and active %}
+        <ul>
+        {% for item in subnav %}
+        <li>
+            <a class="sidenav__link {% if item["active"] %}sidenav__link--active{% endif %}" href="{{item["href"]}}" title="{{item["label"]}}">
+            {% if "icon" in item %}
+                {{ Icon(item["icon"], classes="sidenav__link-icon") }}
+            {% endif %}
+            <span class="sidenav__link-label">{{item["label"]}}</span>
+            </a>
+        </li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+    </li>
+{%- endmacro %}
+
+{% macro Modal() -%}
+<div class='modal'>
+  <div class='modal__dialog' role='dialog' aria-modal='true'>
+    <div class='modal__body'>
+        {{ caller() }}
+    </div>
+  </div>
+</div>
+{%- endmacro %}
+
+{% macro EmptyState(message, actionLabel, actionHref, icon=None) -%}
+<div class='empty-state'>
+  <p>{{ message }}</p>
+
+  {% if icon %}
+    {{ Icon(icon) }}
+  {% endif %}
+
+  <a href='{{ actionHref }}' class='usa-button usa-button-big'>{{ actionLabel }}</a>
+</div>
+{%- endmacro %}
+
+{% macro Alert(title, message=None, actions=None, level='info') -%}
+{% set role = 'alertdialog' if actions else 'alert' %}
+{% set levels = {
+  'warning': {
+    'icon': 'alert',
+    'tone': 'assertive'
+  },
+  'error': {
+    'icon': 'alert',
+    'tone': 'assertive'
+  },
+  'info': {
+    'icon': 'info',
+    'tone': 'polite'
+  },
+  'success': {
+    'icon': 'ok',
+    'tone': 'polite'
+  }
+} %}
+
+<div class='alert alert--{{level}}' role='{{role}}' aria-live='{{levels.get(level).get('tone')}}'>
+  {{ Icon(levels.get(level).get('icon'), classes='alert__icon icon--large') }}
+
+  <div class='alert__content'>
+    <h2 class='alert__title'>{{title}}</h2>
+
+    {% if message %}
+      <div class='alert__message'>{{ message | safe }}</div>
+    {% endif %}
+
+    {% if actions %}
+      <div class='alert__actions'>{{ actions | safe }}</div>
+    {% endif %}
+  </div>
+</div>
+{%- endmacro %}
+
+{% macro TextInput(field, placeholder='') -%}
+<div class='usa-input {% if errors %}usa-input--error{% endif %}'>
+  <label for={{field.name}}>
+    {{ field.label }}
+
+    {% if field.description %}
+      <span class='usa-input__help'>{{ field.description | safe }}</span>
+    {% endif %}
+
+    {% if errors %}
+      {{ Icon('alert') }}
+    {% endif %}
+  </label>
+
+  {{ field(placeholder=placeholder) | safe }}
+
+  {% if field.errors %}
+    {% for error in field.errors %}
+      <span class='usa-input__message'>{{ error }}</span>
+    {% endfor %}
+  {% endif %}
+</div>
+{%- endmacro %}
+
+{% macro OptionsInput(field, inline=False) -%}
+<div class='usa-input {% if errors %}usa-input--error{% endif %}'>
+
+  <fieldset class="usa-input__choices {% if inline %}usa-input__choices--inline{% endif %}">
+    <legend>
+      {{ field.label }}
+
+      {% if field.description %}
+        <span class='usa-input__help'>{{ field.description | safe }}</span>
+      {% endif %}
+
+      {% if field.errors %}
+        {{ Icon('alert') }}
+      {% endif %}
+    </legend>
+
+    {{ field() }}
+
+    {% if field.errors %}
+      {% for error in field.errors %}
+        <span class='usa-input__message'>{{ error }}</span>
+      {% endfor %}
+    {% endif %}
+
+  </fieldset>
+</div>
+
+{%- endmacro %}

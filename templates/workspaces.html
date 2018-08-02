@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class='col'>
+  <table>
+    <thead>
+      <tr>
+        <th>Workspace Name</th>
+        <th>Task Order</th>
+        <th>Users</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for w in workspaces %}
+     <tr>
+        <td>
+          <a class='icon-link icon-link--large' href="/workspaces/{{w['task_order']['number']}}/projects">{{ w['name'] }}</a><br>
+        </td>
+        <td>
+          #{{ w['task_order']['number'] }}
+        </td>
+        <td>
+          <span class="label">{{ w['user_count'] }}</span><span class='h6'>Users</span>
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
+
