@@ -4,6 +4,7 @@ from . import requests_bp
 from atst.domain.requests import Requests
 from atst.forms.financial import FinancialForm
 
+
 @requests_bp.route("/requests/verify/<string:request_id>", methods=["GET"])
 def financial_verification(request_id=None):
     request = Requests.get(request_id)
@@ -30,7 +31,9 @@ def update_financial_verification(request_id):
         if valid:
             redirect(url_for("requests.financial_verification_submitted"))
         else:
-            return render_template("requests/financial_verification.html", **rerender_args)
+            return render_template(
+                "requests/financial_verification.html", **rerender_args
+            )
     else:
         return render_template("requests/financial_verification.html", **rerender_args)
 
