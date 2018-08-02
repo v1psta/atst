@@ -101,7 +101,6 @@ class RequestNew(BaseHandler):
 class JEDIRequestFlow(object):
     def __init__(
         self,
-        requests_repo,
         pe_numbers_repo,
         current_step,
         request=None,
@@ -110,6 +109,8 @@ class JEDIRequestFlow(object):
         current_user=None,
         existing_request=None,
     ):
+        self.pe_numbers_repo = pe_numbers_repo
+
         self.requests_repo = requests_repo
         self.pe_numbers_repo = pe_numbers_repo
 

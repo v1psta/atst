@@ -1,0 +1,32 @@
+{% extends 'requests_new.html' %}
+
+{% from "components.html" import Alert, TextInput, OptionsInput %}
+
+{% block subtitle %}
+<h2>Information About You</h2>
+{% endblock %}
+
+{% block form %}
+
+{% if f.errors %}
+  {{ Alert('There were some errors',
+    message="<p>Please see below.</p>",
+    level='error'
+  ) }}
+{% endif %}
+
+<p>Please tell us more about you.</p>
+
+{{ TextInput(f.fname_request,placeholder='First Name') }}
+{{ TextInput(f.lname_request,placeholder='Last Name') }}
+{{ TextInput(f.email_request,placeholder='jane@mail.mil') }}
+{{ TextInput(f.phone_number,placeholder='(123) 456-7890') }}
+
+<p>We want to collect the following information from you for security auditing and determining priviledged user access</p>
+
+{{ TextInput(f.service_branch,placeholder='e.g. US Air Force, US Army, US Navy, Marine Corps, Defense Media Agency') }}
+{{ OptionsInput(f.citizenship) }}
+{{ OptionsInput(f.designation) }}
+{{ TextInput(f.date_latest_training) }}
+
+{% endblock %}
