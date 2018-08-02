@@ -90,3 +90,56 @@
   </div>
 </div>
 {%- endmacro %}
+
+{% macro TextInput(field, placeholder='') -%}
+<div class='usa-input {% if errors %}usa-input--error{% endif %}'>
+  <label for={{field.name}}>
+    {{ field.label }}
+
+    {% if field.description %}
+      <span class='usa-input__help'>{{ field.description | safe }}</span>
+    {% endif %}
+
+    {% if errors %}
+      {{ Icon('alert') }}
+    {% endif %}
+  </label>
+
+  {{ field(placeholder=placeholder) | safe }}
+
+  {% if field.errors %}
+    {% for error in field.errors %}
+      <span class='usa-input__message'>{{ error }}</span>
+    {% endfor %}
+  {% endif %}
+</div>
+{%- endmacro %}
+
+{% macro OptionsInput(field, inline=False) -%}
+<div class='usa-input {% if errors %}usa-input--error{% endif %}'>
+
+  <fieldset class="usa-input__choices {% if inline %}usa-input__choices--inline{% endif %}">
+    <legend>
+      {{ field.label }}
+
+      {% if field.description %}
+        <span class='usa-input__help'>{{ field.description | safe }}</span>
+      {% endif %}
+
+      {% if field.errors %}
+        {{ Icon('alert') }}
+      {% endif %}
+    </legend>
+
+    {{ field() }}
+
+    {% if field.errors %}
+      {% for error in field.errors %}
+        <span class='usa-input__message'>{{ error }}</span>
+      {% endfor %}
+    {% endif %}
+
+  </fieldset>
+</div>
+
+{%- endmacro %}
