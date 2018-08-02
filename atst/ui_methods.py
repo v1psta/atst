@@ -11,7 +11,7 @@ def navigationContext(self):
 
 
 def dev(self):
-    return os.getenv("TORNADO_ENV", "dev") == "dev"
+    return os.getenv("FLASK_ENV", "dev") == "dev"
 
 
 def matchesPath(self, href):

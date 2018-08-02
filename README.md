@@ -72,6 +72,12 @@ To log in as one of them, navigate to `/login-dev?username=<lowercase name>`. Fo
 
 ## Testing
 
+Tests require a test database:
+
+```
+createdb atat_test
+```
+
 To run lint, static analysis, and unit tests:
 
     script/test

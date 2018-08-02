@@ -12,7 +12,7 @@ from atst.routes.workspaces import bp as workspace_routes
 from atst.routes.requests import requests_bp
 
 
-ENV = os.getenv("TORNADO_ENV", "dev")
+ENV = os.getenv("FLASK_ENV", "dev")
 
 
 def make_app(config):
@@ -40,7 +40,7 @@ def make_app(config):
 
 def make_flask_callbacks(app):
     @app.before_request
-    def set_globals():
+    def _set_globals():
         g.navigationContext = (
             "workspace"
             if re.match("\/workspaces\/[A-Za-z0-9]*", request.url)
@@ -83,6 +83,10 @@ def make_config():
 
     config = ConfigParser()
     config.optionxform = str
+
+    config_files = [BASE_CONFIG_FILENAME, ENV_CONFIG_FILENAME]
+    if OVERRIDE_CONFIG_FILENAME:
+        config_files.append(OVERRIDE_CONFIG_FILENAME)
 
     config_files = [BASE_CONFIG_FILENAME, ENV_CONFIG_FILENAME]
     if OVERRIDE_CONFIG_FILENAME:

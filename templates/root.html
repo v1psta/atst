@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>{% block title %}JEDI{% end %}</title>
-  {% for url in assets['css'].urls() %}
-    <link rel="stylesheet" href="{{ url }}" type="text/css">
-  {% end %}
+  <title>{% block title %}JEDI{% endblock %}</title>
+  {% assets "css" %}
+    <link rel="stylesheet" href="{{ ASSET_URL }}" type="text/css">
+  {% endassets %}
   <link rel="icon" type="image/x-icon" href="/static/img/favicon.ico">
 </head>
 <body>
@@ -17,11 +17,11 @@
 
   <h1 class="usa-display">JEDI</h1>
 
-  <a class="usa-button" href='{{ config['default'].get('cac_url','https://cac.atat.codes') }}'><span>Sign In with CAC</span></a>
+  <a class="usa-button" href='{{ config.get('cac_url','https://cac.atat.codes') }}'><span>Sign In with CAC</span></a>
   <button class="usa-button" disabled>Sign In via MFA</button>
-  {% if dev() %}
+  {% if g.dev %}
     <a class="usa-button usa-button-secondary" href='/login-dev'><span>DEV Login</span></a>
-  {% end %}
+  {% endif %}
 
 </main>
 

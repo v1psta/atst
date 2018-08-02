@@ -1,5 +1,4 @@
 from flask_assets import Environment, Bundle
-from atst.home import home
 
 environment = Environment()
 

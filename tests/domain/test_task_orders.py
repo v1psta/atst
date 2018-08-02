@@ -7,15 +7,15 @@ from tests.factories import TaskOrderFactory
 
 
 @pytest.fixture()
-def task_orders(db):
-    return TaskOrders(db)
+def task_orders(session):
+    return TaskOrders(session)
 
 @pytest.fixture(scope="function")
-def new_task_order(db):
+def new_task_order(session):
     def make_task_order(**kwargs):
         to = TaskOrderFactory.create(**kwargs)
-        db.add(to)
-        db.commit()
+        session.add(to)
+        session.commit()
 
         return to
 

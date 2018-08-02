@@ -1,4 +1,3 @@
-import tornado.gen
 from sqlalchemy import exists, and_
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.orm.attributes import flag_modified

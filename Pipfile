@@ -17,18 +17,17 @@ flask = "*"
 flask-sqlalchemy = "*"
 flask-assets = "*"
 flask-session = "*"
-flask-wtf = "*"
 
 [dev-packages]
 bandit = "*"
 pytest = "*"
-pytest-tornado = "*"
 ipython = "*"
 ipdb = "*"
 pylint = "*"
 black = "*"
 pytest-watch = "*"
 factory-boy = "*"
+pytest-flask = "*"
 
 [requires]
 python_version = "3.6"

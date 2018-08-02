@@ -1,4 +1,5 @@
 from flask import render_template, redirect, url_for
+from flask import request as http_request
 
 from . import requests_bp
 from atst.domain.requests import Requests
@@ -29,7 +30,7 @@ def update_financial_verification(request_id):
             existing_request.body.get("financial_verification")
         )
         if valid:
-            redirect(url_for("requests.financial_verification_submitted"))
+            return redirect(url_for("requests.financial_verification_submitted"))
         else:
             return render_template(
                 "requests/financial_verification.html", **rerender_args

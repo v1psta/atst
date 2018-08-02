@@ -1,44 +1,72 @@
+import os
 import pytest
+import alembic.config
+import alembic.command
+from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, scoped_session
 
-from atst.app import make_app, make_deps, make_config
-from atst.database import make_db
+from atst.app import make_app, make_config
 from tests.mocks import MockApiClient
 from atst.sessions import DictSessions
+from atst.models import Base
+from atst.database import db as _db
 
 
-@pytest.fixture
-def app(db):
-    TEST_DEPS = {
-        "authnid_client": MockApiClient("authnid"),
-        "sessions": DictSessions(),
-        "db_session": db
-    }
-
+@pytest.fixture(scope='session')
+def app(request):
     config = make_config()
-    deps = make_deps(config)
-    deps.update(TEST_DEPS)
 
-    return make_app(config, deps)
+    _app = make_app(config)
+
+    ctx = _app.app_context()
+    ctx.push()
+
+    def teardown():
+        ctx.pop()
+
+    return _app
 
 
-@pytest.fixture(scope='function')
-def db():
+def apply_migrations():
+    """Applies all alembic migrations."""
+    alembic_config = os.path.join(os.path.dirname(__file__), "../", "alembic.ini")
+    config = alembic.config.Config(alembic_config)
+    app_config = make_config()
+    config.set_main_option('sqlalchemy.url', app_config["DATABASE_URI"])
+    alembic.command.upgrade(config, 'head')
 
-    # Override db with a new SQLAlchemy session so that we can rollback
-    # each test's transaction.
-    # Inspiration: https://docs.sqlalchemy.org/en/latest/orm/session_transaction.html#session-external-transaction
-    config = make_config()
-    database = make_db(config)
-    connection = database.get_bind().connect()
+
+@pytest.fixture(scope='session')
+def db(app, request):
+
+    def teardown():
+        _db.drop_all()
+
+    _db.app = app
+
+    apply_migrations()
+
+    yield _db
+
+    _db.drop_all()
+
+
+@pytest.fixture(scope='function', autouse=True)
+def session(db, request):
+    """Creates a new database session for a test."""
+    connection = db.engine.connect()
     transaction = connection.begin()
-    db = scoped_session(sessionmaker(bind=connection))
 
-    yield db
+    options = dict(bind=connection, binds={})
+    session = db.create_scoped_session(options=options)
 
-    db.close()
+    db.session = session
+
+    yield session
+
     transaction.rollback()
     connection.close()
+    session.remove()
 
 
 class DummyForm(dict):
