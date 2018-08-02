@@ -47,6 +47,7 @@ class RequestFinancialVerification(BaseHandler):
 
         if form.validate():
             yield self.update_request(request_id, form.data)
+            # pylint: disable=E1121
             valid = yield form.perform_extra_validation(
                 existing_request.body.get("financial_verification"),
                 self.pe_numbers_repo,
