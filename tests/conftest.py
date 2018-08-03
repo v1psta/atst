@@ -2,13 +2,8 @@ import os
 import pytest
 import alembic.config
 import alembic.command
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker, scoped_session
 
 from atst.app import make_app, make_config
-from tests.mocks import MockApiClient
-from atst.sessions import DictSessions
-from atst.models import Base
 from atst.database import db as _db
 
 
