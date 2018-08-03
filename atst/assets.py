@@ -4,7 +4,7 @@ environment = Environment()
 
 css = Bundle(
     "../static/assets/index.css",
-    output="../static/assets/styles.%(version)s.css",
+    output="../static/assets/index.%(version)s.css",
 )
 
 environment.register("css", css)
