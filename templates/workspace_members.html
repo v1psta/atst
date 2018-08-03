@@ -1,15 +1,17 @@
 {% extends "base_workspace.html.to" %}
 
+{% from "components/empty_state.html" import EmptyState %}
+
 {% block workspace_content %}
 
 {% if not members %}
 
-  {% module EmptyState(
+  {{ EmptyState(
     'There are currently no members in this Workspace.',
     actionLabel='Invite a new Member',
     actionHref='/members/new',
     icon='avatar'
-  )%}
+  ) }}
 
 
 {% else %}
