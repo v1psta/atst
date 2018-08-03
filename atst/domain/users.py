@@ -20,6 +20,15 @@ class Users(object):
         return user
 
     @classmethod
+    def get_by_dod_id(cls, dod_id):
+        try:
+            user = db.session.query(User).filter_by(dod_id=dod_id).one()
+        except NoResultFound:
+            raise NotFoundError("user")
+
+        return user
+
+    @classmethod
     def create(cls, atat_role_name, **kwargs):
         atat_role = Roles.get(atat_role_name)
 

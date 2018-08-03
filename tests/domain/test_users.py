@@ -2,7 +2,7 @@ import pytest
 from uuid import uuid4
 
 from atst.domain.users import Users
-from atst.domain.exceptions import NotFoundError, AlreadyExistsError
+from atst.domain.exceptions import NotFoundError
 
 
 
@@ -39,6 +39,12 @@ def test_get_nonexistent_user():
     Users.create("developer")
     with pytest.raises(NotFoundError):
         Users.get(uuid4())
+
+
+def test_get_user_by_dod_id():
+    new_user = Users.create("developer", dod_id="my_dod_id")
+    user = Users.get_by_dod_id("my_dod_id")
+    assert user == new_user
 
 
 def test_update_user():
