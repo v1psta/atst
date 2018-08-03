@@ -1,0 +1,6 @@
+{% macro Icon(name, classes="") -%}
+  {% autoescape false %}
+      <span class="icon icon--{{name}} {{classes}}" aria-hidden="true">{{ name | iconSvg }}</span>
+  {% endautoescape %}
+{%- endmacro %}
+
