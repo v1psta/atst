@@ -1,6 +1,5 @@
 import classes from '../styles/atat.scss'
 
-import './thing'
+import './example'
 
-console.log('hellooooo')
-
+console.log('hello from index')
