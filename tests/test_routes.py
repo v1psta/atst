@@ -1,6 +1,3 @@
-import pytest
-
-
 def test_routes(client):
     for path in (
         "/",

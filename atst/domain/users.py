@@ -29,7 +29,7 @@ class Users(object):
         return user
 
     @classmethod
-    def create(cls, atat_role_name, **kwargs):
+    def create(cls, atat_role_name="developer", **kwargs):
         atat_role = Roles.get(atat_role_name)
 
         try:
@@ -42,11 +42,11 @@ class Users(object):
         return user
 
     @classmethod
-    def get_or_create(cls, user_id, **kwargs):
+    def get_or_create_by_dod_id(cls, dod_id, **kwargs):
         try:
-            user = Users.get(user_id)
+            user = Users.get_by_dod_id(dod_id)
         except NotFoundError:
-            user = Users.create(id=user_id, **kwargs)
+            user = Users.create(dod_id=dod_id, **kwargs)
             db.session.add(user)
             db.session.commit()
 

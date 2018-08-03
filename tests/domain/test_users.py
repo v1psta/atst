@@ -4,6 +4,7 @@ from uuid import uuid4
 from atst.domain.users import Users
 from atst.domain.exceptions import NotFoundError
 
+DOD_ID = "my_dod_id"
 
 
 def test_create_user():
@@ -17,15 +18,13 @@ def test_create_user_with_nonexistent_role():
 
 
 def test_get_or_create_nonexistent_user():
-    user_id = uuid4()
-    user = Users.get_or_create(user_id, atat_role_name="developer")
-    assert user.id == user_id
+    user = Users.get_or_create_by_dod_id(DOD_ID, atat_role_name="developer")
+    assert user.dod_id == DOD_ID
 
 
 def test_get_or_create_existing_user():
-    user_id = uuid4()
-    Users.get_or_create(user_id, atat_role_name="developer")
-    user = Users.get_or_create(user_id, atat_role_name="developer")
+    Users.get_or_create_by_dod_id(DOD_ID, atat_role_name="developer")
+    user = Users.get_or_create_by_dod_id(DOD_ID, atat_role_name="developer")
     assert user
 
 
@@ -42,8 +41,8 @@ def test_get_nonexistent_user():
 
 
 def test_get_user_by_dod_id():
-    new_user = Users.create("developer", dod_id="my_dod_id")
-    user = Users.get_by_dod_id("my_dod_id")
+    new_user = Users.create("developer", dod_id=DOD_ID)
+    user = Users.get_by_dod_id(DOD_ID)
     assert user == new_user
 
 

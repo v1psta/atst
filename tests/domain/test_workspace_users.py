@@ -1,4 +1,3 @@
-import pytest
 from uuid import uuid4
 
 from atst.domain.workspace_users import WorkspaceUsers

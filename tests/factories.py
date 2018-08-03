@@ -1,7 +1,7 @@
 import factory
 from uuid import uuid4
 
-from atst.models import Request, RequestStatusEvent
+from atst.models import Request
 from atst.models.pe_number import PENumber
 from atst.models.task_order import TaskOrder
 
