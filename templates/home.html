@@ -5,7 +5,13 @@
 <main class="usa-section usa-content">
 
 <h1>Home</h1>
-<div id='hello'></div>
+
+<TextInput inline-template>
+  <div class='usa-input'>
+    <label for='some-input'></label>
+    <input type='text' id='some-input' v-on:change='handleChange'/>
+  </div>
+</TextInput>
 
 </main>
 

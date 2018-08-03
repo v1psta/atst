@@ -6,7 +6,7 @@
 
 {% block modal %}
   {% if g.modalOpen %}
-    {% call Modal() %}
+    {% call Modal(name='styleguide-modal', dismissable=True) %}
       <h1>A modal dialog</h1>
 
       <p>We count thirty Rebel ships, Lord Vader. But they're so small they're evading our turbo-lasers! We'll have to destroy them ship to ship. Get the crews to their fighters. Luke, let me know when you're going in. I'm on my way in now... Watch yourself! There's a lot of fire coming from the right side of that deflection tower. I'm on it. Squad leaders, we've picked up a new group of signals. Enemy fighters coming your way.</p>
@@ -28,7 +28,7 @@
     <p>This is a message. It is a very important message. Please note, <strong>proper semantic markup is required</strong> here, such as paragraph tags. Don't omit paragraph tags!</p>\
     <p>Also note the same for actions below. You'll need to include the full link markup.</p>\
   ",
-  actions="<a href='/styleguide?modal=True'>Open a Modal Dialog</a>",
+  actions='<a v-on:click="openModal" href="#">Open a Modal Dialog</a>',
   level='warning'
 ) }}
 
@@ -68,7 +68,6 @@
 </nav>
 
 <div class='col col--grow'>
-
   <div class="progress-menu progress-menu--three">
     <ul>
       <li class="progress-menu__item progress-menu__item--complete"><a href="#">Step One</a></li>
