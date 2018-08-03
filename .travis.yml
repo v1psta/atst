@@ -26,7 +26,7 @@ before_script:
   - docker build --tag "${TESTER_IMAGE_NAME}" --add-host "postgreshost:${postgres_ip}" --add-host "redishost:${redis_ip}" . -f deploy/docker/tester/Dockerfile
 
 script:
-  - docker run --add-host "postgreshost:${postgres_ip}" "${TESTER_IMAGE_NAME}"
+  - docker run --add-host "postgreshost:${postgres_ip}" --add-host "redishost:${redis_ip}" "${TESTER_IMAGE_NAME}"
 
 before_deploy:
   - docker build --tag "${PROD_IMAGE_NAME}" . -f deploy/docker/prod/Dockerfile
