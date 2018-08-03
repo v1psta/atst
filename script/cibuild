@@ -16,5 +16,8 @@ PYTHON_FILES="./app.py ./atst ./config"
 # Enable Python testing
 RUN_PYTHON_TESTS="true"
 
+# Compile assets
+yarn build
+
 # Run the shared test script
 source ./script/include/run_test
