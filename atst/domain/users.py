@@ -20,11 +20,11 @@ class Users(object):
         return user
 
     @classmethod
-    def create(self, user_id, atat_role_name):
+    def create(cls, atat_role_name, **kwargs):
         atat_role = Roles.get(atat_role_name)
 
         try:
-            user = User(id=user_id, atat_role=atat_role)
+            user = User(atat_role=atat_role, **kwargs)
             db.session.add(user)
             db.session.commit()
         except IntegrityError:
@@ -33,18 +33,18 @@ class Users(object):
         return user
 
     @classmethod
-    def get_or_create(cls, user_id, *args, **kwargs):
+    def get_or_create(cls, user_id, **kwargs):
         try:
             user = Users.get(user_id)
         except NotFoundError:
-            user = Users.create(user_id, *args, **kwargs)
+            user = Users.create(id=user_id, **kwargs)
             db.session.add(user)
             db.session.commit()
 
         return user
 
     @classmethod
-    def update(self, user_id, atat_role_name):
+    def update(cls, user_id, atat_role_name):
 
         user = Users.get(user_id)
         atat_role = Roles.get(atat_role_name)
