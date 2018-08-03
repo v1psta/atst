@@ -1,0 +1,34 @@
+/*
+ * Labels
+ * @see https://designsystem.digital.gov/components/labels/
+ * @source https://github.com/uswds/uswds/blob/develop/src/stylesheets/elements/_labels.scss
+ */
+
+.label {
+  @include h5;
+  display: inline-block;
+  height: 2.4rem;
+  line-height: 2.4rem;
+  color: $color-white;
+  background-color: $color-gray;
+  vertical-align: middle;
+  margin: 0 $gap;
+  padding: 0 $gap;
+  border-radius: $gap / 2;
+
+  &.label--info {
+    background-color: $color-primary;
+  }
+
+  &.label--warning {
+    background-color: $color-gold;
+  }
+
+  &.label--error {
+    background-color: $color-red;
+  }
+
+  &.label--success {
+    background-color: $color-green;
+  }
+}

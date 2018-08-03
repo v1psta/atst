@@ -1,0 +1,36 @@
+[class*='diff--'] {
+  border-left-style: solid;
+  border-left-width: ($gap / 2);
+  padding-left: $gap / 2;
+  margin: ($gap / 2) 0;
+
+  &::before {
+    font-weight: bold;
+    padding-right: $gap;
+    display: inline-block;
+    width: 1.8rem;
+    text-align: center;
+  }
+}
+
+.diff--removed {
+  background-color: $color-red-lightest;
+  border-left-color: $color-red-dark;
+  text-decoration: line-through;
+  text-decoration-color: $color-overlay;
+
+  &::before {
+    content: '-';
+    color: $color-red-dark;
+  }
+}
+
+.diff--added {
+  background-color: $color-aqua-lightest;
+  border-left-color: $color-aqua-dark;
+
+  &::before {
+    content: '+';
+    color: $color-aqua-dark;
+  }
+}

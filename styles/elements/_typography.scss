@@ -1,0 +1,59 @@
+/*
+ * Typography
+ * @see https://designsystem.digital.gov/components/typography/
+ * @source https://github.com/uswds/uswds/blob/develop/src/stylesheets/elements/_typography.scss
+ */
+
+ * {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+p {
+  margin: 0 0 ($gap * 2) 0;
+  @include line-max;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: $font-sans;
+  margin: ($gap * 2) 0;
+
+  + .subtitle * {
+    margin-top: 0;
+  }
+
+}
+
+.h1 { @include h1; }
+.h2 { @include h2; }
+.h3 { @include h3; }
+.h4 { @include h4; }
+.h5 { @include h5; }
+.h6 { @include h6; }
+
+a,
+a:hover {
+  transition:
+  background 0.2s,
+  border 0.2s,
+  box-shadow 0.2s,
+  color 0.2s;
+}
+
+a:visited {
+  color: $color-blue;
+}
+
+dl {
+  dt {
+    display: inline;
+    font-weight: bold;
+  }
+  dd {
+    -webkit-margin-start: 0;
+  }
+
+  > div {
+    margin-bottom: $gap * 2;
+  }
+}

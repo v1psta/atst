@@ -1,0 +1,241 @@
+/*
+ * Inputs
+ * @see https://designsystem.digital.gov/components/form-controls/
+ * @source https://github.com/uswds/uswds/blob/develop/src/stylesheets/elements/_inputs.scss
+ */
+
+@mixin input-icon {
+  width: 1.6rem;
+  height: 1.6rem;
+  display: block;
+}
+
+@mixin input-state($state) {
+  $border-width: 1px;
+  $state-color: $color-gray;
+
+  @if $state == 'error' {
+    $border-width: 2px;
+    $state-color: $color-red;
+
+  } @else if $state == 'warning' {
+    $border-width: 2px;
+    $state-color: $color-gold;
+
+  } @else if $state == 'success' {
+    $border-width: 2px;
+    $state-color: $color-green;
+  }
+
+  .icon {
+    @include icon-color($state-color);
+  }
+
+  .usa-input__message {
+    color: $state-color;
+  }
+
+  input,
+  textarea,
+  select {
+    border-color: $state-color;
+    border-width: $border-width;
+  }
+
+  fieldset {
+    input[type='radio'] {
+      + label::before {
+        box-shadow: 0 0 0 1px $color-white, 0 0 0 3px $color-red;
+      }
+    }
+
+    input[type='checkbox'] {
+      + label::before {
+        box-shadow: 0 0 0 2px $color-red;
+      }
+    }
+  }
+}
+
+.usa-input {
+  margin:  ($gap * 4) ($gap * 2) ($gap * 4) 0;
+
+  @include media($medium-screen) {
+    margin: ($gap * 4) 0;
+  }
+
+  label {
+    padding: 0 0 $gap 0;
+    margin: 0;
+    @include h4;
+    @include line-max;
+    position: relative;
+
+    .usa-input__help {
+      display: block;
+      @include h5;
+      font-weight: normal;
+      padding-top: $gap / 2;
+      @include line-max;
+    }
+
+    .icon {
+      position: absolute;
+      left: 100%;
+      top: 100%;
+      margin-top: 1.4rem;
+      margin-left: $gap;
+    }
+  }
+
+  input,
+  textarea,
+  select {
+    @include line-max;
+    margin: 0;
+  }
+
+  .usa-input__choices { // checkbox & radio sets
+    legend {
+      padding: 0 0 $gap 0;
+      @include h4;
+
+      .icon {
+        vertical-align: middle;
+      }
+    }
+
+    ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+
+      > li {
+        margin: 0;
+
+        [type='radio'] + label,
+        [type='checkbox'] + label {
+          margin: 0;
+        }
+      }
+    }
+
+    label {
+      font-weight: normal;
+      margin: 0;
+    }
+
+    .usa-input__message {
+      display: block;
+    }
+
+    &.usa-input__choices--inline {
+      label {
+        display: inline-block;
+        padding-right: $gap * 3;
+      }
+    }
+  }
+
+  .usa-input__message {
+    @include h5;
+    display: inline-block;
+    padding-top: $gap;
+  }
+
+  &.usa-input--error {
+    @include input-state('error');
+  }
+
+  &.usa-input--warning {
+    @include input-state('warning');
+  }
+
+  &.usa-input--success {
+    @include input-state('success');
+  }
+}
+
+select {
+  border-radius: 0;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.usa-date-input label {
+  margin-top: 0;
+}
+
+.input-label {
+  margin-top: 1rem;
+}
+
+.usa-fieldset-inputs {
+  margin-top: 2.25rem;
+
+  label:first-child {
+    padding-bottom: 0.5rem;
+  }
+}
+
+.usa-search {
+  padding-top: 2px;
+  margin-right: 2rem;
+
+  input[type=search] {
+    height: 4.4rem;
+    font-size: 1.7rem;
+    color: $color-black;
+  }
+
+  button {
+    min-height: 4.4rem;
+  }
+
+}
+
+
+// Form Grid
+.form-row {
+  margin: ($gap * 4) 0;
+
+  .form-col {
+    flex-grow: 1;
+
+    &:first-child .usa-input {
+      &:first-child {
+        margin-top: 0;
+      }
+    }
+
+    &:last-child .usa-input {
+      &:first-child {
+        margin-top: 0;
+      }
+    }
+  }
+
+  @include media($medium-screen) {
+    @include grid-row;
+    align-items: flex-start;
+
+    .form-col {
+      .usa-input {
+        margin-left: ($gap * 4);
+        margin-right: ($gap * 4);
+      }
+
+      &:first-child {
+        .usa-input {
+          margin-left: 0;
+        }
+      }
+
+      &:last-child {
+        .usa-input {
+          margin-right: 0;
+        }
+      }
+    }
+  }
+}
