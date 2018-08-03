@@ -88,7 +88,7 @@
     }
 
     &--complete:before {
-      content: url('/static/icons/checkmark.svg');
+      content: url('#{$asset-path}/icons/checkmark.svg');
       background-color: $color-blue;
       border: 2px solid $color-blue;
       font-size: $h6-font-size;

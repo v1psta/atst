@@ -129,7 +129,7 @@ $grid-columns-large: 12;
 // $large: new-breakpoint(min-width $large-screen $grid-columns-large);
 
 // Set the base path for assets (used for font and image paths below)
-$asset-path: '../';
+$asset-path: '../static/';
 
 // Relative font and image file paths
 $font-path: '#{$asset-path}fonts';

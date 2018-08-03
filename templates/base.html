@@ -34,5 +34,8 @@
   {% include 'footer.html' %}
 
   {% block modal %}{% endblock %}
+  {% assets "js_all" %}
+    <script src="{{ ASSET_URL }}"></script>
+  {% endassets %}
 </body>
 </html>

@@ -63,6 +63,11 @@ def make_flask_callbacks(app):
             "atat_permissions": [],
         }
 
+    @app.template_filter('iconSvg')
+    def _iconSvg(name):
+        with open('static/icons/'+name+'.svg') as contents:
+            return contents.read()
+
 
 def map_config(config):
     return {
