@@ -46,7 +46,7 @@ _DEV_USERS = {
 
 
 @bp.route("/login-dev")
-def get():
+def login_dev():
     role = request.args.get("username", "amanda")
     user_data = _DEV_USERS[role]
     user = _set_user_permissions(user_data["dod_id"], user_data["atat_role"])

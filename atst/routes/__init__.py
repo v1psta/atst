@@ -1,9 +1,11 @@
 from flask import Blueprint, render_template, g, redirect, session, url_for, request
+from flask import current_app as app
 import pendulum
 
 from atst.domain.requests import Requests
 from atst.domain.users import Users
 from atst.domain.authnid.utils import parse_sdn
+from atst.domain.auth import login_required
 
 bp = Blueprint("atst", __name__)
 
@@ -14,16 +16,19 @@ def root():
 
 
 @bp.route("/home")
+@login_required
 def home():
     return render_template("home.html")
 
 
 @bp.route("/styleguide")
+@login_required
 def styleguide():
     return render_template("styleguide.html")
 
 
 @bp.route('/<path:path>')
+@login_required
 def catch_all(path):
     return render_template("{}.html".format(path))
 
@@ -58,8 +63,3 @@ def is_valid_certificate(request):
         return result
     else:
         return False
-
-def construct_redirect(uuid):
-    access_token = app.token_manager.token(uuid)
-    url = f'{app.config["ATST_REDIRECT"]}?bearer-token={access_token}'
-    return app.make_response(redirect(url))
