@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 
-{% from "components.html" import Alert, Modal, Icon %}
+{% from "components/icon.html" import Icon %}
+{% from "components/modal.html" import Modal %}
+{% from "components/alert.html" import Alert %}
 
 {% block modal %}
   {% if g.modalOpen %}

@@ -1,5 +1,7 @@
 {% extends "base_workspace.html.to" %}
 
+{% from "components/alert.html" import Alert %}
+
 {% block template_vars %}
 {% set is_new_member = False %}
 {% set member_name = "Danny Knight" %}
@@ -10,11 +12,12 @@
 
 {% block workspace_content %}
 
-{% module Alert(
+{{ Alert(
   "UI Mock",
   message="<p>Please note, this screen is a non-functional UI mockup.</p>",
   level="info"
-  ) %}
+  )
+}}
 
 
   <div class='panel'>
