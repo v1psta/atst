@@ -1,0 +1,67 @@
+/*
+ * Panels
+ * A generic block container
+ */
+
+ @mixin panel-base {
+  background-color: $color-white;
+  border-top-width: 1px;
+  border-bottom-width: 1px;
+  border-top-style: solid;
+  border-bottom-style: solid;
+  border-left: 0;
+  border-right: 0;
+}
+
+@mixin panel-theme-default {
+  border-top-color: $color-black;
+  border-bottom-color: $color-gray-light;
+}
+
+@mixin panel-margin {
+  margin-top: 0;
+  margin-left: 0;
+  margin-right: 0;
+  margin-bottom: $site-margins-mobile * 2;
+
+  @include media($medium-screen) {
+    margin-bottom: $site-margins * 2;
+  }
+}
+
+@mixin panel-actions {
+  padding: $gap;
+}
+
+.panel {
+  @include panel-base;
+  @include panel-theme-default;
+  @include panel-margin;
+
+  .panel__content {
+    margin: ($gap * 2) 0;
+    padding: 0 ($gap * 2);
+
+    @include media($medium-screen) {
+      margin: ($gap * 4) 0;
+      padding: 0 ($gap * 4);
+    }
+  }
+
+  .panel__heading {
+    margin: $gap * 2;
+
+    @include media($medium-screen) {
+      margin: $gap * 4;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      margin: 0;
+    }
+  }
+}
+
+.panel__actions {
+  @include panel-actions;
+}
+
