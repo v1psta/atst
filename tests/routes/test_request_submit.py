@@ -1,5 +1,4 @@
 import pytest
-import tornado
 from tests.mocks import MOCK_USER
 from tests.factories import RequestFactory
 
