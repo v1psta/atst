@@ -18,10 +18,12 @@ before_install:
 
 before_script:
   - docker run -d --name postgres96 postgres:9.6-alpine
-  - docker run --link postgres96:postgres96 waisbrot/wait
+  - docker run -d --name redis redis:4.0.10-alpine
+  - docker run --link postgres96:postgres96 --link redis:redis waisbrot/wait
   - export postgres_ip="$(docker inspect -f "{{ .NetworkSettings.IPAddress }}" postgres96)"
+  - export redis_ip="$(docker inspect -f "{{ .NetworkSettings.IPAddress }}" redis)"
   - docker login -u $ATAT_DOCKER_REGISTRY_USERNAME -p $ATAT_DOCKER_REGISTRY_PASSWORD $ATAT_DOCKER_REGISTRY_URL
-  - docker build --tag "${TESTER_IMAGE_NAME}" --add-host "postgreshost:${postgres_ip}" . -f deploy/docker/tester/Dockerfile
+  - docker build --tag "${TESTER_IMAGE_NAME}" --add-host "postgreshost:${postgres_ip}" --add-host "redishost:${redis_ip}" . -f deploy/docker/tester/Dockerfile
 
 script:
   - docker run --add-host "postgreshost:${postgres_ip}" "${TESTER_IMAGE_NAME}"
