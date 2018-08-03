@@ -12,6 +12,7 @@ from atst.assets import environment as assets_environment
 from atst.routes import bp
 from atst.routes.workspaces import bp as workspace_routes
 from atst.routes.requests import requests_bp
+from atst.routes.dev import bp as dev_routes
 
 
 ENV = os.getenv("FLASK_ENV", "dev")
@@ -40,6 +41,8 @@ def make_app(config):
     app.register_blueprint(bp)
     app.register_blueprint(workspace_routes)
     app.register_blueprint(requests_bp)
+    if ENV != "production":
+        app.register_blueprint(dev_routes)
 
     return app
 
