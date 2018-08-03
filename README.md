@@ -57,6 +57,10 @@ To start the app locally in the foreground and watch for changes:
 
     script/dev_server
 
+To watch for changes to any js/css assets:
+
+    yarn watch
+
 ### Users
 
 There are currently six mock users for development:
