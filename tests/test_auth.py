@@ -14,7 +14,7 @@ def _fetch_user_info(c, t):
     return MOCK_USER
 
 
-def test_login(client, monkeypatch):
+def test_successful_login_redirect(client, monkeypatch):
     monkeypatch.setattr("atst.routes.is_valid_certificate", lambda *args: True)
 
     resp = client.get(
@@ -28,3 +28,11 @@ def test_login(client, monkeypatch):
     assert resp.status_code == 302
     assert "home" in resp.headers["Location"]
     assert session["user_id"]
+
+
+def test_unsuccessful_login_redirect(client, monkeypatch):
+    resp = client.get("/login-redirect")
+
+    assert resp.status_code == 302
+    assert "unauthorized" in resp.headers["Location"]
+    assert "user_id" not in session

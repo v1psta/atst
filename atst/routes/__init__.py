@@ -29,24 +29,25 @@ def catch_all(path):
 
 
 @bp.route('/login-redirect')
-def log_in_user():
-    # FIXME: Find or create user based on the X-Ssl-Client-S-Dn header
-    # TODO: Store/log the X-Ssl-Client-Cert in case it's needed?
+def login_redirect():
     if request.environ.get('HTTP_X_SSL_CLIENT_VERIFY') == 'SUCCESS' and is_valid_certificate(request):
         sdn = request.environ.get('HTTP_X_SSL_CLIENT_S_DN')
-        # TODO: error handling for bad SDN, database errors, etc
         sdn_parts = parse_sdn(sdn)
         user = Users.get_or_create_by_dod_id(**sdn_parts)
-
         session["user_id"] = user.id
 
         return redirect(url_for("atst.home"))
     else:
-        template = render_template('not_authorized.html', atst_url=app.config['ATST_PASSTHROUGH'])
-        response = app.make_response(template)
-        response.status_code = 403
+        return redirect(url_for("atst.unauthorized"))
 
+
+@bp.route("/unauthorized")
+def unauthorized():
+    template = render_template('unauthorized.html')
+    response = app.make_response(template)
+    response.status_code = 401
     return response
+
 
 def is_valid_certificate(request):
     cert = request.environ.get('HTTP_X_SSL_CLIENT_CERT')
