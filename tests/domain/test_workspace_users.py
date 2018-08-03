@@ -7,7 +7,7 @@ from atst.domain.users import Users
 
 def test_can_create_new_workspace_user():
     workspace_id = uuid4()
-    user = Users.create(uuid4(), "developer")
+    user = Users.create("developer")
 
     workspace_user_dicts = [{"id": user.id, "workspace_role": "owner"}]
 
@@ -20,7 +20,7 @@ def test_can_create_new_workspace_user():
 
 def test_can_update_existing_workspace_user():
     workspace_id = uuid4()
-    user = Users.create(uuid4(), "developer")
+    user = Users.create("developer")
 
     WorkspaceUsers.add_many(
         workspace_id, [{"id": user.id, "workspace_role": "owner"}]
