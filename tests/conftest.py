@@ -16,10 +16,9 @@ def app(request):
     ctx = _app.app_context()
     ctx.push()
 
-    def teardown():
-        ctx.pop()
+    yield _app
 
-    return _app
+    ctx.pop()
 
 
 def apply_migrations():
@@ -33,9 +32,6 @@ def apply_migrations():
 
 @pytest.fixture(scope='session')
 def db(app, request):
-
-    def teardown():
-        _db.drop_all()
 
     _db.app = app
 
