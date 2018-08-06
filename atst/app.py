@@ -1,7 +1,7 @@
 import os
 import re
 from configparser import ConfigParser
-from flask import Flask, request, g, session
+from flask import Flask, request, g
 from flask_session import Session
 import redis
 from unipath import Path
