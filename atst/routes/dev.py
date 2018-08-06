@@ -52,7 +52,6 @@ def login_dev():
     basic_data = {k:v for k,v in user_data.items() if k not in ["dod_id", "atat_role"]}
     user = _set_user_permissions(user_data["dod_id"], user_data["atat_role"], basic_data)
     session["user_id"] = user.id
-    app.logger.warning(session)
     return redirect(url_for("atst.home"))
 
 
