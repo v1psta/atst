@@ -1,5 +1,4 @@
 from flask import Blueprint, request, session, redirect, url_for
-from flask import current_app as app
 
 from atst.domain.users import Users
 
