@@ -1,22 +1,23 @@
-from functools import wraps
-from flask import g, redirect, url_for, session
+from flask import g, redirect, url_for, session, request
 
 from atst.domain.users import Users
 
 
-def login_required(f):
+UNPROTECTED_ROUTES = ["atst.root", "atst.login_dev", "atst.login_redirect", "atst.unauthorized"]
 
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        user = get_current_user()
-        if user:
-            g.current_user = user
-            return f(*args, **kwargs)
+def apply_authentication(app):
+    @app.before_request
+    # pylint: disable=unused-variable
+    def enforce_login():
 
-        else:
-            return redirect(url_for("atst.root"))
+        if not _unprotected_route(request):
+            user = get_current_user()
+            if user:
+                g.current_user = user
 
-    return decorated_function
+            else:
+                return redirect(url_for("atst.root"))
+
 
 def get_current_user():
     user_id = session.get("user_id")
@@ -24,3 +25,8 @@ def get_current_user():
         return Users.get(user_id)
     else:
         return False
+
+def _unprotected_route(request):
+    if request.endpoint in UNPROTECTED_ROUTES:
+        return True
+

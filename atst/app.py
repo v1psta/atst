@@ -15,6 +15,7 @@ from atst.routes.workspaces import bp as workspace_routes
 from atst.routes.requests import requests_bp
 from atst.routes.dev import bp as dev_routes
 from atst.domain.authnid.crl.validator import Validator
+from atst.domain.auth import apply_authentication
 
 
 ENV = os.getenv("FLASK_ENV", "dev")
@@ -46,6 +47,8 @@ def make_app(config):
     app.register_blueprint(requests_bp)
     if ENV != "production":
         app.register_blueprint(dev_routes)
+
+    apply_authentication(app)
 
     return app
 
@@ -136,3 +139,4 @@ def make_crl_validator(app):
     )
     for e in app.crl_validator.errors:
         app.logger.error(e)
+

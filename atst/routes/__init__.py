@@ -5,7 +5,6 @@ import pendulum
 from atst.domain.requests import Requests
 from atst.domain.users import Users
 from atst.domain.authnid.utils import parse_sdn
-from atst.domain.auth import login_required
 
 bp = Blueprint("atst", __name__)
 
@@ -16,19 +15,16 @@ def root():
 
 
 @bp.route("/home")
-@login_required
 def home():
     return render_template("home.html")
 
 
 @bp.route("/styleguide")
-@login_required
 def styleguide():
     return render_template("styleguide.html")
 
 
 @bp.route('/<path:path>')
-@login_required
 def catch_all(path):
     return render_template("{}.html".format(path))
 
