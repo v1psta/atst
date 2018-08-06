@@ -6,10 +6,6 @@ from atst.domain.task_orders import TaskOrders
 from tests.factories import TaskOrderFactory
 
 
-@pytest.fixture()
-def task_orders(session):
-    return TaskOrders(session)
-
 @pytest.fixture(scope="function")
 def new_task_order(session):
     def make_task_order(**kwargs):
@@ -22,13 +18,13 @@ def new_task_order(session):
     return make_task_order
 
 
-def test_can_get_task_order(task_orders, new_task_order):
+def test_can_get_task_order(new_task_order):
     new_to = new_task_order(number="0101969F")
-    to = task_orders.get(new_to.number)
+    to = TaskOrders.get(new_to.number)
 
     assert to.id == to.id
 
 
-def test_nonexistent_task_order_raises(task_orders):
+def test_nonexistent_task_order_raises():
     with pytest.raises(NotFoundError):
-        task_orders.get("some fake number")
+        TaskOrders.get("some fake number")

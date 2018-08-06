@@ -17,7 +17,7 @@
 
   <h1 class="usa-display">JEDI</h1>
 
-  <a class="usa-button" href='{{ config.get('cac_url','https://cac.atat.codes') }}'><span>Sign In with CAC</span></a>
+  <a class="usa-button" href='{{ config.get('CAC_URL','https://cac.atat.codes') }}'><span>Sign In with CAC</span></a>
   <button class="usa-button" disabled>Sign In via MFA</button>
   {% if g.dev %}
     <a class="usa-button usa-button-secondary" href='/login-dev'><span>DEV Login</span></a>

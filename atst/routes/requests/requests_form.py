@@ -5,7 +5,6 @@ from atst.domain.requests import Requests
 from atst.routes.requests.jedi_request_flow import JEDIRequestFlow
 
 
-@requests_bp.route("/requests/new", defaults={"screen": 1})
 @requests_bp.route("/requests/new/<int:screen>", methods=["GET"])
 def requests_form_new(screen):
     jedi_flow = JEDIRequestFlow(screen, request=None)

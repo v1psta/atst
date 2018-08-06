@@ -1,5 +1,6 @@
 import os
 import re
+import pathlib
 from configparser import ConfigParser
 from flask import Flask, request, g
 from flask_session import Session
@@ -12,6 +13,9 @@ from atst.assets import environment as assets_environment
 from atst.routes import bp
 from atst.routes.workspaces import bp as workspace_routes
 from atst.routes.requests import requests_bp
+from atst.routes.dev import bp as dev_routes
+from atst.domain.authnid.crl.validator import Validator
+from atst.domain.auth import apply_authentication
 
 
 ENV = os.getenv("FLASK_ENV", "dev")
@@ -32,6 +36,7 @@ def make_app(config):
     app.config.update({"SESSION_REDIS": redis})
 
     make_flask_callbacks(app)
+    make_crl_validator(app)
 
     db.init_app(app)
     Session(app)
@@ -40,6 +45,10 @@ def make_app(config):
     app.register_blueprint(bp)
     app.register_blueprint(workspace_routes)
     app.register_blueprint(requests_bp)
+    if ENV != "production":
+        app.register_blueprint(dev_routes)
+
+    apply_authentication(app)
 
     return app
 
@@ -77,6 +86,7 @@ def map_config(config):
         "SQLALCHEMY_DATABASE_URI": config["default"]["DATABASE_URI"],
         "SQLALCHEMY_TRACK_MODIFICATIONS": False,
         **config["default"],
+        "PERMANENT_SESSION_LIFETIME": int(config["default"]["PERMANENT_SESSION_LIFETIME"]),
     }
 
 
@@ -120,3 +130,14 @@ def make_config():
 
 def make_redis(config):
     return redis.Redis.from_url(config['REDIS_URI'])
+
+def make_crl_validator(app):
+    crl_locations = []
+    for filename in pathlib.Path(app.config["CRL_DIRECTORY"]).glob("*"):
+        crl_locations.append(filename.absolute())
+    app.crl_validator = Validator(
+        roots=[app.config["CA_CHAIN"]], crl_locations=crl_locations
+    )
+    for e in app.crl_validator.errors:
+        app.logger.error(e)
+

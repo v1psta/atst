@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# script/sync-crls: update the DOD CRLs and place them where authnid expects them
+set -e
+cd "$(dirname "$0")/.."
+
+mkdir -p crl-tmp
+pipenv run python ./atst/domain/authnid/crl/util.py crl-tmp
+mkdir -p crl
+rsync -rq crl-tmp/. crl/.
+rm -rf crl-tmp
+
+if [[ $FLASK_ENV != "production" ]]; then
+  # place our test CRL there
+  cp ssl/client-certs/client-ca.der.crl crl/
+fi

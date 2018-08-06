@@ -1,19 +1,17 @@
 import pytest
 
-
-def test_routes(client):
-    for path in (
+@pytest.mark.parametrize("path", (
         "/",
         "/home",
         "/workspaces",
         "/requests",
-        "/requests/new",
-        "/requests/new/2",
+        "/requests/new/1",
         "/users",
         "/reports",
         "/calculator",
-    ):
-        response = client.get(path)
-        if response.status_code == 404:
-            __import__('ipdb').set_trace()
-        assert response.status_code == 200
+    ))
+def test_routes(path, client, user_session):
+    user_session()
+
+    response = client.get(path)
+    assert response.status_code == 200

@@ -32,6 +32,7 @@ class TestPENumberInForm:
     def _set_monkeypatches(self, monkeypatch):
         monkeypatch.setattr("atst.forms.financial.FinancialForm.validate", lambda s: True)
         monkeypatch.setattr("atst.domain.requests.Requests.get", lambda i: MOCK_REQUEST)
+        monkeypatch.setattr("atst.domain.auth.get_current_user", lambda *args: MOCK_USER)
 
     def submit_data(self, client, data):
         response = client.post(

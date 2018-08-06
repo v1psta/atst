@@ -16,6 +16,11 @@ class User(Base):
     atat_role = relationship("Role")
     workspace_roles = relationship("WorkspaceRole", backref="user")
 
+    email = Column(String, unique=True)
+    dod_id = Column(String, unique=True)
+    first_name = Column(String)
+    last_name = Column(String)
+
     @property
     def atat_permissions(self):
         return self.atat_role.permissions

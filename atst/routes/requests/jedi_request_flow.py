@@ -124,5 +124,5 @@ class JEDIRequestFlow(object):
         if self.request_id:
             Requests.update(self.request_id, request_data)
         else:
-            request = Requests.create(self.current_user["id"], request_data)
+            request = Requests.create(self.current_user.id, request_data)
             self.request_id = request.id

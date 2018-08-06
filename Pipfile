@@ -18,6 +18,8 @@ flask-sqlalchemy = "*"
 flask-assets = "*"
 flask-session = "*"
 flask-wtf = "*"
+pyopenssl = "*"
+requests = "*"
 
 [dev-packages]
 bandit = "*"

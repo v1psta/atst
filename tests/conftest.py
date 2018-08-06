@@ -2,14 +2,10 @@ import os
 import pytest
 import alembic.config
 import alembic.command
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker, scoped_session
 
 from atst.app import make_app, make_config
-from tests.mocks import MockApiClient
-from atst.sessions import DictSessions
-from atst.models import Base
 from atst.database import db as _db
+from .mocks import MOCK_USER
 
 
 @pytest.fixture(scope='session')
@@ -21,10 +17,9 @@ def app(request):
     ctx = _app.app_context()
     ctx.push()
 
-    def teardown():
-        ctx.pop()
+    yield _app
 
-    return _app
+    ctx.pop()
 
 
 def apply_migrations():
@@ -38,9 +33,6 @@ def apply_migrations():
 
 @pytest.fixture(scope='session')
 def db(app, request):
-
-    def teardown():
-        _db.drop_all()
 
     _db.app = app
 
@@ -88,3 +80,11 @@ def dummy_form():
 @pytest.fixture
 def dummy_field():
     return DummyField()
+
+@pytest.fixture
+def user_session(monkeypatch):
+
+    def set_user_session(user = MOCK_USER):
+        monkeypatch.setattr("atst.domain.auth.get_current_user", lambda *args: user)
+
+    return set_user_session

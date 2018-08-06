@@ -1,5 +1,4 @@
 import pytest
-import tornado
 from tests.mocks import MOCK_USER
 from tests.factories import RequestFactory
 
@@ -8,7 +7,8 @@ def _mock_func(*args, **kwargs):
     return RequestFactory.create()
 
 
-def test_submit_reviewed_request(monkeypatch, client):
+def test_submit_reviewed_request(monkeypatch, client, user_session):
+    user_session()
     monkeypatch.setattr("atst.domain.requests.Requests.get", _mock_func)
     monkeypatch.setattr("atst.domain.requests.Requests.submit", _mock_func)
     monkeypatch.setattr("atst.models.request.Request.status", "pending")
@@ -23,7 +23,8 @@ def test_submit_reviewed_request(monkeypatch, client):
     assert "modal" not in response.headers["Location"]
 
 
-def test_submit_autoapproved_reviewed_request(monkeypatch, client):
+def test_submit_autoapproved_reviewed_request(monkeypatch, client, user_session):
+    user_session()
     monkeypatch.setattr("atst.domain.requests.Requests.get", _mock_func)
     monkeypatch.setattr("atst.domain.requests.Requests.submit", _mock_func)
     monkeypatch.setattr("atst.models.request.Request.status", "approved")

@@ -1,6 +1,7 @@
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.exc import IntegrityError
 
+from atst.database import db
 from atst.models import User
 
 from .roles import Roles
@@ -8,47 +9,57 @@ from .exceptions import NotFoundError, AlreadyExistsError
 
 
 class Users(object):
-    def __init__(self, db_session):
-        self.db_session = db_session
-        self.roles_repo = Roles(db_session)
 
-    def get(self, user_id):
+    @classmethod
+    def get(cls, user_id):
         try:
-            user = self.db_session.query(User).filter_by(id=user_id).one()
+            user = db.session.query(User).filter_by(id=user_id).one()
         except NoResultFound:
             raise NotFoundError("user")
 
         return user
 
-    def create(self, user_id, atat_role_name):
-        atat_role = self.roles_repo.get(atat_role_name)
+    @classmethod
+    def get_by_dod_id(cls, dod_id):
+        try:
+            user = db.session.query(User).filter_by(dod_id=dod_id).one()
+        except NoResultFound:
+            raise NotFoundError("user")
+
+        return user
+
+    @classmethod
+    def create(cls, atat_role_name="developer", **kwargs):
+        atat_role = Roles.get(atat_role_name)
 
         try:
-            user = User(id=user_id, atat_role=atat_role)
-            self.db_session.add(user)
-            self.db_session.commit()
+            user = User(atat_role=atat_role, **kwargs)
+            db.session.add(user)
+            db.session.commit()
         except IntegrityError:
             raise AlreadyExistsError("user")
 
         return user
 
-    def get_or_create(self, user_id, *args, **kwargs):
+    @classmethod
+    def get_or_create_by_dod_id(cls, dod_id, **kwargs):
         try:
-            user = self.get(user_id)
+            user = Users.get_by_dod_id(dod_id)
         except NotFoundError:
-            user = self.create(user_id, *args, **kwargs)
-            self.db_session.add(user)
-            self.db_session.commit()
+            user = Users.create(dod_id=dod_id, **kwargs)
+            db.session.add(user)
+            db.session.commit()
 
         return user
 
-    def update(self, user_id, atat_role_name):
+    @classmethod
+    def update(cls, user_id, atat_role_name):
 
-        user = self.get(user_id)
-        atat_role = self.roles_repo.get(atat_role_name)
+        user = Users.get(user_id)
+        atat_role = Roles.get(atat_role_name)
         user.atat_role = atat_role
 
-        self.db_session.add(user)
-        self.db_session.commit()
+        db.session.add(user)
+        db.session.commit()
 
         return user

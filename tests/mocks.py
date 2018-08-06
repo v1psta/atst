@@ -2,23 +2,24 @@ import tornado.gen
 from tornado.httpclient import HTTPRequest, HTTPResponse
 
 from atst.api_client import ApiClient
-from tests.factories import RequestFactory
+from tests.factories import RequestFactory, UserFactory
 
 
-MOCK_USER = {
-    "id": "9cb348f0-8102-4962-88c4-dac8180c904c",
-    "email": "fake.user@mail.com",
-    "first_name": "Fake",
-    "last_name": "User",
-}
+MOCK_USER = UserFactory.create()
 MOCK_REQUEST = RequestFactory.create(
-    creator=MOCK_USER["id"],
+    creator=MOCK_USER.id,
     body={
         "financial_verification": {
             "pe_id": "0203752A",
         },
     }
 )
+DOD_SDN_INFO = {
+        'first_name': 'ART',
+        'last_name': 'GARFUNKEL',
+        'dod_id': '5892460358'
+    }
+DOD_SDN = f"CN={DOD_SDN_INFO['last_name']}.{DOD_SDN_INFO['first_name']}.G.{DOD_SDN_INFO['dod_id']},OU=OTHER,OU=PKI,OU=DoD,O=U.S. Government,C=US"
 
 
 class MockApiClient(ApiClient):
