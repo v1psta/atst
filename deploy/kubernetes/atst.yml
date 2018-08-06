@@ -67,16 +67,17 @@ spec:
           servicePort: 80
 ---
 apiVersion: extensions/v1beta1
+apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: atst-cac
+  name: atst-auth
   namespace: atat
   annotations:
     nginx.ingress.kubernetes.io/proxy-body-size: 10m
     ingress.kubernetes.io/ssl-passthrough: "true"
 spec:
   rules:
-  - host: cac.atat.codes
+  - host: auth.atat.codes
     http:
       paths:
       - path: /
