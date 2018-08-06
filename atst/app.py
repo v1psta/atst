@@ -83,13 +83,14 @@ def make_flask_callbacks(app):
 
 def map_config(config):
     return {
+        **config["default"],
         "ENV": config["default"]["ENVIRONMENT"],
         "DEBUG": config["default"]["DEBUG"],
         "PORT": int(config["default"]["PORT"]),
         "SQLALCHEMY_DATABASE_URI": config["default"]["DATABASE_URI"],
         "SQLALCHEMY_TRACK_MODIFICATIONS": False,
-        **config["default"],
-        "PERMANENT_SESSION_LIFETIME": int(config["default"]["PERMANENT_SESSION_LIFETIME"]),
+        "WTF_CSRF_ENABLED": config.getboolean("default", "WTF_CSRF_ENABLED"),
+        "PERMANENT_SESSION_LIFETIME": config.getint("default", "PERMANENT_SESSION_LIFETIME"),
     }
 
 
