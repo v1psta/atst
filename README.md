@@ -111,7 +111,7 @@ To render an icon, use
 {{ Icon("icon-name", classes="css-classes") }}
 ```
 
-where `name` is the filename of an svg in `static/icons`.
+where `icon-name` is the filename of an svg in `static/icons`.
 
 All icons used should be from the Noun Project, specifically [this collection](https://thenounproject.com/monstercritic/collection/tinicons-a-set-of-tiny-icons-perfect-for-ui-elemen/) if possible.
 
