@@ -1,5 +1,5 @@
 from functools import wraps
-from flask import g, request, redirect, url_for, session
+from flask import g, redirect, url_for, session
 
 from atst.domain.users import Users
 
