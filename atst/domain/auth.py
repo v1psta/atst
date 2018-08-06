@@ -3,7 +3,7 @@ from flask import g, redirect, url_for, session, request
 from atst.domain.users import Users
 
 
-UNPROTECTED_ROUTES = ["atst.root", "atst.login_dev", "atst.login_redirect", "atst.unauthorized", "static"]
+UNPROTECTED_ROUTES = ["atst.root", "dev.login_dev", "atst.login_redirect", "atst.unauthorized", "static"]
 
 def apply_authentication(app):
     @app.before_request
