@@ -1,6 +1,3 @@
-from tornado.web import UIModule
-
-# from tornado.template import raw
 import re
 
 

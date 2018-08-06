@@ -61,7 +61,7 @@ def make_flask_callbacks(app):
             if re.match("\/workspaces\/[A-Za-z0-9]*", request.url)
             else "global"
         )
-        g.dev = os.getenv("TORNADO_ENV", "dev") == "dev"
+        g.dev = os.getenv("FLASK_ENV", "dev") == "dev"
         g.matchesPath = lambda href: re.match("^" + href, request.path)
         g.modalOpen = request.args.get("modal", False)
         g.current_user = {

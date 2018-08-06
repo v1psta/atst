@@ -96,7 +96,7 @@ To re-run tests each time a file is changed:
 
 ## Notes
 
-tornado templates are like mustache templates -- add the
+Jinja templates are like mustache templates -- add the
 following to `~/.vim/filetype.vim` for syntax highlighting:
 
     :au BufRead *.html.to set filetype=mustache
