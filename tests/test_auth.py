@@ -35,7 +35,7 @@ def test_unsuccessful_login_redirect(client, monkeypatch):
 UNPROTECTED_ROUTES = ["/", "/login-dev", "/login-redirect", "/unauthorized"]
 
 # checks that all of the routes in the app are protected by auth
-def test_protected_route(client, app):
+def test_routes_are_protected(client, app):
     for rule in app.url_map.iter_rules():
         args = [1] * len(rule.arguments)
         mock_args = dict(zip(rule.arguments, args))
