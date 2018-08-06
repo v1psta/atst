@@ -15,7 +15,8 @@ MOCK_REQUEST = RequestFactory.create(
 )
 
 
-def test_submit_invalid_request_form(monkeypatch, client):
+def test_submit_invalid_request_form(monkeypatch, client, user_session):
+    user_session()
     response = client.post(
         "/requests/new/1",
         headers={"Content-Type": "application/x-www-form-urlencoded"},
@@ -24,7 +25,8 @@ def test_submit_invalid_request_form(monkeypatch, client):
     assert re.search(ERROR_CLASS, response.data.decode())
 
 
-def test_submit_valid_request_form(monkeypatch, client):
+def test_submit_valid_request_form(monkeypatch, client, user_session):
+    user_session()
     monkeypatch.setattr("atst.forms.request.RequestForm.validate", lambda s: True)
 
     response = client.post(

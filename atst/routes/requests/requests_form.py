@@ -3,10 +3,11 @@ from flask import g, redirect, render_template, url_for, request as http_request
 from . import requests_bp
 from atst.domain.requests import Requests
 from atst.routes.requests.jedi_request_flow import JEDIRequestFlow
+from atst.domain.auth import login_required
 
 
-@requests_bp.route("/requests/new", defaults={"screen": 1})
 @requests_bp.route("/requests/new/<int:screen>", methods=["GET"])
+@login_required
 def requests_form_new(screen):
     jedi_flow = JEDIRequestFlow(screen, request=None)
 
@@ -25,6 +26,7 @@ def requests_form_new(screen):
     "/requests/new/<int:screen>", methods=["GET"], defaults={"request_id": None}
 )
 @requests_bp.route("/requests/new/<int:screen>/<string:request_id>", methods=["GET"])
+@login_required
 def requests_form_update(screen=1, request_id=None):
     request = Requests.get(request_id) if request_id is not None else None
     jedi_flow = JEDIRequestFlow(screen, request, request_id=request_id)
@@ -45,6 +47,7 @@ def requests_form_update(screen=1, request_id=None):
     "/requests/new/<int:screen>", methods=["POST"], defaults={"request_id": None}
 )
 @requests_bp.route("/requests/new/<int:screen>/<string:request_id>", methods=["POST"])
+@login_required
 def requests_update(screen=1, request_id=None):
     screen = int(screen)
     post_data = http_request.form
@@ -89,6 +92,7 @@ def requests_update(screen=1, request_id=None):
 
 
 @requests_bp.route("/requests/submit/<string:request_id>", methods=["POST"])
+@login_required
 def requests_submit(request_id=None):
     request = Requests.get(request_id)
     Requests.submit(request)

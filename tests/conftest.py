@@ -5,6 +5,7 @@ import alembic.command
 
 from atst.app import make_app, make_config
 from atst.database import db as _db
+from .mocks import MOCK_USER
 
 
 @pytest.fixture(scope='session')
@@ -79,3 +80,11 @@ def dummy_form():
 @pytest.fixture
 def dummy_field():
     return DummyField()
+
+@pytest.fixture
+def user_session(monkeypatch):
+
+    def set_user_session(user = MOCK_USER):
+        monkeypatch.setattr("atst.domain.auth.get_current_user", lambda *args: user)
+
+    return set_user_session
