@@ -1,5 +1,6 @@
 import os
 import re
+import pathlib
 from configparser import ConfigParser
 from flask import Flask, request, g
 from flask_session import Session
@@ -13,6 +14,7 @@ from atst.routes import bp
 from atst.routes.workspaces import bp as workspace_routes
 from atst.routes.requests import requests_bp
 from atst.routes.dev import bp as dev_routes
+from atst.domain.authnid.crl.validator import Validator
 
 
 ENV = os.getenv("FLASK_ENV", "dev")
@@ -33,6 +35,7 @@ def make_app(config):
     app.config.update({"SESSION_REDIS": redis})
 
     make_flask_callbacks(app)
+    make_crl_validator(app)
 
     db.init_app(app)
     Session(app)
@@ -123,3 +126,13 @@ def make_config():
 
 def make_redis(config):
     return redis.Redis.from_url(config['REDIS_URI'])
+
+def make_crl_validator(app):
+    crl_locations = []
+    for filename in pathlib.Path(app.config["CRL_DIRECTORY"]).glob("*"):
+        crl_locations.append(filename.absolute())
+    app.crl_validator = Validator(
+        roots=[app.config["CA_CHAIN"]], crl_locations=crl_locations
+    )
+    for e in app.crl_validator.errors:
+        app.logger.error(e)

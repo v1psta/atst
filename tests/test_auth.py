@@ -10,7 +10,7 @@ def _fetch_user_info(c, t):
 
 
 def test_successful_login_redirect(client, monkeypatch):
-    monkeypatch.setattr("atst.routes.is_valid_certificate", lambda *args: True)
+    monkeypatch.setattr("atst.routes._is_valid_certificate", lambda *args: True)
 
     resp = client.get(
         "/login-redirect",
@@ -52,3 +52,36 @@ def test_protected_route(client, app):
             resp = client.post(route)
             assert resp.status_code == 302
             assert resp.headers["Location"] == "http://localhost/"
+
+
+# this implicitly relies on the test config and test CRL in tests/fixtures/crl
+def test_crl_validation_on_login(client):
+    good_cert = open('ssl/client-certs/atat.mil.crt', 'rb').read()
+    bad_cert = open('ssl/client-certs/bad-atat.mil.crt', 'rb').read()
+
+    # bad cert is on the test CRL
+    resp = client.get(
+        "/login-redirect",
+        environ_base={
+            "HTTP_X_SSL_CLIENT_VERIFY": "SUCCESS",
+            "HTTP_X_SSL_CLIENT_S_DN": DOD_SDN,
+            "HTTP_X_SSL_CLIENT_CERT": bad_cert.decode()
+        },
+    )
+    assert resp.status_code == 302
+    assert "unauthorized" in resp.headers["Location"]
+    assert "user_id" not in session
+
+    # good cert is not on the test CRL, passes
+    resp = client.get(
+        "/login-redirect",
+        environ_base={
+            "HTTP_X_SSL_CLIENT_VERIFY": "SUCCESS",
+            "HTTP_X_SSL_CLIENT_S_DN": DOD_SDN,
+            "HTTP_X_SSL_CLIENT_CERT": good_cert.decode()
+        },
+    )
+    assert resp.status_code == 302
+    assert "home" in resp.headers["Location"]
+    assert session["user_id"]
+
