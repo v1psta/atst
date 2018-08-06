@@ -5,7 +5,7 @@ set -e
 cd "$(dirname "$0")/.."
 
 mkdir -p crl-tmp
-pipenv run python ./authnid/crl/util.py crl-tmp
+pipenv run python ./atst/domain/authnid/crl/util.py crl-tmp
 mkdir -p crl
 rsync -rq crl-tmp/. crl/.
 rm -rf crl-tmp

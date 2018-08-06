@@ -30,3 +30,7 @@ static/assets/*
 log/*
 
 config/dev.ini
+
+# CRLs
+/crl
+/crl-tmp

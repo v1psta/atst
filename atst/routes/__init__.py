@@ -35,7 +35,7 @@ def catch_all(path):
 
 @bp.route('/login-redirect')
 def login_redirect():
-    if request.environ.get('HTTP_X_SSL_CLIENT_VERIFY') == 'SUCCESS' and is_valid_certificate(request):
+    if request.environ.get('HTTP_X_SSL_CLIENT_VERIFY') == 'SUCCESS' and _is_valid_certificate(request):
         sdn = request.environ.get('HTTP_X_SSL_CLIENT_S_DN')
         sdn_parts = parse_sdn(sdn)
         user = Users.get_or_create_by_dod_id(**sdn_parts)
@@ -54,7 +54,7 @@ def unauthorized():
     return response
 
 
-def is_valid_certificate(request):
+def _is_valid_certificate(request):
     cert = request.environ.get('HTTP_X_SSL_CLIENT_CERT')
     if cert:
         result = app.crl_validator.validate(cert.encode())
