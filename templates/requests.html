@@ -40,7 +40,7 @@
   {{ EmptyState(
     'There are currently no active requests for you to see.',
     actionLabel='Create a new JEDI Cloud Request',
-    actionHref='/requests/new',
+    actionHref=url_for('requests.requests_form_new', screen=1),
     icon='document'
   ) }}
 

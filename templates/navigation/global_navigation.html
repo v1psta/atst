@@ -18,7 +18,7 @@
       icon="document",
       active=g.matchesPath('/requests'),
       subnav=[
-        {"label":"New Request", "href":"/requests/new/1", "icon": "plus", "active": g.matchesPath('/requests/new')},
+        {"label":"New Request", "href":url_for("requests.requests_form_new", screen=1), "icon": "plus", "active": g.matchesPath('/requests/new')},
       ]
       ) }}
     {{ SidenavItem("Workspaces", href="/workspaces", icon="cloud", active=g.matchesPath('/workspaces')) }}
