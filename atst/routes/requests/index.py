@@ -3,7 +3,6 @@ from flask import render_template, g
 
 from . import requests_bp
 from atst.domain.requests import Requests
-from atst.domain.auth import login_required
 
 
 def map_request(user, request):
@@ -21,7 +20,6 @@ def map_request(user, request):
 
 
 @requests_bp.route("/requests", methods=["GET"])
-@login_required
 def requests_index():
     requests = []
     if (

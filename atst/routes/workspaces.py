@@ -1,7 +1,6 @@
 from flask import Blueprint, render_template
 
 from atst.domain.workspaces import Projects, Members
-from atst.domain.auth import login_required
 
 
 bp = Blueprint("workspaces", __name__)
@@ -17,13 +16,11 @@ mock_workspaces = [
 
 
 @bp.route("/workspaces")
-@login_required
 def workspaces():
     return render_template("workspaces.html", page=5, workspaces=mock_workspaces)
 
 
 @bp.route("/workspaces/<workspace_id>/projects")
-@login_required
 def workspace_projects(workspace_id):
     projects_repo = Projects()
     projects = projects_repo.get_many(workspace_id)
@@ -33,7 +30,6 @@ def workspace_projects(workspace_id):
 
 
 @bp.route("/workspaces/<workspace_id>/members")
-@login_required
 def workspace_members(workspace_id):
     members_repo = Members()
     members = members_repo.get_many(workspace_id)

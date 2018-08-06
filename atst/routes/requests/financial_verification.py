@@ -4,11 +4,9 @@ from flask import request as http_request
 from . import requests_bp
 from atst.domain.requests import Requests
 from atst.forms.financial import FinancialForm
-from atst.domain.auth import login_required
 
 
 @requests_bp.route("/requests/verify/<string:request_id>", methods=["GET"])
-@login_required
 def financial_verification(request_id=None):
     request = Requests.get(request_id)
     form = FinancialForm(data=request.body.get("financial_verification"))
@@ -18,7 +16,6 @@ def financial_verification(request_id=None):
 
 
 @requests_bp.route("/requests/verify/<string:request_id>", methods=["POST"])
-@login_required
 def update_financial_verification(request_id):
     post_data = http_request.form
     existing_request = Requests.get(request_id)
@@ -43,6 +40,5 @@ def update_financial_verification(request_id):
 
 
 @requests_bp.route("/requests/financial_verification_submitted")
-@login_required
 def financial_verification_submitted():
     pass
