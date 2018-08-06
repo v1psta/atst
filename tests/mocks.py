@@ -10,6 +10,7 @@ MOCK_USER = {
     "email": "fake.user@mail.com",
     "first_name": "Fake",
     "last_name": "User",
+    "atat_permissions": []
 }
 MOCK_REQUEST = RequestFactory.create(
     creator=MOCK_USER["id"],

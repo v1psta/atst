@@ -10,7 +10,7 @@ def login_required(f):
     def decorated_function(*args, **kwargs):
         user = get_current_user()
         if user:
-            g.user = user
+            g.current_user = user
             return f(*args, **kwargs)
 
         else:
