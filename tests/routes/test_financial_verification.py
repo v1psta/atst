@@ -1,6 +1,5 @@
 import re
 import pytest
-import tornado
 import urllib
 from tests.mocks import MOCK_REQUEST, MOCK_USER
 from tests.factories import PENumberFactory
