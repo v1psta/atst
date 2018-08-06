@@ -1,19 +1,11 @@
 import re
 import pytest
 import urllib
-from tests.mocks import MOCK_USER
+from tests.mocks import MOCK_USER, MOCK_REQUEST
 from tests.factories import RequestFactory
 
-ERROR_CLASS = "alert--error"
-MOCK_REQUEST = RequestFactory.create(
-    creator=MOCK_USER["id"],
-    body={
-        "financial_verification": {
-            "pe_id": "0203752A",
-        },
-    }
-)
 
+ERROR_CLASS = "alert--error"
 
 def test_submit_invalid_request_form(monkeypatch, client, user_session):
     user_session()
