@@ -86,6 +86,7 @@ def map_config(config):
         "SQLALCHEMY_DATABASE_URI": config["default"]["DATABASE_URI"],
         "SQLALCHEMY_TRACK_MODIFICATIONS": False,
         **config["default"],
+        "PERMANENT_SESSION_LIFETIME": int(config["default"]["PERMANENT_SESSION_LIFETIME"]),
     }
 
 
