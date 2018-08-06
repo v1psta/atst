@@ -15,7 +15,7 @@ def map_request(user, request):
         "status": request.status,
         "app_count": 1,
         "date": time_created.format("M/DD/YYYY"),
-        "full_name": "{} {}".format(user["first_name"], user["last_name"]),
+        "full_name": user.full_name
     }
 
 
