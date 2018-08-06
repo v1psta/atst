@@ -6,6 +6,7 @@ from flask import Flask, request, g
 from flask_session import Session
 import redis
 from unipath import Path
+from flask_wtf.csrf import CSRFProtect
 
 from atst.database import db
 from atst.assets import environment as assets_environment
@@ -31,6 +32,7 @@ def make_app(config):
         static_folder=parent_dir.child("static").absolute(),
     )
     redis = make_redis(config)
+    csrf = CSRFProtect()
 
     app.config.update(config)
     app.config.update({"SESSION_REDIS": redis})
@@ -39,6 +41,7 @@ def make_app(config):
     make_crl_validator(app)
 
     db.init_app(app)
+    csrf.init_app(app)
     Session(app)
     assets_environment.init_app(app)
 
