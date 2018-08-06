@@ -1,5 +1,6 @@
-def test_routes(client):
-    for path in (
+import pytest
+
+@pytest.mark.parametrize("path", (
         "/",
         "/home",
         "/workspaces",
@@ -9,8 +10,9 @@ def test_routes(client):
         "/users",
         "/reports",
         "/calculator",
-    ):
-        response = client.get(path)
-        if response.status_code == 404:
-            __import__('ipdb').set_trace()
-        assert response.status_code == 200
+    ))
+def test_routes(path, client, monkeypatch):
+    monkeypatch.setattr("atst.domain.auth.get_current_user", lambda *args: True)
+
+    response = client.get(path)
+    assert response.status_code == 200
