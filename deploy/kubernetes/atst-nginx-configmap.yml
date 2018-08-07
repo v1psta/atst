@@ -24,7 +24,7 @@ data:
         }
         location @app {
             include uwsgi_params;
-            uswgi_pass unix:///var/run/uwsgi/uwsgi.socket
+            uswgi_pass unix:///var/run/uwsgi/uwsgi.socket;
         }
     }
     server {
@@ -62,7 +62,7 @@ data:
         }
         location @app {
             include uwsgi_params;
-            uswgi_pass unix:///var/run/uwsgi/uwsgi.socket
+            uswgi_pass unix:///var/run/uwsgi/uwsgi.socket;
             uwsgi_param HTTP_X_SSL_CLIENT_VERIFY $ssl_client_verify;
             uwsgi_param HTTP_X_SSL_CLIENT_CERT $ssl_client_raw_cert;
             uwsgi_param HTTP_X_SSL_CLIENT_S_DN $ssl_client_s_dn;
