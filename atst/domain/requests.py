@@ -117,16 +117,11 @@ class Requests(object):
 
     @classmethod
     def action_required_by(cls, request):
-        try:
-            status = RequestStatus(request.status)
-        except ValueError:
-            return None
-
         return {
             RequestStatus.STARTED: "mission_owner",
             RequestStatus.PENDING_FINANCIAL_VERIFICATION: "mission_owner",
             RequestStatus.PENDING_CCPO_APPROVAL: "ccpo"
-        }.get(status)
+        }.get(request.status)
 
     @classmethod
     def should_auto_approve(cls, request):
