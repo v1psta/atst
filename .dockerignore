@@ -16,12 +16,14 @@ log/*
 LICENSE
 *.md
 
-# Skip pipenv/virtualenv related things
+# Skip envrc
 .envrc
-.venv
 
 # Skip ansible-container stuff
 ansible*
 container.yml
 meta.yml
 requirements.yml
+
+# Skip kubernetes and Docker config stuff
+deploy
