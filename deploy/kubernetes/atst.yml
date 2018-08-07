@@ -23,10 +23,72 @@ spec:
       containers:
         - name: atst
           image: registry.atat.codes:443/atst-prod:c06b0f6
+          volumeMounts:
+            - name: atst-config
+              mountPath: "/opt/atat"
+            - name: uswgi-socket-dir
+              mountPath: "/var/run/uwsgi"
+        - name: atst-nginx
+          image: nginx:alpine
           ports:
-            - containerPort: 8000
+            - containerPort: 8080
+              name: http
+            - containerPort: 8443
+              name: http
+          volumeMounts:
+            - name: nginx-auth-tls
+              mountPath: "/etc/ssl/private"
+            - name: nginx-config
+              mountPath: "/etc/nginx/conf.d"
+            - name: nginx-dhparam
+              mountPath: "/etc/ssl"
+            - name: nginx-htpasswd
+              mountPath: "/etc/nginx"
+            - name: uswgi-socket-dir
+              mountPath: "/var/run/uwsgi"
       imagePullSecrets:
         - name: regcred
+      volumes:
+        - name: atst-config
+          configMap:
+            name: atst
+            items:
+            - key: atst-config
+              path: atst-overrides.ini
+              mode: 0644
+        - name: nginx-auth-tls
+          secret:
+            secretName: auth-atst-ingress-tls
+            items:
+            - key: tls.crt
+              path: auth.atat.crt
+              mode: 0644
+            - key: tls.key
+              path: auth.atat.crt
+              mode: 0640
+        - name: nginx-config
+          configMap:
+            name: atst-nginx
+            items:
+            - key: nginx-config
+              path: atst.conf
+        - name: nginx-dhparam
+          secret:
+            secretName: dhparam-4096
+            items:
+            - key: dhparam.pem
+              path: dhparam.pem
+              mode: 0640
+        - name: nginx-htpasswd
+          configMap:
+            name: atst-nginx
+            items:
+            - key: httpasswd
+              path: .htpasswd
+              mode: 0640
+        - name: uswgi-socket-dir
+          emptyDir:
+            medium: Memory
 ---
 apiVersion: v1
 kind: Service
@@ -37,9 +99,12 @@ metadata:
   namespace: atat
 spec:
   ports:
-  - name: "80"
+  - name: "http"
     port: 80
-    targetPort: 8000
+    targetPort: 8080
+  - name: "https"
+    port: 443
+    targetPort: 8443
   selector:
     app: atst
 ---
