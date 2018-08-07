@@ -22,15 +22,15 @@ spec:
     spec:
       containers:
         - name: atst
-          image: registry.atat.codes:443/atst-prod:c06b0f6
+          image: registry.atat.codes:443/atst-prod:cc680fa
           envFrom:
           - configMapRef:
               name: atst-envvars
           volumeMounts:
             - name: atst-config
-              mountPath: "/opt/atat/atst"
+              mountPath: "/opt/atat/atst/atst-overrides.ini"
             - name: uwsgi-config
-              mountPath: "/opt/atat/atst"
+              mountPath: "/opt/atat/atst/uwsgi-config.ini"
             - name: uwsgi-socket-dir
               mountPath: "/var/run/uwsgi"
         - name: atst-nginx
@@ -39,7 +39,7 @@ spec:
             - containerPort: 8080
               name: http
             - containerPort: 8443
-              name: http
+              name: https
           volumeMounts:
             - name: nginx-auth-tls
               mountPath: "/etc/ssl/private"
@@ -56,7 +56,7 @@ spec:
       volumes:
         - name: atst-config
           configMap:
-            name: atst
+            name: atst-config
             items:
             - key: atst-config
               path: atst-overrides.ini
@@ -88,7 +88,7 @@ spec:
           configMap:
             name: atst-nginx
             items:
-            - key: httpasswd
+            - key: htpasswd
               path: .htpasswd
               mode: 0640
         - name: uwsgi-config
