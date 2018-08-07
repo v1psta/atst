@@ -22,11 +22,5 @@ class Request(Base):
     def status(self):
         return self.status_events[-1].new_status
 
-    @property
-    def action_required_by(self):
-        return {
-            "incomplete": "mission_owner",
-            "pending_submission": "mission_owner",
-            "submitted": "ccpo",
-            "approved": "mission_owner",
-        }.get(self.status)
+    def set_status(self, status):
+        self.status_events.append(status)

@@ -1,11 +1,17 @@
 import factory
 from uuid import uuid4
 
-from atst.models import Request
+from atst.models import Request, RequestStatusEvent
 from atst.models.pe_number import PENumber
 from atst.models.task_order import TaskOrder
 from atst.models.user import User
 from atst.models.role import Role
+
+
+class RequestStatusFactory(factory.alchemy.SQLAlchemyModelFactory):
+
+    class Meta:
+        model = RequestStatusEvent
 
 
 class RequestFactory(factory.alchemy.SQLAlchemyModelFactory):
@@ -14,6 +20,7 @@ class RequestFactory(factory.alchemy.SQLAlchemyModelFactory):
         model = Request
 
     id = factory.Sequence(lambda x: uuid4())
+    status_events = factory.RelatedFactory(RequestStatusFactory, "request", new_status="started")
 
 
 class PENumberFactory(factory.alchemy.SQLAlchemyModelFactory):

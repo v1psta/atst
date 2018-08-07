@@ -1,3 +1,4 @@
+from enum import Enum
 from sqlalchemy import exists, and_
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.orm.attributes import flag_modified
@@ -26,10 +27,11 @@ def deep_merge(source, destination: dict):
     return _deep_merge(source, dict(destination))
 
 
-class RequestStatuses(object):
-    @classmethod
-    def new(cls, status_name):
-        return RequestStatusEvent(new_status=status_name)
+class RequestStatus(Enum):
+    STARTED = "started"
+    PENDING_FINANCIAL_VERIFICATION = "pending_financial_verification"
+    PENDING_CCPO_APPROVAL = "pending_ccpo_approval"
+    APPROVED = "approved"
 
 
 class Requests(object):
@@ -38,8 +40,7 @@ class Requests(object):
     @classmethod
     def create(cls, creator_id, body):
         request = Request(creator=creator_id, body=body)
-
-        request.status_events.append(RequestStatuses.new("started"))
+        request = Requests.set_status(request, RequestStatus.STARTED)
 
         db.session.add(request)
         db.session.commit()
@@ -79,12 +80,13 @@ class Requests(object):
 
     @classmethod
     def submit(cls, request):
+        new_status = None
         if Requests.should_auto_approve(request):
-            request.status_events.append(
-                RequestStatuses.new("pending_financial_verification")
-            )
+            new_status = RequestStatus.PENDING_FINANCIAL_VERIFICATION
         else:
-            request.status_events.append(RequestStatuses.new("pending_ccpo_approval"))
+            new_status = RequestStatus.PENDING_CCPO_APPROVAL
+
+        request = Requests.set_status(request, new_status)
 
         db.session.add(request)
         db.session.commit()
@@ -113,6 +115,25 @@ class Requests(object):
 
         db.session.add(request)
         db.session.commit()
+
+    @classmethod
+    def set_status(cls, request: Request, status: RequestStatus):
+        status_event = RequestStatusEvent(new_status=status.value)
+        request.status_events.append(status_event)
+        return request
+
+    @classmethod
+    def action_required_by(cls, request):
+        try:
+            status = RequestStatus(request.status)
+        except ValueError:
+            return None
+
+        return {
+            RequestStatus.STARTED: "mission_owner",
+            RequestStatus.PENDING_FINANCIAL_VERIFICATION: "mission_owner",
+            RequestStatus.PENDING_CCPO_APPROVAL: "ccpo"
+        }.get(status)
 
     @classmethod
     def should_auto_approve(cls, request):
