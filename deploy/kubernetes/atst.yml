@@ -23,10 +23,15 @@ spec:
       containers:
         - name: atst
           image: registry.atat.codes:443/atst-prod:c06b0f6
+          envFrom:
+          - configMapRef:
+              name: atst-envvars
           volumeMounts:
             - name: atst-config
-              mountPath: "/opt/atat"
-            - name: uswgi-socket-dir
+              mountPath: "/opt/atat/atst"
+            - name: uwsgi-config
+              mountPath: "/opt/atat/atst"
+            - name: uwsgi-socket-dir
               mountPath: "/var/run/uwsgi"
         - name: atst-nginx
           image: nginx:alpine
@@ -44,7 +49,7 @@ spec:
               mountPath: "/etc/ssl"
             - name: nginx-htpasswd
               mountPath: "/etc/nginx"
-            - name: uswgi-socket-dir
+            - name: uwsgi-socket-dir
               mountPath: "/var/run/uwsgi"
       imagePullSecrets:
         - name: regcred
@@ -86,7 +91,14 @@ spec:
             - key: httpasswd
               path: .htpasswd
               mode: 0640
-        - name: uswgi-socket-dir
+        - name: uwsgi-config
+          configMap:
+            name: atst-config
+            items:
+            - key: uwsgi-config
+              path: uwsgi-config.ini
+              mode: 0644
+        - name: uwsgi-socket-dir
           emptyDir:
             medium: Memory
 ---
