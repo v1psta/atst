@@ -6,39 +6,41 @@
 
   {% include 'requests/menu.html' %}
 
-  <div class="panel">
+  {% block form_action %}
+    {% if request_id %}
+      <form method='POST' action="{{ url_for('requests.requests_form_update', screen=current, request_id=request_id) }}" autocomplete="off">
+    {% else %}
+      <form method='POST' action="{{ url_for('requests.requests_form_update', screen=current) }}" autocomplete="off">
+    {% endif %}
+  {% endblock %}
 
-    <div class="panel__heading">
-      <h1>New Request</h1>
-      <div class="subtitle">{% block subtitle %}{% endblock %}</div>
+    <div class="panel">
+
+      <div class="panel__heading">
+        <h1>New Request</h1>
+        <div class="subtitle">{% block subtitle %}{% endblock %}</div>
+      </div>
+
+      <div class="panel__content">
+
+        {{ f.csrf_token }}
+        {% block form %}
+        form goes here
+        {% endblock %}
+
+      </div>
+
     </div>
-
-    <div class="panel__content">
-      {% block form_action %}
-        {% if request_id %}
-          <form method='POST' action="{{ url_for('requests.requests_form_update', screen=current, request_id=request_id) }}" autocomplete="off">
-        {% else %}
-          <form method='POST' action="{{ url_for('requests.requests_form_update', screen=current) }}" autocomplete="off">
-        {% endif %}
-      {% endblock %}
-
-      {{ f.csrf_token }}
-      {% block form %}
-      form goes here
-      {% endblock %}
-
-    </div>
-
-  </div>
 
     {% block next %}
 
-    <div class='action-group'>
-      <input type='submit' class='usa-button usa-button-primary' value='Save & Continue' />
-    </div>
+      <div class='action-group'>
+        <input type='submit' class='usa-button usa-button-primary' value='Save & Continue' />
+      </div>
 
     {% endblock %}
-</form>
+
+  </form>
 
 </div>
 
