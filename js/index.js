@@ -1,6 +1,12 @@
 import classes from '../styles/atat.scss'
 import Vue from 'vue/dist/vue'
 
+import TextInput from './components/text_input'
+
+const components = {
+  TextInput
+}
+
 const app = new Vue({
   el: '#app-root',
   methods: {
@@ -17,5 +23,6 @@ const app = new Vue({
         styleguideModal: false,
       }
     }
-  }
+  },
+  components: components
 })
