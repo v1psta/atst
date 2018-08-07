@@ -1,14 +1,13 @@
 import classes from '../styles/atat.scss'
 import Vue from 'vue/dist/vue'
 
-import TextInput from './components/text_input'
-
-const components = {
-  TextInput
-}
+import textinput from './components/text_input'
 
 const app = new Vue({
   el: '#app-root',
+  components: {
+    textinput
+  },
   methods: {
     closeModal: function(name) {
       this.modals[name] = false
@@ -23,6 +22,5 @@ const app = new Vue({
         styleguideModal: false,
       }
     }
-  },
-  components: components
+  }
 })

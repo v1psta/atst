@@ -14,7 +14,8 @@
     "npm": "^6.0.1",
     "parcel": "^1.9.7",
     "uswds": "^1.6.3",
-    "vue": "^2.5.17"
+    "vue": "^2.5.17",
+    "vue-text-mask": "^6.1.2"
   },
   "devDependencies": {
     "node-sass": "^4.9.2"

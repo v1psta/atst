@@ -130,7 +130,7 @@
 
 
       <form>
-        <TextInput inline-template>
+        <textinput inline-template>
           <div class='usa-input'>
             <label for='basic-text-1'>
               Basic Text Input
@@ -138,9 +138,18 @@
                 This is some help text to explain what this form field is and why you should fill it out.
               </span>
             </label>
-            <input id='basic-text-1' type='text' placeholder='this is a sample of what you should enter'/>
+            <masked-input
+              v-on:input='onInput'
+              v-on:change='onChange'
+              id='basic-text-1'
+              type='text'
+              placeholder='this is a sample of what you should enter'
+              :mask="mask">
+            </masked-input>
+          <div v-if='showError'>Error</div>
+          <div v-if='showValid'>Valid</div>
           </div>
-        </TextInput>
+        </textinput>
 
         <div class='usa-input usa-input--error'>
           <label for='basic-text-2'>
