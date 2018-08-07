@@ -16,7 +16,8 @@ data:
     SECRET_KEY=beb178f9e4e83066ec0baa471cea36151f26bd3779902ae2c24eb5bb66e28c15
   uwsgi-config: |-
     [uwsgi]
-    module = main
     callable = app
+    module = app
     socket = /var/run/uwsgi/uwsgi.socket
     plugins = python3
+    virtualenv = /opt/atat/atst/.venv
