@@ -6,9 +6,10 @@ import alembic.command
 from atst.app import make_app, make_config
 from atst.database import db as _db
 from .mocks import MOCK_USER
+import tests.factories as factories
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture(scope="session")
 def app(request):
     config = make_config()
 
@@ -27,11 +28,11 @@ def apply_migrations():
     alembic_config = os.path.join(os.path.dirname(__file__), "../", "alembic.ini")
     config = alembic.config.Config(alembic_config)
     app_config = make_config()
-    config.set_main_option('sqlalchemy.url', app_config["DATABASE_URI"])
-    alembic.command.upgrade(config, 'head')
+    config.set_main_option("sqlalchemy.url", app_config["DATABASE_URI"])
+    alembic.command.upgrade(config, "head")
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture(scope="session")
 def db(app, request):
 
     _db.app = app
@@ -43,7 +44,7 @@ def db(app, request):
     _db.drop_all()
 
 
-@pytest.fixture(scope='function', autouse=True)
+@pytest.fixture(scope="function", autouse=True)
 def session(db, request):
     """Creates a new database session for a test."""
     connection = db.engine.connect()
@@ -53,6 +54,14 @@ def session(db, request):
     session = db.create_scoped_session(options=options)
 
     db.session = session
+
+    factory_list = [
+        cls
+        for _name, cls in factories.__dict__.items()
+        if isinstance(cls, type) and cls.__module__ == "tests.factories"
+    ]
+    for factory in factory_list:
+        factory._meta.sqlalchemy_session = session
 
     yield session
 
@@ -66,6 +75,7 @@ class DummyForm(dict):
 
 
 class DummyField(object):
+
     def __init__(self, data=None, errors=(), raw_data=None):
         self.data = data
         self.errors = list(errors)
@@ -81,10 +91,11 @@ def dummy_form():
 def dummy_field():
     return DummyField()
 
+
 @pytest.fixture
 def user_session(monkeypatch):
 
-    def set_user_session(user = MOCK_USER):
+    def set_user_session(user=MOCK_USER):
         monkeypatch.setattr("atst.domain.auth.get_current_user", lambda *args: user)
 
     return set_user_session
