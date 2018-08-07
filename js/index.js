@@ -2,7 +2,7 @@ import classes from '../styles/atat.scss'
 import Vue from 'vue/dist/vue'
 
 const app = new Vue({
-  el: '#vue-root',
+  el: '#app-root',
   methods: {
     closeModal: function(name) {
       this.modals[name] = false
@@ -19,5 +19,3 @@ const app = new Vue({
     }
   }
 })
-
-console.log('hello from index')
