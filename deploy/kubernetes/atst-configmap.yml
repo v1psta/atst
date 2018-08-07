@@ -5,12 +5,6 @@ metadata:
   name: atst-config
   namespace: atat
 data:
-  uwsgi-config: |-
-    [uwsgi]
-    module = main
-    callable = app
-    socket = /var/run/uwsgi/uwsgi.socket
-    plugins = python3
   atst-config: |-
     [default]
     CAC_URL=https://auth.atat.codes
@@ -20,3 +14,9 @@ data:
     REDIS_URI=redis://redis-master.atat.svc.cluster.local:6379
     SECRET=92d2ef2aedf518e1e04a2a99445e6649539a91f06c977f3d69980c63e4e0fb45
     SECRET_KEY=beb178f9e4e83066ec0baa471cea36151f26bd3779902ae2c24eb5bb66e28c15
+  uwsgi-config: |-
+    [uwsgi]
+    module = main
+    callable = app
+    socket = /var/run/uwsgi/uwsgi.socket
+    plugins = python3
