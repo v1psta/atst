@@ -15,25 +15,28 @@
 </head>
 <body class="{% if g.modalOpen %} modalOpen{% endif %}">
 
-  {% block template_vars %}{% endblock %}
+  <div id='app-root'>
+    {% block template_vars %}{% endblock %}
 
-  {% include 'navigation/topbar.html' %}
+    {% include 'navigation/topbar.html' %}
 
-  <div class='global-layout'>
-    {% include 'navigation/global_navigation.html' %}
+    <div class='global-layout'>
+      {% include 'navigation/global_navigation.html' %}
 
-    <div class='global-panel-container'>
-      {% block sidenav %}{% endblock %}
+      <div class='global-panel-container'>
+        {% block sidenav %}{% endblock %}
 
-      {% block content %}
-        these are not the droids you are looking for
-      {% endblock %}
+        {% block content %}
+          these are not the droids you are looking for
+        {% endblock %}
+      </div>
     </div>
+
+    {% include 'footer.html' %}
+
+    {% block modal %}{% endblock %}
   </div>
 
-  {% include 'footer.html' %}
-
-  {% block modal %}{% endblock %}
   {% assets "js_all" %}
     <script src="{{ ASSET_URL }}"></script>
   {% endassets %}

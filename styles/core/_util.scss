@@ -31,3 +31,7 @@
 @mixin line-max {
   max-width: 45em;
 }
+
+[v-cloak] {
+  display: none
+}
