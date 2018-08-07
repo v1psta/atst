@@ -9,6 +9,8 @@ from atst.models.pe_number import PENumber
 from atst.models.task_order import TaskOrder
 from atst.models.user import User
 from atst.models.role import Role
+from atst.models.request_status_event import RequestStatusEvent
+from atst.domain.roles import Roles
 
 
 class RequestStatusFactory(factory.alchemy.SQLAlchemyModelFactory):
@@ -24,6 +26,7 @@ class RequestFactory(factory.alchemy.SQLAlchemyModelFactory):
     status_events = factory.RelatedFactory(
         RequestStatusFactory, "request", new_status=RequestStatus.STARTED
     )
+    body = {}
 
 
 class PENumberFactory(factory.alchemy.SQLAlchemyModelFactory):
@@ -53,3 +56,11 @@ class UserFactory(factory.alchemy.SQLAlchemyModelFactory):
     last_name = factory.Faker("last_name")
     atat_role = factory.SubFactory(RoleFactory)
     dod_id = factory.LazyFunction(lambda: "".join(random.choices(string.digits, k=10)))
+
+
+class RequestStatusEventFactory(factory.alchemy.SQLAlchemyModelFactory):
+
+    class Meta:
+        model = RequestStatusEvent
+
+    id = factory.Sequence(lambda x: uuid4())
