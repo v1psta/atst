@@ -10,7 +10,7 @@ APP_USER="atst"
 APP_UID="8010"
 
 # Add additional packages required by app dependencies
-ADDITIONAL_PACKAGES="postgresql-libs"
+ADDITIONAL_PACKAGES="postgresql-libs uwsgi uwsgi-python3"
 
 # Run the shared alpine setup script
 source ./script/include/run_alpine_setup
