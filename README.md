@@ -4,18 +4,19 @@
 
 ## Description
 
-This is the main user-facing web application for the ATAT stack. All end-user
-requests are handled by ATST, with it making backend calls to various
-microservices when appropriate.
+This is the user-facing web application for ATAT.
 
 ## Installation
 
 ### Requirements
 See the [scriptz](https://github.com/dod-ccpo/scriptz) repository for the shared
 requirements and guidelines for all ATAT applications.
-Additionally, ATST requires a redis instance for session management. Have redis
-installed and running. By default, ATST will try to connect to a redis instance
-running on localhost on its default port, 6379.
+
+ATST requires a postgres instance (>= 9.6) for persistence. Have postgres installed
+and running on the default port of 5432.
+
+ATST also requires a redis instance for session management. Have redis installed and
+running on the default port of 6379.
 
 ### Cloning
 This project contains git submodules. Here is an example clone command that will
@@ -96,14 +97,21 @@ To re-run tests each time a file is changed:
 
 ## Notes
 
-tornado templates are like mustache templates -- add the
+Jinja templates are like mustache templates -- add the
 following to `~/.vim/filetype.vim` for syntax highlighting:
 
     :au BufRead *.html.to set filetype=mustache
 
 
 ## Icons
-To render an icon use `{% module Icon('name') %}` in a template, where `name` is the filename of an svg file in `static/icons`.
+To render an icon, use
+
+```jinja
+{% import "components/icon.html" %}
+{{ Icon("icon-name", classes="css-classes") }}
+```
+
+where `icon-name` is the filename of an svg in `static/icons`.
 
 All icons used should be from the Noun Project, specifically [this collection](https://thenounproject.com/monstercritic/collection/tinicons-a-set-of-tiny-icons-perfect-for-ui-elemen/) if possible.
 
@@ -113,7 +121,7 @@ SVG markup should be cleaned an minified, [Svgsus](http://www.svgs.us/) works we
 
 The `/login-dev` endpoint is protected by HTTP basic auth when deployed. This can be configured for NGINX following the instructions [here](https://docs.nginx.com/nginx/admin-guide/security-controls/configuring-http-basic-authentication/). The following config should added within the main server block for the site:
 
-```
+```nginx
 location /login-dev {
     auth_basic "Developer Access";
     auth_basic_user_file /etc/apache2/.htpasswd;

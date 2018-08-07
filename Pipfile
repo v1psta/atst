@@ -4,10 +4,8 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-tornado = "*"
 webassets = "*"
 Unipath = "*"
-wtforms-tornado = "*"
 pendulum = "*"
 redis = "*"
 sqlalchemy = "*"

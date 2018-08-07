@@ -1,5 +1,3 @@
-import tornado
-from tornado.gen import Return
 from flask_wtf import FlaskForm
 
 

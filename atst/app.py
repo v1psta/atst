@@ -6,6 +6,7 @@ from flask import Flask, request, g
 from flask_session import Session
 import redis
 from unipath import Path
+from flask_wtf.csrf import CSRFProtect
 
 from atst.database import db
 from atst.assets import environment as assets_environment
@@ -31,6 +32,7 @@ def make_app(config):
         static_folder=parent_dir.child("static").absolute(),
     )
     redis = make_redis(config)
+    csrf = CSRFProtect()
 
     app.config.update(config)
     app.config.update({"SESSION_REDIS": redis})
@@ -39,6 +41,7 @@ def make_app(config):
     make_crl_validator(app)
 
     db.init_app(app)
+    csrf.init_app(app)
     Session(app)
     assets_environment.init_app(app)
 
@@ -61,7 +64,7 @@ def make_flask_callbacks(app):
             if re.match("\/workspaces\/[A-Za-z0-9]*", request.url)
             else "global"
         )
-        g.dev = os.getenv("TORNADO_ENV", "dev") == "dev"
+        g.dev = os.getenv("FLASK_ENV", "dev") == "dev"
         g.matchesPath = lambda href: re.match("^" + href, request.path)
         g.modalOpen = request.args.get("modal", False)
         g.current_user = {
@@ -80,13 +83,14 @@ def make_flask_callbacks(app):
 
 def map_config(config):
     return {
+        **config["default"],
         "ENV": config["default"]["ENVIRONMENT"],
         "DEBUG": config["default"]["DEBUG"],
         "PORT": int(config["default"]["PORT"]),
         "SQLALCHEMY_DATABASE_URI": config["default"]["DATABASE_URI"],
         "SQLALCHEMY_TRACK_MODIFICATIONS": False,
-        **config["default"],
-        "PERMANENT_SESSION_LIFETIME": int(config["default"]["PERMANENT_SESSION_LIFETIME"]),
+        "WTF_CSRF_ENABLED": config.getboolean("default", "WTF_CSRF_ENABLED"),
+        "PERMANENT_SESSION_LIFETIME": config.getint("default", "PERMANENT_SESSION_LIFETIME"),
     }
 
 

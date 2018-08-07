@@ -4,7 +4,7 @@
   <ul>
     {{ SidenavItem(
       "Projects",
-      href='/workspace_projects/123456',
+      href=url_for("workspaces.workspace_projects", workspace_id=123456),
       active=g.matchesPath('\/workspaces\/[A-Za-z0-9]*\/projects'),
       subnav=[
         {
@@ -18,7 +18,7 @@
 
     {{ SidenavItem(
       "Members",
-      href='/workspace_members/123456',
+      href=url_for("workspaces.workspace_members", workspace_id=123456),
       active=g.matchesPath('\/workspaces\/[A-Za-z0-9]*\/members'),
       subnav=[
         {
