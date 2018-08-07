@@ -29,8 +29,10 @@ spec:
           volumeMounts:
             - name: atst-config
               mountPath: "/opt/atat/atst/atst-overrides.ini"
+              subPath: atst-overrides.ini
             - name: uwsgi-config
               mountPath: "/opt/atat/atst/uwsgi-config.ini"
+              subPath: uwsgi-config.ini
             - name: uwsgi-socket-dir
               mountPath: "/var/run/uwsgi"
         - name: atst-nginx
@@ -44,11 +46,14 @@ spec:
             - name: nginx-auth-tls
               mountPath: "/etc/ssl/private"
             - name: nginx-config
-              mountPath: "/etc/nginx/conf.d"
+              mountPath: "/etc/nginx/conf.d/atst.conf"
+              subPath: atst.conf
             - name: nginx-dhparam
               mountPath: "/etc/ssl"
+              subPath: dhparam.pem
             - name: nginx-htpasswd
-              mountPath: "/etc/nginx"
+              mountPath: "/etc/nginx/.htpasswd"
+              subPath: .htpasswd
             - name: uwsgi-socket-dir
               mountPath: "/var/run/uwsgi"
       imagePullSecrets:
@@ -69,7 +74,7 @@ spec:
               path: auth.atat.crt
               mode: 0644
             - key: tls.key
-              path: auth.atat.crt
+              path: auth.atat.key
               mode: 0640
         - name: nginx-config
           configMap:
