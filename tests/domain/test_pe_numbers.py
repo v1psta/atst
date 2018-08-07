@@ -6,20 +6,8 @@ from atst.domain.pe_numbers import PENumbers
 from tests.factories import PENumberFactory
 
 
-@pytest.fixture(scope="function")
-def new_pe_number(session):
-    def make_pe_number(**kwargs):
-        pen = PENumberFactory.create(**kwargs)
-        session.add(pen)
-        session.commit()
-
-        return pen
-
-    return make_pe_number
-
-
-def test_can_get_pe_number(new_pe_number):
-    new_pen = new_pe_number(number="0701367F", description="Combat Support - Offensive")
+def test_can_get_pe_number():
+    new_pen = PENumberFactory.create(number="0701367F", description="Combat Support - Offensive")
     pen = PENumbers.get(new_pen.number)
 
     assert pen.number == new_pen.number

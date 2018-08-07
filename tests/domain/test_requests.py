@@ -9,11 +9,7 @@ from tests.factories import RequestFactory
 
 @pytest.fixture(scope="function")
 def new_request(session):
-    created_request = RequestFactory.create()
-    session.add(created_request)
-    session.commit()
-
-    return created_request
+    return RequestFactory.create()
 
 
 def test_can_get_request(new_request):

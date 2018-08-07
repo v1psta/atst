@@ -1,8 +1,8 @@
 from tests.factories import RequestFactory, UserFactory
 
 
-MOCK_USER = UserFactory.create()
-MOCK_REQUEST = RequestFactory.create(
+MOCK_USER = UserFactory.build()
+MOCK_REQUEST = RequestFactory.build(
     creator=MOCK_USER.id,
     body={
         "financial_verification": {
