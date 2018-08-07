@@ -143,3 +143,11 @@ class Requests(object):
         return request.status == "incomplete" and all(
             section in existing_request_sections for section in all_request_sections
         )
+
+    @classmethod
+    def is_creator(cls, request_id, user_id):
+        try:
+            db.session.query(Request).filter_by(id=request_id, creator=user_id).one()
+            return True
+        except NoResultFound:
+            return False

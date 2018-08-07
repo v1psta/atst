@@ -1,3 +1,5 @@
+import random
+import string
 import factory
 from uuid import uuid4
 
@@ -46,7 +48,8 @@ class UserFactory(factory.alchemy.SQLAlchemyModelFactory):
         model = User
 
     id = factory.Sequence(lambda x: uuid4())
-    email = "fake.user@mail.com"
-    first_name = "Fake"
-    last_name = "User"
+    email = factory.Faker("email")
+    first_name = factory.Faker("first_name")
+    last_name = factory.Faker("last_name")
     atat_role = factory.SubFactory(RoleFactory)
+    dod_id = factory.LazyFunction(lambda: "".join(random.choices(string.digits, k=10)))

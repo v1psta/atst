@@ -5,7 +5,7 @@ from atst.domain.exceptions import NotFoundError
 from atst.domain.requests import Requests
 from atst.models.request_status_event import RequestStatus
 
-from tests.factories import RequestFactory
+from tests.factories import RequestFactory, UserFactory
 
 
 @pytest.fixture(scope="function")
@@ -48,3 +48,11 @@ def test_dont_auto_approve_if_no_dollar_value_specified(new_request):
     request = Requests.submit(new_request)
 
     assert request.status == RequestStatus.PENDING_CCPO_APPROVAL
+
+
+def test_can_check_if_user_created_request(session):
+    user_allowed = UserFactory.create()
+    user_denied = UserFactory.create()
+    request = RequestFactory.create(creator=user_allowed.id)
+    assert Requests.is_creator(request.id, user_allowed.id)
+    assert not Requests.is_creator(request.id, user_denied.id)
