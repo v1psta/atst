@@ -23,22 +23,27 @@ def test_nonexistent_request_raises():
         Requests.get(uuid4())
 
 
+def test_new_request_has_started_status():
+    request = Requests.create(uuid4(), {})
+    assert request.status == "started"
+
+
 def test_auto_approve_less_than_1m(new_request):
     new_request.body = {"details_of_use": {"dollar_value": 999999}}
     request = Requests.submit(new_request)
 
-    assert request.status == 'approved'
+    assert request.status == "pending_financial_verification"
 
 
 def test_dont_auto_approve_if_dollar_value_is_1m_or_above(new_request):
     new_request.body = {"details_of_use": {"dollar_value": 1000000}}
     request = Requests.submit(new_request)
 
-    assert request.status == 'submitted'
+    assert request.status == "pending_ccpo_approval"
 
 
 def test_dont_auto_approve_if_no_dollar_value_specified(new_request):
     new_request.body = {"details_of_use": {}}
     request = Requests.submit(new_request)
 
-    assert request.status == 'submitted'
+    assert request.status == "pending_ccpo_approval"

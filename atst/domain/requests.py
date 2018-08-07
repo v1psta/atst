@@ -26,6 +26,12 @@ def deep_merge(source, destination: dict):
     return _deep_merge(source, dict(destination))
 
 
+class RequestStatuses(object):
+    @classmethod
+    def new(cls, status_name):
+        return RequestStatusEvent(new_status=status_name)
+
+
 class Requests(object):
     AUTO_APPROVE_THRESHOLD = 1000000
 
@@ -33,8 +39,7 @@ class Requests(object):
     def create(cls, creator_id, body):
         request = Request(creator=creator_id, body=body)
 
-        status_event = RequestStatusEvent(new_status="incomplete")
-        request.status_events.append(status_event)
+        request.status_events.append(RequestStatuses.new("started"))
 
         db.session.add(request)
         db.session.commit()
@@ -74,10 +79,12 @@ class Requests(object):
 
     @classmethod
     def submit(cls, request):
-        request.status_events.append(RequestStatusEvent(new_status="submitted"))
-
         if Requests.should_auto_approve(request):
-            request.status_events.append(RequestStatusEvent(new_status="approved"))
+            request.status_events.append(
+                RequestStatuses.new("pending_financial_verification")
+            )
+        else:
+            request.status_events.append(RequestStatuses.new("pending_ccpo_approval"))
 
         db.session.add(request)
         db.session.commit()
@@ -99,11 +106,6 @@ class Requests(object):
             return
 
         request.body = deep_merge(request_delta, request.body)
-
-        if Requests.should_allow_submission(request):
-            request.status_events.append(
-                RequestStatusEvent(new_status="pending_submission")
-            )
 
         # Without this, sqlalchemy won't notice the change to request.body,
         # since it doesn't track dictionary mutations by default.
