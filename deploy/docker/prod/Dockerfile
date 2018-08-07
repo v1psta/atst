@@ -21,7 +21,7 @@ EXPOSE "${APP_PORT}"
 ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 
 # Default command is to launch the server
-CMD ["bash", "-c", "${APP_DIR}/script/server"]
+CMD ["bash", "-c", "${APP_DIR}/script/uwsgi_server"]
 
 ### Items that will change almost every build
 #############################################
