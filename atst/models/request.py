@@ -24,3 +24,4 @@ class Request(Base):
 
     def set_status(self, status):
         self.status_events.append(status)
+

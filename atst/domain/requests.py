@@ -1,9 +1,9 @@
-from enum import Enum
 from sqlalchemy import exists, and_
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.orm.attributes import flag_modified
 
-from atst.models import Request, RequestStatusEvent
+from atst.models.request import Request
+from atst.models.request_status_event import RequestStatusEvent, RequestStatus
 from atst.database import db
 
 from .exceptions import NotFoundError
@@ -25,13 +25,6 @@ def deep_merge(source, destination: dict):
         return b
 
     return _deep_merge(source, dict(destination))
-
-
-class RequestStatus(Enum):
-    STARTED = "started"
-    PENDING_FINANCIAL_VERIFICATION = "pending_financial_verification"
-    PENDING_CCPO_APPROVAL = "pending_ccpo_approval"
-    APPROVED = "approved"
 
 
 class Requests(object):
@@ -118,7 +111,7 @@ class Requests(object):
 
     @classmethod
     def set_status(cls, request: Request, status: RequestStatus):
-        status_event = RequestStatusEvent(new_status=status.value)
+        status_event = RequestStatusEvent(new_status=status)
         request.status_events.append(status_event)
         return request
 
