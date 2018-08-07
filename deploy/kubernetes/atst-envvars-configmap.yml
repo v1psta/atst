@@ -6,5 +6,5 @@ metadata:
   namespace: atat
 data:
   FLASK_ENV: prod
-  OVERRIDE_CONFIG_FULLPATH: /opt/atat/atst-overrides.ini
-  UWSGI_CONFIG_FULLPATH: /opt/atat/uwsgi-config.ini
+  OVERRIDE_CONFIG_FULLPATH: /opt/atat/atst/atst-overrides.ini
+  UWSGI_CONFIG_FULLPATH: /opt/atat/atst/uwsgi-config.ini
