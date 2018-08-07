@@ -23,7 +23,14 @@ static/fonts
 # font files originate from a node module
 static/fonts/*
 
+static/assets
+static/assets/*
+
 # local log files
 log/*
 
 config/dev.ini
+
+# CRLs
+/crl
+/crl-tmp

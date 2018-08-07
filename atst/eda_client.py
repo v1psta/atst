@@ -85,7 +85,7 @@ class MockEDAClient(EDAClientBase):
                 "location": "https://docsrv1.nit.disa.mil:443/eda/enforcer/C0414345.PDF?ver=1.4&loc=Y29udHJhY3RzL29nZGVuL3ZlbmRvci8xOTk4LzA5LzE0L0MwNDE0MzQ1LlBERg==&sourceurl=aHR0cHM6Ly9lZGE0Lm5pdC5kaXNhLm1pbC9wbHMvdXNlci9uZXdfYXBwLkdldF9Eb2M_cFRhYmxlX0lEPTImcFJlY29yZF9LZXk9OEE2ODExNjM2RUY5NkU2M0UwMzQwMDYwQjBCMjgyNkM=&uid=6CFC2B2322E86FD5E054002264936E3C&qid=19344159&signed=G&qdate=20180529194407GMT&token=6xQICrrrfIMciEJSpXmfsAYrToM=",
                 "pay_dodaac": None,
                 "pco_mod": "02",
-                "amount": 2000000
+                "amount": 2000000,
             }
         else:
             return None

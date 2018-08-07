@@ -4,6 +4,11 @@
 
 source "$(dirname "${0}")"/../script/include/global_header.inc.sh
 
+export FLASK_ENV=test
+
+# Enable database resetting
+RESET_DB="true"
+
 # Define all relevant python files and directories for this app
 PYTHON_FILES="./app.py ./atst ./config"
 

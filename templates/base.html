@@ -1,0 +1,41 @@
+{# TODO: set this context elsewhere #}
+{# set context='workspace' #}
+{% set context=g.navigationContext %}
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>{% block title %}JEDI{% endblock %}</title>
+  {% assets "css" %}
+    <link rel="stylesheet" href="{{ ASSET_URL }}" type="text/css">
+  {% endassets %}
+  <link rel="icon" type="image/x-icon" href="/static/img/favicon.ico">
+</head>
+<body class="{% if g.modalOpen %} modalOpen{% endif %}">
+
+  {% block template_vars %}{% endblock %}
+
+  {% include 'navigation/topbar.html' %}
+
+  <div class='global-layout'>
+    {% include 'navigation/global_navigation.html' %}
+
+    <div class='global-panel-container'>
+      {% block sidenav %}{% endblock %}
+
+      {% block content %}
+        these are not the droids you are looking for
+      {% endblock %}
+    </div>
+  </div>
+
+  {% include 'footer.html' %}
+
+  {% block modal %}{% endblock %}
+  {% assets "js_all" %}
+    <script src="{{ ASSET_URL }}"></script>
+  {% endassets %}
+</body>
+</html>

@@ -1,0 +1,26 @@
+{% from "components/sidenav_item.html" import SidenavItem %}
+
+<div class="global-navigation sidenav global-navigation__context--{{context}}">
+  <ul>
+    {% if g.dev %}
+      {{ SidenavItem("Styleguide",
+        href="/styleguide",
+        icon="visible",
+        active=g.matchesPath('/styleguide'),
+        subnav=[
+          {"label":"Subnav 1", "href":"/styleguide?subnav1", "icon": "plus", "active": g.matchesPath('/styleguide?subnav1')},
+          {"label":"Subnav 2", "href":"/styleguide?subnav2", "active": g.matchesPath('/styleguide?subnav2')},
+        ]) }}
+    {% endif %}
+
+    {{ SidenavItem("Requests",
+      href="/requests",
+      icon="document",
+      active=g.matchesPath('/requests'),
+      subnav=[
+        {"label":"New Request", "href":url_for("requests.requests_form_new", screen=1), "icon": "plus", "active": g.matchesPath('/requests/new')},
+      ]
+      ) }}
+    {{ SidenavItem("Workspaces", href="/workspaces", icon="cloud", active=g.matchesPath('/workspaces')) }}
+  </ul>
+</div>

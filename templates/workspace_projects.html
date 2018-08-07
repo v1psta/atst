@@ -1,0 +1,35 @@
+{% from "components/icon.html" import Icon %}
+
+{% extends "base_workspace.html" %}
+
+{% block workspace_content %}
+
+{% for project in projects %}
+  <div class='block-list project-list-item'>
+    <header class='block-list__header'>
+      <h2 class='block-list__title'>{{ project['name'] }} ({{ project['environments']|length }} environments)</h2>
+      <a class='icon-link' href='/workspaces/123456/projects/789/edit'>
+        {{ Icon('edit') }}
+        <span>edit</span>
+      </a>
+    </header>
+    <ul>
+      {% for environment in project['environments'] %}
+        <li class='block-list__item project-list-item__environment'>
+          <a href='/' target='_blank' rel='noopener noreferrer' class='project-list-item__environment__link'>
+            {{ Icon('link') }}
+            <span>{{ environment["name"]}}</span>
+          </a>
+
+          <div class='project-list-item__environment__members'>
+            <div class='label'>0</div>
+            <span>members</span>
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endfor %}
+
+{% endblock %}
+

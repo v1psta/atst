@@ -1,0 +1,36 @@
+{% extends 'requests_new.html' %}
+
+{% from "components/alert.html" import Alert %}
+{% from "components/text_input.html" import TextInput %}
+
+{% block subtitle %}
+<h2>Primary Government/Military <br> Point of Contact (POC)</h2>
+{% endblock %}
+
+{% block form %}
+
+{% if f.errors %}
+  {{ Alert('There were some errors',
+    message="<p>Please see below.</p>",
+    level='error'
+  ) }}
+{% endif %}
+
+<p>Please designate a Primary Point of Contact that will be responsible for owning the workspace in the JEDI Cloud.</p>
+<p>The Point of Contact will become the primary owner of the <em>workspace</em> created to use the JEDI Cloud. As a workspace owner, this person will have the ability to:
+  <ul>
+    <li>Create multiple application stacks and environments in the workspace to access the commercial cloud service provider portal</li>
+    <li>Add and manage users in the workspace</li>
+    <li>View the budget and billing history related to this workspace</li>
+    <li>Manage access to the Cloud Service Provider's Console</li>
+    <li>Transfer Workspace ownership to another person</li>
+  </ul>
+  <em>This POC may be you.</em>
+</p>
+
+{{ TextInput(f.fname_poc,placeholder='First Name') }}
+{{ TextInput(f.lname_poc,placeholder='Last Name') }}
+{{ TextInput(f.email_poc,placeholder='jane@mail.mil') }}
+{{ TextInput(f.dodid_poc,placeholder='10-digit number on the back of the CAC') }}
+
+{% endblock %}

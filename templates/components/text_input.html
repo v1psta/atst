@@ -1,0 +1,23 @@
+{% macro TextInput(field, placeholder='') -%}
+  <div class='usa-input {% if errors %}usa-input--error{% endif %}'>
+    <label for={{field.name}}>
+      {{ field.label }}
+
+      {% if field.description %}
+        <span class='usa-input__help'>{{ field.description | safe }}</span>
+      {% endif %}
+
+      {% if errors %}
+        {{ Icon('alert') }}
+      {% endif %}
+    </label>
+
+    {{ field(placeholder=placeholder) | safe }}
+
+    {% if field.errors %}
+      {% for error in field.errors %}
+        <span class='usa-input__message'>{{ error }}</span>
+      {% endfor %}
+    {% endif %}
+  </div>
+{%- endmacro %}

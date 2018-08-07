@@ -1,0 +1,44 @@
+{% from "components/sidenav_item.html" import SidenavItem %}
+
+<nav class='sidenav workspace-navigation'>
+  <ul>
+    {{ SidenavItem(
+      "Projects",
+      href=url_for("workspaces.workspace_projects", workspace_id=123456),
+      active=g.matchesPath('\/workspaces\/[A-Za-z0-9]*\/projects'),
+      subnav=[
+        {
+          "label": "Add New Project",
+          "href":"/",
+          "active": g.matchesPath('workspaces/projects/new'),
+          "icon": "plus"
+        }
+      ]
+    ) }}
+
+    {{ SidenavItem(
+      "Members",
+      href=url_for("workspaces.workspace_members", workspace_id=123456),
+      active=g.matchesPath('\/workspaces\/[A-Za-z0-9]*\/members'),
+      subnav=[
+        {
+          "label": "Add New Member",
+          "href": "",
+          "active": g.matchesPath('/workspaces/members/new'),
+          "icon": "plus"
+        },
+        {
+          "label": "Editing Member",
+          "href": "",
+          "active": g.matchesPath('/workspaces/123456/members/789/edit')
+        }
+      ]
+    ) }}
+
+    {{ SidenavItem(
+      "Funding & Reports",
+      href='/workspace_reports/123456',
+      active=g.matchesPath('\/workspaces\/[A-Za-z0-9]*\/reports')
+    ) }}
+  </ul>
+</nav>

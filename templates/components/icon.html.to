@@ -1,2 +1,0 @@
-{% autoescape None %}
-<span class="icon icon--{{name}} {{classes}}" aria-hidden="true">{{ svg }}</span>

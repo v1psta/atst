@@ -8,5 +8,11 @@ source "$(dirname "${0}")"/../script/include/global_header.inc.sh
 # Turn on sass compiler installation
 INSTALL_SASS="true"
 
+# Enable database resetting
+RESET_DB="true"
+
 # Run the shared setup script
 source ./script/include/run_setup
+
+# Fetch and import the PE numbers
+run_command "python script/ingest_pe_numbers.py"

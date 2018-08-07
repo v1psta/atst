@@ -1,8 +1,4 @@
-import tornado.gen
-
-
 class Projects(object):
-
     def __init__(self):
         pass
 
@@ -50,7 +46,6 @@ class Projects(object):
 
 
 class Members(object):
-
     def __init__(self):
         pass
 

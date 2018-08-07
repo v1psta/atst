@@ -1,81 +1,90 @@
-import re
-import pytest
-import tornado.web
-import tornado.gen
+from flask import session, url_for
+from .mocks import DOD_SDN
+
 
 MOCK_USER = {"id": "438567dd-25fa-4d83-a8cc-8aa8366cb24a"}
-@tornado.gen.coroutine
+
+
 def _fetch_user_info(c, t):
     return MOCK_USER
 
-@pytest.mark.gen_test
-def test_redirects_when_not_logged_in(http_client, base_url):
-    response = yield http_client.fetch(
-        base_url + "/home", raise_error=False, follow_redirects=False
-    )
-    location = response.headers["Location"]
-    assert response.code == 302
-    assert response.error
-    assert re.match("/\??", location)
 
+def test_successful_login_redirect(client, monkeypatch):
+    monkeypatch.setattr("atst.routes._is_valid_certificate", lambda *args: True)
 
-@pytest.mark.gen_test
-def test_redirects_when_session_does_not_exist(monkeypatch, http_client, base_url):
-    monkeypatch.setattr("atst.handlers.main.Main.get_secure_cookie", lambda s,c: 'stale cookie!')
-    response = yield http_client.fetch(
-        base_url + "/home", raise_error=False, follow_redirects=False
-    )
-    location = response.headers["Location"]
-    cookie = response.headers._dict.get('Set-Cookie')
-    # should clear session cookie
-    assert 'atat=""' in cookie
-    assert response.code == 302
-    assert response.error
-    assert re.match("/\??", location)
-
-
-@pytest.mark.gen_test
-def test_login_with_valid_bearer_token(app, monkeypatch, http_client, base_url):
-    monkeypatch.setattr("atst.handlers.login_redirect.LoginRedirect._fetch_user_info", _fetch_user_info)
-    response = yield http_client.fetch(
-        base_url + "/login-redirect?bearer-token=abc-123",
-        follow_redirects=False,
-        raise_error=False,
-    )
-    assert response.headers["Set-Cookie"].startswith("atat")
-    assert response.headers["Location"] == "/home"
-    assert response.code == 302
-
-
-@pytest.mark.gen_test
-def test_login_via_dev_endpoint(app, http_client, base_url):
-    response = yield http_client.fetch(
-        base_url + "/login-dev", raise_error=False, follow_redirects=False
-    )
-    assert response.headers["Set-Cookie"].startswith("atat")
-    assert response.code == 302
-    assert response.headers["Location"] == "/home"
-
-
-@pytest.mark.gen_test
-@pytest.mark.skip(reason="need to work out auth error user paths")
-def test_login_with_invalid_bearer_token(http_client, base_url):
-    _response = yield http_client.fetch(
-        base_url + "/home",
-        raise_error=False,
-        headers={"Cookie": "bearer-token=anything"},
+    resp = client.get(
+        "/login-redirect",
+        environ_base={
+            "HTTP_X_SSL_CLIENT_VERIFY": "SUCCESS", "HTTP_X_SSL_CLIENT_S_DN": DOD_SDN
+        },
     )
 
-@pytest.mark.gen_test
-def test_valid_login_creates_session(app, monkeypatch, http_client, base_url):
-    monkeypatch.setattr("atst.handlers.login_redirect.LoginRedirect._fetch_user_info", _fetch_user_info)
-    assert len(app.sessions.sessions) == 0
-    yield http_client.fetch(
-        base_url + "/login-redirect?bearer-token=abc-123",
-        follow_redirects=False,
-        raise_error=False,
+    assert resp.status_code == 302
+    assert "home" in resp.headers["Location"]
+    assert session["user_id"]
+
+
+def test_unsuccessful_login_redirect(client, monkeypatch):
+    resp = client.get("/login-redirect")
+
+    assert resp.status_code == 302
+    assert "unauthorized" in resp.headers["Location"]
+    assert "user_id" not in session
+
+
+# checks that all of the routes in the app are protected by auth
+
+
+def test_routes_are_protected(client, app):
+    for rule in app.url_map.iter_rules():
+        args = [1] * len(rule.arguments)
+        mock_args = dict(zip(rule.arguments, args))
+        _n, route = rule.build(mock_args)
+        if route in UNPROTECTED_ROUTES or "/static" in route:
+            continue
+
+        if "GET" in rule.methods:
+            resp = client.get(route)
+            assert resp.status_code == 302
+            assert resp.headers["Location"] == "http://localhost/"
+
+        if "POST" in rule.methods:
+            resp = client.post(route)
+            assert resp.status_code == 302
+            assert resp.headers["Location"] == "http://localhost/"
+
+
+UNPROTECTED_ROUTES = ["/", "/login-dev", "/login-redirect", "/unauthorized"]
+
+# this implicitly relies on the test config and test CRL in tests/fixtures/crl
+
+
+def test_crl_validation_on_login(client):
+    good_cert = open("ssl/client-certs/atat.mil.crt", "rb").read()
+    bad_cert = open("ssl/client-certs/bad-atat.mil.crt", "rb").read()
+
+    # bad cert is on the test CRL
+    resp = client.get(
+        "/login-redirect",
+        environ_base={
+            "HTTP_X_SSL_CLIENT_VERIFY": "SUCCESS",
+            "HTTP_X_SSL_CLIENT_S_DN": DOD_SDN,
+            "HTTP_X_SSL_CLIENT_CERT": bad_cert.decode(),
+        },
     )
-    assert len(app.sessions.sessions) == 1
-    session = list(app.sessions.sessions.values())[0]
-    assert "atat_permissions" in session["user"]
-    assert isinstance(session["user"]["atat_permissions"], list)
+    assert resp.status_code == 302
+    assert "unauthorized" in resp.headers["Location"]
+    assert "user_id" not in session
+
+    # good cert is not on the test CRL, passes
+    resp = client.get(
+        "/login-redirect",
+        environ_base={
+            "HTTP_X_SSL_CLIENT_VERIFY": "SUCCESS",
+            "HTTP_X_SSL_CLIENT_S_DN": DOD_SDN,
+            "HTTP_X_SSL_CLIENT_CERT": good_cert.decode(),
+        },
+    )
+    assert resp.status_code == 302
+    assert "home" in resp.headers["Location"]
+    assert session["user_id"]
