@@ -48,15 +48,11 @@ _DEV_USERS = {
 def login_dev():
     role = request.args.get("username", "amanda")
     user_data = _DEV_USERS[role]
-    basic_data = {
-        k: v for k, v in user_data.items() if k not in ["dod_id", "atat_role"]
-    }
-    user = _set_user_permissions(
-        user_data["dod_id"], user_data["atat_role_name"], basic_data
+    user = Users.get_or_create_by_dod_id(
+        user_data["dod_id"],
+        atat_role_name=user_data["atat_role_name"],
+        first_name=user_data["first_name"],
+        last_name=user_data["last_name"],
     )
     session["user_id"] = user.id
     return redirect(url_for("atst.home"))
-
-
-def _set_user_permissions(dod_id, role, user_data):
-    return Users.get_or_create_by_dod_id(dod_id, atat_role_name=role, **user_data)
