@@ -1,23 +1,60 @@
-{% macro TextInput(field, placeholder='') -%}
-  <div class='usa-input {% if errors %}usa-input--error{% endif %}'>
-    <label for={{field.name}}>
-      {{ field.label }}
+{% from "components/icon.html" import Icon %}
 
-      {% if field.description %}
-        <span class='usa-input__help'>{{ field.description | safe }}</span>
+{% macro TextInput(field, placeholder='', validation='anything', paragraph=False) -%}
+  <textinput name={{ field.name }} validation={{ validation }} inline-template {% if field.value %}value={{ field.value }}{% endif %}>
+    <div
+      class='usa-input {% if errors %}usa-input--error{% endif %}'
+      v-bind:class="['usa-input usa-input--validation--' + validation, { 'usa-input--error': showError, 'usa-input--success': showValid }]">
+
+      <label for={{field.name}}>
+        {{ field.label }}
+
+        {% if field.description %}
+          <span class='usa-input__help'>{{ field.description | safe }}</span>
+        {% endif %}
+
+        {% if errors %}
+          {{ Icon('alert') }}
+        {% endif %}
+
+        <template v-if='showError'>{{ Icon('alert') }}</template>
+        <template v-if='showValid'>{{ Icon('ok') }}</template>
+
+      </label>
+
+      {% if paragraph %}
+
+        <textarea
+          v-on:input='onInput'
+          v-on:change='onChange'
+          v-model='renderedValue'
+          id='{{ field.name }}'
+          ref='input'
+          placeholder='{{ placeholder }}'>
+        </textarea>
+
+      {% else %}
+
+        <masked-input
+          v-on:input='onInput'
+          v-on:change='onChange'
+          v-model='renderedValue'
+          id='{{ field.name }}'
+          type='text'
+          ref='input'
+          placeholder='{{ placeholder }}'
+          :guide="true"
+          :mask="mask"
+          :pipe="pipe"
+          :keep-char-positions="keepCharPositions">
+        </masked-input>
       {% endif %}
 
-      {% if errors %}
-        {{ Icon('alert') }}
+      {% if field.errors %}
+        {% for error in field.errors %}
+          <span class='usa-input__message'>{{ error }}</span>
+        {% endfor %}
       {% endif %}
-    </label>
-
-    {{ field(placeholder=placeholder) | safe }}
-
-    {% if field.errors %}
-      {% for error in field.errors %}
-        <span class='usa-input__message'>{{ error }}</span>
-      {% endfor %}
-    {% endif %}
-  </div>
+    </div>
+</textinput>
 {%- endmacro %}
