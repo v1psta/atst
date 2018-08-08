@@ -58,10 +58,10 @@ class Requests(object):
         return request
 
     @classmethod
-    def get_many(cls, creator_id=None):
+    def get_many(cls, creator=None):
         filters = []
-        if creator_id:
-            filters.append(Request.creator == creator_id)
+        if creator:
+            filters.append(Request.creator == creator)
 
         requests = (
             db.session.query(Request)

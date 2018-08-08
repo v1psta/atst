@@ -5,7 +5,7 @@ from atst.domain.exceptions import NotFoundError
 from atst.domain.requests import Requests
 from atst.models.request_status_event import RequestStatus
 
-from tests.factories import RequestFactory
+from tests.factories import RequestFactory, UserFactory
 
 
 @pytest.fixture(scope="function")
@@ -25,7 +25,7 @@ def test_nonexistent_request_raises():
 
 
 def test_new_request_has_started_status():
-    request = Requests.create(uuid4(), {})
+    request = Requests.create(UserFactory.build(), {})
     assert request.status == RequestStatus.STARTED
 
 

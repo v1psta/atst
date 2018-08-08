@@ -28,7 +28,7 @@ def requests_index():
     ):
         requests = Requests.get_many()
     else:
-        requests = Requests.get_many(creator_id=g.current_user.id)
+        requests = Requests.get_many(creator=g.current_user)
 
     mapped_requests = [map_request(g.current_user, r) for r in requests]
 

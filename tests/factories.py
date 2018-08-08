@@ -9,31 +9,6 @@ from atst.models.user import User
 from atst.models.role import Role
 
 
-class RequestStatusFactory(factory.alchemy.SQLAlchemyModelFactory):
-    class Meta:
-        model = RequestStatusEvent
-
-
-class RequestFactory(factory.alchemy.SQLAlchemyModelFactory):
-    class Meta:
-        model = Request
-
-    id = factory.Sequence(lambda x: uuid4())
-    status_events = factory.RelatedFactory(
-        RequestStatusFactory, "request", new_status=RequestStatus.STARTED
-    )
-
-
-class PENumberFactory(factory.alchemy.SQLAlchemyModelFactory):
-    class Meta:
-        model = PENumber
-
-
-class TaskOrderFactory(factory.alchemy.SQLAlchemyModelFactory):
-    class Meta:
-        model = TaskOrder
-
-
 class RoleFactory(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
         model = Role
@@ -50,3 +25,29 @@ class UserFactory(factory.alchemy.SQLAlchemyModelFactory):
     first_name = "Fake"
     last_name = "User"
     atat_role = factory.SubFactory(RoleFactory)
+
+
+class RequestStatusFactory(factory.alchemy.SQLAlchemyModelFactory):
+    class Meta:
+        model = RequestStatusEvent
+
+
+class RequestFactory(factory.alchemy.SQLAlchemyModelFactory):
+    class Meta:
+        model = Request
+
+    id = factory.Sequence(lambda x: uuid4())
+    status_events = factory.RelatedFactory(
+        RequestStatusFactory, "request", new_status=RequestStatus.STARTED
+    )
+    creator = factory.SubFactory(UserFactory)
+
+
+class PENumberFactory(factory.alchemy.SQLAlchemyModelFactory):
+    class Meta:
+        model = PENumber
+
+
+class TaskOrderFactory(factory.alchemy.SQLAlchemyModelFactory):
+    class Meta:
+        model = TaskOrder
