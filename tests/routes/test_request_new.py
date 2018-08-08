@@ -62,3 +62,10 @@ def test_ccpo_can_view_request(client, user_session):
     response = client.get("/requests/new/1/{}".format(request.id), follow_redirects=True)
 
     assert response.status_code == 200
+
+
+def test_nonexistent_request(client, user_session):
+    user_session()
+    response = client.get("/requests/new/1/foo", follow_redirects=True)
+
+    assert response.status_code == 404

@@ -1,4 +1,4 @@
-from sqlalchemy import exists, and_
+from sqlalchemy import exists, and_, exc
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.orm.attributes import flag_modified
 
@@ -149,5 +149,5 @@ class Requests(object):
         try:
             db.session.query(Request).filter_by(id=request_id, creator=user_id).one()
             return True
-        except NoResultFound:
+        except (NoResultFound, exc.DataError):
             return False
