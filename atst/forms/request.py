@@ -62,7 +62,7 @@ class RequestForm(ValidatedForm):
     )
 
     engineering_assessment = RadioField(
-        description="Have you completed an engineering assessment of your software systems for cloud readiness?",
+        "Have you completed an engineering assessment of your software systems for cloud readiness?",
         choices=[("yes", "Yes"), ("no", "No"), ("in_progress", "In Progress")],
     )
 
