@@ -15,17 +15,21 @@ data:
         #if ($http_x_forwarded_proto != 'https') {
         #    return 301 https://$host$request_uri;
         #}
-        location /login-dev {
-            auth_basic "Developer Access";
-            auth_basic_user_file /etc/nginx/.htpasswd;
-            try_files $uri @app;
-        }
+        #location /login-dev {
+        #    try_files $uri @appbasicauth;
+        #}
         location / {
             try_files $uri @app;
         }
         location @app {
             include uwsgi_params;
             uwsgi_pass unix:///var/run/uwsgi/uwsgi.socket;
+        }
+        location @appbasicauth {
+            include uwsgi_params;
+            uwsgi_pass unix:///var/run/uwsgi/uwsgi.socket;
+            #auth_basic "Developer Access";
+            #auth_basic_user_file /etc/nginx/.htpasswd;
         }
     }
     server {
