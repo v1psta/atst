@@ -20,6 +20,8 @@ spec:
       labels:
         app: atst
     spec:
+      securityContext:
+        fsGroup: 101
       containers:
         - name: atst
           image: registry.atat.codes:443/atst-prod:e9b6f76
