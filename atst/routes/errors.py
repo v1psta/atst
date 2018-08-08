@@ -1,13 +1,19 @@
 from flask import render_template
 
+import atst.domain.exceptions as exceptions
+
 
 def make_error_pages(app):
-    @app.errorhandler(404)
+    @app.errorhandler(exceptions.NotFoundError)
+    @app.errorhandler(exceptions.UnauthorizedError)
+    # pylint: disable=unused-variable
     def not_found(e):
         return render_template("not_found.html"), 404
 
 
-    @app.errorhandler(401)
+    @app.errorhandler(exceptions.UnauthenticatedError)
+    # pylint: disable=unused-variable
     def unauthorized(e):
         return render_template('unauthorized.html'), 401
 
+    return app
