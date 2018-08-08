@@ -1,6 +1,6 @@
 import pytest
 import atst.domain.authnid.utils as utils
-from tests.mocks import DOD_SDN
+from tests.mocks import DOD_SDN, FIXTURE_EMAIL_ADDRESS
 
 
 def test_parse_sdn():
@@ -15,9 +15,6 @@ def test_parse_bad_sdn():
         utils.parse_sdn("this has nothing to do with anything")
     with pytest.raises(ValueError):
         utils.parse_sdn(None)
-
-
-FIXTURE_EMAIL_ADDRESS = "artgarfunkel@uso.mil"
 
 
 def test_parse_email_cert():

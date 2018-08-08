@@ -4,8 +4,8 @@ import pendulum
 
 from atst.domain.requests import Requests
 from atst.domain.users import Users
-from atst.domain.authnid.utils import parse_sdn
-from atst.domain.exceptions import UnauthenticatedError
+from atst.domain.authnid.utils import parse_sdn, email_from_certificate
+from atst.domain.exceptions import UnauthenticatedError, NotFoundError
 
 bp = Blueprint("atst", __name__)
 
@@ -35,10 +35,19 @@ def catch_all(path):
 # or raises the UnauthenticatedError
 @bp.route('/login-redirect')
 def login_redirect():
+    # raise S_DN parse errors
     if request.environ.get('HTTP_X_SSL_CLIENT_VERIFY') == 'SUCCESS' and _is_valid_certificate(request):
         sdn = request.environ.get('HTTP_X_SSL_CLIENT_S_DN')
         sdn_parts = parse_sdn(sdn)
-        user = Users.get_or_create_by_dod_id(**sdn_parts)
+        try:
+            user = Users.get_by_dod_id(sdn_parts["dod_id"])
+        except NotFoundError:
+            try:
+                email = email_from_certificate(request.environ.get('HTTP_X_SSL_CLIENT_CERT').encode())
+                sdn_parts["email"] = email
+            except ValueError:
+                pass
+            user = Users.create(**sdn_parts)
         session["user_id"] = user.id
 
         return redirect(url_for("atst.home"))
