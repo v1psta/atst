@@ -48,7 +48,7 @@ def make_app(config):
     app.register_blueprint(bp)
     app.register_blueprint(workspace_routes)
     app.register_blueprint(requests_bp)
-    if ENV != "production":
+    if ENV != "prod":
         app.register_blueprint(dev_routes)
 
     apply_authentication(app)

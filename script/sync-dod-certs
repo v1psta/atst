@@ -9,7 +9,7 @@ echo "Resetting CA bundle..."
 rm ssl/server-certs/ca-chain.pem &> /dev/null || true
 touch $CA_CHAIN
 
-if [[ $FLASK_ENV != "production" ]]; then
+if [[ $FLASK_ENV != "prod" ]]; then
   # only for testing and development
   echo "Copy in testing client CA..."
   cat ssl/client-certs/client-ca.crt >> $CA_CHAIN
