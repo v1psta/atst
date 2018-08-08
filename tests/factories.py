@@ -9,6 +9,7 @@ from atst.models.user import User
 from atst.models.role import Role
 
 
+
 class RoleFactory(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
         model = Role
@@ -41,6 +42,47 @@ class RequestFactory(factory.alchemy.SQLAlchemyModelFactory):
         RequestStatusFactory, "request", new_status=RequestStatus.STARTED
     )
     creator = factory.SubFactory(UserFactory)
+    body = factory.LazyAttribute(lambda r: RequestFactory.build_request_body(r.creator))
+
+    @classmethod
+    def build_request_body(cls, user, dollar_value=1000000):
+        return {
+            "primary_poc": {
+                "dodid_poc": user.dod_id,
+                "email_poc": user.email,
+                "fname_poc": user.first_name,
+                "lname_poc": user.last_name
+            },
+            "details_of_use": {
+                "jedi_usage": "adf",
+                "start_date": "2018-08-08",
+                "cloud_native": "yes",
+                "dollar_value": dollar_value,
+                "dod_component": "us_navy",
+                "data_transfers": "less_than_100gb",
+                "jedi_migration": "yes",
+                "num_software_systems": 1,
+                "number_user_sessions": 2,
+                "average_daily_traffic": 1,
+                "engineering_assessment": "yes",
+                "technical_support_team": "yes",
+                "estimated_monthly_spend": 100,
+                "expected_completion_date": "less_than_1_month",
+                "rationalization_software_systems": "yes",
+                "organization_providing_assistance": "in_house_staff"
+            },
+            "information_about_you": {
+                "citizenship": "United States",
+                "designation": "military",
+                "phone_number": "1234567890",
+                "email_request": user.email,
+                "fname_request": user.first_name,
+                "lname_request": user.last_name,
+                "service_branch": "ads",
+                "date_latest_training": "2018-08-06"
+            }
+        }
+
 
 
 class PENumberFactory(factory.alchemy.SQLAlchemyModelFactory):
@@ -51,3 +93,4 @@ class PENumberFactory(factory.alchemy.SQLAlchemyModelFactory):
 class TaskOrderFactory(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
         model = TaskOrder
+
