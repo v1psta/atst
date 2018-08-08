@@ -1,4 +1,4 @@
-from enum import Enum, auto
+from enum import Enum
 from sqlalchemy import Column, func, ForeignKey, Enum as SQLAEnum
 from sqlalchemy.types import DateTime, BigInteger
 from sqlalchemy.schema import Sequence
@@ -9,10 +9,10 @@ from atst.models.types import Id
 
 
 class RequestStatus(Enum):
-    STARTED = auto()
-    PENDING_FINANCIAL_VERIFICATION = auto()
-    PENDING_CCPO_APPROVAL = auto()
-    APPROVED = auto()
+    STARTED = "started"
+    PENDING_FINANCIAL_VERIFICATION = "pending_financial_verification"
+    PENDING_CCPO_APPROVAL = "pending_ccpo_approval"
+    APPROVED = "approved"
 
 
 class RequestStatusEvent(Base):
