@@ -21,7 +21,3 @@ class Request(Base):
     @property
     def status(self):
         return self.status_events[-1].new_status
-
-    def set_status(self, status):
-        self.status_events.append(status)
-
