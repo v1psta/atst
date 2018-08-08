@@ -60,10 +60,10 @@ spec:
         - name: regcred
       volumes:
         - name: atst-config
-          configMap:
-            name: atst-config
+          secret:
+            secretName: atst-config-ini
             items:
-            - key: atst-config
+            - key: atst-overrides.ini
               path: atst-overrides.ini
               mode: 0644
         - name: nginx-auth-tls
