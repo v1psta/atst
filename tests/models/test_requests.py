@@ -26,3 +26,45 @@ def test_request_has_creator():
     request = RequestFactory.create(creator=user)
 
     assert request.creator == user
+
+
+def test_request_status_started_displayname():
+    request = RequestFactory.create()
+    request = Requests.set_status(request, RequestStatus.STARTED)
+
+    assert request.status_displayname == "Started"
+
+
+def test_request_status_pending_financial_displayname():
+    request = RequestFactory.create()
+    request = Requests.set_status(request, RequestStatus.PENDING_FINANCIAL_VERIFICATION)
+
+    assert request.status_displayname == "Pending Financial Verification"
+
+
+def test_request_status_pending_ccpo_displayname():
+    request = RequestFactory.create()
+    request = Requests.set_status(request, RequestStatus.PENDING_CCPO_APPROVAL)
+
+    assert request.status_displayname == "Pending CCPO Approval"
+
+
+def test_request_status_pending_approved_displayname():
+    request = RequestFactory.create()
+    request = Requests.set_status(request, RequestStatus.APPROVED)
+
+    assert request.status_displayname == "Approved"
+
+
+def test_request_status_pending_expired_displayname():
+    request = RequestFactory.create()
+    request = Requests.set_status(request, RequestStatus.EXPIRED)
+
+    assert request.status_displayname == "Expired"
+
+
+def test_request_status_pending_deleted_displayname():
+    request = RequestFactory.create()
+    request = Requests.set_status(request, RequestStatus.DELETED)
+
+    assert request.status_displayname == "Deleted"
