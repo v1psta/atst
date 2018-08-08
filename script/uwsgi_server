@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# script/uwsgi_server: Launch the UWSGI server
+
+source "$(dirname "${0}")"/../script/include/global_header.inc.sh
+
+# Launch UWSGI
+run_command "uwsgi --ini ${UWSGI_CONFIG_FULLPATH}"
