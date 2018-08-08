@@ -10,12 +10,13 @@ def map_request(request):
     status_display_name = request.status.name.replace("_", " ").title()
     time_created = pendulum.instance(request.time_created)
     is_new = time_created.add(days=1) > pendulum.now()
+    app_count = request.body.get("details_of_use", {}).get("num_software_systems", 0)
 
     return {
         "order_id": request.id,
         "is_new": is_new,
         "status": status_display_name,
-        "app_count": 1,
+        "app_count": app_count,
         "date": time_created.format("M/DD/YYYY"),
         "full_name": request.creator.full_name,
     }
