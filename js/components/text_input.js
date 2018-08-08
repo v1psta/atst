@@ -24,7 +24,8 @@ export default {
       valid: false,
       showError: false,
       showValid: false,
-      mask: inputValidations[this.validation].mask
+      mask: inputValidations[this.validation].mask,
+      renderedValue: this.value
     }
   },
 
@@ -32,7 +33,7 @@ export default {
     const value = this.$refs.input.value
     if (value) {
       this._checkIfValid({ value, invalidate: true })
-      this.value = conformToMask(value, this.mask).conformedValue
+      this.renderedValue = conformToMask(value, this.mask).conformedValue
     }
   },
 
