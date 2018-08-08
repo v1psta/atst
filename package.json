@@ -13,6 +13,7 @@
   "dependencies": {
     "npm": "^6.0.1",
     "parcel": "^1.9.7",
+    "text-mask-addons": "^3.8.0",
     "uswds": "^1.6.3",
     "vue": "^2.5.17",
     "vue-text-mask": "^6.1.2"
