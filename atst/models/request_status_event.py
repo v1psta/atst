@@ -29,3 +29,7 @@ class RequestStatusEvent(Base):
     sequence = Column(
         BigInteger, Sequence("request_status_events_sequence_seq"), nullable=False
     )
+
+    @property
+    def displayname(self):
+        return self.new_status.name.replace("_", " ").title()

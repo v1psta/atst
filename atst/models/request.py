@@ -23,3 +23,7 @@ class Request(Base):
     @property
     def status(self):
         return self.status_events[-1].new_status
+
+    @property
+    def status_displayname(self):
+        return self.status_events[-1].displayname
