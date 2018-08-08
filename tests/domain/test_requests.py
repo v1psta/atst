@@ -48,3 +48,11 @@ def test_dont_auto_approve_if_no_dollar_value_specified(new_request):
     request = Requests.submit(new_request)
 
     assert request.status == RequestStatus.PENDING_CCPO_APPROVAL
+
+
+def test_exists(session):
+    user_allowed = UserFactory.create()
+    user_denied = UserFactory.create()
+    request = RequestFactory.create(creator=user_allowed.id)
+    assert Requests.exists(request.id, user_allowed.id)
+    assert not Requests.exists(request.id, user_denied.id)

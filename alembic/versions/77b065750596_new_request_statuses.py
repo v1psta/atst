@@ -40,7 +40,7 @@ def upgrade():
                 WHERE id = :id"""
             )
             db.execute(query, id=status_event["id"], status=status.name)
-        except ValueError:
+        except KeyError:
             query = sa.text("DELETE FROM request_status_events WHERE id = :id")
             db.execute(query, id=status_event["id"])
 

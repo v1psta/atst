@@ -1,4 +1,4 @@
-from sqlalchemy import exists, and_
+from sqlalchemy import exists, and_, exc
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.orm.attributes import flag_modified
 
@@ -42,11 +42,14 @@ class Requests(object):
 
     @classmethod
     def exists(cls, request_id, creator_id):
-        return db.session.query(
-            exists().where(
-                and_(Request.id == request_id, Request.creator == creator_id)
-            )
-        ).scalar()
+        try:
+            return db.session.query(
+                exists().where(
+                    and_(Request.id == request_id, Request.creator == creator_id)
+                )
+            ).scalar()
+        except exc.DataError:
+            return False
 
     @classmethod
     def get(cls, request_id):

@@ -1,3 +1,5 @@
+import random
+import string
 import factory
 from uuid import uuid4
 
@@ -7,6 +9,8 @@ from atst.models.pe_number import PENumber
 from atst.models.task_order import TaskOrder
 from atst.models.user import User
 from atst.models.role import Role
+from atst.models.request_status_event import RequestStatusEvent
+from atst.domain.roles import Roles
 
 
 
@@ -16,21 +20,25 @@ class RoleFactory(factory.alchemy.SQLAlchemyModelFactory):
 
     permissions = []
 
-
+    
 class UserFactory(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
         model = User
 
     id = factory.Sequence(lambda x: uuid4())
-    email = "fake.user@mail.com"
-    first_name = "Fake"
-    last_name = "User"
+    email = factory.Faker("email")
+    first_name = factory.Faker("first_name")
+    last_name = factory.Faker("last_name")
     atat_role = factory.SubFactory(RoleFactory)
+    dod_id = factory.LazyFunction(lambda: "".join(random.choices(string.digits, k=10)))
 
 
-class RequestStatusFactory(factory.alchemy.SQLAlchemyModelFactory):
+class RequestStatusEventFactory(factory.alchemy.SQLAlchemyModelFactory):
+
     class Meta:
         model = RequestStatusEvent
+
+    id = factory.Sequence(lambda x: uuid4())
 
 
 class RequestFactory(factory.alchemy.SQLAlchemyModelFactory):
@@ -84,7 +92,6 @@ class RequestFactory(factory.alchemy.SQLAlchemyModelFactory):
         }
 
 
-
 class PENumberFactory(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
         model = PENumber
@@ -93,4 +100,3 @@ class PENumberFactory(factory.alchemy.SQLAlchemyModelFactory):
 class TaskOrderFactory(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
         model = TaskOrder
-
