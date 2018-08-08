@@ -10,9 +10,12 @@ data:
         server_name www.atat.codes atat.codes;
         listen 8442;
         listen [::]:8442 ipv6only=on;
-        #if ($http_x_forwarded_proto != 'https') {
-        #    return 301 https://$host$request_uri;
-        #}
+        if ($http_x_forwarded_proto != 'https') {
+            return 301 https://$host$request_uri;
+        }
+        location /login-redirect {
+            return 301 https://auth.atat.codes$request_uri;
+        }
         location /login-dev {
             try_files $uri @appbasicauth;
         }
