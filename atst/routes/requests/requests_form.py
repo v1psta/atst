@@ -31,7 +31,7 @@ def requests_form_update(screen=1, request_id=None):
         _check_can_view_request(request_id)
 
     request = Requests.get(request_id) if request_id is not None else None
-    jedi_flow = JEDIRequestFlow(screen, request, request_id=request_id)
+    jedi_flow = JEDIRequestFlow(screen, request=request, request_id=request_id, current_user=g.current_user)
 
     return render_template(
         "requests/screen-%d.html" % int(screen),

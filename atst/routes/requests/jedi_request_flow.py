@@ -11,13 +11,15 @@ class JEDIRequestFlow(object):
     def __init__(
         self,
         current_step,
+        current_user=None,
         request=None,
         post_data=None,
         request_id=None,
-        current_user=None,
         existing_request=None,
     ):
         self.current_step = current_step
+
+        self.current_user = current_user
         self.request = request
 
         self.post_data = post_data
@@ -26,7 +28,6 @@ class JEDIRequestFlow(object):
         self.request_id = request_id
         self.form = self._form()
 
-        self.current_user = current_user
         self.existing_request = existing_request
 
     def _form(self):
@@ -59,6 +60,18 @@ class JEDIRequestFlow(object):
     def form_class(self):
         return self.current_screen["form"]
 
+    # maps user data to fields in OrgForm; this should be moved into the
+    # request initialization process when we have a request schema
+    def map_current_user(self):
+        if self.current_user.id == self.request.creator:
+            return {
+                "fname_request": self.current_user.first_name,
+                "lname_request": self.current_user.last_name,
+                "email_request": self.current_user.email
+            }
+        else:
+            return {}
+
     @property
     def current_step_data(self):
         data = {}
@@ -69,6 +82,9 @@ class JEDIRequestFlow(object):
         if self.request:
             if self.form_section == "review_submit":
                 data = self.request.body
+            if self.form_section == "information_about_you":
+                form_data = self.request.body.get(self.form_section, {})
+                data = { **form_data, **self.map_current_user() }
             else:
                 data = self.request.body.get(self.form_section, {})
 
