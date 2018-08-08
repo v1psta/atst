@@ -143,7 +143,7 @@ class Requests(object):
             "primary_poc",
         ]
         existing_request_sections = request.body.keys()
-        return request.status == "incomplete" and all(
+        return request.status == RequestStatus.STARTED and all(
             section in existing_request_sections for section in all_request_sections
         )
 
