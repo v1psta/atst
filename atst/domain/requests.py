@@ -146,3 +146,7 @@ class Requests(object):
         return request.status == "incomplete" and all(
             section in existing_request_sections for section in all_request_sections
         )
+
+    @classmethod
+    def is_pending_financial_verification(cls, request):
+        return request.status == RequestStatus.PENDING_FINANCIAL_VERIFICATION
