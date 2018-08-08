@@ -5,8 +5,6 @@ metadata:
   name: atst-nginx
   namespace: atat
 data:
-  htpasswd: |
-    atat:$apr1$D9ZQ6.AS$BwgIHxTMbRQsv4LbbAGAT/
   nginx-config: |-
     server {
         server_name www.atat.codes atat.codes;
