@@ -59,8 +59,6 @@ def _is_valid_certificate(request):
     cert = request.environ.get('HTTP_X_SSL_CLIENT_CERT')
     if cert:
         result = app.crl_validator.validate(cert.encode())
-        if not result:
-            app.logger.info(app.crl_validator.errors[-1])
         return result
     else:
         return False

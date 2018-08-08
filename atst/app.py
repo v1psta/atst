@@ -142,8 +142,6 @@ def make_crl_validator(app):
     for filename in pathlib.Path(app.config["CRL_DIRECTORY"]).glob("*"):
         crl_locations.append(filename.absolute())
     app.crl_validator = Validator(
-        roots=[app.config["CA_CHAIN"]], crl_locations=crl_locations
+        roots=[app.config["CA_CHAIN"]], crl_locations=crl_locations, logger=app.logger
     )
-    for e in app.crl_validator.errors:
-        app.logger.error(e)
 
