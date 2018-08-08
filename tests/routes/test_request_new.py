@@ -2,7 +2,7 @@ import re
 import pytest
 import urllib
 from tests.mocks import MOCK_USER, MOCK_REQUEST
-from tests.factories import RequestFactory, UserFactory, RequestStatusEventFactory
+from tests.factories import RequestFactory, UserFactory
 from atst.domain.roles import Roles
 
 
@@ -34,7 +34,6 @@ def test_owner_can_view_request(client, user_session):
     user = UserFactory.create()
     user_session(user)
     request = RequestFactory.create(creator=user.id)
-    status = RequestStatusEventFactory.create(request_id=request.id)
 
     response = client.get("/requests/new/1/{}".format(request.id), follow_redirects=True)
 
@@ -45,7 +44,6 @@ def test_non_owner_cannot_view_request(client, user_session):
     user = UserFactory.create()
     user_session(user)
     request = RequestFactory.create()
-    status = RequestStatusEventFactory.create(request_id=request.id)
 
     response = client.get("/requests/new/1/{}".format(request.id), follow_redirects=True)
 
@@ -57,7 +55,6 @@ def test_ccpo_can_view_request(client, user_session):
     user = UserFactory.create(atat_role=ccpo)
     user_session(user)
     request = RequestFactory.create()
-    status = RequestStatusEventFactory.create(request_id=request.id)
 
     response = client.get("/requests/new/1/{}".format(request.id), follow_redirects=True)
 
