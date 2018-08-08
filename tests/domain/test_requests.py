@@ -53,6 +53,6 @@ def test_dont_auto_approve_if_no_dollar_value_specified(new_request):
 def test_exists(session):
     user_allowed = UserFactory.create()
     user_denied = UserFactory.create()
-    request = RequestFactory.create(creator=user_allowed.id)
-    assert Requests.exists(request.id, user_allowed.id)
-    assert not Requests.exists(request.id, user_denied.id)
+    request = RequestFactory.create(creator=user_allowed)
+    assert Requests.exists(request.id, user_allowed)
+    assert not Requests.exists(request.id, user_denied)

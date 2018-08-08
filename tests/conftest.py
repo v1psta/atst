@@ -5,7 +5,6 @@ import alembic.command
 
 from atst.app import make_app, make_config
 from atst.database import db as _db
-from .mocks import MOCK_USER
 import tests.factories as factories
 
 
@@ -75,7 +74,6 @@ class DummyForm(dict):
 
 
 class DummyField(object):
-
     def __init__(self, data=None, errors=(), raw_data=None):
         self.data = data
         self.errors = list(errors)
@@ -93,9 +91,11 @@ def dummy_field():
 
 
 @pytest.fixture
-def user_session(monkeypatch):
-
-    def set_user_session(user=MOCK_USER):
-        monkeypatch.setattr("atst.domain.auth.get_current_user", lambda *args: user)
+def user_session(monkeypatch, session):
+    def set_user_session(user=None):
+        monkeypatch.setattr(
+            "atst.domain.auth.get_current_user",
+            lambda *args: user or factories.UserFactory.build(),
+        )
 
     return set_user_session

@@ -20,7 +20,7 @@ class RoleFactory(factory.alchemy.SQLAlchemyModelFactory):
 
     permissions = []
 
-    
+
 class UserFactory(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
         model = User
@@ -47,7 +47,7 @@ class RequestFactory(factory.alchemy.SQLAlchemyModelFactory):
 
     id = factory.Sequence(lambda x: uuid4())
     status_events = factory.RelatedFactory(
-        RequestStatusFactory, "request", new_status=RequestStatus.STARTED
+        RequestStatusEventFactory, "request", new_status=RequestStatus.STARTED
     )
     creator = factory.SubFactory(UserFactory)
     body = factory.LazyAttribute(lambda r: RequestFactory.build_request_body(r.creator))

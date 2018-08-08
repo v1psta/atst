@@ -31,8 +31,8 @@ class Requests(object):
     AUTO_APPROVE_THRESHOLD = 1000000
 
     @classmethod
-    def create(cls, creator_id, body):
-        request = Request(creator=creator_id, body=body)
+    def create(cls, creator, body):
+        request = Request(creator=creator, body=body)
         request = Requests.set_status(request, RequestStatus.STARTED)
 
         db.session.add(request)
@@ -41,11 +41,11 @@ class Requests(object):
         return request
 
     @classmethod
-    def exists(cls, request_id, creator_id):
+    def exists(cls, request_id, creator):
         try:
             return db.session.query(
                 exists().where(
-                    and_(Request.id == request_id, Request.creator == creator_id)
+                    and_(Request.id == request_id, Request.creator == creator)
                 )
             ).scalar()
         except exc.DataError:
