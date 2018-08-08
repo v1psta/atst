@@ -42,11 +42,14 @@ class Requests(object):
 
     @classmethod
     def exists(cls, request_id, creator_id):
-        return db.session.query(
-            exists().where(
-                and_(Request.id == request_id, Request.creator == creator_id)
-            )
-        ).scalar()
+        try:
+            return db.session.query(
+                exists().where(
+                    and_(Request.id == request_id, Request.creator == creator_id)
+                )
+            ).scalar()
+        except exc.DataError:
+            return False
 
     @classmethod
     def get(cls, request_id):
@@ -143,11 +146,3 @@ class Requests(object):
         return request.status == "incomplete" and all(
             section in existing_request_sections for section in all_request_sections
         )
-
-    @classmethod
-    def is_creator(cls, request_id, user_id):
-        try:
-            db.session.query(Request).filter_by(id=request_id, creator=user_id).one()
-            return True
-        except (NoResultFound, exc.DataError):
-            return False

@@ -111,7 +111,7 @@ def requests_submit(request_id=None):
 def _check_can_view_request(request_id):
     if Permissions.REVIEW_AND_APPROVE_JEDI_WORKSPACE_REQUEST in g.current_user.atat_permissions:
         pass
-    elif Requests.is_creator(request_id, g.current_user.id):
+    elif Requests.exists(request_id, g.current_user.id):
         pass
     else:
         raise UnauthorizedError(g.current_user, "view request {}".format(request_id))
