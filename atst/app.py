@@ -15,6 +15,7 @@ from atst.routes import bp
 from atst.routes.workspaces import bp as workspace_routes
 from atst.routes.requests import requests_bp
 from atst.routes.dev import bp as dev_routes
+from atst.routes.errors import make_error_pages
 from atst.domain.authnid.crl.validator import Validator
 from atst.domain.auth import apply_authentication
 
@@ -45,6 +46,7 @@ def make_app(config):
     Session(app)
     assets_environment.init_app(app)
 
+    make_error_pages(app)
     app.register_blueprint(bp)
     app.register_blueprint(workspace_routes)
     app.register_blueprint(requests_bp)
