@@ -1,5 +1,5 @@
 {% macro TextInput(field, placeholder='') -%}
-  <div class='usa-input {% if errors %}usa-input--error{% endif %}'>
+  <div class='usa-input {% if field.errors %}usa-input--error{% endif %}'>
     <label for={{field.name}}>
       {{ field.label }}
 
