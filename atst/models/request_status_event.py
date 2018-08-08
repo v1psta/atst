@@ -13,6 +13,8 @@ class RequestStatus(Enum):
     PENDING_FINANCIAL_VERIFICATION = "pending_financial_verification"
     PENDING_CCPO_APPROVAL = "pending_ccpo_approval"
     APPROVED = "approved"
+    EXPIRED = "expired"
+    DELETED = "deleted"
 
 
 class RequestStatusEvent(Base):
