@@ -1,4 +1,4 @@
-from flask import g, redirect, render_template, url_for, request as http_request
+from flask import abort, g, redirect, render_template, url_for, request as http_request
 
 from . import requests_bp
 from atst.domain.requests import Requests
@@ -27,7 +27,7 @@ def requests_form_new(screen):
 @requests_bp.route("/requests/new/<int:screen>/<string:request_id>", methods=["GET"])
 def requests_form_update(screen=1, request_id=None):
     if request_id and not _can_view_request(request_id):
-        return redirect(url_for("atst.unauthorized"))
+        abort(404)
 
     request = Requests.get(request_id) if request_id is not None else None
     jedi_flow = JEDIRequestFlow(screen, request, request_id=request_id)

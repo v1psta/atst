@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, g, redirect, session, url_for, request
+from flask import Blueprint, abort, render_template, g, redirect, session, url_for, request
 from flask import current_app as app
 import pendulum
 
@@ -39,15 +39,7 @@ def login_redirect():
 
         return redirect(url_for("atst.home"))
     else:
-        return redirect(url_for("atst.unauthorized"))
-
-
-@bp.route("/unauthorized")
-def unauthorized():
-    template = render_template('unauthorized.html')
-    response = app.make_response(template)
-    response.status_code = 401
-    return response
+        return abort(401)
 
 
 def _is_valid_certificate(request):

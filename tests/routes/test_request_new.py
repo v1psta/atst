@@ -49,7 +49,7 @@ def test_non_owner_cannot_view_request(client, user_session):
 
     response = client.get("/requests/new/1/{}".format(request.id), follow_redirects=True)
 
-    assert response.status_code == 401
+    assert response.status_code == 404
 
 
 def test_ccpo_can_view_request(client, user_session):
