@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
         - name: atst
-          image: registry.atat.codes:443/atst-prod:cc680fa
+          image: registry.atat.codes:443/atst-prod:e9b6f76
           envFrom:
           - configMapRef:
               name: atst-envvars
@@ -116,12 +116,26 @@ metadata:
   namespace: atat
 spec:
   ports:
-  - name: "http"
+  - name: http
     port: 80
     targetPort: 8442
-  - name: "https"
-    port: 443
-    targetPort: 8443
+  selector:
+    app: atst
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: atst
+  name: atst-auth
+  namespace: atat
+spec:
+  type: NodePort
+  ports:
+  - name: https
+    protocol: TCP
+    nodePort: 32751
+    port: 8443
   selector:
     app: atst
 ---
@@ -147,22 +161,3 @@ spec:
         backend:
           serviceName: atst
           servicePort: 80
----
-apiVersion: extensions/v1beta1
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  name: atst-auth
-  namespace: atat
-  annotations:
-    nginx.ingress.kubernetes.io/proxy-body-size: 10m
-    ingress.kubernetes.io/ssl-passthrough: "true"
-spec:
-  rules:
-  - host: auth.atat.codes
-    http:
-      paths:
-      - path: /
-        backend:
-          serviceName: atst
-          servicePort: 443
