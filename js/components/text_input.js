@@ -1,65 +1,75 @@
-import MaskedInput from 'vue-text-mask'
+import MaskedInput, { conformToMask } from 'vue-text-mask'
 import inputValidations from '../lib/input_validations'
-
-const validationTypes = {
-  matchAnything: /^(?!\s*$).+/,
-  matchDigits: /^\d+$/,
-  matchNumbers: /^-?\d+\.?\d*$/,
-  matchUrl: /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/,
-  matchEmail: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
-}
 
 export default {
   name: 'textinput',
-  data: () =>({
-    valid: false,
-    filled: false,
-    showError: false,
-    showValid: false,
-    validationType: inputValidations.anything.match,
-    mask: inputValidations.anything.mask
-  }),
+
   components: {
     MaskedInput
   },
+
+  props: {
+    validation: {
+      type: String,
+      default: () => 'anything'
+    },
+    value: {
+      type: String,
+      default: () => ''
+    }
+  },
+
+  data: function () {
+    return {
+      valid: false,
+      showError: false,
+      showValid: false,
+      mask: inputValidations[this.validation].mask
+    }
+  },
+
+  mounted: function () {
+    const value = this.$refs.input.value
+    if (value) {
+      this._checkIfValid({ value, invalidate: true })
+      this.value = conformToMask(value, this.mask).conformedValue
+    }
+  },
+
   methods: {
     // When user types a character
     onInput: function (value) {
-      this._checkIfFilled(value)
-      this._checkIfValid(value)
+      this._checkIfValid({ value })
     },
 
     // When field is blurred (un-focused)
-    onChange: function (value) {
-      this._checkIfInvalid(value)
+    onChange: function (e) {
+      // Only invalidate the field when it blurs
+      this._checkIfValid({ value: e.target.value, invalidate: true })
     },
 
-    _checkIfFilled: function (value) {
-      this.filled = (value && value !== '') ? true : false
-    },
-
-    _checkIfValid: function (value) {
+    //
+    _checkIfValid: function ({ value, invalidate = false}) {
+      // Validate the value
       const valid = this._validate(value)
+
+      // Show error messages or not
       if (valid) {
         this.showError = false
-      }
-      this.valid = valid
-      this.showValid = valid
-    },
-
-    _checkIfInvalid: function (value) {
-      const valid = this._validate(value)
-      if (!valid) {
+      } else if (invalidate) {
         this.showError = true
-      } else {
-        this.showError = false
       }
       this.valid = valid
       this.showValid = valid
     },
 
     _validate: function (value) {
-      return this.validationType.test(value)
+      // Strip out all the mask characters
+      let rawValue = inputValidations[this.validation].unmask.reduce((currentValue, character) => {
+        return currentValue.split(character).join('')
+      }, value)
+
+      return inputValidations[this.validation].match.test(rawValue)
     }
   }
 }
