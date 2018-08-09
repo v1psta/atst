@@ -25,10 +25,10 @@ def update_financial_verification(request_id):
 
     if form.validate():
         request_data = {"financial_verification": post_data}
-        Requests.update(request_id, request_data)
         valid = form.perform_extra_validation(
             existing_request.body.get("financial_verification")
         )
+        Requests.update(request_id, request_data)
         if valid:
             return redirect(url_for("requests.financial_verification_submitted"))
         else:
@@ -41,4 +41,4 @@ def update_financial_verification(request_id):
 
 @requests_bp.route("/requests/financial_verification_submitted")
 def financial_verification_submitted():
-    pass
+    return render_template("requests/financial_verification_submitted.html")
