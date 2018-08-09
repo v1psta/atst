@@ -27,4 +27,6 @@ class UnauthorizedError(Exception):
 
 
 class UnauthenticatedError(Exception):
-    pass
+    @property
+    def message(self):
+        return str(self)
