@@ -3,6 +3,7 @@ from flask import session, url_for
 from .mocks import DOD_SDN_INFO, DOD_SDN, FIXTURE_EMAIL_ADDRESS
 from atst.domain.users import Users
 from atst.domain.exceptions import NotFoundError
+from .factories import UserFactory
 
 
 MOCK_USER = {"id": "438567dd-25fa-4d83-a8cc-8aa8366cb24a"}
@@ -13,14 +14,14 @@ def _fetch_user_info(c, t):
 
 
 def test_successful_login_redirect(client, monkeypatch):
-    monkeypatch.setattr("atst.routes._is_valid_certificate", lambda *args: True)
-    monkeypatch.setattr("atst.routes.email_from_certificate", lambda *args: None)
+    monkeypatch.setattr("atst.domain.authnid.AuthenticationContext.authenticate", lambda *args: True)
+    monkeypatch.setattr("atst.domain.authnid.AuthenticationContext.get_user", lambda *args: UserFactory.create())
 
     resp = client.get(
         "/login-redirect",
         environ_base={
             "HTTP_X_SSL_CLIENT_VERIFY": "SUCCESS",
-            "HTTP_X_SSL_CLIENT_S_DN": DOD_SDN,
+            "HTTP_X_SSL_CLIENT_S_DN": "",
             "HTTP_X_SSL_CLIENT_CERT": "",
         },
     )
@@ -94,7 +95,7 @@ def test_crl_validation_on_login(client):
 
 
 def test_creates_new_user_on_login(monkeypatch, client):
-    monkeypatch.setattr("atst.routes._is_valid_certificate", lambda *args: True)
+    monkeypatch.setattr("atst.domain.authnid.AuthenticationContext.authenticate", lambda *args: True)
     cert_file = open("tests/fixtures/{}.crt".format(FIXTURE_EMAIL_ADDRESS)).read()
 
     # ensure user does not exist

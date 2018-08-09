@@ -30,3 +30,7 @@ class UnauthenticatedError(Exception):
     @property
     def message(self):
         return str(self)
+
+
+class CRLValidationError(Exception):
+    pass
