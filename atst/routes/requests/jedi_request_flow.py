@@ -63,11 +63,11 @@ class JEDIRequestFlow(object):
     # maps user data to fields in OrgForm; this should be moved into the
     # request initialization process when we have a request schema
     def map_current_user(self):
-        if self.current_user.id == self.request.creator:
+        if self.request:
             return {
-                "fname_request": self.current_user.first_name,
-                "lname_request": self.current_user.last_name,
-                "email_request": self.current_user.email
+                "fname_request": self.request.creator.first_name,
+                "lname_request": self.request.creator.last_name,
+                "email_request": self.request.creator.email
             }
         else:
             return {}

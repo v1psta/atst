@@ -71,7 +71,7 @@ def test_nonexistent_request(client, user_session):
 def test_creator_info_is_autopopulated(monkeypatch, client, user_session):
     user = UserFactory.create()
     user_session(user)
-    request = RequestFactory.create(creator=user.id, body={"information_about_you": {}})
+    request = RequestFactory.create(creator=user, body={"information_about_you": {}})
 
     response = client.get("/requests/new/2/{}".format(request.id))
     body = response.data.decode()
@@ -84,7 +84,7 @@ def test_non_creator_info_is_not_autopopulated(monkeypatch, client, user_session
     user = UserFactory.create()
     creator = UserFactory.create()
     user_session(user)
-    request = RequestFactory.create(creator=creator.id, body={"information_about_you": {}})
+    request = RequestFactory.create(creator=creator, body={"information_about_you": {}})
 
     response = client.get("/requests/new/2/{}".format(request.id))
     body = response.data.decode()
