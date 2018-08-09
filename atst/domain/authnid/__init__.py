@@ -7,14 +7,15 @@ class AuthenticationContext():
 
     def __init__(self, crl_validator, auth_status, sdn, cert):
         if None in locals().values():
-            raise UnauthenticatedError("Missing required authentication context components")
+            raise UnauthenticatedError(
+                "Missing required authentication context components"
+            )
 
         self.crl_validator = crl_validator
         self.auth_status = auth_status
         self.sdn = sdn
         self.cert = cert.encode()
         self._parsed_sdn = None
-
 
     def authenticate(self):
         if not self.auth_status == "SUCCESS":
@@ -24,7 +25,6 @@ class AuthenticationContext():
             raise UnauthenticatedError("Client certificate failed CRL check")
 
         return True
-
 
     def get_user(self):
         try:
