@@ -2,10 +2,18 @@ import os
 import pytest
 import alembic.config
 import alembic.command
+from logging.config import dictConfig
 
 from atst.app import make_app, make_config
 from atst.database import db as _db
 import tests.factories as factories
+
+dictConfig({
+    'version': 1,
+    'handlers': {'wsgi': {
+        'class': 'logging.NullHandler',
+    }}
+})
 
 
 @pytest.fixture(scope="session")
