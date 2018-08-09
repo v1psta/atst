@@ -5,6 +5,7 @@ import pendulum
 from atst.domain.requests import Requests
 from atst.domain.users import Users
 from atst.domain.authnid.utils import parse_sdn
+from atst.domain.exceptions import UnauthenticatedError
 
 bp = Blueprint("atst", __name__)
 
@@ -29,6 +30,9 @@ def catch_all(path):
     return render_template("{}.html".format(path))
 
 
+# TODO: this should be partly consolidated into a domain function that takes
+# all the necessary UWSGI environment values as args and either returns a user
+# or raises the UnauthenticatedError
 @bp.route('/login-redirect')
 def login_redirect():
     if request.environ.get('HTTP_X_SSL_CLIENT_VERIFY') == 'SUCCESS' and _is_valid_certificate(request):
@@ -39,15 +43,7 @@ def login_redirect():
 
         return redirect(url_for("atst.home"))
     else:
-        return redirect(url_for("atst.unauthorized"))
-
-
-@bp.route("/unauthorized")
-def unauthorized():
-    template = render_template('unauthorized.html')
-    response = app.make_response(template)
-    response.status_code = 401
-    return response
+        raise UnauthenticatedError()
 
 
 def _is_valid_certificate(request):

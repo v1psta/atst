@@ -1,8 +1,9 @@
-from sqlalchemy import exists, and_
+from sqlalchemy import exists, and_, exc
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.orm.attributes import flag_modified
 
-from atst.models import Request, RequestStatusEvent
+from atst.models.request import Request
+from atst.models.request_status_event import RequestStatusEvent, RequestStatus
 from atst.database import db
 
 from .exceptions import NotFoundError
@@ -30,11 +31,9 @@ class Requests(object):
     AUTO_APPROVE_THRESHOLD = 1000000
 
     @classmethod
-    def create(cls, creator_id, body):
-        request = Request(creator=creator_id, body=body)
-
-        status_event = RequestStatusEvent(new_status="incomplete")
-        request.status_events.append(status_event)
+    def create(cls, creator, body):
+        request = Request(creator=creator, body=body)
+        request = Requests.set_status(request, RequestStatus.STARTED)
 
         db.session.add(request)
         db.session.commit()
@@ -42,12 +41,15 @@ class Requests(object):
         return request
 
     @classmethod
-    def exists(cls, request_id, creator_id):
-        return db.session.query(
-            exists().where(
-                and_(Request.id == request_id, Request.creator == creator_id)
-            )
-        ).scalar()
+    def exists(cls, request_id, creator):
+        try:
+            return db.session.query(
+                exists().where(
+                    and_(Request.id == request_id, Request.creator == creator)
+                )
+            ).scalar()
+        except exc.DataError:
+            return False
 
     @classmethod
     def get(cls, request_id):
@@ -59,10 +61,10 @@ class Requests(object):
         return request
 
     @classmethod
-    def get_many(cls, creator_id=None):
+    def get_many(cls, creator=None):
         filters = []
-        if creator_id:
-            filters.append(Request.creator == creator_id)
+        if creator:
+            filters.append(Request.creator == creator)
 
         requests = (
             db.session.query(Request)
@@ -74,10 +76,13 @@ class Requests(object):
 
     @classmethod
     def submit(cls, request):
-        request.status_events.append(RequestStatusEvent(new_status="submitted"))
-
+        new_status = None
         if Requests.should_auto_approve(request):
-            request.status_events.append(RequestStatusEvent(new_status="approved"))
+            new_status = RequestStatus.PENDING_FINANCIAL_VERIFICATION
+        else:
+            new_status = RequestStatus.PENDING_CCPO_APPROVAL
+
+        request = Requests.set_status(request, new_status)
 
         db.session.add(request)
         db.session.commit()
@@ -100,17 +105,26 @@ class Requests(object):
 
         request.body = deep_merge(request_delta, request.body)
 
-        if Requests.should_allow_submission(request):
-            request.status_events.append(
-                RequestStatusEvent(new_status="pending_submission")
-            )
-
         # Without this, sqlalchemy won't notice the change to request.body,
         # since it doesn't track dictionary mutations by default.
         flag_modified(request, "body")
 
         db.session.add(request)
         db.session.commit()
+
+    @classmethod
+    def set_status(cls, request: Request, status: RequestStatus):
+        status_event = RequestStatusEvent(new_status=status)
+        request.status_events.append(status_event)
+        return request
+
+    @classmethod
+    def action_required_by(cls, request):
+        return {
+            RequestStatus.STARTED: "mission_owner",
+            RequestStatus.PENDING_FINANCIAL_VERIFICATION: "mission_owner",
+            RequestStatus.PENDING_CCPO_APPROVAL: "ccpo"
+        }.get(request.status)
 
     @classmethod
     def should_auto_approve(cls, request):
@@ -129,6 +143,10 @@ class Requests(object):
             "primary_poc",
         ]
         existing_request_sections = request.body.keys()
-        return request.status == "incomplete" and all(
+        return request.status == RequestStatus.STARTED and all(
             section in existing_request_sections for section in all_request_sections
         )
+
+    @classmethod
+    def is_pending_financial_verification(cls, request):
+        return request.status == RequestStatus.PENDING_FINANCIAL_VERIFICATION

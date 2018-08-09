@@ -27,8 +27,7 @@ def test_successful_login_redirect(client, monkeypatch):
 def test_unsuccessful_login_redirect(client, monkeypatch):
     resp = client.get("/login-redirect")
 
-    assert resp.status_code == 302
-    assert "unauthorized" in resp.headers["Location"]
+    assert resp.status_code == 401
     assert "user_id" not in session
 
 
@@ -55,7 +54,6 @@ def test_routes_are_protected(client, app):
 
 
 UNPROTECTED_ROUTES = ["/", "/login-dev", "/login-redirect", "/unauthorized"]
-
 # this implicitly relies on the test config and test CRL in tests/fixtures/crl
 
 
@@ -72,8 +70,7 @@ def test_crl_validation_on_login(client):
             "HTTP_X_SSL_CLIENT_CERT": bad_cert.decode(),
         },
     )
-    assert resp.status_code == 302
-    assert "unauthorized" in resp.headers["Location"]
+    assert resp.status_code == 401
     assert "user_id" not in session
 
     # good cert is not on the test CRL, passes

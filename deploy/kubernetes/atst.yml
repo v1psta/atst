@@ -1,0 +1,165 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: atat
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: atst
+  name: atst
+  namespace: atat
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: atst
+    spec:
+      securityContext:
+        fsGroup: 101
+      containers:
+        - name: atst
+          image: registry.atat.codes:443/atst-prod:e9b6f76
+          envFrom:
+          - configMapRef:
+              name: atst-envvars
+          volumeMounts:
+            - name: atst-config
+              mountPath: "/opt/atat/atst/atst-overrides.ini"
+              subPath: atst-overrides.ini
+            - name: uwsgi-config
+              mountPath: "/opt/atat/atst/uwsgi-config.ini"
+              subPath: uwsgi-config.ini
+            - name: uwsgi-socket-dir
+              mountPath: "/var/run/uwsgi"
+        - name: atst-nginx
+          image: nginx:alpine
+          ports:
+            - containerPort: 8442
+              name: http
+            - containerPort: 8443
+              name: https
+          volumeMounts:
+            - name: nginx-auth-tls
+              mountPath: "/etc/ssl/private"
+            - name: nginx-config
+              mountPath: "/etc/nginx/conf.d/atst.conf"
+              subPath: atst.conf
+            - name: nginx-dhparam
+              mountPath: "/etc/ssl/dhparam.pem"
+              subPath: dhparam.pem
+            - name: nginx-htpasswd
+              mountPath: "/etc/nginx/.htpasswd"
+              subPath: .htpasswd
+            - name: uwsgi-socket-dir
+              mountPath: "/var/run/uwsgi"
+      imagePullSecrets:
+        - name: regcred
+      volumes:
+        - name: atst-config
+          secret:
+            secretName: atst-config-ini
+            items:
+            - key: atst-overrides.ini
+              path: atst-overrides.ini
+              mode: 0644
+        - name: nginx-auth-tls
+          secret:
+            secretName: auth-atst-ingress-tls
+            items:
+            - key: tls.crt
+              path: auth.atat.crt
+              mode: 0644
+            - key: tls.key
+              path: auth.atat.key
+              mode: 0640
+        - name: nginx-config
+          configMap:
+            name: atst-nginx
+            items:
+            - key: nginx-config
+              path: atst.conf
+        - name: nginx-dhparam
+          secret:
+            secretName: dhparam-4096
+            items:
+            - key: dhparam.pem
+              path: dhparam.pem
+              mode: 0640
+        - name: nginx-htpasswd
+          secret:
+            secretName: atst-nginx-htpasswd
+            items:
+            - key: htpasswd
+              path: .htpasswd
+              mode: 0640
+        - name: uwsgi-config
+          configMap:
+            name: atst-config
+            items:
+            - key: uwsgi-config
+              path: uwsgi-config.ini
+              mode: 0644
+        - name: uwsgi-socket-dir
+          emptyDir:
+            medium: Memory
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: atst
+  name: atst
+  namespace: atat
+spec:
+  ports:
+  - name: http
+    port: 80
+    targetPort: 8442
+  selector:
+    app: atst
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: atst
+  name: atst-auth
+  namespace: atat
+spec:
+  type: NodePort
+  ports:
+  - name: https
+    protocol: TCP
+    nodePort: 32751
+    port: 8443
+  selector:
+    app: atst
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: atst
+  namespace: atat
+  annotations:
+    kubernetes.io/tls-acme: "true"
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/proxy-body-size: 10m
+spec:
+  tls:
+  - hosts:
+    - www.atat.codes
+    secretName: atst-ingress-tls
+  rules:
+  - host: www.atat.codes
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: atst
+          servicePort: 80

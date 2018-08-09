@@ -1,4 +1,4 @@
-FROM python:3.6.5-alpine
+FROM alpine:3.8
 
 ### Very low chance of changing
 ###############################
@@ -7,12 +7,12 @@ ARG APP_USER=atst
 ARG APP_GROUP=atat
 ARG APP_DIR=/opt/atat/atst
 ARG APP_PORT=8000
-ARG SITE_PACKAGES_DIR=/usr/local/lib/python3.6/site-packages
+ARG LOCAL_BIN_DIR=/usr/bin
+ARG SITE_PACKAGES_DIR=/usr/lib/python3.6/site-packages
 
 ENV APP_USER "${APP_USER}"
 ENV APP_GROUP "${APP_GROUP}"
 ENV APP_DIR "${APP_DIR}"
-ENV SKIP_PIPENV true
 
 # Set port to open
 EXPOSE "${APP_PORT}"
@@ -21,12 +21,15 @@ EXPOSE "${APP_PORT}"
 ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 
 # Default command is to launch the server
-CMD ["bash", "-c", "${APP_DIR}/script/server"]
+CMD ["bash", "-c", "${APP_DIR}/script/uwsgi_server"]
 
 ### Items that will change almost every build
 #############################################
 # Copy installed python packages from the tester image
 COPY --from=atst-tester:latest "${SITE_PACKAGES_DIR}" "${SITE_PACKAGES_DIR}"
+
+# Copy local bin directory (contains python system package wrappers)
+COPY --from=atst-tester:latest "${LOCAL_BIN_DIR}" "${LOCAL_BIN_DIR}"
 
 # Copy the app directory contents from the tester image (includes node modules)
 COPY --from=atst-tester:latest "${APP_DIR}" "${APP_DIR}"

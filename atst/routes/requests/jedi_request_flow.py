@@ -76,7 +76,7 @@ class JEDIRequestFlow(object):
 
     @property
     def can_submit(self):
-        return self.request and self.request.status != "incomplete"
+        return self.request and Requests.should_allow_submission(self.request)
 
     @property
     def next_screen(self):
@@ -124,5 +124,5 @@ class JEDIRequestFlow(object):
         if self.request_id:
             Requests.update(self.request_id, request_data)
         else:
-            request = Requests.create(self.current_user.id, request_data)
+            request = Requests.create(self.current_user, request_data)
             self.request_id = request.id

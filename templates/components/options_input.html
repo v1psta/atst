@@ -1,11 +1,11 @@
 {% from "components/icon.html" import Icon %}
 
 {% macro OptionsInput(field, inline=False) -%}
-  <div class='usa-input {% if errors %}usa-input--error{% endif %}'>
+  <div class='usa-input {% if field.errors %}usa-input--error{% endif %}'>
 
     <fieldset class="usa-input__choices {% if inline %}usa-input__choices--inline{% endif %}">
       <legend>
-        {{ field.label }}
+        {{ field.label | striptags}}
 
         {% if field.description %}
           <span class='usa-input__help'>{{ field.description | safe }}</span>
@@ -26,4 +26,7 @@
 
     </fieldset>
   </div>
+
+
+
 {%- endmacro %}

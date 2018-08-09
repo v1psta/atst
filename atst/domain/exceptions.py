@@ -14,3 +14,19 @@ class AlreadyExistsError(Exception):
     @property
     def message(self):
         return "{} already exists".format(self.resource_name)
+
+
+class UnauthorizedError(Exception):
+    def __init__(self, user, action):
+        self.user = user
+        self.action = action
+
+    @property
+    def message(self):
+        return "User {} not authorized to {}".format(self.user.id, self.action)
+
+
+class UnauthenticatedError(Exception):
+    @property
+    def message(self):
+        return str(self)

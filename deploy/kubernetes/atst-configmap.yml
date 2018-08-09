@@ -1,0 +1,15 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: atst-config
+  namespace: atat
+data:
+  uwsgi-config: |-
+    [uwsgi]
+    callable = app
+    module = app
+    socket = /var/run/uwsgi/uwsgi.socket
+    plugins = python3
+    virtualenv = /opt/atat/atst/.venv
+    chmod-socket = 666

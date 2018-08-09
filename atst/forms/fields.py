@@ -29,8 +29,10 @@ class NewlineListField(Field):
     widget = TextArea()
 
     def _value(self):
-        if self.data:
-            return "\n".join(self.data)
+        if isinstance(self.data, list):
+            return '\n'.join(self.data)
+        elif self.data:
+            return self.data
         else:
             return ""
 

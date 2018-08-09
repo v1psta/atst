@@ -169,15 +169,4 @@ def upgrade():
 
 
 def downgrade():
-    db = op.get_bind()
-    db.execute("""
-        DELETE FROM roles
-        WHERE name IN (
-            'ccpo',
-            'owner',
-            'admin',
-            'developer',
-            'billing_auditor',
-            'security_auditor'
-        );
-    """)
+    pass

@@ -3,17 +3,14 @@ from uuid import uuid4
 
 from atst.domain.exceptions import NotFoundError
 from atst.domain.requests import Requests
+from atst.models.request_status_event import RequestStatus
 
-from tests.factories import RequestFactory
+from tests.factories import RequestFactory, UserFactory
 
 
 @pytest.fixture(scope="function")
 def new_request(session):
-    created_request = RequestFactory.create()
-    session.add(created_request)
-    session.commit()
-
-    return created_request
+    return RequestFactory.create()
 
 
 def test_can_get_request(new_request):
@@ -27,22 +24,42 @@ def test_nonexistent_request_raises():
         Requests.get(uuid4())
 
 
+def test_new_request_has_started_status():
+    request = Requests.create(UserFactory.build(), {})
+    assert request.status == RequestStatus.STARTED
+
+
 def test_auto_approve_less_than_1m(new_request):
     new_request.body = {"details_of_use": {"dollar_value": 999999}}
     request = Requests.submit(new_request)
 
-    assert request.status == 'approved'
+    assert request.status == RequestStatus.PENDING_FINANCIAL_VERIFICATION
 
 
 def test_dont_auto_approve_if_dollar_value_is_1m_or_above(new_request):
     new_request.body = {"details_of_use": {"dollar_value": 1000000}}
     request = Requests.submit(new_request)
 
-    assert request.status == 'submitted'
+    assert request.status == RequestStatus.PENDING_CCPO_APPROVAL
 
 
 def test_dont_auto_approve_if_no_dollar_value_specified(new_request):
     new_request.body = {"details_of_use": {}}
     request = Requests.submit(new_request)
 
-    assert request.status == 'submitted'
+    assert request.status == RequestStatus.PENDING_CCPO_APPROVAL
+
+
+def test_should_allow_submission(new_request):
+    assert Requests.should_allow_submission(new_request)
+
+    del new_request.body['details_of_use']
+    assert not Requests.should_allow_submission(new_request)
+
+
+def test_exists(session):
+    user_allowed = UserFactory.create()
+    user_denied = UserFactory.create()
+    request = RequestFactory.create(creator=user_allowed)
+    assert Requests.exists(request.id, user_allowed)
+    assert not Requests.exists(request.id, user_denied)

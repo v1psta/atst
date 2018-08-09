@@ -10,7 +10,7 @@ mkdir -p crl
 rsync -rq crl-tmp/. crl/.
 rm -rf crl-tmp
 
-if [[ $FLASK_ENV != "production" ]]; then
+if [[ $FLASK_ENV != "prod" ]]; then
   # place our test CRL there
   cp ssl/client-certs/client-ca.der.crl crl/
 fi

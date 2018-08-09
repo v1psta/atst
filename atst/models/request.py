@@ -1,6 +1,6 @@
-from sqlalchemy import Column, func
+from sqlalchemy import Column, func, ForeignKey
 from sqlalchemy.types import DateTime
-from sqlalchemy.dialects.postgresql import JSONB, UUID
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import relationship
 
 from atst.models import Base
@@ -11,22 +11,19 @@ class Request(Base):
     __tablename__ = "requests"
 
     id = Id()
-    creator = Column(UUID(as_uuid=True))
     time_created = Column(DateTime(timezone=True), server_default=func.now())
     body = Column(JSONB)
     status_events = relationship(
         "RequestStatusEvent", backref="request", order_by="RequestStatusEvent.sequence"
     )
 
+    user_id = Column(ForeignKey("users.id"), nullable=False)
+    creator = relationship("User")
+
     @property
     def status(self):
         return self.status_events[-1].new_status
 
     @property
-    def action_required_by(self):
-        return {
-            "incomplete": "mission_owner",
-            "pending_submission": "mission_owner",
-            "submitted": "ccpo",
-            "approved": "mission_owner",
-        }.get(self.status)
+    def status_displayname(self):
+        return self.status_events[-1].displayname

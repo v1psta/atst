@@ -65,19 +65,11 @@
   }
 
   label {
-    padding: 0 0 $gap 0;
+    padding: 0 0 $gap/2 0;
     margin: 0;
     @include h4;
     @include line-max;
     position: relative;
-
-    .usa-input__help {
-      display: block;
-      @include h5;
-      font-weight: normal;
-      padding-top: $gap / 2;
-      @include line-max;
-    }
 
     .icon {
       position: absolute;
@@ -86,6 +78,14 @@
       margin-top: 1.4rem;
       margin-left: $gap;
     }
+  }
+
+  .usa-input__help {
+    display: block;
+    @include h4;
+    font-weight: normal;
+    padding: $gap/2 0;
+    @include line-max;
   }
 
   input,
@@ -100,9 +100,14 @@
       padding: 0 0 $gap 0;
       @include h4;
 
+      label {
+        font-weight: $font-bold;
+      }
+
       .icon {
         vertical-align: middle;
       }
+
     }
 
     ul {

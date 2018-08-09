@@ -61,11 +61,9 @@ class TestPENumberInForm:
         assert response.status_code == 302
         assert "/requests/financial_verification_submitted" in response.headers.get("Location")
 
-    def test_submit_request_form_with_new_valid_pe_id(self, session, monkeypatch, client):
+    def test_submit_request_form_with_new_valid_pe_id(self, monkeypatch, client):
         self._set_monkeypatches(monkeypatch)
         pe = PENumberFactory.create(number="8675309U", description="sample PE number")
-        session.add(pe)
-        session.commit()
 
         data = dict(self.required_data)
         data['pe_id'] = pe.number
@@ -74,3 +72,14 @@ class TestPENumberInForm:
 
         assert response.status_code == 302
         assert "/requests/financial_verification_submitted" in response.headers.get("Location")
+
+    def test_submit_request_form_with_missing_pe_id(self, monkeypatch, client):
+        self._set_monkeypatches(monkeypatch)
+
+        data = dict(self.required_data)
+        data['pe_id'] = ''
+
+        response = self.submit_data(client, data)
+
+        assert "There were some errors, see below" in response.data.decode()
+        assert response.status_code == 200

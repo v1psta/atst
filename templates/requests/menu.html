@@ -1,13 +1,21 @@
 <div class="progress-menu progress-menu--four">
   <ul>
     {% for s in screens %}
-    <li class="progress-menu__item">
-      <a href="{{ url_for('requests.requests_form_update', screen=loop.index, request_id=request_id) if request_id else url_for('requests.requests_form_new', screen=loop.index) }}"
-        {% if g.matchesPath('/requests/new/{{ loop.index + 1 }}') %}class="active"{% endif %}
-      >
-        {{ s['title'] }}
-      </a>
-    </li>
+      {% if loop.index < current %}
+        {% set step_indicator = 'complete' %}
+      {% elif loop.index == current %}
+        {% set step_indicator = 'active' %}
+      {% else %}
+        {% set step_indicator = 'incomplete' %}
+      {% endif %}
+
+      <li class="progress-menu__item progress-menu__item--{{ step_indicator }}">
+        <a href="{{ url_for('requests.requests_form_update', screen=loop.index, request_id=request_id) if request_id else url_for('requests.requests_form_new', screen=loop.index) }}"
+          {% if g.matchesPath('/requests/new/{{ loop.index + 1 }}') %}class="active"{% endif %}
+        >
+          {{ s['title'] }}
+        </a>
+      </li>
     {% endfor %}
   </ul>
 </div>

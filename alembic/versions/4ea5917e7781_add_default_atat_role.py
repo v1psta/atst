@@ -34,6 +34,4 @@ def upgrade():
 
 
 def downgrade():
-    db = op.get_bind()
-    db.execute("DELETE FROM roles WHERE name = 'default'")
-
+    pass
