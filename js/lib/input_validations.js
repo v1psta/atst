@@ -11,7 +11,7 @@ export default {
   integer: {
     mask: createNumberMask({ prefix: '', allowDecimal: false }),
     match: /^[1-9]\d*$/,
-    unmask: []
+    unmask: [',']
   },
   dollars: {
     mask: createNumberMask({ prefix: '$', allowDecimal: true }),
@@ -21,7 +21,7 @@ export default {
   gigabytes: {
     mask: createNumberMask({ prefix: '', suffix:'GB', allowDecimal: false }),
     match: /^[1-9]\d*$/,
-    unmask: ['GB']
+    unmask: [',','GB']
   },
   email: {
     mask: emailMask,
