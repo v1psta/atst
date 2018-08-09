@@ -48,4 +48,4 @@ deploy:
   provider: script
   script: echo "** Image push only for now... stay tuned! **"
   on:
-    branch: master
+    all_branches: true
