@@ -34,7 +34,7 @@ class Validator:
         self._add_roots(self.roots)
         self.store.set_flags(crypto.X509StoreFlags.CRL_CHECK)
 
-    def log(self, message):
+    def log_error(self, message):
         if self.logger:
             self.logger.error(message)
 
@@ -43,7 +43,7 @@ class Validator:
             try:
                 self._add_crl(filename)
             except crypto.Error as err:
-                self.log(
+                self.log_error(
                     "CRL could not be parsed. Filename: {}, Error: {}, args: {}".format(
                         filename, type(err), err.args
                     )
@@ -120,7 +120,7 @@ class Validator:
             return True
 
         except crypto.X509StoreContextError as err:
-            self.log(
+            self.log_error(
                 "Certificate revoked or errored. Error: {}. Args: {}".format(
                     type(err), err.args
                 )
