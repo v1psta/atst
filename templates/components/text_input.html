@@ -8,8 +8,7 @@
     inline-template>
 
     <div
-      v-bind:class="['usa-input usa-input--validation--' + validation, { 'usa-input--error': showError, 'usa-input--success': showValid }]"
-      class='usa-input {% if field.errors %}usa-input--error{% endif %}'>
+      v-bind:class="['usa-input {% if field.errors %}usa-input--error{% endif %} usa-input--validation--' + validation, { 'usa-input--error': showError, 'usa-input--success': showValid }]">
 
       <label for={{field.name}}>
         {{ field.label }}
@@ -54,7 +53,7 @@
           placeholder='{{ placeholder }}'
           {% if field.errors %}aria-invalid='true'{% endif %}>
         </masked-input>
-      
+
       {% endif %}
 
       {% if field.errors %}
