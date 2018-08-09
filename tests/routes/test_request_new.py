@@ -33,7 +33,7 @@ def test_submit_valid_request_form(monkeypatch, client, user_session):
 def test_owner_can_view_request(client, user_session):
     user = UserFactory.create()
     user_session(user)
-    request = RequestFactory.create(creator=user.id)
+    request = RequestFactory.create(creator=user)
 
     response = client.get("/requests/new/1/{}".format(request.id), follow_redirects=True)
 

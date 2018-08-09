@@ -9,12 +9,12 @@ from atst.models.types import Id
 
 
 class RequestStatus(Enum):
-    STARTED = "started"
-    PENDING_FINANCIAL_VERIFICATION = "pending_financial_verification"
-    PENDING_CCPO_APPROVAL = "pending_ccpo_approval"
-    APPROVED = "approved"
-    EXPIRED = "expired"
-    DELETED = "deleted"
+    STARTED = "Started"
+    PENDING_FINANCIAL_VERIFICATION = "Pending Financial Verification"
+    PENDING_CCPO_APPROVAL = "Pending CCPO Approval"
+    APPROVED = "Approved"
+    EXPIRED = "Expired"
+    DELETED = "Deleted"
 
 
 class RequestStatusEvent(Base):
@@ -29,3 +29,7 @@ class RequestStatusEvent(Base):
     sequence = Column(
         BigInteger, Sequence("request_status_events_sequence_seq"), nullable=False
     )
+
+    @property
+    def displayname(self):
+        return self.new_status.value

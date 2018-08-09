@@ -37,6 +37,7 @@ class Users(object):
             db.session.add(user)
             db.session.commit()
         except IntegrityError:
+            db.session.rollback()
             raise AlreadyExistsError("user")
 
         return user
