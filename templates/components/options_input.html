@@ -5,7 +5,7 @@
 
     <fieldset class="usa-input__choices {% if inline %}usa-input__choices--inline{% endif %}">
       <legend>
-        {{ field.label }}
+        {{ field.label | striptags}}
 
         {% if field.description %}
           <span class='usa-input__help'>{{ field.description | safe }}</span>
@@ -26,4 +26,7 @@
 
     </fieldset>
   </div>
+
+
+
 {%- endmacro %}
