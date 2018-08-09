@@ -1,3 +1,5 @@
+{% from "components/icon.html" import Icon %}
+
 {% macro TextInput(field, placeholder='') -%}
   <div class='usa-input {% if field.errors %}usa-input--error{% endif %}'>
     <label for={{field.name}}>
@@ -7,9 +9,7 @@
         <span class='usa-input__help'>{{ field.description | safe }}</span>
       {% endif %}
 
-      {% if errors %}
-        {{ Icon('alert') }}
-      {% endif %}
+      {% if field.errors %}{{ Icon('alert') }}{% endif %}
     </label>
 
     {{ field(placeholder=placeholder) | safe }}
