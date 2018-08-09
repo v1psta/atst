@@ -4,7 +4,7 @@ import re
 import os
 import shutil
 from OpenSSL import crypto, SSL
-from atst.domain.authnid.crl.validator import Validator
+from atst.domain.authnid.crl import Validator
 import atst.domain.authnid.crl.util as util
 
 

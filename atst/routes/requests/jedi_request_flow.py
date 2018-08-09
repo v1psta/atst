@@ -61,7 +61,8 @@ class JEDIRequestFlow(object):
         return self.current_screen["form"]
 
     # maps user data to fields in OrgForm; this should be moved into the
-    # request initialization process when we have a request schema
+    # request initialization process when we have a request schema, or we just
+    # shouldn't record this data on the request
     def map_current_user(self):
         if self.request:
             return {
