@@ -85,7 +85,7 @@ class JEDIRequestFlow(object):
                 data = self.request.body
             if self.form_section == "information_about_you":
                 form_data = self.request.body.get(self.form_section, {})
-                data = { **form_data, **self.map_current_user() }
+                data = { **self.map_current_user(), **form_data }
             else:
                 data = self.request.body.get(self.form_section, {})
 
