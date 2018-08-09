@@ -41,4 +41,4 @@ def update_financial_verification(request_id):
 
 @requests_bp.route("/requests/financial_verification_submitted")
 def financial_verification_submitted():
-    pass
+    return render_template("requests/financial_verification_submitted.html")
