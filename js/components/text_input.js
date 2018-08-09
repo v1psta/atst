@@ -14,7 +14,7 @@ export default {
       type: String,
       default: () => 'anything'
     },
-    value: {
+    setValue: {
       type: String,
       default: () => ''
     }
@@ -27,21 +27,24 @@ export default {
       mask: inputValidations[this.validation].mask,
       pipe: inputValidations[this.validation].pipe || undefined,
       keepCharPositions: inputValidations[this.validation].keepCharPositions || false,
-      renderedValue: this.value
+      value: this.setValue
     }
   },
 
   mounted: function () {
-    const value = this.$refs.input.value
-    if (value) {
-      this._checkIfValid({ value, invalidate: true })
-      this.renderedValue = conformToMask(value, this.mask).conformedValue
+    if (this.value && this.mask) {
+      this._checkIfValid({ value: this.value, invalidate: true })
+      this.value = conformToMask(this.value, this.mask).conformedValue
     }
   },
 
   methods: {
     // When user types a character
-    onInput: function (value) {
+    onInput: function (e) {
+      // When we use the native textarea element, we receive an event object
+      // When we use the masked-input component, we receive the value directly
+      const value = typeof e === 'object' ? e.target.value : e
+      this.value = value
       this._checkIfValid({ value })
     },
 
@@ -72,13 +75,14 @@ export default {
       })
     },
 
-    _validate: function (value) {
-      // Strip out all the mask characters
-      let rawValue = inputValidations[this.validation].unmask.reduce((currentValue, character) => {
+    _rawValue: function (value) {
+      return inputValidations[this.validation].unmask.reduce((currentValue, character) => {
         return currentValue.split(character).join('')
       }, value)
+    },
 
-      return inputValidations[this.validation].match.test(rawValue)
+    _validate: function (value) {
+      return inputValidations[this.validation].match.test(this._rawValue(value))
     }
   }
 }
