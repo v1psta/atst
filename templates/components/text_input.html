@@ -1,14 +1,18 @@
 {% from "components/icon.html" import Icon %}
 
 {% macro TextInput(field, placeholder='', validation='anything', paragraph=False) -%}
-  <textinput name={{ field.name }} validation={{ validation }} inline-template {% if field.value %}value={{ field.value }}{% endif %}>
+  <textinput
+    name='{{ field.name }}'
+    validation='{{ validation }}'
+    {% if field.data %}set-value='{{ field.data }}'{% endif %}
+    inline-template>
+
     <div
-      class='usa-input {% if errors %}usa-input--error{% endif %}'
-      v-bind:class="['usa-input usa-input--validation--' + validation, { 'usa-input--error': showError, 'usa-input--success': showValid }]">
+      v-bind:class="['usa-input usa-input--validation--' + validation, { 'usa-input--error': showError, 'usa-input--success': showValid }]"
+      class='usa-input {% if field.errors %}usa-input--error{% endif %}'>
 
       <label for={{field.name}}>
         {{ field.label }}
-
         {% if field.description %}
           <span class='usa-input__help'>{{ field.description | safe }}</span>
         {% endif %}
@@ -27,8 +31,9 @@
         <textarea
           v-on:input='onInput'
           v-on:change='onChange'
-          v-model='renderedValue'
+          v-bind:value='value'
           id='{{ field.name }}'
+          name='{{ field.name }}'
           ref='input'
           placeholder='{{ placeholder }}'>
         </textarea>
@@ -38,15 +43,16 @@
         <masked-input
           v-on:input='onInput'
           v-on:change='onChange'
-          v-model='renderedValue'
+          v-bind:value='value'
+          v-bind:mask='mask'
+          v-bind:pipe='pipe'
+          v-bind:keep-char-positions='keepCharPositions'
           id='{{ field.name }}'
+          name='{{ field.name }}'
           type='text'
           ref='input'
           placeholder='{{ placeholder }}'
-          :guide="true"
-          :mask="mask"
-          :pipe="pipe"
-          :keep-char-positions="keepCharPositions">
+          {% if field.errors %}aria-invalid='true'{% endif %}>
         </masked-input>
       {% endif %}
 
