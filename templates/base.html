@@ -35,6 +35,11 @@
 
     {% include 'footer.html' %}
     {% block modal %}{% endblock %}
+
+    {% if g.modal %}
+      <div data-modal="{{ g.modal }}" id="modalOpen">
+      </div>
+    {% endif %}
   </div>
 
   {% assets "js_all" %}

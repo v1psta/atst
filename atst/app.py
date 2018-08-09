@@ -68,7 +68,7 @@ def make_flask_callbacks(app):
         )
         g.dev = os.getenv("FLASK_ENV", "dev") == "dev"
         g.matchesPath = lambda href: re.match("^" + href, request.path)
-        g.modalOpen = request.args.get("modal", False)
+        g.modal = request.args.get("modal", None)
         g.current_user = {
             "id": "cce17030-4109-4719-b958-ed109dbb87c8",
             "first_name": "Amanda",
