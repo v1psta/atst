@@ -3,6 +3,7 @@ from flask import render_template, g, url_for
 
 from . import requests_bp
 from atst.domain.requests import Requests
+from atst.models.request_status_event import RequestStatus
 
 
 def map_request(request):
@@ -33,4 +34,6 @@ def requests_index():
 
     mapped_requests = [map_request(r) for r in requests]
 
-    return render_template("requests.html", requests=mapped_requests)
+    pending_fv = any(r["status"] == RequestStatus.PENDING_FINANCIAL_VERIFICATION.value for r in mapped_requests)
+
+    return render_template("requests.html", requests=mapped_requests, pending_financial_verification=pending_fv)
