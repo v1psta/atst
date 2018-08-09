@@ -1,5 +1,5 @@
 import pendulum
-from flask import render_template, g
+from flask import render_template, g, url_for
 
 from . import requests_bp
 from atst.domain.requests import Requests
@@ -9,6 +9,8 @@ def map_request(request):
     time_created = pendulum.instance(request.time_created)
     is_new = time_created.add(days=1) > pendulum.now()
     app_count = request.body.get("details_of_use", {}).get("num_software_systems", 0)
+    update_url = url_for('requests.requests_form_update', screen=1, request_id=request.id)
+    verify_url = url_for('requests.financial_verification', request_id=request.id)
 
     return {
         "order_id": request.id,
@@ -17,6 +19,7 @@ def map_request(request):
         "app_count": app_count,
         "date": time_created.format("M/DD/YYYY"),
         "full_name": request.creator.full_name,
+        "edit_link": verify_url if Requests.is_pending_financial_verification(request) else update_url
     }
 
 
