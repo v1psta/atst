@@ -29,7 +29,8 @@ export default {
       pipe: inputValidations[this.validation].pipe || undefined,
       keepCharPositions: inputValidations[this.validation].keepCharPositions || false,
       validationError: inputValidations[this.validation].validationError || '',
-      value: this.initialValue
+      value: this.initialValue,
+      modified: false
     }
   },
 
@@ -60,6 +61,7 @@ export default {
       // When we use the masked-input component, we receive the value directly
       const value = typeof e === 'object' ? e.target.value : e
       this.value = value
+      this.modified = true
       this._checkIfValid({ value })
     },
 
@@ -74,7 +76,7 @@ export default {
       // Validate the value
       let valid = this._validate(value)
 
-      if (this.initialErrors && this.initialErrors.length) {
+      if (!this.modified && this.initialErrors && this.initialErrors.length) {
         valid = false
       }
 
