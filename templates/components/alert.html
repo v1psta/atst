@@ -1,6 +1,6 @@
 {% from "components/icon.html" import Icon %}
 
-{% macro Alert(title, message=None, actions=None, level='info') -%}
+{% macro Alert(title, message=None, actions=None, level='info', fragment=None) -%}
   {% set role = 'alertdialog' if actions else 'alert' %}
   {% set levels = {
     'warning': {
@@ -29,6 +29,12 @@
 
       {% if message %}
         <div class='alert__message'>{{ message | safe }}</div>
+      {% endif %}
+
+      {% if fragment %}
+        <div class='alert__message'>
+          {% include fragment %}
+        </div>
       {% endif %}
 
       {% if actions %}
