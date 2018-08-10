@@ -90,7 +90,7 @@ export default {
 
       // Emit a change event
       this.$root.$emit('field-change', {
-        value,
+        value: this._rawValue(value),
         valid,
         name: this.name
       })
