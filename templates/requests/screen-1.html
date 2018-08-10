@@ -42,7 +42,7 @@
 
     <h2>Financial Usage</h2>
     {{ TextInput(f.estimated_monthly_spend, validation='dollars') }}
-    <p>So this means you are spending approximately <b>$X</b> annually</p>
+    <p>So this means you are spending approximately <b>$!{ annualSpend }</b> annually</p>
     {{ TextInput(f.dollar_value, validation='dollars') }}
     {{ TextInput(f.number_user_sessions, validation='integer') }}
     {{ TextInput(f.average_daily_traffic, placeholder='Gigabytes per day', validation='gigabytes') }}

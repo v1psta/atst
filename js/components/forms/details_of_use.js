@@ -17,8 +17,14 @@ export default {
   },
 
   data: function () {
+    const {
+      estimated_monthly_spend = 0,
+      jedi_migration = ''
+    } = this.initialData
+
     return {
-      jedi_migration: this.initialData.jedi_migration
+      estimated_monthly_spend,
+      jedi_migration
     }
   },
 
@@ -27,6 +33,10 @@ export default {
   },
 
   computed: {
+    annualSpend: function () {
+      const monthlySpend = this.estimated_monthly_spend || 0
+      return monthlySpend * 12
+    },
     isJediMigration: function () {
       return this.jedi_migration === 'yes'
     }
