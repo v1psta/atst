@@ -89,7 +89,7 @@ export default {
       this.showValid = valid
 
       // Emit a change event
-      this.$emit('fieldChange', {
+      this.$root.$emit('field-change', {
         value,
         valid,
         name: this.name
