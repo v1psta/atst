@@ -33,10 +33,8 @@ class JEDIRequestFlow(object):
     def _form(self):
         if self.is_post:
             return self.form_class()(self.post_data)
-        elif self.request:
-            return self.form_class()(data=self.current_step_data)
         else:
-            return self.form_class()()
+            return self.form_class()(data=self.current_step_data)
 
     def validate(self):
         return self.form.validate()
@@ -63,15 +61,12 @@ class JEDIRequestFlow(object):
     # maps user data to fields in OrgForm; this should be moved into the
     # request initialization process when we have a request schema, or we just
     # shouldn't record this data on the request
-    def map_current_user(self):
-        if self.request:
-            return {
-                "fname_request": self.request.creator.first_name,
-                "lname_request": self.request.creator.last_name,
-                "email_request": self.request.creator.email
-            }
-        else:
-            return {}
+    def map_user_data(self, user):
+        return {
+            "fname_request": user.first_name,
+            "lname_request": user.last_name,
+            "email_request": user.email
+        }
 
     @property
     def current_step_data(self):
@@ -85,9 +80,11 @@ class JEDIRequestFlow(object):
                 data = self.request.body
             if self.form_section == "information_about_you":
                 form_data = self.request.body.get(self.form_section, {})
-                data = { **self.map_current_user(), **form_data }
+                data = { **self.map_user_data(self.request.creator), **form_data }
             else:
                 data = self.request.body.get(self.form_section, {})
+        elif self.form_section == "information_about_you":
+            data = self.map_user_data(self.current_user)
 
         return defaultdict(lambda: defaultdict(lambda: "Input required"), data)
 

@@ -80,6 +80,17 @@ def test_creator_info_is_autopopulated(monkeypatch, client, user_session):
     assert 'value="{}"'.format(user.email) in body
 
 
+def test_creator_info_is_autopopulated_for_new_request(monkeypatch, client, user_session):
+    user = UserFactory.create()
+    user_session(user)
+
+    response = client.get("/requests/new/2")
+    body = response.data.decode()
+    assert 'value="{}"'.format(user.first_name) in body
+    assert 'value="{}"'.format(user.last_name) in body
+    assert 'value="{}"'.format(user.email) in body
+
+
 def test_non_creator_info_is_not_autopopulated(monkeypatch, client, user_session):
     user = UserFactory.create()
     creator = UserFactory.create()

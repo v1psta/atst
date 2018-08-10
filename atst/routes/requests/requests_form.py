@@ -9,7 +9,7 @@ from atst.domain.exceptions import UnauthorizedError
 
 @requests_bp.route("/requests/new/<int:screen>", methods=["GET"])
 def requests_form_new(screen):
-    jedi_flow = JEDIRequestFlow(screen, request=None)
+    jedi_flow = JEDIRequestFlow(screen, request=None, current_user=g.current_user)
 
     return render_template(
         "requests/screen-%d.html" % int(screen),
