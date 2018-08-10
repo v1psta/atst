@@ -1,7 +1,6 @@
 import re
 from wtforms.fields.html5 import EmailField
 from wtforms.fields import StringField, SelectField
-from wtforms.form import Form
 from wtforms.validators import Required, Email
 
 from atst.domain.exceptions import NotFoundError
@@ -41,7 +40,7 @@ def suggest_pe_id(pe_id):
 
 def validate_pe_id(field, existing_request):
     try:
-        pe_number = PENumbers.get(field.data)
+        PENumbers.get(field.data)
     except NotFoundError:
         suggestion = suggest_pe_id(field.data)
         error_str = (
