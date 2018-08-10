@@ -56,6 +56,7 @@
 
       <template v-if='showError'>
         <span v-for='error in initialErrors' class='usa-input__message' v-html='error'></span>
+        <span v-if='!initialErrors.length' class='usa-input__message' v-html='validationError'></span>
       </template>
 
     </div>

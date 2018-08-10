@@ -28,6 +28,7 @@ export default {
       mask: inputValidations[this.validation].mask,
       pipe: inputValidations[this.validation].pipe || undefined,
       keepCharPositions: inputValidations[this.validation].keepCharPositions || false,
+      validationError: inputValidations[this.validation].validationError || '',
       value: this.initialValue
     }
   },
