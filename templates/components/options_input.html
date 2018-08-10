@@ -1,32 +1,33 @@
 {% from "components/icon.html" import Icon %}
 
 {% macro OptionsInput(field, inline=False) -%}
-  <div class='usa-input {% if field.errors %}usa-input--error{% endif %}'>
+  <optionsinput name='{{ field.name }}' inline-template>
+    <div class='usa-input {% if field.errors %}usa-input--error{% endif %}'>
 
-    <fieldset class="usa-input__choices {% if inline %}usa-input__choices--inline{% endif %}">
-      <legend>
-        {{ field.label | striptags}}
+      <fieldset v-on:change="onInput" class="usa-input__choices {% if inline %}usa-input__choices--inline{% endif %}">
+        <legend>
+          {{ field.label | striptags}}
 
-        {% if field.description %}
-          <span class='usa-input__help'>{{ field.description | safe }}</span>
-        {% endif %}
+          {% if field.description %}
+            <span class='usa-input__help'>{{ field.description | safe }}</span>
+          {% endif %}
+
+          {% if field.errors %}
+            {{ Icon('alert') }}
+          {% endif %}
+        </legend>
+
+        {{ field() }}
 
         {% if field.errors %}
-          {{ Icon('alert') }}
+          {% for error in field.errors %}
+            <span class='usa-input__message'>{{ error }}</span>
+          {% endfor %}
         {% endif %}
-      </legend>
 
-      {{ field() }}
+      </fieldset>
+    </div>
 
-      {% if field.errors %}
-        {% for error in field.errors %}
-          <span class='usa-input__message'>{{ error }}</span>
-        {% endfor %}
-      {% endif %}
-
-    </fieldset>
-  </div>
-
-
+  </optionsinput>
 
 {%- endmacro %}
