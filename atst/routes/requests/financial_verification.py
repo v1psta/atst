@@ -24,11 +24,10 @@ def update_financial_verification(request_id):
     rerender_args = dict(request_id=request_id, f=form)
 
     if form.validate():
-        request_data = {"financial_verification": post_data}
         valid = form.perform_extra_validation(
             existing_request.body.get("financial_verification")
         )
-        Requests.update(request_id, request_data)
+        Requests.update_financial_verification_info(request_id, post_data)
         if valid:
             return redirect(url_for("requests.financial_verification_submitted"))
         else:

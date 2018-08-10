@@ -61,6 +61,12 @@ class Requests(object):
         return RequestQuery.update(request, update_body=True)
 
     @classmethod
+    def update_financial_verification_info(cls, request_id, financial_info: dict) -> Request:
+        request = RequestQuery.get_with_lock(request_id)
+        request.body = deep_merge({"financial_verification": financial_info}, request.body)
+        return RequestQuery.update(request, update_body=True)
+
+    @classmethod
     def set_status(cls, request: Request, status: RequestStatus):
         status_event = RequestStatusEvent(new_status=status)
         request.status_events.append(status_event)
