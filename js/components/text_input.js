@@ -72,7 +72,11 @@ export default {
     //
     _checkIfValid: function ({ value, invalidate = false}) {
       // Validate the value
-      const valid = this._validate(value)
+      let valid = this._validate(value)
+
+      if (this.initialErrors && this.initialErrors.length) {
+        valid = false
+      }
 
       // Show error messages or not
       if (valid) {
