@@ -1,12 +1,7 @@
-from sqlalchemy import exists, and_, exc
-from sqlalchemy.orm.exc import NoResultFound
-from sqlalchemy.orm.attributes import flag_modified
-
 from atst.models.request import Request
 from atst.models.request_status_event import RequestStatusEvent, RequestStatus
-from atst.database import db
 
-from .exceptions import NotFoundError
+from atst.query.requests import RequestQuery
 
 
 def deep_merge(source, destination: dict):
@@ -34,45 +29,19 @@ class Requests(object):
     def create(cls, creator, body):
         request = Request(creator=creator, body=body)
         request = Requests.set_status(request, RequestStatus.STARTED)
-
-        db.session.add(request)
-        db.session.commit()
-
-        return request
+        return RequestQuery.create(request)
 
     @classmethod
     def exists(cls, request_id, creator):
-        try:
-            return db.session.query(
-                exists().where(
-                    and_(Request.id == request_id, Request.creator == creator)
-                )
-            ).scalar()
-        except exc.DataError:
-            return False
+        return RequestQuery.exists(request_id, creator)
 
     @classmethod
-    def get(cls, request_id):
-        try:
-            request = db.session.query(Request).filter_by(id=request_id).one()
-        except NoResultFound:
-            raise NotFoundError("request")
-
-        return request
+    def get(cls, request_id) -> Request:
+        return RequestQuery.get(request_id)
 
     @classmethod
     def get_many(cls, creator=None):
-        filters = []
-        if creator:
-            filters.append(Request.creator == creator)
-
-        requests = (
-            db.session.query(Request)
-            .filter(*filters)
-            .order_by(Request.time_created.desc())
-            .all()
-        )
-        return requests
+        return RequestQuery.get_many(creator=creator)
 
     @classmethod
     def submit(cls, request):
@@ -83,34 +52,13 @@ class Requests(object):
             new_status = RequestStatus.PENDING_CCPO_APPROVAL
 
         request = Requests.set_status(request, new_status)
-
-        db.session.add(request)
-        db.session.commit()
-
-        return request
+        return RequestQuery.update(request)
 
     @classmethod
     def update(cls, request_id, request_delta):
-        try:
-            # Query for request matching id, acquiring a row-level write lock.
-            # https://www.postgresql.org/docs/10/static/sql-select.html#SQL-FOR-UPDATE-SHARE
-            request = (
-                db.session.query(Request)
-                .filter_by(id=request_id)
-                .with_for_update(of=Request)
-                .one()
-            )
-        except NoResultFound:
-            return
-
+        request = RequestQuery.get_with_lock(request_id)
         request.body = deep_merge(request_delta, request.body)
-
-        # Without this, sqlalchemy won't notice the change to request.body,
-        # since it doesn't track dictionary mutations by default.
-        flag_modified(request, "body")
-
-        db.session.add(request)
-        db.session.commit()
+        return RequestQuery.update(request, update_body=True)
 
     @classmethod
     def set_status(cls, request: Request, status: RequestStatus):
