@@ -35,5 +35,6 @@ const app = new Vue({
       const modal = modalOpen.getAttribute("data-modal");
       this.modals[modal] = true;
     }
-  }
+  },
+  delimiters: ['!{', '}']
 })
