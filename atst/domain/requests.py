@@ -64,6 +64,7 @@ class Requests(object):
     def update_financial_verification_info(cls, request_id, financial_info: dict) -> Request:
         request = RequestQuery.get_with_lock(request_id)
         request.body = deep_merge({"financial_verification": financial_info}, request.body)
+        request = Requests.set_status(request, RequestStatus.PENDING_CCPO_APPROVAL)
         return RequestQuery.update(request, update_body=True)
 
     @classmethod

@@ -63,3 +63,12 @@ def test_exists(session):
     request = RequestFactory.create(creator=user_allowed)
     assert Requests.exists(request.id, user_allowed)
     assert not Requests.exists(request.id, user_denied)
+
+
+def test_submitting_financial_verification_triggers_new_state():
+    request = RequestFactory.create()
+
+    financial_info = {"financial_verification": {"pe_id": "0203752A"}}
+    updated_request = Requests.update_financial_verification_info(request.id, financial_info)
+
+    assert updated_request.status == RequestStatus.PENDING_CCPO_APPROVAL
