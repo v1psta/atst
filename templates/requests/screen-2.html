@@ -29,6 +29,6 @@
 {{ TextInput(f.service_branch,placeholder='e.g. US Air Force, US Army, US Navy, Marine Corps, Defense Media Agency') }}
 {{ OptionsInput(f.citizenship) }}
 {{ OptionsInput(f.designation) }}
-{{ TextInput(f.date_latest_training, validation='date') }}
+{{ TextInput(f.date_latest_training, placeholder='MM / DD / YYYY', validation='date') }}
 
 {% endblock %}
