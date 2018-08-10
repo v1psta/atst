@@ -34,7 +34,9 @@
       <template v-if='isJediMigration' v-cloak>
         {{ OptionsInput(f.rationalization_software_systems) }}
         {{ OptionsInput(f.technical_support_team) }}
-        {{ OptionsInput(f.organization_providing_assistance) }}
+        <template v-if="hasTechnicalSupportTeam">
+          {{ OptionsInput(f.organization_providing_assistance) }}
+        </template>
         {{ OptionsInput(f.engineering_assessment) }}
         {{ OptionsInput(f.data_transfers) }}
         {{ OptionsInput(f.expected_completion_date) }}
