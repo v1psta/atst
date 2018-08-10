@@ -43,8 +43,12 @@ export default {
     if (this.value) {
       this._checkIfValid({ value: this.value, invalidate: true })
 
-      if (this.mask) {
-        this.value = conformToMask(this.value, this.mask).conformedValue
+      if (this.mask && this.validation !== 'email') {
+        const mask = typeof this.mask.mask !== 'function'
+          ? this.mask
+          : mask.mask(this.value).filter((val) => val !== '[]')
+
+        this.value = conformToMask(this.value, mask).conformedValue
       }
     }
   },
