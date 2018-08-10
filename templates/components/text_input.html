@@ -43,11 +43,11 @@
           v-bind:mask='mask'
           v-bind:pipe='pipe'
           v-bind:keep-char-positions='keepCharPositions'
+          v-bind:aria-invalid='showError'
           id='{{ field.name }}'
           type='text'
           ref='input'
-          placeholder='{{ placeholder }}'
-          {% if field.errors %}aria-invalid='true'{% endif %}>
+          placeholder='{{ placeholder }}'>
         </masked-input>
 
       {% endif %}
