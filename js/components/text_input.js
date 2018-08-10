@@ -14,27 +14,37 @@ export default {
       type: String,
       default: () => 'anything'
     },
-    setValue: {
+    initialValue: {
       type: String,
       default: () => ''
-    }
+    },
+    initialErrors: Array
   },
 
   data: function () {
     return {
-      showError: false,
+      showError: (this.initialErrors && this.initialErrors.length) || false,
       showValid: false,
       mask: inputValidations[this.validation].mask,
       pipe: inputValidations[this.validation].pipe || undefined,
       keepCharPositions: inputValidations[this.validation].keepCharPositions || false,
-      value: this.setValue
+      value: this.initialValue
+    }
+  },
+
+  computed:{
+    rawValue: function () {
+      return this._rawValue(this.value)
     }
   },
 
   mounted: function () {
-    if (this.value && this.mask) {
+    if (this.value) {
       this._checkIfValid({ value: this.value, invalidate: true })
-      this.value = conformToMask(this.value, this.mask).conformedValue
+
+      if (this.mask) {
+        this.value = conformToMask(this.value, this.mask).conformedValue
+      }
     }
   },
 
