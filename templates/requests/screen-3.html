@@ -30,7 +30,7 @@
 
 {{ TextInput(f.fname_poc,placeholder='First Name') }}
 {{ TextInput(f.lname_poc,placeholder='Last Name') }}
-{{ TextInput(f.email_poc,placeholder='jane@mail.mil') }}
-{{ TextInput(f.dodid_poc,placeholder='10-digit number on the back of the CAC') }}
+{{ TextInput(f.email_poc,placeholder='jane@mail.mil', validation='email') }}
+{{ TextInput(f.dodid_poc,placeholder='10-digit number on the back of the CAC', validation='dodId') }}
 
 {% endblock %}
