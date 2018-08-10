@@ -37,16 +37,19 @@ class RequestForm(ValidatedForm):
     jedi_migration = RadioField(
         "Are you using the JEDI Cloud to migrate existing systems?",
         choices=[("yes", "Yes"), ("no", "No")],
+        default="",
     )
 
     rationalization_software_systems = RadioField(
         "Have you completed a “rationalization” of your software systems to move to the cloud?",
         choices=[("yes", "Yes"), ("no", "No"), ("in_progress", "In Progress")],
+        default="",
     )
 
     technical_support_team = RadioField(
         "Are you working with a technical support team experienced in cloud migrations?",
         choices=[("yes", "Yes"), ("no", "No")],
+        default="",
     )
 
     organization_providing_assistance = RadioField(  # this needs to be updated to use checkboxes instead of radio
@@ -56,11 +59,13 @@ class RequestForm(ValidatedForm):
             ("contractor", "Contractor"),
             ("other_dod_organization", "Other DoD organization"),
         ],
+        default="",
     )
 
     engineering_assessment = RadioField(
         "Have you completed an engineering assessment of your software systems for cloud readiness?",
         choices=[("yes", "Yes"), ("no", "No"), ("in_progress", "In Progress")],
+        default="",
     )
 
     data_transfers = SelectField(
@@ -94,6 +99,7 @@ class RequestForm(ValidatedForm):
     cloud_native = RadioField(
         "Are your software systems being developed cloud native?",
         choices=[("yes", "Yes"), ("no", "No")],
+        default="",
     )
 
     # Details of Use: Financial Usage
