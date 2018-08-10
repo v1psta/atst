@@ -33,4 +33,6 @@ def requests_index():
 
     mapped_requests = [map_request(r) for r in requests]
 
-    return render_template("requests.html", requests=mapped_requests)
+    pending_fv = any(Requests.is_pending_financial_verification(r) for r in requests)
+
+    return render_template("requests.html", requests=mapped_requests, pending_financial_verification=pending_fv)

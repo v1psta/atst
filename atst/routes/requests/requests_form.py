@@ -4,6 +4,7 @@ from . import requests_bp
 from atst.domain.requests import Requests
 from atst.routes.requests.jedi_request_flow import JEDIRequestFlow
 from atst.models.permissions import Permissions
+from atst.models.request_status_event import RequestStatus
 from atst.domain.exceptions import UnauthorizedError
 
 
@@ -99,8 +100,8 @@ def requests_submit(request_id=None):
     request = Requests.get(request_id)
     Requests.submit(request)
 
-    if request.status == "approved":
-        return redirect("/requests?modal=True")
+    if request.status == RequestStatus.PENDING_FINANCIAL_VERIFICATION:
+        return redirect("/requests?modal=pendingFinancialVerification")
 
     else:
         return redirect("/requests")
