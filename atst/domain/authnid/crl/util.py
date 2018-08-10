@@ -56,7 +56,6 @@ def refresh_crls(out_dir, logger=None):
 
 if __name__ == "__main__":
     import sys
-    import datetime
     import logging
 
     logging.basicConfig(
