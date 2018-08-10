@@ -37,6 +37,9 @@ export default {
       const monthlySpend = this.estimated_monthly_spend || 0
       return monthlySpend * 12
     },
+    jediMigrationOptionSelected: function () {
+      return this.jedi_migration !== ''
+    },
     isJediMigration: function () {
       return this.jedi_migration === 'yes'
     }

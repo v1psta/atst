@@ -17,7 +17,7 @@
   ) }}
 {% endif %}
 
-<details-of-use inline-template v-bind:initial-data='{{ f.data }}'>
+<details-of-use inline-template v-bind:initial-data='{{ f.data|tojson }}'>
   <div>
 
     <p>We’d like to know a little about how you plan to use JEDI Cloud services to process your request. Please answer the following questions to the best of your ability. Note that the CCPO does not directly help with migrating systems to JEDI Cloud. These questions are for learning about your cloud readiness and financial usage of the JEDI Cloud; your estimates will not be used for any department level reporting.</p>
@@ -30,14 +30,18 @@
     <h2>Cloud Readiness</h2>
     {{ TextInput(f.num_software_systems, validation='integer') }}
     {{ OptionsInput(f.jedi_migration) }}
-    <template v-if='isJediMigration' v-cloak>
-      {{ OptionsInput(f.rationalization_software_systems) }}
-      {{ OptionsInput(f.technical_support_team) }}
-      {{ OptionsInput(f.organization_providing_assistance) }}
-      {{ OptionsInput(f.engineering_assessment) }}
-      {{ OptionsInput(f.data_transfers) }}
-      {{ OptionsInput(f.expected_completion_date) }}
-      {{ OptionsInput(f.cloud_native) }}
+    <template v-if="jediMigrationOptionSelected">
+      <template v-if='isJediMigration' v-cloak>
+        {{ OptionsInput(f.rationalization_software_systems) }}
+        {{ OptionsInput(f.technical_support_team) }}
+        {{ OptionsInput(f.organization_providing_assistance) }}
+        {{ OptionsInput(f.engineering_assessment) }}
+        {{ OptionsInput(f.data_transfers) }}
+        {{ OptionsInput(f.expected_completion_date) }}
+      </template>
+      <template v-else-if='!isJediMigration' v-cloak>
+        {{ OptionsInput(f.cloud_native) }}
+      </template>
     </template>
 
     <h2>Financial Usage</h2>
