@@ -20,6 +20,7 @@ before_install:
   - git submodule update --init --recursive
 
 before_script:
+  - rm -rf ./crl/*
   - docker run -d --name postgres96 postgres:9.6-alpine
   - docker run -d --name redis redis:4.0.10-alpine
   - docker run --link postgres96:postgres96 --link redis:redis waisbrot/wait
