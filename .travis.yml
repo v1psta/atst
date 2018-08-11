@@ -32,7 +32,7 @@ script:
   - docker run -d --entrypoint='/bin/sh' -t --name current-atst-tester "${TESTER_IMAGE1_NAME}"
   - docker container exec -t current-atst-tester script/sync-crls
   - docker commit current-atst-tester "${TESTER_IMAGE2_NAME}"
-  - docker cp current-atst-tester:/opt/atat/atst/crl ./crl
+  - docker cp current-atst-tester:/opt/atat/atst/crl/* ./crl/
   - docker container stop current-atst-tester
   - docker run --add-host "postgreshost:${postgres_ip}" --add-host "redishost:${redis_ip}" "${TESTER_IMAGE2_NAME}"
 
