@@ -16,7 +16,7 @@ from atst.routes.workspaces import bp as workspace_routes
 from atst.routes.requests import requests_bp
 from atst.routes.dev import bp as dev_routes
 from atst.routes.errors import make_error_pages
-from atst.domain.authnid.crl.validator import Validator
+from atst.domain.authnid.crl import Validator
 from atst.domain.auth import apply_authentication
 
 
@@ -68,7 +68,7 @@ def make_flask_callbacks(app):
         )
         g.dev = os.getenv("FLASK_ENV", "dev") == "dev"
         g.matchesPath = lambda href: re.match("^" + href, request.path)
-        g.modalOpen = request.args.get("modal", False)
+        g.modal = request.args.get("modal", None)
         g.current_user = {
             "id": "cce17030-4109-4719-b958-ed109dbb87c8",
             "first_name": "Amanda",
@@ -142,8 +142,6 @@ def make_crl_validator(app):
     for filename in pathlib.Path(app.config["CRL_DIRECTORY"]).glob("*"):
         crl_locations.append(filename.absolute())
     app.crl_validator = Validator(
-        roots=[app.config["CA_CHAIN"]], crl_locations=crl_locations
+        roots=[app.config["CA_CHAIN"]], crl_locations=crl_locations, logger=app.logger
     )
-    for e in app.crl_validator.errors:
-        app.logger.error(e)
 
