@@ -24,7 +24,10 @@ spec:
         fsGroup: 101
       containers:
         - name: atst
-          image: registry.atat.codes:443/atst-prod:5ac3343
+          image: registry.atat.codes:443/atst-prod:a1916b1
+          resources:
+            requests:
+               memory: "2500Mi"
           envFrom:
           - configMapRef:
               name: atst-envvars
