@@ -47,6 +47,6 @@ before_deploy:
 
 deploy:
   provider: script
-  script: echo "** Image push only for now... stay tuned! **"
+  script: deploy/kubernetes/atst-update-deploy.sh
   on:
     branch: master
