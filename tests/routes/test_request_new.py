@@ -75,9 +75,9 @@ def test_creator_info_is_autopopulated(monkeypatch, client, user_session):
 
     response = client.get("/requests/new/2/{}".format(request.id))
     body = response.data.decode()
-    assert 'value="{}"'.format(user.first_name) in body
-    assert 'value="{}"'.format(user.last_name) in body
-    assert 'value="{}"'.format(user.email) in body
+    assert "initial-value='{}'".format(user.first_name) in body
+    assert "initial-value='{}'".format(user.last_name) in body
+    assert "initial-value='{}'".format(user.email) in body
 
 
 def test_creator_info_is_autopopulated_for_new_request(monkeypatch, client, user_session):
@@ -86,9 +86,9 @@ def test_creator_info_is_autopopulated_for_new_request(monkeypatch, client, user
 
     response = client.get("/requests/new/2")
     body = response.data.decode()
-    assert 'value="{}"'.format(user.first_name) in body
-    assert 'value="{}"'.format(user.last_name) in body
-    assert 'value="{}"'.format(user.email) in body
+    assert "initial-value='{}'".format(user.first_name) in body
+    assert "initial-value='{}'".format(user.last_name) in body
+    assert "initial-value='{}'".format(user.email) in body
 
 
 def test_non_creator_info_is_not_autopopulated(monkeypatch, client, user_session):
