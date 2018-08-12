@@ -1,10 +1,26 @@
 from wtforms.fields.html5 import IntegerField
 from wtforms.fields import RadioField, TextAreaField, SelectField
+from wtforms.validators import Optional
 from .fields import DateField
 from .forms import ValidatedForm
 
 
 class RequestForm(ValidatedForm):
+
+    def validate(self, *args, **kwargs):
+        if self.jedi_migration.data == 'no':
+            self.rationalization_software_systems.validators.append(Optional())
+            self.technical_support_team.validators.append(Optional())
+            self.organization_providing_assistance.validators.append(Optional())
+            self.engineering_assessment.validators.append(Optional())
+            self.data_transfers.validators.append(Optional())
+            self.expected_completion_date.validators.append(Optional())
+        elif self.jedi_migration.data == 'yes':
+            if self.technical_support_team.data == 'no':
+                self.organization_providing_assistance.validators.append(Optional())
+            self.cloud_native.validators.append(Optional())
+
+        return super(RequestForm, self).validate(*args, **kwargs)
 
     # Details of Use: General
     dod_component = SelectField(
