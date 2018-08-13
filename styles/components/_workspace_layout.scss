@@ -6,13 +6,18 @@
 
 .workspace-navigation {
   @include panel-margin;
+  margin-bottom: $gap * 4;
 
   ul {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
     li {
       flex-grow: 1;
     }
+  }
+
+  @include media($medium-screen) {
+    margin-bottom: $gap * 5;
   }
 
   @include media($large-screen) {
