@@ -15,6 +15,7 @@
     "parcel": "^1.9.7",
     "text-mask-addons": "^3.8.0",
     "uswds": "^1.6.3",
+    "v-tooltip": "^2.0.0-rc.33",
     "vue": "^2.5.17",
     "vue-text-mask": "^6.1.2"
   },
