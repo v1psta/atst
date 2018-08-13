@@ -65,25 +65,27 @@
 
   <div class="col col--grow">
 
-    <form class='search-bar'>
-      <div class='usa-input search-input'>
-        <label for='requests-search'>Search requests by Order ID</label>
-        <input type='search' id='requests-search' name='requests-search' placeholder="Search by Order ID"/>
-        <button type="submit">
-          <span class="hide">Search</span>
-        </button>
-      </div>
+    {% if extended_view %}
+      <form class='search-bar'>
+        <div class='usa-input search-input'>
+          <label for='requests-search'>Search requests by Order ID</label>
+          <input type='search' id='requests-search' name='requests-search' placeholder="Search by Order ID"/>
+          <button type="submit">
+            <span class="hide">Search</span>
+          </button>
+        </div>
 
-      <div class='usa-input'>
-        <label for='filter-status'>Filter requests by status</label>
-        <select id="filter-status" name="filter-status">
-          <option value="" selected disabled>Filter by status</option>
-          <option value="">Active</option>
-          <option value="">Pending</option>
-          <option value="">Denied</option>
-        </select>
-      </div>
-    </form>
+        <div class='usa-input'>
+          <label for='filter-status'>Filter requests by status</label>
+          <select id="filter-status" name="filter-status">
+            <option value="" selected disabled>Filter by status</option>
+            <option value="">Active</option>
+            <option value="">Pending</option>
+            <option value="">Denied</option>
+          </select>
+        </div>
+      </form>
+    {% endif %}
 
     <div class='responsive-table-wrapper'>
       <table>
@@ -91,8 +93,12 @@
           <tr>
             <th scope="col">Order ID</th>
             <th scope="col">Request Date</th>
-            <th scope="col">Requester</th>
-            <th scope="col">Total Apps</th>
+            {% if extended_view %}
+              <th scope="col">Requester</th>
+              <th scope="col">Total Apps</th>
+            {% else %}
+              <th scope="col">Annual Usage</th>
+            {% endif %}
             <th scope="col">Status</th>
             <th scope="col" class="table-cell--shrink">Actions</th>
           </tr>
@@ -106,8 +112,12 @@
             </th>
             {% endif %}
             <td>{{ r['date'] }}</td>
-            <td>{{ r['full_name'] }}</td>
-            <td>{{ r['app_count'] }}</td>
+            {% if extended_view %}
+              <td>{{ r['full_name'] }}</td>
+              <td>{{ r['app_count'] }}</td>
+            {% else %}
+              <td>{{ r['annual_usage'] }}</td>
+            {% endif %}
             <td>{{ r['status'] }}</td>
             <td class="table-cell--shrink">
               <a href="" class='icon-link'>Download</a>
