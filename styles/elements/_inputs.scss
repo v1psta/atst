@@ -27,7 +27,7 @@
     $state-color: $color-green;
   }
 
-  .icon {
+  .icon-validation {
     @include icon-color($state-color);
   }
 

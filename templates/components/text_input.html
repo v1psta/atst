@@ -10,7 +10,7 @@
         <span class='usa-input__help'>{{ field.description | safe }}</span>
       {% endif %}
 
-      {% if field.errors %} <span class="icon-validation">{{ Icon('alert') }}</span>{% endif %}
+      {% if field.errors %} {{ Icon('alert',classes="icon-validation") }} {% endif %}
     </label>
 
     {{ field(placeholder=placeholder) | safe }}
