@@ -21,7 +21,7 @@
 <p><em>All fields are required, unless specified optional.</em></p>
 
 <h2>General</h2>
-{{ TextInput(f.dod_component) }}
+{{ OptionsInput(f.dod_component) }}
 {{ TextInput(f.jedi_usage,placeholder="Briefly describe how you are expecting to use the JEDI Cloud. \n e.g. We are migrating XYZ application to the cloud so that...",tooltip="Your answer will help us provide tangible examples to DoD leadership how and why commercial cloud resources are accelerating the Department\\'s missions.") }}
 
 <h2>Cloud Readiness</h2>
@@ -31,8 +31,8 @@
 {{ OptionsInput(f.technical_support_team) }}
 {{ OptionsInput(f.organization_providing_assistance) }}
 {{ OptionsInput(f.engineering_assessment, tooltip="An engineering assessment is an evaluation to convert your application architecture from on-premises to using the commercial cloud") }}
-{{ TextInput(f.data_transfers) }}
-{{ TextInput(f.expected_completion_date) }}
+{{ OptionsInput(f.data_transfers) }}
+{{ OptionsInput(f.expected_completion_date) }}
 {{ OptionsInput(f.cloud_native, tooltip="Cloud native is architecting and designing your application to use all the benefits of the commercial cloud. Specifically, designing applications so that they are decoupled from a physical resource.") }}
 
 <h2>Financial Usage</h2>
