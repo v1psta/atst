@@ -6,16 +6,17 @@
 
     <fieldset class="usa-input__choices {% if inline %}usa-input__choices--inline{% endif %}">
       <legend>
-        {{ field.label | striptags}}
-
-        {% if tooltip %}{{ Tooltip(tooltip) }}{% endif %}
+        <div>
+          {{ field.label | striptags}}
+          {% if tooltip %}{{ Tooltip(tooltip) }}{% endif %}
+        </div>
 
         {% if field.description %}
           <span class='usa-input__help'>{{ field.description | safe }}</span>
         {% endif %}
 
         {% if field.errors %}
-          <span class="icon-validation">{{ Icon('alert') }}</span>
+          {{ Icon('alert') }}
         {% endif %}
       </legend>
 
