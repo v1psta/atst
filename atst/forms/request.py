@@ -1,8 +1,10 @@
 from wtforms.fields.html5 import IntegerField
 from wtforms.fields import RadioField, TextAreaField, SelectField
 from wtforms.validators import Optional, Required
+
 from .fields import DateField
 from .forms import ValidatedForm
+from atst.domain.requests import Requests
 
 
 class RequestForm(ValidatedForm):
@@ -25,7 +27,7 @@ class RequestForm(ValidatedForm):
         except ValueError:
             annual_spend = 0
 
-        if annual_spend > 1_000_000:
+        if annual_spend > Requests.AUTO_APPROVE_THRESHOLD:
             self.number_user_sessions.validators.append(Required())
             self.average_daily_traffic.validators.append(Required())
 
