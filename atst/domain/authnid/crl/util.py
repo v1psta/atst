@@ -28,16 +28,22 @@ def crl_list_from_disa_html(html):
     parser.feed(html)
     return parser.crl_list
 
-
-def write_crl(out_dir, crl_location):
+def crl_local_path(out_dir, crl_location):
     name = re.split("/", crl_location)[-1]
     crl = os.path.join(out_dir, name)
+    return crl
+
+def write_crl(out_dir, crl_location):
+    crl = crl_local_path(out_dir, crl_location)
     with requests.get(crl_location, stream=True) as r:
         with open(crl, "wb") as crl_file:
             for chunk in r.iter_content(chunk_size=1024):
                 if chunk:
                     crl_file.write(chunk)
 
+def remove_bad_crl(out_dir, crl_location):
+    crl = crl_local_path(out_dir, crl_location)
+    os.remove(crl)
 
 def refresh_crls(out_dir, logger=None):
     disa_html = fetch_disa()
@@ -52,6 +58,7 @@ def refresh_crls(out_dir, logger=None):
                 logger.error(
                     "Error downloading {}, continuing anyway".format(crl_location)
                 )
+            remove_bad_crl(out_dir, crl_location)
 
 
 if __name__ == "__main__":
