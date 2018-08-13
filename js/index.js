@@ -24,7 +24,16 @@ const app = new Vue({
     return {
       modals: {
         styleguideModal: false,
+        pendingFinancialVerification: false,
+        pendingCCPOApproval: false,
       }
+    }
+  },
+  mounted: function() {
+    const modalOpen = document.querySelector("#modalOpen");
+    if (modalOpen) {
+      const modal = modalOpen.getAttribute("data-modal");
+      this.modals[modal] = true;
     }
   }
 })

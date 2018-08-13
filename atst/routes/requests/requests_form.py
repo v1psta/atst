@@ -4,12 +4,13 @@ from . import requests_bp
 from atst.domain.requests import Requests
 from atst.routes.requests.jedi_request_flow import JEDIRequestFlow
 from atst.models.permissions import Permissions
+from atst.models.request_status_event import RequestStatus
 from atst.domain.exceptions import UnauthorizedError
 
 
 @requests_bp.route("/requests/new/<int:screen>", methods=["GET"])
 def requests_form_new(screen):
-    jedi_flow = JEDIRequestFlow(screen, request=None)
+    jedi_flow = JEDIRequestFlow(screen, request=None, current_user=g.current_user)
 
     return render_template(
         "requests/screen-%d.html" % int(screen),
@@ -31,7 +32,7 @@ def requests_form_update(screen=1, request_id=None):
         _check_can_view_request(request_id)
 
     request = Requests.get(request_id) if request_id is not None else None
-    jedi_flow = JEDIRequestFlow(screen, request, request_id=request_id)
+    jedi_flow = JEDIRequestFlow(screen, request=request, request_id=request_id, current_user=g.current_user)
 
     return render_template(
         "requests/screen-%d.html" % int(screen),
@@ -41,6 +42,7 @@ def requests_form_update(screen=1, request_id=None):
         current=screen,
         next_screen=screen + 1,
         request_id=request_id,
+        jedi_request=jedi_flow.request,
         can_submit=jedi_flow.can_submit,
     )
 
@@ -99,11 +101,11 @@ def requests_submit(request_id=None):
     request = Requests.get(request_id)
     Requests.submit(request)
 
-    if request.status == "approved":
-        return redirect("/requests?modal=True")
+    if request.status == RequestStatus.PENDING_FINANCIAL_VERIFICATION:
+        return redirect("/requests?modal=pendingFinancialVerification")
 
     else:
-        return redirect("/requests")
+        return redirect("/requests?modal=pendingCCPOApproval")
 
 
 # TODO: generalize this, along with other authorizations, into a policy-pattern

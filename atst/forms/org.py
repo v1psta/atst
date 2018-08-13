@@ -12,9 +12,11 @@ class OrgForm(ValidatedForm):
 
     lname_request = StringField("Last Name", validators=[Required(), Alphabet()])
 
-    email_request = EmailField("Email Address", validators=[Required(), Email()])
+    email_request = EmailField("E-mail Address", validators=[Required(), Email()])
 
-    phone_number = TelField("Phone Number", validators=[Required(), PhoneNumber()])
+    phone_number = TelField("Phone Number",
+        description='Enter a 10-digit phone number',
+        validators=[Required(), PhoneNumber()])
 
     service_branch = StringField(
         "Service Branch or Agency",

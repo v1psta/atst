@@ -1,0 +1,25 @@
+.kpi {
+
+    margin-bottom: $gap;
+
+  .kpi__item {
+    @include panel-base;
+    text-align: center;
+    margin: $gap;
+    padding: $gap * 2;
+
+    &:first-child {
+      margin-left: -$gap;
+    }
+
+    &:last-child {
+      margin-right: -$gap;
+    }
+  }
+
+  .kpi__item__value {
+    @include h1;
+    padding-bottom: $gap / 2;
+  }
+
+}

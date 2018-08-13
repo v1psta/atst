@@ -4,36 +4,26 @@
 {% from "components/modal.html" import Modal %}
 {% from "components/empty_state.html" import EmptyState %}
 
-{% block modal %}
-  {% if g.modalOpen %}
-    {% call Modal() %}
-      <h1>Your request is now approved!</h1>
-
-      <p>
-        Your next step is to create a <b>Task Order (T.O.)</b> associated with
-        JEDI Cloud. Please consult a <b>Contracting Officer (KO)</b> or
-        <b>Contracting Officer Representative (COR)</b> to help with this step.
-      </p>
-
-      <p>
-        Once the Task Order (T.O.) has been created, we will need the following
-        details to create your account. These details will help keep your cloud
-        usage in sync with your budget.
-      </p>
-
-      {{ Alert("You'll need these details: ",
-        message="<p>Task Order Number</p><p>Contracting Officer: Name, E-mail and Office</p>"
-      ) }}
-
-
-      <div class='action-group'>
-        <a href='/requests' class='action-group__action usa-button'>Close</a>
-      </div>
-    {% endcall %}
-  {% endif %}
-{% endblock %}
-
 {% block content %}
+
+  {% call Modal(name='pendingFinancialVerification', dismissable=True) %}
+    <h1>Request submitted!</h1>
+
+    {% include 'fragments/pending_financial_verification.html' %}
+
+    <div class='action-group'>
+      <a v-on:click="closeModal('pendingFinancialVerification')" class='action-group__action usa-button'>Close</a>
+    </div>
+  {% endcall %}
+
+  {% call Modal(name='pendingCCPOApproval', dismissable=True) %}
+
+    {% include 'fragments/pending_ccpo_approval_modal.html' %}
+
+    <div class='action-group'>
+      <a v-on:click="closeModal('pendingCCPOApproval')" class='action-group__action usa-button'>Close</a>
+    </div>
+  {% endcall %}
 
 {% if not requests %}
 
@@ -46,9 +36,32 @@
 
 {% else %}
 
-  {{ Alert('Pending Financial Verification',
-    message="<p>Your next step is to create a Task Order (T.O.) associated with JEDI Cloud. Please consult a Contracting Officer (KO) or Contracting Officer Representative (COR) to help with this step.</p>"
-  ) }}
+  {% if pending_financial_verification %}
+
+    {{ Alert('Pending Financial Verification', fragment="fragments/pending_financial_verification.html") }}
+
+  {% endif %}
+
+  {% if pending_ccpo_approval %}
+
+    {{ Alert('Request submitted. Approval pending.', fragment="fragments/pending_ccpo_approval_alert.html") }}
+
+  {% endif %}
+
+  <div class="row kpi">
+    <div class="kpi__item col col--grow">
+      <div class="kpi__item__value">3</div>
+      <div class="kpi__item__description">Pending Requests</div>
+    </div>
+    <div class="kpi__item col col--grow">
+      <div class="kpi__item__value">2,456</div>
+      <div class="kpi__item__description">Completed Requests This Year</div>
+    </div>
+    <div class="kpi__item col col--grow">
+      <div class="kpi__item__value">234</div>
+      <div class="kpi__item__description">Denied Requests</div>
+    </div>
+  </div>
 
   <div class="col col--grow">
 

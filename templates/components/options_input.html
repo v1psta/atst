@@ -10,7 +10,6 @@
           {{ field.label | striptags}}
           {% if tooltip %}{{ Tooltip(tooltip) }}{% endif %}
         </div>
-
         {% if field.description %}
           <span class='usa-input__help'>{{ field.description | safe }}</span>
         {% endif %}

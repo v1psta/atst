@@ -66,3 +66,49 @@ def test_nonexistent_request(client, user_session):
     response = client.get("/requests/new/1/foo", follow_redirects=True)
 
     assert response.status_code == 404
+
+
+def test_creator_info_is_autopopulated(monkeypatch, client, user_session):
+    user = UserFactory.create()
+    user_session(user)
+    request = RequestFactory.create(creator=user, body={"information_about_you": {}})
+
+    response = client.get("/requests/new/2/{}".format(request.id))
+    body = response.data.decode()
+    assert "initial-value='{}'".format(user.first_name) in body
+    assert "initial-value='{}'".format(user.last_name) in body
+    assert "initial-value='{}'".format(user.email) in body
+
+
+def test_creator_info_is_autopopulated_for_new_request(monkeypatch, client, user_session):
+    user = UserFactory.create()
+    user_session(user)
+
+    response = client.get("/requests/new/2")
+    body = response.data.decode()
+    assert "initial-value='{}'".format(user.first_name) in body
+    assert "initial-value='{}'".format(user.last_name) in body
+    assert "initial-value='{}'".format(user.email) in body
+
+
+def test_non_creator_info_is_not_autopopulated(monkeypatch, client, user_session):
+    user = UserFactory.create()
+    creator = UserFactory.create()
+    user_session(user)
+    request = RequestFactory.create(creator=creator, body={"information_about_you": {}})
+
+    response = client.get("/requests/new/2/{}".format(request.id))
+    body = response.data.decode()
+    assert not user.first_name in body
+    assert not user.last_name in body
+    assert not user.email in body
+
+def test_can_review_data(user_session, client):
+    creator = UserFactory.create()
+    user_session(creator)
+    request = RequestFactory.create(creator=creator)
+    response = client.get("/requests/new/4/{}".format(request.id))
+    body = response.data.decode()
+    # assert a sampling of the request data is on the review page
+    assert request.body["primary_poc"]["fname_poc"] in body
+    assert request.body["information_about_you"]["email_request"] in body

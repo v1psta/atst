@@ -11,13 +11,15 @@ class JEDIRequestFlow(object):
     def __init__(
         self,
         current_step,
+        current_user=None,
         request=None,
         post_data=None,
         request_id=None,
-        current_user=None,
         existing_request=None,
     ):
         self.current_step = current_step
+
+        self.current_user = current_user
         self.request = request
 
         self.post_data = post_data
@@ -26,16 +28,13 @@ class JEDIRequestFlow(object):
         self.request_id = request_id
         self.form = self._form()
 
-        self.current_user = current_user
         self.existing_request = existing_request
 
     def _form(self):
         if self.is_post:
             return self.form_class()(self.post_data)
-        elif self.request:
-            return self.form_class()(data=self.current_step_data)
         else:
-            return self.form_class()()
+            return self.form_class()(data=self.current_step_data)
 
     def validate(self):
         return self.form.validate()
@@ -59,6 +58,16 @@ class JEDIRequestFlow(object):
     def form_class(self):
         return self.current_screen["form"]
 
+    # maps user data to fields in OrgForm; this should be moved into the
+    # request initialization process when we have a request schema, or we just
+    # shouldn't record this data on the request
+    def map_user_data(self, user):
+        return {
+            "fname_request": user.first_name,
+            "lname_request": user.last_name,
+            "email_request": user.email
+        }
+
     @property
     def current_step_data(self):
         data = {}
@@ -69,8 +78,13 @@ class JEDIRequestFlow(object):
         if self.request:
             if self.form_section == "review_submit":
                 data = self.request.body
+            elif self.form_section == "information_about_you":
+                form_data = self.request.body.get(self.form_section, {})
+                data = { **self.map_user_data(self.request.creator), **form_data }
             else:
                 data = self.request.body.get(self.form_section, {})
+        elif self.form_section == "information_about_you":
+            data = self.map_user_data(self.current_user)
 
         return defaultdict(lambda: defaultdict(lambda: "Input required"), data)
 
