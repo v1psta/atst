@@ -78,7 +78,7 @@ class JEDIRequestFlow(object):
         if self.request:
             if self.form_section == "review_submit":
                 data = self.request.body
-            if self.form_section == "information_about_you":
+            elif self.form_section == "information_about_you":
                 form_data = self.request.body.get(self.form_section, {})
                 data = { **self.map_user_data(self.request.creator), **form_data }
             else:
