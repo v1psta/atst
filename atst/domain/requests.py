@@ -150,3 +150,7 @@ class Requests(object):
     @classmethod
     def is_pending_financial_verification(cls, request):
         return request.status == RequestStatus.PENDING_FINANCIAL_VERIFICATION
+
+    @classmethod
+    def is_pending_ccpo_approval(cls, request):
+        return request.status == RequestStatus.PENDING_CCPO_APPROVAL
