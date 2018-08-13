@@ -21,6 +21,7 @@ const app = new Vue({
       modals: {
         styleguideModal: false,
         pendingFinancialVerification: false,
+        pendingCCPOApproval: false,
       }
     }
   },

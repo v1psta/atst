@@ -16,6 +16,15 @@
     </div>
   {% endcall %}
 
+  {% call Modal(name='pendingCCPOApproval', dismissable=True) %}
+
+    {% include 'fragments/pending_ccpo_approval_modal.html' %}
+
+    <div class='action-group'>
+      <a v-on:click="closeModal('pendingCCPOApproval')" class='action-group__action usa-button'>Close</a>
+    </div>
+  {% endcall %}
+
 {% if not requests %}
 
   {{ EmptyState(
@@ -30,6 +39,12 @@
   {% if pending_financial_verification %}
 
     {{ Alert('Pending Financial Verification', fragment="fragments/pending_financial_verification.html") }}
+
+  {% endif %}
+
+  {% if pending_ccpo_approval %}
+
+    {{ Alert('Request submitted. Approval pending.', fragment="fragments/pending_ccpo_approval_alert.html") }}
 
   {% endif %}
 
