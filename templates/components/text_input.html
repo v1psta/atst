@@ -1,23 +1,64 @@
 {% from "components/icon.html" import Icon %}
 
-{% macro TextInput(field, placeholder='') -%}
-  <div class='usa-input {% if field.errors %}usa-input--error{% endif %}'>
-    <label for={{field.name}}>
-      {{ field.label }}
+{% macro TextInput(field, placeholder='', validation='anything', paragraph=False) -%}
+  <textinput
+    name='{{ field.name }}'
+    validation='{{ validation }}'
+    {% if field.data %}initial-value='{{ field.data }}'{% endif %}
+    {% if field.errors %}v-bind:initial-errors='{{ field.errors }}'{% endif %}
+    inline-template>
 
-      {% if field.description %}
-        <span class='usa-input__help'>{{ field.description | safe }}</span>
+    <div
+      v-bind:class="['usa-input usa-input--validation--' + validation, { 'usa-input--error': showError, 'usa-input--success': showValid }]">
+
+      <label for={{field.name}}>
+        {{ field.label | striptags }}
+
+        {% if field.description %}
+          <span class='usa-input__help'>{{ field.description | safe }}</span>
+        {% endif %}
+
+        <span v-show='showError'>{{ Icon('alert') }}</span>
+        <span v-show='showValid'>{{ Icon('ok') }}</span>
+
+      </label>
+
+      {% if paragraph %}
+
+        <textarea
+          v-on:input='onInput'
+          v-on:change='onChange'
+          v-bind:value='value'
+          id='{{ field.name }}'
+          ref='input'
+          placeholder='{{ placeholder }}'>
+        </textarea>
+
+      {% else %}
+
+        <masked-input
+          v-on:input='onInput'
+          v-on:change='onChange'
+          v-bind:value='value'
+          v-bind:mask='mask'
+          v-bind:pipe='pipe'
+          v-bind:keep-char-positions='keepCharPositions'
+          v-bind:aria-invalid='showError'
+          id='{{ field.name }}'
+          type='text'
+          ref='input'
+          placeholder='{{ placeholder }}'>
+        </masked-input>
+
       {% endif %}
 
-      {% if field.errors %}{{ Icon('alert') }}{% endif %}
-    </label>
+      <input type='hidden' v-bind:value='rawValue' name='{{ field.name }}' />
 
-    {{ field(placeholder=placeholder) | safe }}
+      <template v-if='showError'>
+        <span v-if='initialErrors' v-for='error in initialErrors' class='usa-input__message' v-html='error'></span>
+        <span v-if='!initialErrors' class='usa-input__message' v-html='validationError'></span>
+      </template>
 
-    {% if field.errors %}
-      {% for error in field.errors %}
-        <span class='usa-input__message'>{{ error }}</span>
-      {% endfor %}
-    {% endif %}
-  </div>
+    </div>
+</textinput>
 {%- endmacro %}
