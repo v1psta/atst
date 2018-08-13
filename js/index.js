@@ -2,7 +2,9 @@ import classes from '../styles/atat.scss'
 import Vue from 'vue/dist/vue'
 import VTooltip from 'v-tooltip'
 
+import optionsinput from './components/options_input'
 import textinput from './components/text_input'
+import DetailsOfUse from './components/forms/details_of_use'
 
 Vue.use(VTooltip)
 
@@ -10,7 +12,9 @@ Vue.use(VTooltip)
 const app = new Vue({
   el: '#app-root',
   components: {
-    textinput
+    optionsinput,
+    textinput,
+    DetailsOfUse,
   },
   methods: {
     closeModal: function(name) {
@@ -35,5 +39,6 @@ const app = new Vue({
       const modal = modalOpen.getAttribute("data-modal");
       this.modals[modal] = true;
     }
-  }
+  },
+  delimiters: ['!{', '}']
 })

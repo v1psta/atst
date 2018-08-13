@@ -2,34 +2,36 @@
 {% from "components/tooltip.html" import Tooltip %}
 
 {% macro OptionsInput(field, tooltip, inline=False) -%}
-  <div class='usa-input {% if field.errors %}usa-input--error{% endif %}'>
+  <optionsinput name='{{ field.name }}' inline-template key='{{ field.name }}'>
+    <div class='usa-input {% if field.errors %}usa-input--error{% endif %}'>
 
-    <fieldset class="usa-input__choices {% if inline %}usa-input__choices--inline{% endif %}">
-      <legend>
-        <div class="usa-input__title">
-          {{ field.label | striptags}}
-          {% if tooltip %}{{ Tooltip(tooltip) }}{% endif %}
-        </div>
-        {% if field.description %}
-          <span class='usa-input__help'>{{ field.description | safe }}</span>
-        {% endif %}
+      <fieldset v-on:change="onInput" class="usa-input__choices {% if inline %}usa-input__choices--inline{% endif %}">
+        <legend>
+          <div class="usa-input__title">
+            {{ field.label | striptags}}
+            {% if tooltip %}{{ Tooltip(tooltip) }}{% endif %}
+          </div>
+
+          {% if field.description %}
+            <span class='usa-input__help'>{{ field.description | safe }}</span>
+          {% endif %}
+
+          {% if field.errors %}
+            {{ Icon('alert',classes="icon-validation")) }}
+          {% endif %}
+        </legend>
+
+        {{ field() }}
 
         {% if field.errors %}
-          {{ Icon('alert',classes="icon-validation") }}
+          {% for error in field.errors %}
+            <span class='usa-input__message'>{{ error }}</span>
+          {% endfor %}
         {% endif %}
-      </legend>
 
-      {{ field() }}
+      </fieldset>
+    </div>
 
-      {% if field.errors %}
-        {% for error in field.errors %}
-          <span class='usa-input__message'>{{ error }}</span>
-        {% endfor %}
-      {% endif %}
-
-    </fieldset>
-  </div>
-
-
+  </optionsinput>
 
 {%- endmacro %}

@@ -17,31 +17,48 @@
   ) }}
 {% endif %}
 
-<p>We’d like to know a little about how you plan to use JEDI Cloud services to process your request. Please answer the following questions to the best of your ability. Note that the CCPO does not directly help with migrating systems to JEDI Cloud. These questions are for learning about your cloud readiness and financial usage of the JEDI Cloud; your estimates will not be used for any department level reporting.</p>
-<p><em>All fields are required, unless specified optional.</em></p>
+<details-of-use inline-template v-bind:initial-data='{{ f.data|tojson }}'>
+  <div>
 
-<h2>General</h2>
-{{ OptionsInput(f.dod_component) }}
-{{ TextInput(f.jedi_usage,placeholder="Briefly describe how you are expecting to use the JEDI Cloud. \n e.g. We are migrating XYZ application to the cloud so that...",tooltip="Your answer will help us provide tangible examples to DoD leadership how and why commercial cloud resources are accelerating the Department\\'s missions.") }}
+    <p>We’d like to know a little about how you plan to use JEDI Cloud services to process your request. Please answer the following questions to the best of your ability. Note that the CCPO does not directly help with migrating systems to JEDI Cloud. These questions are for learning about your cloud readiness and financial usage of the JEDI Cloud; your estimates will not be used for any department level reporting.</p>
+    <p><em>All fields are required, unless specified optional.</em></p>
 
-<h2>Cloud Readiness</h2>
-{{ TextInput(f.num_software_systems,validation="integer",tooltip="A software system can be any code that you plan to host on cloud infrastructure. For example, it could be a custom-developed web application, or a large ERP system.") }}
-{{ OptionsInput(f.jedi_migration, tooltip="Cloud migration is the process of moving data, applications or other business elements from an organization\\'s onsite computers/data centers to the cloud, or moving them from one cloud environment to another.") }}
-{{ OptionsInput(f.rationalization_software_systems, tooltip="Rationalization is the DoD process to determine whether the application should move to the cloud.") }}
-{{ OptionsInput(f.technical_support_team) }}
-{{ OptionsInput(f.organization_providing_assistance) }}
-{{ OptionsInput(f.engineering_assessment, tooltip="An engineering assessment is an evaluation to convert your application architecture from on-premises to using the commercial cloud") }}
-{{ OptionsInput(f.data_transfers) }}
-{{ OptionsInput(f.expected_completion_date) }}
-{{ OptionsInput(f.cloud_native, tooltip="Cloud native is architecting and designing your application to use all the benefits of the commercial cloud. Specifically, designing applications so that they are decoupled from a physical resource.") }}
+    <h2>General</h2>
+    {{ OptionsInput(f.dod_component) }}
+    {{ TextInput(f.jedi_usage, paragraph=True, placeholder="Briefly describe how you are expecting to use the JEDI Cloud. \n e.g. We are migrating XYZ application to the cloud so that...",tooltip="Your answer will help us provide tangible examples to DoD leadership how and why commercial cloud resources are accelerating the Department\\'s missions.") }}
 
-<h2>Financial Usage</h2>
-{{ TextInput(f.estimated_monthly_spend, tooltip="Refer to financial verification step help docs", validation="dollars") }}
-<span>So this means you are spending approximately <b class="label">$1,000,023</b> annually.</span>
-{{ TextInput(f.dollar_value,validation="dollars") }}
-{{ TextInput(f.number_user_sessions,validation="integer") }}
-{{ TextInput(f.average_daily_traffic, tooltip="Requests are the client-to-server network traffic that is being transferred to your systems",validation="integer") }}
-{{ TextInput(f.average_daily_traffic_gb, tooltip="GB uploaded is the gigabyte amount of data traffic that is being transferred to your systems",validation="gigabytes") }}
-{{ TextInput(f.start_date, validation="date", placeholder="MM / DD / YYYY") }}
+    <h2>Cloud Readiness</h2>
+    {{ TextInput(f.num_software_systems,validation="integer",tooltip="A software system can be any code that you plan to host on cloud infrastructure. For example, it could be a custom-developed web application, or a large ERP system.") }}
+    {{ OptionsInput(f.jedi_migration, tooltip="Cloud migration is the process of moving data, applications or other business elements from an organization\\'s onsite computers/data centers to the cloud, or moving them from one cloud environment to another.") }}
+    <template v-if="jediMigrationOptionSelected">
+      <template v-if='isJediMigration' v-cloak>
+        {{ OptionsInput(f.rationalization_software_systems, tooltip="Rationalization is the DoD process to determine whether the application should move to the cloud.") }}
+        {{ OptionsInput(f.technical_support_team) }}
+        <template v-if="hasTechnicalSupportTeam">
+          {{ OptionsInput(f.organization_providing_assistance) }}
+        </template>
+        {{ OptionsInput(f.engineering_assessment, tooltip="An engineering assessment is an evaluation to convert your application architecture from on-premises to using the commercial cloud") }}
+        {{ OptionsInput(f.data_transfers) }}
+        {{ OptionsInput(f.expected_completion_date) }}
+      </template>
+      <template v-else-if='!isJediMigration' v-cloak>
+        {{ OptionsInput(f.cloud_native, tooltip="Cloud native is architecting and designing your application to use all the benefits of the commercial cloud. Specifically, designing applications so that they are decoupled from a physical resource.") }}
+      </template>
+    </template>
+
+    <h2>Financial Usage</h2>
+    {{ TextInput(f.estimated_monthly_spend, tooltip="Refer to financial verification step help docs", validation="dollars") }}
+    <p>So this means you are spending approximately <span class="label">!{ annualSpendStr }</span> annually</p>
+    
+    {{ TextInput(f.dollar_value, validation='dollars') }}
+    <template v-if="annualSpend > 1000000">
+      {{ TextInput(f.number_user_sessions, validation='integer') }}      
+      {{ TextInput(f.average_daily_traffic, tooltip="Requests are the client-to-server network traffic that is being transferred to your systems",validation="integer") }}
+      {{ TextInput(f.average_daily_traffic_gb, tooltip="GB uploaded is the gigabyte amount of data traffic that is being transferred to your systems",validation="gigabytes") }}      
+    </template>
+    {{ TextInput(f.start_date, validation='date', placeholder='MM / DD / YYYY') }}
+
+  </div>
+</details-of-use>
 
 {% endblock %}
