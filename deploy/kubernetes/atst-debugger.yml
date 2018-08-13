@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: atst-debugger
+  namespace: atat
+spec:
+  securityContext:
+    fsGroup: 101
+  containers:
+    - name: atst-debugger
+      image: registry.atat.codes:443/atst-prod:a1916b1
+      args: ["/bin/bash", "-c", "while true; do date; sleep 45; done"]
+      envFrom:
+      - configMapRef:
+          name: atst-envvars
+      volumeMounts:
+        - name: atst-config
+          mountPath: "/opt/atat/atst/atst-overrides.ini"
+          subPath: atst-overrides.ini
+        - name: uwsgi-config
+          mountPath: "/opt/atat/atst/uwsgi-config.ini"
+          subPath: uwsgi-config.ini
+        - name: uwsgi-socket-dir
+          mountPath: "/var/run/uwsgi"
+  volumes:
+    - name: atst-config
+      secret:
+        secretName: atst-config-ini
+        items:
+        - key: atst-overrides.ini
+          path: atst-overrides.ini
+          mode: 0644
+    - name: uwsgi-config
+      configMap:
+        name: atst-config
+        items:
+        - key: uwsgi-config
+          path: uwsgi-config.ini
+          mode: 0644
+    - name: uwsgi-socket-dir
+      emptyDir:
+        medium: Memory
+  restartPolicy: Never
