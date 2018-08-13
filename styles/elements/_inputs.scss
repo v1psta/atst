@@ -80,6 +80,17 @@
     }
   }
 
+  .usa-input__title {
+    display: flex;
+    align-items: center;
+
+    .icon-tooltip {
+      padding: 0 $gap/2;
+      cursor: default;
+      margin-left: $gap/2;
+    }
+  }
+
   .usa-input__help {
     @include h4;
     font-weight: normal;
@@ -87,16 +98,7 @@
     @include line-max;
 
     .icon-link {
-      padding: $gap/2;
-    }
-  }
-
-  .icon-tooltip .icon {
-    @include icon-color($color-blue);
-
-    &:hover {
-      @include icon-color($color-aqua);
-      cursor: pointer;
+      padding: 0 $gap/2;
     }
   }
 
@@ -114,10 +116,6 @@
 
       label {
         font-weight: $font-bold;
-      }
-
-      .icon {
-        vertical-align: middle;
       }
 
     }

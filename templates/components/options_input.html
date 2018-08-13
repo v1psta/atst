@@ -6,7 +6,7 @@
 
     <fieldset class="usa-input__choices {% if inline %}usa-input__choices--inline{% endif %}">
       <legend>
-        <div>
+        <div class="usa-input__title">
           {{ field.label | striptags}}
           {% if tooltip %}{{ Tooltip(tooltip) }}{% endif %}
         </div>
