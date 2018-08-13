@@ -102,3 +102,13 @@ def test_non_creator_info_is_not_autopopulated(monkeypatch, client, user_session
     assert not user.first_name in body
     assert not user.last_name in body
     assert not user.email in body
+
+def test_can_review_data(user_session, client):
+    creator = UserFactory.create()
+    user_session(creator)
+    request = RequestFactory.create(creator=creator)
+    response = client.get("/requests/new/4/{}".format(request.id))
+    body = response.data.decode()
+    # assert a sampling of the request data is on the review page
+    assert request.body["primary_poc"]["fname_poc"] in body
+    assert request.body["information_about_you"]["email_request"] in body
