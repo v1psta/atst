@@ -16,6 +16,15 @@
     </div>
   {% endcall %}
 
+  {% call Modal(name='pendingCCPOApproval', dismissable=True) %}
+
+    {% include 'fragments/pending_ccpo_approval_modal.html' %}
+
+    <div class='action-group'>
+      <a v-on:click="closeModal('pendingCCPOApproval')" class='action-group__action usa-button'>Close</a>
+    </div>
+  {% endcall %}
+
 {% if not requests %}
 
   {{ EmptyState(

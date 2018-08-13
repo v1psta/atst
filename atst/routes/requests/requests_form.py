@@ -104,7 +104,7 @@ def requests_submit(request_id=None):
         return redirect("/requests?modal=pendingFinancialVerification")
 
     else:
-        return redirect("/requests")
+        return redirect("/requests?modal=pendingCCPOApproval")
 
 
 # TODO: generalize this, along with other authorizations, into a policy-pattern
