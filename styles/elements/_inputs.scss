@@ -107,6 +107,17 @@
   select {
     @include line-max;
     margin: 0;
+    box-sizing: border-box;
+
+    &:hover,
+    &:focus {
+      border-color: $color-blue;
+      color: $color-blue;
+      box-shadow: inset 0 0 0 1px $color-blue;
+      &::placeholder {
+        color: $color-blue;
+      }
+    }
   }
 
   .usa-input__choices { // checkbox & radio sets
@@ -131,6 +142,12 @@
         [type='radio'] + label,
         [type='checkbox'] + label {
           margin: 0;
+          &:hover {
+            color: $color-blue;
+            &:before {
+              box-shadow: 0 0 0 1px $color-white, 0 0 0 3px $color-blue;
+            }
+          }
         }
       }
     }
