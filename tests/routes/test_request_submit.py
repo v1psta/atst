@@ -21,7 +21,7 @@ def test_submit_reviewed_request(monkeypatch, client, user_session):
         follow_redirects=False,
     )
     assert "/requests" in response.headers["Location"]
-    assert "modal" not in response.headers["Location"]
+    assert "modal=pendingCCPOApproval" in response.headers["Location"]
 
 
 def test_submit_autoapproved_reviewed_request(monkeypatch, client, user_session):
@@ -35,4 +35,4 @@ def test_submit_autoapproved_reviewed_request(monkeypatch, client, user_session)
         data="",
         follow_redirects=False,
     )
-    assert "/requests?modal=" in response.headers["Location"]
+    assert "/requests?modal=pendingFinancialVerification" in response.headers["Location"]

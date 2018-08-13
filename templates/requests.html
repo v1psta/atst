@@ -42,6 +42,12 @@
 
   {% endif %}
 
+  {% if pending_ccpo_approval %}
+
+    {{ Alert('Request submitted. Approval pending.', fragment="fragments/pending_ccpo_approval_alert.html") }}
+
+  {% endif %}
+
   <div class="col col--grow">
 
     <form class='search-bar'>
