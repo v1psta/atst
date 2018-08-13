@@ -2,7 +2,7 @@ from wtforms.fields import StringField
 from wtforms.fields.html5 import EmailField
 from wtforms.validators import Required, Email, Length
 from .forms import ValidatedForm
-from .validators import IsNumber, Alphabet
+from .validators import IsNumber
 
 
 class POCForm(ValidatedForm):
