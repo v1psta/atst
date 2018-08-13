@@ -17,32 +17,46 @@
   ) }}
 {% endif %}
 
+<details-of-use inline-template v-bind:initial-data='{{ f.data|tojson }}'>
+  <div>
 
-<p>We’d like to know a little about how you plan to use JEDI Cloud services to process your request. Please answer the following questions to the best of your ability. Note that the CCPO does not directly help with migrating systems to JEDI Cloud. These questions are for learning about your cloud readiness and financial usage of the JEDI Cloud; your estimates will not be used for any department level reporting.</p>
-<p><em>All fields are required, unless specified optional.</em></p>
+    <p>We’d like to know a little about how you plan to use JEDI Cloud services to process your request. Please answer the following questions to the best of your ability. Note that the CCPO does not directly help with migrating systems to JEDI Cloud. These questions are for learning about your cloud readiness and financial usage of the JEDI Cloud; your estimates will not be used for any department level reporting.</p>
+    <p><em>All fields are required, unless specified optional.</em></p>
 
-<h2>General</h2>
-{{ OptionsInput(f.dod_component) }}
-{{ TextInput(f.jedi_usage, paragraph=True, placeholder="e.g. We are migrating XYZ application to the cloud so that...") }}
+    <h2>General</h2>
+    {{ OptionsInput(f.dod_component) }}
+    {{ TextInput(f.jedi_usage, paragraph=True, placeholder="e.g. We are migrating XYZ application to the cloud so that...") }}
 
-<h2>Cloud Readiness</h2>
-{{ TextInput(f.num_software_systems, validation='integer') }}
-{{ OptionsInput(f.jedi_migration) }}
-{{ OptionsInput(f.rationalization_software_systems) }}
-{{ OptionsInput(f.technical_support_team) }}
-{{ OptionsInput(f.organization_providing_assistance) }}
-{{ OptionsInput(f.engineering_assessment) }}
-{{ OptionsInput(f.data_transfers) }}
-{{ OptionsInput(f.expected_completion_date) }}
-{{ OptionsInput(f.cloud_native) }}
+    <h2>Cloud Readiness</h2>
+    {{ TextInput(f.num_software_systems, validation='integer') }}
+    {{ OptionsInput(f.jedi_migration) }}
+    <template v-if="jediMigrationOptionSelected">
+      <template v-if='isJediMigration' v-cloak>
+        {{ OptionsInput(f.rationalization_software_systems) }}
+        {{ OptionsInput(f.technical_support_team) }}
+        <template v-if="hasTechnicalSupportTeam">
+          {{ OptionsInput(f.organization_providing_assistance) }}
+        </template>
+        {{ OptionsInput(f.engineering_assessment) }}
+        {{ OptionsInput(f.data_transfers) }}
+        {{ OptionsInput(f.expected_completion_date) }}
+      </template>
+      <template v-else-if='!isJediMigration' v-cloak>
+        {{ OptionsInput(f.cloud_native) }}
+      </template>
+    </template>
 
-<h2>Financial Usage</h2>
-{{ TextInput(f.estimated_monthly_spend, validation='dollars') }}
-<p>So this means you are spending approximately <b>$X</b> annually</p>
-{{ TextInput(f.dollar_value, validation='dollars') }}
-{{ TextInput(f.number_user_sessions, validation='integer') }}
-{{ TextInput(f.average_daily_traffic, placeholder='Gigabytes per day', validation='gigabytes') }}
-{{ TextInput(f.start_date, validation='date', placeholder='MM / DD / YYYY') }}
+    <h2>Financial Usage</h2>
+    {{ TextInput(f.estimated_monthly_spend, validation='dollars') }}
+    <p>So this means you are spending approximately <b>!{ annualSpendStr }</b> annually</p>
+    {{ TextInput(f.dollar_value, validation='dollars') }}
+    <template v-if="annualSpend > 1000000">
+      {{ TextInput(f.number_user_sessions, validation='integer') }}
+      {{ TextInput(f.average_daily_traffic, placeholder='Gigabytes per day', validation='gigabytes') }}
+    </template>
+    {{ TextInput(f.start_date, validation='date', placeholder='MM / DD / YYYY') }}
 
+  </div>
+</details-of-use>
 
 {% endblock %}

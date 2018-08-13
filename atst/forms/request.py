@@ -1,10 +1,37 @@
 from wtforms.fields.html5 import IntegerField
 from wtforms.fields import RadioField, TextAreaField, SelectField
+from wtforms.validators import Optional, Required
+
 from .fields import DateField
 from .forms import ValidatedForm
+from atst.domain.requests import Requests
 
 
 class RequestForm(ValidatedForm):
+
+    def validate(self, *args, **kwargs):
+        if self.jedi_migration.data == 'no':
+            self.rationalization_software_systems.validators.append(Optional())
+            self.technical_support_team.validators.append(Optional())
+            self.organization_providing_assistance.validators.append(Optional())
+            self.engineering_assessment.validators.append(Optional())
+            self.data_transfers.validators.append(Optional())
+            self.expected_completion_date.validators.append(Optional())
+        elif self.jedi_migration.data == 'yes':
+            if self.technical_support_team.data == 'no':
+                self.organization_providing_assistance.validators.append(Optional())
+            self.cloud_native.validators.append(Optional())
+
+        try:
+            annual_spend = int(self.estimated_monthly_spend.data or 0) * 12
+        except ValueError:
+            annual_spend = 0
+
+        if annual_spend > Requests.AUTO_APPROVE_THRESHOLD:
+            self.number_user_sessions.validators.append(Required())
+            self.average_daily_traffic.validators.append(Required())
+
+        return super(RequestForm, self).validate(*args, **kwargs)
 
     # Details of Use: General
     dod_component = SelectField(
@@ -37,16 +64,19 @@ class RequestForm(ValidatedForm):
     jedi_migration = RadioField(
         "Are you using the JEDI Cloud to migrate existing systems?",
         choices=[("yes", "Yes"), ("no", "No")],
+        default="",
     )
 
     rationalization_software_systems = RadioField(
         "Have you completed a “rationalization” of your software systems to move to the cloud?",
         choices=[("yes", "Yes"), ("no", "No"), ("in_progress", "In Progress")],
+        default="",
     )
 
     technical_support_team = RadioField(
         "Are you working with a technical support team experienced in cloud migrations?",
         choices=[("yes", "Yes"), ("no", "No")],
+        default="",
     )
 
     organization_providing_assistance = RadioField(  # this needs to be updated to use checkboxes instead of radio
@@ -56,11 +86,13 @@ class RequestForm(ValidatedForm):
             ("contractor", "Contractor"),
             ("other_dod_organization", "Other DoD organization"),
         ],
+        default="",
     )
 
     engineering_assessment = RadioField(
         "Have you completed an engineering assessment of your software systems for cloud readiness?",
         choices=[("yes", "Yes"), ("no", "No"), ("in_progress", "In Progress")],
+        default="",
     )
 
     data_transfers = SelectField(
@@ -94,6 +126,7 @@ class RequestForm(ValidatedForm):
     cloud_native = RadioField(
         "Are your software systems being developed cloud native?",
         choices=[("yes", "Yes"), ("no", "No")],
+        default="",
     )
 
     # Details of Use: Financial Usage
