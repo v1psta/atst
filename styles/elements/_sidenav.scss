@@ -29,8 +29,8 @@
 
     &.sidenav__link--active {
       @include h4;
-      background-color: $color-white;
       color: $color-primary;
+      background-color: $color-white;
       box-shadow: inset ($gap / 2) 0 0 0 $color-primary;
 
       .sidenav__link-icon {
@@ -38,20 +38,32 @@
       }
 
       + ul {
-        background-color: $color-white;
+        background-color: $color-primary;
 
         .sidenav__link {
+          color: $color-white;
+          background-color: $color-primary;
+
+          &:hover {
+            background-color: $color-blue-darker;
+          }
+
           &--active {
             @include h5;
-            color: $color-primary;
+            color: $color-white;
+            background-color: $color-primary;
             box-shadow: none;
+          }
+
+          .icon {
+            @include icon-color($color-white);
           }
         }
       }
     }
 
     + ul {
-      padding-bottom: $gap / 2;
+      // padding-bottom: $gap / 2;
 
       li {
         .sidenav__link {
