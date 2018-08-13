@@ -63,7 +63,7 @@ def make_flask_callbacks(app):
     def _set_globals():
         g.navigationContext = (
             "workspace"
-            if re.match("\/workspaces\/[A-Za-z0-9]*", request.url)
+            if re.match("\/workspaces\/[A-Za-z0-9]*", request.path)
             else "global"
         )
         g.dev = os.getenv("FLASK_ENV", "dev") == "dev"
