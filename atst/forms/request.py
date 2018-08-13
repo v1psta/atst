@@ -36,6 +36,7 @@ class RequestForm(ValidatedForm):
     )
 
     jedi_migration = RadioField(
+        "JEDI Migration",
         description="Are you using the JEDI Cloud to migrate existing systems?",
         choices=[("yes", "Yes"), ("no", "No")],
     )
@@ -94,7 +95,7 @@ class RequestForm(ValidatedForm):
     )
 
     cloud_native = RadioField(
-        "Are your software systems being developed cloud native?",
+        description="Are your software systems being developed cloud native?",
         choices=[("yes", "Yes"), ("no", "No")],
     )
 
