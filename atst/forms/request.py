@@ -1,6 +1,6 @@
 from wtforms.fields.html5 import IntegerField
 from wtforms.fields import RadioField, TextAreaField, SelectField
-from wtforms.validators import Optional
+from wtforms.validators import Optional, Required
 from .fields import DateField
 from .forms import ValidatedForm
 
@@ -19,6 +19,15 @@ class RequestForm(ValidatedForm):
             if self.technical_support_team.data == 'no':
                 self.organization_providing_assistance.validators.append(Optional())
             self.cloud_native.validators.append(Optional())
+
+        try:
+            annual_spend = int(self.estimated_monthly_spend.data or 0) * 12
+        except ValueError:
+            annual_spend = 0
+
+        if annual_spend > 1_000_000:
+            self.number_user_sessions.validators.append(Required())
+            self.average_daily_traffic.validators.append(Required())
 
         return super(RequestForm, self).validate(*args, **kwargs)
 

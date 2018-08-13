@@ -50,8 +50,10 @@
     {{ TextInput(f.estimated_monthly_spend, validation='dollars') }}
     <p>So this means you are spending approximately <b>!{ annualSpendStr }</b> annually</p>
     {{ TextInput(f.dollar_value, validation='dollars') }}
-    {{ TextInput(f.number_user_sessions, validation='integer') }}
-    {{ TextInput(f.average_daily_traffic, placeholder='Gigabytes per day', validation='gigabytes') }}
+    <template v-if="annualSpend > 1000000">
+      {{ TextInput(f.number_user_sessions, validation='integer') }}
+      {{ TextInput(f.average_daily_traffic, placeholder='Gigabytes per day', validation='gigabytes') }}
+    </template>
     {{ TextInput(f.start_date, validation='date', placeholder='MM / DD / YYYY') }}
 
   </div>
