@@ -3,6 +3,7 @@ from flask import render_template, g, url_for
 
 from . import requests_bp
 from atst.domain.requests import Requests
+from atst.models.permissions import Permissions
 
 
 def map_request(request):
@@ -30,15 +31,16 @@ def map_request(request):
 @requests_bp.route("/requests", methods=["GET"])
 def requests_index():
     requests = []
-    if "review_and_approve_jedi_workspace_request" in g.current_user.atat_permissions:
+    is_ccpo = Permissions.REVIEW_AND_APPROVE_JEDI_WORKSPACE_REQUEST in g.current_user.atat_permissions
+    if is_ccpo:
         requests = Requests.get_many()
     else:
         requests = Requests.get_many(creator=g.current_user)
 
     mapped_requests = [map_request(r) for r in requests]
 
-    pending_fv = any(Requests.is_pending_financial_verification(r) for r in requests)
-    pending_ccpo = any(Requests.is_pending_ccpo_approval(r) for r in requests)
+    pending_fv = any(Requests.is_pending_financial_verification(r) for r in requests) and not is_ccpo
+    pending_ccpo = any(Requests.is_pending_ccpo_approval(r) for r in requests) and not is_ccpo
 
     return render_template(
         "requests.html",
