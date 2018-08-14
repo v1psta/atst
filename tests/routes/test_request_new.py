@@ -1,7 +1,4 @@
 import re
-import pytest
-import urllib
-from tests.mocks import MOCK_USER, MOCK_REQUEST
 from tests.factories import RequestFactory, UserFactory
 from atst.domain.roles import Roles
 from atst.domain.requests import Requests
