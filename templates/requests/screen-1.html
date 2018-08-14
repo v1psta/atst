@@ -31,31 +31,50 @@
     {{ TextInput(f.num_software_systems,validation="integer",tooltip="A software system can be any code that you plan to host on cloud infrastructure. For example, it could be a custom-developed web application, or a large ERP system.") }}
     {{ OptionsInput(f.jedi_migration, tooltip="Cloud migration is the process of moving data, applications or other business elements from an organization\\'s onsite computers/data centers to the cloud, or moving them from one cloud environment to another.") }}
     <template v-if="jediMigrationOptionSelected">
-      <template v-if='isJediMigration' v-cloak>
-        {{ OptionsInput(f.rationalization_software_systems, tooltip="Rationalization is the DoD process to determine whether the application should move to the cloud.") }}
-        {{ OptionsInput(f.technical_support_team) }}
-        <template v-if="hasTechnicalSupportTeam">
-          {{ OptionsInput(f.organization_providing_assistance) }}
-        </template>
-        {{ OptionsInput(f.engineering_assessment, tooltip="An engineering assessment is an evaluation to convert your application architecture from on-premises to using the commercial cloud") }}
-        {{ OptionsInput(f.data_transfers) }}
-        {{ OptionsInput(f.expected_completion_date) }}
-      </template>
-      <template v-else-if='!isJediMigration' v-cloak>
+      <transition name='slide'>
+        <fieldset class='form__sub-fields' v-if='isJediMigration' v-cloak>
+          <legend class='usa-sr-only'>Questions related to JEDI Cloud migration</legend>
+          {{ OptionsInput(f.rationalization_software_systems, tooltip="Rationalization is the DoD process to determine whether the application should move to the cloud.") }}
+          {{ OptionsInput(f.technical_support_team) }}
+          <transition name='slide'>
+            <template v-if="hasTechnicalSupportTeam">
+              {{ OptionsInput(f.organization_providing_assistance) }}
+            </template>
+          </transition>
+          {{ OptionsInput(f.engineering_assessment, tooltip="An engineering assessment is an evaluation to convert your application architecture from on-premises to using the commercial cloud") }}
+          {{ OptionsInput(f.data_transfers) }}
+          {{ OptionsInput(f.expected_completion_date) }}
+        </fieldset>
+      </transition>
+
+      <template v-if='!isJediMigration' v-cloak>
         {{ OptionsInput(f.cloud_native, tooltip="Cloud native is architecting and designing your application to use all the benefits of the commercial cloud. Specifically, designing applications so that they are decoupled from a physical resource.") }}
       </template>
     </template>
 
     <h2>Financial Usage</h2>
     {{ TextInput(f.estimated_monthly_spend, tooltip="Refer to financial verification step help docs", validation="dollars") }}
-    <p>So this means you are spending approximately <span class="label">!{ annualSpendStr }</span> annually</p>
-    
-    {{ TextInput(f.dollar_value, validation='dollars') }}
+
+    <div class='alert alert-info'>
+      <div class='alert__content'>
+        <div class='alert__message'>
+          <p>So this means you are spending approximately <span class="label label--info">!{ annualSpendStr }</span> annually</p>
+        </div>
+      </div>
+    </div>
+
     <template v-if="annualSpend > 1000000">
-      {{ TextInput(f.number_user_sessions, validation='integer') }}      
-      {{ TextInput(f.average_daily_traffic, tooltip="Requests are the client-to-server network traffic that is being transferred to your systems",validation="integer") }}
-      {{ TextInput(f.average_daily_traffic_gb, tooltip="GB uploaded is the gigabyte amount of data traffic that is being transferred to your systems",validation="gigabytes") }}      
+      <transition name='slide'>
+        <fieldset class='form__sub-fields'>
+          <h3>Because the approximate annual spend is over $1,000,000, please answer a few additional questions.</h3>
+          {{ TextInput(f.number_user_sessions, validation='integer') }}
+          {{ TextInput(f.average_daily_traffic, tooltip="Requests are the client-to-server network traffic that is being transferred to your systems",validation="integer") }}
+          {{ TextInput(f.average_daily_traffic_gb, tooltip="GB uploaded is the gigabyte amount of data traffic that is being transferred to your systems",validation="gigabytes") }}
+        </fieldset>
+      </transition>
     </template>
+
+    {{ TextInput(f.dollar_value, validation='dollars') }}
     {{ TextInput(f.start_date, validation='date', placeholder='MM / DD / YYYY') }}
 
   </div>
