@@ -48,20 +48,22 @@
 
   {% endif %}
 
-  <div class="row kpi">
-    <div class="kpi__item col col--grow">
-      <div class="kpi__item__value">3</div>
-      <div class="kpi__item__description">Pending Requests</div>
+  {% if extended_view %}
+    <div class="row kpi">
+      <div class="kpi__item col col--grow">
+        <div class="kpi__item__value">3</div>
+        <div class="kpi__item__description">Pending Requests</div>
+      </div>
+      <div class="kpi__item col col--grow">
+        <div class="kpi__item__value">2,456</div>
+        <div class="kpi__item__description">Completed Requests This Year</div>
+      </div>
+      <div class="kpi__item col col--grow">
+        <div class="kpi__item__value">234</div>
+        <div class="kpi__item__description">Denied Requests</div>
+      </div>
     </div>
-    <div class="kpi__item col col--grow">
-      <div class="kpi__item__value">2,456</div>
-      <div class="kpi__item__description">Completed Requests This Year</div>
-    </div>
-    <div class="kpi__item col col--grow">
-      <div class="kpi__item__value">234</div>
-      <div class="kpi__item__description">Denied Requests</div>
-    </div>
-  </div>
+  {% endif %}
 
   <div class="col col--grow">
 
@@ -91,15 +93,14 @@
       <table>
         <thead>
           <tr>
-            <th scope="col">Order ID</th>
-            <th scope="col">Request Date</th>
+            <th scope="col">JEDI Cloud Request ID</th>
+            <th scope="col">Date Request Initiated / Created</th>
             {% if extended_view %}
               <th scope="col">Requester</th>
-              <th scope="col">Total Apps</th>
-            {% else %}
-              <th scope="col">Annual Usage</th>
+              <th scope="col">Reason Flagged</th>
             {% endif %}
-            <th scope="col">Status</th>
+            <th scope="col">Projected Annual Usage ($)</th>
+            <th scope="col">Request Status</th>
             <th scope="col" class="table-cell--shrink">Actions</th>
           </tr>
         </thead>
@@ -114,13 +115,11 @@
             <td>{{ r['date'] }}</td>
             {% if extended_view %}
               <td>{{ r['full_name'] }}</td>
-              <td>{{ r['app_count'] }}</td>
-            {% else %}
-              <td>{{ r['annual_usage'] }}</td>
+              <td></td>
             {% endif %}
+            <td>${{ r['annual_usage'] }}</td>
             <td>{{ r['status'] }}</td>
             <td class="table-cell--shrink">
-              <a href="" class='icon-link'>Download</a>
               <a href="/request/approval" class='icon-link'>Approval</a>
             </td>
           </tr>
