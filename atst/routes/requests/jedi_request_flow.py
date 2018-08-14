@@ -120,7 +120,7 @@ class JEDIRequestFlow(object):
                 "show": True,
             },
             {
-                "title": "Primary Point of Contact",
+                "title": "Workspace Owner",
                 "section": "primary_poc",
                 "form": POCForm,
                 "show": True,
