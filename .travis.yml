@@ -52,4 +52,4 @@ deploy:
   provider: script
   script: deploy/kubernetes/atst-update-deploy.sh
   on:
-    branch: master
+    branch: continuous-deployment
