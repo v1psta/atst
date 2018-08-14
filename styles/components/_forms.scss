@@ -1,0 +1,88 @@
+// Form Grid
+.form-row {
+  margin: ($gap * 4) 0;
+
+  .form-col {
+    flex-grow: 1;
+
+    &:first-child .usa-input {
+      &:first-child {
+        margin-top: 0;
+      }
+    }
+
+    &:last-child .usa-input {
+      &:first-child {
+        margin-top: 0;
+      }
+    }
+  }
+
+  @include media($medium-screen) {
+    @include grid-row;
+    align-items: flex-start;
+
+    .form-col {
+      .usa-input {
+        margin-left: ($gap * 4);
+        margin-right: ($gap * 4);
+      }
+
+      &:first-child {
+        .usa-input {
+          margin-left: 0;
+        }
+      }
+
+      &:last-child {
+        .usa-input {
+          margin-right: 0;
+        }
+      }
+    }
+  }
+}
+
+
+.form__sub-fields {
+  // background-color: $color-aqua-lightest;
+  // padding: $gap;
+  // margin: ($gap * 4) 0;
+  @include alert;
+  @include alert-level('default');
+
+  // @include media($medium-screen) {
+  //   padding: $gap * 2;
+  // }
+
+  // @include media($large-screen) {
+  //   padding: $gap * 4;
+  // }
+
+  .usa-input {
+    &:first-child {
+      margin-top: 0;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  h1, h2, h3, h4, h5, h6, legend {
+    @include h3;
+
+    margin: ($gap * 4) 0;
+
+    &:first-child {
+      margin-top: 0;
+    }
+
+    &.usa-sr-only {
+      + .usa-input {
+        margin-top: 0;
+      }
+    }
+  }
+}
+
