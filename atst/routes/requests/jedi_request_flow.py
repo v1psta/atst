@@ -122,9 +122,13 @@ class JEDIRequestFlow(object):
         ]
 
     def create_or_update_request(self):
-        request_data = {self.form_section: self.form.data}
         if self.request_id:
-            Requests.update(self.request_id, request_data)
+            self.update_request(self.form_section, self.form.data)
         else:
+            request_data = {self.form_section: self.form.data}
             request = Requests.create(self.current_user, request_data)
             self.request_id = request.id
+
+    def update_request(self, section, data):
+        request_data = {section: data}
+        Requests.update(self.request_id, request_data)
