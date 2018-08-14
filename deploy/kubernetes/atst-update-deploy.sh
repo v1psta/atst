@@ -12,17 +12,17 @@ set -o nounset
 echo "${K8S_CA_CRT}" | base64 --decode -i > "${HOME}/k8s_ca.crt"
 
 # Setup the local kubectl client
+kubectl config set-context travis \
+    --cluster=atat-cluster \
+    --user=atat-deployer \
+    --namespace=atat
+
 kubectl config set-cluster atat-cluster \
     --embed-certs=true \
     --server="${K8S_ENDPOINT}"  \
     --certificate-authority="${HOME}/k8s_ca.crt"
 
 kubectl config set-credentials atat-deployer --token="${K8S_USER_TOKEN}"
-
-kubectl config set-context travis \
-    --cluster=atat-cluster \
-    --user=atat-deployer \
-    --namespace=atat
 
 kubectl config use-context travis
 kubectl config current-context
