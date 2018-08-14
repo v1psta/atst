@@ -64,16 +64,16 @@
       </div>
     </div>
 
-    <template v-if="annualSpend > 1000000">
-      <transition name='slide'>
+    <transition name='slide'>
+      <template v-if="annualSpend > 1000000">
         <fieldset class='form__sub-fields'>
           <h3>Because the approximate annual spend is over $1,000,000, please answer a few additional questions.</h3>
           {{ TextInput(f.number_user_sessions, validation='integer') }}
           {{ TextInput(f.average_daily_traffic, tooltip="Requests are the client-to-server network traffic that is being transferred to your systems",validation="integer") }}
           {{ TextInput(f.average_daily_traffic_gb, tooltip="GB uploaded is the gigabyte amount of data traffic that is being transferred to your systems",validation="gigabytes") }}
         </fieldset>
-      </transition>
-    </template>
+      </template>
+    </transition>
 
     {{ TextInput(f.dollar_value, validation='dollars') }}
     {{ TextInput(f.start_date, validation='date', placeholder='MM / DD / YYYY') }}
