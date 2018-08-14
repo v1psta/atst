@@ -70,6 +70,7 @@
     @include h4;
     @include line-max;
     position: relative;
+    clear: both;
 
     .icon-validation {
       position: absolute;
@@ -79,7 +80,7 @@
       margin-left: $gap;
     }
   }
-  
+
   .usa-input__title {
     display: flex;
     align-items: center;
@@ -90,7 +91,7 @@
       margin-left: $gap/2;
     }
   }
-  
+
   .usa-input__help {
     @include h4;
     font-weight: normal;
