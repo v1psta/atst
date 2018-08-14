@@ -30,8 +30,9 @@
     <h2>Cloud Readiness</h2>
     {{ TextInput(f.num_software_systems,validation="integer",tooltip="A software system can be any code that you plan to host on cloud infrastructure. For example, it could be a custom-developed web application, or a large ERP system.") }}
     {{ OptionsInput(f.jedi_migration, tooltip="Cloud migration is the process of moving data, applications or other business elements from an organization\\'s onsite computers/data centers to the cloud, or moving them from one cloud environment to another.") }}
-    <template v-if="jediMigrationOptionSelected">
-      <transition name='slide'>
+
+    <transition name='slide'>
+      <template v-if="jediMigrationOptionSelected">
         <fieldset class='form__sub-fields' v-if='isJediMigration' v-cloak>
           <legend class='usa-sr-only'>Questions related to JEDI Cloud migration</legend>
           {{ OptionsInput(f.rationalization_software_systems, tooltip="Rationalization is the DoD process to determine whether the application should move to the cloud.") }}
@@ -45,12 +46,12 @@
           {{ OptionsInput(f.data_transfers) }}
           {{ OptionsInput(f.expected_completion_date) }}
         </fieldset>
-      </transition>
 
-      <template v-if='!isJediMigration' v-cloak>
-        {{ OptionsInput(f.cloud_native, tooltip="Cloud native is architecting and designing your application to use all the benefits of the commercial cloud. Specifically, designing applications so that they are decoupled from a physical resource.") }}
+        <template v-if='!isJediMigration' v-cloak>
+          {{ OptionsInput(f.cloud_native, tooltip="Cloud native is architecting and designing your application to use all the benefits of the commercial cloud. Specifically, designing applications so that they are decoupled from a physical resource.") }}
+        </template>
       </template>
-    </template>
+    </transition>
 
     <h2>Financial Usage</h2>
     {{ TextInput(f.estimated_monthly_spend, tooltip="Refer to financial verification step help docs", validation="dollars") }}
