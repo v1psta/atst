@@ -65,7 +65,7 @@ class JEDIRequestFlow(object):
         return {
             "fname_request": user.first_name,
             "lname_request": user.last_name,
-            "email_request": user.email
+            "email_request": user.email,
         }
 
     @property
@@ -80,7 +80,7 @@ class JEDIRequestFlow(object):
                 data = self.request.body
             elif self.form_section == "information_about_you":
                 form_data = self.request.body.get(self.form_section, {})
-                data = { **self.map_user_data(self.request.creator), **form_data }
+                data = {**self.map_user_data(self.request.creator), **form_data}
             else:
                 data = self.request.body.get(self.form_section, {})
         elif self.form_section == "information_about_you":
@@ -109,11 +109,7 @@ class JEDIRequestFlow(object):
                 "section": "information_about_you",
                 "form": OrgForm,
             },
-            {
-                "title": "Workspace Owner",
-                "section": "primary_poc",
-                "form": POCForm,
-            },
+            {"title": "Workspace Owner", "section": "primary_poc", "form": POCForm},
             {
                 "title": "Review & Submit",
                 "section": "review_submit",
@@ -122,23 +118,26 @@ class JEDIRequestFlow(object):
         ]
 
     def create_or_update_request(self):
+        request_data = self.map_request_data(self.form_section, self.form.data)
         if self.request_id:
-            self.update_request(self.form_section, self.form.data)
+            Requests.update(self.request_id, request_data)
         else:
-            request_data = {self.form_section: self.form.data}
             request = Requests.create(self.current_user, request_data)
             self.request_id = request.id
 
-    def update_request(self, section, data):
+    def map_request_data(self, section, data):
+        user = (
+            self.existing_request.creator
+            if self.existing_request
+            else self.current_user
+        )
         if section == "primary_poc":
             if data.get("am_poc") == "yes":
                 data = {
                     **data,
-                    "dodid_poc": self.existing_request.creator.dod_id,
-                    "fname_poc": self.existing_request.creator.first_name,
-                    "lname_poc": self.existing_request.creator.last_name,
-                    "email_poc": self.existing_request.creator.email
+                    "dodid_poc": user.dod_id,
+                    "fname_poc": user.first_name,
+                    "lname_poc": user.last_name,
+                    "email_poc": user.email,
                 }
-
-        request_data = {section: data}
-        Requests.update(self.request_id, request_data)
+        return {section: data}

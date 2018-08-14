@@ -139,6 +139,20 @@ def test_not_am_poc_allows_user_to_fill_in_poc_info(client, user_session):
     assert ERROR_CLASS not in response.data.decode()
 
 
+def test_not_am_poc_allows_user_to_fill_in_poc_info_for_new_request(client, user_session):
+    creator = UserFactory.create()
+    user_session(creator)
+    response = client.post(
+        "/requests/new/3",
+        headers={"Content-Type": "application/x-www-form-urlencoded"},
+        data="am_poc=yes",
+    )
+    request_id = response.headers["Location"].split('/')[-1]
+    request = Requests.get(request_id)
+
+    assert request.body["primary_poc"]["dodid_poc"] == creator.dod_id
+
+
 def test_can_review_data(user_session, client):
     creator = UserFactory.create()
     user_session(creator)
