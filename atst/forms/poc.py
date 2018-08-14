@@ -16,7 +16,7 @@ class POCForm(ValidatedForm):
             self.email_poc.validators.insert(0, Optional())
             self.dodid_poc.validators.insert(0, Optional())
 
-        return super(POCForm, self).validate(*args, **kwargs)
+        return super().validate(*args, **kwargs)
 
 
     am_poc = RadioField(
