@@ -15,7 +15,7 @@ class RequestStatus(Enum):
     CHANGES_REQUESTED = "Changes Requested"
     APPROVED = "Approved"
     EXPIRED = "Expired"
-    DELETED = "Deleted"
+    CANCELED = "Canceled"
 
 
 class RequestStatusEvent(Base):

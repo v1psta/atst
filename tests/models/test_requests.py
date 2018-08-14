@@ -65,6 +65,6 @@ def test_request_status_pending_expired_displayname():
 
 def test_request_status_pending_deleted_displayname():
     request = RequestFactory.create()
-    request = Requests.set_status(request, RequestStatus.DELETED)
+    request = Requests.set_status(request, RequestStatus.CANCELED)
 
-    assert request.status_displayname == "Deleted"
+    assert request.status_displayname == "Canceled"
