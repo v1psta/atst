@@ -1,4 +1,4 @@
-from wtforms.fields import StringField, RadioField
+from wtforms.fields import StringField, BooleanField
 from wtforms.fields.html5 import EmailField
 from wtforms.validators import Required, Email, Length, Optional
 from .forms import ValidatedForm
@@ -19,11 +19,10 @@ class POCForm(ValidatedForm):
         return super().validate(*args, **kwargs)
 
 
-    am_poc = RadioField(
+    am_poc = BooleanField(
         "I am the technical POC.",
-        choices=[("yes", "Yes"), ("no", "No")],
-        default="no",
         validators=[Required()],
+        default=False
     )
 
     fname_poc = StringField("POC First Name", validators=[Required()])

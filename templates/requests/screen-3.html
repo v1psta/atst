@@ -31,7 +31,8 @@
       <em>This POC may be you.</em>
     </p>
 
-    {{ OptionsInput(f.am_poc) }}
+    {{ f.am_poc() }}
+    {{ f.am_poc.label }}
 
     <template v-if="!amPOC" v-cloak>
       {{ TextInput(f.fname_poc,placeholder='First Name') }}
