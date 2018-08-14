@@ -101,7 +101,6 @@
             {% endif %}
             <th scope="col">Projected Annual Usage ($)</th>
             <th scope="col">Request Status</th>
-            <th scope="col" class="table-cell--shrink">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -119,9 +118,6 @@
             {% endif %}
             <td>${{ r['annual_usage'] }}</td>
             <td>{{ r['status'] }}</td>
-            <td class="table-cell--shrink">
-              <a href="/request/approval" class='icon-link'>Approval</a>
-            </td>
           </tr>
           {% endfor %}
         </tbody>
