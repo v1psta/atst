@@ -48,53 +48,59 @@
 
   {% endif %}
 
-  <div class="row kpi">
-    <div class="kpi__item col col--grow">
-      <div class="kpi__item__value">3</div>
-      <div class="kpi__item__description">Pending Requests</div>
+  {% if extended_view %}
+    <div class="row kpi">
+      <div class="kpi__item col col--grow">
+        <div class="kpi__item__value">3</div>
+        <div class="kpi__item__description">Pending Requests</div>
+      </div>
+      <div class="kpi__item col col--grow">
+        <div class="kpi__item__value">2,456</div>
+        <div class="kpi__item__description">Completed Requests This Year</div>
+      </div>
+      <div class="kpi__item col col--grow">
+        <div class="kpi__item__value">234</div>
+        <div class="kpi__item__description">Denied Requests</div>
+      </div>
     </div>
-    <div class="kpi__item col col--grow">
-      <div class="kpi__item__value">2,456</div>
-      <div class="kpi__item__description">Completed Requests This Year</div>
-    </div>
-    <div class="kpi__item col col--grow">
-      <div class="kpi__item__value">234</div>
-      <div class="kpi__item__description">Denied Requests</div>
-    </div>
-  </div>
+  {% endif %}
 
   <div class="col col--grow">
 
-    <form class='search-bar'>
-      <div class='usa-input search-input'>
-        <label for='requests-search'>Search requests by Order ID</label>
-        <input type='search' id='requests-search' name='requests-search' placeholder="Search by Order ID"/>
-        <button type="submit">
-          <span class="hide">Search</span>
-        </button>
-      </div>
+    {% if extended_view %}
+      <form class='search-bar'>
+        <div class='usa-input search-input'>
+          <label for='requests-search'>Search requests by Order ID</label>
+          <input type='search' id='requests-search' name='requests-search' placeholder="Search by Order ID"/>
+          <button type="submit">
+            <span class="hide">Search</span>
+          </button>
+        </div>
 
-      <div class='usa-input'>
-        <label for='filter-status'>Filter requests by status</label>
-        <select id="filter-status" name="filter-status">
-          <option value="" selected disabled>Filter by status</option>
-          <option value="">Active</option>
-          <option value="">Pending</option>
-          <option value="">Denied</option>
-        </select>
-      </div>
-    </form>
+        <div class='usa-input'>
+          <label for='filter-status'>Filter requests by status</label>
+          <select id="filter-status" name="filter-status">
+            <option value="" selected disabled>Filter by status</option>
+            <option value="">Active</option>
+            <option value="">Pending</option>
+            <option value="">Denied</option>
+          </select>
+        </div>
+      </form>
+    {% endif %}
 
     <div class='responsive-table-wrapper'>
       <table>
         <thead>
           <tr>
-            <th scope="col">Order ID</th>
-            <th scope="col">Request Date</th>
-            <th scope="col">Requester</th>
-            <th scope="col">Total Apps</th>
-            <th scope="col">Status</th>
-            <th scope="col" class="table-cell--shrink">Actions</th>
+            <th scope="col">JEDI Cloud Request ID</th>
+            <th scope="col">Date Request Initiated / Created</th>
+            {% if extended_view %}
+              <th scope="col">Requester</th>
+              <th scope="col">Reason Flagged</th>
+            {% endif %}
+            <th scope="col">Projected Annual Usage ($)</th>
+            <th scope="col">Request Status</th>
           </tr>
         </thead>
         <tbody>
@@ -106,13 +112,12 @@
             </th>
             {% endif %}
             <td>{{ r['date'] }}</td>
-            <td>{{ r['full_name'] }}</td>
-            <td>{{ r['app_count'] }}</td>
+            {% if extended_view %}
+              <td>{{ r['full_name'] }}</td>
+              <td></td>
+            {% endif %}
+            <td>${{ r['annual_usage'] }}</td>
             <td>{{ r['status'] }}</td>
-            <td class="table-cell--shrink">
-              <a href="" class='icon-link'>Download</a>
-              <a href="/request/approval" class='icon-link'>Approval</a>
-            </td>
           </tr>
           {% endfor %}
         </tbody>
