@@ -45,19 +45,8 @@
 
 
 .form__sub-fields {
-  // background-color: $color-aqua-lightest;
-  // padding: $gap;
-  // margin: ($gap * 4) 0;
   @include alert;
   @include alert-level('default');
-
-  // @include media($medium-screen) {
-  //   padding: $gap * 2;
-  // }
-
-  // @include media($large-screen) {
-  //   padding: $gap * 4;
-  // }
 
   .usa-input {
     &:first-child {
