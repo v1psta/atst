@@ -33,7 +33,7 @@
 
     {{ OptionsInput(f.am_poc) }}
 
-    <template v-if="!amPOC">
+    <template v-if="!amPOC" v-cloak>
       {{ TextInput(f.fname_poc,placeholder='First Name') }}
       {{ TextInput(f.lname_poc,placeholder='Last Name') }}
       {{ TextInput(f.email_poc,placeholder='jane@mail.mil', validation='email') }}

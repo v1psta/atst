@@ -17,8 +17,12 @@ export default {
   },
 
   data: function () {
+    const {
+      am_poc = 'no'
+    } = this.initialData
+
     return {
-        am_poc: "no"
+        am_poc
     }
   },
 
@@ -35,7 +39,6 @@ export default {
   methods: {
     handleFieldChange: function (event) {
       const { value, name } = event
-      console.log(value, name)
       if (typeof this[name] !== undefined) {
         this[name] = value
       }
