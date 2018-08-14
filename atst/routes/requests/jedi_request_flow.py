@@ -103,33 +103,21 @@ class JEDIRequestFlow(object):
                 "title": "Details of Use",
                 "section": "details_of_use",
                 "form": RequestForm,
-                "subitems": [
-                    {
-                        "title": "Overall request details",
-                        "id": "overall-request-details",
-                    },
-                    {"title": "Cloud Resources", "id": "cloud-resources"},
-                    {"title": "Support Staff", "id": "support-staff"},
-                ],
-                "show": True,
             },
             {
                 "title": "Information About You",
                 "section": "information_about_you",
                 "form": OrgForm,
-                "show": True,
             },
             {
                 "title": "Primary Point of Contact",
                 "section": "primary_poc",
                 "form": POCForm,
-                "show": True,
             },
             {
                 "title": "Review & Submit",
                 "section": "review_submit",
                 "form": ReviewForm,
-                "show": True,
             },
         ]
 
