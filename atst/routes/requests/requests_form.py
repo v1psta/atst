@@ -64,35 +64,30 @@ def requests_update(screen=1, request_id=None):
         existing_request=existing_request,
     )
 
-    rerender_args = dict(
-        f=jedi_flow.form,
-        data=post_data,
-        screens=jedi_flow.screens,
-        current=screen,
-        next_screen=jedi_flow.next_screen,
-        request_id=jedi_flow.request_id,
-    )
+    has_next_screen = jedi_flow.next_screen <= len(jedi_flow.screens)
+    valid = jedi_flow.validate() and jedi_flow.validate_warnings()
 
-    if jedi_flow.validate():
+    if valid:
         jedi_flow.create_or_update_request()
-        valid = jedi_flow.validate_warnings()
-        if valid:
-            if jedi_flow.next_screen > len(jedi_flow.screens):
-                where = "/requests"
-            else:
-                where = url_for(
-                    "requests.requests_form_update",
-                    screen=jedi_flow.next_screen,
-                    request_id=jedi_flow.request_id,
-                )
-            return redirect(where)
 
-        else:
-            return render_template(
-                "requests/screen-%d.html" % int(screen), **rerender_args
+        if has_next_screen:
+            where = url_for(
+                "requests.requests_form_update",
+                screen=jedi_flow.next_screen,
+                request_id=jedi_flow.request_id,
             )
-
+        else:
+            where = "/requests"
+        return redirect(where)
     else:
+        rerender_args = dict(
+            f=jedi_flow.form,
+            data=post_data,
+            screens=jedi_flow.screens,
+            current=screen,
+            next_screen=jedi_flow.next_screen,
+            request_id=jedi_flow.request_id,
+        )
         return render_template("requests/screen-%d.html" % int(screen), **rerender_args)
 
 
