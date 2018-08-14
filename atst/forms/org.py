@@ -18,9 +18,14 @@ class OrgForm(ValidatedForm):
         description='Enter a 10-digit phone number',
         validators=[Required(), PhoneNumber()])
 
-    service_branch = StringField("Service Branch or Agency", validators=[Required()])
+    service_branch = StringField(
+        "Service Branch or Agency",
+        description="Which services and organizations do you belong to within the DoD?",
+        validators=[Required()]
+    )
 
     citizenship = RadioField(
+        description="What is your citizenship status?",
         choices=[
             ("United States", "United States"),
             ("Foreign National", "Foreign National"),
@@ -31,6 +36,7 @@ class OrgForm(ValidatedForm):
 
     designation = RadioField(
         "Designation of Person",
+        description="What is your designation within the DoD?",
         choices=[
             ("military", "Military"),
             ("civilian", "Civilian"),
@@ -41,6 +47,7 @@ class OrgForm(ValidatedForm):
 
     date_latest_training = DateField(
         "Latest Information Assurance (IA) Training completion date",
+        description="To complete the training, you can find it in <a class=\"icon-link\" href=\"https://iatraining.disa.mil/eta/disa_cac2018/launchPage.htm\" target=\"_blank\">Information Assurance Cyber Awareness Challange</a> website.",
         validators=[
             Required(),
             DateRange(

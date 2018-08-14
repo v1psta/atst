@@ -1,6 +1,7 @@
 {% from "components/icon.html" import Icon %}
+{% from "components/tooltip.html" import Tooltip %}
 
-{% macro TextInput(field, placeholder='', validation='anything', paragraph=False) -%}
+{% macro TextInput(field, tooltip='', placeholder='', validation='anything', paragraph=False) -%}
   <textinput
     name='{{ field.name }}'
     validation='{{ validation }}'
@@ -13,14 +14,14 @@
       v-bind:class="['usa-input usa-input--validation--' + validation, { 'usa-input--error': showError, 'usa-input--success': showValid }]">
 
       <label for={{field.name}}>
-        {{ field.label | striptags }}
+        <div class="usa-input__title">{{ field.label | striptags }} {% if tooltip %}{{ Tooltip(tooltip) }}{% endif %}</div>
 
         {% if field.description %}
           <span class='usa-input__help'>{{ field.description | safe }}</span>
         {% endif %}
 
-        <span v-show='showError'>{{ Icon('alert') }}</span>
-        <span v-show='showValid'>{{ Icon('ok') }}</span>
+        <span v-show='showError'>{{ Icon('alert',classes="icon-validation") }}</span>
+        <span v-show='showValid'>{{ Icon('ok',classes="icon-validation") }}</span>
 
       </label>
 
@@ -61,5 +62,5 @@
       </template>
 
     </div>
-</textinput>
+  </textinput>
 {%- endmacro %}
