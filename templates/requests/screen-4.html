@@ -59,43 +59,50 @@
       <dd>{{ data['details_of_use']['jedi_migration'] or RequiredLabel() }}</dd>
     </div>
 
-    <div>
-      <dt>Rationalization of Software Systems</dt>
-      <dd>{{ data['details_of_use']['rationalization_software_systems'] or RequiredLabel() }}</dd>
-    </div>
-
-    <div>
-      <dt>Technical Support Team</dt>
-      <dd>{{ data['details_of_use']['technical_support_team'] or RequiredLabel() }}</dd>
-    </div>
-
-
-    {% if data['details_of_use']['technical_support_team'] == 'yes' %}
+    {% if data['details_of_use']['jedi_migration'] == 'yes' %}
       <div>
-        <dt>Organization Providing Assistance</dt>
-        <dd>{{ data['details_of_use']['organization_providing_assistance'] or RequiredLabel() }}</dd>
+        <dt>Rationalization of Software Systems</dt>
+        <dd>{{ data['details_of_use']['rationalization_software_systems'] or RequiredLabel() }}</dd>
       </div>
-    {% endif %}
 
-    <div>
-      <dt>Engineering Assessment</dt>
-      <dd>{{ data['details_of_use']['engineering_assessment'] or RequiredLabel() }}</dd>
-    </div>
+      <div>
+        <dt>Technical Support Team</dt>
+        <dd>{{ data['details_of_use']['technical_support_team'] or RequiredLabel() }}</dd>
+      </div>
 
-    <div>
-      <dt>Data Transfers</dt>
-      <dd>{{ data['details_of_use']['data_transfers'] or RequiredLabel() }}</dd>
-    </div>
 
-    <div>
-      <dt>Expected Completion Date</dt>
-      <dd>{{ data['details_of_use']['expected_completion_date'] or RequiredLabel() }}</dd>
-    </div>
+      {% if data['details_of_use']['technical_support_team'] == 'yes' %}
 
-    <div>
-      <dt>Cloud Native</dt>
-      <dd>{{ data['details_of_use']['cloud_native'] or RequiredLabel() }}</dd>
-    </div>
+        <div>
+          <dt>Organization Providing Assistance</dt>
+          <dd>{{ data['details_of_use']['organization_providing_assistance'] or RequiredLabel() }}</dd>
+        </div>
+
+      {% endif %}
+
+        <div>
+          <dt>Engineering Assessment</dt>
+          <dd>{{ data['details_of_use']['engineering_assessment'] or RequiredLabel() }}</dd>
+        </div>
+
+        <div>
+          <dt>Data Transfers</dt>
+          <dd>{{ data['details_of_use']['data_transfers'] or RequiredLabel() }}</dd>
+        </div>
+
+        <div>
+          <dt>Expected Completion Date</dt>
+          <dd>{{ data['details_of_use']['expected_completion_date'] or RequiredLabel() }}</dd>
+        </div>
+
+      {% else %}
+
+        <div>
+          <dt>Cloud Native</dt>
+          <dd>{{ data['details_of_use']['cloud_native'] or RequiredLabel() }}</dd>
+        </div>
+
+      {% endif %}
 
     <div>
       <dt>Estimated Monthly Spend</dt>
