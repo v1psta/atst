@@ -79,7 +79,7 @@
       margin-left: $gap;
     }
   }
-  
+
   .usa-input__title {
     display: flex;
     align-items: center;
@@ -90,7 +90,7 @@
       margin-left: $gap/2;
     }
   }
-  
+
   .usa-input__help {
     @include h4;
     font-weight: normal;
@@ -111,8 +111,8 @@
 
     &:hover,
     &:focus {
-      border-color: $color-blue;
-      color: $color-blue;
+      border-color: $color-blue !important;
+      color: $color-blue-darker;
       box-shadow: inset 0 0 0 1px $color-blue;
       &::placeholder {
         color: $color-blue;
