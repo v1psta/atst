@@ -125,22 +125,21 @@ def test_not_am_poc_requires_poc_info_to_be_completed(client, user_session):
         "/requests/new/3/{}".format(request.id),
         headers={"Content-Type": "application/x-www-form-urlencoded"},
         data="am_poc=no",
+        follow_redirects=True
     )
     assert ERROR_CLASS in response.data.decode()
 
 
-# def test_not_am_poc_allows_user_to_fill_in_poc_info(client, user_session):
-#     creator = UserFactory.create()
-#     user_session(creator)
-#     request = RequestFactory.create(creator=creator, body={})
-#     client.post(
-#         "/requests/new/3/{}".format(request.id),
-#         headers={"Content-Type": "application/x-www-form-urlencoded"},
-#         data="am_poc=yes",
-#     )
-
-#     assert "Location" not in response.headers
-#     request = Requests.get(request.id)
+def test_not_am_poc_allows_user_to_fill_in_poc_info(client, user_session):
+    creator = UserFactory.create()
+    user_session(creator)
+    request = RequestFactory.create(creator=creator, body={})
+    response = client.post(
+        "/requests/new/3/{}".format(request.id),
+        headers={"Content-Type": "application/x-www-form-urlencoded"},
+        data="am_poc=no&fname_poc=test&lname_poc=user&email_poc=test.user@mail.com&dodid_poc=1234567890",
+    )
+    assert ERROR_CLASS not in response.data.decode()
 
 
 def test_can_review_data(user_session, client):

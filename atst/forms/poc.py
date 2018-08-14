@@ -9,6 +9,8 @@ class POCForm(ValidatedForm):
 
     def validate(self, *args, **kwargs):
         if self.am_poc.data == "yes":
+            # Prepend Optional validators so that the validation chain
+            # halts if no data exists.
             self.fname_poc.validators.insert(0, Optional())
             self.lname_poc.validators.insert(0, Optional())
             self.email_poc.validators.insert(0, Optional())
