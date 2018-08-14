@@ -39,6 +39,7 @@ class RequestStatusEventFactory(factory.alchemy.SQLAlchemyModelFactory):
         model = RequestStatusEvent
 
     id = factory.Sequence(lambda x: uuid4())
+    sequence = 1
 
 
 class RequestFactory(factory.alchemy.SQLAlchemyModelFactory):

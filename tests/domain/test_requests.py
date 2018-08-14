@@ -3,9 +3,10 @@ from uuid import uuid4
 
 from atst.domain.exceptions import NotFoundError
 from atst.domain.requests import Requests
+from atst.models.request import Request
 from atst.models.request_status_event import RequestStatus
 
-from tests.factories import RequestFactory, UserFactory
+from tests.factories import RequestFactory, UserFactory, RequestStatusEventFactory
 
 
 @pytest.fixture(scope="function")
@@ -63,3 +64,15 @@ def test_exists(session):
     request = RequestFactory.create(creator=user_allowed)
     assert Requests.exists(request.id, user_allowed)
     assert not Requests.exists(request.id, user_denied)
+
+
+def test_count_status(session):
+    # make sure table is empty
+    session.query(Request).delete()
+
+    request1 = RequestFactory.create()
+    request2 = RequestFactory.create()
+    RequestStatusEventFactory.create(sequence=2, request_id=request2.id, new_status=RequestStatus.PENDING_FINANCIAL_VERIFICATION)
+
+    assert Requests.count_status(RequestStatus.PENDING_FINANCIAL_VERIFICATION) == 1
+    assert Requests.count_status(RequestStatus.STARTED) == 1

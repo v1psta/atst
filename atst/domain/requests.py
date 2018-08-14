@@ -1,4 +1,6 @@
+from enum import Enum
 from sqlalchemy import exists, and_, exc
+from sqlalchemy.sql import text
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.orm.attributes import flag_modified
 
@@ -154,3 +156,21 @@ class Requests(object):
     @classmethod
     def is_pending_ccpo_approval(cls, request):
         return request.status == RequestStatus.PENDING_CCPO_APPROVAL
+
+    @classmethod
+    def count_status(self, status):
+        raw = text("""
+SELECT count(requests_with_status.id)
+FROM (
+    SELECT DISTINCT ON (rse.request_id) r.*, rse.new_status as status
+    FROM request_status_events rse JOIN requests r ON r.id = rse.request_id
+    ORDER BY rse.request_id, rse.sequence DESC
+) as requests_with_status
+WHERE requests_with_status.status = :status;
+        """)
+        if isinstance(status, Enum):
+            status = status.name
+        results = db.session.execute(raw, {"status": status}).fetchone()
+        (count,) = results
+        return count
+
