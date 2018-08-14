@@ -12,6 +12,7 @@ class RequestStatus(Enum):
     STARTED = "Started"
     PENDING_FINANCIAL_VERIFICATION = "Pending Financial Verification"
     PENDING_CCPO_APPROVAL = "Pending CCPO Approval"
+    CHANGES_REQUESTED = "Changes Requested"
     APPROVED = "Approved"
     EXPIRED = "Expired"
     DELETED = "Deleted"

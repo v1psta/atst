@@ -66,7 +66,7 @@ def test_exists(session):
     assert not Requests.exists(request.id, user_denied)
 
 
-def test_count_status(session):
+def test_status_count(session):
     # make sure table is empty
     session.query(Request).delete()
 
@@ -74,5 +74,6 @@ def test_count_status(session):
     request2 = RequestFactory.create()
     RequestStatusEventFactory.create(sequence=2, request_id=request2.id, new_status=RequestStatus.PENDING_FINANCIAL_VERIFICATION)
 
-    assert Requests.count_status(RequestStatus.PENDING_FINANCIAL_VERIFICATION) == 1
-    assert Requests.count_status(RequestStatus.STARTED) == 1
+    assert Requests.status_count(RequestStatus.PENDING_FINANCIAL_VERIFICATION) == 1
+    assert Requests.status_count(RequestStatus.STARTED) == 1
+    assert Requests.in_progress_count() == 2

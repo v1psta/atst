@@ -51,16 +51,16 @@
   {% if extended_view %}
     <div class="row kpi">
       <div class="kpi__item col col--grow">
-        <div class="kpi__item__value">3</div>
-        <div class="kpi__item__description">Pending Requests</div>
+        <div class="kpi__item__value">{{ kpi_inprogress }}</div>
+        <div class="kpi__item__description">In Progress</div>
       </div>
       <div class="kpi__item col col--grow">
-        <div class="kpi__item__value">2,456</div>
-        <div class="kpi__item__description">Completed Requests This Year</div>
+        <div class="kpi__item__value">{{ kpi_pending }}</div>
+        <div class="kpi__item__description">Pending CCPO Action</div>
       </div>
       <div class="kpi__item col col--grow">
-        <div class="kpi__item__value">234</div>
-        <div class="kpi__item__description">Denied Requests</div>
+        <div class="kpi__item__value">{{ kpi_completed }}</div>
+        <div class="kpi__item__description">Completed (Overall)</div>
       </div>
     </div>
   {% endif %}

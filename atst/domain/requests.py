@@ -158,7 +158,7 @@ class Requests(object):
         return request.status == RequestStatus.PENDING_CCPO_APPROVAL
 
     @classmethod
-    def count_status(self, status):
+    def status_count(cls, status):
         raw = text("""
 SELECT count(requests_with_status.id)
 FROM (
@@ -173,4 +173,20 @@ WHERE requests_with_status.status = :status;
         results = db.session.execute(raw, {"status": status}).fetchone()
         (count,) = results
         return count
+
+    @classmethod
+    def in_progress_count(cls):
+        return sum([
+            Requests.status_count(RequestStatus.STARTED),
+            Requests.status_count(RequestStatus.PENDING_FINANCIAL_VERIFICATION),
+            Requests.status_count(RequestStatus.CHANGES_REQUESTED),
+        ])
+
+    @classmethod
+    def pending_ccpo_count(cls):
+        return Requests.status_count(RequestStatus.PENDING_CCPO_APPROVAL)
+
+    @classmethod
+    def completed_count(cls):
+        return Requests.status_count(RequestStatus.APPROVED)
 
