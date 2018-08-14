@@ -75,6 +75,7 @@ class RequestFactory(factory.alchemy.SQLAlchemyModelFactory):
                 "engineering_assessment": "yes",
                 "technical_support_team": "yes",
                 "estimated_monthly_spend": 100,
+                "average_daily_traffic_gb": 4,
                 "expected_completion_date": "less_than_1_month",
                 "rationalization_software_systems": "yes",
                 "organization_providing_assistance": "in_house_staff"
