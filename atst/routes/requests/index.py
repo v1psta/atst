@@ -39,8 +39,8 @@ def requests_index():
 
     mapped_requests = [map_request(r) for r in requests]
 
-    pending_fv = any(Requests.is_pending_financial_verification(r) for r in requests) and not is_ccpo
-    pending_ccpo = any(Requests.is_pending_ccpo_approval(r) for r in requests) and not is_ccpo
+    pending_fv = not is_ccpo and any(Requests.is_pending_financial_verification(r) for r in requests)
+    pending_ccpo = not is_ccpo and any(Requests.is_pending_ccpo_approval(r) for r in requests)
 
     return render_template(
         "requests.html",
