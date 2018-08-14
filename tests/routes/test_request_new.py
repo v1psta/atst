@@ -4,6 +4,7 @@ import urllib
 from tests.mocks import MOCK_USER, MOCK_REQUEST
 from tests.factories import RequestFactory, UserFactory
 from atst.domain.roles import Roles
+from atst.domain.requests import Requests
 
 
 ERROR_CLASS = "alert--error"
@@ -102,6 +103,45 @@ def test_non_creator_info_is_not_autopopulated(monkeypatch, client, user_session
     assert not user.first_name in body
     assert not user.last_name in body
     assert not user.email in body
+
+def test_am_poc_causes_poc_to_be_autopopulated(client, user_session):
+    creator = UserFactory.create()
+    user_session(creator)
+    request = RequestFactory.create(creator=creator, body={})
+    client.post(
+        "/requests/new/3/{}".format(request.id),
+        headers={"Content-Type": "application/x-www-form-urlencoded"},
+        data="am_poc=yes",
+    )
+    request = Requests.get(request.id)
+    assert request.body["primary_poc"]["dodid_poc"] == creator.dod_id
+
+
+def test_not_am_poc_requires_poc_info_to_be_completed(client, user_session):
+    creator = UserFactory.create()
+    user_session(creator)
+    request = RequestFactory.create(creator=creator, body={})
+    response = client.post(
+        "/requests/new/3/{}".format(request.id),
+        headers={"Content-Type": "application/x-www-form-urlencoded"},
+        data="am_poc=no",
+    )
+    assert ERROR_CLASS in response.data.decode()
+
+
+# def test_not_am_poc_allows_user_to_fill_in_poc_info(client, user_session):
+#     creator = UserFactory.create()
+#     user_session(creator)
+#     request = RequestFactory.create(creator=creator, body={})
+#     client.post(
+#         "/requests/new/3/{}".format(request.id),
+#         headers={"Content-Type": "application/x-www-form-urlencoded"},
+#         data="am_poc=yes",
+#     )
+
+#     assert "Location" not in response.headers
+#     request = Requests.get(request.id)
+
 
 def test_can_review_data(user_session, client):
     creator = UserFactory.create()

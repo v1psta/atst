@@ -130,5 +130,14 @@ class JEDIRequestFlow(object):
             self.request_id = request.id
 
     def update_request(self, section, data):
+        if section == "primary_poc":
+            if data.get("am_poc") == "yes":
+                data = {
+                    "dodid_poc": self.existing_request.creator.dod_id,
+                    "fname_poc": self.existing_request.creator.first_name,
+                    "lname_poc": self.existing_request.creator.last_name,
+                    "email_poc": self.existing_request.creator.email
+                }
+
         request_data = {section: data}
         Requests.update(self.request_id, request_data)

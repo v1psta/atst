@@ -5,6 +5,7 @@ import VTooltip from 'v-tooltip'
 import optionsinput from './components/options_input'
 import textinput from './components/text_input'
 import DetailsOfUse from './components/forms/details_of_use'
+import poc from './components/forms/poc'
 
 Vue.use(VTooltip)
 
@@ -15,6 +16,7 @@ const app = new Vue({
     optionsinput,
     textinput,
     DetailsOfUse,
+    poc,
   },
   methods: {
     closeModal: function(name) {
