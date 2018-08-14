@@ -133,6 +133,7 @@ class JEDIRequestFlow(object):
         if section == "primary_poc":
             if data.get("am_poc") == "yes":
                 data = {
+                    **data,
                     "dodid_poc": self.existing_request.creator.dod_id,
                     "fname_poc": self.existing_request.creator.first_name,
                     "lname_poc": self.existing_request.creator.last_name,
