@@ -158,19 +158,25 @@ class Requests(object):
         return request.status == RequestStatus.PENDING_CCPO_APPROVAL
 
     @classmethod
-    def status_count(cls, status):
-        raw = text("""
+    def status_count(cls, status, creator=None):
+        if isinstance(status, Enum):
+            status = status.name
+        bindings = {"status": status}
+        raw = """
 SELECT count(requests_with_status.id)
 FROM (
     SELECT DISTINCT ON (rse.request_id) r.*, rse.new_status as status
     FROM request_status_events rse JOIN requests r ON r.id = rse.request_id
     ORDER BY rse.request_id, rse.sequence DESC
 ) as requests_with_status
-WHERE requests_with_status.status = :status;
-        """)
-        if isinstance(status, Enum):
-            status = status.name
-        results = db.session.execute(raw, {"status": status}).fetchone()
+WHERE requests_with_status.status = :status
+        """
+
+        if creator:
+            raw += " AND requests_with_status.user_id = :user_id"
+            bindings["user_id"] = creator.id
+
+        results = db.session.execute(text(raw), bindings).fetchone()
         (count,) = results
         return count
 
