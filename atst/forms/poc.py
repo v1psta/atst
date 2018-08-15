@@ -21,8 +21,8 @@ class POCForm(ValidatedForm):
 
     am_poc = BooleanField(
         "I am the technical POC.",
-        validators=[Required()],
-        default=False
+        default=False,
+        false_values=(False, "false", "False", "no", "")
     )
 
     fname_poc = StringField("POC First Name", validators=[Required()])

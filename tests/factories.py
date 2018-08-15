@@ -56,7 +56,7 @@ class RequestFactory(factory.alchemy.SQLAlchemyModelFactory):
     def build_request_body(cls, user, dollar_value=1000000):
         return {
             "primary_poc": {
-                "am_poc": "no",
+                "am_poc": False,
                 "dodid_poc": user.dod_id,
                 "email_poc": user.email,
                 "fname_poc": user.first_name,
