@@ -1,5 +1,6 @@
 import optionsinput from '../options_input'
 import textinput from '../text_input'
+import checkboxinput from '../checkbox_input'
 
 export default {
   name: 'poc',
@@ -7,6 +8,7 @@ export default {
   components: {
     optionsinput,
     textinput,
+    checkboxinput,
   },
 
   props: {
@@ -18,7 +20,7 @@ export default {
 
   data: function () {
     const {
-      am_poc = 'no'
+      am_poc = false
     } = this.initialData
 
     return {
@@ -28,12 +30,6 @@ export default {
 
   mounted: function () {
     this.$root.$on('field-change', this.handleFieldChange)
-  },
-
-  computed: {
-    amPOC: function () {
-        return this.am_poc === 'yes'
-    },
   },
 
   methods: {

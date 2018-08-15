@@ -4,6 +4,7 @@ import VTooltip from 'v-tooltip'
 
 import optionsinput from './components/options_input'
 import textinput from './components/text_input'
+import checkboxinput from './components/checkbox_input'
 import DetailsOfUse from './components/forms/details_of_use'
 import poc from './components/forms/poc'
 
@@ -15,6 +16,7 @@ const app = new Vue({
   components: {
     optionsinput,
     textinput,
+    checkboxinput,
     DetailsOfUse,
     poc,
   },

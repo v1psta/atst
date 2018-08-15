@@ -132,7 +132,7 @@ class JEDIRequestFlow(object):
             else self.current_user
         )
         if section == "primary_poc":
-            if data.get("am_poc") == "yes":
+            if data.get("am_poc"):
                 data = {
                     **data,
                     "dodid_poc": user.dod_id,

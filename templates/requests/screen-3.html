@@ -2,7 +2,7 @@
 
 {% from "components/alert.html" import Alert %}
 {% from "components/text_input.html" import TextInput %}
-{% from "components/options_input.html" import OptionsInput %}
+{% from "components/checkbox_input.html" import CheckboxInput %}
 
 {% block subtitle %}
 <h2>Designate a Workspace Owner</h2>
@@ -31,10 +31,9 @@
       <em>This POC may be you.</em>
     </p>
 
-    {{ f.am_poc() }}
-    {{ f.am_poc.label }}
+    {{ CheckboxInput(f.am_poc) }}
 
-    <template v-if="!amPOC" v-cloak>
+    <template v-if="!am_poc" v-cloak>
       {{ TextInput(f.fname_poc,placeholder='First Name') }}
       {{ TextInput(f.lname_poc,placeholder='Last Name') }}
       {{ TextInput(f.email_poc,placeholder='jane@mail.mil', validation='email') }}
