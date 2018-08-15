@@ -86,7 +86,7 @@ class JEDIRequestFlow(object):
         elif self.form_section == "information_about_you":
             data = self.map_user_data(self.current_user)
 
-        return defaultdict(lambda: defaultdict(lambda: "Input required"), data)
+        return defaultdict(lambda: defaultdict(lambda: None), data)
 
     @property
     def can_submit(self):

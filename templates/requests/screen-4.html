@@ -1,7 +1,12 @@
+{% macro RequiredLabel() -%}
+  <span class='label label--error'>Response Required</span>
+{%- endmacro %}
+
 {% extends 'requests_new.html' %}
 
 {% from "components/alert.html" import Alert %}
 {% from "components/text_input.html" import TextInput %}
+{% from "components/icon.html" import Icon %}
 
 {% block subtitle %}
 <h2>Review &amp; Submit</h2>
@@ -14,172 +19,201 @@
 
   {% block form %}
 
-  {% if f.errors %}
-    {{ Alert('There were some errors',
-      message="<p>Please complete all required fields before submitting.</p>",
+  <p>Before you can submit your request, please take a moment to review the information entered in the form. You may make changes by clicking the edit link on each section. When all information looks right, go ahead and submit.</p>
+
+  {% if f.errors or not can_submit%}
+    {{ Alert('Please complete all sections',
+      message="<p>In order to submit your JEDI Cloud request, you'll need to complete all required sections of this form without error. Missing or invalid fields are noted below.</p>",
       level='error'
     ) }}
   {% endif %}
 
-  <p>Before you can submit your request, please take a moment to review the information entered in the form. You may make changes by clicking the edit link on each section. When all information looks right, go ahead and submit.</p>
 
-  <h2>Details of Use <a href="{{ url_for('requests.requests_form_update', screen=1, request_id=request_id) }}" class="icon-link">Edit</a></h2>
+  <h2>
+    Details of Use
+    <a href="{{ url_for('requests.requests_form_update', screen=1, request_id=request_id) }}" class="icon-link">
+      {{ Icon('edit') }}
+      <span>Edit this section</span>
+    </a>
+  </h2>
 
   <dl>
     <div>
       <dt>DoD Component</dt>
-      <dd>{{data['details_of_use']['dod_component']}}</dd>
+      <dd>{{ data['details_of_use']['dod_component'] or RequiredLabel() }}</dd>
     </div>
 
 
     <div>
       <dt>JEDI Usage</dt>
-      <dd>{{data['details_of_use']['jedi_usage']}}</dd>
+      <dd>{{ data['details_of_use']['jedi_usage'] or RequiredLabel() }}</dd>
     </div>
 
     <div>
       <dt>Number of software systems</dt>
-      <dd>{{data['details_of_use']['num_software_systems']}}</dd>
+      <dd>{{ data['details_of_use']['num_software_systems'] or RequiredLabel() }}</dd>
     </div>
 
     <div>
       <dt>JEDI Migration</dt>
-      <dd>{{data['details_of_use']['jedi_migration']}}</dd>
+      <dd>{{ data['details_of_use']['jedi_migration'] or RequiredLabel() }}</dd>
     </div>
 
-    <div>
-      <dt>Rationalization of Software Systems</dt>
-      <dd>{{data['details_of_use']['rationalization_software_systems']}}</dd>
-    </div>
+    {% if data['details_of_use']['jedi_migration'] == 'yes' %}
+      <div>
+        <dt>Rationalization of Software Systems</dt>
+        <dd>{{ data['details_of_use']['rationalization_software_systems'] or RequiredLabel() }}</dd>
+      </div>
 
-    <div>
-      <dt>Technical Support Team</dt>
-      <dd>{{data['details_of_use']['technical_support_team']}}</dd>
-    </div>
+      <div>
+        <dt>Technical Support Team</dt>
+        <dd>{{ data['details_of_use']['technical_support_team'] or RequiredLabel() }}</dd>
+      </div>
 
-    <div>
-      <dt>Organization Providing Assistance</dt>
-      <dd>{{data['details_of_use']['organization_providing_assistance']}}</dd>
-    </div>
 
-    <div>
-      <dt>Engineering Assessment</dt>
-      <dd>{{data['details_of_use']['engineering_assessment']}}</dd>
-    </div>
+      {% if data['details_of_use']['technical_support_team'] == 'yes' %}
 
-    <div>
-      <dt>Data Transfers</dt>
-      <dd>{{data['details_of_use']['data_transfers']}}</dd>
-    </div>
+        <div>
+          <dt>Organization Providing Assistance</dt>
+          <dd>{{ data['details_of_use']['organization_providing_assistance'] or RequiredLabel() }}</dd>
+        </div>
 
-    <div>
-      <dt>Expected Completion Date</dt>
-      <dd>{{data['details_of_use']['expected_completion_date']}}</dd>
-    </div>
+      {% endif %}
 
-    <div>
-      <dt>Cloud Native</dt>
-      <dd>{{data['details_of_use']['cloud_native']}}</dd>
-    </div>
+        <div>
+          <dt>Engineering Assessment</dt>
+          <dd>{{ data['details_of_use']['engineering_assessment'] or RequiredLabel() }}</dd>
+        </div>
+
+        <div>
+          <dt>Data Transfers</dt>
+          <dd>{{ data['details_of_use']['data_transfers'] or RequiredLabel() }}</dd>
+        </div>
+
+        <div>
+          <dt>Expected Completion Date</dt>
+          <dd>{{ data['details_of_use']['expected_completion_date'] or RequiredLabel() }}</dd>
+        </div>
+
+      {% else %}
+
+        <div>
+          <dt>Cloud Native</dt>
+          <dd>{{ data['details_of_use']['cloud_native'] or RequiredLabel() }}</dd>
+        </div>
+
+      {% endif %}
 
     <div>
       <dt>Estimated Monthly Spend</dt>
-      <dd>{{data['details_of_use']['estimated_monthly_spend']}}</dd>
+      <dd>{{ data['details_of_use']['estimated_monthly_spend'] or RequiredLabel() }}</dd>
     </div>
 
     <div>
       <dt>Total Spend</dt>
-      <dd>${{data['details_of_use']['dollar_value']}}</dd>
+      <dd>{{ data['details_of_use']['dollar_value'] or RequiredLabel() }}</dd>
     </div>
 
     <div>
       <dt>Number of User Sessions</dt>
-      <dd>{{data['details_of_use']['number_user_sessions']}}</dd>
+      <dd>{{ data['details_of_use']['number_user_sessions'] or RequiredLabel() }}</dd>
     </div>
 
     <div>
       <dt>Average Daily Traffic (Number of Requests)</dt>
-      <dd>{{data['details_of_use']['average_daily_traffic']}}</dd>
+      <dd>{{ data['details_of_use']['average_daily_traffic'] or RequiredLabel() }}</dd>
     </div>
 
     <div>
       <dt>Average Daily Traffic (GB)</dt>
-      <dd>{{data['details_of_use']['average_daily_traffic_gb']}}</dd>
+      <dd>{{ data['details_of_use']['average_daily_traffic_gb'] or RequiredLabel() }}</dd>
     </div>
 
     <div>
       <dt>Start Date</dt>
-      <dd>{{data['details_of_use']['start_date']}}</dd>
+      <dd>{{ data['details_of_use']['start_date'] or RequiredLabel() }}</dd>
     </div>
   </dl>
 
 
-  <h2>Information About You <a href="{{ url_for('requests.requests_form_update', screen=2, request_id=request_id) }}" class="icon-link">Edit</a></h2>
+  <h2>
+    Information About You
+    <a href="{{ url_for('requests.requests_form_update', screen=2, request_id=request_id) }}" class="icon-link">
+      {{ Icon('edit') }}
+      <span>Edit this section</span>
+    </a>
+  </h2>
 
   <dl>
     <div>
       <dt>First Name</dt>
-      <dd>{{data['information_about_you']['fname_request']}}</dd>
+      <dd>{{ data['information_about_you']['fname_request'] or RequiredLabel() }}</dd>
     </div>
 
     <div>
       <dt>Last Name</dt>
-      <dd>{{data['information_about_you']['lname_request']}}</dd>
+      <dd>{{ data['information_about_you']['lname_request'] or RequiredLabel() }}</dd>
     </div>
 
     <div>
       <dt>Email Address</dt>
-      <dd>{{data['information_about_you']['email_request']}}</dd>
+      <dd>{{ data['information_about_you']['email_request'] or RequiredLabel() }}</dd>
     </div>
 
     <div>
       <dt>Phone Number</dt>
-      <dd>{{data['information_about_you']['phone_number']}}</dd>
+      <dd>{{ data['information_about_you']['phone_number'] or RequiredLabel() }}</dd>
     </div>
 
     <div>
       <dt>Service Branch or Agency</dt>
-      <dd>{{data['information_about_you']['service_branch']}}</dd>
+      <dd>{{ data['information_about_you']['service_branch'] or RequiredLabel() }}</dd>
     </div>
 
     <div>
       <dt>Citizenship</dt>
-      <dd>{{data['information_about_you']['citizenship']}}</dd>
+      <dd>{{ data['information_about_you']['citizenship'] or RequiredLabel() }}</dd>
     </div>
 
     <div>
       <dt>Designation of Person</dt>
-      <dd>{{data['information_about_you']['designation']}}</dd>
+      <dd>{{ data['information_about_you']['designation'] or RequiredLabel() }}</dd>
     </div>
 
     <div>
       <dt>Latest Information Assurance (IA) Training completion date</dt>
-      <dd>{{data['information_about_you']['date_latest_training']}}</dd>
+      <dd>{{ data['information_about_you']['date_latest_training'] or RequiredLabel() }}</dd>
     </div>
   </dl>
 
 
-  <h2>Primary Point of Contact <a href="{{ url_for('requests.requests_form_update', screen=3, request_id=request_id) }}" class="icon-link">Edit</a></h2>
+  <h2>
+    Primary Point of Contact
+    <a href="{{ url_for('requests.requests_form_update', screen=3, request_id=request_id) }}" class="icon-link">
+      {{ Icon('edit') }}
+      <span>Edit this section</span>
+    </a>
+  </h2>
 
   <dl>
     <div>
       <dt>POC First Name</dt>
-      <dd>{{data['primary_poc']['fname_poc']}}</dd>
+      <dd>{{ data['primary_poc']['fname_poc'] or RequiredLabel() }}</dd>
     </div>
 
     <div>
       <dt>POC Last Name</dt>
-      <dd>{{data['primary_poc']['lname_poc']}}</dd>
+      <dd>{{ data['primary_poc']['lname_poc'] or RequiredLabel() }}</dd>
     </div>
 
     <div>
       <dt>POC Email Address</dt>
-      <dd>{{data['primary_poc']['email_poc']}}</dd>
+      <dd>{{ data['primary_poc']['email_poc'] or RequiredLabel() }}</dd>
     </div>
 
     <div>
       <dt>DOD ID</dt>
-      <dd>{{data['primary_poc']['dodid_poc']}}</dd>
+      <dd>{{ data['primary_poc']['dodid_poc'] or RequiredLabel() }}</dd>
     </div>
   </dl>
 
@@ -188,12 +222,6 @@
 {% endblock %}
 
 {% block next %}
-{% if not can_submit %}
-  {{ Alert('There were some errors',
-    message="<p>Please complete all required fields before submitting.</p>",
-    level='error'
-  ) }}
-{% endif %}
 
 <div class='action-group'>
   <input type='submit' class='usa-button usa-button-primary' value='Submit' {{ "disabled" if not can_submit else "" }} />
