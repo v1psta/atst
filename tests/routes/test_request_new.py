@@ -2,6 +2,7 @@ import re
 from tests.factories import RequestFactory, UserFactory
 from atst.domain.roles import Roles
 from atst.domain.requests import Requests
+from urllib.parse import urlencode
 
 
 ERROR_CLASS = "alert--error"
@@ -131,10 +132,17 @@ def test_not_am_poc_allows_user_to_fill_in_poc_info(client, user_session):
     creator = UserFactory.create()
     user_session(creator)
     request = RequestFactory.create(creator=creator, body={})
+    poc_input = {
+        "am_poc": "no",
+        "fname_poc": "test",
+        "lname_poc": "user",
+        "email_poc": "test.user@mail.com",
+        "dodid_poc": "1234567890",
+    }
     response = client.post(
         "/requests/new/3/{}".format(request.id),
         headers={"Content-Type": "application/x-www-form-urlencoded"},
-        data="am_poc=no&fname_poc=test&lname_poc=user&email_poc=test.user@mail.com&dodid_poc=1234567890",
+        data=urlencode(poc_input),
     )
     assert ERROR_CLASS not in response.data.decode()
 
