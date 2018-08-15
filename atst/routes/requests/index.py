@@ -32,22 +32,40 @@ def map_request(request):
 
 @requests_bp.route("/requests", methods=["GET"])
 def requests_index():
-    requests = []
-    is_ccpo = Permissions.REVIEW_AND_APPROVE_JEDI_WORKSPACE_REQUEST in g.current_user.atat_permissions
-    if is_ccpo:
-        requests = Requests.get_many()
-    else:
-        requests = Requests.get_many(creator=g.current_user)
+    if Permissions.REVIEW_AND_APPROVE_JEDI_WORKSPACE_REQUEST in g.current_user.atat_permissions:
+        return _ccpo_view()
 
+    else:
+        return _non_ccpo_view()
+
+
+def _ccpo_view():
+    requests = Requests.get_many()
     mapped_requests = [map_request(r) for r in requests]
 
-    pending_fv = not is_ccpo and any(Requests.is_pending_financial_verification(r) for r in requests)
-    pending_ccpo = not is_ccpo and any(Requests.is_pending_ccpo_approval(r) for r in requests)
+    return render_template(
+        "requests.html",
+        requests=mapped_requests,
+        pending_financial_verification=False,
+        pending_ccpo_approval=False,
+        extended_view=True,
+        kpi_inprogress=Requests.in_progress_count(),
+        kpi_pending=Requests.pending_ccpo_count(),
+        kpi_completed=Requests.completed_count(),
+    )
+
+
+def _non_ccpo_view():
+    requests = Requests.get_many(creator=g.current_user)
+    mapped_requests = [map_request(r) for r in requests]
+
+    pending_fv = any(Requests.is_pending_financial_verification(r) for r in requests)
+    pending_ccpo = any(Requests.is_pending_ccpo_approval(r) for r in requests)
 
     return render_template(
         "requests.html",
         requests=mapped_requests,
         pending_financial_verification=pending_fv,
         pending_ccpo_approval=pending_ccpo,
-        extended_view=is_ccpo
+        extended_view=False,
     )

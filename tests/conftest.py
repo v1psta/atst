@@ -69,6 +69,7 @@ def session(db, request):
     ]
     for factory in factory_list:
         factory._meta.sqlalchemy_session = session
+        factory._meta.sqlalchemy_session_persistence = "commit"
 
     yield session
 
