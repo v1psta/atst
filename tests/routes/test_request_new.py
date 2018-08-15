@@ -147,7 +147,7 @@ def test_not_am_poc_allows_user_to_fill_in_poc_info(client, user_session):
     assert ERROR_CLASS not in response.data.decode()
 
 
-def test_not_am_poc_allows_user_to_fill_in_poc_info_for_new_request(client, user_session):
+def test_poc_details_can_be_autopopulated_on_new_request(client, user_session):
     creator = UserFactory.create()
     user_session(creator)
     response = client.post(
