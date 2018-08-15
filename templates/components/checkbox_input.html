@@ -1,0 +1,18 @@
+
+{% macro CheckboxInput(field, inline=False) -%}
+  <checkboxinput name='{{ field.name }}' inline-template key='{{ field.name }}'>
+    <div class='usa-input {% if field.errors %}usa-input--error{% endif %}'>
+
+      <fieldset v-on:change="onInput" class="usa-input__choices {% if inline %}usa-input__choices--inline{% endif %}">
+        <legend>
+          {{ field() }}
+          {{ field.label }}
+
+          {% if field.description %}
+            <span class='usa-input__help'>{{ field.description | safe }}</span>
+          {% endif %}
+      </fieldset>
+    </div>
+  </checkboxinput>
+
+{%- endmacro %}

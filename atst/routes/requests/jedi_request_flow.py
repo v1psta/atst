@@ -65,7 +65,7 @@ class JEDIRequestFlow(object):
         return {
             "fname_request": user.first_name,
             "lname_request": user.last_name,
-            "email_request": user.email
+            "email_request": user.email,
         }
 
     @property
@@ -80,7 +80,7 @@ class JEDIRequestFlow(object):
                 data = self.request.body
             elif self.form_section == "information_about_you":
                 form_data = self.request.body.get(self.form_section, {})
-                data = { **self.map_user_data(self.request.creator), **form_data }
+                data = {**self.map_user_data(self.request.creator), **form_data}
             else:
                 data = self.request.body.get(self.form_section, {})
         elif self.form_section == "information_about_you":
@@ -103,40 +103,36 @@ class JEDIRequestFlow(object):
                 "title": "Details of Use",
                 "section": "details_of_use",
                 "form": RequestForm,
-                "subitems": [
-                    {
-                        "title": "Overall request details",
-                        "id": "overall-request-details",
-                    },
-                    {"title": "Cloud Resources", "id": "cloud-resources"},
-                    {"title": "Support Staff", "id": "support-staff"},
-                ],
-                "show": True,
             },
             {
                 "title": "Information About You",
                 "section": "information_about_you",
                 "form": OrgForm,
-                "show": True,
             },
-            {
-                "title": "Workspace Owner",
-                "section": "primary_poc",
-                "form": POCForm,
-                "show": True,
-            },
+            {"title": "Workspace Owner", "section": "primary_poc", "form": POCForm},
             {
                 "title": "Review & Submit",
                 "section": "review_submit",
                 "form": ReviewForm,
-                "show": True,
             },
         ]
 
     def create_or_update_request(self):
-        request_data = {self.form_section: self.form.data}
+        request_data = self.map_request_data(self.form_section, self.form.data)
         if self.request_id:
             Requests.update(self.request_id, request_data)
         else:
             request = Requests.create(self.current_user, request_data)
             self.request_id = request.id
+
+    def map_request_data(self, section, data):
+        if section == "primary_poc":
+            if data.get("am_poc", False):
+                data = {
+                    **data,
+                    "dodid_poc": self.current_user.dod_id,
+                    "fname_poc": self.current_user.first_name,
+                    "lname_poc": self.current_user.last_name,
+                    "email_poc": self.current_user.email,
+                }
+        return {section: data}
