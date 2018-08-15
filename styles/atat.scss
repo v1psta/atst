@@ -3,6 +3,7 @@
 
 @import 'core/grid';
 @import 'core/util';
+@import 'core/transitions';
 
 @import 'elements/typography';
 @import 'elements/icons';
@@ -30,6 +31,7 @@
 @import 'components/footer';
 @import 'components/progress_menu.scss';
 @import 'components/search_bar';
+@import 'components/forms';
 
 @import 'sections/login';
 @import 'sections/request_approval';

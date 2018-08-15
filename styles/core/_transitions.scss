@@ -1,0 +1,36 @@
+// Slide up/down transition
+.slide-enter-active {
+  transform-origin: 0 0;
+  transition: transform 0.5s ease-out;
+
+  > * {
+    transition: opacity 0.5s ease-in;
+  }
+}
+
+.slide-leave-active {
+  transform-origin: 0 0;
+  transition: transform 0.5s ease-in;
+
+  > * {
+    transition: opacity 0.5s ease-out;
+  }
+}
+
+.slide-enter,
+.slide-leave-to {
+  transform: scaleY(0);
+
+  > * {
+    opacity: 0;
+  }
+}
+
+.slide-enter-to,
+.slide-leave {
+  transform: scaleY(1);
+
+  > * {
+    opacity: 1;
+  }
+}

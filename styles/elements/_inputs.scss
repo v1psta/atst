@@ -70,6 +70,7 @@
     @include h4;
     @include line-max;
     position: relative;
+    clear: both;
 
     .icon-validation {
       position: absolute;
@@ -224,50 +225,4 @@ select {
     min-height: 4.4rem;
   }
 
-}
-
-
-// Form Grid
-.form-row {
-  margin: ($gap * 4) 0;
-
-  .form-col {
-    flex-grow: 1;
-
-    &:first-child .usa-input {
-      &:first-child {
-        margin-top: 0;
-      }
-    }
-
-    &:last-child .usa-input {
-      &:first-child {
-        margin-top: 0;
-      }
-    }
-  }
-
-  @include media($medium-screen) {
-    @include grid-row;
-    align-items: flex-start;
-
-    .form-col {
-      .usa-input {
-        margin-left: ($gap * 4);
-        margin-right: ($gap * 4);
-      }
-
-      &:first-child {
-        .usa-input {
-          margin-left: 0;
-        }
-      }
-
-      &:last-child {
-        .usa-input {
-          margin-right: 0;
-        }
-      }
-    }
-  }
 }
