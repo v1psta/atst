@@ -20,16 +20,16 @@ class POCForm(ValidatedForm):
 
 
     am_poc = BooleanField(
-        "I am the technical POC.",
+        "I am the Workspace Owner.",
         default=False,
         false_values=(False, "false", "False", "no", "")
     )
 
-    fname_poc = StringField("POC First Name", validators=[Required()])
+    fname_poc = StringField("First Name", validators=[Required()])
 
-    lname_poc = StringField("POC Last Name", validators=[Required()])
+    lname_poc = StringField("Last Name", validators=[Required()])
 
-    email_poc = EmailField("POC Email Address", validators=[Required(), Email()])
+    email_poc = EmailField("Email Address", validators=[Required(), Email()])
 
     dodid_poc = StringField(
         "DOD ID", validators=[Required(), Length(min=10), IsNumber()]
