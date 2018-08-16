@@ -1,7 +1,7 @@
 from atst.domain.exceptions import UnauthenticatedError, NotFoundError
 from atst.domain.users import Users
 from .utils import parse_sdn, email_from_certificate
-from .crl import Validator
+from .crl import crl_check, CRLException
 
 
 class AuthenticationContext():
@@ -22,8 +22,7 @@ class AuthenticationContext():
         if not self.auth_status == "SUCCESS":
             raise UnauthenticatedError("SSL/TLS client authentication failed")
 
-        elif not self._crl_check():
-            raise UnauthenticatedError("Client certificate failed CRL check")
+        self._crl_check()
 
         return True
 
@@ -45,13 +44,10 @@ class AuthenticationContext():
             return None
 
     def _crl_check(self):
-        validator = Validator(self.crl_cache, self.cert)
-        if self.cert:
-            result = validator.validate()
-            return result
-
-        else:
-            return False
+        try:
+            crl_check(self.crl_cache, self.cert)
+        except CRLException as exc:
+            raise UnauthenticatedError("CRL check failed. " + str(exc))
 
     @property
     def parsed_sdn(self):
