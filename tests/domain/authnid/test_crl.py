@@ -4,7 +4,7 @@ import re
 import os
 import shutil
 from OpenSSL import crypto, SSL
-from atst.domain.authnid.crl import Validator, CRLCache
+from atst.domain.authnid.crl import crl_check, CRLCache, CRLException
 import atst.domain.authnid.crl.util as util
 
 
@@ -39,18 +39,20 @@ def test_can_validate_certificate():
     cache = CRLCache('ssl/server-certs/ca-chain.pem', crl_locations=['ssl/client-certs/client-ca.der.crl'])
     good_cert = open('ssl/client-certs/atat.mil.crt', 'rb').read()
     bad_cert = open('ssl/client-certs/bad-atat.mil.crt', 'rb').read()
-    assert Validator(cache, good_cert).validate()
-    assert Validator(cache, bad_cert).validate() == False
+    assert crl_check(cache, good_cert)
+    with pytest.raises(CRLException):
+        crl_check(cache, bad_cert)
 
 def test_can_dynamically_update_crls(tmpdir):
     crl_file = tmpdir.join('test.crl')
     shutil.copyfile('ssl/client-certs/client-ca.der.crl', crl_file)
     cache = CRLCache('ssl/server-certs/ca-chain.pem', crl_locations=[crl_file])
     cert = open('ssl/client-certs/atat.mil.crt', 'rb').read()
-    assert Validator(cache, cert).validate()
+    assert crl_check(cache, cert)
     # override the original CRL with one that revokes atat.mil.crt
     shutil.copyfile('tests/fixtures/test.der.crl', crl_file)
-    assert Validator(cache, cert).validate() == False
+    with pytest.raises(CRLException):
+        assert crl_check(cache, cert)
 
 def test_parse_disa_pki_list():
     with open('tests/fixtures/disa-pki.html') as disa:
