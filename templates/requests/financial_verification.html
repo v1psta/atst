@@ -105,42 +105,45 @@
           level='warning'
         ) }}
 
-        {{ OptionsInput(
-          f.funding_type
+        <fieldset class="form__sub-fields form__sub-fields--warning">
+          {{ OptionsInput(
+            f.funding_type
           ) }}
 
-        {{ TextInput(
-          f.funding_type_other
+          {{ TextInput(
+            f.funding_type_other
           ) }}
 
-        {{ TextInput(
-          f.clin_0001,placeholder="50,000",
-          validation='integer'
+          {{ TextInput(
+            f.clin_0001,placeholder="50,000",
+            validation='integer'
           ) }}
 
-        {{ TextInput(
-          f.clin_0003,placeholder="13,000",
-          validation='integer'
+          {{ TextInput(
+            f.clin_0003,placeholder="13,000",
+            validation='integer'
           ) }}
 
-        {{ TextInput(
-          f.clin_1001,placeholder="30,000",
-          validation='integer'
+          {{ TextInput(
+            f.clin_1001,placeholder="30,000",
+            validation='integer'
           ) }}
 
-        {{ TextInput(
-          f.clin_1003,placeholder="7,000",
-          validation='integer'
+          {{ TextInput(
+            f.clin_1003,placeholder="7,000",
+            validation='integer'
           ) }}
 
-        {{ TextInput(
-          f.clin_2001,placeholder="30,000",
-          validation='integer'
+          {{ TextInput(
+            f.clin_2001,placeholder="30,000",
+            validation='integer'
           ) }}
 
-        {{ TextInput(f.clin_2003,placeholder="7,000",
-          validation='integer'
+          {{ TextInput(
+            f.clin_2003,placeholder="7,000",
+            validation='integer'
           ) }}
+        </fieldset>
 
 
       {% endautoescape %}
