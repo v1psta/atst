@@ -1,4 +1,41 @@
+from sqlalchemy.orm.exc import NoResultFound
+
+from atst.database import db
+from atst.domain.exceptions import NotFoundError
+from atst.models.workspace import Workspace
+
+
+class Workspaces(object):
+    # will a request have a TO association?
+    # do we automatically create an entry for the request.creator in the
+    # workspace_roles table?
+
+    @classmethod
+    def create(cls, request, task_order, name=None):
+        name = name or request.id
+        return Workspace(request=request, task_order=task_order, name=name)
+
+    @classmethod
+    def get(cls, workspace_id):
+        try:
+            workspace = db.session.query(Workspace).filter_by(id=workspace_id).one()
+        except NoResultFound:
+            raise NotFoundError("workspace")
+
+        return workspace
+
+    @classmethod
+    def get_by_request(cls, request):
+        try:
+            workspace = db.session.query(Workspace).filter_by(request=request).one()
+        except NoResultFound:
+            raise NotFoundError("workspace")
+
+        return workspace
+
+
 class Projects(object):
+
     def __init__(self):
         pass
 
@@ -46,6 +83,7 @@ class Projects(object):
 
 
 class Members(object):
+
     def __init__(self):
         pass
 
