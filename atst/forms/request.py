@@ -97,7 +97,7 @@ class RequestForm(ValidatedForm):
 
     # Details of Use: Cloud Readiness
     num_software_systems = IntegerField(
-        "Number of Software System",
+        "Number of Software Systems",
         description="Estimate the number of software systems that will be supported by this JEDI Cloud access request",
     )
 
@@ -141,16 +141,16 @@ class RequestForm(ValidatedForm):
         description="How much data is being transferred to the cloud?",
         choices=[
             ("null", "Select an option"),
-            ("less_than_100gb", "Less than 100GB"),
-            ("100gb-500gb", "100GB-500GB"),
-            ("500gb-1tb", "500GB-1TB"),
-            ("1tb-50tb", "1TB-50TB"),
-            ("50tb-100tb", "50TB-100TB"),
-            ("100tb-500tb", "100TB-500TB"),
-            ("500tb-1pb", "500TB-1PB"),
-            ("1pb-5pb", "1PB-5PB"),
-            ("5pb-10pb", "5PB-10PB"),
-            ("above_10pb", "Above 10PB"),
+            ("Less than 100GB", "Less than 100GB"),
+            ("100GB-500GB", "100GB-500GB"),
+            ("500GB-1TB", "500GB-1TB"),
+            ("1TB-50TB", "1TB-50TB"),
+            ("50TB-100TB", "50TB-100TB"),
+            ("100TB-500TB", "100TB-500TB"),
+            ("500TB-1PB", "500TB-1PB"),
+            ("1PB-5PB", "1PB-5PB"),
+            ("5PB-10PB", "5PB-10PB"),
+            ("Above 10PB", "Above 10PB"),
         ],
     )
 
@@ -158,10 +158,10 @@ class RequestForm(ValidatedForm):
         description="When do you expect to complete your migration to the JEDI Cloud?",
         choices=[
             ("null", "Select an option"),
-            ("less_than_1_month", "Less than 1 month"),
-            ("1_to_3_months", "1-3 months"),
-            ("3_to_6_months", "3-6 months"),
-            ("above_12_months", "Above 12 months"),
+            ("Less than 1 month", "Less than 1 month"),
+            ("1-3 months", "1-3 months"),
+            ("3-6 months", "3-6 months"),
+            ("Above 12 months", "Above 12 months"),
         ],
     )
 
@@ -173,7 +173,7 @@ class RequestForm(ValidatedForm):
 
     # Details of Use: Financial Usage
     estimated_monthly_spend = IntegerField(
-        "Estimated monthly spend",
+        "Estimated Monthly Spend",
         description='Use the <a href="#" target="_blank" class="icon-link">JEDI CSP Calculator</a> to estimate your <b>monthly</b> cloud resource usage and enter the dollar amount below. Note these estimates are for initial approval only. After the request is approved, you will be asked to provide a valid Task Order number with specific CLIN amounts for cloud services.',
     )
 

@@ -89,7 +89,7 @@ class FinancialForm(ValidatedForm):
 
     email_co = EmailField("Contracting Officer Email", validators=[Required(), Email()])
 
-    office_co = StringField("Contracting Office Office", validators=[Required()])
+    office_co = StringField("Contracting Officer Office", validators=[Required()])
 
     fname_cor = StringField(
         "Contracting Officer Representative (COR) First Name", validators=[Required()]

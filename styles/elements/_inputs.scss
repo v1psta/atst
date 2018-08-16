@@ -194,7 +194,9 @@
     }
 
     &--paragraph {
-      max-width: 30em;
+      textarea {
+        max-width: 30em;
+      }
       .icon-validation {
         left: 30em;
       }

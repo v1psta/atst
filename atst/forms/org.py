@@ -93,7 +93,7 @@ class OrgForm(ValidatedForm):
     )
 
     date_latest_training = DateField(
-        "Latest Information Assurance (IA) Training completion date",
+        "Latest Information Assurance (IA) Training Completion Date",
         description="To complete the training, you can find it in <a class=\"icon-link\" href=\"https://iatraining.disa.mil/eta/disa_cac2018/launchPage.htm\" target=\"_blank\">Information Assurance Cyber Awareness Challange</a> website.",
         validators=[
             Required(),
