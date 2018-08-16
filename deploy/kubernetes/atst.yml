@@ -27,7 +27,7 @@ spec:
           image: registry.atat.codes:443/atst-prod:a1916b1
           resources:
             requests:
-               memory: "2500Mi"
+               memory: "4500Mi"
           envFrom:
           - configMapRef:
               name: atst-envvars
