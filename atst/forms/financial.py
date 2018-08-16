@@ -75,7 +75,8 @@ class FinancialForm(ValidatedForm):
     )
 
     uii_ids = NewlineListField(
-        "Unique Item Identifier (UII)s related to your application(s) if you already have them"
+        "Unique Item Identifier (UII)s related to your application(s) if you already have them",
+        validators=[Required()]
     )
 
     pe_id = StringField("Program Element (PE) Number related to your request", validators=[Required()])
