@@ -11,9 +11,9 @@ class Workspaces(object):
     # workspace_roles table?
 
     @classmethod
-    def create(cls, request, task_order, name=None):
+    def create(cls, request, name=None):
         name = name or request.id
-        return Workspace(request=request, task_order=task_order, name=name)
+        return Workspace(request=request, name=name)
 
     @classmethod
     def get(cls, workspace_id):
