@@ -100,7 +100,6 @@ class FinancialForm(ValidatedForm):
     )
 
     funding_type = SelectField(
-        validators=[Required()],
         choices=[
             ("", "- Select -"),
             ("RDTE", "Research, Development, Testing & Evaluation (RDT&E)"),
