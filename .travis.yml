@@ -10,6 +10,7 @@ env:
     - PROD_IMAGE_NAME=atst-prod
     - TESTER_IMAGE1_NAME=atst-tester-nocrls
     - TESTER_IMAGE2_NAME=atst-tester
+    - GIT_SHA="$(git rev-parse --short HEAD)"
 cache:
   directories:
     - crl
@@ -42,8 +43,7 @@ script:
 
 before_deploy:
   - docker build --tag "${PROD_IMAGE_NAME}" . -f deploy/docker/prod/Dockerfile
-  - git_sha="$(git rev-parse --short HEAD)"
-  - remote_image_name="${ATAT_DOCKER_REGISTRY_URL}/${PROD_IMAGE_NAME}:${git_sha}"
+  - remote_image_name="${ATAT_DOCKER_REGISTRY_URL}/${PROD_IMAGE_NAME}:${GIT_SHA}"
   - docker tag "${PROD_IMAGE_NAME}" "${remote_image_name}"
   - docker images
   - docker push "${remote_image_name}"
