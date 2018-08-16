@@ -32,6 +32,8 @@ def update_financial_verification(request_id):
         if valid:
             return redirect(url_for("requests.financial_verification_submitted"))
         else:
+            # TODO: This is a horrible workaround.
+            form.uii_ids.process_data(form.uii_ids.data)
             return render_template(
                 "requests/financial_verification.html", **rerender_args
             )
