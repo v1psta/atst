@@ -21,7 +21,8 @@ class WorkspaceUsers(object):
 
         try:
             workspace_role = (
-                WorkspaceRole.query.join(User)
+                db.session.query(WorkspaceRole)
+                .join(User)
                 .filter(User.id == user_id, WorkspaceRole.workspace_id == workspace_id)
                 .one()
             )
