@@ -20,7 +20,7 @@ class POCForm(ValidatedForm):
 
 
     am_poc = BooleanField(
-        "I am the Workspace Owner.",
+        "I am the Workspace Owner",
         default=False,
         false_values=(False, "false", "False", "no", "")
     )
