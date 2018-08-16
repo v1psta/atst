@@ -28,7 +28,7 @@ kubectl config use-context travis
 kubectl config current-context
 
 # Update the ATST deployment
-kubectl -n atat set image deployment.apps/atst atst="${PROD_IMAGE_NAME}"
+kubectl -n atat set image deployment.apps/atst atst="${remote_image_name}"
 
 # Remove the K8S CA file when the script exits
 function cleanup {
