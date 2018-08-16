@@ -1,7 +1,7 @@
 import re
 from wtforms.fields.html5 import EmailField
 from wtforms.fields import StringField, SelectField
-from wtforms.validators import Required, Email
+from wtforms.validators import Required, Email, InputRequired
 
 from atst.domain.exceptions import NotFoundError
 from atst.domain.pe_numbers import PENumbers
@@ -106,7 +106,8 @@ class FinancialForm(ValidatedForm):
             ("OM", "Operations & Maintenance (O&M)"),
             ("PROC", "Procurement (PROC)"),
             ("OTHER", "Other"),
-        ]
+        ],
+        validators=[InputRequired()]
     )
 
     funding_type_other = StringField(
