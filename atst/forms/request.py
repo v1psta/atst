@@ -85,11 +85,13 @@ class RequestForm(ValidatedForm):
             ("US Transportation Command (USTRANSCOM)", "US Transportation Command (USTRANSCOM)"),
             ("Washington Headquarters Services", "Washington Headquarters Services"),
         ],
+        validators=[Required()]
     )
 
     jedi_usage = TextAreaField(
         "JEDI Usage",
         description="Your answer will help us provide tangible examples to DoD leadership how and why commercial cloud resources are accelerating the Department's missions",
+        validators=[Required()]
     )
 
 
@@ -195,5 +197,7 @@ class RequestForm(ValidatedForm):
     )
 
     start_date = DateField(
-        description="When do you expect to start using the JEDI Cloud (not for billing purposes)?"
+        description="When do you expect to start using the JEDI Cloud (not for billing purposes)?",
+        validators=[
+            Required()]
     )

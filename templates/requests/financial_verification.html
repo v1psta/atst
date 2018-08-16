@@ -98,9 +98,12 @@
           f.office_cor,placeholder="e.g.: WHS"
           ) }}
 
+        <hr>
 
-        <br><hr>
-        <em>&darr; FIELDS NEEDED FOR MANUAL ENTRY OF TASK ORDER INFORMATION (only necessary if EDA info not available)</em>
+        {{ Alert('Task Order not found in EDA',
+          message="Since the Task Order (TO) number was not found in our system of record, EDA, please populate the additional fields in the form below.",
+          level='warning'
+        ) }}
 
         {{ OptionsInput(
           f.funding_type,

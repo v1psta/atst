@@ -71,9 +71,9 @@ class FinancialForm(ValidatedForm):
 
     pe_id = StringField("Program Element (PE) Number related to your request", validators=[Required()])
 
-    treasury_code = StringField("Program Treasury Code")
+    treasury_code = StringField("Program Treasury Code", validators=[Required()])
 
-    ba_code = StringField("Program BA Code")
+    ba_code = StringField("Program BA Code", validators=[Required()])
 
     fname_co = StringField("Contracting Officer First Name", validators=[Required()])
     lname_co = StringField("Contracting Officer Last Name", validators=[Required()])
@@ -107,6 +107,7 @@ class FinancialForm(ValidatedForm):
             ("PROC", "Procurement (PROC)"),
             ("OTHER", "Other"),
         ],
+        validators=[Required()]
     )
 
     funding_type_other = StringField(
