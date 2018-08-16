@@ -30,3 +30,40 @@ def test_funding_type_other_required_if_funding_type_is_other():
     form = FinancialForm(data=form_data)
     form.validate()
     assert "funding_type_other" in form.errors
+
+
+@pytest.mark.parametrize("input_,expected", [
+    ("1234", True),
+    ("123456", True),
+    ("0001234", True),
+    ("000123456", True),
+    ("12345", False),
+    ("00012345", False),
+    ("0001234567", False),
+    ("000000", False),
+])
+def test_treasury_code_validation(input_, expected):
+    form_data = {"treasury_code": input_}
+    form = FinancialForm(data=form_data)
+    form.validate()
+    is_valid = "treasury_code" not in form.errors
+
+    assert is_valid == expected
+
+
+@pytest.mark.parametrize("input_,expected", [
+    ("12", True),
+    ("00012", True),
+    ("12A", True),
+    ("000123", True),
+    ("00012A", True),
+    ("0001", False),
+    ("00012AB", False),
+])
+def test_ba_code_validation(input_, expected):
+    form_data = {"ba_code": input_}
+    form = FinancialForm(data=form_data)
+    form.validate()
+    is_valid = "ba_code" not in form.errors
+
+    assert is_valid == expected

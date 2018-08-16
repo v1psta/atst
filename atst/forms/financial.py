@@ -1,7 +1,7 @@
 import re
 from wtforms.fields.html5 import EmailField
 from wtforms.fields import StringField, SelectField
-from wtforms.validators import Required, Email, InputRequired
+from wtforms.validators import Required, Email, InputRequired, Regexp
 
 from atst.domain.exceptions import NotFoundError
 from atst.domain.pe_numbers import PENumbers
@@ -21,6 +21,9 @@ PE_REGEX = re.compile(
     re.X,
 )
 
+TREASURY_CODE_REGEX = re.compile(r"^0*([1-9]{4}|[1-9]{6})$")
+
+BA_CODE_REGEX = re.compile(r"^0*[1-9]{2}\w?$")
 
 def suggest_pe_id(pe_id):
     suggestion = pe_id
@@ -77,9 +80,9 @@ class FinancialForm(ValidatedForm):
 
     pe_id = StringField("Program Element (PE) Number related to your request", validators=[Required()])
 
-    treasury_code = StringField("Program Treasury Code", validators=[Required()])
+    treasury_code = StringField("Program Treasury Code", validators=[Required(), Regexp(TREASURY_CODE_REGEX)])
 
-    ba_code = StringField("Program BA Code", validators=[Required()])
+    ba_code = StringField("Program BA Code", validators=[Required(), Regexp(BA_CODE_REGEX)])
 
     fname_co = StringField("Contracting Officer First Name", validators=[Required()])
     lname_co = StringField("Contracting Officer Last Name", validators=[Required()])
