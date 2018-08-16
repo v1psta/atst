@@ -30,6 +30,9 @@ kubectl config current-context
 # Update the ATST deployment
 kubectl -n atat set image deployment.apps/atst atst="${ATAT_DOCKER_REGISTRY_URL}/${PROD_IMAGE_NAME}:${GIT_SHA}"
 
+# Wait for deployment to finish
+kubectl -n atat rollout status deployment/atst
+
 # Remove the K8S CA file when the script exits
 function cleanup {
     printf "Cleaning up...\n"
