@@ -22,11 +22,12 @@ class MockX509Store():
     def set_flags(self, flag):
         pass
 
+
 def test_can_build_crl_list(monkeypatch):
     location = 'ssl/client-certs/client-ca.der.crl'
     cache = CRLCache('ssl/client-certs/client-ca.crt', crl_locations=[location], store_class=MockX509Store)
-    for store in cache.x509_stores.values():
-        assert len(store.crls) == 1
+    assert len(cache.crl_cache.keys()) == 1
+
 
 def test_can_build_trusted_root_list():
     location = 'ssl/server-certs/ca-chain.pem'
