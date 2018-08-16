@@ -176,8 +176,7 @@ WHERE requests_with_status.status = :status
             raw += " AND requests_with_status.user_id = :user_id"
             bindings["user_id"] = creator.id
 
-        results = db.session.execute(text(raw), bindings).fetchone()
-        (count,) = results
+        count = db.session.execute(text(raw), bindings).scalar()
         return count
 
     @classmethod
