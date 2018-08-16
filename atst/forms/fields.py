@@ -1,5 +1,5 @@
 from wtforms.fields.html5 import DateField
-from wtforms.fields import Field
+from wtforms.fields import Field, SelectField as SelectField_
 from wtforms.widgets import TextArea
 
 from atst.domain.date import parse_date
@@ -41,3 +41,13 @@ class NewlineListField(Field):
             self.data = "\n".join(value)
         else:
             self.data = value
+
+
+class SelectField(SelectField_):
+    def __init__(self, *args, **kwargs):
+        render_kw = kwargs.get("render_kw", {})
+        kwargs["render_kw"] = {
+            **render_kw,
+            "required": False
+        }
+        super().__init__(*args, **kwargs)
