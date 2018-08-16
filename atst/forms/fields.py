@@ -32,6 +32,6 @@ class NewlineListField(Field):
 
     def process_formdata(self, valuelist):
         if valuelist:
-            self.data = [l.strip() for l in valuelist[0].split("\n")]
+            self.data = [l.strip() for l in valuelist[0].split("\n") if l]
         else:
             self.data = []
