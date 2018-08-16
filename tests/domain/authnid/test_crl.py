@@ -4,7 +4,7 @@ import re
 import os
 import shutil
 from OpenSSL import crypto, SSL
-from atst.domain.authnid.crl import Validator
+from atst.domain.authnid.crl import Validator, CRLCache
 import atst.domain.authnid.crl.util as util
 
 
@@ -24,38 +24,33 @@ class MockX509Store():
 
 def test_can_build_crl_list(monkeypatch):
     location = 'ssl/client-certs/client-ca.der.crl'
-    validator = Validator(crl_locations=[location], base_store=MockX509Store)
-    assert len(validator.store.crls) == 1
+    cache = CRLCache('ssl/client-certs/client-ca.crt', crl_locations=[location], store_class=MockX509Store)
+    for store in cache.x509_stores.values():
+        assert len(store.crls) == 1
 
 def test_can_build_trusted_root_list():
     location = 'ssl/server-certs/ca-chain.pem'
-    validator = Validator(roots=[location], base_store=MockX509Store)
+    cache = CRLCache(root_location=location, crl_locations=[], store_class=MockX509Store)
     with open(location) as f:
         content = f.read()
-        assert len(validator.store.certs) == content.count('BEGIN CERT')
+        assert len(cache.certificate_authorities.keys()) == content.count('BEGIN CERT')
 
 def test_can_validate_certificate():
-    validator = Validator(
-            roots=['ssl/server-certs/ca-chain.pem'],
-            crl_locations=['ssl/client-certs/client-ca.der.crl']
-            )
+    cache = CRLCache('ssl/server-certs/ca-chain.pem', crl_locations=['ssl/client-certs/client-ca.der.crl'])
     good_cert = open('ssl/client-certs/atat.mil.crt', 'rb').read()
     bad_cert = open('ssl/client-certs/bad-atat.mil.crt', 'rb').read()
-    assert validator.validate(good_cert)
-    assert validator.validate(bad_cert) == False
+    assert Validator(cache, good_cert).validate()
+    assert Validator(cache, bad_cert).validate() == False
 
 def test_can_dynamically_update_crls(tmpdir):
     crl_file = tmpdir.join('test.crl')
     shutil.copyfile('ssl/client-certs/client-ca.der.crl', crl_file)
-    validator = Validator(
-            roots=['ssl/server-certs/ca-chain.pem'],
-            crl_locations=[crl_file]
-            )
+    cache = CRLCache('ssl/server-certs/ca-chain.pem', crl_locations=[crl_file])
     cert = open('ssl/client-certs/atat.mil.crt', 'rb').read()
-    assert validator.validate(cert)
+    assert Validator(cache, cert).validate()
     # override the original CRL with one that revokes atat.mil.crt
     shutil.copyfile('tests/fixtures/test.der.crl', crl_file)
-    assert validator.validate(cert) == False
+    assert Validator(cache, cert).validate() == False
 
 def test_parse_disa_pki_list():
     with open('tests/fixtures/disa-pki.html') as disa:
