@@ -63,6 +63,12 @@ class FinancialForm(ValidatedForm):
             self.funding_type_other.validators.append(Required())
         return super().validate(*args, **kwargs)
 
+    def reset(self):
+        """
+        Reset UII info so that it can be de-parsed rendered properly.
+        This is a stupid workaround, and there's probably a better way.
+        """
+        self.uii_ids.process_data(self.uii_ids.data)
 
     def perform_extra_validation(self, existing_request):
         valid = True
