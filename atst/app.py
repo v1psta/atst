@@ -16,7 +16,7 @@ from atst.routes.workspaces import bp as workspace_routes
 from atst.routes.requests import requests_bp
 from atst.routes.dev import bp as dev_routes
 from atst.routes.errors import make_error_pages
-from atst.domain.authnid.crl import Validator
+from atst.domain.authnid.crl import Validator, CRLCache
 from atst.domain.auth import apply_authentication
 
 
@@ -141,7 +141,5 @@ def make_crl_validator(app):
     crl_locations = []
     for filename in pathlib.Path(app.config["CRL_DIRECTORY"]).glob("*"):
         crl_locations.append(filename.absolute())
-    app.crl_validator = Validator(
-        roots=[app.config["CA_CHAIN"]], crl_locations=crl_locations, logger=app.logger
-    )
+    app.crl_cache = CRLCache(app.config["CA_CHAIN"], crl_locations)
 
