@@ -62,11 +62,11 @@ class FinancialForm(ValidatedForm):
         return valid
 
     task_order_id = StringField(
-        "Task Order Number associated with this request.", validators=[Required()]
+        "Task Order Number associated with this request", validators=[Required()]
     )
 
     uii_ids = NewlineListField(
-        "Unique Item Identifier (UII)s related to your application(s) if you already have them."
+        "Unique Item Identifier (UII)s related to your application(s) if you already have them"
     )
 
     pe_id = StringField("Program Element (PE) Number related to your request", validators=[Required()])
@@ -106,8 +106,7 @@ class FinancialForm(ValidatedForm):
             ("OM", "Operations & Maintenance (O&M)"),
             ("PROC", "Procurement (PROC)"),
             ("OTHER", "Other"),
-        ],
-        validators=[Required()]
+        ]
     )
 
     funding_type_other = StringField(
@@ -117,29 +116,35 @@ class FinancialForm(ValidatedForm):
     clin_0001 = StringField(
         "<dl><dt>CLIN 0001</dt> - <dd>Unclassified IaaS and PaaS Amount</dd></dl>",
         validators=[Required()],
+        description="Review your task order document, the amounts for each CLIN must match exactly here"
     )
 
     clin_0003 = StringField(
         "<dl><dt>CLIN 0003</dt> - <dd>Unclassified Cloud Support Package</dd></dl>",
         validators=[Required()],
+        description="Review your task order document, the amounts for each CLIN must match exactly here"
     )
 
     clin_1001 = StringField(
         "<dl><dt>CLIN 1001</dt> - <dd>Unclassified IaaS and PaaS Amount <br> OPTION PERIOD 1</dd></dl>",
         validators=[Required()],
+        description="Review your task order document, the amounts for each CLIN must match exactly here"
     )
 
     clin_1003 = StringField(
         "<dl><dt>CLIN 1003</dt> - <dd>Unclassified Cloud Support Package <br> OPTION PERIOD 1</dd></dl>",
         validators=[Required()],
+        description="Review your task order document, the amounts for each CLIN must match exactly here"
     )
 
     clin_2001 = StringField(
         "<dl><dt>CLIN 2001</dt> - <dd>Unclassified IaaS and PaaS Amount <br> OPTION PERIOD 2</dd></dl>",
         validators=[Required()],
+        description="Review your task order document, the amounts for each CLIN must match exactly here"
     )
 
     clin_2003 = StringField(
         "<dl><dt>CLIN 2003</dt> - <dd>Unclassified Cloud Support Package <br> OPTION PERIOD 2</dd></dl>",
         validators=[Required()],
+        description="Review your task order document, the amounts for each CLIN must match exactly here"
     )
