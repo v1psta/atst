@@ -35,3 +35,9 @@ class NewlineListField(Field):
             self.data = [l.strip() for l in valuelist[0].split("\n") if l]
         else:
             self.data = []
+
+    def process_data(self, value):
+        if isinstance(value, list):
+            self.data = "\n".join(value)
+        else:
+            self.data = value
