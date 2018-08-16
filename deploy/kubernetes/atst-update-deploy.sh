@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# deploy/kubernetes/atst-update-deploy.sh: Updates the existing ATST deployment 
+# deploy/kubernetes/atst-update-deploy.sh: Updates the existing ATST deployment
 #                                          with a new source image
 
 set -o pipefail
@@ -22,7 +22,7 @@ kubectl config set-cluster atat-cluster \
     --server="${K8S_ENDPOINT}"  \
     --certificate-authority="${HOME}/k8s_ca.crt"
 
-kubectl config set-credentials atat-deployer --token="${K8S_USER_TOKEN}"
+kubectl config set-credentials atat-deployer --token=`echo ${K8S_USER_TOKEN} | base64 --decode`
 
 kubectl config use-context travis
 kubectl config current-context
