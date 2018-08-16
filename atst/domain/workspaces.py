@@ -3,6 +3,8 @@ from sqlalchemy.orm.exc import NoResultFound
 from atst.database import db
 from atst.domain.exceptions import NotFoundError
 from atst.models.workspace import Workspace
+from atst.models.workspace_role import WorkspaceRole
+from atst.domain.roles import Roles
 
 
 class Workspaces(object):
@@ -13,7 +15,10 @@ class Workspaces(object):
     @classmethod
     def create(cls, request, name=None):
         name = name or request.id
-        return Workspace(request=request, name=name)
+        workspace = Workspace(request=request, name=name)
+        role = Roles.get("owner")
+        wr = WorkspaceRole(user_id=request.creator.id, role=role, workspace_id=workspace.id)
+        return workspace
 
     @classmethod
     def get(cls, workspace_id):

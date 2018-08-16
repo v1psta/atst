@@ -14,3 +14,7 @@ class Workspace(Base):
     request = relationship("Request")
 
     name = Column(String, unique=True)
+
+    @property
+    def owner(self):
+        return self.request.creator
