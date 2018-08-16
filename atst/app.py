@@ -16,7 +16,7 @@ from atst.routes.workspaces import bp as workspace_routes
 from atst.routes.requests import requests_bp
 from atst.routes.dev import bp as dev_routes
 from atst.routes.errors import make_error_pages
-from atst.domain.authnid.crl import Validator, CRLCache
+from atst.domain.authnid.crl import CRLCache
 from atst.domain.auth import apply_authentication
 
 

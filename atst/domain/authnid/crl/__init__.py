@@ -56,28 +56,50 @@ class CRLCache():
     # theoretically it can build a longer certificate chain
     def _add_certificate_chain_to_store(self, store, issuer):
         ca = self.certificate_authorities.get(issuer.der())
-        # i.e., it is the root CA
-        if issuer == ca.get_subject():
-            return store
-
         store.add_cert(ca)
-        return self._add_certificate_chain_to_store(store, ca.get_issuer())
 
+        if issuer == ca.get_subject():
+            # i.e., it is the root CA and we are at the end of the chain
+            return store
+        else:
+            return self._add_certificate_chain_to_store(store, ca.get_issuer())
+
+    def get_store(self, cert):
+        return self._check_cache(cert.get_issuer().der())
+
+    def _check_cache(self, issuer):
+        if issuer in self.crl_cache:
+            filename, checksum = self.crl_cache[issuer]
+            if sha256_checksum(filename) != checksum:
+                issuer, store = self._build_store(filename)
+                self.x509_stores[issuer] = store
+                return store
+            else:
+                return self.x509_stores[issuer]
 
 
 class Validator:
 
-    _PEM_RE = re.compile(
-        b"-----BEGIN CERTIFICATE-----\r?.+?\r?-----END CERTIFICATE-----\r?\n?",
-        re.DOTALL,
-    )
-
-    def __init__(self, root, crl_locations=[], base_store=crypto.X509Store, logger=None):
-        self.crl_locations = crl_locations
-        self.root = root
-        self.base_store = base_store
+    def __init__(self, cache, cert, logger=None):
+        self.cache = cache
+        self.cert = cert
         self.logger = logger
-        self._reset()
+
+    def validate(self):
+        parsed = crypto.load_certificate(crypto.FILETYPE_PEM, self.cert)
+        store = self.cache.get_store(parsed)
+        context = crypto.X509StoreContext(store, parsed)
+        try:
+            context.verify_certificate()
+            return True
+
+        except crypto.X509StoreContextError as err:
+            self.log_error(
+                "Certificate revoked or errored. Error: {}. Args: {}".format(
+                    type(err), err.args
+                )
+            )
+            return False
 
     def _add_roots(self, roots):
         with open(filename, "rb") as f:
@@ -161,26 +183,3 @@ class Validator:
         return error.args == self.PRELOADED_CRL or error.args == self.PRELOADED_CERT
 
     # Checks that the CRL currently in-memory is up-to-date via the checksum.
-
-    def refresh_cache(self, cert):
-        der = cert.get_issuer().der()
-        if der in self.cache:
-            filename, checksum = self.cache[der]
-            if sha256_checksum(filename) != checksum:
-                self._reset()
-
-    def validate(self, cert):
-        parsed = crypto.load_certificate(crypto.FILETYPE_PEM, cert)
-        self.refresh_cache(parsed)
-        context = crypto.X509StoreContext(self.store, parsed)
-        try:
-            context.verify_certificate()
-            return True
-
-        except crypto.X509StoreContextError as err:
-            self.log_error(
-                "Certificate revoked or errored. Error: {}. Args: {}".format(
-                    type(err), err.args
-                )
-            )
-            return False
