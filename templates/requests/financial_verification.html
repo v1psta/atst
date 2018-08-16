@@ -6,6 +6,7 @@
 
 {% block content %}
 
+<financial inline-template v-bind:initial-data='{{ f.data|tojson }}'>
 <div class="col">
 
   <div class="panel">
@@ -92,7 +93,9 @@
         <fieldset class="form__sub-fields form__sub-fields--warning">
           {{ OptionsInput(f.funding_type) }}
 
-          {{ TextInput(f.funding_type_other) }}
+          <template v-if="funding_type == 'OTHER'" v-cloak>
+            {{ TextInput(f.funding_type_other) }}
+          </template>
 
           {{ TextInput(
             f.clin_0001,placeholder="50,000",
@@ -132,9 +135,9 @@
       <input type='submit' class='usa-button usa-button-primary' value='Save & Continue' />
       {% endblock %}
       </form>
-
     </div>
   </div>
 </div>
+</financial>
 
 {% endblock %}

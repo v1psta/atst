@@ -7,6 +7,7 @@ import textinput from './components/text_input'
 import checkboxinput from './components/checkbox_input'
 import DetailsOfUse from './components/forms/details_of_use'
 import poc from './components/forms/poc'
+import financial from './components/forms/financial'
 
 Vue.use(VTooltip)
 
@@ -19,6 +20,7 @@ const app = new Vue({
     checkboxinput,
     DetailsOfUse,
     poc,
+    financial,
   },
   methods: {
     closeModal: function(name) {

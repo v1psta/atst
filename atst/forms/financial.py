@@ -1,7 +1,7 @@
 import re
 from wtforms.fields.html5 import EmailField
 from wtforms.fields import StringField, SelectField
-from wtforms.validators import Required, Email, InputRequired
+from wtforms.validators import Required, Email, InputRequired, Optional
 
 from atst.domain.exceptions import NotFoundError
 from atst.domain.pe_numbers import PENumbers
@@ -55,6 +55,12 @@ def validate_pe_id(field, existing_request):
 
 
 class FinancialForm(ValidatedForm):
+    def validate(self, *args, **kwargs):
+        if self.funding_type.data == "OTHER":
+            self.funding_type_other.validators.append(Required())
+        return super().validate(*args, **kwargs)
+
+
     def perform_extra_validation(self, existing_request):
         valid = True
         if not existing_request or existing_request.get("pe_id") != self.pe_id.data:
@@ -110,9 +116,7 @@ class FinancialForm(ValidatedForm):
         validators=[InputRequired()]
     )
 
-    funding_type_other = StringField(
-        "If other, please specify", validators=[Required()]
-    )
+    funding_type_other = StringField("If other, please specify")
 
     clin_0001 = StringField(
         "<dl><dt>CLIN 0001</dt> - <dd>Unclassified IaaS and PaaS Amount</dd></dl>",
