@@ -111,6 +111,5 @@ class WorkspaceFactory(factory.alchemy.SQLAlchemyModelFactory):
         model = Workspace
 
     request = factory.SubFactory(RequestFactory)
-    task_order = factory.SubFactory(TaskOrderFactory)
     # name it the same as the request ID by default
     name = factory.LazyAttribute(lambda w: w.request.id)

@@ -9,13 +9,11 @@ from tests.factories import WorkspaceFactory, RequestFactory, TaskOrderFactory
 
 def test_can_create_workspace():
     request = RequestFactory.create()
-    to = TaskOrderFactory.create()
-    workspace = Workspaces.create(request, to)
+    workspace = Workspaces.create(request)
     assert workspace.request == request
-    assert workspace.task_order == to
     assert workspace.name == request.id
 
-    workspace = Workspaces.create(request, to, name="frugal-whale")
+    workspace = Workspaces.create(request, name="frugal-whale")
     assert workspace.name == "frugal-whale"
 
 

@@ -13,7 +13,4 @@ class Workspace(Base):
     request_id = Column(ForeignKey("requests.id"), nullable=False)
     request = relationship("Request")
 
-    task_order_id = Column(ForeignKey("task_order.id"), nullable=False)
-    task_order = relationship("TaskOrder")
-
     name = Column(String, unique=True)
