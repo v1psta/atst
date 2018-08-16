@@ -14,32 +14,55 @@ export default {
       type: String,
       default: () => 'anything'
     },
-    value: {
+    initialValue: {
       type: String,
       default: () => ''
-    }
+    },
+    initialErrors: Array,
+    paragraph: String
   },
 
   data: function () {
     return {
-      showError: false,
+      showError: (this.initialErrors && this.initialErrors.length) || false,
       showValid: false,
       mask: inputValidations[this.validation].mask,
-      renderedValue: this.value
+      pipe: inputValidations[this.validation].pipe || undefined,
+      keepCharPositions: inputValidations[this.validation].keepCharPositions || false,
+      validationError: inputValidations[this.validation].validationError || '',
+      value: this.initialValue,
+      modified: false
+    }
+  },
+
+  computed:{
+    rawValue: function () {
+      return this._rawValue(this.value)
     }
   },
 
   mounted: function () {
-    const value = this.$refs.input.value
-    if (value) {
-      this._checkIfValid({ value, invalidate: true })
-      this.renderedValue = conformToMask(value, this.mask).conformedValue
+    if (this.value) {
+      this._checkIfValid({ value: this.value, invalidate: true })
+
+      if (this.mask && this.validation !== 'email') {
+        const mask = typeof this.mask.mask !== 'function'
+          ? this.mask
+          : mask.mask(this.value).filter((val) => val !== '[]')
+
+        this.value = conformToMask(this.value, mask).conformedValue
+      }
     }
   },
 
   methods: {
     // When user types a character
-    onInput: function (value) {
+    onInput: function (e) {
+      // When we use the native textarea element, we receive an event object
+      // When we use the masked-input component, we receive the value directly
+      const value = typeof e === 'object' ? e.target.value : e
+      this.value = value
+      this.modified = true
       this._checkIfValid({ value })
     },
 
@@ -52,7 +75,11 @@ export default {
     //
     _checkIfValid: function ({ value, invalidate = false}) {
       // Validate the value
-      const valid = this._validate(value)
+      let valid = this._validate(value)
+
+      if (!this.modified && this.initialErrors && this.initialErrors.length) {
+        valid = false
+      }
 
       // Show error messages or not
       if (valid) {
@@ -63,20 +90,21 @@ export default {
       this.showValid = valid
 
       // Emit a change event
-      this.$emit('fieldChange', {
-        value,
+      this.$root.$emit('field-change', {
+        value: this._rawValue(value),
         valid,
         name: this.name
       })
     },
 
-    _validate: function (value) {
-      // Strip out all the mask characters
-      let rawValue = inputValidations[this.validation].unmask.reduce((currentValue, character) => {
+    _rawValue: function (value) {
+      return inputValidations[this.validation].unmask.reduce((currentValue, character) => {
         return currentValue.split(character).join('')
       }, value)
+    },
 
-      return inputValidations[this.validation].match.test(rawValue)
+    _validate: function (value) {
+      return inputValidations[this.validation].match.test(this._rawValue(value))
     }
   }
 }

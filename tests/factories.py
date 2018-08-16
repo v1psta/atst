@@ -39,6 +39,7 @@ class RequestStatusEventFactory(factory.alchemy.SQLAlchemyModelFactory):
         model = RequestStatusEvent
 
     id = factory.Sequence(lambda x: uuid4())
+    sequence = 1
 
 
 class RequestFactory(factory.alchemy.SQLAlchemyModelFactory):
@@ -56,6 +57,7 @@ class RequestFactory(factory.alchemy.SQLAlchemyModelFactory):
     def build_request_body(cls, user, dollar_value=1000000):
         return {
             "primary_poc": {
+                "am_poc": False,
                 "dodid_poc": user.dod_id,
                 "email_poc": user.email,
                 "fname_poc": user.first_name,
@@ -66,7 +68,7 @@ class RequestFactory(factory.alchemy.SQLAlchemyModelFactory):
                 "start_date": "2018-08-08",
                 "cloud_native": "yes",
                 "dollar_value": dollar_value,
-                "dod_component": "us_navy",
+                "dod_component": "Army and Air Force Exchange Service",
                 "data_transfers": "less_than_100gb",
                 "jedi_migration": "yes",
                 "num_software_systems": 1,
@@ -75,6 +77,7 @@ class RequestFactory(factory.alchemy.SQLAlchemyModelFactory):
                 "engineering_assessment": "yes",
                 "technical_support_team": "yes",
                 "estimated_monthly_spend": 100,
+                "average_daily_traffic_gb": 4,
                 "expected_completion_date": "less_than_1_month",
                 "rationalization_software_systems": "yes",
                 "organization_providing_assistance": "in_house_staff"
@@ -86,7 +89,7 @@ class RequestFactory(factory.alchemy.SQLAlchemyModelFactory):
                 "email_request": user.email,
                 "fname_request": user.first_name,
                 "lname_request": user.last_name,
-                "service_branch": "ads",
+                "service_branch": "Air Force, Department of the",
                 "date_latest_training": "2018-08-06"
             }
         }

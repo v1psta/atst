@@ -1,12 +1,24 @@
 import classes from '../styles/atat.scss'
 import Vue from 'vue/dist/vue'
+import VTooltip from 'v-tooltip'
 
+import optionsinput from './components/options_input'
 import textinput from './components/text_input'
+import checkboxinput from './components/checkbox_input'
+import DetailsOfUse from './components/forms/details_of_use'
+import poc from './components/forms/poc'
+
+Vue.use(VTooltip)
+
 
 const app = new Vue({
   el: '#app-root',
   components: {
-    textinput
+    optionsinput,
+    textinput,
+    checkboxinput,
+    DetailsOfUse,
+    poc,
   },
   methods: {
     closeModal: function(name) {
@@ -21,6 +33,7 @@ const app = new Vue({
       modals: {
         styleguideModal: false,
         pendingFinancialVerification: false,
+        pendingCCPOApproval: false,
       }
     }
   },
@@ -30,5 +43,6 @@ const app = new Vue({
       const modal = modalOpen.getAttribute("data-modal");
       this.modals[modal] = true;
     }
-  }
+  },
+  delimiters: ['!{', '}']
 })

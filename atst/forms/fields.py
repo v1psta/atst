@@ -1,20 +1,14 @@
 from wtforms.fields.html5 import DateField
 from wtforms.fields import Field
 from wtforms.widgets import TextArea
-import pendulum
+
+from atst.domain.date import parse_date
 
 
 class DateField(DateField):
     def _value(self):
         if self.data:
-            date_formats = ["YYYY-MM-DD", "MM/DD/YYYY"]
-            for _format in date_formats:
-                try:
-                    return pendulum.from_format(self.data, _format).date()
-                except (ValueError, pendulum.parsing.exceptions.ParserError):
-                    pass
-
-            raise ValueError("Unable to parse string {}".format(self.data))
+            return parse_date(self.data)
         else:
             return None
 

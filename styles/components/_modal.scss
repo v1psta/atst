@@ -29,6 +29,7 @@
       flex-grow: 1;
       overflow-y: auto;
       max-width: 80rem;
+      position: relative;
 
       @include media($medium-screen) {
         padding: $gap * 4;
@@ -39,8 +40,23 @@
         @include h3;
       }
 
-      :first-child {
+      > :first-child {
         margin-top: 0;
+      }
+
+      .modal__dismiss {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 8rem;
+      }
+    }
+  }
+
+  &.modal--dismissable {
+    .modal__body {
+      > :first-child {
+        margin-right: 8rem;
       }
     }
   }

@@ -1,13 +1,37 @@
 from wtforms.fields.html5 import IntegerField
-from wtforms.fields import RadioField, StringField, TextAreaField, SelectField
-from wtforms.validators import NumberRange, InputRequired
+from wtforms.fields import RadioField, TextAreaField, SelectField
+from wtforms.validators import Optional, Required
+
 from .fields import DateField
 from .forms import ValidatedForm
-from .validators import DateRange
-import pendulum
+from atst.domain.requests import Requests
 
 
 class RequestForm(ValidatedForm):
+
+    def validate(self, *args, **kwargs):
+        if self.jedi_migration.data == 'no':
+            self.rationalization_software_systems.validators.append(Optional())
+            self.technical_support_team.validators.append(Optional())
+            self.organization_providing_assistance.validators.append(Optional())
+            self.engineering_assessment.validators.append(Optional())
+            self.data_transfers.validators.append(Optional())
+            self.expected_completion_date.validators.append(Optional())
+        elif self.jedi_migration.data == 'yes':
+            if self.technical_support_team.data == 'no':
+                self.organization_providing_assistance.validators.append(Optional())
+            self.cloud_native.validators.append(Optional())
+
+        try:
+            annual_spend = int(self.estimated_monthly_spend.data or 0) * 12
+        except ValueError:
+            annual_spend = 0
+
+        if annual_spend > Requests.AUTO_APPROVE_THRESHOLD:
+            self.number_user_sessions.validators.append(Required())
+            self.average_daily_traffic.validators.append(Required())
+
+        return super(RequestForm, self).validate(*args, **kwargs)
 
     # Details of Use: General
     dod_component = SelectField(
@@ -15,21 +39,59 @@ class RequestForm(ValidatedForm):
         description="Identify the DoD component that is requesting access to the JEDI Cloud",
         choices=[
             ("null", "Select an option"),
-            ("us_air_force", "US Air Force"),
-            ("us_army", "US Army"),
-            ("us_navy", "US Navy"),
-            ("us_marine_corps", "US Marine Corps"),
-            ("joint_chiefs_of_staff", "Joint Chiefs of Staff"),
+            ("Air Force, Department of the", "Air Force, Department of the"),
+            ("Army and Air Force Exchange Service", "Army and Air Force Exchange Service"),
+            ("Army, Department of the", "Army, Department of the"),
+            ("Defense Advanced Research Projects Agency", "Defense Advanced Research Projects Agency"),
+            ("Defense Commissary Agency", "Defense Commissary Agency"),
+            ("Defense Contract Audit Agency", "Defense Contract Audit Agency"),
+            ("Defense Contract Management Agency", "Defense Contract Management Agency"),
+            ("Defense Finance & Accounting Service", "Defense Finance & Accounting Service"),
+            ("Defense Health Agency", "Defense Health Agency"),
+            ("Defense Information System Agency", "Defense Information System Agency"),
+            ("Defense Intelligence Agency", "Defense Intelligence Agency"),
+            ("Defense Legal Services Agency", "Defense Legal Services Agency"),
+            ("Defense Logistics Agency", "Defense Logistics Agency"),
+            ("Defense Media Activity", "Defense Media Activity"),
+            ("Defense Micro Electronics Activity", "Defense Micro Electronics Activity"),
+            ("Defense POW-MIA Accounting Agency", "Defense POW-MIA Accounting Agency"),
+            ("Defense Security Cooperation Agency", "Defense Security Cooperation Agency"),
+            ("Defense Security Service", "Defense Security Service"),
+            ("Defense Technical Information Center", "Defense Technical Information Center"),
+            ("Defense Technology Security Administration", "Defense Technology Security Administration"),
+            ("Defense Threat Reduction Agency", "Defense Threat Reduction Agency"),
+            ("DoD Education Activity", "DoD Education Activity"),
+            ("DoD Human Recourses Activity", "DoD Human Recourses Activity"),
+            ("DoD Inspector General", "DoD Inspector General"),
+            ("DoD Test Resource Management Center", "DoD Test Resource Management Center"),
+            ("Headquarters Defense Human Resource Activity ", "Headquarters Defense Human Resource Activity "),
+            ("Joint Staff", "Joint Staff"),
+            ("Missile Defense Agency", "Missile Defense Agency"),
+            ("National Defense University", "National Defense University"),
+            ("National Geospatial Intelligence Agency (NGA)", "National Geospatial Intelligence Agency (NGA)"),
+            ("National Oceanic and Atmospheric Administration (NOAA)", "National Oceanic and Atmospheric Administration (NOAA)"),
+            ("National Reconnaissance Office", "National Reconnaissance Office"),
+            ("National Reconnaissance Office (NRO)", "National Reconnaissance Office (NRO)"),
+            ("National Security Agency (NSA)", "National Security Agency (NSA)"),
+            ("National Security Agency-Central Security Service", "National Security Agency-Central Security Service"),
+            ("Navy, Department of the", "Navy, Department of the"),
+            ("Office of Economic Adjustment", "Office of Economic Adjustment"),
+            ("Office of the Secretary of Defense", "Office of the Secretary of Defense"),
+            ("Pentagon Force Protection Agency", "Pentagon Force Protection Agency"),
+            ("Uniform Services University of the Health Sciences", "Uniform Services University of the Health Sciences"),
+            ("US Cyber Command (USCYBERCOM)", "US Cyber Command (USCYBERCOM)"),
+            ("US Special Operations Command (USSOCOM)", "US Special Operations Command (USSOCOM)"),
+            ("US Strategic Command (USSTRATCOM)", "US Strategic Command (USSTRATCOM)"),
+            ("US Transportation Command (USTRANSCOM)", "US Transportation Command (USTRANSCOM)"),
+            ("Washington Headquarters Services", "Washington Headquarters Services"),
         ],
     )
 
     jedi_usage = TextAreaField(
         "JEDI Usage",
-        description="Briefly describe how you are expecting to use the JEDI Cloud",
-        render_kw={
-            "placeholder": "e.g. We are migrating XYZ application to the cloud so that..."
-        },
+        description="Your answer will help us provide tangible examples to DoD leadership how and why commercial cloud resources are accelerating the Department's missions",
     )
+
 
     # Details of Use: Cloud Readiness
     num_software_systems = IntegerField(
@@ -38,32 +100,39 @@ class RequestForm(ValidatedForm):
     )
 
     jedi_migration = RadioField(
-        "Are you using the JEDI Cloud to migrate existing systems?",
+        "JEDI Migration",
+        description="Are you using the JEDI Cloud to migrate existing systems?",
         choices=[("yes", "Yes"), ("no", "No")],
+        default="",
     )
 
     rationalization_software_systems = RadioField(
-        "Have you completed a “rationalization” of your software systems to move to the cloud?",
+        description="Have you completed a “rationalization” of your software systems to move to the cloud?",
         choices=[("yes", "Yes"), ("no", "No"), ("in_progress", "In Progress")],
+        default="",
     )
 
     technical_support_team = RadioField(
-        "Are you working with a technical support team experienced in cloud migrations?",
+        description="Are you working with a technical support team experienced in cloud migrations?",
         choices=[("yes", "Yes"), ("no", "No")],
+        default="",
     )
 
     organization_providing_assistance = RadioField(  # this needs to be updated to use checkboxes instead of radio
-        "If you are receiving migration assistance, indicate the type of organization providing assistance below:",
+        description="If you are receiving migration assistance, what is the type of organization providing assistance?",
         choices=[
             ("in_house_staff", "In-house staff"),
             ("contractor", "Contractor"),
             ("other_dod_organization", "Other DoD organization"),
+            ("none", "None"),
         ],
+        default="",
     )
 
     engineering_assessment = RadioField(
-        "Have you completed an engineering assessment of your software systems for cloud readiness?",
+        description="Have you completed an engineering assessment of your systems for cloud readiness?",
         choices=[("yes", "Yes"), ("no", "No"), ("in_progress", "In Progress")],
+        default="",
     )
 
     data_transfers = SelectField(
@@ -95,14 +164,15 @@ class RequestForm(ValidatedForm):
     )
 
     cloud_native = RadioField(
-        "Are your software systems being developed cloud native?",
+        description="Are your software systems being developed cloud native?",
         choices=[("yes", "Yes"), ("no", "No")],
+        default="",
     )
 
     # Details of Use: Financial Usage
     estimated_monthly_spend = IntegerField(
         "Estimated monthly spend",
-        description='Use the <a href="#">JEDI CSP Calculator</a> to estimate your monthly cloud resource usage and enter the dollar amount below. Note these estimates are for initial approval only. After the request is approved, you will be asked to provide a valid Task Order number with specific CLIN amounts for cloud services.',
+        description='Use the <a href="#" target="_blank" class="icon-link">JEDI CSP Calculator</a> to estimate your <b>monthly</b> cloud resource usage and enter the dollar amount below. Note these estimates are for initial approval only. After the request is approved, you will be asked to provide a valid Task Order number with specific CLIN amounts for cloud services.',
     )
 
     dollar_value = IntegerField(
@@ -115,6 +185,12 @@ class RequestForm(ValidatedForm):
     )
 
     average_daily_traffic = IntegerField(
+        "Average Daily Traffic (Number of Requests)",
+        description="What is the average daily traffic you expect the systems under this cloud contract to use?"
+    )
+
+    average_daily_traffic_gb = IntegerField(
+        "Average Daily Traffic (GB)",
         description="What is the average daily traffic you expect the systems under this cloud contract to use?"
     )
 

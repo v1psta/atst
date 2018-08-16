@@ -1,7 +1,7 @@
 <div class="progress-menu progress-menu--four">
   <ul>
     {% for s in screens %}
-      {% if loop.index < current %}
+      {% if jedi_request and s.section in jedi_request.body %}
         {% set step_indicator = 'complete' %}
       {% elif loop.index == current %}
         {% set step_indicator = 'active' %}

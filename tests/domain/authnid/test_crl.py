@@ -66,8 +66,9 @@ def test_parse_disa_pki_list():
         assert len(crl_list) == len(href_matches)
 
 class MockStreamingResponse():
-    def __init__(self, content_chunks):
+    def __init__(self, content_chunks, code=200):
         self.content_chunks = content_chunks
+        self.status_code = code
 
     def iter_content(self, chunk_size=0):
         return self.content_chunks
@@ -81,6 +82,10 @@ class MockStreamingResponse():
 def test_write_crl(tmpdir, monkeypatch):
     monkeypatch.setattr('requests.get', lambda u, **kwargs: MockStreamingResponse([b'it worked']))
     crl = 'crl_1'
-    util.write_crl(tmpdir, crl)
+    assert util.write_crl(tmpdir, "random_target_dir", crl)
     assert [p.basename for p in tmpdir.listdir()] == [crl]
     assert [p.read() for p in tmpdir.listdir()] == ['it worked']
+
+def test_skips_crl_if_it_has_not_been_modified(tmpdir, monkeypatch):
+    monkeypatch.setattr('requests.get', lambda u, **kwargs: MockStreamingResponse([b'it worked'], 304))
+    assert not util.write_crl(tmpdir, "random_target_dir", 'crl_file_name')

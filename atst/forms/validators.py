@@ -2,18 +2,19 @@ import re
 from wtforms.validators import ValidationError
 import pendulum
 
+from atst.domain.date import parse_date
+
 
 def DateRange(lower_bound=None, upper_bound=None, message=None):
     def _date_range(form, field):
         now = pendulum.now().date()
+        date = parse_date(field.data)
 
         if lower_bound is not None:
-            date = pendulum.parse(field.data).date()
             if (now - lower_bound) > date:
                 raise ValidationError(message)
 
         if upper_bound is not None:
-            date = pendulum.parse(field.data).date()
             if (now + upper_bound) < date:
                 raise ValidationError(message)
 
