@@ -47,6 +47,7 @@
 .form__sub-fields {
   @include alert;
   @include alert-level('default');
+  display: block;
 
   .usa-input {
     &:first-child {
@@ -76,10 +77,12 @@
 
   &--warning {
     @include alert-level('warning');
+    display: block;
   }
 
   &--error {
     @include alert-level('error');
+    display: block;
   }
 }
 
