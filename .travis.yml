@@ -24,7 +24,6 @@ install:
   - curl -Lo kubectl https://storage.googleapis.com/kubernetes-release/release/v1.10.4/bin/linux/amd64/kubectl && chmod +x kubectl && sudo mv kubectl /usr/local/bin/
 
 before_script:
-  - rm -rf ./crl/*
   - docker run -d --name postgres96 postgres:9.6-alpine
   - docker run -d --name redis redis:4.0.10-alpine
   - docker run --link postgres96:postgres96 --link redis:redis waisbrot/wait
