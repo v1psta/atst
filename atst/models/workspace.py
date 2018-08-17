@@ -3,9 +3,10 @@ from sqlalchemy.orm import relationship
 
 from atst.models import Base
 from atst.models.types import Id
+from atst.models.mixins import TimestampsMixin
 
 
-class Workspace(Base):
+class Workspace(Base, TimestampsMixin):
     __tablename__ = "workspaces"
 
     id = Id()
