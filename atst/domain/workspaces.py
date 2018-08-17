@@ -22,6 +22,8 @@ class Workspaces(object):
 
         db.session.add(workspace)
         db.session.add(workspace_role)
+        db.session.commit()
+
         return workspace
 
     @classmethod
