@@ -9,22 +9,6 @@ class CRLRevocationException(Exception):
     pass
 
 
-def crl_check(cache, cert):
-    parsed = crypto.load_certificate(crypto.FILETYPE_PEM, cert)
-    store = cache.get_store(parsed)
-    context = crypto.X509StoreContext(store, parsed)
-    try:
-        context.verify_certificate()
-        return True
-
-    except crypto.X509StoreContextError as err:
-        raise CRLRevocationException(
-            "Certificate revoked or errored. Error: {}. Args: {}".format(
-                type(err), err.args
-            )
-        )
-
-
 class CRLCache():
 
     _PEM_RE = re.compile(
@@ -38,7 +22,7 @@ class CRLCache():
         self._load_roots(root_location)
         self._build_crl_cache(crl_locations)
 
-    def get_store(self, cert):
+    def _get_store(self, cert):
         return self._build_store(cert.get_issuer().der())
 
     def _load_roots(self, root_location):
@@ -91,3 +75,18 @@ class CRLCache():
 
         else:
             return self._add_certificate_chain_to_store(store, ca.get_issuer())
+
+    def crl_check(self, cert):
+        parsed = crypto.load_certificate(crypto.FILETYPE_PEM, cert)
+        store = self._get_store(parsed)
+        context = crypto.X509StoreContext(store, parsed)
+        try:
+            context.verify_certificate()
+            return True
+
+        except crypto.X509StoreContextError as err:
+            raise CRLRevocationException(
+                "Certificate revoked or errored. Error: {}. Args: {}".format(
+                    type(err), err.args
+                )
+            )
