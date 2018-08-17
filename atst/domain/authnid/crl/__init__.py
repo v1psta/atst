@@ -9,14 +9,6 @@ class CRLRevocationException(Exception):
     pass
 
 
-def sha256_checksum(filename, block_size=65536):
-    sha256 = hashlib.sha256()
-    with open(filename, "rb") as f:
-        for block in iter(lambda: f.read(block_size), b""):
-            sha256.update(block)
-    return sha256.hexdigest()
-
-
 def crl_check(cache, cert):
     parsed = crypto.load_certificate(crypto.FILETYPE_PEM, cert)
     store = cache.get_store(parsed)
