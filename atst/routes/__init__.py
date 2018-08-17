@@ -32,7 +32,7 @@ def catch_all(path):
 
 def _make_authentication_context():
     return AuthenticationContext(
-            crl_validator=app.crl_validator,
+            crl_cache=app.crl_cache,
             auth_status=request.environ.get("HTTP_X_SSL_CLIENT_VERIFY"),
             sdn=request.environ.get("HTTP_X_SSL_CLIENT_S_DN"),
             cert=request.environ.get("HTTP_X_SSL_CLIENT_CERT")

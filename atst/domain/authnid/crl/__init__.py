@@ -5,124 +5,88 @@ import hashlib
 from OpenSSL import crypto, SSL
 
 
-def sha256_checksum(filename, block_size=65536):
-    sha256 = hashlib.sha256()
-    with open(filename, "rb") as f:
-        for block in iter(lambda: f.read(block_size), b""):
-            sha256.update(block)
-    return sha256.hexdigest()
+class CRLRevocationException(Exception):
+    pass
 
 
-class Validator:
+class CRLCache():
 
     _PEM_RE = re.compile(
         b"-----BEGIN CERTIFICATE-----\r?.+?\r?-----END CERTIFICATE-----\r?\n?",
         re.DOTALL,
     )
 
-    def __init__(self, crl_locations=[], roots=[], base_store=crypto.X509Store, logger=None):
-        self.crl_locations = crl_locations
-        self.roots = roots
-        self.base_store = base_store
-        self.logger = logger
-        self._reset()
+    def __init__(self, root_location, crl_locations=[], store_class=crypto.X509Store):
+        self.store_class = store_class
+        self.certificate_authorities = {}
+        self._load_roots(root_location)
+        self._build_crl_cache(crl_locations)
 
-    def _reset(self):
-        self.cache = {}
-        self.store = self.base_store()
-        self._add_crls(self.crl_locations)
-        self._add_roots(self.roots)
-        self.store.set_flags(crypto.X509StoreFlags.CRL_CHECK)
+    def _get_store(self, cert):
+        return self._build_store(cert.get_issuer().der())
 
-    def log_error(self, message):
-        if self.logger:
-            self.logger.error(message)
-
-    def _add_crls(self, locations):
-        for filename in locations:
-            try:
-                self._add_crl(filename)
-            except crypto.Error as err:
-                self.log_error(
-                    "CRL could not be parsed. Filename: {}, Error: {}, args: {}".format(
-                        filename, type(err), err.args
-                    )
-                )
-
-    # This caches the CRL issuer with the CRL filepath and a checksum, in addition to adding the CRL to the store.
-
-    def _add_crl(self, filename):
-        with open(filename, "rb") as crl_file:
-            crl = crypto.load_crl(crypto.FILETYPE_ASN1, crl_file.read())
-            self.cache[crl.get_issuer().der()] = (filename, sha256_checksum(filename))
-            self._add_carefully("add_crl", crl)
+    def _load_roots(self, root_location):
+        with open(root_location, "rb") as f:
+            for raw_ca in self._parse_roots(f.read()):
+                ca = crypto.load_certificate(crypto.FILETYPE_PEM, raw_ca)
+                self.certificate_authorities[ca.get_subject().der()] = ca
 
     def _parse_roots(self, root_str):
         return [match.group(0) for match in self._PEM_RE.finditer(root_str)]
 
-    def _add_roots(self, roots):
-        for filename in roots:
-            with open(filename, "rb") as f:
-                for raw_ca in self._parse_roots(f.read()):
-                    ca = crypto.load_certificate(crypto.FILETYPE_PEM, raw_ca)
-                    self._add_carefully("add_cert", ca)
+    def _build_crl_cache(self, crl_locations):
+        self.crl_cache = {}
+        for crl_location in crl_locations:
+            crl = self._load_crl(crl_location)
+            self.crl_cache[crl.get_issuer().der()] = crl_location
 
-    # in testing, it seems that openssl is maintaining a local cache of certs
-    # in a hash table and throws errors if you try to add redundant certs or
-    # CRLs. For now, we catch and ignore that error with great specificity.
+    def _load_crl(self, crl_location):
+        with open(crl_location, "rb") as crl_file:
+            return crypto.load_crl(crypto.FILETYPE_ASN1, crl_file.read())
 
-    def _add_carefully(self, method_name, obj):
-        try:
-            getattr(self.store, method_name)(obj)
-        except crypto.Error as error:
-            if self._is_preloaded_error(error):
-                pass
-            else:
-                raise error
+    def _build_store(self, issuer):
+        store = self.store_class()
+        store.set_flags(crypto.X509StoreFlags.CRL_CHECK)
+        crl_location = self._get_crl_location(issuer)
+        with open(crl_location, "rb") as crl_file:
+            crl = crypto.load_crl(crypto.FILETYPE_ASN1, crl_file.read())
+            store.add_crl(crl)
+            store = self._add_certificate_chain_to_store(store, crl.get_issuer())
+            return store
 
-    PRELOADED_CRL = (
-        [
-            (
-                "x509 certificate routines",
-                "X509_STORE_add_crl",
-                "cert already in hash table",
-            )
-        ],
-    )
-    PRELOADED_CERT = (
-        [
-            (
-                "x509 certificate routines",
-                "X509_STORE_add_cert",
-                "cert already in hash table",
-            )
-        ],
-    )
+    def _get_crl_location(self, issuer):
+        crl_location = self.crl_cache.get(issuer)
 
-    def _is_preloaded_error(self, error):
-        return error.args == self.PRELOADED_CRL or error.args == self.PRELOADED_CERT
+        if not crl_location:
+            raise CRLRevocationException("Could not find matching CRL for issuer")
 
-    # Checks that the CRL currently in-memory is up-to-date via the checksum.
+        return crl_location
 
-    def refresh_cache(self, cert):
-        der = cert.get_issuer().der()
-        if der in self.cache:
-            filename, checksum = self.cache[der]
-            if sha256_checksum(filename) != checksum:
-                self._reset()
+    # this _should_ happen just twice for the DoD PKI (intermediary, root) but
+    # theoretically it can build a longer certificate chain
 
-    def validate(self, cert):
+    def _add_certificate_chain_to_store(self, store, issuer):
+        ca = self.certificate_authorities.get(issuer.der())
+        store.add_cert(ca)
+
+        if issuer == ca.get_subject():
+            # i.e., it is the root CA and we are at the end of the chain
+            return store
+
+        else:
+            return self._add_certificate_chain_to_store(store, ca.get_issuer())
+
+    def crl_check(self, cert):
         parsed = crypto.load_certificate(crypto.FILETYPE_PEM, cert)
-        self.refresh_cache(parsed)
-        context = crypto.X509StoreContext(self.store, parsed)
+        store = self._get_store(parsed)
+        context = crypto.X509StoreContext(store, parsed)
         try:
             context.verify_certificate()
             return True
 
         except crypto.X509StoreContextError as err:
-            self.log_error(
+            raise CRLRevocationException(
                 "Certificate revoked or errored. Error: {}. Args: {}".format(
                     type(err), err.args
                 )
             )
-            return False
