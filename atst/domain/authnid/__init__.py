@@ -1,7 +1,7 @@
 from atst.domain.exceptions import UnauthenticatedError, NotFoundError
 from atst.domain.users import Users
 from .utils import parse_sdn, email_from_certificate
-from .crl import crl_check, CRLException
+from .crl import crl_check, CRLRevocationException
 
 
 class AuthenticationContext():
@@ -46,7 +46,7 @@ class AuthenticationContext():
     def _crl_check(self):
         try:
             crl_check(self.crl_cache, self.cert)
-        except CRLException as exc:
+        except CRLRevocationException as exc:
             raise UnauthenticatedError("CRL check failed. " + str(exc))
 
     @property

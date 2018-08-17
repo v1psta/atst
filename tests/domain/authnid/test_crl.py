@@ -4,7 +4,7 @@ import re
 import os
 import shutil
 from OpenSSL import crypto, SSL
-from atst.domain.authnid.crl import crl_check, CRLCache, CRLException
+from atst.domain.authnid.crl import crl_check, CRLCache, CRLRevocationException
 import atst.domain.authnid.crl.util as util
 
 
@@ -41,7 +41,7 @@ def test_can_validate_certificate():
     good_cert = open('ssl/client-certs/atat.mil.crt', 'rb').read()
     bad_cert = open('ssl/client-certs/bad-atat.mil.crt', 'rb').read()
     assert crl_check(cache, good_cert)
-    with pytest.raises(CRLException):
+    with pytest.raises(CRLRevocationException):
         crl_check(cache, bad_cert)
 
 def test_can_dynamically_update_crls(tmpdir):
@@ -52,7 +52,7 @@ def test_can_dynamically_update_crls(tmpdir):
     assert crl_check(cache, cert)
     # override the original CRL with one that revokes atat.mil.crt
     shutil.copyfile('tests/fixtures/test.der.crl', crl_file)
-    with pytest.raises(CRLException):
+    with pytest.raises(CRLRevocationException):
         assert crl_check(cache, cert)
 
 def test_parse_disa_pki_list():
