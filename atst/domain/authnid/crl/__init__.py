@@ -71,15 +71,24 @@ class CRLCache():
     def _build_store(self, issuer):
         store = self.store_class()
         store.set_flags(crypto.X509StoreFlags.CRL_CHECK)
-        crl_location = self.crl_cache[issuer]
+        crl_location = self._get_crl_location(issuer)
         with open(crl_location, "rb") as crl_file:
             crl = crypto.load_crl(crypto.FILETYPE_ASN1, crl_file.read())
             store.add_crl(crl)
             store = self._add_certificate_chain_to_store(store, crl.get_issuer())
             return store
 
+    def _get_crl_location(self, issuer):
+        crl_location = self.crl_cache.get(issuer)
+
+        if not crl_location:
+            raise CRLRevocationException("Could not find matching CRL for issuer")
+
+        return crl_location
+
     # this _should_ happen just twice for the DoD PKI (intermediary, root) but
     # theoretically it can build a longer certificate chain
+
     def _add_certificate_chain_to_store(self, store, issuer):
         ca = self.certificate_authorities.get(issuer.der())
         store.add_cert(ca)
@@ -87,6 +96,6 @@ class CRLCache():
         if issuer == ca.get_subject():
             # i.e., it is the root CA and we are at the end of the chain
             return store
+
         else:
             return self._add_certificate_chain_to_store(store, ca.get_issuer())
-
