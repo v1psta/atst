@@ -89,7 +89,7 @@ class FinancialForm(ValidatedForm):
 
     treasury_code = StringField("Program Treasury Code", validators=[Required(), Regexp(TREASURY_CODE_REGEX)])
 
-    ba_code = StringField("Program BA Code", validators=[Required(), Regexp(BA_CODE_REGEX)])
+    ba_code = StringField("Program Budget Activity (BA) Code", validators=[Required(), Regexp(BA_CODE_REGEX)])
 
     fname_co = StringField("Contracting Officer First Name", validators=[Required()])
     lname_co = StringField("Contracting Officer Last Name", validators=[Required()])

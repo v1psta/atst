@@ -64,7 +64,7 @@ class RequestForm(ValidatedForm):
 
     rationalization_software_systems = RadioField(
         description="Have you completed a “rationalization” of your software systems to move to the cloud?",
-        choices=[("yes", "Yes"), ("no", "No"), ("in_progress", "In Progress")],
+        choices=[("yes", "Yes"), ("no", "No"), ("In Progress", "In Progress")],
         default="",
     )
 
@@ -87,14 +87,14 @@ class RequestForm(ValidatedForm):
 
     engineering_assessment = RadioField(
         description="Have you completed an engineering assessment of your systems for cloud readiness?",
-        choices=[("yes", "Yes"), ("no", "No"), ("in_progress", "In Progress")],
+        choices=[("yes", "Yes"), ("no", "No"), ("In Progress", "In Progress")],
         default="",
     )
 
     data_transfers = SelectField(
         description="How much data is being transferred to the cloud?",
         choices=[
-            ("null", "Select an option"),
+            ("", "Select an option"),
             ("Less than 100GB", "Less than 100GB"),
             ("100GB-500GB", "100GB-500GB"),
             ("500GB-1TB", "500GB-1TB"),
@@ -111,7 +111,7 @@ class RequestForm(ValidatedForm):
     expected_completion_date = SelectField(
         description="When do you expect to complete your migration to the JEDI Cloud?",
         choices=[
-            ("null", "Select an option"),
+            ("", "Select an option"),
             ("Less than 1 month", "Less than 1 month"),
             ("1-3 months", "1-3 months"),
             ("3-6 months", "3-6 months"),
