@@ -118,6 +118,7 @@ class FinancialForm(ValidatedForm):
     )
 
     funding_type = SelectField(
+        description="What is the source of funding?",
         choices=[
             ("", "- Select -"),
             ("RDTE", "Research, Development, Testing & Evaluation (RDT&E)"),
