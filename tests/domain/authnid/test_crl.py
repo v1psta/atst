@@ -5,7 +5,7 @@ import os
 import shutil
 from OpenSSL import crypto, SSL
 
-from atst.domain.authnid.crl import crl_check, CRLCache, CRLRevocationException
+from atst.domain.authnid.crl import CRLCache, CRLRevocationException
 import atst.domain.authnid.crl.util as util
 
 from tests.mocks import FIXTURE_EMAIL_ADDRESS
@@ -54,9 +54,9 @@ def test_can_validate_certificate():
     )
     good_cert = open("ssl/client-certs/atat.mil.crt", "rb").read()
     bad_cert = open("ssl/client-certs/bad-atat.mil.crt", "rb").read()
-    assert crl_check(cache, good_cert)
+    assert cache.crl_check(good_cert)
     with pytest.raises(CRLRevocationException):
-        crl_check(cache, bad_cert)
+        cache.crl_check(bad_cert)
 
 
 def test_can_dynamically_update_crls(tmpdir):
@@ -64,18 +64,18 @@ def test_can_dynamically_update_crls(tmpdir):
     shutil.copyfile("ssl/client-certs/client-ca.der.crl", crl_file)
     cache = CRLCache("ssl/server-certs/ca-chain.pem", crl_locations=[crl_file])
     cert = open("ssl/client-certs/atat.mil.crt", "rb").read()
-    assert crl_check(cache, cert)
+    assert cache.crl_check(cert)
     # override the original CRL with one that revokes atat.mil.crt
     shutil.copyfile("tests/fixtures/test.der.crl", crl_file)
     with pytest.raises(CRLRevocationException):
-        assert crl_check(cache, cert)
+        assert cache.crl_check(cert)
 
 
 def test_throws_error_for_missing_issuer():
     cache = CRLCache("ssl/server-certs/ca-chain.pem", crl_locations=[])
     cert = open("tests/fixtures/{}.crt".format(FIXTURE_EMAIL_ADDRESS), "rb").read()
     with pytest.raises(CRLRevocationException) as exc:
-        assert crl_check(cache, cert)
+        assert cache.crl_check(cert)
     (message,) = exc.value.args
     assert "issuer" in message
 

@@ -1,7 +1,7 @@
 import pytest
 
 from atst.domain.authnid import AuthenticationContext
-from atst.domain.authnid.crl import CRLCache
+from atst.domain.authnid.crl import CRLCache, CRLRevocationException
 from atst.domain.exceptions import UnauthenticatedError, NotFoundError
 from atst.domain.users import Users
 
@@ -12,20 +12,24 @@ CERT = open("tests/fixtures/{}.crt".format(FIXTURE_EMAIL_ADDRESS)).read()
 
 
 class MockCRLCache():
-    def get_store(self, cert):
-        pass
+    def __init__(self, valid=True):
+        self.valid = valid
+
+    def crl_check(self, cert):
+        if self.valid:
+            return True
+
+        raise CRLRevocationException()
 
 
-def test_can_authenticate(monkeypatch):
-    monkeypatch.setattr("atst.domain.authnid.crl_check", lambda *args: True)
+def test_can_authenticate():
     auth_context = AuthenticationContext(
         MockCRLCache(), "SUCCESS", DOD_SDN, CERT
     )
     assert auth_context.authenticate()
 
 
-def test_unsuccessful_status(monkeypatch):
-    monkeypatch.setattr("atst.domain.authnid.crl_check", lambda *args: True)
+def test_unsuccessful_status():
     auth_context = AuthenticationContext(
         MockCRLCache(), "FAILURE", DOD_SDN, CERT
     )
@@ -36,11 +40,9 @@ def test_unsuccessful_status(monkeypatch):
     assert "client authentication" in message
 
 
-def test_crl_check_fails(monkeypatch):
-    cache = CRLCache('ssl/client-certs/client-ca.crt', crl_locations=['ssl/client-certs/client-ca.der.crl'])
-    cert = open("ssl/client-certs/bad-atat.mil.crt", "r").read()
+def test_crl_check_fails():
     auth_context = AuthenticationContext(
-        cache, "SUCCESS", DOD_SDN, cert
+        MockCRLCache(False), "SUCCESS", DOD_SDN, CERT
     )
     with pytest.raises(UnauthenticatedError) as excinfo:
         assert auth_context.authenticate()
@@ -49,8 +51,7 @@ def test_crl_check_fails(monkeypatch):
     assert "CRL check" in message
 
 
-def test_bad_sdn(monkeypatch):
-    monkeypatch.setattr("atst.domain.authnid.crl_check", lambda *args: True)
+def test_bad_sdn():
     auth_context = AuthenticationContext(
         MockCRLCache(), "SUCCESS", "abc123", CERT
     )
@@ -61,8 +62,7 @@ def test_bad_sdn(monkeypatch):
     assert "SDN" in message
 
 
-def test_user_exists(monkeypatch):
-    monkeypatch.setattr("atst.domain.authnid.crl_check", lambda *args: True)
+def test_user_exists():
     user = UserFactory.create(**DOD_SDN_INFO)
     auth_context = AuthenticationContext(
         MockCRLCache(), "SUCCESS", DOD_SDN, CERT
@@ -72,8 +72,7 @@ def test_user_exists(monkeypatch):
     assert auth_user == user
 
 
-def test_creates_user(monkeypatch):
-    monkeypatch.setattr("atst.domain.authnid.crl_check", lambda *args: True)
+def test_creates_user():
     # check user does not exist
     with pytest.raises(NotFoundError):
         Users.get_by_dod_id(DOD_SDN_INFO["dod_id"])
@@ -86,8 +85,7 @@ def test_creates_user(monkeypatch):
     assert user.email == FIXTURE_EMAIL_ADDRESS
 
 
-def test_user_cert_has_no_email(monkeypatch):
-    monkeypatch.setattr("atst.domain.authnid.crl_check", lambda *args: True)
+def test_user_cert_has_no_email():
     cert = open("ssl/client-certs/atat.mil.crt").read()
     auth_context = AuthenticationContext(
         MockCRLCache(), "SUCCESS", DOD_SDN, cert
