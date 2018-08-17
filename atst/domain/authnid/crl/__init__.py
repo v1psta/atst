@@ -5,7 +5,7 @@ import hashlib
 from OpenSSL import crypto, SSL
 
 
-class CRLException(Exception):
+class CRLRevocationException(Exception):
     pass
 
 
@@ -26,7 +26,7 @@ def crl_check(cache, cert):
         return True
 
     except crypto.X509StoreContextError as err:
-        raise CRLException(
+        raise CRLRevocationException(
             "Certificate revoked or errored. Error: {}. Args: {}".format(
                 type(err), err.args
             )
