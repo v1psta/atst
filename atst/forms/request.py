@@ -77,10 +77,10 @@ class RequestForm(ValidatedForm):
     organization_providing_assistance = RadioField(  # this needs to be updated to use checkboxes instead of radio
         description="If you are receiving migration assistance, what is the type of organization providing assistance?",
         choices=[
-            ("in_house_staff", "In-house staff"),
-            ("contractor", "Contractor"),
-            ("other_dod_organization", "Other DoD organization"),
-            ("none", "None"),
+            ("In-house staff", "In-house staff"),
+            ("Contractor", "Contractor"),
+            ("Other DoD Organization", "Other DoD Organization"),
+            ("None", "None"),
         ],
         default="",
     )

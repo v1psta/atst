@@ -1,7 +1,7 @@
 import re
 from wtforms.fields.html5 import EmailField
 from wtforms.fields import StringField
-from wtforms.validators import Required, Email, InputRequired, Regexp, DataRequired
+from wtforms.validators import Required, Email, Regexp
 
 from atst.domain.exceptions import NotFoundError
 from atst.domain.pe_numbers import PENumbers

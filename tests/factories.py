@@ -13,7 +13,6 @@ from atst.models.request_status_event import RequestStatusEvent
 from atst.domain.roles import Roles
 
 
-
 class RoleFactory(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
         model = Role
@@ -34,7 +33,6 @@ class UserFactory(factory.alchemy.SQLAlchemyModelFactory):
 
 
 class RequestStatusEventFactory(factory.alchemy.SQLAlchemyModelFactory):
-
     class Meta:
         model = RequestStatusEvent
 
@@ -61,7 +59,7 @@ class RequestFactory(factory.alchemy.SQLAlchemyModelFactory):
                 "dodid_poc": user.dod_id,
                 "email_poc": user.email,
                 "fname_poc": user.first_name,
-                "lname_poc": user.last_name
+                "lname_poc": user.last_name,
             },
             "details_of_use": {
                 "jedi_usage": "adf",
@@ -69,7 +67,8 @@ class RequestFactory(factory.alchemy.SQLAlchemyModelFactory):
                 "cloud_native": "yes",
                 "dollar_value": dollar_value,
                 "dod_component": "Army and Air Force Exchange Service",
-                "data_transfers": "less_than_100gb",
+                "data_transfers": "Less than 100GB",
+                "expected_completion_date": "Less than 1 month",
                 "jedi_migration": "yes",
                 "num_software_systems": 1,
                 "number_user_sessions": 2,
@@ -78,9 +77,8 @@ class RequestFactory(factory.alchemy.SQLAlchemyModelFactory):
                 "technical_support_team": "yes",
                 "estimated_monthly_spend": 100,
                 "average_daily_traffic_gb": 4,
-                "expected_completion_date": "less_than_1_month",
                 "rationalization_software_systems": "yes",
-                "organization_providing_assistance": "in_house_staff"
+                "organization_providing_assistance": "In-house staff",
             },
             "information_about_you": {
                 "citizenship": "United States",
@@ -90,8 +88,8 @@ class RequestFactory(factory.alchemy.SQLAlchemyModelFactory):
                 "fname_request": user.first_name,
                 "lname_request": user.last_name,
                 "service_branch": "Air Force, Department of the",
-                "date_latest_training": "2018-08-06"
-            }
+                "date_latest_training": "2018-08-06",
+            },
         }
 
 
