@@ -11,3 +11,5 @@ from .workspace_role import WorkspaceRole
 from .pe_number import PENumber
 from .task_order import TaskOrder
 from .workspace import Workspace
+from .project import Project
+from .environment import Environment
