@@ -42,3 +42,10 @@ def test_creating_workspace_adds_owner():
     workspace_user = WorkspaceUsers.get(workspace.id, user.id)
     assert workspace_user.workspace_role
 
+
+def test_workspace_has_timestamps():
+    request = RequestFactory.create()
+    workspace = Workspaces.create(request)
+    assert workspace.request == request
+    assert workspace.name == request.id
+    assert workspace.time_created == workspace.time_updated

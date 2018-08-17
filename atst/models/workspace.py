@@ -10,11 +10,11 @@ class Workspace(Base, TimestampsMixin):
     __tablename__ = "workspaces"
 
     id = Id()
+    name = Column(String, unique=True)
 
     request_id = Column(ForeignKey("requests.id"), nullable=False)
     request = relationship("Request")
-
-    name = Column(String, unique=True)
+    projects = relationship("Project", back_populates="workspace")
 
     @property
     def owner(self):
