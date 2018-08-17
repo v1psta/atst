@@ -77,7 +77,9 @@ class FinancialForm(ValidatedForm):
         return valid
 
     task_order_id = StringField(
-        "Task Order Number associated with this request", validators=[Required()]
+        "Task Order Number associated with this request",
+        description="Include the original Task Order number (including the 000X at the end). Do not include any modification numbers. Note that there may be a lag between approving a task order and when it becomes available in our system.",
+        validators=[Required()]
     )
 
     uii_ids = NewlineListField(
