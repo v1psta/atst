@@ -16,8 +16,12 @@ class Workspaces(object):
     def create(cls, request, name=None):
         name = name or request.id
         workspace = Workspace(request=request, name=name)
+
         role = Roles.get("owner")
-        wr = WorkspaceRole(user_id=request.creator.id, role=role, workspace_id=workspace.id)
+        workspace_role = WorkspaceRole(user_id=request.creator.id, role=role, workspace_id=workspace.id)
+
+        db.session.add(workspace)
+        db.session.add(workspace_role)
         return workspace
 
     @classmethod
