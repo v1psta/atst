@@ -1,5 +1,6 @@
 sudo: required
 language: minimal
+dist: trusty
 services:
   - docker
 git:
@@ -9,6 +10,7 @@ env:
     - PROD_IMAGE_NAME=atst-prod
     - TESTER_IMAGE1_NAME=atst-tester-nocrls
     - TESTER_IMAGE2_NAME=atst-tester
+    - GIT_SHA="$(git rev-parse --short HEAD)"
 cache:
   directories:
     - crl
@@ -18,9 +20,10 @@ before_install:
   - sed -i 's/git@github.com:/https:\/\/github.com\//' .gitmodules
   # Manually initialize submodules
   - git submodule update --init --recursive
+install:
+  - curl -Lo kubectl https://storage.googleapis.com/kubernetes-release/release/v1.10.4/bin/linux/amd64/kubectl && chmod +x kubectl && sudo mv kubectl /usr/local/bin/
 
 before_script:
-  - rm -rf ./crl/*
   - docker run -d --name postgres96 postgres:9.6-alpine
   - docker run -d --name redis redis:4.0.10-alpine
   - docker run --link postgres96:postgres96 --link redis:redis waisbrot/wait
@@ -43,14 +46,13 @@ script:
 
 before_deploy:
   - docker build --tag "${PROD_IMAGE_NAME}" . -f deploy/docker/prod/Dockerfile
-  - git_sha="$(git rev-parse --short HEAD)"
-  - remote_image_name="${ATAT_DOCKER_REGISTRY_URL}/${PROD_IMAGE_NAME}:${git_sha}"
+  - remote_image_name="${ATAT_DOCKER_REGISTRY_URL}/${PROD_IMAGE_NAME}:${GIT_SHA}"
   - docker tag "${PROD_IMAGE_NAME}" "${remote_image_name}"
   - docker images
   - docker push "${remote_image_name}"
 
 deploy:
   provider: script
-  script: echo "** Image push only for now... stay tuned! **"
+  script: deploy/kubernetes/atst-update-deploy.sh
   on:
     branch: master
