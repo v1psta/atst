@@ -9,6 +9,13 @@
 <financial inline-template v-bind:initial-data='{{ f.data|tojson }}'>
 <div class="col">
 
+  {% if extended %}
+    {{ Alert('Task Order not found in EDA',
+      message="Since the Task Order (TO) number was not found in our system of record, EDA, please populate the additional fields in the form below.",
+      level='warning'
+    ) }}
+  {% endif %}
+
   <div class="panel">
 
     <div class="panel__heading">
@@ -34,6 +41,46 @@
         {% endif %}
 
         <p>In order to get you access to the JEDI Cloud, we will need you to enter the details below that will help us verify and account for your Task Order.</p>
+
+        {% if extended %}
+          <fieldset class="form__sub-fields form__sub-fields--warning">
+            {{ OptionsInput(f.funding_type) }}
+
+            <template v-if="funding_type == 'OTHER'" v-cloak>
+              {{ TextInput(f.funding_type_other) }}
+            </template>
+
+            {{ TextInput(
+              f.clin_0001,placeholder="50,000",
+              validation='integer'
+            ) }}
+
+            {{ TextInput(
+              f.clin_0003,placeholder="13,000",
+              validation='integer'
+            ) }}
+
+            {{ TextInput(
+              f.clin_1001,placeholder="30,000",
+              validation='integer'
+            ) }}
+
+            {{ TextInput(
+              f.clin_1003,placeholder="7,000",
+              validation='integer'
+            ) }}
+
+            {{ TextInput(
+              f.clin_2001,placeholder="30,000",
+              validation='integer'
+            ) }}
+
+            {{ TextInput(
+              f.clin_2003,placeholder="7,000",
+              validation='integer'
+            ) }}
+          </fieldset>
+        {% endif %}
 
         {{ TextInput(
           f.task_order_id,
@@ -82,51 +129,6 @@
         {{ TextInput(f.email_cor,validation='email',placeholder="jane@mail.mil") }}
 
         {{ TextInput(f.office_cor,placeholder="e.g.: WHS") }}
-
-        <hr>
-
-        {{ Alert('Task Order not found in EDA',
-          message="Since the Task Order (TO) number was not found in our system of record, EDA, please populate the additional fields in the form below.",
-          level='warning'
-        ) }}
-
-        <fieldset class="form__sub-fields form__sub-fields--warning">
-          {{ OptionsInput(f.funding_type) }}
-
-          <template v-if="funding_type == 'OTHER'" v-cloak>
-            {{ TextInput(f.funding_type_other) }}
-          </template>
-
-          {{ TextInput(
-            f.clin_0001,placeholder="50,000",
-            validation='integer'
-          ) }}
-
-          {{ TextInput(
-            f.clin_0003,placeholder="13,000",
-            validation='integer'
-          ) }}
-
-          {{ TextInput(
-            f.clin_1001,placeholder="30,000",
-            validation='integer'
-          ) }}
-
-          {{ TextInput(
-            f.clin_1003,placeholder="7,000",
-            validation='integer'
-          ) }}
-
-          {{ TextInput(
-            f.clin_2001,placeholder="30,000",
-            validation='integer'
-          ) }}
-
-          {{ TextInput(
-            f.clin_2003,placeholder="7,000",
-            validation='integer'
-          ) }}
-        </fieldset>
 
 
       {% endautoescape %}

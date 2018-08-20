@@ -57,12 +57,7 @@ def validate_pe_id(field, existing_request):
     return True
 
 
-class FinancialForm(ValidatedForm):
-    def validate(self, *args, **kwargs):
-        if self.funding_type.data == "OTHER":
-            self.funding_type_other.validators.append(Required())
-        return super().validate(*args, **kwargs)
-
+class BaseFinancialForm(ValidatedForm):
     def reset(self):
         """
         Reset UII info so that it can be de-parsed rendered properly.
@@ -116,6 +111,17 @@ class FinancialForm(ValidatedForm):
     office_cor = StringField(
         "Contracting Officer Representative (COR) Office", validators=[Required()]
     )
+
+
+class FinancialForm(BaseFinancialForm):
+    pass
+
+
+class ExtendedFinancialForm(BaseFinancialForm):
+    def validate(self, *args, **kwargs):
+        if self.funding_type.data == "OTHER":
+            self.funding_type_other.validators.append(Required())
+        return super().validate(*args, **kwargs)
 
     funding_type = SelectField(
         description="What is the source of funding?",

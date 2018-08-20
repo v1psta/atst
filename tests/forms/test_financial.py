@@ -1,6 +1,6 @@
 import pytest
 
-from atst.forms.financial import suggest_pe_id, FinancialForm
+from atst.forms.financial import suggest_pe_id, FinancialForm, ExtendedFinancialForm
 
 
 @pytest.mark.parametrize("input_,expected", [
@@ -18,7 +18,7 @@ def test_funding_type_other_not_required_if_funding_type_is_not_other():
     form_data = {
         "funding_type": "PROC"
     }
-    form = FinancialForm(data=form_data)
+    form = ExtendedFinancialForm(data=form_data)
     form.validate()
     assert "funding_type_other" not in form.errors
 
@@ -27,7 +27,7 @@ def test_funding_type_other_required_if_funding_type_is_other():
     form_data = {
         "funding_type": "OTHER"
     }
-    form = FinancialForm(data=form_data)
+    form = ExtendedFinancialForm(data=form_data)
     form.validate()
     assert "funding_type_other" in form.errors
 
