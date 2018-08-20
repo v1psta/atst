@@ -21,7 +21,7 @@
 
   <p>Before you can submit your request, please take a moment to review the information entered in the form. You may make changes by clicking the edit link on each section. When all information looks right, go ahead and submit.</p>
 
-  {% if f.errors or not can_submit%}
+  {% if f.errors or not can_submit %}
     {{ Alert('Please complete all sections',
       message="<p>In order to submit your JEDI Cloud request, you'll need to complete all required sections of this form without error. Missing or invalid fields are noted below.</p>",
       level='error'
@@ -114,20 +114,22 @@
       <dd>{{ data['details_of_use']['dollar_value'] or RequiredLabel() }}</dd>
     </div>
 
-    <div>
-      <dt>Number of User Sessions</dt>
-      <dd>{{ data['details_of_use']['number_user_sessions'] or RequiredLabel() }}</dd>
-    </div>
+    {% if jedi_request and jedi_request.annual_spend > 1000000 %}
+      <div>
+        <dt>Number of User Sessions</dt>
+        <dd>{{ data['details_of_use']['number_user_sessions'] or RequiredLabel() }}</dd>
+      </div>
 
-    <div>
-      <dt>Average Daily Traffic (Number of Requests)</dt>
-      <dd>{{ data['details_of_use']['average_daily_traffic'] or RequiredLabel() }}</dd>
-    </div>
+      <div>
+        <dt>Average Daily Traffic (Number of Requests)</dt>
+        <dd>{{ data['details_of_use']['average_daily_traffic'] or RequiredLabel() }}</dd>
+      </div>
 
-    <div>
-      <dt>Average Daily Traffic (GB)</dt>
-      <dd>{{ data['details_of_use']['average_daily_traffic_gb'] or RequiredLabel() }}</dd>
-    </div>
+      <div>
+        <dt>Average Daily Traffic (GB)</dt>
+        <dd>{{ data['details_of_use']['average_daily_traffic_gb'] or RequiredLabel() }}</dd>
+      </div>
+    {% endif %}
 
     <div>
       <dt>Start Date</dt>

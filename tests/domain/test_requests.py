@@ -54,6 +54,9 @@ def test_dont_auto_approve_if_no_dollar_value_specified(new_request):
 def test_should_allow_submission(new_request):
     assert Requests.should_allow_submission(new_request)
 
+    RequestStatusEventFactory.create(request=new_request, new_status=RequestStatus.CHANGES_REQUESTED)
+    assert Requests.should_allow_submission(new_request)
+
     del new_request.body['details_of_use']
     assert not Requests.should_allow_submission(new_request)
 
