@@ -10,12 +10,16 @@ from tests.factories import WorkspaceFactory, RequestFactory, UserFactory
 
 def test_can_create_workspace():
     request = RequestFactory.create()
-    workspace = Workspaces.create(request)
-    assert workspace.request == request
-    assert workspace.name == request.id
-
     workspace = Workspaces.create(request, name="frugal-whale")
     assert workspace.name == "frugal-whale"
+    assert workspace.request == request
+
+
+def test_default_workspace_name_is_request_id():
+    request = RequestFactory.create()
+    workspace = Workspaces.create(request)
+    assert workspace.request == request
+    assert workspace.name == str(request.id)
 
 
 def test_can_get_workspace():
@@ -46,6 +50,4 @@ def test_creating_workspace_adds_owner():
 def test_workspace_has_timestamps():
     request = RequestFactory.create()
     workspace = Workspaces.create(request)
-    assert workspace.request == request
-    assert workspace.name == request.id
     assert workspace.time_created == workspace.time_updated
