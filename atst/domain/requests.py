@@ -137,6 +137,13 @@ class Requests(object):
 
         return dollar_value < cls.AUTO_APPROVE_THRESHOLD
 
+    _VALID_SUBMISSION_STATUSES = [
+        RequestStatus.STARTED,
+        RequestStatus.PENDING_FINANCIAL_VERIFICATION,
+        RequestStatus.PENDING_CCPO_APPROVAL,
+        RequestStatus.CHANGES_REQUESTED,
+    ]
+
     @classmethod
     def should_allow_submission(cls, request):
         all_request_sections = [
@@ -145,7 +152,7 @@ class Requests(object):
             "primary_poc",
         ]
         existing_request_sections = request.body.keys()
-        return request.status == RequestStatus.STARTED and all(
+        return request.status in Requests._VALID_SUBMISSION_STATUSES and all(
             section in existing_request_sections for section in all_request_sections
         )
 
