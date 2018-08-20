@@ -8,16 +8,6 @@
 {% from "components/text_input.html" import TextInput %}
 {% from "components/icon.html" import Icon %}
 
-
-{% set dod_component_choices = {
-  "null": "Select an option",
-  "us_air_force": "US Air Force",
-  "us_army": "US Army",
-  "us_navy": "US Navy",
-  "us_marine_corps": "US Marine Corps",
-  "joint_chiefs_of_staff": "Joint Chiefs of Staff"
-} %}
-
 {% set organization_providing_assistance_choices = {
   "in_house_staff": "In-house staff",
   "contractor": "Contractor",
@@ -59,7 +49,7 @@
       <dt>DoD Component</dt>
       <dd>
         {% if data['details_of_use']['dod_component'] %}
-          {{ dod_component_choices[data['details_of_use']['dod_component']] }}
+          {{ data['details_of_use']['dod_component'] | getOptionLabel(service_branches) }}
         {% else %}
           {{ RequiredLabel() }}
         {% endif %}
@@ -195,7 +185,7 @@
         </dd>
       </div>
     {% endif %}
-    
+
     <div>
       <dt>Total Spend</dt>
       <dd>
@@ -251,7 +241,13 @@
 
     <div>
       <dt>Service Branch or Agency</dt>
-      <dd>{{ data['information_about_you']['service_branch'] or RequiredLabel() }}</dd>
+      <dd>
+        {% if data['information_about_you']['service_branch'] %}
+          {{ data['information_about_you']['service_branch'] | getOptionLabel(service_branches) }}
+        {% else %}
+          {{ RequiredLabel() }}
+        {% endif %}
+      </dd>
     </div>
 
     <div>
