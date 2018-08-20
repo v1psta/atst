@@ -26,9 +26,14 @@ def readableInteger(value):
     return "{:,}".format(numberValue)
 
 
+def getOptionLabel(value, options):
+    return next(tup[1] for tup in options if tup[0] == value)
+
+
 def register_filters(app):
     app.jinja_env.filters['iconSvg'] = iconSvg
     app.jinja_env.filters['dollars'] = dollars
     app.jinja_env.filters['usPhone'] = usPhone
     app.jinja_env.filters['readableInteger'] = readableInteger
+    app.jinja_env.filters['getOptionLabel'] = getOptionLabel
 

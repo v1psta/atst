@@ -6,6 +6,7 @@ from atst.routes.requests.jedi_request_flow import JEDIRequestFlow
 from atst.models.permissions import Permissions
 from atst.models.request_status_event import RequestStatus
 from atst.domain.exceptions import UnauthorizedError
+from atst.forms.data import SERVICE_BRANCHES, ASSISTANCE_ORG_TYPES, DATA_TRANSFER_AMOUNTS, COMPLETION_DATE_RANGES
 
 
 @requests_bp.route("/requests/new/<int:screen>", methods=["GET"])
@@ -20,8 +21,11 @@ def requests_form_new(screen):
         current=screen,
         next_screen=screen + 1,
         can_submit=jedi_flow.can_submit,
+        service_branches=SERVICE_BRANCHES,
+        assistance_org_types=ASSISTANCE_ORG_TYPES,
+        data_transfer_amounts=DATA_TRANSFER_AMOUNTS,
+        completion_date_ranges=COMPLETION_DATE_RANGES,
     )
-
 
 @requests_bp.route(
     "/requests/new/<int:screen>", methods=["GET"], defaults={"request_id": None}
@@ -44,6 +48,10 @@ def requests_form_update(screen=1, request_id=None):
         request_id=request_id,
         jedi_request=jedi_flow.request,
         can_submit=jedi_flow.can_submit,
+        service_branches=SERVICE_BRANCHES,
+        assistance_org_types=ASSISTANCE_ORG_TYPES,
+        data_transfer_amounts=DATA_TRANSFER_AMOUNTS,
+        completion_date_ranges=COMPLETION_DATE_RANGES,
     )
 
 

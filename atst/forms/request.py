@@ -4,7 +4,7 @@ from wtforms.validators import Optional, Required
 
 from .fields import DateField, SelectField
 from .forms import ValidatedForm
-from .data import SERVICE_BRANCHES
+from .data import SERVICE_BRANCHES, ASSISTANCE_ORG_TYPES, DATA_TRANSFER_AMOUNTS, COMPLETION_DATE_RANGES
 from atst.domain.requests import Requests
 
 
@@ -76,12 +76,7 @@ class RequestForm(ValidatedForm):
 
     organization_providing_assistance = RadioField(  # this needs to be updated to use checkboxes instead of radio
         description="If you are receiving migration assistance, what is the type of organization providing assistance?",
-        choices=[
-            ("In-house staff", "In-house staff"),
-            ("Contractor", "Contractor"),
-            ("Other DoD Organization", "Other DoD Organization"),
-            ("None", "None"),
-        ],
+        choices=ASSISTANCE_ORG_TYPES,
         default="",
     )
 
@@ -93,31 +88,13 @@ class RequestForm(ValidatedForm):
 
     data_transfers = SelectField(
         description="How much data is being transferred to the cloud?",
-        choices=[
-            ("", "Select an option"),
-            ("Less than 100GB", "Less than 100GB"),
-            ("100GB-500GB", "100GB-500GB"),
-            ("500GB-1TB", "500GB-1TB"),
-            ("1TB-50TB", "1TB-50TB"),
-            ("50TB-100TB", "50TB-100TB"),
-            ("100TB-500TB", "100TB-500TB"),
-            ("500TB-1PB", "500TB-1PB"),
-            ("1PB-5PB", "1PB-5PB"),
-            ("5PB-10PB", "5PB-10PB"),
-            ("Above 10PB", "Above 10PB"),
-        ],
+        choices=DATA_TRANSFER_AMOUNTS,
         validators=[Required()],
     )
 
     expected_completion_date = SelectField(
         description="When do you expect to complete your migration to the JEDI Cloud?",
-        choices=[
-            ("", "Select an option"),
-            ("Less than 1 month", "Less than 1 month"),
-            ("1-3 months", "1-3 months"),
-            ("3-6 months", "3-6 months"),
-            ("Above 12 months", "Above 12 months"),
-        ],
+        choices=COMPLETION_DATE_RANGES,
         validators=[Required()],
     )
 
