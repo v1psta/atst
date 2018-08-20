@@ -1,6 +1,6 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, g
 
-from atst.domain.workspaces import Projects, Members
+from atst.domain.workspaces import Projects, Members, Workspaces
 
 
 bp = Blueprint("workspaces", __name__)
@@ -17,7 +17,8 @@ mock_workspaces = [
 
 @bp.route("/workspaces")
 def workspaces():
-    return render_template("workspaces.html", page=5, workspaces=mock_workspaces)
+    workspaces_ = Workspaces.get_many(g.current_user)
+    return render_template("workspaces.html", page=5, workspaces=workspaces_)
 
 
 @bp.route("/workspaces/<workspace_id>/projects")

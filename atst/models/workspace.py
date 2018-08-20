@@ -1,7 +1,9 @@
-from sqlalchemy import Column, ForeignKey, String
+from sqlalchemy import Column, ForeignKey, String, func
 from sqlalchemy.orm import relationship
 
+from atst.database import db
 from atst.models import Base
+from atst.models.workspace_role import WorkspaceRole
 from atst.models.types import Id
 from atst.models.mixins import TimestampsMixin
 
@@ -19,3 +21,13 @@ class Workspace(Base, TimestampsMixin):
     @property
     def owner(self):
         return self.request.creator
+
+    @property
+    def task_order(self):
+        return {"number": 123}
+
+    @property
+    def user_count(self):
+        return db.session.query(
+            func.count(WorkspaceRole.id).filter(WorkspaceRole.workspace == self)
+        ).scalar()

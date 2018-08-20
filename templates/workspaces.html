@@ -14,13 +14,13 @@
     {% for w in workspaces %}
      <tr>
         <td>
-          <a class='icon-link icon-link--large' href="/workspaces/{{w['task_order']['number']}}/projects">{{ w['name'] }}</a><br>
+          <a class='icon-link icon-link--large' href="/workspaces/{{w.id}}/projects">{{ w.name }}</a><br>
         </td>
         <td>
-          #{{ w['task_order']['number'] }}
+          #{{ w.task_order.number }}
         </td>
         <td>
-          <span class="label">{{ w['user_count'] }}</span><span class='h6'>Users</span>
+          <span class="label">{{ w.user_count }}</span><span class='h6'>Users</span>
         </td>
       </tr>
     {% endfor %}

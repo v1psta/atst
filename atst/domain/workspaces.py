@@ -18,7 +18,9 @@ class Workspaces(object):
         workspace = Workspace(request=request, name=name)
 
         role = Roles.get("owner")
-        workspace_role = WorkspaceRole(user=request.creator, role=role, workspace=workspace)
+        workspace_role = WorkspaceRole(
+            user=request.creator, role=role, workspace=workspace
+        )
 
         db.session.add(workspace)
         db.session.add(workspace_role)
@@ -44,9 +46,17 @@ class Workspaces(object):
 
         return workspace
 
+    @classmethod
+    def get_many(cls, user):
+        workspaces = (
+            db.session.query(Workspace)
+            .join(WorkspaceRole)
+            .filter(WorkspaceRole.user == user)
+            .all()
+        )
+        return workspaces
 
 class Projects(object):
-
     def __init__(self):
         pass
 
@@ -94,7 +104,6 @@ class Projects(object):
 
 
 class Members(object):
-
     def __init__(self):
         pass
 
