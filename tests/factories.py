@@ -3,6 +3,7 @@ import string
 import factory
 from uuid import uuid4
 
+from atst.forms.data import SERVICE_BRANCHES
 from atst.models.request import Request
 from atst.models.request_status_event import RequestStatusEvent, RequestStatus
 from atst.models.pe_number import PENumber
@@ -66,7 +67,7 @@ class RequestFactory(factory.alchemy.SQLAlchemyModelFactory):
                 "start_date": "2018-08-08",
                 "cloud_native": "yes",
                 "dollar_value": dollar_value,
-                "dod_component": "Army and Air Force Exchange Service",
+                "dod_component": SERVICE_BRANCHES[2][1],
                 "data_transfers": "Less than 100GB",
                 "expected_completion_date": "Less than 1 month",
                 "jedi_migration": "yes",
@@ -87,7 +88,7 @@ class RequestFactory(factory.alchemy.SQLAlchemyModelFactory):
                 "email_request": user.email,
                 "fname_request": user.first_name,
                 "lname_request": user.last_name,
-                "service_branch": "Air Force, Department of the",
+                "service_branch": SERVICE_BRANCHES[1][1],
                 "date_latest_training": "2018-08-06",
             },
         }
