@@ -10,7 +10,7 @@ from flask_wtf.csrf import CSRFProtect
 
 from atst.database import db
 from atst.assets import environment as assets_environment
-
+from atst.filters import register_filters
 from atst.routes import bp
 from atst.routes.workspaces import bp as workspace_routes
 from atst.routes.requests import requests_bp
@@ -40,6 +40,7 @@ def make_app(config):
 
     make_flask_callbacks(app)
     make_crl_validator(app)
+    register_filters(app)
 
     db.init_app(app)
     csrf.init_app(app)
@@ -76,11 +77,6 @@ def make_flask_callbacks(app):
             "atat_role": "default",
             "atat_permissions": [],
         }
-
-    @app.template_filter('iconSvg')
-    def _iconSvg(name):
-        with open('static/icons/'+name+'.svg') as contents:
-            return contents.read()
 
 
 def map_config(config):

@@ -116,7 +116,7 @@
               <td>{{ r['full_name'] }}</td>
               <td></td>
             {% endif %}
-            <td>${{ r['annual_usage'] }}</td>
+            <td>{{ r['annual_usage'] | dollars }}</td>
             <td>{{ r['status'] }}</td>
           </tr>
           {% endfor %}
