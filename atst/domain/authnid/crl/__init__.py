@@ -16,11 +16,16 @@ class CRLCache():
         re.DOTALL,
     )
 
-    def __init__(self, root_location, crl_locations=[], store_class=crypto.X509Store):
+    def __init__(self, root_location, crl_locations=[], store_class=crypto.X509Store, logger=None):
         self.store_class = store_class
         self.certificate_authorities = {}
         self._load_roots(root_location)
         self._build_crl_cache(crl_locations)
+        self.logger = logger
+
+    def log_info(self, message):
+        if self.logger:
+            self.logger.info(message)
 
     def _get_store(self, cert):
         return self._build_store(cert.get_issuer().der())
@@ -46,11 +51,13 @@ class CRLCache():
 
     def _build_store(self, issuer):
         store = self.store_class()
+        self.log_info("STORE ID: {}. Building store.".format(id(store)))
         store.set_flags(crypto.X509StoreFlags.CRL_CHECK)
         crl_location = self._get_crl_location(issuer)
         with open(crl_location, "rb") as crl_file:
             crl = crypto.load_crl(crypto.FILETYPE_ASN1, crl_file.read())
             store.add_crl(crl)
+            self.log_info("STORE ID: {}. Adding CRL with issuer {}".format(id(store), crl.get_issuer()))
             store = self._add_certificate_chain_to_store(store, crl.get_issuer())
             return store
 
@@ -68,6 +75,7 @@ class CRLCache():
     def _add_certificate_chain_to_store(self, store, issuer):
         ca = self.certificate_authorities.get(issuer.der())
         store.add_cert(ca)
+        self.log_info("STORE ID: {}. Adding CA with subject {}".format(id(store), ca.get_subject()))
 
         if issuer == ca.get_subject():
             # i.e., it is the root CA and we are at the end of the chain
