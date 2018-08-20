@@ -24,7 +24,7 @@ def update_financial_verification(request_id):
     rerender_args = dict(request_id=request_id, f=form)
 
     if form.validate():
-        request_data = {"financial_verification": post_data}
+        request_data = {"financial_verification": form.data}
         valid = form.perform_extra_validation(
             existing_request.body.get("financial_verification")
         )
@@ -32,10 +32,12 @@ def update_financial_verification(request_id):
         if valid:
             return redirect(url_for("requests.financial_verification_submitted"))
         else:
+            form.reset()
             return render_template(
                 "requests/financial_verification.html", **rerender_args
             )
     else:
+        form.reset()
         return render_template("requests/financial_verification.html", **rerender_args)
 
 
