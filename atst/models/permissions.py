@@ -24,11 +24,11 @@ class Permissions(object):
     VIEW_ATAT_PERMISSIONS = "view_atat_permissions"
     TRANSFER_OWNERSHIP_OF_WORKSPACE = "transfer_ownership_of_workspace"
 
-    ADD_APPLICATION_IN_WORKSPACE = "add_application_in_workspace"
-    DELETE_APPLICATION_IN_WORKSPACE = "delete_application_in_workspace"
-    DEACTIVATE_APPLICATION_IN_WORKSPACE = "deactivate_application_in_workspace"
-    VIEW_APPLICATION_IN_WORKSPACE = "view_application_in_workspace"
-    RENAME_APPLICATION_IN_WORKSPACE = "rename_application_in_workspace"
+    ADD_PROJECT_IN_WORKSPACE = "add_application_in_workspace"
+    DELETE_PROJECT_IN_WORKSPACE = "delete_application_in_workspace"
+    DEACTIVATE_PROJECT_IN_WORKSPACE = "deactivate_application_in_workspace"
+    VIEW_PROJECT_IN_WORKSPACE = "view_application_in_workspace"
+    RENAME_PROJECT_IN_WORKSPACE = "rename_application_in_workspace"
 
     ADD_ENVIRONMENT_IN_APPLICATION = "add_environment_in_application"
     DELETE_ENVIRONMENT_IN_APPLICATION = "delete_environment_in_application"
