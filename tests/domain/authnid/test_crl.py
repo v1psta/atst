@@ -80,6 +80,15 @@ def test_throws_error_for_missing_issuer():
     assert "issuer" in message
 
 
+def test_multistep_certificate_chain():
+    cache = CRLCache(
+        "tests/fixtures/chain/ca-chain.pem",
+        crl_locations=["tests/fixtures/chain/intermediate.crl"],
+    )
+    cert = open("tests/fixtures/chain/client.crt", "rb").read()
+    assert cache.crl_check(cert)
+
+
 def test_parse_disa_pki_list():
     with open("tests/fixtures/disa-pki.html") as disa:
         disa_html = disa.read()
