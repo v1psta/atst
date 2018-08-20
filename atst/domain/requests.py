@@ -4,6 +4,7 @@ from sqlalchemy.sql import text
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.orm.attributes import flag_modified
 
+from atst.domain.workspaces import Workspaces
 from atst.models.request import Request
 from atst.models.request_status_event import RequestStatusEvent, RequestStatus
 from atst.database import db
@@ -113,6 +114,25 @@ class Requests(object):
 
         db.session.add(request)
         db.session.commit()
+
+        return request
+
+    @classmethod
+    def update_financial_verification(cls, request_id, request_delta):
+        updated_request = Requests.update(request_id, request_delta)
+        approved_request = Requests.approve(updated_request)
+
+        db.session.add(approved_request)
+        db.session.commit()
+
+        return approved_request
+
+    @classmethod
+    def approve(cls, request):
+        approved_request = Requests.set_status(request, RequestStatus.APPROVED)
+        Workspaces.create(request)
+
+        return approved_request
 
     @classmethod
     def set_status(cls, request: Request, status: RequestStatus):
