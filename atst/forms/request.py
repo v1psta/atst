@@ -106,6 +106,7 @@ class RequestForm(ValidatedForm):
             ("5PB-10PB", "5PB-10PB"),
             ("Above 10PB", "Above 10PB"),
         ],
+        validators=[Required()],
     )
 
     expected_completion_date = SelectField(
@@ -117,6 +118,7 @@ class RequestForm(ValidatedForm):
             ("3-6 months", "3-6 months"),
             ("Above 12 months", "Above 12 months"),
         ],
+        validators=[Required()],
     )
 
     cloud_native = RadioField(

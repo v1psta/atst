@@ -32,7 +32,11 @@ class TestRequestForm:
         assert request_form.errors == {"cloud_native": ["Not a valid choice"]}
 
     def test_require_migration_questions_when_migrating(self):
-        extra_data = {"jedi_migration": "yes"}
+        extra_data = {
+            "jedi_migration": "yes",
+            "data_transfers": "",
+            "expected_completion_date": "",
+        }
         request_form = RequestForm(data={**self.form_data, **extra_data})
         assert not request_form.validate()
         assert request_form.errors == {
@@ -40,8 +44,8 @@ class TestRequestForm:
             "technical_support_team": ["Not a valid choice"],
             "organization_providing_assistance": ["Not a valid choice"],
             "engineering_assessment": ["Not a valid choice"],
-            "data_transfers": ["Not a valid choice"],
-            "expected_completion_date": ["Not a valid choice"],
+            "data_transfers": ["This field is required."],
+            "expected_completion_date": ["This field is required."],
         }
 
     def test_require_organization_when_technical_support_team(self):
