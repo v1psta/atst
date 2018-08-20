@@ -139,8 +139,6 @@ class Requests(object):
 
     _VALID_SUBMISSION_STATUSES = [
         RequestStatus.STARTED,
-        RequestStatus.PENDING_FINANCIAL_VERIFICATION,
-        RequestStatus.PENDING_CCPO_APPROVAL,
         RequestStatus.CHANGES_REQUESTED,
     ]
 
