@@ -1,10 +1,11 @@
 import re
 from wtforms.fields.html5 import EmailField
 from wtforms.fields import StringField
-from wtforms.validators import Required, Email, Regexp
+from wtforms.validators import Required, Email, Regexp, ValidationError
 
 from atst.domain.exceptions import NotFoundError
 from atst.domain.pe_numbers import PENumbers
+from atst.domain.task_orders import TaskOrders
 
 from .fields import NewlineListField, SelectField
 from .forms import ValidatedForm
@@ -114,7 +115,17 @@ class BaseFinancialForm(ValidatedForm):
 
 
 class FinancialForm(BaseFinancialForm):
-    pass
+    def __init__(self, *args, **kwargs):
+        self.eda_client = kwargs.get("eda_client")
+        if self.eda_client:
+            del(kwargs["eda_client"])
+        super().__init__(*args, **kwargs)
+
+    def validate_task_order_id(form, field):
+        try:
+            TaskOrders.get(field.data, client=form.eda_client)
+        except NotFoundError:
+            raise ValidationError("Task Order number not found")
 
 
 class ExtendedFinancialForm(BaseFinancialForm):

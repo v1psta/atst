@@ -1,6 +1,7 @@
 import pytest
 
 from atst.forms.financial import suggest_pe_id, FinancialForm, ExtendedFinancialForm
+from atst.eda_client import MockEDAClient
 
 
 @pytest.mark.parametrize("input_,expected", [
@@ -67,3 +68,15 @@ def test_ba_code_validation(input_, expected):
     is_valid = "ba_code" not in form.errors
 
     assert is_valid == expected
+
+def test_task_order_id_validation():
+    form_invalid = FinancialForm(data={"task_order_id": "1234"}, eda_client=MockEDAClient())
+    form_invalid.validate()
+
+    assert "task_order_id" in form_invalid.errors
+
+    form_valid = FinancialForm(data={"task_order_id": MockEDAClient.MOCK_CONTRACT_NUMBER}, eda_client=MockEDAClient())
+    form_valid.validate()
+
+    assert "task_order_id" not in form_valid.errors
+
