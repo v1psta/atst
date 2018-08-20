@@ -76,7 +76,7 @@
       <dt>Number of software systems</dt>
       <dd>
         {% if data['details_of_use']['num_software_systems'] %}
-          {{ data['details_of_use']['num_software_systems'] | ReadableInteger }}
+          {{ data['details_of_use']['num_software_systems'] | readableInteger }}
         {% else %}
           {{ RequiredLabel() }}
         {% endif %}
@@ -153,7 +153,7 @@
       <dt>Estimated Monthly Spend</dt>
       <dd>
         {% if data['details_of_use']['estimated_monthly_spend'] %}
-          {{ data['details_of_use']['estimated_monthly_spend'] | USDollars }}
+          {{ data['details_of_use']['estimated_monthly_spend'] | dollars }}
         {% else %}
           {{ RequiredLabel() }}
         {% endif %}
@@ -165,7 +165,7 @@
         <dt>Total Spend</dt>
         <dd>
           {% if data['details_of_use']['dollar_value'] %}
-            {{ data['details_of_use']['dollar_value'] | USDollars }}
+            {{ data['details_of_use']['dollar_value'] | dollars }}
           {% else %}
             {{ RequiredLabel() }}
           {% endif %}
@@ -176,7 +176,7 @@
         <dt>Number of User Sessions</dt>
         <dd>
           {% if data['details_of_use']['number_user_sessions'] %}
-            {{ data['details_of_use']['number_user_sessions'] | ReadableInteger }}
+            {{ data['details_of_use']['number_user_sessions'] | readableInteger }}
           {% else %}
             {{ RequiredLabel() }}
           {% endif %}
@@ -187,7 +187,7 @@
         <dt>Average Daily Traffic (Number of Requests)</dt>
         <dd>
           {% if data['details_of_use']['average_daily_traffic'] %}
-            {{ data['details_of_use']['average_daily_traffic'] | ReadableInteger }}
+            {{ data['details_of_use']['average_daily_traffic'] | readableInteger }}
           {% else %}
             {{ RequiredLabel() }}
           {% endif %}
@@ -198,7 +198,7 @@
         <dt>Average Daily Traffic (GB)</dt>
         <dd>
           {% if data['details_of_use']['average_daily_traffic_gb'] %}
-            {{ data['details_of_use']['average_daily_traffic_gb'] | ReadableInteger }} GB
+            {{ data['details_of_use']['average_daily_traffic_gb'] | readableInteger }} GB
           {% else %}
             {{ RequiredLabel() }}
           {% endif %}
@@ -241,7 +241,7 @@
       <dt>Phone Number</dt>
       <dd>
         {% if data['information_about_you']['phone_number'] %}
-          {{ data['information_about_you']['phone_number'] | USPhone }}
+          {{ data['information_about_you']['phone_number'] | usPhone }}
         {% else %}
           {{ RequiredLabel() }}
         {% endif %}
@@ -260,7 +260,13 @@
 
     <div>
       <dt>Designation of Person</dt>
-      <dd>{{ data['information_about_you']['designation'] or RequiredLabel() }}</dd>
+      <dd>
+        {% if data['information_about_you']['designation'] %}
+          {{ data['information_about_you']['designation'] | capitalize }}
+        {% else %}
+          {{ RequiredLabel() }}
+        {% endif %}
+      </dd>
     </div>
 
     <div>
