@@ -10,7 +10,7 @@ def map_request(request):
     time_created = pendulum.instance(request.time_created)
     is_new = time_created.add(days=1) > pendulum.now()
     app_count = request.body.get("details_of_use", {}).get("num_software_systems", 0)
-    annual_usage = request.body.get("details_of_use", {}).get("dollar_value", 0)
+    annual_usage = request.annual_spend
     update_url = url_for(
         "requests.requests_form_update", screen=1, request_id=request.id
     )

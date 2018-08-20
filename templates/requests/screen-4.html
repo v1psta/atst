@@ -114,8 +114,7 @@
       <dd>{{ data['details_of_use']['dollar_value'] or RequiredLabel() }}</dd>
     </div>
 
-    {% set dollar_value = data['details_of_use']['dollar_value'] | int %}
-    {% if dollar_value > 1000000 %}
+    {% if jedi_request and jedi_request.annual_spend > 1000000 %}
       <div>
         <dt>Number of User Sessions</dt>
         <dd>{{ data['details_of_use']['number_user_sessions'] or RequiredLabel() }}</dd>
