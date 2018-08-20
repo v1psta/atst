@@ -27,3 +27,8 @@ class Request(Base):
     @property
     def status_displayname(self):
         return self.status_events[-1].displayname
+
+    @property
+    def annual_spend(self):
+        monthly = self.body.get("details_of_use", {}).get("estimated_monthly_spend", 0)
+        return monthly * 12
