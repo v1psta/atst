@@ -18,7 +18,7 @@ class Workspaces(object):
         workspace = Workspace(request=request, name=name)
 
         role = Roles.get("owner")
-        workspace_role = WorkspaceRole(user_id=request.creator.id, role=role, workspace_id=workspace.id)
+        workspace_role = WorkspaceRole(user=request.creator, role=role, workspace=workspace)
 
         db.session.add(workspace)
         db.session.add(workspace_role)
