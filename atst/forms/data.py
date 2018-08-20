@@ -46,3 +46,32 @@ SERVICE_BRANCHES = [
     ("US Transportation Command (USTRANSCOM)", "US Transportation Command (USTRANSCOM)"),
     ("Washington Headquarters Services", "Washington Headquarters Services"),
 ]
+
+ASSISTANCE_ORG_TYPES = [
+    ("In-house staff", "In-house staff"),
+    ("Contractor", "Contractor"),
+    ("Other DoD Organization", "Other DoD Organization"),
+    ("None", "None"),
+]
+
+DATA_TRANSFER_AMOUNTS = [
+    ("", "Select an option"),
+    ("Less than 100GB", "Less than 100GB"),
+    ("100GB-500GB", "100GB-500GB"),
+    ("500GB-1TB", "500GB-1TB"),
+    ("1TB-50TB", "1TB-50TB"),
+    ("50TB-100TB", "50TB-100TB"),
+    ("100TB-500TB", "100TB-500TB"),
+    ("500TB-1PB", "500TB-1PB"),
+    ("1PB-5PB", "1PB-5PB"),
+    ("5PB-10PB", "5PB-10PB"),
+    ("Above 10PB", "Above 10PB"),
+]
+
+COMPLETION_DATE_RANGES = [
+    ("", "Select an option"),
+    ("Less than 1 month", "Less than 1 month"),
+    ("1-3 months", "1-3 months"),
+    ("3-6 months", "3-6 months"),
+    ("Above 12 months", "Above 12 months"),
+]

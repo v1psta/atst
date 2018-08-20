@@ -8,13 +8,6 @@
 {% from "components/text_input.html" import TextInput %}
 {% from "components/icon.html" import Icon %}
 
-{% set organization_providing_assistance_choices = {
-  "in_house_staff": "In-house staff",
-  "contractor": "Contractor",
-  "other_dod_organization": "Other DoD organization",
-  "none": "None"
-} %}
-
 {% block subtitle %}
 <h2>Review &amp; Submit</h2>
 {% endblock %}
@@ -95,7 +88,7 @@
           <dt>Organization Providing Assistance</dt>
           <dd>
             {% if data['details_of_use']['organization_providing_assistance'] %}
-              {{ organization_providing_assistance_choices[data['details_of_use']['organization_providing_assistance']] }}
+              {{ data['details_of_use']['organization_providing_assistance'] | getOptionLabel(assistance_org_types) }}
             {% else %}
               {{ RequiredLabel() }}
             {% endif %}
@@ -112,7 +105,7 @@
         <dt>Data Transfers</dt>
         <dd>
           {% if data['details_of_use']['data_transfers'] %}
-            {{ data['details_of_use']['data_transfers'] | upper | replace("_"," ")}}
+            {{ data['details_of_use']['data_transfers'] | getOptionLabel(data_transfer_amounts) }}
           {% else %}
             {{ RequiredLabel() }}
           {% endif %}
@@ -123,7 +116,7 @@
         <dt>Expected Completion Date</dt>
         <dd>
           {% if data['details_of_use']['expected_completion_date'] %}
-            {{ data['details_of_use']['expected_completion_date'] | replace("_"," ")}}
+            {{ data['details_of_use']['expected_completion_date'] | getOptionLabel(completion_date_ranges) }}
           {% else %}
             {{ RequiredLabel() }}
           {% endif %}
