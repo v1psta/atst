@@ -4,7 +4,6 @@ from uuid import uuid4
 from atst.domain.exceptions import NotFoundError
 from atst.domain.workspaces import Workspaces
 from atst.domain.workspace_users import WorkspaceUsers
-
 from tests.factories import WorkspaceFactory, RequestFactory, UserFactory
 
 
@@ -23,14 +22,17 @@ def test_default_workspace_name_is_request_id():
 
 
 def test_can_get_workspace():
-    workspace = WorkspaceFactory.create()
-    found = Workspaces.get(workspace.id)
+    user = UserFactory.create()
+    request = RequestFactory.create(creator=user)
+    workspace = Workspaces.create(request)
+    found = Workspaces.get(user, workspace.id)
     assert workspace == found
 
 
 def test_nonexistent_workspace_raises():
+    user = UserFactory.create()
     with pytest.raises(NotFoundError):
-        Workspaces.get(uuid4())
+        Workspaces.get(user, uuid4())
 
 
 def test_can_get_workspace_by_request():

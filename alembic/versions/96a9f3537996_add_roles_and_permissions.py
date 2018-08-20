@@ -51,17 +51,17 @@ def upgrade():
                 Permissions.VIEW_ATAT_PERMISSIONS,
                 Permissions.TRANSFER_OWNERSHIP_OF_WORKSPACE,
 
-                Permissions.ADD_APPLICATION_IN_WORKSPACE,
-                Permissions.DELETE_APPLICATION_IN_WORKSPACE,
-                Permissions.DEACTIVATE_APPLICATION_IN_WORKSPACE,
-                Permissions.VIEW_APPLICATION_IN_WORKSPACE,
-                Permissions.RENAME_APPLICATION_IN_WORKSPACE,
+                Permissions.ADD_PROJECT_IN_WORKSPACE,
+                Permissions.DELETE_PROJECT_IN_WORKSPACE,
+                Permissions.DEACTIVATE_PROJECT_IN_WORKSPACE,
+                Permissions.VIEW_PROJECT_IN_WORKSPACE,
+                Permissions.RENAME_PROJECT_IN_WORKSPACE,
 
-                Permissions.ADD_ENVIRONMENT_IN_APPLICATION,
-                Permissions.DELETE_ENVIRONMENT_IN_APPLICATION,
-                Permissions.DEACTIVATE_ENVIRONMENT_IN_APPLICATION,
-                Permissions.VIEW_ENVIRONMENT_IN_APPLICATION,
-                Permissions.RENAME_ENVIRONMENT_IN_APPLICATION,
+                Permissions.ADD_ENVIRONMENT_IN_PROJECT,
+                Permissions.DELETE_ENVIRONMENT_IN_PROJECT,
+                Permissions.DEACTIVATE_ENVIRONMENT_IN_PROJECT,
+                Permissions.VIEW_ENVIRONMENT_IN_PROJECT,
+                Permissions.RENAME_ENVIRONMENT_IN_PROJECT,
 
                 Permissions.ADD_TAG_TO_WORKSPACE,
                 Permissions.REMOVE_TAG_FROM_WORKSPACE
@@ -87,17 +87,17 @@ def upgrade():
                 Permissions.DEACTIVATE_WORKSPACE,
                 Permissions.VIEW_ATAT_PERMISSIONS,
 
-                Permissions.ADD_APPLICATION_IN_WORKSPACE,
-                Permissions.DELETE_APPLICATION_IN_WORKSPACE,
-                Permissions.DEACTIVATE_APPLICATION_IN_WORKSPACE,
-                Permissions.VIEW_APPLICATION_IN_WORKSPACE,
-                Permissions.RENAME_APPLICATION_IN_WORKSPACE,
+                Permissions.ADD_PROJECT_IN_WORKSPACE,
+                Permissions.DELETE_PROJECT_IN_WORKSPACE,
+                Permissions.DEACTIVATE_PROJECT_IN_WORKSPACE,
+                Permissions.VIEW_PROJECT_IN_WORKSPACE,
+                Permissions.RENAME_PROJECT_IN_WORKSPACE,
 
-                Permissions.ADD_ENVIRONMENT_IN_APPLICATION,
-                Permissions.DELETE_ENVIRONMENT_IN_APPLICATION,
-                Permissions.DEACTIVATE_ENVIRONMENT_IN_APPLICATION,
-                Permissions.VIEW_ENVIRONMENT_IN_APPLICATION,
-                Permissions.RENAME_ENVIRONMENT_IN_APPLICATION,
+                Permissions.ADD_ENVIRONMENT_IN_PROJECT,
+                Permissions.DELETE_ENVIRONMENT_IN_PROJECT,
+                Permissions.DEACTIVATE_ENVIRONMENT_IN_PROJECT,
+                Permissions.VIEW_ENVIRONMENT_IN_PROJECT,
+                Permissions.RENAME_ENVIRONMENT_IN_PROJECT,
             ]
         ),
         Role(
@@ -113,17 +113,17 @@ def upgrade():
                 Permissions.VIEW_ASSIGNED_ATAT_ROLE_CONFIGURATIONS,
                 Permissions.VIEW_ASSIGNED_CSP_ROLE_CONFIGURATIONS,
 
-                Permissions.ADD_APPLICATION_IN_WORKSPACE,
-                Permissions.DELETE_APPLICATION_IN_WORKSPACE,
-                Permissions.DEACTIVATE_APPLICATION_IN_WORKSPACE,
-                Permissions.VIEW_APPLICATION_IN_WORKSPACE,
-                Permissions.RENAME_APPLICATION_IN_WORKSPACE,
+                Permissions.ADD_PROJECT_IN_WORKSPACE,
+                Permissions.DELETE_PROJECT_IN_WORKSPACE,
+                Permissions.DEACTIVATE_PROJECT_IN_WORKSPACE,
+                Permissions.VIEW_PROJECT_IN_WORKSPACE,
+                Permissions.RENAME_PROJECT_IN_WORKSPACE,
 
-                Permissions.ADD_ENVIRONMENT_IN_APPLICATION,
-                Permissions.DELETE_ENVIRONMENT_IN_APPLICATION,
-                Permissions.DEACTIVATE_ENVIRONMENT_IN_APPLICATION,
-                Permissions.VIEW_ENVIRONMENT_IN_APPLICATION,
-                Permissions.RENAME_ENVIRONMENT_IN_APPLICATION,
+                Permissions.ADD_ENVIRONMENT_IN_PROJECT,
+                Permissions.DELETE_ENVIRONMENT_IN_PROJECT,
+                Permissions.DEACTIVATE_ENVIRONMENT_IN_PROJECT,
+                Permissions.VIEW_ENVIRONMENT_IN_PROJECT,
+                Permissions.RENAME_ENVIRONMENT_IN_PROJECT,
             ]
         ),
         Role(
@@ -132,8 +132,8 @@ def upgrade():
             permissions=[
                 Permissions.VIEW_USAGE_REPORT,
                 Permissions.VIEW_USAGE_DOLLARS,
-                Permissions.VIEW_APPLICATION_IN_WORKSPACE,
-                Permissions.VIEW_ENVIRONMENT_IN_APPLICATION
+                Permissions.VIEW_PROJECT_IN_WORKSPACE,
+                Permissions.VIEW_ENVIRONMENT_IN_PROJECT
             ]
         ),
         Role(
@@ -143,9 +143,9 @@ def upgrade():
                 Permissions.VIEW_USAGE_REPORT,
                 Permissions.VIEW_USAGE_DOLLARS,
 
-                Permissions.VIEW_APPLICATION_IN_WORKSPACE,
+                Permissions.VIEW_PROJECT_IN_WORKSPACE,
 
-                Permissions.VIEW_ENVIRONMENT_IN_APPLICATION,
+                Permissions.VIEW_ENVIRONMENT_IN_PROJECT,
             ]
         ),
         Role(
@@ -157,9 +157,9 @@ def upgrade():
 
                 Permissions.VIEW_ATAT_PERMISSIONS,
 
-                Permissions.VIEW_APPLICATION_IN_WORKSPACE,
+                Permissions.VIEW_PROJECT_IN_WORKSPACE,
 
-                Permissions.VIEW_ENVIRONMENT_IN_APPLICATION,
+                Permissions.VIEW_ENVIRONMENT_IN_PROJECT,
             ]
         ),
     ]

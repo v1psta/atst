@@ -29,7 +29,6 @@ black = "*"
 pytest-watch = "*"
 factory-boy = "*"
 pytest-flask = "*"
-eralchemy = "*"
 
 [requires]
 python_version = "3.6"

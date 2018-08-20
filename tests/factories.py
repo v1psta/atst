@@ -10,6 +10,7 @@ from atst.models.task_order import TaskOrder
 from atst.models.user import User
 from atst.models.role import Role
 from atst.models.workspace import Workspace
+from atst.models.workspace_role import WorkspaceRole
 from atst.models.request_status_event import RequestStatusEvent
 from atst.domain.roles import Roles
 
@@ -20,6 +21,11 @@ class RoleFactory(factory.alchemy.SQLAlchemyModelFactory):
         model = Role
 
     permissions = []
+
+
+class WorkspaceRoleFactory(factory.alchemy.SQLAlchemyModelFactory):
+    class Meta:
+        model = WorkspaceRole
 
 
 class UserFactory(factory.alchemy.SQLAlchemyModelFactory):

@@ -104,7 +104,7 @@ class Requests(object):
                 .one()
             )
         except NoResultFound:
-            return
+            raise NotFoundError("request")
 
         request.body = deep_merge(request_delta, request.body)
 

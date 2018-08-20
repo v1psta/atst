@@ -30,11 +30,11 @@ class Permissions(object):
     VIEW_PROJECT_IN_WORKSPACE = "view_application_in_workspace"
     RENAME_PROJECT_IN_WORKSPACE = "rename_application_in_workspace"
 
-    ADD_ENVIRONMENT_IN_APPLICATION = "add_environment_in_application"
-    DELETE_ENVIRONMENT_IN_APPLICATION = "delete_environment_in_application"
-    DEACTIVATE_ENVIRONMENT_IN_APPLICATION = "deactivate_environment_in_application"
-    VIEW_ENVIRONMENT_IN_APPLICATION = "view_environment_in_application"
-    RENAME_ENVIRONMENT_IN_APPLICATION = "rename_environment_in_application"
+    ADD_ENVIRONMENT_IN_PROJECT = "add_environment_in_application"
+    DELETE_ENVIRONMENT_IN_PROJECT = "delete_environment_in_application"
+    DEACTIVATE_ENVIRONMENT_IN_PROJECT = "deactivate_environment_in_application"
+    VIEW_ENVIRONMENT_IN_PROJECT = "view_environment_in_application"
+    RENAME_ENVIRONMENT_IN_PROJECT = "rename_environment_in_application"
 
     ADD_TAG_TO_WORKSPACE = "add_tag_to_workspace"
     REMOVE_TAG_FROM_WORKSPACE = "remove_tag_from_workspace"
