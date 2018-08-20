@@ -1,6 +1,8 @@
-from flask import Blueprint, render_template, g
+from flask import Blueprint, render_template, g, Response
 
 from atst.domain.workspaces import Projects, Members, Workspaces
+from atst.domain.workspace_users import WorkspaceUsers
+from atst.domain.exceptions import NotFoundError
 
 
 bp = Blueprint("workspaces", __name__)
@@ -23,11 +25,16 @@ def workspaces():
 
 @bp.route("/workspaces/<workspace_id>/projects")
 def workspace_projects(workspace_id):
-    projects_repo = Projects()
-    projects = projects_repo.get_many(workspace_id)
-    return render_template(
-        "workspace_projects.html", workspace_id=workspace_id, projects=projects
-    )
+    workspace = Workspaces.get(workspace_id)
+
+    workspace_user = WorkspaceUsers.get(workspace.id, g.current_user.id)
+
+    # TODO: Not a sufficient check. workspace_user has a value
+    # as long as the user exists in the db. Maybe an Authz service?
+    if not workspace_user:
+        raise NotFoundError("workspace")
+
+    return render_template("workspace_projects.html", workspace=workspace)
 
 
 @bp.route("/workspaces/<workspace_id>/members")
@@ -37,3 +44,9 @@ def workspace_members(workspace_id):
     return render_template(
         "workspace_members.html", workspace_id=workspace_id, members=members
     )
+
+
+@bp.route("/workspaces/<workspace_id>/projects/<project_id>/edit")
+def workspace_project_edit(workspace_id, project_id):
+    response_content = "Editing project {} in workspace {}.".format(project_id, workspace_id)
+    return Response(response_content)
