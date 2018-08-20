@@ -89,11 +89,13 @@ class RequestForm(ValidatedForm):
     data_transfers = SelectField(
         description="How much data is being transferred to the cloud?",
         choices=DATA_TRANSFER_AMOUNTS,
+        validators=[Required()],
     )
 
     expected_completion_date = SelectField(
         description="When do you expect to complete your migration to the JEDI Cloud?",
         choices=COMPLETION_DATE_RANGES,
+        validators=[Required()],
     )
 
     cloud_native = RadioField(

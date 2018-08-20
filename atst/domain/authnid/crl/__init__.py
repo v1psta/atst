@@ -77,7 +77,7 @@ class CRLCache():
         store.add_cert(ca)
         self.log_info("STORE ID: {}. Adding CA with subject {}".format(id(store), ca.get_subject()))
 
-        if issuer == ca.get_subject():
+        if issuer == ca.get_issuer():
             # i.e., it is the root CA and we are at the end of the chain
             return store
 
