@@ -1,3 +1,5 @@
+import re
+
 def iconSvg(name):
     with open('static/icons/'+name+'.svg') as contents:
         return contents.read()
@@ -18,7 +20,7 @@ def usPhone(number):
 
 def readableInteger(value):
     try:
-        numberValue = float(value)
+        numberValue = int(value)
     except ValueError:
         numberValue = 0
     return "{:,}".format(numberValue)
