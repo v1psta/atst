@@ -15,13 +15,14 @@ def workspace():
 
 @bp.route("/workspaces")
 def workspaces():
-    return render_template("workspaces.html", page=5, workspaces=Workspaces.get_many())
+    workspaces = Workspaces.get_many(g.current_user)
+    return render_template("workspaces.html", page=5, workspaces=workspaces)
 
 
 @bp.route("/workspaces/<workspace_id>/projects")
 def workspace_projects(workspace_id):
-    projects = Projects.get_many(workspace_id)
-    return render_template("workspace_projects.html", projects=projects)
+    workspace = Workspaces.get(g.current_user, workspace_id)
+    return render_template("workspace_projects.html", workspace=workspace)
 
 
 @bp.route("/workspaces/<workspace_id>/members")

@@ -54,3 +54,18 @@ def test_workspaces_get_ensures_user_is_in_workspace():
 
     with pytest.raises(UnauthorizedError):
         Workspaces.get(outside_user, workspace.id)
+
+
+def test_workspaces_get_many_with_no_workspaces():
+    workspaces = Workspaces.get_many(UserFactory.build())
+    assert workspaces == []
+
+
+def test_workspaces_get_many_returns_a_users_workspaces():
+    user = UserFactory.create()
+    users_workspace = Workspaces.create(RequestFactory.create(creator=user))
+
+    # random workspace
+    Workspaces.create(RequestFactory.create())
+
+    assert Workspaces.get_many(user) == [users_workspace]

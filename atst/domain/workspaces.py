@@ -47,6 +47,11 @@ class Workspaces(object):
 
         return workspace
 
+    @classmethod
+    def get_many(cls, user):
+        workspaces = db.session.query(Workspace).join(WorkspaceRole).filter(WorkspaceRole.user == user).all()
+        return workspaces
+
 
 class Projects(object):
 
