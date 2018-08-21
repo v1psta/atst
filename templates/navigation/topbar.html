@@ -6,9 +6,9 @@
       {{ Icon('shield', classes='topbar__link-icon') }}
     </a>
 
-    <div class="topbar__context topbar__context--{{context}}">
+    <div class="topbar__context {% if workspace %}topbar__context--workspace{% endif %}">
       <a href="/" class="topbar__link">
-        <span class="topbar__link-label">{{ "Workspace 123456" if context == 'workspace' else "JEDI" }}</span>
+        <span class="topbar__link-label">{{ ("Workspace " + workspace.name) if workspace else "JEDI" }}</span>
         {{ Icon('caret_down', classes='topbar__link-icon icon--tiny') }}
       </a>
 
