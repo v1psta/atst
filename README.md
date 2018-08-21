@@ -8,15 +8,31 @@ This is the user-facing web application for ATAT.
 
 ## Installation
 
-### Requirements
-See the [scriptz](https://github.com/dod-ccpo/scriptz) repository for the shared
-requirements and guidelines for all ATAT applications.
+### System Requirements
+ATST uses the [Scripts to Rule Them All](https://github.com/github/scripts-to-rule-them-all)
+pattern for setting up and running the project. The scripts are located in the
+`scripts` directory and use script fragments in the
+[scriptz](https://github.com/dod-ccpo/scriptz) repository that are shared across
+ATAT repositories.
 
-ATST requires a postgres instance (>= 9.6) for persistence. Have postgres installed
-and running on the default port of 5432.
+Before running the setup scripts, a couple of dependencies need to be installed
+locally:
 
-ATST also requires a redis instance for session management. Have redis installed and
-running on the default port of 6379.
+* `pipenv`
+  ATST requires `pipenv` to be installed for python dependency management. `pipenv`
+  will fetch and install the appropriate versions of Python and `pip`. [See
+  `pipenv`'s documentation for instructions on installing `pipenv](
+  https://pipenv.readthedocs.io/en/latest/install/#installing-pipenv).
+
+* `postgres` >= 9.6
+  ATST requires a PostgreSQL instance (>= 9.6) for persistence. Have PostgresSQL installed
+  and running on the default port of 5432. You can verify that PostgresSQL is running
+  by executing `psql` and ensuring that a connection is successfully made.
+
+* `redis`
+  ATST also requires a Redis instance for session management. Have Redis installed and
+  running on the default port of 6379. You can ensure that Redis is running by
+  executing `redis-cli` with no options and ensuring a connection is succesfully made.
 
 ### Cloning
 This project contains git submodules. Here is an example clone command that will
@@ -62,6 +78,10 @@ To watch for changes to any js/css assets:
 
     yarn watch
 
+After running `script/dev_server`, the application is available at
+[`http://localhost:8000`](http://localhost:8000).
+
+
 ### Users
 
 There are currently six mock users for development:
@@ -73,7 +93,11 @@ There are currently six mock users for development:
 - Dominick
 - Erica
 
-To log in as one of them, navigate to `/login-dev?username=<lowercase name>`. For example `/login-dev?username=amanda`.
+To log in as one of them, navigate to `/login-dev?username=<lowercase name>`.
+For example `/login-dev?username=amanda`.
+
+In development mode, there is a `DEV Login` button available on the home page
+that will automatically log you in as Amanda.
 
 ## Testing
 
