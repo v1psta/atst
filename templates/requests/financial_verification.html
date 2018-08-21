@@ -16,6 +16,17 @@
     ) }}
   {% endif %}
 
+  {% if f.is_missing_task_order_id %}
+    {% set extended_url = url_for('requests.financial_verification', request_id=request_id, extended=True) %}
+    {{ Alert('Task Order not found in EDA',
+        message="We could not find your Task Order in our system of record, EDA.
+                 Please confirm that you have entered it correctly.
+                 <a href=\"%s\">Otherwise enter TO information manually.</a>
+                "|format(extended_url),
+        level='warning'
+    ) }}
+  {% endif %}
+
   <div class="panel">
 
     <div class="panel__heading">
