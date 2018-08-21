@@ -69,8 +69,9 @@ def test_ba_code_validation(input_, expected):
 
     assert is_valid == expected
 
-def test_task_order_number_validation():
-    form_invalid = FinancialForm(data={"task_order_number": "1234"}, eda_client=MockEDAClient())
+def test_task_order_number_validation(monkeypatch):
+    monkeypatch.setattr("atst.domain.task_orders.TaskOrders._client", lambda: MockEDAClient())
+    form_invalid = FinancialForm(data={"task_order_number": "1234"})
     form_invalid.validate()
 
     assert "task_order_number" in form_invalid.errors

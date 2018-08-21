@@ -119,15 +119,9 @@ class BaseFinancialForm(ValidatedForm):
 
 
 class FinancialForm(BaseFinancialForm):
-    def __init__(self, *args, **kwargs):
-        self.eda_client = kwargs.get("eda_client")
-        if self.eda_client:
-            del(kwargs["eda_client"])
-        super().__init__(*args, **kwargs)
-
     def validate_task_order_number(form, field):
         try:
-            TaskOrders.get(field.data, client=form.eda_client)
+            TaskOrders.get(field.data)
         except NotFoundError:
             raise ValidationError("Task Order number not found")
 

@@ -1,6 +1,5 @@
 from flask import render_template, redirect, url_for
 from flask import request as http_request
-from flask import current_app as app
 
 from . import requests_bp
 from atst.domain.requests import Requests
@@ -11,7 +10,7 @@ def financial_form(data):
     if http_request.args.get("extended"):
         return ExtendedFinancialForm(data=data)
     else:
-        return FinancialForm(data=data, eda_client=app.eda_client)
+        return FinancialForm(data=data)
 
 
 @requests_bp.route("/requests/verify/<string:request_id>", methods=["GET"])
