@@ -38,7 +38,22 @@
       {% endif %}
 
       {% if actions %}
-        <div class='alert__actions'>{{ actions | safe }}</div>
+        <div class='alert__actions'>
+          {% if actions is string %}
+
+            {{ actions | safe }}
+
+          {% elif actions is iterable %}
+
+            {% for action in actions %}
+              <a href={{ action["href"] }} class='icon-link'>
+                {% if 'icon' in action %}{{ Icon(action["icon"]) }}{% endif %}
+                <span>{{ action["label"] }}</span>
+              </a>
+            {% endfor %}
+
+          {% endif %}
+        </div>
       {% endif %}
     </div>
   </div>

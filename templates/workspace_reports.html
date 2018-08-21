@@ -1,0 +1,88 @@
+{% extends "base_workspace.html" %}
+
+{% from "components/alert.html" import Alert %}
+
+{% block workspace_content %}
+
+  {{ Alert("Funding Information & Reports for Workspace " + workspace_id,
+    message="<p>On this screen you'll find detailed reporting information on this workspace. This message needs to be written better and be dismissable.</p>",
+    actions=[
+      {"label": "Learn More", "href": "/", "icon": "info"},
+      {"label": "Dismiss", "href": "/"}
+    ]  ) }}
+
+  <div class='funding-summary-row'>
+
+    <div class='funding-summary-row__col'>
+      <div class='panel spend-summary'>
+        <div class='row'>
+          <h2 class='spend-summary__heading col'>Workspace Total Spend</h2>
+          <dl class='spend-summary__budget'>
+            <div>
+              <dt>Budget </dt>
+              <dd>$100,000,000</dd>
+            </div>
+
+            <div>
+              <dt>Remaining</dt>
+              <dd>$60,000,000</dd>
+            </div>
+          </dl>
+        </div>
+
+        <div>
+          <meter value='40000000' min='0' max='100000000' title='$40,000,000 Total spend to date'></meter>
+
+          <dl class='spend-summary__spent'>
+            <dt>Total spend to date</dt>
+            <dd>$40,000,00</dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+
+    <div class='funding-summary-row__col'>
+      <div class='panel to-summary'>
+        <div class='to-summary__row'>
+
+          <div class='to-summary__to'>
+            <h2 class='to-summary__heading'>Task Order</h2>
+            <dl class='to-summary__to-number'>
+              <dt class='usa-sr-only'>Task Order Number</dt>
+              <dd>1234567890</dd>
+            </dl>
+          </div>
+
+          <div class='to-summary__expiration'>
+            <dl>
+              <div>
+                <dt>Expires</dt>
+                <dd>November 1, 2019</dd>
+              </div>
+
+              <div>
+                <dt>Remaining</dt>
+                <dd>200 days</dd>
+              </div>
+            </dl>
+
+            <a href='/' class='icon-link'>
+              Manage Task Order
+            </a>
+          </div>
+        </div>
+
+        <dl class='to-summary__co'>
+          <dt>Contracting Officer</dt>
+          <dd>
+            Pietro Quirines
+            <a class='icon-link' href='mailto:email@email.com'>email@email.com</a>
+          </dd>
+        </dl>
+
+      </div>
+    </div>
+
+  </div>
+
+{% endblock %}

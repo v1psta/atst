@@ -1,0 +1,173 @@
+.funding-summary-row {
+
+  @include media($medium-screen) {
+    @include grid-row;
+    flex-wrap: wrap;
+  }
+
+  .funding-summary-row__col {
+    @include grid-pad;
+
+    @include media($medium-screen) {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: row;
+      flex-basis: 50%;
+    }
+
+    align-items: stretch;
+
+    .panel {
+      padding: $gap * 2;
+      flex-grow: 1;
+
+
+      // Spending Summary
+      // ===============================
+      &.spend-summary {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
+        .row {
+          justify-content: space-between;
+        }
+
+        .spend-summary__heading {
+          @include h3;
+          margin: 0 $gap 0 0;
+        }
+
+        .spend-summary__budget {
+          margin: 0 0 0 $gap;
+
+          > div {
+            text-align: right;
+            margin: 0 0 ($gap / 2) 0;
+
+            dd, dt {
+              display: inline;
+            }
+
+            dt {
+              color: $color-gray;
+              margin-right: $gap;
+              font-weight: normal;
+            }
+
+            dd {
+              font-weight: bold;
+            }
+          }
+        }
+
+        meter {
+          width: 100%;
+          height: 3rem;
+          margin: ($gap * 2) 0 0;
+        }
+
+        .spend-summary__spent {
+          margin: $gap 0 0 0;
+          display: flex;
+          flex-direction: row-reverse;
+          justify-content: flex-end;
+
+          dd, dt {
+            @include h5;
+          }
+
+          dt {
+            font-weight: normal;
+            margin-left: $gap;
+          }
+        }
+      }
+
+
+
+      // Task Order Summary
+      // ===============================
+      &.to-summary {
+
+        .to-summary__row {
+          .to-summary__heading {
+            @include h3;
+            margin: 0;
+          }
+
+          .to-summary__to-number {
+            margin: 0;
+            dd {
+              &::before {
+                content: '#';
+                color: $color-gray;
+                margin-right: $gap;
+              }
+            }
+          }
+
+          @include media($xlarge-screen) {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+
+            .to-summary__to {
+              margin: 0 $gap 0 0;
+            }
+
+            .to-summary__expiration {
+              text-align: right;
+              flex-grow: 1;
+
+              dl {
+                margin: 0 0 0 $gap;
+
+                dd, dt {
+                  display: inline;
+                }
+              }
+            }
+          }
+        }
+
+        .to-summary__expiration {
+
+          dl {
+            margin: ($gap * 2) 0 0 0;
+
+            > div {
+              margin: 0 0 ($gap / 2) 0;
+
+              dd, dt {
+                display: block;
+              }
+
+              dt {
+                color: $color-gray;
+                margin-right: $gap;
+                font-weight: normal;
+              }
+
+              dd {
+                font-weight: bold;
+              }
+            }
+          }
+
+          .icon-link {
+            margin: 0 (-$gap);
+          }
+        }
+
+        .to-summary__co {
+          margin: ($gap * 2) 0 0 0;
+
+          @include media($xlarge-screen) {
+            margin: 0;
+          }
+        }
+      }
+    }
+  }
+}

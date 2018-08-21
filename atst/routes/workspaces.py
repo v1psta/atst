@@ -36,3 +36,10 @@ def workspace_members(workspace_id):
     return render_template(
         "workspace_members.html", workspace_id=workspace_id, members=members
     )
+
+
+@bp.route("/workspaces/<workspace_id>/reports")
+def workspace_reports(workspace_id):
+    return render_template(
+        "workspace_reports.html", workspace_id=workspace_id
+    )
