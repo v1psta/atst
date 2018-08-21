@@ -6,6 +6,7 @@ from sqlalchemy.orm.attributes import flag_modified
 
 from atst.models.request import Request
 from atst.models.request_status_event import RequestStatusEvent, RequestStatus
+from atst.domain.workspaces import Workspaces
 from atst.database import db
 
 from .exceptions import NotFoundError
@@ -113,6 +114,15 @@ class Requests(object):
 
         db.session.add(request)
         db.session.commit()
+
+        return request
+
+    @classmethod
+    def update_financial_verification(cls, request_id, data):
+        updated_request = Requests.update(request_id, {"financial_verification": data})
+        approved_request = Requests.set_status(updated_request, RequestStatus.APPROVED)
+        workspace = Workspaces.create(approved_request)
+        return workspace
 
     @classmethod
     def set_status(cls, request: Request, status: RequestStatus):

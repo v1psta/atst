@@ -31,17 +31,23 @@ def update_financial_verification(request_id):
     existing_request = Requests.get(request_id)
     form = financial_form(post_data)
 
-    rerender_args = dict(request_id=request_id, f=form, extended=http_request.args.get("extended"))
+    rerender_args = dict(
+        request_id=request_id, f=form, extended=http_request.args.get("extended")
+    )
 
     if form.validate():
-        request_data = {"financial_verification": form.data}
         valid = form.perform_extra_validation(
             existing_request.body.get("financial_verification")
         )
-        Requests.update(request_id, request_data)
+        new_workspace = Requests.update_financial_verification(request_id, post_data)
         if valid:
-            return redirect(url_for("requests.financial_verification_submitted"))
-
+            return redirect(
+                url_for(
+                    "workspaces.workspace_projects",
+                    workspace_id=new_workspace.id,
+                    modal=True,
+                )
+            )
         else:
             form.reset()
             return render_template(

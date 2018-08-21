@@ -69,7 +69,7 @@ class TestPENumberInForm:
         response = self.submit_data(client, data)
 
         assert response.status_code == 302
-        assert "/requests/financial_verification_submitted" in response.headers.get("Location")
+        assert "/workspaces" in response.headers.get("Location")
 
     def test_submit_request_form_with_new_valid_pe_id(self, monkeypatch, client):
         self._set_monkeypatches(monkeypatch)
@@ -81,7 +81,7 @@ class TestPENumberInForm:
         response = self.submit_data(client, data)
 
         assert response.status_code == 302
-        assert "/requests/financial_verification_submitted" in response.headers.get("Location")
+        assert "/workspaces" in response.headers.get("Location")
 
     def test_submit_request_form_with_missing_pe_id(self, monkeypatch, client):
         self._set_monkeypatches(monkeypatch)
