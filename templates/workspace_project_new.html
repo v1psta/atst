@@ -4,6 +4,7 @@
 {% extends "base_workspace.html" %}
 
 {% block workspace_content %}
+<new-project inline-template v-bind:initial-data='{{ form.data|tojson }}'>
   <form method="POST" action="{{ url_for('workspaces.update_project', workspace_id=workspace.id) }}" >
     {{ form.csrf_token }}
     <div class="panel">
@@ -24,19 +25,21 @@
         </header>
 
         <ul>
-          <li class="block-list__item">
+          <li v-for="(_, i) in environments" class="block-list__item">
             <span class="project-list-item__environment">
               {{ TextInput(form.environment_name) }}
+              <span v-on:click="removeEnvironment(i)">{{ Icon('x') }}</span>
             </span>
           </li>
         </ul>
       </div>
+      <a v-on:click="addEnvironment">Add another environment</a>
     </div>
 
     <div class="action-group">
       <input type="submit" value="Create Project" class="action-group__action usa-button usa-button-big">
-      <!-- <a href="/styleguide" class="action-group__action">Cancel</a> -->
+      <a href="{{ url_for('workspaces.workspace_projects', workspace_id=workspace.id) }}" class="action-group__action">Cancel</a>
     </div>
   </form>
-
+</new-project>
 {% endblock %}
