@@ -9,7 +9,7 @@ bp = Blueprint("workspaces", __name__)
 def workspace():
     workspace = None
     if "workspace_id" in http_request.view_args:
-        workspace = Workspaces.get(http_request.view_args["workspace_id"])
+        workspace = Workspaces.get(g.current_user, http_request.view_args["workspace_id"])
     return { "workspace": workspace }
 
 
@@ -50,7 +50,7 @@ def new_project(workspace_id):
 @bp.route("/workspaces/<workspace_id>/projects", methods=["POST"])
 def update_project(workspace_id):
     workspace = Workspaces.get(g.current_user, workspace_id)
-    form = NewProjectForm(request.form)
+    form = NewProjectForm(http_request.form)
 
     if form.validate():
         project_data = form.data
