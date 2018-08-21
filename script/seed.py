@@ -8,7 +8,7 @@ sys.path.append(parent_dir)
 from atst.app import make_config, make_app
 from atst.domain.users import Users
 from atst.domain.requests import Requests
-from atst.domain.workspaces import Workspaces
+from atst.domain.workspaces import Workspaces, Projects
 from atst.domain.exceptions import AlreadyExistsError
 from tests.factories import RequestFactory
 from atst.routes.dev import _DEV_USERS as DEV_USERS
@@ -32,7 +32,12 @@ def seed_db():
             Requests.submit(request)
             requests.append(request)
 
-        Workspaces.create(request[0])
+        workspace = Workspaces.create(requests[0], name="{}'s workspace".format(user.first_name))
+        Projects.create(
+            workspace=workspace,
+            name="First Project",
+            description="This is our first project."
+        )
 
 
 if __name__ == "__main__":
