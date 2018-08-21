@@ -1,12 +1,10 @@
-import re
-import pytest
 import urllib
 from flask import url_for
 
 from atst.eda_client import MockEDAClient
 
 from tests.mocks import MOCK_REQUEST, MOCK_USER
-from tests.factories import PENumberFactory
+from tests.factories import PENumberFactory, RequestFactory
 
 
 class TestPENumberInForm:
@@ -39,14 +37,13 @@ class TestPENumberInForm:
 
     def _set_monkeypatches(self, monkeypatch):
         monkeypatch.setattr("atst.forms.financial.FinancialForm.validate", lambda s: True)
-        monkeypatch.setattr("atst.domain.requests.Requests.get", lambda i: MOCK_REQUEST)
         monkeypatch.setattr("atst.domain.auth.get_current_user", lambda *args: MOCK_USER)
 
     def submit_data(self, client, data, extended=False):
-        url_kwargs = {"request_id": MOCK_REQUEST.id}
+        request = RequestFactory.create(body=MOCK_REQUEST.body)
+        url_kwargs = {"request_id": request.id}
         if extended:
             url_kwargs["extended"] = True
-
         response = client.post(
             url_for("requests.financial_verification", **url_kwargs),
             headers={"Content-Type": "application/x-www-form-urlencoded"},
