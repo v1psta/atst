@@ -23,3 +23,11 @@ class Workspace(Base, TimestampsMixin):
     @property
     def users(self):
         return set(role.user for role in self.roles)
+
+    @property
+    def user_count(self):
+        return len(self.users)
+
+    @property
+    def task_order(self):
+        return {"number": "task-order-number"}

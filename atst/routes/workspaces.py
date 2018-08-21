@@ -1,7 +1,6 @@
-from flask import Blueprint, render_template, request as http_request
+from flask import Blueprint, render_template, request as http_request, g
 
-from atst.domain.workspaces import Members, Projects, Workspaces
-
+from atst.domain.workspaces import Workspaces
 
 bp = Blueprint("workspaces", __name__)
 
