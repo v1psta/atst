@@ -4,6 +4,7 @@ from atst.database import db
 from atst.models.workspace import Workspace
 from atst.models.workspace_role import WorkspaceRole
 from atst.models.project import Project
+from atst.models.environment import Environment
 from atst.domain.exceptions import NotFoundError, UnauthorizedError
 from atst.domain.roles import Roles
 
@@ -70,6 +71,15 @@ class Projects(object):
         db.session.commit()
 
         return project
+
+
+class Environments(object):
+    @classmethod
+    def create(cls, project, name):
+        environment = Environment(project=project, name=name)
+        db.session.add(environment)
+        db.session.commit()
+        return environment
 
 
 class Members(object):

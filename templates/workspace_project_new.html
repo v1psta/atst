@@ -1,8 +1,42 @@
 {% from "components/icon.html" import Icon %}
+{% from "components/text_input.html" import TextInput %}
 
 {% extends "base_workspace.html" %}
 
 {% block workspace_content %}
-<h1>Add a new project</h1>
+  <form method="POST" action="{{ url_for('workspaces.update_project', workspace_id=workspace.id) }}" >
+    {{ form.csrf_token }}
+    <div class="panel">
+      <div class="panel__heading">
+        <h1>Add a new project</h1>
+      </div>
+
+      <div class="panel__content">
+        {{ TextInput(form.name) }}
+        {{ TextInput(form.description, paragraph=True) }}
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="block-list project-list-item">
+        <header class="block-list__header">
+          <h3 class="block-list__title">Project Environments</h3>
+        </header>
+
+        <ul>
+          <li class="block-list__item">
+            <span class="project-list-item__environment">
+              {{ TextInput(form.environment_name) }}
+            </span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="action-group">
+      <input type="submit" value="Create Project" class="action-group__action usa-button usa-button-big">
+      <!-- <a href="/styleguide" class="action-group__action">Cancel</a> -->
+    </div>
+  </form>
 
 {% endblock %}

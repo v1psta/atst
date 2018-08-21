@@ -1,6 +1,7 @@
-from flask import Blueprint, render_template, request as http_request, g
+from flask import Blueprint, render_template, request as http_request, g, redirect, url_for
 
-from atst.domain.workspaces import Workspaces, Members
+from atst.domain.workspaces import Workspaces, Members, Projects, Environments
+from atst.forms.new_project import NewProjectForm
 
 bp = Blueprint("workspaces", __name__)
 
@@ -36,4 +37,27 @@ def workspace_members(workspace_id):
 
 @bp.route("/workspaces/<workspace_id>/reports")
 def workspace_reports(workspace_id):
-    return render_template("workspace_reports.html")
+    return render_template("workspace_reports.html", workspace_id=workspace_id)
+
+
+@bp.route("/workspaces/<workspace_id>/projects/new")
+def new_project(workspace_id):
+    workspace = Workspaces.get(g.current_user, workspace_id)
+    form = NewProjectForm()
+    return render_template("workspace_project_new.html", workspace=workspace, form=form)
+
+
+@bp.route("/workspaces/<workspace_id>/projects", methods=["POST"])
+def update_project(workspace_id):
+    workspace = Workspaces.get(g.current_user, workspace_id)
+    form = NewProjectForm(request.form)
+
+    if form.validate():
+        project_data = form.data
+        project = Projects.create(
+            workspace, project_data["name"], project_data["description"]
+        )
+        Environments.create(project, project_data["environment_name"])
+        return redirect(
+            url_for("workspaces.workspace_projects", workspace_id=workspace.id)
+        )
