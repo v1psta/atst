@@ -15,4 +15,4 @@ class Project(Base, TimestampsMixin):
 
     workspace_id = Column(ForeignKey("workspaces.id"), nullable=False)
     workspace = relationship("Workspace")
-    projects = relationship("Environment", back_populates="project")
+    environments = relationship("Environment", back_populates="project")

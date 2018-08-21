@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request as http_request, g
 
-from atst.domain.workspaces import Workspaces
+from atst.domain.workspaces import Workspaces, Members
 
 bp = Blueprint("workspaces", __name__)
 
@@ -26,8 +26,12 @@ def workspace_projects(workspace_id):
 
 @bp.route("/workspaces/<workspace_id>/members")
 def workspace_members(workspace_id):
-    members = Members.get_many(workspace_id)
-    return render_template("workspace_members.html", members=members)
+    workspace = Workspaces.get(g.current_user, workspace_id)
+    members_repo = Members()
+    members = members_repo.get_many(workspace_id)
+    return render_template(
+        "workspace_members.html", workspace=workspace, members=members
+    )
 
 
 @bp.route("/workspaces/<workspace_id>/reports")
