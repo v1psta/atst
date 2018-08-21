@@ -1,7 +1,7 @@
 from sqlalchemy.orm.exc import NoResultFound
 
 from atst.database import db
-from atst.domain.exceptions import NotFoundError
+from atst.domain.exceptions import NotFoundError, UnauthorizedError
 from atst.models.workspace import Workspace
 from atst.models.workspace_role import WorkspaceRole
 from atst.domain.roles import Roles
@@ -27,11 +27,14 @@ class Workspaces(object):
         return workspace
 
     @classmethod
-    def get(cls, workspace_id):
+    def get(cls, user, workspace_id):
         try:
             workspace = db.session.query(Workspace).filter_by(id=workspace_id).one()
         except NoResultFound:
             raise NotFoundError("workspace")
+
+        if user not in workspace.users:
+            raise UnauthorizedError(user, "get workspace")
 
         return workspace
 

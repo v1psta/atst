@@ -19,3 +19,7 @@ class Workspace(Base, TimestampsMixin):
     @property
     def owner(self):
         return self.request.creator
+
+    @property
+    def users(self):
+        return set(role.user for role in self.roles)
