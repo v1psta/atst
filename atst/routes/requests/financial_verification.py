@@ -3,15 +3,25 @@ from flask import request as http_request
 
 from . import requests_bp
 from atst.domain.requests import Requests
-from atst.forms.financial import FinancialForm
+from atst.forms.financial import FinancialForm, ExtendedFinancialForm
+
+
+def financial_form(data):
+    if http_request.args.get("extended"):
+        return ExtendedFinancialForm(data=data)
+    else:
+        return FinancialForm(data=data)
 
 
 @requests_bp.route("/requests/verify/<string:request_id>", methods=["GET"])
 def financial_verification(request_id=None):
     request = Requests.get(request_id)
-    form = FinancialForm(data=request.body.get("financial_verification"))
+    form = financial_form(request.body.get("financial_verification"))
     return render_template(
-        "requests/financial_verification.html", f=form, request_id=request_id
+        "requests/financial_verification.html",
+        f=form,
+        request_id=request_id,
+        extended=http_request.args.get("extended"),
     )
 
 
@@ -19,9 +29,9 @@ def financial_verification(request_id=None):
 def update_financial_verification(request_id):
     post_data = http_request.form
     existing_request = Requests.get(request_id)
-    form = FinancialForm(post_data)
+    form = financial_form(post_data)
 
-    rerender_args = dict(request_id=request_id, f=form)
+    rerender_args = dict(request_id=request_id, f=form, extended=http_request.args.get("extended"))
 
     if form.validate():
         request_data = {"financial_verification": form.data}
@@ -31,11 +41,13 @@ def update_financial_verification(request_id):
         Requests.update(request_id, request_data)
         if valid:
             return redirect(url_for("requests.financial_verification_submitted"))
+
         else:
             form.reset()
             return render_template(
                 "requests/financial_verification.html", **rerender_args
             )
+
     else:
         form.reset()
         return render_template("requests/financial_verification.html", **rerender_args)

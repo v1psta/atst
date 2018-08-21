@@ -1,6 +1,7 @@
 import pytest
 
-from atst.forms.financial import suggest_pe_id, FinancialForm
+from atst.forms.financial import suggest_pe_id, FinancialForm, ExtendedFinancialForm
+from atst.eda_client import MockEDAClient
 
 
 @pytest.mark.parametrize("input_,expected", [
@@ -18,7 +19,7 @@ def test_funding_type_other_not_required_if_funding_type_is_not_other():
     form_data = {
         "funding_type": "PROC"
     }
-    form = FinancialForm(data=form_data)
+    form = ExtendedFinancialForm(data=form_data)
     form.validate()
     assert "funding_type_other" not in form.errors
 
@@ -27,7 +28,7 @@ def test_funding_type_other_required_if_funding_type_is_other():
     form_data = {
         "funding_type": "OTHER"
     }
-    form = FinancialForm(data=form_data)
+    form = ExtendedFinancialForm(data=form_data)
     form.validate()
     assert "funding_type_other" in form.errors
 
@@ -67,3 +68,16 @@ def test_ba_code_validation(input_, expected):
     is_valid = "ba_code" not in form.errors
 
     assert is_valid == expected
+
+def test_task_order_number_validation(monkeypatch):
+    monkeypatch.setattr("atst.domain.task_orders.TaskOrders._client", lambda: MockEDAClient())
+    form_invalid = FinancialForm(data={"task_order_number": "1234"})
+    form_invalid.validate()
+
+    assert "task_order_number" in form_invalid.errors
+
+    form_valid = FinancialForm(data={"task_order_number": MockEDAClient.MOCK_CONTRACT_NUMBER}, eda_client=MockEDAClient())
+    form_valid.validate()
+
+    assert "task_order_number" not in form_valid.errors
+

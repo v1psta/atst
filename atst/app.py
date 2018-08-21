@@ -18,6 +18,7 @@ from atst.routes.dev import bp as dev_routes
 from atst.routes.errors import make_error_pages
 from atst.domain.authnid.crl import CRLCache
 from atst.domain.auth import apply_authentication
+from atst.eda_client import MockEDAClient
 
 
 ENV = os.getenv("FLASK_ENV", "dev")
@@ -41,6 +42,7 @@ def make_app(config):
     make_flask_callbacks(app)
     make_crl_validator(app)
     register_filters(app)
+    make_eda_client(app)
 
     db.init_app(app)
     csrf.init_app(app)
@@ -139,3 +141,5 @@ def make_crl_validator(app):
         crl_locations.append(filename.absolute())
     app.crl_cache = CRLCache(app.config["CA_CHAIN"], crl_locations, logger=app.logger)
 
+def make_eda_client(app):
+    app.eda_client = MockEDAClient()
