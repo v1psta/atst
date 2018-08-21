@@ -41,13 +41,7 @@ def update_financial_verification(request_id):
         )
         new_workspace = Requests.update_financial_verification(request_id, post_data)
         if valid:
-            return redirect(
-                url_for(
-                    "workspaces.workspace_projects",
-                    workspace_id=new_workspace.id,
-                    modal=True,
-                )
-            )
+            return redirect(url_for("workspaces.workspace_projects", workspace_id=new_workspace.id, newWorkspace=True))
         else:
             form.reset()
             return render_template(
