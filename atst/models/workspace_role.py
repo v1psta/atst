@@ -11,7 +11,7 @@ class WorkspaceRole(Base):
 
     id = Id()
     workspace_id = Column(UUID(as_uuid=True), ForeignKey("workspaces.id"), index=True)
-    workspace = relationship("Workspace")
+    workspace = relationship("Workspace", back_populates="roles")
 
     role_id = Column(UUID(as_uuid=True), ForeignKey("roles.id"))
     role = relationship("Role")

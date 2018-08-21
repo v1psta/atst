@@ -18,7 +18,6 @@ def test_can_create_workspace():
 def test_default_workspace_name_is_request_id():
     request = RequestFactory.create()
     workspace = Workspaces.create(request)
-    assert workspace.request == request
     assert workspace.name == str(request.id)
 
 
@@ -51,3 +50,9 @@ def test_workspace_has_timestamps():
     request = RequestFactory.create()
     workspace = Workspaces.create(request)
     assert workspace.time_created == workspace.time_updated
+
+
+def test_workspace_has_roles():
+    request = RequestFactory.create()
+    workspace = Workspaces.create(request)
+    assert workspace.roles[0].user == request.creator
