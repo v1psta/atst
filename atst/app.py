@@ -64,11 +64,6 @@ def make_app(config):
 def make_flask_callbacks(app):
     @app.before_request
     def _set_globals():
-        g.navigationContext = (
-            "workspace"
-            if re.match("\/workspaces\/[A-Za-z0-9]*", request.path)
-            else "global"
-        )
         g.dev = os.getenv("FLASK_ENV", "dev") == "dev"
         g.matchesPath = lambda href: re.match("^" + href, request.path)
         g.modal = request.args.get("modal", None)

@@ -1,14 +1,33 @@
+class Workspaces(object):
+    MOCK_WORKSPACES = [
+        {
+            "name": "Unclassified IaaS and PaaS for Defense Digital Service (DDS)",
+            "id": "5966187a-eff9-44c3-aa15-4de7a65ac7ff",
+            "task_order": {"number": 123456},
+            "user_count": 23,
+        }
+    ]
+
+    @classmethod
+    def get(cls, workspace_id):
+        return cls.MOCK_WORKSPACES[0]
+
+    @classmethod
+    def get_many(cls):
+        return cls.MOCK_WORKSPACES
+
 class Projects(object):
-    def __init__(self):
+
+    @classmethod
+    def create(cls, creator_id, body):
         pass
 
-    def create(self, creator_id, body):
+    @classmethod
+    def get(cls, project_id):
         pass
 
-    def get(self, project_id):
-        pass
-
-    def get_many(self, workspace_id):
+    @classmethod
+    def get_many(cls, workspace_id):
         return [
             {
                 "id": "187c9bea-9541-45d7-801f-cf8e7a642e93",
@@ -41,21 +60,23 @@ class Projects(object):
             },
         ]
 
-    def update(self, request_id, request_delta):
+    @classmethod
+    def update(cls, request_id, request_delta):
         pass
 
 
 class Members(object):
-    def __init__(self):
+
+    @classmethod
+    def create(cls, creator_id, body):
         pass
 
-    def create(self, creator_id, body):
+    @classmethod
+    def get(cls, request_id):
         pass
 
-    def get(self, request_id):
-        pass
-
-    def get_many(self, workspace_id):
+    @classmethod
+    def get_many(cls, workspace_id):
         return [
             {
                 "first_name": "Danny",
@@ -86,5 +107,6 @@ class Members(object):
             },
         ]
 
-    def update(self, request_id, request_delta):
+    @classmethod
+    def update(cls, request_id, request_delta):
         pass
