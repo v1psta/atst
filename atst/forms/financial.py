@@ -73,10 +73,10 @@ class BaseFinancialForm(ValidatedForm):
         return valid
 
     @property
-    def is_missing_task_order_id(self):
+    def is_missing_task_order_number(self):
         return False
 
-    task_order_id = StringField(
+    task_order_number = StringField(
         "Task Order Number associated with this request",
         description="Include the original Task Order number (including the 000X at the end). Do not include any modification numbers. Note that there may be a lag between approving a task order and when it becomes available in our system.",
         validators=[Required()]
@@ -125,15 +125,15 @@ class FinancialForm(BaseFinancialForm):
             del(kwargs["eda_client"])
         super().__init__(*args, **kwargs)
 
-    def validate_task_order_id(form, field):
+    def validate_task_order_number(form, field):
         try:
             TaskOrders.get(field.data, client=form.eda_client)
         except NotFoundError:
             raise ValidationError("Task Order number not found")
 
     @property
-    def is_missing_task_order_id(self):
-        return "task_order_id" in self.errors
+    def is_missing_task_order_number(self):
+        return "task_order_number" in self.errors
 
 
 class ExtendedFinancialForm(BaseFinancialForm):

@@ -69,14 +69,14 @@ def test_ba_code_validation(input_, expected):
 
     assert is_valid == expected
 
-def test_task_order_id_validation():
-    form_invalid = FinancialForm(data={"task_order_id": "1234"}, eda_client=MockEDAClient())
+def test_task_order_number_validation():
+    form_invalid = FinancialForm(data={"task_order_number": "1234"}, eda_client=MockEDAClient())
     form_invalid.validate()
 
-    assert "task_order_id" in form_invalid.errors
+    assert "task_order_number" in form_invalid.errors
 
-    form_valid = FinancialForm(data={"task_order_id": MockEDAClient.MOCK_CONTRACT_NUMBER}, eda_client=MockEDAClient())
+    form_valid = FinancialForm(data={"task_order_number": MockEDAClient.MOCK_CONTRACT_NUMBER}, eda_client=MockEDAClient())
     form_valid.validate()
 
-    assert "task_order_id" not in form_valid.errors
+    assert "task_order_number" not in form_valid.errors
 

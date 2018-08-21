@@ -13,7 +13,7 @@ class TestPENumberInForm:
 
     required_data = {
         "pe_id": "123",
-        "task_order_id": MockEDAClient.MOCK_CONTRACT_NUMBER,
+        "task_order_number": MockEDAClient.MOCK_CONTRACT_NUMBER,
         "fname_co": "Contracting",
         "lname_co": "Officer",
         "email_co": "jane@mail.mil",
@@ -103,7 +103,7 @@ class TestPENumberInForm:
 
         data = dict(self.required_data)
         data['pe_id'] = MOCK_REQUEST.body['financial_verification']['pe_id']
-        data['task_order_id'] = '1234'
+        data['task_order_number'] = '1234'
 
         response = self.submit_data(client, data)
 
@@ -115,7 +115,7 @@ class TestPENumberInForm:
 
         data = dict(self.required_data)
         data['pe_id'] = MOCK_REQUEST.body['financial_verification']['pe_id']
-        data['task_order_id'] = MockEDAClient.MOCK_CONTRACT_NUMBER
+        data['task_order_number'] = MockEDAClient.MOCK_CONTRACT_NUMBER
 
         response = self.submit_data(client, data)
 
@@ -127,7 +127,7 @@ class TestPENumberInForm:
 
         data = { **self.required_data, **self.extended_data }
         data['pe_id'] = MOCK_REQUEST.body['financial_verification']['pe_id']
-        data['task_order_id'] = "1234567"
+        data['task_order_number'] = "1234567"
 
         response = self.submit_data(client, data, extended=True)
 
