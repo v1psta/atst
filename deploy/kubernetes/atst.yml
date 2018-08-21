@@ -12,7 +12,7 @@ metadata:
   name: atst
   namespace: atat
 spec:
-  replicas: 1
+  replicas: 2
   strategy:
     type: RollingUpdate
   template:
@@ -24,10 +24,10 @@ spec:
         fsGroup: 101
       containers:
         - name: atst
-          image: registry.atat.codes:443/atst-prod:23e5c04
+          image: registry.atat.codes:443/atst-prod:e38bc2f
           resources:
             requests:
-               memory: "6000Mi"
+               memory: "2500Mi"
           envFrom:
           - configMapRef:
               name: atst-envvars
