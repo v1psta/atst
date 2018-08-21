@@ -9,8 +9,8 @@
       subnav=[
         {
           "label": "Add New Project",
-          "href":"/",
-          "active": g.matchesPath('workspaces/projects/new'),
+          "href": url_for('workspaces.new_project', workspace_id=workspace.id),
+          "active": g.matchesPath('\/workspaces\/[A-Za-z0-9-]*\/projects'),
           "icon": "plus"
         }
       ]

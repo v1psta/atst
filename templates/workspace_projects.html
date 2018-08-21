@@ -1,8 +1,19 @@
 {% from "components/icon.html" import Icon %}
+{% from "components/alert.html" import Alert %}
 
 {% extends "base_workspace.html" %}
 
 {% block workspace_content %}
+
+{% if True %}
+  {{ Alert('Workspace created!',
+    message="\
+      <p>You are now ready to create projects and environments within the JEDI Cloud.</p>
+    ",
+    actions='',
+    level='success'
+  ) }}
+{% endif %}
 
 {% for project in workspace.projects %}
   <div class='block-list project-list-item'>
