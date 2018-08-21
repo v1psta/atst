@@ -1,5 +1,6 @@
 {% from "components/icon.html" import Icon %}
 {% from "components/text_input.html" import TextInput %}
+{% from "components/tooltip.html" import Tooltip %}
 
 {% extends "base_workspace.html" %}
 
@@ -10,7 +11,12 @@
     <div class="panel">
       <div class="panel__heading">
         <h1>Add a new project</h1>
+        {{ Tooltip(
+          "AT-AT allows you to organize your workspace into multiple projects, each of which may have environments.",
+          title="learn more"
+        )}}
       </div>
+
 
       <div class="panel__content">
         {{ TextInput(form.name) }}
@@ -22,6 +28,10 @@
       <div class="block-list project-list-item">
         <header class="block-list__header">
           <h3 class="block-list__title">Project Environments</h3>
+          {{ Tooltip(
+            "Each environment created within a project is an enclave of cloud resources that is logically separated from each other for increased security.",
+            title="learn more"
+          )}}
         </header>
 
         <ul>
