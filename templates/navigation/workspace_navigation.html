@@ -4,8 +4,8 @@
   <ul>
     {{ SidenavItem(
       "Projects",
-      href=url_for("workspaces.workspace_projects", workspace_id=123456),
-      active=g.matchesPath('\/workspaces\/[A-Za-z0-9]*\/projects'),
+      href=url_for("workspaces.workspace_projects", workspace_id=workspace.id),
+      active=request.url_rule.rule.startswith('/workspaces/<workspace_id>/projects'),
       subnav=[
         {
           "label": "Add New Project",
@@ -18,8 +18,8 @@
 
     {{ SidenavItem(
       "Members",
-      href=url_for("workspaces.workspace_members", workspace_id=123456),
-      active=g.matchesPath('\/workspaces\/[A-Za-z0-9]*\/members'),
+      href=url_for("workspaces.workspace_members", workspace_id=workspace.id),
+      active=request.url_rule.rule.startswith('/workspaces/<workspace_id>/members'),
       subnav=[
         {
           "label": "Add New Member",
@@ -32,8 +32,8 @@
 
     {{ SidenavItem(
       "Funding & Reports",
-      href='/workspaces/123456/reports',
-      active=g.matchesPath('\/workspaces\/[A-Za-z0-9]*\/reports')
+      href=url_for("workspaces.workspace_reports", workspace_id=workspace.id),
+      active=request.url_rule.rule.startswith('/workspaces/<workspace_id>/reports')
     ) }}
   </ul>
 </nav>
