@@ -12,7 +12,7 @@ metadata:
   name: atst
   namespace: atat
 spec:
-  replicas: 1
+  replicas: 2
   strategy:
     type: RollingUpdate
   template:
