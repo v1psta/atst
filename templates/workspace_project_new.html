@@ -27,10 +27,12 @@
       <div class="block-list project-list-item">
         <header class="block-list__header">
           <h2 class="block-list__title">Project Environments</h2>
+
           {{ Tooltip(
             "Each environment created within a project is an enclave of cloud resources that is logically separated from each other for increased security.",
             title="learn more"
           )}}
+
         </header>
 
         <ul>
@@ -41,14 +43,20 @@
             </span>
           </li>
         </ul>
+
+        <div class="block-list__footer">
+          <a v-on:click="addEnvironment">Add another environment</a>
+        </div>
       </div>
-      <a v-on:click="addEnvironment">Add another environment</a>
+
+
+      <div class="action-group">
+        <input type="submit" value="Create Project" class="usa-button usa-button-primary">
+        <a href="{{ url_for('workspaces.workspace_projects', workspace_id=workspace.id) }}" class="action-group__action">Cancel</a>
+      </div>
+
     </div>
 
-    <div class="action-group">
-      <input type="submit" value="Create Project" class="usa-button usa-button-primary">
-      <a href="{{ url_for('workspaces.workspace_projects', workspace_id=workspace.id) }}" class="action-group__action">Cancel</a>
-    </div>
   </form>
 </new-project>
 {% endblock %}

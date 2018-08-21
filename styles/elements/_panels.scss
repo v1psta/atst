@@ -63,7 +63,6 @@
 
   .panel__heading {
     margin: $gap * 2;
-
     @include media($medium-screen) {
       margin: $gap * 4;
     }
