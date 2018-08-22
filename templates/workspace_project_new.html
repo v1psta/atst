@@ -39,13 +39,13 @@
           <li v-for="(_, i) in environments" class="block-list__item project-list-item__environment">
             <span class="project-list-item__environment">
               {{ TextInput(form.environment_name) }}
-              <span v-on:click="removeEnvironment(i)">{{ Icon('x') }}</span>
             </span>
+            <span v-on:click="removeEnvironment(i)">{{ Icon('x') }} Remove</span>
           </li>
         </ul>
 
         <div class="block-list__footer">
-          <a v-on:click="addEnvironment">Add another environment</a>
+          <a v-on:click="addEnvironment" class="icon-link">Add another environment</a>
         </div>
       </div>
 
