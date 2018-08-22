@@ -39,7 +39,7 @@ def update_financial_verification(request_id):
         valid = form.perform_extra_validation(
             existing_request.body.get("financial_verification")
         )
-        updated_request = Requests.update_financial_verification(request_id, form.data)
+        updated_request = Requests.update_financial_verification(request_id, form.data, completed=valid)
         if valid:
             new_workspace = Requests.approve_and_create_workspace(updated_request)
             return redirect(url_for("workspaces.workspace_projects", workspace_id=new_workspace.id, newWorkspace=True))
