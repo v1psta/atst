@@ -12,10 +12,6 @@ from atst.models.permissions import Permissions
 
 
 class Workspaces(object):
-    # will a request have a TO association?
-    # do we automatically create an entry for the request.creator in the
-    # workspace_roles table?
-
     @classmethod
     def create(cls, request, name=None):
         name = name or request.id
