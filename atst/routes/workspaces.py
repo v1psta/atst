@@ -7,7 +7,9 @@ from flask import (
     url_for,
 )
 
-from atst.domain.workspaces import Workspaces, Members, Projects, Environments
+from atst.domain.workspaces import Workspaces, Members
+from atst.domain.projects import Projects
+from atst.domain.environments import Environments
 from atst.forms.new_project import NewProjectForm
 
 bp = Blueprint("workspaces", __name__)

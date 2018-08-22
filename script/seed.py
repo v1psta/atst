@@ -8,7 +8,8 @@ sys.path.append(parent_dir)
 from atst.app import make_config, make_app
 from atst.domain.users import Users
 from atst.domain.requests import Requests
-from atst.domain.workspaces import Workspaces, Projects
+from atst.domain.workspaces import Workspaces
+from atst.domain.projects import Projects
 from atst.domain.exceptions import AlreadyExistsError
 from tests.factories import RequestFactory
 from atst.routes.dev import _DEV_USERS as DEV_USERS

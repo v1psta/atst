@@ -3,8 +3,6 @@ from sqlalchemy.orm.exc import NoResultFound
 from atst.database import db
 from atst.models.workspace import Workspace
 from atst.models.workspace_role import WorkspaceRole
-from atst.models.project import Project
-from atst.models.environment import Environment
 from atst.domain.exceptions import NotFoundError, UnauthorizedError
 from atst.domain.roles import Roles
 from atst.domain.authz import Authorization
@@ -68,25 +66,7 @@ class Workspaces(object):
         )
         return workspaces
 
-
-class Projects(object):
     @classmethod
-    def create(cls, workspace, name, description):
-        project = Project(workspace=workspace, name=name, description=description)
-
-        db.session.add(project)
-        db.session.commit()
-
-        return project
-
-
-class Environments(object):
-    @classmethod
-    def create(cls, project, name):
-        environment = Environment(project=project, name=name)
-        db.session.add(environment)
-        db.session.commit()
-        return environment
 
 
 class Members(object):
