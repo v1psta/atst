@@ -2,6 +2,7 @@ import pytest
 from flask import session, url_for
 from .mocks import DOD_SDN_INFO, DOD_SDN, FIXTURE_EMAIL_ADDRESS
 from atst.domain.users import Users
+from atst.domain.roles import Roles
 from atst.domain.exceptions import NotFoundError
 from .factories import UserFactory
 
@@ -13,9 +14,27 @@ def _fetch_user_info(c, t):
     return MOCK_USER
 
 
-def test_successful_login_redirect(client, monkeypatch):
+def test_successful_login_redirect_non_ccpo(client, monkeypatch):
     monkeypatch.setattr("atst.domain.authnid.AuthenticationContext.authenticate", lambda *args: True)
     monkeypatch.setattr("atst.domain.authnid.AuthenticationContext.get_user", lambda *args: UserFactory.create())
+
+    resp = client.get(
+        "/login-redirect",
+        environ_base={
+            "HTTP_X_SSL_CLIENT_VERIFY": "SUCCESS",
+            "HTTP_X_SSL_CLIENT_S_DN": "",
+            "HTTP_X_SSL_CLIENT_CERT": "",
+        },
+    )
+
+    assert resp.status_code == 302
+    assert "requests" in resp.headers["Location"]
+    assert session["user_id"]
+
+def test_successful_login_redirect_ccpo(client, monkeypatch):
+    monkeypatch.setattr("atst.domain.authnid.AuthenticationContext.authenticate", lambda *args: True)
+    role = Roles.get("ccpo")
+    monkeypatch.setattr("atst.domain.authnid.AuthenticationContext.get_user", lambda *args: UserFactory.create(atat_role=role))
 
     resp = client.get(
         "/login-redirect",
@@ -90,7 +109,7 @@ def test_crl_validation_on_login(client):
         },
     )
     assert resp.status_code == 302
-    assert "home" in resp.headers["Location"]
+    assert "requests" in resp.headers["Location"]
     assert session["user_id"]
 
 
