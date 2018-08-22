@@ -56,3 +56,7 @@ deploy:
   script: deploy/kubernetes/atst-update-deploy.sh
   on:
     branch: master
+
+notifications:
+  slack:
+    secure: $TRAVIS_CI_CRED
