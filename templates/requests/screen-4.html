@@ -143,7 +143,7 @@
       </dd>
     </div>
 
-    {% if jedi_request and jedi_request.annual_spend > 1000000 %}
+    {% if jedi_request and jedi_request.annual_spend > annual_spend_threshold %}
 
       <div>
         <dt>Number of User Sessions</dt>
