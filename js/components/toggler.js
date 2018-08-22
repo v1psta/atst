@@ -20,9 +20,5 @@ export default {
     toggle: function (e) {
       this.isVisible = !this.isVisible
     }
-  },
-
-  mounted: function () {
-    console.log(this)
   }
 }
