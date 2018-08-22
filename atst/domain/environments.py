@@ -10,3 +10,9 @@ class Environments(object):
         db.session.commit()
         return environment
 
+    @classmethod
+    def create_many(cls, project, names):
+        for name in names:
+            environment = Environment(project=project, name=name)
+            db.session.add(environment)
+        db.session.commit()
