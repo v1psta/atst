@@ -1,6 +1,7 @@
 {% extends "base_workspace.html" %}
 
 {% from "components/alert.html" import Alert %}
+{% from "components/icon.html" import Icon %}
 
 {% block workspace_content %}
 
@@ -83,6 +84,111 @@
       </div>
     </div>
 
+  </div>
+
+  <div class='spend-table responsive-table-wrapper'>
+    <div class='spend-table__header'>
+      <h2 class='spend-table__title'>Total spend per month</h2>
+
+      <select name='month' id='month' class='spend-table__month-select'>
+        <option value='06/2018'>June 2018</option>
+      </select>
+    </div>
+
+    <table>
+      <thead>
+        <th scope='col'><span class='usa-sr-only'>Spending scope</span></th>
+        <th scope='col' class='table-cell--align-right previous-month'>April 2018</th>
+        <th scope='col' class='table-cell--align-right previous-month'>May 2018</th>
+        <th scope='col' class='table-cell--align-right current-month'>June 2018</th>
+        <td class='current-month'></td>
+      </thead>
+
+      <tbody class='spend-table__workspace'>
+        <tr>
+          <th scope='row'>Workspace Total</th>
+          <td class='table-cell--align-right previous-month'>$58,000</td>
+          <td class='table-cell--align-right previous-month'>$60,000</td>
+          <td class='table-cell--align-right current-month'>$62,000</td>
+          <td class='table-cell--expand current-month meter-cell'>
+            <meter value='62000' min='0' max='62000'></meter>
+          </td>
+        </tr>
+      </tbody>
+
+      <tbody is='toggler' class='spend-table__project'>
+        <template slot-scope='{ isVisible, toggle }'>
+          <tr>
+            <th scope='rowgroup'>
+              <button v-on:click='toggle' class='icon-link icon-link--large spend-table__project__toggler'>
+                <template v-if='isVisible'>{{ Icon('caret_down') }}</template>
+                <template v-else>{{ Icon('caret_right') }}</template>
+                Code.mil
+              </button>
+            </th>
+            <td class='table-cell--align-right previous-month'>$29,000</td>
+            <td class='table-cell--align-right previous-month'>$30,000</td>
+            <td class='table-cell--align-right current-month'>$31,000</td>
+            <td class='table-cell--expand current-month meter-cell'>
+              <meter value='31000' min='0' max='62000' title='50%'></meter>
+            </td>
+          </tr>
+
+          <tr v-show='isVisible'>
+            <th scope='rowgroup'><a href='/' class='icon-link spend-table__project__env'>{{ Icon('link') }} Production</a></th>
+            <td class='table-cell--align-right previous-month'>$14,000</td>
+            <td class='table-cell--align-right previous-month'>$15,000</td>
+            <td class='table-cell--align-right current-month'>$16,000</td>
+            <td class='table-cell--expand current-month'></td>
+          </tr>
+
+          <tr v-show='isVisible'>
+            <th scope='rowgroup'><a href='/' class='icon-link spend-table__project__env'>{{ Icon('link') }} Development</a></th>
+            <td class='table-cell--align-right previous-month'>$12,000</td>
+            <td class='table-cell--align-right previous-month'>$13,000</td>
+            <td class='table-cell--align-right current-month'>$14,000</td>
+            <td class='table-cell--expand current-month'></td>
+          </tr>
+        </template>
+      </tbody>
+
+      <tbody is='toggler' class='spend-table__project'>
+        <template slot-scope='{ isVisible, toggle }'>
+          <tr>
+            <th scope='rowgroup'>
+              <button v-on:click='toggle' class='icon-link icon-link--large spend-table__project__toggler'>
+                <template v-if='isVisible'>{{ Icon('caret_down') }}</template>
+                <template v-else>{{ Icon('caret_right') }}</template>
+                Digital Dojo
+              </button>
+            </th>
+            <td class='table-cell--align-right previous-month'>$29,000</td>
+            <td class='table-cell--align-right previous-month'>$30,000</td>
+            <td class='table-cell--align-right current-month'>$31,000</td>
+            <td class='table-cell--expand current-month meter-cell'>
+              <meter value='31000' min='0' max='62000' title='50%'></meter>
+            </td>
+          </tr>
+
+          <tr v-show='isVisible'>
+            <th scope='rowgroup'><a href='/' class='icon-link spend-table__project__env'>{{ Icon('link') }} Production</a></th>
+            <td class='table-cell--align-right previous-month'>$14,000</td>
+            <td class='table-cell--align-right previous-month'>$15,000</td>
+            <td class='table-cell--align-right current-month'>$16,000</td>
+            <td class='table-cell--expand current-month'></td>
+          </tr>
+
+          <tr v-show='isVisible'>
+            <th scope='rowgroup'><a href='/' class='icon-link spend-table__project__env'>{{ Icon('link') }} Development</a></th>
+            <td class='table-cell--align-right previous-month'>$12,000</td>
+            <td class='table-cell--align-right previous-month'>$13,000</td>
+            <td class='table-cell--align-right current-month'>$14,000</td>
+            <td class='table-cell--expand current-month'></td>
+          </tr>
+        </template>
+      </tbody>
+
+    </table>
   </div>
 
 {% endblock %}
