@@ -1,5 +1,7 @@
 import textinput from '../text_input'
 
+const createEnvironment = (name) => ({ name })
+
 export default {
   name: 'new-project',
 
@@ -18,7 +20,7 @@ export default {
     const {
       name,
       description,
-      environments = ['']
+      environments = [ createEnvironment() ]
     } = this.initialData
 
     return {
@@ -34,7 +36,7 @@ export default {
 
   methods: {
     addEnvironment: function (event) {
-      this.environments.push('')
+      this.environments.push(createEnvironment(""))
     },
 
     removeEnvironment: function (index) {

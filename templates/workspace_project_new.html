@@ -34,13 +34,14 @@
         </header>
 
         <ul>
-          <li v-for="(_, i) in environments" class="block-list__item">
-              {{ TextInput(form.environment_name) }}
+          <li v-for="(environment, i) in environments" class="block-list__item">
+              {{ form.environment_names.label }}
+              <textarea :name="'environment_names-' + i" :id="'environment_names-' + i" v-model="environment.name"></textarea>
               <span class="icon-link icon-link--danger icon-link--vertical" v-on:click="removeEnvironment(i)">{{ Icon('x') }} Remove</span>
-
           </li>
         </ul>
 
+        {{ form.environment_names.errors }}
         <div class="block-list__footer">
           <a v-on:click="addEnvironment" class="icon-link">Add another environment</a>
         </div>
