@@ -3,6 +3,7 @@ from uuid import uuid4
 
 from atst.domain.exceptions import NotFoundError, UnauthorizedError
 from atst.domain.workspaces import Workspaces
+from atst.domain.workspace_users import WorkspaceUsers
 
 from tests.factories import WorkspaceFactory, RequestFactory, UserFactory
 
@@ -69,3 +70,20 @@ def test_workspaces_get_many_returns_a_users_workspaces():
     Workspaces.create(RequestFactory.create())
 
     assert Workspaces.get_many(user) == [users_workspace]
+
+
+def test_get_for_update_allows_owner():
+    owner = UserFactory.create()
+    workspace = Workspaces.create(RequestFactory.create(creator=owner))
+    Workspaces.get_for_update(owner, workspace.id)
+
+
+def test_get_for_update_blocks_developer():
+    owner = UserFactory.create()
+    developer = UserFactory.create()
+
+    workspace = Workspaces.create(RequestFactory.create(creator=owner))
+    WorkspaceUsers.add(developer, workspace.id, "developer")
+
+    with pytest.raises(UnauthorizedError):
+        Workspaces.get_for_update(developer, workspace.id)

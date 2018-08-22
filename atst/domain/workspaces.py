@@ -7,6 +7,8 @@ from atst.models.project import Project
 from atst.models.environment import Environment
 from atst.domain.exceptions import NotFoundError, UnauthorizedError
 from atst.domain.roles import Roles
+from atst.domain.authz import Authorization
+from atst.models.permissions import Permissions
 
 
 class Workspaces(object):
@@ -40,6 +42,15 @@ class Workspaces(object):
         if user not in workspace.users:
             raise UnauthorizedError(user, "get workspace")
 
+        return workspace
+
+    @classmethod
+    def get_for_update(cls, user, workspace_id):
+        workspace = Workspaces.get(user, workspace_id)
+        if not Authorization.has_workspace_permission(
+            user, workspace, Permissions.ADD_APPLICATION_IN_WORKSPACE
+        ):
+            raise UnauthorizedError(user, "add project")
         return workspace
 
     @classmethod
