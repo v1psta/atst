@@ -7,7 +7,7 @@ from flask import (
     url_for,
 )
 
-from atst.domain.workspaces import Workspaces, Members
+from atst.domain.workspaces import Workspaces
 from atst.domain.projects import Projects
 from atst.domain.environments import Environments
 from atst.forms.new_project import NewProjectForm
@@ -45,11 +45,7 @@ def show_workspace(workspace_id):
 @bp.route("/workspaces/<workspace_id>/members")
 def workspace_members(workspace_id):
     workspace = Workspaces.get(g.current_user, workspace_id)
-    members_repo = Members()
-    members = members_repo.get_many(workspace_id)
-    return render_template(
-        "workspace_members.html", workspace=workspace, members=members
-    )
+    return render_template("workspace_members.html", workspace=workspace)
 
 
 @bp.route("/workspaces/<workspace_id>/reports")
