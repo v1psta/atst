@@ -1,5 +1,5 @@
 from flask_wtf import Form
-from wtforms.fields import StringField, TextAreaField, FieldList
+from wtforms.fields import StringField, TextAreaField
 
 
 class NewProjectForm(Form):
