@@ -118,10 +118,13 @@ class Requests(object):
         return request
 
     @classmethod
-    def update_financial_verification(cls, request_id, data):
-        updated_request = Requests.update(request_id, {"financial_verification": data})
-        approved_request = Requests.set_status(updated_request, RequestStatus.APPROVED)
+    def approve_and_create_workspace(cls, request):
+        approved_request = Requests.set_status(request, RequestStatus.APPROVED)
         workspace = Workspaces.create(approved_request)
+
+        db.session.add(approved_request)
+        db.session.commit()
+
         return workspace
 
     @classmethod

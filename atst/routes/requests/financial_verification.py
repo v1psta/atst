@@ -36,11 +36,13 @@ def update_financial_verification(request_id):
     )
 
     if form.validate():
+        request_data = {"financial_verification": form.data}
         valid = form.perform_extra_validation(
             existing_request.body.get("financial_verification")
         )
-        new_workspace = Requests.update_financial_verification(request_id, post_data)
+        updated_request = Requests.update(request_id, request_data)
         if valid:
+            new_workspace = Requests.approve_and_create_workspace(updated_request)
             return redirect(url_for("workspaces.workspace_projects", workspace_id=new_workspace.id, newWorkspace=True))
         else:
             form.reset()
