@@ -18,5 +18,9 @@ class NewProjectForm(Form):
     @property
     def data(self):
         _data = super(Form, self).data
-        _data["environment_names"] = [n for n in _data["environment_names"] if n not in self.EMPTY_ENVIRONMENT_NAMES]
+        _data["environment_names"] = [
+            n
+            for n in _data["environment_names"]
+            if n not in self.EMPTY_ENVIRONMENT_NAMES
+        ]
         return _data
