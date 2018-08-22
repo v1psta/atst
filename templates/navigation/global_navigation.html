@@ -1,6 +1,6 @@
 {% from "components/sidenav_item.html" import SidenavItem %}
 
-<div class="global-navigation sidenav">
+<div class="global-navigation sidenav {% if workspace %}global-navigation__context--workspace{% endif %}">
   <ul>
     {% if g.dev %}
       {{ SidenavItem("Styleguide",
