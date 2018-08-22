@@ -39,7 +39,7 @@ class Workspaces(object):
         except NoResultFound:
             raise NotFoundError("workspace")
 
-        if user not in workspace.users:
+        if not Authorization.is_in_workspace(user, workspace):
             raise UnauthorizedError(user, "get workspace")
 
         return workspace
