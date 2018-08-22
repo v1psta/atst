@@ -9,7 +9,7 @@
   <form method="POST" action="{{ url_for('workspaces.update_project', workspace_id=workspace.id) }}" >
     {{ form.csrf_token }}
     <div class="panel">
-      <div class="panel__heading">
+      <div class="panel__heading panel__heading--grow">
         <h1>Add a new project</h1>
         {{ Tooltip(
           "AT-AT allows you to organize your workspace into multiple projects, each of which may have environments.",
