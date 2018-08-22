@@ -59,4 +59,4 @@ deploy:
 
 notifications:
   slack:
-    secure: $TRAVIS_CI_CRED
+    secure: $SLACK_TRAVIS_CI_CRED
