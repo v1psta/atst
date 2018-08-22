@@ -18,7 +18,14 @@ class Workspace(Base, TimestampsMixin):
 
     @property
     def owner(self):
-        return self.request.creator
+        return next(
+            (
+                workspace_role.user
+                for workspace_role in self.roles
+                if workspace_role.role.name == "owner"
+            ),
+            None,
+        )
 
     @property
     def users(self):
