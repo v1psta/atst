@@ -10,6 +10,7 @@ from atst.models.pe_number import PENumber
 from atst.models.task_order import TaskOrder
 from atst.models.user import User
 from atst.models.role import Role
+from atst.models.workspace import Workspace
 from atst.models.request_status_event import RequestStatusEvent
 from atst.domain.roles import Roles
 
@@ -102,3 +103,12 @@ class PENumberFactory(factory.alchemy.SQLAlchemyModelFactory):
 class TaskOrderFactory(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
         model = TaskOrder
+
+
+class WorkspaceFactory(factory.alchemy.SQLAlchemyModelFactory):
+    class Meta:
+        model = Workspace
+
+    request = factory.SubFactory(RequestFactory)
+    # name it the same as the request ID by default
+    name = factory.LazyAttribute(lambda w: w.request.id)

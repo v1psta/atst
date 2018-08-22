@@ -10,10 +10,13 @@ class WorkspaceRole(Base):
     __tablename__ = "workspace_role"
 
     id = Id()
-    workspace_id = Column(UUID(as_uuid=True), index=True)
+    workspace_id = Column(UUID(as_uuid=True), ForeignKey("workspaces.id"), index=True)
+    workspace = relationship("Workspace", back_populates="roles")
+
     role_id = Column(UUID(as_uuid=True), ForeignKey("roles.id"))
-    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), index=True)
     role = relationship("Role")
+
+    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), index=True)
 
 
 Index(

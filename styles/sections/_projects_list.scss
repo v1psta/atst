@@ -4,6 +4,10 @@
     flex-direction: row;
     justify-content: space-between;
 
+    .usa-input {
+      margin: 0;
+    }
+
     .project-list-item__environment__link {
       @include icon-link;
       @include icon-link-large;

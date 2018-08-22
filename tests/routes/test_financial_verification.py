@@ -1,12 +1,10 @@
-import re
-import pytest
 import urllib
 from flask import url_for
 
 from atst.eda_client import MockEDAClient
 
 from tests.mocks import MOCK_REQUEST, MOCK_USER
-from tests.factories import PENumberFactory
+from tests.factories import PENumberFactory, RequestFactory
 
 
 class TestPENumberInForm:
@@ -39,14 +37,13 @@ class TestPENumberInForm:
 
     def _set_monkeypatches(self, monkeypatch):
         monkeypatch.setattr("atst.forms.financial.FinancialForm.validate", lambda s: True)
-        monkeypatch.setattr("atst.domain.requests.Requests.get", lambda i: MOCK_REQUEST)
         monkeypatch.setattr("atst.domain.auth.get_current_user", lambda *args: MOCK_USER)
 
     def submit_data(self, client, data, extended=False):
-        url_kwargs = {"request_id": MOCK_REQUEST.id}
+        request = RequestFactory.create(body=MOCK_REQUEST.body)
+        url_kwargs = {"request_id": request.id}
         if extended:
             url_kwargs["extended"] = True
-
         response = client.post(
             url_for("requests.financial_verification", **url_kwargs),
             headers={"Content-Type": "application/x-www-form-urlencoded"},
@@ -72,7 +69,7 @@ class TestPENumberInForm:
         response = self.submit_data(client, data)
 
         assert response.status_code == 302
-        assert "/requests/financial_verification_submitted" in response.headers.get("Location")
+        assert "/workspaces" in response.headers.get("Location")
 
     def test_submit_request_form_with_new_valid_pe_id(self, monkeypatch, client):
         self._set_monkeypatches(monkeypatch)
@@ -84,7 +81,7 @@ class TestPENumberInForm:
         response = self.submit_data(client, data)
 
         assert response.status_code == 302
-        assert "/requests/financial_verification_submitted" in response.headers.get("Location")
+        assert "/workspaces" in response.headers.get("Location")
 
     def test_submit_request_form_with_missing_pe_id(self, monkeypatch, client):
         self._set_monkeypatches(monkeypatch)
@@ -132,4 +129,4 @@ class TestPENumberInForm:
         response = self.submit_data(client, data, extended=True)
 
         assert response.status_code == 302
-        assert "/requests/financial_verification_submitted" in response.headers.get("Location")
+        assert "/workspaces" in response.headers.get("Location")
