@@ -31,6 +31,7 @@ def deep_merge(source, destination: dict):
 
 class Requests(object):
     AUTO_APPROVE_THRESHOLD = 1000000
+    ANNUAL_SPEND_THRESHOLD = 1000000
 
     @classmethod
     def create(cls, creator, body):
