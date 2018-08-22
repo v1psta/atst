@@ -27,20 +27,17 @@
       <div class="block-list project-list-item">
         <header class="block-list__header">
           <h2 class="block-list__title">Project Environments</h2>
-
           {{ Tooltip(
             "Each environment created within a project is an enclave of cloud resources that is logically separated from each other for increased security.",
             title="learn more"
           )}}
-
         </header>
 
         <ul>
-          <li v-for="(_, i) in environments" class="block-list__item project-list-item__environment">
-            <span class="project-list-item__environment">
+          <li v-for="(_, i) in environments" class="block-list__item">
               {{ TextInput(form.environment_name) }}
-            </span>
-            <span v-on:click="removeEnvironment(i)">{{ Icon('x') }} Remove</span>
+              <span class="icon-link icon-link--danger icon-link--vertical" v-on:click="removeEnvironment(i)">{{ Icon('x') }} Remove</span>
+
           </li>
         </ul>
 
