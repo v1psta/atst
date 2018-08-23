@@ -18,14 +18,16 @@ export default {
 
   data: function () {
     const {
-      name,
-      description,
-      environments = [ createEnvironment() ]
+      environment_names,
     } = this.initialData
 
+    const environments = (
+      environment_names.length > 0
+      ? environment_names
+      : [""]
+    ).map(createEnvironment)
+
     return {
-      name,
-      description,
       environments,
     }
   },
