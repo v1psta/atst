@@ -1,4 +1,5 @@
 {% from "components/icon.html" import Icon %}
+{% from "components/modal.html" import Modal %}
 {% from "components/text_input.html" import TextInput %}
 {% from "components/tooltip.html" import Tooltip %}
 {% from "components/alert.html" import Alert %}
@@ -6,8 +7,27 @@
 {% extends "base_workspace.html" %}
 
 {% block workspace_content %}
+
+{% set modalName = "newProjectConfirmation" %}
+
 <new-project inline-template v-bind:initial-data='{{ form.data|tojson }}'>
   <form method="POST" action="{{ url_for('workspaces.update_project', workspace_id=workspace.id) }}" >
+    {% call Modal(name=modalName, dismissable=False) %}
+      <h1>Are you sure you want to create <strong>!{ name }</strong> project?</h1>
+
+      <p>
+      When you click "Create Project" the following environments will be created as individual cloud resource groups under <strong>!{ name }</strong> project:
+      <span v-for="(environment, index) in environments">
+        <strong>!{environment.name}</strong><template v-if="index < (environments.length - 1)">, </template>
+      </span>
+      </p>
+
+      <div class='action-group'>
+        <button type='submit' class='action-group__action usa-button'>Create Project</button>
+        <a v-on:click="closeModal('{{ modalName }}')" class='action-group__action'>Cancel</a>
+      </div>
+    {% endcall %}
+
     {{ form.csrf_token }}
     <div class="panel">
       <div class="panel__heading panel__heading--grow">
@@ -58,8 +78,7 @@
 
 
       <div class="action-group">
-        <input type="submit" value="Create Project" class="usa-button usa-button-primary">
-        <a href="{{ url_for('workspaces.workspace_projects', workspace_id=workspace.id) }}" class="action-group__action">Cancel</a>
+        <div v-on:click="openModal('{{ modalName }}')" class="usa-button usa-button-primary">Create Project</div>
       </div>
 
     </div>
