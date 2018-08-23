@@ -9,7 +9,6 @@ from flask import (
 
 from atst.domain.workspaces import Workspaces
 from atst.domain.projects import Projects
-from atst.domain.environments import Environments
 from atst.forms.new_project import NewProjectForm
 
 bp = Blueprint("workspaces", __name__)
