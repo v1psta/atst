@@ -1,24 +1,34 @@
 {% from "components/icon.html" import Icon %}
+{% from "components/alert.html" import Alert %}
 
 {% extends "base_workspace.html" %}
 
 {% block workspace_content %}
 
-{% for project in projects %}
+{% if request.args.get("newWorkspace") %}
+  {{ Alert('Workspace created!',
+    message="\
+      <p>You are now ready to create projects and environments within the JEDI Cloud.</p>
+    ",
+    level='success'
+  ) }}
+{% endif %}
+
+{% for project in workspace.projects %}
   <div class='block-list project-list-item'>
     <header class='block-list__header'>
-      <h2 class='block-list__title'>{{ project['name'] }} ({{ project['environments']|length }} environments)</h2>
+      <h2 class='block-list__title'>{{ project.name }} ({{ project.environments|length }} environments)</h2>
       <a class='icon-link' href='/workspaces/123456/projects/789/edit'>
         {{ Icon('edit') }}
         <span>edit</span>
       </a>
     </header>
     <ul>
-      {% for environment in project['environments'] %}
+      {% for environment in project.environments %}
         <li class='block-list__item project-list-item__environment'>
           <a href='/' target='_blank' rel='noopener noreferrer' class='project-list-item__environment__link'>
             {{ Icon('link') }}
-            <span>{{ environment["name"]}}</span>
+            <span>{{ environment.name }}</span>
           </a>
 
           <div class='project-list-item__environment__members'>

@@ -1,10 +1,11 @@
 import re
 from wtforms.fields.html5 import EmailField
 from wtforms.fields import StringField
-from wtforms.validators import Required, Email, Regexp
+from wtforms.validators import Required, Email, Regexp, ValidationError
 
 from atst.domain.exceptions import NotFoundError
 from atst.domain.pe_numbers import PENumbers
+from atst.domain.task_orders import TaskOrders
 
 from .fields import NewlineListField, SelectField
 from .forms import ValidatedForm
@@ -57,12 +58,7 @@ def validate_pe_id(field, existing_request):
     return True
 
 
-class FinancialForm(ValidatedForm):
-    def validate(self, *args, **kwargs):
-        if self.funding_type.data == "OTHER":
-            self.funding_type_other.validators.append(Required())
-        return super().validate(*args, **kwargs)
-
+class BaseFinancialForm(ValidatedForm):
     def reset(self):
         """
         Reset UII info so that it can be de-parsed rendered properly.
@@ -76,7 +72,11 @@ class FinancialForm(ValidatedForm):
             valid = validate_pe_id(self.pe_id, existing_request)
         return valid
 
-    task_order_id = StringField(
+    @property
+    def is_missing_task_order_number(self):
+        return False
+
+    task_order_number = StringField(
         "Task Order Number associated with this request",
         description="Include the original Task Order number (including the 000X at the end). Do not include any modification numbers. Note that there may be a lag between approving a task order and when it becomes available in our system.",
         validators=[Required()]
@@ -116,6 +116,25 @@ class FinancialForm(ValidatedForm):
     office_cor = StringField(
         "Contracting Officer Representative (COR) Office", validators=[Required()]
     )
+
+
+class FinancialForm(BaseFinancialForm):
+    def validate_task_order_number(form, field):
+        try:
+            TaskOrders.get(field.data)
+        except NotFoundError:
+            raise ValidationError("Task Order number not found")
+
+    @property
+    def is_missing_task_order_number(self):
+        return "task_order_number" in self.errors
+
+
+class ExtendedFinancialForm(BaseFinancialForm):
+    def validate(self, *args, **kwargs):
+        if self.funding_type.data == "OTHER":
+            self.funding_type_other.validators.append(Required())
+        return super().validate(*args, **kwargs)
 
     funding_type = SelectField(
         description="What is the source of funding?",

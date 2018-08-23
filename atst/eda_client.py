@@ -71,8 +71,10 @@ class MockEDAClient(EDAClientBase):
             },
         ]
 
+    MOCK_CONTRACT_NUMBER = "DCA10096D0052"
+
     def get_contract(self, contract_number, status):
-        if contract_number == "DCA10096D0052" and status == "y":
+        if contract_number == self.MOCK_CONTRACT_NUMBER and status == "y":
             return {
                 "aco_mod": "01",
                 "admin_dodaac": None,

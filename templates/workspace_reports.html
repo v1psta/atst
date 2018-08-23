@@ -5,7 +5,7 @@
 
 {% block workspace_content %}
 
-  {{ Alert("Funding Information & Reports for Workspace " + workspace_id,
+  {{ Alert("Funding Information & Reports for Workspace " + workspace.name,
     message="<p>On this screen you'll find detailed reporting information on this workspace. This message needs to be written better and be dismissable.</p>",
     actions=[
       {"label": "Learn More", "href": "/", "icon": "info"},

@@ -58,7 +58,7 @@
 }
 
 .usa-input {
-  margin:  ($gap * 4) ($gap * 2) ($gap * 4) 0;
+  margin: ($gap * 4) ($gap * 2) ($gap * 4) 0;
 
   @include media($medium-screen) {
     margin: ($gap * 4) 0;

@@ -9,6 +9,7 @@ import DetailsOfUse from './components/forms/details_of_use'
 import poc from './components/forms/poc'
 import financial from './components/forms/financial'
 import toggler from './components/toggler'
+import NewProject from './components/forms/new_project'
 
 Vue.use(VTooltip)
 
@@ -22,6 +23,7 @@ const app = new Vue({
     DetailsOfUse,
     poc,
     financial,
+    NewProject
   },
   methods: {
     closeModal: function(name) {

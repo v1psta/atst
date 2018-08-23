@@ -65,7 +65,7 @@
     </div>
 
     <transition name='slide'>
-      <template v-if="annualSpend > 1000000">
+      <template v-if="annualSpend > {{ annual_spend_threshold }}">
         <fieldset class='form__sub-fields'>
           <h3>Because the approximate annual spend is over $1,000,000, please answer a few additional questions.</h3>
           {{ TextInput(f.number_user_sessions, validation='integer', placeholder="0") }}

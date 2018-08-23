@@ -88,7 +88,7 @@
     <footer class='block-list__footer'>
       <a href='/' class='icon-link'>
         {% module Icon('plus') %}
-        <span>Add another environment</span>
+        <span class="icon-link">Add another environment</span>
       </a>
     </footer>
   </section>

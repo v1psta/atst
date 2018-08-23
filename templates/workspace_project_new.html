@@ -1,0 +1,59 @@
+{% from "components/icon.html" import Icon %}
+{% from "components/text_input.html" import TextInput %}
+{% from "components/tooltip.html" import Tooltip %}
+
+{% extends "base_workspace.html" %}
+
+{% block workspace_content %}
+<new-project inline-template v-bind:initial-data='{{ form.data|tojson }}'>
+  <form method="POST" action="{{ url_for('workspaces.update_project', workspace_id=workspace.id) }}" >
+    {{ form.csrf_token }}
+    <div class="panel">
+      <div class="panel__heading panel__heading--grow">
+        <h1>Add a new project</h1>
+        {{ Tooltip(
+          "AT-AT allows you to organize your workspace into multiple projects, each of which may have environments.",
+          title="learn more"
+        )}}
+      </div>
+
+
+      <div class="panel__content">
+        {{ TextInput(form.name) }}
+        {{ TextInput(form.description, paragraph=True) }}
+      </div>
+    </div>
+
+      <div class="block-list project-list-item">
+        <header class="block-list__header">
+          <h2 class="block-list__title">Project Environments</h2>
+          {{ Tooltip(
+            "Each environment created within a project is an enclave of cloud resources that is logically separated from each other for increased security.",
+            title="learn more"
+          )}}
+        </header>
+
+        <ul>
+          <li v-for="(_, i) in environments" class="block-list__item">
+              {{ TextInput(form.environment_name) }}
+              <span class="icon-link icon-link--danger icon-link--vertical" v-on:click="removeEnvironment(i)">{{ Icon('x') }} Remove</span>
+
+          </li>
+        </ul>
+
+        <div class="block-list__footer">
+          <a v-on:click="addEnvironment" class="icon-link">Add another environment</a>
+        </div>
+      </div>
+
+
+      <div class="action-group">
+        <input type="submit" value="Create Project" class="usa-button usa-button-primary">
+        <a href="{{ url_for('workspaces.workspace_projects', workspace_id=workspace.id) }}" class="action-group__action">Cancel</a>
+      </div>
+
+    </div>
+
+  </form>
+</new-project>
+{% endblock %}
