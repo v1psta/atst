@@ -106,6 +106,8 @@ class Requests(object):
         db.session.add(request)
         db.session.commit()
 
+        return request
+
     @classmethod
     def _get_with_lock(cls, request_id):
         try:
@@ -127,8 +129,6 @@ class Requests(object):
         # Without this, sqlalchemy won't notice the change to request.body,
         # since it doesn't track dictionary mutations by default.
         flag_modified(request, "body")
-
-        return request
 
         return request
 
@@ -247,10 +247,12 @@ WHERE requests_with_status.status = :status
             request.task_order = task_order
             db.session.add(task_order)
 
-        Requests._merge_body(request, {"financial_verification": request_data})
+        request = Requests._merge_body(request, {"financial_verification": request_data})
 
         db.session.add(request)
         db.session.commit()
+
+        return request
 
     @classmethod
     def _get_or_create_task_order(cls, number, task_order_data=None):
