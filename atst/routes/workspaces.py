@@ -59,7 +59,7 @@ def new_project(workspace_id):
     return render_template("workspace_project_new.html", workspace=workspace, form=form)
 
 
-@bp.route("/workspaces/<workspace_id>/projects", methods=["POST"])
+@bp.route("/workspaces/<workspace_id>/projects/new", methods=["POST"])
 def update_project(workspace_id):
     workspace = Workspaces.get_for_update(g.current_user, workspace_id)
     form = NewProjectForm(http_request.form)
