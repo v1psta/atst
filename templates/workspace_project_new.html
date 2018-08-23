@@ -1,6 +1,7 @@
 {% from "components/icon.html" import Icon %}
 {% from "components/text_input.html" import TextInput %}
 {% from "components/tooltip.html" import Tooltip %}
+{% from "components/alert.html" import Alert %}
 
 {% extends "base_workspace.html" %}
 
@@ -24,6 +25,10 @@
       </div>
     </div>
 
+    {% if form.environment_names.errors %}
+      {{ Alert("Missing Environments", message="Provide at least one environment name.", level="error") }}
+    {% endif %}
+
       <div class="block-list project-list-item">
         <header class="block-list__header">
           <h2 class="block-list__title">Project Environments</h2>
@@ -45,10 +50,6 @@
               </button>
           </li>
         </ul>
-
-        {% for error in form.environment_names.errors %}
-          <span>{{ error }}</span>
-        {% endfor %}
 
         <div class="block-list__footer">
           <a v-on:click="addEnvironment" class="icon-link">Add another environment</a>
