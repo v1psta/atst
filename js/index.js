@@ -8,14 +8,15 @@ import checkboxinput from './components/checkbox_input'
 import DetailsOfUse from './components/forms/details_of_use'
 import poc from './components/forms/poc'
 import financial from './components/forms/financial'
+import toggler from './components/toggler'
 import NewProject from './components/forms/new_project'
 
 Vue.use(VTooltip)
 
-
 const app = new Vue({
   el: '#app-root',
   components: {
+    toggler,
     optionsinput,
     textinput,
     checkboxinput,

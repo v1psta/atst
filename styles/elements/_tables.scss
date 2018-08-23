@@ -8,6 +8,28 @@
   @include panel-margin;
   min-width: 100%;
 
+  th, td {
+    &.table-cell--align-right {
+      text-align: right;
+    }
+
+    &.table-cell--shrink {
+      width: 1%;
+    }
+
+    &.table-cell--expand {
+      width: 100%;
+    }
+
+    &.table-cell--hide-small {
+      display: none;
+
+      @include media($medium-screen) {
+        display: table-cell;
+      }
+    }
+  }
+
   tbody {
     tr {
       th,
@@ -29,32 +51,12 @@
           border-bottom-style: solid;
         }
       }
-
-      .table-cell--align-right {
-        text-align: right;
-      }
-
-      .table-cell--shrink {
-        width: 1%;
-      }
-
-      .table-cell--expand {
-        width: 100%;
-      }
-
-      .table-cell--hide-small {
-        display: none;
-
-        @include media($medium-screen) {
-          display: table-cell;
-        }
-      }
     }
   }
 
   thead {
     tr {
-      th {
+      th, td {
         @include block-list-header;
         display: table-cell;
       }
