@@ -41,13 +41,13 @@
         <ul>
           <li v-for="(environment, i) in environments" class="block-list__item project-edit__env-list-item">
             <div class="usa-input">
-              <label :for="'environment_names-' + i">Environment Name</span>
-              <input type="text" :name="'environment_names-' + i" :id="'environment_names-' + i" v-model="environment.name"></input>
+              <label :for="'environment_names-' + i">Environment Name</label>
+              <input type="text" :name="'environment_names-' + i" :id="'environment_names-' + i" v-model="environment.name">
             </div>
-              <button v-on:click="removeEnvironment(i)" v-if="i > 0" type="button" class='project-edit__env-list-item__remover'>
-                <span>{{ Icon('trash') }}</span>
-                <span>Remove</span>
-              </button>
+            <button v-on:click="removeEnvironment(i)" v-if="environments.length > 1" type="button" class='project-edit__env-list-item__remover'>
+              {{ Icon('trash') }}
+              <span>Remove</span>
+            </button>
           </li>
         </ul>
 
