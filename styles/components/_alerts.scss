@@ -48,6 +48,8 @@
   }
 
   .alert__content {
+    flex: 1;
+
     .alert__message {
       &:last-child {
         > *:last-child {
