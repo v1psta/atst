@@ -253,7 +253,7 @@ WHERE requests_with_status.status = :status
         db.session.commit()
 
     @classmethod
-    def _get_or_create_task_order(cls, number, task_order_data={}):
+    def _get_or_create_task_order(cls, number, task_order_data=None):
         if task_order_data:
             return TaskOrders.create(**task_order_data, number=number, source=TaskOrderSource.MANUAL)
         else:
