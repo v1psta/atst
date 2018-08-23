@@ -44,8 +44,8 @@
               <label :for="'environment_names-' + i">Environment Name</span>
               <input type="text" :name="'environment_names-' + i" :id="'environment_names-' + i" v-model="environment.name"></input>
             </div>
-              <button v-on:click="removeEnvironment(i)" type="button" class='project-edit__env-list-item__remover'>
-                {{ Icon('trash') }}
+              <button v-on:click="removeEnvironment(i)" v-if="i > 0" type="button" class='project-edit__env-list-item__remover'>
+                <span>{{ Icon('trash') }}</span>
                 <span>Remove</span>
               </button>
           </li>
