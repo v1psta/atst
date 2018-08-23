@@ -4,6 +4,7 @@ from atst.domain.roles import Roles
 from atst.domain.requests import Requests
 from urllib.parse import urlencode
 
+from tests.assert_util import dict_contains
 
 ERROR_CLASS = "alert--error"
 
@@ -159,6 +160,32 @@ def test_poc_details_can_be_autopopulated_on_new_request(client, user_session):
     request = Requests.get(request_id)
 
     assert request.body["primary_poc"]["dodid_poc"] == creator.dod_id
+
+
+def test_poc_autofill_checks_information_about_you_form_first(client, user_session):
+    creator = UserFactory.create()
+    user_session(creator)
+    request = RequestFactory.create(creator=creator, body={
+        "information_about_you": {
+            "fname_request": "Alice",
+            "lname_request": "Adams",
+            "email_request": "alice.adams@mail.mil"
+        }
+    })
+    poc_input = {
+        "am_poc": "yes",
+    }
+    client.post(
+        "/requests/new/3/{}".format(request.id),
+        headers={"Content-Type": "application/x-www-form-urlencoded"},
+        data=urlencode(poc_input),
+    )
+    request = Requests.get(request.id)
+    assert dict_contains(request.body["primary_poc"], {
+        "fname_poc": "Alice",
+        "lname_poc": "Adams",
+        "email_poc": "alice.adams@mail.mil"
+    })
 
 
 def test_can_review_data(user_session, client):
