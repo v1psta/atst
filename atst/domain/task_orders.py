@@ -7,6 +7,7 @@ from .exceptions import NotFoundError
 
 
 class TaskOrders(object):
+    TASK_ORDER_DATA = [col.name for col in TaskOrder.__table__.c if col.name != "id"]
 
     @classmethod
     def get(cls, order_number):
@@ -28,6 +29,7 @@ class TaskOrders(object):
         if to_data:
             # TODO: we need to determine exactly what we're getting and storing from the EDA client
             return TaskOrders.create(number=to_data["contract_no"], source=Source.EDA)
+
         else:
             raise NotFoundError("task_order")
 
@@ -43,3 +45,14 @@ class TaskOrders(object):
     @classmethod
     def _client(cls):
         return app.eda_client
+
+    @classmethod
+    def get_or_create_task_order(cls, number, task_order_data=None):
+        try:
+            return TaskOrders.get(number)
+
+        except NotFoundError:
+            if task_order_data:
+                return TaskOrders.create(
+                    **task_order_data, number=number, source=Source.MANUAL
+                )

@@ -5,7 +5,6 @@ from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.orm.attributes import flag_modified
 
 from atst.models.request import Request
-from atst.models.task_order import TaskOrder, Source as TaskOrderSource
 from atst.models.request_status_event import RequestStatusEvent, RequestStatus
 from atst.domain.workspaces import Workspaces
 from atst.database import db
@@ -54,6 +53,7 @@ class Requests(object):
                     and_(Request.id == request_id, Request.creator == creator)
                 )
             ).scalar()
+
         except exc.DataError:
             return False
 
@@ -73,10 +73,9 @@ class Requests(object):
             filters.append(Request.creator == creator)
 
         requests = (
-            db.session.query(Request)
-            .filter(*filters)
-            .order_by(Request.time_created.desc())
-            .all()
+            db.session.query(Request).filter(*filters).order_by(
+                Request.time_created.desc()
+            ).all()
         )
         return requests
 
@@ -114,11 +113,11 @@ class Requests(object):
             # Query for request matching id, acquiring a row-level write lock.
             # https://www.postgresql.org/docs/10/static/sql-select.html#SQL-FOR-UPDATE-SHARE
             return (
-                db.session.query(Request)
-                .filter_by(id=request_id)
-                .with_for_update(of=Request)
-                .one()
+                db.session.query(Request).filter_by(id=request_id).with_for_update(
+                    of=Request
+                ).one()
             )
+
         except NoResultFound:
             return
 
@@ -153,8 +152,10 @@ class Requests(object):
         return {
             RequestStatus.STARTED: "mission_owner",
             RequestStatus.PENDING_FINANCIAL_VERIFICATION: "mission_owner",
-            RequestStatus.PENDING_CCPO_APPROVAL: "ccpo"
-        }.get(request.status)
+            RequestStatus.PENDING_CCPO_APPROVAL: "ccpo",
+        }.get(
+            request.status
+        )
 
     @classmethod
     def should_auto_approve(cls, request):
@@ -166,16 +167,13 @@ class Requests(object):
         return dollar_value < cls.AUTO_APPROVE_THRESHOLD
 
     _VALID_SUBMISSION_STATUSES = [
-        RequestStatus.STARTED,
-        RequestStatus.CHANGES_REQUESTED,
+        RequestStatus.STARTED, RequestStatus.CHANGES_REQUESTED
     ]
 
     @classmethod
     def should_allow_submission(cls, request):
         all_request_sections = [
-            "details_of_use",
-            "information_about_you",
-            "primary_poc",
+            "details_of_use", "information_about_you", "primary_poc"
         ]
         existing_request_sections = request.body.keys()
         return request.status in Requests._VALID_SUBMISSION_STATUSES and all(
@@ -215,11 +213,13 @@ WHERE requests_with_status.status = :status
 
     @classmethod
     def in_progress_count(cls):
-        return sum([
-            Requests.status_count(RequestStatus.STARTED),
-            Requests.status_count(RequestStatus.PENDING_FINANCIAL_VERIFICATION),
-            Requests.status_count(RequestStatus.CHANGES_REQUESTED),
-        ])
+        return sum(
+            [
+                Requests.status_count(RequestStatus.STARTED),
+                Requests.status_count(RequestStatus.PENDING_FINANCIAL_VERIFICATION),
+                Requests.status_count(RequestStatus.CHANGES_REQUESTED),
+            ]
+        )
 
     @classmethod
     def pending_ccpo_count(cls):
@@ -229,8 +229,6 @@ WHERE requests_with_status.status = :status
     def completed_count(cls):
         return Requests.status_count(RequestStatus.APPROVED)
 
-    _TASK_ORDER_DATA = [col.name for col in TaskOrder.__table__.c if col.name != "id"]
-
     @classmethod
     def update_financial_verification(cls, request_id, financial_data):
         request = Requests._get_with_lock(request_id)
@@ -238,30 +236,28 @@ WHERE requests_with_status.status = :status
             return
 
         request_data = financial_data.copy()
-        task_order_data = {k: request_data.pop(k) for (k,v) in financial_data.items() if k in Requests._TASK_ORDER_DATA}
+        task_order_data = {
+            k: request_data.pop(k)
+            for (k, v) in financial_data.items()
+            if k in TaskOrders.TASK_ORDER_DATA
+        }
         task_order_number = request_data.pop("task_order_number")
 
-        task_order = Requests._get_or_create_task_order(task_order_number, task_order_data)
+        task_order = TaskOrders.get_or_create_task_order(
+            task_order_number, task_order_data
+        )
 
         if task_order:
             request.task_order = task_order
 
-        request = Requests._merge_body(request, {"financial_verification": request_data})
+        request = Requests._merge_body(
+            request, {"financial_verification": request_data}
+        )
 
         db.session.add(request)
         db.session.commit()
 
         return request
-
-    @classmethod
-    def _get_or_create_task_order(cls, number, task_order_data=None):
-        if task_order_data:
-            return TaskOrders.create(**task_order_data, number=number, source=TaskOrderSource.MANUAL)
-        else:
-            try:
-                return TaskOrders.get(number)
-            except NotFoundError:
-                return
 
     @classmethod
     def submit_financial_verification(cls, request_id):
@@ -273,4 +269,3 @@ WHERE requests_with_status.status = :status
 
         db.session.add(request)
         db.session.commit()
-
