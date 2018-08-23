@@ -128,11 +128,22 @@ class JEDIRequestFlow(object):
     def map_request_data(self, section, data):
         if section == "primary_poc":
             if data.get("am_poc", False):
+                try:
+                    request_user_info = self.existing_request.body.get("information_about_you", {})
+                except AttributeError:
+                    request_user_info = {}
+
                 data = {
                     **data,
                     "dodid_poc": self.current_user.dod_id,
-                    "fname_poc": self.current_user.first_name,
-                    "lname_poc": self.current_user.last_name,
-                    "email_poc": self.current_user.email,
+                    "fname_poc": request_user_info.get(
+                        "fname_request", self.current_user.first_name
+                    ),
+                    "lname_poc": request_user_info.get(
+                        "lname_request", self.current_user.last_name
+                    ),
+                    "email_poc": request_user_info.get(
+                        "email_request", self.current_user.email
+                    ),
                 }
         return {section: data}
