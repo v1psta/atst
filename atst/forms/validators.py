@@ -51,3 +51,14 @@ def Alphabet(message="Please enter only letters."):
             raise ValidationError(message)
 
     return _alphabet
+
+
+def ListItemRequired(message="Please provide at least one.", empty_values=("", None)):
+    def _list_item_required(form, field):
+        non_empty_values = [v for v in field.data if v not in empty_values]
+        if len(non_empty_values) == 0:
+            raise ValidationError(message)
+
+    return _list_item_required
+
+

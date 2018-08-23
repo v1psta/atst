@@ -9,7 +9,6 @@ from flask import (
 
 from atst.domain.workspaces import Workspaces
 from atst.domain.projects import Projects
-from atst.domain.environments import Environments
 from atst.forms.new_project import NewProjectForm
 
 bp = Blueprint("workspaces", __name__)
@@ -67,10 +66,16 @@ def update_project(workspace_id):
 
     if form.validate():
         project_data = form.data
-        project = Projects.create(
-            workspace, project_data["name"], project_data["description"]
+        Projects.create(
+            workspace,
+            project_data["name"],
+            project_data["description"],
+            project_data["environment_names"],
         )
-        Environments.create(project, project_data["environment_name"])
         return redirect(
             url_for("workspaces.workspace_projects", workspace_id=workspace.id)
+        )
+    else:
+        return render_template(
+            "workspace_project_new.html", workspace=workspace, form=form
         )

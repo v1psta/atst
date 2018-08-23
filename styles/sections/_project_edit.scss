@@ -13,7 +13,7 @@
     @include icon-link-vertical;
     @include icon-link-color($color-red, $color-red-lightest);
 
-    margin-bottom: -$gap;
+    margin-bottom: 0;
     margin-right: -$gap;
   }
 }
