@@ -1,7 +1,7 @@
 """add additional task order fields
 
 Revision ID: 875e4b8a05fc
-Revises: 05d6272bdb43
+Revises: f36f130622b9
 Create Date: 2018-08-21 15:52:46.636928
 
 """
@@ -11,7 +11,7 @@ import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
 revision = '875e4b8a05fc'
-down_revision = '05d6272bdb43'
+down_revision = 'f36f130622b9'
 branch_labels = None
 depends_on = None
 
