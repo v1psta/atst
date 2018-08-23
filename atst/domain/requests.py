@@ -8,6 +8,7 @@ from atst.models.request import Request
 from atst.models.request_status_event import RequestStatusEvent, RequestStatus
 from atst.domain.workspaces import Workspaces
 from atst.database import db
+from atst.domain.task_orders import TaskOrders
 
 from .exceptions import NotFoundError
 
@@ -52,6 +53,7 @@ class Requests(object):
                     and_(Request.id == request_id, Request.creator == creator)
                 )
             ).scalar()
+
         except exc.DataError:
             return False
 
@@ -71,10 +73,9 @@ class Requests(object):
             filters.append(Request.creator == creator)
 
         requests = (
-            db.session.query(Request)
-            .filter(*filters)
-            .order_by(Request.time_created.desc())
-            .all()
+            db.session.query(Request).filter(*filters).order_by(
+                Request.time_created.desc()
+            ).all()
         )
         return requests
 
@@ -95,26 +96,38 @@ class Requests(object):
 
     @classmethod
     def update(cls, request_id, request_delta):
+        request = Requests._get_with_lock(request_id)
+        if not request:
+            return
+
+        request = Requests._merge_body(request, request_delta)
+
+        db.session.add(request)
+        db.session.commit()
+
+        return request
+
+    @classmethod
+    def _get_with_lock(cls, request_id):
         try:
             # Query for request matching id, acquiring a row-level write lock.
             # https://www.postgresql.org/docs/10/static/sql-select.html#SQL-FOR-UPDATE-SHARE
-            request = (
-                db.session.query(Request)
-                .filter_by(id=request_id)
-                .with_for_update(of=Request)
-                .one()
+            return (
+                db.session.query(Request).filter_by(id=request_id).with_for_update(
+                    of=Request
+                ).one()
             )
+
         except NoResultFound:
             return
 
+    @classmethod
+    def _merge_body(cls, request, request_delta):
         request.body = deep_merge(request_delta, request.body)
 
         # Without this, sqlalchemy won't notice the change to request.body,
         # since it doesn't track dictionary mutations by default.
         flag_modified(request, "body")
-
-        db.session.add(request)
-        db.session.commit()
 
         return request
 
@@ -139,8 +152,10 @@ class Requests(object):
         return {
             RequestStatus.STARTED: "mission_owner",
             RequestStatus.PENDING_FINANCIAL_VERIFICATION: "mission_owner",
-            RequestStatus.PENDING_CCPO_APPROVAL: "ccpo"
-        }.get(request.status)
+            RequestStatus.PENDING_CCPO_APPROVAL: "ccpo",
+        }.get(
+            request.status
+        )
 
     @classmethod
     def should_auto_approve(cls, request):
@@ -152,16 +167,13 @@ class Requests(object):
         return dollar_value < cls.AUTO_APPROVE_THRESHOLD
 
     _VALID_SUBMISSION_STATUSES = [
-        RequestStatus.STARTED,
-        RequestStatus.CHANGES_REQUESTED,
+        RequestStatus.STARTED, RequestStatus.CHANGES_REQUESTED
     ]
 
     @classmethod
     def should_allow_submission(cls, request):
         all_request_sections = [
-            "details_of_use",
-            "information_about_you",
-            "primary_poc",
+            "details_of_use", "information_about_you", "primary_poc"
         ]
         existing_request_sections = request.body.keys()
         return request.status in Requests._VALID_SUBMISSION_STATUSES and all(
@@ -201,11 +213,13 @@ WHERE requests_with_status.status = :status
 
     @classmethod
     def in_progress_count(cls):
-        return sum([
-            Requests.status_count(RequestStatus.STARTED),
-            Requests.status_count(RequestStatus.PENDING_FINANCIAL_VERIFICATION),
-            Requests.status_count(RequestStatus.CHANGES_REQUESTED),
-        ])
+        return sum(
+            [
+                Requests.status_count(RequestStatus.STARTED),
+                Requests.status_count(RequestStatus.PENDING_FINANCIAL_VERIFICATION),
+                Requests.status_count(RequestStatus.CHANGES_REQUESTED),
+            ]
+        )
 
     @classmethod
     def pending_ccpo_count(cls):
@@ -215,3 +229,43 @@ WHERE requests_with_status.status = :status
     def completed_count(cls):
         return Requests.status_count(RequestStatus.APPROVED)
 
+    @classmethod
+    def update_financial_verification(cls, request_id, financial_data):
+        request = Requests._get_with_lock(request_id)
+        if not request:
+            return
+
+        request_data = financial_data.copy()
+        task_order_data = {
+            k: request_data.pop(k)
+            for (k, v) in financial_data.items()
+            if k in TaskOrders.TASK_ORDER_DATA
+        }
+        task_order_number = request_data.pop("task_order_number")
+
+        task_order = TaskOrders.get_or_create_task_order(
+            task_order_number, task_order_data
+        )
+
+        if task_order:
+            request.task_order = task_order
+
+        request = Requests._merge_body(
+            request, {"financial_verification": request_data}
+        )
+
+        db.session.add(request)
+        db.session.commit()
+
+        return request
+
+    @classmethod
+    def submit_financial_verification(cls, request_id):
+        request = Requests._get_with_lock(request_id)
+        if not request:
+            return
+
+        Requests.set_status(request, RequestStatus.PENDING_CCPO_APPROVAL)
+
+        db.session.add(request)
+        db.session.commit()
