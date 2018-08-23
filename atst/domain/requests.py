@@ -245,7 +245,6 @@ WHERE requests_with_status.status = :status
 
         if task_order:
             request.task_order = task_order
-            db.session.add(task_order)
 
         request = Requests._merge_body(request, {"financial_verification": request_data})
 
