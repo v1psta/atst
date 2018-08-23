@@ -6,6 +6,9 @@ source "$(dirname "${0}")"/../script/include/global_header.inc.sh
 
 export FLASK_ENV=test
 
+# create upload directory for app
+mkdir uploads | true
+
 # Enable database resetting
 RESET_DB="true"
 

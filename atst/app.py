@@ -19,6 +19,7 @@ from atst.routes.errors import make_error_pages
 from atst.domain.authnid.crl import CRLCache
 from atst.domain.auth import apply_authentication
 from atst.eda_client import MockEDAClient
+from atst.uploader import Uploader
 
 
 ENV = os.getenv("FLASK_ENV", "dev")
@@ -43,6 +44,7 @@ def make_app(config):
     make_crl_validator(app)
     register_filters(app)
     make_eda_client(app)
+    make_upload_storage(app)
 
     db.init_app(app)
     csrf.init_app(app)
@@ -143,3 +145,12 @@ def make_crl_validator(app):
 
 def make_eda_client(app):
     app.eda_client = MockEDAClient()
+
+def make_upload_storage(app):
+    uploader = Uploader(
+            provider=app.config.get("STORAGE_PROVIDER"),
+            container=app.config.get("STORAGE_CONTAINER"),
+            key=app.config.get("STORAGE_KEY"),
+            secret=app.config.get("STORAGE_SECRET")
+            )
+    app.uploader = uploader

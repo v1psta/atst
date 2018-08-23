@@ -94,6 +94,9 @@
               f.clin_2003,placeholder="7,000",
               validation='integer'
             ) }}
+
+            {{ f.task_order.label }}
+            {{ f.task_order(multiple="") }}
           </fieldset>
         {% endif %}
 

@@ -1,7 +1,8 @@
 import re
 from wtforms.fields.html5 import EmailField
-from wtforms.fields import StringField
+from wtforms.fields import StringField, FileField
 from wtforms.validators import Required, Email, Regexp
+from flask_wtf.file import FileAllowed
 
 from atst.domain.exceptions import NotFoundError
 from atst.domain.pe_numbers import PENumbers
@@ -214,3 +215,5 @@ class ExtendedFinancialForm(BaseFinancialForm):
         description="Review your task order document, the amounts for each CLIN must match exactly here",
         filters=[number_to_int],
     )
+
+    task_order = FileField("Upload a copy of your Task Order", validators=[FileAllowed(['pdf'], 'Only PDF documents can be uploaded.')])
