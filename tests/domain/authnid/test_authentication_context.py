@@ -11,7 +11,7 @@ from tests.factories import UserFactory
 CERT = open("tests/fixtures/{}.crt".format(FIXTURE_EMAIL_ADDRESS)).read()
 
 
-class MockCRLCache():
+class MockCRLCache:
     def __init__(self, valid=True):
         self.valid = valid
 
@@ -23,16 +23,12 @@ class MockCRLCache():
 
 
 def test_can_authenticate():
-    auth_context = AuthenticationContext(
-        MockCRLCache(), "SUCCESS", DOD_SDN, CERT
-    )
+    auth_context = AuthenticationContext(MockCRLCache(), "SUCCESS", DOD_SDN, CERT)
     assert auth_context.authenticate()
 
 
 def test_unsuccessful_status():
-    auth_context = AuthenticationContext(
-        MockCRLCache(), "FAILURE", DOD_SDN, CERT
-    )
+    auth_context = AuthenticationContext(MockCRLCache(), "FAILURE", DOD_SDN, CERT)
     with pytest.raises(UnauthenticatedError) as excinfo:
         assert auth_context.authenticate()
 
@@ -41,9 +37,7 @@ def test_unsuccessful_status():
 
 
 def test_crl_check_fails():
-    auth_context = AuthenticationContext(
-        MockCRLCache(False), "SUCCESS", DOD_SDN, CERT
-    )
+    auth_context = AuthenticationContext(MockCRLCache(False), "SUCCESS", DOD_SDN, CERT)
     with pytest.raises(UnauthenticatedError) as excinfo:
         assert auth_context.authenticate()
 
@@ -52,9 +46,7 @@ def test_crl_check_fails():
 
 
 def test_bad_sdn():
-    auth_context = AuthenticationContext(
-        MockCRLCache(), "SUCCESS", "abc123", CERT
-    )
+    auth_context = AuthenticationContext(MockCRLCache(), "SUCCESS", "abc123", CERT)
     with pytest.raises(UnauthenticatedError) as excinfo:
         auth_context.get_user()
 
@@ -64,9 +56,7 @@ def test_bad_sdn():
 
 def test_user_exists():
     user = UserFactory.create(**DOD_SDN_INFO)
-    auth_context = AuthenticationContext(
-        MockCRLCache(), "SUCCESS", DOD_SDN, CERT
-    )
+    auth_context = AuthenticationContext(MockCRLCache(), "SUCCESS", DOD_SDN, CERT)
     auth_user = auth_context.get_user()
 
     assert auth_user == user
@@ -77,9 +67,7 @@ def test_creates_user():
     with pytest.raises(NotFoundError):
         Users.get_by_dod_id(DOD_SDN_INFO["dod_id"])
 
-    auth_context = AuthenticationContext(
-        MockCRLCache(), "SUCCESS", DOD_SDN, CERT
-    )
+    auth_context = AuthenticationContext(MockCRLCache(), "SUCCESS", DOD_SDN, CERT)
     user = auth_context.get_user()
     assert user.dod_id == DOD_SDN_INFO["dod_id"]
     assert user.email == FIXTURE_EMAIL_ADDRESS
@@ -87,9 +75,7 @@ def test_creates_user():
 
 def test_user_cert_has_no_email():
     cert = open("ssl/client-certs/atat.mil.crt").read()
-    auth_context = AuthenticationContext(
-        MockCRLCache(), "SUCCESS", DOD_SDN, cert
-    )
+    auth_context = AuthenticationContext(MockCRLCache(), "SUCCESS", DOD_SDN, cert)
     user = auth_context.get_user()
 
     assert user.email == None

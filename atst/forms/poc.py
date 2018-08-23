@@ -6,7 +6,6 @@ from .validators import IsNumber
 
 
 class POCForm(ValidatedForm):
-
     def validate(self, *args, **kwargs):
         if self.am_poc.data:
             # Prepend Optional validators so that the validation chain
@@ -18,11 +17,10 @@ class POCForm(ValidatedForm):
 
         return super().validate(*args, **kwargs)
 
-
     am_poc = BooleanField(
         "I am the Workspace Owner",
         default=False,
-        false_values=(False, "false", "False", "no", "")
+        false_values=(False, "false", "False", "no", ""),
     )
 
     fname_poc = StringField("First Name", validators=[Required()])

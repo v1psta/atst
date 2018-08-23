@@ -8,12 +8,7 @@ from atst.app import make_app, make_config
 from atst.database import db as _db
 import tests.factories as factories
 
-dictConfig({
-    'version': 1,
-    'handlers': {'wsgi': {
-        'class': 'logging.NullHandler',
-    }}
-})
+dictConfig({"version": 1, "handlers": {"wsgi": {"class": "logging.NullHandler"}}})
 
 
 @pytest.fixture(scope="session")

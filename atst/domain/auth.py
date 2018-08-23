@@ -3,7 +3,14 @@ from flask import g, redirect, url_for, session, request
 from atst.domain.users import Users
 
 
-UNPROTECTED_ROUTES = ["atst.root", "dev.login_dev", "atst.login_redirect", "atst.unauthorized", "static"]
+UNPROTECTED_ROUTES = [
+    "atst.root",
+    "dev.login_dev",
+    "atst.login_redirect",
+    "atst.unauthorized",
+    "static",
+]
+
 
 def apply_authentication(app):
     @app.before_request
@@ -26,7 +33,7 @@ def get_current_user():
     else:
         return False
 
+
 def _unprotected_route(request):
     if request.endpoint in UNPROTECTED_ROUTES:
         return True
-

@@ -64,8 +64,6 @@ class Workspaces(object):
     @classmethod
     def _create_workspace_role(cls, user, workspace, role_name):
         role = Roles.get(role_name)
-        workspace_role = WorkspaceRole(
-            user=user, role=role, workspace=workspace
-        )
+        workspace_role = WorkspaceRole(user=user, role=role, workspace=workspace)
         db.session.add(workspace_role)
         return workspace_role

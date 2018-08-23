@@ -25,21 +25,21 @@ def styleguide():
     return render_template("styleguide.html")
 
 
-@bp.route('/<path:path>')
+@bp.route("/<path:path>")
 def catch_all(path):
     return render_template("{}.html".format(path))
 
 
 def _make_authentication_context():
     return AuthenticationContext(
-            crl_cache=app.crl_cache,
-            auth_status=request.environ.get("HTTP_X_SSL_CLIENT_VERIFY"),
-            sdn=request.environ.get("HTTP_X_SSL_CLIENT_S_DN"),
-            cert=request.environ.get("HTTP_X_SSL_CLIENT_CERT")
+        crl_cache=app.crl_cache,
+        auth_status=request.environ.get("HTTP_X_SSL_CLIENT_VERIFY"),
+        sdn=request.environ.get("HTTP_X_SSL_CLIENT_S_DN"),
+        cert=request.environ.get("HTTP_X_SSL_CLIENT_CERT"),
     )
 
 
-@bp.route('/login-redirect')
+@bp.route("/login-redirect")
 def login_redirect():
     auth_context = _make_authentication_context()
     auth_context.authenticate()
@@ -53,7 +53,7 @@ def login_redirect():
 
 
 def _is_valid_certificate(request):
-    cert = request.environ.get('HTTP_X_SSL_CLIENT_CERT')
+    cert = request.environ.get("HTTP_X_SSL_CLIENT_CERT")
     if cert:
         result = app.crl_validator.validate(cert.encode())
         return result

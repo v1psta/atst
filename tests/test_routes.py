@@ -1,6 +1,9 @@
 import pytest
 
-@pytest.mark.parametrize("path", (
+
+@pytest.mark.parametrize(
+    "path",
+    (
         "/",
         "/home",
         "/workspaces",
@@ -9,7 +12,8 @@ import pytest
         "/users",
         "/reports",
         "/calculator",
-    ))
+    ),
+)
 def test_routes(path, client, user_session):
     user_session()
 

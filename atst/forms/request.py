@@ -4,22 +4,26 @@ from wtforms.validators import Optional, Required
 
 from .fields import DateField, SelectField
 from .forms import ValidatedForm
-from .data import SERVICE_BRANCHES, ASSISTANCE_ORG_TYPES, DATA_TRANSFER_AMOUNTS, COMPLETION_DATE_RANGES
+from .data import (
+    SERVICE_BRANCHES,
+    ASSISTANCE_ORG_TYPES,
+    DATA_TRANSFER_AMOUNTS,
+    COMPLETION_DATE_RANGES,
+)
 from atst.domain.requests import Requests
 
 
 class RequestForm(ValidatedForm):
-
     def validate(self, *args, **kwargs):
-        if self.jedi_migration.data == 'no':
+        if self.jedi_migration.data == "no":
             self.rationalization_software_systems.validators.append(Optional())
             self.technical_support_team.validators.append(Optional())
             self.organization_providing_assistance.validators.append(Optional())
             self.engineering_assessment.validators.append(Optional())
             self.data_transfers.validators.append(Optional())
             self.expected_completion_date.validators.append(Optional())
-        elif self.jedi_migration.data == 'yes':
-            if self.technical_support_team.data == 'no':
+        elif self.jedi_migration.data == "yes":
+            if self.technical_support_team.data == "no":
                 self.organization_providing_assistance.validators.append(Optional())
             self.cloud_native.validators.append(Optional())
 
@@ -39,15 +43,14 @@ class RequestForm(ValidatedForm):
         "DoD Component",
         description="Identify the DoD component that is requesting access to the JEDI Cloud",
         choices=SERVICE_BRANCHES,
-        validators=[Required()]
+        validators=[Required()],
     )
 
     jedi_usage = TextAreaField(
         "JEDI Usage",
         description="Your answer will help us provide tangible examples to DoD leadership how and why commercial cloud resources are accelerating the Department's missions",
-        validators=[Required()]
+        validators=[Required()],
     )
-
 
     # Details of Use: Cloud Readiness
     num_software_systems = IntegerField(
@@ -121,16 +124,15 @@ class RequestForm(ValidatedForm):
 
     average_daily_traffic = IntegerField(
         "Average Daily Traffic (Number of Requests)",
-        description="What is the average daily traffic you expect the systems under this cloud contract to use?"
+        description="What is the average daily traffic you expect the systems under this cloud contract to use?",
     )
 
     average_daily_traffic_gb = IntegerField(
         "Average Daily Traffic (GB)",
-        description="What is the average daily traffic you expect the systems under this cloud contract to use?"
+        description="What is the average daily traffic you expect the systems under this cloud contract to use?",
     )
 
     start_date = DateField(
         description="When do you expect to start using the JEDI Cloud (not for billing purposes)?",
-        validators=[
-            Required()]
+        validators=[Required()],
     )

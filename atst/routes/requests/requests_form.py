@@ -6,7 +6,12 @@ from atst.routes.requests.jedi_request_flow import JEDIRequestFlow
 from atst.models.permissions import Permissions
 from atst.models.request_status_event import RequestStatus
 from atst.domain.exceptions import UnauthorizedError
-from atst.forms.data import SERVICE_BRANCHES, ASSISTANCE_ORG_TYPES, DATA_TRANSFER_AMOUNTS, COMPLETION_DATE_RANGES
+from atst.forms.data import (
+    SERVICE_BRANCHES,
+    ASSISTANCE_ORG_TYPES,
+    DATA_TRANSFER_AMOUNTS,
+    COMPLETION_DATE_RANGES,
+)
 
 
 @requests_bp.route("/requests/new/<int:screen>", methods=["GET"])
@@ -27,6 +32,7 @@ def requests_form_new(screen):
         completion_date_ranges=COMPLETION_DATE_RANGES,
     )
 
+
 @requests_bp.route(
     "/requests/new/<int:screen>", methods=["GET"], defaults={"request_id": None}
 )
@@ -36,7 +42,9 @@ def requests_form_update(screen=1, request_id=None):
         _check_can_view_request(request_id)
 
     request = Requests.get(request_id) if request_id is not None else None
-    jedi_flow = JEDIRequestFlow(screen, request=request, request_id=request_id, current_user=g.current_user)
+    jedi_flow = JEDIRequestFlow(
+        screen, request=request, request_id=request_id, current_user=g.current_user
+    )
 
     return render_template(
         "requests/screen-%d.html" % int(screen),
@@ -114,10 +122,12 @@ def requests_submit(request_id=None):
 # TODO: generalize this, along with other authorizations, into a policy-pattern
 # for authorization in the application
 def _check_can_view_request(request_id):
-    if Permissions.REVIEW_AND_APPROVE_JEDI_WORKSPACE_REQUEST in g.current_user.atat_permissions:
+    if (
+        Permissions.REVIEW_AND_APPROVE_JEDI_WORKSPACE_REQUEST
+        in g.current_user.atat_permissions
+    ):
         pass
     elif Requests.exists(request_id, g.current_user):
         pass
     else:
         raise UnauthorizedError(g.current_user, "view request {}".format(request_id))
-

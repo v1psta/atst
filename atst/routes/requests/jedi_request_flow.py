@@ -129,7 +129,9 @@ class JEDIRequestFlow(object):
         if section == "primary_poc":
             if data.get("am_poc", False):
                 try:
-                    request_user_info = self.existing_request.body.get("information_about_you", {})
+                    request_user_info = self.existing_request.body.get(
+                        "information_about_you", {}
+                    )
                 except AttributeError:
                     request_user_info = {}
 

@@ -18,4 +18,3 @@ def test_invalid_date():
     date_str = "This is not a valid data"
     with pytest.raises(ValueError):
         parse_date(date_str)
-

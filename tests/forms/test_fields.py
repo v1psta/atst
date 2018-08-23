@@ -30,13 +30,16 @@ def test_date_insane_format():
         form.date._value()
 
 
-@pytest.mark.parametrize("input_,expected", [
-    ("", []),
-    ("hello", ["hello"]),
-    ("hello\n", ["hello"]),
-    ("hello\nworld", ["hello", "world"]),
-    ("hello\nworld\n", ["hello", "world"])
-])
+@pytest.mark.parametrize(
+    "input_,expected",
+    [
+        ("", []),
+        ("hello", ["hello"]),
+        ("hello\n", ["hello"]),
+        ("hello\nworld", ["hello", "world"]),
+        ("hello\nworld\n", ["hello", "world"]),
+    ],
+)
 def test_newline_list_process(input_, expected):
     form_data = ImmutableMultiDict({"newline_list": input_})
     form = NewlineListForm(form_data)
@@ -45,11 +48,10 @@ def test_newline_list_process(input_, expected):
     assert form.data == {"newline_list": expected}
 
 
-@pytest.mark.parametrize("input_,expected", [
-    ([], ""),
-    (["hello"], "hello"),
-    (["hello", "world"], "hello\nworld")
-])
+@pytest.mark.parametrize(
+    "input_,expected",
+    [([], ""), (["hello"], "hello"), (["hello", "world"], "hello\nworld")],
+)
 def test_newline_list_value(input_, expected):
     form_data = {"newline_list": input_}
     form = NewlineListForm(data=form_data)

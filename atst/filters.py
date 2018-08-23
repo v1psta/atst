@@ -1,7 +1,8 @@
 import re
 
+
 def iconSvg(name):
-    with open('static/icons/'+name+'.svg') as contents:
+    with open("static/icons/" + name + ".svg") as contents:
         return contents.read()
 
 
@@ -14,8 +15,8 @@ def dollars(value):
 
 
 def usPhone(number):
-    phone = re.sub(r'\D', '', number)
-    return '+1 ({}) {} - {}'.format(phone[0:3], phone[3:6], phone[6:])
+    phone = re.sub(r"\D", "", number)
+    return "+1 ({}) {} - {}".format(phone[0:3], phone[3:6], phone[6:])
 
 
 def readableInteger(value):
@@ -31,9 +32,8 @@ def getOptionLabel(value, options):
 
 
 def register_filters(app):
-    app.jinja_env.filters['iconSvg'] = iconSvg
-    app.jinja_env.filters['dollars'] = dollars
-    app.jinja_env.filters['usPhone'] = usPhone
-    app.jinja_env.filters['readableInteger'] = readableInteger
-    app.jinja_env.filters['getOptionLabel'] = getOptionLabel
-
+    app.jinja_env.filters["iconSvg"] = iconSvg
+    app.jinja_env.filters["dollars"] = dollars
+    app.jinja_env.filters["usPhone"] = usPhone
+    app.jinja_env.filters["readableInteger"] = readableInteger
+    app.jinja_env.filters["getOptionLabel"] = getOptionLabel

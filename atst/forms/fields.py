@@ -24,7 +24,7 @@ class NewlineListField(Field):
 
     def _value(self):
         if isinstance(self.data, list):
-            return '\n'.join(self.data)
+            return "\n".join(self.data)
         elif self.data:
             return self.data
         else:
@@ -46,8 +46,5 @@ class NewlineListField(Field):
 class SelectField(SelectField_):
     def __init__(self, *args, **kwargs):
         render_kw = kwargs.get("render_kw", {})
-        kwargs["render_kw"] = {
-            **render_kw,
-            "required": False
-        }
+        kwargs["render_kw"] = {**render_kw, "required": False}
         super().__init__(*args, **kwargs)

@@ -11,7 +11,6 @@ from .exceptions import NotFoundError
 
 
 class WorkspaceUsers(object):
-
     @classmethod
     def get(cls, workspace_id, user_id):
         try:

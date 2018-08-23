@@ -24,15 +24,18 @@ def map_request(request):
         "date": time_created.format("M/DD/YYYY"),
         "full_name": request.creator.full_name,
         "annual_usage": annual_usage,
-        "edit_link": verify_url if Requests.is_pending_financial_verification(
-            request
-        ) else update_url,
+        "edit_link": verify_url
+        if Requests.is_pending_financial_verification(request)
+        else update_url,
     }
 
 
 @requests_bp.route("/requests", methods=["GET"])
 def requests_index():
-    if Permissions.REVIEW_AND_APPROVE_JEDI_WORKSPACE_REQUEST in g.current_user.atat_permissions:
+    if (
+        Permissions.REVIEW_AND_APPROVE_JEDI_WORKSPACE_REQUEST
+        in g.current_user.atat_permissions
+    ):
         return _ccpo_view()
 
     else:

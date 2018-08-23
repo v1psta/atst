@@ -26,6 +26,7 @@ TREASURY_CODE_REGEX = re.compile(r"^0*([1-9]{4}|[1-9]{6})$")
 
 BA_CODE_REGEX = re.compile(r"^0*[1-9]{2}\w?$")
 
+
 def suggest_pe_id(pe_id):
     suggestion = pe_id
     match = PE_REGEX.match(pe_id)
@@ -94,19 +95,26 @@ class BaseFinancialForm(ValidatedForm):
     task_order_number = StringField(
         "Task Order Number associated with this request",
         description="Include the original Task Order number (including the 000X at the end). Do not include any modification numbers. Note that there may be a lag between approving a task order and when it becomes available in our system.",
-        validators=[Required()]
+        validators=[Required()],
     )
 
     uii_ids = NewlineListField(
         "Unique Item Identifier (UII)s related to your application(s) if you already have them",
-        validators=[Required()]
+        validators=[Required()],
     )
 
-    pe_id = StringField("Program Element (PE) Number related to your request", validators=[Required()])
+    pe_id = StringField(
+        "Program Element (PE) Number related to your request", validators=[Required()]
+    )
 
-    treasury_code = StringField("Program Treasury Code", validators=[Required(), Regexp(TREASURY_CODE_REGEX)])
+    treasury_code = StringField(
+        "Program Treasury Code", validators=[Required(), Regexp(TREASURY_CODE_REGEX)]
+    )
 
-    ba_code = StringField("Program Budget Activity (BA) Code", validators=[Required(), Regexp(BA_CODE_REGEX)])
+    ba_code = StringField(
+        "Program Budget Activity (BA) Code",
+        validators=[Required(), Regexp(BA_CODE_REGEX)],
+    )
 
     fname_co = StringField("Contracting Officer First Name", validators=[Required()])
     lname_co = StringField("Contracting Officer Last Name", validators=[Required()])
@@ -160,7 +168,7 @@ class ExtendedFinancialForm(BaseFinancialForm):
             ("OTHER", "Other"),
         ],
         validators=[Required()],
-        render_kw={"required": False}
+        render_kw={"required": False},
     )
 
     funding_type_other = StringField("If other, please specify")
@@ -169,40 +177,40 @@ class ExtendedFinancialForm(BaseFinancialForm):
         "<dl><dt>CLIN 0001</dt> - <dd>Unclassified IaaS and PaaS Amount</dd></dl>",
         validators=[Required()],
         description="Review your task order document, the amounts for each CLIN must match exactly here",
-        filters=[number_to_int]
+        filters=[number_to_int],
     )
 
     clin_0003 = StringField(
         "<dl><dt>CLIN 0003</dt> - <dd>Unclassified Cloud Support Package</dd></dl>",
         validators=[Required()],
         description="Review your task order document, the amounts for each CLIN must match exactly here",
-        filters=[number_to_int]
+        filters=[number_to_int],
     )
 
     clin_1001 = StringField(
         "<dl><dt>CLIN 1001</dt> - <dd>Unclassified IaaS and PaaS Amount <br> OPTION PERIOD 1</dd></dl>",
         validators=[Required()],
         description="Review your task order document, the amounts for each CLIN must match exactly here",
-        filters=[number_to_int]
+        filters=[number_to_int],
     )
 
     clin_1003 = StringField(
         "<dl><dt>CLIN 1003</dt> - <dd>Unclassified Cloud Support Package <br> OPTION PERIOD 1</dd></dl>",
         validators=[Required()],
         description="Review your task order document, the amounts for each CLIN must match exactly here",
-        filters=[number_to_int]
+        filters=[number_to_int],
     )
 
     clin_2001 = StringField(
         "<dl><dt>CLIN 2001</dt> - <dd>Unclassified IaaS and PaaS Amount <br> OPTION PERIOD 2</dd></dl>",
         validators=[Required()],
         description="Review your task order document, the amounts for each CLIN must match exactly here",
-        filters=[number_to_int]
+        filters=[number_to_int],
     )
 
     clin_2003 = StringField(
         "<dl><dt>CLIN 2003</dt> - <dd>Unclassified Cloud Support Package <br> OPTION PERIOD 2</dd></dl>",
         validators=[Required()],
         description="Review your task order document, the amounts for each CLIN must match exactly here",
-        filters=[number_to_int]
+        filters=[number_to_int],
     )

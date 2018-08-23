@@ -6,7 +6,6 @@ from .exceptions import NotFoundError
 
 
 class Roles(object):
-
     @classmethod
     def get(cls, role_name):
         try:

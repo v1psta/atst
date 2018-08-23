@@ -15,8 +15,13 @@ def _fetch_user_info(c, t):
 
 
 def test_successful_login_redirect_non_ccpo(client, monkeypatch):
-    monkeypatch.setattr("atst.domain.authnid.AuthenticationContext.authenticate", lambda *args: True)
-    monkeypatch.setattr("atst.domain.authnid.AuthenticationContext.get_user", lambda *args: UserFactory.create())
+    monkeypatch.setattr(
+        "atst.domain.authnid.AuthenticationContext.authenticate", lambda *args: True
+    )
+    monkeypatch.setattr(
+        "atst.domain.authnid.AuthenticationContext.get_user",
+        lambda *args: UserFactory.create(),
+    )
 
     resp = client.get(
         "/login-redirect",
@@ -31,10 +36,16 @@ def test_successful_login_redirect_non_ccpo(client, monkeypatch):
     assert "requests" in resp.headers["Location"]
     assert session["user_id"]
 
+
 def test_successful_login_redirect_ccpo(client, monkeypatch):
-    monkeypatch.setattr("atst.domain.authnid.AuthenticationContext.authenticate", lambda *args: True)
+    monkeypatch.setattr(
+        "atst.domain.authnid.AuthenticationContext.authenticate", lambda *args: True
+    )
     role = Roles.get("ccpo")
-    monkeypatch.setattr("atst.domain.authnid.AuthenticationContext.get_user", lambda *args: UserFactory.create(atat_role=role))
+    monkeypatch.setattr(
+        "atst.domain.authnid.AuthenticationContext.get_user",
+        lambda *args: UserFactory.create(atat_role=role),
+    )
 
     resp = client.get(
         "/login-redirect",
@@ -114,7 +125,9 @@ def test_crl_validation_on_login(client):
 
 
 def test_creates_new_user_on_login(monkeypatch, client):
-    monkeypatch.setattr("atst.domain.authnid.AuthenticationContext.authenticate", lambda *args: True)
+    monkeypatch.setattr(
+        "atst.domain.authnid.AuthenticationContext.authenticate", lambda *args: True
+    )
     cert_file = open("tests/fixtures/{}.crt".format(FIXTURE_EMAIL_ADDRESS)).read()
 
     # ensure user does not exist
