@@ -9,4 +9,4 @@ def test_create_project_with_multiple_environments():
     assert project.workspace == workspace
     assert project.name == "My Test Project"
     assert project.description == "Test"
-    assert [e.name for e in project.environments] == ["dev", "prod"]
+    assert sorted(e.name for e in project.environments) == ["dev", "prod"]
