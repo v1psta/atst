@@ -27,12 +27,12 @@ class TestPENumberInForm:
     extended_data = {
         "funding_type": "RDTE",
         "funding_type_other": "other",
-        "clin_0001": "50,000",
-        "clin_0003": "13,000",
-        "clin_1001": "30,000",
-        "clin_1003": "7,000",
-        "clin_2001": "30,000",
-        "clin_2003": "7,000",
+        "clin_0001": "50000",
+        "clin_0003": "13000",
+        "clin_1001": "30000",
+        "clin_1003": "7000",
+        "clin_2001": "30000",
+        "clin_2003": "7000",
     }
 
     def _set_monkeypatches(self, monkeypatch):
