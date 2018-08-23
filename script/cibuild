@@ -20,7 +20,7 @@ RUN_PYTHON_TESTS="true"
 yarn build
 
 # Check python formatting
-source .script/format check
+source ./script/format check
 
 # Run the shared test script
 source ./script/include/run_test
