@@ -3,7 +3,7 @@
 FILES_TO_FORMAT="atst/ tests/ app.py"
 
 if [ $1 == "check" ]; then
-  black --check -q ${FILES_TO_FORMAT}
+  pipenv run black --check -q ${FILES_TO_FORMAT}
 else
-  black ${FILES_TO_FORMAT}
+  pipenv run black ${FILES_TO_FORMAT}
 fi
