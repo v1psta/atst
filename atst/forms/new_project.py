@@ -1,7 +1,7 @@
 from flask_wtf import Form
 from wtforms.fields import StringField, TextAreaField, FieldList
 from wtforms.validators import Required
-from atst.forms.validators import ListItemRequired
+from atst.forms.validators import ListItemRequired, ListItemsUnique
 
 
 class NewProjectForm(Form):
@@ -12,7 +12,10 @@ class NewProjectForm(Form):
     description = TextAreaField(label="Description", validators=[Required()])
     environment_names = FieldList(
         StringField(label="Environment Name"),
-        validators=[ListItemRequired(message="Provide at least one environment name.")],
+        validators=[
+            ListItemRequired(message="Provide at least one environment name."),
+            ListItemsUnique(message="Environment names must be unique."),
+        ],
     )
 
     @property

@@ -1,7 +1,7 @@
 from wtforms.validators import ValidationError
 import pytest
 
-from atst.forms.validators import Alphabet, IsNumber, PhoneNumber
+from atst.forms.validators import Alphabet, IsNumber, PhoneNumber, ListItemsUnique
 
 
 class TestIsNumber:
@@ -48,6 +48,21 @@ class TestAlphabet:
     @pytest.mark.parametrize("invalid", ["", "hi mark", "cloud9"])
     def test_Alphabet_rejects_non_letters(self, invalid, dummy_form, dummy_field):
         validator = Alphabet()
+        dummy_field.data = invalid
+        with pytest.raises(ValidationError):
+            validator(dummy_form, dummy_field)
+
+
+class TestListItemsUnique:
+    @pytest.mark.parametrize("valid", [["a", "aa", "aaa"], ["one", "two", "three"]])
+    def test_ListItemsUnique_allows_unique_items(self, valid, dummy_form, dummy_field):
+        validator = ListItemsUnique()
+        dummy_field.data = valid
+        validator(dummy_form, dummy_field)
+
+    @pytest.mark.parametrize("invalid", [["a", "a", "a"], ["one", "two", "two", "three"]])
+    def test_ListItemsUnique_rejects_non_letters(self, invalid, dummy_form, dummy_field):
+        validator = ListItemsUnique()
         dummy_field.data = invalid
         with pytest.raises(ValidationError):
             validator(dummy_form, dummy_field)
