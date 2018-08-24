@@ -15,6 +15,11 @@ def map_request(request):
         "requests.requests_form_update", screen=1, request_id=request.id
     )
     verify_url = url_for("requests.financial_verification", request_id=request.id)
+    edit_link = (
+        verify_url
+        if Requests.is_pending_financial_verification(request)
+        else update_url
+    )
 
     return {
         "order_id": request.id,
@@ -24,9 +29,7 @@ def map_request(request):
         "date": time_created.format("M/DD/YYYY"),
         "full_name": request.creator.full_name,
         "annual_usage": annual_usage,
-        "edit_link": verify_url
-        if Requests.is_pending_financial_verification(request)
-        else update_url,
+        "edit_link": edit_link,
     }
 
 
