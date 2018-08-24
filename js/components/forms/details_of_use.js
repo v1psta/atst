@@ -1,11 +1,14 @@
 import createNumberMask from 'text-mask-addons/dist/createNumberMask'
 import { conformToMask } from 'vue-text-mask'
 
+import FormMixin from '../../mixins/form'
 import textinput from '../text_input'
 import optionsinput from '../options_input'
 
 export default {
   name: 'details-of-use',
+
+  mixins: [FormMixin],
 
   components: {
     textinput,
@@ -33,10 +36,6 @@ export default {
     }
   },
 
-  mounted: function () {
-    this.$root.$on('field-change', this.handleFieldChange)
-  },
-
   computed: {
     annualSpend: function () {
       const monthlySpend = this.estimated_monthly_spend || 0
@@ -60,12 +59,6 @@ export default {
     formatDollars: function (intValue) {
       const mask = createNumberMask({ prefix: '$', allowDecimal: true })
       return conformToMask(intValue.toString(), mask).conformedValue
-    },
-    handleFieldChange: function (event) {
-      const { value, name } = event
-      if (typeof this[name] !== undefined) {
-        this[name] = value
-      }
-    },
+    }
   }
 }

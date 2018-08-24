@@ -1,9 +1,12 @@
+import FormMixin from '../../mixins/form'
 import optionsinput from '../options_input'
 import textinput from '../text_input'
 import checkboxinput from '../checkbox_input'
 
 export default {
   name: 'poc',
+
+  mixins: [FormMixin],
 
   components: {
     optionsinput,
@@ -26,18 +29,5 @@ export default {
     return {
         am_poc
     }
-  },
-
-  mounted: function () {
-    this.$root.$on('field-change', this.handleFieldChange)
-  },
-
-  methods: {
-    handleFieldChange: function (event) {
-      const { value, name } = event
-      if (typeof this[name] !== undefined) {
-        this[name] = value
-      }
-    },
   }
 }

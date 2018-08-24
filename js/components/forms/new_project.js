@@ -1,9 +1,12 @@
+import FormMixin from '../../mixins/form'
 import textinput from '../text_input'
 
 const createEnvironment = (name) => ({ name })
 
 export default {
   name: 'new-project',
+
+  mixins: [FormMixin],
 
   components: {
     textinput
@@ -19,6 +22,7 @@ export default {
   data: function () {
     const {
       environment_names,
+      name,
     } = this.initialData
 
     const environments = (
@@ -29,6 +33,7 @@ export default {
 
     return {
       environments,
+      name,
     }
   },
 
