@@ -137,4 +137,4 @@ class TestPENumberInForm:
         response = self.submit_data(client, data, extended=True)
 
         assert response.status_code == 302
-        assert "/workspaces" in response.headers.get("Location")
+        assert "/projects/new" in response.headers.get("Location")

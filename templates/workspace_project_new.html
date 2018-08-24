@@ -9,6 +9,14 @@
 {% block workspace_content %}
 
 {% set modalName = "newProjectConfirmation" %}
+{% if request.args.get("newWorkspace") %}
+  {{ Alert('Workspace created!',
+    message="\
+      <p>You are now ready to create projects and environments within the JEDI Cloud.</p>
+    ",
+    level='success'
+  ) }}
+{% endif %}
 
 <new-project inline-template v-bind:initial-data='{{ form.data|tojson }}'>
   <form method="POST" action="{{ url_for('workspaces.update_project', workspace_id=workspace.id) }}" >
@@ -32,30 +40,29 @@
     <div class="panel">
       <div class="panel__heading panel__heading--grow">
         <h1>Add a new project</h1>
-        {{ Tooltip(
-          "AT-AT allows you to organize your workspace into multiple projects, each of which may have environments.",
-          title="learn more"
-        )}}
       </div>
 
-
       <div class="panel__content">
+        <p>
+          AT-AT allows you to organize your workspace into multiple projects, each of which may have environments.
+        </p>
         {{ TextInput(form.name) }}
         {{ TextInput(form.description, paragraph=True) }}
       </div>
     </div>
 
     {% if form.environment_names.errors %}
-      {{ Alert("Missing Environments", message="Provide at least one environment name.", level="error") }}
+      {% for error in form.environment_names.errors %}
+        {{ Alert(error, level="error") }}
+      {% endfor %}
     {% endif %}
 
       <div class="block-list project-list-item">
-        <header class="block-list__header">
+        <header class="block-list__header block-list__header--grow">
           <h2 class="block-list__title">Project Environments</h2>
-          {{ Tooltip(
-            "Each environment created within a project is an enclave of cloud resources that is logically separated from each other for increased security.",
-            title="learn more"
-          )}}
+          <p>
+            Each environment created within a project is an enclave of cloud resources that is logically separated from each other for increased security.
+          </p>
         </header>
 
         <ul>

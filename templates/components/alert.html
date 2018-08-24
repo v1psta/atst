@@ -31,6 +31,10 @@
         <div class='alert__message'>{{ message | safe }}</div>
       {% endif %}
 
+      {% if caller %}
+        <div class='alert__message'>{{ caller() }}</div>
+      {% endif %}
+
       {% if fragment %}
         <div class='alert__message'>
           {% include fragment %}

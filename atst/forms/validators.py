@@ -60,3 +60,11 @@ def ListItemRequired(message="Please provide at least one.", empty_values=("", N
             raise ValidationError(message)
 
     return _list_item_required
+
+
+def ListItemsUnique(message="Items must be unique"):
+    def _list_items_unique(form, field):
+        if len(field.data) > len(set(field.data)):
+            raise ValidationError(message)
+
+    return _list_items_unique
