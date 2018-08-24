@@ -12,9 +12,7 @@ class NewMemberForm(Form):
     first_name = StringField(label="First Name", validators=[Required()])
     last_name = StringField(label="Last Name", validators=[Required()])
     email = EmailField("Email Address", validators=[Required(), Email()])
-    dod_id = StringField(
-        "DOD ID", validators=[Required(), Length(min=10), IsNumber()]
-    )
+    dod_id = StringField("DOD ID", validators=[Required(), Length(min=10), IsNumber()])
     workspace_role = SelectField(
         "Workspace Role",
         choices=[
@@ -26,5 +24,5 @@ class NewMemberForm(Form):
             ("owner", "Owner"),
             ("security_auditor", "Security Auditor"),
         ],
-        validators=[Required()]
+        validators=[Required()],
     )
