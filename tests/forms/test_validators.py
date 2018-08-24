@@ -60,8 +60,12 @@ class TestListItemsUnique:
         dummy_field.data = valid
         validator(dummy_form, dummy_field)
 
-    @pytest.mark.parametrize("invalid", [["a", "a", "a"], ["one", "two", "two", "three"]])
-    def test_ListItemsUnique_rejects_non_letters(self, invalid, dummy_form, dummy_field):
+    @pytest.mark.parametrize(
+        "invalid", [["a", "a", "a"], ["one", "two", "two", "three"]]
+    )
+    def test_ListItemsUnique_rejects_non_letters(
+        self, invalid, dummy_form, dummy_field
+    ):
         validator = ListItemsUnique()
         dummy_field.data = invalid
         with pytest.raises(ValidationError):
