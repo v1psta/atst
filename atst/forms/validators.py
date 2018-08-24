@@ -64,8 +64,7 @@ def ListItemRequired(message="Please provide at least one.", empty_values=("", N
 
 def ListItemsUnique(message="Items must be unique"):
     def _list_items_unique(form, field):
-        sorted_values = sorted(v for v in field.data)
-        if sorted_values != sorted(set(sorted_values)):
+        if len(field.data) > len(set(field.data)):
             raise ValidationError(message)
 
     return _list_items_unique
