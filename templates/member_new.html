@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 
 {% from "components/icon.html" import Icon %}
+{% from "components/text_input.html" import TextInput %}
+{% from "components/options_input.html" import OptionsInput %}
 
 {% block content %}
 
@@ -14,51 +16,12 @@
     </div>
 
     <div class="panel__content">
-
-
-      <div class='usa-input'>
-        <label for='member_fname'>
-          First Name
-        </label>
-        <input id='member_fname' type='text' aria-describedby='member_fname'/>
-      </div>
-
-      <div class='usa-input'>
-        <label for='member_lname'>
-          Last Name
-        </label>
-        <input id='member_lname' type='text' aria-describedby='member_lname'/>
-      </div>
-
-      <div class='usa-input'>
-        <label for='member_email'>
-          Email
-        </label>
-        <input id='member_email' type='email' placeholder='name@mail.mil' aria-describedby='member_email'/>
-      </div>
-
-      <div class='usa-input'>
-        <label for='member_dodid'>
-          DoD ID
-        </label>
-        <input id='member_dodid' type='text' placeholder='23456789' aria-describedby='member_dodid'/>
-      </div>
-
-      <div class="usa-input">
-        <label for="filter-status">Workspace Role</label>
-        <select id="filter-status" name="filter-status">
-          <option value="" selected="selected" disabled>Select a role</option>
-          <option value="Admin">Admin</option>
-          <option value="Billing Auditor">Billing Auditor</option>
-          <option value="CCPO">CCPO</option>
-          <option value="Developer">Developer</option>
-          <option value="Owner">Owner</option>
-          <option value="Security Auditor">Security Auditor</option>
-        </select>
-      </div>
-
+      {{ TextInput(form.first_name) }}
+      {{ TextInput(form.last_name) }}
+      {{ TextInput(form.email) }}
+      {{ TextInput(form.dod_id) }}
+      {{ OptionsInput(form.workspace_role) }}
     </div>
-
   </div>
 
   <div class='action-group'>
