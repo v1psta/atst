@@ -11,3 +11,6 @@ DOD_SDN = f"CN={DOD_SDN_INFO['last_name']}.{DOD_SDN_INFO['first_name']}.G.{DOD_S
 MOCK_VALID_PE_ID = "8675309U"
 
 FIXTURE_EMAIL_ADDRESS = "artgarfunkel@uso.mil"
+
+PDF_FILENAME = "tests/fixtures/sample.pdf"
+

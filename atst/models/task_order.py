@@ -1,6 +1,7 @@
 from enum import Enum
 
-from sqlalchemy import Column, Integer, String, Enum as SQLAEnum
+from sqlalchemy import Column, Integer, String, ForeignKey, Enum as SQLAEnum
+from sqlalchemy.orm import relationship
 
 from atst.models import Base
 
@@ -31,3 +32,6 @@ class TaskOrder(Base):
     clin_1003 = Column(Integer)
     clin_2001 = Column(Integer)
     clin_2003 = Column(Integer)
+
+    attachment_id = Column(ForeignKey("attachments.id"))
+    pdf = relationship("Attachment")
