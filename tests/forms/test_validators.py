@@ -63,7 +63,7 @@ class TestListItemsUnique:
     @pytest.mark.parametrize(
         "invalid", [["a", "a", "a"], ["one", "two", "two", "three"]]
     )
-    def test_ListItemsUnique_rejects_non_letters(
+    def test_ListItemsUnique_rejects_duplicate_names(
         self, invalid, dummy_form, dummy_field
     ):
         validator = ListItemsUnique()
