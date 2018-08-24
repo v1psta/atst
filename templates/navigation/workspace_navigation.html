@@ -23,8 +23,8 @@
       subnav=[
         {
           "label": "Add New Member",
-          "href": "/member_new",
-          "active": g.matchesPath('/workspaces/members/new'),
+          "href": url_for("workspaces.new_member", workspace_id=workspace.id),
+          "active": request.url_rule.rule.startswith('/workspaces/<workspace_id>/members/new'),
           "icon": "plus"
         }
       ]

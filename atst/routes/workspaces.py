@@ -10,6 +10,7 @@ from flask import (
 from atst.domain.workspaces import Workspaces
 from atst.domain.projects import Projects
 from atst.forms.new_project import NewProjectForm
+from atst.forms.new_member import NewMemberForm
 
 bp = Blueprint("workspaces", __name__)
 
@@ -79,3 +80,10 @@ def update_project(workspace_id):
         return render_template(
             "workspace_project_new.html", workspace=workspace, form=form
         )
+
+
+@bp.route("/workspaces/<workspace_id>/members/new")
+def new_member(workspace_id):
+    workspace = Workspaces.get(g.current_user, workspace_id)
+    form = NewMemberForm()
+    return render_template("member_new.html", workspace=workspace, form=form)
