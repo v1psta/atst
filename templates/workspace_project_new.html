@@ -52,11 +52,9 @@
     </div>
 
     {% if form.environment_names.errors %}
-      {% call Alert("Missing Environments", level="error") %}
-        {% for error in form.environment_names.errors %}
-          <p>{{ error }}</p>
-        {% endfor %}
-      {% endcall %}
+      {% for error in form.environment_names.errors %}
+        {{ Alert(error, level="error") }}
+      {% endfor %}
     {% endif %}
 
       <div class="block-list project-list-item">
