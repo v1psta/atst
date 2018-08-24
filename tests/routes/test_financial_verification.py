@@ -22,7 +22,7 @@ class TestPENumberInForm:
         "office_cor": "WHS",
         "uii_ids": "1234",
         "treasury_code": "00123456",
-        "ba_code": "024A"
+        "ba_code": "024A",
     }
     extended_data = {
         "funding_type": "RDTE",
@@ -36,8 +36,12 @@ class TestPENumberInForm:
     }
 
     def _set_monkeypatches(self, monkeypatch):
-        monkeypatch.setattr("atst.forms.financial.FinancialForm.validate", lambda s: True)
-        monkeypatch.setattr("atst.domain.auth.get_current_user", lambda *args: MOCK_USER)
+        monkeypatch.setattr(
+            "atst.forms.financial.FinancialForm.validate", lambda s: True
+        )
+        monkeypatch.setattr(
+            "atst.domain.auth.get_current_user", lambda *args: MOCK_USER
+        )
 
     def submit_data(self, client, data, extended=False):
         request = RequestFactory.create(body=MOCK_REQUEST.body)
@@ -64,7 +68,7 @@ class TestPENumberInForm:
         self._set_monkeypatches(monkeypatch)
 
         data = dict(self.required_data)
-        data['pe_id'] = MOCK_REQUEST.body['financial_verification']['pe_id']
+        data["pe_id"] = MOCK_REQUEST.body["financial_verification"]["pe_id"]
 
         response = self.submit_data(client, data)
 
@@ -76,7 +80,7 @@ class TestPENumberInForm:
         pe = PENumberFactory.create(number="8675309U", description="sample PE number")
 
         data = dict(self.required_data)
-        data['pe_id'] = pe.number
+        data["pe_id"] = pe.number
 
         response = self.submit_data(client, data)
 
@@ -87,32 +91,36 @@ class TestPENumberInForm:
         self._set_monkeypatches(monkeypatch)
 
         data = dict(self.required_data)
-        data['pe_id'] = ''
+        data["pe_id"] = ""
 
         response = self.submit_data(client, data)
 
         assert "There were some errors" in response.data.decode()
         assert response.status_code == 200
 
-    def test_submit_financial_form_with_invalid_task_order(self, monkeypatch, user_session, client):
+    def test_submit_financial_form_with_invalid_task_order(
+        self, monkeypatch, user_session, client
+    ):
         monkeypatch.setattr("atst.domain.requests.Requests.get", lambda i: MOCK_REQUEST)
         user_session()
 
         data = dict(self.required_data)
-        data['pe_id'] = MOCK_REQUEST.body['financial_verification']['pe_id']
-        data['task_order_number'] = '1234'
+        data["pe_id"] = MOCK_REQUEST.body["financial_verification"]["pe_id"]
+        data["task_order_number"] = "1234"
 
         response = self.submit_data(client, data)
 
         assert "enter TO information manually" in response.data.decode()
 
-    def test_submit_financial_form_with_valid_task_order(self, monkeypatch, user_session, client):
+    def test_submit_financial_form_with_valid_task_order(
+        self, monkeypatch, user_session, client
+    ):
         monkeypatch.setattr("atst.domain.requests.Requests.get", lambda i: MOCK_REQUEST)
         user_session()
 
         data = dict(self.required_data)
-        data['pe_id'] = MOCK_REQUEST.body['financial_verification']['pe_id']
-        data['task_order_number'] = MockEDAClient.MOCK_CONTRACT_NUMBER
+        data["pe_id"] = MOCK_REQUEST.body["financial_verification"]["pe_id"]
+        data["task_order_number"] = MockEDAClient.MOCK_CONTRACT_NUMBER
 
         response = self.submit_data(client, data)
 
@@ -122,9 +130,9 @@ class TestPENumberInForm:
         monkeypatch.setattr("atst.domain.requests.Requests.get", lambda i: MOCK_REQUEST)
         user_session()
 
-        data = { **self.required_data, **self.extended_data }
-        data['pe_id'] = MOCK_REQUEST.body['financial_verification']['pe_id']
-        data['task_order_number'] = "1234567"
+        data = {**self.required_data, **self.extended_data}
+        data["pe_id"] = MOCK_REQUEST.body["financial_verification"]["pe_id"]
+        data["task_order_number"] = "1234567"
 
         response = self.submit_data(client, data, extended=True)
 

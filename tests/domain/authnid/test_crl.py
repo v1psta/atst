@@ -11,8 +11,7 @@ import atst.domain.authnid.crl.util as util
 from tests.mocks import FIXTURE_EMAIL_ADDRESS
 
 
-class MockX509Store():
-
+class MockX509Store:
     def __init__(self):
         self.crls = []
         self.certs = []
@@ -98,8 +97,7 @@ def test_parse_disa_pki_list():
         assert len(crl_list) == len(href_matches)
 
 
-class MockStreamingResponse():
-
+class MockStreamingResponse:
     def __init__(self, content_chunks, code=200):
         self.content_chunks = content_chunks
         self.status_code = code

@@ -9,14 +9,16 @@ class CRLRevocationException(Exception):
     pass
 
 
-class CRLCache():
+class CRLCache:
 
     _PEM_RE = re.compile(
         b"-----BEGIN CERTIFICATE-----\r?.+?\r?-----END CERTIFICATE-----\r?\n?",
         re.DOTALL,
     )
 
-    def __init__(self, root_location, crl_locations=[], store_class=crypto.X509Store, logger=None):
+    def __init__(
+        self, root_location, crl_locations=[], store_class=crypto.X509Store, logger=None
+    ):
         self.store_class = store_class
         self.certificate_authorities = {}
         self._load_roots(root_location)
@@ -57,7 +59,11 @@ class CRLCache():
         with open(crl_location, "rb") as crl_file:
             crl = crypto.load_crl(crypto.FILETYPE_ASN1, crl_file.read())
             store.add_crl(crl)
-            self.log_info("STORE ID: {}. Adding CRL with issuer {}".format(id(store), crl.get_issuer()))
+            self.log_info(
+                "STORE ID: {}. Adding CRL with issuer {}".format(
+                    id(store), crl.get_issuer()
+                )
+            )
             store = self._add_certificate_chain_to_store(store, crl.get_issuer())
             return store
 
@@ -75,7 +81,11 @@ class CRLCache():
     def _add_certificate_chain_to_store(self, store, issuer):
         ca = self.certificate_authorities.get(issuer.der())
         store.add_cert(ca)
-        self.log_info("STORE ID: {}. Adding CA with subject {}".format(id(store), ca.get_subject()))
+        self.log_info(
+            "STORE ID: {}. Adding CA with subject {}".format(
+                id(store), ca.get_subject()
+            )
+        )
 
         if issuer == ca.get_issuer():
             # i.e., it is the root CA and we are at the end of the chain

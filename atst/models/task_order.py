@@ -4,6 +4,7 @@ from sqlalchemy import Column, Integer, String, Enum as SQLAEnum
 
 from atst.models import Base
 
+
 class Source(Enum):
     MANUAL = "Manual"
     EDA = "eda"

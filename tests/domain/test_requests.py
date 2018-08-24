@@ -7,7 +7,12 @@ from atst.models.request import Request
 from atst.models.request_status_event import RequestStatus
 from atst.models.task_order import Source as TaskOrderSource
 
-from tests.factories import RequestFactory, UserFactory, RequestStatusEventFactory, TaskOrderFactory
+from tests.factories import (
+    RequestFactory,
+    UserFactory,
+    RequestStatusEventFactory,
+    TaskOrderFactory,
+)
 
 
 @pytest.fixture(scope="function")
@@ -55,10 +60,12 @@ def test_dont_auto_approve_if_no_dollar_value_specified(new_request):
 def test_should_allow_submission(new_request):
     assert Requests.should_allow_submission(new_request)
 
-    RequestStatusEventFactory.create(request=new_request, new_status=RequestStatus.CHANGES_REQUESTED)
+    RequestStatusEventFactory.create(
+        request=new_request, new_status=RequestStatus.CHANGES_REQUESTED
+    )
     assert Requests.should_allow_submission(new_request)
 
-    del new_request.body['details_of_use']
+    del new_request.body["details_of_use"]
     assert not Requests.should_allow_submission(new_request)
 
 
@@ -76,11 +83,16 @@ def test_status_count(session):
 
     request1 = RequestFactory.create()
     request2 = RequestFactory.create()
-    RequestStatusEventFactory.create(sequence=2, request_id=request2.id, new_status=RequestStatus.PENDING_FINANCIAL_VERIFICATION)
+    RequestStatusEventFactory.create(
+        sequence=2,
+        request_id=request2.id,
+        new_status=RequestStatus.PENDING_FINANCIAL_VERIFICATION,
+    )
 
     assert Requests.status_count(RequestStatus.PENDING_FINANCIAL_VERIFICATION) == 1
     assert Requests.status_count(RequestStatus.STARTED) == 1
     assert Requests.in_progress_count() == 2
+
 
 def test_status_count_scoped_to_creator(session):
     # make sure table is empty
@@ -123,7 +135,7 @@ task_order_financial_data = {
 
 def test_update_financial_verification_without_task_order():
     request = RequestFactory.create()
-    financial_data = { **request_financial_data, **task_order_financial_data }
+    financial_data = {**request_financial_data, **task_order_financial_data}
     Requests.update_financial_verification(request.id, financial_data)
     assert request.task_order
     assert request.task_order.clin_0001 == task_order_financial_data["clin_0001"]
@@ -132,7 +144,7 @@ def test_update_financial_verification_without_task_order():
 
 def test_update_financial_verification_with_task_order():
     task_order = TaskOrderFactory.create(source=TaskOrderSource.EDA)
-    financial_data = { **request_financial_data, "task_order_number": task_order.number }
+    financial_data = {**request_financial_data, "task_order_number": task_order.number}
     request = RequestFactory.create()
     Requests.update_financial_verification(request.id, financial_data)
     assert request.task_order == task_order
@@ -142,4 +154,3 @@ def test_update_financial_verification_with_invalid_task_order():
     request = RequestFactory.create()
     Requests.update_financial_verification(request.id, request_financial_data)
     assert not request.task_order
-

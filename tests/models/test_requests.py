@@ -69,6 +69,7 @@ def test_request_status_pending_deleted_displayname():
 
     assert request.status_displayname == "Canceled"
 
+
 def test_annual_spend():
     request = RequestFactory.create()
     monthly = request.body.get("details_of_use").get("estimated_monthly_spend")

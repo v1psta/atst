@@ -60,5 +60,3 @@ def ListItemRequired(message="Please provide at least one.", empty_values=("", N
             raise ValidationError(message)
 
     return _list_item_required
-
-

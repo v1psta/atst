@@ -16,9 +16,11 @@ class OrgForm(ValidatedForm):
 
     email_request = EmailField("E-mail Address", validators=[Required(), Email()])
 
-    phone_number = TelField("Phone Number",
-        description='Enter a 10-digit phone number',
-        validators=[Required(), PhoneNumber()])
+    phone_number = TelField(
+        "Phone Number",
+        description="Enter a 10-digit phone number",
+        validators=[Required(), PhoneNumber()],
+    )
 
     service_branch = SelectField(
         "Service Branch or Agency",
@@ -49,7 +51,7 @@ class OrgForm(ValidatedForm):
 
     date_latest_training = DateField(
         "Latest Information Assurance (IA) Training Completion Date",
-        description="To complete the training, you can find it in <a class=\"icon-link\" href=\"https://iatraining.disa.mil/eta/disa_cac2018/launchPage.htm\" target=\"_blank\">Information Assurance Cyber Awareness Challange</a> website.",
+        description='To complete the training, you can find it in <a class="icon-link" href="https://iatraining.disa.mil/eta/disa_cac2018/launchPage.htm" target="_blank">Information Assurance Cyber Awareness Challange</a> website.',
         validators=[
             Required(),
             DateRange(

@@ -73,9 +73,10 @@ class Requests(object):
             filters.append(Request.creator == creator)
 
         requests = (
-            db.session.query(Request).filter(*filters).order_by(
-                Request.time_created.desc()
-            ).all()
+            db.session.query(Request)
+            .filter(*filters)
+            .order_by(Request.time_created.desc())
+            .all()
         )
         return requests
 
@@ -113,9 +114,10 @@ class Requests(object):
             # Query for request matching id, acquiring a row-level write lock.
             # https://www.postgresql.org/docs/10/static/sql-select.html#SQL-FOR-UPDATE-SHARE
             return (
-                db.session.query(Request).filter_by(id=request_id).with_for_update(
-                    of=Request
-                ).one()
+                db.session.query(Request)
+                .filter_by(id=request_id)
+                .with_for_update(of=Request)
+                .one()
             )
 
         except NoResultFound:
@@ -153,9 +155,7 @@ class Requests(object):
             RequestStatus.STARTED: "mission_owner",
             RequestStatus.PENDING_FINANCIAL_VERIFICATION: "mission_owner",
             RequestStatus.PENDING_CCPO_APPROVAL: "ccpo",
-        }.get(
-            request.status
-        )
+        }.get(request.status)
 
     @classmethod
     def should_auto_approve(cls, request):
@@ -167,13 +167,16 @@ class Requests(object):
         return dollar_value < cls.AUTO_APPROVE_THRESHOLD
 
     _VALID_SUBMISSION_STATUSES = [
-        RequestStatus.STARTED, RequestStatus.CHANGES_REQUESTED
+        RequestStatus.STARTED,
+        RequestStatus.CHANGES_REQUESTED,
     ]
 
     @classmethod
     def should_allow_submission(cls, request):
         all_request_sections = [
-            "details_of_use", "information_about_you", "primary_poc"
+            "details_of_use",
+            "information_about_you",
+            "primary_poc",
         ]
         existing_request_sections = request.body.keys()
         return request.status in Requests._VALID_SUBMISSION_STATUSES and all(

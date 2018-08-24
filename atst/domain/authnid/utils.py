@@ -25,7 +25,15 @@ def email_from_certificate(cert_file):
             return email[0]
 
         else:
-            raise ValueError("No email available for certificate with serial {}".format(cert.serial_number))
+            raise ValueError(
+                "No email available for certificate with serial {}".format(
+                    cert.serial_number
+                )
+            )
 
     except x509.extensions.ExtensionNotFound:
-        raise ValueError("No subjectAltName available for certificate with serial {}".format(cert.serial_number))
+        raise ValueError(
+            "No subjectAltName available for certificate with serial {}".format(
+                cert.serial_number
+            )
+        )

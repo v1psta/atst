@@ -6,7 +6,6 @@ from .exceptions import NotFoundError
 
 
 class PENumbers(object):
-
     @classmethod
     def get(cls, number):
         pe_number = db.session.query(PENumber).get(number)

@@ -85,7 +85,9 @@ def map_config(config):
         "SQLALCHEMY_DATABASE_URI": config["default"]["DATABASE_URI"],
         "SQLALCHEMY_TRACK_MODIFICATIONS": False,
         "WTF_CSRF_ENABLED": config.getboolean("default", "WTF_CSRF_ENABLED"),
-        "PERMANENT_SESSION_LIFETIME": config.getint("default", "PERMANENT_SESSION_LIFETIME"),
+        "PERMANENT_SESSION_LIFETIME": config.getint(
+            "default", "PERMANENT_SESSION_LIFETIME"
+        ),
     }
 
 
@@ -127,14 +129,17 @@ def make_config():
 
     return map_config(config)
 
+
 def make_redis(config):
-    return redis.Redis.from_url(config['REDIS_URI'])
+    return redis.Redis.from_url(config["REDIS_URI"])
+
 
 def make_crl_validator(app):
     crl_locations = []
     for filename in pathlib.Path(app.config["CRL_DIRECTORY"]).glob("*"):
         crl_locations.append(filename.absolute())
     app.crl_cache = CRLCache(app.config["CA_CHAIN"], crl_locations, logger=app.logger)
+
 
 def make_eda_client(app):
     app.eda_client = MockEDAClient()

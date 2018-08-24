@@ -4,8 +4,7 @@ from .utils import parse_sdn, email_from_certificate
 from .crl import CRLRevocationException
 
 
-class AuthenticationContext():
-
+class AuthenticationContext:
     def __init__(self, crl_cache, auth_status, sdn, cert):
         if None in locals().values():
             raise UnauthenticatedError(

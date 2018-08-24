@@ -1,0 +1,9 @@
+#!/bin/bash
+
+FILES_TO_FORMAT="atst/ tests/ app.py"
+
+if [ "$1" == "check" ]; then
+  pipenv run black --check ${FILES_TO_FORMAT}
+else
+  pipenv run black ${FILES_TO_FORMAT}
+fi
