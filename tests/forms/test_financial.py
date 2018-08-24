@@ -69,7 +69,7 @@ def test_treasury_code_validation(input_, expected):
         ("02A", True),
         ("0012", False),
         ("012A", False),
-        ("2AB", False)
+        ("2AB", False),
     ],
 )
 def test_ba_code_validation(input_, expected):
