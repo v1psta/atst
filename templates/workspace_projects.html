@@ -5,15 +5,6 @@
 
 {% block workspace_content %}
 
-{% if request.args.get("newWorkspace") %}
-  {{ Alert('Workspace created!',
-    message="\
-      <p>You are now ready to create projects and environments within the JEDI Cloud.</p>
-    ",
-    level='success'
-  ) }}
-{% endif %}
-
 {% for project in workspace.projects %}
   <div class='block-list project-list-item'>
     <header class='block-list__header'>

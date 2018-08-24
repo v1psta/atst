@@ -45,7 +45,7 @@ def update_financial_verification(request_id):
             new_workspace = Requests.approve_and_create_workspace(updated_request)
             return redirect(
                 url_for(
-                    "workspaces.workspace_projects",
+                    "workspaces.new_project",
                     workspace_id=new_workspace.id,
                     newWorkspace=True,
                 )
