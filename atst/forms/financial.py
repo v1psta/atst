@@ -24,7 +24,7 @@ PE_REGEX = re.compile(
 
 TREASURY_CODE_REGEX = re.compile(r"^0*([1-9]{4}|[1-9]{6})$")
 
-BA_CODE_REGEX = re.compile(r"^0*[1-9]{2}\w?$")
+BA_CODE_REGEX = re.compile(r"[0-9]{2}\w?$")
 
 
 def suggest_pe_id(pe_id):

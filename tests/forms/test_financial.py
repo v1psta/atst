@@ -57,13 +57,19 @@ def test_treasury_code_validation(input_, expected):
 @pytest.mark.parametrize(
     "input_,expected",
     [
+        ("1", False),
         ("12", True),
-        ("00012", True),
+        ("01", True),
+        ("0A", False),
+        ("A", False),
+        ("AB", False),
+        ("123", True),
+        ("012", True),
         ("12A", True),
-        ("000123", True),
-        ("00012A", True),
-        ("0001", False),
-        ("00012AB", False),
+        ("02A", True),
+        ("0012", False),
+        ("012A", False),
+        ("2AB", False),
     ],
 )
 def test_ba_code_validation(input_, expected):
