@@ -22,7 +22,7 @@ class TestPENumberInForm:
         "office_cor": "WHS",
         "uii_ids": "1234",
         "treasury_code": "00123456",
-        "ba_code": "024A",
+        "ba_code": "02A",
     }
     extended_data = {
         "funding_type": "RDTE",
