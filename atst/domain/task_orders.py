@@ -3,6 +3,7 @@ from flask import current_app as app
 
 from atst.database import db
 from atst.models.task_order import TaskOrder, Source
+from atst.models.attachment import Attachment
 from .exceptions import NotFoundError
 
 
@@ -53,6 +54,9 @@ class TaskOrders(object):
 
         except NotFoundError:
             if task_order_data:
+                pdf_file = task_order_data.pop("pdf")
+                # should catch the error here
+                attachment = Attachment.attach(pdf_file)
                 return TaskOrders.create(
-                    **task_order_data, number=number, source=Source.MANUAL
+                    **task_order_data, number=number, source=Source.MANUAL, pdf=attachment
                 )

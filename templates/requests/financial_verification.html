@@ -38,7 +38,7 @@
 
       {% block form_action %}
         {% if extended %}
-          <form method='POST' action="{{ url_for('requests.financial_verification', request_id=request_id, extended=True) }}" autocomplete="off">
+          <form method='POST' action="{{ url_for('requests.financial_verification', request_id=request_id, extended=True) }}" autocomplete="off" enctype="multipart/form-data">
         {% else %}
           <form method='POST' action="{{ url_for('requests.financial_verification', request_id=request_id) }}" autocomplete="off">
         {% endif %}
@@ -96,7 +96,7 @@
             ) }}
 
             {{ f.task_order.label }}
-            {{ f.task_order(multiple="") }}
+            {{ f.task_order }}
           </fieldset>
         {% endif %}
 
