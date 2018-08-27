@@ -17,6 +17,7 @@ from atst.models.permissions import Permissions
 
 bp = Blueprint("workspaces", __name__)
 
+
 @bp.context_processor
 def workspace():
     workspace = None
@@ -30,14 +31,13 @@ def workspace():
 
     def user_can(permission):
         if workspace:
-            return Authorization.has_workspace_permission(g.current_user, workspace, permission)
+            return Authorization.has_workspace_permission(
+                g.current_user, workspace, permission
+            )
         return False
 
-    return {
-        "workspace": workspace,
-        "permissions": Permissions,
-        "user_can": user_can
-    }
+    return {"workspace": workspace, "permissions": Permissions, "user_can": user_can}
+
 
 @bp.route("/workspaces")
 def workspaces():
