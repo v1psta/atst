@@ -118,3 +118,18 @@ def user_session(monkeypatch, session):
 def pdf_upload():
     with open(PDF_FILENAME, "rb") as fp:
         yield FileStorage(fp, content_type="application/pdf")
+
+
+@pytest.fixture
+def extended_financial_verification_data(pdf_upload):
+    return {
+        "funding_type": "RDTE",
+        "funding_type_other": "other",
+        "clin_0001": "50000",
+        "clin_0003": "13000",
+        "clin_1001": "30000",
+        "clin_1003": "7000",
+        "clin_2001": "30000",
+        "clin_2003": "7000",
+        "task_order": pdf_upload,
+    }

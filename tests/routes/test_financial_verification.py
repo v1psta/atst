@@ -1,4 +1,5 @@
 import urllib
+import pytest
 from flask import url_for
 
 from atst.eda_client import MockEDAClient
@@ -24,16 +25,6 @@ class TestPENumberInForm:
         "treasury_code": "00123456",
         "ba_code": "02A",
     }
-    extended_data = {
-        "funding_type": "RDTE",
-        "funding_type_other": "other",
-        "clin_0001": "50000",
-        "clin_0003": "13000",
-        "clin_1001": "30000",
-        "clin_1003": "7000",
-        "clin_2001": "30000",
-        "clin_2003": "7000",
-    }
 
     def _set_monkeypatches(self, monkeypatch):
         monkeypatch.setattr(
@@ -50,8 +41,7 @@ class TestPENumberInForm:
             url_kwargs["extended"] = True
         response = client.post(
             url_for("requests.financial_verification", **url_kwargs),
-            headers={"Content-Type": "application/x-www-form-urlencoded"},
-            data=urllib.parse.urlencode(data),
+            data=data,
             follow_redirects=False,
         )
         return response
@@ -126,11 +116,12 @@ class TestPENumberInForm:
 
         assert "enter TO information manually" not in response.data.decode()
 
-    def test_submit_extended_financial_form(self, monkeypatch, user_session, client):
+    def test_submit_extended_financial_form(
+        self, monkeypatch, user_session, client, extended_financial_verification_data
+    ):
         monkeypatch.setattr("atst.domain.requests.Requests.get", lambda i: MOCK_REQUEST)
         user_session()
-
-        data = {**self.required_data, **self.extended_data}
+        data = {**self.required_data, **extended_financial_verification_data}
         data["pe_id"] = MOCK_REQUEST.body["financial_verification"]["pe_id"]
         data["task_order_number"] = "1234567"
 
