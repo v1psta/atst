@@ -50,6 +50,21 @@
         right: 0;
         width: 8rem;
       }
+
+      .block-list {
+
+        .block-list__header {
+          display: block;
+        }
+
+        .action-group {
+          margin-right: $gap*4;
+          margin-left: $gap*3;
+          display: flex;
+          justify-content: space-between;
+        }
+      }
+
     }
   }
 

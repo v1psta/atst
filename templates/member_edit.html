@@ -57,8 +57,8 @@
   <div class="block-list">
 
     <header class="block-list__header">
-      <h3>New Request</h3>
-      <div class="subtitle">Add a user to an environment</div>
+      <h2>New Request <div class="subtitle">Add a user to an environment</div></h2>
+
     </header>
 
     <dl>
@@ -88,12 +88,13 @@
       </div>
     </dl>
 
+    <div class='action-group'>
+      <a v-on:click="closeModal('rolesModal')" class='action-group__action usa-button'>Add Access</a>
+      <a class='action-group__action icon-link icon-link--danger' v-on:click="closeModal('rolesModal')">No Access</a>
+    </div>
+
   </div>
 
-  <div class='action-group'>
-    <a v-on:click="closeModal('rolesModal')" class='action-group__action usa-button'>Add Access</a>
-    <a class='action-group__action icon-link icon-link--danger' v-on:click="closeModal('rolesModal')">No Access</a>
-  </div>
 {% endcall %}
 
 <div is='toggler' default-visible class='block-list project-list-item'>
