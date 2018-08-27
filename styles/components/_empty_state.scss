@@ -14,7 +14,7 @@
      @include icon-color($color-gray-light);
   }
 
-  p {
+  .empty-state__message {
     @include h2;
     line-height: 1.2;
     max-width: 15em;
@@ -22,6 +22,15 @@
 
     @include media($large-screen) {
       @include h1;
+    }
+  }
+
+  .empty-state__sub-message {
+    @include h4;
+    color: $color-gray;
+
+    @include media($large-screen) {
+      @include h3;
     }
   }
 }
