@@ -18,11 +18,12 @@
     <div class="panel__content">
       {{ TextInput(form.first_name) }}
       {{ TextInput(form.last_name) }}
-      {{ TextInput(form.email) }}
-      {{ TextInput(form.dod_id) }}
+      {{ TextInput(form.email,placeholder='jane@mail.mil', validation='email') }}
+      {{ TextInput(form.dod_id,placeholder='10-digit number on the back of the CAC', validation='dodId') }}
       {{ OptionsInput(form.workspace_role) }}
     </div>
   </div>
+
 
   <div class='action-group'>
     <a href='#' class='action-group__action usa-button usa-button-big'>
