@@ -1,13 +1,20 @@
 {% from "components/icon.html" import Icon %}
 
-{% macro EmptyState(message, actionLabel, actionHref, icon=None) -%}
+{% macro EmptyState(message, action_label, action_href, icon=None, sub_message=None) -%}
   <div class='empty-state'>
-    <p>{{ message }}</p>
+    <p class='empty-state__message'>{{ message }}</p>
 
     {% if icon %}
       {{ Icon(icon) }}
     {% endif %}
 
-    <a href='{{ actionHref }}' class='usa-button usa-button-big'>{{ actionLabel }}</a>
+    {% if sub_message %}
+      <p class='empty-state__sub-message'>{{ sub_message }}</p>
+    {% endif %}
+
+    {% if action_href and action_label %}
+      <a href='{{ action_href }}' class='usa-button usa-button-big'>{{ action_label }}</a>
+    {% endif %}
+
   </div>
 {%- endmacro %}
