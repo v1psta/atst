@@ -31,7 +31,7 @@ def workspace():
     def user_can(permission):
         if workspace:
             return Authorization.has_workspace_permission(g.current_user, workspace, permission)
-        return false
+        return False
 
     return {
         "workspace": workspace,
