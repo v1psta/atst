@@ -37,6 +37,7 @@ def test_nonexistent_task_order_raises_with_client(monkeypatch):
     with pytest.raises(NotFoundError):
         TaskOrders.get("some other fake numer")
 
+
 def test_create_attachment(extended_financial_verification_data):
     task_order_data = extended_financial_verification_data.copy()
     task_order_data["pdf"] = task_order_data.pop("task_order")

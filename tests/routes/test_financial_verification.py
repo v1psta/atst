@@ -130,3 +130,18 @@ class TestPENumberInForm:
 
         assert response.status_code == 302
         assert "/projects/new" in response.headers.get("Location")
+
+    def test_submit_invalid_extended_financial_form(
+        self, monkeypatch, user_session, client, extended_financial_verification_data
+    ):
+        request = RequestFactory.create()
+        monkeypatch.setattr("atst.domain.requests.Requests.get", lambda i: request)
+        monkeypatch.setattr("atst.forms.financial.validate_pe_id", lambda *args: True)
+        user_session()
+        data = {**self.required_data, **extended_financial_verification_data}
+        data["task_order_number"] = "1234567"
+        del (data["clin_0001"])
+
+        response = self.submit_data(client, data, extended=True)
+
+        assert response.status_code == 200
