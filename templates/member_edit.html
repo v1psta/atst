@@ -53,15 +53,13 @@
   </div>
 </form>
 
-{% call Modal(name='styleguideModal', dismissable=True) %}
+{% call Modal(name='rolesModal', dismissable=False) %}
   <div class="block-list">
 
     <header class="block-list__header">
       <h3>New Request</h3>
       <div class="subtitle">Add a user to an environment</div>
-
     </header>
-
 
     <dl>
       <div class='block-list__item'>
@@ -93,8 +91,8 @@
   </div>
 
   <div class='action-group'>
-    <a v-on:click="closeModal('styleguideModal')" class='action-group__action usa-button'>Add Access</a>
-    <a class='action-group__action icon-link icon-link--danger' v-on:click="closeModal('styleguideModal')">No Access</a>
+    <a v-on:click="closeModal('rolesModal')" class='action-group__action usa-button'>Add Access</a>
+    <a class='action-group__action icon-link icon-link--danger' v-on:click="closeModal('rolesModal')">No Access</a>
   </div>
 {% endcall %}
 
@@ -114,7 +112,7 @@
           Development
         </span>
         <div class='project-list-item__environment__actions'>
-          <span class="label">no access </span><button v-on:click="openModal('styleguideModal')" type="button" class="icon-link">set role</button>
+          <span class="label">no access </span><button v-on:click="openModal('rolesModal')" type="button" class="icon-link">set role</button>
         </div>
       </li>
       <li class='block-list__item project-list-item__environment'>
@@ -122,7 +120,7 @@
           Sandbox
         </span>
         <div class='project-list-item__environment__actions'>
-          <span class="label">no access</span><button v-on:click="openModal('styleguideModal')" type="button" class="icon-link">set role</button>
+          <span class="label">no access</span><button v-on:click="openModal('rolesModal')" type="button" class="icon-link">set role</button>
         </div>
       </li>
       <li class='block-list__item project-list-item__environment'>
@@ -130,7 +128,7 @@
           Production
         </span>
         <div class='project-list-item__environment__actions'>
-          <span class="label label--success">Billing</span><button v-on:click="openModal('styleguideModal')" type="button" class="icon-link">set role</button>
+          <span class="label label--success">Billing</span><button v-on:click="openModal('rolesModal')" type="button" class="icon-link">set role</button>
         </div>
       </li>
     </ul>
@@ -153,7 +151,7 @@
           Development
         </span>
         <div class='project-list-item__environment__actions'>
-          <span class="label">no access </span><button v-on:click="openModal('styleguideModal')" type="button" class="icon-link">set role</button>
+          <span class="label">no access </span><button v-on:click="openModal('rolesModal')" type="button" class="icon-link">set role</button>
         </div>
       </li>
       <li class='block-list__item project-list-item__environment'>
@@ -161,7 +159,7 @@
           Sandbox
         </span>
         <div class='project-list-item__environment__actions'>
-          <span class="label">no access</span><button v-on:click="openModal('styleguideModal')" type="button" class="icon-link">set role</button>
+          <span class="label">no access</span><button v-on:click="openModal('rolesModal')" type="button" class="icon-link">set role</button>
         </div>
       </li>
       <li class='block-list__item project-list-item__environment'>
@@ -169,7 +167,7 @@
           Production
         </span>
         <div class='project-list-item__environment__actions'>
-          <span class="label">no access</span><button v-on:click="openModal('styleguideModal')" type="button" class="icon-link">set role</button>
+          <span class="label">no access</span><button v-on:click="openModal('rolesModal')" type="button" class="icon-link">set role</button>
         </div>
       </li>
     </ul>
