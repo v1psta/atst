@@ -218,5 +218,8 @@ class ExtendedFinancialForm(BaseFinancialForm):
 
     task_order = FileField(
         "Upload a copy of your Task Order",
-        validators=[FileAllowed(["pdf"], "Only PDF documents can be uploaded.")],
+        validators=[
+            FileAllowed(["pdf"], "Only PDF documents can be uploaded."),
+            Required(),
+        ],
     )

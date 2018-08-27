@@ -95,8 +95,13 @@
               validation='integer'
             ) }}
 
-            {{ f.task_order.label }}
-            {{ f.task_order }}
+            <div class="usa-input usa-input--validation--anything {% if f.task_order.errors %} usa-input--error {% endif %}">
+              {{ f.task_order.label }}
+              {{ f.task_order }}
+              {% for error in f.task_order.errors %}
+                <span class="usa-input__message">{{error}}</span>
+              {% endfor %}
+            </div>
           </fieldset>
         {% endif %}
 
