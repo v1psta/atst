@@ -6,10 +6,13 @@
 
 {% if not workspace.members %}
 
+  {% set user_can_invite = user_can(permissions.ASSIGN_AND_UNASSIGN_ATAT_ROLE) %}
+
   {{ EmptyState(
     'There are currently no members in this Workspace.',
-    action_label='Invite a new Member',
-    action_href='/members/new',
+    action_label='Invite a new Member' if user_can_invite else None,
+    action_href='/members/new' if user_can_invite else None,
+    sub_message=None if user_can_invite else 'Please contact your JEDI workspace administrator to invite new members.',
     icon='avatar'
   ) }}
 
