@@ -10,16 +10,13 @@
 {% if not workspace.projects %}
 
   {% set can_create_projects = user_can(permissions.ADD_APPLICATION_IN_WORKSPACE) %}
-  {% set sub_message = None if can_create_projects else 'Please contact your workspace administrator to set up a new project.' %}
-  {% set action_label = 'Add a New Project' if can_create_projects else None %}
-  {% set action_href = url_for('workspaces.new_project', workspace_id=workspace.id) if can_create_projects else None %}
 
   {{ EmptyState(
     'This workspace doesn’t have any projects yet.',
-    action_label=action_label,
-    action_href=action_href,
+    action_label='Add a New Project' if can_create_projects else None,
+    action_href=url_for('workspaces.new_project', workspace_id=workspace.id) if can_create_projects else None,
     icon='cloud',
-    sub_message=sub_message
+    sub_message=None if can_create_projects else 'Please contact your JEDI workspace administrator to set up a new project.'
   ) }}
 
 {% else %}
