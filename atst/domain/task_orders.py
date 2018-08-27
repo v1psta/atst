@@ -58,5 +58,8 @@ class TaskOrders(object):
                 # should catch the error here
                 attachment = Attachment.attach(pdf_file)
                 return TaskOrders.create(
-                    **task_order_data, number=number, source=Source.MANUAL, pdf=attachment
+                    **task_order_data,
+                    number=number,
+                    source=Source.MANUAL,
+                    pdf=attachment,
                 )

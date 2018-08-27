@@ -31,4 +31,3 @@ def test_upload_fails_for_non_pdfs(uploader):
         fs = FileStorage(fp, content_type="text/plain")
         with pytest.raises(UploadError):
             uploader.upload(fs)
-

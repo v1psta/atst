@@ -13,4 +13,3 @@ MOCK_VALID_PE_ID = "8675309U"
 FIXTURE_EMAIL_ADDRESS = "artgarfunkel@uso.mil"
 
 PDF_FILENAME = "tests/fixtures/sample.pdf"
-

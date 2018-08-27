@@ -251,7 +251,9 @@ WHERE requests_with_status.status = :status
         else:
             task_order_number = request_data.get("task_order_number")
 
-        if "task_order" in request_data and isinstance(request_data["task_order"], FileStorage):
+        if "task_order" in request_data and isinstance(
+            request_data["task_order"], FileStorage
+        ):
             task_order_data["pdf"] = request_data.pop("task_order")
 
         task_order = TaskOrders.get_or_create_task_order(

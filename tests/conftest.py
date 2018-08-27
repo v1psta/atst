@@ -26,7 +26,6 @@ def app(request):
     ctx = _app.app_context()
     ctx.push()
 
-
     yield _app
 
     upload_dir.cleanup()

@@ -146,11 +146,12 @@ def make_crl_validator(app):
 def make_eda_client(app):
     app.eda_client = MockEDAClient()
 
+
 def make_upload_storage(app):
     uploader = Uploader(
-            provider=app.config.get("STORAGE_PROVIDER"),
-            container=app.config.get("STORAGE_CONTAINER"),
-            key=app.config.get("STORAGE_KEY"),
-            secret=app.config.get("STORAGE_SECRET")
-            )
+        provider=app.config.get("STORAGE_PROVIDER"),
+        container=app.config.get("STORAGE_CONTAINER"),
+        key=app.config.get("STORAGE_KEY"),
+        secret=app.config.get("STORAGE_SECRET"),
+    )
     app.uploader = uploader

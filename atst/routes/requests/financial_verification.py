@@ -30,7 +30,6 @@ def update_financial_verification(request_id):
     post_data = http_request.form
     existing_request = Requests.get(request_id)
     form = financial_form(post_data)
-
     rerender_args = dict(
         request_id=request_id, f=form, extended=http_request.args.get("extended")
     )

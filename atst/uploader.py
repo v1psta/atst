@@ -7,7 +7,7 @@ class UploadError(Exception):
     pass
 
 
-class Uploader():
+class Uploader:
     _PERMITTED_MIMETYPES = ["application/pdf"]
 
     def __init__(self, provider, container=None, key=None, secret=None):
