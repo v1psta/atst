@@ -59,8 +59,3 @@ def update_financial_verification(request_id):
     else:
         form.reset()
         return render_template("requests/financial_verification.html", **rerender_args)
-
-
-@requests_bp.route("/requests/financial_verification_submitted")
-def financial_verification_submitted():
-    return render_template("requests/financial_verification_submitted.html")
