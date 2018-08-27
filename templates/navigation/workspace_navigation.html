@@ -6,7 +6,7 @@
       "Projects",
       href=url_for("workspaces.workspace_projects", workspace_id=workspace.id),
       active=request.url_rule.rule.startswith('/workspaces/<workspace_id>/projects'),
-      subnav=[
+      subnav=None if not user_can(permissions.ADD_APPLICATION_IN_WORKSPACE) else [
         {
           "label": "Add New Project",
           "href": url_for('workspaces.new_project', workspace_id=workspace.id),
