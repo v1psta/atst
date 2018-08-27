@@ -99,9 +99,6 @@ class Requests(object):
     @classmethod
     def update(cls, request_id, request_delta):
         request = Requests._get_with_lock(request_id)
-        if not request:
-            return
-
         request = Requests._merge_body(request, request_delta)
 
         db.session.add(request)
@@ -122,7 +119,7 @@ class Requests(object):
             )
 
         except NoResultFound:
-            return
+            raise NotFoundError()
 
     @classmethod
     def _merge_body(cls, request, request_delta):
@@ -236,8 +233,6 @@ WHERE requests_with_status.status = :status
     @classmethod
     def update_financial_verification(cls, request_id, financial_data):
         request = Requests._get_with_lock(request_id)
-        if not request:
-            return
 
         request_data = financial_data.copy()
         task_order_data = {
@@ -275,10 +270,9 @@ WHERE requests_with_status.status = :status
     @classmethod
     def submit_financial_verification(cls, request_id):
         request = Requests._get_with_lock(request_id)
-        if not request:
-            return
-
         Requests.set_status(request, RequestStatus.PENDING_CCPO_APPROVAL)
 
         db.session.add(request)
         db.session.commit()
+
+        return request
