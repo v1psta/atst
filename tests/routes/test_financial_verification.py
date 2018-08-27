@@ -119,10 +119,11 @@ class TestPENumberInForm:
     def test_submit_extended_financial_form(
         self, monkeypatch, user_session, client, extended_financial_verification_data
     ):
-        monkeypatch.setattr("atst.domain.requests.Requests.get", lambda i: MOCK_REQUEST)
+        request = RequestFactory.create()
+        monkeypatch.setattr("atst.domain.requests.Requests.get", lambda i: request)
+        monkeypatch.setattr("atst.forms.financial.validate_pe_id", lambda *args: True)
         user_session()
         data = {**self.required_data, **extended_financial_verification_data}
-        data["pe_id"] = MOCK_REQUEST.body["financial_verification"]["pe_id"]
         data["task_order_number"] = "1234567"
 
         response = self.submit_data(client, data, extended=True)

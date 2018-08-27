@@ -134,6 +134,7 @@ def test_update_financial_verification_without_task_order(
         extended_financial_verification_data["clin_0001"]
     )
     assert request.task_order.source == TaskOrderSource.MANUAL
+    assert request.task_order.pdf
 
 
 def test_update_financial_verification_with_task_order():
