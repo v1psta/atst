@@ -20,7 +20,7 @@
       "Members",
       href=url_for("workspaces.workspace_members", workspace_id=workspace.id),
       active=request.url_rule.rule.startswith('/workspaces/<workspace_id>/members'),
-      subnav=[
+      subnav=None if not user_can(permissions.ASSIGN_AND_UNASSIGN_ATAT_ROLE) else [
         {
           "label": "Add New Member",
           "href": url_for("workspaces.new_member", workspace_id=workspace.id),
