@@ -222,6 +222,8 @@
 
       &.meter-cell {
         padding-left: 0;
+        position: relative;
+        min-width: 4rem;
 
         @include media($medium-screen) {
           min-width: 12rem;
@@ -231,7 +233,6 @@
           width: 100%;
           height: 3rem;
           background: $color-white;
-          position: relative;
           display: none;
 
           @include media($medium-screen) {
@@ -241,14 +242,17 @@
           &::-webkit-meter-bar {
             background: $color-white;
           }
+        }
 
-          &::before {
-            content: attr(title);
-            position: absolute;
-            top: .5rem;
-            left: $gap;
-            @include h5;
+        .spend-table__meter-value {
+          @include h5;
+
+          @include media($medium-screen) {
+            display: block;
             color: $color-white;
+            position: absolute;
+            top: 2.3rem;
+            left: $gap;
           }
         }
       }
