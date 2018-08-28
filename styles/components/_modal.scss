@@ -52,6 +52,11 @@
       }
 
       .block-list {
+        margin: -$gap * 2;
+
+        @include media($medium-screen) {
+          margin: -$gap * 4;
+        }
 
         .block-list__header {
           display: block;
@@ -62,6 +67,11 @@
           margin-left: $gap*3;
           display: flex;
           justify-content: space-between;
+
+          position: absolute;
+          bottom: 0;
+          right: 0;
+          background: white;
         }
       }
 
