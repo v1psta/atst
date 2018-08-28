@@ -76,6 +76,10 @@
     margin: 0;
     max-width: 100%;
 
+    &:hover {
+      color: $color-blue;
+    }
+
     dd {
       width: 94%;
     }
