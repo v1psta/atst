@@ -2353,10 +2353,6 @@ flatten@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/flatten/-/flatten-1.0.2.tgz#dae46a9d78fbe25292258cc1e780a41d95c03782"
 
-flexibility@1.0.6:
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/flexibility/-/flexibility-1.0.6.tgz#faa5caf65708c91317508a491d194f434f2eba74"
-
 flush-write-stream@^1.0.0:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/flush-write-stream/-/flush-write-stream-1.0.3.tgz#c5d586ef38af6097650b49bc41b55fabb19f35bd"
@@ -4815,12 +4811,6 @@ postcss-filter-plugins@^2.0.0:
   resolved "https://registry.yarnpkg.com/postcss-filter-plugins/-/postcss-filter-plugins-2.0.3.tgz#82245fdf82337041645e477114d8e593aa18b8ec"
   dependencies:
     postcss "^5.0.4"
-
-postcss-flexibility@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/postcss-flexibility/-/postcss-flexibility-2.0.0.tgz#5612c1b85d6595ed480966839928a41617a6a768"
-  dependencies:
-    postcss "^6.0.1"
 
 postcss-merge-idents@^2.1.5:
   version "2.1.7"
