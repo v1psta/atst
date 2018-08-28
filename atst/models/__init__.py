@@ -13,3 +13,4 @@ from .task_order import TaskOrder
 from .workspace import Workspace
 from .project import Project
 from .environment import Environment
+from .attachment import Attachment

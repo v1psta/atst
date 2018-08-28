@@ -35,3 +35,6 @@ config/dev.ini
 /crl
 /crl-tmp
 *.bk
+
+# uploads
+/uploads

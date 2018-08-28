@@ -3,6 +3,7 @@ from sqlalchemy import exists, and_, exc
 from sqlalchemy.sql import text
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.orm.attributes import flag_modified
+from werkzeug.datastructures import FileStorage
 
 from atst.models.request import Request
 from atst.models.request_status_event import RequestStatusEvent, RequestStatus
@@ -244,10 +245,16 @@ WHERE requests_with_status.status = :status
             for (k, v) in financial_data.items()
             if k in TaskOrders.TASK_ORDER_DATA
         }
+
         if task_order_data:
             task_order_number = request_data.pop("task_order_number")
         else:
             task_order_number = request_data.get("task_order_number")
+
+        if "task_order" in request_data and isinstance(
+            request_data["task_order"], FileStorage
+        ):
+            task_order_data["pdf"] = request_data.pop("task_order")
 
         task_order = TaskOrders.get_or_create_task_order(
             task_order_number, task_order_data

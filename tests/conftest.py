@@ -3,17 +3,23 @@ import pytest
 import alembic.config
 import alembic.command
 from logging.config import dictConfig
+from werkzeug.datastructures import FileStorage
+from tempfile import TemporaryDirectory
 
 from atst.app import make_app, make_config
 from atst.database import db as _db
 import tests.factories as factories
+from tests.mocks import PDF_FILENAME
 
 dictConfig({"version": 1, "handlers": {"wsgi": {"class": "logging.NullHandler"}}})
 
 
 @pytest.fixture(scope="session")
 def app(request):
+    upload_dir = TemporaryDirectory()
+
     config = make_config()
+    config.update({"STORAGE_CONTAINER": upload_dir.name})
 
     _app = make_app(config)
 
@@ -21,6 +27,8 @@ def app(request):
     ctx.push()
 
     yield _app
+
+    upload_dir.cleanup()
 
     ctx.pop()
 
@@ -103,3 +111,24 @@ def user_session(monkeypatch, session):
         )
 
     return set_user_session
+
+
+@pytest.fixture
+def pdf_upload():
+    with open(PDF_FILENAME, "rb") as fp:
+        yield FileStorage(fp, content_type="application/pdf")
+
+
+@pytest.fixture
+def extended_financial_verification_data(pdf_upload):
+    return {
+        "funding_type": "RDTE",
+        "funding_type_other": "other",
+        "clin_0001": "50000",
+        "clin_0003": "13000",
+        "clin_1001": "30000",
+        "clin_1003": "7000",
+        "clin_2001": "30000",
+        "clin_2003": "7000",
+        "task_order": pdf_upload,
+    }

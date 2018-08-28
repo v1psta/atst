@@ -6,7 +6,7 @@
 
 {% block content %}
 
-<financial inline-template v-bind:initial-data='{{ f.data|tojson }}'>
+<financial inline-template v-bind:initial-data='{{ f.data|mixedContentToJson }}'>
 <div class="col">
 
   {% if extended %}
@@ -38,7 +38,7 @@
 
       {% block form_action %}
         {% if extended %}
-          <form method='POST' action="{{ url_for('requests.financial_verification', request_id=request_id, extended=True) }}" autocomplete="off">
+          <form method='POST' action="{{ url_for('requests.financial_verification', request_id=request_id, extended=True) }}" autocomplete="off" enctype="multipart/form-data">
         {% else %}
           <form method='POST' action="{{ url_for('requests.financial_verification', request_id=request_id) }}" autocomplete="off">
         {% endif %}
@@ -94,6 +94,14 @@
               f.clin_2003,placeholder="7,000",
               validation='integer'
             ) }}
+
+            <div class="usa-input usa-input--validation--anything {% if f.task_order.errors %} usa-input--error {% endif %}">
+              {{ f.task_order.label }}
+              {{ f.task_order }}
+              {% for error in f.task_order.errors %}
+                <span class="usa-input__message">{{error}}</span>
+              {% endfor %}
+            </div>
           </fieldset>
         {% endif %}
 

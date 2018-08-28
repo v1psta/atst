@@ -121,25 +121,20 @@ request_financial_data = {
     "treasury_code": "00123456",
     "ba_code": "024A",
 }
-task_order_financial_data = {
-    "funding_type": "RDTE",
-    "funding_type_other": "other",
-    "clin_0001": 50000,
-    "clin_0003": 13000,
-    "clin_1001": 30000,
-    "clin_1003": 7000,
-    "clin_2001": 30000,
-    "clin_2003": 7000,
-}
 
 
-def test_update_financial_verification_without_task_order():
+def test_update_financial_verification_without_task_order(
+    extended_financial_verification_data
+):
     request = RequestFactory.create()
-    financial_data = {**request_financial_data, **task_order_financial_data}
+    financial_data = {**request_financial_data, **extended_financial_verification_data}
     Requests.update_financial_verification(request.id, financial_data)
     assert request.task_order
-    assert request.task_order.clin_0001 == task_order_financial_data["clin_0001"]
+    assert request.task_order.clin_0001 == int(
+        extended_financial_verification_data["clin_0001"]
+    )
     assert request.task_order.source == TaskOrderSource.MANUAL
+    assert request.task_order.pdf
 
 
 def test_update_financial_verification_with_task_order():

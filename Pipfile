@@ -18,6 +18,8 @@ flask-session = "*"
 flask-wtf = "*"
 pyopenssl = "*"
 requests = "*"
+apache-libcloud = "*"
+lockfile = "*"
 
 [dev-packages]
 bandit = "*"
