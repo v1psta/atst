@@ -91,7 +91,6 @@ class TestPENumberInForm:
     def test_submit_financial_form_with_invalid_task_order(
         self, monkeypatch, user_session, client
     ):
-        monkeypatch.setattr("atst.domain.requests.Requests.get", lambda i: MOCK_REQUEST)
         user_session()
 
         data = dict(self.required_data)
@@ -134,8 +133,6 @@ class TestPENumberInForm:
     def test_submit_invalid_extended_financial_form(
         self, monkeypatch, user_session, client, extended_financial_verification_data
     ):
-        request = RequestFactory.create()
-        monkeypatch.setattr("atst.domain.requests.Requests.get", lambda i: request)
         monkeypatch.setattr("atst.forms.financial.validate_pe_id", lambda *args: True)
         user_session()
         data = {**self.required_data, **extended_financial_verification_data}
