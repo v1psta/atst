@@ -61,37 +61,57 @@
 
     </header>
 
-    <dl>
-      <div class='block-list__item'>
-        <dt>CCPO</dt>
-        <dd>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fugiat dicta voluptate vitae quasi, cumque rem dolores, quae quas cum in recusandae? Libero deleniti minus ab accusantium vel necessitatibus placeat, rerum?</dd>
-      </div>
-      <div class='block-list__item'>
-        <dt>Security</dt>
-        <dd>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quaerat vel ea, eaque, odio sint explicabo officia, debitis dolore, et repudiandae possimus deserunt eveniet laborum. Sunt blanditiis deleniti minus. Et, mollitia.</dd>
-      </div>
-      <div class='block-list__item'>
-        <dt>Audit</dt>
-        <dd>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Autem itaque reprehenderit dolorum nobis voluptatibus quae, facilis voluptatum necessitatibus alias laboriosam, esse blanditiis culpa possimus tempore consectetur recusandae. Nihil, vel, dolorem!</dd>
-      </div>
-      <div class='block-list__item'>
-        <dt>Application Developer</dt>
-        <dd>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea esse ab consequuntur aliquam. Porro ea mollitia sapiente blanditiis quaerat quam beatae vitae adipisci quisquam dolore reiciendis tenetur, eius nemo quibusdam!</dd>
-      </div>
-      <div class='block-list__item'>
-        <dt>Dev Ops</dt>
-        <dd>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore incidunt obcaecati, quidem ullam sint iusto. Natus ex distinctio eveniet cumque laudantium veritatis nemo asperiores, esse hic quis perspiciatis, quia impedit.</dd>
-      </div>
-      <div class='block-list__item'>
-        <dt>Billing</dt>
-        <dd>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quidem delectus at, voluptatibus dolores, nobis temporibus. Ipsum dignissimos corrupti qui nisi et alias totam commodi maiores hic possimus ipsam error, ullam.</dd>
-      </div>
-    </dl>
+    <form method="post" action="">
+      <dl>
+        <div class='block-list__item'>
+          <input type='radio' name='radio' id='radio-1' />
+          <label for='radio-1'>
+            <dt>CCPO</dt>
+            <dd>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fugiat dicta voluptate vitae quasi, cumque rem dolores, quae quas cum in recusandae? Libero deleniti minus ab accusantium vel necessitatibus placeat, rerum?</dd>
+          </label>
+        </div>
+        <div class='block-list__item'>
+          <input type='radio' name='radio' id='radio-2' />
+          <label for='radio-2'>
+            <dt>Security</dt>
+            <dd>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quaerat vel ea, eaque, odio sint explicabo officia, debitis dolore, et repudiandae possimus deserunt eveniet laborum. Sunt blanditiis deleniti minus. Et, mollitia.</dd>
+          </label>
+        </div>
+        <div class='block-list__item'>
+          <input type='radio' name='radio' id='radio-3' />
+          <label for='radio-3'>
+            <dt>Audit</dt>
+            <dd>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Autem itaque reprehenderit dolorum nobis voluptatibus quae, facilis voluptatum necessitatibus alias laboriosam, esse blanditiis culpa possimus tempore consectetur recusandae. Nihil, vel, dolorem!</dd>
+          </label>
+        </div>
+        <div class='block-list__item'>
+          <input type='radio' name='radio' id='radio-4' />
+          <label for='radio-4'>
+            <dt>Application Developer</dt>
+            <dd>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea esse ab consequuntur aliquam. Porro ea mollitia sapiente blanditiis quaerat quam beatae vitae adipisci quisquam dolore reiciendis tenetur, eius nemo quibusdam!</dd>
+          </label>
+        </div>
+        <div class='block-list__item'>
+          <input type='radio' name='radio' id='radio-5' />
+          <label for='radio-5'>
+            <dt>Dev Ops</dt>
+            <dd>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore incidunt obcaecati, quidem ullam sint iusto. Natus ex distinctio eveniet cumque laudantium veritatis nemo asperiores, esse hic quis perspiciatis, quia impedit.</dd>
+          </label>
+        </div>
+        <div class='block-list__item'>
+          <input type='radio' name='radio' id='radio-6' />
+          <label for='radio-6'>
+            <dt>Billing</dt>
+            <dd>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quidem delectus at, voluptatibus dolores, nobis temporibus. Ipsum dignissimos corrupti qui nisi et alias totam commodi maiores hic possimus ipsam error, ullam.</dd>
+          </label>
+        </div>
+      </dl>
 
-    <div class='action-group'>
-      <a v-on:click="closeModal('rolesModal')" class='action-group__action usa-button'>Add Access</a>
-      <a class='action-group__action icon-link icon-link--danger' v-on:click="closeModal('rolesModal')">No Access</a>
-    </div>
+      <div class='action-group'>
+        <a v-on:click="closeModal('rolesModal')" class='action-group__action usa-button'>Add Access</a>
+        <a class='action-group__action icon-link icon-link--danger' v-on:click="closeModal('rolesModal')">No Access</a>
+      </div>
+    </form>
 
   </div>
 
