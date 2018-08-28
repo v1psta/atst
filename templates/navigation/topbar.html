@@ -2,14 +2,14 @@
 
 <header class="topbar">
   <nav class="topbar__navigation">
-    <a href="/home" class="topbar__link topbar__link--shield" title="JEDI Home">
+    <a href="{{ url_for('atst.home') }}" class="topbar__link topbar__link--shield" title="JEDI Home">
       {{ Icon('shield', classes='topbar__link-icon') }}
     </a>
 
     <div class="topbar__context {% if workspace %}topbar__context--workspace{% endif %}">
-      <a href="/" class="topbar__link">
+      {% set topbar_link = url_for("workspaces.show_workspace", workspace_id=workspace.id) if workspace else url_for("atst.home") %}
+      <a href="{{ topbar_link }}" class="topbar__link">
         <span class="topbar__link-label">{{ ("Workspace " + workspace.name) if workspace else "JEDI" }}</span>
-        {{ Icon('caret_down', classes='topbar__link-icon icon--tiny') }}
       </a>
 
       <a href="/" class="topbar__link">
