@@ -75,6 +75,17 @@
   label {
     margin: 0;
     max-width: 100%;
+
+    dd {
+      width: 94%;
+    }
+
+    &:before {
+      float: right;
+      position: relative;
+      top: $gap*4;
+      margin-right: $gap*4;
+    }
   }
 
   .icon-link,
