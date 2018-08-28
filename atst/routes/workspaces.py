@@ -7,6 +7,7 @@ from flask import (
     url_for,
 )
 
+from atst.domain.exceptions import UnauthorizedError
 from atst.domain.workspaces import Workspaces
 from atst.domain.projects import Projects
 from atst.forms.new_project import NewProjectForm
@@ -19,9 +20,12 @@ bp = Blueprint("workspaces", __name__)
 def workspace():
     workspace = None
     if "workspace_id" in http_request.view_args:
-        workspace = Workspaces.get(
-            g.current_user, http_request.view_args["workspace_id"]
-        )
+        try:
+            workspace = Workspaces.get(
+                g.current_user, http_request.view_args["workspace_id"]
+            )
+        except UnauthorizedError:
+            pass
     return {"workspace": workspace}
 
 
