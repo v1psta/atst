@@ -108,9 +108,8 @@
           <tr>
             <th scope="row">
               <a class='icon-link icon-link--large' href="{{ r['edit_link'] }}">{{ r['order_id'] }}</a>
-              {% if r['is_new'] %}<span class="usa-label">New</span>
+              {% if r['is_new'] %}<span class="usa-label">New</span>{% endif %}
             </th>
-            {% endif %}
             <td>{{ r['date'] }}</td>
             {% if extended_view %}
               <td>{{ r['full_name'] }}</td>
