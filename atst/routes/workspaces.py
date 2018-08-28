@@ -12,6 +12,8 @@ from atst.domain.workspaces import Workspaces
 from atst.domain.projects import Projects
 from atst.forms.new_project import NewProjectForm
 from atst.forms.new_member import NewMemberForm
+from atst.domain.authz import Authorization
+from atst.models.permissions import Permissions
 
 bp = Blueprint("workspaces", __name__)
 
@@ -26,7 +28,15 @@ def workspace():
             )
         except UnauthorizedError:
             pass
-    return {"workspace": workspace}
+
+    def user_can(permission):
+        if workspace:
+            return Authorization.has_workspace_permission(
+                g.current_user, workspace, permission
+            )
+        return False
+
+    return {"workspace": workspace, "permissions": Permissions, "user_can": user_can}
 
 
 @bp.route("/workspaces")
