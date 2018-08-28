@@ -33,7 +33,11 @@ def getOptionLabel(value, options):
     return next(tup[1] for tup in options if tup[0] == value)
 
 
-def enhancedToJson(value):
+def mixedContentToJson(value):
+    """
+    This coerces the file upload in form data to its filename
+    so that the data can be JSON serialized.
+    """
     if (
         isinstance(value, dict)
         and "task_order" in value
@@ -49,4 +53,4 @@ def register_filters(app):
     app.jinja_env.filters["usPhone"] = usPhone
     app.jinja_env.filters["readableInteger"] = readableInteger
     app.jinja_env.filters["getOptionLabel"] = getOptionLabel
-    app.jinja_env.filters["enhancedToJson"] = enhancedToJson
+    app.jinja_env.filters["mixedContentToJson"] = mixedContentToJson

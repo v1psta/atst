@@ -6,7 +6,7 @@
 
 {% block content %}
 
-<financial inline-template v-bind:initial-data='{{ f.data|enhancedToJson }}'>
+<financial inline-template v-bind:initial-data='{{ f.data|mixedContentToJson }}'>
 <div class="col">
 
   {% if extended %}
