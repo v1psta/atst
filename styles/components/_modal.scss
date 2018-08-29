@@ -1,3 +1,5 @@
+$fixed-footer-height: 5rem + ($gap * 4);
+
 .modal {
   position: fixed;
   z-index: 3;
@@ -7,13 +9,20 @@
   bottom: 0;
   background-color: $color-overlay;
 
+  .modal__container {
+    height: 100vh;
+  }
+
   .modal__dialog {
     padding: $gap;
-    height: 100vh;
+    margin: 0 auto;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    max-width: 80rem;
+    max-height: 100%;
+    position: relative;
 
     @include media($medium-screen) {
       padding: $gap * 2;
@@ -26,14 +35,11 @@
     .modal__body {
       background-color: $color-white;
       padding: $gap * 2;
-      flex-grow: 1;
+      width: 100%;
       overflow-y: auto;
-      max-width: 80rem;
-      position: relative;
 
       @include media($medium-screen) {
         padding: $gap * 4;
-        flex-grow: 0;
       }
 
       h1, h2 {
@@ -53,20 +59,50 @@
 
       .block-list {
         margin: -$gap * 2;
+        padding-bottom: $fixed-footer-height;
 
         @include media($medium-screen) {
           margin: -$gap * 4;
         }
 
         .block-list__header {
-          display: block;
+          border-top: 0;
         }
 
-        .action-group {
-          margin-right: $gap*4;
-          margin-left: $gap*3;
+        .block-list__item {
+          &:last-child {
+            border: 0;
+          }
+        }
+
+        .block-list__footer {
+          height: $fixed-footer-height;
+          margin: 0;
+          padding: 0 ($gap * 2);
           display: flex;
           justify-content: space-between;
+          position: absolute;
+          bottom: $gap;
+          left: $gap;
+          right: $gap;
+          background: $color-white;
+          border-top: 1px solid $color-gray-light;
+
+          @include media($medium-screen) {
+            bottom: $gap * 2;
+            left: $gap * 2;
+            right: $gap * 2;
+          }
+
+          @include media($large-screen) {
+            bottom: $gap * 4;
+            left: $gap * 4;
+            right: $gap * 4;
+          }
+
+          .action-group {
+            margin: 0;
+          }
         }
       }
 

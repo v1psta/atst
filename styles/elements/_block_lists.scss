@@ -1,7 +1,7 @@
 @mixin block-list {
   @include panel-margin;
 
-  > ul {
+  ul, dl {
     list-style: none;
     margin: 0;
     padding: 0;
@@ -72,26 +72,6 @@
     margin: -$gap 0;
   }
 
-  label {
-    margin: 0;
-    max-width: 100%;
-
-    &:hover {
-      color: $color-blue;
-    }
-
-    dd {
-      width: 94%;
-    }
-
-    &:before {
-      float: right;
-      position: relative;
-      top: $gap*4;
-      margin-right: $gap*4;
-    }
-  }
-
   .icon-link,
   .label {
     &:first-child {
@@ -115,6 +95,30 @@
 
 .block-list__item {
   @include block-list-item;
+
+  &.block-list__item--selectable {
+    > label {
+      margin: 0;
+      max-width: none;
+      display: flex;
+      flex-direction: row-reverse;
+      align-items: center;
+      justify-content: space-between;
+      &::before {
+        flex-shrink: 0;
+      }
+
+      &:hover {
+        color: $color-primary;
+      }
+    }
+
+    input:checked {
+      + label {
+        color: $color-primary;
+      }
+    }
+  }
 }
 
 .block-list__footer {
