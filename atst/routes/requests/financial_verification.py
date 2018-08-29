@@ -41,7 +41,7 @@ def update_financial_verification(request_id):
         updated_request = Requests.update_financial_verification(request_id, form.data)
         if valid:
             submitted_request = Requests.submit_financial_verification(updated_request)
-            if updated_request.is_financially_verified:
+            if submitted_request.is_financially_verified:
                 new_workspace = Requests.approve_and_create_workspace(submitted_request)
                 return redirect(
                     url_for(
