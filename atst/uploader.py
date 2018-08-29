@@ -26,9 +26,11 @@ class Uploader:
             )
 
         object_name = uuid4().hex
-        self.container.upload_object_via_stream(
-            iterator=fyle.stream.__iter__(),
+        self.container.driver._put_object(
+            stream=iter(fyle.stream),
+            container=self.container,
             object_name=object_name,
+            verify_hash=False,
             extra={"acl": "private"},
         )
         return (fyle.filename, object_name)
