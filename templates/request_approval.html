@@ -87,7 +87,77 @@
           </div>
         </dl>
 
+        <hr>
+        <h2>Information About You</h2>
 
+        <dl>
+          <div>
+            <dt>First Name</dt>
+            <dd>Amanda</dd>
+          </div>
+          <div>
+            <dt>Last Name</dt>
+            <dd>Adamson</dd>
+          </div>
+          <div>
+            <dt>Email Address</dt>
+            <dd>amanda@test.com</dd>
+          </div>
+          <div>
+            <dt>Phone Number</dt>
+            <dd>
+              +1 (123) 123 - 1231
+            </dd>
+          </div>
+          <div>
+            <dt>Service Branch or Agency</dt>
+            <dd>
+              Air Force, Department of the
+            </dd>
+          </div>
+          <div>
+            <dt>Citizenship</dt>
+            <dd>United States</dd>
+          </div>
+          <div>
+            <dt>Designation of Person</dt>
+            <dd>
+              Military
+            </dd>
+          </div>
+          <div>
+            <dt>Latest Information Assurance (IA) Training completion date</dt>
+            <dd>12/12/2017</dd>
+          </div>
+        </dl>
+
+        <hr>
+        <h2>Workspace Owner</h2>
+        <dl>
+          <div>
+            <dt>POC First Name</dt>
+            <dd>Amanda</dd>
+          </div>
+          <div>
+            <dt>POC Last Name</dt>
+            <dd>Adamson</dd>
+          </div>
+          <div>
+            <dt>POC Email Address</dt>
+            <dd>amanda@test.com</dd>
+          </div>
+          <div>
+            <dt>DOD ID</dt>
+            <dd>2345678901</dd>
+          </div>
+        </dl>
+
+      </div>
+
+    </section>
+
+    <section class="panel">
+      <div class="panel__content">
 
         <div class='row row--halves request-approval__info-columns'>
           <div class='col'>
@@ -129,6 +199,54 @@
                 <dd class='diff--added'><span class='hide'>Changed to: </span>Absolute Destructive Power</dd>
               </div>
             </dl>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class='panel'>
+      <div class='panel__content'>
+        <p>Here is some good text explaining what the CCPO needs to do in order to approve the request. This text should also explain why we are asking for multiple people's names and the risk of boiling the ocean.</p>
+
+
+        <div class='usa-input'>
+          <label for='notes'>Notes</label>
+          <textarea id='notes' placeholder='Add notes or comments related to the approval or disapproval of this request.'/></textarea>
+        </div>
+
+        <div class='form-row'>
+          <div class='form-col'>
+            <div class='usa-input'>
+              <label for='mo-behalf-name'>Mission Owner approval on behalf of</label>
+              <input id='mo-behalf-name' type='text' placeholder='Name of approving officer'/>
+            </div>
+
+            <div class='usa-input'>
+              <label for='mo-behalf-email'>Mission Owner e-mail</label>
+              <input id='mo-behalf-email' type='email' placeholder='i.e. name@mail.mil'/>
+            </div>
+
+            <div class='usa-input'>
+              <label for='mo-behalf-phone'>Mission Owner phone number</label>
+              <input id='mo-behalf-phone' type='tel' placeholder='i.e. (123) 456-7890'/>
+            </div>
+          </div>
+
+          <div class='form-col'>
+            <div class='usa-input'>
+              <label for='ccpo-behalf-name'>CCPO approval on behalf of</label>
+              <input id='ccpo-behalf-name' type='text' placeholder='Name of approving officer'/>
+            </div>
+
+            <div class='usa-input'>
+              <label for='ccpo-behalf-email'>CCPO e-mail</label>
+              <input id='ccpo-behalf-email' type='email' placeholder='i.e. name@mail.mil'/>
+            </div>
+
+            <div class='usa-input'>
+              <label for='ccpo-behalf-phone'>CCPO phone number</label>
+              <input id='ccpo-behalf-phone' type='tel' placeholder='i.e. (123) 456-7890'/>
+            </div>
           </div>
         </div>
       </div>
@@ -200,53 +318,7 @@
       </div>
     </section>
 
-    <section class='panel'>
-      <div class='panel__content'>
-        <p>Here is some good text explaining what the CCPO needs to do in order to approve the request. This text should also explain why we are asking for multiple people's names and the risk of boiling the ocean.</p>
 
-
-        <div class='usa-input'>
-          <label for='notes'>Notes</label>
-          <textarea id='notes' placeholder='Add notes or comments related to the approval or disapproval of this request.'/></textarea>
-        </div>
-
-        <div class='form-row'>
-          <div class='form-col'>
-            <div class='usa-input'>
-              <label for='mo-behalf-name'>Mission Owner approval on behalf of</label>
-              <input id='mo-behalf-name' type='text' placeholder='Name of approving officer'/>
-            </div>
-
-            <div class='usa-input'>
-              <label for='mo-behalf-email'>Mission Owner e-mail</label>
-              <input id='mo-behalf-email' type='email' placeholder='i.e. name@mail.mil'/>
-            </div>
-
-            <div class='usa-input'>
-              <label for='mo-behalf-phone'>Mission Owner phone number</label>
-              <input id='mo-behalf-phone' type='tel' placeholder='i.e. (123) 456-7890'/>
-            </div>
-          </div>
-
-          <div class='form-col'>
-            <div class='usa-input'>
-              <label for='ccpo-behalf-name'>CCPO approval on behalf of</label>
-              <input id='ccpo-behalf-name' type='text' placeholder='Name of approving officer'/>
-            </div>
-
-            <div class='usa-input'>
-              <label for='ccpo-behalf-email'>CCPO e-mail</label>
-              <input id='ccpo-behalf-email' type='email' placeholder='i.e. name@mail.mil'/>
-            </div>
-
-            <div class='usa-input'>
-              <label for='ccpo-behalf-phone'>CCPO phone number</label>
-              <input id='ccpo-behalf-phone' type='tel' placeholder='i.e. (123) 456-7890'/>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
 
     <div class='action-group'>
       <a href='/' class='usa-button usa-button-big'>Approve Request</a>
