@@ -17,6 +17,8 @@ class Request(Base):
         "RequestStatusEvent", backref="request", order_by="RequestStatusEvent.sequence"
     )
 
+    workspace = relationship("Workspace", uselist=False, back_populates="request")
+
     user_id = Column(ForeignKey("users.id"), nullable=False)
     creator = relationship("User")
 
