@@ -1,9 +1,10 @@
-{% extends "base.html.to" %}
+{% extends "base.html" %}
+
+{% from "components/icon.html" import Icon %}
 
 {% block content %}
 
 <article class='col col--grow request-approval'>
-  {# A {% module Alert() %} goes here, if alerting be needed #}
 
   <form>
     <section class='panel'>
@@ -129,7 +130,6 @@
       <div class='panel__content'>
         <p>Here is some good text explaining what the CCPO needs to do in order to approve the request. This text should also explain why we are asking for multiple people's names and the risk of boiling the ocean.</p>
 
-        {# All instances of .usa-input groups here should be replaced with {% module TextInput(wtforms.fields.Field) %} #}
 
         <div class='usa-input'>
           <label for='notes'>Notes</label>
@@ -178,12 +178,12 @@
       <a href='/' class='usa-button usa-button-big'>Approve Request</a>
       <a href='/' class='usa-button usa-button-big usa-button-secondary'>Deny Request</a>
       <a href='/' class='icon-link'>
-        {% module Icon('x') %}
+        {{ Icon('x') }}
         <span>Cancel</span>
       </a>
     </div>
   </form>
 </article>
 
-{% end %}
+{% endblock %}
 
