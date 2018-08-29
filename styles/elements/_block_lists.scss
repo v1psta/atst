@@ -1,7 +1,7 @@
 @mixin block-list {
   @include panel-margin;
 
-  > ul {
+  ul, dl {
     list-style: none;
     margin: 0;
     padding: 0;
@@ -95,6 +95,30 @@
 
 .block-list__item {
   @include block-list-item;
+
+  &.block-list__item--selectable {
+    > label {
+      margin: 0;
+      max-width: none;
+      display: flex;
+      flex-direction: row-reverse;
+      align-items: center;
+      justify-content: space-between;
+      &::before {
+        flex-shrink: 0;
+      }
+
+      &:hover {
+        color: $color-primary;
+      }
+    }
+
+    input:checked {
+      + label {
+        color: $color-primary;
+      }
+    }
+  }
 }
 
 .block-list__footer {

@@ -18,9 +18,13 @@ h1, h2, h3, h4, h5, h6 {
   font-family: $font-sans;
   margin: ($gap * 2) 0;
 
-  + .subtitle * {
-    margin-top: 0;
+  .subtitle,
+  + .subtitle {
     color: $color-gray;
+  }
+
+  + .subtitle, * {
+    margin-top: 0;
   }
 
 }

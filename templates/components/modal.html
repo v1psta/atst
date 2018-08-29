@@ -1,20 +1,22 @@
 {% from "components/icon.html" import Icon %}
 
 {% macro Modal(name, dismissable=False) -%}
-<div v-if='modals.{{name}} === true' v-cloak>
+  <template v-if='modals.{{name}} === true' v-cloak>
     <div class='modal {% if dismissable %}modal--dismissable{% endif%}'>
-      <div class='modal__dialog' role='dialog' aria-modal='true'>
-        <div class='modal__body'>
-            {{ caller() }}
+      <div class='modal__container'>
+        <div class='modal__dialog' role='dialog' aria-modal='true'>
+          <div class='modal__body'>
+              {{ caller() }}
 
-            {% if dismissable %}
-              <button type='button' class='icon-link modal__dismiss' v-on:click='closeModal("{{name}}")'>
-                {{ Icon('x') }}
-                <span>Close</span>
-              </button>
-            {% endif %}
+              {% if dismissable %}
+                <button type='button' class='icon-link modal__dismiss' v-on:click='closeModal("{{name}}")'>
+                  {{ Icon('x') }}
+                  <span>Close</span>
+                </button>
+              {% endif %}
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  </template>
 {%- endmacro %}
