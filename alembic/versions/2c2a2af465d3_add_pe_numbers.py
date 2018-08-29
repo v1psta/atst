@@ -1,7 +1,7 @@
 """add PE numbers
 
 Revision ID: 2c2a2af465d3
-Revises: 0845b2f0f401
+Revises: 14cd800904bc
 Create Date: 2018-08-27 16:26:51.707146
 
 """
@@ -17,7 +17,7 @@ from atst.models.pe_number import PENumber
 
 # revision identifiers, used by Alembic.
 revision = '2c2a2af465d3'
-down_revision = '0845b2f0f401'
+down_revision = '14cd800904bc'
 branch_labels = None
 depends_on = None
 
