@@ -96,3 +96,9 @@
   @include panel-actions;
 }
 
+hr {
+  border: 0;
+  border-bottom: 1px dashed $color-gray-light;
+  margin: 0px $site-margins*-4;
+}
+
