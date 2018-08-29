@@ -268,8 +268,7 @@ WHERE requests_with_status.status = :status
         return request
 
     @classmethod
-    def submit_financial_verification(cls, request_id):
-        request = Requests._get_with_lock(request_id)
+    def submit_financial_verification(cls, request):
         Requests.set_status(request, RequestStatus.PENDING_CCPO_APPROVAL)
 
         db.session.add(request)
