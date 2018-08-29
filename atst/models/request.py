@@ -44,4 +44,6 @@ class Request(Base):
 
     @property
     def is_financially_verified(self):
-        return self.task_order is not None
+        if self.task_order:
+            return self.task_order.verified
+        return False

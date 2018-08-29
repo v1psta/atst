@@ -35,3 +35,7 @@ class TaskOrder(Base):
 
     attachment_id = Column(ForeignKey("attachments.id"))
     pdf = relationship("Attachment")
+
+    @property
+    def verified(self):
+        return self.source == Source.EDA
