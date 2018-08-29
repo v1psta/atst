@@ -1,4 +1,6 @@
+from tempfile import NamedTemporaryFile
 from uuid import uuid4
+
 from libcloud.storage.types import Provider
 from libcloud.storage.providers import get_driver
 
@@ -26,11 +28,13 @@ class Uploader:
             )
 
         object_name = uuid4().hex
-        self.container.upload_object_via_stream(
-            iterator=fyle.stream.__iter__(),
-            object_name=object_name,
-            extra={"acl": "private"},
-        )
+        with NamedTemporaryFile() as tempfile:
+            tempfile.write(fyle.stream.read())
+            self.container.upload_object(
+                file_path=tempfile.name,
+                object_name=object_name,
+                extra={"acl": "private"},
+            )
         return (fyle.filename, object_name)
 
     def download(self, path):
