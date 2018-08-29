@@ -50,6 +50,10 @@ def update_financial_verification(request_id):
                         newWorkspace=True,
                     )
                 )
+            else:
+                return redirect(
+                    url_for("requests.requests_index", pendingFinancialVerification=True)
+                )
 
         else:
             form.reset()
