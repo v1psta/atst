@@ -31,9 +31,7 @@ class TestPENumberInForm:
             "atst.forms.financial.FinancialForm.validate", lambda s: True
         )
         user = UserFactory.create()
-        monkeypatch.setattr(
-            "atst.domain.auth.get_current_user", lambda *args: user
-        )
+        monkeypatch.setattr("atst.domain.auth.get_current_user", lambda *args: user)
         return user
 
     def submit_data(self, client, user, data, extended=False):
@@ -108,7 +106,9 @@ class TestPENumberInForm:
         self, monkeypatch, user_session, client
     ):
         user = UserFactory.create()
-        monkeypatch.setattr("atst.domain.requests.Requests.get", lambda *args: MOCK_REQUEST)
+        monkeypatch.setattr(
+            "atst.domain.requests.Requests.get", lambda *args: MOCK_REQUEST
+        )
         user_session(user)
 
         data = dict(self.required_data)

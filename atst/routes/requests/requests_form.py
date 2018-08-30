@@ -13,6 +13,7 @@ from atst.forms.data import (
     COMPLETION_DATE_RANGES,
 )
 
+
 @requests_bp.context_processor
 def option_data():
     return {
@@ -46,7 +47,9 @@ def requests_form_update(screen=1, request_id=None):
     if request_id:
         _check_can_view_request(request_id)
 
-    request = Requests.get(g.current_user, request_id) if request_id is not None else None
+    request = (
+        Requests.get(g.current_user, request_id) if request_id is not None else None
+    )
     jedi_flow = JEDIRequestFlow(
         screen, request=request, request_id=request_id, current_user=g.current_user
     )
@@ -72,7 +75,9 @@ def requests_update(screen=1, request_id=None):
     screen = int(screen)
     post_data = http_request.form
     current_user = g.current_user
-    existing_request = Requests.get(g.current_user, request_id) if request_id is not None else None
+    existing_request = (
+        Requests.get(g.current_user, request_id) if request_id is not None else None
+    )
     jedi_flow = JEDIRequestFlow(
         screen,
         post_data=post_data,
