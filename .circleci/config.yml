@@ -7,9 +7,6 @@ jobs:
           username: $REGISTRY_USERNAME
           password: $REGISTRY_PASSWORD
         environment:
-          ATST_PGHOST: localhost
-          ATST_PGUSER: root
-          ATST_PGDATABASE: circle_test
           PGHOST: localhost
           PGUSER: root
           PGDATABASE: circle_test
