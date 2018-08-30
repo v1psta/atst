@@ -16,9 +16,6 @@ PYTHON_FILES="./app.py ./atst/** ./config"
 # Enable Python testing
 RUN_PYTHON_TESTS="true"
 
-# Compile assets
-yarn build
-
 # Check python formatting
 source ./script/format check
 
