@@ -28,6 +28,8 @@ class Request(Base):
     task_order_id = Column(ForeignKey("task_order.id"))
     task_order = relationship("TaskOrder")
 
+    revisions = relationship("RequestRevision", back_populates="request")
+
     @property
     def status(self):
         return self.status_events[-1].new_status
