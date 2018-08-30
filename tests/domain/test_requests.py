@@ -21,14 +21,15 @@ def new_request(session):
 
 
 def test_can_get_request(new_request):
-    request = Requests.get(new_request.id)
+    request = Requests.get(new_request.creator, new_request.id)
 
     assert request.id == new_request.id
 
 
 def test_nonexistent_request_raises():
+    a_user = UserFactory.build()
     with pytest.raises(NotFoundError):
-        Requests.get(uuid4())
+        Requests.get(a_user, uuid4())
 
 
 def test_new_request_has_started_status():

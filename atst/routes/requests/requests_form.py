@@ -46,7 +46,7 @@ def requests_form_update(screen=1, request_id=None):
     if request_id:
         _check_can_view_request(request_id)
 
-    request = Requests.get(request_id) if request_id is not None else None
+    request = Requests.get(g.current_user, request_id) if request_id is not None else None
     jedi_flow = JEDIRequestFlow(
         screen, request=request, request_id=request_id, current_user=g.current_user
     )
@@ -72,7 +72,7 @@ def requests_update(screen=1, request_id=None):
     screen = int(screen)
     post_data = http_request.form
     current_user = g.current_user
-    existing_request = Requests.get(request_id) if request_id is not None else None
+    existing_request = Requests.get(g.current_user, request_id) if request_id is not None else None
     jedi_flow = JEDIRequestFlow(
         screen,
         post_data=post_data,
@@ -110,7 +110,7 @@ def requests_update(screen=1, request_id=None):
 
 @requests_bp.route("/requests/submit/<string:request_id>", methods=["POST"])
 def requests_submit(request_id=None):
-    request = Requests.get(request_id)
+    request = Requests.get(g.current_user, request_id)
     Requests.submit(request)
 
     if request.status == RequestStatus.PENDING_FINANCIAL_VERIFICATION:
@@ -122,7 +122,7 @@ def requests_submit(request_id=None):
 
 @requests_bp.route("/requests/pending/<string:request_id>", methods=["GET"])
 def view_pending_request(request_id=None):
-    request = Requests.get(request_id)
+    request = Requests.get(g.current_user, request_id)
     return render_template("requests/view_pending.html", data=request.body)
 
 

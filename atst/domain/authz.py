@@ -1,4 +1,5 @@
 from atst.domain.workspace_users import WorkspaceUsers
+from atst.models.permissions import Permissions
 
 
 class Authorization(object):
@@ -10,3 +11,15 @@ class Authorization(object):
     @classmethod
     def is_in_workspace(cls, user, workspace):
         return user in workspace.users
+
+    @classmethod
+    def can_view_request(cls, user, request):
+        if (
+            Permissions.REVIEW_AND_APPROVE_JEDI_WORKSPACE_REQUEST
+            in user.atat_permissions
+        ):
+            return True
+        elif request.creator == user:
+            return True
+
+        return False
