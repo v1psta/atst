@@ -102,3 +102,11 @@ COMPLETION_DATE_RANGES = [
     ("3-6 months", "3-6 months"),
     ("Above 12 months", "Above 12 months"),
 ]
+
+WORKSPACE_ROLES = [
+    ("admin", "Admin", "Lorem ipsum dolor sit amet, consectetur adipiscing elit."),
+    ("billing_auditor", "Billing Auditor", "Nullam sit amet sem volutpat, congue est nec, euismod leo."),
+    ("developer", "Developer", "Aenean suscipit facilisis eros, vitae malesuada dui egestas in."),
+    ("owner", "Owner", "Nullam luctus a arcu non placerat."),
+    ("security_auditor", "Security Auditor", "In ut leo vitae libero convallis finibus nec ac massa. Aliquam bibendum nulla at eros dapibus tristique."),
+]
