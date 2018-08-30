@@ -115,9 +115,8 @@ def make_config():
     config.read(config_files)
 
     # Check for ENV variables as a final source of overrides
-    # ENV vars must be named "ATST_<KEYNAME>"
     for confsetting in config.options("default"):
-        env_override = os.getenv("ATST_" + confsetting.upper())
+        env_override = os.getenv(confsetting.upper())
         if env_override:
             config.set("default", confsetting, env_override)
 
