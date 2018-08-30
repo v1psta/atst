@@ -1,0 +1,63 @@
+{% from "components/icon.html" import Icon %}
+
+{# expects a wtforms SelectField instance #}
+{% macro Selector(field, default_label='Select an option') -%}
+
+<selector
+  v-bind:choices='{{ field.choices | toJson }}'
+  default-label='{{ default_label }}'
+  {% if field.data %}initial-choice='{{ field.data }}'{% endif %}
+  {% if field.errors %}v-bind:initial-errors='{{ field.errors }}'{% endif %}
+  inline-template>
+
+  <fieldset v-bind:class="['selector usa-input', { 'usa-input--error': initialErrors }]">
+    <v-popover v-bind:container='false' ref='popover'>
+      <legend>
+        {{ field.label | striptags }}
+
+        {% if field.description %}
+          <span class='usa-input__help'>{{ field.description | safe }}</span>
+        {% endif %}
+
+        <span v-show='showError'>{{ Icon('alert',classes="icon-validation") }}</span>
+      </legend>
+
+      <button class='selector__button' type='button' v-html='label'></button>
+
+      <span v-show='showError'>{{ Icon('alert',classes="icon-validation") }}</span>
+
+      <template v-if='showError'>
+        <span v-if='initialErrors' v-for='error in initialErrors' class='usa-input__message' v-html='error'></span>
+      </template>
+
+      <template slot='popover'>
+        <div class='block-list'>
+          <ul>
+            <li v-for='choice in choices' class='block-list__item block-list__item--selectable'>
+              <template v-if='choice[0] !== ""'>
+                <input
+                  type='radio'
+                  name='{{ field.name }}'
+                  v-bind:id="'{{ field.name }}_' + choice[0]"
+                  v-bind:value='choice[0]'
+                  v-bind:checked='value === choice[0]'
+                  v-on:change='change'/>
+                <label v-bind:for="'{{ field.name }}_' + choice[0]">
+                  <template v-if='choices[2]'>
+                    <dl>
+                      <dt v-html='choice[1]'></dt>
+                      <dd v-html='choice[2]'></dd>
+                    </dl>
+                  </template>
+                  <span v-else v-html='choice[1]'>
+                </label>
+              </template>
+            </li>
+          </ul>
+        </div>
+      </template>
+    </v-popover>
+  </fieldset>
+</selector>
+
+{%- endmacro %}
