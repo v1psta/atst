@@ -26,6 +26,8 @@
 
       <span v-show='showError'>{{ Icon('alert',classes="icon-validation") }}</span>
 
+      <input type='hidden' name='{{ field.name }}' v-bind:value='value'/>
+
       <template v-if='showError'>
         <span v-if='initialErrors' v-for='error in initialErrors' class='usa-input__message' v-html='error'></span>
       </template>
@@ -37,7 +39,6 @@
               <template v-if='choice[0] !== ""'>
                 <input
                   type='radio'
-                  name='{{ field.name }}'
                   v-bind:id="'{{ field.name }}_' + choice[0]"
                   v-bind:value='choice[0]'
                   v-bind:checked='value === choice[0]'
