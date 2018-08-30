@@ -24,13 +24,13 @@ jobs:
       - restore_cache:
           name: "Load Cache: Pipenv References"
           keys:
-            - pipenv-v1-{{ .Branch }}-{{ checksum "Pipefile.lock" }}
+            - pipenv-v1-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
             - pipenv-v1-{{ .Branch }}-
             - pipenv-v1-
       - restore_cache:
           name: "Load Cache: Python Venv"
           keys:
-            - venv-v1-{{ .Branch }}-{{ checksum "Pipefile.lock" }}
+            - venv-v1-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
             - venv-v1-{{ .Branch }}-
             - venv-v1-
       - restore_cache:
@@ -44,12 +44,12 @@ jobs:
           name: "Save Cache: Pipenv Refrences"
           paths:
             - ~/.local/share
-          key: pipenv-v1-{{ .Branch }}-{{ checksum "Pipefile.lock" }}
+          key: pipenv-v1-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
       - save_cache:
           name: "Save Cache: Python Venv"
           paths:
             - ./.venv
-          key: venv-v1-{{ .Branch }}-{{ checksum "Pipefile.lock" }}
+          key: venv-v1-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
       - save_cache:
           name: "Save Cache: Yarn"
           paths:
