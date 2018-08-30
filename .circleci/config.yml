@@ -10,6 +10,9 @@ jobs:
           ATST_PGHOST: localhost
           ATST_PGUSER: root
           ATST_PGDATABASE: circle_test
+          PGHOST: localhost
+          PGUSER: root
+          PGDATABASE: circle_test
       - image: circleci/postgres:9.6.5-alpine-ram
     steps:
       - checkout
