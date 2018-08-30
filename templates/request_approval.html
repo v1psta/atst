@@ -156,55 +156,11 @@
 
     </section>
 
-    <section class="panel">
-      <div class="panel__content">
-
-        <div class='row row--halves request-approval__info-columns'>
-          <div class='col'>
-            <h2 class='h3 request-approval__columns__heading'>Information About Requestor</h2>
-            <dl>
-              <div>
-                <dt>Name</dt>
-                <dd>Firmus Piett</dd>
-              </div>
-
-              <div>
-                <dt>E-mail</dt>
-                <dd>piett@empire.mil</dd>
-              </div>
-
-              <div>
-                <dt>Phone Number</dt>
-                <dd>(123) 456-7890</dd>
-              </div>
-
-              <div>
-                <dt>Location</dt>
-                <dd>Death Star</dd>
-              </div>
-            </dl>
-          </div>
-
-          <div class='col'>
-            <h2 class='h3 request-approval__columns__heading'>Funding Information</h2>
-            <dl>
-              <div>
-                <dt>Task Order Number</dt>
-                <dd>4523542345322345234</dd>
-              </div>
-
-              <div>
-                <dt>Funding Type</dt>
-                <dd class='diff--removed'><span class='hide'>Previously: </span>Modest Destructive Power</dd>
-                <dd class='diff--added'><span class='hide'>Changed to: </span>Absolute Destructive Power</dd>
-              </div>
-            </dl>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <section class='panel'>
+      <header class='panel__heading'>
+        <h2 class='h3'>Approval Notes</h2>
+      </header>
+
       <div class='panel__content'>
         <p>Here is some good text explaining what the CCPO needs to do in order to approve the request. This text should also explain why we are asking for multiple people's names and the risk of boiling the ocean.</p>
 
@@ -250,6 +206,15 @@
           </div>
         </div>
       </div>
+    </section>
+
+    <section class='action-group'>
+      <a href='/' class='usa-button usa-button-big'>Approve Request</a>
+      <a href='/' class='usa-button usa-button-big usa-button-secondary'>Deny Request</a>
+      <a href='/' class='icon-link'>
+        {{ Icon('x') }}
+        <span>Cancel</span>
+      </a>
     </section>
 
     <section class='panel'>
@@ -318,16 +283,6 @@
       </div>
     </section>
 
-
-
-    <div class='action-group'>
-      <a href='/' class='usa-button usa-button-big'>Approve Request</a>
-      <a href='/' class='usa-button usa-button-big usa-button-secondary'>Deny Request</a>
-      <a href='/' class='icon-link'>
-        {{ Icon('x') }}
-        <span>Cancel</span>
-      </a>
-    </div>
   </form>
 </article>
 
