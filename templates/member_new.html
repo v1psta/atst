@@ -3,6 +3,7 @@
 {% from "components/icon.html" import Icon %}
 {% from "components/text_input.html" import TextInput %}
 {% from "components/options_input.html" import OptionsInput %}
+{% from "components/selector.html" import Selector %}
 
 {% block content %}
 
@@ -20,7 +21,7 @@
       {{ TextInput(form.last_name) }}
       {{ TextInput(form.email,placeholder='jane@mail.mil', validation='email') }}
       {{ TextInput(form.dod_id,placeholder='10-digit number on the back of the CAC', validation='dodId') }}
-      {{ OptionsInput(form.workspace_role) }}
+      {{ Selector(form.workspace_role) }}
     </div>
   </div>
 
