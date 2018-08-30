@@ -7,7 +7,8 @@
 
 {% block content %}
 
-<form method="POST" action="" autocomplete="false">
+<form method="POST" action="{{ url_for('workspaces.create_member', workspace_id=workspace.id) }}" autocomplete="false">
+  {{ form.csrf_token }}
 
   <div class="panel">
 
@@ -27,9 +28,7 @@
 
 
   <div class='action-group'>
-    <a href='#' class='action-group__action usa-button usa-button-big'>
-      Add User
-    </a>
+    <button class="usa-button usa-button-big usa-button-primary" tabindex="0">Add User</button>
     <a href='#' class='action-group__action icon-link'>
       {{ Icon('x') }}
       <span>Cancel</span>

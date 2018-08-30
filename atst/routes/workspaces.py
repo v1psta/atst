@@ -101,3 +101,15 @@ def new_member(workspace_id):
     workspace = Workspaces.get(g.current_user, workspace_id)
     form = NewMemberForm()
     return render_template("member_new.html", workspace=workspace, form=form)
+
+
+@bp.route("/workspaces/<workspace_id>/members/new", methods=["POST"])
+def create_member(workspace_id):
+    workspace = Workspaces.get(g.current_user, workspace_id)
+    form = NewMemberForm(http_request.form)
+
+    if form.validate():
+        Workspaces.create_member(g.current_user, workspace, form.data)
+        return redirect(url_for("workspaces.new_member", memberCreated=True))
+    else:
+        return render_template("member_new.html", workspace=workspace, form=form)
