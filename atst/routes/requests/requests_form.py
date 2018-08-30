@@ -3,9 +3,7 @@ from flask import g, redirect, render_template, url_for, request as http_request
 from . import requests_bp
 from atst.domain.requests import Requests
 from atst.routes.requests.jedi_request_flow import JEDIRequestFlow
-from atst.models.permissions import Permissions
 from atst.models.request_status_event import RequestStatus
-from atst.domain.exceptions import UnauthorizedError
 from atst.forms.data import (
     SERVICE_BRANCHES,
     ASSISTANCE_ORG_TYPES,
