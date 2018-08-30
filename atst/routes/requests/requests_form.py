@@ -119,6 +119,19 @@ def requests_submit(request_id=None):
         return redirect("/requests?modal=pendingCCPOApproval")
 
 
+@requests_bp.route("/requests/pending/<string:request_id>", methods=["GET"])
+def view_pending_request(request_id=None):
+    request = Requests.get(request_id)
+    return render_template(
+        "requests/view_pending.html",
+        data=request.body,
+        service_branches=SERVICE_BRANCHES,
+        assistance_org_types=ASSISTANCE_ORG_TYPES,
+        data_transfer_amounts=DATA_TRANSFER_AMOUNTS,
+        completion_date_ranges=COMPLETION_DATE_RANGES,
+    )
+
+
 # TODO: generalize this, along with other authorizations, into a policy-pattern
 # for authorization in the application
 def _check_can_view_request(request_id):
