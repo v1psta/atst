@@ -22,4 +22,12 @@ jobs:
           command: |
             git submodule update --init --recursive
       - run: ./script/setup
+      - restore_cache:
+          keys:
+            - disa-crls
+      - run: ./script/sync-crls
+      - save_cache:
+          paths:
+            - ./crl
+          key: disa-crls
       - run: ./script/cibuild
