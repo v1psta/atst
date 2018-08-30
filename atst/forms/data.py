@@ -104,9 +104,9 @@ COMPLETION_DATE_RANGES = [
 ]
 
 WORKSPACE_ROLES = [
-    ("admin", "Admin", "Lorem ipsum dolor sit amet, consectetur adipiscing elit."),
-    ("billing_auditor", "Billing Auditor", "Nullam sit amet sem volutpat, congue est nec, euismod leo."),
-    ("developer", "Developer", "Aenean suscipit facilisis eros, vitae malesuada dui egestas in."),
-    ("owner", "Owner", "Nullam luctus a arcu non placerat."),
-    ("security_auditor", "Security Auditor", "In ut leo vitae libero convallis finibus nec ac massa. Aliquam bibendum nulla at eros dapibus tristique."),
+    ("owner", "Workspace Owner", "Can add, edit, deactivate access to all projects, environments, and members. Can view budget reports. Can start and edit JEDI Cloud requests."),
+    ("admin", "Administrator", "Can add and edit projects, environments, members, but cannot deactivate. Cannot view budget reports or JEDI Cloud requests."),
+    ("developer", "Developer", "Can view only the projects and environments they are granted access to. Can also view members associated with each environment."),
+    ("billing_auditor", "Billing Auditor", "Can view only the projects and environments they are granted access to. Can also view budgets and reports associated with the workspace."),
+    ("security_auditor", "Security Auditor", "Can view only the projects and environments they are granted access to. Can also view activity logs."),
 ]
