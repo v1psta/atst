@@ -1,4 +1,5 @@
 import re
+import json
 from flask import current_app as app
 from werkzeug.datastructures import FileStorage
 
@@ -49,6 +50,8 @@ def mixedContentToJson(value):
         value["task_order"] = value["task_order"].filename
     return app.jinja_env.filters["tojson"](value)
 
+def toJson(data):
+    return json.dumps(data)
 
 def register_filters(app):
     app.jinja_env.filters["iconSvg"] = iconSvg
@@ -57,3 +60,4 @@ def register_filters(app):
     app.jinja_env.filters["readableInteger"] = readableInteger
     app.jinja_env.filters["getOptionLabel"] = getOptionLabel
     app.jinja_env.filters["mixedContentToJson"] = mixedContentToJson
+    app.jinja_env.filters["toJson"] = toJson
