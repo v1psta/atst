@@ -14,6 +14,7 @@ jobs:
           PGUSER: root
           PGDATABASE: circle_test
       - image: circleci/postgres:9.6.5-alpine-ram
+      - image: circleci/redis:4-alpine3.8
     steps:
       - checkout
       - run:
