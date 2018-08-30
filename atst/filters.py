@@ -30,7 +30,10 @@ def readableInteger(value):
 
 
 def getOptionLabel(value, options):
-    return next(tup[1] for tup in options if tup[0] == value)
+    try:
+        return next(tup[1] for tup in options if tup[0] == value)
+    except StopIteration:
+        return
 
 
 def mixedContentToJson(value):

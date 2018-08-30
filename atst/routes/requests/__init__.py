@@ -7,6 +7,7 @@ requests_bp = Blueprint("requests", __name__)
 from . import index
 from . import requests_form
 from . import financial_verification
+from . import approval
 
 
 @requests_bp.context_processor

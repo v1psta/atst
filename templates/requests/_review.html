@@ -1,0 +1,278 @@
+{% macro RequiredLabel() -%}
+  <span class='label label--error'>Response Required</span>
+{%- endmacro %}
+
+<hr>
+<h2>
+  Details of Use
+  {% if editable %}
+  <a href="{{ url_for('requests.requests_form_update', screen=1, request_id=request_id) }}" class="icon-link">
+    {{ Icon('edit') }}
+    <span>Edit this section</span>
+  </a>
+  {% endif %}
+</h2>
+
+<dl>
+  <div>
+    <dt>DoD Component</dt>
+    <dd>
+      {% if data['details_of_use']['dod_component'] %}
+        {{ data['details_of_use']['dod_component'] | getOptionLabel(service_branches) }}
+      {% else %}
+        {{ RequiredLabel() }}
+      {% endif %}
+    </dd>
+  </div>
+
+  <div>
+    <dt>JEDI Usage</dt>
+    <dd>{{ data['details_of_use']['jedi_usage'] or RequiredLabel() }}</dd>
+  </div>
+
+  <div>
+    <dt>Number of software systems</dt>
+    <dd>
+      {% if data['details_of_use']['num_software_systems'] %}
+        {{ data['details_of_use']['num_software_systems'] | readableInteger }}
+      {% else %}
+        {{ RequiredLabel() }}
+      {% endif %}
+    </dd>
+  </div>
+
+  <div>
+    <dt>JEDI Migration</dt>
+    <dd>{{ data['details_of_use']['jedi_migration'] or RequiredLabel() }}</dd>
+  </div>
+
+  {% if data['details_of_use']['jedi_migration'] == 'yes' %}
+    <div>
+      <dt>Rationalization of Software Systems</dt>
+      <dd>{{ data['details_of_use']['rationalization_software_systems'] or RequiredLabel() }}</dd>
+    </div>
+
+    <div>
+      <dt>Technical Support Team</dt>
+      <dd>{{ data['details_of_use']['technical_support_team'] or RequiredLabel() }}</dd>
+    </div>
+
+
+    {% if data['details_of_use']['technical_support_team'] == 'yes' %}
+      <div>
+        <dt>Organization Providing Assistance</dt>
+        <dd>
+          {% if data['details_of_use']['organization_providing_assistance'] %}
+            {{ data['details_of_use']['organization_providing_assistance'] | getOptionLabel(assistance_org_types) }}
+          {% else %}
+            {{ RequiredLabel() }}
+          {% endif %}
+        </dd>
+      </div>
+    {% endif %}
+
+    <div>
+      <dt>Engineering Assessment</dt>
+      <dd>{{ data['details_of_use']['engineering_assessment'] or RequiredLabel() }}</dd>
+    </div>
+
+    <div>
+      <dt>Data Transfers</dt>
+      <dd>
+        {% if data['details_of_use']['data_transfers'] %}
+          {{ data['details_of_use']['data_transfers'] | getOptionLabel(data_transfer_amounts) }}
+        {% else %}
+          {{ RequiredLabel() }}
+        {% endif %}
+      </dd>
+    </div>
+
+    <div>
+      <dt>Expected Completion Date</dt>
+      <dd>
+        {% if data['details_of_use']['expected_completion_date'] %}
+          {{ data['details_of_use']['expected_completion_date'] | getOptionLabel(completion_date_ranges) }}
+        {% else %}
+          {{ RequiredLabel() }}
+        {% endif %}
+      </dd>
+    </div>
+
+  {% else %}
+
+    <div>
+      <dt>Cloud Native</dt>
+      <dd>{{ data['details_of_use']['cloud_native'] or RequiredLabel() }}</dd>
+    </div>
+
+  {% endif %}
+
+  <div>
+    <dt>Estimated Monthly Spend</dt>
+    <dd>
+      {% if data['details_of_use']['estimated_monthly_spend'] %}
+        {{ data['details_of_use']['estimated_monthly_spend'] | dollars }}
+      {% else %}
+        {{ RequiredLabel() }}
+      {% endif %}
+    </dd>
+  </div>
+
+  {% if jedi_request and jedi_request.annual_spend > annual_spend_threshold %}
+
+    <div>
+      <dt>Number of User Sessions</dt>
+      <dd>
+        {% if data['details_of_use']['number_user_sessions'] %}
+          {{ data['details_of_use']['number_user_sessions'] | readableInteger }}
+        {% else %}
+          {{ RequiredLabel() }}
+        {% endif %}
+      </dd>
+    </div>
+
+    <div>
+      <dt>Average Daily Traffic (Number of Requests)</dt>
+      <dd>
+        {% if data['details_of_use']['average_daily_traffic'] %}
+          {{ data['details_of_use']['average_daily_traffic'] | readableInteger }}
+        {% else %}
+          {{ RequiredLabel() }}
+        {% endif %}
+      </dd>
+    </div>
+
+    <div>
+      <dt>Average Daily Traffic (GB)</dt>
+      <dd>
+        {% if data['details_of_use']['average_daily_traffic_gb'] %}
+          {{ data['details_of_use']['average_daily_traffic_gb'] | readableInteger }} GB
+        {% else %}
+          {{ RequiredLabel() }}
+        {% endif %}
+      </dd>
+    </div>
+  {% endif %}
+
+  <div>
+    <dt>Total Spend</dt>
+    <dd>
+      {% if data['details_of_use']['dollar_value'] %}
+        {{ data['details_of_use']['dollar_value'] | dollars }}
+      {% else %}
+        {{ RequiredLabel() }}
+      {% endif %}
+    </dd>
+  </div>
+
+  <div>
+    <dt>Start Date</dt>
+    <dd>{{ data['details_of_use']['start_date'] or RequiredLabel() }}</dd>
+  </div>
+</dl>
+
+<hr>
+<h2>
+  Information About You
+  {% if editable %}
+  <a href="{{ url_for('requests.requests_form_update', screen=2, request_id=request_id) }}" class="icon-link">
+    {{ Icon('edit') }}
+    <span>Edit this section</span>
+  </a>
+  {% endif %}
+</h2>
+
+<dl>
+  <div>
+    <dt>First Name</dt>
+    <dd>{{ data['information_about_you']['fname_request'] or RequiredLabel() }}</dd>
+  </div>
+
+  <div>
+    <dt>Last Name</dt>
+    <dd>{{ data['information_about_you']['lname_request'] or RequiredLabel() }}</dd>
+  </div>
+
+  <div>
+    <dt>Email Address</dt>
+    <dd>{{ data['information_about_you']['email_request'] or RequiredLabel() }}</dd>
+  </div>
+
+  <div>
+    <dt>Phone Number</dt>
+    <dd>
+      {% if data['information_about_you']['phone_number'] %}
+        {{ data['information_about_you']['phone_number'] | usPhone }}
+      {% else %}
+        {{ RequiredLabel() }}
+      {% endif %}
+    </dd>
+  </div>
+
+  <div>
+    <dt>Service Branch or Agency</dt>
+    <dd>
+      {% if data['information_about_you']['service_branch'] %}
+        {{ data['information_about_you']['service_branch'] | getOptionLabel(service_branches) }}
+      {% else %}
+        {{ RequiredLabel() }}
+      {% endif %}
+    </dd>
+  </div>
+
+  <div>
+    <dt>Citizenship</dt>
+    <dd>{{ data['information_about_you']['citizenship'] or RequiredLabel() }}</dd>
+  </div>
+
+  <div>
+    <dt>Designation of Person</dt>
+    <dd>
+      {% if data['information_about_you']['designation'] %}
+        {{ data['information_about_you']['designation'] | capitalize }}
+      {% else %}
+        {{ RequiredLabel() }}
+      {% endif %}
+    </dd>
+  </div>
+
+  <div>
+    <dt>Latest Information Assurance (IA) Training completion date</dt>
+    <dd>{{ data['information_about_you']['date_latest_training'] or RequiredLabel() }}</dd>
+  </div>
+</dl>
+
+<hr>
+<h2>
+  Workspace Owner
+  {% if editable %}
+  <a href="{{ url_for('requests.requests_form_update', screen=3, request_id=request_id) }}" class="icon-link">
+    {{ Icon('edit') }}
+    <span>Edit this section</span>
+  </a>
+  {% endif %}
+</h2>
+
+<dl>
+  <div>
+    <dt>POC First Name</dt>
+    <dd>{{ data['primary_poc']['fname_poc'] or RequiredLabel() }}</dd>
+  </div>
+
+  <div>
+    <dt>POC Last Name</dt>
+    <dd>{{ data['primary_poc']['lname_poc'] or RequiredLabel() }}</dd>
+  </div>
+
+  <div>
+    <dt>POC Email Address</dt>
+    <dd>{{ data['primary_poc']['email_poc'] or RequiredLabel() }}</dd>
+  </div>
+
+  <div>
+    <dt>DOD ID</dt>
+    <dd>{{ data['primary_poc']['dodid_poc'] or RequiredLabel() }}</dd>
+  </div>
+</dl>
+
+
