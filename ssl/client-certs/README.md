@@ -28,3 +28,6 @@ openssl verify -verbose -CAfile /tmp/test.pem -crl_check ssl/client-certs/atat.m
 > atat.mil.crt: OK
 ```
 
+To regenerate the crl:
+
+`openssl ca -gencrl -keyfile client-ca.key -cert client-ca.crt -out <cert_name>.crl -config crl_openssl.conf -outform der`
