@@ -3,6 +3,9 @@ jobs:
   build:
     docker:
       - image: registry.atat.codes:443/atat-app-builder:circleci
+        auth:
+          username: $REGISTRY_USERNAME
+          password: $REGISTRY_PASSWORD
         environment:
           ATST_PGHOST: localhost
           ATST_PGUSER: root
