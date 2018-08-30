@@ -17,140 +17,46 @@
 
         <p>Ongoing maintainence for Death Star (a moon-sized Imperial military battlestation armed with a planet-destroying superlaser). Its definitely hasn't been sabotaged from the start.</p>
 
-        <h2>Details of Use</h2>
-        <dl>
-          <div>
-            <dt>DoD Component</dt>
-            <dd>
-              Army, Department of the
-            </dd>
-          </div>
-          <div>
-            <dt>JEDI Usage</dt>
-            <dd>asdsa</dd>
-          </div>
-          <div>
-            <dt>Number of software systems</dt>
-            <dd>
-              2
-            </dd>
-          </div>
-          <div>
-            <dt>JEDI Migration</dt>
-            <dd>yes</dd>
-          </div>
-          <div>
-            <dt>Rationalization of Software Systems</dt>
-            <dd>yes</dd>
-          </div>
-          <div>
-            <dt>Technical Support Team</dt>
-            <dd>yes</dd>
-          </div>
-          <div>
-            <dt>Organization Providing Assistance</dt>
-            <dd>
-              In-house staff
-            </dd>
-          </div>
-          <div>
-            <dt>Engineering Assessment</dt>
-            <dd>yes</dd>
-          </div>
-          <div>
-            <dt>Data Transfers</dt>
-            <dd>
-              Less than 100GB
-            </dd>
-          </div>
-          <div>
-            <dt>Expected Completion Date</dt>
-            <dd>
-              Less than 1 month
-            </dd>
-          </div>
-          <div>
-            <dt>Estimated Monthly Spend</dt>
-            <dd>
-              $12
-            </dd>
-          </div>
-          <div>
-            <dt>Total Spend</dt>
-            <dd>
-              $1,231
-            </dd>
-          </div>
-          <div>
-            <dt>Start Date</dt>
-            <dd>12/12/2018</dd>
-          </div>
-        </dl>
-
-        <hr>
-        <h2>Information About You</h2>
-
-        <dl>
-          <div>
-            <dt>First Name</dt>
-            <dd>Amanda</dd>
-          </div>
-          <div>
-            <dt>Last Name</dt>
-            <dd>Adamson</dd>
-          </div>
-          <div>
-            <dt>Email Address</dt>
-            <dd>amanda@test.com</dd>
-          </div>
-          <div>
-            <dt>Phone Number</dt>
-            <dd>
-              +1 (123) 123 - 1231
-            </dd>
-          </div>
-          <div>
-            <dt>Service Branch or Agency</dt>
-            <dd>
-              Air Force, Department of the
-            </dd>
-          </div>
-          <div>
-            <dt>Citizenship</dt>
-            <dd>United States</dd>
-          </div>
-          <div>
-            <dt>Designation of Person</dt>
-            <dd>
-              Military
-            </dd>
-          </div>
-          <div>
-            <dt>Latest Information Assurance (IA) Training completion date</dt>
-            <dd>12/12/2017</dd>
-          </div>
-        </dl>
-
-        <hr>
-        <h2>Workspace Owner</h2>
-        <dl>
-          <div>
-            <dt>POC First Name</dt>
-            <dd>Amanda</dd>
-          </div>
-          <div>
-            <dt>POC Last Name</dt>
-            <dd>Adamson</dd>
-          </div>
-          <div>
-            <dt>POC Email Address</dt>
-            <dd>amanda@test.com</dd>
-          </div>
-          <div>
-            <dt>DOD ID</dt>
-            <dd>2345678901</dd>
-          </div>
-        </dl>
+        {% with data = {
+            "primary_poc": {
+                "am_poc": False,
+                "dodid_poc": "1234567890",
+                "email_poc": "fake@email.com",
+                "fname_poc": "Amanda",
+                "lname_poc": "Adamson",
+            },
+            "details_of_use": {
+                "jedi_usage": "adf",
+                "start_date": "2018-08-08",
+                "cloud_native": "yes",
+                "dollar_value": 500000,
+                "dod_component": "Air Force, Department of the",
+                "data_transfers": "Less than 100GB",
+                "expected_completion_date": "Less than 1 month",
+                "jedi_migration": "yes",
+                "num_software_systems": 1,
+                "number_user_sessions": 2,
+                "average_daily_traffic": 1,
+                "engineering_assessment": "yes",
+                "technical_support_team": "yes",
+                "estimated_monthly_spend": 100,
+                "average_daily_traffic_gb": 4,
+                "rationalization_software_systems": "yes",
+                "organization_providing_assistance": "In-house staff",
+            },
+            "information_about_you": {
+                "citizenship": "United States",
+                "designation": "military",
+                "phone_number": "1234567890",
+                "email_request": "fake@email.mil",
+                "fname_request": "Amanda",
+                "lname_request": "Adamson",
+                "service_branch": "Air Force, Department of the",
+                "date_latest_training": "2018-08-06",
+            }
+          }, service_branches=service_branches %}
+          {% include "requests/_review.html" %}
+        {% endwith %}
 
       </div>
 
