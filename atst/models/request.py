@@ -7,7 +7,23 @@ import pendulum
 from atst.models import Base
 from atst.models.types import Id
 from atst.models.request_status_event import RequestStatus
-from atst.utils import first_or_none
+from atst.utils import deep_merge, first_or_none
+
+
+def map_properties_to_dict(properties, instance):
+    return {
+        field: getattr(instance, field)
+        for field in properties
+        if getattr(instance, field) is not None
+    }
+
+
+def update_dict_with_properties(instance, body, top_level_key, properties):
+    new_properties = map_properties_to_dict(properties, instance)
+    if new_properties:
+        body[top_level_key] = new_properties
+
+    return body
 
 
 class Request(Base):
@@ -28,7 +44,77 @@ class Request(Base):
     task_order_id = Column(ForeignKey("task_order.id"))
     task_order = relationship("TaskOrder")
 
-    revisions = relationship("RequestRevision", back_populates="request")
+    revisions = relationship(
+        "RequestRevision", back_populates="request", order_by="RequestRevision.sequence"
+    )
+
+    @property
+    def latest_revision(self):
+        if self.revisions:
+            return self.revisions[-1]
+
+        else:
+            return RequestRevision(request=self)
+
+    PRIMARY_POC_FIELDS = ["am_poc", "dodid_poc", "email_poc", "fname_poc", "lname_poc"]
+    DETAILS_OF_USE_FIELDS = [
+        "jedi_usage",
+        "start_date",
+        "cloud_native",
+        "dollar_value",
+        "dod_component",
+        "data_transfers",
+        "expected_completion_date",
+        "jedi_migration",
+        "num_software_systems",
+        "number_user_sessions",
+        "average_daily_traffic",
+        "engineering_assessment",
+        "technical_support_team",
+        "estimated_monthly_spend",
+        "average_daily_traffic_gb",
+        "rationalization_software_systems",
+        "organization_providing_assistance",
+    ]
+    INFORMATION_ABOUT_YOU_FIELDS = [
+        "citizenship",
+        "designation",
+        "phone_number",
+        "email_request",
+        "fname_request",
+        "lname_request",
+        "service_branch",
+        "date_latest_training",
+    ]
+    FINANCIAL_VERIFICATION_FIELDS = [
+        "pe_id",
+        "task_order_number",
+        "fname_co",
+        "lname_co",
+        "email_co",
+        "office_co",
+        "fname_cor",
+        "lname_cor",
+        "email_cor",
+        "office_cor",
+        "uii_ids",
+        "treasury_code",
+        "ba_code",
+    ]
+
+    @property
+    def body(self):
+        current = self.latest_revision
+        body = {}
+        for top_level_key, properties in [
+            ("primary_poc", Request.PRIMARY_POC_FIELDS),
+            ("details_of_use", Request.DETAILS_OF_USE_FIELDS),
+            ("information_about_you", Request.INFORMATION_ABOUT_YOU_FIELDS),
+            ("financial_verification", Request.FINANCIAL_VERIFICATION_FIELDS),
+        ]:
+            body = update_dict_with_properties(current, body, top_level_key, properties)
+
+        return body
 
     @property
     def status(self):
@@ -40,7 +126,7 @@ class Request(Base):
 
     @property
     def annual_spend(self):
-        monthly = self.body.get("details_of_use", {}).get("estimated_monthly_spend", 0)
+        monthly = self.latest_revision.estimated_monthly_spend or 0
         return monthly * 12
 
     @property

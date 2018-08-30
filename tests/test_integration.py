@@ -15,7 +15,8 @@ def screens(app):
 def test_stepthrough_request_form(user_session, screens, client):
     user = UserFactory.create()
     user_session(user)
-    mock_request = RequestFactory.stub()
+    mock_request = RequestFactory.create()
+    mock_body = mock_request.body
 
     def post_form(url, redirects=False, data=""):
         return client.post(
@@ -33,6 +34,7 @@ def test_stepthrough_request_form(user_session, screens, client):
         # destination url
         prelim_resp = post_form(req_url, data=data)
         response = post_form(req_url, True, data=data)
+        assert prelim_resp.status_code == 302
         return (prelim_resp.headers.get("Location"), response)
 
     # GET the initial form
@@ -44,7 +46,7 @@ def test_stepthrough_request_form(user_session, screens, client):
     for i in range(1, len(screens)):
         # get appropriate form data to POST for this section
         section = screens[i - 1]["section"]
-        post_data = urlencode(mock_request.body[section])
+        post_data = urlencode(mock_body[section])
 
         effective_url, resp = take_a_step(i, req=req_id, data=post_data)
         req_id = effective_url.split("/")[-1]
@@ -55,7 +57,7 @@ def test_stepthrough_request_form(user_session, screens, client):
 
     # at this point, the real request we made and the mock_request bodies
     # should be equivalent
-    assert Requests.get(user, req_id).body == mock_request.body
+    assert Requests.get(user, req_id).body == mock_body
 
     # finish the review and submit step
     client.post(

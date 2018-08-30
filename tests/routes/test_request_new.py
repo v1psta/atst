@@ -1,5 +1,5 @@
 import re
-from tests.factories import RequestFactory, UserFactory
+from tests.factories import RequestFactory, UserFactory, RequestRevisionFactory
 from atst.domain.roles import Roles
 from atst.domain.requests import Requests
 from urllib.parse import urlencode
@@ -75,10 +75,12 @@ def test_nonexistent_request(client, user_session):
     assert response.status_code == 404
 
 
-def test_creator_info_is_autopopulated(monkeypatch, client, user_session):
+def test_creator_info_is_autopopulated_for_existing_request(
+    monkeypatch, client, user_session
+):
     user = UserFactory.create()
     user_session(user)
-    request = RequestFactory.create(creator=user, body={"information_about_you": {}})
+    request = RequestFactory.create(creator=user, initial_revision={})
 
     response = client.get("/requests/new/2/{}".format(request.id))
     body = response.data.decode()
@@ -104,7 +106,7 @@ def test_non_creator_info_is_not_autopopulated(monkeypatch, client, user_session
     user = UserFactory.create()
     creator = UserFactory.create()
     user_session(user)
-    request = RequestFactory.create(creator=creator, body={"information_about_you": {}})
+    request = RequestFactory.create(creator=creator, initial_revision={})
 
     response = client.get("/requests/new/2/{}".format(request.id))
     body = response.data.decode()
@@ -116,7 +118,7 @@ def test_non_creator_info_is_not_autopopulated(monkeypatch, client, user_session
 def test_am_poc_causes_poc_to_be_autopopulated(client, user_session):
     creator = UserFactory.create()
     user_session(creator)
-    request = RequestFactory.create(creator=creator, body={})
+    request = RequestFactory.create(creator=creator, initial_revision={})
     client.post(
         "/requests/new/3/{}".format(request.id),
         headers={"Content-Type": "application/x-www-form-urlencoded"},
@@ -129,7 +131,7 @@ def test_am_poc_causes_poc_to_be_autopopulated(client, user_session):
 def test_not_am_poc_requires_poc_info_to_be_completed(client, user_session):
     creator = UserFactory.create()
     user_session(creator)
-    request = RequestFactory.create(creator=creator, body={})
+    request = RequestFactory.create(creator=creator, initial_revision={})
     response = client.post(
         "/requests/new/3/{}".format(request.id),
         headers={"Content-Type": "application/x-www-form-urlencoded"},
@@ -142,7 +144,7 @@ def test_not_am_poc_requires_poc_info_to_be_completed(client, user_session):
 def test_not_am_poc_allows_user_to_fill_in_poc_info(client, user_session):
     creator = UserFactory.create()
     user_session(creator)
-    request = RequestFactory.create(creator=creator, body={})
+    request = RequestFactory.create(creator=creator, initial_revision={})
     poc_input = {
         "am_poc": "no",
         "fname_poc": "test",
@@ -177,13 +179,11 @@ def test_poc_autofill_checks_information_about_you_form_first(client, user_sessi
     user_session(creator)
     request = RequestFactory.create(
         creator=creator,
-        body={
-            "information_about_you": {
-                "fname_request": "Alice",
-                "lname_request": "Adams",
-                "email_request": "alice.adams@mail.mil",
-            }
-        },
+        initial_revision=dict(
+            fname_request="Alice",
+            lname_request="Adams",
+            email_request="alice.adams@mail.mil",
+        ),
     )
     poc_input = {"am_poc": "yes"}
     client.post(

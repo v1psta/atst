@@ -35,7 +35,7 @@ class TestPENumberInForm:
         return user
 
     def submit_data(self, client, user, data, extended=False):
-        request = RequestFactory.create(creator=user, body=MOCK_REQUEST.body)
+        request = RequestFactory.create(creator=user)
         url_kwargs = {"request_id": request.id}
         if extended:
             url_kwargs["extended"] = True
@@ -58,7 +58,7 @@ class TestPENumberInForm:
         user = self._set_monkeypatches(monkeypatch)
 
         data = dict(self.required_data)
-        data["pe_id"] = MOCK_REQUEST.body["financial_verification"]["pe_id"]
+        data["pe_id"] = "0101110F"
 
         response = self.submit_data(client, user, data)
 
@@ -95,7 +95,7 @@ class TestPENumberInForm:
         user_session(user)
 
         data = dict(self.required_data)
-        data["pe_id"] = MOCK_REQUEST.body["financial_verification"]["pe_id"]
+        data["pe_id"] = "0101110F"
         data["task_order_number"] = "1234"
 
         response = self.submit_data(client, user, data)
@@ -112,7 +112,7 @@ class TestPENumberInForm:
         user_session(user)
 
         data = dict(self.required_data)
-        data["pe_id"] = MOCK_REQUEST.body["financial_verification"]["pe_id"]
+        data["pe_id"] = "0101110F"
         data["task_order_number"] = MockEDAClient.MOCK_CONTRACT_NUMBER
 
         response = self.submit_data(client, user, data)

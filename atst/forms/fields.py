@@ -16,7 +16,7 @@ class DateField(DateField):
         if values:
             self.data = values[0]
         else:
-            self.data = []
+            self.data = None
 
 
 class NewlineListField(Field):
