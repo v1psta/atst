@@ -63,7 +63,7 @@ class Requests(object):
     def get(cls, user, request_id):
         try:
             request = db.session.query(Request).filter_by(id=request_id).one()
-        except NoResultFound:
+        except (NoResultFound, exc.DataError):
             raise NotFoundError("request")
 
         if not Authorization.can_view_request(user, request):
