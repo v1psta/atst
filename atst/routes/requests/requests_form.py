@@ -13,6 +13,15 @@ from atst.forms.data import (
     COMPLETION_DATE_RANGES,
 )
 
+@requests_bp.context_processor
+def option_data():
+    return {
+        "service_branches": SERVICE_BRANCHES,
+        "assistance_org_types": ASSISTANCE_ORG_TYPES,
+        "data_transfer_amounts": DATA_TRANSFER_AMOUNTS,
+        "completion_date_ranges": COMPLETION_DATE_RANGES,
+    }
+
 
 @requests_bp.route("/requests/new/<int:screen>", methods=["GET"])
 def requests_form_new(screen):
@@ -26,10 +35,6 @@ def requests_form_new(screen):
         current=screen,
         next_screen=screen + 1,
         can_submit=jedi_flow.can_submit,
-        service_branches=SERVICE_BRANCHES,
-        assistance_org_types=ASSISTANCE_ORG_TYPES,
-        data_transfer_amounts=DATA_TRANSFER_AMOUNTS,
-        completion_date_ranges=COMPLETION_DATE_RANGES,
     )
 
 
@@ -56,10 +61,6 @@ def requests_form_update(screen=1, request_id=None):
         request_id=request_id,
         jedi_request=jedi_flow.request,
         can_submit=jedi_flow.can_submit,
-        service_branches=SERVICE_BRANCHES,
-        assistance_org_types=ASSISTANCE_ORG_TYPES,
-        data_transfer_amounts=DATA_TRANSFER_AMOUNTS,
-        completion_date_ranges=COMPLETION_DATE_RANGES,
     )
 
 
@@ -122,14 +123,7 @@ def requests_submit(request_id=None):
 @requests_bp.route("/requests/pending/<string:request_id>", methods=["GET"])
 def view_pending_request(request_id=None):
     request = Requests.get(request_id)
-    return render_template(
-        "requests/view_pending.html",
-        data=request.body,
-        service_branches=SERVICE_BRANCHES,
-        assistance_org_types=ASSISTANCE_ORG_TYPES,
-        data_transfer_amounts=DATA_TRANSFER_AMOUNTS,
-        completion_date_ranges=COMPLETION_DATE_RANGES,
-    )
+    return render_template("requests/view_pending.html", data=request.body)
 
 
 # TODO: generalize this, along with other authorizations, into a policy-pattern
