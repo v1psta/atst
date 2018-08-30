@@ -1,4 +1,4 @@
 [submodule "script/include"]
 	path = script/include
-	url = https://github.com:dod-ccpo/scriptz.git
+	url = https://github.com/dod-ccpo/scriptz.git
 	branch = master
