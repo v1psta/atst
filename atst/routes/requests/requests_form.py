@@ -44,9 +44,6 @@ def requests_form_new(screen):
 )
 @requests_bp.route("/requests/new/<int:screen>/<string:request_id>", methods=["GET"])
 def requests_form_update(screen=1, request_id=None):
-    if request_id:
-        _check_can_view_request(request_id)
-
     request = (
         Requests.get(g.current_user, request_id) if request_id is not None else None
     )
@@ -129,17 +126,3 @@ def requests_submit(request_id=None):
 def view_pending_request(request_id=None):
     request = Requests.get(g.current_user, request_id)
     return render_template("requests/view_pending.html", data=request.body)
-
-
-# TODO: generalize this, along with other authorizations, into a policy-pattern
-# for authorization in the application
-def _check_can_view_request(request_id):
-    if (
-        Permissions.REVIEW_AND_APPROVE_JEDI_WORKSPACE_REQUEST
-        in g.current_user.atat_permissions
-    ):
-        pass
-    elif Requests.exists(request_id, g.current_user):
-        pass
-    else:
-        raise UnauthorizedError(g.current_user, "view request {}".format(request_id))
