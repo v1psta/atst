@@ -87,3 +87,35 @@ def test_get_for_update_blocks_developer():
 
     with pytest.raises(UnauthorizedError):
         Workspaces.get_for_update(developer, workspace.id)
+
+
+def test_can_create_workspace_user():
+    owner = UserFactory.create()
+    workspace = Workspaces.create(RequestFactory.create(creator=owner))
+
+    user_data = {
+        "first_name": "New",
+        "last_name": "User",
+        "email": "new.user@mail.com",
+        "workspace_role": "developer",
+        "dod_id": "1234567890"
+    }
+
+    new_member = Workspaces.create_member(owner, workspace, user_data)
+    assert new_member.workspace == workspace
+
+
+def test_need_permission_to_create_workspace_user():
+    workspace = Workspaces.create(request=RequestFactory.create())
+    random_user = UserFactory.create()
+
+    user_data = {
+        "first_name": "New",
+        "last_name": "User",
+        "email": "new.user@mail.com",
+        "workspace_role": "developer",
+        "dod_id": "1234567890"
+    }
+
+    with pytest.raises(UnauthorizedError):
+        Workspaces.create_member(random_user, workspace, user_data)

@@ -33,6 +33,8 @@ class WorkspaceUsers(object):
     @classmethod
     def add(cls, user, workspace_id, role_name):
         role = Roles.get(role_name)
+
+        new_workspace_role = None
         try:
             existing_workspace_role = (
                 db.session.query(WorkspaceRole)
@@ -52,6 +54,8 @@ class WorkspaceUsers(object):
         user.workspace_roles.append(new_workspace_role)
         db.session.add(user)
         db.session.commit()
+
+        return WorkspaceUser(user, new_workspace_role)
 
     @classmethod
     def add_many(cls, workspace_id, workspace_user_dicts):
