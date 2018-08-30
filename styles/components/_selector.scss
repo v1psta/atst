@@ -1,0 +1,54 @@
+.selector {
+  max-width: 30em;
+
+  .trigger {
+    display: block !important;
+  }
+
+  legend {
+    @include h4;
+    padding-bottom: $gap / 2;
+  }
+
+  .selector__button {
+    width: 100%;
+    height: $input-height;
+    margin: 0;
+    padding: $input-padding-vertical 0.7em;
+    line-height: $input-line-height;
+    color: $color-base;
+    font-size: $base-font-size;
+    font-weight: $font-normal;
+    text-align: left;
+    border-width: 1px;
+    border-style: solid;
+    border-color: $color-gray;
+    border-radius: 0;
+    box-sizing: border-box;
+    background-color: $color-white;
+    background-image: none, url('#{$image-path}/arrow-both.svg'), url('#{$image-path}/arrow-both.png');
+    background-position: right 1.3rem center;
+    background-repeat: no-repeat;
+    background-size: 1rem;
+  }
+
+  .tooltip {
+    &.popover {
+      .popover-inner {
+        padding: 0;
+
+        .block-list {
+          margin: 0;
+
+          label {
+            padding: 0;
+          }
+        }
+      }
+
+      .popover-arrow {
+        background-color: $color-white;
+      }
+    }
+  }
+}
