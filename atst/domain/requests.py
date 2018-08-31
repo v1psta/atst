@@ -5,13 +5,14 @@ from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.orm.attributes import flag_modified
 from werkzeug.datastructures import FileStorage
 
+from atst.database import db
+from atst.domain.authz import Authorization
+from atst.domain.task_orders import TaskOrders
+from atst.domain.workspaces import Workspaces
 from atst.models.request import Request
 from atst.models.request_status_event import RequestStatusEvent, RequestStatus
-from atst.domain.workspaces import Workspaces
-from atst.database import db
-from atst.domain.task_orders import TaskOrders
 
-from .exceptions import NotFoundError
+from .exceptions import NotFoundError, UnauthorizedError
 
 
 def deep_merge(source, destination: dict):
@@ -59,11 +60,14 @@ class Requests(object):
             return False
 
     @classmethod
-    def get(cls, request_id):
+    def get(cls, user, request_id):
         try:
             request = db.session.query(Request).filter_by(id=request_id).one()
-        except NoResultFound:
+        except (NoResultFound, exc.DataError):
             raise NotFoundError("request")
+
+        if not Authorization.can_view_request(user, request):
+            raise UnauthorizedError(user, "get request")
 
         return request
 

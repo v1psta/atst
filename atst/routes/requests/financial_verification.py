@@ -1,4 +1,4 @@
-from flask import render_template, redirect, url_for
+from flask import g, render_template, redirect, url_for
 from flask import request as http_request
 
 from . import requests_bp
@@ -15,7 +15,7 @@ def financial_form(data):
 
 @requests_bp.route("/requests/verify/<string:request_id>", methods=["GET"])
 def financial_verification(request_id=None):
-    request = Requests.get(request_id)
+    request = Requests.get(g.current_user, request_id)
     form = financial_form(request.body.get("financial_verification"))
     return render_template(
         "requests/financial_verification.html",
@@ -28,7 +28,7 @@ def financial_verification(request_id=None):
 @requests_bp.route("/requests/verify/<string:request_id>", methods=["POST"])
 def update_financial_verification(request_id):
     post_data = http_request.form
-    existing_request = Requests.get(request_id)
+    existing_request = Requests.get(g.current_user, request_id)
     form = financial_form(post_data)
     rerender_args = dict(
         request_id=request_id, f=form, extended=http_request.args.get("extended")

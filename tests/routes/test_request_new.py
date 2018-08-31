@@ -122,7 +122,7 @@ def test_am_poc_causes_poc_to_be_autopopulated(client, user_session):
         headers={"Content-Type": "application/x-www-form-urlencoded"},
         data="am_poc=yes",
     )
-    request = Requests.get(request.id)
+    request = Requests.get(creator, request.id)
     assert request.body["primary_poc"]["dodid_poc"] == creator.dod_id
 
 
@@ -167,7 +167,7 @@ def test_poc_details_can_be_autopopulated_on_new_request(client, user_session):
         data="am_poc=yes",
     )
     request_id = response.headers["Location"].split("/")[-1]
-    request = Requests.get(request_id)
+    request = Requests.get(creator, request_id)
 
     assert request.body["primary_poc"]["dodid_poc"] == creator.dod_id
 
@@ -191,7 +191,7 @@ def test_poc_autofill_checks_information_about_you_form_first(client, user_sessi
         headers={"Content-Type": "application/x-www-form-urlencoded"},
         data=urlencode(poc_input),
     )
-    request = Requests.get(request.id)
+    request = Requests.get(creator, request.id)
     assert dict_contains(
         request.body["primary_poc"],
         {

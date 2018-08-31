@@ -11,15 +11,15 @@ def map_request(request):
     is_new = time_created.add(days=1) > pendulum.now()
     app_count = request.body.get("details_of_use", {}).get("num_software_systems", 0)
     annual_usage = request.annual_spend
-    update_url = url_for(
-        "requests.requests_form_update", screen=1, request_id=request.id
-    )
-    verify_url = url_for("requests.financial_verification", request_id=request.id)
-    edit_link = (
-        verify_url
-        if Requests.is_pending_financial_verification(request)
-        else update_url
-    )
+
+    if Requests.is_pending_financial_verification(request):
+        edit_link = url_for("requests.financial_verification", request_id=request.id)
+    elif Requests.is_pending_ccpo_approval(request):
+        edit_link = url_for("requests.view_pending_request", request_id=request.id)
+    else:
+        edit_link = url_for(
+            "requests.requests_form_update", screen=1, request_id=request.id
+        )
 
     return {
         "workspace_id": request.workspace.id if request.workspace else None,

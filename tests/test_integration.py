@@ -55,7 +55,7 @@ def test_stepthrough_request_form(user_session, screens, client):
 
     # at this point, the real request we made and the mock_request bodies
     # should be equivalent
-    assert Requests.get(req_id).body == mock_request.body
+    assert Requests.get(user, req_id).body == mock_request.body
 
     # finish the review and submit step
     client.post(
@@ -63,5 +63,5 @@ def test_stepthrough_request_form(user_session, screens, client):
         headers={"Content-Type": "application/x-www-form-urlencoded"},
     )
 
-    finished_request = Requests.get(req_id)
+    finished_request = Requests.get(user, req_id)
     assert finished_request.status == RequestStatus.PENDING_CCPO_APPROVAL

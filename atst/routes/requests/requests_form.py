@@ -3,15 +3,23 @@ from flask import g, redirect, render_template, url_for, request as http_request
 from . import requests_bp
 from atst.domain.requests import Requests
 from atst.routes.requests.jedi_request_flow import JEDIRequestFlow
-from atst.models.permissions import Permissions
 from atst.models.request_status_event import RequestStatus
-from atst.domain.exceptions import UnauthorizedError
 from atst.forms.data import (
     SERVICE_BRANCHES,
     ASSISTANCE_ORG_TYPES,
     DATA_TRANSFER_AMOUNTS,
     COMPLETION_DATE_RANGES,
 )
+
+
+@requests_bp.context_processor
+def option_data():
+    return {
+        "service_branches": SERVICE_BRANCHES,
+        "assistance_org_types": ASSISTANCE_ORG_TYPES,
+        "data_transfer_amounts": DATA_TRANSFER_AMOUNTS,
+        "completion_date_ranges": COMPLETION_DATE_RANGES,
+    }
 
 
 @requests_bp.route("/requests/new/<int:screen>", methods=["GET"])
@@ -26,10 +34,6 @@ def requests_form_new(screen):
         current=screen,
         next_screen=screen + 1,
         can_submit=jedi_flow.can_submit,
-        service_branches=SERVICE_BRANCHES,
-        assistance_org_types=ASSISTANCE_ORG_TYPES,
-        data_transfer_amounts=DATA_TRANSFER_AMOUNTS,
-        completion_date_ranges=COMPLETION_DATE_RANGES,
     )
 
 
@@ -38,10 +42,9 @@ def requests_form_new(screen):
 )
 @requests_bp.route("/requests/new/<int:screen>/<string:request_id>", methods=["GET"])
 def requests_form_update(screen=1, request_id=None):
-    if request_id:
-        _check_can_view_request(request_id)
-
-    request = Requests.get(request_id) if request_id is not None else None
+    request = (
+        Requests.get(g.current_user, request_id) if request_id is not None else None
+    )
     jedi_flow = JEDIRequestFlow(
         screen, request=request, request_id=request_id, current_user=g.current_user
     )
@@ -56,10 +59,6 @@ def requests_form_update(screen=1, request_id=None):
         request_id=request_id,
         jedi_request=jedi_flow.request,
         can_submit=jedi_flow.can_submit,
-        service_branches=SERVICE_BRANCHES,
-        assistance_org_types=ASSISTANCE_ORG_TYPES,
-        data_transfer_amounts=DATA_TRANSFER_AMOUNTS,
-        completion_date_ranges=COMPLETION_DATE_RANGES,
     )
 
 
@@ -71,7 +70,9 @@ def requests_update(screen=1, request_id=None):
     screen = int(screen)
     post_data = http_request.form
     current_user = g.current_user
-    existing_request = Requests.get(request_id) if request_id is not None else None
+    existing_request = (
+        Requests.get(g.current_user, request_id) if request_id is not None else None
+    )
     jedi_flow = JEDIRequestFlow(
         screen,
         post_data=post_data,
@@ -109,7 +110,7 @@ def requests_update(screen=1, request_id=None):
 
 @requests_bp.route("/requests/submit/<string:request_id>", methods=["POST"])
 def requests_submit(request_id=None):
-    request = Requests.get(request_id)
+    request = Requests.get(g.current_user, request_id)
     Requests.submit(request)
 
     if request.status == RequestStatus.PENDING_FINANCIAL_VERIFICATION:
@@ -119,15 +120,7 @@ def requests_submit(request_id=None):
         return redirect("/requests?modal=pendingCCPOApproval")
 
 
-# TODO: generalize this, along with other authorizations, into a policy-pattern
-# for authorization in the application
-def _check_can_view_request(request_id):
-    if (
-        Permissions.REVIEW_AND_APPROVE_JEDI_WORKSPACE_REQUEST
-        in g.current_user.atat_permissions
-    ):
-        pass
-    elif Requests.exists(request_id, g.current_user):
-        pass
-    else:
-        raise UnauthorizedError(g.current_user, "view request {}".format(request_id))
+@requests_bp.route("/requests/pending/<string:request_id>", methods=["GET"])
+def view_pending_request(request_id=None):
+    request = Requests.get(g.current_user, request_id)
+    return render_template("requests/view_pending.html", data=request.body)
