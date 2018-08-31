@@ -1,5 +1,4 @@
 import re
-import json
 from flask import current_app as app
 from werkzeug.datastructures import FileStorage
 
