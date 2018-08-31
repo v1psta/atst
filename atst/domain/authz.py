@@ -1,5 +1,6 @@
 from atst.domain.workspace_users import WorkspaceUsers
 from atst.models.permissions import Permissions
+from atst.domain.exceptions import UnauthorizedError
 
 
 class Authorization(object):
@@ -23,3 +24,8 @@ class Authorization(object):
             return True
 
         return False
+
+    @classmethod
+    def check_workspace_permission(cls, user, workspace, permission, message):
+        if not Authorization.has_workspace_permission(user, workspace, permission):
+            raise UnauthorizedError(user, message)

@@ -32,4 +32,3 @@ class WorkspaceUser(object):
     @property
     def status(self):
         return "radical"
-

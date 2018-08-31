@@ -127,12 +127,22 @@ def create_member(workspace_id):
 @bp.route("/workspaces/<workspace_id>/members/<member_id>/member_edit")
 def view_member(workspace_id, member_id):
     workspace = Workspaces.get(g.current_user, workspace_id)
+    Authorization.check_workspace_permission(
+        g.current_user,
+        workspace,
+        Permissions.ASSIGN_AND_UNASSIGN_ATAT_ROLE,
+        "edit this workspace user",
+    )
     member = WorkspaceUsers.get(workspace_id, member_id)
     form = NewMemberForm(http_request.form)
+    return render_template(
+        "member_edit.html", form=form, workspace=workspace, member=member
+    )
 
-    return render_template("member_edit.html", form=form, workspace=workspace, member=member)
 
-@bp.route("/workspaces/<workspace_id>/members/<member_id>/member_edit", methods=['POST'])
+@bp.route(
+    "/workspaces/<workspace_id>/members/<member_id>/member_edit", methods=["POST"]
+)
 def update_member(workspace_id, member_id):
     workspace = Workspaces.get(g.current_user, workspace_id)
     member = WorkspaceUsers.get(workspace_id, member_id)
@@ -140,11 +150,9 @@ def update_member(workspace_id, member_id):
 
     if form.validate():
         return redirect(
-            url_for(
-                "workspaces.workspace_members",
-                workspace_id=workspace.id,
-            )
+            url_for("workspaces.workspace_members", workspace_id=workspace.id)
         )
     else:
-        return render_template("member_edit.html", form=form, workspace=workspace, member=member)
-
+        return render_template(
+            "member_edit.html", form=form, workspace=workspace, member=member
+        )

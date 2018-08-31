@@ -69,4 +69,4 @@ class Workspace(Base, TimestampsMixin):
 
     @property
     def members(self):
-        return [ WorkspaceUser(role.user, role) for role in self.roles]
+        return [WorkspaceUser(role.user, role) for role in self.roles]
