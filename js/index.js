@@ -13,6 +13,7 @@ import financial from './components/forms/financial'
 import toggler from './components/toggler'
 import NewProject from './components/forms/new_project'
 import Modal from './mixins/modal'
+import selector from './components/selector'
 
 Vue.use(VTooltip)
 
@@ -28,7 +29,8 @@ const app = new Vue({
     DetailsOfUse,
     poc,
     financial,
-    NewProject
+    NewProject,
+    selector
   },
   mounted: function() {
     const modalOpen = document.querySelector("#modalOpen")

@@ -37,7 +37,8 @@
 
   input,
   textarea,
-  select {
+  select,
+  .selector__button {
     border-color: $state-color;
     border-width: $border-width;
   }
@@ -72,6 +73,10 @@
     position: relative;
     clear: both;
 
+    dd {
+      font-weight: normal;
+    }
+
     .icon-validation {
       position: absolute;
       top: 100%;
@@ -105,7 +110,8 @@
 
   input,
   textarea,
-  select {
+  select,
+  .selector__button {
     @include line-max;
     margin: 0;
     box-sizing: border-box;
