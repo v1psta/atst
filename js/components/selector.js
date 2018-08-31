@@ -26,17 +26,21 @@ export default {
 
   computed: {
     label: function () {
-      return this.value
-        ? this.choices.find((choice) => {
+      if (this.value) {
+        const selectedChoice = this.choices.find((choice) => {
           return this.value === choice[0]
         })[1]
-        : this.defaultLabel
+        return selectedChoice.name
+      } else {
+        return this.defaultLabel
+      }
     }
   },
 
   methods: {
     change: function (e) {
       this.value = e.target.value
+      console.log(this.value)
       this.showError = false
       setTimeout(() => this.$refs.popover.hide(), 300)
     }
