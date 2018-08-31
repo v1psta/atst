@@ -40,7 +40,6 @@ export default {
   methods: {
     change: function (e) {
       this.value = e.target.value
-      console.log(this.value)
       this.showError = false
       setTimeout(() => this.$refs.popover.hide(), 300)
     }
