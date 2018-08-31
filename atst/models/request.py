@@ -17,6 +17,8 @@ class Request(Base):
         "RequestStatusEvent", backref="request", order_by="RequestStatusEvent.sequence"
     )
 
+    workspace = relationship("Workspace", uselist=False, backref="request")
+
     user_id = Column(ForeignKey("users.id"), nullable=False)
     creator = relationship("User")
 
@@ -35,3 +37,13 @@ class Request(Base):
     def annual_spend(self):
         monthly = self.body.get("details_of_use", {}).get("estimated_monthly_spend", 0)
         return monthly * 12
+
+    @property
+    def financial_verification(self):
+        return self.body.get("financial_verification")
+
+    @property
+    def is_financially_verified(self):
+        if self.task_order:
+            return self.task_order.verified
+        return False

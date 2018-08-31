@@ -116,7 +116,15 @@
               <td></td>
             {% endif %}
             <td>{{ r['annual_usage'] | dollars }}</td>
-            <td>{{ r['status'] }}</td>
+            <td>
+              {% if r.status == 'Approved' %}
+                <a href="{{ url_for('workspaces.workspace_projects', workspace_id=r.workspace_id) }}">
+                  {{ r.status }}
+                </a>
+              {% else %}
+                {{ r.status }}
+              {% endif %}
+            </td>
           </tr>
           {% endfor %}
         </tbody>

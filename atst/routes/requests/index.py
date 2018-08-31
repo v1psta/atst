@@ -22,6 +22,7 @@ def map_request(request):
     )
 
     return {
+        "workspace_id": request.workspace.id if request.workspace else None,
         "order_id": request.id,
         "is_new": is_new,
         "status": request.status_displayname,

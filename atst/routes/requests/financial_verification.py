@@ -40,15 +40,22 @@ def update_financial_verification(request_id):
         )
         updated_request = Requests.update_financial_verification(request_id, form.data)
         if valid:
-            Requests.submit_financial_verification(request_id)
-            new_workspace = Requests.approve_and_create_workspace(updated_request)
-            return redirect(
-                url_for(
-                    "workspaces.new_project",
-                    workspace_id=new_workspace.id,
-                    newWorkspace=True,
+            submitted_request = Requests.submit_financial_verification(updated_request)
+            if submitted_request.is_financially_verified:
+                new_workspace = Requests.approve_and_create_workspace(submitted_request)
+                return redirect(
+                    url_for(
+                        "workspaces.new_project",
+                        workspace_id=new_workspace.id,
+                        newWorkspace=True,
+                    )
                 )
-            )
+            else:
+                return redirect(
+                    url_for(
+                        "requests.requests_index", pendingFinancialVerification=True
+                    )
+                )
 
         else:
             form.reset()
@@ -59,8 +66,3 @@ def update_financial_verification(request_id):
     else:
         form.reset()
         return render_template("requests/financial_verification.html", **rerender_args)
-
-
-@requests_bp.route("/requests/financial_verification_submitted")
-def financial_verification_submitted():
-    return render_template("requests/financial_verification_submitted.html")

@@ -43,7 +43,6 @@ class Workspace(Base, TimestampsMixin):
     id = Id()
     name = Column(String, unique=True)
     request_id = Column(ForeignKey("requests.id"), nullable=False)
-    request = relationship("Request")
     projects = relationship("Project", back_populates="workspace")
     roles = relationship("WorkspaceRole")
 

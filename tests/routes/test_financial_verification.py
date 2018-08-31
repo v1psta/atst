@@ -128,7 +128,7 @@ class TestPENumberInForm:
         response = self.submit_data(client, data, extended=True)
 
         assert response.status_code == 302
-        assert "/projects/new" in response.headers.get("Location")
+        assert "/requests" in response.headers.get("Location")
 
     def test_submit_invalid_extended_financial_form(
         self, monkeypatch, user_session, client, extended_financial_verification_data
