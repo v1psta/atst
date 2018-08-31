@@ -149,6 +149,9 @@ def update_member(workspace_id, member_id):
     form = UpdateMemberForm(http_request.form)
 
     if form.validate():
+        Workspaces.update_member(
+            g.current_user, workspace, member, form.data["workspace_role"]
+        )
         return redirect(
             url_for("workspaces.workspace_members", workspace_id=workspace.id)
         )

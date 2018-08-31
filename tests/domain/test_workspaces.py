@@ -119,3 +119,38 @@ def test_need_permission_to_create_workspace_user():
 
     with pytest.raises(UnauthorizedError):
         Workspaces.create_member(random_user, workspace, user_data)
+
+
+def test_can_update_workspace_user_role():
+    owner = UserFactory.create()
+    workspace = Workspaces.create(RequestFactory.create(creator=owner))
+    user_data = {
+        "first_name": "New",
+        "last_name": "User",
+        "email": "new.user@mail.com",
+        "workspace_role": "developer",
+        "dod_id": "1234567890",
+    }
+    member = Workspaces.create_member(owner, workspace, user_data)
+    role_name = "developer"
+
+    updated_member = Workspaces.update_member(owner, workspace, member, role_name)
+    assert updated_member.workspace == workspace
+
+
+def test_need_permission_to_update_workspace_user_role():
+    owner = UserFactory.create()
+    workspace = Workspaces.create(RequestFactory.create(creator=owner))
+    random_user = UserFactory.create()
+    user_data = {
+        "first_name": "New",
+        "last_name": "User",
+        "email": "new.user@mail.com",
+        "workspace_role": "developer",
+        "dod_id": "1234567890",
+    }
+    member = Workspaces.create_member(owner, workspace, user_data)
+    role_name = "developer"
+
+    with pytest.raises(UnauthorizedError):
+        Workspaces.update_member(random_user, workspace, member, role_name)

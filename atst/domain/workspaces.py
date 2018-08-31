@@ -82,6 +82,15 @@ class Workspaces(object):
         return workspace_user
 
     @classmethod
+    def update_member(cls, user, workspace, member, role_name):
+        if not Authorization.has_workspace_permission(
+            user, workspace, Permissions.ASSIGN_AND_UNASSIGN_ATAT_ROLE
+        ):
+            raise UnauthorizedError(user, "update workspace member")
+
+        return WorkspaceUsers.update_role(member, workspace.id, role_name)
+
+    @classmethod
     def _create_workspace_role(cls, user, workspace, role_name):
         role = Roles.get(role_name)
         workspace_role = WorkspaceRole(user=user, role=role, workspace=workspace)
