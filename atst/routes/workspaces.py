@@ -9,9 +9,12 @@ from flask import (
 
 from atst.domain.exceptions import UnauthorizedError
 from atst.domain.workspaces import Workspaces
+from atst.domain.workspace_users import WorkspaceUsers
 from atst.domain.projects import Projects
 from atst.forms.new_project import NewProjectForm
 from atst.forms.new_member import NewMemberForm
+from atst.forms.update_member import UpdateMemberForm
+from atst.forms.forms import ValidatedForm
 from atst.domain.authz import Authorization
 from atst.models.permissions import Permissions
 
@@ -119,3 +122,29 @@ def create_member(workspace_id):
         )
     else:
         return render_template("member_new.html", workspace=workspace, form=form)
+
+
+@bp.route("/workspaces/<workspace_id>/members/<member_id>/member_edit")
+def view_member(workspace_id, member_id):
+    workspace = Workspaces.get(g.current_user, workspace_id)
+    member = WorkspaceUsers.get(workspace_id, member_id)
+    form = NewMemberForm(http_request.form)
+
+    return render_template("member_edit.html", form=form, workspace=workspace, member=member)
+
+@bp.route("/workspaces/<workspace_id>/members/<member_id>/member_edit", methods=['POST'])
+def update_member(workspace_id, member_id):
+    workspace = Workspaces.get(g.current_user, workspace_id)
+    member = WorkspaceUsers.get(workspace_id, member_id)
+    form = UpdateMemberForm(http_request.form)
+
+    if form.validate():
+        return redirect(
+            url_for(
+                "workspaces.workspace_members",
+                workspace_id=workspace.id,
+            )
+        )
+    else:
+        return render_template("member_edit.html", form=form, workspace=workspace, member=member)
+

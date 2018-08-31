@@ -5,6 +5,7 @@ from atst.models import Base
 from atst.models.types import Id
 from atst.models.mixins import TimestampsMixin
 from atst.utils import first_or_none
+from atst.models.workspace_user import WorkspaceUser
 
 
 MOCK_MEMBERS = [
@@ -68,4 +69,4 @@ class Workspace(Base, TimestampsMixin):
 
     @property
     def members(self):
-        return MOCK_MEMBERS
+        return [ WorkspaceUser(role.user, role) for role in self.roles]

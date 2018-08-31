@@ -16,3 +16,20 @@ class WorkspaceUser(object):
 
     def workspace_id(self):
         return self.workspace_role.workspace_id
+
+    @property
+    def user_id(self):
+        return self.user.id
+
+    @property
+    def user_name(self):
+        return self.user.full_name
+
+    @property
+    def role(self):
+        return self.workspace_role.role.name
+
+    @property
+    def status(self):
+        return "radical"
+
