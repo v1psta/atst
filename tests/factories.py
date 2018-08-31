@@ -77,7 +77,7 @@ class RequestFactory(factory.alchemy.SQLAlchemyModelFactory):
             fname_poc=user.first_name,
             lname_poc=user.last_name,
             jedi_usage="adf",
-            start_date=datetime.datetime(2018, 8, 8, tzinfo=datetime.timezone.utc),
+            start_date=datetime.date(2018, 8, 8),
             cloud_native="yes",
             dollar_value=dollar_value,
             dod_component=SERVICE_BRANCHES[2][1],
@@ -100,9 +100,7 @@ class RequestFactory(factory.alchemy.SQLAlchemyModelFactory):
             fname_request=user.first_name,
             lname_request=user.last_name,
             service_branch=SERVICE_BRANCHES[1][1],
-            date_latest_training=datetime.datetime(
-                2018, 8, 6, tzinfo=datetime.timezone.utc
-            ),
+            date_latest_training=datetime.date(2018, 8, 6),
         )
 
         data = (

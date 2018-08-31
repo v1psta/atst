@@ -2,9 +2,8 @@ from enum import Enum
 from sqlalchemy import exists, and_, exc
 from sqlalchemy.sql import text
 from sqlalchemy.orm.exc import NoResultFound
-from sqlalchemy.orm.attributes import flag_modified
 from werkzeug.datastructures import FileStorage
-import pendulum
+import dateutil
 
 from atst.database import db
 from atst.domain.authz import Authorization
@@ -20,11 +19,11 @@ from .exceptions import NotFoundError, UnauthorizedError
 
 def create_revision_from_request_body(body):
     body = {k: v for p in body.values() for k, v in p.items()}
-    TIMESTAMPS = ["start_date", "date_latest_training"]
+    DATES = ["start_date", "date_latest_training"]
     coerced_timestamps = {
-        k: pendulum.parse(v)
+        k: dateutil.parser.parse(v)
         for k, v in body.items()
-        if k in TIMESTAMPS and isinstance(v, str)
+        if k in DATES and isinstance(v, str)
     }
     body = {**body, **coerced_timestamps}
     return RequestRevision(**body)

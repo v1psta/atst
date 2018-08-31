@@ -8,6 +8,7 @@ from atst.models import Base
 from atst.models.types import Id
 from atst.models.request_status_event import RequestStatus
 from atst.utils import deep_merge, first_or_none
+from atst.models.request_revision import RequestRevision
 
 
 def map_properties_to_dict(properties, instance):

@@ -1,7 +1,5 @@
-import pendulum
 from sqlalchemy import (
     Column,
-    func,
     ForeignKey,
     String,
     Boolean,
@@ -10,8 +8,6 @@ from sqlalchemy import (
     BigInteger,
     Sequence,
 )
-from sqlalchemy.types import DateTime
-from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import relationship
 
 from atst.models import Base
