@@ -6,7 +6,7 @@ from wtforms.validators import Required, Email, Length
 from atst.forms.validators import IsNumber
 from atst.forms.fields import SelectField
 
-from .data import (WORKSPACE_ROLES)
+from .data import WORKSPACE_ROLES
 
 
 class NewMemberForm(Form):
@@ -16,8 +16,5 @@ class NewMemberForm(Form):
     email = EmailField("Email Address", validators=[Required(), Email()])
     dod_id = StringField("DOD ID", validators=[Required(), Length(min=10), IsNumber()])
     workspace_role = SelectField(
-        "Workspace Role",
-        choices=WORKSPACE_ROLES,
-        validators=[Required()],
-        default=''
+        "Workspace Role", choices=WORKSPACE_ROLES, validators=[Required()], default=""
     )
