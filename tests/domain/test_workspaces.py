@@ -98,7 +98,7 @@ def test_can_create_workspace_user():
         "last_name": "User",
         "email": "new.user@mail.com",
         "workspace_role": "developer",
-        "dod_id": "1234567890"
+        "dod_id": "1234567890",
     }
 
     new_member = Workspaces.create_member(owner, workspace, user_data)
@@ -114,7 +114,7 @@ def test_need_permission_to_create_workspace_user():
         "last_name": "User",
         "email": "new.user@mail.com",
         "workspace_role": "developer",
-        "dod_id": "1234567890"
+        "dod_id": "1234567890",
     }
 
     with pytest.raises(UnauthorizedError):
