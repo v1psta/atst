@@ -114,7 +114,7 @@ def create_member(workspace_id):
             url_for(
                 "workspaces.workspace_members",
                 workspace_id=workspace.id,
-                newMemberName=new_member.user.full_name
+                newMemberName=new_member.user.full_name,
             )
         )
     else:
