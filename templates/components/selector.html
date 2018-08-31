@@ -4,7 +4,7 @@
 {% macro Selector(field, default_label='Select an option') -%}
 
 <selector
-  v-bind:choices='{{ field.choices | toJson }}'
+  v-bind:choices='{{ field.choices | tojson }}'
   default-label='{{ default_label }}'
   {% if field.data %}initial-choice='{{ field.data }}'{% endif %}
   {% if field.errors %}v-bind:initial-errors='{{ field.errors }}'{% endif %}
