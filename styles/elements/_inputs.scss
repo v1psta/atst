@@ -112,6 +112,11 @@
     max-width: 32em;
     resize: none;
 
+    &::placeholder {
+      color: $color-gray;
+      font-style: italic;
+    }
+
     &:hover,
     &:focus {
       border-color: $color-blue !important;
