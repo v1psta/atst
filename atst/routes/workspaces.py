@@ -109,12 +109,12 @@ def create_member(workspace_id):
     form = NewMemberForm(http_request.form)
 
     if form.validate():
-        Workspaces.create_member(g.current_user, workspace, form.data)
+        new_member = Workspaces.create_member(g.current_user, workspace, form.data)
         return redirect(
             url_for(
                 "workspaces.workspace_members",
                 workspace_id=workspace.id,
-                memberCreated=True,
+                newMemberName=new_member.user.full_name
             )
         )
     else:
