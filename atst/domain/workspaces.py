@@ -38,10 +38,13 @@ class Workspaces(object):
     @classmethod
     def get_for_update(cls, user, workspace_id):
         workspace = Workspaces.get(user, workspace_id)
-        if not Authorization.has_workspace_permission(
-            user, workspace, Permissions.ADD_APPLICATION_IN_WORKSPACE
-        ):
-            raise UnauthorizedError(user, "add project")
+        Authorization.check_workspace_permission(
+            user,
+            workspace,
+            Permissions.ADD_APPLICATION_IN_WORKSPACE,
+            "add project",
+        )
+
         return workspace
 
     @classmethod
@@ -65,10 +68,12 @@ class Workspaces(object):
 
     @classmethod
     def create_member(cls, user, workspace, data):
-        if not Authorization.has_workspace_permission(
-            user, workspace, Permissions.ASSIGN_AND_UNASSIGN_ATAT_ROLE
-        ):
-            raise UnauthorizedError(user, "create workspace member")
+        Authorization.check_workspace_permission(
+            user,
+            workspace,
+            Permissions.ASSIGN_AND_UNASSIGN_ATAT_ROLE,
+            "create workspace member",
+        )
 
         new_user = Users.get_or_create_by_dod_id(
             data["dod_id"],
@@ -83,10 +88,12 @@ class Workspaces(object):
 
     @classmethod
     def update_member(cls, user, workspace, member, role_name):
-        if not Authorization.has_workspace_permission(
-            user, workspace, Permissions.ASSIGN_AND_UNASSIGN_ATAT_ROLE
-        ):
-            raise UnauthorizedError(user, "update workspace member")
+        Authorization.check_workspace_permission(
+            user,
+            workspace,
+            Permissions.ASSIGN_AND_UNASSIGN_ATAT_ROLE,
+            "update workspace member",
+        )
 
         return WorkspaceUsers.update_role(member, workspace.id, role_name)
 
