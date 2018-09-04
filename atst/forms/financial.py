@@ -113,7 +113,7 @@ class BaseFinancialForm(ValidatedForm):
 
     treasury_code = StringField(
         "Program Treasury Code",
-        description="Program Treasury Cod (or Appropriations Code) identifies resource types. <br/> <em>It should be a four digit or six digit number, prefixed by one or more zeros.</em>",
+        description="Program Treasury Code (or Appropriations Code) identifies resource types. <br/> <em>It should be a four digit or six digit number, prefixed by one or more zeros.</em>",
         validators=[Required(), Regexp(TREASURY_CODE_REGEX)]
     )
 
