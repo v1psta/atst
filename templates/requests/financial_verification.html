@@ -116,44 +116,45 @@
 
         {{ TextInput(f.uii_ids,
           paragraph=True,
-          placeholder="e.g.: DI 0CVA5786950 \nUN1945326361234786950",
+          placeholder="examples: \nDI 0CVA5786950 \nUN1945326361234786950",
           tooltip="A Unique Item Identifer is a unique code that helps the Department of Defense track and report on where and how digital assets are stored. <br>Not all applications have an existing UII number assigned."
           ) }}
 
         {{ TextInput(f.pe_id,
-          placeholder="e.g.: 0302400A",
-          tooltip="Program Element numbers helps the Department of Defense identify which offices\\' budgets are contributing towards this resource use."
+          placeholder="e.g.: 0105688F",
+          validation="peNumber"
           ) }}
 
-        {{ TextInput(f.treasury_code,placeholder="e.g.: 00123456") }}
+        {{ TextInput(f.treasury_code,placeholder="e.g.: 00123456",validation="treasuryCode") }}
 
-        {{ TextInput(f.ba_code,placeholder="e.g.: 02A") }}
+        {{ TextInput(f.ba_code,placeholder="e.g.: 02A",validation="baCode") }}
+
+        <hr />
 
         <h3>Contracting Officer (KO) Information</h3>
-        {{ TextInput(f.fname_co,placeholder="Contracting Officer First Name") }}
 
-        {{ TextInput(f.lname_co,placeholder="Contracting Officer Last Name") }}
+        <div class='form-row'>
+          <div class='form-col form-col--half '>{{ TextInput(f.fname_co) }}</div>
+          <div class='form-col form-col--half '>{{ TextInput(f.lname_co) }}</div>
+        </div>
 
-        {{ TextInput(
-          f.email_co,validation='email',
-          placeholder="jane@mail.mil"
-          ) }}
+        <div class='form-row'>
+          <div class='form-col form-col--half'>{{ TextInput(f.email_co,validation='email') }}</div>
+          <div class='form-col form-col--half'>{{ TextInput(f.office_co,placeholder="e.g.: WHS") }}</div>
+        </div>
 
-        {{ TextInput(
-          f.office_co,
-          placeholder="e.g.: WHS"
-          ) }}
-
-
+        <hr />
 
         <h3>Contracting Officer Representative (COR) Information</h3>
-        {{ TextInput(f.fname_cor,placeholder="Contracting Officer Representative First Name") }}
+        <div class='form-row'>
+          <div class='form-col form-col--half '>{{ TextInput(f.fname_cor) }}</div>
+          <div class='form-col form-col--half '>{{ TextInput(f.lname_cor) }}</div>
+        </div>
 
-        {{ TextInput(f.lname_cor,placeholder="Contracting Officer Representative Last Name") }}
-
-        {{ TextInput(f.email_cor,validation='email',placeholder="jane@mail.mil") }}
-
-        {{ TextInput(f.office_cor,placeholder="e.g.: WHS") }}
+        <div class='form-row'>
+          <div class='form-col form-col--half'>{{ TextInput(f.email_cor,validation='email') }}</div>
+          <div class='form-col form-col--half'>{{ TextInput(f.office_cor,placeholder="e.g.: WHS") }}</div>
+        </div>
 
 
       {% endautoescape %}

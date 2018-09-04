@@ -36,10 +36,17 @@
     {{ CheckboxInput(f.am_poc) }}
 
     <template v-if="!am_poc" v-cloak>
-      {{ TextInput(f.fname_poc,placeholder='First Name') }}
-      {{ TextInput(f.lname_poc,placeholder='Last Name') }}
-      {{ TextInput(f.email_poc,placeholder='jane@mail.mil', validation='email') }}
-      {{ TextInput(f.dodid_poc,placeholder='10-digit number on the back of the CAC', validation='dodId') }}
+
+      <div class='form-row'>
+        <div class='form-col form-col--half'>{{ TextInput(f.fname_poc) }}</div>
+        <div class='form-col form-col--half'>{{ TextInput(f.lname_poc) }}</div>
+      </div>
+
+      <div class='form-row'>
+        <div class='form-col form-col--two-thirds'>{{ TextInput(f.email_poc, validation='email') }}</div>
+        <div class='form-col form-col--third'>{{ TextInput(f.dodid_poc, validation='dodId') }}</div>
+      </div>
+
     </template>
 
   </div>
