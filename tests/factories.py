@@ -11,7 +11,6 @@ from atst.models.task_order import TaskOrder
 from atst.models.user import User
 from atst.models.role import Role
 from atst.models.workspace import Workspace
-from atst.models.request_status_event import RequestStatusEvent
 from atst.domain.roles import Roles
 
 
@@ -33,6 +32,10 @@ class UserFactory(factory.alchemy.SQLAlchemyModelFactory):
     atat_role = factory.SubFactory(RoleFactory)
     dod_id = factory.LazyFunction(lambda: "".join(random.choices(string.digits, k=10)))
 
+    @classmethod
+    def from_atat_role(cls, atat_role_name, **kwargs):
+        role = Roles.get(atat_role_name)
+        return cls.create(atat_role=role, **kwargs)
 
 class RequestStatusEventFactory(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
