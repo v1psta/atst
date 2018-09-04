@@ -6,7 +6,7 @@ import pendulum
 from atst.models import Base
 from atst.models.types import Id
 from atst.models.request_status_event import RequestStatus
-from atst.utils import deep_merge, first_or_none
+from atst.utils import first_or_none
 from atst.models.request_revision import RequestRevision
 
 
