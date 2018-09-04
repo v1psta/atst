@@ -1,6 +1,5 @@
 from sqlalchemy import Column, func, ForeignKey
 from sqlalchemy.types import DateTime
-from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import relationship
 import pendulum
 
@@ -32,7 +31,6 @@ class Request(Base):
 
     id = Id()
     time_created = Column(DateTime(timezone=True), server_default=func.now())
-    body = Column(JSONB)
     status_events = relationship(
         "RequestStatusEvent", backref="request", order_by="RequestStatusEvent.sequence"
     )
