@@ -22,7 +22,7 @@ class RequestsIndex(object):
 
     def _ccpo_view(self, user):
         requests = Requests.get_many()
-        mapped_requests = [self.map_request(r, "ccpo") for r in requests]
+        mapped_requests = [self._map_request(r, "ccpo") for r in requests]
         num_action_required = len(
             [r for r in mapped_requests if r.get("action_required")]
         )
@@ -40,7 +40,7 @@ class RequestsIndex(object):
 
     def _non_ccpo_view(self, user):
         requests = Requests.get_many(creator=user)
-        mapped_requests = [self.map_request(r, "mission_owner") for r in requests]
+        mapped_requests = [self._map_request(r, "mission_owner") for r in requests]
         num_action_required = len(
             [r for r in mapped_requests if r.get("action_required")]
         )
@@ -57,7 +57,7 @@ class RequestsIndex(object):
             extended_view=False,
         )
 
-    def map_request(self, request, viewing_role):
+    def _map_request(self, request, viewing_role):
         time_created = pendulum.instance(request.time_created)
         is_new = time_created.add(days=1) > pendulum.now()
         app_count = request.body.get("details_of_use", {}).get(
