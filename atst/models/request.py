@@ -64,7 +64,6 @@ class Request(Base):
     @property
     def action_required_by(self):
         return {
-            RequestStatus.STARTED: "mission_owner",
             RequestStatus.PENDING_FINANCIAL_VERIFICATION: "mission_owner",
             RequestStatus.PENDING_CCPO_APPROVAL: "ccpo",
         }.get(self.status)

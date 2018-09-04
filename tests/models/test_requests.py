@@ -2,11 +2,6 @@ from tests.factories import RequestFactory, UserFactory
 from atst.domain.requests import Requests, RequestStatus
 
 
-def test_started_request_requires_mo_action():
-    request = RequestFactory.create()
-    assert request.action_required_by == "mission_owner"
-
-
 def test_pending_financial_requires_mo_action():
     request = RequestFactory.create()
     request = Requests.set_status(request, RequestStatus.PENDING_FINANCIAL_VERIFICATION)
