@@ -11,7 +11,7 @@
 
   <div class='panel member-card'>
     <div class='member-card__header'>
-      <h1 class='member-card__heading'>Danny Knight</h1>
+      <h1 class='member-card__heading'>{{ member.user.full_name }}</h1>
 
         <div class="usa-input member-card__input">
           <label for="filter-status">Workspace Role</label>
@@ -23,11 +23,11 @@
       <dl>
         <div>
           <dt>DOD ID:</dt>
-          <dd>789</dd>
+          <dd>{{ member.user.dod_id }}</dd>
         </div>
         <div>
           <dt>Email:</dt>
-          <dd>knight@mil.gov</dd>
+          <dd>{{ member.user.email }}</dd>
         </div>
       </dl>
       <a href='#' class='icon-link'>edit account details</a>
