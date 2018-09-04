@@ -128,10 +128,6 @@ class Requests(object):
             raise NotFoundError()
 
     @classmethod
-    def _merge_body(cls, request, request_delta):
-        return deep_merge(request_delta, request.body)
-
-    @classmethod
     def approve_and_create_workspace(cls, request):
         approved_request = Requests.set_status(request, RequestStatus.APPROVED)
         workspace = Workspaces.create(approved_request)
