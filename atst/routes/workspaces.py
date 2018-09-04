@@ -153,7 +153,11 @@ def update_member(workspace_id, member_id):
             g.current_user, workspace, member, form.data["workspace_role"]
         )
         return redirect(
-            url_for("workspaces.workspace_members", workspace_id=workspace.id)
+            url_for(
+                "workspaces.workspace_members",
+                workspace_id=workspace.id,
+                memberName=member.user.full_name,
+            )
         )
     else:
         return render_template(
