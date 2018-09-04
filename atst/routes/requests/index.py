@@ -6,7 +6,8 @@ from atst.domain.requests import Requests
 from atst.models.permissions import Permissions
 
 
-def map_request(request):
+def map_request(request, viewing_role):
+
     time_created = pendulum.instance(request.time_created)
     is_new = time_created.add(days=1) > pendulum.now()
     app_count = request.body.get("details_of_use", {}).get("num_software_systems", 0)
@@ -36,6 +37,7 @@ def map_request(request):
         "full_name": request.creator.full_name,
         "annual_usage": annual_usage,
         "edit_link": edit_link,
+        "action_required": request.action_required_by == viewing_role,
     }
 
 
@@ -53,7 +55,8 @@ def requests_index():
 
 def _ccpo_view():
     requests = Requests.get_many()
-    mapped_requests = [map_request(r) for r in requests]
+    mapped_requests = [map_request(r, "ccpo") for r in requests]
+    num_action_required = len([r for r in mapped_requests if r.get("action_required")])
 
     return render_template(
         "requests.html",
@@ -64,12 +67,14 @@ def _ccpo_view():
         kpi_inprogress=Requests.in_progress_count(),
         kpi_pending=Requests.pending_ccpo_count(),
         kpi_completed=Requests.completed_count(),
+        num_action_required=num_action_required,
     )
 
 
 def _non_ccpo_view():
     requests = Requests.get_many(creator=g.current_user)
-    mapped_requests = [map_request(r) for r in requests]
+    mapped_requests = [map_request(r, "mission_owner") for r in requests]
+    num_action_required = len([r for r in mapped_requests if r.get("action_required")])
 
     pending_fv = any(Requests.is_pending_financial_verification(r) for r in requests)
     pending_ccpo = any(Requests.is_pending_ccpo_approval(r) for r in requests)
@@ -79,5 +84,6 @@ def _non_ccpo_view():
         requests=mapped_requests,
         pending_financial_verification=pending_fv,
         pending_ccpo_approval=pending_ccpo,
+        num_action_required=num_action_required,
         extended_view=False,
     )
