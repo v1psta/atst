@@ -95,7 +95,7 @@
         <thead>
           <tr>
             <th scope="col">JEDI Cloud Request ID</th>
-            <th scope="col">Date Request Initiated / Created</th>
+            <th scope="col">Date Request Submitted</th>
             {% if extended_view %}
               <th scope="col">Requester</th>
               <th scope="col">Reason Flagged</th>
@@ -111,7 +111,7 @@
               <a class='icon-link icon-link--large' href="{{ r['edit_link'] }}">{{ r['order_id'] }}</a>
               {% if r['is_new'] %}<span class="usa-label">New</span>{% endif %}
             </th>
-            <td>{{ r['date'] }}</td>
+            <td>{{ r.last_submission_timestamp }}</td>
             {% if extended_view %}
               <td>{{ r['full_name'] }}</td>
               <td></td>

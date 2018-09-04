@@ -70,6 +70,15 @@ def test_should_allow_submission(new_request):
     assert not Requests.should_allow_submission(new_request)
 
 
+def test_request_knows_its_last_submission_timestamp(new_request):
+    submitted_request = Requests.submit(new_request)
+    assert submitted_request.last_submission_timestamp
+
+
+def test_request_knows_if_it_has_no_last_submission_timestamp(new_request):
+    assert new_request.last_submission_timestamp is None
+
+
 def test_exists(session):
     user_allowed = UserFactory.create()
     user_denied = UserFactory.create()
