@@ -8,37 +8,6 @@ from atst.utils import first_or_none
 from atst.models.workspace_user import WorkspaceUser
 
 
-MOCK_MEMBERS = [
-    {
-        "first_name": "Danny",
-        "last_name": "Knight",
-        "email": "dknight@thenavy.mil",
-        "dod_id": "1257892124",
-        "workspace_role": "Developer",
-        "status": "Pending",
-        "num_projects": "4",
-    },
-    {
-        "first_name": "Mario",
-        "last_name": "Hudson",
-        "email": "mhudson@thearmy.mil",
-        "dod_id": "4357892125",
-        "workspace_role": "CCPO",
-        "status": "Active",
-        "num_projects": "0",
-    },
-    {
-        "first_name": "Louise",
-        "last_name": "Greer",
-        "email": "lgreer@theairforce.mil",
-        "dod_id": "7257892125",
-        "workspace_role": "Admin",
-        "status": "Pending",
-        "num_projects": "43",
-    },
-]
-
-
 class Workspace(Base, TimestampsMixin):
     __tablename__ = "workspaces"
 
