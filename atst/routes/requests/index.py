@@ -11,6 +11,11 @@ def map_request(request):
     is_new = time_created.add(days=1) > pendulum.now()
     app_count = request.body.get("details_of_use", {}).get("num_software_systems", 0)
     annual_usage = request.annual_spend
+    last_submission_timestamp = (
+        request.last_submission_timestamp.format("M/DD/YYY")
+        if request.last_submission_timestamp
+        else "-"
+    )
 
     if Requests.is_pending_financial_verification(request):
         edit_link = url_for("requests.financial_verification", request_id=request.id)
@@ -27,7 +32,7 @@ def map_request(request):
         "is_new": is_new,
         "status": request.status_displayname,
         "app_count": app_count,
-        "date": time_created.format("M/DD/YYYY"),
+        "last_submission_timestamp": last_submission_timestamp,
         "full_name": request.creator.full_name,
         "annual_usage": annual_usage,
         "edit_link": edit_link,
