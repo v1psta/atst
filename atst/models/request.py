@@ -6,9 +6,7 @@ from sqlalchemy.orm import relationship
 from atst.models import Base
 from atst.models.types import Id
 from atst.models.request_status_event import RequestStatus
-
-def first_or_none(predicate, lst):
-    return next((x for x in lst if predicate(x)), None,)
+from atst.utils import first_or_none
 
 
 class Request(Base):

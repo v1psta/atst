@@ -4,6 +4,7 @@ from sqlalchemy.orm import relationship
 from atst.models import Base
 from atst.models.types import Id
 from atst.models.mixins import TimestampsMixin
+from atst.utils import first_or_none
 
 
 MOCK_MEMBERS = [
@@ -48,14 +49,10 @@ class Workspace(Base, TimestampsMixin):
 
     @property
     def owner(self):
-        return next(
-            (
-                workspace_role.user
-                for workspace_role in self.roles
-                if workspace_role.role.name == "owner"
-            ),
-            None,
-        )
+        def _is_workspace_owner(workspace_role):
+            return workspace_role.role.name == "owner"
+
+        return first_or_none(_is_workspace_owner, self.roles)
 
     @property
     def users(self):
