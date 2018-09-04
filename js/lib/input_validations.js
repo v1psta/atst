@@ -55,9 +55,9 @@ export default {
   },
   peNumber: {
     mask: val => {
-      if (val.length <= 7) return ['0',/\d/,'0',/\d/,/\d/,/\d/,/\d/,/[a-z,A-Z]/]
-      if (val.length === 8) return ['0',/\d/,'0',/\d/,/\d/,/\d/,/\d/,/[a-z,A-Z]/,/[a-z,A-Z]/]
-      return ['0',/\d/,'0',/\d/,/\d/,/\d/,/\d/,/[a-z,A-Z]/,/[a-z,A-Z]/,/[a-z,A-Z]/]
+      if (val.length <= 7) return [/\d/,/\d/,/\d/,/\d/,/\d/,/\d/,/\d/,/[a-z,A-Z]/]
+      if (val.length === 8) return [/\d/,/\d/,/\d/,/\d/,/\d/,/\d/,/\d/,/[a-z,A-Z]/,/[a-z,A-Z]/]
+      return [/\d/,/\d/,/\d/,/\d/,/\d/,/\d/,/\d/,/[a-z,A-Z]/,/[a-z,A-Z]/,/[a-z,A-Z]/]
     },
     match: /(0\d)(0\d)(\d)(\d{2})([a-z,A-Z]{1,3})/,
     unmask: ['_'],
