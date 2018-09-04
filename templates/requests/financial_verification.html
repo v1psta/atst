@@ -27,6 +27,25 @@
     ) }}
   {% endif %}
 
+  {% block form_action %}
+    {% if extended %}
+      <form method='POST' action="{{ url_for('requests.financial_verification', request_id=request_id, extended=True) }}" autocomplete="off" enctype="multipart/form-data">
+    {% else %}
+      <form method='POST' action="{{ url_for('requests.financial_verification', request_id=request_id) }}" autocomplete="off">
+    {% endif %}
+  {% endblock %}
+
+  {{ f.csrf_token }}
+  {% block form %}
+    {% autoescape false %}
+
+    {% if f.errors %}
+      {{ Alert('There were some errors',
+        message="<p>Please see below.</p>",
+        level='error'
+      ) }}
+    {% endif %}
+
   <div class="panel">
 
     <div class="panel__heading">
@@ -36,26 +55,9 @@
 
     <div class="panel__content">
 
-      {% block form_action %}
-        {% if extended %}
-          <form method='POST' action="{{ url_for('requests.financial_verification', request_id=request_id, extended=True) }}" autocomplete="off" enctype="multipart/form-data">
-        {% else %}
-          <form method='POST' action="{{ url_for('requests.financial_verification', request_id=request_id) }}" autocomplete="off">
-        {% endif %}
-      {% endblock %}
-
-      {{ f.csrf_token }}
-      {% block form %}
-        {% autoescape false %}
-
-        {% if f.errors %}
-          {{ Alert('There were some errors',
-            message="<p>Please see below.</p>",
-            level='error'
-          ) }}
-        {% endif %}
-
         <p>In order to get you access to the JEDI Cloud, we will need you to enter the details below that will help us verify and account for your Task Order.</p>
+
+        <hr />
 
         {% if extended %}
           <fieldset class="form__sub-fields form__sub-fields--warning">
@@ -155,13 +157,18 @@
 
 
       {% endautoescape %}
-      {% endblock form %}
-      {% block next %}
-      <input type='submit' class='usa-button usa-button-primary' value='Save & Continue' />
-      {% endblock %}
-      </form>
+
     </div>
   </div>
+
+  {% endblock form %}
+  {% block next %}
+  <div class='action-group'>
+    <input type='submit' class='usa-button usa-button-primary' value='Save & Continue' />
+  </div>
+  {% endblock %}
+  </form>
+
 </div>
 </financial>
 
