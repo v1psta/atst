@@ -64,10 +64,10 @@ export default {
     validationError: 'Please enter a valid PE number. Note that it should be 7 digits followed by 1-3 letters, and should have a zero as the first and third digits.'
   },
   treasuryCode: {
-    mask: createNumberMask({ prefix: '0', allowDecimal: false, allowLeadingZeroes: true, includeThousandsSeparator: false }),
+    mask: createNumberMask({ prefix: '', allowDecimal: false, allowLeadingZeroes: true, includeThousandsSeparator: false }),
     match: /^0*([1-9]{4}|[1-9]{6})$/,
     unmask: [],
-    validationError: 'Please enter a valid Program Treasury Code. Note that it should be a four digit or six digit number, prefixed by one or more zeros.'
+    validationError: 'Please enter a valid Program Treasury Code. Note that it should be a four digit or six digit number, optionally prefixed by one or more zeros.'
   },
   baCode: {
     mask: val => {
