@@ -145,6 +145,12 @@ def view_member(workspace_id, member_id):
 )
 def update_member(workspace_id, member_id):
     workspace = Workspaces.get(g.current_user, workspace_id)
+    Authorization.check_workspace_permission(
+        g.current_user,
+        workspace,
+        Permissions.ASSIGN_AND_UNASSIGN_ATAT_ROLE,
+        "edit this workspace user",
+    )
     member = WorkspaceUsers.get(workspace_id, member_id)
     form = UpdateMemberForm(http_request.form)
 
