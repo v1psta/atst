@@ -18,44 +18,7 @@
 
         <p>Ongoing maintainence for Death Star (a moon-sized Imperial military battlestation armed with a planet-destroying superlaser). Its definitely hasn't been sabotaged from the start.</p>
 
-        {% with data = {
-            "primary_poc": {
-                "am_poc": False,
-                "dodid_poc": "1234567890",
-                "email_poc": "fake@email.com",
-                "fname_poc": "Amanda",
-                "lname_poc": "Adamson",
-            },
-            "details_of_use": {
-                "jedi_usage": "adf",
-                "start_date": "2018-08-08",
-                "cloud_native": "yes",
-                "dollar_value": 500000,
-                "dod_component": "Air Force, Department of the",
-                "data_transfers": "Less than 100GB",
-                "expected_completion_date": "Less than 1 month",
-                "jedi_migration": "yes",
-                "num_software_systems": 1,
-                "number_user_sessions": 2,
-                "average_daily_traffic": 1,
-                "engineering_assessment": "yes",
-                "technical_support_team": "yes",
-                "estimated_monthly_spend": 100,
-                "average_daily_traffic_gb": 4,
-                "rationalization_software_systems": "yes",
-                "organization_providing_assistance": "In-house staff",
-            },
-            "information_about_you": {
-                "citizenship": "United States",
-                "designation": "military",
-                "phone_number": "1234567890",
-                "email_request": "fake@email.mil",
-                "fname_request": "Amanda",
-                "lname_request": "Adamson",
-                "service_branch": "Air Force, Department of the",
-                "date_latest_training": "2018-08-06",
-            }
-          }, service_branches=service_branches %}
+        {% with data=data, service_branches=service_branches %}
           {% include "requests/_review.html" %}
         {% endwith %}
 

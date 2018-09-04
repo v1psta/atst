@@ -70,7 +70,9 @@ class RequestsIndex(object):
             else "-"
         )
 
-        if Requests.is_pending_financial_verification(request):
+        if viewing_role == "ccpo":
+            edit_link = url_for("requests.approval", request_id=request.id)
+        elif Requests.is_pending_financial_verification(request):
             edit_link = url_for(
                 "requests.financial_verification", request_id=request.id
             )
