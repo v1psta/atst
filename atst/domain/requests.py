@@ -154,14 +154,6 @@ class Requests(object):
         return request
 
     @classmethod
-    def action_required_by(cls, request):
-        return {
-            RequestStatus.STARTED: "mission_owner",
-            RequestStatus.PENDING_FINANCIAL_VERIFICATION: "mission_owner",
-            RequestStatus.PENDING_CCPO_APPROVAL: "ccpo",
-        }.get(request.status)
-
-    @classmethod
     def should_auto_approve(cls, request):
         try:
             dollar_value = request.body["details_of_use"]["dollar_value"]
