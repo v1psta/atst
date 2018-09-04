@@ -87,6 +87,8 @@ class Requests(object):
 
     @classmethod
     def submit(cls, request):
+        request = Requests.set_status(request, RequestStatus.SUBMITTED)
+
         new_status = None
         if Requests.should_auto_approve(request):
             new_status = RequestStatus.PENDING_FINANCIAL_VERIFICATION

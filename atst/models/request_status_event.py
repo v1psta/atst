@@ -10,6 +10,7 @@ from atst.models.types import Id
 
 class RequestStatus(Enum):
     STARTED = "Started"
+    SUBMITTED = "Submitted"
     PENDING_FINANCIAL_VERIFICATION = "Pending Financial Verification"
     PENDING_CCPO_APPROVAL = "Pending CCPO Approval"
     CHANGES_REQUESTED = "Changes Requested"
