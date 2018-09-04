@@ -108,13 +108,13 @@ class BaseFinancialForm(ValidatedForm):
     pe_id = StringField(
         "Program Element Number",
         description="PE numbers help the Department of Defense identify which offices' budgets are contributing towards this resource use. <br/><em>It should be 7 digits followed by 1-3 letters, and should have a zero as the first and third digits.</em>",
-        validators=[Required()]
+        validators=[Required()],
     )
 
     treasury_code = StringField(
         "Program Treasury Code",
         description="Program Treasury Code (or Appropriations Code) identifies resource types. <br/> <em>It should be a four digit or six digit number, optionally prefixed by one or more zeros.</em>",
-        validators=[Required(), Regexp(TREASURY_CODE_REGEX)]
+        validators=[Required(), Regexp(TREASURY_CODE_REGEX)],
     )
 
     ba_code = StringField(
@@ -130,22 +130,13 @@ class BaseFinancialForm(ValidatedForm):
 
     office_co = StringField("KO Office", validators=[Required()])
 
-    fname_cor = StringField(
-        "COR First Name", validators=[Required()]
-    )
+    fname_cor = StringField("COR First Name", validators=[Required()])
 
-    lname_cor = StringField(
-        "COR Last Name", validators=[Required()]
-    )
+    lname_cor = StringField("COR Last Name", validators=[Required()])
 
-    email_cor = EmailField(
-        "COR Email",
-        validators=[Required(), Email()],
-    )
+    email_cor = EmailField("COR Email", validators=[Required(), Email()])
 
-    office_cor = StringField(
-        "COR Office", validators=[Required()]
-    )
+    office_cor = StringField("COR Office", validators=[Required()])
 
 
 class FinancialForm(BaseFinancialForm):
