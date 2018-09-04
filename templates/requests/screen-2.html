@@ -3,6 +3,7 @@
 {% from "components/alert.html" import Alert %}
 {% from "components/text_input.html" import TextInput %}
 {% from "components/options_input.html" import OptionsInput %}
+{% from "components/date_input.html" import DateInput %}
 
 {% block subtitle %}
 <h2>Information About You</h2>
@@ -29,5 +30,5 @@
 {{ OptionsInput(f.service_branch) }}
 {{ OptionsInput(f.citizenship) }}
 {{ OptionsInput(f.designation) }}
-{{ TextInput(f.date_latest_training,tooltip="When was the last time you completed the IA training? <br> Information Assurance (IA) training is an important step in cyber awareness.",placeholder="MM / DD / YYYY", validation="date") }}
+{{ DateInput(f.date_latest_training,tooltip="When was the last time you completed the IA training? <br> Information Assurance (IA) training is an important step in cyber awareness.",placeholder="MM / DD / YYYY", validation="date") }}
 {% endblock %}

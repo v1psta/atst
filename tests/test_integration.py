@@ -12,6 +12,20 @@ def screens(app):
     return JEDIRequestFlow(3).screens
 
 
+def serialize_dates(data):
+    if not data:
+        return data
+
+    dates = {
+        k: v.strftime("%m/%d/%Y") for k, v in data.items() if hasattr(v, "strftime")
+    }
+
+    new_data = data.copy()
+    new_data.update(dates)
+
+    return new_data
+
+
 def test_stepthrough_request_form(user_session, screens, client):
     user = UserFactory.create()
     user_session(user)
@@ -46,7 +60,8 @@ def test_stepthrough_request_form(user_session, screens, client):
     for i in range(1, len(screens)):
         # get appropriate form data to POST for this section
         section = screens[i - 1]["section"]
-        post_data = urlencode(mock_body[section])
+        massaged = serialize_dates(mock_body[section])
+        post_data = urlencode(massaged)
 
         effective_url, resp = take_a_step(i, req=req_id, data=post_data)
         req_id = effective_url.split("/")[-1]

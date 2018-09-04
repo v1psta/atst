@@ -1,0 +1,10 @@
+{% from "components/text_input.html" import TextInput %}
+
+{% macro DateInput(field, tooltip='', placeholder='', validation='anything', paragraph=False) -%}
+  {% if field.data %}
+    {% set input_value=field.data.strftime("%m/%d/%Y") %}
+  {% else %}
+    {% set input_value=None %}
+  {% endif %}
+  {{ TextInput(field, initial_value=input_value, tooltip=tooltip, placeholder=placeholder, validation=validation, paragraph=paragraph) }}
+{% endmacro %}

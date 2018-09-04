@@ -1,8 +1,8 @@
-from wtforms.fields.html5 import IntegerField
+from wtforms.fields.html5 import DateField, IntegerField
 from wtforms.fields import RadioField, TextAreaField
 from wtforms.validators import Optional, Required
 
-from .fields import DateField, SelectField
+from .fields import SelectField
 from .forms import ValidatedForm
 from .data import (
     SERVICE_BRANCHES,
@@ -135,4 +135,5 @@ class RequestForm(ValidatedForm):
     start_date = DateField(
         description="When do you expect to start using the JEDI Cloud (not for billing purposes)?",
         validators=[Required()],
+        format="%m/%d/%Y",
     )
