@@ -57,7 +57,7 @@ def test_successful_login_redirect_ccpo(client, monkeypatch):
     )
 
     assert resp.status_code == 302
-    assert "home" in resp.headers["Location"]
+    assert "requests" in resp.headers["Location"]
     assert session["user_id"]
 
 

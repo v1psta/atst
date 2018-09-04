@@ -64,6 +64,6 @@ def login_dev():
     session["user_id"] = user.id
 
     if user.atat_role.name == "ccpo":
-        return redirect(url_for("atst.home"))
+        return redirect(url_for("requests.requests_index"))
     else:
         return redirect(url_for("requests.requests_index"))
