@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% from "components/icon.html" import Icon %}
+{% from "components/alert.html" import Alert %}
 
 {% block content %}
 
@@ -68,56 +69,107 @@
       </header>
 
       <div class='panel__content'>
-        <p>Here is some good text explaining what the CCPO needs to do in order to approve the request. This text should also explain why we are asking for multiple people's names and the risk of boiling the ocean.</p>
+
+        <div class="form__sub-fields">
+
+          <h3>Comments to End User</h3>
+
+          You may leave a comment for the end user explaining what changes are being requested or why further discussion is needed about this request. The user can then re-submit the request with your changes requested or may initiate an offline message (via email) to respond to the CCPO directly. <br> This notes are optional and <b>will be visible to end-users</b>.
+
+          <div class='usa-input'>
+            <label for='notes'>Comments <em>(optional)</em></label>
+            <textarea id='notes' placeholder='Add notes or comments explaining what changes are being requested or why further discussion is needed about this request.'/></textarea>
+          </div>
 
 
-        <div class='usa-input'>
-          <label for='notes'>Notes</label>
-          <textarea id='notes' placeholder='Add notes or comments related to the approval or disapproval of this request.'/></textarea>
         </div>
+
+        <div class="form-row">
+          <div class="form-col">
+            <h3>Authorizing Officials</h3>
+            <p>This section is not visible to the end user. It will only be visible to CCPO staff.</p>
+            <p>Provide the name of the key officials for both parties that have authorized this request to move forward.</p>
+          </div>
+        </div>
+        <h4 class="h3">Mission Authorizing Official</h4>
 
         <div class='form-row'>
           <div class='form-col'>
+
             <div class='usa-input'>
-              <label for='mo-behalf-name'>Mission Owner approval on behalf of</label>
-              <input id='mo-behalf-name' type='text' placeholder='Name of approving officer'/>
+              <label for='mo-behalf-fname'>First Name</label>
+              <input id='mo-behalf-fname' type='text' placeholder='First name of mission authorizing official' tabindex='1' />
             </div>
 
             <div class='usa-input'>
               <label for='mo-behalf-email'>Mission Owner e-mail</label>
-              <input id='mo-behalf-email' type='email' placeholder='i.e. name@mail.mil'/>
+              <input id='mo-behalf-email' type='email' placeholder='i.e. name@mail.mil' tabindex='3'/>
+            </div>
+
+          </div>
+
+
+          <div class='form-col'>
+
+            <div class='usa-input'>
+              <label for='mo-behalf-lname'>Last Name</label>
+              <input id='mo-behalf-lname' type='text' placeholder='Last name of mission authorizing official' tabindex='2'/>
             </div>
 
             <div class='usa-input'>
               <label for='mo-behalf-phone'>Mission Owner phone number</label>
-              <input id='mo-behalf-phone' type='tel' placeholder='i.e. (123) 456-7890'/>
+              <input id='mo-behalf-phone' type='tel' placeholder='i.e. (123) 456-7890' tabindex='4'/>
             </div>
+
           </div>
 
-          <div class='form-col'>
+        </div>
+
+
+        <h4 class="h3">CCPO Authorizing Official</h4>
+
+        <div class="form-row">
+          <div class="form-col">
+
             <div class='usa-input'>
-              <label for='ccpo-behalf-name'>CCPO approval on behalf of</label>
-              <input id='ccpo-behalf-name' type='text' placeholder='Name of approving officer'/>
+              <label for='ccpo-behalf-fname'>First Name</label>
+              <input id='ccpo-behalf-fname' type='text' placeholder='Name of approving officer' tabindex='5' />
             </div>
 
             <div class='usa-input'>
               <label for='ccpo-behalf-email'>CCPO e-mail</label>
-              <input id='ccpo-behalf-email' type='email' placeholder='i.e. name@mail.mil'/>
+              <input id='ccpo-behalf-email' type='email' placeholder='i.e. name@mail.mil' tabindex='7' />
+            </div>
+
+
+
+          </div>
+
+          <div class="form-col">
+
+            <div class='usa-input'>
+              <label for='ccpo-behalf-lname'>Last Name</label>
+              <input id='ccpo-behalf-lname' type='text' placeholder='Name of approving officer' tabindex='6' />
             </div>
 
             <div class='usa-input'>
               <label for='ccpo-behalf-phone'>CCPO phone number</label>
-              <input id='ccpo-behalf-phone' type='tel' placeholder='i.e. (123) 456-7890'/>
+              <input id='ccpo-behalf-phone' type='tel' placeholder='i.e. (123) 456-7890' tabindex='8' />
             </div>
+
+
           </div>
         </div>
+
       </div>
+
+
     </section>
 
     <section class='action-group'>
-      <a href='/' class='usa-button usa-button-big'>Approve Request</a>
-      <a href='/' class='usa-button usa-button-big usa-button-secondary'>Deny Request</a>
-      <a href='/' class='icon-link'>
+      <a href='#' class='usa-button usa-button-big'>Approve Request</a>
+      <a href='#' class='usa-button usa-button-big usa-button-secondary'>Mark as Changes Requested</a>
+      <a href='#' class='icon-link'>
         {{ Icon('x') }}
         <span>Cancel</span>
       </a>
