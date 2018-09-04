@@ -37,6 +37,7 @@ class UserFactory(factory.alchemy.SQLAlchemyModelFactory):
         role = Roles.get(atat_role_name)
         return cls.create(atat_role=role, **kwargs)
 
+
 class RequestStatusEventFactory(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
         model = RequestStatusEvent

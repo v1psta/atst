@@ -9,7 +9,7 @@ def test_action_required_mission_owner():
     Requests.submit(requests[0])
     context = RequestsIndex(creator).execute()
 
-    assert context['requests'][0]['action_required'] == False
+    assert context["requests"][0]["action_required"] == False
 
 
 def test_action_required_ccpo():
@@ -20,4 +20,4 @@ def test_action_required_ccpo():
     ccpo = UserFactory.from_atat_role("ccpo")
     context = RequestsIndex(ccpo).execute()
 
-    assert context['num_action_required'] == 1
+    assert context["num_action_required"] == 1
