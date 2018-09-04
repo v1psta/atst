@@ -143,7 +143,9 @@ class Requests(object):
 
     @classmethod
     def set_status(cls, request: Request, status: RequestStatus):
-        status_event = RequestStatusEvent(new_status=status)
+        status_event = RequestStatusEvent(
+            new_status=status, revision=request.latest_revision
+        )
         request.status_events.append(status_event)
         return request
 

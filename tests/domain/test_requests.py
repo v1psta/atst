@@ -66,7 +66,9 @@ def test_should_allow_submission():
     assert Requests.should_allow_submission(new_request)
 
     RequestStatusEventFactory.create(
-        request=new_request, new_status=RequestStatus.CHANGES_REQUESTED
+        request=new_request,
+        new_status=RequestStatus.CHANGES_REQUESTED,
+        revision=new_request.latest_revision,
     )
     assert Requests.should_allow_submission(new_request)
 
@@ -101,6 +103,7 @@ def test_status_count(session):
     RequestStatusEventFactory.create(
         sequence=2,
         request_id=request2.id,
+        revision=request2.latest_revision,
         new_status=RequestStatus.PENDING_FINANCIAL_VERIFICATION,
     )
 
@@ -169,3 +172,9 @@ def test_update_financial_verification_with_invalid_task_order():
         request.body["financial_verification"]["task_order_number"]
         == request_financial_data["task_order_number"]
     )
+
+
+def test_set_status_sets_revision():
+    request = RequestFactory.create()
+    Requests.set_status(request, RequestStatus.APPROVED)
+    assert request.latest_revision == request.status_events[-1].revision

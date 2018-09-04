@@ -56,16 +56,27 @@ class RequestFactory(factory.alchemy.SQLAlchemyModelFactory):
         model = Request
 
     id = factory.Sequence(lambda x: uuid4())
-    status_events = factory.RelatedFactory(
-        RequestStatusEventFactory, "request", new_status=RequestStatus.STARTED
-    )
     creator = factory.SubFactory(UserFactory)
     revisions = factory.LazyAttribute(
         lambda r: [RequestFactory.create_initial_revision(r)]
     )
+    status_events = factory.RelatedFactory(
+        RequestStatusEventFactory,
+        "request",
+        new_status=RequestStatus.STARTED,
+        revision=factory.LazyAttribute(lambda se: se.factory_parent.revisions[-1]),
+    )
 
     class Params:
         initial_revision = None
+
+    @classmethod
+    def create_initial_status_event(cls, request):
+        return RequestStatusEventFactory(
+            request=request,
+            new_status=RequestStatus.STARTED,
+            revision=request.revisions,
+        )
 
     @classmethod
     def create_initial_revision(cls, request, dollar_value=1000000):
