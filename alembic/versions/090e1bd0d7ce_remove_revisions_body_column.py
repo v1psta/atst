@@ -13,6 +13,7 @@ from sqlalchemy.dialects import postgresql
 from atst.models.request import Request
 from atst.utils import deep_merge
 from atst.domain.requests import create_revision_from_request_body
+from atst.domain.task_orders import TaskOrders
 
 
 # revision identifiers, used by Alembic.
@@ -30,9 +31,21 @@ def delete_two_deep(body, key1, key2):
     return body
 
 
+TASK_ORDER_DATA = TaskOrders.TASK_ORDER_DATA + ["task_order_id", "csrf_token"]
+
+def create_revision(body):
+    financials = body.get("financial_verification")
+    if financials:
+        for column in TASK_ORDER_DATA:
+            if column in financials:
+                del(financials[column])
+
+    return create_revision_from_request_body(body)
+
+
 def massaged_revision(body):
     try:
-        return create_revision_from_request_body(body)
+        return create_revision(body)
     except ValueError:
         # some of the data on staging has out-of-range dates like "02/29/2019";
         # we don't know how to coerce them to valid dates, so we remove those
@@ -40,8 +53,9 @@ def massaged_revision(body):
         body = delete_two_deep(body, "details_of_use", "start_date")
         body = delete_two_deep(body, "information_about_you", "date_latest_training")
 
-        return create_revision_from_request_body(body)
+        return create_revision(body)
 
+from uuid import UUID
 
 def upgrade():
     Session = sessionmaker(bind=op.get_bind())
@@ -49,13 +63,13 @@ def upgrade():
     for request in session.query(Request).all():
         (body,) = session.execute("SELECT body from requests WHERE id='{}'".format(request.id)).fetchone()
 
-        # this data should already exist as a task_order
-        if body.get("financial_verification"):
-            del(body["financial_verification"])
-
         revision = massaged_revision(body)
         request.revisions.append(revision)
+
+        session.add(revision)
         session.add(request)
+
+    session.commit()
 
     op.drop_column('requests', 'body')
 
