@@ -37,7 +37,8 @@ def seed_db():
         Projects.create(
             workspace=workspace,
             name="First Project",
-            description="This is our first project."
+            description="This is our first project.",
+            environment_names=["dev", "staging", "prod"]
         )
 
 

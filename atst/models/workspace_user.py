@@ -10,5 +10,9 @@ class WorkspaceUser(object):
         )
         return set(workspace_permissions).union(atat_permissions)
 
+    @property
+    def workspace(self):
+        return self.workspace_role.workspace
+
     def workspace_id(self):
         return self.workspace_role.workspace_id

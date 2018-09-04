@@ -44,13 +44,13 @@
                   v-bind:checked='value === choice[0]'
                   v-on:change='change'/>
                 <label v-bind:for="'{{ field.name }}_' + choice[0]">
-                  <template v-if='choices[2]'>
+                  <template v-if='choice[1].description'>
                     <dl>
-                      <dt v-html='choice[1]'></dt>
-                      <dd v-html='choice[2]'></dd>
+                      <dt v-html='choice[1].name'></dt>
+                      <dd v-html='choice[1].description'></dd>
                     </dl>
                   </template>
-                  <span v-else v-html='choice[1]'>
+                  <span v-else v-html='choice[1].name'>
                 </label>
               </template>
             </li>

@@ -1,6 +1,7 @@
 {% extends "base_workspace.html" %}
 
 {% from "components/empty_state.html" import EmptyState %}
+{% from "components/alert.html" import Alert %}
 
 {% block workspace_content %}
 
@@ -18,6 +19,19 @@
 
 
 {% else %}
+
+{% set new_member_name = request.args.get("newMemberName") %}
+{% if new_member_name %}
+    {% set message -%}
+      <p>{{ new_member_name }} was successfully invited via email to this workspace. They do not yet have access to any environments.</p>
+      <p><a href="#">Add environment access.</a></p>
+    {%- endset %}
+
+  {{ Alert('Member added successfully',
+    message=message,
+    level='success'
+  ) }}
+{% endif %}
 
   <form class='search-bar'>
     <div class='usa-input search-input'>

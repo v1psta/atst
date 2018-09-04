@@ -7,6 +7,8 @@ from atst.domain.exceptions import NotFoundError, UnauthorizedError
 from atst.domain.roles import Roles
 from atst.domain.authz import Authorization
 from atst.models.permissions import Permissions
+from atst.domain.users import Users
+from atst.domain.workspace_users import WorkspaceUsers
 
 
 class Workspaces(object):
@@ -60,6 +62,24 @@ class Workspaces(object):
             .all()
         )
         return workspaces
+
+    @classmethod
+    def create_member(cls, user, workspace, data):
+        if not Authorization.has_workspace_permission(
+            user, workspace, Permissions.ASSIGN_AND_UNASSIGN_ATAT_ROLE
+        ):
+            raise UnauthorizedError(user, "create workspace member")
+
+        new_user = Users.get_or_create_by_dod_id(
+            data["dod_id"],
+            first_name=data["first_name"],
+            last_name=data["last_name"],
+            email=data["email"],
+        )
+        workspace_user = WorkspaceUsers.add(
+            new_user, workspace.id, data["workspace_role"]
+        )
+        return workspace_user
 
     @classmethod
     def _create_workspace_role(cls, user, workspace, role_name):
