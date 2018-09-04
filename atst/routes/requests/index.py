@@ -12,7 +12,7 @@ def map_request(request):
     app_count = request.body.get("details_of_use", {}).get("num_software_systems", 0)
     annual_usage = request.annual_spend
     last_submission_timestamp = (
-        request.last_submission_timestamp.format("M/DD/YYY")
+        request.last_submission_timestamp.format("M/DD/YYYY")
         if request.last_submission_timestamp
         else "-"
     )
