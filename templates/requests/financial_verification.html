@@ -68,33 +68,33 @@
             </template>
 
             {{ TextInput(
-              f.clin_0001,placeholder="50,000",
-              validation='integer'
+              f.clin_0001,
+              validation='dollars'
             ) }}
 
             {{ TextInput(
-              f.clin_0003,placeholder="13,000",
-              validation='integer'
+              f.clin_0003,
+              validation='dollars'
             ) }}
 
             {{ TextInput(
-              f.clin_1001,placeholder="30,000",
-              validation='integer'
+              f.clin_1001,
+              validation='dollars'
             ) }}
 
             {{ TextInput(
-              f.clin_1003,placeholder="7,000",
-              validation='integer'
+              f.clin_1003,
+              validation='dollars'
             ) }}
 
             {{ TextInput(
-              f.clin_2001,placeholder="30,000",
-              validation='integer'
+              f.clin_2001,
+              validation='dollars'
             ) }}
 
             {{ TextInput(
-              f.clin_2003,placeholder="7,000",
-              validation='integer'
+              f.clin_2003,
+              validation='dollars'
             ) }}
 
             <div class="usa-input usa-input--validation--anything {% if f.task_order.errors %} usa-input--error {% endif %}">
