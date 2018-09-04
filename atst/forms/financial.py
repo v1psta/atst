@@ -101,7 +101,7 @@ class BaseFinancialForm(ValidatedForm):
 
     uii_ids = NewlineListField(
         "Unique Item Identifier (UII)s related to your application(s) if you already have them.",
-        description="If you have more than on UII, place each one on a new line.",
+        description="If you have more than one UII, place each one on a new line.",
         validators=[Required()],
     )
 
