@@ -1,0 +1,65 @@
+version: 2.0
+jobs:
+  build:
+    docker:
+      - image: registry.atat.codes:443/atat-app-builder:circleci
+        auth:
+          username: $REGISTRY_USERNAME
+          password: $REGISTRY_PASSWORD
+        environment:
+          KEEP_EXISTING_VENV: true
+          PGHOST: localhost
+          PGUSER: root
+          PGDATABASE: circle_test
+          REDIS_URI: redis://localhost:6379
+      - image: circleci/postgres:9.6.5-alpine-ram
+      - image: circleci/redis:4-alpine3.8
+    steps:
+      - checkout
+      - run:
+          name: "Clone Submodules"
+          command: |
+            git submodule update --init --recursive
+      - restore_cache:
+          name: "Load Cache: Pipenv References"
+          keys:
+            - pipenv-v1-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+            - pipenv-v1-{{ .Branch }}-
+            - pipenv-v1-
+      - restore_cache:
+          name: "Load Cache: Python Venv"
+          keys:
+            - venv-v1-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+            - venv-v1-{{ .Branch }}-
+            - venv-v1-
+      - restore_cache:
+          name: "Load Cache: Yarn"
+          keys:
+            - yarn-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
+            - yarn-v1-{{ .Branch }}-
+            - yarn-v1-
+      - run: ./script/setup
+      - save_cache:
+          name: "Save Cache: Pipenv Refrences"
+          paths:
+            - ~/.local/share
+          key: pipenv-v1-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+      - save_cache:
+          name: "Save Cache: Python Venv"
+          paths:
+            - ./.venv
+          key: venv-v1-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+      - save_cache:
+          name: "Save Cache: Yarn"
+          paths:
+            - ~/.cache/yarn
+          key: yarn-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
+      - restore_cache:
+          keys:
+            - disa-crls
+      - run: ./script/sync-crls
+      - save_cache:
+          paths:
+            - ./crl
+          key: disa-crls
+      - run: ./script/cibuild

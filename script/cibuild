@@ -7,17 +7,11 @@ source "$(dirname "${0}")"/../script/include/global_header.inc.sh
 # Run lint/style checks and unit tests
 export FLASK_ENV=ci
 
-# Enable database resetting
-RESET_DB="true"
-
 # Define all relevant python files and directories for this app
-PYTHON_FILES="./app.py ./atst ./config"
+PYTHON_FILES="./app.py ./atst/** ./config"
 
 # Enable Python testing
 RUN_PYTHON_TESTS="true"
-
-# Compile assets
-yarn build
 
 # Check python formatting
 source ./script/format check

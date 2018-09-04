@@ -114,6 +114,12 @@ def make_config():
     # ENV_CONFIG will override values in BASE_CONFIG.
     config.read(config_files)
 
+    # Check for ENV variables as a final source of overrides
+    for confsetting in config.options("default"):
+        env_override = os.getenv(confsetting.upper())
+        if env_override:
+            config.set("default", confsetting, env_override)
+
     # Assemble DATABASE_URI value
     database_uri = (
         "postgres://"
