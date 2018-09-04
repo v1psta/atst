@@ -46,10 +46,7 @@ def login_redirect():
     user = auth_context.get_user()
     session["user_id"] = user.id
 
-    if user.atat_role.name == "ccpo":
-        return redirect(url_for("requests.requests_index"))
-    else:
-        return redirect(url_for("requests.requests_index"))
+    return redirect(url_for("requests.requests_index"))
 
 
 def _is_valid_certificate(request):
