@@ -2,6 +2,7 @@ from sqlalchemy import Column, func, ForeignKey
 from sqlalchemy.types import DateTime
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import relationship
+import pendulum
 
 from atst.models import Base
 from atst.models.types import Id
@@ -51,10 +52,11 @@ class Request(Base):
         return False
 
     @property
-    def last_submission_date(self):
+    def last_submission_timestamp(self):
         def _is_submission(status_event):
             return status_event.new_status == RequestStatus.SUBMITTED
 
         last_submission = first_or_none(_is_submission, reversed(self.status_events))
         if last_submission:
-            return last_submission.time_created
+            return pendulum.instance(last_submission.time_created)
+        return None
