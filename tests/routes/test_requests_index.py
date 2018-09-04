@@ -30,11 +30,13 @@ def test_ccpo_sees_approval_screen():
     request = RequestFactory.create()
     Requests.submit(request)
     ccpo_context = RequestsIndex(ccpo).execute()
-    assert ccpo_context["requests"][0]["edit_link"] == url_for(
-        "requests.approval", request_id=request.id
+    assert (
+        ccpo_context["requests"][0]["edit_link"]
+        == url_for("requests.approval", request_id=request.id)
     )
 
     mo_context = RequestsIndex(request.creator).execute()
-    assert mo_context["requests"][0]["edit_link"] != url_for(
-        "requests.approval", request_id=request.id
+    assert (
+        mo_context["requests"][0]["edit_link"]
+        != url_for("requests.approval", request_id=request.id)
     )
