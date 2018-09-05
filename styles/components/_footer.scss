@@ -1,6 +1,29 @@
 .app-footer {
   background-color: $color-gray-lightest;
   border-top: 1px solid $color-gray-lighter;
-  padding-left: $gap*4;
-  padding-bottom: $gap*2;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  h5,
+  .browser-support {
+    margin: 0;
+    padding: $gap * 2;
+  }
+
+  .browser-support {
+    color: $color-gray;
+    text-align: right;
+    dt, dd {
+      @include h5;
+      display: inline-block;
+    }
+
+    dd {
+      font-weight: normal;
+      &::before {
+        content: '・';
+      }
+    }
+  }
 }
