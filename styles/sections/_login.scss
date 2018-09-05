@@ -1,3 +1,23 @@
-.login-area {
- text-align: center;
+.login-layout {
+  align-items: center;
+  justify-content: center;
+
+  .login-container {
+    max-width: 70rem;
+
+    .login-banner {
+      text-align: center;
+      margin-bottom: $gap * 10;
+
+      .login-banner__heading {
+        @include h1;
+      }
+
+      .login-banner__logo {
+        display: block;
+        max-width: 15rem;
+        margin: ($gap * 2) auto;
+      }
+    }
+  }
 }
