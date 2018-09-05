@@ -5,7 +5,6 @@ import pytest
     "path",
     (
         "/",
-        "/home",
         "/workspaces",
         "/requests",
         "/requests/new/1",
