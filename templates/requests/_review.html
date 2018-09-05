@@ -2,6 +2,20 @@
   <span class='label label--error'>Response Required</span>
 {%- endmacro %}
 
+{% macro DefinitionReviewField(title, section, item_name, filter=None, filter_args=[]) -%}
+  <div>
+    <dt>{{ title }}</dt>
+    <dd>
+      {% if data[section] and data[section][item_name] %}
+        {{ data[section][item_name] | findFilter(filter, filter_args) }}
+      {% else %}
+        {{ RequiredLabel() }}
+      {% endif %}
+    </dd>
+  </div>
+{% endmacro %}
+
+
 <hr>
 <h2>
   Details of Use
@@ -14,161 +28,51 @@
 </h2>
 
 <dl>
-  <div>
-    <dt>DoD Component</dt>
-    <dd>
-      {% if data['details_of_use']['dod_component'] %}
-        {{ data['details_of_use']['dod_component'] | getOptionLabel(service_branches) }}
-      {% else %}
-        {{ RequiredLabel() }}
-      {% endif %}
-    </dd>
-  </div>
 
-  <div>
-    <dt>JEDI Usage</dt>
-    <dd>{{ data['details_of_use']['jedi_usage'] or RequiredLabel() }}</dd>
-  </div>
+  {{ DefinitionReviewField("DoD Component", "details_of_use", "dod_component", filter="getOptionLabel", filter_args=[service_branches]) }}
 
-  <div>
-    <dt>Number of software systems</dt>
-    <dd>
-      {% if data['details_of_use']['num_software_systems'] %}
-        {{ data['details_of_use']['num_software_systems'] | readableInteger }}
-      {% else %}
-        {{ RequiredLabel() }}
-      {% endif %}
-    </dd>
-  </div>
+  {{ DefinitionReviewField("JEDI Usage", "details_of_use", "jedi_usage") }}
 
-  <div>
-    <dt>JEDI Migration</dt>
-    <dd>{{ data['details_of_use']['jedi_migration'] or RequiredLabel() }}</dd>
-  </div>
+  {{ DefinitionReviewField("Number of software systems", "details_of_use", "num_software_systems", filter="readableInteger") }}
+
+  {{ DefinitionReviewField("JEDI Migration", "details_of_use", "jedi_migration") }}
 
   {% if data['details_of_use']['jedi_migration'] == 'yes' %}
-    <div>
-      <dt>Rationalization of Software Systems</dt>
-      <dd>{{ data['details_of_use']['rationalization_software_systems'] or RequiredLabel() }}</dd>
-    </div>
+    {{ DefinitionReviewField("Rationalization of Software Systems", "details_of_use", "rationalization_software_systems") }}
 
-    <div>
-      <dt>Technical Support Team</dt>
-      <dd>{{ data['details_of_use']['technical_support_team'] or RequiredLabel() }}</dd>
-    </div>
-
+    {{ DefinitionReviewField("Technical Support Team", "details_of_use", "technical_support_team") }}
 
     {% if data['details_of_use']['technical_support_team'] == 'yes' %}
-      <div>
-        <dt>Organization Providing Assistance</dt>
-        <dd>
-          {% if data['details_of_use']['organization_providing_assistance'] %}
-            {{ data['details_of_use']['organization_providing_assistance'] | getOptionLabel(assistance_org_types) }}
-          {% else %}
-            {{ RequiredLabel() }}
-          {% endif %}
-        </dd>
-      </div>
+      {{ DefinitionReviewField("Organization Providing Assistance", "details_of_use", "organization_providing_assistance", filter="getOptionLabel", filter_args=[assistance_org_types]) }}
     {% endif %}
 
-    <div>
-      <dt>Engineering Assessment</dt>
-      <dd>{{ data['details_of_use']['engineering_assessment'] or RequiredLabel() }}</dd>
-    </div>
+    {{ DefinitionReviewField("Engineering Assessment", "details_of_use", "engineering_assessment") }}
 
-    <div>
-      <dt>Data Transfers</dt>
-      <dd>
-        {% if data['details_of_use']['data_transfers'] %}
-          {{ data['details_of_use']['data_transfers'] | getOptionLabel(data_transfer_amounts) }}
-        {% else %}
-          {{ RequiredLabel() }}
-        {% endif %}
-      </dd>
-    </div>
+    {{ DefinitionReviewField("Data Transfers", "details_of_use", "data_transfers", filter="getOptionLabel", filter_args=[data_transfer_amounts]) }}
 
-    <div>
-      <dt>Expected Completion Date</dt>
-      <dd>
-        {% if data['details_of_use']['expected_completion_date'] %}
-          {{ data['details_of_use']['expected_completion_date'] | getOptionLabel(completion_date_ranges) }}
-        {% else %}
-          {{ RequiredLabel() }}
-        {% endif %}
-      </dd>
-    </div>
+    {{ DefinitionReviewField("Expected Completion Date", "details_of_use", "expected_completion_date", filter="getOptionLabel", filter_args=[completion_date_ranges]) }}
 
   {% else %}
 
-    <div>
-      <dt>Cloud Native</dt>
-      <dd>{{ data['details_of_use']['cloud_native'] or RequiredLabel() }}</dd>
-    </div>
+    {{ DefinitionReviewField("Cloud Native", "details_of_use", "cloud_native") }}
 
   {% endif %}
 
-  <div>
-    <dt>Estimated Monthly Spend</dt>
-    <dd>
-      {% if data['details_of_use']['estimated_monthly_spend'] %}
-        {{ data['details_of_use']['estimated_monthly_spend'] | dollars }}
-      {% else %}
-        {{ RequiredLabel() }}
-      {% endif %}
-    </dd>
-  </div>
+  {{ DefinitionReviewField("Estimated Monthly Spend", "details_of_use", "estimated_monthly_spend", filter="dollars") }}
 
   {% if jedi_request and jedi_request.annual_spend > annual_spend_threshold %}
 
-    <div>
-      <dt>Number of User Sessions</dt>
-      <dd>
-        {% if data['details_of_use']['number_user_sessions'] %}
-          {{ data['details_of_use']['number_user_sessions'] | readableInteger }}
-        {% else %}
-          {{ RequiredLabel() }}
-        {% endif %}
-      </dd>
-    </div>
+    {{ DefinitionReviewField("Number of User Sessions", "details_of_use", "number_user_sessions", filter="readableInteger") }}
 
-    <div>
-      <dt>Average Daily Traffic (Number of Requests)</dt>
-      <dd>
-        {% if data['details_of_use']['average_daily_traffic'] %}
-          {{ data['details_of_use']['average_daily_traffic'] | readableInteger }}
-        {% else %}
-          {{ RequiredLabel() }}
-        {% endif %}
-      </dd>
-    </div>
+    {{ DefinitionReviewField("Average Daily Traffic (Number of Requests)", "details_of_use", "average_daily_traffic", filter="readableInteger") }}
 
-    <div>
-      <dt>Average Daily Traffic (GB)</dt>
-      <dd>
-        {% if data['details_of_use']['average_daily_traffic_gb'] %}
-          {{ data['details_of_use']['average_daily_traffic_gb'] | readableInteger }} GB
-        {% else %}
-          {{ RequiredLabel() }}
-        {% endif %}
-      </dd>
-    </div>
+    {{ DefinitionReviewField("Average Daily Traffic (GB)", "details_of_use", "average_daily_traffic_gb", filter="readableInteger") }}
+
   {% endif %}
 
-  <div>
-    <dt>Total Spend</dt>
-    <dd>
-      {% if data['details_of_use']['dollar_value'] %}
-        {{ data['details_of_use']['dollar_value'] | dollars }}
-      {% else %}
-        {{ RequiredLabel() }}
-      {% endif %}
-    </dd>
-  </div>
+  {{ DefinitionReviewField("Total Spend", "details_of_use", "dollar_value", filter="dollars") }}
 
-  <div>
-    <dt>Start Date</dt>
-    <dd>{{ data['details_of_use']['start_date'] or RequiredLabel() }}</dd>
-  </div>
+  {{ DefinitionReviewField("Start Date", "details_of_use", "start_date") }}
 </dl>
 
 <hr>
@@ -183,63 +87,21 @@
 </h2>
 
 <dl>
-  <div>
-    <dt>First Name</dt>
-    <dd>{{ data['information_about_you']['fname_request'] or RequiredLabel() }}</dd>
-  </div>
+  {{ DefinitionReviewField("First Name", "information_about_you", "fname_request") }}
 
-  <div>
-    <dt>Last Name</dt>
-    <dd>{{ data['information_about_you']['lname_request'] or RequiredLabel() }}</dd>
-  </div>
+  {{ DefinitionReviewField("Last Name", "information_about_you", "lname_request") }}
 
-  <div>
-    <dt>Email Address</dt>
-    <dd>{{ data['information_about_you']['email_request'] or RequiredLabel() }}</dd>
-  </div>
+  {{ DefinitionReviewField("Email Address", "information_about_you", "email_request") }}
 
-  <div>
-    <dt>Phone Number</dt>
-    <dd>
-      {% if data['information_about_you']['phone_number'] %}
-        {{ data['information_about_you']['phone_number'] | usPhone }}
-      {% else %}
-        {{ RequiredLabel() }}
-      {% endif %}
-    </dd>
-  </div>
+  {{ DefinitionReviewField("Phone Number", "information_about_you", "phone_number", filter="usPhone") }}
 
-  <div>
-    <dt>Service Branch or Agency</dt>
-    <dd>
-      {% if data['information_about_you']['service_branch'] %}
-        {{ data['information_about_you']['service_branch'] | getOptionLabel(service_branches) }}
-      {% else %}
-        {{ RequiredLabel() }}
-      {% endif %}
-    </dd>
-  </div>
+  {{ DefinitionReviewField("Service Branch or Agency", "information_about_you", "service_branch", filter="getOptionLabel", filter_args=[service_branches]) }}
 
-  <div>
-    <dt>Citizenship</dt>
-    <dd>{{ data['information_about_you']['citizenship'] or RequiredLabel() }}</dd>
-  </div>
+  {{ DefinitionReviewField("Citizenship", "information_about_you", "citizenship") }}
 
-  <div>
-    <dt>Designation of Person</dt>
-    <dd>
-      {% if data['information_about_you']['designation'] %}
-        {{ data['information_about_you']['designation'] | capitalize }}
-      {% else %}
-        {{ RequiredLabel() }}
-      {% endif %}
-    </dd>
-  </div>
+  {{ DefinitionReviewField("Designation of Person", "information_about_you", "designation", filter="capitalize") }}
 
-  <div>
-    <dt>Latest Information Assurance (IA) Training completion date</dt>
-    <dd>{{ data['information_about_you']['date_latest_training'] or RequiredLabel() }}</dd>
-  </div>
+  {{ DefinitionReviewField("Latest Information Assurance (IA) Training completion date", "information_about_you", "date_latest_training") }}
 </dl>
 
 <hr>
@@ -254,25 +116,13 @@
 </h2>
 
 <dl>
-  <div>
-    <dt>POC First Name</dt>
-    <dd>{{ data['primary_poc']['fname_poc'] or RequiredLabel() }}</dd>
-  </div>
+  {{ DefinitionReviewField("POC First Name", "primary_poc", "fname_poc") }}
 
-  <div>
-    <dt>POC Last Name</dt>
-    <dd>{{ data['primary_poc']['lname_poc'] or RequiredLabel() }}</dd>
-  </div>
+  {{ DefinitionReviewField("POC Last Name", "primary_poc", "lname_poc") }}
 
-  <div>
-    <dt>POC Email Address</dt>
-    <dd>{{ data['primary_poc']['email_poc'] or RequiredLabel() }}</dd>
-  </div>
+  {{ DefinitionReviewField("POC Email Address", "primary_poc", "email_poc") }}
 
-  <div>
-    <dt>DOD ID</dt>
-    <dd>{{ data['primary_poc']['dodid_poc'] or RequiredLabel() }}</dd>
-  </div>
+  {{ DefinitionReviewField("DOD ID", "primary_poc", "dodid_poc") }}
 </dl>
 
 
