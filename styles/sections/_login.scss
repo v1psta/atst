@@ -1,13 +1,14 @@
 .login-layout {
-  align-items: center;
-  justify-content: center;
+  display: block;
 
   .login-container {
     max-width: 70rem;
+    margin-left: auto;
+    margin-right: auto;
 
     .login-banner {
       text-align: center;
-      margin-bottom: $gap * 10;
+      margin: ($gap * 5) 0 ($gap * 10);
 
       .login-banner__heading {
         @include h1;
