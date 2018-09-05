@@ -27,16 +27,16 @@ class RequestsIndex(object):
             [r for r in mapped_requests if r.get("action_required")]
         )
 
-        return dict(
-            requests=mapped_requests,
-            pending_financial_verification=False,
-            pending_ccpo_approval=False,
-            extended_view=True,
-            kpi_inprogress=Requests.in_progress_count(),
-            kpi_pending=Requests.pending_ccpo_count(),
-            kpi_completed=Requests.completed_count(),
-            num_action_required=num_action_required,
-        )
+        return {
+            "requests": mapped_requests,
+            "pending_financial_verification": False,
+            "pending_ccpo_approval": False,
+            "extended_view": True,
+            "kpi_inprogress": Requests.in_progress_count(),
+            "kpi_pending": Requests.pending_ccpo_count(),
+            "kpi_completed": Requests.completed_count(),
+            "num_action_required": num_action_required,
+        }
 
     def _non_ccpo_view(self, user):
         requests = Requests.get_many(creator=user)
@@ -49,13 +49,13 @@ class RequestsIndex(object):
         )
         pending_ccpo = any(Requests.is_pending_ccpo_approval(r) for r in requests)
 
-        return dict(
-            requests=mapped_requests,
-            pending_financial_verification=pending_fv,
-            pending_ccpo_approval=pending_ccpo,
-            num_action_required=num_action_required,
-            extended_view=False,
-        )
+        return {
+            "requests": mapped_requests,
+            "pending_financial_verification": pending_fv,
+            "pending_ccpo_approval": pending_ccpo,
+            "num_action_required": num_action_required,
+            "extended_view": False,
+        }
 
     def _map_request(self, request, viewing_role):
         time_created = pendulum.instance(request.time_created)
