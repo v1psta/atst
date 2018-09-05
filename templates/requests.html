@@ -25,6 +25,14 @@
     </div>
   {% endcall %}
 
+{% if num_action_required %}
+  {% set title -%}
+    Action required on {{ num_action_required }} requests.
+  {%- endset %}
+
+  {{ Alert (title)}}
+{% endif %}
+
 {% if not requests %}
 
   {{ EmptyState(
@@ -109,7 +117,7 @@
           <tr>
             <th scope="row">
               <a class='icon-link icon-link--large' href="{{ r['edit_link'] }}">{{ r['order_id'] }}</a>
-              {% if r['is_new'] %}<span class="usa-label">New</span>{% endif %}
+              {% if r.action_required %}<span class="label label--info">Action Required</span>{% endif %}
             </th>
             <td>{{ r.last_submission_timestamp }}</td>
             {% if extended_view %}
