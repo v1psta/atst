@@ -4,8 +4,8 @@ from sqlalchemy.orm import relationship
 from atst.models import Base
 from atst.models.types import Id
 from atst.models.mixins import TimestampsMixin
-from atst.utils import first_or_none
 from atst.models.workspace_user import WorkspaceUser
+from atst.utils import first_or_none
 
 
 class Workspace(Base, TimestampsMixin):
