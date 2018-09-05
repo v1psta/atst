@@ -9,9 +9,11 @@ from flask import (
 
 from atst.domain.exceptions import UnauthorizedError
 from atst.domain.workspaces import Workspaces
+from atst.domain.workspace_users import WorkspaceUsers
 from atst.domain.projects import Projects
 from atst.forms.new_project import NewProjectForm
 from atst.forms.new_member import NewMemberForm
+from atst.forms.edit_member import EditMemberForm
 from atst.domain.authz import Authorization
 from atst.models.permissions import Permissions
 
@@ -114,8 +116,58 @@ def create_member(workspace_id):
             url_for(
                 "workspaces.workspace_members",
                 workspace_id=workspace.id,
-                newMemberName=new_member.user.full_name,
+                newMemberName=new_member.user_name,
             )
         )
     else:
         return render_template("member_new.html", workspace=workspace, form=form)
+
+
+@bp.route("/workspaces/<workspace_id>/members/<member_id>/member_edit")
+def view_member(workspace_id, member_id):
+    workspace = Workspaces.get(g.current_user, workspace_id)
+    Authorization.check_workspace_permission(
+        g.current_user,
+        workspace,
+        Permissions.ASSIGN_AND_UNASSIGN_ATAT_ROLE,
+        "edit this workspace user",
+    )
+    member = WorkspaceUsers.get(workspace_id, member_id)
+    form = EditMemberForm(workspace_role=member.role)
+    return render_template(
+        "member_edit.html", form=form, workspace=workspace, member=member
+    )
+
+
+@bp.route(
+    "/workspaces/<workspace_id>/members/<member_id>/member_edit", methods=["POST"]
+)
+def update_member(workspace_id, member_id):
+    workspace = Workspaces.get(g.current_user, workspace_id)
+    Authorization.check_workspace_permission(
+        g.current_user,
+        workspace,
+        Permissions.ASSIGN_AND_UNASSIGN_ATAT_ROLE,
+        "edit this workspace user",
+    )
+    member = WorkspaceUsers.get(workspace_id, member_id)
+    form = EditMemberForm(http_request.form)
+
+    if form.validate():
+        role = None
+        if form.data["workspace_role"] != member.role:
+            role = form.data["workspace_role"]
+            Workspaces.update_member(g.current_user, workspace, member, role)
+
+        return redirect(
+            url_for(
+                "workspaces.workspace_members",
+                workspace_id=workspace.id,
+                memberName=member.user_name,
+                updatedRole=role,
+            )
+        )
+    else:
+        return render_template(
+            "member_edit.html", form=form, workspace=workspace, member=member
+        )

@@ -31,6 +31,21 @@ class WorkspaceUsers(object):
         return WorkspaceUser(user, workspace_role)
 
     @classmethod
+    def _get_workspace_role(cls, user, workspace_id):
+        try:
+            existing_workspace_role = (
+                db.session.query(WorkspaceRole)
+                .filter(
+                    WorkspaceRole.user == user,
+                    WorkspaceRole.workspace_id == workspace_id,
+                )
+                .one()
+            )
+            return existing_workspace_role
+        except NoResultFound:
+            raise NotFoundError("workspace role")
+
+    @classmethod
     def add(cls, user, workspace_id, role_name):
         role = Roles.get(role_name)
 
@@ -56,6 +71,16 @@ class WorkspaceUsers(object):
         db.session.commit()
 
         return WorkspaceUser(user, new_workspace_role)
+
+    @classmethod
+    def update_role(cls, member, workspace_id, role_name):
+        new_role = Roles.get(role_name)
+        workspace_role = WorkspaceUsers._get_workspace_role(member.user, workspace_id)
+        workspace_role.role = new_role
+
+        db.session.add(workspace_role)
+        db.session.commit()
+        return WorkspaceUser(member.user, workspace_role)
 
     @classmethod
     def add_many(cls, workspace_id, workspace_user_dicts):

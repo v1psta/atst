@@ -2,223 +2,142 @@
 
 {% from "components/icon.html" import Icon %}
 {% from "components/modal.html" import Modal %}
+{% from "components/selector.html" import Selector %}
 
 {% block content %}
 
-<div class='panel member-card'>
-  <div class='member-card__header'>
-    <h1 class='member-card__heading'>Danny Knight</h1>
+<form method="POST" action="{{ url_for('workspaces.update_member', workspace_id=workspace.id, member_id=member.user_id) }}" autocomplete="false">
+  {{ form.csrf_token }}
 
-    <div class="usa-input member-card__input">
-      <label for="filter-status">Workspace Role</label>
-      <select id="filter-status" name="filter-status">
-        <option value="Admin">Admin</option>
-        <option value="Billing Auditor" selected="selected">Billing Auditor</option>
-        <option value="CCPO">CCPO</option>
-        <option value="Developer">Developer</option>
-        <option value="Owner">Owner</option>
-        <option value="Security Auditor">Security Auditor</option>
-      </select>
+  <div class='panel member-card'>
+    <div class='member-card__header'>
+      <h1 class='member-card__heading'>{{ member.user.full_name }}</h1>
+
+        <div class="usa-input member-card__input">
+          {{ Selector(form.workspace_role) }}
+        </div>
+
     </div>
-
+    <div class='member-card__details'>
+      <dl>
+        <div>
+          <dt>DOD ID:</dt>
+          <dd>{{ member.user.dod_id }}</dd>
+        </div>
+        <div>
+          <dt>Email:</dt>
+          <dd>{{ member.user.email }}</dd>
+        </div>
+      </dl>
+      <a href='#' class='icon-link'>edit account details</a>
+    </div>
   </div>
-  <div class='member-card__details'>
-    <dl>
-      <div>
-        <dt>DOD ID:</dt>
-        <dd>789</dd>
-      </div>
-      <div>
-        <dt>Email:</dt>
-        <dd>knight@mil.gov</dd>
-      </div>
-    </dl>
-    <a href='#' class='icon-link'>edit account details</a>
+
+  <div class="panel">
+    <div class="panel__heading panel__heading--tight">
+      <h2 class="h3">Manage Access <div class="subtitle">Grant access to an environment</div></h2>
+    </div>
   </div>
-</div>
 
-<div class="panel">
-  <div class="panel__heading panel__heading--tight">
-    <h2 class="h3">Manage Access <div class="subtitle">Grant access to an environment</div></h2>
+  <div class='search-bar'>
+    <div class='usa-input search-input'>
+      <label for='project-search'>Search by project name</label>
+      <input type='search' id='project-search' name='project-search' placeholder="Search by project name"/>
+      <button type="submit">
+        <span class="hide">Search</span>
+      </button>
+    </div>
   </div>
-</div>
 
-<form class='search-bar'>
-  <div class='usa-input search-input'>
-    <label for='project-search'>Search by project name</label>
-    <input type='search' id='project-search' name='project-search' placeholder="Search by project name"/>
-    <button type="submit">
-      <span class="hide">Search</span>
-    </button>
-  </div>
-</form>
-
-{% call Modal(name='rolesModal', dismissable=False) %}
-  <div class="block-list">
-    <header class="block-list__header">
-      <h2 class="block-list__title">
-        Environment access for Danny Knight
-        <div class='subtitle'>Project Name - Environment Name</div>
-      </h2>
-    </header>
-
-    <form method="post" action="">
-      <ul>
-        <li class='block-list__item block-list__item--selectable'>
-          <input type='radio' name='radio' id='radio-1' />
-          <label for='radio-1'>
-            <dl>
-              <dt>CCPO</dt>
-              <dd>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fugiat dicta voluptate vitae quasi, cumque rem dolores, quae quas cum in recusandae? Libero deleniti minus ab accusantium vel necessitatibus placeat, rerum?</dd>
-            </dl>
-          </label>
+  <div is='toggler' default-visible class='block-list project-list-item'>
+    <template slot-scope='{ isVisible, toggle }'>
+      <header class='block-list__header'>
+      <button v-on:click='toggle' class='icon-link icon-link--large icon-link--default spend-table__project__toggler'>
+          <template v-if='isVisible'>{{ Icon('caret_down') }}</template>
+          <template v-else>{{ Icon('caret_right') }}</template>
+          <h3 class="block-list__title">Code.mil</h3>
+        </button>
+        <span><a href="#" class="icon-link icon-link--danger">revoke all access</a></span>
+      </header>
+      <ul v-show='isVisible'>
+        <li class='block-list__item project-list-item__environment'>
+          <span class='project-list-item__environment'>
+            Development
+          </span>
+          <div class='project-list-item__environment__actions'>
+            <span class="label">no access </span><button v-on:click="openModal('rolesModal')" type="button" class="icon-link">set role</button>
+          </div>
         </li>
-        <li class='block-list__item block-list__item--selectable'>
-          <input type='radio' name='radio' id='radio-2' />
-          <label for='radio-2'>
-            <dl>
-              <dt>Security</dt>
-              <dd>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quaerat vel ea, eaque, odio sint explicabo officia, debitis dolore, et repudiandae possimus deserunt eveniet laborum. Sunt blanditiis deleniti minus. Et, mollitia.</dd>
-            </dl>
-          </label>
+        <li class='block-list__item project-list-item__environment'>
+          <span class='project-list-item__environment'>
+            Sandbox
+          </span>
+          <div class='project-list-item__environment__actions'>
+            <span class="label">no access</span><button v-on:click="openModal('rolesModal')" type="button" class="icon-link">set role</button>
+          </div>
         </li>
-        <li class='block-list__item block-list__item--selectable'>
-          <input type='radio' name='radio' id='radio-3' />
-          <label for='radio-3'>
-            <dl>
-              <dt>Audit</dt>
-              <dd>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Autem itaque reprehenderit dolorum nobis voluptatibus quae, facilis voluptatum necessitatibus alias laboriosam, esse blanditiis culpa possimus tempore consectetur recusandae. Nihil, vel, dolorem!</dd>
-            </dl>
-          </label>
-        </li>
-        <li class='block-list__item block-list__item--selectable'>
-          <input type='radio' name='radio' id='radio-4' />
-          <label for='radio-4'>
-            <dl>
-              <dt>Application Developer</dt>
-              <dd>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea esse ab consequuntur aliquam. Porro ea mollitia sapiente blanditiis quaerat quam beatae vitae adipisci quisquam dolore reiciendis tenetur, eius nemo quibusdam!</dd>
-            </dl>
-          </label>
-        </li>
-        <li class='block-list__item block-list__item--selectable'>
-          <input type='radio' name='radio' id='radio-5' />
-          <label for='radio-5'>
-            <dl>
-              <dt>Dev Ops</dt>
-              <dd>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore incidunt obcaecati, quidem ullam sint iusto. Natus ex distinctio eveniet cumque laudantium veritatis nemo asperiores, esse hic quis perspiciatis, quia impedit.</dd>
-            </dl>
-          </label>
-        </li>
-        <li class='block-list__item block-list__item--selectable'>
-          <input type='radio' name='radio' id='radio-6' />
-          <label for='radio-6'>
-            <dl>
-              <dt>Billing</dt>
-              <dd>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quidem delectus at, voluptatibus dolores, nobis temporibus. Ipsum dignissimos corrupti qui nisi et alias totam commodi maiores hic possimus ipsam error, ullam.</dd>
-            </dl>
-          </label>
+        <li class='block-list__item project-list-item__environment'>
+          <span class='project-list-item__environment'>
+            Production
+          </span>
+          <div class='project-list-item__environment__actions'>
+            <span class="label label--success">Billing</span><button v-on:click="openModal('rolesModal')" type="button" class="icon-link">set role</button>
+          </div>
         </li>
       </ul>
-
-      <div class='block-list__footer'>
-        <div class='action-group'>
-          <a v-on:click="closeModal('rolesModal')" class='action-group__action usa-button'>Select Access Role</a>
-          <a class='action-group__action icon-link icon-link--danger' v-on:click="closeModal('rolesModal')">No Access</a>
-        </div>
-      </div>
-    </form>
-
+    </template>
   </div>
 
-{% endcall %}
+  <div is="toggler" class='block-list project-list-item'>
+    <template slot-scope='{ isVisible, toggle }'>
+      <header class='block-list__header'>
+      <button v-on:click='toggle' class='icon-link icon-link--large icon-link--default spend-table__project__toggler'>
+          <template v-if='isVisible'>{{ Icon('caret_down') }}</template>
+          <template v-else>{{ Icon('caret_right') }}</template>
+          <h3 class="block-list__title">Digital Dojo</h3>
+        </button>
+        <span class="label">no access</span>
+      </header>
+      <ul v-show='isVisible'>
+        <li class='block-list__item project-list-item__environment'>
+          <span class='project-list-item__environment'>
+            Development
+          </span>
+          <div class='project-list-item__environment__actions'>
+            <span class="label">no access </span><button v-on:click="openModal('rolesModal')" type="button" class="icon-link">set role</button>
+          </div>
+        </li>
+        <li class='block-list__item project-list-item__environment'>
+          <span class='project-list-item__environment'>
+            Sandbox
+          </span>
+          <div class='project-list-item__environment__actions'>
+            <span class="label">no access</span><button v-on:click="openModal('rolesModal')" type="button" class="icon-link">set role</button>
+          </div>
+        </li>
+        <li class='block-list__item project-list-item__environment'>
+          <span class='project-list-item__environment'>
+            Production
+          </span>
+          <div class='project-list-item__environment__actions'>
+            <span class="label">no access</span><button v-on:click="openModal('rolesModal')" type="button" class="icon-link">set role</button>
+          </div>
+        </li>
+      </ul>
+    </template>
+  </div>
 
-<div is='toggler' default-visible class='block-list project-list-item'>
-  <template slot-scope='{ isVisible, toggle }'>
-    <header class='block-list__header'>
-    <button v-on:click='toggle' class='icon-link icon-link--large icon-link--default spend-table__project__toggler'>
-        <template v-if='isVisible'>{{ Icon('caret_down') }}</template>
-        <template v-else>{{ Icon('caret_right') }}</template>
-        <h3 class="block-list__title">Code.mil</h3>
-      </button>
-      <span><a href="#" class="icon-link icon-link--danger">revoke all access</a></span>
-    </header>
-    <ul v-show='isVisible'>
-      <li class='block-list__item project-list-item__environment'>
-        <span class='project-list-item__environment'>
-          Development
-        </span>
-        <div class='project-list-item__environment__actions'>
-          <span class="label">no access </span><button v-on:click="openModal('rolesModal')" type="button" class="icon-link">set role</button>
-        </div>
-      </li>
-      <li class='block-list__item project-list-item__environment'>
-        <span class='project-list-item__environment'>
-          Sandbox
-        </span>
-        <div class='project-list-item__environment__actions'>
-          <span class="label">no access</span><button v-on:click="openModal('rolesModal')" type="button" class="icon-link">set role</button>
-        </div>
-      </li>
-      <li class='block-list__item project-list-item__environment'>
-        <span class='project-list-item__environment'>
-          Production
-        </span>
-        <div class='project-list-item__environment__actions'>
-          <span class="label label--success">Billing</span><button v-on:click="openModal('rolesModal')" type="button" class="icon-link">set role</button>
-        </div>
-      </li>
-    </ul>
-  </template>
-</div>
+  <div class='action-group'>
+    <button class='action-group__action usa-button usa-button-big'>
+      {% if is_new_member %}Create{% else %}Save{% endif %}
+    </button>
+    <a href='#' class='action-group__action icon-link'>
+      {{ Icon('x') }}
+      <span>Cancel</span>
+    </a>
+  </div>
 
-<div is="toggler" class='block-list project-list-item'>
-  <template slot-scope='{ isVisible, toggle }'>
-    <header class='block-list__header'>
-    <button v-on:click='toggle' class='icon-link icon-link--large icon-link--default spend-table__project__toggler'>
-        <template v-if='isVisible'>{{ Icon('caret_down') }}</template>
-        <template v-else>{{ Icon('caret_right') }}</template>
-        <h3 class="block-list__title">Digital Dojo</h3>
-      </button>
-      <span class="label">no access</span>
-    </header>
-    <ul v-show='isVisible'>
-      <li class='block-list__item project-list-item__environment'>
-        <span class='project-list-item__environment'>
-          Development
-        </span>
-        <div class='project-list-item__environment__actions'>
-          <span class="label">no access </span><button v-on:click="openModal('rolesModal')" type="button" class="icon-link">set role</button>
-        </div>
-      </li>
-      <li class='block-list__item project-list-item__environment'>
-        <span class='project-list-item__environment'>
-          Sandbox
-        </span>
-        <div class='project-list-item__environment__actions'>
-          <span class="label">no access</span><button v-on:click="openModal('rolesModal')" type="button" class="icon-link">set role</button>
-        </div>
-      </li>
-      <li class='block-list__item project-list-item__environment'>
-        <span class='project-list-item__environment'>
-          Production
-        </span>
-        <div class='project-list-item__environment__actions'>
-          <span class="label">no access</span><button v-on:click="openModal('rolesModal')" type="button" class="icon-link">set role</button>
-        </div>
-      </li>
-    </ul>
-  </template>
-</div>
-
-<div class='action-group'>
-  <a href='#' class='action-group__action usa-button usa-button-big'>
-    {% if is_new_member %}Create{% else %}Save{% endif %}
-  </a>
-  <a href='#' class='action-group__action icon-link'>
-    {{ Icon('x') }}
-    <span>Cancel</span>
-  </a>
-</div>
+</form>
 
 
 

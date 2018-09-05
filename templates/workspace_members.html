@@ -33,6 +33,19 @@
   ) }}
 {% endif %}
 
+{% set member_name = request.args.get("memberName") %}
+{% set updated_role = request.args.get("updatedRole") %}
+{% if updated_role %}
+    {% set message -%}
+      <p>{{ member_name }}'s role  was successfully updated to {{ updated_role }}</p>
+    {%- endset %}
+
+  {{ Alert('Workspace role updated successfully',
+    message=message,
+    level='success'
+  ) }}
+{% endif %}
+
   <form class='search-bar'>
     <div class='usa-input search-input'>
       <label for='members-search'>Search members by name</label>
@@ -77,10 +90,10 @@
       <tbody>
         {% for m in workspace.members %}
         <tr>
-          <td><a href="/member_edit" class="icon-link icon-link--large">{{ m['first_name'] }} {{ m['last_name'] }}</a></td>
+          <td><a href="{{ url_for('workspaces.update_member', workspace_id=workspace.id, member_id=m.user_id) }}" class="icon-link icon-link--large">{{ m.user_name }}</a></td>
           <td class='table-cell--shrink'>{% if m['num_projects'] == '0' %} <span class="label label--info">No Project Access</span> {% endif %}</td>
-          <td>{{ m['status'] }}</a></td>
-          <td>{{ m['workspace_role'] }}</a></td>
+          <td>{{ m.status }}</a></td>
+          <td>{{ m.role }}</a></td>
         </tr>
         {% endfor %}
       </tbody>
