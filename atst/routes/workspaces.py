@@ -134,7 +134,7 @@ def view_member(workspace_id, member_id):
         "edit this workspace user",
     )
     member = WorkspaceUsers.get(workspace_id, member_id)
-    form = NewMemberForm(http_request.form)
+    form = UpdateMemberForm(http_request.form)
     return render_template(
         "member_edit.html", form=form, workspace=workspace, member=member
     )
