@@ -1,12 +1,12 @@
 {% from "components/icon.html" import Icon %}
 {% from "components/tooltip.html" import Tooltip %}
 
-{% macro TextInput(field, tooltip='', placeholder='', validation='anything', paragraph=False) -%}
+{% macro TextInput(field, tooltip='', placeholder='', validation='anything', paragraph=False, initial_value='') -%}
   <textinput
     name='{{ field.name }}'
     validation='{{ validation }}'
     {% if paragraph %}paragraph='true'{% endif %}
-    {% if field.data %}initial-value='{{ field.data }}'{% endif %}
+    {% if initial_value or field.data %}initial-value='{{ initial_value or field.data }}'{% endif %}
     {% if field.errors %}v-bind:initial-errors='{{ field.errors }}'{% endif %}
     key='{{ field.name }}'
     inline-template>

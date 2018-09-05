@@ -12,6 +12,7 @@ from tests.factories import (
     UserFactory,
     RequestStatusEventFactory,
     TaskOrderFactory,
+    RequestRevisionFactory,
 )
 
 
@@ -20,10 +21,11 @@ def new_request(session):
     return RequestFactory.create()
 
 
-def test_can_get_request(new_request):
-    request = Requests.get(new_request.creator, new_request.id)
+def test_can_get_request():
+    factory_req = RequestFactory.create()
+    request = Requests.get(factory_req.creator, factory_req.id)
 
-    assert request.id == new_request.id
+    assert request.id == factory_req.id
 
 
 def test_nonexistent_request_raises():
@@ -37,36 +39,41 @@ def test_new_request_has_started_status():
     assert request.status == RequestStatus.STARTED
 
 
-def test_auto_approve_less_than_1m(new_request):
-    new_request.body = {"details_of_use": {"dollar_value": 999999}}
+def test_auto_approve_less_than_1m():
+    new_request = RequestFactory.create(initial_revision={"dollar_value": 999999})
     request = Requests.submit(new_request)
 
     assert request.status == RequestStatus.PENDING_FINANCIAL_VERIFICATION
 
 
-def test_dont_auto_approve_if_dollar_value_is_1m_or_above(new_request):
-    new_request.body = {"details_of_use": {"dollar_value": 1000000}}
+def test_dont_auto_approve_if_dollar_value_is_1m_or_above():
+    new_request = RequestFactory.create(initial_revision={"dollar_value": 1000000})
     request = Requests.submit(new_request)
 
     assert request.status == RequestStatus.PENDING_CCPO_APPROVAL
 
 
-def test_dont_auto_approve_if_no_dollar_value_specified(new_request):
-    new_request.body = {"details_of_use": {}}
+def test_dont_auto_approve_if_no_dollar_value_specified():
+    new_request = RequestFactory.create(initial_revision={})
     request = Requests.submit(new_request)
 
     assert request.status == RequestStatus.PENDING_CCPO_APPROVAL
 
 
-def test_should_allow_submission(new_request):
+def test_should_allow_submission():
+    new_request = RequestFactory.create()
+
     assert Requests.should_allow_submission(new_request)
 
     RequestStatusEventFactory.create(
-        request=new_request, new_status=RequestStatus.CHANGES_REQUESTED
+        request=new_request,
+        new_status=RequestStatus.CHANGES_REQUESTED,
+        revision=new_request.latest_revision,
     )
     assert Requests.should_allow_submission(new_request)
 
-    del new_request.body["details_of_use"]
+    # new, blank revision
+    RequestRevisionFactory.create(request=new_request)
     assert not Requests.should_allow_submission(new_request)
 
 
@@ -96,6 +103,7 @@ def test_status_count(session):
     RequestStatusEventFactory.create(
         sequence=2,
         request_id=request2.id,
+        revision=request2.latest_revision,
         new_status=RequestStatus.PENDING_FINANCIAL_VERIFICATION,
     )
 
@@ -164,3 +172,9 @@ def test_update_financial_verification_with_invalid_task_order():
         request.body["financial_verification"]["task_order_number"]
         == request_financial_data["task_order_number"]
     )
+
+
+def test_set_status_sets_revision():
+    request = RequestFactory.create()
+    Requests.set_status(request, RequestStatus.APPROVED)
+    assert request.latest_revision == request.status_events[-1].revision

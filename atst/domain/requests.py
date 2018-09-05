@@ -2,35 +2,31 @@ from enum import Enum
 from sqlalchemy import exists, and_, exc
 from sqlalchemy.sql import text
 from sqlalchemy.orm.exc import NoResultFound
-from sqlalchemy.orm.attributes import flag_modified
 from werkzeug.datastructures import FileStorage
+import dateutil
 
 from atst.database import db
 from atst.domain.authz import Authorization
 from atst.domain.task_orders import TaskOrders
 from atst.domain.workspaces import Workspaces
 from atst.models.request import Request
+from atst.models.request_revision import RequestRevision
 from atst.models.request_status_event import RequestStatusEvent, RequestStatus
+from atst.utils import deep_merge
 
 from .exceptions import NotFoundError, UnauthorizedError
 
 
-def deep_merge(source, destination: dict):
-    """
-    Merge source dict into destination dict recursively.
-    """
-
-    def _deep_merge(a, b):
-        for key, value in a.items():
-            if isinstance(value, dict):
-                node = b.setdefault(key, {})
-                _deep_merge(value, node)
-            else:
-                b[key] = value
-
-        return b
-
-    return _deep_merge(source, dict(destination))
+def create_revision_from_request_body(body):
+    body = {k: v for p in body.values() for k, v in p.items()}
+    DATES = ["start_date", "date_latest_training"]
+    coerced_timestamps = {
+        k: dateutil.parser.parse(v)
+        for k, v in body.items()
+        if k in DATES and isinstance(v, str)
+    }
+    body = {**body, **coerced_timestamps}
+    return RequestRevision(**body)
 
 
 class Requests(object):
@@ -39,7 +35,8 @@ class Requests(object):
 
     @classmethod
     def create(cls, creator, body):
-        request = Request(creator=creator, body=body)
+        revision = create_revision_from_request_body(body)
+        request = Request(creator=creator, revisions=[revision])
         request = Requests.set_status(request, RequestStatus.STARTED)
 
         db.session.add(request)
@@ -105,7 +102,10 @@ class Requests(object):
     @classmethod
     def update(cls, request_id, request_delta):
         request = Requests._get_with_lock(request_id)
-        request = Requests._merge_body(request, request_delta)
+
+        new_body = deep_merge(request_delta, request.body)
+        revision = create_revision_from_request_body(new_body)
+        request.revisions.append(revision)
 
         db.session.add(request)
         db.session.commit()
@@ -128,16 +128,6 @@ class Requests(object):
             raise NotFoundError()
 
     @classmethod
-    def _merge_body(cls, request, request_delta):
-        request.body = deep_merge(request_delta, request.body)
-
-        # Without this, sqlalchemy won't notice the change to request.body,
-        # since it doesn't track dictionary mutations by default.
-        flag_modified(request, "body")
-
-        return request
-
-    @classmethod
     def approve_and_create_workspace(cls, request):
         approved_request = Requests.set_status(request, RequestStatus.APPROVED)
         workspace = Workspaces.create(approved_request)
@@ -149,7 +139,9 @@ class Requests(object):
 
     @classmethod
     def set_status(cls, request: Request, status: RequestStatus):
-        status_event = RequestStatusEvent(new_status=status)
+        status_event = RequestStatusEvent(
+            new_status=status, revision=request.latest_revision
+        )
         request.status_events.append(status_event)
         return request
 
@@ -256,12 +248,7 @@ WHERE requests_with_status.status = :status
         if task_order:
             request.task_order = task_order
 
-        request = Requests._merge_body(
-            request, {"financial_verification": request_data}
-        )
-
-        db.session.add(request)
-        db.session.commit()
+        request = Requests.update(request.id, {"financial_verification": request_data})
 
         return request
 

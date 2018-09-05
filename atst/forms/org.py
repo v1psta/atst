@@ -1,9 +1,9 @@
-from wtforms.fields.html5 import EmailField, TelField
+from wtforms.fields.html5 import DateField, EmailField, TelField
 from wtforms.fields import RadioField, StringField
 from wtforms.validators import Required, Email
 import pendulum
 
-from .fields import DateField, SelectField
+from .fields import SelectField
 from .forms import ValidatedForm
 from .validators import DateRange, PhoneNumber, Alphabet
 from .data import SERVICE_BRANCHES
@@ -60,4 +60,5 @@ class OrgForm(ValidatedForm):
                 message="Must be a date within the last year.",
             ),
         ],
+        format="%m/%d/%Y",
     )

@@ -1,22 +1,5 @@
-from wtforms.fields.html5 import DateField
 from wtforms.fields import Field, SelectField as SelectField_
 from wtforms.widgets import TextArea
-
-from atst.domain.date import parse_date
-
-
-class DateField(DateField):
-    def _value(self):
-        if self.data:
-            return parse_date(self.data)
-        else:
-            return None
-
-    def process_formdata(self, values):
-        if values:
-            self.data = values[0]
-        else:
-            self.data = []
 
 
 class NewlineListField(Field):

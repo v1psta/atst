@@ -2,9 +2,11 @@ import random
 import string
 import factory
 from uuid import uuid4
+import datetime
 
 from atst.forms.data import SERVICE_BRANCHES
 from atst.models.request import Request
+from atst.models.request_revision import RequestRevision
 from atst.models.request_status_event import RequestStatusEvent, RequestStatus
 from atst.models.pe_number import PENumber
 from atst.models.task_order import TaskOrder
@@ -46,57 +48,83 @@ class RequestStatusEventFactory(factory.alchemy.SQLAlchemyModelFactory):
     sequence = 1
 
 
+class RequestRevisionFactory(factory.alchemy.SQLAlchemyModelFactory):
+    class Meta:
+        model = RequestRevision
+
+    id = factory.Sequence(lambda x: uuid4())
+
+
 class RequestFactory(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
         model = Request
 
     id = factory.Sequence(lambda x: uuid4())
-    status_events = factory.RelatedFactory(
-        RequestStatusEventFactory, "request", new_status=RequestStatus.STARTED
-    )
     creator = factory.SubFactory(UserFactory)
-    body = factory.LazyAttribute(lambda r: RequestFactory.build_request_body(r.creator))
+    revisions = factory.LazyAttribute(
+        lambda r: [RequestFactory.create_initial_revision(r)]
+    )
+    status_events = factory.RelatedFactory(
+        RequestStatusEventFactory,
+        "request",
+        new_status=RequestStatus.STARTED,
+        revision=factory.LazyAttribute(lambda se: se.factory_parent.revisions[-1]),
+    )
+
+    class Params:
+        initial_revision = None
 
     @classmethod
-    def build_request_body(cls, user, dollar_value=1000000):
-        return {
-            "primary_poc": {
-                "am_poc": False,
-                "dodid_poc": user.dod_id,
-                "email_poc": user.email,
-                "fname_poc": user.first_name,
-                "lname_poc": user.last_name,
-            },
-            "details_of_use": {
-                "jedi_usage": "adf",
-                "start_date": "2018-08-08",
-                "cloud_native": "yes",
-                "dollar_value": dollar_value,
-                "dod_component": SERVICE_BRANCHES[2][1],
-                "data_transfers": "Less than 100GB",
-                "expected_completion_date": "Less than 1 month",
-                "jedi_migration": "yes",
-                "num_software_systems": 1,
-                "number_user_sessions": 2,
-                "average_daily_traffic": 1,
-                "engineering_assessment": "yes",
-                "technical_support_team": "yes",
-                "estimated_monthly_spend": 100,
-                "average_daily_traffic_gb": 4,
-                "rationalization_software_systems": "yes",
-                "organization_providing_assistance": "In-house staff",
-            },
-            "information_about_you": {
-                "citizenship": "United States",
-                "designation": "military",
-                "phone_number": "1234567890",
-                "email_request": user.email,
-                "fname_request": user.first_name,
-                "lname_request": user.last_name,
-                "service_branch": SERVICE_BRANCHES[1][1],
-                "date_latest_training": "2018-08-06",
-            },
-        }
+    def create_initial_status_event(cls, request):
+        return RequestStatusEventFactory(
+            request=request,
+            new_status=RequestStatus.STARTED,
+            revision=request.revisions,
+        )
+
+    @classmethod
+    def create_initial_revision(cls, request, dollar_value=1000000):
+        user = request.creator
+        default_data = dict(
+            am_poc=False,
+            dodid_poc=user.dod_id,
+            email_poc=user.email,
+            fname_poc=user.first_name,
+            lname_poc=user.last_name,
+            jedi_usage="adf",
+            start_date=datetime.date(2018, 8, 8),
+            cloud_native="yes",
+            dollar_value=dollar_value,
+            dod_component=SERVICE_BRANCHES[2][1],
+            data_transfers="Less than 100GB",
+            expected_completion_date="Less than 1 month",
+            jedi_migration="yes",
+            num_software_systems=1,
+            number_user_sessions=2,
+            average_daily_traffic=1,
+            engineering_assessment="yes",
+            technical_support_team="yes",
+            estimated_monthly_spend=100,
+            average_daily_traffic_gb=4,
+            rationalization_software_systems="yes",
+            organization_providing_assistance="In-house staff",
+            citizenship="United States",
+            designation="military",
+            phone_number="1234567890",
+            email_request=user.email,
+            fname_request=user.first_name,
+            lname_request=user.last_name,
+            service_branch=SERVICE_BRANCHES[1][1],
+            date_latest_training=datetime.date(2018, 8, 6),
+        )
+
+        data = (
+            request.initial_revision
+            if request.initial_revision is not None
+            else default_data
+        )
+
+        return RequestRevisionFactory.build(**data)
 
 
 class PENumberFactory(factory.alchemy.SQLAlchemyModelFactory):

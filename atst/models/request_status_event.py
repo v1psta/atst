@@ -1,5 +1,6 @@
 from enum import Enum
 from sqlalchemy import Column, func, ForeignKey, Enum as SQLAEnum
+from sqlalchemy.orm import relationship
 from sqlalchemy.types import DateTime, BigInteger
 from sqlalchemy.schema import Sequence
 from sqlalchemy.dialects.postgresql import UUID
@@ -31,6 +32,8 @@ class RequestStatusEvent(Base):
     sequence = Column(
         BigInteger, Sequence("request_status_events_sequence_seq"), nullable=False
     )
+    request_revision_id = Column(ForeignKey("request_revisions.id"), nullable=False)
+    revision = relationship("RequestRevision")
 
     @property
     def displayname(self):

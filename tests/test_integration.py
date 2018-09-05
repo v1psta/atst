@@ -12,10 +12,25 @@ def screens(app):
     return JEDIRequestFlow(3).screens
 
 
+def serialize_dates(data):
+    if not data:
+        return data
+
+    dates = {
+        k: v.strftime("%m/%d/%Y") for k, v in data.items() if hasattr(v, "strftime")
+    }
+
+    new_data = data.copy()
+    new_data.update(dates)
+
+    return new_data
+
+
 def test_stepthrough_request_form(user_session, screens, client):
     user = UserFactory.create()
     user_session(user)
-    mock_request = RequestFactory.stub()
+    mock_request = RequestFactory.create()
+    mock_body = mock_request.body
 
     def post_form(url, redirects=False, data=""):
         return client.post(
@@ -33,6 +48,7 @@ def test_stepthrough_request_form(user_session, screens, client):
         # destination url
         prelim_resp = post_form(req_url, data=data)
         response = post_form(req_url, True, data=data)
+        assert prelim_resp.status_code == 302
         return (prelim_resp.headers.get("Location"), response)
 
     # GET the initial form
@@ -44,7 +60,8 @@ def test_stepthrough_request_form(user_session, screens, client):
     for i in range(1, len(screens)):
         # get appropriate form data to POST for this section
         section = screens[i - 1]["section"]
-        post_data = urlencode(mock_request.body[section])
+        massaged = serialize_dates(mock_body[section])
+        post_data = urlencode(massaged)
 
         effective_url, resp = take_a_step(i, req=req_id, data=post_data)
         req_id = effective_url.split("/")[-1]
@@ -55,7 +72,7 @@ def test_stepthrough_request_form(user_session, screens, client):
 
     # at this point, the real request we made and the mock_request bodies
     # should be equivalent
-    assert Requests.get(user, req_id).body == mock_request.body
+    assert Requests.get(user, req_id).body == mock_body
 
     # finish the review and submit step
     client.post(
