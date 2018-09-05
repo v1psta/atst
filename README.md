@@ -104,6 +104,13 @@ For example `/login-dev?username=amanda`.
 In development mode, there is a `DEV Login` button available on the home page
 that will automatically log you in as Amanda.
 
+### Seeding the database
+
+We have a helper script that will seed the database with requests, workspaces and
+projects for all of the test users:
+
+`pipenv run python script/seed.py`
+
 ## Testing
 
 Tests require a test database:
