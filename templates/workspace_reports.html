@@ -89,36 +89,37 @@
 
   </div>
 
+  {% set current_month = '03/2019' %}
+  {% set prev_month = '02/2019' %}
+  {% set two_months_ago = '01/2019' %}
+  {% set workspace_totals = monthly_totals['workspace'] %}
+
   <div class='spend-table responsive-table-wrapper'>
     <div class='spend-table__header'>
       <h2 class='spend-table__title'>Total spend per month</h2>
 
       <select name='month' id='month' class='spend-table__month-select'>
-        <option value='05/2019'>May 2019</option>
+        <option value='03/2019'>March 2019</option>
       </select>
     </div>
 
     <table>
       <thead>
         <th scope='col'><span class='usa-sr-only'>Spending scope</span></th>
-        <th scope='col' class='table-cell--align-right previous-month'>March 2019</th>
-        <th scope='col' class='table-cell--align-right previous-month'>April 2019</th>
-        <th scope='col' class='table-cell--align-right current-month'>May 2019</th>
+        <th scope='col' class='table-cell--align-right previous-month'>January 2019</th>
+        <th scope='col' class='table-cell--align-right previous-month'>February 2019</th>
+        <th scope='col' class='table-cell--align-right current-month'>March 2019</th>
         <td class='current-month'></td>
       </thead>
 
-      {% set workspace_totals = monthly_totals['workspace'] %}
-      {% set current_month = '05/2019' %}
-      {% set prev_month = '04/2019' %}
-      {% set two_months_ago = '03/2019' %}
       <tbody class='spend-table__workspace'>
         <tr>
           <th scope='row'>Workspace Total</th>
-          <td class='table-cell--align-right previous-month'>{{ workspace_totals[two_months_ago] | dollars }}</td>
-          <td class='table-cell--align-right previous-month'>{{ workspace_totals[prev_month] | dollars }}</td>
-          <td class='table-cell--align-right current-month'>{{ workspace_totals[current_month] | dollars }}</td>
+          <td class='table-cell--align-right previous-month'>{{ workspace_totals.get(two_months_ago, 0) | dollars }}</td>
+          <td class='table-cell--align-right previous-month'>{{ workspace_totals.get(prev_month, 0) | dollars }}</td>
+          <td class='table-cell--align-right current-month'>{{ workspace_totals.get(current_month, 0) | dollars }}</td>
           <td class='table-cell--expand current-month meter-cell'>
-            <meter value='{{ workspace_totals[current_month] }}' min='0' max='{{ workspace_totals[current_month] }}'></meter>
+            <meter value='{{ workspace_totals.get(current_month, 0) }}' min='0' max='{{ workspace_totals.get(current_month, 0) }}'></meter>
           </td>
         </tr>
       </tbody>
@@ -138,8 +139,8 @@
               <td class='table-cell--align-right previous-month'>{{ project_totals.get(prev_month, 0) | dollars }}</td>
               <td class='table-cell--align-right current-month'>{{ project_totals.get(current_month, 0) | dollars }}</td>
               <td class='table-cell--expand current-month meter-cell'>
-                <span class='spend-table__meter-value'>{{ (100 * (project_totals.get(current_month) / workspace_totals[current_month])) | round | int }}%</span>
-                <meter value='{{ project_totals[current_month] }}' min='0' max='{{ workspace_totals[current_month] }}'></meter>
+                <span class='spend-table__meter-value'>{{ (100 * (project_totals.get(current_month, 0) / workspace_totals.get(current_month, 1))) | round | int }}%</span>
+                <meter value='{{ project_totals.get(current_month, 0) }}' min='0' max='{{ workspace_totals.get(current_month, 0) }}'></meter>
               </td>
             </tr>
 

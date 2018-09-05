@@ -1,7 +1,7 @@
 from itertools import groupby
 
 
-MONTHLY_SPEND = {
+MONTHLY_SPEND_AARDVARK = {
     "LC04": {
         "Integ": {
             "10/2018": 284,
@@ -116,24 +116,52 @@ MONTHLY_SPEND = {
     },
 }
 
+MONTHLY_SPEND_BELUGA = {
+    "NP02": {
+        "Integ": {
+            "02/2019": 284,
+            "03/2019": 1210,
+        },
+        "PreProd": {
+            "02/2019": 812,
+            "03/2019": 1389,
+        },
+        "Prod": {
+            "02/2019": 3742,
+            "03/2019": 4716,
+        },
+    },
+    "FM": {
+        "Integ": {
+            "03/2019": 1498,
+        },
+        "Prod": {
+            "03/2019": 5686,
+        },
+    },
+}
+
 
 class Reports:
     @classmethod
-    def workspace_totals(cls, workspace):
+    def workspace_totals(cls, alternate):
+        data = MONTHLY_SPEND_BELUGA if alternate else MONTHLY_SPEND_AARDVARK
         spent = sum(
             [
                 spend
-                for project in MONTHLY_SPEND.values()
+                for project in data.values()
                 for env in project.values()
                 for spend in env.values()
             ]
         )
-        return {"budget": 500_000, "spent": spent}
+        budget = 70_000 if alternate else 500_000
+        return {"budget": budget, "spent": spent}
 
     @classmethod
-    def monthly_totals(cls, workspace):
+    def monthly_totals(cls, alternate):
+        data = MONTHLY_SPEND_BELUGA if alternate else MONTHLY_SPEND_AARDVARK
         project_totals = {}
-        for project, environments in MONTHLY_SPEND.items():
+        for project, environments in data.items():
             project_spend = [
                 (month, spend)
                 for env in environments.values()
@@ -154,7 +182,7 @@ class Reports:
             workspace_totals[month] = sum([spend[1] for spend in spends])
 
         return {
-            "environments": MONTHLY_SPEND,
+            "environments": data,
             "projects": project_totals,
             "workspace": workspace_totals,
         }
