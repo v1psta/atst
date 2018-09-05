@@ -70,7 +70,7 @@
               </div>
             </dl>
 
-            <a href='/' class='icon-link'>
+            <a href='#' class='icon-link'>
               Manage Task Order
             </a>
           </div>
@@ -145,7 +145,7 @@
 
             {% for env_name, env_totals in monthly_totals['environments'][project_name].items() %}
               <tr v-show='isVisible'>
-                <th scope='rowgroup'><a href='/' class='icon-link spend-table__project__env'>{{ Icon('link') }} {{ env_name }}</a></th>
+                <th scope='rowgroup'><a href='#' class='icon-link spend-table__project__env'>{{ Icon('link') }} {{ env_name }}</a></th>
                 <td class='table-cell--align-right previous-month'>{{ env_totals.get(two_months_ago, 0) | dollars }}</td>
                 <td class='table-cell--align-right previous-month'>{{ env_totals.get(prev_month, 0) | dollars }}</td>
                 <td class='table-cell--align-right current-month'>{{ env_totals.get(current_month, 0) | dollars }}</td>
