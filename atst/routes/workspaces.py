@@ -134,7 +134,7 @@ def view_member(workspace_id, member_id):
         "edit this workspace user",
     )
     member = WorkspaceUsers.get(workspace_id, member_id)
-    form = UpdateMemberForm(http_request.form)
+    form = UpdateMemberForm(workspace_role=member.role)
     return render_template(
         "member_edit.html", form=form, workspace=workspace, member=member
     )
@@ -155,14 +155,19 @@ def update_member(workspace_id, member_id):
     form = UpdateMemberForm(http_request.form)
 
     if form.validate():
+        if form.data["workspace_role"]:
+            role = form.data["workspace_role"]
+        else:
+            role = member.user.role
         Workspaces.update_member(
-            g.current_user, workspace, member, form.data["workspace_role"]
+            g.current_user, workspace, member, role
         )
         return redirect(
             url_for(
                 "workspaces.workspace_members",
                 workspace_id=workspace.id,
                 memberName=member.user.full_name,
+                updatedRole=form.data["workspace_role"],
             )
         )
     else:

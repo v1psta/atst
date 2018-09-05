@@ -9,5 +9,5 @@ from .data import WORKSPACE_ROLES
 class UpdateMemberForm(Form):
 
     workspace_role = SelectField(
-        "Workspace Role", choices=WORKSPACE_ROLES, validators=[Optional()], default=""
+        "Workspace Role", choices=WORKSPACE_ROLES, validators=[Optional()]
     )
