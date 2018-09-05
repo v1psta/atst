@@ -7,6 +7,7 @@ Create Date: 2018-08-30 13:28:16.928946
 """
 from alembic import op
 import sqlalchemy as sa
+from sqlalchemy.dialects.postgresql import ARRAY as Array
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
@@ -63,7 +64,7 @@ def upgrade():
     sa.Column('lname_cor', sa.String(), nullable=True),
     sa.Column('email_cor', sa.String(), nullable=True),
     sa.Column('office_cor', sa.String(), nullable=True),
-    sa.Column('uii_ids', sa.String(), nullable=True),
+    sa.Column('uii_ids', Array(sa.String()), nullable=True),
     sa.Column('treasury_code', sa.String(), nullable=True),
     sa.Column('ba_code', sa.String(), nullable=True),
     sa.ForeignKeyConstraint(['request_id'], ['requests.id'], ),

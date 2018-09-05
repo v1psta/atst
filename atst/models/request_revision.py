@@ -9,6 +9,7 @@ from sqlalchemy import (
     Sequence,
 )
 from sqlalchemy.orm import relationship
+from sqlalchemy.dialects.postgresql import ARRAY
 
 from atst.models import Base
 from atst.models.mixins import TimestampsMixin
@@ -72,6 +73,6 @@ class RequestRevision(Base, TimestampsMixin):
     lname_cor = Column(String)
     email_cor = Column(String)
     office_cor = Column(String)
-    uii_ids = Column(String)
+    uii_ids = Column(ARRAY(String))
     treasury_code = Column(String)
     ba_code = Column(String)
