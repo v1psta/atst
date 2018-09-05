@@ -9,12 +9,16 @@
     <div class="topbar__context {% if workspace %}topbar__context--workspace{% endif %}">
       {% set topbar_link = url_for("workspaces.show_workspace", workspace_id=workspace.id) if workspace else url_for("atst.home") %}
       <a href="{{ topbar_link }}" class="topbar__link">
-        <span class="topbar__link-label">{{ ("Workspace " + workspace.name) if workspace else "JEDI" }}</span>
+        <span class="topbar__link-label">{{ ("Workspace " + workspace.name) if workspace else "JEDI Cloud" }}</span>
       </a>
 
       <a href="/" class="topbar__link">
         <span class="topbar__link-label">{{ g.current_user.first_name + " " + g.current_user.last_name }}</span>
         {{ Icon('avatar', classes='topbar__link-icon') }}
+      </a>
+
+      <a href="/" class="topbar__link" title='Log out of JEDI Cloud'>
+        {{ Icon('logout', classes='topbar__link-icon') }}
       </a>
     </div>
   </nav>
