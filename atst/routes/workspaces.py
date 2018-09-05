@@ -13,8 +13,7 @@ from atst.domain.workspace_users import WorkspaceUsers
 from atst.domain.projects import Projects
 from atst.forms.new_project import NewProjectForm
 from atst.forms.new_member import NewMemberForm
-from atst.forms.update_member import UpdateMemberForm
-from atst.forms.forms import ValidatedForm
+from atst.forms.edit_member import EditMemberForm
 from atst.domain.authz import Authorization
 from atst.models.permissions import Permissions
 
@@ -117,7 +116,7 @@ def create_member(workspace_id):
             url_for(
                 "workspaces.workspace_members",
                 workspace_id=workspace.id,
-                newMemberName=new_member.user.full_name,
+                newMemberName=new_member.user_name,
             )
         )
     else:
@@ -134,7 +133,7 @@ def view_member(workspace_id, member_id):
         "edit this workspace user",
     )
     member = WorkspaceUsers.get(workspace_id, member_id)
-    form = UpdateMemberForm(workspace_role=member.role)
+    form = EditMemberForm(workspace_role=member.role)
     return render_template(
         "member_edit.html", form=form, workspace=workspace, member=member
     )
@@ -152,22 +151,20 @@ def update_member(workspace_id, member_id):
         "edit this workspace user",
     )
     member = WorkspaceUsers.get(workspace_id, member_id)
-    form = UpdateMemberForm(http_request.form)
+    form = EditMemberForm(http_request.form)
 
     if form.validate():
-        if form.data["workspace_role"]:
+        role = None
+        if form.data["workspace_role"] != member.role:
             role = form.data["workspace_role"]
-        else:
-            role = member.user.role
-        Workspaces.update_member(
-            g.current_user, workspace, member, role
-        )
+            Workspaces.update_member(g.current_user, workspace, member, role)
+
         return redirect(
             url_for(
                 "workspaces.workspace_members",
                 workspace_id=workspace.id,
-                memberName=member.user.full_name,
-                updatedRole=form.data["workspace_role"],
+                memberName=member.user_name,
+                updatedRole=role,
             )
         )
     else:

@@ -22,10 +22,6 @@ class User(Base):
     last_name = Column(String)
 
     @property
-    def role(self):
-        return self.atat_role.name
-
-    @property
     def atat_permissions(self):
         return self.atat_role.permissions
 

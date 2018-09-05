@@ -39,10 +39,7 @@ class Workspaces(object):
     def get_for_update(cls, user, workspace_id):
         workspace = Workspaces.get(user, workspace_id)
         Authorization.check_workspace_permission(
-            user,
-            workspace,
-            Permissions.ADD_APPLICATION_IN_WORKSPACE,
-            "add project",
+            user, workspace, Permissions.ADD_APPLICATION_IN_WORKSPACE, "add project"
         )
 
         return workspace
@@ -92,7 +89,7 @@ class Workspaces(object):
             user,
             workspace,
             Permissions.ASSIGN_AND_UNASSIGN_ATAT_ROLE,
-            "update workspace member",
+            "edit workspace member",
         )
 
         return WorkspaceUsers.update_role(member, workspace.id, role_name)

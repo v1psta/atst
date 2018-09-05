@@ -6,7 +6,7 @@ from atst.forms.fields import SelectField
 from .data import WORKSPACE_ROLES
 
 
-class UpdateMemberForm(Form):
+class EditMemberForm(Form):
 
     workspace_role = SelectField(
         "Workspace Role", choices=WORKSPACE_ROLES, validators=[Optional()]
