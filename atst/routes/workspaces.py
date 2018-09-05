@@ -76,6 +76,7 @@ def workspace_reports(workspace_id):
     return render_template(
         "workspace_reports.html",
         workspace_totals=Reports.workspace_totals(workspace),
+        monthly_totals=Reports.monthly_totals(workspace),
     )
 
 
