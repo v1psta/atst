@@ -17,7 +17,7 @@ def root():
 
 @bp.route("/home")
 def home():
-    return render_template("home.html")
+    return redirect(url_for("requests.requests_index"))
 
 
 @bp.route("/styleguide")
@@ -46,7 +46,7 @@ def login_redirect():
     user = auth_context.get_user()
     session["user_id"] = user.id
 
-    return redirect(url_for("requests.requests_index"))
+    return redirect(url_for(".home"))
 
 
 def _is_valid_certificate(request):

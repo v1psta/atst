@@ -33,7 +33,7 @@ def test_successful_login_redirect_non_ccpo(client, monkeypatch):
     )
 
     assert resp.status_code == 302
-    assert "requests" in resp.headers["Location"]
+    assert "home" in resp.headers["Location"]
     assert session["user_id"]
 
 
@@ -57,7 +57,7 @@ def test_successful_login_redirect_ccpo(client, monkeypatch):
     )
 
     assert resp.status_code == 302
-    assert "requests" in resp.headers["Location"]
+    assert "home" in resp.headers["Location"]
     assert session["user_id"]
 
 
@@ -119,8 +119,6 @@ def test_crl_validation_on_login(client):
             "HTTP_X_SSL_CLIENT_CERT": good_cert,
         },
     )
-    assert resp.status_code == 302
-    assert "requests" in resp.headers["Location"]
     assert session["user_id"]
 
 
