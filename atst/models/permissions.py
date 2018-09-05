@@ -23,6 +23,7 @@ class Permissions(object):
     DEACTIVATE_WORKSPACE = "deactivate_workspace"
     VIEW_ATAT_PERMISSIONS = "view_atat_permissions"
     TRANSFER_OWNERSHIP_OF_WORKSPACE = "transfer_ownership_of_workspace"
+    VIEW_WORKSPACE_MEMBERS = "view_workspace_members"
 
     ADD_APPLICATION_IN_WORKSPACE = "add_application_in_workspace"
     DELETE_APPLICATION_IN_WORKSPACE = "delete_application_in_workspace"
