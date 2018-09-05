@@ -19,24 +19,27 @@
         <div class='row'>
           <h2 class='spend-summary__heading col'>Workspace Total Spend</h2>
           <dl class='spend-summary__budget'>
+            {% set budget = workspace_totals['budget'] %}
+            {% set spent = workspace_totals['spent'] %}
+            {% set remaining = budget - spent %}
             <div>
               <dt>Budget </dt>
-              <dd>$100,000,000</dd>
+              <dd>{{ budget | dollars }}</dd>
             </div>
 
             <div>
               <dt>Remaining</dt>
-              <dd>$60,000,000</dd>
+              <dd>{{ remaining | dollars }}</dd>
             </div>
           </dl>
         </div>
 
         <div>
-          <meter value='40000000' min='0' max='100000000' title='$40,000,000 Total spend to date'></meter>
+          <meter value='{{ spent }}' min='0' max='{{ budget }}' title='{{ spent | dollars }} Total spend to date'></meter>
 
           <dl class='spend-summary__spent'>
             <dt>Total spend to date</dt>
-            <dd>$40,000,00</dd>
+            <dd>{{ spent | dollars }}</dd>
           </dl>
         </div>
       </div>
