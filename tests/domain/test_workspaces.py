@@ -121,7 +121,7 @@ def test_need_permission_to_create_workspace_user():
         Workspaces.create_member(random_user, workspace, user_data)
 
 
-def test_can_update_workspace_user_role():
+def test_update_workspace_user_role():
     owner = UserFactory.create()
     workspace = Workspaces.create(RequestFactory.create(creator=owner))
     user_data = {
@@ -132,10 +132,11 @@ def test_can_update_workspace_user_role():
         "dod_id": "1234567890",
     }
     member = Workspaces.create_member(owner, workspace, user_data)
-    role_name = "developer"
+    role_name = "admin"
 
     updated_member = Workspaces.update_member(owner, workspace, member, role_name)
     assert updated_member.workspace == workspace
+    assert updated_member.role == role_name
 
 
 def test_need_permission_to_update_workspace_user_role():
