@@ -14,7 +14,7 @@
     width: 100%;
     height: $input-height;
     margin: 0;
-    padding: $input-padding-vertical 0.7em;
+    padding: $input-padding-vertical ($gap*5) $input-padding-vertical 0.7em;
     line-height: $input-line-height;
     color: $color-base;
     font-size: $base-font-size;
@@ -42,6 +42,9 @@
 
           label {
             padding: 0;
+            dt {
+              font-weight: $font-bold;
+            }
           }
         }
       }

@@ -3,23 +3,6 @@
   padding: $gap*2;
   justify-content: space-between;
 
-  dl {
-    margin: 0;
-
-    > div {
-      margin-bottom: $gap;
-    }
-  }
-
-  dt {
-    font-weight: normal;
-    color: $color-gray;
-  }
-
-  dd {
-    display: inline;
-  }
-
   .member-card__header {
     display: flex;
     flex-direction: column;
@@ -35,11 +18,13 @@
     margin: 0;
     display: flex;
     margin-top: $gap;
+    fieldset {
+      margin: 0;
+    }
 
-    label {
+    legend {
       flex: none;
       margin-top: $gap*1.5;
-      font-weight: $font-normal;
       margin-right: $gap*2;
     }
   }
@@ -50,6 +35,23 @@
 
     .icon-link {
       margin: 0 -$gap;
+    }
+
+    dl {
+      margin: 0;
+
+      > div {
+        margin-bottom: $gap;
+      }
+    }
+
+    dt {
+      font-weight: normal;
+      color: $color-gray;
+    }
+
+    dd {
+      display: inline;
     }
   }
 }
