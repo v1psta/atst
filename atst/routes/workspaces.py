@@ -1,3 +1,5 @@
+from datetime import date, timedelta
+
 from flask import (
     Blueprint,
     render_template,
@@ -73,10 +75,21 @@ def workspace_reports(workspace_id):
     ):
         raise UnauthorizedError(g.current_user, "view workspace reports")
 
+    alternate_reports = http_request.args.get('alternate')
+    month = http_request.args.get('month', 3)
+    year = http_request.args.get('year', 2019)
+    current_month = date(int(year), int(month), 15)
+    prev_month = current_month - timedelta(days=28)
+    two_months_ago = prev_month - timedelta(days=28)
+
+
     return render_template(
         "workspace_reports.html",
-        workspace_totals=Reports.workspace_totals(workspace),
-        monthly_totals=Reports.monthly_totals(workspace),
+        workspace_totals=Reports.workspace_totals(alternate_reports),
+        monthly_totals=Reports.monthly_totals(alternate_reports),
+        current_month=current_month,
+        prev_month=prev_month,
+        two_months_ago=two_months_ago,
     )
 
 
