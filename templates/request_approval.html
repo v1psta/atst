@@ -72,9 +72,9 @@
 
         <div class="form__sub-fields">
 
-          <h3>Comments to Requestor</h3>
+          <h3>Instructions for the Requestor</h3>
 
-          You may leave a comment for the requestor explaining what changes are being requested or why further discussion is needed about this request. The requestor can then re-submit the request with your changes requested or may initiate an offline message (via email) to respond to the CCPO directly. <br> This notes are optional and <b>will be visible to requestors</b>.
+          Provide instructions or notes for additional information that is necessary to approve the request here. The requestor may then re-submit the updated request or initiate contact outside of AT-AT if further discussion is required. <b>These notes will be visible to the person making the JEDI request</b>.
 
           <div class='usa-input'>
             <label for='notes'>Comments <em>(optional)</em></label>
@@ -87,8 +87,9 @@
         <div class="form-row">
           <div class="form-col">
             <h3>Authorizing Officials</h3>
-            <p>This section is not visible to the requestor. It will only be visible to CCPO staff.</p>
+            <p>This section is not visible to the person making the request. It is only viewable by CCPO staff.</p>
             <p>Provide the name of the key officials for both parties that have authorized this request to move forward.</p>
+
           </div>
         </div>
         <h4 class="h3">Mission Authorizing Official</h4>
@@ -121,7 +122,7 @@
 
 
             <div class='usa-input'>
-              <label for='mo-behalf-email'>Mission Owner e-mail</label>
+              <label for='mo-behalf-email'>Mission Owner e-mail (optional)</label>
               <input id='mo-behalf-email' type='email' placeholder='name@mail.mil'/>
             </div>
 
@@ -131,20 +132,16 @@
           <div class='form-col'>
 
             <div class='usa-input'>
-              <label for='mo-behalf-phone'>Mission Owner phone number</label>
+              <label for='mo-behalf-phone'>Mission Owner phone number (optional)</label>
               <input id='mo-behalf-phone' type='tel' placeholder='(123) 456-7890'/>
             </div>
 
           </div>
 
-
-
         </div>
 
 
         <h4 class="h3">CCPO Authorizing Official</h4>
-
-
 
         <div class='form-row'>
 
@@ -168,8 +165,26 @@
 
         </div>
 
-      </div>
 
+
+        <h4 class="h3">CCPO Internal Notes</h4>
+
+        <p>You may add additional comments and notes for internal CCPO reference and follow-up here.</p>
+
+        <div class='form-row'>
+
+          <div class='form-col'>
+
+            <div class='usa-input'>
+              <label for='notes'>Internal Comments <em>(optional)</em></label>
+              <textarea id='notes' placeholder='Add notes or comments for internal CCPO reference.'/></textarea>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
 
     </section>
 
