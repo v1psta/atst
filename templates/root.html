@@ -1,9 +1,12 @@
+{% from "components/alert.html" import Alert %}
+
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>{% block title %}JEDI{% endblock %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}JEDI Cloud{% endblock %}</title>
   {% assets "css" %}
     <link rel="stylesheet" href="{{ ASSET_URL }}" type="text/css">
   {% endassets %}
@@ -11,19 +14,47 @@
 </head>
 <body>
 
-<main class="usa-grid-full usa-section login-area">
+<div id='app-root'>
 
-  <img class="logo-img" src="/static/img/logo-alt.png" alt="Defense Digital Service Logo">
+  <div class='global-layout login-layout'>
+    <div class='global-panel-container login-container'>
+      <div class='col'>
 
-  <h1 class="usa-display">JEDI</h1>
+        <div class='login-banner'>
+          <h1 class="login-banner__heading">Access the JEDI Cloud</h1>
 
-  <a class="usa-button" href='{{ config.get('CAC_URL','https://cac.atat.codes') }}'><span>Sign In with CAC</span></a>
-  <button class="usa-button" disabled>Sign In via MFA</button>
-  {% if g.dev %}
-    <a class="usa-button usa-button-secondary" href='/login-dev'><span>DEV Login</span></a>
-  {% endif %}
+          <img class="login-banner__logo" src="/static/img/logo-alt.png" alt="Defense Digital Service Logo">
 
-</main>
+          <a class="usa-button usa-button-big login-banner__button" href='{{ config.get('CAC_URL','https://cac.atat.codes') }}'><span>Sign in with CAC card</span></a>
+
+          {% if g.dev %}
+            <a class="usa-button usa-button-big usa-button-secondary" href='/login-dev'><span>DEV Login</span></a>
+          {% endif %}
+        </div>
+
+        {{ Alert('Certificate Selection',
+          message='When you are prompted to select a certificate, please select <strong>E-mail Certificate</strong> from the provided choices.',
+          actions=[
+            {
+              'label': 'Learn More',
+              'icon': 'help',
+              'href': '/'
+            }
+          ]
+        ) }}
+
+      </div>
+    </div>
+  </div>
+
+  <footer class='app-footer'>
+    <h5>Joint Enterprise Defense Infrastructure</h5>
+    <dl class='browser-support'>
+      <dt>JEDI Cloud supported on these web browsers</dt>
+      <dd>Chrome</dd><dd>Firefox</dd><dd>Safari</dd><dd>Edge</dd><dd>IE11 on Windows 10</dd><dd>IE10 on Windows 7</dd>
+  </footer>
+
+</div>
 
 </body>
 </html>
