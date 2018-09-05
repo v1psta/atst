@@ -8,9 +8,10 @@ from flask import (
 )
 
 from atst.domain.exceptions import UnauthorizedError
+from atst.domain.projects import Projects
+from atst.domain.reports import Reports
 from atst.domain.workspaces import Workspaces
 from atst.domain.workspace_users import WorkspaceUsers
-from atst.domain.projects import Projects
 from atst.forms.new_project import NewProjectForm
 from atst.forms.new_member import NewMemberForm
 from atst.forms.edit_member import EditMemberForm
@@ -66,7 +67,16 @@ def workspace_members(workspace_id):
 
 @bp.route("/workspaces/<workspace_id>/reports")
 def workspace_reports(workspace_id):
-    return render_template("workspace_reports.html", workspace_id=workspace_id)
+    workspace = Workspaces.get(g.current_user, workspace_id)
+    if not Authorization.has_workspace_permission(
+        g.current_user, workspace, Permissions.VIEW_USAGE_DOLLARS
+    ):
+        raise UnauthorizedError(g.current_user, "view workspace reports")
+
+    return render_template(
+        "workspace_reports.html",
+        workspace_totals=Reports.workspace_totals(workspace),
+    )
 
 
 @bp.route("/workspaces/<workspace_id>/projects/new")
