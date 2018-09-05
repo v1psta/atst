@@ -20,7 +20,7 @@
 
   @include media($medium-screen) {
     @include grid-row;
-    align-items: flex-end;
+    align-items: flex-start;
     justify-content: flex-start;
 
     .form-col {
