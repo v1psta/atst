@@ -75,13 +75,12 @@ def workspace_reports(workspace_id):
     ):
         raise UnauthorizedError(g.current_user, "view workspace reports")
 
-    alternate_reports = http_request.args.get('alternate')
-    month = http_request.args.get('month', 3)
-    year = http_request.args.get('year', 2019)
+    alternate_reports = http_request.args.get("alternate")
+    month = http_request.args.get("month", 3)
+    year = http_request.args.get("year", 2019)
     current_month = date(int(year), int(month), 15)
     prev_month = current_month - timedelta(days=28)
     two_months_ago = prev_month - timedelta(days=28)
-
 
     return render_template(
         "workspace_reports.html",
