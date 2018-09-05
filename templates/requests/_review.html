@@ -4,7 +4,7 @@
 
 {% macro DefinitionReviewField(title, section, item_name, filter=None, filter_args=[]) -%}
   <div>
-    <dt>{{ title }}</dt>
+    <dt>{{ title | safe }}</dt>
     <dd>
       {% if data[section] and data[section][item_name] %}
         {{ data[section][item_name] | findFilter(filter, filter_args) }}
@@ -125,4 +125,57 @@
   {{ DefinitionReviewField("DOD ID", "primary_poc", "dodid_poc") }}
 </dl>
 
+{% if financial_review %}
+  <hr>
+  <h2>
+    Financial Verification
+  </h2>
 
+  <dl>
+    {{ DefinitionReviewField("Task Order Number", "task_order", "number") }}
+
+    {{ DefinitionReviewField("What is the source of funding?", "task_order", "funding_type", filter="getOptionLabel", filter_args=[funding_types]) }}
+
+    {% if data["task_order"] and data["task_order"]["funding_type"].value == "OTHER" %}
+      {{ DefinitionReviewField("If other, please specify", "task_order", "funding_type_other") }}
+    {% endif %}
+
+    {{ DefinitionReviewField("<dl><dt>CLIN 0001</dt> - <dd>Unclassified IaaS and PaaS Amount</dd></dl>", "task_order", "clin_0001", filter="dollars") }}
+
+    {{ DefinitionReviewField("<dl><dt>CLIN 0003</dt> - <dd>Unclassified Cloud Support Package</dd></dl>", "task_order", "clin_0003", filter="dollars") }}
+
+    {{ DefinitionReviewField("<dl><dt>CLIN 1001</dt> - <dd>Unclassified IaaS and PaaS Amount <br> OPTION PERIOD 1</dd></dl>", "task_order", "clin_1001", filter="dollars") }}
+
+    {{ DefinitionReviewField("<dl><dt>CLIN 1003</dt> - <dd>Unclassified Cloud Support Package <br> OPTION PERIOD 1</dd></dl>", "task_order", "clin_1003", filter="dollars") }}
+
+    {{ DefinitionReviewField("<dl><dt>CLIN 2001</dt> - <dd>Unclassified IaaS and PaaS Amount <br> OPTION PERIOD 2</dd></dl>", "task_order", "clin_2001", filter="dollars") }}
+
+    {{ DefinitionReviewField("<dl><dt>CLIN 2003</dt> - <dd>Unclassified Cloud Support Package <br> OPTION PERIOD 2</dd></dl>", "task_order", "clin_2003", filter="dollars") }}
+
+    <!-- {{ DefinitionReviewField("Task Order PDF", "task_order", "attachment") }} -->
+
+    {{ DefinitionReviewField("Unique Item Identifier (UII)s related to your application(s) if you already have them", "financial_verification", "uii_ids", filter="renderList") }}
+
+    {{ DefinitionReviewField("Program Element (PE) Number related to your request", "financial_verification", "pe_id") }}
+
+    {{ DefinitionReviewField("Program Treasury Code", "financial_verification", "treasury_code") }}
+
+    {{ DefinitionReviewField("Program Budget Activity (BA) Code", "financial_verification", "ba_code") }}
+
+    {{ DefinitionReviewField("Contracting Officer First Name", "financial_verification", "fname_co") }}
+
+    {{ DefinitionReviewField("Contracting Officer Last Name", "financial_verification", "lname_co") }}
+
+    {{ DefinitionReviewField("Contracting Officer Email", "financial_verification", "email_co") }}
+
+    {{ DefinitionReviewField("Contracting Officer Office", "financial_verification", "office_co") }}
+
+    {{ DefinitionReviewField("Contracting Officer Representative (COR) First Name", "financial_verification", "fname_cor") }}
+
+    {{ DefinitionReviewField("Contracting Officer Representative (COR) Last Name", "financial_verification", "lname_cor") }}
+
+    {{ DefinitionReviewField("Contracting Officer Representative (COR) Email", "financial_verification", "email_cor") }}
+
+    {{ DefinitionReviewField("Contracting Officer Representative (COR) Office", "financial_verification", "office_cor") }}
+  </dl>
+{% endif %}

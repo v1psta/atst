@@ -140,3 +140,11 @@ WORKSPACE_ROLES = [
         },
     ),
 ]
+
+FUNDING_TYPES = [
+    ("", "- Select -"),
+    ("RDTE", "Research, Development, Testing & Evaluation (RDT&E)"),
+    ("OM", "Operations & Maintenance (O&M)"),
+    ("PROC", "Procurement (PROC)"),
+    ("OTHER", "Other"),
+]

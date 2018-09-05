@@ -30,6 +30,8 @@ def readableInteger(value):
 
 
 def getOptionLabel(value, options):
+    if hasattr(value, "value"):
+        value = value.value
     try:
         return next(tup[1] for tup in options if tup[0] == value)
     except StopIteration:
@@ -59,6 +61,10 @@ def findFilter(value, filter_name, filter_args=[]):
         raise ValueError("filter name {} not found".format(filter_name))
 
 
+def renderList(value):
+    return app.jinja_env.filters["safe"]("<br>".join(value))
+
+
 def register_filters(app):
     app.jinja_env.filters["iconSvg"] = iconSvg
     app.jinja_env.filters["dollars"] = dollars
@@ -67,3 +73,4 @@ def register_filters(app):
     app.jinja_env.filters["getOptionLabel"] = getOptionLabel
     app.jinja_env.filters["mixedContentToJson"] = mixedContentToJson
     app.jinja_env.filters["findFilter"] = findFilter
+    app.jinja_env.filters["renderList"] = renderList
