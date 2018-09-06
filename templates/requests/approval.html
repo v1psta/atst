@@ -16,14 +16,6 @@
 
       <div class='panel__content'>
 
-        <p>
-          {% if data["details_of_use"] and data["details_of_use"]["jedi_usage"] %}
-            {{ data["details_of_use"]["jedi_usage"] }}
-          {% else %}
-            <i>Missing usage information</i>
-          {% endif %}
-        </p>
-
         {% with data=data, request_id=request_id %}
           {% include "requests/_review.html" %}
         {% endwith %}
