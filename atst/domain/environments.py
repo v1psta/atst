@@ -1,5 +1,6 @@
 from atst.database import db
 from atst.models.environment import Environment
+from atst.models.environment_role import EnvironmentRole, CSPRole
 
 
 class Environments(object):
@@ -16,3 +17,13 @@ class Environments(object):
             environment = Environment(project=project, name=name)
             db.session.add(environment)
         db.session.commit()
+
+    @classmethod
+    def add_member(cls, user, environment, member):
+        environment_user = EnvironmentRole(
+            user=member, environment=environment, role=CSPRole.NONSENSE_ROLE.value
+        )
+        db.session.add(environment_user)
+        db.session.commit()
+
+        return environment

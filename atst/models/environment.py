@@ -14,3 +14,7 @@ class Environment(Base, TimestampsMixin):
 
     project_id = Column(ForeignKey("projects.id"))
     project = relationship("Project")
+
+    @property
+    def users(self):
+        return [r.user for r in self.roles]
