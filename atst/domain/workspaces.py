@@ -30,7 +30,9 @@ class Workspaces(object):
         except NoResultFound:
             raise NotFoundError("workspace")
 
-        if not Authorization.has_workspace_permission(user, workspace, Permissions.VIEW_WORKSPACE):
+        if not Authorization.has_workspace_permission(
+            user, workspace, Permissions.VIEW_WORKSPACE
+        ):
             raise UnauthorizedError(user, "get workspace")
 
         return workspace
