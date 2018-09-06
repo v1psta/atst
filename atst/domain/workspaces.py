@@ -30,10 +30,9 @@ class Workspaces(object):
         except NoResultFound:
             raise NotFoundError("workspace")
 
-        if not Authorization.has_workspace_permission(
-            user, workspace, Permissions.VIEW_WORKSPACE
-        ):
-            raise UnauthorizedError(user, "get workspace")
+        Authorization.check_workspace_permission(
+            user, workspace, Permissions.VIEW_WORKSPACE, "get workspace"
+        )
 
         return workspace
 
@@ -58,10 +57,9 @@ class Workspaces(object):
     @classmethod
     def get_with_members(cls, user, workspace_id):
         workspace = Workspaces.get(user, workspace_id)
-        if not Authorization.has_workspace_permission(
-            user, workspace, Permissions.VIEW_WORKSPACE_MEMBERS
-        ):
-            raise UnauthorizedError(user, "view workspace members")
+        Authorization.check_workspace_permission(
+            user, workspace, Permissions.VIEW_WORKSPACE_MEMBERS, "view workspace members"
+        )
         return workspace
 
     @classmethod
