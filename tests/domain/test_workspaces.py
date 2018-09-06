@@ -155,3 +155,19 @@ def test_need_permission_to_update_workspace_user_role():
 
     with pytest.raises(UnauthorizedError):
         Workspaces.update_member(random_user, workspace, member, role_name)
+
+
+def test_owner_can_view_workspace_members():
+    owner = UserFactory.create()
+    workspace = Workspaces.create(RequestFactory.create(creator=owner))
+    workspace = Workspaces.get_with_members(owner, workspace.id)
+
+    assert workspace
+
+
+def test_ccpo_can_view_workspace_members():
+    workspace = Workspaces.create(RequestFactory.create(creator=UserFactory.create()))
+    ccpo = UserFactory.from_atat_role("ccpo")
+    workspace = Workspaces.get_with_members(ccpo, workspace.id)
+
+    assert workspace

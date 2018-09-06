@@ -63,13 +63,7 @@ def show_workspace(workspace_id):
 
 @bp.route("/workspaces/<workspace_id>/members")
 def workspace_members(workspace_id):
-    user = g.current_user
-    workspace = Workspaces.get(user, workspace_id)
-    if not Authorization.has_workspace_permission(
-        user, workspace, Permissions.VIEW_WORKSPACE_MEMBERS
-    ):
-        raise UnauthorizedError(user, "view workspace members")
-
+    workspace = Workspaces.get_with_members(g.current_user, workspace_id)
     return render_template("workspace_members.html", workspace=workspace)
 
 

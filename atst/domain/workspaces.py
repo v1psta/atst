@@ -54,6 +54,15 @@ class Workspaces(object):
         return workspace
 
     @classmethod
+    def get_with_members(cls, user, workspace_id):
+        workspace = Workspaces.get(user, workspace_id)
+        if not Authorization.has_workspace_permission(
+            user, workspace, Permissions.VIEW_WORKSPACE_MEMBERS
+        ):
+            raise UnauthorizedError(user, "view workspace members")
+        return workspace
+
+    @classmethod
     def get_many(cls, user):
         workspaces = (
             db.session.query(Workspace)
