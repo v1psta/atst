@@ -22,24 +22,32 @@ def upgrade():
 
     session = Session(bind=op.get_bind())
 
-    owner_role = session.query(Role).filter_by(name="owner").one()
-    owner_role.add_permission(Permissions.VIEW_WORKSPACE_MEMBERS)
+    all_roles_but_default = session.query(Role).filter(Role.name != "default").all()
+    for role in all_roles_but_default:
+        role.add_permission(Permissions.VIEW_WORKSPACE)
+        session.add(role)
 
-    ccpo_role = session.query(Role).filter_by(name="ccpo").one()
-    ccpo_role.add_permission(Permissions.VIEW_WORKSPACE_MEMBERS)
+    owner_and_ccpo = session.query(Role).filter(Role.name.in_(["owner", "ccpo"])).all()
+    for role in owner_and_ccpo:
+        role.add_permission(Permissions.VIEW_WORKSPACE_MEMBERS)
+        session.add(role)
 
-    session.add_all((ccpo_role, owner_role))
+    session.flush()
     session.commit()
 
 
 def downgrade():
     session = Session(bind=op.get_bind())
 
-    owner_role = session.query(Role).filter_by(name="owner").one()
-    owner_role.remove_permission(Permissions.VIEW_WORKSPACE_MEMBERS)
+    all_roles_but_default = session.query(Role).filter(Role.name != "default").all()
+    for role in all_roles_but_default:
+        role.remove_permission(Permissions.VIEW_WORKSPACE)
+        session.add(role)
 
-    ccpo_role = session.query(Role).filter_by(name="ccpo").one()
-    ccpo_role.remove_permission(Permissions.VIEW_WORKSPACE_MEMBERS)
+    owner_and_ccpo = session.query(Role).filter(Role.name.in_(["owner", "ccpo"])).all()
+    for role in owner_and_ccpo:
+        role.remove_permission(Permissions.VIEW_WORKSPACE_MEMBERS)
+        session.add(role)
 
-    session.add_all((ccpo_role, owner_role))
+    session.flush()
     session.commit()
