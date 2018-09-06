@@ -25,11 +25,7 @@ class Workspaces(object):
 
     @classmethod
     def get(cls, user, workspace_id):
-        try:
-            workspace = db.session.query(Workspace).filter_by(id=workspace_id).one()
-        except NoResultFound:
-            raise NotFoundError("workspace")
-
+        workspace = Workspaces._get(workspace_id)
         Authorization.check_workspace_permission(
             user, workspace, Permissions.VIEW_WORKSPACE, "get workspace"
         )
@@ -38,7 +34,7 @@ class Workspaces(object):
 
     @classmethod
     def get_for_update(cls, user, workspace_id):
-        workspace = Workspaces.get(user, workspace_id)
+        workspace = Workspaces._get(workspace_id)
         Authorization.check_workspace_permission(
             user, workspace, Permissions.ADD_APPLICATION_IN_WORKSPACE, "add project"
         )
@@ -56,13 +52,14 @@ class Workspaces(object):
 
     @classmethod
     def get_with_members(cls, user, workspace_id):
-        workspace = Workspaces.get(user, workspace_id)
+        workspace = Workspaces._get(workspace_id)
         Authorization.check_workspace_permission(
             user,
             workspace,
             Permissions.VIEW_WORKSPACE_MEMBERS,
             "view workspace members",
         )
+
         return workspace
 
     @classmethod
@@ -112,3 +109,12 @@ class Workspaces(object):
         workspace_role = WorkspaceRole(user=user, role=role, workspace=workspace)
         db.session.add(workspace_role)
         return workspace_role
+
+    @classmethod
+    def _get(cls, workspace_id):
+        try:
+            workspace = db.session.query(Workspace).filter_by(id=workspace_id).one()
+        except NoResultFound:
+            raise NotFoundError("workspace")
+
+        return workspace
