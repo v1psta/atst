@@ -14,7 +14,7 @@ from atst.models.permissions import Permissions
 
 # revision identifiers, used by Alembic.
 revision = 'ad30159ef19b'
-down_revision = '06aa23166ca9'
+down_revision = 'c1d074288e99'
 branch_labels = None
 depends_on = None
 
