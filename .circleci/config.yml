@@ -1,22 +1,4 @@
 version: 2.0
-
-workflows:
-  version: 2
-  jobs:
-    - app_setup
-    - sync_crls:
-        requires:
-          - app_setup
-    - test:
-        requires:
-          - sync_crls
-    - deploy:
-        requires:
-          - test
-        filters:
-          branches:
-            only: master
-
 jobs:
   app_setup:
     docker:
@@ -155,3 +137,19 @@ jobs:
           name: "Run Tests"
           command: ./script/cibuild
 
+workflows:
+  version: 2
+  jobs:
+    - app_setup
+    - sync_crls:
+        requires:
+          - app_setup
+    - test:
+        requires:
+          - sync_crls
+    - deploy:
+        requires:
+          - test
+        filters:
+          branches:
+            only: master
