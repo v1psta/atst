@@ -103,6 +103,18 @@ jobs:
           name: "Run Tests"
           command: ./script/cibuild
 
+  build_image:
+    docker:
+      - image: *sourceImage
+        auth: *sourceAuth
+    steps:
+      - attach_workspace:
+          at: .
+      - setup_remote_docker
+      - run:
+          name: "List Running Containers"
+          command: docker container ls
+
 workflows:
   version: 2
   run-tests:
@@ -111,3 +123,9 @@ workflows:
       - test:
           requires:
             - app_setup
+      - build_image:
+          requires:
+            - test
+          filters:
+            branches:
+              only: circleci-workflow
