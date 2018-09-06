@@ -20,6 +20,8 @@ jobs:
           name: "Clone Submodules"
           command: |
             git submodule update --init --recursive
+      - attach_workspace:
+          at: .
       - restore_cache:
           name: "Load Cache: Pipenv References"
           keys:
@@ -63,6 +65,10 @@ jobs:
           paths:
             - ./node_modules
           key: node-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
+      - persist_to_workspace:
+          root: .
+          paths:
+            - ./static
 
   sync_crls:
     docker:
@@ -125,6 +131,8 @@ jobs:
           name: "Clone Submodules"
           command: |
             git submodule update --init --recursive
+      - attach_workspace:
+          at: .
       - restore_cache:
           name: "Load Cache: Pipenv References"
           keys:
