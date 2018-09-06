@@ -1,17 +1,23 @@
 version: 2.0
+
+defaults:
+  sourceImage: &sourceImage registry.atat.codes:443/atat-app-builder:circleci-cd
+  sourceAuth: &sourceAuth
+    username: $REGISTRY_USERNAME
+    password: $REGISTRY_PASSWORD
+  appEnvironment: &appEnvironment
+    KEEP_EXISTING_VENV: true
+    PGHOST: localhost
+    PGUSER: root
+    PGDATABASE: circle_test
+    REDIS_URI: redis://localhost:6379
+
 jobs:
   app_setup:
     docker:
-      - image: registry.atat.codes:443/atat-app-builder:circleci
-        auth:
-          username: $REGISTRY_USERNAME
-          password: $REGISTRY_PASSWORD
-        environment:
-          KEEP_EXISTING_VENV: true
-          PGHOST: localhost
-          PGUSER: root
-          PGDATABASE: circle_test
-          REDIS_URI: redis://localhost:6379
+      - image: *sourceImage
+        auth: *sourceAuth
+        environment: *appEnvironment
       - image: circleci/postgres:9.6.5-alpine-ram
       - image: circleci/redis:4-alpine3.8
     steps:
@@ -85,16 +91,9 @@ jobs:
 
   test:
     docker:
-      - image: registry.atat.codes:443/atat-app-builder:circleci
-        auth:
-          username: $REGISTRY_USERNAME
-          password: $REGISTRY_PASSWORD
-        environment:
-          KEEP_EXISTING_VENV: true
-          PGHOST: localhost
-          PGUSER: root
-          PGDATABASE: circle_test
-          REDIS_URI: redis://localhost:6379
+      - image: *sourceImage
+        auth: *sourceAuth
+        environment: *appEnvironment
       - image: circleci/postgres:9.6.5-alpine-ram
       - image: circleci/redis:4-alpine3.8
     steps:
