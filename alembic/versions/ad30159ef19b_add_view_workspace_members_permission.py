@@ -27,7 +27,7 @@ def upgrade():
         role.add_permission(Permissions.VIEW_WORKSPACE)
         session.add(role)
 
-    owner_and_ccpo = session.query(Role).filter(Role.name.in_(["owner", "ccpo"])).all()
+    owner_and_ccpo = session.query(Role).filter(Role.name.in_(["owner", "ccpo", "admin"])).all()
     for role in owner_and_ccpo:
         role.add_permission(Permissions.VIEW_WORKSPACE_MEMBERS)
         session.add(role)
