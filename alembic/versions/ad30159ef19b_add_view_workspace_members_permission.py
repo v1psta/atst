@@ -7,6 +7,8 @@ Create Date: 2018-09-05 11:17:17.204089
 """
 from alembic import op
 from sqlalchemy.orm.session import Session
+from sqlalchemy.orm.attributes import flag_modified
+
 from atst.models.role import Role
 from atst.models.permissions import Permissions
 
@@ -27,6 +29,24 @@ def upgrade():
     ccpo_role = session.query(Role).filter_by(name="ccpo").one()
     ccpo_role.permissions.append(Permissions.VIEW_WORKSPACE_MEMBERS)
 
+    flag_modified(owner_role, "permissions")
+    flag_modified(ccpo_role, "permissions")
+
+    session.add_all((ccpo_role, owner_role))
+    session.commit()
+
 
 def downgrade():
-    pass
+    session = Session(bind=op.get_bind())
+
+    owner_role = session.query(Role).filter_by(name="owner").one()
+    owner_role.permissions.append(Permissions.VIEW_WORKSPACE_MEMBERS)
+
+    ccpo_role = session.query(Role).filter_by(name="ccpo").one()
+    ccpo_role.permissions.append(Permissions.VIEW_WORKSPACE_MEMBERS)
+
+    flag_modified(owner_role, "permissions")
+    flag_modified(ccpo_role, "permissions")
+
+    session.add_all((ccpo_role, owner_role))
+    session.commit()
