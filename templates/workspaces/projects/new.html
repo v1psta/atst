@@ -1,0 +1,17 @@
+{% extends "workspaces/base.html" %}
+
+{% block workspace_content %}
+
+{% set modalName = "newProjectConfirmation" %}
+{% if request.args.get("newWorkspace") %}
+  {{ Alert('Workspace created!',
+    message="\
+      <p>You are now ready to create projects and environments within the JEDI Cloud.</p>
+    ",
+    level='success'
+  ) }}
+{% endif %}
+
+{% include "fragments/edit_project_form.html" %}
+
+{% endblock %}

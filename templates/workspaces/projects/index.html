@@ -2,7 +2,7 @@
 {% from "components/alert.html" import Alert %}
 {% from "components/empty_state.html" import EmptyState %}
 
-{% extends "base_workspace.html" %}
+{% extends "workspaces/base.html" %}
 
 
 {% block workspace_content %}
@@ -25,7 +25,7 @@
     <div class='block-list project-list-item'>
       <header class='block-list__header'>
         <h2 class='block-list__title'>{{ project.name }} ({{ project.environments|length }} environments)</h2>
-        <a class='icon-link' href='/workspaces/123456/projects/789/edit'>
+        <a class='icon-link' href='{{ url_for("workspaces.edit_project", workspace_id=workspace.id, project_id=project.id) }}'>
           {{ Icon('edit') }}
           <span>edit</span>
         </a>

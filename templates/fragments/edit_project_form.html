@@ -1,30 +1,20 @@
 {% from "components/icon.html" import Icon %}
 {% from "components/modal.html" import Modal %}
 {% from "components/text_input.html" import TextInput %}
-{% from "components/tooltip.html" import Tooltip %}
 {% from "components/alert.html" import Alert %}
 
-{% extends "base_workspace.html" %}
-
-{% block workspace_content %}
-
-{% set modalName = "newProjectConfirmation" %}
-{% if request.args.get("newWorkspace") %}
-  {{ Alert('Workspace created!',
-    message="\
-      <p>You are now ready to create projects and environments within the JEDI Cloud.</p>
-    ",
-    level='success'
-  ) }}
-{% endif %}
-
 <new-project inline-template v-bind:initial-data='{{ form.data|tojson }}'>
-  <form method="POST" action="{{ url_for('workspaces.update_project', workspace_id=workspace.id) }}" >
+  {% set new_project = project is not defined %}
+  {% set form_action = url_for('workspaces.create_project', workspace_id=workspace.id) if new_project else url_for('workspaces.edit_project', workspace_id=workspace.id, project_id=project.id) %}
+  {% set action_text = 'Create' if new_project else 'Update' %}
+  {% set title_text = 'Add a new project' if new_project else 'Edit {} project'.format(project.name) %}
+
+  <form method="POST" action="{{ form_action }}" >
     {% call Modal(name=modalName, dismissable=False) %}
-      <h1>Create project !{ name }</h1>
+      <h1>{{ action_text }} project !{ name }</h1>
 
       <p>
-      When you click <em>Create Project</em>, the environments
+      When you click <em>{{ action_text }} Project</em>, the environments
       <span v-for="(environment, index) in environments">
         <strong>!{environment.name}</strong><template v-if="index < (environments.length - 1)">, </template>
       </span>
@@ -32,7 +22,7 @@
       </p>
 
       <div class='action-group'>
-        <button type='submit' class='action-group__action usa-button' tabindex='0'>Create Project</button>
+        <button type='submit' class='action-group__action usa-button' tabindex='0'>{{ action_text }} Project</button>
         <button type='button' v-on:click="closeModal('{{ modalName }}')" class='icon-link action-group__action' tabindex='0'>Cancel</button>
       </div>
     {% endcall %}
@@ -40,7 +30,7 @@
     {{ form.csrf_token }}
     <div class="panel">
       <div class="panel__heading panel__heading--grow">
-        <h1>Add a new project</h1>
+        <h1>{{ title_text }}</h1>
       </div>
 
       <div class="panel__content">
@@ -86,11 +76,11 @@
 
 
       <div class="action-group">
-        <button v-on:click="openModal('{{ modalName }}')" class="usa-button usa-button-primary" tabindex="0" type="button">Create Project</button>
+        <button v-on:click="openModal('{{ modalName }}')" class="usa-button usa-button-primary" tabindex="0" type="button">{{ action_text }} Project</button>
       </div>
 
     </div>
 
   </form>
 </new-project>
-{% endblock %}
+

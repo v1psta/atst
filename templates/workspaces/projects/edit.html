@@ -1,0 +1,17 @@
+{% extends "workspaces/base.html" %}
+
+{% from "components/alert.html" import Alert %}
+{% from "components/icon.html" import Icon %}
+
+{% block workspace_content %}
+
+{{ Alert(
+  "UI Mock",
+  message="<p>Please note, this screen is a non-functional UI mockup.</p>",
+  level="warning"
+) }}
+
+{% set modalName = "updateProjectConfirmation" %}
+{% include "fragments/edit_project_form.html" %}
+
+{% endblock %}
