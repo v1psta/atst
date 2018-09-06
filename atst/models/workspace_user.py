@@ -1,3 +1,9 @@
+from atst.database import db
+from atst.models.environment_role import EnvironmentRole
+from atst.models.project import Project
+from atst.models.environment import Environment
+
+
 class WorkspaceUser(object):
     def __init__(self, user, workspace_role):
         self.user = user
@@ -14,6 +20,7 @@ class WorkspaceUser(object):
     def workspace(self):
         return self.workspace_role.workspace
 
+    @property
     def workspace_id(self):
         return self.workspace_role.workspace_id
 
@@ -32,3 +39,16 @@ class WorkspaceUser(object):
     @property
     def status(self):
         return "radical"
+
+    @property
+    def has_environment_roles(self):
+        num_environment_roles = (
+            db.session.query(EnvironmentRole)
+            .join(EnvironmentRole.environment)
+            .join(Environment.project)
+            .join(Project.workspace)
+            .filter(Project.workspace_id == self.workspace_id)
+            .filter(EnvironmentRole.user_id == self.user_id)
+            .count()
+        )
+        return num_environment_roles > 0
