@@ -74,6 +74,10 @@ jobs:
           KEEP_EXISTING_VENV: true
     steps:
       - checkout
+      - run:
+          name: "Clone Submodules"
+          command: |
+            git submodule update --init --recursive
       - attach_workspace:
           at: .
       - restore_cache:
@@ -117,6 +121,10 @@ jobs:
       - image: circleci/redis:4-alpine3.8
     steps:
       - checkout
+      - run:
+          name: "Clone Submodules"
+          command: |
+            git submodule update --init --recursive
       - restore_cache:
           name: "Load Cache: Pipenv References"
           keys:
