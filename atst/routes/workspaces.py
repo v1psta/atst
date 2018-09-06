@@ -70,10 +70,12 @@ def workspace_members(workspace_id):
 @bp.route("/workspaces/<workspace_id>/reports")
 def workspace_reports(workspace_id):
     workspace = Workspaces.get(g.current_user, workspace_id)
-    if not Authorization.has_workspace_permission(
-        g.current_user, workspace, Permissions.VIEW_USAGE_DOLLARS
-    ):
-        raise UnauthorizedError(g.current_user, "view workspace reports")
+    Authorization.check_workspace_permission(
+        g.current_user,
+        workspace,
+        Permissions.VIEW_USAGE_DOLLARS,
+        "view workspace reports",
+    )
 
     alternate_reports = http_request.args.get("alternate")
     month = http_request.args.get("month", 3)
