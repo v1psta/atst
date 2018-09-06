@@ -139,11 +139,12 @@ jobs:
 
 workflows:
   version: 2
-  jobs:
-    - app_setup
-    - sync_crls:
-        requires:
-          - app_setup
-    - test:
-        requires:
-          - sync_crls
+  run-tests:
+    jobs:
+      - app_setup
+      - sync_crls:
+          requires:
+            - app_setup
+      - test:
+          requires:
+            - sync_crls
