@@ -131,6 +131,14 @@
     Financial Verification
   </h2>
 
+  {% if pdf_available %}
+    <div>
+      <a href="{{ url_for("requests.task_order_pdf_download", request_id=request_id)}}" download>
+        Download the Task Order PDF
+      </a>
+    </div>
+  {% endif %}
+
   <dl>
     {{ DefinitionReviewField("Task Order Number", "task_order", "number") }}
 
@@ -151,16 +159,6 @@
     {{ DefinitionReviewField("<dl><dt>CLIN 2001</dt> - <dd>Unclassified IaaS and PaaS Amount <br> OPTION PERIOD 2</dd></dl>", "task_order", "clin_2001", filter="dollars") }}
 
     {{ DefinitionReviewField("<dl><dt>CLIN 2003</dt> - <dd>Unclassified Cloud Support Package <br> OPTION PERIOD 2</dd></dl>", "task_order", "clin_2003", filter="dollars") }}
-
-    <!-- {{ DefinitionReviewField("Task Order PDF", "task_order", "attachment") }} -->
-    <div>
-      <dt>Task Order PDF</dt>
-      <dd>
-        <a href="{{ url_for("requests.task_order_pdf_download", request_id=request_id)}}" download>
-          Download the Task Order PDF
-        </a>
-      </dd>
-    </div>
 
     {{ DefinitionReviewField("Unique Item Identifier (UII)s related to your application(s) if you already have them", "financial_verification", "uii_ids", filter="renderList") }}
 

@@ -29,6 +29,7 @@ def approval(request_id):
         data=data,
         request_id=request.id,
         financial_review=True,
+        pdf_available=request.task_order and request.task_order.pdf,
     )
 
 
