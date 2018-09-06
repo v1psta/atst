@@ -3,7 +3,7 @@ from sqlalchemy.orm.exc import NoResultFound
 from atst.database import db
 from atst.models.workspace import Workspace
 from atst.models.workspace_role import WorkspaceRole
-from atst.domain.exceptions import NotFoundError, UnauthorizedError
+from atst.domain.exceptions import NotFoundError
 from atst.domain.roles import Roles
 from atst.domain.authz import Authorization
 from atst.models.permissions import Permissions
@@ -25,19 +25,16 @@ class Workspaces(object):
 
     @classmethod
     def get(cls, user, workspace_id):
-        try:
-            workspace = db.session.query(Workspace).filter_by(id=workspace_id).one()
-        except NoResultFound:
-            raise NotFoundError("workspace")
-
-        if not Authorization.is_in_workspace(user, workspace):
-            raise UnauthorizedError(user, "get workspace")
+        workspace = Workspaces._get(workspace_id)
+        Authorization.check_workspace_permission(
+            user, workspace, Permissions.VIEW_WORKSPACE, "get workspace"
+        )
 
         return workspace
 
     @classmethod
     def get_for_update(cls, user, workspace_id):
-        workspace = Workspaces.get(user, workspace_id)
+        workspace = Workspaces._get(workspace_id)
         Authorization.check_workspace_permission(
             user, workspace, Permissions.ADD_APPLICATION_IN_WORKSPACE, "add project"
         )
@@ -50,6 +47,18 @@ class Workspaces(object):
             workspace = db.session.query(Workspace).filter_by(request=request).one()
         except NoResultFound:
             raise NotFoundError("workspace")
+
+        return workspace
+
+    @classmethod
+    def get_with_members(cls, user, workspace_id):
+        workspace = Workspaces._get(workspace_id)
+        Authorization.check_workspace_permission(
+            user,
+            workspace,
+            Permissions.VIEW_WORKSPACE_MEMBERS,
+            "view workspace members",
+        )
 
         return workspace
 
@@ -100,3 +109,12 @@ class Workspaces(object):
         workspace_role = WorkspaceRole(user=user, role=role, workspace=workspace)
         db.session.add(workspace_role)
         return workspace_role
+
+    @classmethod
+    def _get(cls, workspace_id):
+        try:
+            workspace = db.session.query(Workspace).filter_by(id=workspace_id).one()
+        except NoResultFound:
+            raise NotFoundError("workspace")
+
+        return workspace
