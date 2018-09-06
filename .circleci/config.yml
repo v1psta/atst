@@ -68,7 +68,7 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - ./static
+            - .
 
   sync_crls:
     docker:
@@ -79,25 +79,8 @@ jobs:
         environment:
           KEEP_EXISTING_VENV: true
     steps:
-      - checkout
-      - run:
-          name: "Clone Submodules"
-          command: |
-            git submodule update --init --recursive
       - attach_workspace:
           at: .
-      - restore_cache:
-          name: "Load Cache: Pipenv References"
-          keys:
-            - pipenv-v1-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
-      - restore_cache:
-          name: "Load Cache: Python Venv"
-          keys:
-            - venv-v1-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
-      - restore_cache:
-          name: "Load Cache: Node Modules"
-          keys:
-            - node-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
       - restore_cache:
           name: "Load Cache: CRLs"
           keys:
@@ -110,6 +93,10 @@ jobs:
           paths:
             - ./crl
           key: disa-crls
+      - persist_to_workspace:
+          root: .
+          paths:
+            - ./crl
 
   test:
     docker:
@@ -126,29 +113,8 @@ jobs:
       - image: circleci/postgres:9.6.5-alpine-ram
       - image: circleci/redis:4-alpine3.8
     steps:
-      - checkout
-      - run:
-          name: "Clone Submodules"
-          command: |
-            git submodule update --init --recursive
       - attach_workspace:
           at: .
-      - restore_cache:
-          name: "Load Cache: Pipenv References"
-          keys:
-            - pipenv-v1-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
-      - restore_cache:
-          name: "Load Cache: Python Venv"
-          keys:
-            - venv-v1-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
-      - restore_cache:
-          name: "Load Cache: Node Modules"
-          keys:
-            - node-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
-      - restore_cache:
-          name: "Load Cache: CRLs"
-          keys:
-            - disa-crls
       - run: 
           name: "Run Tests"
           command: ./script/cibuild
