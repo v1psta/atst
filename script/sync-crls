@@ -14,3 +14,10 @@ if [[ $FLASK_ENV != "prod" ]]; then
   # place our test CRL there
   cp ssl/client-certs/client-ca.der.crl crl/
 fi
+
+# Create a file containing checksums for all the CRLs
+# (makes it easier to track changes for the CI cache)
+for CRLFILE in ./crl/*
+do
+    cksum "${CRLFILE}" >> ./crl/checksums
+done
