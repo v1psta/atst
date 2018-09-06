@@ -105,7 +105,7 @@ def new_project(workspace_id):
 
 
 @bp.route("/workspaces/<workspace_id>/projects/new", methods=["POST"])
-def update_project(workspace_id):
+def create_project(workspace_id):
     workspace = Workspaces.get_for_update(g.current_user, workspace_id)
     form = NewProjectForm(http_request.form)
 
@@ -124,6 +124,21 @@ def update_project(workspace_id):
         return render_template(
             "workspaces/projects/new.html", workspace=workspace, form=form
         )
+
+
+@bp.route("/workspaces/<workspace_id>/projects/<project_id>/edit")
+def edit_project(workspace_id, project_id):
+    workspace = Workspaces.get_for_update(g.current_user, workspace_id)
+    project = Projects.get(g.current_user, workspace, project_id)
+    form = NewProjectForm(
+        name=project.name,
+        environment_names=[env.name for env in project.environments],
+        description=project.description,
+    )
+
+    return render_template(
+        "workspaces/projects/edit.html", workspace=workspace, project=project, form=form
+    )
 
 
 @bp.route("/workspaces/<workspace_id>/members/new")
