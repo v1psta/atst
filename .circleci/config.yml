@@ -1,6 +1,24 @@
 version: 2.0
+
+workflows:
+  version: 2
+  jobs:
+    - app_setup
+    - sync_crls:
+        requires:
+          - app_setup
+    - test:
+        requires:
+          - sync_crls
+    - deploy:
+        requires:
+          - test
+        filters:
+          branches:
+            only: master
+
 jobs:
-  build:
+  app_setup:
     docker:
       - image: registry.atat.codes:443/atat-app-builder:circleci
         auth:
@@ -38,6 +56,10 @@ jobs:
             - yarn-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
             - yarn-v1-{{ .Branch }}-
             - yarn-v1-
+      - restore_cache:
+          name: "Load Cache: Node Modules"
+          keys:
+            - node-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
       - run: ./script/setup
       - save_cache:
           name: "Save Cache: Pipenv Refrences"
@@ -54,12 +76,82 @@ jobs:
           paths:
             - ~/.cache/yarn
           key: yarn-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
+      - save_cache:
+          name: "Save Cache: Node Modules"
+          paths:
+            - ./node_modules
+          key: node-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
+
+  sync_crls:
+    docker:
+      - image: registry.atat.codes:443/atat-app-builder:circleci
+        auth:
+          username: $REGISTRY_USERNAME
+          password: $REGISTRY_PASSWORD
+        environment:
+          KEEP_EXISTING_VENV: true
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
       - restore_cache:
+          name: "Load Cache: Pipenv References"
+          keys:
+            - pipenv-v1-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+      - restore_cache:
+          name: "Load Cache: Python Venv"
+          keys:
+            - venv-v1-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+      - restore_cache:
+          name: "Load Cache: Node Modules"
+          keys:
+            - node-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
+      - restore_cache:
+          name: "Load Cache: CRLs"
           keys:
             - disa-crls
-      - run: ./script/sync-crls
+      - run: 
+          name: "Update CRLs"
+          command: ./script/sync-crls
       - save_cache:
+          name: "Save Cache: CRLs"
           paths:
             - ./crl
           key: disa-crls
-      - run: ./script/cibuild
+
+  test:
+    docker:
+      - image: registry.atat.codes:443/atat-app-builder:circleci
+        auth:
+          username: $REGISTRY_USERNAME
+          password: $REGISTRY_PASSWORD
+        environment:
+          KEEP_EXISTING_VENV: true
+          PGHOST: localhost
+          PGUSER: root
+          PGDATABASE: circle_test
+          REDIS_URI: redis://localhost:6379
+      - image: circleci/postgres:9.6.5-alpine-ram
+      - image: circleci/redis:4-alpine3.8
+    steps:
+      - checkout
+      - restore_cache:
+          name: "Load Cache: Pipenv References"
+          keys:
+            - pipenv-v1-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+      - restore_cache:
+          name: "Load Cache: Python Venv"
+          keys:
+            - venv-v1-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+      - restore_cache:
+          name: "Load Cache: Node Modules"
+          keys:
+            - node-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
+      - restore_cache:
+          name: "Load Cache: CRLs"
+          keys:
+            - disa-crls
+      - run: 
+          name: "Run Tests"
+          command: ./script/cibuild
+
