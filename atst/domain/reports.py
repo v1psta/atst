@@ -116,6 +116,21 @@ MONTHLY_SPEND_AARDVARK = {
     },
 }
 
+CUMULATIVE_BUDGET_AARDVARK = {
+    "10/2018": {"spend": 9857, "cumulative": 9857},
+    "11/2018": {"spend": 7881, "cumulative": 17738},
+    "12/2018": {"spend": 14010, "cumulative": 31748},
+    "01/2019": {"spend": 43510, "cumulative": 75259},
+    "02/2019": {"spend": 41725, "cumulative": 116984},
+    "03/2019": {"spend": 41328, "cumulative": 158312},
+    "04/2019": {"spend": 47491, "cumulative": 205803},
+    "05/2019": {"spend": 45826, "cumulative": 251629},
+    "06/2019": {"projected": 296511},
+    "07/2019": {"projected": 341393},
+    "08/2019": {"projected": 386274},
+    "09/2019": {"projected": 431156},
+}
+
 MONTHLY_SPEND_BELUGA = {
     "NP02": {
         "Integ": {"02/2019": 284, "03/2019": 1210},
@@ -123,6 +138,17 @@ MONTHLY_SPEND_BELUGA = {
         "Prod": {"02/2019": 3742, "03/2019": 4716},
     },
     "FM": {"Integ": {"03/2019": 1498}, "Prod": {"03/2019": 5686}},
+}
+
+CUMULATIVE_BUDGET_BELUGA = {
+    "02/2019": {"spend": 4838, "cumulative": 4838},
+    "03/2019": {"spend": 14500, "cumulative": 19338},
+    "04/2019": {"projected": 29007},
+    "05/2019": {"projected": 38676},
+    "06/2019": {"projected": 48345},
+    "07/2019": {"projected": 58014},
+    "08/2019": {"projected": 67683},
+    "09/2019": {"projected": 77352},
 }
 
 
