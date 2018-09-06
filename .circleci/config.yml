@@ -142,6 +142,8 @@ workflows:
   jobs:
     app_setup
     sync_crls:
-      requires: app_setup
+      requires:
+        - app_setup
     test:
-      requires: sync_crls
+      requires:
+        - sync_crls
