@@ -18,3 +18,7 @@ class Environment(Base, TimestampsMixin):
     @property
     def users(self):
         return [r.user for r in self.roles]
+
+    @property
+    def num_users(self):
+        return len(self.users)
