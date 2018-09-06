@@ -5,6 +5,7 @@ import sys
 parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 sys.path.append(parent_dir)
 
+from atst.database import db
 from atst.app import make_config, make_app
 from atst.domain.users import Users
 from atst.domain.requests import Requests
@@ -27,9 +28,11 @@ def seed_db():
     for user in users:
         requests = []
         for dollar_value in [1, 200, 3000, 40000, 500000, 1000000]:
-            request = Requests.create(
-                user, RequestFactory.build_request_body(user, dollar_value)
-            )
+            request = RequestFactory.build(creator=user)
+            request.latest_revision.dollar_value = dollar_value
+            db.session.add(request)
+            db.session.commit()
+
             Requests.submit(request)
             requests.append(request)
 
