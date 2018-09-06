@@ -98,4 +98,4 @@ class RequestsIndex(object):
 @requests_bp.route("/requests", methods=["GET"])
 def requests_index():
     context = RequestsIndex(g.current_user).execute()
-    return render_template("requests.html", **context)
+    return render_template("requests/index.html", **context)

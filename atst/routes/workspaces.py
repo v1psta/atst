@@ -47,13 +47,13 @@ def workspace():
 @bp.route("/workspaces")
 def workspaces():
     workspaces = Workspaces.get_many(g.current_user)
-    return render_template("workspaces.html", page=5, workspaces=workspaces)
+    return render_template("workspaces/index.html", page=5, workspaces=workspaces)
 
 
 @bp.route("/workspaces/<workspace_id>/projects")
 def workspace_projects(workspace_id):
     workspace = Workspaces.get(g.current_user, workspace_id)
-    return render_template("workspace_projects.html", workspace=workspace)
+    return render_template("workspaces/projects/index.html", workspace=workspace)
 
 
 @bp.route("/workspaces/<workspace_id>")
@@ -64,7 +64,7 @@ def show_workspace(workspace_id):
 @bp.route("/workspaces/<workspace_id>/members")
 def workspace_members(workspace_id):
     workspace = Workspaces.get(g.current_user, workspace_id)
-    return render_template("workspace_members.html", workspace=workspace)
+    return render_template("workspaces/members/index.html", workspace=workspace)
 
 
 @bp.route("/workspaces/<workspace_id>/reports")
@@ -86,7 +86,7 @@ def workspace_reports(workspace_id):
     two_months_ago = prev_month - timedelta(days=28)
 
     return render_template(
-        "workspace_reports.html",
+        "workspaces/reports/index.html",
         workspace_totals=Reports.workspace_totals(alternate_reports),
         monthly_totals=Reports.monthly_totals(alternate_reports),
         current_month=current_month,
@@ -99,7 +99,9 @@ def workspace_reports(workspace_id):
 def new_project(workspace_id):
     workspace = Workspaces.get_for_update(g.current_user, workspace_id)
     form = NewProjectForm()
-    return render_template("workspace_project_new.html", workspace=workspace, form=form)
+    return render_template(
+        "workspaces/projects/new.html", workspace=workspace, form=form
+    )
 
 
 @bp.route("/workspaces/<workspace_id>/projects/new", methods=["POST"])
@@ -120,7 +122,7 @@ def update_project(workspace_id):
         )
     else:
         return render_template(
-            "workspace_project_new.html", workspace=workspace, form=form
+            "workspaces/projects/new.html", workspace=workspace, form=form
         )
 
 
@@ -128,7 +130,9 @@ def update_project(workspace_id):
 def new_member(workspace_id):
     workspace = Workspaces.get(g.current_user, workspace_id)
     form = NewMemberForm()
-    return render_template("member_new.html", workspace=workspace, form=form)
+    return render_template(
+        "workspaces/members/new.html", workspace=workspace, form=form
+    )
 
 
 @bp.route("/workspaces/<workspace_id>/members/new", methods=["POST"])
@@ -146,7 +150,9 @@ def create_member(workspace_id):
             )
         )
     else:
-        return render_template("member_new.html", workspace=workspace, form=form)
+        return render_template(
+            "workspaces/members/new.html", workspace=workspace, form=form
+        )
 
 
 @bp.route("/workspaces/<workspace_id>/members/<member_id>/member_edit")
@@ -161,7 +167,7 @@ def view_member(workspace_id, member_id):
     member = WorkspaceUsers.get(workspace_id, member_id)
     form = EditMemberForm(workspace_role=member.role)
     return render_template(
-        "member_edit.html", form=form, workspace=workspace, member=member
+        "workspaces/members/edit.html", form=form, workspace=workspace, member=member
     )
 
 
@@ -195,5 +201,8 @@ def update_member(workspace_id, member_id):
         )
     else:
         return render_template(
-            "member_edit.html", form=form, workspace=workspace, member=member
+            "workspaces/members/edit.html",
+            form=form,
+            workspace=workspace,
+            member=member,
         )
