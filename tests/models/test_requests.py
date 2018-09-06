@@ -1,4 +1,9 @@
-from tests.factories import RequestFactory, UserFactory
+from tests.factories import (
+    RequestFactory,
+    UserFactory,
+    RequestStatusEventFactory,
+    RequestReviewFactory,
+)
 from atst.domain.requests import Requests, RequestStatus
 
 
@@ -69,3 +74,17 @@ def test_annual_spend():
     request = RequestFactory.create()
     monthly = request.body.get("details_of_use").get("estimated_monthly_spend")
     assert request.annual_spend == monthly * 12
+
+
+def test_reviews():
+    request = RequestFactory.create()
+    request.status_events = [
+        RequestStatusEventFactory.create(
+            revision=request.latest_revision, review=RequestReviewFactory.create()
+        ),
+        RequestStatusEventFactory.create(
+            revision=request.latest_revision, review=RequestReviewFactory.create()
+        ),
+        RequestStatusEventFactory.create(revision=request.latest_revision),
+    ]
+    assert len(request.reviews) == 2

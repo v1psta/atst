@@ -116,12 +116,16 @@ class Request(Base):
         return body
 
     @property
+    def latest_status(self):
+        return self.status_events[-1]
+
+    @property
     def status(self):
-        return self.status_events[-1].new_status
+        return self.latest_status.new_status
 
     @property
     def status_displayname(self):
-        return self.status_events[-1].displayname
+        return self.latest_status.displayname
 
     @property
     def annual_spend(self):
@@ -154,3 +158,7 @@ class Request(Base):
             RequestStatus.PENDING_FINANCIAL_VERIFICATION: "mission_owner",
             RequestStatus.PENDING_CCPO_APPROVAL: "ccpo",
         }.get(self.status)
+
+    @property
+    def reviews(self):
+        return [status.review for status in self.status_events if status.review]

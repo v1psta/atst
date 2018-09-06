@@ -7,6 +7,7 @@ import datetime
 from atst.forms.data import SERVICE_BRANCHES
 from atst.models.request import Request
 from atst.models.request_revision import RequestRevision
+from atst.models.request_review import RequestReview
 from atst.models.request_status_event import RequestStatusEvent, RequestStatus
 from atst.models.pe_number import PENumber
 from atst.models.task_order import TaskOrder
@@ -53,6 +54,11 @@ class RequestRevisionFactory(factory.alchemy.SQLAlchemyModelFactory):
         model = RequestRevision
 
     id = factory.Sequence(lambda x: uuid4())
+
+
+class RequestReviewFactory(factory.alchemy.SQLAlchemyModelFactory):
+    class Meta:
+        model = RequestReview
 
 
 class RequestFactory(factory.alchemy.SQLAlchemyModelFactory):

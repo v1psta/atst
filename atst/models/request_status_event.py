@@ -35,6 +35,9 @@ class RequestStatusEvent(Base):
     request_revision_id = Column(ForeignKey("request_revisions.id"), nullable=False)
     revision = relationship("RequestRevision")
 
+    request_review_id = Column(ForeignKey("request_reviews.id"), nullable=True)
+    review = relationship("RequestReview", back_populates="status")
+
     @property
     def displayname(self):
         return self.new_status.value
