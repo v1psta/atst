@@ -39,7 +39,9 @@ class Uploader:
 
     def download_stream(self, object_name):
         obj = self.container.get_object(object_name=object_name)
-        return obj.as_stream()
+        with NamedTemporaryFile() as tempfile:
+            obj.download(tempfile.name, overwrite_existing=True)
+            return open(tempfile.name, "rb")
 
     def _get_container(self, provider, container, key, secret):
         if provider == "LOCAL":
