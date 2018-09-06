@@ -1,3 +1,5 @@
+from datetime import date, timedelta
+
 from flask import (
     Blueprint,
     render_template,
@@ -8,9 +10,10 @@ from flask import (
 )
 
 from atst.domain.exceptions import UnauthorizedError
+from atst.domain.projects import Projects
+from atst.domain.reports import Reports
 from atst.domain.workspaces import Workspaces
 from atst.domain.workspace_users import WorkspaceUsers
-from atst.domain.projects import Projects
 from atst.forms.new_project import NewProjectForm
 from atst.forms.new_member import NewMemberForm
 from atst.forms.edit_member import EditMemberForm
@@ -66,7 +69,30 @@ def workspace_members(workspace_id):
 
 @bp.route("/workspaces/<workspace_id>/reports")
 def workspace_reports(workspace_id):
-    return render_template("workspace_reports.html", workspace_id=workspace_id)
+    workspace = Workspaces.get(g.current_user, workspace_id)
+    Authorization.check_workspace_permission(
+        g.current_user,
+        workspace,
+        Permissions.VIEW_USAGE_DOLLARS,
+        "view workspace reports",
+    )
+
+    alternate_reports = http_request.args.get("alternate")
+    today = date.today()
+    month = http_request.args.get("month", today.month)
+    year = http_request.args.get("year", today.year)
+    current_month = date(int(year), int(month), 15)
+    prev_month = current_month - timedelta(days=28)
+    two_months_ago = prev_month - timedelta(days=28)
+
+    return render_template(
+        "workspace_reports.html",
+        workspace_totals=Reports.workspace_totals(alternate_reports),
+        monthly_totals=Reports.monthly_totals(alternate_reports),
+        current_month=current_month,
+        prev_month=prev_month,
+        two_months_ago=two_months_ago,
+    )
 
 
 @bp.route("/workspaces/<workspace_id>/projects/new")
