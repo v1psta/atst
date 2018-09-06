@@ -14,6 +14,7 @@ import toggler from './components/toggler'
 import NewProject from './components/forms/new_project'
 import Modal from './mixins/modal'
 import selector from './components/selector'
+import BudgetChart from './components/charts/budget_chart'
 
 Vue.use(VTooltip)
 
@@ -30,7 +31,8 @@ const app = new Vue({
     poc,
     financial,
     NewProject,
-    selector
+    selector,
+    BudgetChart
   },
   mounted: function() {
     const modalOpen = document.querySelector("#modalOpen")

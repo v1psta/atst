@@ -94,6 +94,19 @@
   {% set prev_month_index = prev_month.strftime('%m/%Y') %}
   {% set two_months_ago_index = two_months_ago.strftime('%m/%Y') %}
 
+  <budget-chart current-month='{{ current_month_index }}' v-bind:months='{{ cumulative_budget.months | tojson }}' inline-template>
+    <div class='budget-chart panel' ref='panel'>
+      <header class='panel__heading panel__heading--tight'>
+        <h2 class='h3'>Cumulative Budget</h2>
+      </header>
+      <svg v-bind:height="height" v-bind:width="width">
+        <g v-for='month in displayedMonths'>
+          <rect v-if='month.budget' width='20' height='100' v-bind:x='month.metrics.x' />
+        </g>
+      </svg>
+    </div>
+  </budget-chart>
+
   <div class='spend-table responsive-table-wrapper'>
     <div class='spend-table__header'>
       <h2 class='spend-table__title'>Total spend per month</h2>

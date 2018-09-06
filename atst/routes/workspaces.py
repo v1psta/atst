@@ -87,6 +87,7 @@ def workspace_reports(workspace_id):
 
     return render_template(
         "workspaces/reports/index.html",
+        cumulative_budget=Reports.cumulative_budget(alternate_reports),
         workspace_totals=Reports.workspace_totals(alternate_reports),
         monthly_totals=Reports.monthly_totals(alternate_reports),
         current_month=current_month,

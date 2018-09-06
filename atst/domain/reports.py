@@ -196,3 +196,9 @@ class Reports:
             "projects": project_totals,
             "workspace": workspace_totals,
         }
+
+    @classmethod
+    def cumulative_budget(cls, alternate):
+        return {
+            "months": CUMULATIVE_BUDGET_BELUGA if alternate else CUMULATIVE_BUDGET_AARDVARK
+        }
