@@ -171,3 +171,11 @@ def test_ccpo_can_view_workspace_members():
     workspace = Workspaces.get_with_members(ccpo, workspace.id)
 
     assert workspace
+
+
+def test_random_user_cannot_view_workspace_members():
+    workspace = Workspaces.create(RequestFactory.create(creator=UserFactory.create()))
+    developer = UserFactory.from_atat_role("developer")
+
+    with pytest.raises(UnauthorizedError):
+        workspace = Workspaces.get_with_members(developer, workspace.id)
