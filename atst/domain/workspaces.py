@@ -58,7 +58,10 @@ class Workspaces(object):
     def get_with_members(cls, user, workspace_id):
         workspace = Workspaces.get(user, workspace_id)
         Authorization.check_workspace_permission(
-            user, workspace, Permissions.VIEW_WORKSPACE_MEMBERS, "view workspace members"
+            user,
+            workspace,
+            Permissions.VIEW_WORKSPACE_MEMBERS,
+            "view workspace members",
         )
         return workspace
 
