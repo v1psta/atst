@@ -140,16 +140,8 @@ jobs:
 workflows:
   version: 2
   jobs:
-    - app_setup
-    - sync_crls:
-        requires:
-          - app_setup
-    - test:
-        requires:
-          - sync_crls
-    - deploy:
-        requires:
-          - test
-        filters:
-          branches:
-            only: master
+    app_setup
+    sync_crls:
+      requires: app_setup
+    test:
+      requires: sync_crls
