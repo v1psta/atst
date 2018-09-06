@@ -10,13 +10,19 @@
   <form>
     <section class='panel'>
       <header class='panel__heading request-approval__heading'>
-        <h1 class='h2'>Request #1234567890</h1>
-        <span class='label label--info'>Pending</span>
+        <h1 class='h2'>Request #{{ request_id }}</h1>
+        <span class='label label--info'>{{ status }}</span>
       </header>
 
       <div class='panel__content'>
 
-        <p>Ongoing maintainence for Death Star (a moon-sized Imperial military battlestation armed with a planet-destroying superlaser). Its definitely hasn't been sabotaged from the start.</p>
+        <p>
+          {% if data["details_of_use"] and data["details_of_use"]["jedi_usage"] %}
+            {{ data["details_of_use"]["jedi_usage"] }}
+          {% else %}
+            <i>Missing usage information</i>
+          {% endif %}
+        </p>
 
         {% with data=data, request_id=request_id %}
           {% include "requests/_review.html" %}

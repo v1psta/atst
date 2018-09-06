@@ -27,7 +27,8 @@ def approval(request_id):
     return render_template(
         "requests/approval.html",
         data=data,
-        request_id=request.id,
+        request_id=request_id,
+        status=request.status.value,
         financial_review=True,
         pdf_available=request.task_order and request.task_order.pdf,
     )
