@@ -38,7 +38,7 @@ class WorkspaceUser(object):
 
     @property
     def status(self):
-        return "radical"
+        return "active"
 
     @property
     def has_environment_roles(self):
