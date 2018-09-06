@@ -36,8 +36,15 @@ def approval(request_id):
 def task_order_pdf_download(request_id):
     request = Requests.get(g.current_user, request_id)
     if request.task_order and request.task_order.pdf:
-        object_name = request.task_order.pdf.object_name
-        generator = app.uploader.download_stream(object_name)
-        return Response(generator, mimetype="application/pdf")
+        pdf = request.task_order.pdf
+        generator = app.uploader.download_stream(pdf.object_name)
+        return Response(
+            generator,
+            headers={
+                "Content-Disposition": "attachment; filename={}".format(pdf.filename)
+            },
+            mimetype="application/pdf",
+        )
+
     else:
         raise NotFoundError("task_order pdf")
