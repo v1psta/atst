@@ -21,11 +21,15 @@ def seed_db():
     for dev_user in DEV_USERS.values():
         try:
             user = Users.create(**dev_user)
-            users.append(user)
         except AlreadyExistsError:
-            pass
+            user = Users.get_by_dod_id(dev_user["dod_id"])
+
+        users.append(user)
 
     for user in users:
+        if Requests.get_many(creator=user):
+            continue
+
         requests = []
         for dollar_value in [1, 200, 3000, 40000, 500000, 1000000]:
             request = RequestFactory.build(creator=user)
