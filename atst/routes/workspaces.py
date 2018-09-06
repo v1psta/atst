@@ -78,8 +78,9 @@ def workspace_reports(workspace_id):
     )
 
     alternate_reports = http_request.args.get("alternate")
-    month = http_request.args.get("month", 3)
-    year = http_request.args.get("year", 2019)
+    today = date.today()
+    month = http_request.args.get("month", today.month)
+    year = http_request.args.get("year", today.year)
     current_month = date(int(year), int(month), 15)
     prev_month = current_month - timedelta(days=28)
     two_months_ago = prev_month - timedelta(days=28)
