@@ -3,7 +3,7 @@ from sqlalchemy.orm.exc import NoResultFound
 from atst.database import db
 from atst.models.workspace import Workspace
 from atst.models.workspace_role import WorkspaceRole
-from atst.domain.exceptions import NotFoundError, UnauthorizedError
+from atst.domain.exceptions import NotFoundError
 from atst.domain.roles import Roles
 from atst.domain.authz import Authorization
 from atst.models.permissions import Permissions
