@@ -11,7 +11,7 @@ defaults:
     PGUSER: root
     PGDATABASE: circle_test
     REDIS_URI: redis://localhost:6379
-  dockerCmdEnvironment:
+  dockerCmdEnvironment: &dockerCmdEnvironment
     APP_USER: atst
     APP_GROUP: atat
     APP_DIR: /opt/atat/atst
