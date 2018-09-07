@@ -1,4 +1,23 @@
 version: 2.0
+
+defaults:
+  sourceImage: &sourceImage registry.atat.codes:443/atat-app-builder:circleci-cd
+  sourceAuth: &sourceAuth
+    username: $REGISTRY_USERNAME
+    password: $REGISTRY_PASSWORD
+  appEnvironment: &appEnvironment
+    KEEP_EXISTING_VENV: true
+    PGHOST: localhost
+    PGUSER: root
+    PGDATABASE: circle_test
+    REDIS_URI: redis://localhost:6379
+  dockerCmdEnvironment: &dockerCmdEnvironment
+    APP_USER: atst
+    APP_GROUP: atat
+    APP_DIR: /opt/atat/atst
+    CONTAINER_NAME: atst-container
+    REGISTRY_LOCATION: registry.atat.codes:443
+
 jobs:
   build:
     docker:
