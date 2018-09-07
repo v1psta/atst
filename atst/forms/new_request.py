@@ -1,6 +1,7 @@
-from wtforms.fields.html5 import DateField, IntegerField
-from wtforms.fields import RadioField, TextAreaField
-from wtforms.validators import Optional, Required
+import pendulum
+from wtforms.fields.html5 import DateField, EmailField, IntegerField, TelField
+from wtforms.fields import BooleanField, RadioField, StringField, TextAreaField
+from wtforms.validators import Email, Length, Optional, Required
 
 from .fields import SelectField
 from .forms import ValidatedForm
@@ -10,10 +11,11 @@ from .data import (
     DATA_TRANSFER_AMOUNTS,
     COMPLETION_DATE_RANGES,
 )
+from .validators import Alphabet, DateRange, PhoneNumber, IsNumber
 from atst.domain.requests import Requests
 
 
-class RequestForm(ValidatedForm):
+class DetailsOfUseForm(ValidatedForm):
     def validate(self, *args, **kwargs):
         if self.jedi_migration.data == "no":
             self.rationalization_software_systems.validators.append(Optional())
@@ -36,7 +38,7 @@ class RequestForm(ValidatedForm):
             self.number_user_sessions.validators.append(Required())
             self.average_daily_traffic.validators.append(Required())
 
-        return super(RequestForm, self).validate(*args, **kwargs)
+        return super(DetailsOfUseForm, self).validate(*args, **kwargs)
 
     # Details of Use: General
     dod_component = SelectField(
@@ -137,3 +139,91 @@ class RequestForm(ValidatedForm):
         validators=[Required()],
         format="%m/%d/%Y",
     )
+
+
+class InformationAboutYouForm(ValidatedForm):
+    fname_request = StringField("First Name", validators=[Required(), Alphabet()])
+
+    lname_request = StringField("Last Name", validators=[Required(), Alphabet()])
+
+    email_request = EmailField("E-mail Address", validators=[Required(), Email()])
+
+    phone_number = TelField(
+        "Phone Number",
+        description="Enter a 10-digit phone number",
+        validators=[Required(), PhoneNumber()],
+    )
+
+    service_branch = SelectField(
+        "Service Branch or Agency",
+        description="Which services and organizations do you belong to within the DoD?",
+        choices=SERVICE_BRANCHES,
+    )
+
+    citizenship = RadioField(
+        description="What is your citizenship status?",
+        choices=[
+            ("United States", "United States"),
+            ("Foreign National", "Foreign National"),
+            ("Other", "Other"),
+        ],
+        validators=[Required()],
+    )
+
+    designation = RadioField(
+        "Designation of Person",
+        description="What is your designation within the DoD?",
+        choices=[
+            ("military", "Military"),
+            ("civilian", "Civilian"),
+            ("contractor", "Contractor"),
+        ],
+        validators=[Required()],
+    )
+
+    date_latest_training = DateField(
+        "Latest Information Assurance (IA) Training Completion Date",
+        description='To complete the training, you can find it in <a class="icon-link" href="https://iatraining.disa.mil/eta/disa_cac2018/launchPage.htm" target="_blank">Information Assurance Cyber Awareness Challange</a> website.',
+        validators=[
+            Required(),
+            DateRange(
+                lower_bound=pendulum.duration(years=1),
+                upper_bound=pendulum.duration(days=0),
+                message="Must be a date within the last year.",
+            ),
+        ],
+        format="%m/%d/%Y",
+    )
+
+
+class WorkspaceOwnerForm(ValidatedForm):
+    def validate(self, *args, **kwargs):
+        if self.am_poc.data:
+            # Prepend Optional validators so that the validation chain
+            # halts if no data exists.
+            self.fname_poc.validators.insert(0, Optional())
+            self.lname_poc.validators.insert(0, Optional())
+            self.email_poc.validators.insert(0, Optional())
+            self.dodid_poc.validators.insert(0, Optional())
+
+        return super().validate(*args, **kwargs)
+
+    am_poc = BooleanField(
+        "I am the Workspace Owner",
+        default=False,
+        false_values=(False, "false", "False", "no", ""),
+    )
+
+    fname_poc = StringField("First Name", validators=[Required()])
+
+    lname_poc = StringField("Last Name", validators=[Required()])
+
+    email_poc = EmailField("Email Address", validators=[Required(), Email()])
+
+    dodid_poc = StringField(
+        "DOD ID", validators=[Required(), Length(min=10), IsNumber()]
+    )
+
+
+class ReviewAndSubmitForm(ValidatedForm):
+    reviewed = BooleanField("I have reviewed this data and it is correct.")

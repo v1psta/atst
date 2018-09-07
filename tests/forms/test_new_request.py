@@ -1,9 +1,9 @@
 import pytest
 
-from atst.forms.request import RequestForm
+from atst.forms.new_request import DetailsOfUseForm
 
 
-class TestRequestForm:
+class TestDetailsOfUseForm:
 
     form_data = {
         "dod_component": "Army and Air Force Exchange Service",
@@ -27,7 +27,7 @@ class TestRequestForm:
 
     def test_require_cloud_native_when_not_migrating(self):
         extra_data = {"jedi_migration": "no"}
-        request_form = RequestForm(data={**self.form_data, **extra_data})
+        request_form = DetailsOfUseForm(data={**self.form_data, **extra_data})
         assert not request_form.validate()
         assert request_form.errors == {"cloud_native": ["Not a valid choice"]}
 
@@ -37,7 +37,7 @@ class TestRequestForm:
             "data_transfers": "",
             "expected_completion_date": "",
         }
-        request_form = RequestForm(data={**self.form_data, **extra_data})
+        request_form = DetailsOfUseForm(data={**self.form_data, **extra_data})
         assert not request_form.validate()
         assert request_form.errors == {
             "rationalization_software_systems": ["Not a valid choice"],
@@ -52,7 +52,7 @@ class TestRequestForm:
         data = {**self.form_data, **self.migration_data}
         del data["organization_providing_assistance"]
 
-        request_form = RequestForm(data=data)
+        request_form = DetailsOfUseForm(data=data)
         assert not request_form.validate()
         assert request_form.errors == {
             "organization_providing_assistance": ["Not a valid choice"]
@@ -63,7 +63,7 @@ class TestRequestForm:
         data["technical_support_team"] = "no"
         del data["organization_providing_assistance"]
 
-        request_form = RequestForm(data=data)
+        request_form = DetailsOfUseForm(data=data)
         assert request_form.validate()
 
     def test_sessions_required_for_large_projects(self):
@@ -72,7 +72,7 @@ class TestRequestForm:
         del data["number_user_sessions"]
         del data["average_daily_traffic"]
 
-        request_form = RequestForm(data=data)
+        request_form = DetailsOfUseForm(data=data)
         assert not request_form.validate()
         assert request_form.errors == {
             "number_user_sessions": ["This field is required."],
@@ -85,5 +85,5 @@ class TestRequestForm:
         del data["number_user_sessions"]
         del data["average_daily_traffic"]
 
-        request_form = RequestForm(data=data)
+        request_form = DetailsOfUseForm(data=data)
         assert request_form.validate()
