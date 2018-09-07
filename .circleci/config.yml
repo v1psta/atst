@@ -124,7 +124,7 @@ jobs:
       - run:
           name: "Create ATST Container"
           command: |
-            docker run -d --entrypoint='/bin/sh' -t --name ${CONTAINER_NAME} alpine:3.8 top
+            docker run -d --entrypoint='/bin/sh' -ti --name ${CONTAINER_NAME} alpine:3.8
             docker exec -t ${CONTAINER_NAME} mkdir ${APP_DIR}
             docker cp . ${CONTAINER_NAME}:${APP_DIR}
             docker exec -t --workdir ${APP_DIR} ${CONTAINER_NAME} ./script/alpine_setup
@@ -139,10 +139,13 @@ jobs:
               --change="USER \"${APP_USER}\"" \
               ${CONTAINER_NAME} \
               ${IMAGE_NAME}
+            docker container ls
             docker image ls
       - run:
           name: "List Docker Images"
-          command: docker image ls
+          command: |
+            docker container ls
+            docker image ls
       - run:
           name: "Publish ATST Image"
           command: |
