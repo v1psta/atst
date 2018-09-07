@@ -148,3 +148,5 @@ FUNDING_TYPES = [
     ("PROC", "Procurement (PROC)"),
     ("OTHER", "Other"),
 ]
+
+TASK_ORDER_SOURCES = [("MANUAL", "Manual"), ("EDA", "EDA")]

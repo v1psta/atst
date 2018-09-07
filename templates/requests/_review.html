@@ -140,6 +140,8 @@
   {% endif %}
 
   <dl>
+    {{ DefinitionReviewField("Task Order Information Source", "task_order", "source", filter="getOptionLabel", filter_args=[task_order_sources]) }}
+
     {{ DefinitionReviewField("Task Order Number", "task_order", "number") }}
 
     {{ DefinitionReviewField("What is the source of funding?", "task_order", "funding_type", filter="getOptionLabel", filter_args=[funding_types]) }}
