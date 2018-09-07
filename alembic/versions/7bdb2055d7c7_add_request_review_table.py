@@ -1,7 +1,7 @@
 """add request review table
 
 Revision ID: 7bdb2055d7c7
-Revises: 06aa23166ca9
+Revises: ad30159ef19b
 Create Date: 2018-09-06 15:15:40.666840
 
 """
@@ -11,7 +11,7 @@ import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
 revision = '7bdb2055d7c7'
-down_revision = '06aa23166ca9'
+down_revision = 'ad30159ef19b'
 branch_labels = None
 depends_on = None
 
