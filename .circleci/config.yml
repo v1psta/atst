@@ -119,26 +119,16 @@ jobs:
           at: .
       - setup_remote_docker
       - run:
-          name: "Start Fresh Container"
-          command: docker run -d --entrypoint='/bin/sh' --name ${CONTAINER_NAME} alpine:3.8
-      - run:
-          name: "Create App Directory"
-          command: docker container exec -t ${CONTAINER_NAME} mkdir ${APP_DIR}
-      - run:
-          name: "Copy Pre-Built Files"
-          command: docker cp . ${CONTAINER_NAME}:${APP_DIR}
-      - run:
-          name: "Install System Packages"
-          command: docker container exec -t --workdir ${APP_DIR} ${CONTAINER_NAME} ./script/alpine_setup
-      - run:
-          name: "Update App File Ownership"
-          command: docker container exec -t --workdir ${APP_DIR} ${CONTAINER_NAME} ./script/fix_permissions
-      - run:
           name: "Generate Image Name"
           command: echo 'export IMAGENAME="${REGISTRY_LOCATION}:$(git rev-parse --short HEAD)-circle"' >> $BASH_ENV
       - run:
-          name: "Save ATST Image"
+          name: "Create ATST Container"
           command: |
+            docker run -d --entrypoint='/bin/sh' --name ${CONTAINER_NAME} alpine:3.8
+            docker container exec -t ${CONTAINER_NAME} mkdir ${APP_DIR}
+            docker cp . ${CONTAINER_NAME}:${APP_DIR}
+            docker container exec -t --workdir ${APP_DIR} ${CONTAINER_NAME} ./script/alpine_setup
+            docker container exec -t --workdir ${APP_DIR} ${CONTAINER_NAME} ./script/fix_permissions
             docker commit \
               --change="ENV APP_USER \"${APP_USER}\"" \
               --change="ENV APP_GROUP \"${APP_GROUP}\"" \
@@ -149,15 +139,16 @@ jobs:
               --change="USER \"${APP_USER}\"" \
               ${CONTAINER_NAME} \
               ${IMAGE_NAME}
+            docker image ls
+      - run:
+          name: "List Docker Images"
+          command: docker image ls
       - run:
           name: "Publish ATST Image"
           command: |
+            docker image ls
             docker login -u ${REGISTRY_USERNAME} -p ${REGISTRY_PASSWORD} ${REGISTRY_LOCATION}
             docker push ${IMAGE_NAME}
-      - run:
-          name: "Clean UP"
-          command: |
-            docker container ${CONTAINER_NAME} stop
             docker logout
 
 workflows:
