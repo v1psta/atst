@@ -117,7 +117,7 @@ jobs:
     steps:
       - attach_workspace:
           at: .
-      - setup_remote_docker
+      - setup_remote_docker:
           version: 18.05.0-ce
       - run:
           name: "Generate Image Name"
