@@ -121,9 +121,7 @@ jobs:
           version: 18.05.0-ce
       - run:
           name: "Generate the Target Image Name"
-          command: |
-            echo "export IMAGE_NAME=\"${REGISTRY_LOCATION}/atst-prod:$(git rev-parse --short HEAD)-circle\"" >> $BASH_ENV
-            echo $BASH_ENV | grep IMAGE_NAME
+          command: echo "export IMAGE_NAME=\"${REGISTRY_LOCATION}/atst-prod:$(git rev-parse --short HEAD)-circle\"" >> $BASH_ENV
       - run:
           name: "Start a Fresh Container"
           command: docker run -d --entrypoint='/bin/sh' -ti --name ${CONTAINER_NAME} alpine:3.8
