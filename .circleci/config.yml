@@ -124,11 +124,11 @@ jobs:
       - run:
           name: "Create ATST Container"
           command: |
-            docker run -d --entrypoint='/bin/sh' --name ${CONTAINER_NAME} alpine:3.8 top
-            docker container exec -t ${CONTAINER_NAME} mkdir ${APP_DIR}
+            docker run -d --entrypoint='/bin/sh' -t --name ${CONTAINER_NAME} alpine:3.8 top
+            docker exec -t ${CONTAINER_NAME} mkdir ${APP_DIR}
             docker cp . ${CONTAINER_NAME}:${APP_DIR}
-            docker container exec -t --workdir ${APP_DIR} ${CONTAINER_NAME} ./script/alpine_setup
-            docker container exec -t --workdir ${APP_DIR} ${CONTAINER_NAME} ./script/fix_permissions
+            docker exec -t --workdir ${APP_DIR} ${CONTAINER_NAME} ./script/alpine_setup
+            docker exec -t --workdir ${APP_DIR} ${CONTAINER_NAME} ./script/fix_permissions
             docker commit \
               --change="ENV APP_USER \"${APP_USER}\"" \
               --change="ENV APP_GROUP \"${APP_GROUP}\"" \
