@@ -93,16 +93,107 @@
   {% set current_month_index = current_month.strftime('%m/%Y') %}
   {% set prev_month_index = prev_month.strftime('%m/%Y') %}
   {% set two_months_ago_index = two_months_ago.strftime('%m/%Y') %}
+  {% set reports_url = url_for("workspaces.workspace_reports", workspace_id=workspace.id) %}
 
-  <budget-chart current-month='{{ current_month_index }}' v-bind:months='{{ cumulative_budget.months | tojson }}' inline-template>
+  <budget-chart budget={{ budget }} current-month='{{ current_month_index }}' v-bind:months='{{ cumulative_budget.months | tojson }}' inline-template>
     <div class='budget-chart panel' ref='panel'>
-      <header class='panel__heading panel__heading--tight'>
+      <header class='budget-chart__header panel__heading panel__heading--tight'>
         <h2 class='h3'>Cumulative Budget</h2>
       </header>
-      <svg v-bind:height="height" v-bind:width="width">
-        <g v-for='month in displayedMonths'>
-          <rect v-if='month.budget' width='20' height='100' v-bind:x='month.metrics.x' />
-        </g>
+      <svg v-bind:height='height' v-bind:width='width'>
+        <g v-for='month in displayedMonths' >
+          {# make this clickable to focus on that month #}
+          <a v-bind:href='"{{ reports_url }}?month=" + month.date.monthIndex + "&year=" + month.date.year'>
+            <title>
+              <span v-html='month.date.month + " " + month.date.year'></span>&nbsp;|&nbsp;<!--
+              --><template v-if='month.budget'><!--
+                --><template v-if='month.budget.spend'>Spend:</template><!--
+                --><template v-if='month.budget.projected'>Projected Spend:</template><!--
+                --><span v-html='month.spendAmount'></span><!--
+                -->&nbsp;|&nbsp;<!--
+                --><template v-if='month.budget.cumulative'>Total:</template><!--
+                --><template v-if='month.budget.projected'>Projected Total:</template><!--
+                --><span v-html='month.cumulativeAmount'></span><!--
+              --></template><!--
+
+              --><template v-else>No spend for this month</template>
+            </title>
+
+            {# container block #}
+            <rect
+              class='budget-chart__block'
+              v-bind:class='{ "budget-chart__block--highlighted": month.isHighlighted }'
+              v-bind:width='month.metrics.blockWidth'
+              v-bind:x='month.metrics.blockX'
+              v-bind:height='height'/>
+
+            {# budget bar #}
+            <rect
+              v-if='month.budget'
+              class='budget-chart__bar'
+              v-bind:class='{ "budget-chart__bar--projected": month.budget.projected }'
+              v-bind:width='month.metrics.barWidth'
+              v-bind:height='month.metrics.barHeight'
+              v-bind:x='month.metrics.barX'
+              v-bind:y='month.metrics.barY'>
+            </rect>
+
+            {# cumulative dot #}
+            <circle
+              v-if='month.budget'
+              class='budget-chart__cumulative__dot'
+              v-bind:r='month.metrics.cumulativeR'
+              v-bind:cx='month.metrics.cumulativeX'
+              v-bind:cy='month.metrics.cumulativeY'/>
+
+            {# abbreviated cumulative label #}
+            <text
+              v-if='month.budget'
+              v-bind:x='month.metrics.cumulativeX'
+              v-bind:y='month.metrics.cumulativeY - 10'
+              text-anchor='middle'
+              class='budget-chart__label'
+              v-html='month.abbreviatedCumulative'/>
+
+            {# abbreviated spend label #}
+            <text
+              v-bind:x='month.metrics.cumulativeX'
+              v-bind:y='baseHeight + 20'
+              text-anchor='middle'
+              class='budget-chart__label'
+              v-html='"+" + month.abbreviatedSpend'/>
+
+            {# month label #}
+            <text
+              v-bind:x='month.metrics.cumulativeX'
+              v-bind:y='baseHeight + 40'
+              text-anchor='middle'
+              class='budget-chart__label budget-chart__label--strong'
+              v-html='month.date.month'/>
+          </g>
+        </a>
+
+        {# spend/projected budget path lines #}
+        <path class='budget-chart__projected-path' v-bind:d='projectedPath'/>
+        <path class='budget-chart__spend-path' v-bind:d='spendPath'/>
+
+        {# max budget line #}
+        <line
+          class='budget-chart__budget-line'
+          x1='0'
+          v-bind:x2='width'
+          v-bind:y1='budgetHeight'
+          v-bind:y2='budgetHeight'/>
+
+        <text
+          x='20'
+          v-bind:y='budgetHeight + 20'
+          class='budget-chart__label'>Total Budget</text>
+        <text
+          x='20'
+          v-bind:y='budgetHeight + 40'
+          class='budget-chart__label'
+          v-html='displayBudget'/>
       </svg>
     </div>
   </budget-chart>
