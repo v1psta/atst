@@ -121,7 +121,7 @@ jobs:
           version: 18.05.0-ce
       - run:
           name: "Generate Image Name"
-          command: echo 'export IMAGE_NAME="${REGISTRY_LOCATION}:$(git rev-parse --short HEAD)-circle"' >> $BASH_ENV
+          command: echo "export IMAGE_NAME=\"${REGISTRY_LOCATION}/atst-prod:$(git rev-parse --short HEAD)-circle\"" >> $BASH_ENV
       - run:
           name: "Create ATST Container"
           command: |
