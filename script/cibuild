@@ -13,6 +13,9 @@ PYTHON_FILES="./app.py ./atst/** ./config"
 # Enable Python testing
 RUN_PYTHON_TESTS="true"
 
+# Reset the DB, since the one script/setup created might not be persisted
+RESET_DB="true"
+
 # Check python formatting
 source ./script/format check
 
