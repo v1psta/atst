@@ -21,11 +21,35 @@
   @include media($medium-screen) {
     @include grid-row;
     align-items: flex-start;
+    justify-content: flex-start;
 
     .form-col {
+      &.form-col--half {
+        flex-basis: 50%;
+      }
+
+      &.form-col--third {
+        flex-basis: 33.33%;
+      }
+
+      &.form-col--two-thirds {
+        flex-basis: 66.66%;
+      }
+
       .usa-input {
         margin-left: ($gap * 4);
         margin-right: ($gap * 4);
+
+        label {
+          .icon-validation {
+            left: auto;
+            right: -$gap * 3;
+          }
+        }
+
+        input {
+          max-width: none;
+        }
       }
 
       &:first-child {

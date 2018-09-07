@@ -52,5 +52,31 @@ export default {
     match: /^\d{10}$/,
     unmask: [],
     validationError: 'Please enter a 10-digit DoD ID number'
+  },
+  peNumber: {
+    mask: val => {
+      if (val.length <= 7) return [/\d/,/\d/,/\d/,/\d/,/\d/,/\d/,/\d/,/[a-z,A-Z]/]
+      if (val.length === 8) return [/\d/,/\d/,/\d/,/\d/,/\d/,/\d/,/\d/,/[a-z,A-Z]/,/[a-z,A-Z]/]
+      return [/\d/,/\d/,/\d/,/\d/,/\d/,/\d/,/\d/,/[a-z,A-Z]/,/[a-z,A-Z]/,/[a-z,A-Z]/]
+    },
+    match: /(0\d)(0\d)(\d)(\d{2})([a-z,A-Z]{1,3})/,
+    unmask: ['_'],
+    validationError: 'Please enter a valid PE number. Note that it should be 7 digits followed by 1-3 letters, and should have a zero as the first and third digits.'
+  },
+  treasuryCode: {
+    mask: createNumberMask({ prefix: '', allowDecimal: false, allowLeadingZeroes: true, includeThousandsSeparator: false }),
+    match: /^0*([1-9]{4}|[1-9]{6})$/,
+    unmask: [],
+    validationError: 'Please enter a valid Program Treasury Code. Note that it should be a four digit or six digit number, optionally prefixed by one or more zeros.'
+  },
+  baCode: {
+    mask: val => {
+      if (val.length === 1) return [/\d/]
+      if (val.length === 2) return [/\d/, /\d/]
+      return [/\d/,/\d/,/[a-z,A-Z]/]
+    },
+    match: /[0-9]{2}\w?$/,
+    unmask: [],
+    validationError: 'Please enter a valid BA Code. Note that it should be two digits, followed by a letter.'
   }
 }

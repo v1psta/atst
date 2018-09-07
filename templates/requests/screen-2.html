@@ -20,10 +20,15 @@
 
 <p>Please tell us more about you.</p>
 
-{{ TextInput(f.fname_request, placeholder='First Name') }}
-{{ TextInput(f.lname_request, placeholder='Last Name') }}
-{{ TextInput(f.email_request, placeholder='jane@mail.mil', validation='email') }}
-{{ TextInput(f.phone_number, placeholder='e.g. (123) 456-7890', validation='usPhone') }}
+<div class='form-row'>
+  <div class='form-col form-col--half'>{{ TextInput(f.fname_request) }}</div>
+  <div class='form-col form-col--half'>{{ TextInput(f.lname_request) }}</div>
+</div>
+
+<div class='form-row'>
+  <div class='form-col form-col--half'>{{ TextInput(f.email_request, placeholder='e.g. jane@mail.mil', validation='email') }}</div>
+  <div class='form-col form-col--half'>{{ TextInput(f.phone_number, placeholder='e.g. (123) 456-7890', validation='usPhone') }}</div>
+</div>
 
 <p>We want to collect the following information from you for security auditing and determining priviledged user access.</p>
 

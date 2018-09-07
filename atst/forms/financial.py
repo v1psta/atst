@@ -101,46 +101,43 @@ class BaseFinancialForm(ValidatedForm):
     )
 
     uii_ids = NewlineListField(
-        "Unique Item Identifier (UII)s related to your application(s) if you already have them",
+        "Unique Item Identifier (UII)s related to your application(s) if you already have them.",
+        description="If you have more than one UII, place each one on a new line.",
         validators=[Required()],
     )
 
     pe_id = StringField(
-        "Program Element (PE) Number related to your request", validators=[Required()]
+        "Program Element Number",
+        description="PE numbers help the Department of Defense identify which offices' budgets are contributing towards this resource use. <br/><em>It should be 7 digits followed by 1-3 letters, and should have a zero as the first and third digits.</em>",
+        validators=[Required()],
     )
 
     treasury_code = StringField(
-        "Program Treasury Code", validators=[Required(), Regexp(TREASURY_CODE_REGEX)]
+        "Program Treasury Code",
+        description="Program Treasury Code (or Appropriations Code) identifies resource types. <br/> <em>It should be a four digit or six digit number, optionally prefixed by one or more zeros.</em>",
+        validators=[Required(), Regexp(TREASURY_CODE_REGEX)],
     )
 
     ba_code = StringField(
         "Program Budget Activity (BA) Code",
+        description="BA Code is used to identify the purposes, projects, or types of activities financed by the appropriation fund. <br/><em>It should be two digits, followed by a letter.</em>",
         validators=[Required(), Regexp(BA_CODE_REGEX)],
     )
 
-    fname_co = StringField("Contracting Officer First Name", validators=[Required()])
-    lname_co = StringField("Contracting Officer Last Name", validators=[Required()])
+    fname_co = StringField("KO First Name", validators=[Required()])
+    lname_co = StringField("KO Last Name", validators=[Required()])
 
-    email_co = EmailField("Contracting Officer Email", validators=[Required(), Email()])
+    email_co = EmailField("KO Email", validators=[Required(), Email()])
 
-    office_co = StringField("Contracting Officer Office", validators=[Required()])
+    office_co = StringField("KO Office", validators=[Required()])
 
-    fname_cor = StringField(
-        "Contracting Officer Representative (COR) First Name", validators=[Required()]
-    )
+    fname_cor = StringField("COR First Name", validators=[Required()])
 
-    lname_cor = StringField(
-        "Contracting Officer Representative (COR) Last Name", validators=[Required()]
-    )
+    lname_cor = StringField("COR Last Name", validators=[Required()])
 
-    email_cor = EmailField(
-        "Contracting Officer Representative (COR) Email",
-        validators=[Required(), Email()],
-    )
+    email_cor = EmailField("COR Email", validators=[Required(), Email()])
 
-    office_cor = StringField(
-        "Contracting Officer Representative (COR) Office", validators=[Required()]
-    )
+    office_cor = StringField("COR Office", validators=[Required()])
 
 
 class FinancialForm(BaseFinancialForm):

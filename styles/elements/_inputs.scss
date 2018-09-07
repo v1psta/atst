@@ -93,14 +93,14 @@
     .icon-tooltip {
       padding: 0 $gap/2;
       cursor: default;
-      margin-left: $gap/2;
+      margin: 0 0 0 ($gap / 2);
     }
   }
 
   .usa-input__help {
-    @include h4;
+    @include h5;
     font-weight: normal;
-    padding: $gap/2 0;
+
     @include line-max;
 
     .icon-link {
@@ -115,7 +115,6 @@
     @include line-max;
     margin: 0;
     box-sizing: border-box;
-    max-width: 32em;
     resize: none;
 
     &::placeholder {
@@ -215,7 +214,9 @@
 
     &--integer,
     &--dollars,
-    &--gigabytes, {
+    &--gigabytes,
+    &--treasuryCode,
+    &--peNumber {
       input {
         max-width: 16em;
       }
@@ -225,7 +226,8 @@
     }
 
     &--date,
-    &--usPhone {
+    &--usPhone,
+    &--baCode {
       input {
         max-width: 10em;
       }

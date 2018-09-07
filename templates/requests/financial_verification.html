@@ -27,6 +27,25 @@
     ) }}
   {% endif %}
 
+  {% block form_action %}
+    {% if extended %}
+      <form method='POST' action="{{ url_for('requests.financial_verification', request_id=request_id, extended=True) }}" autocomplete="off" enctype="multipart/form-data">
+    {% else %}
+      <form method='POST' action="{{ url_for('requests.financial_verification', request_id=request_id) }}" autocomplete="off">
+    {% endif %}
+  {% endblock %}
+
+  {{ f.csrf_token }}
+  {% block form %}
+    {% autoescape false %}
+
+    {% if f.errors %}
+      {{ Alert('There were some errors',
+        message="<p>Please see below.</p>",
+        level='error'
+      ) }}
+    {% endif %}
+
   <div class="panel">
 
     <div class="panel__heading">
@@ -36,26 +55,9 @@
 
     <div class="panel__content">
 
-      {% block form_action %}
-        {% if extended %}
-          <form method='POST' action="{{ url_for('requests.financial_verification', request_id=request_id, extended=True) }}" autocomplete="off" enctype="multipart/form-data">
-        {% else %}
-          <form method='POST' action="{{ url_for('requests.financial_verification', request_id=request_id) }}" autocomplete="off">
-        {% endif %}
-      {% endblock %}
-
-      {{ f.csrf_token }}
-      {% block form %}
-        {% autoescape false %}
-
-        {% if f.errors %}
-          {{ Alert('There were some errors',
-            message="<p>Please see below.</p>",
-            level='error'
-          ) }}
-        {% endif %}
-
         <p>In order to get you access to the JEDI Cloud, we will need you to enter the details below that will help us verify and account for your Task Order.</p>
+
+        <hr />
 
         {% if extended %}
           <fieldset class="form__sub-fields form__sub-fields--warning">
@@ -66,33 +68,33 @@
             </template>
 
             {{ TextInput(
-              f.clin_0001,placeholder="50,000",
-              validation='integer'
+              f.clin_0001,
+              validation='dollars'
             ) }}
 
             {{ TextInput(
-              f.clin_0003,placeholder="13,000",
-              validation='integer'
+              f.clin_0003,
+              validation='dollars'
             ) }}
 
             {{ TextInput(
-              f.clin_1001,placeholder="30,000",
-              validation='integer'
+              f.clin_1001,
+              validation='dollars'
             ) }}
 
             {{ TextInput(
-              f.clin_1003,placeholder="7,000",
-              validation='integer'
+              f.clin_1003,
+              validation='dollars'
             ) }}
 
             {{ TextInput(
-              f.clin_2001,placeholder="30,000",
-              validation='integer'
+              f.clin_2001,
+              validation='dollars'
             ) }}
 
             {{ TextInput(
-              f.clin_2003,placeholder="7,000",
-              validation='integer'
+              f.clin_2003,
+              validation='dollars'
             ) }}
 
             <div class="usa-input usa-input--validation--anything {% if f.task_order.errors %} usa-input--error {% endif %}">
@@ -114,54 +116,60 @@
 
         {{ TextInput(f.uii_ids,
           paragraph=True,
-          placeholder="e.g.: DI 0CVA5786950 \nUN1945326361234786950",
+          placeholder="examples: \nDI 0CVA5786950 \nUN1945326361234786950",
           tooltip="A Unique Item Identifer is a unique code that helps the Department of Defense track and report on where and how digital assets are stored. <br>Not all applications have an existing UII number assigned."
           ) }}
 
         {{ TextInput(f.pe_id,
-          placeholder="e.g.: 0302400A",
-          tooltip="Program Element numbers helps the Department of Defense identify which offices\\' budgets are contributing towards this resource use."
+          placeholder="e.g.: 0105688F",
+          validation="peNumber"
           ) }}
 
-        {{ TextInput(f.treasury_code,placeholder="e.g.: 00123456") }}
+        {{ TextInput(f.treasury_code,placeholder="e.g.: 00123456",validation="treasuryCode") }}
 
-        {{ TextInput(f.ba_code,placeholder="e.g.: 02A") }}
+        {{ TextInput(f.ba_code,placeholder="e.g.: 02A",validation="baCode") }}
+
+        <hr />
 
         <h3>Contracting Officer (KO) Information</h3>
-        {{ TextInput(f.fname_co,placeholder="Contracting Officer First Name") }}
 
-        {{ TextInput(f.lname_co,placeholder="Contracting Officer Last Name") }}
+        <div class='form-row'>
+          <div class='form-col form-col--half '>{{ TextInput(f.fname_co) }}</div>
+          <div class='form-col form-col--half '>{{ TextInput(f.lname_co) }}</div>
+        </div>
 
-        {{ TextInput(
-          f.email_co,validation='email',
-          placeholder="jane@mail.mil"
-          ) }}
+        <div class='form-row'>
+          <div class='form-col form-col--half'>{{ TextInput(f.email_co,validation='email', placeholder='e.g. jane@mail.mil') }}</div>
+          <div class='form-col form-col--half'>{{ TextInput(f.office_co,placeholder="e.g.: WHS") }}</div>
+        </div>
 
-        {{ TextInput(
-          f.office_co,
-          placeholder="e.g.: WHS"
-          ) }}
-
-
+        <hr />
 
         <h3>Contracting Officer Representative (COR) Information</h3>
-        {{ TextInput(f.fname_cor,placeholder="Contracting Officer Representative First Name") }}
+        <div class='form-row'>
+          <div class='form-col form-col--half '>{{ TextInput(f.fname_cor) }}</div>
+          <div class='form-col form-col--half '>{{ TextInput(f.lname_cor) }}</div>
+        </div>
 
-        {{ TextInput(f.lname_cor,placeholder="Contracting Officer Representative Last Name") }}
-
-        {{ TextInput(f.email_cor,validation='email',placeholder="jane@mail.mil") }}
-
-        {{ TextInput(f.office_cor,placeholder="e.g.: WHS") }}
+        <div class='form-row'>
+          <div class='form-col form-col--half'>{{ TextInput(f.email_cor,validation='email', placeholder='e.g. jane@mail.mil') }}</div>
+          <div class='form-col form-col--half'>{{ TextInput(f.office_cor,placeholder="e.g.: WHS") }}</div>
+        </div>
 
 
       {% endautoescape %}
-      {% endblock form %}
-      {% block next %}
-      <input type='submit' class='usa-button usa-button-primary' value='Save & Continue' />
-      {% endblock %}
-      </form>
+
     </div>
   </div>
+
+  {% endblock form %}
+  {% block next %}
+  <div class='action-group'>
+    <input type='submit' class='usa-button usa-button-primary' value='Save & Continue' />
+  </div>
+  {% endblock %}
+  </form>
+
 </div>
 </financial>
 
