@@ -1,10 +1,7 @@
 from collections import defaultdict
 
 from atst.domain.requests import Requests
-from atst.forms.request import RequestForm
-from atst.forms.org import OrgForm
-from atst.forms.poc import POCForm
-from atst.forms.review import ReviewForm
+import atst.forms.new_request as request_forms
 
 
 class JEDIRequestFlow(object):
@@ -58,9 +55,9 @@ class JEDIRequestFlow(object):
     def form_class(self):
         return self.current_screen["form"]
 
-    # maps user data to fields in OrgForm; this should be moved into the
-    # request initialization process when we have a request schema, or we just
-    # shouldn't record this data on the request
+    # maps user data to fields in InformationAboutYouForm; this should be moved
+    # into the request initialization process when we have a request schema, or
+    # we just shouldn't record this data on the request
     def map_user_data(self, user):
         return {
             "fname_request": user.first_name,
@@ -102,18 +99,22 @@ class JEDIRequestFlow(object):
             {
                 "title": "Details of Use",
                 "section": "details_of_use",
-                "form": RequestForm,
+                "form": request_forms.DetailsOfUseForm,
             },
             {
                 "title": "Information About You",
                 "section": "information_about_you",
-                "form": OrgForm,
+                "form": request_forms.InformationAboutYouForm,
             },
-            {"title": "Workspace Owner", "section": "primary_poc", "form": POCForm},
+            {
+                "title": "Workspace Owner",
+                "section": "primary_poc",
+                "form": request_forms.WorkspaceOwnerForm,
+            },
             {
                 "title": "Review & Submit",
                 "section": "review_submit",
-                "form": ReviewForm,
+                "form": request_forms.ReviewAndSubmitForm,
             },
         ]
 

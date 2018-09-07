@@ -21,7 +21,9 @@ def test_submit_invalid_request_form(monkeypatch, client, user_session):
 
 def test_submit_valid_request_form(monkeypatch, client, user_session):
     user_session()
-    monkeypatch.setattr("atst.forms.request.RequestForm.validate", lambda s: True)
+    monkeypatch.setattr(
+        "atst.forms.new_request.DetailsOfUseForm.validate", lambda s: True
+    )
 
     response = client.post(
         "/requests/new/1",
