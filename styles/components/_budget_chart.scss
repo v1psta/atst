@@ -1,0 +1,80 @@
+.budget-chart {
+  .budget-chart__header {
+    border-bottom: 1px solid $color-gray-light;
+  }
+
+  .budget-chart__block {
+    fill: $color-white;
+    cursor: pointer;
+
+    &--highlighted {
+      fill: $color-aqua-lightest;
+    }
+
+    &:hover {
+      fill: $color-aqua-lightest;
+    }
+  }
+
+  svg {
+    display: block;
+
+    a {
+      text-decoration: none;
+      &:focus {
+        outline: none;
+        stroke: $color-gray-light;
+        stroke-dasharray: 2px;
+      }
+    }
+  }
+
+  .budget-chart__bar {
+    fill: $color-blue;
+
+    &--projected {
+      fill: transparent;
+      stroke-width: 2px;
+      stroke: $color-blue;
+      stroke-dasharray: 2px;
+    }
+  }
+
+  .budget-chart__cumulative__dot {
+    fill: $color-gold;
+  }
+
+  .budget-chart__projected-path {
+    stroke-width: 1px;
+    stroke: $color-gold;
+    stroke-dasharray: 2px;
+    fill: none;
+  }
+
+  .budget-chart__spend-path {
+    stroke-width: 1px;
+    stroke: $color-gold;
+    fill: none;
+  }
+
+  .budget-chart__budget-line {
+    stroke-width: 2px;
+    stroke: $color-gray-light;
+    stroke-dasharray: 2px;
+  }
+
+  .budget-chart__label {
+    @include h6;
+    font-weight: bold;
+    text-transform: none;
+    fill: $color-gray;
+
+    &--strong {
+      fill: $color-black;
+    }
+  }
+
+  .budget-chart__budget-text {
+
+  }
+}
