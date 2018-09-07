@@ -124,7 +124,7 @@ jobs:
       - run:
           name: "Create ATST Container"
           command: |
-            docker run -d --entrypoint='/bin/sh' --name ${CONTAINER_NAME} alpine:3.8
+            docker run -d --entrypoint='/bin/sh' --name ${CONTAINER_NAME} alpine:3.8 top
             docker container exec -t ${CONTAINER_NAME} mkdir ${APP_DIR}
             docker cp . ${CONTAINER_NAME}:${APP_DIR}
             docker container exec -t --workdir ${APP_DIR} ${CONTAINER_NAME} ./script/alpine_setup
