@@ -129,7 +129,7 @@ jobs:
             docker exec -t ${CONTAINER_NAME} mkdir -p ${APP_DIR}
             docker cp . ${CONTAINER_NAME}:${APP_DIR}
             docker exec -t --workdir ${APP_DIR} ${CONTAINER_NAME} ./script/alpine_setup
-            docker exec -t --workdir ${APP_DIR} ${CONTAINER_NAME} ./script/fix_permissions
+            docker exec -t --workdir ${APP_DIR} ${CONTAINER_NAME} ./script/fix_permissions ${APP_USER} ${APP_GROUP}
             docker commit \
               --change="ENV APP_USER \"${APP_USER}\"" \
               --change="ENV APP_GROUP \"${APP_GROUP}\"" \
