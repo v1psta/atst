@@ -11,6 +11,12 @@ defaults:
     PGUSER: root
     PGDATABASE: circle_test
     REDIS_URI: redis://localhost:6379
+  dockerCmdEnvironment:
+    APP_USER: atst
+    APP_GROUP: atat
+    APP_DIR: /opt/atat/atst
+    CONTAINER_NAME: atst-container
+    REGISTRY_LOCATION: registry.atat.codes:443
 
 jobs:
   app_setup:
@@ -103,17 +109,56 @@ jobs:
           name: "Run Tests"
           command: ./script/cibuild
 
-  build_image:
+  build_and_push_image:
     docker:
       - image: *sourceImage
         auth: *sourceAuth
+        environment: *dockerCmdEnvironment
     steps:
       - attach_workspace:
           at: .
       - setup_remote_docker
       - run:
-          name: "List Running Containers"
-          command: docker container ls
+          name: "Start Fresh Container"
+          command: docker run -d --entrypoint='/bin/sh' --name ${CONTAINER_NAME} alpine:3.8
+      - run:
+          name: "Create App Directory"
+          command: docker container exec -t ${CONTAINER_NAME} mkdir ${APP_DIR}
+      - run:
+          name: "Copy Pre-Built Files"
+          command: docker cp . ${CONTAINER_NAME}:${APP_DIR}
+      - run:
+          name: "Install System Packages"
+          command: docker container exec -t --workdir ${APP_DIR} ${CONTAINER_NAME} ./script/alpine_setup
+      - run:
+          name: "Update App File Ownership"
+          command: docker container exec -t --workdir ${APP_DIR} ${CONTAINER_NAME} ./script/fix_permissions
+      - run:
+          name: "Generate Image Name"
+          command: echo 'export IMAGENAME="${REGISTRY_LOCATION}:$(git rev-parse --short HEAD)-circle"' >> $BASH_ENV
+      - run:
+          name: "Save ATST Image"
+          command: |
+            docker commit \
+              --change="ENV APP_USER \"${APP_USER}\"" \
+              --change="ENV APP_GROUP \"${APP_GROUP}\"" \
+              --change="ENV APP_DIR \"${APP_DIR}\"" \
+              --change='ENTRYPOINT ["/usr/bin/dumb-init", "--"]' \
+              --change="CMD [\"bash\", \"-c\", \"${APP_DIR}/script/uwsgi_server\"]" \
+              --change="WORKDIR ${APP_DIR}" \
+              --change="USER \"${APP_USER}\"" \
+              ${CONTAINER_NAME} \
+              ${IMAGE_NAME}
+      - run:
+          name: "Publish ATST Image"
+          command: |
+            docker login -u ${REGISTRY_USERNAME} -p ${REGISTRY_PASSWORD} ${REGISTRY_LOCATION}
+            docker push ${IMAGE_NAME}
+      - run:
+          name: "Clean UP"
+          command: |
+            docker container ${CONTAINER_NAME} stop
+            docker logout
 
 workflows:
   version: 2
@@ -123,7 +168,7 @@ workflows:
       - test:
           requires:
             - app_setup
-      - build_image:
+      - build_and_push_image:
           requires:
             - test
           filters:
