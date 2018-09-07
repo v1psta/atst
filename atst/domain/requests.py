@@ -12,6 +12,7 @@ from atst.domain.workspaces import Workspaces
 from atst.models.request import Request
 from atst.models.request_revision import RequestRevision
 from atst.models.request_status_event import RequestStatusEvent, RequestStatus
+from atst.models.request_review import RequestReview
 from atst.utils import deep_merge
 
 from .exceptions import NotFoundError, UnauthorizedError
@@ -255,6 +256,17 @@ WHERE requests_with_status.status = :status
     @classmethod
     def submit_financial_verification(cls, request):
         Requests.set_status(request, RequestStatus.PENDING_CCPO_APPROVAL)
+
+        db.session.add(request)
+        db.session.commit()
+
+        return request
+
+    @classmethod
+    def approve_for_financial_verification(cls, request, review_data):
+        Requests.set_status(request, RequestStatus.PENDING_FINANCIAL_VERIFICATION)
+
+        request.latest_status.review = RequestReview(**review_data)
 
         db.session.add(request)
         db.session.commit()

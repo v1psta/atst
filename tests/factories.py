@@ -17,14 +17,20 @@ from atst.models.workspace import Workspace
 from atst.domain.roles import Roles
 
 
-class RoleFactory(factory.alchemy.SQLAlchemyModelFactory):
+class Base(factory.alchemy.SQLAlchemyModelFactory):
+    @classmethod
+    def dictionary(cls, **attrs):
+        return factory.build(dict, FACTORY_CLASS=cls, **attrs)
+
+
+class RoleFactory(Base):
     class Meta:
         model = Role
 
     permissions = []
 
 
-class UserFactory(factory.alchemy.SQLAlchemyModelFactory):
+class UserFactory(Base):
     class Meta:
         model = User
 
@@ -41,7 +47,7 @@ class UserFactory(factory.alchemy.SQLAlchemyModelFactory):
         return cls.create(atat_role=role, **kwargs)
 
 
-class RequestStatusEventFactory(factory.alchemy.SQLAlchemyModelFactory):
+class RequestStatusEventFactory(Base):
     class Meta:
         model = RequestStatusEvent
 
@@ -49,19 +55,27 @@ class RequestStatusEventFactory(factory.alchemy.SQLAlchemyModelFactory):
     sequence = 1
 
 
-class RequestRevisionFactory(factory.alchemy.SQLAlchemyModelFactory):
+class RequestRevisionFactory(Base):
     class Meta:
         model = RequestRevision
 
     id = factory.Sequence(lambda x: uuid4())
 
 
-class RequestReviewFactory(factory.alchemy.SQLAlchemyModelFactory):
+class RequestReviewFactory(Base):
     class Meta:
         model = RequestReview
 
+    comments = factory.Faker("sentence")
+    fname_mao = factory.Faker("first_name")
+    lname_mao = factory.Faker("last_name")
+    email_mao = factory.Faker("email")
+    phone_mao = factory.Faker("phone_number")
+    fname_ccpo = factory.Faker("first_name")
+    lname_ccpo = factory.Faker("last_name")
 
-class RequestFactory(factory.alchemy.SQLAlchemyModelFactory):
+
+class RequestFactory(Base):
     class Meta:
         model = Request
 
@@ -133,17 +147,17 @@ class RequestFactory(factory.alchemy.SQLAlchemyModelFactory):
         return RequestRevisionFactory.build(**data)
 
 
-class PENumberFactory(factory.alchemy.SQLAlchemyModelFactory):
+class PENumberFactory(Base):
     class Meta:
         model = PENumber
 
 
-class TaskOrderFactory(factory.alchemy.SQLAlchemyModelFactory):
+class TaskOrderFactory(Base):
     class Meta:
         model = TaskOrder
 
 
-class WorkspaceFactory(factory.alchemy.SQLAlchemyModelFactory):
+class WorkspaceFactory(Base):
     class Meta:
         model = Workspace
 
