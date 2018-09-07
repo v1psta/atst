@@ -109,6 +109,57 @@ jobs:
           name: "Run Tests"
           command: ./script/cibuild
 
+  build_and_push_image:
+    docker:
+      - image: *sourceImage
+        auth: *sourceAuth
+        environment: *dockerCmdEnvironment
+    steps:
+      - attach_workspace:
+          at: .
+      - setup_remote_docker:
+          version: 18.05.0-ce
+      - run:
+          name: "Generate the Target Image Name"
+          command: |
+            echo "export IMAGE_NAME=\"${REGISTRY_LOCATION}/atst-prod:$(git rev-parse --short HEAD)-circle\"" >> $BASH_ENV
+            echo $BASH_ENV | grep IMAGE_NAME
+      - run:
+          name: "Start a Fresh Container"
+          command: docker run -d --entrypoint='/bin/sh' -ti --name ${CONTAINER_NAME} alpine:3.8
+      - run:
+          name: "Create the App Directory"
+          command: docker exec -t ${CONTAINER_NAME} mkdir -p ${APP_DIR}
+      - run:
+          name: "Copy Workspace Contents into the Container"
+          command: docker cp . ${CONTAINER_NAME}:${APP_DIR}
+      - run:
+          name: "Run Alpine Setup"
+          command: docker exec -t --workdir ${APP_DIR} ${CONTAINER_NAME} ./script/alpine_setup
+      - run:
+          name: "Run Fix Permissions"
+          command: docker exec -t --workdir ${APP_DIR} ${CONTAINER_NAME} ./script/fix_permissions ${APP_USER} ${APP_GROUP}
+      - run:
+          name: "Commit Container Changes to New Image"
+          command: |
+            docker commit \
+              --change="ENV APP_USER \"${APP_USER}\"" \
+              --change="ENV APP_GROUP \"${APP_GROUP}\"" \
+              --change="ENV APP_DIR \"${APP_DIR}\"" \
+              --change='ENTRYPOINT ["/usr/bin/dumb-init", "--"]' \
+              --change="CMD [\"bash\", \"-c\", \"${APP_DIR}/script/uwsgi_server\"]" \
+              --change="WORKDIR ${APP_DIR}" \
+              --change="USER \"${APP_USER}\"" \
+              ${CONTAINER_NAME} \
+              ${IMAGE_NAME}
+      - run:
+          name: "Publish ATST Image"
+          command: |
+            docker image ls
+            docker login -u ${REGISTRY_USERNAME} -p ${REGISTRY_PASSWORD} ${REGISTRY_LOCATION}
+            docker push ${IMAGE_NAME}
+            docker logout
+
 workflows:
   version: 2
   run-tests:
@@ -117,3 +168,9 @@ workflows:
       - test:
           requires:
             - app_setup
+      - build_and_push_image:
+          requires:
+            - test
+          filters:
+            branches:
+              only: circleci-cd
