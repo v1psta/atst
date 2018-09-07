@@ -9,6 +9,8 @@ from atst.forms.data import (
     ASSISTANCE_ORG_TYPES,
     DATA_TRANSFER_AMOUNTS,
     COMPLETION_DATE_RANGES,
+    FUNDING_TYPES,
+    TASK_ORDER_SOURCES,
 )
 
 
@@ -19,6 +21,8 @@ def option_data():
         "assistance_org_types": ASSISTANCE_ORG_TYPES,
         "data_transfer_amounts": DATA_TRANSFER_AMOUNTS,
         "completion_date_ranges": COMPLETION_DATE_RANGES,
+        "funding_types": FUNDING_TYPES,
+        "task_order_sources": TASK_ORDER_SOURCES,
     }
 
 

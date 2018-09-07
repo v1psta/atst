@@ -26,6 +26,16 @@ class Authorization(object):
         return False
 
     @classmethod
+    def check_can_approve_request(cls, user):
+        if (
+            Permissions.REVIEW_AND_APPROVE_JEDI_WORKSPACE_REQUEST
+            in user.atat_permissions
+        ):
+            return True
+        else:
+            raise UnauthorizedError(user, "cannot review and approve requests")
+
+    @classmethod
     def check_workspace_permission(cls, user, workspace, permission, message):
         if not Authorization.has_workspace_permission(user, workspace, permission):
             raise UnauthorizedError(user, message)

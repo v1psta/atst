@@ -10,6 +10,7 @@ from atst.domain.task_orders import TaskOrders
 
 from .fields import NewlineListField, SelectField
 from .forms import ValidatedForm
+from .data import FUNDING_TYPES
 
 
 PE_REGEX = re.compile(
@@ -161,13 +162,7 @@ class ExtendedFinancialForm(BaseFinancialForm):
 
     funding_type = SelectField(
         description="What is the source of funding?",
-        choices=[
-            ("", "- Select -"),
-            ("RDTE", "Research, Development, Testing & Evaluation (RDT&E)"),
-            ("OM", "Operations & Maintenance (O&M)"),
-            ("PROC", "Procurement (PROC)"),
-            ("OTHER", "Other"),
-        ],
+        choices=FUNDING_TYPES,
         validators=[Required()],
         render_kw={"required": False},
     )

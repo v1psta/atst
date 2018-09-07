@@ -8,7 +8,7 @@ from atst.models import Base
 
 class Source(Enum):
     MANUAL = "Manual"
-    EDA = "eda"
+    EDA = "EDA"
 
 
 class FundingType(Enum):

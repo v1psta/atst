@@ -37,8 +37,11 @@ class Uploader:
             )
         return (fyle.filename, object_name)
 
-    def download(self, path):
-        pass
+    def download_stream(self, object_name):
+        obj = self.container.get_object(object_name=object_name)
+        with NamedTemporaryFile() as tempfile:
+            obj.download(tempfile.name, overwrite_existing=True)
+            return open(tempfile.name, "rb")
 
     def _get_container(self, provider, container, key, secret):
         if provider == "LOCAL":
