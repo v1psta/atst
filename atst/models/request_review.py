@@ -22,6 +22,10 @@ class RequestReview(Base):
     lname_ccpo = Column(String)
 
     @property
+    def full_name_reviewer(self):
+        return self.reviewer.full_name
+
+    @property
     def full_name_mao(self):
         return "{} {}".format(self.fname_mao, self.lname_mao)
 

@@ -148,7 +148,7 @@
                 <li>
                   <article class='approval-log__log-item'>
                     <div>
-                      <h3 class='approval-log__log-item__header'>Denied by Darth Vader</h3>
+                      <h3 class='approval-log__log-item__header'>{{ status.log_name }} by {{ status.review.full_name_reviewer }}</h3>
                       {% if status.review.comment %}
                         <p>{{ status.review.comment }}</p>
                       {% endif %}
@@ -171,12 +171,12 @@
                         {% endif %}
                       </div>
                     </div>
-                    <footer class='approval-log__log-item__timestamp'><time datetime='2018-07-02 04:23:02 EST'>{{ status.time_created.strftime("%Y-%m-%d %H:%M:%S %Z") }}</time></footer>
+                    {% set timestamp=status.time_created.strftime("%Y-%m-%d %H:%M:%S %Z") %}
+                    <footer class='approval-log__log-item__timestamp'><time datetime='{{ timestamp }}'>{{ timestamp }}</time></footer>
                   </article>
                 </li>
               {% endif %}
             {% endfor %}
-
 
           </ol>
         </div>
