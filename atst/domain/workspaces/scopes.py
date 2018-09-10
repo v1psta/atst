@@ -52,7 +52,7 @@ class ScopedProject(ScopedResource):
     @property
     def environments(self):
         can_view_all_environments = Authorization.has_workspace_permission(
-            self.user, self.resource, Permissions.VIEW_ENVIRONMENT_IN_APPLICATION
+            self.user, self.resource.workspace, Permissions.VIEW_ENVIRONMENT_IN_APPLICATION
         )
 
         if can_view_all_environments:

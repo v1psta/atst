@@ -203,7 +203,7 @@ def test_scoped_workspace_only_returns_users_projects_and_environments():
     assert scoped_workspace.projects[0].environments == [dev_environment]
 
 
-def test_scoped_workspace_returns_all_projects_for_ccpo():
+def test_scoped_workspace_returns_all_projects_for_workspace_admin():
     workspace = Workspaces.create(RequestFactory.create())
     for _ in range(5):
         Projects.create(
@@ -214,8 +214,10 @@ def test_scoped_workspace_returns_all_projects_for_ccpo():
             ["dev", "staging", "prod"],
         )
 
-    ccpo = UserFactory.from_atat_role("ccpo")
-    scoped_workspace = Workspaces.get(ccpo, workspace.id)
+    admin = Workspaces.add_member(
+        workspace, UserFactory.from_atat_role("default"), "admin"
+    ).user
+    scoped_workspace = Workspaces.get(admin, workspace.id)
 
     assert len(scoped_workspace.projects) == 5
     assert len(scoped_workspace.projects[0].environments) == 3
@@ -223,16 +225,12 @@ def test_scoped_workspace_returns_all_projects_for_ccpo():
 
 def test_scoped_workspace_returns_all_projects_for_workspace_owner():
     workspace = Workspaces.create(RequestFactory.create())
+    owner = workspace.owner
     for _ in range(5):
         Projects.create(
-            workspace.owner,
-            workspace,
-            "My Project",
-            "My project",
-            ["dev", "staging", "prod"],
+            owner, workspace, "My Project", "My project", ["dev", "staging", "prod"]
         )
 
-    owner = UserFactory.from_atat_role("owner")
     scoped_workspace = Workspaces.get(owner, workspace.id)
 
     assert len(scoped_workspace.projects) == 5
