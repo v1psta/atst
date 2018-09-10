@@ -7,7 +7,7 @@ from .validators import Alphabet, PhoneNumber
 
 
 class CCPOReviewForm(ValidatedForm):
-    comments = TextAreaField("Comments (optional)")
+    comment = TextAreaField("Comments (optional)")
     fname_mao = StringField("First Name (optional)", validators=[Alphabet()])
     lname_mao = StringField("Last Name (optional)", validators=[Alphabet()])
     email_mao = EmailField("Mission Owner e-mail (optional)", validators=[Email()])

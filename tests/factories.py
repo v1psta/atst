@@ -66,7 +66,7 @@ class RequestReviewFactory(Base):
     class Meta:
         model = RequestReview
 
-    comments = factory.Faker("sentence")
+    comment = factory.Faker("sentence")
     fname_mao = factory.Faker("first_name")
     lname_mao = factory.Faker("last_name")
     email_mao = factory.Faker("email")
