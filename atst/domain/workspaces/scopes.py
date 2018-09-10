@@ -30,9 +30,11 @@ class ScopedWorkspace(ScopedResource):
 
     @property
     def projects(self):
-        if Authorization.has_workspace_permission(
+        can_view_all_projects = Authorization.has_workspace_permission(
             self.user, self.resource, Permissions.VIEW_APPLICATION_IN_WORKSPACE
-        ):
+        )
+
+        if can_view_all_projects:
             projects = self.resource.projects
         else:
             projects = Projects.for_user(self.user, self.resource)
@@ -49,9 +51,11 @@ class ScopedProject(ScopedResource):
 
     @property
     def environments(self):
-        if Authorization.has_workspace_permission(
+        can_view_all_environments = Authorization.has_workspace_permission(
             self.user, self.resource, Permissions.VIEW_ENVIRONMENT_IN_APPLICATION
-        ):
+        )
+
+        if can_view_all_environments:
             environments = self.resource.environments
         else:
             environments = Environments.for_user(self.user, self.resource)
