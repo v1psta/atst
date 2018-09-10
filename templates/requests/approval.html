@@ -142,60 +142,42 @@
       <div>
         <div class='approval-log'>
           <ol>
-            <li>
-              <article class='approval-log__log-item'>
-                <div>
-                  <h3 class='approval-log__log-item__header'>Denied by Darth Vader</h3>
-                  <p>"You have failed me for the last time, Admiral. Captain Piett. Yes, my lord. Make ready to land out troops beyond the energy shield and deploy the fleet so that nothing gets off that system."</p>
 
-                  <div class='approval-log__behalfs'>
-                    <div class='approval-log__behalf'>
-                      <h3 class='approval-log__log-item__header'>Mission Owner approval on behalf of:</h3>
-                      <span>Grand Moff Tarkin</span>
-                      <span>tarkin@empire.mil</span>
-                      <span>(234) 567-8901</span>
+            {% for status in statuses %}
+              {% if status.review %}
+                <li>
+                  <article class='approval-log__log-item'>
+                    <div>
+                      <h3 class='approval-log__log-item__header'>Denied by Darth Vader</h3>
+                      {% if status.review.comment %}
+                        <p>{{ status.review.comment }}</p>
+                      {% endif %}
+
+                      <div class='approval-log__behalfs'>
+                        {% if status.review.lname_mao %}
+                          <div class='approval-log__behalf'>
+                            <h3 class='approval-log__log-item__header'>Mission Owner approval on behalf of:</h3>
+                            <span>{{ status.review.full_name_mao }}</span>
+                            <span>{{ status.review.email_mao }}</span>
+                            <span>{{ status.review.phone_mao }}</span>
+                          </div>
+                        {% endif %}
+
+                        {% if status.review.lname_ccpo %}
+                          <div class='approval-log__behalf'>
+                            <h3 class='approval-log__log-item__header'>CCPO approval on behalf of:</h3>
+                            <span>{{ status.review.full_name_ccpo }}</span>
+                          </div>
+                        {% endif %}
+                      </div>
                     </div>
-
-                    <div class='approval-log__behalf'>
-                      <h3 class='approval-log__log-item__header'>CCPO approval on behalf of:</h3>
-                      <span>Emperor Palpatine</span>
-                      <span>palpatine@empire.mil</span>
-                      <span>(345) 678-9012</span>
-                    </div>
-                  </div>
-                </div>
-
-                <footer class='approval-log__log-item__timestamp'><time datetime='2018-07-02 04:23:02 EST'>2018-07-02 04:23:02 EST</time></footer>
-              </article>
-            </li>
+                    <footer class='approval-log__log-item__timestamp'><time datetime='2018-07-02 04:23:02 EST'>{{ status.time_created.strftime("%Y-%m-%d %H:%M:%S %Z") }}</time></footer>
+                  </article>
+                </li>
+              {% endif %}
+            {% endfor %}
 
 
-            <li>
-              <article class='approval-log__log-item'>
-                <div>
-                  <h3 class='approval-log__log-item__header'>Denied by Darth Vader</h3>
-                  <p>"You have failed me for the last time, Admiral. Captain Piett. Yes, my lord. Make ready to land out troops beyond the energy shield and deploy the fleet so that nothing gets off that system."</p>
-
-                  <div class='approval-log__behalfs'>
-                    <div class='approval-log__behalf'>
-                      <h3 class='approval-log__log-item__header'>Mission Owner approval on behalf of:</h3>
-                      <span>Grand Moff Tarkin</span>
-                      <span>tarkin@empire.mil</span>
-                      <span>(234) 567-8901</span>
-                    </div>
-
-                    <div class='approval-log__behalf'>
-                      <h3 class='approval-log__log-item__header'>CCPO approval on behalf of:</h3>
-                      <span>Emperor Palpatine</span>
-                      <span>palpatine@empire.mil</span>
-                      <span>(345) 678-9012</span>
-                    </div>
-                  </div>
-                </div>
-
-                <footer class='approval-log__log-item__timestamp'><time datetime='2018-07-02 04:23:02 EST'>2018-07-02 04:23:02 EST</time></footer>
-              </article>
-            </li>
           </ol>
         </div>
       </div>

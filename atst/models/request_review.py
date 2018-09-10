@@ -20,3 +20,11 @@ class RequestReview(Base):
     phone_mao = Column(String)
     fname_ccpo = Column(String)
     lname_ccpo = Column(String)
+
+    @property
+    def full_name_mao(self):
+        return "{} {}".format(self.fname_mao, self.lname_mao)
+
+    @property
+    def full_name_ccpo(self):
+        return "{} {}".format(self.fname_ccpo, self.lname_ccpo)

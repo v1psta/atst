@@ -35,6 +35,7 @@ def render_approval(request, form=None):
     return render_template(
         "requests/approval.html",
         data=data,
+        statuses=request.status_events,
         request_id=request.id,
         status=request.status.value,
         pending_review=pending_review,
