@@ -156,6 +156,7 @@ class Request(Base):
     def action_required_by(self):
         return {
             RequestStatus.PENDING_FINANCIAL_VERIFICATION: "mission_owner",
+            RequestStatus.CHANGES_REQUESTED: "mission_owner",
             RequestStatus.PENDING_CCPO_APPROVAL: "ccpo",
             RequestStatus.PENDING_CCPO_ACCEPTANCE: "ccpo",
         }.get(self.status)
