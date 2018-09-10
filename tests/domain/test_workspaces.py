@@ -193,7 +193,9 @@ def test_scoped_workspace_only_returns_users_projects_and_environments():
         ["dev", "staging", "prod"],
     )
     developer = UserFactory.from_atat_role("developer")
-    dev_environment = Environments.add_member(workspace.owner, new_project.environments[0], developer)
+    dev_environment = Environments.add_member(
+        workspace.owner, new_project.environments[0], developer
+    )
 
     scoped_workspace = Workspaces.get(developer, workspace.id)
 
