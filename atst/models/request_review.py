@@ -11,9 +11,9 @@ class RequestReview(Base):
     status = relationship("RequestStatusEvent", back_populates="review")
 
     comments = Column(String)
-    fname_mao = Column(String)
-    lname_mao = Column(String)
+    fname_mao = Column(String, nullable=False)
+    lname_mao = Column(String, nullable=False)
     email_mao = Column(String)
     phone_mao = Column(String)
-    fname_ccpo = Column(String)
-    lname_ccpo = Column(String)
+    fname_ccpo = Column(String, nullable=False)
+    lname_ccpo = Column(String, nullable=False)
