@@ -184,7 +184,7 @@ workflows:
           filters:
             branches:
               only: circleci-cd
-      - deploy
+      - deploy:
           requires:
             - build_and_push_image
           filters:
