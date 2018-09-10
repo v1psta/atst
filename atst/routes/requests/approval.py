@@ -1,4 +1,11 @@
-from flask import render_template, g, Response, request as http_request, redirect, url_for
+from flask import (
+    render_template,
+    g,
+    Response,
+    request as http_request,
+    redirect,
+    url_for,
+)
 from flask import current_app as app
 
 from . import requests_bp

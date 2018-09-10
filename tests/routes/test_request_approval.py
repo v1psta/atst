@@ -6,7 +6,10 @@ from atst.models.request_status_event import RequestStatus
 from atst.domain.roles import Roles
 
 from tests.factories import (
-    RequestFactory, TaskOrderFactory, UserFactory, RequestReviewFactory
+    RequestFactory,
+    TaskOrderFactory,
+    UserFactory,
+    RequestReviewFactory,
 )
 
 

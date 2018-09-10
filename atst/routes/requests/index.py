@@ -76,7 +76,9 @@ class RequestsIndex(object):
             edit_link = url_for(
                 "requests.financial_verification", request_id=request.id
             )
-        elif Requests.is_pending_ccpo_acceptance(request) or Requests.is_pending_ccpo_approval(request):
+        elif Requests.is_pending_ccpo_acceptance(
+            request
+        ) or Requests.is_pending_ccpo_approval(request):
             edit_link = url_for("requests.view_pending_request", request_id=request.id)
         else:
             edit_link = url_for(

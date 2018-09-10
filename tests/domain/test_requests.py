@@ -188,4 +188,3 @@ def test_accept_for_financial_verification():
     assert request.status == RequestStatus.PENDING_FINANCIAL_VERIFICATION
     current_review = request.latest_status.review
     assert current_review.fname_mao == review_data["fname_mao"]
-
