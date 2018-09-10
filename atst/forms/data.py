@@ -187,17 +187,18 @@ ENVIRONMENT_ROLES = [
 ]
 
 ENVIRONMENT_ROLES = [
+    (None, {"name": "No access", "description": "No environment access."}),
     (
-        "developer",
+        "meow",
         {
-            "name": "Developer",
+            "name": "Meow",
             "description": "Configures cloud-based IaaS and PaaS computing, networking, and storage services.",
         },
     ),
     (
-        "owner",
+        "woof",
         {
-            "name": "Workspace Owner",
+            "name": "Woof",
             "description": "Can add, edit, deactivate access to all projects, environments, and members. Can view budget reports. Can start and edit JEDI Cloud requests.",
         },
     ),

@@ -214,7 +214,7 @@ def view_member(workspace_id, member_id):
         "edit this workspace user",
     )
     member = WorkspaceUsers.get(workspace_id, member_id)
-    form = EditMemberForm(workspace_role=member.role)
+    form = EditMemberForm(workspace_role=member.role, environment_role="")
     return render_template(
         "workspaces/members/edit.html", form=form, workspace=workspace, member=member
     )
