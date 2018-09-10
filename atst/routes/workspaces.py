@@ -14,6 +14,7 @@ from atst.domain.projects import Projects
 from atst.domain.reports import Reports
 from atst.domain.workspaces import Workspaces
 from atst.domain.workspace_users import WorkspaceUsers
+from atst.domain.environments import Environments
 from atst.forms.new_project import NewProjectForm
 from atst.forms.new_member import NewMemberForm
 from atst.forms.edit_member import EditMemberForm

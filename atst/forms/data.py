@@ -186,6 +186,23 @@ ENVIRONMENT_ROLES = [
     ),
 ]
 
+ENVIRONMENT_ROLES = [
+    (
+        "developer",
+        {
+            "name": "Developer",
+            "description": "Configures cloud-based IaaS and PaaS computing, networking, and storage services.",
+        },
+    ),
+    (
+        "owner",
+        {
+            "name": "Workspace Owner",
+            "description": "Can add, edit, deactivate access to all projects, environments, and members. Can view budget reports. Can start and edit JEDI Cloud requests.",
+        },
+    ),
+]
+
 FUNDING_TYPES = [
     ("", "- Select -"),
     ("RDTE", "Research, Development, Testing & Evaluation (RDT&E)"),
