@@ -181,10 +181,10 @@ def test_set_status_sets_revision():
     assert request.latest_revision == request.status_events[-1].revision
 
 
-def test_approve_for_financial_verification():
+def test_accept_for_financial_verification():
     request = RequestFactory.create()
     review_data = RequestReviewFactory.dictionary()
-    Requests.approve_for_financial_verification(request, review_data)
+    Requests.accept_for_financial_verification(request, review_data)
     assert request.status == RequestStatus.PENDING_FINANCIAL_VERIFICATION
     current_review = request.latest_status.review
     assert current_review.fname_mao == review_data["fname_mao"]

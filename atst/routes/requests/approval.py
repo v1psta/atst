@@ -48,7 +48,11 @@ def submit_approval(request_id):
 
     form = CCPOReviewForm(http_request.form)
     if form.validate():
-        Requests.approve_for_financial_verification(request, form.data)
+        if http_request.form.get("approved"):
+            Requests.accept_for_financial_verification(request, form.data)
+        else:
+            Requests.request_changes(request, form.data)
+
         return redirect(url_for("requests.requests_index"))
     else:
         return render_approval(request, form)

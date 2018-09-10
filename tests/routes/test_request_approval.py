@@ -2,6 +2,7 @@ import os
 from flask import url_for
 
 from atst.models.attachment import Attachment
+from atst.models.request_status_event import RequestStatus
 from atst.domain.roles import Roles
 
 from tests.factories import (
@@ -68,7 +69,22 @@ def test_can_submit_request_approval(client, user_session):
     user_session(user)
     request = RequestFactory.create()
     review_data = RequestReviewFactory.dictionary()
+    review_data["approved"] = True
     response = client.post(
         url_for("requests.submit_approval", request_id=request.id), data=review_data
     )
     assert response.status_code == 302
+    assert request.status == RequestStatus.PENDING_FINANCIAL_VERIFICATION
+
+
+def test_can_submit_request_denial(client, user_session):
+    user = UserFactory.from_atat_role("ccpo")
+    user_session(user)
+    request = RequestFactory.create()
+    review_data = RequestReviewFactory.dictionary()
+    review_data["denied"] = True
+    response = client.post(
+        url_for("requests.submit_approval", request_id=request.id), data=review_data
+    )
+    assert response.status_code == 302
+    assert request.status == RequestStatus.CHANGES_REQUESTED
