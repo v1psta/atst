@@ -81,4 +81,4 @@ def test_stepthrough_request_form(user_session, screens, client):
     )
 
     finished_request = Requests.get(user, req_id)
-    assert finished_request.status == RequestStatus.PENDING_CCPO_APPROVAL
+    assert finished_request.status == RequestStatus.PENDING_CCPO_ACCEPTANCE

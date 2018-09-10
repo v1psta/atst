@@ -71,4 +71,4 @@ def test_can_submit_request_approval(client, user_session):
     response = client.post(
         url_for("requests.submit_approval", request_id=request.id), data=review_data
     )
-    assert response.status_code == 301
+    assert response.status_code == 302

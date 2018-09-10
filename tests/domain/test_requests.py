@@ -51,14 +51,14 @@ def test_dont_auto_approve_if_dollar_value_is_1m_or_above():
     new_request = RequestFactory.create(initial_revision={"dollar_value": 1000000})
     request = Requests.submit(new_request)
 
-    assert request.status == RequestStatus.PENDING_CCPO_APPROVAL
+    assert request.status == RequestStatus.PENDING_CCPO_ACCEPTANCE
 
 
 def test_dont_auto_approve_if_no_dollar_value_specified():
     new_request = RequestFactory.create(initial_revision={})
     request = Requests.submit(new_request)
 
-    assert request.status == RequestStatus.PENDING_CCPO_APPROVAL
+    assert request.status == RequestStatus.PENDING_CCPO_ACCEPTANCE
 
 
 def test_should_allow_submission():

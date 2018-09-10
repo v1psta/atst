@@ -157,6 +157,7 @@ class Request(Base):
         return {
             RequestStatus.PENDING_FINANCIAL_VERIFICATION: "mission_owner",
             RequestStatus.PENDING_CCPO_APPROVAL: "ccpo",
+            RequestStatus.PENDING_CCPO_ACCEPTANCE: "ccpo",
         }.get(self.status)
 
     @property

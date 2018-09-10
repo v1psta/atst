@@ -30,7 +30,7 @@ class RequestsIndex(object):
         return {
             "requests": mapped_requests,
             "pending_financial_verification": False,
-            "pending_ccpo_approval": False,
+            "pending_ccpo_acceptance": False,
             "extended_view": True,
             "kpi_inprogress": Requests.in_progress_count(),
             "kpi_pending": Requests.pending_ccpo_count(),
@@ -47,12 +47,12 @@ class RequestsIndex(object):
         pending_fv = any(
             Requests.is_pending_financial_verification(r) for r in requests
         )
-        pending_ccpo = any(Requests.is_pending_ccpo_approval(r) for r in requests)
+        pending_ccpo = any(Requests.is_pending_ccpo_acceptance(r) for r in requests)
 
         return {
             "requests": mapped_requests,
             "pending_financial_verification": pending_fv,
-            "pending_ccpo_approval": pending_ccpo,
+            "pending_ccpo_acceptance": pending_ccpo,
             "num_action_required": num_action_required,
             "extended_view": False,
         }
@@ -76,7 +76,7 @@ class RequestsIndex(object):
             edit_link = url_for(
                 "requests.financial_verification", request_id=request.id
             )
-        elif Requests.is_pending_ccpo_approval(request):
+        elif Requests.is_pending_ccpo_acceptance(request) or Requests.is_pending_ccpo_approval(request):
             edit_link = url_for("requests.view_pending_request", request_id=request.id)
         else:
             edit_link = url_for(
