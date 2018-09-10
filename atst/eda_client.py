@@ -1,5 +1,5 @@
 from csv import DictReader
-import xml.etree.ElementTree as ET
+import defusedxml.ElementTree as ET
 
 import requests
 from requests.auth import HTTPBasicAuth
