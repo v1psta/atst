@@ -2,12 +2,14 @@
 
 {% from "components/icon.html" import Icon %}
 {% from "components/alert.html" import Alert %}
+{% from "components/text_input.html" import TextInput %}
 
 {% block content %}
 
 <article class='col col--grow request-approval'>
 
-  <form>
+  <form method="POST" action="{{ url_for("requests.submit_approval", request_id=request_id) }}" autocomplete="off">
+    {{ f.csrf_token }}
     <section class='panel'>
       <header class='panel__heading request-approval__heading'>
         <h1 class='h2'>Request #{{ request_id }}</h1>
@@ -58,21 +60,11 @@
         <div class='form-row'>
 
           <div class='form-col form-col--half'>
-
-            <div class='usa-input'>
-              <label for='mo-behalf-fname'>First Name</label>
-              <input id='mo-behalf-fname' type='text' placeholder='First name of mission authorizing official' />
-            </div>
-
+            {{ TextInput(f.fname_mao, placeholder="First name of mission authorizing official") }}
           </div>
 
           <div class='form-col form-col--half'>
-
-            <div class='usa-input'>
-              <label for='mo-behalf-lname'>Last Name</label>
-              <input id='mo-behalf-lname' type='text' placeholder='Last name of mission authorizing official'/>
-            </div>
-
+            {{ TextInput(f.lname_mao, placeholder="Last name of mission authorizing official") }}
           </div>
 
         </div>
@@ -80,23 +72,12 @@
         <div class='form-row'>
 
           <div class='form-col form-col--half'>
-
-
-            <div class='usa-input'>
-              <label for='mo-behalf-email'>Mission Owner e-mail (optional)</label>
-              <input id='mo-behalf-email' type='email' placeholder='name@mail.mil'/>
-            </div>
-
+            {{ TextInput(f.email_mao, placeholder="name@mail.mil") }}
           </div>
 
 
           <div class='form-col form-col--half'>
-
-            <div class='usa-input'>
-              <label for='mo-behalf-phone'>Mission Owner phone number (optional)</label>
-              <input id='mo-behalf-phone' type='tel' placeholder='(123) 456-7890'/>
-            </div>
-
+            {{ TextInput(f.phone_mao, placeholder="(123) 456-7890", validation='usPhone') }}
           </div>
 
         </div>
@@ -107,21 +88,11 @@
         <div class='form-row'>
 
           <div class='form-col form-col--half'>
-
-            <div class='usa-input'>
-              <label for='ccpo-behalf-fname'>First Name</label>
-              <input id='ccpo-behalf-fname' type='text' placeholder='First name of CCPO authorizing official' />
-            </div>
-
+            {{ TextInput(f.fname_ccpo, placeholder="First name of CCPO authorizing official") }}
           </div>
 
           <div class='form-col form-col--half'>
-
-            <div class='usa-input'>
-              <label for='ccpo-behalf-lname'>Last Name</label>
-              <input id='ccpo-behalf-lname' type='text' placeholder='Last name of CCPO authorizing official'/>
-            </div>
-
+            {{ TextInput(f.lname_ccpo, placeholder="Last name of CCPO authorizing official") }}
           </div>
 
         </div>
@@ -135,12 +106,7 @@
         <div class='form-row'>
 
           <div class='form-col'>
-
-            <div class='usa-input'>
-              <label for='notes'>Internal Comments <em>(optional)</em></label>
-              <textarea id='notes' placeholder='Add notes or comments for internal CCPO reference.'/></textarea>
-            </div>
-
+            {{ TextInput(f.comments, paragraph=True, placeholder="Add notes or comments for internal CCPO reference.") }}
           </div>
 
         </div>
@@ -150,7 +116,7 @@
     </section>
 
     <section class='action-group'>
-      <a href='#' class='usa-button usa-button-big'>Approve Request</a>
+      <button type="submit" class='usa-button usa-button-big'>Approve Request</button>
       <a href='#' class='usa-button usa-button-big usa-button-secondary'>Mark as Changes Requested</a>
       <a href='#' class='icon-link'>
         {{ Icon('x') }}

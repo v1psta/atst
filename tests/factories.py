@@ -70,7 +70,7 @@ class RequestReviewFactory(Base):
     fname_mao = factory.Faker("first_name")
     lname_mao = factory.Faker("last_name")
     email_mao = factory.Faker("email")
-    phone_mao = factory.Faker("phone_number")
+    phone_mao = factory.LazyFunction(lambda: "".join(random.choices(string.digits, k=10)))
     fname_ccpo = factory.Faker("first_name")
     lname_ccpo = factory.Faker("last_name")
 

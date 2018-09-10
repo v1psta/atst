@@ -4,7 +4,9 @@ from flask import url_for
 from atst.models.attachment import Attachment
 from atst.domain.roles import Roles
 
-from tests.factories import RequestFactory, TaskOrderFactory, UserFactory
+from tests.factories import (
+    RequestFactory, TaskOrderFactory, UserFactory, RequestReviewFactory
+)
 
 
 def test_ccpo_can_view_approval(user_session, client):
@@ -59,3 +61,14 @@ def test_task_order_download_does_not_exist(client, user_session):
         url_for("requests.task_order_pdf_download", request_id=request.id)
     )
     assert response.status_code == 404
+
+
+def test_can_submit_request_approval(client, user_session):
+    user = UserFactory.from_atat_role("ccpo")
+    user_session(user)
+    request = RequestFactory.create()
+    review_data = RequestReviewFactory.dictionary()
+    response = client.post(
+        url_for("requests.submit_approval", request_id=request.id), data=review_data
+    )
+    assert response.status_code == 301
