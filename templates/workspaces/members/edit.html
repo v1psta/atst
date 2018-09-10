@@ -52,88 +52,80 @@
   {% call Modal(name='rolesModal', dismissable=False) %}
   <div class="block-list">
     <header class="block-list__header">
-      <div>
-        <h2 class="block-list__title">
-          Environment access for Danny Knight
-          <div class='subtitle'>Project Name - Environment Name</div>
-        </h2>
-        <div class="block-list__description">
-          <p>An environment role determines the permissions a member of the workspace assumes when using the JEDI Cloud.</p>
-          <p>A member may have different environment roles across different projects. A member can only have one assigned environment role in a given environment.</p>
-        </div>
-      </div>
+      <h2 class="block-list__title">
+        Environment access for {{ member.user.full_name }}
+        <div class='subtitle'>Project Name - Environment Name</div>
+      </h2>
     </header>
 
-    <form method="post" action="">
-      <ul>
-        <li class='block-list__item block-list__item--selectable'>
-          <input type='radio' name='radio' id='radio-' />
-          <label for='radio-'>
-            <dl>
-              <dt>Developer</dt>
-              <dd>Configures cloud-based IaaS and PaaS computing, networking, and storage services.</dd>
-            </dl>
-          </label>
-        </li>
+    <ul>
+      <li class='block-list__item block-list__item--selectable'>
+        <input type='radio' name='radio' id='developer' />
+        <label for='developer'>
+          <dl>
+            <dt>Developer</dt>
+            <dd>Configures cloud-based IaaS and PaaS computing, networking, and storage services.</dd>
+          </dl>
+        </label>
+      </li>
 
-        <li class='block-list__item block-list__item--selectable'>
-          <input type='radio' name='radio' id='radio-' />
-          <label for='radio-'>
-            <dl>
-              <dt>Database Administrator</dt>
-              <dd>Configures cloud-based database services.</dd>
-            </dl>
-          </label>
-        </li>
+      <li class='block-list__item block-list__item--selectable'>
+        <input type='radio' name='radio' id='database_admin' />
+        <label for='database_admin'>
+          <dl>
+            <dt>Database Administrator</dt>
+            <dd>Configures cloud-based database services.</dd>
+          </dl>
+        </label>
+      </li>
 
-        <li class='block-list__item block-list__item--selectable'>
-          <input type='radio' name='radio' id='radio-' />
-          <label for='radio-'>
-            <dl>
-              <dt>DevOps</dt>
-              <dd>Provisions, deprovisions, and deploys cloud-based IaaS and PaaS computing, networking, and storage services, including pre-configured machine images.</dd>
-            </dl>
-          </label>
-        </li>
+      <li class='block-list__item block-list__item--selectable'>
+        <input type='radio' name='radio' id='devops' />
+        <label for='devops'>
+          <dl>
+            <dt>DevOps</dt>
+            <dd>Provisions, deprovisions, and deploys cloud-based IaaS and PaaS computing, networking, and storage services, including pre-configured machine images.</dd>
+          </dl>
+        </label>
+      </li>
 
-        <li class='block-list__item block-list__item--selectable'>
-          <input type='radio' name='radio' id='radio-' />
-          <label for='radio-'>
-            <dl>
-              <dt>Billing Administrator</dt>
-              <dd>Views cloud resource usage, budget reports, and invoices; tracks budgets, including spend reports, cost planning and projections, and sets limits based on cloud service usage.</dd>
-            </dl>
-          </label>
-        </li>
+      <li class='block-list__item block-list__item--selectable'>
+        <input type='radio' name='radio' id='billing_admin' />
+        <label for='billing_admin'>
+          <dl>
+            <dt>Billing Administrator</dt>
+            <dd>Views cloud resource usage, budget reports, and invoices; Tracks budgets, including spend reports, cost planning and projections, and sets limits based on cloud service usage.</dd>
+          </dl>
+        </label>
+      </li>
 
-        <li class='block-list__item block-list__item--selectable'>
-          <input type='radio' name='radio' id='radio-' />
-          <label for='radio-'>
-            <dl>
-              <dt>Security Administrator</dt>
-              <dd>Accesses information security and control tools of cloud resources which include viewing cloud resource usage logging, user roles and permissioning history.</dd>
-            </dl>
-          </label>
-        </li>
+      <li class='block-list__item block-list__item--selectable'>
+        <input type='radio' name='radio' id='security_admin' />
+        <label for='security_admin'>
+          <dl>
+            <dt>Security Administrator</dt>
+            <dd>Accesses information security and control tools of cloud resources which include viewing cloud resource usage logging, user roles and permissioning history.</dd>
+          </dl>
+        </label>
+      </li>
 
-        <li class='block-list__item block-list__item--selectable'>
-          <input type='radio' name='radio' id='radio-' />
-          <label for='radio-'>
-            <dl>
-              <dt>Financial Auditor</dt>
-              <dd>Views cloud resource usage and budget reports.</dd>
-            </dl>
-          </label>
-        </li>
-      </ul>
+      <li class='block-list__item block-list__item--selectable'>
+        <input type='radio' name='radio' id='financial_auditor' />
+        <label for='financial_auditor'>
+          <dl>
+            <dt>Financial Auditor</dt>
+            <dd>Views cloud resource usage and budget reports.</dd>
+          </dl>
+        </label>
+      </li>
+    </ul>
 
-      <div class='block-list__footer'>
-        <div class='action-group'>
-          <a v-on:click="closeModal('rolesModal')" class='action-group__action usa-button'>Select Access Role</a>
-          <a class='action-group__action icon-link icon-link--danger' v-on:click="closeModal('rolesModal')">No Access</a>
-        </div>
+    <div class='block-list__footer'>
+      <div class='action-group'>
+        <a v-on:click="closeModal('rolesModal')" class='action-group__action usa-button'>Select Access Role</a>
+        <a class='action-group__action icon-link icon-link--danger' v-on:click="closeModal('rolesModal')">No Access</a>
       </div>
-    </form>
+    </div>
 
   </div>
 
