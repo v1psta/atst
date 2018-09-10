@@ -18,7 +18,8 @@ def task_order_dictionary(task_order):
 
 def render_approval(request, form=None):
     data = request.body
-    if request.task_order:
+    pending_final_approval = Requests.is_pending_ccpo_approval(request)
+    if pending_final_approval and request.task_order:
         data["task_order"] = task_order_dictionary(request.task_order)
 
     return render_template(
@@ -26,7 +27,7 @@ def render_approval(request, form=None):
         data=data,
         request_id=request.id,
         status=request.status.value,
-        financial_review=True,
+        financial_review=pending_final_approval,
         pdf_available=request.task_order and request.task_order.pdf,
         f=form or CCPOReviewForm(),
     )
