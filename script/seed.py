@@ -68,6 +68,7 @@ def seed_db():
             Workspaces.create_member(user, workspace, workspace_user)
 
         Projects.create(
+            user,
             workspace=workspace,
             name="First Project",
             description="This is our first project.",

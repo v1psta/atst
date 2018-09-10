@@ -10,7 +10,7 @@ def test_add_user_to_environment():
 
     workspace = Workspaces.create(RequestFactory.create(creator=owner))
     project = Projects.create(
-        workspace, "my test project", "It's mine.", ["dev", "staging", "prod"]
+        owner, workspace, "my test project", "It's mine.", ["dev", "staging", "prod"]
     )
     dev_environment = project.environments[0]
 

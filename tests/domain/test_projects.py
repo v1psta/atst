@@ -4,7 +4,7 @@ from tests.factories import WorkspaceFactory
 
 def test_create_project_with_multiple_environments():
     workspace = WorkspaceFactory.create()
-    project = Projects.create(workspace, "My Test Project", "Test", ["dev", "prod"])
+    project = Projects.create(workspace.owner, workspace, "My Test Project", "Test", ["dev", "prod"])
 
     assert project.workspace == workspace
     assert project.name == "My Test Project"
