@@ -15,8 +15,9 @@ defaults:
     APP_USER: atst
     APP_GROUP: atat
     APP_DIR: /opt/atat/atst
-    CONTAINER_NAME: atst-container
     ATAT_DOCKER_REGISTRY_URL: registry.atat.codes:443
+    CONTAINER_NAME: atst-container
+    PROD_IMAGE_NAME: atst-prod
 
 jobs:
   app_setup:
@@ -120,8 +121,11 @@ jobs:
       - setup_remote_docker:
           version: 18.05.0-ce
       - run:
+          name: "Export GIT_SHA"
+          command: echo "export GIT_SHA=$(git rev-parse --short HEAD)" >> $BASH_ENV
+      - run:
           name: "Generate the Target Image Name"
-          command: echo "export IMAGE_NAME=\"${ATAT_DOCKER_REGISTRY_URL}/atst-prod:$(git rev-parse --short HEAD)-circle\"" >> $BASH_ENV
+          command: echo "export IMAGE_NAME=\"${ATAT_DOCKER_REGISTRY_URL}/${PROD_IMAGE_NAME}:${GIT_SHA}-circle\"" >> $BASH_ENV
       - run:
           name: "Start a Fresh Container"
           command: docker run -d --entrypoint='/bin/sh' -ti --name ${CONTAINER_NAME} alpine:3.8
