@@ -9,7 +9,7 @@ set -o nounset
 # set -o xtrace
 
 # Decode and save the K8S CA cert
-echo "${K8S_CA_CRT}" | base64 --decode -i > "${HOME}/k8s_ca.crt"
+echo "${K8S_CA_CRT}" | base64 -d - > "${HOME}/k8s_ca.crt"
 
 # Setup the local kubectl client
 kubectl config set-context travis \
@@ -22,7 +22,7 @@ kubectl config set-cluster atat-cluster \
     --server="${K8S_ENDPOINT}"  \
     --certificate-authority="${HOME}/k8s_ca.crt"
 
-kubectl config set-credentials atat-deployer --token=`echo ${K8S_USER_TOKEN} | base64 --decode`
+kubectl config set-credentials atat-deployer --token="$(echo ${K8S_USER_TOKEN} | base64 -d -)"
 
 kubectl config use-context travis
 kubectl config current-context
