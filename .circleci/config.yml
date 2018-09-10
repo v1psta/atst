@@ -158,6 +158,18 @@ jobs:
             docker push ${IMAGE_NAME}
             docker logout
 
+  deploy:
+    docker:
+      - image: *sourceImage
+        auth: *sourceAuth
+        environment: *dockerCmdEnvironment
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: "Update Kubernetes Deployment"
+          command: ./deploy/kubernetes/atst-check-deploy.sh
+
 workflows:
   version: 2
   run-tests:
@@ -169,6 +181,12 @@ workflows:
       - build_and_push_image:
           requires:
             - test
+          filters:
+            branches:
+              only: circleci-cd
+      - deploy
+          requires:
+            - build_and_push_image
           filters:
             branches:
               only: circleci-cd
