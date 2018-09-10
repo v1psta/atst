@@ -105,26 +105,29 @@
             <th scope="col">JEDI Cloud Request ID</th>
             <th scope="col">Date Request Submitted</th>
             {% if extended_view %}
+              <th scope="col">Date Request Last Edited</th>
               <th scope="col">Requester</th>
-              <th scope="col">Reason Flagged</th>
             {% endif %}
             <th scope="col">Projected Annual Usage ($)</th>
             <th scope="col">Request Status</th>
+            {% if extended_view %}
+              <th scope="col">DOD Component</th>
+            {% endif %}
           </tr>
         </thead>
         <tbody>
           {% for r in requests %}
           <tr>
             <th scope="row">
-              <a class='icon-link icon-link--large' href="{{ r['edit_link'] }}">{{ r['order_id'] }}</a>
+              <a class='icon-link icon-link--large' href="{{ r.edit_link }}">{{ r.order_id }}</a>
               {% if r.action_required %}<span class="label label--info">Action Required</span>{% endif %}
             </th>
-            <td>{{ r.last_submission_timestamp }}</td>
+            <td>{{ r.last_submission_timestamp | formattedDate }}</td>
             {% if extended_view %}
-              <td>{{ r['full_name'] }}</td>
-              <td></td>
+              <td>{{ r.last_edited_timestamp | formattedDate }}</td>
+              <td>{{ r.full_name }}</td>
             {% endif %}
-            <td>{{ r['annual_usage'] | dollars }}</td>
+            <td>{{ r.annual_usage | dollars }}</td>
             <td>
               {% if r.status == 'Approved' %}
                 <a href="{{ url_for('workspaces.workspace_projects', workspace_id=r.workspace_id) }}">
@@ -134,6 +137,9 @@
                 {{ r.status }}
               {% endif %}
             </td>
+            {% if extended_view %}
+              <td>{{ r.dod_component }}</td>
+            {% endif %}
           </tr>
           {% endfor %}
         </tbody>
