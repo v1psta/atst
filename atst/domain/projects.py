@@ -4,6 +4,8 @@ from atst.domain.environments import Environments
 from atst.domain.exceptions import NotFoundError
 from atst.models.permissions import Permissions
 from atst.models.project import Project
+from atst.models.environment import Environment
+from atst.models.environment_role import EnvironmentRole
 
 
 class Projects(object):
@@ -36,3 +38,14 @@ class Projects(object):
             raise NotFoundError("project")
 
         return project
+
+    @classmethod
+    def for_user(self, user, workspace):
+        return (
+            db.session.query(Project)
+            .join(Environment)
+            .join(EnvironmentRole)
+            .filter(Project.workspace_id == workspace.id)
+            .filter(EnvironmentRole.user_id == user.id)
+            .all()
+        )

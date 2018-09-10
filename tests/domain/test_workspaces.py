@@ -4,6 +4,8 @@ from uuid import uuid4
 from atst.domain.exceptions import NotFoundError, UnauthorizedError
 from atst.domain.workspaces import Workspaces
 from atst.domain.workspace_users import WorkspaceUsers
+from atst.domain.projects import Projects
+from atst.domain.environments import Environments
 
 from tests.factories import WorkspaceFactory, RequestFactory, UserFactory
 
@@ -179,3 +181,57 @@ def test_random_user_cannot_view_workspace_members():
 
     with pytest.raises(UnauthorizedError):
         workspace = Workspaces.get_with_members(developer, workspace.id)
+
+
+def test_scoped_workspace_only_returns_users_projects_and_environments():
+    workspace = WorkspaceFactory.create()
+    new_project = Projects.create(
+        workspace.owner,
+        workspace,
+        "My Project",
+        "My project",
+        ["dev", "staging", "prod"],
+    )
+    developer = UserFactory.from_atat_role("developer")
+    dev_environment = Environments.add_member(workspace.owner, new_project.environments[0], developer)
+
+    scoped_workspace = Workspaces.get(developer, workspace.id)
+
+    assert scoped_workspace.projects == [new_project]
+    assert scoped_workspace.projects[0].environments == [dev_environment]
+
+
+def test_scoped_workspace_returns_all_projects_for_ccpo():
+    workspace = Workspaces.create(RequestFactory.create())
+    for _ in range(5):
+        Projects.create(
+            workspace.owner,
+            workspace,
+            "My Project",
+            "My project",
+            ["dev", "staging", "prod"],
+        )
+
+    ccpo = UserFactory.from_atat_role("ccpo")
+    scoped_workspace = Workspaces.get(ccpo, workspace.id)
+
+    assert len(scoped_workspace.projects) == 5
+    assert len(scoped_workspace.projects[0].environments) == 3
+
+
+def test_scoped_workspace_returns_all_projects_for_workspace_owner():
+    workspace = Workspaces.create(RequestFactory.create())
+    for _ in range(5):
+        Projects.create(
+            workspace.owner,
+            workspace,
+            "My Project",
+            "My project",
+            ["dev", "staging", "prod"],
+        )
+
+    owner = UserFactory.from_atat_role("owner")
+    scoped_workspace = Workspaces.get(owner, workspace.id)
+
+    assert len(scoped_workspace.projects) == 5
+    assert len(scoped_workspace.projects[0].environments) == 3
