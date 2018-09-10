@@ -88,8 +88,12 @@ class Workspaces(object):
             last_name=data["last_name"],
             email=data["email"],
         )
+        return Workspaces.add_member(workspace, new_user, data["workspace_role"])
+
+    @classmethod
+    def add_member(cls, workspace, member, role_name):
         workspace_user = WorkspaceUsers.add(
-            new_user, workspace.id, data["workspace_role"]
+            member, workspace.id, role_name
         )
         return workspace_user
 
