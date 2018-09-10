@@ -92,9 +92,7 @@ class Workspaces(object):
 
     @classmethod
     def add_member(cls, workspace, member, role_name):
-        workspace_user = WorkspaceUsers.add(
-            member, workspace.id, role_name
-        )
+        workspace_user = WorkspaceUsers.add(member, workspace.id, role_name)
         return workspace_user
 
     @classmethod
