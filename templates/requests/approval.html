@@ -26,104 +26,107 @@
 
     </section>
 
-    <section class='panel'>
-      <header class='panel__heading'>
-        <h2 class='h3'>Approval Notes</h2>
-      </header>
+    {% if pending_review %}
+      <section class='panel'>
+        <header class='panel__heading'>
+          <h2 class='h3'>Approval Notes</h2>
+        </header>
 
-      <div class='panel__content'>
+        <div class='panel__content'>
 
-        <div class="form__sub-fields">
+          <div class="form__sub-fields">
 
-          <h3>Instructions for the Requestor</h3>
+            <h3>Instructions for the Requestor</h3>
 
-          Provide instructions or notes for additional information that is necessary to approve the request here. The requestor may then re-submit the updated request or initiate contact outside of AT-AT if further discussion is required. <b>These notes will be visible to the person making the JEDI request</b>.
+            Provide instructions or notes for additional information that is necessary to approve the request here. The requestor may then re-submit the updated request or initiate contact outside of AT-AT if further discussion is required. <b>These notes will be visible to the person making the JEDI request</b>.
 
-          {{ TextInput(f.comments, paragraph=True, placeholder="Add notes or comments explaining what changes are being requested or why further discussion is needed about this request.") }}
-
-        </div>
-
-        <div class="form-row">
-          <div class="form-col">
-            <h3>Authorizing Officials</h3>
-            <p>This section is not visible to the person making the request. It is only viewable by CCPO staff.</p>
-            <p>Provide the name of the key officials for both parties that have authorized this request to move forward.</p>
+            {{ TextInput(f.comments, paragraph=True, placeholder="Add notes or comments explaining what changes are being requested or why further discussion is needed about this request.") }}
 
           </div>
-        </div>
-        <h4 class="h3">Mission Authorizing Official</h4>
 
-        <div class='form-row'>
+          <div class="form-row">
+            <div class="form-col">
+              <h3>Authorizing Officials</h3>
+              <p>This section is not visible to the person making the request. It is only viewable by CCPO staff.</p>
+              <p>Provide the name of the key officials for both parties that have authorized this request to move forward.</p>
 
-          <div class='form-col form-col--half'>
-            {{ TextInput(f.fname_mao, placeholder="First name of mission authorizing official") }}
+            </div>
+          </div>
+          <h4 class="h3">Mission Authorizing Official</h4>
+
+
+          <div class='form-row'>
+
+            <div class='form-col form-col--half'>
+              {{ TextInput(f.fname_mao, placeholder="First name of mission authorizing official") }}
+            </div>
+
+            <div class='form-col form-col--half'>
+              {{ TextInput(f.lname_mao, placeholder="Last name of mission authorizing official") }}
+            </div>
+
           </div>
 
-          <div class='form-col form-col--half'>
-            {{ TextInput(f.lname_mao, placeholder="Last name of mission authorizing official") }}
+          <div class='form-row'>
+
+            <div class='form-col form-col--half'>
+              {{ TextInput(f.email_mao, placeholder="name@mail.mil") }}
+            </div>
+
+
+            <div class='form-col form-col--half'>
+              {{ TextInput(f.phone_mao, placeholder="(123) 456-7890", validation='usPhone') }}
+            </div>
+
           </div>
 
-        </div>
 
-        <div class='form-row'>
+          <h4 class="h3">CCPO Authorizing Official</h4>
 
-          <div class='form-col form-col--half'>
-            {{ TextInput(f.email_mao, placeholder="name@mail.mil") }}
+          <div class='form-row'>
+
+            <div class='form-col form-col--half'>
+              {{ TextInput(f.fname_ccpo, placeholder="First name of CCPO authorizing official") }}
+            </div>
+
+            <div class='form-col form-col--half'>
+              {{ TextInput(f.lname_ccpo, placeholder="Last name of CCPO authorizing official") }}
+            </div>
+
           </div>
 
 
-          <div class='form-col form-col--half'>
-            {{ TextInput(f.phone_mao, placeholder="(123) 456-7890", validation='usPhone') }}
-          </div>
 
-        </div>
+          <h4 class="h3">CCPO Internal Notes</h4>
 
+          <p>You may add additional comments and notes for internal CCPO reference and follow-up here.</p>
 
-        <h4 class="h3">CCPO Authorizing Official</h4>
+          <div class='form-row'>
 
-        <div class='form-row'>
+            <div class='form-col'>
 
-          <div class='form-col form-col--half'>
-            {{ TextInput(f.fname_ccpo, placeholder="First name of CCPO authorizing official") }}
-          </div>
+              <div class='usa-input'>
+                <label for='notes'>Internal Comments <em>(optional)</em></label>
+                <textarea id='notes' placeholder='Add notes or comments for internal CCPO reference.'/></textarea>
+              </div>
 
-          <div class='form-col form-col--half'>
-            {{ TextInput(f.lname_ccpo, placeholder="Last name of CCPO authorizing official") }}
-          </div>
-
-        </div>
-
-
-
-        <h4 class="h3">CCPO Internal Notes</h4>
-
-        <p>You may add additional comments and notes for internal CCPO reference and follow-up here.</p>
-
-        <div class='form-row'>
-
-          <div class='form-col'>
-
-            <div class='usa-input'>
-              <label for='notes'>Internal Comments <em>(optional)</em></label>
-              <textarea id='notes' placeholder='Add notes or comments for internal CCPO reference.'/></textarea>
             </div>
 
           </div>
 
         </div>
 
-      </div>
+      </section>
 
-    </section>
-
-    <section class='action-group'>
-      <input type="submit" name="approved" class='usa-button usa-button-big' value='Approve Request'>
-      <input type="submit" name="denied" class='usa-button usa-button-big usa-button-secondary' value='Mark as Changes Requested'>
-      <a href='{{ url_for("requests.requests_index") }}' class='icon-link'>
-        {{ Icon('x') }}
-        <span>Cancel</span>
-      </a>
-    </section>
+      <section class='action-group'>
+        <input type="submit" name="approved" class='usa-button usa-button-big' value='Approve Request'>
+        <input type="submit" name="denied" class='usa-button usa-button-big usa-button-secondary' value='Mark as Changes Requested'>
+        <a href='{{ url_for("requests.requests_index") }}' class='icon-link'>
+          {{ Icon('x') }}
+          <span>Cancel</span>
+        </a>
+      </section>
+    {% endif %}
 
     <section class='panel'>
       <header class='panel__heading'>
