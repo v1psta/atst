@@ -272,8 +272,8 @@ WHERE requests_with_status.status = :status
         return request
 
     @classmethod
-    def _add_review(cls, request, review_data):
-        request.latest_status.review = RequestReview(**review_data)
+    def _add_review(cls, user, request, review_data):
+        request.latest_status.review = RequestReview(reviewer=user, **review_data)
 
         db.session.add(request)
         db.session.commit()
@@ -281,13 +281,13 @@ WHERE requests_with_status.status = :status
         return request
 
     @classmethod
-    def accept_for_financial_verification(cls, request, review_data):
+    def accept_for_financial_verification(cls, user, request, review_data):
         Requests.set_status(request, RequestStatus.PENDING_FINANCIAL_VERIFICATION)
 
-        return Requests._add_review(request, review_data)
+        return Requests._add_review(user, request, review_data)
 
     @classmethod
-    def request_changes(cls, request, review_data):
+    def request_changes(cls, user, request, review_data):
         Requests.set_status(request, RequestStatus.CHANGES_REQUESTED)
 
-        return Requests._add_review(request, review_data)
+        return Requests._add_review(user, request, review_data)

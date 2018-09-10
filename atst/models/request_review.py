@@ -1,4 +1,4 @@
-from sqlalchemy import Column, BigInteger, String
+from sqlalchemy import Column, BigInteger, String, ForeignKey
 from sqlalchemy.orm import relationship
 
 from atst.models import Base
@@ -9,6 +9,9 @@ class RequestReview(Base):
 
     id = Column(BigInteger, primary_key=True)
     status = relationship("RequestStatusEvent", back_populates="review")
+
+    user_id = Column(ForeignKey("users.id"), nullable=False)
+    reviewer = relationship("User")
 
     comment = Column(String)
     fname_mao = Column(String)

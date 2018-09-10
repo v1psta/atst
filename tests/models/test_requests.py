@@ -78,12 +78,15 @@ def test_annual_spend():
 
 def test_reviews():
     request = RequestFactory.create()
+    ccpo = UserFactory.from_atat_role("ccpo")
     request.status_events = [
         RequestStatusEventFactory.create(
-            revision=request.latest_revision, review=RequestReviewFactory.create()
+            revision=request.latest_revision,
+            review=RequestReviewFactory.create(reviewer=ccpo),
         ),
         RequestStatusEventFactory.create(
-            revision=request.latest_revision, review=RequestReviewFactory.create()
+            revision=request.latest_revision,
+            review=RequestReviewFactory.create(reviewer=ccpo),
         ),
         RequestStatusEventFactory.create(revision=request.latest_revision),
     ]
