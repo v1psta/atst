@@ -16,7 +16,7 @@ defaults:
     APP_GROUP: atat
     APP_DIR: /opt/atat/atst
     CONTAINER_NAME: atst-container
-    REGISTRY_LOCATION: registry.atat.codes:443
+    ATAT_DOCKER_REGISTRY_URL: registry.atat.codes:443
 
 jobs:
   app_setup:
@@ -121,7 +121,7 @@ jobs:
           version: 18.05.0-ce
       - run:
           name: "Generate the Target Image Name"
-          command: echo "export IMAGE_NAME=\"${REGISTRY_LOCATION}/atst-prod:$(git rev-parse --short HEAD)-circle\"" >> $BASH_ENV
+          command: echo "export IMAGE_NAME=\"${ATAT_DOCKER_REGISTRY_URL}/atst-prod:$(git rev-parse --short HEAD)-circle\"" >> $BASH_ENV
       - run:
           name: "Start a Fresh Container"
           command: docker run -d --entrypoint='/bin/sh' -ti --name ${CONTAINER_NAME} alpine:3.8
@@ -154,7 +154,7 @@ jobs:
           name: "Publish ATST Image"
           command: |
             docker image ls
-            docker login -u ${REGISTRY_USERNAME} -p ${REGISTRY_PASSWORD} ${REGISTRY_LOCATION}
+            docker login -u ${REGISTRY_USERNAME} -p ${REGISTRY_PASSWORD} ${ATAT_DOCKER_REGISTRY_URL}
             docker push ${IMAGE_NAME}
             docker logout
 
