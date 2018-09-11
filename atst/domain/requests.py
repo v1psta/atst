@@ -13,6 +13,7 @@ from atst.models.request import Request
 from atst.models.request_revision import RequestRevision
 from atst.models.request_status_event import RequestStatusEvent, RequestStatus
 from atst.models.request_review import RequestReview
+from atst.models.request_internal_comment import RequestInternalComment
 from atst.utils import deep_merge
 
 from .exceptions import NotFoundError, UnauthorizedError
@@ -311,3 +312,13 @@ WHERE requests_with_status.status = :status
             Requests.set_status(request, RequestStatus.CHANGES_REQUESTED_TO_FINVER)
 
         return Requests._add_review(user, request, review_data)
+
+    @classmethod
+    def update_internal_comments(cls, user, request, comment_text):
+        Authorization.check_can_approve_request(user)
+
+        request.internal_comments = RequestInternalComment(text=comment_text, user=user)
+        db.session.add(request)
+        db.session.commit()
+
+        return request

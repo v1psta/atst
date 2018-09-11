@@ -221,3 +221,12 @@ def test_request_changes_to_financial_verification_info():
     assert request.status == RequestStatus.CHANGES_REQUESTED_TO_FINVER
     current_review = request.latest_status.review
     assert current_review.fname_mao == review_data["fname_mao"]
+
+
+def test_update_internal_comments():
+    request = RequestFactory.create()
+    ccpo = UserFactory.from_atat_role("ccpo")
+
+    request = Requests.update_internal_comments(ccpo, request, "this is my comment")
+
+    assert request.internal_comments.text == "this is my comment"
