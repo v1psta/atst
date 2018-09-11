@@ -130,7 +130,6 @@ export default {
         })
 
       }
-      console.log(monthsRange)
       this.displayedMonths = monthsRange
     }
   }
