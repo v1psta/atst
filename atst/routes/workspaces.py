@@ -241,6 +241,8 @@ def update_member(workspace_id, member_id):
                 g.current_user, workspace, member, form.data["workspace_role"]
             )
             new_role_name = member.role_displayname
+        if form.data["environment_role"]:
+            print (form.data)
 
         return redirect(
             url_for(

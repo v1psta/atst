@@ -62,8 +62,8 @@
                   name='environment_role'
                   type='radio'
                   id="environment_role_{{ choice[0] }}"
-                  value='choice[0]'
-                  checked='value is choice[0]'
+                  value='{{ choice[0] }}'
+                  checked='{{ value == choice[0] }}'
                 />
                 <label for="environment_role_{{ choice[0] }}">
                   {% if choice[1].description %}
