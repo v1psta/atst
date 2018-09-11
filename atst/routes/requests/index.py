@@ -61,9 +61,7 @@ class RequestsIndex(object):
         if viewing_role == "ccpo":
             return url_for("requests.approval", request_id=request.id)
         elif Requests.is_pending_financial_verification(request):
-            return url_for(
-                "requests.financial_verification", request_id=request.id
-            )
+            return url_for("requests.financial_verification", request_id=request.id)
         elif Requests.is_pending_financial_verification_changes(request):
             return url_for(
                 "requests.financial_verification", request_id=request.id, extended=True

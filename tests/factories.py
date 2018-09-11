@@ -10,7 +10,7 @@ from atst.models.request_revision import RequestRevision
 from atst.models.request_review import RequestReview
 from atst.models.request_status_event import RequestStatusEvent, RequestStatus
 from atst.models.pe_number import PENumber
-from atst.models.task_order import TaskOrder
+from atst.models.task_order import TaskOrder, Source, FundingType
 from atst.models.user import User
 from atst.models.role import Role
 from atst.models.workspace import Workspace
@@ -165,6 +165,17 @@ class PENumberFactory(Base):
 class TaskOrderFactory(Base):
     class Meta:
         model = TaskOrder
+
+    source = Source.MANUAL
+    funding_type = FundingType.PROC
+    funding_type_other = None
+    number = "toABC123"
+    clin_0001 = random.randrange(100, 100000)
+    clin_0003 = random.randrange(100, 100000)
+    clin_1001 = random.randrange(100, 100000)
+    clin_1003 = random.randrange(100, 100000)
+    clin_2001 = random.randrange(100, 100000)
+    clin_2003 = random.randrange(100, 100000)
 
 
 class WorkspaceFactory(Base):

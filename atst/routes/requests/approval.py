@@ -14,14 +14,6 @@ from atst.domain.exceptions import NotFoundError
 from atst.forms.ccpo_review import CCPOReviewForm
 
 
-def task_order_dictionary(task_order):
-    return {
-        c.name: getattr(task_order, c.name)
-        for c in task_order.__table__.columns
-        if c.name not in ["id", "attachment_id"]
-    }
-
-
 def render_approval(request, form=None):
     data = request.body
     pending_final_approval = Requests.is_pending_ccpo_approval(request)
@@ -29,7 +21,7 @@ def render_approval(request, form=None):
         Requests.is_pending_ccpo_acceptance(request) or pending_final_approval
     )
     if pending_final_approval and request.task_order:
-        data["task_order"] = task_order_dictionary(request.task_order)
+        data["task_order"] = request.task_order.to_dictionary()
 
     return render_template(
         "requests/approval.html",
