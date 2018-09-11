@@ -44,7 +44,7 @@ def render_approval(request, form=None):
         financial_review=pending_final_approval,
         pdf_available=request.task_order and request.task_order.pdf,
         f=form or CCPOReviewForm(),
-        internal_comment_form=internal_comment_form
+        internal_comment_form=internal_comment_form,
     )
 
 
