@@ -171,7 +171,7 @@
                         {% endif %}
                       </div>
                     </div>
-                    {% set timestamp=status.time_created.strftime("%Y-%m-%d %H:%M:%S %Z") %}
+                    {% set timestamp=status.time_created | formattedDate("%Y-%m-%d %H:%M:%S %Z") %}
                     <footer class='approval-log__log-item__timestamp'><time datetime='{{ timestamp }}'>{{ timestamp }}</time></footer>
                   </article>
                 </li>

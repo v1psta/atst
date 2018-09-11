@@ -65,9 +65,9 @@ def renderList(value):
     return app.jinja_env.filters["safe"]("<br>".join(value))
 
 
-def formattedDate(value):
+def formattedDate(value, formatter="%m/%d/%Y"):
     if value:
-        return value.strftime("%m/%d/%Y")
+        return value.strftime(formatter)
     else:
         return "-"
 
