@@ -64,11 +64,6 @@ class RequestsIndex(object):
             "num_software_systems", 0
         )
         annual_usage = request.annual_spend
-        last_submission_timestamp = (
-            request.last_submission_timestamp.format("M/DD/YYYY")
-            if request.last_submission_timestamp
-            else "-"
-        )
 
         if viewing_role == "ccpo":
             edit_link = url_for("requests.approval", request_id=request.id)
@@ -91,11 +86,13 @@ class RequestsIndex(object):
             "is_new": is_new,
             "status": request.status_displayname,
             "app_count": app_count,
-            "last_submission_timestamp": last_submission_timestamp,
+            "last_submission_timestamp": request.last_submission_timestamp,
+            "last_edited_timestamp": request.latest_revision.time_updated,
             "full_name": request.creator.full_name,
             "annual_usage": annual_usage,
             "edit_link": edit_link,
             "action_required": request.action_required_by == viewing_role,
+            "dod_component": request.latest_revision.dod_component,
         }
 
 
