@@ -13,6 +13,7 @@ class RequestStatus(Enum):
     STARTED = "Started"
     SUBMITTED = "Submitted"
     PENDING_FINANCIAL_VERIFICATION = "Pending Financial Verification"
+    PENDING_CCPO_ACCEPTANCE = "Pending CCPO Acceptance"
     PENDING_CCPO_APPROVAL = "Pending CCPO Approval"
     CHANGES_REQUESTED = "Changes Requested"
     APPROVED = "Approved"
@@ -34,6 +35,9 @@ class RequestStatusEvent(Base):
     )
     request_revision_id = Column(ForeignKey("request_revisions.id"), nullable=False)
     revision = relationship("RequestRevision")
+
+    request_review_id = Column(ForeignKey("request_reviews.id"), nullable=True)
+    review = relationship("RequestReview", back_populates="status")
 
     @property
     def displayname(self):

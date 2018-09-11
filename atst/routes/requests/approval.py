@@ -1,10 +1,18 @@
-from flask import render_template, g, Response
+from flask import (
+    render_template,
+    g,
+    Response,
+    request as http_request,
+    redirect,
+    url_for,
+)
 from flask import current_app as app
 
 from . import requests_bp
 from atst.domain.requests import Requests
 from atst.domain.exceptions import NotFoundError
 from atst.domain.authz import Authorization
+from atst.forms.ccpo_review import CCPOReviewForm
 
 
 def task_order_dictionary(task_order):
@@ -15,23 +23,52 @@ def task_order_dictionary(task_order):
     }
 
 
-@requests_bp.route("/requests/approval/<string:request_id>", methods=["GET"])
-def approval(request_id):
-    request = Requests.get(g.current_user, request_id)
-    Authorization.check_can_approve_request(g.current_user)
-
+def render_approval(request, form=None):
     data = request.body
-    if request.task_order:
+    pending_final_approval = Requests.is_pending_ccpo_approval(request)
+    pending_review = (
+        Requests.is_pending_ccpo_acceptance(request) or pending_final_approval
+    )
+    if pending_final_approval and request.task_order:
         data["task_order"] = task_order_dictionary(request.task_order)
 
     return render_template(
         "requests/approval.html",
         data=data,
-        request_id=request_id,
+        request_id=request.id,
         status=request.status.value,
-        financial_review=True,
+        pending_review=pending_review,
+        financial_review=pending_final_approval,
         pdf_available=request.task_order and request.task_order.pdf,
+        f=form or CCPOReviewForm(),
     )
+
+
+@requests_bp.route("/requests/approval/<string:request_id>", methods=["GET"])
+def approval(request_id):
+    request = Requests.get(g.current_user, request_id)
+    Authorization.check_can_approve_request(g.current_user)
+
+    return render_approval(request)
+
+
+@requests_bp.route("/requests/submit_approval/<string:request_id>", methods=["POST"])
+def submit_approval(request_id):
+    request = Requests.get(g.current_user, request_id)
+    Authorization.check_can_approve_request(g.current_user)
+
+    form = CCPOReviewForm(http_request.form)
+    if form.validate():
+        if http_request.form.get("approved"):
+            Requests.accept_for_financial_verification(
+                g.current_user, request, form.data
+            )
+        else:
+            Requests.request_changes(g.current_user, request, form.data)
+
+        return redirect(url_for("requests.requests_index"))
+    else:
+        return render_approval(request, form)
 
 
 @requests_bp.route("/requests/task_order_download/<string:request_id>", methods=["GET"])

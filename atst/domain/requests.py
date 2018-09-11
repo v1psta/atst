@@ -12,6 +12,7 @@ from atst.domain.workspaces import Workspaces
 from atst.models.request import Request
 from atst.models.request_revision import RequestRevision
 from atst.models.request_status_event import RequestStatusEvent, RequestStatus
+from atst.models.request_review import RequestReview
 from atst.utils import deep_merge
 
 from .exceptions import NotFoundError, UnauthorizedError
@@ -90,7 +91,7 @@ class Requests(object):
         if Requests.should_auto_approve(request):
             new_status = RequestStatus.PENDING_FINANCIAL_VERIFICATION
         else:
-            new_status = RequestStatus.PENDING_CCPO_APPROVAL
+            new_status = RequestStatus.PENDING_CCPO_ACCEPTANCE
 
         request = Requests.set_status(request, new_status)
 
@@ -176,6 +177,10 @@ class Requests(object):
         return request.status == RequestStatus.PENDING_FINANCIAL_VERIFICATION
 
     @classmethod
+    def is_pending_ccpo_acceptance(cls, request):
+        return request.status == RequestStatus.PENDING_CCPO_ACCEPTANCE
+
+    @classmethod
     def is_pending_ccpo_approval(cls, request):
         return request.status == RequestStatus.PENDING_CCPO_APPROVAL
 
@@ -214,7 +219,12 @@ WHERE requests_with_status.status = :status
 
     @classmethod
     def pending_ccpo_count(cls):
-        return Requests.status_count(RequestStatus.PENDING_CCPO_APPROVAL)
+        return sum(
+            [
+                Requests.status_count(RequestStatus.PENDING_CCPO_ACCEPTANCE),
+                Requests.status_count(RequestStatus.PENDING_CCPO_APPROVAL),
+            ]
+        )
 
     @classmethod
     def completed_count(cls):
@@ -260,3 +270,24 @@ WHERE requests_with_status.status = :status
         db.session.commit()
 
         return request
+
+    @classmethod
+    def _add_review(cls, user, request, review_data):
+        request.latest_status.review = RequestReview(reviewer=user, **review_data)
+
+        db.session.add(request)
+        db.session.commit()
+
+        return request
+
+    @classmethod
+    def accept_for_financial_verification(cls, user, request, review_data):
+        Requests.set_status(request, RequestStatus.PENDING_FINANCIAL_VERIFICATION)
+
+        return Requests._add_review(user, request, review_data)
+
+    @classmethod
+    def request_changes(cls, user, request, review_data):
+        Requests.set_status(request, RequestStatus.CHANGES_REQUESTED)
+
+        return Requests._add_review(user, request, review_data)
