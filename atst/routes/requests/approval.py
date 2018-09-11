@@ -32,7 +32,7 @@ def render_approval(request, form=None):
     if pending_final_approval and request.task_order:
         data["task_order"] = task_order_dictionary(request.task_order)
 
-    internal_comment_form = InternalCommentForm(text=request.internal_comments.text)
+    internal_comment_form = InternalCommentForm(text=request.internal_comments_text)
 
     return render_template(
         "requests/approval.html",
