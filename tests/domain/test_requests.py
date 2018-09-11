@@ -182,11 +182,8 @@ def test_set_status_sets_revision():
 
 
 def test_advance_to_financial_verification():
-    request = RequestFactory.create()
-    RequestStatusEventFactory.create(
-        request=request,
-        revision=request.latest_revision,
-        new_status=RequestStatus.PENDING_CCPO_ACCEPTANCE,
+    request = RequestFactory.create_with_status(
+        status=RequestStatus.PENDING_CCPO_ACCEPTANCE
     )
     review_data = RequestReviewFactory.dictionary()
     Requests.advance(UserFactory.create(), request, review_data)
@@ -196,12 +193,31 @@ def test_advance_to_financial_verification():
 
 
 def test_advance_to_approval():
-    request = RequestFactory.create()
-    RequestStatusEventFactory.create(
-        request=request,
-        revision=request.latest_revision,
-        new_status=RequestStatus.PENDING_CCPO_APPROVAL,
+    request = RequestFactory.create_with_status(
+        status=RequestStatus.PENDING_CCPO_APPROVAL
     )
     review_data = RequestReviewFactory.dictionary()
     Requests.advance(UserFactory.create(), request, review_data)
     assert request.status == RequestStatus.APPROVED
+
+
+def test_request_changes_to_request_application():
+    request = RequestFactory.create_with_status(
+        status=RequestStatus.PENDING_CCPO_ACCEPTANCE
+    )
+    review_data = RequestReviewFactory.dictionary()
+    Requests.request_changes(UserFactory.create(), request, review_data)
+    assert request.status == RequestStatus.CHANGES_REQUESTED
+    current_review = request.latest_status.review
+    assert current_review.fname_mao == review_data["fname_mao"]
+
+
+def test_request_changes_to_financial_verification_info():
+    request = RequestFactory.create_with_status(
+        status=RequestStatus.PENDING_CCPO_APPROVAL
+    )
+    review_data = RequestReviewFactory.dictionary()
+    Requests.request_changes(UserFactory.create(), request, review_data)
+    assert request.status == RequestStatus.CHANGES_REQUESTED_TO_FINVER
+    current_review = request.latest_status.review
+    assert current_review.fname_mao == review_data["fname_mao"]

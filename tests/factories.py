@@ -148,6 +148,14 @@ class RequestFactory(Base):
 
         return RequestRevisionFactory.build(**data)
 
+    @classmethod
+    def create_with_status(cls, status=RequestStatus.STARTED, **kwargs):
+        request = RequestFactory(**kwargs)
+        RequestStatusEventFactory.create(
+            request=request, revision=request.latest_revision, new_status=status
+        )
+        return request
+
 
 class PENumberFactory(Base):
     class Meta:

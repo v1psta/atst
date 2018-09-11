@@ -291,6 +291,9 @@ WHERE requests_with_status.status = :status
 
     @classmethod
     def request_changes(cls, user, request, review_data):
-        Requests.set_status(request, RequestStatus.CHANGES_REQUESTED)
+        if request.status == RequestStatus.PENDING_CCPO_ACCEPTANCE:
+            Requests.set_status(request, RequestStatus.CHANGES_REQUESTED)
+        elif request.status == RequestStatus.PENDING_CCPO_APPROVAL:
+            Requests.set_status(request, RequestStatus.CHANGES_REQUESTED_TO_FINVER)
 
         return Requests._add_review(user, request, review_data)
