@@ -15,12 +15,20 @@
   </div>
 {% endmacro %}
 
+{% macro EditLink(screen) %}
+  {% if request_id %}
+    {{ url_for('requests.requests_form_update', screen=screen, request_id=request_id)}}
+  {% else %}
+    {{ url_for('requests.requests_form_update', screen=screen, request_id=None) }}
+  {% endif %}
+{% endmacro %}
+
 
 <hr>
 <h2>
   Details of Use
   {% if editable %}
-  <a href="{{ url_for('requests.requests_form_update', screen=1, request_id=request_id) }}" class="icon-link">
+  <a href="{{ EditLink(1) }}" class="icon-link">
     {{ Icon('edit') }}
     <span>Edit this section</span>
   </a>
@@ -79,7 +87,7 @@
 <h2>
   Information About You
   {% if editable %}
-  <a href="{{ url_for('requests.requests_form_update', screen=2, request_id=request_id) }}" class="icon-link">
+  <a href="{{ EditLink(2) }}" class="icon-link">
     {{ Icon('edit') }}
     <span>Edit this section</span>
   </a>
@@ -108,7 +116,7 @@
 <h2>
   Workspace Owner
   {% if editable %}
-  <a href="{{ url_for('requests.requests_form_update', screen=3, request_id=request_id) }}" class="icon-link">
+  <a href="{{ EditLink(3) }}" class="icon-link">
     {{ Icon('edit') }}
     <span>Edit this section</span>
   </a>
