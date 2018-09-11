@@ -17,6 +17,7 @@
     "date-fns": "^1.29.0",
     "npm": "^6.0.1",
     "parcel": "^1.9.7",
+    "svg-innerhtml": "^1.1.0",
     "text-mask-addons": "^3.8.0",
     "uswds": "^1.6.3",
     "v-tooltip": "^2.0.0-rc.33",

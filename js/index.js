@@ -1,3 +1,4 @@
+import 'svg-innerhtml'
 import 'babel-polyfill'
 
 import classes from '../styles/atat.scss'
