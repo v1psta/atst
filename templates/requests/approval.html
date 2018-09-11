@@ -15,17 +15,15 @@
   ) }}
 {% endif %}
 
-  <form method="POST" action="{{ url_for("requests.submit_approval", request_id=request_id) }}" autocomplete="off">
-    {{ f.csrf_token }}
     <section class='panel'>
       <header class='panel__heading request-approval__heading'>
-        <h1 class='h2'>Request #{{ request_id }}</h1>
+        <h1 class='h2'>Request #{{ request.id }}</h1>
         <span class='label label--info'>{{ current_status }}</span>
       </header>
 
       <div class='panel__content'>
 
-        {% with data=data, request_id=request_id %}
+        {% with data=data, request_id=request.id %}
           {% include "requests/_review.html" %}
         {% endwith %}
 
@@ -34,6 +32,8 @@
     </section>
 
     {% if pending_review %}
+    <form method="POST" action="{{ url_for("requests.submit_approval", request_id=request.id) }}" autocomplete="off">
+      {{ f.csrf_token }}
       <section class='panel'>
         <header class='panel__heading'>
           <h2 class='h3'>Approval Notes</h2>
@@ -104,25 +104,6 @@
 
 
 
-          <h4 class="h3">CCPO Internal Notes</h4>
-
-          <p>You may add additional comments and notes for internal CCPO reference and follow-up here.</p>
-
-          <div class='form-row'>
-
-            <div class='form-col'>
-
-              <div class='usa-input'>
-                <label for='notes'>Internal Comments <em>(optional)</em></label>
-                <textarea id='notes' placeholder='Add notes or comments for internal CCPO reference.'/></textarea>
-              </div>
-
-            </div>
-
-          </div>
-
-        </div>
-
       </section>
 
       <section class='action-group'>
@@ -133,7 +114,23 @@
           <span>Cancel</span>
         </a>
       </section>
+    </form>
     {% endif %}
+
+    <section class='panel'>
+      <h4 class="h3">CCPO Internal Notes</h4>
+      <p>You may add additional comments and notes for internal CCPO reference and follow-up here.</p>
+      <div class='form-row'>
+        <div class='form-col'>
+          <form method="POST" action="{{ url_for('requests.create_internal_comment', request_id=request.id) }}">
+            {{ internal_comment_form.csrf_token }}
+            {{ TextInput(internal_comment_form.text, paragraph=True) }}
+            <button type="submit">Leave comment</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    </section>
 
     <section class='panel'>
       <header class='panel__heading'>
@@ -182,8 +179,6 @@
         </div>
       </div>
     </section>
-
-  </form>
 </article>
 
 {% endblock %}

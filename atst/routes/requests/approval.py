@@ -12,6 +12,7 @@ from . import requests_bp
 from atst.domain.requests import Requests
 from atst.domain.exceptions import NotFoundError
 from atst.forms.ccpo_review import CCPOReviewForm
+from atst.forms.internal_comment import InternalCommentForm
 
 
 def task_order_dictionary(task_order):
@@ -31,16 +32,19 @@ def render_approval(request, form=None):
     if pending_final_approval and request.task_order:
         data["task_order"] = task_order_dictionary(request.task_order)
 
+    internal_comment_form = InternalCommentForm(text=request.internal_comments.text)
+
     return render_template(
         "requests/approval.html",
         data=data,
         status_events=reversed(request.status_events),
-        request_id=request.id,
+        request=request,
         current_status=request.status.value,
         pending_review=pending_review,
         financial_review=pending_final_approval,
         pdf_available=request.task_order and request.task_order.pdf,
         f=form or CCPOReviewForm(),
+        internal_comment_form=internal_comment_form
     )
 
 
@@ -83,3 +87,13 @@ def task_order_pdf_download(request_id):
 
     else:
         raise NotFoundError("task_order pdf")
+
+
+@requests_bp.route("/requests/internal_comments/<string:request_id>", methods=["POST"])
+def create_internal_comment(request_id):
+    form = InternalCommentForm(http_request.form)
+    if form.validate():
+        request = Requests.get(g.current_user, request_id)
+        Requests.update_internal_comments(g.current_user, request, form.data["text"])
+
+    return redirect(url_for("requests.approval", request_id=request_id))
