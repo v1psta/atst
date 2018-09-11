@@ -253,11 +253,11 @@
 
       {% for project_name, project_totals in monthly_totals['projects'].items() %}
         <tbody is='toggler' class='spend-table__project'>
-          <template slot-scope='{ isVisible, toggle }'>
+          <template slot-scope='props'>
             <tr>
               <th scope='rowgroup'>
-                <button v-on:click='toggle' class='icon-link icon-link--large spend-table__project__toggler'>
-                  <template v-if='isVisible'>{{ Icon('caret_down') }}</template>
+                <button v-on:click='props.toggle' class='icon-link icon-link--large spend-table__project__toggler'>
+                  <template v-if='props.isVisible'>{{ Icon('caret_down') }}</template>
                   <template v-else>{{ Icon('caret_right') }}</template>
                   {{ project_name }}
                 </button>
@@ -272,7 +272,7 @@
             </tr>
 
             {% for env_name, env_totals in monthly_totals['environments'][project_name].items() %}
-              <tr v-show='isVisible'>
+              <tr v-show='props.isVisible'>
                 <th scope='rowgroup'><a href='#' class='icon-link spend-table__project__env'>{{ Icon('link') }} {{ env_name }}</a></th>
                 <td class='table-cell--align-right previous-month'>{{ env_totals.get(two_months_ago_index, 0) | dollars }}</td>
                 <td class='table-cell--align-right previous-month'>{{ env_totals.get(prev_month_index, 0) | dollars }}</td>
