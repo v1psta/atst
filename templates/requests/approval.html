@@ -20,7 +20,7 @@
     <section class='panel'>
       <header class='panel__heading request-approval__heading'>
         <h1 class='h2'>Request #{{ request_id }}</h1>
-        <span class='label label--info'>{{ status }}</span>
+        <span class='label label--info'>{{ current_status }}</span>
       </header>
 
       <div class='panel__content'>
@@ -143,35 +143,35 @@
         <div class='approval-log'>
           <ol>
 
-            {% for status in statuses %}
-              {% if status.review %}
+            {% for status_event in status_events %}
+              {% if status_event.review %}
                 <li>
                   <article class='approval-log__log-item'>
                     <div>
-                      <h3 class='approval-log__log-item__header'>{{ status.log_name }} by {{ status.review.full_name_reviewer }}</h3>
-                      {% if status.review.comment %}
-                        <p>{{ status.review.comment }}</p>
+                      <h3 class='approval-log__log-item__header'>{{ status_event.log_name }} by {{ status_event.review.full_name_reviewer }}</h3>
+                      {% if status_event.review.comment %}
+                        <p>{{ status_event.review.comment }}</p>
                       {% endif %}
 
                       <div class='approval-log__behalfs'>
-                        {% if status.review.lname_mao %}
+                        {% if status_event.review.lname_mao %}
                           <div class='approval-log__behalf'>
                             <h3 class='approval-log__log-item__header'>Mission Owner approval on behalf of:</h3>
-                            <span>{{ status.review.full_name_mao }}</span>
-                            <span>{{ status.review.email_mao }}</span>
-                            <span>{{ status.review.phone_mao }}</span>
+                            <span>{{ status_event.review.full_name_mao }}</span>
+                            <span>{{ status_event.review.email_mao }}</span>
+                            <span>{{ status_event.review.phone_mao }}</span>
                           </div>
                         {% endif %}
 
-                        {% if status.review.lname_ccpo %}
+                        {% if status_event.review.lname_ccpo %}
                           <div class='approval-log__behalf'>
                             <h3 class='approval-log__log-item__header'>CCPO approval on behalf of:</h3>
-                            <span>{{ status.review.full_name_ccpo }}</span>
+                            <span>{{ status_event.review.full_name_ccpo }}</span>
                           </div>
                         {% endif %}
                       </div>
                     </div>
-                    {% set timestamp=status.time_created | formattedDate("%Y-%m-%d %H:%M:%S %Z") %}
+                    {% set timestamp=status_event.time_created | formattedDate("%Y-%m-%d %H:%M:%S %Z") %}
                     <footer class='approval-log__log-item__timestamp'><time datetime='{{ timestamp }}'>{{ timestamp }}</time></footer>
                   </article>
                 </li>
