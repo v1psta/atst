@@ -50,39 +50,36 @@
         </button>
       </div>
     </div>
-      {{ Selector(form.environment_role) }}
+
 
     {% call Modal(name='rolesModal', dismissable=False) %}
-      <div class='block-list'>
-        <ul>
-          {% for choice in form.environment_role.choices %}
-          <li class='block-list__item block-list__item--selectable'>
-
-            {% if choice[0] != ""  %}
-              <input
-                name='env'
-                v-on:change='change'
-                type='radio'
-                id="env_{{ choice[0] }}"
-                value='{{ choice[0] }}'
-                {% if role == choice[0] %}
-                  checked='checked'
+        <div class='block-list'>
+          <ul>
+            {% for choice in form.environment_role.choices %}
+            <li class='block-list__item block-list__item--selectable'>
+              {% if choice[0] != ""  %}
+                <input
+                  name='environment_role'
+                  type='radio'
+                  id="environment_role_{{ choice[0] }}"
+                  value='choice[0]'
+                  checked='value is choice[0]'
+                />
+                <label for="environment_role_{{ choice[0] }}">
+                  {% if choice[1].description %}
+                    <dl>
+                      <dt>{{ choice[1].name }}</dt>
+                      <dd>{{ choice[1].description }}</dd>
+                    </dl>
+                  {% else %}
+                    {{ choice[1].name }}
+                  {% endif %}
+                </label>
                 {% endif %}
-              />
-              <label for="env_{{ choice[0] }}">
-                {% if choice[1].description %}
-                  <dl>
-                    <dt>{{ choice[1].name }}</dt>
-                    <dd>{{ choice[1].description }}</dd>
-                  </dl>
-                {% else %}
-                  {{ choice[1].name }}
-                {% endif %}
-              </label>
-              {% endif %}
-          </li>
-          {% endfor %}
-        </ul>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
         <div class='block-list__footer'>
           <div class='action-group'>
             <a v-on:click="closeModal('rolesModal')" class='action-group__action usa-button'>Select Access Role</a>
