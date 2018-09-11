@@ -99,7 +99,31 @@
     <div class='budget-chart panel' ref='panel'>
       <header class='budget-chart__header panel__heading panel__heading--tight'>
         <h2 class='h3'>Cumulative Budget</h2>
+
+        <div class='budget-chart__legend'>
+          <dl class='budget-chart__legend__spend'>
+            <div>
+              <dt>Monthly Spend</dt>
+              <dd class='budget-chart__legend__dot monthly'><span class='usa-sr-only'>Monthly spend visual key</span></dd>
+            </div>
+
+            <div>
+              <dt>Accumulated Spend</dt>
+              <dd class='budget-chart__legend__dot accumulated'><span class='usa-sr-only'>Accumulated spend visual key</span></dd>
+            </div>
+          </dl>
+          <dl class='budget-chart__legend__projected'>
+            <div>
+              <dt>Projected</dt>
+              <dd>
+                <div class='budget-chart__legend__line spend'><span class='usa-sr-only'>Projected monthly spend visual key</span></div>
+                <div class='budget-chart__legend__line accumulated'><span class='usa-sr-only'>Projected accumulated spend visual key</span></div>
+              </dd>
+            </div>
+          </dl>
+        </div>
       </header>
+
       <svg v-bind:height='height' v-bind:width='width'>
         <g v-for='month in displayedMonths' >
           {# make this clickable to focus on that month #}
