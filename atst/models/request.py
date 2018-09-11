@@ -46,6 +46,8 @@ class Request(Base):
         "RequestRevision", back_populates="request", order_by="RequestRevision.sequence"
     )
 
+    internal_comments = relationship("RequestInternalComment", uselist=False)
+
     @property
     def latest_revision(self):
         if self.revisions:
