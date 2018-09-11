@@ -9,6 +9,7 @@ from atst.domain.authz import Authorization
 from atst.models.permissions import Permissions
 from atst.domain.users import Users
 from atst.domain.workspace_users import WorkspaceUsers
+from .scopes import ScopedWorkspace
 
 
 class Workspaces(object):
@@ -30,7 +31,7 @@ class Workspaces(object):
             user, workspace, Permissions.VIEW_WORKSPACE, "get workspace"
         )
 
-        return workspace
+        return ScopedWorkspace(user, workspace)
 
     @classmethod
     def get_for_update(cls, user, workspace_id):
@@ -87,9 +88,11 @@ class Workspaces(object):
             last_name=data["last_name"],
             email=data["email"],
         )
-        workspace_user = WorkspaceUsers.add(
-            new_user, workspace.id, data["workspace_role"]
-        )
+        return Workspaces.add_member(workspace, new_user, data["workspace_role"])
+
+    @classmethod
+    def add_member(cls, workspace, member, role_name):
+        workspace_user = WorkspaceUsers.add(member, workspace.id, role_name)
         return workspace_user
 
     @classmethod

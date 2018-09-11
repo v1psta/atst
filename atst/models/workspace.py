@@ -22,7 +22,8 @@ class Workspace(Base, TimestampsMixin):
         def _is_workspace_owner(workspace_role):
             return workspace_role.role.name == "owner"
 
-        return first_or_none(_is_workspace_owner, self.roles)
+        owner = first_or_none(_is_workspace_owner, self.roles)
+        return owner.user if owner else None
 
     @property
     def users(self):

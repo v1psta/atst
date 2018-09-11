@@ -112,6 +112,7 @@ def create_project(workspace_id):
     if form.validate():
         project_data = form.data
         Projects.create(
+            g.current_user,
             workspace,
             project_data["name"],
             project_data["description"],
