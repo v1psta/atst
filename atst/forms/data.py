@@ -189,17 +189,38 @@ ENVIRONMENT_ROLES = [
 ENVIRONMENT_ROLES = [
     (None, {"name": "No access", "description": "No environment access."}),
     (
-        "meow",
+        "database_admin",
         {
-            "name": "Meow",
-            "description": "Configures cloud-based IaaS and PaaS computing, networking, and storage services.",
+            "name": "Database Administrator",
+            "description": "Configures cloud-based database services.",
         },
     ),
     (
-        "woof",
+        "devops",
         {
-            "name": "Woof",
-            "description": "Can add, edit, deactivate access to all projects, environments, and members. Can view budget reports. Can start and edit JEDI Cloud requests.",
+            "name": "DevOps",
+            "description": "Provisions, deprovisions, and deploys cloud-based IaaS and PaaS computing, networking, and storage services, including pre-configured machine images.",
+        },
+    ),
+    (
+        "billing_admin",
+        {
+            "name": "Billing Administrator",
+            "description": "Views cloud resource usage, budget reports, and invoices; Tracks budgets, including spend reports, cost planning and projections, and sets limits based on cloud service usage.",
+        },
+    ),
+    (
+        "security_admin",
+        {
+            "name": "Security Administrator",
+            "description": "Accesses information security and control tools of cloud resources which include viewing cloud resource usage logging, user roles and permissioning history.",
+        },
+    ),
+    (
+        "financial_auditor",
+        {
+            "name": "Financial Auditor",
+            "description": "Views cloud resource usage and budget reports.",
         },
     ),
 ]
