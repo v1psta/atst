@@ -42,3 +42,12 @@ class RequestStatusEvent(Base):
     @property
     def displayname(self):
         return self.new_status.value
+
+    @property
+    def log_name(self):
+        if self.new_status == RequestStatus.CHANGES_REQUESTED:
+            return "Denied"
+        elif self.new_status == RequestStatus.PENDING_FINANCIAL_VERIFICATION:
+            return "Accepted"
+        else:
+            return self.displayname
