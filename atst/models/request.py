@@ -46,6 +46,8 @@ class Request(Base):
         "RequestRevision", back_populates="request", order_by="RequestRevision.sequence"
     )
 
+    internal_comments = relationship("RequestInternalComment", uselist=False)
+
     @property
     def latest_revision(self):
         if self.revisions:
@@ -163,3 +165,7 @@ class Request(Base):
     @property
     def reviews(self):
         return [status.review for status in self.status_events if status.review]
+
+    @property
+    def internal_comments_text(self):
+        return self.internal_comments.text if self.internal_comments else ""

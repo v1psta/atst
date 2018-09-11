@@ -16,3 +16,4 @@ from .environment import Environment
 from .attachment import Attachment
 from .request_revision import RequestRevision
 from .request_review import RequestReview
+from .request_internal_comment import RequestInternalComment
