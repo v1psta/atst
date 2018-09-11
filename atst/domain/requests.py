@@ -281,8 +281,11 @@ WHERE requests_with_status.status = :status
         return request
 
     @classmethod
-    def accept_for_financial_verification(cls, user, request, review_data):
-        Requests.set_status(request, RequestStatus.PENDING_FINANCIAL_VERIFICATION)
+    def advance(cls, user, request, review_data):
+        if request.status == RequestStatus.PENDING_CCPO_ACCEPTANCE:
+            Requests.set_status(request, RequestStatus.PENDING_FINANCIAL_VERIFICATION)
+        elif request.status == RequestStatus.PENDING_CCPO_APPROVAL:
+            Requests.approve_and_create_workspace(request)
 
         return Requests._add_review(user, request, review_data)
 

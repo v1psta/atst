@@ -181,12 +181,27 @@ def test_set_status_sets_revision():
     assert request.latest_revision == request.status_events[-1].revision
 
 
-def test_accept_for_financial_verification():
+def test_advance_to_financial_verification():
     request = RequestFactory.create()
-    review_data = RequestReviewFactory.dictionary()
-    Requests.accept_for_financial_verification(
-        UserFactory.create(), request, review_data
+    RequestStatusEventFactory.create(
+        request=request,
+        revision=request.latest_revision,
+        new_status=RequestStatus.PENDING_CCPO_ACCEPTANCE,
     )
+    review_data = RequestReviewFactory.dictionary()
+    Requests.advance(UserFactory.create(), request, review_data)
     assert request.status == RequestStatus.PENDING_FINANCIAL_VERIFICATION
     current_review = request.latest_status.review
     assert current_review.fname_mao == review_data["fname_mao"]
+
+
+def test_advance_to_approval():
+    request = RequestFactory.create()
+    RequestStatusEventFactory.create(
+        request=request,
+        revision=request.latest_revision,
+        new_status=RequestStatus.PENDING_CCPO_APPROVAL,
+    )
+    review_data = RequestReviewFactory.dictionary()
+    Requests.advance(UserFactory.create(), request, review_data)
+    assert request.status == RequestStatus.APPROVED

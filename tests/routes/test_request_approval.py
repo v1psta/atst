@@ -10,6 +10,7 @@ from tests.factories import (
     TaskOrderFactory,
     UserFactory,
     RequestReviewFactory,
+    RequestStatusEventFactory,
 )
 
 
@@ -71,6 +72,11 @@ def test_can_submit_request_approval(client, user_session):
     user = UserFactory.from_atat_role("ccpo")
     user_session(user)
     request = RequestFactory.create()
+    RequestStatusEventFactory.create(
+        request=request,
+        revision=request.latest_revision,
+        new_status=RequestStatus.PENDING_CCPO_ACCEPTANCE,
+    )
     review_data = RequestReviewFactory.dictionary()
     review_data["approved"] = True
     response = client.post(
