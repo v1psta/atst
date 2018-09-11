@@ -11,7 +11,6 @@ from flask import current_app as app
 from . import requests_bp
 from atst.domain.requests import Requests
 from atst.domain.exceptions import NotFoundError
-from atst.domain.authz import Authorization
 from atst.forms.ccpo_review import CCPOReviewForm
 
 
@@ -47,23 +46,19 @@ def render_approval(request, form=None):
 
 @requests_bp.route("/requests/approval/<string:request_id>", methods=["GET"])
 def approval(request_id):
-    request = Requests.get(g.current_user, request_id)
-    Authorization.check_can_approve_request(g.current_user)
+    request = Requests.get_for_approval(g.current_user, request_id)
 
     return render_approval(request)
 
 
 @requests_bp.route("/requests/submit_approval/<string:request_id>", methods=["POST"])
 def submit_approval(request_id):
-    request = Requests.get(g.current_user, request_id)
-    Authorization.check_can_approve_request(g.current_user)
+    request = Requests.get_for_approval(g.current_user, request_id)
 
     form = CCPOReviewForm(http_request.form)
     if form.validate():
         if http_request.form.get("approved"):
-            Requests.accept_for_financial_verification(
-                g.current_user, request, form.data
-            )
+            Requests.advance(g.current_user, request, form.data)
         else:
             Requests.request_changes(g.current_user, request, form.data)
 

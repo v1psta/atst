@@ -10,6 +10,7 @@ from tests.factories import (
     TaskOrderFactory,
     UserFactory,
     RequestReviewFactory,
+    RequestStatusEventFactory,
 )
 
 
@@ -70,7 +71,9 @@ def test_task_order_download_does_not_exist(client, user_session):
 def test_can_submit_request_approval(client, user_session):
     user = UserFactory.from_atat_role("ccpo")
     user_session(user)
-    request = RequestFactory.create()
+    request = RequestFactory.create_with_status(
+        status=RequestStatus.PENDING_CCPO_ACCEPTANCE
+    )
     review_data = RequestReviewFactory.dictionary()
     review_data["approved"] = True
     response = client.post(
@@ -83,7 +86,9 @@ def test_can_submit_request_approval(client, user_session):
 def test_can_submit_request_denial(client, user_session):
     user = UserFactory.from_atat_role("ccpo")
     user_session(user)
-    request = RequestFactory.create()
+    request = RequestFactory.create_with_status(
+        status=RequestStatus.PENDING_CCPO_ACCEPTANCE
+    )
     review_data = RequestReviewFactory.dictionary()
     review_data["denied"] = True
     response = client.post(

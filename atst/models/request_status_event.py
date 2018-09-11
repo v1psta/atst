@@ -16,9 +16,10 @@ class RequestStatus(Enum):
     PENDING_CCPO_ACCEPTANCE = "Pending CCPO Acceptance"
     PENDING_CCPO_APPROVAL = "Pending CCPO Approval"
     CHANGES_REQUESTED = "Changes Requested"
+    CHANGES_REQUESTED_TO_FINVER = "Change Requested to Financial Verification"
     APPROVED = "Approved"
     EXPIRED = "Expired"
-    CANCELED = "Canceled"
+    DELETED = "Deleted"
 
 
 class RequestStatusEvent(Base):

@@ -58,14 +58,28 @@ class Requests(object):
             return False
 
     @classmethod
-    def get(cls, user, request_id):
+    def _get(cls, user, request_id):
         try:
             request = db.session.query(Request).filter_by(id=request_id).one()
         except (NoResultFound, exc.DataError):
             raise NotFoundError("request")
 
+        return request
+
+    @classmethod
+    def get(cls, user, request_id):
+        request = Requests._get(user, request_id)
+
         if not Authorization.can_view_request(user, request):
             raise UnauthorizedError(user, "get request")
+
+        return request
+
+    @classmethod
+    def get_for_approval(cls, user, request_id):
+        request = Requests._get(user, request_id)
+
+        Authorization.check_can_approve_request(user)
 
         return request
 
@@ -281,13 +295,19 @@ WHERE requests_with_status.status = :status
         return request
 
     @classmethod
-    def accept_for_financial_verification(cls, user, request, review_data):
-        Requests.set_status(request, RequestStatus.PENDING_FINANCIAL_VERIFICATION)
+    def advance(cls, user, request, review_data):
+        if request.status == RequestStatus.PENDING_CCPO_ACCEPTANCE:
+            Requests.set_status(request, RequestStatus.PENDING_FINANCIAL_VERIFICATION)
+        elif request.status == RequestStatus.PENDING_CCPO_APPROVAL:
+            Requests.approve_and_create_workspace(request)
 
         return Requests._add_review(user, request, review_data)
 
     @classmethod
     def request_changes(cls, user, request, review_data):
-        Requests.set_status(request, RequestStatus.CHANGES_REQUESTED)
+        if request.status == RequestStatus.PENDING_CCPO_ACCEPTANCE:
+            Requests.set_status(request, RequestStatus.CHANGES_REQUESTED)
+        elif request.status == RequestStatus.PENDING_CCPO_APPROVAL:
+            Requests.set_status(request, RequestStatus.CHANGES_REQUESTED_TO_FINVER)
 
         return Requests._add_review(user, request, review_data)
