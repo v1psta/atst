@@ -183,7 +183,7 @@ def test_random_user_cannot_view_workspace_members():
         workspace = Workspaces.get_with_members(developer, workspace.id)
 
 
-def test_scoped_workspace_only_returns_users_projects_and_environments():
+def test_scoped_workspace_only_returns_a_users_projects_and_environments():
     workspace = WorkspaceFactory.create()
     new_project = Projects.create(
         workspace.owner,
@@ -199,6 +199,8 @@ def test_scoped_workspace_only_returns_users_projects_and_environments():
 
     scoped_workspace = Workspaces.get(developer, workspace.id)
 
+    # Should only return the project and environment in which the user has an
+    # environment role.
     assert scoped_workspace.projects == [new_project]
     assert scoped_workspace.projects[0].environments == [dev_environment]
 
