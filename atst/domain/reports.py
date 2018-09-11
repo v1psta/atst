@@ -200,5 +200,7 @@ class Reports:
     @classmethod
     def cumulative_budget(cls, alternate):
         return {
-            "months": CUMULATIVE_BUDGET_BELUGA if alternate else CUMULATIVE_BUDGET_AARDVARK
+            "months": CUMULATIVE_BUDGET_BELUGA
+            if alternate
+            else CUMULATIVE_BUDGET_AARDVARK
         }
