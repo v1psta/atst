@@ -1,0 +1,130 @@
+.budget-chart {
+  .budget-chart__header {
+    border-bottom: 1px solid $color-gray-light;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    .budget-chart__legend {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+
+      dl {
+        margin: 0 0 0 ($gap * 2);
+
+        > div {
+          margin: 0;
+          display: flex;
+          flex-direction: row-reverse;
+          align-items: center;
+
+          dt {
+            @include small-label;
+          }
+
+          .budget-chart__legend__dot {
+            width: $gap;
+            height: $gap;
+            border-radius: $gap / 2;
+            margin: 0 $gap;
+
+            &.accumulated {
+              background-color: $color-gold;
+            }
+            &.monthly {
+              background-color: $color-blue;
+            }
+          }
+
+          .budget-chart__legend__line {
+            height: 2px;
+            width: $gap * 3;
+            border-top-width: 2px;
+            border-top-style: dashed;
+            margin: $gap;
+
+            &.spend {
+              border-color: $color-blue;
+            }
+            &.accumulated {
+              border-color: $color-gold;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .budget-chart__block {
+    fill: $color-white;
+    cursor: pointer;
+
+    &--highlighted {
+      fill: $color-aqua-lightest;
+    }
+
+    &:hover {
+      fill: $color-aqua-lightest;
+    }
+  }
+
+  svg {
+    display: block;
+
+    a {
+      text-decoration: none;
+      &:focus {
+        outline: none;
+        stroke: $color-gray-light;
+        stroke-dasharray: 2px;
+      }
+    }
+  }
+
+  .budget-chart__bar {
+    fill: $color-blue;
+
+    &--projected {
+      fill: transparent;
+      stroke-width: 2px;
+      stroke: $color-blue;
+      stroke-dasharray: 4px;
+    }
+  }
+
+  .budget-chart__cumulative__dot {
+    fill: $color-gold;
+  }
+
+  .budget-chart__projected-path {
+    stroke-width: 1px;
+    stroke: $color-gold;
+    stroke-dasharray: 4px;
+    fill: none;
+  }
+
+  .budget-chart__spend-path {
+    stroke-width: 1px;
+    stroke: $color-gold;
+    fill: none;
+  }
+
+  .budget-chart__budget-line {
+    stroke-width: 2px;
+    stroke: $color-gray-light;
+    stroke-dasharray: 4px;
+  }
+
+  .budget-chart__label {
+    @include small-label;
+    fill: $color-gray;
+
+    &--strong {
+      fill: $color-black;
+    }
+  }
+}

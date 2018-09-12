@@ -93,6 +93,133 @@
   {% set current_month_index = current_month.strftime('%m/%Y') %}
   {% set prev_month_index = prev_month.strftime('%m/%Y') %}
   {% set two_months_ago_index = two_months_ago.strftime('%m/%Y') %}
+  {% set reports_url = url_for("workspaces.workspace_reports", workspace_id=workspace.id) %}
+
+  <budget-chart budget={{ budget }} current-month='{{ current_month_index }}' v-bind:months='{{ cumulative_budget.months | tojson }}' inline-template>
+    <div class='budget-chart panel' ref='panel'>
+      <header class='budget-chart__header panel__heading panel__heading--tight'>
+        <h2 class='h3'>Cumulative Budget</h2>
+
+        <div class='budget-chart__legend'>
+          <dl class='budget-chart__legend__spend'>
+            <div>
+              <dt>Monthly Spend</dt>
+              <dd class='budget-chart__legend__dot monthly'><span class='usa-sr-only'>Monthly spend visual key</span></dd>
+            </div>
+
+            <div>
+              <dt>Accumulated Spend</dt>
+              <dd class='budget-chart__legend__dot accumulated'><span class='usa-sr-only'>Accumulated spend visual key</span></dd>
+            </div>
+          </dl>
+          <dl class='budget-chart__legend__projected'>
+            <div>
+              <dt>Projected</dt>
+              <dd>
+                <div class='budget-chart__legend__line spend'><span class='usa-sr-only'>Projected monthly spend visual key</span></div>
+                <div class='budget-chart__legend__line accumulated'><span class='usa-sr-only'>Projected accumulated spend visual key</span></div>
+              </dd>
+            </div>
+          </dl>
+        </div>
+      </header>
+
+      <svg v-bind:height='height' v-bind:width='width'>
+        <g v-for='month in displayedMonths' >
+          {# make this clickable to focus on that month #}
+          <a v-bind:href='"{{ reports_url }}?month=" + month.date.monthIndex + "&year=" + month.date.year'>
+            <title>
+              <span v-html='month.date.month + " " + month.date.year'></span>&nbsp;|&nbsp;<!--
+              --><template v-if='month.budget'><!--
+                --><template v-if='month.budget.spend'>Spend:</template><!--
+                --><template v-if='month.budget.projected'>Projected Spend:</template><!--
+                --><span v-html='month.spendAmount'></span><!--
+                -->&nbsp;|&nbsp;<!--
+                --><template v-if='month.budget.cumulative'>Total:</template><!--
+                --><template v-if='month.budget.projected'>Projected Total:</template><!--
+                --><span v-html='month.cumulativeAmount'></span><!--
+              --></template><!--
+
+              --><template v-else>No spend for this month</template>
+            </title>
+
+            {# container block #}
+            <rect
+              class='budget-chart__block'
+              v-bind:class='{ "budget-chart__block--highlighted": month.isHighlighted }'
+              v-bind:width='month.metrics.blockWidth'
+              v-bind:x='month.metrics.blockX'
+              v-bind:height='height'></rect>
+
+            {# budget bar #}
+            <rect
+              v-if='month.budget'
+              class='budget-chart__bar'
+              v-bind:class='{ "budget-chart__bar--projected": month.budget.projected }'
+              v-bind:width='month.metrics.barWidth'
+              v-bind:height='month.metrics.barHeight'
+              v-bind:x='month.metrics.barX'
+              v-bind:y='month.metrics.barY'></rect>
+
+            {# cumulative dot #}
+            <circle
+              v-if='month.budget'
+              class='budget-chart__cumulative__dot'
+              v-bind:r='month.metrics.cumulativeR'
+              v-bind:cx='month.metrics.cumulativeX'
+              v-bind:cy='month.metrics.cumulativeY'></circle>
+
+            {# abbreviated cumulative label #}
+            <text
+              v-if='month.budget'
+              v-bind:x='month.metrics.cumulativeX'
+              v-bind:y='month.metrics.cumulativeY - 10'
+              text-anchor='middle'
+              class='budget-chart__label'
+              v-html='month.abbreviatedCumulative'></text>
+
+            {# abbreviated spend label #}
+            <text
+              v-bind:x='month.metrics.cumulativeX'
+              v-bind:y='baseHeight + 20'
+              text-anchor='middle'
+              class='budget-chart__label'
+              v-html='"+" + month.abbreviatedSpend'></text>
+
+            {# month label #}
+            <text
+              v-bind:x='month.metrics.cumulativeX'
+              v-bind:y='baseHeight + 40'
+              text-anchor='middle'
+              class='budget-chart__label budget-chart__label--strong'
+              v-html='month.date.month'></text>
+          </g>
+        </a>
+
+        {# spend/projected budget path lines #}
+        <path class='budget-chart__projected-path' v-bind:d='projectedPath'></path>
+        <path class='budget-chart__spend-path' v-bind:d='spendPath'></path>
+
+        {# max budget line #}
+        <line
+          class='budget-chart__budget-line'
+          x1='0'
+          v-bind:x2='width'
+          v-bind:y1='budgetHeight'
+          v-bind:y2='budgetHeight'></line>
+
+        <text
+          x='20'
+          v-bind:y='budgetHeight + 20'
+          class='budget-chart__label'>Total Budget</text>
+        <text
+          x='20'
+          v-bind:y='budgetHeight + 40'
+          class='budget-chart__label'
+          v-html='displayBudget'></text>
+      </svg>
+    </div>
+  </budget-chart>
 
   <div class='spend-table responsive-table-wrapper'>
     <div class='spend-table__header'>
@@ -126,11 +253,11 @@
 
       {% for project_name, project_totals in monthly_totals['projects'].items() %}
         <tbody is='toggler' class='spend-table__project'>
-          <template slot-scope='{ isVisible, toggle }'>
+          <template slot-scope='props'>
             <tr>
               <th scope='rowgroup'>
-                <button v-on:click='toggle' class='icon-link icon-link--large spend-table__project__toggler'>
-                  <template v-if='isVisible'>{{ Icon('caret_down') }}</template>
+                <button v-on:click='props.toggle' class='icon-link icon-link--large spend-table__project__toggler'>
+                  <template v-if='props.isVisible'>{{ Icon('caret_down') }}</template>
                   <template v-else>{{ Icon('caret_right') }}</template>
                   {{ project_name }}
                 </button>
@@ -145,7 +272,7 @@
             </tr>
 
             {% for env_name, env_totals in monthly_totals['environments'][project_name].items() %}
-              <tr v-show='isVisible'>
+              <tr v-show='props.isVisible'>
                 <th scope='rowgroup'><a href='#' class='icon-link spend-table__project__env'>{{ Icon('link') }} {{ env_name }}</a></th>
                 <td class='table-cell--align-right previous-month'>{{ env_totals.get(two_months_ago_index, 0) | dollars }}</td>
                 <td class='table-cell--align-right previous-month'>{{ env_totals.get(prev_month_index, 0) | dollars }}</td>

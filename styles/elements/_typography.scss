@@ -68,3 +68,9 @@ dl {
     margin-bottom: $gap * 2;
   }
 }
+
+@mixin small-label {
+  font-size: $h6-font-size;
+  font-weight: $font-bold;
+  color: $color-black;
+}
