@@ -22,7 +22,7 @@
       ]
       ) }}
 
-    {% if g.current_user.workspace_roles %}
+    {% if g.current_user.has_workspaces %}
       {{ SidenavItem("Workspaces", href="/workspaces", icon="cloud", active=g.matchesPath('/workspaces')) }}
     {% endif %}
   </ul>

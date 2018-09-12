@@ -4,6 +4,7 @@ from sqlalchemy.dialects.postgresql import UUID
 
 from atst.models import Base
 from .types import Id
+from atst.models.permissions import Permissions
 
 
 class User(Base):
@@ -28,3 +29,9 @@ class User(Base):
     @property
     def full_name(self):
         return "{} {}".format(self.first_name, self.last_name)
+
+    @property
+    def has_workspaces(self):
+        return (
+            Permissions.VIEW_WORKSPACE in self.atat_role.permissions
+        ) or self.workspace_roles

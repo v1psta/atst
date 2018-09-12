@@ -46,7 +46,7 @@ def workspace():
 
 @bp.route("/workspaces")
 def workspaces():
-    workspaces = Workspaces.get_many(g.current_user)
+    workspaces = Workspaces.for_user(g.current_user)
     return render_template("workspaces/index.html", page=5, workspaces=workspaces)
 
 
