@@ -74,6 +74,19 @@ class Workspaces(object):
         return workspaces
 
     @classmethod
+    def for_user(cls, user):
+        if Authorization.has_atat_permission(user, Permissions.VIEW_WORKSPACE):
+            workspaces = db.session.query(Workspace).all()
+        else:
+            workspaces = (
+                db.session.query(Workspace)
+                .join(WorkspaceRole)
+                .filter(WorkspaceRole.user == user)
+                .all()
+            )
+        return workspaces
+
+    @classmethod
     def create_member(cls, user, workspace, data):
         Authorization.check_workspace_permission(
             user,

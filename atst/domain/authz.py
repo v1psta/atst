@@ -10,6 +10,10 @@ class Authorization(object):
         return permission in workspace_user.permissions()
 
     @classmethod
+    def has_atat_permission(cls, user, permission):
+        return permission in user.atat_role.permissions
+
+    @classmethod
     def is_in_workspace(cls, user, workspace):
         return user in workspace.users
 

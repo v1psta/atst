@@ -237,3 +237,23 @@ def test_scoped_workspace_returns_all_projects_for_workspace_owner():
 
     assert len(scoped_workspace.projects) == 5
     assert len(scoped_workspace.projects[0].environments) == 3
+
+
+def test_for_user_workspace_member():
+    bob = UserFactory.from_atat_role("default")
+    workspace = Workspaces.create(RequestFactory.create())
+    Workspaces.add_member(workspace, bob, "developer")
+
+    Workspaces.create(RequestFactory.create())
+
+    bobs_workspaces = Workspaces.for_user(bob)
+    assert len(bobs_workspaces) == 1
+
+
+def test_for_user_ccpo():
+    sam = UserFactory.from_atat_role("ccpo")
+    workspace = Workspaces.create(RequestFactory.create())
+    Workspaces.create(RequestFactory.create())
+
+    sams_workspaces = Workspaces.for_user(sam)
+    assert len(sams_workspaces) == 2
