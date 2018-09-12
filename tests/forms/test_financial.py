@@ -1,4 +1,5 @@
 import pytest
+from werkzeug.datastructures import ImmutableMultiDict
 
 from atst.forms.financial import suggest_pe_id, FinancialForm, ExtendedFinancialForm
 from atst.eda_client import MockEDAClient
@@ -98,3 +99,13 @@ def test_task_order_number_validation(monkeypatch):
     form_valid.perform_extra_validation({})
 
     assert "task_order_number" not in form_valid.errors
+
+
+def test_can_submit_zero_for_clin():
+    form_first = ExtendedFinancialForm()
+    form_first.validate()
+    assert "clin_0001" in form_first.errors
+    form_data = ImmutableMultiDict([("clin_0001", "0")])
+    form_second = ExtendedFinancialForm(form_data)
+    form_second.validate()
+    assert "clin_0001" not in form_second.errors
