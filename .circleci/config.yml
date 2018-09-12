@@ -125,7 +125,7 @@ jobs:
           command: echo "export GIT_SHA=$(git rev-parse --short HEAD)" >> $BASH_ENV
       - run:
           name: "Generate the Target Image Name"
-          command: echo "export IMAGE_NAME=\"${ATAT_DOCKER_REGISTRY_URL}/${PROD_IMAGE_NAME}:${GIT_SHA}-circle\"" >> $BASH_ENV
+          command: echo "export IMAGE_NAME=\"${ATAT_DOCKER_REGISTRY_URL}/${PROD_IMAGE_NAME}:${GIT_SHA}\"" >> $BASH_ENV
       - run:
           name: "Start a Fresh Container"
           command: docker run -d --entrypoint='/bin/sh' -ti --name ${CONTAINER_NAME} alpine:3.8
