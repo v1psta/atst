@@ -172,7 +172,7 @@ jobs:
           at: .
       - run:
           name: "Update Kubernetes Deployment"
-          command: ./deploy/kubernetes/atst-check-deploy.sh
+          command: ./deploy/kubernetes/atst-update-deploy.sh
 
 workflows:
   version: 2
@@ -187,10 +187,10 @@ workflows:
             - test
           filters:
             branches:
-              only: circleci-cd
+              only: master
       - deploy:
           requires:
             - build_and_push_image
           filters:
             branches:
-              only: circleci-cd
+              only: master
