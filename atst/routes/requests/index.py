@@ -57,6 +57,24 @@ class RequestsIndex(object):
             "extended_view": False,
         }
 
+    def _edit_link_for_request(self, viewing_role, request):
+        if viewing_role == "ccpo":
+            return url_for("requests.approval", request_id=request.id)
+        elif Requests.is_pending_financial_verification(request):
+            return url_for("requests.financial_verification", request_id=request.id)
+        elif Requests.is_pending_financial_verification_changes(request):
+            return url_for(
+                "requests.financial_verification", request_id=request.id, extended=True
+            )
+        elif Requests.is_pending_ccpo_acceptance(
+            request
+        ) or Requests.is_pending_ccpo_approval(request):
+            return url_for("requests.view_pending_request", request_id=request.id)
+        else:
+            return url_for(
+                "requests.requests_form_update", screen=1, request_id=request.id
+            )
+
     def _map_request(self, request, viewing_role):
         time_created = pendulum.instance(request.time_created)
         is_new = time_created.add(days=1) > pendulum.now()
@@ -64,21 +82,6 @@ class RequestsIndex(object):
             "num_software_systems", 0
         )
         annual_usage = request.annual_spend
-
-        if viewing_role == "ccpo":
-            edit_link = url_for("requests.approval", request_id=request.id)
-        elif Requests.is_pending_financial_verification(request):
-            edit_link = url_for(
-                "requests.financial_verification", request_id=request.id
-            )
-        elif Requests.is_pending_ccpo_acceptance(
-            request
-        ) or Requests.is_pending_ccpo_approval(request):
-            edit_link = url_for("requests.view_pending_request", request_id=request.id)
-        else:
-            edit_link = url_for(
-                "requests.requests_form_update", screen=1, request_id=request.id
-            )
 
         return {
             "workspace_id": request.workspace.id if request.workspace else None,
@@ -90,7 +93,7 @@ class RequestsIndex(object):
             "last_edited_timestamp": request.latest_revision.time_updated,
             "full_name": request.creator.full_name,
             "annual_usage": annual_usage,
-            "edit_link": edit_link,
+            "edit_link": self._edit_link_for_request(viewing_role, request),
             "action_required": request.action_required_by == viewing_role,
             "dod_component": request.latest_revision.dod_component,
         }

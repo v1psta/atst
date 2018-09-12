@@ -39,3 +39,10 @@ class TaskOrder(Base):
     @property
     def verified(self):
         return self.source == Source.EDA
+
+    def to_dictionary(self):
+        return {
+            c.name: getattr(self, c.name)
+            for c in self.__table__.columns
+            if c.name not in ["id", "attachment_id"]
+        }

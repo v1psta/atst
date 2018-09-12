@@ -192,6 +192,10 @@ class Requests(object):
         return request.status == RequestStatus.PENDING_FINANCIAL_VERIFICATION
 
     @classmethod
+    def is_pending_financial_verification_changes(cls, request):
+        return request.status == RequestStatus.CHANGES_REQUESTED_TO_FINVER
+
+    @classmethod
     def is_pending_ccpo_acceptance(cls, request):
         return request.status == RequestStatus.PENDING_CCPO_ACCEPTANCE
 

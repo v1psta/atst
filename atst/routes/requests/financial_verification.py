@@ -6,6 +6,13 @@ from atst.domain.requests import Requests
 from atst.forms.financial import FinancialForm, ExtendedFinancialForm
 
 
+def task_order_data(task_order):
+    data = task_order.to_dictionary()
+    data["task_order_number"] = task_order.number
+    data["funding_type"] = task_order.funding_type.value
+    return data
+
+
 def financial_form(data):
     if http_request.args.get("extended"):
         return ExtendedFinancialForm(data=data)
@@ -16,7 +23,11 @@ def financial_form(data):
 @requests_bp.route("/requests/verify/<string:request_id>", methods=["GET"])
 def financial_verification(request_id=None):
     request = Requests.get(g.current_user, request_id)
-    form = financial_form(request.body.get("financial_verification"))
+    form_data = request.body.get("financial_verification")
+    if request.task_order:
+        form_data.update(task_order_data(request.task_order))
+
+    form = financial_form(form_data)
     return render_template(
         "requests/financial_verification.html",
         f=form,
