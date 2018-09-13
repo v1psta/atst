@@ -153,7 +153,9 @@ class Requests(object):
 
     @classmethod
     def is_pending_ccpo_action(cls, request):
-        return Requests.is_pending_ccpo_acceptance(request) or Requests.is_pending_ccpo_approval(request)
+        return Requests.is_pending_ccpo_acceptance(
+            request
+        ) or Requests.is_pending_ccpo_approval(request)
 
     @classmethod
     def is_approved(cls, request):

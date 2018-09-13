@@ -127,18 +127,23 @@ def requests_submit(request_id=None):
 @requests_bp.route("/requests/details/<string:request_id>", methods=["GET"])
 def view_request_details(request_id=None):
     request = Requests.get(g.current_user, request_id)
-    financial_review=Requests.is_pending_ccpo_approval(request) or Requests.is_approved(request)
+    financial_review = (
+        Requests.is_pending_ccpo_approval(request)
+        or Requests.is_approved(request)
+        or Requests.is_pending_financial_verification_changes(request)
+    )
 
     data = request.body
     if financial_review and request.task_order:
         data["task_order"] = request.task_order.to_dictionary()
 
     return render_template(
-            "requests/view_pending.html",
-            data=data,
-            request_id=request.id,
-            status=request.status_displayname,
-            pending_review=Requests.is_pending_ccpo_action(request),
-            financial_verification=Requests.is_pending_financial_verification(request),
-            financial_review=financial_review,
+        "requests/view_pending.html",
+        data=data,
+        request_id=request.id,
+        status=request.status_displayname,
+        pending_review=Requests.is_pending_ccpo_action(request),
+        financial_verification=Requests.is_pending_financial_verification(request)
+        or Requests.is_pending_financial_verification_changes(request),
+        financial_review=financial_review,
     )

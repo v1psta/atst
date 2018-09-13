@@ -13,8 +13,14 @@ def task_order_data(task_order):
     return data
 
 
-def financial_form(data):
-    if http_request.args.get("extended"):
+def is_extended(request):
+    return http_request.args.get(
+        "extended"
+    ) or Requests.is_pending_financial_verification_changes(request)
+
+
+def financial_form(request, data):
+    if is_extended(request):
         return ExtendedFinancialForm(data=data)
     else:
         return FinancialForm(data=data)
@@ -27,12 +33,12 @@ def financial_verification(request_id=None):
     if request.task_order:
         form_data.update(task_order_data(request.task_order))
 
-    form = financial_form(form_data)
+    form = financial_form(request, form_data)
     return render_template(
         "requests/financial_verification.html",
         f=form,
         request_id=request_id,
-        extended=http_request.args.get("extended"),
+        extended=is_extended(request),
     )
 
 
@@ -40,9 +46,9 @@ def financial_verification(request_id=None):
 def update_financial_verification(request_id):
     post_data = http_request.form
     existing_request = Requests.get(g.current_user, request_id)
-    form = financial_form(post_data)
+    form = financial_form(existing_request, post_data)
     rerender_args = dict(
-        request_id=request_id, f=form, extended=http_request.args.get("extended")
+        request_id=request_id, f=form, extended=is_extended(existing_request)
     )
 
     if form.validate():
