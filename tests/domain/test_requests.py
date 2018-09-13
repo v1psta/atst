@@ -42,21 +42,21 @@ def test_new_request_has_started_status():
 
 def test_auto_approve_less_than_1m():
     new_request = RequestFactory.create(initial_revision={"dollar_value": 999999})
-    request = Requests.submit(new_request)
+    request = Requests.submit(new_request.creator, new_request)
 
     assert request.status == RequestStatus.PENDING_FINANCIAL_VERIFICATION
 
 
 def test_dont_auto_approve_if_dollar_value_is_1m_or_above():
     new_request = RequestFactory.create(initial_revision={"dollar_value": 1000000})
-    request = Requests.submit(new_request)
+    request = Requests.submit(new_request.creator, new_request)
 
     assert request.status == RequestStatus.PENDING_CCPO_ACCEPTANCE
 
 
 def test_dont_auto_approve_if_no_dollar_value_specified():
     new_request = RequestFactory.create(initial_revision={})
-    request = Requests.submit(new_request)
+    request = Requests.submit(new_request.creator, new_request)
 
     assert request.status == RequestStatus.PENDING_CCPO_ACCEPTANCE
 
@@ -79,7 +79,7 @@ def test_should_allow_submission():
 
 
 def test_request_knows_its_last_submission_timestamp(new_request):
-    submitted_request = Requests.submit(new_request)
+    submitted_request = Requests.submit(new_request.creator, new_request)
     assert submitted_request.last_submission_timestamp
 
 

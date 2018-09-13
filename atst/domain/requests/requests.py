@@ -67,7 +67,7 @@ class Requests(object):
         return RequestsQuery.get_many(creator)
 
     @classmethod
-    def submit(cls, request):
+    def submit(cls, user, request):
         request = Requests.set_status(request, RequestStatus.SUBMITTED)
 
         new_status = None
@@ -78,6 +78,8 @@ class Requests(object):
 
         request = Requests.set_status(request, new_status)
         request = RequestsQuery.add_and_commit(request)
+
+        AuditLog.log_event(user, request, "submit request")
 
         return request
 
