@@ -154,58 +154,57 @@
     </section>
 
     <section>
-      {% if reviews %}
-        <div class='panel'>
-          <header class='panel__heading'>
-            <h2 class='h3 request-approval__columns__heading'>CCPO Activity Log</h2>
-          </header>
+      <div class='panel'>
+        <header class='panel__heading panel__heading--divider'>
+          <h2 class='h3 request-approval__columns__heading'>CCPO Activity Log</h2>
+        </header>
 
-          <div class='approval-log'>
-            <ol>
-              {% for review in reviews %}
-                <li>
-                  <article class='approval-log__log-item'>
-                    <div>
-                      {{ review.log_name }}
-                      <h3 class='approval-log__log-item__header'>{{ review.status.log_name }} by {{ review.full_name_reviewer }}</h3>
-                      {% if review.comment %}
-                        <p>{{ review.comment }}</p>
+        <div class='approval-log'>
+          {% if reviews %}
+          <ol>
+            {% for review in reviews %}
+              <li>
+                <article class='approval-log__log-item'>
+                  <div>
+                    {{ review.log_name }}
+                    <h3 class='approval-log__log-item__header'>{{ review.status.log_name }} by {{ review.full_name_reviewer }}</h3>
+                    {% if review.comment %}
+                      <p>{{ review.comment }}</p>
+                    {% endif %}
+
+                    <div class='approval-log__behalfs'>
+                      {% if review.lname_mao %}
+                        <div class='approval-log__behalf'>
+                          <h3 class='approval-log__log-item__header'>Mission Owner approval on behalf of:</h3>
+                          <span>{{ review.full_name_mao }}</span>
+                          <span>{{ review.email_mao }}</span>
+                          <span>{{ review.phone_mao }}</span>
+                        </div>
                       {% endif %}
 
-                      <div class='approval-log__behalfs'>
-                        {% if review.lname_mao %}
-                          <div class='approval-log__behalf'>
-                            <h3 class='approval-log__log-item__header'>Mission Owner approval on behalf of:</h3>
-                            <span>{{ review.full_name_mao }}</span>
-                            <span>{{ review.email_mao }}</span>
-                            <span>{{ review.phone_mao }}</span>
-                          </div>
-                        {% endif %}
-
-                        {% if review.lname_ccpo %}
-                          <div class='approval-log__behalf'>
-                            <h3 class='approval-log__log-item__header'>CCPO approval on behalf of:</h3>
-                            <span>{{ review.full_name_ccpo }}</span>
-                          </div>
-                        {% endif %}
-                      </div>
+                      {% if review.lname_ccpo %}
+                        <div class='approval-log__behalf'>
+                          <h3 class='approval-log__log-item__header'>CCPO approval on behalf of:</h3>
+                          <span>{{ review.full_name_ccpo }}</span>
+                        </div>
+                      {% endif %}
                     </div>
-                    {% set timestamp=review.status.time_created | formattedDate("%Y-%m-%d %H:%M:%S %Z") %}
-                    <footer class='approval-log__log-item__timestamp'>
-                      <local-datetime timestamp='{{ timestamp }}'></local-datetime>
-                    </footer>
-                  </article>
-                </li>
-              {% endfor %}
-            </ol>
-          </div>
+                  </div>
+                  {% set timestamp=review.status.time_created | formattedDate("%Y-%m-%d %H:%M:%S %Z") %}
+                  <footer class='approval-log__log-item__timestamp'>
+                    <local-datetime timestamp='{{ timestamp }}'></local-datetime>
+                  </footer>
+                </article>
+              </li>
+            {% endfor %}
+          </ol>
+          {% else %}
+            <div class='panel__content'>
+              <p class='h4'>No CCPO approvals or request changes have been recorded yet.</p>
+            </div>
+          {% endif %}
         </div>
-      {% else %}
-        {{ Alert('CCPO Activity Log',
-          message='No CCPO approvals or request changes have been recorded yet.',
-          level='warning'
-        ) }}
-      {% endif %}
+      </div>
     </section>
 
 </article>
