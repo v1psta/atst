@@ -18,7 +18,7 @@ export default {
 
   props: {
     choices: Array,
-    initialData: String
+    initialData: Object
   },
 
   data: function () {

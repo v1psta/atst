@@ -242,7 +242,13 @@ def update_member(workspace_id, member_id):
             )
             new_role_name = member.role_displayname
         if form.data["environment_role"]:
-            print (form.data)
+            new_env_role = form.data["environment_role"]
+            environment_data = {
+                "id": "9432c6a5-2f9d-4c9c-b553-4c175852fb65",
+                "name": "this environment",
+                "user_role_name": new_env_role,
+            }
+            Environments.update_environment_role(environment_data, member)
 
         return redirect(
             url_for(

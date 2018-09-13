@@ -4,6 +4,8 @@ from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
 from atst.models import Base, types, mixins
+from atst.database import db
+from .types import Id
 
 
 class CSPRole(Enum):
@@ -23,6 +25,18 @@ class EnvironmentRole(Base, mixins.TimestampsMixin):
 
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
     user = relationship("User", backref="environment_roles")
+
+    @classmethod
+    def get(cls, user_id, environment_id):
+        existing_env_role = (
+            db.session.query(EnvironmentRole)
+            .filter(
+                EnvironmentRole.user_id == user_id,
+                EnvironmentRole.environment_id == environment_id,
+            )
+            .one_or_none()
+        )
+        return existing_env_role
 
 
 Index(
