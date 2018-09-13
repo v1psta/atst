@@ -1,14 +1,10 @@
-from sqlalchemy.orm.exc import NoResultFound
-
-from atst.database import db
-from atst.models.workspace import Workspace
-from atst.models.workspace_role import WorkspaceRole
-from atst.domain.exceptions import NotFoundError
 from atst.domain.roles import Roles
 from atst.domain.authz import Authorization
 from atst.models.permissions import Permissions
 from atst.domain.users import Users
 from atst.domain.workspace_users import WorkspaceUsers
+
+from .query import WorkspaceQuery
 from .scopes import ScopedWorkspace
 
 
@@ -16,17 +12,14 @@ class Workspaces(object):
     @classmethod
     def create(cls, request, name=None):
         name = name or request.id
-        workspace = Workspace(request=request, name=name)
+        workspace = WorkspaceQuery.create(request=request, name=name)
         Workspaces._create_workspace_role(request.creator, workspace, "owner")
-
-        db.session.add(workspace)
-        db.session.commit()
-
+        WorkspaceQuery.add_and_commit(workspace)
         return workspace
 
     @classmethod
     def get(cls, user, workspace_id):
-        workspace = Workspaces._get(workspace_id)
+        workspace = WorkspaceQuery.get(workspace_id)
         Authorization.check_workspace_permission(
             user, workspace, Permissions.VIEW_WORKSPACE, "get workspace"
         )
@@ -35,7 +28,7 @@ class Workspaces(object):
 
     @classmethod
     def get_for_update(cls, user, workspace_id):
-        workspace = Workspaces._get(workspace_id)
+        workspace = WorkspaceQuery.get(workspace_id)
         Authorization.check_workspace_permission(
             user, workspace, Permissions.ADD_APPLICATION_IN_WORKSPACE, "add project"
         )
@@ -44,16 +37,11 @@ class Workspaces(object):
 
     @classmethod
     def get_by_request(cls, request):
-        try:
-            workspace = db.session.query(Workspace).filter_by(request=request).one()
-        except NoResultFound:
-            raise NotFoundError("workspace")
-
-        return workspace
+        return WorkspaceQuery.get_by_request(request)
 
     @classmethod
     def get_with_members(cls, user, workspace_id):
-        workspace = Workspaces._get(workspace_id)
+        workspace = WorkspaceQuery.get(workspace_id)
         Authorization.check_workspace_permission(
             user,
             workspace,
@@ -64,26 +52,11 @@ class Workspaces(object):
         return workspace
 
     @classmethod
-    def get_many(cls, user):
-        workspaces = (
-            db.session.query(Workspace)
-            .join(WorkspaceRole)
-            .filter(WorkspaceRole.user == user)
-            .all()
-        )
-        return workspaces
-
-    @classmethod
     def for_user(cls, user):
         if Authorization.has_atat_permission(user, Permissions.VIEW_WORKSPACE):
-            workspaces = db.session.query(Workspace).all()
+            workspaces = WorkspaceQuery.get_all()
         else:
-            workspaces = (
-                db.session.query(Workspace)
-                .join(WorkspaceRole)
-                .filter(WorkspaceRole.user == user)
-                .all()
-            )
+            workspaces = WorkspaceQuery.get_for_user(user)
         return workspaces
 
     @classmethod
@@ -122,15 +95,6 @@ class Workspaces(object):
     @classmethod
     def _create_workspace_role(cls, user, workspace, role_name):
         role = Roles.get(role_name)
-        workspace_role = WorkspaceRole(user=user, role=role, workspace=workspace)
-        db.session.add(workspace_role)
+        workspace_role = WorkspaceQuery.create_workspace_role(user, role, workspace)
+        WorkspaceQuery.add_and_commit(workspace_role)
         return workspace_role
-
-    @classmethod
-    def _get(cls, workspace_id):
-        try:
-            workspace = db.session.query(Workspace).filter_by(id=workspace_id).one()
-        except NoResultFound:
-            raise NotFoundError("workspace")
-
-        return workspace

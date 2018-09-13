@@ -63,18 +63,6 @@ def test_workspaces_get_ensures_user_is_in_workspace(workspace, workspace_owner)
         Workspaces.get(outside_user, workspace.id)
 
 
-def test_workspaces_get_many_with_no_workspaces():
-    workspaces = Workspaces.get_many(UserFactory.build())
-    assert workspaces == []
-
-
-def test_workspaces_get_many_returns_a_users_workspaces(workspace, workspace_owner):
-    # random workspace
-    Workspaces.create(RequestFactory.create())
-
-    assert Workspaces.get_many(workspace_owner) == [workspace]
-
-
 def test_get_for_update_allows_owner(workspace, workspace_owner):
     Workspaces.get_for_update(workspace_owner, workspace.id)
 
