@@ -4,7 +4,6 @@ import dateutil
 from atst.domain.authz import Authorization
 from atst.domain.task_orders import TaskOrders
 from atst.domain.workspaces import Workspaces
-from atst.models.request import Request
 from atst.models.request_revision import RequestRevision
 from atst.models.request_status_event import RequestStatusEvent, RequestStatus
 from atst.models.request_review import RequestReview
@@ -103,7 +102,7 @@ class Requests(object):
         return workspace
 
     @classmethod
-    def set_status(cls, request: Request, status: RequestStatus):
+    def set_status(cls, request, status: RequestStatus):
         status_event = RequestStatusEvent(
             new_status=status, revision=request.latest_revision
         )
