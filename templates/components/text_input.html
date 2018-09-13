@@ -1,24 +1,35 @@
 {% from "components/icon.html" import Icon %}
 {% from "components/tooltip.html" import Tooltip %}
 
-{% macro TextInput(field, tooltip='', placeholder='', validation='anything', paragraph=False, initial_value='') -%}
+{% macro TextInput(
+  field,
+  label=field.label | striptags,
+  description=field.description,
+  tooltip='',
+  placeholder='',
+  validation='anything',
+  paragraph=False,
+  initial_value='',
+  noMaxWidth=False) -%}
+
   <textinput
     name='{{ field.name }}'
     validation='{{ validation }}'
     {% if paragraph %}paragraph='true'{% endif %}
+    {% if noMaxWidth %}no-max-width='true'{% endif %}
     {% if initial_value or field.data %}initial-value='{{ initial_value or field.data }}'{% endif %}
     {% if field.errors %}v-bind:initial-errors='{{ field.errors }}'{% endif %}
     key='{{ field.name }}'
     inline-template>
 
     <div
-      v-bind:class="['usa-input usa-input--validation--' + validation, { 'usa-input--error': showError, 'usa-input--success': showValid, 'usa-input--validation--paragraph': paragraph }]">
+      v-bind:class="['usa-input usa-input--validation--' + validation, { 'usa-input--error': showError, 'usa-input--success': showValid, 'usa-input--validation--paragraph': paragraph, 'no-max-width': noMaxWidth }]">
 
       <label for={{field.name}}>
-        <div class="usa-input__title">{{ field.label | striptags }} {% if tooltip %}{{ Tooltip(tooltip) }}{% endif %}</div>
+        <div class="usa-input__title">{{ label }} {% if tooltip %}{{ Tooltip(tooltip) }}{% endif %}</div>
 
         {% if field.description %}
-          <span class='usa-input__help'>{{ field.description | safe }}</span>
+          <span class='usa-input__help'>{{ description | safe }}</span>
         {% endif %}
 
         <span v-show='showError'>{{ Icon('alert',classes="icon-validation") }}</span>
