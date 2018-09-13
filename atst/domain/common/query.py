@@ -35,4 +35,3 @@ class Query(object):
         db.session.add(resource)
         db.session.commit()
         return resource
-
