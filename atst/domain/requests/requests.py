@@ -11,6 +11,7 @@ from atst.models.request_internal_comment import RequestInternalComment
 from atst.utils import deep_merge
 
 from atst.domain.exceptions import UnauthorizedError
+from atst.domain.audit_log import AuditLog
 
 from .query import RequestsQuery
 
@@ -37,7 +38,7 @@ class Requests(object):
         request = RequestsQuery.create(creator=creator, revisions=[revision])
         request = Requests.set_status(request, RequestStatus.STARTED)
         request = RequestsQuery.add_and_commit(request)
-
+        AuditLog.log_event(creator, request, "create request")
         return request
 
     @classmethod
