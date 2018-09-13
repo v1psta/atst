@@ -4,7 +4,8 @@ from tests.factories import (
     RequestStatusEventFactory,
     RequestReviewFactory,
 )
-from atst.domain.requests import Requests, RequestStatus
+from atst.domain.requests import Requests
+from atst.models.request_status_event import RequestStatus
 
 
 def test_pending_financial_requires_mo_action():

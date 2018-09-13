@@ -1,11 +1,6 @@
-from enum import Enum
-from sqlalchemy import exists, and_, exc
-from sqlalchemy.sql import text
-from sqlalchemy.orm.exc import NoResultFound
 from werkzeug.datastructures import FileStorage
 import dateutil
 
-from atst.database import db
 from atst.domain.authz import Authorization
 from atst.domain.task_orders import TaskOrders
 from atst.domain.workspaces import Workspaces
@@ -16,7 +11,9 @@ from atst.models.request_review import RequestReview
 from atst.models.request_internal_comment import RequestInternalComment
 from atst.utils import deep_merge
 
-from .exceptions import NotFoundError, UnauthorizedError
+from atst.domain.exceptions import UnauthorizedError
+
+from .query import RequestsQuery
 
 
 def create_revision_from_request_body(body):
@@ -38,38 +35,19 @@ class Requests(object):
     @classmethod
     def create(cls, creator, body):
         revision = create_revision_from_request_body(body)
-        request = Request(creator=creator, revisions=[revision])
+        request = RequestsQuery.create(creator=creator, revisions=[revision])
         request = Requests.set_status(request, RequestStatus.STARTED)
-
-        db.session.add(request)
-        db.session.commit()
+        request = RequestsQuery.add_and_commit(request)
 
         return request
 
     @classmethod
     def exists(cls, request_id, creator):
-        try:
-            return db.session.query(
-                exists().where(
-                    and_(Request.id == request_id, Request.creator == creator)
-                )
-            ).scalar()
-
-        except exc.DataError:
-            return False
-
-    @classmethod
-    def _get(cls, user, request_id):
-        try:
-            request = db.session.query(Request).filter_by(id=request_id).one()
-        except (NoResultFound, exc.DataError):
-            raise NotFoundError("request")
-
-        return request
+        return RequestsQuery.exists(request_id, creator)
 
     @classmethod
     def get(cls, user, request_id):
-        request = Requests._get(user, request_id)
+        request = RequestsQuery.get(request_id)
 
         if not Authorization.can_view_request(user, request):
             raise UnauthorizedError(user, "get request")
@@ -78,7 +56,7 @@ class Requests(object):
 
     @classmethod
     def get_for_approval(cls, user, request_id):
-        request = Requests._get(user, request_id)
+        request = RequestsQuery.get(request_id)
 
         Authorization.check_can_approve_request(user)
 
@@ -86,17 +64,7 @@ class Requests(object):
 
     @classmethod
     def get_many(cls, creator=None):
-        filters = []
-        if creator:
-            filters.append(Request.creator == creator)
-
-        requests = (
-            db.session.query(Request)
-            .filter(*filters)
-            .order_by(Request.time_created.desc())
-            .all()
-        )
-        return requests
+        return RequestsQuery.get_many(creator)
 
     @classmethod
     def submit(cls, request):
@@ -109,47 +77,28 @@ class Requests(object):
             new_status = RequestStatus.PENDING_CCPO_ACCEPTANCE
 
         request = Requests.set_status(request, new_status)
-
-        db.session.add(request)
-        db.session.commit()
+        request = RequestsQuery.add_and_commit(request)
 
         return request
 
     @classmethod
     def update(cls, request_id, request_delta):
-        request = Requests._get_with_lock(request_id)
+        request = RequestsQuery.get_with_lock(request_id)
 
         new_body = deep_merge(request_delta, request.body)
         revision = create_revision_from_request_body(new_body)
         request.revisions.append(revision)
 
-        db.session.add(request)
-        db.session.commit()
+        request = RequestsQuery.add_and_commit(request)
 
         return request
-
-    @classmethod
-    def _get_with_lock(cls, request_id):
-        try:
-            # Query for request matching id, acquiring a row-level write lock.
-            # https://www.postgresql.org/docs/10/static/sql-select.html#SQL-FOR-UPDATE-SHARE
-            return (
-                db.session.query(Request)
-                .filter_by(id=request_id)
-                .with_for_update(of=Request)
-                .one()
-            )
-
-        except NoResultFound:
-            raise NotFoundError()
 
     @classmethod
     def approve_and_create_workspace(cls, request):
         approved_request = Requests.set_status(request, RequestStatus.APPROVED)
         workspace = Workspaces.create(approved_request)
 
-        db.session.add(approved_request)
-        db.session.commit()
+        RequestsQuery.add_and_commit(approved_request)
 
         return workspace
 
@@ -205,26 +154,7 @@ class Requests(object):
 
     @classmethod
     def status_count(cls, status, creator=None):
-        if isinstance(status, Enum):
-            status = status.name
-        bindings = {"status": status}
-        raw = """
-SELECT count(requests_with_status.id)
-FROM (
-    SELECT DISTINCT ON (rse.request_id) r.*, rse.new_status as status
-    FROM request_status_events rse JOIN requests r ON r.id = rse.request_id
-    ORDER BY rse.request_id, rse.sequence DESC
-) as requests_with_status
-WHERE requests_with_status.status = :status
-        """
-
-        if creator:
-            raw += " AND requests_with_status.user_id = :user_id"
-            bindings["user_id"] = creator.id
-
-        results = db.session.execute(text(raw), bindings).fetchone()
-        (count,) = results
-        return count
+        return RequestsQuery.status_count(status, creator)
 
     @classmethod
     def in_progress_count(cls):
@@ -251,7 +181,7 @@ WHERE requests_with_status.status = :status
 
     @classmethod
     def update_financial_verification(cls, request_id, financial_data):
-        request = Requests._get_with_lock(request_id)
+        request = RequestsQuery.get_with_lock(request_id)
 
         request_data = financial_data.copy()
         task_order_data = {
@@ -283,20 +213,14 @@ WHERE requests_with_status.status = :status
 
     @classmethod
     def submit_financial_verification(cls, request):
-        Requests.set_status(request, RequestStatus.PENDING_CCPO_APPROVAL)
-
-        db.session.add(request)
-        db.session.commit()
-
+        request = Requests.set_status(request, RequestStatus.PENDING_CCPO_APPROVAL)
+        request = RequestsQuery.add_and_commit(request)
         return request
 
     @classmethod
     def _add_review(cls, user, request, review_data):
         request.latest_status.review = RequestReview(reviewer=user, **review_data)
-
-        db.session.add(request)
-        db.session.commit()
-
+        request = RequestsQuery.add_and_commit(request)
         return request
 
     @classmethod
@@ -320,9 +244,6 @@ WHERE requests_with_status.status = :status
     @classmethod
     def update_internal_comments(cls, user, request, comment_text):
         Authorization.check_can_approve_request(user)
-
         request.internal_comments = RequestInternalComment(text=comment_text, user=user)
-        db.session.add(request)
-        db.session.commit()
-
+        request = RequestsQuery.add_and_commit(request)
         return request
