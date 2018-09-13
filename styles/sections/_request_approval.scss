@@ -32,6 +32,12 @@
     }
   }
 
+  .request-approval__review {
+    .action-group {
+      margin-bottom: $gap * 6;
+    }
+  }
+
   .approval-log {
     ol {
       list-style: none;
@@ -92,6 +98,12 @@
           }
         }
       }
+    }
+  }
+
+  .internal-notes {
+    textarea {
+      resize: vertical;
     }
   }
 }
