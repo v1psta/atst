@@ -16,3 +16,13 @@ class AuditEvent(Base, mixins.TimestampsMixin):
     resource_name = Column(String())
     resource_id = Column(UUID(as_uuid=True), index=True)
     action = Column(String())
+
+    def __str__(self):
+        user_name = self.user.full_name
+
+        if self.action == "create request":
+            return "{} created request {}".format(user_name, self.resource_id)
+        else:
+            return "{} {} {} {}".format(
+                user_name, self.action, self.resource_name, self.resource_id
+            )

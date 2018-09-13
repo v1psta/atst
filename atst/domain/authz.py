@@ -43,3 +43,8 @@ class Authorization(object):
     def check_workspace_permission(cls, user, workspace, permission, message):
         if not Authorization.has_workspace_permission(user, workspace, permission):
             raise UnauthorizedError(user, message)
+
+    @classmethod
+    def check_atat_permission(cls, user, permission, message):
+        if not Authorization.has_atat_permission(user, permission):
+            raise UnauthorizedError(user, message)
