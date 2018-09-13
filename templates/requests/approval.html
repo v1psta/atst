@@ -190,7 +190,9 @@
                       </div>
                     </div>
                     {% set timestamp=review.status.time_created | formattedDate("%Y-%m-%d %H:%M:%S %Z") %}
-                    <footer class='approval-log__log-item__timestamp'><time datetime='{{ timestamp }}'>{{ timestamp }}</time></footer>
+                    <footer class='approval-log__log-item__timestamp'>
+                      <local-datetime timestamp='{{ timestamp }}'></local-datetime>
+                    </footer>
                   </article>
                 </li>
               {% endfor %}
