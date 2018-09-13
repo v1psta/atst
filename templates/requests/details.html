@@ -6,9 +6,7 @@
 <div class="col">
 
   {% if financial_verification %}
-    {% with complete=False %}
-      {% include 'requests/review_menu.html' %}
-    {% endwith %}
+    {% include 'requests/review_menu.html' %}
   {% endif %}
 
   {% if pending_review %}

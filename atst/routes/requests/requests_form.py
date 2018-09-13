@@ -138,7 +138,7 @@ def view_request_details(request_id=None):
         data["task_order"] = request.task_order.to_dictionary()
 
     return render_template(
-        "requests/view_pending.html",
+        "requests/details.html",
         data=data,
         request_id=request.id,
         status=request.status_displayname,

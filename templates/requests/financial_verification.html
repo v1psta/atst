@@ -6,9 +6,7 @@
 
 {% block content %}
 
-{% with complete=False %}
-  {% include 'requests/review_menu.html' %}
-{% endwith %}
+{% include 'requests/review_menu.html' %}
 
 <financial inline-template v-bind:initial-data='{{ f.data|mixedContentToJson }}'>
 <div class="col">
