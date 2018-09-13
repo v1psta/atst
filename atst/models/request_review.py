@@ -8,7 +8,7 @@ class RequestReview(Base):
     __tablename__ = "request_reviews"
 
     id = Column(BigInteger, primary_key=True)
-    status = relationship("RequestStatusEvent", back_populates="review")
+    status = relationship("RequestStatusEvent", uselist=False, back_populates="review")
 
     user_id = Column(ForeignKey("users.id"), nullable=False)
     reviewer = relationship("User")
