@@ -4,7 +4,7 @@ from atst.models.permissions import Permissions
 from atst.domain.users import Users
 from atst.domain.workspace_users import WorkspaceUsers
 
-from .query import WorkspaceQuery
+from .query import WorkspacesQuery
 from .scopes import ScopedWorkspace
 
 
@@ -12,14 +12,14 @@ class Workspaces(object):
     @classmethod
     def create(cls, request, name=None):
         name = name or request.id
-        workspace = WorkspaceQuery.create(request=request, name=name)
+        workspace = WorkspacesQuery.create(request=request, name=name)
         Workspaces._create_workspace_role(request.creator, workspace, "owner")
-        WorkspaceQuery.add_and_commit(workspace)
+        WorkspacesQuery.add_and_commit(workspace)
         return workspace
 
     @classmethod
     def get(cls, user, workspace_id):
-        workspace = WorkspaceQuery.get(workspace_id)
+        workspace = WorkspacesQuery.get(workspace_id)
         Authorization.check_workspace_permission(
             user, workspace, Permissions.VIEW_WORKSPACE, "get workspace"
         )
@@ -28,7 +28,7 @@ class Workspaces(object):
 
     @classmethod
     def get_for_update(cls, user, workspace_id):
-        workspace = WorkspaceQuery.get(workspace_id)
+        workspace = WorkspacesQuery.get(workspace_id)
         Authorization.check_workspace_permission(
             user, workspace, Permissions.ADD_APPLICATION_IN_WORKSPACE, "add project"
         )
@@ -37,11 +37,11 @@ class Workspaces(object):
 
     @classmethod
     def get_by_request(cls, request):
-        return WorkspaceQuery.get_by_request(request)
+        return WorkspacesQuery.get_by_request(request)
 
     @classmethod
     def get_with_members(cls, user, workspace_id):
-        workspace = WorkspaceQuery.get(workspace_id)
+        workspace = WorkspacesQuery.get(workspace_id)
         Authorization.check_workspace_permission(
             user,
             workspace,
@@ -54,9 +54,9 @@ class Workspaces(object):
     @classmethod
     def for_user(cls, user):
         if Authorization.has_atat_permission(user, Permissions.VIEW_WORKSPACE):
-            workspaces = WorkspaceQuery.get_all()
+            workspaces = WorkspacesQuery.get_all()
         else:
-            workspaces = WorkspaceQuery.get_for_user(user)
+            workspaces = WorkspacesQuery.get_for_user(user)
         return workspaces
 
     @classmethod
@@ -95,6 +95,6 @@ class Workspaces(object):
     @classmethod
     def _create_workspace_role(cls, user, workspace, role_name):
         role = Roles.get(role_name)
-        workspace_role = WorkspaceQuery.create_workspace_role(user, role, workspace)
-        WorkspaceQuery.add_and_commit(workspace_role)
+        workspace_role = WorkspacesQuery.create_workspace_role(user, role, workspace)
+        WorkspacesQuery.add_and_commit(workspace_role)
         return workspace_role

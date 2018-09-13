@@ -7,7 +7,7 @@ from atst.models.workspace import Workspace
 from atst.models.workspace_role import WorkspaceRole
 
 
-class WorkspaceQuery(Query):
+class WorkspacesQuery(Query):
     model = Workspace
 
     @classmethod
