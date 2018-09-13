@@ -27,7 +27,7 @@ class RequestRevision(Base, TimestampsMixin):
     )
 
     # primary_poc
-    am_poc = Column(Boolean, default=False)
+    am_poc = Column(Boolean)
     dodid_poc = Column(String)
     email_poc = Column(String)
     fname_poc = Column(String)
