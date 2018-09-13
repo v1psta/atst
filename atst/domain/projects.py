@@ -49,3 +49,21 @@ class Projects(object):
             .filter(EnvironmentRole.user_id == user.id)
             .all()
         )
+
+    @classmethod
+    def get_all(cls, workspace_user, workspace):
+        Authorization.check_workspace_permission(
+            workspace_user.user,
+            workspace,
+            Permissions.VIEW_APPLICATION_IN_WORKSPACE,
+            "view project in workspace",
+        )
+
+        try:
+            projects = (
+                db.session.query(Project).filter_by(workspace_id=workspace.id).all()
+            )
+        except NoResultFound:
+            raise NotFoundError("projects")
+
+        return projects

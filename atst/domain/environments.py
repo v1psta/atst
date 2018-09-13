@@ -4,7 +4,6 @@ from atst.database import db
 from atst.models.environment import Environment
 from atst.models.environment_role import EnvironmentRole, CSPRole
 from atst.models.project import Project
-from atst.domain.users import Users
 
 from .exceptions import NotFoundError
 
@@ -59,13 +58,13 @@ class Environments(object):
         new_role = environment_data["user_role_name"]
         environment = Environments.get(cls=cls, environment_id=environment_data["id"])
         if workspace_user.has_environment_roles:
-            env_role = EnvironmentRole.get(workspace_user.user_id, environment.id)
+            env_role = EnvironmentRole.get(
+                workspace_user.user_id, environment_data["id"]
+            )
             env_role.role = new_role
         else:
             env_role = EnvironmentRole(
-                user=workspace_user.user,
-                environment=environment,
-                role=new_role
+                user=workspace_user.user, environment=environment, role=new_role
             )
         db.session.add(env_role)
         db.session.commit()
