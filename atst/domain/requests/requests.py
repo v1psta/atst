@@ -156,6 +156,10 @@ class Requests(object):
         return Requests.is_pending_ccpo_acceptance(request) or Requests.is_pending_ccpo_approval(request)
 
     @classmethod
+    def is_approved(cls, request):
+        return request.status == RequestStatus.APPROVED
+
+    @classmethod
     def status_count(cls, status, creator=None):
         return RequestsQuery.status_count(status, creator)
 

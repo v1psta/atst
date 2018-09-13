@@ -31,7 +31,7 @@ def readableInteger(value):
 
 def getOptionLabel(value, options):
     if hasattr(value, "value"):
-        value = value.value
+        value = value.name
     try:
         return next(tup[1] for tup in options if tup[0] == value)
     except StopIteration:

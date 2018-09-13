@@ -5,9 +5,11 @@
 {% block content %}
 <div class="col">
 
-  {% with complete=False %}
-    {% include 'requests/review_menu.html' %}
-  {% endwith %}
+  {% if financial_verification %}
+    {% with complete=False %}
+      {% include 'requests/review_menu.html' %}
+    {% endwith %}
+  {% endif %}
 
   {% if pending_review %}
     {{ Alert('Your request is being reviewed',
@@ -18,7 +20,8 @@
 
   <div class="panel">
     <div class="panel__heading">
-      <h1>View Pending Request</h1>
+      <h1>Request Details</h1><br/>
+      <h2>#{{ request_id }} <span class="label label--info">{{ status }}</span></h2>
     </div>
 
     <div class="panel__content">
