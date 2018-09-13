@@ -166,7 +166,8 @@
                 <li>
                   <article class='approval-log__log-item'>
                     <div>
-                      <h3 class='approval-log__log-item__header'>{{ review.log_name }} by {{ review.full_name_reviewer }}</h3>
+                      {{ review.log_name }}
+                      <h3 class='approval-log__log-item__header'>{{ review.status.log_name }} by {{ review.full_name_reviewer }}</h3>
                       {% if review.comment %}
                         <p>{{ review.comment }}</p>
                       {% endif %}
