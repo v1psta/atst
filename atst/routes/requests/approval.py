@@ -15,6 +15,10 @@ from atst.forms.ccpo_review import CCPOReviewForm
 from atst.forms.internal_comment import InternalCommentForm
 
 
+def map_ccpo_authorizing(user):
+    return {"fname_ccpo": user.first_name, "lname_ccpo": user.last_name}
+
+
 def render_approval(request, form=None):
     data = request.body
     pending_final_approval = Requests.is_pending_ccpo_approval(request)
@@ -26,6 +30,10 @@ def render_approval(request, form=None):
 
     internal_comment_form = InternalCommentForm(text=request.internal_comments_text)
 
+    if not form:
+        mo_data = map_ccpo_authorizing(g.current_user)
+        form = CCPOReviewForm(data=mo_data)
+
     return render_template(
         "requests/approval.html",
         data=data,
@@ -35,7 +43,7 @@ def render_approval(request, form=None):
         pending_review=pending_review,
         financial_review=pending_final_approval,
         pdf_available=request.task_order and request.task_order.pdf,
-        f=form or CCPOReviewForm(),
+        f=form,
         internal_comment_form=internal_comment_form,
     )
 
