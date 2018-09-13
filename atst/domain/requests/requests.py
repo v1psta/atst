@@ -136,32 +136,6 @@ class Requests(object):
         )
 
     @classmethod
-    def is_pending_financial_verification(cls, request):
-        return request.status == RequestStatus.PENDING_FINANCIAL_VERIFICATION
-
-    @classmethod
-    def is_pending_financial_verification_changes(cls, request):
-        return request.status == RequestStatus.CHANGES_REQUESTED_TO_FINVER
-
-    @classmethod
-    def is_pending_ccpo_acceptance(cls, request):
-        return request.status == RequestStatus.PENDING_CCPO_ACCEPTANCE
-
-    @classmethod
-    def is_pending_ccpo_approval(cls, request):
-        return request.status == RequestStatus.PENDING_CCPO_APPROVAL
-
-    @classmethod
-    def is_pending_ccpo_action(cls, request):
-        return Requests.is_pending_ccpo_acceptance(
-            request
-        ) or Requests.is_pending_ccpo_approval(request)
-
-    @classmethod
-    def is_approved(cls, request):
-        return request.status == RequestStatus.APPROVED
-
-    @classmethod
     def status_count(cls, status, creator=None):
         return RequestsQuery.status_count(status, creator)
 

@@ -170,3 +170,27 @@ class Request(Base):
     @property
     def internal_comments_text(self):
         return self.internal_comments.text if self.internal_comments else ""
+
+    @property
+    def is_pending_financial_verification(self):
+        return self.status == RequestStatus.PENDING_FINANCIAL_VERIFICATION
+
+    @property
+    def is_pending_financial_verification_changes(self):
+        return self.status == RequestStatus.CHANGES_REQUESTED_TO_FINVER
+
+    @property
+    def is_pending_ccpo_acceptance(self):
+        return self.status == RequestStatus.PENDING_CCPO_ACCEPTANCE
+
+    @property
+    def is_pending_ccpo_approval(self):
+        return self.status == RequestStatus.PENDING_CCPO_APPROVAL
+
+    @property
+    def is_pending_ccpo_action(self):
+        return self.is_pending_ccpo_acceptance or self.is_pending_ccpo_approval
+
+    @property
+    def is_approved(self):
+        return self.status == RequestStatus.APPROVED

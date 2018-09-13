@@ -128,9 +128,9 @@ def requests_submit(request_id=None):
 def view_request_details(request_id=None):
     request = Requests.get(g.current_user, request_id)
     financial_review = (
-        Requests.is_pending_ccpo_approval(request)
-        or Requests.is_approved(request)
-        or Requests.is_pending_financial_verification_changes(request)
+        request.is_pending_ccpo_approval
+        or request.is_approved
+        or request.is_pending_financial_verification_changes
     )
 
     data = request.body
@@ -142,8 +142,8 @@ def view_request_details(request_id=None):
         data=data,
         request_id=request.id,
         status=request.status_displayname,
-        pending_review=Requests.is_pending_ccpo_action(request),
-        financial_verification=Requests.is_pending_financial_verification(request)
-        or Requests.is_pending_financial_verification_changes(request),
+        pending_review=request.is_pending_ccpo_action,
+        financial_verification=request.is_pending_financial_verification
+        or request.is_pending_financial_verification_changes,
         financial_review=financial_review,
     )

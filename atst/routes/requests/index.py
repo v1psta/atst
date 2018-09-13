@@ -44,10 +44,8 @@ class RequestsIndex(object):
         num_action_required = len(
             [r for r in mapped_requests if r.get("action_required")]
         )
-        pending_fv = any(
-            Requests.is_pending_financial_verification(r) for r in requests
-        )
-        pending_ccpo = any(Requests.is_pending_ccpo_acceptance(r) for r in requests)
+        pending_fv = any(r.is_pending_financial_verification for r in requests)
+        pending_ccpo = any(r.is_pending_ccpo_acceptance for r in requests)
 
         return {
             "requests": mapped_requests,
@@ -60,13 +58,13 @@ class RequestsIndex(object):
     def _edit_link_for_request(self, viewing_role, request):
         if viewing_role == "ccpo":
             return url_for("requests.approval", request_id=request.id)
-        elif Requests.is_pending_financial_verification(request):
+        elif request.is_pending_financial_verification:
             return url_for("requests.financial_verification", request_id=request.id)
-        elif Requests.is_pending_financial_verification_changes(request):
+        elif request.is_pending_financial_verification_changes:
             return url_for(
                 "requests.financial_verification", request_id=request.id, extended=True
             )
-        elif Requests.is_pending_ccpo_action(request) or Requests.is_approved(request):
+        elif request.is_pending_ccpo_action or request.is_approved:
             return url_for("requests.view_request_details", request_id=request.id)
         else:
             return url_for(

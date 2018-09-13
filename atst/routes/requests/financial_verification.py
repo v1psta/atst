@@ -14,9 +14,10 @@ def task_order_data(task_order):
 
 
 def is_extended(request):
-    return http_request.args.get(
-        "extended"
-    ) or Requests.is_pending_financial_verification_changes(request)
+    return (
+        http_request.args.get("extended")
+        or request.is_pending_financial_verification_changes
+    )
 
 
 def financial_form(request, data):
