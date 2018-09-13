@@ -246,6 +246,19 @@
     }
   }
 
+  &.no-max-width {
+    padding-right: $gap * 3;
+
+    input, textarea, select, label {
+      max-width: none;
+    }
+
+    .icon-validation {
+      left: auto;
+      right: - $gap * 4;
+    }
+  }
+
   &.usa-input--error {
     @include input-state('error');
   }

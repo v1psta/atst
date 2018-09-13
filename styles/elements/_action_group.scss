@@ -5,6 +5,10 @@
   margin-top: $gap * 4;
   margin-bottom: $gap * 4;
 
+  &--tight {
+    margin-top: $gap * 2;
+  }
+
   .usa-button,
   a {
     margin: 0 0 0 ($gap * 2);

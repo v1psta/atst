@@ -63,12 +63,17 @@
 
   .panel__heading {
     padding: $gap * 2;
+
     @include media($medium-screen) {
       padding: $gap * 4;
     }
 
     &--tight {
       padding: $gap*2;
+    }
+
+    &--divider {
+      border-bottom: 1px solid $color-gray-light;
     }
 
     h1, h2, h3, h4, h5, h6 {
@@ -90,15 +95,16 @@
       justify-content: space-between;
     }
   }
+
+  hr {
+    border: 0;
+    border-bottom: 1px dashed $color-gray-light;
+    margin: ($gap * 4) ($site-margins*-4);
+  }
 }
 
 .panel__actions {
   @include panel-actions;
 }
 
-hr {
-  border: 0;
-  border-bottom: 1px dashed $color-gray-light;
-  margin: 0px $site-margins*-4;
-}
 
