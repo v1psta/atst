@@ -86,12 +86,12 @@ $color-cool-blue-light:      #4773aa;
 $color-cool-blue-lighter:    #8ba6ca;
 $color-cool-blue-lightest:   #dce4ef;
 
-$color-purple:               #4c2c92;
+$color-purple:               #5a2c85;
 
 // Functional colors
-$color-primary:              $color-blue;
-$color-primary-darker:       $color-blue-darker;
-$color-primary-darkest:      $color-blue-darkest;
+$color-primary:              $color-purple;
+$color-primary-darker:       darken($color-purple,4%);
+$color-primary-darkest:      darken($color-purple,8%);
 
 $color-primary-alt:          $color-aqua;
 $color-primary-alt-dark:     $color-aqua-dark;
@@ -112,6 +112,8 @@ $color-visited:              $color-purple;
 $color-overlay:              rgba(#000, 0.5);
 $color-shadow:               rgba(#000, 0.3);
 $color-transparent:          rgba(#000, 0);
+
+$color-link:                 $color-blue;
 
 // Mobile First Breakpoints
 $small-screen:  481px;

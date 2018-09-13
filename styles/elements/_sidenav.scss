@@ -45,13 +45,13 @@
           background-color: $color-primary;
 
           &:hover {
-            background-color: $color-blue-darker;
+            background-color: $color-primary-darker;
           }
 
           &--active {
             @include h5;
             color: $color-white;
-            background-color: $color-primary;
+            background-color: $color-primary-darker;
             box-shadow: none;
           }
 
