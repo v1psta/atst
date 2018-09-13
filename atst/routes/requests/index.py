@@ -66,10 +66,8 @@ class RequestsIndex(object):
             return url_for(
                 "requests.financial_verification", request_id=request.id, extended=True
             )
-        elif Requests.is_pending_ccpo_acceptance(
-            request
-        ) or Requests.is_pending_ccpo_approval(request):
-            return url_for("requests.view_pending_request", request_id=request.id)
+        elif Requests.is_pending_ccpo_action(request):
+            return url_for("requests.view_request_details", request_id=request.id)
         else:
             return url_for(
                 "requests.requests_form_update", screen=1, request_id=request.id

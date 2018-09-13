@@ -4,10 +4,17 @@
 
 {% block content %}
 <div class="col">
-  {{ Alert('Your request is being reviewed',
-    message="<p>You cannot edit your submitted request while it is under review. Your request will be reviewed within 3 business days.</p>",
-    level='warning'
-  ) }}
+
+  {% with complete=False %}
+    {% include 'requests/review_menu.html' %}
+  {% endwith %}
+
+  {% if pending_review %}
+    {{ Alert('Your request is being reviewed',
+      message="<p>You cannot edit your submitted request while it is under review. Your request will be reviewed within 3 business days.</p>",
+      level='warning'
+    ) }}
+  {% endif %}
 
   <div class="panel">
     <div class="panel__heading">

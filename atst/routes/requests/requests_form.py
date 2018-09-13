@@ -124,7 +124,12 @@ def requests_submit(request_id=None):
         return redirect("/requests?modal=pendingCCPOApproval")
 
 
-@requests_bp.route("/requests/pending/<string:request_id>", methods=["GET"])
-def view_pending_request(request_id=None):
+@requests_bp.route("/requests/details/<string:request_id>", methods=["GET"])
+def view_request_details(request_id=None):
     request = Requests.get(g.current_user, request_id)
-    return render_template("requests/view_pending.html", data=request.body)
+    return render_template(
+            "requests/view_pending.html",
+            data=request.body,
+            request_id=request.id,
+            pending_review=Requests.is_pending_ccpo_action(request)
+    )

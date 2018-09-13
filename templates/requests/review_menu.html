@@ -1,0 +1,23 @@
+{% set pending_url=url_for('requests.view_request_details', request_id=request_id) %}
+{% set financial_url=url_for('requests.financial_verification', request_id=request_id) %}
+<div class="progress-menu progress-menu--four">
+  <ul>
+    <li class="progress-menu__item progress-menu__item--complete">
+      <a href="{{ pending_url }}">
+        Request Information
+      </a>
+    </li>
+    {% if complete %}
+      {% set financial_status="complete" %}
+    {% elif g.matchesPath(financial_url) %}
+      {% set financial_status="active" %}
+    {% else %}
+      {% set financial_status="incomplete" %}
+    {% endif %}
+    <li class="progress-menu__item progress-menu__item--{{ financial_status }}">
+      <a href="{{ financial_url }}">
+        Financial Verification Information
+      </a>
+    </li>
+  </ul>
+</div>
