@@ -16,6 +16,7 @@ import NewProject from './components/forms/new_project'
 import Modal from './mixins/modal'
 import selector from './components/selector'
 import BudgetChart from './components/charts/budget_chart'
+import CcpoApproval from './components/forms/ccpo_approval'
 
 Vue.use(VTooltip)
 
@@ -33,7 +34,8 @@ const app = new Vue({
     financial,
     NewProject,
     selector,
-    BudgetChart
+    BudgetChart,
+    CcpoApproval
   },
   mounted: function() {
     const modalOpen = document.querySelector("#modalOpen")
