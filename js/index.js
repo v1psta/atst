@@ -17,6 +17,7 @@ import Modal from './mixins/modal'
 import selector from './components/selector'
 import BudgetChart from './components/charts/budget_chart'
 import CcpoApproval from './components/forms/ccpo_approval'
+import LocalDatetime from './components/local_datetime'
 
 Vue.use(VTooltip)
 
@@ -35,7 +36,8 @@ const app = new Vue({
     NewProject,
     selector,
     BudgetChart,
-    CcpoApproval
+    CcpoApproval,
+    LocalDatetime
   },
   mounted: function() {
     const modalOpen = document.querySelector("#modalOpen")
