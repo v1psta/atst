@@ -93,4 +93,6 @@ def create_internal_comment(request_id):
         request = Requests.get(g.current_user, request_id)
         Requests.update_internal_comments(g.current_user, request, form.data["text"])
 
-    return redirect(url_for("requests.approval", request_id=request_id, _anchor='ccpo-notes'))
+    return redirect(
+        url_for("requests.approval", request_id=request_id, _anchor="ccpo-notes")
+    )
