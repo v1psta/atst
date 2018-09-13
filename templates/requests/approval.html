@@ -122,8 +122,8 @@
             </div>
 
             <div v-if='approving || denying' class='action-group' v-cloak>
-              <button type="submit" name="approved" class='usa-button usa-button-big'>Approve Request</button>
-              <button type="submit" name="denied" class='usa-button usa-button-big usa-button-secondary'>Request Revisions</button>
+              <button v-if='approving' type="submit" name="approved" class='usa-button usa-button-big'>Approve Request</button>
+              <button v-if='denying' type="submit" name="denied" class='usa-button usa-button-big'>Request Revisions</button>
               <a href='{{ url_for("requests.requests_index") }}' class='icon-link'>
                 {{ Icon('x') }}
                 <span>Cancel</span>
