@@ -38,7 +38,7 @@ def financial_verification(request_id=None):
     return render_template(
         "requests/financial_verification.html",
         f=form,
-        request_id=request_id,
+        request=request,
         extended=is_extended(request),
     )
 
