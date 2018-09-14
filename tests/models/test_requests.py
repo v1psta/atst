@@ -92,3 +92,26 @@ def test_reviews():
         RequestStatusEventFactory.create(revision=request.latest_revision),
     ]
     assert len(request.reviews) == 2
+
+
+def test_review_comment():
+    request = RequestFactory.create()
+    ccpo = UserFactory.from_atat_role("ccpo")
+    request.status_events = [
+        RequestStatusEventFactory.create(
+            revision=request.latest_revision,
+            new_status=RequestStatus.CHANGES_REQUESTED,
+            review=RequestReviewFactory.create(reviewer=ccpo, comment="do better"),
+        )
+    ]
+    assert request.review_comment == "do better"
+
+    request.status_events = [
+        RequestStatusEventFactory.create(
+            revision=request.latest_revision,
+            new_status=RequestStatus.APPROVED,
+            review=RequestReviewFactory.create(reviewer=ccpo, comment="much better"),
+        )
+    ]
+
+    assert not request.review_comment
