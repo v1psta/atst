@@ -124,7 +124,26 @@ def requests_submit(request_id=None):
         return redirect("/requests?modal=pendingCCPOApproval")
 
 
-@requests_bp.route("/requests/pending/<string:request_id>", methods=["GET"])
-def view_pending_request(request_id=None):
+@requests_bp.route("/requests/details/<string:request_id>", methods=["GET"])
+def view_request_details(request_id=None):
     request = Requests.get(g.current_user, request_id)
-    return render_template("requests/view_pending.html", data=request.body)
+    financial_review = (
+        request.is_pending_ccpo_approval
+        or request.is_approved
+        or request.is_pending_financial_verification_changes
+    )
+
+    data = request.body
+    if financial_review and request.task_order:
+        data["task_order"] = request.task_order.to_dictionary()
+
+    return render_template(
+        "requests/details.html",
+        data=data,
+        request_id=request.id,
+        status=request.status_displayname,
+        pending_review=request.is_pending_ccpo_action,
+        financial_verification=request.is_pending_financial_verification
+        or request.is_pending_financial_verification_changes,
+        financial_review=financial_review,
+    )

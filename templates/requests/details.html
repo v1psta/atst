@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% from "components/alert.html" import Alert %}
+
+{% block content %}
+<div class="col">
+
+  {% if financial_verification %}
+    {% include 'requests/review_menu.html' %}
+  {% endif %}
+
+  {% if pending_review %}
+    {{ Alert('Your request is being reviewed',
+      message="<p>You cannot edit your submitted request while it is under review. Your request will be reviewed within 3 business days.</p>",
+      level='warning'
+    ) }}
+  {% endif %}
+
+  <div class="panel">
+    <div class="panel__heading">
+      <h1>Request Details</h1><br/>
+      <h2>#{{ request_id }} <span class="label label--info">{{ status }}</span></h2>
+    </div>
+
+    <div class="panel__content">
+
+      {% include "requests/_review.html" %}
+
+    </div>
+  </div>
+</div>
+{% endblock %}

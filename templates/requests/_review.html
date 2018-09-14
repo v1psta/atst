@@ -139,13 +139,11 @@
     Financial Verification
   </h2>
 
-  {% if pdf_available %}
-    <div>
-      <a href="{{ url_for("requests.task_order_pdf_download", request_id=request_id)}}" download>
-        Download the Task Order PDF
-      </a>
-    </div>
-  {% endif %}
+  <div>
+    <a href="{{ url_for("requests.task_order_pdf_download", request_id=request_id)}}" download>
+      Download the Task Order PDF
+    </a>
+  </div>
 
   <dl>
     {{ DefinitionReviewField("Task Order Information Source", "task_order", "source", filter="getOptionLabel", filter_args=[task_order_sources]) }}

@@ -21,10 +21,8 @@ def map_ccpo_authorizing(user):
 
 def render_approval(request, form=None):
     data = request.body
-    pending_final_approval = Requests.is_pending_ccpo_approval(request)
-    pending_review = (
-        Requests.is_pending_ccpo_acceptance(request) or pending_final_approval
-    )
+    pending_final_approval = request.is_pending_ccpo_approval
+    pending_review = request.is_pending_ccpo_acceptance or pending_final_approval
     if pending_final_approval and request.task_order:
         data["task_order"] = request.task_order.to_dictionary()
 
@@ -42,8 +40,7 @@ def render_approval(request, form=None):
         current_status=request.status.value,
         pending_review=pending_review,
         financial_review=pending_final_approval,
-        pdf_available=request.task_order and request.task_order.pdf,
-        f=form,
+        f=form or CCPOReviewForm(),
         internal_comment_form=internal_comment_form,
     )
 
