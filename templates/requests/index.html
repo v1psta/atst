@@ -45,9 +45,9 @@
 
 {% else %}
 
-  {% if pending_ccpo_approval %}
+  {% if pending_financial_verification %}
 
-    {{ Alert('Request submitted. Approval pending.', fragment="fragments/pending_ccpo_approval_alert.html") }}
+    {{ Alert('Pending Financial Verification', fragment="fragments/pending_financial_verification.html") }}
 
   {% endif %}
 

@@ -9,6 +9,10 @@
     {% include 'requests/review_menu.html' %}
   {% endif %}
 
+  {% if pending_ccpo_acceptance %}
+    {{ Alert('Request submitted. Approval pending.', fragment="fragments/pending_ccpo_approval_alert.html") }}
+  {% endif %}
+
   {% if pending_review %}
     {{ Alert('Your request is being reviewed',
       message="<p>You cannot edit your submitted request while it is under review. Your request will be reviewed within 3 business days.</p>",
