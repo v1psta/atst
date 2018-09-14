@@ -144,6 +144,7 @@ def view_request_details(request_id=None):
         status=request.status_displayname,
         pending_review=request.is_pending_ccpo_action,
         pending_ccpo_acceptance=request.is_pending_ccpo_acceptance,
+        pending_ccpo_approval=request.is_pending_ccpo_approval,
         financial_verification=request.is_pending_financial_verification
         or request.is_pending_financial_verification_changes,
         financial_review=financial_review,
