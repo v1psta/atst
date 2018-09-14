@@ -49,7 +49,7 @@ def update_financial_verification(request_id):
     existing_request = Requests.get(g.current_user, request_id)
     form = financial_form(existing_request, post_data)
     rerender_args = dict(
-        request_id=request_id, f=form, extended=is_extended(existing_request)
+        request=existing_request, f=form, extended=is_extended(existing_request)
     )
 
     if form.validate():

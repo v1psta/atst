@@ -6,15 +6,16 @@
 
 {% block content %}
 
-{% if request.is_pending_financial_verification %}
-  {{ Alert('Pending Financial Verification', fragment="fragments/pending_financial_verification.html") }}
-{% endif %}
-
 
 {% include 'requests/review_menu.html' %}
 
 <financial inline-template v-bind:initial-data='{{ f.data|mixedContentToJson }}'>
 <div class="col">
+
+  {% if request.is_pending_financial_verification %}
+    {{ Alert('Pending Financial Verification', fragment="fragments/pending_financial_verification.html") }}
+  {% endif %}
+
 
   {% if extended %}
     {{ Alert('Task Order not found in EDA',
@@ -25,13 +26,10 @@
 
   {% if f.is_missing_task_order_number %}
     {% set extended_url = url_for('requests.financial_verification', request_id=request.id, extended=True) %}
-    {{ Alert('Task Order not found in EDA',
-        message="We could not find your Task Order in our system of record, EDA.
-                 Please confirm that you have entered it correctly.<br>
-                 <a class=\"usa-button\" href=\"%s\">Enter Task Order information manually</a>
-                "|format(extended_url),
-        level='warning'
-    ) }}
+    {% call Alert('Task Order not found in EDA', level='warning') %}
+        We could not find your Task Order in our system of record, EDA. Please confirm that you have entered it correctly.<br>
+        <a class="usa-button" href="{{ extended_url }}">Enter Task Order information manually</a>
+    {% endcall %}
   {% endif %}
 
   {% block form_action %}
