@@ -6,16 +6,14 @@
 
 {% block content %}
 
+{% if request.is_pending_financial_verification %}
+  {{ Alert('Pending Financial Verification', fragment="fragments/pending_financial_verification.html") }}
+{% endif %}
 
 {% include 'requests/review_menu.html' %}
 
 <financial inline-template v-bind:initial-data='{{ f.data|mixedContentToJson }}'>
 <div class="col">
-
-  {% if request.is_pending_financial_verification %}
-    {{ Alert('Pending Financial Verification', fragment="fragments/pending_financial_verification.html") }}
-  {% endif %}
-
 
   {% if extended %}
     {{ Alert('Task Order not found in EDA',
