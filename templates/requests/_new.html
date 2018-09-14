@@ -1,10 +1,18 @@
 {% extends "base.html" %}
 
+{% from "components/alert.html" import Alert %}
+
 {% block content %}
 
 <div class="col">
 
   {% include 'requests/menu.html' %}
+
+  {% if review_comment %}
+    {{ Alert('Changes Requested',
+              message="<p>CCPO has requested changes to your submission with the following notes:<br>" + review_comment + "<br>Please contact info@jedi.cloud or 123-123-4567 for further discussion.</p>",
+              level='warning') }}
+  {% endif %}
 
   {% block form_action %}
     {% if request_id %}

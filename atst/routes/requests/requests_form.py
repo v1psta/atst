@@ -62,6 +62,7 @@ def requests_form_update(screen=1, request_id=None):
         next_screen=screen + 1,
         request_id=request_id,
         jedi_request=jedi_flow.request,
+        review_comment=request.review_comment,
         can_submit=jedi_flow.can_submit,
     )
 
