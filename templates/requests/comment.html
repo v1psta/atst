@@ -1,0 +1,5 @@
+{% from "components/alert.html" import Alert %}
+
+{{ Alert('Changes Requested',
+          message="<p>CCPO has requested changes to your submission with the following notes:<br>" + review_comment + "<br>Please contact info@jedi.cloud or 123-123-4567 for further discussion.</p>",
+          level='warning') }}

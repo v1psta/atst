@@ -3,9 +3,16 @@ import pytest
 from flask import url_for
 
 from atst.eda_client import MockEDAClient
+from atst.models.request_status_event import RequestStatus
 
 from tests.mocks import MOCK_REQUEST, MOCK_USER
-from tests.factories import PENumberFactory, RequestFactory, UserFactory
+from tests.factories import (
+    PENumberFactory,
+    RequestFactory,
+    UserFactory,
+    RequestStatusEventFactory,
+    RequestReviewFactory,
+)
 
 
 class TestPENumberInForm:
@@ -148,3 +155,21 @@ class TestPENumberInForm:
         response = self.submit_data(client, user, data, extended=True)
 
         assert response.status_code == 200
+
+
+def test_displays_ccpo_review_comment(user_session, client):
+    creator = UserFactory.create()
+    ccpo = UserFactory.from_atat_role("ccpo")
+    user_session(creator)
+    request = RequestFactory.create(creator=creator)
+    review_comment = "add all of the correct info, instead of the incorrect info"
+    request.status_events = [
+        RequestStatusEventFactory.create(
+            revision=request.latest_revision,
+            new_status=RequestStatus.CHANGES_REQUESTED_TO_FINVER,
+            review=RequestReviewFactory.create(reviewer=ccpo, comment=review_comment),
+        )
+    ]
+    response = client.get("/requests/verify/{}".format(request.id))
+    body = response.data.decode()
+    assert review_comment in body
