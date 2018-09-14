@@ -24,6 +24,18 @@ def test_ccpo_can_view_approval(user_session, client):
     assert response.status_code == 200
 
 
+def test_ccpo_prepopulated_as_mission_owner(user_session, client):
+    user = UserFactory.from_atat_role("ccpo")
+    user_session(user)
+
+    request = RequestFactory.create_with_status(RequestStatus.PENDING_CCPO_ACCEPTANCE)
+    response = client.get(url_for("requests.approval", request_id=request.id))
+
+    body = response.data.decode()
+    assert user.first_name in body
+    assert user.last_name in body
+
+
 def test_non_ccpo_cannot_view_approval(user_session, client):
     user = UserFactory.create()
     user_session(user)
