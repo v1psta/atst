@@ -142,7 +142,6 @@ def view_request_details(request_id=None):
         data=data,
         request_id=request.id,
         status=request.status_displayname,
-        pending_review=request.is_pending_ccpo_action,
         pending_ccpo_acceptance=request.is_pending_ccpo_acceptance,
         pending_ccpo_approval=request.is_pending_ccpo_approval,
         financial_verification=request.is_pending_financial_verification
