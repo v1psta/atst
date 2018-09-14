@@ -51,43 +51,6 @@
       </div>
     </div>
 
-
-    {% call Modal(name='rolesModal', dismissable=False) %}
-        <div class='block-list'>
-          <ul>
-            {% for choice in form.environment_role.choices %}
-            <li class='block-list__item block-list__item--selectable'>
-              {% if choice[0] != ""  %}
-                <input
-                  name='environment_role'
-                  type='radio'
-                  id="environment_role_{{ choice[0] }}"
-                  value='{{ choice[0] }}'
-                  checked='{{ value == choice[0] }}'
-                />
-                <label for="environment_role_{{ choice[0] }}">
-                  {% if choice[1].description %}
-                    <dl>
-                      <dt>{{ choice[1].name }}</dt>
-                      <dd>{{ choice[1].description }}</dd>
-                    </dl>
-                  {% else %}
-                    {{ choice[1].name }}
-                  {% endif %}
-                </label>
-                {% endif %}
-            </li>
-            {% endfor %}
-          </ul>
-        </div>
-        <div class='block-list__footer'>
-          <div class='action-group'>
-            <a v-on:click="closeModal('rolesModal')" class='action-group__action usa-button'>Select Access Role</a>
-            <a class='action-group__action icon-link icon-link--danger' v-on:click="closeModal('rolesModal')">Cancel</a>
-          </div>
-        </div>
-    {% endcall %}
-
     {% for project in projects %}
     <div is='toggler' default-visible class='block-list project-list-item'>
       <template slot-scope='{ isVisible, toggle }'>
@@ -101,11 +64,48 @@
         </header>
         <ul v-show='isVisible'>
           {% for env in project.environments %}
+            {% call Modal(name=env.name + 'RolesModal', dismissable=False) %}
+                <div class='block-list'>
+                  <ul>
+                    {% for choice in form.environment_role.choices %}
+                    <li class='block-list__item block-list__item--selectable'>
+                      {% if choice[0] != ""  %}
+                        <input
+                          name='environment_role'
+                          type='radio'
+                          id="environment_role_{{ choice[0] }}"
+                          value='{{ choice[0] }}'
+                          checked='{{ value == choice[0] }}'
+                        />
+                        <label for="environment_role_{{ choice[0] }}">
+                          {% if choice[1].description %}
+                            <dl>
+                              <dt>{{ choice[1].name }}</dt>
+                              <dd>{{ choice[1].description }}</dd>
+                            </dl>
+                          {% else %}
+                            {{ choice[1].name }}
+                          {% endif %}
+                        </label>
+                        {% endif %}
+                    </li>
+                    {% endfor %}
+                  </ul>
+                </div>
+                <div class='block-list__footer'>
+                  <div class='action-group'>
+                    <a v-on:click="closeModal('{{ env.name }}RolesModal')" class='action-group__action usa-button'>Select Access Role</a>
+                    <a class='action-group__action icon-link icon-link--danger' v-on:click="closeModal('{{ env.name }}RolesModal')">No Access</a>
+                  </div>
+                </div>
+            {% endcall %}
+
           <li class='block-list__item project-list-item__environment'>
             <span class='project-list-item__environment'>
               {{ env.name }}
             </span>
             <div class='project-list-item__environment__actions'>
+              <input type="hidden" name="{{ env.id }}">
               {% set role = 'no access' %}
               {% set label = 'label' %}
               {% for er in member.user.environment_roles %}
@@ -114,8 +114,10 @@
                   {% set label = 'label label--success' %}
                 {% endif %}
               {% endfor %}
-              <span class="{{ label }}">{{ role }}</span><button v-on:click="openModal('rolesModal')" type="button" class="icon-link">set role</button>
+              <span class="label {{ label }}">{{ role }}</span>
+              <button v-on:click="openModal('{{ env.name }}RolesModal')" type="button" class="icon-link">set role</button>
             </div>
+
           {% endfor %}
         </ul>
       </template>
