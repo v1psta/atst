@@ -195,12 +195,15 @@ class Requests(object):
 
         request = Requests.update(request.id, {"financial_verification": request_data})
 
+        AuditLog.log_event(user, request, "update financial verification")
+
         return request
 
     @classmethod
     def submit_financial_verification(cls, request):
         request = Requests.set_status(request, RequestStatus.PENDING_CCPO_APPROVAL)
         request = RequestsQuery.add_and_commit(request)
+        AuditLog.log_event(user, request, "submit financial verification")
         return request
 
     @classmethod
@@ -213,8 +216,10 @@ class Requests(object):
     def advance(cls, user, request, review_data):
         if request.status == RequestStatus.PENDING_CCPO_ACCEPTANCE:
             Requests.set_status(request, RequestStatus.PENDING_FINANCIAL_VERIFICATION)
+            AuditLog.log_event(user, request, "accept request")
         elif request.status == RequestStatus.PENDING_CCPO_APPROVAL:
             Requests.approve_and_create_workspace(request)
+            AuditLog.log_event(user, request, "approve request")
 
         return Requests._add_review(user, request, review_data)
 
@@ -222,8 +227,10 @@ class Requests(object):
     def request_changes(cls, user, request, review_data):
         if request.status == RequestStatus.PENDING_CCPO_ACCEPTANCE:
             Requests.set_status(request, RequestStatus.CHANGES_REQUESTED)
+            AuditLog.log_event(user, request, "request changes")
         elif request.status == RequestStatus.PENDING_CCPO_APPROVAL:
             Requests.set_status(request, RequestStatus.CHANGES_REQUESTED_TO_FINVER)
+            AuditLog.log_event(user, request, "request changes to financial verification")
 
         return Requests._add_review(user, request, review_data)
 
