@@ -17,7 +17,7 @@ class AuditEventQuery(Query):
 class AuditLog(object):
     @classmethod
     def log_event(cls, user, resource, action):
-        resource_name = resource.__class__.lower()
+        resource_name = type(resource).__name__.lower()
         audit_event = AuditEventQuery.create(
             user=user,
             resource_id=resource.id,
