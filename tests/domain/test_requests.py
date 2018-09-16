@@ -147,7 +147,7 @@ def test_update_financial_verification_without_task_order(
 ):
     request = RequestFactory.create()
     financial_data = {**request_financial_data, **extended_financial_verification_data}
-    Requests.update_financial_verification(request.id, financial_data)
+    Requests.update_financial_verification(request.creator, request.id, financial_data)
     assert request.task_order
     assert request.task_order.clin_0001 == int(
         extended_financial_verification_data["clin_0001"]
@@ -160,13 +160,13 @@ def test_update_financial_verification_with_task_order():
     task_order = TaskOrderFactory.create(source=TaskOrderSource.EDA)
     financial_data = {**request_financial_data, "task_order_number": task_order.number}
     request = RequestFactory.create()
-    Requests.update_financial_verification(request.id, financial_data)
+    Requests.update_financial_verification(request.creator, request.id, financial_data)
     assert request.task_order == task_order
 
 
 def test_update_financial_verification_with_invalid_task_order():
     request = RequestFactory.create()
-    Requests.update_financial_verification(request.id, request_financial_data)
+    Requests.update_financial_verification(request.creator, request.id, request_financial_data)
     assert not request.task_order
     assert "task_order_number" in request.body.get("financial_verification")
     assert (

@@ -166,7 +166,7 @@ class Requests(object):
         return Requests.status_count(RequestStatus.APPROVED)
 
     @classmethod
-    def update_financial_verification(cls, request_id, financial_data):
+    def update_financial_verification(cls, user, request_id, financial_data):
         request = RequestsQuery.get_with_lock(request_id)
 
         request_data = financial_data.copy()
@@ -200,7 +200,7 @@ class Requests(object):
         return request
 
     @classmethod
-    def submit_financial_verification(cls, request):
+    def submit_financial_verification(cls, user, request):
         request = Requests.set_status(request, RequestStatus.PENDING_CCPO_APPROVAL)
         request = RequestsQuery.add_and_commit(request)
         AuditLog.log_event(user, request, "submit financial verification")
