@@ -1,5 +1,12 @@
 import re
-from tests.factories import RequestFactory, UserFactory, RequestRevisionFactory
+from tests.factories import (
+    RequestFactory,
+    UserFactory,
+    RequestRevisionFactory,
+    RequestStatusEventFactory,
+    RequestReviewFactory,
+)
+from atst.models.request_status_event import RequestStatus
 from atst.domain.roles import Roles
 from atst.domain.requests import Requests
 from urllib.parse import urlencode
@@ -213,3 +220,21 @@ def test_can_review_data(user_session, client):
     # assert a sampling of the request data is on the review page
     assert request.body["primary_poc"]["fname_poc"] in body
     assert request.body["information_about_you"]["email_request"] in body
+
+
+def test_displays_ccpo_review_comment(user_session, client):
+    creator = UserFactory.create()
+    ccpo = UserFactory.from_atat_role("ccpo")
+    user_session(creator)
+    request = RequestFactory.create(creator=creator)
+    review_comment = "add all of the correct info, instead of the incorrect info"
+    request.status_events = [
+        RequestStatusEventFactory.create(
+            revision=request.latest_revision,
+            new_status=RequestStatus.CHANGES_REQUESTED,
+            review=RequestReviewFactory.create(reviewer=ccpo, comment=review_comment),
+        )
+    ]
+    response = client.get("/requests/new/1/{}".format(request.id))
+    body = response.data.decode()
+    assert review_comment in body

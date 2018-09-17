@@ -39,6 +39,7 @@ def financial_verification(request_id=None):
         "requests/financial_verification.html",
         f=form,
         request=request,
+        review_comment=request.review_comment,
         extended=is_extended(request),
     )
 
