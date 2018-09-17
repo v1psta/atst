@@ -1,5 +1,6 @@
 import re
-from wtforms.fields.html5 import EmailField
+import pendulum
+from wtforms.fields.html5 import DateField, EmailField
 from wtforms.fields import StringField, FileField
 from wtforms.validators import InputRequired, Required, Email, Regexp
 from flask_wtf.file import FileAllowed
@@ -11,6 +12,7 @@ from atst.domain.task_orders import TaskOrders
 from .fields import NewlineListField, SelectField
 from .forms import ValidatedForm
 from .data import FUNDING_TYPES
+from .validators import DateRange
 
 
 PE_REGEX = re.compile(
@@ -165,6 +167,20 @@ class ExtendedFinancialForm(BaseFinancialForm):
     )
 
     funding_type_other = StringField("If other, please specify")
+
+    expiration_date = DateField(
+        "Task Order Expiration Date",
+        description="Please enter the expiration date for the Task Order",
+        validators=[
+            Required(),
+            DateRange(
+                lower_bound=pendulum.duration(days=0),
+                upper_bound=pendulum.duration(years=100),
+                message="Must be a date in the future.",
+            ),
+        ],
+        format="%m/%d/%Y",
+    )
 
     clin_0001 = StringField(
         "<dl><dt>CLIN 0001</dt> - <dd>Unclassified IaaS and PaaS Amount</dd></dl>",

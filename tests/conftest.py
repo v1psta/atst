@@ -1,4 +1,5 @@
 import os
+import datetime
 import pytest
 import alembic.config
 import alembic.command
@@ -124,6 +125,7 @@ def extended_financial_verification_data(pdf_upload):
     return {
         "funding_type": "RDTE",
         "funding_type_other": "other",
+        "expiration_date": "1/1/{}".format(datetime.date.today().year + 1),
         "clin_0001": "50000",
         "clin_0003": "13000",
         "clin_1001": "30000",

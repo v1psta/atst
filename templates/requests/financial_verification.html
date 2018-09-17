@@ -3,6 +3,7 @@
 {% from "components/alert.html" import Alert %}
 {% from "components/text_input.html" import TextInput %}
 {% from "components/options_input.html" import OptionsInput %}
+{% from "components/date_input.html" import DateInput %}
 
 {% block content %}
 
@@ -71,6 +72,8 @@
             <template v-if="funding_type == 'OTHER'" v-cloak>
               {{ TextInput(f.funding_type_other) }}
             </template>
+
+            {{ DateInput(f.expiration_date, placeholder='MM / DD / YYYY', validation='date', tooltip='Please enter the expiration date for the task order only and do not include options that you may choose to exercise in the future.') }}
 
             {{ TextInput(
               f.clin_0001,
