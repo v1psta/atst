@@ -62,6 +62,7 @@ def requests_form_update(screen=1, request_id=None):
         next_screen=screen + 1,
         request_id=request_id,
         jedi_request=jedi_flow.request,
+        review_comment=request.review_comment,
         can_submit=jedi_flow.can_submit,
     )
 
@@ -132,6 +133,10 @@ def view_request_details(request_id=None):
         or request.is_approved
         or request.is_pending_financial_verification_changes
     )
+    requires_fv_action = (
+        request.is_pending_financial_verification
+        or request.is_pending_financial_verification_changes
+    )
 
     data = request.body
     if financial_review and request.task_order:
@@ -140,10 +145,6 @@ def view_request_details(request_id=None):
     return render_template(
         "requests/details.html",
         data=data,
-        request_id=request.id,
-        status=request.status_displayname,
-        pending_review=request.is_pending_ccpo_action,
-        financial_verification=request.is_pending_financial_verification
-        or request.is_pending_financial_verification_changes,
-        financial_review=financial_review,
+        request=request,
+        requires_fv_action=requires_fv_action,
     )

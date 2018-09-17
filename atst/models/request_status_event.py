@@ -48,6 +48,8 @@ class RequestStatusEvent(Base):
     def log_name(self):
         if self.new_status == RequestStatus.CHANGES_REQUESTED:
             return "Denied"
+        if self.new_status == RequestStatus.CHANGES_REQUESTED_TO_FINVER:
+            return "Denied"
         elif self.new_status == RequestStatus.PENDING_FINANCIAL_VERIFICATION:
             return "Accepted"
         else:

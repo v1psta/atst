@@ -87,7 +87,7 @@ def test_can_submit_request_approval(client, user_session):
         status=RequestStatus.PENDING_CCPO_ACCEPTANCE
     )
     review_data = RequestReviewFactory.dictionary()
-    review_data["approved"] = True
+    review_data["review"] = "approving"
     response = client.post(
         url_for("requests.submit_approval", request_id=request.id), data=review_data
     )
@@ -102,7 +102,7 @@ def test_can_submit_request_denial(client, user_session):
         status=RequestStatus.PENDING_CCPO_ACCEPTANCE
     )
     review_data = RequestReviewFactory.dictionary()
-    review_data["denied"] = True
+    review_data["review"] = "denying"
     response = client.post(
         url_for("requests.submit_approval", request_id=request.id), data=review_data
     )

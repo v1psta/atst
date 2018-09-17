@@ -49,10 +49,9 @@ def login_redirect():
     return redirect(url_for(".home"))
 
 
-def _is_valid_certificate(request):
-    cert = request.environ.get("HTTP_X_SSL_CLIENT_CERT")
-    if cert:
-        result = app.crl_validator.validate(cert.encode())
-        return result
-    else:
-        return False
+@bp.route("/logout")
+def logout():
+    if session.get("user_id"):
+        del (session["user_id"])
+
+    return redirect(url_for(".home"))

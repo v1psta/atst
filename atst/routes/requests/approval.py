@@ -12,7 +12,6 @@ from . import requests_bp
 from atst.domain.requests import Requests
 from atst.domain.exceptions import NotFoundError
 from atst.forms.ccpo_review import CCPOReviewForm
-from atst.forms.internal_comment import InternalCommentForm
 
 
 def map_ccpo_authorizing(user):
@@ -26,8 +25,6 @@ def render_approval(request, form=None):
     if pending_final_approval and request.task_order:
         data["task_order"] = request.task_order.to_dictionary()
 
-    internal_comment_form = InternalCommentForm(text=request.internal_comments_text)
-
     if not form:
         mo_data = map_ccpo_authorizing(g.current_user)
         form = CCPOReviewForm(data=mo_data)
@@ -35,13 +32,12 @@ def render_approval(request, form=None):
     return render_template(
         "requests/approval.html",
         data=data,
-        status_events=reversed(request.status_events),
+        reviews=list(reversed(request.reviews)),
         request=request,
         current_status=request.status.value,
         pending_review=pending_review,
         financial_review=pending_final_approval,
         f=form or CCPOReviewForm(),
-        internal_comment_form=internal_comment_form,
     )
 
 
@@ -58,7 +54,7 @@ def submit_approval(request_id):
 
     form = CCPOReviewForm(http_request.form)
     if form.validate():
-        if http_request.form.get("approved"):
+        if http_request.form.get("review") == "approving":
             Requests.advance(g.current_user, request, form.data)
         else:
             Requests.request_changes(g.current_user, request, form.data)
@@ -84,13 +80,3 @@ def task_order_pdf_download(request_id):
 
     else:
         raise NotFoundError("task_order pdf")
-
-
-@requests_bp.route("/requests/internal_comments/<string:request_id>", methods=["POST"])
-def create_internal_comment(request_id):
-    form = InternalCommentForm(http_request.form)
-    if form.validate():
-        request = Requests.get(g.current_user, request_id)
-        Requests.update_internal_comments(g.current_user, request, form.data["text"])
-
-    return redirect(url_for("requests.approval", request_id=request_id))

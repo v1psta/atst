@@ -16,8 +16,9 @@
 {% endif %}
 
     <section class='panel'>
-      <header class='panel__heading request-approval__heading'>
-        <h1 class='h2'>Request #{{ request.id }}</h1>
+      <header class='panel__heading panel__heading--divider request-approval__heading'>
+        <h1 class='h2'>Request #{{ request.id }}
+        </h1>
         <span class='label label--info'>{{ current_status }}</span>
       </header>
 
@@ -32,153 +33,162 @@
     </section>
 
     {% if pending_review %}
-    <form method="POST" action="{{ url_for("requests.submit_approval", request_id=request.id) }}" autocomplete="off">
-      {{ f.csrf_token }}
-      <section class='panel'>
-        <header class='panel__heading'>
-          <h2 class='h3'>Approval Notes</h2>
-        </header>
+    <section class='request-approval__review'>
+      <form method="POST" action="{{ url_for("requests.submit_approval", request_id=request.id) }}" autocomplete="off">
+        {{ f.csrf_token }}
 
-        <div class='panel__content'>
+        <ccpo-approval inline-template>
+          <div>
+            <div class='panel'>
+              <div class='panel__content'>
+                <h2>Review this Request</h2>
 
-          <div class="form__sub-fields">
+                <div class='usa-input'>
+                  <fieldset class='usa-input__choices usa-input__choices--inline'>
+                    <input v-on:change='setReview' type='radio' name='review' id='review-approving' value='approving'/>
+                    <label for='review-approving'>Ready for approval</label>
 
-            <h3>Instructions for the Requestor</h3>
+                    <input v-on:change='setReview' type='radio' name='review' id='review-denying' value='denying'/>
+                    <label for='review-denying'>Request revisions</label>
+                  </fieldset>
+                </div>
 
-            Provide instructions or notes for additional information that is necessary to approve the request here. The requestor may then re-submit the updated request or initiate contact outside of AT-AT if further discussion is required. <b>These notes will be visible to the person making the JEDI Cloud request</b>.
+                <div v-if='approving || denying' class='form__sub-fields' v-cloak>
+                  <h3>Message to Requestor <span class='subtitle'>(optional)</span></h3>
+                  <div v-if='approving' key='approving' v-cloak>
+                    {{ TextInput(
+                      f.comment,
+                      label='Approval comments or notes',
+                      description='Provide any comments or notes regarding the approval of this request. <strong>This message will be shared with the person making the JEDI request.</strong>.',
+                      paragraph=True,
+                      noMaxWidth=True
+                    ) }}
+                  </div>
 
-            {{ TextInput(f.comment, paragraph=True, placeholder="Add notes or comments explaining what changes are being requested or why further discussion is needed about this request.") }}
+                  <div v-else key='denying' v-cloak>
+                    {{ TextInput(
+                      f.comment,
+                      label='Revision instructions or notes',
+                      paragraph=True,
+                      noMaxWidth=True
+                    ) }}
+                  </div>
+                </div>
 
-          </div>
+                <div v-if='approving' class='form__sub-fields' v-cloak>
 
-          <div class="form-row">
-            <div class="form-col">
-              <h3>Authorizing Officials</h3>
-              <p>This section is not visible to the person making the request. It is only viewable by CCPO staff.</p>
-              <p>Provide the name of the key officials for both parties that have authorized this request to move forward.</p>
+                  <h3>Authorizing Officials <span class='subtitle'>(optional)</span></h3>
+                  <p>Provide the name of the key officials for both parties that have authorized this request to move forward. <strong>This section is not visible to the person making the request. It is only viewable by CCPO staff.</strong></p>
 
+                  <hr />
+
+                  <h4>Mission Authorizing Official</h4>
+
+                  <div class='form-row'>
+                    <div class='form-col form-col--half'>
+                      {{ TextInput(f.fname_mao, placeholder="First name of mission authorizing official") }}
+                    </div>
+
+                    <div class='form-col form-col--half'>
+                      {{ TextInput(f.lname_mao, placeholder="Last name of mission authorizing official") }}
+                    </div>
+                  </div>
+
+                  <div class='form-row'>
+                    <div class='form-col form-col--half'>
+                      {{ TextInput(f.email_mao, placeholder="name@mail.mil", validation='email') }}
+                    </div>
+
+                    <div class='form-col form-col--half'>
+                      {{ TextInput(f.phone_mao, placeholder="(123) 456-7890", validation='usPhone') }}
+                    </div>
+                  </div>
+
+                  <hr />
+
+                  <h4>CCPO Authorizing Official</h4>
+
+                  <div class='form-row'>
+                    <div class='form-col form-col--half'>
+                      {{ TextInput(f.fname_ccpo, placeholder="First name of CCPO authorizing official") }}
+                    </div>
+
+                    <div class='form-col form-col--half'>
+                      {{ TextInput(f.lname_ccpo, placeholder="Last name of CCPO authorizing official") }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div v-if='approving || denying' class='action-group' v-cloak>
+              <button v-if='approving' type="submit" name="approved" class='usa-button usa-button-big'>Approve Request</button>
+              <button v-if='denying' type="submit" name="denied" class='usa-button usa-button-big'>Request Revisions</button>
+              <a href='{{ url_for("requests.requests_index") }}' class='icon-link'>
+                {{ Icon('x') }}
+                <span>Cancel</span>
+              </a>
             </div>
           </div>
-          <h4 class="h3">Mission Authorizing Official</h4>
-
-
-          <div class='form-row'>
-
-            <div class='form-col form-col--half'>
-              {{ TextInput(f.fname_mao, placeholder="First name of mission authorizing official") }}
-            </div>
-
-            <div class='form-col form-col--half'>
-              {{ TextInput(f.lname_mao, placeholder="Last name of mission authorizing official") }}
-            </div>
-
-          </div>
-
-          <div class='form-row'>
-
-            <div class='form-col form-col--half'>
-              {{ TextInput(f.email_mao, placeholder="name@mail.mil") }}
-            </div>
-
-
-            <div class='form-col form-col--half'>
-              {{ TextInput(f.phone_mao, placeholder="(123) 456-7890", validation='usPhone') }}
-            </div>
-
-          </div>
-
-
-          <h4 class="h3">CCPO Authorizing Official</h4>
-
-          <div class='form-row'>
-
-            <div class='form-col form-col--half'>
-              {{ TextInput(f.fname_ccpo, placeholder="First name of CCPO authorizing official") }}
-            </div>
-
-            <div class='form-col form-col--half'>
-              {{ TextInput(f.lname_ccpo, placeholder="Last name of CCPO authorizing official") }}
-            </div>
-
-          </div>
-
-
-
-      </section>
-
-      <section class='action-group'>
-        <input type="submit" name="approved" class='usa-button usa-button-big' value='Approve Request'>
-        <input type="submit" name="denied" class='usa-button usa-button-big usa-button-secondary' value='Mark as Changes Requested'>
-        <a href='{{ url_for("requests.requests_index") }}' class='icon-link'>
-          {{ Icon('x') }}
-          <span>Cancel</span>
-        </a>
-      </section>
-    </form>
+        </ccpo-approval>
+      </form>
+    </section>
     {% endif %}
 
-    <section class='panel'>
-      <h4 class="h3">CCPO Internal Notes</h4>
-      <p>You may add additional comments and notes for internal CCPO reference and follow-up here.</p>
-      <div class='form-row'>
-        <div class='form-col'>
-          <form method="POST" action="{{ url_for('requests.create_internal_comment', request_id=request.id) }}">
-            {{ internal_comment_form.csrf_token }}
-            {{ TextInput(internal_comment_form.text, paragraph=True) }}
-            <button type="submit">Leave comment</button>
-          </form>
-        </div>
-      </div>
-    </div>
-    </section>
+    <section>
+      <div class='panel'>
+        <header class='panel__heading panel__heading--divider'>
+          <h2 class='h3 request-approval__columns__heading'>CCPO Activity Log</h2>
+        </header>
 
-    <section class='panel'>
-      <header class='panel__heading'>
-        <h2 class='h3 request-approval__columns__heading'>Approval Log</h2>
-      </header>
-      <div>
         <div class='approval-log'>
+          {% if reviews %}
           <ol>
+            {% for review in reviews %}
+              <li>
+                <article class='approval-log__log-item'>
+                  <div>
+                    {{ review.log_name }}
+                    <h3 class='approval-log__log-item__header'>{{ review.status.log_name }} by {{ review.full_name_reviewer }}</h3>
+                    {% if review.comment %}
+                      <p>{{ review.comment }}</p>
+                    {% endif %}
 
-            {% for status_event in status_events %}
-              {% if status_event.review %}
-                <li>
-                  <article class='approval-log__log-item'>
-                    <div>
-                      <h3 class='approval-log__log-item__header'>{{ status_event.log_name }} by {{ status_event.review.full_name_reviewer }}</h3>
-                      {% if status_event.review.comment %}
-                        <p>{{ status_event.review.comment }}</p>
+                    <div class='approval-log__behalfs'>
+                      {% if review.lname_mao %}
+                        <div class='approval-log__behalf'>
+                          <h3 class='approval-log__log-item__header'>Mission Owner approval on behalf of:</h3>
+                          <span>{{ review.full_name_mao }}</span>
+                          <span>{{ review.email_mao }}</span>
+                          <span>{{ review.phone_mao }}</span>
+                        </div>
                       {% endif %}
 
-                      <div class='approval-log__behalfs'>
-                        {% if status_event.review.lname_mao %}
-                          <div class='approval-log__behalf'>
-                            <h3 class='approval-log__log-item__header'>Mission Owner approval on behalf of:</h3>
-                            <span>{{ status_event.review.full_name_mao }}</span>
-                            <span>{{ status_event.review.email_mao }}</span>
-                            <span>{{ status_event.review.phone_mao }}</span>
-                          </div>
-                        {% endif %}
-
-                        {% if status_event.review.lname_ccpo %}
-                          <div class='approval-log__behalf'>
-                            <h3 class='approval-log__log-item__header'>CCPO approval on behalf of:</h3>
-                            <span>{{ status_event.review.full_name_ccpo }}</span>
-                          </div>
-                        {% endif %}
-                      </div>
+                      {% if review.lname_ccpo %}
+                        <div class='approval-log__behalf'>
+                          <h3 class='approval-log__log-item__header'>CCPO approval on behalf of:</h3>
+                          <span>{{ review.full_name_ccpo }}</span>
+                        </div>
+                      {% endif %}
                     </div>
-                    {% set timestamp=status_event.time_created | formattedDate("%Y-%m-%d %H:%M:%S %Z") %}
-                    <footer class='approval-log__log-item__timestamp'><time datetime='{{ timestamp }}'>{{ timestamp }}</time></footer>
-                  </article>
-                </li>
-              {% endif %}
+                  </div>
+                  {% set timestamp=review.status.time_created | formattedDate("%Y-%m-%d %H:%M:%S %Z") %}
+                  <footer class='approval-log__log-item__timestamp'>
+                    <local-datetime timestamp='{{ timestamp }}'></local-datetime>
+                  </footer>
+                </article>
+              </li>
             {% endfor %}
-
           </ol>
+          {% else %}
+            <div class='panel__content'>
+              <p class='h4'>No CCPO approvals or request changes have been recorded yet.</p>
+            </div>
+          {% endif %}
         </div>
       </div>
     </section>
+
 </article>
 
 {% endblock %}

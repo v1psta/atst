@@ -6,6 +6,10 @@
 
   {% include 'requests/menu.html' %}
 
+  {% if review_comment %}
+    {% include 'requests/comment.html' %}
+  {% endif %}
+
   {% block form_action %}
     {% if request_id %}
       <form method='POST' action="{{ url_for('requests.requests_form_update', screen=current, request_id=request_id) }}" autocomplete="off">

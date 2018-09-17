@@ -194,3 +194,13 @@ class Request(Base):
     @property
     def is_approved(self):
         return self.status == RequestStatus.APPROVED
+
+    @property
+    def review_comment(self):
+        if (
+            self.status == RequestStatus.CHANGES_REQUESTED
+            or self.status == RequestStatus.CHANGES_REQUESTED_TO_FINVER
+        ):
+            review = self.latest_status.review
+            if review:
+                return review.comment

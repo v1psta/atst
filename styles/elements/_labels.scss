@@ -15,6 +15,7 @@
   margin: 0 $gap;
   padding: 0 $gap;
   border-radius: $gap / 2;
+  white-space: nowrap;
 
   &.label--info {
     background-color: $color-primary;
