@@ -135,24 +135,6 @@
     </section>
     {% endif %}
 
-
-    <section class='internal-notes' id='ccpo-notes'>
-      <form method="POST" action="{{ url_for('requests.create_internal_comment', request_id=request.id) }}">
-        <div class='panel'>
-          <div class='panel__content'>
-
-              {{ internal_comment_form.csrf_token }}
-              {{ TextInput(internal_comment_form.text, paragraph=True, noMaxWidth=True) }}
-
-          </div>
-        </div>
-
-        <div class='action-group action-group--tight'>
-          <button class='usa-button' type="submit">Save Notes</button>
-        </div>
-      </form>
-    </section>
-
     <section>
       <div class='panel'>
         <header class='panel__heading panel__heading--divider'>
