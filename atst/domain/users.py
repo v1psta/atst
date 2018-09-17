@@ -6,6 +6,7 @@ from atst.models import User
 
 from .roles import Roles
 from .exceptions import NotFoundError, AlreadyExistsError
+from atst.domain.audit_log import AuditLog
 
 
 class Users(object):
