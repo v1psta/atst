@@ -1,4 +1,11 @@
-export const formatDollars = value => `$${value.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`
+export const formatDollars = (value, cents = true) => {
+  if (typeof value === 'number') {
+    return cents
+      ? `$${value.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`
+      : `$${value.toFixed(0).replace(/\d(?=(\d{3}))/g, '$&,')}`
+  }
+  return ''
+}
 
 export const abbreviateDollars = (value, decimals = 1) => {
   if (value === null) { return null } // terminate early
