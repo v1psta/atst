@@ -76,7 +76,7 @@ def logout():
     return redirect(url_for(".home"))
 
 
-@bp.route("/audit-log")
-def audit_log():
+@bp.route("/activity-history")
+def activity_history():
     audit_events = AuditLog.get_all_events(g.current_user)
     return render_template("audit_log.html", audit_events=audit_events)
