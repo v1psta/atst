@@ -32,7 +32,7 @@ class TaskOrder(Base):
     clin_1003 = Column(Integer)
     clin_2001 = Column(Integer)
     clin_2003 = Column(Integer)
-    expiration_date = Column(Date())
+    expiration_date = Column(Date)
 
     attachment_id = Column(ForeignKey("attachments.id"))
     pdf = relationship("Attachment")
