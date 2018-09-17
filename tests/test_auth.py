@@ -16,6 +16,17 @@ def _fetch_user_info(c, t):
     return MOCK_USER
 
 
+def _login(client, verify="SUCCESS", sdn=DOD_SDN, cert=""):
+    return client.get(
+        url_for("atst.login_redirect"),
+        environ_base={
+            "HTTP_X_SSL_CLIENT_VERIFY": verify,
+            "HTTP_X_SSL_CLIENT_S_DN": sdn,
+            "HTTP_X_SSL_CLIENT_CERT": cert,
+        },
+    )
+
+
 def test_successful_login_redirect_non_ccpo(client, monkeypatch):
     monkeypatch.setattr(
         "atst.domain.authnid.AuthenticationContext.authenticate", lambda *args: True
@@ -25,14 +36,7 @@ def test_successful_login_redirect_non_ccpo(client, monkeypatch):
         lambda *args: UserFactory.create(),
     )
 
-    resp = client.get(
-        "/login-redirect",
-        environ_base={
-            "HTTP_X_SSL_CLIENT_VERIFY": "SUCCESS",
-            "HTTP_X_SSL_CLIENT_S_DN": "",
-            "HTTP_X_SSL_CLIENT_CERT": "",
-        },
-    )
+    resp = _login(client)
 
     assert resp.status_code == 302
     assert "home" in resp.headers["Location"]
@@ -49,14 +53,7 @@ def test_successful_login_redirect_ccpo(client, monkeypatch):
         lambda *args: UserFactory.create(atat_role=role),
     )
 
-    resp = client.get(
-        "/login-redirect",
-        environ_base={
-            "HTTP_X_SSL_CLIENT_VERIFY": "SUCCESS",
-            "HTTP_X_SSL_CLIENT_S_DN": "",
-            "HTTP_X_SSL_CLIENT_CERT": "",
-        },
-    )
+    resp = _login(client)
 
     assert resp.status_code == 302
     assert "home" in resp.headers["Location"]
@@ -64,7 +61,7 @@ def test_successful_login_redirect_ccpo(client, monkeypatch):
 
 
 def test_unsuccessful_login_redirect(client, monkeypatch):
-    resp = client.get("/login-redirect")
+    resp = client.get(url_for("atst.login_redirect"))
 
     assert resp.status_code == 401
     assert "user_id" not in session
@@ -101,26 +98,12 @@ def test_crl_validation_on_login(client):
     bad_cert = open("ssl/client-certs/bad-atat.mil.crt").read()
 
     # bad cert is on the test CRL
-    resp = client.get(
-        "/login-redirect",
-        environ_base={
-            "HTTP_X_SSL_CLIENT_VERIFY": "SUCCESS",
-            "HTTP_X_SSL_CLIENT_S_DN": DOD_SDN,
-            "HTTP_X_SSL_CLIENT_CERT": bad_cert,
-        },
-    )
+    resp = _login(client, cert=bad_cert)
     assert resp.status_code == 401
     assert "user_id" not in session
 
     # good cert is not on the test CRL, passes
-    resp = client.get(
-        "/login-redirect",
-        environ_base={
-            "HTTP_X_SSL_CLIENT_VERIFY": "SUCCESS",
-            "HTTP_X_SSL_CLIENT_S_DN": DOD_SDN,
-            "HTTP_X_SSL_CLIENT_CERT": good_cert,
-        },
-    )
+    resp = _login(client, cert=good_cert)
     assert session["user_id"]
 
 
@@ -134,14 +117,7 @@ def test_creates_new_user_on_login(monkeypatch, client):
     with pytest.raises(NotFoundError):
         Users.get_by_dod_id(DOD_SDN_INFO["dod_id"])
 
-    resp = client.get(
-        "/login-redirect",
-        environ_base={
-            "HTTP_X_SSL_CLIENT_VERIFY": "SUCCESS",
-            "HTTP_X_SSL_CLIENT_S_DN": DOD_SDN,
-            "HTTP_X_SSL_CLIENT_CERT": cert_file,
-        },
-    )
+    resp = _login(client, cert=cert_file)
 
     user = Users.get_by_dod_id(DOD_SDN_INFO["dod_id"])
     assert user.first_name == DOD_SDN_INFO["first_name"]
@@ -156,14 +132,7 @@ def test_creates_new_user_without_email_on_login(monkeypatch, client):
     with pytest.raises(NotFoundError):
         Users.get_by_dod_id(DOD_SDN_INFO["dod_id"])
 
-    resp = client.get(
-        "/login-redirect",
-        environ_base={
-            "HTTP_X_SSL_CLIENT_VERIFY": "SUCCESS",
-            "HTTP_X_SSL_CLIENT_S_DN": DOD_SDN,
-            "HTTP_X_SSL_CLIENT_CERT": cert_file,
-        },
-    )
+    resp = _login(client, cert=cert_file)
 
     user = Users.get_by_dod_id(DOD_SDN_INFO["dod_id"])
     assert user.first_name == DOD_SDN_INFO["first_name"]
@@ -180,14 +149,7 @@ def test_logout(app, client, monkeypatch):
         lambda s: UserFactory.create(),
     )
     # create a real session
-    resp = client.get(
-        url_for("atst.login_redirect"),
-        environ_base={
-            "HTTP_X_SSL_CLIENT_VERIFY": "SUCCESS",
-            "HTTP_X_SSL_CLIENT_S_DN": DOD_SDN,
-            "HTTP_X_SSL_CLIENT_CERT": "",
-        },
-    )
+    resp = _login(client)
     resp_success = client.get(url_for("requests.requests_index"))
     # verify session is valid
     assert resp_success.status_code == 200
