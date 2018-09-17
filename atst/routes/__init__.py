@@ -17,7 +17,6 @@ def root():
 
 @bp.route("/home")
 def home():
-    is_request_owner = bool(g.current_user.owned_requests)
     num_workspaces = len(g.current_user.workspace_roles)
 
     if num_workspaces == 0:
