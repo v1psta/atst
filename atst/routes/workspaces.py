@@ -51,6 +51,19 @@ def workspaces():
     return render_template("workspaces/index.html", page=5, workspaces=workspaces)
 
 
+@bp.route("/workspaces/<workspace_id>/edit")
+def workspace(workspace_id):
+    workspace = Workspaces.get_for_update_information(g.current_user, workspace_id)
+    form = WorkspaceForm(data={"name": workspace.name})
+    return render_template("workspaces/edit.html", form=form, workspace=workspace)
+
+
+@bp.route("/workspaces/<workspace_id>/projects")
+def workspace_projects(workspace_id):
+    workspace = Workspaces.get(g.current_user, workspace_id)
+    return render_template("workspaces/projects/index.html", workspace=workspace)
+
+
 @bp.route("/workspaces/<workspace_id>/edit", methods=["POST"])
 def edit_workspace(workspace_id):
     workspace = Workspaces.get_for_update_information(g.current_user, workspace_id)
@@ -61,14 +74,7 @@ def edit_workspace(workspace_id):
             url_for("workspaces.workspace_projects", workspace_id=workspace.id)
         )
     else:
-        # return render_template("workspaces/edit.html", form=form, workspace=workspace)
-        pass
-
-
-@bp.route("/workspaces/<workspace_id>/projects")
-def workspace_projects(workspace_id):
-    workspace = Workspaces.get(g.current_user, workspace_id)
-    return render_template("workspaces/projects/index.html", workspace=workspace)
+        return render_template("workspaces/edit.html", form=form, workspace=workspace)
 
 
 @bp.route("/workspaces/<workspace_id>")
