@@ -44,6 +44,7 @@ class Environments(object):
             .all()
         )
 
+    @classmethod
     def get(cls, environment_id):
         try:
             env = db.session.query(Environment).filter_by(id=environment_id).one()
@@ -56,11 +57,9 @@ class Environments(object):
     def update_environment_role(cls, environment_data, workspace_user):
         # TODO need to check permissions?
         new_role = environment_data["user_role_name"]
-        environment = Environments.get(cls=cls, environment_id=environment_data["id"])
-        if workspace_user.has_environment_roles:
-            env_role = EnvironmentRole.get(
-                workspace_user.user_id, environment_data["id"]
-            )
+        environment = Environments.get(environment_data["id"])
+        env_role = EnvironmentRole.get(member.user_id, environment_data["id"])
+        if env_role:
             env_role.role = new_role
         else:
             env_role = EnvironmentRole(

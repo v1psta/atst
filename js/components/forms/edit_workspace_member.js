@@ -28,13 +28,6 @@ export default {
   methods: {
     change: function (e) {
       this.value = e.target.value
-    },
-    readableName: function (role) {
-      return role.replace(/[_]/g, " ")
-    },
-  },
-
-  mounted: function () {
-    console.log(this.initialData, this.choices)
+    }
   }
 }
