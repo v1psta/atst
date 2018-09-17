@@ -6,8 +6,9 @@
   <div>
     <dt>{{ title | safe }}</dt>
     <dd>
-      {% if data[section] and data[section][item_name] %}
-        {{ data[section][item_name] | findFilter(filter, filter_args) }}
+      {% set value = data.get(section, {}).get(item_name) %}
+      {% if value is not none %}
+        {{ value | findFilter(filter, filter_args) }}
       {% else %}
         {{ RequiredLabel() }}
       {% endif %}
