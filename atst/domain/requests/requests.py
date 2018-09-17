@@ -230,7 +230,9 @@ class Requests(object):
             AuditLog.log_event(user, request, "request changes")
         elif request.status == RequestStatus.PENDING_CCPO_APPROVAL:
             Requests.set_status(request, RequestStatus.CHANGES_REQUESTED_TO_FINVER)
-            AuditLog.log_event(user, request, "request changes to financial verification")
+            AuditLog.log_event(
+                user, request, "request changes to financial verification"
+            )
 
         return Requests._add_review(user, request, review_data)
 

@@ -32,7 +32,9 @@ def test_log_system_event():
 
 def test_log_workspace_event():
     workspace = WorkspaceFactory.create()
-    event = AuditLog.log_workspace_event(workspace.owner, workspace, workspace, "create workspace")
+    event = AuditLog.log_workspace_event(
+        workspace.owner, workspace, workspace, "create workspace"
+    )
 
     assert event.workspace_id == workspace.id
 

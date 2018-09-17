@@ -17,27 +17,17 @@ class AuditEventQuery(Query):
 class AuditLog(object):
     @classmethod
     def log_event(cls, user, resource, action):
-        return cls._log(
-            user=user,
-            resource=resource,
-            action=action,
-        )
+        return cls._log(user=user, resource=resource, action=action)
 
     @classmethod
     def log_workspace_event(cls, user, workspace, resource, action):
         return cls._log(
-            user=user,
-            workspace_id=workspace.id,
-            resource=resource,
-            action=action
+            user=user, workspace_id=workspace.id, resource=resource, action=action
         )
 
     @classmethod
     def log_system_event(cls, resource, action):
-        return cls._log(
-            resource=resource,
-            action=action
-        )
+        return cls._log(resource=resource, action=action)
 
     @classmethod
     def get_all_events(cls, user):

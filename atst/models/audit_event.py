@@ -21,10 +21,14 @@ class AuditEvent(Base, mixins.TimestampsMixin):
     action = Column(String())
 
     def __str__(self):
-        full_action = "{} on {} {}".format(self.action, self.resource_name, self.resource_id)
+        full_action = "{} on {} {}".format(
+            self.action, self.resource_name, self.resource_id
+        )
 
         if self.user and self.workspace:
-            return "{} performed {} in workspace {}".format(self.user.full_name, full_action, self.workspace_id)
+            return "{} performed {} in workspace {}".format(
+                self.user.full_name, full_action, self.workspace_id
+            )
         if self.user:
             return "{} performed {}".format(self.user.full_name, full_action)
         else:

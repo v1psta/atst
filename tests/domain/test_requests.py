@@ -166,7 +166,9 @@ def test_update_financial_verification_with_task_order():
 
 def test_update_financial_verification_with_invalid_task_order():
     request = RequestFactory.create()
-    Requests.update_financial_verification(request.creator, request.id, request_financial_data)
+    Requests.update_financial_verification(
+        request.creator, request.id, request_financial_data
+    )
     assert not request.task_order
     assert "task_order_number" in request.body.get("financial_verification")
     assert (

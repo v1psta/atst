@@ -19,7 +19,12 @@ class Environments(object):
         db.session.add(environment_role)
         db.session.commit()
 
-        AuditLog.log_workspace_event(user, environment.project.workspace, environment_role, "add environment role")
+        AuditLog.log_workspace_event(
+            user,
+            environment.project.workspace,
+            environment_role,
+            "add environment role",
+        )
 
         return environment
 
@@ -39,5 +44,7 @@ class Environments(object):
         environment = Environment(project=project, name=name)
         db.session.add(environment)
         db.session.commit()
-        AuditLog.log_workspace_event(user, project.workspace, environment, "create environment")
+        AuditLog.log_workspace_event(
+            user, project.workspace, environment, "create environment"
+        )
         return environment
