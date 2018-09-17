@@ -234,3 +234,19 @@ def test_for_user_returns_all_workspaces_for_ccpo(workspace, workspace_owner):
 
     sams_workspaces = Workspaces.for_user(sam)
     assert len(sams_workspaces) == 2
+
+
+def test_get_for_update_information():
+    workspace_owner = UserFactory.create()
+    workspace = Workspaces.create(RequestFactory.create(creator=workspace_owner))
+    owner_ws = Workspaces.get_for_update_information(workspace_owner, workspace.id)
+    assert workspace == owner_ws
+
+    admin = UserFactory.create()
+    Workspaces.add_member(workspace, admin, "admin")
+    admin_ws = Workspaces.get_for_update_information(admin, workspace.id)
+    assert workspace == admin_ws
+
+    ccpo = UserFactory.from_atat_role("ccpo")
+    with pytest.raises(UnauthorizedError):
+        Workspaces.get_for_update_information(ccpo, workspace.id)

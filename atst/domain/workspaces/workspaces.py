@@ -38,9 +38,9 @@ class Workspaces(object):
     @classmethod
     def get_for_update_information(cls, user, workspace_id):
         workspace = WorkspacesQuery.get(workspace_id)
-        # Authorization.check_workspace_permission(
-        #     user, workspace, TBD, "update workspace information"
-        # )
+        Authorization.check_workspace_permission(
+            user, workspace, Permissions.EDIT_WORKSPACE_INFORMATION, "update workspace information"
+        )
 
         return workspace
 
