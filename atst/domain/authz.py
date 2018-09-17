@@ -48,3 +48,7 @@ class Authorization(object):
     def check_atat_permission(cls, user, permission, message):
         if not Authorization.has_atat_permission(user, permission):
             raise UnauthorizedError(user, message)
+
+    @classmethod
+    def can_view_audit_log(cls, user):
+        return Authorization.has_atat_permission(user, Permissions.VIEW_AUDIT_LOG)
