@@ -35,5 +35,15 @@
       href=url_for("workspaces.workspace_reports", workspace_id=workspace.id),
       active=request.url_rule.rule.startswith('/workspaces/<workspace_id>/reports')
     ) }}
+
+    {% if user_can(permissions.EDIT_WORKSPACE_INFORMATION) %}
+      {{ SidenavItem(
+        "Workspace Settings",
+        href=url_for("workspaces.workspace", workspace_id=workspace.id),
+        active=request.url_rule.rule.startswith('/workspaces/<workspace_id>/edit'),
+        subnav=None
+      ) }}
+    {% endif %}
+
   </ul>
 </nav>

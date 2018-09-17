@@ -20,6 +20,7 @@ class Permissions(object):
     VIEW_ASSIGNED_ATAT_ROLE_CONFIGURATIONS = "view_assigned_atat_role_configurations"
     VIEW_ASSIGNED_CSP_ROLE_CONFIGURATIONS = "view_assigned_csp_role_configurations"
 
+    EDIT_WORKSPACE_INFORMATION = "edit_workspace_information"
     DEACTIVATE_WORKSPACE = "deactivate_workspace"
     VIEW_ATAT_PERMISSIONS = "view_atat_permissions"
     TRANSFER_OWNERSHIP_OF_WORKSPACE = "transfer_ownership_of_workspace"

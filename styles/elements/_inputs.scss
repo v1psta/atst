@@ -194,6 +194,7 @@
   &--validation {
 
     &--anything,
+    &--workspaceName,
     &--email {
       input {
         max-width: 30em;

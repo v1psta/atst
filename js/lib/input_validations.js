@@ -78,5 +78,11 @@ export default {
     match: /[0-9]{2}\w?$/,
     unmask: [],
     validationError: 'Please enter a valid BA Code. Note that it should be two digits, followed by a letter.'
-  }
+  },
+  workspaceName: {
+    mask: false,
+    match: /^.{4,50}$/,
+    unmask: [],
+    validationError: 'Workspace names must be at least 4 and not more than 50 characters'
+  },
 }
