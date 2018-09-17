@@ -19,9 +19,7 @@ def test_user_without_workspaces_has_no_workspaces_nav(client, user_session):
     assert b'href="/workspaces"' not in response.data
 
 
-def test_request_owner_with_no_workspaces_redirected_to_requests(
-    client, user_session
-):
+def test_request_owner_with_no_workspaces_redirected_to_requests(client, user_session):
     request = RequestFactory.create()
     user_session(request.creator)
     response = client.get("/home", follow_redirects=False)
