@@ -17,12 +17,19 @@ class AuditEventQuery(Query):
 class AuditLog(object):
     @classmethod
     def log_event(cls, user, resource, action):
-        resource_name = type(resource).__name__.lower()
         audit_event = AuditEventQuery.create(
             user=user,
             resource_id=resource.id,
-            resource_name=resource_name,
+            resource_name=cls._resource_name(resource),
             action=action,
+        )
+        return AuditEventQuery.add_and_commit(audit_event)
+
+    @classmethod
+    def log_system_event(cls, resource, action):
+        audit_event = AuditEventQuery.create(
+            resource_id=resource.id,
+            resource_name=cls._resource_name(resource)
         )
         return AuditEventQuery.add_and_commit(audit_event)
 
@@ -32,3 +39,7 @@ class AuditLog(object):
             user, Permissions.VIEW_AUDIT_LOG, "view audit log"
         )
         return AuditEventQuery.get_all()
+
+    @classmethod
+    def _resource_name(cls, resource):
+        return type(resource).__name__.lower()
