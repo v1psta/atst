@@ -37,7 +37,7 @@ class Request(Base):
     workspace = relationship("Workspace", uselist=False, backref="request")
 
     user_id = Column(ForeignKey("users.id"), nullable=False)
-    creator = relationship("User")
+    creator = relationship("User", backref="owned_requests")
 
     task_order_id = Column(ForeignKey("task_order.id"))
     task_order = relationship("TaskOrder")
