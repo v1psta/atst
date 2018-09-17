@@ -19,7 +19,7 @@ def test_user_without_workspaces_has_no_workspaces_nav(client, user_session):
     assert b'href="/workspaces"' not in response.data
 
 
-def test_request_owner_with_no_workspaces_redirected_to_requests_page(
+def test_request_owner_with_no_workspaces_redirected_to_requests(
     client, user_session
 ):
     request = RequestFactory.create()
@@ -29,7 +29,7 @@ def test_request_owner_with_no_workspaces_redirected_to_requests_page(
     assert "/requests" in response.location
 
 
-def test_request_owner_with_one_workspace_redirected_to_report(client, user_session):
+def test_request_owner_with_one_workspace_redirected_to_reports(client, user_session):
     request = RequestFactory.create()
     workspace = Workspaces.create(request)
 
@@ -39,7 +39,7 @@ def test_request_owner_with_one_workspace_redirected_to_report(client, user_sess
     assert "/workspaces/{}/reports".format(workspace.id) in response.location
 
 
-def test_request_owner_with_more_than_one_workspace_redirected_to_report(
+def test_request_owner_with_more_than_one_workspace_redirected_to_workspaces(
     client, user_session
 ):
     request_creator = UserFactory.create()
