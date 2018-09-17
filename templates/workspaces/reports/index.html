@@ -35,7 +35,9 @@
         </div>
 
         <div>
-          <meter value='{{ spent }}' min='0' max='{{ budget }}' title='{{ spent | dollars }} Total spend to date'></meter>
+          <meter value='{{ spent }}' min='0' max='{{ budget }}' title='{{ spent | dollars }} Total spend to date'>
+            <div class='meter__fallback' style='width:{{ (spent / budget) * 100 }}%;'></div>
+          </meter>
 
           <dl class='spend-summary__spent'>
             <dt>Total spend to date</dt>

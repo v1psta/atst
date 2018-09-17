@@ -15,4 +15,10 @@ meter {
   &::-moz-meter-bar {
     background: $color-primary;
   }
+
+  .meter__fallback {
+    display: inline-block;
+    background: $color-primary;
+    height: 100%;
+  }
 }
