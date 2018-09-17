@@ -17,7 +17,7 @@
         {{ Icon('avatar', classes='topbar__link-icon') }}
       </a>
 
-      <a href="/" class="topbar__link" title='Log out of JEDI Cloud'>
+      <a href="{{ url_for('atst.logout') }}" class="topbar__link" title='Log out of JEDI Cloud'>
         {{ Icon('logout', classes='topbar__link-icon') }}
       </a>
     </div>

@@ -1,3 +1,5 @@
+from urllib.parse import urlparse
+
 import pytest
 from flask import session, url_for
 from .mocks import DOD_SDN_INFO, DOD_SDN, FIXTURE_EMAIL_ADDRESS
@@ -148,7 +150,6 @@ def test_creates_new_user_on_login(monkeypatch, client):
 
 
 def test_creates_new_user_without_email_on_login(monkeypatch, client):
-    monkeypatch.setattr("atst.routes._is_valid_certificate", lambda *args: True)
     cert_file = open("ssl/client-certs/atat.mil.crt").read()
 
     # ensure user does not exist
@@ -168,3 +169,31 @@ def test_creates_new_user_without_email_on_login(monkeypatch, client):
     assert user.first_name == DOD_SDN_INFO["first_name"]
     assert user.last_name == DOD_SDN_INFO["last_name"]
     assert user.email == None
+
+
+def test_logout(app, client, monkeypatch):
+    monkeypatch.setattr(
+        "atst.domain.authnid.AuthenticationContext.authenticate", lambda s: True
+    )
+    monkeypatch.setattr(
+        "atst.domain.authnid.AuthenticationContext.get_user",
+        lambda s: UserFactory.create(),
+    )
+    # create a real session
+    resp = client.get(
+        url_for("atst.login_redirect"),
+        environ_base={
+            "HTTP_X_SSL_CLIENT_VERIFY": "SUCCESS",
+            "HTTP_X_SSL_CLIENT_S_DN": DOD_SDN,
+            "HTTP_X_SSL_CLIENT_CERT": "",
+        },
+    )
+    resp_success = client.get(url_for("requests.requests_index"))
+    # verify session is valid
+    assert resp_success.status_code == 200
+    client.get(url_for("atst.logout"))
+    resp_failure = client.get(url_for("requests.requests_index"))
+    # verify that logging out has cleared the session
+    assert resp_failure.status_code == 302
+    destination = urlparse(resp_failure.headers["Location"]).path
+    assert destination == url_for("atst.root")
