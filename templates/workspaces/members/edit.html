@@ -64,20 +64,28 @@
         </header>
         <ul v-show='isVisible'>
           {% for env in project.environments %}
+
+            {% set role = EnvironmentRole.get(member.user_id, env.id).role or 'no access' %}
+            {% set label_class = 'label' %}
+            {% if role != 'no access' %}
+              {% set label_class = 'label label--success' %}
+            {% endif %}
+
             {% call Modal(name=env.name + 'RolesModal', dismissable=False) %}
                 <div class='block-list'>
                   <ul>
                     {% for choice in form.environment_role.choices %}
                     <li class='block-list__item block-list__item--selectable'>
+
                       {% if choice[0] != ""  %}
                         <input
-                          name='environment_role'
+                          name='env_{{ env.name }}'
                           type='radio'
-                          id="environment_role_{{ choice[0] }}"
-                          value='{{ choice[0] }}'
-                          checked='{{ value == choice[0] }}'
+                          id="env_{{ env.name }}"
+                          value='{ "id": "{{ env.id }}", "role": "{{ choice[0] }}" }'
+                          checked='{{ role  == choice[0] }}'
                         />
-                        <label for="environment_role_{{ choice[0] }}">
+                        <label for="env_{{ env.name }}">
                           {% if choice[1].description %}
                             <dl>
                               <dt>{{ choice[1].name }}</dt>
@@ -104,17 +112,11 @@
             <span class='project-list-item__environment'>
               {{ env.name }}
             </span>
+
             <div class='project-list-item__environment__actions'>
-              <input type="hidden" name="{{ env.id }}">
-              {% set role = 'no access' %}
-              {% set label = 'label' %}
-              {% for er in member.user.environment_roles %}
-                {% if er.get(member.user_id, env.id) %}
-                  {% set role = er.get(member.user_id, env.id).role %}
-                  {% set label = 'label label--success' %}
-                {% endif %}
-              {% endfor %}
-              <span class="label {{ label }}">{{ role }}</span>
+              <div>{{ form.data["environment_role"] }}</div>
+
+              <span class="{{ label_class }}">{{ role }}</span>
               <button v-on:click="openModal('{{ env.name }}RolesModal')" type="button" class="icon-link">set role</button>
             </div>
 

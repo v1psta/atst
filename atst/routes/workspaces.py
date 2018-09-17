@@ -15,6 +15,7 @@ from atst.domain.reports import Reports
 from atst.domain.workspaces import Workspaces
 from atst.domain.workspace_users import WorkspaceUsers
 from atst.domain.environments import Environments
+from atst.models.environment_role import EnvironmentRole
 from atst.forms.new_project import NewProjectForm
 from atst.forms.new_member import NewMemberForm
 from atst.forms.edit_member import EditMemberForm
@@ -222,6 +223,7 @@ def view_member(workspace_id, member_id):
         member=member,
         projects=projects,
         form=form,
+        EnvironmentRole=EnvironmentRole,
     )
 
 
