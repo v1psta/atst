@@ -21,7 +21,7 @@ class Projects(object):
         db.session.add(project)
         db.session.commit()
 
-        AuditLog.log_event(user, project, "create project")
+        AuditLog.log_workspace_event(user, workspace, project, "create project")
 
         return project
 

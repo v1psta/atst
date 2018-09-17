@@ -89,7 +89,7 @@ class Workspaces(object):
             email=data["email"],
         )
         member = Workspaces.add_member(workspace, new_user, data["workspace_role"])
-        AuditLog.log_event(user, workspace, "create member")
+        AuditLog.log_workspace_event(user, workspace, member.workspace_role, "create workspace role")
         return member
 
     @classmethod
@@ -106,7 +106,7 @@ class Workspaces(object):
             "edit workspace member",
         )
         member = WorkspaceUsers.update_role(member, workspace.id, role_name)
-        AuditLog.log_event(user, workspace, "update member")
+        AuditLog.log_workspace_event(user, workspace, member.workspace_role, "update workspace_role")
         return member
 
     @classmethod
