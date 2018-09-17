@@ -1,7 +1,7 @@
 """add expiration date to task order
 
 Revision ID: 4f4defb7b440
-Revises: 2572be7fb7fc
+Revises: 4c425f17bfe8
 Create Date: 2018-09-17 15:22:33.240310
 
 """
@@ -11,7 +11,7 @@ import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
 revision = '4f4defb7b440'
-down_revision = '2572be7fb7fc'
+down_revision = '4c425f17bfe8'
 branch_labels = None
 depends_on = None
 
