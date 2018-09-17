@@ -32,6 +32,12 @@
     }
   }
 
+  .request-approval__review {
+    .action-group {
+      margin-bottom: $gap * 6;
+    }
+  }
+
   .approval-log {
     ol {
       list-style: none;
@@ -43,7 +49,7 @@
         border-top: 1px dashed $color-gray-light;
 
         &:first-child {
-          border-top-style: solid;
+          border-top: none;
         }
 
         @include media($medium-screen) {
@@ -92,6 +98,12 @@
           }
         }
       }
+    }
+  }
+
+  .internal-notes {
+    textarea {
+      resize: vertical;
     }
   }
 }

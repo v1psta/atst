@@ -9,6 +9,10 @@
   border-left-width: $gap / 2;
   border-left-style: solid;
   @include panel-margin;
+
+  @include media($medium-screen) {
+    padding: $gap * 4;
+  }
 }
 
 @mixin alert-level($level) {
@@ -53,6 +57,10 @@
   .alert__title {
     @include h3;
     margin-top: 0;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
   }
 
   .alert__content {

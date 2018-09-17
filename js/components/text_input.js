@@ -19,7 +19,8 @@ export default {
       default: () => ''
     },
     initialErrors: Array,
-    paragraph: String
+    paragraph: String,
+    noMaxWidth: String
   },
 
   data: function () {

@@ -35,7 +35,7 @@ def render_approval(request, form=None):
     return render_template(
         "requests/approval.html",
         data=data,
-        status_events=reversed(request.status_events),
+        reviews=list(reversed(request.reviews)),
         request=request,
         current_status=request.status.value,
         pending_review=pending_review,
@@ -58,7 +58,7 @@ def submit_approval(request_id):
 
     form = CCPOReviewForm(http_request.form)
     if form.validate():
-        if http_request.form.get("approved"):
+        if http_request.form.get("review") == "approving":
             Requests.advance(g.current_user, request, form.data)
         else:
             Requests.request_changes(g.current_user, request, form.data)
@@ -93,4 +93,6 @@ def create_internal_comment(request_id):
         request = Requests.get(g.current_user, request_id)
         Requests.update_internal_comments(g.current_user, request, form.data["text"])
 
-    return redirect(url_for("requests.approval", request_id=request_id))
+    return redirect(
+        url_for("requests.approval", request_id=request_id, _anchor="ccpo-notes")
+    )
