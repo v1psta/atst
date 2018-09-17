@@ -23,7 +23,10 @@ def home():
     if num_workspaces == 0:
         return redirect(url_for("requests.requests_index"))
     elif num_workspaces == 1:
-        workspace_id = g.current_user.workspace_roles[0].workspace_id
+        workspace_role = g.current_user.workspace_roles[0]
+        workspace_id = workspace_role.workspace.id
+        is_request_owner = workspace_role.role.name == "owner"
+
         if is_request_owner:
             return redirect(
                 url_for("workspaces.workspace_reports", workspace_id=workspace_id)
