@@ -17,7 +17,23 @@ def root():
 
 @bp.route("/home")
 def home():
-    return redirect(url_for("requests.requests_index"))
+    is_request_owner = bool(g.current_user.owned_requests)
+    num_workspaces = len(g.current_user.workspace_roles)
+
+    if num_workspaces == 0:
+        return redirect(url_for("requests.requests_index"))
+    elif num_workspaces == 1:
+        workspace_id = g.current_user.workspace_roles[0].workspace_id
+        if is_request_owner:
+            return redirect(
+                url_for("workspaces.workspace_reports", workspace_id=workspace_id)
+            )
+        else:
+            return redirect(
+                url_for("workspaces.workspace_projects", workspace_id=workspace_id)
+            )
+    else:
+        return redirect(url_for("workspaces.workspaces"))
 
 
 @bp.route("/styleguide")
