@@ -179,7 +179,7 @@ def test_update_financial_verification_with_invalid_task_order():
 
 def test_set_status_sets_revision():
     request = RequestFactory.create()
-    Requests.set_status(request, RequestStatus.APPROVED)
+    Requests.set_status(request.creator, request, RequestStatus.APPROVED)
     assert request.latest_revision == request.status_events[-1].revision
 
 

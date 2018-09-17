@@ -36,9 +36,8 @@ class Requests(object):
     def create(cls, creator, body):
         revision = create_revision_from_request_body(body)
         request = RequestsQuery.create(creator=creator, revisions=[revision])
-        request = Requests.set_status(request, RequestStatus.STARTED)
+        request = Requests.set_status(creator, request, RequestStatus.STARTED)
         request = RequestsQuery.add_and_commit(request)
-        AuditLog.log_event(creator, request, "create request")
         return request
 
     @classmethod
@@ -68,7 +67,7 @@ class Requests(object):
 
     @classmethod
     def submit(cls, user, request):
-        request = Requests.set_status(request, RequestStatus.SUBMITTED)
+        request = Requests.set_status(user, request, RequestStatus.SUBMITTED)
 
         new_status = None
         if Requests.should_auto_approve(request):
@@ -76,10 +75,8 @@ class Requests(object):
         else:
             new_status = RequestStatus.PENDING_CCPO_ACCEPTANCE
 
-        request = Requests.set_status(request, new_status)
+        request = Requests.set_status(user, request, new_status)
         request = RequestsQuery.add_and_commit(request)
-
-        AuditLog.log_event(user, request, "submit request")
 
         return request
 
@@ -96,8 +93,8 @@ class Requests(object):
         return request
 
     @classmethod
-    def approve_and_create_workspace(cls, request):
-        approved_request = Requests.set_status(request, RequestStatus.APPROVED)
+    def approve_and_create_workspace(cls, user, request):
+        approved_request = Requests.set_status(user, request, RequestStatus.APPROVED)
         workspace = Workspaces.create(approved_request)
 
         RequestsQuery.add_and_commit(approved_request)
@@ -105,11 +102,16 @@ class Requests(object):
         return workspace
 
     @classmethod
-    def set_status(cls, request, status: RequestStatus):
+    def set_status(cls, user, request, status: RequestStatus):
         status_event = RequestStatusEvent(
             new_status=status, revision=request.latest_revision
         )
         request.status_events.append(status_event)
+        RequestsQuery.add_and_commit(request)
+
+        action = "update status to {}".format(status.value)
+        AuditLog.log_event(user, request, action)
+
         return request
 
     @classmethod
@@ -201,9 +203,10 @@ class Requests(object):
 
     @classmethod
     def submit_financial_verification(cls, user, request):
-        request = Requests.set_status(request, RequestStatus.PENDING_CCPO_APPROVAL)
+        request = Requests.set_status(
+            user, request, RequestStatus.PENDING_CCPO_APPROVAL
+        )
         request = RequestsQuery.add_and_commit(request)
-        AuditLog.log_event(user, request, "submit financial verification")
         return request
 
     @classmethod
@@ -215,23 +218,21 @@ class Requests(object):
     @classmethod
     def advance(cls, user, request, review_data):
         if request.status == RequestStatus.PENDING_CCPO_ACCEPTANCE:
-            Requests.set_status(request, RequestStatus.PENDING_FINANCIAL_VERIFICATION)
-            AuditLog.log_event(user, request, "accept request")
+            Requests.set_status(
+                user, request, RequestStatus.PENDING_FINANCIAL_VERIFICATION
+            )
         elif request.status == RequestStatus.PENDING_CCPO_APPROVAL:
-            Requests.approve_and_create_workspace(request)
-            AuditLog.log_event(user, request, "approve request")
+            Requests.approve_and_create_workspace(user, request)
 
         return Requests._add_review(user, request, review_data)
 
     @classmethod
     def request_changes(cls, user, request, review_data):
         if request.status == RequestStatus.PENDING_CCPO_ACCEPTANCE:
-            Requests.set_status(request, RequestStatus.CHANGES_REQUESTED)
-            AuditLog.log_event(user, request, "request changes")
+            Requests.set_status(user, request, RequestStatus.CHANGES_REQUESTED)
         elif request.status == RequestStatus.PENDING_CCPO_APPROVAL:
-            Requests.set_status(request, RequestStatus.CHANGES_REQUESTED_TO_FINVER)
-            AuditLog.log_event(
-                user, request, "request changes to financial verification"
+            Requests.set_status(
+                user, request, RequestStatus.CHANGES_REQUESTED_TO_FINVER
             )
 
         return Requests._add_review(user, request, review_data)
