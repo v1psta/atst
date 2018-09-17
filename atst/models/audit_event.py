@@ -21,11 +21,11 @@ class AuditEvent(Base, mixins.TimestampsMixin):
     action = Column(String())
 
     def __str__(self):
-        user_name = self.user.full_name
+        full_action = "{} on {} {}".format(self.action, self.resource_name, self.resource_id)
 
-        if self.action == "create request":
-            return "{} created request {}".format(user_name, self.resource_id)
+        if self.user and self.workspace:
+            return "{} performed {} in workspace {}".format(self.user.full_name, full_action, self.workspace_id)
+        if self.user:
+            return "{} performed {}".format(self.user.full_name, full_action)
         else:
-            return "{} {} {} {}".format(
-                user_name, self.action, self.resource_name, self.resource_id
-            )
+            return "ATAT System performed {}".format(full_action)
