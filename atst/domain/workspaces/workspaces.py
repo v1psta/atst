@@ -27,11 +27,20 @@ class Workspaces(object):
         return ScopedWorkspace(user, workspace)
 
     @classmethod
-    def get_for_update(cls, user, workspace_id):
+    def get_for_update_projects(cls, user, workspace_id):
         workspace = WorkspacesQuery.get(workspace_id)
         Authorization.check_workspace_permission(
             user, workspace, Permissions.ADD_APPLICATION_IN_WORKSPACE, "add project"
         )
+
+        return workspace
+
+    @classmethod
+    def get_for_update_information(cls, user, workspace_id):
+        workspace = WorkspacesQuery.get(workspace_id)
+        # Authorization.check_workspace_permission(
+        #     user, workspace, TBD, "update workspace information"
+        # )
 
         return workspace
 
@@ -98,3 +107,10 @@ class Workspaces(object):
         workspace_role = WorkspacesQuery.create_workspace_role(user, role, workspace)
         WorkspacesQuery.add_and_commit(workspace_role)
         return workspace_role
+
+    @classmethod
+    def update(cls, workspace, new_data):
+        if "name" in new_data:
+            workspace.name = new_data["name"]
+
+        WorkspacesQuery.add_and_commit(workspace)

@@ -63,16 +63,16 @@ def test_workspaces_get_ensures_user_is_in_workspace(workspace, workspace_owner)
         Workspaces.get(outside_user, workspace.id)
 
 
-def test_get_for_update_allows_owner(workspace, workspace_owner):
-    Workspaces.get_for_update(workspace_owner, workspace.id)
+def test_get_for_update_projects_allows_owner(workspace, workspace_owner):
+    Workspaces.get_for_update_projects(workspace_owner, workspace.id)
 
 
-def test_get_for_update_blocks_developer(workspace):
+def test_get_for_update_projects_blocks_developer(workspace):
     developer = UserFactory.create()
     WorkspaceUsers.add(developer, workspace.id, "developer")
 
     with pytest.raises(UnauthorizedError):
-        Workspaces.get_for_update(developer, workspace.id)
+        Workspaces.get_for_update_projects(developer, workspace.id)
 
 
 def test_can_create_workspace_user(workspace, workspace_owner):
