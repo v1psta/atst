@@ -23,10 +23,12 @@ def upgrade():
     sa.Column('time_updated', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('id', postgresql.UUID(as_uuid=True), server_default=sa.text('uuid_generate_v4()'), nullable=False),
     sa.Column('user_id', postgresql.UUID(as_uuid=True), nullable=True),
-    sa.Column('resource_name', sa.String(), nullable=True),
-    sa.Column('resource_id', postgresql.UUID(as_uuid=True), nullable=True),
-    sa.Column('action', sa.String(), nullable=True),
-    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
+    sa.Column('resource_name', sa.String(), nullable=False),
+    sa.Column('resource_id', postgresql.UUID(as_uuid=True), nullable=False),
+    sa.Column('action', sa.String(), nullable=False),
+    sa.Column('workspace_id', postgresql.UUID(as_uuid=True), nullable=True),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id']),
+    sa.ForeignKeyConstraint(['workspace_id'], ['workspaces.id']),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_audit_events_resource_id'), 'audit_events', ['resource_id'], unique=False)

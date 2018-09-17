@@ -13,6 +13,9 @@ class AuditEvent(Base, mixins.TimestampsMixin):
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), index=True)
     user = relationship("User", backref="audit_events")
 
+    workspace_id = Column(UUID(as_uuid=True), ForeignKey("workspaces.id"), index=True)
+    workspace = relationship("Workspace", backref="audit_events")
+
     resource_name = Column(String())
     resource_id = Column(UUID(as_uuid=True), index=True)
     action = Column(String())

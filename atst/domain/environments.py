@@ -10,17 +10,16 @@ class Environments(object):
     def create_many(cls, user, project, names):
         for name in names:
             Environments._create(user, project, name)
-        db.session.commit()
 
     @classmethod
     def add_member(cls, user, environment, member, role=CSPRole.NONSENSE_ROLE):
-        environment_user = EnvironmentRole(
+        environment_role = EnvironmentRole(
             user=member, environment=environment, role=role.value
         )
-        db.session.add(environment_user)
+        db.session.add(environment_role)
         db.session.commit()
 
-        AuditLog.log_event(user, environment, "add member")
+        AuditLog.log_workspace_event(user, environment.project.workspace, environment_role, "add environment role")
 
         return environment
 
@@ -39,5 +38,6 @@ class Environments(object):
     def _create(cls, user, project, name):
         environment = Environment(project=project, name=name)
         db.session.add(environment)
-        AuditLog.log_event(user, environment, "create environment")
+        db.session.commit()
+        AuditLog.log_workspace_event(user, project.workspace, environment, "create environment")
         return environment

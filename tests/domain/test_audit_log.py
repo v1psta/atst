@@ -3,7 +3,7 @@ import pytest
 from atst.domain.audit_log import AuditLog
 from atst.domain.requests import Requests
 from atst.domain.exceptions import UnauthorizedError
-from tests.factories import UserFactory, RequestFactory
+from tests.factories import UserFactory, RequestFactory, WorkspaceFactory
 
 
 @pytest.fixture(scope="function")
@@ -21,6 +21,20 @@ def test_log_event(developer):
     event = AuditLog.log_event(developer, request, "create request")
 
     assert event.user == developer
+
+
+def test_log_system_event():
+    request = RequestFactory.create()
+    event = AuditLog.log_system_event(request, "create request")
+
+    assert event.resource_id == request.id
+
+
+def test_log_workspace_event():
+    workspace = WorkspaceFactory.create()
+    event = AuditLog.log_workspace_event(workspace.owner, workspace, workspace, "create workspace")
+
+    assert event.workspace_id == workspace.id
 
 
 def test_get_all_events(developer, ccpo):
