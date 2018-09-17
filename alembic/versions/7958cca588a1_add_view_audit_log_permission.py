@@ -21,7 +21,7 @@ depends_on = None
 
 def upgrade():
     session = Session(bind=op.get_bind())
-    admin_roles = session.query(Role).filter(Role.name.in_(["ccpo", "admin"])).all()
+    admin_roles = session.query(Role).filter(Role.name.in_(["ccpo", "security_auditor"])).all()
     for role in admin_roles:
         role.add_permission(Permissions.VIEW_AUDIT_LOG)
         session.add(role)
@@ -31,7 +31,7 @@ def upgrade():
 
 def downgrade():
     session = Session(bind=op.get_bind())
-    admin_roles = session.query(Role).filter(Role.name.in_(["ccpo", "admin"])).all()
+    admin_roles = session.query(Role).filter(Role.name.in_(["ccpo", "security_auditor"])).all()
     for role in admin_roles:
         role.remove_permission(Permissions.VIEW_AUDIT_LOG)
         session.add(role)
