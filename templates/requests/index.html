@@ -45,18 +45,6 @@
 
 {% else %}
 
-  {% if pending_financial_verification %}
-
-    {{ Alert('Pending Financial Verification', fragment="fragments/pending_financial_verification.html") }}
-
-  {% endif %}
-
-  {% if pending_ccpo_approval %}
-
-    {{ Alert('Request submitted. Approval pending.', fragment="fragments/pending_ccpo_approval_alert.html") }}
-
-  {% endif %}
-
   {% if extended_view %}
     <div class="row kpi">
       <div class="kpi__item col col--grow">
