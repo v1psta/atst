@@ -30,7 +30,9 @@ export default {
     change: function (e) {
       this.value = e.target.value
     },
-    // method to map ugly name to human readable name here
+    readableName: function (role) {
+      return role.replace(/[_]/g, " ")
+    },
   },
 
   mounted: function () {

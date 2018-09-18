@@ -81,7 +81,7 @@
             <div class='project-list-item__environment__actions'>
               <div>{{ form.data["environment_role"] }}</div>
 
-              <span class="{{ label_class }}" v-html="value"></span>
+              <span class="{{ label_class }}" v-html:on=readableName(value)></span>
               <button v-on:click="openModal('{{ env.name }}RolesModal')" type="button" class="icon-link">set role</button>
               {% call Modal(name=env.name + 'RolesModal', dismissable=False) %}
                   <div class='block-list'>
