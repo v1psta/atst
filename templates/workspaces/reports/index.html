@@ -35,7 +35,9 @@
         </div>
 
         <div>
-          <meter value='{{ spent }}' min='0' max='{{ budget }}' title='{{ spent | dollars }} Total spend to date'></meter>
+          <meter value='{{ spent }}' min='0' max='{{ budget }}' title='{{ spent | dollars }} Total spend to date'>
+            <div class='meter__fallback' style='width:{{ (spent / budget) * 100 }}%;'></div>
+          </meter>
 
           <dl class='spend-summary__spent'>
             <dt>Total spend to date</dt>
@@ -223,14 +225,22 @@
 
   <div class='spend-table responsive-table-wrapper'>
     <div class='spend-table__header'>
-      <h2 class='spend-table__title'>Total spend per month</h2>
+      <h2 class='spend-table__title'>Total spend per month </h2>
 
       <select name='month' id='month' class='spend-table__month-select'>
         <option value='03/2019'>{{ current_month.strftime('%B %Y') }}</option>
       </select>
     </div>
 
-    <table>
+    <spend-table
+      v-bind:projects='{{ monthly_totals['projects'] | tojson }}'
+      v-bind:workspace='{{ workspace_totals | tojson }}'
+      v-bind:environments='{{ monthly_totals['environments'] | tojson }}'
+      current-month-index='{{ current_month_index }}'
+      prev-month-index='{{ prev_month_index }}'
+      two-months-ago-index='{{ two_months_ago_index }}'
+      inline-template>
+      <table>
       <thead>
         <th scope='col'><span class='usa-sr-only'>Spending scope</span></th>
         <th scope='col' class='table-cell--align-right previous-month'>{{ two_months_ago.strftime('%B %Y') }}</th>
@@ -251,9 +261,63 @@
         </tr>
       </tbody>
 
-      {% for project_name, project_totals in monthly_totals['projects'].items() %}
-        <tbody is='toggler' class='spend-table__project'>
-          <template slot-scope='props'>
+      <tbody v-for='(project, name) in projectsState' class='spend-table__project'>
+        <tr>
+          <th scope='rowgroup'>
+            <button v-on:click='toggle($event, name)' class='icon-link icon-link--large spend-table__project__toggler'>
+              <template v-if='project.isVisible'>{{ Icon('caret_down') }}</template>
+              <template v-else>{{ Icon('caret_right') }}</template>
+              <span v-html='name'></span>
+            </button>
+          </th>
+          <td class='table-cell--align-right previous-month'>
+            <span v-html='formatDollars(project[twoMonthsAgoIndex] || 0)'></span>
+          </td>
+
+          <td class='table-cell--align-right previous-month'>
+            <span v-html='formatDollars(project[prevMonthIndex] || 0)'></span>
+          </td>
+
+          <td class='table-cell--align-right current-month'>
+            <span v-html='formatDollars(project[currentMonthIndex] || 0)'></span>
+          </td>
+
+          <td class='table-cell--expand current-month meter-cell'>
+            <span class='spend-table__meter-value'>
+              <span v-html='round( 100 * ((project[currentMonthIndex] || 0) / (workspace[currentMonthIndex] || 1) )) + "%"'></span>
+            </span>
+            <meter v-bind:value='project[currentMonthIndex] || 0' min='0' v-bind:max='workspace[currentMonthIndex] || 1'>
+              <div class='meter__fallback' v-bind:style='"width:" + round( 100 * ((project[currentMonthIndex] || 0) / (workspace[currentMonthIndex] || 1) )) + "%;"'></div>
+            </meter>
+          </td>
+        </tr>
+
+        <tr v-for='(environment, envName) in environments[name]' v-show='project.isVisible' class='spend-table__project__env'>
+          <th scope='rowgroup'>
+            <a href='#' class='icon-link spend-table__project__env'>
+              {{ Icon('link') }}
+              <span v-html='envName'></span>
+            </a>
+          </th>
+
+          <td class='table-cell--align-right previous-month'>
+            <span v-html='formatDollars(environment[twoMonthsAgoIndex] || 0)'></span>
+          </td>
+
+          <td class='table-cell--align-right previous-month'>
+            <span v-html='formatDollars(environment[prevMonthIndex] || 0)'></span>
+          </td>
+
+          <td class='table-cell--align-right current-month'>
+            <span v-html='formatDollars(environment[currentMonthIndex] || 0)'></span>
+          </td>
+
+          <td class='table-cell--expand current-month'></td>
+        </tr>
+      </tbody>
+
+      {# {% for project_name, project_totals in monthly_totals['projects'].items() %}
+        <tbody is='tbody-toggler' class='spend-table__project'>
             <tr>
               <th scope='rowgroup'>
                 <button v-on:click='props.toggle' class='icon-link icon-link--large spend-table__project__toggler'>
@@ -280,10 +344,12 @@
                 <td class='table-cell--expand current-month'></td>
               </tr>
             {% endfor %}
+
           </template>
         </tbody>
-      {% endfor %}
-    </table>
+      {% endfor %} #}
+      </table>
+    </spend-table>
   </div>
 
 {% endblock %}
