@@ -1,4 +1,4 @@
-import re, ast
+import re
 from datetime import date, timedelta
 
 from flask import (
@@ -241,11 +241,13 @@ def update_member(workspace_id, member_id):
     )
     member = WorkspaceUsers.get(workspace_id, member_id)
 
-    environment_data = []
+    ids_and_roles = []
     form_dict = http_request.form.to_dict()
     for entry in form_dict:
         if re.match("env_", entry):
-            environment_data.append(ast.literal_eval(form_dict[entry]))
+            env_id = entry[4:]
+            env_role = form_dict[entry]
+            ids_and_roles.append({"id": env_id, "role": env_role})
 
     form = EditMemberForm(http_request.form)
 
@@ -257,7 +259,7 @@ def update_member(workspace_id, member_id):
             )
             new_role_name = member.role_displayname
 
-        Environments.update_environment_role(environment_data, member)
+        Environments.update_environment_role(ids_and_roles, member)
 
         return redirect(
             url_for(

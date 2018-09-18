@@ -91,11 +91,11 @@
 
                         {% if choice[0] != ""  %}
                           <input
-                            name='env_{{ env.name }}_{{ project.id }}'
-                            v-on:change="change"
+                            name='env_{{ env.id }}'
+                            v-on:change='change'
                             type='radio'
                             id="env_{{ env.id }}_{{ choice[0] }}"
-                            value='{ "id": "{{ env.id }}", "role": "{{ choice[0] }}" }'
+                            value='{{ choice[0] }}'
                             {% if role == choice[0] %}
                               checked='checked'
                             {% endif %}

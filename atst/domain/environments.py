@@ -54,13 +54,13 @@ class Environments(object):
         return env
 
     @classmethod
-    def update_environment_role(cls, environment_data, workspace_user):
+    def update_environment_role(cls, ids_and_roles, workspace_user):
         # TODO need to check permissions?
-        for i in range(len(environment_data)):
-            new_role = environment_data[i]["role"]
-            environment = Environments.get(environment_data[i]["id"])
+        for i in range(len(ids_and_roles)):
+            new_role = ids_and_roles[i]["role"]
+            environment = Environments.get(ids_and_roles[i]["id"])
             env_role = EnvironmentRole.get(
-                workspace_user.user_id, environment_data[i]["id"]
+                workspace_user.user_id, ids_and_roles[i]["id"]
             )
             if env_role:
                 env_role.role = new_role
