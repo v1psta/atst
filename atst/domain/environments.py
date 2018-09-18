@@ -56,14 +56,17 @@ class Environments(object):
     @classmethod
     def update_environment_role(cls, environment_data, workspace_user):
         # TODO need to check permissions?
-        new_role = environment_data["user_role_name"]
-        environment = Environments.get(environment_data["id"])
-        env_role = EnvironmentRole.get(member.user_id, environment_data["id"])
-        if env_role:
-            env_role.role = new_role
-        else:
-            env_role = EnvironmentRole(
-                user=workspace_user.user, environment=environment, role=new_role
+        for i in range(len(environment_data)):
+            new_role = environment_data[i]["role"]
+            environment = Environments.get(environment_data[i]["id"])
+            env_role = EnvironmentRole.get(
+                workspace_user.user_id, environment_data[i]["id"]
             )
-        db.session.add(env_role)
-        db.session.commit()
+            if env_role:
+                env_role.role = new_role
+            else:
+                env_role = EnvironmentRole(
+                    user=workspace_user.user, environment=environment, role=new_role
+                )
+            db.session.add(env_role)
+            db.session.commit()

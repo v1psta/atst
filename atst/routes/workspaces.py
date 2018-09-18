@@ -1,3 +1,4 @@
+import re, ast
 from datetime import date, timedelta
 
 from flask import (
@@ -239,6 +240,13 @@ def update_member(workspace_id, member_id):
         "edit this workspace user",
     )
     member = WorkspaceUsers.get(workspace_id, member_id)
+
+    environment_data = []
+    form_dict = http_request.form.to_dict()
+    for entry in form_dict:
+        if re.match("env_", entry):
+            environment_data.append(ast.literal_eval(form_dict[entry]))
+
     form = EditMemberForm(http_request.form)
 
     if form.validate():
@@ -248,14 +256,8 @@ def update_member(workspace_id, member_id):
                 g.current_user, workspace, member, form.data["workspace_role"]
             )
             new_role_name = member.role_displayname
-        if form.data["environment_role"]:
-            new_env_role = form.data["environment_role"]
-            environment_data = {
-                "id": "9432c6a5-2f9d-4c9c-b553-4c175852fb65",
-                "name": "this environment",
-                "user_role_name": new_env_role,
-            }
-            Environments.update_environment_role(environment_data, member)
+
+        Environments.update_environment_role(environment_data, member)
 
         return redirect(
             url_for(
