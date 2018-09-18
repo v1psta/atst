@@ -18,7 +18,8 @@ export default {
 
   props: {
     choices: Array,
-    initialData: Object
+    initialData: String
+
   },
 
   data: function () {
@@ -28,6 +29,11 @@ export default {
   methods: {
     change: function (e) {
       this.value = e.target.value
-    }
+    },
+    // method to map ugly name to human readable name here
+  },
+
+  mounted: function () {
+    console.log(this.initialData, this.choices)
   }
 }

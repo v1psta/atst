@@ -7,137 +7,143 @@
 
 {% block content %}
 
-<edit-workspace-member inline-template v-bind:initial-data='{{ form.data|tojson }}' v-bind:choices='{{ form.environment_role.choices | tojson }}'>
-  <form method="POST" action="{{ url_for('workspaces.update_member', workspace_id=workspace.id, member_id=member.user_id) }}" autocomplete="false">
-    {{ form.csrf_token }}
+<form method="POST" action="{{ url_for('workspaces.update_member', workspace_id=workspace.id, member_id=member.user_id) }}" autocomplete="false">
+  {{ form.csrf_token }}
 
-    <div class='panel member-card'>
-      <div class='member-card__header'>
-        <h1 class='member-card__heading'>{{ member.user.full_name }}</h1>
+  <div class='panel member-card'>
+    <div class='member-card__header'>
+      <h1 class='member-card__heading'>{{ member.user.full_name }}</h1>
 
-          <div class="usa-input member-card__input">
-            {{ Selector(form.workspace_role) }}
-          </div>
+        <div class="usa-input member-card__input">
+          {{ Selector(form.workspace_role) }}
+        </div>
 
-      </div>
-      <div class='member-card__details'>
-        <dl>
-          <div>
-            <dt>DOD ID:</dt>
-            <dd>{{ member.user.dod_id }}</dd>
-          </div>
-          <div>
-            <dt>Email:</dt>
-            <dd>{{ member.user.email }}</dd>
-          </div>
-        </dl>
-        <a href='#' class='icon-link'>edit account details</a>
-      </div>
     </div>
-
-    <div class="panel">
-      <div class="panel__heading panel__heading--tight">
-        <h2 class="h3">Manage Access <div class="subtitle">Grant access to an environment</div></h2>
-      </div>
+    <div class='member-card__details'>
+      <dl>
+        <div>
+          <dt>DOD ID:</dt>
+          <dd>{{ member.user.dod_id }}</dd>
+        </div>
+        <div>
+          <dt>Email:</dt>
+          <dd>{{ member.user.email }}</dd>
+        </div>
+      </dl>
+      <a href='#' class='icon-link'>edit account details</a>
     </div>
+  </div>
 
-    <div class='search-bar'>
-      <div class='usa-input search-input'>
-        <label for='project-search'>Search by project name</label>
-        <input type='search' id='project-search' name='project-search' placeholder="Search by project name"/>
-        <button type="submit">
-          <span class="hide">Search</span>
+  <div class="panel">
+    <div class="panel__heading panel__heading--tight">
+      <h2 class="h3">Manage Access <div class="subtitle">Grant access to an environment</div></h2>
+    </div>
+  </div>
+
+  <div class='search-bar'>
+    <div class='usa-input search-input'>
+      <label for='project-search'>Search by project name</label>
+      <input type='search' id='project-search' name='project-search' placeholder="Search by project name"/>
+      <button type="submit">
+        <span class="hide">Search</span>
+      </button>
+    </div>
+  </div>
+
+  {% for project in projects %}
+  <div is='toggler' default-visible class='block-list project-list-item'>
+    <template slot-scope='{ isVisible, toggle }'>
+      <header class='block-list__header'>
+      <button v-on:click='toggle' class='icon-link icon-link--large icon-link--default spend-table__project__toggler'>
+          <template v-if='isVisible'>{{ Icon('caret_down') }}</template>
+          <template v-else>{{ Icon('caret_right') }}</template>
+          <h3 class="block-list__title">{{ project.name }}</h3>
         </button>
-      </div>
-    </div>
+        <span><a href="#" class="icon-link icon-link--danger">revoke all access</a></span>
+      </header>
+      <ul v-show='isVisible'>
+        {% for env in project.environments %}
 
-    {% for project in projects %}
-    <div is='toggler' default-visible class='block-list project-list-item'>
-      <template slot-scope='{ isVisible, toggle }'>
-        <header class='block-list__header'>
-        <button v-on:click='toggle' class='icon-link icon-link--large icon-link--default spend-table__project__toggler'>
-            <template v-if='isVisible'>{{ Icon('caret_down') }}</template>
-            <template v-else>{{ Icon('caret_right') }}</template>
-            <h3 class="block-list__title">{{ project.name }}</h3>
-          </button>
-          <span><a href="#" class="icon-link icon-link--danger">revoke all access</a></span>
-        </header>
-        <ul v-show='isVisible'>
-          {% for env in project.environments %}
+          {% set role = EnvironmentRole.get(member.user_id, env.id).role or 'no_access' %}
+          {% set label_class = 'label' %}
+          {% if role != 'no_access' %}
+            {% set label_class = 'label label--success' %}
+          {% endif %}
 
-            {% set role = EnvironmentRole.get(member.user_id, env.id).role or 'no access' %}
-            {% set label_class = 'label' %}
-            {% if role != 'no access' %}
-              {% set label_class = 'label label--success' %}
-            {% endif %}
 
-            {% call Modal(name=env.name + 'RolesModal', dismissable=False) %}
-                <div class='block-list'>
-                  <ul>
-                    {% for choice in form.environment_role.choices %}
-                    <li class='block-list__item block-list__item--selectable'>
-
-                      {% if choice[0] != ""  %}
-                        <input
-                          name='env_{{ env.name }}'
-                          type='radio'
-                          id="env_{{ env.name }}"
-                          value='{ "id": "{{ env.id }}", "role": "{{ choice[0] }}" }'
-                          checked='{{ role  == choice[0] }}'
-                        />
-                        <label for="env_{{ env.name }}">
-                          {% if choice[1].description %}
-                            <dl>
-                              <dt>{{ choice[1].name }}</dt>
-                              <dd>{{ choice[1].description }}</dd>
-                            </dl>
-                          {% else %}
-                            {{ choice[1].name }}
-                          {% endif %}
-                        </label>
-                        {% endif %}
-                    </li>
-                    {% endfor %}
-                  </ul>
-                </div>
-                <div class='block-list__footer'>
-                  <div class='action-group'>
-                    <a v-on:click="closeModal('{{ env.name }}RolesModal')" class='action-group__action usa-button'>Select Access Role</a>
-                    <a class='action-group__action icon-link icon-link--danger' v-on:click="closeModal('{{ env.name }}RolesModal')">No Access</a>
-                  </div>
-                </div>
-            {% endcall %}
-
-          <li class='block-list__item project-list-item__environment'>
-            <span class='project-list-item__environment'>
+        <li class='block-list__item'>
+          <edit-workspace-member inline-template initial-data='{{ role }}' v-bind:choices='{{ form.environment_role.choices | tojson }}'>
+          <div class='project-list-item__environment'>
+            <span class='project-list-item__environment__link'>
               {{ env.name }}
             </span>
 
             <div class='project-list-item__environment__actions'>
               <div>{{ form.data["environment_role"] }}</div>
 
-              <span class="{{ label_class }}">{{ role }}</span>
+              <span class="{{ label_class }}" v-html="value"></span>
               <button v-on:click="openModal('{{ env.name }}RolesModal')" type="button" class="icon-link">set role</button>
+              {% call Modal(name=env.name + 'RolesModal', dismissable=False) %}
+                  <div class='block-list'>
+                    <ul>
+                      {% for choice in form.environment_role.choices %}
+                      <li class='block-list__item block-list__item--selectable'>
+
+                        {% if choice[0] != ""  %}
+                          <input
+                            name='env_{{ env.name }}_{{ project.id }}'
+                            v-on:change="change"
+                            type='radio'
+                            id="env_{{ env.id }}_{{ choice[0] }}"
+                            value='{ "id": "{{ env.id }}", "role": "{{ choice[0] }}" }'
+                            {% if role == choice[0] %}
+                              checked='checked'
+                            {% endif %}
+                          />
+                          <label for="env_{{ env.id }}_{{ choice[0] }}">
+                            {% if choice[1].description %}
+                              <dl>
+                                <dt>{{ choice[1].name }}</dt>
+                                <dd>{{ choice[1].description }}</dd>
+                              </dl>
+                            {% else %}
+                              {{ choice[1].name }}
+                            {% endif %}
+                          </label>
+                          {% endif %}
+                      </li>
+                      {% endfor %}
+                    </ul>
+                    <div class='block-list__footer'>
+                      <div class='action-group'>
+                        <a v-on:click="closeModal('{{ env.name }}RolesModal')" class='action-group__action usa-button'>Select Access Role</a>
+                        <a class='action-group__action icon-link icon-link--danger' v-on:click="closeModal('{{ env.name }}RolesModal')">Cancel</a>
+                      </div>
+                    </div>
+                  </div>
+              {% endcall %}
             </div>
+          </div>
+          </edit-workspace-member>
+        </li>
 
-          {% endfor %}
-        </ul>
-      </template>
-    </div>
-    {% endfor %}
+        {% endfor %}
+      </ul>
+    </template>
+  </div>
+  {% endfor %}
 
-    <div class='action-group'>
-      <button class='action-group__action usa-button usa-button-big'>
-        {% if is_new_member %}Create{% else %}Save{% endif %}
-      </button>
-      <a href='#' class='action-group__action icon-link'>
-        {{ Icon('x') }}
-        <span>Cancel</span>
-      </a>
-    </div>
+  <div class='action-group'>
+    <button class='action-group__action usa-button usa-button-big'>
+      {% if is_new_member %}Create{% else %}Save{% endif %}
+    </button>
+    <a href='#' class='action-group__action icon-link'>
+      {{ Icon('x') }}
+      <span>Cancel</span>
+    </a>
+  </div>
 
   </form>
-</edit-workspace-member>
 
 
 

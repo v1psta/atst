@@ -187,7 +187,13 @@ ENVIRONMENT_ROLES = [
 ]
 
 ENVIRONMENT_ROLES = [
-    (None, {"name": "No access", "description": "No environment access."}),
+    (
+        "no_access",
+        {
+            "name": "no access",
+            "description": "No environment access."
+        }
+    ),
     (
         "database_admin",
         {
