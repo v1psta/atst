@@ -154,18 +154,15 @@ CUMULATIVE_BUDGET_BELUGA = {
 
 class Reports:
     @classmethod
-    def workspace_totals(cls, alternate):
-        data = MONTHLY_SPEND_BELUGA if alternate else MONTHLY_SPEND_AARDVARK
-        spent = sum(
-            [
-                spend
-                for project in data.values()
-                for env in project.values()
-                for spend in env.values()
-            ]
-        )
-        budget = 70_000 if alternate else 500_000
-        return {"budget": budget, "spent": spent}
+    def workspace_totals(cls, workspace):
+        if workspace.request and workspace.request.task_order:
+            ws_to = workspace.request.task_order
+            budget = ws_to.budget
+        else:
+            budget = 0
+
+        # spent will be derived from CSP data
+        return {"budget": budget, "spent": 0}
 
     @classmethod
     def monthly_totals(cls, alternate):
