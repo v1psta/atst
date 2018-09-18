@@ -84,3 +84,15 @@ def test_non_owner_user_with_mulitple_workspaces_redirected_to_workspaces(
     response = client.get("/home", follow_redirects=False)
 
     assert "/workspaces" in response.location
+
+
+def test_ccpo_user_redirected_to_requests(client, user_session):
+    user = UserFactory.from_atat_role("ccpo")
+    for _ in range(3):
+        workspace = WorkspaceFactory.create()
+        Workspaces._create_workspace_role(user, workspace, "developer")
+
+    user_session(user)
+    response = client.get("/home", follow_redirects=False)
+
+    assert "/requests" in response.location

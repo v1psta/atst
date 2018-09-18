@@ -27,6 +27,10 @@ class User(Base):
         return self.atat_role.permissions
 
     @property
+    def atat_role_name(self):
+        return self.atat_role.name
+
+    @property
     def full_name(self):
         return "{} {}".format(self.first_name, self.last_name)
 
