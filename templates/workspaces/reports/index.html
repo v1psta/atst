@@ -261,7 +261,7 @@
         </tr>
       </tbody>
 
-      <tbody v-for='(project, name) in projects'>
+      <tbody v-for='(project, name) in projectsState' class='spend-table__project'>
         <tr>
           <th scope='rowgroup'>
             <button v-on:click='toggle($event, name)' class='icon-link icon-link--large spend-table__project__toggler'>
@@ -292,7 +292,7 @@
           </td>
         </tr>
 
-        <tr v-for='(environment, envName) in environments[name]' v-show='project.isVisible'>
+        <tr v-for='(environment, envName) in environments[name]' v-show='project.isVisible' class='spend-table__project__env'>
           <th scope='rowgroup'>
             <a href='#' class='icon-link spend-table__project__env'>
               {{ Icon('link') }}
