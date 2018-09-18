@@ -128,24 +128,18 @@ def requests_submit(request_id=None):
 @requests_bp.route("/requests/details/<string:request_id>", methods=["GET"])
 def view_request_details(request_id=None):
     request = Requests.get(g.current_user, request_id)
-    financial_review = (
-        request.is_pending_ccpo_approval
-        or request.is_approved
-        or request.is_pending_financial_verification_changes
-    )
     requires_fv_action = (
         request.is_pending_financial_verification
         or request.is_pending_financial_verification_changes
     )
 
     data = request.body
-    if financial_review and request.task_order:
+    if request.has_financial_data:
         data["task_order"] = request.task_order.to_dictionary()
 
     return render_template(
         "requests/details.html",
         data=data,
         request=request,
-        financial_review=financial_review,
         requires_fv_action=requires_fv_action,
     )
