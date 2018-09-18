@@ -35,7 +35,7 @@ class RequestRevision(Base, TimestampsMixin):
 
     # details_of_use
     jedi_usage = Column(String)
-    start_date = Column(Date())
+    start_date = Column(Date)
     cloud_native = Column(String)
     dollar_value = Column(Integer)
     dod_component = Column(String)
@@ -60,7 +60,7 @@ class RequestRevision(Base, TimestampsMixin):
     fname_request = Column(String)
     lname_request = Column(String)
     service_branch = Column(String)
-    date_latest_training = Column(Date())
+    date_latest_training = Column(Date)
 
     # financial_verification
     pe_id = Column(String)

@@ -155,6 +155,8 @@
       {{ DefinitionReviewField("If other, please specify", "task_order", "funding_type_other") }}
     {% endif %}
 
+    {{ DefinitionReviewField("Task Order Expiration Date", "task_order", "expiration_date") }}
+
     {{ DefinitionReviewField("<dl><dt>CLIN 0001</dt> - <dd>Unclassified IaaS and PaaS Amount</dd></dl>", "task_order", "clin_0001", filter="dollars") }}
 
     {{ DefinitionReviewField("<dl><dt>CLIN 0003</dt> - <dd>Unclassified Cloud Support Package</dd></dl>", "task_order", "clin_0003", filter="dollars") }}

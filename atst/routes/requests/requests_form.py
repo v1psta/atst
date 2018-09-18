@@ -146,5 +146,6 @@ def view_request_details(request_id=None):
         "requests/details.html",
         data=data,
         request=request,
+        financial_review=financial_review,
         requires_fv_action=requires_fv_action,
     )

@@ -170,6 +170,11 @@ class TaskOrderFactory(Base):
     funding_type = FundingType.PROC
     funding_type_other = None
     number = "toABC123"
+    expiration_date = factory.LazyFunction(
+        lambda: datetime.date(
+            datetime.date.today().year + random.randrange(1, 15), 1, 1
+        )
+    )
     clin_0001 = random.randrange(100, 100000)
     clin_0003 = random.randrange(100, 100000)
     clin_1001 = random.randrange(100, 100000)
