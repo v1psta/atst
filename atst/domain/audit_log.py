@@ -9,9 +9,7 @@ class AuditEventQuery(Query):
 
     @classmethod
     def get_all(cls):
-        return (
-            db.session.query(AuditEvent).order_by(AuditEvent.time_created.desc()).all()
-        )
+        return db.session.query(cls.model).order_by(cls.model.time_created.desc()).all()
 
 
 class AuditLog(object):
