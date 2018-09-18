@@ -8,6 +8,10 @@
   @include panel-margin;
   min-width: 100%;
 
+  @include ie-only {
+    border-collapse: separate;
+  }
+
   th, td {
     &.table-cell--align-right {
       text-align: right;
