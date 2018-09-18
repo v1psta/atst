@@ -20,9 +20,7 @@ def map_ccpo_authorizing(user):
 
 def render_approval(request, form=None):
     data = request.body
-    pending_final_approval = request.is_pending_ccpo_approval
-    pending_review = request.is_pending_ccpo_acceptance or pending_final_approval
-    if pending_final_approval and request.task_order:
+    if request.has_financial_data:
         data["task_order"] = request.task_order.to_dictionary()
 
     if not form:
@@ -35,8 +33,6 @@ def render_approval(request, form=None):
         reviews=list(reversed(request.reviews)),
         request=request,
         current_status=request.status.value,
-        pending_review=pending_review,
-        financial_review=pending_final_approval,
         f=form or CCPOReviewForm(),
     )
 

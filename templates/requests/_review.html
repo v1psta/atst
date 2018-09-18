@@ -132,7 +132,7 @@
   {{ DefinitionReviewField("DoD ID", "primary_poc", "dodid_poc") }}
 </dl>
 
-{% if financial_review %}
+{% if request.has_financial_data %}
   <hr>
   <h2>
     Financial Verification

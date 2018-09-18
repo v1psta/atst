@@ -32,7 +32,7 @@
 
     </section>
 
-    {% if pending_review %}
+    {% if request.is_pending_ccpo_action %}
     <section class='request-approval__review'>
       <form method="POST" action="{{ url_for("requests.submit_approval", request_id=request.id) }}" autocomplete="off">
         {{ f.csrf_token }}

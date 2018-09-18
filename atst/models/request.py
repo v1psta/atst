@@ -204,3 +204,11 @@ class Request(Base):
             review = self.latest_status.review
             if review:
                 return review.comment
+
+    @property
+    def has_financial_data(self):
+        return (
+            self.is_pending_ccpo_approval
+            or self.is_pending_financial_verification_changes
+            or self.is_approved
+        ) and self.task_order
