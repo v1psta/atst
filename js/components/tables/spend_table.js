@@ -28,9 +28,9 @@ export default {
   methods: {
     toggle: function (e, projectName) {
       this.projectsState = Object.assign(this.projectsState, {
-        [projectName]: {
+        [projectName]: Object.assign(this.projectsState[projectName],{
           isVisible: !this.projectsState[projectName].isVisible
-        }
+        })
       })
     },
 
