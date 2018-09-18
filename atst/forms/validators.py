@@ -1,12 +1,17 @@
 import re
 from wtforms.validators import ValidationError
 import pendulum
+from datetime import datetime
 
 
 def DateRange(lower_bound=None, upper_bound=None, message=None):
     def _date_range(form, field):
         now = pendulum.now().date()
-        date = field.data
+
+        if isinstance(field.data, str):
+            date = datetime.strptime(field.data, field.format)
+        else:
+            date = field.data
 
         if lower_bound is not None:
             if (now - lower_bound) > date:

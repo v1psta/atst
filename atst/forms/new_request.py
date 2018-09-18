@@ -1,7 +1,7 @@
 import pendulum
 from wtforms.fields.html5 import DateField, EmailField, IntegerField, TelField
 from wtforms.fields import BooleanField, RadioField, StringField, TextAreaField
-from wtforms.validators import Email, Length, Optional, Required
+from wtforms.validators import Email, Length, Optional, Required, DataRequired
 
 from .fields import SelectField
 from .forms import ValidatedForm
@@ -136,7 +136,14 @@ class DetailsOfUseForm(ValidatedForm):
 
     start_date = DateField(
         description="When do you expect to start using the JEDI Cloud (not for billing purposes)?",
-        validators=[Required()],
+        validators=[
+            DataRequired(),
+            DateRange(
+                lower_bound=pendulum.duration(days=1),
+                upper_bound=None,
+                message="Must be a date in the future.",
+            ),
+        ],
         format="%m/%d/%Y",
     )
 
