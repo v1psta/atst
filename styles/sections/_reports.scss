@@ -280,6 +280,13 @@
 
       .spend-table__project__env {
         margin-left: $gap;
+
+        &:last-child {
+          td, th {
+            padding-bottom: $gap * 5;
+            box-shadow: inset 0 (-$gap * 2.5) 0 $color-gray-lightest;
+          }
+        }
       }
     }
   }
