@@ -17,12 +17,17 @@ def root():
 
 @bp.route("/home")
 def home():
-    num_workspaces = len(g.current_user.workspace_roles)
+    user = g.current_user
+
+    if user.atat_role_name == "ccpo":
+        return redirect(url_for("requests.requests_index"))
+
+    num_workspaces = len(user.workspace_roles)
 
     if num_workspaces == 0:
         return redirect(url_for("requests.requests_index"))
     elif num_workspaces == 1:
-        workspace_role = g.current_user.workspace_roles[0]
+        workspace_role = user.workspace_roles[0]
         workspace_id = workspace_role.workspace.id
         is_request_owner = workspace_role.role.name == "owner"
 
