@@ -171,6 +171,9 @@ jobs:
       - attach_workspace:
           at: .
       - run:
+          name: "Export GIT_SHA"
+          command: echo "export GIT_SHA=$(git rev-parse --short HEAD)" >> $BASH_ENV
+      - run:
           name: "Update Kubernetes Deployment"
           command: ./deploy/kubernetes/atst-update-deploy.sh
 
