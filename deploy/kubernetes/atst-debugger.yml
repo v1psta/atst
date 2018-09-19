@@ -3,14 +3,14 @@ kind: Pod
 metadata:
   labels:
     app: atst-debugger
-  name: atst-debugger
+  name: atst-debugger-v1
   namespace: atat
 spec:
   securityContext:
     fsGroup: 101
   containers:
-    - name: atst-debugger
-      image: registry.atat.codes:443/atst-prod:beac5fb
+    - name: atst
+      image: registry.atat.codes:443/atst-prod:6329f8e
       args: ["/bin/bash", "-c", "while true; do date; sleep 45; done"]
       envFrom:
       - configMapRef:
