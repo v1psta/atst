@@ -23,8 +23,8 @@ class TaskOrder(Base):
 
     id = Column(Integer, primary_key=True)
     number = Column(String, unique=True)
-    source = Column(SQLAEnum(Source))
-    funding_type = Column(SQLAEnum(FundingType))
+    source = Column(SQLAEnum(Source, native_enum=False))
+    funding_type = Column(SQLAEnum(FundingType, native_enum=False))
     funding_type_other = Column(String)
     clin_0001 = Column(Integer)
     clin_0003 = Column(Integer)

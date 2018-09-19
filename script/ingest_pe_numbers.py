@@ -16,11 +16,6 @@ def get_pe_numbers(url):
     t = response.read().decode("utf-8")
     return list(csv.reader(t.split("\r\n")))
 
-def make_pe_number_repo(config):
-    deps = make_deps(config)
-    db = deps["db_session"]
-    return PENumbers(db)
-
 if __name__ == "__main__":
     config = make_config()
     url = config['PE_NUMBER_CSV_URL']
