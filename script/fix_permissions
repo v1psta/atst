@@ -17,8 +17,8 @@ if [ "${APP_USER}x" = "x" ] || [ "${APP_GROUP}x" = "x" ]; then
 fi
 
 chown "${APP_USER}:${APP_GROUP}" .
-chown "${APP_USER}:${APP_GROUP}" *
+chown "${APP_USER}:${APP_GROUP}" ./*
 for subdir in $(find . -type d -maxdepth 1 | grep -Ee '.[^/]' | grep -Fve 'node_modules')
 do
-    chown "${APP_USER}:${APP_GROUP}" -R ${subdir}
+    chown "${APP_USER}:${APP_GROUP}" -R "${subdir}"
 done
