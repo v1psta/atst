@@ -148,7 +148,7 @@ class DetailsOfUseForm(ValidatedForm):
     )
 
     name = StringField(
-        "Name your Request",
+        "Name Your Request",
         description="This name serves as a reference for your initial request and the associated workspace that will be created once this request is approved. You may edit this name later.",
         validators=[
             Required(),
