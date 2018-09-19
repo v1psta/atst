@@ -106,6 +106,11 @@ def workspace_reports(workspace_id):
     prev_month = current_month - timedelta(days=28)
     two_months_ago = prev_month - timedelta(days=28)
 
+    # lets just say it expires on Christmas... ho ho ho
+    expiration_date = date(2018, 12, 25)
+    remaining_difference = expiration_date - current_month
+    remaining_days = remaining_difference.days
+
     return render_template(
         "workspaces/reports/index.html",
         cumulative_budget=Reports.cumulative_budget(alternate_reports),
@@ -114,6 +119,8 @@ def workspace_reports(workspace_id):
         current_month=current_month,
         prev_month=prev_month,
         two_months_ago=two_months_ago,
+        expiration_date=expiration_date,
+        remaining_days=remaining_days
     )
 
 
