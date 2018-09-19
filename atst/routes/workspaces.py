@@ -120,7 +120,7 @@ def workspace_reports(workspace_id):
         prev_month=prev_month,
         two_months_ago=two_months_ago,
         expiration_date=expiration_date,
-        remaining_days=remaining_days
+        remaining_days=remaining_days,
     )
 
 
