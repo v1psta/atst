@@ -47,3 +47,19 @@ class TaskOrder(Base):
             for c in self.__table__.columns
             if c.name not in ["id", "attachment_id"]
         }
+
+    @property
+    def budget(self):
+        return sum(
+            filter(
+                None,
+                [
+                    self.clin_0001,
+                    self.clin_0003,
+                    self.clin_1001,
+                    self.clin_1003,
+                    self.clin_2001,
+                    self.clin_2003,
+                ],
+            )
+        )
