@@ -35,7 +35,7 @@ def downgrade():
     session = Session(bind=op.get_bind())
 
     owner_and_admin = session.query(Role).filter(Role.name.in_(["owner", "admin"])).all()
-    for role in owner_and_ccpo:
+    for role in owner_and_admin:
         role.remove_permission(Permissions.EDIT_WORKSPACE_INFORMATION)
         session.add(role)
 
