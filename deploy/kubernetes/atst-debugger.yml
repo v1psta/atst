@@ -1,6 +1,8 @@
 apiVersion: v1
 kind: Pod
 metadata:
+  labels:
+    app: atst-debugger
   name: atst-debugger
   namespace: atat
 spec:
@@ -8,7 +10,7 @@ spec:
     fsGroup: 101
   containers:
     - name: atst-debugger
-      image: registry.atat.codes:443/atst-prod:a1916b1
+      image: registry.atat.codes:443/atst-prod:beac5fb
       args: ["/bin/bash", "-c", "while true; do date; sleep 45; done"]
       envFrom:
       - configMapRef:
@@ -17,19 +19,85 @@ spec:
         - name: atst-config
           mountPath: "/opt/atat/atst/atst-overrides.ini"
           subPath: atst-overrides.ini
+        - name: nginx-client-ca-bundle
+          mountPath: "/opt/atat/atst/ssl/server-certs/ca-chain.pem"
+          subPath: client-ca-bundle.pem
         - name: uwsgi-config
           mountPath: "/opt/atat/atst/uwsgi-config.ini"
           subPath: uwsgi-config.ini
         - name: uwsgi-socket-dir
           mountPath: "/var/run/uwsgi"
+    - name: atst-nginx
+      image: nginx:alpine
+      ports:
+        - containerPort: 8442
+          name: http
+        - containerPort: 8443
+          name: https
+      volumeMounts:
+        - name: nginx-auth-tls
+          mountPath: "/etc/ssl/private"
+        - name: nginx-client-ca-bundle
+          mountPath: "/etc/ssl/client-ca-bundle.pem"
+          subPath: client-ca-bundle.pem
+        - name: nginx-config
+          mountPath: "/etc/nginx/conf.d/atst.conf"
+          subPath: atst.conf
+        - name: nginx-dhparam
+          mountPath: "/etc/ssl/dhparam.pem"
+          subPath: dhparam.pem
+        - name: nginx-htpasswd
+          mountPath: "/etc/nginx/.htpasswd"
+          subPath: .htpasswd
+        - name: uwsgi-socket-dir
+          mountPath: "/var/run/uwsgi"
+  imagePullSecrets:
+    - name: regcred
   volumes:
     - name: atst-config
       secret:
         secretName: atst-config-ini
         items:
-        - key: atst-overrides.ini
+        - key: override.ini
           path: atst-overrides.ini
           mode: 0644
+    - name: nginx-auth-tls
+      secret:
+        secretName: auth-atst-ingress-tls
+        items:
+        - key: tls.crt
+          path: auth.atat.crt
+          mode: 0644
+        - key: tls.key
+          path: auth.atat.key
+          mode: 0640
+    - name: nginx-client-ca-bundle
+      secret:
+        secretName: nginx-client-ca-bundle
+        items:
+        - key: client-ca-bundle.pem
+          path: client-ca-bundle.pem
+          mode: 0666
+    - name: nginx-config
+      configMap:
+        name: atst-nginx
+        items:
+        - key: nginx-config
+          path: atst.conf
+    - name: nginx-dhparam
+      secret:
+        secretName: dhparam-4096
+        items:
+        - key: dhparam.pem
+          path: dhparam.pem
+          mode: 0640
+    - name: nginx-htpasswd
+      secret:
+        secretName: atst-nginx-htpasswd
+        items:
+        - key: htpasswd
+          path: .htpasswd
+          mode: 0640
     - name: uwsgi-config
       configMap:
         name: atst-config
@@ -41,3 +109,18 @@ spec:
       emptyDir:
         medium: Memory
   restartPolicy: Never
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: atst-debugger
+  name: atst-debugger
+  namespace: atat
+spec:
+  ports:
+  - name: http
+    port: 80
+    targetPort: 8442
+  selector:
+    app: atst-debugger
