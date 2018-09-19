@@ -60,11 +60,11 @@
   }
 
   .budget-chart__block {
-    fill: $color-white;
+    fill: transparent;
     cursor: pointer;
 
     &--highlighted {
-      fill: $color-aqua-lightest;
+      fill: rgba($color-aqua, .15);
     }
 
     &--is-expiration {
@@ -72,12 +72,26 @@
     }
 
     &:hover {
-      fill: $color-aqua-lightest;
+      fill: rgba($color-aqua, .15);
     }
   }
 
   svg {
     display: block;
+
+    .filter__text-background {
+      feFlood {
+        flood-color: $color-white;
+        flood-opacity: 1;
+      }
+
+      &--highlighted {
+        feFlood {
+          flood-color: $color-aqua-lightest;
+          flood-opacity: 1;
+        }
+      }
+    }
 
     a {
       text-decoration: none;
@@ -85,6 +99,15 @@
         outline: none;
         stroke: $color-gray-light;
         stroke-dasharray: 2px;
+      }
+
+      &:hover {
+        .filter__text-background {
+          feFlood {
+            flood-color: $color-aqua-lightest;
+            flood-opacity: 1;
+          }
+        }
       }
     }
   }
