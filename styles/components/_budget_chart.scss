@@ -155,6 +155,7 @@
   .budget-chart__label {
     @include small-label;
     fill: $color-gray;
+    pointer-events: none;
 
     &--strong {
       fill: $color-black;
