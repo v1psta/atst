@@ -67,6 +67,10 @@
       fill: $color-aqua-lightest;
     }
 
+    &--is-expiration {
+      border-left: 2px dotted $color-gray;
+    }
+
     &:hover {
       fill: $color-aqua-lightest;
     }
@@ -94,6 +98,12 @@
       stroke: $color-blue;
       stroke-dasharray: 4px;
     }
+  }
+
+  .budget-chart__expiration-line {
+    stroke-width: 2px;
+    stroke: $color-gray-light;
+    stroke-dasharray: 4px;
   }
 
   .budget-chart__cumulative__dot {
