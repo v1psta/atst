@@ -3,10 +3,10 @@ from sqlalchemy.orm import relationship
 
 from atst.models import Base
 from atst.models.types import Id
-from atst.models.mixins import TimestampsMixin
+from atst.models import mixins
 
 
-class Project(Base, TimestampsMixin):
+class Project(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     __tablename__ = "projects"
 
     id = Id()

@@ -34,6 +34,10 @@ def get_current_user():
     else:
         return False
 
+def logout():
+    if session.get("user_id"):
+        del (session["user_id"])
+
 
 def _unprotected_route(request):
     if request.endpoint in UNPROTECTED_ROUTES:

@@ -12,11 +12,11 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import ARRAY
 
 from atst.models import Base
-from atst.models.mixins import TimestampsMixin
+from atst.models import mixins
 from atst.models.types import Id
 
 
-class RequestRevision(Base, TimestampsMixin):
+class RequestRevision(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     __tablename__ = "request_revisions"
 
     id = Id()

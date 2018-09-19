@@ -133,7 +133,7 @@ class TestPENumberInForm:
         request = RequestFactory.create(creator=user)
         monkeypatch.setattr("atst.domain.requests.Requests.get", lambda *args: request)
         monkeypatch.setattr("atst.forms.financial.validate_pe_id", lambda *args: True)
-        user_session()
+        user_session(user)
         data = {**self.required_data, **extended_financial_verification_data}
         data["task_order_number"] = "1234567"
 

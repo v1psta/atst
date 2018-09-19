@@ -1,10 +1,11 @@
 from atst.domain.projects import Projects
-from atst.domain.workspaces import Workspaces
 from tests.factories import RequestFactory
+from atst.domain.workspaces import Workspaces
 
 
 def test_create_project_with_multiple_environments():
-    workspace = Workspaces.create(RequestFactory.create())
+    request = RequestFactory.create()
+    workspace = Workspaces.create(request)
     project = Projects.create(
         workspace.owner, workspace, "My Test Project", "Test", ["dev", "prod"]
     )

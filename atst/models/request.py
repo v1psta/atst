@@ -24,7 +24,7 @@ def update_dict_with_properties(instance, body, top_level_key, properties):
     return body
 
 
-class Request(Base, mixins.TimestampsMixin):
+class Request(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     __tablename__ = "requests"
 
     id = types.Id()

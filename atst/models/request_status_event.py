@@ -22,7 +22,7 @@ class RequestStatus(Enum):
     DELETED = "Deleted"
 
 
-class RequestStatusEvent(Base, mixins.TimestampsMixin):
+class RequestStatusEvent(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     __tablename__ = "request_status_events"
 
     id = Id()

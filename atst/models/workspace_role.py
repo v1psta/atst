@@ -6,7 +6,7 @@ from atst.models import Base, mixins
 from .types import Id
 
 
-class WorkspaceRole(Base, mixins.TimestampsMixin):
+class WorkspaceRole(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     __tablename__ = "workspace_roles"
 
     id = Id()

@@ -9,6 +9,7 @@ from tempfile import TemporaryDirectory
 
 from atst.app import make_app, make_config
 from atst.database import db as _db
+from atst.domain.auth import logout
 import tests.factories as factories
 from tests.mocks import PDF_FILENAME
 
@@ -108,7 +109,7 @@ def user_session(monkeypatch, session):
     def set_user_session(user=None):
         monkeypatch.setattr(
             "atst.domain.auth.get_current_user",
-            lambda *args: user or factories.UserFactory.build(),
+            lambda *args: user or factories.UserFactory.create(),
         )
 
     return set_user_session
