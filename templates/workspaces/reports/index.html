@@ -102,7 +102,12 @@
   {% set two_months_ago_index = two_months_ago.strftime('%m/%Y') %}
   {% set reports_url = url_for("workspaces.workspace_reports", workspace_id=workspace.id) %}
 
-  <budget-chart budget={{ budget }} current-month='{{ current_month_index }}' v-bind:months='{{ cumulative_budget.months | tojson }}' inline-template>
+  <budget-chart
+    budget={{ budget }}
+    current-month='{{ current_month_index }}'
+    expiration-date='{{ expiration_date }}'
+    v-bind:months='{{ cumulative_budget.months | tojson }}'
+    inline-template>
     <div class='budget-chart panel' ref='panel'>
       <header class='budget-chart__header panel__heading panel__heading--tight'>
         <h2 class='h3'>Cumulative Budget</h2>
@@ -153,7 +158,7 @@
             {# container block #}
             <rect
               class='budget-chart__block'
-              v-bind:class='{ "budget-chart__block--highlighted": month.isHighlighted }'
+              v-bind:class='{ "budget-chart__block--highlighted": month.isHighlighted, "budget-chart__block-is-expiration": month.isExpirationMonth }'
               v-bind:width='month.metrics.blockWidth'
               v-bind:x='month.metrics.blockX'
               v-bind:height='height'></rect>
@@ -167,6 +172,31 @@
               v-bind:height='month.metrics.barHeight'
               v-bind:x='month.metrics.barX'
               v-bind:y='month.metrics.barY'></rect>
+
+            {# projected budget bar #}
+            <rect
+              v-if='!month.budget'
+              class='budget-chart__bar budget-chart__bar--projected'
+              v-bind:width='month.metrics.barWidth'
+              v-bind:height='month.metrics.barHeight'
+              v-bind:x='month.metrics.barX'
+              v-bind:y='month.metrics.barY'></rect>
+
+            {# task order expiration line #}
+            <line
+              v-if='month.isExpirationMonth'
+              class='budget-chart__expiration-line'
+              v-bind:x1='month.metrics.blockX'
+              v-bind:x2='month.metrics.blockX'
+              y1='0'
+              v-bind:y2='height'></line>
+
+            {# task order expiration label #}
+            <text
+              v-if='month.isExpirationMonth'
+              v-bind:x='month.metrics.blockX + 10'
+              v-bind:y='budgetHeight + 20'
+              class='budget-chart__label'>T.O. Expires</text>
 
             {# cumulative dot #}
             <circle
@@ -200,6 +230,15 @@
               text-anchor='middle'
               class='budget-chart__label budget-chart__label--strong'
               v-html='month.date.month'></text>
+
+            {# year label #}
+            <text
+              v-if='month.showYear'
+              v-bind:x='month.metrics.cumulativeX'
+              v-bind:y='baseHeight + 55'
+              text-anchor='middle'
+              class='budget-chart__label budget-chart__label--strong'
+              v-html='month.date.year'></text>
           </g>
         </a>
 
