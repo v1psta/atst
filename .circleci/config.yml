@@ -83,8 +83,7 @@ jobs:
       - restore_cache:
           name: "Load Cache: CRLs"
           keys:
-            - disa-crls-v1
-            - disa-crls
+            - disa-crls-v2
       - run: 
           name: "Update CRLs"
           command: ./script/sync-crls
@@ -92,7 +91,7 @@ jobs:
           name: "Save Cache: CRLs"
           paths:
             - ./crl
-          key: disa-crls-v1-{{ .Branch }}-{{ epoch}}
+          key: disa-crls-v2-{{ .Branch }}-{{ epoch}}
       - persist_to_workspace:
           root: .
           paths:
