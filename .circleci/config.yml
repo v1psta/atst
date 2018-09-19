@@ -141,7 +141,7 @@ jobs:
           command: docker exec -t --workdir ${APP_DIR} ${CONTAINER_NAME} ./script/alpine_setup
       - run:
           name: "Copy System Site Packages into the Container"
-          command: docker cp ${PYTHON_SITE_PACKAGES_DIR} ${CONTAINER_NAME}:${PYTHON_SITE_PACKAGES_DIR}
+          command: docker cp ${PYTHON_SITE_PACKAGES_DIR}/. ${CONTAINER_NAME}:${PYTHON_SITE_PACKAGES_DIR}
       - run:
           name: "Run Fix Permissions"
           command: docker exec -t --workdir ${APP_DIR} ${CONTAINER_NAME} ./script/fix_permissions ${APP_USER} ${APP_GROUP}
