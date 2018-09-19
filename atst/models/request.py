@@ -75,6 +75,7 @@ class Request(Base):
         "average_daily_traffic_gb",
         "rationalization_software_systems",
         "organization_providing_assistance",
+        "name",
     ]
     INFORMATION_ABOUT_YOU_FIELDS = [
         "citizenship",
@@ -212,3 +213,7 @@ class Request(Base):
             or self.is_pending_financial_verification_changes
             or self.is_approved
         ) and self.task_order
+
+    @property
+    def displayname(self):
+        return self.latest_revision.name or self.id

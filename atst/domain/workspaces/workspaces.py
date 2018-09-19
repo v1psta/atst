@@ -11,7 +11,7 @@ from .scopes import ScopedWorkspace
 class Workspaces(object):
     @classmethod
     def create(cls, request, name=None):
-        name = name or request.id
+        name = name or request.displayname
         workspace = WorkspacesQuery.create(request=request, name=name)
         Workspaces._create_workspace_role(request.creator, workspace, "owner")
         WorkspacesQuery.add_and_commit(workspace)

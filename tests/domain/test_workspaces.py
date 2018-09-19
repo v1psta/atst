@@ -35,8 +35,8 @@ def test_request_is_associated_with_workspace(workspace, request_):
     assert workspace.request == request_
 
 
-def test_default_workspace_name_is_request_id(workspace, request_):
-    assert workspace.name == str(request_.id)
+def test_default_workspace_name_is_request_name(workspace, request_):
+    assert workspace.name == str(request_.displayname)
 
 
 def test_get_nonexistent_workspace_raises():

@@ -10,7 +10,7 @@ class WorkspaceForm(ValidatedForm):
         validators=[
             Length(
                 min=4,
-                max=50,
+                max=100,
                 message="Workspace names must be at least 4 and not more than 50 characters",
             )
         ],

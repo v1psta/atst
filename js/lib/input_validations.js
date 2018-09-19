@@ -81,8 +81,8 @@ export default {
   },
   workspaceName: {
     mask: false,
-    match: /^.{4,50}$/,
+    match: /^.{4,100}$/,
     unmask: [],
-    validationError: 'Workspace names must be at least 4 and not more than 50 characters'
+    validationError: 'Workspace and request names must be at least 4 and not more than 100 characters'
   },
 }
