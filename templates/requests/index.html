@@ -90,7 +90,7 @@
       <table>
         <thead>
           <tr>
-            <th scope="col">JEDI Cloud Request ID</th>
+            <th scope="col">JEDI Cloud Request Name</th>
             <th scope="col">Date Request Submitted</th>
             {% if extended_view %}
               <th scope="col">Date Request Last Edited</th>
@@ -107,7 +107,7 @@
           {% for r in requests %}
           <tr>
             <th scope="row">
-              <a class='icon-link icon-link--large' href="{{ r.edit_link }}">{{ r.order_id }}</a>
+              <a class='icon-link icon-link--large' href="{{ r.edit_link }}">{{ r.name }}</a>
               {% if r.action_required %}<span class="label label--info">Action Required</span>{% endif %}
             </th>
             <td>{{ r.last_submission_timestamp | formattedDate }}</td>

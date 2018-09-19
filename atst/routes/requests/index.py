@@ -81,7 +81,7 @@ class RequestsIndex(object):
 
         return {
             "workspace_id": request.workspace.id if request.workspace else None,
-            "order_id": request.id,
+            "name": request.displayname,
             "is_new": is_new,
             "status": request.status_displayname,
             "app_count": app_count,
