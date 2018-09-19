@@ -1,13 +1,13 @@
-from sqlalchemy import Column, BigInteger, String, ForeignKey
+from sqlalchemy import Column, String, ForeignKey
 from sqlalchemy.orm import relationship
 
-from atst.models import Base
+from atst.models import Base, types
 
 
 class RequestInternalComment(Base):
     __tablename__ = "request_internal_comments"
 
-    id = Column(BigInteger, primary_key=True)
+    id = types.Id()
     text = Column(String())
 
     user_id = Column(ForeignKey("users.id"), nullable=False)

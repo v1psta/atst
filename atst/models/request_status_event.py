@@ -26,7 +26,7 @@ class RequestStatusEvent(Base):
     __tablename__ = "request_status_events"
 
     id = Id()
-    new_status = Column(SQLAEnum(RequestStatus))
+    new_status = Column(SQLAEnum(RequestStatus, native_enum=False))
     time_created = Column(DateTime(timezone=True), server_default=func.now())
     request_id = Column(
         UUID(as_uuid=True), ForeignKey("requests.id", ondelete="CASCADE")
