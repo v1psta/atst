@@ -141,18 +141,45 @@ CUMULATIVE_BUDGET_BELUGA = {
     "09/2018": {"spend": 14500, "cumulative": 19338},
 }
 
+REPORT_FIXTURE_MAP = {
+    "aardvark": {
+        "cumulative": CUMULATIVE_BUDGET_AARDVARK,
+        "monthly": MONTHLY_SPEND_AARDVARK,
+        "budget": 500_000,
+    },
+    "beluga": {
+        "cumulative": CUMULATIVE_BUDGET_BELUGA,
+        "monthly": MONTHLY_SPEND_BELUGA,
+        "budget": 70_000,
+    }
+}
+
+def _sum_monthly_spend(data):
+    return sum(
+        [
+            spend
+            for project in data.values()
+            for env in project.values()
+            for spend in env.values()
+        ]
+    )
 
 class Reports:
     @classmethod
     def workspace_totals(cls, workspace):
-        if workspace.request and workspace.request.task_order:
+        if workspace.name in REPORT_FIXTURE_MAP.keys():
+            budget = REPORT_FIXTURE_MAP[workspace.name]["budget"]
+            spent = _sum_monthly_spend(REPORT_FIXTURE_MAP[workspace.name]["monthly"])
+        elif workspace.request and workspace.request.task_order:
             ws_to = workspace.request.task_order
             budget = ws_to.budget
+            spent = 0
         else:
             budget = 0
+            spent = 0
 
         # spent will be derived from CSP data
-        return {"budget": budget, "spent": 0}
+        return {"budget": budget, "spent": spent}
 
     @classmethod
     def monthly_totals(cls, alternate):
