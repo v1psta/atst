@@ -222,16 +222,17 @@
             <line
               v-if='month.isExpirationMonth'
               class='budget-chart__expiration-line'
-              v-bind:x1='month.metrics.blockX'
-              v-bind:x2='month.metrics.blockX'
+              v-bind:x1='month.metrics.cumulativeX'
+              v-bind:x2='month.metrics.cumulativeX'
               y1='0'
-              v-bind:y2='height'></line>
+              v-bind:y2='baseHeight'></line>
 
             {# task order expiration label #}
             <text
               v-bind:filter="'url(#text-background__' + month.date.month + month.date.year + ')'"
               v-if='month.isExpirationMonth'
-              v-bind:x='month.metrics.blockX + 10'
+              text-anchor='middle'
+              v-bind:x='month.metrics.cumulativeX'
               v-bind:y='budgetHeight + 20'
               class='budget-chart__label'>T.O. Expires</text>
 
@@ -282,18 +283,6 @@
               v-html='month.date.year'></text>
           </g>
         </a>
-
-        {# spend/projected budget path lines #}
-        <path class='budget-chart__projected-path' v-bind:d='projectedPath'></path>
-        <path class='budget-chart__spend-path' v-bind:d='spendPath'></path>
-
-        {# max budget line #}
-        <line
-          class='budget-chart__budget-line'
-          x1='0'
-          v-bind:x2='width'
-          v-bind:y1='budgetHeight'
-          v-bind:y2='budgetHeight'></line>
 
         <text
           x='20'
