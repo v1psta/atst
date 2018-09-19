@@ -178,13 +178,13 @@
 
             <title>
               <span v-html='month.date.month + " " + month.date.year'></span>&nbsp;|&nbsp;<!--
-              --><template v-if='month.budget'><!--
-                --><template v-if='month.budget.spend'>Spend:</template><!--
-                --><template v-if='month.budget.projected'>Projected Spend:</template><!--
+              --><template v-if='month.cumulativeTotal'><!--
+                --><template v-if='month.budget && month.budget.spend'>Spend:</template><!--
+                --><template v-else>Projected Spend:</template><!--
                 --><span v-html='month.spendAmount'></span><!--
                 -->&nbsp;|&nbsp;<!--
-                --><template v-if='month.budget.cumulative'>Total:</template><!--
-                --><template v-if='month.budget.projected'>Projected Total:</template><!--
+                --><template v-if='month.budget'>Total:</template><!--
+                --><template v-else>Projected Total:</template><!--
                 --><span v-html='month.cumulativeAmount'></span><!--
               --></template><!--
 
@@ -237,7 +237,7 @@
 
             {# cumulative dot #}
             <circle
-              v-if='month.budget'
+              v-if='month.cumulativeTotal'
               class='budget-chart__cumulative__dot'
               v-bind:r='month.metrics.cumulativeR'
               v-bind:cx='month.metrics.cumulativeX'
@@ -245,8 +245,8 @@
 
             {# abbreviated cumulative label #}
             <text
-              v-if='month.budget'
               v-bind:filter="'url(#text-background__' + month.date.month + month.date.year + ')'"
+              v-if='month.cumulativeTotal'
               v-bind:x='month.metrics.cumulativeX'
               v-bind:y='month.metrics.cumulativeY - 10'
               text-anchor='middle'
