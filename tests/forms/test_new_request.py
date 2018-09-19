@@ -13,7 +13,7 @@ class TestDetailsOfUseForm:
         "dollar_value": "42",
         "number_user_sessions": "6",
         "average_daily_traffic": "0",
-        "start_date": "12/12/2012",
+        "start_date": "12/12/2050",
     }
     migration_data = {
         "jedi_migration": "yes",
@@ -87,3 +87,11 @@ class TestDetailsOfUseForm:
 
         request_form = DetailsOfUseForm(data=data)
         assert request_form.validate()
+
+    def test_start_date_must_be_in_the_future(self):
+        data = {**self.form_data, **self.migration_data}
+        data["start_date"] = "01/01/2018"
+
+        request_form = DetailsOfUseForm(data=data)
+        assert not request_form.validate()
+        assert "Must be a date in the future." in request_form.errors["start_date"]
