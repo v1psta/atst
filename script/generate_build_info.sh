@@ -103,7 +103,7 @@ cat > ${STATIC_DIR}/buildinfo.html <<ENDHTML
 </TR>
 <TR>
         <TD class="label">Commit SHA:</TD>
-        <TD><A target="_blank" href="${GITHUB_COMMIT_URL}">${GIT_COMMIT}</A></TD>
+        <TD><A target="_blank" href="${GITHUB_COMMIT_URL}">${GIT_SHA}</A></TD>
 </TR>
 <TR>
         <TD class="label">Commit Author:</TD>
