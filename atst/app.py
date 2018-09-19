@@ -144,7 +144,7 @@ def make_redis(config):
 
 def make_crl_validator(app):
     crl_locations = []
-    for filename in pathlib.Path(app.config["CRL_DIRECTORY"]).glob("*"):
+    for filename in pathlib.Path(app.config["CRL_DIRECTORY"]).glob("*.crl"):
         crl_locations.append(filename.absolute())
     app.crl_cache = CRLCache(app.config["CA_CHAIN"], crl_locations, logger=app.logger)
 
