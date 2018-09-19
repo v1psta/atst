@@ -14,6 +14,7 @@ class TestDetailsOfUseForm:
         "number_user_sessions": "6",
         "average_daily_traffic": "0",
         "start_date": "12/12/2050",
+        "name": "blue-beluga",
     }
     migration_data = {
         "jedi_migration": "yes",

@@ -75,6 +75,7 @@ class Request(Base):
         "average_daily_traffic_gb",
         "rationalization_software_systems",
         "organization_providing_assistance",
+        "name",
     ]
     INFORMATION_ABOUT_YOU_FIELDS = [
         "citizenship",

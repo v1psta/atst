@@ -51,6 +51,7 @@ class RequestRevision(Base, TimestampsMixin):
     average_daily_traffic_gb = Column(Integer)
     rationalization_software_systems = Column(String)
     organization_providing_assistance = Column(String)
+    name = Column(String)
 
     # information_about_you
     citizenship = Column(String)

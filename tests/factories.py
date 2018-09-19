@@ -108,6 +108,7 @@ class RequestFactory(Base):
     def create_initial_revision(cls, request, dollar_value=1000000):
         user = request.creator
         default_data = dict(
+            name=factory.Faker("domain_word"),
             am_poc=False,
             dodid_poc=user.dod_id,
             email_poc=user.email,
