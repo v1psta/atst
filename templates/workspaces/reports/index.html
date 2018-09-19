@@ -63,12 +63,17 @@
             <dl>
               <div>
                 <dt>Expires</dt>
-                <dd>November 1, 2019</dd>
+                <dd>
+                  <local-datetime
+                    timestamp='{{ expiration_date }}'
+                    format='MMMM D, YYYY'>
+                    </local-datetime>
+                </dd>
               </div>
 
               <div>
                 <dt>Remaining</dt>
-                <dd>200 days</dd>
+                <dd>{{ remaining_days }} days</dd>
               </div>
             </dl>
 
