@@ -150,7 +150,14 @@ class DetailsOfUseForm(ValidatedForm):
     name = StringField(
         "Name your Request",
         description="This name serves as a reference for your initial request and the associated workspace that will be created once this request is approved. You may edit this name later.",
-        validators=[Required(), Length(min=4, max=100, message="Request names must be at least 4 and not more than 100 characters")]
+        validators=[
+            Required(),
+            Length(
+                min=4,
+                max=100,
+                message="Request names must be at least 4 and not more than 100 characters",
+            ),
+        ],
     )
 
 
