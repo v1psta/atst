@@ -8,9 +8,27 @@
 
 # Config
 APP_NAME="ATST"
-CIRCLECI_WORKFLOW_BASEURL="https://circleci.com/workflow-run"
-CIRCLECI_WORKFLOW_URL="${CIRCLECI_WORKFLOW_BASEURL}/${CIRCLE_WORKFLOW_ID}"
 STATIC_DIR="./static"
+
+if [ "${CIRCLECI}" = "true" ]
+then
+	# This is a CircleCI build
+	BUILD_NUMBER="${CIRCLE_BUILD_NUM}"
+	BUILD_STATUS_URL="${CIRCLE_BUILD_URL}"
+	BUILT_BY="CircleCI"
+	CIRCLECI_WORKFLOW_BASEURL="https://circleci.com/workflow-run"
+	GIT_BRANCH="${CIRCLE_BRANCH}"
+	WORKFLOW_ID="${CIRCLE_WORKFLOW_ID}"
+	WORKFLOW_STATUS_URL="${CIRCLECI_WORKFLOW_BASEURL}/${CIRCLE_WORKFLOW_ID}"
+else
+	# Assume we're running on TravisCI instead
+	BUILD_NUMBER="${TRAVIS_BUILD_ID}"
+	BUILD_STATUS_URL="https://travis-ci.org/$TRAVIS_REPO_SLUG/builds/$TRAVIS_BUILD_ID"
+	BUILT_BY="TravisCI"
+	GIT_BRANCH="${TRAVIS_BRANCH}"
+	WORKFLOW_ID="N/A"
+	WORKFLOW_STATUS_URL="#"
+fi
 
 echo "### Generate Build Info ###"
 
@@ -39,10 +57,11 @@ cat > ${STATIC_DIR}/buildinfo.json <<ENDJSON
 {
   "build_info" : {
     "project_name" : "${APP_NAME}",
-    "build_id" : "${CIRCLE_BUILD_NUM}",
-    "build_url" : "${CIRCLE_BUILD_URL}",
-    "workflow_id" : "${CIRCLE_WORKFLOW_ID}",
-    "workflow_url" : "${CIRCLECI_WORKFLOW_URL}"
+    "build_id" : "${BUILD_NUMBER}",
+    "build_url" : "${BUILD_STATUS_URL}",
+    "built_by" : "${BUILT_BY}",
+    "workflow_id" : "${WORKFLOW_ID}",
+    "workflow_url" : "${WORKFLOW_STATUS_URL}"
   },
   "image_info" : {
     "create_date" : "${APP_CONTAINER_CREATE_DATE}",
@@ -50,7 +69,7 @@ cat > ${STATIC_DIR}/buildinfo.json <<ENDJSON
   },
   "git_info" : {
     "repository_url" : "${GIT_URL}",
-    "branch" : "${CIRCLE_BRANCH}",
+    "branch" : "${GIT_BRANCH}",
     "commit" : {
       "sha" : "${GIT_SHA}",
       "github_commit_url" : "${GITHUB_COMMIT_URL}",
@@ -66,7 +85,7 @@ echo "Generating public/buildinfo.html ..."
 cat > ${STATIC_DIR}/buildinfo.html <<ENDHTML
 <HTML>
 <HEAD>
-        <TITLE>${APP_NAME} build ${CIRCLE_BUILD_NUM} info</TITLE>
+        <TITLE>${APP_NAME} build ${BUILD_NUMBER} info</TITLE>
         <STYLE>
                 table {
                                 display: table;
@@ -87,7 +106,7 @@ cat > ${STATIC_DIR}/buildinfo.html <<ENDHTML
 <BODY>
 <TABLE border="1">
 <TR>
-        <TH colspan="2">BuildInfo</TH>
+        <TH colspan="2">BuildInfo (${BUILT_BY}</TH>
 </TR>
 <TR>
         <TD class="label">Container Image Creation Time:</TD>
@@ -95,11 +114,11 @@ cat > ${STATIC_DIR}/buildinfo.html <<ENDHTML
 </TR>
 <TR>
         <TD class="label">Build Number:</TD>
-        <TD><A target="_blank" href="${CIRCLE_BUILD_URL}">${CIRCLE_BUILD_NUM}</A></TD>
+        <TD><A target="_blank" href="${BUILD_STATUS_URL}">${BUILD_NUMBER}</A></TD>
 </TR>
 <TR>
         <TD class="label">Workflow Number:</TD>
-        <TD><A target="_blank" href="${CIRCLECI_WORKFLOW_URL}">${CIRCLE_WORKFLOW_NUM}</A></TD>
+        <TD><A target="_blank" href="${WORKFLOW_STATUS_URL}">${WORKFLOW_ID}</A></TD>
 </TR>
 <TR>
         <TD class="label">Commit SHA:</TD>
