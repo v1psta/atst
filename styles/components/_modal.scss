@@ -52,9 +52,19 @@ $fixed-footer-height: 5rem + ($gap * 4);
 
       .modal__dismiss {
         position: absolute;
-        top: 0;
-        right: 0;
+        top: $gap;
+        right: $gap;
         width: 8rem;
+
+        @include media($medium-screen) {
+          top: $gap * 2;
+          right: $gap * 2;
+        }
+
+        @include media($large-screen) {
+          top: $gap * 4;
+          right: $gap * 4;
+        }
       }
 
       .block-list {
