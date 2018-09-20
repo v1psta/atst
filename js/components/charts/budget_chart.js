@@ -1,14 +1,15 @@
-import { format } from 'date-fns'
+import { format, isWithinRange, addMonths, isSameMonth, getMonth } from 'date-fns'
 import { abbreviateDollars, formatDollars } from '../../lib/dollars'
 
 const TOP_OFFSET = 20
-const BOTTOM_OFFSET = 60
+const BOTTOM_OFFSET = 70
 const CHART_HEIGHT = 360
 
 export default {
   name: 'budget-chart',
   props: {
     currentMonth: String,
+    expirationDate: String,
     months: Object,
     budget: String
   },
@@ -46,18 +47,15 @@ export default {
       let lastSpendPoint = ''
 
       for (let i = 0; i < this.numMonths; i++) {
-        const { metrics, budget } = this.displayedMonths[i]
+        const { metrics, budget, rollingAverage, cumulativeTotal } = this.displayedMonths[i]
         const blockWidth = (this.width / this.numMonths)
         const blockX = blockWidth * i
-        const spend = budget
-          ? budget.spend || lastSpend
-          : 0
-        const cumulative = budget
-          ? budget.cumulative || budget.projected
-          : 0
+        const spend = budget && budget.spend
+          ? budget.spend
+          : rollingAverage
         const barHeight = spend / this.heightScale
         lastSpend = spend
-        const cumulativeY = this.height - (cumulative / this.heightScale) - BOTTOM_OFFSET
+        const cumulativeY = this.height - (cumulativeTotal / this.heightScale) - BOTTOM_OFFSET
         const cumulativeX = blockX + blockWidth/2
         const cumulativePoint = `${cumulativeX} ${cumulativeY}`
 
@@ -77,9 +75,7 @@ export default {
           this.spendPath += this.spendPath === '' ? 'M' : ' L'
           this.spendPath += cumulativePoint
           lastSpendPoint = cumulativePoint
-        }
-
-        if (budget && budget.projected) {
+        } else {
           this.projectedPath += this.projectedPath === '' ? `M${lastSpendPoint} L` : ' L'
           this.projectedPath += cumulativePoint
         }
@@ -88,32 +84,76 @@ export default {
 
     _setDisplayedMonths: function () {
       const [month, year] = this.currentMonth.split('/')
+      const [expYear, expMonth, expDate] = this.expirationDate.split('-') // assumes format 'YYYY-MM-DD'
       const monthsRange = []
-      const monthsBack = this.focusedMonthPosition
+      const monthsBack = this.focusedMonthPosition + 1
       const monthsForward = this.numMonths - this.focusedMonthPosition - 1
-      const start = new Date(year, month - 1 - monthsBack)
 
-      let previousAmount = 0
+      // currently focused date
+      const current = new Date(year, month)
+
+      // starting date of the chart
+      const start = addMonths(current, -monthsBack)
+
+      // ending date of the chart
+      const end = addMonths(start, this.numMonths + 1)
+
+      // expiration date
+      const expires = new Date(expYear, expMonth-1, expDate)
+
+      // is the expiration date within the displayed date range?
+      const expirationWithinRange = isWithinRange(expires, start, end)
+
+      let rollingAverage = 0
+      let cumulativeTotal = 0
 
       for (let i = 0; i < this.numMonths; i++) {
-        const date = new Date(start.getFullYear(), start.getMonth() + i)
+        const date = addMonths(start, i)
+        const dateMinusOne = addMonths(date, -1)
+        const dateMinusTwo = addMonths(date, -2)
+        const dateMinusThree = addMonths(date, -3)
+
         const index = format(date, 'MM/YYYY')
+        const indexMinusOne = format(dateMinusOne, 'MM/YYYY')
+        const indexMinusTwo = format(dateMinusTwo, 'MM/YYYY')
+        const indexMinusThree = format(dateMinusThree, 'MM/YYYY')
+
         const budget = this.months[index] || null
-        const spendAmount = budget ? budget.spend || previousAmount : 0
-        const cumulativeAmount = budget ? budget.cumulative || budget.projected : 0
-        previousAmount = spendAmount
+        const spendAmount = budget ? budget.spend : rollingAverage
+        const spendMinusOne = this.months[indexMinusOne] ? this.months[indexMinusOne].spend : rollingAverage
+        const spendMinusTwo = this.months[indexMinusTwo] ? this.months[indexMinusTwo].spend : rollingAverage
+        const spendMinusThree = this.months[indexMinusThree] ? this.months[indexMinusThree].spend : rollingAverage
+
+        const isExpirationMonth = isSameMonth(date, expires)
+
+        if (budget && budget.cumulative) {
+          cumulativeTotal = budget.cumulative
+        } else {
+          cumulativeTotal += spendAmount
+        }
+
+        rollingAverage = (
+            spendAmount
+          + spendMinusOne
+          + spendMinusTwo
+          + spendMinusThree
+          ) / 4
 
         monthsRange.push({
           budget,
+          rollingAverage,
+          cumulativeTotal,
+          isExpirationMonth,
           spendAmount: formatDollars(spendAmount),
           abbreviatedSpend: abbreviateDollars(spendAmount),
-          cumulativeAmount: formatDollars(cumulativeAmount),
-          abbreviatedCumulative: abbreviateDollars(cumulativeAmount),
+          cumulativeAmount: formatDollars(cumulativeTotal),
+          abbreviatedCumulative: abbreviateDollars(cumulativeTotal),
           date: {
             monthIndex: format(date, 'M'),
             month: format(date, 'MMM'),
             year: format(date,'YYYY')
           },
+          showYear: isExpirationMonth || (i === 0) || getMonth(date) === 0,
           isHighlighted: this.currentMonth === index,
           metrics: {
             blockWidth: 0,
