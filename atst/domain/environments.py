@@ -58,8 +58,8 @@ class Environments(object):
     @classmethod
     def update_environment_role(cls, ids_and_roles, workspace_user):
         Authorization.check_workspace_permission(
-            user,
-            workspace,
+            workspace_user.user,
+            workspace_user.workspace,
             Permissions.ADD_AND_ASSIGN_CSP_ROLES,
             "assign environment roles",
         )
