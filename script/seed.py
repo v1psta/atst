@@ -12,7 +12,7 @@ from atst.domain.requests import Requests
 from atst.domain.workspaces import Workspaces
 from atst.domain.projects import Projects
 from atst.domain.exceptions import AlreadyExistsError
-from tests.factories import RequestFactory
+from tests.factories import RequestFactory, TaskOrderFactory
 from atst.routes.dev import _DEV_USERS as DEV_USERS
 
 WORKSPACE_USERS = [
@@ -63,7 +63,10 @@ def seed_db():
             Requests.submit(request)
             requests.append(request)
 
-        workspace = Workspaces.create(requests[0], name="{}'s workspace".format(user.first_name))
+        request = requests[0]
+        request.task_order = TaskOrderFactory.build()
+
+        workspace = Workspaces.create(request, name="{}'s workspace".format(user.first_name))
         for workspace_user in WORKSPACE_USERS:
             Workspaces.create_member(user, workspace, workspace_user)
 
