@@ -98,7 +98,6 @@ def workspace_reports(workspace_id):
         "view workspace reports",
     )
 
-    alternate_reports = http_request.args.get("alternate")
     today = date.today()
     month = http_request.args.get("month", today.month)
     year = http_request.args.get("year", today.year)
@@ -113,9 +112,9 @@ def workspace_reports(workspace_id):
 
     return render_template(
         "workspaces/reports/index.html",
-        cumulative_budget=Reports.cumulative_budget(alternate_reports),
+        cumulative_budget=Reports.cumulative_budget(workspace),
         workspace_totals=Reports.workspace_totals(workspace),
-        monthly_totals=Reports.monthly_totals(alternate_reports),
+        monthly_totals=Reports.monthly_totals(workspace),
         current_month=current_month,
         prev_month=prev_month,
         two_months_ago=two_months_ago,
