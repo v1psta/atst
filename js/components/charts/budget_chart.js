@@ -47,8 +47,6 @@ export default {
       let lastSpendPoint = ''
 
       for (let i = 0; i < this.numMonths; i++) {
-
-        console.log(this.displayedMonths[i])
         const { metrics, budget, rollingAverage, cumulativeTotal } = this.displayedMonths[i]
         const blockWidth = (this.width / this.numMonths)
         const blockX = blockWidth * i
