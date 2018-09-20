@@ -301,8 +301,21 @@
     <div class='spend-table__header'>
       <h2 class='spend-table__title'>Total spend per month </h2>
 
-      <select name='month' id='month' class='spend-table__month-select'>
-        <option value='03/2019'>{{ current_month.strftime('%B %Y') }}</option>
+      <select name='month' id='month' onchange='location = this.value' class='spend-table__month-select'>
+        {% for m in cumulative_budget["months"] %}
+          {% set month = m | dateFromString %}
+          <option
+            {% if month.month == current_month.month and month.year == current_month.year %}
+              selected='selected'
+            {% endif %}
+            value='{{ url_for("workspaces.workspace_reports",
+                              workspace_id=workspace.id,
+                              month=month.month,
+                              year=month.year) }}'
+          >
+            {{ month.strftime('%B %Y') }}
+          </option>
+        {% endfor %}
       </select>
     </div>
 

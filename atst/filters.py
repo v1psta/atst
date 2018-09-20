@@ -1,4 +1,5 @@
 import re
+import datetime
 from flask import current_app as app
 from werkzeug.datastructures import FileStorage
 
@@ -72,6 +73,10 @@ def formattedDate(value, formatter="%m/%d/%Y"):
         return "-"
 
 
+def dateFromString(value, formatter="%m/%Y"):
+    return datetime.datetime.strptime(value, formatter)
+
+
 def register_filters(app):
     app.jinja_env.filters["iconSvg"] = iconSvg
     app.jinja_env.filters["dollars"] = dollars
@@ -82,3 +87,4 @@ def register_filters(app):
     app.jinja_env.filters["findFilter"] = findFilter
     app.jinja_env.filters["renderList"] = renderList
     app.jinja_env.filters["formattedDate"] = formattedDate
+    app.jinja_env.filters["dateFromString"] = dateFromString
