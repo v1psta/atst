@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, String
 from flask import current_app as app
 
 from atst.models import Base, types, mixins
