@@ -1,13 +1,13 @@
-from sqlalchemy import Column, BigInteger, String, ForeignKey
+from sqlalchemy import Column, String, ForeignKey
 from sqlalchemy.orm import relationship
 
-from atst.models import Base
+from atst.models import Base, mixins, types
 
 
-class RequestReview(Base):
+class RequestReview(Base, mixins.TimestampsMixin):
     __tablename__ = "request_reviews"
 
-    id = Column(BigInteger, primary_key=True)
+    id = types.Id()
     status = relationship("RequestStatusEvent", uselist=False, back_populates="review")
 
     user_id = Column(ForeignKey("users.id"), nullable=False)

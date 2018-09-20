@@ -1,10 +1,10 @@
 from sqlalchemy import Column, String, ForeignKey
 from sqlalchemy.orm import relationship
 
-from atst.models import Base, types
+from atst.models import Base, types, mixins
 
 
-class RequestInternalComment(Base):
+class RequestInternalComment(Base, mixins.TimestampsMixin):
     __tablename__ = "request_internal_comments"
 
     id = types.Id()

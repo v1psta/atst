@@ -3,7 +3,7 @@ from enum import Enum
 from sqlalchemy import Column, Integer, String, ForeignKey, Enum as SQLAEnum, Date
 from sqlalchemy.orm import relationship
 
-from atst.models import Base
+from atst.models import Base, types, mixins
 
 
 class Source(Enum):
@@ -18,10 +18,10 @@ class FundingType(Enum):
     OTHER = "OTHER"
 
 
-class TaskOrder(Base):
-    __tablename__ = "task_order"
+class TaskOrder(Base, mixins.TimestampsMixin):
+    __tablename__ = "task_orders"
 
-    id = Column(Integer, primary_key=True)
+    id = types.Id()
     number = Column(String, unique=True)
     source = Column(SQLAEnum(Source, native_enum=False))
     funding_type = Column(SQLAEnum(FundingType, native_enum=False))

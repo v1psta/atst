@@ -5,7 +5,7 @@ from sqlalchemy.types import DateTime, BigInteger
 from sqlalchemy.schema import Sequence
 from sqlalchemy.dialects.postgresql import UUID
 
-from atst.models import Base
+from atst.models import Base, mixins
 from atst.models.types import Id
 
 
@@ -22,7 +22,7 @@ class RequestStatus(Enum):
     DELETED = "Deleted"
 
 
-class RequestStatusEvent(Base):
+class RequestStatusEvent(Base, mixins.TimestampsMixin):
     __tablename__ = "request_status_events"
 
     id = Id()
