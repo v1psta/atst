@@ -141,42 +141,87 @@ CUMULATIVE_BUDGET_BELUGA = {
     "09/2018": {"spend": 14500, "cumulative": 19338},
 }
 
+REPORT_FIXTURE_MAP = {
+    "Aardvark": {
+        "cumulative": CUMULATIVE_BUDGET_AARDVARK,
+        "monthly": MONTHLY_SPEND_AARDVARK,
+        "budget": 500_000,
+    },
+    "Beluga": {
+        "cumulative": CUMULATIVE_BUDGET_BELUGA,
+        "monthly": MONTHLY_SPEND_BELUGA,
+        "budget": 70_000,
+    },
+}
+
+
+def _sum_monthly_spend(data):
+    return sum(
+        [
+            spend
+            for project in data.values()
+            for env in project.values()
+            for spend in env.values()
+        ]
+    )
+
+
+def _derive_project_totals(data):
+    project_totals = {}
+    for project, environments in data.items():
+        project_spend = [
+            (month, spend)
+            for env in environments.values()
+            for month, spend in env.items()
+        ]
+        project_totals[project] = {
+            month: sum([spend[1] for spend in spends])
+            for month, spends in groupby(sorted(project_spend), lambda x: x[0])
+        }
+
+    return project_totals
+
+
+def _derive_workspace_totals(project_totals):
+    monthly_spend = [
+        (month, spend)
+        for project in project_totals.values()
+        for month, spend in project.items()
+    ]
+    workspace_totals = {}
+    for month, spends in groupby(sorted(monthly_spend), lambda m: m[0]):
+        workspace_totals[month] = sum([spend[1] for spend in spends])
+
+    return workspace_totals
+
 
 class Reports:
     @classmethod
     def workspace_totals(cls, workspace):
-        if workspace.request and workspace.request.task_order:
+        if workspace.name in REPORT_FIXTURE_MAP:
+            budget = REPORT_FIXTURE_MAP[workspace.name]["budget"]
+            spent = _sum_monthly_spend(REPORT_FIXTURE_MAP[workspace.name]["monthly"])
+        elif workspace.request and workspace.request.task_order:
             ws_to = workspace.request.task_order
             budget = ws_to.budget
+            # spent will be derived from CSP data
+            spent = 0
         else:
             budget = 0
+            spent = 0
 
-        # spent will be derived from CSP data
-        return {"budget": budget, "spent": 0}
+        return {"budget": budget, "spent": spent}
 
     @classmethod
-    def monthly_totals(cls, alternate):
-        data = MONTHLY_SPEND_BELUGA if alternate else MONTHLY_SPEND_AARDVARK
-        project_totals = {}
-        for project, environments in data.items():
-            project_spend = [
-                (month, spend)
-                for env in environments.values()
-                for month, spend in env.items()
-            ]
-            project_totals[project] = {
-                month: sum([spend[1] for spend in spends])
-                for month, spends in groupby(sorted(project_spend), lambda x: x[0])
-            }
-
-        monthly_spend = [
-            (month, spend)
-            for project in project_totals.values()
-            for month, spend in project.items()
-        ]
-        workspace_totals = {}
-        for month, spends in groupby(sorted(monthly_spend), lambda m: m[0]):
-            workspace_totals[month] = sum([spend[1] for spend in spends])
+    def monthly_totals(cls, workspace):
+        if workspace.name in REPORT_FIXTURE_MAP:
+            data = REPORT_FIXTURE_MAP[workspace.name]["monthly"]
+            project_totals = _derive_project_totals(data)
+            workspace_totals = _derive_workspace_totals(project_totals)
+        else:
+            data = {}
+            project_totals = {}
+            workspace_totals = {}
 
         return {
             "environments": data,
@@ -185,9 +230,10 @@ class Reports:
         }
 
     @classmethod
-    def cumulative_budget(cls, alternate):
-        return {
-            "months": CUMULATIVE_BUDGET_BELUGA
-            if alternate
-            else CUMULATIVE_BUDGET_AARDVARK
-        }
+    def cumulative_budget(cls, workspace):
+        if workspace.name in REPORT_FIXTURE_MAP:
+            months = REPORT_FIXTURE_MAP[workspace.name]["cumulative"]
+        else:
+            months = {}
+
+        return {"months": months}
