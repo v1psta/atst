@@ -142,12 +142,12 @@ CUMULATIVE_BUDGET_BELUGA = {
 }
 
 REPORT_FIXTURE_MAP = {
-    "aardvark": {
+    "Aardvark": {
         "cumulative": CUMULATIVE_BUDGET_AARDVARK,
         "monthly": MONTHLY_SPEND_AARDVARK,
         "budget": 500_000,
     },
-    "beluga": {
+    "Beluga": {
         "cumulative": CUMULATIVE_BUDGET_BELUGA,
         "monthly": MONTHLY_SPEND_BELUGA,
         "budget": 70_000,
