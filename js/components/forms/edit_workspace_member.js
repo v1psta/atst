@@ -24,6 +24,7 @@ export default {
   data: function () {
     return {
       value: this.initialData,
+      label_class: this.initialData,
     }
   },
 
@@ -31,7 +32,10 @@ export default {
     change: function (e) {
       this.value = e.target.value
     },
-    readableName: function (role) {
+    displayName: function (role) {
+      this.label_class = role === "no_access" ?
+        "label" : "label label--success"
+
       return role.replace(/[_]/g, " ")
     },
     cancel: function (current_role, selected_role) {

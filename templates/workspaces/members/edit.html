@@ -65,11 +65,6 @@
         {% for env in project.environments %}
 
           {% set role = EnvironmentRole.get(member.user_id, env.id).role or 'no_access' %}
-          {% set label_class = 'label' %}
-          {% if role != 'no_access' %}
-            {% set label_class = 'label label--success' %}
-          {% endif %}
-
 
         <li class='block-list__item'>
           <edit-workspace-member inline-template initial-data='{{ role }}' v-bind:choices='{{ form.environment_role.choices | tojson }}'>
@@ -81,7 +76,7 @@
             <div class='project-list-item__environment__actions'>
               <div>{{ form.data["environment_role"] }}</div>
 
-              <span class="{{ label_class }}" v-html:on=readableName(value)></span>
+              <span v-bind:class="label_class" v-html:on=displayName(value)></span>
               <button v-on:click="openModal('{{ env.name }}RolesModal')" type="button" class="icon-link">set role</button>
               {% call Modal(name=env.name + 'RolesModal', dismissable=False) %}
                   <div class='block-list'>
