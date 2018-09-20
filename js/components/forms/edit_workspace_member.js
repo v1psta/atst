@@ -45,10 +45,10 @@ export default {
           return this.choices[arr][1].name
         }
       }
-      return this.value
+      return this.value ? this.value : "no access"
     },
     label_class: function () {
-      return this.value === "no_access" ?
+      return this.displayName === "no access" ?
         "label" : "label label--success"
     }
   }
