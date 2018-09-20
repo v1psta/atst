@@ -216,3 +216,13 @@ class Request(Base, mixins.TimestampsMixin):
     @property
     def displayname(self):
         return self.latest_revision.name or self.id
+
+    @property
+    def contracting_officer_full_name(self):
+        if self.latest_revision.fname_co:
+            return "{} {}".format(self.latest_revision.fname_co, self.latest_revision.lname_co)
+
+    @property
+    def contracting_officer_email(self):
+        return self.latest_revision.email_co
+
