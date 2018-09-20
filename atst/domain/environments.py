@@ -4,6 +4,8 @@ from atst.database import db
 from atst.models.environment import Environment
 from atst.models.environment_role import EnvironmentRole, CSPRole
 from atst.models.project import Project
+from atst.models.permissions import Permissions
+from atst.domain.authz import Authorization
 
 from .exceptions import NotFoundError
 
@@ -55,13 +57,17 @@ class Environments(object):
 
     @classmethod
     def update_environment_role(cls, ids_and_roles, workspace_user):
-        # TODO need to check permissions?
-        for i in range(len(ids_and_roles)):
-            new_role = ids_and_roles[i]["role"]
-            environment = Environments.get(ids_and_roles[i]["id"])
-            env_role = EnvironmentRole.get(
-                workspace_user.user_id, ids_and_roles[i]["id"]
-            )
+        Authorization.check_workspace_permission(
+            user,
+            workspace,
+            Permissions.ADD_AND_ASSIGN_CSP_ROLES,
+            "assign environment roles",
+        )
+
+        for id_and_role in ids_and_roles:
+            new_role = id_and_role["role"]
+            environment = Environments.get(id_and_role["id"])
+            env_role = EnvironmentRole.get(workspace_user.user_id, id_and_role["id"])
             if env_role:
                 env_role.role = new_role
             else:
@@ -69,4 +75,5 @@ class Environments(object):
                     user=workspace_user.user, environment=environment, role=new_role
                 )
             db.session.add(env_role)
-            db.session.commit()
+
+        db.session.commit()
