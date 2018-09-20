@@ -11,12 +11,6 @@ export default {
   },
   data: function() {
     return {
-      modals: {
-        styleguidemodal: false,
-        newprojectconfirmation: false,
-        pendingfinancialverification: false,
-        pendingccpoapproval: false,
-      },
       activeModal: null,
     }
   }
