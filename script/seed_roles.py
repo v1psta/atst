@@ -48,6 +48,7 @@ roles = [
             Permissions.RENAME_ENVIRONMENT_IN_APPLICATION,
             Permissions.ADD_TAG_TO_WORKSPACE,
             Permissions.REMOVE_TAG_FROM_WORKSPACE,
+            Permissions.VIEW_AUDIT_LOG
         ],
     ),
     Role(
