@@ -24,7 +24,6 @@ export default {
   data: function () {
     return {
       value: this.initialData,
-      label_class: this.initialData,
     }
   },
 
@@ -32,16 +31,25 @@ export default {
     change: function (e) {
       this.value = e.target.value
     },
-    displayName: function (role) {
-      this.label_class = role === "no_access" ?
-        "label" : "label label--success"
-
-      return role.replace(/[_]/g, " ")
-    },
     cancel: function (current_role, selected_role) {
       if (current_role != selected_role) {
         this.value = current_role
       }
     }
   },
+
+  computed: {
+    displayName: function () {
+      for (var arr in this.choices) {
+        if (this.choices[arr][0] == this.value) {
+          return this.choices[arr][1].name
+        }
+      }
+      return this.value
+    },
+    label_class: function () {
+      return this.value === "no_access" ?
+        "label" : "label label--success"
+    }
+  }
 }
