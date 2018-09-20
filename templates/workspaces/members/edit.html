@@ -117,7 +117,7 @@
                     <div class='block-list__footer'>
                       <div class='action-group'>
                         <a v-on:click="closeModal('{{ env.name }}RolesModal')" class='action-group__action usa-button'>Select Access Role</a>
-                        <a class='action-group__action icon-link icon-link--danger' v-on:click="closeModal('{{ env.name }}RolesModal')">Cancel</a>
+                        <a class='action-group__action icon-link icon-link--danger' v-on:click="closeModal('{{ env.name }}RolesModal'); cancel('{{ role }}', value);" value="{{ value if value == role else role }}" >Cancel</a>
                       </div>
                     </div>
                   </div>

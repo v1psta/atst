@@ -18,12 +18,13 @@ export default {
 
   props: {
     choices: Array,
-    initialData: String
-
+    initialData: String,
   },
 
   data: function () {
-    return { value: this.initialData }
+    return {
+      value: this.initialData,
+    }
   },
 
   methods: {
@@ -33,9 +34,10 @@ export default {
     readableName: function (role) {
       return role.replace(/[_]/g, " ")
     },
+    cancel: function (current_role, selected_role) {
+      if (current_role != selected_role) {
+        this.value = current_role
+      }
+    }
   },
-
-  mounted: function () {
-    console.log(this.initialData, this.choices)
-  }
 }
