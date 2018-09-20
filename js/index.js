@@ -41,8 +41,18 @@ const app = new Vue({
     CcpoApproval,
     LocalDatetime
   },
+
   mounted: function() {
+    this.$on('modalOpen', isOpen => {
+      if (isOpen) {
+        document.body.className += ' modal-open'
+      } else {
+        document.body.className = document.body.className.replace(' modal-open', '')
+      }
+    })
+
     const modalOpen = document.querySelector("#modalOpen")
+
     if (modalOpen) {
       const modal = modalOpen.getAttribute("data-modal")
       this.openModal(modal)
