@@ -32,10 +32,8 @@ export default {
       e.preventDefault()
       this.new_role = e.target.value
     },
-    cancel: function (current_role, selected_role) {
-      if (current_role != selected_role) {
-        this.new_role = current_role
-      }
+    cancel: function () {
+      this.new_role = this.initialData
     },
   },
 
@@ -51,6 +49,6 @@ export default {
     label_class: function () {
       return this.displayName === "no access" ?
         "label" : "label label--success"
-    }
+    },
   }
 }

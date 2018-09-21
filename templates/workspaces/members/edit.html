@@ -86,7 +86,7 @@
 
                         {% if choice[0] != ""  %}
                           <input
-                            name='env_{{ env.id }}'
+                            name='radio_input_{{ env.id }}'
                             v-on:change='change'
                             type='radio'
                             id="env_{{ env.id }}_{{ choice[0] }}"
@@ -109,10 +109,11 @@
                       </li>
                       {% endfor %}
                     </ul>
+                    <input type='hidden' name='env_{{ env.id }}' v-bind:value='new_role'/>
                     <div class='block-list__footer'>
                       <div class='action-group'>
                         <a v-on:click="closeModal('{{ env.name }}RolesModal')" class='action-group__action usa-button'>Select Access Role</a>
-                        <a class='action-group__action icon-link icon-link--danger' v-on:click="closeModal('{{ env.name }}RolesModal'); cancel('{{ role }}', value);" value="{{ value if value == role else role }}" >Cancel</a>
+                        <a class='action-group__action icon-link icon-link--danger' v-on:click="closeModal('{{ env.name }}RolesModal'); cancel();" value="{{ value if value == role else role }}" >Cancel</a>
                       </div>
                     </div>
                   </div>
