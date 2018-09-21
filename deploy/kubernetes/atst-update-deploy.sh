@@ -8,6 +8,17 @@ set -o errexit
 set -o nounset
 # set -o xtrace
 
+# Config
+MAX_DEPLOY_WAIT='5m'
+
+# Remove the K8S CA file when the script exits
+function cleanup {
+    printf "Cleaning up...\n"
+    rm -vf "${HOME}/k8s_ca.crt"
+    printf "Cleaning done."
+}
+trap cleanup EXIT
+
 # Decode and save the K8S CA cert
 echo "${K8S_CA_CRT}" | base64 -d - > "${HOME}/k8s_ca.crt"
 
@@ -31,13 +42,10 @@ kubectl config current-context
 kubectl -n atat set image deployment.apps/atst atst="${ATAT_DOCKER_REGISTRY_URL}/${PROD_IMAGE_NAME}:${GIT_SHA}"
 
 # Wait for deployment to finish
-kubectl -n atat rollout status deployment/atst
-
-# Remove the K8S CA file when the script exits
-function cleanup {
-    printf "Cleaning up...\n"
-    rm -vf "${HOME}/k8s_ca.crt"
-    printf "Cleaning done."
-}
-
-trap cleanup EXIT
+if ! timeout -s 2 "${MAX_DEPLOY_WAIT}" kubectl -n atat rollout status deployment/atst
+then
+    # Deploy did not finish before max wait time; abort and rollback the deploy
+    kubectl -n atat rollout undo deployment/atst
+    # Exit with a non-zero return code
+    exit 2
+fi
