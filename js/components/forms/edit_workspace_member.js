@@ -23,29 +23,30 @@ export default {
 
   data: function () {
     return {
-      value: this.initialData,
+      new_role: this.initialData,
     }
   },
 
   methods: {
     change: function (e) {
-      this.value = e.target.value
+      e.preventDefault()
+      this.new_role = e.target.value
     },
     cancel: function (current_role, selected_role) {
       if (current_role != selected_role) {
-        this.value = current_role
+        this.new_role = current_role
       }
-    }
+    },
   },
 
   computed: {
     displayName: function () {
       for (var arr in this.choices) {
-        if (this.choices[arr][0] == this.value) {
+        if (this.choices[arr][0] == this.new_role) {
           return this.choices[arr][1].name
         }
       }
-      return this.value ? this.value : "no access"
+      return this.new_role ? this.new_role : "no access"
     },
     label_class: function () {
       return this.displayName === "no access" ?
