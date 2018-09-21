@@ -51,9 +51,9 @@ class Projects(object):
         )
 
     @classmethod
-    def get_all(cls, workspace_user, workspace):
+    def get_all(cls, user, workspace_user, workspace):
         Authorization.check_workspace_permission(
-            workspace_user.user,
+            user,
             workspace,
             Permissions.VIEW_APPLICATION_IN_WORKSPACE,
             "view project in workspace",

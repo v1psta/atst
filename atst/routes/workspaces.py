@@ -216,7 +216,7 @@ def view_member(workspace_id, member_id):
         "edit this workspace user",
     )
     member = WorkspaceUsers.get(workspace_id, member_id)
-    projects = Projects.get_all(member, workspace)
+    projects = Projects.get_all(g.current_user, member, workspace)
     form = EditMemberForm(workspace_role=member.role, environment_role="")
     return render_template(
         "workspaces/members/edit.html",
@@ -259,7 +259,7 @@ def update_member(workspace_id, member_id):
             )
             new_role_name = member.role_displayname
 
-        Environments.update_environment_role(ids_and_roles, member)
+        Environments.update_environment_role(g.current_user, ids_and_roles, member)
 
         return redirect(
             url_for(

@@ -2,7 +2,7 @@ from sqlalchemy.orm.exc import NoResultFound
 
 from atst.database import db
 from atst.models.environment import Environment
-from atst.models.environment_role import EnvironmentRole, CSPRole
+from atst.models.environment_role import EnvironmentRole
 from atst.models.project import Project
 from atst.models.permissions import Permissions
 from atst.domain.authz import Authorization
@@ -27,9 +27,9 @@ class Environments(object):
         db.session.commit()
 
     @classmethod
-    def add_member(cls, user, environment, member, role=CSPRole.NONSENSE_ROLE):
+    def add_member(cls, user, environment, member, role=None):
         environment_user = EnvironmentRole(
-            user=member, environment=environment, role=role.value
+            user=member, environment=environment, role=role
         )
         db.session.add(environment_user)
         db.session.commit()
@@ -57,9 +57,9 @@ class Environments(object):
         return env
 
     @classmethod
-    def update_environment_role(cls, ids_and_roles, workspace_user):
+    def update_environment_role(cls, user, ids_and_roles, workspace_user):
         Authorization.check_workspace_permission(
-            workspace_user.user,
+            user,
             workspace_user.workspace,
             Permissions.ADD_AND_ASSIGN_CSP_ROLES,
             "assign environment roles",

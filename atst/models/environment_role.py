@@ -26,18 +26,6 @@ class EnvironmentRole(Base, mixins.TimestampsMixin):
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
     user = relationship("User", backref="environment_roles")
 
-    @classmethod
-    def get(cls, user_id, environment_id):
-        existing_env_role = (
-            db.session.query(EnvironmentRole)
-            .filter(
-                EnvironmentRole.user_id == user_id,
-                EnvironmentRole.environment_id == environment_id,
-            )
-            .one_or_none()
-        )
-        return existing_env_role
-
 
 Index(
     "environments_role_user_environment",
