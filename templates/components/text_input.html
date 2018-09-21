@@ -69,8 +69,7 @@
       <input type='hidden' v-bind:value='rawValue' name='{{ field.name }}' />
 
       <template v-if='showError'>
-        <span v-if='initialErrors' v-for='error in initialErrors' class='usa-input__message' v-html='error'></span>
-        <span v-if='!initialErrors' class='usa-input__message' v-html='validationError'></span>
+        <span class='usa-input__message' v-html='validationError'></span>
       </template>
 
     </div>
