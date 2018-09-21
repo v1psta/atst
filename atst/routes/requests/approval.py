@@ -16,6 +16,7 @@ from atst.forms.internal_comment import InternalCommentForm
 
 from datetime import date
 
+
 def map_ccpo_authorizing(user):
     return {"fname_ccpo": user.first_name, "lname_ccpo": user.last_name}
 
@@ -32,15 +33,18 @@ def render_approval(request, form=None):
     internal_comment_form = InternalCommentForm(text=request.internal_comments_text)
 
     # Dummy internal comments
-    comments = [{
-        "time_created": date(2018, 9, 18),
-        "full_name_commenter": "Darth Vader",
-        "message": "We'll have no more of this Obi-Wan Kenobi jibberish...and don't talk to me about your mission, either. You're fortunate he doesn't blast you into a million pieces right here. "
-    }, {
-        "time_created": date(2018, 9, 20),
-        "full_name_commenter": "Grand Moff Tarkin",
-        "message": "We'll have no more of this Obi-Wan Kenobi jibberish...and don't talk to me about your mission, either. You're fortunate he doesn't blast you into a million pieces right here. "
-    }]
+    comments = [
+        {
+            "time_created": date(2018, 9, 18),
+            "full_name_commenter": "Darth Vader",
+            "message": "We'll have no more of this Obi-Wan Kenobi jibberish...and don't talk to me about your mission, either. You're fortunate he doesn't blast you into a million pieces right here. ",
+        },
+        {
+            "time_created": date(2018, 9, 20),
+            "full_name_commenter": "Grand Moff Tarkin",
+            "message": "We'll have no more of this Obi-Wan Kenobi jibberish...and don't talk to me about your mission, either. You're fortunate he doesn't blast you into a million pieces right here. ",
+        },
+    ]
 
     return render_template(
         "requests/approval.html",
@@ -50,7 +54,7 @@ def render_approval(request, form=None):
         current_status=request.status.value,
         f=form or CCPOReviewForm(),
         internal_comment_form=internal_comment_form,
-        comments=comments
+        comments=comments,
     )
 
 
@@ -93,6 +97,7 @@ def task_order_pdf_download(request_id):
 
     else:
         raise NotFoundError("task_order pdf")
+
 
 @requests_bp.route("/requests/internal_comments/<string:request_id>", methods=["POST"])
 def create_internal_comment(request_id):
