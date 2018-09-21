@@ -352,12 +352,12 @@
             <th scope='col' class='table-cell--align-right previous-month'>{{ two_months_ago.strftime('%B %Y') }}</th>
             <th scope='col' class='table-cell--align-right previous-month'>{{ prev_month.strftime('%B %Y') }}</th>
             <th scope='col' class='table-cell--align-right current-month'>{{ current_month.strftime('%B %Y') }}</th>
-            <td class='current-month'></td>
+            <th class='current-month'>% of total spend this month</th>
           </thead>
 
           <tbody class='spend-table__workspace'>
             <tr>
-              <th scope='row'>Workspace Total</th>
+              <th scope='row'>Total</th>
               <td class='table-cell--align-right previous-month'>{{ workspace_totals.get(two_months_ago_index, 0) | dollars }}</td>
               <td class='table-cell--align-right previous-month'>{{ workspace_totals.get(prev_month_index, 0) | dollars }}</td>
               <td class='table-cell--align-right current-month'>{{ workspace_totals.get(current_month_index, 0) | dollars }}</td>
