@@ -1,5 +1,11 @@
 $fixed-footer-height: 5rem + ($gap * 4);
 
+body {
+  &.modal-open {
+    overflow-y: hidden;
+  }
+}
+
 .modal {
   position: fixed;
   z-index: 3;
@@ -11,6 +17,7 @@ $fixed-footer-height: 5rem + ($gap * 4);
 
   .modal__container {
     height: 100vh;
+    max-height: 100vh;
   }
 
   .modal__dialog {
@@ -36,7 +43,13 @@ $fixed-footer-height: 5rem + ($gap * 4);
       background-color: $color-white;
       padding: $gap * 2;
       width: 100%;
+
       overflow-y: auto;
+      -ms-overflow-style: scrollbar;
+
+      @include ie-only {
+        max-height: calc(100vh - #{$gap * 8});
+      }
 
       @include media($medium-screen) {
         padding: $gap * 4;
@@ -52,9 +65,19 @@ $fixed-footer-height: 5rem + ($gap * 4);
 
       .modal__dismiss {
         position: absolute;
-        top: 0;
-        right: 0;
+        top: $gap;
+        right: $gap;
         width: 8rem;
+
+        @include media($medium-screen) {
+          top: $gap * 2;
+          right: $gap * 2;
+        }
+
+        @include media($large-screen) {
+          top: $gap * 4;
+          right: $gap * 4;
+        }
       }
 
       .block-list {
