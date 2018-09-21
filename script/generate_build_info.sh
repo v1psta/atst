@@ -4,7 +4,7 @@
 #                             places them in a publically accessable static asset
 #                             folder
 
-#source "$(dirname "${0}")"/../script/include/global_header.inc.sh
+source "$(dirname "${0}")"/../script/include/global_header.inc.sh
 
 # Config
 APP_NAME="ATST"
