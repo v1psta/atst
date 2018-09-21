@@ -202,10 +202,10 @@ workflows:
             - test
           filters:
             branches:
-              only: circleci-cd
+              only: master
       - deploy:
           requires:
             - build_and_push_image
           filters:
             branches:
-              only: circleci-cd
+              only: master
