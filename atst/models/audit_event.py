@@ -38,7 +38,4 @@ class AuditEvent(Base, TimestampsMixin):
     def save(self, connection):
         attrs = inspect(self).dict
 
-        connection.execute(
-            self.__table__.insert(),
-            **attrs
-        )
+        connection.execute(self.__table__.insert(), **attrs)

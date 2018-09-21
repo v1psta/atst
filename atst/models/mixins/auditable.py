@@ -11,18 +11,17 @@ ACTION_DELETE = "delete"
 
 def getattr_path(obj, path, default=None):
     _obj = obj
-    for item in path.split('.'):
+    for item in path.split("."):
         _obj = getattr(_obj, item, default)
     return _obj
 
 
 def camel_to_snake(camel_cased):
-    s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', camel_cased)
-    return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()
+    s1 = re.sub("(.)([A-Z][a-z]+)", r"\1_\2", camel_cased)
+    return re.sub("([a-z0-9])([A-Z])", r"\1_\2", s1).lower()
 
 
 class AuditableMixin(object):
-
     @staticmethod
     def create_audit_event(connection, resource, action):
         user_id = getattr_path(g, "current_user.id")
@@ -41,9 +40,9 @@ class AuditableMixin(object):
 
     @classmethod
     def __declare_last__(cls):
-        event.listen(cls, 'after_insert', cls.audit_insert)
-        event.listen(cls, 'after_delete', cls.audit_delete)
-        event.listen(cls, 'after_update', cls.audit_update)
+        event.listen(cls, "after_insert", cls.audit_insert)
+        event.listen(cls, "after_delete", cls.audit_delete)
+        event.listen(cls, "after_update", cls.audit_update)
 
     @staticmethod
     def audit_insert(mapper, connection, target):
