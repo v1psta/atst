@@ -29,7 +29,9 @@ class RequestStatusEvent(Base, mixins.TimestampsMixin):
     new_status = Column(SQLAEnum(RequestStatus, native_enum=False))
     time_created = Column(DateTime(timezone=True), server_default=func.now())
     request_id = Column(
-        UUID(as_uuid=True), ForeignKey("requests.id", ondelete="CASCADE")
+        UUID(as_uuid=True),
+        ForeignKey("requests.id", ondelete="CASCADE"),
+        nullable=False,
     )
     sequence = Column(
         BigInteger, Sequence("request_status_events_sequence_seq"), nullable=False

@@ -12,7 +12,7 @@ class Environment(Base, TimestampsMixin):
     id = Id()
     name = Column(String, nullable=False)
 
-    project_id = Column(ForeignKey("projects.id"))
+    project_id = Column(ForeignKey("projects.id"), nullable=False)
     project = relationship("Project")
 
     @property

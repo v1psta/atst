@@ -17,7 +17,7 @@ class User(Base, mixins.TimestampsMixin):
     workspace_roles = relationship("WorkspaceRole", backref="user")
 
     email = Column(String, unique=True)
-    dod_id = Column(String, unique=True)
+    dod_id = Column(String, unique=True, nullable=False)
     first_name = Column(String)
     last_name = Column(String)
 

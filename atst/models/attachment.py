@@ -14,8 +14,8 @@ class Attachment(Base, mixins.TimestampsMixin):
     __tablename__ = "attachments"
 
     id = types.Id()
-    filename = Column(String)
-    object_name = Column(String, unique=True)
+    filename = Column(String, nullable=False)
+    object_name = Column(String, unique=True, nullable=False)
 
     @classmethod
     def attach(cls, fyle):

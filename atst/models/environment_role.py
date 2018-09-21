@@ -14,12 +14,14 @@ class EnvironmentRole(Base, mixins.TimestampsMixin):
     __tablename__ = "environment_roles"
 
     id = types.Id()
-    environment_id = Column(UUID(as_uuid=True), ForeignKey("environments.id"))
+    environment_id = Column(
+        UUID(as_uuid=True), ForeignKey("environments.id"), nullable=False
+    )
     environment = relationship("Environment", backref="roles")
 
     role = Column(String())
 
-    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
+    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
     user = relationship("User", backref="environment_roles")
 
 

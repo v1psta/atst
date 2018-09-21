@@ -25,8 +25,8 @@ def upgrade():
     sa.Column('time_created', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('time_updated', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('id', postgresql.UUID(as_uuid=True), server_default=sa.text('uuid_generate_v4()'), nullable=False),
-    sa.Column('filename', sa.String(), nullable=True),
-    sa.Column('object_name', sa.String(), nullable=True),
+    sa.Column('filename', sa.String(), nullable=False),
+    sa.Column('object_name', sa.String(), nullable=False),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('object_name')
     )
@@ -39,9 +39,9 @@ def upgrade():
     sa.Column('time_created', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('time_updated', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('id', postgresql.UUID(as_uuid=True), server_default=sa.text('uuid_generate_v4()'), nullable=False),
-    sa.Column('name', sa.String(), nullable=True),
-    sa.Column('description', sa.String(), nullable=True),
-    sa.Column('permissions', postgresql.ARRAY(sa.String()), server_default='{}', nullable=True),
+    sa.Column('name', sa.String(), nullable=False),
+    sa.Column('description', sa.String(), nullable=False),
+    sa.Column('permissions', postgresql.ARRAY(sa.String()), server_default='{}', nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_roles_name'), 'roles', ['name'], unique=True)
@@ -73,7 +73,7 @@ def upgrade():
     sa.Column('username', sa.String(), nullable=True),
     sa.Column('atat_role_id', postgresql.UUID(as_uuid=True), nullable=True),
     sa.Column('email', sa.String(), nullable=True),
-    sa.Column('dod_id', sa.String(), nullable=True),
+    sa.Column('dod_id', sa.String(), nullable=False),
     sa.Column('first_name', sa.String(), nullable=True),
     sa.Column('last_name', sa.String(), nullable=True),
     sa.ForeignKeyConstraint(['atat_role_id'], ['roles.id'], ),
@@ -110,9 +110,9 @@ def upgrade():
     sa.Column('time_created', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('time_updated', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('id', postgresql.UUID(as_uuid=True), server_default=sa.text('uuid_generate_v4()'), nullable=False),
-    sa.Column('text', sa.String(), nullable=True),
+    sa.Column('text', sa.String(), nullable=False),
     sa.Column('user_id', postgresql.UUID(as_uuid=True), nullable=False),
-    sa.Column('request_id', postgresql.UUID(as_uuid=True), nullable=True),
+    sa.Column('request_id', postgresql.UUID(as_uuid=True), nullable=False),
     sa.ForeignKeyConstraint(['request_id'], ['requests.id'], ondelete='CASCADE'),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
@@ -195,7 +195,7 @@ def upgrade():
     sa.Column('id', postgresql.UUID(as_uuid=True), server_default=sa.text('uuid_generate_v4()'), nullable=False),
     sa.Column('new_status', sa.Enum('STARTED', 'SUBMITTED', 'PENDING_FINANCIAL_VERIFICATION', 'PENDING_CCPO_ACCEPTANCE', 'PENDING_CCPO_APPROVAL', 'CHANGES_REQUESTED', 'CHANGES_REQUESTED_TO_FINVER', 'APPROVED', 'EXPIRED', 'DELETED', name='requeststatus', native_enum=False), nullable=True),
     sa.Column('time_created', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=True),
-    sa.Column('request_id', postgresql.UUID(as_uuid=True), nullable=True),
+    sa.Column('request_id', postgresql.UUID(as_uuid=True), nullable=False),
     sa.Column('sequence', sa.BigInteger(), nullable=False),
     sa.Column('request_revision_id', postgresql.UUID(as_uuid=True), nullable=False),
     sa.Column('request_review_id', postgresql.UUID(as_uuid=True), nullable=True),
@@ -208,9 +208,9 @@ def upgrade():
     sa.Column('time_created', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('time_updated', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('id', postgresql.UUID(as_uuid=True), server_default=sa.text('uuid_generate_v4()'), nullable=False),
-    sa.Column('workspace_id', postgresql.UUID(as_uuid=True), nullable=True),
-    sa.Column('role_id', postgresql.UUID(as_uuid=True), nullable=True),
-    sa.Column('user_id', postgresql.UUID(as_uuid=True), nullable=True),
+    sa.Column('workspace_id', postgresql.UUID(as_uuid=True), nullable=False),
+    sa.Column('role_id', postgresql.UUID(as_uuid=True), nullable=False),
+    sa.Column('user_id', postgresql.UUID(as_uuid=True), nullable=False),
     sa.ForeignKeyConstraint(['role_id'], ['roles.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.ForeignKeyConstraint(['workspace_id'], ['workspaces.id'], ),
@@ -224,7 +224,7 @@ def upgrade():
     sa.Column('time_updated', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('id', postgresql.UUID(as_uuid=True), server_default=sa.text('uuid_generate_v4()'), nullable=False),
     sa.Column('name', sa.String(), nullable=False),
-    sa.Column('project_id', postgresql.UUID(as_uuid=True), nullable=True),
+    sa.Column('project_id', postgresql.UUID(as_uuid=True), nullable=False),
     sa.ForeignKeyConstraint(['project_id'], ['projects.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
@@ -232,9 +232,9 @@ def upgrade():
     sa.Column('time_created', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('time_updated', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('id', postgresql.UUID(as_uuid=True), server_default=sa.text('uuid_generate_v4()'), nullable=False),
-    sa.Column('environment_id', postgresql.UUID(as_uuid=True), nullable=True),
+    sa.Column('environment_id', postgresql.UUID(as_uuid=True), nullable=False),
     sa.Column('role', sa.String(), nullable=True),
-    sa.Column('user_id', postgresql.UUID(as_uuid=True), nullable=True),
+    sa.Column('user_id', postgresql.UUID(as_uuid=True), nullable=False),
     sa.ForeignKeyConstraint(['environment_id'], ['environments.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')

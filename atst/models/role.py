@@ -9,9 +9,9 @@ class Role(Base, mixins.TimestampsMixin):
     __tablename__ = "roles"
 
     id = types.Id()
-    name = Column(String, index=True, unique=True)
-    description = Column(String)
-    permissions = Column(ARRAY(String), index=True, server_default="{}")
+    name = Column(String, index=True, unique=True, nullable=False)
+    description = Column(String, nullable=False)
+    permissions = Column(ARRAY(String), index=True, server_default="{}", nullable=False)
 
     def add_permission(self, permission):
         perms_set = set(self.permissions)
