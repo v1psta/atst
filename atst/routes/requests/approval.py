@@ -42,6 +42,8 @@ def render_approval(request, form=None):
     #     "message": "We'll have no more of this Obi-Wan Kenobi jibberish...and don't talk to me about your mission, either. You're fortunate he doesn't blast you into a million pieces right here. "
     # }]
 
+    comments = []
+
     return render_template(
         "requests/approval.html",
         data=data,
@@ -50,7 +52,7 @@ def render_approval(request, form=None):
         current_status=request.status.value,
         f=form or CCPOReviewForm(),
         internal_comment_form=internal_comment_form,
-        comments=[], # <-- put comments here
+        comments=comments
     )
 
 
