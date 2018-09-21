@@ -1,7 +1,7 @@
 from enum import Enum
-from sqlalchemy import Column, func, ForeignKey, Enum as SQLAEnum
+from sqlalchemy import Column, ForeignKey, Enum as SQLAEnum
 from sqlalchemy.orm import relationship
-from sqlalchemy.types import DateTime, BigInteger
+from sqlalchemy.types import BigInteger
 from sqlalchemy.schema import Sequence
 from sqlalchemy.dialects.postgresql import UUID
 
