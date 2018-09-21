@@ -31,7 +31,7 @@
     ) }}
 
     {{ SidenavItem(
-      "Funding & Reports",
+      "Budget Report",
       href=url_for("workspaces.workspace_reports", workspace_id=workspace.id),
       active=request.url_rule.rule.startswith('/workspaces/<workspace_id>/reports')
     ) }}
