@@ -29,6 +29,7 @@ before_script:
   - docker run --link postgres96:postgres96 --link redis:redis waisbrot/wait
   - export postgres_ip="$(docker inspect -f "{{ .NetworkSettings.IPAddress }}" postgres96)"
   - export redis_ip="$(docker inspect -f "{{ .NetworkSettings.IPAddress }}" redis)"
+  - ./script/generate_build_info.sh
   - docker login -u $ATAT_DOCKER_REGISTRY_USERNAME -p $ATAT_DOCKER_REGISTRY_PASSWORD $ATAT_DOCKER_REGISTRY_URL
   - docker build --tag "${TESTER_IMAGE1_NAME}" --add-host "postgreshost:${postgres_ip}" --add-host "redishost:${redis_ip}" . -f deploy/docker/tester/Dockerfile
 

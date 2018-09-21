@@ -26,6 +26,9 @@ static/fonts/*
 static/assets
 static/assets/*
 
+# buildinfo files
+static/buildinfo.*
+
 # local log files
 log/*
 
