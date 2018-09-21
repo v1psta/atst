@@ -6,6 +6,7 @@ from atst.models.environment_role import EnvironmentRole, CSPRole
 from atst.models.project import Project
 from atst.models.permissions import Permissions
 from atst.domain.authz import Authorization
+from atst.domain.environment_roles import EnvironmentRoles
 
 from .exceptions import NotFoundError
 
@@ -67,7 +68,7 @@ class Environments(object):
         for id_and_role in ids_and_roles:
             new_role = id_and_role["role"]
             environment = Environments.get(id_and_role["id"])
-            env_role = EnvironmentRole.get(workspace_user.user_id, id_and_role["id"])
+            env_role = EnvironmentRoles.get(workspace_user.user_id, id_and_role["id"])
             if env_role:
                 env_role.role = new_role
             else:

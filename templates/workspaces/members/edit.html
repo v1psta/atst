@@ -64,7 +64,7 @@
       <ul v-show='isVisible'>
         {% for env in project.environments %}
 
-          {% set role = EnvironmentRole.get(member.user_id, env.id).role %}
+          {% set role = EnvironmentRoles.get(member.user_id, env.id).role %}
 
         <li class='block-list__item'>
           <edit-workspace-member inline-template initial-data='{{ role }}' v-bind:choices='{{ form.environment_role.choices | tojson }}'>
