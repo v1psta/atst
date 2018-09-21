@@ -80,38 +80,36 @@ def test_annual_spend():
 def test_reviews():
     request = RequestFactory.create()
     ccpo = UserFactory.from_atat_role("ccpo")
-    request.status_events = [
-        RequestStatusEventFactory.create(
-            revision=request.latest_revision,
-            review=RequestReviewFactory.create(reviewer=ccpo),
-        ),
-        RequestStatusEventFactory.create(
-            revision=request.latest_revision,
-            review=RequestReviewFactory.create(reviewer=ccpo),
-        ),
-        RequestStatusEventFactory.create(revision=request.latest_revision),
-    ]
+    RequestStatusEventFactory.create(
+        request=request,
+        revision=request.latest_revision,
+        review=RequestReviewFactory.create(reviewer=ccpo),
+    ),
+    RequestStatusEventFactory.create(
+        request=request,
+        revision=request.latest_revision,
+        review=RequestReviewFactory.create(reviewer=ccpo),
+    ),
+    RequestStatusEventFactory.create(request=request, revision=request.latest_revision),
     assert len(request.reviews) == 2
 
 
 def test_review_comment():
     request = RequestFactory.create()
     ccpo = UserFactory.from_atat_role("ccpo")
-    request.status_events = [
-        RequestStatusEventFactory.create(
-            revision=request.latest_revision,
-            new_status=RequestStatus.CHANGES_REQUESTED,
-            review=RequestReviewFactory.create(reviewer=ccpo, comment="do better"),
-        )
-    ]
+    RequestStatusEventFactory.create(
+        request=request,
+        revision=request.latest_revision,
+        new_status=RequestStatus.CHANGES_REQUESTED,
+        review=RequestReviewFactory.create(reviewer=ccpo, comment="do better"),
+    )
     assert request.review_comment == "do better"
 
-    request.status_events = [
-        RequestStatusEventFactory.create(
-            revision=request.latest_revision,
-            new_status=RequestStatus.APPROVED,
-            review=RequestReviewFactory.create(reviewer=ccpo, comment="much better"),
-        )
-    ]
+    RequestStatusEventFactory.create(
+        request=request,
+        revision=request.latest_revision,
+        new_status=RequestStatus.APPROVED,
+        review=RequestReviewFactory.create(reviewer=ccpo, comment="much better"),
+    )
 
     assert not request.review_comment

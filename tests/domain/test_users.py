@@ -8,13 +8,13 @@ DOD_ID = "my_dod_id"
 
 
 def test_create_user():
-    user = Users.create("developer")
+    user = Users.create("developer", dod_id=DOD_ID)
     assert user.atat_role.name == "developer"
 
 
 def test_create_user_with_nonexistent_role():
     with pytest.raises(NotFoundError):
-        Users.create("nonexistent")
+        Users.create("nonexistent", dod_id=DOD_ID)
 
 
 def test_get_or_create_nonexistent_user():
@@ -29,13 +29,13 @@ def test_get_or_create_existing_user():
 
 
 def test_get_user():
-    new_user = Users.create("developer")
+    new_user = Users.create("developer", dod_id=DOD_ID)
     user = Users.get(new_user.id)
     assert user.id == new_user.id
 
 
 def test_get_nonexistent_user():
-    Users.create("developer")
+    Users.create("developer", dod_id=DOD_ID)
     with pytest.raises(NotFoundError):
         Users.get(uuid4())
 
@@ -47,19 +47,19 @@ def test_get_user_by_dod_id():
 
 
 def test_update_user():
-    new_user = Users.create("developer")
+    new_user = Users.create("developer", dod_id=DOD_ID)
     updated_user = Users.update(new_user.id, "ccpo")
 
     assert updated_user.atat_role.name == "ccpo"
 
 
 def test_update_nonexistent_user():
-    Users.create("developer")
+    Users.create("developer", dod_id=DOD_ID)
     with pytest.raises(NotFoundError):
         Users.update(uuid4(), "ccpo")
 
 
 def test_update_existing_user_with_nonexistent_role():
-    new_user = Users.create("developer")
+    new_user = Users.create("developer", dod_id=DOD_ID)
     with pytest.raises(NotFoundError):
         Users.update(new_user.id, "nonexistent")
