@@ -12,7 +12,9 @@ from . import requests_bp
 from atst.domain.requests import Requests
 from atst.domain.exceptions import NotFoundError
 from atst.forms.ccpo_review import CCPOReviewForm
+from atst.forms.internal_comment import InternalCommentForm
 
+from datetime import date
 
 def map_ccpo_authorizing(user):
     return {"fname_ccpo": user.first_name, "lname_ccpo": user.last_name}
@@ -27,6 +29,19 @@ def render_approval(request, form=None):
         mo_data = map_ccpo_authorizing(g.current_user)
         form = CCPOReviewForm(data=mo_data)
 
+    internal_comment_form = InternalCommentForm(text=request.internal_comments_text)
+
+    # # Dummy internal comments
+    # comments = [{
+    #     "time_created": date(2018, 9, 18),
+    #     "full_name_commenter": "Darth Vader",
+    #     "message": "We'll have no more of this Obi-Wan Kenobi jibberish...and don't talk to me about your mission, either. You're fortunate he doesn't blast you into a million pieces right here. "
+    # }, {
+    #     "time_created": date(2018, 9, 20),
+    #     "full_name_commenter": "Grand Moff Tarkin",
+    #     "message": "We'll have no more of this Obi-Wan Kenobi jibberish...and don't talk to me about your mission, either. You're fortunate he doesn't blast you into a million pieces right here. "
+    # }]
+
     return render_template(
         "requests/approval.html",
         data=data,
@@ -34,6 +49,8 @@ def render_approval(request, form=None):
         request=request,
         current_status=request.status.value,
         f=form or CCPOReviewForm(),
+        internal_comment_form=internal_comment_form,
+        comments=[], # <-- put comments here
     )
 
 
@@ -76,3 +93,13 @@ def task_order_pdf_download(request_id):
 
     else:
         raise NotFoundError("task_order pdf")
+
+@requests_bp.route("/requests/internal_comments/<string:request_id>", methods=["POST"])
+def create_internal_comment(request_id):
+    form = InternalCommentForm(http_request.form)
+    # if form.validate():
+    #     request = Requests.get(g.current_user, request_id)
+    #     Requests.update_internal_comments(g.current_user, request, form.data["text"])
+    return redirect(
+        url_for("requests.approval", request_id=request_id, _anchor="ccpo-notes")
+    )
