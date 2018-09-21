@@ -1,6 +1,7 @@
 version: 2.0
 
 defaults:
+  working_directory: &workingDirectory /opt/atat/atst
   sourceImage: &sourceImage registry.atat.codes:443/atat-app-builder:circleci-cd
   sourceAuth: &sourceAuth
     username: $REGISTRY_USERNAME
@@ -29,6 +30,7 @@ jobs:
         environment: *appEnvironment
       - image: circleci/postgres:9.6.5-alpine-ram
       - image: circleci/redis:4-alpine3.8
+    working_directory: *workingDirectory
     steps:
       - checkout
       - run:
@@ -104,6 +106,7 @@ jobs:
         environment: *appEnvironment
       - image: circleci/postgres:9.6.5-alpine-ram
       - image: circleci/redis:4-alpine3.8
+    working_directory: *workingDirectory
     steps:
       - attach_workspace:
           at: .
@@ -116,6 +119,7 @@ jobs:
       - image: *sourceImage
         auth: *sourceAuth
         environment: *dockerCmdEnvironment
+    working_directory: *workingDirectory
     steps:
       - attach_workspace:
           at: .
@@ -174,6 +178,7 @@ jobs:
       - image: *sourceImage
         auth: *sourceAuth
         environment: *dockerCmdEnvironment
+    working_directory: *workingDirectory
     steps:
       - attach_workspace:
           at: .
