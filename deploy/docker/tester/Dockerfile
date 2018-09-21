@@ -31,10 +31,6 @@ COPY script/ ./script/
 RUN set -x ; \
   script/alpine_setup
 
-# Add git for buildinfo, which only the tester needs
-RUN set -x ; \
-  apk add git
-
 ### Items that will change almost every build
 #############################################
 # Copy over the rest of the app source
