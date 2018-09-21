@@ -124,7 +124,7 @@ CUMULATIVE_BUDGET_AARDVARK = {
     "06/2018": {"spend": 41725, "cumulative": 116984},
     "07/2018": {"spend": 41328, "cumulative": 158312},
     "08/2018": {"spend": 47491, "cumulative": 205803},
-    "09/2018": {"spend": 45826, "cumulative": 251629},
+    "09/2018": {"spend": 36028, "cumulative": 241831},
 }
 
 MONTHLY_SPEND_BELUGA = {
