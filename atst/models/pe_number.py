@@ -4,7 +4,7 @@ from atst.models import Base
 
 
 class PENumber(Base):
-    __tablename__ = "pe_number"
+    __tablename__ = "pe_numbers"
 
     number = Column(String, primary_key=True)
     description = Column(String)

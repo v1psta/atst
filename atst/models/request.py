@@ -2,8 +2,7 @@ from sqlalchemy import Column, func, ForeignKey
 from sqlalchemy.types import DateTime
 from sqlalchemy.orm import relationship
 
-from atst.models import Base
-from atst.models.types import Id
+from atst.models import Base, types, mixins
 from atst.models.request_status_event import RequestStatus
 from atst.utils import first_or_none
 from atst.models.request_revision import RequestRevision
@@ -25,10 +24,10 @@ def update_dict_with_properties(instance, body, top_level_key, properties):
     return body
 
 
-class Request(Base):
+class Request(Base, mixins.TimestampsMixin):
     __tablename__ = "requests"
 
-    id = Id()
+    id = types.Id()
     time_created = Column(DateTime(timezone=True), server_default=func.now())
     status_events = relationship(
         "RequestStatusEvent", backref="request", order_by="RequestStatusEvent.sequence"
@@ -39,7 +38,7 @@ class Request(Base):
     user_id = Column(ForeignKey("users.id"), nullable=False)
     creator = relationship("User", backref="owned_requests")
 
-    task_order_id = Column(ForeignKey("task_order.id"))
+    task_order_id = Column(ForeignKey("task_orders.id"))
     task_order = relationship("TaskOrder")
 
     revisions = relationship(

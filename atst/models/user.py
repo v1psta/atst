@@ -2,15 +2,14 @@ from sqlalchemy import String, ForeignKey, Column
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import UUID
 
-from atst.models import Base
-from .types import Id
+from atst.models import Base, types, mixins
 from atst.models.permissions import Permissions
 
 
-class User(Base):
+class User(Base, mixins.TimestampsMixin):
     __tablename__ = "users"
 
-    id = Id()
+    id = types.Id()
     username = Column(String)
     atat_role_id = Column(UUID(as_uuid=True), ForeignKey("roles.id"))
 
@@ -18,7 +17,7 @@ class User(Base):
     workspace_roles = relationship("WorkspaceRole", backref="user")
 
     email = Column(String, unique=True)
-    dod_id = Column(String, unique=True)
+    dod_id = Column(String, unique=True, nullable=False)
     first_name = Column(String)
     last_name = Column(String)
 

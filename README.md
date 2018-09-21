@@ -109,7 +109,7 @@ that will automatically log you in as Amanda.
 We have a helper script that will seed the database with requests, workspaces and
 projects for all of the test users:
 
-`pipenv run python script/seed.py`
+`pipenv run python script/seed_sample.py`
 
 ## Testing
 

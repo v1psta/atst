@@ -1,11 +1,11 @@
 from enum import Enum
-from sqlalchemy import Column, func, ForeignKey, Enum as SQLAEnum
+from sqlalchemy import Column, ForeignKey, Enum as SQLAEnum
 from sqlalchemy.orm import relationship
-from sqlalchemy.types import DateTime, BigInteger
+from sqlalchemy.types import BigInteger
 from sqlalchemy.schema import Sequence
 from sqlalchemy.dialects.postgresql import UUID
 
-from atst.models import Base
+from atst.models import Base, mixins
 from atst.models.types import Id
 
 
@@ -22,14 +22,15 @@ class RequestStatus(Enum):
     DELETED = "Deleted"
 
 
-class RequestStatusEvent(Base):
+class RequestStatusEvent(Base, mixins.TimestampsMixin):
     __tablename__ = "request_status_events"
 
     id = Id()
-    new_status = Column(SQLAEnum(RequestStatus))
-    time_created = Column(DateTime(timezone=True), server_default=func.now())
+    new_status = Column(SQLAEnum(RequestStatus, native_enum=False))
     request_id = Column(
-        UUID(as_uuid=True), ForeignKey("requests.id", ondelete="CASCADE")
+        UUID(as_uuid=True),
+        ForeignKey("requests.id", ondelete="CASCADE"),
+        nullable=False,
     )
     sequence = Column(
         BigInteger, Sequence("request_status_events_sequence_seq"), nullable=False

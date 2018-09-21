@@ -1,7 +1,7 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, String
 from flask import current_app as app
 
-from atst.models import Base
+from atst.models import Base, types, mixins
 from atst.database import db
 from atst.uploader import UploadError
 
@@ -10,12 +10,12 @@ class AttachmentError(Exception):
     pass
 
 
-class Attachment(Base):
+class Attachment(Base, mixins.TimestampsMixin):
     __tablename__ = "attachments"
 
-    id = Column(Integer, primary_key=True)
-    filename = Column(String)
-    object_name = Column(String, unique=True)
+    id = types.Id()
+    filename = Column(String, nullable=False)
+    object_name = Column(String, unique=True, nullable=False)
 
     @classmethod
     def attach(cls, fyle):

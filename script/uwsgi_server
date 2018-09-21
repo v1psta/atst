@@ -7,5 +7,7 @@ source "$(dirname "${0}")"/../script/include/global_header.inc.sh
 # Before starting the server, apply any pending migrations to the DB
 migrate_db
 
+seed_db
+
 # Launch UWSGI
 run_command "uwsgi --ini ${UWSGI_CONFIG_FULLPATH}"

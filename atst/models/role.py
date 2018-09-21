@@ -2,17 +2,16 @@ from sqlalchemy import String, Column
 from sqlalchemy.dialects.postgresql import ARRAY
 from sqlalchemy.orm.attributes import flag_modified
 
-from atst.models import Base
-from .types import Id
+from atst.models import Base, types, mixins
 
 
-class Role(Base):
+class Role(Base, mixins.TimestampsMixin):
     __tablename__ = "roles"
 
-    id = Id()
-    name = Column(String, index=True, unique=True)
-    description = Column(String)
-    permissions = Column(ARRAY(String), index=True, server_default="{}")
+    id = types.Id()
+    name = Column(String, index=True, unique=True, nullable=False)
+    description = Column(String, nullable=False)
+    permissions = Column(ARRAY(String), index=True, server_default="{}", nullable=False)
 
     def add_permission(self, permission):
         perms_set = set(self.permissions)

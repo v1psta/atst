@@ -1,16 +1,16 @@
-from sqlalchemy import Column, BigInteger, String, ForeignKey
+from sqlalchemy import Column, String, ForeignKey
 from sqlalchemy.orm import relationship
 
-from atst.models import Base
+from atst.models import Base, types, mixins
 
 
-class RequestInternalComment(Base):
+class RequestInternalComment(Base, mixins.TimestampsMixin):
     __tablename__ = "request_internal_comments"
 
-    id = Column(BigInteger, primary_key=True)
-    text = Column(String())
+    id = types.Id()
+    text = Column(String(), nullable=False)
 
     user_id = Column(ForeignKey("users.id"), nullable=False)
     user = relationship("User")
 
-    request_id = Column(ForeignKey("requests.id", ondelete="CASCADE"))
+    request_id = Column(ForeignKey("requests.id", ondelete="CASCADE"), nullable=False)

@@ -1,12 +1,11 @@
-from atst.models.task_order import TaskOrder
-
 from tests.factories import TaskOrderFactory
+from tests.assert_util import dict_contains
 
 
 def test_as_dictionary():
     data = TaskOrderFactory.dictionary()
     real_task_order = TaskOrderFactory.create(**data)
-    assert real_task_order.to_dictionary() == data
+    assert dict_contains(real_task_order.to_dictionary(), data)
 
 
 def test_budget():
