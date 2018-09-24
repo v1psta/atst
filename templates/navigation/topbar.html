@@ -2,15 +2,23 @@
 
 <header class="topbar">
   <nav class="topbar__navigation">
-    <a href="{{ url_for('atst.home') }}" class="topbar__link topbar__link--shield" title="JEDI Cloud Home">
-      {{ Icon('shield', classes='topbar__link-icon') }}
-    </a>
+    {% if not workspace %}
+      <a href="{{ url_for('atst.home') }}" class="topbar__link topbar__link--home">
+        {{ Icon('shield', classes='topbar__link-icon') }}
+        <span class="topbar__link-label">JEDI Cloud</span>
+      </a>
+    {% else %}
+      <a href="{{ url_for('atst.home') }}" class="topbar__link topbar__link--shield" title="JEDI Cloud Home">
+        {{ Icon('shield', classes='topbar__link-icon') }}
+      </a>
+    {% endif %}
 
     <div class="topbar__context {% if workspace %}topbar__context--workspace{% endif %}">
-      {% set topbar_link = url_for("workspaces.show_workspace", workspace_id=workspace.id) if workspace else url_for("atst.home") %}
-      <a href="{{ topbar_link }}" class="topbar__link">
-        <span class="topbar__link-label">{{ ("Workspace " + workspace.name) if workspace else "JEDI Cloud" }}</span>
-      </a>
+      {% if workspace %}
+        <a href="{{ url_for("workspaces.show_workspace", workspace_id=workspace.id) }}" class="topbar__link topbar__link--workspace">
+          <span class="topbar__link-label">{{ ("Workspace " + workspace.name) }}</span>
+        </a>
+      {% endif %}
 
       <a href="/" class="topbar__link">
         <span class="topbar__link-label">{{ g.current_user.first_name + " " + g.current_user.last_name }}</span>
