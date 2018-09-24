@@ -1,3 +1,12 @@
+{% from "components/icon.html" import Icon %}
+
 <footer class='app-footer'>
-  <h5>Joint Enterprise Defense Infrastructure</h5>
+  <div class='app-footer__info'>
+    <h5 class='app-footer__info__title'>Joint Enterprise Defense Infrastructure</h5>
+
+    <a href='/help' class='icon-link app-footer__info__link' target='_blank' rel='noopener noreferrer'>
+      {{ Icon('help') }}
+      <span>JEDI Help</span>
+    </a>
+  </div>
 </footer>
