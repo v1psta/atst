@@ -35,19 +35,19 @@ class AuditLog(object):
         return AuditEventQuery.get_all()
 
     @classmethod
-    def _resource_name(cls, resource):
+    def _resource_type(cls, resource):
         return type(resource).__name__.lower()
 
     @classmethod
     def _log(cls, user=None, workspace_id=None, resource=None, action=None):
         resource_id = resource.id if resource else None
-        resource_name = cls._resource_name(resource) if resource else None
+        resource_type = cls._resource_type(resource) if resource else None
 
         audit_event = AuditEventQuery.create(
             user=user,
             workspace_id=workspace_id,
             resource_id=resource_id,
-            resource_name=resource_name,
+            resource_type=resource_type,
             action=action,
         )
         return AuditEventQuery.add_and_commit(audit_event)

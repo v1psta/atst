@@ -26,12 +26,12 @@ class AuditableMixin(object):
     def create_audit_event(connection, resource, action):
         user_id = getattr_path(g, "current_user.id")
         workspace_id = resource.auditable_workspace_id()
-        resource_name = resource.auditable_resource_name()
+        resource_type = resource.auditable_resource_type()
 
         audit_event = AuditEvent(
             user_id=user_id,
             workspace_id=workspace_id,
-            resource_name=resource_name,
+            resource_type=resource_type,
             resource_id=resource.id,
             action=action,
         )
@@ -58,7 +58,7 @@ class AuditableMixin(object):
     def audit_update(mapper, connection, target):
         target.create_audit_event(connection, target, ACTION_UPDATE)
 
-    def auditable_resource_name(self):
+    def auditable_resource_type(self):
         return camel_to_snake(type(self).__name__)
 
     def auditable_workspace_id(self):

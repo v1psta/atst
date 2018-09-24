@@ -17,13 +17,13 @@ class AuditEvent(Base, TimestampsMixin):
     workspace_id = Column(UUID(as_uuid=True), ForeignKey("workspaces.id"), index=True)
     workspace = relationship("Workspace", backref="audit_events")
 
-    resource_name = Column(String(), nullable=False)
+    resource_type = Column(String(), nullable=False)
     resource_id = Column(UUID(as_uuid=True), index=True, nullable=False)
     action = Column(String(), nullable=False)
 
     def __str__(self):
         full_action = "{} on {} {}".format(
-            self.action, self.resource_name, self.resource_id
+            self.action, self.resource_type, self.resource_id
         )
 
         if self.user and self.workspace:
