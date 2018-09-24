@@ -74,7 +74,7 @@ export default {
     },
 
     validateAndOpenModal: function (modalName) {
-      const childrenValid = this.$children.reduce((previous, newVal) => {
+      let isValid = this.$children.reduce((previous, newVal) => {
         // display textInput error if it is not valid
         if (!newVal.showValid) {
           newVal.showError = true
@@ -83,18 +83,17 @@ export default {
         return newVal.showValid && previous
       }, true)
 
-      const hasNames = this.environmentsHaveNames()
-      const uniqNames = this.envNamesAreUnique()
-
-      if (!hasNames) {
+      if (!this.environmentsHaveNames()) {
+        isValid = false
         this.showMissingError = true
       }
 
-      if (!uniqNames) {
+      if (!this.envNamesAreUnique()) {
+        isValid = false
         this.showUniqueError = true
       }
 
-      if (childrenValid && hasNames && uniqNames) {
+      if (isValid) {
         this.openModal(modalName)
       }
     }
