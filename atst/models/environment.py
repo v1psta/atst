@@ -22,3 +22,6 @@ class Environment(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     @property
     def num_users(self):
         return len(self.users)
+
+    def auditable_workspace_id(self):
+        return self.project.workspace_id
