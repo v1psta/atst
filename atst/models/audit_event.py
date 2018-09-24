@@ -19,21 +19,19 @@ class AuditEvent(Base, TimestampsMixin):
 
     resource_type = Column(String(), nullable=False)
     resource_id = Column(UUID(as_uuid=True), index=True, nullable=False)
+    display_name = Column(String())
     action = Column(String(), nullable=False)
 
     def __str__(self):
-        full_action = "{} on {} {}".format(
+
+        user_str = "{} performed".format(self.user.full_name) if self.user else "ATAT System"
+        action_str = "{} on {} {}".format(
             self.action, self.resource_type, self.resource_id
         )
+        display_name_str = "({})".format(self.display_name) if self.display_name else ""
+        workspace_str = "in workspace {}".format(self.workspace_id) if self.workspace_id else ""
 
-        if self.user and self.workspace:
-            return "{} performed {} in workspace {}".format(
-                self.user.full_name, full_action, self.workspace_id
-            )
-        if self.user:
-            return "{} performed {}".format(self.user.full_name, full_action)
-        else:
-            return "ATAT System performed {}".format(full_action)
+        return " ".join([user_str, action_str, display_name_str, workspace_str])
 
     def save(self, connection):
         attrs = inspect(self).dict

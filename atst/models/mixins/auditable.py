@@ -27,12 +27,14 @@ class AuditableMixin(object):
         user_id = getattr_path(g, "current_user.id")
         workspace_id = resource.auditable_workspace_id()
         resource_type = resource.auditable_resource_type()
+        display_name = resource.auditable_displayname()
 
         audit_event = AuditEvent(
             user_id=user_id,
             workspace_id=workspace_id,
             resource_type=resource_type,
             resource_id=resource.id,
+            display_name=display_name,
             action=action,
         )
 
@@ -63,3 +65,6 @@ class AuditableMixin(object):
 
     def auditable_workspace_id(self):
         return getattr_path(self, "workspace.id")
+
+    def auditable_displayname(self):
+        return getattr_path(self, "displayname")
