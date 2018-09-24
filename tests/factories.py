@@ -3,6 +3,7 @@ import string
 import factory
 from uuid import uuid4
 import datetime
+from faker import Faker as _Faker
 
 from atst.forms.data import SERVICE_BRANCHES
 from atst.models.request import Request
@@ -159,6 +160,24 @@ class RequestFactory(Base):
         )
         return request
 
+    @classmethod
+    def mock_financial_data(cls):
+        fake = _Faker()
+        return {
+            "pe_id": "0101110F",
+            "fname_co": fake.first_name(),
+            "lname_co": fake.last_name(),
+            "email_co": fake.email(),
+            "office_co": fake.phone_number(),
+            "fname_cor": fake.first_name(),
+            "lname_cor": fake.last_name(),
+            "email_cor": fake.email(),
+            "office_cor": fake.phone_number(),
+            "uii_ids": "123abc",
+            "treasury_code": "00123456",
+            "ba_code": "02A",
+        }
+
 
 class PENumberFactory(Base):
     class Meta:
@@ -172,10 +191,14 @@ class TaskOrderFactory(Base):
     source = Source.MANUAL
     funding_type = FundingType.PROC
     funding_type_other = None
-    number = factory.Faker("md5")
+    number = factory.LazyFunction(
+        lambda: "".join(random.choices(string.ascii_uppercase + string.digits, k=13))
+    )
     expiration_date = factory.LazyFunction(
         lambda: datetime.date(
-            datetime.date.today().year + random.randrange(1, 15), 1, 1
+            datetime.date.today().year + random.randrange(1, 5),
+            random.randrange(1, 12),
+            random.randrange(1, 28),
         )
     )
     clin_0001 = random.randrange(100, 100000)

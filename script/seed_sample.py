@@ -21,23 +21,24 @@ WORKSPACE_USERS = [
         "last_name": "Knight",
         "email": "knight@mil.gov",
         "workspace_role": "developer",
-        "dod_id": "0000000001"
+        "dod_id": "0000000001",
     },
     {
         "first_name": "Mario",
         "last_name": "Hudson",
         "email": "hudson@mil.gov",
         "workspace_role": "ccpo",
-        "dod_id": "0000000002"
+        "dod_id": "0000000002",
     },
     {
         "first_name": "Louise",
         "last_name": "Greer",
         "email": "greer@mil.gov",
         "workspace_role": "admin",
-        "dod_id": "0000000003"
+        "dod_id": "0000000003",
     },
 ]
+
 
 def seed_db():
     users = []
@@ -65,8 +66,13 @@ def seed_db():
 
         request = requests[0]
         request.task_order = TaskOrderFactory.build()
+        request = Requests.update(
+            request.id, {"financial_verification": RequestFactory.mock_financial_data()}
+        )
 
-        workspace = Workspaces.create(request, name="{}'s workspace".format(user.first_name))
+        workspace = Workspaces.create(
+            request, name="{}'s workspace".format(user.first_name)
+        )
         for workspace_user in WORKSPACE_USERS:
             Workspaces.create_member(user, workspace, workspace_user)
 
@@ -75,7 +81,7 @@ def seed_db():
             workspace=workspace,
             name="First Project",
             description="This is our first project.",
-            environment_names=["dev", "staging", "prod"]
+            environment_names=["dev", "staging", "prod"],
         )
 
 
