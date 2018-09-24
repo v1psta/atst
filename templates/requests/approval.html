@@ -51,8 +51,8 @@
                 <li>
                   <article class='comment-log__log-item'>
                     <div>
-                      <h3 class='comment-log__log-item__header'>{{ comment.full_name_commenter }}</h3>
-                      <p>{{ comment.message }}</p>
+                      <h3 class='comment-log__log-item__header'>{{ comment.user.full_name }}</h3>
+                      <p>{{ comment.text }}</p>
                     </div>
                     {% set timestamp=comment.time_created | formattedDate("%Y-%m-%d %H:%M:%S %Z") %}
                     <footer class='comment-log__log-item__timestamp'>

@@ -108,3 +108,39 @@ def test_can_submit_request_denial(client, user_session):
     )
     assert response.status_code == 302
     assert request.status == RequestStatus.CHANGES_REQUESTED
+
+
+def test_ccpo_user_can_comment_on_request(client, user_session):
+    user = UserFactory.from_atat_role("ccpo")
+    user_session(user)
+    request = RequestFactory.create_with_status(
+        status=RequestStatus.PENDING_CCPO_ACCEPTANCE
+    )
+    assert len(request.internal_comments) == 0
+
+    comment_text = "This is the greatest request in the history of requests"
+    comment_form_data = {"text": comment_text}
+    response = client.post(
+        url_for("requests.create_internal_comment", request_id=request.id),
+        data=comment_form_data,
+    )
+    assert response.status_code == 302
+    assert len(request.internal_comments) == 1
+    assert request.internal_comments[0].text == comment_text
+
+
+def test_other_user_cannot_comment_on_request(client, user_session):
+    user = UserFactory.create()
+    user_session(user)
+    request = RequestFactory.create_with_status(
+        status=RequestStatus.PENDING_CCPO_ACCEPTANCE
+    )
+
+    comment_text = "What is this even"
+    comment_form_data = {"text": comment_text}
+    response = client.post(
+        url_for("requests.create_internal_comment", request_id=request.id),
+        data=comment_form_data,
+    )
+
+    assert response.status_code == 404
