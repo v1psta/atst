@@ -42,13 +42,11 @@
       </div>
     </div>
 
-    {% if form.environment_names.errors %}
-      {% for error in form.environment_names.errors %}
-        {{ Alert(error, level="error") }}
-      {% endfor %}
-    {% endif %}
-    <div v-if="showError">
+    <div v-if="showMissingError">
       {{ Alert("Provide at least one environment name.", level="error") }}
+    </div>
+    <div v-if="showUniqueError">
+      {{ Alert("Environment names must be unique.", level="error") }}
     </div>
 
       <div class="block-list project-list-item">

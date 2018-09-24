@@ -32,7 +32,8 @@ export default {
     ).map(createEnvironment)
 
     return {
-      showError: false,
+      showMissingError: false,
+      showUniqueError: false,
       environments,
       name,
     }
@@ -44,7 +45,11 @@ export default {
 
   updated: function() {
     if (this.environmentsHaveNames()) {
-      this.showError = false
+      this.showMissingError = false
+    }
+
+    if (this.envNamesAreUnique()) {
+      this.showUniqueError = false
     }
   },
 
@@ -63,8 +68,13 @@ export default {
       return this.environments.every((e) => e.name !== "")
     },
 
+    envNamesAreUnique: function () {
+      const names = this.environments.map((e) => e.name)
+      return [...new Set(names)].length == this.environments.length
+    },
+
     validateAndOpenModal: function (modalName) {
-      const textInputs = this.$children.reduce((previous, newVal) => {
+      const childrenValid = this.$children.reduce((previous, newVal) => {
         // display textInput error if it is not valid
         if (!newVal.showValid) {
           newVal.showError = true
@@ -73,12 +83,19 @@ export default {
         return newVal.showValid && previous
       }, true)
 
-      const isValid = textInputs && this.environmentsHaveNames()
+      const hasNames = this.environmentsHaveNames()
+      const uniqNames = this.envNamesAreUnique()
 
-      if (isValid) {
+      if (!hasNames) {
+        this.showMissingError = true
+      }
+
+      if (!uniqNames) {
+        this.showUniqueError = true
+      }
+
+      if (childrenValid && hasNames && uniqNames) {
         this.openModal(modalName)
-      } else {
-        this.showError = true
       }
     }
   }
