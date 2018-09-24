@@ -35,7 +35,7 @@ class Workspace(Base, TimestampsMixin):
 
     @property
     def task_order(self):
-        return {"number": "task-order-number"}
+        return self.request.task_order
 
     @property
     def members(self):
