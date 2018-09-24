@@ -27,7 +27,7 @@ class RoleFactory(Base):
     class Meta:
         model = Role
 
-    name = factory.Faker("job")
+    name = factory.Faker("name")
     description = "This is a test role."
     permissions = []
 
