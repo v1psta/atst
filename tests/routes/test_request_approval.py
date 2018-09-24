@@ -129,7 +129,7 @@ def test_ccpo_user_can_comment_on_request(client, user_session):
     assert request.internal_comments[0].text == comment_text
 
 
-def test_ccpo_user_can_comment_on_request(client, user_session):
+def test_comment_text_is_required(client, user_session):
     user = UserFactory.from_atat_role("ccpo")
     user_session(user)
     request = RequestFactory.create_with_status(
