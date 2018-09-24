@@ -8,7 +8,7 @@
 
 <article class='col col--grow request-approval'>
 
-{% if f.errors %}
+{% if review_form.errors or internal_comment_form.errors %}
   {{ Alert('There were some errors',
     message="<p>Please see below.</p>",
     level='error'
@@ -32,11 +32,6 @@
 
     </section>
 
-    {{ Alert('Comments and comment form are fake!',
-      message="<p>Please note, the comments and comment form below are just mocked out. Submitting it will do nothing. These will be hooked up to real functionality shortly. </p><p><strong>Engineer: please remove this alert when you do your thing.</strong></p>",
-      level='warning'
-    ) }}
-
     <section class='internal-notes' id='ccpo-notes'>
       <form method="POST" action="{{ url_for('requests.create_internal_comment', request_id=request.id) }}">
         <div class='panel'>
@@ -51,8 +46,8 @@
                 <li>
                   <article class='comment-log__log-item'>
                     <div>
-                      <h3 class='comment-log__log-item__header'>{{ comment.full_name_commenter }}</h3>
-                      <p>{{ comment.message }}</p>
+                      <h3 class='comment-log__log-item__header'>{{ comment.user.full_name }}</h3>
+                      <p>{{ comment.text }}</p>
                     </div>
                     {% set timestamp=comment.time_created | formattedDate("%Y-%m-%d %H:%M:%S %Z") %}
                     <footer class='comment-log__log-item__timestamp'>
@@ -88,7 +83,7 @@
 
     <section class='request-approval__review'>
       <form method="POST" action="{{ url_for("requests.submit_approval", request_id=request.id) }}" autocomplete="off">
-        {{ f.csrf_token }}
+        {{ review_form.csrf_token }}
 
         <ccpo-approval inline-template>
           <div>
@@ -165,7 +160,7 @@
                   <h3>Message to Requestor <span class='subtitle'>(optional)</span></h3>
                   <div v-if='approving' key='approving' v-cloak>
                     {{ TextInput(
-                      f.comment,
+                      review_form.comment,
                       label='Approval comments or notes',
                       description='Provide any comments or notes regarding the approval of this request. <strong>This message will be shared with the person making the JEDI request.</strong>.',
                       paragraph=True,
@@ -175,7 +170,7 @@
 
                   <div v-else key='denying' v-cloak>
                     {{ TextInput(
-                      f.comment,
+                      review_form.comment,
                       label='Revision instructions or notes',
                       paragraph=True,
                       noMaxWidth=True
@@ -194,21 +189,21 @@
 
                   <div class='form-row'>
                     <div class='form-col form-col--half'>
-                      {{ TextInput(f.fname_mao, placeholder="First name of mission authorizing official") }}
+                      {{ TextInput(review_form.fname_mao, placeholder="First name of mission authorizing official") }}
                     </div>
 
                     <div class='form-col form-col--half'>
-                      {{ TextInput(f.lname_mao, placeholder="Last name of mission authorizing official") }}
+                      {{ TextInput(review_form.lname_mao, placeholder="Last name of mission authorizing official") }}
                     </div>
                   </div>
 
                   <div class='form-row'>
                     <div class='form-col form-col--half'>
-                      {{ TextInput(f.email_mao, placeholder="name@mail.mil", validation='email') }}
+                      {{ TextInput(review_form.email_mao, placeholder="name@mail.mil", validation='email') }}
                     </div>
 
                     <div class='form-col form-col--half'>
-                      {{ TextInput(f.phone_mao, placeholder="(123) 456-7890", validation='usPhone') }}
+                      {{ TextInput(review_form.phone_mao, placeholder="(123) 456-7890", validation='usPhone') }}
                     </div>
                   </div>
 
@@ -218,11 +213,11 @@
 
                   <div class='form-row'>
                     <div class='form-col form-col--half'>
-                      {{ TextInput(f.fname_ccpo, placeholder="First name of CCPO authorizing official") }}
+                      {{ TextInput(review_form.fname_ccpo, placeholder="First name of CCPO authorizing official") }}
                     </div>
 
                     <div class='form-col form-col--half'>
-                      {{ TextInput(f.lname_ccpo, placeholder="Last name of CCPO authorizing official") }}
+                      {{ TextInput(review_form.lname_ccpo, placeholder="Last name of CCPO authorizing official") }}
                     </div>
                   </div>
                 </div>

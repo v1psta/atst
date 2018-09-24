@@ -223,10 +223,13 @@ def test_request_changes_to_financial_verification_info():
     assert current_review.fname_mao == review_data["fname_mao"]
 
 
-def test_update_internal_comments():
+def test_add_internal_comment():
     request = RequestFactory.create()
     ccpo = UserFactory.from_atat_role("ccpo")
 
-    request = Requests.update_internal_comments(ccpo, request, "this is my comment")
+    assert len(request.internal_comments) == 0
 
-    assert request.internal_comments.text == "this is my comment"
+    request = Requests.add_internal_comment(ccpo, request, "this is my comment")
+
+    assert len(request.internal_comments) == 1
+    assert request.internal_comments[0].text == "this is my comment"

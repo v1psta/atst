@@ -45,7 +45,7 @@ class Request(Base, mixins.TimestampsMixin):
         "RequestRevision", back_populates="request", order_by="RequestRevision.sequence"
     )
 
-    internal_comments = relationship("RequestInternalComment", uselist=False)
+    internal_comments = relationship("RequestInternalComment")
 
     @property
     def latest_revision(self):
@@ -166,10 +166,6 @@ class Request(Base, mixins.TimestampsMixin):
     @property
     def reviews(self):
         return [status.review for status in self.status_events if status.review]
-
-    @property
-    def internal_comments_text(self):
-        return self.internal_comments.text if self.internal_comments else ""
 
     @property
     def is_pending_financial_verification(self):
