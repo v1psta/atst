@@ -82,16 +82,21 @@
       <thead>
         <tr>
           <th scope="col" width="50%">Name</th>
-          <th scope="col" class='table-cell--shrink'>&nbsp;<span class="hide">Status Flag</span></th>
+          <th scope="col">Environments</th>
           <th scope="col">Status</th>
           <th scope="col">Workspace Role</th>
         </tr>
       </thead>
       <tbody>
         {% for m in workspace.members %}
+        {% set num_environment_roles = m.num_environment_roles %}
         <tr>
           <td><a href="{{ url_for('workspaces.update_member', workspace_id=workspace.id, member_id=m.user_id) }}" class="icon-link icon-link--large">{{ m.user_name }}</a></td>
-          <td class='table-cell--shrink'>{% if not m.has_environment_roles %} <span class="label label--info">No Environment Access</span> {% endif %}</td>
+          {% if num_environment_roles %}
+            <td class="table-cell--align-right">{{ num_environment_roles }}</td>
+          {% else %}
+            <td class='table-cell--shrink'><span class="label label--info">No Environment Access</span></td>
+          {% endif %}
           <td>{{ m.status }}</a></td>
           <td>{{ m.role }}</a></td>
         </tr>

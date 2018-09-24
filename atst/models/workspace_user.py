@@ -41,8 +41,8 @@ class WorkspaceUser(object):
         return "active"
 
     @property
-    def has_environment_roles(self):
-        num_environment_roles = (
+    def num_environment_roles(self):
+        return (
             db.session.query(EnvironmentRole)
             .join(EnvironmentRole.environment)
             .join(Environment.project)
@@ -51,4 +51,7 @@ class WorkspaceUser(object):
             .filter(EnvironmentRole.user_id == self.user_id)
             .count()
         )
-        return num_environment_roles > 0
+
+    @property
+    def has_environment_roles(self):
+        return self.num_environment_roles > 0
