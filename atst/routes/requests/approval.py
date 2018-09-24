@@ -14,8 +14,6 @@ from atst.domain.exceptions import NotFoundError
 from atst.forms.ccpo_review import CCPOReviewForm
 from atst.forms.internal_comment import InternalCommentForm
 
-from datetime import date
-
 
 def map_ccpo_authorizing(user):
     return {"fname_ccpo": user.first_name, "lname_ccpo": user.last_name}
@@ -32,20 +30,6 @@ def render_approval(request, form=None, internal_comment_form=None):
 
     if not internal_comment_form:
         internal_comment_form = InternalCommentForm()
-
-    # Dummy internal comments
-    comments = [
-        {
-            "time_created": date(2018, 9, 18),
-            "full_name_commenter": "Darth Vader",
-            "message": "We'll have no more of this Obi-Wan Kenobi jibberish...and don't talk to me about your mission, either. You're fortunate he doesn't blast you into a million pieces right here. ",
-        },
-        {
-            "time_created": date(2018, 9, 20),
-            "full_name_commenter": "Grand Moff Tarkin",
-            "message": "We'll have no more of this Obi-Wan Kenobi jibberish...and don't talk to me about your mission, either. You're fortunate he doesn't blast you into a million pieces right here. ",
-        },
-    ]
 
     return render_template(
         "requests/approval.html",
