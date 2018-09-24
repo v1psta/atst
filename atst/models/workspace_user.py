@@ -37,6 +37,10 @@ class WorkspaceUser(object):
         return self.workspace_role.role.name
 
     @property
+    def role_displayname(self):
+        return self.workspace_role.role.display_name
+
+    @property
     def status(self):
         return "active"
 

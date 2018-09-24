@@ -13,6 +13,7 @@ from atst.models import Role, Permissions
 roles = [
     Role(
         name="ccpo",
+        display_name="CCPO",
         description="",
         permissions=[
             Permissions.VIEW_ORIGINAL_JEDI_REQEUST,
@@ -51,6 +52,7 @@ roles = [
     ),
     Role(
         name="owner",
+        display_name="Owner",
         description="",
         permissions=[
             Permissions.REQUEST_JEDI_WORKSPACE,
@@ -82,6 +84,7 @@ roles = [
     ),
     Role(
         name="admin",
+        display_name="Admin",
         description="",
         permissions=[
             Permissions.VIEW_USAGE_REPORT,
@@ -108,16 +111,18 @@ roles = [
     ),
     Role(
         name="developer",
+        display_name="Developer",
         description="",
         permissions=[
             Permissions.VIEW_USAGE_REPORT,
             Permissions.VIEW_USAGE_DOLLARS,
             Permissions.VIEW_WORKSPACE,
-            Permissions.VIEW_APPLICATION_IN_WORKSPACE
+            Permissions.VIEW_APPLICATION_IN_WORKSPACE,
         ],
     ),
     Role(
         name="billing_auditor",
+        display_name="Billing Auditor",
         description="",
         permissions=[
             Permissions.VIEW_USAGE_REPORT,
@@ -129,6 +134,7 @@ roles = [
     Role(
         name="security_auditor",
         description="",
+        display_name="Security Auditor",
         permissions=[
             Permissions.VIEW_ASSIGNED_ATAT_ROLE_CONFIGURATIONS,
             Permissions.VIEW_ASSIGNED_CSP_ROLE_CONFIGURATIONS,
@@ -138,7 +144,10 @@ roles = [
         ],
     ),
     Role(
-        name="default", description="", permissions=[Permissions.REQUEST_JEDI_WORKSPACE]
+        name="default",
+        display_name="Default",
+        description="",
+        permissions=[Permissions.REQUEST_JEDI_WORKSPACE],
     ),
 ]
 

@@ -10,6 +10,7 @@ class Role(Base, mixins.TimestampsMixin):
 
     id = types.Id()
     name = Column(String, index=True, unique=True, nullable=False)
+    display_name = Column(String, nullable=False)
     description = Column(String, nullable=False)
     permissions = Column(ARRAY(String), index=True, server_default="{}", nullable=False)
 
