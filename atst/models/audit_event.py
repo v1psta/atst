@@ -24,12 +24,18 @@ class AuditEvent(Base, TimestampsMixin):
 
     def __str__(self):
 
-        user_str = "{} performed".format(self.user.full_name) if self.user else "ATAT System"
+        user_str = (
+            "{} performed".format(self.user.full_name) if self.user else "ATAT System"
+        )
         action_str = "{} on {} {}".format(
             self.action, self.resource_type, self.resource_id
         )
         display_name_str = "({})".format(self.display_name) if self.display_name else ""
-        workspace_str = "in workspace {}".format(self.workspace_id) if self.workspace_id else ""
+        workspace_str = (
+            "in workspace {}".format(self.workspace_id)
+            if self.workspace_id and self.resource_type != "workspace"
+            else ""
+        )
 
         return " ".join([user_str, action_str, display_name_str, workspace_str])
 
