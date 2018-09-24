@@ -32,11 +32,6 @@
 
     </section>
 
-    {{ Alert('Comments and comment form are fake!',
-      message="<p>Please note, the comments and comment form below are just mocked out. Submitting it will do nothing. These will be hooked up to real functionality shortly. </p><p><strong>Engineer: please remove this alert when you do your thing.</strong></p>",
-      level='warning'
-    ) }}
-
     <section class='internal-notes' id='ccpo-notes'>
       <form method="POST" action="{{ url_for('requests.create_internal_comment', request_id=request.id) }}">
         <div class='panel'>
