@@ -11,6 +11,11 @@ set -o nounset
 # Config
 MAX_DEPLOY_WAIT='300'
 
+if [ "${IMAGE_NAME}x" = "x" ]
+then
+    IMAGE_NAME="${ATAT_DOCKER_REGISTRY_URL}/${PROD_IMAGE_NAME}:${GIT_SHA}"
+fi
+
 # Remove the K8S CA file when the script exits
 function cleanup {
     printf "Cleaning up...\n"
@@ -39,7 +44,7 @@ kubectl config use-context travis
 kubectl config current-context
 
 # Update the ATST deployment
-kubectl -n atat set image deployment.apps/atst atst="${ATAT_DOCKER_REGISTRY_URL}/${PROD_IMAGE_NAME}:${GIT_SHA}"
+kubectl -n atat set image deployment.apps/atst atst="${IMAGE_NAME}"
 
 # Wait for deployment to finish
 if ! timeout -t "${MAX_DEPLOY_WAIT}" -s INT kubectl -n atat rollout status deployment/atst
