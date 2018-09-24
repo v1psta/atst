@@ -103,7 +103,7 @@
   {% set two_months_ago_index = two_months_ago.strftime('%m/%Y') %}
   {% set reports_url = url_for("workspaces.workspace_reports", workspace_id=workspace.id) %}
 
-  {% if not monthly_totals['environments'] %}
+  {% if not workspace.projects %}
 
     {% set can_create_projects = user_can(permissions.ADD_APPLICATION_IN_WORKSPACE) %}
     {% set message = 'This Workspace has no Cloud Environments setup, hence there is no spending data to report. Create a Project with some Cloud Environments to get started.'

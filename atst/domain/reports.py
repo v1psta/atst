@@ -215,16 +215,18 @@ class Reports:
     @classmethod
     def monthly_totals(cls, workspace):
         if workspace.name in REPORT_FIXTURE_MAP:
-            data = REPORT_FIXTURE_MAP[workspace.name]["monthly"]
-            project_totals = _derive_project_totals(data)
-            workspace_totals = _derive_workspace_totals(project_totals)
+            environments = REPORT_FIXTURE_MAP[workspace.name]["monthly"]
         else:
-            data = {}
-            project_totals = {}
-            workspace_totals = {}
+            environments = {
+                project.name: {env.name: {} for env in project.environments}
+                for project in workspace.projects
+            }
+
+        project_totals = _derive_project_totals(environments)
+        workspace_totals = _derive_workspace_totals(project_totals)
 
         return {
-            "environments": data,
+            "environments": environments,
             "projects": project_totals,
             "workspace": workspace_totals,
         }
