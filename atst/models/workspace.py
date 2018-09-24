@@ -41,5 +41,9 @@ class Workspace(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     def members(self):
         return [WorkspaceUser(role.user, role) for role in self.roles]
 
+    @property
+    def displayname(self):
+        return self.name
+
     def auditable_workspace_id(self):
         return self.id
