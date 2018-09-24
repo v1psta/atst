@@ -129,6 +129,23 @@ def test_ccpo_user_can_comment_on_request(client, user_session):
     assert request.internal_comments[0].text == comment_text
 
 
+def test_ccpo_user_can_comment_on_request(client, user_session):
+    user = UserFactory.from_atat_role("ccpo")
+    user_session(user)
+    request = RequestFactory.create_with_status(
+        status=RequestStatus.PENDING_CCPO_ACCEPTANCE
+    )
+    assert len(request.internal_comments) == 0
+
+    comment_form_data = {"text": ""}
+    response = client.post(
+        url_for("requests.create_internal_comment", request_id=request.id),
+        data=comment_form_data,
+    )
+    assert response.status_code == 200
+    assert len(request.internal_comments) == 0
+
+
 def test_other_user_cannot_comment_on_request(client, user_session):
     user = UserFactory.create()
     user_session(user)
