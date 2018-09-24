@@ -13,6 +13,9 @@ bp = Blueprint("atst", __name__)
 @bp.route("/")
 def root():
     return render_template("root.html")
+@bp.route("/help")
+def helpdocs():
+    return render_template("help/index.html")
 
 
 @bp.route("/home")
