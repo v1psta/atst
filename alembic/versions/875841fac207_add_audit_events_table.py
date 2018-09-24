@@ -28,6 +28,7 @@ def upgrade():
     sa.Column('resource_id', postgresql.UUID(as_uuid=True), nullable=False),
     sa.Column('action', sa.String(), nullable=False),
     sa.Column('workspace_id', postgresql.UUID(as_uuid=True), nullable=True),
+    sa.Column('request_id', postgresql.UUID(as_uuid=True), nullable=True),
     sa.ForeignKeyConstraint(['user_id'], ['users.id']),
     sa.ForeignKeyConstraint(['workspace_id'], ['workspaces.id']),
     sa.PrimaryKeyConstraint('id')
