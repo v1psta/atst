@@ -47,6 +47,9 @@
         {{ Alert(error, level="error") }}
       {% endfor %}
     {% endif %}
+    <div v-if="showError">
+      {{ Alert("Provide at least one environment name.", level="error") }}
+    </div>
 
       <div class="block-list project-list-item">
         <header class="block-list__header block-list__header--grow">
@@ -76,7 +79,7 @@
 
 
       <div class="action-group">
-        <button v-on:click="openModal('{{ modalName }}')" class="usa-button usa-button-primary" tabindex="0" type="button">{{ action_text }} Project</button>
+        <button v-on:click="validateAndOpenModal('{{ modalName }}')" class="usa-button usa-button-primary" tabindex="0" type="button">{{ action_text }} Project</button>
       </div>
 
     </div>
