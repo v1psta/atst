@@ -30,7 +30,7 @@ def render_approval(request, form=None):
         mo_data = map_ccpo_authorizing(g.current_user)
         form = CCPOReviewForm(data=mo_data)
 
-    internal_comment_form = InternalCommentForm(text=request.internal_comments_text)
+    internal_comment_form = InternalCommentForm()
 
     # Dummy internal comments
     comments = [
@@ -54,7 +54,7 @@ def render_approval(request, form=None):
         current_status=request.status.value,
         f=form or CCPOReviewForm(),
         internal_comment_form=internal_comment_form,
-        comments=comments,
+        comments=request.internal_comments,
     )
 
 
@@ -101,10 +101,10 @@ def task_order_pdf_download(request_id):
 
 @requests_bp.route("/requests/internal_comments/<string:request_id>", methods=["POST"])
 def create_internal_comment(request_id):
-    # form = InternalCommentForm(http_request.form)
-    # if form.validate():
-    #     request = Requests.get(g.current_user, request_id)
-    #     Requests.update_internal_comments(g.current_user, request, form.data["text"])
+    form = InternalCommentForm(http_request.form)
+    if form.validate():
+        request = Requests.get(g.current_user, request_id)
+        Requests.add_internal_comment(g.current_user, request, form.data.get("text"))
     return redirect(
         url_for("requests.approval", request_id=request_id, _anchor="ccpo-notes")
     )

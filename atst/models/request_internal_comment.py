@@ -14,3 +14,4 @@ class RequestInternalComment(Base, mixins.TimestampsMixin):
     user = relationship("User")
 
     request_id = Column(ForeignKey("requests.id", ondelete="CASCADE"), nullable=False)
+    request = relationship("Request")
