@@ -3,6 +3,7 @@ import string
 import factory
 from uuid import uuid4
 import datetime
+from faker import Faker as _Faker
 
 from atst.forms.data import SERVICE_BRANCHES
 from atst.models.request import Request
@@ -158,6 +159,24 @@ class RequestFactory(Base):
             request=request, revision=request.latest_revision, new_status=status
         )
         return request
+
+    @classmethod
+    def mock_financial_data(cls):
+        fake = _Faker()
+        return {
+            "pe_id": "0101110F",
+            "fname_co": fake.first_name(),
+            "lname_co": fake.last_name(),
+            "email_co": fake.email(),
+            "office_co": fake.phone_number(),
+            "fname_cor": fake.first_name(),
+            "lname_cor": fake.last_name(),
+            "email_cor": fake.email(),
+            "office_cor": fake.phone_number(),
+            "uii_ids": "123abc",
+            "treasury_code": "00123456",
+            "ba_code": "02A",
+        }
 
 
 class PENumberFactory(Base):
