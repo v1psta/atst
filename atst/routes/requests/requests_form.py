@@ -119,10 +119,11 @@ def requests_submit(request_id=None):
     Requests.submit(request)
 
     if request.status == RequestStatus.PENDING_FINANCIAL_VERIFICATION:
-        return redirect("/requests?modal=pendingFinancialVerification")
-
+        modal = "pendingFinancialVerification"
     else:
-        return redirect("/requests?modal=pendingCCPOApproval")
+        modal = "pendingCCPOApproval"
+
+    return redirect(url_for("requests.requests_index", modal=modal))
 
 
 @requests_bp.route("/requests/details/<string:request_id>", methods=["GET"])
