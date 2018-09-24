@@ -225,8 +225,8 @@ class Requests(object):
         return Requests._add_review(user, request, review_data)
 
     @classmethod
-    def update_internal_comments(cls, user, request, comment_text):
+    def add_internal_comment(cls, user, request, comment_text):
         Authorization.check_can_approve_request(user)
-        request.internal_comments = RequestInternalComment(text=comment_text, user=user)
-        request = RequestsQuery.add_and_commit(request)
+        comment = RequestInternalComment(request=request, text=comment_text, user=user)
+        RequestsQuery.add_and_commit(comment)
         return request
