@@ -1,10 +1,12 @@
 import textinput from '../text_input'
+import LocalDatetime from '../local_datetime'
 
 export default {
   name: 'ccpo-approval',
 
   components: {
-    textinput
+    textinput,
+    LocalDatetime
   },
 
   data: function () {

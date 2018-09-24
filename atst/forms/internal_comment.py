@@ -7,6 +7,6 @@ from .forms import ValidatedForm
 class InternalCommentForm(ValidatedForm):
     text = TextAreaField(
         "CCPO Internal Notes",
-        description="You may add additional comments and notes for internal CCPO reference and follow-up here.",
+        description="Add comments or notes for internal CCPO reference and follow-up here.<strong>These comments <em>will not</em> be visible to the person making the JEDI request.</strong>",
         validators=[Optional()],
     )
