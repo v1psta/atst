@@ -93,7 +93,7 @@
           <td><a href="{{ url_for('workspaces.update_member', workspace_id=workspace.id, member_id=m.user_id) }}" class="icon-link icon-link--large">{{ m.user_name }}</a></td>
           <td class='table-cell--shrink'>{% if not m.has_environment_roles %} <span class="label label--info">No Environment Access</span> {% endif %}</td>
           <td>{{ m.status }}</a></td>
-          <td>{{ m.role }}</a></td>
+          <td>{{ m.role_displayname }}</a></td>
         </tr>
         {% endfor %}
       </tbody>
