@@ -64,7 +64,7 @@ class AuditableMixin(object):
         return camel_to_snake(type(self).__name__)
 
     def auditable_workspace_id(self):
-        return getattr_path(self, "workspace.id")
+        return getattr_path(self, "workspace_id")
 
     def auditable_displayname(self):
         return getattr_path(self, "displayname")
