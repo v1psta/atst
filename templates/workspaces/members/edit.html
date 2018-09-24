@@ -67,7 +67,7 @@
           {% set role = EnvironmentRoles.get(member.user_id, env.id).role %}
 
         <li class='block-list__item'>
-          <edit-workspace-member inline-template initial-data='{{ role }}' v-bind:choices='{{ form.environment_role.choices | tojson }}'>
+          <edit-workspace-member inline-template initial-data='{{ role }}' v-bind:choices='{{ choices | tojson }}'>
           <div class='project-list-item__environment'>
             <span class='project-list-item__environment__link'>
               {{ env.name }}
@@ -81,7 +81,7 @@
               {% call Modal(name=env.name + 'RolesModal', dismissable=False) %}
                   <div class='block-list'>
                     <ul>
-                      {% for choice in form.environment_role.choices %}
+                      {% for choice in choices %}
                       <li class='block-list__item block-list__item--selectable'>
 
                         {% if choice[0] != ""  %}
