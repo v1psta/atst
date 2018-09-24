@@ -196,7 +196,9 @@ class TaskOrderFactory(Base):
     )
     expiration_date = factory.LazyFunction(
         lambda: datetime.date(
-            datetime.date.today().year + random.randrange(1, 15), 1, 1
+            datetime.date.today().year + random.randrange(1, 5),
+            random.randrange(1, 12),
+            random.randrange(1, 28),
         )
     )
     clin_0001 = random.randrange(100, 100000)
