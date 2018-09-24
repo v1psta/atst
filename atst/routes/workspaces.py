@@ -232,7 +232,9 @@ def update_member(workspace_id, member_id):
     if form.validate():
         new_role_name = None
         if form.data["workspace_role"] != member.role:
-            member = Workspaces.update_member(g.current_user, workspace, member, form.data["workspace_role"])
+            member = Workspaces.update_member(
+                g.current_user, workspace, member, form.data["workspace_role"]
+            )
             new_role_name = member.role_displayname
 
         return redirect(
