@@ -72,7 +72,7 @@ def update_financial_verification(request_id):
             else:
                 return redirect(
                     url_for(
-                        "requests.requests_index", pendingFinancialVerification=True
+                        "requests.requests_index", modal="pendingFinancialVerification"
                     )
                 )
 
