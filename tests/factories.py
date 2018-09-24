@@ -191,7 +191,9 @@ class TaskOrderFactory(Base):
     source = Source.MANUAL
     funding_type = FundingType.PROC
     funding_type_other = None
-    number = factory.Faker("md5")
+    number = factory.LazyFunction(
+        lambda: "".join(random.choices(string.ascii_uppercase + string.digits, k=13))
+    )
     expiration_date = factory.LazyFunction(
         lambda: datetime.date(
             datetime.date.today().year + random.randrange(1, 15), 1, 1
