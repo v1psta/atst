@@ -42,11 +42,11 @@
       </div>
     </div>
 
-    {% if form.environment_names.errors %}
-      {% for error in form.environment_names.errors %}
-        {{ Alert(error, level="error") }}
-      {% endfor %}
-    {% endif %}
+    <div> {# this extra div prevents this bug: https://www.pivotaltracker.com/story/show/160768940 #}
+      <div v-cloak v-for="title in errors" :key="title">
+        {{ Alert(message=None, level="error", vue_template=True) }}
+      </div>
+    </div>
 
       <div class="block-list project-list-item">
         <header class="block-list__header block-list__header--grow">
@@ -74,9 +74,8 @@
         </div>
       </div>
 
-
       <div class="action-group">
-        <button v-on:click="openModal('{{ modalName }}')" class="usa-button usa-button-primary" tabindex="0" type="button">{{ action_text }} Project</button>
+        <button v-on:click="validateAndOpenModal('{{ modalName }}')" class="usa-button usa-button-primary" tabindex="0" type="button">{{ action_text }} Project</button>
       </div>
 
     </div>

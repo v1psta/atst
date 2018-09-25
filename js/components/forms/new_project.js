@@ -32,6 +32,12 @@ export default {
     ).map(createEnvironment)
 
     return {
+      validations: [
+        {func: this.hasEnvironments, message: "Provide at least one environment name."},
+        {func: this.envNamesAreUnique, message: "Environment names must be unique."},
+        {func: this.environmentsHaveNames, message: "Environment names cannot be empty."},
+      ],
+      errors: [],
       environments,
       name,
     }
@@ -49,6 +55,51 @@ export default {
     removeEnvironment: function (index) {
       if (this.environments.length > 1) {
         this.environments.splice(index, 1)
+      }
+    },
+
+    validate: function() {
+      this.errors = this.validations.map((validation) => {
+        if (!validation.func()) {
+          return validation.message
+        }
+      }).filter(Boolean)
+    },
+
+    hasEnvironments: function () {
+      return this.environments.length > 0 && this.environments.some((e) => e.name !== "")
+    },
+
+    environmentsHaveNames: function () {
+      if (this.environments.length > 1) {
+        // only want to display this error if we have multiple envs and one or
+        // more do not have names
+        return this.environments.every((e) => e.name !== "")
+      } else {
+        return true
+      }
+    },
+
+    envNamesAreUnique: function () {
+      const names = this.environments.map((e) => e.name)
+      return names.every((n, index) => names.indexOf(n) === index)
+    },
+
+    validateAndOpenModal: function (modalName) {
+      let isValid = this.$children.reduce((previous, newVal) => {
+        // display textInput error if it is not valid
+        if (!newVal.showValid) {
+          newVal.showError = true
+        }
+
+        return newVal.showValid && previous
+      }, true)
+
+      this.validate()
+      isValid = this.errors.length == 0 && isValid
+
+      if (isValid) {
+        this.openModal(modalName)
       }
     }
   }

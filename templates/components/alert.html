@@ -1,6 +1,6 @@
 {% from "components/icon.html" import Icon %}
 
-{% macro Alert(title, message=None, actions=None, level='info', fragment=None) -%}
+{% macro Alert(title, message=None, actions=None, level='info', fragment=None, vue_template=False) -%}
   {% set role = 'alertdialog' if actions else 'alert' %}
   {% set levels = {
     'warning': {
@@ -25,7 +25,11 @@
     {{ Icon(levels.get(level).get('icon'), classes='alert__icon icon--large') }}
 
     <div class='alert__content'>
-      <h2 class='alert__title'>{{title}}</h2>
+      {% if vue_template %}
+        <h2 class='alert__title' v-html='title'></h2>
+      {% else %}
+        <h2 class='alert__title'>{{title}}</h2>
+      {% endif %}
 
       {% if message %}
         <div class='alert__message'>{{ message | safe }}</div>
