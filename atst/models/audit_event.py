@@ -38,7 +38,7 @@ class AuditEvent(Base, TimestampsMixin):
         if self.request_id and self.resource_type != "request":
             scope_str = "for request {}".format(self.request_id)
         elif self.workspace_id and self.resource_type != "workspace":
-            scope_str = "in workspace {}".format(self.request_id)
+            scope_str = "in workspace {}".format(self.workspace_id)
 
         return " ".join([user_str, action_str, display_name_str, scope_str])
 
