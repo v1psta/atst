@@ -131,7 +131,7 @@
     <button class='action-group__action usa-button usa-button-big'>
       {% if is_new_member %}Create{% else %}Save{% endif %}
     </button>
-    <a href='#' class='action-group__action icon-link'>
+    <a href='{{ url_for("workspaces.workspace_members", workspace_id=workspace.id) }}' class='action-group__action icon-link'>
       {{ Icon('x') }}
       <span>Cancel</span>
     </a>
