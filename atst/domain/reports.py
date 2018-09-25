@@ -1,3 +1,4 @@
+from datetime import datetime
 from itertools import groupby
 
 
@@ -236,6 +237,7 @@ class Reports:
         if workspace.name in REPORT_FIXTURE_MAP:
             months = REPORT_FIXTURE_MAP[workspace.name]["cumulative"]
         else:
-            months = {}
+            this_month = datetime.today().strftime("%m/%Y")
+            months = {this_month: {"spend": 0, "cumulative": 0}}
 
         return {"months": months}
