@@ -14,15 +14,19 @@ from .validators import Alphabet, DateRange, PhoneNumber
 
 class EditUserForm(ValidatedForm):
 
-    fname = StringField("First Name", validators=[Required(), Alphabet()])
+    first_name = StringField("First Name", validators=[Required(), Alphabet()])
 
-    lname = StringField("Last Name", validators=[Required(), Alphabet()])
+    last_name = StringField("Last Name", validators=[Required(), Alphabet()])
 
-    email = EmailField("E-mail Address", validators=[Required(), Email()])
+    email = EmailField(
+        "E-mail Address",
+        description="Enter your preferred contact e-mail address",
+        validators=[Required(), Email()]
+    )
 
     phone_number = TelField(
         "Phone Number",
-        description="Enter a 10-digit phone number",
+        description="Enter your 10-digit U.S. phone number",
         validators=[Required(), PhoneNumber()],
     )
 
