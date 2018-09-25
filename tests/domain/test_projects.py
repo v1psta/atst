@@ -16,14 +16,14 @@ def test_create_project_with_multiple_environments():
     assert sorted(e.name for e in project.environments) == ["dev", "prod"]
 
 
-def test_project_creator_has_environment_access():
+def test_workspace_owner_can_view_environments():
     owner = UserFactory.create()
     request = RequestFactory.create(creator=owner)
     workspace = Workspaces.create(request)
-    project = Projects.create(
+    _project = Projects.create(
         owner, workspace, "My Test Project", "Test", ["dev", "prod"]
     )
 
-    environment = project.environments[0]
+    project = Projects.get(owner, workspace, _project.id)
 
-    assert owner in environment.users
+    assert len(project.environments) == 2
