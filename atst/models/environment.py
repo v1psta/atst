@@ -3,10 +3,10 @@ from sqlalchemy.orm import relationship
 
 from atst.models import Base
 from atst.models.types import Id
-from atst.models.mixins import TimestampsMixin
+from atst.models import mixins
 
 
-class Environment(Base, TimestampsMixin):
+class Environment(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     __tablename__ = "environments"
 
     id = Id()
@@ -22,3 +22,10 @@ class Environment(Base, TimestampsMixin):
     @property
     def num_users(self):
         return len(self.users)
+
+    @property
+    def displayname(self):
+        return self.name
+
+    def auditable_workspace_id(self):
+        return self.project.workspace_id

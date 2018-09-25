@@ -18,6 +18,7 @@ from atst.routes.dev import bp as dev_routes
 from atst.routes.errors import make_error_pages
 from atst.domain.authnid.crl import CRLCache
 from atst.domain.auth import apply_authentication
+from atst.domain.authz import Authorization
 from atst.eda_client import MockEDAClient
 from atst.uploader import Uploader
 
@@ -69,13 +70,12 @@ def make_flask_callbacks(app):
         g.dev = os.getenv("FLASK_ENV", "dev") == "dev"
         g.matchesPath = lambda href: re.match("^" + href, request.path)
         g.modal = request.args.get("modal", None)
-        g.current_user = {
-            "id": "cce17030-4109-4719-b958-ed109dbb87c8",
-            "first_name": "Amanda",
-            "last_name": "Adamson",
-            "atat_role": "default",
-            "atat_permissions": [],
-        }
+        g.Authorization = Authorization
+
+    @app.after_request
+    def _cleanup(response):
+        g.pop("current_user", None)
+        return response
 
 
 def map_config(config):

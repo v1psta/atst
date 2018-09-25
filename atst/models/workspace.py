@@ -3,12 +3,12 @@ from sqlalchemy.orm import relationship
 
 from atst.models import Base
 from atst.models.types import Id
-from atst.models.mixins import TimestampsMixin
+from atst.models import mixins
 from atst.models.workspace_user import WorkspaceUser
 from atst.utils import first_or_none
 
 
-class Workspace(Base, TimestampsMixin):
+class Workspace(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     __tablename__ = "workspaces"
 
     id = Id()
@@ -40,3 +40,10 @@ class Workspace(Base, TimestampsMixin):
     @property
     def members(self):
         return [WorkspaceUser(role.user, role) for role in self.roles]
+
+    @property
+    def displayname(self):
+        return self.name
+
+    def auditable_workspace_id(self):
+        return self.id

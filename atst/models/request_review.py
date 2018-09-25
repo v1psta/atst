@@ -4,7 +4,7 @@ from sqlalchemy.orm import relationship
 from atst.models import Base, mixins, types
 
 
-class RequestReview(Base, mixins.TimestampsMixin):
+class RequestReview(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     __tablename__ = "request_reviews"
 
     id = types.Id()
