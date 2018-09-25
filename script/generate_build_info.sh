@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # script/generate_build_info: Generates buildinfo.html and buildinfo.json and
-#                             places them in a publically accessable static asset
+#                             places them in a publicly accessable static asset
 #                             folder
 
 source "$(dirname "${0}")"/../script/include/global_header.inc.sh
