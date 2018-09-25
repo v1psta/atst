@@ -89,7 +89,14 @@ def show_workspace(workspace_id):
 @bp.route("/workspaces/<workspace_id>/members")
 def workspace_members(workspace_id):
     workspace = Workspaces.get_with_members(g.current_user, workspace_id)
-    return render_template("workspaces/members/index.html", workspace=workspace)
+    new_member_name = http_request.args.get("newMemberName")
+    new_member = next(
+        filter(lambda m: m.user_name == new_member_name, workspace.members), None
+    )
+
+    return render_template(
+        "workspaces/members/index.html", workspace=workspace, new_member=new_member
+    )
 
 
 @bp.route("/workspaces/<workspace_id>/reports")
