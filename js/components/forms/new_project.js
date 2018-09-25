@@ -82,7 +82,7 @@ export default {
 
     envNamesAreUnique: function () {
       const names = this.environments.map((e) => e.name)
-      return [...new Set(names)].length == this.environments.length
+      return names.every((n, index) => names.indexOf(n) === index)
     },
 
     validateAndOpenModal: function (modalName) {
