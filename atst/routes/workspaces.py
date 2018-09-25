@@ -234,17 +234,19 @@ def update_member(workspace_id, member_id):
     form = EditMemberForm(http_request.form)
 
     if form.validate():
-        role = None
+        new_role_name = None
         if form.data["workspace_role"] != member.role:
-            role = form.data["workspace_role"]
-            Workspaces.update_member(g.current_user, workspace, member, role)
+            member = Workspaces.update_member(
+                g.current_user, workspace, member, form.data["workspace_role"]
+            )
+            new_role_name = member.role_displayname
 
         return redirect(
             url_for(
                 "workspaces.workspace_members",
                 workspace_id=workspace.id,
                 memberName=member.user_name,
-                updatedRole=role,
+                updatedRole=new_role_name,
             )
         )
     else:

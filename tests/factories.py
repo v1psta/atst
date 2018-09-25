@@ -29,6 +29,7 @@ class RoleFactory(Base):
         model = Role
 
     name = factory.Faker("name")
+    display_name = "Role display name"
     description = "This is a test role."
     permissions = []
 
