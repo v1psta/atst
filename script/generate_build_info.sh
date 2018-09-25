@@ -43,8 +43,13 @@ COMMIT_MESSAGE_JSON=$(git log -1 --pretty=format:%B | sed -e 's#\([^\\]\)"#\1\\"
 COMMIT_MESSAGE_HTML=$(git log -1 --pretty=format:%B | sed -e 's#>#&gt;#g' | sed -e 's#<#&lt;#g' | awk 1 ORS='<BR/>')
 
 # Assemble https based git repo url
-GIT_REPO=$(git config --get remote.origin.url | cut -d ':' -f 2)
-GIT_URL="https:${GIT_REPO}"
+GIT_REMOTE_URL=$(git config --get remote.origin.url)
+if [[ ${GIT_REMOTE_URL} =~ "@" ]]
+then
+    GIT_URL="https://github.com/$(echo "${GIT_REMOTE_URL}" | cut -d ':' -f 2)"
+else
+    GIT_URL="${GIT_REMOTE_URL}"
+fi
 # Drop the trailing .git for generating github links
 GITHUB_BASE_URL="${GIT_URL%.git}"
 GITHUB_COMMIT_URL="${GITHUB_BASE_URL}/commit/${GIT_SHA}"
