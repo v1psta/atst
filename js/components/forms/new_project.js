@@ -9,6 +9,39 @@ const VALIDATIONS = {
   showEmptyError: "environmentsHaveNames",
 }
 
+class Validator {
+  constructor(validations) {
+    this.validations = validations
+  }
+
+  errorList() {
+    let errors = {}
+    this.map((key) => {
+      errors[key] = false
+    })
+    return errors
+  }
+
+  map(callback) {
+    Object.keys(this.validations).map((k) => callback(k))
+  }
+
+  update(object) {
+    this.map((errName) => {
+      if (object[this.validations[errName]]()) {
+        object.errors[errName] = false
+      }
+    })
+  }
+
+  validate(object) {
+    this.map((errName) => {
+      object.errors[errName] = !object[this.validations[errName]]()
+    })
+    return Object.values(object.errors).every(e => e)
+  }
+}
+
 export default {
   name: 'new-project',
 
@@ -37,13 +70,11 @@ export default {
       : [""]
     ).map(createEnvironment)
 
-    let errors = {}
-    Object.keys(VALIDATIONS).map((key) => {
-      errors[key] = false
-    })
+    const validator = new Validator(VALIDATIONS)
 
     return {
-      errors,
+      validator,
+      errors: validator.errorList(),
       environments,
       name,
     }
@@ -54,12 +85,7 @@ export default {
   },
 
   updated: function() {
-    Object.keys(VALIDATIONS).map((errName) => {
-      const func = VALIDATIONS[errName]
-      if (this[func]()) {
-        this.errors[errName] = false
-      }
-    })
+    this.validator.update(this)
   },
 
   methods: {
@@ -102,13 +128,7 @@ export default {
         return newVal.showValid && previous
       }, true)
 
-      Object.keys(VALIDATIONS).map((errName) => {
-        const func = VALIDATIONS[errName]
-        if (!this[func]()) {
-          isValid = false
-          this.errors[errName] = true
-        }
-      })
+      isValid = this.validator.validate(this) && isValid
 
       if (isValid) {
         this.openModal(modalName)
