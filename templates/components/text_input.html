@@ -17,7 +17,7 @@
     validation='{{ validation }}'
     {% if paragraph %}paragraph='true'{% endif %}
     {% if noMaxWidth %}no-max-width='true'{% endif %}
-    {% if initial_value or field.data %}initial-value='{{ initial_value or field.data }}'{% endif %}
+    {% if initial_value or field.data is not none %}initial-value='{{ initial_value or field.data }}'{% endif %}
     {% if field.errors %}v-bind:initial-errors='{{ field.errors }}'{% endif %}
     key='{{ field.name }}'
     inline-template>
