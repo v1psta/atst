@@ -20,7 +20,7 @@
         </a>
       {% endif %}
 
-      <a href="/" class="topbar__link">
+      <a href="{{ url_for('atst.home') }}" class="topbar__link">
         <span class="topbar__link-label">{{ g.current_user.first_name + " " + g.current_user.last_name }}</span>
         {{ Icon('avatar', classes='topbar__link-icon') }}
       </a>

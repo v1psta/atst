@@ -24,7 +24,7 @@
       </a>
 
       {% if g.current_user %}
-        <a href="/" class="topbar__link">
+        <a href="{{ url_for('atst.home') }}" class="topbar__link">
           <span class="topbar__link-label">{{ g.current_user.first_name + " " + g.current_user.last_name }}</span>
           {{ Icon('avatar', classes='topbar__link-icon') }}
         </a>
@@ -48,7 +48,7 @@
     <div class='app-footer__info'>
       <h5 class='app-footer__info__title'>Joint Enterprise Defense Infrastructure</h5>
 
-      <a href='/help' class='icon-link app-footer__info__link' target='_blank' rel='noopener noreferrer'>
+      <a href='{{ url_for('atst.helpdocs') }}' class='icon-link app-footer__info__link' target='_blank' rel='noopener noreferrer'>
         {{ Icon('help') }}
         <span>JEDI Help</span>
       </a>
