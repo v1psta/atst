@@ -25,6 +25,7 @@ export default {
 
   methods: {
     toggle: function (e) {
+      e.preventDefault()
       this.isVisible = !this.isVisible
     }
   }
