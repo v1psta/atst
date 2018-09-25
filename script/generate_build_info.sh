@@ -1,7 +1,7 @@
 #!/bin/bash
 #
-# script/generate_build_info: Generates buildinfo.html and buildinfo.json and 
-#                             places them in a publically accessable static asset
+# script/generate_build_info: Generates buildinfo.html and buildinfo.json and
+#                             places them in a publicly accessable static asset
 #                             folder
 
 source "$(dirname "${0}")"/../script/include/global_header.inc.sh
@@ -36,15 +36,20 @@ echo "Gathering info from git..."
 COMMIT_AUTHOR=$(git log -1 --pretty=%aN)
 COMMIT_AUTHOR_EMAIL=$(git log -1 --pretty=%aE)
 GIT_SHA=$(git rev-parse HEAD)
-# Escape all double quotes in commit message and switch newlines for \n 
+# Escape all double quotes in commit message and switch newlines for \n
 # (for JSON compatability)
 COMMIT_MESSAGE_JSON=$(git log -1 --pretty=format:%B | sed -e 's#\([^\\]\)"#\1\\"#g' | awk 1 ORS='\\n')
 # Escape all < and > characters in commit message and trade newlines for <BR/> tags
 COMMIT_MESSAGE_HTML=$(git log -1 --pretty=format:%B | sed -e 's#>#&gt;#g' | sed -e 's#<#&lt;#g' | awk 1 ORS='<BR/>')
 
 # Assemble https based git repo url
-GIT_REPO=$(git config --get remote.origin.url | cut -d ':' -f 2)
-GIT_URL="https://github.com/${GIT_REPO}"
+GIT_REMOTE_URL=$(git config --get remote.origin.url)
+if [[ ${GIT_REMOTE_URL} =~ "@" ]]
+then
+    GIT_URL="https://github.com/$(echo "${GIT_REMOTE_URL}" | cut -d ':' -f 2)"
+else
+    GIT_URL="${GIT_REMOTE_URL}"
+fi
 # Drop the trailing .git for generating github links
 GITHUB_BASE_URL="${GIT_URL%.git}"
 GITHUB_COMMIT_URL="${GITHUB_BASE_URL}/commit/${GIT_SHA}"
@@ -52,7 +57,7 @@ GITHUB_COMMIT_URL="${GITHUB_BASE_URL}/commit/${GIT_SHA}"
 APP_CONTAINER_CREATE_DATE=$(date '+%Y-%m-%d')
 APP_CONTAINER_CREATE_TIME=$(date '+%H:%M:%S')
 
-echo "Generating public/buildinfo.json ..."
+echo "Generating ${STATIC_DIR}/buildinfo.json ..."
 cat > ${STATIC_DIR}/buildinfo.json <<ENDJSON
 {
   "build_info" : {
@@ -81,7 +86,7 @@ cat > ${STATIC_DIR}/buildinfo.json <<ENDJSON
 }
 ENDJSON
 
-echo "Generating public/buildinfo.html ..."
+echo "Generating ${STATIC_DIR}/buildinfo.html ..."
 cat > ${STATIC_DIR}/buildinfo.html <<ENDHTML
 <HTML>
 <HEAD>
