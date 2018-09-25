@@ -21,9 +21,13 @@ class Environments(object):
 
     @classmethod
     def create_many(cls, project, names):
+        environments = []
         for name in names:
             environment = Environment(project=project, name=name)
-            db.session.add(environment)
+            environments.append(environment)
+
+        db.session.add_all(environments)
+        return environments
 
     @classmethod
     def add_member(cls, environment, user, role):
@@ -31,8 +35,6 @@ class Environments(object):
             user=user, environment=environment, role=role
         )
         db.session.add(environment_user)
-        db.session.commit()
-
         return environment
 
     @classmethod

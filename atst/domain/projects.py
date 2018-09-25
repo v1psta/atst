@@ -5,7 +5,6 @@ from atst.domain.exceptions import NotFoundError
 from atst.models.permissions import Permissions
 from atst.models.project import Project
 from atst.models.environment import Environment
-from atst.models.environment_role import EnvironmentRole
 
 
 class Projects(object):
@@ -15,9 +14,6 @@ class Projects(object):
         db.session.add(project)
 
         Environments.create_many(project, environment_names)
-
-        for environment in project.environments:
-            Environments.add_member(user, environment, user)
 
         db.session.commit()
         return project
