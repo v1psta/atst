@@ -90,6 +90,7 @@
 
     .topbar__navigation {
       justify-content: flex-end;
+      -ms-flex-pack: justify;
     }
 
     .topbar__link {
