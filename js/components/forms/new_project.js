@@ -3,6 +3,12 @@ import textinput from '../text_input'
 
 const createEnvironment = (name) => ({ name })
 
+const VALIDATIONS = {
+  showMissingError: "hasEnvironments",
+  showUniqueError: "envNamesAreUnique",
+  showEmptyError: "environmentsHaveNames",
+}
+
 export default {
   name: 'new-project',
 
@@ -31,9 +37,13 @@ export default {
       : [""]
     ).map(createEnvironment)
 
+    let errors = {}
+    Object.keys(VALIDATIONS).map((key) => {
+      errors[key] = false
+    })
+
     return {
-      showMissingError: false,
-      showUniqueError: false,
+      errors,
       environments,
       name,
     }
@@ -44,13 +54,12 @@ export default {
   },
 
   updated: function() {
-    if (this.environmentsHaveNames()) {
-      this.showMissingError = false
-    }
-
-    if (this.envNamesAreUnique()) {
-      this.showUniqueError = false
-    }
+    Object.keys(VALIDATIONS).map((errName) => {
+      const func = VALIDATIONS[errName]
+      if (this[func]()) {
+        this.errors[errName] = false
+      }
+    })
   },
 
   methods: {
@@ -64,8 +73,18 @@ export default {
       }
     },
 
+    hasEnvironments: function () {
+      return this.environments.length > 0 && this.environments.some((e) => e.name !== "")
+    },
+
     environmentsHaveNames: function () {
-      return this.environments.every((e) => e.name !== "")
+      if (this.environments.length > 1) {
+        // only want to display this error if we have multiple envs and one or
+        // more do not have names
+        return this.environments.every((e) => e.name !== "")
+      } else {
+        return true
+      }
     },
 
     envNamesAreUnique: function () {
@@ -83,15 +102,13 @@ export default {
         return newVal.showValid && previous
       }, true)
 
-      if (!this.environmentsHaveNames()) {
-        isValid = false
-        this.showMissingError = true
-      }
-
-      if (!this.envNamesAreUnique()) {
-        isValid = false
-        this.showUniqueError = true
-      }
+      Object.keys(VALIDATIONS).map((errName) => {
+        const func = VALIDATIONS[errName]
+        if (!this[func]()) {
+          isValid = false
+          this.errors[errName] = true
+        }
+      })
 
       if (isValid) {
         this.openModal(modalName)
