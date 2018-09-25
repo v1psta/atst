@@ -97,3 +97,8 @@ def user():
     form = EditUserForm(request.form)
     user = g.current_user
     return render_template("user/edit.html", form=form, user=user)
+
+@bp.route("/save_user")
+def save_user():
+    # no op
+    return redirect(url_for(".home"))
