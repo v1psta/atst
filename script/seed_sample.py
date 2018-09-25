@@ -27,7 +27,7 @@ WORKSPACE_USERS = [
         "first_name": "Mario",
         "last_name": "Hudson",
         "email": "hudson@mil.gov",
-        "workspace_role": "ccpo",
+        "workspace_role": "billing_auditor",
         "dod_id": "0000000002",
     },
     {

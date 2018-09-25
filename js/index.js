@@ -13,6 +13,7 @@ import poc from './components/forms/poc'
 import financial from './components/forms/financial'
 import toggler from './components/toggler'
 import NewProject from './components/forms/new_project'
+import EditWorkspaceMember from './components/forms/edit_workspace_member'
 import Modal from './mixins/modal'
 import selector from './components/selector'
 import BudgetChart from './components/charts/budget_chart'
@@ -39,7 +40,8 @@ const app = new Vue({
     BudgetChart,
     SpendTable,
     CcpoApproval,
-    LocalDatetime
+    LocalDatetime,
+    EditWorkspaceMember,
   },
 
   mounted: function() {

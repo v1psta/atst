@@ -7,7 +7,7 @@ from atst.models import Base, types, mixins
 
 
 class CSPRole(Enum):
-    NONSENSE_ROLE = "nonesense_role"
+    NONSENSE_ROLE = "nonsense_role"
 
 
 class EnvironmentRole(Base, mixins.TimestampsMixin):

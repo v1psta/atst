@@ -1,3 +1,4 @@
+import re
 from datetime import date, timedelta
 
 from flask import (
@@ -14,10 +15,13 @@ from atst.domain.projects import Projects
 from atst.domain.reports import Reports
 from atst.domain.workspaces import Workspaces
 from atst.domain.workspace_users import WorkspaceUsers
+from atst.domain.environments import Environments
+from atst.domain.environment_roles import EnvironmentRoles
 from atst.forms.new_project import NewProjectForm
 from atst.forms.new_member import NewMemberForm
 from atst.forms.edit_member import EditMemberForm
 from atst.forms.workspace import WorkspaceForm
+from atst.forms.data import ENVIRONMENT_ROLES
 from atst.domain.authz import Authorization
 from atst.models.permissions import Permissions
 
@@ -213,9 +217,16 @@ def view_member(workspace_id, member_id):
         "edit this workspace user",
     )
     member = WorkspaceUsers.get(workspace_id, member_id)
+    projects = Projects.get_all(g.current_user, member, workspace)
     form = EditMemberForm(workspace_role=member.role)
     return render_template(
-        "workspaces/members/edit.html", form=form, workspace=workspace, member=member
+        "workspaces/members/edit.html",
+        workspace=workspace,
+        member=member,
+        projects=projects,
+        form=form,
+        choices=ENVIRONMENT_ROLES,
+        EnvironmentRoles=EnvironmentRoles,
     )
 
 
@@ -231,6 +242,16 @@ def update_member(workspace_id, member_id):
         "edit this workspace user",
     )
     member = WorkspaceUsers.get(workspace_id, member_id)
+
+    ids_and_roles = []
+    form_dict = http_request.form.to_dict()
+    for entry in form_dict:
+        if re.match("env_", entry):
+            env_id = entry[4:]
+            env_role = form_dict[entry]
+            if env_role:
+                ids_and_roles.append({"id": env_id, "role": env_role})
+
     form = EditMemberForm(http_request.form)
 
     if form.validate():
@@ -240,6 +261,8 @@ def update_member(workspace_id, member_id):
                 g.current_user, workspace, member, form.data["workspace_role"]
             )
             new_role_name = member.role_displayname
+
+        Environments.update_environment_role(g.current_user, ids_and_roles, member)
 
         return redirect(
             url_for(

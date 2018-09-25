@@ -3,6 +3,7 @@
 {% from "components/icon.html" import Icon %}
 {% from "components/modal.html" import Modal %}
 {% from "components/selector.html" import Selector %}
+{% from "components/options_input.html" import OptionsInput %}
 
 {% block content %}
 
@@ -49,173 +50,82 @@
     </div>
   </div>
 
-  {% call Modal(name='rolesModal', dismissable=False) %}
-  <div class="block-list">
-    <header class="block-list__header">
-      <div>
-        <h2 class="block-list__title">
-          Environment access for Danny Knight
-          <div class='subtitle'>Project Name - Environment Name</div>
-        </h2>
-        <div class="block-list__description">
-          <p>An environment role determines the permissions a member of the workspace assumes when using the JEDI Cloud.</p>
-          <p>A member may have different environment roles across different projects. A member can only have one assigned environment role in a given environment.</p>
-        </div>
-      </div>
-    </header>
-
-    <form method="post" action="">
-      <ul>
-        <li class='block-list__item block-list__item--selectable'>
-          <input type='radio' name='radio' id='radio-' />
-          <label for='radio-'>
-            <dl>
-              <dt>Developer</dt>
-              <dd>Configures cloud-based IaaS and PaaS computing, networking, and storage services.</dd>
-            </dl>
-          </label>
-        </li>
-
-        <li class='block-list__item block-list__item--selectable'>
-          <input type='radio' name='radio' id='radio-' />
-          <label for='radio-'>
-            <dl>
-              <dt>Database Administrator</dt>
-              <dd>Configures cloud-based database services.</dd>
-            </dl>
-          </label>
-        </li>
-
-        <li class='block-list__item block-list__item--selectable'>
-          <input type='radio' name='radio' id='radio-' />
-          <label for='radio-'>
-            <dl>
-              <dt>DevOps</dt>
-              <dd>Provisions, deprovisions, and deploys cloud-based IaaS and PaaS computing, networking, and storage services, including pre-configured machine images.</dd>
-            </dl>
-          </label>
-        </li>
-
-        <li class='block-list__item block-list__item--selectable'>
-          <input type='radio' name='radio' id='radio-' />
-          <label for='radio-'>
-            <dl>
-              <dt>Billing Administrator</dt>
-              <dd>Views cloud resource usage, budget reports, and invoices; tracks budgets, including spend reports, cost planning and projections, and sets limits based on cloud service usage.</dd>
-            </dl>
-          </label>
-        </li>
-
-        <li class='block-list__item block-list__item--selectable'>
-          <input type='radio' name='radio' id='radio-' />
-          <label for='radio-'>
-            <dl>
-              <dt>Security Administrator</dt>
-              <dd>Accesses information security and control tools of cloud resources which include viewing cloud resource usage logging, user roles and permissioning history.</dd>
-            </dl>
-          </label>
-        </li>
-
-        <li class='block-list__item block-list__item--selectable'>
-          <input type='radio' name='radio' id='radio-' />
-          <label for='radio-'>
-            <dl>
-              <dt>Financial Auditor</dt>
-              <dd>Views cloud resource usage and budget reports.</dd>
-            </dl>
-          </label>
-        </li>
-      </ul>
-
-      <div class='block-list__footer'>
-        <div class='action-group'>
-          <a v-on:click="closeModal('rolesModal')" class='action-group__action usa-button'>Select Access Role</a>
-          <a class='action-group__action icon-link icon-link--danger' v-on:click="closeModal('rolesModal')">No Access</a>
-        </div>
-      </div>
-    </form>
-
-  </div>
-
-  {% endcall %}
-
+  {% for project in projects %}
   <div is='toggler' default-visible class='block-list project-list-item'>
     <template slot-scope='props'>
       <header class='block-list__header'>
-      <button type='button' v-on:click='props.toggle' class='icon-link icon-link--large icon-link--default spend-table__project__toggler'>
+      <button v-on:click='props.toggle' class='icon-link icon-link--large icon-link--default spend-table__project__toggler'>
           <template v-if='props.isVisible'>{{ Icon('caret_down') }}</template>
           <template v-else>{{ Icon('caret_right') }}</template>
-          <h3 class="block-list__title">Code.mil</h3>
+          <h3 class="block-list__title">{{ project.name }}</h3>
         </button>
         <span><a href="#" class="icon-link icon-link--danger">revoke all access</a></span>
       </header>
       <ul v-show='props.isVisible'>
-        <li class='block-list__item project-list-item__environment'>
-          <span class='project-list-item__environment'>
-            Development
-          </span>
-          <div class='project-list-item__environment__actions'>
-            <span class="label">no access </span><button v-on:click="openModal('rolesModal')" type="button" class="icon-link">set role</button>
-          </div>
-        </li>
-        <li class='block-list__item project-list-item__environment'>
-          <span class='project-list-item__environment'>
-            Sandbox
-          </span>
-          <div class='project-list-item__environment__actions'>
-            <span class="label">no access</span><button v-on:click="openModal('rolesModal')" type="button" class="icon-link">set role</button>
-          </div>
-        </li>
-        <li class='block-list__item project-list-item__environment'>
-          <span class='project-list-item__environment'>
-            Production
-          </span>
-          <div class='project-list-item__environment__actions'>
-            <span class="label label--success">Billing</span><button v-on:click="openModal('rolesModal')" type="button" class="icon-link">set role</button>
-          </div>
-        </li>
-      </ul>
-    </template>
-  </div>
+        {% for env in project.environments %}
 
-  <div is="toggler" class='block-list project-list-item'>
-    <template slot-scope='props'>
-      <header class='block-list__header'>
-      <button type='button' v-on:click='props.toggle' class='icon-link icon-link--large icon-link--default spend-table__project__toggler'>
-          <template v-if='props.isVisible'>{{ Icon('caret_down') }}</template>
-          <template v-else>{{ Icon('caret_right') }}</template>
-          <h3 class="block-list__title">Digital Dojo</h3>
-        </button>
-        <span class="label">no access</span>
-      </header>
-      <ul v-show='props.isVisible'>
-        <li class='block-list__item project-list-item__environment'>
-          <span class='project-list-item__environment'>
-            Development
-          </span>
-          <div class='project-list-item__environment__actions'>
-            <span class="label">no access </span><button v-on:click="openModal('rolesModal')" type="button" class="icon-link">set role</button>
+          {% set role = EnvironmentRoles.get(member.user_id, env.id).role %}
+
+        <li class='block-list__item'>
+          <edit-workspace-member inline-template initial-data='{{ role }}' v-bind:choices='{{ choices | tojson }}'>
+          <div class='project-list-item__environment'>
+            <span class='project-list-item__environment__link'>
+              {{ env.name }}
+            </span>
+
+            <div class='project-list-item__environment__actions'>
+              <span v-bind:class="label_class" v-html:on=displayName></span>
+              <button v-on:click="openModal('{{ env.name }}RolesModal')" type="button" class="icon-link">set role</button>
+              {% call Modal(name=env.name + 'RolesModal', dismissable=False) %}
+                  <div class='block-list'>
+                    <ul>
+                      {% for choice in choices %}
+                      <li class='block-list__item block-list__item--selectable'>
+
+                        {% if choice[0] != ""  %}
+                          <input
+                            name='radio_input_{{ env.id }}'
+                            v-on:change='change'
+                            type='radio'
+                            id="env_{{ env.id }}_{{ choice[0] }}"
+                            value='{{ choice[0] }}'
+                            {% if role == choice[0] %}
+                              checked='checked'
+                            {% endif %}
+                          />
+                          <label for="env_{{ env.id }}_{{ choice[0] }}">
+                            {% if choice[1].description %}
+                              <dl>
+                                <dt>{{ choice[1].name }}</dt>
+                                <dd>{{ choice[1].description }}</dd>
+                              </dl>
+                            {% else %}
+                              {{ choice[1].name }}
+                            {% endif %}
+                          </label>
+                          {% endif %}
+                      </li>
+                      {% endfor %}
+                    </ul>
+                    <input type='hidden' name='env_{{ env.id }}' v-bind:value='new_role'/>
+                    <div class='block-list__footer'>
+                      <div class='action-group'>
+                        <a v-on:click="closeModal('{{ env.name }}RolesModal')" class='action-group__action usa-button'>Select Access Role</a>
+                        <a class='action-group__action icon-link icon-link--danger' v-on:click="closeModal('{{ env.name }}RolesModal'); cancel();" value="{{ value if value == role else role }}" >Cancel</a>
+                      </div>
+                    </div>
+                  </div>
+              {% endcall %}
+            </div>
           </div>
+          </edit-workspace-member>
         </li>
-        <li class='block-list__item project-list-item__environment'>
-          <span class='project-list-item__environment'>
-            Sandbox
-          </span>
-          <div class='project-list-item__environment__actions'>
-            <span class="label">no access</span><button v-on:click="openModal('rolesModal')" type="button" class="icon-link">set role</button>
-          </div>
-        </li>
-        <li class='block-list__item project-list-item__environment'>
-          <span class='project-list-item__environment'>
-            Production
-          </span>
-          <div class='project-list-item__environment__actions'>
-            <span class="label">no access</span><button v-on:click="openModal('rolesModal')" type="button" class="icon-link">set role</button>
-          </div>
-        </li>
+
+        {% endfor %}
       </ul>
     </template>
   </div>
+  {% endfor %}
 
   <div class='action-group'>
     <button class='action-group__action usa-button usa-button-big'>
@@ -227,7 +137,7 @@
     </a>
   </div>
 
-</form>
+  </form>
 
 
 

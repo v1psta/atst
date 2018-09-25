@@ -14,9 +14,6 @@ class Projects(object):
         project = Project(workspace=workspace, name=name, description=description)
         Environments.create_many(project, environment_names)
 
-        for environment in project.environments:
-            Environments.add_member(user, environment, user)
-
         db.session.add(project)
         db.session.commit()
 
@@ -49,3 +46,21 @@ class Projects(object):
             .filter(EnvironmentRole.user_id == user.id)
             .all()
         )
+
+    @classmethod
+    def get_all(cls, user, workspace_user, workspace):
+        Authorization.check_workspace_permission(
+            user,
+            workspace,
+            Permissions.VIEW_APPLICATION_IN_WORKSPACE,
+            "view project in workspace",
+        )
+
+        try:
+            projects = (
+                db.session.query(Project).filter_by(workspace_id=workspace.id).all()
+            )
+        except NoResultFound:
+            raise NotFoundError("projects")
+
+        return projects

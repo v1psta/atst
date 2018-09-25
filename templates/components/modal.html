@@ -1,7 +1,7 @@
 {% from "components/icon.html" import Icon %}
 
 {% macro Modal(name, dismissable=False) -%}
-  <template v-if='modals.{{name}} === true' v-cloak>
+  <div v-show="activeModal === '{{name}}'" v-cloak>
     <div class='modal {% if dismissable %}modal--dismissable{% endif%}'>
       <div class='modal__container'>
         <div class='modal__dialog' role='dialog' aria-modal='true'>
@@ -18,5 +18,5 @@
         </div>
       </div>
     </div>
-  </template>
+  </div>
 {%- endmacro %}
