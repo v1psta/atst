@@ -1,0 +1,67 @@
+{% from "components/icon.html" import Icon %}
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}JEDI Cloud{% endblock %}</title>
+  {% assets "css" %}
+    <link rel="stylesheet" href="{{ ASSET_URL }}" type="text/css">
+  {% endassets %}
+  <link rel="icon" type="image/x-icon" href="/static/img/favicon.ico">
+</head>
+<body>
+
+<div id='app-root'>
+
+  <header class="topbar topbar--public">
+    <nav class="topbar__navigation">
+      <a href="{{ url_for('atst.home') }}" class="topbar__link topbar__link--home">
+        {{ Icon('shield', classes='topbar__link-icon') }}
+        <span class="topbar__link-label">JEDI Cloud</span>
+      </a>
+
+      {% if g.current_user %}
+        <a href="{{ url_for('atst.home') }}" class="topbar__link">
+          <span class="topbar__link-label">{{ g.current_user.first_name + " " + g.current_user.last_name }}</span>
+          {{ Icon('avatar', classes='topbar__link-icon') }}
+        </a>
+
+        <a href="{{ url_for('atst.logout') }}" class="topbar__link" title='Log out of JEDI Cloud'>
+          {{ Icon('logout', classes='topbar__link-icon') }}
+        </a>
+      {% else %}
+        <a href="{{ url_for('atst.home') }}" class="topbar__link" title='Log in'>
+          <span class="topbar__link-label">Log in</span>
+          {{ Icon('avatar', classes='topbar__link-icon') }}
+        </a>
+      {% endif %}
+
+    </nav>
+  </header>
+
+  {% block content %}{% endblock %}
+
+  <footer class='app-footer'>
+    <div class='app-footer__info'>
+      <h5 class='app-footer__info__title'>Joint Enterprise Defense Infrastructure</h5>
+
+      <a href='{{ url_for('atst.helpdocs') }}' class='icon-link app-footer__info__link' target='_blank' rel='noopener noreferrer'>
+        {{ Icon('help') }}
+        <span>JEDI Help</span>
+      </a>
+    </div>
+
+    <dl class='app-footer__browser-support'>
+      <dt>JEDI Cloud supported on these web browsers</dt>
+      <dd>Chrome</dd><dd>Firefox</dd><dd>Safari</dd><dd>Edge</dd><dd>IE11 on Windows 10</dd><dd>IE10 on Windows 7</dd>
+  </footer>
+
+</div>
+
+</body>
+</html>
+
+

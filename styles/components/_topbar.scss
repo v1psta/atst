@@ -24,6 +24,14 @@
         margin-left: $gap;
       }
 
+      &.topbar__link--home {
+        padding-left: $gap/2;
+
+        .topbar__link-label {
+          padding-left: $gap;
+        }
+      }
+
       &.topbar__link--shield {
         width: $icon-bar-width;
         justify-content: center;
@@ -52,7 +60,7 @@
       justify-content: flex-end;
       -ms-flex-pack: start;
 
-      .topbar__link {
+      .topbar__link--workspace {
         &:first-child {
           margin-right: auto;
         }
@@ -72,6 +80,36 @@
             background-color: $color-primary-darker;
           }
         }
+      }
+    }
+  }
+
+
+  &.topbar--public {
+    background-color: $color-primary;
+
+    .topbar__navigation {
+      justify-content: flex-end;
+      -ms-flex-pack: justify;
+    }
+
+    .topbar__link {
+      color: $color-white;
+
+      .topbar__link-icon {
+        @include icon-style-inverted;
+      }
+
+      &.topbar__link--home {
+        padding-left: $gap;
+      }
+
+      &:first-child {
+        margin-right: auto;
+      }
+
+      &:hover {
+        background-color: $color-primary-darker;
       }
     }
   }

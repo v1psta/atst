@@ -6,6 +6,7 @@ from .mocks import DOD_SDN_INFO, DOD_SDN, FIXTURE_EMAIL_ADDRESS
 from atst.domain.users import Users
 from atst.domain.roles import Roles
 from atst.domain.exceptions import NotFoundError
+from atst.domain.auth import UNPROTECTED_ROUTES
 from .factories import UserFactory
 
 
@@ -68,6 +69,8 @@ def test_unsuccessful_login_redirect(client, monkeypatch):
 
 
 # checks that all of the routes in the app are protected by auth
+def is_unprotected(rule):
+    return rule.endpoint in UNPROTECTED_ROUTES
 
 
 def test_routes_are_protected(client, app):
@@ -75,7 +78,7 @@ def test_routes_are_protected(client, app):
         args = [1] * len(rule.arguments)
         mock_args = dict(zip(rule.arguments, args))
         _n, route = rule.build(mock_args)
-        if route in UNPROTECTED_ROUTES or "/static" in route:
+        if is_unprotected(rule) or "/static" in route:
             continue
 
         if "GET" in rule.methods:
@@ -89,7 +92,6 @@ def test_routes_are_protected(client, app):
             assert resp.headers["Location"] == "http://localhost/"
 
 
-UNPROTECTED_ROUTES = ["/", "/login-dev", "/login-redirect", "/unauthorized"]
 # this implicitly relies on the test config and test CRL in tests/fixtures/crl
 
 

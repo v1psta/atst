@@ -1,3 +1,5 @@
+{% from "components/icon.html" import Icon %}
+
 <p>
   We will review and respond to your request in 3 business days. You’ll be notified via email or phone.
 </p>
@@ -6,6 +8,10 @@
   While your request is being reviewed, your next step is to create a Task Order associated with JEDI Cloud. Please contact a Contracting Officer (KO), Contracting Officer Representative (COR), or a Financial Manager to help with this step.
 </p>
 
-<p>
-  Learn more about the JEDI Cloud Task Order and the Financial Verification process.
-</p>
+<div class='alert__actions'>
+  <a href='/help' class='icon-link'>
+    {{ Icon('help') }}
+    Learn more about the JEDI Cloud Task Order and the Financial Verification process.
+  </a>
+</div>
+
