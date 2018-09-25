@@ -75,7 +75,8 @@ export default {
           this.spendPath += this.spendPath === '' ? 'M' : ' L'
           this.spendPath += cumulativePoint
           lastSpendPoint = cumulativePoint
-        } else {
+
+        } else if (lastSpendPoint !== '') {
           this.projectedPath += this.projectedPath === '' ? `M${lastSpendPoint} L` : ' L'
           this.projectedPath += cumulativePoint
         }
