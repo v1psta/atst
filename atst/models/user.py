@@ -6,7 +6,7 @@ from atst.models import Base, types, mixins
 from atst.models.permissions import Permissions
 
 
-class User(Base, mixins.TimestampsMixin):
+class User(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     __tablename__ = "users"
 
     id = types.Id()
