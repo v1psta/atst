@@ -14,10 +14,9 @@ class Projects(object):
         project = Project(workspace=workspace, name=name, description=description)
         db.session.add(project)
 
-        Environments.create_many(project, environment_names)
-
-        for environment in project.environments:
-            Environments.add_member(user, environment, user)
+        environments = Environments.create_many(project, environment_names)
+        for environment in environments:
+            Environments.add_member(environment, user, "owner")
 
         db.session.commit()
         return project
