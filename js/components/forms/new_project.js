@@ -3,45 +3,6 @@ import textinput from '../text_input'
 
 const createEnvironment = (name) => ({ name })
 
-const VALIDATIONS = {
-  showMissingError: "hasEnvironments",
-  showUniqueError: "envNamesAreUnique",
-  showEmptyError: "environmentsHaveNames",
-}
-
-class Validator {
-  constructor(validations) {
-    this.validations = validations
-  }
-
-  errorList() {
-    let errors = {}
-    this.map((key) => {
-      errors[key] = false
-    })
-    return errors
-  }
-
-  map(callback) {
-    Object.keys(this.validations).map((k) => callback(k))
-  }
-
-  update(object) {
-    this.map((errName) => {
-      if (object[this.validations[errName]]()) {
-        object.errors[errName] = false
-      }
-    })
-  }
-
-  validate(object) {
-    this.map((errName) => {
-      object.errors[errName] = !object[this.validations[errName]]()
-    })
-    return Object.values(object.errors).every(e => e)
-  }
-}
-
 export default {
   name: 'new-project',
 
@@ -70,11 +31,13 @@ export default {
       : [""]
     ).map(createEnvironment)
 
-    const validator = new Validator(VALIDATIONS)
-
     return {
-      validator,
-      errors: validator.errorList(),
+      validations: [
+        {func: "hasEnvironments", message: "Provide at least one environment name."},
+        {func: "envNamesAreUnique", message: "Environment names must be unique."},
+        {func: "environmentsHaveNames", message: "Environment names cannot be empty."},
+      ],
+      errors: [],
       environments,
       name,
     }
@@ -82,10 +45,6 @@ export default {
 
   mounted: function () {
     this.$root.$on('onEnvironmentAdded', this.addEnvironment)
-  },
-
-  updated: function() {
-    this.validator.update(this)
   },
 
   methods: {
@@ -97,6 +56,14 @@ export default {
       if (this.environments.length > 1) {
         this.environments.splice(index, 1)
       }
+    },
+
+    validate: function() {
+      this.errors = this.validations.map((validation) => {
+        if (!this[validation.func]()) {
+          return validation.message
+        }
+      }).filter(Boolean)
     },
 
     hasEnvironments: function () {
@@ -128,7 +95,8 @@ export default {
         return newVal.showValid && previous
       }, true)
 
-      isValid = this.validator.validate(this) && isValid
+      this.validate()
+      isValid = this.errors.length == 0 && isValid
 
       if (isValid) {
         this.openModal(modalName)

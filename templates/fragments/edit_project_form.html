@@ -42,14 +42,8 @@
       </div>
     </div>
 
-    <div v-if="errors.showMissingError">
-      {{ Alert("Provide at least one environment name.", level="error") }}
-    </div>
-    <div v-if="errors.showUniqueError">
-      {{ Alert("Environment names must be unique.", level="error") }}
-    </div>
-    <div v-if="errors.showEmptyError">
-      {{ Alert("Environment names cannot be empty.", level="error") }}
+    <div v-for="title in errors">
+      {{ Alert(message=None, level="error", vue_template=True) }}
     </div>
 
       <div class="block-list project-list-item">
@@ -77,7 +71,6 @@
           <button v-on:click="addEnvironment" class="icon-link" tabindex="0" type="button">Add another environment</button>
         </div>
       </div>
-
 
       <div class="action-group">
         <button v-on:click="validateAndOpenModal('{{ modalName }}')" class="usa-button usa-button-primary" tabindex="0" type="button">{{ action_text }} Project</button>
