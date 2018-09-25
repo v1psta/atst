@@ -12,11 +12,14 @@ class Projects(object):
     @classmethod
     def create(cls, user, workspace, name, description, environment_names):
         project = Project(workspace=workspace, name=name, description=description)
+        db.session.add(project)
+
         Environments.create_many(project, environment_names)
 
-        db.session.add(project)
-        db.session.commit()
+        for environment in project.environments:
+            Environments.add_member(user, environment, user)
 
+        db.session.commit()
         return project
 
     @classmethod

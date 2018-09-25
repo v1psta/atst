@@ -17,7 +17,6 @@ class Project(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     workspace = relationship("Workspace")
     environments = relationship("Environment", back_populates="project")
 
-
     @property
     def displayname(self):
         return self.name

@@ -24,7 +24,6 @@ class Environments(object):
         for name in names:
             environment = Environment(project=project, name=name)
             db.session.add(environment)
-        db.session.commit()
 
     @classmethod
     def add_member(cls, environment, user, role):
