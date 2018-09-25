@@ -158,6 +158,7 @@ def seed_roles():
             existing_role = db.session.query(Role).filter_by(name=role.name).one()
             existing_role.description = role.description
             existing_role.permissions = role.permissions
+            existing_role.display_name = role.display_name
             db.session.add(existing_role)
             print("Updated existing role {}".format(existing_role.name))
         except NoResultFound:
