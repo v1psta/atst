@@ -335,6 +335,9 @@
               {{ month.strftime('%B %Y') }}
             </option>
           {% endfor %}
+          {% if not cumulative_budget["months"] %}
+            <option>{{ current_month.strftime('%B %Y') }}</option>
+          {% endif %}
         </select>
       </div>
 
