@@ -5,9 +5,7 @@ from wtforms.validators import Email, Required
 
 from .fields import SelectField
 from .forms import ValidatedForm
-from .data import (
-    SERVICE_BRANCHES,
-)
+from .data import SERVICE_BRANCHES
 
 from .validators import Alphabet, DateRange, PhoneNumber
 
@@ -21,7 +19,7 @@ class EditUserForm(ValidatedForm):
     email = EmailField(
         "E-mail Address",
         description="Enter your preferred contact e-mail address",
-        validators=[Required(), Email()]
+        validators=[Required(), Email()],
     )
 
     phone_number = TelField(
