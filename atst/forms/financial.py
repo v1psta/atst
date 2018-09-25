@@ -2,7 +2,7 @@ import re
 import pendulum
 from wtforms.fields.html5 import DateField, EmailField
 from wtforms.fields import StringField, FileField
-from wtforms.validators import InputRequired, Required, Email, Regexp
+from wtforms.validators import InputRequired, Required, Email, Regexp, Optional
 from flask_wtf.file import FileAllowed
 
 from atst.domain.exceptions import NotFoundError
@@ -121,9 +121,9 @@ class BaseFinancialForm(ValidatedForm):
     )
 
     ba_code = StringField(
-        "Program Budget Activity (BA) Code",
+        "Program Budget Activity (BA) Code (Optional)",
         description="BA Code is used to identify the purposes, projects, or types of activities financed by the appropriation fund. <br/><em>It should be two digits, followed by a letter.</em>",
-        validators=[Required(), Regexp(BA_CODE_REGEX)],
+        validators=[Optional(), Regexp(BA_CODE_REGEX)],
     )
 
     fname_co = StringField("KO First Name", validators=[Required()])
