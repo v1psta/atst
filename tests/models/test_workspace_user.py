@@ -36,7 +36,7 @@ def test_has_environment_roles():
     project = Projects.create(
         owner, workspace, "my test project", "It's mine.", ["dev", "staging", "prod"]
     )
-    Environments.add_member(owner, project.environments[0], workspace_user.user)
+    Environments.add_member(project.environments[0], workspace_user.user, "developer")
     assert workspace_user.has_environment_roles
 
 

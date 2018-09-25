@@ -108,7 +108,7 @@ def test_update_member_environment_role(client, user_session):
     env1_id = project.environments[0].id
     env2_id = project.environments[1].id
     for env in project.environments:
-        Environments.add_member(owner, env, user, "developer")
+        Environments.add_member(env, user, "developer")
     user_session(owner)
     response = client.post(
         url_for(

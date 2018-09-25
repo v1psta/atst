@@ -14,5 +14,5 @@ def test_add_user_to_environment():
     )
     dev_environment = project.environments[0]
 
-    dev_environment = Environments.add_member(owner, dev_environment, developer)
+    dev_environment = Environments.add_member(dev_environment, developer, "developer")
     assert developer in dev_environment.users

@@ -29,8 +29,8 @@ def test_update_environment_roles():
 
     dev_env = project.environments[0]
     staging_env = project.environments[1]
-    Environments.add_member(owner, dev_env, workspace_user.user, role="devops")
-    Environments.add_member(owner, staging_env, workspace_user.user, role="developer")
+    Environments.add_member(dev_env, workspace_user.user, "devops")
+    Environments.add_member(staging_env, workspace_user.user, "developer")
 
     new_ids_and_roles = [
         {"id": dev_env.id, "role": "billing_admin"},

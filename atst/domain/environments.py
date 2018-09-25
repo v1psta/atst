@@ -27,9 +27,9 @@ class Environments(object):
         db.session.commit()
 
     @classmethod
-    def add_member(cls, environment, member, role):
+    def add_member(cls, environment, user, role):
         environment_user = EnvironmentRole(
-            user=member, environment=environment, role=role
+            user=user, environment=environment, role=role
         )
         db.session.add(environment_user)
         db.session.commit()
