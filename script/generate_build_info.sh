@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# script/generate_build_info: Generates buildinfo.html and buildinfo.json and 
+# script/generate_build_info: Generates buildinfo.html and buildinfo.json and
 #                             places them in a publically accessable static asset
 #                             folder
 
@@ -36,7 +36,7 @@ echo "Gathering info from git..."
 COMMIT_AUTHOR=$(git log -1 --pretty=%aN)
 COMMIT_AUTHOR_EMAIL=$(git log -1 --pretty=%aE)
 GIT_SHA=$(git rev-parse HEAD)
-# Escape all double quotes in commit message and switch newlines for \n 
+# Escape all double quotes in commit message and switch newlines for \n
 # (for JSON compatability)
 COMMIT_MESSAGE_JSON=$(git log -1 --pretty=format:%B | sed -e 's#\([^\\]\)"#\1\\"#g' | awk 1 ORS='\\n')
 # Escape all < and > characters in commit message and trade newlines for <BR/> tags
@@ -44,7 +44,7 @@ COMMIT_MESSAGE_HTML=$(git log -1 --pretty=format:%B | sed -e 's#>#&gt;#g' | sed 
 
 # Assemble https based git repo url
 GIT_REPO=$(git config --get remote.origin.url | cut -d ':' -f 2)
-GIT_URL="https://github.com/${GIT_REPO}"
+GIT_URL="https:${GIT_REPO}"
 # Drop the trailing .git for generating github links
 GITHUB_BASE_URL="${GIT_URL%.git}"
 GITHUB_COMMIT_URL="${GITHUB_BASE_URL}/commit/${GIT_SHA}"
