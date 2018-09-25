@@ -42,8 +42,10 @@
       </div>
     </div>
 
-    <div v-for="title in errors">
-      {{ Alert(message=None, level="error", vue_template=True) }}
+    <div> {# this extra div prevents this bug: https://www.pivotaltracker.com/story/show/160768940 #}
+      <div v-cloak v-for="title in errors" :key="title">
+        {{ Alert(message=None, level="error", vue_template=True) }}
+      </div>
     </div>
 
       <div class="block-list project-list-item">

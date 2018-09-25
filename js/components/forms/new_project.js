@@ -33,9 +33,9 @@ export default {
 
     return {
       validations: [
-        {func: "hasEnvironments", message: "Provide at least one environment name."},
-        {func: "envNamesAreUnique", message: "Environment names must be unique."},
-        {func: "environmentsHaveNames", message: "Environment names cannot be empty."},
+        {func: this.hasEnvironments, message: "Provide at least one environment name."},
+        {func: this.envNamesAreUnique, message: "Environment names must be unique."},
+        {func: this.environmentsHaveNames, message: "Environment names cannot be empty."},
       ],
       errors: [],
       environments,
@@ -60,7 +60,7 @@ export default {
 
     validate: function() {
       this.errors = this.validations.map((validation) => {
-        if (!this[validation.func]()) {
+        if (!validation.func()) {
           return validation.message
         }
       }).filter(Boolean)
