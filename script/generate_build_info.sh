@@ -57,7 +57,7 @@ GITHUB_COMMIT_URL="${GITHUB_BASE_URL}/commit/${GIT_SHA}"
 APP_CONTAINER_CREATE_DATE=$(date '+%Y-%m-%d')
 APP_CONTAINER_CREATE_TIME=$(date '+%H:%M:%S')
 
-echo "Generating public/buildinfo.json ..."
+echo "Generating ${STATIC_DIR}/buildinfo.json ..."
 cat > ${STATIC_DIR}/buildinfo.json <<ENDJSON
 {
   "build_info" : {
@@ -86,7 +86,7 @@ cat > ${STATIC_DIR}/buildinfo.json <<ENDJSON
 }
 ENDJSON
 
-echo "Generating public/buildinfo.html ..."
+echo "Generating ${STATIC_DIR}/buildinfo.html ..."
 cat > ${STATIC_DIR}/buildinfo.html <<ENDHTML
 <HTML>
 <HEAD>
