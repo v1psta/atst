@@ -3,20 +3,31 @@
 {% block content %}
 
 
-  <div class="panel">
-    <section class="block-list">
-      <header class="block-list__header">
-        <h1 class="block-list__title">Acitivity History</h1>
-      </header>
+  <section class="block-list">
+    <header class="block-list__header">
+      <h1 class="block-list__title">Activity History</h1>
+    </header>
 
-      <ul>
-        {% for event in audit_events %}
-          <li class="block-list__item">{{ event }}</li>
-        {% endfor %}
-      </ul>
+    <ul>
+      {% for event in audit_events %}
+        <li class="block-list__item">
+          <article class='audit-log__item'>
+            <div class='audit-log__item__timestamp'>
+              <local-datetime timestamp='{{ event.time_created }}'></local-datetime>
+            </div>
 
-    </section>
+            <div>
+              <h2 class='h4 audit-log__item__name'>
+                {{ event.user.full_name if event.user else "ATAT System" }}
+              </h2>
+              {{ event.activity_description }}
+            </div>
+          </article>
+        </li>
+      {% endfor %}
+    </ul>
 
-  </div>
+  </section>
+
 
 {% endblock %}
