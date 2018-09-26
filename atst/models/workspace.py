@@ -12,7 +12,7 @@ class Workspace(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     __tablename__ = "workspaces"
 
     id = Id()
-    name = Column(String, unique=True)
+    name = Column(String)
     request_id = Column(ForeignKey("requests.id"), nullable=False)
     projects = relationship("Project", back_populates="workspace")
     roles = relationship("WorkspaceRole")

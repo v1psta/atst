@@ -250,3 +250,9 @@ def test_get_for_update_information():
     ccpo = UserFactory.from_atat_role("ccpo")
     with pytest.raises(UnauthorizedError):
         Workspaces.get_for_update_information(ccpo, workspace.id)
+
+
+def test_can_create_workspaces_with_matching_names():
+    workspace_name = "Great Workspace"
+    Workspaces.create(RequestFactory.create(), name=workspace_name)
+    Workspaces.create(RequestFactory.create(), name=workspace_name)
