@@ -1,0 +1,38 @@
+{% from "components/text_input.html" import TextInput %}
+{% from "components/options_input.html" import OptionsInput %}
+{% from "components/date_input.html" import DateInput %}
+
+<form action='{{ form_action }}'>
+  <div class='panel'>
+    <div class='panel__content'>
+      <div class='form-row'>
+        <div class='form-col form-col--half'>
+          {{ TextInput(form.first_name) }}
+        </div>
+
+        <div class='form-col form-col--half'>
+          {{ TextInput(form.last_name) }}
+        </div>
+      </div>
+
+      <div class='form-row'>
+        <div class='form-col form-col--half'>
+          {{ TextInput(form.email, validation='email') }}
+        </div>
+
+        <div class='form-col form-col--half'>
+          {{ TextInput(form.phone_number, validation='usPhone') }}
+        </div>
+      </div>
+
+      {{ OptionsInput(form.service_branch) }}
+      {{ OptionsInput(form.citizenship) }}
+      {{ OptionsInput(form.designation) }}
+      {{ DateInput(form.date_latest_training,tooltip="When was the last time you completed the IA training? <br> Information Assurance (IA) training is an important step in cyber awareness.",placeholder="MM / DD / YYYY", validation="date") }}
+    </div>
+  </div>
+
+  <div class='action-group'>
+    <button class='usa-button usa-button-big' type='submit'>Save Details</button>
+  </div>
+</form>

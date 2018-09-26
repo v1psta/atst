@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% from "components/alert.html" import Alert %}
+
+{% block content %}
+<div class='col'>
+  {{ Alert('This form does not yet function',
+    message="<p>Functionality of this form is pending more engineering work. Engineers, please remove this alert when done.</p>",
+    level='warning'
+  ) }}
+
+  <div class='panel'>
+    <div class='panel__heading'>
+      <h1>
+        <div class='h2'>{{ user.first_name }} {{ user.last_name }}</div>
+        <div class='subtitle h3'>Edit user details</div>
+      </h1>
+    </div>
+  </div>
+
+  {% set form_action = url_for('atst.save_user') %}
+  {% include "fragments/edit_user_form.html" %}
+
+</div>
+{% endblock %}
