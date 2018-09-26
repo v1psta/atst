@@ -20,11 +20,10 @@
 
 {% else %}
 
-{% set new_member_name = request.args.get("newMemberName") %}
-{% if new_member_name %}
+{% if new_member %}
     {% set message -%}
-      <p>{{ new_member_name }} was successfully invited via email to this workspace. They do not yet have access to any environments.</p>
-      <p><a href="#">Add environment access.</a></p>
+      <p>{{ new_member.user_name }} was successfully invited via email to this workspace. They do not yet have access to any environments.</p>
+      <p><a href="{{ url_for('workspaces.update_member', workspace_id=workspace.id, member_id=new_member.user_id) }}">Add environment access.</a></p>
     {%- endset %}
 
   {{ Alert('Member added successfully',
