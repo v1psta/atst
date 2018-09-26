@@ -74,8 +74,8 @@ def test_treasury_code_validation(input_, expected):
     ],
 )
 def test_ba_code_validation(input_, expected):
-    form_data = {"ba_code": input_}
-    form = FinancialForm(data=form_data)
+    form_data = ImmutableMultiDict([("ba_code", input_)])
+    form = FinancialForm(form_data)
     form.validate()
     is_valid = "ba_code" not in form.errors
 
