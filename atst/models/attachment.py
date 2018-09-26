@@ -30,3 +30,6 @@ class Attachment(Base, mixins.TimestampsMixin):
         db.session.commit()
 
         return attachment
+
+    def __repr__(self):
+        return "<Attachment(name='{}', id='{}')>".format(self.filename, self.id)

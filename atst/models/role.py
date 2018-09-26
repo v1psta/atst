@@ -25,3 +25,8 @@ class Role(Base, mixins.TimestampsMixin):
         perms_set.discard(permission)
         self.permissions = list(perms_set)
         flag_modified(self, "permissions")
+
+    def __repr__(self):
+        return "<Role(name='{}', description='{}', permissions='{}', id='{}')>".format(
+            self.name, self.description, self.permissions, self.id
+        )

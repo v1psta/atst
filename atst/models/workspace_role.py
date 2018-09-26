@@ -22,6 +22,11 @@ class WorkspaceRole(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
         UUID(as_uuid=True), ForeignKey("users.id"), index=True, nullable=False
     )
 
+    def __repr__(self):
+        return "<WorkspaceRole(role='{}', workspace='{}', user_id='{}', id='{}')>".format(
+            self.role.name, self.workspace.name, self.user_id, self.id
+        )
+
 
 Index(
     "workspace_role_user_workspace",

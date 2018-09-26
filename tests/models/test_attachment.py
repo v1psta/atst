@@ -16,3 +16,9 @@ def test_attach_raises():
         fs = FileStorage(fp, content_type="something/else")
         with pytest.raises(AttachmentError):
             Attachment.attach(fs)
+
+
+def test_repr(pdf_upload):
+    attachment = Attachment.attach(pdf_upload)
+    assert attachment.filename in str(attachment)
+    assert str(attachment.id) in str(attachment)

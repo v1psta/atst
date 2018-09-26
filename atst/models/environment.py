@@ -29,3 +29,12 @@ class Environment(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
 
     def auditable_workspace_id(self):
         return self.project.workspace_id
+
+    def __repr__(self):
+        return "<Environment(name='{}', num_users='{}', project='{}', workspace='{}', id='{}')>".format(
+            self.name,
+            self.num_users,
+            self.project.name,
+            self.project.workspace.name,
+            self.id,
+        )

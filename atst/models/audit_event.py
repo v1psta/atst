@@ -29,3 +29,8 @@ class AuditEvent(Base, TimestampsMixin):
         attrs = inspect(self).dict
 
         connection.execute(self.__table__.insert(), **attrs)
+
+    def __repr__(self):
+        return "<AuditEvent(name='{}', action='{}', id='{}')>".format(
+            self.display_name, self.action, self.id
+        )
