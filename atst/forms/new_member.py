@@ -1,4 +1,4 @@
-from flask_wtf import Form
+from flask_wtf import FlaskForm
 from wtforms.fields import StringField
 from wtforms.fields.html5 import EmailField
 from wtforms.validators import Required, Email, Length
@@ -9,7 +9,7 @@ from atst.forms.fields import SelectField
 from .data import WORKSPACE_ROLES
 
 
-class NewMemberForm(Form):
+class NewMemberForm(FlaskForm):
 
     first_name = StringField(label="First Name", validators=[Required()])
     last_name = StringField(label="Last Name", validators=[Required()])

@@ -1,10 +1,10 @@
-from flask_wtf import Form
+from flask_wtf import FlaskForm
 from wtforms.fields import StringField, TextAreaField, FieldList
 from wtforms.validators import Required
 from atst.forms.validators import ListItemRequired, ListItemsUnique
 
 
-class NewProjectForm(Form):
+class NewProjectForm(FlaskForm):
 
     EMPTY_ENVIRONMENT_NAMES = ["", None]
 
@@ -20,7 +20,7 @@ class NewProjectForm(Form):
 
     @property
     def data(self):
-        _data = super(Form, self).data
+        _data = super(FlaskForm, self).data
         _data["environment_names"] = [
             n
             for n in _data["environment_names"]
