@@ -42,7 +42,6 @@ class AuditEvent(Base, TimestampsMixin):
 
         return " ".join([user_str, action_str, display_name_str, scope_str])
 
-
     @property
     def activity_description(self):
         action_str = "{} on {} {}".format(
@@ -56,7 +55,6 @@ class AuditEvent(Base, TimestampsMixin):
             scope_str = "in workspace {}".format(self.workspace_id)
 
         return " ".join([action_str, display_name_str, scope_str])
-
 
     def save(self, connection):
         attrs = inspect(self).dict
