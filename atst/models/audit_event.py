@@ -17,7 +17,7 @@ class AuditEvent(Base, TimestampsMixin):
     workspace_id = Column(UUID(as_uuid=True), ForeignKey("workspaces.id"), index=True)
     workspace = relationship("Workspace", backref="audit_events")
 
-    request_id = Column(UUID(as_uuid=True), ForeignKey("request.id"), index=True)
+    request_id = Column(UUID(as_uuid=True), ForeignKey("requests.id"), index=True)
 
     resource_type = Column(String(), nullable=False)
     resource_id = Column(UUID(as_uuid=True), index=True, nullable=False)
