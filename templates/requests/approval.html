@@ -85,7 +85,8 @@
       <form method="POST" action="{{ url_for("requests.submit_approval", request_id=jedi_request.id) }}" autocomplete="off">
         {{ review_form.csrf_token }}
 
-        <ccpo-approval inline-template>
+        {% set initialState = 'approving' if review_form.errors else '' %}
+        <ccpo-approval inline-template initial-state="{{ initialState }}">
           <div>
             <div class='panel'>
 
@@ -148,7 +149,7 @@
 
                 <div class='usa-input'>
                   <fieldset class='usa-input__choices usa-input__choices--inline'>
-                    <input v-on:change='setReview' type='radio' name='review' id='review-approving' value='approving'/>
+                    <input v-on:change='setReview' type='radio' name='review' id='review-approving' value='approving' {{ 'checked' if initialState == 'approving' }}/>
                     <label for='review-approving'>Ready for approval</label>
 
                     <input v-on:change='setReview' type='radio' name='review' id='review-denying' value='denying'/>
