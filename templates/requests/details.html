@@ -5,9 +5,9 @@
 {% block content %}
 <div class="col">
 
-  {% if request.is_pending_ccpo_acceptance %}
+  {% if jedi_request.is_pending_ccpo_acceptance %}
     {{ Alert('Request submitted. Approval pending.', fragment="fragments/pending_ccpo_acceptance_alert.html") }}
-  {% elif request.is_pending_ccpo_approval %}
+  {% elif jedi_request.is_pending_ccpo_approval %}
     {{ Alert('Request submitted. Approval pending.', fragment="fragments/pending_ccpo_approval_modal.html") }}
   {% elif requires_fv_action %}
     {% include 'requests/review_menu.html' %}
@@ -17,7 +17,7 @@
   <div class="panel">
     <div class="panel__heading">
       <h1>Request Details</h1>
-      <h2><span class="subtitle">{{ request.displayname }}</span> <span class="label label--info">{{ request.status_displayname }}</span></h2>
+      <h2><span class="subtitle">{{ jedi_request.displayname }}</span> <span class="label label--info">{{ jedi_request.status_displayname }}</span></h2>
     </div>
 
     <div class="panel__content">

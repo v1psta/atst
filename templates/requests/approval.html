@@ -17,14 +17,14 @@
 
     <section class='panel'>
       <header class='panel__heading panel__heading--divider request-approval__heading'>
-        <h1 class='h2'>Request: {{ request.displayname }}
+        <h1 class='h2'>Request: {{ jedi_request.displayname }}
         </h1>
         <span class='label label--info'>{{ current_status }}</span>
       </header>
 
       <div class='panel__content'>
 
-        {% with data=data, request_id=request.id %}
+        {% with data=data, request_id=jedi_request.id %}
           {% include "requests/_review.html" %}
         {% endwith %}
 
@@ -33,7 +33,7 @@
     </section>
 
     <section class='internal-notes' id='ccpo-notes'>
-      <form method="POST" action="{{ url_for('requests.create_internal_comment', request_id=request.id) }}">
+      <form method="POST" action="{{ url_for('requests.create_internal_comment', request_id=jedi_request.id) }}">
         <div class='panel'>
           <div class='panel__heading panel__heading--divider'>
             <h2>CCPO Internal Comments</h2>
@@ -82,7 +82,7 @@
 
 
     <section class='request-approval__review'>
-      <form method="POST" action="{{ url_for("requests.submit_approval", request_id=request.id) }}" autocomplete="off">
+      <form method="POST" action="{{ url_for("requests.submit_approval", request_id=jedi_request.id) }}" autocomplete="off">
         {{ review_form.csrf_token }}
 
         <ccpo-approval inline-template>
@@ -139,7 +139,7 @@
                 {% endif %}
               </div>
 
-              {% if request.is_pending_ccpo_action %}
+              {% if jedi_request.is_pending_ccpo_action %}
               <div class='panel__heading request-approval__review__heading'>
                 <h3 class='h3'>Review this Request</h2>
               </div>
@@ -226,7 +226,7 @@
 
             </div>
 
-            {% if request.is_pending_ccpo_action %}
+            {% if jedi_request.is_pending_ccpo_action %}
             <div v-if='approving || denying' class='action-group' v-cloak>
               <button v-if='approving' type="submit" name="approved" class='usa-button usa-button-big'>Approve Request</button>
               <button v-if='denying' type="submit" name="denied" class='usa-button usa-button-big'>Request Revisions</button>
