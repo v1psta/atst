@@ -21,6 +21,7 @@ requests = "*"
 apache-libcloud = "*"
 lockfile = "*"
 defusedxml = "*"
+pytest = "*"
 
 [dev-packages]
 bandit = "*"
@@ -33,9 +34,10 @@ pytest-watch = "*"
 factory-boy = "*"
 pytest-flask = "*"
 pytest-env = "*"
+pytest-cov = "*"
 
 [requires]
-python_version = "3.6"
+python_version = "3.6.6"
 
 [pipenv]
 allow_prereleases = true
