@@ -121,9 +121,9 @@ class BaseFinancialForm(ValidatedForm):
     )
 
     ba_code = StringField(
-        "Program Budget Activity (BA) Code (Optional)",
+        "Program Budget Activity (BA) Code",
         description="BA Code is used to identify the purposes, projects, or types of activities financed by the appropriation fund. <br/><em>It should be two digits, followed by an optional letter.</em>",
-        validators=[Optional(), Regexp(BA_CODE_REGEX)],
+        validators=[Required(), Regexp(BA_CODE_REGEX)],
     )
 
     fname_co = StringField("KO First Name", validators=[Required()])
