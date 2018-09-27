@@ -28,7 +28,7 @@ class Users(object):
         return user
 
     @classmethod
-    def create(cls, atat_role_name="developer", **kwargs):
+    def create(cls, atat_role_name=None, **kwargs):
         atat_role = Roles.get(atat_role_name)
 
         try:
