@@ -30,6 +30,7 @@
 
     .panel {
       padding: $gap * 2;
+      width: 100%;
 
       @include ie-only {
         max-width: 100%;
