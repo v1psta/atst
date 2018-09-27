@@ -1,4 +1,5 @@
 import pytest
+from werkzeug.datastructures import ImmutableMultiDict
 
 from atst.forms.new_request import DetailsOfUseForm
 
@@ -26,9 +27,13 @@ class TestDetailsOfUseForm:
         "expected_completion_date": "Less than 1 month",
     }
 
+    def _make_form(self, data):
+        form_data = ImmutableMultiDict(data.items())
+        return DetailsOfUseForm(form_data)
+
     def test_require_cloud_native_when_not_migrating(self):
         extra_data = {"jedi_migration": "no"}
-        request_form = DetailsOfUseForm(data={**self.form_data, **extra_data})
+        request_form = self._make_form({**self.form_data, **extra_data})
         assert not request_form.validate()
         assert request_form.errors == {"cloud_native": ["Not a valid choice"]}
 
@@ -38,7 +43,7 @@ class TestDetailsOfUseForm:
             "data_transfers": "",
             "expected_completion_date": "",
         }
-        request_form = DetailsOfUseForm(data={**self.form_data, **extra_data})
+        request_form = self._make_form({**self.form_data, **extra_data})
         assert not request_form.validate()
         assert request_form.errors == {
             "rationalization_software_systems": ["Not a valid choice"],
@@ -53,7 +58,7 @@ class TestDetailsOfUseForm:
         data = {**self.form_data, **self.migration_data}
         del data["organization_providing_assistance"]
 
-        request_form = DetailsOfUseForm(data=data)
+        request_form = self._make_form(data)
         assert not request_form.validate()
         assert request_form.errors == {
             "organization_providing_assistance": ["Not a valid choice"]
@@ -64,7 +69,7 @@ class TestDetailsOfUseForm:
         data["technical_support_team"] = "no"
         del data["organization_providing_assistance"]
 
-        request_form = DetailsOfUseForm(data=data)
+        request_form = self._make_form(data)
         assert request_form.validate()
 
     def test_sessions_required_for_large_projects(self):
@@ -73,26 +78,26 @@ class TestDetailsOfUseForm:
         del data["number_user_sessions"]
         del data["average_daily_traffic"]
 
-        request_form = DetailsOfUseForm(data=data)
+        request_form = self._make_form(data)
         assert not request_form.validate()
         assert request_form.errors == {
             "number_user_sessions": ["This field is required."],
             "average_daily_traffic": ["This field is required."],
         }
 
-    def test_sessions_not_required_invalid_monthly_spend(self):
+    def test_sessions_not_required_low_monthly_spend(self):
         data = {**self.form_data, **self.migration_data}
-        data["estimated_monthly_spend"] = "foo"
+        data["estimated_monthly_spend"] = "10"
         del data["number_user_sessions"]
         del data["average_daily_traffic"]
 
-        request_form = DetailsOfUseForm(data=data)
+        request_form = self._make_form(data)
         assert request_form.validate()
 
     def test_start_date_must_be_in_the_future(self):
         data = {**self.form_data, **self.migration_data}
         data["start_date"] = "01/01/2018"
 
-        request_form = DetailsOfUseForm(data=data)
+        request_form = self._make_form(data)
         assert not request_form.validate()
         assert "Must be a date in the future." in request_form.errors["start_date"]
