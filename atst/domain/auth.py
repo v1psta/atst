@@ -17,14 +17,11 @@ def apply_authentication(app):
     @app.before_request
     # pylint: disable=unused-variable
     def enforce_login():
-
-        if not _unprotected_route(request):
-            user = get_current_user()
-            if user:
-                g.current_user = user
-
-            else:
-                return redirect(url_for("atst.root"))
+        user = get_current_user()
+        if user:
+            g.current_user = user
+        elif not _unprotected_route(request):
+            return redirect(url_for("atst.root"))
 
 
 def get_current_user():
