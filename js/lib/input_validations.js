@@ -77,7 +77,7 @@ export default {
     },
     match: /[0-9]{2}\w?$/,
     unmask: [],
-    validationError: 'Please enter a valid BA Code. Note that it should be two digits, followed by a letter.'
+    validationError: 'Please enter a valid BA Code. Note that it should be two digits, followed by an optional letter.'
   },
   workspaceName: {
     mask: false,
