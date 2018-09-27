@@ -28,8 +28,8 @@ def create_revision_from_request_body(body):
 
 
 class Requests(object):
-    AUTO_APPROVE_THRESHOLD = 1000000
-    ANNUAL_SPEND_THRESHOLD = 1000000
+    AUTO_APPROVE_THRESHOLD = 1_000_000
+    ANNUAL_SPEND_THRESHOLD = 1_000_000
 
     @classmethod
     def create(cls, creator, body):

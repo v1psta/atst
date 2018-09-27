@@ -123,10 +123,10 @@ CUMULATIVE_BUDGET_AARDVARK = {
     "03/2018": {"spend": 7881, "cumulative": 17738},
     "04/2018": {"spend": 14010, "cumulative": 31748},
     "05/2018": {"spend": 43510, "cumulative": 75259},
-    "06/2018": {"spend": 41725, "cumulative": 116984},
-    "07/2018": {"spend": 41328, "cumulative": 158312},
-    "08/2018": {"spend": 47491, "cumulative": 205803},
-    "09/2018": {"spend": 36028, "cumulative": 241831},
+    "06/2018": {"spend": 41725, "cumulative": 116_984},
+    "07/2018": {"spend": 41328, "cumulative": 158_312},
+    "08/2018": {"spend": 47491, "cumulative": 205_803},
+    "09/2018": {"spend": 36028, "cumulative": 241_831},
 }
 
 MONTHLY_SPEND_BELUGA = {
@@ -152,7 +152,7 @@ REPORT_FIXTURE_MAP = {
     "Beluga": {
         "cumulative": CUMULATIVE_BUDGET_BELUGA,
         "monthly": MONTHLY_SPEND_BELUGA,
-        "budget": 70_000,
+        "budget": 70000,
     },
 }
 

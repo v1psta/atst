@@ -119,7 +119,7 @@ class RequestFactory(Base):
         )
 
     @classmethod
-    def create_initial_revision(cls, request, dollar_value=1000000):
+    def create_initial_revision(cls, request, dollar_value=1_000_000):
         user = request.creator
         default_data = dict(
             name=factory.Faker("domain_word"),
@@ -212,12 +212,12 @@ class TaskOrderFactory(Base):
             random.randrange(1, 28),
         )
     )
-    clin_0001 = random.randrange(100, 100000)
-    clin_0003 = random.randrange(100, 100000)
-    clin_1001 = random.randrange(100, 100000)
-    clin_1003 = random.randrange(100, 100000)
-    clin_2001 = random.randrange(100, 100000)
-    clin_2003 = random.randrange(100, 100000)
+    clin_0001 = random.randrange(100, 100_000)
+    clin_0003 = random.randrange(100, 100_000)
+    clin_1001 = random.randrange(100, 100_000)
+    clin_1003 = random.randrange(100, 100_000)
+    clin_2001 = random.randrange(100, 100_000)
+    clin_2003 = random.randrange(100, 100_000)
 
 
 class WorkspaceFactory(Base):
