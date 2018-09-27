@@ -18,7 +18,10 @@ export default {
       type: String,
       default: () => ''
     },
-    initialErrors: Array,
+    initialErrors: {
+      type: Array,
+      default: () => []
+    },
     paragraph: String,
     noMaxWidth: String
   },
@@ -30,7 +33,7 @@ export default {
       mask: inputValidations[this.validation].mask,
       pipe: inputValidations[this.validation].pipe || undefined,
       keepCharPositions: inputValidations[this.validation].keepCharPositions || false,
-      validationError: inputValidations[this.validation].validationError || '',
+      validationError: this.initialErrors.join(' ') || inputValidations[this.validation].validationError,
       value: this.initialValue,
       modified: false
     }
@@ -80,6 +83,10 @@ export default {
 
       if (!this.modified && this.initialErrors && this.initialErrors.length) {
         valid = false
+      }
+
+      if (this.modified) {
+        this.validationError = inputValidations[this.validation].validationError
       }
 
       // Show error messages or not
