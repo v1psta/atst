@@ -106,9 +106,9 @@
   {% if not workspace.projects %}
 
     {% set can_create_projects = user_can(permissions.ADD_APPLICATION_IN_WORKSPACE) %}
-    {% set message = 'This Workspace has no Cloud Environments setup, hence there is no spending data to report. Create a Project with some Cloud Environments to get started.'
+    {% set message = 'This workspace has no cloud environments set up, so there is no spending data to report. Create a project with some cloud environments to get started.'
       if can_create_projects
-      else 'This Workspace has no Cloud Environments setup, hence there is no spending data to report. Contact the Workspace Owner to set up some Cloud Environments.'
+      else 'This workspace has no cloud environments set up, so there is no spending data to report. Contact the workspace owner to set up some cloud environments.'
     %}
 
     {{ EmptyState(
