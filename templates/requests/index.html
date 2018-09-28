@@ -25,6 +25,16 @@
     </div>
   {% endcall %}
 
+  {% call Modal(name='pendingCCPOAcceptance', dismissable=True) %}
+    <h1>Request submitted!</h1>
+
+    {% include 'fragments/pending_ccpo_acceptance_alert.html' %}
+
+    <div class='action-group'>
+      <a v-on:click="closeModal('pendingCCPOAcceptance')" class='action-group__action usa-button'>Close</a>
+    </div>
+  {% endcall %}
+
 {% if num_action_required %}
   {% set title -%}
     Action required on {{ num_action_required }} requests.
