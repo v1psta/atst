@@ -141,9 +141,13 @@
   </h2>
 
   <div>
-    <a href="{{ url_for("requests.task_order_pdf_download", request_id=request_id)}}" download>
-      Download the Task Order PDF
-    </a>
+    {% if jedi_request.task_order.pdf %}
+        <a href="{{ url_for("requests.task_order_pdf_download", request_id=request_id)}}" download>
+          Download the Task Order PDF
+        </a>
+    {% else %}
+      <p>No Task Order PDF attached.</p>
+    {% endif %}
   </div>
 
   <dl>

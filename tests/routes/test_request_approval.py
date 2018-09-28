@@ -45,6 +45,42 @@ def test_non_ccpo_cannot_view_approval(user_session, client):
     assert response.status_code == 404
 
 
+def prepare_request_pending_approval(creator, pdf_attachment=None):
+    task_order = TaskOrderFactory.create(number="abc123", pdf=pdf_attachment)
+    return RequestFactory.create_with_status(
+        status=RequestStatus.PENDING_CCPO_APPROVAL,
+        task_order=task_order,
+        creator=creator,
+    )
+
+
+def test_ccpo_sees_pdf_link(user_session, client, pdf_upload):
+    ccpo = UserFactory.from_atat_role("ccpo")
+    user_session(ccpo)
+
+    attachment = Attachment.attach(pdf_upload)
+    request = prepare_request_pending_approval(ccpo, pdf_attachment=attachment)
+
+    response = client.get(url_for("requests.approval", request_id=request.id))
+    download_url = url_for("requests.task_order_pdf_download", request_id=request.id)
+
+    body = response.data.decode()
+    assert download_url in body
+
+
+def test_ccpo_does_not_see_pdf_link_if_no_pdf(user_session, client, pdf_upload):
+    ccpo = UserFactory.from_atat_role("ccpo")
+    user_session(ccpo)
+
+    request = prepare_request_pending_approval(ccpo)
+
+    response = client.get(url_for("requests.approval", request_id=request.id))
+    download_url = url_for("requests.task_order_pdf_download", request_id=request.id)
+
+    body = response.data.decode()
+    assert download_url not in body
+
+
 def test_task_order_download(app, client, user_session, pdf_upload):
     user = UserFactory.create()
     user_session(user)
