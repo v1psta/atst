@@ -9,10 +9,14 @@ export default {
     LocalDatetime
   },
 
+  props: {
+    initialState: String
+  },
+
   data: function () {
     return {
-      approving: false,
-      denying: false
+      approving: this.initialState === 'approving',
+      denying: this.initialState === 'denying'
     }
   },
 

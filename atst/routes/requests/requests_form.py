@@ -121,7 +121,7 @@ def requests_submit(request_id=None):
     if request.status == RequestStatus.PENDING_FINANCIAL_VERIFICATION:
         modal = "pendingFinancialVerification"
     else:
-        modal = "pendingCCPOApproval"
+        modal = "pendingCCPOAcceptance"
 
     return redirect(url_for("requests.requests_index", modal=modal))
 
@@ -141,6 +141,6 @@ def view_request_details(request_id=None):
     return render_template(
         "requests/details.html",
         data=data,
-        request=request,
+        jedi_request=request,
         requires_fv_action=requires_fv_action,
     )

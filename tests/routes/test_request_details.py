@@ -19,7 +19,7 @@ def test_can_show_financial_data(client, user_session):
     )
 
     body = response.data.decode()
-    assert re.search(">\s+Financial Verification\s+<", body)
+    assert re.search(r">\s+Financial Verification\s+<", body)
 
 
 def test_can_not_show_financial_data(client, user_session):
@@ -34,4 +34,4 @@ def test_can_not_show_financial_data(client, user_session):
     )
 
     body = response.data.decode()
-    assert not re.search(">\s+Financial Verification\s+<", body)
+    assert not re.search(r">\s+Financial Verification\s+<", body)

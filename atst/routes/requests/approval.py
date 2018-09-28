@@ -35,7 +35,7 @@ def render_approval(request, form=None, internal_comment_form=None):
         "requests/approval.html",
         data=data,
         reviews=list(reversed(request.reviews)),
-        request=request,
+        jedi_request=request,
         current_status=request.status.value,
         review_form=form or CCPOReviewForm(),
         internal_comment_form=internal_comment_form,
