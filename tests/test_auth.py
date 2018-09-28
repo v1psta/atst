@@ -88,12 +88,19 @@ def test_protected_routes_redirect_to_login(client, app):
         if "GET" in rule.methods:
             resp = client.get(protected_route)
             assert resp.status_code == 302
-            assert resp.headers["Location"] == "http://localhost/"
+            assert "http://localhost/" in resp.headers["Location"]
 
         if "POST" in rule.methods:
             resp = client.post(protected_route)
             assert resp.status_code == 302
-            assert resp.headers["Location"] == "http://localhost/"
+            assert "http://localhost/" in resp.headers["Location"]
+
+
+def test_get_protected_route_encodes_redirect(client):
+    workspace_index = url_for("workspaces.workspaces")
+    response = client.get(workspace_index)
+    redirect = url_for("atst.root", next=workspace_index)
+    assert redirect in response.headers["Location"]
 
 
 def test_unprotected_routes_set_user_if_logged_in(client, app, user_session):

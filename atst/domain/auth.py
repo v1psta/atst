@@ -21,7 +21,7 @@ def apply_authentication(app):
         if user:
             g.current_user = user
         elif not _unprotected_route(request):
-            return redirect(url_for("atst.root"))
+            return redirect(url_for("atst.root", next=request.path))
 
 
 def get_current_user():
