@@ -84,7 +84,7 @@ def login_redirect():
 @bp.route("/logout")
 def logout():
     _logout()
-    return redirect(url_for(".home"))
+    return redirect(url_for(".root"))
 
 
 @bp.route("/activity-history")
