@@ -1,5 +1,6 @@
 from flask import Blueprint, request, session, redirect, url_for
 
+from . import redirect_url
 from atst.domain.users import Users
 
 bp = Blueprint("dev", __name__)
@@ -63,4 +64,4 @@ def login_dev():
     )
     session["user_id"] = user.id
 
-    return redirect(url_for("atst.home"))
+    return redirect(redirect_url())

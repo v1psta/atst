@@ -80,6 +80,13 @@ def _make_authentication_context():
     )
 
 
+def redirect_url():
+    if request.args.get("next"):
+        return request.args.get("next")
+    else:
+        return url_for(".home")
+
+
 @bp.route("/login-redirect")
 def login_redirect():
     auth_context = _make_authentication_context()
@@ -87,7 +94,7 @@ def login_redirect():
     user = auth_context.get_user()
     session["user_id"] = user.id
 
-    return redirect(url_for(".home"))
+    return redirect(redirect_url())
 
 
 @bp.route("/logout")
