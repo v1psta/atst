@@ -1,3 +1,4 @@
+import urllib.parse as url
 from flask import Blueprint, render_template, g, redirect, session, url_for, request
 
 from flask import current_app as app
@@ -16,7 +17,15 @@ bp = Blueprint("atst", __name__)
 
 @bp.route("/")
 def root():
-    return render_template("login.html")
+    redirect_url = app.config.get("CAC_URL")
+    if request.args.get("next"):
+        redirect_url = url.urljoin(
+            redirect_url, "?{}".format(url.urlencode(request.args))
+        )
+
+    return render_template(
+        "login.html", redirect=bool(request.args.get("next")), redirect_url=redirect_url
+    )
 
 
 @bp.route("/help")
