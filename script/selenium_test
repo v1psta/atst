@@ -45,8 +45,8 @@ echo "starting BrowserStack local client..."
 BSL_ID=$!
 
 # run example selenium script that fetches the home page
-echo "running selenium example script"
-pipenv run python selenium_example.py
+echo "running selenium tests"
+pipenv run pytest tests/acceptance -s
 
 # kill BrowserStackLocal
 kill $BSL_ID
