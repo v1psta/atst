@@ -1,3 +1,5 @@
+from atst.domain.roles import WORKSPACE_ROLES as WORKSPACE_ROLE_DEFINITIONS
+
 SERVICE_BRANCHES = [
     (None, "Select an option"),
     ("Air Force, Department of the", "Air Force, Department of the"),
@@ -104,41 +106,8 @@ COMPLETION_DATE_RANGES = [
 ]
 
 WORKSPACE_ROLES = [
-    (
-        "owner",
-        {
-            "name": "Workspace Owner",
-            "description": "Adds, edits, deactivates access to all projects, environments, and members. Views budget reports. Initiates and edits JEDI Cloud requests.",
-        },
-    ),
-    (
-        "admin",
-        {
-            "name": "Administrator",
-            "description": "Adds and edits projects, environments, members, but cannot deactivate. Cannot view budget reports or JEDI Cloud requests.",
-        },
-    ),
-    (
-        "developer",
-        {
-            "name": "Developer",
-            "description": "Views only the projects and environments they are granted access to. Can also view members associated with each environment.",
-        },
-    ),
-    (
-        "billing_auditor",
-        {
-            "name": "Billing Auditor",
-            "description": "Views only the projects and environments they are granted access to. Can also view budgets and reports associated with the workspace.",
-        },
-    ),
-    (
-        "security_auditor",
-        {
-            "name": "Security Auditor",
-            "description": "Views only the projects and environments they are granted access to. Can also view activity logs.",
-        },
-    ),
+    (role["name"], {"name": role["display_name"], "description": role["description"]})
+    for role in WORKSPACE_ROLE_DEFINITIONS
 ]
 
 ENVIRONMENT_ROLES = [
