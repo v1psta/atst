@@ -38,3 +38,7 @@ class User(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
         return (
             Permissions.VIEW_WORKSPACE in self.atat_role.permissions
         ) or self.workspace_roles
+
+    @property
+    def displayname(self):
+        return self.full_name
