@@ -44,7 +44,7 @@ class Environments(object):
             .join(EnvironmentRole)
             .join(Project)
             .filter(EnvironmentRole.user_id == user.id)
-            .filter(Project.id == Environment.project_id)
+            .filter(Environment.project_id == project.id)
             .all()
         )
 

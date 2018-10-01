@@ -6,11 +6,13 @@ import datetime
 from faker import Faker as _Faker
 
 from atst.forms.data import SERVICE_BRANCHES
+from atst.models.environment import Environment
 from atst.models.request import Request
 from atst.models.request_revision import RequestRevision
 from atst.models.request_review import RequestReview
 from atst.models.request_status_event import RequestStatusEvent, RequestStatus
 from atst.models.pe_number import PENumber
+from atst.models.project import Project
 from atst.models.task_order import TaskOrder, Source, FundingType
 from atst.models.user import User
 from atst.models.role import Role
@@ -217,3 +219,17 @@ class WorkspaceFactory(Base):
     request = factory.SubFactory(RequestFactory)
     # name it the same as the request ID by default
     name = factory.LazyAttribute(lambda w: w.request.id)
+
+
+class ProjectFactory(Base):
+    class Meta:
+        model = Project
+
+    workspace = factory.SubFactory(WorkspaceFactory)
+    name = factory.Faker("name")
+    description = "A test project"
+
+
+class EnvironmentFactory(Base):
+    class Meta:
+        model = Environment
