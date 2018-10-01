@@ -17,11 +17,22 @@
   {% endcall %}
 
   {% call Modal(name='pendingCCPOApproval', dismissable=True) %}
+    <h1>Financial Verification submitted!</h1>
 
     {% include 'fragments/pending_ccpo_approval_modal.html' %}
 
     <div class='action-group'>
       <a v-on:click="closeModal('pendingCCPOApproval')" class='action-group__action usa-button'>Close</a>
+    </div>
+  {% endcall %}
+
+  {% call Modal(name='pendingCCPOAcceptance', dismissable=True) %}
+    <h1>Request submitted!</h1>
+
+    {% include 'fragments/pending_ccpo_acceptance_alert.html' %}
+
+    <div class='action-group'>
+      <a v-on:click="closeModal('pendingCCPOAcceptance')" class='action-group__action usa-button'>Close</a>
     </div>
   {% endcall %}
 
