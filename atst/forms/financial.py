@@ -9,7 +9,7 @@ from atst.domain.exceptions import NotFoundError
 from atst.domain.pe_numbers import PENumbers
 from atst.domain.task_orders import TaskOrders
 
-from .fields import NewlineListField, SelectField
+from .fields import NewlineListField, SelectField, NumberStringField
 from .forms import ValidatedForm
 from .data import FUNDING_TYPES
 from .validators import DateRange
@@ -181,42 +181,42 @@ class ExtendedFinancialForm(BaseFinancialForm):
         format="%m/%d/%Y",
     )
 
-    clin_0001 = StringField(
+    clin_0001 = NumberStringField(
         "<dl><dt>CLIN 0001</dt> - <dd>Unclassified IaaS and PaaS Amount</dd></dl>",
         validators=[InputRequired()],
         description="Review your task order document, the amounts for each CLIN must match exactly here",
         filters=[number_to_int],
     )
 
-    clin_0003 = StringField(
+    clin_0003 = NumberStringField(
         "<dl><dt>CLIN 0003</dt> - <dd>Unclassified Cloud Support Package</dd></dl>",
         validators=[InputRequired()],
         description="Review your task order document, the amounts for each CLIN must match exactly here",
         filters=[number_to_int],
     )
 
-    clin_1001 = StringField(
+    clin_1001 = NumberStringField(
         "<dl><dt>CLIN 1001</dt> - <dd>Unclassified IaaS and PaaS Amount <br> OPTION PERIOD 1</dd></dl>",
         validators=[InputRequired()],
         description="Review your task order document, the amounts for each CLIN must match exactly here",
         filters=[number_to_int],
     )
 
-    clin_1003 = StringField(
+    clin_1003 = NumberStringField(
         "<dl><dt>CLIN 1003</dt> - <dd>Unclassified Cloud Support Package <br> OPTION PERIOD 1</dd></dl>",
         validators=[InputRequired()],
         description="Review your task order document, the amounts for each CLIN must match exactly here",
         filters=[number_to_int],
     )
 
-    clin_2001 = StringField(
+    clin_2001 = NumberStringField(
         "<dl><dt>CLIN 2001</dt> - <dd>Unclassified IaaS and PaaS Amount <br> OPTION PERIOD 2</dd></dl>",
         validators=[InputRequired()],
         description="Review your task order document, the amounts for each CLIN must match exactly here",
         filters=[number_to_int],
     )
 
-    clin_2003 = StringField(
+    clin_2003 = NumberStringField(
         "<dl><dt>CLIN 2003</dt> - <dd>Unclassified Cloud Support Package <br> OPTION PERIOD 2</dd></dl>",
         validators=[InputRequired()],
         description="Review your task order document, the amounts for each CLIN must match exactly here",
