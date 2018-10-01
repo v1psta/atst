@@ -34,6 +34,7 @@ factory-boy = "*"
 pytest-flask = "*"
 pytest-env = "*"
 pytest-cov = "*"
+selenium = "*"
 
 [requires]
 python_version = "3.6.6"
