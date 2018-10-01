@@ -1,4 +1,4 @@
-from wtforms.fields import Field, SelectField as SelectField_
+from wtforms.fields import Field, StringField, SelectField as SelectField_
 from wtforms.widgets import TextArea
 
 
@@ -31,3 +31,11 @@ class SelectField(SelectField_):
         render_kw = kwargs.get("render_kw", {})
         kwargs["render_kw"] = {**render_kw, "required": False}
         super().__init__(*args, **kwargs)
+
+
+class NumberStringField(StringField):
+    def process_data(self, value):
+        if isinstance(value, int):
+            self.data = str(value)
+        else:
+            self.data = value
