@@ -121,7 +121,7 @@ def workspace_reports(workspace_id):
         remaining_difference = expiration_date - today
         remaining_days = remaining_difference.days
     else:
-        remaining_days = 0
+        remaining_days = None
 
     return render_template(
         "workspaces/reports/index.html",

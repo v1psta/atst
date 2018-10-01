@@ -65,16 +65,26 @@
               <div>
                 <dt>Expires</dt>
                 <dd>
-                  <local-datetime
-                    timestamp='{{ expiration_date }}'
-                    format='MMMM D, YYYY'>
-                    </local-datetime>
+                  {% if expiration_date %}
+                    <local-datetime
+                      timestamp='{{ expiration_date }}'
+                      format='MMMM D, YYYY'>
+                      </local-datetime>
+                  {% else %}
+                      -
+                  {% endif %}
                 </dd>
               </div>
 
               <div>
                 <dt>Remaining</dt>
-                <dd>{{ remaining_days }} days</dd>
+                <dd>
+                  {% if remaining_days %}
+                    {{ remaining_days }} days
+                  {% else %}
+                    -
+                  {% endif %}
+                </dd>
               </div>
             </dl>
 
