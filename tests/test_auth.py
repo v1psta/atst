@@ -17,9 +17,9 @@ def _fetch_user_info(c, t):
     return MOCK_USER
 
 
-def _login(client, verify="SUCCESS", sdn=DOD_SDN, cert=""):
+def _login(client, verify="SUCCESS", sdn=DOD_SDN, cert="", **url_query_args):
     return client.get(
-        url_for("atst.login_redirect"),
+        url_for("atst.login_redirect", **url_query_args),
         environ_base={
             "HTTP_X_SSL_CLIENT_VERIFY": verify,
             "HTTP_X_SSL_CLIENT_S_DN": sdn,
@@ -88,12 +88,19 @@ def test_protected_routes_redirect_to_login(client, app):
         if "GET" in rule.methods:
             resp = client.get(protected_route)
             assert resp.status_code == 302
-            assert resp.headers["Location"] == "http://localhost/"
+            assert "http://localhost/" in resp.headers["Location"]
 
         if "POST" in rule.methods:
             resp = client.post(protected_route)
             assert resp.status_code == 302
-            assert resp.headers["Location"] == "http://localhost/"
+            assert "http://localhost/" in resp.headers["Location"]
+
+
+def test_get_protected_route_encodes_redirect(client):
+    workspace_index = url_for("workspaces.workspaces")
+    response = client.get(workspace_index)
+    redirect = url_for("atst.root", next=workspace_index)
+    assert redirect in response.headers["Location"]
 
 
 def test_unprotected_routes_set_user_if_logged_in(client, app, user_session):
@@ -178,3 +185,16 @@ def test_logout(app, client, monkeypatch):
     assert resp_failure.status_code == 302
     destination = urlparse(resp_failure.headers["Location"]).path
     assert destination == url_for("atst.root")
+
+
+def test_redirected_on_login(client, monkeypatch):
+    monkeypatch.setattr(
+        "atst.domain.authnid.AuthenticationContext.authenticate", lambda *args: True
+    )
+    monkeypatch.setattr(
+        "atst.domain.authnid.AuthenticationContext.get_user",
+        lambda *args: UserFactory.create(),
+    )
+    target_route = url_for("requests.requests_form_new", screen=1)
+    response = _login(client, next=target_route)
+    assert target_route in response.headers.get("Location")

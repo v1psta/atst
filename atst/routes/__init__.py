@@ -1,4 +1,6 @@
+import urllib.parse as url
 from flask import Blueprint, render_template, g, redirect, session, url_for, request
+
 from flask import current_app as app
 import pendulum
 
@@ -15,7 +17,16 @@ bp = Blueprint("atst", __name__)
 
 @bp.route("/")
 def root():
-    return render_template("login.html")
+    redirect_url = app.config.get("CAC_URL")
+    if request.args.get("next"):
+        redirect_url = url.urljoin(
+            redirect_url,
+            "?{}".format(url.urlencode({"next": request.args.get("next")})),
+        )
+
+    return render_template(
+        "login.html", redirect=bool(request.args.get("next")), redirect_url=redirect_url
+    )
 
 
 @bp.route("/help")
@@ -70,6 +81,13 @@ def _make_authentication_context():
     )
 
 
+def redirect_after_login_url():
+    if request.args.get("next"):
+        return request.args.get("next")
+    else:
+        return url_for("atst.home")
+
+
 @bp.route("/login-redirect")
 def login_redirect():
     auth_context = _make_authentication_context()
@@ -77,13 +95,13 @@ def login_redirect():
     user = auth_context.get_user()
     session["user_id"] = user.id
 
-    return redirect(url_for(".home"))
+    return redirect(redirect_after_login_url())
 
 
 @bp.route("/logout")
 def logout():
     _logout()
-    return redirect(url_for(".home"))
+    return redirect(url_for(".root"))
 
 
 @bp.route("/activity-history")
