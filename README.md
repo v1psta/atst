@@ -131,6 +131,27 @@ To re-run tests each time a file is changed:
 
     pipenv run ptw
 
+### Selenium Tests
+
+Selenium tests rely on BrowserStack. In order to run the Selenium tests
+locally, you need BrowserStack credentials. The user email and key can
+be found on the account settings page. To run the selenium tests:
+
+```
+BROWSERSTACK_TOKEN=<token> BROWSERSTACK_EMAIL=<email> ./script/selenium_test
+```
+
+The selenium tests are in `tests/acceptance`. This directory is ignored by
+pytest for normal test runs.
+
+The `selenium_test` script manages the setup of a separate database and
+launching the BrowserStackLocal client. If you already have the client running
+locally, you can run the selenium tests with:
+
+```
+BROWSERSTACK_TOKEN=<token> BROWSERSTACK_EMAIL=<email> pipenv run pytest tests/acceptance
+```
+
 ## Notes
 
 Jinja templates are like mustache templates -- add the
