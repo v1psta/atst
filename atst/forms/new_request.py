@@ -1,7 +1,7 @@
 import pendulum
 from wtforms.fields.html5 import DateField, EmailField, IntegerField, TelField
 from wtforms.fields import BooleanField, RadioField, StringField, TextAreaField
-from wtforms.validators import Email, Length, Optional, Required, DataRequired
+from wtforms.validators import Email, Length, Optional, InputRequired, DataRequired
 
 from .fields import SelectField
 from .forms import ValidatedForm
@@ -35,8 +35,8 @@ class DetailsOfUseForm(ValidatedForm):
             annual_spend = 0
 
         if annual_spend > Requests.AUTO_APPROVE_THRESHOLD:
-            self.number_user_sessions.validators.append(Required())
-            self.average_daily_traffic.validators.append(Required())
+            self.number_user_sessions.validators.append(InputRequired())
+            self.average_daily_traffic.validators.append(InputRequired())
 
         return super(DetailsOfUseForm, self).validate(*args, **kwargs)
 
@@ -45,13 +45,13 @@ class DetailsOfUseForm(ValidatedForm):
         "DoD Component",
         description="Identify the DoD component that is requesting access to the JEDI Cloud",
         choices=SERVICE_BRANCHES,
-        validators=[Required()],
+        validators=[InputRequired()],
     )
 
     jedi_usage = TextAreaField(
         "JEDI Usage",
         description="Your answer will help us provide tangible examples to DoD leadership how and why commercial cloud resources are accelerating the Department's missions",
-        validators=[Required()],
+        validators=[InputRequired()],
     )
 
     # Details of Use: Cloud Readiness
@@ -94,13 +94,13 @@ class DetailsOfUseForm(ValidatedForm):
     data_transfers = SelectField(
         description="How much data is being transferred to the cloud?",
         choices=DATA_TRANSFER_AMOUNTS,
-        validators=[Required()],
+        validators=[DataRequired()],
     )
 
     expected_completion_date = SelectField(
         description="When do you expect to complete your migration to the JEDI Cloud?",
         choices=COMPLETION_DATE_RANGES,
-        validators=[Required()],
+        validators=[DataRequired()],
     )
 
     cloud_native = RadioField(
@@ -137,7 +137,7 @@ class DetailsOfUseForm(ValidatedForm):
     start_date = DateField(
         description="When do you expect to start using the JEDI Cloud (not for billing purposes)?",
         validators=[
-            DataRequired(),
+            InputRequired(),
             DateRange(
                 lower_bound=pendulum.duration(days=1),
                 upper_bound=None,
@@ -151,7 +151,7 @@ class DetailsOfUseForm(ValidatedForm):
         "Name Your Request",
         description="This name serves as a reference for your initial request and the associated workspace that will be created once this request is approved. You may edit this name later.",
         validators=[
-            Required(),
+            InputRequired(),
             Length(
                 min=4,
                 max=100,
@@ -162,16 +162,16 @@ class DetailsOfUseForm(ValidatedForm):
 
 
 class InformationAboutYouForm(ValidatedForm):
-    fname_request = StringField("First Name", validators=[Required(), Alphabet()])
+    fname_request = StringField("First Name", validators=[InputRequired(), Alphabet()])
 
-    lname_request = StringField("Last Name", validators=[Required(), Alphabet()])
+    lname_request = StringField("Last Name", validators=[InputRequired(), Alphabet()])
 
-    email_request = EmailField("E-mail Address", validators=[Required(), Email()])
+    email_request = EmailField("E-mail Address", validators=[InputRequired(), Email()])
 
     phone_number = TelField(
         "Phone Number",
         description="Enter a 10-digit phone number",
-        validators=[Required(), PhoneNumber()],
+        validators=[InputRequired(), PhoneNumber()],
     )
 
     service_branch = SelectField(
@@ -187,7 +187,7 @@ class InformationAboutYouForm(ValidatedForm):
             ("Foreign National", "Foreign National"),
             ("Other", "Other"),
         ],
-        validators=[Required()],
+        validators=[InputRequired()],
     )
 
     designation = RadioField(
@@ -198,14 +198,14 @@ class InformationAboutYouForm(ValidatedForm):
             ("civilian", "Civilian"),
             ("contractor", "Contractor"),
         ],
-        validators=[Required()],
+        validators=[InputRequired()],
     )
 
     date_latest_training = DateField(
         "Latest Information Assurance (IA) Training Completion Date",
         description='To complete the training, you can find it in <a class="icon-link" href="https://iatraining.disa.mil/eta/disa_cac2018/launchPage.htm" target="_blank">Information Assurance Cyber Awareness Challange</a> website.',
         validators=[
-            Required(),
+            InputRequired(),
             DateRange(
                 lower_bound=pendulum.duration(years=1),
                 upper_bound=pendulum.duration(days=0),
@@ -234,14 +234,14 @@ class WorkspaceOwnerForm(ValidatedForm):
         false_values=(False, "false", "False", "no", ""),
     )
 
-    fname_poc = StringField("First Name", validators=[Required()])
+    fname_poc = StringField("First Name", validators=[InputRequired()])
 
-    lname_poc = StringField("Last Name", validators=[Required()])
+    lname_poc = StringField("Last Name", validators=[InputRequired()])
 
-    email_poc = EmailField("Email Address", validators=[Required(), Email()])
+    email_poc = EmailField("Email Address", validators=[InputRequired(), Email()])
 
     dodid_poc = StringField(
-        "DoD ID", validators=[Required(), Length(min=10), IsNumber()]
+        "DoD ID", validators=[InputRequired(), Length(min=10), IsNumber()]
     )
 
 
