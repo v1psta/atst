@@ -1,4 +1,4 @@
-from flask import Blueprint, request, session, redirect, url_for
+from flask import Blueprint, request, session, redirect
 
 from . import redirect_url
 from atst.domain.users import Users
