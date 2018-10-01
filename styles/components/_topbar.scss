@@ -58,7 +58,6 @@
       flex-direction: row;
       align-items: stretch;
       justify-content: flex-end;
-      -ms-flex-pack: start;
 
       .topbar__link--workspace {
         &:first-child {
@@ -68,6 +67,7 @@
 
       &.topbar__context--workspace {
         background-color: $color-primary;
+        -ms-flex-pack: start;
 
         .topbar__link {
           color: $color-white;
