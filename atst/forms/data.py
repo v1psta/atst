@@ -1,4 +1,4 @@
-from atst.domain.roles import DEFINITIONS as ROLE_DEFINITIONS
+from atst.domain.roles import WORKSPACE_ROLES as WORKSPACE_ROLE_DEFINITIONS
 
 SERVICE_BRANCHES = [
     (None, "Select an option"),
@@ -107,8 +107,7 @@ COMPLETION_DATE_RANGES = [
 
 WORKSPACE_ROLES = [
     (role["name"], {"name": role["display_name"], "description": role["description"]})
-    for role in ROLE_DEFINITIONS
-    if role["name"] not in ["ccpo", "default"]
+    for role in WORKSPACE_ROLE_DEFINITIONS
 ]
 
 ENVIRONMENT_ROLES = [

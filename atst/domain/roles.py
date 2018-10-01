@@ -5,7 +5,7 @@ from atst.models import Role, Permissions
 from .exceptions import NotFoundError
 
 
-DEFINITIONS = [
+ATAT_ROLES = [
     {
         "name": "ccpo",
         "display_name": "CCPO",
@@ -46,6 +46,14 @@ DEFINITIONS = [
             Permissions.VIEW_AUDIT_LOG,
         ],
     },
+    {
+        "name": "default",
+        "display_name": "Default",
+        "description": "",
+        "permissions": [Permissions.REQUEST_JEDI_WORKSPACE],
+    },
+]
+WORKSPACE_ROLES = [
     {
         "name": "owner",
         "display_name": "Workspace Owner",
@@ -138,12 +146,6 @@ DEFINITIONS = [
             Permissions.VIEW_WORKSPACE,
             Permissions.VIEW_APPLICATION_IN_WORKSPACE,
         ],
-    },
-    {
-        "name": "default",
-        "display_name": "Default",
-        "description": "",
-        "permissions": [Permissions.REQUEST_JEDI_WORKSPACE],
     },
 ]
 
