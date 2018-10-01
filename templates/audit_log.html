@@ -20,7 +20,18 @@
               <h2 class='h4 audit-log__item__name'>
                 {{ event.user.full_name if event.user else "ATAT System" }}
               </h2>
-              {{ event.activity_description }}
+              {{ event.action }} {{ event.resource_type }} <code>{{ event.resource_id }}</code>
+              {% if event.display_name %}
+                ({{ event.display_name }})
+              {% endif %}
+
+              <br>
+
+              {% if event.workspace %}
+                in Workspace <code>{{ event.workspace_id }}</code> ({{ event.workspace.name }})
+              {% elif event.request %}
+                on Request <code>{{ event.request_id }}</code> ({{ event.request.displayname }})
+              {% endif %}
             </div>
           </article>
         </li>
