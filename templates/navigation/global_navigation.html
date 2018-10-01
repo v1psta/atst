@@ -27,7 +27,7 @@
     {% endif %}
 
     {% if g.Authorization.can_view_audit_log(g.current_user) %}
-      {{ SidenavItem("Activity History", url_for('atst.activity_history'), icon="document", active=g.matchesPath('/activity-history')) }}
+      {{ SidenavItem("Activity History", url_for('atst.activity_history'), icon="time", active=g.matchesPath('/activity-history')) }}
     {% endif %}
   </ul>
 </div>
