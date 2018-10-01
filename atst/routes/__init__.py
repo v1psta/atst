@@ -20,7 +20,8 @@ def root():
     redirect_url = app.config.get("CAC_URL")
     if request.args.get("next"):
         redirect_url = url.urljoin(
-            redirect_url, "?{}".format(url.urlencode(request.args))
+            redirect_url,
+            "?{}".format(url.urlencode({"next": request.args.get("next")})),
         )
 
     return render_template(
@@ -80,11 +81,11 @@ def _make_authentication_context():
     )
 
 
-def redirect_url():
+def redirect_after_login_url():
     if request.args.get("next"):
         return request.args.get("next")
     else:
-        return url_for(".home")
+        return url_for("atst.home")
 
 
 @bp.route("/login-redirect")
@@ -94,7 +95,7 @@ def login_redirect():
     user = auth_context.get_user()
     session["user_id"] = user.id
 
-    return redirect(redirect_url())
+    return redirect(redirect_after_login_url())
 
 
 @bp.route("/logout")
