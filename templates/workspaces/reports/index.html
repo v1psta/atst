@@ -79,7 +79,7 @@
               <div>
                 <dt>Remaining</dt>
                 <dd>
-                  {% if remaining_days %}
+                  {% if remaining_days is not none %}
                     {{ remaining_days }} days
                   {% else %}
                     -
