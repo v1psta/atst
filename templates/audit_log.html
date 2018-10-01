@@ -29,6 +29,8 @@
 
               {% if event.workspace %}
                 in Workspace <code>{{ event.workspace_id }}</code> ({{ event.workspace.name }})
+              {% elif event.request %}
+                on Request <code>{{ event.request_id }}</code> ({{ event.request.displayname }})
               {% endif %}
             </div>
           </article>
