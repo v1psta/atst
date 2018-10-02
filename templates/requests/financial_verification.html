@@ -23,7 +23,14 @@
   {% if extended %}
     {{ Alert('Manually enter Task Order information',
       message="Additional field are displayed below, where you can manually enter financial information as documented in your Task Order.",
-      level='warning'
+      level='warning',
+      actions=[
+        {
+          'href': url_for('atst.helpdocs'),
+          'label': 'Learn more about the JEDI Cloud Task Order and the Financial Verification process.',
+          'icon': 'help'
+        }
+      ]
     ) }}
   {% endif %}
 
