@@ -47,7 +47,7 @@
   {% block form %}
     {% autoescape false %}
 
-    {% if f.errors %}
+    {% if f.errors and not f.is_only_missing_task_order_number %}
       {{ Alert('There were some errors',
         message="<p>Please see below.</p>",
         level='error'
