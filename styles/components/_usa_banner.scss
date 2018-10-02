@@ -1,0 +1,27 @@
+.usa-banner {
+  display: flex;
+  align-items: center;
+  padding: ($gap / 2) $gap;
+  z-index: 5;
+
+  img {
+    flex-grow: 0;
+    margin-right: $gap;
+  }
+
+  p {
+    margin: 0;
+  }
+
+  button.icon-tooltip {
+    @include small-label;
+    color: $color-blue;
+    padding: 0 ($gap / 2);
+    margin: 0 ($gap / 2);
+    font-weight: normal;
+
+    .icon {
+      @include icon-size(12);
+    }
+  }
+}

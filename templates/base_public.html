@@ -16,6 +16,8 @@
 
 <div id='app-root'>
 
+  {% include 'components/usa_header.html' %}
+
   <header class="topbar topbar--public">
     <nav class="topbar__navigation">
       <a href="{{ url_for('atst.home') }}" class="topbar__link topbar__link--home">
@@ -46,6 +48,10 @@
 
   {% include 'footer.html' %}
 </div>
+
+{% assets "js_all" %}
+  <script src="{{ ASSET_URL }}"></script>
+{% endassets %}
 
 </body>
 </html>
