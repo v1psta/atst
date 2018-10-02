@@ -28,11 +28,11 @@ class Users(object):
         return user
 
     @classmethod
-    def create(cls, atat_role_name=None, **kwargs):
+    def create(cls, dod_id, atat_role_name=None, **kwargs):
         atat_role = Roles.get(atat_role_name)
 
         try:
-            user = User(atat_role=atat_role, **kwargs)
+            user = User(dod_id=dod_id, atat_role=atat_role, **kwargs)
             db.session.add(user)
             db.session.commit()
         except IntegrityError:
@@ -46,7 +46,7 @@ class Users(object):
         try:
             user = Users.get_by_dod_id(dod_id)
         except NotFoundError:
-            user = Users.create(dod_id=dod_id, **kwargs)
+            user = Users.create(dod_id, **kwargs)
             db.session.add(user)
             db.session.commit()
 

@@ -119,7 +119,6 @@ WORKSPACE_ROLES = [
         "description": "Views only the projects and environments they are granted access to. Can also view members associated with each environment.",
         "permissions": [
             Permissions.VIEW_USAGE_REPORT,
-            Permissions.VIEW_USAGE_DOLLARS,
             Permissions.VIEW_WORKSPACE,
             Permissions.VIEW_APPLICATION_IN_WORKSPACE,
         ],

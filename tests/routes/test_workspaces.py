@@ -9,6 +9,30 @@ from atst.domain.environment_roles import EnvironmentRoles
 from atst.models.workspace_user import WorkspaceUser
 
 
+def test_user_with_permission_has_budget_report_link(client, user_session):
+    user = UserFactory.create()
+    workspace = WorkspaceFactory.create()
+    Workspaces._create_workspace_role(user, workspace, "owner")
+
+    user_session(user)
+    response = client.get("/workspaces/{}/projects".format(workspace.id))
+    assert (
+        'href="/workspaces/{}/reports"'.format(workspace.id).encode() in response.data
+    )
+
+
+def test_user_without_permission_has_no_budget_report_link(client, user_session):
+    user = UserFactory.create()
+    workspace = WorkspaceFactory.create()
+    Workspaces._create_workspace_role(user, workspace, "developer")
+    user_session(user)
+    response = client.get("/workspaces/{}/projects".format(workspace.id))
+    assert (
+        'href="/workspaces/{}/reports"'.format(workspace.id).encode()
+        not in response.data
+    )
+
+
 def test_user_with_permission_has_add_project_link(client, user_session):
     user = UserFactory.create()
     workspace = WorkspaceFactory.create()
