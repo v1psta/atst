@@ -15,9 +15,10 @@ USER_CERT = "ssl/client-certs/atat.mil.crt"
 
 
 @pytest.mark.parametrize("browser_type", BROWSERSTACK_CONFIG.keys())
-def test_can_get_title(browser_type, live_app, drivers):
+@pytest.mark.usefixtures('live_server')
+def test_can_get_title(browser_type, app, drivers):
     driver = drivers[browser_type]
-    driver.get(live_app.server_url)
+    driver.get(url_for("atst.root", _external=True))
     assert "JEDI" in driver.title
 
 
@@ -57,13 +58,12 @@ def _valid_login(client, driver):
         )
 
 
-def test_login(live_app, drivers, client, valid_user_from_cert):
+@pytest.mark.usefixtures('live_server')
+def test_login(drivers, client, app, valid_user_from_cert):
     driver = drivers["win10_chrome62"]
-    driver.get(live_app.server_url)
+    driver.get(url_for("atst.root", _external=True))
     cookie = _valid_login(client, driver)
-    requests_page = urljoin(
-        live_app.server_url, url_for("requests.requests_form_new", screen=1)
-    )
+    requests_page = url_for("requests.requests_form_new", screen=1, _external=True)
     driver.get(requests_page)
     user = valid_user_from_cert
     assert user.last_name in driver.page_source

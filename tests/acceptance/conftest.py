@@ -7,7 +7,6 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
-from .live_server import LiveServer
 from .browsers import BROWSERSTACK_CONFIG
 
 
@@ -20,18 +19,12 @@ def session(db, request):
 
 
 @pytest.fixture(scope="session")
-def live_app(app):
+def app(app):
     handler = RotatingFileHandler("log/acceptance.log", maxBytes=10000, backupCount=1)
     handler.setLevel(logging.INFO)
     app.logger.addHandler(handler)
 
-    runnable = LiveServer(app, port=8943, timeout=10)
-    runnable.spawn_live_server()
-    app.server_url = runnable.server_url
-
-    yield app
-
-    runnable.terminate()
+    return app
 
 
 class DriverCollection(Mapping):
