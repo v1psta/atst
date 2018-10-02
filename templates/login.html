@@ -17,7 +17,7 @@
 
           <a class="usa-button usa-button-big login-banner__button" href='{{ redirect_url }}'><span>Sign in with CAC</span></a>
 
-          {% if g.dev %}
+          {% if False %}
           <a class="usa-button usa-button-big usa-button-secondary" href='{{ url_for("dev.login_dev", **request.args) }}'><span>DEV Login</span></a>
           {% endif %}
         </div>
