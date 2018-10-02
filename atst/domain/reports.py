@@ -1,4 +1,6 @@
 from itertools import groupby
+from collections import OrderedDict
+import pendulum
 
 
 MONTHLY_SPEND_AARDVARK = {
@@ -234,8 +236,14 @@ class Reports:
     @classmethod
     def cumulative_budget(cls, workspace):
         if workspace.name in REPORT_FIXTURE_MAP:
-            months = REPORT_FIXTURE_MAP[workspace.name]["cumulative"]
+            budget_months = REPORT_FIXTURE_MAP[workspace.name]["cumulative"]
         else:
-            months = {}
+            budget_months = {}
 
-        return {"months": months}
+        this_year = pendulum.now().year
+        all_months = OrderedDict()
+        for m in range(1, 13):
+            month_str = "{month:02d}/{year}".format(month=m, year=this_year)
+            all_months[month_str] = budget_months.get(month_str, None)
+
+        return {"months": all_months}
