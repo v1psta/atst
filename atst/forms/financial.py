@@ -151,6 +151,10 @@ class FinancialForm(BaseFinancialForm):
     def is_missing_task_order_number(self):
         return "task_order_number" in self.errors
 
+    @property
+    def is_only_missing_task_order_number(self):
+        return "task_order_number" in self.errors and len(self.errors) == 1
+
 
 class ExtendedFinancialForm(BaseFinancialForm):
     def validate(self, *args, **kwargs):

@@ -9,7 +9,7 @@
 
 {% include 'requests/review_menu.html' %}
 
-{% if request.is_pending_financial_verification %}
+{% if request.is_pending_financial_verification and not f.errors and not extended %}
   {{ Alert('Pending Financial Verification', fragment="fragments/pending_financial_verification.html") }}
 {% endif %}
 
@@ -21,9 +21,16 @@
 <div class="col">
 
   {% if extended %}
-    {{ Alert('Task Order not found in EDA',
-      message="We could not find your Task Order in the EDA, our system of record. Please confirm that you have entered the information correctly and resubmit or click on the button below to enter the TO manually.",
-      level='warning'
+    {{ Alert('Manually enter Task Order information',
+      message="Additional fields are displayed below, where you can manually enter financial information as documented in your Task Order.",
+      level='warning',
+      actions=[
+        {
+          'href': url_for('atst.helpdocs'),
+          'label': 'Learn more about the JEDI Cloud Task Order and the Financial Verification process.',
+          'icon': 'help'
+        }
+      ]
     ) }}
   {% endif %}
 
@@ -47,7 +54,7 @@
   {% block form %}
     {% autoescape false %}
 
-    {% if f.errors %}
+    {% if f.errors and not f.is_only_missing_task_order_number %}
       {{ Alert('There were some errors',
         message="<p>Please see below.</p>",
         level='error'
