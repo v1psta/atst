@@ -156,7 +156,6 @@ class FinancialForm(BaseFinancialForm):
         return "task_order_number" in self.errors and len(self.errors) == 1
 
 
-
 class ExtendedFinancialForm(BaseFinancialForm):
     def validate(self, *args, **kwargs):
         if self.funding_type.data == "OTHER":
