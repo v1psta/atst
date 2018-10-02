@@ -11,12 +11,19 @@ from atst.models.environment_role import EnvironmentRole
 from atst.models.project import Project
 from atst.models.request import Request
 from atst.models.request_revision import RequestRevision
-from atst.models.request_status_event import RequestStatusEvent
+from atst.models.request_status_event import RequestStatus, RequestStatusEvent
 from atst.models.role import Role
 from atst.models.user import User
 from atst.models.workspace_role import WorkspaceRole
 from atst.models.workspace import Workspace
 from atst.models.mixins import AuditableMixin
+
+from atst.domain.environments import Environments
+from atst.domain.reports import MONTHLY_SPEND_AARDVARK, MONTHLY_SPEND_BELUGA
+from atst.domain.requests import Requests
+from atst.domain.users import Users
+from atst.domain.workspaces import Workspaces
+from tests.factories import RequestFactory, TaskOrderFactory
 
 
 dod_ids = [
@@ -26,15 +33,44 @@ dod_ids = [
     "4567890123",
     "5678901234",
     "6789012345",
-    "2342342342",
-    "3453453453",
-    "4564564564",
+    "2342342342", # Andy
+    "3453453453", # Sally
+    "4564564564", # Betty
     "6786786786",
 ]
 
 
-def remove_sample_data():
-    users = db.session.query(User).filter(User.dod_id.in_(dod_ids)).all()
+def create_demo_workspace(name, data):
+    workspace_owner = Users.get_by_dod_id("6786786786") # Other
+    auditor = Users.get_by_dod_id("3453453453") # Sally
+
+    request = RequestFactory.build(creator=workspace_owner)
+    request.task_order = TaskOrderFactory.build()
+    request = Requests.update(
+        request.id, {"financial_verification": RequestFactory.mock_financial_data()}
+    )
+    approved_request = Requests.set_status(request, RequestStatus.APPROVED)
+
+    workspace = Requests.approve_and_create_workspace(request)
+    Workspaces.update(workspace, { "name": name })
+
+    for name in data:
+        project = Project(workspace=workspace, name=name, description='')
+        env_names = [env for env in data[name]]
+        envs = Environments.create_many(project, env_names)
+        db.session.add(project)
+        db.session.commit()
+
+
+
+
+
+
+def remove_sample_data(all_users=False):
+    query = db.session.query(User)
+    if not all_users:
+        query = query.filter(User.dod_id.in_(dod_ids))
+    users = query.all()
 
     delete_listeners = [
         k
@@ -112,3 +148,5 @@ if __name__ == "__main__":
     app = make_app(config)
     with app.app_context():
         remove_sample_data()
+        create_demo_workspace('Aardvark', MONTHLY_SPEND_AARDVARK)
+        create_demo_workspace('Beluga', MONTHLY_SPEND_BELUGA)
