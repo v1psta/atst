@@ -11,6 +11,14 @@ from .live_server import LiveServer
 from .browsers import BROWSERSTACK_CONFIG
 
 
+@pytest.fixture(scope="function", autouse=True)
+def session(db, request):
+    """
+    Override base test session
+    """
+    pass
+
+
 @pytest.fixture(scope="session")
 def live_app(app):
     handler = RotatingFileHandler("log/acceptance.log", maxBytes=10000, backupCount=1)
