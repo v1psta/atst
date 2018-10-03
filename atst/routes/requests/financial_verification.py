@@ -32,7 +32,8 @@ class FinancialVerification:
     @property
     def _task_order_data(self):
         if self.request.task_order:
-            data = self.request.task_order.to_dictionary()
+            task_order = self.request.task_order
+            data = task_order.to_dictionary()
             data["task_order_number"] = task_order.number
             data["funding_type"] = task_order.funding_type.value
             return data
