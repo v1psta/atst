@@ -1,5 +1,5 @@
-{% set pending_url=url_for('requests.view_request_details', request_id=request.id) %}
-{% set financial_url=url_for('requests.financial_verification', request_id=request.id) %}
+{% set pending_url=url_for('requests.view_request_details', request_id=jedi_request.id) %}
+{% set financial_url=url_for('requests.financial_verification', request_id=jedi_request.id) %}
 <div class="progress-menu progress-menu--two">
   <ul>
     <li class="progress-menu__item progress-menu__item--complete">
