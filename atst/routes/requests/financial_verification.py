@@ -7,16 +7,16 @@ from atst.forms.financial import FinancialForm, ExtendedFinancialForm
 
 
 class FinancialVerification:
-    def __init__(self, user, request_id=None, extended=False, post_data=None):
+    def __init__(self, user, request_id, extended=False, post_data=None):
         self.request = Requests.get(user, request_id)
         self._extended = extended
-        self.post_data = post_data
+        self._post_data = post_data
         self._form = None
         self.reset()
 
     def reset(self):
-        self.updateable = False
-        self.valid = False
+        self._updateable = False
+        self._valid = False
         self.workspace = None
         if self._form:
             self._form.reset()
@@ -42,8 +42,8 @@ class FinancialVerification:
 
     @property
     def _form_data(self):
-        if self.post_data:
-            return self.post_data
+        if self._post_data:
+            return self._post_data
         else:
             form_data = self.request.body.get("financial_verification", {})
             form_data.update(self._task_order_data)
@@ -62,27 +62,27 @@ class FinancialVerification:
 
     def validate(self):
         if self.form.validate():
-            self.updateable = True
-            self.valid = self.form.perform_extra_validation(
+            self._updateable = True
+            self._valid = self.form.perform_extra_validation(
                 self.request.body.get("financial_verification")
             )
         else:
-            self.updateable = False
-            self.valid = False
+            self._updateable = False
+            self._valid = False
 
-        return self.valid
+        return self._valid
 
     @property
     def pending(self):
         return self.request.is_pending_ccpo_approval
 
     def finalize(self):
-        if self.updateable:
+        if self._updateable:
             self.request = Requests.update_financial_verification(
                 self.request.id, self.form.data
             )
 
-        if self.valid:
+        if self._valid:
             self.request = Requests.submit_financial_verification(self.request)
 
             if self.request.is_financially_verified:
@@ -92,9 +92,7 @@ class FinancialVerification:
 @requests_bp.route("/requests/verify/<string:request_id>", methods=["GET"])
 def financial_verification(request_id):
     finver = FinancialVerification(
-        g.current_user,
-        request_id=request_id,
-        extended=http_request.args.get("extended"),
+        g.current_user, request_id, extended=http_request.args.get("extended")
     )
 
     return render_template(
@@ -110,7 +108,7 @@ def financial_verification(request_id):
 def update_financial_verification(request_id):
     finver = FinancialVerification(
         g.current_user,
-        request_id=request_id,
+        request_id,
         extended=http_request.args.get("extended"),
         post_data=http_request.form,
     )

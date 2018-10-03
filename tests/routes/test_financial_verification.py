@@ -4,6 +4,7 @@ from flask import url_for
 
 from atst.eda_client import MockEDAClient
 from atst.models.request_status_event import RequestStatus
+from atst.routes.requests.financial_verification import FinancialVerification
 
 from tests.mocks import MOCK_REQUEST, MOCK_USER
 from tests.factories import (
@@ -172,3 +173,36 @@ def test_displays_ccpo_review_comment(user_session, client):
     response = client.get("/requests/verify/{}".format(request.id))
     body = response.data.decode()
     assert review_comment in body
+
+
+class TestFinancialVerification:
+    @pytest.fixture(scope="function", autouse=True)
+    def apply_monkeypath(self, monkeypatch):
+        monkeypatch.setattr(
+            "atst.domain.requests.Requests.get", lambda *args: self.request
+        )
+
+    def _service_object(self, request=None, extended=False, post_data={}):
+        if not request:
+            self.request = RequestFactory.create()
+        else:
+            self.request = request
+
+        return FinancialVerification(
+            UserFactory.create(),
+            self.request.id,
+            extended=extended,
+            post_data=post_data,
+        )
+
+    def test_is_extended(self):
+        finver_one = self._service_object()
+        assert not finver_one.is_extended
+        finver_two = self._service_object(
+            request=RequestFactory.create_with_status(
+                RequestStatus.CHANGES_REQUESTED_TO_FINVER
+            )
+        )
+        assert finver_two.is_extended
+        finver_three = self._service_object(extended=True)
+        assert finver_three.is_extended
