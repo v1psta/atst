@@ -9,7 +9,7 @@
   {% set action_text = 'Create' if new_project else 'Update' %}
   {% set title_text = 'Add a new project' if new_project else 'Edit {} project'.format(project.name) %}
 
-  <form method="POST" action="{{ form_action }}" >
+  <form method="POST" action="{{ form_action }}" v-on:submit="handleSubmit('{{ modalName }}', $event)">
     {% call Modal(name=modalName, dismissable=False) %}
       <h1>{{ action_text }} project !{ name }</h1>
 
@@ -75,7 +75,7 @@
       </div>
 
       <div class="action-group">
-        <button v-on:click="validateAndOpenModal('{{ modalName }}')" class="usa-button usa-button-primary" tabindex="0" type="button">{{ action_text }} Project</button>
+        <button class="usa-button usa-button-primary" tabindex="0" type="button">{{ action_text }} Project</button>
       </div>
 
     </div>
