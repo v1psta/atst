@@ -40,6 +40,7 @@ export default {
       errors: [],
       environments,
       name,
+      readyToSubmit: false
     }
   },
 
@@ -106,6 +107,7 @@ export default {
       isValid = this.errors.length == 0 && isValid
 
       if (isValid) {
+        this.readyToSubmit = true
         this.openModal(modalName)
       }
     }
