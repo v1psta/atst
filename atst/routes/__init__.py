@@ -3,6 +3,7 @@ from flask import Blueprint, render_template, g, redirect, session, url_for, req
 
 from flask import current_app as app
 import pendulum
+import os
 
 from atst.domain.requests import Requests
 from atst.domain.users import Users
@@ -30,8 +31,13 @@ def root():
 
 
 @bp.route("/help")
-def helpdocs():
-    return render_template("help/index.html")
+@bp.route("/help/<path:doc>")
+def helpdocs(doc=None):
+    docs = [os.path.splitext(file)[0] for file in os.listdir("templates/help/docs")]
+    if doc:
+        return render_template("help/docs/{}.html".format(doc), docs=docs, doc=doc)
+    else:
+        return render_template("help/index.html", docs=docs, doc=doc)
 
 
 @bp.route("/home")
