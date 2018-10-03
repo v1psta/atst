@@ -1,8 +1,10 @@
 from sqlalchemy import exists, and_, exc, text
+from sqlalchemy.orm.exc import NoResultFound
 
 from atst.database import db
 from atst.domain.common import Query
 from atst.models.request import Request
+from atst.domain.exceptions import NotFoundError
 
 
 class RequestsQuery(Query):
