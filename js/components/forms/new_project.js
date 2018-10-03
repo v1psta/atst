@@ -85,6 +85,13 @@ export default {
       return names.every((n, index) => names.indexOf(n) === index)
     },
 
+    handleSubmit: function (modalName, event) {
+      if (!this.readyToSubmit) {
+        event.preventDefault()
+        this.validateAndOpenModal(modalName)
+      }
+    },
+
     validateAndOpenModal: function (modalName) {
       let isValid = this.$children.reduce((previous, newVal) => {
         // display textInput error if it is not valid
