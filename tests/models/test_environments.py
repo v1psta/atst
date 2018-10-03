@@ -16,7 +16,3 @@ def test_add_user_to_environment():
 
     dev_environment = Environments.add_member(dev_environment, developer, "developer")
     assert developer in dev_environment.users
-
-
-def test_repr():
-    pass
