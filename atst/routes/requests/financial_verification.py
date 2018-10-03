@@ -27,20 +27,57 @@ def financial_form(request, data):
         return FinancialForm(data=data)
 
 
-@requests_bp.route("/requests/verify/<string:request_id>", methods=["GET"])
-def financial_verification(request_id=None):
-    request = Requests.get(g.current_user, request_id)
-    form_data = request.body.get("financial_verification")
-    if request.task_order:
-        form_data.update(task_order_data(request.task_order))
+class FinancialVerification:
+    def __init__(self, user, request_id=None, extended=False, post_data=None):
+        self.request = Requests.get(user, request_id)
+        self._extended = extended
+        self.post_data = post_data
 
-    form = financial_form(request, form_data)
+    @property
+    def is_extended(self):
+        return self._extended or self.is_pending_changes
+
+    @property
+    def is_pending_changes(self):
+        return self.request.is_pending_financial_verification_changes
+
+    @property
+    def _task_order_data(self):
+        if self.request.task_order:
+            data = self.request.task_order.to_dictionary()
+            data["task_order_number"] = task_order.number
+            data["funding_type"] = task_order.funding_type.value
+            return data
+        else:
+            return {}
+
+    @property
+    def _form_data(self):
+        form_data = self.request.body.get("financial_verification", {})
+        form_data.update(self._task_order_data)
+
+        return form_data
+
+    @property
+    def form(self):
+        if self.is_extended:
+            return ExtendedFinancialForm(self._form_data)
+        else:
+            return FinancialForm(self._form_data)
+
+
+@requests_bp.route("/requests/verify/<string:request_id>", methods=["GET"])
+def financial_verification(request_id):
+    finver = FinancialVerification(
+        g.current_user, request_id=request_id, extended=http_request.args.get("extended")
+    )
+
     return render_template(
         "requests/financial_verification.html",
-        f=form,
-        jedi_request=request,
-        review_comment=request.review_comment,
-        extended=is_extended(request),
+        f=finver.form,
+        jedi_request=finver.request,
+        review_comment=finver.request.review_comment,
+        extended=finver.is_extended,
     )
 
 
