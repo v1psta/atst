@@ -9,7 +9,7 @@
 
 {% include 'requests/review_menu.html' %}
 
-{% if request.is_pending_financial_verification and not f.errors and not extended %}
+{% if jedi_request.is_pending_financial_verification and not f.errors and not extended %}
   {{ Alert('Pending Financial Verification', fragment="fragments/pending_financial_verification.html") }}
 {% endif %}
 
@@ -35,7 +35,7 @@
   {% endif %}
 
   {% if f.is_missing_task_order_number %}
-    {% set extended_url = url_for('requests.financial_verification', request_id=request.id, extended=True) %}
+    {% set extended_url = url_for('requests.financial_verification', request_id=jedi_request.id, extended=True) %}
     {% call Alert('Task Order not found in EDA', level='warning') %}
         We could not find your Task Order in our system of record, EDA. Please confirm that you have entered it correctly.<br>
         <a class="usa-button" href="{{ extended_url }}">Enter Task Order information manually</a>
@@ -44,9 +44,9 @@
 
   {% block form_action %}
     {% if extended %}
-      <form method='POST' action="{{ url_for('requests.financial_verification', request_id=request.id, extended=True) }}" autocomplete="off" enctype="multipart/form-data">
+      <form method='POST' action="{{ url_for('requests.financial_verification', request_id=jedi_request.id, extended=True) }}" autocomplete="off" enctype="multipart/form-data">
     {% else %}
-      <form method='POST' action="{{ url_for('requests.financial_verification', request_id=request.id) }}" autocomplete="off">
+    <form method='POST' action="{{ url_for('requests.financial_verification', request_id=jedi_request.id) }}" autocomplete="off">
     {% endif %}
   {% endblock %}
 
@@ -65,7 +65,7 @@
 
     <div class="panel__heading">
       <h1>Financial Verification</h1>
-      <div class="subtitle" id="financial-verification"><h2>Request: {{ request.displayname }}</h2></div>
+      <div class="subtitle" id="financial-verification"><h2>Request: {{ jedi_request.displayname }}</h2></div>
     </div>
 
     <div class="panel__content">
