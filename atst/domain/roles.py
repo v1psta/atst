@@ -120,7 +120,6 @@ WORKSPACE_ROLES = [
         "permissions": [
             Permissions.VIEW_USAGE_REPORT,
             Permissions.VIEW_WORKSPACE,
-            Permissions.VIEW_APPLICATION_IN_WORKSPACE,
         ],
     },
     {
@@ -131,7 +130,6 @@ WORKSPACE_ROLES = [
             Permissions.VIEW_USAGE_REPORT,
             Permissions.VIEW_USAGE_DOLLARS,
             Permissions.VIEW_WORKSPACE,
-            Permissions.VIEW_APPLICATION_IN_WORKSPACE,
         ],
     },
     {
@@ -143,7 +141,6 @@ WORKSPACE_ROLES = [
             Permissions.VIEW_ASSIGNED_CSP_ROLE_CONFIGURATIONS,
             Permissions.VIEW_ATAT_PERMISSIONS,
             Permissions.VIEW_WORKSPACE,
-            Permissions.VIEW_APPLICATION_IN_WORKSPACE,
         ],
     },
 ]
