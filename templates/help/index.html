@@ -4,51 +4,52 @@
 
 {% block title %}Help | JEDI Cloud{% endblock %}
 
+
 {% block content %}
   <div class='global-layout'>
     <div class='global-navigation sidenav'>
       <ul>
-        {{ SidenavItem("Help Topic",
-          href="/help",
-          active=g.matchesPath('/help'),
-          subnav=[
-            {"label":"Sub Topic", "href":"/help", "active": False},
-            {"label":"Sub Topic", "href":"/help", "active": False},
-            {"label":"Another Sub Topic", "href":"/help", "active": False},
-          ]
+
+        {{ SidenavItem("JEDI Cloud Help",
+          href = url_for("atst.helpdocs"),
+          active = not doc,
+          icon='help'
         )}}
 
+        {% for doc_item in docs %}
+          {% set active = doc and doc == doc_item %}
 
-        {{ SidenavItem("Another Help Topic",
-          href="/help",
-          active=False
-        )}}
+          {{ SidenavItem(doc_item | title,
+            href = url_for("atst.helpdocs", doc=doc_item),
+            active = active,
+            subnav = subnav or None
+          )}}
+        {% endfor %}
 
-        {{ SidenavItem("One More Help Topic",
-          href="/help",
-          active=False
-        )}}
       </ul>
     </div>
 
 
     <div class='global-panel-container'>
-      {{ Alert('Sample Content',
-        message='This is a sample help page intended to demonstrate the layout of a JEDI Cloud help documentation page.',
-      ) }}
 
       <div class='panel'>
         <div class='panel__heading panel__heading--divider'>
           <h1>
-            <div class='h4'>JEDI Cloud Help Documentation</div>
-            <span class='h1'>Help Topic</span>
+            {% if doc %}
+              <div class='h4'>JEDI Cloud Help Documentation</div>
+              <div class='h1'>{{ doc | title }}</div>
+            {% else %}
+              <div class='h1'>JEDI Cloud Help Documentation</span>
+            {% endif %}
           </h1>
         </div>
 
         <div class='panel__content'>
-          <p>So you see, since we're a small operation, we don't fall into the...uh...jurisdiction of the Empire. So you're part of the mining guild then? No, not actually. Our operation is small enough not to be noticed...which is advantageous for everybody since our customers are anxious to avoid attracting attention to themselves. Aren't you afraid the Empire's going to find out about this little operation and shut you down? That's always been a danger looming like a shadow over everything we've built here. But things have developed that will insure security. I've just made a deal that will keep the Empire out of here forever. We would be honored if you would join us. I had no choice. They arrived right before you did. I'm sorry. I'm sorry, too.</p>
-          <p>Now will you move along, little fella? We're got a lot of work to do. No! No, no! Stay and help you, I will. Find your friend, hmm? I'm not looking for a friend, I'm looking for a Jedi Master. Oohhh. Jedi Master. Yoda. You seek Yoda. You know him? Mmm. Take you to him, I will. Yes, yes. But now, we must eat. Come. Good food. Come. Come, come. Stay here and watch after the camp, Artoo.</p>
-          <p>Well done. Hold them in the security tower - and keep it quiet. Move. What do you think you're doing? We're getting out of here. I knew all along it had to be a mistake. Do you think that after what you did to Han we're going to trust you? I had no choice... What are you doing? Trust him, trust him! Oh, so we understand, don't we, Chewie? He had no choice. I'm just trying to help... We don't need any of your help. H-a-a-a... What? It sounds like Han. There's still a chance to save Han...I mean, at the East Platform... Chewie. I'm terribly sorry about all this. After all, he's only a Wookiee.</p>
+
+          {% block doc_content %}
+            <p>Welcome to the JEDI Cloud help documentation.</p>
+          {% endblock %}
+
         </div>
       </div>
     </div>
