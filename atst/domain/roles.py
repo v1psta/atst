@@ -117,10 +117,7 @@ WORKSPACE_ROLES = [
         "name": "developer",
         "display_name": "Developer",
         "description": "Views only the projects and environments they are granted access to. Can also view members associated with each environment.",
-        "permissions": [
-            Permissions.VIEW_USAGE_REPORT,
-            Permissions.VIEW_WORKSPACE,
-        ],
+        "permissions": [Permissions.VIEW_USAGE_REPORT, Permissions.VIEW_WORKSPACE],
     },
     {
         "name": "billing_auditor",
