@@ -59,3 +59,11 @@ class WorkspaceUser(object):
     @property
     def has_environment_roles(self):
         return self.num_environment_roles > 0
+
+    def __repr__(self):
+        return "<WorkspaceUser(user='{}', role='{}', workspace='{}', num_environment_roles='{}')>".format(
+            self.user_name,
+            self.role.name,
+            self.workspace.name,
+            self.num_environment_roles,
+        )

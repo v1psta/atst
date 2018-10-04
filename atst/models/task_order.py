@@ -63,3 +63,13 @@ class TaskOrder(Base, mixins.TimestampsMixin):
                 ],
             )
         )
+
+    def __repr__(self):
+        return "<TaskOrder(number='{}', verified='{}', budget='{}', expiration_date='{}', pdf='{}', id='{}')>".format(
+            self.number,
+            self.verified,
+            self.budget,
+            self.expiration_date,
+            self.pdf,
+            self.id,
+        )

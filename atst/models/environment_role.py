@@ -24,6 +24,11 @@ class EnvironmentRole(Base, mixins.TimestampsMixin):
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
     user = relationship("User", backref="environment_roles")
 
+    def __repr__(self):
+        return "<EnvironmentRole(role='{}', user='{}', environment='{}', id='{}')>".format(
+            self.role, self.user.full_name, self.environment.name, self.id
+        )
+
 
 Index(
     "environments_role_user_environment",

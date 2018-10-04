@@ -223,3 +223,13 @@ class Request(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     @property
     def contracting_officer_email(self):
         return self.latest_revision.email_co
+
+    def __repr__(self):
+        return "<Request(status='{}', name='{}', creator='{}', is_approved='{}', time_created='{}', id='{}')>".format(
+            self.status_displayname,
+            self.displayname,
+            self.creator.full_name,
+            self.is_approved,
+            self.time_created,
+            self.id,
+        )

@@ -42,3 +42,13 @@ class User(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     @property
     def displayname(self):
         return self.full_name
+
+    def __repr__(self):
+        return "<User(name='{}', dod_id='{}', email='{}', role='{}', has_workspaces='{}', id='{}')>".format(
+            self.full_name,
+            self.dod_id,
+            self.email,
+            self.atat_role_name,
+            self.has_workspaces,
+            self.id,
+        )

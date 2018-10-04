@@ -15,3 +15,8 @@ class RequestInternalComment(Base, mixins.TimestampsMixin):
 
     request_id = Column(ForeignKey("requests.id", ondelete="CASCADE"), nullable=False)
     request = relationship("Request")
+
+    def __repr__(self):
+        return "<RequestInternalComment(text='{}', user='{}', request='{}', id='{}')>".format(
+            self.text, self.user.full_name, self.request_id, self.id
+        )

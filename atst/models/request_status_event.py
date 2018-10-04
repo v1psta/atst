@@ -55,3 +55,8 @@ class RequestStatusEvent(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
             return "Accepted"
         else:
             return self.displayname
+
+    def __repr__(self):
+        return "<RequestStatusEvent(log_name='{}', request='{}', id='{}')>".format(
+            self.log_name, self.request_id, self.id
+        )
