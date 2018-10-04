@@ -16,7 +16,8 @@ export default {
     initialData: {
       type: Object,
       default: () => ({})
-    }
+    },
+    modalName: String
   },
 
   data: function () {
@@ -86,10 +87,10 @@ export default {
       return names.every((n, index) => names.indexOf(n) === index)
     },
 
-    handleSubmit: function (modalName, event) {
+    handleSubmit: function (event) {
       if (!this.readyToSubmit) {
         event.preventDefault()
-        this.validateAndOpenModal(modalName)
+        this.validateAndOpenModal(this.modalName)
       }
     },
 
