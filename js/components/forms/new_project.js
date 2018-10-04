@@ -90,7 +90,7 @@ export default {
     handleSubmit: function (event) {
       if (!this.readyToSubmit) {
         event.preventDefault()
-        this.validateAndOpenModal(this.modalName)
+        this.validateAndOpenModal()
       }
     },
 
@@ -99,7 +99,7 @@ export default {
       this.closeModal(this.modalName)
     },
 
-    validateAndOpenModal: function (modalName) {
+    validateAndOpenModal: function () {
       let isValid = this.$children.reduce((previous, newVal) => {
         // display textInput error if it is not valid
         if (!newVal.showValid) {
@@ -114,7 +114,7 @@ export default {
 
       if (isValid) {
         this.readyToSubmit = true
-        this.openModal(modalName)
+        this.openModal(this.modalName)
       }
     }
   }
