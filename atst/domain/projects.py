@@ -5,6 +5,7 @@ from atst.domain.exceptions import NotFoundError
 from atst.models.permissions import Permissions
 from atst.models.project import Project
 from atst.models.environment import Environment
+from atst.models.environment_role import EnvironmentRole
 
 
 class Projects(object):
