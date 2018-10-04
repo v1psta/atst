@@ -94,6 +94,11 @@ export default {
       }
     },
 
+    handleCancelSubmit: function () {
+      this.readyToSubmit = false
+      this.closeModal(this.modalName)
+    },
+
     validateAndOpenModal: function (modalName) {
       let isValid = this.$children.reduce((previous, newVal) => {
         // display textInput error if it is not valid
