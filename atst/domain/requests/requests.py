@@ -1,7 +1,6 @@
 from werkzeug.datastructures import FileStorage
 import dateutil
 
-from atst.domain.authz import Authorization
 from atst.domain.task_orders import TaskOrders
 from atst.domain.workspaces import Workspaces
 from atst.models.request_revision import RequestRevision
@@ -10,9 +9,8 @@ from atst.models.request_review import RequestReview
 from atst.models.request_internal_comment import RequestInternalComment
 from atst.utils import deep_merge
 
-from atst.domain.exceptions import UnauthorizedError
-
 from .query import RequestsQuery
+from .authorization import RequestsAuthorization
 
 
 def create_revision_from_request_body(body):
@@ -47,18 +45,13 @@ class Requests(object):
     @classmethod
     def get(cls, user, request_id):
         request = RequestsQuery.get(request_id)
-
-        if not Authorization.can_view_request(user, request):
-            raise UnauthorizedError(user, "get request")
-
+        RequestsAuthorization(user, request).check_can_view("get request")
         return request
 
     @classmethod
     def get_for_approval(cls, user, request_id):
         request = RequestsQuery.get(request_id)
-
-        Authorization.check_can_approve_request(user)
-
+        RequestsAuthorization(user, request).check_can_approve()
         return request
 
     @classmethod
@@ -226,7 +219,7 @@ class Requests(object):
 
     @classmethod
     def add_internal_comment(cls, user, request, comment_text):
-        Authorization.check_can_approve_request(user)
+        RequestsAuthorization(user, request).check_can_approve()
         comment = RequestInternalComment(request=request, text=comment_text, user=user)
         RequestsQuery.add_and_commit(comment)
         return request
