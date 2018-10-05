@@ -16,7 +16,8 @@ export default {
     initialData: {
       type: Object,
       default: () => ({})
-    }
+    },
+    modalName: String
   },
 
   data: function () {
@@ -40,6 +41,7 @@ export default {
       errors: [],
       environments,
       name,
+      readyToSubmit: false
     }
   },
 
@@ -85,7 +87,19 @@ export default {
       return names.every((n, index) => names.indexOf(n) === index)
     },
 
-    validateAndOpenModal: function (modalName) {
+    handleSubmit: function (event) {
+      if (!this.readyToSubmit) {
+        event.preventDefault()
+        this.validateAndOpenModal()
+      }
+    },
+
+    handleCancelSubmit: function () {
+      this.readyToSubmit = false
+      this.closeModal(this.modalName)
+    },
+
+    validateAndOpenModal: function () {
       let isValid = this.$children.reduce((previous, newVal) => {
         // display textInput error if it is not valid
         if (!newVal.showValid) {
@@ -99,7 +113,8 @@ export default {
       isValid = this.errors.length == 0 && isValid
 
       if (isValid) {
-        this.openModal(modalName)
+        this.readyToSubmit = true
+        this.openModal(this.modalName)
       }
     }
   }

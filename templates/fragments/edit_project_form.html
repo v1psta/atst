@@ -3,13 +3,13 @@
 {% from "components/text_input.html" import TextInput %}
 {% from "components/alert.html" import Alert %}
 
-<new-project inline-template v-bind:initial-data='{{ form.data|tojson }}'>
+<new-project inline-template v-bind:initial-data='{{ form.data|tojson }}' modal-name='{{ modalName }}'>
   {% set new_project = project is not defined %}
   {% set form_action = url_for('workspaces.create_project', workspace_id=workspace.id) if new_project else url_for('workspaces.edit_project', workspace_id=workspace.id, project_id=project.id) %}
   {% set action_text = 'Create' if new_project else 'Update' %}
   {% set title_text = 'Add a new project' if new_project else 'Edit {} project'.format(project.name) %}
 
-  <form method="POST" action="{{ form_action }}" >
+  <form method="POST" action="{{ form_action }}" v-on:submit="handleSubmit">
     {% call Modal(name=modalName, dismissable=False) %}
       <h1>{{ action_text }} project !{ name }</h1>
 
@@ -23,7 +23,7 @@
 
       <div class='action-group'>
         <button type='submit' class='action-group__action usa-button' tabindex='0'>{{ action_text }} Project</button>
-        <button type='button' v-on:click="closeModal('{{ modalName }}')" class='icon-link action-group__action' tabindex='0'>Cancel</button>
+        <button type='button' v-on:click="handleCancelSubmit" class='icon-link action-group__action' tabindex='0'>Cancel</button>
       </div>
     {% endcall %}
 
@@ -75,7 +75,7 @@
       </div>
 
       <div class="action-group">
-        <button v-on:click="validateAndOpenModal('{{ modalName }}')" class="usa-button usa-button-primary" tabindex="0" type="button">{{ action_text }} Project</button>
+        <button class="usa-button usa-button-primary" tabindex="0" type="submit">{{ action_text }} Project</button>
       </div>
 
     </div>
