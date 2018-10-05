@@ -16,6 +16,7 @@ from tests.factories import (
     WorkspaceFactory,
     EnvironmentFactory,
     ProjectFactory,
+    SuperWorkspaceFactory,
 )
 
 
@@ -55,20 +56,37 @@ def test_update_environment_roles():
 
 def test_get_scoped_environments(db):
     developer = UserFactory.create()
-    workspace = WorkspaceFactory.create()
-    workspace_user = Workspaces.add_member(workspace, developer, "developer")
-    project1 = ProjectFactory.create(workspace=workspace)
-    project2 = ProjectFactory.create(workspace=workspace)
-    env1 = EnvironmentFactory.create(project=project1, name="project1 dev")
-    env2 = EnvironmentFactory.create(project=project1, name="project1 staging")
-    env3 = EnvironmentFactory.create(project=project2, name="project2 dev")
-    env4 = EnvironmentFactory.create(project=project2, name="project2 staging")
-    db.session.add(EnvironmentRole(user=developer, environment=env1, role="developer"))
-    db.session.add(EnvironmentRole(user=developer, environment=env4, role="developer"))
-    db.session.commit()
+    workspace = SuperWorkspaceFactory.create(
+        name="hey",
+        members=[{"user": developer, "role_name": "developer"}],
+        projects=[
+            {
+                "name": "project1",
+                "environments": [
+                    {
+                        "name": "project1 dev",
+                        "members": [{"user": developer, "role_name": "developer"}],
+                    },
+                    {"name": "project1 staging"},
+                    {"name": "project1 prod"},
+                ],
+            },
+            {
+                "name": "project2",
+                "environments": [
+                    {"name": "project2 dev"},
+                    {
+                        "name": "project2 staging",
+                        "members": [{"user": developer, "role_name": "developer"}],
+                    },
+                    {"name": "project2 prod"},
+                ],
+            },
+        ],
+    )
 
-    project1_envs = Environments.for_user(developer, project1)
+    project1_envs = Environments.for_user(developer, workspace.projects[0])
     assert [env.name for env in project1_envs] == ["project1 dev"]
 
-    project2_envs = Environments.for_user(developer, project2)
+    project2_envs = Environments.for_user(developer, workspace.projects[1])
     assert [env.name for env in project2_envs] == ["project2 staging"]

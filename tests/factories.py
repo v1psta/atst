@@ -18,6 +18,8 @@ from atst.models.user import User
 from atst.models.role import Role
 from atst.models.workspace import Workspace
 from atst.domain.roles import Roles
+from atst.models.workspace_role import WorkspaceRole
+from atst.models.environment_role import EnvironmentRole
 
 
 class Base(factory.alchemy.SQLAlchemyModelFactory):
@@ -98,6 +100,7 @@ class RequestFactory(Base):
         new_status=RequestStatus.STARTED,
         revision=factory.LazyAttribute(lambda se: se.factory_parent.revisions[-1]),
     )
+    task_order = factory.SubFactory("tests.factories.TaskOrderFactory")
 
     class Params:
         initial_revision = None
@@ -233,3 +236,84 @@ class ProjectFactory(Base):
 class EnvironmentFactory(Base):
     class Meta:
         model = Environment
+
+
+class WorkspaceRoleFactory(Base):
+    class Meta:
+        model = WorkspaceRole
+
+    workspace = factory.SubFactory(WorkspaceFactory)
+    role = factory.SubFactory(RoleFactory)
+    user = factory.SubFactory(UserFactory)
+
+
+class EnvironmentRoleFactory(Base):
+    class Meta:
+        model = EnvironmentRole
+
+    environment = factory.SubFactory(EnvironmentFactory)
+    role = factory.Faker("name")
+    user = factory.SubFactory(UserFactory)
+
+
+class SuperEnvironmentFactory(EnvironmentFactory):
+    @classmethod
+    def create(cls, *args, **kwargs):
+        with_members = kwargs.pop("members", [])
+        environment = super().create(*args, **kwargs)
+
+        for member in with_members:
+            user = member.get("user", UserFactory.create())
+            role_name = member["role_name"]
+            EnvironmentRoleFactory.create(
+                environment=environment, role=role_name, user=user
+            )
+
+        return environment
+
+
+class SuperProjectFactory(ProjectFactory):
+    @classmethod
+    def create(cls, *args, **kwargs):
+        with_environments = kwargs.pop("environments", [])
+        project = super().create(*args, **kwargs)
+
+        environments = [
+            SuperEnvironmentFactory.create(project=project, **e) for e in with_environments
+        ]
+
+        project.environments = environments
+        return project
+
+
+class SuperWorkspaceFactory(WorkspaceFactory):
+    class Meta:
+        pass
+
+    @classmethod
+    def create(cls, *args, **kwargs):
+        with_projects = kwargs.pop("projects", [])
+        owner = kwargs.pop("owner", None)
+        members = kwargs.pop("members", [])
+
+        workspace = super().create(*args, **kwargs)
+
+        projects = [
+            SuperProjectFactory.create(workspace=workspace, **p) for p in with_projects
+        ]
+
+        if owner:
+            workspace.request.creator = owner
+            WorkspaceRoleFactory.create(
+                workspace=workspace, role=Roles.get("owner"), user=owner
+            )
+
+        for member in members:
+            user = member.get("user", UserFactory.create())
+            role_name = member["role_name"]
+            WorkspaceRoleFactory.create(
+                workspace=workspace, role=Roles.get(role_name), user=user
+            )
+
+        workspace.projects = projects
+        return workspace
