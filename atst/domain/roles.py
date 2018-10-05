@@ -117,11 +117,7 @@ WORKSPACE_ROLES = [
         "name": "developer",
         "display_name": "Developer",
         "description": "Views only the projects and environments they are granted access to. Can also view members associated with each environment.",
-        "permissions": [
-            Permissions.VIEW_USAGE_REPORT,
-            Permissions.VIEW_WORKSPACE,
-            Permissions.VIEW_APPLICATION_IN_WORKSPACE,
-        ],
+        "permissions": [Permissions.VIEW_USAGE_REPORT, Permissions.VIEW_WORKSPACE],
     },
     {
         "name": "billing_auditor",
@@ -131,7 +127,6 @@ WORKSPACE_ROLES = [
             Permissions.VIEW_USAGE_REPORT,
             Permissions.VIEW_USAGE_DOLLARS,
             Permissions.VIEW_WORKSPACE,
-            Permissions.VIEW_APPLICATION_IN_WORKSPACE,
         ],
     },
     {
@@ -143,7 +138,6 @@ WORKSPACE_ROLES = [
             Permissions.VIEW_ASSIGNED_CSP_ROLE_CONFIGURATIONS,
             Permissions.VIEW_ATAT_PERMISSIONS,
             Permissions.VIEW_WORKSPACE,
-            Permissions.VIEW_APPLICATION_IN_WORKSPACE,
         ],
     },
 ]
