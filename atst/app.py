@@ -19,6 +19,7 @@ from atst.routes.errors import make_error_pages
 from atst.domain.authnid.crl import CRLCache
 from atst.domain.auth import apply_authentication
 from atst.domain.authz import Authorization
+from atst.models.permissions import Permissions
 from atst.eda_client import MockEDAClient
 from atst.uploader import Uploader
 
@@ -71,6 +72,7 @@ def make_flask_callbacks(app):
         g.matchesPath = lambda href: re.match("^" + href, request.path)
         g.modal = request.args.get("modal", None)
         g.Authorization = Authorization
+        g.Permissions = Permissions
 
     @app.after_request
     def _cleanup(response):
