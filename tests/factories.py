@@ -100,10 +100,15 @@ class RequestFactory(Base):
         new_status=RequestStatus.STARTED,
         revision=factory.LazyAttribute(lambda se: se.factory_parent.revisions[-1]),
     )
-    task_order = factory.SubFactory("tests.factories.TaskOrderFactory")
 
     class Params:
         initial_revision = None
+
+    @classmethod
+    def _adjust_kwargs(cls, **kwargs):
+        if kwargs.pop("with_task_order", False) and "task_order" not in kwargs:
+            kwargs["task_order"] = TaskOrderFactory.build()
+        return kwargs
 
     @classmethod
     def create_initial_status_event(cls, request):
