@@ -1,14 +1,14 @@
 from atst.domain.environments import Environments
 from atst.domain.environment_roles import EnvironmentRoles
 
-from tests.factories import UserFactory, SuperWorkspaceFactory
+from tests.factories import UserFactory, WorkspaceFactory
 
 
 def test_update_environment_roles():
     owner = UserFactory.create()
     developer = UserFactory.from_atat_role("developer")
 
-    workspace = SuperWorkspaceFactory.create(
+    workspace = WorkspaceFactory.create(
         owner=owner,
         members=[{"user": developer, "role_name": "developer"}],
         projects=[
@@ -47,7 +47,7 @@ def test_update_environment_roles():
 
 def test_get_scoped_environments(db):
     developer = UserFactory.create()
-    workspace = SuperWorkspaceFactory.create(
+    workspace = WorkspaceFactory.create(
         members=[{"user": developer, "role_name": "developer"}],
         projects=[
             {

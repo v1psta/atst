@@ -224,9 +224,37 @@ class WorkspaceFactory(Base):
     class Meta:
         model = Workspace
 
-    request = factory.SubFactory(RequestFactory)
+    request = factory.SubFactory(RequestFactory, with_task_order=True)
     # name it the same as the request ID by default
     name = factory.LazyAttribute(lambda w: w.request.id)
+
+    @classmethod
+    def _create(cls, model_class, *args, **kwargs):
+        with_projects = kwargs.pop("projects", [])
+        owner = kwargs.pop("owner", None)
+        members = kwargs.pop("members", [])
+
+        workspace = super()._create(model_class, *args, **kwargs)
+
+        projects = [
+            ProjectFactory.create(workspace=workspace, **p) for p in with_projects
+        ]
+
+        if owner:
+            workspace.request.creator = owner
+            WorkspaceRoleFactory.create(
+                workspace=workspace, role=Roles.get("owner"), user=owner
+            )
+
+        for member in members:
+            user = member.get("user", UserFactory.create())
+            role_name = member["role_name"]
+            WorkspaceRoleFactory.create(
+                workspace=workspace, role=Roles.get(role_name), user=user
+            )
+
+        workspace.projects = projects
+        return workspace
 
 
 class ProjectFactory(Base):
@@ -237,10 +265,36 @@ class ProjectFactory(Base):
     name = factory.Faker("name")
     description = "A test project"
 
+    @classmethod
+    def _create(cls, model_class, *args, **kwargs):
+        with_environments = kwargs.pop("environments", [])
+        project = super()._create(model_class, *args, **kwargs)
+
+        environments = [
+            EnvironmentFactory.create(project=project, **e) for e in with_environments
+        ]
+
+        project.environments = environments
+        return project
+
 
 class EnvironmentFactory(Base):
     class Meta:
         model = Environment
+
+    @classmethod
+    def _create(cls, model_class, *args, **kwargs):
+        with_members = kwargs.pop("members", [])
+        environment = super()._create(model_class, *args, **kwargs)
+
+        for member in with_members:
+            user = member.get("user", UserFactory.create())
+            role_name = member["role_name"]
+            EnvironmentRoleFactory.create(
+                environment=environment, role=role_name, user=user
+            )
+
+        return environment
 
 
 class WorkspaceRoleFactory(Base):
@@ -259,66 +313,3 @@ class EnvironmentRoleFactory(Base):
     environment = factory.SubFactory(EnvironmentFactory)
     role = factory.Faker("name")
     user = factory.SubFactory(UserFactory)
-
-
-class SuperEnvironmentFactory(EnvironmentFactory):
-    @classmethod
-    def create(cls, *args, **kwargs):
-        with_members = kwargs.pop("members", [])
-        environment = super().create(*args, **kwargs)
-
-        for member in with_members:
-            user = member.get("user", UserFactory.create())
-            role_name = member["role_name"]
-            EnvironmentRoleFactory.create(
-                environment=environment, role=role_name, user=user
-            )
-
-        return environment
-
-
-class SuperProjectFactory(ProjectFactory):
-    @classmethod
-    def create(cls, *args, **kwargs):
-        with_environments = kwargs.pop("environments", [])
-        project = super().create(*args, **kwargs)
-
-        environments = [
-            SuperEnvironmentFactory.create(project=project, **e) for e in with_environments
-        ]
-
-        project.environments = environments
-        return project
-
-
-class SuperWorkspaceFactory(WorkspaceFactory):
-    class Meta:
-        pass
-
-    @classmethod
-    def create(cls, *args, **kwargs):
-        with_projects = kwargs.pop("projects", [])
-        owner = kwargs.pop("owner", None)
-        members = kwargs.pop("members", [])
-
-        workspace = super().create(*args, **kwargs)
-
-        projects = [
-            SuperProjectFactory.create(workspace=workspace, **p) for p in with_projects
-        ]
-
-        if owner:
-            workspace.request.creator = owner
-            WorkspaceRoleFactory.create(
-                workspace=workspace, role=Roles.get("owner"), user=owner
-            )
-
-        for member in members:
-            user = member.get("user", UserFactory.create())
-            role_name = member["role_name"]
-            WorkspaceRoleFactory.create(
-                workspace=workspace, role=Roles.get(role_name), user=user
-            )
-
-        workspace.projects = projects
-        return workspace
