@@ -21,7 +21,7 @@ def test_update_environment_roles():
                     },
                     {
                         "name": "project1 staging",
-                        "members": [{"user": developer, "role_name": "developer"}]
+                        "members": [{"user": developer, "role_name": "developer"}],
                     },
                     {"name": "project1 prod"},
                 ],

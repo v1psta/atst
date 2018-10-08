@@ -19,15 +19,7 @@ def test_create_project_with_multiple_environments():
 def test_workspace_owner_can_view_environments():
     owner = UserFactory.create()
     workspace = WorkspaceFactory.create(
-        owner=owner,
-        projects=[
-            {
-                "environments": [
-                    {"name": "dev"},
-                    {"name": "prod"}
-                ]
-            }
-        ]
+        owner=owner, projects=[{"environments": [{"name": "dev"}, {"name": "prod"}]}]
     )
     project = Projects.get(owner, workspace, workspace.projects[0].id)
 
