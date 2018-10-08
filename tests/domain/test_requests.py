@@ -243,13 +243,6 @@ def test_creator_can_view_own_request():
     assert RequestsAuthorization(creator, request).can_view
 
 
-def test_creator_can_view_own_request():
-    creator = UserFactory.create()
-    request = RequestFactory.create(creator=creator)
-
-    assert RequestsAuthorization(creator, request).can_view
-
-
 def test_ccpo_can_view_request():
     ccpo = UserFactory.from_atat_role("ccpo")
     request = RequestFactory.create()
