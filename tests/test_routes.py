@@ -4,7 +4,6 @@ import pytest
 @pytest.mark.parametrize(
     "path",
     (
-        "/",
         "/workspaces",
         "/requests",
         "/requests/new/1",

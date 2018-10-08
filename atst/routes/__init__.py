@@ -25,6 +25,9 @@ def root():
             "?{}".format(url.urlencode({"next": request.args.get("next")})),
         )
 
+    if g.current_user:
+        return redirect(url_for(".home"))
+
     return render_template(
         "login.html", redirect=bool(request.args.get("next")), redirect_url=redirect_url
     )

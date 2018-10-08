@@ -67,6 +67,7 @@ def make_app(config):
 def make_flask_callbacks(app):
     @app.before_request
     def _set_globals():
+        g.current_user = None
         g.dev = os.getenv("FLASK_ENV", "dev") == "dev"
         g.matchesPath = lambda href: re.match("^" + href, request.path)
         g.modal = request.args.get("modal", None)
@@ -74,7 +75,7 @@ def make_flask_callbacks(app):
 
     @app.after_request
     def _cleanup(response):
-        g.pop("current_user", None)
+        g.current_user = None
         return response
 
 
