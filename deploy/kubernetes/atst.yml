@@ -24,7 +24,7 @@ spec:
         fsGroup: 101
       containers:
         - name: atst
-          image: registry.atat.codes:443/atst-prod:d8d05da
+          image: registry.atat.codes:443/atst-prod:76854ac
           resources:
             requests:
                memory: "2500Mi"
