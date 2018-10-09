@@ -21,7 +21,6 @@ requests = "*"
 apache-libcloud = "*"
 lockfile = "*"
 defusedxml = "*"
-pytest = "*"
 
 [dev-packages]
 bandit = "*"
