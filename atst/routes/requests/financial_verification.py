@@ -7,8 +7,8 @@ from atst.forms.financial import FinancialForm, ExtendedFinancialForm
 
 
 class FinancialVerification:
-    def __init__(self, user, request_id, extended=False, post_data=None):
-        self.request = Requests.get(user, request_id)
+    def __init__(self, request, extended=False, post_data=None):
+        self.request = request
         self._extended = extended
         self._post_data = post_data
         self._form = None
@@ -91,9 +91,8 @@ class FinancialVerification:
 
 @requests_bp.route("/requests/verify/<string:request_id>", methods=["GET"])
 def financial_verification(request_id):
-    finver = FinancialVerification(
-        g.current_user, request_id, extended=http_request.args.get("extended")
-    )
+    request = Requests.get(g.current_user, request_id)
+    finver = FinancialVerification(request, extended=http_request.args.get("extended"))
 
     return render_template(
         "requests/financial_verification.html",
@@ -106,11 +105,9 @@ def financial_verification(request_id):
 
 @requests_bp.route("/requests/verify/<string:request_id>", methods=["POST"])
 def update_financial_verification(request_id):
+    request = Requests.get(g.current_user, request_id)
     finver = FinancialVerification(
-        g.current_user,
-        request_id,
-        extended=http_request.args.get("extended"),
-        post_data=http_request.form,
+        request, extended=http_request.args.get("extended"), post_data=http_request.form
     )
 
     finver.validate()

@@ -176,12 +176,6 @@ def test_displays_ccpo_review_comment(user_session, client):
 
 
 class TestFinancialVerification:
-    @pytest.fixture(scope="function", autouse=True)
-    def apply_monkeypath(self, monkeypatch):
-        monkeypatch.setattr(
-            "atst.domain.requests.Requests.get", lambda *args: self.request
-        )
-
     def _service_object(self, request=None, extended=False, post_data={}):
         if not request:
             self.request = RequestFactory.create()
@@ -189,10 +183,7 @@ class TestFinancialVerification:
             self.request = request
 
         return FinancialVerification(
-            UserFactory.create(),
-            self.request.id,
-            extended=extended,
-            post_data=post_data,
+            self.request, extended=extended, post_data=post_data
         )
 
     def test_is_extended(self):
