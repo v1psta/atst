@@ -18,6 +18,9 @@ bp = Blueprint("atst", __name__)
 
 @bp.route("/")
 def root():
+    if g.current_user:
+        return redirect(url_for(".home"))
+
     redirect_url = app.config.get("CAC_URL")
     if request.args.get("next"):
         redirect_url = url.urljoin(
