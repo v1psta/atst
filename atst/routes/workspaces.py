@@ -10,7 +10,7 @@ from flask import (
     url_for,
 )
 
-from atst.domain.exceptions import UnauthorizedError
+from atst.domain.exceptions import UnauthorizedError, AlreadyExistsError
 from atst.domain.projects import Projects
 from atst.domain.reports import Reports
 from atst.domain.workspaces import Workspaces
@@ -200,14 +200,19 @@ def create_member(workspace_id):
     form = NewMemberForm(http_request.form)
 
     if form.validate():
-        new_member = Workspaces.create_member(g.current_user, workspace, form.data)
-        return redirect(
-            url_for(
-                "workspaces.workspace_members",
-                workspace_id=workspace.id,
-                newMemberName=new_member.user_name,
+        try:
+            new_member = Workspaces.create_member(g.current_user, workspace, form.data)
+            return redirect(
+                url_for(
+                    "workspaces.workspace_members",
+                    workspace_id=workspace.id,
+                    newMemberName=new_member.user_name,
+                )
             )
-        )
+        except AlreadyExistsError:
+            return render_template(
+                "error.html", message="There was an error processing your request."
+            )
     else:
         return render_template(
             "workspaces/members/new.html", workspace=workspace, form=form

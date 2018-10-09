@@ -2,7 +2,7 @@ import pytest
 from uuid import uuid4
 
 from atst.domain.users import Users
-from atst.domain.exceptions import NotFoundError
+from atst.domain.exceptions import NotFoundError, AlreadyExistsError
 
 DOD_ID = "my_dod_id"
 
@@ -10,6 +10,12 @@ DOD_ID = "my_dod_id"
 def test_create_user():
     user = Users.create(DOD_ID, "developer")
     assert user.atat_role.name == "developer"
+
+
+def test_create_user_with_existing_email():
+    Users.create(DOD_ID, "developer", email="thisusersemail@usersRus.com")
+    with pytest.raises(AlreadyExistsError):
+        Users.create(DOD_ID, "admin", email="thisusersemail@usersRus.com")
 
 
 def test_create_user_with_nonexistent_role():

@@ -9,12 +9,12 @@ def make_error_pages(app):
     # pylint: disable=unused-variable
     def not_found(e):
         app.logger.error(e.message)
-        return render_template("not_found.html"), 404
+        return render_template("error.html", message="Not Found"), 404
 
     @app.errorhandler(exceptions.UnauthenticatedError)
     # pylint: disable=unused-variable
     def unauthorized(e):
         app.logger.error(e.message)
-        return render_template("unauthenticated.html"), 401
+        return render_template("error.html", message="Log in Failed"), 401
 
     return app
