@@ -18,6 +18,8 @@ from atst.models.user import User
 from atst.models.role import Role
 from atst.models.workspace import Workspace
 from atst.domain.roles import Roles
+from atst.models.workspace_role import WorkspaceRole
+from atst.models.environment_role import EnvironmentRole
 
 
 class Base(factory.alchemy.SQLAlchemyModelFactory):
@@ -101,6 +103,12 @@ class RequestFactory(Base):
 
     class Params:
         initial_revision = None
+
+    @classmethod
+    def _adjust_kwargs(cls, **kwargs):
+        if kwargs.pop("with_task_order", False) and "task_order" not in kwargs:
+            kwargs["task_order"] = TaskOrderFactory.build()
+        return kwargs
 
     @classmethod
     def create_initial_status_event(cls, request):
@@ -216,9 +224,37 @@ class WorkspaceFactory(Base):
     class Meta:
         model = Workspace
 
-    request = factory.SubFactory(RequestFactory)
+    request = factory.SubFactory(RequestFactory, with_task_order=True)
     # name it the same as the request ID by default
     name = factory.LazyAttribute(lambda w: w.request.id)
+
+    @classmethod
+    def _create(cls, model_class, *args, **kwargs):
+        with_projects = kwargs.pop("projects", [])
+        owner = kwargs.pop("owner", None)
+        members = kwargs.pop("members", [])
+
+        workspace = super()._create(model_class, *args, **kwargs)
+
+        projects = [
+            ProjectFactory.create(workspace=workspace, **p) for p in with_projects
+        ]
+
+        if owner:
+            workspace.request.creator = owner
+            WorkspaceRoleFactory.create(
+                workspace=workspace, role=Roles.get("owner"), user=owner
+            )
+
+        for member in members:
+            user = member.get("user", UserFactory.create())
+            role_name = member["role_name"]
+            WorkspaceRoleFactory.create(
+                workspace=workspace, role=Roles.get(role_name), user=user
+            )
+
+        workspace.projects = projects
+        return workspace
 
 
 class ProjectFactory(Base):
@@ -229,7 +265,51 @@ class ProjectFactory(Base):
     name = factory.Faker("name")
     description = "A test project"
 
+    @classmethod
+    def _create(cls, model_class, *args, **kwargs):
+        with_environments = kwargs.pop("environments", [])
+        project = super()._create(model_class, *args, **kwargs)
+
+        environments = [
+            EnvironmentFactory.create(project=project, **e) for e in with_environments
+        ]
+
+        project.environments = environments
+        return project
+
 
 class EnvironmentFactory(Base):
     class Meta:
         model = Environment
+
+    @classmethod
+    def _create(cls, model_class, *args, **kwargs):
+        with_members = kwargs.pop("members", [])
+        environment = super()._create(model_class, *args, **kwargs)
+
+        for member in with_members:
+            user = member.get("user", UserFactory.create())
+            role_name = member["role_name"]
+            EnvironmentRoleFactory.create(
+                environment=environment, role=role_name, user=user
+            )
+
+        return environment
+
+
+class WorkspaceRoleFactory(Base):
+    class Meta:
+        model = WorkspaceRole
+
+    workspace = factory.SubFactory(WorkspaceFactory)
+    role = factory.SubFactory(RoleFactory)
+    user = factory.SubFactory(UserFactory)
+
+
+class EnvironmentRoleFactory(Base):
+    class Meta:
+        model = EnvironmentRole
+
+    environment = factory.SubFactory(EnvironmentFactory)
+    role = factory.Faker("name")
+    user = factory.SubFactory(UserFactory)

@@ -1,5 +1,5 @@
 from atst.domain.projects import Projects
-from tests.factories import RequestFactory, UserFactory
+from tests.factories import RequestFactory, UserFactory, WorkspaceFactory
 from atst.domain.workspaces import Workspaces
 
 
@@ -18,12 +18,9 @@ def test_create_project_with_multiple_environments():
 
 def test_workspace_owner_can_view_environments():
     owner = UserFactory.create()
-    request = RequestFactory.create(creator=owner)
-    workspace = Workspaces.create(request)
-    _project = Projects.create(
-        owner, workspace, "My Test Project", "Test", ["dev", "prod"]
+    workspace = WorkspaceFactory.create(
+        owner=owner, projects=[{"environments": [{"name": "dev"}, {"name": "prod"}]}]
     )
-
-    project = Projects.get(owner, workspace, _project.id)
+    project = Projects.get(owner, workspace, workspace.projects[0].id)
 
     assert len(project.environments) == 2
