@@ -3,6 +3,7 @@ from uuid import uuid4
 
 from atst.domain.exceptions import NotFoundError
 from atst.domain.requests import Requests
+from atst.domain.requests.authorization import RequestsAuthorization
 from atst.models.request import Request
 from atst.models.request_status_event import RequestStatus
 from atst.models.task_order import Source as TaskOrderSource
@@ -233,3 +234,24 @@ def test_add_internal_comment():
 
     assert len(request.internal_comments) == 1
     assert request.internal_comments[0].text == "this is my comment"
+
+
+def test_creator_can_view_own_request():
+    creator = UserFactory.create()
+    request = RequestFactory.create(creator=creator)
+
+    assert RequestsAuthorization(creator, request).can_view
+
+
+def test_ccpo_can_view_request():
+    ccpo = UserFactory.from_atat_role("ccpo")
+    request = RequestFactory.create()
+
+    assert RequestsAuthorization(ccpo, request).can_view
+
+
+def test_random_user_cannot_view_request():
+    user = UserFactory.create()
+    request = RequestFactory.create()
+
+    assert not RequestsAuthorization(user, request).can_view
