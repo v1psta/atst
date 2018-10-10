@@ -14,7 +14,7 @@ data:
             return 301 https://$host$request_uri;
         }
         location /login-redirect {
-          return 301 https://auth-uat.atat.codes$request_uri;
+            return 301 https://auth-uat.atat.codes$request_uri;
         }
         location /login-dev {
             try_files $uri @appbasicauth;

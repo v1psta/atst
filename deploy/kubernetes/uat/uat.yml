@@ -79,7 +79,7 @@ spec:
               mode: 0644
         - name: nginx-auth-tls
           secret:
-            secretName: auth-atst-ingress-tls
+            secretName: atst-auth-uat-ingress-tls
             items:
             - key: tls.crt
               path: auth.atat.crt
