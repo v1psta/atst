@@ -22,6 +22,7 @@ from atst.domain.authz import Authorization
 from atst.models.permissions import Permissions
 from atst.eda_client import MockEDAClient
 from atst.uploader import Uploader
+from atst.utils.mailer import make_mailer
 
 
 ENV = os.getenv("FLASK_ENV", "dev")
@@ -47,6 +48,7 @@ def make_app(config):
     register_filters(app)
     make_eda_client(app)
     make_upload_storage(app)
+    make_mailer(app)
 
     db.init_app(app)
     csrf.init_app(app)
