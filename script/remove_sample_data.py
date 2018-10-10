@@ -62,10 +62,6 @@ def create_demo_workspace(name, data):
         db.session.commit()
 
 
-
-
-
-
 def remove_sample_data(all_users=False):
     query = db.session.query(User)
     if not all_users:
