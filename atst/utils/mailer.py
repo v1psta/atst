@@ -26,20 +26,17 @@ class _HostConnection:
 
 
 class Mailer:
-    def __init__(
-        self, server, port, sender, username, password, use_tls=False, debug=False
-    ):
+    def __init__(self, server, port, sender, password, use_tls=False, debug=False):
         self.server = server
         self.port = port
         self.sender = sender
-        self.username = username
         self.password = password
         self.use_tls = use_tls
         self.debug = debug
         self.messages = deque(maxlen=50)
 
     def connection(self):
-        return _HostConnection(self.server, self.port, self.username, self.password)
+        return _HostConnection(self.server, self.port, self.sender, self.password)
 
     def _message(self, recipients, subject, body):
         msg = EmailMessage()
@@ -64,7 +61,6 @@ def _map_config(config):
         "server": config.get("MAIL_SERVER"),
         "port": config.get("MAIL_PORT"),
         "sender": config.get("MAIL_SENDER"),
-        "username": config.get("MAIL_USERNAME"),
         "password": config.get("MAIL_PASSWORD"),
         "use_tls": config.get("MAIL_TLS", False),
         "debug": config.get("DEBUG", False),
