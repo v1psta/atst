@@ -168,11 +168,11 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-body-size: 10m
 spec:
   tls:
-  - hosts:
-    - uat.atat.codes
-    secretName: atst-uat-ingress-tls
+  - secretName: atst-uat-ingress-tls
+    hosts:
+    - uat.atat.code.mil
   rules:
-  - host: uat.atat.codes
+  - host: uat.atat.code.mil
     http:
       paths:
       - path: /
