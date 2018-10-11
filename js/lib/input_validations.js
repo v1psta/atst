@@ -66,11 +66,7 @@ export default {
     validationError: 'Please enter a valid Program Treasury Code. Note that it should be a four digit or six digit number, optionally prefixed by one or more zeros.'
   },
   baCode: {
-    mask: val => {
-      if (val.length === 1) return [/\d/]
-      if (val.length === 2) return [/\d/, /\d/]
-      return [/\d/,/\d/,/[a-z,A-Z]/]
-    },
+    mask: false,
     match: /[0-9]{2}\w?$/,
     unmask: [],
     validationError: 'Please enter a valid BA Code. Note that it should be two digits, followed by an optional letter.'
