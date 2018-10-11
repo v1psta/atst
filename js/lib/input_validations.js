@@ -54,12 +54,8 @@ export default {
     validationError: 'Please enter a 10-digit DoD ID number'
   },
   peNumber: {
-    mask: val => {
-      if (val.length <= 7) return [/\d/,/\d/,/\d/,/\d/,/\d/,/\d/,/\d/,/[a-z,A-Z]/]
-      if (val.length === 8) return [/\d/,/\d/,/\d/,/\d/,/\d/,/\d/,/\d/,/[a-z,A-Z]/,/[a-z,A-Z]/]
-      return [/\d/,/\d/,/\d/,/\d/,/\d/,/\d/,/\d/,/[a-z,A-Z]/,/[a-z,A-Z]/,/[a-z,A-Z]/]
-    },
-    match: /(0\d)(0\d)(\d)(\d{2})([a-z,A-Z]{1,3})/,
+    mask: false,
+    match: /(0\d)(0\d)(\d{3})([a-z,A-Z]{1,3})/,
     unmask: ['_'],
     validationError: 'Please enter a valid PE number. Note that it should be 7 digits followed by 1-3 letters, and should have a zero as the first and third digits.'
   },
