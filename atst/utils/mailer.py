@@ -1,6 +1,5 @@
 import smtplib
 from email.message import EmailMessage
-from collections import deque
 
 
 class _HostConnection:
@@ -25,18 +24,13 @@ class _HostConnection:
             self.host.quit()
 
 
-class Mailer:
-    def __init__(self, server, port, sender, password, use_tls=False, debug=False):
+class BaseMailer:
+    def __init__(self, server, port, sender, password, use_tls=False):
         self.server = server
         self.port = port
         self.sender = sender
         self.password = password
         self.use_tls = use_tls
-        self.debug = debug
-        self.messages = deque(maxlen=50)
-
-    def connection(self):
-        return _HostConnection(self.server, self.port, self.sender, self.password)
 
     def _message(self, recipients, subject, body):
         msg = EmailMessage()
@@ -48,26 +42,32 @@ class Mailer:
         return msg
 
     def send(self, recipients, subject, body):
+        pass
+
+
+class Mailer(BaseMailer):
+    def connection(self):
+        return _HostConnection(self.server, self.port, self.sender, self.password)
+
+    def send(self, recipients, subject, body):
         message = self._message(recipients, subject, body)
-        if self.debug:
-            self.messages.appendleft(message)
-        else:
-            with self.connection() as conn:
-                conn.send_message(message)
+        with self.connection() as conn:
+            conn.send_message(message)
 
 
-def _map_config(config):
-    return {
-        "server": config.get("MAIL_SERVER"),
-        "port": config.get("MAIL_PORT"),
-        "sender": config.get("MAIL_SENDER"),
-        "password": config.get("MAIL_PASSWORD"),
-        "use_tls": config.get("MAIL_TLS", False),
-        "debug": config.get("DEBUG", False),
-    }
+class RedisMailer(BaseMailer):
+    def __init__(self, redis, **kwargs):
+        super().__init__(**kwargs)
+        self.redis = redis
+        self._reset()
 
+    def _reset(self):
+        self.redis.delete("atat_inbox")
 
-def make_mailer(app):
-    config = _map_config(app.config)
-    mailer = Mailer(**config)
-    app.mailer = mailer
+    @property
+    def messages(self):
+        return [msg.decode() for msg in self.redis.lrange("atat_inbox", 0, -1)]
+
+    def send(self, recipients, subject, body):
+        message = self._message(recipients, subject, body)
+        self.redis.lpush("atat_inbox", str(message))

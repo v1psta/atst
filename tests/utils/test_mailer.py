@@ -1,5 +1,5 @@
 import pytest
-from atst.utils.mailer import Mailer
+from atst.utils.mailer import Mailer, RedisMailer
 
 
 class MockHost:
@@ -21,7 +21,7 @@ def mail_host():
     return MockHost()
 
 
-def test_can_send_mail(monkeypatch, mail_host):
+def test_mailer_can_send_mail(monkeypatch, mail_host):
     monkeypatch.setattr("atst.utils.mailer.Mailer.connection", lambda *args: mail_host)
     mailer = Mailer("localhost", 456, "leia@rebellion.net", "droidsyourelookingfor")
     message_data = {
@@ -37,10 +37,8 @@ def test_can_send_mail(monkeypatch, mail_host):
     assert message.get_content().strip() == message_data["body"]
 
 
-def test_can_save_messages():
-    mailer = Mailer(
-        "localhost", 456, "leia@rebellion.net", "droidsyourelookingfor", debug=True
-    )
+def test_redis_mailer_can_save_messages(app):
+    mailer = RedisMailer(app.redis, server=None, port=None, sender=None, password=None)
     message_data = {
         "recipients": ["ben@tattoine.org"],
         "subject": "help",
@@ -49,6 +47,3 @@ def test_can_save_messages():
     mailer.send(**message_data)
     assert len(mailer.messages) == 1
     message = mailer.messages[0]
-    assert message["To"] == message_data["recipients"][0]
-    assert message["Subject"] == message_data["subject"]
-    assert message.get_content().strip() == message_data["body"]

@@ -22,7 +22,8 @@ from atst.domain.authz import Authorization
 from atst.models.permissions import Permissions
 from atst.eda_client import MockEDAClient
 from atst.uploader import Uploader
-from atst.utils.mailer import make_mailer
+from atst.utils.mailer import Mailer, RedisMailer
+from atst.queue import queue
 
 
 ENV = os.getenv("FLASK_ENV", "dev")
@@ -37,11 +38,11 @@ def make_app(config):
         template_folder=parent_dir.child("templates").absolute(),
         static_folder=parent_dir.child("static").absolute(),
     )
-    redis = make_redis(config)
+    make_redis(app, config)
     csrf = CSRFProtect()
 
     app.config.update(config)
-    app.config.update({"SESSION_REDIS": redis})
+    app.config.update({"SESSION_REDIS": app.redis})
 
     make_flask_callbacks(app)
     make_crl_validator(app)
@@ -49,6 +50,7 @@ def make_app(config):
     make_eda_client(app)
     make_upload_storage(app)
     make_mailer(app)
+    queue.init_app(app)
 
     db.init_app(app)
     csrf.init_app(app)
@@ -95,6 +97,7 @@ def map_config(config):
         "PERMANENT_SESSION_LIFETIME": config.getint(
             "default", "PERMANENT_SESSION_LIFETIME"
         ),
+        "RQ_REDIS_URL": config["default"]["REDIS_URI"],
     }
 
 
@@ -143,8 +146,9 @@ def make_config():
     return map_config(config)
 
 
-def make_redis(config):
-    return redis.Redis.from_url(config["REDIS_URI"])
+def make_redis(app, config):
+    r = redis.Redis.from_url(config["REDIS_URI"])
+    app.redis = r
 
 
 def make_crl_validator(app):
@@ -166,3 +170,22 @@ def make_upload_storage(app):
         secret=app.config.get("STORAGE_SECRET"),
     )
     app.uploader = uploader
+
+
+def _map_config(config):
+    return {
+        "server": config.get("MAIL_SERVER"),
+        "port": config.get("MAIL_PORT"),
+        "sender": config.get("MAIL_SENDER"),
+        "password": config.get("MAIL_PASSWORD"),
+        "use_tls": config.get("MAIL_TLS", False),
+    }
+
+
+def make_mailer(app):
+    config = _map_config(app.config)
+    if app.config["DEBUG"]:
+        mailer = RedisMailer(redis=app.redis, **config)
+    else:
+        mailer = Mailer(**config)
+    app.mailer = mailer

@@ -21,6 +21,7 @@ requests = "*"
 apache-libcloud = "*"
 lockfile = "*"
 defusedxml = "*"
+"flask-rq2" = "*"
 
 [dev-packages]
 bandit = "*"

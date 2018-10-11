@@ -10,6 +10,7 @@ from flask import (
 
 from . import redirect_after_login_url
 from atst.domain.users import Users
+from atst.queue import send_mail
 
 bp = Blueprint("dev", __name__)
 
@@ -77,7 +78,7 @@ def login_dev():
 
 @bp.route("/test-email")
 def test_email():
-    app.mailer.send(
+    send_mail.queue(
         [request.args.get("to")], request.args.get("subject"), request.args.get("body")
     )
 
