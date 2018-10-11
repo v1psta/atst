@@ -7,14 +7,14 @@ metadata:
 data:
   nginx-config: |-
     server {
-        server_name www.atat.codes atat.codes;
+        server_name www.atat.code.mil atat.code.mil;
         listen 8442;
         listen [::]:8442 ipv6only=on;
         if ($http_x_forwarded_proto != 'https') {
             return 301 https://$host$request_uri;
         }
         location /login-redirect {
-            return 301 https://auth.atat.codes$request_uri;
+            return 301 https://auth.atat.code.mil$request_uri;
         }
         location /login-dev {
             try_files $uri @appbasicauth;
@@ -34,7 +34,7 @@ data:
         }
     }
     server {
-        server_name auth.atat.codes;
+        server_name auth.atat.code.mil;
         listen 8443 ssl;
         listen [::]:8443 ssl ipv6only=on;
         # SSL server certificate and private key
@@ -61,7 +61,7 @@ data:
         # Guard against HTTPS -> HTTP downgrade
         add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; always";
         location / {
-            return 301 https://www.atat.codes$request_uri;
+            return 301 https://www.atat.code.mil$request_uri;
         }
         location /login-redirect {
             try_files $uri @app;
