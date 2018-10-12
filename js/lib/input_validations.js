@@ -5,7 +5,7 @@ import createAutoCorrectedDatePipe from 'text-mask-addons/dist/createAutoCorrect
 export default {
   anything: {
     mask: false,
-    match: /^(?!\s*$).+/,
+    match: /\s*/,
     unmask: [],
     validationError: 'Please enter a response'
   },

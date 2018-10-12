@@ -95,7 +95,7 @@ export default {
       } else if (invalidate) {
         this.showError = true
       }
-      this.showValid = valid
+      this.showValid = this.value != "" && valid
 
       // Emit a change event
       this.$root.$emit('field-change', {
