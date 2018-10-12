@@ -33,7 +33,6 @@ class BaseMailer:
         self.sender = sender
         self.password = password
         self.use_tls = use_tls
-        self.messages = []
 
     def _message(self, recipients, subject, body):
         msg = EmailMessage()
@@ -47,10 +46,17 @@ class BaseMailer:
     def send(self, recipients, subject, body):
         pass
 
+    # do not collect messages by default
+    @property
+    def messages(self):
+        return []
+
 
 class Mailer(BaseMailer):
     def connection(self):
-        return _HostConnection(self.server, self.port, self.sender, self.password, use_tls=self.use_tls)
+        return _HostConnection(
+            self.server, self.port, self.sender, self.password, use_tls=self.use_tls
+        )
 
     def send(self, recipients, subject, body):
         message = self._message(recipients, subject, body)

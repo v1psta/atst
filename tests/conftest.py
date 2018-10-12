@@ -23,7 +23,6 @@ def app(request):
 
     config = make_config()
     config.update({"STORAGE_CONTAINER": upload_dir.name})
-    config.update({"RQ_QUEUES": ["test"]})
 
     _app = make_app(config)
 

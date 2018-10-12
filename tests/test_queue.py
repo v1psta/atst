@@ -8,6 +8,7 @@ def reset_queue():
     yield
     queue.get_queue().empty()
 
+
 def test_send_mail():
     assert len(queue.get_queue()) == 0
     send_mail.queue(
