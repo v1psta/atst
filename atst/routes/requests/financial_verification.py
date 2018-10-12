@@ -6,80 +6,129 @@ from atst.domain.requests import Requests
 from atst.forms.financial import FinancialForm, ExtendedFinancialForm
 
 
-def task_order_data(task_order):
-    data = task_order.to_dictionary()
-    data["task_order_number"] = task_order.number
-    data["funding_type"] = task_order.funding_type.value
-    return data
+class FinancialVerification:
+    def __init__(self, request, extended=False, post_data=None):
+        self.request = request
+        self._extended = extended
+        self._post_data = post_data
+        self._form = None
+        self.reset()
 
+    def reset(self):
+        self._updateable = False
+        self._valid = False
+        self.workspace = None
+        if self._form:
+            self._form.reset()
 
-def is_extended(request):
-    return (
-        http_request.args.get("extended")
-        or request.is_pending_financial_verification_changes
-    )
+    @property
+    def is_extended(self):
+        return self._extended or self.is_pending_changes
 
+    @property
+    def is_pending_changes(self):
+        return self.request.is_pending_financial_verification_changes
 
-def financial_form(request, data):
-    if is_extended(request):
-        return ExtendedFinancialForm(data=data)
-    else:
-        return FinancialForm(data=data)
+    @property
+    def _task_order_data(self):
+        if self.request.task_order:
+            task_order = self.request.task_order
+            data = task_order.to_dictionary()
+            data["task_order_number"] = task_order.number
+            data["funding_type"] = task_order.funding_type.value
+            return data
+        else:
+            return {}
+
+    @property
+    def _form_data(self):
+        if self._post_data:
+            return self._post_data
+        else:
+            form_data = self.request.body.get("financial_verification", {})
+            form_data.update(self._task_order_data)
+
+            return form_data
+
+    @property
+    def form(self):
+        if not self._form:
+            if self.is_extended:
+                self._form = ExtendedFinancialForm(data=self._form_data)
+            else:
+                self._form = FinancialForm(data=self._form_data)
+
+        return self._form
+
+    def validate(self):
+        if self.form.validate():
+            self._updateable = True
+            self._valid = self.form.perform_extra_validation(
+                self.request.body.get("financial_verification")
+            )
+        else:
+            self._updateable = False
+            self._valid = False
+
+        return self._valid
+
+    @property
+    def pending(self):
+        return self.request.is_pending_ccpo_approval
+
+    def finalize(self):
+        if self._updateable:
+            self.request = Requests.update_financial_verification(
+                self.request.id, self.form.data
+            )
+
+        if self._valid:
+            self.request = Requests.submit_financial_verification(self.request)
+
+            if self.request.is_financially_verified:
+                self.workspace = Requests.approve_and_create_workspace(self.request)
 
 
 @requests_bp.route("/requests/verify/<string:request_id>", methods=["GET"])
-def financial_verification(request_id=None):
+def financial_verification(request_id):
     request = Requests.get(g.current_user, request_id)
-    form_data = request.body.get("financial_verification")
-    if request.task_order:
-        form_data.update(task_order_data(request.task_order))
+    finver = FinancialVerification(request, extended=http_request.args.get("extended"))
 
-    form = financial_form(request, form_data)
     return render_template(
         "requests/financial_verification.html",
-        f=form,
-        jedi_request=request,
-        review_comment=request.review_comment,
-        extended=is_extended(request),
+        f=finver.form,
+        jedi_request=finver.request,
+        review_comment=finver.request.review_comment,
+        extended=finver.is_extended,
     )
 
 
 @requests_bp.route("/requests/verify/<string:request_id>", methods=["POST"])
 def update_financial_verification(request_id):
-    post_data = http_request.form
-    existing_request = Requests.get(g.current_user, request_id)
-    form = financial_form(existing_request, post_data)
-    rerender_args = dict(
-        jedi_request=existing_request, f=form, extended=is_extended(existing_request)
+    request = Requests.get(g.current_user, request_id)
+    finver = FinancialVerification(
+        request, extended=http_request.args.get("extended"), post_data=http_request.form
     )
 
-    if form.validate():
-        valid = form.perform_extra_validation(
-            existing_request.body.get("financial_verification")
-        )
-        updated_request = Requests.update_financial_verification(request_id, form.data)
-        if valid:
-            submitted_request = Requests.submit_financial_verification(updated_request)
-            if submitted_request.is_financially_verified:
-                new_workspace = Requests.approve_and_create_workspace(submitted_request)
-                return redirect(
-                    url_for(
-                        "workspaces.new_project",
-                        workspace_id=new_workspace.id,
-                        newWorkspace=True,
-                    )
-                )
-            else:
-                return redirect(
-                    url_for("requests.requests_index", modal="pendingCCPOApproval")
-                )
+    finver.validate()
 
-        else:
-            form.reset()
-            return render_template(
-                "requests/financial_verification.html", **rerender_args
+    finver.finalize()
+
+    if finver.workspace:
+        return redirect(
+            url_for(
+                "workspaces.new_project",
+                workspace_id=finver.workspace.id,
+                newWorkspace=True,
             )
-
+        )
+    elif finver.pending:
+        return redirect(url_for("requests.requests_index", modal="pendingCCPOApproval"))
     else:
-        form.reset()
-        return render_template("requests/financial_verification.html", **rerender_args)
+        finver.reset()
+        return render_template(
+            "requests/financial_verification.html",
+            jedi_request=finver.request,
+            f=finver.form,
+            extended=finver.is_extended,
+        )

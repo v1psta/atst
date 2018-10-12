@@ -4,6 +4,7 @@ from flask import url_for
 
 from atst.eda_client import MockEDAClient
 from atst.models.request_status_event import RequestStatus
+from atst.routes.requests.financial_verification import FinancialVerification
 
 from tests.mocks import MOCK_REQUEST, MOCK_USER
 from tests.factories import (
@@ -172,3 +173,47 @@ def test_displays_ccpo_review_comment(user_session, client):
     response = client.get("/requests/verify/{}".format(request.id))
     body = response.data.decode()
     assert review_comment in body
+
+
+class TestFinancialVerification:
+    def _service_object(self, request=None, extended=False, post_data={}):
+        if not request:
+            self.request = RequestFactory.create()
+        else:
+            self.request = request
+
+        return FinancialVerification(
+            self.request, extended=extended, post_data=post_data
+        )
+
+    def test_is_extended(self):
+        finver_one = self._service_object()
+        assert not finver_one.is_extended
+        finver_two = self._service_object(
+            request=RequestFactory.create_with_status(
+                RequestStatus.CHANGES_REQUESTED_TO_FINVER
+            )
+        )
+        assert finver_two.is_extended
+        finver_three = self._service_object(extended=True)
+        assert finver_three.is_extended
+
+    def test_is_pending_changes(self):
+        finver_one = self._service_object()
+        assert not finver_one.is_pending_changes
+        finver_two = self._service_object(
+            request=RequestFactory.create_with_status(
+                RequestStatus.CHANGES_REQUESTED_TO_FINVER
+            )
+        )
+        assert finver_two.is_pending_changes
+
+    def test_pending(self):
+        finver_one = self._service_object()
+        assert not finver_one.pending
+        finver_two = self._service_object(
+            request=RequestFactory.create_with_status(
+                RequestStatus.PENDING_CCPO_APPROVAL
+            )
+        )
+        assert finver_two.pending
