@@ -12,9 +12,11 @@ class _HostConnection:
         self.host = None
 
     def __enter__(self):
-        self.host = smtplib.SMTP_SSL(self.server, self.port)
         if self.use_tls:
+            self.host = smtplib.SMTP(self.server, self.port)
             self.host.starttls()
+        else:
+            self.host = smtplib.SMTP_SSL(self.server, self.port)
         self.host.login(self.username, self.password)
 
         return self.host
@@ -31,6 +33,7 @@ class BaseMailer:
         self.sender = sender
         self.password = password
         self.use_tls = use_tls
+        self.messages = []
 
     def _message(self, recipients, subject, body):
         msg = EmailMessage()
@@ -47,7 +50,7 @@ class BaseMailer:
 
 class Mailer(BaseMailer):
     def connection(self):
-        return _HostConnection(self.server, self.port, self.sender, self.password)
+        return _HostConnection(self.server, self.port, self.sender, self.password, use_tls=self.use_tls)
 
     def send(self, recipients, subject, body):
         message = self._message(recipients, subject, body)
