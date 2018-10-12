@@ -111,6 +111,22 @@ projects for all of the test users:
 
 `pipenv run python script/seed_sample.py`
 
+### Email Notifications
+
+To send email, the following configuration values must be set:
+
+```
+MAIL_SERVER = <SMTP server URL>
+MAIL_PORT = <SMTP server port>
+MAIL_SENDER = <Login name for the email account and sender address>
+MAIL_PASSWORD = <login password for the email account>
+MAIL_TLS = <Boolean, whether TLS should be enabled for outgoing email. Defaults to false.>
+```
+
+When the `DEBUG` environment variable is enabled and the app environment is not
+set to production, sent email messages are available at the `/messages` endpoint.
+Emails are not sent in development and test modes.
+
 ## Testing
 
 Tests require a test database:

@@ -172,7 +172,7 @@ def make_upload_storage(app):
     app.uploader = uploader
 
 
-def _map_config(config):
+def _map_email_config(config):
     return {
         "server": config.get("MAIL_SERVER"),
         "port": config.get("MAIL_PORT"),
@@ -183,7 +183,7 @@ def _map_config(config):
 
 
 def make_mailer(app):
-    config = _map_config(app.config)
+    config = _map_email_config(app.config)
     if app.config["DEBUG"]:
         mailer = RedisMailer(redis=app.redis, **config)
     else:
