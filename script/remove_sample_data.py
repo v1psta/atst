@@ -19,6 +19,7 @@ from atst.models.workspace import Workspace
 from atst.models.mixins import AuditableMixin
 
 from atst.domain.environments import Environments
+from atst.domain.exceptions import NotFoundError
 from atst.domain.reports import MONTHLY_SPEND_AARDVARK, MONTHLY_SPEND_BELUGA
 from atst.domain.requests import Requests
 from atst.domain.users import Users
@@ -41,8 +42,12 @@ dod_ids = [
 
 
 def create_demo_workspace(name, data):
-    workspace_owner = Users.get_by_dod_id("6786786786") # Other
-    auditor = Users.get_by_dod_id("3453453453") # Sally
+    try:
+        workspace_owner = Users.get_by_dod_id("678678678") # Other
+        auditor = Users.get_by_dod_id("3453453453") # Sally
+    except NotFoundError:
+        print("Could not find demo users; will not create demo workspace {}".format(name))
+        return
 
     request = RequestFactory.build(creator=workspace_owner)
     request.task_order = TaskOrderFactory.build()
