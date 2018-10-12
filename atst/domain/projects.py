@@ -64,3 +64,15 @@ class Projects(object):
             raise NotFoundError("projects")
 
         return projects
+
+    @classmethod
+    def update(cls, user, workspace, project, new_data):
+        if "name" in new_data:
+            project.name = new_data["name"]
+        if "description" in new_data:
+            project.description = new_data["description"]
+
+        db.session.add(project)
+        db.session.commit()
+
+        return project

@@ -192,6 +192,27 @@ def edit_project(workspace_id, project_id):
     )
 
 
+@bp.route("/workspaces/<workspace_id>/projects/<project_id>/edit", methods=["POST"])
+def update_project(workspace_id, project_id):
+    workspace = Workspaces.get_for_update_projects(g.current_user, workspace_id)
+    project = Projects.get(g.current_user, workspace, project_id)
+    form = NewProjectForm(http_request.form)
+    if form.validate():
+        project_data = form.data
+        Projects.update(g.current_user, workspace, project, project_data)
+
+        return redirect(
+            url_for("workspaces.workspace_projects", workspace_id=workspace.id)
+        )
+    else:
+        return render_template(
+            "workspaces/projects/edit.html",
+            workspace=workspace,
+            project=project,
+            form=form,
+        )
+
+
 @bp.route("/workspaces/<workspace_id>/members/new")
 def new_member(workspace_id):
     workspace = Workspaces.get(g.current_user, workspace_id)
