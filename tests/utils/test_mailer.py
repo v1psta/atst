@@ -47,3 +47,6 @@ def test_redis_mailer_can_save_messages(app):
     mailer.send(**message_data)
     assert len(mailer.messages) == 1
     message = mailer.messages[0]
+    assert message_data["recipients"][0] in message
+    assert message_data["subject"] in message
+    assert message_data["body"] in message
