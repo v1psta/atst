@@ -44,3 +44,6 @@ config/dev.ini
 
 # coverage output
 .coverage
+
+# selenium testing
+browserstacklocal

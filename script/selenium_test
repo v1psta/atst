@@ -1,0 +1,53 @@
+#!/bin/bash
+
+# script/selenium_test: Run selenium tests via BrowserStack
+
+source "$(dirname "${0}")"/../script/include/global_header.inc.sh
+
+export FLASK_ENV=selenium
+
+# create upload directory for app
+mkdir uploads | true
+
+# Fetch postgres settings and set them as ENV vars
+source ./script/get_db_settings
+
+if [ -n "${PGDATABASE}" ]; then
+  echo "Resetting database ${PGDATABASE}..."
+  # Reset the db
+  reset_db "${PGDATABASE}"
+else
+  echo "ERROR: RESET_DB is set, but PGDATABASE is not!"
+  echo "Skipping database reset..."
+fi
+
+BSL_FILE=BrowserStackLocal
+if [[ `uname` == "Darwin" ]]; then
+  BSL_DOWNLOAD="https://www.browserstack.com/browserstack-local/BrowserStackLocal-darwin-x64.zip"
+else
+  BSL_DOWNLOAD="https://www.browserstack.com/browserstack-local/BrowserStackLocal-linux-x64.zip"
+fi
+
+# Fetch BrowserStackLocal script
+if [ -e "${BSL_FILE}" ]; then
+  echo "BrowserStack file already exists"
+else
+  echo "downloading BrowserStack file"
+  curl $BSL_DOWNLOAD --output $BSL_FILE.zip
+  unzip $BSL_FILE.zip -d .
+  rm $BSL_FILE.zip
+  chmod u+x $BSL_FILE
+fi
+
+# run BrowserStackLocal in the background
+echo "starting BrowserStack local client..."
+./$BSL_FILE --key $BROWSERSTACK_TOKEN &
+BSL_ID=$!
+trap "kill $BSL_ID" SIGTERM SIGINT EXIT
+
+# run example selenium script that fetches the home page
+echo "running selenium tests"
+pipenv run pytest tests/acceptance -s --no-cov
+
+# kill BrowserStackLocal
+kill $BSL_ID
