@@ -17,4 +17,9 @@ def make_error_pages(app):
         app.logger.error(e.message)
         return render_template("error.html", message="Log in Failed"), 401
 
+    @app.errorhandler(Exception)
+    def exception(e):
+        app.logger.error(e.message)
+        return render_template("error.html", message="An Unexpected Error Occurred"), 500
+
     return app

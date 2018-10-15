@@ -1,7 +1,6 @@
 import os
 import pytest
 import logging
-from logging.handlers import RotatingFileHandler
 from collections import Mapping
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
@@ -16,15 +15,6 @@ def session(db, request):
     Override base test session
     """
     pass
-
-
-@pytest.fixture(scope="session")
-def app(app):
-    handler = RotatingFileHandler("log/acceptance.log", maxBytes=10000, backupCount=1)
-    handler.setLevel(logging.INFO)
-    app.logger.addHandler(handler)
-
-    return app
 
 
 class DriverCollection(Mapping):
