@@ -77,13 +77,9 @@ virtualenvs for you when you enter and leave the directory.
 
 To start the app locally in the foreground and watch for changes:
 
-    script/dev_server
+    script/server
 
-To watch for changes to any js/css assets:
-
-    yarn watch
-
-After running `script/dev_server`, the application is available at
+After running `script/server`, the application is available at
 [`http://localhost:8000`](http://localhost:8000).
 
 
