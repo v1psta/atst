@@ -1,5 +1,6 @@
-from flask import Blueprint, render_template, g, redirect, session, url_for, request
+from flask import Blueprint, render_template, g, redirect, url_for, request as http_request
 from atst.forms.edit_user import EditUserForm
+from atst.domain.users import Users
 
 
 bp = Blueprint("users", __name__)
@@ -14,4 +15,11 @@ def user():
 
 @bp.route("/user", methods=["POST"])
 def update_user():
-    return redirect(url_for(".home"))
+    user = g.current_user
+    form = EditUserForm(http_request.form)
+    if form.validate():
+        Users.update(user, form.data)
+        return redirect(url_for("atst.home"))
+    else:
+        return render_template("user/edit.html", form=form, user=user)
+
