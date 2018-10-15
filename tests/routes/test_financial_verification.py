@@ -2,7 +2,10 @@ import pytest
 from unittest.mock import MagicMock
 
 from atst.eda_client import MockEDAClient
-from atst.routes.requests.financial_verification import UpdateFinancialVerification, SaveFinancialVerificationDraft
+from atst.routes.requests.financial_verification import (
+    UpdateFinancialVerification,
+    SaveFinancialVerificationDraft,
+)
 
 from tests.mocks import MOCK_REQUEST, MOCK_USER, MOCK_VALID_PE_ID
 from tests.factories import (
@@ -17,6 +20,7 @@ from atst.domain.requests.financial_verification import (
     PENumberValidator,
     TaskOrderNumberValidator,
 )
+
 
 @pytest.fixture
 def fv_data():
@@ -43,6 +47,7 @@ TrueValidator.validate = MagicMock(return_value=True)
 FalseValidator = MagicMock()
 FalseValidator.validate = MagicMock(return_value=False)
 
+
 class MockPEValidator(object):
     def validate(self, request, field):
         return True
@@ -59,12 +64,7 @@ def test_update(fv_data):
     data = {**fv_data, "pe_id": MOCK_VALID_PE_ID}
 
     response_context = UpdateFinancialVerification(
-        TrueValidator,
-        TrueValidator,
-        user,
-        request,
-        data,
-        is_extended=False,
+        TrueValidator, TrueValidator, user, request, data, is_extended=False
     ).execute()
 
     assert response_context.get("workspace")
@@ -75,12 +75,7 @@ def test_re_enter_pe_number(fv_data):
     user = UserFactory.create()
     data = {**fv_data, "pe_id": "0101228M"}
     update_fv = UpdateFinancialVerification(
-        PENumberValidator(),
-        TrueValidator,
-        user,
-        request,
-        data,
-        is_extended=False,
+        PENumberValidator(), TrueValidator, user, request, data, is_extended=False
     )
 
     with pytest.raises(FormValidationError):
@@ -112,12 +107,7 @@ def test_extended_fv_data(fv_data, extended_financial_verification_data):
     user = UserFactory.create()
     data = {**fv_data, **extended_financial_verification_data}
     update_fv = UpdateFinancialVerification(
-        TrueValidator,
-        TaskOrderNumberValidator(),
-        user,
-        request,
-        data,
-        is_extended=True,
+        TrueValidator, TaskOrderNumberValidator(), user, request, data, is_extended=True
     )
 
     assert update_fv.execute()
@@ -143,12 +133,7 @@ def test_save_empty_draft():
     request = RequestFactory.create()
     user = UserFactory.create()
     save_draft = SaveFinancialVerificationDraft(
-        TrueValidator,
-        TrueValidator,
-        user,
-        request,
-        {},
-        is_extended=False,
+        TrueValidator, TrueValidator, user, request, {}, is_extended=False
     )
 
     assert save_draft.execute()
@@ -158,12 +143,7 @@ def test_save_draft_with_invalid_task_order(fv_data):
     request = RequestFactory.create()
     user = UserFactory.create()
     save_draft = SaveFinancialVerificationDraft(
-        TrueValidator,
-        FalseValidator,
-        user,
-        request,
-        fv_data,
-        is_extended=False,
+        TrueValidator, FalseValidator, user, request, fv_data, is_extended=False
     )
 
     with pytest.raises(FormValidationError):
@@ -174,12 +154,7 @@ def test_save_draft_with_invalid_pe_number(fv_data):
     request = RequestFactory.create()
     user = UserFactory.create()
     save_draft = SaveFinancialVerificationDraft(
-        FalseValidator,
-        TrueValidator,
-        user,
-        request,
-        fv_data,
-        is_extended=False,
+        FalseValidator, TrueValidator, user, request, fv_data, is_extended=False
     )
 
     with pytest.raises(FormValidationError):
