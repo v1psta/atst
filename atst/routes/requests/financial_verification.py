@@ -69,9 +69,9 @@ class UpdateFinancialVerification(object):
             raise FormValidationError(form)
 
         if should_submit:
-            submitted_request = Requests.submit_financial_verification(updated_request)
-            if submitted_request.is_financially_verified:
-                workspace = Requests.approve_and_create_workspace(submitted_request)
+            updated_request = Requests.submit_financial_verification(updated_request)
+            if updated_request.is_financially_verified:
+                workspace = Requests.approve_and_create_workspace(updated_request)
                 submitted = True
         else:
             form.reset()
