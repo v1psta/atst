@@ -24,3 +24,34 @@ def test_workspace_owner_can_view_environments():
     project = Projects.get(owner, workspace, workspace.projects[0].id)
 
     assert len(project.environments) == 2
+
+
+def test_can_only_update_name_and_description():
+    owner = UserFactory.create()
+    workspace = WorkspaceFactory.create(
+        owner=owner,
+        projects=[
+            {
+                "name": "Project 1",
+                "description": "a project",
+                "environments": [{"name": "dev"}],
+            }
+        ],
+    )
+    project = Projects.get(owner, workspace, workspace.projects[0].id)
+    env_name = project.environments[0].name
+    Projects.update(
+        owner,
+        workspace,
+        project,
+        {
+            "name": "New Name",
+            "description": "a new project",
+            "environment_name": "prod",
+        },
+    )
+
+    assert project.name == "New Name"
+    assert project.description == "a new project"
+    assert len(project.environments) == 1
+    assert project.environments[0].name == env_name
