@@ -133,6 +133,73 @@ class UpdateFinancialVerification(object):
             return {"state": "pending", "request": updated_request}
 
 
+class SaveFinancialVerificationDraft(object):
+    def __init__(
+        self,
+        pe_validator,
+        task_order_validator,
+        user,
+        request,
+        fv_data,
+        is_extended=False,
+    ):
+        self.pe_validator = pe_validator
+        self.task_order_validator = task_order_validator
+        self.user = user
+        self.request = request
+        self.fv_data = fv_data
+        self.is_extended = is_extended
+
+    def _get_form(self):
+        data = self.fv_data
+
+        existing_fv_data = self.request.body.get("financial_verification", {})
+        data = {**data, **existing_fv_data}
+
+        if self.request.task_order:
+            task_order_dict = self.request.task_order.to_dictionary()
+            task_order_dict.update({
+                "task_order_number": self.request.task_order.number,
+                "funding_type": self.request.task_order.funding_type.value
+            })
+            data = {**data, **task_order_dict}
+
+        mdict = ImmutableMultiDict(data)
+        if self.is_extended:
+            return ExtendedFinancialForm(formdata=mdict)
+        else:
+            return FinancialForm(formdata=mdict)
+
+    def execute(self):
+        form = self._get_form()
+        valid = True
+
+        if not form.validate_draft():
+            valid = False
+
+        if valid and form.pe_id.data and not self.pe_validator.validate(self.request, form.pe_id.data):
+            suggestion = self.pe_validator.suggest_pe_id(form.pe_id.data)
+            error_str = (
+                "We couldn't find that PE number. {}"
+                "If you have double checked it you can submit anyway. "
+                "Your request will need to go through a manual review."
+            ).format('Did you mean "{}"? '.format(suggestion) if suggestion else "")
+            form.pe_id.errors += (error_str,)
+            valid = False
+
+        if valid and form.task_order_number.data and not self.task_order_validator.validate(form.task_order_number.data):
+            form.task_order_number.errors += ("Task Order number not found",)
+            valid = False
+
+        if not valid:
+            form.reset()
+            raise FormValidationError(form)
+        else:
+            updated_request = Requests.update_financial_verification(self.request.id, form.data)
+            return {"request": updated_request}
+
+
+
 @requests_bp.route("/requests/verify/<string:request_id>", methods=["GET"])
 def financial_verification(request_id):
     request = Requests.get(g.current_user, request_id)
@@ -181,3 +248,29 @@ def update_financial_verification(request_id):
         )
     elif response_context["state"] == "pending":
         return redirect(url_for("requests.requests_index", modal="pendingCCPOApproval"))
+
+
+@requests_bp.route("/requests/verify/<string:request_id>/draft", methods=["POST"])
+def save_financial_verification_draft(request_id):
+    request = Requests.get(g.current_user, request_id)
+    fv_data = http_request.form
+    is_extended = http_request.args.get("extended")
+
+    try:
+        response_context = SaveFinancialVerificationDraft(
+            PENumberValidator(),
+            TaskOrderNumberValidator(),
+            g.current_user,
+            request,
+            fv_data,
+            is_extended=is_extended,
+        ).execute()
+    except FormValidationError as e:
+        return render_template(
+            "requests/financial_verification.html",
+            jedi_request=request,
+            f=e.form,
+            extended=is_extended,
+        )
+
+    return redirect(url_for("requests.requests_index"))
