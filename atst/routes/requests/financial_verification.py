@@ -13,7 +13,6 @@ from atst.domain.requests.financial_verification import (
 
 
 class FinancialVerificationBase(object):
-
     def _get_form(self, request, is_extended, input_data):
         data = input_data
 
@@ -22,10 +21,12 @@ class FinancialVerificationBase(object):
 
         if request.task_order:
             task_order_dict = request.task_order.to_dictionary()
-            task_order_dict.update({
-                "task_order_number": request.task_order.number,
-                "funding_type": request.task_order.funding_type.value
-            })
+            task_order_dict.update(
+                {
+                    "task_order_number": request.task_order.number,
+                    "funding_type": request.task_order.funding_type.value,
+                }
+            )
             data = {**data, **task_order_dict}
 
         mdict = ImmutableMultiDict(data)
@@ -45,6 +46,7 @@ class FinancialVerificationBase(object):
 
     def _apply_task_order_number_error(self, field):
         field.errors += ("Task Order number not found",)
+
 
 class GetFinancialVerificationForm(FinancialVerificationBase):
     def __init__(self, user, request, is_extended=False):
@@ -145,11 +147,19 @@ class SaveFinancialVerificationDraft(FinancialVerificationBase):
         if not form.validate_draft():
             valid = False
 
-        if valid and form.pe_id.data and not self.pe_validator.validate(self.request, form.pe_id.data):
+        if (
+            valid
+            and form.pe_id.data
+            and not self.pe_validator.validate(self.request, form.pe_id.data)
+        ):
             self._apply_pe_number_error(form.pe_id)
             valid = False
 
-        if valid and form.task_order_number.data and not self.task_order_validator.validate(form.task_order_number.data):
+        if (
+            valid
+            and form.task_order_number.data
+            and not self.task_order_validator.validate(form.task_order_number.data)
+        ):
             self._apply_task_order_number_error(form.task_order_number)
             valid = False
 
@@ -157,9 +167,10 @@ class SaveFinancialVerificationDraft(FinancialVerificationBase):
             form.reset()
             raise FormValidationError(form)
         else:
-            updated_request = Requests.update_financial_verification(self.request.id, form.data)
+            updated_request = Requests.update_financial_verification(
+                self.request.id, form.data
+            )
             return {"request": updated_request}
-
 
 
 @requests_bp.route("/requests/verify/<string:request_id>", methods=["GET"])
@@ -167,7 +178,9 @@ def financial_verification(request_id):
     request = Requests.get(g.current_user, request_id)
     is_extended = http_request.args.get("extended")
 
-    response_context = GetFinancialVerificationForm(g.current_user, request, is_extended=is_extended).execute()
+    response_context = GetFinancialVerificationForm(
+        g.current_user, request, is_extended=is_extended
+    ).execute()
 
     return render_template(
         "requests/financial_verification.html",
