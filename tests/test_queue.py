@@ -10,8 +10,8 @@ def reset_queue():
 
 
 def test_send_mail():
-    assert len(queue.get_queue()) == 0
+    initial = len(queue.get_queue())
     send_mail.queue(
         ["lordvader@geocities.net"], "death start", "how is it coming along?"
     )
-    assert len(queue.get_queue()) == 1
+    assert len(queue.get_queue()) == initial + 1

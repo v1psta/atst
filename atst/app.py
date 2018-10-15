@@ -98,7 +98,6 @@ def map_config(config):
             "default", "PERMANENT_SESSION_LIFETIME"
         ),
         "RQ_REDIS_URL": config["default"]["REDIS_URI"],
-        "RQ_QUEUES": ["atat_{}".format(ENV.lower())],
     }
 
 
