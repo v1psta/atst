@@ -34,6 +34,17 @@ class FinancialVerificationBase(object):
         else:
             return FinancialForm(formdata=mdict)
 
+    def _apply_pe_number_error(self, field):
+        suggestion = self.pe_validator.suggest_pe_id(field.data)
+        error_str = (
+            "We couldn't find that PE number. {}"
+            "If you have double checked it you can submit anyway. "
+            "Your request will need to go through a manual review."
+        ).format('Did you mean "{}"? '.format(suggestion) if suggestion else "")
+        field.errors += (error_str,)
+
+    def _apply_task_order_number_error(self, field):
+        field.errors += ("Task Order number not found",)
 
 class GetFinancialVerificationForm(FinancialVerificationBase):
     def __init__(self, user, request, is_extended=False):
@@ -76,17 +87,11 @@ class UpdateFinancialVerification(FinancialVerificationBase):
             should_update = False
 
         if not self.pe_validator.validate(self.request, form.pe_id.data):
-            suggestion = self.pe_validator.suggest_pe_id(form.pe_id.data)
-            error_str = (
-                "We couldn't find that PE number. {}"
-                "If you have double checked it you can submit anyway. "
-                "Your request will need to go through a manual review."
-            ).format('Did you mean "{}"? '.format(suggestion) if suggestion else "")
-            form.pe_id.errors += (error_str,)
+            self._apply_pe_number_error(form.pe_id)
             should_submit = False
 
         if not self.task_order_validator.validate(form.task_order_number.data):
-            form.task_order_number.errors += ("Task Order number not found",)
+            self._apply_task_order_number_error(form.task_order_number)
             should_submit = False
 
         if should_update:
@@ -141,17 +146,11 @@ class SaveFinancialVerificationDraft(FinancialVerificationBase):
             valid = False
 
         if valid and form.pe_id.data and not self.pe_validator.validate(self.request, form.pe_id.data):
-            suggestion = self.pe_validator.suggest_pe_id(form.pe_id.data)
-            error_str = (
-                "We couldn't find that PE number. {}"
-                "If you have double checked it you can submit anyway. "
-                "Your request will need to go through a manual review."
-            ).format('Did you mean "{}"? '.format(suggestion) if suggestion else "")
-            form.pe_id.errors += (error_str,)
+            self._apply_pe_number_error(form.pe_id)
             valid = False
 
         if valid and form.task_order_number.data and not self.task_order_validator.validate(form.task_order_number.data):
-            form.task_order_number.errors += ("Task Order number not found",)
+            self._apply_task_order_number_error(form.task_order_number)
             valid = False
 
         if not valid:
