@@ -52,36 +52,86 @@ class MockTaskOrderValidator(object):
 
 def test_update():
     request = RequestFactory.create()
+    user = UserFactory.create()
     data = {**required_data, "pe_id": MOCK_VALID_PE_ID}
+
     response_context = UpdateFinancialVerification(
-        MockPEValidator(), MockTaskOrderValidator(), request, data, is_extended=False
+        MockPEValidator(),
+        MockTaskOrderValidator(),
+        user,
+        request,
+        data,
+        is_extended=False,
     ).execute()
+
     assert response_context.get("workspace")
 
 
 def test_re_enter_pe_number():
     request = RequestFactory.create()
+    user = UserFactory.create()
     data = {**required_data, "pe_id": "0101228M"}
     update_fv = UpdateFinancialVerification(
-        PENumberValidator(), MockTaskOrderValidator(), request, data, is_extended=False
+        PENumberValidator(),
+        MockTaskOrderValidator(),
+        user,
+        request,
+        data,
+        is_extended=False,
     )
+
     with pytest.raises(FormValidationError):
         update_fv.execute()
-
     response_context = update_fv.execute()
+
     assert response_context.get("status", "submitted")
 
 
 def test_invalid_task_order_number():
     request = RequestFactory.create()
+    user = UserFactory.create()
     data = {**required_data, "task_order_number": "DCA10096D0051"}
     update_fv = UpdateFinancialVerification(
         MockPEValidator(),
         TaskOrderNumberValidator(),
+        user,
         request,
         data,
         is_extended=False,
     )
+
+    with pytest.raises(FormValidationError):
+        update_fv.execute()
+
+
+def test_extended_fv_data(extended_financial_verification_data):
+    request = RequestFactory.create()
+    user = UserFactory.create()
+    data = {**required_data, **extended_financial_verification_data}
+    update_fv = UpdateFinancialVerification(
+        MockPEValidator(),
+        TaskOrderNumberValidator(),
+        user,
+        request,
+        data,
+        is_extended=True,
+    )
+
+    assert update_fv.execute()
+
+
+def test_missing_extended_fv_data():
+    request = RequestFactory.create()
+    user = UserFactory.create()
+    update_fv = UpdateFinancialVerification(
+        MockPEValidator(),
+        TaskOrderNumberValidator(),
+        user,
+        request,
+        required_data,
+        is_extended=True,
+    )
+
     with pytest.raises(FormValidationError):
         update_fv.execute()
 

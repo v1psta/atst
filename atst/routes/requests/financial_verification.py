@@ -11,127 +11,57 @@ from atst.domain.requests.financial_verification import (
 )
 
 
-class FinancialVerification:
-    def __init__(self, request, extended=False, post_data=None):
-        self.request = request
-        self._extended = extended
-        self._post_data = post_data
-        self._form = None
-        self.reset()
-
-    def reset(self):
-        self._updateable = False
-        self._valid = False
-        self.workspace = None
-        if self._form:
-            self._form.reset()
-
-    @property
-    def is_extended(self):
-        return self._extended or self.is_pending_changes
-
-    @property
-    def is_pending_changes(self):
-        return self.request.is_pending_financial_verification_changes
-
-    @property
-    def _task_order_data(self):
-        if self.request.task_order:
-            task_order = self.request.task_order
-            data = task_order.to_dictionary()
-            data["task_order_number"] = task_order.number
-            data["funding_type"] = task_order.funding_type.value
-            return data
-        else:
-            return {}
-
-    @property
-    def _form_data(self):
-        if self._post_data:
-            return self._post_data
-        else:
-            form_data = self.request.body.get("financial_verification", {})
-            form_data.update(self._task_order_data)
-
-            return form_data
-
-    @property
-    def form(self):
-        if not self._form:
-            if self.is_extended:
-                self._form = ExtendedFinancialForm(data=self._form_data)
-            else:
-                self._form = FinancialForm(data=self._form_data)
-
-        return self._form
-
-    def validate(self):
-        if self.form.validate():
-            self._updateable = True
-            self._valid = self.form.perform_extra_validation(
-                self.request.body.get("financial_verification")
-            )
-        else:
-            self._updateable = False
-            self._valid = False
-
-        return self._valid
-
-    @property
-    def pending(self):
-        return self.request.is_pending_ccpo_approval
-
-    def finalize(self):
-        if self._updateable:
-            self.request = Requests.update_financial_verification(
-                self.request.id, self.form.data
-            )
-
-        if self._valid:
-            self.request = Requests.submit_financial_verification(self.request)
-
-            if self.request.is_financially_verified:
-                self.workspace = Requests.approve_and_create_workspace(self.request)
-
-
 class UpdateFinancialVerification(object):
     def __init__(
-        self, pe_validator, task_order_validator, request, fv_data, is_extended=False
+        self,
+        pe_validator,
+        task_order_validator,
+        user,
+        request,
+        fv_data,
+        is_extended=False,
     ):
         self.pe_validator = pe_validator
         self.task_order_validator = task_order_validator
+        self.user = user
         self.request = request
         self.fv_data = fv_data
         self.is_extended = is_extended
 
+    def _get_form(self):
+        if self.is_extended:
+            return ExtendedFinancialForm(data=self.fv_data)
+        else:
+            return FinancialForm(data=self.fv_data)
+
     def execute(self):
-        fv = FinancialVerification(self.request, self.is_extended, self.fv_data)
+        form = self._get_form()
 
         should_update = True
         should_submit = True
 
-        if not fv.validate():
+        if not form.validate():
             should_update = False
 
-        if not self.pe_validator.validate(self.request, fv.form.pe_id):
-            suggestion = self.pe_validator.suggest_pe_id(fv.form.pe_id.data)
+        if not self.pe_validator.validate(self.request, form.pe_id):
+            suggestion = self.pe_validator.suggest_pe_id(form.pe_id.data)
             error_str = (
                 "We couldn't find that PE number. {}"
                 "If you have double checked it you can submit anyway. "
                 "Your request will need to go through a manual review."
             ).format('Did you mean "{}"? '.format(suggestion) if suggestion else "")
-            fv.form.pe_id.errors += (error_str,)
+            form.pe_id.errors += (error_str,)
             should_submit = False
 
-        if not self.task_order_validator.validate(fv.form.task_order_number):
-            fv.form.task_order_number.errors += ("Task Order number not found",)
+        if not self.task_order_validator.validate(form.task_order_number):
+            form.task_order_number.errors += ("Task Order number not found",)
             should_submit = False
 
         if should_update:
-            Requests.update_financial_verification(self.request.id, fv.form.data)
+            Requests.update_financial_verification(self.request.id, form.data)
         else:
-            fv.form.reset()
-            raise FormValidationError(fv.form)
+            form.reset()
+            raise FormValidationError(form)
 
         if should_submit:
             submitted_request = Requests.submit_financial_verification(self.request)
@@ -141,8 +71,8 @@ class UpdateFinancialVerification(object):
             else:
                 return {"state": "pending"}
         else:
-            fv.form.reset()
-            raise FormValidationError(fv.form)
+            form.reset()
+            raise FormValidationError(form)
 
 
 @requests_bp.route("/requests/verify/<string:request_id>", methods=["GET"])
@@ -169,6 +99,7 @@ def update_financial_verification(request_id):
         response_context = UpdateFinancialVerification(
             PENumberValidator(),
             TaskOrderNumberValidator(),
+            g.current_user,
             request,
             fv_data,
             is_extended=is_extended,

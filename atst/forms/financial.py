@@ -29,13 +29,6 @@ class BaseFinancialForm(ValidatedForm):
         """
         self.uii_ids.process_data(self.uii_ids.data)
 
-    def perform_extra_validation(self, existing_request):
-        return True
-        # valid = True
-        # if not existing_request or existing_request.get("pe_id") != self.pe_id.data:
-        #     valid = validate_pe_id(self.pe_id, existing_request)
-        # return valid
-
     @property
     def is_missing_task_order_number(self):
         return False
@@ -86,12 +79,6 @@ class BaseFinancialForm(ValidatedForm):
 
 
 class FinancialForm(BaseFinancialForm):
-    def perform_extra_validation(self, existing_request):
-        return True
-        # previous_valid = super().perform_extra_validation(existing_request)
-        # task_order_valid = validate_task_order_number(self.task_order_number)
-        # return previous_valid and task_order_valid
-
     @property
     def is_missing_task_order_number(self):
         return "task_order_number" in self.errors
