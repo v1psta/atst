@@ -42,14 +42,14 @@ def test_new_request_has_started_status():
 
 
 def test_auto_approve_less_than_1m():
-    new_request = RequestFactory.create(initial_revision={"dollar_value": 999999})
+    new_request = RequestFactory.create(initial_revision={"dollar_value": 999_999})
     request = Requests.submit(new_request)
 
     assert request.status == RequestStatus.PENDING_FINANCIAL_VERIFICATION
 
 
 def test_dont_auto_approve_if_dollar_value_is_1m_or_above():
-    new_request = RequestFactory.create(initial_revision={"dollar_value": 1000000})
+    new_request = RequestFactory.create(initial_revision={"dollar_value": 1_000_000})
     request = Requests.submit(new_request)
 
     assert request.status == RequestStatus.PENDING_CCPO_ACCEPTANCE

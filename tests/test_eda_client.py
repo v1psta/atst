@@ -12,7 +12,7 @@ def test_list_contracts():
 def test_get_contract():
     result = client.get_contract("DCA10096D0052", "y")
     assert result["contract_no"] == "DCA10096D0052"
-    assert result["amount"] == 2000000
+    assert result["amount"] == 2_000_000
 
 
 def test_contract_not_found():
