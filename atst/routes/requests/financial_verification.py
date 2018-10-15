@@ -92,7 +92,7 @@ class UpdateFinancialVerification(object):
         if not form.validate():
             should_update = False
 
-        if not self.pe_validator.validate(self.request, form.pe_id):
+        if not self.pe_validator.validate(self.request, form.pe_id.data):
             suggestion = self.pe_validator.suggest_pe_id(form.pe_id.data)
             error_str = (
                 "We couldn't find that PE number. {}"
@@ -102,7 +102,7 @@ class UpdateFinancialVerification(object):
             form.pe_id.errors += (error_str,)
             should_submit = False
 
-        if not self.task_order_validator.validate(form.task_order_number):
+        if not self.task_order_validator.validate(form.task_order_number.data):
             form.task_order_number.errors += ("Task Order number not found",)
             should_submit = False
 
@@ -154,8 +154,6 @@ def update_financial_verification(request_id):
     request = Requests.get(g.current_user, request_id)
     fv_data = http_request.form
     is_extended = http_request.args.get("extended")
-
-    import ipdb; ipdb.set_trace()
 
     try:
         response_context = UpdateFinancialVerification(

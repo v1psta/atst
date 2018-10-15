@@ -17,12 +17,12 @@ class PENumberValidator(object):
         re.X,
     )
 
-    def validate(self, request, field):
-        if self._same_as_previous(request, field):
+    def validate(self, request, pe_id):
+        if self._same_as_previous(request, pe_id):
             return True
 
         try:
-            PENumbers.get(field.data)
+            PENumbers.get(pe_id)
         except NotFoundError:
             return False
 
@@ -43,14 +43,14 @@ class PENumberValidator(object):
             return suggestion
         return None
 
-    def _same_as_previous(self, request, field):
-        return request.pe_number == field.data
+    def _same_as_previous(self, request, pe_id):
+        return request.pe_number == pe_id
 
 
 class TaskOrderNumberValidator(object):
-    def validate(self, field):
+    def validate(self, task_order_number):
         try:
-            TaskOrders.get(field.data)
+            TaskOrders.get(task_order_number)
         except NotFoundError:
             return False
 
