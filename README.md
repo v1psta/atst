@@ -152,6 +152,10 @@ locally, you can run the selenium tests with:
 BROWSERSTACK_TOKEN=<token> BROWSERSTACK_EMAIL=<email> pipenv run pytest tests/acceptance
 ```
 
+The BrowserStack email is the one associated with the account. The token is
+available in the BrowserStack profile information page. Go to the dashboard,
+then "Account" > "Settings", then the token is under "Local Testing".
+
 ## Notes
 
 Jinja templates are like mustache templates -- add the
