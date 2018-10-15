@@ -11,6 +11,32 @@ from atst.domain.requests.financial_verification import (
 )
 
 
+class GetFinancialVerificationForm(object):
+    def __init__(self, user, request, is_extended=False):
+        self.user = user
+        self.request = request
+        self.is_extended = is_extended
+
+    def _get_form(self):
+        data = {}
+        if self.request.task_order:
+            task_order_dict = self.request.task_order.to_dictionary()
+            task_order_dict.update({
+                "task_order_number": self.request.task_order.number,
+                "funding_type": self.request.task_order.funding_type.value
+            })
+            data = {**data, **task_order_dict}
+
+        if self.is_extended:
+            return ExtendedFinancialForm(data=data)
+        else:
+            return FinancialForm(data=data)
+
+    def execute(self):
+        form = self._get_form()
+        return {"form": form}
+
+
 class UpdateFinancialVerification(object):
     def __init__(
         self,
@@ -29,10 +55,19 @@ class UpdateFinancialVerification(object):
         self.is_extended = is_extended
 
     def _get_form(self):
+        data = self.fv_data
+        if self.request.task_order:
+            task_order_dict = self.request.task_order.to_dictionary()
+            task_order_dict.update({
+                "task_order_number": self.request.task_order.number,
+                "funding_type": self.request.task_order.funding_type.value
+            })
+            data = {**data, **task_order_dict}
+
         if self.is_extended:
-            return ExtendedFinancialForm(data=self.fv_data)
+            return ExtendedFinancialForm(data=data)
         else:
-            return FinancialForm(data=self.fv_data)
+            return FinancialForm(data=data)
 
     def execute(self):
         form = self._get_form()
@@ -90,14 +125,16 @@ class UpdateFinancialVerification(object):
 @requests_bp.route("/requests/verify/<string:request_id>", methods=["GET"])
 def financial_verification(request_id):
     request = Requests.get(g.current_user, request_id)
-    finver = FinancialVerification(request, extended=http_request.args.get("extended"))
+    is_extended = http_request.args.get("extended")
+
+    response_context = GetFinancialVerificationForm(g.current_user, request, is_extended=is_extended).execute()
 
     return render_template(
         "requests/financial_verification.html",
-        f=finver.form,
-        jedi_request=finver.request,
-        review_comment=finver.request.review_comment,
-        extended=finver.is_extended,
+        f=response_context["form"],
+        jedi_request=request,
+        review_comment=request.review_comment,
+        extended=is_extended,
     )
 
 
