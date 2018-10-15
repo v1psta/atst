@@ -2,10 +2,18 @@
 
 {% from "components/alert.html" import Alert %}
 {% from "components/icon.html" import Icon %}
+{% from "components/modal.html" import Modal %}
+{% from "components/text_input.html" import TextInput %}
 
 {% block workspace_content %}
 
-{% set modalName = "updateProjectConfirmation" %}
-{% include "fragments/edit_project_form.html" %}
+  <form method="POST" action="{{ url_for('workspaces.edit_project', workspace_id=workspace.id, project_id=project.id) }}" v-on:submit="handleSubmit">
+
+    {% include "fragments/edit_project_form.html" %}
+
+    <div class="action-group">
+      <button class="usa-button usa-button-primary" tabindex="0" type="submit">Update Project</button>
+    </div>
+  </form>
 
 {% endblock %}
