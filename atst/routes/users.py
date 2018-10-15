@@ -1,4 +1,11 @@
-from flask import Blueprint, render_template, g, redirect, url_for, request as http_request
+from flask import (
+    Blueprint,
+    render_template,
+    g,
+    redirect,
+    url_for,
+    request as http_request,
+)
 from atst.forms.edit_user import EditUserForm
 from atst.domain.users import Users
 
@@ -22,4 +29,3 @@ def update_user():
         return redirect(url_for("atst.home"))
     else:
         return render_template("user/edit.html", form=form, user=user)
-

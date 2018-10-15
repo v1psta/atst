@@ -57,7 +57,8 @@ class UserFactory(Base):
     citizenship = "United States"
     designation = "military"
     date_latest_training = factory.LazyFunction(
-        lambda: datetime.date.today() + datetime.timedelta(days=-(random.randrange(1,365)))
+        lambda: datetime.date.today()
+        + datetime.timedelta(days=-(random.randrange(1, 365)))
     )
 
     @classmethod
