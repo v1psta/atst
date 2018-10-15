@@ -224,6 +224,10 @@ class Request(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     def contracting_officer_email(self):
         return self.latest_revision.email_co
 
+    @property
+    def pe_number(self):
+        return self.body.get("financial_verification", {}).get("pe_id")
+
     def __repr__(self):
         return "<Request(status='{}', name='{}', creator='{}', is_approved='{}', time_created='{}', id='{}')>".format(
             self.status_displayname,

@@ -1,22 +1,22 @@
 import pytest
 from werkzeug.datastructures import ImmutableMultiDict
 
-from atst.forms.financial import suggest_pe_id, FinancialForm, ExtendedFinancialForm
+from atst.forms.financial import FinancialForm, ExtendedFinancialForm
 from atst.eda_client import MockEDAClient
 
 
-@pytest.mark.parametrize(
-    "input_,expected",
-    [
-        ("0603502N", None),
-        ("0603502NZ", None),
-        ("603502N", "0603502N"),
-        ("063502N", "0603502N"),
-        ("63502N", "0603502N"),
-    ],
-)
-def test_suggest_pe_id(input_, expected):
-    assert suggest_pe_id(input_) == expected
+# @pytest.mark.parametrize(
+#     "input_,expected",
+#     [
+#         ("0603502N", None),
+#         ("0603502NZ", None),
+#         ("603502N", "0603502N"),
+#         ("063502N", "0603502N"),
+#         ("63502N", "0603502N"),
+#     ],
+# )
+# def test_suggest_pe_id(input_, expected):
+#     assert suggest_pe_id(input_) == expected
 
 
 def test_funding_type_other_not_required_if_funding_type_is_not_other():
@@ -80,25 +80,6 @@ def test_ba_code_validation(input_, expected):
     is_valid = "ba_code" not in form.errors
 
     assert is_valid == expected
-
-
-def test_task_order_number_validation(monkeypatch):
-    monkeypatch.setattr(
-        "atst.domain.task_orders.TaskOrders._client", lambda: MockEDAClient()
-    )
-    monkeypatch.setattr("atst.forms.financial.validate_pe_id", lambda *args: True)
-    form_invalid = FinancialForm(data={"task_order_number": "1234"})
-    form_invalid.perform_extra_validation({})
-
-    assert "task_order_number" in form_invalid.errors
-
-    form_valid = FinancialForm(
-        data={"task_order_number": MockEDAClient.MOCK_CONTRACT_NUMBER},
-        eda_client=MockEDAClient(),
-    )
-    form_valid.perform_extra_validation({})
-
-    assert "task_order_number" not in form_valid.errors
 
 
 def test_can_submit_zero_for_clin():
