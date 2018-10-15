@@ -47,7 +47,7 @@ trap "kill $BSL_ID" SIGTERM SIGINT EXIT
 
 # run example selenium script that fetches the home page
 echo "running selenium tests"
-pipenv run pytest tests/acceptance -s
+pipenv run pytest tests/acceptance -s --no-cov
 
 # kill BrowserStackLocal
 kill $BSL_ID

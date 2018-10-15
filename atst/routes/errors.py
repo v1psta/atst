@@ -18,6 +18,7 @@ def make_error_pages(app):
         return render_template("error.html", message="Log in Failed"), 401
 
     @app.errorhandler(Exception)
+    # pylint: disable=unused-variable
     def exception(e):
         app.logger.error(e.message)
         return render_template("error.html", message="An Unexpected Error Occurred"), 500
