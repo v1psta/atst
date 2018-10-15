@@ -1,5 +1,6 @@
 from flask import g, render_template, redirect, url_for
 from flask import request as http_request
+from werkzeug.datastructures import ImmutableMultiDict
 
 from . import requests_bp
 from atst.domain.requests import Requests
@@ -61,6 +62,10 @@ class UpdateFinancialVerification(object):
 
     def _get_form(self):
         data = self.fv_data
+
+        existing_fv_data = self.request.body.get("financial_verification", {})
+        data = {**data, **existing_fv_data}
+
         if self.request.task_order:
             task_order_dict = self.request.task_order.to_dictionary()
             task_order_dict.update({
@@ -69,10 +74,11 @@ class UpdateFinancialVerification(object):
             })
             data = {**data, **task_order_dict}
 
+        mdict = ImmutableMultiDict(data)
         if self.is_extended:
-            return ExtendedFinancialForm(data=data)
+            return ExtendedFinancialForm(formdata=mdict)
         else:
-            return FinancialForm(data=data)
+            return FinancialForm(formdata=mdict)
 
     def execute(self):
         form = self._get_form()
@@ -148,6 +154,8 @@ def update_financial_verification(request_id):
     request = Requests.get(g.current_user, request_id)
     fv_data = http_request.form
     is_extended = http_request.args.get("extended")
+
+    import ipdb; ipdb.set_trace()
 
     try:
         response_context = UpdateFinancialVerification(
