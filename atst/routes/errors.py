@@ -21,6 +21,9 @@ def make_error_pages(app):
     # pylint: disable=unused-variable
     def exception(e):
         app.logger.error(e.message)
-        return render_template("error.html", message="An Unexpected Error Occurred"), 500
+        return (
+            render_template("error.html", message="An Unexpected Error Occurred"),
+            500,
+        )
 
     return app
