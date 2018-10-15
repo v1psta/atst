@@ -86,7 +86,7 @@ jobs:
           name: "Load Cache: CRLs"
           keys:
             - disa-crls-v2
-      - run:
+      - run: 
           name: "Update CRLs"
           command: ./script/sync-crls
       - save_cache:
@@ -208,10 +208,10 @@ workflows:
             - test
           filters:
             branches:
-              only: circleci-cd-rebased
+              only: master
       - deploy:
           requires:
             - build_and_push_image
           filters:
             branches:
-              only: circleci-cd-rebased
+              only: master
