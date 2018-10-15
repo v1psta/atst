@@ -39,6 +39,9 @@ class UpdateFinancialVerification(object):
 
         should_update = True
         should_submit = True
+        updated_request = None
+        submitted = False
+        workspace = None
 
         if not form.validate():
             should_update = False
@@ -58,21 +61,30 @@ class UpdateFinancialVerification(object):
             should_submit = False
 
         if should_update:
-            Requests.update_financial_verification(self.request.id, form.data)
+            updated_request = Requests.update_financial_verification(
+                self.request.id, form.data
+            )
         else:
             form.reset()
             raise FormValidationError(form)
 
         if should_submit:
-            submitted_request = Requests.submit_financial_verification(self.request)
+            submitted_request = Requests.submit_financial_verification(updated_request)
             if submitted_request.is_financially_verified:
                 workspace = Requests.approve_and_create_workspace(submitted_request)
-                return {"state": "submitted", "workspace": workspace}
-            else:
-                return {"state": "pending"}
+                submitted = True
         else:
             form.reset()
             raise FormValidationError(form)
+
+        if submitted:
+            return {
+                "state": "submitted",
+                "workspace": workspace,
+                "request": updated_request,
+            }
+        else:
+            return {"state": "pending", "request": updated_request}
 
 
 @requests_bp.route("/requests/verify/<string:request_id>", methods=["GET"])
