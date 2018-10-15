@@ -19,6 +19,11 @@ class GetFinancialVerificationForm(object):
 
     def _get_form(self):
         data = {}
+
+        fv_data = self.request.body.get("financial_verification")
+        if fv_data:
+            data = {**data, **fv_data}
+
         if self.request.task_order:
             task_order_dict = self.request.task_order.to_dictionary()
             task_order_dict.update({
