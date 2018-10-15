@@ -24,11 +24,13 @@ class ATSTQueue(RQ):
     def _queue_job(self, function, *args, **kwargs):
         self.get_queue().enqueue(function, *args, **kwargs)
 
+    # pylint: disable=pointless-string-statement
     """Instance methods to queue up application-specific jobs."""
 
     def send_mail(self, to, subject, body):
         self._queue_job(ATSTQueue._send_mail, to, subject, body)
 
+    # pylint: disable=pointless-string-statement
     """Class methods to actually perform the work.
 
     Must be a class method (or a module-level function) because we being able
