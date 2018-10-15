@@ -43,6 +43,7 @@ fi
 echo "starting BrowserStack local client..."
 ./$BSL_FILE --key $BROWSERSTACK_TOKEN &
 BSL_ID=$!
+trap "kill $BSL_ID" SIGTERM SIGINT EXIT
 
 # run example selenium script that fetches the home page
 echo "running selenium tests"
