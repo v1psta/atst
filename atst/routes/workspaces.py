@@ -17,7 +17,7 @@ from atst.domain.workspaces import Workspaces
 from atst.domain.workspace_users import WorkspaceUsers
 from atst.domain.environments import Environments
 from atst.domain.environment_roles import EnvironmentRoles
-from atst.forms.new_project import NewProjectForm
+from atst.forms.project import NewProjectForm, ProjectForm
 from atst.forms.new_member import NewMemberForm
 from atst.forms.edit_member import EditMemberForm
 from atst.forms.workspace import WorkspaceForm
@@ -196,7 +196,7 @@ def edit_project(workspace_id, project_id):
 def update_project(workspace_id, project_id):
     workspace = Workspaces.get_for_update_projects(g.current_user, workspace_id)
     project = Projects.get(g.current_user, workspace, project_id)
-    form = NewProjectForm(http_request.form)
+    form = ProjectForm(http_request.form)
     if form.validate():
         project_data = form.data
         Projects.update(g.current_user, workspace, project, project_data)
