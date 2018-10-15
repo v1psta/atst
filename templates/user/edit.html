@@ -1,12 +1,7 @@
 {% extends "base.html" %}
-{% from "components/alert.html" import Alert %}
 
 {% block content %}
 <div class='col'>
-  {{ Alert('This form does not yet function',
-    message="<p>Functionality of this form is pending more engineering work. Engineers, please remove this alert when done.</p>",
-    level='warning'
-  ) }}
 
   <div class='panel'>
     <div class='panel__heading'>
@@ -17,7 +12,7 @@
     </div>
   </div>
 
-  {% set form_action = url_for('atst.save_user') %}
+  {% set form_action = url_for('users.user') %}
   {% include "fragments/edit_user_form.html" %}
 
 </div>

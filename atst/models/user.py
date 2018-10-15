@@ -52,3 +52,10 @@ class User(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
             self.has_workspaces,
             self.id,
         )
+
+    def to_dictionary(self):
+        return {
+            c.name: getattr(self, c.name)
+            for c in self.__table__.columns
+            if c.name not in ["id"]
+        }
