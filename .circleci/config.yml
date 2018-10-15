@@ -94,6 +94,9 @@ jobs:
           paths:
             - ./crl
           key: disa-crls-v2-{{ .Branch }}-{{ epoch}}
+      - run:
+          name: "Generate build info"
+          command: ./script/generate_build_info.sh
       - persist_to_workspace:
           root: .
           paths:

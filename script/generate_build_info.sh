@@ -111,7 +111,7 @@ cat > ${STATIC_DIR}/buildinfo.html <<ENDHTML
 <BODY>
 <TABLE border="1">
 <TR>
-        <TH colspan="2">BuildInfo (${BUILT_BY}</TH>
+        <TH colspan="2">BuildInfo (${BUILT_BY})</TH>
 </TR>
 <TR>
         <TD class="label">Container Image Creation Time:</TD>
