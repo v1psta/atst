@@ -12,38 +12,41 @@ from atst.domain.requests.financial_verification import (
 )
 
 
-class GetFinancialVerificationForm(object):
+class FinancialVerificationBase(object):
+
+    def _get_form(self, request, is_extended, input_data):
+        data = input_data
+
+        fv_data = request.body.get("financial_verification", {})
+        data = {**data, **fv_data}
+
+        if request.task_order:
+            task_order_dict = request.task_order.to_dictionary()
+            task_order_dict.update({
+                "task_order_number": request.task_order.number,
+                "funding_type": request.task_order.funding_type.value
+            })
+            data = {**data, **task_order_dict}
+
+        mdict = ImmutableMultiDict(data)
+        if is_extended:
+            return ExtendedFinancialForm(formdata=mdict)
+        else:
+            return FinancialForm(formdata=mdict)
+
+
+class GetFinancialVerificationForm(FinancialVerificationBase):
     def __init__(self, user, request, is_extended=False):
         self.user = user
         self.request = request
         self.is_extended = is_extended
 
-    def _get_form(self):
-        data = {}
-
-        fv_data = self.request.body.get("financial_verification")
-        if fv_data:
-            data = {**data, **fv_data}
-
-        if self.request.task_order:
-            task_order_dict = self.request.task_order.to_dictionary()
-            task_order_dict.update({
-                "task_order_number": self.request.task_order.number,
-                "funding_type": self.request.task_order.funding_type.value
-            })
-            data = {**data, **task_order_dict}
-
-        if self.is_extended:
-            return ExtendedFinancialForm(data=data)
-        else:
-            return FinancialForm(data=data)
-
     def execute(self):
-        form = self._get_form()
+        form = self._get_form(self.request, self.is_extended, {})
         return {"form": form}
 
 
-class UpdateFinancialVerification(object):
+class UpdateFinancialVerification(FinancialVerificationBase):
     def __init__(
         self,
         pe_validator,
@@ -60,28 +63,8 @@ class UpdateFinancialVerification(object):
         self.fv_data = fv_data
         self.is_extended = is_extended
 
-    def _get_form(self):
-        data = self.fv_data
-
-        existing_fv_data = self.request.body.get("financial_verification", {})
-        data = {**data, **existing_fv_data}
-
-        if self.request.task_order:
-            task_order_dict = self.request.task_order.to_dictionary()
-            task_order_dict.update({
-                "task_order_number": self.request.task_order.number,
-                "funding_type": self.request.task_order.funding_type.value
-            })
-            data = {**data, **task_order_dict}
-
-        mdict = ImmutableMultiDict(data)
-        if self.is_extended:
-            return ExtendedFinancialForm(formdata=mdict)
-        else:
-            return FinancialForm(formdata=mdict)
-
     def execute(self):
-        form = self._get_form()
+        form = self._get_form(self.request, self.is_extended, self.fv_data)
 
         should_update = True
         should_submit = True
@@ -133,7 +116,7 @@ class UpdateFinancialVerification(object):
             return {"state": "pending", "request": updated_request}
 
 
-class SaveFinancialVerificationDraft(object):
+class SaveFinancialVerificationDraft(FinancialVerificationBase):
     def __init__(
         self,
         pe_validator,
@@ -150,28 +133,8 @@ class SaveFinancialVerificationDraft(object):
         self.fv_data = fv_data
         self.is_extended = is_extended
 
-    def _get_form(self):
-        data = self.fv_data
-
-        existing_fv_data = self.request.body.get("financial_verification", {})
-        data = {**data, **existing_fv_data}
-
-        if self.request.task_order:
-            task_order_dict = self.request.task_order.to_dictionary()
-            task_order_dict.update({
-                "task_order_number": self.request.task_order.number,
-                "funding_type": self.request.task_order.funding_type.value
-            })
-            data = {**data, **task_order_dict}
-
-        mdict = ImmutableMultiDict(data)
-        if self.is_extended:
-            return ExtendedFinancialForm(formdata=mdict)
-        else:
-            return FinancialForm(formdata=mdict)
-
     def execute(self):
-        form = self._get_form()
+        form = self._get_form(self.request, self.is_extended, self.fv_data)
         valid = True
 
         if not form.validate_draft():
