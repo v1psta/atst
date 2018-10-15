@@ -2,7 +2,7 @@ import re
 import pendulum
 from wtforms.fields.html5 import DateField, EmailField
 from wtforms.fields import StringField, FileField
-from wtforms.validators import InputRequired, Email, Regexp
+from wtforms.validators import InputRequired, Email, Regexp, Optional
 from flask_wtf.file import FileAllowed
 
 from .fields import NewlineListField, SelectField, NumberStringField
@@ -28,6 +28,11 @@ class BaseFinancialForm(ValidatedForm):
         This is a stupid workaround, and there's probably a better way.
         """
         self.uii_ids.process_data(self.uii_ids.data)
+
+    def validate_draft(self):
+        for field in self:
+            field.validators.insert(0, Optional())
+        return self.validate()
 
     @property
     def is_missing_task_order_number(self):
