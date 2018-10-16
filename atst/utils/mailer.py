@@ -4,7 +4,6 @@ from email.message import EmailMessage
 
 
 class MailConnection(object):
-
     def send(self, message):
         raise NotImplementedError()
 
@@ -63,7 +62,6 @@ class RedisConnection(MailConnection):
 
 
 class Mailer(object):
-
     def __init__(self, connection, sender):
         self.connection = connection
         self.sender = sender

@@ -182,7 +182,7 @@ def make_mailer(app):
             port=app.config.get("MAIL_PORT"),
             username=app.config.get("MAIL_SENDER"),
             password=app.config.get("MAIL_PASSWORD"),
-            use_tls=app.config.get("MAIL_TLS")
+            use_tls=app.config.get("MAIL_TLS"),
         )
     sender = app.config.get("MAIL_SENDER")
     app.mailer = mailer.Mailer(mailer_connection, sender)
