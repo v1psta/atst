@@ -9,41 +9,33 @@ from .data import SERVICE_BRANCHES
 
 from .validators import Alphabet, DateRange, PhoneNumber
 
-
-class EditUserForm(ValidatedForm):
-
-    first_name = StringField("First Name", validators=[Required(), Alphabet()])
-
-    last_name = StringField("Last Name", validators=[Required(), Alphabet()])
-
-    email = EmailField(
+USER_FIELDS = {
+    "first_name": StringField("First Name", validators=[Required(), Alphabet()]),
+    "last_name": StringField("Last Name", validators=[Required(), Alphabet()]),
+    "email": EmailField(
         "E-mail Address",
         description="Enter your preferred contact e-mail address",
         validators=[Required(), Email()],
-    )
-
-    phone_number = TelField(
+    ),
+    "phone_number": TelField(
         "Phone Number",
         description="Enter your 10-digit U.S. phone number",
         validators=[PhoneNumber()],
-    )
-
-    service_branch = SelectField(
+    ),
+    "service_branch": SelectField(
         "Service Branch or Agency",
         description="Which service or organization do you belong to within the DoD?",
         choices=SERVICE_BRANCHES,
-    )
-
-    citizenship = RadioField(
+    ),
+    "citizenship": RadioField(
         description="What is your citizenship status?",
         choices=[
             ("United States", "United States"),
             ("Foreign National", "Foreign National"),
             ("Other", "Other"),
         ],
-    )
-
-    designation = RadioField(
+    ),
+    "designation": RadioField(
         "Designation of Person",
         description="What is your designation within the DoD?",
         choices=[
@@ -51,9 +43,8 @@ class EditUserForm(ValidatedForm):
             ("civilian", "Civilian"),
             ("contractor", "Contractor"),
         ],
-    )
-
-    date_latest_training = DateField(
+    ),
+    "date_latest_training": DateField(
         "Latest Information Assurance (IA) Training Completion Date",
         description='To complete the training, you can find it in <a class="icon-link" href="https://iatraining.disa.mil/eta/disa_cac2018/launchPage.htm" target="_blank">Information Assurance Cyber Awareness Challange</a> website.',
         validators=[
@@ -64,4 +55,16 @@ class EditUserForm(ValidatedForm):
             )
         ],
         format="%m/%d/%Y",
-    )
+    ),
+}
+
+
+class EditUserForm(ValidatedForm):
+    first_name = USER_FIELDS["first_name"]
+    last_name = USER_FIELDS["last_name"]
+    email = USER_FIELDS["email"]
+    phone_number = USER_FIELDS["phone_number"]
+    service_branch = USER_FIELDS["service_branch"]
+    citizenship = USER_FIELDS["citizenship"]
+    designation = USER_FIELDS["designation"]
+    date_latest_training = USER_FIELDS["date_latest_training"]
