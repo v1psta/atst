@@ -1,3 +1,4 @@
+import datetime
 import re
 from tests.factories import (
     RequestFactory,
@@ -93,9 +94,18 @@ def test_creator_info_is_autopopulated_for_existing_request(
 
     response = client.get("/requests/new/2/{}".format(request.id))
     body = response.data.decode()
-    assert "initial-value='{}'".format(user.first_name) in body
-    assert "initial-value='{}'".format(user.last_name) in body
-    assert "initial-value='{}'".format(user.email) in body
+    prepopulated_values = [
+        "first_name",
+        "last_name",
+        "email",
+        "phone_number",
+        "date_latest_training",
+    ]
+    for attr in prepopulated_values:
+        value = getattr(user, attr)
+        if isinstance(value, datetime.date):
+            value = value.strftime("%m/%d/%Y")
+        assert "initial-value='{}'".format(value) in body
 
 
 def test_creator_info_is_autopopulated_for_new_request(
