@@ -4,6 +4,13 @@
 {% block content %}
 <div class='col'>
 
+  {% if form.errors %}
+    {{ Alert('There were some errors',
+      message="<p>Please see below.</p>",
+      level='error'
+    ) }}
+  {% endif %}
+
   {% if updated %}
     {{ Alert('User information updated.', level='success') }}
   {% endif %}
