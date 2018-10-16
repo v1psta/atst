@@ -56,8 +56,7 @@ class GetFinancialVerificationForm(FinancialVerificationBase):
         self.is_extended = is_extended
 
     def execute(self):
-        form = self._get_form(self.request, self.is_extended)
-        return {"form": form}
+        return self._get_form(self.request, self.is_extended)
 
 
 class UpdateFinancialVerification(FinancialVerificationBase):
@@ -83,8 +82,6 @@ class UpdateFinancialVerification(FinancialVerificationBase):
         should_update = True
         should_submit = True
         updated_request = None
-        submitted = False
-        workspace = None
 
         if not form.validate():
             should_update = False
@@ -101,25 +98,10 @@ class UpdateFinancialVerification(FinancialVerificationBase):
             updated_request = Requests.update_financial_verification(
                 self.request.id, form.data
             )
-        else:
-            self._raise(form)
+            if should_submit:
+                return Requests.submit_financial_verification(updated_request)
 
-        if should_submit:
-            updated_request = Requests.submit_financial_verification(updated_request)
-            if updated_request.is_financially_verified:
-                workspace = Requests.approve_and_create_workspace(updated_request)
-                submitted = True
-        else:
-            self._raise(form)
-
-        if submitted:
-            return {
-                "state": "submitted",
-                "workspace": workspace,
-                "request": updated_request,
-            }
-        else:
-            return {"state": "pending", "request": updated_request}
+        self._raise(form)
 
 
 class SaveFinancialVerificationDraft(FinancialVerificationBase):
@@ -163,7 +145,7 @@ class SaveFinancialVerificationDraft(FinancialVerificationBase):
         )
 
         if valid:
-            return {"request": updated_request}
+            return updated_request
         else:
             self._raise(form)
 
@@ -173,13 +155,13 @@ def financial_verification(request_id):
     request = Requests.get(g.current_user, request_id)
     is_extended = http_request.args.get("extended")
 
-    response_context = GetFinancialVerificationForm(
+    form = GetFinancialVerificationForm(
         g.current_user, request, is_extended=is_extended
     ).execute()
 
     return render_template(
         "requests/financial_verification.html",
-        f=response_context["form"],
+        f=form,
         jedi_request=request,
         review_comment=request.review_comment,
         extended=is_extended,
@@ -193,7 +175,7 @@ def update_financial_verification(request_id):
     is_extended = http_request.args.get("extended")
 
     try:
-        response_context = UpdateFinancialVerification(
+        updated_request = UpdateFinancialVerification(
             PENumberValidator(),
             TaskOrderNumberValidator(),
             g.current_user,
@@ -209,14 +191,14 @@ def update_financial_verification(request_id):
             extended=is_extended,
         )
 
-    if response_context["state"] == "submitted":
-        workspace = response_context["workspace"]
+    if updated_request.is_pending_ccpo_approval:
+        workspace = Requests.approve_and_create_workspace(updated_request)
         return redirect(
             url_for(
                 "workspaces.new_project", workspace_id=workspace.id, newWorkspace=True
             )
         )
-    elif response_context["state"] == "pending":
+    else:
         return redirect(url_for("requests.requests_index", modal="pendingCCPOApproval"))
 
 
