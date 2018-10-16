@@ -15,9 +15,45 @@
 
     <div class="topbar__context {% if workspace %}topbar__context--workspace{% endif %}">
       {% if workspace %}
-        <a href="{{ url_for("workspaces.show_workspace", workspace_id=workspace.id) }}" class="topbar__link topbar__link--workspace">
-          <span class="topbar__link-label">{{ ("Workspace " + workspace.name) }}</span>
-        </a>
+        {% if workspaces %}
+
+          <div is='toggler' class='topbar__workspace-menu'>
+            <template slot-scope='props'>
+              <button
+                v-on:click='props.toggle'
+                class="topbar__link topbar__workspace-menu__toggle"
+                v-bind:class="{ 'topbar__workspace-menu__toggle--open': props.isVisible }">
+                <span class="topbar__link-label">{{ ("Workspace " + workspace.name) }}</span>
+                <template v-if='props.isVisible'>{{ Icon('caret_up', classes='topbar__link-icon') }}</template>
+                <template v-else>{{ Icon('caret_down', classes='topbar__link-icon') }}</template>
+              </button>
+
+              <div v-show='props.isVisible' class='topbar__workspace-menu__panel menu'>
+                <h2 class='menu__heading'>Other Active Workspaces</h2>
+                <ul class='menu__list'>
+                  {% for other_workspace in workspaces %}
+                    <li class='menu__list__item'>
+                      <a href="{{ url_for('workspaces.show_workspace', workspace_id=other_workspace.id)}}">
+                        {{ other_workspace.name }}
+                        {{ Icon('caret_right', classes='topbar__link-icon') }}
+                      </a>
+                    </li>
+                  {% endfor %}
+                </ul>
+                <a href="{{ url_for('requests.requests_form_new', screen=1) }}" class='menu__button usa-button'>Request a new JEDI Workspace</a>
+              </div>
+            </template>
+          </div>
+
+        {% else %}
+
+          <div class='topbar__workspace-menu'>
+            <a class="topbar__link" href="{{ url_for('workspaces.show_workspace', workspace_id=workspace.id)}}">
+              <span class="topbar__link-label">{{ ("Workspace " + workspace.name) }}</span>
+            </a>
+          </div>
+
+        {% endif %}
       {% endif %}
 
       <a href="{{ url_for('atst.user') }}" class="topbar__link">
