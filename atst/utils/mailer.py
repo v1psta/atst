@@ -1,8 +1,19 @@
+from contextlib import contextmanager
 import smtplib
 from email.message import EmailMessage
 
 
-class _HostConnection:
+class MailConnection(object):
+
+    def send(self, message):
+        raise NotImplementedError()
+
+    @property
+    def messages(self):
+        raise NotImplementedError()
+
+
+class SMTPConnection(MailConnection):
     def __init__(self, server, port, username, password, use_tls=False):
         self.server = server
         self.port = port
@@ -11,7 +22,10 @@ class _HostConnection:
         self.use_tls = use_tls
         self.host = None
 
-    def __enter__(self):
+    @contextmanager
+    def _host(self):
+        host = None
+
         if self.use_tls:
             self.host = smtplib.SMTP(self.server, self.port)
             self.host.starttls()
@@ -19,52 +33,20 @@ class _HostConnection:
             self.host = smtplib.SMTP_SSL(self.server, self.port)
         self.host.login(self.username, self.password)
 
-        return self.host
+        yield host
 
-    def __exit__(self, *args):
-        if self.host:
-            self.host.quit()
+        host.quit()
 
-
-class BaseMailer:
-    def __init__(self, server, port, sender, password, use_tls=False):
-        self.server = server
-        self.port = port
-        self.sender = sender
-        self.password = password
-        self.use_tls = use_tls
-
-    def _message(self, recipients, subject, body):
-        msg = EmailMessage()
-        msg.set_content(body)
-        msg["From"] = self.sender
-        msg["To"] = ", ".join(recipients)
-        msg["Subject"] = subject
-
-        return msg
-
-    def send(self, recipients, subject, body):
-        pass
-
-    # do not collect messages by default
     @property
     def messages(self):
         return []
 
-
-class Mailer(BaseMailer):
-    def connection(self):
-        return _HostConnection(
-            self.server, self.port, self.sender, self.password, use_tls=self.use_tls
-        )
-
-    def send(self, recipients, subject, body):
-        message = self._message(recipients, subject, body)
-        with self.connection() as conn:
-            conn.send_message(message)
+    def send(self, message):
+        with self._host() as host:
+            host.send_message(message)
 
 
-class RedisMailer(BaseMailer):
+class RedisConnection(MailConnection):
     def __init__(self, redis, **kwargs):
         super().__init__(**kwargs)
         self.redis = redis
@@ -77,6 +59,34 @@ class RedisMailer(BaseMailer):
     def messages(self):
         return [msg.decode() for msg in self.redis.lrange("atat_inbox", 0, -1)]
 
+    def send(self, message):
+        self.redis.lpush("atat_inbox", str(message))
+
+
+class Mailer(object):
+
+    def __init__(self, connection, sender):
+        self.connection = connection
+        self.sender = sender
+
+    def _message(self, recipients, subject, body):
+        msg = EmailMessage()
+        msg.set_content(body)
+        msg["From"] = self.sender
+        msg["To"] = ", ".join(recipients)
+        msg["Subject"] = subject
+
+        return msg
+
     def send(self, recipients, subject, body):
         message = self._message(recipients, subject, body)
-        self.redis.lpush("atat_inbox", str(message))
+        self.connection.send(message)
+
+    @property
+    def messages(self):
+        return self.connection.messages
+
+
+class RedisMailer(object):
+    def __init__(self, *args, **kwargs):
+        pass
