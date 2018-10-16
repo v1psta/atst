@@ -1,25 +1,44 @@
 version: 2.0
+
+defaults:
+  working_directory: &workingDirectory /opt/atat/atst
+  sourceImage: &sourceImage registry.atat.codes:443/atat-app-builder:circleci-cd
+  sourceAuth: &sourceAuth
+    username: $REGISTRY_USERNAME
+    password: $REGISTRY_PASSWORD
+  appEnvironment: &appEnvironment
+    KEEP_EXISTING_VENV: true
+    PGHOST: localhost
+    PGUSER: root
+    PGDATABASE: circle_test
+    REDIS_URI: redis://localhost:6379
+  dockerCmdEnvironment: &dockerCmdEnvironment
+    APP_USER: atst
+    APP_GROUP: atat
+    APP_DIR: /opt/atat/atst
+    ATAT_DOCKER_REGISTRY_URL: registry.atat.codes:443
+    CONTAINER_NAME: atst-container
+    USR_BIN_DIR: /usr/bin
+    PYTHON_SITE_PACKAGES_DIR: /usr/lib/python3.6/site-packages
+    PROD_IMAGE_NAME: atst-prod
+
 jobs:
-  build:
+  app_setup:
     docker:
-      - image: registry.atat.codes:443/atat-app-builder:circleci
-        auth:
-          username: $REGISTRY_USERNAME
-          password: $REGISTRY_PASSWORD
-        environment:
-          KEEP_EXISTING_VENV: true
-          PGHOST: localhost
-          PGUSER: root
-          PGDATABASE: circle_test
-          REDIS_URI: redis://localhost:6379
+      - image: *sourceImage
+        auth: *sourceAuth
+        environment: *appEnvironment
       - image: circleci/postgres:9.6.5-alpine-ram
       - image: circleci/redis:4-alpine3.8
+    working_directory: *workingDirectory
     steps:
       - checkout
       - run:
           name: "Clone Submodules"
           command: |
             git submodule update --init --recursive
+      - attach_workspace:
+          at: .
       - restore_cache:
           name: "Load Cache: Pipenv References"
           keys:
@@ -38,6 +57,10 @@ jobs:
             - yarn-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
             - yarn-v1-{{ .Branch }}-
             - yarn-v1-
+      - restore_cache:
+          name: "Load Cache: Node Modules"
+          keys:
+            - node-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
       - run: ./script/setup
       - save_cache:
           name: "Save Cache: Pipenv Refrences"
@@ -54,12 +77,141 @@ jobs:
           paths:
             - ~/.cache/yarn
           key: yarn-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
-      - restore_cache:
-          keys:
-            - disa-crls
-      - run: ./script/sync-crls
       - save_cache:
+          name: "Save Cache: Node Modules"
+          paths:
+            - ./node_modules
+          key: node-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
+      - restore_cache:
+          name: "Load Cache: CRLs"
+          keys:
+            - disa-crls-v2
+      - run: 
+          name: "Update CRLs"
+          command: ./script/sync-crls
+      - save_cache:
+          name: "Save Cache: CRLs"
           paths:
             - ./crl
-          key: disa-crls
-      - run: ./script/cibuild
+          key: disa-crls-v2-{{ .Branch }}-{{ epoch}}
+      - run:
+          name: "Generate build info"
+          command: ./script/generate_build_info.sh
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
+
+  test:
+    docker:
+      - image: *sourceImage
+        auth: *sourceAuth
+        environment: *appEnvironment
+      - image: circleci/postgres:9.6.5-alpine-ram
+      - image: circleci/redis:4-alpine3.8
+    working_directory: *workingDirectory
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: "Run Tests"
+          command: ./script/cibuild
+
+  build_and_push_image:
+    docker:
+      - image: *sourceImage
+        auth: *sourceAuth
+        environment: *dockerCmdEnvironment
+    working_directory: *workingDirectory
+    steps:
+      - attach_workspace:
+          at: .
+      - setup_remote_docker:
+          version: 18.05.0-ce
+      - run:
+          name: "Export GIT_SHA"
+          command: echo "export GIT_SHA=$(git rev-parse --short HEAD)" >> $BASH_ENV
+      - run:
+          name: "Generate the Target Image Name"
+          command: echo "export IMAGE_NAME=\"${ATAT_DOCKER_REGISTRY_URL}/${PROD_IMAGE_NAME}:${GIT_SHA}-circleci\"" >> $BASH_ENV
+      - run:
+          name: "Start a Fresh Container"
+          command: docker run -d --entrypoint='/bin/sh' -ti --name ${CONTAINER_NAME} alpine:3.8
+      - run:
+          name: "Create the App Directory"
+          command: docker exec -t ${CONTAINER_NAME} mkdir -p ${APP_DIR}
+      - run:
+          name: "Copy Workspace Contents into the Container"
+          command: docker cp . ${CONTAINER_NAME}:${APP_DIR}
+      - run:
+          name: "Run Alpine Setup"
+          command: docker exec -t --workdir ${APP_DIR} ${CONTAINER_NAME} ./script/alpine_setup
+      - run:
+          name: "Copy System Site Packages into the Container"
+          command: docker cp -a ${PYTHON_SITE_PACKAGES_DIR}/. ${CONTAINER_NAME}:${PYTHON_SITE_PACKAGES_DIR}
+      - run:
+          name: "Copy USR_BIN Contents into the Container"
+          command: docker cp -a ${USR_BIN_DIR}/. ${CONTAINER_NAME}:${USR_BIN_DIR}
+      - run:
+          name: "Run Fix Permissions"
+          command: docker exec -t --workdir ${APP_DIR} ${CONTAINER_NAME} ./script/fix_permissions ${APP_USER} ${APP_GROUP}
+      - run:
+          name: "Commit Container Changes to New Image"
+          command: |
+            docker commit \
+              --change="ENV APP_USER \"${APP_USER}\"" \
+              --change="ENV APP_GROUP \"${APP_GROUP}\"" \
+              --change="ENV APP_DIR \"${APP_DIR}\"" \
+              --change='ENTRYPOINT ["/usr/bin/dumb-init", "--"]' \
+              --change="CMD [\"bash\", \"-c\", \"${APP_DIR}/script/uwsgi_server\"]" \
+              --change="WORKDIR ${APP_DIR}" \
+              --change="USER \"${APP_USER}\"" \
+              ${CONTAINER_NAME} \
+              ${IMAGE_NAME}
+      - run:
+          name: "Publish ATST Image"
+          command: |
+            docker image ls
+            docker login -u ${REGISTRY_USERNAME} -p ${REGISTRY_PASSWORD} ${ATAT_DOCKER_REGISTRY_URL}
+            docker push ${IMAGE_NAME}
+            docker logout
+
+  deploy:
+    docker:
+      - image: *sourceImage
+        auth: *sourceAuth
+        environment: *dockerCmdEnvironment
+    working_directory: *workingDirectory
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: "Export GIT_SHA"
+          command: echo "export GIT_SHA=$(git rev-parse --short HEAD)" >> $BASH_ENV
+      - run:
+          name: "Generate the Target Image Name"
+          command: echo "export IMAGE_NAME=\"${ATAT_DOCKER_REGISTRY_URL}/${PROD_IMAGE_NAME}:${GIT_SHA}-circleci\"" >> $BASH_ENV
+      - run:
+          name: "Update Kubernetes Deployment"
+          command: ./deploy/kubernetes/atst-update-deploy.sh
+
+workflows:
+  version: 2
+  run-tests:
+    jobs:
+      - app_setup
+      - test:
+          requires:
+            - app_setup
+      - build_and_push_image:
+          requires:
+            - test
+          filters:
+            branches:
+              only: master
+      - deploy:
+          requires:
+            - build_and_push_image
+          filters:
+            branches:
+              only: master
