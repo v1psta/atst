@@ -14,10 +14,7 @@ from atst.domain.requests.financial_verification import (
 
 class FinancialVerificationBase(object):
     def _get_form(self, request, is_extended, input_data):
-        data = input_data
-
-        fv_data = request.body.get("financial_verification", {})
-        data = {**data, **fv_data}
+        existing_fv_data = request.financial_verification
 
         if request.task_order:
             task_order_dict = request.task_order.to_dictionary()
@@ -27,13 +24,13 @@ class FinancialVerificationBase(object):
                     "funding_type": request.task_order.funding_type.value,
                 }
             )
-            data = {**data, **task_order_dict}
+            existing_fv_data = {**existing_fv_data, **task_order_dict}
 
-        mdict = ImmutableMultiDict(data)
+        mdict = ImmutableMultiDict(input_data)
         if is_extended:
-            return ExtendedFinancialForm(formdata=mdict)
+            return ExtendedFinancialForm(formdata=mdict, data=existing_fv_data)
         else:
-            return FinancialForm(formdata=mdict)
+            return FinancialForm(formdata=mdict, data=existing_fv_data)
 
     def _apply_pe_number_error(self, field):
         suggestion = self.pe_validator.suggest_pe_id(field.data)
