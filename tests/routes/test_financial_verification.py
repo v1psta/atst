@@ -139,6 +139,18 @@ def test_save_empty_draft():
     assert save_draft.execute()
 
 
+def test_save_draft_with_ba_code():
+    request = RequestFactory.create()
+    user = UserFactory.create()
+    data = {"ba_code": "02A"}
+    save_draft = SaveFinancialVerificationDraft(
+        TrueValidator, TrueValidator, user, request, data, is_extended=False
+    )
+
+    response_context = save_draft.execute()
+    request = response_context["request"]
+
+
 def test_save_draft_with_invalid_task_order(fv_data):
     request = RequestFactory.create()
     user = UserFactory.create()
