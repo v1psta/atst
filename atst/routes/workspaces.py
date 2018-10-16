@@ -181,9 +181,8 @@ def create_project(workspace_id):
 def edit_project(workspace_id, project_id):
     workspace = Workspaces.get_for_update_projects(g.current_user, workspace_id)
     project = Projects.get(g.current_user, workspace, project_id)
-    form = NewProjectForm(
+    form = ProjectForm(
         name=project.name,
-        environment_names=[env.name for env in project.environments],
         description=project.description,
     )
 
