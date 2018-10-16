@@ -30,12 +30,14 @@ bp = Blueprint("workspaces", __name__)
 
 @bp.context_processor
 def workspace():
+    workspaces = Workspaces.for_user(g.current_user)
     workspace = None
     if "workspace_id" in http_request.view_args:
         try:
             workspace = Workspaces.get(
                 g.current_user, http_request.view_args["workspace_id"]
             )
+            workspaces = [ws for ws in workspaces if not ws.id == workspace.id]
         except UnauthorizedError:
             pass
 
@@ -46,7 +48,7 @@ def workspace():
             )
         return False
 
-    return {"workspace": workspace, "permissions": Permissions, "user_can": user_can}
+    return {"workspace": workspace, "workspaces": workspaces, "permissions": Permissions, "user_can": user_can}
 
 
 @bp.route("/workspaces")
