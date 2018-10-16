@@ -25,7 +25,7 @@ class EditUserForm(ValidatedForm):
     phone_number = TelField(
         "Phone Number",
         description="Enter your 10-digit U.S. phone number",
-        validators=[Required(), PhoneNumber()],
+        validators=[PhoneNumber()],
     )
 
     service_branch = SelectField(
@@ -41,7 +41,6 @@ class EditUserForm(ValidatedForm):
             ("Foreign National", "Foreign National"),
             ("Other", "Other"),
         ],
-        validators=[Required()],
     )
 
     designation = RadioField(
@@ -52,14 +51,12 @@ class EditUserForm(ValidatedForm):
             ("civilian", "Civilian"),
             ("contractor", "Contractor"),
         ],
-        validators=[Required()],
     )
 
     date_latest_training = DateField(
         "Latest Information Assurance (IA) Training Completion Date",
         description='To complete the training, you can find it in <a class="icon-link" href="https://iatraining.disa.mil/eta/disa_cac2018/launchPage.htm" target="_blank">Information Assurance Cyber Awareness Challange</a> website.',
         validators=[
-            Required(),
             DateRange(
                 lower_bound=pendulum.duration(years=1),
                 upper_bound=pendulum.duration(days=0),
