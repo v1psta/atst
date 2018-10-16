@@ -6,6 +6,9 @@ from datetime import datetime
 
 def DateRange(lower_bound=None, upper_bound=None, message=None):
     def _date_range(form, field):
+        if field.data is None:
+            return
+
         now = pendulum.now().date()
 
         if isinstance(field.data, str):
