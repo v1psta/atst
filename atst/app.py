@@ -22,7 +22,7 @@ from atst.domain.authz import Authorization
 from atst.models.permissions import Permissions
 from atst.eda_client import MockEDAClient
 from atst.uploader import Uploader
-from atst.utils.mailer import Mailer, RedisMailer
+from atst.utils import mailer
 from atst.queue import queue
 
 
@@ -173,20 +173,15 @@ def make_upload_storage(app):
     app.uploader = uploader
 
 
-def _map_email_config(config):
-    return {
-        "server": config.get("MAIL_SERVER"),
-        "port": config.get("MAIL_PORT"),
-        "sender": config.get("MAIL_SENDER"),
-        "password": config.get("MAIL_PASSWORD"),
-        "use_tls": config.get("MAIL_TLS", False),
-    }
-
-
 def make_mailer(app):
-    config = _map_email_config(app.config)
     if app.config["DEBUG"]:
-        mailer = RedisMailer(redis=app.redis, **config)
+        mailer_connection = mailer.RedisConnection(app.redis)
     else:
-        mailer = Mailer(**config)
-    app.mailer = mailer
+        mailer_connection = mailer.SMTPConnection(
+            server=app.config.get("MAIL_SERVER"),
+            port=app.config.get("MAIL_PORT"),
+            password=app.config.get("MAIL_PASSWORD"),
+            use_tls=app.config.get("MAIL_TLS")
+        )
+    sender = app.config.get("MAIL_SENDER")
+    app.mailer = mailer.Mailer(mailer_connection, sender)
