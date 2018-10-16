@@ -1,4 +1,4 @@
-from flask import render_template
+from flask import render_template, current_app
 import werkzeug.exceptions as werkzeug_exceptions
 
 import atst.domain.exceptions as exceptions
@@ -27,6 +27,8 @@ def make_error_pages(app):
     # pylint: disable=unused-variable
     def exception(e):
         log_error(e)
+        if current_app.debug:
+            raise e
         return (
             render_template("error.html", message="An Unexpected Error Occurred"),
             500,
