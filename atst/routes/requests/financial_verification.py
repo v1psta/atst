@@ -142,32 +142,30 @@ class SaveFinancialVerificationDraft(FinancialVerificationBase):
         valid = True
 
         if not form.validate_draft():
-            valid = False
-
-        if (
-            valid
-            and form.pe_id.data
-            and not self.pe_validator.validate(self.request, form.pe_id.data)
-        ):
-            self._apply_pe_number_error(form.pe_id)
-            valid = False
-
-        if (
-            valid
-            and form.task_order_number.data
-            and not self.task_order_validator.validate(form.task_order_number.data)
-        ):
-            self._apply_task_order_number_error(form.task_order_number)
-            valid = False
-
-        if not valid:
             form.reset()
             raise FormValidationError(form)
-        else:
-            updated_request = Requests.update_financial_verification(
-                self.request.id, form.data
-            )
+
+        if form.pe_id.data and not self.pe_validator.validate(
+            self.request, form.pe_id.data
+        ):
+            valid = False
+            self._apply_pe_number_error(form.pe_id)
+
+        if form.task_order_number.data and not self.task_order_validator.validate(
+            form.task_order_number.data
+        ):
+            valid = False
+            self._apply_task_order_number_error(form.task_order_number)
+
+        updated_request = Requests.update_financial_verification(
+            self.request.id, form.data
+        )
+
+        if valid:
             return {"request": updated_request}
+        else:
+            form.reset()
+            raise FormValidationError(form)
 
 
 @requests_bp.route("/requests/verify/<string:request_id>", methods=["GET"])
