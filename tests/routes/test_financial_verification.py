@@ -54,11 +54,12 @@ def test_update_fv(fv_data):
     user = UserFactory.create()
     data = {**fv_data, "pe_id": MOCK_VALID_PE_ID}
 
-    response_context = UpdateFinancialVerification(
+    updated_request = UpdateFinancialVerification(
         TrueValidator, TrueValidator, user, request, data, is_extended=False
     ).execute()
 
-    assert response_context.get("workspace")
+    assert updated_request.is_pending_ccpo_approval
+
 
 
 def test_update_fv_re_enter_pe_number(fv_data):
@@ -71,9 +72,9 @@ def test_update_fv_re_enter_pe_number(fv_data):
 
     with pytest.raises(FormValidationError):
         update_fv.execute()
-    response_context = update_fv.execute()
+    updated_request = update_fv.execute()
 
-    assert response_context.get("status", "submitted")
+    assert updated_request.is_pending_ccpo_approval
 
 
 def test_update_fv_invalid_task_order_number(fv_data):
@@ -123,10 +124,10 @@ def test_update_fv_missing_extended_data(fv_data):
 def test_update_fv_submission(fv_data):
     request = RequestFactory.create()
     user = UserFactory.create()
-    response_context = UpdateFinancialVerification(
+    updated_request = UpdateFinancialVerification(
         TrueValidator, TrueValidator, user, request, fv_data
     ).execute()
-    assert response_context
+    assert updated_request
 
 
 def test_save_empty_draft():
@@ -147,8 +148,7 @@ def test_save_draft_with_ba_code():
         TrueValidator, TrueValidator, user, request, data, is_extended=False
     )
 
-    response_context = save_draft.execute()
-    request = response_context["request"]
+    assert save_draft.execute()
 
 
 def test_save_draft_with_invalid_task_order(fv_data):
@@ -183,7 +183,7 @@ def test_save_draft_re_enter_pe_number(fv_data):
 
     with pytest.raises(FormValidationError):
         save_fv.execute()
-    response_context = save_fv.execute()
+    save_fv.execute()
 
 
 def test_update_fv_route(client, user_session, fv_data):
