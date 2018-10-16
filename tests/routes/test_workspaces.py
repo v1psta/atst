@@ -117,11 +117,17 @@ def test_view_edit_project(client, user_session):
 
 def test_user_with_permission_can_update_project(client, user_session):
     owner = UserFactory.create()
-    workspace = WorkspaceFactory.create()
-    Workspaces._create_workspace_role(owner, workspace, "admin")
-    project = Projects.create(
-        owner, workspace, "Awesome Project", "It's really awesome!", {"dev", "prod"}
+    workspace = WorkspaceFactory.create(
+        owner=owner,
+        projects=[
+            {
+                "name": "Awesome Project",
+                "description": "It's really awesome!",
+                "environments": [{"name": "dev"}, {"name": "prod"}],
+            }
+        ],
     )
+    project = workspace.projects[0]
     user_session(owner)
     response = client.post(
         url_for(
@@ -141,11 +147,18 @@ def test_user_with_permission_can_update_project(client, user_session):
 def test_user_without_permission_cannot_update_project(client, user_session):
     dev = UserFactory.create()
     owner = UserFactory.create()
-    workspace = WorkspaceFactory.create()
-    Workspaces._create_workspace_role(dev, workspace, "developer")
-    project = Projects.create(
-        owner, workspace, "Great Project", "Cool stuff happening here!", {"dev", "prod"}
+    workspace = WorkspaceFactory.create(
+        owner=owner,
+        members=[{"user": dev, "role_name": "developer"}],
+        projects=[
+            {
+                "name": "Great Project",
+                "description": "Cool stuff happening here!",
+                "environments": [{"name": "dev"}, {"name": "prod"}],
+            }
+        ],
     )
+    project = workspace.projects[0]
     user_session(dev)
     response = client.post(
         url_for(
