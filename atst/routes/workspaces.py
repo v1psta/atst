@@ -181,10 +181,7 @@ def create_project(workspace_id):
 def edit_project(workspace_id, project_id):
     workspace = Workspaces.get_for_update_projects(g.current_user, workspace_id)
     project = Projects.get(g.current_user, workspace, project_id)
-    form = ProjectForm(
-        name=project.name,
-        description=project.description,
-    )
+    form = ProjectForm(name=project.name, description=project.description)
 
     return render_template(
         "workspaces/projects/edit.html", workspace=workspace, project=project, form=form

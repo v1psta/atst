@@ -4,22 +4,22 @@
 {% set title_text = 'Edit {} project'.format(project.name) if project else 'Add a new project' %}
 
 {{ form.csrf_token }}
-  <div class="panel">
-    <div class="panel__heading panel__heading--grow">
-      <h1>{{ title_text }}</h1>
-    </div>
-
-    <div class="panel__content">
-      <p>
-        AT-AT allows you to organize your workspace into multiple projects, each of which may have environments.
-      </p>
-      {{ TextInput(form.name) }}
-      {{ TextInput(form.description, paragraph=True) }}
-    </div>
+<div class="panel">
+  <div class="panel__heading panel__heading--grow">
+    <h1>{{ title_text }}</h1>
   </div>
 
-  <div> {# this extra div prevents this bug: https://www.pivotaltracker.com/story/show/160768940 #}
-    <div v-cloak v-for="title in errors" :key="title">
-      {{ Alert(message=None, level="error", vue_template=True) }}
-    </div>
+  <div class="panel__content">
+    <p>
+      AT-AT allows you to organize your workspace into multiple projects, each of which may have environments.
+    </p>
+    {{ TextInput(form.name) }}
+    {{ TextInput(form.description, paragraph=True) }}
   </div>
+</div>
+
+<div> {# this extra div prevents this bug: https://www.pivotaltracker.com/story/show/160768940 #}
+  <div v-cloak v-for="title in errors" :key="title">
+    {{ Alert(message=None, level="error", vue_template=True) }}
+  </div>
+</div>
