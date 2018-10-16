@@ -61,7 +61,7 @@ class EditUserForm(ValidatedForm):
                 lower_bound=pendulum.duration(years=1),
                 upper_bound=pendulum.duration(days=0),
                 message="Must be a date within the last year.",
-            ),
+            )
         ],
         format="%m/%d/%Y",
     )
