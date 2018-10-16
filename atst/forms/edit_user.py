@@ -1,7 +1,8 @@
 import pendulum
+from copy import deepcopy
 from wtforms.fields.html5 import DateField, EmailField, TelField
 from wtforms.fields import RadioField, StringField
-from wtforms.validators import Email, Required
+from wtforms.validators import Email, Required, Optional
 
 from .fields import SelectField
 from .forms import ValidatedForm
@@ -10,12 +11,12 @@ from .data import SERVICE_BRANCHES
 from .validators import Alphabet, DateRange, PhoneNumber
 
 USER_FIELDS = {
-    "first_name": StringField("First Name", validators=[Required(), Alphabet()]),
-    "last_name": StringField("Last Name", validators=[Required(), Alphabet()]),
+    "first_name": StringField("First Name", validators=[Alphabet()]),
+    "last_name": StringField("Last Name", validators=[Alphabet()]),
     "email": EmailField(
         "E-mail Address",
         description="Enter your preferred contact e-mail address",
-        validators=[Required(), Email()],
+        validators=[Email()],
     ),
     "phone_number": TelField(
         "Phone Number",
@@ -59,12 +60,27 @@ USER_FIELDS = {
 }
 
 
+def inherit_field(unbound_field, required=True):
+    kwargs = deepcopy(unbound_field.kwargs)
+    if not "validators" in kwargs:
+        kwargs["validators"] = []
+
+    if required:
+        kwargs["validators"].append(Required())
+    else:
+        kwargs["validators"].append(Optional())
+
+    return unbound_field.field_class(*unbound_field.args, **kwargs)
+
+
 class EditUserForm(ValidatedForm):
-    first_name = USER_FIELDS["first_name"]
-    last_name = USER_FIELDS["last_name"]
-    email = USER_FIELDS["email"]
-    phone_number = USER_FIELDS["phone_number"]
-    service_branch = USER_FIELDS["service_branch"]
-    citizenship = USER_FIELDS["citizenship"]
-    designation = USER_FIELDS["designation"]
-    date_latest_training = USER_FIELDS["date_latest_training"]
+    first_name = inherit_field(USER_FIELDS["first_name"])
+    last_name = inherit_field(USER_FIELDS["last_name"])
+    email = inherit_field(USER_FIELDS["email"])
+    phone_number = inherit_field(USER_FIELDS["phone_number"], required=False)
+    service_branch = inherit_field(USER_FIELDS["service_branch"], required=False)
+    citizenship = inherit_field(USER_FIELDS["citizenship"], required=False)
+    designation = inherit_field(USER_FIELDS["designation"], required=False)
+    date_latest_training = inherit_field(
+        USER_FIELDS["date_latest_training"], required=False
+    )

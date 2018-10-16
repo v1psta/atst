@@ -1,18 +1,18 @@
 import pendulum
-from wtforms.fields.html5 import DateField, EmailField, IntegerField, TelField
+from wtforms.fields.html5 import DateField, EmailField, IntegerField
 from wtforms.fields import BooleanField, RadioField, StringField, TextAreaField
 from wtforms.validators import Email, Length, Optional, InputRequired, DataRequired
 
 from .fields import SelectField
 from .forms import ValidatedForm
-from .edit_user import USER_FIELDS
+from .edit_user import USER_FIELDS, inherit_field
 from .data import (
     SERVICE_BRANCHES,
     ASSISTANCE_ORG_TYPES,
     DATA_TRANSFER_AMOUNTS,
     COMPLETION_DATE_RANGES,
 )
-from .validators import Alphabet, DateRange, PhoneNumber, IsNumber
+from .validators import DateRange, IsNumber
 from atst.domain.requests import Requests
 
 
@@ -162,36 +162,22 @@ class DetailsOfUseForm(ValidatedForm):
     )
 
 
-def inherit_field(unbound_field, append_validators=[]):
-    if "validators" in unbound_field.kwargs:
-        unbound_field.kwargs["validators"] += append_validators
-    return unbound_field.field_class(*unbound_field.args, **unbound_field.kwargs)
-
-
 class InformationAboutYouForm(ValidatedForm):
-    fname_request = USER_FIELDS["first_name"]
+    fname_request = inherit_field(USER_FIELDS["first_name"])
 
-    lname_request = USER_FIELDS["last_name"]
+    lname_request = inherit_field(USER_FIELDS["last_name"])
 
     email_request = EmailField("E-mail Address", validators=[InputRequired(), Email()])
 
-    phone_number = inherit_field(
-        USER_FIELDS["phone_number"], append_validators=[InputRequired()]
-    )
+    phone_number = inherit_field(USER_FIELDS["phone_number"])
 
-    service_branch = USER_FIELDS["service_branch"]
+    service_branch = inherit_field(USER_FIELDS["service_branch"])
 
-    citizenship = inherit_field(
-        USER_FIELDS["citizenship"], append_validators=[InputRequired()]
-    )
+    citizenship = inherit_field(USER_FIELDS["citizenship"])
 
-    designation = inherit_field(
-        USER_FIELDS["designation"], append_validators=[InputRequired()]
-    )
+    designation = inherit_field(USER_FIELDS["designation"])
 
-    date_latest_training = inherit_field(
-        USER_FIELDS["date_latest_training"], append_validators=[InputRequired()]
-    )
+    date_latest_training = inherit_field(USER_FIELDS["date_latest_training"])
 
 
 class WorkspaceOwnerForm(ValidatedForm):
