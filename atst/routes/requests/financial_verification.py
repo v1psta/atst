@@ -229,7 +229,7 @@ def save_financial_verification_draft(request_id):
     is_extended = http_request.args.get("extended")
 
     try:
-        response_context = SaveFinancialVerificationDraft(
+        SaveFinancialVerificationDraft(
             PENumberValidator(),
             TaskOrderNumberValidator(),
             g.current_user,
