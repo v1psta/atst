@@ -1,5 +1,6 @@
 import pytest
 from unittest.mock import MagicMock
+from flask import url_for
 
 from atst.eda_client import MockEDAClient
 from atst.routes.requests.financial_verification import (
@@ -48,7 +49,7 @@ FalseValidator = MagicMock()
 FalseValidator.validate = MagicMock(return_value=False)
 
 
-def test_update(fv_data):
+def test_update_fv(fv_data):
     request = RequestFactory.create()
     user = UserFactory.create()
     data = {**fv_data, "pe_id": MOCK_VALID_PE_ID}
@@ -60,7 +61,7 @@ def test_update(fv_data):
     assert response_context.get("workspace")
 
 
-def test_re_enter_pe_number(fv_data):
+def test_update_fv_re_enter_pe_number(fv_data):
     request = RequestFactory.create()
     user = UserFactory.create()
     data = {**fv_data, "pe_id": "0101228M"}
@@ -75,7 +76,7 @@ def test_re_enter_pe_number(fv_data):
     assert response_context.get("status", "submitted")
 
 
-def test_invalid_task_order_number(fv_data):
+def test_update_fv_invalid_task_order_number(fv_data):
     request = RequestFactory.create()
     user = UserFactory.create()
     data = {**fv_data, "task_order_number": "DCA10096D0051"}
@@ -92,7 +93,7 @@ def test_invalid_task_order_number(fv_data):
         update_fv.execute()
 
 
-def test_extended_fv_data(fv_data, extended_financial_verification_data):
+def test_update_fv_extended(fv_data, extended_financial_verification_data):
     request = RequestFactory.create()
     user = UserFactory.create()
     data = {**fv_data, **extended_financial_verification_data}
@@ -103,7 +104,7 @@ def test_extended_fv_data(fv_data, extended_financial_verification_data):
     assert update_fv.execute()
 
 
-def test_missing_extended_fv_data(fv_data):
+def test_update_fv_missing_extended_data(fv_data):
     request = RequestFactory.create()
     user = UserFactory.create()
     update_fv = UpdateFinancialVerification(
@@ -117,6 +118,15 @@ def test_missing_extended_fv_data(fv_data):
 
     with pytest.raises(FormValidationError):
         update_fv.execute()
+
+
+def test_update_fv_submission(fv_data):
+    request = RequestFactory.create()
+    user = UserFactory.create()
+    response_context = UpdateFinancialVerification(
+        TrueValidator, TrueValidator, user, request, fv_data
+    ).execute()
+    assert response_context
 
 
 def test_save_empty_draft():
@@ -174,3 +184,42 @@ def test_save_draft_re_enter_pe_number(fv_data):
     with pytest.raises(FormValidationError):
         save_fv.execute()
     response_context = save_fv.execute()
+
+
+def test_update_fv_route(client, user_session, fv_data):
+    user = UserFactory.create()
+    request = RequestFactory.create(creator=user)
+    user_session(user)
+    response = client.post(
+        url_for("requests.financial_verification", request_id=request.id),
+        data=fv_data,
+        follow_redirects=False,
+    )
+
+    assert response.status_code == 200
+
+
+def test_save_fv_draft_route(client, user_session, fv_data):
+    user = UserFactory.create()
+    request = RequestFactory.create(creator=user)
+    user_session(user)
+    response = client.post(
+        url_for("requests.save_financial_verification_draft", request_id=request.id),
+        data=fv_data,
+        follow_redirects=False,
+    )
+
+    assert response.status_code == 200
+
+
+def test_get_fv_form_route(client, user_session, fv_data):
+    user = UserFactory.create()
+    request = RequestFactory.create(creator=user)
+    user_session(user)
+    response = client.get(
+        url_for("requests.financial_verification", request_id=request.id),
+        data=fv_data,
+        follow_redirects=False,
+    )
+
+    assert response.status_code == 200
