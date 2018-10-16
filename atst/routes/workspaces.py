@@ -48,7 +48,12 @@ def workspace():
             )
         return False
 
-    return {"workspace": workspace, "workspaces": workspaces, "permissions": Permissions, "user_can": user_can}
+    return {
+        "workspace": workspace,
+        "workspaces": workspaces,
+        "permissions": Permissions,
+        "user_can": user_can,
+    }
 
 
 @bp.route("/workspaces")
