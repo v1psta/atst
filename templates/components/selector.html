@@ -22,7 +22,13 @@
         <span v-show='showError'>{{ Icon('alert',classes="icon-validation") }}</span>
       </legend>
 
-      <button class='selector__button' type='button' v-html='label'></button>
+      <button
+        class='selector__button'
+        type='button'
+        v-html='label'
+        v-on:keyup.down='handleButtonArrowDown'
+        v-tooltip='{ container:false }'>
+      </button>
 
       <span v-show='showError'>{{ Icon('alert',classes="icon-validation") }}</span>
 
@@ -38,11 +44,16 @@
             <li v-for='choice in choices' class='block-list__item block-list__item--selectable'>
               <template v-if='choice[0] !== ""'>
                 <input
+                  tabindex='0'
                   type='radio'
+                  name="{{ field.name }}"
                   v-bind:id="'{{ field.name }}_' + choice[0]"
                   v-bind:value='choice[0]'
                   v-bind:checked='value === choice[0]'
-                  v-on:change='change'/>
+                  v-on:click='handleClickOption'
+                  v-on:keyup.enter='handleEnterOption'
+                  v-on:keyup.down='handleSwitchOption'
+                  v-on:keyup.up='handleSwitchOption'/>
                 <label v-bind:for="'{{ field.name }}_' + choice[0]">
                   <template v-if='choice[1].description'>
                     <dl>

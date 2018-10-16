@@ -38,10 +38,32 @@ export default {
   },
 
   methods: {
-    change: function (e) {
-      this.value = e.target.value
+    change: function (value) {
+      console.log('change', value)
+      this.value = value
       this.showError = false
       setTimeout(() => this.$refs.popover.hide(), 300)
+    },
+
+    handleClickOption: function (e) {
+      console.log('click', e)
+      this.change(e.target.value)
+    },
+
+    handleSwitchOption: function (e) {
+      console.log('switch', e)
+      this.value = e.target.value
+    },
+
+    handleEnterOption: function (e) {
+      console.log('enter', e)
+      e.stopPropagation()
+      this.change(e.target.value)
+      return false
+    },
+
+    handleButtonArrowDown: function (e) {
+      this.$refs.popover.show()
     }
   },
 }
