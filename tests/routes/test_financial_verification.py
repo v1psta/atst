@@ -48,16 +48,6 @@ FalseValidator = MagicMock()
 FalseValidator.validate = MagicMock(return_value=False)
 
 
-class MockPEValidator(object):
-    def validate(self, request, field):
-        return True
-
-
-class MockTaskOrderValidator(object):
-    def validate(self, field):
-        return True
-
-
 def test_update(fv_data):
     request = RequestFactory.create()
     user = UserFactory.create()
@@ -171,3 +161,16 @@ def test_save_draft_with_invalid_pe_number(fv_data):
 
     with pytest.raises(FormValidationError):
         assert save_draft.execute()
+
+
+def test_save_draft_re_enter_pe_number(fv_data):
+    request = RequestFactory.create()
+    user = UserFactory.create()
+    data = {**fv_data, "pe_id": "0101228M"}
+    save_fv = SaveFinancialVerificationDraft(
+        PENumberValidator(), TrueValidator, user, request, data, is_extended=False
+    )
+
+    with pytest.raises(FormValidationError):
+        save_fv.execute()
+    response_context = save_fv.execute()
