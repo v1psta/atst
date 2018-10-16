@@ -1,3 +1,10 @@
+# Add root project dir to the python path
+import os
+import sys
+
+parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+sys.path.append(parent_dir)
+
 import ctypes
 import sqlalchemy
 from sqlalchemy import or_, event as sqlalchemy_event
