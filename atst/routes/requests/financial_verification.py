@@ -44,6 +44,10 @@ class FinancialVerificationBase(object):
     def _apply_task_order_number_error(self, field):
         field.errors += ("Task Order number not found",)
 
+    def _raise(self, form):
+        form.reset()
+        raise FormValidationError(form)
+
 
 class GetFinancialVerificationForm(FinancialVerificationBase):
     def __init__(self, user, request, is_extended=False):
@@ -98,8 +102,7 @@ class UpdateFinancialVerification(FinancialVerificationBase):
                 self.request.id, form.data
             )
         else:
-            form.reset()
-            raise FormValidationError(form)
+            self._raise(form)
 
         if should_submit:
             updated_request = Requests.submit_financial_verification(updated_request)
@@ -107,8 +110,7 @@ class UpdateFinancialVerification(FinancialVerificationBase):
                 workspace = Requests.approve_and_create_workspace(updated_request)
                 submitted = True
         else:
-            form.reset()
-            raise FormValidationError(form)
+            self._raise(form)
 
         if submitted:
             return {
@@ -142,8 +144,7 @@ class SaveFinancialVerificationDraft(FinancialVerificationBase):
         valid = True
 
         if not form.validate_draft():
-            form.reset()
-            raise FormValidationError(form)
+            self._raise(form)
 
         if form.pe_id.data and not self.pe_validator.validate(
             self.request, form.pe_id.data
@@ -164,8 +165,7 @@ class SaveFinancialVerificationDraft(FinancialVerificationBase):
         if valid:
             return {"request": updated_request}
         else:
-            form.reset()
-            raise FormValidationError(form)
+            self._raise(form)
 
 
 @requests_bp.route("/requests/verify/<string:request_id>", methods=["GET"])
