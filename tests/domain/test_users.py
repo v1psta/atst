@@ -79,5 +79,7 @@ def test_update_user():
 
 def test_update_user_with_dod_id():
     new_user = Users.create(DOD_ID, "developer")
-    with pytest.raises(UnauthorizedError):
+    with pytest.raises(UnauthorizedError) as excinfo:
         Users.update(new_user, {"dod_id": "1234567890"})
+
+    assert "dod_id" in str(excinfo.value)

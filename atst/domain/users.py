@@ -77,8 +77,10 @@ class Users(object):
 
     @classmethod
     def update(cls, user, user_delta):
-        if not set(user_delta.keys()).issubset(Users._UPDATEABLE_ATTRS):
-            raise UnauthorizedError(user, "update DOD ID")
+        delta_set = set(user_delta.keys())
+        if not set(delta_set).issubset(Users._UPDATEABLE_ATTRS):
+            unpermitted = delta_set - Users._UPDATEABLE_ATTRS
+            raise UnauthorizedError(user, "update {}".format(", ".join(unpermitted)))
 
         for key, value in user_delta.items():
             setattr(user, key, value)
