@@ -13,7 +13,7 @@ from atst.domain.requests.financial_verification import (
 
 
 class FinancialVerificationBase(object):
-    def _get_form(self, request, is_extended, input_data):
+    def _get_form(self, request, is_extended, formdata=None):
         existing_fv_data = request.financial_verification
 
         if request.task_order:
@@ -26,7 +26,7 @@ class FinancialVerificationBase(object):
             )
             existing_fv_data = {**existing_fv_data, **task_order_dict}
 
-        mdict = ImmutableMultiDict(input_data)
+        mdict = ImmutableMultiDict(formdata) if formdata is not None else None
         if is_extended:
             return ExtendedFinancialForm(formdata=mdict, data=existing_fv_data)
         else:
@@ -52,7 +52,7 @@ class GetFinancialVerificationForm(FinancialVerificationBase):
         self.is_extended = is_extended
 
     def execute(self):
-        form = self._get_form(self.request, self.is_extended, {})
+        form = self._get_form(self.request, self.is_extended)
         return {"form": form}
 
 
