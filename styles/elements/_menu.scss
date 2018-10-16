@@ -42,6 +42,13 @@
     }
   }
 
+  .menu__message {
+    @include h5;
+    font-weight: normal;
+    font-style: italic;
+    padding: 0 ($gap * 2);
+  }
+
   .menu__button {
     margin: ($gap * 2) ($gap * 2) 0;
     white-space: nowrap;
