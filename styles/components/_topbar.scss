@@ -59,9 +59,38 @@
       align-items: stretch;
       justify-content: flex-end;
 
-      .topbar__link--workspace {
-        &:first-child {
-          margin-right: auto;
+      .topbar__workspace-menu {
+        margin-right: auto;
+        position: relative;
+
+        .topbar__workspace-menu__toggle {
+          margin: 0;
+          border-radius: 0;
+
+          &--open {
+            background-color: $color-blue-darkest;
+            position: relative;
+
+            &::before {
+              content: '';
+              display: block;
+              position: absolute;
+              bottom: 0;
+              left: $gap * 2;
+              right: $gap * 2;
+              height: $gap / 2;
+              background-color: $color-primary;
+            }
+          }
+
+          .icon {
+            @include icon-size(10);
+            margin-left: $gap * 2;
+          }
+        }
+
+        .topbar__workspace-menu__panel {
+          position: absolute;
         }
       }
 
