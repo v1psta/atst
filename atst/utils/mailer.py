@@ -20,18 +20,17 @@ class SMTPConnection(MailConnection):
         self.username = username
         self.password = password
         self.use_tls = use_tls
-        self.host = None
 
     @contextmanager
     def _host(self):
         host = None
 
         if self.use_tls:
-            self.host = smtplib.SMTP(self.server, self.port)
-            self.host.starttls()
+            host = smtplib.SMTP(self.server, self.port)
+            host.starttls()
         else:
-            self.host = smtplib.SMTP_SSL(self.server, self.port)
-        self.host.login(self.username, self.password)
+            host = smtplib.SMTP_SSL(self.server, self.port)
+        host.login(self.username, self.password)
 
         yield host
 
@@ -85,8 +84,3 @@ class Mailer(object):
     @property
     def messages(self):
         return self.connection.messages
-
-
-class RedisMailer(object):
-    def __init__(self, *args, **kwargs):
-        pass
