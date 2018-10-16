@@ -39,6 +39,10 @@ locally:
   running on the default port of 6379. You can ensure that Redis is running by
   executing `redis-cli` with no options and ensuring a connection is succesfully made.
 
+* [`entr`](http://www.entrproject.org/)
+  This dependency is optional. If present, the queue worker process will hot
+  reload in development.
+
 ### Cloning
 This project contains git submodules. Here is an example clone command that will
 automatically initialize and update those modules:
