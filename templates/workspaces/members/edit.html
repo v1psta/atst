@@ -82,7 +82,7 @@
                       <div>
                       {% if env_role_modal_description %}
                         <h1>{{ env_role_modal_description.header }}</h1>
-                        <p>{{ env_role_modal_description.body }}</p>
+                        <p>{{ env_role_modal_description.body | safe }}</p>
                       {% endif %}
                       </div>
                     </div>

@@ -157,7 +157,7 @@ ENVIRONMENT_ROLES = [
 
 ENV_ROLE_MODAL_DESCRIPTION = {
     "header": "Assign Environment Role",
-    "body": "An environment role determines the permissions a member of the workspace assumes when using the JEDI Cloud.\n\nA member may have different environment roles across different projects. A member can only have one assigned environment role in a given environment.",
+    "body": "An environment role determines the permissions a member of the workspace assumes when using the JEDI Cloud.<br/><br/>A member may have different environment roles across different projects. A member can only have one assigned environment role in a given environment.",
 }
 
 FUNDING_TYPES = [
