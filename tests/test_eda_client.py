@@ -22,5 +22,5 @@ def test_contract_not_found():
 def test_eda_xml_parser():
     with open("tests/fixtures/eda_contract.xml") as contract:
         eda_data = parse_eda_xml(contract.read())
-        assert eda_data["clin_0001"] == 200000.00
+        assert eda_data["clin_0001"] == 200_000.00
         assert not eda_data["clin_0003"]

@@ -28,14 +28,14 @@ class EDAXMLHandler:
     def _line_items(self):
         return self.element_tree.findall(".//LineItem[LineItemType='CLIN']/../../..")
 
-    def _parse_clin_data(self):
-        for line_item in self._line_items:
-            number = line_item.find(".//LineItemBase").text
-            amount_details = line_item.find(".//ItemOtherAmounts[AmountDescription='Not to Exceed Amount (Funding)']/Amount")
-            self.clins[number] = float(amount_details.text)
-
     def parse(self):
-        self._parse_clin_data()
+        for line_item in self._line_items:
+            number_el = line_item.find(".//LineItemBase")
+            amount_details = line_item.find(
+                ".//ItemOtherAmounts[AmountDescription='Not to Exceed Amount (Funding)']/Amount"
+            )
+            if number_el is not None and amount_details is not None:
+                self.clins[number_el.text] = float(amount_details.text)
 
 
 class EDAClientBase(object):
