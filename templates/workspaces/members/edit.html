@@ -81,7 +81,7 @@
           {% set role = EnvironmentRoles.get(member.user_id, env.id).role %}
 
         <li class='block-list__item'>
-          <edit-environment-role inline-template initial-data='{{ role }}' v-bind:choices='{{ choices | tojson }}' v-bind:revoke='revoke'>
+          <edit-environment-role inline-template initial-data='{{ role or "" }}' v-bind:choices='{{ choices | tojson }}' v-bind:revoke='revoke'>
           <div class='project-list-item__environment'>
             <span class='project-list-item__environment__link'>
               {{ env.name }}
@@ -104,7 +104,6 @@
                       {% for choice in choices %}
                       <li class='block-list__item block-list__item--selectable'>
 
-                        {% if choice[0] != ""  %}
                           <input
                             name='radio_input_{{ env.id }}'
                             v-on:change='change'
@@ -126,7 +125,6 @@
                               {{ choice[1].name }}
                             {% endif %}
                           </label>
-                          {% endif %}
                       </li>
                       {% endfor %}
                     </ul>

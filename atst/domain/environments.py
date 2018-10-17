@@ -69,13 +69,17 @@ class Environments(object):
         for id_and_role in ids_and_roles:
             new_role = id_and_role["role"]
             environment = Environments.get(id_and_role["id"])
-            env_role = EnvironmentRoles.get(workspace_user.user_id, id_and_role["id"])
-            if env_role:
-                env_role.role = new_role
+
+            if new_role is None:
+                EnvironmentRoles.delete(workspace_user.user.id, environment.id)
             else:
-                env_role = EnvironmentRole(
-                    user=workspace_user.user, environment=environment, role=new_role
-                )
-            db.session.add(env_role)
+                env_role = EnvironmentRoles.get(workspace_user.user_id, id_and_role["id"])
+                if env_role:
+                    env_role.role = new_role
+                else:
+                    env_role = EnvironmentRole(
+                        user=workspace_user.user, environment=environment, role=new_role
+                    )
+                db.session.add(env_role)
 
         db.session.commit()

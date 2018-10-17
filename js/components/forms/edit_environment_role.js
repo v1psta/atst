@@ -38,26 +38,24 @@ export default {
       this.new_role = this.initialData
     },
     actualRole: function () {
-      return this.revoke ? null : this.new_role
     }
   },
 
   computed: {
     displayName: function () {
-      const roleName = this.actualRole()
+      const newRole = this.newRole
       for (var arr in this.choices) {
-        if (this.choices[arr][0] == roleName) {
+        if (this.choices[arr][0] == newRole) {
           return this.choices[arr][1].name
         }
       }
-      return roleName ? roleName : "no access"
     },
     label_class: function () {
-      return this.displayName === "no access" ?
+      return this.displayName === "No Access" ?
         "label" : "label label--success"
     },
     newRole: function () {
-      return this.actualRole()
+      return this.revoke ? "" : this.new_role
     }
   },
 }
