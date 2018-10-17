@@ -1,10 +1,41 @@
 import { VPopover } from 'v-tooltip'
 
+const SelectorInput = {
+  name: 'SelectorInput',
+  props: {
+    name: String,
+    value: String,
+    label: String,
+    description: String,
+    selected: Boolean,
+    handleChange: Function,
+    handleEnter: Function
+  },
+
+  computed: {
+    id: function () {
+      return `${this.name}_${this.value}`
+    }
+  },
+
+  methods: {
+    onChange: function (e) {
+      this.handleChange(this.value)
+    },
+
+    onEnter: function (e) {
+      this.handleEnter()
+    }
+  }
+}
+
+
 export default {
   name: 'selector',
 
   components: {
-    VPopover
+    VPopover,
+    SelectorInput
   },
 
   props: {
@@ -20,7 +51,8 @@ export default {
   data: function () {
     return {
       value: this.initialChoice || null,
-      showError: (this.initialErrors && this.initialErrors.length) || false
+      showError: (this.initialErrors && this.initialErrors.length) || false,
+      usingKeyboard: false
     }
   },
 
@@ -38,32 +70,29 @@ export default {
   },
 
   methods: {
+
     change: function (value) {
-      console.log('change', value)
       this.value = value
       this.showError = false
-      setTimeout(() => this.$refs.popover.hide(), 300)
+      if (!this.usingKeyboard) {
+        setTimeout(() => this.$refs.popover.hide(), 300)
+      }
     },
 
-    handleClickOption: function (e) {
-      console.log('click', e)
-      this.change(e.target.value)
-    },
-
-    handleSwitchOption: function (e) {
-      console.log('switch', e)
-      this.value = e.target.value
+    enter: function () {
+      this.$refs.popover.hide()
     },
 
     handleEnterOption: function (e) {
-      console.log('enter', e)
-      e.stopPropagation()
       this.change(e.target.value)
-      return false
+      this.usingKeyboard = false
+      this.$refs.popover.hide()
     },
 
     handleButtonArrowDown: function (e) {
+      this.usingKeyboard = true
       this.$refs.popover.show()
+      this.$refs.choices.find(choice => choice.selected).$refs.input[0].focus()
     }
   },
 }

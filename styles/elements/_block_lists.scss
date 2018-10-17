@@ -105,21 +105,26 @@
   @include block-list-item;
 
   &.block-list__item--selectable {
-    > label {
-      margin: 0;
-      max-width: none;
+    > div {
       display: flex;
       flex-direction: row-reverse;
-      align-items: center;
-      justify-content: space-between;
-      &::before {
-        flex-shrink: 0;
-        margin-right: 0;
-        margin-left: $gap * 2;
-      }
 
-      &:hover {
-        color: $color-primary;
+      > label {
+        margin: 0;
+        max-width: none;
+        display: flex;
+        flex-direction: row-reverse;
+        align-items: center;
+        justify-content: space-between;
+        &::before {
+          flex-shrink: 0;
+          margin-right: 0;
+          margin-left: $gap * 2;
+        }
+
+        &:hover {
+          color: $color-primary;
+        }
       }
     }
 

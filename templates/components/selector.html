@@ -26,7 +26,7 @@
         class='selector__button'
         type='button'
         v-html='label'
-        v-on:keyup.down='handleButtonArrowDown'
+        v-on:keydown.down.prevent.stop='handleButtonArrowDown'
         v-tooltip='{ container:false }'>
       </button>
 
@@ -41,28 +41,45 @@
       <template slot='popover'>
         <div class='block-list'>
           <ul>
-            <li v-for='choice in choices' class='block-list__item block-list__item--selectable'>
+            <li v-for='(choice, index) in choices' class='block-list__item block-list__item--selectable'>
               <template v-if='choice[0] !== ""'>
-                <input
-                  tabindex='0'
-                  type='radio'
+
+                <selector-input
                   name="{{ field.name }}"
-                  v-bind:id="'{{ field.name }}_' + choice[0]"
+                  ref='choices'
                   v-bind:value='choice[0]'
-                  v-bind:checked='value === choice[0]'
-                  v-on:click='handleClickOption'
-                  v-on:keyup.enter='handleEnterOption'
-                  v-on:keyup.down='handleSwitchOption'
-                  v-on:keyup.up='handleSwitchOption'/>
-                <label v-bind:for="'{{ field.name }}_' + choice[0]">
-                  <template v-if='choice[1].description'>
-                    <dl>
-                      <dt v-html='choice[1].name'></dt>
-                      <dd v-html='choice[1].description'></dd>
-                    </dl>
-                  </template>
-                  <span v-else v-html='choice[1].name'>
-                </label>
+                  v-bind:label='choice[1].name'
+                  v-bind:description='choice[1].description'
+                  v-bind:selected='value === choice[0]'
+                  v-bind:handle-change='change'
+                  v-bind:handle-enter='enter'
+                  inline-template>
+
+                  <div>
+                    <input
+                      ref='input'
+                      tabindex='0'
+                      type='radio'
+                      v-bind:name='name'
+                      v-bind:id='id'
+                      v-bind:value='value'
+                      v-bind:checked='selected'
+                      v-on:change='onChange'
+                      v-on:keydown.enter.prevent.stop='onEnter'/>
+
+                    <label v-bind:for='id'>
+                      <template v-if='description'>
+                        <dl>
+                          <dt v-html='label'></dt>
+                          <dd v-html='description'></dd>
+                        </dl>
+                      </template>
+                      <span v-else v-html='label'>
+                    </label>
+                  </div>
+
+                </selector-input>
+
               </template>
             </li>
           </ul>
