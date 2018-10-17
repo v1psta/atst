@@ -39,6 +39,10 @@ locally:
   running on the default port of 6379. You can ensure that Redis is running by
   executing `redis-cli` with no options and ensuring a connection is succesfully made.
 
+* [`entr`](http://www.entrproject.org/)
+  This dependency is optional. If present, the queue worker process will hot
+  reload in development.
+
 ### Cloning
 This project contains git submodules. Here is an example clone command that will
 automatically initialize and update those modules:
@@ -77,13 +81,9 @@ virtualenvs for you when you enter and leave the directory.
 
 To start the app locally in the foreground and watch for changes:
 
-    script/dev_server
+    script/server
 
-To watch for changes to any js/css assets:
-
-    yarn watch
-
-After running `script/dev_server`, the application is available at
+After running `script/server`, the application is available at
 [`http://localhost:8000`](http://localhost:8000).
 
 
@@ -110,6 +110,22 @@ We have a helper script that will seed the database with requests, workspaces an
 projects for all of the test users:
 
 `pipenv run python script/seed_sample.py`
+
+### Email Notifications
+
+To send email, the following configuration values must be set:
+
+```
+MAIL_SERVER = <SMTP server URL>
+MAIL_PORT = <SMTP server port>
+MAIL_SENDER = <Login name for the email account and sender address>
+MAIL_PASSWORD = <login password for the email account>
+MAIL_TLS = <Boolean, whether TLS should be enabled for outgoing email. Defaults to false.>
+```
+
+When the `DEBUG` environment variable is enabled and the app environment is not
+set to production, sent email messages are available at the `/messages` endpoint.
+Emails are not sent in development and test modes.
 
 ## Testing
 

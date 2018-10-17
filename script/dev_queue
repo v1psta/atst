@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# script/dev_queue: Run the queue with entr if available
+
+set -e
+
+if [[ `command -v entr` ]]; then
+  find atst | entr -r flask rq worker
+else
+  flask rq worker
+fi

@@ -10,6 +10,7 @@ from tempfile import TemporaryDirectory
 from atst.app import make_app, make_config
 from atst.database import db as _db
 from atst.domain.auth import logout
+from atst.queue import queue
 import tests.factories as factories
 from tests.mocks import PDF_FILENAME
 

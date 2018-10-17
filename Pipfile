@@ -21,6 +21,7 @@ requests = "*"
 apache-libcloud = "*"
 lockfile = "*"
 defusedxml = "*"
+"flask-rq2" = "*"
 
 [dev-packages]
 bandit = "*"
@@ -35,6 +36,7 @@ pytest-flask = "*"
 pytest-env = "*"
 pytest-cov = "*"
 selenium = "*"
+honcho = "*"
 
 [requires]
 python_version = "3.6.6"

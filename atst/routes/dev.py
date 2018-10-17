@@ -1,7 +1,16 @@
-from flask import Blueprint, request, session, redirect
+from flask import (
+    Blueprint,
+    request,
+    session,
+    redirect,
+    render_template,
+    url_for,
+    current_app as app,
+)
 
 from . import redirect_after_login_url
 from atst.domain.users import Users
+from atst.queue import queue
 
 bp = Blueprint("dev", __name__)
 
@@ -65,3 +74,17 @@ def login_dev():
     session["user_id"] = user.id
 
     return redirect(redirect_after_login_url())
+
+
+@bp.route("/test-email")
+def test_email():
+    queue.send_mail(
+        [request.args.get("to")], request.args.get("subject"), request.args.get("body")
+    )
+
+    return redirect(url_for("dev.messages"))
+
+
+@bp.route("/messages")
+def messages():
+    return render_template("dev/emails.html", messages=app.mailer.messages)
