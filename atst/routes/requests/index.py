@@ -56,20 +56,21 @@ class RequestsIndex(object):
         }
 
     def _edit_link_for_request(self, viewing_role, request):
-        if viewing_role == "ccpo":
+        if request.creator == g.current_user:
+            if request.is_pending_financial_verification:
+                return url_for("requests.financial_verification", request_id=request.id)
+            elif request.is_pending_financial_verification_changes:
+                return url_for(
+                    "requests.financial_verification", request_id=request.id, extended=True
+                )
+            elif request.is_approved:
+                return url_for("requests.view_request_details", request_id=request.id)
+            else:
+                return url_for(
+                    "requests.requests_form_update", screen=1, request_id=request.id
+                )
+        elif viewing_role == "ccpo":
             return url_for("requests.approval", request_id=request.id)
-        elif request.is_pending_financial_verification:
-            return url_for("requests.financial_verification", request_id=request.id)
-        elif request.is_pending_financial_verification_changes:
-            return url_for(
-                "requests.financial_verification", request_id=request.id, extended=True
-            )
-        elif request.is_pending_ccpo_action or request.is_approved:
-            return url_for("requests.view_request_details", request_id=request.id)
-        else:
-            return url_for(
-                "requests.requests_form_update", screen=1, request_id=request.id
-            )
 
     def _map_request(self, request, viewing_role):
         time_created = pendulum.instance(request.time_created)
