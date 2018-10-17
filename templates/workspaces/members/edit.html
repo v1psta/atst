@@ -52,6 +52,7 @@
 
   {% for project in projects %}
   {% set revoke_modal_name = project.name + 'RevokeModal' %}
+  <edit-project-roles inline-template v-bind:name="'{{ project.name }}'">
   <div is='toggler' default-visible class='block-list project-list-item'>
     <template slot-scope='props'>
       <header class='block-list__header'>
@@ -68,7 +69,7 @@
               Confirming will revoke access for {{ member.user.full_name }} to any environments associated with {{ project.name }}.
             </p>
             <div class='action-group'>
-              <a v-on:click="closeModal('{{ revoke_modal_name }}')" class='action-group__action usa-button'>Confirm</a>
+              <a v-on:click="revoke = true; closeModal('{{ revoke_modal_name }}')" class='action-group__action usa-button'>Confirm</a>
               <a class='action-group__action icon-link icon-link--danger' v-on:click="closeModal('{{ revoke_modal_name }}'); cancel();">Cancel</a>
             </div>
           </div>
@@ -80,7 +81,7 @@
           {% set role = EnvironmentRoles.get(member.user_id, env.id).role %}
 
         <li class='block-list__item'>
-          <edit-environment-role inline-template initial-data='{{ role }}' v-bind:choices='{{ choices | tojson }}'>
+          <edit-environment-role inline-template initial-data='{{ role }}' v-bind:choices='{{ choices | tojson }}' v-bind:revoke='revoke'>
           <div class='project-list-item__environment'>
             <span class='project-list-item__environment__link'>
               {{ env.name }}
@@ -147,6 +148,7 @@
       </ul>
     </template>
   </div>
+  </edit-project-roles>
   {% endfor %}
 
   <div class='action-group'>

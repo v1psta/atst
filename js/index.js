@@ -14,6 +14,7 @@ import financial from './components/forms/financial'
 import toggler from './components/toggler'
 import NewProject from './components/forms/new_project'
 import EditEnvironmentRole from './components/forms/edit_environment_role'
+import EditProjectRoles from './components/forms/edit_project_roles'
 import Modal from './mixins/modal'
 import selector from './components/selector'
 import BudgetChart from './components/charts/budget_chart'
@@ -42,6 +43,7 @@ const app = new Vue({
     CcpoApproval,
     LocalDatetime,
     EditEnvironmentRole,
+    EditProjectRoles,
   },
 
   mounted: function() {
