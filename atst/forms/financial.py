@@ -6,7 +6,7 @@ from wtforms.validators import InputRequired, Email, Regexp, Optional
 from flask_wtf.file import FileAllowed
 
 from .fields import NewlineListField, SelectField, NumberStringField
-from .forms import ValidatedForm
+from atst.forms.forms import ValidatedForm
 from .data import FUNDING_TYPES
 from .validators import DateRange
 
@@ -30,9 +30,21 @@ class BaseFinancialForm(ValidatedForm):
         self.uii_ids.process_data(self.uii_ids.data)
 
     def validate_draft(self):
+        """
+        Another stupid workaround. Maybe there isn't a better way.
+
+        Make all fields optional before validation, and then return them to
+        their previous state.
+        """
         for field in self:
             field.validators.insert(0, Optional())
-        return self.validate()
+
+        valid = self.validate()
+
+        for field in self:
+            field.validators.pop(0)
+
+        return valid
 
     @property
     def is_missing_task_order_number(self):
