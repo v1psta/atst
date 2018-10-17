@@ -61,7 +61,9 @@ class RequestsIndex(object):
                 return url_for("requests.financial_verification", request_id=request.id)
             elif request.is_pending_financial_verification_changes:
                 return url_for(
-                    "requests.financial_verification", request_id=request.id, extended=True
+                    "requests.financial_verification",
+                    request_id=request.id,
+                    extended=True,
                 )
             elif request.is_approved:
                 return url_for("requests.view_request_details", request_id=request.id)
