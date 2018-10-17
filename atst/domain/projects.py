@@ -2,6 +2,7 @@ from atst.database import db
 from atst.domain.authz import Authorization
 from atst.domain.environments import Environments
 from atst.domain.exceptions import NotFoundError
+from atst.domain.environment_roles import EnvironmentRoles
 from atst.models.permissions import Permissions
 from atst.models.project import Project
 from atst.models.environment import Environment

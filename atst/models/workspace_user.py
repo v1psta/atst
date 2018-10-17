@@ -57,6 +57,18 @@ class WorkspaceUser(object):
         )
 
     @property
+    def environment_roles(self):
+        return (
+            db.session.query(EnvironmentRole)
+            .join(EnvironmentRole.environment)
+            .join(Environment.project)
+            .join(Project.workspace)
+            .filter(Project.workspace_id == self.workspace_id)
+            .filter(EnvironmentRole.user_id == self.user_id)
+            .all()
+        )
+
+    @property
     def has_environment_roles(self):
         return self.num_environment_roles > 0
 

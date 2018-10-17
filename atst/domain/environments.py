@@ -58,10 +58,10 @@ class Environments(object):
         return env
 
     @classmethod
-    def update_environment_role(cls, user, ids_and_roles, workspace_user):
+    def update_environment_roles(cls, user, workspace, workspace_user, ids_and_roles):
         Authorization.check_workspace_permission(
             user,
-            workspace_user.workspace,
+            workspace,
             Permissions.ADD_AND_ASSIGN_CSP_ROLES,
             "assign environment roles",
         )
@@ -73,7 +73,9 @@ class Environments(object):
             if new_role is None:
                 EnvironmentRoles.delete(workspace_user.user.id, environment.id)
             else:
-                env_role = EnvironmentRoles.get(workspace_user.user_id, id_and_role["id"])
+                env_role = EnvironmentRoles.get(
+                    workspace_user.user.id, id_and_role["id"]
+                )
                 if env_role:
                     env_role.role = new_role
                 else:

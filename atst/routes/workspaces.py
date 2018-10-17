@@ -297,7 +297,9 @@ def update_member(workspace_id, member_id):
             )
             new_role_name = member.role_displayname
 
-        Environments.update_environment_role(g.current_user, ids_and_roles, member)
+        Environments.update_environment_roles(
+            g.current_user, workspace, member, ids_and_roles
+        )
 
         return redirect(
             url_for(
