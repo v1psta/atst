@@ -1,7 +1,7 @@
 from atst.domain.roles import WORKSPACE_ROLES as WORKSPACE_ROLE_DEFINITIONS
 
 SERVICE_BRANCHES = [
-    (None, "Select an option"),
+    ("", "Select an option"),
     ("Air Force, Department of the", "Air Force, Department of the"),
     ("Army and Air Force Exchange Service", "Army and Air Force Exchange Service"),
     ("Army, Department of the", "Army, Department of the"),
