@@ -130,7 +130,7 @@
                       </li>
                       {% endfor %}
                     </ul>
-                    <input type='hidden' name='env_{{ env.id }}' v-bind:value='new_role'/>
+                    <input type='hidden' name='env_{{ env.id }}' v-bind:value='newRole'/>
                     <div class='block-list__footer'>
                       <div class='action-group'>
                         <button type='button' v-on:click="closeModal('{{ env.name }}RolesModal')" class='action-group__action usa-button'>Select Access Role</button>
