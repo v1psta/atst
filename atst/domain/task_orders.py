@@ -29,7 +29,7 @@ class TaskOrders(object):
         to_data = TaskOrders._client().get_contract(order_number, status="y")
         if to_data:
             # TODO: we need to determine exactly what we're getting and storing from the EDA client
-            return TaskOrders.create(number=to_data["contract_no"], source=Source.EDA)
+            return TaskOrders.create(source=Source.EDA, **to_data)
 
         else:
             raise NotFoundError("task_order")
