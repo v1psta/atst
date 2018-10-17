@@ -1,0 +1,56 @@
+.menu {
+  background-color: $color-blue-darkest;
+  color: $color-white;
+  position: absolute;
+  min-width: 30rem;
+  max-height: 80vh;
+  overflow-y: auto;
+  padding-bottom: $gap * 2;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.25);
+
+  .menu__heading {
+    @include h5;
+    margin: 0;
+    padding: ($gap * 3) ($gap * 2) $gap;
+  }
+
+  .menu__list {
+    margin: 0;
+    padding: 0;
+
+    > .menu__list__item {
+      margin: 0;
+
+      > a {
+        @include h5;
+        font-weight: normal;
+        text-decoration: none;
+        display: block;
+        color: $color-white;
+        padding: ($gap * .75) ($gap * 2);
+
+        .icon {
+          @include icon-color($color-white);
+          @include icon-size(10);
+          margin-left: $gap;
+        }
+
+        &:hover {
+          background-color: $color-blue-darker;
+        }
+      }
+    }
+  }
+
+  .menu__message {
+    @include h5;
+    font-weight: normal;
+    font-style: italic;
+    padding: 0 ($gap * 2);
+  }
+
+  .menu__button {
+    margin: ($gap * 2) ($gap * 2) 0;
+    white-space: nowrap;
+  }
+}
