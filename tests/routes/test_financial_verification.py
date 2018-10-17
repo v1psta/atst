@@ -61,7 +61,6 @@ def test_update_fv(fv_data):
     assert updated_request.is_pending_ccpo_approval
 
 
-
 def test_update_fv_re_enter_pe_number(fv_data):
     request = RequestFactory.create()
     user = UserFactory.create()
@@ -184,6 +183,20 @@ def test_save_draft_re_enter_pe_number(fv_data):
     with pytest.raises(FormValidationError):
         save_fv.execute()
     save_fv.execute()
+
+
+def test_save_draft_and_then_submit():
+    request = RequestFactory.create()
+    user = UserFactory.create()
+    data = {"ba_code": "02A"}
+    updated_request = SaveFinancialVerificationDraft(
+        TrueValidator, TrueValidator, user, request, data, is_extended=False
+    ).execute()
+
+    with pytest.raises(FormValidationError):
+        UpdateFinancialVerification(
+            TrueValidator, TrueValidator, user, updated_request, data
+        ).execute()
 
 
 def test_update_fv_route(client, user_session, fv_data):
