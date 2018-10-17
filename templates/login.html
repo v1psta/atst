@@ -11,6 +11,12 @@
       <div class='col'>
 
         <div class='login-banner'>
+          {% if request.args.get("sessionExpired") %}
+            {{ Alert('Session Expired',
+                message='Your session expired due to inactivity. Please log in again to continue.',
+                level='error'
+            ) }}
+          {% endif %}
           <h1 class="login-banner__heading">Access the JEDI Cloud</h1>
 
           <img class="login-banner__logo" src="{{url_for('static', filename='img/ccpo-logo.svg')}}" alt="Cloud Computing Program Office Logo">

@@ -1,4 +1,5 @@
-from flask import render_template, current_app
+from flask import render_template, current_app, url_for, redirect, request
+from flask_wtf.csrf import CSRFError
 import werkzeug.exceptions as werkzeug_exceptions
 
 import atst.domain.exceptions as exceptions
@@ -22,6 +23,12 @@ def make_error_pages(app):
     def unauthorized(e):
         log_error(e)
         return render_template("error.html", message="Log in Failed"), 401
+
+    @app.errorhandler(CSRFError)
+    # pylint: disable=unused-variable
+    def session_expired(e):
+        log_error(e)
+        return redirect(url_for("atst.root", sessionExpired=True, next=request.path))
 
     @app.errorhandler(Exception)
     # pylint: disable=unused-variable
