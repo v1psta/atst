@@ -38,7 +38,9 @@ def test_update_environment_roles():
     ]
 
     workspace_user = workspace.members[0]
-    Environments.update_environment_roles(owner, workspace, workspace_user, new_ids_and_roles)
+    Environments.update_environment_roles(
+        owner, workspace, workspace_user, new_ids_and_roles
+    )
     new_dev_env_role = EnvironmentRoles.get(workspace_user.user.id, dev_env.id)
     staging_env_role = EnvironmentRoles.get(workspace_user.user.id, staging_env.id)
 
