@@ -1,4 +1,4 @@
-from sqlalchemy import String, ForeignKey, Column
+from sqlalchemy import String, ForeignKey, Column, Date
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import UUID
 
@@ -20,6 +20,11 @@ class User(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     dod_id = Column(String, unique=True, nullable=False)
     first_name = Column(String)
     last_name = Column(String)
+    phone_number = Column(String)
+    service_branch = Column(String)
+    citizenship = Column(String)
+    designation = Column(String)
+    date_latest_training = Column(Date)
 
     @property
     def atat_permissions(self):
@@ -52,3 +57,10 @@ class User(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
             self.has_workspaces,
             self.id,
         )
+
+    def to_dictionary(self):
+        return {
+            c.name: getattr(self, c.name)
+            for c in self.__table__.columns
+            if c.name not in ["id"]
+        }

@@ -1,17 +1,18 @@
 import pendulum
-from wtforms.fields.html5 import DateField, EmailField, IntegerField, TelField
+from wtforms.fields.html5 import DateField, EmailField, IntegerField
 from wtforms.fields import BooleanField, RadioField, StringField, TextAreaField
 from wtforms.validators import Email, Length, Optional, InputRequired, DataRequired
 
 from .fields import SelectField
 from .forms import ValidatedForm
+from .edit_user import USER_FIELDS, inherit_field
 from .data import (
     SERVICE_BRANCHES,
     ASSISTANCE_ORG_TYPES,
     DATA_TRANSFER_AMOUNTS,
     COMPLETION_DATE_RANGES,
 )
-from .validators import Alphabet, DateRange, PhoneNumber, IsNumber
+from .validators import DateRange, IsNumber
 from atst.domain.requests import Requests
 
 
@@ -162,58 +163,21 @@ class DetailsOfUseForm(ValidatedForm):
 
 
 class InformationAboutYouForm(ValidatedForm):
-    fname_request = StringField("First Name", validators=[InputRequired(), Alphabet()])
+    fname_request = inherit_field(USER_FIELDS["first_name"])
 
-    lname_request = StringField("Last Name", validators=[InputRequired(), Alphabet()])
+    lname_request = inherit_field(USER_FIELDS["last_name"])
 
     email_request = EmailField("E-mail Address", validators=[InputRequired(), Email()])
 
-    phone_number = TelField(
-        "Phone Number",
-        description="Enter a 10-digit phone number",
-        validators=[InputRequired(), PhoneNumber()],
-    )
+    phone_number = inherit_field(USER_FIELDS["phone_number"])
 
-    service_branch = SelectField(
-        "Service Branch or Agency",
-        description="Which service or organization do you belong to within the DoD?",
-        choices=SERVICE_BRANCHES,
-    )
+    service_branch = inherit_field(USER_FIELDS["service_branch"])
 
-    citizenship = RadioField(
-        description="What is your citizenship status?",
-        choices=[
-            ("United States", "United States"),
-            ("Foreign National", "Foreign National"),
-            ("Other", "Other"),
-        ],
-        validators=[InputRequired()],
-    )
+    citizenship = inherit_field(USER_FIELDS["citizenship"])
 
-    designation = RadioField(
-        "Designation of Person",
-        description="What is your designation within the DoD?",
-        choices=[
-            ("military", "Military"),
-            ("civilian", "Civilian"),
-            ("contractor", "Contractor"),
-        ],
-        validators=[InputRequired()],
-    )
+    designation = inherit_field(USER_FIELDS["designation"])
 
-    date_latest_training = DateField(
-        "Latest Information Assurance (IA) Training Completion Date",
-        description='To complete the training, you can find it in <a class="icon-link" href="https://iatraining.disa.mil/eta/disa_cac2018/launchPage.htm" target="_blank">Information Assurance Cyber Awareness Challange</a> website.',
-        validators=[
-            InputRequired(),
-            DateRange(
-                lower_bound=pendulum.duration(years=1),
-                upper_bound=pendulum.duration(days=0),
-                message="Must be a date within the last year.",
-            ),
-        ],
-        format="%m/%d/%Y",
-    )
+    date_latest_training = inherit_field(USER_FIELDS["date_latest_training"])
 
 
 class WorkspaceOwnerForm(ValidatedForm):

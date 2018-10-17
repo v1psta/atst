@@ -10,7 +10,6 @@ from atst.domain.users import Users
 from atst.domain.authnid import AuthenticationContext
 from atst.domain.audit_log import AuditLog
 from atst.domain.auth import logout as _logout
-from atst.forms.edit_user import EditUserForm
 
 
 bp = Blueprint("atst", __name__)
@@ -117,19 +116,6 @@ def logout():
 def activity_history():
     audit_events = AuditLog.get_all_events(g.current_user)
     return render_template("audit_log.html", audit_events=audit_events)
-
-
-@bp.route("/user")
-def user():
-    form = EditUserForm(request.form)
-    user = g.current_user
-    return render_template("user/edit.html", form=form, user=user)
-
-
-@bp.route("/save_user")
-def save_user():
-    # no op
-    return redirect(url_for(".home"))
 
 
 @bp.route("/about")

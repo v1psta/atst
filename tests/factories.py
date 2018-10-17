@@ -48,6 +48,18 @@ class UserFactory(Base):
     last_name = factory.Faker("last_name")
     atat_role = factory.SubFactory(RoleFactory)
     dod_id = factory.LazyFunction(lambda: "".join(random.choices(string.digits, k=10)))
+    phone_number = factory.LazyFunction(
+        lambda: "".join(random.choices(string.digits, k=10))
+    )
+    service_branch = factory.LazyFunction(
+        lambda: random.choices([k for k, v in SERVICE_BRANCHES if k is not None])[0]
+    )
+    citizenship = "United States"
+    designation = "military"
+    date_latest_training = factory.LazyFunction(
+        lambda: datetime.date.today()
+        + datetime.timedelta(days=-(random.randrange(1, 365)))
+    )
 
     @classmethod
     def from_atat_role(cls, atat_role_name, **kwargs):

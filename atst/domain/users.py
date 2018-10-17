@@ -5,7 +5,7 @@ from atst.database import db
 from atst.models import User
 
 from .roles import Roles
-from .exceptions import NotFoundError, AlreadyExistsError
+from .exceptions import NotFoundError, AlreadyExistsError, UnauthorizedError
 
 
 class Users(object):
@@ -53,11 +53,37 @@ class Users(object):
         return user
 
     @classmethod
-    def update(cls, user_id, atat_role_name):
+    def update_role(cls, user_id, atat_role_name):
 
         user = Users.get(user_id)
         atat_role = Roles.get(atat_role_name)
         user.atat_role = atat_role
+
+        db.session.add(user)
+        db.session.commit()
+
+        return user
+
+    _UPDATEABLE_ATTRS = {
+        "first_name",
+        "last_name",
+        "email",
+        "phone_number",
+        "service_branch",
+        "citizenship",
+        "designation",
+        "date_latest_training",
+    }
+
+    @classmethod
+    def update(cls, user, user_delta):
+        delta_set = set(user_delta.keys())
+        if not set(delta_set).issubset(Users._UPDATEABLE_ATTRS):
+            unpermitted = delta_set - Users._UPDATEABLE_ATTRS
+            raise UnauthorizedError(user, "update {}".format(", ".join(unpermitted)))
+
+        for key, value in user_delta.items():
+            setattr(user, key, value)
 
         db.session.add(user)
         db.session.commit()
