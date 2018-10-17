@@ -1,6 +1,14 @@
-def test_csrf_error(app, client):
-    app.config.update({"WTF_CSRF_ENABLED": True})
+import pytest
 
+
+@pytest.fixture
+def csrf_enabled_app(app):
+    app.config.update({"WTF_CSRF_ENABLED": True})
+    yield app
+    app.config.update({"WTF_CSRF_ENABLED": False})
+
+
+def test_csrf_error(csrf_enabled_app, client):
     response = client.post(
         "/requests/new/1",
         headers={"Content-Type": "application/x-www-form-urlencoded"},
