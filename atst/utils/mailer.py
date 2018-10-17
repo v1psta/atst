@@ -21,7 +21,7 @@ class SMTPConnection(MailConnection):
         self.use_tls = use_tls
 
     @contextmanager
-    def _host(self):
+    def _connected_host(self):
         host = None
 
         if self.use_tls:
@@ -29,6 +29,7 @@ class SMTPConnection(MailConnection):
             host.starttls()
         else:
             host = smtplib.SMTP_SSL(self.server, self.port)
+
         host.login(self.username, self.password)
 
         yield host
@@ -40,7 +41,7 @@ class SMTPConnection(MailConnection):
         return []
 
     def send(self, message):
-        with self._host() as host:
+        with self._connected_host() as host:
             host.send_message(message)
 
 
@@ -66,7 +67,7 @@ class Mailer(object):
         self.connection = connection
         self.sender = sender
 
-    def _message(self, recipients, subject, body):
+    def _build_message(self, recipients, subject, body):
         msg = EmailMessage()
         msg.set_content(body)
         msg["From"] = self.sender
@@ -76,7 +77,7 @@ class Mailer(object):
         return msg
 
     def send(self, recipients, subject, body):
-        message = self._message(recipients, subject, body)
+        message = self._build_message(recipients, subject, body)
         self.connection.send(message)
 
     @property
