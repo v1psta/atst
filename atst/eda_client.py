@@ -5,6 +5,39 @@ import requests
 from requests.auth import HTTPBasicAuth
 
 
+def parse_eda_xml(xml_string):
+    contract_et = ET.fromstring(xml_string)
+    handler = EDAXMLHandler(contract_et)
+    handler.parse()
+    return {
+        "clin_0001": handler.clins.get("0001"),
+        "clin_0003": handler.clins.get("0003"),
+        "clin_1001": handler.clins.get("1001"),
+        "clin_1003": handler.clins.get("1003"),
+        "clin_2001": handler.clins.get("2001"),
+        "clin_2003": handler.clins.get("2003"),
+    }
+
+
+class EDAXMLHandler:
+    def __init__(self, element_tree):
+        self.element_tree = element_tree
+        self.clins = {}
+
+    @property
+    def _line_items(self):
+        return self.element_tree.findall(".//LineItem[LineItemType='CLIN']/../../..")
+
+    def _parse_clin_data(self):
+        for line_item in self._line_items:
+            number = line_item.find(".//LineItemBase").text
+            amount_details = line_item.find(".//ItemOtherAmounts[AmountDescription='Not to Exceed Amount (Funding)']/Amount")
+            self.clins[number] = float(amount_details.text)
+
+    def parse(self):
+        self._parse_clin_data()
+
+
 class EDAClientBase(object):
     def list_contracts(
         self,
@@ -80,9 +113,6 @@ class MockEDAClient(EDAClientBase):
 
     MOCK_CONTRACT_NUMBER = "DCA10096D0052"
 
-    # TODO: It seems likely that this will have to supply CLIN data form the
-    # EDA returnclinXML API call, in addition to the basic task order data
-    # below. See the EDA docs.
     def get_contract(self, contract_number, status):
         if contract_number == self.MOCK_CONTRACT_NUMBER and status == "y":
             return {
