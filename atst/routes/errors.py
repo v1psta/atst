@@ -25,6 +25,7 @@ def make_error_pages(app):
         return render_template("error.html", message="Log in Failed"), 401
 
     @app.errorhandler(CSRFError)
+    # pylint: disable=unused-variable
     def session_expired(e):
         log_error(e)
         return redirect(url_for("atst.root", sessionExpired=True, next=request.path))
