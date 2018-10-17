@@ -51,6 +51,7 @@
   </div>
 
   {% for project in projects %}
+  {% set revoke_modal_name = project.name + 'RevokeModal' %}
   <div is='toggler' default-visible class='block-list project-list-item'>
     <template slot-scope='props'>
       <header class='block-list__header'>
@@ -59,7 +60,19 @@
           <template v-else>{{ Icon('caret_right') }}</template>
           <h3 class="block-list__title">{{ project.name }}</h3>
         </button>
-        <span><a href="#" class="icon-link icon-link--danger">revoke all access</a></span>
+        <span><a v-on:click="openModal('{{ revoke_modal_name }}')" class="icon-link icon-link--danger">revoke all access</a></span>
+        {% call Modal(name=revoke_modal_name, dismissable=False) %}
+          <div>
+            <h1>Revoke Access</h1>
+            <p>
+              Confirming will revoke access for {{ member.user.full_name }} to any environments associated with {{ project.name }}.
+            </p>
+            <div class='action-group'>
+              <a v-on:click="closeModal('{{ revoke_modal_name }}')" class='action-group__action usa-button'>Confirm</a>
+              <a class='action-group__action icon-link icon-link--danger' v-on:click="closeModal('{{ revoke_modal_name }}'); cancel();">Cancel</a>
+            </div>
+          </div>
+        {% endcall %}
       </header>
       <ul v-show='props.isVisible'>
         {% for env in project.environments %}
