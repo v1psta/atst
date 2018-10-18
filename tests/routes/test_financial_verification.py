@@ -199,6 +199,20 @@ def test_save_draft_and_then_submit():
         ).execute()
 
 
+def test_updated_request_has_pdf(fv_data, extended_financial_verification_data):
+    request = RequestFactory.create()
+    user = UserFactory.create()
+    data = {
+        **fv_data,
+        **extended_financial_verification_data,
+        "task_order_number": "DCA10096D0051",
+    }
+    updated_request = UpdateFinancialVerification(
+        TrueValidator, TrueValidator, user, request, data, is_extended=True
+    ).execute()
+    assert updated_request.task_order.pdf
+
+
 def test_update_fv_route(client, user_session, fv_data):
     user = UserFactory.create()
     request = RequestFactory.create(creator=user)
