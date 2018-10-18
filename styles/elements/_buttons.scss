@@ -3,3 +3,11 @@
  * @see https://designsystem.digital.gov/components/buttons/
  * @source https://github.com/uswds/uswds/blob/develop/src/stylesheets/elements/_buttons.scss
  */
+
+button,
+[type='button'] {
+  &:disabled {
+    background-color: unset;
+    opacity: 0.75;
+  }
+}
