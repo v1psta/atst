@@ -180,3 +180,21 @@ spec:
         backend:
           serviceName: atst
           servicePort: 80
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: crl-sync
+  namespace: atat
+spec:
+  schedule: "0 */6 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: crl-sync
+            image: registry.atat.codes:443/atst-prod:76854ac
+            args:
+            - ./script/sync-crls
+          restartPolicy: OnFailure
