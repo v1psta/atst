@@ -12,7 +12,7 @@
     {% include 'fragments/pending_financial_verification.html' %}
 
     <div class='action-group'>
-      <a v-on:click="closeModal('pendingFinancialVerification')" class='action-group__action usa-button'>Close</a>
+      <button autofocus type=button v-on:click="closeModal('pendingFinancialVerification')" class='action-group__action usa-button'>Close</button>
     </div>
   {% endcall %}
 
@@ -22,7 +22,7 @@
     {% include 'fragments/pending_ccpo_approval_modal.html' %}
 
     <div class='action-group'>
-      <a v-on:click="closeModal('pendingCCPOApproval')" class='action-group__action usa-button'>Close</a>
+      <button autofocus type='button' v-on:click="closeModal('pendingCCPOApproval')" class='action-group__action usa-button'>Close</button>
     </div>
   {% endcall %}
 
@@ -32,7 +32,7 @@
     {% include 'fragments/pending_ccpo_acceptance_alert.html' %}
 
     <div class='action-group'>
-      <a v-on:click="closeModal('pendingCCPOAcceptance')" class='action-group__action usa-button'>Close</a>
+      <button autofocus type='button' v-on:click="closeModal('pendingCCPOAcceptance')" class='action-group__action usa-button'>Close</button>
     </div>
   {% endcall %}
 
