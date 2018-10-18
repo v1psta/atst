@@ -52,7 +52,7 @@ def PhoneNumber(message="Please enter a valid 5 or 10 digit phone number."):
 
 def Alphabet(message="Please enter only letters."):
     def _alphabet(form, field):
-        match = re.match(r"[A-Za-z\-\']+", field.data)
+        match = re.match(r"[\w \,\.\'\-]+", field.data)
         if not match or match.group() != field.data:
             raise ValidationError(message)
 
