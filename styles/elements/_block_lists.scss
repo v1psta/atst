@@ -68,6 +68,24 @@
   }
 }
 
+@mixin block-list-selectable-label {
+  margin: 0;
+  max-width: none;
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  justify-content: space-between;
+  &::before {
+    flex-shrink: 0;
+    margin-right: 0;
+    margin-left: $gap * 2;
+  }
+
+  &:hover {
+    color: $color-primary;
+  }
+}
+
 
 .block-list {
   @include block-list;
@@ -110,22 +128,12 @@
       flex-direction: row-reverse;
 
       > label {
-        margin: 0;
-        max-width: none;
-        display: flex;
-        flex-direction: row-reverse;
-        align-items: center;
-        justify-content: space-between;
-        &::before {
-          flex-shrink: 0;
-          margin-right: 0;
-          margin-left: $gap * 2;
-        }
-
-        &:hover {
-          color: $color-primary;
-        }
+        @include block-list-selectable-label;
       }
+    }
+
+    > label {
+      @include block-list-selectable-label;
     }
 
     input:checked {
