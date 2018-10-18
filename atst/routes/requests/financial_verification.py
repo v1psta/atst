@@ -171,7 +171,7 @@ def financial_verification(request_id):
 @requests_bp.route("/requests/verify/<string:request_id>", methods=["POST"])
 def update_financial_verification(request_id):
     request = Requests.get(g.current_user, request_id)
-    fv_data = http_request.form
+    fv_data = {**http_request.form, **http_request.files}
     is_extended = http_request.args.get("extended")
 
     try:
