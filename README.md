@@ -29,6 +29,10 @@ locally:
   `pipenv`'s documentation for instructions on installing `pipenv](
   https://pipenv.readthedocs.io/en/latest/install/#installing-pipenv).
 
+* `yarn`
+  ATST requires `yarn` for installing and managing Javascript
+  dependencies: https://yarnpkg.com/en/
+
 * `postgres` >= 9.6
   ATST requires a PostgreSQL instance (>= 9.6) for persistence. Have PostgresSQL installed
   and running on the default port of 5432. You can verify that PostgresSQL is running
@@ -65,7 +69,7 @@ To perform the installation, run the setup script:
     script/setup
 
 The setup script creates the virtual environment, and then calls script/bootstrap
-to install all of the Python and Node dependencies.
+to install all of the Python and Node dependencies and run database migrations.
 
 To enter the virtualenv manually (a la `source .venv/bin/activate`):
 
@@ -76,6 +80,21 @@ project directory, take a look at [direnv](https://direnv.net/).  An `.envrc`
 file is included in this repository.  direnv will activate and deactivate
 virtualenvs for you when you enter and leave the directory.
 
+### Troubleshooting Setup
+
+If you have a new postgres installation you might encounter
+errors about the `postgres` role not existing. If so, run:
+
+```
+createuser -s postgres
+```
+
+If `script/setup` complains that the database does not exist,
+run:
+
+```
+createdb atat
+```
 
 ## Running (development)
 
