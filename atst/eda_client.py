@@ -35,7 +35,10 @@ class EDAXMLHandler:
                 ".//ItemOtherAmounts[AmountDescription='Not to Exceed Amount (Funding)']/Amount"
             )
             if number_el is not None and amount_details is not None:
-                self.clins[number_el.text] = float(amount_details.text)
+                try:
+                    self.clins[number_el.text] = float(amount_details.text)
+                except ValueError:
+                    continue
 
 
 class EDAClientBase(object):

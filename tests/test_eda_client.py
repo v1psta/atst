@@ -24,3 +24,34 @@ def test_eda_xml_parser():
         eda_data = parse_eda_xml(contract.read())
         assert eda_data["clin_0001"] == 200_000.00
         assert not eda_data["clin_0003"]
+
+
+_EDA_XML_NO_NUMBER = """
+<ProcurementDocument>
+  <AwardInstrument>
+    <ContractLineItems>
+      <LineItems>
+        <LineItemIdentifier>
+          <DFARS>
+            <LineItem>
+              <LineItemType>CLIN</LineItemType>
+              <LineItemBase>0001</LineItemBase>
+            </LineItem>
+          </DFARS>
+        </LineItemIdentifier>
+        <LineItemAmounts>
+          <ItemOtherAmounts>
+            <AmountDescription>Not to Exceed Amount (Funding)</AmountDescription>
+            <Amount>not a number</Amount>
+          </ItemOtherAmounts>
+        </LineItemAmounts>
+      </LineItems>
+    </ContractLineItems>
+  </AwardInstrument>
+</ProcurementDocument>
+"""
+
+
+def test_eda_xml_parser_with_bad_xml():
+    eda_data = parse_eda_xml(_EDA_XML_NO_NUMBER)
+    assert eda_data["clin_0001"] is None
