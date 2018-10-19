@@ -13,6 +13,11 @@ from atst.domain.requests.financial_verification import (
 )
 from atst.models.attachment import Attachment
 from atst.domain.task_orders import TaskOrders
+from atst.utils import getattr_path
+
+
+def fv_extended(_http_request):
+    return bool(_http_request.args.get("extended"))
 
 
 class FinancialVerificationBase(object):
@@ -24,7 +29,7 @@ class FinancialVerificationBase(object):
             task_order_dict.update(
                 {
                     "task_order_number": request.task_order.number,
-                    "funding_type": request.task_order.funding_type.value,
+                    "funding_type": getattr_path(request, "task_order.funding_type.value")
                 }
             )
             existing_fv_data = {**existing_fv_data, **task_order_dict}
@@ -51,7 +56,10 @@ class FinancialVerificationBase(object):
                     form.task_order.data, "task_order", self.request.id
                 )
             elif isinstance(form.task_order.data, str):
-                attachment = Attachment.get_for_resource("task_order", self.request.id)
+                try:
+                    attachment = Attachment.get_for_resource("task_order", self.request.id)
+                except NotFoundError:
+                    pass
 
             if attachment:
                 form.task_order.data = attachment.id
@@ -139,7 +147,7 @@ class UpdateFinancialVerification(FinancialVerificationBase):
         if should_update:
             task_order = self._try_create_task_order(form, attachment)
             updated_request = Requests.update_financial_verification(
-                self.request.id, form.data, task_order=task_order
+                self.request.id, form.data, extended=self.is_extended, task_order=task_order
             )
             if should_submit:
                 return Requests.submit_financial_verification(updated_request)
@@ -186,7 +194,7 @@ class SaveFinancialVerificationDraft(FinancialVerificationBase):
         attachment = self._process_attachment(self.is_extended, form)
         task_order = self._try_create_task_order(form, attachment)
         updated_request = Requests.update_financial_verification(
-            self.request.id, form.data, task_order=task_order
+            self.request.id, form.data, extended=self.is_extended, task_order=task_order
         )
 
         if valid:
@@ -198,7 +206,7 @@ class SaveFinancialVerificationDraft(FinancialVerificationBase):
 @requests_bp.route("/requests/verify/<string:request_id>", methods=["GET"])
 def financial_verification(request_id):
     request = Requests.get(g.current_user, request_id)
-    is_extended = http_request.args.get("extended")
+    is_extended = fv_extended(http_request) or request.financial_verification.get("extended", False)
 
     form = GetFinancialVerificationForm(
         g.current_user, request, is_extended=is_extended
@@ -217,7 +225,7 @@ def financial_verification(request_id):
 def update_financial_verification(request_id):
     request = Requests.get(g.current_user, request_id)
     fv_data = {**http_request.form, **http_request.files}
-    is_extended = http_request.args.get("extended")
+    is_extended = fv_extended(http_request)
 
     try:
         updated_request = UpdateFinancialVerification(
@@ -251,7 +259,7 @@ def update_financial_verification(request_id):
 def save_financial_verification_draft(request_id):
     request = Requests.get(g.current_user, request_id)
     fv_data = {**http_request.form, **http_request.files}
-    is_extended = http_request.args.get("extended")
+    is_extended = fv_extended(http_request)
 
     try:
         SaveFinancialVerificationDraft(

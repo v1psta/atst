@@ -100,6 +100,7 @@ class Request(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
         "uii_ids",
         "treasury_code",
         "ba_code",
+        "extended"
     ]
 
     @property
@@ -135,7 +136,7 @@ class Request(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
 
     @property
     def financial_verification(self):
-        return self.body.get("financial_verification")
+        return self.body.get("financial_verification", {})
 
     @property
     def is_financially_verified(self):
