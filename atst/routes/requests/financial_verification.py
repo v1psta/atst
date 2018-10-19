@@ -62,7 +62,7 @@ class FinancialVerificationBase(object):
                     pass
 
             if attachment:
-                form.task_order.data = attachment.id
+                form.task_order.data = attachment.filename
 
         return attachment
 
