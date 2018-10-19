@@ -67,3 +67,13 @@ class TaskOrders(object):
                     source=Source.MANUAL,
                     pdf=attachment,
                 )
+
+    @classmethod
+    def get_or_create(cls, number, attachment=None, data=None):
+        try:
+            return TaskOrders.get(number)
+        except NotFoundError:
+            data = data or {}
+            return TaskOrders.create(
+                **data, number=number, pdf=attachment, source=Source.MANUAL
+            )

@@ -25,7 +25,22 @@ export default {
     } = this.initialData
 
     return {
-      funding_type
+      funding_type,
+      shouldForceShowTaskOrder: false
+    }
+  },
+
+  computed: {
+    showTaskOrder: function() {
+      return !this.initialData.task_order || this.shouldForceShowTaskOrder
+    }
+  },
+
+  methods: {
+    forceShowTaskOrder: function(e) {
+      console.log("forceShowTaskOrder", e)
+      e.preventDefault()
+      this.shouldForceShowTaskOrder = true
     }
   }
 }

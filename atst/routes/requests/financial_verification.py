@@ -1,15 +1,18 @@
 from flask import g, render_template, redirect, url_for
 from flask import request as http_request
-from werkzeug.datastructures import ImmutableMultiDict
+from werkzeug.datastructures import ImmutableMultiDict, FileStorage
 
 from . import requests_bp
 from atst.domain.requests import Requests
 from atst.forms.financial import FinancialForm, ExtendedFinancialForm
 from atst.forms.exceptions import FormValidationError
+from atst.domain.exceptions import NotFoundError
 from atst.domain.requests.financial_verification import (
     PENumberValidator,
     TaskOrderNumberValidator,
 )
+from atst.models.attachment import Attachment
+from atst.domain.task_orders import TaskOrders
 
 
 class FinancialVerificationBase(object):
@@ -28,9 +31,45 @@ class FinancialVerificationBase(object):
 
         mdict = ImmutableMultiDict(formdata) if formdata is not None else None
         if is_extended:
+            try:
+                attachment = Attachment.get_for_resource("task_order", self.request.id)
+                existing_fv_data["task_order"] = attachment.filename
+            except NotFoundError:
+                pass
+
             return ExtendedFinancialForm(formdata=mdict, data=existing_fv_data)
         else:
             return FinancialForm(formdata=mdict, data=existing_fv_data)
+
+    def _process_attachment(self, is_extended, form):
+        attachment = None
+        if self.is_extended:
+            attachment = None
+            if isinstance(form.task_order.data, FileStorage):
+                Attachment.delete_for_resource("task_order", self.request.id)
+                attachment = Attachment.attach(
+                    form.task_order.data, "task_order", self.request.id
+                )
+            elif isinstance(form.task_order.data, str):
+                attachment = Attachment.get_for_resource("task_order", self.request.id)
+
+            if attachment:
+                form.task_order.data = attachment.id
+
+        return attachment
+
+    def _try_create_task_order(self, form, attachment):
+        form_data = form.data
+
+        task_order_number = form_data.get("task_order_number")
+        if task_order_number:
+            task_order_data = {
+                k: v for (k, v) in form_data.items() if k in TaskOrders.TASK_ORDER_DATA
+            }
+            return TaskOrders.get_or_create(
+                task_order_number, attachment=attachment, data=task_order_data
+            )
+        return None
 
     def _apply_pe_number_error(self, field):
         suggestion = self.pe_validator.suggest_pe_id(field.data)
@@ -56,7 +95,8 @@ class GetFinancialVerificationForm(FinancialVerificationBase):
         self.is_extended = is_extended
 
     def execute(self):
-        return self._get_form(self.request, self.is_extended)
+        form = self._get_form(self.request, self.is_extended)
+        return form
 
 
 class UpdateFinancialVerification(FinancialVerificationBase):
@@ -94,9 +134,12 @@ class UpdateFinancialVerification(FinancialVerificationBase):
             self._apply_task_order_number_error(form.task_order_number)
             should_submit = False
 
+        attachment = self._process_attachment(self.is_extended, form)
+
         if should_update:
+            task_order = self._try_create_task_order(form, attachment)
             updated_request = Requests.update_financial_verification(
-                self.request.id, form.data
+                self.request.id, form.data, task_order=task_order
             )
             if should_submit:
                 return Requests.submit_financial_verification(updated_request)
@@ -140,8 +183,10 @@ class SaveFinancialVerificationDraft(FinancialVerificationBase):
             valid = False
             self._apply_task_order_number_error(form.task_order_number)
 
+        attachment = self._process_attachment(self.is_extended, form)
+        task_order = self._try_create_task_order(form, attachment)
         updated_request = Requests.update_financial_verification(
-            self.request.id, form.data
+            self.request.id, form.data, task_order=task_order
         )
 
         if valid:
@@ -205,7 +250,7 @@ def update_financial_verification(request_id):
 @requests_bp.route("/requests/verify/<string:request_id>/draft", methods=["POST"])
 def save_financial_verification_draft(request_id):
     request = Requests.get(g.current_user, request_id)
-    fv_data = http_request.form
+    fv_data = {**http_request.form, **http_request.files}
     is_extended = http_request.args.get("extended")
 
     try:
