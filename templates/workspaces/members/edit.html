@@ -99,6 +99,7 @@
                             value='{{ choice[0] }}'
                             {% if role == choice[0] %}
                               checked='checked'
+                              autofocus
                             {% endif %}
                           />
                           <label for="env_{{ env.id }}_{{ choice[0] }}">
@@ -118,8 +119,8 @@
                     <input type='hidden' name='env_{{ env.id }}' v-bind:value='new_role'/>
                     <div class='block-list__footer'>
                       <div class='action-group'>
-                        <a v-on:click="closeModal('{{ env.name }}RolesModal')" class='action-group__action usa-button'>Select Access Role</a>
-                        <a class='action-group__action icon-link icon-link--danger' v-on:click="closeModal('{{ env.name }}RolesModal'); cancel();" value="{{ value if value == role else role }}" >Cancel</a>
+                        <button type='button' v-on:click="closeModal('{{ env.name }}RolesModal')" class='action-group__action usa-button'>Select Access Role</button>
+                        <button type='button' class='action-group__action icon-link icon-link--danger' v-on:click="closeModal('{{ env.name }}RolesModal'); cancel();" value="{{ value if value == role else role }}" >Cancel</button>
                       </div>
                     </div>
                   </div>

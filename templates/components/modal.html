@@ -2,7 +2,7 @@
 
 {% macro Modal(name, dismissable=False) -%}
   <div v-show="activeModal === '{{name}}'" v-cloak>
-    <div class='modal {% if dismissable %}modal--dismissable{% endif%}'>
+    <div id='modal--{{name}}' class='modal {% if dismissable %}modal--dismissable{% endif%}'>
       <div class='modal__container'>
         <div class='modal__dialog' role='dialog' aria-modal='true'>
           <div class='modal__body'>
