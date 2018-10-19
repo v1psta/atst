@@ -1,7 +1,5 @@
-from werkzeug.datastructures import FileStorage
 import dateutil
 
-from atst.domain.task_orders import TaskOrders
 from atst.domain.workspaces import Workspaces
 from atst.models.request_revision import RequestRevision
 from atst.models.request_status_event import RequestStatusEvent, RequestStatus
@@ -166,26 +164,6 @@ class Requests(object):
     ):
         request = RequestsQuery.get_with_lock(request_id)
 
-        # request_data = financial_data.copy()
-        # task_order_data = {
-        #     k: request_data.pop(k)
-        #     for (k, v) in financial_data.items()
-        #     if k in TaskOrders.TASK_ORDER_DATA
-        # }
-
-        # if task_order_data:
-        #     task_order_number = request_data.pop("task_order_number")
-        # else:
-        #     task_order_number = request_data.get("task_order_number")
-
-        # task_order_file = request_data.pop("task_order", None)
-        # if isinstance(task_order_file, FileStorage):
-        #     task_order_data["pdf"] = task_order_file
-
-        # task_order = TaskOrders.get_or_create_task_order(
-        #     task_order_number, task_order_data
-        # )
-
         delta = pick(
             [
                 "uii_ids",
@@ -203,7 +181,7 @@ class Requests(object):
             ],
             financial_data,
         )
-        delta = {**delta, "extended": extended}
+        delta["extended"] = extended
 
         if task_order:
             request.task_order = task_order

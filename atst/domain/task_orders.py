@@ -30,9 +30,7 @@ class TaskOrders(object):
         if to_data:
             # TODO: we need to determine exactly what we're getting and storing from the EDA client
             return TaskOrders.create(
-                number=to_data["contract_no"],
-                source=Source.EDA,
-                funding_type=FundingType.PROC,
+                source=Source.EDA, funding_type=FundingType.PROC, **to_data
             )
 
         else:
