@@ -100,7 +100,7 @@ class Request(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
         "uii_ids",
         "treasury_code",
         "ba_code",
-        "extended"
+        "extended",
     ]
 
     @property

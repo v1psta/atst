@@ -182,5 +182,5 @@ class ExtendedFinancialForm(BaseFinancialForm):
             FileAllowed(["pdf"], "Only PDF documents can be uploaded."),
             InputRequired(),
         ],
-        render_kw={"required": False}
+        render_kw={"required": False},
     )

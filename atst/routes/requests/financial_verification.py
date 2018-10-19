@@ -29,7 +29,9 @@ class FinancialVerificationBase(object):
             task_order_dict.update(
                 {
                     "task_order_number": request.task_order.number,
-                    "funding_type": getattr_path(request, "task_order.funding_type.value")
+                    "funding_type": getattr_path(
+                        request, "task_order.funding_type.value"
+                    ),
                 }
             )
             existing_fv_data = {**existing_fv_data, **task_order_dict}
@@ -57,7 +59,9 @@ class FinancialVerificationBase(object):
                 )
             elif isinstance(form.task_order.data, str):
                 try:
-                    attachment = Attachment.get_for_resource("task_order", self.request.id)
+                    attachment = Attachment.get_for_resource(
+                        "task_order", self.request.id
+                    )
                 except NotFoundError:
                     pass
 
@@ -147,7 +151,10 @@ class UpdateFinancialVerification(FinancialVerificationBase):
         if should_update:
             task_order = self._try_create_task_order(form, attachment)
             updated_request = Requests.update_financial_verification(
-                self.request.id, form.data, extended=self.is_extended, task_order=task_order
+                self.request.id,
+                form.data,
+                extended=self.is_extended,
+                task_order=task_order,
             )
             if should_submit:
                 return Requests.submit_financial_verification(updated_request)
@@ -206,7 +213,9 @@ class SaveFinancialVerificationDraft(FinancialVerificationBase):
 @requests_bp.route("/requests/verify/<string:request_id>", methods=["GET"])
 def financial_verification(request_id):
     request = Requests.get(g.current_user, request_id)
-    is_extended = fv_extended(http_request) or request.financial_verification.get("extended", False)
+    is_extended = fv_extended(http_request) or request.financial_verification.get(
+        "extended", False
+    )
 
     form = GetFinancialVerificationForm(
         g.current_user, request, is_extended=is_extended
