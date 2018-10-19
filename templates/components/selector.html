@@ -11,7 +11,7 @@
   inline-template>
 
   <fieldset v-bind:class="['selector usa-input', { 'usa-input--error': initialErrors }]">
-    <v-popover v-bind:container='false' ref='popover'>
+    <v-popover v-bind:container='false' ref='popover' v-on:show='onShow'>
       <legend>
         <div class="usa-input__title">{{ field.label | striptags }}</div>
 
@@ -27,6 +27,7 @@
         type='button'
         v-html='label'
         v-on:keydown.down.prevent.stop='handleButtonArrowDown'
+        v-on:keydown.up.prevent.stop='handleButtonArrowDown'
         v-tooltip='{ container:false }'>
       </button>
 
@@ -53,6 +54,7 @@
                   v-bind:selected='value === choice[0]'
                   v-bind:handle-change='change'
                   v-bind:handle-enter='enter'
+                  v-bind:handle-esc='esc'
                   inline-template>
 
                   <div>
@@ -64,8 +66,10 @@
                       v-bind:id='id'
                       v-bind:value='value'
                       v-bind:checked='selected'
+                      v-bind:autofocus='selected'
                       v-on:change='onChange'
-                      v-on:keydown.enter.prevent.stop='onEnter'/>
+                      v-on:keydown.enter.prevent.stop='onEnter'
+                      v-on:keydown.esc.prevent.stop='onEsc'/>
 
                     <label v-bind:for='id'>
                       <template v-if='description'>

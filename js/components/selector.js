@@ -9,7 +9,8 @@ const SelectorInput = {
     description: String,
     selected: Boolean,
     handleChange: Function,
-    handleEnter: Function
+    handleEnter: Function,
+    handleEsc: Function
   },
 
   computed: {
@@ -25,6 +26,10 @@ const SelectorInput = {
 
     onEnter: function (e) {
       this.handleEnter()
+    },
+
+    onEsc: function (e) {
+      this.handleEsc()
     }
   }
 }
@@ -51,6 +56,7 @@ export default {
   data: function () {
     return {
       value: this.initialChoice || null,
+      currentChoice: this.initialChoice || null,
       showError: (this.initialErrors && this.initialErrors.length) || false,
       usingKeyboard: false
     }
@@ -74,17 +80,27 @@ export default {
     change: function (value) {
       this.value = value
       this.showError = false
-      if (!this.usingKeyboard) {
-        setTimeout(() => this.$refs.popover.hide(), 300)
-      }
+    },
+
+    onShow: function () {
+      setTimeout(() => { // timeout is a hack to make focus work in Chrome
+        this.$refs.choices.find(choice => choice.selected).$refs.input[0].focus()
+      }, 100)
     },
 
     enter: function () {
       this.$refs.popover.hide()
     },
 
+    esc: function () {
+      this.value = this.currentChoice
+      this.usingKeyboard = false
+      this.$refs.popover.hide()
+    },
+
     handleEnterOption: function (e) {
       this.change(e.target.value)
+      this.currentChoice = e.target.value
       this.usingKeyboard = false
       this.$refs.popover.hide()
     },
@@ -92,7 +108,6 @@ export default {
     handleButtonArrowDown: function (e) {
       this.usingKeyboard = true
       this.$refs.popover.show()
-      this.$refs.choices.find(choice => choice.selected).$refs.input[0].focus()
     }
   },
 }
