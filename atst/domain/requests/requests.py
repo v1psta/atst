@@ -13,6 +13,11 @@ from .query import RequestsQuery
 from .authorization import RequestsAuthorization
 
 
+def pick(keys, d):
+    _keys = set(keys)
+    return {k: v for (k, v) in d.items() if k in _keys}
+
+
 def create_revision_from_request_body(body):
     body = {k: v for p in body.values() for k, v in p.items()}
     DATES = ["start_date", "date_latest_training"]
@@ -156,33 +161,51 @@ class Requests(object):
         return Requests.status_count(RequestStatus.APPROVED)
 
     @classmethod
-    def update_financial_verification(cls, request_id, financial_data):
+    def update_financial_verification(cls, request_id, financial_data, task_order=None):
         request = RequestsQuery.get_with_lock(request_id)
 
-        request_data = financial_data.copy()
-        task_order_data = {
-            k: request_data.pop(k)
-            for (k, v) in financial_data.items()
-            if k in TaskOrders.TASK_ORDER_DATA
-        }
+        # request_data = financial_data.copy()
+        # task_order_data = {
+        #     k: request_data.pop(k)
+        #     for (k, v) in financial_data.items()
+        #     if k in TaskOrders.TASK_ORDER_DATA
+        # }
 
-        if task_order_data:
-            task_order_number = request_data.pop("task_order_number")
-        else:
-            task_order_number = request_data.get("task_order_number")
+        # if task_order_data:
+        #     task_order_number = request_data.pop("task_order_number")
+        # else:
+        #     task_order_number = request_data.get("task_order_number")
 
-        task_order_file = request_data.pop("task_order", None)
-        if isinstance(task_order_file, FileStorage):
-            task_order_data["pdf"] = task_order_file
+        # task_order_file = request_data.pop("task_order", None)
+        # if isinstance(task_order_file, FileStorage):
+        #     task_order_data["pdf"] = task_order_file
 
-        task_order = TaskOrders.get_or_create_task_order(
-            task_order_number, task_order_data
+        # task_order = TaskOrders.get_or_create_task_order(
+        #     task_order_number, task_order_data
+        # )
+
+        delta = pick(
+            [
+                "uii_ids",
+                "pe_id",
+                "treasury_code",
+                "ba_code",
+                "fname_co",
+                "lname_co",
+                "email_co",
+                "office_co",
+                "fname_cor",
+                "lname_cor",
+                "email_cor",
+                "office_cor",
+            ],
+            financial_data,
         )
 
         if task_order:
             request.task_order = task_order
 
-        request = Requests.update(request.id, {"financial_verification": request_data})
+        request = Requests.update(request.id, {"financial_verification": delta})
 
         return request
 

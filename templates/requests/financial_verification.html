@@ -106,13 +106,21 @@
               validation='dollars'
             ) }}
 
-            <div class="usa-input usa-input--validation--anything {% if f.task_order.errors %} usa-input--error {% endif %}">
-              {{ f.task_order.label }}
-              {{ f.task_order }}
-              {% for error in f.task_order.errors %}
-                <span class="usa-input__message">{{error}}</span>
-              {% endfor %}
-            </div>
+            <template v-if="showTaskOrder">
+              <div class="usa-input {% if f.task_order.errors %} usa-input--error {% endif %}">
+                {{ f.task_order.label }}
+                {{ f.task_order }}
+                {% for error in f.task_order.errors %}
+                  <span class="usa-input__message">{{error}}</span>
+                {% endfor %}
+              </div>
+            </template>
+            <template v-else>
+              <p>Uploaded {{ f.task_order.data }}.</p>
+              <div>
+                <button v-on:click="forceShowTaskOrder($event)">Change</button>
+              </div>
+            </template>
           </fieldset>
         {% endif %}
 

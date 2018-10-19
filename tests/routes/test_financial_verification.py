@@ -4,6 +4,7 @@ from flask import url_for
 
 from atst.eda_client import MockEDAClient
 from atst.routes.requests.financial_verification import (
+    GetFinancialVerificationForm,
     UpdateFinancialVerification,
     SaveFinancialVerificationDraft,
 )
@@ -211,6 +212,18 @@ def test_updated_request_has_pdf(fv_data, extended_financial_verification_data):
         TrueValidator, TrueValidator, user, request, data, is_extended=True
     ).execute()
     assert updated_request.task_order.pdf
+
+
+def test_can_save_draft_with_just_pdf(extended_financial_verification_data):
+    request = RequestFactory.create()
+    user = UserFactory.create()
+    data = {"task_order": extended_financial_verification_data["task_order"]}
+    SaveFinancialVerificationDraft(
+        TrueValidator, TrueValidator, user, request, data, is_extended=True
+    ).execute()
+
+    form = GetFinancialVerificationForm(user, request, is_extended=True).execute()
+    assert form.task_order
 
 
 def test_update_fv_route(client, user_session, fv_data):
