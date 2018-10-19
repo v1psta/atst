@@ -161,7 +161,9 @@ class Requests(object):
         return Requests.status_count(RequestStatus.APPROVED)
 
     @classmethod
-    def update_financial_verification(cls, request_id, financial_data, extended=False, task_order=None):
+    def update_financial_verification(
+        cls, request_id, financial_data, extended=False, task_order=None
+    ):
         request = RequestsQuery.get_with_lock(request_id)
 
         # request_data = financial_data.copy()
