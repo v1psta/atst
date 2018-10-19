@@ -37,8 +37,6 @@ export default {
     cancel: function () {
       this.new_role = this.initialData
     },
-    actualRole: function () {
-    }
   },
 
   computed: {
@@ -51,7 +49,7 @@ export default {
       }
     },
     label_class: function () {
-      return this.displayName === "No Access" ?
+      return this.newRole === "" ?
         "label" : "label label--success"
     },
     newRole: function () {
