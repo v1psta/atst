@@ -1,24 +1,12 @@
 from sqlalchemy import event
 from flask import g
-import re
 
 from atst.models.audit_event import AuditEvent
+from atst.utils import camel_to_snake, getattr_path
 
 ACTION_CREATE = "create"
 ACTION_UPDATE = "update"
 ACTION_DELETE = "delete"
-
-
-def getattr_path(obj, path, default=None):
-    _obj = obj
-    for item in path.split("."):
-        _obj = getattr(_obj, item, default)
-    return _obj
-
-
-def camel_to_snake(camel_cased):
-    s1 = re.sub("(.)([A-Z][a-z]+)", r"\1_\2", camel_cased)
-    return re.sub("([a-z0-9])([A-Z])", r"\1_\2", s1).lower()
 
 
 class AuditableMixin(object):
