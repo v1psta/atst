@@ -17,7 +17,7 @@ from atst.utils import getattr_path
 
 
 def fv_extended(_http_request):
-    return bool(_http_request.args.get("extended"))
+    return _http_request.args.get("extended", "false").lower() in ["true", "t"]
 
 
 class FinancialVerificationBase(object):
@@ -151,10 +151,7 @@ class UpdateFinancialVerification(FinancialVerificationBase):
         if should_update:
             task_order = self._try_create_task_order(form, attachment)
             updated_request = Requests.update_financial_verification(
-                self.request.id,
-                form.data,
-                extended=self.is_extended,
-                task_order=task_order,
+                self.request.id, form.data, task_order=task_order
             )
             if should_submit:
                 return Requests.submit_financial_verification(updated_request)
@@ -201,7 +198,7 @@ class SaveFinancialVerificationDraft(FinancialVerificationBase):
         attachment = self._process_attachment(self.is_extended, form)
         task_order = self._try_create_task_order(form, attachment)
         updated_request = Requests.update_financial_verification(
-            self.request.id, form.data, extended=self.is_extended, task_order=task_order
+            self.request.id, form.data, task_order=task_order
         )
 
         if valid:
@@ -213,9 +210,13 @@ class SaveFinancialVerificationDraft(FinancialVerificationBase):
 @requests_bp.route("/requests/verify/<string:request_id>", methods=["GET"])
 def financial_verification(request_id):
     request = Requests.get(g.current_user, request_id)
-    is_extended = fv_extended(http_request) or request.financial_verification.get(
-        "extended", False
-    )
+    is_extended = fv_extended(http_request)
+
+    should_be_extended = not is_extended and request.has_manual_task_order
+    if should_be_extended:
+        return redirect(
+            url_for(".financial_verification", request_id=request_id, extended=True)
+        )
 
     form = GetFinancialVerificationForm(
         g.current_user, request, is_extended=is_extended
