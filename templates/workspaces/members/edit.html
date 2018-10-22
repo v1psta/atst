@@ -62,6 +62,7 @@
           <h3 class="block-list__title">{{ project.name }}</h3>
         </button>
         <span><a v-on:click="openModal('{{ revoke_modal_name }}')" class="icon-link icon-link--danger">revoke all access</a></span>
+      </header>
         {% call Modal(name=revoke_modal_name, dismissable=False) %}
           <div>
             <h1>Revoke Access</h1>
@@ -74,7 +75,6 @@
             </div>
           </div>
         {% endcall %}
-      </header>
       <ul v-show='props.isVisible'>
         {% for env in project.environments %}
 
