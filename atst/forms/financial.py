@@ -29,6 +29,9 @@ class BaseFinancialForm(ValidatedForm):
         """
         self.uii_ids.process_data(self.uii_ids.data)
 
+    def validate(self, **kwargs):
+        return super().validate()
+
     def validate_draft(self):
         """
         Another stupid workaround. Maybe there isn't a better way.
@@ -109,7 +112,18 @@ class ExtendedFinancialForm(BaseFinancialForm):
     def validate(self, *args, **kwargs):
         if self.funding_type.data == "OTHER":
             self.funding_type_other.validators.append(InputRequired())
-        return super().validate(*args, **kwargs)
+
+        to_validator = None
+        if kwargs.get("has_attachment"):
+            to_validators = list(self.task_order.validators)
+            self.task_order.validators = []
+
+        valid = super().validate(*args, **kwargs)
+
+        if to_validator:
+            self.task_order.validators = to_validators
+
+        return valid
 
     funding_type = SelectField(
         description="What is the source of funding?",
