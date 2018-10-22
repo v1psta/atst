@@ -13,7 +13,7 @@ from atst.domain.requests.financial_verification import (
 )
 from atst.models.attachment import Attachment
 from atst.domain.task_orders import TaskOrders
-from atst.utils import getattr_path, update_obj
+from atst.utils import getattr_path
 
 
 def fv_extended(_http_request):
@@ -74,14 +74,14 @@ class FinancialVerificationBase(object):
         form_data = form.data
 
         task_order_number = form_data.pop("task_order_number")
-        if task_order_number is None:
+        if not task_order_number:
             return None
 
         task_order_data = {
             k: v for (k, v) in form_data.items() if k in TaskOrders.TASK_ORDER_DATA
         }
         task_order_data["number"] = task_order_number
-        funding_type = getattr_path(form_data, "funding_type.data")
+        funding_type = form_data.get("funding_type")
         task_order_data["funding_type"] = funding_type if funding_type != "" else None
 
         if attachment:

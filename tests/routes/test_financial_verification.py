@@ -22,6 +22,7 @@ from atst.domain.requests.financial_verification import (
     PENumberValidator,
     TaskOrderNumberValidator,
 )
+from atst.utils import pick
 
 
 @pytest.fixture
@@ -241,6 +242,36 @@ def test_task_order_info_present_in_extended_form(
 
     form = GetFinancialVerificationForm(user, request, is_extended=True).execute()
     assert form.clin_0001.data
+
+
+def test_simple_form_does_not_generate_task_order(fv_data):
+    request = RequestFactory.create()
+    user = UserFactory.create()
+    data = pick(["uii_ids"], fv_data)
+    updated_request = SaveFinancialVerificationDraft(
+        TrueValidator, TrueValidator, user, request, data, is_extended=False
+    ).execute()
+
+    assert updated_request.task_order is None
+
+
+def test_can_save_draft_with_funding_type(
+    fv_data, extended_financial_verification_data
+):
+    request = RequestFactory.create()
+    user = UserFactory.create()
+    data = {
+        "task_order_number": fv_data["task_order_number"],
+        "funding_type": extended_financial_verification_data["funding_type"],
+    }
+    updated_request = SaveFinancialVerificationDraft(
+        TrueValidator, TrueValidator, user, request, data, is_extended=False
+    ).execute()
+
+    import ipdb
+
+    ipdb.set_trace()
+    assert updated_request.task_order.funding_type
 
 
 def test_update_fv_route(client, user_session, fv_data):
