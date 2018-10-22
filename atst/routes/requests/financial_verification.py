@@ -13,7 +13,7 @@ from atst.domain.requests.financial_verification import (
 )
 from atst.models.attachment import Attachment
 from atst.domain.task_orders import TaskOrders
-from atst.utils import getattr_path
+from atst.utils import getattr_path, update_obj
 
 
 def fv_extended(_http_request):
@@ -73,15 +73,33 @@ class FinancialVerificationBase(object):
     def _try_create_task_order(self, form, attachment):
         form_data = form.data
 
-        task_order_number = form_data.get("task_order_number")
-        if task_order_number:
-            task_order_data = {
-                k: v for (k, v) in form_data.items() if k in TaskOrders.TASK_ORDER_DATA
-            }
-            return TaskOrders.get_or_create(
-                task_order_number, attachment=attachment, data=task_order_data
-            )
-        return None
+        task_order_number = form_data.pop("task_order_number")
+        if task_order_number is None:
+            return None
+
+        task_order_data = {
+            k: v for (k, v) in form_data.items() if k in TaskOrders.TASK_ORDER_DATA
+        }
+        task_order_data["number"] = task_order_number
+        funding_type = getattr_path(form_data, "funding_type.data")
+        task_order_data["funding_type"] = funding_type if funding_type != "" else None
+
+        if attachment:
+            task_order_data["pdf"] = attachment
+
+        try:
+            task_order = TaskOrders.get(task_order_number)
+            task_order = TaskOrders.update(task_order, task_order_data)
+            return task_order
+        except NotFoundError:
+            pass
+
+        try:
+            return TaskOrders._get_from_eda(task_order_number)
+        except NotFoundError:
+            pass
+
+        return TaskOrders.create(**task_order_data)
 
     def _apply_pe_number_error(self, field):
         suggestion = self.pe_validator.suggest_pe_id(field.data)

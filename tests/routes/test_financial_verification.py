@@ -226,6 +226,23 @@ def test_can_save_draft_with_just_pdf(extended_financial_verification_data):
     assert form.task_order
 
 
+def test_task_order_info_present_in_extended_form(
+    fv_data, extended_financial_verification_data
+):
+    request = RequestFactory.create()
+    user = UserFactory.create()
+    data = {
+        "clin_0001": extended_financial_verification_data["clin_0001"],
+        "task_order_number": fv_data["task_order_number"],
+    }
+    SaveFinancialVerificationDraft(
+        TrueValidator, TrueValidator, user, request, data, is_extended=True
+    ).execute()
+
+    form = GetFinancialVerificationForm(user, request, is_extended=True).execute()
+    assert form.clin_0001.data
+
+
 def test_update_fv_route(client, user_session, fv_data):
     user = UserFactory.create()
     request = RequestFactory.create(creator=user)

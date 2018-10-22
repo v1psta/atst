@@ -5,15 +5,10 @@ from atst.models.request_revision import RequestRevision
 from atst.models.request_status_event import RequestStatusEvent, RequestStatus
 from atst.models.request_review import RequestReview
 from atst.models.request_internal_comment import RequestInternalComment
-from atst.utils import deep_merge
+from atst.utils import deep_merge, pick
 
 from .query import RequestsQuery
 from .authorization import RequestsAuthorization
-
-
-def pick(keys, d):
-    _keys = set(keys)
-    return {k: v for (k, v) in d.items() if k in _keys}
 
 
 def create_revision_from_request_body(body):
@@ -79,7 +74,10 @@ class Requests(object):
     @classmethod
     def update(cls, request_id, request_delta):
         request = RequestsQuery.get_with_lock(request_id)
+        return Requests._update(request, request_delta)
 
+    @classmethod
+    def _update(cls, request, request_delta):
         new_body = deep_merge(request_delta, request.body)
         revision = create_revision_from_request_body(new_body)
         request.revisions.append(revision)
@@ -183,7 +181,7 @@ class Requests(object):
         if task_order:
             request.task_order = task_order
 
-        request = Requests.update(request.id, {"financial_verification": delta})
+        request = Requests._update(request, {"financial_verification": delta})
 
         return request
 
