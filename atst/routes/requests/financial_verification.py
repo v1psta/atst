@@ -50,7 +50,7 @@ class FinancialVerificationBase(object):
 
     def _process_attachment(self, is_extended, form):
         attachment = None
-        if self.is_extended:
+        if is_extended:
             attachment = None
             if isinstance(form.task_order.data, FileStorage):
                 Attachment.delete_for_resource("task_order", self.request.id)
