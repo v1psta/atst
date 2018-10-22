@@ -5,6 +5,7 @@ from atst.database import db
 from atst.models.task_order import TaskOrder, Source, FundingType
 from atst.models.attachment import Attachment
 from .exceptions import NotFoundError
+from atst.utils import drop, update_obj
 
 
 class TaskOrders(object):
@@ -38,7 +39,8 @@ class TaskOrders(object):
 
     @classmethod
     def create(cls, **kwargs):
-        task_order = TaskOrder(**kwargs)
+        to_data = drop(["source"], kwargs)
+        task_order = TaskOrder(source=Source.MANUAL, **to_data)
 
         db.session.add(task_order)
         db.session.commit()
@@ -75,3 +77,10 @@ class TaskOrders(object):
             return TaskOrders.create(
                 **data, number=number, pdf=attachment, source=Source.MANUAL
             )
+
+    @classmethod
+    def update(cls, task_order, dct):
+        updated = update_obj(task_order, dct)
+        db.session.add(updated)
+        db.session.commit()
+        return updated
