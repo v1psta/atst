@@ -21,6 +21,7 @@ def fv_extended(_http_request):
 
 
 class FinancialVerificationBase(object):
+
     def _get_form(self, request, is_extended, formdata=None):
         existing_fv_data = request.financial_verification
 
@@ -153,7 +154,9 @@ class UpdateFinancialVerification(FinancialVerificationBase):
         should_submit = True
         updated_request = None
 
-        if not form.validate():
+        attachment = self._process_attachment(self.is_extended, form)
+
+        if not form.validate(has_attachment=attachment):
             should_update = False
 
         if not self.pe_validator.validate(self.request, form.pe_id.data):
@@ -163,8 +166,6 @@ class UpdateFinancialVerification(FinancialVerificationBase):
         if not self.task_order_validator.validate(form.task_order_number.data):
             self._apply_task_order_number_error(form.task_order_number)
             should_submit = False
-
-        attachment = self._process_attachment(self.is_extended, form)
 
         if should_update:
             task_order = self._try_create_task_order(form, attachment)
