@@ -77,7 +77,6 @@ class RequestRevision(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     uii_ids = Column(ARRAY(String))
     treasury_code = Column(String)
     ba_code = Column(String)
-    extended = Column(Boolean, default=False)
 
     def __repr__(self):
         return "<RequestRevision(request='{}', id='{}')>".format(

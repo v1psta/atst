@@ -263,3 +263,22 @@ def test_get_fv_form_route(client, user_session, fv_data):
     )
 
     assert response.status_code == 200
+
+
+def test_manual_task_order_triggers_extended_form(client, user_session, fv_data):
+    user = UserFactory.create()
+    request = RequestFactory.create(creator=user)
+
+    data = {**fv_data, "task_order_number": "DCA10096D0053"}
+
+    UpdateFinancialVerification(
+        TrueValidator, TrueValidator, user, request, data, is_extended=False
+    ).execute()
+
+    user_session(user)
+    response = client.get(
+        url_for("requests.financial_verification", request_id=request.id),
+        data=fv_data,
+        follow_redirects=False,
+    )
+    assert "extended" in response.headers["Location"]
