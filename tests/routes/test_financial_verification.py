@@ -255,6 +255,17 @@ def test_task_order_info_present_in_extended_form(fv_data, e_fv_data):
     assert form.task_order.clin_0001.data
 
 
+def test_update_ignores_empty_values(fv_data, e_fv_data):
+    request = RequestFactory.create()
+    user = UserFactory.create()
+    data = {
+        **fv_data, **e_fv_data, "task_order-funding_type": ""
+    }
+    SaveFinancialVerificationDraft(
+        TrueValidator, TrueValidator, user, request, data, is_extended=True
+    ).execute()
+
+
 def test_simple_form_does_not_generate_task_order(fv_data):
     request = RequestFactory.create()
     user = UserFactory.create()

@@ -3,9 +3,8 @@ from flask import current_app as app
 
 from atst.database import db
 from atst.models.task_order import TaskOrder, Source, FundingType
-from atst.models.attachment import Attachment
 from .exceptions import NotFoundError
-from atst.utils import drop, update_obj
+from atst.utils import update_obj
 
 
 class TaskOrders(object):
@@ -53,7 +52,7 @@ class TaskOrders(object):
 
     @classmethod
     def update(cls, task_order, dct):
-        updated = update_obj(task_order, dct)
+        updated = update_obj(task_order, dct, ignore_vals=lambda v: v in ["", None])
         db.session.add(updated)
         db.session.commit()
         return updated
