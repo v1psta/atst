@@ -38,9 +38,9 @@ class TaskOrders(object):
             raise NotFoundError("task_order")
 
     @classmethod
-    def create(cls, **kwargs):
+    def create(cls, source=Source.MANUAL, **kwargs):
         to_data = {k: v for k, v in kwargs.items() if v not in ["", None]}
-        task_order = TaskOrder(source=Source.MANUAL, **to_data)
+        task_order = TaskOrder(source=source, **to_data)
 
         db.session.add(task_order)
         db.session.commit()

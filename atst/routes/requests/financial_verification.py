@@ -27,7 +27,6 @@ class FinancialVerification(object):
 
 
 class FinancialVerificationBase(object):
-
     def _get_form(self, request, is_extended, formdata=None):
         _formdata = ImmutableMultiDict(formdata) if formdata is not None else None
         fv = FinancialVerification(request)
@@ -58,12 +57,12 @@ class FinancialVerificationBase(object):
         attachment = None
         if is_extended:
             attachment = None
-            if isinstance(form.task_order.data, FileStorage):
+            if isinstance(form.task_order.pdf.data, FileStorage):
                 Attachment.delete_for_resource("task_order", self.request.id)
                 attachment = Attachment.attach(
-                    form.task_order.data, "task_order", self.request.id
+                    form.task_order.pdf.data, "task_order", self.request.id
                 )
-            elif isinstance(form.task_order.data, str):
+            elif isinstance(form.task_order.pdf.data, str):
                 try:
                     attachment = Attachment.get_for_resource(
                         "task_order", self.request.id
@@ -72,12 +71,11 @@ class FinancialVerificationBase(object):
                     pass
 
             if attachment:
-                form.task_order.data = attachment.filename
+                form.task_order.pdf.data = attachment.filename
 
         return attachment
 
     def _try_create_task_order(self, form, attachment):
-        import ipdb; ipdb.set_trace()
         task_order_number = form.task_order.number.data
         if not task_order_number:
             return None
@@ -155,8 +153,11 @@ class UpdateFinancialVerification(FinancialVerificationBase):
 
         attachment = self._process_attachment(self.is_extended, form)
 
-        if not form.validate(has_attachment=attachment):
-            should_update = False
+        if self.is_extended:
+            if not form.validate(has_attachment=attachment):
+                should_update = False
+        else:
+            should_update = form.do_validate_request()
 
         if not self.pe_validator.validate(self.request, form.pe_id.data):
             self._apply_pe_number_error(form.pe_id)
@@ -169,7 +170,7 @@ class UpdateFinancialVerification(FinancialVerificationBase):
         if should_update:
             task_order = self._try_create_task_order(form, attachment)
             updated_request = Requests.update_financial_verification(
-                self.request.id, form.data, task_order=task_order
+                self.request.id, form.request.data, task_order=task_order
             )
             if should_submit:
                 return Requests.submit_financial_verification(updated_request)

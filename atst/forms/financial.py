@@ -20,8 +20,14 @@ def number_to_int(num):
     if num:
         return int(num)
 
+
 def coerce_choice(val):
-    return str(val) if val is not None else None
+    if val is None:
+        return None
+    elif isinstance(val, str):
+        return val
+    else:
+        return val.value
 
 
 class DraftValidateMixin(object):
@@ -194,6 +200,12 @@ class FinancialVerificationForm(ValidatedForm):
 
         return valid
 
+    def do_validate_request(self):
+        """
+        Called do_validate_request to avoid being considered an inline
+        validator by wtforms.
+        """
+        return self.request.validate(self)
 
     def validate_draft(self):
         return self.task_order.validate_draft() and self.request.validate_draft()
