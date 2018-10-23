@@ -1,7 +1,7 @@
 from wtforms.validators import ValidationError
 import pytest
 
-from atst.forms.validators import Alphabet, IsNumber, PhoneNumber, ListItemsUnique
+from atst.forms.validators import Name, IsNumber, PhoneNumber, ListItemsUnique
 
 
 class TestIsNumber:
@@ -38,16 +38,16 @@ class TestPhoneNumber:
             validator(dummy_form, dummy_field)
 
 
-class TestAlphabet:
+class TestName:
     @pytest.mark.parametrize("valid", ["a", "abcde", "hi mark", "cloud9", "niña"])
-    def test_Alphabet_accepts_letters(self, valid, dummy_form, dummy_field):
-        validator = Alphabet()
+    def test_Name_accepts_letters(self, valid, dummy_form, dummy_field):
+        validator = Name()
         dummy_field.data = valid
         validator(dummy_form, dummy_field)
 
     @pytest.mark.parametrize("invalid", [""])
-    def test_Alphabet_rejects_non_letters(self, invalid, dummy_form, dummy_field):
-        validator = Alphabet()
+    def test_Name_rejects_non_letters(self, invalid, dummy_form, dummy_field):
+        validator = Name()
         dummy_field.data = invalid
         with pytest.raises(ValidationError):
             validator(dummy_form, dummy_field)

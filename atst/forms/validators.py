@@ -50,13 +50,13 @@ def PhoneNumber(message="Please enter a valid 5 or 10 digit phone number."):
     return _is_phone_number
 
 
-def Alphabet(message="Please enter only letters."):
-    def _alphabet(form, field):
+def Name(message="Please enter only letters."):
+    def _name(form, field):
         match = re.match(r"[\w \,\.\'\-]+", field.data)
         if not match or match.group() != field.data:
             raise ValidationError(message)
 
-    return _alphabet
+    return _name
 
 
 def ListItemRequired(message="Please provide at least one.", empty_values=("", None)):

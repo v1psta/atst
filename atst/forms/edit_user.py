@@ -8,11 +8,11 @@ from .fields import SelectField
 from .forms import ValidatedForm
 from .data import SERVICE_BRANCHES
 
-from .validators import Alphabet, DateRange, PhoneNumber
+from .validators import Name, DateRange, PhoneNumber
 
 USER_FIELDS = {
-    "first_name": StringField("First Name", validators=[Alphabet()]),
-    "last_name": StringField("Last Name", validators=[Alphabet()]),
+    "first_name": StringField("First Name", validators=[Name()]),
+    "last_name": StringField("Last Name", validators=[Name()]),
     "email": EmailField(
         "E-mail Address",
         description="Enter your preferred contact e-mail address",
