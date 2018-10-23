@@ -188,15 +188,15 @@ class FinancialVerificationForm(ValidatedForm):
         if self.task_order.funding_type.data == "OTHER":
             self.task_order.funding_type_other.validators.append(InputRequired())
 
-        to_number_validators = None
+        to_pdf_validators = None
         if kwargs.get("has_attachment"):
-            to_number_validators = list(self.task_order.number.validators)
-            self.task_order.number.validators = []
+            to_pdf_validators = list(self.task_order.pdf.validators)
+            self.task_order.pdf.validators = []
 
         valid = super().validate()
 
-        if to_number_validators:
-            self.task_order.number.validators = to_number_validators
+        if to_pdf_validators:
+            self.task_order.pdf.validators = to_pdf_validators
 
         return valid
 
