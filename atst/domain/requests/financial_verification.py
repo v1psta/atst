@@ -58,7 +58,6 @@ class PENumberValidator(object):
             "Your request will need to go through a manual review."
         ).format('Did you mean "{}"? '.format(suggestion) if suggestion else "")
         field.errors += (error_str,)
-        field.errors = list(field.errors)
 
 
 class TaskOrderNumberValidator(object):
@@ -73,4 +72,3 @@ class TaskOrderNumberValidator(object):
 
     def _apply_error(self, field):
         field.errors += ("Task Order number not found",)
-        field.errors = list(field.errors)
