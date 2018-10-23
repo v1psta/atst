@@ -18,6 +18,15 @@ export default {
   },
 
   data: function() {
-      return { revoke: false }
+    return { revoke: false }
+  },
+
+  methods: {
+    doRevoke: function () {
+      // This is being used to send an event to the edit-environment-role child component.
+      // We'll toggle this back on the next line so that it can be used again.
+      this.revoke = true
+      setTimeout(() => { this.revoke = false }, 25)
+    }
   }
 }

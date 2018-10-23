@@ -70,7 +70,7 @@
                 Confirming will revoke access for {{ member.user.full_name }} to any environments associated with {{ project.name }}.
               </p>
               <div class='action-group'>
-                <a v-on:click="revoke = true; closeModal('{{ revoke_modal_name }}')" class='action-group__action usa-button'>Confirm</a>
+                <a v-on:click="doRevoke(); closeModal('{{ revoke_modal_name }}')" class='action-group__action usa-button'>Confirm</a>
                 <a class='action-group__action icon-link icon-link--danger' v-on:click="closeModal('{{ revoke_modal_name }}'); cancel();">Cancel</a>
               </div>
             </div>
@@ -106,11 +106,11 @@
 
                             <input
                               name='radio_input_{{ env.id }}'
-                              v-on:change='change'
+                              v-on:change.prevent='change'
                               type='radio'
                               id="env_{{ env.id }}_{{ choice[0] }}"
                               value='{{ choice[0] }}'
-                              {% if role == choice[0] %}
+                              {% if "!{new_role}" == choice[0] %}
                                 checked='checked'
                               {% endif %}
                             />

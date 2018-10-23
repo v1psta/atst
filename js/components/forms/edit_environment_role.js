@@ -31,12 +31,19 @@ export default {
 
   methods: {
     change: function (e) {
-      e.preventDefault()
-      this.new_role = this.revoke ? "" : e.target.value
+      this.new_role = e.target.value
     },
     cancel: function () {
       this.new_role = this.initialData
     },
+  },
+
+  watch: {
+    revoke: function (val) {
+      if (val) {
+        this.new_role = ""
+      }
+    }
   },
 
   computed: {
@@ -53,7 +60,7 @@ export default {
         "label" : "label label--success"
     },
     newRole: function () {
-      return this.revoke ? "" : this.new_role
+      return this.new_role
     }
   },
 }
