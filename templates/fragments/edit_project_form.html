@@ -1,85 +1,19 @@
-{% from "components/icon.html" import Icon %}
-{% from "components/modal.html" import Modal %}
 {% from "components/text_input.html" import TextInput %}
 {% from "components/alert.html" import Alert %}
 
-<new-project inline-template v-bind:initial-data='{{ form.data|tojson }}' modal-name='{{ modalName }}'>
-  {% set new_project = project is not defined %}
-  {% set form_action = url_for('workspaces.create_project', workspace_id=workspace.id) if new_project else url_for('workspaces.edit_project', workspace_id=workspace.id, project_id=project.id) %}
-  {% set action_text = 'Create' if new_project else 'Update' %}
-  {% set title_text = 'Add a new project' if new_project else 'Edit {} project'.format(project.name) %}
+{% set title_text = 'Edit {} project'.format(project.name) if project else 'Add a new project' %}
 
-  <form method="POST" action="{{ form_action }}" v-on:submit="handleSubmit">
-    {% call Modal(name=modalName, dismissable=False) %}
-      <h1>{{ action_text }} project !{ name }</h1>
+{{ form.csrf_token }}
+<div class="panel">
+  <div class="panel__heading panel__heading--grow">
+    <h1>{{ title_text }}</h1>
+  </div>
 
-      <p>
-      When you click <em>{{ action_text }} Project</em>, the environments
-      <span v-for="(environment, index) in environments">
-        <strong>!{environment.name}</strong><template v-if="index < (environments.length - 1)">, </template>
-      </span>
-      will be created as individual cloud resource groups under <strong>!{ name }</strong> project.
-      </p>
-
-      <div class='action-group'>
-        <button autofocus type='submit' class='action-group__action usa-button' tabindex='0'>{{ action_text }} Project</button>
-        <button type='button' v-on:click="handleCancelSubmit" class='icon-link action-group__action' tabindex='0'>Cancel</button>
-      </div>
-    {% endcall %}
-
-    {{ form.csrf_token }}
-    <div class="panel">
-      <div class="panel__heading panel__heading--grow">
-        <h1>{{ title_text }}</h1>
-      </div>
-
-      <div class="panel__content">
-        <p>
-          AT-AT allows you to organize your workspace into multiple projects, each of which may have environments.
-        </p>
-        {{ TextInput(form.name) }}
-        {{ TextInput(form.description, paragraph=True) }}
-      </div>
-    </div>
-
-    <div> {# this extra div prevents this bug: https://www.pivotaltracker.com/story/show/160768940 #}
-      <div v-cloak v-for="title in errors" :key="title">
-        {{ Alert(message=None, level="error", vue_template=True) }}
-      </div>
-    </div>
-
-      <div class="block-list project-list-item">
-        <header class="block-list__header block-list__header--grow">
-          <h2 class="block-list__title">Project Environments</h2>
-          <p>
-            Each environment created within a project is an enclave of cloud resources that is logically separated from each other for increased security.
-          </p>
-        </header>
-
-        <ul>
-          <li v-for="(environment, i) in environments" class="block-list__item project-edit__env-list-item">
-            <div class="usa-input">
-              <label :for="'environment_names-' + i">Environment Name</label>
-              <input type="text" :name="'environment_names-' + i" :id="'environment_names-' + i" v-model="environment.name" placeholder="e.g. Development, Staging, Production">
-            </div>
-            <button v-on:click="removeEnvironment(i)" v-if="environments.length > 1" type="button" class='project-edit__env-list-item__remover'>
-              {{ Icon('trash') }}
-              <span>Remove</span>
-            </button>
-          </li>
-        </ul>
-
-        <div class="block-list__footer">
-          <button v-on:click="addEnvironment" class="icon-link" tabindex="0" type="button">Add another environment</button>
-        </div>
-      </div>
-
-      <div class="action-group">
-        <button class="usa-button usa-button-primary" tabindex="0" type="submit">{{ action_text }} Project</button>
-      </div>
-
-    </div>
-
-  </form>
-</new-project>
-
+  <div class="panel__content">
+    <p>
+      AT-AT allows you to organize your workspace into multiple projects, each of which may have environments.
+    </p>
+    {{ TextInput(form.name) }}
+    {{ TextInput(form.description, paragraph=True) }}
+  </div>
+</div>

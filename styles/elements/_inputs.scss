@@ -133,6 +133,10 @@
     }
   }
 
+  input:read-only {
+    color: grey;
+  }
+
   .usa-input__choices { // checkbox & radio sets
     legend {
       padding: 0 0 $gap 0;

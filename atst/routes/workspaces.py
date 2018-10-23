@@ -17,7 +17,7 @@ from atst.domain.workspaces import Workspaces
 from atst.domain.workspace_users import WorkspaceUsers
 from atst.domain.environments import Environments
 from atst.domain.environment_roles import EnvironmentRoles
-from atst.forms.new_project import NewProjectForm
+from atst.forms.project import NewProjectForm, ProjectForm
 from atst.forms.new_member import NewMemberForm
 from atst.forms.edit_member import EditMemberForm
 from atst.forms.workspace import WorkspaceForm
@@ -181,15 +181,32 @@ def create_project(workspace_id):
 def edit_project(workspace_id, project_id):
     workspace = Workspaces.get_for_update_projects(g.current_user, workspace_id)
     project = Projects.get(g.current_user, workspace, project_id)
-    form = NewProjectForm(
-        name=project.name,
-        environment_names=[env.name for env in project.environments],
-        description=project.description,
-    )
+    form = ProjectForm(name=project.name, description=project.description)
 
     return render_template(
         "workspaces/projects/edit.html", workspace=workspace, project=project, form=form
     )
+
+
+@bp.route("/workspaces/<workspace_id>/projects/<project_id>/edit", methods=["POST"])
+def update_project(workspace_id, project_id):
+    workspace = Workspaces.get_for_update_projects(g.current_user, workspace_id)
+    project = Projects.get(g.current_user, workspace, project_id)
+    form = ProjectForm(http_request.form)
+    if form.validate():
+        project_data = form.data
+        Projects.update(g.current_user, workspace, project, project_data)
+
+        return redirect(
+            url_for("workspaces.workspace_projects", workspace_id=workspace.id)
+        )
+    else:
+        return render_template(
+            "workspaces/projects/edit.html",
+            workspace=workspace,
+            project=project,
+            form=form,
+        )
 
 
 @bp.route("/workspaces/<workspace_id>/members/new")

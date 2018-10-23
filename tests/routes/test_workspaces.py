@@ -115,6 +115,66 @@ def test_view_edit_project(client, user_session):
     assert response.status_code == 200
 
 
+def test_user_with_permission_can_update_project(client, user_session):
+    owner = UserFactory.create()
+    workspace = WorkspaceFactory.create(
+        owner=owner,
+        projects=[
+            {
+                "name": "Awesome Project",
+                "description": "It's really awesome!",
+                "environments": [{"name": "dev"}, {"name": "prod"}],
+            }
+        ],
+    )
+    project = workspace.projects[0]
+    user_session(owner)
+    response = client.post(
+        url_for(
+            "workspaces.update_project",
+            workspace_id=workspace.id,
+            project_id=project.id,
+        ),
+        data={"name": "Really Cool Project", "description": "A very cool project."},
+        follow_redirects=True,
+    )
+
+    assert response.status_code == 200
+    assert project.name == "Really Cool Project"
+    assert project.description == "A very cool project."
+
+
+def test_user_without_permission_cannot_update_project(client, user_session):
+    dev = UserFactory.create()
+    owner = UserFactory.create()
+    workspace = WorkspaceFactory.create(
+        owner=owner,
+        members=[{"user": dev, "role_name": "developer"}],
+        projects=[
+            {
+                "name": "Great Project",
+                "description": "Cool stuff happening here!",
+                "environments": [{"name": "dev"}, {"name": "prod"}],
+            }
+        ],
+    )
+    project = workspace.projects[0]
+    user_session(dev)
+    response = client.post(
+        url_for(
+            "workspaces.update_project",
+            workspace_id=workspace.id,
+            project_id=project.id,
+        ),
+        data={"name": "New Name", "description": "A new description."},
+        follow_redirects=True,
+    )
+
+    assert response.status_code == 404
+    assert project.name == "Great Project"
+    assert project.description == "Cool stuff happening here!"
+
+
 def test_create_member(client, user_session):
     owner = UserFactory.create()
     user = UserFactory.create()

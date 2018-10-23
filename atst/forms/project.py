@@ -4,12 +4,14 @@ from wtforms.validators import Required
 from atst.forms.validators import ListItemRequired, ListItemsUnique
 
 
-class NewProjectForm(FlaskForm):
-
-    EMPTY_ENVIRONMENT_NAMES = ["", None]
-
+class ProjectForm(FlaskForm):
     name = StringField(label="Project Name", validators=[Required()])
     description = TextAreaField(label="Description", validators=[Required()])
+
+
+class NewProjectForm(ProjectForm):
+    EMPTY_ENVIRONMENT_NAMES = ["", None]
+
     environment_names = FieldList(
         StringField(label="Environment Name"),
         validators=[
