@@ -31,13 +31,13 @@ export default {
   },
 
   computed: {
-    showTaskOrder: function() {
-      return this.initialData.task_order.number || this.shouldForceShowTaskOrder
+    showTaskOrderUpload: function() {
+      return !this.initialData.task_order.pdf || this.shouldForceShowTaskOrder
     }
   },
 
   methods: {
-    forceShowTaskOrder: function(e) {
+    forceShowTaskOrderUpload: function(e) {
       console.log("forceShowTaskOrder", e)
       e.preventDefault()
       this.shouldForceShowTaskOrder = true
