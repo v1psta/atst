@@ -68,6 +68,24 @@
   }
 }
 
+@mixin block-list-selectable-label {
+  margin: 0;
+  max-width: 100%;
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  justify-content: space-between;
+  &::before {
+    flex-shrink: 0;
+    margin-right: 0;
+    margin-left: $gap * 2;
+  }
+
+  &:hover {
+    color: $color-primary;
+  }
+}
+
 
 .block-list {
   @include block-list;
@@ -105,22 +123,21 @@
   @include block-list-item;
 
   &.block-list__item--selectable {
-    > label {
-      margin: 0;
-      max-width: none;
+    > div {
       display: flex;
       flex-direction: row-reverse;
-      align-items: center;
-      justify-content: space-between;
-      &::before {
-        flex-shrink: 0;
-        margin-right: 0;
-        margin-left: $gap * 2;
+
+      @include ie-only {
+        width: 100%;
       }
 
-      &:hover {
-        color: $color-primary;
+      > label {
+        @include block-list-selectable-label;
       }
+    }
+
+    > label {
+      @include block-list-selectable-label;
     }
 
     input:checked {

@@ -1,10 +1,46 @@
 import { VPopover } from 'v-tooltip'
 
+const SelectorInput = {
+  name: 'SelectorInput',
+  props: {
+    name: String,
+    value: String,
+    label: String,
+    description: String,
+    selected: Boolean,
+    handleChange: Function,
+    handleEnter: Function,
+    handleEsc: Function
+  },
+
+  computed: {
+    id: function () {
+      return `${this.name}_${this.value}`
+    }
+  },
+
+  methods: {
+    onChange: function (e) {
+      this.handleChange(this.value)
+    },
+
+    onEnter: function (e) {
+      this.handleEnter()
+    },
+
+    onEsc: function (e) {
+      this.handleEsc()
+    }
+  }
+}
+
+
 export default {
   name: 'selector',
 
   components: {
-    VPopover
+    VPopover,
+    SelectorInput
   },
 
   props: {
@@ -20,7 +56,9 @@ export default {
   data: function () {
     return {
       value: this.initialChoice || null,
-      showError: (this.initialErrors && this.initialErrors.length) || false
+      currentChoice: this.initialChoice || null,
+      showError: (this.initialErrors && this.initialErrors.length) || false,
+      usingKeyboard: false
     }
   },
 
@@ -38,10 +76,38 @@ export default {
   },
 
   methods: {
-    change: function (e) {
-      this.value = e.target.value
+
+    change: function (value) {
+      this.value = value
       this.showError = false
-      setTimeout(() => this.$refs.popover.hide(), 300)
+    },
+
+    onShow: function () {
+      setTimeout(() => { // timeout is a hack to make focus work in Chrome
+        this.$refs.choices.find(choice => choice.selected).$refs.input[0].focus()
+      }, 100)
+    },
+
+    enter: function () {
+      this.$refs.popover.hide()
+    },
+
+    esc: function () {
+      this.value = this.currentChoice
+      this.usingKeyboard = false
+      this.$refs.popover.hide()
+    },
+
+    handleEnterOption: function (e) {
+      this.change(e.target.value)
+      this.currentChoice = e.target.value
+      this.usingKeyboard = false
+      this.$refs.popover.hide()
+    },
+
+    handleButtonArrowDown: function (e) {
+      this.usingKeyboard = true
+      this.$refs.popover.show()
     }
   },
 }
