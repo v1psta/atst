@@ -106,7 +106,7 @@
               validation='dollars'
             ) }}
 
-            <template v-if="showTaskOrder">
+            <template v-if="showTaskOrderUpload">
               <div class="usa-input {% if f.task_order.pdf.errors %} usa-input--error {% endif %}">
                 {{ f.task_order.pdf.label }}
                 {{ f.task_order.pdf }}
@@ -118,7 +118,7 @@
             <template v-else>
               <p>Uploaded {{ f.task_order.pdf.data }}.</p>
               <div>
-                <button v-on:click="forceShowTaskOrder($event)">Change</button>
+                <button v-on:click="forceShowTaskOrderUpload($event)">Change</button>
               </div>
             </template>
           </fieldset>
