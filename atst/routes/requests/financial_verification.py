@@ -26,7 +26,6 @@ class FinancialVerification(object):
 
 
 class FinancialVerificationBase(object):
-
     def _get_form(self, request, is_extended, formdata=None):
         _formdata = ImmutableMultiDict(formdata) if formdata is not None else None
         fv = FinancialVerification(request)

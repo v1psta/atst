@@ -5,7 +5,7 @@ from atst.models.request_revision import RequestRevision
 from atst.models.request_status_event import RequestStatusEvent, RequestStatus
 from atst.models.request_review import RequestReview
 from atst.models.request_internal_comment import RequestInternalComment
-from atst.utils import deep_merge, pick
+from atst.utils import deep_merge
 
 from .query import RequestsQuery
 from .authorization import RequestsAuthorization
