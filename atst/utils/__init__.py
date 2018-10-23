@@ -33,9 +33,9 @@ def getattr_path(obj, path, default=None):
     return _obj
 
 
-def update_obj(obj, dct):
+def update_obj(obj, dct, ignore_vals=lambda v: v is None):
     for k, v in dct.items():
-        if hasattr(obj, k) and v is not None:
+        if hasattr(obj, k) and not ignore_vals(v):
             setattr(obj, k, v)
     return obj
 
