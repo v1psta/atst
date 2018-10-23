@@ -24,6 +24,8 @@ from atst.forms.workspace import WorkspaceForm
 from atst.forms.data import ENVIRONMENT_ROLES, ENV_ROLE_MODAL_DESCRIPTION
 from atst.domain.authz import Authorization
 from atst.models.permissions import Permissions
+from atst.domain.invitations import Invitations
+from atst.queue import queue
 
 bp = Blueprint("workspaces", __name__)
 
@@ -218,6 +220,17 @@ def new_member(workspace_id):
     )
 
 
+def send_invite_email(owner_name, invite_id, new_member_email):
+    body = render_template(
+        "emails/invitation.txt", owner=owner_name, invite_id=invite_id
+    )
+    queue.send_mail(
+        [new_member_email],
+        "{} has invited you to a JEDI Cloud Workspace".format(owner_name),
+        body,
+    )
+
+
 @bp.route("/workspaces/<workspace_id>/members/new", methods=["POST"])
 def create_member(workspace_id):
     workspace = Workspaces.get(g.current_user, workspace_id)
@@ -226,6 +239,11 @@ def create_member(workspace_id):
     if form.validate():
         try:
             new_member = Workspaces.create_member(g.current_user, workspace, form.data)
+            invite = Invitations.create(workspace, new_member.user)
+            send_invite_email(
+                g.current_user.full_name, invite.id, new_member.user.email
+            )
+
             return redirect(
                 url_for(
                     "workspaces.workspace_members",
@@ -318,3 +336,8 @@ def update_member(workspace_id, member_id):
             workspace=workspace,
             member=member,
         )
+
+
+@bp.route("/workspaces/invitation/<invite_id>", methods=["GET"])
+def accept_invitation(invite_id):
+    pass

@@ -7,6 +7,7 @@ from atst.domain.projects import Projects
 from atst.domain.environments import Environments
 from atst.domain.environment_roles import EnvironmentRoles
 from atst.models.workspace_user import WorkspaceUser
+from atst.queue import queue
 
 
 def test_user_with_permission_has_budget_report_link(client, user_session):
@@ -181,6 +182,8 @@ def test_create_member(client, user_session):
     workspace = WorkspaceFactory.create()
     Workspaces._create_workspace_role(owner, workspace, "admin")
     user_session(owner)
+    queue_length = len(queue.get_queue())
+
     response = client.post(
         url_for("workspaces.create_member", workspace_id=workspace.id),
         data={
@@ -195,6 +198,8 @@ def test_create_member(client, user_session):
 
     assert response.status_code == 200
     assert user.has_workspaces
+    assert user.invitations
+    assert len(queue.get_queue()) == queue_length + 1
 
 
 def test_permissions_for_view_member(client, user_session):
