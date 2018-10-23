@@ -39,7 +39,7 @@ class TaskOrders(object):
 
     @classmethod
     def create(cls, **kwargs):
-        to_data = drop(["source"], kwargs)
+        to_data = {k: v for k, v in kwargs.items() if v not in ["", None]}
         task_order = TaskOrder(source=Source.MANUAL, **to_data)
 
         db.session.add(task_order)

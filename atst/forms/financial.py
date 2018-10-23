@@ -44,10 +44,6 @@ class DraftValidateMixin(object):
 
 
 class TaskOrderForm(ValidatedForm, DraftValidateMixin):
-    def validate(self, *args, **kwargs):
-        if self.funding_type.data == "OTHER":
-            self.funding_type_other.validators.append(InputRequired())
-
     number = StringField(
         "Task Order Number associated with this request",
         description="Include the original Task Order number (including the 000X at the end). Do not include any modification numbers. Note that there may be a lag between approving a task order and when it becomes available in our system.",
@@ -182,6 +178,23 @@ class FinancialVerificationForm(ValidatedForm):
     task_order = FormField(TaskOrderForm)
     request = FormField(RequestFinancialVerificationForm)
 
+    def validate(self, *args, **kwargs):
+        if self.task_order.funding_type.data == "OTHER":
+            self.task_order.funding_type_other.validators.append(InputRequired())
+
+        to_number_validators = None
+        if kwargs.get("has_attachment"):
+            to_number_validators = list(self.task_order.number.validators)
+            self.task_order.number.validators = []
+
+        valid = super().validate()
+
+        if to_number_validators:
+            self.task_order.number.validators = to_number_validators
+
+        return valid
+
+
     def validate_draft(self):
         return self.task_order.validate_draft() and self.request.validate_draft()
 
@@ -198,23 +211,8 @@ class FinancialVerificationForm(ValidatedForm):
 
     @property
     def is_missing_task_order_number(self):
-        return "task_order_number" in self.errors
+        return "number" in self.errors.get("task_order", {})
 
     @property
     def is_only_missing_task_order_number(self):
         return "task_order_number" in self.errors and len(self.errors) == 1
-
-
-# class ExtendedFinancialForm(BaseFinancialForm):
-
-#         to_validator = None
-#         if kwargs.get("has_attachment"):
-#             to_validators = list(self.task_order.validators)
-#             self.task_order.validators = []
-
-#         valid = super().validate(*args, **kwargs)
-
-#         if to_validator:
-#             self.task_order.validators = to_validators
-
-#         return valid
