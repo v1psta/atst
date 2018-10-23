@@ -27,6 +27,7 @@ class PENumberValidator(object):
         try:
             PENumbers.get(field.data)
         except NotFoundError:
+            self._apply_error(field)
             return False
 
         return True
@@ -50,7 +51,7 @@ class PENumberValidator(object):
         return request.pe_number == pe_id
 
     def _apply_error(self, field):
-        suggestion = self.pe_validator.suggest_pe_id(field.data)
+        suggestion = self.suggest_pe_id(field.data)
         error_str = (
             "We couldn't find that PE number. {}"
             "If you have double checked it you can submit anyway. "
