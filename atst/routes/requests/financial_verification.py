@@ -13,7 +13,6 @@ from atst.domain.requests.financial_verification import (
 )
 from atst.models.attachment import Attachment
 from atst.domain.task_orders import TaskOrders
-from atst.utils import getattr_path
 
 
 def fv_extended(_http_request):
@@ -31,19 +30,6 @@ class FinancialVerificationBase(object):
         _formdata = ImmutableMultiDict(formdata) if formdata is not None else None
         fv = FinancialVerification(request)
         form = FinancialVerificationForm(obj=fv, formdata=_formdata)
-        # if request.task_order:
-        #     task_order_dict = request.task_order.to_dictionary()
-        #     task_order_dict.update(
-        #         {
-        #             "task_order_number": request.task_order.number,
-        #             "funding_type": getattr_path(
-        #                 request, "task_order.funding_type.value"
-        #             ),
-        #         }
-        #     )
-        #     existing_fv_data = {**existing_fv_data, **task_order_dict}
-
-        # mdict = ImmutableMultiDict(formdata) if formdata is not None else None
         if is_extended:
             try:
                 attachment = Attachment.get_for_resource("task_order", self.request.id)
@@ -93,7 +79,7 @@ class FinancialVerificationBase(object):
             pass
 
         try:
-            return TaskOrders._get_from_eda(task_order_number)
+            return TaskOrders.get_from_eda(task_order_number)
         except NotFoundError:
             pass
 
