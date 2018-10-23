@@ -4,7 +4,7 @@
 
 {% block workspace_content %}
 
-  <form method="POST" action="{{ url_for('workspaces.edit_project', workspace_id=workspace.id, project_id=project.id) }}" v-on:submit="handleSubmit">
+  <form method="POST" action="{{ url_for('workspaces.edit_project', workspace_id=workspace.id, project_id=project.id) }}">
 
     {% include "fragments/edit_project_form.html" %}
 
