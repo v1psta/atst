@@ -88,20 +88,6 @@ class FinancialVerificationBase(object):
         else:
             return None
 
-    def _apply_pe_number_error(self, field):
-        suggestion = self.pe_validator.suggest_pe_id(field.data)
-        error_str = (
-            "We couldn't find that PE number. {}"
-            "If you have double checked it you can submit anyway. "
-            "Your request will need to go through a manual review."
-        ).format('Did you mean "{}"? '.format(suggestion) if suggestion else "")
-        field.errors += (error_str,)
-        field.errors = list(field.errors)
-
-    def _apply_task_order_number_error(self, field):
-        field.errors += ("Task Order number not found",)
-        field.errors = list(field.errors)
-
     def _raise(self, form):
         form.reset()
         raise FormValidationError(form)
@@ -191,7 +177,9 @@ class SaveFinancialVerificationDraft(FinancialVerificationBase):
         if not self.pe_validator.validate(self.request, form.pe_id):
             valid = False
 
-        if form.task_order.number.data and not self.task_order_validator.validate(form.task_order.number):
+        if form.task_order.number.data and not self.task_order_validator.validate(
+            form.task_order.number
+        ):
             valid = False
 
         attachment = self._process_attachment(self.is_extended, form)

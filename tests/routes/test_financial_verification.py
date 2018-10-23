@@ -328,7 +328,9 @@ def test_get_fv_form_route(client, user_session, fv_data):
     assert response.status_code == 200
 
 
-def test_manual_task_order_triggers_extended_form(client, user_session, fv_data, e_fv_data):
+def test_manual_task_order_triggers_extended_form(
+    client, user_session, fv_data, e_fv_data
+):
     user = UserFactory.create()
     request = RequestFactory.create(creator=user)
 
