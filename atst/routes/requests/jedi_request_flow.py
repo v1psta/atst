@@ -63,6 +63,11 @@ class JEDIRequestFlow(object):
             "fname_request": user.first_name,
             "lname_request": user.last_name,
             "email_request": user.email,
+            "phone_number": user.phone_number,
+            "service_branch": user.service_branch,
+            "designation": user.designation,
+            "citizenship": user.citizenship,
+            "date_latest_training": user.date_latest_training,
         }
 
     @property
