@@ -20,13 +20,17 @@ export default {
   props: {
     choices: Array,
     initialData: String,
-    revoke: Boolean,
+    projectId: String
   },
 
   data: function () {
     return {
       new_role: this.initialData,
     }
+  },
+
+  mounted: function() {
+    this.$root.$on('revoke-' + this.projectId, this.revoke)
   },
 
   methods: {
@@ -36,13 +40,8 @@ export default {
     cancel: function () {
       this.new_role = this.initialData
     },
-  },
-
-  watch: {
-    revoke: function (val) {
-      if (val) {
-        this.new_role = ""
-      }
+    revoke: function () {
+      this.new_role = ""
     }
   },
 

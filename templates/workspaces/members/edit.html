@@ -52,7 +52,7 @@
 
   {% for project in projects %}
   {% set revoke_modal_name = project.name + 'RevokeModal' %}
-  <edit-project-roles inline-template v-bind:name="'{{ project.name }}'">
+  <edit-project-roles inline-template v-bind:name="'{{ project.name }}'" v-bind:id="'{{ project.id }}'">
     <div is='toggler' default-visible class='block-list project-list-item'>
       <template slot-scope='props'>
         <header class='block-list__header'>
@@ -81,7 +81,7 @@
             {% set role = EnvironmentRoles.get(member.user_id, env.id).role %}
 
           <li class='block-list__item'>
-            <edit-environment-role inline-template initial-data='{{ role or "" }}' v-bind:choices='{{ choices | tojson }}' v-bind:revoke='revoke'>
+            <edit-environment-role inline-template initial-data='{{ role or "" }}' v-bind:choices='{{ choices | tojson }}' v-bind:project-id="'{{ project.id }}'">
             <div class='project-list-item__environment'>
               <span class='project-list-item__environment__link'>
                 {{ env.name }}
