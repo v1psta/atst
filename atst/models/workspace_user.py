@@ -62,8 +62,5 @@ class WorkspaceUser(object):
 
     def __repr__(self):
         return "<WorkspaceUser(user='{}', role='{}', workspace='{}', num_environment_roles='{}')>".format(
-            self.user_name,
-            self.role.name,
-            self.workspace.name,
-            self.num_environment_roles,
+            self.user_name, self.role, self.workspace.name, self.num_environment_roles
         )
