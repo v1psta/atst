@@ -328,14 +328,14 @@ def test_get_fv_form_route(client, user_session, fv_data):
     assert response.status_code == 200
 
 
-def test_manual_task_order_triggers_extended_form(client, user_session, fv_data):
+def test_manual_task_order_triggers_extended_form(client, user_session, fv_data, e_fv_data):
     user = UserFactory.create()
     request = RequestFactory.create(creator=user)
 
-    data = {**fv_data, "task_order-number": "DCA10096D0053"}
+    data = {**fv_data, **e_fv_data, "task_order-number": "DCA10096D0053"}
 
     UpdateFinancialVerification(
-        TrueValidator, TrueValidator, user, request, data, is_extended=False
+        TrueValidator, TrueValidator, user, request, data, is_extended=True
     ).execute()
 
     user_session(user)

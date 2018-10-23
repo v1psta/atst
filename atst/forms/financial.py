@@ -33,8 +33,6 @@ def coerce_choice(val):
 class DraftValidateMixin(object):
     def validate_draft(self):
         """
-        Another stupid workaround. Maybe there isn't a better way.
-
         Make all fields optional before validation, and then return them to
         their previous state.
         """
@@ -50,6 +48,19 @@ class DraftValidateMixin(object):
 
 
 class TaskOrderForm(ValidatedForm, DraftValidateMixin):
+    def do_validate_number(self):
+        for field in self:
+            if field.name != "task_order-number":
+                field.validators.insert(0, Optional())
+
+        valid = super().validate()
+
+        for field in self:
+            if field.name != "task_order-number":
+                field.validators.pop(0)
+
+        return valid
+
     number = StringField(
         "Task Order Number associated with this request",
         description="Include the original Task Order number (including the 000X at the end). Do not include any modification numbers. Note that there may be a lag between approving a task order and when it becomes available in our system.",
@@ -185,6 +196,9 @@ class FinancialVerificationForm(ValidatedForm):
     request = FormField(RequestFinancialVerificationForm)
 
     def validate(self, *args, **kwargs):
+        if not kwargs.get("is_extended", True):
+            return self.do_validate_request()
+
         if self.task_order.funding_type.data == "OTHER":
             self.task_order.funding_type_other.validators.append(InputRequired())
 
@@ -205,7 +219,9 @@ class FinancialVerificationForm(ValidatedForm):
         Called do_validate_request to avoid being considered an inline
         validator by wtforms.
         """
-        return self.request.validate(self)
+        request_valid = self.request.validate(self)
+        task_order_valid = self.task_order.do_validate_number()
+        return request_valid and task_order_valid
 
     def validate_draft(self):
         return self.task_order.validate_draft() and self.request.validate_draft()

@@ -17,12 +17,15 @@ class PENumberValidator(object):
         re.X,
     )
 
-    def validate(self, request, pe_id):
-        if self._same_as_previous(request, pe_id):
+    def validate(self, request, field):
+        if field.errors:
+            return False
+
+        if self._same_as_previous(request, field.data):
             return True
 
         try:
-            PENumbers.get(pe_id)
+            PENumbers.get(field.data)
         except NotFoundError:
             return False
 
@@ -46,12 +49,27 @@ class PENumberValidator(object):
     def _same_as_previous(self, request, pe_id):
         return request.pe_number == pe_id
 
+    def _apply_error(self, field):
+        suggestion = self.pe_validator.suggest_pe_id(field.data)
+        error_str = (
+            "We couldn't find that PE number. {}"
+            "If you have double checked it you can submit anyway. "
+            "Your request will need to go through a manual review."
+        ).format('Did you mean "{}"? '.format(suggestion) if suggestion else "")
+        field.errors += (error_str,)
+        field.errors = list(field.errors)
+
 
 class TaskOrderNumberValidator(object):
-    def validate(self, task_order_number):
+    def validate(self, field):
         try:
-            TaskOrders.get(task_order_number)
+            TaskOrders.get(field.data)
         except NotFoundError:
+            self._apply_error(field)
             return False
 
         return True
+
+    def _apply_error(self, field):
+        field.errors += ("Task Order number not found",)
+        field.errors = list(field.errors)

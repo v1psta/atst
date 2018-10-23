@@ -61,7 +61,7 @@ class FinancialVerificationBase(object):
 
         return attachment
 
-    def _try_create_task_order(self, form, attachment):
+    def _try_create_task_order(self, form, attachment, is_extended):
         task_order_number = form.task_order.number.data
         if not task_order_number:
             return None
@@ -83,7 +83,10 @@ class FinancialVerificationBase(object):
         except NotFoundError:
             pass
 
-        return TaskOrders.create(**task_order_data)
+        if is_extended:
+            return TaskOrders.create(**task_order_data)
+        else:
+            return None
 
     def _apply_pe_number_error(self, field):
         suggestion = self.pe_validator.suggest_pe_id(field.data)
@@ -93,9 +96,11 @@ class FinancialVerificationBase(object):
             "Your request will need to go through a manual review."
         ).format('Did you mean "{}"? '.format(suggestion) if suggestion else "")
         field.errors += (error_str,)
+        field.errors = list(field.errors)
 
     def _apply_task_order_number_error(self, field):
         field.errors += ("Task Order number not found",)
+        field.errors = list(field.errors)
 
     def _raise(self, form):
         form.reset()
@@ -139,22 +144,17 @@ class UpdateFinancialVerification(FinancialVerificationBase):
 
         attachment = self._process_attachment(self.is_extended, form)
 
-        if self.is_extended:
-            if not form.validate(has_attachment=attachment):
-                should_update = False
-        else:
-            should_update = form.do_validate_request()
+        if not form.validate(is_extended=self.is_extended, has_attachment=attachment):
+            should_update = False
 
-        if not self.pe_validator.validate(self.request, form.pe_id.data):
-            self._apply_pe_number_error(form.pe_id)
+        if not self.pe_validator.validate(self.request, form.pe_id):
             should_submit = False
 
-        if not self.task_order_validator.validate(form.task_order_number.data):
-            self._apply_task_order_number_error(form.task_order_number)
+        if not self.task_order_validator.validate(form.task_order.number):
             should_submit = False
 
         if should_update:
-            task_order = self._try_create_task_order(form, attachment)
+            task_order = self._try_create_task_order(form, attachment, self.is_extended)
             updated_request = Requests.update_financial_verification(
                 self.request.id, form.request.data, task_order=task_order
             )
@@ -188,20 +188,14 @@ class SaveFinancialVerificationDraft(FinancialVerificationBase):
         if not form.validate_draft():
             self._raise(form)
 
-        if form.pe_id.data and not self.pe_validator.validate(
-            self.request, form.pe_id.data
-        ):
+        if not self.pe_validator.validate(self.request, form.pe_id):
             valid = False
-            self._apply_pe_number_error(form.pe_id)
 
-        if form.task_order_number.data and not self.task_order_validator.validate(
-            form.task_order_number.data
-        ):
+        if form.task_order.number.data and not self.task_order_validator.validate(form.task_order.number):
             valid = False
-            self._apply_task_order_number_error(form.task_order_number)
 
         attachment = self._process_attachment(self.is_extended, form)
-        task_order = self._try_create_task_order(form, attachment)
+        task_order = self._try_create_task_order(form, attachment, self.is_extended)
         updated_request = Requests.update_financial_verification(
             self.request.id, form.request.data, task_order=task_order
         )
