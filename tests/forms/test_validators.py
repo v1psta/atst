@@ -45,7 +45,10 @@ class TestName:
         dummy_field.data = valid
         validator(dummy_form, dummy_field)
 
-    @pytest.mark.parametrize("invalid", [""])
+    @pytest.mark.parametrize(
+        "invalid",
+        ["", "/my name", ":-)", "Name&Name", "Ke$ha", "A^Name", "#yourvalidname"],
+    )
     def test_Name_rejects_empty_string(self, invalid, dummy_form, dummy_field):
         validator = Name()
         dummy_field.data = invalid
