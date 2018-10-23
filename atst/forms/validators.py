@@ -50,7 +50,9 @@ def PhoneNumber(message="Please enter a valid 5 or 10 digit phone number."):
     return _is_phone_number
 
 
-def Name(message="Please enter only letters."):
+def Name(
+    message="This field accepts letters, numbers, commas, apostrophes, hyphens, and periods."
+):
     def _name(form, field):
         match = re.match(r"[\w \,\.\'\-]+", field.data)
         if not match or match.group() != field.data:
