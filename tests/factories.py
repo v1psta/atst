@@ -20,6 +20,7 @@ from atst.models.workspace import Workspace
 from atst.domain.roles import Roles
 from atst.models.workspace_role import WorkspaceRole
 from atst.models.environment_role import EnvironmentRole
+from atst.models.invitation import Invitation
 
 
 class Base(factory.alchemy.SQLAlchemyModelFactory):
@@ -325,3 +326,8 @@ class EnvironmentRoleFactory(Base):
     environment = factory.SubFactory(EnvironmentFactory)
     role = factory.Faker("name")
     user = factory.SubFactory(UserFactory)
+
+
+class InvitationFactory(Base):
+    class Meta:
+        model = Invitation
