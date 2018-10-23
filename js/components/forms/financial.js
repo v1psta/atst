@@ -32,7 +32,7 @@ export default {
 
   computed: {
     showTaskOrder: function() {
-      return !this.initialData.task_order || this.shouldForceShowTaskOrder
+      return this.initialData.task_order.number || this.shouldForceShowTaskOrder
     }
   },
 

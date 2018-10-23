@@ -1,6 +1,7 @@
 import pytest
 from unittest.mock import MagicMock
 from flask import url_for
+import datetime
 
 from atst.eda_client import MockEDAClient
 from atst.routes.requests.financial_verification import (
@@ -28,19 +29,35 @@ from atst.utils import pick
 @pytest.fixture
 def fv_data():
     return {
-        "pe_id": "123",
-        "task_order_number": MockEDAClient.MOCK_CONTRACT_NUMBER,
-        "fname_co": "Contracting",
-        "lname_co": "Officer",
-        "email_co": "jane@mail.mil",
-        "office_co": "WHS",
-        "fname_cor": "Officer",
-        "lname_cor": "Representative",
-        "email_cor": "jane@mail.mil",
-        "office_cor": "WHS",
-        "uii_ids": "1234",
-        "treasury_code": "00123456",
-        "ba_code": "02A",
+        "request-pe_id": "123",
+        "task_order-number": MockEDAClient.MOCK_CONTRACT_NUMBER,
+        "request-fname_co": "Contracting",
+        "request-lname_co": "Officer",
+        "request-email_co": "jane@mail.mil",
+        "request-office_co": "WHS",
+        "request-fname_cor": "Officer",
+        "request-lname_cor": "Representative",
+        "request-email_cor": "jane@mail.mil",
+        "request-office_cor": "WHS",
+        "request-uii_ids": "1234",
+        "request-treasury_code": "00123456",
+        "request-ba_code": "02A",
+    }
+
+
+@pytest.fixture
+def e_fv_data(pdf_upload):
+    return {
+        "task_order-funding_type": "RDTE",
+        "task_order-funding_type_other": "other",
+        "task_order-expiration_date": "1/1/{}".format(datetime.date.today().year + 1),
+        "task_order-clin_0001": "50000",
+        "task_order-clin_0003": "13000",
+        "task_order-clin_1001": "30000",
+        "task_order-clin_1003": "7000",
+        "task_order-clin_2001": "30000",
+        "task_order-clin_2003": "7000",
+        "task_order-pdf": pdf_upload,
     }
 
 
@@ -81,7 +98,7 @@ def test_update_fv_re_enter_pe_number(fv_data):
 def test_update_fv_invalid_task_order_number(fv_data):
     request = RequestFactory.create()
     user = UserFactory.create()
-    data = {**fv_data, "task_order_number": "DCA10096D0051"}
+    data = {**fv_data, "task_order-number": "DCA10096D0051"}
     update_fv = UpdateFinancialVerification(
         TrueValidator,
         TaskOrderNumberValidator(),
@@ -95,10 +112,10 @@ def test_update_fv_invalid_task_order_number(fv_data):
         update_fv.execute()
 
 
-def test_update_fv_extended(fv_data, extended_financial_verification_data):
+def test_update_fv_extended(fv_data, e_fv_data):
     request = RequestFactory.create()
     user = UserFactory.create()
-    data = {**fv_data, **extended_financial_verification_data}
+    data = {**fv_data, **e_fv_data}
     update_fv = UpdateFinancialVerification(
         TrueValidator, TaskOrderNumberValidator(), user, request, data, is_extended=True
     )
@@ -201,47 +218,41 @@ def test_save_draft_and_then_submit():
         ).execute()
 
 
-def test_updated_request_has_pdf(fv_data, extended_financial_verification_data):
+def test_updated_request_has_pdf(fv_data, e_fv_data):
     request = RequestFactory.create()
     user = UserFactory.create()
-    data = {
-        **fv_data,
-        **extended_financial_verification_data,
-        "task_order_number": "DCA10096D0051",
-    }
+    data = {**fv_data, **e_fv_data, "task_order-number": "DCA10096D0051"}
     updated_request = UpdateFinancialVerification(
         TrueValidator, TrueValidator, user, request, data, is_extended=True
     ).execute()
     assert updated_request.task_order.pdf
 
 
-def test_can_save_draft_with_just_pdf(extended_financial_verification_data):
+def test_can_save_draft_with_just_pdf(e_fv_data):
     request = RequestFactory.create()
     user = UserFactory.create()
-    data = {"task_order": extended_financial_verification_data["task_order"]}
+    data = {"task_order-pdf": e_fv_data["task_order-pdf"]}
     SaveFinancialVerificationDraft(
         TrueValidator, TrueValidator, user, request, data, is_extended=True
     ).execute()
 
     form = GetFinancialVerificationForm(user, request, is_extended=True).execute()
-    assert form.task_order
+    assert form.task_order.pdf
 
 
-def test_task_order_info_present_in_extended_form(
-    fv_data, extended_financial_verification_data
-):
+def test_task_order_info_present_in_extended_form(fv_data, e_fv_data):
     request = RequestFactory.create()
     user = UserFactory.create()
     data = {
-        "clin_0001": extended_financial_verification_data["clin_0001"],
-        "task_order_number": fv_data["task_order_number"],
+        "task_order-clin_0001": "1",
+        "task_order-number": fv_data["task_order-number"],
     }
     SaveFinancialVerificationDraft(
         TrueValidator, TrueValidator, user, request, data, is_extended=True
     ).execute()
 
     form = GetFinancialVerificationForm(user, request, is_extended=True).execute()
-    assert form.clin_0001.data
+    assert form.task_order.clin_0001.data
 
 
 def test_simple_form_does_not_generate_task_order(fv_data):
@@ -255,22 +266,17 @@ def test_simple_form_does_not_generate_task_order(fv_data):
     assert updated_request.task_order is None
 
 
-def test_can_save_draft_with_funding_type(
-    fv_data, extended_financial_verification_data
-):
+def test_can_save_draft_with_funding_type(fv_data, e_fv_data):
     request = RequestFactory.create()
     user = UserFactory.create()
     data = {
-        "task_order_number": fv_data["task_order_number"],
-        "funding_type": extended_financial_verification_data["funding_type"],
+        "task_order-number": fv_data["task_order-number"],
+        "task_order-funding_type": e_fv_data["task_order-funding_type"],
     }
     updated_request = SaveFinancialVerificationDraft(
         TrueValidator, TrueValidator, user, request, data, is_extended=False
     ).execute()
 
-    import ipdb
-
-    ipdb.set_trace()
     assert updated_request.task_order.funding_type
 
 
@@ -317,7 +323,7 @@ def test_manual_task_order_triggers_extended_form(client, user_session, fv_data)
     user = UserFactory.create()
     request = RequestFactory.create(creator=user)
 
-    data = {**fv_data, "task_order_number": "DCA10096D0053"}
+    data = {**fv_data, "task_order-number": "DCA10096D0053"}
 
     UpdateFinancialVerification(
         TrueValidator, TrueValidator, user, request, data, is_extended=False

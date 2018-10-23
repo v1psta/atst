@@ -4,7 +4,7 @@ from werkzeug.datastructures import ImmutableMultiDict, FileStorage
 
 from . import requests_bp
 from atst.domain.requests import Requests
-from atst.forms.financial import FinancialForm, ExtendedFinancialForm
+from atst.forms.financial import FinancialVerificationForm
 from atst.forms.exceptions import FormValidationError
 from atst.domain.exceptions import NotFoundError
 from atst.domain.requests.financial_verification import (
@@ -13,52 +13,42 @@ from atst.domain.requests.financial_verification import (
 )
 from atst.models.attachment import Attachment
 from atst.domain.task_orders import TaskOrders
-from atst.utils import getattr_path
 
 
 def fv_extended(_http_request):
     return _http_request.args.get("extended", "false").lower() in ["true", "t"]
 
 
+class FinancialVerification(object):
+    def __init__(self, request):
+        self.request = request.latest_revision
+        self.task_order = request.task_order
+
+
 class FinancialVerificationBase(object):
-
     def _get_form(self, request, is_extended, formdata=None):
-        existing_fv_data = request.financial_verification
-
-        if request.task_order:
-            task_order_dict = request.task_order.to_dictionary()
-            task_order_dict.update(
-                {
-                    "task_order_number": request.task_order.number,
-                    "funding_type": getattr_path(
-                        request, "task_order.funding_type.value"
-                    ),
-                }
-            )
-            existing_fv_data = {**existing_fv_data, **task_order_dict}
-
-        mdict = ImmutableMultiDict(formdata) if formdata is not None else None
+        _formdata = ImmutableMultiDict(formdata) if formdata is not None else None
+        fv = FinancialVerification(request)
+        form = FinancialVerificationForm(obj=fv, formdata=_formdata)
         if is_extended:
             try:
                 attachment = Attachment.get_for_resource("task_order", self.request.id)
-                existing_fv_data["task_order"] = attachment.filename
+                form.task_order.pdf.data = attachment.filename
             except NotFoundError:
                 pass
 
-            return ExtendedFinancialForm(formdata=mdict, data=existing_fv_data)
-        else:
-            return FinancialForm(formdata=mdict, data=existing_fv_data)
+        return form
 
     def _process_attachment(self, is_extended, form):
         attachment = None
         if is_extended:
             attachment = None
-            if isinstance(form.task_order.data, FileStorage):
+            if isinstance(form.task_order.pdf.data, FileStorage):
                 Attachment.delete_for_resource("task_order", self.request.id)
                 attachment = Attachment.attach(
-                    form.task_order.data, "task_order", self.request.id
+                    form.task_order.pdf.data, "task_order", self.request.id
                 )
-            elif isinstance(form.task_order.data, str):
+            elif isinstance(form.task_order.pdf.data, str):
                 try:
                     attachment = Attachment.get_for_resource(
                         "task_order", self.request.id
@@ -67,23 +57,16 @@ class FinancialVerificationBase(object):
                     pass
 
             if attachment:
-                form.task_order.data = attachment.filename
+                form.task_order.pdf.data = attachment.filename
 
         return attachment
 
     def _try_create_task_order(self, form, attachment):
-        form_data = form.data
-
-        task_order_number = form_data.pop("task_order_number")
+        task_order_number = form.task_order.number.data
         if not task_order_number:
             return None
 
-        task_order_data = {
-            k: v for (k, v) in form_data.items() if k in TaskOrders.TASK_ORDER_DATA
-        }
-        task_order_data["number"] = task_order_number
-        funding_type = form_data.get("funding_type")
-        task_order_data["funding_type"] = funding_type if funding_type != "" else None
+        task_order_data = form.task_order.data
 
         if attachment:
             task_order_data["pdf"] = attachment
@@ -96,7 +79,7 @@ class FinancialVerificationBase(object):
             pass
 
         try:
-            return TaskOrders._get_from_eda(task_order_number)
+            return TaskOrders.get_from_eda(task_order_number)
         except NotFoundError:
             pass
 
@@ -156,8 +139,11 @@ class UpdateFinancialVerification(FinancialVerificationBase):
 
         attachment = self._process_attachment(self.is_extended, form)
 
-        if not form.validate(has_attachment=attachment):
-            should_update = False
+        if self.is_extended:
+            if not form.validate(has_attachment=attachment):
+                should_update = False
+        else:
+            should_update = form.do_validate_request()
 
         if not self.pe_validator.validate(self.request, form.pe_id.data):
             self._apply_pe_number_error(form.pe_id)
@@ -170,7 +156,7 @@ class UpdateFinancialVerification(FinancialVerificationBase):
         if should_update:
             task_order = self._try_create_task_order(form, attachment)
             updated_request = Requests.update_financial_verification(
-                self.request.id, form.data, task_order=task_order
+                self.request.id, form.request.data, task_order=task_order
             )
             if should_submit:
                 return Requests.submit_financial_verification(updated_request)
@@ -217,7 +203,7 @@ class SaveFinancialVerificationDraft(FinancialVerificationBase):
         attachment = self._process_attachment(self.is_extended, form)
         task_order = self._try_create_task_order(form, attachment)
         updated_request = Requests.update_financial_verification(
-            self.request.id, form.data, task_order=task_order
+            self.request.id, form.request.data, task_order=task_order
         )
 
         if valid:

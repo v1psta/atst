@@ -82,9 +82,7 @@ class Requests(object):
         revision = create_revision_from_request_body(new_body)
         request.revisions.append(revision)
 
-        request = RequestsQuery.add_and_commit(request)
-
-        return request
+        return RequestsQuery.add_and_commit(request)
 
     @classmethod
     def approve_and_create_workspace(cls, request):
@@ -160,29 +158,10 @@ class Requests(object):
     def update_financial_verification(cls, request_id, financial_data, task_order=None):
         request = RequestsQuery.get_with_lock(request_id)
 
-        delta = pick(
-            [
-                "uii_ids",
-                "pe_id",
-                "treasury_code",
-                "ba_code",
-                "fname_co",
-                "lname_co",
-                "email_co",
-                "office_co",
-                "fname_cor",
-                "lname_cor",
-                "email_cor",
-                "office_cor",
-            ],
-            financial_data,
-        )
-
         if task_order:
             request.task_order = task_order
 
-        request = Requests._update(request, {"financial_verification": delta})
-
+        request = Requests._update(request, {"financial_verification": financial_data})
         return request
 
     @classmethod
