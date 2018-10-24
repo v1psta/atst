@@ -103,16 +103,13 @@
                       <ul>
                         {% for choice in choices %}
                         <li class='block-list__item block-list__item--selectable'>
-
                             <input
                               name='radio_input_{{ env.id }}'
                               v-on:change.prevent='change'
                               type='radio'
                               id="env_{{ env.id }}_{{ choice[0] }}"
                               value='{{ choice[0] }}'
-                              {% if "!{new_role}" == choice[0] %}
-                                checked='checked'
-                              {% endif %}
+                              :checked="new_role === '{{ choice[0]}}'"
                             />
                             <label for="env_{{ env.id }}_{{ choice[0] }}">
                               {% if choice[1].description %}
