@@ -1,4 +1,4 @@
-import re
+import re, json
 from datetime import date, timedelta
 
 from flask import (
@@ -100,9 +100,16 @@ def workspace_members(workspace_id):
     new_member = next(
         filter(lambda m: m.user_name == new_member_name, workspace.members), None
     )
+    members_list = [
+        {"name": k.user_name, "role": k.role, "num_env": k.num_environment_roles}
+        for k in workspace.members
+    ]
 
     return render_template(
-        "workspaces/members/index.html", workspace=workspace, new_member=new_member
+        "workspaces/members/index.html",
+        workspace=workspace,
+        members=members_list,
+        new_member=new_member,
     )
 
 

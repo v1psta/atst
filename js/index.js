@@ -19,6 +19,7 @@ import selector from './components/selector'
 import BudgetChart from './components/charts/budget_chart'
 import SpendTable from './components/tables/spend_table'
 import CcpoApproval from './components/forms/ccpo_approval'
+import MembersList from './components/forms/members_list'
 import LocalDatetime from './components/local_datetime'
 
 Vue.use(VTooltip)
@@ -40,6 +41,7 @@ const app = new Vue({
     BudgetChart,
     SpendTable,
     CcpoApproval,
+    MembersList,
     LocalDatetime,
     EditWorkspaceMember,
   },
