@@ -49,7 +49,7 @@ class TestName:
         "invalid",
         ["", "/my name", ":-)", "Name&Name", "Ke$ha", "A^Name", "#yourvalidname"],
     )
-    def test_Name_rejects_empty_string(self, invalid, dummy_form, dummy_field):
+    def test_Name_rejects_invalid_characters(self, invalid, dummy_form, dummy_field):
         validator = Name()
         dummy_field.data = invalid
         with pytest.raises(ValidationError):
