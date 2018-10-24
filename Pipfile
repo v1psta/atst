@@ -22,6 +22,7 @@ apache-libcloud = "*"
 lockfile = "*"
 defusedxml = "*"
 "flask-rq2" = "*"
+itsdangerous = "~=0.24"
 
 [dev-packages]
 bandit = "*"
