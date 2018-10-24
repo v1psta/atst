@@ -27,6 +27,9 @@ WORKDIR ${APP_DIR}
 # Copy over setup scripts
 COPY script/ ./script/
 
+# add sync-crl cronjob for atst user
+RUN echo "1 */6 * * * /opt/atat/atst/script/sync-crls tests/crl-tmp" >> /etc/crontabs/atst
+
 # Add required system packages and app user
 RUN set -x ; \
   script/alpine_setup
