@@ -241,7 +241,7 @@ def update_financial_verification(request_id):
             extended=is_extended,
         )
 
-    if updated_request.is_pending_ccpo_approval:
+    if updated_request.is_approved:
         workspace = Requests.approve_and_create_workspace(updated_request)
         return redirect(
             url_for(
