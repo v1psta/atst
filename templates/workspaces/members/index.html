@@ -45,11 +45,16 @@
   ) }}
 {% endif %}
 
+
+
+
+<members-list id="search-template" v-bind:members='{{ members | tojson}}'>
+  <div>
   <form class='search-bar'>
     <div class='usa-input search-input'>
       <label for='members-search'>Search members by name</label>
-      <input type='search' id='members-search' name='members-search' placeholder="Search by name"/>
-      <button type="submit">
+      <input v-model='searchValue' type='search' id='members-search' name='members-search' placeholder="Search by name"/>
+      <button type="button" @click='search'>
         <span class="hide">Search</span>
       </button>
     </div>
@@ -103,6 +108,8 @@
       </tbody>
     </table>
   </div>
+</div>
+</members-list>
 
 {% endif %}
 
