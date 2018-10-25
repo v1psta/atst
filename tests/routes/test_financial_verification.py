@@ -57,6 +57,9 @@ def e_fv_data(pdf_upload):
     }
 
 
+MANUAL_TO_NUMBER = "DCA10096D0051"
+
+
 TrueValidator = MagicMock()
 TrueValidator.validate = MagicMock(return_value=True)
 
@@ -94,7 +97,7 @@ def test_update_fv_re_enter_pe_number(fv_data):
 def test_update_fv_invalid_task_order_number(fv_data):
     request = RequestFactory.create()
     user = UserFactory.create()
-    data = {**fv_data, "task_order-number": "DCA10096D0051"}
+    data = {**fv_data, "task_order-number": MANUAL_TO_NUMBER}
     update_fv = UpdateFinancialVerification(
         TrueValidator,
         TaskOrderNumberValidator(),
@@ -217,7 +220,7 @@ def test_save_draft_and_then_submit():
 def test_updated_request_has_pdf(fv_data, e_fv_data):
     request = RequestFactory.create()
     user = UserFactory.create()
-    data = {**fv_data, **e_fv_data, "task_order-number": "DCA10096D0051"}
+    data = {**fv_data, **e_fv_data, "task_order-number": MANUAL_TO_NUMBER}
     updated_request = UpdateFinancialVerification(
         TrueValidator, TrueValidator, user, request, data, is_extended=True
     ).execute()
@@ -330,7 +333,7 @@ def test_manual_task_order_triggers_extended_form(
     user = UserFactory.create()
     request = RequestFactory.create(creator=user)
 
-    data = {**fv_data, **e_fv_data, "task_order-number": "DCA10096D0053"}
+    data = {**fv_data, **e_fv_data, "task_order-number": MANUAL_TO_NUMBER}
 
     UpdateFinancialVerification(
         TrueValidator, TrueValidator, user, request, data, is_extended=True
@@ -348,7 +351,12 @@ def test_manual_task_order_triggers_extended_form(
 def test_manual_to_does_not_trigger_approval(client, user_session, fv_data, e_fv_data):
     user = UserFactory.create()
     request = RequestFactory.create(creator=user)
-    data = {**fv_data, **e_fv_data, "request-pe_id": "0101228N"}
+    data = {
+        **fv_data,
+        **e_fv_data,
+        "task_order-number": MANUAL_TO_NUMBER,
+        "request-pe_id": "0101228N",
+    }
     user_session(user)
     client.post(
         url_for(
@@ -360,3 +368,25 @@ def test_manual_to_does_not_trigger_approval(client, user_session, fv_data, e_fv
 
     updated_request = RequestsQuery.get(request.id)
     assert updated_request.status != RequestStatus.APPROVED
+
+
+def test_eda_task_order_does_trigger_approval(client, user_session, fv_data, e_fv_data):
+    user = UserFactory.create()
+    request = RequestFactory.create(creator=user)
+    data = {
+        **fv_data,
+        **e_fv_data,
+        "task_order-number": MockEDAClient.MOCK_CONTRACT_NUMBER,
+        "request-pe_id": "0101228N",
+    }
+    user_session(user)
+    client.post(
+        url_for(
+            "requests.financial_verification", request_id=request.id, extended=True
+        ),
+        data=data,
+        follow_redirects=True,
+    )
+
+    updated_request = RequestsQuery.get(request.id)
+    assert updated_request.status == RequestStatus.APPROVED
