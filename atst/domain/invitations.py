@@ -39,7 +39,7 @@ class Invitations(object):
     @classmethod
     def accept(cls, invite_id):
         invite = Invitations._get(invite_id)
-        valid = Invitations._is_valid(invite)
+        valid = Invitations.is_valid(invite)
 
         invite.valid = False
         db.session.add(invite)
@@ -51,12 +51,13 @@ class Invitations(object):
         return invite
 
     @classmethod
-    def _is_valid(cls, invite):
-        if not invite.valid:
-            return False
-        else:
-            time_created = invite.time_created
-            expiration = datetime.datetime.now(
-                time_created.tzinfo
-            ) - datetime.timedelta(minutes=Invitations.EXPIRATION_LIMIT)
-            return invite.time_created > expiration
+    def is_valid(cls, invite):
+        return invite.valid and not Invitations.is_expired(invite)
+
+    @classmethod
+    def is_expired(cls, invite):
+        time_created = invite.time_created
+        expiration = datetime.datetime.now(time_created.tzinfo) - datetime.timedelta(
+            minutes=Invitations.EXPIRATION_LIMIT
+        )
+        return invite.time_created < expiration
