@@ -6,6 +6,7 @@ def test_user_with_workspaces_has_workspaces_nav(client, user_session):
     user = UserFactory.create()
     workspace = WorkspaceFactory.create()
     Workspaces._create_workspace_role(user, workspace, "developer")
+    Workspaces.accept_workspace_role(user, workspace)
 
     user_session(user)
     response = client.get("/home", follow_redirects=True)

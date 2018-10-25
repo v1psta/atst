@@ -21,6 +21,7 @@ from atst.domain.roles import Roles
 from atst.models.workspace_role import WorkspaceRole
 from atst.models.environment_role import EnvironmentRole
 from atst.models.invitation import Invitation
+from atst.domain.workspaces import Workspaces
 
 
 class Base(factory.alchemy.SQLAlchemyModelFactory):
@@ -244,7 +245,7 @@ class WorkspaceFactory(Base):
     @classmethod
     def _create(cls, model_class, *args, **kwargs):
         with_projects = kwargs.pop("projects", [])
-        owner = kwargs.pop("owner", None)
+        owner = kwargs.pop("owner", UserFactory.create())
         members = kwargs.pop("members", [])
 
         workspace = super()._create(model_class, *args, **kwargs)
@@ -253,11 +254,10 @@ class WorkspaceFactory(Base):
             ProjectFactory.create(workspace=workspace, **p) for p in with_projects
         ]
 
-        if owner:
-            workspace.request.creator = owner
-            WorkspaceRoleFactory.create(
-                workspace=workspace, role=Roles.get("owner"), user=owner
-            )
+        workspace.request.creator = owner
+        WorkspaceRoleFactory.create(
+            workspace=workspace, role=Roles.get("owner"), user=owner, accepted=True
+        )
 
         for member in members:
             user = member.get("user", UserFactory.create())
@@ -268,6 +268,14 @@ class WorkspaceFactory(Base):
 
         workspace.projects = projects
         return workspace
+
+    @classmethod
+    def create_user_and_workspace_with_role(cls, role="owner"):
+        user = UserFactory.create()
+        workspace = WorkspaceFactory.create()
+        Workspaces._create_workspace_role(user, workspace, role)
+        Workspaces.accept_workspace_role(user, workspace)
+        return user, workspace
 
 
 class ProjectFactory(Base):

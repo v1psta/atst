@@ -219,6 +219,7 @@ def test_scoped_workspace_returns_all_projects_for_workspace_admin(
     admin = Workspaces.add_member(
         workspace, UserFactory.from_atat_role("default"), "admin"
     ).user
+    Workspaces.accept_workspace_role(admin, workspace)
     scoped_workspace = Workspaces.get(admin, workspace.id)
 
     assert len(scoped_workspace.projects) == 5
@@ -279,6 +280,7 @@ def test_get_for_update_information():
 
     admin = UserFactory.create()
     Workspaces.add_member(workspace, admin, "admin")
+    Workspaces.accept_workspace_role(admin, workspace)
     admin_ws = Workspaces.get_for_update_information(admin, workspace.id)
     assert workspace == admin_ws
 

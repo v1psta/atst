@@ -12,7 +12,9 @@ class WorkspaceUser(object):
     def permissions(self):
         atat_permissions = set(self.user.atat_role.permissions)
         workspace_permissions = (
-            [] if self.workspace_role is None else self.workspace_role.role.permissions
+            []
+            if self.workspace_role is None or not self.is_accepted
+            else self.workspace_role.role.permissions
         )
         return set(workspace_permissions).union(atat_permissions)
 
@@ -74,8 +76,15 @@ class WorkspaceUser(object):
 
     def __repr__(self):
         return "<WorkspaceUser(user='{}', role='{}', workspace='{}', num_environment_roles='{}')>".format(
-            self.user_name,
-            self.role.name,
+            self.user.full_name,
+            self.role,
             self.workspace.name,
             self.num_environment_roles,
         )
+
+    @property
+    def is_accepted(self):
+        if self.workspace_role:
+            return self.workspace_role.accepted
+
+        return False

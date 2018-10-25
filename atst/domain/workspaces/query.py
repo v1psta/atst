@@ -30,8 +30,8 @@ class WorkspacesQuery(Query):
         )
 
     @classmethod
-    def create_workspace_role(cls, user, role, workspace):
-        return WorkspaceRole(user=user, role=role, workspace=workspace)
+    def create_workspace_role(cls, user, role, workspace, **kwargs):
+        return WorkspaceRole(user=user, role=role, workspace=workspace, **kwargs)
 
     @classmethod
     def get_role_for_workspace_and_user(cls, workspace, user):

@@ -341,6 +341,7 @@ def update_member(workspace_id, member_id):
 @bp.route("/workspaces/invitation/<invite_id>", methods=["GET"])
 def accept_invitation(invite_id):
     invite = Invitations.accept(invite_id)
+
     Workspaces.accept_workspace_role(invite.user, invite.workspace)
 
     return redirect(

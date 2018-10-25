@@ -13,7 +13,9 @@ class Workspaces(object):
     def create(cls, request, name=None):
         name = name or request.displayname
         workspace = WorkspacesQuery.create(request=request, name=name)
-        Workspaces._create_workspace_role(request.creator, workspace, "owner")
+        Workspaces._create_workspace_role(
+            request.creator, workspace, "owner", accepted=True
+        )
         WorkspacesQuery.add_and_commit(workspace)
         return workspace
 
@@ -107,9 +109,11 @@ class Workspaces(object):
         return WorkspaceUsers.update_role(member, workspace.id, role_name)
 
     @classmethod
-    def _create_workspace_role(cls, user, workspace, role_name):
+    def _create_workspace_role(cls, user, workspace, role_name, accepted=False):
         role = Roles.get(role_name)
-        workspace_role = WorkspacesQuery.create_workspace_role(user, role, workspace)
+        workspace_role = WorkspacesQuery.create_workspace_role(
+            user, role, workspace, accepted=accepted
+        )
         WorkspacesQuery.add_and_commit(workspace_role)
         return workspace_role
 
