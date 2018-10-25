@@ -24,7 +24,7 @@ spec:
         fsGroup: 101
       containers:
         - name: atst
-          image: registry.atat.codes:443/atst-prod:b1042cad
+          image: registry.atat.codes:443/atst-prod:5550eed2
           resources:
             requests:
                memory: "2500Mi"
@@ -145,7 +145,7 @@ spec:
         fsGroup: 101
       containers:
         - name: atst-worker
-          image: registry.atat.codes:443/atst-prod:b1042cad
+          image: registry.atat.codes:443/atst-prod:5550eed2
           args: ["/bin/bash", "-c", "/opt/atat/atst/script/rq_worker"]
           resources:
             requests:
