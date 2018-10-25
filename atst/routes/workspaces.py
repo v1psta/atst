@@ -101,7 +101,13 @@ def workspace_members(workspace_id):
         filter(lambda m: m.user_name == new_member_name, workspace.members), None
     )
     members_list = [
-        {"name": k.user_name, "role": k.role, "num_env": k.num_environment_roles}
+        {
+            "name": k.user_name,
+            "status": k.status,
+            "id": k.user_id,
+            "role": k.role,
+            "num_env": k.num_environment_roles,
+        }
         for k in workspace.members
     ]
 

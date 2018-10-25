@@ -80,7 +80,6 @@
     </div>
   </form>
 
-
   <div class='responsive-table-wrapper'>
     <table>
       <thead>
@@ -91,20 +90,21 @@
           <th scope="col">Workspace Role</th>
         </tr>
       </thead>
+
       <tbody>
-        {% for m in workspace.members %}
-        {% set num_environment_roles = m.num_environment_roles %}
-        <tr>
-          <td><a href="{{ url_for('workspaces.update_member', workspace_id=workspace.id, member_id=m.user_id) }}" class="icon-link icon-link--large">{{ m.user_name }}</a></td>
-          {% if num_environment_roles %}
-            <td class="table-cell--align-right">{{ num_environment_roles }}</td>
-          {% else %}
-            <td class='table-cell--shrink'><span class="label label--info">No Environment Access</span></td>
-          {% endif %}
-          <td>{{ m.status }}</a></td>
-          <td>{{ m.role_displayname }}</a></td>
+        <tr v-for='member in searchedList'>
+          <td>
+            <a :href="'/workspaces/{{ workspace.id }}/members/'  + member.id + '/member_edit'" class="icon-link icon-link--large" v-html="member.name"></a>
+          </td>
+          <td class="table-cell--align-right" v-if='member.num_env'>
+            <span v-html="member.num_env"></span>
+          </td>
+          <td class='table-cell--shrink' v-else>
+            <span class="label label--info">No Environment Access</span>
+          </td>
+          <td v-html="member.status"></td>
+          <td v-html="member.role"></td>
         </tr>
-        {% endfor %}
       </tbody>
     </table>
   </div>
