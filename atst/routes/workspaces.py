@@ -1,4 +1,4 @@
-import re, json
+import re
 from datetime import date, timedelta
 
 from flask import (
