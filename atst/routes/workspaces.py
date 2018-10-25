@@ -107,7 +107,7 @@ def workspace_members(workspace_id):
             "name": k.user_name,
             "status": k.status,
             "id": k.user_id,
-            "role": k.role,
+            "role": k.role_displayname,
             "num_env": k.num_environment_roles,
         }
         for k in workspace.members
