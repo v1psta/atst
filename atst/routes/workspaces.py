@@ -285,12 +285,10 @@ def update_member(workspace_id, member_id):
     for entry in form_dict:
         if re.match("env_", entry):
             env_id = entry[4:]
-            env_role = form_dict[entry]
-            if env_role:
-                ids_and_roles.append({"id": env_id, "role": env_role})
+            env_role = form_dict[entry] or None
+            ids_and_roles.append({"id": env_id, "role": env_role})
 
     form = EditMemberForm(http_request.form)
-
     if form.validate():
         new_role_name = None
         if form.data["workspace_role"] != member.role:
@@ -299,7 +297,9 @@ def update_member(workspace_id, member_id):
             )
             new_role_name = member.role_displayname
 
-        Environments.update_environment_role(g.current_user, ids_and_roles, member)
+        Environments.update_environment_roles(
+            g.current_user, workspace, member, ids_and_roles
+        )
 
         return redirect(
             url_for(

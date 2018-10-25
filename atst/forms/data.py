@@ -153,6 +153,10 @@ ENVIRONMENT_ROLES = [
             "description": "Views cloud resource usage and budget reports.",
         },
     ),
+    (
+        "",
+        {"name": "No Access", "description": "User has no access to this environment."},
+    ),
 ]
 
 ENV_ROLE_MODAL_DESCRIPTION = {

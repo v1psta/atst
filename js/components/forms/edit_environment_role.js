@@ -4,8 +4,9 @@ import Selector from '../selector'
 import Modal from '../../mixins/modal'
 import toggler from '../toggler'
 
+
 export default {
-  name: 'edit-workspace-member',
+  name: 'edit-environment-role',
 
   mixins: [FormMixin, Modal],
 
@@ -19,6 +20,7 @@ export default {
   props: {
     choices: Array,
     initialData: String,
+    projectId: String
   },
 
   data: function () {
@@ -27,28 +29,37 @@ export default {
     }
   },
 
+  mounted: function() {
+    this.$root.$on('revoke-' + this.projectId, this.revoke)
+  },
+
   methods: {
     change: function (e) {
-      e.preventDefault()
       this.new_role = e.target.value
     },
     cancel: function () {
       this.new_role = this.initialData
     },
+    revoke: function () {
+      this.new_role = ""
+    }
   },
 
   computed: {
     displayName: function () {
+      const newRole = this.newRole
       for (var arr in this.choices) {
-        if (this.choices[arr][0] == this.new_role) {
+        if (this.choices[arr][0] == newRole) {
           return this.choices[arr][1].name
         }
       }
-      return this.new_role ? this.new_role : "no access"
     },
     label_class: function () {
-      return this.displayName === "no access" ?
+      return this.newRole === "" ?
         "label" : "label label--success"
     },
-  }
+    newRole: function () {
+      return this.new_role
+    }
+  },
 }
