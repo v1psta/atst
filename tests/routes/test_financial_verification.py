@@ -351,9 +351,11 @@ def test_manual_to_does_not_trigger_approval(client, user_session, fv_data, e_fv
     data = {**fv_data, **e_fv_data, "request-pe_id": "0101228N"}
     user_session(user)
     client.post(
-        url_for("requests.financial_verification", request_id=request.id, extended=True),
+        url_for(
+            "requests.financial_verification", request_id=request.id, extended=True
+        ),
         data=data,
-        follow_redirects=True
+        follow_redirects=True,
     )
 
     updated_request = RequestsQuery.get(request.id)
