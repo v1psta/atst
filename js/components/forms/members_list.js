@@ -9,6 +9,8 @@ export default {
   data: function () {
     return {
       searchValue: '',
+      status: '',
+      role: '',
       searchedList: [],
     }
   },
@@ -23,6 +25,18 @@ export default {
         member => member.name.toLowerCase()
         .includes(this.searchValue.toLowerCase())
       )
+
+      if (this.status) {
+        this.searchedList = this.searchedList.filter(
+          member => member.status === this.status
+        )
+      }
+
+      if (this.role) {
+        this.searchedList = this.searchedList.filter(
+            member => member.role.toLowerCase() === this.role
+        )
+      }
     },
   },
 }

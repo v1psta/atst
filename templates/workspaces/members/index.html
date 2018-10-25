@@ -59,21 +59,21 @@
 
     <div class='usa-input filter-input'>
       <label for='filter-status'>Filter members by status</label>
-      <select id="filter-status" name="filter-status">
+      <select v-model="status" id="filter-status" name="filter-status">
         <option value="" selected disabled>Filter by status</option>
-        <option value="">Active</option>
-        <option value="">Pending</option>
-        <option value="">Denied</option>
+        <option value="active">Active</option>
+        <option value="pending">Pending</option>
+        <option value="denied">Denied</option>
       </select>
     </div>
 
     <div class='usa-input filter-input'>
       <label for='filter-role'>Filter members by role</label>
-      <select id="filter-role" name="filter-role">
+      <select v-model="role" id="filter-role" name="filter-role">
         <option value="" selected disabled>Filter by role</option>
-        <option value="">Admin</option>
-        <option value="">CCPO</option>
-        <option value="">Developer</option>
+        <option value="administrator">Administrator</option>
+        <option value="ccpo">CCPO</option>
+        <option value="developer">Developer</option>
       </select>
     </div>
   </form>
