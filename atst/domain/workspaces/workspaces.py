@@ -119,3 +119,11 @@ class Workspaces(object):
             workspace.name = new_data["name"]
 
         WorkspacesQuery.add_and_commit(workspace)
+
+    @classmethod
+    def accept_workspace_role(cls, user, workspace):
+        workspace_role = WorkspacesQuery.get_role_for_workspace_and_user(
+            workspace, user
+        )
+        workspace_role.accepted = True
+        WorkspacesQuery.add_and_commit(workspace_role)

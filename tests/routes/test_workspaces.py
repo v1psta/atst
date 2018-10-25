@@ -316,7 +316,7 @@ def test_update_member_environment_role_with_no_data(client, user_session):
     assert EnvironmentRoles.get(user.id, env1_id).role == "developer"
 
 
-def test_new_member_accept_valid_invite(client, user_session):
+def test_new_member_accepts_valid_invite(client, user_session):
     owner = UserFactory.create()
     workspace = WorkspaceFactory.create()
     Workspaces._create_workspace_role(owner, workspace, "admin")
@@ -324,15 +324,23 @@ def test_new_member_accept_valid_invite(client, user_session):
     user = UserFactory.create()
     member = WorkspaceUsers.add(user, workspace.id, "developer")
     invite = InvitationFactory.create(user_id=member.user.id, workspace_id=workspace.id)
+
+    # the user does not have access to the workspace before accepting the invite
+    assert len(Workspaces.for_user(user)) == 0
+
     user_session(user)
     response = client.get(url_for("workspaces.accept_invitation", invite_id=invite.id))
 
+    # user is redirected to the workspace view
     assert response.status_code == 302
     assert (
         url_for("workspaces.show_workspace", workspace_id=invite.workspace.id)
         in response.headers["Location"]
     )
+    # the one-time use invite is no longer usable
     assert invite.valid == False
+    # the user has access to the workspace
+    assert len(Workspaces.for_user(user)) == 1
 
 
 def test_new_member_accept_invalid_invite(client, user_session):

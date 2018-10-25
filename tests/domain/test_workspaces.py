@@ -247,9 +247,20 @@ def test_for_user_returns_assigned_workspaces_for_user(workspace, workspace_owne
     bob = UserFactory.from_atat_role("default")
     Workspaces.add_member(workspace, bob, "developer")
     Workspaces.create(RequestFactory.create())
+    Workspaces.accept_workspace_role(bob, workspace)
+
     bobs_workspaces = Workspaces.for_user(bob)
 
     assert len(bobs_workspaces) == 1
+
+
+def test_for_user_does_not_return_unaccepted_workspaces(workspace, workspace_owner):
+    bob = UserFactory.from_atat_role("default")
+    Workspaces.add_member(workspace, bob, "developer")
+    Workspaces.create(RequestFactory.create())
+    bobs_workspaces = Workspaces.for_user(bob)
+
+    assert len(bobs_workspaces) == 0
 
 
 def test_for_user_returns_all_workspaces_for_ccpo(workspace, workspace_owner):
