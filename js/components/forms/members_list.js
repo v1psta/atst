@@ -16,14 +16,15 @@ export default {
   },
 
   mounted: function () {
-    // console.log(this.members)
+    this.searchedList = this.members
   },
 
   methods: {
     search: function () {
-      console.log(this.members)
-      this.searchedList = this.members.filter(member => member.name.includes(this.searchValue))
-      console.log(this.searchedList)
+      this.searchedList = this.members.filter(
+        member => member.name.toLowerCase()
+        .includes(this.searchValue.toLowerCase())
+      )
     },
   },
 }
