@@ -12,5 +12,8 @@ APP_UID="8010"
 # Add additional packages required by app dependencies
 ADDITIONAL_PACKAGES="postgresql-libs python3 rsync uwsgi uwsgi-python3"
 
+# add sync-crl cronjob for atst user
+echo "1 */6 * * * /opt/atat/atst/script/sync-crls tests/crl-tmp" >> /etc/crontabs/atst
+
 # Run the shared alpine setup script
 source ./script/include/run_alpine_setup

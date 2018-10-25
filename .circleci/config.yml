@@ -86,7 +86,7 @@ jobs:
           name: "Load Cache: CRLs"
           keys:
             - disa-crls-v2
-      - run: 
+      - run:
           name: "Update CRLs"
           command: ./script/sync-crls
       - save_cache:
@@ -163,7 +163,7 @@ jobs:
               --change="ENV APP_GROUP \"${APP_GROUP}\"" \
               --change="ENV APP_DIR \"${APP_DIR}\"" \
               --change='ENTRYPOINT ["/usr/bin/dumb-init", "--"]' \
-              --change="CMD [\"bash\", \"-c\", \"${APP_DIR}/script/uwsgi_server\"]" \
+              --change="CMD [\"bash\", \"-c\", \"crond -b && ${APP_DIR}/script/uwsgi_server\"]" \
               --change="WORKDIR ${APP_DIR}" \
               --change="USER \"${APP_USER}\"" \
               ${CONTAINER_NAME} \
