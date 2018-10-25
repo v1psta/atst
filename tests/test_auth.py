@@ -211,3 +211,17 @@ def test_redirected_on_login(client, monkeypatch):
     target_route = url_for("requests.requests_form_new", screen=1)
     response = _login(client, next=target_route)
     assert target_route in response.headers.get("Location")
+
+
+def test_invited_user_finalized_on_login(monkeypatch, client):
+    user = UserFactory.create(provisional=True)
+    monkeypatch.setattr(
+        "atst.domain.authnid.AuthenticationContext.authenticate", lambda *args: True
+    )
+    monkeypatch.setattr(
+        "atst.domain.authnid.AuthenticationContext.get_user", lambda *args: user
+    )
+
+    resp = _login(client)
+
+    assert not user.provisional

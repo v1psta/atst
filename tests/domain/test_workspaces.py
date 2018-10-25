@@ -86,6 +86,23 @@ def test_can_create_workspace_user(workspace, workspace_owner):
 
     new_member = Workspaces.create_member(workspace_owner, workspace, user_data)
     assert new_member.workspace == workspace
+    assert new_member.user.provisional
+
+
+def test_can_add_existing_user_to_workspace(workspace, workspace_owner):
+    user = UserFactory.create()
+    user_data = {
+        "first_name": "New",
+        "last_name": "User",
+        "email": "new.user@mail.com",
+        "workspace_role": "developer",
+        "dod_id": user.dod_id,
+    }
+
+    new_member = Workspaces.create_member(workspace_owner, workspace, user_data)
+    assert new_member.workspace == workspace
+    assert new_member.user.email == user.email
+    assert not new_member.user.provisional
 
 
 def test_need_permission_to_create_workspace_user(workspace, workspace_owner):

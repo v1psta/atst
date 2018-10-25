@@ -86,6 +86,7 @@ class Workspaces(object):
             last_name=data["last_name"],
             email=data["email"],
             atat_role_name="default",
+            provisional=True,
         )
         return Workspaces.add_member(workspace, new_user, data["workspace_role"])
 
