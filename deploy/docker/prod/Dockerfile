@@ -21,7 +21,7 @@ EXPOSE "${APP_PORT}"
 ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 
 # Default command is to launch the server
-CMD ["bash", "-c", "crond -b && ${APP_DIR}/script/uwsgi_server"]
+CMD ["bash", "-c", "${APP_DIR}/script/uwsgi_server"]
 
 ### Items that will change almost every build
 #############################################
@@ -40,9 +40,6 @@ WORKDIR ${APP_DIR}
 # Add required system packages and app user
 RUN set -x ; \
   script/alpine_setup "${APP_USER}" "${APP_GROUP}"
-
-# add sync-crl cronjob for atst user
-RUN echo "1 */6 * * * /opt/atat/atst/script/sync-crls tests/crl-tmp" >> /etc/crontabs/atst
 
 # Update file ownership
 RUN set -x ; \
