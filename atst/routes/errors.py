@@ -3,6 +3,7 @@ from flask_wtf.csrf import CSRFError
 import werkzeug.exceptions as werkzeug_exceptions
 
 import atst.domain.exceptions as exceptions
+from atst.domain.invitations import InvitationExpired
 
 
 def make_error_pages(app):
@@ -39,6 +40,17 @@ def make_error_pages(app):
         return (
             render_template("error.html", message="An Unexpected Error Occurred"),
             500,
+        )
+
+    @app.errorhandler(InvitationExpired)
+    # pylint: disable=unused-variable
+    def expired_invitation(e):
+        log_error(e)
+        return (
+            render_template(
+                "error.html", message="The invitation you followed has expired."
+            ),
+            404,
         )
 
     return app
