@@ -99,7 +99,7 @@ class Requests(object):
             new_status=status, revision=request.latest_revision
         )
         request.status_events.append(status_event)
-        return request
+        return RequestsQuery.add_and_commit(request)
 
     @classmethod
     def should_auto_approve(cls, request):

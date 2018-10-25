@@ -119,11 +119,11 @@ class Request(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
 
     @property
     def latest_status(self):
-        return self.status_events[-1]
+        return self.status_events[-1] if self.status_events else None
 
     @property
     def status(self):
-        return self.latest_status.new_status
+        return self.latest_status.new_status if self.latest_status else None
 
     @property
     def status_displayname(self):
