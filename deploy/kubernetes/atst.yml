@@ -153,6 +153,8 @@ spec:
           envFrom:
           - configMapRef:
               name: atst-envvars
+          - configMapRef:
+              name: atst-worker-envvars
           volumeMounts:
             - name: atst-config
               mountPath: "/opt/atat/atst/atst-overrides.ini"

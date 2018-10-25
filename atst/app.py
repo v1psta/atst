@@ -28,6 +28,7 @@ from atst.queue import queue
 
 
 ENV = os.getenv("FLASK_ENV", "dev")
+REQUIRE_CRLS = os.getenv("REQUIRE_CRLS", "True")
 
 
 def make_app(config):
@@ -46,7 +47,8 @@ def make_app(config):
     app.config.update({"SESSION_REDIS": app.redis})
 
     make_flask_callbacks(app)
-    make_crl_validator(app)
+    if REQUIRE_CRLS == "True":
+        make_crl_validator(app)
     register_filters(app)
     make_eda_client(app)
     make_upload_storage(app)
