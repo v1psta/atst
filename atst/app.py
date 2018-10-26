@@ -46,7 +46,8 @@ def make_app(config):
     app.config.update({"SESSION_REDIS": app.redis})
 
     make_flask_callbacks(app)
-    make_crl_validator(app)
+    if app.config.get("REQUIRE_CRLS"):
+        make_crl_validator(app)
     register_filters(app)
     make_eda_client(app)
     make_upload_storage(app)
@@ -99,6 +100,7 @@ def map_config(config):
         "PERMANENT_SESSION_LIFETIME": config.getint(
             "default", "PERMANENT_SESSION_LIFETIME"
         ),
+        "REQUIRE_CRLS": config.getboolean("default", "REQUIRE_CRLS"),
         "RQ_REDIS_URL": config["default"]["REDIS_URI"],
         "RQ_QUEUES": ["atat_{}".format(ENV.lower())],
     }

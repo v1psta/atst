@@ -45,12 +45,14 @@ kubectl config current-context
 
 # Update the ATST deployment
 kubectl -n atat set image deployment.apps/atst atst="${IMAGE_NAME}"
+kubectl -n atat set image deployment.apps/atst-worker atst-worker="${IMAGE_NAME}"
 
 # Wait for deployment to finish
 if ! timeout -t "${MAX_DEPLOY_WAIT}" -s INT kubectl -n atat rollout status deployment/atst
 then
     # Deploy did not finish before max wait time; abort and rollback the deploy
     kubectl -n atat rollout undo deployment/atst
+    kubectl -n atat rollout undo deployment/atst-worker
     # Exit with a non-zero return code
     exit 2
 fi
