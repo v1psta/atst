@@ -390,3 +390,50 @@ def test_eda_task_order_does_trigger_approval(client, user_session, fv_data, e_f
 
     updated_request = RequestsQuery.get(request.id)
     assert updated_request.status == RequestStatus.APPROVED
+
+
+def test_task_order_number_persists_in_form(fv_data, e_fv_data):
+    user = UserFactory.create()
+    request = RequestFactory.create(creator=user)
+    data = {
+        **fv_data,
+        "task_order-number": MANUAL_TO_NUMBER,
+        "request-pe_id": "0101228N",
+    }
+
+    try:
+        UpdateFinancialVerification(
+            TrueValidator, FalseValidator, user, request, data, is_extended=False
+        ).execute()
+    except FormValidationError:
+        pass
+
+    form = GetFinancialVerificationForm(user, request, is_extended=True).execute()
+    assert form.task_order.number.data == MANUAL_TO_NUMBER
+
+
+def test_can_submit_once_to_details_are_entered(fv_data, e_fv_data):
+    user = UserFactory.create()
+    request = RequestFactory.create(creator=user)
+    data = {
+        **fv_data,
+        "task_order-number": MANUAL_TO_NUMBER,
+        "request-pe_id": "0101228N",
+    }
+
+    try:
+        UpdateFinancialVerification(
+            TrueValidator, FalseValidator, user, request, data, is_extended=False
+        ).execute()
+    except FormValidationError:
+        pass
+
+    data = {
+        **fv_data,
+        **e_fv_data,
+        "task_order-number": MANUAL_TO_NUMBER,
+        "request-pe_id": "0101228N",
+    }
+    assert UpdateFinancialVerification(
+        TrueValidator, TrueValidator, user, request, data, is_extended=True
+    ).execute()

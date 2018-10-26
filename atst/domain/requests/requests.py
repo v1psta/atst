@@ -157,7 +157,6 @@ class Requests(object):
     @classmethod
     def update_financial_verification(cls, request_id, financial_data, task_order=None):
         request = RequestsQuery.get_with_lock(request_id)
-
         if task_order:
             request.task_order = task_order
 

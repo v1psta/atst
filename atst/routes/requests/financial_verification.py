@@ -83,10 +83,7 @@ class FinancialVerificationBase(object):
         except NotFoundError:
             pass
 
-        if is_extended:
-            return TaskOrders.create(**task_order_data)
-        else:
-            return None
+        return TaskOrders.create(**task_order_data)
 
     def _raise(self, form):
         form.reset()
