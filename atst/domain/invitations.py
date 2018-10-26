@@ -17,7 +17,8 @@ class InvitationExpired(Exception):
 
 
 class Invitations(object):
-    EXPIRATION_LIMIT = 360
+    # number of minutes a given invitation is considered valid
+    EXPIRATION_LIMIT_MINUTES = 360
 
     @classmethod
     def _get(cls, invite_id):
@@ -58,6 +59,6 @@ class Invitations(object):
     def is_expired(cls, invite):
         time_created = invite.time_created
         expiration = datetime.datetime.now(time_created.tzinfo) - datetime.timedelta(
-            minutes=Invitations.EXPIRATION_LIMIT
+            minutes=Invitations.EXPIRATION_LIMIT_MINUTES
         )
         return invite.time_created < expiration
