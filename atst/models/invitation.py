@@ -1,9 +1,18 @@
-from sqlalchemy import Column, ForeignKey, Boolean
+from enum import Enum
+
+from sqlalchemy import Column, ForeignKey, Enum as SQLAEnum
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
 from atst.models import Base, types
 from atst.models.mixins.timestamps import TimestampsMixin
+
+
+class Status(Enum):
+    ACCEPTED = "accepted"
+    REVOKED = "revoked"
+    PENDING = "pending"
+    REJECTED = "rejected"
 
 
 class Invitation(Base, TimestampsMixin):
@@ -20,9 +29,25 @@ class Invitation(Base, TimestampsMixin):
     inviter_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), index=True)
     inviter = relationship("User", backref="sent_invites", foreign_keys=[inviter_id])
 
-    valid = Column(Boolean, default=True)
+    status = Column(SQLAEnum(Status, native_enum=False, default=Status.PENDING))
 
     def __repr__(self):
         return "<Invitation(user='{}', workspace='{}', id='{}')>".format(
             self.user.id, self.workspace.id, self.id
         )
+
+    @property
+    def is_accepted(self):
+        return self.status == Status.ACCEPTED
+
+    @property
+    def is_revoked(self):
+        return self.status == Status.REVOKED
+
+    @property
+    def is_pending(self):
+        return self.status == Status.PENDING
+
+    @property
+    def is_rejected(self):
+        return self.status == Status.REJECTED

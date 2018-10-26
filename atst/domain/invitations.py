@@ -2,18 +2,18 @@ import datetime
 from sqlalchemy.orm.exc import NoResultFound
 
 from atst.database import db
-from atst.models import Invitation
+from atst.models.invitation import Invitation, Status as InvitationStatus
 
 from .exceptions import NotFoundError
 
 
-class InvitationExpired(Exception):
-    def __init__(self, invite_id):
-        self.invite_id = invite_id
+class InvitationError(Exception):
+    def __init__(self, invite):
+        self.invite = invite
 
     @property
     def message(self):
-        return "{} has expired".format(self.invite_id)
+        return "{} has a status of {}".format(self.invite.id, self.invite.status.value)
 
 
 class Invitations(object):
@@ -31,7 +31,12 @@ class Invitations(object):
 
     @classmethod
     def create(cls, workspace, inviter, user):
-        invite = Invitation(workspace=workspace, inviter=inviter, user=user, valid=True)
+        invite = Invitation(
+            workspace=workspace,
+            inviter=inviter,
+            user=user,
+            status=InvitationStatus.PENDING,
+        )
         db.session.add(invite)
         db.session.commit()
 
@@ -40,23 +45,22 @@ class Invitations(object):
     @classmethod
     def accept(cls, invite_id):
         invite = Invitations._get(invite_id)
-        valid = Invitations.is_valid(invite)
 
-        invite.valid = False
+        if Invitations._is_expired(invite):
+            invite.status = InvitationStatus.REJECTED
+        elif invite.is_pending:
+            invite.status = InvitationStatus.ACCEPTED
+
         db.session.add(invite)
         db.session.commit()
 
-        if not valid:
-            raise InvitationExpired(invite_id)
+        if invite.is_revoked or invite.is_rejected:
+            raise InvitationError(invite)
 
         return invite
 
     @classmethod
-    def is_valid(cls, invite):
-        return invite.valid and not Invitations.is_expired(invite)
-
-    @classmethod
-    def is_expired(cls, invite):
+    def _is_expired(cls, invite):
         time_created = invite.time_created
         expiration = datetime.datetime.now(time_created.tzinfo) - datetime.timedelta(
             minutes=Invitations.EXPIRATION_LIMIT_MINUTES

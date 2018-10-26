@@ -8,6 +8,7 @@ from atst.domain.environments import Environments
 from atst.domain.environment_roles import EnvironmentRoles
 from atst.domain.invitations import Invitations
 from atst.models.workspace_user import WorkspaceUser
+from atst.models.invitation import Status as InvitationStatus
 from atst.queue import queue
 
 
@@ -316,7 +317,7 @@ def test_new_member_accepts_valid_invite(client, user_session):
         in response.headers["Location"]
     )
     # the one-time use invite is no longer usable
-    assert invite.valid == False
+    assert invite.is_accepted
     # the user has access to the workspace
     assert len(Workspaces.for_user(user)) == 1
 
@@ -327,7 +328,9 @@ def test_new_member_accept_invalid_invite(client, user_session):
     user = UserFactory.create()
     member = WorkspaceUsers.add(user, workspace.id, "developer")
     invite = InvitationFactory.create(
-        user_id=member.user.id, workspace_id=workspace.id, valid=False
+        user_id=member.user.id,
+        workspace_id=workspace.id,
+        status=InvitationStatus.REJECTED,
     )
     user_session(user)
     response = client.get(url_for("workspaces.accept_invitation", invite_id=invite.id))

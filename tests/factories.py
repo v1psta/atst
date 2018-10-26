@@ -20,7 +20,7 @@ from atst.models.workspace import Workspace
 from atst.domain.roles import Roles
 from atst.models.workspace_role import WorkspaceRole
 from atst.models.environment_role import EnvironmentRole
-from atst.models.invitation import Invitation
+from atst.models.invitation import Invitation, Status as InvitationStatus
 from atst.domain.workspaces import Workspaces
 
 
@@ -339,3 +339,5 @@ class EnvironmentRoleFactory(Base):
 class InvitationFactory(Base):
     class Meta:
         model = Invitation
+
+    status = InvitationStatus.PENDING

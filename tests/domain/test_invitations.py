@@ -1,7 +1,8 @@
 import datetime
 import pytest
 
-from atst.domain.invitations import Invitations, InvitationExpired
+from atst.domain.invitations import Invitations, InvitationError
+from atst.models.invitation import Status
 
 from tests.factories import WorkspaceFactory, UserFactory, InvitationFactory
 
@@ -13,16 +14,16 @@ def test_create_invitation():
     assert invite.user == user
     assert invite.workspace == workspace
     assert invite.inviter == workspace.owner
-    assert invite.valid
+    assert invite.status == Status.PENDING
 
 
 def test_accept_invitation():
     workspace = WorkspaceFactory.create()
     user = UserFactory.create()
     invite = Invitations.create(workspace, workspace.owner, user)
-    assert invite.valid
+    assert invite.is_pending
     accepted_invite = Invitations.accept(invite.id)
-    assert not accepted_invite.valid
+    assert accepted_invite.is_accepted
 
 
 def test_accept_expired_invitation():
@@ -31,19 +32,32 @@ def test_accept_expired_invitation():
     increment = Invitations.EXPIRATION_LIMIT_MINUTES + 1
     created_at = datetime.datetime.now() - datetime.timedelta(minutes=increment)
     invite = InvitationFactory.create(
-        workspace_id=workspace.id, user_id=user.id, time_created=created_at, valid=True
+        workspace_id=workspace.id,
+        user_id=user.id,
+        time_created=created_at,
+        status=Status.PENDING,
     )
-    with pytest.raises(InvitationExpired):
+    with pytest.raises(InvitationError):
         Invitations.accept(invite.id)
 
-    assert not invite.valid
+    assert invite.is_rejected
 
 
-def test_accept_invalid_invite():
+def test_accept_rejected_invite():
     workspace = WorkspaceFactory.create()
     user = UserFactory.create()
     invite = InvitationFactory.create(
-        workspace_id=workspace.id, user_id=user.id, valid=False
+        workspace_id=workspace.id, user_id=user.id, status=Status.REJECTED
     )
-    with pytest.raises(InvitationExpired):
+    with pytest.raises(InvitationError):
+        Invitations.accept(invite.id)
+
+
+def test_accept_revoked_invite():
+    workspace = WorkspaceFactory.create()
+    user = UserFactory.create()
+    invite = InvitationFactory.create(
+        workspace_id=workspace.id, user_id=user.id, status=Status.REVOKED
+    )
+    with pytest.raises(InvitationError):
         Invitations.accept(invite.id)
