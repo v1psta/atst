@@ -11,32 +11,42 @@ export default {
       searchValue: '',
       status: '',
       role: '',
-      searchedList: [],
     }
   },
 
   mounted: function () {
-    this.searchedList = this.members
+    // this.searchedList = this.members
   },
+
+  computed: {
+    searchedList: function () {
+      return this.members.filter(
+        member => this.status ? member.status === this.status : true
+      ).filter(
+          member => this.role ? member.role.toLowerCase() === this.role : true
+      ).filter(
+        member => this.searchValue ? member.name.toLowerCase()
+          .includes(this.searchValue.toLowerCase()) : true
+      )
+    }
+  },
+
+  // watch: {
+  //   status: function (status) {
+  //     this.searchedList = this.searchedList.filter(
+  //       member => member.status === status
+  //     )
+  //   },
+  //   role: function (role) {
+  //     this.searchedList = this.searchedList.filter(
+  //       member => member.role.toLowerCase() === role
+  //     )
+  //   }
+  // },
 
   methods: {
     search: function () {
-      this.searchedList = this.members.filter(
-        member => member.name.toLowerCase()
-        .includes(this.searchValue.toLowerCase())
-      )
-
-      if (this.status) {
-        this.searchedList = this.searchedList.filter(
-          member => member.status === this.status
-        )
-      }
-
-      if (this.role) {
-        this.searchedList = this.searchedList.filter(
-            member => member.role.toLowerCase() === this.role
-        )
-      }
+      console.log("search")
     },
   },
 }
