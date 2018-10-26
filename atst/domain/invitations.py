@@ -30,8 +30,8 @@ class Invitations(object):
         return invite
 
     @classmethod
-    def create(cls, workspace, user):
-        invite = Invitation(workspace=workspace, user=user, valid=True)
+    def create(cls, workspace, inviter, user):
+        invite = Invitation(workspace=workspace, inviter=inviter, user=user, valid=True)
         db.session.add(invite)
         db.session.commit()
 

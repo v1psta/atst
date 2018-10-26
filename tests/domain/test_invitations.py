@@ -9,16 +9,17 @@ from tests.factories import WorkspaceFactory, UserFactory, InvitationFactory
 def test_create_invitation():
     workspace = WorkspaceFactory.create()
     user = UserFactory.create()
-    invite = Invitations.create(workspace, user)
+    invite = Invitations.create(workspace, workspace.owner, user)
     assert invite.user == user
     assert invite.workspace == workspace
+    assert invite.inviter == workspace.owner
     assert invite.valid
 
 
 def test_accept_invitation():
     workspace = WorkspaceFactory.create()
     user = UserFactory.create()
-    invite = Invitations.create(workspace, user)
+    invite = Invitations.create(workspace, workspace.owner, user)
     assert invite.valid
     accepted_invite = Invitations.accept(invite.id)
     assert not accepted_invite.valid

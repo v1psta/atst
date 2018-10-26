@@ -12,10 +12,13 @@ class Invitation(Base, TimestampsMixin):
     id = types.Id()
 
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), index=True)
-    user = relationship("User", backref="invitations")
+    user = relationship("User", backref="invitations", foreign_keys=[user_id])
 
     workspace_id = Column(UUID(as_uuid=True), ForeignKey("workspaces.id"), index=True)
     workspace = relationship("Workspace", backref="invitations")
+
+    inviter_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), index=True)
+    inviter = relationship("User", backref="sent_invites", foreign_keys=[inviter_id])
 
     valid = Column(Boolean, default=True)
 
