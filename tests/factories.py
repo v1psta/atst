@@ -257,7 +257,13 @@ class WorkspaceFactory(Base):
 
         workspace.request.creator = owner
         WorkspaceRoleFactory.create(
-            workspace=workspace, role=Roles.get("owner"), user=owner, accepted=True
+            workspace=workspace, role=Roles.get("owner"), user=owner
+        )
+        InvitationFactory.create(
+            user=owner,
+            inviter=owner,
+            workspace=workspace,
+            status=InvitationStatus.ACCEPTED,
         )
 
         for member in members:
@@ -275,7 +281,12 @@ class WorkspaceFactory(Base):
         user = UserFactory.create()
         workspace = WorkspaceFactory.create()
         Workspaces._create_workspace_role(user, workspace, role)
-        Workspaces.accept_workspace_role(user, workspace)
+        InvitationFactory.create(
+            user=user,
+            inviter=workspace.owner,
+            workspace=workspace,
+            status=InvitationStatus.ACCEPTED,
+        )
         return user, workspace
 
 

@@ -6,8 +6,9 @@ from atst.domain.workspaces import Workspaces
 from atst.domain.workspace_users import WorkspaceUsers
 from atst.domain.projects import Projects
 from atst.domain.environments import Environments
+from atst.models.invitation import Status as InvitationStatus
 
-from tests.factories import RequestFactory, UserFactory
+from tests.factories import RequestFactory, UserFactory, InvitationFactory
 
 
 @pytest.fixture(scope="function")
@@ -219,7 +220,12 @@ def test_scoped_workspace_returns_all_projects_for_workspace_admin(
     admin = Workspaces.add_member(
         workspace, UserFactory.from_atat_role("default"), "admin"
     ).user
-    Workspaces.accept_workspace_role(admin, workspace)
+    InvitationFactory.create(
+        user=admin,
+        inviter=workspace.owner,
+        workspace=workspace,
+        status=InvitationStatus.ACCEPTED,
+    )
     scoped_workspace = Workspaces.get(admin, workspace.id)
 
     assert len(scoped_workspace.projects) == 5
@@ -248,7 +254,12 @@ def test_for_user_returns_assigned_workspaces_for_user(workspace, workspace_owne
     bob = UserFactory.from_atat_role("default")
     Workspaces.add_member(workspace, bob, "developer")
     Workspaces.create(RequestFactory.create())
-    Workspaces.accept_workspace_role(bob, workspace)
+    InvitationFactory.create(
+        user=bob,
+        inviter=workspace.owner,
+        workspace=workspace,
+        status=InvitationStatus.ACCEPTED,
+    )
 
     bobs_workspaces = Workspaces.for_user(bob)
 
@@ -275,12 +286,23 @@ def test_for_user_returns_all_workspaces_for_ccpo(workspace, workspace_owner):
 def test_get_for_update_information():
     workspace_owner = UserFactory.create()
     workspace = Workspaces.create(RequestFactory.create(creator=workspace_owner))
+    InvitationFactory.create(
+        user=workspace_owner,
+        inviter=workspace_owner,
+        workspace=workspace,
+        status=InvitationStatus.ACCEPTED,
+    )
     owner_ws = Workspaces.get_for_update_information(workspace_owner, workspace.id)
     assert workspace == owner_ws
 
     admin = UserFactory.create()
     Workspaces.add_member(workspace, admin, "admin")
-    Workspaces.accept_workspace_role(admin, workspace)
+    InvitationFactory.create(
+        user=admin,
+        inviter=workspace_owner,
+        workspace=workspace,
+        status=InvitationStatus.ACCEPTED,
+    )
     admin_ws = Workspaces.get_for_update_information(admin, workspace.id)
     assert workspace == admin_ws
 

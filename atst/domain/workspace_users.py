@@ -4,6 +4,7 @@ from atst.database import db
 from atst.models.workspace_role import WorkspaceRole
 from atst.models.workspace_user import WorkspaceUser
 from atst.models.user import User
+from atst.models.invitation import Invitation, Status as InvitationStatus
 
 from .roles import Roles
 from .users import Users
@@ -29,6 +30,32 @@ class WorkspaceUsers(object):
             workspace_role = None
 
         return WorkspaceUser(user, workspace_role)
+
+    @classmethod
+    def _get_active_workspace_role(cls, workspace_id, user_id):
+        try:
+            return (
+                db.session.query(WorkspaceRole)
+                .join(User)
+                .filter(User.id == user_id, WorkspaceRole.workspace_id == workspace_id)
+                .join(Invitation, WorkspaceRole.workspace_id == Invitation.workspace_id)
+                .filter(Invitation.user_id == WorkspaceRole.user_id)
+                .filter(Invitation.status == InvitationStatus.ACCEPTED)
+                .one()
+            )
+        except NoResultFound:
+            return None
+
+    @classmethod
+    def workspace_user_permissions(cls, workspace, user):
+        workspace_role = WorkspaceUsers._get_active_workspace_role(
+            workspace.id, user.id
+        )
+        atat_permissions = set(user.atat_role.permissions)
+        workspace_permissions = (
+            [] if workspace_role is None else workspace_role.role.permissions
+        )
+        return set(workspace_permissions).union(atat_permissions)
 
     @classmethod
     def _get_workspace_role(cls, user, workspace_id):
@@ -63,7 +90,7 @@ class WorkspaceUsers(object):
             new_workspace_role.role = role
         except NoResultFound:
             new_workspace_role = WorkspaceRole(
-                user=user, role_id=role.id, workspace_id=workspace_id, accepted=False
+                user=user, role_id=role.id, workspace_id=workspace_id
             )
 
         user.workspace_roles.append(new_workspace_role)

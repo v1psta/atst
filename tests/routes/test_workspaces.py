@@ -341,11 +341,16 @@ def test_new_member_accept_invalid_invite(client, user_session):
 def test_user_who_has_not_accepted_workspace_invite_cannot_view(client, user_session):
     user = UserFactory.create()
     workspace = WorkspaceFactory.create()
-    Workspaces.create_member(
-        workspace.owner,
-        workspace,
-        {"workspace_role": "developer", **user.to_dictionary()},
+    Invitations.create_for_owner(workspace, workspace.owner)
+
+    # create user in workspace with invitation
+    user_session(workspace.owner)
+    response = client.post(
+        url_for("workspaces.create_member", workspace_id=workspace.id),
+        data={"workspace_role": "developer", **user.to_dictionary()},
     )
+
+    # user tries to view workspace before accepting invitation
     user_session(user)
     response = client.get("/workspaces/{}/projects".format(workspace.id))
     assert response.status_code == 404

@@ -44,6 +44,20 @@ class Invitations(object):
         return invite
 
     @classmethod
+    def create_for_owner(cls, workspace, user):
+        invite = Invitation(
+            workspace=workspace,
+            inviter=user,
+            user=user,
+            status=InvitationStatus.ACCEPTED,
+            expiration_time=Invitations.current_expiration_time(),
+        )
+        db.session.add(invite)
+        db.session.commit()
+
+        return invite
+
+    @classmethod
     def accept(cls, invite_id):
         invite = Invitations._get(invite_id)
 

@@ -340,9 +340,9 @@ def update_member(workspace_id, member_id):
 
 @bp.route("/workspaces/invitation/<invite_id>", methods=["GET"])
 def accept_invitation(invite_id):
+    # TODO: check that the current_user DOD ID matches the user associated with
+    # the invitation
     invite = Invitations.accept(invite_id)
-
-    Workspaces.accept_workspace_role(invite.user, invite.workspace)
 
     return redirect(
         url_for("workspaces.show_workspace", workspace_id=invite.workspace.id)

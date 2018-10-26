@@ -1,12 +1,23 @@
-from tests.factories import UserFactory, WorkspaceFactory, RequestFactory
+from tests.factories import (
+    UserFactory,
+    WorkspaceFactory,
+    RequestFactory,
+    InvitationFactory,
+)
 from atst.domain.workspaces import Workspaces
+from atst.models.invitation import Status as InvitationStatus
 
 
 def test_user_with_workspaces_has_workspaces_nav(client, user_session):
     user = UserFactory.create()
     workspace = WorkspaceFactory.create()
     Workspaces._create_workspace_role(user, workspace, "developer")
-    Workspaces.accept_workspace_role(user, workspace)
+    InvitationFactory.create(
+        user=user,
+        inviter=workspace.owner,
+        workspace=workspace,
+        status=InvitationStatus.ACCEPTED,
+    )
 
     user_session(user)
     response = client.get("/home", follow_redirects=True)

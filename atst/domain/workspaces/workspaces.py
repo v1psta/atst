@@ -3,6 +3,7 @@ from atst.domain.authz import Authorization
 from atst.models.permissions import Permissions
 from atst.domain.users import Users
 from atst.domain.workspace_users import WorkspaceUsers
+from atst.domain.invitations import Invitations
 
 from .query import WorkspacesQuery
 from .scopes import ScopedWorkspace
@@ -13,9 +14,8 @@ class Workspaces(object):
     def create(cls, request, name=None):
         name = name or request.displayname
         workspace = WorkspacesQuery.create(request=request, name=name)
-        Workspaces._create_workspace_role(
-            request.creator, workspace, "owner", accepted=True
-        )
+        Workspaces._create_workspace_role(request.creator, workspace, "owner")
+        Invitations.create_for_owner(workspace, request.creator)
         WorkspacesQuery.add_and_commit(workspace)
         return workspace
 
@@ -109,11 +109,9 @@ class Workspaces(object):
         return WorkspaceUsers.update_role(member, workspace.id, role_name)
 
     @classmethod
-    def _create_workspace_role(cls, user, workspace, role_name, accepted=False):
+    def _create_workspace_role(cls, user, workspace, role_name):
         role = Roles.get(role_name)
-        workspace_role = WorkspacesQuery.create_workspace_role(
-            user, role, workspace, accepted=accepted
-        )
+        workspace_role = WorkspacesQuery.create_workspace_role(user, role, workspace)
         WorkspacesQuery.add_and_commit(workspace_role)
         return workspace_role
 
@@ -123,11 +121,3 @@ class Workspaces(object):
             workspace.name = new_data["name"]
 
         WorkspacesQuery.add_and_commit(workspace)
-
-    @classmethod
-    def accept_workspace_role(cls, user, workspace):
-        workspace_role = WorkspacesQuery.get_role_for_workspace_and_user(
-            workspace, user
-        )
-        workspace_role.accepted = True
-        WorkspacesQuery.add_and_commit(workspace_role)

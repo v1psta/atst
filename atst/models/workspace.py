@@ -49,6 +49,6 @@ class Workspace(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
         return self.id
 
     def __repr__(self):
-        return "<Workspace(name='{}', request='{}', task_order='{}', user_count='{}', id='{}')>".format(
-            self.name, self.request_id, self.task_order.number, self.user_count, self.id
+        return "<Workspace(name='{}', request='{}', user_count='{}', id='{}')>".format(
+            self.name, self.request_id, self.user_count, self.id
         )

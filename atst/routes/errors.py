@@ -48,7 +48,7 @@ def make_error_pages(app):
         log_error(e)
         return (
             render_template(
-                "error.html", message="The invitation you followed has expired."
+                "error.html", message="The invitation link you clicked is invalid."
             ),
             404,
         )
