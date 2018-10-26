@@ -1,6 +1,7 @@
+import datetime
 from enum import Enum
 
-from sqlalchemy import Column, ForeignKey, Enum as SQLAEnum
+from sqlalchemy import Column, ForeignKey, Enum as SQLAEnum, TIMESTAMP
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
@@ -31,6 +32,8 @@ class Invitation(Base, TimestampsMixin):
 
     status = Column(SQLAEnum(Status, native_enum=False, default=Status.PENDING))
 
+    expiration_time = Column(TIMESTAMP(timezone=True))
+
     def __repr__(self):
         return "<Invitation(user='{}', workspace='{}', id='{}')>".format(
             self.user.id, self.workspace.id, self.id
@@ -51,3 +54,7 @@ class Invitation(Base, TimestampsMixin):
     @property
     def is_rejected(self):
         return self.status == Status.REJECTED
+
+    @property
+    def is_expired(self):
+        return datetime.datetime.now(self.expiration_time.tzinfo) > self.expiration_time

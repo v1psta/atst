@@ -22,6 +22,7 @@ from atst.models.workspace_role import WorkspaceRole
 from atst.models.environment_role import EnvironmentRole
 from atst.models.invitation import Invitation, Status as InvitationStatus
 from atst.domain.workspaces import Workspaces
+from atst.domain.invitations import Invitations
 
 
 class Base(factory.alchemy.SQLAlchemyModelFactory):
@@ -341,3 +342,4 @@ class InvitationFactory(Base):
         model = Invitation
 
     status = InvitationStatus.PENDING
+    expiration_time = Invitations.current_expiration_time()

@@ -30,11 +30,11 @@ def test_accept_expired_invitation():
     workspace = WorkspaceFactory.create()
     user = UserFactory.create()
     increment = Invitations.EXPIRATION_LIMIT_MINUTES + 1
-    created_at = datetime.datetime.now() - datetime.timedelta(minutes=increment)
+    expiration_time = datetime.datetime.now() - datetime.timedelta(minutes=increment)
     invite = InvitationFactory.create(
         workspace_id=workspace.id,
         user_id=user.id,
-        time_created=created_at,
+        expiration_time=expiration_time,
         status=Status.PENDING,
     )
     with pytest.raises(InvitationError):

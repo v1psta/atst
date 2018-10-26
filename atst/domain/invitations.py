@@ -36,6 +36,7 @@ class Invitations(object):
             inviter=inviter,
             user=user,
             status=InvitationStatus.PENDING,
+            expiration_time=Invitations.current_expiration_time(),
         )
         db.session.add(invite)
         db.session.commit()
@@ -46,7 +47,7 @@ class Invitations(object):
     def accept(cls, invite_id):
         invite = Invitations._get(invite_id)
 
-        if Invitations._is_expired(invite):
+        if invite.is_expired:
             invite.status = InvitationStatus.REJECTED
         elif invite.is_pending:
             invite.status = InvitationStatus.ACCEPTED
@@ -60,9 +61,7 @@ class Invitations(object):
         return invite
 
     @classmethod
-    def _is_expired(cls, invite):
-        time_created = invite.time_created
-        expiration = datetime.datetime.now(time_created.tzinfo) - datetime.timedelta(
+    def current_expiration_time(cls):
+        return datetime.datetime.now() + datetime.timedelta(
             minutes=Invitations.EXPIRATION_LIMIT_MINUTES
         )
-        return invite.time_created < expiration
