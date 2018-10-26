@@ -2,8 +2,6 @@
 export default {
   name: 'members-list',
 
-  template: '#search-template',
-
   props: {
     members: Array,
   },
