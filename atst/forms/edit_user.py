@@ -77,10 +77,8 @@ class EditUserForm(ValidatedForm):
     first_name = inherit_field(USER_FIELDS["first_name"])
     last_name = inherit_field(USER_FIELDS["last_name"])
     email = inherit_field(USER_FIELDS["email"])
-    phone_number = inherit_field(USER_FIELDS["phone_number"], required=False)
-    service_branch = inherit_field(USER_FIELDS["service_branch"], required=False)
-    citizenship = inherit_field(USER_FIELDS["citizenship"], required=False)
-    designation = inherit_field(USER_FIELDS["designation"], required=False)
-    date_latest_training = inherit_field(
-        USER_FIELDS["date_latest_training"], required=False
-    )
+    phone_number = inherit_field(USER_FIELDS["phone_number"])
+    service_branch = inherit_field(USER_FIELDS["service_branch"])
+    citizenship = inherit_field(USER_FIELDS["citizenship"])
+    designation = inherit_field(USER_FIELDS["designation"])
+    date_latest_training = inherit_field(USER_FIELDS["date_latest_training"])
