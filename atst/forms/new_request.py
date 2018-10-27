@@ -167,7 +167,7 @@ class InformationAboutYouForm(ValidatedForm):
 
     lname_request = inherit_field(USER_FIELDS["last_name"])
 
-    email_request = EmailField("E-mail Address", validators=[InputRequired(), Email()])
+    email_request = inherit_field(USER_FIELDS["email"])
 
     phone_number = inherit_field(USER_FIELDS["phone_number"])
 
