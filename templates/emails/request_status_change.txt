@@ -1,0 +1,5 @@
+<h1>Your JEDI request status has changed</h1>
+
+The status of your JEDI Cloud request - {{ request.name }} - was recently updated. Log in to see whether this change requires an action or response from you.
+
+{{ url_for('requests.view_request_details', request_id=request.id, _external=True) }}

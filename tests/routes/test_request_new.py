@@ -239,7 +239,9 @@ def test_displays_ccpo_review_comment(user_session, client):
     request = RequestFactory.create(creator=creator)
     request = Requests.set_status(request, RequestStatus.CHANGES_REQUESTED)
     review_comment = "add all of the correct info, instead of the incorrect info"
-    RequestReviewFactory.create(reviewer=ccpo, comment=review_comment, status=request.status_events[-1])
+    RequestReviewFactory.create(
+        reviewer=ccpo, comment=review_comment, status=request.status_events[-1]
+    )
     response = client.get("/requests/new/1/{}".format(request.id))
     body = response.data.decode()
     assert review_comment in body

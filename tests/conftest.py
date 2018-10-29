@@ -137,8 +137,7 @@ def extended_financial_verification_data(pdf_upload):
     }
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture(scope="function", autouse=True)
 def queue():
-    _queue = atst_queue
-    yield _queue
-    _queue.get_queue().empty()
+    yield atst_queue
+    atst_queue.get_queue().empty()

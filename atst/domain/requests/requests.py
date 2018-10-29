@@ -6,9 +6,11 @@ from atst.models.request_status_event import RequestStatusEvent, RequestStatus
 from atst.models.request_review import RequestReview
 from atst.models.request_internal_comment import RequestInternalComment
 from atst.utils import deep_merge
+from atst.queue import queue
 
 from .query import RequestsQuery
 from .authorization import RequestsAuthorization
+from .status_event_handler import RequestStatusEventHandler
 
 
 def create_revision_from_request_body(body):
@@ -95,11 +97,17 @@ class Requests(object):
 
     @classmethod
     def set_status(cls, request, status: RequestStatus):
+        old_status = request.status
         status_event = RequestStatusEvent(
             new_status=status, revision=request.latest_revision
         )
         request.status_events.append(status_event)
-        return RequestsQuery.add_and_commit(request)
+        updated_request = RequestsQuery.add_and_commit(request)
+        RequestStatusEventHandler(queue).handle_status_change(
+            updated_request, old_status, status
+        )
+
+        return updated_request
 
     @classmethod
     def should_auto_approve(cls, request):
