@@ -1,6 +1,8 @@
 from atst.domain.workspace_users import WorkspaceUsers
 from atst.domain.users import Users
-from tests.factories import WorkspaceFactory, UserFactory
+from atst.models.invitation import Status as InvitationStatus
+
+from tests.factories import WorkspaceFactory, UserFactory, InvitationFactory
 
 
 def test_can_create_new_workspace_user():
@@ -34,3 +36,24 @@ def test_can_update_existing_workspace_user():
         workspace_users[0].workspace_role.role.name
         == new_user.workspace_roles[0].role.name
     )
+
+
+def test_workspace_user_permissions():
+    workspace_one = WorkspaceFactory.create()
+    workspace_two = WorkspaceFactory.create()
+    new_user = UserFactory.create()
+    WorkspaceUsers.add_many(
+        workspace_one.id, [{"id": new_user.id, "workspace_role": "developer"}]
+    )
+    WorkspaceUsers.add_many(
+        workspace_two.id, [{"id": new_user.id, "workspace_role": "developer"}]
+    )
+    InvitationFactory.create(
+        workspace=workspace_one,
+        user=new_user,
+        inviter=workspace_one.owner,
+        status=InvitationStatus.ACCEPTED,
+    )
+
+    assert WorkspaceUsers.workspace_user_permissions(workspace_one, new_user)
+    assert not WorkspaceUsers.workspace_user_permissions(workspace_two, new_user)
