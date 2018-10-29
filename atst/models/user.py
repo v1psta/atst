@@ -39,6 +39,15 @@ class User(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     ]
 
     @property
+    def profile_complete(self):
+        return all(
+            [
+                getattr(self, field_name) is not None
+                for field_name in self.REQUIRED_FIELDS
+            ]
+        )
+
+    @property
     def atat_permissions(self):
         return self.atat_role.permissions
 
