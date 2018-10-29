@@ -1,7 +1,7 @@
 """add invitiations
 
 Revision ID: 25bcba9b99a9
-Revises: c99026ab9918
+Revises: 9c24c609878a
 Create Date: 2018-10-23 15:03:12.641069
 
 """
@@ -11,7 +11,7 @@ from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
 revision = '25bcba9b99a9'
-down_revision = 'c99026ab9918'
+down_revision = '9c24c609878a'
 branch_labels = None
 depends_on = None
 
