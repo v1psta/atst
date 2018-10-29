@@ -133,7 +133,9 @@ class UpdateFinancialVerification(FinancialVerificationBase):
         if not self.pe_validator.validate(self.request, form.pe_id):
             should_submit = False
 
-        if not self.task_order_validator.validate(form.task_order.number):
+        if not self.is_extended and not self.task_order_validator.validate(
+            form.task_order.number
+        ):
             should_submit = False
 
         if should_update:
