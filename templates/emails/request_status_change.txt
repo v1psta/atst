@@ -1,4 +1,4 @@
-<h1>Your JEDI request status has changed</h1>
+Your JEDI request status has changed
 
 The status of your JEDI Cloud request - {{ request.displayname }} - was recently updated. Log in to see whether this change requires an action or response from you.
 
