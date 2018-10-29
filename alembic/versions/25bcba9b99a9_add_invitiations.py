@@ -24,13 +24,19 @@ def upgrade():
     sa.Column('id', postgresql.UUID(as_uuid=True), server_default=sa.text('uuid_generate_v4()'), nullable=False),
     sa.Column('user_id', postgresql.UUID(as_uuid=True), nullable=True),
     sa.Column('workspace_id', postgresql.UUID(as_uuid=True), nullable=True),
-    sa.Column('valid', sa.Boolean(), nullable=True),
+    sa.Column('status', sa.Enum('ACCEPTED', 'REVOKED', 'PENDING', 'REJECTED', name='status', native_enum=False), nullable=True),
+    sa.Column('inviter_id', postgresql.UUID(as_uuid=True), nullable=True),
+    sa.Column('token', sa.String(), nullable=True),
+    sa.Column('expiration_time', sa.TIMESTAMP(timezone=True), nullable=True),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
+    sa.ForeignKeyConstraint(['inviter_id'], ['users.id'], ),
     sa.ForeignKeyConstraint(['workspace_id'], ['workspaces.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_invitations_user_id'), 'invitations', ['user_id'], unique=False)
+    op.create_index(op.f('ix_invitations_inviter_id'), 'invitations', ['inviter_id'], unique=False)
     op.create_index(op.f('ix_invitations_workspace_id'), 'invitations', ['workspace_id'], unique=False)
+    op.create_index(op.f('ix_invitations_token'), 'invitations', ['token'], unique=True)
     # ### end Alembic commands ###
 
 
