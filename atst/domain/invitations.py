@@ -21,9 +21,9 @@ class Invitations(object):
     EXPIRATION_LIMIT_MINUTES = 360
 
     @classmethod
-    def _get(cls, invite_id):
+    def _get(cls, token):
         try:
-            invite = db.session.query(Invitation).filter_by(id=invite_id).one()
+            invite = db.session.query(Invitation).filter_by(token=token).one()
         except NoResultFound:
             raise NotFoundError("invite")
 
@@ -58,8 +58,8 @@ class Invitations(object):
         return invite
 
     @classmethod
-    def accept(cls, invite_id):
-        invite = Invitations._get(invite_id)
+    def accept(cls, token):
+        invite = Invitations._get(token)
 
         if invite.is_expired:
             invite.status = InvitationStatus.REJECTED

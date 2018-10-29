@@ -1,7 +1,8 @@
 import datetime
 from enum import Enum
+import secrets
 
-from sqlalchemy import Column, ForeignKey, Enum as SQLAEnum, TIMESTAMP
+from sqlalchemy import Column, ForeignKey, Enum as SQLAEnum, TIMESTAMP, String
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
@@ -33,6 +34,8 @@ class Invitation(Base, TimestampsMixin):
     status = Column(SQLAEnum(Status, native_enum=False, default=Status.PENDING))
 
     expiration_time = Column(TIMESTAMP(timezone=True))
+
+    token = Column(String(), index=True, default=lambda: secrets.token_urlsafe())
 
     def __repr__(self):
         return "<Invitation(user='{}', workspace='{}', id='{}')>".format(

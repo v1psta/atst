@@ -308,7 +308,7 @@ def test_new_member_accepts_valid_invite(client, user_session):
     assert len(Workspaces.for_user(user)) == 0
 
     user_session(user)
-    response = client.get(url_for("workspaces.accept_invitation", invite_id=invite.id))
+    response = client.get(url_for("workspaces.accept_invitation", token=invite.token))
 
     # user is redirected to the workspace view
     assert response.status_code == 302
@@ -333,7 +333,7 @@ def test_new_member_accept_invalid_invite(client, user_session):
         status=InvitationStatus.REJECTED,
     )
     user_session(user)
-    response = client.get(url_for("workspaces.accept_invitation", invite_id=invite.id))
+    response = client.get(url_for("workspaces.accept_invitation", token=invite.token))
 
     assert response.status_code == 404
 

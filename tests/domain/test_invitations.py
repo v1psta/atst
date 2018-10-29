@@ -1,5 +1,6 @@
 import datetime
 import pytest
+import re
 
 from atst.domain.invitations import Invitations, InvitationError
 from atst.models.invitation import Status
@@ -15,6 +16,7 @@ def test_create_invitation():
     assert invite.workspace == workspace
     assert invite.inviter == workspace.owner
     assert invite.status == Status.PENDING
+    assert re.match(r"^[\w\-_]+$", invite.token)
 
 
 def test_accept_invitation():
@@ -22,7 +24,7 @@ def test_accept_invitation():
     user = UserFactory.create()
     invite = Invitations.create(workspace, workspace.owner, user)
     assert invite.is_pending
-    accepted_invite = Invitations.accept(invite.id)
+    accepted_invite = Invitations.accept(invite.token)
     assert accepted_invite.is_accepted
 
 
@@ -38,7 +40,7 @@ def test_accept_expired_invitation():
         status=Status.PENDING,
     )
     with pytest.raises(InvitationError):
-        Invitations.accept(invite.id)
+        Invitations.accept(invite.token)
 
     assert invite.is_rejected
 
@@ -50,7 +52,7 @@ def test_accept_rejected_invite():
         workspace_id=workspace.id, user_id=user.id, status=Status.REJECTED
     )
     with pytest.raises(InvitationError):
-        Invitations.accept(invite.id)
+        Invitations.accept(invite.token)
 
 
 def test_accept_revoked_invite():
@@ -60,4 +62,4 @@ def test_accept_revoked_invite():
         workspace_id=workspace.id, user_id=user.id, status=Status.REVOKED
     )
     with pytest.raises(InvitationError):
-        Invitations.accept(invite.id)
+        Invitations.accept(invite.token)

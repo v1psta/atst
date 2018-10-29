@@ -1,7 +1,7 @@
 Join this JEDI Cloud Workspace
 {{ owner }} has invited you to join a JEDI Cloud Workspace.  Login now to view or use your JEDI Cloud resources.
 
-{{ url_for("workspaces.accept_invitation", invite_id=invite_id, _external=True) }}
+{{ url_for("workspaces.accept_invitation", token=token, _external=True) }}
 
 What is JEDI Cloud?
 JEDI Cloud is a DoD enterprise-wide solution for commercial cloud services.

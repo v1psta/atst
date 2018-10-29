@@ -220,10 +220,8 @@ def new_member(workspace_id):
     )
 
 
-def send_invite_email(owner_name, invite_id, new_member_email):
-    body = render_template(
-        "emails/invitation.txt", owner=owner_name, invite_id=invite_id
-    )
+def send_invite_email(owner_name, token, new_member_email):
+    body = render_template("emails/invitation.txt", owner=owner_name, token=token)
     queue.send_mail(
         [new_member_email],
         "{} has invited you to a JEDI Cloud Workspace".format(owner_name),
@@ -241,7 +239,7 @@ def create_member(workspace_id):
             new_member = Workspaces.create_member(g.current_user, workspace, form.data)
             invite = Invitations.create(workspace, g.current_user, new_member.user)
             send_invite_email(
-                g.current_user.full_name, invite.id, new_member.user.email
+                g.current_user.full_name, invite.token, new_member.user.email
             )
 
             return redirect(
@@ -338,11 +336,11 @@ def update_member(workspace_id, member_id):
         )
 
 
-@bp.route("/workspaces/invitation/<invite_id>", methods=["GET"])
-def accept_invitation(invite_id):
+@bp.route("/workspaces/invitation/<token>", methods=["GET"])
+def accept_invitation(token):
     # TODO: check that the current_user DOD ID matches the user associated with
     # the invitation
-    invite = Invitations.accept(invite_id)
+    invite = Invitations.accept(token)
 
     return redirect(
         url_for("workspaces.show_workspace", workspace_id=invite.workspace.id)
