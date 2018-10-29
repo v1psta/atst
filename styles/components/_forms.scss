@@ -42,6 +42,10 @@
         flex-basis: 66.66%;
       }
 
+      &.form-col--sixth {
+        flex-basis: 16.66%;
+      }
+
       .usa-input {
         margin-left: ($gap * 4);
         margin-right: ($gap * 4);

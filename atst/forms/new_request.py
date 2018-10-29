@@ -167,6 +167,7 @@ class InformationAboutYouForm(ValidatedForm):
     lname_request = inherit_field(USER_FIELDS["last_name"])
     email_request = inherit_field(USER_FIELDS["email"])
     phone_number = inherit_field(USER_FIELDS["phone_number"])
+    phone_ext = inherit_field(USER_FIELDS["phone_ext"], required=False)
     service_branch = inherit_field(USER_FIELDS["service_branch"])
     citizenship = inherit_field(USER_FIELDS["citizenship"])
     designation = inherit_field(USER_FIELDS["designation"])

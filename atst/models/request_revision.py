@@ -57,6 +57,7 @@ class RequestRevision(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     citizenship = Column(String)
     designation = Column(String)
     phone_number = Column(String)
+    phone_ext = Column(String)
     email_request = Column(String)
     fname_request = Column(String)
     lname_request = Column(String)

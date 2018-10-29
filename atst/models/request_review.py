@@ -18,6 +18,7 @@ class RequestReview(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     lname_mao = Column(String)
     email_mao = Column(String)
     phone_mao = Column(String)
+    phone_ext_mao = Column(String)
     fname_ccpo = Column(String)
     lname_ccpo = Column(String)
 

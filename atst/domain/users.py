@@ -69,6 +69,7 @@ class Users(object):
         "last_name",
         "email",
         "phone_number",
+        "phone_ext",
         "service_branch",
         "citizenship",
         "designation",

@@ -102,7 +102,20 @@
 
   {{ DefinitionReviewField("Email Address", "information_about_you", "email_request") }}
 
-  {{ DefinitionReviewField("Phone Number", "information_about_you", "phone_number", filter="usPhone") }}
+  <div>
+    <dt>Phone Number</dt>
+    <dd>
+      {% if data.information_about_you.phone_number is not none %}
+        {{ data.information_about_you.phone_number }}
+      {% else %}
+        {{ RequiredLabel() }}
+      {% endif %}
+
+      {% if data.information_about_you.phone_ext %}
+        ext. {{ data.information_about_you.phone_ext }}
+      {% endif %}
+    </dd>
+  </div>
 
   {{ DefinitionReviewField("Service Branch or Agency", "information_about_you", "service_branch", filter="getOptionLabel", filter_args=[service_branches]) }}
 

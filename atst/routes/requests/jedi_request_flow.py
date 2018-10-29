@@ -64,6 +64,7 @@ class JEDIRequestFlow(object):
             "lname_request": user.last_name,
             "email_request": user.email,
             "phone_number": user.phone_number,
+            "phone_ext": user.phone_ext,
             "service_branch": user.service_branch,
             "designation": user.designation,
             "citizenship": user.citizenship,

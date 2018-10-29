@@ -21,8 +21,11 @@
           {{ TextInput(form.email, validation='email') }}
         </div>
 
-        <div class='form-col form-col--half'>
+        <div class='form-col form-col--third'>
           {{ TextInput(form.phone_number, validation='usPhone') }}
+        </div>
+        <div class='form-col form-col--sixth'>
+          {{ TextInput(form.phone_ext)}}
         </div>
       </div>
 

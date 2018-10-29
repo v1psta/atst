@@ -21,6 +21,7 @@ class User(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     first_name = Column(String)
     last_name = Column(String)
     phone_number = Column(String)
+    phone_ext = Column(String)
     service_branch = Column(String)
     citizenship = Column(String)
     designation = Column(String)
