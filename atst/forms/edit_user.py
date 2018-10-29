@@ -2,13 +2,15 @@ import pendulum
 from copy import deepcopy
 from wtforms.fields.html5 import DateField, EmailField, TelField
 from wtforms.fields import RadioField, StringField
-from wtforms.validators import Email, Required, Optional
+from wtforms.validators import Email, DataRequired, Optional
 
 from .fields import SelectField
 from .forms import ValidatedForm
 from .data import SERVICE_BRANCHES
+from atst.models.user import User
 
 from .validators import Name, DateRange, PhoneNumber
+
 
 USER_FIELDS = {
     "first_name": StringField("First Name", validators=[Name()]),
@@ -66,19 +68,25 @@ def inherit_field(unbound_field, required=True):
         kwargs["validators"] = []
 
     if required:
-        kwargs["validators"].append(Required())
+        kwargs["validators"].append(DataRequired())
     else:
         kwargs["validators"].append(Optional())
 
     return unbound_field.field_class(*unbound_field.args, **kwargs)
 
 
+def inherit_user_field(field_name):
+    required = field_name in User.REQUIRED_FIELDS
+    return inherit_field(USER_FIELDS[field_name], required=required)
+
+
 class EditUserForm(ValidatedForm):
-    first_name = inherit_field(USER_FIELDS["first_name"])
-    last_name = inherit_field(USER_FIELDS["last_name"])
-    email = inherit_field(USER_FIELDS["email"])
-    phone_number = inherit_field(USER_FIELDS["phone_number"])
-    service_branch = inherit_field(USER_FIELDS["service_branch"])
-    citizenship = inherit_field(USER_FIELDS["citizenship"])
-    designation = inherit_field(USER_FIELDS["designation"])
-    date_latest_training = inherit_field(USER_FIELDS["date_latest_training"])
+
+    first_name = inherit_user_field("first_name")
+    last_name = inherit_user_field("last_name")
+    email = inherit_user_field("email")
+    phone_number = inherit_user_field("phone_number")
+    service_branch = inherit_user_field("service_branch")
+    citizenship = inherit_user_field("citizenship")
+    designation = inherit_user_field("designation")
+    date_latest_training = inherit_user_field("date_latest_training")

@@ -26,6 +26,18 @@ class User(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     designation = Column(String)
     date_latest_training = Column(Date)
 
+    REQUIRED_FIELDS = [
+        "email",
+        "dod_id",
+        "first_name",
+        "last_name",
+        "phone_number",
+        "service_branch",
+        "citizenship",
+        "designation",
+        "date_latest_training",
+    ]
+
     @property
     def atat_permissions(self):
         return self.atat_role.permissions

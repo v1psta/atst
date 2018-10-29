@@ -13,9 +13,7 @@ def test_edit_user_form_requires_all_fields():
     form_data = ImmutableMultiDict(user_data)
     form = EditUserForm(form_data)
     assert not form.validate()
-    assert form.errors == {
-        'date_latest_training': ['This field is required.']
-    }
+    assert form.errors == {"date_latest_training": ["This field is required."]}
 
 
 def test_edit_user_form_valid_with_all_fields():
