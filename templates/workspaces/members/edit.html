@@ -54,7 +54,7 @@
 
   {% for project in projects %}
   {% set revoke_modal_name = string(project.id) + 'RevokeModal' %}
-  <edit-project-roles inline-template name="{{ project.name | string }}" id="{{ project.id }}">
+  <edit-project-roles inline-template name="{{ project.name }}" id="{{ project.id }}">
     <div is='toggler' default-visible class='block-list project-list-item'>
       <template slot-scope='props'>
         <header class='block-list__header'>
