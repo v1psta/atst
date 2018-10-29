@@ -30,7 +30,9 @@
           <dd>{{ member.user.email }}</dd>
         </div>
       </dl>
-      <a href='#' class='icon-link'>edit account details</a>
+      {% if editable %}
+        <a href='{{ url_for("users.user") }}' class='icon-link'>edit account details</a>
+      {% endif %}
     </div>
   </div>
 

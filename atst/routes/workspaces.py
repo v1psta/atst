@@ -255,6 +255,7 @@ def view_member(workspace_id, member_id):
     member = WorkspaceUsers.get(workspace_id, member_id)
     projects = Projects.get_all(g.current_user, member, workspace)
     form = EditMemberForm(workspace_role=member.role)
+    editable = g.current_user == member.user
     return render_template(
         "workspaces/members/edit.html",
         workspace=workspace,
@@ -264,6 +265,7 @@ def view_member(workspace_id, member_id):
         choices=ENVIRONMENT_ROLES,
         env_role_modal_description=ENV_ROLE_MODAL_DESCRIPTION,
         EnvironmentRoles=EnvironmentRoles,
+        editable=editable,
     )
 
 
