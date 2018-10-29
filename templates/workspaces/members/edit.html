@@ -31,7 +31,7 @@
         </div>
       </dl>
       {% if editable %}
-        <a href='#' class='icon-link'>edit account details</a>
+        <a href='{{ url_for("users.user") }}' class='icon-link'>edit account details</a>
       {% endif %}
     </div>
   </div>
