@@ -1,8 +1,8 @@
 import pytest
 from werkzeug.datastructures import ImmutableMultiDict
 
-from atst.forms.financial import suggest_pe_id, FinancialForm, ExtendedFinancialForm
-from atst.eda_client import MockEDAClient
+from atst.forms.financial import FinancialVerificationForm
+from atst.domain.requests.financial_verification import PENumberValidator
 
 
 @pytest.mark.parametrize(
@@ -16,21 +16,21 @@ from atst.eda_client import MockEDAClient
     ],
 )
 def test_suggest_pe_id(input_, expected):
-    assert suggest_pe_id(input_) == expected
+    assert PENumberValidator().suggest_pe_id(input_) == expected
 
 
 def test_funding_type_other_not_required_if_funding_type_is_not_other():
-    form_data = {"funding_type": "PROC"}
-    form = ExtendedFinancialForm(data=form_data)
+    form_data = ImmutableMultiDict({"task_order-funding_type": "PROC"})
+    form = FinancialVerificationForm(form_data)
     form.validate()
     assert "funding_type_other" not in form.errors
 
 
 def test_funding_type_other_required_if_funding_type_is_other():
-    form_data = {"funding_type": "OTHER"}
-    form = ExtendedFinancialForm(data=form_data)
+    form_data = ImmutableMultiDict({"task_order-funding_type": "OTHER"})
+    form = FinancialVerificationForm(form_data)
     form.validate()
-    assert "funding_type_other" in form.errors
+    assert "funding_type_other" in form.errors["task_order"]
 
 
 @pytest.mark.parametrize(
@@ -47,10 +47,10 @@ def test_funding_type_other_required_if_funding_type_is_other():
     ],
 )
 def test_treasury_code_validation(input_, expected):
-    form_data = ImmutableMultiDict([("treasury_code", input_)])
-    form = FinancialForm(form_data)
+    form_data = ImmutableMultiDict([("request-treasury_code", input_)])
+    form = FinancialVerificationForm(form_data)
     form.validate()
-    is_valid = "treasury_code" not in form.errors
+    is_valid = "treasury_code" not in form.errors["request"]
 
     assert is_valid == expected
 
@@ -74,38 +74,19 @@ def test_treasury_code_validation(input_, expected):
     ],
 )
 def test_ba_code_validation(input_, expected):
-    form_data = ImmutableMultiDict([("ba_code", input_)])
-    form = FinancialForm(form_data)
+    form_data = ImmutableMultiDict([("request-ba_code", input_)])
+    form = FinancialVerificationForm(form_data)
     form.validate()
-    is_valid = "ba_code" not in form.errors
+    is_valid = "ba_code" not in form.errors["request"]
 
     assert is_valid == expected
 
 
-def test_task_order_number_validation(monkeypatch):
-    monkeypatch.setattr(
-        "atst.domain.task_orders.TaskOrders._client", lambda: MockEDAClient()
-    )
-    monkeypatch.setattr("atst.forms.financial.validate_pe_id", lambda *args: True)
-    form_invalid = FinancialForm(data={"task_order_number": "1234"})
-    form_invalid.perform_extra_validation({})
-
-    assert "task_order_number" in form_invalid.errors
-
-    form_valid = FinancialForm(
-        data={"task_order_number": MockEDAClient.MOCK_CONTRACT_NUMBER},
-        eda_client=MockEDAClient(),
-    )
-    form_valid.perform_extra_validation({})
-
-    assert "task_order_number" not in form_valid.errors
-
-
 def test_can_submit_zero_for_clin():
-    form_first = ExtendedFinancialForm()
+    form_first = FinancialVerificationForm()
     form_first.validate()
-    assert "clin_0001" in form_first.errors
-    form_data = ImmutableMultiDict([("clin_0001", "0")])
-    form_second = ExtendedFinancialForm(form_data)
+    assert "clin_0001" in form_first.errors["task_order"]
+    form_data = ImmutableMultiDict([("task_order-clin_0001", "0")])
+    form_second = FinancialVerificationForm(form_data)
     form_second.validate()
-    assert "clin_0001" not in form_second.errors
+    assert "clin_0001" not in form_second.errors["task_order"]

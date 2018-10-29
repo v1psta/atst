@@ -6,6 +6,7 @@ from atst.models import Base, types, mixins
 from atst.models.request_status_event import RequestStatus
 from atst.utils import first_or_none
 from atst.models.request_revision import RequestRevision
+from atst.models.task_order import Source as TaskOrderSource
 
 
 def map_properties_to_dict(properties, instance):
@@ -135,7 +136,7 @@ class Request(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
 
     @property
     def financial_verification(self):
-        return self.body.get("financial_verification")
+        return self.body.get("financial_verification", {})
 
     @property
     def is_financially_verified(self):
@@ -223,6 +224,18 @@ class Request(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     @property
     def contracting_officer_email(self):
         return self.latest_revision.email_co
+
+    @property
+    def pe_number(self):
+        return self.body.get("financial_verification", {}).get("pe_id")
+
+    @property
+    def has_manual_task_order(self):
+        return (
+            self.task_order.source == TaskOrderSource.MANUAL
+            if self.task_order is not None
+            else None
+        )
 
     def __repr__(self):
         return "<Request(status='{}', name='{}', creator='{}', is_approved='{}', time_created='{}', id='{}')>".format(

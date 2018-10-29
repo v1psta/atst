@@ -2,9 +2,9 @@ from sqlalchemy.orm.exc import NoResultFound
 from flask import current_app as app
 
 from atst.database import db
-from atst.models.task_order import TaskOrder, Source
-from atst.models.attachment import Attachment
+from atst.models.task_order import TaskOrder, Source, FundingType
 from .exceptions import NotFoundError
+from atst.utils import update_obj
 
 
 class TaskOrders(object):
@@ -18,25 +18,28 @@ class TaskOrders(object):
             )
         except NoResultFound:
             if TaskOrders._client():
-                task_order = TaskOrders._get_from_eda(order_number)
+                task_order = TaskOrders.get_from_eda(order_number)
             else:
                 raise NotFoundError("task_order")
 
         return task_order
 
     @classmethod
-    def _get_from_eda(cls, order_number):
+    def get_from_eda(cls, order_number):
         to_data = TaskOrders._client().get_contract(order_number, status="y")
         if to_data:
             # TODO: we need to determine exactly what we're getting and storing from the EDA client
-            return TaskOrders.create(source=Source.EDA, **to_data)
+            return TaskOrders.create(
+                source=Source.EDA, funding_type=FundingType.PROC, **to_data
+            )
 
         else:
             raise NotFoundError("task_order")
 
     @classmethod
-    def create(cls, **kwargs):
-        task_order = TaskOrder(**kwargs)
+    def create(cls, source=Source.MANUAL, **kwargs):
+        to_data = {k: v for k, v in kwargs.items() if v not in ["", None]}
+        task_order = TaskOrder(source=source, **to_data)
 
         db.session.add(task_order)
         db.session.commit()
@@ -48,18 +51,8 @@ class TaskOrders(object):
         return app.eda_client
 
     @classmethod
-    def get_or_create_task_order(cls, number, task_order_data=None):
-        try:
-            return TaskOrders.get(number)
-
-        except NotFoundError:
-            if task_order_data:
-                pdf_file = task_order_data.pop("pdf")
-                # should catch the error here
-                attachment = Attachment.attach(pdf_file)
-                return TaskOrders.create(
-                    **task_order_data,
-                    number=number,
-                    source=Source.MANUAL,
-                    pdf=attachment,
-                )
+    def update(cls, task_order, dct):
+        updated = update_obj(task_order, dct, ignore_vals=lambda v: v in ["", None])
+        db.session.add(updated)
+        db.session.commit()
+        return updated

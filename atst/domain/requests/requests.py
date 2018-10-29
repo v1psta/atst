@@ -1,7 +1,5 @@
-from werkzeug.datastructures import FileStorage
 import dateutil
 
-from atst.domain.task_orders import TaskOrders
 from atst.domain.workspaces import Workspaces
 from atst.models.request_revision import RequestRevision
 from atst.models.request_status_event import RequestStatusEvent, RequestStatus
@@ -76,14 +74,15 @@ class Requests(object):
     @classmethod
     def update(cls, request_id, request_delta):
         request = RequestsQuery.get_with_lock(request_id)
+        return Requests._update(request, request_delta)
 
+    @classmethod
+    def _update(cls, request, request_delta):
         new_body = deep_merge(request_delta, request.body)
         revision = create_revision_from_request_body(new_body)
         request.revisions.append(revision)
 
-        request = RequestsQuery.add_and_commit(request)
-
-        return request
+        return RequestsQuery.add_and_commit(request)
 
     @classmethod
     def approve_and_create_workspace(cls, request):
@@ -156,35 +155,12 @@ class Requests(object):
         return Requests.status_count(RequestStatus.APPROVED)
 
     @classmethod
-    def update_financial_verification(cls, request_id, financial_data):
+    def update_financial_verification(cls, request_id, financial_data, task_order=None):
         request = RequestsQuery.get_with_lock(request_id)
-
-        request_data = financial_data.copy()
-        task_order_data = {
-            k: request_data.pop(k)
-            for (k, v) in financial_data.items()
-            if k in TaskOrders.TASK_ORDER_DATA
-        }
-
-        if task_order_data:
-            task_order_number = request_data.pop("task_order_number")
-        else:
-            task_order_number = request_data.get("task_order_number")
-
-        if "task_order" in request_data and isinstance(
-            request_data["task_order"], FileStorage
-        ):
-            task_order_data["pdf"] = request_data.pop("task_order")
-
-        task_order = TaskOrders.get_or_create_task_order(
-            task_order_number, task_order_data
-        )
-
         if task_order:
             request.task_order = task_order
 
-        request = Requests.update(request.id, {"financial_verification": request_data})
-
+        request = Requests._update(request, {"financial_verification": financial_data})
         return request
 
     @classmethod
