@@ -76,6 +76,9 @@ def formattedDate(value, formatter="%m/%d/%Y"):
 def dateFromString(value, formatter="%m/%Y"):
     return datetime.datetime.strptime(value, formatter)
 
+def string(value):
+    return app.jinja_env.filters["string"](value)
+
 
 def register_filters(app):
     app.jinja_env.filters["iconSvg"] = iconSvg
@@ -88,3 +91,4 @@ def register_filters(app):
     app.jinja_env.filters["renderList"] = renderList
     app.jinja_env.filters["formattedDate"] = formattedDate
     app.jinja_env.filters["dateFromString"] = dateFromString
+    app.jinja_env.globals.update(string=string)
