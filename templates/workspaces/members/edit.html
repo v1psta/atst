@@ -53,8 +53,8 @@
   </div>
 
   {% for project in projects %}
-  {% set revoke_modal_name = project.name + 'RevokeModal' %}
-  <edit-project-roles inline-template v-bind:name="'{{ project.name }}'" v-bind:id="'{{ project.id }}'">
+  {% set revoke_modal_name = string(project.id) + 'RevokeModal' %}
+  <edit-project-roles inline-template name="{{ project.name | string }}" id="{{ project.id }}">
     <div is='toggler' default-visible class='block-list project-list-item'>
       <template slot-scope='props'>
         <header class='block-list__header'>
