@@ -5,6 +5,8 @@
 {% from "components/empty_state.html" import EmptyState %}
 
 {% block content %}
+  <requests-list inline-template v-bind:initial-data='{{ requests | tojson }}' v-bind:is-extended="{{ extended_view | boolean }}">
+    <div>
 
   {% call Modal(name='pendingFinancialVerification', dismissable=True) %}
     <h1>Request submitted!</h1>
@@ -55,7 +57,6 @@
   ) }}
 
 {% else %}
-
   {% if extended_view %}
     <div class="row kpi">
       <div class="kpi__item col col--grow">
@@ -79,7 +80,7 @@
       <form class='search-bar'>
         <div class='usa-input search-input'>
           <label for='requests-search'>Search requests by Order ID</label>
-          <input type='search' id='requests-search' name='requests-search' placeholder="Search by Order ID"/>
+          <input v-model='searchValue' type='search' id='requests-search' name='requests-search' placeholder="Search by Order ID"/>
           <button type="submit">
             <span class="hide">Search</span>
           </button>
@@ -87,11 +88,11 @@
 
         <div class='usa-input'>
           <label for='filter-status'>Filter requests by status</label>
-          <select id="filter-status" name="filter-status">
+          <select v-model="statusValue" id="filter-status" name="filter-status">
             <option value="" selected disabled>Filter by status</option>
-            <option value="">Active</option>
-            <option value="">Pending</option>
-            <option value="">Denied</option>
+            <option value="active">Active</option>
+            <option value="pending">Pending</option>
+            <option value="denied">Denied</option>
           </select>
         </div>
       </form>
@@ -114,39 +115,38 @@
             {% endif %}
           </tr>
         </thead>
-        <tbody>
-          {% for r in requests %}
+        <tbody v-for="r in filteredRequests">
           <tr>
             <th scope="row">
-              <a class='icon-link icon-link--large' href="{{ r.edit_link }}">{{ r.name }}</a>
-              {% if r.action_required %}<span class="label label--info">Action Required</span>{% endif %}
+              <a class='icon-link icon-link--large' :href="r.edit_link">!{ r.name }</a>
+              <span v-if="r.action_required" class="label label--info">Action Required</span>
             </th>
-            <td>{{ r.last_submission_timestamp | formattedDate }}</td>
+            <td>!{ r.last_submission_timestamp}</td>
             {% if extended_view %}
-              <td>{{ r.last_edited_timestamp | formattedDate }}</td>
-              <td>{{ r.full_name }}</td>
+              <td>!{ r.last_edited_timestamp }</td>
+              <td>!{ r.full_name }</td>
             {% endif %}
-            <td>{{ r.annual_usage | dollars }}</td>
+            <td>!{ r.annual_usage }</td>
             <td>
-              {% if r.status == 'Approved' %}
-                <a class="icon-link icon-link--large" href="{{ url_for('workspaces.workspace_projects', workspace_id=r.workspace_id) }}">
-                  {{ r.status }}
-                </a>
-              {% else %}
-                {{ r.status }}
-              {% endif %}
+              <a v-if="r.is_approved" class="icon-link icon-link--large" :href="r.workspace_link">
+                !{ r.status }
+              </a>
+              <span v-else>
+                !{ r.status }
+              </span>
             </td>
             {% if extended_view %}
-              <td>{{ r.dod_component }}</td>
+              <td>!{ r.dod_component }</td>
             {% endif %}
           </tr>
-          {% endfor %}
         </tbody>
       </table>
     </div>
   </div>
-
 {% endif %}
+
+</div>
+</requests-list>
 
 {% endblock %}
 

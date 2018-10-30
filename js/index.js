@@ -22,6 +22,7 @@ import SpendTable from './components/tables/spend_table'
 import CcpoApproval from './components/forms/ccpo_approval'
 import MembersList from './components/forms/members_list'
 import LocalDatetime from './components/local_datetime'
+import RequestsList from './components/forms/requests_list'
 
 Vue.use(VTooltip)
 
@@ -46,6 +47,7 @@ const app = new Vue({
     LocalDatetime,
     EditEnvironmentRole,
     EditProjectRoles,
+    RequestsList,
   },
 
   mounted: function() {

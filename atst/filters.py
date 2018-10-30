@@ -77,6 +77,10 @@ def dateFromString(value, formatter="%m/%Y"):
     return datetime.datetime.strptime(value, formatter)
 
 
+def boolean(value):
+    return "true" if value else "false"
+
+
 def register_filters(app):
     app.jinja_env.filters["iconSvg"] = iconSvg
     app.jinja_env.filters["dollars"] = dollars
@@ -88,3 +92,4 @@ def register_filters(app):
     app.jinja_env.filters["renderList"] = renderList
     app.jinja_env.filters["formattedDate"] = formattedDate
     app.jinja_env.filters["dateFromString"] = dateFromString
+    app.jinja_env.filters["boolean"] = boolean

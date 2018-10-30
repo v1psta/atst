@@ -55,6 +55,12 @@ class RequestsIndex(object):
             "extended_view": False,
         }
 
+    def _workspace_link_for_request(self, request):
+        if request.is_approved:
+            return url_for("workspaces.workspace_projects", workspace_id=request.workspace_id)
+        else:
+            return None
+
     def _map_request(self, request, viewing_role):
         time_created = pendulum.instance(request.time_created)
         is_new = time_created.add(days=1) > pendulum.now()
@@ -67,7 +73,9 @@ class RequestsIndex(object):
             "workspace_id": request.workspace.id if request.workspace else None,
             "name": request.displayname,
             "is_new": is_new,
+            "is_approved": request.is_approved,
             "status": request.status_displayname,
+            "simple_status": request.simple_status,
             "app_count": app_count,
             "last_submission_timestamp": request.last_submission_timestamp,
             "last_edited_timestamp": request.latest_revision.time_updated,
@@ -76,6 +84,7 @@ class RequestsIndex(object):
             "edit_link": url_for("requests.edit", request_id=request.id),
             "action_required": request.action_required_by == viewing_role,
             "dod_component": request.latest_revision.dod_component,
+            "workspace_link": self._workspace_link_for_request(request)
         }
 
 

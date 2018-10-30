@@ -56,6 +56,15 @@ class RequestStatusEvent(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
         else:
             return self.displayname
 
+    @property
+    def simple_name(self):
+        if self.new_status in [RequestStatus.CHANGES_REQUESTED, RequestStatus.CHANGES_REQUESTED_TO_FINVER]:
+            return "denied"
+        elif self.new_status == [RequestStatus.PENDING_FINANCIAL_VERIFICATION, RequestStatus.APPROVED]:
+            return "accepted"
+        else:
+            return "pending"
+
     def __repr__(self):
         return "<RequestStatusEvent(log_name='{}', request='{}', id='{}')>".format(
             self.log_name, self.request_id, self.id
