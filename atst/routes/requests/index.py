@@ -57,7 +57,9 @@ class RequestsIndex(object):
 
     def _workspace_link_for_request(self, request):
         if request.is_approved:
-            return url_for("workspaces.workspace_projects", workspace_id=request.workspace_id)
+            return url_for(
+                "workspaces.workspace_projects", workspace_id=request.workspace_id
+            )
         else:
             return None
 
@@ -84,7 +86,7 @@ class RequestsIndex(object):
             "edit_link": url_for("requests.edit", request_id=request.id),
             "action_required": request.action_required_by == viewing_role,
             "dod_component": request.latest_revision.dod_component,
-            "workspace_link": self._workspace_link_for_request(request)
+            "workspace_link": self._workspace_link_for_request(request),
         }
 
 
