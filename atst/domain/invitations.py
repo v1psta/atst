@@ -3,6 +3,7 @@ from sqlalchemy.orm.exc import NoResultFound
 
 from atst.database import db
 from atst.models.invitation import Invitation, Status as InvitationStatus
+from atst.domain.workspace_users import WorkspaceUsers
 
 from .exceptions import NotFoundError
 
@@ -30,26 +31,12 @@ class Invitations(object):
         return invite
 
     @classmethod
-    def create(cls, workspace, inviter, user):
+    def create(cls, workspace_role, inviter, user):
         invite = Invitation(
-            workspace=workspace,
+            workspace_role=workspace_role,
             inviter=inviter,
             user=user,
             status=InvitationStatus.PENDING,
-            expiration_time=Invitations.current_expiration_time(),
-        )
-        db.session.add(invite)
-        db.session.commit()
-
-        return invite
-
-    @classmethod
-    def create_for_owner(cls, workspace, user):
-        invite = Invitation(
-            workspace=workspace,
-            inviter=user,
-            user=user,
-            status=InvitationStatus.ACCEPTED,
             expiration_time=Invitations.current_expiration_time(),
         )
         db.session.add(invite)
@@ -71,6 +58,8 @@ class Invitations(object):
 
         if invite.is_revoked or invite.is_rejected:
             raise InvitationError(invite)
+
+        WorkspaceUsers.enable(invite.workspace_role)
 
         return invite
 

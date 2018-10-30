@@ -1,9 +1,16 @@
-from sqlalchemy import Index, ForeignKey, Column
+from enum import Enum
+from sqlalchemy import Index, ForeignKey, Column, Enum as SQLAEnum
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
 from atst.models import Base, mixins
 from .types import Id
+
+
+class Status(Enum):
+    ACTIVE = "active"
+    DISABLED = "disabled"
+    PENDING = "pending"
 
 
 class WorkspaceRole(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
@@ -21,6 +28,8 @@ class WorkspaceRole(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     user_id = Column(
         UUID(as_uuid=True), ForeignKey("users.id"), index=True, nullable=False
     )
+
+    status = Column(SQLAEnum(Status, native_enum=False, default=Status.PENDING))
 
     def __repr__(self):
         return "<WorkspaceRole(role='{}', workspace='{}', user_id='{}', id='{}')>".format(

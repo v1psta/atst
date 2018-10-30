@@ -1,8 +1,14 @@
 from atst.domain.workspace_users import WorkspaceUsers
 from atst.domain.users import Users
-from atst.models.invitation import Status as InvitationStatus
+from atst.models.workspace_role import Status as WorkspaceRoleStatus
+from atst.domain.roles import Roles
 
-from tests.factories import WorkspaceFactory, UserFactory, InvitationFactory
+from tests.factories import (
+    WorkspaceFactory,
+    UserFactory,
+    InvitationFactory,
+    WorkspaceRoleFactory,
+)
 
 
 def test_can_create_new_workspace_user():
@@ -42,17 +48,17 @@ def test_workspace_user_permissions():
     workspace_one = WorkspaceFactory.create()
     workspace_two = WorkspaceFactory.create()
     new_user = UserFactory.create()
-    WorkspaceUsers.add_many(
-        workspace_one.id, [{"id": new_user.id, "workspace_role": "developer"}]
-    )
-    WorkspaceUsers.add_many(
-        workspace_two.id, [{"id": new_user.id, "workspace_role": "developer"}]
-    )
-    InvitationFactory.create(
+    WorkspaceRoleFactory.create(
         workspace=workspace_one,
         user=new_user,
-        inviter=workspace_one.owner,
-        status=InvitationStatus.ACCEPTED,
+        role=Roles.get("developer"),
+        status=WorkspaceRoleStatus.ACTIVE,
+    )
+    WorkspaceRoleFactory.create(
+        workspace=workspace_two,
+        user=new_user,
+        role=Roles.get("developer"),
+        status=WorkspaceRoleStatus.PENDING,
     )
 
     assert WorkspaceUsers.workspace_user_permissions(workspace_one, new_user)

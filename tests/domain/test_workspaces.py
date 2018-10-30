@@ -6,9 +6,14 @@ from atst.domain.workspaces import Workspaces
 from atst.domain.workspace_users import WorkspaceUsers
 from atst.domain.projects import Projects
 from atst.domain.environments import Environments
-from atst.models.invitation import Status as InvitationStatus
+from atst.models.workspace_role import Status as WorkspaceRoleStatus
 
-from tests.factories import RequestFactory, UserFactory, InvitationFactory
+from tests.factories import (
+    RequestFactory,
+    UserFactory,
+    InvitationFactory,
+    WorkspaceRoleFactory,
+)
 
 
 @pytest.fixture(scope="function")
@@ -217,14 +222,9 @@ def test_scoped_workspace_returns_all_projects_for_workspace_admin(
             ["dev", "staging", "prod"],
         )
 
-    admin = Workspaces.add_member(
-        workspace, UserFactory.from_atat_role("default"), "admin"
-    ).user
-    InvitationFactory.create(
-        user=admin,
-        inviter=workspace.owner,
-        workspace=workspace,
-        status=InvitationStatus.ACCEPTED,
+    admin = UserFactory.from_atat_role("default")
+    Workspaces._create_workspace_role(
+        admin, workspace, "admin", status=WorkspaceRoleStatus.ACTIVE
     )
     scoped_workspace = Workspaces.get(admin, workspace.id)
 
@@ -250,23 +250,19 @@ def test_scoped_workspace_returns_all_projects_for_workspace_owner(
     assert len(scoped_workspace.projects[0].environments) == 3
 
 
-def test_for_user_returns_assigned_workspaces_for_user(workspace, workspace_owner):
+def test_for_user_returns_active_workspaces_for_user(workspace, workspace_owner):
     bob = UserFactory.from_atat_role("default")
-    Workspaces.add_member(workspace, bob, "developer")
-    Workspaces.create(RequestFactory.create())
-    InvitationFactory.create(
-        user=bob,
-        inviter=workspace.owner,
-        workspace=workspace,
-        status=InvitationStatus.ACCEPTED,
+    WorkspaceRoleFactory.create(
+        user=bob, workspace=workspace, status=WorkspaceRoleStatus.ACTIVE
     )
+    Workspaces.create(RequestFactory.create())
 
     bobs_workspaces = Workspaces.for_user(bob)
 
     assert len(bobs_workspaces) == 1
 
 
-def test_for_user_does_not_return_unaccepted_workspaces(workspace, workspace_owner):
+def test_for_user_does_not_return_inactive_workspaces(workspace, workspace_owner):
     bob = UserFactory.from_atat_role("default")
     Workspaces.add_member(workspace, bob, "developer")
     Workspaces.create(RequestFactory.create())
@@ -286,22 +282,12 @@ def test_for_user_returns_all_workspaces_for_ccpo(workspace, workspace_owner):
 def test_get_for_update_information():
     workspace_owner = UserFactory.create()
     workspace = Workspaces.create(RequestFactory.create(creator=workspace_owner))
-    InvitationFactory.create(
-        user=workspace_owner,
-        inviter=workspace_owner,
-        workspace=workspace,
-        status=InvitationStatus.ACCEPTED,
-    )
     owner_ws = Workspaces.get_for_update_information(workspace_owner, workspace.id)
     assert workspace == owner_ws
 
     admin = UserFactory.create()
-    Workspaces.add_member(workspace, admin, "admin")
-    InvitationFactory.create(
-        user=admin,
-        inviter=workspace_owner,
-        workspace=workspace,
-        status=InvitationStatus.ACCEPTED,
+    Workspaces._create_workspace_role(
+        admin, workspace, "admin", status=WorkspaceRoleStatus.ACTIVE
     )
     admin_ws = Workspaces.get_for_update_information(admin, workspace.id)
     assert workspace == admin_ws

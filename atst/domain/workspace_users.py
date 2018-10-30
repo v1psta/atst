@@ -1,10 +1,9 @@
 from sqlalchemy.orm.exc import NoResultFound
 
 from atst.database import db
-from atst.models.workspace_role import WorkspaceRole
+from atst.models.workspace_role import WorkspaceRole, Status as WorkspaceRoleStatus
 from atst.models.workspace_user import WorkspaceUser
 from atst.models.user import User
-from atst.models.invitation import Invitation, Status as InvitationStatus
 
 from .roles import Roles
 from .users import Users
@@ -38,9 +37,7 @@ class WorkspaceUsers(object):
                 db.session.query(WorkspaceRole)
                 .join(User)
                 .filter(User.id == user_id, WorkspaceRole.workspace_id == workspace_id)
-                .join(Invitation, WorkspaceRole.workspace_id == Invitation.workspace_id)
-                .filter(Invitation.user_id == WorkspaceRole.user_id)
-                .filter(Invitation.status == InvitationStatus.ACCEPTED)
+                .filter(WorkspaceRole.status == WorkspaceRoleStatus.ACTIVE)
                 .one()
             )
         except NoResultFound:
@@ -150,3 +147,10 @@ class WorkspaceUsers(object):
         db.session.commit()
 
         return workspace_users
+
+    @classmethod
+    def enable(cls, workspace_role):
+        workspace_role.status = WorkspaceRoleStatus.ACTIVE
+
+        db.session.add(workspace_role)
+        db.session.commit()

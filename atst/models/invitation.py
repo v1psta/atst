@@ -25,8 +25,10 @@ class Invitation(Base, TimestampsMixin):
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), index=True)
     user = relationship("User", backref="invitations", foreign_keys=[user_id])
 
-    workspace_id = Column(UUID(as_uuid=True), ForeignKey("workspaces.id"), index=True)
-    workspace = relationship("Workspace", backref="invitations")
+    workspace_role_id = Column(
+        UUID(as_uuid=True), ForeignKey("workspace_roles.id"), index=True
+    )
+    workspace_role = relationship("WorkspaceRole", backref="invitations")
 
     inviter_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), index=True)
     inviter = relationship("User", backref="sent_invites", foreign_keys=[inviter_id])
@@ -61,3 +63,8 @@ class Invitation(Base, TimestampsMixin):
     @property
     def is_expired(self):
         return datetime.datetime.now(self.expiration_time.tzinfo) > self.expiration_time
+
+    @property
+    def workspace(self):
+        if self.workspace_role:
+            return self.workspace_role.workspace

@@ -237,7 +237,9 @@ def create_member(workspace_id):
     if form.validate():
         try:
             new_member = Workspaces.create_member(g.current_user, workspace, form.data)
-            invite = Invitations.create(workspace, g.current_user, new_member.user)
+            invite = Invitations.create(
+                new_member.workspace_role, g.current_user, new_member.user
+            )
             send_invite_email(
                 g.current_user.full_name, invite.token, new_member.user.email
             )

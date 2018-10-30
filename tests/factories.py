@@ -18,7 +18,7 @@ from atst.models.user import User
 from atst.models.role import Role
 from atst.models.workspace import Workspace
 from atst.domain.roles import Roles
-from atst.models.workspace_role import WorkspaceRole
+from atst.models.workspace_role import WorkspaceRole, Status as WorkspaceRoleStatus
 from atst.models.environment_role import EnvironmentRole
 from atst.models.invitation import Invitation, Status as InvitationStatus
 from atst.domain.workspaces import Workspaces
@@ -257,37 +257,24 @@ class WorkspaceFactory(Base):
 
         workspace.request.creator = owner
         WorkspaceRoleFactory.create(
-            workspace=workspace, role=Roles.get("owner"), user=owner
-        )
-        InvitationFactory.create(
-            user=owner,
-            inviter=owner,
             workspace=workspace,
-            status=InvitationStatus.ACCEPTED,
+            role=Roles.get("owner"),
+            user=owner,
+            status=WorkspaceRoleStatus.ACTIVE,
         )
 
         for member in members:
             user = member.get("user", UserFactory.create())
             role_name = member["role_name"]
             WorkspaceRoleFactory.create(
-                workspace=workspace, role=Roles.get(role_name), user=user
+                workspace=workspace,
+                role=Roles.get(role_name),
+                user=user,
+                status=WorkspaceRoleStatus.ACTIVE,
             )
 
         workspace.projects = projects
         return workspace
-
-    @classmethod
-    def create_user_and_workspace_with_role(cls, role="owner"):
-        user = UserFactory.create()
-        workspace = WorkspaceFactory.create()
-        Workspaces._create_workspace_role(user, workspace, role)
-        InvitationFactory.create(
-            user=user,
-            inviter=workspace.owner,
-            workspace=workspace,
-            status=InvitationStatus.ACCEPTED,
-        )
-        return user, workspace
 
 
 class ProjectFactory(Base):

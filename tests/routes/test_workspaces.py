@@ -1,21 +1,25 @@
 from flask import url_for
 
-from tests.factories import UserFactory, WorkspaceFactory, InvitationFactory
+from tests.factories import (
+    UserFactory,
+    WorkspaceFactory,
+    WorkspaceRoleFactory,
+    InvitationFactory,
+)
 from atst.domain.workspaces import Workspaces
 from atst.domain.workspace_users import WorkspaceUsers
 from atst.domain.projects import Projects
 from atst.domain.environments import Environments
 from atst.domain.environment_roles import EnvironmentRoles
-from atst.domain.invitations import Invitations
 from atst.models.workspace_user import WorkspaceUser
+from atst.models.workspace_role import Status as WorkspaceRoleStatus
 from atst.models.invitation import Status as InvitationStatus
 from atst.queue import queue
 
 
 def test_user_with_permission_has_budget_report_link(client, user_session):
-    user, workspace = WorkspaceFactory.create_user_and_workspace_with_role("owner")
-
-    user_session(user)
+    workspace = WorkspaceFactory.create()
+    user_session(workspace.owner)
     response = client.get("/workspaces/{}/projects".format(workspace.id))
     assert (
         'href="/workspaces/{}/reports"'.format(workspace.id).encode() in response.data
@@ -23,8 +27,11 @@ def test_user_with_permission_has_budget_report_link(client, user_session):
 
 
 def test_user_without_permission_has_no_budget_report_link(client, user_session):
-    user, workspace = WorkspaceFactory.create_user_and_workspace_with_role("developer")
-
+    user = UserFactory.create()
+    workspace = WorkspaceFactory.create()
+    Workspaces._create_workspace_role(
+        user, workspace, "developer", status=WorkspaceRoleStatus.ACTIVE
+    )
     user_session(user)
     response = client.get("/workspaces/{}/projects".format(workspace.id))
     assert (
@@ -34,9 +41,8 @@ def test_user_without_permission_has_no_budget_report_link(client, user_session)
 
 
 def test_user_with_permission_has_add_project_link(client, user_session):
-    user, workspace = WorkspaceFactory.create_user_and_workspace_with_role("owner")
-
-    user_session(user)
+    workspace = WorkspaceFactory.create()
+    user_session(workspace.owner)
     response = client.get("/workspaces/{}/projects".format(workspace.id))
     assert (
         'href="/workspaces/{}/projects/new"'.format(workspace.id).encode()
@@ -45,8 +51,9 @@ def test_user_with_permission_has_add_project_link(client, user_session):
 
 
 def test_user_without_permission_has_no_add_project_link(client, user_session):
-    user, workspace = WorkspaceFactory.create_user_and_workspace_with_role("developer")
-
+    user = UserFactory.create()
+    workspace = WorkspaceFactory.create()
+    Workspaces._create_workspace_role(user, workspace, "developer")
     user_session(user)
     response = client.get("/workspaces/{}/projects".format(workspace.id))
     assert (
@@ -56,9 +63,8 @@ def test_user_without_permission_has_no_add_project_link(client, user_session):
 
 
 def test_user_with_permission_has_add_member_link(client, user_session):
-    user, workspace = WorkspaceFactory.create_user_and_workspace_with_role("owner")
-
-    user_session(user)
+    workspace = WorkspaceFactory.create()
+    user_session(workspace.owner)
     response = client.get("/workspaces/{}/members".format(workspace.id))
     assert (
         'href="/workspaces/{}/members/new"'.format(workspace.id).encode()
@@ -67,8 +73,9 @@ def test_user_with_permission_has_add_member_link(client, user_session):
 
 
 def test_user_without_permission_has_no_add_member_link(client, user_session):
-    user, workspace = WorkspaceFactory.create_user_and_workspace_with_role("developer")
-
+    user = UserFactory.create()
+    workspace = WorkspaceFactory.create()
+    Workspaces._create_workspace_role(user, workspace, "developer")
     user_session(user)
     response = client.get("/workspaces/{}/members".format(workspace.id))
     assert (
@@ -78,9 +85,8 @@ def test_user_without_permission_has_no_add_member_link(client, user_session):
 
 
 def test_update_workspace_name(client, user_session):
-    user, workspace = WorkspaceFactory.create_user_and_workspace_with_role("admin")
-
-    user_session(user)
+    workspace = WorkspaceFactory.create()
+    user_session(workspace.owner)
     response = client.post(
         url_for("workspaces.edit_workspace", workspace_id=workspace.id),
         data={"name": "a cool new name"},
@@ -91,16 +97,15 @@ def test_update_workspace_name(client, user_session):
 
 
 def test_view_edit_project(client, user_session):
-    owner, workspace = WorkspaceFactory.create_user_and_workspace_with_role("admin")
-
+    workspace = WorkspaceFactory.create()
     project = Projects.create(
-        owner,
+        workspace.owner,
         workspace,
         "Snazzy Project",
         "A new project for me and my friends",
         {"env1", "env2"},
     )
-    user_session(owner)
+    user_session(workspace.owner)
     response = client.get(
         "/workspaces/{}/projects/{}/edit".format(workspace.id, project.id)
     )
@@ -168,12 +173,11 @@ def test_user_without_permission_cannot_update_project(client, user_session):
 
 
 def test_create_member(client, user_session):
-    owner, workspace = WorkspaceFactory.create_user_and_workspace_with_role("admin")
-
-    user_session(owner)
+    user = UserFactory.create()
+    workspace = WorkspaceFactory.create()
+    user_session(workspace.owner)
     queue_length = len(queue.get_queue())
 
-    user = UserFactory.create()
     response = client.post(
         url_for("workspaces.create_member", workspace_id=workspace.id),
         data={
@@ -193,8 +197,10 @@ def test_create_member(client, user_session):
 
 
 def test_permissions_for_view_member(client, user_session):
-    user, workspace = WorkspaceFactory.create_user_and_workspace_with_role("developer")
-
+    user = UserFactory.create()
+    workspace = WorkspaceFactory.create()
+    Workspaces._create_workspace_role(user, workspace, "developer")
+    member = WorkspaceUsers.add(user, workspace.id, "developer")
     user_session(user)
     response = client.post(
         url_for("workspaces.view_member", workspace_id=workspace.id, member_id=user.id),
@@ -204,11 +210,10 @@ def test_permissions_for_view_member(client, user_session):
 
 
 def test_update_member_workspace_role(client, user_session):
-    owner, workspace = WorkspaceFactory.create_user_and_workspace_with_role("admin")
-
+    workspace = WorkspaceFactory.create()
     user = UserFactory.create()
     member = WorkspaceUsers.add(user, workspace.id, "developer")
-    user_session(owner)
+    user_session(workspace.owner)
     response = client.post(
         url_for(
             "workspaces.update_member", workspace_id=workspace.id, member_id=user.id
@@ -221,11 +226,10 @@ def test_update_member_workspace_role(client, user_session):
 
 
 def test_update_member_workspace_role_with_no_data(client, user_session):
-    owner, workspace = WorkspaceFactory.create_user_and_workspace_with_role("admin")
-
+    workspace = WorkspaceFactory.create()
     user = UserFactory.create()
     member = WorkspaceUsers.add(user, workspace.id, "developer")
-    user_session(owner)
+    user_session(workspace.owner)
     response = client.post(
         url_for(
             "workspaces.update_member", workspace_id=workspace.id, member_id=user.id
@@ -238,12 +242,11 @@ def test_update_member_workspace_role_with_no_data(client, user_session):
 
 
 def test_update_member_environment_role(client, user_session):
-    owner, workspace = WorkspaceFactory.create_user_and_workspace_with_role("admin")
-
+    workspace = WorkspaceFactory.create()
     user = UserFactory.create()
     member = WorkspaceUsers.add(user, workspace.id, "developer")
     project = Projects.create(
-        owner,
+        workspace.owner,
         workspace,
         "Snazzy Project",
         "A new project for me and my friends",
@@ -253,7 +256,7 @@ def test_update_member_environment_role(client, user_session):
     env2_id = project.environments[1].id
     for env in project.environments:
         Environments.add_member(env, user, "developer")
-    user_session(owner)
+    user_session(workspace.owner)
     response = client.post(
         url_for(
             "workspaces.update_member", workspace_id=workspace.id, member_id=user.id
@@ -271,12 +274,11 @@ def test_update_member_environment_role(client, user_session):
 
 
 def test_update_member_environment_role_with_no_data(client, user_session):
-    owner, workspace = WorkspaceFactory.create_user_and_workspace_with_role("admin")
-
+    workspace = WorkspaceFactory.create()
     user = UserFactory.create()
     member = WorkspaceUsers.add(user, workspace.id, "developer")
     project = Projects.create(
-        owner,
+        workspace.owner,
         workspace,
         "Snazzy Project",
         "A new project for me and my friends",
@@ -285,7 +287,7 @@ def test_update_member_environment_role_with_no_data(client, user_session):
     env1_id = project.environments[0].id
     for env in project.environments:
         Environments.add_member(env, user, "developer")
-    user_session(owner)
+    user_session(workspace.owner)
     response = client.post(
         url_for(
             "workspaces.update_member", workspace_id=workspace.id, member_id=user.id
@@ -298,11 +300,12 @@ def test_update_member_environment_role_with_no_data(client, user_session):
 
 
 def test_new_member_accepts_valid_invite(client, user_session):
-    owner, workspace = WorkspaceFactory.create_user_and_workspace_with_role("admin")
-
+    workspace = WorkspaceFactory.create()
     user = UserFactory.create()
-    member = WorkspaceUsers.add(user, workspace.id, "developer")
-    invite = InvitationFactory.create(user_id=member.user.id, workspace_id=workspace.id)
+    ws_role = WorkspaceRoleFactory.create(
+        workspace=workspace, user=user, status=WorkspaceRoleStatus.PENDING
+    )
+    invite = InvitationFactory.create(user_id=user.id, workspace_role_id=ws_role.id)
 
     # the user does not have access to the workspace before accepting the invite
     assert len(Workspaces.for_user(user)) == 0
@@ -323,14 +326,13 @@ def test_new_member_accepts_valid_invite(client, user_session):
 
 
 def test_new_member_accept_invalid_invite(client, user_session):
-    owner, workspace = WorkspaceFactory.create_user_and_workspace_with_role("admin")
-
+    workspace = WorkspaceFactory.create()
     user = UserFactory.create()
-    member = WorkspaceUsers.add(user, workspace.id, "developer")
+    ws_role = WorkspaceRoleFactory.create(
+        user=user, workspace=workspace, status=WorkspaceRoleStatus.PENDING
+    )
     invite = InvitationFactory.create(
-        user_id=member.user.id,
-        workspace_id=workspace.id,
-        status=InvitationStatus.REJECTED,
+        user_id=user.id, workspace_role_id=ws_role.id, status=InvitationStatus.REJECTED
     )
     user_session(user)
     response = client.get(url_for("workspaces.accept_invitation", token=invite.token))
@@ -341,7 +343,6 @@ def test_new_member_accept_invalid_invite(client, user_session):
 def test_user_who_has_not_accepted_workspace_invite_cannot_view(client, user_session):
     user = UserFactory.create()
     workspace = WorkspaceFactory.create()
-    Invitations.create_for_owner(workspace, workspace.owner)
 
     # create user in workspace with invitation
     user_session(workspace.owner)
