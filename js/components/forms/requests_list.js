@@ -1,4 +1,5 @@
 import Modal from '../../mixins/modal'
+import LocalDatetime from '../../components/local_datetime'
 
 export default {
     name: 'requests-list',
@@ -7,6 +8,7 @@ export default {
 
     components: {
       Modal,
+      LocalDatetime
     },
 
     props: {

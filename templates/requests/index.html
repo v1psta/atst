@@ -121,9 +121,9 @@
               <a class='icon-link icon-link--large' :href="r.edit_link">!{ r.name }</a>
               <span v-if="r.action_required" class="label label--info">Action Required</span>
             </th>
-            <td>!{ r.last_submission_timestamp}</td>
+            <td><local-datetime :timestamp="r.last_submission_timestamp" format="M/D/YYYY"></td>
             {% if extended_view %}
-              <td>!{ r.last_edited_timestamp }</td>
+              <td><local-datetime :timestamp="r.last_edited_timestamp" format="M/D/YYYY"></td>
               <td>!{ r.full_name }</td>
             {% endif %}
             <td>!{ r.annual_usage }</td>
