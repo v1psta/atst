@@ -4,24 +4,20 @@ from atst.models.request_status_event import RequestStatus
 
 
 class RequestStatusEventHandler(object):
-    STATUS_TRANSITIONS = set([
-        (
-            RequestStatus.PENDING_CCPO_ACCEPTANCE,
-            RequestStatus.PENDING_FINANCIAL_VERIFICATION,
-        ),
-        (
-            RequestStatus.PENDING_CCPO_ACCEPTANCE,
-            RequestStatus.CHANGES_REQUESTED,
-        ),
-        (
-            RequestStatus.PENDING_CCPO_APPROVAL,
-            RequestStatus.CHANGES_REQUESTED_TO_FINVER,
-        ),
-        (
-            RequestStatus.PENDING_CCPO_APPROVAL,
-            RequestStatus.APPROVED,
-        ),
-    ])
+    STATUS_TRANSITIONS = set(
+        [
+            (
+                RequestStatus.PENDING_CCPO_ACCEPTANCE,
+                RequestStatus.PENDING_FINANCIAL_VERIFICATION,
+            ),
+            (RequestStatus.PENDING_CCPO_ACCEPTANCE, RequestStatus.CHANGES_REQUESTED),
+            (
+                RequestStatus.PENDING_CCPO_APPROVAL,
+                RequestStatus.CHANGES_REQUESTED_TO_FINVER,
+            ),
+            (RequestStatus.PENDING_CCPO_APPROVAL, RequestStatus.APPROVED),
+        ]
+    )
 
     def __init__(self, queue):
         self.queue = queue
