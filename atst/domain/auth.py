@@ -7,6 +7,7 @@ UNPROTECTED_ROUTES = [
     "atst.root",
     "dev.login_dev",
     "atst.login_redirect",
+    "atst.logout",
     "atst.unauthorized",
     "atst.helpdocs",
     "static",
