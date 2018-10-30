@@ -1,5 +1,6 @@
 import Modal from '../../mixins/modal'
 import LocalDatetime from '../../components/local_datetime'
+import { formatDollars } from '../../lib/dollars'
 
 export default {
     name: 'requests-list',
@@ -47,6 +48,7 @@ export default {
             request.name.toLowerCase().includes(query.toLowerCase()) :
             true
         )
-      }
+      },
+      dollars: (value) => formatDollars(value, false),
     },
   }
