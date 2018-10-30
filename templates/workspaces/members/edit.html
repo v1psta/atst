@@ -81,6 +81,7 @@
           {% for env in project.environments %}
 
             {% set role = EnvironmentRoles.get(member.user_id, env.id).role %}
+            {% set env_modal_name = (env.id|string) + 'RolesModal' %}
 
           <li class='block-list__item'>
             <edit-environment-role inline-template initial-data='{{ role or "" }}' v-bind:choices='{{ choices | tojson }}' v-bind:project-id="'{{ project.id }}'">
@@ -91,8 +92,8 @@
 
               <div class='project-list-item__environment__actions'>
                 <span v-bind:class="label_class" v-html:on=displayName></span>
-                <button v-on:click="openModal('{{ env.name }}RolesModal')" type="button" class="icon-link">set role</button>
-                {% call Modal(name=env.name + 'RolesModal', dismissable=False) %}
+                <button v-on:click="openModal('{{env_modal_name}}')" type="button" class="icon-link">set role</button>
+                {% call Modal(name=env_modal_name, dismissable=False) %}
                     <div class='block-list'>
                       <div class='block-list__header'>
                         <div>
@@ -129,8 +130,8 @@
                       <input type='hidden' name='env_{{ env.id }}' v-bind:value='newRole'/>
                       <div class='block-list__footer'>
                         <div class='action-group'>
-                          <a v-on:click="closeModal('{{ env.name }}RolesModal')" class='action-group__action usa-button'>Select Access Role</a>
-                          <a class='action-group__action icon-link icon-link--danger' v-on:click="closeModal('{{ env.name }}RolesModal'); cancel();" value="{{ value if value == role else role }}" >Cancel</a>
+                          <a v-on:click="closeModal('{{env_modal_name}}')" class='action-group__action usa-button'>Select Access Role</a>
+                          <a class='action-group__action icon-link icon-link--danger' v-on:click="closeModal('{{env_modal_name}}'); cancel();" value="{{ value if value == role else role }}" >Cancel</a>
                         </div>
                       </div>
                     </div>
