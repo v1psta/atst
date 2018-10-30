@@ -37,15 +37,22 @@ export default {
 
     computed: {
       filteredRequests: function () {
-        return this.applySearch(this.searchValue)
+        return this.applyFilters(this.applySearch(this.requests, this.searchValue), this.statusValue)
       }
     },
 
     methods: {
-      applySearch: function(query) {
-        return this.requests.filter(
+      applySearch: (requests, query) => {
+        return requests.filter(
           (request) => query !== '' ?
             request.name.toLowerCase().includes(query.toLowerCase()) :
+            true
+        )
+      },
+      applyFilters: (requests, status) => {
+        return requests.filter(
+          (request) => status !== '' ?
+            request.simple_status.toLowerCase() === status :
             true
         )
       },
