@@ -1,7 +1,7 @@
 """add provisional column to users
 
 Revision ID: 5284ac1ac77c
-Revises: 25bcba9b99a9
+Revises: e0fc3cd315c1
 Create Date: 2018-10-25 11:04:49.879393
 
 """
@@ -11,7 +11,7 @@ import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
 revision = '5284ac1ac77c'
-down_revision = '25bcba9b99a9'
+down_revision = 'e0fc3cd315c1'
 branch_labels = None
 depends_on = None
 

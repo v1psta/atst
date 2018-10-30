@@ -1,7 +1,7 @@
 """add status to workspace_roles
 
 Revision ID: e0fc3cd315c1
-Revises: d1ea7f3ee4be
+Revises: 994a80ee92c9
 Create Date: 2018-10-30 14:36:51.047876
 
 """
@@ -11,7 +11,7 @@ import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
 revision = 'e0fc3cd315c1'
-down_revision = 'd1ea7f3ee4be'
+down_revision = '994a80ee92c9'
 branch_labels = None
 depends_on = None
 
