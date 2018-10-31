@@ -48,7 +48,7 @@
 
 <members-list inline-template id="search-template" v-bind:members='{{ members | tojson}}'>
   <div>
-  <form class='search-bar' @submit.prevent="search">
+  <form class='search-bar' @submit.prevent>
     <div class='usa-input search-input'>
       <label for='members-search'>Search members by name</label>
       <input v-model='searchValue' type='search' id='members-search' name='members-search' placeholder="Search by name"/>
