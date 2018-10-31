@@ -70,6 +70,8 @@ class Invitations(object):
         invite = Invitations._get(token)
 
         if invite.user.dod_id != user.dod_id:
+            if invite.is_pending:
+                Invitations._update_status(invite, InvitationStatus.REJECTED)
             raise WrongUserError(user, invite)
 
         elif invite.is_expired:

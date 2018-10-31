@@ -75,6 +75,16 @@ def test_wrong_user_accepts_invitation():
         Invitations.accept(wrong_user, invite.token)
 
 
+def test_user_cannot_accept_invitation_accepted_by_wrong_user():
+    user = UserFactory.create()
+    wrong_user = UserFactory.create()
+    invite = InvitationFactory.create(user_id=user.id)
+    with pytest.raises(WrongUserError):
+        Invitations.accept(wrong_user, invite.token)
+    with pytest.raises(InvitationError):
+        Invitations.accept(user, invite.token)
+
+
 def test_accept_invitation_twice():
     workspace = WorkspaceFactory.create()
     user = UserFactory.create()
