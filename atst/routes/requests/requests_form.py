@@ -2,6 +2,7 @@ from flask import g, redirect, render_template, url_for, request as http_request
 
 from . import requests_bp
 from atst.domain.requests import Requests
+from atst.domain.authz import Authorization
 from atst.routes.requests.jedi_request_flow import JEDIRequestFlow
 from atst.models.request_status_event import RequestStatus
 from atst.forms.data import (
@@ -144,3 +145,34 @@ def view_request_details(request_id=None):
         jedi_request=request,
         requires_fv_action=requires_fv_action,
     )
+
+
+@requests_bp.route("/requests/edit/<string:request_id>")
+def edit(request_id):
+    user = g.current_user
+    request = Requests.get(user, request_id)
+    is_ccpo = Authorization.is_ccpo(user)
+
+    redirect_url = ""
+
+    if request.creator == user:
+        if request.is_pending_financial_verification:
+            redirect_url = url_for(
+                "requests.financial_verification", request_id=request.id
+            )
+        elif request.is_pending_financial_verification_changes:
+            redirect_url = url_for(
+                "requests.financial_verification", request_id=request.id, extended=True
+            )
+        elif request.is_approved:
+            redirect_url = url_for(
+                "requests.view_request_details", request_id=request.id
+            )
+        else:
+            redirect_url = url_for(
+                "requests.requests_form_update", screen=1, request_id=request.id
+            )
+    elif is_ccpo:
+        redirect_url = url_for("requests.approval", request_id=request.id)
+
+    return redirect(redirect_url)

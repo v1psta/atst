@@ -23,18 +23,3 @@ def test_action_required_ccpo():
     context = RequestsIndex(ccpo).execute()
 
     assert context["num_action_required"] == 1
-
-
-def test_ccpo_sees_approval_screen():
-    ccpo = UserFactory.from_atat_role("ccpo")
-    request = RequestFactory.create()
-    Requests.submit(request)
-    ccpo_context = RequestsIndex(ccpo).execute()
-    assert ccpo_context["requests"][0]["edit_link"] == url_for(
-        "requests.approval", request_id=request.id
-    )
-
-    mo_context = RequestsIndex(request.creator).execute()
-    assert mo_context["requests"][0]["edit_link"] != url_for(
-        "requests.approval", request_id=request.id
-    )

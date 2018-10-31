@@ -55,25 +55,6 @@ class RequestsIndex(object):
             "extended_view": False,
         }
 
-    def _edit_link_for_request(self, viewing_role, request):
-        if request.creator == g.current_user:
-            if request.is_pending_financial_verification:
-                return url_for("requests.financial_verification", request_id=request.id)
-            elif request.is_pending_financial_verification_changes:
-                return url_for(
-                    "requests.financial_verification",
-                    request_id=request.id,
-                    extended=True,
-                )
-            elif request.is_approved:
-                return url_for("requests.view_request_details", request_id=request.id)
-            else:
-                return url_for(
-                    "requests.requests_form_update", screen=1, request_id=request.id
-                )
-        elif viewing_role == "ccpo":
-            return url_for("requests.approval", request_id=request.id)
-
     def _map_request(self, request, viewing_role):
         time_created = pendulum.instance(request.time_created)
         is_new = time_created.add(days=1) > pendulum.now()
@@ -92,7 +73,7 @@ class RequestsIndex(object):
             "last_edited_timestamp": request.latest_revision.time_updated,
             "full_name": request.creator.full_name,
             "annual_usage": annual_usage,
-            "edit_link": self._edit_link_for_request(viewing_role, request),
+            "edit_link": url_for("requests.edit", request_id=request.id),
             "action_required": request.action_required_by == viewing_role,
             "dod_component": request.latest_revision.dod_component,
         }
