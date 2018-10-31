@@ -37,13 +37,44 @@ export default {
       }
 
       const columnList = [
-        { displayName: 'JEDI Cloud Request Name', attr: 'name', sortFunc: defaultSort },
-        { displayName: 'Date Request Submitted', attr: 'last_submission_timestamp', sortFunc: dateSort },
-        { displayName: 'Date Request Last Edited', attr: 'last_edited_timestamp', extendedOnly: true, sortFunc: dateSort },
-        { displayName: 'Requester', attr: 'full_name', extendedOnly: true, sortFunc: defaultSort, },
-        { displayName: 'Projected Annual Usage ($)', attr: 'annual_usage', sortFunc: defaultSort },
-        { displayName: 'Request Status', attr: 'status', sortFunc: defaultSort },
-        { displayName: 'DOD Component', attr: 'dod_component', extendedOnly: true, sortFunc: defaultSort },
+        {
+          displayName: 'JEDI Cloud Request Name',
+          attr: 'name',
+          sortFunc: defaultSort,
+        },
+        {
+          displayName: 'Date Request Submitted',
+          attr: 'last_submission_timestamp',
+          sortFunc: dateSort,
+        },
+        {
+          displayName: 'Date Request Last Edited',
+          attr: 'last_edited_timestamp',
+          extendedOnly: true,
+          sortFunc: dateSort,
+        },
+        {
+          displayName: 'Requester',
+          attr: 'full_name',
+          extendedOnly: true,
+          sortFunc: defaultSort,
+        },
+        {
+          displayName: 'Projected Annual Usage ($)',
+          attr: 'annual_usage',
+          sortFunc: defaultSort,
+        },
+        {
+          displayName: 'Request Status',
+          attr: 'status',
+          sortFunc: defaultSort,
+        },
+        {
+          displayName: 'DOD Component',
+          attr: 'dod_component',
+          extendedOnly: true,
+          sortFunc: defaultSort,
+        },
       ]
 
       return {
