@@ -1,3 +1,4 @@
+import datetime
 from flask import url_for
 
 from tests.factories import (
@@ -333,10 +334,7 @@ def test_new_member_accepts_valid_invite(client, user_session):
     user_session(workspace.owner)
     client.post(
         url_for("workspaces.create_member", workspace_id=workspace.id),
-        data={
-            "workspace_role": "developer",
-            **user_info,
-        }
+        data={"workspace_role": "developer", **user_info},
     )
 
     user = Users.get_by_dod_id(user_info["dod_id"])
@@ -394,10 +392,26 @@ def test_user_accepts_invite_with_wrong_dod_id(client, user_session):
     ws_role = WorkspaceRoleFactory.create(
         user=user, workspace=workspace, status=WorkspaceRoleStatus.PENDING
     )
-    invite = InvitationFactory.create(
-        user_id=user.id, workspace_role_id=ws_role.id
-    )
+    invite = InvitationFactory.create(user_id=user.id, workspace_role_id=ws_role.id)
     user_session(different_user)
+    response = client.get(url_for("workspaces.accept_invitation", token=invite.token))
+
+    assert response.status_code == 404
+
+
+def test_user_accepts_expired_invite(client, user_session):
+    workspace = WorkspaceFactory.create()
+    user = UserFactory.create()
+    ws_role = WorkspaceRoleFactory.create(
+        user=user, workspace=workspace, status=WorkspaceRoleStatus.PENDING
+    )
+    invite = InvitationFactory.create(
+        user_id=user.id,
+        workspace_role_id=ws_role.id,
+        status=InvitationStatus.REJECTED,
+        expiration_time=datetime.datetime.now() - datetime.timedelta(seconds=1),
+    )
+    user_session(user)
     response = client.get(url_for("workspaces.accept_invitation", token=invite.token))
 
     assert response.status_code == 404

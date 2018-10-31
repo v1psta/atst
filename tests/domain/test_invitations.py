@@ -2,7 +2,12 @@ import datetime
 import pytest
 import re
 
-from atst.domain.invitations import Invitations, InvitationError, WrongUserError
+from atst.domain.invitations import (
+    Invitations,
+    InvitationError,
+    WrongUserError,
+    ExpiredError,
+)
 from atst.models.invitation import Status
 
 from tests.factories import (
@@ -42,7 +47,7 @@ def test_accept_expired_invitation():
     invite = InvitationFactory.create(
         user_id=user.id, expiration_time=expiration_time, status=Status.PENDING
     )
-    with pytest.raises(InvitationError):
+    with pytest.raises(ExpiredError):
         Invitations.accept(user, invite.token)
 
     assert invite.is_rejected
@@ -69,3 +74,12 @@ def test_wrong_user_accepts_invitation():
     with pytest.raises(WrongUserError):
         Invitations.accept(wrong_user, invite.token)
 
+
+def test_accept_invitation_twice():
+    workspace = WorkspaceFactory.create()
+    user = UserFactory.create()
+    ws_role = WorkspaceRoleFactory.create(user=user, workspace=workspace)
+    invite = Invitations.create(ws_role, workspace.owner, user)
+    Invitations.accept(user, invite.token)
+    with pytest.raises(InvitationError):
+        Invitations.accept(user, invite.token)

@@ -15,7 +15,19 @@ class WrongUserError(Exception):
 
     @property
     def message(self):
-        return "User {} with DOD ID {} does not match expected DOD ID {} for invitation {}".format(self.user.id, self.user.dod_id, self.invite.user.dod_id, self.invite.id)
+        return "User {} with DOD ID {} does not match expected DOD ID {} for invitation {}".format(
+            self.user.id, self.user.dod_id, self.invite.user.dod_id, self.invite.id
+        )
+
+
+class ExpiredError(Exception):
+    def __init__(self, invite):
+        self.invite = invite
+
+    @property
+    def message(self):
+        return "Invitation {} has expired.".format(self.invite.id)
+
 
 class InvitationError(Exception):
     def __init__(self, invite):
@@ -60,23 +72,28 @@ class Invitations(object):
         if invite.user.dod_id != user.dod_id:
             raise WrongUserError(user, invite)
 
-        if invite.is_expired:
-            invite.status = InvitationStatus.REJECTED
-        elif invite.is_pending:
-            invite.status = InvitationStatus.ACCEPTED
+        elif invite.is_expired:
+            Invitations._update_status(invite, InvitationStatus.REJECTED)
+            raise ExpiredError(invite)
 
-        db.session.add(invite)
-        db.session.commit()
-
-        if invite.is_revoked or invite.is_rejected:
+        elif invite.is_accepted or invite.is_revoked or invite.is_rejected:
             raise InvitationError(invite)
 
-        WorkspaceUsers.enable(invite.workspace_role)
-
-        return invite
+        elif invite.is_pending:
+            Invitations._update_status(invite, InvitationStatus.ACCEPTED)
+            WorkspaceUsers.enable(invite.workspace_role)
+            return invite
 
     @classmethod
     def current_expiration_time(cls):
         return datetime.datetime.now() + datetime.timedelta(
             minutes=Invitations.EXPIRATION_LIMIT_MINUTES
         )
+
+    @classmethod
+    def _update_status(cls, invite, new_status):
+        invite.status = new_status
+        db.session.add(invite)
+        db.session.commit()
+
+        return invite
