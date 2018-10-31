@@ -45,39 +45,41 @@
   ) }}
 {% endif %}
 
-  <form class='search-bar'>
+
+<members-list inline-template id="search-template" v-bind:members='{{ members | tojson}}' v-bind:choices='{{ choices | tojson}}'>
+  <div>
+  <form class='search-bar' @submit.prevent>
     <div class='usa-input search-input'>
       <label for='members-search'>Search members by name</label>
-      <input type='search' id='members-search' name='members-search' placeholder="Search by name"/>
-      <button type="submit">
-        <span class="hide">Search</span>
-      </button>
+      <input v-model='searchValue' type='search' id='members-search' name='members-search' placeholder="Search by name"/>
+      <button type="button"></button>
     </div>
 
     <div class='usa-input filter-input'>
       <label for='filter-status'>Filter members by status</label>
-      <select id="filter-status" name="filter-status">
+      <select v-model="status" id="filter-status" name="filter-status">
         <option value="" selected disabled>Filter by status</option>
-        <option value="">Active</option>
-        <option value="">Pending</option>
-        <option value="">Denied</option>
+        <option value="all">View All</option>
+        <option value="active">Active</option>
+        <option value="pending">Pending</option>
+        <option value="denied">Denied</option>
       </select>
     </div>
 
     <div class='usa-input filter-input'>
       <label for='filter-role'>Filter members by role</label>
-      <select id="filter-role" name="filter-role">
+      <select v-model="role" id="filter-role" name="filter-role">
         <option value="" selected disabled>Filter by role</option>
-        <option value="">Admin</option>
-        <option value="">CCPO</option>
-        <option value="">Developer</option>
+        <option value="all">View All</option>
+        {% for role in choices %}
+          <option value='{{ role.name }}'>{{ role.display_name }}</option>
+        {% endfor %}
       </select>
     </div>
   </form>
 
-
   <div class='responsive-table-wrapper'>
-    <table>
+    <table v-if='searchedList && searchedList.length'>
       <thead>
         <tr>
           <th scope="col" width="50%">Name</th>
@@ -86,23 +88,35 @@
           <th scope="col">Workspace Role</th>
         </tr>
       </thead>
+
       <tbody>
-        {% for m in workspace.members %}
-        {% set num_environment_roles = m.num_environment_roles %}
-        <tr>
-          <td><a href="{{ url_for('workspaces.update_member', workspace_id=workspace.id, member_id=m.user_id) }}" class="icon-link icon-link--large">{{ m.user_name }}</a></td>
-          {% if num_environment_roles %}
-            <td class="table-cell--align-right">{{ num_environment_roles }}</td>
-          {% else %}
-            <td class='table-cell--shrink'><span class="label label--info">No Environment Access</span></td>
-          {% endif %}
-          <td>{{ m.status }}</a></td>
-          <td>{{ m.role_displayname }}</a></td>
+        <tr v-for='member in searchedList'>
+          <td>
+            <a :href="member.edit_link" class="icon-link icon-link--large" v-html="member.name"></a>
+          </td>
+          <td class="table-cell--align-right" v-if='member.num_env'>
+            <span v-html="member.num_env"></span>
+          </td>
+          <td class='table-cell--shrink' v-else>
+            <span class="label label--info">No Environment Access</span>
+          </td>
+          <td v-html="member.status"></td>
+          <td v-html="member.role"></td>
         </tr>
-        {% endfor %}
       </tbody>
     </table>
+    <div v-else>
+      {{ EmptyState(
+        'No members found.',
+        action_label=None,
+        action_href=None,
+        sub_message='Please try a different search.',
+        icon=None
+      ) }}
+    </div>
   </div>
+</div>
+</members-list>
 
 {% endif %}
 
