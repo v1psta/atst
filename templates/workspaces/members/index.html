@@ -71,9 +71,9 @@
       <select v-model="role" id="filter-role" name="filter-role">
         <option value="" selected disabled>Filter by role</option>
         <option value="all">View All</option>
-        <option value="administrator">Administrator</option>
-        <option value="ccpo">CCPO</option>
-        <option value="developer">Developer</option>
+        {% for role in choices %}
+          <option value='{{ role.name }}'>{{ role.display_name }}</option>
+        {% endfor %}
       </select>
     </div>
   </form>

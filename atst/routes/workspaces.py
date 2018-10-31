@@ -21,7 +21,11 @@ from atst.forms.project import NewProjectForm, ProjectForm
 from atst.forms.new_member import NewMemberForm
 from atst.forms.edit_member import EditMemberForm
 from atst.forms.workspace import WorkspaceForm
-from atst.forms.data import ENVIRONMENT_ROLES, ENV_ROLE_MODAL_DESCRIPTION
+from atst.forms.data import (
+    ENVIRONMENT_ROLES,
+    ENV_ROLE_MODAL_DESCRIPTION,
+    WORKSPACE_ROLE_DEFINITIONS,
+)
 from atst.domain.authz import Authorization
 from atst.models.permissions import Permissions
 from atst.domain.invitations import Invitations
@@ -116,6 +120,7 @@ def workspace_members(workspace_id):
     return render_template(
         "workspaces/members/index.html",
         workspace=workspace,
+        choices=WORKSPACE_ROLE_DEFINITIONS,
         members=members_list,
         new_member=new_member,
     )
