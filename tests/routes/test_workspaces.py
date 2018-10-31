@@ -15,6 +15,7 @@ from atst.models.workspace_user import WorkspaceUser
 from atst.models.workspace_role import Status as WorkspaceRoleStatus
 from atst.models.invitation import Status as InvitationStatus
 from atst.queue import queue
+from atst.domain.users import Users
 
 
 def test_user_with_permission_has_budget_report_link(client, user_session):
@@ -299,7 +300,7 @@ def test_update_member_environment_role_with_no_data(client, user_session):
     assert EnvironmentRoles.get(user.id, env1_id).role == "developer"
 
 
-def test_new_member_accepts_valid_invite(client, user_session):
+def test_existing_member_accepts_valid_invite(client, user_session):
     workspace = WorkspaceFactory.create()
     user = UserFactory.create()
     ws_role = WorkspaceRoleFactory.create(
@@ -325,7 +326,36 @@ def test_new_member_accepts_valid_invite(client, user_session):
     assert len(Workspaces.for_user(user)) == 1
 
 
-def test_new_member_accept_invalid_invite(client, user_session):
+def test_new_member_accepts_valid_invite(client, user_session):
+    workspace = WorkspaceFactory.create()
+    user_info = UserFactory.dictionary()
+
+    user_session(workspace.owner)
+    client.post(
+        url_for("workspaces.create_member", workspace_id=workspace.id),
+        data={
+            "workspace_role": "developer",
+            **user_info,
+        }
+    )
+
+    user = Users.get_by_dod_id(user_info["dod_id"])
+    token = user.invitations[0].token
+
+    user_session(user)
+    response = client.get(url_for("workspaces.accept_invitation", token=token))
+
+    # user is redirected to the workspace view
+    assert response.status_code == 302
+    assert (
+        url_for("workspaces.show_workspace", workspace_id=workspace.id)
+        in response.headers["Location"]
+    )
+    # the user has access to the workspace
+    assert len(Workspaces.for_user(user)) == 1
+
+
+def test_member_accepts_invalid_invite(client, user_session):
     workspace = WorkspaceFactory.create()
     user = UserFactory.create()
     ws_role = WorkspaceRoleFactory.create(
