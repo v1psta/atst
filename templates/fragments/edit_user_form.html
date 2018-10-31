@@ -16,17 +16,15 @@
         </div>
       </div>
 
-      <div class='form-row'>
-        <div class='form-col form-col--half'>
-          {{ TextInput(form.email, validation='email') }}
-        </div>
+      {{ TextInput(form.email, validation='email') }}
 
-        <div class='form-col form-col--third'>
-          {{ TextInput(form.phone_number, validation='usPhone') }}
-        </div>
-        <div class='form-col form-col--sixth'>
-          {{ TextInput(form.phone_ext)}}
-        </div>
+      <div class='phone-input'>
+          <div class='phone-input__phone'>
+            {{ TextInput(form.phone_number, validation='usPhone') }}
+          </div>
+          <div class='phone-input__extension'>
+            {{ TextInput(form.phone_ext)}}
+          </div>
       </div>
 
       {{ OptionsInput(form.service_branch) }}

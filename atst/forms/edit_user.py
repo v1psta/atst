@@ -22,7 +22,6 @@ USER_FIELDS = {
     ),
     "phone_number": TelField(
         "Phone Number",
-        description="Enter your 10-digit U.S. phone number",
         validators=[PhoneNumber()],
     ),
     "phone_ext": StringField("Extension"),

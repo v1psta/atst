@@ -314,3 +314,36 @@ select {
   }
 
 }
+
+.phone-input {
+  display: flex;
+  flex-direction: row;
+
+  .phone-input__phone {
+    margin-right: ($gap * 4);
+
+    .usa-input {
+      input, label, .usa-input__message {
+        max-width: 20rem;
+      }
+
+      .icon-validation {
+        left: 20rem;
+      }
+    }
+  }
+
+  .phone-input__extension {
+    margin-left: ($gap * 4);
+
+    .usa-input {
+      input, label {
+        max-width: 8rem;
+      }
+
+      .icon-validation {
+        left: 5em;
+      }
+    }
+  }
+}
