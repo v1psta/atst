@@ -16,46 +16,46 @@ bp = Blueprint("dev", __name__)
 
 _DEV_USERS = {
     "sam": {
-        "dod_id": "1234567890",
+        "dod_id": "6346349876",
         "first_name": "Sam",
-        "last_name": "Seeceepio",
+        "last_name": "Stevenson",
         "atat_role_name": "ccpo",
-        "email": "sam@test.com",
+        "email": "sam@example.com",
     },
     "amanda": {
         "dod_id": "2345678901",
         "first_name": "Amanda",
         "last_name": "Adamson",
         "atat_role_name": "default",
-        "email": "amanda@test.com",
+        "email": "amanda@example.com",
     },
     "brandon": {
         "dod_id": "3456789012",
         "first_name": "Brandon",
         "last_name": "Buchannan",
         "atat_role_name": "default",
-        "email": "brandon@test.com",
+        "email": "brandon@example.com",
     },
     "christina": {
         "dod_id": "4567890123",
         "first_name": "Christina",
         "last_name": "Collins",
         "atat_role_name": "default",
-        "email": "christina@test.com",
+        "email": "christina@example.com",
     },
     "dominick": {
         "dod_id": "5678901234",
         "first_name": "Dominick",
         "last_name": "Domingo",
         "atat_role_name": "default",
-        "email": "dominick@test.com",
+        "email": "dominick@example.com",
     },
     "erica": {
         "dod_id": "6789012345",
         "first_name": "Erica",
         "last_name": "Eichner",
         "atat_role_name": "default",
-        "email": "erica@test.com",
+        "email": "erica@example.com",
     },
 }
 
