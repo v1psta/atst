@@ -92,7 +92,7 @@
       <tbody>
         <tr v-for='member in searchedList'>
           <td>
-            <a :href="'/workspaces/{{ workspace.id }}/members/'  + member.id + '/member_edit'" class="icon-link icon-link--large" v-html="member.name"></a>
+            <a :href="member.edit_link" class="icon-link icon-link--large" v-html="member.name"></a>
           </td>
           <td class="table-cell--align-right" v-if='member.num_env'>
             <span v-html="member.num_env"></span>

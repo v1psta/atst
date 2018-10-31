@@ -113,6 +113,7 @@ def workspace_members(workspace_id):
             "id": k.user_id,
             "role": k.role_displayname,
             "num_env": k.num_environment_roles,
+            "edit_link": url_for("workspaces.view_member", workspace_id=workspace.id, member_id=k.user_id)
         }
         for k in workspace.members
     ]
