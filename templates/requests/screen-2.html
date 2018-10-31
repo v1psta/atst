@@ -4,6 +4,7 @@
 {% from "components/text_input.html" import TextInput %}
 {% from "components/options_input.html" import OptionsInput %}
 {% from "components/date_input.html" import DateInput %}
+{% from "components/phone_input.html" import PhoneInput %}
 
 {% block heading %}
   Information About You
@@ -25,15 +26,8 @@
   <div class='form-col form-col--half'>{{ TextInput(f.lname_request) }}</div>
 </div>
 
-<div class='form-row'>
-  <div class='form-col form-col--half'>{{ TextInput(f.email_request, placeholder='e.g. jane@mail.mil', validation='email') }}</div>
-  <div class='form-col form-col--third'>
-    {{ TextInput(f.phone_number, placeholder='e.g. (123) 456-7890', validation='usPhone') }}
-  </div>
-  <div class='form-col form-col--sixth'>
-    {{ TextInput(f.phone_ext)}}
-  </div>
-</div>
+{{ TextInput(f.email_request, placeholder='e.g. jane@mail.mil', validation='email') }}
+{{ PhoneInput(f.phone_number, f.phone_ext, placeholder_phone='e.g. (123) 456-7890') }}
 
 <p>We want to collect the following information from you for security auditing and determining priviledged user access.</p>
 

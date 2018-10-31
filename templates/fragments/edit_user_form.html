@@ -1,6 +1,7 @@
 {% from "components/text_input.html" import TextInput %}
 {% from "components/options_input.html" import OptionsInput %}
 {% from "components/date_input.html" import DateInput %}
+{% from "components/phone_input.html" import PhoneInput %}
 
 <form method="POST" action='{{ form_action }}'>
   {{ form.csrf_token }}
@@ -17,15 +18,7 @@
       </div>
 
       {{ TextInput(form.email, validation='email') }}
-
-      <div class='phone-input'>
-          <div class='phone-input__phone'>
-            {{ TextInput(form.phone_number, validation='usPhone') }}
-          </div>
-          <div class='phone-input__extension'>
-            {{ TextInput(form.phone_ext)}}
-          </div>
-      </div>
+      {{ PhoneInput(form.phone_number, form.phone_ext) }}
 
       {{ OptionsInput(form.service_branch) }}
       {{ OptionsInput(form.citizenship) }}

@@ -1,0 +1,12 @@
+{% from "components/text_input.html" import TextInput %}
+
+{% macro PhoneInput(phone_number, phone_ext, placeholder_phone="") %}
+  <div class='phone-input'>
+      <div class='phone-input__phone'>
+        {{ TextInput(phone_number, placeholder=placeholder_phone, validation='usPhone') }}
+      </div>
+      <div class='phone-input__extension'>
+        {{ TextInput(phone_ext)}}
+      </div>
+  </div>
+{%- endmacro %}
