@@ -8,6 +8,7 @@ from sqlalchemy.orm import relationship
 
 from atst.models import Base, types
 from atst.models.mixins.timestamps import TimestampsMixin
+from atst.models.mixins.auditable import AuditableMixin
 
 
 class Status(Enum):
@@ -17,7 +18,7 @@ class Status(Enum):
     REJECTED = "rejected"
 
 
-class Invitation(Base, TimestampsMixin):
+class Invitation(Base, TimestampsMixin, AuditableMixin):
     __tablename__ = "invitations"
 
     id = types.Id()
