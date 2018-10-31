@@ -3,6 +3,7 @@
 {% from "components/alert.html" import Alert %}
 {% from "components/modal.html" import Modal %}
 {% from "components/empty_state.html" import EmptyState %}
+{% from "components/icon.html" import Icon %}
 
 {% block content %}
   <requests-list inline-template v-bind:requests='{{ requests | tojson }}' v-bind:is-extended='{{ extended_view | tojson }}' v-bind:statuses='{{ possible_statuses | tojson }}'>
@@ -101,17 +102,15 @@
       <table>
         <thead>
           <tr>
-            <th scope="col">JEDI Cloud Request Name</th>
-            <th scope="col">Date Request Submitted</th>
-            {% if extended_view %}
-              <th scope="col">Date Request Last Edited</th>
-              <th scope="col">Requester</th>
-            {% endif %}
-            <th scope="col">Projected Annual Usage ($)</th>
-            <th scope="col">Request Status</th>
-            {% if extended_view %}
-              <th scope="col">DOD Component</th>
-            {% endif %}
+            <th v-for="column in getColumns()"scope="col">
+              <a @click.prevent="updateSortValue(column.attr)" href="">!{ column.displayName }</a>
+              <span v-if="column.attr === sort.columnName && sort.isAscending" class="icon icon--caret_up" aria-idden="true">
+                {{ Icon("caret_down") }}
+              </span>
+              <span v-else-if="column.attr === sort.columnName && !sort.isAscending">
+                {{ Icon("caret_up") }}
+              </span>
+            </th>
           </tr>
         </thead>
         <tbody v-for="r in filteredRequests">
@@ -121,7 +120,7 @@
               <span v-if="r.action_required" class="label label--info">Action Required</span>
             </th>
             <td><local-datetime :timestamp="r.last_submission_timestamp" format="M/D/YYYY"></td>
-            {% if extended_view %}
+          {% if extended_view %}
               <td><local-datetime :timestamp="r.last_edited_timestamp" format="M/D/YYYY"></td>
               <td>!{ r.full_name }</td>
             {% endif %}
