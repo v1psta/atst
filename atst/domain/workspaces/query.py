@@ -4,7 +4,7 @@ from atst.database import db
 from atst.domain.common import Query
 from atst.domain.exceptions import NotFoundError
 from atst.models.workspace import Workspace
-from atst.models.workspace_role import WorkspaceRole
+from atst.models.workspace_role import WorkspaceRole, Status as WorkspaceRoleStatus
 
 
 class WorkspacesQuery(Query):
@@ -25,9 +25,10 @@ class WorkspacesQuery(Query):
             db.session.query(Workspace)
             .join(WorkspaceRole)
             .filter(WorkspaceRole.user == user)
+            .filter(WorkspaceRole.status == WorkspaceRoleStatus.ACTIVE)
             .all()
         )
 
     @classmethod
-    def create_workspace_role(cls, user, role, workspace):
-        return WorkspaceRole(user=user, role=role, workspace=workspace)
+    def create_workspace_role(cls, user, role, workspace, **kwargs):
+        return WorkspaceRole(user=user, role=role, workspace=workspace, **kwargs)

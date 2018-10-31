@@ -3,11 +3,8 @@ from atst.domain.workspaces import Workspaces
 
 
 def test_user_with_workspaces_has_workspaces_nav(client, user_session):
-    user = UserFactory.create()
     workspace = WorkspaceFactory.create()
-    Workspaces._create_workspace_role(user, workspace, "developer")
-
-    user_session(user)
+    user_session(workspace.owner)
     response = client.get("/home", follow_redirects=True)
     assert b'href="/workspaces"' in response.data
 

@@ -6,8 +6,7 @@ from atst.domain.exceptions import UnauthorizedError
 class Authorization(object):
     @classmethod
     def has_workspace_permission(cls, user, workspace, permission):
-        workspace_user = WorkspaceUsers.get(workspace.id, user.id)
-        return permission in workspace_user.permissions()
+        return permission in WorkspaceUsers.workspace_user_permissions(workspace, user)
 
     @classmethod
     def has_atat_permission(cls, user, permission):

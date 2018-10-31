@@ -1,4 +1,4 @@
-from sqlalchemy import String, ForeignKey, Column, Date
+from sqlalchemy import String, ForeignKey, Column, Date, Boolean
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import UUID
 
@@ -25,6 +25,8 @@ class User(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     citizenship = Column(String)
     designation = Column(String)
     date_latest_training = Column(Date)
+
+    provisional = Column(Boolean)
 
     @property
     def atat_permissions(self):

@@ -101,6 +101,10 @@ def login_redirect():
     auth_context = _make_authentication_context()
     auth_context.authenticate()
     user = auth_context.get_user()
+
+    if user.provisional:
+        Users.finalize(user)
+
     session["user_id"] = user.id
 
     return redirect(redirect_after_login_url())

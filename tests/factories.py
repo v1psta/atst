@@ -18,8 +18,11 @@ from atst.models.user import User
 from atst.models.role import Role
 from atst.models.workspace import Workspace
 from atst.domain.roles import Roles
-from atst.models.workspace_role import WorkspaceRole
+from atst.models.workspace_role import WorkspaceRole, Status as WorkspaceRoleStatus
 from atst.models.environment_role import EnvironmentRole
+from atst.models.invitation import Invitation, Status as InvitationStatus
+from atst.domain.workspaces import Workspaces
+from atst.domain.invitations import Invitations
 
 
 class Base(factory.alchemy.SQLAlchemyModelFactory):
@@ -243,7 +246,7 @@ class WorkspaceFactory(Base):
     @classmethod
     def _create(cls, model_class, *args, **kwargs):
         with_projects = kwargs.pop("projects", [])
-        owner = kwargs.pop("owner", None)
+        owner = kwargs.pop("owner", UserFactory.create())
         members = kwargs.pop("members", [])
 
         workspace = super()._create(model_class, *args, **kwargs)
@@ -252,17 +255,22 @@ class WorkspaceFactory(Base):
             ProjectFactory.create(workspace=workspace, **p) for p in with_projects
         ]
 
-        if owner:
-            workspace.request.creator = owner
-            WorkspaceRoleFactory.create(
-                workspace=workspace, role=Roles.get("owner"), user=owner
-            )
+        workspace.request.creator = owner
+        WorkspaceRoleFactory.create(
+            workspace=workspace,
+            role=Roles.get("owner"),
+            user=owner,
+            status=WorkspaceRoleStatus.ACTIVE,
+        )
 
         for member in members:
             user = member.get("user", UserFactory.create())
             role_name = member["role_name"]
             WorkspaceRoleFactory.create(
-                workspace=workspace, role=Roles.get(role_name), user=user
+                workspace=workspace,
+                role=Roles.get(role_name),
+                user=user,
+                status=WorkspaceRoleStatus.ACTIVE,
             )
 
         workspace.projects = projects
@@ -325,3 +333,11 @@ class EnvironmentRoleFactory(Base):
     environment = factory.SubFactory(EnvironmentFactory)
     role = factory.Faker("name")
     user = factory.SubFactory(UserFactory)
+
+
+class InvitationFactory(Base):
+    class Meta:
+        model = Invitation
+
+    status = InvitationStatus.PENDING
+    expiration_time = Invitations.current_expiration_time()

@@ -3,6 +3,7 @@ from atst.domain.authz import Authorization
 from atst.models.permissions import Permissions
 from atst.domain.users import Users
 from atst.domain.workspace_users import WorkspaceUsers
+from atst.models.workspace_role import Status as WorkspaceRoleStatus
 
 from .query import WorkspacesQuery
 from .scopes import ScopedWorkspace
@@ -13,7 +14,9 @@ class Workspaces(object):
     def create(cls, request, name=None):
         name = name or request.displayname
         workspace = WorkspacesQuery.create(request=request, name=name)
-        Workspaces._create_workspace_role(request.creator, workspace, "owner")
+        Workspaces._create_workspace_role(
+            request.creator, workspace, "owner", status=WorkspaceRoleStatus.ACTIVE
+        )
         WorkspacesQuery.add_and_commit(workspace)
         return workspace
 
@@ -86,6 +89,7 @@ class Workspaces(object):
             last_name=data["last_name"],
             email=data["email"],
             atat_role_name="default",
+            provisional=True,
         )
         return Workspaces.add_member(workspace, new_user, data["workspace_role"])
 
@@ -106,9 +110,13 @@ class Workspaces(object):
         return WorkspaceUsers.update_role(member, workspace.id, role_name)
 
     @classmethod
-    def _create_workspace_role(cls, user, workspace, role_name):
+    def _create_workspace_role(
+        cls, user, workspace, role_name, status=WorkspaceRoleStatus.PENDING
+    ):
         role = Roles.get(role_name)
-        workspace_role = WorkspacesQuery.create_workspace_role(user, role, workspace)
+        workspace_role = WorkspacesQuery.create_workspace_role(
+            user, role, workspace, status=status
+        )
         WorkspacesQuery.add_and_commit(workspace_role)
         return workspace_role
 

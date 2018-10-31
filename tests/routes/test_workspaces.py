@@ -1,20 +1,25 @@
 from flask import url_for
 
-from tests.factories import UserFactory, WorkspaceFactory
+from tests.factories import (
+    UserFactory,
+    WorkspaceFactory,
+    WorkspaceRoleFactory,
+    InvitationFactory,
+)
 from atst.domain.workspaces import Workspaces
 from atst.domain.workspace_users import WorkspaceUsers
 from atst.domain.projects import Projects
 from atst.domain.environments import Environments
 from atst.domain.environment_roles import EnvironmentRoles
 from atst.models.workspace_user import WorkspaceUser
+from atst.models.workspace_role import Status as WorkspaceRoleStatus
+from atst.models.invitation import Status as InvitationStatus
+from atst.queue import queue
 
 
 def test_user_with_permission_has_budget_report_link(client, user_session):
-    user = UserFactory.create()
     workspace = WorkspaceFactory.create()
-    Workspaces._create_workspace_role(user, workspace, "owner")
-
-    user_session(user)
+    user_session(workspace.owner)
     response = client.get("/workspaces/{}/projects".format(workspace.id))
     assert (
         'href="/workspaces/{}/reports"'.format(workspace.id).encode() in response.data
@@ -24,7 +29,9 @@ def test_user_with_permission_has_budget_report_link(client, user_session):
 def test_user_without_permission_has_no_budget_report_link(client, user_session):
     user = UserFactory.create()
     workspace = WorkspaceFactory.create()
-    Workspaces._create_workspace_role(user, workspace, "developer")
+    Workspaces._create_workspace_role(
+        user, workspace, "developer", status=WorkspaceRoleStatus.ACTIVE
+    )
     user_session(user)
     response = client.get("/workspaces/{}/projects".format(workspace.id))
     assert (
@@ -34,11 +41,8 @@ def test_user_without_permission_has_no_budget_report_link(client, user_session)
 
 
 def test_user_with_permission_has_add_project_link(client, user_session):
-    user = UserFactory.create()
     workspace = WorkspaceFactory.create()
-    Workspaces._create_workspace_role(user, workspace, "owner")
-
-    user_session(user)
+    user_session(workspace.owner)
     response = client.get("/workspaces/{}/projects".format(workspace.id))
     assert (
         'href="/workspaces/{}/projects/new"'.format(workspace.id).encode()
@@ -59,11 +63,8 @@ def test_user_without_permission_has_no_add_project_link(client, user_session):
 
 
 def test_user_with_permission_has_add_member_link(client, user_session):
-    user = UserFactory.create()
     workspace = WorkspaceFactory.create()
-    Workspaces._create_workspace_role(user, workspace, "owner")
-
-    user_session(user)
+    user_session(workspace.owner)
     response = client.get("/workspaces/{}/members".format(workspace.id))
     assert (
         'href="/workspaces/{}/members/new"'.format(workspace.id).encode()
@@ -84,10 +85,8 @@ def test_user_without_permission_has_no_add_member_link(client, user_session):
 
 
 def test_update_workspace_name(client, user_session):
-    user = UserFactory.create()
     workspace = WorkspaceFactory.create()
-    Workspaces._create_workspace_role(user, workspace, "admin")
-    user_session(user)
+    user_session(workspace.owner)
     response = client.post(
         url_for("workspaces.edit_workspace", workspace_id=workspace.id),
         data={"name": "a cool new name"},
@@ -98,17 +97,15 @@ def test_update_workspace_name(client, user_session):
 
 
 def test_view_edit_project(client, user_session):
-    owner = UserFactory.create()
     workspace = WorkspaceFactory.create()
-    Workspaces._create_workspace_role(owner, workspace, "admin")
     project = Projects.create(
-        owner,
+        workspace.owner,
         workspace,
         "Snazzy Project",
         "A new project for me and my friends",
         {"env1", "env2"},
     )
-    user_session(owner)
+    user_session(workspace.owner)
     response = client.get(
         "/workspaces/{}/projects/{}/edit".format(workspace.id, project.id)
     )
@@ -176,11 +173,11 @@ def test_user_without_permission_cannot_update_project(client, user_session):
 
 
 def test_create_member(client, user_session):
-    owner = UserFactory.create()
     user = UserFactory.create()
     workspace = WorkspaceFactory.create()
-    Workspaces._create_workspace_role(owner, workspace, "admin")
-    user_session(owner)
+    user_session(workspace.owner)
+    queue_length = len(queue.get_queue())
+
     response = client.post(
         url_for("workspaces.create_member", workspace_id=workspace.id),
         data={
@@ -195,6 +192,8 @@ def test_create_member(client, user_session):
 
     assert response.status_code == 200
     assert user.has_workspaces
+    assert user.invitations
+    assert len(queue.get_queue()) == queue_length + 1
 
 
 def test_permissions_for_view_member(client, user_session):
@@ -211,12 +210,10 @@ def test_permissions_for_view_member(client, user_session):
 
 
 def test_update_member_workspace_role(client, user_session):
-    owner = UserFactory.create()
     workspace = WorkspaceFactory.create()
-    Workspaces._create_workspace_role(owner, workspace, "admin")
     user = UserFactory.create()
     member = WorkspaceUsers.add(user, workspace.id, "developer")
-    user_session(owner)
+    user_session(workspace.owner)
     response = client.post(
         url_for(
             "workspaces.update_member", workspace_id=workspace.id, member_id=user.id
@@ -229,12 +226,10 @@ def test_update_member_workspace_role(client, user_session):
 
 
 def test_update_member_workspace_role_with_no_data(client, user_session):
-    owner = UserFactory.create()
     workspace = WorkspaceFactory.create()
-    Workspaces._create_workspace_role(owner, workspace, "admin")
     user = UserFactory.create()
     member = WorkspaceUsers.add(user, workspace.id, "developer")
-    user_session(owner)
+    user_session(workspace.owner)
     response = client.post(
         url_for(
             "workspaces.update_member", workspace_id=workspace.id, member_id=user.id
@@ -247,14 +242,11 @@ def test_update_member_workspace_role_with_no_data(client, user_session):
 
 
 def test_update_member_environment_role(client, user_session):
-    owner = UserFactory.create()
     workspace = WorkspaceFactory.create()
-    Workspaces._create_workspace_role(owner, workspace, "admin")
-
     user = UserFactory.create()
     member = WorkspaceUsers.add(user, workspace.id, "developer")
     project = Projects.create(
-        owner,
+        workspace.owner,
         workspace,
         "Snazzy Project",
         "A new project for me and my friends",
@@ -264,7 +256,7 @@ def test_update_member_environment_role(client, user_session):
     env2_id = project.environments[1].id
     for env in project.environments:
         Environments.add_member(env, user, "developer")
-    user_session(owner)
+    user_session(workspace.owner)
     response = client.post(
         url_for(
             "workspaces.update_member", workspace_id=workspace.id, member_id=user.id
@@ -282,14 +274,11 @@ def test_update_member_environment_role(client, user_session):
 
 
 def test_update_member_environment_role_with_no_data(client, user_session):
-    owner = UserFactory.create()
     workspace = WorkspaceFactory.create()
-    Workspaces._create_workspace_role(owner, workspace, "admin")
-
     user = UserFactory.create()
     member = WorkspaceUsers.add(user, workspace.id, "developer")
     project = Projects.create(
-        owner,
+        workspace.owner,
         workspace,
         "Snazzy Project",
         "A new project for me and my friends",
@@ -298,7 +287,7 @@ def test_update_member_environment_role_with_no_data(client, user_session):
     env1_id = project.environments[0].id
     for env in project.environments:
         Environments.add_member(env, user, "developer")
-    user_session(owner)
+    user_session(workspace.owner)
     response = client.post(
         url_for(
             "workspaces.update_member", workspace_id=workspace.id, member_id=user.id
@@ -308,3 +297,61 @@ def test_update_member_environment_role_with_no_data(client, user_session):
     )
     assert response.status_code == 200
     assert EnvironmentRoles.get(user.id, env1_id).role == "developer"
+
+
+def test_new_member_accepts_valid_invite(client, user_session):
+    workspace = WorkspaceFactory.create()
+    user = UserFactory.create()
+    ws_role = WorkspaceRoleFactory.create(
+        workspace=workspace, user=user, status=WorkspaceRoleStatus.PENDING
+    )
+    invite = InvitationFactory.create(user_id=user.id, workspace_role_id=ws_role.id)
+
+    # the user does not have access to the workspace before accepting the invite
+    assert len(Workspaces.for_user(user)) == 0
+
+    user_session(user)
+    response = client.get(url_for("workspaces.accept_invitation", token=invite.token))
+
+    # user is redirected to the workspace view
+    assert response.status_code == 302
+    assert (
+        url_for("workspaces.show_workspace", workspace_id=invite.workspace.id)
+        in response.headers["Location"]
+    )
+    # the one-time use invite is no longer usable
+    assert invite.is_accepted
+    # the user has access to the workspace
+    assert len(Workspaces.for_user(user)) == 1
+
+
+def test_new_member_accept_invalid_invite(client, user_session):
+    workspace = WorkspaceFactory.create()
+    user = UserFactory.create()
+    ws_role = WorkspaceRoleFactory.create(
+        user=user, workspace=workspace, status=WorkspaceRoleStatus.PENDING
+    )
+    invite = InvitationFactory.create(
+        user_id=user.id, workspace_role_id=ws_role.id, status=InvitationStatus.REJECTED
+    )
+    user_session(user)
+    response = client.get(url_for("workspaces.accept_invitation", token=invite.token))
+
+    assert response.status_code == 404
+
+
+def test_user_who_has_not_accepted_workspace_invite_cannot_view(client, user_session):
+    user = UserFactory.create()
+    workspace = WorkspaceFactory.create()
+
+    # create user in workspace with invitation
+    user_session(workspace.owner)
+    response = client.post(
+        url_for("workspaces.create_member", workspace_id=workspace.id),
+        data={"workspace_role": "developer", **user.to_dictionary()},
+    )
+
+    # user tries to view workspace before accepting invitation
+    user_session(user)
+    response = client.get("/workspaces/{}/projects".format(workspace.id))
+    assert response.status_code == 404

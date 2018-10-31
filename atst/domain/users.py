@@ -89,3 +89,12 @@ class Users(object):
         db.session.commit()
 
         return user
+
+    @classmethod
+    def finalize(cls, user):
+        user.provisional = False
+
+        db.session.add(user)
+        db.session.commit()
+
+        return user
