@@ -363,7 +363,7 @@ def update_member(workspace_id, member_id):
 def accept_invitation(token):
     # TODO: check that the current_user DOD ID matches the user associated with
     # the invitation
-    invite = Invitations.accept(token)
+    invite = Invitations.accept(g.current_user, token)
 
     return redirect(
         url_for("workspaces.show_workspace", workspace_id=invite.workspace.id)

@@ -3,7 +3,7 @@ from flask_wtf.csrf import CSRFError
 import werkzeug.exceptions as werkzeug_exceptions
 
 import atst.domain.exceptions as exceptions
-from atst.domain.invitations import InvitationError
+from atst.domain.invitations import InvitationError, WrongUserError as InvitationWrongUserError
 
 
 def make_error_pages(app):
@@ -43,12 +43,13 @@ def make_error_pages(app):
         )
 
     @app.errorhandler(InvitationError)
+    @app.errorhandler(InvitationWrongUserError)
     # pylint: disable=unused-variable
     def invalid_invitation(e):
         log_error(e)
         return (
             render_template(
-                "error.html", message="The invitation link you clicked is invalid."
+                "error.html", message="The link you followed is invalid."
             ),
             404,
         )

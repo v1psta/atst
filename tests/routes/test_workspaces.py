@@ -355,3 +355,19 @@ def test_user_who_has_not_accepted_workspace_invite_cannot_view(client, user_ses
     user_session(user)
     response = client.get("/workspaces/{}/projects".format(workspace.id))
     assert response.status_code == 404
+
+
+def test_user_accepts_invite_with_wrong_dod_id(client, user_session):
+    workspace = WorkspaceFactory.create()
+    user = UserFactory.create()
+    different_user = UserFactory.create()
+    ws_role = WorkspaceRoleFactory.create(
+        user=user, workspace=workspace, status=WorkspaceRoleStatus.PENDING
+    )
+    invite = InvitationFactory.create(
+        user_id=user.id, workspace_role_id=ws_role.id
+    )
+    user_session(different_user)
+    response = client.get(url_for("workspaces.accept_invitation", token=invite.token))
+
+    assert response.status_code == 404

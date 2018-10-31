@@ -8,6 +8,15 @@ from atst.domain.workspace_users import WorkspaceUsers
 from .exceptions import NotFoundError
 
 
+class WrongUserError(Exception):
+    def __init__(self, user, invite):
+        self.user = user
+        self.invite = invite
+
+    @property
+    def message(self):
+        return "User {} with DOD ID {} does not match expected DOD ID {} for invitation {}".format(self.user.id, self.user.dod_id, self.invite.user.dod_id, self.invite.id)
+
 class InvitationError(Exception):
     def __init__(self, invite):
         self.invite = invite
@@ -45,8 +54,11 @@ class Invitations(object):
         return invite
 
     @classmethod
-    def accept(cls, token):
+    def accept(cls, user, token):
         invite = Invitations._get(token)
+
+        if invite.user.dod_id != user.dod_id:
+            raise WrongUserError(user, invite)
 
         if invite.is_expired:
             invite.status = InvitationStatus.REJECTED
