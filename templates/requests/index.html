@@ -5,7 +5,7 @@
 {% from "components/empty_state.html" import EmptyState %}
 
 {% block content %}
-  <requests-list inline-template v-bind:initial-data='{{ requests | tojson }}' v-bind:is-extended="{{ extended_view | boolean }}">
+  <requests-list inline-template v-bind:requests='{{ requests | tojson }}' v-bind:is-extended='{{ extended_view | tojson }}' v-bind:statuses='{{ possible_statuses | tojson }}'>
     <div>
 
   {% call Modal(name='pendingFinancialVerification', dismissable=True) %}
@@ -91,9 +91,7 @@
           <select v-model="statusValue" id="filter-status" name="filter-status">
             <option value="" selected disabled>Filter by status</option>
             <option value="">All</option>
-            <option value="active">Active</option>
-            <option value="pending">Pending</option>
-            <option value="denied">Denied</option>
+            <option v-for="status in statuses" :value="status">!{ status }</option>
           </select>
         </div>
       </form>

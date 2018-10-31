@@ -237,10 +237,6 @@ class Request(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
             else None
         )
 
-    @property
-    def simple_status(self):
-        return self.latest_status.simple_name
-
     def __repr__(self):
         return "<Request(status='{}', name='{}', creator='{}', is_approved='{}', time_created='{}', id='{}')>".format(
             self.status_displayname,

@@ -13,7 +13,7 @@ export default {
     },
 
     props: {
-      initialData: {
+      requests: {
         type: Array,
         default: [],
       },
@@ -21,12 +21,14 @@ export default {
         type: Boolean,
         default: false,
       },
+      statuses: {
+        type: Array,
+        default: [],
+      },
     },
 
     data: function () {
-      const requests = this.initialData
       return {
-        requests,
         searchValue: '',
         statusValue: '',
       }
@@ -52,7 +54,7 @@ export default {
       applyFilters: (requests, status) => {
         return requests.filter(
           (request) => status !== '' ?
-            request.simple_status.toLowerCase() === status :
+            request.status === status :
             true
         )
       },

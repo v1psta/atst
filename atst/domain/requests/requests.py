@@ -207,3 +207,7 @@ class Requests(object):
         comment = RequestInternalComment(request=request, text=comment_text, user=user)
         RequestsQuery.add_and_commit(comment)
         return request
+
+    @classmethod
+    def possible_statuses(cls):
+        return [s[1].value for s in RequestStatus.__members__.items()]

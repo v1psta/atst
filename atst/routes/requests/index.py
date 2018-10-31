@@ -15,10 +15,15 @@ class RequestsIndex(object):
             Permissions.REVIEW_AND_APPROVE_JEDI_WORKSPACE_REQUEST
             in self.user.atat_permissions
         ):
-            return self._ccpo_view(self.user)
+            context = self._ccpo_view(self.user)
 
         else:
-            return self._non_ccpo_view(self.user)
+            context = self._non_ccpo_view(self.user)
+
+        return {
+            **context,
+            "possible_statuses": Requests.possible_statuses(),
+        }
 
     def _ccpo_view(self, user):
         requests = Requests.get_many()
@@ -77,7 +82,6 @@ class RequestsIndex(object):
             "is_new": is_new,
             "is_approved": request.is_approved,
             "status": request.status_displayname,
-            "simple_status": request.simple_status,
             "app_count": app_count,
             "last_submission_timestamp": request.last_submission_timestamp,
             "last_edited_timestamp": request.latest_revision.time_updated,
