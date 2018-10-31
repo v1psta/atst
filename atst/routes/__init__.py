@@ -2,6 +2,7 @@ import urllib.parse as url
 from flask import Blueprint, render_template, g, redirect, session, url_for, request
 
 from flask import current_app as app
+from jinja2.exceptions import TemplateNotFound
 import pendulum
 import os
 
@@ -10,6 +11,7 @@ from atst.domain.users import Users
 from atst.domain.authnid import AuthenticationContext
 from atst.domain.audit_log import AuditLog
 from atst.domain.auth import logout as _logout
+from werkzeug.exceptions import NotFound
 
 
 bp = Blueprint("atst", __name__)
@@ -77,7 +79,10 @@ def styleguide():
 
 @bp.route("/<path:path>")
 def catch_all(path):
-    return render_template("{}.html".format(path))
+    try:
+        return render_template("{}.html".format(path))
+    except TemplateNotFound:
+        raise NotFound()
 
 
 def _make_authentication_context():

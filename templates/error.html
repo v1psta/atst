@@ -10,6 +10,10 @@
     <h1>An error occurred.</h1>
 {% endif %}
 
+{% if g.current_user %}
+  <p>Return <a href="{{ url_for("atst.home") }}">home</a>.</p>
+{% endif %}
+
 </main>
 
 {% endblock %}
