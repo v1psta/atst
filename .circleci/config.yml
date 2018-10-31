@@ -206,6 +206,9 @@ workflows:
       - build_and_push_image:
           requires:
             - test
+          filters:
+            branches:
+              only: master
       - deploy:
           requires:
             - build_and_push_image
