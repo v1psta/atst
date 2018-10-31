@@ -25,7 +25,7 @@ class User(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     citizenship = Column(String)
     designation = Column(String)
     date_latest_training = Column(Date)
-    
+
     provisional = Column(Boolean)
 
     REQUIRED_FIELDS = [
