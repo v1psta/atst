@@ -20,10 +20,7 @@ USER_FIELDS = {
         description="Enter your preferred contact e-mail address",
         validators=[Email()],
     ),
-    "phone_number": TelField(
-        "Phone Number",
-        validators=[PhoneNumber()],
-    ),
+    "phone_number": TelField("Phone Number", validators=[PhoneNumber()]),
     "phone_ext": StringField("Extension"),
     "service_branch": SelectField(
         "Service Branch or Agency",
