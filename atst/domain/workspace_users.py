@@ -1,7 +1,7 @@
 from sqlalchemy.orm.exc import NoResultFound
 
 from atst.database import db
-from atst.models.workspace_role import WorkspaceRole
+from atst.models.workspace_role import WorkspaceRole, Status as WorkspaceRoleStatus
 from atst.models.workspace_user import WorkspaceUser
 from atst.models.user import User
 
@@ -29,6 +29,30 @@ class WorkspaceUsers(object):
             workspace_role = None
 
         return WorkspaceUser(user, workspace_role)
+
+    @classmethod
+    def _get_active_workspace_role(cls, workspace_id, user_id):
+        try:
+            return (
+                db.session.query(WorkspaceRole)
+                .join(User)
+                .filter(User.id == user_id, WorkspaceRole.workspace_id == workspace_id)
+                .filter(WorkspaceRole.status == WorkspaceRoleStatus.ACTIVE)
+                .one()
+            )
+        except NoResultFound:
+            return None
+
+    @classmethod
+    def workspace_user_permissions(cls, workspace, user):
+        workspace_role = WorkspaceUsers._get_active_workspace_role(
+            workspace.id, user.id
+        )
+        atat_permissions = set(user.atat_role.permissions)
+        workspace_permissions = (
+            [] if workspace_role is None else workspace_role.role.permissions
+        )
+        return set(workspace_permissions).union(atat_permissions)
 
     @classmethod
     def _get_workspace_role(cls, user, workspace_id):
@@ -123,3 +147,10 @@ class WorkspaceUsers(object):
         db.session.commit()
 
         return workspace_users
+
+    @classmethod
+    def enable(cls, workspace_role):
+        workspace_role.status = WorkspaceRoleStatus.ACTIVE
+
+        db.session.add(workspace_role)
+        db.session.commit()
