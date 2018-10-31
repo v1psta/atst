@@ -8,7 +8,7 @@ kind: Role
 apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
   namespace: atat
-  name: travis-deploy-role
+  name: atst-deploy-role
 rules:
 - apiGroups: ["extensions", "apps"]
   resources: ["deployments"]
@@ -26,7 +26,7 @@ rules:
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
-  name: travis-role-binding
+  name: atst-role-binding
   namespace: atat
 subjects:
 - kind: ServiceAccount
@@ -34,5 +34,5 @@ subjects:
   namespace: atat
 roleRef:
   kind: Role
-  name: travis-deploy-role
+  name: atst-deploy-role
   apiGroup: rbac.authorization.k8s.io

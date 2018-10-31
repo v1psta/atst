@@ -28,7 +28,7 @@ trap cleanup EXIT
 echo "${K8S_CA_CRT}" | base64 -d - > "${HOME}/k8s_ca.crt"
 
 # Setup the local kubectl client
-kubectl config set-context travis \
+kubectl config set-context atst-deployer \
     --cluster=atat-cluster \
     --user=atat-deployer \
     --namespace=atat
@@ -40,7 +40,7 @@ kubectl config set-cluster atat-cluster \
 
 kubectl config set-credentials atat-deployer --token="$(echo ${K8S_USER_TOKEN} | base64 -d -)"
 
-kubectl config use-context travis
+kubectl config use-context atst-deployer
 kubectl config current-context
 
 # Update the ATST deployment
