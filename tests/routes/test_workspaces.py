@@ -327,7 +327,7 @@ def test_existing_member_accepts_valid_invite(client, user_session):
     assert len(Workspaces.for_user(user)) == 1
 
 
-def test_new_member_accepts_valid_invite(client, user_session):
+def test_new_member_accepts_valid_invite(monkeypatch, client, user_session):
     workspace = WorkspaceFactory.create()
     user_info = UserFactory.dictionary()
 
@@ -340,6 +340,9 @@ def test_new_member_accepts_valid_invite(client, user_session):
     user = Users.get_by_dod_id(user_info["dod_id"])
     token = user.invitations[0].token
 
+    monkeypatch.setattr(
+        "atst.domain.auth.should_redirect_to_user_profile", lambda *args: False
+    )
     user_session(user)
     response = client.get(url_for("workspaces.accept_invitation", token=token))
 
