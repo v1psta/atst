@@ -47,6 +47,12 @@ export default {
     unmask: ['(',')','-',' '],
     validationError: 'Please enter a 10-digit phone number'
   },
+  phoneExt: {
+    mask: [/\w/, /\w/, /\w/, /\w/, /\w/, /\w/, /\w/, /\w/, /\w/, /\w/],
+    match: /^\w*$/,
+    unmask: [],
+    validationError: 'Optional: Please enter up to 10 characters'
+  },
   dodId: {
     mask: createNumberMask({ prefix: '', allowDecimal: false, includeThousandsSeparator: false }),
     match: /^\d{10}$/,

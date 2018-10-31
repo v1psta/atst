@@ -6,7 +6,7 @@
         {{ TextInput(phone_number, placeholder=placeholder_phone, validation='usPhone') }}
       </div>
       <div class='phone-input__extension'>
-        {{ TextInput(phone_ext)}}
+        {{ TextInput(phone_ext, validation='phoneExt')}}
       </div>
   </div>
 {%- endmacro %}
