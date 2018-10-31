@@ -102,8 +102,8 @@
       <table>
         <thead>
           <tr>
-            <th v-for="column in getColumns()"scope="col">
-              <a @click.prevent="updateSortValue(column.attr)" href="">!{ column.displayName }</a>
+            <th @click.prevent="updateSortValue(column.attr)" v-for="column in getColumns()"scope="col">
+              !{ column.displayName }
               <span v-if="column.attr === sort.columnName && sort.isAscending" class="icon icon--caret_up" aria-idden="true">
                 {{ Icon("caret_down") }}
               </span>

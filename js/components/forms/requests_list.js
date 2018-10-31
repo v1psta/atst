@@ -133,9 +133,13 @@ export default {
       },
       dollars: (value) => formatDollars(value, false),
       updateSortValue: function(columnName) {
+        if (!this.isExtended) { return }
+
+        // toggle ascending / descending if column is clicked twice
         if (columnName === this.sort.columnName) {
           this.sort.isAscending = !this.sort.isAscending
         }
+
         this.sort.columnName = columnName;
       },
     },
