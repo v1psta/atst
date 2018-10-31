@@ -122,6 +122,17 @@ def test_update_fv_extended(fv_data, e_fv_data):
     assert update_fv.execute()
 
 
+def test_update_fv_extended_does_not_validate_task_order(fv_data, e_fv_data):
+    request = RequestFactory.create()
+    user = UserFactory.create()
+    data = {**fv_data, **e_fv_data, "task_order-number": "abc123"}
+    update_fv = UpdateFinancialVerification(
+        TrueValidator, TaskOrderNumberValidator(), user, request, data, is_extended=True
+    )
+
+    assert update_fv.execute()
+
+
 def test_update_fv_missing_extended_data(fv_data):
     request = RequestFactory.create()
     user = UserFactory.create()
