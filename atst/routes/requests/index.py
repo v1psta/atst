@@ -20,10 +20,7 @@ class RequestsIndex(object):
         else:
             context = self._non_ccpo_view(self.user)
 
-        return {
-            **context,
-            "possible_statuses": Requests.possible_statuses(),
-        }
+        return {**context, "possible_statuses": Requests.possible_statuses()}
 
     def _ccpo_view(self, user):
         requests = Requests.get_many()
