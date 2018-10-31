@@ -52,15 +52,14 @@
     <div class='usa-input search-input'>
       <label for='members-search'>Search members by name</label>
       <input v-model='searchValue' type='search' id='members-search' name='members-search' placeholder="Search by name"/>
-      <button v-if='searchValue' type="button" @click='search'>
-        <span class="hide">Search</span>
-      </button>
+      <button type="button"></button>
     </div>
 
     <div class='usa-input filter-input'>
       <label for='filter-status'>Filter members by status</label>
       <select v-model="status" id="filter-status" name="filter-status">
-        <option value="" selected>Filter by status</option>
+        <option value="" selected disabled>Filter by status</option>
+        <option value="all">View All</option>
         <option value="active">Active</option>
         <option value="pending">Pending</option>
         <option value="denied">Denied</option>
@@ -70,7 +69,8 @@
     <div class='usa-input filter-input'>
       <label for='filter-role'>Filter members by role</label>
       <select v-model="role" id="filter-role" name="filter-role">
-        <option value="" selected>Filter by role</option>
+        <option value="" selected disabled>Filter by role</option>
+        <option value="all">View All</option>
         <option value="administrator">Administrator</option>
         <option value="ccpo">CCPO</option>
         <option value="developer">Developer</option>
