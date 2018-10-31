@@ -164,19 +164,12 @@ class DetailsOfUseForm(ValidatedForm):
 
 class InformationAboutYouForm(ValidatedForm):
     fname_request = inherit_field(USER_FIELDS["first_name"])
-
     lname_request = inherit_field(USER_FIELDS["last_name"])
-
-    email_request = EmailField("E-mail Address", validators=[InputRequired(), Email()])
-
+    email_request = inherit_field(USER_FIELDS["email"])
     phone_number = inherit_field(USER_FIELDS["phone_number"])
-
     service_branch = inherit_field(USER_FIELDS["service_branch"])
-
     citizenship = inherit_field(USER_FIELDS["citizenship"])
-
     designation = inherit_field(USER_FIELDS["designation"])
-
     date_latest_training = inherit_field(USER_FIELDS["date_latest_training"])
 
 

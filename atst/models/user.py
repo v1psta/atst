@@ -28,6 +28,27 @@ class User(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
 
     provisional = Column(Boolean)
 
+    REQUIRED_FIELDS = [
+        "email",
+        "dod_id",
+        "first_name",
+        "last_name",
+        "phone_number",
+        "service_branch",
+        "citizenship",
+        "designation",
+        "date_latest_training",
+    ]
+
+    @property
+    def profile_complete(self):
+        return all(
+            [
+                getattr(self, field_name) is not None
+                for field_name in self.REQUIRED_FIELDS
+            ]
+        )
+
     @property
     def atat_permissions(self):
         return self.atat_role.permissions

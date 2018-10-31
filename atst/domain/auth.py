@@ -7,6 +7,7 @@ UNPROTECTED_ROUTES = [
     "atst.root",
     "dev.login_dev",
     "atst.login_redirect",
+    "atst.logout",
     "atst.unauthorized",
     "atst.helpdocs",
     "static",
@@ -21,8 +22,24 @@ def apply_authentication(app):
         user = get_current_user()
         if user:
             g.current_user = user
+            if should_redirect_to_user_profile(request, user):
+                return redirect(url_for("users.user", next=request.path))
         elif not _unprotected_route(request):
             return redirect(url_for("atst.root", next=request.path))
+
+
+def should_redirect_to_user_profile(request, user):
+    has_complete_profile = user.profile_complete
+    is_unprotected_route = _unprotected_route(request)
+    is_requesting_user_endpoint = request.endpoint in [
+        "users.user",
+        "users.update_user",
+    ]
+
+    if has_complete_profile or is_unprotected_route or is_requesting_user_endpoint:
+        return False
+
+    return True
 
 
 def get_current_user():
