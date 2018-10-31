@@ -32,12 +32,3 @@ class WorkspacesQuery(Query):
     @classmethod
     def create_workspace_role(cls, user, role, workspace, **kwargs):
         return WorkspaceRole(user=user, role=role, workspace=workspace, **kwargs)
-
-    @classmethod
-    def get_role_for_workspace_and_user(cls, workspace, user):
-        return (
-            db.session.query(WorkspaceRole)
-            .filter(WorkspaceRole.user == user)
-            .filter(WorkspaceRole.workspace == workspace)
-            .one()
-        )

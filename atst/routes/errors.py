@@ -44,7 +44,7 @@ def make_error_pages(app):
 
     @app.errorhandler(InvitationError)
     # pylint: disable=unused-variable
-    def expired_invitation(e):
+    def invalid_invitation(e):
         log_error(e)
         return (
             render_template(

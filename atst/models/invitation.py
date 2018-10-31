@@ -41,8 +41,8 @@ class Invitation(Base, TimestampsMixin, AuditableMixin):
     token = Column(String(), index=True, default=lambda: secrets.token_urlsafe())
 
     def __repr__(self):
-        return "<Invitation(user='{}', workspace='{}', id='{}')>".format(
-            self.user.id, self.workspace.id, self.id
+        return "<Invitation(user='{}', workspace_role='{}', id='{}')>".format(
+            self.user_id, self.workspace_role_id, self.id
         )
 
     @property
