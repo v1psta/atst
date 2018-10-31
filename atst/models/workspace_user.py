@@ -35,7 +35,7 @@ class WorkspaceUser(object):
 
     @property
     def status(self):
-        return "active"
+        return self.workspace_role.display_status
 
     @property
     def num_environment_roles(self):

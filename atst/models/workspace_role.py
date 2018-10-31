@@ -36,6 +36,18 @@ class WorkspaceRole(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
             self.role.name, self.workspace.name, self.user_id, self.id
         )
 
+    @property
+    def display_status(self):
+        if self.status == Status.ACTIVE:
+            return "Active"
+        else:
+            if any(i.is_expired for i in self.invitations):
+                return "Invitation Expired"
+            elif any(i.is_rejected for i in self.invitations):
+                return "Invitation Rejected"
+            else:
+                return "Pending"
+
 
 Index(
     "workspace_role_user_workspace",
