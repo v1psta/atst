@@ -46,7 +46,7 @@
 {% endif %}
 
 
-<members-list inline-template id="search-template" v-bind:members='{{ members | tojson}}'>
+<members-list inline-template id="search-template" v-bind:members='{{ members | tojson}}' v-bind:choices='{{ choices | tojson}}'>
   <div>
   <form class='search-bar' @submit.prevent>
     <div class='usa-input search-input'>
