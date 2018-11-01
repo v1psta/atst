@@ -6,13 +6,11 @@ from atst.domain.requests import Requests
 from atst.domain.requests.authorization import RequestsAuthorization
 from atst.models.request import Request
 from atst.models.request_status_event import RequestStatus
-from atst.models.task_order import Source as TaskOrderSource
 
 from tests.factories import (
     RequestFactory,
     UserFactory,
     RequestStatusEventFactory,
-    TaskOrderFactory,
     RequestRevisionFactory,
     RequestReviewFactory,
 )
@@ -222,3 +220,44 @@ def test_random_user_cannot_view_request():
     request = RequestFactory.create()
 
     assert not RequestsAuthorization(user, request).can_view
+
+
+class TestStatusNotifications(object):
+    def _assert_job(self, queue, request):
+        assert len(queue.get_queue()) == 1
+        job = queue.get_queue().jobs[0]
+        assert job.func == queue._send_mail
+        assert job.args[0] == [request.creator.email]
+
+    def test_pending_finver_triggers_notification(self, queue):
+        request = RequestFactory.create()
+        request = Requests.set_status(request, RequestStatus.PENDING_CCPO_ACCEPTANCE)
+        request = Requests.set_status(
+            request, RequestStatus.PENDING_FINANCIAL_VERIFICATION
+        )
+        self._assert_job(queue, request)
+
+    def test_changes_requested_triggers_notification(self, queue):
+        request = RequestFactory.create()
+        request = Requests.set_status(request, RequestStatus.PENDING_CCPO_ACCEPTANCE)
+        request = Requests.set_status(request, RequestStatus.CHANGES_REQUESTED)
+        self._assert_job(queue, request)
+
+    def test_changes_requested_to_finver_triggers_notification(self, queue):
+        request = RequestFactory.create()
+        request = Requests.set_status(request, RequestStatus.PENDING_CCPO_APPROVAL)
+        request = Requests.set_status(
+            request, RequestStatus.CHANGES_REQUESTED_TO_FINVER
+        )
+        self._assert_job(queue, request)
+
+    def test_approval_triggers_notification(self, queue):
+        request = RequestFactory.create()
+        request = Requests.set_status(request, RequestStatus.PENDING_CCPO_APPROVAL)
+        request = Requests.set_status(request, RequestStatus.APPROVED)
+        self._assert_job(queue, request)
+
+    def test_submitted_does_not_trigger_notification(self, queue):
+        request = RequestFactory.create()
+        request = Requests.set_status(request, RequestStatus.SUBMITTED)
+        assert len(queue.get_queue()) == 0

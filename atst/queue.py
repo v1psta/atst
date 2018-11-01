@@ -27,8 +27,8 @@ class ATSTQueue(RQ):
     # pylint: disable=pointless-string-statement
     """Instance methods to queue up application-specific jobs."""
 
-    def send_mail(self, to, subject, body):
-        self._queue_job(ATSTQueue._send_mail, to, subject, body)
+    def send_mail(self, recipients, subject, body):
+        self._queue_job(ATSTQueue._send_mail, recipients, subject, body)
 
     # pylint: disable=pointless-string-statement
     """Class methods to actually perform the work.
@@ -38,8 +38,8 @@ class ATSTQueue(RQ):
     """
 
     @classmethod
-    def _send_mail(self, to, subject, body):
-        app.mailer.send(to, subject, body)
+    def _send_mail(self, recipients, subject, body):
+        app.mailer.send(recipients, subject, body)
 
 
 queue = ATSTQueue()

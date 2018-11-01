@@ -9,8 +9,7 @@ from tempfile import TemporaryDirectory
 
 from atst.app import make_app, make_config
 from atst.database import db as _db
-from atst.domain.auth import logout
-from atst.queue import queue
+from atst.queue import queue as atst_queue
 import tests.factories as factories
 from tests.mocks import PDF_FILENAME
 
@@ -136,3 +135,9 @@ def extended_financial_verification_data(pdf_upload):
         "clin_2003": "7000",
         "task_order": pdf_upload,
     }
+
+
+@pytest.fixture(scope="function", autouse=True)
+def queue():
+    yield atst_queue
+    atst_queue.get_queue().empty()

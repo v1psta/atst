@@ -29,3 +29,7 @@ class Authorization(object):
     @classmethod
     def can_view_audit_log(cls, user):
         return Authorization.has_atat_permission(user, Permissions.VIEW_AUDIT_LOG)
+
+    @classmethod
+    def is_ccpo(cls, user):
+        return user.atat_role.name == "ccpo"

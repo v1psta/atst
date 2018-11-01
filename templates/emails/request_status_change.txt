@@ -1,0 +1,5 @@
+Your JEDI request status has changed
+
+The status of your JEDI Cloud request - {{ request.displayname }} - was recently updated. Log in to see whether this change requires an action or response from you.
+
+{{ url_for('requests.edit', request_id=request.id, _external=True) }}
