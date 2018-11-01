@@ -3,6 +3,7 @@
 {% from "components/alert.html" import Alert %}
 {% from "components/modal.html" import Modal %}
 {% from "components/empty_state.html" import EmptyState %}
+{% from "components/icon.html" import Icon %}
 
 {% block content %}
 
@@ -36,6 +37,9 @@
     </div>
   {% endcall %}
 
+  <requests-list inline-template v-bind:requests='{{ requests | tojson }}' v-bind:is-extended='{{ extended_view | tojson }}' v-bind:statuses='{{ possible_statuses | tojson }}'>
+    <div>
+
 {% if num_action_required %}
   {% set title -%}
     Action required on {{ num_action_required }} requests.
@@ -55,7 +59,6 @@
   ) }}
 
 {% else %}
-
   {% if extended_view %}
     <div class="row kpi">
       <div class="kpi__item col col--grow">
@@ -76,22 +79,21 @@
   <div class="col col--grow">
 
     {% if extended_view %}
-      <form class='search-bar'>
+      <form @submit.prevent class='search-bar'>
         <div class='usa-input search-input'>
-          <label for='requests-search'>Search requests by Order ID</label>
-          <input type='search' id='requests-search' name='requests-search' placeholder="Search by Order ID"/>
-          <button type="submit">
+          <label for='requests-search'>Search requests by name</label>
+          <input v-model='searchValue' type='search' id='requests-search' name='requests-search' placeholder="Search by name"/>
+          <button>
             <span class="hide">Search</span>
           </button>
         </div>
 
         <div class='usa-input'>
           <label for='filter-status'>Filter requests by status</label>
-          <select id="filter-status" name="filter-status">
+          <select v-model="statusValue" id="filter-status" name="filter-status">
             <option value="" selected disabled>Filter by status</option>
-            <option value="">Active</option>
-            <option value="">Pending</option>
-            <option value="">Denied</option>
+            <option value="">All</option>
+            <option v-for="status in statuses" :value="status">!{ status }</option>
           </select>
         </div>
       </form>
@@ -101,52 +103,49 @@
       <table>
         <thead>
           <tr>
-            <th scope="col">JEDI Cloud Request Name</th>
-            <th scope="col">Date Request Submitted</th>
-            {% if extended_view %}
-              <th scope="col">Date Request Last Edited</th>
-              <th scope="col">Requester</th>
-            {% endif %}
-            <th scope="col">Projected Annual Usage ($)</th>
-            <th scope="col">Request Status</th>
-            {% if extended_view %}
-              <th scope="col">DOD Component</th>
-            {% endif %}
+            <th @click.prevent="updateSortValue(column.attr)" v-for="column in getColumns()"scope="col">
+              !{ column.displayName }
+              <span v-if="column.attr === sort.columnName && sort.isAscending">
+                {{ Icon("caret_down") }}
+              </span>
+              <span v-else-if="column.attr === sort.columnName && !sort.isAscending">
+                {{ Icon("caret_up") }}
+              </span>
+            </th>
           </tr>
         </thead>
-        <tbody>
-          {% for r in requests %}
+        <tbody v-for="r in filteredRequests">
           <tr>
             <th scope="row">
-              <a class='icon-link icon-link--large' href="{{ r.edit_link }}">{{ r.name }}</a>
-              {% if r.action_required %}<span class="label label--info">Action Required</span>{% endif %}
+              <a class='icon-link icon-link--large' :href="r.edit_link">!{ r.name }</a>
+              <span v-if="r.action_required" class="label label--info">Action Required</span>
             </th>
-            <td>{{ r.last_submission_timestamp | formattedDate }}</td>
-            {% if extended_view %}
-              <td>{{ r.last_edited_timestamp | formattedDate }}</td>
-              <td>{{ r.full_name }}</td>
+            <td><local-datetime :timestamp="r.last_submission_timestamp" format="M/D/YYYY"></td>
+          {% if extended_view %}
+              <td><local-datetime :timestamp="r.last_edited_timestamp" format="M/D/YYYY"></td>
+              <td>!{ r.full_name }</td>
             {% endif %}
-            <td>{{ r.annual_usage | dollars }}</td>
+            <td>!{ dollars(r.annual_usage) }</td>
             <td>
-              {% if r.status == 'Approved' %}
-                <a class="icon-link icon-link--large" href="{{ url_for('workspaces.workspace_projects', workspace_id=r.workspace_id) }}">
-                  {{ r.status }}
-                </a>
-              {% else %}
-                {{ r.status }}
-              {% endif %}
+              <a v-if="r.is_approved" class="icon-link icon-link--large" :href="r.workspace_link">
+                !{ r.status }
+              </a>
+              <span v-else>
+                !{ r.status }
+              </span>
             </td>
             {% if extended_view %}
-              <td>{{ r.dod_component }}</td>
+              <td>!{ r.dod_component }</td>
             {% endif %}
           </tr>
-          {% endfor %}
         </tbody>
       </table>
     </div>
   </div>
-
 {% endif %}
+
+</div>
+</requests-list>
 
 {% endblock %}
 
