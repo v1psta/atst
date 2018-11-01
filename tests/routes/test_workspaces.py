@@ -363,7 +363,9 @@ def test_member_accepts_invalid_invite(client, user_session):
         user=user, workspace=workspace, status=WorkspaceRoleStatus.PENDING
     )
     invite = InvitationFactory.create(
-        user_id=user.id, workspace_role_id=ws_role.id, status=InvitationStatus.REJECTED
+        user_id=user.id,
+        workspace_role_id=ws_role.id,
+        status=InvitationStatus.REJECTED_WRONG_USER,
     )
     user_session(user)
     response = client.get(url_for("workspaces.accept_invitation", token=invite.token))
@@ -411,7 +413,7 @@ def test_user_accepts_expired_invite(client, user_session):
     invite = InvitationFactory.create(
         user_id=user.id,
         workspace_role_id=ws_role.id,
-        status=InvitationStatus.REJECTED,
+        status=InvitationStatus.REJECTED_EXPIRED,
         expiration_time=datetime.datetime.now() - datetime.timedelta(seconds=1),
     )
     user_session(user)

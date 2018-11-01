@@ -4,7 +4,7 @@ import secrets
 
 from sqlalchemy import Column, ForeignKey, Enum as SQLAEnum, TIMESTAMP, String
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, backref
 
 from atst.models import Base, types
 from atst.models.mixins.timestamps import TimestampsMixin
@@ -15,7 +15,8 @@ class Status(Enum):
     ACCEPTED = "accepted"
     REVOKED = "revoked"
     PENDING = "pending"
-    REJECTED = "rejected"
+    REJECTED_WRONG_USER = "rejected_wrong_user"
+    REJECTED_EXPIRED = "rejected_expired"
 
 
 class Invitation(Base, TimestampsMixin, AuditableMixin):
@@ -29,7 +30,10 @@ class Invitation(Base, TimestampsMixin, AuditableMixin):
     workspace_role_id = Column(
         UUID(as_uuid=True), ForeignKey("workspace_roles.id"), index=True
     )
-    workspace_role = relationship("WorkspaceRole", backref="invitations")
+    workspace_role = relationship(
+        "WorkspaceRole",
+        backref=backref("invitations", order_by="Invitation.time_created"),
+    )
 
     inviter_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), index=True)
     inviter = relationship("User", backref="sent_invites", foreign_keys=[inviter_id])
@@ -59,7 +63,15 @@ class Invitation(Base, TimestampsMixin, AuditableMixin):
 
     @property
     def is_rejected(self):
-        return self.status == Status.REJECTED
+        return self.status in [Status.REJECTED_WRONG_USER, Status.REJECTED_EXPIRED]
+
+    @property
+    def is_rejected_expired(self):
+        return self.status == Status.REJECTED_EXPIRED
+
+    @property
+    def is_rejected_wrong_user(self):
+        return self.status == Status.REJECTED_WRONG_USER
 
     @property
     def is_expired(self):

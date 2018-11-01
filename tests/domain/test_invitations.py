@@ -55,7 +55,7 @@ def test_accept_expired_invitation():
 
 def test_accept_rejected_invite():
     user = UserFactory.create()
-    invite = InvitationFactory.create(user_id=user.id, status=Status.REJECTED)
+    invite = InvitationFactory.create(user_id=user.id, status=Status.REJECTED_EXPIRED)
     with pytest.raises(InvitationError):
         Invitations.accept(user, invite.token)
 
