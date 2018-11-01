@@ -366,3 +366,24 @@ def accept_invitation(token):
     return redirect(
         url_for("workspaces.show_workspace", workspace_id=invite.workspace.id)
     )
+
+
+@bp.route("/workspaces/<workspace_id>/members/<member_id>/reinvite", methods=["POST"])
+def reinvite_member(workspace_id, member_id):
+    workspace = Workspaces.get(g.current_user, workspace_id)
+    Authorization.check_workspace_permission(
+        g.current_user,
+        workspace,
+        Permissions.ASSIGN_AND_UNASSIGN_ATAT_ROLE,
+        "reinvite user",
+    )
+    member = WorkspaceUsers.get(workspace_id, member_id)
+    invite = Invitations.recreate(member.workspace_role, g.current_user, member.user)
+    send_invite_email(g.current_user.full_name, invite.token, member.user.email)
+    return redirect(
+        url_for(
+            "workspaces.workspace_members",
+            workspace_id=workspace.id,
+            newMemberName=member.user_name,
+        )
+    )
