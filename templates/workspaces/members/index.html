@@ -2,6 +2,7 @@
 
 {% from "components/empty_state.html" import EmptyState %}
 {% from "components/alert.html" import Alert %}
+{% from "components/icon.html" import Icon %}
 
 {% block workspace_content %}
 
@@ -82,10 +83,15 @@
     <table v-if='searchedList && searchedList.length'>
       <thead>
         <tr>
-          <th @click="updateSort('Name')" scope="col" width="50%">Name</th>
-          <th @click="updateSort('Environments')" scope="col" class="table-cell--align-right">Environments</th>
-          <th @click="updateSort('Status')" scope="col">Status</th>
-          <th @click="updateSort('Workspace Role')" scope="col">Workspace Role</th>
+          <th v-for="col in getColumns()" @click="updateSort(col.displayName)" :width="col.width" :class="col.class" scope="col">
+            !{ col.displayName }
+            <span v-if="col.displayName === sortInfo.columnName && sortInfo.isAscending">
+              {{ Icon("caret_down") }}
+            </span>
+            <span v-if="col.displayName === sortInfo.columnName && !sortInfo.isAscending">
+              {{ Icon("caret_up") }}
+            </span>
+          </th>
         </tr>
       </thead>
 

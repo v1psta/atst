@@ -66,12 +66,14 @@ export default {
       {
         displayName: 'Name',
         attr: 'name',
-        sortFunc: alphabeticalSort
+        sortFunc: alphabeticalSort,
+        width: "50%"
       },
       {
         displayName: 'Environments',
         attr: 'num_env',
-        sortFunc: numericSort
+        sortFunc: numericSort,
+        class: "table-cell--align-right"
       },
       {
         displayName: 'Status',
@@ -118,5 +120,8 @@ export default {
 
       this.sortInfo.columnName = columnName
     },
+    getColumns: function() {
+      return Object.values(this.sortInfo.columns)
+    }
   }
 }
