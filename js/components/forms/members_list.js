@@ -1,3 +1,37 @@
+import { compose, filter, equals, indexBy, partial, prop, pipe } from 'ramda'
+
+const search = (query, members) => {
+  if (query === '' || query === 'all') {
+    return members
+  } else {
+    const normalizedQuery = query.toLowerCase()
+    return members.filter(
+      (member) => member.name.toLowerCase().includes(normalizedQuery)
+    )
+  }
+}
+
+const filterByStatus = (status, members) => {
+  if (status === '' || status === 'all') {
+    return members
+  } else {
+    return members.filter(
+      (member) => member.status === status
+    )
+  }
+}
+
+const filterByRole = (role, rolesByDisplayname, members) => {
+  const getRoleNameFromDisplayName = (_role) => rolesByDisplayname[_role].name
+
+  if (role === '' || role === 'all') {
+    return members
+  } else {
+    return members.filter(
+      (member) => getRoleNameFromDisplayName(member.role) === role
+    )
+  }
+}
 
 export default {
   name: 'members-list',
@@ -12,29 +46,17 @@ export default {
       searchValue: '',
       status: '',
       role: '',
+      rolesByDisplayName: indexBy(prop('display_name'), this.choices),
     }
   },
 
   computed: {
     searchedList: function () {
-      return this.members.filter(
-        member => this.status ?
-          member.status === this.status | this.status === 'all'
-          : true
-      ).filter(
-        member => this.role ? (
-          this.getRoleFromDisplayName(member.role) === this.role | this.role === 'all')
-          : true
-      ).filter(
-        member => this.searchValue ? member.name.toLowerCase()
-          .includes(this.searchValue.toLowerCase()) : true
-      )
+      return pipe(
+        partial(search, [this.searchValue]),
+        partial(filterByStatus, [this.status]),
+        partial(filterByRole, [this.role, this.rolesByDisplayName]),
+      )(this.members)
     }
-  },
-
-  methods: {
-    getRoleFromDisplayName: function (role) {
-      return this.choices.find(choice => choice.display_name === role).name
-    },
   },
 }
