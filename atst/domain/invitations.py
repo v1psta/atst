@@ -52,6 +52,17 @@ class Invitations(object):
         return invite
 
     @classmethod
+    def _get_all(cls, user, workspace_role):
+        try:
+            return (
+                db.session.query(Invitation)
+                .filter_by(user=user, workspace_role=workspace_role)
+                .all()
+            )
+        except NoResultFound:
+            return []
+
+    @classmethod
     def create(cls, workspace_role, inviter, user):
         invite = Invitation(
             workspace_role=workspace_role,
@@ -99,3 +110,12 @@ class Invitations(object):
         db.session.commit()
 
         return invite
+
+    @classmethod
+    def recreate(cls, workspace_role, inviter, user):
+        for invite in Invitations._get_all(user, workspace_role):
+            if invite.is_pending:
+                invite.status = InvitationStatus.REVOKED
+                db.session.add(invite)
+
+        return Invitations.create(workspace_role, inviter, user)
