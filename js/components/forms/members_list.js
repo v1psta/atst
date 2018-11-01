@@ -1,4 +1,4 @@
-import { compose, filter, equals, indexBy, partial, prop, pipe } from 'ramda'
+import { compose, sortBy, reverse, indexBy, partial, prop, pipe, toLower } from 'ramda'
 
 const search = (query, members) => {
   if (query === '' || query === 'all') {
@@ -33,6 +33,19 @@ const filterByRole = (role, rolesByDisplayname, members) => {
   }
 }
 
+const sort = (sortInfo, members) => {
+  if (sortInfo.columnName === '') {
+    return members
+  } else {
+    const sortColumn = sortInfo.columns[sortInfo.columnName]
+    const sortedMembers = sortColumn.sortFunc(sortColumn.attr, members)
+
+    return sortInfo.isAscending ?
+      sortedMembers :
+      reverse(sortedMembers)
+    }
+}
+
 export default {
   name: 'members-list',
 
@@ -42,11 +55,46 @@ export default {
   },
 
   data: function () {
+    const alphabeticalSort = (attr, members) => {
+      const lowercaseProp = compose(toLower, prop(attr))
+      return sortBy(lowercaseProp, members)
+    }
+
+    const numericSort = (attr, members) => sortBy(prop(attr), members)
+
+    const columns = [
+      {
+        displayName: 'Name',
+        attr: 'name',
+        sortFunc: alphabeticalSort
+      },
+      {
+        displayName: 'Environments',
+        attr: 'num_env',
+        sortFunc: numericSort
+      },
+      {
+        displayName: 'Status',
+        attr: 'status',
+        sortFunc: alphabeticalSort
+      },
+      {
+        displayName: 'Workspace Role',
+        attr: 'role',
+        sortFunc: alphabeticalSort
+      },
+    ]
+
     return {
       searchValue: '',
       status: '',
       role: '',
       rolesByDisplayName: indexBy(prop('display_name'), this.choices),
+      sortInfo: {
+        columnName: '',
+        isAscending: true,
+        columns: indexBy(prop('displayName'), columns)
+      },
     }
   },
 
@@ -56,7 +104,19 @@ export default {
         partial(search, [this.searchValue]),
         partial(filterByStatus, [this.status]),
         partial(filterByRole, [this.role, this.rolesByDisplayName]),
+        partial(sort, [this.sortInfo])
       )(this.members)
     }
   },
+
+  methods: {
+    updateSort: function(columnName) {
+      // clicking a column twice toggles ascending / descending
+      if (columnName === this.sortInfo.columnName) {
+        this.sortInfo.isAscending = !this.sortInfo.isAscending
+      }
+
+      this.sortInfo.columnName = columnName
+    },
+  }
 }

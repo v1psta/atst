@@ -82,10 +82,10 @@
     <table v-if='searchedList && searchedList.length'>
       <thead>
         <tr>
-          <th scope="col" width="50%">Name</th>
-          <th scope="col" class="table-cell--align-right">Environments</th>
-          <th scope="col">Status</th>
-          <th scope="col">Workspace Role</th>
+          <th @click="updateSort('Name')" scope="col" width="50%">Name</th>
+          <th @click="updateSort('Environments')" scope="col" class="table-cell--align-right">Environments</th>
+          <th @click="updateSort('Status')" scope="col">Status</th>
+          <th @click="updateSort('Workspace Role')" scope="col">Workspace Role</th>
         </tr>
       </thead>
 
