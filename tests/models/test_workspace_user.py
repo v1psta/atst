@@ -1,8 +1,9 @@
 from atst.domain.environments import Environments
 from atst.domain.workspaces import Workspaces
 from atst.domain.projects import Projects
-from atst.models.workspace_user import WorkspaceUser
-from tests.factories import RequestFactory, UserFactory
+from atst.domain.workspace_users import WorkspaceUsers
+from atst.models.invitation import Status
+from tests.factories import RequestFactory, UserFactory, InvitationFactory, WorkspaceRoleFactory
 
 
 def test_has_no_environment_roles():
@@ -54,3 +55,10 @@ def test_role_displayname():
     workspace_user = Workspaces.create_member(owner, workspace, developer_data)
 
     assert workspace_user.role_displayname == "Developer"
+
+
+def test_status_when_member_has_pending_invitation():
+    workspace_role = WorkspaceRoleFactory.create(
+        invitations=[InvitationFactory.create(status=Status.ACCEPTED)]
+    )
+    assert workspace_role.display_status == "Accepted"

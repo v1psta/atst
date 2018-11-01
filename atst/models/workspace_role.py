@@ -38,6 +38,7 @@ class WorkspaceRole(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
 
     @property
     def display_status(self):
+        import ipdb; ipdb.set_trace()
         if self.status == Status.ACTIVE:
             return "Active"
         else:
