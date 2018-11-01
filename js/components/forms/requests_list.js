@@ -1,4 +1,3 @@
-import Modal from '../../mixins/modal'
 import LocalDatetime from '../../components/local_datetime'
 import { formatDollars } from '../../lib/dollars'
 import { parse } from 'date-fns'
@@ -7,11 +6,8 @@ import { compose, partial, indexBy, prop, sortBy, reverse, pipe } from 'ramda'
 export default {
     name: 'requests-list',
 
-    mixins: [Modal],
-
     components: {
-      Modal,
-      LocalDatetime
+      LocalDatetime,
     },
 
     props: {
@@ -86,9 +82,6 @@ export default {
         },
         columns: indexBy(prop('attr'), columnList),
       }
-    },
-
-    mounted: function () {
     },
 
     computed: {
