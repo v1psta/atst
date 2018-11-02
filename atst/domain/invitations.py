@@ -71,11 +71,11 @@ class Invitations(object):
 
         if invite.user.dod_id != user.dod_id:
             if invite.is_pending:
-                Invitations._update_status(invite, InvitationStatus.REJECTED)
+                Invitations._update_status(invite, InvitationStatus.REJECTED_WRONG_USER)
             raise WrongUserError(user, invite)
 
         elif invite.is_expired:
-            Invitations._update_status(invite, InvitationStatus.REJECTED)
+            Invitations._update_status(invite, InvitationStatus.REJECTED_EXPIRED)
             raise ExpiredError(invite)
 
         elif invite.is_accepted or invite.is_revoked or invite.is_rejected:
