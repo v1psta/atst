@@ -403,6 +403,31 @@ def test_eda_task_order_does_trigger_approval(client, user_session, fv_data, e_f
     assert updated_request.status == RequestStatus.APPROVED
 
 
+def test_attachment_on_non_extended_form(client, user_session, fv_data, e_fv_data):
+    user = UserFactory.create()
+    request = RequestFactory.create(creator=user)
+    data = {
+        **fv_data,
+        **e_fv_data,
+        "task_order-number": MockEDAClient.MOCK_CONTRACT_NUMBER,
+        "request-pe_id": "0101228N",
+    }
+    user_session(user)
+    client.post(
+        url_for(
+            "requests.financial_verification", request_id=request.id, extended=True
+        ),
+        data=data,
+        follow_redirects=True,
+    )
+
+    response = client.get(
+        url_for("requests.financial_verification", request_id=request.id)
+    )
+
+    assert response.status_code == 200
+
+
 def test_task_order_number_persists_in_form(fv_data, e_fv_data):
     user = UserFactory.create()
     request = RequestFactory.create(creator=user)
