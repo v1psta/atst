@@ -1,4 +1,4 @@
-from atst.domain.workspace_users import WorkspaceUsers
+from atst.domain.workspace_roles import WorkspaceRoles
 from atst.models.permissions import Permissions
 from atst.domain.exceptions import UnauthorizedError
 
@@ -6,7 +6,7 @@ from atst.domain.exceptions import UnauthorizedError
 class Authorization(object):
     @classmethod
     def has_workspace_permission(cls, user, workspace, permission):
-        return permission in WorkspaceUsers.workspace_user_permissions(workspace, user)
+        return permission in WorkspaceRoles.workspace_role_permissions(workspace, user)
 
     @classmethod
     def has_atat_permission(cls, user, permission):

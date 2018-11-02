@@ -1,6 +1,6 @@
 from atst.domain.environments import Environments
 from atst.domain.environment_roles import EnvironmentRoles
-from atst.domain.workspace_users import WorkspaceUsers
+from atst.domain.workspace_roles import WorkspaceRoles
 
 from tests.factories import UserFactory, WorkspaceFactory
 
@@ -37,12 +37,12 @@ def test_update_environment_roles():
         {"id": staging_env.id, "role": "developer"},
     ]
 
-    workspace_user = workspace.members[0]
+    workspace_role = workspace.members[0]
     Environments.update_environment_roles(
-        owner, workspace, workspace_user, new_ids_and_roles
+        owner, workspace, workspace_role, new_ids_and_roles
     )
-    new_dev_env_role = EnvironmentRoles.get(workspace_user.user.id, dev_env.id)
-    staging_env_role = EnvironmentRoles.get(workspace_user.user.id, staging_env.id)
+    new_dev_env_role = EnvironmentRoles.get(workspace_role.user.id, dev_env.id)
+    staging_env_role = EnvironmentRoles.get(workspace_role.user.id, staging_env.id)
 
     assert new_dev_env_role.role == "billing_admin"
     assert staging_env_role.role == "developer"
@@ -88,12 +88,12 @@ def test_remove_environment_role():
         {"id": now_none, "role": None},
     ]
 
-    workspace_user = WorkspaceUsers.get(workspace.id, developer.id)
+    workspace_role = WorkspaceRoles.get(workspace.id, developer.id)
     Environments.update_environment_roles(
-        owner, workspace, workspace_user, new_environment_roles
+        owner, workspace, workspace_role, new_environment_roles
     )
 
-    assert workspace_user.num_environment_roles == 2
+    assert workspace_role.num_environment_roles == 2
     assert EnvironmentRoles.get(developer.id, now_ba).role == "billing_auditor"
     assert EnvironmentRoles.get(developer.id, now_none) is None
     assert EnvironmentRoles.get(developer.id, still_fa).role == "financial_auditor"

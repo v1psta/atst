@@ -58,7 +58,7 @@ class Environments(object):
         return env
 
     @classmethod
-    def update_environment_roles(cls, user, workspace, workspace_user, ids_and_roles):
+    def update_environment_roles(cls, user, workspace, workspace_role, ids_and_roles):
         Authorization.check_workspace_permission(
             user,
             workspace,
@@ -71,16 +71,16 @@ class Environments(object):
             environment = Environments.get(id_and_role["id"])
 
             if new_role is None:
-                EnvironmentRoles.delete(workspace_user.user.id, environment.id)
+                EnvironmentRoles.delete(workspace_role.user.id, environment.id)
             else:
                 env_role = EnvironmentRoles.get(
-                    workspace_user.user.id, id_and_role["id"]
+                    workspace_role.user.id, id_and_role["id"]
                 )
                 if env_role:
                     env_role.role = new_role
                 else:
                     env_role = EnvironmentRole(
-                        user=workspace_user.user, environment=environment, role=new_role
+                        user=workspace_role.user, environment=environment, role=new_role
                     )
                 db.session.add(env_role)
 

@@ -2,7 +2,7 @@ from atst.domain.roles import Roles
 from atst.domain.authz import Authorization
 from atst.models.permissions import Permissions
 from atst.domain.users import Users
-from atst.domain.workspace_users import WorkspaceUsers
+from atst.domain.workspace_roles import WorkspaceRoles
 from atst.models.workspace_role import Status as WorkspaceRoleStatus
 
 from .query import WorkspacesQuery
@@ -95,8 +95,8 @@ class Workspaces(object):
 
     @classmethod
     def add_member(cls, workspace, member, role_name):
-        workspace_user = WorkspaceUsers.add(member, workspace.id, role_name)
-        return workspace_user
+        workspace_role = WorkspaceRoles.add(member, workspace.id, role_name)
+        return workspace_role
 
     @classmethod
     def update_member(cls, user, workspace, member, role_name):
@@ -107,7 +107,7 @@ class Workspaces(object):
             "edit workspace member",
         )
 
-        return WorkspaceUsers.update_role(member, workspace.id, role_name)
+        return WorkspaceRoles.update_role(member, workspace.id, role_name)
 
     @classmethod
     def _create_workspace_role(

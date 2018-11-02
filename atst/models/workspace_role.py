@@ -6,6 +6,11 @@ from sqlalchemy.orm import relationship
 from atst.models import Base, mixins
 from .types import Id
 
+from atst.database import db
+from atst.models.environment_role import EnvironmentRole
+from atst.models.project import Project
+from atst.models.environment import Environment
+
 
 class Status(Enum):
     ACTIVE = "active"
@@ -60,6 +65,46 @@ class WorkspaceRole(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     @property
     def has_dod_id_error(self):
         return self.latest_invitation and self.latest_invitation.is_rejected_wrong_user
+
+    @property
+    def role_name(self):
+        return self.role.name
+
+    @property
+    def user_name(self):
+        return self.user.full_name
+
+    @property
+    def role_displayname(self):
+        return self.role.display_name
+
+    @property
+    def num_environment_roles(self):
+        return (
+            db.session.query(EnvironmentRole)
+            .join(EnvironmentRole.environment)
+            .join(Environment.project)
+            .join(Project.workspace)
+            .filter(Project.workspace_id == self.workspace_id)
+            .filter(EnvironmentRole.user_id == self.user_id)
+            .count()
+        )
+
+    @property
+    def environment_roles(self):
+        return (
+            db.session.query(EnvironmentRole)
+            .join(EnvironmentRole.environment)
+            .join(Environment.project)
+            .join(Project.workspace)
+            .filter(Project.workspace_id == self.workspace_id)
+            .filter(EnvironmentRole.user_id == self.user_id)
+            .all()
+        )
+
+    @property
+    def has_environment_roles(self):
+        return self.num_environment_roles > 0
 
 
 Index(

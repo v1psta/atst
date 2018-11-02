@@ -8,11 +8,11 @@ from tests.factories import (
     InvitationFactory,
 )
 from atst.domain.workspaces import Workspaces
-from atst.domain.workspace_users import WorkspaceUsers
+from atst.domain.workspace_roles import WorkspaceRoles
 from atst.domain.projects import Projects
 from atst.domain.environments import Environments
 from atst.domain.environment_roles import EnvironmentRoles
-from atst.models.workspace_user import WorkspaceUser
+from atst.models.workspace_role import WorkspaceRole
 from atst.models.workspace_role import Status as WorkspaceRoleStatus
 from atst.models.invitation import Status as InvitationStatus
 from atst.queue import queue
@@ -202,7 +202,7 @@ def test_permissions_for_view_member(client, user_session):
     user = UserFactory.create()
     workspace = WorkspaceFactory.create()
     Workspaces._create_workspace_role(user, workspace, "developer")
-    member = WorkspaceUsers.add(user, workspace.id, "developer")
+    member = WorkspaceRoles.add(user, workspace.id, "developer")
     user_session(user)
     response = client.post(
         url_for("workspaces.view_member", workspace_id=workspace.id, member_id=user.id),
@@ -214,7 +214,7 @@ def test_permissions_for_view_member(client, user_session):
 def test_update_member_workspace_role(client, user_session):
     workspace = WorkspaceFactory.create()
     user = UserFactory.create()
-    member = WorkspaceUsers.add(user, workspace.id, "developer")
+    member = WorkspaceRoles.add(user, workspace.id, "developer")
     user_session(workspace.owner)
     response = client.post(
         url_for(
@@ -224,13 +224,13 @@ def test_update_member_workspace_role(client, user_session):
         follow_redirects=True,
     )
     assert response.status_code == 200
-    assert member.role == "security_auditor"
+    assert member.role_name == "security_auditor"
 
 
 def test_update_member_workspace_role_with_no_data(client, user_session):
     workspace = WorkspaceFactory.create()
     user = UserFactory.create()
-    member = WorkspaceUsers.add(user, workspace.id, "developer")
+    member = WorkspaceRoles.add(user, workspace.id, "developer")
     user_session(workspace.owner)
     response = client.post(
         url_for(
@@ -240,13 +240,13 @@ def test_update_member_workspace_role_with_no_data(client, user_session):
         follow_redirects=True,
     )
     assert response.status_code == 200
-    assert member.role == "developer"
+    assert member.role_name == "developer"
 
 
 def test_update_member_environment_role(client, user_session):
     workspace = WorkspaceFactory.create()
     user = UserFactory.create()
-    member = WorkspaceUsers.add(user, workspace.id, "developer")
+    member = WorkspaceRoles.add(user, workspace.id, "developer")
     project = Projects.create(
         workspace.owner,
         workspace,
@@ -278,7 +278,7 @@ def test_update_member_environment_role(client, user_session):
 def test_update_member_environment_role_with_no_data(client, user_session):
     workspace = WorkspaceFactory.create()
     user = UserFactory.create()
-    member = WorkspaceUsers.add(user, workspace.id, "developer")
+    member = WorkspaceRoles.add(user, workspace.id, "developer")
     project = Projects.create(
         workspace.owner,
         workspace,
