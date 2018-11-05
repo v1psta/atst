@@ -7,6 +7,7 @@ from flask import (
     url_for,
     current_app as app,
 )
+import pendulum
 
 from . import redirect_after_login_url
 from atst.domain.users import Users
@@ -21,6 +22,11 @@ _DEV_USERS = {
         "last_name": "Stevenson",
         "atat_role_name": "ccpo",
         "email": "sam@example.com",
+        "service_branch": "Fake Service Branch",
+        "phone_number": "1234567890",
+        "citizenship": "United States",
+        "designation": "Military",
+        "date_latest_training": pendulum.date(2018, 1, 1),
     },
     "amanda": {
         "dod_id": "2345678901",
@@ -28,6 +34,11 @@ _DEV_USERS = {
         "last_name": "Adamson",
         "atat_role_name": "default",
         "email": "amanda@example.com",
+        "service_branch": "Fake Service Branch",
+        "phone_number": "1234567890",
+        "citizenship": "United States",
+        "designation": "Military",
+        "date_latest_training": pendulum.date(2018, 1, 1),
     },
     "brandon": {
         "dod_id": "3456789012",
@@ -35,6 +46,11 @@ _DEV_USERS = {
         "last_name": "Buchannan",
         "atat_role_name": "default",
         "email": "brandon@example.com",
+        "service_branch": "Fake Service Branch",
+        "phone_number": "1234567890",
+        "citizenship": "United States",
+        "designation": "Military",
+        "date_latest_training": pendulum.date(2018, 1, 1),
     },
     "christina": {
         "dod_id": "4567890123",
@@ -42,6 +58,11 @@ _DEV_USERS = {
         "last_name": "Collins",
         "atat_role_name": "default",
         "email": "christina@example.com",
+        "service_branch": "Fake Service Branch",
+        "phone_number": "1234567890",
+        "citizenship": "United States",
+        "designation": "Military",
+        "date_latest_training": pendulum.date(2018, 1, 1),
     },
     "dominick": {
         "dod_id": "5678901234",
@@ -49,6 +70,11 @@ _DEV_USERS = {
         "last_name": "Domingo",
         "atat_role_name": "default",
         "email": "dominick@example.com",
+        "service_branch": "Fake Service Branch",
+        "phone_number": "1234567890",
+        "citizenship": "United States",
+        "designation": "Military",
+        "date_latest_training": pendulum.date(2018, 1, 1),
     },
     "erica": {
         "dod_id": "6789012345",
@@ -56,6 +82,11 @@ _DEV_USERS = {
         "last_name": "Eichner",
         "atat_role_name": "default",
         "email": "erica@example.com",
+        "service_branch": "Fake Service Branch",
+        "phone_number": "1234567890",
+        "citizenship": "United States",
+        "designation": "Military",
+        "date_latest_training": pendulum.date(2018, 1, 1),
     },
 }
 
