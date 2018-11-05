@@ -63,10 +63,22 @@ class Requests(object):
         request = Requests.set_status(request, RequestStatus.SUBMITTED)
 
         if Requests.should_auto_approve(request):
-            request = Requests.set_status(request, RequestStatus.PENDING_FINANCIAL_VERIFICATION)
-            Requests._add_review(None, request, {"comment": "Auto-approval for dollar value below {}".format(Requests.AUTO_APPROVE_THRESHOLD)})
+            request = Requests.set_status(
+                request, RequestStatus.PENDING_FINANCIAL_VERIFICATION
+            )
+            Requests._add_review(
+                None,
+                request,
+                {
+                    "comment": "Auto-acceptance for dollar value below {}".format(
+                        Requests.AUTO_APPROVE_THRESHOLD
+                    )
+                },
+            )
         else:
-            request = Requests.set_status(request, RequestStatus.PENDING_CCPO_ACCEPTANCE)
+            request = Requests.set_status(
+                request, RequestStatus.PENDING_CCPO_ACCEPTANCE
+            )
 
         request = RequestsQuery.add_and_commit(request)
 
@@ -92,6 +104,16 @@ class Requests(object):
 
         RequestsQuery.add_and_commit(approved_request)
 
+        return workspace
+
+    @classmethod
+    def auto_approve_and_create_workspace(
+        cls,
+        request,
+        reason="Financial verification information found in Electronic Document Access API",
+    ):
+        workspace = Requests.approve_and_create_workspace(request)
+        Requests._add_review(None, request, {"comment": reason})
         return workspace
 
     @classmethod

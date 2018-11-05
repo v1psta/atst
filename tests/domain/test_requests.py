@@ -224,6 +224,14 @@ def test_random_user_cannot_view_request():
     assert not RequestsAuthorization(user, request).can_view
 
 
+def test_auto_approve_and_create_workspace():
+    request = RequestFactory.create()
+    workspace = Requests.auto_approve_and_create_workspace(request)
+    assert workspace
+    assert request.reviews[0]
+    assert request.reviews[0].full_name_reviewer == "System"
+
+
 class TestStatusNotifications(object):
     def _assert_job(self, queue, request):
         assert len(queue.get_queue()) == 1
