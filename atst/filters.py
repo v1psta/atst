@@ -2,6 +2,7 @@ import re
 import datetime
 from flask import current_app as app
 from werkzeug.datastructures import FileStorage
+from atst.models.attachment import Attachment
 
 
 def iconSvg(name):
@@ -47,9 +48,12 @@ def mixedContentToJson(value):
     if (
         isinstance(value, dict)
         and "task_order" in value
-        and isinstance(value["task_order"], FileStorage)
+        and (
+            isinstance(value["task_order"]["pdf"], FileStorage)
+            or isinstance(value["task_order"]["pdf"], Attachment)
+        )
     ):
-        value["task_order"] = value["task_order"].filename
+        value["task_order"]["pdf"] = value["task_order"]["pdf"].filename
     return app.jinja_env.filters["tojson"](value)
 
 
