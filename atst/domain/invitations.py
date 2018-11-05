@@ -3,7 +3,7 @@ from sqlalchemy.orm.exc import NoResultFound
 
 from atst.database import db
 from atst.models.invitation import Invitation, Status as InvitationStatus
-from atst.domain.workspace_users import WorkspaceUsers
+from atst.domain.workspace_roles import WorkspaceRoles
 
 from .exceptions import NotFoundError
 
@@ -83,7 +83,7 @@ class Invitations(object):
 
         elif invite.is_pending:
             Invitations._update_status(invite, InvitationStatus.ACCEPTED)
-            WorkspaceUsers.enable(invite.workspace_role)
+            WorkspaceRoles.enable(invite.workspace_role)
             return invite
 
     @classmethod

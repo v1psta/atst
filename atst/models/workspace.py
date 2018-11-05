@@ -4,7 +4,6 @@ from sqlalchemy.orm import relationship
 from atst.models import Base
 from atst.models.types import Id
 from atst.models import mixins
-from atst.models.workspace_user import WorkspaceUser
 from atst.utils import first_or_none
 
 
@@ -39,7 +38,7 @@ class Workspace(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
 
     @property
     def members(self):
-        return [WorkspaceUser(role.user, role) for role in self.roles]
+        return self.roles
 
     @property
     def displayname(self):

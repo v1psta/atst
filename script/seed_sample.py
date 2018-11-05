@@ -11,7 +11,7 @@ from atst.domain.users import Users
 from atst.domain.requests import Requests
 from atst.domain.workspaces import Workspaces
 from atst.domain.projects import Projects
-from atst.domain.workspace_users import WorkspaceUsers
+from atst.domain.workspace_roles import WorkspaceRoles
 from atst.domain.exceptions import AlreadyExistsError
 from tests.factories import RequestFactory, TaskOrderFactory
 from atst.routes.dev import _DEV_USERS as DEV_USERS
@@ -74,9 +74,9 @@ def seed_db():
         workspace = Workspaces.create(
             request, name="{}'s workspace".format(user.first_name)
         )
-        for workspace_user in WORKSPACE_USERS:
-            ws_user = Workspaces.create_member(user, workspace, workspace_user)
-            WorkspaceUsers.enable(ws_user.workspace_role)
+        for workspace_role in WORKSPACE_USERS:
+            ws_role = Workspaces.create_member(user, workspace, workspace_role)
+            WorkspaceRoles.enable(ws_role)
 
         Projects.create(
             user,

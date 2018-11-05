@@ -3,7 +3,7 @@ from uuid import uuid4
 
 from atst.domain.exceptions import NotFoundError, UnauthorizedError
 from atst.domain.workspaces import Workspaces
-from atst.domain.workspace_users import WorkspaceUsers
+from atst.domain.workspace_roles import WorkspaceRoles
 from atst.domain.projects import Projects
 from atst.domain.environments import Environments
 from atst.models.workspace_role import Status as WorkspaceRoleStatus
@@ -75,13 +75,13 @@ def test_get_for_update_projects_allows_owner(workspace, workspace_owner):
 
 def test_get_for_update_projects_blocks_developer(workspace):
     developer = UserFactory.create()
-    WorkspaceUsers.add(developer, workspace.id, "developer")
+    WorkspaceRoles.add(developer, workspace.id, "developer")
 
     with pytest.raises(UnauthorizedError):
         Workspaces.get_for_update_projects(developer, workspace.id)
 
 
-def test_can_create_workspace_user(workspace, workspace_owner):
+def test_can_create_workspace_role(workspace, workspace_owner):
     user_data = {
         "first_name": "New",
         "last_name": "User",
@@ -111,7 +111,7 @@ def test_can_add_existing_user_to_workspace(workspace, workspace_owner):
     assert not new_member.user.provisional
 
 
-def test_need_permission_to_create_workspace_user(workspace, workspace_owner):
+def test_need_permission_to_create_workspace_role(workspace, workspace_owner):
     random_user = UserFactory.create()
 
     user_data = {
@@ -126,7 +126,7 @@ def test_need_permission_to_create_workspace_user(workspace, workspace_owner):
         Workspaces.create_member(random_user, workspace, user_data)
 
 
-def test_update_workspace_user_role(workspace, workspace_owner):
+def test_update_workspace_role_role(workspace, workspace_owner):
     user_data = {
         "first_name": "New",
         "last_name": "User",
@@ -141,10 +141,10 @@ def test_update_workspace_user_role(workspace, workspace_owner):
         workspace_owner, workspace, member, role_name
     )
     assert updated_member.workspace == workspace
-    assert updated_member.role == role_name
+    assert updated_member.role_name == role_name
 
 
-def test_need_permission_to_update_workspace_user_role(workspace, workspace_owner):
+def test_need_permission_to_update_workspace_role_role(workspace, workspace_owner):
     random_user = UserFactory.create()
     user_data = {
         "first_name": "New",

@@ -48,7 +48,7 @@ class Projects(object):
         )
 
     @classmethod
-    def get_all(cls, user, workspace_user, workspace):
+    def get_all(cls, user, workspace_role, workspace):
         Authorization.check_workspace_permission(
             user,
             workspace,

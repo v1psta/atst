@@ -3,7 +3,7 @@ import datetime
 from atst.domain.environments import Environments
 from atst.domain.workspaces import Workspaces
 from atst.domain.projects import Projects
-from atst.domain.workspace_users import WorkspaceUsers
+from atst.domain.workspace_roles import WorkspaceRoles
 from atst.models.workspace_role import Status
 from atst.models.invitation import Status as InvitationStatus
 from tests.factories import (
@@ -25,9 +25,9 @@ def test_has_no_environment_roles():
     }
 
     workspace = Workspaces.create(RequestFactory.create(creator=owner))
-    workspace_user = Workspaces.create_member(owner, workspace, developer_data)
+    workspace_role = Workspaces.create_member(owner, workspace, developer_data)
 
-    assert not workspace_user.has_environment_roles
+    assert not workspace_role.has_environment_roles
 
 
 def test_has_environment_roles():
@@ -41,12 +41,12 @@ def test_has_environment_roles():
     }
 
     workspace = Workspaces.create(RequestFactory.create(creator=owner))
-    workspace_user = Workspaces.create_member(owner, workspace, developer_data)
+    workspace_role = Workspaces.create_member(owner, workspace, developer_data)
     project = Projects.create(
         owner, workspace, "my test project", "It's mine.", ["dev", "staging", "prod"]
     )
-    Environments.add_member(project.environments[0], workspace_user.user, "developer")
-    assert workspace_user.has_environment_roles
+    Environments.add_member(project.environments[0], workspace_role.user, "developer")
+    assert workspace_role.has_environment_roles
 
 
 def test_role_displayname():
@@ -60,9 +60,9 @@ def test_role_displayname():
     }
 
     workspace = Workspaces.create(RequestFactory.create(creator=owner))
-    workspace_user = Workspaces.create_member(owner, workspace, developer_data)
+    workspace_role = Workspaces.create_member(owner, workspace, developer_data)
 
-    assert workspace_user.role_displayname == "Developer"
+    assert workspace_role.role_displayname == "Developer"
 
 
 def test_status_when_member_is_active():

@@ -14,7 +14,7 @@ from atst.domain.exceptions import UnauthorizedError, AlreadyExistsError
 from atst.domain.projects import Projects
 from atst.domain.reports import Reports
 from atst.domain.workspaces import Workspaces
-from atst.domain.workspace_users import WorkspaceUsers
+from atst.domain.workspace_roles import WorkspaceRoles
 from atst.domain.environments import Environments
 from atst.domain.environment_roles import EnvironmentRoles
 from atst.forms.project import NewProjectForm, ProjectForm
@@ -109,7 +109,7 @@ def workspace_members(workspace_id):
     members_list = [
         {
             "name": k.user_name,
-            "status": k.status,
+            "status": k.display_status,
             "id": k.user_id,
             "role": k.role_displayname,
             "num_env": k.num_environment_roles,
@@ -258,9 +258,7 @@ def create_member(workspace_id):
     if form.validate():
         try:
             new_member = Workspaces.create_member(g.current_user, workspace, form.data)
-            invite = Invitations.create(
-                new_member.workspace_role, g.current_user, new_member.user
-            )
+            invite = Invitations.create(new_member, g.current_user, new_member.user)
             send_invite_email(
                 g.current_user.full_name, invite.token, new_member.user.email
             )
@@ -291,7 +289,7 @@ def view_member(workspace_id, member_id):
         Permissions.ASSIGN_AND_UNASSIGN_ATAT_ROLE,
         "edit this workspace user",
     )
-    member = WorkspaceUsers.get(workspace_id, member_id)
+    member = WorkspaceRoles.get(workspace_id, member_id)
     projects = Projects.get_all(g.current_user, member, workspace)
     form = EditMemberForm(workspace_role=member.role)
     editable = g.current_user == member.user
@@ -319,7 +317,7 @@ def update_member(workspace_id, member_id):
         Permissions.ASSIGN_AND_UNASSIGN_ATAT_ROLE,
         "edit this workspace user",
     )
-    member = WorkspaceUsers.get(workspace_id, member_id)
+    member = WorkspaceRoles.get(workspace_id, member_id)
 
     ids_and_roles = []
     form_dict = http_request.form.to_dict()
