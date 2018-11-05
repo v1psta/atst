@@ -44,6 +44,8 @@ def test_auto_approve_less_than_1m():
     request = Requests.submit(new_request)
 
     assert request.status == RequestStatus.PENDING_FINANCIAL_VERIFICATION
+    assert request.reviews
+    assert request.reviews[0].full_name_reviewer == "System"
 
 
 def test_dont_auto_approve_if_dollar_value_is_1m_or_above():

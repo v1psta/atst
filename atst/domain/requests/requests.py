@@ -62,13 +62,12 @@ class Requests(object):
     def submit(cls, request):
         request = Requests.set_status(request, RequestStatus.SUBMITTED)
 
-        new_status = None
         if Requests.should_auto_approve(request):
-            new_status = RequestStatus.PENDING_FINANCIAL_VERIFICATION
+            request = Requests.set_status(request, RequestStatus.PENDING_FINANCIAL_VERIFICATION)
+            Requests._add_review(None, request, {"comment": "Auto-approval for dollar value below {}".format(Requests.AUTO_APPROVE_THRESHOLD)})
         else:
-            new_status = RequestStatus.PENDING_CCPO_ACCEPTANCE
+            request = Requests.set_status(request, RequestStatus.PENDING_CCPO_ACCEPTANCE)
 
-        request = Requests.set_status(request, new_status)
         request = RequestsQuery.add_and_commit(request)
 
         return request

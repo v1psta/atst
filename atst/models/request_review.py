@@ -10,7 +10,7 @@ class RequestReview(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     id = types.Id()
     status = relationship("RequestStatusEvent", uselist=False, back_populates="review")
 
-    user_id = Column(ForeignKey("users.id"), nullable=False)
+    user_id = Column(ForeignKey("users.id"))
     reviewer = relationship("User")
 
     comment = Column(String)
@@ -23,7 +23,10 @@ class RequestReview(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
 
     @property
     def full_name_reviewer(self):
-        return self.reviewer.full_name
+        if self.reviewer:
+            return self.reviewer.full_name
+        else:
+            return "System"
 
     @property
     def full_name_mao(self):
