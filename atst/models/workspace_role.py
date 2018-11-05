@@ -57,6 +57,10 @@ class WorkspaceRole(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
         else:
             return "Unknown errors"
 
+    @property
+    def has_dod_id_error(self):
+        return self.latest_invitation and self.latest_invitation.is_rejected_wrong_user
+
 
 Index(
     "workspace_role_user_workspace",
