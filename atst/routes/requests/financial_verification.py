@@ -173,7 +173,7 @@ class SaveFinancialVerificationDraft(FinancialVerificationBase):
         if not form.validate_draft():
             self._raise(form)
 
-        if not self.pe_validator.validate(self.request, form.pe_id):
+        if form.pe_id.data and not self.pe_validator.validate(self.request, form.pe_id):
             valid = False
 
         if form.task_order.number.data and not self.task_order_validator.validate(

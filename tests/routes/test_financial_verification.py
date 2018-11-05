@@ -111,6 +111,20 @@ def test_update_fv_invalid_task_order_number(fv_data):
         update_fv.execute()
 
 
+def test_draft_without_pe_id(fv_data):
+    request = RequestFactory.create()
+    user = UserFactory.create()
+    data = {"request-uii_ids": "1234"}
+    assert SaveFinancialVerificationDraft(
+        PENumberValidator(),
+        TaskOrderNumberValidator(),
+        user,
+        request,
+        data,
+        is_extended=False,
+    ).execute()
+
+
 def test_update_fv_extended(fv_data, e_fv_data):
     request = RequestFactory.create()
     user = UserFactory.create()
