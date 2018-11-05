@@ -30,12 +30,12 @@ class FinancialVerificationBase(object):
         _formdata = ImmutableMultiDict(formdata) if formdata is not None else None
         fv = FinancialVerification(request)
         form = FinancialVerificationForm(obj=fv, formdata=_formdata)
-        if is_extended:
-            try:
-                attachment = Attachment.get_for_resource("task_order", self.request.id)
-                form.task_order.pdf.data = attachment.filename
-            except NotFoundError:
-                pass
+
+        try:
+            attachment = Attachment.get_for_resource("task_order", self.request.id)
+            form.task_order.pdf.data = attachment.filename
+        except NotFoundError:
+            pass
 
         return form
 
@@ -173,7 +173,7 @@ class SaveFinancialVerificationDraft(FinancialVerificationBase):
         if not form.validate_draft():
             self._raise(form)
 
-        if not self.pe_validator.validate(self.request, form.pe_id):
+        if form.pe_id.data and not self.pe_validator.validate(self.request, form.pe_id):
             valid = False
 
         if form.task_order.number.data and not self.task_order_validator.validate(
