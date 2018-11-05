@@ -22,7 +22,7 @@ def test_create_invitation():
     workspace = WorkspaceFactory.create()
     user = UserFactory.create()
     ws_role = WorkspaceRoleFactory.create(user=user, workspace=workspace)
-    invite = Invitations.create(ws_role, workspace.owner, user)
+    invite = Invitations.create(workspace.owner, ws_role)
     assert invite.user == user
     assert invite.workspace_role == ws_role
     assert invite.inviter == workspace.owner
@@ -34,7 +34,7 @@ def test_accept_invitation():
     workspace = WorkspaceFactory.create()
     user = UserFactory.create()
     ws_role = WorkspaceRoleFactory.create(user=user, workspace=workspace)
-    invite = Invitations.create(ws_role, workspace.owner, user)
+    invite = Invitations.create(workspace.owner, ws_role)
     assert invite.is_pending
     accepted_invite = Invitations.accept(user, invite.token)
     assert accepted_invite.is_accepted
@@ -89,7 +89,7 @@ def test_accept_invitation_twice():
     workspace = WorkspaceFactory.create()
     user = UserFactory.create()
     ws_role = WorkspaceRoleFactory.create(user=user, workspace=workspace)
-    invite = Invitations.create(ws_role, workspace.owner, user)
+    invite = Invitations.create(workspace.owner, ws_role)
     Invitations.accept(user, invite.token)
     with pytest.raises(InvitationError):
         Invitations.accept(user, invite.token)

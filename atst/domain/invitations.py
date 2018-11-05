@@ -52,11 +52,11 @@ class Invitations(object):
         return invite
 
     @classmethod
-    def create(cls, workspace_role, inviter, user):
+    def create(cls, inviter, workspace_role):
         invite = Invitation(
             workspace_role=workspace_role,
             inviter=inviter,
-            user=user,
+            user=workspace_role.user,
             status=InvitationStatus.PENDING,
             expiration_time=Invitations.current_expiration_time(),
         )

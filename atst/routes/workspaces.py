@@ -255,11 +255,12 @@ def send_invite_email(owner_name, token, new_member_email):
 def create_member(workspace_id):
     workspace = Workspaces.get(g.current_user, workspace_id)
     form = NewMemberForm(http_request.form)
+    user = g.current_user
 
     if form.validate():
         try:
-            new_member = Workspaces.create_member(g.current_user, workspace, form.data)
-            invite = Invitations.create(new_member, g.current_user, new_member.user)
+            new_member = Workspaces.create_member(user, workspace, form.data)
+            invite = Invitations.create(user, new_member)
             send_invite_email(
                 g.current_user.full_name, invite.token, new_member.user.email
             )
