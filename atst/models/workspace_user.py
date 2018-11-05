@@ -38,6 +38,10 @@ class WorkspaceUser(object):
         return self.workspace_role.display_status
 
     @property
+    def has_dod_id_error(self):
+        return self.workspace_role.has_dod_id_error
+
+    @property
     def num_environment_roles(self):
         return (
             db.session.query(EnvironmentRole)
