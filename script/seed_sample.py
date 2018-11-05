@@ -75,8 +75,8 @@ def seed_db():
             request, name="{}'s workspace".format(user.first_name)
         )
         for workspace_role in WORKSPACE_USERS:
-            ws_user = Workspaces.create_member(user, workspace, workspace_role)
-            WorkspaceRoles.enable(ws_user.workspace_role)
+            ws_role = Workspaces.create_member(user, workspace, workspace_role)
+            WorkspaceRoles.enable(ws_role)
 
         Projects.create(
             user,
