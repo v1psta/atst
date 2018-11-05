@@ -102,7 +102,7 @@ def map_config(config):
         ),
         "REQUIRE_CRLS": config.getboolean("default", "REQUIRE_CRLS"),
         "RQ_REDIS_URL": config["default"]["REDIS_URI"],
-        "RQ_QUEUES": ["atat_{}".format(ENV.lower())],
+        "RQ_QUEUES": [config["default"]["RQ_QUEUES"]],
     }
 
 

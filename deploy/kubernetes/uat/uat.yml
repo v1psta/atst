@@ -24,7 +24,7 @@ spec:
         fsGroup: 101
       containers:
         - name: atst
-          image: registry.atat.codes:443/atst-prod:76854ac
+          image: registry.atat.codes:443/atst-prod:a9fc2bd2
           resources:
             requests:
                memory: "2500Mi"
@@ -124,6 +124,51 @@ spec:
         - name: uwsgi-socket-dir
           emptyDir:
             medium: Memory
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: atst
+  name: atst-worker
+  namespace: atat-uat
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: atst
+    spec:
+      securityContext:
+        fsGroup: 101
+      containers:
+        - name: atst-worker
+          image: registry.atat.codes:443/atst-prod:a9fc2bd2
+          args: ["/bin/bash", "-c", "/opt/atat/atst/script/rq_worker"]
+          resources:
+            requests:
+               memory: "500Mi"
+          envFrom:
+          - configMapRef:
+              name: atst-envvars
+          - configMapRef:
+              name: atst-worker-envvars
+          volumeMounts:
+            - name: atst-config
+              mountPath: "/opt/atat/atst/atst-overrides.ini"
+              subPath: atst-overrides.ini
+      imagePullSecrets:
+        - name: regcred
+      volumes:
+        - name: atst-config
+          secret:
+            secretName: atst-config-ini
+            items:
+            - key: override.ini
+              path: atst-overrides.ini
+              mode: 0644
 ---
 apiVersion: v1
 kind: Service

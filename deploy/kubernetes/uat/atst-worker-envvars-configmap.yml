@@ -1,0 +1,8 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: atst-worker-envvars
+  namespace: atat-uat
+data:
+  REQUIRE_CRLS: "False"
