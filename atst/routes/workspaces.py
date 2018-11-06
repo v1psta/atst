@@ -291,7 +291,7 @@ def view_member(workspace_id, member_id):
     )
     member = WorkspaceRoles.get(workspace_id, member_id)
     projects = Projects.get_all(g.current_user, member, workspace)
-    form = EditMemberForm(workspace_role=member.role)
+    form = EditMemberForm(workspace_role=member.role_name)
     editable = g.current_user == member.user
     return render_template(
         "workspaces/members/edit.html",
