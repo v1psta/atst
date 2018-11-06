@@ -39,6 +39,9 @@ config/dev.ini
 /crl-tmp
 *.bk
 
+# test CA config
+ssl/client-certs/*.srl
+
 # uploads
 /uploads
 
