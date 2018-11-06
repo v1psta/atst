@@ -7,6 +7,7 @@ from atst.models.request_review import RequestReview
 from atst.models.request_internal_comment import RequestInternalComment
 from atst.utils import deep_merge
 from atst.queue import queue
+from atst.filters import dollars
 
 from .query import RequestsQuery
 from .authorization import RequestsAuthorization
@@ -67,11 +68,11 @@ class Requests(object):
                 request, RequestStatus.PENDING_FINANCIAL_VERIFICATION
             )
             Requests._add_review(
-                None,
-                request,
-                {
+                user=None,
+                request=request,
+                review_data={
                     "comment": "Auto-acceptance for dollar value below {}".format(
-                        Requests.AUTO_APPROVE_THRESHOLD
+                        dollars(Requests.AUTO_APPROVE_THRESHOLD)
                     )
                 },
             )
@@ -113,7 +114,9 @@ class Requests(object):
         reason="Financial verification information found in Electronic Document Access API",
     ):
         workspace = Requests.approve_and_create_workspace(request)
-        Requests._add_review(None, request, {"comment": reason})
+        Requests._add_review(
+            user=None, request=request, review_data={"comment": reason}
+        )
         return workspace
 
     @classmethod
@@ -199,7 +202,7 @@ class Requests(object):
         return request
 
     @classmethod
-    def _add_review(cls, user, request, review_data):
+    def _add_review(cls, user=None, request=None, review_data=None):
         request.latest_status.review = RequestReview(reviewer=user, **review_data)
         request = RequestsQuery.add_and_commit(request)
         return request
@@ -211,7 +214,7 @@ class Requests(object):
         elif request.status == RequestStatus.PENDING_CCPO_APPROVAL:
             Requests.approve_and_create_workspace(request)
 
-        return Requests._add_review(user, request, review_data)
+        return Requests._add_review(user=user, request=request, review_data=review_data)
 
     @classmethod
     def request_changes(cls, user, request, review_data):
@@ -220,7 +223,7 @@ class Requests(object):
         elif request.status == RequestStatus.PENDING_CCPO_APPROVAL:
             Requests.set_status(request, RequestStatus.CHANGES_REQUESTED_TO_FINVER)
 
-        return Requests._add_review(user, request, review_data)
+        return Requests._add_review(user=user, request=request, review_data=review_data)
 
     @classmethod
     def add_internal_comment(cls, user, request, comment_text):
