@@ -1,0 +1,42 @@
+#!/bin/bash
+
+# script/make-test-cac:  Set up a test CAC card.
+# Usage:
+# ./script/make-test-cac [DOD identifier string] [user email] [certificate name]
+# i.e.:
+# ./script/make-text-cac JONES.ANDY.1234567890 andy@example.com andy
+# The script will output 3 files:
+#   1. The certificate (crt) file (for reference)
+#   2. The certificate key (key) file (also for reference)
+#   3. The PFX file, which is the package file that needs to be loaded on the PIVKey brand card
+set -e
+
+SAN="subjectAltName=email:$2"
+
+CSR=$(openssl req \
+  -new \
+  -newkey rsa:4096 \
+  -sha256 \
+  -nodes \
+  -days 365 \
+  -subj "/CN=$1" \
+  -reqexts SAN \
+  -config <(cat /etc/ssl/openssl.cnf; echo '[SAN]'; echo $SAN) \
+  -keyout $3.key )
+
+openssl x509 \
+  -req \
+  -in <(echo "$CSR") \
+  -CA "ssl/client-certs/client-ca.crt" \
+  -CAkey "ssl/client-certs/client-ca.key" \
+  -CAcreateserial \
+  -extensions SAN \
+  -extfile <(cat /etc/ssl/openssl.cnf; echo '[SAN]'; echo $SAN) \
+  -out $3.crt
+
+openssl pkcs12 -passout pass: -export -out $3.pfx -inkey $3.key -in $3.crt
+
+echo "Generated files:"
+echo "  CERT: $3.crt"
+echo "  KEY:  $3.key"
+echo "  PFX:  $3.pfx"
