@@ -241,7 +241,7 @@ def update_financial_verification(request_id):
         )
 
     if updated_request.task_order.verified:
-        workspace = Requests.approve_and_create_workspace(updated_request)
+        workspace = Requests.auto_approve_and_create_workspace(updated_request)
         return redirect(
             url_for(
                 "workspaces.new_project", workspace_id=workspace.id, newWorkspace=True

@@ -44,6 +44,8 @@ def test_auto_approve_less_than_1m():
     request = Requests.submit(new_request)
 
     assert request.status == RequestStatus.PENDING_FINANCIAL_VERIFICATION
+    assert request.reviews
+    assert request.reviews[0].full_name_reviewer == "System"
 
 
 def test_dont_auto_approve_if_dollar_value_is_1m_or_above():
@@ -220,6 +222,14 @@ def test_random_user_cannot_view_request():
     request = RequestFactory.create()
 
     assert not RequestsAuthorization(user, request).can_view
+
+
+def test_auto_approve_and_create_workspace():
+    request = RequestFactory.create()
+    workspace = Requests.auto_approve_and_create_workspace(request)
+    assert workspace
+    assert request.reviews[0]
+    assert request.reviews[0].full_name_reviewer == "System"
 
 
 class TestStatusNotifications(object):
