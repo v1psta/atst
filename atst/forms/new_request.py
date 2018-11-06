@@ -35,7 +35,7 @@ class DetailsOfUseForm(ValidatedForm):
         except ValueError:
             annual_spend = 0
 
-        if annual_spend > Requests.AUTO_APPROVE_THRESHOLD:
+        if annual_spend > Requests.AUTO_ACCEPT_THRESHOLD:
             self.number_user_sessions.validators.append(InputRequired())
             self.average_daily_traffic.validators.append(InputRequired())
 

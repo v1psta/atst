@@ -27,7 +27,7 @@ def create_revision_from_request_body(body):
 
 
 class Requests(object):
-    AUTO_APPROVE_THRESHOLD = 1_000_000
+    AUTO_ACCEPT_THRESHOLD = 1_000_000
     ANNUAL_SPEND_THRESHOLD = 1_000_000
 
     @classmethod
@@ -63,7 +63,7 @@ class Requests(object):
     def submit(cls, request):
         request = Requests.set_status(request, RequestStatus.SUBMITTED)
 
-        if Requests.should_auto_approve(request):
+        if Requests.should_auto_accept(request):
             request = Requests.set_status(
                 request, RequestStatus.PENDING_FINANCIAL_VERIFICATION
             )
@@ -134,13 +134,13 @@ class Requests(object):
         return updated_request
 
     @classmethod
-    def should_auto_approve(cls, request):
+    def should_auto_accept(cls, request):
         try:
             dollar_value = request.body["details_of_use"]["dollar_value"]
         except KeyError:
             return False
 
-        return dollar_value < cls.AUTO_APPROVE_THRESHOLD
+        return dollar_value < cls.AUTO_ACCEPT_THRESHOLD
 
     _VALID_SUBMISSION_STATUSES = [
         RequestStatus.STARTED,
