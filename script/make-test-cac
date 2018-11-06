@@ -2,9 +2,9 @@
 
 # script/make-test-cac:  Set up a test CAC card.
 # Usage:
-# ./script/make-test-cac [DOD identifier string] [user email] [certificate name]
+# ./script/make-test-cac [DOD identifier string] [user email] [output name]
 # i.e.:
-# ./script/make-text-cac JONES.ANDY.1234567890 andy@example.com andy
+# ./script/make-test-cac JONES.ANDY.1234567890 andy@example.com andy
 # The script will output 3 files:
 #   1. The certificate (crt) file (for reference)
 #   2. The certificate key (key) file (also for reference)
