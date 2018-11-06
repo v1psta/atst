@@ -420,3 +420,22 @@ def test_user_accepts_expired_invite(client, user_session):
     response = client.get(url_for("workspaces.accept_invitation", token=invite.token))
 
     assert response.status_code == 404
+
+
+def test_revoke_invitation(client, user_session):
+    workspace = WorkspaceFactory.create()
+    user = UserFactory.create()
+    ws_role = WorkspaceRoleFactory.create(
+        user=user, workspace=workspace, status=WorkspaceRoleStatus.PENDING
+    )
+    invite = InvitationFactory.create(
+        user_id=user.id,
+        workspace_role_id=ws_role.id,
+        status=InvitationStatus.REJECTED_EXPIRED,
+        expiration_time=datetime.datetime.now() - datetime.timedelta(seconds=1),
+    )
+    user_session(workspace.owner)
+    response = client.post(url_for("workspaces.revoke_invitation", workspace_id=workspace.id, token=invite.token))
+
+    assert response.status_code == 302
+    assert invite.is_revoked
