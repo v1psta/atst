@@ -1,0 +1,18 @@
+{% macro ConfirmationButton(btn_text, action, confirm_msg="Are you sure?", confirm_btn="Confirm", cancel_btn="Cancel") -%}
+  <v-popover placement='top-start'>
+    <template slot="popover">
+      <p>{{ confirm_msg }}</p>
+      <div class='action-group'>
+        <form method="POST" action="{{ action }}">
+          <button class='usa-button usa-button-primary' type='submit'>
+            {{ confirm_btn }}
+          </button>
+        </form>
+        <button class='usa-button usa-button-secondary' v-close-popover>
+          {{ cancel_btn }}
+        </button>
+      </div>
+    </template>
+    <button class="tooltip-target">{{ btn_text }}</button>
+  </v-popover>
+{%- endmacro %}
