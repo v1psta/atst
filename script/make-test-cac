@@ -13,20 +13,20 @@ set -e
 
 SAN="subjectAltName=email:$2"
 
+openssl genrsa -out $3.key 2048
+
 CSR=$(openssl req \
   -new \
-  -newkey rsa:4096 \
-  -sha256 \
   -nodes \
-  -days 365 \
   -subj "/CN=$1" \
   -reqexts SAN \
   -config <(cat /etc/ssl/openssl.cnf; echo '[SAN]'; echo $SAN) \
-  -keyout $3.key )
+  -key $3.key )
 
 openssl x509 \
   -req \
   -in <(echo "$CSR") \
+  -days 365 \
   -CA "ssl/client-certs/client-ca.crt" \
   -CAkey "ssl/client-certs/client-ca.key" \
   -CAcreateserial \
