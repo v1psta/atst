@@ -23,6 +23,10 @@ export default {
         type: Array,
         default: [],
       },
+      dodComponents: {
+        type: Array,
+        default: [],
+      }
     },
 
     data: function () {
@@ -76,6 +80,7 @@ export default {
       return {
         searchValue: '',
         statusValue: '',
+        dodComponentValue: '',
         sort: {
           columnName: '',
           isAscending: true
@@ -88,7 +93,7 @@ export default {
       filteredRequests: function () {
         return pipe(
           partial(this.applySearch, [this.searchValue]),
-          partial(this.applyFilters, [this.statusValue]),
+          partial(this.applyFilters, [this.statusValue, this.dodComponentValue]),
           partial(this.applySort, [this.sort]),
         )(this.requests)
       }
@@ -106,10 +111,14 @@ export default {
             true
         )
       },
-      applyFilters: (status, requests) => {
+      applyFilters: (status, dodComponent, requests) => {
         return requests.filter(
           (request) => status !== '' ?
             request.status === status :
+            true
+        ).filter(
+          (request) => dodComponent !== '' ?
+            request.dod_component === dodComponent :
             true
         )
       },
