@@ -435,7 +435,13 @@ def test_revoke_invitation(client, user_session):
         expiration_time=datetime.datetime.now() - datetime.timedelta(seconds=1),
     )
     user_session(workspace.owner)
-    response = client.post(url_for("workspaces.revoke_invitation", workspace_id=workspace.id, token=invite.token))
+    response = client.post(
+        url_for(
+            "workspaces.revoke_invitation",
+            workspace_id=workspace.id,
+            token=invite.token,
+        )
+    )
 
     assert response.status_code == 302
     assert invite.is_revoked

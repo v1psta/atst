@@ -375,8 +375,6 @@ def revoke_invitation(workspace_id, token):
         Permissions.ASSIGN_AND_UNASSIGN_ATAT_ROLE,
         "revoke member invitation",
     )
-    invite = Invitations.revoke(token)
+    Invitations.revoke(token)
 
-    return redirect(
-        url_for("workspaces.show_workspace", workspace_id=workspace.id)
-    )
+    return redirect(url_for("workspaces.workspace_members", workspace_id=workspace.id))
