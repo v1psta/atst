@@ -48,10 +48,10 @@ export default {
     validationError: 'Please enter a 10-digit phone number'
   },
   phoneExt: {
-    mask: [/\w/, /\w/, /\w/, /\w/, /\w/, /\w/, /\w/, /\w/, /\w/, /\w/],
-    match: /^\w*$/,
+    mask: createNumberMask({ prefix: '', allowDecimal: false, allowLeadingZeroes: true, includeThousandsSeparator: false }),
+    match: /^\w{0,10}$/,
     unmask: [],
-    validationError: 'Optional: Please enter up to 10 characters'
+    validationError: 'Optional: Please enter up to 10 digits'
   },
   dodId: {
     mask: createNumberMask({ prefix: '', allowDecimal: false, includeThousandsSeparator: false }),
