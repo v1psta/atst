@@ -244,4 +244,3 @@ class FinancialVerificationForm(ValidatedForm):
     @property
     def is_only_missing_task_order_number(self):
         return "task_order_number" in self.errors and len(self.errors) == 1
-
