@@ -16,7 +16,7 @@ const filterByStatus = (status, members) => {
     return members
   } else {
     return members.filter(
-      (member) => member.status === status
+      (member) => member.status.toLowerCase() === status
     )
   }
 }
