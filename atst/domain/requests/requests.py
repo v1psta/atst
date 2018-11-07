@@ -72,7 +72,7 @@ class Requests(object):
                 request=request,
                 review_data={
                     "comment": "Auto-acceptance for dollar value below {}".format(
-                        dollars(Requests.AUTO_APPROVE_THRESHOLD)
+                        dollars(Requests.AUTO_ACCEPT_THRESHOLD)
                     )
                 },
             )
