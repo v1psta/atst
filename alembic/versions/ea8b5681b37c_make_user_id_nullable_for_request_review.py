@@ -1,7 +1,7 @@
 """make user_id nullable for request_review
 
 Revision ID: ea8b5681b37c
-Revises: e1081cf01780
+Revises: 4c0b8263d800
 Create Date: 2018-11-05 14:42:42.175939
 
 """
@@ -11,7 +11,7 @@ from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
 revision = 'ea8b5681b37c'
-down_revision = 'e1081cf01780'
+down_revision = '4c0b8263d800'
 branch_labels = None
 depends_on = None
 
