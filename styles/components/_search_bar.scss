@@ -6,10 +6,18 @@
   padding: $gap;
   flex-wrap: wrap;
 
+  @include media($large-screen) {
+    flex-wrap: nowrap;
+  }
+
+  .search-bar__filters {
+    display: flex;
+  }
+
   .usa-input {
     margin: 0;
     flex-grow: 1;
-    flex-shrink: 0;
+    flex-shrink: 1;
     flex-basis: 100%;
     height: $search-input-height;
     position: relative;
