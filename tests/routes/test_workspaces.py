@@ -198,15 +198,27 @@ def test_create_member(client, user_session):
     assert len(queue.get_queue()) == queue_length + 1
 
 
+def test_view_member_shows_role(client, user_session):
+    user = UserFactory.create()
+    workspace = WorkspaceFactory.create()
+    Workspaces._create_workspace_role(user, workspace, "developer")
+    member = WorkspaceRoles.add(user, workspace.id, "developer")
+    user_session(workspace.owner)
+    response = client.get(
+        url_for("workspaces.view_member", workspace_id=workspace.id, member_id=user.id)
+    )
+    assert response.status_code == 200
+    assert "initial-choice='developer'".encode() in response.data
+
+
 def test_permissions_for_view_member(client, user_session):
     user = UserFactory.create()
     workspace = WorkspaceFactory.create()
     Workspaces._create_workspace_role(user, workspace, "developer")
     member = WorkspaceRoles.add(user, workspace.id, "developer")
     user_session(user)
-    response = client.post(
-        url_for("workspaces.view_member", workspace_id=workspace.id, member_id=user.id),
-        follow_redirects=True,
+    response = client.get(
+        url_for("workspaces.view_member", workspace_id=workspace.id, member_id=user.id)
     )
     assert response.status_code == 404
 
