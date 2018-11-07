@@ -368,13 +368,7 @@ def accept_invitation(token):
 
 @bp.route("/workspaces/<workspace_id>/invitations/<token>/revoke", methods=["POST"])
 def revoke_invitation(workspace_id, token):
-    workspace = Workspaces.get(g.current_user, workspace_id)
-    Authorization.check_workspace_permission(
-        g.current_user,
-        workspace,
-        Permissions.ASSIGN_AND_UNASSIGN_ATAT_ROLE,
-        "revoke member invitation",
-    )
+    workspace = Workspaces.get_for_update_member(g.current_user, workspace_id)
     Invitations.revoke(token)
 
     return redirect(url_for("workspaces.workspace_members", workspace_id=workspace.id))
