@@ -29,7 +29,7 @@ export default {
     const environments = (
       environment_names.length > 0
       ? environment_names
-      : [""]
+      : ["Development", "Testing", "Staging", "Production"]
     ).map(createEnvironment)
 
     return {
