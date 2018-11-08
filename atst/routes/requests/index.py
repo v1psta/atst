@@ -4,6 +4,7 @@ from flask import render_template, g, url_for
 from . import requests_bp
 from atst.domain.requests import Requests
 from atst.models.permissions import Permissions
+from atst.forms.data import SERVICE_BRANCHES
 
 
 class RequestsIndex(object):
@@ -20,7 +21,11 @@ class RequestsIndex(object):
         else:
             context = self._non_ccpo_view(self.user)
 
-        return {**context, "possible_statuses": Requests.possible_statuses()}
+        return {
+            **context,
+            "possible_statuses": Requests.possible_statuses(),
+            "possible_dod_components": [b[0] for b in SERVICE_BRANCHES[1:]],
+        }
 
     def _ccpo_view(self, user):
         requests = Requests.get_many()

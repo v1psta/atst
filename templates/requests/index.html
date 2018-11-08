@@ -37,7 +37,13 @@
     </div>
   {% endcall %}
 
-  <requests-list inline-template v-bind:requests='{{ requests | tojson }}' v-bind:is-extended='{{ extended_view | tojson }}' v-bind:statuses='{{ possible_statuses | tojson }}'>
+  <requests-list
+    inline-template
+    v-bind:requests='{{ requests | tojson }}'
+    v-bind:is-extended='{{ extended_view | tojson }}'
+    v-bind:statuses='{{ possible_statuses | tojson }}'
+    v-bind:dod-components='{{ possible_dod_components | tojson }}'
+  >
     <div>
 
 {% if num_action_required %}
@@ -88,13 +94,24 @@
           </button>
         </div>
 
-        <div class='usa-input'>
-          <label for='filter-status'>Filter requests by status</label>
-          <select v-model="statusValue" id="filter-status" name="filter-status">
-            <option value="" selected disabled>Filter by status</option>
-            <option value="">All</option>
-            <option v-for="status in statuses" :value="status">!{ status }</option>
-          </select>
+        <div class="search-bar__filters">
+          <div class='usa-input'>
+            <label for='filter-status'>Filter requests by status</label>
+            <select v-model="statusValue" id="filter-status" name="filter-status">
+              <option value="" selected disabled>Filter by status</option>
+              <option value="">All</option>
+              <option v-for="status in statuses" :value="status">!{ status }</option>
+            </select>
+          </div>
+
+          <div class='usa-input'>
+            <label for='filter-dod-component'>Filter requests by DOD component</label>
+            <select v-model="dodComponentValue" id="filter-dod-component" name="filter-dod-component">
+              <option value="" selected disabled>Filter by DOD Component</option>
+              <option value="">All</option>
+              <option v-for="dodComponent in dodComponents" :value="dodComponent">!{ dodComponent }</option>
+            </select>
+          </div>
         </div>
       </form>
     {% endif %}
