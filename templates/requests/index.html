@@ -117,7 +117,7 @@
     {% endif %}
 
     <div class='responsive-table-wrapper'>
-      <table v-if="isExtended && filteredRequests.length">
+      <table v-if="filteredRequests.length">
         <thead>
           <tr>
             <th @click.prevent="updateSortValue(column.attr)" v-for="column in getColumns()"scope="col">
