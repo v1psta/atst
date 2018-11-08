@@ -117,7 +117,7 @@
     {% endif %}
 
     <div class='responsive-table-wrapper'>
-      <table>
+      <table v-if="isExtended && filteredRequests.length">
         <thead>
           <tr>
             <th @click.prevent="updateSortValue(column.attr)" v-for="column in getColumns()"scope="col">
@@ -157,6 +157,15 @@
           </tr>
         </tbody>
       </table>
+      <div v-else>
+        {{ EmptyState(
+          'No requests found.',
+          action_label=None,
+          action_href=None,
+          sub_message='Please try a different search.',
+          icon=None
+        ) }}
+      </div>
     </div>
   </div>
 {% endif %}
