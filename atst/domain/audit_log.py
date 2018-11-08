@@ -24,6 +24,19 @@ class AuditLog(object):
         )
 
     @classmethod
+    def log_update_workspace_role(
+        cls, action, user, updated_user, workspace, previous_role, new_role
+    ):
+        return cls._log(
+            action=action,
+            user=user,
+            updated_user=updated_user,
+            workspace_id=workspace.id,
+            previous_role_id=previous_role.id,
+            new_role_id=new_role.id,
+        )
+
+    @classmethod
     def log_system_event(cls, resource, action):
         return cls._log(resource=resource, action=action)
 
@@ -39,15 +52,27 @@ class AuditLog(object):
         return type(resource).__name__.lower()
 
     @classmethod
-    def _log(cls, user=None, workspace_id=None, resource=None, action=None):
+    def _log(
+        cls,
+        user=None,
+        updated_user=None,
+        workspace_id=None,
+        resource=None,
+        action=None,
+        previous_role_id=None,
+        new_role_id=None,
+    ):
         resource_id = resource.id if resource else None
         resource_type = cls._resource_type(resource) if resource else None
 
         audit_event = AuditEventQuery.create(
             user=user,
+            updated_user=updated_user,
             workspace_id=workspace_id,
             resource_id=resource_id,
             resource_type=resource_type,
+            previous_role_id=previous_role_id,
+            new_role_id=new_role_id,
             action=action,
         )
         return AuditEventQuery.add_and_commit(audit_event)
