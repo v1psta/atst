@@ -25,6 +25,10 @@ from atst.domain.workspaces import Workspaces
 from atst.domain.invitations import Invitations
 
 
+def random_service_branch():
+    return random.choice([k for k, v in SERVICE_BRANCHES if k])
+
+
 class Base(factory.alchemy.SQLAlchemyModelFactory):
     @classmethod
     def dictionary(cls, **attrs):
@@ -54,9 +58,7 @@ class UserFactory(Base):
     phone_number = factory.LazyFunction(
         lambda: "".join(random.choices(string.digits, k=10))
     )
-    service_branch = factory.LazyFunction(
-        lambda: random.choices([k for k, v in SERVICE_BRANCHES if k is not None])[0]
-    )
+    service_branch = factory.LazyFunction(random_service_branch)
     citizenship = "United States"
     designation = "military"
     date_latest_training = factory.LazyFunction(
@@ -147,7 +149,7 @@ class RequestFactory(Base):
             start_date=datetime.date(2050, 1, 1),
             cloud_native="yes",
             dollar_value=dollar_value,
-            dod_component=SERVICE_BRANCHES[2][1],
+            dod_component=random_service_branch(),
             data_transfers="Less than 100GB",
             expected_completion_date="Less than 1 month",
             jedi_migration="yes",
@@ -167,7 +169,7 @@ class RequestFactory(Base):
             email_request=user.email,
             fname_request=user.first_name,
             lname_request=user.last_name,
-            service_branch=SERVICE_BRANCHES[1][1],
+            service_branch=random_service_branch(),
             date_latest_training=datetime.date(2018, 8, 6),
         )
 
