@@ -12,9 +12,10 @@ export default {
 
 
   data: function () {
+    const showError = (this.initialErrors && this.initialErrors.length) || false
     return {
-      showError: (this.initialErrors && this.initialErrors.length) || false,
-      showValid: !!this.initialValue,
+      showError: showError,
+      showValid: !showError && !!this.initialValue,
       validationError: this.initialErrors.join(' ')
     }
   },
