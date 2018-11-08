@@ -1,7 +1,7 @@
 """Add Phone Extension
 
 Revision ID: 4c0b8263d800
-Revises: e1081cf01780
+Revises: ea8b5681b37c
 Create Date: 2018-10-29 11:14:01.332665
 
 """
@@ -11,7 +11,7 @@ import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
 revision = '4c0b8263d800'
-down_revision = 'e1081cf01780'
+down_revision = 'ea8b5681b37c'
 branch_labels = None
 depends_on = None
 
