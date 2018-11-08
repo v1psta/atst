@@ -357,10 +357,18 @@ def update_member(workspace_id, member_id):
         )
 
 
-@bp.route("/workspaces/invitation/<token>", methods=["GET"])
+@bp.route("/workspaces/invitations/<token>", methods=["GET"])
 def accept_invitation(token):
     invite = Invitations.accept(g.current_user, token)
 
     return redirect(
         url_for("workspaces.show_workspace", workspace_id=invite.workspace.id)
     )
+
+
+@bp.route("/workspaces/<workspace_id>/invitations/<token>/revoke", methods=["POST"])
+def revoke_invitation(workspace_id, token):
+    workspace = Workspaces.get_for_update_member(g.current_user, workspace_id)
+    Invitations.revoke(token)
+
+    return redirect(url_for("workspaces.workspace_members", workspace_id=workspace.id))

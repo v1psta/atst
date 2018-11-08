@@ -5,6 +5,7 @@
 {% from "components/selector.html" import Selector %}
 {% from "components/options_input.html" import OptionsInput %}
 {% from "components/alert.html" import Alert %}
+{% from "components/confirmation_button.html" import ConfirmationButton %}
 
 {% block content %}
 
@@ -37,6 +38,13 @@
       </dl>
       {% if editable %}
         <a href='{{ url_for("users.user") }}' class='icon-link'>edit account details</a>
+      {% endif %}
+      {% if member.latest_invitation.is_pending %}
+        {{ ConfirmationButton(
+              "Revoke Invitation",
+              url_for("workspaces.revoke_invitation", workspace_id=workspace.id, token=member.latest_invitation.token),
+              form.csrf_token
+           ) }}
       {% endif %}
     </div>
   </div>

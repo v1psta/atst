@@ -99,3 +99,8 @@ class Invitations(object):
         db.session.commit()
 
         return invite
+
+    @classmethod
+    def revoke(cls, token):
+        invite = Invitations._get(token)
+        return Invitations._update_status(invite, InvitationStatus.REVOKED)

@@ -51,6 +51,18 @@ class Workspaces(object):
         return workspace
 
     @classmethod
+    def get_for_update_member(cls, user, workspace_id):
+        workspace = WorkspacesQuery.get(workspace_id)
+        Authorization.check_workspace_permission(
+            user,
+            workspace,
+            Permissions.ASSIGN_AND_UNASSIGN_ATAT_ROLE,
+            "update a workspace member",
+        )
+
+        return workspace
+
+    @classmethod
     def get_by_request(cls, request):
         return WorkspacesQuery.get_by_request(request)
 

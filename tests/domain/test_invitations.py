@@ -93,3 +93,13 @@ def test_accept_invitation_twice():
     Invitations.accept(user, invite.token)
     with pytest.raises(InvitationError):
         Invitations.accept(user, invite.token)
+
+
+def test_revoke_invitation():
+    workspace = WorkspaceFactory.create()
+    user = UserFactory.create()
+    ws_role = WorkspaceRoleFactory.create(user=user, workspace=workspace)
+    invite = Invitations.create(ws_role, workspace.owner, user)
+    assert invite.is_pending
+    Invitations.revoke(invite.token)
+    assert invite.is_revoked
