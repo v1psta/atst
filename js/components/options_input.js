@@ -7,13 +7,14 @@ export default {
       type: Array,
       default: () => []
     },
+    initialValue: String,
   },
 
 
   data: function () {
     return {
       showError: (this.initialErrors && this.initialErrors.length) || false,
-      showValid: false,
+      showValid: !!this.initialValue,
       validationError: this.initialErrors.join(' ')
     }
   },
