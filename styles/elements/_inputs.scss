@@ -46,13 +46,13 @@
   fieldset {
     input[type='radio'] {
       + label::before {
-        box-shadow: 0 0 0 1px $color-white, 0 0 0 3px $color-red;
+        box-shadow: 0 0 0 1px $color-white, 0 0 0 3px $state-color;
       }
     }
 
     input[type='checkbox'] {
       + label::before {
-        box-shadow: 0 0 0 2px $color-red;
+        box-shadow: 0 0 0 2px $state-color;
       }
     }
   }
