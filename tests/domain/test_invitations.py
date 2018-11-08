@@ -103,3 +103,13 @@ def test_revoke_invitation():
     assert invite.is_pending
     Invitations.revoke(invite.token)
     assert invite.is_revoked
+
+
+def test_resend_invitation():
+    workspace = WorkspaceFactory.create()
+    user = UserFactory.create()
+    ws_role = WorkspaceRoleFactory.create(user=user, workspace=workspace)
+    invite = Invitations.create(workspace.owner, ws_role)
+    Invitations.resend(workspace.owner, workspace.id, invite.token)
+    assert ws_role.invitations[0].is_revoked
+    assert ws_role.invitations[1].is_pending

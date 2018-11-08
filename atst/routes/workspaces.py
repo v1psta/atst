@@ -374,3 +374,9 @@ def revoke_invitation(workspace_id, token):
     Invitations.revoke(token)
 
     return redirect(url_for("workspaces.workspace_members", workspace_id=workspace.id))
+
+
+@bp.route("/workspaces/<workspace_id>/invitations/<token>/resend", methods=["POST"])
+def resend_invitation(workspace_id, token):
+    Invitations.resend(g.current_user, workspace_id, token)
+    return redirect(url_for("workspaces.workspace_members", workspace_id=workspace_id))

@@ -39,6 +39,7 @@
       {% if editable %}
         <a href='{{ url_for("users.user") }}' class='icon-link'>edit account details</a>
       {% endif %}
+      <div>
       {% if member.latest_invitation.is_pending %}
         {{ ConfirmationButton(
               "Revoke Invitation",
@@ -46,6 +47,15 @@
               form.csrf_token
            ) }}
       {% endif %}
+      {% if member.can_resend_invitation %}
+        {{ ConfirmationButton (
+              "Resend Invitation",
+              url_for("workspaces.resend_invitation", workspace_id=workspace.id, token=member.latest_invitation.token),
+              form.csrf_token,
+              confirm_msg="Are you sure? This will invalidate the previously sent invitation."
+        )}}
+      {% endif %}
+      </div>
     </div>
   </div>
 
