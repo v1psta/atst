@@ -1,4 +1,4 @@
-from flask import g, render_template, redirect, url_for
+from flask import g, render_template, redirect, url_for, current_app as app
 from flask import request as http_request
 from werkzeug.datastructures import ImmutableMultiDict, FileStorage
 
@@ -13,6 +13,7 @@ from atst.domain.requests.financial_verification import (
 )
 from atst.models.attachment import Attachment
 from atst.domain.task_orders import TaskOrders
+from atst.utils.form_cache import retrieve_form_data
 
 
 def fv_extended(_http_request):
@@ -90,6 +91,12 @@ class FinancialVerificationBase(object):
         raise FormValidationError(form)
 
 
+def existing_form_data():
+    key = http_request.args.get("formCache")
+    if key:
+        return retrieve_form_data(app.redis, key)
+
+
 class GetFinancialVerificationForm(FinancialVerificationBase):
     def __init__(self, user, request, is_extended=False):
         self.user = user
@@ -97,7 +104,7 @@ class GetFinancialVerificationForm(FinancialVerificationBase):
         self.is_extended = is_extended
 
     def execute(self):
-        form = self._get_form(self.request, self.is_extended)
+        form = self._get_form(self.request, self.is_extended, formdata=existing_form_data())
         return form
 
 
