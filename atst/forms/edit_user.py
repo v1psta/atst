@@ -20,11 +20,8 @@ USER_FIELDS = {
         description="Enter your preferred contact e-mail address",
         validators=[Email()],
     ),
-    "phone_number": TelField(
-        "Phone Number",
-        description="Enter your 10-digit U.S. phone number",
-        validators=[PhoneNumber()],
-    ),
+    "phone_number": TelField("Phone Number", validators=[PhoneNumber()]),
+    "phone_ext": StringField("Extension"),
     "service_branch": SelectField(
         "Service Branch or Agency",
         description="Which service or organization do you belong to within the DoD?",
@@ -86,6 +83,7 @@ class EditUserForm(ValidatedForm):
     last_name = inherit_user_field("last_name")
     email = inherit_user_field("email")
     phone_number = inherit_user_field("phone_number")
+    phone_ext = inherit_user_field("phone_ext")
     service_branch = inherit_user_field("service_branch")
     citizenship = inherit_user_field("citizenship")
     designation = inherit_user_field("designation")

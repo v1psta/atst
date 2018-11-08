@@ -3,6 +3,7 @@
 {% from "components/icon.html" import Icon %}
 {% from "components/alert.html" import Alert %}
 {% from "components/text_input.html" import TextInput %}
+{% from "components/phone_input.html" import PhoneInput %}
 
 {% block content %}
 
@@ -112,7 +113,12 @@
                                 <h3 class='approval-log__log-item__header'>Mission Owner approval on behalf of:</h3>
                                 <span>{{ review.full_name_mao }}</span>
                                 <span>{{ review.email_mao }}</span>
-                                <span>{{ review.phone_mao }}</span>
+                                <span>
+                                  {{ review.phone_mao }}
+                                  {% if review.phone_ext_mao %}
+                                    ext. {{ review.phone_ext_mao }}
+                                  {% endif %}
+                                </span>
                               </div>
                             {% endif %}
 
@@ -197,15 +203,8 @@
                     </div>
                   </div>
 
-                  <div class='form-row'>
-                    <div class='form-col form-col--half'>
-                      {{ TextInput(review_form.email_mao, placeholder="name@mail.mil", validation='email') }}
-                    </div>
-
-                    <div class='form-col form-col--half'>
-                      {{ TextInput(review_form.phone_mao, placeholder="(123) 456-7890", validation='usPhone') }}
-                    </div>
-                  </div>
+                  {{ TextInput(review_form.email_mao, placeholder="name@mail.mil", validation='email') }}
+                  {{ PhoneInput(review_form.phone_mao, review_form.phone_ext_mao) }}
 
                   <hr />
 

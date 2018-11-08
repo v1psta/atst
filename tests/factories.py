@@ -163,6 +163,7 @@ class RequestFactory(Base):
             citizenship="United States",
             designation="military",
             phone_number="1234567890",
+            phone_ext="123",
             email_request=user.email,
             fname_request=user.first_name,
             lname_request=user.last_name,

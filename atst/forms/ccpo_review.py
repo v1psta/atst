@@ -19,5 +19,6 @@ class CCPOReviewForm(ValidatedForm):
     phone_mao = TelField(
         "Mission Owner phone number (optional)", validators=[Optional(), PhoneNumber()]
     )
+    phone_ext_mao = StringField("Extension (optional)")
     fname_ccpo = StringField("First Name (optional)", validators=[Optional(), Name()])
     lname_ccpo = StringField("Last Name (optional)", validators=[Optional(), Name()])

@@ -81,6 +81,7 @@ class Request(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
         "citizenship",
         "designation",
         "phone_number",
+        "phone_ext",
         "email_request",
         "fname_request",
         "lname_request",
