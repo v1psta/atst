@@ -8,6 +8,7 @@ from atst.domain.invitations import (
     ExpiredError as InvitationExpiredError,
     WrongUserError as InvitationWrongUserError,
 )
+from atst.utils.form_cache import cache_form_data
 
 
 def log_error(e):
@@ -37,7 +38,10 @@ def make_error_pages(app):
     # pylint: disable=unused-variable
     def session_expired(e):
         log_error(e)
-        return redirect(url_for("atst.root", sessionExpired=True, next=request.path))
+        url_args = {"sessionExpired": True, "next": request.path}
+        if request.method == "POST":
+            url_args["formCache"] = cache_form_data(app.redis, request.form)
+        return redirect(url_for("atst.root", **url_args))
 
     @app.errorhandler(Exception)
     # pylint: disable=unused-variable
