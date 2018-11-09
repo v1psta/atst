@@ -1,5 +1,7 @@
-from sqlalchemy import event
+from sqlalchemy import event, inspect
 from flask import g
+from sqlalchemy.orm import class_mapper
+from sqlalchemy.orm.attributes import get_history
 
 from atst.models.audit_event import AuditEvent
 from atst.utils import camel_to_snake, getattr_path
@@ -11,12 +13,13 @@ ACTION_DELETE = "delete"
 
 class AuditableMixin(object):
     @staticmethod
-    def create_audit_event(connection, resource, action):
+    def create_audit_event(connection, resource, action, previous_state=None):
         user_id = getattr_path(g, "current_user.id")
         workspace_id = resource.auditable_workspace_id()
         request_id = resource.auditable_request_id()
         resource_type = resource.auditable_resource_type()
         display_name = resource.auditable_displayname()
+        previous_role_id = previous_state["role_id"]
 
         audit_event = AuditEvent(
             user_id=user_id,
@@ -26,6 +29,7 @@ class AuditableMixin(object):
             resource_id=resource.id,
             display_name=display_name,
             action=action,
+            previous_role_id=previous_role_id,
         )
 
         audit_event.save(connection)
@@ -48,7 +52,14 @@ class AuditableMixin(object):
 
     @staticmethod
     def audit_update(mapper, connection, target):
-        target.create_audit_event(connection, target, ACTION_UPDATE)
+        previous_state = {}
+        inspr = inspect(target)
+        attrs = class_mapper(target.__class__).column_attrs
+        for attr in attrs:
+            history = getattr(inspr.attrs, attr.key).history
+            if history.has_changes():
+                previous_state[attr.key] = get_history(target, attr.key)[2].pop()
+        target.create_audit_event(connection, target, ACTION_UPDATE, previous_state)
 
     def auditable_resource_type(self):
         return camel_to_snake(type(self).__name__)
