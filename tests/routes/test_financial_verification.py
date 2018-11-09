@@ -519,3 +519,21 @@ def test_existing_task_order_with_pdf(fv_data, e_fv_data, client, user_session):
     )
 
     assert response.status_code == 200
+
+
+def test_pdf_clearing(fv_data, e_fv_data, pdf_upload, pdf_upload2):
+    user = UserFactory.create()
+    request = RequestFactory.create(creator=user)
+    data = {**fv_data, **e_fv_data, "task_order-pdf": pdf_upload}
+
+    SaveFinancialVerificationDraft(
+        TrueValidator, TrueValidator, user, request, data, is_extended=True
+    ).execute()
+
+    data = {**data, "task_order-pdf": pdf_upload2}
+    UpdateFinancialVerification(
+        TrueValidator, TrueValidator, user, request, data, is_extended=True
+    ).execute()
+
+    form = GetFinancialVerificationForm(user, request, is_extended=True).execute()
+    assert form.task_order.pdf.data == pdf_upload2.filename

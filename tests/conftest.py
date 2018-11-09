@@ -11,7 +11,7 @@ from atst.app import make_app, make_config
 from atst.database import db as _db
 from atst.queue import queue as atst_queue
 import tests.factories as factories
-from tests.mocks import PDF_FILENAME
+from tests.mocks import PDF_FILENAME, PDF_FILENAME2
 
 dictConfig({"version": 1, "handlers": {"wsgi": {"class": "logging.NullHandler"}}})
 
@@ -118,6 +118,12 @@ def user_session(monkeypatch, session):
 @pytest.fixture
 def pdf_upload():
     with open(PDF_FILENAME, "rb") as fp:
+        yield FileStorage(fp, content_type="application/pdf")
+
+
+@pytest.fixture
+def pdf_upload2():
+    with open(PDF_FILENAME2, "rb") as fp:
         yield FileStorage(fp, content_type="application/pdf")
 
 
