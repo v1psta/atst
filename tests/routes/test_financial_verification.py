@@ -487,3 +487,35 @@ def test_can_submit_once_to_details_are_entered(fv_data, e_fv_data):
     assert UpdateFinancialVerification(
         TrueValidator, TrueValidator, user, request, data, is_extended=True
     ).execute()
+
+
+def test_existing_task_order_with_pdf(fv_data, e_fv_data, client, user_session):
+    # Use finver route to create initial TO #1, complete with PDF
+    user = UserFactory.create()
+    request = RequestFactory.create(creator=user)
+    data = {**fv_data, **e_fv_data, "task_order-number": MANUAL_TO_NUMBER}
+    UpdateFinancialVerification(
+        TrueValidator, TaskOrderNumberValidator(), user, request, data, is_extended=True
+    ).execute()
+
+    # Save draft on a new finver form, but with same number as TO #1
+    user = UserFactory.create()
+    request = RequestFactory.create(creator=user)
+    data = {"task_order-number": MANUAL_TO_NUMBER}
+    SaveFinancialVerificationDraft(
+        TrueValidator,
+        TaskOrderNumberValidator(),
+        user,
+        request,
+        data,
+        is_extended=False,
+    ).execute()
+
+    # Get finver form
+    user_session(user)
+    response = client.get(
+        url_for("requests.financial_verification", request_id=request.id),
+        follow_redirects=True,
+    )
+
+    assert response.status_code == 200
