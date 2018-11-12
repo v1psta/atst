@@ -10,6 +10,7 @@ from atst.database import db
 from atst.models.environment_role import EnvironmentRole
 from atst.models.project import Project
 from atst.models.environment import Environment
+from atst.models.role import Role
 
 
 class Status(Enum):
@@ -43,14 +44,15 @@ class WorkspaceRole(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
 
     @property
     def history(self):
-        previous_state = AuditableMixin.get_history(self)
-        from_role = previous_role["role"]
+        previous_state = mixins.AuditableMixin.get_history(self)
+        from_role_id = previous_state["role_id"]
+        from_role = db.session.query(Role).filter(Role.id == from_role_id).one()
         to_role = self.role_displayname
-        return {"role": [from_role, to_role]}
+        return {"role": [from_role.display_name, to_role]}
 
     @property
-    def auditable_event_details(self):
-        return {"updated_user": self.user_name, "updated_user_id" = self.user_id}
+    def event_details(self):
+        return {"updated_user": self.user_name, "updated_user_id": str(self.user_id)}
 
     @property
     def latest_invitation(self):
