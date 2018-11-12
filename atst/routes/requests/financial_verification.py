@@ -181,6 +181,7 @@ class SaveFinancialVerificationDraft(FinancialVerificationBase):
 def financial_verification(request_id):
     request = Requests.get(g.current_user, request_id)
     is_extended = fv_extended(http_request)
+    saved_draft = http_request.args.get("saved_draft", False)
 
     should_be_extended = not is_extended and request.has_manual_task_order
     if should_be_extended:
@@ -198,6 +199,7 @@ def financial_verification(request_id):
         jedi_request=request,
         review_comment=request.review_comment,
         extended=is_extended,
+        saved_draft=saved_draft
     )
 
 
@@ -259,14 +261,11 @@ def save_financial_verification_draft(request_id):
             extended=is_extended,
         )
 
-    form = GetFinancialVerificationForm(
-        user, updated_request, is_extended=is_extended
-    ).execute()
-    return render_template(
-        "requests/financial_verification.html",
-        f=form,
-        jedi_request=request,
-        review_comment=request.review_comment,
-        extended=is_extended,
-        saved_draft=True,
+    return redirect(
+        url_for(
+            "requests.financial_verification",
+            request_id=updated_request.id,
+            is_extended=is_extended,
+            saved_draft=True,
+        )
     )
