@@ -305,7 +305,7 @@ def test_save_fv_draft_route(client, user_session, fv_data):
     response = client.post(
         url_for("requests.save_financial_verification_draft", request_id=request.id),
         data=fv_data,
-        follow_redirects=False,
+        follow_redirects=True,
     )
 
     assert response.status_code == 200
