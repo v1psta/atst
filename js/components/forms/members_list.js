@@ -51,7 +51,7 @@ export default {
 
   props: {
     members: Array,
-    choices: Array,
+    role_choices: Array,
   },
 
   data: function () {
@@ -91,7 +91,7 @@ export default {
       searchValue: '',
       status: '',
       role: '',
-      rolesByDisplayName: indexBy(prop('display_name'), this.choices),
+      rolesByDisplayName: indexBy(prop('display_name'), this.role_choices),
       sortInfo: {
         columnName: '',
         isAscending: true,
