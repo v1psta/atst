@@ -65,7 +65,7 @@ class Attachment(Base, mixins.TimestampsMixin):
             return (
                 db.session.query(Attachment)
                 .filter_by(resource=resource, resource_id=resource_id)
-                .delete()
+                .update({"resource_id": None})
             )
         except NoResultFound:
             raise NotFoundError("attachment")

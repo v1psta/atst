@@ -4,6 +4,7 @@ from wtforms.fields.html5 import DateField, EmailField
 from wtforms.fields import StringField, FileField, FormField
 from wtforms.validators import InputRequired, Email, Regexp, Optional
 from flask_wtf.file import FileAllowed
+from werkzeug.datastructures import FileStorage
 
 from .fields import NewlineListField, SelectField, NumberStringField
 from atst.forms.forms import ValidatedForm
@@ -236,6 +237,10 @@ class FinancialVerificationForm(ValidatedForm):
     @property
     def task_order_number(self):
         return self.task_order.number
+
+    @property
+    def has_task_order_pdf(self):
+        return isinstance(self.task_order.pdf.data, FileStorage)
 
     @property
     def is_missing_task_order_number(self):
