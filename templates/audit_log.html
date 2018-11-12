@@ -27,6 +27,16 @@
 
               <br>
 
+              {% if event.event_details %}
+                for User <code>{{ event.event_details.updated_user_id }}</code> ({{ event.event_details.updated_user }})
+                <br>
+              {% endif %}
+
+              {% if event.changed_state %}
+                from {{ event.changed_state.role[0] }} to {{ event.changed_state.role[1] }}
+                <br>
+              {% endif %}
+
               {% if event.workspace %}
                 in Workspace <code>{{ event.workspace_id }}</code> ({{ event.workspace.name }})
               {% elif event.request %}
