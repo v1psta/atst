@@ -9,6 +9,12 @@
 
 {% include 'requests/review_menu.html' %}
 
+{% if saved_draft %}
+  {% call Alert('Draft saved', level='success') %}
+  {% endcall %}
+{% endif %}
+
+
 {% if jedi_request.is_pending_financial_verification and not f.errors and not extended %}
   {{ Alert('Pending Financial Verification', fragment="fragments/pending_financial_verification.html") }}
 {% endif %}
@@ -19,7 +25,6 @@
 
 <financial inline-template v-bind:initial-data='{{ f.data|mixedContentToJson }}'>
 <div class="col">
-
   {% if extended %}
     {{ Alert('Manually enter Task Order information',
       message="Additional fields are displayed below, where you can manually enter financial information as documented in your Task Order.",
@@ -39,11 +44,6 @@
     {% call Alert('Task Order not found in EDA', level='warning') %}
         We could not find your Task Order in our system of record, EDA. Please confirm that you have entered it correctly.<br>
         <a class="usa-button" href="{{ extended_url }}">Enter Task Order information manually</a>
-    {% endcall %}
-  {% endif %}
-
-  {% if saved_draft %}
-    {% call Alert('Draft saved', level='success') %}
     {% endcall %}
   {% endif %}
 
