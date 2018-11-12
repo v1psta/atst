@@ -1,6 +1,7 @@
 import FormMixin from '../../mixins/form'
 import optionsinput from '../options_input'
 import textinput from '../text_input'
+import localdatetime from '../local_datetime'
 
 export default {
   name: 'financial',
@@ -10,6 +11,7 @@ export default {
   components: {
     optionsinput,
     textinput,
+    localdatetime,
   },
 
   props: {

@@ -43,7 +43,7 @@
   {% endif %}
 
   {% if saved_draft %}
-    {% call Alert('Draft saved', level='info') %}
+    {% call Alert('Draft saved', level='success') %}
     {% endcall %}
   {% endif %}
 
@@ -185,6 +185,9 @@
   </div>
 
   {% endblock form %}
+  {% if saved_draft %}
+    Draft saved at <localdatetime :timestamp="new Date().toString()"></localdatetime>
+  {% endif %}
   {% block next %}
   <div class='action-group'>
     <input formmethod="post" formaction="{{ url_for('requests.financial_verification', request_id=jedi_request.id, extended=extended) }}" type='submit' class='usa-button usa-button-primary' value='Save & Continue' />
