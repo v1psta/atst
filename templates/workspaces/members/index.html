@@ -47,7 +47,12 @@
 {% endif %}
 
 
-<members-list inline-template id="search-template" v-bind:members='{{ members | tojson}}' v-bind:role_choices='{{ role_choices | tojson}}'>
+<members-list
+  inline-template
+  id="search-template"
+  v-bind:members='{{ members | tojson}}'
+  v-bind:role_choices='{{ role_choices | tojson}}'
+  v-bind:status_choices='{{ status_choices | tojson}}'>
   <div>
   <form class='search-bar' @submit.prevent>
     <div class='usa-input search-input'>
@@ -61,9 +66,9 @@
       <select v-model="status" id="filter-status" name="filter-status">
         <option value="" selected disabled>Filter by status</option>
         <option value="all">View All</option>
-        <option value="active">Active</option>
-        <option value="pending">Pending</option>
-        <option value="denied">Denied</option>
+        {% for status in status_choices %}
+          <option value='{{ status.name }}'>{{ status.display_name }}</option>
+        {% endfor %}
       </select>
     </div>
 

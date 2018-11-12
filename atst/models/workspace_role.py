@@ -53,11 +53,12 @@ class WorkspaceRole(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
         elif self.latest_invitation:
             if self.latest_invitation.is_revoked:
                 return "Revoked"
-            elif self.latest_invitation.is_rejected_expired:
-                return "Invite expired"
             elif self.latest_invitation.is_rejected_wrong_user:
                 return "Error on invite"
-            elif self.latest_invitation.is_expired:
+            elif (
+                self.latest_invitation.is_rejected_expired
+                or self.latest_invitation.is_expired
+            ):
                 return "Invite expired"
             else:
                 return "Pending"
