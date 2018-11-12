@@ -42,6 +42,17 @@ class WorkspaceRole(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
         )
 
     @property
+    def history(self):
+        previous_state = AuditableMixin.get_history(self)
+        from_role = previous_role["role"]
+        to_role = self.role_displayname
+        return {"role": [from_role, to_role]}
+
+    @property
+    def auditable_event_details(self):
+        return {"updated_user": self.user_name, "updated_user_id" = self.user_id}
+
+    @property
     def latest_invitation(self):
         if self.invitations:
             return self.invitations[-1]
