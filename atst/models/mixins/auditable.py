@@ -3,46 +3,12 @@ from flask import g
 from sqlalchemy.orm import class_mapper
 from sqlalchemy.orm.attributes import get_history
 
-from atst.database import db
-from atst.models.workspace_role import WorkspaceRole
 from atst.models.audit_event import AuditEvent
 from atst.utils import camel_to_snake, getattr_path
 
 ACTION_CREATE = "create"
 ACTION_UPDATE = "update"
 ACTION_DELETE = "delete"
-
-
-class AuditableWorkspaceRole(AuditableMixin):
-    target = target
-    changed_state = get_changed_state()
-    event_details = get_event_details()
-
-    @classmethod
-    def get_changed_state(self, resource):
-        previous_state = {}
-        inspr = inspect(target)
-        attrs = class_mapper(target.__class__).column_attrs
-        for attr in attrs:
-            history = getattr(inspr.attrs, attr.key).history
-            if history.has_changes():
-                previous_state[attr.key] = get_history(target, attr.key)[2].pop()
-
-        from_role = previous_role["role"]
-        to_role = target.role_displayname
-        return {"role": [from_role, to_role]}
-
-    @classmethod
-    def get_event_details(self):
-        # get user that is being updated
-        # does this need to query the db?
-        ws_role_id = target.auditable_request_id()
-        ws_role = (
-            db.session.query(WorkspaceRole)
-            .filter(WorkspaceRole.id == ws_role_id)
-            .first()
-        )
-        return {"user": ws_role.user_name}
 
 
 class AuditableMixin(object):
@@ -105,7 +71,7 @@ class AuditableMixin(object):
         return getattr_path(self, "history")
 
     def auditable_event_details(self):
-        return getattr_path(self, "auditable_event_details")
+        return getattr_path(self, "event_details")
 
     def auditable_resource_type(self):
         return camel_to_snake(type(self).__name__)
