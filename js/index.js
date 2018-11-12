@@ -24,6 +24,8 @@ import MembersList from './components/forms/members_list'
 import LocalDatetime from './components/local_datetime'
 import RequestsList from './components/forms/requests_list'
 
+Vue.config.productionTip = false
+
 Vue.use(VTooltip)
 
 Vue.mixin(Modal)
