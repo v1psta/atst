@@ -1,7 +1,6 @@
 from sqlalchemy import String, Column, ForeignKey, inspect
 from sqlalchemy.dialects.postgresql import UUID, JSON
 from sqlalchemy.orm import relationship
-from atst.database import db
 
 from atst.models import Base, types
 from atst.models.mixins.timestamps import TimestampsMixin
@@ -28,7 +27,6 @@ class AuditEvent(Base, TimestampsMixin):
     resource_id = Column(UUID(as_uuid=True), index=True, nullable=False)
     display_name = Column(String())
     action = Column(String(), nullable=False)
-
 
     def save(self, connection):
         attrs = inspect(self).dict
