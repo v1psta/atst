@@ -30,25 +30,7 @@ def coerce_choice(val):
         return val.value
 
 
-class DraftValidateMixin(object):
-    def validate_draft(self):
-        return True
-        # """
-        # Make all fields optional before validation, and then return them to
-        # their previous state.
-        # """
-        # for field in self:
-        #     field.validators.insert(0, Optional())
-
-        # valid = self.validate()
-
-        # for field in self:
-        #     field.validators.pop(0)
-
-        # return valid
-
-
-class TaskOrderForm(ValidatedForm, DraftValidateMixin):
+class TaskOrderForm(ValidatedForm):
     def do_validate_number(self):
         for field in self:
             if field.name != "task_order-number":
@@ -144,7 +126,7 @@ class TaskOrderForm(ValidatedForm, DraftValidateMixin):
     )
 
 
-class RequestFinancialVerificationForm(ValidatedForm, DraftValidateMixin):
+class RequestFinancialVerificationForm(ValidatedForm):
     uii_ids = NewlineListField(
         "Unique Item Identifier (UII)s related to your application(s) if you already have them.",
         description="If you have more than one UII, place each one on a new line.",
@@ -223,9 +205,6 @@ class FinancialVerificationForm(ValidatedForm):
         request_valid = self.request.validate(self)
         task_order_valid = self.task_order.do_validate_number()
         return request_valid and task_order_valid
-
-    def validate_draft(self):
-        return self.task_order.validate_draft() and self.request.validate_draft()
 
     def reset(self):
         self.request.reset()

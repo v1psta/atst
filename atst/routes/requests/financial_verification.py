@@ -168,9 +168,6 @@ class SaveFinancialVerificationDraft(FinancialVerificationBase):
 
     def execute(self):
         form = self._get_form(self.request, self.is_extended, self.fv_data)
-        if not form.validate_draft():
-            self._raise(form)
-
         attachment = self._process_attachment(self.is_extended, form)
         task_order = self._try_create_task_order(form, attachment, self.is_extended)
         updated_request = Requests.update_financial_verification(
