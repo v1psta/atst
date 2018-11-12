@@ -168,18 +168,8 @@ class SaveFinancialVerificationDraft(FinancialVerificationBase):
 
     def execute(self):
         form = self._get_form(self.request, self.is_extended, self.fv_data)
-        valid = True
-
         if not form.validate_draft():
             self._raise(form)
-
-        if form.pe_id.data and not self.pe_validator.validate(self.request, form.pe_id):
-            valid = False
-
-        if form.task_order.number.data and not self.task_order_validator.validate(
-            form.task_order.number
-        ):
-            valid = False
 
         attachment = self._process_attachment(self.is_extended, form)
         task_order = self._try_create_task_order(form, attachment, self.is_extended)
@@ -187,10 +177,7 @@ class SaveFinancialVerificationDraft(FinancialVerificationBase):
             self.request.id, form.request.data, task_order=task_order
         )
 
-        if valid:
-            return updated_request
-        else:
-            self._raise(form)
+        return updated_request
 
 
 @requests_bp.route("/requests/verify/<string:request_id>", methods=["GET"])

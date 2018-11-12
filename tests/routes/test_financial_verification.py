@@ -193,39 +193,18 @@ def test_save_draft_with_ba_code():
     assert save_draft.execute()
 
 
-def test_save_draft_with_invalid_task_order(fv_data):
+def test_save_draft_allows_invalid_data():
     request = RequestFactory.create()
     user = UserFactory.create()
-    save_draft = SaveFinancialVerificationDraft(
-        TrueValidator, FalseValidator, user, request, fv_data, is_extended=False
-    )
+    data = {
+        "task_order-number": MANUAL_TO_NUMBER,
+        "request-pe_id": "123",
+        "request-ba_code": "a"
+    }
 
-    with pytest.raises(FormValidationError):
-        assert save_draft.execute()
-
-
-def test_save_draft_with_invalid_pe_number(fv_data):
-    request = RequestFactory.create()
-    user = UserFactory.create()
-    save_draft = SaveFinancialVerificationDraft(
-        FalseValidator, TrueValidator, user, request, fv_data, is_extended=False
-    )
-
-    with pytest.raises(FormValidationError):
-        assert save_draft.execute()
-
-
-def test_save_draft_re_enter_pe_number(fv_data):
-    request = RequestFactory.create()
-    user = UserFactory.create()
-    data = {**fv_data, "pe_id": "0101228M"}
-    save_fv = SaveFinancialVerificationDraft(
-        PENumberValidator(), TrueValidator, user, request, data, is_extended=False
-    )
-
-    with pytest.raises(FormValidationError):
-        save_fv.execute()
-    save_fv.execute()
+    assert SaveFinancialVerificationDraft(
+        PENumberValidator(), TaskOrderNumberValidator(), user, request, data, is_extended=True
+    ).execute()
 
 
 def test_save_draft_and_then_submit():

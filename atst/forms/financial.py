@@ -32,19 +32,20 @@ def coerce_choice(val):
 
 class DraftValidateMixin(object):
     def validate_draft(self):
-        """
-        Make all fields optional before validation, and then return them to
-        their previous state.
-        """
-        for field in self:
-            field.validators.insert(0, Optional())
+        return True
+        # """
+        # Make all fields optional before validation, and then return them to
+        # their previous state.
+        # """
+        # for field in self:
+        #     field.validators.insert(0, Optional())
 
-        valid = self.validate()
+        # valid = self.validate()
 
-        for field in self:
-            field.validators.pop(0)
+        # for field in self:
+        #     field.validators.pop(0)
 
-        return valid
+        # return valid
 
 
 class TaskOrderForm(ValidatedForm, DraftValidateMixin):
