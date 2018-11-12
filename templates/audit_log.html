@@ -40,5 +40,13 @@
 
   </section>
 
+  {% for i in range(1, audit_events.pages + 1) %}
+    {% if i == audit_events.page %}
+      {{ i }}
+    {% else %}
+      <a href="{{ url_for('atst.activity_history', page=i) }}">{{ i }}</a>
+    {% endif %}
+  {% endfor %}
+
 
 {% endblock %}

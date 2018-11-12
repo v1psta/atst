@@ -121,9 +121,17 @@ def logout():
     return redirect(url_for(".root"))
 
 
+def pagination_info(request, default_page=1, default_per_page=50):
+    return {
+        "page": int(request.args.get("page", default_page)),
+        "per_page": int(request.args.get("per_page", default_per_page)),
+    }
+
+
 @bp.route("/activity-history")
 def activity_history():
-    audit_events = AuditLog.get_all_events(g.current_user)
+    pagination = pagination_info(request)
+    audit_events = AuditLog.get_all_events(g.current_user, pagination)
     return render_template("audit_log.html", audit_events=audit_events)
 
 
