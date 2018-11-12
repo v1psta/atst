@@ -466,13 +466,15 @@ def test_resend_invitation_sends_email(client, user_session, queue):
         user=user, workspace=workspace, status=WorkspaceRoleStatus.PENDING
     )
     invite = InvitationFactory.create(
-        user_id=user.id,
-        workspace_role_id=ws_role.id,
-        status=InvitationStatus.PENDING,
+        user_id=user.id, workspace_role_id=ws_role.id, status=InvitationStatus.PENDING
     )
     user_session(workspace.owner)
     client.post(
-        url_for("workspaces.resend_invitation", workspace_id=workspace.id, token=invite.token)
+        url_for(
+            "workspaces.resend_invitation",
+            workspace_id=workspace.id,
+            token=invite.token,
+        )
     )
 
     assert len(queue.get_queue()) == 1
