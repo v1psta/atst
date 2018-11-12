@@ -29,5 +29,5 @@ def test_paginate_audit_log(ccpo):
     for _ in range(100):
         AuditLog.log_system_event(user, action="create")
 
-    events = AuditLog.get_all_events(ccpo, pagination={"per_page": 25, "page": 2})
+    events = AuditLog.get_all_events(ccpo, pagination_opts={"per_page": 25, "page": 2})
     assert len(events) == 25

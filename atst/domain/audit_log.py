@@ -8,9 +8,9 @@ class AuditEventQuery(Query):
     model = AuditEvent
 
     @classmethod
-    def get_all(cls, pagination):
+    def get_all(cls, pagination_opts):
         query = db.session.query(cls.model).order_by(cls.model.time_created.desc())
-        return cls.paginate(query, pagination)
+        return cls.paginate(query, pagination_opts)
 
 
 class AuditLog(object):
@@ -29,11 +29,11 @@ class AuditLog(object):
         return cls._log(resource=resource, action=action)
 
     @classmethod
-    def get_all_events(cls, user, pagination=None):
+    def get_all_events(cls, user, pagination_opts=None):
         Authorization.check_atat_permission(
             user, Permissions.VIEW_AUDIT_LOG, "view audit log"
         )
-        return AuditEventQuery.get_all(pagination)
+        return AuditEventQuery.get_all(pagination_opts)
 
     @classmethod
     def _resource_type(cls, resource):

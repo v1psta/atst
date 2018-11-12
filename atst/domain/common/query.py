@@ -18,10 +18,12 @@ class Paginator(object):
         self.query_set = query_set
 
     @classmethod
-    def paginate(cls, query, pagination=None):
-        if pagination is not None:
+    def paginate(cls, query, pagination_opts=None):
+        if pagination_opts is not None:
             return cls(
-                query.paginate(page=pagination["page"], per_page=pagination["per_page"])
+                query.paginate(
+                    page=pagination_opts["page"], per_page=pagination_opts["per_page"]
+                )
             )
         else:
             return query.all()
@@ -68,5 +70,5 @@ class Query(object):
         return resource
 
     @classmethod
-    def paginate(cls, query, pagination):
-        return Paginator.paginate(query, pagination)
+    def paginate(cls, query, pagination_opts):
+        return Paginator.paginate(query, pagination_opts)
