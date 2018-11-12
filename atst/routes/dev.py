@@ -12,6 +12,8 @@ import pendulum
 from . import redirect_after_login_url
 from atst.domain.users import Users
 from atst.queue import queue
+from tests.factories import random_service_branch
+from atst.utils import pick
 
 bp = Blueprint("dev", __name__)
 
@@ -22,7 +24,7 @@ _DEV_USERS = {
         "last_name": "Stevenson",
         "atat_role_name": "ccpo",
         "email": "sam@example.com",
-        "service_branch": "Fake Service Branch",
+        "service_branch": random_service_branch(),
         "phone_number": "1234567890",
         "citizenship": "United States",
         "designation": "Military",
@@ -34,7 +36,7 @@ _DEV_USERS = {
         "last_name": "Adamson",
         "atat_role_name": "default",
         "email": "amanda@example.com",
-        "service_branch": "Fake Service Branch",
+        "service_branch": random_service_branch(),
         "phone_number": "1234567890",
         "citizenship": "United States",
         "designation": "Military",
@@ -46,7 +48,7 @@ _DEV_USERS = {
         "last_name": "Buchannan",
         "atat_role_name": "default",
         "email": "brandon@example.com",
-        "service_branch": "Fake Service Branch",
+        "service_branch": random_service_branch(),
         "phone_number": "1234567890",
         "citizenship": "United States",
         "designation": "Military",
@@ -58,7 +60,7 @@ _DEV_USERS = {
         "last_name": "Collins",
         "atat_role_name": "default",
         "email": "christina@example.com",
-        "service_branch": "Fake Service Branch",
+        "service_branch": random_service_branch(),
         "phone_number": "1234567890",
         "citizenship": "United States",
         "designation": "Military",
@@ -70,7 +72,7 @@ _DEV_USERS = {
         "last_name": "Domingo",
         "atat_role_name": "default",
         "email": "dominick@example.com",
-        "service_branch": "Fake Service Branch",
+        "service_branch": random_service_branch(),
         "phone_number": "1234567890",
         "citizenship": "United States",
         "designation": "Military",
@@ -82,7 +84,7 @@ _DEV_USERS = {
         "last_name": "Eichner",
         "atat_role_name": "default",
         "email": "erica@example.com",
-        "service_branch": "Fake Service Branch",
+        "service_branch": random_service_branch(),
         "phone_number": "1234567890",
         "citizenship": "United States",
         "designation": "Military",
@@ -97,10 +99,20 @@ def login_dev():
     user_data = _DEV_USERS[role]
     user = Users.get_or_create_by_dod_id(
         user_data["dod_id"],
-        atat_role_name=user_data["atat_role_name"],
-        first_name=user_data["first_name"],
-        last_name=user_data["last_name"],
-        email=user_data["email"],
+        **pick(
+            [
+                "atat_role_name",
+                "first_name",
+                "last_name",
+                "email",
+                "service_branch",
+                "phone_number",
+                "citizenship",
+                "designation",
+                "date_latest_training",
+            ],
+            user_data,
+        ),
     )
     session["user_id"] = user.id
 
