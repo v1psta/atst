@@ -42,6 +42,11 @@
     {% endcall %}
   {% endif %}
 
+  {% if saved_draft %}
+    {% call Alert('Draft saved', level='info') %}
+    {% endcall %}
+  {% endif %}
+
   <form autocomplete="off" enctype="multipart/form-data">
 
   {{ f.csrf_token }}

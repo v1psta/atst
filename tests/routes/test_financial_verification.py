@@ -17,7 +17,6 @@ from atst.domain.requests.financial_verification import (
     PENumberValidator,
     TaskOrderNumberValidator,
 )
-from atst.utils import pick
 from atst.models.request_status_event import RequestStatus
 from atst.domain.requests.query import RequestsQuery
 
@@ -199,11 +198,16 @@ def test_save_draft_allows_invalid_data():
     data = {
         "task_order-number": MANUAL_TO_NUMBER,
         "request-pe_id": "123",
-        "request-ba_code": "a"
+        "request-ba_code": "a",
     }
 
     assert SaveFinancialVerificationDraft(
-        PENumberValidator(), TaskOrderNumberValidator(), user, request, data, is_extended=True
+        PENumberValidator(),
+        TaskOrderNumberValidator(),
+        user,
+        request,
+        data,
+        is_extended=True,
     ).execute()
 
 
@@ -265,17 +269,6 @@ def test_update_ignores_empty_values(fv_data, e_fv_data):
     SaveFinancialVerificationDraft(
         TrueValidator, TrueValidator, user, request, data, is_extended=True
     ).execute()
-
-
-def test_simple_form_does_not_generate_task_order(fv_data):
-    request = RequestFactory.create()
-    user = UserFactory.create()
-    data = pick(["uii_ids"], fv_data)
-    updated_request = SaveFinancialVerificationDraft(
-        TrueValidator, TrueValidator, user, request, data, is_extended=False
-    ).execute()
-
-    assert updated_request.task_order is None
 
 
 def test_can_save_draft_with_funding_type(fv_data, e_fv_data):

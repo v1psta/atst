@@ -240,15 +240,16 @@ def update_financial_verification(request_id):
 
 @requests_bp.route("/requests/verify/<string:request_id>/draft", methods=["POST"])
 def save_financial_verification_draft(request_id):
-    request = Requests.get(g.current_user, request_id)
+    user = g.current_user
+    request = Requests.get(user, request_id)
     fv_data = {**http_request.form, **http_request.files}
     is_extended = fv_extended(http_request)
 
     try:
-        SaveFinancialVerificationDraft(
+        updated_request = SaveFinancialVerificationDraft(
             PENumberValidator(),
             TaskOrderNumberValidator(),
-            g.current_user,
+            user,
             request,
             fv_data,
             is_extended=is_extended,
@@ -261,4 +262,14 @@ def save_financial_verification_draft(request_id):
             extended=is_extended,
         )
 
-    return redirect(url_for("requests.requests_index"))
+    form = GetFinancialVerificationForm(
+        user, updated_request, is_extended=is_extended
+    ).execute()
+    return render_template(
+        "requests/financial_verification.html",
+        f=form,
+        jedi_request=request,
+        review_comment=request.review_comment,
+        extended=is_extended,
+        saved_draft=True,
+    )
