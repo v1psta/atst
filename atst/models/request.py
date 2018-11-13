@@ -238,6 +238,13 @@ class Request(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
             else None
         )
 
+    @property
+    def last_finver_draft_saved_at(self):
+        if self.latest_revision.any_finver_fields_saved:
+            return self.latest_revision.time_updated
+        else:
+            return None
+
     def __repr__(self):
         return "<Request(status='{}', name='{}', creator='{}', is_approved='{}', time_created='{}', id='{}')>".format(
             self.status_displayname,

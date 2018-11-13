@@ -83,3 +83,24 @@ class RequestRevision(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
         return "<RequestRevision(request='{}', id='{}')>".format(
             self.request_id, self.id
         )
+
+    @property
+    def any_finver_fields_saved(self):
+        return any(
+            getattr(self, n, None)
+            for n in [
+                "pe_id",
+                "task_order_number",
+                "fname_co",
+                "lname_co",
+                "email_co",
+                "office_co",
+                "fname_cor",
+                "lname_cor",
+                "email_cor",
+                "office_cor",
+                "uii_ids",
+                "treasury_code",
+                "ba_code",
+            ]
+        )

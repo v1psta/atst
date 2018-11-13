@@ -186,7 +186,7 @@
 
   {% endblock form %}
   {% if saved_draft %}
-    Draft saved at <localdatetime :timestamp="new Date().toString()"></localdatetime>
+    Draft saved at <localdatetime :timestamp="'{{ jedi_request.last_finver_draft_saved_at.isoformat() }}'"></localdatetime>
   {% endif %}
   {% block next %}
   <div class='action-group'>
