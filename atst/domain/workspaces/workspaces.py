@@ -119,7 +119,7 @@ class Workspaces(object):
             "edit workspace member",
         )
 
-        return WorkspaceRoles.update_role(member, workspace.id, role_name)
+        return WorkspaceRoles.update_role(member, role_name)
 
     @classmethod
     def _create_workspace_role(
