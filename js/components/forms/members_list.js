@@ -11,12 +11,14 @@ const search = (query, members) => {
   }
 }
 
-const filterByStatus = (status, members) => {
+const filterByStatus = (status, statusesByDisplayName, members) => {
+  const getStatusFromDisplayName = (_status) => statusesByDisplayName[_status].name
+
   if (status === '' || status === 'all') {
     return members
   } else {
     return members.filter(
-      (member) => member.status.toLowerCase() === status
+      (member) => getStatusFromDisplayName(member.status) === status
     )
   }
 }
@@ -51,7 +53,8 @@ export default {
 
   props: {
     members: Array,
-    choices: Array,
+    role_choices: Array,
+    status_choices: Array,
   },
 
   data: function () {
@@ -90,8 +93,9 @@ export default {
     return {
       searchValue: '',
       status: '',
+      statusesByDisplayName: indexBy(prop('display_name'), this.status_choices),
       role: '',
-      rolesByDisplayName: indexBy(prop('display_name'), this.choices),
+      rolesByDisplayName: indexBy(prop('display_name'), this.role_choices),
       sortInfo: {
         columnName: '',
         isAscending: true,
@@ -104,7 +108,7 @@ export default {
     searchedList: function () {
       return pipe(
         partial(search, [this.searchValue]),
-        partial(filterByStatus, [this.status]),
+        partial(filterByStatus, [this.status, this.statusesByDisplayName]),
         partial(filterByRole, [this.role, this.rolesByDisplayName]),
         partial(sort, [this.sortInfo])
       )(this.members)

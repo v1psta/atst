@@ -14,7 +14,7 @@ from atst.domain.exceptions import UnauthorizedError, AlreadyExistsError
 from atst.domain.projects import Projects
 from atst.domain.reports import Reports
 from atst.domain.workspaces import Workspaces
-from atst.domain.workspace_roles import WorkspaceRoles
+from atst.domain.workspace_roles import WorkspaceRoles, MEMBER_STATUSES
 from atst.domain.environments import Environments
 from atst.domain.environment_roles import EnvironmentRoles
 from atst.forms.project import NewProjectForm, ProjectForm
@@ -123,7 +123,8 @@ def workspace_members(workspace_id):
     return render_template(
         "workspaces/members/index.html",
         workspace=workspace,
-        choices=WORKSPACE_ROLE_DEFINITIONS,
+        role_choices=WORKSPACE_ROLE_DEFINITIONS,
+        status_choices=MEMBER_STATUSES,
         members=members_list,
         new_member=new_member,
     )

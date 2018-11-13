@@ -47,7 +47,12 @@
 {% endif %}
 
 
-<members-list inline-template id="search-template" v-bind:members='{{ members | tojson}}' v-bind:choices='{{ choices | tojson}}'>
+<members-list
+  inline-template
+  id="search-template"
+  v-bind:members='{{ members | tojson}}'
+  v-bind:role_choices='{{ role_choices | tojson}}'
+  v-bind:status_choices='{{ status_choices | tojson}}'>
   <div>
   <form class='search-bar' @submit.prevent>
     <div class='usa-input search-input'>
@@ -56,26 +61,28 @@
       <button type="button"></button>
     </div>
 
-    <div class='usa-input filter-input'>
-      <label for='filter-status'>Filter members by status</label>
-      <select v-model="status" id="filter-status" name="filter-status">
-        <option value="" selected disabled>Filter by status</option>
-        <option value="all">View All</option>
-        <option value="active">Active</option>
-        <option value="pending">Pending</option>
-        <option value="denied">Denied</option>
-      </select>
-    </div>
+    <div class="search-bar__filters">
+      <div class='usa-input'>
+        <label for='filter-status'>Filter members by status</label>
+        <select v-model="status" id="filter-status" name="filter-status">
+          <option value="" selected disabled>Filter by status</option>
+          <option value="all">View All</option>
+          {% for status in status_choices %}
+            <option value='{{ status.name }}'>{{ status.display_name }}</option>
+          {% endfor %}
+        </select>
+      </div>
 
-    <div class='usa-input filter-input'>
-      <label for='filter-role'>Filter members by role</label>
-      <select v-model="role" id="filter-role" name="filter-role">
-        <option value="" selected disabled>Filter by role</option>
-        <option value="all">View All</option>
-        {% for role in choices %}
-          <option value='{{ role.name }}'>{{ role.display_name }}</option>
-        {% endfor %}
-      </select>
+      <div class='usa-input'>
+        <label for='filter-role'>Filter members by role</label>
+        <select v-model="role" id="filter-role" name="filter-role">
+          <option value="" selected disabled>Filter by role</option>
+          <option value="all">View All</option>
+          {% for role in role_choices %}
+            <option value='{{ role.name }}'>{{ role.display_name }}</option>
+          {% endfor %}
+        </select>
+      </div>
     </div>
   </form>
 

@@ -9,6 +9,16 @@ from .users import Users
 from .exceptions import NotFoundError
 
 
+MEMBER_STATUSES = [
+    {"name": "active", "display_name": "Active"},
+    {"name": "revoked", "display_name": "Revoked"},
+    {"name": "expired", "display_name": "Invite expired"},
+    {"name": "error", "display_name": "Error on invite"},
+    {"name": "pending", "display_name": "Pending"},
+    {"name": "unknown", "display_name": "Unknown errors"},
+]
+
+
 class WorkspaceRoles(object):
     @classmethod
     def get(cls, workspace_id, user_id):
