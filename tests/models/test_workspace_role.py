@@ -6,12 +6,57 @@ from atst.domain.projects import Projects
 from atst.domain.workspace_roles import WorkspaceRoles
 from atst.models.workspace_role import Status
 from atst.models.invitation import Status as InvitationStatus
+from atst.models.audit_event import AuditEvent
 from tests.factories import (
     RequestFactory,
     UserFactory,
     InvitationFactory,
     WorkspaceRoleFactory,
 )
+
+
+def test_has_no_history(session):
+    owner = UserFactory.create()
+    user = UserFactory.create()
+
+    workspace = Workspaces.create(RequestFactory.create(creator=owner))
+    workspace_role = WorkspaceRoles.add(user, workspace.id, "developer")
+    audit_events = (
+        session.query(AuditEvent)
+        .filter(AuditEvent.resource_id == workspace_role.id)
+        .all()
+    )
+
+    create_event = [event for event in audit_events if event.action == "create"]
+    assert not create_event[0].changed_state
+
+
+def test_has_history(session):
+    owner = UserFactory.create()
+    user = UserFactory.create()
+
+    workspace = Workspaces.create(RequestFactory.create(creator=owner))
+    workspace_role = WorkspaceRoles.add(user, workspace.id, "developer")
+    WorkspaceRoles.update_role(workspace_role, "admin")
+    audit_events = (
+        session.query(AuditEvent)
+        .filter(AuditEvent.resource_id == workspace_role.id)
+        .all()
+    )
+    changed_events = [event for event in audit_events if event.changed_state]
+
+    assert changed_events[0].changed_state
+
+
+def test_event_details():
+    owner = UserFactory.create()
+    user = UserFactory.create()
+
+    workspace = Workspaces.create(RequestFactory.create(creator=owner))
+    workspace_role = WorkspaceRoles.add(user, workspace.id, "developer")
+
+    assert workspace_role.event_details["updated_user"] == user.displayname
+    assert workspace_role.event_details["updated_user_id"] == str(user.id)
 
 
 def test_has_no_environment_roles():

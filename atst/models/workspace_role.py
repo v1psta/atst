@@ -52,7 +52,7 @@ class WorkspaceRole(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
             to_role = self.role_displayname
             auditable_previous_state["role"] = [from_role.display_name, to_role]
         if "status" in previous_state:
-            auditable_previous_state["status"]= previous_state["status"].value
+            auditable_previous_state["status"] = previous_state["status"].value
         return auditable_previous_state
 
     @property

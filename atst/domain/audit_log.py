@@ -19,4 +19,3 @@ class AuditLog(object):
             user, Permissions.VIEW_AUDIT_LOG, "view audit log"
         )
         return AuditEventQuery.get_all()
-
