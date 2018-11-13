@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% from "components/pagination.html" import Pagination %}
 
 {% block content %}
 
@@ -40,50 +41,5 @@
 
   </section>
 
-  {% macro Page(pagination, route, i, label=None) -%}
-    {% set label = label or i %}
-
-    {% if i == pagination.page %}
-      <button class="usa-button usa-button-primary">{{ label }}</button>
-    {% else %}
-      <a class="usa-button usa-button-secondary page" href="{{ url_for(route, page=i, perPage=pagination.per_page) }}">{{ label }}</a>
-    {% endif%}
-  {%- endmacro %}
-
-  {% macro Pagination(pagination, route) -%}
-    {% set first %}
-      {{ Page(pagination, route, 1, label="first") }}
-      {{ Page(pagination, route, pagination.page - 1, label="prev") }}
-    {% endset %}
-
-    {% set last %}
-      {{ Page(pagination, route, pagination.page + 1, label="next") }}
-      {{ Page(pagination, route, pagination.pages, label="last") }}
-    {% endset %}
-
-    <div class="pagination">
-
-      {% if pagination.page == 1 %}
-        {% set max_page = [pagination.pages, 5] | min %}
-
-        {% for i in range(1, max_page + 1) %}
-          {{ Page(pagination, route, i) }}
-        {% endfor %}
-        {{ last }}
-      {% elif pagination.page == pagination.pages %}
-        {{ first }}
-        {% for i in range(pagination.pages - 4, pagination.pages + 1) %}
-          {{ Page(pagination, route, i) }}
-        {% endfor %}
-      {% else %}
-        {% set window = pagination | pageWindow %}
-        {{ first }}
-        {% for i in range(window.0, window.1 + 1) %}
-          {{ Page(pagination, route, i) }}
-        {% endfor %}
-        {{ last }}
-      {% endif %}
-    </div>
-  {%- endmacro %}
   {{ Pagination(audit_events, 'atst.activity_history') }}
 {% endblock %}
