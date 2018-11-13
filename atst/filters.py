@@ -83,10 +83,7 @@ def pageWindow(pagination, size=2):
     over = max(0, page + size - num_pages)
     under = min(0, page - size - 1)
 
-    return (
-        max(1, (page - size) - over),
-        min(num_pages, (page + size) - under)
-    )
+    return (max(1, (page - size) - over), min(num_pages, (page + size) - under))
 
 
 def register_filters(app):
