@@ -12,8 +12,9 @@ from atst.domain.requests import Requests
 from atst.domain.workspaces import Workspaces
 from atst.domain.projects import Projects
 from atst.domain.workspace_roles import WorkspaceRoles
+from atst.models.invitation import Status as InvitationStatus
 from atst.domain.exceptions import AlreadyExistsError
-from tests.factories import RequestFactory, TaskOrderFactory
+from tests.factories import RequestFactory, TaskOrderFactory, InvitationFactory
 from atst.routes.dev import _DEV_USERS as DEV_USERS
 
 WORKSPACE_USERS = [
@@ -37,6 +38,41 @@ WORKSPACE_USERS = [
         "email": "greer@mil.gov",
         "workspace_role": "admin",
         "dod_id": "0000000003",
+    },
+]
+
+WORKSPACE_INVITED_USERS = [
+    {
+        "first_name": "Frederick",
+        "last_name": "Fitzgerald",
+        "email": "frederick@mil.gov",
+        "workspace_role": "developer",
+        "dod_id": "0000000004",
+        "status": InvitationStatus.REJECTED_WRONG_USER
+    },
+    {
+        "first_name": "Gina",
+        "last_name": "Guzman",
+        "email": "gina@mil.gov",
+        "workspace_role": "developer",
+        "dod_id": "0000000005",
+        "status": InvitationStatus.REJECTED_EXPIRED
+    },
+    {
+        "first_name": "Hector",
+        "last_name": "Harper",
+        "email": "hector@mil.gov",
+        "workspace_role": "developer",
+        "dod_id": "0000000006",
+        "status": InvitationStatus.REVOKED
+    },
+    {
+        "first_name": "Isabella",
+        "last_name": "Ingram",
+        "email": "isabella@mil.gov",
+        "workspace_role": "developer",
+        "dod_id": "0000000007",
+        "status": InvitationStatus.PENDING
     },
 ]
 
@@ -77,6 +113,13 @@ def seed_db():
         for workspace_role in WORKSPACE_USERS:
             ws_role = Workspaces.create_member(user, workspace, workspace_role)
             WorkspaceRoles.enable(ws_role)
+
+        for workspace_role in WORKSPACE_INVITED_USERS:
+            ws_role = Workspaces.create_member(user, workspace, workspace_role)
+            invitation = InvitationFactory.build(workspace_role=ws_role, status=workspace_role["status"])
+            db.session.add(invitation)
+
+        db.session.commit()
 
         Projects.create(
             user,

@@ -96,3 +96,17 @@ def test_status_when_invitation_is_expired():
         ]
     )
     assert workspace_role.display_status == "Invite expired"
+
+
+def test_can_not_resend_invitation_if_active():
+    workspace_role = WorkspaceRoleFactory.create(
+        invitations=[InvitationFactory.create(status=InvitationStatus.ACCEPTED)]
+    )
+    assert not workspace_role.can_resend_invitation
+
+
+def test_can_resend_invitation_if_expired():
+    workspace_role = WorkspaceRoleFactory.create(
+        invitations=[InvitationFactory.create(status=InvitationStatus.REJECTED_EXPIRED)]
+    )
+    assert workspace_role.can_resend_invitation

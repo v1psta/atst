@@ -109,6 +109,12 @@ class WorkspaceRole(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     def has_environment_roles(self):
         return self.num_environment_roles > 0
 
+    @property
+    def can_resend_invitation(self):
+        return self.latest_invitation and (
+            self.latest_invitation.is_rejected or self.latest_invitation.is_expired
+        )
+
 
 Index(
     "workspace_role_user_workspace",

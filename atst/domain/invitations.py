@@ -4,6 +4,8 @@ from sqlalchemy.orm.exc import NoResultFound
 from atst.database import db
 from atst.models.invitation import Invitation, Status as InvitationStatus
 from atst.domain.workspace_roles import WorkspaceRoles
+from atst.domain.authz import Authorization, Permissions
+from atst.domain.workspaces import Workspaces
 
 from .exceptions import NotFoundError
 
@@ -52,11 +54,11 @@ class Invitations(object):
         return invite
 
     @classmethod
-    def create(cls, workspace_role, inviter, user):
+    def create(cls, inviter, workspace_role):
         invite = Invitation(
             workspace_role=workspace_role,
             inviter=inviter,
-            user=user,
+            user=workspace_role.user,
             status=InvitationStatus.PENDING,
             expiration_time=Invitations.current_expiration_time(),
         )
@@ -104,3 +106,18 @@ class Invitations(object):
     def revoke(cls, token):
         invite = Invitations._get(token)
         return Invitations._update_status(invite, InvitationStatus.REVOKED)
+
+    @classmethod
+    def resend(cls, user, workspace_id, token):
+        workspace = Workspaces.get(user, workspace_id)
+        Authorization.check_workspace_permission(
+            user,
+            workspace,
+            Permissions.ASSIGN_AND_UNASSIGN_ATAT_ROLE,
+            "resend a workspace invitation",
+        )
+
+        previous_invitation = Invitations._get(token)
+        Invitations._update_status(previous_invitation, InvitationStatus.REVOKED)
+
+        return Invitations.create(user, previous_invitation.workspace_role)

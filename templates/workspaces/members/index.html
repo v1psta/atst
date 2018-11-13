@@ -33,6 +33,17 @@
   ) }}
 {% endif %}
 
+{% if resent_invitation_to %}
+    {% set message -%}
+      <p>Successfully sent a new invitation to {{ resent_invitation_to }}.</p>
+    {%- endset %}
+
+  {{ Alert('Invitation resent',
+    message=message,
+    level='success'
+  ) }}
+{% endif %}
+
 {% set member_name = request.args.get("memberName") %}
 {% set updated_role = request.args.get("updatedRole") %}
 {% if updated_role %}

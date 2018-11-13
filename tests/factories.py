@@ -21,7 +21,6 @@ from atst.domain.roles import Roles
 from atst.models.workspace_role import WorkspaceRole, Status as WorkspaceRoleStatus
 from atst.models.environment_role import EnvironmentRole
 from atst.models.invitation import Invitation, Status as InvitationStatus
-from atst.domain.workspaces import Workspaces
 from atst.domain.invitations import Invitations
 
 

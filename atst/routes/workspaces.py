@@ -103,6 +103,7 @@ def show_workspace(workspace_id):
 def workspace_members(workspace_id):
     workspace = Workspaces.get_with_members(g.current_user, workspace_id)
     new_member_name = http_request.args.get("newMemberName")
+    resent_invitation_to = http_request.args.get("resentInvitationTo")
     new_member = next(
         filter(lambda m: m.user_name == new_member_name, workspace.members), None
     )
@@ -127,6 +128,7 @@ def workspace_members(workspace_id):
         status_choices=MEMBER_STATUSES,
         members=members_list,
         new_member=new_member,
+        resent_invitation_to=resent_invitation_to,
     )
 
 
@@ -255,11 +257,12 @@ def send_invite_email(owner_name, token, new_member_email):
 def create_member(workspace_id):
     workspace = Workspaces.get(g.current_user, workspace_id)
     form = NewMemberForm(http_request.form)
+    user = g.current_user
 
     if form.validate():
         try:
-            new_member = Workspaces.create_member(g.current_user, workspace, form.data)
-            invite = Invitations.create(new_member, g.current_user, new_member.user)
+            new_member = Workspaces.create_member(user, workspace, form.data)
+            invite = Invitations.create(user, new_member)
             send_invite_email(
                 g.current_user.full_name, invite.token, new_member.user.email
             )
@@ -373,3 +376,16 @@ def revoke_invitation(workspace_id, token):
     Invitations.revoke(token)
 
     return redirect(url_for("workspaces.workspace_members", workspace_id=workspace.id))
+
+
+@bp.route("/workspaces/<workspace_id>/invitations/<token>/resend", methods=["POST"])
+def resend_invitation(workspace_id, token):
+    invite = Invitations.resend(g.current_user, workspace_id, token)
+    send_invite_email(g.current_user.full_name, invite.token, invite.user_email)
+    return redirect(
+        url_for(
+            "workspaces.workspace_members",
+            workspace_id=workspace_id,
+            resentInvitationTo=invite.user_name,
+        )
+    )
