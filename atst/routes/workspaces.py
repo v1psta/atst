@@ -103,6 +103,7 @@ def show_workspace(workspace_id):
 def workspace_members(workspace_id):
     workspace = Workspaces.get_with_members(g.current_user, workspace_id)
     new_member_name = http_request.args.get("newMemberName")
+    resent_invitation_to = http_request.args.get("resentInvitationTo")
     new_member = next(
         filter(lambda m: m.user_name == new_member_name, workspace.members), None
     )
@@ -127,6 +128,7 @@ def workspace_members(workspace_id):
         status_choices=MEMBER_STATUSES,
         members=members_list,
         new_member=new_member,
+        resent_invitation_to=resent_invitation_to,
     )
 
 
@@ -380,4 +382,10 @@ def revoke_invitation(workspace_id, token):
 def resend_invitation(workspace_id, token):
     invite = Invitations.resend(g.current_user, workspace_id, token)
     send_invite_email(g.current_user.full_name, invite.token, invite.user_email)
-    return redirect(url_for("workspaces.workspace_members", workspace_id=workspace_id))
+    return redirect(
+        url_for(
+            "workspaces.workspace_members",
+            workspace_id=workspace_id,
+            resentInvitationTo=invite.user_name,
+        )
+    )

@@ -85,3 +85,7 @@ class Invitation(Base, TimestampsMixin, AuditableMixin):
     @property
     def user_email(self):
         return self.workspace_role.user.email
+
+    @property
+    def user_name(self):
+        return self.workspace_role.user.full_name
