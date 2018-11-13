@@ -27,6 +27,8 @@
     flex-basis: 100%;
 
     .usa-input {
+      flex-basis: 100%;
+
       @media (min-width:1000px) {
         margin-top: 0;
       }
