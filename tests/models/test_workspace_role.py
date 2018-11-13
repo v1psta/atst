@@ -45,7 +45,7 @@ def test_has_history(session):
     )
     changed_events = [event for event in audit_events if event.changed_state]
 
-    assert changed_events[0].changed_state
+    assert changed_events[0].changed_state["role"]
 
 
 def test_event_details():
