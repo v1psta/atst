@@ -20,14 +20,15 @@ def test_has_no_history(session):
 
     workspace = Workspaces.create(RequestFactory.create(creator=owner))
     workspace_role = WorkspaceRoles.add(user, workspace.id, "developer")
-    audit_events = (
+    create_event = (
         session.query(AuditEvent)
-        .filter(AuditEvent.resource_id == workspace_role.id)
-        .all()
+        .filter(
+            AuditEvent.resource_id == workspace_role.id, AuditEvent.action == "create"
+        )
+        .one()
     )
 
-    create_event = [event for event in audit_events if event.action == "create"]
-    assert not create_event[0].changed_state
+    assert not create_event.changed_state
 
 
 def test_has_history(session):
@@ -44,7 +45,8 @@ def test_has_history(session):
     )
     changed_events = [event for event in audit_events if event.changed_state]
 
-    assert changed_events[0].changed_state["role"]
+    assert changed_events[0].changed_state["role"][0]
+    assert changed_events[0].changed_state["role"][1]
 
 
 def test_event_details():
@@ -54,7 +56,7 @@ def test_event_details():
     workspace = Workspaces.create(RequestFactory.create(creator=owner))
     workspace_role = WorkspaceRoles.add(user, workspace.id, "developer")
 
-    assert workspace_role.event_details["updated_user"] == user.displayname
+    assert workspace_role.event_details["updated_user_name"] == user.displayname
     assert workspace_role.event_details["updated_user_id"] == str(user.id)
 
 
