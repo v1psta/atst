@@ -45,19 +45,24 @@ class WorkspaceRole(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     @property
     def history(self):
         previous_state = mixins.AuditableMixin.get_history(self)
-        auditable_previous_state = {}
+        change_set = {}
         if "role_id" in previous_state:
             from_role_id = previous_state["role_id"]
             from_role = db.session.query(Role).filter(Role.id == from_role_id).one()
             to_role = self.role_displayname
-            auditable_previous_state["role"] = [from_role.display_name, to_role]
+            change_set["role"] = [from_role.display_name, to_role]
         if "status" in previous_state:
-            auditable_previous_state["status"] = previous_state["status"].value
-        return auditable_previous_state
+            from_status = previous_state["status"].value
+            to_status = self.status.value
+            change_set["status"] = [from_status, to_status]
+        return change_set
 
     @property
     def event_details(self):
-        return {"updated_user": self.user_name, "updated_user_id": str(self.user_id)}
+        return {
+            "updated_user_name": self.user_name,
+            "updated_user_id": str(self.user_id),
+        }
 
     @property
     def latest_invitation(self):
