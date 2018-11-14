@@ -10,7 +10,7 @@ class CSPRole(Enum):
     NONSENSE_ROLE = "nonsense_role"
 
 
-class EnvironmentRole(Base, mixins.TimestampsMixin):
+class EnvironmentRole(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     __tablename__ = "environment_roles"
 
     id = types.Id()

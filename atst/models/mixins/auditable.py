@@ -52,7 +52,8 @@ class AuditableMixin(object):
 
     @staticmethod
     def audit_update(mapper, connection, target):
-        target.create_audit_event(connection, target, ACTION_UPDATE)
+        if AuditableMixin.get_history(target):
+            target.create_audit_event(connection, target, ACTION_UPDATE)
 
     def get_changes(self):
         """
