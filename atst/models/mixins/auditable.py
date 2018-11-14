@@ -44,6 +44,16 @@ class AuditableMixin(object):
 
     @staticmethod
     def get_history(target):
+        """
+        This function borrows largely from a gist:
+        https://gist.github.com/ngse/c20058116b8044c65d3fbceda3fdf423#file-audit_mixin-py-L106-L120
+
+        It returns a dictionary of the form {item: from_value},
+        where 'item' is the attribute on the target that has been updated
+        and 'from_value' is the value of the attribute before it was updated.
+
+        There may be more than one item in the dictionary, but that is not expected.
+        """
         previous_state = {}
         inspr = inspect(target)
         attrs = class_mapper(target.__class__).column_attrs
