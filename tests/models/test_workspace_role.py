@@ -32,13 +32,34 @@ def test_has_no_history(session):
     assert not create_event.changed_state
 
 
-def test_has_history(session):
+def test_has_role_history(session):
     owner = UserFactory.create()
     user = UserFactory.create()
 
     workspace = Workspaces.create(RequestFactory.create(creator=owner))
     workspace_role = WorkspaceRoles.add(user, workspace.id, "developer")
     WorkspaceRoles.update_role(workspace_role, "admin")
+    changed_events = (
+        session.query(AuditEvent)
+        .filter(AuditEvent.resource_id == workspace_role.id, AuditEvent.changed_state != None)
+        .all()
+    )
+
+    assert changed_events[0].changed_state["role"][0]
+    assert changed_events[0].changed_state["role"][1]
+
+
+def test_has_status_history(session):
+    owner = UserFactory.create()
+    user = UserFactory.create()
+
+    workspace = Workspaces.create(RequestFactory.create(creator=owner))
+    workspace_role = WorkspaceRoles.add(user, workspace.id, "developer")
+    session.add(workspace_role)
+    session.commit()
+    workspace_role.status = Status.ACTIVE
+    session.add(workspace_role)
+    session.commit()
     audit_events = (
         session.query(AuditEvent)
         .filter(AuditEvent.resource_id == workspace_role.id)
@@ -46,8 +67,10 @@ def test_has_history(session):
     )
     changed_events = [event for event in audit_events if event.changed_state]
 
-    assert changed_events[0].changed_state["role"][0]
-    assert changed_events[0].changed_state["role"][1]
+    import ipdb; ipdb.set_trace()
+
+    assert changed_events[0].changed_state["status"][0]
+    assert changed_events[0].changed_state["status"][1]
 
 
 def test_event_details():
