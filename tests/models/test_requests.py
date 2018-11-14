@@ -3,6 +3,7 @@ from tests.factories import (
     UserFactory,
     RequestStatusEventFactory,
     RequestReviewFactory,
+    RequestRevisionFactory,
 )
 from atst.domain.requests import Requests
 from atst.models.request_status_event import RequestStatus
@@ -113,3 +114,9 @@ def test_review_comment():
     )
 
     assert not request.review_comment
+
+
+def test_finver_last_saved_at():
+    request = RequestFactory.create()
+    RequestRevisionFactory.create(fname_co="Amanda", request=request)
+    assert request.last_finver_draft_saved_at

@@ -9,6 +9,12 @@
 
 {% include 'requests/review_menu.html' %}
 
+{% if saved_draft %}
+  {% call Alert('Draft saved', level='success') %}
+  {% endcall %}
+{% endif %}
+
+
 {% if jedi_request.is_pending_financial_verification and not f.errors and not extended %}
   {{ Alert('Pending Financial Verification', fragment="fragments/pending_financial_verification.html") }}
 {% endif %}
@@ -19,7 +25,6 @@
 
 <financial inline-template v-bind:initial-data='{{ f.data|mixedContentToJson }}'>
 <div class="col">
-
   {% if extended %}
     {{ Alert('Manually enter Task Order information',
       message="Additional fields are displayed below, where you can manually enter financial information as documented in your Task Order.",
@@ -184,6 +189,9 @@
   <div class='action-group'>
     <input formmethod="post" formaction="{{ url_for('requests.financial_verification', request_id=jedi_request.id, extended=extended) }}" type='submit' class='usa-button usa-button-primary' value='Save & Continue' />
     <input formmethod="post" formaction="{{ url_for('requests.save_financial_verification_draft', request_id=jedi_request.id, extended=extended) }}" type='submit' class='usa-button usa-button-primary' value='Save Draft' />
+  {% if jedi_request.last_finver_draft_saved_at %}
+    <em>Draft saved at <localdatetime :timestamp="'{{ jedi_request.last_finver_draft_saved_at.isoformat() }}'"></localdatetime></em>
+  {% endif %}
   </div>
   {% endblock %}
   </form>

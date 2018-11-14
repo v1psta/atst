@@ -169,35 +169,20 @@ class SaveFinancialVerificationDraft(FinancialVerificationBase):
 
     def execute(self):
         form = self._get_form(self.request, self.is_extended, self.fv_data)
-        valid = True
-
-        if not form.validate_draft():
-            self._raise(form)
-
-        if form.pe_id.data and not self.pe_validator.validate(self.request, form.pe_id):
-            valid = False
-
-        if form.task_order.number.data and not self.task_order_validator.validate(
-            form.task_order.number
-        ):
-            valid = False
-
         attachment = self._process_attachment(self.is_extended, form)
         task_order = self._try_create_task_order(form, attachment, self.is_extended)
         updated_request = Requests.update_financial_verification(
             self.request.id, form.request.data, task_order=task_order
         )
 
-        if valid:
-            return updated_request
-        else:
-            self._raise(form)
+        return updated_request
 
 
 @requests_bp.route("/requests/verify/<string:request_id>", methods=["GET"])
 def financial_verification(request_id):
     request = Requests.get(g.current_user, request_id)
     is_extended = fv_extended(http_request)
+    saved_draft = http_request.args.get("saved_draft", False)
 
     should_be_extended = not is_extended and request.has_manual_task_order
     if should_be_extended:
@@ -215,6 +200,7 @@ def financial_verification(request_id):
         jedi_request=request,
         review_comment=request.review_comment,
         extended=is_extended,
+        saved_draft=saved_draft,
     )
 
 
@@ -254,15 +240,16 @@ def update_financial_verification(request_id):
 
 @requests_bp.route("/requests/verify/<string:request_id>/draft", methods=["POST"])
 def save_financial_verification_draft(request_id):
-    request = Requests.get(g.current_user, request_id)
+    user = g.current_user
+    request = Requests.get(user, request_id)
     fv_data = {**http_request.form, **http_request.files}
     is_extended = fv_extended(http_request)
 
     try:
-        SaveFinancialVerificationDraft(
+        updated_request = SaveFinancialVerificationDraft(
             PENumberValidator(),
             TaskOrderNumberValidator(),
-            g.current_user,
+            user,
             request,
             fv_data,
             is_extended=is_extended,
@@ -275,4 +262,11 @@ def save_financial_verification_draft(request_id):
             extended=is_extended,
         )
 
-    return redirect(url_for("requests.requests_index"))
+    return redirect(
+        url_for(
+            "requests.financial_verification",
+            request_id=updated_request.id,
+            is_extended=is_extended,
+            saved_draft=True,
+        )
+    )

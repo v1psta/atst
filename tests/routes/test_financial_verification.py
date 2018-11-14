@@ -17,7 +17,6 @@ from atst.domain.requests.financial_verification import (
     PENumberValidator,
     TaskOrderNumberValidator,
 )
-from atst.utils import pick
 from atst.models.request_status_event import RequestStatus
 from atst.domain.requests.query import RequestsQuery
 
@@ -193,39 +192,23 @@ def test_save_draft_with_ba_code():
     assert save_draft.execute()
 
 
-def test_save_draft_with_invalid_task_order(fv_data):
+def test_save_draft_allows_invalid_data():
     request = RequestFactory.create()
     user = UserFactory.create()
-    save_draft = SaveFinancialVerificationDraft(
-        TrueValidator, FalseValidator, user, request, fv_data, is_extended=False
-    )
+    data = {
+        "task_order-number": MANUAL_TO_NUMBER,
+        "request-pe_id": "123",
+        "request-ba_code": "a",
+    }
 
-    with pytest.raises(FormValidationError):
-        assert save_draft.execute()
-
-
-def test_save_draft_with_invalid_pe_number(fv_data):
-    request = RequestFactory.create()
-    user = UserFactory.create()
-    save_draft = SaveFinancialVerificationDraft(
-        FalseValidator, TrueValidator, user, request, fv_data, is_extended=False
-    )
-
-    with pytest.raises(FormValidationError):
-        assert save_draft.execute()
-
-
-def test_save_draft_re_enter_pe_number(fv_data):
-    request = RequestFactory.create()
-    user = UserFactory.create()
-    data = {**fv_data, "pe_id": "0101228M"}
-    save_fv = SaveFinancialVerificationDraft(
-        PENumberValidator(), TrueValidator, user, request, data, is_extended=False
-    )
-
-    with pytest.raises(FormValidationError):
-        save_fv.execute()
-    save_fv.execute()
+    assert SaveFinancialVerificationDraft(
+        PENumberValidator(),
+        TaskOrderNumberValidator(),
+        user,
+        request,
+        data,
+        is_extended=True,
+    ).execute()
 
 
 def test_save_draft_and_then_submit():
@@ -288,17 +271,6 @@ def test_update_ignores_empty_values(fv_data, e_fv_data):
     ).execute()
 
 
-def test_simple_form_does_not_generate_task_order(fv_data):
-    request = RequestFactory.create()
-    user = UserFactory.create()
-    data = pick(["uii_ids"], fv_data)
-    updated_request = SaveFinancialVerificationDraft(
-        TrueValidator, TrueValidator, user, request, data, is_extended=False
-    ).execute()
-
-    assert updated_request.task_order is None
-
-
 def test_can_save_draft_with_funding_type(fv_data, e_fv_data):
     request = RequestFactory.create()
     user = UserFactory.create()
@@ -333,7 +305,7 @@ def test_save_fv_draft_route(client, user_session, fv_data):
     response = client.post(
         url_for("requests.save_financial_verification_draft", request_id=request.id),
         data=fv_data,
-        follow_redirects=False,
+        follow_redirects=True,
     )
 
     assert response.status_code == 200
