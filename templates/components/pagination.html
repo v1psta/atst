@@ -11,20 +11,10 @@
     {% set button_class = button_class + "usa-button-secondary" %}
   {% endif %}
 
-    <a class="{{ button_class }}" href="{{ url_for(route, page=i, perPage=pagination.per_page) }}">{{ label }}</a>
+    <a id="{{ label }}" type="button" class="{{ button_class }}" href="{{ url_for(route, page=i, perPage=pagination.per_page) if not disabled else 'null' }}">{{ label }}</a>
 {%- endmacro %}
 
 {% macro Pagination(pagination, route) -%}
-  {% set first %}
-    {{ Page(pagination, route, 1, label="first") }}
-    {{ Page(pagination, route, pagination.page - 1, label="prev") }}
-  {% endset %}
-
-  {% set last %}
-    {{ Page(pagination, route, pagination.page + 1, label="next") }}
-    {{ Page(pagination, route, pagination.pages, label="last") }}
-  {% endset %}
-
   <div class="pagination">
 
     {% if pagination.page == 1 %}
@@ -46,8 +36,8 @@
       {{ Page(pagination, route, pagination.pages, label="last", disabled=True) }}
     {% else %}
       {% set window = pagination | pageWindow %}
-      {{ Page(pagination, route, 1, label="first", disabled=True) }}
-      {{ Page(pagination, route, pagination.page - 1, label="prev", disabled=True) }}
+      {{ Page(pagination, route, 1, label="first") }}
+      {{ Page(pagination, route, pagination.page - 1, label="prev") }}
       {% for i in range(window.0, window.1 + 1) %}
         {{ Page(pagination, route, i) }}
       {% endfor %}
