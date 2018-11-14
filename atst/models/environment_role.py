@@ -44,8 +44,8 @@ class EnvironmentRole(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
         return {
             "updated_user": self.user.displayname,
             "updated_user_id": str(self.user_id),
-            "env": self.environment.displayname,
-            "env_id": str(self.environment_id),
+            "environment": self.environment.displayname,
+            "environment_id": str(self.environment_id),
             "project": self.environment.project.name,
             "project_id": str(self.environment.project_id),
             "workspace": self.environment.project.workspace.name,
