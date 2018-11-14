@@ -29,6 +29,29 @@ class EnvironmentRole(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
             self.role, self.user.full_name, self.environment.name, self.id
         )
 
+    @property
+    def history(self):
+        previous_state = mixins.AuditableMixin.get_history(self)
+        auditable_previous_state = {}
+        if "role" in previous_state:
+            from_role = previous_state["role"]
+            to_role = self.role
+            auditable_previous_state["role"] = [from_role, to_role]
+        return auditable_previous_state
+
+    @property
+    def event_details(self):
+        return {
+            "updated_user": self.user.displayname,
+            "updated_user_id": str(self.user_id),
+            "env": self.environment.displayname,
+            "env_id": str(self.environment_id),
+            "project": self.environment.project.name,
+            "project_id": str(self.environment.project_id),
+            "workspace": self.environment.project.workspace.name,
+            "workspace_id": str(self.environment.project.workspace.id),
+        }
+
 
 Index(
     "environments_role_user_environment",
