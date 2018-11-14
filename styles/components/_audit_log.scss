@@ -22,13 +22,14 @@
 }
 
 .pagination {
-  width: 800px;
+  width: 80%;
   display: flex;
   flex-direction: row;
-  align-content: space-between;
   margin: auto;
 }
 
 .page {
   margin: auto;
+  flex-grow: 1;
+  max-width: 8%;
 }
