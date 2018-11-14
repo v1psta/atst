@@ -121,7 +121,7 @@ def logout():
     return redirect(url_for(".root"))
 
 
-def get_pagination_opts(request, default_page=1, default_per_page=50):
+def get_pagination_opts(request, default_page=1, default_per_page=100):
     return {
         "page": int(request.args.get("page", default_page)),
         "per_page": int(request.args.get("perPage", default_per_page)),
