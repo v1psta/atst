@@ -1,4 +1,4 @@
-from flask import g, redirect, render_template, url_for, request as http_request
+from flask import g, redirect, render_template, url_for, request as http_request, current_app
 
 from . import requests_bp
 from atst.domain.requests import Requests
@@ -29,7 +29,8 @@ def option_data():
 
 @requests_bp.route("/requests/new/<int:screen>", methods=["GET"])
 def requests_form_new(screen):
-    jedi_flow = JEDIRequestFlow(screen, request=None, current_user=g.current_user)
+    cached_data = current_app.form_cache.from_request(http_request)
+    jedi_flow = JEDIRequestFlow(screen, request=None, current_user=g.current_user, post_data=cached_data)
 
     return render_template(
         "requests/screen-%d.html" % int(screen),

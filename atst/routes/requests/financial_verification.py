@@ -13,7 +13,7 @@ from atst.domain.requests.financial_verification import (
 )
 from atst.models.attachment import Attachment
 from atst.domain.task_orders import TaskOrders
-from atst.utils.form_cache import retrieve_form_data
+from atst.utils.form_cache import FormCache
 
 
 def fv_extended(_http_request):
@@ -95,7 +95,7 @@ class FinancialVerificationBase(object):
 def existing_form_data():
     key = http_request.args.get("formCache")
     if key:
-        return retrieve_form_data(app.redis, key)
+        return FormCache(app.redis).read(key)
 
 
 class GetFinancialVerificationForm(FinancialVerificationBase):
