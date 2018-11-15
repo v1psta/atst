@@ -45,8 +45,9 @@ def test_has_role_history(session):
         .all()
     )
 
-    assert changed_events[0].changed_state["role"][0]
-    assert changed_events[0].changed_state["role"][1]
+    # changed_state["role"] returns a list [previous role, current role]
+    assert changed_events[0].changed_state["role"][0] == 'developer'
+    assert changed_events[0].changed_state["role"][1] == 'admin'
 
 
 def test_has_status_history(session):

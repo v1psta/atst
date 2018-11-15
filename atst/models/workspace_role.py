@@ -49,8 +49,8 @@ class WorkspaceRole(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
         if "role_id" in previous_state:
             from_role_id = previous_state["role_id"]
             from_role = db.session.query(Role).filter(Role.id == from_role_id).one()
-            to_role = self.role_displayname
-            change_set["role"] = [from_role.display_name, to_role]
+            to_role = self.role_name
+            change_set["role"] = [from_role.name, to_role]
         if "status" in previous_state:
             from_status = previous_state["status"].value
             to_status = self.status.value
