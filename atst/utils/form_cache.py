@@ -16,3 +16,27 @@ def cache_form_data(redis, formdata, expiry_seconds=3600, key_prefix=DEFAULT_CAC
 def retrieve_form_data(redis, formdata_key, key_prefix="formcache"):
     data = redis.get("{}:{}".format(key_prefix, formdata_key))
     return pickle.loads(data)
+
+
+class FormCache(object):
+
+    def __init__(self, redis):
+        self.redis = redis
+
+    def from_request(self, http_request):
+        cache_key = http_request.args.get("formCache")
+        if cache_key:
+            return self.read(cache_key)
+
+    def write(self, formdata, expiry_seconds=3600, key_prefix="formcache"):
+        value = pickle.dumps(formdata)
+        hash_ = hashlib.sha1(os.urandom(64)).hexdigest()
+        self.redis.setex(name=self._key(key_prefix, hash_), value=value, time=expiry_seconds)
+
+    def read(self, formdata_key, key_prefix="formcache"):
+        data = self.redis.get(self._key(key_prefix, formdata_key))
+        return pickle.loads(data)
+
+    @staticmethod
+    def _key(prefix, hash_):
+        return "{}:{}".format(prefix, hash_)

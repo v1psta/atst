@@ -24,6 +24,7 @@ from atst.models.permissions import Permissions
 from atst.eda_client import MockEDAClient
 from atst.uploader import Uploader
 from atst.utils import mailer
+from atst.utils.form_cache import FormCache
 from atst.queue import queue
 
 
@@ -66,6 +67,8 @@ def make_app(config):
     app.register_blueprint(user_routes)
     if ENV != "prod":
         app.register_blueprint(dev_routes)
+
+    app.form_cache = FormCache(app.redis)
 
     apply_authentication(app)
 
