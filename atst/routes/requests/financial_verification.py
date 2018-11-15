@@ -185,6 +185,7 @@ class SaveFinancialVerificationDraft(FinancialVerificationBase):
         return updated_request
 
 
+@requests_bp.route("/requests/verify/<string:request_id>/draft", methods=["GET"])
 @requests_bp.route("/requests/verify/<string:request_id>", methods=["GET"])
 def financial_verification(request_id):
     request = Requests.get(g.current_user, request_id)
