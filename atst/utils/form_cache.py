@@ -1,5 +1,4 @@
-import os
-import hashlib
+from hashlib import sha256
 import pickle
 
 
@@ -17,7 +16,7 @@ class FormCache(object):
 
     def write(self, formdata, expiry_seconds=3600, key_prefix=DEFAULT_CACHE_NAME):
         value = pickle.dumps(formdata)
-        hash_ = hashlib.sha1(os.urandom(64)).hexdigest()
+        hash_ = sha256().hexdigest()
         self.redis.setex(
             name=self._key(key_prefix, hash_), value=value, time=expiry_seconds
         )
