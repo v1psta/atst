@@ -5,6 +5,7 @@ from atst.domain.workspaces import Workspaces
 from atst.domain.projects import Projects
 from atst.domain.workspace_roles import WorkspaceRoles
 from atst.models.workspace_role import Status
+from atst.models.role import Role
 from atst.models.invitation import Status as InvitationStatus
 from tests.factories import (
     RequestFactory,
@@ -36,8 +37,8 @@ def test_has_role_history(session):
     user = UserFactory.create()
 
     workspace = Workspaces.create(RequestFactory.create(creator=owner))
-    workspace_role = WorkspaceRoles.add(user, workspace.id, "developer")
-    # why not use workspace_role = WorkspaceRoleFactory.create()?
+    role = session.query(Role).filter(Role.name == 'developer').one()
+    workspace_role = WorkspaceRoleFactory.create(workspace=workspace, user=user, role=role)
     WorkspaceRoles.update_role(workspace_role, "admin")
     changed_events = (
         session.query(AuditEvent)
@@ -57,10 +58,7 @@ def test_has_status_history(session):
     user = UserFactory.create()
 
     workspace = Workspaces.create(RequestFactory.create(creator=owner))
-    workspace_role = WorkspaceRoles.add(user, workspace.id, "developer")
-    import ipdb
-
-    ipdb.set_trace()
+    workspace_role = WorkspaceRoleFactory.create(workspace=workspace, user=user)
     WorkspaceRoles.enable(workspace_role)
     changed_events = (
         session.query(AuditEvent)
