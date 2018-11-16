@@ -103,9 +103,11 @@ class WorkspaceRoles(object):
     @classmethod
     def update_role(cls, member, role_name):
         new_role = Roles.get(role_name)
+        # necessary?
         workspace_role = WorkspaceRoles._get_workspace_role(
             member.user, member.workspace_id
         )
+        # why not just member.role = new_role?
         workspace_role.role = new_role
 
         db.session.add(workspace_role)
@@ -155,7 +157,10 @@ class WorkspaceRoles(object):
 
     @classmethod
     def enable(cls, workspace_role):
-        workspace_role.status = WorkspaceRoleStatus.ACTIVE
+        ws_role = WorkspaceRoles._get_workspace_role(
+            workspace_role.user, workspace_role.workspace_id
+        )
+        ws_role.status = WorkspaceRoleStatus.ACTIVE
 
-        db.session.add(workspace_role)
+        db.session.add(ws_role)
         db.session.commit()

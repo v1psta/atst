@@ -1,7 +1,5 @@
 from sqlalchemy import event, inspect
 from flask import g
-from sqlalchemy.orm import class_mapper
-from sqlalchemy.orm.attributes import get_history
 
 from atst.models.audit_event import AuditEvent
 from atst.utils import camel_to_snake, getattr_path
@@ -43,27 +41,6 @@ class AuditableMixin(object):
         event.listen(cls, "after_update", cls.audit_update)
 
     @staticmethod
-    def get_history(target):
-        """
-        This function borrows largely from a gist:
-        https://gist.github.com/ngse/c20058116b8044c65d3fbceda3fdf423#file-audit_mixin-py-L106-L120
-
-        It returns a dictionary of the form {item: from_value},
-        where 'item' is the attribute on the target that has been updated
-        and 'from_value' is the value of the attribute before it was updated.
-
-        There may be more than one item in the dictionary, but that is not expected.
-        """
-        previous_state = {}
-        inspr = inspect(target)
-        attrs = class_mapper(target.__class__).column_attrs
-        for attr in attrs:
-            history = getattr(inspr.attrs, attr.key).history
-            if history.has_changes():
-                previous_state[attr.key] = get_history(target, attr.key)[2].pop()
-        return previous_state
-
-    @staticmethod
     def audit_insert(mapper, connection, target):
         """Listen for the `after_insert` event and create an AuditLog entry"""
         target.create_audit_event(connection, target, ACTION_CREATE)
@@ -76,6 +53,26 @@ class AuditableMixin(object):
     @staticmethod
     def audit_update(mapper, connection, target):
         target.create_audit_event(connection, target, ACTION_UPDATE)
+
+    def get_changes(self):
+        """
+        This function borrows largely from a gist:
+        https://gist.github.com/ngse/c20058116b8044c65d3fbceda3fdf423#file-audit_mixin-py-L106-L120
+
+        It returns a dictionary of the form {item: [from_value, to_value]},
+        where 'item' is the attribute on the target that has been updated,
+        'from_value' is the value of the attribute before it was updated,
+        and 'to_value' is the current value of the attribute.
+
+        There may be more than one item in the dictionary, but that is not expected.
+        """
+        previous_state = {}
+        attrs = inspect(self).mapper.column_attrs
+        for attr in attrs:
+            history = getattr(inspect(self).attrs, attr.key).history
+            if history.has_changes():
+                previous_state[attr.key] = [history.deleted.pop(), history.added.pop()]
+        return previous_state
 
     def auditable_changed_state(self):
         return getattr_path(self, "history")

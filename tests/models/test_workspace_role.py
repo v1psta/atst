@@ -38,16 +38,19 @@ def test_has_role_history(session):
 
     workspace = Workspaces.create(RequestFactory.create(creator=owner))
     workspace_role = WorkspaceRoles.add(user, workspace.id, "developer")
+    # why not use workspace_role = WorkspaceRoleFactory.create()?
     WorkspaceRoles.update_role(workspace_role, "admin")
     changed_events = (
         session.query(AuditEvent)
-        .filter(AuditEvent.resource_id == workspace_role.id, AuditEvent.changed_state != None)
+        .filter(
+            AuditEvent.resource_id == workspace_role.id,
+            AuditEvent.changed_state != None,
+        )
         .all()
     )
-
     # changed_state["role"] returns a list [previous role, current role]
-    assert changed_events[0].changed_state["role"][0] == 'developer'
-    assert changed_events[0].changed_state["role"][1] == 'admin'
+    assert changed_events[0].changed_state["role"][0] == "developer"
+    assert changed_events[0].changed_state["role"][1] == "admin"
 
 
 def test_has_status_history(session):
@@ -56,22 +59,22 @@ def test_has_status_history(session):
 
     workspace = Workspaces.create(RequestFactory.create(creator=owner))
     workspace_role = WorkspaceRoles.add(user, workspace.id, "developer")
-    session.add(workspace_role)
-    session.commit()
-    workspace_role.status = Status.ACTIVE
-    session.add(workspace_role)
-    session.commit()
-    audit_events = (
+    import ipdb
+
+    ipdb.set_trace()
+    WorkspaceRoles.enable(workspace_role)
+    changed_events = (
         session.query(AuditEvent)
-        .filter(AuditEvent.resource_id == workspace_role.id)
+        .filter(
+            AuditEvent.resource_id == workspace_role.id,
+            AuditEvent.changed_state != None,
+        )
         .all()
     )
-    changed_events = [event for event in audit_events if event.changed_state]
 
-    import ipdb; ipdb.set_trace()
-
-    assert changed_events[0].changed_state["status"][0]
-    assert changed_events[0].changed_state["status"][1]
+    # changed_state["status"] returns a list [previous status, current status]
+    assert changed_events[0].changed_state["status"][0] == "pending"
+    assert changed_events[0].changed_state["status"][1] == "active"
 
 
 def test_event_details():

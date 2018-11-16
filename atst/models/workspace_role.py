@@ -35,7 +35,9 @@ class WorkspaceRole(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
         UUID(as_uuid=True), ForeignKey("users.id"), index=True, nullable=False
     )
 
-    status = Column(SQLAEnum(Status, native_enum=False, default=Status.PENDING))
+    status = Column(
+        SQLAEnum(Status, native_enum=False, default=Status.PENDING), nullable=False
+    )
 
     def __repr__(self):
         return "<WorkspaceRole(role='{}', workspace='{}', user_id='{}', id='{}')>".format(
@@ -44,15 +46,18 @@ class WorkspaceRole(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
 
     @property
     def history(self):
-        previous_state = mixins.AuditableMixin.get_history(self)
+        previous_state = self.get_changes()
         change_set = {}
         if "role_id" in previous_state:
-            from_role_id = previous_state["role_id"]
+            from_role_id = previous_state["role_id"][0]
             from_role = db.session.query(Role).filter(Role.id == from_role_id).one()
             to_role = self.role_name
             change_set["role"] = [from_role.name, to_role]
         if "status" in previous_state:
-            from_status = previous_state["status"].value
+            if previous_state["status"][0]:
+                from_status = previous_state["status"][0].value
+            else:
+                from_status = "pending"
             to_status = self.status.value
             change_set["status"] = [from_status, to_status]
         return change_set
