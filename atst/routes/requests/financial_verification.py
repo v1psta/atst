@@ -91,20 +91,15 @@ class FinancialVerificationBase(object):
         raise FormValidationError(form)
 
 
-def existing_form_data():
-    key = http_request.args.get("formCache")
-    if key:
-        return app.form_cache.read(key)
-
-
 class GetFinancialVerificationForm(FinancialVerificationBase):
-    def __init__(self, user, request, is_extended=False):
+    def __init__(self, user, request, cached_data=None, is_extended=False):
         self.user = user
         self.request = request
+        self.cached_data = cached_data or {}
         self.is_extended = is_extended
 
     def execute(self):
-        form = self._get_form(self.request, self.is_extended, formdata=existing_form_data())
+        form = self._get_form(self.request, self.is_extended, formdata=self.cached_data)
         form.reset()
         return form
 
@@ -199,7 +194,10 @@ def financial_verification(request_id):
         )
 
     form = GetFinancialVerificationForm(
-        g.current_user, request, is_extended=is_extended
+        g.current_user,
+        request,
+        is_extended=is_extended,
+        cached_data=app.form_cache.from_request(http_request),
     ).execute()
 
     return render_template(

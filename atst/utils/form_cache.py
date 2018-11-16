@@ -7,7 +7,6 @@ DEFAULT_CACHE_NAME = "formcache"
 
 
 class FormCache(object):
-
     def __init__(self, redis):
         self.redis = redis
 
@@ -19,7 +18,9 @@ class FormCache(object):
     def write(self, formdata, expiry_seconds=3600, key_prefix=DEFAULT_CACHE_NAME):
         value = pickle.dumps(formdata)
         hash_ = hashlib.sha1(os.urandom(64)).hexdigest()
-        self.redis.setex(name=self._key(key_prefix, hash_), value=value, time=expiry_seconds)
+        self.redis.setex(
+            name=self._key(key_prefix, hash_), value=value, time=expiry_seconds
+        )
         return hash_
 
     def read(self, formdata_key, key_prefix=DEFAULT_CACHE_NAME):
