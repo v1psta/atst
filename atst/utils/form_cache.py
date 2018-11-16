@@ -32,10 +32,11 @@ class FormCache(object):
         value = pickle.dumps(formdata)
         hash_ = hashlib.sha1(os.urandom(64)).hexdigest()
         self.redis.setex(name=self._key(key_prefix, hash_), value=value, time=expiry_seconds)
+        return hash_
 
     def read(self, formdata_key, key_prefix="formcache"):
         data = self.redis.get(self._key(key_prefix, formdata_key))
-        return pickle.loads(data)
+        return pickle.loads(data) if data is not None else {}
 
     @staticmethod
     def _key(prefix, hash_):
