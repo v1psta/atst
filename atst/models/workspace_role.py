@@ -36,8 +36,7 @@ class WorkspaceRole(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     )
 
     status = Column(
-        SQLAEnum(Status, native_enum=False, default=Status.PENDING), nullable=False
-    )
+        SQLAEnum(Status, native_enum=False), default=Status.PENDING)
 
     def __repr__(self):
         return "<WorkspaceRole(role='{}', workspace='{}', user_id='{}', id='{}')>".format(
@@ -54,10 +53,7 @@ class WorkspaceRole(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
             to_role = self.role_name
             change_set["role"] = [from_role.name, to_role]
         if "status" in previous_state:
-            if previous_state["status"][0]:
-                from_status = previous_state["status"][0].value
-            else:
-                from_status = "pending"
+            from_status = previous_state["status"][0].value
             to_status = self.status.value
             change_set["status"] = [from_status, to_status]
         return change_set
