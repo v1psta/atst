@@ -106,6 +106,7 @@ class GetFinancialVerificationForm(FinancialVerificationBase):
 
     def execute(self):
         form = self._get_form(self.request, self.is_extended, formdata=existing_form_data())
+        form.reset()
         return form
 
 
