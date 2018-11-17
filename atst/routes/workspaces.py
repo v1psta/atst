@@ -264,7 +264,7 @@ def create_member(workspace_id):
             new_member = Workspaces.create_member(user, workspace, form.data)
             invite = Invitations.create(user, new_member)
             send_invite_email(
-                g.current_user.full_name, invite.token, new_member.user.email
+                g.current_user.full_name, invite.token, form.data["email"]
             )
 
             return redirect(
