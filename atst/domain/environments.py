@@ -85,3 +85,7 @@ class Environments(object):
                 db.session.add(env_role)
 
         db.session.commit()
+
+    @classmethod
+    def revoke_access(cls, user, environment, target_user):
+        pass

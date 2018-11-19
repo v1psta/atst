@@ -1,5 +1,6 @@
 from sqlalchemy import Column, ForeignKey, String
 from sqlalchemy.orm import relationship
+from itertools import chain
 
 from atst.models import Base
 from atst.models.types import Id
@@ -43,6 +44,10 @@ class Workspace(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     @property
     def displayname(self):
         return self.name
+
+    @property
+    def all_environments(self):
+        return list(chain.from_iterable(p.environments for p in self.projects))
 
     def auditable_workspace_id(self):
         return self.id

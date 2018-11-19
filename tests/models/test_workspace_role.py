@@ -3,7 +3,6 @@ import datetime
 from atst.domain.environments import Environments
 from atst.domain.workspaces import Workspaces
 from atst.domain.projects import Projects
-from atst.domain.workspace_roles import WorkspaceRoles
 from atst.models.workspace_role import Status
 from atst.models.role import Role
 from atst.models.invitation import Status as InvitationStatus
@@ -16,7 +15,9 @@ from tests.factories import (
     EnvironmentFactory,
     EnvironmentRoleFactory,
     ProjectFactory,
+    WorkspaceFactory,
 )
+from atst.domain.workspace_roles import WorkspaceRoles
 
 
 def test_has_no_ws_role_history(session):
@@ -234,3 +235,36 @@ def test_can_resend_invitation_if_expired():
         invitations=[InvitationFactory.create(status=InvitationStatus.REJECTED_EXPIRED)]
     )
     assert workspace_role.can_resend_invitation
+
+
+def test_can_list_all_environments():
+    workspace = WorkspaceFactory.create(
+        projects=[
+            {
+                "name": "project1",
+                "environments": [
+                    {"name": "dev"},
+                    {"name": "staging"},
+                    {"name": "prod"},
+                ],
+            },
+            {
+                "name": "project2",
+                "environments": [
+                    {"name": "dev"},
+                    {"name": "staging"},
+                    {"name": "prod"},
+                ],
+            },
+            {
+                "name": "project3",
+                "environments": [
+                    {"name": "dev"},
+                    {"name": "staging"},
+                    {"name": "prod"},
+                ],
+            },
+        ]
+    )
+
+    assert len(workspace.all_environments) == 9

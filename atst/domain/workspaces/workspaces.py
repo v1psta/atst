@@ -146,4 +146,7 @@ class Workspaces(object):
         #     user, workspace, Permissions.REQUEST_NEW_CSP_ROLE, "revoke workspace access"
         # )
         target_workspace_role.status = WorkspaceRoleStatus.DISABLED
+        for environment in workspace.all_environments:
+            # TODO: Implement Environments.revoke_access
+            Environments.revoke_access(user, environment, target_workspace_role.user)
         return WorkspacesQuery.add_and_commit(target_workspace_role)
