@@ -11,8 +11,8 @@ from atst.models.workspace_role import Status as WorkspaceRoleStatus
 from tests.factories import (
     RequestFactory,
     UserFactory,
-    InvitationFactory,
     WorkspaceRoleFactory,
+    WorkspaceFactory,
 )
 
 
@@ -302,3 +302,10 @@ def test_can_create_workspaces_with_matching_names():
     workspace_name = "Great Workspace"
     Workspaces.create(RequestFactory.create(), name=workspace_name)
     Workspaces.create(RequestFactory.create(), name=workspace_name)
+
+
+def test_can_remove_workspace_access():
+    workspace = WorkspaceFactory.create()
+    workspace_role = WorkspaceRoleFactory.create(workspace=workspace)
+    Workspaces.revoke_access(workspace.owner, workspace, workspace_role)
+    assert Workspaces.for_user(workspace_role.user) == []

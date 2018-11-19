@@ -138,3 +138,12 @@ class Workspaces(object):
             workspace.name = new_data["name"]
 
         WorkspacesQuery.add_and_commit(workspace)
+
+    @classmethod
+    def revoke_access(cls, user, workspace, target_workspace_role):
+        # TODO: What permission to here? Do we need a new one?
+        # Authorization.check_workspace_permission(
+        #     user, workspace, Permissions.REQUEST_NEW_CSP_ROLE, "revoke workspace access"
+        # )
+        target_workspace_role.status = WorkspaceRoleStatus.DISABLED
+        return WorkspacesQuery.add_and_commit(target_workspace_role)
