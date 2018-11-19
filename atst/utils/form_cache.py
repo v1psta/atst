@@ -1,5 +1,6 @@
 from hashlib import sha256
 import json
+from werkzeug.datastructures import ImmutableMultiDict
 
 
 DEFAULT_CACHE_NAME = "formcache"
@@ -24,7 +25,8 @@ class FormCache(object):
 
     def read(self, formdata_key, key_prefix=DEFAULT_CACHE_NAME):
         data = self.redis.get(self._key(key_prefix, formdata_key))
-        return json.loads(data) if data is not None else {}
+        dict_data = json.loads(data) if data is not None else {}
+        return ImmutableMultiDict(dict_data)
 
     @staticmethod
     def _key(prefix, hash_):
