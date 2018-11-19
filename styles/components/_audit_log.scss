@@ -24,12 +24,11 @@
 .pagination {
   width: 80%;
   display: flex;
-  flex-direction: row;
   margin: auto;
+  flex-direction: row;
+  flex-wrap: wrap;
 }
 
 .page {
-  margin: auto;
-  flex-grow: 1;
-  max-width: 8%;
+  margin: .5em;
 }
