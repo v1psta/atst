@@ -36,10 +36,7 @@ def option_data():
 
 @requests_bp.route("/requests/new/<int:screen>", methods=["GET"])
 def requests_form_new(screen):
-    cached_data = current_app.form_cache.from_request(http_request)
-    jedi_flow = JEDIRequestFlow(
-        screen, request=None, current_user=g.current_user, post_data=cached_data
-    )
+    jedi_flow = JEDIRequestFlow(screen, request=None, current_user=g.current_user)
 
     return render_template(
         "requests/screen-%d.html" % int(screen),
