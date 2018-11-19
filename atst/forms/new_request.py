@@ -4,7 +4,7 @@ from wtforms.fields import BooleanField, RadioField, StringField, TextAreaField
 from wtforms.validators import Email, Length, Optional, InputRequired, DataRequired
 
 from .fields import SelectField
-from .forms import ValidatedForm
+from .forms import CacheableForm
 from .edit_user import USER_FIELDS, inherit_field
 from .data import (
     SERVICE_BRANCHES,
@@ -16,7 +16,7 @@ from .validators import DateRange, IsNumber
 from atst.domain.requests import Requests
 
 
-class DetailsOfUseForm(ValidatedForm):
+class DetailsOfUseForm(CacheableForm):
     def validate(self, *args, **kwargs):
         if self.jedi_migration.data == "no":
             self.rationalization_software_systems.validators.append(Optional())
@@ -162,7 +162,7 @@ class DetailsOfUseForm(ValidatedForm):
     )
 
 
-class InformationAboutYouForm(ValidatedForm):
+class InformationAboutYouForm(CacheableForm):
     fname_request = inherit_field(USER_FIELDS["first_name"])
     lname_request = inherit_field(USER_FIELDS["last_name"])
     email_request = inherit_field(USER_FIELDS["email"])
@@ -174,7 +174,7 @@ class InformationAboutYouForm(ValidatedForm):
     date_latest_training = inherit_field(USER_FIELDS["date_latest_training"])
 
 
-class WorkspaceOwnerForm(ValidatedForm):
+class WorkspaceOwnerForm(CacheableForm):
     def validate(self, *args, **kwargs):
         if self.am_poc.data:
             # Prepend Optional validators so that the validation chain
@@ -203,5 +203,5 @@ class WorkspaceOwnerForm(ValidatedForm):
     )
 
 
-class ReviewAndSubmitForm(ValidatedForm):
+class ReviewAndSubmitForm(CacheableForm):
     reviewed = BooleanField("I have reviewed this data and it is correct.")

@@ -1,4 +1,4 @@
-from flask import g, render_template, redirect, url_for, current_app as app
+from flask import g, render_template, redirect, url_for
 from flask import request as http_request
 from werkzeug.datastructures import ImmutableMultiDict, FileStorage
 

@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from flask import current_app, request as http_request
 
 
-class _ValidatedForm(FlaskForm):
+class ValidatedForm(FlaskForm):
     def perform_extra_validation(self, *args, **kwargs):
         """Performs any applicable extra validation. Must
         return True if the form is valid or False otherwise."""
@@ -15,7 +15,7 @@ class _ValidatedForm(FlaskForm):
         return _data
 
 
-class ValidatedForm(_ValidatedForm):
+class CacheableForm(ValidatedForm):
     def __init__(self, formdata=None, **kwargs):
         formdata = formdata or {}
         cached_data = current_app.form_cache.from_request(http_request)

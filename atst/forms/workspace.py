@@ -1,10 +1,10 @@
 from wtforms.fields import StringField
 from wtforms.validators import Length
 
-from .forms import ValidatedForm
+from .forms import CacheableForm
 
 
-class WorkspaceForm(ValidatedForm):
+class WorkspaceForm(CacheableForm):
     name = StringField(
         "Workspace Name",
         validators=[
