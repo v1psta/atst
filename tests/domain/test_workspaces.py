@@ -307,5 +307,5 @@ def test_can_create_workspaces_with_matching_names():
 def test_can_remove_workspace_access():
     workspace = WorkspaceFactory.create()
     workspace_role = WorkspaceRoleFactory.create(workspace=workspace)
-    Workspaces.revoke_access(workspace.owner, workspace, workspace_role)
+    Workspaces.revoke_access(workspace.owner, workspace.id, workspace_role.id)
     assert Workspaces.for_user(workspace_role.user) == []

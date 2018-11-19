@@ -3,6 +3,7 @@ from atst.domain.authz import Authorization
 from atst.models.permissions import Permissions
 from atst.domain.users import Users
 from atst.domain.workspace_roles import WorkspaceRoles
+from atst.domain.environments import Environments
 from atst.models.workspace_role import Status as WorkspaceRoleStatus
 
 from .query import WorkspacesQuery
@@ -140,13 +141,15 @@ class Workspaces(object):
         WorkspacesQuery.add_and_commit(workspace)
 
     @classmethod
-    def revoke_access(cls, user, workspace, target_workspace_role):
+    def revoke_access(cls, user, workspace_id, workspace_role_id):
         # TODO: What permission to here? Do we need a new one?
         # Authorization.check_workspace_permission(
         #     user, workspace, Permissions.REQUEST_NEW_CSP_ROLE, "revoke workspace access"
         # )
-        target_workspace_role.status = WorkspaceRoleStatus.DISABLED
+        workspace = WorkspacesQuery.get(workspace_id)
+        workspace_role = WorkspaceRoles.get_by_id(workspace_role_id)
+        workspace_role.status = WorkspaceRoleStatus.DISABLED
         for environment in workspace.all_environments:
             # TODO: Implement Environments.revoke_access
-            Environments.revoke_access(user, environment, target_workspace_role.user)
-        return WorkspacesQuery.add_and_commit(target_workspace_role)
+            Environments.revoke_access(user, environment, workspace_role.user)
+        return WorkspacesQuery.add_and_commit(workspace_role)

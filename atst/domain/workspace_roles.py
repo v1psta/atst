@@ -34,6 +34,20 @@ class WorkspaceRoles(object):
         return workspace_role
 
     @classmethod
+    def get_by_id(cls, id_):
+        try:
+            workspace_role = (
+                db.session.query(WorkspaceRole)
+                .join(User)
+                .filter(WorkspaceRole.id == id_)
+                .one()
+            )
+        except NoResultFound:
+            workspace_role = None
+
+        return workspace_role
+
+    @classmethod
     def _get_active_workspace_role(cls, workspace_id, user_id):
         try:
             return (
