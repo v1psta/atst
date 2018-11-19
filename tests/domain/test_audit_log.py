@@ -22,3 +22,12 @@ def test_non_admin_cannot_view_audit_log(developer):
 
 def test_ccpo_can_iview_audit_log(ccpo):
     AuditLog.get_all_events(ccpo)
+
+
+def test_paginate_audit_log(ccpo):
+    user = UserFactory.create()
+    for _ in range(100):
+        AuditLog.log_system_event(user, action="create")
+
+    events = AuditLog.get_all_events(ccpo, pagination_opts={"per_page": 25, "page": 2})
+    assert len(events) == 25

@@ -76,6 +76,16 @@ def dateFromString(value, formatter="%m/%Y"):
     return datetime.datetime.strptime(value, formatter)
 
 
+def pageWindow(pagination, size=2):
+    page = pagination.page
+    num_pages = pagination.pages
+
+    over = max(0, page + size - num_pages)
+    under = min(0, page - size - 1)
+
+    return (max(1, (page - size) - over), min(num_pages, (page + size) - under))
+
+
 def register_filters(app):
     app.jinja_env.filters["iconSvg"] = iconSvg
     app.jinja_env.filters["dollars"] = dollars
@@ -87,3 +97,4 @@ def register_filters(app):
     app.jinja_env.filters["renderList"] = renderList
     app.jinja_env.filters["formattedDate"] = formattedDate
     app.jinja_env.filters["dateFromString"] = dateFromString
+    app.jinja_env.filters["pageWindow"] = pageWindow

@@ -20,3 +20,15 @@
     margin-bottom: $gap;
   }
 }
+
+.pagination {
+  width: 80%;
+  display: flex;
+  margin: auto;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.page {
+  margin: .5em;
+}
