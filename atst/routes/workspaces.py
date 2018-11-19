@@ -262,10 +262,8 @@ def create_member(workspace_id):
     if form.validate():
         try:
             new_member = Workspaces.create_member(user, workspace, form.data)
-            invite = Invitations.create(user, new_member)
-            send_invite_email(
-                g.current_user.full_name, invite.token, form.data["email"]
-            )
+            invite = Invitations.create(user, new_member, form.data["email"])
+            send_invite_email(g.current_user.full_name, invite.token, invite.email)
 
             return redirect(
                 url_for(
@@ -381,7 +379,7 @@ def revoke_invitation(workspace_id, token):
 @bp.route("/workspaces/<workspace_id>/invitations/<token>/resend", methods=["POST"])
 def resend_invitation(workspace_id, token):
     invite = Invitations.resend(g.current_user, workspace_id, token)
-    send_invite_email(g.current_user.full_name, invite.token, invite.user_email)
+    send_invite_email(g.current_user.full_name, invite.token, invite.email)
     return redirect(
         url_for(
             "workspaces.workspace_members",
