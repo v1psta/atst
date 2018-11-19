@@ -39,7 +39,7 @@ def make_error_pages(app):
         log_error(e)
         url_args = {"sessionExpired": True, "next": request.path}
         if request.method == "POST":
-            url_args["formCache"] = app.form_cache.write(request.form)
+            url_args[app.form_cache.PARAM_NAME] = app.form_cache.write(request.form)
         return redirect(url_for("atst.root", **url_args))
 
     @app.errorhandler(Exception)

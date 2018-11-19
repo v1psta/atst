@@ -7,11 +7,13 @@ DEFAULT_CACHE_NAME = "formcache"
 
 
 class FormCache(object):
+    PARAM_NAME = "formCache"
+
     def __init__(self, redis):
         self.redis = redis
 
     def from_request(self, http_request):
-        cache_key = http_request.args.get("formCache")
+        cache_key = http_request.args.get(self.PARAM_NAME)
         if cache_key:
             return self.read(cache_key)
 

@@ -97,8 +97,10 @@ def _make_authentication_context():
 def redirect_after_login_url():
     if request.args.get("next"):
         returl = request.args.get("next")
-        if request.args.get("formCache"):
-            returl += "?" + url.urlencode({"formCache": request.args.get("formCache")})
+        if request.args.get(app.form_cache.PARAM_NAME):
+            returl += "?" + url.urlencode(
+                {app.form_cache.PARAM_NAME: request.args.get(app.form_cache.PARAM_NAME)}
+            )
         return returl
     else:
         return url_for("atst.home")
