@@ -142,11 +142,10 @@ class Workspaces(object):
 
     @classmethod
     def revoke_access(cls, user, workspace_id, workspace_role_id):
-        # TODO: What permission to here? Do we need a new one?
-        # Authorization.check_workspace_permission(
-        #     user, workspace, Permissions.REQUEST_NEW_CSP_ROLE, "revoke workspace access"
-        # )
         workspace = WorkspacesQuery.get(workspace_id)
+        Authorization.check_workspace_permission(
+            user, workspace, Permissions.ASSIGN_AND_UNASSIGN_ATAT_ROLE, "revoke workspace access"
+        )
         workspace_role = WorkspaceRoles.get_by_id(workspace_role_id)
         workspace_role.status = WorkspaceRoleStatus.DISABLED
         for environment in workspace.all_environments:
