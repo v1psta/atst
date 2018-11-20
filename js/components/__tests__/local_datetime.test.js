@@ -14,4 +14,16 @@ describe('LocalDatetime', () => {
   it('matches snapshot', () => {
     expect(wrapper).toMatchSnapshot()
   })
+
+  it('allows specifying a custom format', () => {
+    const wrapperWithCustomFormat = shallowMount(
+      LocalDatetime, {
+        propsData: {
+          timestamp: '1977-05-25 00:00:00',
+          format: 'MMM Do YY'
+        }
+      }
+    )
+    expect(wrapperWithCustomFormat).toMatchSnapshot()
+  })
 })
