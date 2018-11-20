@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LocalDatetime matches snapshot 1`] = `<time datetime="1977-05-25 00:00:00">May 25 1977 0:00</time>`;
