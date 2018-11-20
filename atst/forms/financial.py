@@ -7,7 +7,7 @@ from flask_wtf.file import FileAllowed
 from werkzeug.datastructures import FileStorage
 
 from .fields import NewlineListField, SelectField, NumberStringField
-from atst.forms.forms import ValidatedForm
+from atst.forms.forms import CacheableForm
 from .data import FUNDING_TYPES
 from .validators import DateRange
 
@@ -31,7 +31,7 @@ def coerce_choice(val):
         return val.value
 
 
-class TaskOrderForm(ValidatedForm):
+class TaskOrderForm(CacheableForm):
     def do_validate_number(self):
         for field in self:
             if field.name != "task_order-number":
@@ -127,7 +127,7 @@ class TaskOrderForm(ValidatedForm):
     )
 
 
-class RequestFinancialVerificationForm(ValidatedForm):
+class RequestFinancialVerificationForm(CacheableForm):
     uii_ids = NewlineListField(
         "Unique Item Identifier (UII)s related to your application(s) if you already have them.",
         description="If you have more than one UII, place each one on a new line.",
@@ -174,7 +174,7 @@ class RequestFinancialVerificationForm(ValidatedForm):
         self.uii_ids.process_data(self.uii_ids.data)
 
 
-class FinancialVerificationForm(ValidatedForm):
+class FinancialVerificationForm(CacheableForm):
 
     task_order = FormField(TaskOrderForm)
     request = FormField(RequestFinancialVerificationForm)

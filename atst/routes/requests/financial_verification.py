@@ -99,6 +99,7 @@ class GetFinancialVerificationForm(FinancialVerificationBase):
 
     def execute(self):
         form = self._get_form(self.request, self.is_extended)
+        form.reset()
         return form
 
 
@@ -178,6 +179,7 @@ class SaveFinancialVerificationDraft(FinancialVerificationBase):
         return updated_request
 
 
+@requests_bp.route("/requests/verify/<string:request_id>/draft", methods=["GET"])
 @requests_bp.route("/requests/verify/<string:request_id>", methods=["GET"])
 def financial_verification(request_id):
     request = Requests.get(g.current_user, request_id)

@@ -1,10 +1,10 @@
 from wtforms.fields import TextAreaField
 from wtforms.validators import InputRequired
 
-from .forms import ValidatedForm
+from .forms import CacheableForm
 
 
-class InternalCommentForm(ValidatedForm):
+class InternalCommentForm(CacheableForm):
     text = TextAreaField(
         "CCPO Internal Notes",
         default="",

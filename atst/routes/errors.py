@@ -37,7 +37,10 @@ def make_error_pages(app):
     # pylint: disable=unused-variable
     def session_expired(e):
         log_error(e)
-        return redirect(url_for("atst.root", sessionExpired=True, next=request.path))
+        url_args = {"sessionExpired": True, "next": request.path}
+        if request.method == "POST":
+            url_args[app.form_cache.PARAM_NAME] = app.form_cache.write(request.form)
+        return redirect(url_for("atst.root", **url_args))
 
     @app.errorhandler(Exception)
     # pylint: disable=unused-variable
