@@ -15,29 +15,6 @@ class AuditEventQuery(Query):
 
 class AuditLog(object):
     @classmethod
-    def log_event(cls, user, resource, action):
-        return cls._log(user=user, resource=resource, action=action)
-
-    @classmethod
-    def log_workspace_event(cls, user, workspace, resource, action):
-        return cls._log(
-            user=user, workspace_id=workspace.id, resource=resource, action=action
-        )
-
-    @classmethod
-    def log_update_workspace_role(
-        cls, action, user, updated_user, workspace, previous_role, new_role
-    ):
-        return cls._log(
-            action=action,
-            user=user,
-            updated_user=updated_user,
-            workspace_id=workspace.id,
-            previous_role_id=previous_role.id,
-            new_role_id=new_role.id,
-        )
-
-    @classmethod
     def log_system_event(cls, resource, action):
         return cls._log(resource=resource, action=action)
 
@@ -59,12 +36,6 @@ class AuditLog(object):
 
         audit_event = AuditEventQuery.create(
             user=user,
-            updated_user=updated_user,
-            workspace_id=workspace_id,
-            resource_id=resource_id,
-            resource_type=resource_type,
-            previous_role_id=previous_role_id,
-            new_role_id=new_role_id,
             workspace_id=workspace_id,
             resource_id=resource_id,
             resource_type=resource_type,

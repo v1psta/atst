@@ -7,6 +7,7 @@ from atst.domain.workspace_roles import WorkspaceRoles
 from atst.models.workspace_role import Status
 from atst.models.role import Role
 from atst.models.invitation import Status as InvitationStatus
+from atst.models.audit_event import AuditEvent
 from tests.factories import (
     RequestFactory,
     UserFactory,
