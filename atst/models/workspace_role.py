@@ -35,8 +35,7 @@ class WorkspaceRole(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
         UUID(as_uuid=True), ForeignKey("users.id"), index=True, nullable=False
     )
 
-    status = Column(
-        SQLAEnum(Status, native_enum=False), default=Status.PENDING)
+    status = Column(SQLAEnum(Status, native_enum=False), default=Status.PENDING)
 
     def __repr__(self):
         return "<WorkspaceRole(role='{}', workspace='{}', user_id='{}', id='{}')>".format(
