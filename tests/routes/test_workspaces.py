@@ -527,6 +527,7 @@ def test_existing_member_invite_resent_to_email_submitted_in_form(
         )
     )
 
+    send_mail_job = queue.get_queue().jobs[0]
     assert user.email != "example@example.com"
-    assert len(queue.get_queue().jobs[0].args[0]) == 1
-    assert queue.get_queue().jobs[0].args[0][0] == "example@example.com"
+    assert send_mail_job.func.__func__.__name__ == "_send_mail"
+    assert send_mail_job.args[0] == ["example@example.com"]
