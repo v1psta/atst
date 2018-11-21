@@ -38,6 +38,8 @@ def test_has_role_history(session):
 
     workspace = Workspaces.create(RequestFactory.create(creator=owner))
     role = session.query(Role).filter(Role.name == 'developer').one()
+    # in order to get the history, we don't want the WorkspaceRoleFactory
+    #  to commit after create()
     WorkspaceRoleFactory._meta.sqlalchemy_session_persistence = 'flush'
     workspace_role = WorkspaceRoleFactory.create(workspace=workspace, user=user, role=role)
     WorkspaceRoles.update_role(workspace_role, "admin")
@@ -45,7 +47,7 @@ def test_has_role_history(session):
         session.query(AuditEvent)
         .filter(
             AuditEvent.resource_id == workspace_role.id,
-            AuditEvent.changed_state != None,
+            AuditEvent.action == 'update',
         )
         .all()
     )
@@ -60,7 +62,8 @@ def test_has_status_history(session):
     user = UserFactory.create()
 
     workspace = Workspaces.create(RequestFactory.create(creator=owner))
-    # in order to get the history, we don't want the WorkspaceRoleFactory to commit
+    # in order to get the history, we don't want the WorkspaceRoleFactory
+    #  to commit after create()
     WorkspaceRoleFactory._meta.sqlalchemy_session_persistence = 'flush'
     workspace_role = WorkspaceRoleFactory.create(workspace=workspace, user=user)
     WorkspaceRoles.enable(workspace_role)
