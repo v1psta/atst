@@ -6,7 +6,9 @@
   "scripts": {
     "watch": "parcel watch js/index.js -d static/assets --public-url /static/assets -o index.js --no-autoinstall",
     "build": "parcel build js/index.js -d static/assets --public-url /static/assets -o index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest",
+    "test:coverage": "jest --coverage",
+    "test:watch": "jest --watch"
   },
   "author": "",
   "license": "MIT",
@@ -25,12 +27,27 @@
     "vue-text-mask": "^6.1.2"
   },
   "devDependencies": {
+    "@vue/test-utils": "^1.0.0-beta.25",
+    "babel-core": "^6.26.3",
+    "babel-jest": "^23.6.0",
+    "babel-preset-env": "^1.7.0",
+    "jest": "^23.6.0",
+    "jest-serializer-vue": "^2.0.2",
     "node-sass": "^4.9.2",
-    "parcel-bundler": "^1.10.3"
+    "parcel-bundler": "^1.10.3",
+    "vue-template-compiler": "2.5.15"
   },
   "browserslist": [
     "last 3 version",
     "> 5%",
     "IE 10"
-  ]
+  ],
+  "jest": {
+    "transform": {
+      "^.+\\.js$": "<rootDir>/node_modules/babel-jest"
+    },
+    "snapshotSerializers": [
+      "<rootDir>/node_modules/jest-serializer-vue"
+    ]
+  }
 }

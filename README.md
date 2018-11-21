@@ -154,17 +154,29 @@ Tests require a test database:
 createdb atat_test
 ```
 
-To run lint, static analysis, and unit tests:
+To run lint, static analysis, and Python unit tests:
 
     script/test
 
-To run only the unit tests:
+To run only the Python unit tests:
 
     pipenv run python -m pytest
 
-To re-run tests each time a file is changed:
+To re-run Python tests each time a file is changed:
 
     pipenv run ptw
+
+This project also runs Javascript tests using jest. To run the Javascript tests:
+
+    yarn test
+
+To re-run the Javascript tests each time a file is changed:
+
+    yarn test:watch
+
+To generate coverage reports for the Javascript tests:
+
+    yarn test:coverage
 
 ### Selenium Tests
 
