@@ -53,16 +53,7 @@ class AuditLog(object):
         return type(resource).__name__.lower()
 
     @classmethod
-    def _log(
-        cls,
-        user=None,
-        updated_user=None,
-        workspace_id=None,
-        resource=None,
-        action=None,
-        previous_role_id=None,
-        new_role_id=None,
-    ):
+    def _log(cls, user=None, workspace_id=None, resource=None, action=None):
         resource_id = resource.id if resource else None
         resource_type = cls._resource_type(resource) if resource else None
 
@@ -74,6 +65,9 @@ class AuditLog(object):
             resource_type=resource_type,
             previous_role_id=previous_role_id,
             new_role_id=new_role_id,
+            workspace_id=workspace_id,
+            resource_id=resource_id,
+            resource_type=resource_type,
             action=action,
         )
         return AuditEventQuery.add_and_commit(audit_event)
