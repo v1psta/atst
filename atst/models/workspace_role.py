@@ -57,7 +57,6 @@ class WorkspaceRole(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
             change_set["status"] = [from_status, to_status]
         return change_set
 
-
     @property
     def event_details(self):
         return {
