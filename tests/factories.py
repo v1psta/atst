@@ -326,6 +326,7 @@ class WorkspaceRoleFactory(Base):
     workspace = factory.SubFactory(WorkspaceFactory)
     role = factory.SubFactory(RoleFactory)
     user = factory.SubFactory(UserFactory)
+    status = WorkspaceRoleStatus.PENDING
 
 
 class EnvironmentRoleFactory(Base):

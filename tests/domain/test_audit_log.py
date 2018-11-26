@@ -20,7 +20,7 @@ def test_non_admin_cannot_view_audit_log(developer):
         AuditLog.get_all_events(developer)
 
 
-def test_ccpo_can_iview_audit_log(ccpo):
+def test_ccpo_can_view_audit_log(ccpo):
     AuditLog.get_all_events(ccpo)
 
 

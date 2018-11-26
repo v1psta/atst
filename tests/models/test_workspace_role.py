@@ -5,13 +5,91 @@ from atst.domain.workspaces import Workspaces
 from atst.domain.projects import Projects
 from atst.domain.workspace_roles import WorkspaceRoles
 from atst.models.workspace_role import Status
+from atst.models.role import Role
 from atst.models.invitation import Status as InvitationStatus
+from atst.models.audit_event import AuditEvent
 from tests.factories import (
     RequestFactory,
     UserFactory,
     InvitationFactory,
     WorkspaceRoleFactory,
 )
+
+
+def test_has_no_history(session):
+    owner = UserFactory.create()
+    user = UserFactory.create()
+
+    workspace = Workspaces.create(RequestFactory.create(creator=owner))
+    workspace_role = WorkspaceRoles.add(user, workspace.id, "developer")
+    create_event = (
+        session.query(AuditEvent)
+        .filter(
+            AuditEvent.resource_id == workspace_role.id, AuditEvent.action == "create"
+        )
+        .one()
+    )
+
+    assert not create_event.changed_state
+
+
+def test_has_role_history(session):
+    owner = UserFactory.create()
+    user = UserFactory.create()
+
+    workspace = Workspaces.create(RequestFactory.create(creator=owner))
+    role = session.query(Role).filter(Role.name == "developer").one()
+    # in order to get the history, we don't want the WorkspaceRoleFactory
+    #  to commit after create()
+    WorkspaceRoleFactory._meta.sqlalchemy_session_persistence = "flush"
+    workspace_role = WorkspaceRoleFactory.create(
+        workspace=workspace, user=user, role=role
+    )
+    WorkspaceRoles.update_role(workspace_role, "admin")
+    changed_events = (
+        session.query(AuditEvent)
+        .filter(
+            AuditEvent.resource_id == workspace_role.id, AuditEvent.action == "update"
+        )
+        .all()
+    )
+    # changed_state["role"] returns a list [previous role, current role]
+    assert changed_events[0].changed_state["role"][0] == "developer"
+    assert changed_events[0].changed_state["role"][1] == "admin"
+
+
+def test_has_status_history(session):
+    owner = UserFactory.create()
+    user = UserFactory.create()
+
+    workspace = Workspaces.create(RequestFactory.create(creator=owner))
+    # in order to get the history, we don't want the WorkspaceRoleFactory
+    #  to commit after create()
+    WorkspaceRoleFactory._meta.sqlalchemy_session_persistence = "flush"
+    workspace_role = WorkspaceRoleFactory.create(workspace=workspace, user=user)
+    WorkspaceRoles.enable(workspace_role)
+    changed_events = (
+        session.query(AuditEvent)
+        .filter(
+            AuditEvent.resource_id == workspace_role.id, AuditEvent.action == "update"
+        )
+        .all()
+    )
+
+    # changed_state["status"] returns a list [previous status, current status]
+    assert changed_events[0].changed_state["status"][0] == "pending"
+    assert changed_events[0].changed_state["status"][1] == "active"
+
+
+def test_event_details():
+    owner = UserFactory.create()
+    user = UserFactory.create()
+
+    workspace = Workspaces.create(RequestFactory.create(creator=owner))
+    workspace_role = WorkspaceRoles.add(user, workspace.id, "developer")
+
+    assert workspace_role.event_details["updated_user_name"] == user.displayname
+    assert workspace_role.event_details["updated_user_id"] == str(user.id)
 
 
 def test_has_no_environment_roles():

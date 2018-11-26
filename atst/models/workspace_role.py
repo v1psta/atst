@@ -10,6 +10,7 @@ from atst.database import db
 from atst.models.environment_role import EnvironmentRole
 from atst.models.project import Project
 from atst.models.environment import Environment
+from atst.models.role import Role
 
 
 class Status(Enum):
@@ -34,12 +35,34 @@ class WorkspaceRole(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
         UUID(as_uuid=True), ForeignKey("users.id"), index=True, nullable=False
     )
 
-    status = Column(SQLAEnum(Status, native_enum=False, default=Status.PENDING))
+    status = Column(SQLAEnum(Status, native_enum=False), default=Status.PENDING)
 
     def __repr__(self):
         return "<WorkspaceRole(role='{}', workspace='{}', user_id='{}', id='{}')>".format(
             self.role.name, self.workspace.name, self.user_id, self.id
         )
+
+    @property
+    def history(self):
+        previous_state = self.get_changes()
+        change_set = {}
+        if "role_id" in previous_state:
+            from_role_id = previous_state["role_id"][0]
+            from_role = db.session.query(Role).filter(Role.id == from_role_id).one()
+            to_role = self.role_name
+            change_set["role"] = [from_role.name, to_role]
+        if "status" in previous_state:
+            from_status = previous_state["status"][0].value
+            to_status = self.status.value
+            change_set["status"] = [from_status, to_status]
+        return change_set
+
+    @property
+    def event_details(self):
+        return {
+            "updated_user_name": self.user_name,
+            "updated_user_id": str(self.user_id),
+        }
 
     @property
     def latest_invitation(self):
