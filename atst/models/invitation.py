@@ -87,3 +87,7 @@ class Invitation(Base, TimestampsMixin, AuditableMixin):
     @property
     def user_name(self):
         return self.workspace_role.user.full_name
+
+    @property
+    def is_revokable(self):
+        return self.is_pending and not self.is_expired
