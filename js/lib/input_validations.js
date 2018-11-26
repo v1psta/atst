@@ -48,8 +48,8 @@ export default {
     validationError: 'Please enter a 10-digit phone number'
   },
   phoneExt: {
-    mask: createNumberMask({ prefix: '', allowDecimal: false, allowLeadingZeroes: true, includeThousandsSeparator: false }),
-    match: /^\w{0,10}$/,
+    mask: createNumberMask({ prefix: '', allowDecimal: false, integerLimit: 10, allowLeadingZeroes: true, includeThousandsSeparator: false }),
+    match: /^\d{0,10}$/,
     unmask: [],
     validationError: 'Optional: Please enter up to 10 digits'
   },
