@@ -10,6 +10,10 @@ from .query import WorkspacesQuery
 from .scopes import ScopedWorkspace
 
 
+class WorkspaceError(Exception):
+    pass
+
+
 class Workspaces(object):
     @classmethod
     def create(cls, request, name=None):
@@ -141,6 +145,10 @@ class Workspaces(object):
         WorkspacesQuery.add_and_commit(workspace)
 
     @classmethod
+    def can_revoke_access(cls, workspace, workspace_role):
+        return workspace_role.user != workspace.owner
+
+    @classmethod
     def revoke_access(cls, user, workspace_id, workspace_role_id):
         workspace = WorkspacesQuery.get(workspace_id)
         Authorization.check_workspace_permission(
@@ -150,8 +158,14 @@ class Workspaces(object):
             "revoke workspace access",
         )
         workspace_role = WorkspaceRoles.get_by_id(workspace_role_id)
+
+        if not Workspaces.can_revoke_access(workspace, workspace_role):
+            raise WorkspaceError()
+
         workspace_role.status = WorkspaceRoleStatus.DISABLED
         for environment in workspace.all_environments:
             # TODO: Implement Environments.revoke_access
             Environments.revoke_access(user, environment, workspace_role.user)
-        return WorkspacesQuery.add_and_commit(workspace_role)
+        WorkspacesQuery.add_and_commit(workspace_role)
+
+        return workspace_role

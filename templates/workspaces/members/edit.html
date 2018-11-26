@@ -53,12 +53,14 @@
               confirm_msg="Are you sure? This will send an email to invite the user to join this workspace."
         )}}
       {% endif %}
+      {% if can_revoke_access %}
         {{ ConfirmationButton (
               "Remove Workspace Access",
               url_for("workspaces.revoke_access", workspace_id=workspace.id, member_id=member.id),
               form.csrf_token,
               confirm_msg="Are you sure? This will remove this user from the workspace.",
         )}}
+      {% endif %}
       </div>
     </div>
   </div>
