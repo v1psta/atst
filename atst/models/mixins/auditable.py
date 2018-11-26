@@ -17,8 +17,11 @@ class AuditableMixin(object):
         request_id = resource.auditable_request_id()
         resource_type = resource.auditable_resource_type()
         display_name = resource.auditable_displayname()
-        changed_state = resource.auditable_changed_state()
         event_details = resource.auditable_event_details()
+
+        changed_state = (
+            resource.auditable_changed_state() if action == ACTION_UPDATE else None
+        )
 
         audit_event = AuditEvent(
             user_id=user_id,
@@ -69,7 +72,9 @@ class AuditableMixin(object):
         for attr in attrs:
             history = getattr(inspect(self).attrs, attr.key).history
             if history.has_changes():
-                previous_state[attr.key] = [history.deleted.pop(), history.added.pop()]
+                deleted = history.deleted.pop() if history.deleted else None
+                added = history.added.pop() if history.added else None
+                previous_state[attr.key] = [deleted, added]
         return previous_state
 
     def auditable_changed_state(self):
