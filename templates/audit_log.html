@@ -30,8 +30,6 @@
 
               {% if event.event_details %}
                 for User <code>{{ event.event_details.updated_user_id }}</code> ({{ event.event_details.updated_user_name }})
-                <br>
-              {% endif %}
 
                 {% if event.event_details["environment"] %}
                   <br>
@@ -50,7 +48,7 @@
                 on Request <code>{{ event.request_id }}</code> ({{ event.request.displayname }})
               {% endif %}
 
-              {% if event.changed_state %}
+              {% if event.changed_state.role %}
                 from {{ event.changed_state.role[0] }} to {{ event.changed_state.role[1] }}
                 <br>
               {% endif %}

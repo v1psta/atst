@@ -52,15 +52,12 @@ class AuditableMixin(object):
 
     @staticmethod
     def audit_update(mapper, connection, target):
-        if AuditableMixin.get_history(target):
+        if AuditableMixin.get_changes(target):
             target.create_audit_event(connection, target, ACTION_UPDATE)
 
     def get_changes(self):
         """
-        This function borrows largely from a gist:
-        https://gist.github.com/ngse/c20058116b8044c65d3fbceda3fdf423#file-audit_mixin-py-L106-L120
-
-        It returns a dictionary of the form {item: [from_value, to_value]},
+        This function returns a dictionary of the form {item: [from_value, to_value]},
         where 'item' is the attribute on the target that has been updated,
         'from_value' is the value of the attribute before it was updated,
         and 'to_value' is the current value of the attribute.
