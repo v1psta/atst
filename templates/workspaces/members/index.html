@@ -44,6 +44,17 @@
   ) }}
 {% endif %}
 
+{% if revoked_member_name %}
+    {% set message -%}
+      <p>Removed {{ revoked_member_name }} from this workspace.</p>
+    {%- endset %}
+
+  {{ Alert('Removed workspace access',
+    message=message,
+    level='success'
+  ) }}
+{% endif %}
+
 {% set member_name = request.args.get("memberName") %}
 {% set updated_role = request.args.get("updatedRole") %}
 {% if updated_role %}
