@@ -2,16 +2,16 @@ from sqlalchemy import Column, ForeignKey, String
 from sqlalchemy.orm import relationship
 from itertools import chain
 
-from atst.models import Base
-from atst.models.types import Id
-from atst.models import mixins
+from atst.models import Base, mixins, types
+from atst.models.workspace_role import WorkspaceRole, Status as WorkspaceRoleStatus
 from atst.utils import first_or_none
+from atst.database import db
 
 
 class Workspace(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     __tablename__ = "workspaces"
 
-    id = Id()
+    id = types.Id()
     name = Column(String)
     request_id = Column(ForeignKey("requests.id"), nullable=False)
     projects = relationship("Project", back_populates="workspace")
@@ -39,7 +39,12 @@ class Workspace(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
 
     @property
     def members(self):
-        return self.roles
+        return (
+            db.session.query(WorkspaceRole)
+            .filter(WorkspaceRole.workspace_id == self.id)
+            .filter(WorkspaceRole.status != WorkspaceRoleStatus.DISABLED)
+            .all()
+        )
 
     @property
     def displayname(self):

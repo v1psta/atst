@@ -144,7 +144,10 @@ class Workspaces(object):
     def revoke_access(cls, user, workspace_id, workspace_role_id):
         workspace = WorkspacesQuery.get(workspace_id)
         Authorization.check_workspace_permission(
-            user, workspace, Permissions.ASSIGN_AND_UNASSIGN_ATAT_ROLE, "revoke workspace access"
+            user,
+            workspace,
+            Permissions.ASSIGN_AND_UNASSIGN_ATAT_ROLE,
+            "revoke workspace access",
         )
         workspace_role = WorkspaceRoles.get_by_id(workspace_role_id)
         workspace_role.status = WorkspaceRoleStatus.DISABLED

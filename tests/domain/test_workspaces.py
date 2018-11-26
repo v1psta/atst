@@ -309,3 +309,14 @@ def test_can_remove_workspace_access():
     workspace_role = WorkspaceRoleFactory.create(workspace=workspace)
     Workspaces.revoke_access(workspace.owner, workspace.id, workspace_role.id)
     assert Workspaces.for_user(workspace_role.user) == []
+
+
+def test_disabled_members_dont_show_up(session):
+    workspace = WorkspaceFactory.create()
+    WorkspaceRoleFactory.create(workspace=workspace, status=WorkspaceRoleStatus.ACTIVE)
+    WorkspaceRoleFactory.create(
+        workspace=workspace, status=WorkspaceRoleStatus.DISABLED
+    )
+
+    # should only return workspace owner and ACTIVE member
+    assert len(workspace.members) == 2
