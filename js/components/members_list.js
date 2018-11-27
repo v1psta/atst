@@ -90,6 +90,8 @@ export default {
       },
     ]
 
+    const defaultSortColumn = 'Name'
+
     return {
       searchValue: '',
       status: '',
@@ -97,7 +99,7 @@ export default {
       role: '',
       rolesByDisplayName: indexBy(prop('display_name'), this.role_choices),
       sortInfo: {
-        columnName: '',
+        columnName: defaultSortColumn,
         isAscending: true,
         columns: indexBy(prop('displayName'), columns)
       },
@@ -127,5 +129,7 @@ export default {
     getColumns: function() {
       return Object.values(this.sortInfo.columns)
     }
-  }
+  },
+
+  template: '<div></div>'
 }
