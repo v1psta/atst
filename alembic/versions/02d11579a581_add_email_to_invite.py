@@ -1,7 +1,7 @@
 """Add email to invite
 
 Revision ID: 02d11579a581
-Revises: 4c0b8263d800
+Revises: 4f46aecb337f
 Create Date: 2018-11-19 14:51:33.178358
 
 """
@@ -12,7 +12,7 @@ from sqlalchemy.sql import text
 
 # revision identifiers, used by Alembic.
 revision = '02d11579a581'
-down_revision = '4c0b8263d800'
+down_revision = '4f46aecb337f'
 branch_labels = None
 depends_on = None
 
