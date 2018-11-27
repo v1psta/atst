@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ConfirmationPopover matches snapshot 1`] = `<v-popover placement="top-start"><template></template> <button type="button" class="tooltip-target">Do something dangerous</button></v-popover>`;

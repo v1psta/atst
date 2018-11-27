@@ -23,6 +23,7 @@ import CcpoApproval from './components/forms/ccpo_approval'
 import MembersList from './components/forms/members_list'
 import LocalDatetime from './components/local_datetime'
 import RequestsList from './components/forms/requests_list'
+import ConfirmationPopover from './components/confirmation_popover'
 
 Vue.config.productionTip = false
 
@@ -50,6 +51,7 @@ const app = new Vue({
     EditEnvironmentRole,
     EditProjectRoles,
     RequestsList,
+    ConfirmationPopover,
   },
 
   mounted: function() {
