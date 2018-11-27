@@ -316,8 +316,8 @@ def test_can_revoke_access():
     owner_role = workspace.roles[0]
     workspace_role = WorkspaceRoleFactory.create(workspace=workspace)
 
-    assert Workspaces.can_revoke_access(workspace, workspace_role)
-    assert not Workspaces.can_revoke_access(workspace, owner_role)
+    assert Workspaces.can_revoke_access_for(workspace, workspace_role)
+    assert not Workspaces.can_revoke_access_for(workspace, owner_role)
 
 
 def test_cant_revoke_owner_workspace_access():

@@ -145,7 +145,7 @@ class Workspaces(object):
         WorkspacesQuery.add_and_commit(workspace)
 
     @classmethod
-    def can_revoke_access(cls, workspace, workspace_role):
+    def can_revoke_access_for(cls, workspace, workspace_role):
         return workspace_role.user != workspace.owner
 
     @classmethod
@@ -159,7 +159,7 @@ class Workspaces(object):
         )
         workspace_role = WorkspaceRoles.get_by_id(workspace_role_id)
 
-        if not Workspaces.can_revoke_access(workspace, workspace_role):
+        if not Workspaces.can_revoke_access_for(workspace, workspace_role):
             raise WorkspaceError("cannot revoke workspace access for this user")
 
         workspace_role.status = WorkspaceRoleStatus.DISABLED
