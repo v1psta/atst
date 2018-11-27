@@ -31,13 +31,7 @@ class EnvironmentRole(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
 
     @property
     def history(self):
-        previous_state = self.get_changes()
-        change_set = {}
-        if "role" in previous_state:
-            from_role = previous_state["role"][0]
-            to_role = self.role
-            change_set["role"] = [from_role, to_role]
-        return change_set
+        return self.get_changes()
 
     @property
     def event_details(self):
