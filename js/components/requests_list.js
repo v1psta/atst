@@ -1,5 +1,5 @@
-import LocalDatetime from '../../components/local_datetime'
-import { formatDollars } from '../../lib/dollars'
+import LocalDatetime from '../components/local_datetime'
+import { formatDollars } from '../lib/dollars'
 import { parse } from 'date-fns'
 import { compose, partial, indexBy, prop, sortBy, reverse, pipe } from 'ramda'
 
