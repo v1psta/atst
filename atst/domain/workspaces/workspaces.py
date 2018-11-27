@@ -160,7 +160,7 @@ class Workspaces(object):
         workspace_role = WorkspaceRoles.get_by_id(workspace_role_id)
 
         if not Workspaces.can_revoke_access(workspace, workspace_role):
-            raise WorkspaceError()
+            raise WorkspaceError("cannot revoke workspace access for this user")
 
         workspace_role.status = WorkspaceRoleStatus.DISABLED
         for environment in workspace.all_environments:
