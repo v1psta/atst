@@ -12,7 +12,7 @@ from atst.database import db
 from atst.assets import environment as assets_environment
 from atst.filters import register_filters
 from atst.routes import bp
-from atst.routes.workspaces import bp as workspace_routes
+from atst.routes.workspaces import workspaces_bp as workspace_routes
 from atst.routes.requests import requests_bp
 from atst.routes.dev import bp as dev_routes
 from atst.routes.users import bp as user_routes
