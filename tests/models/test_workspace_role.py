@@ -13,10 +13,13 @@ from tests.factories import (
     UserFactory,
     InvitationFactory,
     WorkspaceRoleFactory,
+    EnvironmentFactory,
+    EnvironmentRoleFactory,
+    ProjectFactory,
 )
 
 
-def test_has_no_history(session):
+def test_has_no_ws_role_history(session):
     owner = UserFactory.create()
     user = UserFactory.create()
 
@@ -33,7 +36,7 @@ def test_has_no_history(session):
     assert not create_event.changed_state
 
 
-def test_has_role_history(session):
+def test_has_ws_role_history(session):
     owner = UserFactory.create()
     user = UserFactory.create()
 
@@ -58,7 +61,7 @@ def test_has_role_history(session):
     assert changed_events[0].changed_state["role"][1] == "admin"
 
 
-def test_has_status_history(session):
+def test_has_ws_status_history(session):
     owner = UserFactory.create()
     user = UserFactory.create()
 
@@ -79,6 +82,49 @@ def test_has_status_history(session):
     # changed_state["status"] returns a list [previous status, current status]
     assert changed_events[0].changed_state["status"][0] == "pending"
     assert changed_events[0].changed_state["status"][1] == "active"
+
+
+def test_has_no_env_role_history(session):
+    owner = UserFactory.create()
+    user = UserFactory.create()
+    workspace = Workspaces.create(RequestFactory.create(creator=owner))
+    project = ProjectFactory.create(workspace=workspace)
+    environment = EnvironmentFactory.create(project=project, name="new environment!")
+
+    env_role = EnvironmentRoleFactory.create(
+        user=user, environment=environment, role="developer"
+    )
+    create_event = (
+        session.query(AuditEvent)
+        .filter(AuditEvent.resource_id == env_role.id, AuditEvent.action == "create")
+        .one()
+    )
+
+    assert not create_event.changed_state
+
+
+def test_has_env_role_history(session):
+    owner = UserFactory.create()
+    user = UserFactory.create()
+    workspace = Workspaces.create(RequestFactory.create(creator=owner))
+    workspace_role = WorkspaceRoleFactory.create(workspace=workspace, user=user)
+    project = ProjectFactory.create(workspace=workspace)
+    environment = EnvironmentFactory.create(project=project, name="new environment!")
+
+    env_role = EnvironmentRoleFactory.create(
+        user=user, environment=environment, role="developer"
+    )
+    Environments.update_environment_roles(
+        owner, workspace, workspace_role, [{"role": "admin", "id": environment.id}]
+    )
+    changed_events = (
+        session.query(AuditEvent)
+        .filter(AuditEvent.resource_id == env_role.id, AuditEvent.action == "update")
+        .all()
+    )
+    # changed_state["role"] returns a list [previous role, current role]
+    assert changed_events[0].changed_state["role"][0] == "developer"
+    assert changed_events[0].changed_state["role"][1] == "admin"
 
 
 def test_event_details():
