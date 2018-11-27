@@ -77,13 +77,14 @@ export default {
       },
     ]
 
+    const defaultSortColumn = this.isExtended ? 'last_submission_timestamp' : ''
     return {
       searchValue: '',
       statusValue: '',
       dodComponentValue: '',
       sort: {
-        columnName: '',
-        isAscending: true
+        columnName: defaultSortColumn,
+        isAscending: false
       },
       columns: indexBy(prop('attr'), columnList),
     }
@@ -145,4 +146,6 @@ export default {
       this.sort.columnName = columnName;
     },
   },
+
+  template: '<div></div>'
 }
