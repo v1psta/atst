@@ -1,11 +1,15 @@
-import { shallowMount } from '@vue/test-utils'
+import { createLocalVue, shallowMount } from '@vue/test-utils'
+import VTooltip from 'v-tooltip'
 
 import ConfirmationPopover from '../confirmation_popover'
 
+const localVue = createLocalVue()
+localVue.use(VTooltip)
 
 describe('ConfirmationPopover', () => {
   it('matches snapshot', () => {
     const wrapper = shallowMount(ConfirmationPopover, {
+      localVue,
       propsData: {
         action: '/some-url',
         btn_text: 'Do something dangerous',
