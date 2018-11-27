@@ -1,2 +1,3 @@
 [run]
 omit = atst/routes/dev.py
+branch = True
