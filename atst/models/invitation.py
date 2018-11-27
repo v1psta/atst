@@ -91,3 +91,24 @@ class Invitation(Base, TimestampsMixin, AuditableMixin):
     @property
     def is_revokable(self):
         return self.is_pending and not self.is_expired
+
+    @property
+    def user_dod_id(self):
+        return self.user.dod_id if self.user is not None else None
+
+    @property
+    def event_details(self):
+        return {
+            "email": self.email,
+            "dod_id": self.user_dod_id,
+        }
+
+    @property
+    def history(self):
+        changes = self.get_changes()
+        change_set = {}
+
+        if "status" in changes:
+            change_set["status"] = [s.name for s in changes["status"]]
+
+        return change_set
