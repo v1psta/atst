@@ -164,7 +164,6 @@ class Workspaces(object):
 
         workspace_role.status = WorkspaceRoleStatus.DISABLED
         for environment in workspace.all_environments:
-            # TODO: Implement Environments.revoke_access
             Environments.revoke_access(user, environment, workspace_role.user)
         WorkspacesQuery.add_and_commit(workspace_role)
 
