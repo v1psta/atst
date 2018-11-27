@@ -342,5 +342,6 @@ class InvitationFactory(Base):
     class Meta:
         model = Invitation
 
+    email = factory.Faker("email")
     status = InvitationStatus.PENDING
     expiration_time = Invitations.current_expiration_time()
