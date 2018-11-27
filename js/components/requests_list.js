@@ -13,7 +13,7 @@ export default {
   props: {
     requests: {
       type: Array,
-      default: [],
+      default: () => [],
     },
     isExtended: {
       type: Boolean,
@@ -21,11 +21,11 @@ export default {
     },
     statuses: {
       type: Array,
-      default: [],
+      default: () => [],
     },
     dodComponents: {
       type: Array,
-      default: [],
+      default: () => [],
     }
   },
 
