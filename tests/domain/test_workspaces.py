@@ -134,7 +134,8 @@ def test_update_workspace_role_role(workspace, workspace_owner):
         "workspace_role": "developer",
         "dod_id": "1234567890",
     }
-    member = Workspaces.create_member(workspace_owner, workspace, user_data)
+    WorkspaceRoleFactory._meta.sqlalchemy_session_persistence = "flush"
+    member = WorkspaceRoleFactory.create(workspace=workspace)
     role_name = "admin"
 
     updated_member = Workspaces.update_member(

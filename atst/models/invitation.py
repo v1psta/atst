@@ -42,11 +42,13 @@ class Invitation(Base, TimestampsMixin, AuditableMixin):
 
     expiration_time = Column(TIMESTAMP(timezone=True))
 
-    token = Column(String(), index=True, default=lambda: secrets.token_urlsafe())
+    token = Column(String, index=True, default=lambda: secrets.token_urlsafe())
+
+    email = Column(String, nullable=False)
 
     def __repr__(self):
-        return "<Invitation(user='{}', workspace_role='{}', id='{}')>".format(
-            self.user_id, self.workspace_role_id, self.id
+        return "<Invitation(user='{}', workspace_role='{}', id='{}', email='{}')>".format(
+            self.user_id, self.workspace_role_id, self.id, self.email
         )
 
     @property
@@ -81,10 +83,6 @@ class Invitation(Base, TimestampsMixin, AuditableMixin):
     def workspace(self):
         if self.workspace_role:
             return self.workspace_role.workspace
-
-    @property
-    def user_email(self):
-        return self.workspace_role.user.email
 
     @property
     def user_name(self):

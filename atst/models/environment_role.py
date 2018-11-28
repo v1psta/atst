@@ -10,7 +10,7 @@ class CSPRole(Enum):
     NONSENSE_ROLE = "nonsense_role"
 
 
-class EnvironmentRole(Base, mixins.TimestampsMixin):
+class EnvironmentRole(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     __tablename__ = "environment_roles"
 
     id = types.Id()
@@ -28,6 +28,23 @@ class EnvironmentRole(Base, mixins.TimestampsMixin):
         return "<EnvironmentRole(role='{}', user='{}', environment='{}', id='{}')>".format(
             self.role, self.user.full_name, self.environment.name, self.id
         )
+
+    @property
+    def history(self):
+        return self.get_changes()
+
+    @property
+    def event_details(self):
+        return {
+            "updated_user_name": self.user.displayname,
+            "updated_user_id": str(self.user_id),
+            "environment": self.environment.displayname,
+            "environment_id": str(self.environment_id),
+            "project": self.environment.project.name,
+            "project_id": str(self.environment.project_id),
+            "workspace": self.environment.project.workspace.name,
+            "workspace_id": str(self.environment.project.workspace.id),
+        }
 
 
 Index(

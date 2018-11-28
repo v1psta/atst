@@ -1,5 +1,6 @@
 import datetime
 from flask import url_for
+import pytest
 
 from tests.factories import (
     UserFactory,
@@ -339,6 +340,29 @@ def test_existing_member_accepts_valid_invite(client, user_session):
     assert len(Workspaces.for_user(user)) == 1
 
 
+def test_existing_member_invite_sent_to_email_submitted_in_form(
+    client, user_session, queue
+):
+    workspace = WorkspaceFactory.create()
+    user = UserFactory.create()
+    member_form_data = {
+        "dod_id": user.dod_id,
+        "first_name": user.first_name,
+        "last_name": user.last_name,
+        "workspace_role": "developer",
+        "email": "example@example.com",
+    }
+    user_session(workspace.owner)
+    client.post(
+        url_for("workspaces.create_member", workspace_id=workspace.id),
+        data={**member_form_data},
+    )
+
+    assert user.email != "example@example.com"
+    assert len(queue.get_queue().jobs[0].args[0]) == 1
+    assert queue.get_queue().jobs[0].args[0][0] == "example@example.com"
+
+
 def test_new_member_accepts_valid_invite(monkeypatch, client, user_session):
     workspace = WorkspaceFactory.create()
     user_info = UserFactory.dictionary()
@@ -478,3 +502,32 @@ def test_resend_invitation_sends_email(client, user_session, queue):
     )
 
     assert len(queue.get_queue()) == 1
+
+
+def test_existing_member_invite_resent_to_email_submitted_in_form(
+    client, user_session, queue
+):
+    workspace = WorkspaceFactory.create()
+    user = UserFactory.create()
+    ws_role = WorkspaceRoleFactory.create(
+        user=user, workspace=workspace, status=WorkspaceRoleStatus.PENDING
+    )
+    invite = InvitationFactory.create(
+        user_id=user.id,
+        workspace_role_id=ws_role.id,
+        status=InvitationStatus.PENDING,
+        email="example@example.com",
+    )
+    user_session(workspace.owner)
+    client.post(
+        url_for(
+            "workspaces.resend_invitation",
+            workspace_id=workspace.id,
+            token=invite.token,
+        )
+    )
+
+    send_mail_job = queue.get_queue().jobs[0]
+    assert user.email != "example@example.com"
+    assert send_mail_job.func.__func__.__name__ == "_send_mail"
+    assert send_mail_job.args[0] == ["example@example.com"]

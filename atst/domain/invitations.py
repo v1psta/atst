@@ -54,13 +54,14 @@ class Invitations(object):
         return invite
 
     @classmethod
-    def create(cls, inviter, workspace_role):
+    def create(cls, inviter, workspace_role, email):
         invite = Invitation(
             workspace_role=workspace_role,
             inviter=inviter,
             user=workspace_role.user,
             status=InvitationStatus.PENDING,
             expiration_time=Invitations.current_expiration_time(),
+            email=email,
         )
         db.session.add(invite)
         db.session.commit()
@@ -120,4 +121,6 @@ class Invitations(object):
         previous_invitation = Invitations._get(token)
         Invitations._update_status(previous_invitation, InvitationStatus.REVOKED)
 
-        return Invitations.create(user, previous_invitation.workspace_role)
+        return Invitations.create(
+            user, previous_invitation.workspace_role, previous_invitation.email
+        )
