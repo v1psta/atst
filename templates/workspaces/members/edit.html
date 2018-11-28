@@ -44,14 +44,12 @@
         {{ ConfirmationButton(
               "Revoke Invitation",
               url_for("workspaces.revoke_invitation", workspace_id=workspace.id, token=member.latest_invitation.token),
-              form.csrf_token
            ) }}
       {% endif %}
       {% if member.can_resend_invitation %}
         {{ ConfirmationButton (
               "Resend Invitation",
               url_for("workspaces.resend_invitation", workspace_id=workspace.id, token=member.latest_invitation.token),
-              form.csrf_token,
               confirm_msg="Are you sure? This will send an email to invite the user to join this workspace."
         )}}
       {% endif %}

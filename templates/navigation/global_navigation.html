@@ -2,17 +2,6 @@
 
 <div class="global-navigation sidenav {% if workspace %}global-navigation__context--workspace{% endif %}">
   <ul>
-    {% if g.dev %}
-      {{ SidenavItem("Styleguide",
-        href="/styleguide",
-        icon="visible",
-        active=g.matchesPath('/styleguide'),
-        subnav=[
-          {"label":"Subnav 1", "href":"/styleguide?subnav1", "icon": "plus", "active": g.matchesPath('/styleguide?subnav1')},
-          {"label":"Subnav 2", "href":"/styleguide?subnav2", "active": g.matchesPath('/styleguide?subnav2')},
-        ]) }}
-    {% endif %}
-
     {{ SidenavItem("Requests",
       href="/requests",
       icon="document",
