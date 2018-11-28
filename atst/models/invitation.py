@@ -112,3 +112,7 @@ class Invitation(Base, TimestampsMixin, AuditableMixin):
             change_set["status"] = [s.name for s in changes["status"]]
 
         return change_set
+
+    @property
+    def workspace_id(self):
+        return self.workspace_role.workspace_id
