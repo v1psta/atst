@@ -40,7 +40,7 @@
         <a href='{{ url_for("users.user") }}' class='icon-link'>edit account details</a>
       {% endif %}
       <div>
-      {% if member.latest_invitation.is_pending %}
+      {% if member.latest_invitation.is_revokable %}
         {{ ConfirmationButton(
               "Revoke Invitation",
               url_for("workspaces.revoke_invitation", workspace_id=workspace.id, token=member.latest_invitation.token),
