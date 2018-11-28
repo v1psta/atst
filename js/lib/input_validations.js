@@ -9,6 +9,12 @@ export default {
     unmask: [],
     validationError: 'Please enter a response'
   },
+  requiredField: {
+    mask: false,
+    match: /.+/,
+    unmask: [],
+    validationError: 'This field is required'
+  },
   integer: {
     mask: createNumberMask({ prefix: '', allowDecimal: false }),
     match: /^[1-9]\d*$/,
