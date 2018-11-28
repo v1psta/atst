@@ -112,4 +112,4 @@ class Invitation(Base, TimestampsMixin, AuditableMixin):
 
     @property
     def workspace_id(self):
-        return self.workspace_role.workspace_id
+        return self.workspace_role.workspace_id if self.workspace_role else None
