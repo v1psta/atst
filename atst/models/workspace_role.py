@@ -15,7 +15,7 @@ from atst.models.role import Role
 
 MEMBER_STATUSES = {
     "active": "Active",
-    "revoked": "Revoked",
+    "revoked": "Invite revoked",
     "expired": "Invite expired",
     "error": "Error on invite",
     "pending": "Pending",
