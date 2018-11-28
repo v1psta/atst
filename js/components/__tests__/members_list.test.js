@@ -48,7 +48,7 @@ describe('MembersList', () => {
     const wrapper = createWrapper()
     wrapper.vm.updateSort('Environments')
     const listedMembers = wrapper.vm.searchedList
-    const memberNames = listedMembers.map(member => member.name)
-    expect(memberNames).toEqual(['Luke Skywalker', 'Chewie'])
+    const memberEnvs = listedMembers.map(member => member.num_env)
+    expect(memberEnvs).toEqual([2, 3])
   })
 })
