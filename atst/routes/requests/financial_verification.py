@@ -32,11 +32,16 @@ class FinancialVerificationBase(object):
         form = FinancialVerificationForm(obj=fv, formdata=_formdata)
 
         if not form.has_task_order_pdf:
-            try:
-                attachment = Attachment.get_for_resource("task_order", self.request.id)
-                form.task_order.pdf.data = attachment.filename
-            except NotFoundError:
-                pass
+            if isinstance(form.task_order.pdf.data, Attachment):
+                form.task_order.pdf.data = form.task_order.pdf.data.filename
+            else:
+                try:
+                    attachment = Attachment.get_for_resource(
+                        "task_order", self.request.id
+                    )
+                    form.task_order.pdf.data = attachment.filename
+                except NotFoundError:
+                    pass
 
         return form
 
