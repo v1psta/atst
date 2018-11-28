@@ -31,7 +31,7 @@ class FinancialVerificationBase(object):
         fv = FinancialVerification(request)
         form = FinancialVerificationForm(obj=fv, formdata=_formdata)
 
-        if not form.has_task_order_pdf:
+        if not form.has_pdf_upload:
             if isinstance(form.task_order.pdf.data, Attachment):
                 form.task_order.pdf.data = form.task_order.pdf.data.filename
             else:
