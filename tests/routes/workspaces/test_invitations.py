@@ -179,6 +179,7 @@ def test_resend_invitation_sends_email(client, user_session, queue):
 
     assert len(queue.get_queue()) == 1
 
+
 def test_existing_member_invite_resent_to_email_submitted_in_form(
     client, user_session, queue
 ):

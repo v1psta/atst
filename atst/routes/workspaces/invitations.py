@@ -39,7 +39,7 @@ def revoke_invitation(workspace_id, token):
 )
 def resend_invitation(workspace_id, token):
     invite = Invitations.resend(g.current_user, workspace_id, token)
-    send_invite_email(g.current_user.full_name, invite.token, invite.user_email)
+    send_invite_email(g.current_user.full_name, invite.token, invite.email)
     return redirect(
         url_for(
             "workspaces.workspace_members",
