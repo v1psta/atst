@@ -7,7 +7,7 @@ from atst.routes.workspaces.invitations import send_invite_email
 from atst.domain.exceptions import AlreadyExistsError
 from atst.domain.projects import Projects
 from atst.domain.workspaces import Workspaces
-from atst.domain.workspace_roles import WorkspaceRoles, MEMBER_STATUSES
+from atst.domain.workspace_roles import WorkspaceRoles, MEMBER_STATUS_CHOICES
 from atst.domain.environments import Environments
 from atst.domain.environment_roles import EnvironmentRoles
 from atst.forms.new_member import NewMemberForm
@@ -48,7 +48,7 @@ def workspace_members(workspace_id):
         "workspaces/members/index.html",
         workspace=workspace,
         role_choices=WORKSPACE_ROLE_DEFINITIONS,
-        status_choices=MEMBER_STATUSES,
+        status_choices=MEMBER_STATUS_CHOICES,
         members=members_list,
         new_member=new_member,
         resent_invitation_to=resent_invitation_to,

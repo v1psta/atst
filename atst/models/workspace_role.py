@@ -13,6 +13,16 @@ from atst.models.environment import Environment
 from atst.models.role import Role
 
 
+MEMBER_STATUSES = {
+    "active": "Active",
+    "revoked": "Revoked",
+    "expired": "Invite expired",
+    "error": "Error on invite",
+    "pending": "Pending",
+    "unknown": "Unknown errors",
+}
+
+
 class Status(Enum):
     ACTIVE = "active"
     DISABLED = "disabled"
@@ -72,21 +82,21 @@ class WorkspaceRole(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     @property
     def display_status(self):
         if self.status == Status.ACTIVE:
-            return "Active"
+            return MEMBER_STATUSES['active']
         elif self.latest_invitation:
             if self.latest_invitation.is_revoked:
-                return "Revoked"
+                return MEMBER_STATUSES['revoked']
             elif self.latest_invitation.is_rejected_wrong_user:
-                return "Error on invite"
+                return MEMBER_STATUSES['error']
             elif (
                 self.latest_invitation.is_rejected_expired
                 or self.latest_invitation.is_expired
             ):
-                return "Invite expired"
+                return MEMBER_STATUSES['expired']
             else:
-                return "Pending"
+                return MEMBER_STATUSES['pending']
         else:
-            return "Unknown errors"
+            return MEMBER_STATUSES['unknown']
 
     @property
     def has_dod_id_error(self):
