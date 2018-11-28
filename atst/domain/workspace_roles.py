@@ -1,7 +1,9 @@
 from sqlalchemy.orm.exc import NoResultFound
 
 from atst.database import db
-from atst.models.workspace_role import WorkspaceRole, Status as WorkspaceRoleStatus
+from atst.models.workspace_role import (
+    WorkspaceRole, Status as WorkspaceRoleStatus, MEMBER_STATUSES
+)
 from atst.models.user import User
 
 from .roles import Roles
@@ -9,13 +11,9 @@ from .users import Users
 from .exceptions import NotFoundError
 
 
-MEMBER_STATUSES = [
-    {"name": "active", "display_name": "Active"},
-    {"name": "revoked", "display_name": "Revoked"},
-    {"name": "expired", "display_name": "Invite expired"},
-    {"name": "error", "display_name": "Error on invite"},
-    {"name": "pending", "display_name": "Pending"},
-    {"name": "unknown", "display_name": "Unknown errors"},
+MEMBER_STATUS_CHOICES = [
+    dict(name=key, display_name=value)
+    for key, value in MEMBER_STATUSES.items()
 ]
 
 
