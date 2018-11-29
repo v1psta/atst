@@ -85,3 +85,13 @@ class Environments(object):
                 db.session.add(env_role)
 
         db.session.commit()
+
+    @classmethod
+    def revoke_access(cls, user, environment, target_user):
+        Authorization.check_workspace_permission(
+            user,
+            environment.workspace,
+            Permissions.REMOVE_CSP_ROLES,
+            "revoke environment access",
+        )
+        EnvironmentRoles.delete(environment.id, target_user.id)

@@ -2,7 +2,7 @@ import pytest
 from uuid import uuid4
 
 from atst.domain.exceptions import NotFoundError, UnauthorizedError
-from atst.domain.workspaces import Workspaces
+from atst.domain.workspaces import Workspaces, WorkspaceError
 from atst.domain.workspace_roles import WorkspaceRoles
 from atst.domain.projects import Projects
 from atst.domain.environments import Environments
@@ -11,8 +11,8 @@ from atst.models.workspace_role import Status as WorkspaceRoleStatus
 from tests.factories import (
     RequestFactory,
     UserFactory,
-    InvitationFactory,
     WorkspaceRoleFactory,
+    WorkspaceFactory,
 )
 
 
@@ -302,3 +302,38 @@ def test_can_create_workspaces_with_matching_names():
     workspace_name = "Great Workspace"
     Workspaces.create(RequestFactory.create(), name=workspace_name)
     Workspaces.create(RequestFactory.create(), name=workspace_name)
+
+
+def test_can_revoke_workspace_access():
+    workspace = WorkspaceFactory.create()
+    workspace_role = WorkspaceRoleFactory.create(workspace=workspace)
+    Workspaces.revoke_access(workspace.owner, workspace.id, workspace_role.id)
+    assert Workspaces.for_user(workspace_role.user) == []
+
+
+def test_can_revoke_access():
+    workspace = WorkspaceFactory.create()
+    owner_role = workspace.roles[0]
+    workspace_role = WorkspaceRoleFactory.create(workspace=workspace)
+
+    assert Workspaces.can_revoke_access_for(workspace, workspace_role)
+    assert not Workspaces.can_revoke_access_for(workspace, owner_role)
+
+
+def test_cant_revoke_owner_workspace_access():
+    workspace = WorkspaceFactory.create()
+    owner_workspace_role = workspace.roles[0]
+
+    with pytest.raises(WorkspaceError):
+        Workspaces.revoke_access(workspace.owner, workspace.id, owner_workspace_role.id)
+
+
+def test_disabled_members_dont_show_up(session):
+    workspace = WorkspaceFactory.create()
+    WorkspaceRoleFactory.create(workspace=workspace, status=WorkspaceRoleStatus.ACTIVE)
+    WorkspaceRoleFactory.create(
+        workspace=workspace, status=WorkspaceRoleStatus.DISABLED
+    )
+
+    # should only return workspace owner and ACTIVE member
+    assert len(workspace.members) == 2

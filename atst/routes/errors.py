@@ -8,6 +8,7 @@ from atst.domain.invitations import (
     ExpiredError as InvitationExpiredError,
     WrongUserError as InvitationWrongUserError,
 )
+from atst.domain.workspaces import WorkspaceError
 
 
 def log_error(e):
@@ -24,6 +25,7 @@ def make_error_pages(app):
     @app.errorhandler(werkzeug_exceptions.NotFound)
     @app.errorhandler(exceptions.NotFoundError)
     @app.errorhandler(exceptions.UnauthorizedError)
+    @app.errorhandler(WorkspaceError)
     # pylint: disable=unused-variable
     def not_found(e):
         return handle_error(e)

@@ -3,10 +3,15 @@ from atst.domain.authz import Authorization
 from atst.models.permissions import Permissions
 from atst.domain.users import Users
 from atst.domain.workspace_roles import WorkspaceRoles
+from atst.domain.environments import Environments
 from atst.models.workspace_role import Status as WorkspaceRoleStatus
 
 from .query import WorkspacesQuery
 from .scopes import ScopedWorkspace
+
+
+class WorkspaceError(Exception):
+    pass
 
 
 class Workspaces(object):
@@ -138,3 +143,28 @@ class Workspaces(object):
             workspace.name = new_data["name"]
 
         WorkspacesQuery.add_and_commit(workspace)
+
+    @classmethod
+    def can_revoke_access_for(cls, workspace, workspace_role):
+        return workspace_role.user != workspace.owner
+
+    @classmethod
+    def revoke_access(cls, user, workspace_id, workspace_role_id):
+        workspace = WorkspacesQuery.get(workspace_id)
+        Authorization.check_workspace_permission(
+            user,
+            workspace,
+            Permissions.ASSIGN_AND_UNASSIGN_ATAT_ROLE,
+            "revoke workspace access",
+        )
+        workspace_role = WorkspaceRoles.get_by_id(workspace_role_id)
+
+        if not Workspaces.can_revoke_access_for(workspace, workspace_role):
+            raise WorkspaceError("cannot revoke workspace access for this user")
+
+        workspace_role.status = WorkspaceRoleStatus.DISABLED
+        for environment in workspace.all_environments:
+            Environments.revoke_access(user, environment, workspace_role.user)
+        WorkspacesQuery.add_and_commit(workspace_role)
+
+        return workspace_role

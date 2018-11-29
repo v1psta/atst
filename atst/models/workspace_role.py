@@ -20,6 +20,7 @@ MEMBER_STATUSES = {
     "error": "Error on invite",
     "pending": "Pending",
     "unknown": "Unknown errors",
+    "disabled": "Disabled",
 }
 
 
@@ -83,6 +84,8 @@ class WorkspaceRole(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     def display_status(self):
         if self.status == Status.ACTIVE:
             return MEMBER_STATUSES["active"]
+        elif self.status == Status.DISABLED:
+            return MEMBER_STATUSES["disabled"]
         elif self.latest_invitation:
             if self.latest_invitation.is_revoked:
                 return MEMBER_STATUSES["revoked"]

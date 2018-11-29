@@ -1,1 +1,1 @@
-from .workspaces import Workspaces
+from .workspaces import Workspaces, WorkspaceError

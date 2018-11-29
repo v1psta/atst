@@ -168,3 +168,17 @@ def update_member(workspace_id, member_id):
             workspace=workspace,
             member=member,
         )
+
+
+@workspaces_bp.route(
+    "/workspaces/<workspace_id>/members/<member_id>/revoke_access", methods=["POST"]
+)
+def revoke_access(workspace_id, member_id):
+    revoked_role = Workspaces.revoke_access(g.current_user, workspace_id, member_id)
+    return redirect(
+        url_for(
+            "workspaces.workspace_members",
+            workspace_id=workspace_id,
+            revokedMemberName=revoked_role.user_name,
+        )
+    )

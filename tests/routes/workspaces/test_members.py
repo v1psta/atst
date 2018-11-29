@@ -168,3 +168,24 @@ def test_update_member_environment_role_with_no_data(client, user_session):
     )
     assert response.status_code == 200
     assert EnvironmentRoles.get(user.id, env1_id).role == "developer"
+
+
+def test_revoke_member_access(client, user_session):
+    workspace = WorkspaceFactory.create()
+    user = UserFactory.create()
+    member = WorkspaceRoles.add(user, workspace.id, "developer")
+    Projects.create(
+        workspace.owner,
+        workspace,
+        "Snazzy Project",
+        "A new project for me and my friends",
+        {"env1"},
+    )
+    user_session(workspace.owner)
+    response = client.post(
+        url_for(
+            "workspaces.revoke_access", workspace_id=workspace.id, member_id=member.id
+        )
+    )
+    assert response.status_code == 302
+    assert WorkspaceRoles.get_by_id(member.id).num_environment_roles == 0
