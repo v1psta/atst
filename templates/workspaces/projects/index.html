@@ -35,7 +35,7 @@
       <ul>
         {% for environment in project.environments %}
           <li class='block-list__item project-list-item__environment'>
-            <a href='/' target='_blank' rel='noopener noreferrer' class='project-list-item__environment__link'>
+            <a href='{{ url_for("atst.csp_environment_access")}}' target='_blank' rel='noopener noreferrer' class='project-list-item__environment__link'>
               {{ Icon('link') }}
               <span>{{ environment.name }}</span>
             </a>
