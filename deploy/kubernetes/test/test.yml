@@ -24,7 +24,7 @@ spec:
         fsGroup: 101
       containers:
         - name: atst
-          image: registry.atat.codes:443/atst-prod:a9fc2bd2
+          image: registry.atat.codes:443/atst-prod:24b2543c
           resources:
             requests:
                memory: "2500Mi"
@@ -35,9 +35,6 @@ spec:
             - name: atst-config
               mountPath: "/opt/atat/atst/atst-overrides.ini"
               subPath: atst-overrides.ini
-            - name: nginx-client-ca-bundle
-              mountPath: "/opt/atat/atst/ssl/server-certs/ca-chain.pem"
-              subPath: client-ca-bundle.pem
             - name: uwsgi-config
               mountPath: "/opt/atat/atst/uwsgi-config.ini"
               subPath: uwsgi-config.ini
@@ -145,7 +142,7 @@ spec:
         fsGroup: 101
       containers:
         - name: atst-worker
-          image: registry.atat.codes:443/atst-prod:a9fc2bd2
+          image: registry.atat.codes:443/atst-prod:24b2543c
           args: ["/bin/bash", "-c", "/opt/atat/atst/script/rq_worker"]
           resources:
             requests:
