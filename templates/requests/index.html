@@ -137,7 +137,14 @@
               <a class='icon-link icon-link--large' :href="r.edit_link">!{ r.name }</a>
               <span v-if="r.action_required" class="label label--info">Action Required</span>
             </th>
-            <td><local-datetime :timestamp="r.last_submission_timestamp" format="M/D/YYYY"></td>
+            <td>
+              <local-datetime
+                v-if="r.last_submission_timestamp"
+                :timestamp="r.last_submission_timestamp"
+                format="M/D/YYYY">
+              </local-datetime>
+              <span v-else>—<span>
+            </td>
           {% if extended_view %}
               <td><local-datetime :timestamp="r.last_edited_timestamp" format="M/D/YYYY"></td>
               <td>!{ r.full_name }</td>
