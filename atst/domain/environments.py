@@ -88,7 +88,10 @@ class Environments(object):
 
     @classmethod
     def revoke_access(cls, user, environment, target_user):
-        Authorization.check_atat_permission(
-            user, Permissions.REMOVE_CSP_ROLES, "revoke environment access"
+        Authorization.check_workspace_permission(
+            user,
+            environment.workspace,
+            Permissions.REMOVE_CSP_ROLES,
+            "revoke environment access",
         )
         EnvironmentRoles.delete(environment.id, target_user.id)

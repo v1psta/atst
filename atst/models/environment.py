@@ -27,6 +27,10 @@ class Environment(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     def displayname(self):
         return self.name
 
+    @property
+    def workspace(self):
+        return self.project.workspace
+
     def auditable_workspace_id(self):
         return self.project.workspace_id
 

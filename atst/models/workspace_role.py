@@ -20,7 +20,7 @@ MEMBER_STATUSES = {
     "error": "Error on invite",
     "pending": "Pending",
     "unknown": "Unknown errors",
-    "disabled": "Disabled"
+    "disabled": "Disabled",
 }
 
 
