@@ -82,21 +82,21 @@ class WorkspaceRole(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     @property
     def display_status(self):
         if self.status == Status.ACTIVE:
-            return MEMBER_STATUSES['active']
+            return MEMBER_STATUSES["active"]
         elif self.latest_invitation:
             if self.latest_invitation.is_revoked:
-                return MEMBER_STATUSES['revoked']
+                return MEMBER_STATUSES["revoked"]
             elif self.latest_invitation.is_rejected_wrong_user:
-                return MEMBER_STATUSES['error']
+                return MEMBER_STATUSES["error"]
             elif (
                 self.latest_invitation.is_rejected_expired
                 or self.latest_invitation.is_expired
             ):
-                return MEMBER_STATUSES['expired']
+                return MEMBER_STATUSES["expired"]
             else:
-                return MEMBER_STATUSES['pending']
+                return MEMBER_STATUSES["pending"]
         else:
-            return MEMBER_STATUSES['unknown']
+            return MEMBER_STATUSES["unknown"]
 
     @property
     def has_dod_id_error(self):

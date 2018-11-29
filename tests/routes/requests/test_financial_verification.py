@@ -11,13 +11,14 @@ from atst.routes.requests.financial_verification import (
 )
 
 from tests.mocks import MOCK_VALID_PE_ID
-from tests.factories import RequestFactory, UserFactory
+from tests.factories import RequestFactory, UserFactory, TaskOrderFactory
 from atst.forms.exceptions import FormValidationError
 from atst.domain.requests.financial_verification import (
     PENumberValidator,
     TaskOrderNumberValidator,
 )
 from atst.models.request_status_event import RequestStatus
+from atst.models.attachment import Attachment
 from atst.domain.requests.query import RequestsQuery
 
 
@@ -509,3 +510,30 @@ def test_pdf_clearing(fv_data, e_fv_data, pdf_upload, pdf_upload2):
 
     form = GetFinancialVerificationForm(user, request, is_extended=True).execute()
     assert form.task_order.pdf.data == pdf_upload2.filename
+
+
+# TODO: This test manages an edge case for our current non-unique handling of
+# task orders. Because two requests can reference the same task order but we
+# only record one request ID on the PDF attachment, multiple task
+# orders/requests reference the same task order but only one of them is noted
+# in the related attachment entity. I have changed the handling in
+# FinancialVerificationBase#_get_form to be more generous in how it finds the
+# PDF filename and prepopulates the form data with that name.
+def test_always_derives_pdf_filename(fv_data, e_fv_data, pdf_upload):
+    user = UserFactory.create()
+    request_one = RequestFactory.create(creator=user)
+    attachment = Attachment.attach(
+        pdf_upload, resource="task_order", resource_id=request_one.id
+    )
+    task_order = TaskOrderFactory.create(pdf=attachment)
+    request_two = RequestFactory.create(creator=user, task_order=task_order)
+
+    form_one = GetFinancialVerificationForm(
+        user, request_one, is_extended=True
+    ).execute()
+    form_two = GetFinancialVerificationForm(
+        user, request_two, is_extended=True
+    ).execute()
+
+    assert form_one.task_order.pdf.data == attachment.filename
+    assert form_two.task_order.pdf.data == attachment.filename
