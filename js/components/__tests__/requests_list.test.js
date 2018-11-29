@@ -55,5 +55,21 @@ describe('RequestsList', () => {
       const requestNames = displayedRequests.map(req => req.name)
       expect(requestNames).toEqual(['X Wing', 'TIE Fighter'])
     })
+
+    it('handles sorting with un-submitted requests', () => {
+      const unsubmittedRequest = {
+        name: 'Death Star',
+        status: 'Started',
+        last_submission_timestamp: null
+      }
+      const wrapper = shallowMount(RequestsList, {
+        propsData: {
+          requests: [unsubmittedRequest, ...requests],
+          isExtended: true
+        }
+      })
+      const displayedRequests = wrapper.vm.filteredRequests
+      expect(displayedRequests).toEqual([requests[1], requests[0], unsubmittedRequest])
+    })
   })
 })

@@ -1,7 +1,7 @@
 import LocalDatetime from '../components/local_datetime'
 import { formatDollars } from '../lib/dollars'
 import { parse } from 'date-fns'
-import { compose, partial, indexBy, prop, sortBy, reverse, pipe } from 'ramda'
+import { compose, partial, indexBy, prop, propOr, sortBy, reverse, pipe } from 'ramda'
 
 export default {
   name: 'requests-list',
@@ -32,7 +32,7 @@ export default {
   data: function () {
     const defaultSort = (sort, requests) => sortBy(prop(sort.columnName), requests)
     const dateSort = (sort, requests) => {
-      const parseDate = compose(partial(parse), prop(sort.columnName))
+      const parseDate = compose(partial(parse), propOr(sort.columnName, ''))
       return sortBy(parseDate, requests)
     }
 
