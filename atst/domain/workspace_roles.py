@@ -2,7 +2,9 @@ from sqlalchemy.orm.exc import NoResultFound
 
 from atst.database import db
 from atst.models.workspace_role import (
-    WorkspaceRole, Status as WorkspaceRoleStatus, MEMBER_STATUSES
+    WorkspaceRole,
+    Status as WorkspaceRoleStatus,
+    MEMBER_STATUSES,
 )
 from atst.models.user import User
 
@@ -12,8 +14,7 @@ from .exceptions import NotFoundError
 
 
 MEMBER_STATUS_CHOICES = [
-    dict(name=key, display_name=value)
-    for key, value in MEMBER_STATUSES.items()
+    dict(name=key, display_name=value) for key, value in MEMBER_STATUSES.items()
 ]
 
 
