@@ -17,6 +17,8 @@ from tests.factories import (
     InvitationFactory,
 )
 
+from atst.domain.audit_log import AuditLog
+
 
 def test_create_invitation():
     workspace = WorkspaceFactory.create()
@@ -113,3 +115,15 @@ def test_resend_invitation():
     Invitations.resend(workspace.owner, workspace.id, invite.token)
     assert ws_role.invitations[0].is_revoked
     assert ws_role.invitations[1].is_pending
+
+
+def test_audit_event_for_accepted_invite():
+    workspace = WorkspaceFactory.create()
+    user = UserFactory.create()
+    ws_role = WorkspaceRoleFactory.create(user=user, workspace=workspace)
+    invite = Invitations.create(workspace.owner, ws_role, user.email)
+    invite = Invitations.accept(user, invite.token)
+
+    accepted_event = AuditLog.get_by_resource(invite.id)[0]
+    assert "email" in accepted_event.event_details
+    assert "dod_id" in accepted_event.event_details

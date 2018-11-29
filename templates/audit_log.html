@@ -28,7 +28,7 @@
 
               <br>
 
-              {% if event.event_details %}
+              {% if event.event_details and event.resource_type == "user" %}
                 for User <code>{{ event.event_details.updated_user_id }}</code> ({{ event.event_details.updated_user_name }})
 
                 {% if event.event_details["environment"] %}
@@ -40,6 +40,17 @@
                   in Workspace <code>{{ event.event_details["workspace_id"] }}</code> ({{ event.event_details["workspace"] }})
                 {% endif %}
               <br>
+
+              {% elif event.event_details and event.resource_type == "invitation" %}
+                {% set accepted = event.changed_state.status and event.changed_state.status.1 == "ACCEPTED" %}
+                {% if accepted %}
+                  accepted by {{ event.event_details.email }} (DOD <code>{{ event.event_details.dod_id }}</code>)
+                {% endif %}
+              {% endif %}
+
+              {% if event.changed_state and event.resource_type == 'environment_role' %}
+                from {{ event.changed_state.role[0] }} to {{ event.changed_state.role[1] }}
+                <br>
               {% endif %}
 
               {% if event.workspace %}
