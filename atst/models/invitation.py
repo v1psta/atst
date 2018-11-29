@@ -98,10 +98,7 @@ class Invitation(Base, TimestampsMixin, AuditableMixin):
 
     @property
     def event_details(self):
-        return {
-            "email": self.email,
-            "dod_id": self.user_dod_id,
-        }
+        return {"email": self.email, "dod_id": self.user_dod_id}
 
     @property
     def history(self):

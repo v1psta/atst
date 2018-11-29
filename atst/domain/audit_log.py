@@ -27,7 +27,12 @@ class AuditLog(object):
 
     @classmethod
     def get_by_resource(cls, resource_id):
-        return db.session.query(AuditEvent).filter(AuditEvent.resource_id == resource_id).order_by(AuditEvent.time_created.desc()).all()
+        return (
+            db.session.query(AuditEvent)
+            .filter(AuditEvent.resource_id == resource_id)
+            .order_by(AuditEvent.time_created.desc())
+            .all()
+        )
 
     @classmethod
     def _resource_type(cls, resource):
