@@ -197,7 +197,7 @@ spec:
   ports:
   - name: https
     protocol: TCP
-    nodePort: 32701
+    nodePort: 32711
     port: 8443
   selector:
     app: atst
