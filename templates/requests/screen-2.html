@@ -1,6 +1,5 @@
 {% extends 'requests/_new.html' %}
 
-{% from "components/alert.html" import Alert %}
 {% from "components/text_input.html" import TextInput %}
 {% from "components/options_input.html" import OptionsInput %}
 {% from "components/date_input.html" import DateInput %}
@@ -12,12 +11,7 @@
 
 {% block form %}
 
-{% if f.errors %}
-  {{ Alert('There were some errors',
-    message="<p>Please see below.</p>",
-    level='error'
-  ) }}
-{% endif %}
+{% include "fragments/flash.html" %}
 
 <p>Please tell us more about you.</p>
 

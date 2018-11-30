@@ -4,7 +4,6 @@
 
 {% extends 'requests/_new.html' %}
 
-{% from "components/alert.html" import Alert %}
 {% from "components/text_input.html" import TextInput %}
 {% from "components/icon.html" import Icon %}
 
@@ -21,12 +20,7 @@
 
   <p>Before you can submit your request, please take a moment to review the information entered in the form. You may make changes by clicking the edit link on each section. When all information looks right, go ahead and submit.</p>
 
-  {% if f.errors or not can_submit %}
-    {{ Alert('Please complete all sections',
-      message="<p>In order to submit your JEDI Cloud request, you'll need to complete all required sections of this form without error. Missing or invalid fields are noted below.</p>",
-      level='error'
-    ) }}
-  {% endif %}
+  {% include "fragments/flash.html" %}
 
   {% with editable=True %}
     {% include "requests/_review.html" %}

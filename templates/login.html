@@ -11,29 +11,14 @@
       <div class='col'>
 
         <div class='login-banner'>
-          {% if request.args.get("sessionExpired") %}
-            {{ Alert('Session Expired',
-                message='Your session expired due to inactivity. Please log in again to continue.',
-                level='error'
-            ) }}
-          {% endif %}
           <h1 class="login-banner__heading">Access the JEDI Cloud</h1>
 
           <img class="login-banner__logo" src="{{url_for('static', filename='img/ccpo-logo.svg')}}" alt="Cloud Computing Program Office Logo">
 
           <a class="usa-button usa-button-big login-banner__button" href='{{ redirect_url }}'><span>Sign in with CAC</span></a>
-
-          {% if False %}
-          <a class="usa-button usa-button-big usa-button-secondary" href='{{ url_for("dev.login_dev", **request.args) }}'><span>DEV Login</span></a>
-          {% endif %}
         </div>
 
-        {% if redirect %}
-          {{ Alert('Log in Required.',
-              message='After you log in, you will be redirected to your destination page.',
-              level='warning'
-          ) }}
-        {% endif %}
+        {% include "fragments/flash.html" %}
 
         {{ Alert('Certificate Selection',
           message='When you are prompted to select a certificate, please select <strong>E-mail Certificate</strong> from the provided choices.',

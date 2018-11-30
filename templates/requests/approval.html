@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 
 {% from "components/icon.html" import Icon %}
-{% from "components/alert.html" import Alert %}
 {% from "components/text_input.html" import TextInput %}
 {% from "components/phone_input.html" import PhoneInput %}
 
@@ -9,12 +8,7 @@
 
 <article class='col col--grow request-approval'>
 
-{% if review_form.errors or internal_comment_form.errors %}
-  {{ Alert('There were some errors',
-    message="<p>Please see below.</p>",
-    level='error'
-  ) }}
-{% endif %}
+{% include "fragments/flash.html" %}
 
     <section class='panel'>
       <header class='panel__heading panel__heading--divider request-approval__heading'>

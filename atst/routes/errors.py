@@ -9,6 +9,7 @@ from atst.domain.invitations import (
     WrongUserError as InvitationWrongUserError,
 )
 from atst.domain.workspaces import WorkspaceError
+from atst.utils.flash import formatted_flash as flash
 
 
 def log_error(e):
@@ -39,7 +40,8 @@ def make_error_pages(app):
     # pylint: disable=unused-variable
     def session_expired(e):
         log_error(e)
-        url_args = {"sessionExpired": True, "next": request.path}
+        url_args = {"next": request.path}
+        flash("session_expired")
         if request.method == "POST":
             url_args[app.form_cache.PARAM_NAME] = app.form_cache.write(request.form)
         return redirect(url_for("atst.root", **url_args))

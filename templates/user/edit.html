@@ -1,26 +1,9 @@
 {% extends "base.html" %}
-{% from "components/alert.html" import Alert %}
 
 {% block content %}
 <div class='col'>
 
-  {% if next is not none %}
-    {{ Alert('You must complete your profile',
-      message='<p>Before continuing, you must complete your profile</p>',
-      level='info'
-    ) }}
-  {% endif %}
-
-  {% if form.errors %}
-    {{ Alert('There were some errors',
-      message="<p>Please see below.</p>",
-      level='error'
-    ) }}
-  {% endif %}
-
-  {% if updated %}
-    {{ Alert('User information updated.', level='success') }}
-  {% endif %}
+  {% include "fragments/flash.html" %}
 
   <div class='panel'>
     <div class='panel__heading'>

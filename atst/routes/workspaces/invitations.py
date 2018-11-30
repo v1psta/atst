@@ -4,6 +4,7 @@ from . import workspaces_bp
 from atst.domain.workspaces import Workspaces
 from atst.domain.invitations import Invitations
 from atst.queue import queue
+from atst.utils.flash import formatted_flash as flash
 
 
 def send_invite_email(owner_name, token, new_member_email):
@@ -40,10 +41,5 @@ def revoke_invitation(workspace_id, token):
 def resend_invitation(workspace_id, token):
     invite = Invitations.resend(g.current_user, workspace_id, token)
     send_invite_email(g.current_user.full_name, invite.token, invite.email)
-    return redirect(
-        url_for(
-            "workspaces.workspace_members",
-            workspace_id=workspace_id,
-            resentInvitationTo=invite.user_name,
-        )
-    )
+    flash("resent_workspace_invitation", {"user_name": invite.user_name})
+    return redirect(url_for("workspaces.workspace_members", workspace_id=workspace_id))

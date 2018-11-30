@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 
-{% from "components/alert.html" import Alert %}
 {% from "components/modal.html" import Modal %}
 {% from "components/empty_state.html" import EmptyState %}
 {% from "components/icon.html" import Icon %}
@@ -46,13 +45,7 @@
   >
     <div>
 
-{% if num_action_required %}
-  {% set title -%}
-    Action required on {{ num_action_required }} requests.
-  {%- endset %}
-
-  {{ Alert (title)}}
-{% endif %}
+{% include "fragments/flash.html" %}
 
 {% if not requests %}
 

@@ -124,6 +124,10 @@ class JEDIRequestFlow(object):
             },
         ]
 
+    @property
+    def is_review_screen(self):
+        return self.screens[-1] == self.current_screen
+
     def create_or_update_request(self):
         request_data = self.map_request_data(self.form_section, self.form.data)
         if self.request_id:

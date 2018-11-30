@@ -5,13 +5,14 @@ from flask import current_app as app
 from jinja2.exceptions import TemplateNotFound
 import pendulum
 import os
+from werkzeug.exceptions import NotFound
 
 from atst.domain.requests import Requests
 from atst.domain.users import Users
 from atst.domain.authnid import AuthenticationContext
 from atst.domain.audit_log import AuditLog
 from atst.domain.auth import logout as _logout
-from werkzeug.exceptions import NotFound
+from atst.utils.flash import formatted_flash as flash
 
 
 bp = Blueprint("atst", __name__)
@@ -28,10 +29,9 @@ def root():
             redirect_url,
             "?{}".format(url.urlencode({"next": request.args.get("next")})),
         )
+        flash("login_next")
 
-    return render_template(
-        "login.html", redirect=bool(request.args.get("next")), redirect_url=redirect_url
-    )
+    return render_template("login.html", redirect_url=redirect_url)
 
 
 @bp.route("/help")

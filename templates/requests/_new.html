@@ -6,9 +6,7 @@
 
   {% include 'requests/menu.html' %}
 
-  {% if review_comment %}
-    {% include 'requests/comment.html' %}
-  {% endif %}
+  {% include "fragments/flash.html" %}
 
   {% block form_action %}
     {% if request_id %}

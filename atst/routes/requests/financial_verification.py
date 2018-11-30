@@ -13,6 +13,7 @@ from atst.domain.requests.financial_verification import (
 )
 from atst.models.attachment import Attachment
 from atst.domain.task_orders import TaskOrders
+from atst.utils.flash import formatted_flash as flash
 
 
 def fv_extended(_http_request):
@@ -201,11 +202,13 @@ def financial_verification(request_id):
         g.current_user, request, is_extended=is_extended
     ).execute()
 
+    if request.review_comment:
+        flash("request_review_comment", {"comment": request.review_comment})
+
     return render_template(
         "requests/financial_verification.html",
         f=form,
         jedi_request=request,
-        review_comment=request.review_comment,
         extended=is_extended,
         saved_draft=saved_draft,
     )
@@ -236,11 +239,8 @@ def update_financial_verification(request_id):
 
     if updated_request.task_order.verified:
         workspace = Requests.auto_approve_and_create_workspace(updated_request)
-        return redirect(
-            url_for(
-                "workspaces.new_project", workspace_id=workspace.id, newWorkspace=True
-            )
-        )
+        flash("new_workspace")
+        return redirect(url_for("workspaces.new_project", workspace_id=workspace.id))
     else:
         return redirect(url_for("requests.requests_index", modal="pendingCCPOApproval"))
 

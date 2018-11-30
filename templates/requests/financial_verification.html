@@ -9,6 +9,8 @@
 
 {% include 'requests/review_menu.html' %}
 
+{% include "fragments/flash.html" %}
+
 {% if saved_draft %}
   {% call Alert('Draft saved', level='success') %}
   {% endcall %}
@@ -17,10 +19,6 @@
 
 {% if jedi_request.is_pending_financial_verification and not f.errors and not extended %}
   {{ Alert('Pending Financial Verification', fragment="fragments/pending_financial_verification.html") }}
-{% endif %}
-
-{% if review_comment %}
-  {% include 'requests/comment.html' %}
 {% endif %}
 
 <financial inline-template v-bind:initial-data='{{ f.data|mixedContentToJson }}'>

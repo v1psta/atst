@@ -1,6 +1,5 @@
 {% extends 'requests/_new.html' %}
 
-{% from "components/alert.html" import Alert %}
 {% from "components/text_input.html" import TextInput %}
 {% from "components/checkbox_input.html" import CheckboxInput %}
 
@@ -10,12 +9,7 @@
 
 {% block form %}
 
-{% if f.errors %}
-  {{ Alert('There were some errors',
-    message="<p>Please see below.</p>",
-    level='error'
-  ) }}
-{% endif %}
+{% include "fragments/flash.html" %}
 
 <poc inline-template v-bind:initial-data='{{ f.data|tojson }}'>
   <div>

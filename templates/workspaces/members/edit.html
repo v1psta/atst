@@ -4,14 +4,11 @@
 {% from "components/modal.html" import Modal %}
 {% from "components/selector.html" import Selector %}
 {% from "components/options_input.html" import OptionsInput %}
-{% from "components/alert.html" import Alert %}
 {% from "components/confirmation_button.html" import ConfirmationButton %}
 
 {% block content %}
 
-{% if member.has_dod_id_error %}
-  {{ Alert('CAC ID Error', message='The member attempted to accept this invite, but their CAC ID did not match the CAC ID you specified on the invite. Please confirm that the DOD ID is accurate.', level='error') }}
-{% endif %}
+{% include "fragments/flash.html" %}
 
 <form method="POST" action="{{ url_for('workspaces.update_member', workspace_id=workspace.id, member_id=member.user_id) }}" autocomplete="false">
   {{ form.csrf_token }}

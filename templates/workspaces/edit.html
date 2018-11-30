@@ -1,18 +1,11 @@
 {% extends "workspaces/base.html" %}
 
 {% from "components/icon.html" import Icon %}
-{% from "components/alert.html" import Alert %}
 {% from "components/text_input.html" import TextInput %}
-
 
 {% block workspace_content %}
 
-{% if form.errors %}
-  {{ Alert('There were some errors',
-    message="<p>Please see below.</p>",
-    level='error'
-  ) }}
-{% endif %}
+{% include "fragments/flash.html" %}
 
 <form method="POST" action="{{ url_for('workspaces.edit_workspace', workspace_id=workspace.id) }}" autocomplete="false">
   {{ form.csrf_token }}
