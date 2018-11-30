@@ -195,6 +195,19 @@ jobs:
           name: "Update Kubernetes Deployment"
           command: ./deploy/kubernetes/atst-update-deploy.sh
 
+  deploy_test:
+    docker:
+      - image: *sourceImage
+        auth: *sourceAuth
+        environment: *dockerCmdEnvironment
+    working_directory: *workingDirectory
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: "Update Kubernetes Deployment"
+          command: ./deploy/kubernetes/atst-update-deploy.sh atat-test
+
 workflows:
   version: 2
   run-tests:
@@ -210,6 +223,21 @@ workflows:
             branches:
               only: master
       - deploy:
+          requires:
+            - build_and_push_image
+          filters:
+            branches:
+              only: master
+  nightly:
+    triggers:
+      - schedule:
+          cron: "0 0 * * *"
+          filters:
+            branches:
+              only:
+                - master
+    jobs:
+      - deploy_test:
           requires:
             - build_and_push_image
           filters:

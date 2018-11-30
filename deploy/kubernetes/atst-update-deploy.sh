@@ -11,6 +11,12 @@ set -o nounset
 # Config
 MAX_DEPLOY_WAIT='300'
 
+if [[ $# -eq 0 ]]; then
+  NAMESPACE=atat
+else
+  NAMESPACE=$1
+fi
+
 if [ "${IMAGE_NAME}x" = "x" ]
 then
     IMAGE_NAME="${ATAT_DOCKER_REGISTRY_URL}/${PROD_IMAGE_NAME}:${GIT_SHA}"
@@ -44,15 +50,15 @@ kubectl config use-context atst-deployer
 kubectl config current-context
 
 # Update the ATST deployment
-kubectl -n atat set image deployment.apps/atst atst="${IMAGE_NAME}"
-kubectl -n atat set image deployment.apps/atst-worker atst-worker="${IMAGE_NAME}"
+kubectl -n ${NAMESPACE} set image deployment.apps/atst atst="${IMAGE_NAME}"
+kubectl -n ${NAMESPACE} set image deployment.apps/atst-worker atst-worker="${IMAGE_NAME}"
 
 # Wait for deployment to finish
-if ! timeout -t "${MAX_DEPLOY_WAIT}" -s INT kubectl -n atat rollout status deployment/atst
+if ! timeout -t "${MAX_DEPLOY_WAIT}" -s INT kubectl -n ${NAMESPACE} rollout status deployment/atst
 then
     # Deploy did not finish before max wait time; abort and rollback the deploy
-    kubectl -n atat rollout undo deployment/atst
-    kubectl -n atat rollout undo deployment/atst-worker
+    kubectl -n ${NAMESPACE} rollout undo deployment/atst
+    kubectl -n ${NAMESPACE} rollout undo deployment/atst-worker
     # Exit with a non-zero return code
     exit 2
 fi
