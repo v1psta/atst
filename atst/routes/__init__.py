@@ -147,9 +147,9 @@ def about():
 
 @bp.route("/csp-environment-access")
 def csp_environment_access():
-    return render_template("csp_environment_access.html")
+    return render_template("mock_csp.html", text="console for this environment")
 
 
 @bp.route("/jedi-csp-calculator")
 def jedi_csp_calculator():
-    return render_template("jedi_csp_calculator.html")
+    return render_template("mock_csp.html", text="service and price calculator")
