@@ -6,7 +6,7 @@ Add a new subfolder to this directory. You can copy `uat` or `tests`. You'll nee
 
 ## New Load Balancers
 
-You need two new load balancers. Currently, these are managed in Rackspace. You will need one for the regular site and one for the auth domain. They should have all of the Kubernetes worker nodes attached. When attached to the LB for the main site domain, the nodes should point to port 32761, which is the port where all our NGINX ingress is managed. The auth LB nodes should point to a new port in the 32700 - 32799 range.
+You need two new load balancers. Currently, these are managed in Rackspace. You will need one for the regular site and one for the auth domain. They should have all of the Kubernetes worker nodes attached. When attached to the LB for the main site domain, the nodes should point to port 32761, which is the port where all our NGINX ingress is managed. The auth LB nodes should point to a new port in the 32700 - 32799 range. The `nodePort` specified in your new environment's config should match this port.
 
 ## Initially Apply the New Config
 
