@@ -1,6 +1,6 @@
 from flask import url_for
 
-from tests.factories import UserFactory, WorkspaceFactory
+from tests.factories import UserFactory, WorkspaceFactory, WorkspaceRoleFactory
 from atst.domain.workspaces import Workspaces
 from atst.domain.workspace_roles import WorkspaceRoles
 from atst.domain.projects import Projects
@@ -189,3 +189,31 @@ def test_revoke_member_access(client, user_session):
     )
     assert response.status_code == 302
     assert WorkspaceRoles.get_by_id(member.id).num_environment_roles == 0
+
+
+def test_shows_revoke_button(client, user_session):
+    workspace = WorkspaceFactory.create()
+    user = UserFactory.create()
+    member = WorkspaceRoleFactory.create(user=user, workspace=workspace)
+    user_session(workspace.owner)
+    response = client.get(
+        url_for(
+            "workspaces.view_member",
+            workspace_id=workspace.id,
+            member_id=member.user.id,
+        )
+    )
+    assert "Remove Workspace Access" in response.data.decode()
+
+
+def test_does_not_show_revoke_button(client, user_session):
+    workspace = WorkspaceFactory.create()
+    user_session(workspace.owner)
+    response = client.get(
+        url_for(
+            "workspaces.view_member",
+            workspace_id=workspace.id,
+            member_id=workspace.owner.id,
+        )
+    )
+    assert "Remove Workspace Access" not in response.data.decode()

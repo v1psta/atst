@@ -106,6 +106,7 @@ def view_member(workspace_id, member_id):
     projects = Projects.get_all(g.current_user, member, workspace)
     form = EditMemberForm(workspace_role=member.role_name)
     editable = g.current_user == member.user
+    can_revoke_access = Workspaces.can_revoke_access_for(workspace, member)
     return render_template(
         "workspaces/members/edit.html",
         workspace=workspace,
@@ -116,6 +117,7 @@ def view_member(workspace_id, member_id):
         env_role_modal_description=ENV_ROLE_MODAL_DESCRIPTION,
         EnvironmentRoles=EnvironmentRoles,
         editable=editable,
+        can_revoke_access=can_revoke_access,
     )
 
 
