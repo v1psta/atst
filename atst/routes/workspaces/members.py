@@ -147,22 +147,20 @@ def update_member(workspace_id, member_id):
     form = EditMemberForm(http_request.form)
     if form.validate():
         new_role_name = None
-        if form.data["workspace_role"] != member.role:
+        if form.data["workspace_role"] != member.role.name:
             member = Workspaces.update_member(
                 g.current_user, workspace, member, form.data["workspace_role"]
             )
             new_role_name = member.role_displayname
+            flash(
+                "workspace_role_updated",
+                member_name=member.user_name,
+                updated_role=new_role_name,
+            )
 
         Environments.update_environment_roles(
             g.current_user, workspace, member, ids_and_roles
         )
-
-        flash(
-            "workspace_role_updated",
-            member_name=member.user_name,
-            updated_role=new_role_name,
-        )
-
         return redirect(
             url_for("workspaces.workspace_members", workspace_id=workspace.id)
         )
