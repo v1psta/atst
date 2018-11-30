@@ -29,7 +29,7 @@ class WorkspaceRoles(object):
                 .one()
             )
         except NoResultFound:
-            workspace_role = None
+            raise NotFoundError("workspace_role")
 
         return workspace_role
 

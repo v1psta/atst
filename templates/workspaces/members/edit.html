@@ -57,7 +57,6 @@
         {{ ConfirmationButton (
               "Remove Workspace Access",
               url_for("workspaces.revoke_access", workspace_id=workspace.id, member_id=member.id),
-              form.csrf_token,
               confirm_msg="Are you sure? This will remove this user from the workspace.",
         )}}
       {% endif %}
