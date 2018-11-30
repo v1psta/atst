@@ -195,13 +195,6 @@ def test_shows_revoke_button(client, user_session):
     workspace = WorkspaceFactory.create()
     user = UserFactory.create()
     member = WorkspaceRoleFactory.create(user=user, workspace=workspace)
-    Projects.create(
-        workspace.owner,
-        workspace,
-        "Snazzy Project",
-        "A new project for me and my friends",
-        {"env1"},
-    )
     user_session(workspace.owner)
     response = client.get(
         url_for(
@@ -215,13 +208,6 @@ def test_shows_revoke_button(client, user_session):
 
 def test_does_not_show_revoke_button(client, user_session):
     workspace = WorkspaceFactory.create()
-    Projects.create(
-        workspace.owner,
-        workspace,
-        "Snazzy Project",
-        "A new project for me and my friends",
-        {"env1"},
-    )
     user_session(workspace.owner)
     response = client.get(
         url_for(
