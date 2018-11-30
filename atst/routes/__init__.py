@@ -143,3 +143,13 @@ def activity_history():
 @bp.route("/about")
 def about():
     return render_template("about.html")
+
+
+@bp.route("/csp-environment-access")
+def csp_environment_access():
+    return render_template("mock_csp.html", text="console for this environment")
+
+
+@bp.route("/jedi-csp-calculator")
+def jedi_csp_calculator():
+    return render_template("mock_csp.html", text="service and price calculator")
