@@ -19,9 +19,7 @@ class AuditableMixin(object):
         display_name = resource.displayname
         event_details = resource.event_details
 
-        changed_state = (
-            resource.history if action == ACTION_UPDATE else None
-        )
+        changed_state = resource.history if action == ACTION_UPDATE else None
 
         audit_event = AuditEvent(
             user_id=user_id,
