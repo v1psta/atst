@@ -60,7 +60,7 @@ export default {
     validationError: 'Optional: Please enter up to 10 digits'
   },
   dodId: {
-    mask: createNumberMask({ prefix: '', allowDecimal: false, includeThousandsSeparator: false }),
+    mask: createNumberMask({ prefix: '', allowDecimal: false, allowLeadingZeroes: true, includeThousandsSeparator: false }),
     match: /^\d{10}$/,
     unmask: [],
     validationError: 'Please enter a 10-digit DoD ID number'
