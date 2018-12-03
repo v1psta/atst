@@ -1,6 +1,7 @@
 import re
 import datetime
-from flask import current_app as app
+from flask import current_app as app, render_template
+from jinja2.exceptions import TemplateNotFound
 
 
 def iconSvg(name):
@@ -86,6 +87,14 @@ def pageWindow(pagination, size=2):
     return (max(1, (page - size) - over), min(num_pages, (page + size) - under))
 
 
+def renderAuditEvent(event):
+    template_name = 'audit_log/events/{}.html'.format(event.resource_type)
+    try:
+        return render_template(template_name, event=event)
+    except TemplateNotFound:
+        return render_template('audit_log/events/default.html', event=event)
+
+
 def register_filters(app):
     app.jinja_env.filters["iconSvg"] = iconSvg
     app.jinja_env.filters["dollars"] = dollars
@@ -98,3 +107,4 @@ def register_filters(app):
     app.jinja_env.filters["formattedDate"] = formattedDate
     app.jinja_env.filters["dateFromString"] = dateFromString
     app.jinja_env.filters["pageWindow"] = pageWindow
+    app.jinja_env.filters["renderAuditEvent"] = renderAuditEvent

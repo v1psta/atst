@@ -1,0 +1,22 @@
+<article class='audit-log__item'>
+  <div class='audit-log__item__timestamp'>
+    <local-datetime timestamp='{{ event.time_created }}'></local-datetime>
+  </div>
+
+  <div>
+    {% block header %}
+      <h2 class='h4 audit-log__item__name'>
+        {{ event.user.full_name if event.user else "ATAT System" }}
+      </h2>
+      {{ event.action }} {{ event.resource_type }} <code>{{ event.resource_id }}</code>
+      {% if event.display_name %}
+        ({{ event.display_name }})
+      {% endif %}
+    {% endblock %}
+
+    <br>
+
+    {% block content %}{% endblock %}
+  </div>
+</article>
+
