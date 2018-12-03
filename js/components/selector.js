@@ -84,7 +84,11 @@ export default {
 
     onShow: function () {
       setTimeout(() => { // timeout is a hack to make focus work in Chrome
-        this.$refs.choices.find(choice => choice.selected).$refs.input[0].focus()
+        if (this.$refs.choices.find(choice => choice.selected)) {
+          this.$refs.choices.find(choice => choice.selected).$refs.input[0].focus()
+        } else {
+          this.$refs.choices[0].$refs.input[0].focus()
+        }
       }, 100)
     },
 
