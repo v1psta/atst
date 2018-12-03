@@ -44,10 +44,15 @@ def test_accept_invitation():
 
 def test_accept_expired_invitation():
     user = UserFactory.create()
+    workspace = WorkspaceFactory.create()
+    ws_role = WorkspaceRoleFactory.create(user=user, workspace=workspace)
     increment = Invitations.EXPIRATION_LIMIT_MINUTES + 1
     expiration_time = datetime.datetime.now() - datetime.timedelta(minutes=increment)
     invite = InvitationFactory.create(
-        user=user, expiration_time=expiration_time, status=Status.PENDING
+        user=user,
+        expiration_time=expiration_time,
+        status=Status.PENDING,
+        workspace_role=ws_role,
     )
     with pytest.raises(ExpiredError):
         Invitations.accept(user, invite.token)
@@ -57,30 +62,42 @@ def test_accept_expired_invitation():
 
 def test_accept_rejected_invite():
     user = UserFactory.create()
-    invite = InvitationFactory.create(user=user, status=Status.REJECTED_EXPIRED)
+    workspace = WorkspaceFactory.create()
+    ws_role = WorkspaceRoleFactory.create(user=user, workspace=workspace)
+    invite = InvitationFactory.create(
+        user=user, status=Status.REJECTED_EXPIRED, workspace_role=ws_role
+    )
     with pytest.raises(InvitationError):
         Invitations.accept(user, invite.token)
 
 
 def test_accept_revoked_invite():
     user = UserFactory.create()
-    invite = InvitationFactory.create(user=user, status=Status.REVOKED)
+    workspace = WorkspaceFactory.create()
+    ws_role = WorkspaceRoleFactory.create(user=user, workspace=workspace)
+    invite = InvitationFactory.create(
+        user=user, status=Status.REVOKED, workspace_role=ws_role
+    )
     with pytest.raises(InvitationError):
         Invitations.accept(user, invite.token)
 
 
 def test_wrong_user_accepts_invitation():
     user = UserFactory.create()
+    workspace = WorkspaceFactory.create()
+    ws_role = WorkspaceRoleFactory.create(user=user, workspace=workspace)
     wrong_user = UserFactory.create()
-    invite = InvitationFactory.create(user=user)
+    invite = InvitationFactory.create(user=user, workspace_role=ws_role)
     with pytest.raises(WrongUserError):
         Invitations.accept(wrong_user, invite.token)
 
 
 def test_user_cannot_accept_invitation_accepted_by_wrong_user():
     user = UserFactory.create()
+    workspace = WorkspaceFactory.create()
+    ws_role = WorkspaceRoleFactory.create(user=user, workspace=workspace)
     wrong_user = UserFactory.create()
-    invite = InvitationFactory.create(user=user)
+    invite = InvitationFactory.create(user=user, workspace_role=ws_role)
     with pytest.raises(WrongUserError):
         Invitations.accept(wrong_user, invite.token)
     with pytest.raises(InvitationError):
