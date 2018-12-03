@@ -205,6 +205,12 @@ jobs:
       - attach_workspace:
           at: .
       - run:
+          name: "Export GIT_SHA"
+          command: echo "export GIT_SHA=$(git rev-parse --short HEAD)" >> $BASH_ENV
+      - run:
+          name: "Generate the Target Image Name"
+          command: echo "export IMAGE_NAME=\"${ATAT_DOCKER_REGISTRY_URL}/${PROD_IMAGE_NAME}:${GIT_SHA}\"" >> $BASH_ENV
+      - run:
           name: "Update Kubernetes Deployment"
           command: ./deploy/kubernetes/atst-update-deploy.sh atat-test
 
@@ -231,15 +237,31 @@ workflows:
   nightly:
     triggers:
       - schedule:
-          cron: "0 0 * * *"
+          cron: "37 * * * *"
+          # cron: "0 0 * * *"
           filters:
             branches:
               only:
                 - master
+                - test-env
     jobs:
+      - app_setup
+      - test:
+          requires:
+            - app_setup
+      - build_and_push_image:
+          requires:
+            - test
+          filters:
+            branches:
+              only:
+                - master
+                - test-env
       - deploy_test:
           requires:
             - build_and_push_image
           filters:
             branches:
-              only: master
+              only:
+                - master
+                - test-env

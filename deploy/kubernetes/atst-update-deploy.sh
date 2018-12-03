@@ -37,7 +37,7 @@ echo "${K8S_CA_CRT}" | base64 -d - > "${HOME}/k8s_ca.crt"
 kubectl config set-context atst-deployer \
     --cluster=atat-cluster \
     --user=atat-deployer \
-    --namespace=atat
+    --namespace=${NAMESPACE}
 
 kubectl config set-cluster atat-cluster \
     --embed-certs=true \
