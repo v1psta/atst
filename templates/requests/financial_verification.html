@@ -133,7 +133,7 @@
           f.task_order.number,
           placeholder="e.g.: 1234567899C0001",
           tooltip="A Contracting Officer will likely be the best source for this number.",
-          validation="anything"
+          validation="requiredField"
           ) }}
 
         {{ TextInput(f.request.uii_ids,
@@ -156,26 +156,26 @@
         <h3>Contracting Officer (KO) Information</h3>
 
         <div class='form-row'>
-          <div class='form-col form-col--half '>{{ TextInput(f.request.fname_co) }}</div>
-          <div class='form-col form-col--half '>{{ TextInput(f.request.lname_co) }}</div>
+          <div class='form-col form-col--half '>{{ TextInput(f.request.fname_co, validation="requiredField") }}</div>
+          <div class='form-col form-col--half '>{{ TextInput(f.request.lname_co, validation="requiredField") }}</div>
         </div>
 
         <div class='form-row'>
           <div class='form-col form-col--half'>{{ TextInput(f.request.email_co,validation='email', placeholder='e.g. jane@mail.mil') }}</div>
-          <div class='form-col form-col--half'>{{ TextInput(f.request.office_co,placeholder="e.g.: WHS") }}</div>
+          <div class='form-col form-col--half'>{{ TextInput(f.request.office_co, validation="requiredField", placeholder="e.g.: WHS") }}</div>
         </div>
 
         <hr />
 
         <h3>Contracting Officer Representative (COR) Information</h3>
         <div class='form-row'>
-          <div class='form-col form-col--half '>{{ TextInput(f.request.fname_cor) }}</div>
-          <div class='form-col form-col--half '>{{ TextInput(f.request.lname_cor) }}</div>
+          <div class='form-col form-col--half '>{{ TextInput(f.request.fname_cor, validation="requiredField") }}</div>
+          <div class='form-col form-col--half '>{{ TextInput(f.request.lname_cor, validation="requiredField") }}</div>
         </div>
 
         <div class='form-row'>
           <div class='form-col form-col--half'>{{ TextInput(f.request.email_cor,validation='email', placeholder='e.g. jane@mail.mil') }}</div>
-          <div class='form-col form-col--half'>{{ TextInput(f.request.office_cor,placeholder="e.g.: WHS") }}</div>
+          <div class='form-col form-col--half'>{{ TextInput(f.request.office_cor, validation="requiredField", placeholder="e.g.: WHS") }}</div>
         </div>
 
 
