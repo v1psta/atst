@@ -199,67 +199,62 @@ def test_status_when_member_is_active():
 def test_status_when_invitation_has_been_rejected_for_expirations():
     workspace = WorkspaceFactory.create()
     user = UserFactory.create()
-    ws_role = WorkspaceRoleFactory.create(
+    workspace_role = WorkspaceRoleFactory.create(
         workspace=workspace, user=user, status=WorkspaceRoleStatus.PENDING
     )
     invitation = InvitationFactory.create(
-        workspace_role=ws_role, status=InvitationStatus.REJECTED_EXPIRED
+        workspace_role=workspace_role, status=InvitationStatus.REJECTED_EXPIRED
     )
-    workspace_role = WorkspaceRoleFactory.create(invitations=[invitation])
     assert workspace_role.display_status == "Invite expired"
 
 
 def test_status_when_invitation_has_been_rejected_for_wrong_user():
     workspace = WorkspaceFactory.create()
     user = UserFactory.create()
-    ws_role = WorkspaceRoleFactory.create(
+    workspace_role = WorkspaceRoleFactory.create(
         workspace=workspace, user=user, status=WorkspaceRoleStatus.PENDING
     )
     invitation = InvitationFactory.create(
-        workspace_role=ws_role, status=InvitationStatus.REJECTED_WRONG_USER
+        workspace_role=workspace_role, status=InvitationStatus.REJECTED_WRONG_USER
     )
-    workspace_role = WorkspaceRoleFactory.create(invitations=[invitation])
     assert workspace_role.display_status == "Error on invite"
 
 
 def test_status_when_invitation_is_expired():
     workspace = WorkspaceFactory.create()
     user = UserFactory.create()
-    ws_role = WorkspaceRoleFactory.create(
+    workspace_role = WorkspaceRoleFactory.create(
         workspace=workspace, user=user, status=WorkspaceRoleStatus.PENDING
     )
     invitation = InvitationFactory.create(
-        workspace_role=ws_role,
+        workspace_role=workspace_role,
         status=InvitationStatus.PENDING,
         expiration_time=datetime.datetime.now() - datetime.timedelta(seconds=1),
     )
-    workspace_role = WorkspaceRoleFactory.create(invitations=[invitation])
     assert workspace_role.display_status == "Invite expired"
 
 
 def test_can_not_resend_invitation_if_active():
     workspace = WorkspaceFactory.create()
     user = UserFactory.create()
-    ws_role = WorkspaceRoleFactory.create(
+    workspace_role = WorkspaceRoleFactory.create(
         workspace=workspace, user=user, status=WorkspaceRoleStatus.PENDING
     )
     invitation = InvitationFactory.create(
-        workspace_role=ws_role, status=InvitationStatus.ACCEPTED
+        workspace_role=workspace_role, status=InvitationStatus.ACCEPTED
     )
-    workspace_role = WorkspaceRoleFactory.create(invitations=[invitation])
     assert not workspace_role.can_resend_invitation
 
 
 def test_can_resend_invitation_if_expired():
     workspace = WorkspaceFactory.create()
     user = UserFactory.create()
-    ws_role = WorkspaceRoleFactory.create(
+    workspace_role = WorkspaceRoleFactory.create(
         workspace=workspace, user=user, status=WorkspaceRoleStatus.PENDING
     )
     invitation = InvitationFactory.create(
-        workspace_role=ws_role, status=InvitationStatus.REJECTED_EXPIRED
+        workspace_role=workspace_role, status=InvitationStatus.REJECTED_EXPIRED
     )
-    workspace_role = WorkspaceRoleFactory.create(invitations=[invitation])
     assert workspace_role.can_resend_invitation
 
 
