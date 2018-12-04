@@ -1,0 +1,8 @@
+{% extends "audit_log/events/_base.html" %}
+
+{% block content %}
+  {% set accepted = event.changed_state.status and event.changed_state.status.1 == "ACCEPTED" %}
+  {% if accepted %}
+    accepted by {{ event.event_details.email }} (DOD <code>{{ event.event_details.dod_id }}</code>)
+  {% endif %}
+{% endblock %}

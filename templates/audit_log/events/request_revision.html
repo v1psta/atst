@@ -1,0 +1,5 @@
+{% extends "audit_log/events/_base.html" %}
+
+{% block content %}
+  on Request <code>{{ event.request_id }}</code> ({{ event.request.displayname }})
+{% endblock %}

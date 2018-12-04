@@ -1,0 +1,13 @@
+{% extends 'audit_log/events/_base.html' %}
+
+{% block content %}
+  for User <code>{{ event.event_details.updated_user_id }}</code> ({{ event.event_details.updated_user_name }})
+  {% if event.event_details["environment"] %}
+    <br>
+    in Environment <code>{{ event.event_details["environment_id"] }}</code> ({{ event.event_details["environment"] }})
+    <br>
+    in Project <code>{{ event.event_details["project_id"] }}</code> ({{ event.event_details["project"] }})
+    <br>
+    in Workspace <code>{{ event.event_details["workspace_id"] }}</code> ({{ event.event_details["workspace"] }})
+  {% endif %}
+{% endblock %}
