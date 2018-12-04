@@ -213,6 +213,9 @@ jobs:
       - run:
           name: "Update Kubernetes Deployment"
           command: ./deploy/kubernetes/atst-update-deploy.sh atat-test
+      - run:
+          name: "Reset the Sample Data"
+          command: ./deploy/kubernetes/atst-reset-sample-data.sh atat-test
 
 workflows:
   version: 2
@@ -237,7 +240,7 @@ workflows:
   nightly:
     triggers:
       - schedule:
-          cron: "37 * * * *"
+          cron: "45 * * * *"
           # cron: "0 0 * * *"
           filters:
             branches:
