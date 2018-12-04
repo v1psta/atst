@@ -215,10 +215,6 @@ class FinancialVerificationForm(CacheableForm):
         return self.request.pe_id
 
     @property
-    def task_order_number(self):
-        return self.task_order.number
-
-    @property
     def has_pdf_upload(self):
         return isinstance(self.task_order.pdf.data, FileStorage)
 
