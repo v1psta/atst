@@ -240,13 +240,11 @@ workflows:
   nightly:
     triggers:
       - schedule:
-          cron: "45 * * * *"
-          # cron: "0 0 * * *"
+          cron: "0 0 * * *"
           filters:
             branches:
               only:
                 - master
-                - test-env
     jobs:
       - app_setup
       - test:
@@ -259,7 +257,6 @@ workflows:
             branches:
               only:
                 - master
-                - test-env
       - deploy_test:
           requires:
             - build_and_push_image
@@ -267,4 +264,3 @@ workflows:
             branches:
               only:
                 - master
-                - test-env

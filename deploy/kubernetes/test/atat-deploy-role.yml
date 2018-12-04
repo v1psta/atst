@@ -2,17 +2,25 @@ kind: Role
 apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
   namespace: atat-test
-  name: atat-deploy-role
+  name: atat-sample-update
 rules:
-- apiGroups: ["extensions", "apps"]
-  resources: ["deployments"]
-  verbs: ["get", "watch", "create", "update", "patch"]
 - apiGroups: [""]
-  resources: ["services"]
-  verbs: ["get", "create", "update", "patch"]
+  resources: ["pods"]
+  verbs: ["get", "list"]
 - apiGroups: [""]
-  resources: ["configmaps"]
-  verbs: ["get", "create", "update", "patch"]
-- apiGroups: ["extensions", "apps"]
-  resources: ["ingresses"]
-  verbs: ["get", "create", "update", "patch"]
+  resources: ["pods/exec"]
+  verbs: ["create"]
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: atst-sample-role-binding
+  namespace: atat-test
+subjects:
+- kind: ServiceAccount
+  name: atat-deployer
+  namespace: atat
+roleRef:
+  kind: Role
+  name: atat-sample-update
+  apiGroup: rbac.authorization.k8s.io

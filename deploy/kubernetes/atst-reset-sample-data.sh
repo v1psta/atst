@@ -17,11 +17,6 @@ else
   NAMESPACE=$1
 fi
 
-if [ "${IMAGE_NAME}x" = "x" ]
-then
-    IMAGE_NAME="${ATAT_DOCKER_REGISTRY_URL}/${PROD_IMAGE_NAME}:${GIT_SHA}"
-fi
-
 # Remove the K8S CA file when the script exits
 function cleanup {
     printf "Cleaning up...\n"
@@ -50,7 +45,10 @@ kubectl config use-context atst-deployer
 kubectl config current-context
 
 # we only need to run these commands against one existing pod
-ATST_POD=$(kubectl -n ${NAMESPACE} get pods -l app=atst -o custom-columns=NAME:.metadata.name --no-headers)
+ATST_POD=$(kubectl -n ${NAMESPACE} get pods -l app=atst -o custom-columns=NAME:.metadata.name --no-headers | sed -n 1p)
+# echo "kubectl -n ${NAMESPACE} exec ${ATST_POD} -- pipenv run python script/remove_sample_data.py"
+echo "removing sample data on pod ${ATST_POD}"
 kubectl -n ${NAMESPACE} exec ${ATST_POD} -- pipenv run python script/remove_sample_data.py
+echo "seeding sample data on pod ${ATST_POD}"
 kubectl -n ${NAMESPACE} exec ${ATST_POD} -- pipenv run python script/seed_sample.py
 
