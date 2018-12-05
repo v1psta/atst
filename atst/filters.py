@@ -88,11 +88,11 @@ def pageWindow(pagination, size=2):
 
 
 def renderAuditEvent(event):
-    template_name = 'audit_log/events/{}.html'.format(event.resource_type)
+    template_name = "audit_log/events/{}.html".format(event.resource_type)
     try:
         return render_template(template_name, event=event)
     except TemplateNotFound:
-        return render_template('audit_log/events/default.html', event=event)
+        return render_template("audit_log/events/default.html", event=event)
 
 
 def register_filters(app):

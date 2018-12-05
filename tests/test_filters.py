@@ -19,12 +19,12 @@ def test_dollar_fomatter(input, expected):
 
 
 def test_render_audit_event_with_known_resource_type():
-    event = AuditEvent(resource_type='user')
+    event = AuditEvent(resource_type="user")
     result = renderAuditEvent(event)
-    assert '<article' in result
+    assert "<article" in result
 
 
 def test_render_audit_event_with_unknown_resource_type():
-    event = AuditEvent(resource_type='boat')
+    event = AuditEvent(resource_type="boat")
     result = renderAuditEvent(event)
-    assert '<article' in result
+    assert "<article" in result
