@@ -195,6 +195,28 @@ jobs:
           name: "Update Kubernetes Deployment"
           command: ./deploy/kubernetes/atst-update-deploy.sh
 
+  deploy_test:
+    docker:
+      - image: *sourceImage
+        auth: *sourceAuth
+        environment: *dockerCmdEnvironment
+    working_directory: *workingDirectory
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: "Export GIT_SHA"
+          command: echo "export GIT_SHA=$(git rev-parse --short HEAD)" >> $BASH_ENV
+      - run:
+          name: "Generate the Target Image Name"
+          command: echo "export IMAGE_NAME=\"${ATAT_DOCKER_REGISTRY_URL}/${PROD_IMAGE_NAME}:${GIT_SHA}\"" >> $BASH_ENV
+      - run:
+          name: "Update Kubernetes Deployment"
+          command: ./deploy/kubernetes/atst-update-deploy.sh atat-test
+      - run:
+          name: "Reset the Sample Data"
+          command: ./deploy/kubernetes/atst-reset-sample-data.sh atat-test
+
 workflows:
   version: 2
   run-tests:
@@ -215,3 +237,30 @@ workflows:
           filters:
             branches:
               only: master
+  nightly:
+    triggers:
+      - schedule:
+          cron: "0 0 * * *"
+          filters:
+            branches:
+              only:
+                - master
+    jobs:
+      - app_setup
+      - test:
+          requires:
+            - app_setup
+      - build_and_push_image:
+          requires:
+            - test
+          filters:
+            branches:
+              only:
+                - master
+      - deploy_test:
+          requires:
+            - build_and_push_image
+          filters:
+            branches:
+              only:
+                - master

@@ -45,8 +45,12 @@ ssl/client-certs/*.srl
 # uploads
 /uploads
 
-# coverage output
+# python coverage output
 .coverage
+
+# je coverage output
+coverage
+
 
 # selenium testing
 browserstacklocal
