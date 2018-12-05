@@ -37,7 +37,7 @@ class RequestReview(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     def full_name_ccpo(self):
         return "{} {}".format(self.fname_ccpo, self.lname_ccpo)
 
-    def __repr__(self):
+    def __repr__(self): #pragma: no cover
         return "<RequestReview(status='{}', comment='{}', reviewer='{}', id='{}')>".format(
             self.status.log_name, self.comment, self.full_name_reviewer, self.id
         )
