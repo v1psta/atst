@@ -1,39 +1,26 @@
 {% extends "audit_log/events/_base.html" %}
 
 {% block content %}
-  {% if event.event_details and event.resource_type == "user" %}
-    for User <code>{{ event.event_details.updated_user_id }}</code> ({{ event.event_details.updated_user_name }})
-
-    {% if event.event_details["environment"] %}
-      <br>
-      in Environment <code>{{ event.event_details["environment_id"] }}</code> ({{ event.event_details["environment"] }})
-      <br>
-      in Project <code>{{ event.event_details["project_id"] }}</code> ({{ event.event_details["project"] }})
-      <br>
-      in Workspace <code>{{ event.event_details["workspace_id"] }}</code> ({{ event.event_details["workspace"] }})
-    {% endif %}
-  <br>
-
-  {% elif event.event_details and event.resource_type == "invitation" %}
-    {% set accepted = event.changed_state.status and event.changed_state.status.1 == "ACCEPTED" %}
-    {% if accepted %}
-      accepted by {{ event.event_details.email }} (DOD <code>{{ event.event_details.dod_id }}</code>)
-    {% endif %}
-  {% endif %}
-
-  {% if event.changed_state and event.resource_type == 'environment_role' %}
-    from {{ event.changed_state.role[0] }} to {{ event.changed_state.role[1] }}
+  {% if event.event_details %}
     <br>
+    <b>Details:</b>
+    <dl>
+      {% for key, value in event.event_details.items() %}
+        {% if value is not none %}
+          <dt>{{ key }}</dt>
+          <dd>{{ value }}</dd>
+        {% endif %}
+      {% endfor %}
+    </dl>
   {% endif %}
-
-  {% if event.workspace %}
-    in Workspace <code>{{ event.workspace_id }}</code> ({{ event.workspace.name }})
-  {% elif event.request %}
-    on Request <code>{{ event.request_id }}</code> ({{ event.request.displayname }})
-  {% endif %}
-
-  {% if event.changed_state.role %}
-    from {{ event.changed_state.role[0] }} to {{ event.changed_state.role[1] }}
+  {% if event.changed_state %}
     <br>
+    <b>Changes:</b>
+    <dl>
+      {% for key, value in event.changed_state.items() %}
+        <dt>{{ key }}</dt>
+        <dd>{{ value[0] }} to {{ value[1] }}</dd>
+      {% endfor %}
+    </dl>
   {% endif %}
 {% endblock %}
