@@ -87,7 +87,6 @@ export default {
         displayName: 'Workspace Role',
         attr: 'role',
         sortFunc: alphabeticalSort,
-        width: "20%"
       },
     ]
 
