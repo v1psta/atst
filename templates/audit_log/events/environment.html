@@ -1,0 +1,5 @@
+{% extends "audit_log/events/_base.html" %}
+
+{% block content %}
+  in Workspace <code>{{ event.workspace_id }}</code> ({{ event.workspace.name }})
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends "audit_log/events/_base.html" %}
+
+{% block content %}
+  {% if event.event_details %}
+    <br>
+    <b>Details:</b>
+    <dl>
+      {% for key, value in event.event_details.items() %}
+        {% if value is not none %}
+          <dt>{{ key }}</dt>
+          <dd>{{ value }}</dd>
+        {% endif %}
+      {% endfor %}
+    </dl>
+  {% endif %}
+  {% if event.changed_state %}
+    <br>
+    <b>Changes:</b>
+    <dl>
+      {% for key, value in event.changed_state.items() %}
+        <dt>{{ key }}</dt>
+        <dd>{{ value[0] }} to {{ value[1] }}</dd>
+      {% endfor %}
+    </dl>
+  {% endif %}
+{% endblock %}

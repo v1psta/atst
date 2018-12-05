@@ -137,7 +137,7 @@ def get_pagination_opts(request, default_page=1, default_per_page=100):
 def activity_history():
     pagination_opts = get_pagination_opts(request)
     audit_events = AuditLog.get_all_events(g.current_user, pagination_opts)
-    return render_template("audit_log.html", audit_events=audit_events)
+    return render_template("audit_log/audit_log.html", audit_events=audit_events)
 
 
 @bp.route("/about")
