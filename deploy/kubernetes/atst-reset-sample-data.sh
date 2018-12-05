@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
-# deploy/kubernetes/atst-update-deploy.sh: Updates the existing ATST deployment
-#                                          with a new source image
+# deploy/kubernetes/atst-update-deploy.sh: Resets the sample data on the target
+#                                          environment.
 
 set -o pipefail
 set -o errexit
@@ -15,11 +15,6 @@ if [[ $# -eq 0 ]]; then
   NAMESPACE=atat
 else
   NAMESPACE=$1
-fi
-
-if [ "${IMAGE_NAME}x" = "x" ]
-then
-    IMAGE_NAME="${ATAT_DOCKER_REGISTRY_URL}/${PROD_IMAGE_NAME}:${GIT_SHA}"
 fi
 
 # Remove the K8S CA file when the script exits
@@ -49,16 +44,11 @@ kubectl config set-credentials atat-deployer --token="$(echo ${K8S_USER_TOKEN} |
 kubectl config use-context atst-deployer
 kubectl config current-context
 
-# Update the ATST deployment
-kubectl -n ${NAMESPACE} set image deployment.apps/atst atst="${IMAGE_NAME}"
-kubectl -n ${NAMESPACE} set image deployment.apps/atst-worker atst-worker="${IMAGE_NAME}"
+# we only need to run these commands against one existing pod
+ATST_POD=$(kubectl -n ${NAMESPACE} get pods -l app=atst -o custom-columns=NAME:.metadata.name --no-headers | sed -n 1p)
+# echo "kubectl -n ${NAMESPACE} exec ${ATST_POD} -- pipenv run python script/remove_sample_data.py"
+echo "removing sample data on pod ${ATST_POD}"
+kubectl -n ${NAMESPACE} exec ${ATST_POD} -- pipenv run python script/remove_sample_data.py
+echo "seeding sample data on pod ${ATST_POD}"
+kubectl -n ${NAMESPACE} exec ${ATST_POD} -- pipenv run python script/seed_sample.py
 
-# Wait for deployment to finish
-if ! timeout -t "${MAX_DEPLOY_WAIT}" -s INT kubectl -n ${NAMESPACE} rollout status deployment/atst
-then
-    # Deploy did not finish before max wait time; abort and rollback the deploy
-    kubectl -n ${NAMESPACE} rollout undo deployment/atst
-    kubectl -n ${NAMESPACE} rollout undo deployment/atst-worker
-    # Exit with a non-zero return code
-    exit 2
-fi

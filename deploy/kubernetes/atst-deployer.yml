@@ -32,6 +32,9 @@ subjects:
 - kind: ServiceAccount
   name: atat-deployer
   namespace: atat
+- kind: ServiceAccount
+  name: atat-deployer
+  namespace: atat-test
 roleRef:
   kind: Role
   name: atat-deploy-role
