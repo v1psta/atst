@@ -46,7 +46,7 @@ class Invitation(Base, TimestampsMixin, AuditableMixin):
 
     email = Column(String, nullable=False)
 
-    def __repr__(self):
+    def __repr__(self): #pragma: no cover
         return "<Invitation(user='{}', workspace_role='{}', id='{}', email='{}')>".format(
             self.user_id, self.workspace_role_id, self.id, self.email
         )
