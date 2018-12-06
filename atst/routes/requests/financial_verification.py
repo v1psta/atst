@@ -203,7 +203,7 @@ def financial_verification(request_id):
     ).execute()
 
     if request.review_comment:
-        flash("request_review_comment", {"comment": request.review_comment})
+        flash("request_review_comment", comment=request.review_comment)
 
     return render_template(
         "requests/financial_verification.html",

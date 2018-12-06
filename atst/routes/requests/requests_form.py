@@ -62,7 +62,7 @@ def requests_form_update(screen=1, request_id=None):
         flash("request_incomplete")
 
     if request.review_comment:
-        flash("request_review_comment", {"comment": request.review_comment})
+        flash("request_review_comment", comment=request.review_comment)
 
     return render_template(
         "requests/screen-%d.html" % int(screen),

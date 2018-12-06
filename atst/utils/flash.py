@@ -99,9 +99,8 @@ MESSAGES = {
 }
 
 
-def formatted_flash(message_name, message_args=None):
+def formatted_flash(message_name, **message_args):
     config = MESSAGES[message_name]
-    args = message_args or {}
-    title = render_template_string(config["title_template"], **args)
-    message = render_template_string(config["message_template"], **args)
+    title = render_template_string(config["title_template"], **message_args)
+    message = render_template_string(config["message_template"], **message_args)
     flash({"title": title, "message": message}, config["category"])

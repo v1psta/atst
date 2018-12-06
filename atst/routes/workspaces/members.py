@@ -76,10 +76,7 @@ def create_member(workspace_id):
             invite = Invitations.create(user, new_member, form.data["email"])
             send_invite_email(g.current_user.full_name, invite.token, invite.email)
 
-            flash(
-                "new_workspace_member",
-                {"new_member": new_member, "workspace": workspace},
-            )
+            flash("new_workspace_member", new_member=new_member, workspace=workspace)
 
             return redirect(
                 url_for("workspaces.workspace_members", workspace_id=workspace.id)
@@ -162,7 +159,8 @@ def update_member(workspace_id, member_id):
 
         flash(
             "workspace_role_updated",
-            {"member_name": member.user_name, "updated_role": new_role_name},
+            member_name=member.user_name,
+            updated_role=new_role_name,
         )
 
         return redirect(
@@ -182,5 +180,5 @@ def update_member(workspace_id, member_id):
 )
 def revoke_access(workspace_id, member_id):
     revoked_role = Workspaces.revoke_access(g.current_user, workspace_id, member_id)
-    flash("revoked_workspace_access", {"member_name": revoked_role.user.full_name})
+    flash("revoked_workspace_access", member_name=revoked_role.user.full_name)
     return redirect(url_for("workspaces.workspace_members", workspace_id=workspace_id))

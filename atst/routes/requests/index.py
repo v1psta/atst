@@ -102,6 +102,6 @@ def requests_index():
     context = RequestsIndex(g.current_user).execute()
 
     if context.get("num_action_required"):
-        flash("requests_action_required", {"count": context.get("num_action_required")})
+        flash("requests_action_required", count=context.get("num_action_required"))
 
     return render_template("requests/index.html", **context)
