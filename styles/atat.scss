@@ -46,3 +46,8 @@
 @import 'sections/project_edit';
 @import 'sections/member_edit';
 @import 'sections/reports';
+
+[v-cloak] .audit-log__item__timestamp::before {
+  content: "ABC 0 0000 00:00";
+  color: gray;
+}
