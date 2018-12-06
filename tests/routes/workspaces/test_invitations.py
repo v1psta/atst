@@ -19,7 +19,7 @@ def test_existing_member_accepts_valid_invite(client, user_session):
     ws_role = WorkspaceRoleFactory.create(
         workspace=workspace, user=user, status=WorkspaceRoleStatus.PENDING
     )
-    invite = InvitationFactory.create(user_id=user.id, workspace_role_id=ws_role.id)
+    invite = InvitationFactory.create(user_id=user.id, workspace_role=ws_role)
 
     # the user does not have access to the workspace before accepting the invite
     assert len(Workspaces.for_user(user)) == 0
@@ -76,7 +76,7 @@ def test_member_accepts_invalid_invite(client, user_session):
     )
     invite = InvitationFactory.create(
         user_id=user.id,
-        workspace_role_id=ws_role.id,
+        workspace_role=ws_role,
         status=InvitationStatus.REJECTED_WRONG_USER,
     )
     user_session(user)
@@ -109,7 +109,7 @@ def test_user_accepts_invite_with_wrong_dod_id(client, user_session):
     ws_role = WorkspaceRoleFactory.create(
         user=user, workspace=workspace, status=WorkspaceRoleStatus.PENDING
     )
-    invite = InvitationFactory.create(user_id=user.id, workspace_role_id=ws_role.id)
+    invite = InvitationFactory.create(user_id=user.id, workspace_role=ws_role)
     user_session(different_user)
     response = client.get(url_for("workspaces.accept_invitation", token=invite.token))
 
@@ -124,7 +124,7 @@ def test_user_accepts_expired_invite(client, user_session):
     )
     invite = InvitationFactory.create(
         user_id=user.id,
-        workspace_role_id=ws_role.id,
+        workspace_role=ws_role,
         status=InvitationStatus.REJECTED_EXPIRED,
         expiration_time=datetime.datetime.now() - datetime.timedelta(seconds=1),
     )
@@ -142,7 +142,7 @@ def test_revoke_invitation(client, user_session):
     )
     invite = InvitationFactory.create(
         user_id=user.id,
-        workspace_role_id=ws_role.id,
+        workspace_role=ws_role,
         status=InvitationStatus.REJECTED_EXPIRED,
         expiration_time=datetime.datetime.now() - datetime.timedelta(seconds=1),
     )
@@ -166,7 +166,7 @@ def test_resend_invitation_sends_email(client, user_session, queue):
         user=user, workspace=workspace, status=WorkspaceRoleStatus.PENDING
     )
     invite = InvitationFactory.create(
-        user_id=user.id, workspace_role_id=ws_role.id, status=InvitationStatus.PENDING
+        user_id=user.id, workspace_role=ws_role, status=InvitationStatus.PENDING
     )
     user_session(workspace.owner)
     client.post(
@@ -190,7 +190,7 @@ def test_existing_member_invite_resent_to_email_submitted_in_form(
     )
     invite = InvitationFactory.create(
         user_id=user.id,
-        workspace_role_id=ws_role.id,
+        workspace_role=ws_role,
         status=InvitationStatus.PENDING,
         email="example@example.com",
     )

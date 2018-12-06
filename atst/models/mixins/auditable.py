@@ -13,15 +13,13 @@ class AuditableMixin(object):
     @staticmethod
     def create_audit_event(connection, resource, action):
         user_id = getattr_path(g, "current_user.id")
-        workspace_id = resource.auditable_workspace_id()
-        request_id = resource.auditable_request_id()
-        resource_type = resource.auditable_resource_type()
-        display_name = resource.auditable_displayname()
-        event_details = resource.auditable_event_details()
+        workspace_id = resource.workspace_id
+        request_id = resource.request_id
+        resource_type = resource.resource_type
+        display_name = resource.displayname
+        event_details = resource.event_details
 
-        changed_state = (
-            resource.auditable_changed_state() if action == ACTION_UPDATE else None
-        )
+        changed_state = resource.history if action == ACTION_UPDATE else None
 
         audit_event = AuditEvent(
             user_id=user_id,
@@ -77,20 +75,26 @@ class AuditableMixin(object):
                 previous_state[attr.key] = [deleted, added]
         return previous_state
 
-    def auditable_changed_state(self):
-        return getattr_path(self, "history")
+    @property
+    def history(self):
+        return None
 
-    def auditable_event_details(self):
-        return getattr_path(self, "event_details")
+    @property
+    def event_details(self):
+        return None
 
-    def auditable_resource_type(self):
+    @property
+    def resource_type(self):
         return camel_to_snake(type(self).__name__)
 
-    def auditable_workspace_id(self):
-        return getattr_path(self, "workspace_id")
+    @property
+    def workspace_id(self):
+        return None
 
-    def auditable_request_id(self):
-        return getattr_path(self, "request_id")
+    @property
+    def request_id(self):
+        return None
 
-    def auditable_displayname(self):
-        return getattr_path(self, "displayname")
+    @property
+    def displayname(self):
+        return None

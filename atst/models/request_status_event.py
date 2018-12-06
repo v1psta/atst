@@ -43,7 +43,7 @@ class RequestStatusEvent(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
 
     @property
     def displayname(self):
-        return self.new_status.value
+        return self.new_status.value if self.new_status else None
 
     @property
     def log_name(self):
