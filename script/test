@@ -18,5 +18,8 @@ PYTHON_FILES="./app.py ./atst/** ./config"
 # Enable Python testing
 RUN_PYTHON_TESTS="true"
 
+# Check python formatting
+source ./script/format check
+
 # Run the shared test script
 source ./script/include/run_test
