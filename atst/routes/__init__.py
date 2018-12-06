@@ -153,3 +153,26 @@ def csp_environment_access():
 @bp.route("/jedi-csp-calculator")
 def jedi_csp_calculator():
     return render_template("mock_csp.html", text="service and price calculator")
+
+
+import secrets
+from atst.forms.edit_user import EditUserForm
+from atst.utils.docx import Docx
+
+
+@bp.route("/docx", methods=["GET", "POST"])
+def docx():
+    filename = None
+    if request.method == "POST":
+        app.logger.info(request.form)
+        bytes_ = Docx.render(
+            character=request.form.get("character"), vehicle=request.form.get("vehicle")
+        )
+        filename = "{}.docx".format(secrets.token_urlsafe(16))
+        with open(
+            os.path.join(app.root_path, "..", "static", "docx_demo", filename), "wb"
+        ) as docx:
+            docx.write(bytes_)
+
+    form = EditUserForm()
+    return render_template("docx_demo.html", f=form, docx=filename)

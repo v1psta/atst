@@ -1,0 +1,15 @@
+<html>
+  <body>
+    <form method="POST" action="{{ url_for('atst.docx') }}">
+      {{ f.csrf_token }}
+      <label for="character">Character:</label>
+      <input type="text" name="character">
+      <label for="vehicle">Vehicle:</label>
+      <input type="text" name="vehicle">
+      <button type="submit">Submit</button>
+    </form>
+    {% if docx %}
+      <a href="/static/docx_demo/{{ docx }}" download>Download your file</a>
+    {% endif %}
+  </body>
+</html>
