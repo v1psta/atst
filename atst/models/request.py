@@ -245,7 +245,7 @@ class Request(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
         else:
             return None
 
-    def __repr__(self): #pragma: no cover
+    def __repr__(self):  # pragma: no cover
         return "<Request(status='{}', name='{}', creator='{}', is_approved='{}', time_created='{}', id='{}')>".format(
             self.status_displayname,
             self.displayname,

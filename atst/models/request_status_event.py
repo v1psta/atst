@@ -56,7 +56,7 @@ class RequestStatusEvent(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
         else:
             return self.displayname
 
-    def __repr__(self): #pragma: no cover
+    def __repr__(self):  # pragma: no cover
         return "<RequestStatusEvent(log_name='{}', request='{}', id='{}')>".format(
             self.log_name, self.request_id, self.id
         )

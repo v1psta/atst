@@ -79,7 +79,7 @@ class RequestRevision(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     treasury_code = Column(String)
     ba_code = Column(String)
 
-    def __repr__(self): #pragma: no cover
+    def __repr__(self):  # pragma: no cover
         return "<RequestRevision(request='{}', id='{}')>".format(
             self.request_id, self.id
         )
