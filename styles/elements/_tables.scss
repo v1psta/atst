@@ -63,6 +63,7 @@
       th, td {
         @include block-list-header;
         display: table-cell;
+        white-space: nowrap;
       }
     }
   }
