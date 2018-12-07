@@ -17,5 +17,5 @@ export default {
     }
   },
 
-  template: '<time v-bind:datetime="timestamp">{{ this.displayTime }}</time>'
+  template: '<time v-bind:datetime="timestamp">{{ displayTime }}</time>'
 }
