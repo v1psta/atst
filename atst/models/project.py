@@ -21,7 +21,7 @@ class Project(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     def displayname(self):
         return self.name
 
-    def __repr__(self):  # pragma: no cover
+    def __repr__(self):
         return "<Project(name='{}', description='{}', workspace='{}', id='{}')>".format(
             self.name, self.description, self.workspace.name, self.id
         )

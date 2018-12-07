@@ -64,7 +64,7 @@ class TaskOrder(Base, mixins.TimestampsMixin):
             )
         )
 
-    def __repr__(self):  # pragma: no cover
+    def __repr__(self):
         return "<TaskOrder(number='{}', verified='{}', budget='{}', expiration_date='{}', pdf='{}', id='{}')>".format(
             self.number,
             self.verified,
