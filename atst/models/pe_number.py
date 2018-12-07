@@ -9,7 +9,7 @@ class PENumber(Base):
     number = Column(String, primary_key=True)
     description = Column(String)
 
-    def __repr__(self):  # pragma: no cover
+    def __repr__(self):
         return "<PENumber(number='{}', description='{}')>".format(
             self.number, self.description
         )
