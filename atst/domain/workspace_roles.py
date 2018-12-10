@@ -97,7 +97,10 @@ class WorkspaceRoles(object):
             new_workspace_role.role = role
         except NoResultFound:
             new_workspace_role = WorkspaceRole(
-                user=user, role_id=role.id, workspace_id=workspace_id
+                user=user,
+                role_id=role.id,
+                workspace_id=workspace_id,
+                status=WorkspaceRoleStatus.PENDING,
             )
 
         user.workspace_roles.append(new_workspace_role)
