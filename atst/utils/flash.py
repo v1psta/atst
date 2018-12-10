@@ -16,7 +16,7 @@ MESSAGES = {
         """,
         "category": "success",
     },
-    "resent_workspace_invitation": {
+    "resend_workspace_invitation": {
         "title_template": "Invitation resent",
         "message_template": """
           <p>Successfully sent a new invitation to {{ user_name }}.</p>
