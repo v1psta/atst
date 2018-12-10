@@ -101,11 +101,6 @@ def remove_sample_data(all_users=False):
             .filter(AuditEvent.request_id.in_([r.id for r in requests]))
             .all()
         )
-        request_audit = (
-            db.session.query(AuditEvent)
-            .filter(AuditEvent.request_id.in_([r.id for r in requests]))
-            .all()
-        )
         events = [ev for r in requests for ev in r.status_events]
         revisions = [rev for r in requests for rev in r.revisions]
         workspaces = [r.workspace for r in requests if r.workspace]
@@ -115,6 +110,7 @@ def remove_sample_data(all_users=False):
             .all()
         )
         workspace_roles = [role for workspace in workspaces for role in workspace.roles]
+        invites = [invite for role in workspace_roles for invite in role.invitations]
         projects = [p for workspace in workspaces for p in workspace.projects]
         environments = (
             db.session.query(Environment)
@@ -127,6 +123,7 @@ def remove_sample_data(all_users=False):
             roles,
             environments,
             projects,
+            invites,
             workspace_roles,
             ws_audit,
             events,
