@@ -112,6 +112,7 @@ def seed_db():
         )
         for workspace_role in WORKSPACE_USERS:
             ws_role = Workspaces.create_member(user, workspace, workspace_role)
+            db.session.refresh(ws_role)
             WorkspaceRoles.enable(ws_role)
 
         for workspace_role in WORKSPACE_INVITED_USERS:
