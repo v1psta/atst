@@ -11,6 +11,12 @@
       <div class='col'>
 
         <div class='login-banner'>
+
+          {% with %}
+            {% set category_filter=["error"] %}
+            {% include "fragments/flash.html" %}
+          {% endwith %}
+
           <h1 class="login-banner__heading">Access the JEDI Cloud</h1>
 
           <img class="login-banner__logo" src="{{url_for('static', filename='img/ccpo-logo.svg')}}" alt="Cloud Computing Program Office Logo">
@@ -18,7 +24,10 @@
           <a class="usa-button usa-button-big login-banner__button" href='{{ redirect_url }}'><span>Sign in with CAC</span></a>
         </div>
 
-        {% include "fragments/flash.html" %}
+        {% with %}
+          {% set category_filter=["success", "info", "warning"] %}
+          {% include "fragments/flash.html" %}
+        {% endwith %}
 
         {{ Alert('Certificate Selection',
           message='When you are prompted to select a certificate, please select <strong>E-mail Certificate</strong> from the provided choices.',

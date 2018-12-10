@@ -1,6 +1,10 @@
 {% from "components/alert.html" import Alert %}
 
-{% with messages = get_flashed_messages(with_categories=true) %}
+{% if not category_filter %}
+  {% set category_filter=["success", "info", "warning", "error"] %}
+{% endif %}
+
+{% with messages = get_flashed_messages(with_categories=true, category_filter=category_filter) %}
   {% if messages %}
     {% for category, message_config in messages %}
       {{ Alert(message_config["title"], message=message_config.get("message"), level=category) }}
