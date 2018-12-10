@@ -5,6 +5,7 @@ from . import requests_bp
 from atst.domain.requests import Requests
 from atst.models.permissions import Permissions
 from atst.forms.data import SERVICE_BRANCHES
+from atst.utils.flash import formatted_flash as flash
 
 
 class RequestsIndex(object):
@@ -99,4 +100,8 @@ class RequestsIndex(object):
 @requests_bp.route("/requests", methods=["GET"])
 def requests_index():
     context = RequestsIndex(g.current_user).execute()
+
+    if context.get("num_action_required"):
+        flash("requests_action_required", count=context.get("num_action_required"))
+
     return render_template("requests/index.html", **context)

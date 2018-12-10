@@ -13,6 +13,7 @@ from atst.forms.data import (
     FUNDING_TYPES,
     TASK_ORDER_SOURCES,
 )
+from atst.utils.flash import formatted_flash as flash
 
 
 @requests_bp.context_processor
@@ -30,6 +31,9 @@ def option_data():
 @requests_bp.route("/requests/new/<int:screen>", methods=["GET"])
 def requests_form_new(screen):
     jedi_flow = JEDIRequestFlow(screen, request=None, current_user=g.current_user)
+
+    if jedi_flow.is_review_screen and not jedi_flow.can_submit:
+        flash("request_incomplete")
 
     return render_template(
         "requests/screen-%d.html" % int(screen),
@@ -54,6 +58,12 @@ def requests_form_update(screen=1, request_id=None):
         screen, request=request, request_id=request_id, current_user=g.current_user
     )
 
+    if jedi_flow.is_review_screen and not jedi_flow.can_submit:
+        flash("request_incomplete")
+
+    if request.review_comment:
+        flash("request_review_comment", comment=request.review_comment)
+
     return render_template(
         "requests/screen-%d.html" % int(screen),
         f=jedi_flow.form,
@@ -63,7 +73,6 @@ def requests_form_update(screen=1, request_id=None):
         next_screen=screen + 1,
         request_id=request_id,
         jedi_request=jedi_flow.request,
-        review_comment=request.review_comment,
         can_submit=jedi_flow.can_submit,
     )
 

@@ -21,12 +21,13 @@ from atst.domain.authz import Authorization
 from atst.models.permissions import Permissions
 from atst.domain.invitations import Invitations
 
+from atst.utils.flash import formatted_flash as flash
+
 
 @workspaces_bp.route("/workspaces/<workspace_id>/members")
 def workspace_members(workspace_id):
     workspace = Workspaces.get_with_members(g.current_user, workspace_id)
     new_member_name = http_request.args.get("newMemberName")
-    resent_invitation_to = http_request.args.get("resentInvitationTo")
     new_member = next(
         filter(lambda m: m.user_name == new_member_name, workspace.members), None
     )
@@ -51,7 +52,6 @@ def workspace_members(workspace_id):
         status_choices=MEMBER_STATUS_CHOICES,
         members=members_list,
         new_member=new_member,
-        resent_invitation_to=resent_invitation_to,
     )
 
 
@@ -76,12 +76,10 @@ def create_member(workspace_id):
             invite = Invitations.create(user, new_member, form.data["email"])
             send_invite_email(g.current_user.full_name, invite.token, invite.email)
 
+            flash("new_workspace_member", new_member=new_member, workspace=workspace)
+
             return redirect(
-                url_for(
-                    "workspaces.workspace_members",
-                    workspace_id=workspace.id,
-                    newMemberName=new_member.user_name,
-                )
+                url_for("workspaces.workspace_members", workspace_id=workspace.id)
             )
         except AlreadyExistsError:
             return render_template(
@@ -107,6 +105,10 @@ def view_member(workspace_id, member_id):
     form = EditMemberForm(workspace_role=member.role_name)
     editable = g.current_user == member.user
     can_revoke_access = Workspaces.can_revoke_access_for(workspace, member)
+
+    if member.has_dod_id_error:
+        flash("workspace_member_dod_id_error")
+
     return render_template(
         "workspaces/members/edit.html",
         workspace=workspace,
@@ -155,13 +157,14 @@ def update_member(workspace_id, member_id):
             g.current_user, workspace, member, ids_and_roles
         )
 
+        flash(
+            "workspace_role_updated",
+            member_name=member.user_name,
+            updated_role=new_role_name,
+        )
+
         return redirect(
-            url_for(
-                "workspaces.workspace_members",
-                workspace_id=workspace.id,
-                memberName=member.user_name,
-                updatedRole=new_role_name,
-            )
+            url_for("workspaces.workspace_members", workspace_id=workspace.id)
         )
     else:
         return render_template(
@@ -177,10 +180,5 @@ def update_member(workspace_id, member_id):
 )
 def revoke_access(workspace_id, member_id):
     revoked_role = Workspaces.revoke_access(g.current_user, workspace_id, member_id)
-    return redirect(
-        url_for(
-            "workspaces.workspace_members",
-            workspace_id=workspace_id,
-            revokedMemberName=revoked_role.user_name,
-        )
-    )
+    flash("revoked_workspace_access", member_name=revoked_role.user.full_name)
+    return redirect(url_for("workspaces.workspace_members", workspace_id=workspace_id))

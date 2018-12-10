@@ -1,7 +1,6 @@
 {% extends "workspaces/base.html" %}
 
 {% from "components/empty_state.html" import EmptyState %}
-{% from "components/alert.html" import Alert %}
 {% from "components/icon.html" import Icon %}
 
 {% block workspace_content %}
@@ -21,53 +20,7 @@
 
 {% else %}
 
-{% if new_member %}
-    {% set message -%}
-      <p>{{ new_member.user_name }} was successfully invited via email to this workspace. They do not yet have access to any environments.</p>
-      <p><a href="{{ url_for('workspaces.update_member', workspace_id=workspace.id, member_id=new_member.user_id) }}">Add environment access.</a></p>
-    {%- endset %}
-
-  {{ Alert('Member added successfully',
-    message=message,
-    level='success'
-  ) }}
-{% endif %}
-
-{% if resent_invitation_to %}
-    {% set message -%}
-      <p>Successfully sent a new invitation to {{ resent_invitation_to }}.</p>
-    {%- endset %}
-
-  {{ Alert('Invitation resent',
-    message=message,
-    level='success'
-  ) }}
-{% endif %}
-
-{% if revoked_member_name %}
-    {% set message -%}
-      <p>Removed {{ revoked_member_name }} from this workspace.</p>
-    {%- endset %}
-
-  {{ Alert('Removed workspace access',
-    message=message,
-    level='success'
-  ) }}
-{% endif %}
-
-{% set member_name = request.args.get("memberName") %}
-{% set updated_role = request.args.get("updatedRole") %}
-{% if updated_role %}
-    {% set message -%}
-      <p>{{ member_name }}'s role  was successfully updated to {{ updated_role }}</p>
-    {%- endset %}
-
-  {{ Alert('Workspace role updated successfully',
-    message=message,
-    level='success'
-  ) }}
-{% endif %}
-
+{% include "fragments/flash.html" %}
 
 <members-list
   inline-template

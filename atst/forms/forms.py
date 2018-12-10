@@ -1,6 +1,8 @@
 from flask_wtf import FlaskForm
 from flask import current_app, request as http_request
 
+from atst.utils.flash import formatted_flash as flash
+
 
 class ValidatedForm(FlaskForm):
     def perform_extra_validation(self, *args, **kwargs):
@@ -13,6 +15,12 @@ class ValidatedForm(FlaskForm):
         _data = super().data
         _data.pop("csrf_token", None)
         return _data
+
+    def validate(self, *args, **kwargs):
+        valid = super().validate(*args, **kwargs)
+        if not valid:
+            flash("form_errors")
+        return valid
 
 
 class CacheableForm(ValidatedForm):
