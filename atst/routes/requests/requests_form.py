@@ -112,7 +112,6 @@ def requests_update(screen=1, request_id=None):
             where = "/requests"
         return redirect(where)
     else:
-        flash("form_errors")
         rerender_args = dict(
             f=jedi_flow.form,
             data=post_data,

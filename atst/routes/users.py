@@ -29,7 +29,5 @@ def update_user():
         flash("user_updated")
         if next_url:
             return redirect(next_url)
-    else:
-        flash("form_errors")
 
     return render_template("user/edit.html", form=form, user=user, next=next_url)

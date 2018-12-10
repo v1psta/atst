@@ -13,7 +13,6 @@ from atst.domain.requests import Requests
 from atst.domain.exceptions import NotFoundError
 from atst.forms.ccpo_review import CCPOReviewForm
 from atst.forms.internal_comment import InternalCommentForm
-from atst.utils.flash import formatted_flash as flash
 
 
 def map_ccpo_authorizing(user):
@@ -64,7 +63,6 @@ def submit_approval(request_id):
 
         return redirect(url_for("requests.requests_index"))
     else:
-        flash("form_errors")
         return render_approval(request, form)
 
 
@@ -96,5 +94,4 @@ def create_internal_comment(request_id):
             url_for("requests.approval", request_id=request_id, _anchor="ccpo-notes")
         )
     else:
-        flash("form_errors")
         return render_approval(request, internal_comment_form=form)

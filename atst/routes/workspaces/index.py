@@ -8,7 +8,6 @@ from atst.domain.workspaces import Workspaces
 from atst.forms.workspace import WorkspaceForm
 from atst.domain.authz import Authorization
 from atst.models.permissions import Permissions
-from atst.utils.flash import formatted_flash as flash
 
 
 @workspaces_bp.route("/workspaces")
@@ -34,7 +33,6 @@ def edit_workspace(workspace_id):
             url_for("workspaces.workspace_projects", workspace_id=workspace.id)
         )
     else:
-        flash("form_errors")
         return render_template("workspaces/edit.html", form=form, workspace=workspace)
 
 
