@@ -108,11 +108,11 @@
     </div>
   </form>
 
-  <div class='fixed-table-wrapper'>
+  <div class='responsive-table-wrapper'>
     <table v-if='searchedList && searchedList.length'>
       <thead>
         <tr>
-          <th v-for="col in getColumns()" @click="updateSort(col.displayName)" :width="col.width" :class="col.class" scope="col">
+          <th v-cloak v-for="col in getColumns()" @click="updateSort(col.displayName)" :width="col.width" :class="col.class" scope="col">
             !{ col.displayName }
             <span v-if="col.displayName === sortInfo.columnName && sortInfo.isAscending">
               {{ Icon("caret_down") }}
