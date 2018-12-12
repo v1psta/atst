@@ -54,7 +54,7 @@
           {% elif actions is iterable %}
 
             {% for action in actions %}
-              <a href={{ action["href"] }} class='icon-link'>
+              <a href='{{ action["href"] }}' class='icon-link'>
                 {% if 'icon' in action %}{{ Icon(action["icon"]) }}{% endif %}
                 <span>{{ action["label"] }}</span>
               </a>
