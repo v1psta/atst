@@ -31,44 +31,46 @@ Vue.use(VTooltip)
 
 Vue.mixin(Modal)
 
-const app = new Vue({
-  el: '#app-root',
-  components: {
-    toggler,
-    optionsinput,
-    textinput,
-    checkboxinput,
-    DetailsOfUse,
-    poc,
-    financial,
-    NewProject,
-    selector,
-    BudgetChart,
-    SpendTable,
-    CcpoApproval,
-    MembersList,
-    LocalDatetime,
-    EditEnvironmentRole,
-    EditProjectRoles,
-    RequestsList,
-    ConfirmationPopover,
-  },
+setTimeout(() => {
+  const app = new Vue({
+    el: '#app-root',
+    components: {
+      toggler,
+      optionsinput,
+      textinput,
+      checkboxinput,
+      DetailsOfUse,
+      poc,
+      financial,
+      NewProject,
+      selector,
+      BudgetChart,
+      SpendTable,
+      CcpoApproval,
+      MembersList,
+      LocalDatetime,
+      EditEnvironmentRole,
+      EditProjectRoles,
+      RequestsList,
+      ConfirmationPopover,
+    },
 
-  mounted: function() {
-    this.$on('modalOpen', isOpen => {
-      if (isOpen) {
-        document.body.className += ' modal-open'
-      } else {
-        document.body.className = document.body.className.replace(' modal-open', '')
+    mounted: function() {
+      this.$on('modalOpen', isOpen => {
+        if (isOpen) {
+          document.body.className += ' modal-open'
+        } else {
+          document.body.className = document.body.className.replace(' modal-open', '')
+        }
+      })
+
+      const modalOpen = document.querySelector("#modalOpen")
+
+      if (modalOpen) {
+        const modal = modalOpen.getAttribute("data-modal")
+        this.openModal(modal)
       }
-    })
-
-    const modalOpen = document.querySelector("#modalOpen")
-
-    if (modalOpen) {
-      const modal = modalOpen.getAttribute("data-modal")
-      this.openModal(modal)
-    }
-  },
-  delimiters: ['!{', '}']
-})
+    },
+    delimiters: ['!{', '}']
+  })
+}, 10000)
