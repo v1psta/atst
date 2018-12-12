@@ -34,8 +34,8 @@ class Workspace(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
         return len(self.users)
 
     @property
-    def task_order(self):
-        return self.request.task_order
+    def legacy_task_order(self):
+        return self.request.legacy_task_order
 
     @property
     def members(self):

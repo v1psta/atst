@@ -23,7 +23,7 @@ def fv_extended(_http_request):
 class FinancialVerification(object):
     def __init__(self, request):
         self.request = request.latest_revision
-        self.task_order = request.task_order
+        self.legacy_task_order = request.legacy_task_order
 
 
 class FinancialVerificationBase(object):
@@ -33,14 +33,16 @@ class FinancialVerificationBase(object):
         form = FinancialVerificationForm(obj=fv, formdata=_formdata)
 
         if not form.has_pdf_upload:
-            if isinstance(form.task_order.pdf.data, Attachment):
-                form.task_order.pdf.data = form.task_order.pdf.data.filename
+            if isinstance(form.legacy_task_order.pdf.data, Attachment):
+                form.legacy_task_order.pdf.data = (
+                    form.legacy_task_order.pdf.data.filename
+                )
             else:
                 try:
                     attachment = Attachment.get_for_resource(
-                        "task_order", self.request.id
+                        "legacy_task_order", self.request.id
                     )
-                    form.task_order.pdf.data = attachment.filename
+                    form.legacy_task_order.pdf.data = attachment.filename
                 except NotFoundError:
                     pass
 
@@ -50,38 +52,40 @@ class FinancialVerificationBase(object):
         attachment = None
         if is_extended:
             attachment = None
-            if isinstance(form.task_order.pdf.data, FileStorage):
-                Attachment.delete_for_resource("task_order", self.request.id)
+            if isinstance(form.legacy_task_order.pdf.data, FileStorage):
+                Attachment.delete_for_resource("legacy_task_order", self.request.id)
                 attachment = Attachment.attach(
-                    form.task_order.pdf.data, "task_order", self.request.id
+                    form.legacy_task_order.pdf.data,
+                    "legacy_task_order",
+                    self.request.id,
                 )
-            elif isinstance(form.task_order.pdf.data, str):
+            elif isinstance(form.legacy_task_order.pdf.data, str):
                 try:
                     attachment = Attachment.get_for_resource(
-                        "task_order", self.request.id
+                        "legacy_task_order", self.request.id
                     )
                 except NotFoundError:
                     pass
 
             if attachment:
-                form.task_order.pdf.data = attachment.filename
+                form.legacy_task_order.pdf.data = attachment.filename
 
         return attachment
 
     def _try_create_task_order(self, form, attachment, is_extended):
-        task_order_number = form.task_order.number.data
+        task_order_number = form.legacy_task_order.number.data
         if not task_order_number:
             return None
 
-        task_order_data = form.task_order.data
+        task_order_data = form.legacy_task_order.data
 
         if attachment:
             task_order_data["pdf"] = attachment
 
         try:
-            task_order = TaskOrders.get(task_order_number)
-            task_order = TaskOrders.update(task_order, task_order_data)
-            return task_order
+            legacy_task_order = TaskOrders.get(task_order_number)
+            legacy_task_order = TaskOrders.update(legacy_task_order, task_order_data)
+            return legacy_task_order
         except NotFoundError:
             pass
 
@@ -142,14 +146,16 @@ class UpdateFinancialVerification(FinancialVerificationBase):
             should_submit = False
 
         if not self.is_extended and not self.task_order_validator.validate(
-            form.task_order.number
+            form.legacy_task_order.number
         ):
             should_submit = False
 
         if should_update:
-            task_order = self._try_create_task_order(form, attachment, self.is_extended)
+            legacy_task_order = self._try_create_task_order(
+                form, attachment, self.is_extended
+            )
             updated_request = Requests.update_financial_verification(
-                self.request.id, form.request.data, task_order=task_order
+                self.request.id, form.request.data, legacy_task_order=legacy_task_order
             )
             if should_submit:
                 return Requests.submit_financial_verification(updated_request)
@@ -177,9 +183,11 @@ class SaveFinancialVerificationDraft(FinancialVerificationBase):
     def execute(self):
         form = self._get_form(self.request, self.is_extended, self.fv_data)
         attachment = self._process_attachment(self.is_extended, form)
-        task_order = self._try_create_task_order(form, attachment, self.is_extended)
+        legacy_task_order = self._try_create_task_order(
+            form, attachment, self.is_extended
+        )
         updated_request = Requests.update_financial_verification(
-            self.request.id, form.request.data, task_order=task_order
+            self.request.id, form.request.data, legacy_task_order=legacy_task_order
         )
 
         return updated_request
@@ -237,7 +245,7 @@ def update_financial_verification(request_id):
             extended=is_extended,
         )
 
-    if updated_request.task_order.verified:
+    if updated_request.legacy_task_order.verified:
         workspace = Requests.auto_approve_and_create_workspace(updated_request)
         flash("new_workspace")
         return redirect(url_for("workspaces.new_project", workspace_id=workspace.id))

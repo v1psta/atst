@@ -122,8 +122,8 @@ class RequestFactory(Base):
 
     @classmethod
     def _adjust_kwargs(cls, **kwargs):
-        if kwargs.pop("with_task_order", False) and "task_order" not in kwargs:
-            kwargs["task_order"] = LegacyTaskOrderFactory.build()
+        if kwargs.pop("with_task_order", False) and "legacy_task_order" not in kwargs:
+            kwargs["legacy_task_order"] = LegacyTaskOrderFactory.build()
         return kwargs
 
     @classmethod

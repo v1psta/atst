@@ -9,7 +9,7 @@ def test_as_dictionary():
 
 
 def test_budget():
-    task_order = LegacyTaskOrderFactory.create(
+    legacy_task_order = LegacyTaskOrderFactory.create(
         clin_0001=500,
         clin_0003=200,
         clin_1001=None,
@@ -17,4 +17,4 @@ def test_budget():
         clin_2001=None,
         clin_2003=None,
     )
-    assert task_order.budget == 700
+    assert legacy_task_order.budget == 700

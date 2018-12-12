@@ -10,9 +10,11 @@ def test_can_show_financial_data(client, user_session):
     user = UserFactory.create()
     user_session(user)
 
-    task_order = LegacyTaskOrderFactory.create()
+    legacy_task_order = LegacyTaskOrderFactory.create()
     request = RequestFactory.create_with_status(
-        status=RequestStatus.PENDING_CCPO_APPROVAL, task_order=task_order, creator=user
+        status=RequestStatus.PENDING_CCPO_APPROVAL,
+        legacy_task_order=legacy_task_order,
+        creator=user,
     )
     response = client.get(
         url_for("requests.view_request_details", request_id=request.id)

@@ -34,7 +34,7 @@ export default {
 
   computed: {
     showTaskOrderUpload: function() {
-      return !this.initialData.task_order.pdf || this.shouldForceShowTaskOrder
+      return !this.initialData.legacy_task_order.pdf || this.shouldForceShowTaskOrder
     }
   },
 

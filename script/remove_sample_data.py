@@ -57,7 +57,7 @@ def create_demo_workspace(name, data):
         return
 
     request = RequestFactory.build(creator=workspace_owner)
-    request.task_order = LegacyTaskOrderFactory.build()
+    request.legacy_task_order = LegacyTaskOrderFactory.build()
     request = Requests.update(
         request.id, {"financial_verification": RequestFactory.mock_financial_data()}
     )

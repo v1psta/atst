@@ -15,16 +15,16 @@ class TaskOrders(object):
     @classmethod
     def get(cls, order_number):
         try:
-            task_order = (
+            legacy_task_order = (
                 db.session.query(LegacyTaskOrder).filter_by(number=order_number).one()
             )
         except NoResultFound:
             if TaskOrders._client():
-                task_order = TaskOrders.get_from_eda(order_number)
+                legacy_task_order = TaskOrders.get_from_eda(order_number)
             else:
-                raise NotFoundError("task_order")
+                raise NotFoundError("legacy_task_order")
 
-        return task_order
+        return legacy_task_order
 
     @classmethod
     def get_from_eda(cls, order_number):
@@ -36,25 +36,27 @@ class TaskOrders(object):
             )
 
         else:
-            raise NotFoundError("task_order")
+            raise NotFoundError("legacy_task_order")
 
     @classmethod
     def create(cls, source=Source.MANUAL, **kwargs):
         to_data = {k: v for k, v in kwargs.items() if v not in ["", None]}
-        task_order = LegacyTaskOrder(source=source, **to_data)
+        legacy_task_order = LegacyTaskOrder(source=source, **to_data)
 
-        db.session.add(task_order)
+        db.session.add(legacy_task_order)
         db.session.commit()
 
-        return task_order
+        return legacy_task_order
 
     @classmethod
     def _client(cls):
         return app.eda_client
 
     @classmethod
-    def update(cls, task_order, dct):
-        updated = update_obj(task_order, dct, ignore_vals=lambda v: v in ["", None])
+    def update(cls, legacy_task_order, dct):
+        updated = update_obj(
+            legacy_task_order, dct, ignore_vals=lambda v: v in ["", None]
+        )
         db.session.add(updated)
         db.session.commit()
         return updated

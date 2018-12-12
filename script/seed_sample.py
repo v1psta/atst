@@ -102,7 +102,7 @@ def seed_db():
             requests.append(request)
 
         request = requests[0]
-        request.task_order = LegacyTaskOrderFactory.build()
+        request.legacy_task_order = LegacyTaskOrderFactory.build()
         request = Requests.update(
             request.id, {"financial_verification": RequestFactory.mock_financial_data()}
         )

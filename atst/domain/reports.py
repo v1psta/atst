@@ -203,8 +203,8 @@ class Reports:
         if workspace.name in REPORT_FIXTURE_MAP:
             budget = REPORT_FIXTURE_MAP[workspace.name]["budget"]
             spent = _sum_monthly_spend(REPORT_FIXTURE_MAP[workspace.name]["monthly"])
-        elif workspace.request and workspace.request.task_order:
-            ws_to = workspace.request.task_order
+        elif workspace.request and workspace.request.legacy_task_order:
+            ws_to = workspace.request.legacy_task_order
             budget = ws_to.budget
             # spent will be derived from CSP data
             spent = 0
