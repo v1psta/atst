@@ -72,8 +72,11 @@ class Environments(object):
             environment = Environments.get(id_and_role["id"])
 
             if new_role is None:
-                EnvironmentRoles.delete(workspace_role.user.id, environment.id)
-                updated = True
+                role_deleted = EnvironmentRoles.delete(
+                    workspace_role.user.id, environment.id
+                )
+                if role_deleted:
+                    updated = True
             else:
                 env_role = EnvironmentRoles.get(
                     workspace_role.user.id, id_and_role["id"]
