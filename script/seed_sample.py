@@ -14,7 +14,7 @@ from atst.domain.projects import Projects
 from atst.domain.workspace_roles import WorkspaceRoles
 from atst.models.invitation import Status as InvitationStatus
 from atst.domain.exceptions import AlreadyExistsError
-from tests.factories import RequestFactory, TaskOrderFactory, InvitationFactory
+from tests.factories import RequestFactory, LegacyTaskOrderFactory, InvitationFactory
 from atst.routes.dev import _DEV_USERS as DEV_USERS
 
 WORKSPACE_USERS = [
@@ -102,7 +102,7 @@ def seed_db():
             requests.append(request)
 
         request = requests[0]
-        request.task_order = TaskOrderFactory.build()
+        request.task_order = LegacyTaskOrderFactory.build()
         request = Requests.update(
             request.id, {"financial_verification": RequestFactory.mock_financial_data()}
         )

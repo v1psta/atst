@@ -1,12 +1,12 @@
 from atst.domain.reports import Reports
 
-from tests.factories import RequestFactory, TaskOrderFactory, WorkspaceFactory
+from tests.factories import RequestFactory, LegacyTaskOrderFactory, WorkspaceFactory
 
 CLIN_NUMS = ["0001", "0003", "1001", "1003", "2001", "2003"]
 
 
 def test_workspace_totals():
-    task_order = TaskOrderFactory.create()
+    task_order = LegacyTaskOrderFactory.create()
 
     for num in CLIN_NUMS:
         setattr(task_order, "clin_{}".format(num), 200)

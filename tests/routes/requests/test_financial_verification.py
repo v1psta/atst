@@ -11,7 +11,7 @@ from atst.routes.requests.financial_verification import (
 )
 
 from tests.mocks import MOCK_VALID_PE_ID
-from tests.factories import RequestFactory, UserFactory, TaskOrderFactory
+from tests.factories import RequestFactory, UserFactory, LegacyTaskOrderFactory
 from atst.forms.exceptions import FormValidationError
 from atst.domain.requests.financial_verification import (
     PENumberValidator,
@@ -525,7 +525,7 @@ def test_always_derives_pdf_filename(fv_data, e_fv_data, pdf_upload):
     attachment = Attachment.attach(
         pdf_upload, resource="task_order", resource_id=request_one.id
     )
-    task_order = TaskOrderFactory.create(pdf=attachment)
+    task_order = LegacyTaskOrderFactory.create(pdf=attachment)
     request_two = RequestFactory.create(creator=user, task_order=task_order)
 
     form_one = GetFinancialVerificationForm(

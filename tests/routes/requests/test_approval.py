@@ -7,7 +7,7 @@ from atst.domain.roles import Roles
 
 from tests.factories import (
     RequestFactory,
-    TaskOrderFactory,
+    LegacyTaskOrderFactory,
     UserFactory,
     RequestReviewFactory,
     RequestStatusEventFactory,
@@ -46,7 +46,7 @@ def test_non_ccpo_cannot_view_approval(user_session, client):
 
 
 def prepare_request_pending_approval(creator, pdf_attachment=None):
-    task_order = TaskOrderFactory.create(number="abc123", pdf=pdf_attachment)
+    task_order = LegacyTaskOrderFactory.create(number="abc123", pdf=pdf_attachment)
     return RequestFactory.create_with_status(
         status=RequestStatus.PENDING_CCPO_APPROVAL,
         task_order=task_order,
@@ -86,7 +86,7 @@ def test_task_order_download(app, client, user_session, pdf_upload):
     user_session(user)
 
     attachment = Attachment.attach(pdf_upload)
-    task_order = TaskOrderFactory.create(number="abc123", pdf=attachment)
+    task_order = LegacyTaskOrderFactory.create(number="abc123", pdf=attachment)
     request = RequestFactory.create(task_order=task_order, creator=user)
 
     # ensure that real data for pdf upload has been flushed to disk

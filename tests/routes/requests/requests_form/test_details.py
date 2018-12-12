@@ -3,14 +3,14 @@ from flask import url_for
 
 from atst.models.request_status_event import RequestStatus
 
-from tests.factories import RequestFactory, TaskOrderFactory, UserFactory
+from tests.factories import RequestFactory, LegacyTaskOrderFactory, UserFactory
 
 
 def test_can_show_financial_data(client, user_session):
     user = UserFactory.create()
     user_session(user)
 
-    task_order = TaskOrderFactory.create()
+    task_order = LegacyTaskOrderFactory.create()
     request = RequestFactory.create_with_status(
         status=RequestStatus.PENDING_CCPO_APPROVAL, task_order=task_order, creator=user
     )

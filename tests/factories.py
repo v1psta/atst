@@ -13,7 +13,7 @@ from atst.models.request_review import RequestReview
 from atst.models.request_status_event import RequestStatusEvent, RequestStatus
 from atst.models.pe_number import PENumber
 from atst.models.project import Project
-from atst.models.task_order import TaskOrder, Source, FundingType
+from atst.models.legacy_task_order import LegacyTaskOrder, Source, FundingType
 from atst.models.user import User
 from atst.models.role import Role
 from atst.models.workspace import Workspace
@@ -123,7 +123,7 @@ class RequestFactory(Base):
     @classmethod
     def _adjust_kwargs(cls, **kwargs):
         if kwargs.pop("with_task_order", False) and "task_order" not in kwargs:
-            kwargs["task_order"] = TaskOrderFactory.build()
+            kwargs["task_order"] = LegacyTaskOrderFactory.build()
         return kwargs
 
     @classmethod
@@ -212,9 +212,9 @@ class PENumberFactory(Base):
         model = PENumber
 
 
-class TaskOrderFactory(Base):
+class LegacyTaskOrderFactory(Base):
     class Meta:
-        model = TaskOrder
+        model = LegacyTaskOrder
 
     source = Source.MANUAL
     funding_type = FundingType.PROC

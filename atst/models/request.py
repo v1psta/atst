@@ -6,7 +6,7 @@ from atst.models import Base, types, mixins
 from atst.models.request_status_event import RequestStatus
 from atst.utils import first_or_none
 from atst.models.request_revision import RequestRevision
-from atst.models.task_order import Source as TaskOrderSource
+from atst.models.legacy_task_order import Source as TaskOrderSource
 
 
 def map_properties_to_dict(properties, instance):
@@ -39,8 +39,8 @@ class Request(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     user_id = Column(ForeignKey("users.id"), nullable=False)
     creator = relationship("User", backref="owned_requests")
 
-    task_order_id = Column(ForeignKey("task_orders.id"))
-    task_order = relationship("TaskOrder")
+    task_order_id = Column(ForeignKey("legacy_task_orders.id"))
+    task_order = relationship("LegacyTaskOrder")
 
     revisions = relationship(
         "RequestRevision", back_populates="request", order_by="RequestRevision.sequence"

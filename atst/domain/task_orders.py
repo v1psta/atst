@@ -2,19 +2,21 @@ from sqlalchemy.orm.exc import NoResultFound
 from flask import current_app as app
 
 from atst.database import db
-from atst.models.task_order import TaskOrder, Source, FundingType
+from atst.models.legacy_task_order import LegacyTaskOrder, Source, FundingType
 from .exceptions import NotFoundError
 from atst.utils import update_obj
 
 
 class TaskOrders(object):
-    TASK_ORDER_DATA = [col.name for col in TaskOrder.__table__.c if col.name != "id"]
+    TASK_ORDER_DATA = [
+        col.name for col in LegacyTaskOrder.__table__.c if col.name != "id"
+    ]
 
     @classmethod
     def get(cls, order_number):
         try:
             task_order = (
-                db.session.query(TaskOrder).filter_by(number=order_number).one()
+                db.session.query(LegacyTaskOrder).filter_by(number=order_number).one()
             )
         except NoResultFound:
             if TaskOrders._client():
@@ -39,7 +41,7 @@ class TaskOrders(object):
     @classmethod
     def create(cls, source=Source.MANUAL, **kwargs):
         to_data = {k: v for k, v in kwargs.items() if v not in ["", None]}
-        task_order = TaskOrder(source=source, **to_data)
+        task_order = LegacyTaskOrder(source=source, **to_data)
 
         db.session.add(task_order)
         db.session.commit()

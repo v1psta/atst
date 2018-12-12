@@ -4,11 +4,11 @@ from atst.domain.exceptions import NotFoundError
 from atst.domain.task_orders import TaskOrders
 from atst.eda_client import MockEDAClient
 
-from tests.factories import TaskOrderFactory
+from tests.factories import LegacyTaskOrderFactory
 
 
 def test_can_get_task_order():
-    new_to = TaskOrderFactory.create(number="0101969F")
+    new_to = LegacyTaskOrderFactory.create(number="0101969F")
     to = TaskOrders.get(new_to.number)
 
     assert to.id == to.id
