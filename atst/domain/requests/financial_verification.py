@@ -1,6 +1,6 @@
 import re
 
-from atst.domain.task_orders import TaskOrders
+from atst.domain.legacy_task_orders import LegacyTaskOrders
 from atst.domain.pe_numbers import PENumbers
 from atst.domain.exceptions import NotFoundError
 
@@ -63,7 +63,7 @@ class PENumberValidator(object):
 class TaskOrderNumberValidator(object):
     def validate(self, field):
         try:
-            TaskOrders.get(field.data)
+            LegacyTaskOrders.get(field.data)
         except NotFoundError:
             self._apply_error(field)
             return False

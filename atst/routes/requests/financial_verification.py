@@ -12,7 +12,7 @@ from atst.domain.requests.financial_verification import (
     TaskOrderNumberValidator,
 )
 from atst.models.attachment import Attachment
-from atst.domain.task_orders import TaskOrders
+from atst.domain.legacy_task_orders import LegacyTaskOrders
 from atst.utils.flash import formatted_flash as flash
 
 
@@ -83,18 +83,20 @@ class FinancialVerificationBase(object):
             task_order_data["pdf"] = attachment
 
         try:
-            legacy_task_order = TaskOrders.get(task_order_number)
-            legacy_task_order = TaskOrders.update(legacy_task_order, task_order_data)
+            legacy_task_order = LegacyTaskOrders.get(task_order_number)
+            legacy_task_order = LegacyTaskOrders.update(
+                legacy_task_order, task_order_data
+            )
             return legacy_task_order
         except NotFoundError:
             pass
 
         try:
-            return TaskOrders.get_from_eda(task_order_number)
+            return LegacyTaskOrders.get_from_eda(task_order_number)
         except NotFoundError:
             pass
 
-        return TaskOrders.create(**task_order_data)
+        return LegacyTaskOrders.create(**task_order_data)
 
     def _raise(self, form):
         form.reset()

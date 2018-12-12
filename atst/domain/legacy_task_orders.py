@@ -7,7 +7,7 @@ from .exceptions import NotFoundError
 from atst.utils import update_obj
 
 
-class TaskOrders(object):
+class LegacyTaskOrders(object):
     TASK_ORDER_DATA = [
         col.name for col in LegacyTaskOrder.__table__.c if col.name != "id"
     ]
@@ -19,8 +19,8 @@ class TaskOrders(object):
                 db.session.query(LegacyTaskOrder).filter_by(number=order_number).one()
             )
         except NoResultFound:
-            if TaskOrders._client():
-                legacy_task_order = TaskOrders.get_from_eda(order_number)
+            if LegacyTaskOrders._client():
+                legacy_task_order = LegacyTaskOrders.get_from_eda(order_number)
             else:
                 raise NotFoundError("legacy_task_order")
 
@@ -28,10 +28,10 @@ class TaskOrders(object):
 
     @classmethod
     def get_from_eda(cls, order_number):
-        to_data = TaskOrders._client().get_contract(order_number, status="y")
+        to_data = LegacyTaskOrders._client().get_contract(order_number, status="y")
         if to_data:
             # TODO: we need to determine exactly what we're getting and storing from the EDA client
-            return TaskOrders.create(
+            return LegacyTaskOrders.create(
                 source=Source.EDA, funding_type=FundingType.PROC, **to_data
             )
 
