@@ -92,7 +92,9 @@ class Environments(object):
                     updated = True
                     db.session.add(env_role)
 
-        db.session.commit()
+        if updated:
+            db.session.commit()
+
         return updated
 
     @classmethod
