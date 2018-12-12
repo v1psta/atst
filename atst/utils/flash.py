@@ -96,6 +96,11 @@ MESSAGES = {
         """,
         "category": "warning",
     },
+    "environment_access_changed": {
+        "title_template": "User access successfully changed.",
+        "message_template": "",
+        "category": "success",
+    },
 }
 
 

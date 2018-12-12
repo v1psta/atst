@@ -142,6 +142,7 @@ def test_update_member_environment_role(client, user_session):
     )
     assert response.status_code == 200
     assert b"role updated successfully" not in response.data
+    assert b"access successfully changed" in response.data
     assert EnvironmentRoles.get(user.id, env1_id).role == "security_auditor"
     assert EnvironmentRoles.get(user.id, env2_id).role == "devops"
 
@@ -169,6 +170,7 @@ def test_update_member_environment_role_with_no_data(client, user_session):
         follow_redirects=True,
     )
     assert response.status_code == 200
+    assert b"access successfully changed" not in response.data
     assert EnvironmentRoles.get(user.id, env1_id).role == "developer"
 
 

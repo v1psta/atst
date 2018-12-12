@@ -158,9 +158,12 @@ def update_member(workspace_id, member_id):
                 updated_role=new_role_name,
             )
 
-        Environments.update_environment_roles(
+        updated_roles = Environments.update_environment_roles(
             g.current_user, workspace, member, ids_and_roles
         )
+        if updated_roles:
+            flash("environment_access_changed")
+
         return redirect(
             url_for("workspaces.workspace_members", workspace_id=workspace.id)
         )

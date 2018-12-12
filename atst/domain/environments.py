@@ -65,6 +65,7 @@ class Environments(object):
             Permissions.ADD_AND_ASSIGN_CSP_ROLES,
             "assign environment roles",
         )
+        updated = False
 
         for id_and_role in ids_and_roles:
             new_role = id_and_role["role"]
@@ -72,19 +73,24 @@ class Environments(object):
 
             if new_role is None:
                 EnvironmentRoles.delete(workspace_role.user.id, environment.id)
+                updated = True
             else:
                 env_role = EnvironmentRoles.get(
                     workspace_role.user.id, id_and_role["id"]
                 )
-                if env_role:
+                if env_role and env_role.role != new_role:
                     env_role.role = new_role
-                else:
+                    updated = True
+                    db.session.add(env_role)
+                elif not env_role:
                     env_role = EnvironmentRole(
                         user=workspace_role.user, environment=environment, role=new_role
                     )
-                db.session.add(env_role)
+                    updated = True
+                    db.session.add(env_role)
 
         db.session.commit()
+        return updated
 
     @classmethod
     def revoke_access(cls, user, environment, target_user):
