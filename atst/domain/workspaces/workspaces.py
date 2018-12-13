@@ -16,7 +16,16 @@ class WorkspaceError(Exception):
 
 class Workspaces(object):
     @classmethod
-    def create(cls, request, name=None):
+    def create(cls, user, name):
+        workspace = WorkspacesQuery.create(name=name)
+        Workspaces._create_workspace_role(
+            user, workspace, "owner", status=WorkspaceRoleStatus.ACTIVE
+        )
+        WorkspacesQuery.add_and_commit(workspace)
+        return workspace
+
+    @classmethod
+    def create_from_request(cls, request, name=None):
         name = name or request.displayname
         workspace = WorkspacesQuery.create(request=request, name=name)
         Workspaces._create_workspace_role(

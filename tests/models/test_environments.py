@@ -8,7 +8,7 @@ def test_add_user_to_environment():
     owner = UserFactory.create()
     developer = UserFactory.from_atat_role("developer")
 
-    workspace = Workspaces.create(RequestFactory.create(creator=owner))
+    workspace = Workspaces.create_from_request(RequestFactory.create(creator=owner))
     project = Projects.create(
         owner, workspace, "my test project", "It's mine.", ["dev", "staging", "prod"]
     )

@@ -14,6 +14,7 @@ from atst.models.request_status_event import RequestStatusEvent, RequestStatus
 from atst.models.pe_number import PENumber
 from atst.models.project import Project
 from atst.models.legacy_task_order import LegacyTaskOrder, Source, FundingType
+from atst.models.task_order import TaskOrder
 from atst.models.user import User
 from atst.models.role import Role
 from atst.models.workspace import Workspace
@@ -345,3 +346,15 @@ class InvitationFactory(Base):
     email = factory.Faker("email")
     status = InvitationStatus.PENDING
     expiration_time = Invitations.current_expiration_time()
+
+
+class TaskOrderFactory(Base):
+    class Meta:
+        model = TaskOrder
+
+    clin_0001 = random.randrange(100, 100_000)
+    clin_0003 = random.randrange(100, 100_000)
+    clin_1001 = random.randrange(100, 100_000)
+    clin_1003 = random.randrange(100, 100_000)
+    clin_2001 = random.randrange(100, 100_000)
+    clin_2003 = random.randrange(100, 100_000)

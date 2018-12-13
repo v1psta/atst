@@ -28,12 +28,12 @@ def request_(workspace_owner):
 
 @pytest.fixture(scope="function")
 def workspace(request_):
-    workspace = Workspaces.create(request_)
+    workspace = Workspaces.create_from_request(request_)
     return workspace
 
 
 def test_can_create_workspace(request_):
-    workspace = Workspaces.create(request_, name="frugal-whale")
+    workspace = Workspaces.create_from_request(request_, name="frugal-whale")
     assert workspace.name == "frugal-whale"
 
 
@@ -163,7 +163,9 @@ def test_need_permission_to_update_workspace_role_role(workspace, workspace_owne
 
 def test_owner_can_view_workspace_members(workspace, workspace_owner):
     workspace_owner = UserFactory.create()
-    workspace = Workspaces.create(RequestFactory.create(creator=workspace_owner))
+    workspace = Workspaces.create_from_request(
+        RequestFactory.create(creator=workspace_owner)
+    )
     workspace = Workspaces.get_with_members(workspace_owner, workspace.id)
 
     assert workspace
@@ -256,7 +258,7 @@ def test_for_user_returns_active_workspaces_for_user(workspace, workspace_owner)
     WorkspaceRoleFactory.create(
         user=bob, workspace=workspace, status=WorkspaceRoleStatus.ACTIVE
     )
-    Workspaces.create(RequestFactory.create())
+    Workspaces.create_from_request(RequestFactory.create())
 
     bobs_workspaces = Workspaces.for_user(bob)
 
@@ -266,7 +268,7 @@ def test_for_user_returns_active_workspaces_for_user(workspace, workspace_owner)
 def test_for_user_does_not_return_inactive_workspaces(workspace, workspace_owner):
     bob = UserFactory.from_atat_role("default")
     Workspaces.add_member(workspace, bob, "developer")
-    Workspaces.create(RequestFactory.create())
+    Workspaces.create_from_request(RequestFactory.create())
     bobs_workspaces = Workspaces.for_user(bob)
 
     assert len(bobs_workspaces) == 0
@@ -274,7 +276,7 @@ def test_for_user_does_not_return_inactive_workspaces(workspace, workspace_owner
 
 def test_for_user_returns_all_workspaces_for_ccpo(workspace, workspace_owner):
     sam = UserFactory.from_atat_role("ccpo")
-    Workspaces.create(RequestFactory.create())
+    Workspaces.create_from_request(RequestFactory.create())
 
     sams_workspaces = Workspaces.for_user(sam)
     assert len(sams_workspaces) == 2
@@ -282,7 +284,9 @@ def test_for_user_returns_all_workspaces_for_ccpo(workspace, workspace_owner):
 
 def test_get_for_update_information():
     workspace_owner = UserFactory.create()
-    workspace = Workspaces.create(RequestFactory.create(creator=workspace_owner))
+    workspace = Workspaces.create_from_request(
+        RequestFactory.create(creator=workspace_owner)
+    )
     owner_ws = Workspaces.get_for_update_information(workspace_owner, workspace.id)
     assert workspace == owner_ws
 
@@ -300,8 +304,8 @@ def test_get_for_update_information():
 
 def test_can_create_workspaces_with_matching_names():
     workspace_name = "Great Workspace"
-    Workspaces.create(RequestFactory.create(), name=workspace_name)
-    Workspaces.create(RequestFactory.create(), name=workspace_name)
+    Workspaces.create_from_request(RequestFactory.create(), name=workspace_name)
+    Workspaces.create_from_request(RequestFactory.create(), name=workspace_name)
 
 
 def test_can_revoke_workspace_access():

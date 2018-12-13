@@ -14,6 +14,7 @@ from atst.filters import register_filters
 from atst.routes import bp
 from atst.routes.workspaces import workspaces_bp as workspace_routes
 from atst.routes.requests import requests_bp
+from atst.routes.task_orders import task_orders_bp
 from atst.routes.dev import bp as dev_routes
 from atst.routes.users import bp as user_routes
 from atst.routes.errors import make_error_pages
@@ -64,6 +65,7 @@ def make_app(config):
     app.register_blueprint(bp)
     app.register_blueprint(workspace_routes)
     app.register_blueprint(requests_bp)
+    app.register_blueprint(task_orders_bp)
     app.register_blueprint(user_routes)
     if ENV != "prod":
         app.register_blueprint(dev_routes)

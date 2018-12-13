@@ -19,3 +19,4 @@ from .request_review import RequestReview
 from .request_internal_comment import RequestInternalComment
 from .audit_event import AuditEvent
 from .invitation import Invitation
+from .task_order import TaskOrder

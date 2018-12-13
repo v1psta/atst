@@ -1,4 +1,4 @@
-from flask import Blueprint, request as http_request, g
+from flask import Blueprint, request as http_request, g, render_template
 
 workspaces_bp = Blueprint("workspaces", __name__)
 
@@ -6,6 +6,7 @@ from . import index
 from . import projects
 from . import members
 from . import invitations
+from . import new
 from atst.domain.exceptions import UnauthorizedError
 from atst.domain.workspaces import Workspaces
 from atst.domain.authz import Authorization
