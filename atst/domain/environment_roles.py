@@ -21,3 +21,6 @@ class EnvironmentRoles(object):
         if existing_env_role:
             db.session.delete(existing_env_role)
             db.session.commit()
+            return True
+        else:
+            return False

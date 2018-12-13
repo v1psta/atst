@@ -38,7 +38,7 @@ def test_update_environment_roles():
     ]
 
     workspace_role = workspace.members[0]
-    Environments.update_environment_roles(
+    assert Environments.update_environment_roles(
         owner, workspace, workspace_role, new_ids_and_roles
     )
     new_dev_env_role = EnvironmentRoles.get(workspace_role.user.id, dev_env.id)
@@ -89,7 +89,7 @@ def test_remove_environment_role():
     ]
 
     workspace_role = WorkspaceRoles.get(workspace.id, developer.id)
-    Environments.update_environment_roles(
+    assert Environments.update_environment_roles(
         owner, workspace, workspace_role, new_environment_roles
     )
 
@@ -97,6 +97,35 @@ def test_remove_environment_role():
     assert EnvironmentRoles.get(developer.id, now_ba).role == "billing_auditor"
     assert EnvironmentRoles.get(developer.id, now_none) is None
     assert EnvironmentRoles.get(developer.id, still_fa).role == "financial_auditor"
+
+
+def test_no_update_to_environment_roles():
+    owner = UserFactory.create()
+    developer = UserFactory.from_atat_role("developer")
+
+    workspace = WorkspaceFactory.create(
+        owner=owner,
+        members=[{"user": developer, "role_name": "developer"}],
+        projects=[
+            {
+                "name": "project1",
+                "environments": [
+                    {
+                        "name": "project1 dev",
+                        "members": [{"user": developer, "role_name": "devops"}],
+                    }
+                ],
+            }
+        ],
+    )
+
+    dev_env = workspace.projects[0].environments[0]
+    new_ids_and_roles = [{"id": dev_env.id, "role": "devops"}]
+
+    workspace_role = WorkspaceRoles.get(workspace.id, developer.id)
+    assert not Environments.update_environment_roles(
+        owner, workspace, workspace_role, new_ids_and_roles
+    )
 
 
 def test_get_scoped_environments(db):
