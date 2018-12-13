@@ -1,7 +1,7 @@
 """remove workspaces.name unique constraint
 
 Revision ID: 903d7c66ff1d
-Revises: 7958cca588a1
+Revises: 875841fac207
 Create Date: 2018-09-26 10:19:13.230064
 
 """
@@ -11,7 +11,7 @@ from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
 revision = '903d7c66ff1d'
-down_revision = '7958cca588a1'
+down_revision = '875841fac207'
 branch_labels = None
 depends_on = None
 
