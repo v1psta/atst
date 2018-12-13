@@ -7,9 +7,7 @@ Create Date: 2018-11-01 12:24:10.970963
 """
 from alembic import op
 import sqlalchemy as sa
-from atst.models.invitation import Status
 from enum import Enum
-
 
 # revision identifiers, used by Alembic.
 revision = 'e1081cf01780'
@@ -17,6 +15,13 @@ down_revision = 'a9d8c6b6221c'
 branch_labels = None
 depends_on = None
 
+
+class Status(Enum):
+    ACCEPTED = "accepted"
+    REVOKED = "revoked"
+    PENDING = "pending"
+    REJECTED_WRONG_USER = "rejected_wrong_user"
+    REJECTED_EXPIRED = "rejected_expired"
 
 def upgrade():
     conn = op.get_bind()
