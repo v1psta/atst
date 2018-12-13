@@ -102,10 +102,14 @@ def set_default_headers(app):
         response.headers["X-Frame-Options"] = "SAMEORIGIN"
         response.headers["X-XSS-Protection"] = "1; mode=block"
 
-        if ENV == 'dev':
-            response.headers["Content-Security-Policy"] = "default-src 'self' 'unsafe-eval'; connect-src *"
+        if ENV == "dev":
+            response.headers[
+                "Content-Security-Policy"
+            ] = "default-src 'self' 'unsafe-eval'; connect-src *"
         else:
-            response.headers["Content-Security-Policy"] = "default-src 'self' 'unsafe-eval'"
+            response.headers[
+                "Content-Security-Policy"
+            ] = "default-src 'self' 'unsafe-eval'"
 
         return response
 
