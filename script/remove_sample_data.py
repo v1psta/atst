@@ -31,7 +31,7 @@ from atst.domain.reports import MONTHLY_SPEND_AARDVARK, MONTHLY_SPEND_BELUGA
 from atst.domain.requests import Requests
 from atst.domain.users import Users
 from atst.domain.workspaces import Workspaces
-from tests.factories import RequestFactory, TaskOrderFactory
+from tests.factories import RequestFactory, LegacyTaskOrderFactory
 
 
 dod_ids = [
@@ -57,7 +57,7 @@ def create_demo_workspace(name, data):
         return
 
     request = RequestFactory.build(creator=workspace_owner)
-    request.task_order = TaskOrderFactory.build()
+    request.legacy_task_order = LegacyTaskOrderFactory.build()
     request = Requests.update(
         request.id, {"financial_verification": RequestFactory.mock_financial_data()}
     )

@@ -154,7 +154,7 @@
   </h2>
 
   <div>
-    {% if jedi_request.task_order.pdf %}
+    {% if jedi_request.legacy_task_order.pdf %}
         <a href="{{ url_for("requests.task_order_pdf_download", request_id=request_id)}}" download>
           Download the Task Order PDF
         </a>
@@ -164,29 +164,29 @@
   </div>
 
   <dl>
-    {{ DefinitionReviewField("Task Order Information Source", "task_order", "source", filter="getOptionLabel", filter_args=[task_order_sources]) }}
+    {{ DefinitionReviewField("Task Order Information Source", "legacy_task_order", "source", filter="getOptionLabel", filter_args=[task_order_sources]) }}
 
-    {{ DefinitionReviewField("Task Order Number", "task_order", "number") }}
+    {{ DefinitionReviewField("Task Order Number", "legacy_task_order", "number") }}
 
-    {{ DefinitionReviewField("What is the source of funding?", "task_order", "funding_type", filter="getOptionLabel", filter_args=[funding_types]) }}
+    {{ DefinitionReviewField("What is the source of funding?", "legacy_task_order", "funding_type", filter="getOptionLabel", filter_args=[funding_types]) }}
 
-    {% if data["task_order"] and data["task_order"]["funding_type"].value == "OTHER" %}
-      {{ DefinitionReviewField("If other, please specify", "task_order", "funding_type_other") }}
+    {% if data["legacy_task_order"] and data["legacy_task_order"]["funding_type"].value == "OTHER" %}
+      {{ DefinitionReviewField("If other, please specify", "legacy_task_order", "funding_type_other") }}
     {% endif %}
 
-    {{ DefinitionReviewField("Task Order Expiration Date", "task_order", "expiration_date") }}
+    {{ DefinitionReviewField("Task Order Expiration Date", "legacy_task_order", "expiration_date") }}
 
-    {{ DefinitionReviewField("<dl><dt>CLIN 0001</dt> - <dd>Unclassified IaaS and PaaS Amount</dd></dl>", "task_order", "clin_0001", filter="dollars") }}
+    {{ DefinitionReviewField("<dl><dt>CLIN 0001</dt> - <dd>Unclassified IaaS and PaaS Amount</dd></dl>", "legacy_task_order", "clin_0001", filter="dollars") }}
 
-    {{ DefinitionReviewField("<dl><dt>CLIN 0003</dt> - <dd>Unclassified Cloud Support Package</dd></dl>", "task_order", "clin_0003", filter="dollars") }}
+    {{ DefinitionReviewField("<dl><dt>CLIN 0003</dt> - <dd>Unclassified Cloud Support Package</dd></dl>", "legacy_task_order", "clin_0003", filter="dollars") }}
 
-    {{ DefinitionReviewField("<dl><dt>CLIN 1001</dt> - <dd>Unclassified IaaS and PaaS Amount <br> OPTION PERIOD 1</dd></dl>", "task_order", "clin_1001", filter="dollars") }}
+    {{ DefinitionReviewField("<dl><dt>CLIN 1001</dt> - <dd>Unclassified IaaS and PaaS Amount <br> OPTION PERIOD 1</dd></dl>", "legacy_task_order", "clin_1001", filter="dollars") }}
 
-    {{ DefinitionReviewField("<dl><dt>CLIN 1003</dt> - <dd>Unclassified Cloud Support Package <br> OPTION PERIOD 1</dd></dl>", "task_order", "clin_1003", filter="dollars") }}
+    {{ DefinitionReviewField("<dl><dt>CLIN 1003</dt> - <dd>Unclassified Cloud Support Package <br> OPTION PERIOD 1</dd></dl>", "legacy_task_order", "clin_1003", filter="dollars") }}
 
-    {{ DefinitionReviewField("<dl><dt>CLIN 2001</dt> - <dd>Unclassified IaaS and PaaS Amount <br> OPTION PERIOD 2</dd></dl>", "task_order", "clin_2001", filter="dollars") }}
+    {{ DefinitionReviewField("<dl><dt>CLIN 2001</dt> - <dd>Unclassified IaaS and PaaS Amount <br> OPTION PERIOD 2</dd></dl>", "legacy_task_order", "clin_2001", filter="dollars") }}
 
-    {{ DefinitionReviewField("<dl><dt>CLIN 2003</dt> - <dd>Unclassified Cloud Support Package <br> OPTION PERIOD 2</dd></dl>", "task_order", "clin_2003", filter="dollars") }}
+    {{ DefinitionReviewField("<dl><dt>CLIN 2003</dt> - <dd>Unclassified Cloud Support Package <br> OPTION PERIOD 2</dd></dl>", "legacy_task_order", "clin_2003", filter="dollars") }}
 
     {{ DefinitionReviewField("Unique Item Identifier (UII)s related to your application(s) if you already have them", "financial_verification", "uii_ids", filter="renderList") }}
 

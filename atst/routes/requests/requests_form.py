@@ -146,7 +146,7 @@ def view_request_details(request_id=None):
 
     data = request.body
     if request.has_financial_data:
-        data["task_order"] = request.task_order.to_dictionary()
+        data["legacy_task_order"] = request.legacy_task_order.to_dictionary()
 
     return render_template(
         "requests/details.html",

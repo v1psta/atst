@@ -46,10 +46,10 @@ def mixedContentToJson(value):
     """
     if (
         isinstance(value, dict)
-        and "task_order" in value
-        and hasattr(value["task_order"]["pdf"], "filename")
+        and "legacy_task_order" in value
+        and hasattr(value["legacy_task_order"]["pdf"], "filename")
     ):
-        value["task_order"]["pdf"] = value["task_order"]["pdf"].filename
+        value["legacy_task_order"]["pdf"] = value["legacy_task_order"]["pdf"].filename
     return app.jinja_env.filters["tojson"](value)
 
 

@@ -22,7 +22,7 @@ def map_ccpo_authorizing(user):
 def render_approval(request, form=None, internal_comment_form=None):
     data = request.body
     if request.has_financial_data:
-        data["task_order"] = request.task_order.to_dictionary()
+        data["legacy_task_order"] = request.legacy_task_order.to_dictionary()
 
     if not form:
         mo_data = map_ccpo_authorizing(g.current_user)
@@ -69,8 +69,8 @@ def submit_approval(request_id):
 @requests_bp.route("/requests/task_order_download/<string:request_id>", methods=["GET"])
 def task_order_pdf_download(request_id):
     request = Requests.get(g.current_user, request_id)
-    if request.task_order and request.task_order.pdf:
-        pdf = request.task_order.pdf
+    if request.legacy_task_order and request.legacy_task_order.pdf:
+        pdf = request.legacy_task_order.pdf
         generator = app.uploader.download_stream(pdf.object_name)
         return Response(
             generator,
@@ -81,7 +81,7 @@ def task_order_pdf_download(request_id):
         )
 
     else:
-        raise NotFoundError("task_order pdf")
+        raise NotFoundError("legacy_task_order pdf")
 
 
 @requests_bp.route("/requests/internal_comments/<string:request_id>", methods=["POST"])

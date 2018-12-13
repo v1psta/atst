@@ -11,7 +11,7 @@ from atst.routes.requests.financial_verification import (
 )
 
 from tests.mocks import MOCK_VALID_PE_ID
-from tests.factories import RequestFactory, UserFactory, TaskOrderFactory
+from tests.factories import RequestFactory, UserFactory, LegacyTaskOrderFactory
 from atst.forms.exceptions import FormValidationError
 from atst.domain.requests.financial_verification import (
     PENumberValidator,
@@ -26,7 +26,7 @@ from atst.domain.requests.query import RequestsQuery
 def fv_data():
     return {
         "request-pe_id": "123",
-        "task_order-number": MockEDAClient.MOCK_CONTRACT_NUMBER,
+        "legacy_task_order-number": MockEDAClient.MOCK_CONTRACT_NUMBER,
         "request-fname_co": "Contracting",
         "request-lname_co": "Officer",
         "request-email_co": "jane@mail.mil",
@@ -44,16 +44,18 @@ def fv_data():
 @pytest.fixture
 def e_fv_data(pdf_upload):
     return {
-        "task_order-funding_type": "RDTE",
-        "task_order-funding_type_other": "other",
-        "task_order-expiration_date": "1/1/{}".format(datetime.date.today().year + 1),
-        "task_order-clin_0001": "50000",
-        "task_order-clin_0003": "13000",
-        "task_order-clin_1001": "30000",
-        "task_order-clin_1003": "7000",
-        "task_order-clin_2001": "30000",
-        "task_order-clin_2003": "7000",
-        "task_order-pdf": pdf_upload,
+        "legacy_task_order-funding_type": "RDTE",
+        "legacy_task_order-funding_type_other": "other",
+        "legacy_task_order-expiration_date": "1/1/{}".format(
+            datetime.date.today().year + 1
+        ),
+        "legacy_task_order-clin_0001": "50000",
+        "legacy_task_order-clin_0003": "13000",
+        "legacy_task_order-clin_1001": "30000",
+        "legacy_task_order-clin_1003": "7000",
+        "legacy_task_order-clin_2001": "30000",
+        "legacy_task_order-clin_2003": "7000",
+        "legacy_task_order-pdf": pdf_upload,
     }
 
 
@@ -97,7 +99,7 @@ def test_update_fv_re_enter_pe_number(fv_data):
 def test_update_fv_invalid_task_order_number(fv_data):
     request = RequestFactory.create()
     user = UserFactory.create()
-    data = {**fv_data, "task_order-number": MANUAL_TO_NUMBER}
+    data = {**fv_data, "legacy_task_order-number": MANUAL_TO_NUMBER}
     update_fv = UpdateFinancialVerification(
         TrueValidator,
         TaskOrderNumberValidator(),
@@ -139,7 +141,7 @@ def test_update_fv_extended(fv_data, e_fv_data):
 def test_update_fv_extended_does_not_validate_task_order(fv_data, e_fv_data):
     request = RequestFactory.create()
     user = UserFactory.create()
-    data = {**fv_data, **e_fv_data, "task_order-number": "abc123"}
+    data = {**fv_data, **e_fv_data, "legacy_task_order-number": "abc123"}
     update_fv = UpdateFinancialVerification(
         TrueValidator, TaskOrderNumberValidator(), user, request, data, is_extended=True
     )
@@ -197,7 +199,7 @@ def test_save_draft_allows_invalid_data():
     request = RequestFactory.create()
     user = UserFactory.create()
     data = {
-        "task_order-number": MANUAL_TO_NUMBER,
+        "legacy_task_order-number": MANUAL_TO_NUMBER,
         "request-pe_id": "123",
         "request-ba_code": "a",
     }
@@ -229,44 +231,44 @@ def test_save_draft_and_then_submit():
 def test_updated_request_has_pdf(fv_data, e_fv_data):
     request = RequestFactory.create()
     user = UserFactory.create()
-    data = {**fv_data, **e_fv_data, "task_order-number": MANUAL_TO_NUMBER}
+    data = {**fv_data, **e_fv_data, "legacy_task_order-number": MANUAL_TO_NUMBER}
     updated_request = UpdateFinancialVerification(
         TrueValidator, TrueValidator, user, request, data, is_extended=True
     ).execute()
-    assert updated_request.task_order.pdf
+    assert updated_request.legacy_task_order.pdf
 
 
 def test_can_save_draft_with_just_pdf(e_fv_data):
     request = RequestFactory.create()
     user = UserFactory.create()
-    data = {"task_order-pdf": e_fv_data["task_order-pdf"]}
+    data = {"legacy_task_order-pdf": e_fv_data["legacy_task_order-pdf"]}
     SaveFinancialVerificationDraft(
         TrueValidator, TrueValidator, user, request, data, is_extended=True
     ).execute()
 
     form = GetFinancialVerificationForm(user, request, is_extended=True).execute()
-    assert form.task_order.pdf
+    assert form.legacy_task_order.pdf
 
 
 def test_task_order_info_present_in_extended_form(fv_data, e_fv_data):
     request = RequestFactory.create()
     user = UserFactory.create()
     data = {
-        "task_order-clin_0001": "1",
-        "task_order-number": fv_data["task_order-number"],
+        "legacy_task_order-clin_0001": "1",
+        "legacy_task_order-number": fv_data["legacy_task_order-number"],
     }
     SaveFinancialVerificationDraft(
         TrueValidator, TrueValidator, user, request, data, is_extended=True
     ).execute()
 
     form = GetFinancialVerificationForm(user, request, is_extended=True).execute()
-    assert form.task_order.clin_0001.data
+    assert form.legacy_task_order.clin_0001.data
 
 
 def test_update_ignores_empty_values(fv_data, e_fv_data):
     request = RequestFactory.create()
     user = UserFactory.create()
-    data = {**fv_data, **e_fv_data, "task_order-funding_type": ""}
+    data = {**fv_data, **e_fv_data, "legacy_task_order-funding_type": ""}
     SaveFinancialVerificationDraft(
         TrueValidator, TrueValidator, user, request, data, is_extended=True
     ).execute()
@@ -276,14 +278,14 @@ def test_can_save_draft_with_funding_type(fv_data, e_fv_data):
     request = RequestFactory.create()
     user = UserFactory.create()
     data = {
-        "task_order-number": fv_data["task_order-number"],
-        "task_order-funding_type": e_fv_data["task_order-funding_type"],
+        "legacy_task_order-number": fv_data["legacy_task_order-number"],
+        "legacy_task_order-funding_type": e_fv_data["legacy_task_order-funding_type"],
     }
     updated_request = SaveFinancialVerificationDraft(
         TrueValidator, TrueValidator, user, request, data, is_extended=False
     ).execute()
 
-    assert updated_request.task_order.funding_type
+    assert updated_request.legacy_task_order.funding_type
 
 
 def test_update_fv_route(client, user_session, fv_data):
@@ -331,7 +333,7 @@ def test_manual_task_order_triggers_extended_form(
     user = UserFactory.create()
     request = RequestFactory.create(creator=user)
 
-    data = {**fv_data, **e_fv_data, "task_order-number": MANUAL_TO_NUMBER}
+    data = {**fv_data, **e_fv_data, "legacy_task_order-number": MANUAL_TO_NUMBER}
 
     UpdateFinancialVerification(
         TrueValidator, TrueValidator, user, request, data, is_extended=True
@@ -352,7 +354,7 @@ def test_manual_to_does_not_trigger_approval(client, user_session, fv_data, e_fv
     data = {
         **fv_data,
         **e_fv_data,
-        "task_order-number": MANUAL_TO_NUMBER,
+        "legacy_task_order-number": MANUAL_TO_NUMBER,
         "request-pe_id": "0101228N",
     }
     user_session(user)
@@ -374,7 +376,7 @@ def test_eda_task_order_does_trigger_approval(client, user_session, fv_data, e_f
     data = {
         **fv_data,
         **e_fv_data,
-        "task_order-number": MockEDAClient.MOCK_CONTRACT_NUMBER,
+        "legacy_task_order-number": MockEDAClient.MOCK_CONTRACT_NUMBER,
         "request-pe_id": "0101228N",
     }
     user_session(user)
@@ -396,7 +398,7 @@ def test_attachment_on_non_extended_form(client, user_session, fv_data, e_fv_dat
     data = {
         **fv_data,
         **e_fv_data,
-        "task_order-number": MockEDAClient.MOCK_CONTRACT_NUMBER,
+        "legacy_task_order-number": MockEDAClient.MOCK_CONTRACT_NUMBER,
         "request-pe_id": "0101228N",
     }
     user_session(user)
@@ -420,7 +422,7 @@ def test_task_order_number_persists_in_form(fv_data, e_fv_data):
     request = RequestFactory.create(creator=user)
     data = {
         **fv_data,
-        "task_order-number": MANUAL_TO_NUMBER,
+        "legacy_task_order-number": MANUAL_TO_NUMBER,
         "request-pe_id": "0101228N",
     }
 
@@ -432,7 +434,7 @@ def test_task_order_number_persists_in_form(fv_data, e_fv_data):
         pass
 
     form = GetFinancialVerificationForm(user, request, is_extended=True).execute()
-    assert form.task_order.number.data == MANUAL_TO_NUMBER
+    assert form.legacy_task_order.number.data == MANUAL_TO_NUMBER
 
 
 def test_can_submit_once_to_details_are_entered(fv_data, e_fv_data):
@@ -440,7 +442,7 @@ def test_can_submit_once_to_details_are_entered(fv_data, e_fv_data):
     request = RequestFactory.create(creator=user)
     data = {
         **fv_data,
-        "task_order-number": MANUAL_TO_NUMBER,
+        "legacy_task_order-number": MANUAL_TO_NUMBER,
         "request-pe_id": "0101228N",
     }
 
@@ -454,7 +456,7 @@ def test_can_submit_once_to_details_are_entered(fv_data, e_fv_data):
     data = {
         **fv_data,
         **e_fv_data,
-        "task_order-number": MANUAL_TO_NUMBER,
+        "legacy_task_order-number": MANUAL_TO_NUMBER,
         "request-pe_id": "0101228N",
     }
     assert UpdateFinancialVerification(
@@ -466,7 +468,7 @@ def test_existing_task_order_with_pdf(fv_data, e_fv_data, client, user_session):
     # Use finver route to create initial TO #1, complete with PDF
     user = UserFactory.create()
     request = RequestFactory.create(creator=user)
-    data = {**fv_data, **e_fv_data, "task_order-number": MANUAL_TO_NUMBER}
+    data = {**fv_data, **e_fv_data, "legacy_task_order-number": MANUAL_TO_NUMBER}
     UpdateFinancialVerification(
         TrueValidator, TaskOrderNumberValidator(), user, request, data, is_extended=True
     ).execute()
@@ -474,7 +476,7 @@ def test_existing_task_order_with_pdf(fv_data, e_fv_data, client, user_session):
     # Save draft on a new finver form, but with same number as TO #1
     user = UserFactory.create()
     request = RequestFactory.create(creator=user)
-    data = {"task_order-number": MANUAL_TO_NUMBER}
+    data = {"legacy_task_order-number": MANUAL_TO_NUMBER}
     SaveFinancialVerificationDraft(
         TrueValidator,
         TaskOrderNumberValidator(),
@@ -497,19 +499,19 @@ def test_existing_task_order_with_pdf(fv_data, e_fv_data, client, user_session):
 def test_pdf_clearing(fv_data, e_fv_data, pdf_upload, pdf_upload2):
     user = UserFactory.create()
     request = RequestFactory.create(creator=user)
-    data = {**fv_data, **e_fv_data, "task_order-pdf": pdf_upload}
+    data = {**fv_data, **e_fv_data, "legacy_task_order-pdf": pdf_upload}
 
     SaveFinancialVerificationDraft(
         TrueValidator, TrueValidator, user, request, data, is_extended=True
     ).execute()
 
-    data = {**data, "task_order-pdf": pdf_upload2}
+    data = {**data, "legacy_task_order-pdf": pdf_upload2}
     UpdateFinancialVerification(
         TrueValidator, TrueValidator, user, request, data, is_extended=True
     ).execute()
 
     form = GetFinancialVerificationForm(user, request, is_extended=True).execute()
-    assert form.task_order.pdf.data == pdf_upload2.filename
+    assert form.legacy_task_order.pdf.data == pdf_upload2.filename
 
 
 # TODO: This test manages an edge case for our current non-unique handling of
@@ -523,10 +525,12 @@ def test_always_derives_pdf_filename(fv_data, e_fv_data, pdf_upload):
     user = UserFactory.create()
     request_one = RequestFactory.create(creator=user)
     attachment = Attachment.attach(
-        pdf_upload, resource="task_order", resource_id=request_one.id
+        pdf_upload, resource="legacy_task_order", resource_id=request_one.id
     )
-    task_order = TaskOrderFactory.create(pdf=attachment)
-    request_two = RequestFactory.create(creator=user, task_order=task_order)
+    legacy_task_order = LegacyTaskOrderFactory.create(pdf=attachment)
+    request_two = RequestFactory.create(
+        creator=user, legacy_task_order=legacy_task_order
+    )
 
     form_one = GetFinancialVerificationForm(
         user, request_one, is_extended=True
@@ -535,5 +539,5 @@ def test_always_derives_pdf_filename(fv_data, e_fv_data, pdf_upload):
         user, request_two, is_extended=True
     ).execute()
 
-    assert form_one.task_order.pdf.data == attachment.filename
-    assert form_two.task_order.pdf.data == attachment.filename
+    assert form_one.legacy_task_order.pdf.data == attachment.filename
+    assert form_two.legacy_task_order.pdf.data == attachment.filename

@@ -9,7 +9,7 @@ from .role import Role
 from .user import User
 from .workspace_role import WorkspaceRole
 from .pe_number import PENumber
-from .task_order import TaskOrder
+from .legacy_task_order import LegacyTaskOrder
 from .workspace import Workspace
 from .project import Project
 from .environment import Environment

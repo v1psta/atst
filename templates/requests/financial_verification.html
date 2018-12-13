@@ -71,55 +71,55 @@
 
         {% if extended %}
           <fieldset class="form__sub-fields form__sub-fields--warning">
-            {{ OptionsInput(f.task_order.funding_type) }}
+            {{ OptionsInput(f.legacy_task_order.funding_type) }}
 
             <template v-if="funding_type == 'OTHER'" v-cloak>
-              {{ TextInput(f.task_order.funding_type_other) }}
+              {{ TextInput(f.legacy_task_order.funding_type_other) }}
             </template>
 
-            {{ DateInput(f.task_order.expiration_date, placeholder='MM / DD / YYYY', validation='date', tooltip='Please enter the expiration date for the task order only and do not include options that you may choose to exercise in the future.') }}
+            {{ DateInput(f.legacy_task_order.expiration_date, placeholder='MM / DD / YYYY', validation='date', tooltip='Please enter the expiration date for the task order only and do not include options that you may choose to exercise in the future.') }}
 
             {{ TextInput(
-              f.task_order.clin_0001,
+              f.legacy_task_order.clin_0001,
               validation='dollars'
             ) }}
 
             {{ TextInput(
-              f.task_order.clin_0003,
+              f.legacy_task_order.clin_0003,
               validation='dollars'
             ) }}
 
             {{ TextInput(
-              f.task_order.clin_1001,
+              f.legacy_task_order.clin_1001,
               validation='dollars'
             ) }}
 
             {{ TextInput(
-              f.task_order.clin_1003,
+              f.legacy_task_order.clin_1003,
               validation='dollars'
             ) }}
 
             {{ TextInput(
-              f.task_order.clin_2001,
+              f.legacy_task_order.clin_2001,
               validation='dollars'
             ) }}
 
             {{ TextInput(
-              f.task_order.clin_2003,
+              f.legacy_task_order.clin_2003,
               validation='dollars'
             ) }}
 
             <template v-if="showTaskOrderUpload">
-              <div class="usa-input {% if f.task_order.pdf.errors %} usa-input--error {% endif %}">
-                {{ f.task_order.pdf.label }}
-                {{ f.task_order.pdf }}
-                {% for error in f.task_order.pdf.errors %}
+              <div class="usa-input {% if f.legacy_task_order.pdf.errors %} usa-input--error {% endif %}">
+                {{ f.legacy_task_order.pdf.label }}
+                {{ f.legacy_task_order.pdf }}
+                {% for error in f.legacy_task_order.pdf.errors %}
                   <span class="usa-input__message">{{error}}</span>
                 {% endfor %}
               </div>
             </template>
             <template v-else>
-              <p>Uploaded {{ f.task_order.pdf.data }}.</p>
+              <p>Uploaded {{ f.legacy_task_order.pdf.data }}.</p>
               <div>
                 <button v-on:click="forceShowTaskOrderUpload($event)">Change</button>
               </div>
@@ -128,7 +128,7 @@
         {% endif %}
 
         {{ TextInput(
-          f.task_order.number,
+          f.legacy_task_order.number,
           placeholder="e.g.: 1234567899C0001",
           tooltip="A Contracting Officer will likely be the best source for this number.",
           validation="requiredField"

@@ -20,17 +20,17 @@ def test_suggest_pe_id(input_, expected):
 
 
 def test_funding_type_other_not_required_if_funding_type_is_not_other():
-    form_data = ImmutableMultiDict({"task_order-funding_type": "PROC"})
+    form_data = ImmutableMultiDict({"legacy_task_order-funding_type": "PROC"})
     form = FinancialVerificationForm(form_data)
     form.validate()
     assert "funding_type_other" not in form.errors
 
 
 def test_funding_type_other_required_if_funding_type_is_other():
-    form_data = ImmutableMultiDict({"task_order-funding_type": "OTHER"})
+    form_data = ImmutableMultiDict({"legacy_task_order-funding_type": "OTHER"})
     form = FinancialVerificationForm(form_data)
     form.validate()
-    assert "funding_type_other" in form.errors["task_order"]
+    assert "funding_type_other" in form.errors["legacy_task_order"]
 
 
 @pytest.mark.parametrize(
@@ -85,8 +85,8 @@ def test_ba_code_validation(input_, expected):
 def test_can_submit_zero_for_clin():
     form_first = FinancialVerificationForm()
     form_first.validate()
-    assert "clin_0001" in form_first.errors["task_order"]
-    form_data = ImmutableMultiDict([("task_order-clin_0001", "0")])
+    assert "clin_0001" in form_first.errors["legacy_task_order"]
+    form_data = ImmutableMultiDict([("legacy_task_order-clin_0001", "0")])
     form_second = FinancialVerificationForm(form_data)
     form_second.validate()
-    assert "clin_0001" not in form_second.errors["task_order"]
+    assert "clin_0001" not in form_second.errors["legacy_task_order"]

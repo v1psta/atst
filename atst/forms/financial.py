@@ -34,13 +34,13 @@ def coerce_choice(val):
 class TaskOrderForm(CacheableForm):
     def do_validate_number(self):
         for field in self:
-            if field.name != "task_order-number":
+            if field.name != "legacy_task_order-number":
                 field.validators.insert(0, Optional())
 
         valid = super().validate()
 
         for field in self:
-            if field.name != "task_order-number":
+            if field.name != "legacy_task_order-number":
                 field.validators.pop(0)
 
         return valid
@@ -176,25 +176,25 @@ class RequestFinancialVerificationForm(CacheableForm):
 
 class FinancialVerificationForm(CacheableForm):
 
-    task_order = FormField(TaskOrderForm)
+    legacy_task_order = FormField(TaskOrderForm)
     request = FormField(RequestFinancialVerificationForm)
 
     def validate(self, *args, **kwargs):
         if not kwargs.get("is_extended", True):
             return self.do_validate_request()
 
-        if self.task_order.funding_type.data == "OTHER":
-            self.task_order.funding_type_other.validators.append(InputRequired())
+        if self.legacy_task_order.funding_type.data == "OTHER":
+            self.legacy_task_order.funding_type_other.validators.append(InputRequired())
 
         to_pdf_validators = None
         if kwargs.get("has_attachment"):
-            to_pdf_validators = list(self.task_order.pdf.validators)
-            self.task_order.pdf.validators = []
+            to_pdf_validators = list(self.legacy_task_order.pdf.validators)
+            self.legacy_task_order.pdf.validators = []
 
         valid = super().validate()
 
         if to_pdf_validators:
-            self.task_order.pdf.validators = to_pdf_validators
+            self.legacy_task_order.pdf.validators = to_pdf_validators
 
         return valid
 
@@ -204,7 +204,7 @@ class FinancialVerificationForm(CacheableForm):
         validator by wtforms.
         """
         request_valid = self.request.validate(self)
-        task_order_valid = self.task_order.do_validate_number()
+        task_order_valid = self.legacy_task_order.do_validate_number()
         return request_valid and task_order_valid
 
     def reset(self):
@@ -216,11 +216,11 @@ class FinancialVerificationForm(CacheableForm):
 
     @property
     def has_pdf_upload(self):
-        return isinstance(self.task_order.pdf.data, FileStorage)
+        return isinstance(self.legacy_task_order.pdf.data, FileStorage)
 
     @property
     def is_missing_task_order_number(self):
-        return "number" in self.errors.get("task_order", {})
+        return "number" in self.errors.get("legacy_task_order", {})
 
     @property
     def is_only_missing_task_order_number(self):

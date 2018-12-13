@@ -1,15 +1,15 @@
-from tests.factories import TaskOrderFactory
+from tests.factories import LegacyTaskOrderFactory
 from tests.assert_util import dict_contains
 
 
 def test_as_dictionary():
-    data = TaskOrderFactory.dictionary()
-    real_task_order = TaskOrderFactory.create(**data)
+    data = LegacyTaskOrderFactory.dictionary()
+    real_task_order = LegacyTaskOrderFactory.create(**data)
     assert dict_contains(real_task_order.to_dictionary(), data)
 
 
 def test_budget():
-    task_order = TaskOrderFactory.create(
+    legacy_task_order = LegacyTaskOrderFactory.create(
         clin_0001=500,
         clin_0003=200,
         clin_1001=None,
@@ -17,4 +17,4 @@ def test_budget():
         clin_2001=None,
         clin_2003=None,
     )
-    assert task_order.budget == 700
+    assert legacy_task_order.budget == 700

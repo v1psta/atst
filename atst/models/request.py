@@ -6,7 +6,7 @@ from atst.models import Base, types, mixins
 from atst.models.request_status_event import RequestStatus
 from atst.utils import first_or_none
 from atst.models.request_revision import RequestRevision
-from atst.models.task_order import Source as TaskOrderSource
+from atst.models.legacy_task_order import Source as TaskOrderSource
 
 
 def map_properties_to_dict(properties, instance):
@@ -39,8 +39,8 @@ class Request(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     user_id = Column(ForeignKey("users.id"), nullable=False)
     creator = relationship("User", backref="owned_requests")
 
-    task_order_id = Column(ForeignKey("task_orders.id"))
-    task_order = relationship("TaskOrder")
+    legacy_task_order_id = Column(ForeignKey("legacy_task_orders.id"))
+    legacy_task_order = relationship("LegacyTaskOrder")
 
     revisions = relationship(
         "RequestRevision", back_populates="request", order_by="RequestRevision.sequence"
@@ -141,8 +141,8 @@ class Request(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
 
     @property
     def is_financially_verified(self):
-        if self.task_order:
-            return self.task_order.verified
+        if self.legacy_task_order:
+            return self.legacy_task_order.verified
         return False
 
     @property
@@ -209,7 +209,7 @@ class Request(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
             self.is_pending_ccpo_approval
             or self.is_pending_financial_verification_changes
             or self.is_approved
-        ) and self.task_order
+        ) and self.legacy_task_order
 
     @property
     def displayname(self):
@@ -233,8 +233,8 @@ class Request(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     @property
     def has_manual_task_order(self):
         return (
-            self.task_order.source == TaskOrderSource.MANUAL
-            if self.task_order is not None
+            self.legacy_task_order.source == TaskOrderSource.MANUAL
+            if self.legacy_task_order is not None
             else None
         )
 

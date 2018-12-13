@@ -187,10 +187,12 @@ class Requests(object):
         return Requests.status_count(RequestStatus.APPROVED)
 
     @classmethod
-    def update_financial_verification(cls, request_id, financial_data, task_order=None):
+    def update_financial_verification(
+        cls, request_id, financial_data, legacy_task_order=None
+    ):
         request = RequestsQuery.get_with_lock(request_id)
-        if task_order:
-            request.task_order = task_order
+        if legacy_task_order:
+            request.legacy_task_order = legacy_task_order
 
         request = Requests._update(request, {"financial_verification": financial_data})
         return request

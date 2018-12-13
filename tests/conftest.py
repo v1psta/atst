@@ -139,7 +139,7 @@ def extended_financial_verification_data(pdf_upload):
         "clin_1003": "7000",
         "clin_2001": "30000",
         "clin_2003": "7000",
-        "task_order": pdf_upload,
+        "legacy_task_order": pdf_upload,
     }
 
 

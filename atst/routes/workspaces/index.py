@@ -58,7 +58,7 @@ def workspace_reports(workspace_id):
     prev_month = current_month - timedelta(days=28)
     two_months_ago = prev_month - timedelta(days=28)
 
-    expiration_date = workspace.request.task_order.expiration_date
+    expiration_date = workspace.request.legacy_task_order.expiration_date
     if expiration_date:
         remaining_difference = expiration_date - today
         remaining_days = remaining_difference.days
@@ -71,7 +71,7 @@ def workspace_reports(workspace_id):
         workspace_totals=Reports.workspace_totals(workspace),
         monthly_totals=Reports.monthly_totals(workspace),
         jedi_request=workspace.request,
-        task_order=workspace.request.task_order,
+        legacy_task_order=workspace.request.legacy_task_order,
         current_month=current_month,
         prev_month=prev_month,
         two_months_ago=two_months_ago,

@@ -18,8 +18,8 @@ class FundingType(Enum):
     OTHER = "OTHER"
 
 
-class TaskOrder(Base, mixins.TimestampsMixin):
-    __tablename__ = "task_orders"
+class LegacyTaskOrder(Base, mixins.TimestampsMixin):
+    __tablename__ = "legacy_task_orders"
 
     id = types.Id()
     number = Column(String, unique=True)
@@ -65,7 +65,7 @@ class TaskOrder(Base, mixins.TimestampsMixin):
         )
 
     def __repr__(self):
-        return "<TaskOrder(number='{}', verified='{}', budget='{}', expiration_date='{}', pdf='{}', id='{}')>".format(
+        return "<LegacyTaskOrder(number='{}', verified='{}', budget='{}', expiration_date='{}', pdf='{}', id='{}')>".format(
             self.number,
             self.verified,
             self.budget,
