@@ -12,7 +12,7 @@ MESSAGES = {
     "revoked_workspace_access": {
         "title_template": "Removed workspace access",
         "message_template": """
-          <p>Removed {{ member_name }} from this workspace.</p>
+          <p>Workspace access successfully removed from {{ member_name }}.</p>
         """,
         "category": "success",
     },
