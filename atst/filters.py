@@ -1,5 +1,6 @@
 import re
 import datetime
+from atst.utils.localization import translate
 from flask import current_app as app, render_template
 from jinja2.exceptions import TemplateNotFound
 
@@ -108,3 +109,4 @@ def register_filters(app):
     app.jinja_env.filters["dateFromString"] = dateFromString
     app.jinja_env.filters["pageWindow"] = pageWindow
     app.jinja_env.filters["renderAuditEvent"] = renderAuditEvent
+    app.jinja_env.filters["translate"] = translate

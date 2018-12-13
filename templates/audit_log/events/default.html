@@ -3,7 +3,7 @@
 {% block content %}
   {% if event.event_details %}
     <br>
-    <b>Details:</b>
+    <b>{{ "audit_log.events.default.details" | translate }}</b>
     <dl>
       {% for key, value in event.event_details.items() %}
         {% if value is not none %}
@@ -15,11 +15,13 @@
   {% endif %}
   {% if event.changed_state %}
     <br>
-    <b>Changes:</b>
+    <b>{{ "audit_log.events.default.changes" | translate }}</b>
     <dl>
       {% for key, value in event.changed_state.items() %}
         <dt>{{ key }}</dt>
-        <dd>{{ value[0] }} to {{ value[1] }}</dd>
+        <dd>
+          {{ "audit_log.events.default.change" | translate({ "from": value[0], "to": value[1] }) }}
+        </dd>
       {% endfor %}
     </dl>
   {% endif %}

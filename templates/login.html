@@ -2,7 +2,7 @@
 
 {% extends "base_public.html" %}
 
-{% block title %}Sign in | JEDI Cloud{% endblock %}
+{% block title %}{{ "login.title_tag" | translate }}{% endblock %}
 
 {% block content %}
 
@@ -17,11 +17,15 @@
             {% include "fragments/flash.html" %}
           {% endwith %}
 
-          <h1 class="login-banner__heading">Access the JEDI Cloud</h1>
+          <h1 class="login-banner__heading">{{ "login.h1_title" | translate }}</h1>
 
-          <img class="login-banner__logo" src="{{url_for('static', filename='img/ccpo-logo.svg')}}" alt="Cloud Computing Program Office Logo">
+          <img class="login-banner__logo" src="{{url_for('static', filename='img/ccpo-logo.svg')}}" alt="{{ "login.ccpo_logo_alt_text" | translate }}">
 
-          <a class="usa-button usa-button-big login-banner__button" href='{{ redirect_url }}'><span>Sign in with CAC</span></a>
+          <a class="usa-button usa-button-big login-banner__button" href='{{ redirect_url }}'>
+            <span>
+              {{ "login.login_button" | translate }}
+            </span>
+          </a>
         </div>
 
         {% with %}
@@ -29,11 +33,11 @@
           {% include "fragments/flash.html" %}
         {% endwith %}
 
-        {{ Alert('Certificate Selection',
-          message='When you are prompted to select a certificate, please select <strong>E-mail Certificate</strong> from the provided choices.',
+        {{ Alert(("login.certificate_selection.title" | translate),
+          message=("login.certificate_selection.message" | translate),
           actions=[
             {
-              'label': 'Learn More',
+              'label': ("login.certificate_selection.learn_more" | translate),
               'icon': 'help',
               'href': '/help'
             }

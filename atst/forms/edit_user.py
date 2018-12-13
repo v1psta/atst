@@ -8,27 +8,34 @@ from .fields import SelectField
 from .forms import CacheableForm
 from .data import SERVICE_BRANCHES
 from atst.models.user import User
+from atst.utils.localization import translate
 
 from .validators import Name, DateRange, PhoneNumber
 
 
 USER_FIELDS = {
-    "first_name": StringField("First Name", validators=[Name()]),
-    "last_name": StringField("Last Name", validators=[Name()]),
+    "first_name": StringField(
+        translate("forms.edit_user.first_name_label"), validators=[Name()]
+    ),
+    "last_name": StringField(
+        translate("forms.edit_user.last_name_label"), validators=[Name()]
+    ),
     "email": EmailField(
-        "E-mail Address",
-        description="Enter your preferred contact e-mail address",
+        translate("forms.edit_user.email_label"),
+        description=translate("forms.edit_user.email_description"),
         validators=[Email()],
     ),
-    "phone_number": TelField("Phone Number", validators=[PhoneNumber()]),
+    "phone_number": TelField(
+        translate("forms.edit_user.phone_number_label"), validators=[PhoneNumber()]
+    ),
     "phone_ext": StringField("Extension"),
     "service_branch": SelectField(
-        "Service Branch or Agency",
-        description="Which service or organization do you belong to within the DoD?",
+        translate("forms.edit_user.service_branch_label"),
+        description=translate("forms.edit_user.service_branch_description"),
         choices=SERVICE_BRANCHES,
     ),
     "citizenship": RadioField(
-        description="What is your citizenship status?",
+        description=translate("forms.edit_user.citizenship_description"),
         choices=[
             ("United States", "United States"),
             ("Foreign National", "Foreign National"),
@@ -36,8 +43,8 @@ USER_FIELDS = {
         ],
     ),
     "designation": RadioField(
-        "Designation of Person",
-        description="What is your designation within the DoD?",
+        translate("forms.edit_user.designation_label"),
+        description=translate("forms.edit_user.designation_description"),
         choices=[
             ("military", "Military"),
             ("civilian", "Civilian"),
@@ -45,8 +52,8 @@ USER_FIELDS = {
         ],
     ),
     "date_latest_training": DateField(
-        "Latest Information Assurance (IA) Training Completion Date",
-        description='To complete the training, you can find it in <a class="icon-link" href="https://iatraining.disa.mil/eta/disa_cac2018/launchPage.htm" target="_blank">Information Assurance Cyber Awareness Challange</a> website.',
+        translate("forms.edit_user.date_latest_training_label"),
+        description=translate("forms.edit_user.date_latest_training_description"),
         validators=[
             DateRange(
                 lower_bound=pendulum.duration(years=1),

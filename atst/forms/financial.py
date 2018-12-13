@@ -8,6 +8,7 @@ from werkzeug.datastructures import FileStorage
 
 from .fields import NewlineListField, SelectField, NumberStringField
 from atst.forms.forms import CacheableForm
+from atst.utils.localization import translate
 from .data import FUNDING_TYPES
 from .validators import DateRange
 
@@ -46,24 +47,26 @@ class TaskOrderForm(CacheableForm):
         return valid
 
     number = StringField(
-        "Task Order Number associated with this request",
-        description="Include the original Task Order number (including the 000X at the end). Do not include any modification numbers. Note that there may be a lag between approving a task order and when it becomes available in our system.",
+        translate("forms.financial.number_label"),
+        description=translate("forms.financial.number_description"),
         validators=[InputRequired()],
     )
 
     funding_type = SelectField(
-        description="What is the source of funding?",
+        description=translate("forms.financial.funding_type_description"),
         choices=FUNDING_TYPES,
         validators=[InputRequired()],
         coerce=coerce_choice,
         render_kw={"required": False},
     )
 
-    funding_type_other = StringField("If other, please specify")
+    funding_type_other = StringField(
+        translate("forms.financial.funding_type_other_label")
+    )
 
     expiration_date = DateField(
-        "Task Order Expiration Date",
-        description="Please enter the expiration date for the Task Order",
+        translate("forms.financial.expiration_date_label"),
+        description=translate("forms.financial.expiration_date_description"),
         validators=[
             InputRequired(),
             DateRange(
@@ -76,51 +79,51 @@ class TaskOrderForm(CacheableForm):
     )
 
     clin_0001 = NumberStringField(
-        "<dl><dt>CLIN 0001</dt> - <dd>Unclassified IaaS and PaaS Amount</dd></dl>",
+        translate("forms.financial.clin_0001_label"),
         validators=[InputRequired()],
-        description="Review your task order document, the amounts for each CLIN must match exactly here",
+        description=translate("forms.financial.clin_0001_description"),
         filters=[number_to_int],
     )
 
     clin_0003 = NumberStringField(
-        "<dl><dt>CLIN 0003</dt> - <dd>Unclassified Cloud Support Package</dd></dl>",
+        translate("forms.financial.clin_0003_label"),
         validators=[InputRequired()],
-        description="Review your task order document, the amounts for each CLIN must match exactly here",
+        description=translate("forms.financial.clin_0003_description"),
         filters=[number_to_int],
     )
 
     clin_1001 = NumberStringField(
-        "<dl><dt>CLIN 1001</dt> - <dd>Unclassified IaaS and PaaS Amount <br> OPTION PERIOD 1</dd></dl>",
+        translate("forms.financial.clin_1001_label"),
         validators=[InputRequired()],
-        description="Review your task order document, the amounts for each CLIN must match exactly here",
+        description=translate("forms.financial.clin_1001_description"),
         filters=[number_to_int],
     )
 
     clin_1003 = NumberStringField(
-        "<dl><dt>CLIN 1003</dt> - <dd>Unclassified Cloud Support Package <br> OPTION PERIOD 1</dd></dl>",
+        translate("forms.financial.clin_1003_label"),
         validators=[InputRequired()],
-        description="Review your task order document, the amounts for each CLIN must match exactly here",
+        description=translate("forms.financial.clin_1003_description"),
         filters=[number_to_int],
     )
 
     clin_2001 = NumberStringField(
-        "<dl><dt>CLIN 2001</dt> - <dd>Unclassified IaaS and PaaS Amount <br> OPTION PERIOD 2</dd></dl>",
+        translate("forms.financial.clin_2001_label"),
         validators=[InputRequired()],
-        description="Review your task order document, the amounts for each CLIN must match exactly here",
+        description=translate("forms.financial.clin_2001_description"),
         filters=[number_to_int],
     )
 
     clin_2003 = NumberStringField(
-        "<dl><dt>CLIN 2003</dt> - <dd>Unclassified Cloud Support Package <br> OPTION PERIOD 2</dd></dl>",
+        translate("forms.financial.clin_2003_label"),
         validators=[InputRequired()],
-        description="Review your task order document, the amounts for each CLIN must match exactly here",
+        description=translate("forms.financial.clin_2003_description"),
         filters=[number_to_int],
     )
 
     pdf = FileField(
-        "Upload a copy of your Task Order",
+        translate("forms.financial.pdf_label"),
         validators=[
-            FileAllowed(["pdf"], "Only PDF documents can be uploaded."),
+            FileAllowed(["pdf"], translate("forms.financial.pdf_allowed_description")),
             InputRequired(),
         ],
         render_kw={"required": False},
@@ -129,42 +132,60 @@ class TaskOrderForm(CacheableForm):
 
 class RequestFinancialVerificationForm(CacheableForm):
     uii_ids = NewlineListField(
-        "Unique Item Identifier (UII)s related to your application(s) if you already have them.",
-        description="If you have more than one UII, place each one on a new line.",
+        translate("forms.financial.uii_ids_label"),
+        description=translate("forms.financial.uii_ids_description"),
     )
 
     pe_id = StringField(
-        "Program Element Number",
-        description="PE numbers help the Department of Defense identify which offices' budgets are contributing towards this resource use. <br/><em>It should be 7 digits followed by 1-3 letters, and should have a zero as the first and third digits.</em>",
+        translate("forms.financial.pe_id_label"),
+        description=translate("forms.financial.pe_id_description"),
         validators=[InputRequired()],
     )
 
     treasury_code = StringField(
-        "Program Treasury Code",
-        description="Program Treasury Code (or Appropriations Code) identifies resource types. <br/> <em>It should be a four digit or six digit number, optionally prefixed by one or more zeros.</em>",
+        translate("forms.financial.treasury_code_label"),
+        description=translate("forms.financial.treasury_code_description"),
         validators=[InputRequired(), Regexp(TREASURY_CODE_REGEX)],
     )
 
     ba_code = StringField(
-        "Program Budget Activity (BA) Code",
-        description="BA Code is used to identify the purposes, projects, or types of activities financed by the appropriation fund. <br/><em>It should be two digits, followed by an optional letter.</em>",
+        translate("forms.financial.ba_code_label"),
+        description=translate("forms.financial.ba_code_description"),
         validators=[InputRequired(), Regexp(BA_CODE_REGEX)],
     )
 
-    fname_co = StringField("KO First Name", validators=[InputRequired()])
-    lname_co = StringField("KO Last Name", validators=[InputRequired()])
+    fname_co = StringField(
+        translate("forms.financial.fname_co_label"), validators=[InputRequired()]
+    )
+    lname_co = StringField(
+        translate("forms.financial.lname_co_label"), validators=[InputRequired()]
+    )
 
-    email_co = EmailField("KO Email", validators=[InputRequired(), Email()])
+    email_co = EmailField(
+        translate("forms.financial.email_co_label"),
+        validators=[InputRequired(), Email()],
+    )
 
-    office_co = StringField("KO Office", validators=[InputRequired()])
+    office_co = StringField(
+        translate("forms.financial.office_co_label"), validators=[InputRequired()]
+    )
 
-    fname_cor = StringField("COR First Name", validators=[InputRequired()])
+    fname_cor = StringField(
+        translate("forms.financial.fname_cor_label"), validators=[InputRequired()]
+    )
 
-    lname_cor = StringField("COR Last Name", validators=[InputRequired()])
+    lname_cor = StringField(
+        translate("forms.financial.lname_cor_label"), validators=[InputRequired()]
+    )
 
-    email_cor = EmailField("COR Email", validators=[InputRequired(), Email()])
+    email_cor = EmailField(
+        translate("forms.financial.email_cor_label"),
+        validators=[InputRequired(), Email()],
+    )
 
-    office_cor = StringField("COR Office", validators=[InputRequired()])
+    office_cor = StringField(
+        translate("forms.financial.office_cor_label"), validators=[InputRequired()]
+    )
 
     def reset(self):
         """

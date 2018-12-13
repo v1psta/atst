@@ -2,16 +2,17 @@ from wtforms.fields import StringField
 from wtforms.validators import Length
 
 from .forms import CacheableForm
+from atst.utils.localization import translate
 
 
 class WorkspaceForm(CacheableForm):
     name = StringField(
-        "Workspace Name",
+        translate("forms.workspace.name_label"),
         validators=[
             Length(
                 min=4,
                 max=100,
-                message="Workspace names must be at least 4 and not more than 50 characters",
+                message=translate("forms.workspace.name_length_validation_message"),
             )
         ],
     )

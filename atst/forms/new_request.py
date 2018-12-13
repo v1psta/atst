@@ -14,6 +14,7 @@ from .data import (
 )
 from .validators import DateRange, IsNumber
 from atst.domain.requests import Requests
+from atst.utils.localization import translate
 
 
 class DetailsOfUseForm(CacheableForm):
@@ -43,120 +44,126 @@ class DetailsOfUseForm(CacheableForm):
 
     # Details of Use: General
     dod_component = SelectField(
-        "DoD Component",
-        description="Identify the DoD component that is requesting access to the JEDI Cloud",
+        translate("forms.new_request.dod_component_label"),
+        description=translate("forms.new_request.dod_component_description"),
         choices=SERVICE_BRANCHES,
         validators=[InputRequired()],
     )
 
     jedi_usage = TextAreaField(
-        "JEDI Usage",
-        description="Your answer will help us provide tangible examples to DoD leadership how and why commercial cloud resources are accelerating the Department's missions",
+        translate("forms.new_request.jedi_usage_label"),
+        description=translate("forms.new_request.jedi_usage_description"),
         validators=[InputRequired()],
     )
 
     # Details of Use: Cloud Readiness
     num_software_systems = IntegerField(
-        "Number of Software Systems",
-        description="Estimate the number of software systems that will be supported by this JEDI Cloud access request",
+        translate("forms.new_request.num_software_systems_label"),
+        description=translate("forms.new_request.num_software_systems_description"),
     )
 
     jedi_migration = RadioField(
-        "JEDI Migration",
-        description="Are you using the JEDI Cloud to migrate existing systems?",
+        translate("forms.new_request.jedi_migration_label"),
+        description=translate("forms.new_request.jedi_migration_description"),
         choices=[("yes", "Yes"), ("no", "No")],
         default="",
     )
 
     rationalization_software_systems = RadioField(
-        description="Have you completed a “rationalization” of your software systems to move to the cloud?",
+        description=translate(
+            "forms.new_request.rationalization_software_systems_description"
+        ),
         choices=[("yes", "Yes"), ("no", "No"), ("In Progress", "In Progress")],
         default="",
     )
 
     technical_support_team = RadioField(
-        description="Are you working with a technical support team experienced in cloud migrations?",
+        description=translate("forms.new_request.technical_support_team_description"),
         choices=[("yes", "Yes"), ("no", "No")],
         default="",
     )
 
     organization_providing_assistance = RadioField(  # this needs to be updated to use checkboxes instead of radio
-        description="If you are receiving migration assistance, what is the type of organization providing assistance?",
+        description=translate(
+            "forms.new_request.organization_providing_assistance_description"
+        ),
         choices=ASSISTANCE_ORG_TYPES,
         default="",
     )
 
     engineering_assessment = RadioField(
-        description="Have you completed an engineering assessment of your systems for cloud readiness?",
+        description=translate("forms.new_request.engineering_assessment_description"),
         choices=[("yes", "Yes"), ("no", "No"), ("In Progress", "In Progress")],
         default="",
     )
 
     data_transfers = SelectField(
-        description="How much data is being transferred to the cloud?",
+        description=translate("forms.new_request.data_transfers_description"),
         choices=DATA_TRANSFER_AMOUNTS,
         validators=[DataRequired()],
     )
 
     expected_completion_date = SelectField(
-        description="When do you expect to complete your migration to the JEDI Cloud?",
+        description=translate("forms.new_request.expected_completion_date_description"),
         choices=COMPLETION_DATE_RANGES,
         validators=[DataRequired()],
     )
 
     cloud_native = RadioField(
-        description="Are your software systems being developed cloud native?",
+        description=translate("forms.new_request.cloud_native_description"),
         choices=[("yes", "Yes"), ("no", "No")],
         default="",
     )
 
     # Details of Use: Financial Usage
     estimated_monthly_spend = IntegerField(
-        "Estimated Monthly Spend",
-        description='Use the <a href="/jedi-csp-calculator" target="_blank" class="icon-link">JEDI CSP Calculator</a> to estimate your <b>monthly</b> cloud resource usage and enter the dollar amount below. Note these estimates are for initial approval only. After the request is approved, you will be asked to provide a valid Task Order number with specific CLIN amounts for cloud services.',
+        translate("forms.new_request.estimated_monthly_spend_label"),
+        description=translate("forms.new_request.estimated_monthly_spend_description"),
     )
 
     dollar_value = IntegerField(
-        "Total Spend",
-        description="What is your total expected budget for this JEDI Cloud Request?",
+        translate("forms.new_request.dollar_value_label"),
+        description=translate("forms.new_request.dollar_value_description"),
     )
 
     number_user_sessions = IntegerField(
-        description="How many user sessions do you expect on these systems each day?"
+        description=translate("forms.new_request.number_user_sessions_description")
     )
 
     average_daily_traffic = IntegerField(
-        "Average Daily Traffic (Number of Requests)",
-        description="What is the average daily traffic you expect the systems under this cloud contract to use?",
+        translate("forms.new_request.average_daily_traffic_label"),
+        description=translate("forms.new_request.average_daily_traffic_description"),
     )
 
     average_daily_traffic_gb = IntegerField(
-        "Average Daily Traffic (GB)",
-        description="What is the average daily traffic you expect the systems under this cloud contract to use?",
+        translate("forms.new_request.average_daily_traffic_gb_label"),
+        description=translate("forms.new_request.average_daily_traffic_gb_description"),
     )
 
     start_date = DateField(
-        description="When do you expect to start using the JEDI Cloud (not for billing purposes)?",
+        description=translate("forms.new_request.start_date_label"),
         validators=[
             InputRequired(),
             DateRange(
                 lower_bound=pendulum.duration(days=1),
                 upper_bound=None,
-                message="Must be a date in the future.",
+                message=translate(
+                    "forms.new_request.start_date_date_range_validation_message"
+                ),
             ),
         ],
         format="%m/%d/%Y",
     )
 
     name = StringField(
-        "Name Your Request",
-        description="This name serves as a reference for your initial request and the associated workspace that will be created once this request is approved. You may edit this name later.",
+        translate("forms.new_request.name_label"),
+        description=translate("forms.new_request.name_description"),
         validators=[
             InputRequired(),
             Length(
                 min=4,
                 max=100,
-                message="Request names must be at least 4 and not more than 100 characters",
+                message=translate("forms.new_request.name_length_validation_message"),
             ),
         ],
     )
@@ -187,21 +194,29 @@ class WorkspaceOwnerForm(CacheableForm):
         return super().validate(*args, **kwargs)
 
     am_poc = BooleanField(
-        "I am the Workspace Owner",
+        translate("forms.new_request.am_poc_label"),
         default=False,
         false_values=(False, "false", "False", "no", ""),
     )
 
-    fname_poc = StringField("First Name", validators=[InputRequired()])
+    fname_poc = StringField(
+        translate("forms.new_request.fname_poc_label"), validators=[InputRequired()]
+    )
 
-    lname_poc = StringField("Last Name", validators=[InputRequired()])
+    lname_poc = StringField(
+        translate("forms.new_request.lname_poc_label"), validators=[InputRequired()]
+    )
 
-    email_poc = EmailField("Email Address", validators=[InputRequired(), Email()])
+    email_poc = EmailField(
+        translate("forms.new_request.email_poc_label"),
+        validators=[InputRequired(), Email()],
+    )
 
     dodid_poc = StringField(
-        "DoD ID", validators=[InputRequired(), Length(min=10), IsNumber()]
+        translate("forms.new_request.dodid_poc_label"),
+        validators=[InputRequired(), Length(min=10), IsNumber()],
     )
 
 
 class ReviewAndSubmitForm(CacheableForm):
-    reviewed = BooleanField("I have reviewed this data and it is correct.")
+    reviewed = BooleanField(translate("forms.new_request.reviewed_label"))

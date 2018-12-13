@@ -12,25 +12,25 @@
 {% include "fragments/flash.html" %}
 
 {% if saved_draft %}
-  {% call Alert('Draft saved', level='success') %}
+  {% call Alert(("requests.financial_verification.draft_saved" | translate), level='success') %}
   {% endcall %}
 {% endif %}
 
 
 {% if jedi_request.is_pending_financial_verification and not f.errors and not extended %}
-  {{ Alert('Pending Financial Verification', fragment="fragments/pending_financial_verification.html") }}
+  {{ Alert(("requests.financial_verification.pending_financial_verification" | translate), fragment="fragments/pending_financial_verification.html") }}
 {% endif %}
 
 <financial inline-template v-bind:initial-data='{{ f.data|mixedContentToJson }}'>
 <div class="col">
   {% if extended %}
-    {{ Alert('Manually enter Task Order information',
-      message="Additional fields are displayed below, where you can manually enter financial information as documented in your Task Order.",
+    {{ Alert(("requests.financial_verification.manually_enter_task_information_label" | translate),
+      message=("requests.financial_verification.manually_enter_task_information_description" | translate),
       level='warning',
       actions=[
         {
           'href': url_for('atst.helpdocs'),
-          'label': 'Learn more about the JEDI Cloud Task Order and the Financial Verification process.',
+          'label': ("requests.financial_verification.manually_enter_task_information_help_label" | translate),
           'icon': 'help'
         }
       ]
@@ -39,9 +39,12 @@
 
   {% if f.is_missing_task_order_number %}
     {% set extended_url = url_for('requests.financial_verification', request_id=jedi_request.id, extended=True) %}
-    {% call Alert('Task Order not found in EDA', level='warning') %}
-        We could not find your Task Order in our system of record, EDA. Please confirm that you have entered it correctly.<br>
-        <a class="usa-button" href="{{ extended_url }}">Enter Task Order information manually</a>
+    {% call Alert(("requests.financial_verification.task_order_not_found_eda_label"), level='warning') %}
+        {{ "requsts.financial_verification.task_order_not_found_eda_description" | translate }}
+        <br>
+        <a class="usa-button" href="{{ extended_url }}">
+          {{ "requests.financial_verification.enter_task_order_manually_link_text" | translate }}
+        </a>
     {% endcall %}
   {% endif %}
 
@@ -52,7 +55,7 @@
     {% autoescape false %}
 
     {% if f.errors and not f.is_only_missing_task_order_number %}
-      {{ Alert('There were some errors',
+      {{ Alert(("requests.financial_verification.some_errors_label" | translate),
         message="<p>Please see below.</p>",
         level='error'
       ) }}
@@ -61,13 +64,19 @@
   <div class="panel">
 
     <div class="panel__heading">
-      <h1>Financial Verification</h1>
-      <div class="subtitle" id="financial-verification"><h2>Request: {{ jedi_request.displayname }}</h2></div>
+      <h1>{{ "requests.financial_verification.financial_verification_title" | translate }}</h1>
+      <div class="subtitle" id="financial-verification">
+        <h2>
+          {{ "requests.financial_verification.request_title" | translate({ "displayname" : jedi_request.displayname }) }}
+        </h2>
+      </div>
     </div>
 
     <div class="panel__content">
 
-        <p>In order to get you access to the JEDI Cloud, we will need you to enter the details below that will help us verify and account for your Task Order.</p>
+        <p>
+          {{ "requests.financial_verification.permissions_paragraph" | translate }}
+        </p>
 
         {% if extended %}
           <fieldset class="form__sub-fields form__sub-fields--warning">
@@ -77,7 +86,14 @@
               {{ TextInput(f.legacy_task_order.funding_type_other) }}
             </template>
 
-            {{ DateInput(f.legacy_task_order.expiration_date, placeholder='MM / DD / YYYY', validation='date', tooltip='Please enter the expiration date for the task order only and do not include options that you may choose to exercise in the future.') }}
+            {{
+              DateInput(
+                f.legacy_task_order.expiration_date,
+                placeholder='MM / DD / YYYY',
+                validation='date',
+                tooltip=("requests.financial_verification.expiration_date_placeholder" | translate)
+              )
+            }}
 
             {{ TextInput(
               f.legacy_task_order.clin_0001,
@@ -130,14 +146,14 @@
         {{ TextInput(
           f.legacy_task_order.number,
           placeholder="e.g.: 1234567899C0001",
-          tooltip="A Contracting Officer will likely be the best source for this number.",
+          tooltip=("requests.financial_verification.number_placeholder" | translate),
           validation="requiredField"
           ) }}
 
         {{ TextInput(f.request.uii_ids,
           paragraph=True,
           placeholder="examples: \nDI 0CVA5786950 \nUN1945326361234786950",
-          tooltip="A Unique Item Identifer is a unique code that helps the Department of Defense track and report on where and how digital assets are stored. <br>Not all applications have an existing UII number assigned."
+          tooltip=("requests.financial_verification.uui_ids_placeholder" | translate)
           ) }}
 
         {{ TextInput(f.request.pe_id,
@@ -151,7 +167,9 @@
 
         <hr />
 
-        <h3>Contracting Officer (KO) Information</h3>
+        <h3>
+          {{ "requests.financial_verification.contracting_officer_information_title" | translate }}
+        </h3>
 
         <div class='form-row'>
           <div class='form-col form-col--half '>{{ TextInput(f.request.fname_co, validation="requiredField") }}</div>
@@ -165,7 +183,9 @@
 
         <hr />
 
-        <h3>Contracting Officer Representative (COR) Information</h3>
+        <h3>
+          {{ "requests.financial_verification.contracting_officer_representative_information_title" | translate }}
+        </h3>
         <div class='form-row'>
           <div class='form-col form-col--half '>{{ TextInput(f.request.fname_cor, validation="requiredField") }}</div>
           <div class='form-col form-col--half '>{{ TextInput(f.request.lname_cor, validation="requiredField") }}</div>

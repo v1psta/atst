@@ -5,7 +5,9 @@
     {% if not workspace %}
       <a href="{{ url_for('atst.home') }}" class="topbar__link topbar__link--home">
         {{ Icon('shield', classes='topbar__link-icon') }}
-        <span class="topbar__link-label">JEDI Cloud</span>
+        <span class="topbar__link-label">
+          {{ "navigation.topbar.jedi_cloud_link_text" | translate }}
+        </span>
       </a>
     {% else %}
       <a href="{{ url_for('atst.home') }}" class="topbar__link topbar__link--shield" title="JEDI Cloud Home">
@@ -22,13 +24,15 @@
                 v-on:click='props.toggle'
                 class="topbar__link topbar__workspace-menu__toggle"
                 v-bind:class="{ 'topbar__workspace-menu__toggle--open': props.isVisible }">
-                <span class="topbar__link-label">{{ ("Workspace " + workspace.name) }}</span>
+                <span class="topbar__link-label">{{ "navigation.topbar.named_workspace" | translate({ "workspace": workspace.name }) }}</span>
                 <template v-if='props.isVisible'>{{ Icon('caret_up', classes='topbar__link-icon') }}</template>
                 <template v-else>{{ Icon('caret_down', classes='topbar__link-icon') }}</template>
               </button>
 
               <div v-show='props.isVisible' class='topbar__workspace-menu__panel menu'>
-                <h2 class='menu__heading'>Other Active Workspaces</h2>
+                <h2 class='menu__heading'>
+                  {{ "navigation.topbar.other_active_workspaces" | translate }}
+                </h2>
                 {% if workspaces %}
 
                   <ul class='menu__list'>
@@ -44,11 +48,15 @@
 
                 {% else %}
 
-                  <p class='menu__message'>You have no other active JEDI workspaces.</p>
+                  <p class='menu__message'>
+                    {{ "navigation.topbar.no_other_active_workspaces" | translate }}
+                  </p>
 
                 {% endif %}
 
-                <a href="{{ url_for('requests.requests_form_new', screen=1) }}" class='menu__button usa-button'>Request a new JEDI Workspace</a>
+                <a href="{{ url_for('requests.requests_form_new', screen=1) }}" class='menu__button usa-button'>
+                  {{ "navigation.topbar.request_workspace_link_text" | translate }}
+                </a>
               </div>
             </template>
           </div>
@@ -60,7 +68,7 @@
         {{ Icon('avatar', classes='topbar__link-icon') }}
       </a>
 
-      <a href="{{ url_for('atst.logout') }}" class="topbar__link" title='Log out of JEDI Cloud'>
+      <a href="{{ url_for('atst.logout') }}" class="topbar__link" title='{{ "navigation.topbar.logout_link_title" | translate }}'>
         {{ Icon('logout', classes='topbar__link-icon') }}
       </a>
     </div>
