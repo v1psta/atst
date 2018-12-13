@@ -18,6 +18,9 @@ PYTHON_FILES="./app.py ./atst/** ./config"
 # Enable Python testing
 RUN_PYTHON_TESTS="true"
 
+# Enable Javascript testing
+RUN_JS_TESTS="true"
+
 # Check python formatting
 source ./script/format check
 
