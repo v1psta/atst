@@ -12,6 +12,7 @@ defaults:
     PGUSER: root
     PGDATABASE: circle_test
     REDIS_URI: redis://localhost:6379
+    PIP_VERSION: 18.*
   dockerCmdEnvironment: &dockerCmdEnvironment
     APP_USER: atst
     APP_GROUP: atat

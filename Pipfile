@@ -21,6 +21,7 @@ requests = "*"
 apache-libcloud = "*"
 lockfile = "*"
 defusedxml = "*"
+rq-scheduler = ">=0.8.3,<0.9"
 "flask-rq2" = "*"
 
 [dev-packages]
