@@ -62,7 +62,7 @@
   </form>
 
   <div class='responsive-table-wrapper'>
-    <table v-if='searchedList && searchedList.length'>
+    <table v-cloak v-if='searchedList && searchedList.length'>
       <thead>
         <tr>
           <th v-for="col in getColumns()" @click="updateSort(col.displayName)" :width="col.width" :class="col.class" scope="col">
