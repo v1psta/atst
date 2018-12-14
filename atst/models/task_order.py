@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, Date
+from sqlalchemy.types import ARRAY
 from sqlalchemy.orm import relationship
 
 from atst.models import Base, types, mixins
@@ -8,14 +9,6 @@ class TaskOrder(Base, mixins.TimestampsMixin):
     __tablename__ = "task_orders"
 
     id = types.Id()
-    number = Column(String, unique=True)
-    clin_0001 = Column(Integer)
-    clin_0003 = Column(Integer)
-    clin_1001 = Column(Integer)
-    clin_1003 = Column(Integer)
-    clin_2001 = Column(Integer)
-    clin_2003 = Column(Integer)
-    expiration_date = Column(Date)
 
     workspace_id = Column(ForeignKey("workspaces.id"))
     workspace = relationship("Workspace")
@@ -23,23 +16,43 @@ class TaskOrder(Base, mixins.TimestampsMixin):
     user_id = Column(ForeignKey("users.id"))
     creator = relationship("User")
 
+    scope = Column(String)  # Cloud Project Scope
+    defense_component = Column(String)  # Department of Defense Component
+    app_migration = Column(String)  # App Migration
+    native_apps = Column(String)  # Native Apps
+    complexity = Column(ARRAY(String))  # Project Complexity
+    complexity_other = Column(String)
+    dev_team = Column(ARRAY(String))  # Development Team
+    dev_team_other = Column(String)
+    team_experience = Column(String)  # Team Experience
+    start_date = Column(Date)  # Period of Performance
+    end_date = Column(Date)
+    clin_01 = Column(Integer)  # CLIN 01 : Unclassified Cloud Offerings
+    clin_02 = Column(Integer)  # CLIN 02: Classified Cloud Offerings
+    clin_03 = Column(Integer)  # CLIN 03: Unclassified Cloud Support and Assistance
+    clin_04 = Column(Integer)  # CLIN 04: Classified Cloud Support and Assistance
+    ko_first_name = Column(String)  # First Name
+    ko_last_name = Column(String)  # Last Name
+    ko_email = Column(String)  # Email
+    ko_dod_id = Column(String)  # DOD ID
+    cor_first_name = Column(String)  # First Name
+    cor_last_name = Column(String)  # Last Name
+    cor_email = Column(String)  # Email
+    cor_dod_id = Column(String)  # DOD ID
+    so_first_name = Column(String)  # First Name
+    so_last_name = Column(String)  # Last Name
+    so_email = Column(String)  # Email
+    so_dod_id = Column(String)  # DOD ID
+    number = Column(String, unique=True)  # Task Order Number
+    loa = Column(ARRAY(String))  # Line of Accounting (LOA)
+
     @property
     def budget(self):
         return sum(
-            filter(
-                None,
-                [
-                    self.clin_0001,
-                    self.clin_0003,
-                    self.clin_1001,
-                    self.clin_1003,
-                    self.clin_2001,
-                    self.clin_2003,
-                ],
-            )
+            filter(None, [self.clin_01, self.clin_02, self.clin_03, self.clin_04])
         )
 
     def __repr__(self):
-        return "<TaskOrder(number='{}', budget='{}', expiration_date='{}', id='{}')>".format(
-            self.number, self.budget, self.expiration_date, self.id
+        return "<TaskOrder(number='{}', budget='{}', end_date='{}', id='{}')>".format(
+            self.number, self.budget, self.end_date, self.id
         )

@@ -26,16 +26,9 @@ def test_create_new_workspace(client, user_session):
 
     response = client.post(
         url_for("task_orders.update", task_order_id=task_order.id),
-        data={
-            "clin_0001": 12345,
-            "clin_0003": 12345,
-            "clin_1001": 12345,
-            "clin_1003": 12345,
-            "clin_2001": 12345,
-            "clin_2003": 12345,
-        },
+        data={**TaskOrderFactory.dictionary(), "clin_01": 12345, "clin_03": 12345},
         follow_redirects=False,
     )
 
     assert response.status_code == 200
-    assert task_order.clin_0001 == 12345
+    assert task_order.clin_01 == 12345

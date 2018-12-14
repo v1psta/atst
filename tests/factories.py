@@ -5,7 +5,7 @@ from uuid import uuid4
 import datetime
 from faker import Faker as _Faker
 
-from atst.forms.data import SERVICE_BRANCHES
+from atst.forms import data
 from atst.models.environment import Environment
 from atst.models.request import Request
 from atst.models.request_revision import RequestRevision
@@ -25,8 +25,12 @@ from atst.models.invitation import Invitation, Status as InvitationStatus
 from atst.domain.invitations import Invitations
 
 
+def random_choice(choices):
+    return random.choice([k for k, v in choices if k])
+
+
 def random_service_branch():
-    return random.choice([k for k, v in SERVICE_BRANCHES if k])
+    return random_choice(data.SERVICE_BRANCHES)
 
 
 class Base(factory.alchemy.SQLAlchemyModelFactory):
@@ -352,9 +356,12 @@ class TaskOrderFactory(Base):
     class Meta:
         model = TaskOrder
 
-    clin_0001 = random.randrange(100, 100_000)
-    clin_0003 = random.randrange(100, 100_000)
-    clin_1001 = random.randrange(100, 100_000)
-    clin_1003 = random.randrange(100, 100_000)
-    clin_2001 = random.randrange(100, 100_000)
-    clin_2003 = random.randrange(100, 100_000)
+    clin_01 = random.randrange(100, 100_000)
+    clin_03 = random.randrange(100, 100_000)
+
+    defense_component = random_service_branch()
+    app_migration = random_choice(data.APP_MIGRATION)
+    native_apps = "no"
+    complexity = random_choice(data.PROJECT_COMPLEXITY)
+    dev_team = random_choice(data.DEV_TEAM)
+    team_experience = random_choice(data.TEAM_EXPERIENCE)

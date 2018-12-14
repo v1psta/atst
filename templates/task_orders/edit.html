@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 
 {% from "components/text_input.html" import TextInput %}
+{% from "components/options_input.html" import OptionsInput %}
+{% from "components/date_input.html" import DateInput %}
 
 {% block content %}
 
@@ -16,12 +18,38 @@
     </div>
 
     <div class="panel__content">
-      {{ TextInput(form.clin_0001) }}
-      {{ TextInput(form.clin_0003) }}
-      {{ TextInput(form.clin_1001) }}
-      {{ TextInput(form.clin_1003) }}
-      {{ TextInput(form.clin_2001) }}
-      {{ TextInput(form.clin_2003) }}
+      {{ TextInput(form.scope, paragraph=True) }}
+      {{ OptionsInput(form.defense_component) }}
+      {{ OptionsInput(form.app_migration) }}
+      {{ OptionsInput(form.native_apps) }}
+      {{ OptionsInput(form.complexity) }}
+      {{ TextInput(form.complexity_other) }}
+      {{ OptionsInput(form.dev_team) }}
+      {{ TextInput(form.dev_team_other) }}
+      {{ OptionsInput(form.team_experience) }}
+      {{ DateInput(form.start_date, placeholder='MM / DD / YYYY', validation='date') }}
+      {{ DateInput(form.end_date, placeholder='MM / DD / YYYY', validation='date') }}
+      {{ TextInput(form.clin_01, validation='dollars') }}
+      {{ TextInput(form.clin_02, validation='dollars') }}
+      {{ TextInput(form.clin_03, validation='dollars') }}
+      {{ TextInput(form.clin_04, validation='dollars') }}
+      <h3>Contracting Officer (KO) Information</h3>
+      {{ TextInput(form.ko_first_name) }}
+      {{ TextInput(form.ko_last_name) }}
+      {{ TextInput(form.ko_email) }}
+      {{ TextInput(form.ko_dod_id) }}
+      <h3>Contractive Officer Representative (COR) Information</h3>
+      {{ TextInput(form.cor_first_name) }}
+      {{ TextInput(form.cor_last_name) }}
+      {{ TextInput(form.cor_email) }}
+      {{ TextInput(form.cor_dod_id) }}
+      <h3>Security Officer Information</h3>
+      {{ TextInput(form.so_first_name) }}
+      {{ TextInput(form.so_last_name) }}
+      {{ TextInput(form.so_email) }}
+      {{ TextInput(form.so_dod_id) }}
+      {{ TextInput(form.number) }}
+      {{ TextInput(form.loa) }}
     </div>
   </div>
 
