@@ -19,7 +19,7 @@
       {% endfor %}
     </ul>
 
-  </section>
+    {{ Pagination(audit_events, 'atst.activity_history') }}
 
-  {{ Pagination(audit_events, 'atst.activity_history') }}
+  </section>
 {% endblock %}
