@@ -337,3 +337,14 @@ def test_disabled_members_dont_show_up(session):
 
     # should only return workspace owner and ACTIVE member
     assert len(workspace.members) == 2
+
+
+def test_does_not_count_disabled_members(session):
+    workspace = WorkspaceFactory.create()
+    WorkspaceRoleFactory.create(workspace=workspace, status=WorkspaceRoleStatus.ACTIVE)
+    WorkspaceRoleFactory.create(workspace=workspace)
+    WorkspaceRoleFactory.create(
+        workspace=workspace, status=WorkspaceRoleStatus.DISABLED
+    )
+
+    assert workspace.user_count == 3
