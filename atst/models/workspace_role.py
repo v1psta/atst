@@ -118,6 +118,10 @@ class WorkspaceRole(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
         return self.role.display_name
 
     @property
+    def is_active(self):
+        return self.status == Status.ACTIVE
+
+    @property
     def num_environment_roles(self):
         return (
             db.session.query(EnvironmentRole)
@@ -147,8 +151,13 @@ class WorkspaceRole(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
 
     @property
     def can_resend_invitation(self):
-        return self.latest_invitation and (
-            self.latest_invitation.is_rejected or self.latest_invitation.is_expired
+        return not self.is_active and (
+            self.latest_invitation
+            and (
+                self.latest_invitation.is_rejected
+                or self.latest_invitation.is_expired
+                or self.latest_invitation.is_revoked
+            )
         )
 
 

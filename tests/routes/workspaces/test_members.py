@@ -1,12 +1,19 @@
 from flask import url_for
 
-from tests.factories import UserFactory, WorkspaceFactory, WorkspaceRoleFactory
+from tests.factories import (
+    UserFactory,
+    WorkspaceFactory,
+    WorkspaceRoleFactory,
+    InvitationFactory,
+)
 from atst.domain.workspaces import Workspaces
 from atst.domain.workspace_roles import WorkspaceRoles
 from atst.domain.projects import Projects
 from atst.domain.environments import Environments
 from atst.domain.environment_roles import EnvironmentRoles
 from atst.queue import queue
+from atst.models.workspace_role import Status as WorkspaceRoleStatus
+from atst.models.invitation import Status as InvitationStatus
 
 
 def test_user_with_permission_has_add_member_link(client, user_session):
@@ -174,10 +181,12 @@ def test_update_member_environment_role_with_no_data(client, user_session):
     assert EnvironmentRoles.get(user.id, env1_id).role == "developer"
 
 
-def test_revoke_member_access(client, user_session):
+def test_revoke_active_member_access(client, user_session):
     workspace = WorkspaceFactory.create()
     user = UserFactory.create()
-    member = WorkspaceRoles.add(user, workspace.id, "developer")
+    member = WorkspaceRoleFactory.create(
+        workspace=workspace, user=user, status=WorkspaceRoleStatus.ACTIVE
+    )
     Projects.create(
         workspace.owner,
         workspace,
@@ -195,22 +204,7 @@ def test_revoke_member_access(client, user_session):
     assert WorkspaceRoles.get_by_id(member.id).num_environment_roles == 0
 
 
-def test_shows_revoke_button(client, user_session):
-    workspace = WorkspaceFactory.create()
-    user = UserFactory.create()
-    member = WorkspaceRoleFactory.create(user=user, workspace=workspace)
-    user_session(workspace.owner)
-    response = client.get(
-        url_for(
-            "workspaces.view_member",
-            workspace_id=workspace.id,
-            member_id=member.user.id,
-        )
-    )
-    assert "Remove Workspace Access" in response.data.decode()
-
-
-def test_does_not_show_revoke_button(client, user_session):
+def test_does_not_show_any_buttons_if_owner(client, user_session):
     workspace = WorkspaceFactory.create()
     user_session(workspace.owner)
     response = client.get(
@@ -221,3 +215,95 @@ def test_does_not_show_revoke_button(client, user_session):
         )
     )
     assert "Remove Workspace Access" not in response.data.decode()
+    assert "Resend Invitation" not in response.data.decode()
+    assert "Revoke Invitation" not in response.data.decode()
+
+
+def test_only_shows_revoke_access_button_if_active(client, user_session):
+    workspace = WorkspaceFactory.create()
+    user = UserFactory.create()
+    member = WorkspaceRoleFactory.create(
+        user=user, workspace=workspace, status=WorkspaceRoleStatus.ACTIVE
+    )
+    InvitationFactory.create(
+        user=workspace.owner,
+        workspace_role=member,
+        email=member.user.email,
+        status=InvitationStatus.ACCEPTED,
+    )
+    user_session(workspace.owner)
+    response = client.get(
+        url_for(
+            "workspaces.view_member",
+            workspace_id=workspace.id,
+            member_id=member.user.id,
+        )
+    )
+    assert "Remove Workspace Access" in response.data.decode()
+    assert "Revoke Invitation" not in response.data.decode()
+    assert "Resend Invitation" not in response.data.decode()
+
+
+def test_only_shows_revoke_invite_button_if_pending(client, user_session):
+    workspace = WorkspaceFactory.create()
+    member = WorkspaceRoleFactory.create(
+        workspace=workspace, status=WorkspaceRoleStatus.PENDING
+    )
+    InvitationFactory.create(
+        user=workspace.owner, workspace_role=member, email=member.user.email
+    )
+    user_session(workspace.owner)
+    response = client.get(
+        url_for(
+            "workspaces.view_member",
+            workspace_id=workspace.id,
+            member_id=member.user.id,
+        )
+    )
+    assert "Revoke Invitation" in response.data.decode()
+    assert "Remove Workspace Access" not in response.data.decode()
+    assert "Resend Invitation" not in response.data.decode()
+
+
+def test_only_shows_resend_button_if_expired(client, user_session):
+    workspace = WorkspaceFactory.create()
+    member = WorkspaceRoleFactory.create(workspace=workspace)
+    InvitationFactory.create(
+        user=workspace.owner,
+        workspace_role=member,
+        email=member.user.email,
+        status=InvitationStatus.REJECTED_EXPIRED,
+    )
+    user_session(workspace.owner)
+    response = client.get(
+        url_for(
+            "workspaces.view_member",
+            workspace_id=workspace.id,
+            member_id=member.user.id,
+        )
+    )
+    assert "Resend Invitation" in response.data.decode()
+    assert "Revoke Invitation" not in response.data.decode()
+    assert "Remove Workspace Access" not in response.data.decode()
+
+
+def test_only_shows_resend_button_if_revoked(client, user_session):
+    workspace = WorkspaceFactory.create()
+    member = WorkspaceRoleFactory.create(workspace=workspace)
+    InvitationFactory.create(
+        user=workspace.owner,
+        workspace_role=member,
+        email=member.user.email,
+        status=InvitationStatus.REVOKED,
+    )
+    user_session(workspace.owner)
+    response = client.get(
+        url_for(
+            "workspaces.view_member",
+            workspace_id=workspace.id,
+            member_id=member.user.id,
+        )
+    )
+    assert "Resend Invitation" in response.data.decode()
+    assert "Remove Workspace Access" not in response.data.decode()
+    assert "Revoke Invitation" not in response.data.decode()
