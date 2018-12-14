@@ -22,7 +22,7 @@
 {% else %}
 
   {% for project in workspace.projects %}
-    <div class='block-list project-list-item'>
+    <div v-cloak class='block-list project-list-item'>
       <header class='block-list__header'>
         <h2 class='block-list__title'>{{ project.name }} ({{ project.environments|length }} environments)</h2>
         {% if user_can(permissions.RENAME_APPLICATION_IN_WORKSPACE) %}
