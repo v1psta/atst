@@ -71,6 +71,7 @@ def make_app(config):
     app.form_cache = FormCache(app.redis)
 
     apply_authentication(app)
+    set_default_headers(app)
 
     return app
 
@@ -88,6 +89,28 @@ def make_flask_callbacks(app):
     @app.after_request
     def _cleanup(response):
         g.current_user = None
+        return response
+
+
+def set_default_headers(app):  # pragma: no cover
+    @app.after_request
+    def _set_security_headers(response):
+        response.headers[
+            "Strict-Transport-Security"
+        ] = "max-age=31536000; includeSubDomains"
+        response.headers["X-Content-Type-Options"] = "nosniff"
+        response.headers["X-Frame-Options"] = "SAMEORIGIN"
+        response.headers["X-XSS-Protection"] = "1; mode=block"
+
+        if ENV == "dev":
+            response.headers[
+                "Content-Security-Policy"
+            ] = "default-src 'self' 'unsafe-eval'; connect-src *"
+        else:
+            response.headers[
+                "Content-Security-Policy"
+            ] = "default-src 'self' 'unsafe-eval'"
+
         return response
 
 
