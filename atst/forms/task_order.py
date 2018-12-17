@@ -18,7 +18,11 @@ from .data import (
 )
 
 
-class TaskOrderForm(CacheableForm):
+class AppInfoForm(CacheableForm):
+    portfolio_name = StringField(
+        "Organization Portfolio Name",
+        description="The name of your office or organization. You can add multiple applications to your portfolio. Your task orders are used to pay for these applications and their environments",
+    )
     scope = TextAreaField(
         "Cloud Project Scope",
         description="The name of your office or organization. You can add multiple applications to your portfolio. Your task orders are used to pay for these applications and their environments",
@@ -45,20 +49,23 @@ class TaskOrderForm(CacheableForm):
         choices=PROJECT_COMPLEXITY,
         default="",
     )
-    complexity_other = StringField("?")
+    complexity_other = StringField("Project Complexity Other")
     dev_team = SelectMultipleField(
         "Development Team",
         description="Which people or teams will be completing the development work for your cloud applications?",
         choices=DEV_TEAM,
         default="",
     )
-    dev_team_other = StringField("?")
+    dev_team_other = StringField("Development Team Other")
     team_experience = RadioField(
         "Team Experience",
         description="How much experience does your team have with development in the cloud?",
         choices=TEAM_EXPERIENCE,
         default="",
     )
+
+
+class FundingForm(CacheableForm):
     start_date = DateField(
         "Period of Performance",
         description="Select a start and end date for your Task Order to be active. Please note, this will likely be revised once your Task Order has been approved.",
@@ -80,6 +87,9 @@ class TaskOrderForm(CacheableForm):
         "CLIN 04: Classified Cloud Support and Assistance",
         description="CLASSIFIED technical guidance from the cloud service provider, including architecture, configuration of IaaS and PaaS, integration, troubleshooting assistance, and other services.",
     )
+
+
+class OversightForm(CacheableForm):
     ko_first_name = StringField("First Name")
     ko_last_name = StringField("Last Name")
     ko_email = StringField("Email")
@@ -92,5 +102,7 @@ class TaskOrderForm(CacheableForm):
     so_last_name = StringField("Last Name")
     so_email = StringField("Email")
     so_dod_id = StringField("DOD ID")
-    number = StringField("Task Order Number")
-    loa = StringField("Line of Accounting (LOA)")
+
+
+class ReviewForm(CacheableForm):
+    pass

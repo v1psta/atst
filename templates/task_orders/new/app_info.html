@@ -1,0 +1,41 @@
+{% extends 'task_orders/_new.html' %}
+
+{% from "components/text_input.html" import TextInput %}
+{% from "components/options_input.html" import OptionsInput %}
+{% from "components/date_input.html" import DateInput %}
+
+{% block heading %}
+  What You're Building
+{% endblock %}
+
+{% block form %}
+
+{% include "fragments/flash.html" %}
+
+<h3>Basic Information</h3>
+{{ TextInput(form.portfolio_name) }}
+{{ TextInput(form.scope, paragraph=True) }}
+{{ OptionsInput(form.defense_component) }}
+
+<hr>
+
+<h3>About Your Project</h3>
+{{ OptionsInput(form.app_migration) }}
+{{ OptionsInput(form.native_apps) }}
+{{ OptionsInput(form.complexity) }}
+{{ TextInput(form.complexity_other) }}
+
+<hr>
+
+<h3>About Your Team</h3>
+{{ OptionsInput(form.dev_team) }}
+{{ TextInput(form.dev_team_other) }}
+{{ OptionsInput(form.team_experience) }}
+
+<hr>
+
+<h3>Market Research</h3>
+<p>View JEDI Market Research Memo</p>
+
+
+{% endblock %}

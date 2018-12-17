@@ -16,11 +16,13 @@ class TaskOrders(object):
             raise NotFoundError("task_order")
 
     @classmethod
-    def create(cls, workspace, creator):
+    def create(cls, workspace, creator, commit=False):
         task_order = TaskOrder(workspace=workspace, creator=creator)
 
         db.session.add(task_order)
-        db.session.commit()
+
+        if commit:
+            db.session.commit()
 
         return task_order
 

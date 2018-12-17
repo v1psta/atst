@@ -56,3 +56,13 @@ class TaskOrder(Base, mixins.TimestampsMixin):
         return "<TaskOrder(number='{}', budget='{}', end_date='{}', id='{}')>".format(
             self.number, self.budget, self.end_date, self.id
         )
+
+    def to_dictionary(self):
+        return {
+            "portfolio_name": self.workspace.name,
+            **{
+                c.name: getattr(self, c.name)
+                for c in self.__table__.columns
+                if c.name not in ["id"]
+            },
+        }

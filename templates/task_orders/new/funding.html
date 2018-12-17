@@ -1,0 +1,29 @@
+{% extends 'task_orders/_new.html' %}
+
+{% from "components/text_input.html" import TextInput %}
+{% from "components/options_input.html" import OptionsInput %}
+{% from "components/date_input.html" import DateInput %}
+
+{% block heading %}
+  Funding
+{% endblock %}
+
+{% block form %}
+
+{% include "fragments/flash.html" %}
+
+<!-- Get Funding Section					 -->
+{{ DateInput(form.start_date, placeholder='MM / DD / YYYY', validation='date') }}
+{{ DateInput(form.end_date, placeholder='MM / DD / YYYY', validation='date') }}
+<p>Cloud Usage Estimate</p>
+<p>Upload a copy of your CSP Cost Estimate Research</p>
+
+<h3>Cloud Usage Calculations</h3>
+{{ TextInput(form.clin_01, validation='dollars') }}
+{{ TextInput(form.clin_02, validation='dollars') }}
+{{ TextInput(form.clin_03, validation='dollars', tooltip='The cloud support and assistance packages cannot be used as a primary development resource.') }}
+{{ TextInput(form.clin_04, validation='dollars', tooltip='The cloud support and assistance packages cannot be used as a primary development resource.') }}
+<p>Total Task Order Value</p>
+
+
+{% endblock %}
