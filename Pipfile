@@ -26,7 +26,7 @@ rq-scheduler = ">=0.8.3,<0.9"
 
 [dev-packages]
 bandit = "*"
-pytest = "*"
+pytest = "~= 3.8.2"
 ipython = "*"
 ipdb = "*"
 pylint = "*"
