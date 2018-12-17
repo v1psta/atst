@@ -92,7 +92,7 @@ def make_flask_callbacks(app):
         return response
 
 
-def set_default_headers(app):
+def set_default_headers(app):  # pragma: no cover
     @app.after_request
     def _set_security_headers(response):
         response.headers[
