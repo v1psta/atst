@@ -200,7 +200,7 @@ class Request(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
             or self.status == RequestStatus.CHANGES_REQUESTED_TO_FINVER
         ):
             review = self.latest_status.review
-            if review: #pragma: no branch
+            if review:  # pragma: no branch
                 return review.comment
 
     @property
