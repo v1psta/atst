@@ -13,8 +13,14 @@
 {% include "fragments/flash.html" %}
 
 <h3>Basic Information</h3>
-{{ TextInput(form.portfolio_name) }}
+{{ TextInput(form.portfolio_name, placeholder="The name of your office or organization") }}
 {{ TextInput(form.scope, paragraph=True) }}
+<p>
+<i>
+  Not sure how to describe your scope? <a href="#">Read some Sample Scopes</a> to
+  get an idea of what is appropriate.
+</i>
+</p>
 {{ OptionsInput(form.defense_component) }}
 
 <hr>
@@ -35,7 +41,11 @@
 <hr>
 
 <h3>Market Research</h3>
-<p>View JEDI Market Research Memo</p>
+<p>
+The JEDI Cloud Computing Program Office (CCPO) has completed the market
+research requirement for all related task orders. The Department of Defense CIO
+has approved this research. <a href="#">View JEDI Cloud Market Research</a>
+</p>
 
 
 {% endblock %}

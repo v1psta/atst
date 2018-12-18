@@ -1,11 +1,9 @@
 {% extends 'task_orders/_new.html' %}
 
-{% from "components/text_input.html" import TextInput %}
-{% from "components/options_input.html" import OptionsInput %}
-{% from "components/date_input.html" import DateInput %}
+{% from "components/user_info.html" import UserInfo %}
 
 {% block heading %}
-  Funding
+  Oversight
 {% endblock %}
 
 {% block form %}
@@ -14,19 +12,13 @@
 
 <!-- Oversight Section					 -->
 <h3>Contracting Officer (KO) Information</h3>
-{{ TextInput(form.ko_first_name) }}
-{{ TextInput(form.ko_last_name) }}
-{{ TextInput(form.ko_email) }}
-{{ TextInput(form.ko_dod_id) }}
+
+{{ UserInfo(form.ko_first_name, form.ko_last_name, form.ko_email, form.ko_dod_id) }}
+
 <h3>Contractive Officer Representative (COR) Information</h3>
-{{ TextInput(form.cor_first_name) }}
-{{ TextInput(form.cor_last_name) }}
-{{ TextInput(form.cor_email) }}
-{{ TextInput(form.cor_dod_id) }}
+{{ UserInfo(form.cor_first_name, form.cor_last_name, form.cor_email, form.cor_dod_id) }}
+
 <h3>Security Officer Information</h3>
-{{ TextInput(form.so_first_name) }}
-{{ TextInput(form.so_last_name) }}
-{{ TextInput(form.so_email) }}
-{{ TextInput(form.so_dod_id) }}
+{{ UserInfo(form.so_first_name, form.so_last_name, form.so_email, form.so_dod_id) }}
 
 {% endblock %}

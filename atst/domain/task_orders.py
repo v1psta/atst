@@ -76,7 +76,7 @@ class TaskOrders(object):
     def is_section_complete(cls, task_order, section):
         if section in TaskOrders.SECTIONS:
             for attr in TaskOrders.SECTIONS[section]:
-                if not getattr(task_order, attr):
+                if getattr(task_order, attr) is None:
                     return False
 
             return True

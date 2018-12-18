@@ -26,6 +26,19 @@ def slice_data_for_section(task_order_data, section):
     return {k: v for k, v in task_order_data.items() if k in attrs}
 
 
+def serialize_dates(data):
+    if not data:
+        return data
+
+    dates = {
+        k: v.strftime("%m/%d/%Y") for k, v in data.items() if hasattr(v, "strftime")
+    }
+
+    data.update(dates)
+
+    return data
+
+
 # TODO: this test will need to be more complicated when we add validation to
 # the forms
 def test_create_new_task_order(client, user_session):
@@ -43,6 +56,7 @@ def test_create_new_task_order(client, user_session):
     assert url_for("task_orders.new", screen=2) in response.headers["Location"]
 
     funding_data = slice_data_for_section(task_order_data, "funding")
+    funding_data = serialize_dates(funding_data)
     response = client.post(
         response.headers["Location"], data=funding_data, follow_redirects=False
     )

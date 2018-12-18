@@ -1,5 +1,4 @@
 from wtforms.fields import (
-    DateField,
     IntegerField,
     RadioField,
     SelectField,
@@ -7,6 +6,7 @@ from wtforms.fields import (
     StringField,
     TextAreaField,
 )
+from wtforms.fields.html5 import DateField
 
 from .forms import CacheableForm
 from .data import (
@@ -28,9 +28,7 @@ class AppInfoForm(CacheableForm):
         description="The name of your office or organization. You can add multiple applications to your portfolio. Your task orders are used to pay for these applications and their environments",
     )
     defense_component = SelectField(
-        "Department of Defense Component",
-        description="Your team's plan for using the cloud, such as migrating an existing application or creating a prototype.",
-        choices=SERVICE_BRANCHES,
+        "Department of Defense Component", choices=SERVICE_BRANCHES
     )
     app_migration = RadioField(
         "App Migration",
@@ -66,27 +64,12 @@ class AppInfoForm(CacheableForm):
 
 
 class FundingForm(CacheableForm):
-    start_date = DateField(
-        "Period of Performance",
-        description="Select a start and end date for your Task Order to be active. Please note, this will likely be revised once your Task Order has been approved.",
-    )
-    end_date = DateField("Period of Performance")
-    clin_01 = IntegerField(
-        "CLIN 01 : Unclassified Cloud Offerings",
-        description="UNCLASSIFIED Infrastructure as a Service (IaaS) and Platform as a Service (PaaS) offerings. ",
-    )
-    clin_02 = IntegerField(
-        "CLIN 02: Classified Cloud Offerings",
-        description="CLASSIFIED Infrastructure as a Service (IaaS) and Platform as a Service (PaaS) offerings. ",
-    )
-    clin_03 = IntegerField(
-        "CLIN 03: Unclassified Cloud Support and Assistance",
-        description="UNCLASSIFIED technical guidance from the cloud service provider, including architecture, configuration of IaaS and PaaS, integration, troubleshooting assistance, and other services.",
-    )
-    clin_04 = IntegerField(
-        "CLIN 04: Classified Cloud Support and Assistance",
-        description="CLASSIFIED technical guidance from the cloud service provider, including architecture, configuration of IaaS and PaaS, integration, troubleshooting assistance, and other services.",
-    )
+    start_date = DateField("Start Date", format="%m/%d/%Y")
+    end_date = DateField("End Date", format="%m/%d/%Y")
+    clin_01 = IntegerField("CLIN 01 : Unclassified")
+    clin_02 = IntegerField("CLIN 02: Classified")
+    clin_03 = IntegerField("CLIN 03: Unclassified")
+    clin_04 = IntegerField("CLIN 04: Classified")
 
 
 class OversightForm(CacheableForm):
