@@ -35,7 +35,7 @@ class Uploader:
                 object_name=object_name,
                 extra={"acl": "private"},
             )
-        return (fyle.filename, object_name)
+        return object_name
 
     def download_stream(self, object_name):
         obj = self.container.get_object(object_name=object_name)

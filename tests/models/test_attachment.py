@@ -9,6 +9,7 @@ from tests.mocks import PDF_FILENAME
 def test_attach(pdf_upload):
     attachment = Attachment.attach(pdf_upload)
     assert attachment.filename == PDF_FILENAME
+    assert attachment.object_name is not None
 
 
 def test_attach_raises():

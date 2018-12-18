@@ -21,8 +21,7 @@ NONPDF_FILENAME = "tests/fixtures/disa-pki.html"
 
 
 def test_upload(uploader, upload_dir, pdf_upload):
-    filename, object_name = uploader.upload(pdf_upload)
-    assert filename == PDF_FILENAME
+    object_name = uploader.upload(pdf_upload)
     assert os.path.isfile(os.path.join(upload_dir, object_name))
 
 
