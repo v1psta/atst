@@ -2,6 +2,10 @@
 {% from "components/options_input.html" import OptionsInput %}
 {% from "components/date_input.html" import DateInput %}
 {% from "components/phone_input.html" import PhoneInput %}
+{% from "components/multi_checkbox_input.html" import MultiCheckboxInput %}
+{% from "components/checkbox_input.html" import CheckboxInput %}
+
+
 
 <form method="POST" action='{{ form_action }}'>
   {{ form.csrf_token }}
@@ -23,6 +27,13 @@
       {{ OptionsInput(form.service_branch) }}
       {{ OptionsInput(form.citizenship) }}
       {{ OptionsInput(form.designation) }}
+      {{ MultiCheckboxInput(form.animals) }}
+      {{ CheckboxInput(form.other) }}
+
+      <otherinput inline-template v-bind:initial-data='{{ form.data|tojson }}'>
+        <div v-if="other" class='form-col form-col--half'>{{ TextInput(form.animals_other) }}</div>
+      </otherinput>
+
       {{ DateInput(form.date_latest_training,tooltip="When was the last time you completed the IA training? <br> Information Assurance (IA) training is an important step in cyber awareness.",placeholder="MM / DD / YYYY", validation="date") }}
     </div>
   </div>

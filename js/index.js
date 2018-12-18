@@ -6,10 +6,12 @@ import Vue from 'vue/dist/vue'
 import VTooltip from 'v-tooltip'
 
 import optionsinput from './components/options_input'
+import multicheckboxinput from './components/multi_checkbox_input'
 import textinput from './components/text_input'
 import checkboxinput from './components/checkbox_input'
 import DetailsOfUse from './components/forms/details_of_use'
 import poc from './components/forms/poc'
+import otherinput from './components/forms/other_input'
 import financial from './components/forms/financial'
 import toggler from './components/toggler'
 import NewProject from './components/forms/new_project'
@@ -36,10 +38,12 @@ const app = new Vue({
   components: {
     toggler,
     optionsinput,
+    multicheckboxinput,
     textinput,
     checkboxinput,
     DetailsOfUse,
     poc,
+    otherinput,
     financial,
     NewProject,
     selector,

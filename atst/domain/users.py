@@ -74,6 +74,9 @@ class Users(object):
         "citizenship",
         "designation",
         "date_latest_training",
+        "animals",
+        "animals_other",
+        "other"
     }
 
     @classmethod

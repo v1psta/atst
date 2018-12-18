@@ -1,0 +1,40 @@
+{% from "components/icon.html" import Icon %}
+{% from "components/tooltip.html" import Tooltip %}
+
+{% macro MultiCheckboxInput(field, tooltip, inline=False) -%}
+  <multicheckboxinput
+    name='{{ field.name }}'
+    inline-template
+    {% if field.errors %}v-bind:initial-errors='{{ field.errors | list }}'{% endif %}
+    {% if field.data and field.data != "None" %}v-bind:initial-value="{{ field.data }}"{% endif %}
+    key='{{ field.name }}'>
+    <div
+      v-bind:class="['usa-input', { 'usa-input--error': showError, 'usa-input--success': showValid }]">
+
+      <fieldset v-on:change="onInput" class="usa-input__choices {% if inline %}usa-input__choices--inline{% endif %}">
+        <legend>
+          <div class="usa-input__title">
+            {{ field.label | striptags}}
+            {% if tooltip %}{{ Tooltip(tooltip) }}{% endif %}
+          </div>
+
+          {% if field.description %}
+            <span class='usa-input__help'>{{ field.description | safe }}</span>
+          {% endif %}
+
+          <span v-show='showError'>{{ Icon('alert',classes="icon-validation") }}</span>
+          <span v-show='showValid'>{{ Icon('ok',classes="icon-validation") }}</span>
+        </legend>
+
+        {{ field() }}
+
+        <template v-if='showError'>
+          <span class='usa-input__message' v-html='validationError'></span>
+        </template>
+
+      </fieldset>
+    </div>
+
+  </multicheckboxinput>
+
+{%- endmacro %}

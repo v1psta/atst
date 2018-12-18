@@ -1,8 +1,9 @@
 import pendulum
 from copy import deepcopy
 from wtforms.fields.html5 import DateField, EmailField, TelField
-from wtforms.fields import RadioField, StringField
+from wtforms.fields import RadioField, StringField, SelectMultipleField, FieldList, BooleanField, FormField
 from wtforms.validators import Email, DataRequired, Optional
+from wtforms.widgets import ListWidget, CheckboxInput, TextInput
 
 from .fields import SelectField
 from .forms import CacheableForm
@@ -10,6 +11,10 @@ from .data import SERVICE_BRANCHES
 from atst.models.user import User
 
 from .validators import Name, DateRange, PhoneNumber
+
+class MultiCheckboxField(SelectMultipleField):
+    widget = ListWidget(prefix_label=False)
+    option_widget = CheckboxInput()
 
 
 USER_FIELDS = {
@@ -34,6 +39,39 @@ USER_FIELDS = {
             ("Foreign National", "Foreign National"),
             ("Other", "Other"),
         ],
+    ),
+    # "animals": FieldList(
+    #     SelectMultipleField(
+    #         "I am a:",
+    #         description="Please select the type of animals you are",
+    #         choices=[
+    #             ("cat", "Cat"),
+    #             ("dog", "Dog"),
+    #             ('horse', 'Horse')
+    #         ],
+    #         widget=ListWidget(prefix_label=False),
+    #         option_widget=CheckboxInput()
+    #     ),
+    # ),
+    "animals": SelectMultipleField(
+        "I am a:",
+        description="Please select the type of animals you are",
+        choices=[
+            ("cat", "Cat"),
+            ("dog", "Dog"),
+            ("human", "Human"),
+        ],
+        widget=ListWidget(prefix_label=False),
+        option_widget=CheckboxInput()
+    ),
+    "other": BooleanField(
+        "I am something else!",
+        default=False,
+        false_values=(False, "false", "False", "no", ""),
+    ),
+    "animals_other": StringField(
+        "Other animal",
+        description="What are you????",
     ),
     "designation": RadioField(
         "Designation of Person",
@@ -77,6 +115,16 @@ def inherit_user_field(field_name):
     return inherit_field(USER_FIELDS[field_name], required=required)
 
 
+class AnimalsForm(CacheableForm):
+    # create sub form that contains all of the fields we want
+    # then use FieldList to compile them all into one field in the form?
+    # can combine, but not rendering
+    # having issue w/ other
+    animals = inherit_user_field("animals")
+    other = inherit_user_field("other")
+    animals_other = inherit_user_field("animals_other")
+
+
 class EditUserForm(CacheableForm):
 
     first_name = inherit_user_field("first_name")
@@ -86,5 +134,9 @@ class EditUserForm(CacheableForm):
     phone_ext = inherit_user_field("phone_ext")
     service_branch = inherit_user_field("service_branch")
     citizenship = inherit_user_field("citizenship")
+    # animals_form = FieldList(FormField(AnimalsForm))
+    animals = inherit_user_field("animals")
+    other = inherit_user_field("other")
+    animals_other = inherit_user_field("animals_other")
     designation = inherit_user_field("designation")
     date_latest_training = inherit_user_field("date_latest_training")
