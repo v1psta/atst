@@ -25,7 +25,7 @@ class Attachment(Base, mixins.TimestampsMixin):
     @classmethod
     def attach(cls, fyle, resource=None, resource_id=None):
         try:
-            object_name = app.uploader.upload(fyle)
+            object_name = app.csp.files.upload(fyle)
         except UploadError as e:
             raise AttachmentError("Could not add attachment. " + str(e))
 
