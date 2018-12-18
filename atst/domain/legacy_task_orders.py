@@ -54,9 +54,7 @@ class LegacyTaskOrders(object):
 
     @classmethod
     def update(cls, legacy_task_order, dct):
-        updated = update_obj(
-            legacy_task_order, dct, ignore_vals=lambda v: v in ["", None]
-        )
+        updated = update_obj(legacy_task_order, dct, ignore_vals=["", None])
         db.session.add(updated)
         db.session.commit()
         return updated
