@@ -81,7 +81,7 @@ class Invitation(Base, TimestampsMixin, AuditableMixin):
 
     @property
     def workspace(self):
-        if self.workspace_role: #pragma: no branch
+        if self.workspace_role:  # pragma: no branch
             return self.workspace_role.workspace
 
     @property

@@ -84,7 +84,7 @@ class Invitations(object):
         elif invite.is_accepted or invite.is_revoked or invite.is_rejected:
             raise InvitationError(invite)
 
-        elif invite.is_pending:
+        elif invite.is_pending:  # pragma: no branch
             Invitations._update_status(invite, InvitationStatus.ACCEPTED)
             WorkspaceRoles.enable(invite.workspace_role)
             return invite
