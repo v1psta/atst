@@ -152,12 +152,7 @@ class WorkspaceRole(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     @property
     def can_resend_invitation(self):
         return not self.is_active and (
-            self.latest_invitation
-            and (
-                self.latest_invitation.is_rejected
-                or self.latest_invitation.is_expired
-                or self.latest_invitation.is_revoked
-            )
+            self.latest_invitation and self.latest_invitation.is_inactive
         )
 
 

@@ -83,6 +83,14 @@ class Invitation(Base, TimestampsMixin, AuditableMixin):
         )
 
     @property
+    def is_inactive(self):
+        return self.is_expired or self.status in [
+            Status.REJECTED_WRONG_USER,
+            Status.REJECTED_EXPIRED,
+            Status.REVOKED,
+        ]
+
+    @property
     def workspace(self):
         if self.workspace_role:
             return self.workspace_role.workspace
