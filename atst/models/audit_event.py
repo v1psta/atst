@@ -33,7 +33,7 @@ class AuditEvent(Base, TimestampsMixin):
 
         connection.execute(self.__table__.insert(), **attrs)
 
-    def __repr__(self):
+    def __repr__(self):  # pragma: no cover
         return "<AuditEvent(name='{}', action='{}', id='{}')>".format(
             self.display_name, self.action, self.id
         )

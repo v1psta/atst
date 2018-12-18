@@ -64,7 +64,7 @@ class LegacyTaskOrder(Base, mixins.TimestampsMixin):
             )
         )
 
-    def __repr__(self):
+    def __repr__(self):  # pragma: no cover
         return "<LegacyTaskOrder(number='{}', verified='{}', budget='{}', expiration_date='{}', pdf='{}', id='{}')>".format(
             self.number,
             self.verified,
