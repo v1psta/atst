@@ -1,7 +1,13 @@
 {% extends 'audit_log/events/_base.html' %}
 
 {% block content %}
+  {% if event.changed_state.role %}
+    from role "{{ event.changed_state.role[0] }}" to "{{ event.changed_state.role[1] }}"
+    <br>
+  {% endif %}
+
   for User <code>{{ event.event_details.updated_user_id }}</code> ({{ event.event_details.updated_user_name }})
+
   {% if event.event_details["environment"] %}
     <br>
     in Environment <code>{{ event.event_details["environment_id"] }}</code> ({{ event.event_details["environment"] }})

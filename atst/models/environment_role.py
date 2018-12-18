@@ -34,10 +34,15 @@ class EnvironmentRole(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
         return self.get_changes()
 
     @property
+    def displayname(self):
+        return self.role
+
+    @property
     def event_details(self):
         return {
             "updated_user_name": self.user.displayname,
             "updated_user_id": str(self.user_id),
+            "role": self.role,
             "environment": self.environment.displayname,
             "environment_id": str(self.environment_id),
             "project": self.environment.project.name,
