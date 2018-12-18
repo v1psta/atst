@@ -6,6 +6,42 @@ from .exceptions import NotFoundError
 
 
 class TaskOrders(object):
+    SECTIONS = {
+        "app_info": [
+            "scope",
+            "defense_component",
+            "app_migration",
+            "native_apps",
+            "complexity",
+            "complexity_other",
+            "dev_team",
+            "dev_team_other",
+            "team_experience",
+        ],
+        "funding": [
+            "start_date",
+            "end_date",
+            "clin_01",
+            "clin_02",
+            "clin_03",
+            "clin_04",
+        ],
+        "oversight": [
+            "ko_first_name",
+            "ko_last_name",
+            "ko_email",
+            "ko_dod_id",
+            "cor_first_name",
+            "cor_last_name",
+            "cor_email",
+            "cor_dod_id",
+            "so_first_name",
+            "so_last_name",
+            "so_email",
+            "so_dod_id",
+        ],
+    }
+
     @classmethod
     def get(cls, task_order_id):
         try:
@@ -35,3 +71,23 @@ class TaskOrders(object):
         db.session.commit()
 
         return task_order
+
+    @classmethod
+    def is_section_complete(cls, task_order, section):
+        if section in TaskOrders.SECTIONS:
+            for attr in TaskOrders.SECTIONS[section]:
+                if not getattr(task_order, attr):
+                    return False
+
+            return True
+
+        else:
+            return False
+
+    @classmethod
+    def all_sections_complete(cls, task_order):
+        for section in TaskOrders.SECTIONS.keys():
+            if not TaskOrders.is_section_complete(task_order, section):
+                return False
+
+        return True

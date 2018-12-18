@@ -1,28 +1,31 @@
 import pytest
 
-from atst.domain.exceptions import NotFoundError
-from atst.domain.legacy_task_orders import LegacyTaskOrders
-from atst.eda_client import MockEDAClient
+from atst.domain.task_orders import TaskOrders
 
-from tests.factories import LegacyTaskOrderFactory
+from tests.factories import TaskOrderFactory
 
 
-def test_can_get_task_order():
-    new_to = LegacyTaskOrderFactory.create(number="0101969F")
-    to = LegacyTaskOrders.get(new_to.number)
+def test_is_section_complete():
+    dict_keys = [k for k in TaskOrders.SECTIONS.keys()]
+    section = dict_keys[0]
+    attrs = TaskOrders.SECTIONS[section].copy()
+    task_order = TaskOrderFactory.create(**{k: None for k in attrs})
+    leftover = attrs.pop()
+    for attr in attrs:
+        setattr(task_order, attr, "str12345")
+    assert not TaskOrders.is_section_complete(task_order, section)
+    setattr(task_order, leftover, "str12345")
+    assert TaskOrders.is_section_complete(task_order, section)
 
-    assert to.id == to.id
 
+def test_all_sections_complete():
+    task_order = TaskOrderFactory.create()
+    for attr_list in TaskOrders.SECTIONS.values():
+        for attr in attr_list:
+            if not getattr(task_order, attr):
+                setattr(task_order, attr, "str12345")
 
-def test_nonexistent_task_order_raises_without_client():
-    with pytest.raises(NotFoundError):
-        LegacyTaskOrders.get("some fake number")
-
-
-def test_nonexistent_task_order_raises_with_client(monkeypatch):
-    monkeypatch.setattr(
-        "atst.domain.legacy_task_orders.LegacyTaskOrders._client",
-        lambda: MockEDAClient(),
-    )
-    with pytest.raises(NotFoundError):
-        LegacyTaskOrders.get("some other fake numer")
+    task_order.scope = None
+    assert not TaskOrders.all_sections_complete(task_order)
+    task_order.scope = "str12345"
+    assert TaskOrders.all_sections_complete(task_order)

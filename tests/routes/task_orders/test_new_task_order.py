@@ -7,17 +7,14 @@ from atst.models.workspace import Workspace
 from tests.factories import UserFactory, WorkspaceFactory, TaskOrderFactory
 
 
-def test_edit_task_order(client, user_session):
+def test_new_task_order(client, user_session):
     creator = UserFactory.create()
-    task_order = TaskOrderFactory.create(
-        creator=creator, workspace=WorkspaceFactory.create()
-    )
     user_session()
-    response = client.get(url_for("task_orders.edit", task_order_id=task_order.id))
+    response = client.get(url_for("task_orders.new", screen=1))
     assert response.status_code == 200
 
 
-def test_create_new_workspace(client, user_session):
+def test_create_new_task_order(client, user_session):
     creator = UserFactory.create()
     task_order = TaskOrderFactory.create(
         creator=creator, workspace=WorkspaceFactory.create()

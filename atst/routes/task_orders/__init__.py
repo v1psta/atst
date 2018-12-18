@@ -65,6 +65,18 @@ class ShowTaskOrderWorkflow:
     def template(self):
         return self._section["template"]
 
+    @property
+    def display_screens(self):
+        screen_info = TASK_ORDER_SECTIONS.copy()
+
+        if self.task_order:
+            for section in screen_info:
+                if TaskOrders.is_section_complete(self.task_order, section["section"]):
+                    section["complete"] = True
+
+        return screen_info
+
+
 
 class UpdateTaskOrderWorkflow(ShowTaskOrderWorkflow):
     def __init__(self, form_data, user, screen=1, task_order_id=None):
@@ -95,21 +107,21 @@ class UpdateTaskOrderWorkflow(ShowTaskOrderWorkflow):
         return self.task_order
 
 
-@task_orders_bp.route("/task_order/new/<int:screen>")
-@task_orders_bp.route("/task_order/new/<int:screen>/<task_order_id>")
+@task_orders_bp.route("/task_orders/new/<int:screen>")
+@task_orders_bp.route("/task_orders/new/<int:screen>/<task_order_id>")
 def new(screen, task_order_id=None):
     workflow = ShowTaskOrderWorkflow(screen, task_order_id)
     return render_template(
         workflow.template,
         current=screen,
         task_order_id=task_order_id,
-        screens=TASK_ORDER_SECTIONS,
+        screens=workflow.display_screens,
         form=workflow.form,
     )
 
 
-@task_orders_bp.route("/task_order/new/<int:screen>", methods=["POST"])
-@task_orders_bp.route("/task_order/new/<int:screen>/<task_order_id>", methods=["POST"])
+@task_orders_bp.route("/task_orders/new/<int:screen>", methods=["POST"])
+@task_orders_bp.route("/task_orders/new/<int:screen>/<task_order_id>", methods=["POST"])
 def update(screen, task_order_id=None):
     workflow = UpdateTaskOrderWorkflow(
         http_request.form, g.current_user, screen, task_order_id
