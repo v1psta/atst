@@ -11,14 +11,9 @@
       ]
       ) }}
 
-      {{ SidenavItem("Workspaces",
-          href="/workspaces",
-          icon="cloud",
-          active=g.matchesPath('/workspaces'),
-          subnav=[
-            {"label":"New Workspace", "href":url_for("workspaces.new"), "icon": "plus", "active": g.matchesPath('/workspaces/new')},
-          ]
-          ) }}
+    {% if g.current_user.has_workspaces %}
+      {{ SidenavItem("Workspaces", href="/workspaces", icon="cloud", active=g.matchesPath('/workspaces')) }}
+    {% endif %}
 
     {% if g.Authorization.has_atat_permission(g.current_user, g.Permissions.VIEW_AUDIT_LOG) %}
       {{ SidenavItem("Activity History", url_for('atst.activity_history'), icon="time", active=g.matchesPath('/activity-history')) }}

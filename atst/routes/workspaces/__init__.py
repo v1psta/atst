@@ -6,7 +6,6 @@ from . import index
 from . import projects
 from . import members
 from . import invitations
-from . import new
 from atst.domain.exceptions import UnauthorizedError
 from atst.domain.workspaces import Workspaces
 from atst.domain.authz import Authorization

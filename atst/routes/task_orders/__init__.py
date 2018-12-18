@@ -1,4 +1,11 @@
-from flask import Blueprint, request as http_request, render_template, g, redirect, url_for
+from flask import (
+    Blueprint,
+    request as http_request,
+    render_template,
+    g,
+    redirect,
+    url_for,
+)
 
 from atst.domain.task_orders import TaskOrders
 from atst.domain.workspaces import Workspaces
@@ -77,7 +84,6 @@ class ShowTaskOrderWorkflow:
         return screen_info
 
 
-
 class UpdateTaskOrderWorkflow(ShowTaskOrderWorkflow):
     def __init__(self, form_data, user, screen=1, task_order_id=None):
         self.form_data = form_data
@@ -129,7 +135,13 @@ def update(screen, task_order_id=None):
 
     if workflow.validate():
         workflow.update()
-        return redirect(url_for("task_orders.new", screen=screen+1, task_order_id=workflow.task_order.id))
+        return redirect(
+            url_for(
+                "task_orders.new",
+                screen=screen + 1,
+                task_order_id=workflow.task_order.id,
+            )
+        )
     else:
         return render_template(
             workflow.template,
