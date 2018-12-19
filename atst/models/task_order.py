@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Date
+from sqlalchemy import Column, Numeric, String, ForeignKey, Date
 from sqlalchemy.types import ARRAY
 from sqlalchemy.orm import relationship
 
@@ -27,10 +27,10 @@ class TaskOrder(Base, mixins.TimestampsMixin):
     team_experience = Column(String)  # Team Experience
     start_date = Column(Date)  # Period of Performance
     end_date = Column(Date)
-    clin_01 = Column(Integer)  # CLIN 01 : Unclassified Cloud Offerings
-    clin_02 = Column(Integer)  # CLIN 02: Classified Cloud Offerings
-    clin_03 = Column(Integer)  # CLIN 03: Unclassified Cloud Support and Assistance
-    clin_04 = Column(Integer)  # CLIN 04: Classified Cloud Support and Assistance
+    clin_01 = Column(Numeric(scale=2))
+    clin_02 = Column(Numeric(scale=2))
+    clin_03 = Column(Numeric(scale=2))
+    clin_04 = Column(Numeric(scale=2))
     ko_first_name = Column(String)  # First Name
     ko_last_name = Column(String)  # Last Name
     ko_email = Column(String)  # Email
