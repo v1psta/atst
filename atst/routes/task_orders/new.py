@@ -76,13 +76,9 @@ class ShowTaskOrderWorkflow:
         return screen_info
 
 
-from flask import current_app as app
-
-
 class UpdateTaskOrderWorkflow(ShowTaskOrderWorkflow):
     def __init__(self, form_data, user, screen=1, task_order_id=None):
         self.form_data = form_data
-        app.logger.info(form_data)
         self.user = user
         self.screen = screen
         self.task_order_id = task_order_id
