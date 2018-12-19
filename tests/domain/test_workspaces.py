@@ -304,7 +304,7 @@ def test_can_create_workspaces_with_matching_names():
     Workspaces.create(RequestFactory.create(), name=workspace_name)
 
 
-def test_can_revoke_workspace_access_for_active_member():
+def test_able_to_revoke_workspace_access_for_active_member():
     workspace = WorkspaceFactory.create()
     workspace_role = WorkspaceRoleFactory.create(
         workspace=workspace, status=WorkspaceRoleStatus.ACTIVE
@@ -324,7 +324,7 @@ def test_can_revoke_access():
     assert not Workspaces.can_revoke_access_for(workspace, owner_role)
 
 
-def test_cant_revoke_owner_workspace_access():
+def test_unable_to_revoke_owner_workspace_access():
     workspace = WorkspaceFactory.create()
     owner_workspace_role = workspace.roles[0]
 
