@@ -11,7 +11,7 @@
 
       <li class="progress-menu__item progress-menu__item--{{ step_indicator }}">
         <a href="{{ url_for('task_orders.new', screen=loop.index, task_order_id=task_order_id) }}"
-          {% if g.matchesPath(url_for('task_orders.new', screen=loop.index + 1)) %}class="active"{% endif %}
+          {% if g.matchesPath(url_for('task_orders.new', screen=loop.index)) %}class="active"{% endif %}
         >
           {{ s['title'] }}
         </a>

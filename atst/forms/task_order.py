@@ -25,7 +25,7 @@ class AppInfoForm(CacheableForm):
     )
     scope = TextAreaField(
         "Cloud Project Scope",
-        description="The name of your office or organization. You can add multiple applications to your portfolio. Your task orders are used to pay for these applications and their environments",
+        description="Your team's plan for using the cloud, such as migrating an existing application or creating a prototype.",
     )
     defense_component = SelectField(
         "Department of Defense Component", choices=SERVICE_BRANCHES
