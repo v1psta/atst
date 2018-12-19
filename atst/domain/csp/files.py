@@ -2,12 +2,12 @@ from atst.uploader import Uploader
 
 
 class FileProviderInterface:
-    def upload(self, fyle): # pragma: no cover
+    def upload(self, fyle):  # pragma: no cover
         """Store the file object `fyle` in the CSP. This method returns the
         object name that can be used to later look up the file."""
         raise NotImplementedError()
 
-    def download(self, object_name): # pragma: no cover
+    def download(self, object_name):  # pragma: no cover
         """Retrieve the stored file represented by `object_name`. Returns a
         file object.
         """
