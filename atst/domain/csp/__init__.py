@@ -1,4 +1,4 @@
-from .files import RackspaceFiles
+from .files import RackspaceFileProvider
 
 
 class MockCSP:
@@ -8,4 +8,4 @@ class MockCSP:
 
 
 def make_csp_provider(app):
-    app.csp = MockCSP(RackspaceFiles(app))
+    app.csp = MockCSP(RackspaceFileProvider(app))

@@ -1,7 +1,7 @@
 from atst.uploader import Uploader
 
 
-class Files:
+class FileProviderInterface:
     def upload(self, fyle): # pragma: no cover
         """Store the file object `fyle` in the CSP. This method returns the
         object name that can be used to later look up the file."""
@@ -14,7 +14,7 @@ class Files:
         raise NotImplementedError()
 
 
-class RackspaceFiles(Files):
+class RackspaceFileProvider(FileProviderInterface):
     def __init__(self, app):
         self.uploader = Uploader(
             provider=app.config.get("STORAGE_PROVIDER"),
