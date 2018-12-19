@@ -367,10 +367,12 @@ class TaskOrderFactory(Base):
     class Meta:
         model = TaskOrder
 
-    clin_01 = random.randrange(100, 100_000)
-    clin_03 = random.randrange(100, 100_000)
-    clin_02 = random.randrange(100, 100_000)
-    clin_04 = random.randrange(100, 100_000)
+    workspace = factory.SubFactory(WorkspaceFactory)
+
+    clin_01 = factory.LazyFunction(lambda *args: random.randrange(100, 100_000))
+    clin_03 = factory.LazyFunction(lambda *args: random.randrange(100, 100_000))
+    clin_02 = factory.LazyFunction(lambda *args: random.randrange(100, 100_000))
+    clin_04 = factory.LazyFunction(lambda *args: random.randrange(100, 100_000))
 
     defense_component = factory.LazyFunction(random_service_branch)
     app_migration = random_choice(data.APP_MIGRATION)
@@ -380,8 +382,12 @@ class TaskOrderFactory(Base):
     team_experience = random_choice(data.TEAM_EXPERIENCE)
 
     scope = factory.Faker("sentence")
-    start_date = random_future_date(year_min=1, year_max=1)
-    end_date = random_future_date(year_min=2, year_max=5)
+    start_date = factory.LazyFunction(
+        lambda *args: random_future_date(year_min=1, year_max=1)
+    )
+    end_date = factory.LazyFunction(
+        lambda *args: random_future_date(year_min=2, year_max=5)
+    )
 
     ko_first_name = factory.Faker("first_name")
     ko_last_name = factory.Faker("last_name")

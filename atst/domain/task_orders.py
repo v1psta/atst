@@ -13,9 +13,7 @@ class TaskOrders(object):
             "app_migration",
             "native_apps",
             "complexity",
-            "complexity_other",
             "dev_team",
-            "dev_team_other",
             "team_experience",
         ],
         "funding": [
