@@ -16,6 +16,26 @@ from atst.models.workspace_role import Status as WorkspaceRoleStatus
 from atst.models.invitation import Status as InvitationStatus
 
 
+def create_workspace_and_invite_user(
+    ws_role="developer",
+    ws_status=WorkspaceRoleStatus.PENDING,
+    invite_status=InvitationStatus.PENDING,
+):
+    workspace = WorkspaceFactory.create()
+    if ws_role != "owner":
+        user = UserFactory.create()
+        member = WorkspaceRoleFactory.create(
+            user=user, workspace=workspace, status=ws_status
+        )
+        InvitationFactory.create(
+            user=workspace.owner,
+            workspace_role=member,
+            email=member.user.email,
+            status=invite_status,
+        )
+    return workspace
+
+
 def test_user_with_permission_has_add_member_link(client, user_session):
     workspace = WorkspaceFactory.create()
     user_session(workspace.owner)
@@ -220,18 +240,11 @@ def test_does_not_show_any_buttons_if_owner(client, user_session):
 
 
 def test_only_shows_revoke_access_button_if_active(client, user_session):
-    workspace = WorkspaceFactory.create()
-    user = UserFactory.create()
-    member = WorkspaceRoleFactory.create(
-        user=user, workspace=workspace, status=WorkspaceRoleStatus.ACTIVE
-    )
-    InvitationFactory.create(
-        user=workspace.owner,
-        workspace_role=member,
-        email=member.user.email,
-        status=InvitationStatus.ACCEPTED,
+    workspace = create_workspace_and_invite_user(
+        ws_status=WorkspaceRoleStatus.ACTIVE, invite_status=InvitationStatus.ACCEPTED
     )
     user_session(workspace.owner)
+    member = workspace.members[1]
     response = client.get(
         url_for(
             "workspaces.view_member",
@@ -245,14 +258,11 @@ def test_only_shows_revoke_access_button_if_active(client, user_session):
 
 
 def test_only_shows_revoke_invite_button_if_pending(client, user_session):
-    workspace = WorkspaceFactory.create()
-    member = WorkspaceRoleFactory.create(
-        workspace=workspace, status=WorkspaceRoleStatus.PENDING
-    )
-    InvitationFactory.create(
-        user=workspace.owner, workspace_role=member, email=member.user.email
+    workspace = create_workspace_and_invite_user(
+        ws_status=WorkspaceRoleStatus.PENDING, invite_status=InvitationStatus.PENDING
     )
     user_session(workspace.owner)
+    member = workspace.members[1]
     response = client.get(
         url_for(
             "workspaces.view_member",
@@ -266,15 +276,12 @@ def test_only_shows_revoke_invite_button_if_pending(client, user_session):
 
 
 def test_only_shows_resend_button_if_expired(client, user_session):
-    workspace = WorkspaceFactory.create()
-    member = WorkspaceRoleFactory.create(workspace=workspace)
-    InvitationFactory.create(
-        user=workspace.owner,
-        workspace_role=member,
-        email=member.user.email,
-        status=InvitationStatus.REJECTED_EXPIRED,
+    workspace = create_workspace_and_invite_user(
+        ws_status=WorkspaceRoleStatus.PENDING,
+        invite_status=InvitationStatus.REJECTED_EXPIRED,
     )
     user_session(workspace.owner)
+    member = workspace.members[1]
     response = client.get(
         url_for(
             "workspaces.view_member",
@@ -288,15 +295,11 @@ def test_only_shows_resend_button_if_expired(client, user_session):
 
 
 def test_only_shows_resend_button_if_revoked(client, user_session):
-    workspace = WorkspaceFactory.create()
-    member = WorkspaceRoleFactory.create(workspace=workspace)
-    InvitationFactory.create(
-        user=workspace.owner,
-        workspace_role=member,
-        email=member.user.email,
-        status=InvitationStatus.REVOKED,
+    workspace = create_workspace_and_invite_user(
+        ws_status=WorkspaceRoleStatus.PENDING, invite_status=InvitationStatus.REVOKED
     )
     user_session(workspace.owner)
+    member = workspace.members[1]
     response = client.get(
         url_for(
             "workspaces.view_member",
