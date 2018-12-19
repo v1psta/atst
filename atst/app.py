@@ -105,11 +105,11 @@ def set_default_headers(app):  # pragma: no cover
         if ENV == "dev":
             response.headers[
                 "Content-Security-Policy"
-            ] = "default-src 'self' 'unsafe-eval'; connect-src *"
+            ] = "default-src 'self' 'unsafe-eval' 'unsafe-inline'; connect-src *"
         else:
             response.headers[
                 "Content-Security-Policy"
-            ] = "default-src 'self' 'unsafe-eval'"
+            ] = "default-src 'self' 'unsafe-eval' 'unsafe-inline'"
 
         return response
 
