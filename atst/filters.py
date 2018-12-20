@@ -34,7 +34,7 @@ def getOptionLabel(value, options):
     if hasattr(value, "value"):
         value = value.name
     try:
-        return next(tup[1] for tup in options if tup[0] == value)
+        return next(tup[1] for tup in options if tup[0] == value)  # pragma: no branch
     except StopIteration:
         return
 
