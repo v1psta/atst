@@ -1,31 +1,29 @@
-import FormMixin from '../../mixins/form'
-import textinput from '../text_input'
-import checkboxinput from '../checkbox_input'
+import FormMixin from '../mixins/form'
+import textinput from '../components/text_input'
 
 export default {
-  name: 'poc',
+  name: 'otherinput',
 
   mixins: [FormMixin],
 
   components: {
     textinput,
-    checkboxinput,
   },
 
   props: {
     initialData: {
-      type: Object,
+      type: Array,
       default: () => ({})
     }
   },
 
   data: function () {
     const {
-      am_poc = false
+      other = true
     } = this.initialData
 
     return {
-        am_poc
+        other
     }
   }
 }

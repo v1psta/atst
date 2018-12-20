@@ -28,8 +28,16 @@
 <h3>About Your Project</h3>
 {{ OptionsInput(form.app_migration) }}
 {{ OptionsInput(form.native_apps) }}
-{{ OptionsInput(form.complexity) }}
-{{ TextInput(form.complexity_other) }}
+
+<multicheckboxinput inline-template>
+    <div>
+        {{ OptionsInput(form.complexity) }}
+        {{ TextInput(form.complexity_other) }}
+        <otherinput inline-template v-bind:initial-data='{{ form.complexity|tojson }}'>
+            <div v-if="other" class='form-col form-col--half'>{{ TextInput(form.complexity_other) }}</div>
+        </otherinput>
+    </div>
+</multicheckboxinput>
 
 <hr>
 
