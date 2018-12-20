@@ -148,10 +148,6 @@ def make_config():
     if OVERRIDE_CONFIG_FILENAME:
         config_files.append(OVERRIDE_CONFIG_FILENAME)
 
-    config_files = [BASE_CONFIG_FILENAME, ENV_CONFIG_FILENAME]
-    if OVERRIDE_CONFIG_FILENAME:
-        config_files.append(OVERRIDE_CONFIG_FILENAME)
-
     # ENV_CONFIG will override values in BASE_CONFIG.
     config.read(config_files)
 
