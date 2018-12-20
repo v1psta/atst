@@ -75,7 +75,7 @@
     </div>
   {% endif %}
 
-  <div class="col col--grow">
+  <div v-cloak class="col col--grow">
 
     {% if extended_view %}
       <form @submit.prevent class='search-bar'>
@@ -109,7 +109,7 @@
       </form>
     {% endif %}
 
-    <div class='responsive-table-wrapper'>
+    <div v-cloak class='responsive-table-wrapper'>
       <table v-if="filteredRequests.length">
         <thead>
           <tr>

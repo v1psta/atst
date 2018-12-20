@@ -13,7 +13,7 @@
       {"label": "Learn More", "href": url_for('atst.helpdocs'), "icon": "info"}
     ]  ) }}
 
-  <div class='funding-summary-row'>
+  <div v-cloak class='funding-summary-row'>
 
     <div class='funding-summary-row__col'>
       <div class='panel spend-summary'>
@@ -131,6 +131,7 @@
   {% else %}
 
     <budget-chart
+      v-cloak
       budget={{ budget }}
       current-month='{{ current_month_index }}'
       expiration-date='{{ expiration_date }}'
