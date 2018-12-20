@@ -11,7 +11,7 @@ from atst.utils.localization import translate
 class CCPOReviewForm(CacheableForm):
     comment = TextAreaField(
         translate("forms.ccpo_review.comment_label"),
-        description=("forms.ccpo_review.comment_description"),
+        description=translate("forms.ccpo_review.comment_description"),
     )
     fname_mao = StringField(
         translate("forms.ccpo_review.fname_mao_label"), validators=[Optional(), Name()]
