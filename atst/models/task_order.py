@@ -57,9 +57,13 @@ class TaskOrder(Base, mixins.TimestampsMixin):
             self.number, self.budget, self.end_date, self.id
         )
 
+    @property
+    def portfolio_name(self):
+        return self.workspace.name
+
     def to_dictionary(self):
         return {
-            "portfolio_name": self.workspace.name,
+            "portfolio_name": self.portfolio_name,
             **{
                 c.name: getattr(self, c.name)
                 for c in self.__table__.columns

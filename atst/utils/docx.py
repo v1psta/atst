@@ -42,4 +42,4 @@ class Docx:
         Docx._write(docx_template, docx_file, document)
         docx_file.close()
         byte_str.seek(0)
-        return byte_str.read()
+        return byte_str

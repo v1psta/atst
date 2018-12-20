@@ -377,8 +377,8 @@ class TaskOrderFactory(Base):
     defense_component = factory.LazyFunction(random_service_branch)
     app_migration = random_choice(data.APP_MIGRATION)
     native_apps = random.choices(["yes", "no", "not_sure"])
-    complexity = random_choice(data.PROJECT_COMPLEXITY)
-    dev_team = random_choice(data.DEV_TEAM)
+    complexity = [random_choice(data.PROJECT_COMPLEXITY)]
+    dev_team = [random_choice(data.DEV_TEAM)]
     team_experience = random_choice(data.TEAM_EXPERIENCE)
 
     scope = factory.Faker("sentence")
