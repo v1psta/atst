@@ -37,7 +37,7 @@ class Workspace(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
 
     @property
     def legacy_task_order(self):
-        return self.request.legacy_task_order
+        return self.request.legacy_task_order if self.request else None
 
     @property
     def members(self):
