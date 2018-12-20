@@ -1,8 +1,8 @@
 {% extends 'task_orders/_new.html' %}
 
-{% from "components/text_input.html" import TextInput %}
-{% from "components/options_input.html" import OptionsInput %}
-{% from "components/date_input.html" import DateInput %}
+{% from "components/edit_link.html" import EditLink %}
+{% from "components/required_label.html" import RequiredLabel %}
+{% from "components/icon.html" import Icon %}
 
 {% block heading %}
   Review & Download
@@ -12,6 +12,126 @@
 
 {% include "fragments/flash.html" %}
 
-<a href="#">Download your Task Order Packet.</a>
+{% if task_order %}
+  {% set edit_link = EditLink(url_for("task_orders.new", screen=1, task_order_id=task_order.id)) %}
+{% else %}
+  {% set edit_link = EditLink(url_for("task_orders.new", screen=1)) %}
+{% endif %}
+
+<h3>Scope (Statement of Work) {{ edit_link }}</h3>
+<p>
+  {{ task_order.scope or RequiredLabel() }}
+</p>
+
+<div class="row">
+  <div class="col col--grow">
+    <h3>Period of Performance length {{ edit_link }}</h3>
+    <p>
+    {{ task_order.scope or RequiredLabel() }}
+    </p>
+  </div>
+
+  <div class="col col--grow">
+    <h3>Total funding requested {{ edit_link }}</h3>
+    <p>
+    {{ task_order.budget }}
+    </p>
+  </div>
+</div>
+
+<hr>
+
+<h2>Generated Documents</h2>
+
+<p>
+  <a href="#" download>
+    {{ Icon('download') }}
+    Cover Sheet
+  </a>
+</p>
+
+<p>
+  <a href="#" download>
+    {{ Icon('download') }}
+    Market Research
+  </a>
+</p>
+
+{% if task_order %}
+<p>
+  <a href="{{ url_for('task_orders.download_summary', task_order_id=task_order.id) }}" download>
+    {{ Icon('download') }}
+    Task Order Draft
+  </a>
+</p>
+{% endif %}
+
+<p>
+  <a href="#" download>
+    {{ Icon('download') }}
+    DD 254
+  </a>
+</p>
+
+<hr>
+
+<h2>Invite Signatories/Collaborators</h2>
+
+<div class="form-row">
+  <div class="form-col">
+    <div class="usa-input">
+      <fieldset class="usa-input__choices">
+        <legend>Financial Oversight</legend>
+        <p>
+        {% if task_order.ko_first_name %}
+        {{ task_order.ko_first_name }}
+        {{ task_order.ko_last_name }}
+        {% else %}
+        {{ RequiredLabel() }}
+        {% endif %}
+        (Contracting Officer)
+        </p>
+        <p>
+        {% if task_order.ko_first_name %}
+        {{ task_order.cor_first_name }}
+        {{ task_order.cor_last_name }}
+        {% else %}
+        {{ RequiredLabel() }}
+        {% endif %}
+        (Contracting Officer Representative)
+        </p>
+      </fieldset>
+    </div>
+  </div>
+  <div class="form-col">
+    <div class="usa-input">
+      <fieldset class="usa-input__choices">
+        <legend>Invite?</legend>
+      </fieldset>
+    </div>
+  </div>
+</div>
+<div class="form-row">
+  <div class="form-col">
+    <div class="usa-input">
+      <fieldset class="usa-input__choices">
+        <legend>Security Officer</legend>
+        <p>
+        {% if task_order.so_first_name %}
+        {{ task_order.so_first_name }}
+        {{ task_order.so_last_name }}
+        {% else %}
+        {{ RequiredLabel() }}
+        {% endif %}
+        (Security Officer)
+        </p>
+      </fieldset>
+    </div>
+  </div>
+  <div class="form-col">
+    <div class="usa-input">
+    </div>
+  </div>
+</div>
 
 {% endblock %}
