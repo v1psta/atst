@@ -101,6 +101,13 @@ MESSAGES = {
         "message_template": "",
         "category": "success",
     },
+    "task_order_complete": {
+        "title_template": "Task Order Complete",
+        "message_template": """
+        Invitations for {{ task_order.portfolio_name }} have been sent.
+        """,
+        "category": "success",
+    },
 }
 
 

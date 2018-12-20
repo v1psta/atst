@@ -18,120 +18,134 @@
   {% set edit_link = EditLink(url_for("task_orders.new", screen=1)) %}
 {% endif %}
 
-<h3>Scope (Statement of Work) {{ edit_link }}</h3>
-<p>
+<section>
+  <h3>Scope (Statement of Work) {{ edit_link }}</h3>
+  <p>
   {{ task_order.scope or RequiredLabel() }}
-</p>
+  </p>
 
-<div class="row">
-  <div class="col col--grow">
-    <h3>Period of Performance length {{ edit_link }}</h3>
-    <p>
-    {{ task_order.scope or RequiredLabel() }}
-    </p>
-  </div>
+  <div class="row">
+    <div class="col col--grow">
+      <h3>Period of Performance length {{ edit_link }}</h3>
+      {{ task_order.period or RequiredLabel() }}
+    </div>
 
-  <div class="col col--grow">
-    <h3>Total funding requested {{ edit_link }}</h3>
-    <p>
-    {{ task_order.budget }}
-    </p>
+    <div class="col col--grow">
+      <h3>Total funding requested {{ edit_link }}</h3>
+      {{ task_order.budget }}
+    </div>
   </div>
-</div>
+</section>
 
 <hr>
 
-<h2>Generated Documents</h2>
+<section>
+  <h2>Generated Documents</h2>
 
-<p>
-  <a href="#" download>
-    {{ Icon('download') }}
-    Cover Sheet
-  </a>
-</p>
+  <ul class="usa-unstyled-list">
+    <li>
+      <a href="#" download>
+        {{ Icon('download') }}
+        Cover Sheet
+      </a>
+    </li>
 
-<p>
-  <a href="#" download>
-    {{ Icon('download') }}
-    Market Research
-  </a>
-</p>
+    <li>
+      <a href="#" download>
+        {{ Icon('download') }}
+        Market Research
+      </a>
+    </li>
 
-{% if task_order %}
-<p>
-  <a href="{{ url_for('task_orders.download_summary', task_order_id=task_order.id) }}" download>
-    {{ Icon('download') }}
-    Task Order Draft
-  </a>
-</p>
-{% endif %}
+    {% if task_order %}
+    <li>
+      <a href="{{ url_for('task_orders.download_summary', task_order_id=task_order.id) }}" download>
+        {{ Icon('download') }}
+        Task Order Draft
+      </a>
+    </li>
+    {% endif %}
 
-<p>
-  <a href="#" download>
-    {{ Icon('download') }}
-    DD 254
-  </a>
-</p>
+    <li>
+      <a href="#" download>
+        {{ Icon('download') }}
+        DD 254
+      </a>
+    </li>
+  </ul>
+</section>
 
 <hr>
 
-<h2>Invite Signatories/Collaborators</h2>
+<section>
+  <h2>Invite Signatories/Collaborators</h2>
 
-<div class="form-row">
-  <div class="form-col">
-    <div class="usa-input">
-      <fieldset class="usa-input__choices">
-        <legend>Financial Oversight</legend>
-        <p>
-        {% if task_order.ko_first_name %}
-        {{ task_order.ko_first_name }}
-        {{ task_order.ko_last_name }}
-        {% else %}
-        {{ RequiredLabel() }}
-        {% endif %}
-        (Contracting Officer)
-        </p>
-        <p>
-        {% if task_order.ko_first_name %}
-        {{ task_order.cor_first_name }}
-        {{ task_order.cor_last_name }}
-        {% else %}
-        {{ RequiredLabel() }}
-        {% endif %}
-        (Contracting Officer Representative)
-        </p>
-      </fieldset>
+  <div class="form-row">
+    <div class="form-col">
+      <div class="usa-input">
+        <fieldset class="usa-input__choices">
+          <legend>Financial Oversight</legend>
+          <p>
+          {% if task_order.ko_first_name %}
+          {{ task_order.ko_first_name }}
+          {{ task_order.ko_last_name }}
+          {% else %}
+          {{ RequiredLabel() }}
+          {% endif %}
+          (Contracting Officer)
+          </p>
+          <p>
+          {% if task_order.ko_first_name %}
+          {{ task_order.cor_first_name }}
+          {{ task_order.cor_last_name }}
+          {% else %}
+          {{ RequiredLabel() }}
+          {% endif %}
+          (Contracting Officer Representative)
+          </p>
+        </fieldset>
+      </div>
+    </div>
+    <div class="form-col">
+      <div class="usa-input">
+        <fieldset class="usa-input__choices">
+          <legend>Invite?</legend>
+        </fieldset>
+      </div>
     </div>
   </div>
-  <div class="form-col">
-    <div class="usa-input">
-      <fieldset class="usa-input__choices">
-        <legend>Invite?</legend>
-      </fieldset>
+  <div class="form-row">
+    <div class="form-col">
+      <div class="usa-input">
+        <fieldset class="usa-input__choices">
+          <legend>Security Officer</legend>
+          <p>
+          {% if task_order.so_first_name %}
+          {{ task_order.so_first_name }}
+          {{ task_order.so_last_name }}
+          {% else %}
+          {{ RequiredLabel() }}
+          {% endif %}
+          (Security Officer)
+          </p>
+        </fieldset>
+      </div>
+    </div>
+    <div class="form-col">
+      <div class="usa-input">
+      </div>
     </div>
   </div>
-</div>
-<div class="form-row">
-  <div class="form-col">
-    <div class="usa-input">
-      <fieldset class="usa-input__choices">
-        <legend>Security Officer</legend>
-        <p>
-        {% if task_order.so_first_name %}
-        {{ task_order.so_first_name }}
-        {{ task_order.so_last_name }}
-        {% else %}
-        {{ RequiredLabel() }}
-        {% endif %}
-        (Security Officer)
-        </p>
-      </fieldset>
-    </div>
-  </div>
-  <div class="form-col">
-    <div class="usa-input">
-    </div>
-  </div>
-</div>
+</section>
 
+{% endblock %}
+
+{% block next %}
+  <div class='action-group'>
+    <input type='submit' class='usa-button usa-button-primary' value='Send Invitations' />
+  </div>
+{% endblock %}
+
+{% block form_action %}
+  <form method='POST' action="{{ url_for('task_orders.invite', task_order_id=task_order_id) }}" autocomplete="off">
 {% endblock %}
