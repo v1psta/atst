@@ -101,7 +101,7 @@ class Requests(object):
     @classmethod
     def approve_and_create_workspace(cls, request):
         approved_request = Requests.set_status(request, RequestStatus.APPROVED)
-        workspace = Workspaces.create(approved_request)
+        workspace = Workspaces.create_from_request(approved_request)
 
         RequestsQuery.add_and_commit(approved_request)
 

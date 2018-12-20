@@ -25,7 +25,7 @@ def test_has_no_ws_role_history(session):
     owner = UserFactory.create()
     user = UserFactory.create()
 
-    workspace = Workspaces.create(RequestFactory.create(creator=owner))
+    workspace = Workspaces.create_from_request(RequestFactory.create(creator=owner))
     workspace_role = WorkspaceRoles.add(user, workspace.id, "developer")
     create_event = (
         session.query(AuditEvent)
@@ -42,7 +42,7 @@ def test_has_ws_role_history(session):
     owner = UserFactory.create()
     user = UserFactory.create()
 
-    workspace = Workspaces.create(RequestFactory.create(creator=owner))
+    workspace = Workspaces.create_from_request(RequestFactory.create(creator=owner))
     role = session.query(Role).filter(Role.name == "developer").one()
     # in order to get the history, we don't want the WorkspaceRoleFactory
     #  to commit after create()
@@ -67,7 +67,7 @@ def test_has_ws_status_history(session):
     owner = UserFactory.create()
     user = UserFactory.create()
 
-    workspace = Workspaces.create(RequestFactory.create(creator=owner))
+    workspace = Workspaces.create_from_request(RequestFactory.create(creator=owner))
     # in order to get the history, we don't want the WorkspaceRoleFactory
     #  to commit after create()
     WorkspaceRoleFactory._meta.sqlalchemy_session_persistence = "flush"
@@ -89,7 +89,7 @@ def test_has_ws_status_history(session):
 def test_has_no_env_role_history(session):
     owner = UserFactory.create()
     user = UserFactory.create()
-    workspace = Workspaces.create(RequestFactory.create(creator=owner))
+    workspace = Workspaces.create_from_request(RequestFactory.create(creator=owner))
     project = ProjectFactory.create(workspace=workspace)
     environment = EnvironmentFactory.create(project=project, name="new environment!")
 
@@ -108,7 +108,7 @@ def test_has_no_env_role_history(session):
 def test_has_env_role_history(session):
     owner = UserFactory.create()
     user = UserFactory.create()
-    workspace = Workspaces.create(RequestFactory.create(creator=owner))
+    workspace = Workspaces.create_from_request(RequestFactory.create(creator=owner))
     workspace_role = WorkspaceRoleFactory.create(workspace=workspace, user=user)
     project = ProjectFactory.create(workspace=workspace)
     environment = EnvironmentFactory.create(project=project, name="new environment!")
@@ -133,7 +133,7 @@ def test_event_details():
     owner = UserFactory.create()
     user = UserFactory.create()
 
-    workspace = Workspaces.create(RequestFactory.create(creator=owner))
+    workspace = Workspaces.create_from_request(RequestFactory.create(creator=owner))
     workspace_role = WorkspaceRoles.add(user, workspace.id, "developer")
 
     assert workspace_role.event_details["updated_user_name"] == user.displayname
@@ -150,7 +150,7 @@ def test_has_no_environment_roles():
         "workspace_role": "developer",
     }
 
-    workspace = Workspaces.create(RequestFactory.create(creator=owner))
+    workspace = Workspaces.create_from_request(RequestFactory.create(creator=owner))
     workspace_role = Workspaces.create_member(owner, workspace, developer_data)
 
     assert not workspace_role.has_environment_roles
@@ -166,7 +166,7 @@ def test_has_environment_roles():
         "workspace_role": "developer",
     }
 
-    workspace = Workspaces.create(RequestFactory.create(creator=owner))
+    workspace = Workspaces.create_from_request(RequestFactory.create(creator=owner))
     workspace_role = Workspaces.create_member(owner, workspace, developer_data)
     project = Projects.create(
         owner, workspace, "my test project", "It's mine.", ["dev", "staging", "prod"]
@@ -185,7 +185,7 @@ def test_role_displayname():
         "workspace_role": "developer",
     }
 
-    workspace = Workspaces.create(RequestFactory.create(creator=owner))
+    workspace = Workspaces.create_from_request(RequestFactory.create(creator=owner))
     workspace_role = Workspaces.create_member(owner, workspace, developer_data)
 
     assert workspace_role.role_displayname == "Developer"

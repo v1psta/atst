@@ -1,4 +1,4 @@
-from flask import Blueprint, request as http_request, g
+from flask import Blueprint, request as http_request, g, render_template
 
 workspaces_bp = Blueprint("workspaces", __name__)
 

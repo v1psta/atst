@@ -1,0 +1,79 @@
+{% extends 'task_orders/_new.html' %}
+
+{% from "components/text_input.html" import TextInput %}
+{% from "components/options_input.html" import OptionsInput %}
+{% from "components/date_input.html" import DateInput %}
+
+{% block heading %}
+  Funding
+{% endblock %}
+
+{% block form %}
+
+{% include "fragments/flash.html" %}
+
+<!-- Get Funding Section					 -->
+<h3>Period of Performance</h3>
+
+<p>Choose the dates your task order will cover.</p>
+
+<p>
+Because your funds will be lost if you don’t use them, we strongly recommend
+submitting small, short-duration task orders, usually a three month period.
+We’ll notify you when your period of performance is nearing the end so you can
+request your next set of funds with a new task order.
+</p>
+
+{{ DateInput(form.start_date, placeholder='MM / DD / YYYY', validation='date') }}
+{{ DateInput(form.end_date, placeholder='MM / DD / YYYY', validation='date') }}
+
+<hr>
+<h3>Cloud Usage Estimate</h3>
+
+<p>
+  Calculate how much your cloud usage will cost. A technical representative
+  should help you complete this calculation.
+  <a href="{{ url_for('atst.jedi_csp_calculator') }}">
+    Cloud Service Provider's estimate calculator
+  </a>
+</p>
+<h4>Upload a copy of your CSP Cost Estimate Research</h4>
+
+<p>
+Upload your anticipated cloud usage from the CSP tool linked above. PDFs and
+screengrabs of the tool are sufficient.
+</p>
+<p>
+This is only an estimation tool to help you make and informed evaluation of
+what you expect to use. While you're tied to the dollar amount you specify in
+your task order, you're not obligated by the resources you indicate in the
+calculator.
+</p>
+<input type="file">
+
+<hr>
+<h3>Cloud Usage Calculations</h3>
+<p>
+Enter the results of your cloud usage calculations. These will correspond with
+your task order's period of performance.
+</p>
+<h4>Cloud Offerings</h4>
+<p>
+Infrastructure as a Service (IaaS) and Platform as a Service (PaaS) offerings
+</p>
+
+{{ TextInput(form.clin_01, validation='dollars') }}
+{{ TextInput(form.clin_02, validation='dollars') }}
+
+<h4>Cloud Support and Assistance</h4>
+<p>
+Technical guidance from the cloud service provider, including architecture,
+configuration of IaaS and PaaS, integration, troubleshooting assistance, and
+other services.
+</p>
+{{ TextInput(form.clin_03, validation='dollars', tooltip='The cloud support and assistance packages cannot be used as a primary development resource.') }}
+{{ TextInput(form.clin_04, validation='dollars', tooltip='The cloud support and assistance packages cannot be used as a primary development resource.') }}
+<p>Total Task Order Value</p>
+
+
+{% endblock %}

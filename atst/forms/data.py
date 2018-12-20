@@ -173,3 +173,39 @@ FUNDING_TYPES = [
 ]
 
 TASK_ORDER_SOURCES = [("MANUAL", "Manual"), ("EDA", "EDA")]
+
+APP_MIGRATION = [
+    ("on_premise", "Yes, migrating from an on-premise data center"),
+    ("cloud", "Yes, migrating from another cloud provider "),
+    ("none", "Not planning to migrate any applications "),
+    ("not_sure", "Not Sure"),
+]
+
+PROJECT_COMPLEXITY = [
+    ("storage", "Storage "),
+    ("data_analytics", "Data Analytics "),
+    ("conus", "CONUS Only Access "),
+    ("oconus", "OCONUS Access "),
+    ("tactical_edge", "Tactical Edge Access "),
+    ("not_sure", "Not Sure "),
+    ("other", "Other"),
+]
+
+DEV_TEAM = [
+    ("government", "Government"),
+    ("civilians", "Civilians"),
+    ("military", "Military "),
+    ("contractor", "Contractor "),
+    ("other", "Other"),
+]
+
+TEAM_EXPERIENCE = [
+    ("none", "No previous experience"),
+    ("planned", "Researched or planned a cloud build or migration"),
+    ("built_1", "Built or Migrated 1-2 applications"),
+    ("built_3", "Built or Migrated 3-5 applications"),
+    (
+        "built_many",
+        "Built or migrated many applications, or consulted on several such projects",
+    ),
+]

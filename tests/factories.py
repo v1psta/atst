@@ -5,7 +5,7 @@ from uuid import uuid4
 import datetime
 from faker import Faker as _Faker
 
-from atst.forms.data import SERVICE_BRANCHES
+from atst.forms import data
 from atst.models.environment import Environment
 from atst.models.request import Request
 from atst.models.request_revision import RequestRevision
@@ -14,6 +14,7 @@ from atst.models.request_status_event import RequestStatusEvent, RequestStatus
 from atst.models.pe_number import PENumber
 from atst.models.project import Project
 from atst.models.legacy_task_order import LegacyTaskOrder, Source, FundingType
+from atst.models.task_order import TaskOrder
 from atst.models.user import User
 from atst.models.role import Role
 from atst.models.workspace import Workspace
@@ -24,8 +25,29 @@ from atst.models.invitation import Invitation, Status as InvitationStatus
 from atst.domain.invitations import Invitations
 
 
+def random_choice(choices):
+    return random.choice([k for k, v in choices if k])
+
+
 def random_service_branch():
-    return random.choice([k for k, v in SERVICE_BRANCHES if k])
+    return random_choice(data.SERVICE_BRANCHES)
+
+
+def random_dod_id():
+    return "".join(random.choices(string.digits, k=10))
+
+
+def random_future_date(year_min=1, year_max=5):
+    if year_min == year_max:
+        inc = year_min
+    else:
+        inc = random.randrange(year_min, year_max)
+
+    return datetime.date(
+        datetime.date.today().year + inc,
+        random.randrange(1, 12),
+        random.randrange(1, 28),
+    )
 
 
 class Base(factory.alchemy.SQLAlchemyModelFactory):
@@ -53,7 +75,7 @@ class UserFactory(Base):
     first_name = factory.Faker("first_name")
     last_name = factory.Faker("last_name")
     atat_role = factory.SubFactory(RoleFactory)
-    dod_id = factory.LazyFunction(lambda: "".join(random.choices(string.digits, k=10)))
+    dod_id = factory.LazyFunction(random_dod_id)
     phone_number = factory.LazyFunction(
         lambda: "".join(random.choices(string.digits, k=10))
     )
@@ -222,13 +244,7 @@ class LegacyTaskOrderFactory(Base):
     number = factory.LazyFunction(
         lambda: "".join(random.choices(string.ascii_uppercase + string.digits, k=13))
     )
-    expiration_date = factory.LazyFunction(
-        lambda: datetime.date(
-            datetime.date.today().year + random.randrange(1, 5),
-            random.randrange(1, 12),
-            random.randrange(1, 28),
-        )
-    )
+    expiration_date = factory.LazyFunction(random_future_date)
     clin_0001 = random.randrange(100, 100_000)
     clin_0003 = random.randrange(100, 100_000)
     clin_1001 = random.randrange(100, 100_000)
@@ -345,3 +361,43 @@ class InvitationFactory(Base):
     email = factory.Faker("email")
     status = InvitationStatus.PENDING
     expiration_time = Invitations.current_expiration_time()
+
+
+class TaskOrderFactory(Base):
+    class Meta:
+        model = TaskOrder
+
+    workspace = factory.SubFactory(WorkspaceFactory)
+
+    clin_01 = factory.LazyFunction(lambda *args: random.randrange(100, 100_000))
+    clin_03 = factory.LazyFunction(lambda *args: random.randrange(100, 100_000))
+    clin_02 = factory.LazyFunction(lambda *args: random.randrange(100, 100_000))
+    clin_04 = factory.LazyFunction(lambda *args: random.randrange(100, 100_000))
+
+    defense_component = factory.LazyFunction(random_service_branch)
+    app_migration = random_choice(data.APP_MIGRATION)
+    native_apps = random.choices(["yes", "no", "not_sure"])
+    complexity = random_choice(data.PROJECT_COMPLEXITY)
+    dev_team = random_choice(data.DEV_TEAM)
+    team_experience = random_choice(data.TEAM_EXPERIENCE)
+
+    scope = factory.Faker("sentence")
+    start_date = factory.LazyFunction(
+        lambda *args: random_future_date(year_min=1, year_max=1)
+    )
+    end_date = factory.LazyFunction(
+        lambda *args: random_future_date(year_min=2, year_max=5)
+    )
+
+    ko_first_name = factory.Faker("first_name")
+    ko_last_name = factory.Faker("last_name")
+    ko_email = factory.Faker("email")
+    ko_dod_id = factory.LazyFunction(random_dod_id)
+    cor_first_name = factory.Faker("first_name")
+    cor_last_name = factory.Faker("last_name")
+    cor_email = factory.Faker("email")
+    cor_dod_id = factory.LazyFunction(random_dod_id)
+    so_first_name = factory.Faker("first_name")
+    so_last_name = factory.Faker("last_name")
+    so_email = factory.Faker("email")
+    so_dod_id = factory.LazyFunction(random_dod_id)

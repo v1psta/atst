@@ -13,9 +13,11 @@ class Workspace(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
 
     id = types.Id()
     name = Column(String)
-    request_id = Column(ForeignKey("requests.id"), nullable=False)
+    request_id = Column(ForeignKey("requests.id"), nullable=True)
     projects = relationship("Project", back_populates="workspace")
     roles = relationship("WorkspaceRole")
+
+    task_orders = relationship("TaskOrder")
 
     @property
     def owner(self):

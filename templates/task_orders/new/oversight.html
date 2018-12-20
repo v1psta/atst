@@ -1,0 +1,24 @@
+{% extends 'task_orders/_new.html' %}
+
+{% from "components/user_info.html" import UserInfo %}
+
+{% block heading %}
+  Oversight
+{% endblock %}
+
+{% block form %}
+
+{% include "fragments/flash.html" %}
+
+<!-- Oversight Section					 -->
+<h3>Contracting Officer (KO) Information</h3>
+
+{{ UserInfo(form.ko_first_name, form.ko_last_name, form.ko_email, form.ko_dod_id) }}
+
+<h3>Contractive Officer Representative (COR) Information</h3>
+{{ UserInfo(form.cor_first_name, form.cor_last_name, form.cor_email, form.cor_dod_id) }}
+
+<h3>Security Officer Information</h3>
+{{ UserInfo(form.so_first_name, form.so_last_name, form.so_email, form.so_dod_id) }}
+
+{% endblock %}

@@ -1,0 +1,21 @@
+<div class="progress-menu progress-menu--four">
+  <ul>
+    {% for s in screens %}
+      {% if s.complete %}
+        {% set step_indicator = 'complete' %}
+      {% elif loop.index == current %}
+        {% set step_indicator = 'active' %}
+      {% else %}
+        {% set step_indicator = 'incomplete' %}
+      {% endif %}
+
+      <li class="progress-menu__item progress-menu__item--{{ step_indicator }}">
+        <a href="{{ url_for('task_orders.new', screen=loop.index, task_order_id=task_order_id) }}"
+          {% if g.matchesPath(url_for('task_orders.new', screen=loop.index)) %}class="active"{% endif %}
+        >
+          {{ s['title'] }}
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+</div>

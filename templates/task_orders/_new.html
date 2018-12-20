@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="col">
+
+  {% include 'task_orders/new/menu.html' %}
+
+  {% include "fragments/flash.html" %}
+
+  {% block form_action %}
+    {% if task_order_id %}
+      <form method='POST' action="{{ url_for('task_orders.new', screen=current, task_order_id=task_order_id) }}" autocomplete="off">
+    {% else %}
+      <form method='POST' action="{{ url_for('task_orders.update', screen=current) }}" autocomplete="off">
+    {% endif %}
+  {% endblock %}
+
+    <div class="panel">
+
+      <div class="panel__heading">
+        <div class="subtitle h2">Task Order Builder</div>
+        <h1>{% block heading %}{% endblock %}</h1>
+      </div>
+
+      <div class="panel__content">
+
+        {{ form.csrf_token }}
+        {% block form %}
+        form goes here
+        {% endblock %}
+
+      </div>
+
+    </div>
+
+    {% block next %}
+
+      <div class='action-group'>
+        <input type='submit' class='usa-button usa-button-primary' value='Save & Continue' />
+      </div>
+
+    {% endblock %}
+
+  </form>
+
+</div>
+
+{% endblock %}

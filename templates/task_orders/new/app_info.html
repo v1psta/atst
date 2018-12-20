@@ -1,0 +1,51 @@
+{% extends 'task_orders/_new.html' %}
+
+{% from "components/text_input.html" import TextInput %}
+{% from "components/options_input.html" import OptionsInput %}
+{% from "components/date_input.html" import DateInput %}
+
+{% block heading %}
+  What You're Building
+{% endblock %}
+
+{% block form %}
+
+{% include "fragments/flash.html" %}
+
+<h3>Basic Information</h3>
+{{ TextInput(form.portfolio_name, placeholder="The name of your office or organization") }}
+{{ TextInput(form.scope, paragraph=True) }}
+<p>
+<i>
+  Not sure how to describe your scope? <a href="#">Read some Sample Scopes</a> to
+  get an idea of what is appropriate.
+</i>
+</p>
+{{ OptionsInput(form.defense_component) }}
+
+<hr>
+
+<h3>About Your Project</h3>
+{{ OptionsInput(form.app_migration) }}
+{{ OptionsInput(form.native_apps) }}
+{{ OptionsInput(form.complexity) }}
+{{ TextInput(form.complexity_other) }}
+
+<hr>
+
+<h3>About Your Team</h3>
+{{ OptionsInput(form.dev_team) }}
+{{ TextInput(form.dev_team_other) }}
+{{ OptionsInput(form.team_experience) }}
+
+<hr>
+
+<h3>Market Research</h3>
+<p>
+The JEDI Cloud Computing Program Office (CCPO) has completed the market
+research requirement for all related task orders. The Department of Defense CIO
+has approved this research. <a href="#">View JEDI Cloud Market Research</a>
+</p>
+
+
+{% endblock %}
