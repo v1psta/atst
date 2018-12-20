@@ -77,7 +77,18 @@ class Invitation(Base, TimestampsMixin, AuditableMixin):
 
     @property
     def is_expired(self):
-        return datetime.datetime.now(self.expiration_time.tzinfo) > self.expiration_time
+        return (
+            datetime.datetime.now(self.expiration_time.tzinfo) > self.expiration_time
+            and not self.status == Status.ACCEPTED
+        )
+
+    @property
+    def is_inactive(self):
+        return self.is_expired or self.status in [
+            Status.REJECTED_WRONG_USER,
+            Status.REJECTED_EXPIRED,
+            Status.REVOKED,
+        ]
 
     @property
     def workspace(self):

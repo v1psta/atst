@@ -146,7 +146,10 @@ class Workspaces(object):
 
     @classmethod
     def can_revoke_access_for(cls, workspace, workspace_role):
-        return workspace_role.user != workspace.owner
+        return (
+            workspace_role.user != workspace.owner
+            and workspace_role.status == WorkspaceRoleStatus.ACTIVE
+        )
 
     @classmethod
     def revoke_access(cls, user, workspace_id, workspace_role_id):
