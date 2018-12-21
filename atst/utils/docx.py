@@ -15,13 +15,27 @@ class Docx:
         return ZipFile(Docx._template_path(docx_file), mode="r")
 
     @classmethod
-    def _write(cls, docx_template, docx_file, document):
+    def _write(cls, docx_template, docx_file, document_content):
+        """
+        This method takes an existing docx as its starting
+        point and copies over every file from it to a new zip
+        file, overwriting the document.xml file with new
+        document content.
+
+        zipfile.ZipFile does not provide a way to replace file
+        contents in a zip in-place, so we copy over the entire
+        zip archive instead.
+
+        docx_template: The source docx file we harvest from.
+        docx_file: A ZipFile instance that content from the docx_template is copied to
+        document_content: The new content for the document.xml file
+        """
         with docx_template as template:
             for item in template.infolist():
                 if item.filename != Docx.DOCUMENT_FILE:
                     content = template.read(item.filename).decode()
                 else:
-                    content = document
+                    content = document_content
 
                 docx_file.writestr(item, content)
 
