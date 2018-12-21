@@ -1,5 +1,4 @@
 import os
-from io import BytesIO
 from zipfile import ZipFile
 from flask import render_template, current_app as app
 
@@ -31,15 +30,14 @@ class Docx:
     @classmethod
     def render(
         cls,
+        file_like,
         doc_template="docx/document.xml",
         file_template="docx/template.docx",
         **args,
     ):
         document = render_template(doc_template, **args)
-        byte_str = BytesIO()
-        docx_file = ZipFile(byte_str, mode="w")
-        docx_template = Docx._template(file_template)
-        Docx._write(docx_template, docx_file, document)
-        docx_file.close()
-        byte_str.seek(0)
-        return byte_str
+        with ZipFile(file_like, mode="w") as docx_file:
+            docx_template = Docx._template(file_template)
+            Docx._write(docx_template, docx_file, document)
+        file_like.seek(0)
+        return file_like

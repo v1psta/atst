@@ -1,3 +1,4 @@
+from io import BytesIO
 from flask import Response
 
 from . import task_orders_bp
@@ -8,7 +9,8 @@ from atst.utils.docx import Docx
 @task_orders_bp.route("/task_orders/download_summary/<task_order_id>")
 def download_summary(task_order_id):
     task_order = TaskOrders.get(task_order_id)
-    byte_str = Docx.render(data=task_order.to_dictionary())
+    byte_str = BytesIO()
+    Docx.render(byte_str, data=task_order.to_dictionary())
     filename = "{}.docx".format(task_order.portfolio_name)
     return Response(
         byte_str,
