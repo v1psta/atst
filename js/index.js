@@ -15,6 +15,7 @@ import toggler from './components/toggler'
 import NewProject from './components/forms/new_project'
 import EditEnvironmentRole from './components/forms/edit_environment_role'
 import EditProjectRoles from './components/forms/edit_project_roles'
+import funding from './components/forms/funding'
 import Modal from './mixins/modal'
 import selector from './components/selector'
 import BudgetChart from './components/charts/budget_chart'
@@ -52,6 +53,7 @@ const app = new Vue({
     EditProjectRoles,
     RequestsList,
     ConfirmationPopover,
+    funding,
   },
 
   mounted: function() {
