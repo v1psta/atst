@@ -9,7 +9,7 @@ from atst.utils.flash import formatted_flash as flash
 @task_orders_bp.route("/task_orders/invite/<task_order_id>", methods=["POST"])
 def invite(task_order_id):
     task_order = TaskOrders.get(task_order_id)
-    flash("task_order_complete", task_order=task_order)
+    flash("task_order_submitted", task_order=task_order)
     return redirect(
         url_for("workspaces.workspace_members", workspace_id=task_order.workspace.id)
     )

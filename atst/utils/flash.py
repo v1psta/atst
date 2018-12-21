@@ -101,10 +101,10 @@ MESSAGES = {
         "message_template": "",
         "category": "success",
     },
-    "task_order_complete": {
-        "title_template": "Task Order Complete",
+    "task_order_submitted": {
+        "title_template": "Task Order Form Submitted",
         "message_template": """
-        Invitations for {{ task_order.portfolio_name }} have been sent.
+        Your task order form for {{ task_order.portfolio_name }} has been submitted.
         """,
         "category": "success",
     },
