@@ -12,26 +12,28 @@
 
 {% include "fragments/flash.html" %}
 
+{% macro TOEditLink(screen=1) %}
 {% if task_order %}
-  {% set edit_link = EditLink(url_for("task_orders.new", screen=1, task_order_id=task_order.id)) %}
+  {{ EditLink(url_for("task_orders.new", screen=screen, task_order_id=task_order.id)) }}
 {% else %}
-  {% set edit_link = EditLink(url_for("task_orders.new", screen=1)) %}
+  {{ EditLink(url_for("task_orders.new", screen=screen)) }}
 {% endif %}
+{% endmacro %}
 
 <section>
-  <h3>Scope (Statement of Work) {{ edit_link }}</h3>
+  <h3>Scope (Statement of Work) {{ TOEditLink() }}</h3>
   <p>
   {{ task_order.scope or RequiredLabel() }}
   </p>
 
   <div class="row">
     <div class="col col--grow">
-      <h3>Period of Performance length {{ edit_link }}</h3>
+      <h3>Period of Performance length {{ TOEditLink(screen=2) }}</h3>
       {{ task_order.period or RequiredLabel() }}
     </div>
 
     <div class="col col--grow">
-      <h3>Total funding requested {{ edit_link }}</h3>
+      <h3>Total funding requested {{ TOEditLink(screen=2) }}</h3>
       {{ task_order.budget }}
     </div>
   </div>
@@ -55,7 +57,8 @@
         {{ Icon('download') }}
         Market Research
       </a>
-    </li>
+    </li
+    >
 
     {% if task_order %}
     <li>
@@ -87,19 +90,19 @@
           <legend>Financial Oversight</legend>
           <p>
           {% if task_order.ko_first_name %}
-          {{ task_order.ko_first_name }}
-          {{ task_order.ko_last_name }}
+            {{ task_order.ko_first_name }}
+            {{ task_order.ko_last_name }}
           {% else %}
-          {{ RequiredLabel() }}
+            {{ RequiredLabel() }}
           {% endif %}
           (Contracting Officer)
           </p>
           <p>
           {% if task_order.ko_first_name %}
-          {{ task_order.cor_first_name }}
-          {{ task_order.cor_last_name }}
+            {{ task_order.cor_first_name }}
+            {{ task_order.cor_last_name }}
           {% else %}
-          {{ RequiredLabel() }}
+            {{ RequiredLabel() }}
           {% endif %}
           (Contracting Officer Representative)
           </p>
@@ -121,10 +124,10 @@
           <legend>Security Officer</legend>
           <p>
           {% if task_order.so_first_name %}
-          {{ task_order.so_first_name }}
-          {{ task_order.so_last_name }}
+            {{ task_order.so_first_name }}
+            {{ task_order.so_last_name }}
           {% else %}
-          {{ RequiredLabel() }}
+            {{ RequiredLabel() }}
           {% endif %}
           (Security Officer)
           </p>
