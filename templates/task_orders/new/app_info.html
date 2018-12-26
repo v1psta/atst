@@ -3,6 +3,7 @@
 {% from "components/text_input.html" import TextInput %}
 {% from "components/options_input.html" import OptionsInput %}
 {% from "components/date_input.html" import DateInput %}
+{% from "components/multi_checkbox_input.html" import MultiCheckboxInput %}
 
 {% block heading %}
   What You're Building
@@ -28,16 +29,7 @@
 <h3>About Your Project</h3>
 {{ OptionsInput(form.app_migration) }}
 {{ OptionsInput(form.native_apps) }}
-
-<multicheckboxinput inline-template>
-    <div>
-        {{ OptionsInput(form.complexity) }}
-        {{ TextInput(form.complexity_other) }}
-        <otherinput inline-template v-bind:initial-data='{{ form.data.complexity.data|tojson }}'>
-            <div v-if="other" class='form-col form-col--half'>{{ TextInput(form.complexity_other) }}</div>
-        </otherinput>
-    </div>
-</multicheckboxinput>
+{{ MultiCheckboxInput(form.complexity, form.complexity_other)}}
 
 <hr>
 

@@ -1,0 +1,48 @@
+{% from "components/icon.html" import Icon %}
+{% from "components/tooltip.html" import Tooltip %}
+{% from "components/text_input.html" import TextInput %}
+
+{% macro MultiCheckboxInput(field1, field_other, tooltip, inline=False) -%}
+  <multicheckboxinput
+    name='{{ field1.name }}'
+    inline-template
+    {% if field1.errors %}v-bind:initial-errors='{{ field1.errors | list }}'{% endif %}
+    {% if field1.data and field1.data != "None" %}v-bind:initial-value="'{{ field1.data }}'"{% endif %}
+    key='{{ field1.name }}'>
+    <div
+      v-bind:class="['usa-input', { 'usa-input--error': showError, 'usa-input--success': showValid }]">
+
+      <fieldset v-on:change="onInput" class="usa-input__choices {% if inline %}usa-input__choices--inline{% endif %}">
+        <legend>
+          <div class="usa-input__title">
+            {{ field1.label | striptags}}
+            {% if tooltip %}{{ Tooltip(tooltip) }}{% endif %}
+          </div>
+
+          {% if field1.description %}
+            <span class='usa-input__help'>{{ field1.description | safe }}</span>
+          {% endif %}
+
+          <span v-show='showError'>{{ Icon('alert',classes="icon-validation") }}</span>
+          <span v-show='showValid'>{{ Icon('ok',classes="icon-validation") }}</span>
+        </legend>
+
+        {{ field1() }}
+
+        <template v-if='showError'>
+          <span class='usa-input__message' v-html='validationError'></span>
+        </template>
+
+        <input type='checkbox' id='opt-other' aria-controls='opt-other-value'/>
+        <label for='opt-other'>Other</label>
+
+        <input type='text' name='options' id='opt-other-value' aria-expanded='false'/>
+
+        {{ TextInput(field_other) }}
+
+      </fieldset>
+    </div>
+
+  </multicheckboxinput>
+
+{%- endmacro %}
