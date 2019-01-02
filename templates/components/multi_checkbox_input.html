@@ -27,17 +27,17 @@
         </legend>
 
         <ul>
-          {% for f in field.choices %}
+          {% for choice in field.choices %}
             <li>
-              {% if f[0] != 'other' %}
-              <input type='checkbox' name='options' id='{{ field.name }}-{{ field.choices.index(f) }}'/>
-              <label for='{{ field.name }}-{{ field.choices.index(f) }}'>{{ f[1] }}</label>
+              {% if choice[0] != 'other' %}
+              <input type='checkbox' name='{{ field.name }}' id='{{ field.name }}-{{ field.choices.index(choice) }}' value='{{ choice[0] }}'/>
+              <label for='{{ field.name }}-{{ field.choices.index(choice) }}'>{{ choice[1] }}</label>
               {% else %}
-                <input @click="otherToggle" type='checkbox' name='options' id='{{ field.name }}-{{ field.choices.index(f) }}'/>
-                <label for='{{ field.name }}-{{ field.choices.index(f) }}'>{{ f[1] }}</label>
+                <input @click="otherToggle" type='checkbox' name='{{ field.name }}' id='{{ field.name }}-{{ field.choices.index(choice) }}' value='other'/>
+                <label for='{{ field.name }}-{{ field.choices.index(choice) }}'>{{ choice[1] }}</label>
 
                 <div v-show="otherChecked">
-                  <input type='text' name='options' id='{{ field.name }}-other' aria-expanded='false'/>
+                  <input type='text' name='{{ field.name}}_other' id='{{ field.name }}-other' aria-expanded='false'/>
                 </div>
               {% endif %}
             </li>
