@@ -5,8 +5,7 @@ from flask import current_app as app
 
 from atst.models import Base, types, mixins
 from atst.database import db
-from atst.uploader import UploadError
-from atst.domain.exceptions import NotFoundError
+from atst.domain.exceptions import NotFoundError, UploadError
 
 
 class AttachmentError(Exception):
