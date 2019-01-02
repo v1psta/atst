@@ -113,6 +113,7 @@ def new(screen, task_order_id=None):
         workflow.template,
         current=screen,
         task_order_id=task_order_id,
+        task_order=workflow.task_order,
         screens=workflow.display_screens,
         form=workflow.form,
     )

@@ -1,0 +1,8 @@
+{% from "components/icon.html" import Icon %}
+
+{% macro EditLink(url) -%}
+  <a class='icon-link' href='{{ url }}'>
+    {{ Icon('edit') }}
+    <span>edit</span>
+  </a>
+{% endmacro %}

@@ -101,6 +101,13 @@ MESSAGES = {
         "message_template": "",
         "category": "success",
     },
+    "task_order_submitted": {
+        "title_template": "Task Order Form Submitted",
+        "message_template": """
+        Your task order form for {{ task_order.portfolio_name }} has been submitted.
+        """,
+        "category": "success",
+    },
 }
 
 
