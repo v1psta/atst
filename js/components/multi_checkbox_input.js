@@ -18,6 +18,7 @@ export default {
       default: () => []
     },
     initialValue: Array,
+    otherChecked: Boolean,
   },
 
 
@@ -26,7 +27,7 @@ export default {
     return {
       showError: showError,
       showValid: !showError && !!this.initialValue,
-      validationError: this.initialErrors.join(' ')
+      validationError: this.initialErrors.join(' '),
     }
   },
 
@@ -39,6 +40,9 @@ export default {
       })
       this.showError = false
       this.showValid = true
+    },
+    otherToggle: function() {
+      this.otherChecked = !this.otherChecked
     }
   }
 }

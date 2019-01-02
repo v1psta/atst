@@ -29,10 +29,16 @@
         <ul>
           {% for f in field.choices %}
             <li>
+              {% if f[0] != 'other' %}
               <input type='checkbox' name='options' id='{{ field.name }}-{{ field.choices.index(f) }}'/>
               <label for='{{ field.name }}-{{ field.choices.index(f) }}'>{{ f[1] }}</label>
-              {% if f[0] == 'other' %}
-                <input type='text' name='options' id='{{ field.name }}-other' aria-expanded='false'/>
+              {% else %}
+                <input @click="otherToggle" type='checkbox' name='options' id='{{ field.name }}-{{ field.choices.index(f) }}'/>
+                <label for='{{ field.name }}-{{ field.choices.index(f) }}'>{{ f[1] }}</label>
+
+                <div v-show="otherChecked">
+                  <input type='text' name='options' id='{{ field.name }}-other' aria-expanded='false'/>
+                </div>
               {% endif %}
             </li>
           {% endfor %}
