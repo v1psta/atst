@@ -1,14 +1,5 @@
 import pytest
-from atst.utils.localization import (
-    translate,
-    load_cached_translations_file,
-    LocalizationInvalidKeyError,
-)
-
-
-def test_loading_cached_translations_file_returns_the_file_contents():
-    file_name = "translations.yaml"
-    assert load_cached_translations_file(file_name) == open(file_name).read()
+from atst.utils.localization import translate, LocalizationInvalidKeyError
 
 
 def test_looking_up_existing_key():
