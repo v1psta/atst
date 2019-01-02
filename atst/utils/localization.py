@@ -1,5 +1,6 @@
 import yaml
 import os
+from flask import current_app as app
 from functools import lru_cache
 from atst.utils import getattr_path
 
@@ -25,8 +26,18 @@ def load_cached_translations_file(file_name):
     return open(file_name).read()
 
 
+def _translations_file():
+    file_name = "translations.yaml"
+
+    if app:
+        file_name = app.config.get("TRANSLATIONS_FILE") or file_name
+
+    return file_name
+
+
 def translate(key, variables=None):
-    translations = yaml.safe_load(load_cached_translations_file("translations.yaml"))
+    translations_file = _translations_file()
+    translations = yaml.safe_load(load_cached_translations_file(translations_file))
     value = getattr_path(translations, key)
 
     if variables is None:
