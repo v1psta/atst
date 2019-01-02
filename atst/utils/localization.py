@@ -1,5 +1,4 @@
 import yaml
-import os
 from flask import current_app as app
 from atst.utils import getattr_path
 
