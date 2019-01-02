@@ -65,5 +65,9 @@ export default {
     clin_02: 'updateBudget',
     clin_03: 'updateBudget',
     clin_04: 'updateBudget',
+  },
+
+  mounted: function() {
+    this.updateBudget()
   }
 }
