@@ -25,11 +25,14 @@ def load_cached_translations_file(file_name):
     return open(file_name).read()
 
 
-def translate(key, variables={}):
+def translate(key, variables=None):
     translations = yaml.safe_load(load_cached_translations_file("translations.yaml"))
     value = getattr_path(translations, key)
 
-    if value == None:
+    if variables is None:
+        variables = {}
+
+    if value is None:
         raise LocalizationInvalidKeyError(key, variables)
 
     return value.format(**variables).replace("\n", "")
