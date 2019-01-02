@@ -9,6 +9,8 @@ base_public:
   header_title: JEDI Cloud
   login: Log in
   title_tag: JEDI Cloud
+common:
+  save_and_continue: Save & Continue
 components:
   modal:
     close: Close
@@ -206,7 +208,6 @@ navigation:
 requests:
   _new:
     new_request: New Request
-    save_and_continue: Save & Continue
   approval:
     add_comment: Add a comment
     approve_comments_or_notes_description: Provide any comments or notes regarding the approval of this request. <strong>This message will be shared with the person making the JEDI request.</strong>
