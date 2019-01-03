@@ -1,6 +1,10 @@
 import yaml
+import os
+from functools import lru_cache
 from flask import current_app as app
 from atst.utils import getattr_path
+
+ENV = os.getenv("FLASK_ENV", "dev")
 
 
 class LocalizationInvalidKeyError(Exception):
@@ -14,18 +18,23 @@ class LocalizationInvalidKeyError(Exception):
         )
 
 
+translations_yaml_max_cache = 0 if ENV == "dev" else None
+
+
+@lru_cache(maxsize=translations_yaml_max_cache)
 def _translations_file():
     file_name = "translations.yaml"
 
     if app:
         file_name = app.config.get("DEFAULT_TRANSLATIONS_FILE", file_name)
 
-    return open(file_name)
+    file = open(file_name)
+
+    return yaml.safe_load(file)
 
 
 def translate(key, variables=None):
-    translations_file = _translations_file()
-    translations = yaml.safe_load(translations_file)
+    translations = _translations_file()
     value = getattr_path(translations, key)
 
     if variables is None:
