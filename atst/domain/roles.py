@@ -140,6 +140,24 @@ WORKSPACE_ROLES = [
             Permissions.VIEW_WORKSPACE,
         ],
     },
+    {
+        "name": "contracting_officer",
+        "description": "Can approve funding for a task order. Has view and edit permissions for task orders in a workspace.",
+        "display_name": "Contracting Officer",
+        "permissions": [Permissions.VIEW_WORKSPACE, Permissions.KO_SIGN_TASK_ORDER],
+    },
+    {
+        "name": "contracting_officer_representative",
+        "description": "Assists in submitting task order documents. Can update Task Order.",
+        "display_name": "Contracting Officer Representative",
+        "permissions": [Permissions.VIEW_WORKSPACE],
+    },
+    {
+        "name": "security_officer",
+        "description": "Can edit security questions for a task order.",
+        "display_name": "Contracting Officer",
+        "permissions": [Permissions.VIEW_WORKSPACE, Permissions.SO_SIGN_TASK_ORDER],
+    },
 ]
 
 

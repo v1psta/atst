@@ -42,3 +42,6 @@ class Permissions(object):
 
     ADD_TAG_TO_WORKSPACE = "add_tag_to_workspace"
     REMOVE_TAG_FROM_WORKSPACE = "remove_tag_from_workspace"
+
+    KO_SIGN_TASK_ORDER = "ko_sign_task_order"
+    SO_SIGN_TASK_ORDER = "so_sign_task_order"
