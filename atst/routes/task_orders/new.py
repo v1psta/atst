@@ -112,6 +112,11 @@ class UpdateTaskOrderWorkflow(ShowTaskOrderWorkflow):
     def form(self):
         return self._section["form"](self.form_data)
 
+    @property
+    def workspace(self):
+        if self.task_order:
+            return self.task_order.workspace
+
     def validate(self):
         return self.form.validate()
 
@@ -152,7 +157,11 @@ class UpdateTaskOrderWorkflow(ShowTaskOrderWorkflow):
     def _update_invitations(self):
         for officer_type in self.OFFICER_INVITATIONS:
             field = officer_type["field"]
-            if hasattr(self.form, field) and self.form[field].data:
+            if (
+                hasattr(self.form, field)
+                and self.form[field].data
+                and not getattr(self.workspace, officer_type["role"])
+            ):
                 prefix = officer_type["prefix"]
                 officer_data = {
                     field: getattr(self.task_order, prefix + "_" + field)

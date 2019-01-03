@@ -63,3 +63,21 @@ class Workspace(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
         return "<Workspace(name='{}', request='{}', user_count='{}', id='{}')>".format(
             self.name, self.request_id, self.user_count, self.id
         )
+
+    def _find_by_role(self, role):
+        try:
+            return [member for member in self.members if member.role.name == role]
+        except StopIteration:
+            return None
+
+    @property
+    def contracting_officer(self):
+        return self._find_by_role("contracting_officer")
+
+    @property
+    def contracting_officer_representative(self):
+        return self._find_by_role("contracting_officer_representative")
+
+    @property
+    def security_officer(self):
+        return self._find_by_role("security_officer")

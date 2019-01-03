@@ -152,3 +152,23 @@ def test_invite_officers_to_task_order(queue):
     assert "contracting_officer_representative" in roles
     assert "security_officer" in roles
     assert len(queue.get_queue()) == 3
+
+
+def test_update_does_not_resend_invitation():
+    user = UserFactory.create()
+    contracting_officer = UserFactory.create()
+    workspace = WorkspaceFactory.create(owner=user)
+    task_order = TaskOrderFactory.create(
+        creator=user,
+        workspace=workspace,
+        ko_first_name=contracting_officer.first_name,
+        ko_last_name=contracting_officer.last_name,
+        ko_dod_id=contracting_officer.dod_id,
+    )
+    to_data = {**task_order.to_dictionary(), "ko_invite": True}
+    workflow = UpdateTaskOrderWorkflow(
+        to_data, user, screen=3, task_order_id=task_order.id
+    )
+    for i in range(2):
+        workflow.update()
+    assert len(contracting_officer.invitations) == 1
