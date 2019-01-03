@@ -34,6 +34,14 @@ export default {
     }
   },
 
+  mounted: function () {
+    for (let child of this.$el.firstChild.lastElementChild.children) {
+      if (this.initialValue.includes(child.firstChild.value)) {
+        child.firstChild.checked = true
+      }
+    }
+  },
+
   methods: {
     onInput: function (e) {
       this.$root.$emit('field-change', {
