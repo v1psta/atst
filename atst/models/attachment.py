@@ -5,8 +5,7 @@ from flask import current_app as app
 
 from atst.models import Base, types, mixins
 from atst.database import db
-from atst.uploader import UploadError
-from atst.domain.exceptions import NotFoundError
+from atst.domain.exceptions import NotFoundError, UploadError
 
 
 class AttachmentError(Exception):
@@ -25,12 +24,12 @@ class Attachment(Base, mixins.TimestampsMixin):
     @classmethod
     def attach(cls, fyle, resource=None, resource_id=None):
         try:
-            filename, object_name = app.uploader.upload(fyle)
+            object_name = app.csp.files.upload(fyle)
         except UploadError as e:
             raise AttachmentError("Could not add attachment. " + str(e))
 
         attachment = Attachment(
-            filename=filename,
+            filename=fyle.filename,
             object_name=object_name,
             resource=resource,
             resource_id=resource_id,

@@ -2,27 +2,23 @@ import os
 import pytest
 from werkzeug.datastructures import FileStorage
 
-from atst.uploader import Uploader, UploadError
+from atst.domain.csp.files import RackspaceFileProvider
+from atst.domain.exceptions import UploadError
 
 from tests.mocks import PDF_FILENAME
 
 
-@pytest.fixture(scope="function")
-def upload_dir(tmpdir):
-    return tmpdir.mkdir("uploads")
-
-
 @pytest.fixture
-def uploader(upload_dir):
-    return Uploader("LOCAL", container=upload_dir)
+def uploader(app):
+    return RackspaceFileProvider(app)
 
 
 NONPDF_FILENAME = "tests/fixtures/disa-pki.html"
 
 
-def test_upload(uploader, upload_dir, pdf_upload):
-    filename, object_name = uploader.upload(pdf_upload)
-    assert filename == PDF_FILENAME
+def test_upload(app, uploader, pdf_upload):
+    object_name = uploader.upload(pdf_upload)
+    upload_dir = app.config["STORAGE_CONTAINER"]
     assert os.path.isfile(os.path.join(upload_dir, object_name))
 
 
@@ -33,17 +29,18 @@ def test_upload_fails_for_non_pdfs(uploader):
             uploader.upload(fs)
 
 
-def test_download_stream(upload_dir, uploader, pdf_upload):
+def test_download(app, uploader, pdf_upload):
     # write pdf content to upload file storage and make sure it is flushed to
     # disk
     pdf_upload.seek(0)
     pdf_content = pdf_upload.read()
     pdf_upload.close()
+    upload_dir = app.config["STORAGE_CONTAINER"]
     full_path = os.path.join(upload_dir, "abc")
     with open(full_path, "wb") as output_file:
         output_file.write(pdf_content)
         output_file.flush()
 
-    stream = uploader.download_stream("abc")
+    stream = uploader.download("abc")
     stream_content = b"".join([b for b in stream])
     assert pdf_content == stream_content

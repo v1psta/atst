@@ -71,7 +71,7 @@ def task_order_pdf_download(request_id):
     request = Requests.get(g.current_user, request_id)
     if request.legacy_task_order and request.legacy_task_order.pdf:
         pdf = request.legacy_task_order.pdf
-        generator = app.uploader.download_stream(pdf.object_name)
+        generator = app.csp.files.download(pdf.object_name)
         return Response(
             generator,
             headers={
