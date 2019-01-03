@@ -28,9 +28,9 @@ def _translations_file():
     if app:
         file_name = app.config.get("DEFAULT_TRANSLATIONS_FILE", file_name)
 
-    file = open(file_name)
+    f = open(file_name)
 
-    return yaml.safe_load(file)
+    return yaml.safe_load(f)
 
 
 def translate(key, variables=None):
