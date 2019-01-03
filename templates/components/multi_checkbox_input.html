@@ -6,7 +6,7 @@
     name='{{ field.name }}'
     inline-template
     {% if field.errors %}v-bind:initial-errors='{{ field.errors | list }}'{% endif %}
-    {% if field.data and field.data != "None" %}v-bind:initial-value="'{{ field.data }}'"{% endif %}
+    {% if field.data and field.data != "None" %}v-bind:initial-value="{{ field.data }}"{% endif %}
     key='{{ field.name }}'>
     <div
       v-bind:class="['usa-input', { 'usa-input--error': showError, 'usa-input--success': showValid }]">
