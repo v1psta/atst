@@ -54,7 +54,9 @@ class ShowTaskOrderWorkflow:
         if self._form:
             pass
         elif self.task_order:
-            self._form = self._section["form"](data=self.task_order.to_dictionary())
+            # None causes issues with formdata, so coerce None to ''
+            formdata = self.process_none_types(self.task_order.to_dictionary())
+            self._form = self._section["form"](formdata=formdata)
         else:
             self._form = self._section["form"]()
 
@@ -74,6 +76,12 @@ class ShowTaskOrderWorkflow:
                     section["complete"] = True
 
         return screen_info
+
+    def process_none_types(task_order_dict):
+        for field in task_order_dict:
+            if field is None:
+                field = ''
+        return task_order_dict
 
 
 class UpdateTaskOrderWorkflow(ShowTaskOrderWorkflow):
