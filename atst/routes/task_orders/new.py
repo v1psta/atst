@@ -11,6 +11,7 @@ from . import task_orders_bp
 from atst.domain.task_orders import TaskOrders
 from atst.domain.workspaces import Workspaces
 import atst.forms.task_order as task_order_form
+from atst.services.invitation import Invitation as InvitationService
 
 
 TASK_ORDER_SECTIONS = [
@@ -114,7 +115,7 @@ class UpdateTaskOrderWorkflow(ShowTaskOrderWorkflow):
     def validate(self):
         return self.form.validate()
 
-    def update(self):
+    def _update_task_order(self):
         if self.task_order:
             TaskOrders.update(self.task_order, **self.form.data)
         else:
@@ -124,6 +125,51 @@ class UpdateTaskOrderWorkflow(ShowTaskOrderWorkflow):
             self._task_order = TaskOrders.create(workspace=ws, creator=self.user)
             TaskOrders.update(self.task_order, **to_data)
 
+    OFFICER_INVITATIONS = [
+        {
+            "field": "ko_invite",
+            "prefix": "ko",
+            "role": "contracting_officer",
+            "subject": "Review a task order",
+            "template": "emails/invitation.txt",
+        },
+        {
+            "field": "cor_invite",
+            "prefix": "cor",
+            "role": "contracting_officer_representative",
+            "subject": "Help with a task order",
+            "template": "emails/invitation.txt",
+        },
+        {
+            "field": "so_invite",
+            "prefix": "so",
+            "role": "security_officer",
+            "subject": "Review security for a task order",
+            "template": "emails/invitation.txt",
+        },
+    ]
+
+    def _update_invitations(self):
+        for officer_type in self.OFFICER_INVITATIONS:
+            field = officer_type["field"]
+            if hasattr(self.form, field) and self.form[field].data:
+                prefix = officer_type["prefix"]
+                officer_data = {
+                    field: getattr(self.task_order, prefix + "_" + field)
+                    for field in ["first_name", "last_name", "email", "dod_id"]
+                }
+                invite_service = InvitationService(
+                    self.user,
+                    self.task_order.workspace,
+                    {**officer_data, "workspace_role": officer_type["role"]},
+                    subject=officer_type["subject"],
+                    email_template=officer_type["template"],
+                )
+                invite_service.invite()
+
+    def update(self):
+        self._update_task_order()
+        self._update_invitations()
         return self.task_order
 
 

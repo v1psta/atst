@@ -4,7 +4,7 @@ from flask import url_for
 from atst.domain.task_orders import TaskOrders
 from atst.routes.task_orders.new import ShowTaskOrderWorkflow, UpdateTaskOrderWorkflow
 
-from tests.factories import UserFactory, TaskOrderFactory
+from tests.factories import UserFactory, TaskOrderFactory, WorkspaceFactory
 
 
 def test_new_task_order(client, user_session):
@@ -129,3 +129,26 @@ def test_update_task_order_with_existing_task_order():
     assert workflow.task_order.start_date != to_data["start_date"]
     workflow.update()
     assert workflow.task_order.start_date.strftime("%m/%d/%Y") == to_data["start_date"]
+
+
+def test_invite_officers_to_task_order(queue):
+    user = UserFactory.create()
+    workspace = WorkspaceFactory.create(owner=user)
+    task_order = TaskOrderFactory.create(creator=user, workspace=workspace)
+    to_data = {
+        **TaskOrderFactory.dictionary(),
+        "ko_invite": True,
+        "cor_invite": True,
+        "so_invite": True,
+    }
+    workflow = UpdateTaskOrderWorkflow(
+        to_data, user, screen=3, task_order_id=task_order.id
+    )
+    workflow.update()
+    workspace = task_order.workspace
+    assert len(workspace.members) == 4
+    roles = [member.role.name for member in workspace.members]
+    assert "contracting_officer" in roles
+    assert "contracting_officer_representative" in roles
+    assert "security_officer" in roles
+    assert len(queue.get_queue()) == 3

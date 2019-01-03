@@ -1,9 +1,3 @@
-# send invite to KO
-# create KO user (Workspaces.create_member)
-#   needs workspace role name
-# new_member = Workspaces.create_member(user, workspace, ws_role_name)
-# invite = Invitations.create(user, new_member, form.data["email"])
-# send_invite_email(g.current_user.full_name, invite.token, invite.email)
 from flask import render_template
 
 from atst.domain.workspaces import Workspaces
@@ -41,5 +35,7 @@ class Invitation:
         return Invitations.create(self.inviter, member, email)
 
     def _send_invite_email(self, token, email):
-        body = render_template(self.email_template, owner=self.inviter, token=token)
+        body = render_template(
+            self.email_template, owner=self.inviter.full_name, token=token
+        )
         queue.send_mail([email], self.subject.format(self.inviter), body)
