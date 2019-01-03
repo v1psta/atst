@@ -3,13 +3,13 @@ import re
 from flask import render_template, request as http_request, g, redirect, url_for
 
 from . import workspaces_bp
-from atst.routes.workspaces.invitations import send_invite_email
 from atst.domain.exceptions import AlreadyExistsError
 from atst.domain.projects import Projects
 from atst.domain.workspaces import Workspaces
 from atst.domain.workspace_roles import WorkspaceRoles, MEMBER_STATUS_CHOICES
 from atst.domain.environments import Environments
 from atst.domain.environment_roles import EnvironmentRoles
+from atst.services.invitation import Invitation as InvitationService
 from atst.forms.new_member import NewMemberForm
 from atst.forms.edit_member import EditMemberForm
 from atst.forms.data import (
@@ -19,7 +19,6 @@ from atst.forms.data import (
 )
 from atst.domain.authz import Authorization
 from atst.models.permissions import Permissions
-from atst.domain.invitations import Invitations
 
 from atst.utils.flash import formatted_flash as flash
 
@@ -68,13 +67,11 @@ def new_member(workspace_id):
 def create_member(workspace_id):
     workspace = Workspaces.get(g.current_user, workspace_id)
     form = NewMemberForm(http_request.form)
-    user = g.current_user
 
     if form.validate():
         try:
-            new_member = Workspaces.create_member(user, workspace, form.data)
-            invite = Invitations.create(user, new_member, form.data["email"])
-            send_invite_email(g.current_user.full_name, invite.token, invite.email)
+            invite_service = InvitationService(g.current_user, workspace, form.data)
+            invite_service.invite()
 
             flash("new_workspace_member", new_member=new_member, workspace=workspace)
 
