@@ -1,4 +1,5 @@
 from wtforms.fields import (
+    BooleanField,
     IntegerField,
     RadioField,
     SelectField,
@@ -95,6 +96,33 @@ class OversightForm(CacheableForm):
     so_last_name = StringField("Last Name")
     so_email = StringField("Email")
     so_dod_id = StringField("DOD ID")
+
+    ko_invite = BooleanField(
+        "Invite KO to Task Order Builder",
+        description="""
+            Your KO will need to approve funding for this Task Order by logging
+            into the JEDI Cloud Portal, submitting the Task Order documents
+            within their official system of record, and electronically signing.
+            <i>You may choose to skip this for now and invite them later.</i>
+            """,
+    )
+    cor_invite = BooleanField(
+        "Invite COR to Task Order Builder",
+        description="""
+            Your COR may assist with submitting the Task Order documents within
+            their official system of record. <i>You may choose to skip this for
+            now and invite them later.</i>
+            """,
+    )
+    so_invite = BooleanField(
+        "Invite Security Officer to Task Order Builder",
+        description="""
+            Your Security Officer will need to answer some security
+            configuration questions in order to generate a DD-254 document,
+            then electronically sign. <i>You may choose to skip this for now
+            and invite them later.</i>
+            """,
+    )
 
 
 class ReviewForm(CacheableForm):

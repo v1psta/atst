@@ -1,6 +1,7 @@
 {% extends 'task_orders/_new.html' %}
 
 {% from "components/user_info.html" import UserInfo %}
+{% from "components/checkbox_input.html" import CheckboxInput %}
 
 {% block heading %}
   Oversight
@@ -12,13 +13,15 @@
 
 <!-- Oversight Section					 -->
 <h3>Contracting Officer (KO) Information</h3>
-
 {{ UserInfo(form.ko_first_name, form.ko_last_name, form.ko_email, form.ko_dod_id) }}
+{{ CheckboxInput(form.ko_invite) }}
 
 <h3>Contractive Officer Representative (COR) Information</h3>
 {{ UserInfo(form.cor_first_name, form.cor_last_name, form.cor_email, form.cor_dod_id) }}
+{{ CheckboxInput(form.cor_invite) }}
 
 <h3>Security Officer Information</h3>
 {{ UserInfo(form.so_first_name, form.so_last_name, form.so_email, form.so_dod_id) }}
+{{ CheckboxInput(form.so_invite) }}
 
 {% endblock %}
