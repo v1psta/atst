@@ -65,7 +65,7 @@
   </p>
 
   {{ TextInput(form.clin_01, validation='dollars') }}
-  {{ TextInput(form.clin_02, validation='dollars') }}
+  {{ TextInput(form.clin_02, validation='dollars', disabled=(not config.CLASSIFIED)) }}
 
   <h4>Cloud Support and Assistance</h4>
   <p>
@@ -74,7 +74,7 @@
   other services.
   </p>
   {{ TextInput(form.clin_03, validation='dollars', tooltip='The cloud support and assistance packages cannot be used as a primary development resource.') }}
-  {{ TextInput(form.clin_04, validation='dollars', tooltip='The cloud support and assistance packages cannot be used as a primary development resource.') }}
+  {{ TextInput(form.clin_04, validation='dollars', tooltip='The cloud support and assistance packages cannot be used as a primary development resource.', disabled=(not config.CLASSIFIED)) }}
 </div>
 </funding>
 

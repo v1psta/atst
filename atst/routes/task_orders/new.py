@@ -1,4 +1,11 @@
-from flask import request as http_request, render_template, g, redirect, url_for
+from flask import (
+    request as http_request,
+    render_template,
+    g,
+    redirect,
+    url_for,
+    current_app as app,
+)
 
 from . import task_orders_bp
 from atst.domain.task_orders import TaskOrders
@@ -18,6 +25,7 @@ TASK_ORDER_SECTIONS = [
         "title": "Funding",
         "template": "task_orders/new/funding.html",
         "form": task_order_form.FundingForm,
+        "unclassified_form": task_order_form.UnclassifiedFundingForm,
     },
     {
         "section": "oversight",
@@ -59,12 +67,18 @@ class ShowTaskOrderWorkflow:
 
     @property
     def form(self):
+        form_type = (
+            "unclassified_form"
+            if "unclassified_form" in self._section and not app.config.get("CLASSIFIED")
+            else "form"
+        )
+
         if self._form:
             pass
         elif self.task_order:
-            self._form = self._section["form"](formdata=self.task_order_formdata)
+            self._form = self._section[form_type](formdata=self.task_order_formdata)
         else:
-            self._form = self._section["form"]()
+            self._form = self._section[form_type]()
 
         return self._form
 
