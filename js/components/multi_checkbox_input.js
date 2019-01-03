@@ -17,8 +17,10 @@ export default {
       type: Array,
       default: () => []
     },
-    initialValue: Array,
-    otherChecked: Boolean,
+    initialValue: {
+      type: Array,
+      default: () => []
+    }
   },
 
 
@@ -28,9 +30,9 @@ export default {
       showError: showError,
       showValid: !showError && !!this.initialValue,
       validationError: this.initialErrors.join(' '),
+      otherChecked: this.initialValue.includes("other") ? true : this.otherChecked
     }
   },
-
 
   methods: {
     onInput: function (e) {
