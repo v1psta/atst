@@ -32,15 +32,14 @@ export default {
       showValid: !showError && !!this.initialValue,
       validationError: this.initialErrors.join(' '),
       otherChecked: this.initialValue.includes("other") ? true : this.otherChecked,
-      otherText: this.initialOtherValue
+      otherText: this.initialOtherValue,
+      selections: []
     }
   },
 
   mounted: function () {
-    for (let child of this.$el.firstChild.lastElementChild.children) {
-      if (this.initialValue.includes(child.firstChild.value)) {
-        child.firstChild.checked = true
-      }
+    for (let choice of this.initialValue) {
+      this.selections.push(choice)
     }
   },
 
