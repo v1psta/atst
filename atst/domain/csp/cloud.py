@@ -8,9 +8,23 @@ class CloudProviderInterface:
         """
         raise NotImplementedError()
 
+    def create_role(self, environment_role):  # pragma: no cover
+        """Takes an `atst.model.EnvironmentRole` object and allows the
+        specified user access to the specified cloud entity.
+
+        This _does not_ return a token, but is intended to perform any necessary
+        setup to allow a token to be generated in the future (for example,
+        add the user to the cloud entity in some fashion).
+        """
+        raise NotImplementedError()
+
 
 class MockCloudProvider(CloudProviderInterface):
     def create_application(self, name):
         """Returns an id that represents what would be an application in the
         cloud."""
         return uuid4().hex
+
+    def create_role(self, environment_role):
+        # Currently, there is nothing to mock out, so just do nothing.
+        pass

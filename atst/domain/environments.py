@@ -31,7 +31,7 @@ class Environments(object):
 
     @classmethod
     def add_member(cls, environment, user, role):
-        environment_user = EnvironmentRole(
+        environment_user = EnvironmentRoles.create(
             user=user, environment=environment, role=role
         )
         db.session.add(environment_user)
@@ -86,7 +86,7 @@ class Environments(object):
                     updated = True
                     db.session.add(env_role)
                 elif not env_role:
-                    env_role = EnvironmentRole(
+                    env_role = EnvironmentRoles.create(
                         user=workspace_role.user, environment=environment, role=new_role
                     )
                     updated = True

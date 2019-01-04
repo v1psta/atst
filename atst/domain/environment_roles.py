@@ -1,8 +1,16 @@
+from flask import current_app as app
+
 from atst.models.environment_role import EnvironmentRole
 from atst.database import db
 
 
 class EnvironmentRoles(object):
+    @classmethod
+    def create(cls, user, environment, role):
+        env_role = EnvironmentRole(user=user, environment=environment, role=role)
+        app.csp.cloud.create_role(env_role)
+        return env_role
+
     @classmethod
     def get(cls, user_id, environment_id):
         existing_env_role = (
