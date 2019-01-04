@@ -81,7 +81,7 @@ class ShowTaskOrderWorkflow:
         task_order_dict = task_order.to_dictionary()
         for field in task_order_dict:
             if task_order_dict[field] is None:
-                task_order_dict[field] = ''
+                task_order_dict[field] = ""
         return task_order_dict
 
 

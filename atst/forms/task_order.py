@@ -48,7 +48,7 @@ class AppInfoForm(CacheableForm):
         choices=PROJECT_COMPLEXITY,
         default="",
         widget=ListWidget(prefix_label=False),
-        option_widget=CheckboxInput()
+        option_widget=CheckboxInput(),
     )
     complexity_other = StringField("Project Complexity Other")
     dev_team = SelectMultipleField(
@@ -57,7 +57,7 @@ class AppInfoForm(CacheableForm):
         choices=DEV_TEAM,
         default="",
         widget=ListWidget(prefix_label=False),
-        option_widget=CheckboxInput()
+        option_widget=CheckboxInput(),
     )
     dev_team_other = StringField("Development Team Other")
     team_experience = RadioField(
