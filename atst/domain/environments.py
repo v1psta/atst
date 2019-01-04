@@ -1,3 +1,4 @@
+from flask import current_app as app
 from sqlalchemy.orm.exc import NoResultFound
 
 from atst.database import db
@@ -15,15 +16,14 @@ class Environments(object):
     @classmethod
     def create(cls, project, name):
         environment = Environment(project=project, name=name)
-        db.session.add(environment)
-        db.session.commit()
+        environment.cloud_id = app.csp.cloud.create_application(environment.name)
         return environment
 
     @classmethod
     def create_many(cls, project, names):
         environments = []
         for name in names:
-            environment = Environment(project=project, name=name)
+            environment = Environments.create(project, name)
             environments.append(environment)
 
         db.session.add_all(environments)

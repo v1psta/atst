@@ -2,7 +2,14 @@ from atst.domain.environments import Environments
 from atst.domain.environment_roles import EnvironmentRoles
 from atst.domain.workspace_roles import WorkspaceRoles
 
-from tests.factories import UserFactory, WorkspaceFactory
+from tests.factories import ProjectFactory, UserFactory, WorkspaceFactory
+
+
+def test_create_environments():
+    project = ProjectFactory.create()
+    environments = Environments.create_many(project, ["Staging", "Production"])
+    for env in environments:
+        assert env.cloud_id is not None
 
 
 def test_update_environment_roles():
