@@ -2,7 +2,9 @@ from sqlalchemy.orm.exc import NoResultFound
 
 from atst.database import db
 from atst.models.task_order import TaskOrder
+from atst.domain.workspaces import Workspaces
 from .exceptions import NotFoundError
+
 
 class TaskOrderError(Exception):
     pass
@@ -93,16 +95,25 @@ class TaskOrders(object):
 
         return True
 
-    OFFICERS = ["contracting_officer", "contracting_officer_representative", "security_officer"]
+    OFFICERS = [
+        "contracting_officer",
+        "contracting_officer_representative",
+        "security_officer",
+    ]
 
     @classmethod
-    def add_officer(cls, task_order, user, role):
+    def add_officer(cls, user, task_order, role, officer_data):
         if role in TaskOrders.OFFICERS:
-            setattr(task_order, role, user)
+            member = Workspaces.create_member(
+                user, task_order.workspace, {**officer_data, "workspace_role": role}
+            )
+            setattr(task_order, role, member.user)
 
             db.session.add(task_order)
             db.session.commit()
 
-            return task_order
+            return member.user
         else:
-            raise TaskOrderError("{} is not an officer role on task orders".format(role))
+            raise TaskOrderError(
+                "{} is not an officer role on task orders".format(role)
+            )

@@ -10,6 +10,7 @@ from flask import (
 from . import task_orders_bp
 from atst.domain.task_orders import TaskOrders
 from atst.domain.workspaces import Workspaces
+from atst.domain.workspace_roles import WorkspaceRoles
 import atst.forms.task_order as task_order_form
 from atst.services.invitation import Invitation as InvitationService
 
@@ -167,17 +168,18 @@ class UpdateTaskOrderWorkflow(ShowTaskOrderWorkflow):
                     field: getattr(self.task_order, prefix + "_" + field)
                     for field in ["first_name", "last_name", "email", "dod_id"]
                 }
+                officer = TaskOrders.add_officer(
+                    self.user, self.task_order, officer_type["role"], officer_data
+                )
+                ws_officer_member = WorkspaceRoles.get(self.workspace.id, officer.id)
                 invite_service = InvitationService(
                     self.user,
-                    self.workspace,
-                    {**officer_data, "workspace_role": officer_type["role"]},
+                    ws_officer_member,
+                    officer_data["email"],
                     subject=officer_type["subject"],
                     email_template=officer_type["template"],
                 )
-                invite = invite_service.invite()
-                TaskOrders.add_officer(
-                    self.task_order, invite.user, officer_type["role"]
-                )
+                invite_service.invite()
 
     def update(self):
         self._update_task_order()

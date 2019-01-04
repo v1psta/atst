@@ -70,7 +70,10 @@ def create_member(workspace_id):
 
     if form.validate():
         try:
-            invite_service = InvitationService(g.current_user, workspace, form.data)
+            member = Workspaces.create_member(g.current_user, workspace, form.data)
+            invite_service = InvitationService(
+                g.current_user, member, form.data.get("email")
+            )
             invite_service.invite()
 
             flash("new_workspace_member", new_member=new_member, workspace=workspace)
