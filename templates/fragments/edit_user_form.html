@@ -23,11 +23,20 @@
       {{ OptionsInput(form.service_branch) }}
       {{ OptionsInput(form.citizenship) }}
       {{ OptionsInput(form.designation) }}
-      {{ DateInput(form.date_latest_training,tooltip="When was the last time you completed the IA training? <br> Information Assurance (IA) training is an important step in cyber awareness.",placeholder="MM / DD / YYYY", validation="date") }}
+      {{
+        DateInput(
+          form.date_latest_training,
+          tooltip=("fragments.edit_user_form.date_last_training_tooltip" | translate),
+          placeholder="MM / DD / YYYY",
+          validation="date"
+        )
+      }}
     </div>
   </div>
 
   <div class='action-group'>
-    <button class='usa-button usa-button-big' type='submit'>Save Details</button>
+    <button class='usa-button usa-button-big' type='submit'>
+      {{ "fragments.edit_user_form.save_details_button" | translate }}
+    </button>
   </div>
 </form>

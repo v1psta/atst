@@ -6,7 +6,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% block title %}JEDI Cloud{% endblock %}</title>
+  <title>{% block title %}{{ "base_public.title_tag" | translate }}{% endblock %}</title>
   {% assets "css" %}
     <link rel="stylesheet" href="{{ ASSET_URL }}" type="text/css">
   {% endassets %}
@@ -15,14 +15,13 @@
 <body>
 
 <div id='app-root'>
-
   {% include 'components/usa_header.html' %}
 
   <header class="topbar topbar--public">
     <nav class="topbar__navigation">
       <a href="{{ url_for('atst.home') }}" class="topbar__link topbar__link--home">
         {{ Icon('shield', classes='topbar__link-icon') }}
-        <span class="topbar__link-label">JEDI Cloud</span>
+        <span class="topbar__link-label">{{ "base_public.header_title" | translate }}</span>
       </a>
 
       {% if g.current_user %}
@@ -36,7 +35,7 @@
         </a>
       {% else %}
         <a href="{{ url_for('atst.home') }}" class="topbar__link" title='Log in'>
-          <span class="topbar__link-label">Log in</span>
+          <span class="topbar__link-label">{{ "base_public.login" | translate }}</span>
           {{ Icon('avatar', classes='topbar__link-icon') }}
         </a>
       {% endif %}

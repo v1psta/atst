@@ -12,7 +12,8 @@
 
     <section class='panel'>
       <header class='panel__heading panel__heading--divider request-approval__heading'>
-        <h1 class='h2'>Request: {{ jedi_request.displayname }}
+        <h1 class='h2'>
+          {{ "requests.approval.request_title" | translate({ "displayname": jedi_request.displayname }) }}
         </h1>
         <span class='label label--info'>{{ current_status }}</span>
       </header>
@@ -31,7 +32,7 @@
       <form method="POST" action="{{ url_for('requests.create_internal_comment', request_id=jedi_request.id) }}">
         <div class='panel'>
           <div class='panel__heading panel__heading--divider'>
-            <h2>CCPO Internal Comments</h2>
+            <h2>{{ "requests.approval.ccpo_internal_comments" | translate }}</h2>
           </div>
 
           <div class='comment-log'>
@@ -54,14 +55,18 @@
             </ol>
             {% else %}
               <div class='panel__content'>
-                <p class='h4'>No CCPO comments have been recorded yet.</p>
+                <p class='h4'>
+                  {{ "requests.approval.no_ccpo_comments" | translate }}
+                </p>
               </div>
             {% endif %}
 
           </div>
 
           <div class='panel__heading internal-notes__add-comment__heading'>
-            <h3 class='h3'>Add a comment</h2>
+            <h3 class='h3'>
+              {{ "requests.approval.add_comment" | translate }}
+            </h3>
           </div>
 
           <div class='panel__content'>
@@ -70,7 +75,9 @@
           </div>
         </div>
          <div class='action-group action-group--tight'>
-          <button class='usa-button' type="submit">Save Notes</button>
+          <button class='usa-button' type="submit">
+            {{ "requests.approval.save_notes" | translate }}
+          </button>
         </div>
       </form>
     </section>
@@ -86,7 +93,9 @@
             <div class='panel'>
 
               <header class='panel__heading panel__heading--divider'>
-                <h2 class='request-approval__columns__heading'>CCPO Review Activity</h2>
+                <h2 class='request-approval__columns__heading'>
+                  {{ "requests.approval.ccpo_review_activity" | translate }}
+                </h2>
               </header>
 
               <div class='approval-log'>
@@ -104,7 +113,9 @@
                           <div class='approval-log__behalfs'>
                             {% if review.lname_mao %}
                               <div class='approval-log__behalf'>
-                                <h3 class='approval-log__log-item__header'>Mission Owner approval on behalf of:</h3>
+                                <h3 class='approval-log__log-item__header'>
+                                  {{ "requests.approval.mission_owner_approval_on_behalf_of" | translate }}
+                                </h3>
                                 <span>{{ review.full_name_mao }}</span>
                                 <span>{{ review.email_mao }}</span>
                                 <span>
@@ -118,7 +129,9 @@
 
                             {% if review.lname_ccpo %}
                               <div class='approval-log__behalf'>
-                                <h3 class='approval-log__log-item__header'>CCPO approval on behalf of:</h3>
+                                <h3 class='approval-log__log-item__header'>
+                                  {{ "requests.approval.ccpo_approval_on_behalf_of" | translate }}
+                                </h3>
                                 <span>{{ review.full_name_ccpo }}</span>
                               </div>
                             {% endif %}
@@ -134,14 +147,18 @@
                 </ol>
                 {% else %}
                   <div class='panel__content'>
-                    <p class='h4'>No CCPO approvals or request changes have been recorded yet.</p>
+                    <p class='h4'>
+                      {{ "requests.approval.no_ccpo_approval_request_changes" | translate }}
+                    </p>
                   </div>
                 {% endif %}
               </div>
 
               {% if jedi_request.is_pending_ccpo_action %}
               <div class='panel__heading request-approval__review__heading'>
-                <h3 class='h3'>Review this Request</h2>
+                <h3 class='h3'>
+                  {{ "requests.approval.review_request" | translate }}
+                </h3>
               </div>
 
               <div class='panel__content'>
@@ -149,10 +166,14 @@
                 <div class='usa-input'>
                   <fieldset class='usa-input__choices usa-input__choices--inline'>
                     <input v-on:change='setReview' type='radio' name='review' id='review-approving' value='approving' {{ 'checked' if initialState == 'approving' }}/>
-                    <label for='review-approving'>Ready for approval</label>
+                    <label for='review-approving'>
+                      {{ "requests.approval.ready_for_approval" | translate }}
+                    </label>
 
                     <input v-on:change='setReview' type='radio' name='review' id='review-denying' value='denying'/>
-                    <label for='review-denying'>Request revisions</label>
+                    <label for='review-denying'>
+                      {{ "requests.approval.request_revisions" | translate }}
+                    </label>
                   </fieldset>
                 </div>
 
@@ -161,8 +182,8 @@
                   <div v-if='approving' key='approving' v-cloak>
                     {{ TextInput(
                       review_form.comment,
-                      label='Approval comments or notes',
-                      description='Provide any comments or notes regarding the approval of this request. <strong>This message will be shared with the person making the JEDI request.</strong>',
+                      label=("requests.approval.approve_comments_or_notes_label" | translate),
+                      description=("requests.approval.approve_comments_or_notes_description" | translate),
                       paragraph=True,
                       noMaxWidth=True
                     ) }}
@@ -171,7 +192,7 @@
                   <div v-else key='denying' v-cloak>
                     {{ TextInput(
                       review_form.comment,
-                      label='Revision instructions or notes',
+                      label=("requests.approval.revision_instructions_or_notes_label" | translate),
                       paragraph=True,
                       noMaxWidth=True
                     ) }}
@@ -180,12 +201,20 @@
 
                 <div v-if='approving' class='form__sub-fields' v-cloak>
 
-                  <h3>Authorizing Officials <span class='subtitle'>(optional)</span></h3>
-                  <p>Provide the name of the key officials for both parties that have authorized this request to move forward. <strong>This section is not visible to the person making the request. It is only viewable by CCPO staff.</strong></p>
+                  <h3>
+                    {{ "requests.approval.authorizing_officials_title" | translate }}
+                    <span class='subtitle'>(optional)</span>
+                  </h3>
+
+                  <p>
+                    {{ "requests.approval.authorizing_officials_paragraph" | translate }}
+                  </p>
 
                   <hr />
 
-                  <h4>Mission Authorizing Official</h4>
+                  <h4>
+                    {{ "requests.approval.mission_authorizing_official_title" | translate }}
+                  </h4>
 
                   <div class='form-row'>
                     <div class='form-col form-col--half'>
@@ -202,7 +231,9 @@
 
                   <hr />
 
-                  <h4>CCPO Authorizing Official</h4>
+                  <h4>
+                    {{ "requests.approval.ccpo_authorizing_official_title" | translate }}
+                  </h4>
 
                   <div class='form-row'>
                     <div class='form-col form-col--half'>
@@ -238,4 +269,3 @@
 </article>
 
 {% endblock %}
-

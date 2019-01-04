@@ -4,7 +4,7 @@
   <ul>
     <li class="progress-menu__item progress-menu__item--complete">
       <a href="{{ pending_url }}">
-        Request Information
+        {{ "requests.review_menu.request_information_link_text" | translate }}
       </a>
     </li>
     {% if g.matchesPath(financial_url) %}
@@ -14,7 +14,7 @@
     {% endif %}
     <li class="progress-menu__item progress-menu__item--{{ financial_status }}">
       <a href="{{ financial_url }}">
-        Financial Verification Information
+        {{ "requests.review_menu.financial_verification_information_link_text" | translate }}
       </a>
     </li>
   </ul>

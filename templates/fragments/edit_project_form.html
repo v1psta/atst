@@ -1,6 +1,6 @@
 {% from "components/text_input.html" import TextInput %}
 
-{% set title_text = 'Edit {} project'.format(project.name) if project else 'Add a new project' %}
+{% set title_text = ('fragments.edit_project_form.existing_project_title' | translate({ "project_name": project.name })) if project else ('fragments.edit_project_form.new_project_title' | translate) %}
 
 {{ form.csrf_token }}
 <div class="panel">
@@ -10,7 +10,7 @@
 
   <div class="panel__content">
     <p>
-      AT-AT allows you to organize your workspace into multiple projects, each of which may have environments.
+      {{ "fragments.edit_project_form.explain" | translate }}
     </p>
     {{ TextInput(form.name) }}
     {{ TextInput(form.description, paragraph=True) }}

@@ -15,46 +15,86 @@
 <details-of-use inline-template v-bind:initial-data='{{ f.data|tojson }}'>
   <div>
 
-    <p>We’d like to know a little about how you plan to use JEDI Cloud services to process your request. Please answer the following questions to the best of your ability. Note that the CCPO does not directly help with migrating systems to JEDI Cloud. These questions are for learning about your cloud readiness and financial usage of the JEDI Cloud; your estimates will not be used for any department level reporting.</p>
-    <p><em>All fields are required, unless specified optional.</em></p>
+    {{ "requests.screen-1.form_instructions" | translate }}
 
-    <h2>General</h2>
+    <h2>{{ "requests.screen-1.general_title_text"| translate }}</h2>
     {{ OptionsInput(f.dod_component) }}
-    {{ TextInput(f.jedi_usage, paragraph=True, placeholder="Briefly describe how you are expecting to use the JEDI Cloud. e.g. We are migrating XYZ application to the cloud so that...") }}
+    {{
+      TextInput(
+        f.jedi_usage,
+        paragraph=True,
+        placeholder=("requests.screen-1.jedi_usage_placeholder" | translate)
+      )
+    }}
 
-    <h2>Cloud Readiness</h2>
-    {{ TextInput(f.num_software_systems,validation="integer",tooltip="A software system can be any code that you plan to host on cloud infrastructure. For example, it could be a custom-developed web application, or a large ERP system.",placeholder="0") }}
-    {{ OptionsInput(f.jedi_migration, tooltip="Cloud migration is the process of moving data, applications or other business elements from an organization\\'s onsite computers/data centers to the cloud, or moving them from one cloud environment to another.") }}
+    <h2>{{ "requests.screen-1.cloud_readiness_title_text" | translate }}</h2>
+    {{
+      TextInput(
+        f.num_software_systems,
+        validation="integer",
+        tooltip=("requests.screen-1.num_software_systems_tooltip" | translate),
+        placeholder="0"
+      )
+    }}
+    {{
+      OptionsInput(
+        f.jedi_migration,
+        tooltip=("requests.screen-1.jedi_migration_tooltip" | translate)
+      )
+    }}
 
     <transition name='slide'>
       <template v-if="jediMigrationOptionSelected">
         <fieldset class='form__sub-fields' v-if='isJediMigration' v-cloak>
-          <legend class='usa-sr-only'>Questions related to JEDI Cloud migration</legend>
-          {{ OptionsInput(f.rationalization_software_systems, tooltip="Rationalization is the DoD process to determine whether the application should move to the cloud.") }}
+          <legend class='usa-sr-only'>
+            {{ "requests.screen-1.questions_title_text" | translate }}
+          </legend>
+          {{
+            OptionsInput(
+              f.rationalization_software_systems,
+              tooltip=("requests.screen-1.rationalization_software_systems_tooltip" | translate)
+            )
+          }}
           {{ OptionsInput(f.technical_support_team) }}
           <transition name='slide'>
             <template v-if="hasTechnicalSupportTeam">
               {{ OptionsInput(f.organization_providing_assistance) }}
             </template>
           </transition>
-          {{ OptionsInput(f.engineering_assessment, tooltip="An engineering assessment is an evaluation to convert your application architecture from on-premises to using the commercial cloud") }}
+          {{ OptionsInput(
+              f.engineering_assessment,
+              tooltip=("requests.screen-1.engineering_assessment_tooltip" | translate)
+            )
+          }}
           {{ OptionsInput(f.data_transfers) }}
           {{ OptionsInput(f.expected_completion_date) }}
         </fieldset>
 
         <template v-if='!isJediMigration' v-cloak>
-          {{ OptionsInput(f.cloud_native, tooltip="Cloud native is architecting and designing your application to use all the benefits of the commercial cloud. Specifically, designing applications so that they are decoupled from a physical resource.") }}
+          {{
+            OptionsInput(
+              f.cloud_native,
+              tooltip=("requests.screen-1.cloud_native_tooltip" | translate)
+            )
+          }}
         </template>
       </template>
     </transition>
 
-    <h2>Financial Usage</h2>
-    {{ TextInput(f.estimated_monthly_spend, tooltip="Refer to financial verification step help docs", validation="dollars", placeholder="$0") }}
+    <h2>{{ "requests.screen-1.financial_usage_title" | translate }}</h2>
+    {{
+      TextInput(
+        f.estimated_monthly_spend,
+        tooltip=("requests.screen-1.estimated_monthly_spend_tooltip" | translate),
+        validation="dollars",
+        placeholder="$0"
+      )
+    }}
 
     <div class='alert alert-info'>
       <div class='alert__content'>
         <div class='alert__message'>
-          <p>So this means you are spending approximately <span class="label label--info">!{ annualSpendStr }</span> annually</p>
+          {{ "requests.screen-1.approximate_annual_spend_paragraph" | translate }}
         </div>
       </div>
     </div>
@@ -62,15 +102,38 @@
     <transition name='slide'>
       <template v-if="annualSpend > {{ annual_spend_threshold }}">
         <fieldset class='form__sub-fields'>
-          <h3>Please provide additional details regarding your planned usage.</h3>
+          <h3>
+            {{ "requests.screen-1.additional_plan_details_title" | translate }}
+          </h3>
           {{ TextInput(f.number_user_sessions, validation='integer', placeholder="0") }}
-          {{ TextInput(f.average_daily_traffic, tooltip="Requests are the client-to-server network traffic that is being transferred to your systems",validation="integer", placeholder="0") }}
-          {{ TextInput(f.average_daily_traffic_gb, tooltip="GB uploaded is the gigabyte amount of data traffic that is being transferred to your systems",validation="gigabytes", placeholder="0GB") }}
+          {{
+            TextInput(
+              f.average_daily_traffic,
+              tooltip=("requests.screen-1.average_daily_traffic_tooltip" | translate),
+              validation="integer",
+              placeholder="0"
+            )
+          }}
+          {{
+            TextInput(
+              f.average_daily_traffic_gb,
+              tooltip=("requests.screen-1.average_daily_traffic_gb_tooltip" | translate),
+              validation="gigabytes",
+              placeholder="0GB"
+            )
+          }}
         </fieldset>
       </template>
     </transition>
 
-    {{ TextInput(f.dollar_value, validation='dollars', placeholder='$0', tooltip='You may specify a different Total Spend amount to cover other JEDI Cloud services that the JEDI Cloud cost calculator was not able to estimate. Examples may include support packages from the cloud service provider.') }}
+    {{
+      TextInput(
+        f.dollar_value,
+        validation='dollars',
+        placeholder='$0',
+        tooltip=("requests.screen-1.dollar_value_tooltip" | translate)
+      )
+    }}
     {{ DateInput(f.start_date, placeholder='MM / DD / YYYY', validation='date') }}
     {{ TextInput(f.name, placeholder='Request Name', validation='workspaceName') }}
 

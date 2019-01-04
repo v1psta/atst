@@ -1,6 +1,8 @@
 import re
 import datetime
+from atst.utils.localization import translate
 from flask import current_app as app, render_template
+from jinja2 import contextfilter
 from jinja2.exceptions import TemplateNotFound
 
 
@@ -108,3 +110,12 @@ def register_filters(app):
     app.jinja_env.filters["dateFromString"] = dateFromString
     app.jinja_env.filters["pageWindow"] = pageWindow
     app.jinja_env.filters["renderAuditEvent"] = renderAuditEvent
+
+    @contextfilter
+    def translateWithoutCache(context, *kwargs):
+        return translate(*kwargs)
+
+    if app.config["DEBUG"]:
+        app.jinja_env.filters["translate"] = translateWithoutCache
+    else:
+        app.jinja_env.filters["translate"] = translate

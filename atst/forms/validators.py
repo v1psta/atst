@@ -2,6 +2,7 @@ import re
 from wtforms.validators import ValidationError
 import pendulum
 from datetime import datetime
+from atst.utils.localization import translate
 
 
 def DateRange(lower_bound=None, upper_bound=None, message=None):
@@ -27,7 +28,7 @@ def DateRange(lower_bound=None, upper_bound=None, message=None):
     return _date_range
 
 
-def IsNumber(message="Please enter a valid number."):
+def IsNumber(message=translate("forms.validators.is_number_message")):
     def _is_number(form, field):
         try:
             int(field.data)
@@ -37,7 +38,7 @@ def IsNumber(message="Please enter a valid number."):
     return _is_number
 
 
-def PhoneNumber(message="Please enter a valid 5 or 10 digit phone number."):
+def PhoneNumber(message=translate("forms.validators.phone_number_message")):
     def _is_phone_number(form, field):
         digits = re.sub(r"\D", "", field.data)
         if len(digits) not in [5, 10]:
@@ -50,9 +51,7 @@ def PhoneNumber(message="Please enter a valid 5 or 10 digit phone number."):
     return _is_phone_number
 
 
-def Name(
-    message="This field accepts letters, numbers, commas, apostrophes, hyphens, and periods."
-):
+def Name(message=translate("forms.validators.name_message")):
     def _name(form, field):
         match = re.match(r"[\w \,\.\'\-]+", field.data)
         if not match or match.group() != field.data:
@@ -61,7 +60,10 @@ def Name(
     return _name
 
 
-def ListItemRequired(message="Please provide at least one.", empty_values=("", None)):
+def ListItemRequired(
+    message=translate("forms.validators.list_item_required_message"),
+    empty_values=("", None),
+):
     def _list_item_required(form, field):
         non_empty_values = [v for v in field.data if v not in empty_values]
         if len(non_empty_values) == 0:
@@ -70,7 +72,7 @@ def ListItemRequired(message="Please provide at least one.", empty_values=("", N
     return _list_item_required
 
 
-def ListItemsUnique(message="Items must be unique"):
+def ListItemsUnique(message=translate("forms.validators.list_items_unique_message")):
     def _list_items_unique(form, field):
         if len(field.data) > len(set(field.data)):
             raise ValidationError(message)

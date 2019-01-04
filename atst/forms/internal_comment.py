@@ -2,12 +2,13 @@ from wtforms.fields import TextAreaField
 from wtforms.validators import InputRequired
 
 from .forms import CacheableForm
+from atst.utils.localization import translate
 
 
 class InternalCommentForm(CacheableForm):
     text = TextAreaField(
-        "CCPO Internal Notes",
+        translate("forms.internal_comment.text_label"),
         default="",
-        description="Add comments or notes for internal CCPO reference and follow-up here. <strong>These comments <em>will not</em> be visible to the person making the JEDI request.</strong>",
+        description=translate("forms.internal_comment.text_description"),
         validators=[InputRequired()],
     )

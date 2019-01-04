@@ -20,7 +20,7 @@
 
       <div class="panel__heading">
         <h1>{% block heading %}{% endblock %}</h1>
-        <div class="subtitle h2">New Request</div>
+        <div class="subtitle h2">{{ "requests._new.new_request" | translate }}</div>
       </div>
 
       <div class="panel__content">
@@ -37,7 +37,7 @@
     {% block next %}
 
       <div class='action-group'>
-        <input type='submit' class='usa-button usa-button-primary' value='Save & Continue' />
+        <input type='submit' class='usa-button usa-button-primary' value='{{ "common.save_and_continue" | translate }}' />
       </div>
 
     {% endblock %}
