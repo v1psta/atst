@@ -27,7 +27,7 @@ from atst.models.mixins import AuditableMixin
 
 from atst.domain.environments import Environments
 from atst.domain.exceptions import NotFoundError
-from atst.domain.reports import MONTHLY_SPEND_AARDVARK, MONTHLY_SPEND_BELUGA
+from atst.domain.csp.reports import MockReportingProvider
 from atst.domain.requests import Requests
 from atst.domain.users import Users
 from atst.domain.workspaces import Workspaces
@@ -66,9 +66,9 @@ def create_demo_workspace(name, data):
     workspace = Requests.approve_and_create_workspace(request)
     Workspaces.update(workspace, { "name": name })
 
-    for name in data:
-        project = Project(workspace=workspace, name=name, description='')
-        env_names = [env for env in data[name]]
+    for mock_project in data["projects"]:
+        project = Project(workspace=workspace, name=mock_project.name, description='')
+        env_names = [env.name for env in mock_project.environments]
         envs = Environments.create_many(project, env_names)
         db.session.add(project)
         db.session.commit()
@@ -153,5 +153,5 @@ if __name__ == "__main__":
     app = make_app(config)
     with app.app_context():
         remove_sample_data()
-        create_demo_workspace('Aardvark', MONTHLY_SPEND_AARDVARK)
-        create_demo_workspace('Beluga', MONTHLY_SPEND_BELUGA)
+        create_demo_workspace('Aardvark', MockReportingProvider.REPORT_FIXTURE_MAP["Aardvark"])
+        create_demo_workspace('Beluga', MockReportingProvider.REPORT_FIXTURE_MAP["Beluga"])
