@@ -29,12 +29,12 @@
 <h3>About Your Project</h3>
 {{ OptionsInput(form.app_migration) }}
 {{ OptionsInput(form.native_apps) }}
-{{ MultiCheckboxInput(form.complexity) }}
+{{ MultiCheckboxInput(form.complexity, form.complexity_other) }}
 
 <hr>
 
 <h3>About Your Team</h3>
-{{ MultiCheckboxInput(form.dev_team) }}
+{{ MultiCheckboxInput(form.dev_team, form.dev_team_other) }}
 {{ TextInput(form.dev_team_other) }}
 {{ OptionsInput(form.team_experience) }}
 

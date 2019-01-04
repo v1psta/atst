@@ -20,7 +20,8 @@ export default {
     initialValue: {
       type: Array,
       default: () => []
-    }
+    },
+    initialOtherValue: String,
   },
 
 
