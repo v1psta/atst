@@ -161,6 +161,27 @@ def test_invite_officers_to_task_order(queue):
     assert task_order.security_officer.dod_id == to_data["so_dod_id"]
 
 
+def test_add_officer_but_do_not_invite(queue):
+    user = UserFactory.create()
+    workspace = WorkspaceFactory.create(owner=user)
+    task_order = TaskOrderFactory.create(creator=user, workspace=workspace)
+    to_data = {
+        **TaskOrderFactory.dictionary(),
+        "ko_invite": False,
+        "cor_invite": False,
+        "so_invite": False,
+    }
+    workflow = UpdateTaskOrderWorkflow(
+        to_data, user, screen=3, task_order_id=task_order.id
+    )
+    workflow.update()
+    workspace = task_order.workspace
+    # owner is only workspace member
+    assert len(workspace.members) == 1
+    # no invitations are enqueued
+    assert len(queue.get_queue()) == 0
+
+
 def test_update_does_not_resend_invitation():
     user = UserFactory.create()
     contracting_officer = UserFactory.create()
