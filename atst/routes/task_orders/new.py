@@ -154,7 +154,7 @@ class UpdateTaskOrderWorkflow(ShowTaskOrderWorkflow):
         },
     ]
 
-    def _update_invitations(self):
+    def _update_officer_invitations(self):
         for officer_type in self.OFFICER_INVITATIONS:
             field = officer_type["field"]
             if (
@@ -169,16 +169,19 @@ class UpdateTaskOrderWorkflow(ShowTaskOrderWorkflow):
                 }
                 invite_service = InvitationService(
                     self.user,
-                    self.task_order.workspace,
+                    self.workspace,
                     {**officer_data, "workspace_role": officer_type["role"]},
                     subject=officer_type["subject"],
                     email_template=officer_type["template"],
                 )
-                invite_service.invite()
+                invite = invite_service.invite()
+                TaskOrders.add_officer(
+                    self.task_order, invite.user, officer_type["role"]
+                )
 
     def update(self):
         self._update_task_order()
-        self._update_invitations()
+        self._update_officer_invitations()
         return self.task_order
 
 

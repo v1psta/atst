@@ -6,6 +6,7 @@ from tests.factories import (
     WorkspaceFactory,
     WorkspaceRoleFactory,
     InvitationFactory,
+    TaskOrderFactory,
 )
 from atst.domain.workspaces import Workspaces
 from atst.models.workspace_role import Status as WorkspaceRoleStatus
@@ -207,3 +208,39 @@ def test_existing_member_invite_resent_to_email_submitted_in_form(
     assert user.email != "example@example.com"
     assert send_mail_job.func.__func__.__name__ == "_send_mail"
     assert send_mail_job.args[0] == ["example@example.com"]
+
+
+def test_task_order_officer_accepts_invite(monkeypatch, client, user_session):
+    workspace = WorkspaceFactory.create()
+    task_order = TaskOrderFactory.create(workspace=workspace)
+    user_info = UserFactory.dictionary()
+
+    # create contracting officer
+    user_session(workspace.owner)
+    client.post(
+        url_for("task_orders.new", screen=3, task_order_id=task_order.id),
+        data={
+            "workspace_role": "contracting_officer",
+            "ko_first_name": user_info["first_name"],
+            "ko_last_name": user_info["last_name"],
+            "ko_email": user_info["email"],
+            "ko_dod_id": user_info["dod_id"],
+            "ko_invite": True,
+        },
+    )
+
+    # contracting officer accepts invitation
+    user = Users.get_by_dod_id(user_info["dod_id"])
+    token = user.invitations[0].token
+    monkeypatch.setattr(
+        "atst.domain.auth.should_redirect_to_user_profile", lambda *args: False
+    )
+    user_session(user)
+    response = client.get(url_for("workspaces.accept_invitation", token=token))
+
+    # user is redirected to the task order review page
+    assert response.status_code == 302
+    to_review_url = url_for(
+        "task_orders.new", screen=4, task_order_id=task_order.id, _external=True
+    )
+    assert response.headers["Location"] == to_review_url

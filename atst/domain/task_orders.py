@@ -4,6 +4,9 @@ from atst.database import db
 from atst.models.task_order import TaskOrder
 from .exceptions import NotFoundError
 
+class TaskOrderError(Exception):
+    pass
+
 
 class TaskOrders(object):
     SECTIONS = {
@@ -89,3 +92,17 @@ class TaskOrders(object):
                 return False
 
         return True
+
+    OFFICERS = ["contracting_officer", "contracting_officer_representative", "security_officer"]
+
+    @classmethod
+    def add_officer(cls, task_order, user, role):
+        if role in TaskOrders.OFFICERS:
+            setattr(task_order, role, user)
+
+            db.session.add(task_order)
+            db.session.commit()
+
+            return task_order
+        else:
+            raise TaskOrderError("{} is not an officer role on task orders".format(role))

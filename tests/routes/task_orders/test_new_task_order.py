@@ -146,12 +146,19 @@ def test_invite_officers_to_task_order(queue):
     )
     workflow.update()
     workspace = task_order.workspace
+    # owner and three officers are workspace members
     assert len(workspace.members) == 4
     roles = [member.role.name for member in workspace.members]
+    # officers exist in roles
     assert "contracting_officer" in roles
     assert "contracting_officer_representative" in roles
     assert "security_officer" in roles
+    # email invitations are enqueued
     assert len(queue.get_queue()) == 3
+    # task order has relationship to user for each officer role
+    assert task_order.contracting_officer.dod_id == to_data["ko_dod_id"]
+    assert task_order.contracting_officer_representative.dod_id == to_data["cor_dod_id"]
+    assert task_order.security_officer.dod_id == to_data["so_dod_id"]
 
 
 def test_update_does_not_resend_invitation():
