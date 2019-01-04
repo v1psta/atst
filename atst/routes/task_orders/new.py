@@ -161,7 +161,7 @@ class UpdateTaskOrderWorkflow(ShowTaskOrderWorkflow):
             if (
                 hasattr(self.form, field)
                 and self.form[field].data
-                and not getattr(self.workspace, officer_type["role"])
+                and not getattr(self.task_order, officer_type["role"])
             ):
                 prefix = officer_type["prefix"]
                 officer_data = {
