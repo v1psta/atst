@@ -78,6 +78,16 @@ def test_show_task_order():
     assert another_workflow.task_order == task_order
 
 
+def test_show_task_order_formdata():
+    task_order = TaskOrderFactory.create()
+    workflow = ShowTaskOrderWorkflow(task_order_id=task_order.id)
+
+    assert workflow.task_order.to_dictionary()["user_id"] is None
+    assert workflow.task_order_formdata["user_id"] is ""
+    for field in workflow.task_order_formdata:
+        assert not field is None
+
+
 def test_show_task_order_form():
     workflow = ShowTaskOrderWorkflow()
     assert not workflow.form.data["app_migration"]

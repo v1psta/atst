@@ -7,6 +7,7 @@ from wtforms.fields import (
     TextAreaField,
 )
 from wtforms.fields.html5 import DateField
+from wtforms.widgets import ListWidget, CheckboxInput
 
 from .forms import CacheableForm
 from .data import (
@@ -46,6 +47,8 @@ class AppInfoForm(CacheableForm):
         description="Which of these describes how complex your team's use of the cloud will be? (Select all that apply.)",
         choices=PROJECT_COMPLEXITY,
         default="",
+        widget=ListWidget(prefix_label=False),
+        option_widget=CheckboxInput(),
     )
     complexity_other = StringField("Project Complexity Other")
     dev_team = SelectMultipleField(
@@ -53,6 +56,8 @@ class AppInfoForm(CacheableForm):
         description="Which people or teams will be completing the development work for your cloud applications?",
         choices=DEV_TEAM,
         default="",
+        widget=ListWidget(prefix_label=False),
+        option_widget=CheckboxInput(),
     )
     dev_team_other = StringField("Development Team Other")
     team_experience = RadioField(

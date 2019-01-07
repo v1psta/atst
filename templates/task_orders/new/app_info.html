@@ -3,6 +3,7 @@
 {% from "components/text_input.html" import TextInput %}
 {% from "components/options_input.html" import OptionsInput %}
 {% from "components/date_input.html" import DateInput %}
+{% from "components/multi_checkbox_input.html" import MultiCheckboxInput %}
 
 {% block heading %}
   What You're Building
@@ -28,14 +29,12 @@
 <h3>About Your Project</h3>
 {{ OptionsInput(form.app_migration) }}
 {{ OptionsInput(form.native_apps) }}
-{{ OptionsInput(form.complexity) }}
-{{ TextInput(form.complexity_other) }}
+{{ MultiCheckboxInput(form.complexity, form.complexity_other) }}
 
 <hr>
 
 <h3>About Your Team</h3>
-{{ OptionsInput(form.dev_team) }}
-{{ TextInput(form.dev_team_other) }}
+{{ MultiCheckboxInput(form.dev_team, form.dev_team_other) }}
 {{ OptionsInput(form.team_experience) }}
 
 <hr>

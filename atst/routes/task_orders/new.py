@@ -50,11 +50,19 @@ class ShowTaskOrderWorkflow:
         return self._task_order
 
     @property
+    def task_order_formdata(self):
+        task_order_dict = self.task_order.to_dictionary()
+        for field in task_order_dict:
+            if task_order_dict[field] is None:
+                task_order_dict[field] = ""
+        return task_order_dict
+
+    @property
     def form(self):
         if self._form:
             pass
         elif self.task_order:
-            self._form = self._section["form"](data=self.task_order.to_dictionary())
+            self._form = self._section["form"](formdata=self.task_order_formdata)
         else:
             self._form = self._section["form"]()
 

@@ -1,0 +1,60 @@
+{% from "components/icon.html" import Icon %}
+{% from "components/tooltip.html" import Tooltip %}
+
+{% macro MultiCheckboxInput(field, other_input_field, tooltip, inline=False) -%}
+  <multicheckboxinput
+    v-cloak
+    name='{{ field.name }}'
+    inline-template
+    {% if field.errors %}v-bind:initial-errors='{{ field.errors | list }}'{% endif %}
+    {% if field.data and field.data != "None" %}v-bind:initial-value="{{ field.data }}"{% endif %}
+    {% if other_input_field.data and other_input_field.data != "None" %}initial-other-value="{{ other_input_field.data }}"{% endif %}
+    key='{{ field.name }}'>
+    <div
+      v-bind:class="['usa-input', { 'usa-input--error': showError, 'usa-input--success': showValid }]">
+
+      <fieldset v-on:change="onInput" class="usa-input__choices {% if inline %}usa-input__choices--inline{% endif %}">
+        <legend>
+          <div class="usa-input__title">
+            {{ field.label | striptags}}
+            {% if tooltip %}{{ Tooltip(tooltip) }}{% endif %}
+          </div>
+
+          {% if field.description %}
+            <span class='usa-input__help'>{{ field.description | safe }}</span>
+          {% endif %}
+
+          <span v-show='showError'>{{ Icon('alert',classes="icon-validation") }}</span>
+          <span v-show='showValid'>{{ Icon('ok',classes="icon-validation") }}</span>
+        </legend>
+
+        <ul>
+          {% for choice in field.choices %}
+            <li>
+              {% if choice[0] != 'other' %}
+              <input type='checkbox' name='{{ field.name }}' id='{{ field.name }}-{{ field.choices.index(choice) }}' value='{{ choice[0] }}' v-model="selections"/>
+              <label for='{{ field.name }}-{{ field.choices.index(choice) }}'>{{ choice[1] }}</label>
+              {% else %}
+                <input @click="otherToggle" type='checkbox' name='{{ field.name }}' id='{{ field.name }}-{{ field.choices.index(choice) }}' value='other' v-model="selections"/>
+                <label for='{{ field.name }}-{{ field.choices.index(choice) }}'>{{ choice[1] }}</label>
+
+                <div v-show="otherChecked">
+                  <input type='text' name='{{ other_input_field.name}}' id='{{ field.name }}-other'  v-bind:value="otherText" aria-expanded='false' />
+                </div>
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+
+
+
+        <template v-if='showError'>
+          <span class='usa-input__message' v-html='validationError'></span>
+        </template>
+
+      </fieldset>
+    </div>
+
+  </multicheckboxinput>
+
+{%- endmacro %}
