@@ -155,7 +155,7 @@ WORKSPACE_ROLES = [
     {
         "name": "security_officer",
         "description": "Can edit security questions for a task order.",
-        "display_name": "Contracting Officer",
+        "display_name": "Security Officer",
         "permissions": [Permissions.VIEW_WORKSPACE, Permissions.SO_SIGN_TASK_ORDER],
     },
 ]
