@@ -18,6 +18,13 @@ class CloudProviderInterface:
         """
         raise NotImplementedError()
 
+    def delete_role(self, environment_role):  # pragma: no cover
+        """Takes an `atst.model.EnvironmentRole` object and performs any action
+        necessary in the CSP to remove the specified user from the specified
+        environment. This method does not return anything.
+        """
+        raise NotImplementedError()
+
 
 class MockCloudProvider(CloudProviderInterface):
     def create_application(self, name):
@@ -27,4 +34,8 @@ class MockCloudProvider(CloudProviderInterface):
 
     def create_role(self, environment_role):
         # Currently, there is nothing to mock out, so just do nothing.
+        pass
+
+    def delete_role(self, environment_role):
+        # Currently nothing to do.
         pass

@@ -27,6 +27,7 @@ class EnvironmentRoles(object):
     def delete(cls, user_id, environment_id):
         existing_env_role = EnvironmentRoles.get(user_id, environment_id)
         if existing_env_role:
+            app.csp.cloud.delete_role(existing_env_role)
             db.session.delete(existing_env_role)
             db.session.commit()
             return True
