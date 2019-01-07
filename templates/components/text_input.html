@@ -25,7 +25,7 @@
 
     <div
       {% if disabled %}class="input--disabled"{% endif %}
-      v-bind:class="['usa-input usa-input--validation--' + validation, { 'usa-input--error': showError, 'usa-input--success': showValid, 'usa-input--validation--paragraph': paragraph, 'no-max-width': noMaxWidth, 'disabled-available-soon': disabled_available_soon }]">
+      v-bind:class="['usa-input usa-input--validation--' + validation, { 'usa-input--error': showError, 'usa-input--success': showValid, 'usa-input--validation--paragraph': paragraph, 'no-max-width': noMaxWidth }]">
 
       <label for={{field.name}}>
         <div class="usa-input__title">
