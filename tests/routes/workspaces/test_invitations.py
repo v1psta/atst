@@ -225,6 +225,8 @@ def test_task_order_officer_accepts_invite(monkeypatch, client, user_session):
             "ko_last_name": user_info["last_name"],
             "ko_email": user_info["email"],
             "ko_dod_id": user_info["dod_id"],
+            "so_dod_id": task_order.so_dod_id,
+            "cor_dod_id": task_order.cor_dod_id,
             "ko_invite": True,
         },
     )
