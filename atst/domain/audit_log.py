@@ -26,6 +26,15 @@ class AuditLog(object):
         return AuditEventQuery.get_all(pagination_opts)
 
     @classmethod
+    def get_workspace_events(cls, workspace_id):
+        return (
+            db.session.query(AuditEvent)
+            .filter(AuditEvent.workspace_id == workspace_id)
+            .order_by(AuditEvent.time_created.desc())
+            .all()
+        )
+
+    @classmethod
     def get_by_resource(cls, resource_id):
         return (
             db.session.query(AuditEvent)

@@ -5,8 +5,9 @@ from flask import render_template, request as http_request, g, redirect, url_for
 from . import workspaces_bp
 from atst.domain.reports import Reports
 from atst.domain.workspaces import Workspaces
-from atst.forms.workspace import WorkspaceForm
+from atst.domain.audit_log import AuditLog
 from atst.domain.authz import Authorization
+from atst.forms.workspace import WorkspaceForm
 from atst.models.permissions import Permissions
 
 
@@ -92,5 +93,10 @@ def workspace_activity(workspace_id):
         Permissions.VIEW_USAGE_DOLLARS,
         "view workspace reports",
     )
+    audit_events = AuditLog.get_workspace_events(workspace_id)
 
-    return render_template("workspaces/activity.html", workspace_name=workspace.name)
+    return render_template(
+        "workspaces/activity/index.html",
+        workspace_name=workspace.name,
+        audit_events=audit_events,
+    )
