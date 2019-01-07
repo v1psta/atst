@@ -108,6 +108,15 @@
     }
   }
 
+  .usa-input__coming-soon {
+    @include h5;
+    font-weight: normal;
+
+    @include line-max;
+
+    color: $color-gray-medium;
+  }
+
   input,
   textarea,
   select,
@@ -345,6 +354,20 @@ select {
       .icon-validation {
         left: 12rem;
       }
+    }
+  }
+}
+
+.input--disabled {
+  color: $color-gray-lighter;
+
+  input[disabled] {
+    border-color: $color-gray-lighter;
+    cursor: not-allowed;
+
+    &:hover {
+      border-color: $color-gray-lighter !important;
+      box-shadow: none;
     }
   }
 }

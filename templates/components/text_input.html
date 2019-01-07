@@ -9,6 +9,7 @@
   placeholder='',
   validation='anything',
   paragraph=False,
+  disabled=False,
   initial_value='',
   noMaxWidth=False) -%}
 
@@ -23,10 +24,14 @@
     inline-template>
 
     <div
-      v-bind:class="['usa-input usa-input--validation--' + validation, { 'usa-input--error': showError, 'usa-input--success': showValid, 'usa-input--validation--paragraph': paragraph, 'no-max-width': noMaxWidth }]">
+      {% if disabled %}class="input--disabled"{% endif %}
+      v-bind:class="['usa-input usa-input--validation--' + validation, { 'usa-input--error': showError, 'usa-input--success': showValid, 'usa-input--validation--paragraph': paragraph, 'no-max-width': noMaxWidth, 'disabled-available-soon': disabled_available_soon }]">
 
       <label for={{field.name}}>
-        <div class="usa-input__title">{{ label }} {% if tooltip %}{{ Tooltip(tooltip) }}{% endif %}</div>
+        <div class="usa-input__title">
+          {{ label }}
+          {% if tooltip %}{{ Tooltip(tooltip) }}{% endif %}
+        </div>
 
         {% if field.description %}
           <span class='usa-input__help'>{{ description | safe }}</span>
@@ -60,6 +65,9 @@
           v-bind:aria-invalid='showError'
           id='{{ field.name }}'
           type='text'
+          {% if disabled %}
+          disabled="disabled"
+          {% endif %}
           ref='input'
           placeholder='{{ placeholder }}'>
         </masked-input>

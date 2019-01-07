@@ -77,6 +77,11 @@ class FundingForm(CacheableForm):
     clin_04 = IntegerField("CLIN 04: Classified")
 
 
+class UnclassifiedFundingForm(FundingForm):
+    clin_02 = IntegerField("CLIN 02: Classified (available soon)")
+    clin_04 = IntegerField("CLIN 04: Classified (available soon)")
+
+
 class OversightForm(CacheableForm):
     ko_first_name = StringField("First Name")
     ko_last_name = StringField("Last Name")
