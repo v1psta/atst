@@ -7,6 +7,7 @@ from atst.domain.reports import Reports
 from atst.domain.workspaces import Workspaces
 from atst.domain.audit_log import AuditLog
 from atst.domain.authz import Authorization
+from atst.domain.common import Paginator
 from atst.forms.workspace import WorkspaceForm
 from atst.models.permissions import Permissions
 
@@ -87,16 +88,16 @@ def workspace_reports(workspace_id):
 def workspace_activity(workspace_id):
     workspace = Workspaces.get(g.current_user, workspace_id)
     Authorization.check_workspace_permission(
-        g.current_user,
-        workspace,
-        # TODO: diff permission
-        Permissions.VIEW_USAGE_DOLLARS,
-        "view workspace reports",
+        g.current_user, workspace, Permissions.VIEW_AUDIT_LOG, "view workspace reports"
     )
-    audit_events = AuditLog.get_workspace_events(workspace_id)
+    pagination_opts = Paginator.get_pagination_opts(http_request)
+    audit_events = AuditLog.get_workspace_events(
+        g.current_user, workspace_id, pagination_opts
+    )
 
     return render_template(
         "workspaces/activity/index.html",
         workspace_name=workspace.name,
+        workspace_id=workspace_id,
         audit_events=audit_events,
     )

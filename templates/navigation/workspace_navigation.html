@@ -56,8 +56,7 @@
       ) }}
     {% endif %}
 
-    <!-- TODO: diff permission  -->
-    {% if user_can(permissions.VIEW_USAGE_DOLLARS) %}
+    {% if user_can(permissions.VIEW_AUDIT_LOG) %}
       {{ SidenavItem(
         ("navigation.workspace_navigation.activity_log" | translate),
         href=url_for("workspaces.workspace_activity", workspace_id=workspace.id),
