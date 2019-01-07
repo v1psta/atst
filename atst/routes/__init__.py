@@ -48,13 +48,19 @@ def helpdocs(doc=None):
 def home():
     user = g.current_user
 
+    resource_index = (
+        "requests.requests_index"
+        if app.config.get("REQUESTS_WORKFLOW")
+        else "workspaces.workspaces"
+    )
+
     if user.atat_role_name == "ccpo":
-        return redirect(url_for("requests.requests_index"))
+        return redirect(url_for(resource_index))
 
     num_workspaces = len(user.workspace_roles)
 
     if num_workspaces == 0:
-        return redirect(url_for("requests.requests_index"))
+        return redirect(url_for(resource_index))
     elif num_workspaces == 1:
         workspace_role = user.workspace_roles[0]
         workspace_id = workspace_role.workspace.id

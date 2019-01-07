@@ -2,14 +2,16 @@
 
 <div class="global-navigation sidenav {% if workspace %}global-navigation__context--workspace{% endif %}">
   <ul>
-    {{ SidenavItem("Requests",
-      href="/requests",
-      icon="document",
-      active=g.matchesPath('/requests'),
-      subnav=[
-        {"label":"New Request", "href":url_for("requests.requests_form_new", screen=1), "icon": "plus", "active": g.matchesPath('/requests/new')},
-      ]
-      ) }}
+    {% if config.get("REQUESTS_WORKFLOW") %}
+      {{ SidenavItem("Requests",
+        href="/requests",
+        icon="document",
+        active=g.matchesPath('/requests'),
+        subnav=[
+          {"label":"New Request", "href":url_for("requests.requests_form_new", screen=1), "icon": "plus", "active": g.matchesPath('/requests/new')},
+        ]
+        ) }}
+    {% endif %}
 
     {{ SidenavItem("New Task Order",
       href=url_for("task_orders.new", screen=1),
