@@ -32,4 +32,4 @@ class Invitation:
         body = render_template(
             self.email_template, owner=self.inviter.full_name, token=token
         )
-        queue.send_mail([self.email], self.subject.format(self.inviter), body)
+        queue.send_mail([self.email], self.subject.format(self.inviter.full_name), body)
