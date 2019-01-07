@@ -1,4 +1,3 @@
-import otherinput from '../components/other_input'
 import optionsinput from '../components/options_input'
 import textinput from '../components/text_input'
 
@@ -26,20 +25,14 @@ export default {
 
 
   data: function () {
-    const showError = (this.initialErrors && this.initialErrors.length) || false
+    const showError = (this.initialErrors && this.initialValue.length > 0) || false
     return {
       showError: showError,
       showValid: !showError && !!this.initialValue,
       validationError: this.initialErrors.join(' '),
       otherChecked: this.initialValue.includes("other") ? true : this.otherChecked,
       otherText: this.initialOtherValue,
-      selections: []
-    }
-  },
-
-  mounted: function () {
-    for (let choice of this.initialValue) {
-      this.selections.push(choice)
+      selections: this.setSelection()
     }
   },
 
@@ -55,6 +48,11 @@ export default {
     otherToggle: function() {
       this.otherChecked = !this.otherChecked
       this.otherText = ''
+    },
+    setSelection: function () {
+      for (let choice of this.initialValue) {
+        this.selections.push(choice)
+      }
     }
   }
 }

@@ -33,7 +33,7 @@
             <li>
               {% if choice[0] != 'other' %}
               <input type='checkbox' name='{{ field.name }}' id='{{ field.name }}-{{ field.choices.index(choice) }}' value='{{ choice[0] }}' v-model="selections"/>
-              <label for='{{ field.name }}-{{ field.choices.index(choice) }}'>{{ choice[1] }}</label>
+              <label for='{{ field.name }}-{{ loop.index }}'>{{ choice[1] }}</label>
               {% else %}
                 <input @click="otherToggle" type='checkbox' name='{{ field.name }}' id='{{ field.name }}-{{ field.choices.index(choice) }}' value='other' v-model="selections"/>
                 <label for='{{ field.name }}-{{ field.choices.index(choice) }}'>{{ choice[1] }}</label>
