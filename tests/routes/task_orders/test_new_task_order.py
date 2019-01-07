@@ -83,7 +83,7 @@ def test_show_task_order_formdata():
     workflow = ShowTaskOrderWorkflow(task_order_id=task_order.id)
 
     assert workflow.task_order.to_dictionary()["user_id"] is None
-    assert workflow.task_order_formdata["user_id"] is ""
+    assert workflow.task_order_formdata["user_id"] is ''
     for field in workflow.task_order_formdata:
         assert not field is None
 

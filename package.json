@@ -8,7 +8,8 @@
     "build": "parcel build js/index.js -d static/assets --public-url /static/assets -o index.js",
     "test": "jest",
     "test:coverage": "jest --coverage",
-    "test:watch": "jest --watch --no-cache"
+    "test:watch": "jest --watch --no-cache",
+    "prepush": "script/format"
   },
   "author": "",
   "license": "MIT",
