@@ -25,6 +25,13 @@ class CloudProviderInterface:
         """
         raise NotImplementedError()
 
+    def get_access_token(self, environment_role):  # pragma: no cover
+        """Takes an `atst.model.EnvironmentRole` object and returns a federated
+        access token that gives the specified user access to the specified
+        environment with the proper permissions.
+        """
+        raise NotImplementedError()
+
 
 class MockCloudProvider(CloudProviderInterface):
     def create_application(self, name):
@@ -39,3 +46,11 @@ class MockCloudProvider(CloudProviderInterface):
     def delete_role(self, environment_role):
         # Currently nothing to do.
         pass
+
+    def get_access_token(self, environment_role):
+        # for now, just create a mock token using the user and environement
+        # cloud IDs and the name of the role in the environment
+        user_id = str(environment_role.user.id)
+        env_id = environment_role.environment.cloud_id or ""
+        role_details = environment_role.role
+        return "::".join([user_id, env_id, role_details])
