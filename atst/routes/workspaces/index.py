@@ -80,3 +80,17 @@ def workspace_reports(workspace_id):
         expiration_date=expiration_date,
         remaining_days=remaining_days,
     )
+
+
+@workspaces_bp.route("/workspaces/<workspace_id>/activity")
+def workspace_activity(workspace_id):
+    workspace = Workspaces.get(g.current_user, workspace_id)
+    Authorization.check_workspace_permission(
+        g.current_user,
+        workspace,
+        # TODO: diff permission
+        Permissions.VIEW_USAGE_DOLLARS,
+        "view workspace reports",
+    )
+
+    return render_template("workspaces/activity.html", workspace_name=workspace.name)
