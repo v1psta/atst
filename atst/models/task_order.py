@@ -52,11 +52,6 @@ class TaskOrder(Base, mixins.TimestampsMixin):
             filter(None, [self.clin_01, self.clin_02, self.clin_03, self.clin_04])
         )
 
-    def __repr__(self):
-        return "<TaskOrder(number='{}', budget='{}', end_date='{}', id='{}')>".format(
-            self.number, self.budget, self.end_date, self.id
-        )
-
     @property
     def portfolio_name(self):
         return self.workspace.name
@@ -70,3 +65,8 @@ class TaskOrder(Base, mixins.TimestampsMixin):
                 if c.name not in ["id"]
             },
         }
+
+    def __repr__(self):
+        return "<TaskOrder(number='{}', budget='{}', end_date='{}', id='{}')>".format(
+            self.number, self.budget, self.end_date, self.id
+        )
