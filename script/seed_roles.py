@@ -1,3 +1,4 @@
+#! .venv/bin/python
 # Add root project dir to the python path
 import os
 import sys

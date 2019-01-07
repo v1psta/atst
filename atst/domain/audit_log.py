@@ -37,7 +37,7 @@ class AuditLog(object):
     @classmethod
     def get_workspace_events(cls, user, workspace_id, pagination_opts):
         Authorization.check_atat_permission(
-            user, Permissions.VIEW_AUDIT_LOG, "view audit log"
+            user, Permissions.VIEW_WORKSPACE_AUDIT_LOG, "view audit log"
         )
         return AuditEventQuery.get_ws_events(workspace_id, pagination_opts)
 
