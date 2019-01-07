@@ -105,9 +105,16 @@ COMPLETION_DATE_RANGES = [
     ("Above 12 months", "Above 12 months"),
 ]
 
+NONDISPLAY_ROLES = [
+    "contracting_officer",
+    "contracting_officer_representative",
+    "security_officer",
+]
+
 WORKSPACE_ROLES = [
     (role["name"], {"name": role["display_name"], "description": role["description"]})
     for role in WORKSPACE_ROLE_DEFINITIONS
+    if role["name"] not in NONDISPLAY_ROLES
 ]
 
 ENVIRONMENT_ROLES = [
