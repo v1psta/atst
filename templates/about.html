@@ -15,7 +15,9 @@
         JEDI Cloud provides commercial Infrastructure as a Service (IaaS) and Platform as a Service (PaaS) offerings to support DoD business and mission operations.<br>
         <b>Anyone with a DoD mission may use JEDI</b>.
       </p>
-      <a class="usa-button" href="{{ url_for('requests.requests_form_new', screen=1) }}"><span>New JEDI Request</span></a>
+      {% if config.get("REQUESTS_WORKFLOW") %}
+        <a class="usa-button" href="{{ url_for('requests.requests_form_new', screen=1) }}"><span>New JEDI Request</span></a>
+      {% endif %}
 
 
       <h2>Five Steps to the JEDI Cloud</h2>
@@ -27,7 +29,9 @@
             <h3 class="h4">Complete a JEDI Cloud Access Request</h3>
             <p>
               A JEDI Cloud Access Request will inform the the Cloud Computing Program Office (CCPO) about your intention to use JEDI's commercial cloud services and provide the preliminary information needed to grant access.
-              Any DoD employee with a CAC may initiate this request. <a class="icon-link" href="{{ url_for('requests.requests_form_new', screen=1) }}">Start a Request</a>
+              {% if config.get("REQUESTS_WORKFLOW") %}
+                Any DoD employee with a CAC may initiate this request. <a class="icon-link" href="{{ url_for('requests.requests_form_new', screen=1) }}">Start a Request</a>
+              {% endif %}
             </p>
           </li>
           <li>

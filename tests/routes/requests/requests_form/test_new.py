@@ -1,3 +1,4 @@
+import pytest
 import datetime
 import re
 from tests.factories import (
@@ -17,6 +18,7 @@ from tests.assert_util import dict_contains
 ERROR_CLASS = "alert--error"
 
 
+@pytest.mark.requests_workflow
 def test_submit_invalid_request_form(monkeypatch, client, user_session):
     user_session()
     response = client.post(
@@ -27,6 +29,7 @@ def test_submit_invalid_request_form(monkeypatch, client, user_session):
     assert re.search(ERROR_CLASS, response.data.decode())
 
 
+@pytest.mark.requests_workflow
 def test_submit_valid_request_form(monkeypatch, client, user_session):
     user_session()
     monkeypatch.setattr(
@@ -41,6 +44,7 @@ def test_submit_valid_request_form(monkeypatch, client, user_session):
     assert "/requests/new/2" in response.headers.get("Location")
 
 
+@pytest.mark.requests_workflow
 def test_owner_can_view_request(client, user_session):
     user = UserFactory.create()
     user_session(user)
@@ -53,6 +57,7 @@ def test_owner_can_view_request(client, user_session):
     assert response.status_code == 200
 
 
+@pytest.mark.requests_workflow
 def test_non_owner_cannot_view_request(client, user_session):
     user = UserFactory.create()
     user_session(user)
@@ -65,6 +70,7 @@ def test_non_owner_cannot_view_request(client, user_session):
     assert response.status_code == 404
 
 
+@pytest.mark.requests_workflow
 def test_ccpo_can_view_request(client, user_session):
     ccpo = Roles.get("ccpo")
     user = UserFactory.create(atat_role=ccpo)
@@ -78,6 +84,7 @@ def test_ccpo_can_view_request(client, user_session):
     assert response.status_code == 200
 
 
+@pytest.mark.requests_workflow
 def test_nonexistent_request(client, user_session):
     user_session()
     response = client.get("/requests/new/1/foo", follow_redirects=True)
@@ -85,6 +92,7 @@ def test_nonexistent_request(client, user_session):
     assert response.status_code == 404
 
 
+@pytest.mark.requests_workflow
 def test_creator_info_is_autopopulated_for_existing_request(
     monkeypatch, client, user_session
 ):
@@ -108,6 +116,7 @@ def test_creator_info_is_autopopulated_for_existing_request(
         assert "initial-value='{}'".format(value) in body
 
 
+@pytest.mark.requests_workflow
 def test_creator_info_is_autopopulated_for_new_request(
     monkeypatch, client, user_session
 ):
@@ -121,6 +130,7 @@ def test_creator_info_is_autopopulated_for_new_request(
     assert "initial-value='{}'".format(user.email) in body
 
 
+@pytest.mark.requests_workflow
 def test_non_creator_info_is_not_autopopulated(monkeypatch, client, user_session):
     user = UserFactory.create()
     creator = UserFactory.create()
@@ -134,6 +144,7 @@ def test_non_creator_info_is_not_autopopulated(monkeypatch, client, user_session
     assert not user.email in body
 
 
+@pytest.mark.requests_workflow
 def test_am_poc_causes_poc_to_be_autopopulated(client, user_session):
     creator = UserFactory.create()
     user_session(creator)
@@ -147,6 +158,7 @@ def test_am_poc_causes_poc_to_be_autopopulated(client, user_session):
     assert request.body["primary_poc"]["dodid_poc"] == creator.dod_id
 
 
+@pytest.mark.requests_workflow
 def test_not_am_poc_requires_poc_info_to_be_completed(client, user_session):
     creator = UserFactory.create()
     user_session(creator)
@@ -160,6 +172,7 @@ def test_not_am_poc_requires_poc_info_to_be_completed(client, user_session):
     assert ERROR_CLASS in response.data.decode()
 
 
+@pytest.mark.requests_workflow
 def test_not_am_poc_allows_user_to_fill_in_poc_info(client, user_session):
     creator = UserFactory.create()
     user_session(creator)
@@ -179,6 +192,7 @@ def test_not_am_poc_allows_user_to_fill_in_poc_info(client, user_session):
     assert ERROR_CLASS not in response.data.decode()
 
 
+@pytest.mark.requests_workflow
 def test_poc_details_can_be_autopopulated_on_new_request(client, user_session):
     creator = UserFactory.create()
     user_session(creator)
@@ -193,6 +207,7 @@ def test_poc_details_can_be_autopopulated_on_new_request(client, user_session):
     assert request.body["primary_poc"]["dodid_poc"] == creator.dod_id
 
 
+@pytest.mark.requests_workflow
 def test_poc_autofill_checks_information_about_you_form_first(client, user_session):
     creator = UserFactory.create()
     user_session(creator)
@@ -221,6 +236,7 @@ def test_poc_autofill_checks_information_about_you_form_first(client, user_sessi
     )
 
 
+@pytest.mark.requests_workflow
 def test_can_review_data(user_session, client):
     creator = UserFactory.create()
     user_session(creator)
@@ -232,6 +248,7 @@ def test_can_review_data(user_session, client):
     assert request.body["information_about_you"]["email_request"] in body
 
 
+@pytest.mark.requests_workflow
 def test_displays_ccpo_review_comment(user_session, client):
     creator = UserFactory.create()
     ccpo = UserFactory.from_atat_role("ccpo")

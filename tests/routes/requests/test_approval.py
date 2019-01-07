@@ -1,3 +1,4 @@
+import pytest
 import os
 from flask import url_for
 
@@ -14,6 +15,7 @@ from tests.factories import (
 )
 
 
+@pytest.mark.requests_workflow
 def test_ccpo_can_view_approval(user_session, client):
     ccpo = Roles.get("ccpo")
     user = UserFactory.create(atat_role=ccpo)
@@ -24,6 +26,7 @@ def test_ccpo_can_view_approval(user_session, client):
     assert response.status_code == 200
 
 
+@pytest.mark.requests_workflow
 def test_ccpo_prepopulated_as_mission_owner(user_session, client):
     user = UserFactory.from_atat_role("ccpo")
     user_session(user)
@@ -36,6 +39,7 @@ def test_ccpo_prepopulated_as_mission_owner(user_session, client):
     assert user.last_name in body
 
 
+@pytest.mark.requests_workflow
 def test_non_ccpo_cannot_view_approval(user_session, client):
     user = UserFactory.create()
     user_session(user)
@@ -45,6 +49,7 @@ def test_non_ccpo_cannot_view_approval(user_session, client):
     assert response.status_code == 404
 
 
+@pytest.mark.requests_workflow
 def prepare_request_pending_approval(creator, pdf_attachment=None):
     legacy_task_order = LegacyTaskOrderFactory.create(
         number="abc123", pdf=pdf_attachment
@@ -56,6 +61,7 @@ def prepare_request_pending_approval(creator, pdf_attachment=None):
     )
 
 
+@pytest.mark.requests_workflow
 def test_ccpo_sees_pdf_link(user_session, client, pdf_upload):
     ccpo = UserFactory.from_atat_role("ccpo")
     user_session(ccpo)
@@ -70,6 +76,7 @@ def test_ccpo_sees_pdf_link(user_session, client, pdf_upload):
     assert download_url in body
 
 
+@pytest.mark.requests_workflow
 def test_ccpo_does_not_see_pdf_link_if_no_pdf(user_session, client, pdf_upload):
     ccpo = UserFactory.from_atat_role("ccpo")
     user_session(ccpo)
@@ -83,6 +90,7 @@ def test_ccpo_does_not_see_pdf_link_if_no_pdf(user_session, client, pdf_upload):
     assert download_url not in body
 
 
+@pytest.mark.requests_workflow
 def test_task_order_download(app, client, user_session, pdf_upload):
     user = UserFactory.create()
     user_session(user)
@@ -108,6 +116,7 @@ def test_task_order_download(app, client, user_session, pdf_upload):
     assert response.data == pdf_content
 
 
+@pytest.mark.requests_workflow
 def test_task_order_download_does_not_exist(client, user_session):
     user = UserFactory.create()
     user_session(user)
@@ -118,6 +127,7 @@ def test_task_order_download_does_not_exist(client, user_session):
     assert response.status_code == 404
 
 
+@pytest.mark.requests_workflow
 def test_can_submit_request_approval(client, user_session):
     user = UserFactory.from_atat_role("ccpo")
     user_session(user)
@@ -133,6 +143,7 @@ def test_can_submit_request_approval(client, user_session):
     assert request.status == RequestStatus.PENDING_FINANCIAL_VERIFICATION
 
 
+@pytest.mark.requests_workflow
 def test_can_submit_request_denial(client, user_session):
     user = UserFactory.from_atat_role("ccpo")
     user_session(user)
@@ -148,6 +159,7 @@ def test_can_submit_request_denial(client, user_session):
     assert request.status == RequestStatus.CHANGES_REQUESTED
 
 
+@pytest.mark.requests_workflow
 def test_ccpo_user_can_comment_on_request(client, user_session):
     user = UserFactory.from_atat_role("ccpo")
     user_session(user)
@@ -167,6 +179,7 @@ def test_ccpo_user_can_comment_on_request(client, user_session):
     assert request.internal_comments[0].text == comment_text
 
 
+@pytest.mark.requests_workflow
 def test_comment_text_is_required(client, user_session):
     user = UserFactory.from_atat_role("ccpo")
     user_session(user)
@@ -184,6 +197,7 @@ def test_comment_text_is_required(client, user_session):
     assert len(request.internal_comments) == 0
 
 
+@pytest.mark.requests_workflow
 def test_other_user_cannot_comment_on_request(client, user_session):
     user = UserFactory.create()
     user_session(user)

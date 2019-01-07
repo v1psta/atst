@@ -1,4 +1,5 @@
 import pytest
+from flask import url_for
 
 
 @pytest.fixture
@@ -10,7 +11,7 @@ def csrf_enabled_app(app):
 
 def test_csrf_error(csrf_enabled_app, client):
     response = client.post(
-        "/requests/new/1",
+        url_for("users.user"),
         headers={"Content-Type": "application/x-www-form-urlencoded"},
         data="csrf_token=invalid_token",
         follow_redirects=True,

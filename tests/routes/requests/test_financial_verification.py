@@ -69,6 +69,7 @@ FalseValidator = MagicMock()
 FalseValidator.validate = MagicMock(return_value=False)
 
 
+@pytest.mark.requests_workflow
 def test_update_fv(fv_data):
     request = RequestFactory.create()
     user = UserFactory.create()
@@ -81,6 +82,7 @@ def test_update_fv(fv_data):
     assert updated_request.is_pending_ccpo_approval
 
 
+@pytest.mark.requests_workflow
 def test_update_fv_re_enter_pe_number(fv_data):
     request = RequestFactory.create()
     user = UserFactory.create()
@@ -96,6 +98,7 @@ def test_update_fv_re_enter_pe_number(fv_data):
     assert updated_request.is_pending_ccpo_approval
 
 
+@pytest.mark.requests_workflow
 def test_update_fv_invalid_task_order_number(fv_data):
     request = RequestFactory.create()
     user = UserFactory.create()
@@ -113,6 +116,7 @@ def test_update_fv_invalid_task_order_number(fv_data):
         update_fv.execute()
 
 
+@pytest.mark.requests_workflow
 def test_draft_without_pe_id(fv_data):
     request = RequestFactory.create()
     user = UserFactory.create()
@@ -127,6 +131,7 @@ def test_draft_without_pe_id(fv_data):
     ).execute()
 
 
+@pytest.mark.requests_workflow
 def test_update_fv_extended(fv_data, e_fv_data):
     request = RequestFactory.create()
     user = UserFactory.create()
@@ -138,6 +143,7 @@ def test_update_fv_extended(fv_data, e_fv_data):
     assert update_fv.execute()
 
 
+@pytest.mark.requests_workflow
 def test_update_fv_extended_does_not_validate_task_order(fv_data, e_fv_data):
     request = RequestFactory.create()
     user = UserFactory.create()
@@ -149,6 +155,7 @@ def test_update_fv_extended_does_not_validate_task_order(fv_data, e_fv_data):
     assert update_fv.execute()
 
 
+@pytest.mark.requests_workflow
 def test_update_fv_missing_extended_data(fv_data):
     request = RequestFactory.create()
     user = UserFactory.create()
@@ -165,6 +172,7 @@ def test_update_fv_missing_extended_data(fv_data):
         update_fv.execute()
 
 
+@pytest.mark.requests_workflow
 def test_update_fv_submission(fv_data):
     request = RequestFactory.create()
     user = UserFactory.create()
@@ -174,6 +182,7 @@ def test_update_fv_submission(fv_data):
     assert updated_request
 
 
+@pytest.mark.requests_workflow
 def test_save_empty_draft():
     request = RequestFactory.create()
     user = UserFactory.create()
@@ -184,6 +193,7 @@ def test_save_empty_draft():
     assert save_draft.execute()
 
 
+@pytest.mark.requests_workflow
 def test_save_draft_with_ba_code():
     request = RequestFactory.create()
     user = UserFactory.create()
@@ -195,6 +205,7 @@ def test_save_draft_with_ba_code():
     assert save_draft.execute()
 
 
+@pytest.mark.requests_workflow
 def test_save_draft_allows_invalid_data():
     request = RequestFactory.create()
     user = UserFactory.create()
@@ -214,6 +225,7 @@ def test_save_draft_allows_invalid_data():
     ).execute()
 
 
+@pytest.mark.requests_workflow
 def test_save_draft_and_then_submit():
     request = RequestFactory.create()
     user = UserFactory.create()
@@ -228,6 +240,7 @@ def test_save_draft_and_then_submit():
         ).execute()
 
 
+@pytest.mark.requests_workflow
 def test_updated_request_has_pdf(fv_data, e_fv_data):
     request = RequestFactory.create()
     user = UserFactory.create()
@@ -238,6 +251,7 @@ def test_updated_request_has_pdf(fv_data, e_fv_data):
     assert updated_request.legacy_task_order.pdf
 
 
+@pytest.mark.requests_workflow
 def test_can_save_draft_with_just_pdf(e_fv_data):
     request = RequestFactory.create()
     user = UserFactory.create()
@@ -250,6 +264,7 @@ def test_can_save_draft_with_just_pdf(e_fv_data):
     assert form.legacy_task_order.pdf
 
 
+@pytest.mark.requests_workflow
 def test_task_order_info_present_in_extended_form(fv_data, e_fv_data):
     request = RequestFactory.create()
     user = UserFactory.create()
@@ -265,6 +280,7 @@ def test_task_order_info_present_in_extended_form(fv_data, e_fv_data):
     assert form.legacy_task_order.clin_0001.data
 
 
+@pytest.mark.requests_workflow
 def test_update_ignores_empty_values(fv_data, e_fv_data):
     request = RequestFactory.create()
     user = UserFactory.create()
@@ -274,6 +290,7 @@ def test_update_ignores_empty_values(fv_data, e_fv_data):
     ).execute()
 
 
+@pytest.mark.requests_workflow
 def test_can_save_draft_with_funding_type(fv_data, e_fv_data):
     request = RequestFactory.create()
     user = UserFactory.create()
@@ -288,6 +305,7 @@ def test_can_save_draft_with_funding_type(fv_data, e_fv_data):
     assert updated_request.legacy_task_order.funding_type
 
 
+@pytest.mark.requests_workflow
 def test_update_fv_route(client, user_session, fv_data):
     user = UserFactory.create()
     request = RequestFactory.create(creator=user)
@@ -301,6 +319,7 @@ def test_update_fv_route(client, user_session, fv_data):
     assert response.status_code == 200
 
 
+@pytest.mark.requests_workflow
 def test_save_fv_draft_route(client, user_session, fv_data):
     user = UserFactory.create()
     request = RequestFactory.create(creator=user)
@@ -314,6 +333,7 @@ def test_save_fv_draft_route(client, user_session, fv_data):
     assert response.status_code == 200
 
 
+@pytest.mark.requests_workflow
 def test_get_fv_form_route(client, user_session, fv_data):
     user = UserFactory.create()
     request = RequestFactory.create(creator=user)
@@ -327,6 +347,7 @@ def test_get_fv_form_route(client, user_session, fv_data):
     assert response.status_code == 200
 
 
+@pytest.mark.requests_workflow
 def test_manual_task_order_triggers_extended_form(
     client, user_session, fv_data, e_fv_data
 ):
@@ -348,6 +369,7 @@ def test_manual_task_order_triggers_extended_form(
     assert "extended" in response.headers["Location"]
 
 
+@pytest.mark.requests_workflow
 def test_manual_to_does_not_trigger_approval(client, user_session, fv_data, e_fv_data):
     user = UserFactory.create()
     request = RequestFactory.create(creator=user)
@@ -370,6 +392,7 @@ def test_manual_to_does_not_trigger_approval(client, user_session, fv_data, e_fv
     assert updated_request.status != RequestStatus.APPROVED
 
 
+@pytest.mark.requests_workflow
 def test_eda_task_order_does_trigger_approval(client, user_session, fv_data, e_fv_data):
     user = UserFactory.create()
     request = RequestFactory.create(creator=user)
@@ -392,6 +415,7 @@ def test_eda_task_order_does_trigger_approval(client, user_session, fv_data, e_f
     assert updated_request.status == RequestStatus.APPROVED
 
 
+@pytest.mark.requests_workflow
 def test_attachment_on_non_extended_form(client, user_session, fv_data, e_fv_data):
     user = UserFactory.create()
     request = RequestFactory.create(creator=user)
@@ -417,6 +441,7 @@ def test_attachment_on_non_extended_form(client, user_session, fv_data, e_fv_dat
     assert response.status_code == 200
 
 
+@pytest.mark.requests_workflow
 def test_task_order_number_persists_in_form(fv_data, e_fv_data):
     user = UserFactory.create()
     request = RequestFactory.create(creator=user)
@@ -437,6 +462,7 @@ def test_task_order_number_persists_in_form(fv_data, e_fv_data):
     assert form.legacy_task_order.number.data == MANUAL_TO_NUMBER
 
 
+@pytest.mark.requests_workflow
 def test_can_submit_once_to_details_are_entered(fv_data, e_fv_data):
     user = UserFactory.create()
     request = RequestFactory.create(creator=user)
@@ -464,6 +490,7 @@ def test_can_submit_once_to_details_are_entered(fv_data, e_fv_data):
     ).execute()
 
 
+@pytest.mark.requests_workflow
 def test_existing_task_order_with_pdf(fv_data, e_fv_data, client, user_session):
     # Use finver route to create initial TO #1, complete with PDF
     user = UserFactory.create()
@@ -496,6 +523,7 @@ def test_existing_task_order_with_pdf(fv_data, e_fv_data, client, user_session):
     assert response.status_code == 200
 
 
+@pytest.mark.requests_workflow
 def test_pdf_clearing(fv_data, e_fv_data, pdf_upload, pdf_upload2):
     user = UserFactory.create()
     request = RequestFactory.create(creator=user)
@@ -521,6 +549,7 @@ def test_pdf_clearing(fv_data, e_fv_data, pdf_upload, pdf_upload2):
 # in the related attachment entity. I have changed the handling in
 # FinancialVerificationBase#_get_form to be more generous in how it finds the
 # PDF filename and prepopulates the form data with that name.
+@pytest.mark.requests_workflow
 def test_always_derives_pdf_filename(fv_data, e_fv_data, pdf_upload):
     user = UserFactory.create()
     request_one = RequestFactory.create(creator=user)
