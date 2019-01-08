@@ -1,3 +1,5 @@
+from copy import deepcopy
+
 from flask import (
     request as http_request,
     render_template,
@@ -90,7 +92,7 @@ class ShowTaskOrderWorkflow:
 
     @property
     def display_screens(self):
-        screen_info = TASK_ORDER_SECTIONS.copy()
+        screen_info = deepcopy(TASK_ORDER_SECTIONS)
 
         if self.task_order:
             for section in screen_info:
