@@ -17,6 +17,8 @@ class Environments(object):
     def create(cls, project, name):
         environment = Environment(project=project, name=name)
         environment.cloud_id = app.csp.cloud.create_application(environment.name)
+        db.session.add(environment)
+        db.session.commit()
         return environment
 
     @classmethod
