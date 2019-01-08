@@ -1,3 +1,5 @@
+from sqlalchemy import or_
+
 from atst.database import db
 from atst.domain.common import Query
 from atst.domain.authz import Authorization, Permissions
@@ -16,7 +18,12 @@ class AuditEventQuery(Query):
     def get_ws_events(cls, workspace_id, pagination_opts):
         query = (
             db.session.query(cls.model)
-            .filter(cls.model.workspace_id == workspace_id)
+            .filter(
+                or_(
+                    cls.model.workspace_id == workspace_id,
+                    cls.model.resource_id == workspace_id,
+                )
+            )
             .order_by(cls.model.time_created.desc())
         )
         return cls.paginate(query, pagination_opts)

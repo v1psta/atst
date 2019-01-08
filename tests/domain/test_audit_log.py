@@ -99,4 +99,4 @@ def test_ws_audit_log_only_includes_current_ws_events():
 
     events = AuditLog.get_workspace_events(workspace.owner, workspace)
     for event in events:
-        assert event.workspace_id == workspace.id
+        assert event.workspace_id == workspace.id or event.resource_id == workspace.id
