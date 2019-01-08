@@ -150,9 +150,7 @@ def test_invite_officers_to_task_order(queue):
     assert len(workspace.members) == 4
     roles = [member.role.name for member in workspace.members]
     # officers exist in roles
-    assert "contracting_officer" in roles
-    assert "contracting_officer_representative" in roles
-    assert "security_officer" in roles
+    assert roles.count("officer") == 3
     # email invitations are enqueued
     assert len(queue.get_queue()) == 3
     # task order has relationship to user for each officer role

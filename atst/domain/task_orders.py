@@ -102,18 +102,34 @@ class TaskOrders(object):
     ]
 
     @classmethod
-    def add_officer(cls, user, task_order, role, officer_data):
-        if role in TaskOrders.OFFICERS:
-            member = Workspaces.create_member(
-                user, task_order.workspace, {**officer_data, "workspace_role": role}
+    def add_officer(cls, user, task_order, officer_type, officer_data):
+        if officer_type in TaskOrders.OFFICERS:
+            workspace = task_order.workspace
+
+            existing_member = next(
+                (
+                    member
+                    for member in workspace.members
+                    if member.user.dod_id is officer_data["dod_id"]
+                ),
+                None,
             )
-            setattr(task_order, role, member.user)
+
+            if existing_member:
+                user = existing_member.user
+            else:
+                member = Workspaces.create_member(
+                    user, workspace, {**officer_data, "workspace_role": "officer"}
+                )
+                user = member.user
+
+            setattr(task_order, officer_type, user)
 
             db.session.add(task_order)
             db.session.commit()
 
-            return member.user
+            return user
         else:
             raise TaskOrderError(
-                "{} is not an officer role on task orders".format(role)
+                "{} is not an officer role on task orders".format(officer_type)
             )
