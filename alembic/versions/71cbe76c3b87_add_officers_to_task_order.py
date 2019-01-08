@@ -1,7 +1,7 @@
 """add officers to task order
 
 Revision ID: 71cbe76c3b87
-Revises: 6172ac7b8b26
+Revises: 91bd9482ce23
 Create Date: 2019-01-04 10:16:50.062349
 
 """
@@ -11,7 +11,7 @@ from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
 revision = '71cbe76c3b87'
-down_revision = '6172ac7b8b26'
+down_revision = '91bd9482ce23'
 branch_labels = None
 depends_on = None
 
