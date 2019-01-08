@@ -70,6 +70,28 @@ def test_create_new_task_order(client, user_session):
     assert url_for("task_orders.new", screen=4) in response.headers["Location"]
 
 
+def test_task_order_form_shows_errors(client, user_session):
+    creator = UserFactory.create()
+    user_session(creator)
+
+    to = TaskOrderFactory.create()
+
+    task_order_data = TaskOrderFactory.dictionary()
+    funding_data = slice_data_for_section(task_order_data, "funding")
+    funding_data = serialize_dates(funding_data)
+    funding_data.update({"clin_01": "one milllllion dollars"})
+
+    response = client.post(
+        url_for("task_orders.update", screen=2, task_order_id=to.id),
+        data=funding_data,
+        follow_redirects=False,
+    )
+
+    body = response.data.decode()
+    assert "There were some errors" in body
+    assert "Not a valid integer" in body
+
+
 def test_show_task_order():
     workflow = ShowTaskOrderWorkflow()
     assert workflow.task_order is None

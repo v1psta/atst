@@ -108,10 +108,11 @@ class UpdateTaskOrderWorkflow(ShowTaskOrderWorkflow):
         self.task_order_id = task_order_id
         self._task_order = None
         self._section = TASK_ORDER_SECTIONS[screen - 1]
+        self._form = self._section["form"](self.form_data)
 
     @property
     def form(self):
-        return self._section["form"](self.form_data)
+        return self._form
 
     @property
     def workspace(self):
