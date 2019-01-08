@@ -37,8 +37,10 @@
           <span class='usa-input__help'>{{ description | safe }}</span>
         {% endif %}
 
-        <span v-show='showError'>{{ Icon('alert',classes="icon-validation") }}</span>
-        <span v-show='showValid'>{{ Icon('ok',classes="icon-validation") }}</span>
+        {% if not disabled %}
+          <span v-show='showError'>{{ Icon('alert',classes="icon-validation") }}</span>
+          <span v-show='showValid'>{{ Icon('ok',classes="icon-validation") }}</span>
+        {% endif %}
 
       </label>
 
