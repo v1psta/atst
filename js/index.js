@@ -7,7 +7,6 @@ import VTooltip from 'v-tooltip'
 
 import optionsinput from './components/options_input'
 import multicheckboxinput from './components/multi_checkbox_input'
-import otherinput from './components/other_input'
 import textinput from './components/text_input'
 import checkboxinput from './components/checkbox_input'
 import DetailsOfUse from './components/forms/details_of_use'
@@ -40,7 +39,6 @@ const app = new Vue({
     toggler,
     optionsinput,
     multicheckboxinput,
-    otherinput,
     textinput,
     checkboxinput,
     DetailsOfUse,

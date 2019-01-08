@@ -5,7 +5,6 @@ export default {
   name: 'multicheckboxinput',
 
   components: {
-    otherinput,
     optionsinput,
     textinput,
   },
