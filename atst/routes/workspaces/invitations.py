@@ -20,6 +20,25 @@ def send_invite_email(owner_name, token, new_member_email):
 def accept_invitation(token):
     invite = Invitations.accept(g.current_user, token)
 
+    # TODO: this will eventually redirect to different places depending on
+    # whether the user is an officer for the TO and what kind of officer they
+    # are. It will also have to manage cases like:
+    #   - the logged-in user has multiple roles on the TO (e.g., KO and COR)
+    #   - the logged-in user has officer roles on multiple unsigned TOs
+    for task_order in invite.workspace.task_orders:
+        if g.current_user == task_order.contracting_officer:
+            return redirect(
+                url_for("task_orders.new", screen=4, task_order_id=task_order.id)
+            )
+        elif g.current_user == task_order.contracting_officer_representative:
+            return redirect(
+                url_for("task_orders.new", screen=4, task_order_id=task_order.id)
+            )
+        elif g.current_user == task_order.security_officer:
+            return redirect(
+                url_for("task_orders.new", screen=4, task_order_id=task_order.id)
+            )
+
     return redirect(
         url_for("workspaces.show_workspace", workspace_id=invite.workspace.id)
     )

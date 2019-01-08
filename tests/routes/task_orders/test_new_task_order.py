@@ -4,7 +4,7 @@ from flask import url_for
 from atst.domain.task_orders import TaskOrders
 from atst.routes.task_orders.new import ShowTaskOrderWorkflow, UpdateTaskOrderWorkflow
 
-from tests.factories import UserFactory, TaskOrderFactory
+from tests.factories import UserFactory, TaskOrderFactory, WorkspaceFactory
 
 
 def test_new_task_order(client, user_session):
@@ -129,3 +129,72 @@ def test_update_task_order_with_existing_task_order():
     assert workflow.task_order.start_date != to_data["start_date"]
     workflow.update()
     assert workflow.task_order.start_date.strftime("%m/%d/%Y") == to_data["start_date"]
+
+
+def test_invite_officers_to_task_order(queue):
+    user = UserFactory.create()
+    workspace = WorkspaceFactory.create(owner=user)
+    task_order = TaskOrderFactory.create(creator=user, workspace=workspace)
+    to_data = {
+        **TaskOrderFactory.dictionary(),
+        "ko_invite": True,
+        "cor_invite": True,
+        "so_invite": True,
+    }
+    workflow = UpdateTaskOrderWorkflow(
+        to_data, user, screen=3, task_order_id=task_order.id
+    )
+    workflow.update()
+    workspace = task_order.workspace
+    # owner and three officers are workspace members
+    assert len(workspace.members) == 4
+    roles = [member.role.name for member in workspace.members]
+    # officers exist in roles
+    assert roles.count("officer") == 3
+    # email invitations are enqueued
+    assert len(queue.get_queue()) == 3
+    # task order has relationship to user for each officer role
+    assert task_order.contracting_officer.dod_id == to_data["ko_dod_id"]
+    assert task_order.contracting_officer_representative.dod_id == to_data["cor_dod_id"]
+    assert task_order.security_officer.dod_id == to_data["so_dod_id"]
+
+
+def test_add_officer_but_do_not_invite(queue):
+    user = UserFactory.create()
+    workspace = WorkspaceFactory.create(owner=user)
+    task_order = TaskOrderFactory.create(creator=user, workspace=workspace)
+    to_data = {
+        **TaskOrderFactory.dictionary(),
+        "ko_invite": False,
+        "cor_invite": False,
+        "so_invite": False,
+    }
+    workflow = UpdateTaskOrderWorkflow(
+        to_data, user, screen=3, task_order_id=task_order.id
+    )
+    workflow.update()
+    workspace = task_order.workspace
+    # owner is only workspace member
+    assert len(workspace.members) == 1
+    # no invitations are enqueued
+    assert len(queue.get_queue()) == 0
+
+
+def test_update_does_not_resend_invitation():
+    user = UserFactory.create()
+    contracting_officer = UserFactory.create()
+    workspace = WorkspaceFactory.create(owner=user)
+    task_order = TaskOrderFactory.create(
+        creator=user,
+        workspace=workspace,
+        ko_first_name=contracting_officer.first_name,
+        ko_last_name=contracting_officer.last_name,
+        ko_dod_id=contracting_officer.dod_id,
+    )
+    to_data = {**task_order.to_dictionary(), "ko_invite": True}
+    workflow = UpdateTaskOrderWorkflow(
+        to_data, user, screen=3, task_order_id=task_order.id
+    )
+    for i in range(2):
+        workflow.update()
+    assert len(contracting_officer.invitations) == 1

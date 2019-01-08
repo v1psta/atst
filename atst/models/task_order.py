@@ -14,7 +14,18 @@ class TaskOrder(Base, mixins.TimestampsMixin):
     workspace = relationship("Workspace")
 
     user_id = Column(ForeignKey("users.id"))
-    creator = relationship("User")
+    creator = relationship("User", foreign_keys="TaskOrder.user_id")
+
+    ko_id = Column(ForeignKey("users.id"))
+    contracting_officer = relationship("User", foreign_keys="TaskOrder.ko_id")
+
+    cor_id = Column(ForeignKey("users.id"))
+    contracting_officer_representative = relationship(
+        "User", foreign_keys="TaskOrder.cor_id"
+    )
+
+    so_id = Column(ForeignKey("users.id"))
+    security_officer = relationship("User", foreign_keys="TaskOrder.so_id")
 
     scope = Column(String)  # Cloud Project Scope
     defense_component = Column(String)  # Department of Defense Component

@@ -140,6 +140,12 @@ WORKSPACE_ROLES = [
             Permissions.VIEW_WORKSPACE,
         ],
     },
+    {
+        "name": "officer",
+        "description": "Officer involved with setting up a Task Order",
+        "display_name": "Task Order Officer",
+        "permissions": [],
+    },
 ]
 
 

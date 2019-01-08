@@ -108,6 +108,7 @@ COMPLETION_DATE_RANGES = [
 WORKSPACE_ROLES = [
     (role["name"], {"name": role["display_name"], "description": role["description"]})
     for role in WORKSPACE_ROLE_DEFINITIONS
+    if role["name"] is not "officer"
 ]
 
 ENVIRONMENT_ROLES = [

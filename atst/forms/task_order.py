@@ -1,4 +1,5 @@
 from wtforms.fields import (
+    BooleanField,
     IntegerField,
     RadioField,
     SelectField,
@@ -8,6 +9,9 @@ from wtforms.fields import (
 )
 from wtforms.fields.html5 import DateField
 from wtforms.widgets import ListWidget, CheckboxInput
+from wtforms.validators import Required, Length
+
+from atst.forms.validators import IsNumber
 
 from .forms import CacheableForm
 from .data import (
@@ -86,15 +90,50 @@ class OversightForm(CacheableForm):
     ko_first_name = StringField("First Name")
     ko_last_name = StringField("Last Name")
     ko_email = StringField("Email")
-    ko_dod_id = StringField("DOD ID")
+    ko_dod_id = StringField(
+        "DOD ID", validators=[Required(), Length(min=10), IsNumber()]
+    )
+
     cor_first_name = StringField("First Name")
     cor_last_name = StringField("Last Name")
     cor_email = StringField("Email")
-    cor_dod_id = StringField("DOD ID")
+    cor_dod_id = StringField(
+        "DOD ID", validators=[Required(), Length(min=10), IsNumber()]
+    )
+
     so_first_name = StringField("First Name")
     so_last_name = StringField("Last Name")
     so_email = StringField("Email")
-    so_dod_id = StringField("DOD ID")
+    so_dod_id = StringField(
+        "DOD ID", validators=[Required(), Length(min=10), IsNumber()]
+    )
+
+    ko_invite = BooleanField(
+        "Invite KO to Task Order Builder",
+        description="""
+            Your KO will need to approve funding for this Task Order by logging
+            into the JEDI Cloud Portal, submitting the Task Order documents
+            within their official system of record, and electronically signing.
+            <i>You may choose to skip this for now and invite them later.</i>
+            """,
+    )
+    cor_invite = BooleanField(
+        "Invite COR to Task Order Builder",
+        description="""
+            Your COR may assist with submitting the Task Order documents within
+            their official system of record. <i>You may choose to skip this for
+            now and invite them later.</i>
+            """,
+    )
+    so_invite = BooleanField(
+        "Invite Security Officer to Task Order Builder",
+        description="""
+            Your Security Officer will need to answer some security
+            configuration questions in order to generate a DD-254 document,
+            then electronically sign. <i>You may choose to skip this for now
+            and invite them later.</i>
+            """,
+    )
 
 
 class ReviewForm(CacheableForm):
