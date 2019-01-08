@@ -29,6 +29,8 @@ class User(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
 
     provisional = Column(Boolean)
 
+    cloud_id = Column(String)
+
     REQUIRED_FIELDS = [
         "email",
         "dod_id",
