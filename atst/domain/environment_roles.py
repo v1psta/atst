@@ -8,6 +8,8 @@ class EnvironmentRoles(object):
     @classmethod
     def create(cls, user, environment, role):
         env_role = EnvironmentRole(user=user, environment=environment, role=role)
+        if not user.cloud_id:
+            user.cloud_id = app.csp.cloud.create_user(user)
         app.csp.cloud.create_role(env_role)
         return env_role
 

@@ -8,6 +8,12 @@ class CloudProviderInterface:
         """
         raise NotImplementedError()
 
+    def create_user(self, user):  # pragma: no cover
+        """Create an account in the CSP for specified user. Returns the ID of
+        the created user.
+        """
+        raise NotImplementedError()
+
     def create_role(self, environment_role):  # pragma: no cover
         """Takes an `atst.model.EnvironmentRole` object and allows the
         specified user access to the specified cloud entity.
@@ -39,6 +45,10 @@ class MockCloudProvider(CloudProviderInterface):
         cloud."""
         return uuid4().hex
 
+    def create_user(self, user):
+        """Returns an id that represents what would be an user in the cloud."""
+        return uuid4().hex
+
     def create_role(self, environment_role):
         # Currently, there is nothing to mock out, so just do nothing.
         pass
@@ -48,9 +58,9 @@ class MockCloudProvider(CloudProviderInterface):
         pass
 
     def get_access_token(self, environment_role):
-        # for now, just create a mock token using the user and environement
+        # for now, just create a mock token using the user and environment
         # cloud IDs and the name of the role in the environment
-        user_id = str(environment_role.user.id)
+        user_id = environment_role.user.cloud_id or ""
         env_id = environment_role.environment.cloud_id or ""
         role_details = environment_role.role
         return "::".join([user_id, env_id, role_details])

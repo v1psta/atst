@@ -12,6 +12,28 @@ def test_create_environments():
         assert env.cloud_id is not None
 
 
+def test_create_environment_role_creates_cloud_id(session):
+    owner = UserFactory.create()
+    developer = UserFactory.from_atat_role("developer")
+
+    workspace = WorkspaceFactory.create(
+        owner=owner,
+        members=[{"user": developer, "role_name": "developer"}],
+        projects=[{"name": "project1", "environments": [{"name": "project1 prod"}]}],
+    )
+
+    env = workspace.projects[0].environments[0]
+    new_role = [{"id": env.id, "role": "developer"}]
+
+    workspace_role = workspace.members[0]
+    assert not workspace_role.user.cloud_id
+    assert Environments.update_environment_roles(
+        owner, workspace, workspace_role, new_role
+    )
+
+    assert workspace_role.user.cloud_id is not None
+
+
 def test_update_environment_roles():
     owner = UserFactory.create()
     developer = UserFactory.from_atat_role("developer")
