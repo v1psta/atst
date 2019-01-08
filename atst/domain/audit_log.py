@@ -24,8 +24,8 @@ class AuditEventQuery(Query):
 
 class AuditLog(object):
     @classmethod
-    def log_system_event(cls, resource, action):
-        return cls._log(resource=resource, action=action)
+    def log_system_event(cls, resource, action, workspace=None):
+        return cls._log(resource=resource, action=action, workspace=workspace)
 
     @classmethod
     def get_all_events(cls, user, pagination_opts=None):
@@ -58,9 +58,10 @@ class AuditLog(object):
         return type(resource).__name__.lower()
 
     @classmethod
-    def _log(cls, user=None, workspace_id=None, resource=None, action=None):
+    def _log(cls, user=None, workspace=None, resource=None, action=None):
         resource_id = resource.id if resource else None
         resource_type = cls._resource_type(resource) if resource else None
+        workspace_id = workspace.id if workspace else None
 
         audit_event = AuditEventQuery.create(
             user=user,
