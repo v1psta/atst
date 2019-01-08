@@ -85,6 +85,11 @@ class UnclassifiedFundingForm(FundingForm):
     clin_02 = IntegerField("CLIN 02: Classified (available soon)")
     clin_04 = IntegerField("CLIN 04: Classified (available soon)")
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.clin_02.data = "0"
+        self.clin_04.data = "0"
+
 
 class OversightForm(CacheableForm):
     ko_first_name = StringField("First Name")
