@@ -95,7 +95,7 @@ def workspace_activity(workspace_id):
     )
     pagination_opts = Paginator.get_pagination_opts(http_request)
     audit_events = AuditLog.get_workspace_events(
-        g.current_user, workspace_id, pagination_opts
+        g.current_user, workspace, pagination_opts
     )
 
     return render_template(

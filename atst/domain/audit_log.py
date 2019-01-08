@@ -35,11 +35,14 @@ class AuditLog(object):
         return AuditEventQuery.get_all(pagination_opts)
 
     @classmethod
-    def get_workspace_events(cls, user, workspace_id, pagination_opts):
-        Authorization.check_atat_permission(
-            user, Permissions.VIEW_WORKSPACE_AUDIT_LOG, "view audit log"
+    def get_workspace_events(cls, user, workspace, pagination_opts=None):
+        Authorization.check_workspace_permission(
+            user,
+            workspace,
+            Permissions.VIEW_WORKSPACE_AUDIT_LOG,
+            "view workspace audit log",
         )
-        return AuditEventQuery.get_ws_events(workspace_id, pagination_opts)
+        return AuditEventQuery.get_ws_events(workspace.id, pagination_opts)
 
     @classmethod
     def get_by_resource(cls, resource_id):
