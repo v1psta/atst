@@ -24,10 +24,10 @@ export default {
 
 
   data: function () {
-    const showError = (this.initialErrors && this.initialValue.length > 0) || false
+    const showError = (this.initialErrors && this.initialErrors.length) || false
     return {
       showError: showError,
-      showValid: !showError && !!this.initialValue,
+      showValid: !showError && this.initialValue.length > 0,
       validationError: this.initialErrors.join(' '),
       otherChecked: this.initialValue.includes("other") ? true : this.otherChecked,
       otherText: this.initialOtherValue,
