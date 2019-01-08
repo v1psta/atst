@@ -4,5 +4,11 @@
   {% set accepted = event.changed_state.status and event.changed_state.status.1 == "ACCEPTED" %}
   {% if accepted %}
     accepted by {{ event.event_details.email }} (DOD <code>{{ event.event_details.dod_id }}</code>)
+    <br>
   {% endif %}
+  {% if event.action == "create" %}
+    invited {{ event.event_details.email }} (DOD <code>{{ event.event_details.dod_id }}</code>)
+    <br>
+  {% endif %}
+  in Workspace <code>{{ event.workspace_id }}</code> ({{ event.workspace.name }})
 {% endblock %}
