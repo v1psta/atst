@@ -1,6 +1,13 @@
 from flask import url_for
 
-from tests.factories import UserFactory, WorkspaceFactory
+from tests.factories import (
+    UserFactory,
+    WorkspaceFactory,
+    WorkspaceRoleFactory,
+    EnvironmentRoleFactory,
+    EnvironmentFactory,
+    ProjectFactory,
+)
 from atst.domain.projects import Projects
 from atst.domain.workspaces import Workspaces
 from atst.models.workspace_role import Status as WorkspaceRoleStatus
@@ -125,3 +132,42 @@ def test_user_without_permission_cannot_update_project(client, user_session):
     assert response.status_code == 404
     assert project.name == "Great Project"
     assert project.description == "Cool stuff happening here!"
+
+
+def create_environment(user):
+    workspace = WorkspaceFactory.create()
+    workspace_role = WorkspaceRoleFactory.create(workspace=workspace, user=user)
+    project = ProjectFactory.create(workspace=workspace)
+    return EnvironmentFactory.create(project=project, name="new environment!")
+
+
+def test_environment_access_with_env_role(client, user_session):
+    user = UserFactory.create()
+    environment = create_environment(user)
+    env_role = EnvironmentRoleFactory.create(
+        user=user, environment=environment, role="developer"
+    )
+    user_session(user)
+    response = client.get(
+        url_for(
+            "workspaces.access_environment",
+            workspace_id=environment.workspace.id,
+            environment_id=environment.id,
+        )
+    )
+    assert response.status_code == 302
+    assert "csp-environment-access" in response.location
+
+
+def test_environment_access_with_no_role(client, user_session):
+    user = UserFactory.create()
+    environment = create_environment(user)
+    user_session(user)
+    response = client.get(
+        url_for(
+            "workspaces.access_environment",
+            workspace_id=environment.workspace.id,
+            environment_id=environment.id,
+        )
+    )
+    assert response.status_code == 404

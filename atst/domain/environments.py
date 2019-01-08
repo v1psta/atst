@@ -1,3 +1,4 @@
+from flask import current_app as app
 from sqlalchemy.orm.exc import NoResultFound
 
 from atst.database import db
@@ -15,6 +16,7 @@ class Environments(object):
     @classmethod
     def create(cls, project, name):
         environment = Environment(project=project, name=name)
+        environment.cloud_id = app.csp.cloud.create_application(environment.name)
         db.session.add(environment)
         db.session.commit()
         return environment
@@ -23,7 +25,7 @@ class Environments(object):
     def create_many(cls, project, names):
         environments = []
         for name in names:
-            environment = Environment(project=project, name=name)
+            environment = Environments.create(project, name)
             environments.append(environment)
 
         db.session.add_all(environments)
@@ -31,7 +33,7 @@ class Environments(object):
 
     @classmethod
     def add_member(cls, environment, user, role):
-        environment_user = EnvironmentRole(
+        environment_user = EnvironmentRoles.create(
             user=user, environment=environment, role=role
         )
         db.session.add(environment_user)
@@ -86,7 +88,7 @@ class Environments(object):
                     updated = True
                     db.session.add(env_role)
                 elif not env_role:
-                    env_role = EnvironmentRole(
+                    env_role = EnvironmentRoles.create(
                         user=workspace_role.user, environment=environment, role=new_role
                     )
                     updated = True

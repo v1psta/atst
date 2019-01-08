@@ -15,6 +15,8 @@ class Environment(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     project_id = Column(ForeignKey("projects.id"), nullable=False)
     project = relationship("Project")
 
+    cloud_id = Column(String)
+
     @property
     def users(self):
         return [r.user for r in self.roles]
