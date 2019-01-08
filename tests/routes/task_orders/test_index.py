@@ -23,6 +23,4 @@ def test_download_summary(client, user_session):
     doc = zip_.read(Docx.DOCUMENT_FILE).decode()
     for attr, val in task_order.to_dictionary().items():
         assert attr in doc
-        if not xml_translated(val) in doc:
-            __import__("ipdb").set_trace()
         assert xml_translated(val) in doc
