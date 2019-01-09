@@ -1,4 +1,3 @@
-import otherinput from '../components/other_input'
 import optionsinput from '../components/options_input'
 import textinput from '../components/text_input'
 
@@ -6,7 +5,6 @@ export default {
   name: 'multicheckboxinput',
 
   components: {
-    otherinput,
     optionsinput,
     textinput,
   },
@@ -29,17 +27,11 @@ export default {
     const showError = (this.initialErrors && this.initialErrors.length) || false
     return {
       showError: showError,
-      showValid: !showError && !!this.initialValue,
+      showValid: !showError && this.initialValue.length > 0,
       validationError: this.initialErrors.join(' '),
       otherChecked: this.initialValue.includes("other") ? true : this.otherChecked,
       otherText: this.initialOtherValue,
-      selections: []
-    }
-  },
-
-  mounted: function () {
-    for (let choice of this.initialValue) {
-      this.selections.push(choice)
+      selections: this.initialValue
     }
   },
 
@@ -55,6 +47,6 @@ export default {
     otherToggle: function() {
       this.otherChecked = !this.otherChecked
       this.otherText = ''
-    }
+    },
   }
 }
