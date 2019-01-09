@@ -1,8 +1,14 @@
 import pytest
 
 from atst.domain.task_orders import TaskOrders, TaskOrderError
+from atst.domain.exceptions import UnauthorizedError
 
-from tests.factories import TaskOrderFactory, UserFactory
+from tests.factories import (
+    TaskOrderFactory,
+    UserFactory,
+    WorkspaceRoleFactory,
+    WorkspaceFactory,
+)
 
 
 def test_is_section_complete():
@@ -60,3 +66,37 @@ def test_add_officer_who_is_already_workspace_member():
     assert task_order.contracting_officer == owner
     member = task_order.workspace.members[0]
     assert member.user == owner and member.role_name == "owner"
+
+
+def test_task_order_access():
+    creator = UserFactory.create()
+    member = UserFactory.create()
+    rando = UserFactory.create()
+    officer = UserFactory.create()
+
+    def check_access(can, cannot, method_name, method_args):
+        method = getattr(TaskOrders, method_name)
+
+        for user in can:
+            assert method(user, *method_args)
+
+        for user in cannot:
+            with pytest.raises(UnauthorizedError):
+                method(user, *method_args)
+
+    workspace = WorkspaceFactory.create(owner=creator)
+    task_order = TaskOrderFactory.create(creator=creator, workspace=workspace)
+    WorkspaceRoleFactory.create(user=member, workspace=task_order.workspace)
+    TaskOrders.add_officer(
+        creator, task_order, "contracting_officer", officer.to_dictionary()
+    )
+
+    check_access([creator, officer], [member, rando], "get", [task_order.id])
+    check_access([creator], [officer, member, rando], "create", [workspace])
+    check_access([creator, officer], [member, rando], "update", [task_order])
+    check_access(
+        [creator],
+        [officer, member, rando],
+        "add_officer",
+        [task_order, "contracting_officer", rando.to_dictionary()],
+    )

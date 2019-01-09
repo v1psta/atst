@@ -86,6 +86,9 @@ WORKSPACE_ROLES = [
             Permissions.VIEW_ENVIRONMENT_IN_APPLICATION,
             Permissions.RENAME_ENVIRONMENT_IN_APPLICATION,
             Permissions.VIEW_WORKSPACE_AUDIT_LOG,
+            Permissions.VIEW_TASK_ORDER,
+            Permissions.UPDATE_TASK_ORDER,
+            Permissions.ADD_TASK_ORDER_OFFICER,
         ],
     },
     {
@@ -114,6 +117,9 @@ WORKSPACE_ROLES = [
             Permissions.VIEW_ENVIRONMENT_IN_APPLICATION,
             Permissions.RENAME_ENVIRONMENT_IN_APPLICATION,
             Permissions.VIEW_WORKSPACE_AUDIT_LOG,
+            Permissions.VIEW_TASK_ORDER,
+            Permissions.UPDATE_TASK_ORDER,
+            Permissions.ADD_TASK_ORDER_OFFICER,
         ],
     },
     {
