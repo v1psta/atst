@@ -1,0 +1,41 @@
+.task-order-summary {
+
+  @include media($medium-screen) {
+    @include grid-row;
+    flex-wrap: wrap;
+  }
+
+  .panel {
+    padding: 0 $gap * 2;
+    width: 100%;
+
+    @include ie-only {
+      max-width: 100%;
+    }
+  }
+
+  .task-order-heading {
+    align-items: center;
+    justify-content: space-between;
+
+    .task-order-heading__name {
+      align-items: center;
+      padding: $gap;
+
+      label {
+        padding: $gap;
+      }
+    }
+
+    .task-order-heading__value {
+      margin: 0 ($gap * 2);
+      text-align: right;
+
+      dt {
+        font-weight: bold;
+      }
+      dd {
+      }
+    }
+  }
+}

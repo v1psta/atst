@@ -2,6 +2,28 @@
 
 {% block workspace_content %}
 
-You're looking at TO {{ task_order.id }}
+<div class='task-order-summary'>
+  <div class='panel task-order-heading row'>
+    <div class='task-order-heading__name row'>
+      <h2>New Task Order</h2>
+      <span class="label label--warning">Pending</span>
+    </div>
+    <div class="task_order-heading__details row">
+      <div class="task-order-heading__value col">
+        <dt>Started</dt>
+        <dd>
+          <local-datetime
+            timestamp='{{ task_order.start_date }}'
+            format='M/D/YYYY'>
+            </local-datetime>
+        </dd>
+      </div>
+      <div class="task-order-heading__value col">
+        <dt>Task Order Value</dt>
+        <dd>{{ task_order.budget | dollars }}</dd>
+      </div>
+    </div>
+  </div>
+</div>
 
 {% endblock %}
