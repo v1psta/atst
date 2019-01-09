@@ -87,12 +87,6 @@ def workspace_reports(workspace_id):
 @workspaces_bp.route("/workspaces/<workspace_id>/activity")
 def workspace_activity(workspace_id):
     workspace = Workspaces.get(g.current_user, workspace_id)
-    Authorization.check_workspace_permission(
-        g.current_user,
-        workspace,
-        Permissions.VIEW_WORKSPACE_AUDIT_LOG,
-        "view workspace reports",
-    )
     pagination_opts = Paginator.get_pagination_opts(http_request)
     audit_events = AuditLog.get_workspace_events(
         g.current_user, workspace, pagination_opts
