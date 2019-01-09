@@ -21,52 +21,53 @@ from .data import (
     DEV_TEAM,
     TEAM_EXPERIENCE,
 )
+from atst.utils.localization import translate
 
 
 class AppInfoForm(CacheableForm):
     portfolio_name = StringField(
-        "Organization Portfolio Name",
-        description="The name of your office or organization. You can add multiple applications to your portfolio. Your task orders are used to pay for these applications and their environments",
+        translate("forms.task_order.portfolio_name_label"),
+        description=translate("forms.task_order.portfolio_name_description"),
     )
     scope = TextAreaField(
-        "Cloud Project Scope",
-        description="Your team's plan for using the cloud, such as migrating an existing application or creating a prototype.",
+        translate("forms.task_order.scope_label"),
+        description=translate("forms.task_order.scope_description"),
     )
     defense_component = SelectField(
-        "Department of Defense Component", choices=SERVICE_BRANCHES
+        translate("forms.task_order.defense_component_label"), choices=SERVICE_BRANCHES
     )
     app_migration = RadioField(
-        "App Migration",
-        description="Do you plan to migrate existing application(s) to the cloud?",
+        translate("forms.task_order.app_migration_label"),
+        description=translate("forms.task_order.app_migration_description"),
         choices=APP_MIGRATION,
         default="",
     )
     native_apps = RadioField(
-        "Native Apps",
-        description="Do you plan to develop application(s) natively in the cloud? ",
+        translate("forms.task_order.native_apps_label"),
+        description=translate("forms.task_order.native_apps_description"),
         choices=[("yes", "Yes"), ("no", "No"), ("not_sure", "Not Sure")],
     )
     complexity = SelectMultipleField(
-        "Project Complexity",
-        description="Which of these describes how complex your team's use of the cloud will be? (Select all that apply.)",
+        translate("forms.task_order.complexity_label"),
+        description=translate("forms.task_order.complexity_description"),
         choices=PROJECT_COMPLEXITY,
         default="",
         widget=ListWidget(prefix_label=False),
         option_widget=CheckboxInput(),
     )
-    complexity_other = StringField("Project Complexity Other")
+    complexity_other = StringField(translate("forms.task_order.complexity_other_label"))
     dev_team = SelectMultipleField(
-        "Development Team",
-        description="Which people or teams will be completing the development work for your cloud applications?",
+        translate("forms.task_order.dev_team_label"),
+        description=translate("forms.task_order.dev_team_description"),
         choices=DEV_TEAM,
         default="",
         widget=ListWidget(prefix_label=False),
         option_widget=CheckboxInput(),
     )
-    dev_team_other = StringField("Development Team Other")
+    dev_team_other = StringField(translate("forms.task_order.dev_team_other_label"))
     team_experience = RadioField(
-        "Team Experience",
-        description="How much experience does your team have with development in the cloud?",
+        translate("forms.task_order.team_experience_label"),
+        description=translate("forms.task_order.team_experience_description"),
         choices=TEAM_EXPERIENCE,
         default="",
     )

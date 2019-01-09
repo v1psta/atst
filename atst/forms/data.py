@@ -176,9 +176,13 @@ FUNDING_TYPES = [
 TASK_ORDER_SOURCES = [("MANUAL", "Manual"), ("EDA", "EDA")]
 
 APP_MIGRATION = [
-    ("on_premise", "Yes, migrating from an on-premise data center"),
-    ("cloud", "Yes, migrating from another cloud provider "),
-    ("none", "Not planning to migrate any applications "),
+    ("on_premise", "Yes, migrating from an <strong>on-premise data center</strong>"),
+    ("cloud", "Yes, migrating from <strong>another cloud provider</strong>"),
+    (
+        "both",
+        "Yes, migrating from an <strong>on-premise data center</strong> and <strong>another cloud provider</strong>",
+    ),
+    ("none", "Not planning to migrate any applications"),
     ("not_sure", "Not Sure"),
 ]
 
@@ -193,11 +197,10 @@ PROJECT_COMPLEXITY = [
 ]
 
 DEV_TEAM = [
-    ("government", "Government"),
-    ("civilians", "Civilians"),
+    ("government_civilians", "Government Civilians"),
     ("military", "Military "),
     ("contractor", "Contractor "),
-    ("other", "Other"),
+    ("other", "Other (E.g. University or other partner)"),
 ]
 
 TEAM_EXPERIENCE = [

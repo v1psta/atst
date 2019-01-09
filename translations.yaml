@@ -1,3 +1,13 @@
+# How to use text containing html tags in .html files:
+  # In the template add the `safe` filter when referencing the string
+  # from the template file. ie:
+
+  # login:
+  #   title: A title with <a href="#">a link</a>!
+
+  # `{{ "login.title" | translate | safe }}`
+
+
 audit_log:
   events:
     default:
@@ -153,6 +163,24 @@ forms:
     environment_names_required_validation_message: Provide at least one environment name.
     environment_names_unique_validation_message: Environment names must be unique.
     name_label: Project Name
+  task_order:
+    portfolio_name_label: Organization Portfolio Name
+    portfolio_name_description: The name of your office or organization. You can add multiple applications to your portfolio. Your task orders are used to pay for these applications and their environments.
+    scope_label: Cloud Project Scope
+    scope_description: Your team's plan for using the cloud, such as migrating an existing application or creating a prototype.
+    defense_component_label: Department of Defense Component
+    app_migration_label: App Migration
+    app_migration_description: Do you plan to migrate existing application(s) to the cloud?
+    native_apps_label: Native Apps
+    native_apps_description: Do you plan to develop application(s) natively in the cloud?
+    complexity_label: Project Complexity
+    complexity_description: Which of these describes how complex your team's use of the cloud will be? Select all that apply.
+    complexity_other_label: Project Complexity Other
+    dev_team_label: Development Team
+    dev_team_description: Which people or teams will be completing the development work for your cloud applications? Select all that apply.
+    dev_team_other_label: Development Team Other
+    team_experience_label: Team Experience
+    team_experience_description: How much experience does your team have with development in the cloud?
   validators:
     is_number_message: Please enter a valid number.
     list_item_required_message: Please provide at least one.
@@ -295,6 +323,17 @@ requests:
     num_software_systems_tooltip: 'A software system can be any code that you plan to host on cloud infrastructure. For example, it could be a custom-developed web application, or a large ERP system.'
     questions_title_text: Questions related to JEDI Cloud migration
     rationalization_software_systems_tooltip: Rationalization is the DoD process to determine whether the application should move to the cloud.
+task_orders:
+  new:
+    app_info:
+      section_title: "What You're Making"
+      basic_info_title: Basic information
+      sample_scope: |
+        Not sure how to describe your scope? <a href="#">Read some Sample Scopes</a> to get an idea of what is appropriate.
+      project_title: About your project
+      team_title: About your team
+      market_research_title: Market Research
+      market_research_paragraph: 'The JEDI Cloud Computing Program Office (CCPO) has completed the market research requirements for all related task orders. The Department of Defense CIO has approved this research.<br /><a href="#">View JEDI Market Research Memo</a>'
 testing:
   example_string: Hello World
   example_with_variables: 'Hello, {name}!'

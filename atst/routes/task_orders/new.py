@@ -15,12 +15,13 @@ from atst.domain.workspaces import Workspaces
 from atst.domain.workspace_roles import WorkspaceRoles
 import atst.forms.task_order as task_order_form
 from atst.services.invitation import Invitation as InvitationService
+from atst.utils.localization import translate
 
 
 TASK_ORDER_SECTIONS = [
     {
         "section": "app_info",
-        "title": "What You're Building",
+        "title": "What You're Making",
         "template": "task_orders/new/app_info.html",
         "form": task_order_form.AppInfoForm,
     },

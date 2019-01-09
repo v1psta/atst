@@ -6,42 +6,40 @@
 {% from "components/multi_checkbox_input.html" import MultiCheckboxInput %}
 
 {% block heading %}
-  What You're Building
+  {{ "task_orders.new.app_info.section_title"| translate }}
 {% endblock %}
 
 {% block form %}
 
-<h3>Basic Information</h3>
+<h3>{{ "task_orders.new.app_info.basic_info_title"| translate }}</h3>
 {{ TextInput(form.portfolio_name, placeholder="The name of your office or organization") }}
 {{ TextInput(form.scope, paragraph=True) }}
 <p>
 <i>
-  Not sure how to describe your scope? <a href="#">Read some Sample Scopes</a> to
-  get an idea of what is appropriate.
+  {{ "task_orders.new.app_info.sample_scope" | translate | safe }}
 </i>
 </p>
+
 {{ OptionsInput(form.defense_component) }}
 
 <hr>
 
-<h3>About Your Project</h3>
+<h3>{{ "task_orders.new.app_info.project_title" | translate }}</h3>
 {{ OptionsInput(form.app_migration) }}
 {{ OptionsInput(form.native_apps) }}
 {{ MultiCheckboxInput(form.complexity, form.complexity_other) }}
 
 <hr>
 
-<h3>About Your Team</h3>
+<h3>{{ "task_orders.new.app_info.team_title" | translate }}</h3>
 {{ MultiCheckboxInput(form.dev_team, form.dev_team_other) }}
 {{ OptionsInput(form.team_experience) }}
 
 <hr>
 
-<h3>Market Research</h3>
+<h3>{{ "task_orders.new.app_info.market_research_title" | translate }}</h3>
 <p>
-The JEDI Cloud Computing Program Office (CCPO) has completed the market
-research requirement for all related task orders. The Department of Defense CIO
-has approved this research. <a href="#">View JEDI Cloud Market Research</a>
+{{ "task_orders.new.app_info.market_research_paragraph" | translate | safe }}
 </p>
 
 
