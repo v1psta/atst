@@ -7,5 +7,5 @@ app = make_app(config)
 
 if __name__ == "__main__":
     port = int(config["PORT"])
-    app.run(port=port)
+    app.run(port=port, extra_files=["translations.yaml"])
     print("Listening on http://localhost:%i" % port)
