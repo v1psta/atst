@@ -1,6 +1,5 @@
 from flask import url_for
 
-<<<<<<< HEAD
 from tests.factories import (
     UserFactory,
     WorkspaceFactory,
@@ -9,9 +8,7 @@ from tests.factories import (
     EnvironmentFactory,
     ProjectFactory,
 )
-=======
-from tests.factories import UserFactory, WorkspaceFactory, WorkspaceRoleFactory
->>>>>>> Add tests
+
 from atst.domain.projects import Projects
 from atst.domain.workspaces import Workspaces
 from atst.domain.roles import Roles
