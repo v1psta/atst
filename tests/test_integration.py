@@ -26,7 +26,6 @@ def serialize_dates(data):
     return new_data
 
 
-@pytest.mark.requests_workflow
 def test_stepthrough_request_form(user_session, screens, client):
     user = UserFactory.create()
     user_session(user)

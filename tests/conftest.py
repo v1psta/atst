@@ -147,8 +147,3 @@ def extended_financial_verification_data(pdf_upload):
 def queue():
     yield atst_queue
     atst_queue.get_queue().empty()
-
-
-pytest.mark.requests_workflow = pytest.mark.skipif(
-    not make_config().get("REQUESTS_WORKFLOW"), reason="requests workflow is deprecated"
-)

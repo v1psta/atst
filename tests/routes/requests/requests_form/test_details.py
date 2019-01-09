@@ -1,4 +1,3 @@
-import pytest
 import re
 from flask import url_for
 
@@ -7,7 +6,6 @@ from atst.models.request_status_event import RequestStatus
 from tests.factories import RequestFactory, LegacyTaskOrderFactory, UserFactory
 
 
-@pytest.mark.requests_workflow
 def test_can_show_financial_data(client, user_session):
     user = UserFactory.create()
     user_session(user)
@@ -26,7 +24,6 @@ def test_can_show_financial_data(client, user_session):
     assert re.search(r">\s+Financial Verification\s+<", body)
 
 
-@pytest.mark.requests_workflow
 def test_can_not_show_financial_data(client, user_session):
     user = UserFactory.create()
     user_session(user)

@@ -8,7 +8,6 @@ def _mock_func(*args, **kwargs):
     return RequestFactory.create()
 
 
-@pytest.mark.requests_workflow
 def test_submit_reviewed_request(monkeypatch, client, user_session):
     user_session()
     monkeypatch.setattr("atst.domain.requests.Requests.get", _mock_func)
@@ -25,7 +24,6 @@ def test_submit_reviewed_request(monkeypatch, client, user_session):
     assert "modal=pendingCCPOAcceptance" in response.headers["Location"]
 
 
-@pytest.mark.requests_workflow
 def test_submit_autoapproved_reviewed_request(monkeypatch, client, user_session):
     user_session()
     monkeypatch.setattr("atst.domain.requests.Requests.get", _mock_func)

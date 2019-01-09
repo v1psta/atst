@@ -1,4 +1,3 @@
-import pytest
 from flask import url_for
 
 from atst.routes.requests.index import RequestsIndex
@@ -6,7 +5,6 @@ from tests.factories import RequestFactory, UserFactory
 from atst.domain.requests import Requests
 
 
-@pytest.mark.requests_workflow
 def test_action_required_mission_owner():
     creator = UserFactory.create()
     requests = RequestFactory.create_batch(5, creator=creator)
@@ -18,7 +16,6 @@ def test_action_required_mission_owner():
     assert context["requests"][0]["action_required"] == False
 
 
-@pytest.mark.requests_workflow
 def test_action_required_ccpo():
     creator = UserFactory.create()
     requests = RequestFactory.create_batch(5, creator=creator)
