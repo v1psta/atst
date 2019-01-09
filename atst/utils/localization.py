@@ -18,10 +18,7 @@ class LocalizationInvalidKeyError(Exception):
         )
 
 
-translations_yaml_max_cache = 0 if ENV == "dev" else None
-
-
-@lru_cache(maxsize=translations_yaml_max_cache)
+@lru_cache(maxsize=None)
 def _translations_file():
     file_name = "translations.yaml"
 
