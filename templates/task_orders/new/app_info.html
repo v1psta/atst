@@ -11,8 +11,6 @@
 
 {% block form %}
 
-{% include "fragments/flash.html" %}
-
 <h3>Basic Information</h3>
 {{ TextInput(form.portfolio_name, placeholder="The name of your office or organization") }}
 {{ TextInput(form.scope, paragraph=True) }}
