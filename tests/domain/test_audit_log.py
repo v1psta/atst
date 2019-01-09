@@ -28,7 +28,8 @@ def test_non_admin_cannot_view_audit_log(developer):
 
 
 def test_ccpo_can_view_audit_log(ccpo):
-    AuditLog.get_all_events(ccpo)
+    events = AuditLog.get_all_events(ccpo)
+    assert len(events) > 0
 
 
 def test_paginate_audit_log(ccpo):
@@ -42,7 +43,8 @@ def test_paginate_audit_log(ccpo):
 
 def test_ccpo_can_view_ws_audit_log(ccpo):
     workspace = WorkspaceFactory.create()
-    AuditLog.get_workspace_events(ccpo, workspace)
+    events = AuditLog.get_workspace_events(ccpo, workspace)
+    assert len(events) > 0
 
 
 def test_ws_admin_can_view_ws_audit_log():
@@ -54,12 +56,14 @@ def test_ws_admin_can_view_ws_audit_log():
         role=Roles.get("admin"),
         status=WorkspaceRoleStatus.ACTIVE,
     )
-    AuditLog.get_workspace_events(admin, workspace)
+    events = AuditLog.get_workspace_events(admin, workspace)
+    assert len(events) > 0
 
 
 def test_ws_owner_can_view_ws_audit_log():
     workspace = WorkspaceFactory.create()
-    AuditLog.get_workspace_events(workspace.owner, workspace)
+    events = AuditLog.get_workspace_events(workspace.owner, workspace)
+    assert len(events) > 0
 
 
 def test_other_users_cannot_view_ws_audit_log():
@@ -100,3 +104,7 @@ def test_ws_audit_log_only_includes_current_ws_events():
     events = AuditLog.get_workspace_events(workspace.owner, workspace)
     for event in events:
         assert event.workspace_id == workspace.id or event.resource_id == workspace.id
+        assert (
+            not event.workspace_id == other_workspace.id
+            or event.resource_id == other_workspace.id
+        )
