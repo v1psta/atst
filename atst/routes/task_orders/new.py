@@ -62,14 +62,6 @@ class ShowTaskOrderWorkflow:
         return self._task_order
 
     @property
-    def task_order_formdata(self):
-        task_order_dict = self.task_order.to_dictionary()
-        for field in task_order_dict:
-            if task_order_dict[field] is None:
-                task_order_dict[field] = ""
-        return task_order_dict
-
-    @property
     def form(self):
         form_type = (
             "unclassified_form"
@@ -80,7 +72,11 @@ class ShowTaskOrderWorkflow:
         if self._form:
             pass
         elif self.task_order:
-            self._form = self._section[form_type](formdata=self.task_order_formdata)
+            self._form = self._section[form_type](obj=self.task_order)
+            # manually set SelectMultipleFields
+            if self._section["section"] == "app_info":
+                self._form.complexity.data = self.task_order.complexity
+                self._form.dev_team.data = self.task_order.dev_team
         else:
             self._form = self._section[form_type]()
 
