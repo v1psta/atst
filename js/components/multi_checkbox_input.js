@@ -31,7 +31,7 @@ export default {
       validationError: this.initialErrors.join(' '),
       otherChecked: this.initialValue.includes("other") ? true : this.otherChecked,
       otherText: this.initialOtherValue,
-      selections: this.setSelection()
+      selections: this.initialValue
     }
   },
 
@@ -48,10 +48,5 @@ export default {
       this.otherChecked = !this.otherChecked
       this.otherText = ''
     },
-    setSelection: function () {
-      for (let choice of this.initialValue) {
-        this.selections.push(choice)
-      }
-    }
   }
 }
