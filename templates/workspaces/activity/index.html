@@ -2,5 +2,8 @@
 {% from "components/pagination.html" import Pagination %}
 
 {% block workspace_content %}
-  {% include "fragments/audit_events_log.html" %}
+  <div v-cloak>
+    {% include "fragments/audit_events_log.html" %}
+    {{ Pagination(audit_events, 'workspaces.workspace_activity', workspace_id=workspace_id) }}
+  </div>
 {% endblock %}
