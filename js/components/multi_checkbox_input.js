@@ -30,7 +30,7 @@ export default {
       showValid: !showError && this.initialValue.length > 0,
       validationError: this.initialErrors.join(' '),
       otherChecked: this.initialValue.includes("other") ? true : this.otherChecked,
-      otherText: this.initialOtherValue,
+      otherText: this.initialValue.includes("other") ? this.initialOtherValue : '',
       selections: this.initialValue
     }
   },
@@ -46,7 +46,6 @@ export default {
     },
     otherToggle: function() {
       this.otherChecked = !this.otherChecked
-      this.otherText = ''
     },
   }
 }
