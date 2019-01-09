@@ -204,6 +204,7 @@ navigation:
     budget_report: Budget Report
     members: Members
     projects: Projects
+    task_orders: Task Orders
     workspace_settings: Workspace Settings
 requests:
   _new:

@@ -40,6 +40,13 @@
       ) }}
     {% endif %}
 
+    {{ SidenavItem(
+      ("navigation.workspace_navigation.task_orders" | translate),
+      href=url_for("workspaces.workspace_task_orders", workspace_id=workspace.id),
+      active=request.url_rule.rule.startswith('/workspaces/<workspace_id>/task_order'),
+      subnav=None
+    ) }}
+
     {% if user_can(permissions.EDIT_WORKSPACE_INFORMATION) %}
       {{ SidenavItem(
         ("navigation.workspace_navigation.workspace_settings" | translate),
