@@ -100,9 +100,9 @@ class ShowTaskOrderWorkflow:
 
 
 class UpdateTaskOrderWorkflow(ShowTaskOrderWorkflow):
-    def __init__(self, form_data, user, screen=1, task_order_id=None):
-        self.form_data = form_data
+    def __init__(self, user, form_data, screen=1, task_order_id=None):
         self.user = user
+        self.form_data = form_data
         self.screen = screen
         self.task_order_id = task_order_id
         self._task_order = None
@@ -205,7 +205,7 @@ def new(screen, task_order_id=None):
 @task_orders_bp.route("/task_orders/new/<int:screen>/<task_order_id>", methods=["POST"])
 def update(screen, task_order_id=None):
     workflow = UpdateTaskOrderWorkflow(
-        http_request.form, g.current_user, screen, task_order_id
+        g.current_user, http_request.form, screen, task_order_id
     )
 
     if workflow.validate():

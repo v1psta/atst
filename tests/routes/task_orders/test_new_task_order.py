@@ -141,7 +141,7 @@ def test_show_task_order_display_screen(task_order):
 def test_update_task_order_with_no_task_order():
     user = UserFactory.create()
     to_data = TaskOrderFactory.dictionary()
-    workflow = UpdateTaskOrderWorkflow(to_data, user)
+    workflow = UpdateTaskOrderWorkflow(user, to_data)
     assert workflow.task_order is None
     workflow.update()
     assert workflow.task_order
@@ -151,7 +151,7 @@ def test_update_task_order_with_no_task_order():
 def test_update_task_order_with_existing_task_order(task_order):
     to_data = serialize_dates(TaskOrderFactory.dictionary())
     workflow = UpdateTaskOrderWorkflow(
-        to_data, task_order.creator, screen=2, task_order_id=task_order.id
+        task_order.creator, to_data, screen=2, task_order_id=task_order.id
     )
     assert workflow.task_order.start_date != to_data["start_date"]
     workflow.update()
@@ -166,7 +166,7 @@ def test_invite_officers_to_task_order(task_order, queue):
         "so_invite": True,
     }
     workflow = UpdateTaskOrderWorkflow(
-        to_data, task_order.creator, screen=3, task_order_id=task_order.id
+        task_order.creator, to_data, screen=3, task_order_id=task_order.id
     )
     workflow.update()
     workspace = task_order.workspace
@@ -191,7 +191,7 @@ def test_add_officer_but_do_not_invite(task_order, queue):
         "so_invite": False,
     }
     workflow = UpdateTaskOrderWorkflow(
-        to_data, task_order.creator, screen=3, task_order_id=task_order.id
+        task_order.creator, to_data, screen=3, task_order_id=task_order.id
     )
     workflow.update()
     workspace = task_order.workspace
@@ -214,7 +214,7 @@ def test_update_does_not_resend_invitation():
     )
     to_data = {**task_order.to_dictionary(), "ko_invite": True}
     workflow = UpdateTaskOrderWorkflow(
-        to_data, user, screen=3, task_order_id=task_order.id
+        user, to_data, screen=3, task_order_id=task_order.id
     )
     for i in range(2):
         workflow.update()
