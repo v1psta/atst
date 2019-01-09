@@ -24,8 +24,14 @@
       {% for i in range(1, max_page + 1) %}
         {{ Page(pagination, route, i, workspace_id=workspace_id) }}
       {% endfor %}
-      {{ Page(pagination, route, pagination.page + 1, label="next", workspace_id=workspace_id) }}
-      {{ Page(pagination, route, pagination.pages, label="last", workspace_id=workspace_id) }}
+      {% if pagination.per_page >= pagination.total %}
+        {{ Page(pagination, route, pagination.page + 1, label="next", disabled=True, workspace_id=workspace_id) }}
+        {{ Page(pagination, route, pagination.pages, label="last", disabled=True, workspace_id=workspace_id) }}
+      {% else %}
+        {{ Page(pagination, route, pagination.page + 1, label="next", workspace_id=workspace_id) }}
+        {{ Page(pagination, route, pagination.pages, label="last", workspace_id=workspace_id) }}
+      {% endif %}
+
     {% elif pagination.page == pagination.pages %}
       {{ Page(pagination, route, 1, label="first", workspace_id=workspace_id) }}
       {{ Page(pagination, route, pagination.page - 1, label="prev", workspace_id=workspace_id) }}
