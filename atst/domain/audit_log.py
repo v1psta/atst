@@ -1,3 +1,5 @@
+from sqlalchemy import or_
+
 from atst.database import db
 from atst.domain.common import Query
 from atst.domain.authz import Authorization, Permissions
@@ -12,11 +14,25 @@ class AuditEventQuery(Query):
         query = db.session.query(cls.model).order_by(cls.model.time_created.desc())
         return cls.paginate(query, pagination_opts)
 
+    @classmethod
+    def get_ws_events(cls, workspace_id, pagination_opts):
+        query = (
+            db.session.query(cls.model)
+            .filter(
+                or_(
+                    cls.model.workspace_id == workspace_id,
+                    cls.model.resource_id == workspace_id,
+                )
+            )
+            .order_by(cls.model.time_created.desc())
+        )
+        return cls.paginate(query, pagination_opts)
+
 
 class AuditLog(object):
     @classmethod
-    def log_system_event(cls, resource, action):
-        return cls._log(resource=resource, action=action)
+    def log_system_event(cls, resource, action, workspace=None):
+        return cls._log(resource=resource, action=action, workspace=workspace)
 
     @classmethod
     def get_all_events(cls, user, pagination_opts=None):
@@ -24,6 +40,16 @@ class AuditLog(object):
             user, Permissions.VIEW_AUDIT_LOG, "view audit log"
         )
         return AuditEventQuery.get_all(pagination_opts)
+
+    @classmethod
+    def get_workspace_events(cls, user, workspace, pagination_opts=None):
+        Authorization.check_workspace_permission(
+            user,
+            workspace,
+            Permissions.VIEW_WORKSPACE_AUDIT_LOG,
+            "view workspace audit log",
+        )
+        return AuditEventQuery.get_ws_events(workspace.id, pagination_opts)
 
     @classmethod
     def get_by_resource(cls, resource_id):
@@ -39,9 +65,10 @@ class AuditLog(object):
         return type(resource).__name__.lower()
 
     @classmethod
-    def _log(cls, user=None, workspace_id=None, resource=None, action=None):
+    def _log(cls, user=None, workspace=None, resource=None, action=None):
         resource_id = resource.id if resource else None
         resource_type = cls._resource_type(resource) if resource else None
+        workspace_id = workspace.id if workspace else None
 
         audit_event = AuditEventQuery.create(
             user=user,

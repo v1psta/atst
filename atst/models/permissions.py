@@ -1,5 +1,6 @@
 class Permissions(object):
     VIEW_AUDIT_LOG = "view_audit_log"
+    VIEW_WORKSPACE_AUDIT_LOG = "view_workspace_audit_log"
     REQUEST_JEDI_WORKSPACE = "request_jedi_workspace"
     VIEW_ORIGINAL_JEDI_REQEUST = "view_original_jedi_request"
     REVIEW_AND_APPROVE_JEDI_WORKSPACE_REQUEST = (

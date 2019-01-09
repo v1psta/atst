@@ -18,6 +18,13 @@ class Paginator(object):
         self.query_set = query_set
 
     @classmethod
+    def get_pagination_opts(cls, request, default_page=1, default_per_page=100):
+        return {
+            "page": int(request.args.get("page", default_page)),
+            "per_page": int(request.args.get("perPage", default_per_page)),
+        }
+
+    @classmethod
     def paginate(cls, query, pagination_opts=None):
         if pagination_opts is not None:
             return cls(

@@ -1,4 +1,4 @@
-{% macro Page(pagination, route, i, label=None, disabled=False) -%}
+{% macro Page(pagination, route, i, label=None, disabled=False, workspace_id=None) -%}
   {% set label = label or i %}
 
   {% set button_class = "page usa-button " %}
@@ -11,38 +11,43 @@
     {% set button_class = button_class + "usa-button-secondary" %}
   {% endif %}
 
-    <a id="{{ label }}" type="button" class="{{ button_class }}" href="{{ url_for(route, page=i, perPage=pagination.per_page) if not disabled else 'null' }}">{{ label }}</a>
+    <a id="{{ label }}" type="button" class="{{ button_class }}" href="{{ url_for(route, workspace_id=workspace_id, page=i, perPage=pagination.per_page) if not disabled else 'null' }}">{{ label }}</a>
 {%- endmacro %}
 
-{% macro Pagination(pagination, route) -%}
+{% macro Pagination(pagination, route, workspace_id=None) -%}
   <div class="pagination">
 
     {% if pagination.page == 1 %}
+      {{ Page(pagination, route, 1, label="first", disabled=True, workspace_id=workspace_id) }}
+      {{ Page(pagination, route, pagination.page - 1, label="prev", disabled=True, workspace_id=workspace_id) }}
+    {% else %}
+      {{ Page(pagination, route, 1, label="first", workspace_id=workspace_id) }}
+      {{ Page(pagination, route, pagination.page - 1, label="prev", workspace_id=workspace_id) }}
+    {% endif %}
+
+    {% if pagination.page == 1 %}
       {% set max_page = [pagination.pages, 5] | min %}
-      {{ Page(pagination, route, 1, label="first", disabled=True) }}
-      {{ Page(pagination, route, pagination.page - 1, label="prev", disabled=True) }}
       {% for i in range(1, max_page + 1) %}
-        {{ Page(pagination, route, i) }}
+        {{ Page(pagination, route, i, workspace_id=workspace_id) }}
       {% endfor %}
-      {{ Page(pagination, route, pagination.page + 1, label="next") }}
-      {{ Page(pagination, route, pagination.pages, label="last") }}
     {% elif pagination.page == pagination.pages %}
-      {{ Page(pagination, route, 1, label="first") }}
-      {{ Page(pagination, route, pagination.page - 1, label="prev") }}
       {% for i in range(pagination.pages - 4, pagination.pages + 1) %}
-        {{ Page(pagination, route, i) }}
+        {{ Page(pagination, route, i, workspace_id=workspace_id) }}
       {% endfor %}
-      {{ Page(pagination, route, pagination.page + 1, label="next", disabled=True) }}
-      {{ Page(pagination, route, pagination.pages, label="last", disabled=True) }}
     {% else %}
       {% set window = pagination | pageWindow %}
-      {{ Page(pagination, route, 1, label="first") }}
-      {{ Page(pagination, route, pagination.page - 1, label="prev") }}
       {% for i in range(window.0, window.1 + 1) %}
-        {{ Page(pagination, route, i) }}
+        {{ Page(pagination, route, i, workspace_id=workspace_id) }}
       {% endfor %}
-      {{ Page(pagination, route, pagination.page + 1, label="next") }}
-      {{ Page(pagination, route, pagination.pages, label="last") }}
     {% endif %}
+
+    {% if pagination.page == pagination.pages %}
+      {{ Page(pagination, route, pagination.page + 1, label="next", disabled=True, workspace_id=workspace_id) }}
+      {{ Page(pagination, route, pagination.pages, label="last", disabled=True, workspace_id=workspace_id) }}
+    {% else %}
+      {{ Page(pagination, route, pagination.page + 1, label="next", workspace_id=workspace_id) }}
+      {{ Page(pagination, route, pagination.pages, label="last", workspace_id=workspace_id) }}
+    {% endif %}
+
   </div>
 {%- endmacro %}

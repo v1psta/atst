@@ -44,6 +44,7 @@ ATAT_ROLES = [
             Permissions.ADD_TAG_TO_WORKSPACE,
             Permissions.REMOVE_TAG_FROM_WORKSPACE,
             Permissions.VIEW_AUDIT_LOG,
+            Permissions.VIEW_WORKSPACE_AUDIT_LOG,
         ],
     },
     {
@@ -84,6 +85,7 @@ WORKSPACE_ROLES = [
             Permissions.DEACTIVATE_ENVIRONMENT_IN_APPLICATION,
             Permissions.VIEW_ENVIRONMENT_IN_APPLICATION,
             Permissions.RENAME_ENVIRONMENT_IN_APPLICATION,
+            Permissions.VIEW_WORKSPACE_AUDIT_LOG,
         ],
     },
     {
@@ -111,6 +113,7 @@ WORKSPACE_ROLES = [
             Permissions.DEACTIVATE_ENVIRONMENT_IN_APPLICATION,
             Permissions.VIEW_ENVIRONMENT_IN_APPLICATION,
             Permissions.RENAME_ENVIRONMENT_IN_APPLICATION,
+            Permissions.VIEW_WORKSPACE_AUDIT_LOG,
         ],
     },
     {

@@ -202,6 +202,7 @@ navigation:
     add_new_member_label: Add New Member
     add_new_project_label: Add New Project
     budget_report: Budget Report
+    activity_log: Activity Log
     members: Members
     projects: Projects
     task_orders: Task Orders

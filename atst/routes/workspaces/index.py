@@ -5,8 +5,10 @@ from flask import render_template, request as http_request, g, redirect, url_for
 from . import workspaces_bp
 from atst.domain.reports import Reports
 from atst.domain.workspaces import Workspaces
-from atst.forms.workspace import WorkspaceForm
+from atst.domain.audit_log import AuditLog
 from atst.domain.authz import Authorization
+from atst.domain.common import Paginator
+from atst.forms.workspace import WorkspaceForm
 from atst.models.permissions import Permissions
 
 
@@ -79,4 +81,20 @@ def workspace_reports(workspace_id):
         two_months_ago=two_months_ago,
         expiration_date=expiration_date,
         remaining_days=remaining_days,
+    )
+
+
+@workspaces_bp.route("/workspaces/<workspace_id>/activity")
+def workspace_activity(workspace_id):
+    workspace = Workspaces.get(g.current_user, workspace_id)
+    pagination_opts = Paginator.get_pagination_opts(http_request)
+    audit_events = AuditLog.get_workspace_events(
+        g.current_user, workspace, pagination_opts
+    )
+
+    return render_template(
+        "workspaces/activity/index.html",
+        workspace_name=workspace.name,
+        workspace_id=workspace_id,
+        audit_events=audit_events,
     )

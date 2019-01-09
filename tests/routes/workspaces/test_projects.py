@@ -8,8 +8,10 @@ from tests.factories import (
     EnvironmentFactory,
     ProjectFactory,
 )
+
 from atst.domain.projects import Projects
 from atst.domain.workspaces import Workspaces
+from atst.domain.roles import Roles
 from atst.models.workspace_role import Status as WorkspaceRoleStatus
 
 
@@ -32,6 +34,55 @@ def test_user_without_permission_has_no_budget_report_link(client, user_session)
     response = client.get("/workspaces/{}/projects".format(workspace.id))
     assert (
         'href="/workspaces/{}/reports"'.format(workspace.id).encode()
+        not in response.data
+    )
+
+
+def test_user_with_permission_has_activity_log_link(client, user_session):
+    workspace = WorkspaceFactory.create()
+    ccpo = UserFactory.from_atat_role("ccpo")
+    admin = UserFactory.create()
+    WorkspaceRoleFactory.create(
+        workspace=workspace,
+        user=admin,
+        role=Roles.get("admin"),
+        status=WorkspaceRoleStatus.ACTIVE,
+    )
+
+    user_session(workspace.owner)
+    response = client.get("/workspaces/{}/projects".format(workspace.id))
+    assert (
+        'href="/workspaces/{}/activity"'.format(workspace.id).encode() in response.data
+    )
+
+    # logs out previous user before creating a new session
+    user_session(admin)
+    response = client.get("/workspaces/{}/projects".format(workspace.id))
+    assert (
+        'href="/workspaces/{}/activity"'.format(workspace.id).encode() in response.data
+    )
+
+    user_session(ccpo)
+    response = client.get("/workspaces/{}/projects".format(workspace.id))
+    assert (
+        'href="/workspaces/{}/activity"'.format(workspace.id).encode() in response.data
+    )
+
+
+def test_user_without_permission_has_no_activity_log_link(client, user_session):
+    workspace = WorkspaceFactory.create()
+    developer = UserFactory.create()
+    WorkspaceRoleFactory.create(
+        workspace=workspace,
+        user=developer,
+        role=Roles.get("developer"),
+        status=WorkspaceRoleStatus.ACTIVE,
+    )
+
+    user_session(developer)
+    response = client.get("/workspaces/{}/projects".format(workspace.id))
+    assert (
+        'href="/workspaces/{}/activity"'.format(workspace.id).encode()
         not in response.data
     )
 

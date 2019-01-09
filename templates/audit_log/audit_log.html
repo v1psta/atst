@@ -2,24 +2,8 @@
 {% from "components/pagination.html" import Pagination %}
 
 {% block content %}
-
   <div v-cloak>
-    <section class="block-list">
-      <header class="block-list__header">
-        <h1 class="block-list__title">{{ "audit_log.header_title" | translate }}</h1>
-      </header>
-
-      <ul>
-        {% for event in audit_events %}
-          <li class="block-list__item">
-            {% autoescape false %}
-              {{ event | renderAuditEvent }}
-            {% endautoescape %}
-          </li>
-        {% endfor %}
-      </ul>
-    </section>
-
-    {{ Pagination(audit_events, 'atst.activity_history') }}
+    {% include "fragments/audit_events_log.html" %}
+    {{ Pagination(audit_events, 'atst.activity_history')}}
   </div>
 {% endblock %}
