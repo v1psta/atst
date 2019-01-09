@@ -40,7 +40,7 @@ export default {
     totalBudget: function () {
       return [this.clin_01, this.clin_02, this.clin_03, this.clin_04].reduce(
         function(acc, curr) {
-          curr = curr === null ? 0 : parseInt(curr)
+          curr = !curr ? 0 : parseInt(curr)
           return acc + curr;
         }, 0
       )
