@@ -33,9 +33,15 @@
       <span>{{ Icon("download") }}</span>
     </div>
     <div class="task-order-document-details col">
-      <a href="{{ link_url }}" class="icon-link {{ 'disabled' if disabled }}">
-        {{ title }}
-      </a>
+      {% if disabled %}
+        <div class="task-order-document-details__disabled_link">
+          {{ title }}
+        </div>
+      {% else %}
+        <a href="{{ link_url }}" class="icon-link">
+          {{ title }}
+        </a>
+      {% endif %}
       {% if description %}
         <div class="task-order-document-details__description">
           {{ description }}

@@ -87,10 +87,6 @@
           @include icon-color($color-cool-blue-lighter);
         }
       }
-
-      .icon-link.disabled {
-        color: $color-cool-blue-lighter;
-      }
     }
 
     .task-order-document-link__icon {
@@ -103,6 +99,16 @@
     .task-order-document-details {
       .task-order-document-details__description {
         font-style: italic;
+      }
+
+      .task-order-document-details__disabled_link {
+        @include icon-link;
+        cursor: unset;
+        &:hover {
+          background-color: unset;
+          color: $color-cool-blue-lighter;
+        }
+        color: $color-cool-blue-lighter;
       }
     }
   }
