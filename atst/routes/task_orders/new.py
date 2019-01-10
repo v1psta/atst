@@ -63,6 +63,21 @@ class ShowTaskOrderWorkflow:
         return self._task_order
 
     @property
+    def task_order_formdata(self):
+        task_order_dict = self.task_order.to_dictionary()
+        for field in task_order_dict:
+            if task_order_dict[field] is None:
+                task_order_dict[field] = ""
+
+        # don't save other text in DB unless "other" is checked
+        if 'other' not in task_order_dict['complexity']:
+            task_order_dict['complexity_other'] = ""
+        if 'other' not in task_order_dict['dev_team']:
+            task_order_dict['dev_team_other'] = ""
+
+        return task_order_dict
+
+    @property
     def form(self):
         form_type = (
             "unclassified_form"
