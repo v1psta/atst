@@ -38,4 +38,88 @@
       }
     }
   }
+
+  .task-order-details {
+    flex-grow: 1;
+  }
+
+  .task-order-next-steps {
+    flex-grow: 1;
+    padding-right: $gap;
+
+    .task-order-next-steps__step {
+      .task-order-next-steps__icon {
+        padding: $gap $gap 0 0;
+        justify-content: center;
+        .complete {
+          @include icon-color($color-green);
+        }
+        .incomplete {
+          @include icon-color($color-gray-light);
+        }
+      }
+
+      .task-order-next-steps__heading {
+        h4 {
+          margin: $gap $gap 0 0;
+        }
+      }
+      .task-order-next-steps__description {
+        font-style: italic;
+      }
+    }
+  }
+
+  .task-order-sidebar {
+    flex-basis: 25%;
+    min-width: 30rem;
+
+    hr {
+      margin: 2rem 0;
+    }
+  }
+
+  .task-order-document-link {
+    &.disabled {
+      color: $color-shadow;
+      .task-order-document-link__icon {
+        span {
+          @include icon-color($color-cool-blue-lighter);
+        }
+      }
+
+      .icon-link.disabled {
+        color: $color-cool-blue-lighter;
+      }
+    }
+
+    .task-order-document-link__icon {
+      padding-top: 0.5rem;
+      span {
+        @include icon-color($color-blue);
+      }
+    }
+
+    .task-order-document-details {
+      .task-order-document-details__description {
+        font-style: italic;
+      }
+    }
+  }
+
+  .task-order-invitation-status {
+    .invited {
+      color: $color-green;
+      @include icon-color($color-green);
+    }
+    .uninvited {
+      color: $color-gray-light;
+      @include icon-color($color-gray-light);
+    }
+
+    .task-order-invitation-status__icon {
+      padding: 0 0.5rem;
+    }
+  }
+
 }
