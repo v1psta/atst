@@ -47,7 +47,8 @@ TASK_ORDER_SECTIONS = [
 
 
 class ShowTaskOrderWorkflow:
-    def __init__(self, screen=1, task_order_id=None):
+    def __init__(self, user, screen=1, task_order_id=None):
+        self.user = user
         self.screen = screen
         self.task_order_id = task_order_id
         self._section = TASK_ORDER_SECTIONS[screen - 1]
@@ -57,7 +58,7 @@ class ShowTaskOrderWorkflow:
     @property
     def task_order(self):
         if not self._task_order and self.task_order_id:
-            self._task_order = TaskOrders.get(self.task_order_id)
+            self._task_order = TaskOrders.get(self.user, self.task_order_id)
 
         return self._task_order
 
@@ -99,9 +100,9 @@ class ShowTaskOrderWorkflow:
 
 
 class UpdateTaskOrderWorkflow(ShowTaskOrderWorkflow):
-    def __init__(self, form_data, user, screen=1, task_order_id=None):
-        self.form_data = form_data
+    def __init__(self, user, form_data, screen=1, task_order_id=None):
         self.user = user
+        self.form_data = form_data
         self.screen = screen
         self.task_order_id = task_order_id
         self._task_order = None
@@ -122,13 +123,13 @@ class UpdateTaskOrderWorkflow(ShowTaskOrderWorkflow):
 
     def _update_task_order(self):
         if self.task_order:
-            TaskOrders.update(self.task_order, **self.form.data)
+            TaskOrders.update(self.user, self.task_order, **self.form.data)
         else:
             ws = Workspaces.create(self.user, self.form.portfolio_name.data)
             to_data = self.form.data.copy()
             to_data.pop("portfolio_name")
-            self._task_order = TaskOrders.create(workspace=ws, creator=self.user)
-            TaskOrders.update(self.task_order, **to_data)
+            self._task_order = TaskOrders.create(self.user, ws)
+            TaskOrders.update(self.user, self.task_order, **to_data)
 
     OFFICER_INVITATIONS = [
         {
@@ -189,7 +190,7 @@ class UpdateTaskOrderWorkflow(ShowTaskOrderWorkflow):
 @task_orders_bp.route("/task_orders/new/<int:screen>")
 @task_orders_bp.route("/task_orders/new/<int:screen>/<task_order_id>")
 def new(screen, task_order_id=None):
-    workflow = ShowTaskOrderWorkflow(screen, task_order_id)
+    workflow = ShowTaskOrderWorkflow(g.current_user, screen, task_order_id)
     return render_template(
         workflow.template,
         current=screen,
@@ -204,7 +205,7 @@ def new(screen, task_order_id=None):
 @task_orders_bp.route("/task_orders/new/<int:screen>/<task_order_id>", methods=["POST"])
 def update(screen, task_order_id=None):
     workflow = UpdateTaskOrderWorkflow(
-        http_request.form, g.current_user, screen, task_order_id
+        g.current_user, http_request.form, screen, task_order_id
     )
 
     if workflow.validate():

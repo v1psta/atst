@@ -92,35 +92,48 @@ def test_task_order_form_shows_errors(client, user_session):
     assert "Not a valid integer" in body
 
 
-def test_show_task_order():
-    workflow = ShowTaskOrderWorkflow()
+@pytest.fixture
+def task_order():
+    user = UserFactory.create()
+    workspace = WorkspaceFactory.create(owner=user)
+
+    return TaskOrderFactory.create(creator=user, workspace=workspace)
+
+
+def test_show_task_order(task_order):
+    workflow = ShowTaskOrderWorkflow(task_order.creator)
     assert workflow.task_order is None
-    task_order = TaskOrderFactory.create()
-    another_workflow = ShowTaskOrderWorkflow(task_order_id=task_order.id)
+    another_workflow = ShowTaskOrderWorkflow(
+        task_order.creator, task_order_id=task_order.id
+    )
     assert another_workflow.task_order == task_order
 
 
 def test_show_task_order_form_list_data():
     complexity = ["oconus", "tactical_edge"]
-    task_order = TaskOrderFactory.create(complexity=complexity)
-    workflow = ShowTaskOrderWorkflow(task_order_id=task_order.id)
+    user = UserFactory.create()
+    workspace = WorkspaceFactory.create(owner=user)
+    task_order = TaskOrderFactory.create(
+        creator=user, workspace=workspace, complexity=complexity
+    )
+    workflow = ShowTaskOrderWorkflow(user, task_order_id=task_order.id)
 
     assert workflow.form.complexity.data == complexity
 
 
-def test_show_task_order_form():
-    workflow = ShowTaskOrderWorkflow()
+def test_show_task_order_form(task_order):
+    workflow = ShowTaskOrderWorkflow(task_order.creator)
     assert not workflow.form.data["app_migration"]
-    task_order = TaskOrderFactory.create()
-    another_workflow = ShowTaskOrderWorkflow(task_order_id=task_order.id)
+    another_workflow = ShowTaskOrderWorkflow(
+        task_order.creator, task_order_id=task_order.id
+    )
     assert (
         another_workflow.form.data["defense_component"] == task_order.defense_component
     )
 
 
-def test_show_task_order_display_screen():
-    task_order = TaskOrderFactory.create()
-    workflow = ShowTaskOrderWorkflow(task_order_id=task_order.id)
+def test_show_task_order_display_screen(task_order):
+    workflow = ShowTaskOrderWorkflow(task_order.creator, task_order_id=task_order.id)
     screens = workflow.display_screens
     # every form section is complete
     for i in range(2):
@@ -132,29 +145,24 @@ def test_show_task_order_display_screen():
 def test_update_task_order_with_no_task_order():
     user = UserFactory.create()
     to_data = TaskOrderFactory.dictionary()
-    workflow = UpdateTaskOrderWorkflow(to_data, user)
+    workflow = UpdateTaskOrderWorkflow(user, to_data)
     assert workflow.task_order is None
     workflow.update()
     assert workflow.task_order
     assert workflow.task_order.scope == to_data["scope"]
 
 
-def test_update_task_order_with_existing_task_order():
-    user = UserFactory.create()
-    task_order = TaskOrderFactory.create()
+def test_update_task_order_with_existing_task_order(task_order):
     to_data = serialize_dates(TaskOrderFactory.dictionary())
     workflow = UpdateTaskOrderWorkflow(
-        to_data, user, screen=2, task_order_id=task_order.id
+        task_order.creator, to_data, screen=2, task_order_id=task_order.id
     )
     assert workflow.task_order.start_date != to_data["start_date"]
     workflow.update()
     assert workflow.task_order.start_date.strftime("%m/%d/%Y") == to_data["start_date"]
 
 
-def test_invite_officers_to_task_order(queue):
-    user = UserFactory.create()
-    workspace = WorkspaceFactory.create(owner=user)
-    task_order = TaskOrderFactory.create(creator=user, workspace=workspace)
+def test_invite_officers_to_task_order(task_order, queue):
     to_data = {
         **TaskOrderFactory.dictionary(),
         "ko_invite": True,
@@ -162,7 +170,7 @@ def test_invite_officers_to_task_order(queue):
         "so_invite": True,
     }
     workflow = UpdateTaskOrderWorkflow(
-        to_data, user, screen=3, task_order_id=task_order.id
+        task_order.creator, to_data, screen=3, task_order_id=task_order.id
     )
     workflow.update()
     workspace = task_order.workspace
@@ -179,10 +187,7 @@ def test_invite_officers_to_task_order(queue):
     assert task_order.security_officer.dod_id == to_data["so_dod_id"]
 
 
-def test_add_officer_but_do_not_invite(queue):
-    user = UserFactory.create()
-    workspace = WorkspaceFactory.create(owner=user)
-    task_order = TaskOrderFactory.create(creator=user, workspace=workspace)
+def test_add_officer_but_do_not_invite(task_order, queue):
     to_data = {
         **TaskOrderFactory.dictionary(),
         "ko_invite": False,
@@ -190,7 +195,7 @@ def test_add_officer_but_do_not_invite(queue):
         "so_invite": False,
     }
     workflow = UpdateTaskOrderWorkflow(
-        to_data, user, screen=3, task_order_id=task_order.id
+        task_order.creator, to_data, screen=3, task_order_id=task_order.id
     )
     workflow.update()
     workspace = task_order.workspace
@@ -213,18 +218,15 @@ def test_update_does_not_resend_invitation():
     )
     to_data = {**task_order.to_dictionary(), "ko_invite": True}
     workflow = UpdateTaskOrderWorkflow(
-        to_data, user, screen=3, task_order_id=task_order.id
+        user, to_data, screen=3, task_order_id=task_order.id
     )
     for i in range(2):
         workflow.update()
     assert len(contracting_officer.invitations) == 1
 
 
-def test_review_task_order_form(client, user_session):
-    creator = UserFactory.create()
-    user_session(creator)
-
-    task_order = TaskOrderFactory.create(creator=creator)
+def test_review_task_order_form(client, user_session, task_order):
+    user_session(task_order.creator)
 
     for idx, section in enumerate(TaskOrders.SECTIONS):
         response = client.get(

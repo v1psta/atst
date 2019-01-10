@@ -5,7 +5,7 @@ from zipfile import ZipFile
 
 from atst.utils.docx import Docx
 
-from tests.factories import TaskOrderFactory
+from tests.factories import TaskOrderFactory, WorkspaceFactory, UserFactory
 
 
 def xml_translated(val):
@@ -13,8 +13,10 @@ def xml_translated(val):
 
 
 def test_download_summary(client, user_session):
-    user_session()
-    task_order = TaskOrderFactory.create()
+    user = UserFactory.create()
+    workspace = WorkspaceFactory.create(owner=user)
+    task_order = TaskOrderFactory.create(creator=user, workspace=workspace)
+    user_session(user)
     response = client.get(
         url_for("task_orders.download_summary", task_order_id=task_order.id)
     )

@@ -43,3 +43,7 @@ class Permissions(object):
 
     ADD_TAG_TO_WORKSPACE = "add_tag_to_workspace"
     REMOVE_TAG_FROM_WORKSPACE = "remove_tag_from_workspace"
+
+    VIEW_TASK_ORDER = "view_task_order"
+    UPDATE_TASK_ORDER = "update_task_order"
+    ADD_TASK_ORDER_OFFICER = "add_task_order_officers"
