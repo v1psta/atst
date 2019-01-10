@@ -132,6 +132,18 @@ class UpdateTaskOrderWorkflow(ShowTaskOrderWorkflow):
 
         return to_data
 
+    @property
+    def task_order_form_data(self):
+        to_data = self.form.data.copy()
+        if "portfolio_name" in to_data:
+            new_name = self.form.data["portfolio_name"]
+            old_name = self.task_order.to_dictionary()["portfolio_name"]
+            if not new_name is old_name:
+                Portfolios.update(self.task_order.portfolio, {"name": new_name})
+            to_data.pop("portfolio_name")
+
+        return to_data
+
     def validate(self):
         return self.form.validate()
 
