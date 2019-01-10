@@ -55,5 +55,11 @@ def test_workspace_role_permissions():
         status=WorkspaceRoleStatus.PENDING,
     )
 
-    assert WorkspaceRoles.workspace_role_permissions(workspace_one, new_user)
-    assert not WorkspaceRoles.workspace_role_permissions(workspace_two, new_user)
+    default_perms = set(new_user.atat_role.permissions)
+    assert len(
+        WorkspaceRoles.workspace_role_permissions(workspace_one, new_user)
+    ) > len(default_perms)
+    assert (
+        WorkspaceRoles.workspace_role_permissions(workspace_two, new_user)
+        == default_perms
+    )
