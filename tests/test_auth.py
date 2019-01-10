@@ -189,11 +189,11 @@ def test_logout(app, client, monkeypatch):
     )
     # create a real session
     resp = _login(client)
-    resp_success = client.get(url_for("requests.requests_index"))
+    resp_success = client.get(url_for("users.user"))
     # verify session is valid
     assert resp_success.status_code == 200
     client.get(url_for("atst.logout"))
-    resp_failure = client.get(url_for("requests.requests_index"))
+    resp_failure = client.get(url_for("users.user"))
     # verify that logging out has cleared the session
     assert resp_failure.status_code == 302
     destination = urlparse(resp_failure.headers["Location"]).path
@@ -208,6 +208,6 @@ def test_redirected_on_login(client, monkeypatch):
         "atst.domain.authnid.AuthenticationContext.get_user",
         lambda *args: UserFactory.create(),
     )
-    target_route = url_for("requests.requests_form_new", screen=1)
+    target_route = url_for("users.user")
     response = _login(client, next=target_route)
     assert target_route in response.headers.get("Location")

@@ -64,9 +64,10 @@ def make_app(config):
     make_error_pages(app)
     app.register_blueprint(bp)
     app.register_blueprint(workspace_routes)
-    app.register_blueprint(requests_bp)
     app.register_blueprint(task_orders_bp)
     app.register_blueprint(user_routes)
+    app.register_blueprint(requests_bp)
+
     if ENV != "prod":
         app.register_blueprint(dev_routes)
 
