@@ -4,7 +4,7 @@ import toggler from '../toggler'
 import EditEnvironmentRole from './edit_environment_role'
 
 export default {
-  name: 'edit-project-roles',
+  name: 'edit-application-roles',
 
   mixins: [FormMixin, Modal],
 

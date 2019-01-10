@@ -7,11 +7,11 @@
 
 {% block workspace_content %}
 
-  {% set modalName = "newProjectConfirmation" %}
+  {% set modalName = "newApplicationConfirmation" %}
   {% include "fragments/flash.html" %}
 
-  <new-project inline-template v-bind:initial-data='{{ form.data|tojson }}' modal-name='{{ modalName }}'>
-    <form method="POST" action="{{ url_for('workspaces.create_project', workspace_id=workspace.id) }}" v-on:submit="handleSubmit">
+  <new-application inline-template v-bind:initial-data='{{ form.data|tojson }}' modal-name='{{ modalName }}'>
+    <form method="POST" action="{{ url_for('workspaces.create_application', workspace_id=workspace.id) }}" v-on:submit="handleSubmit">
 
       {% call Modal(name=modalName, dismissable=False) %}
         <h1>Create application !{ name }</h1>
@@ -21,7 +21,7 @@
         <span v-for="(environment, index) in environments">
           <strong>!{environment.name}</strong><template v-if="index < (environments.length - 1)">, </template>
         </span>
-        will be created as individual cloud resource groups under <strong>!{ name }</strong> project.
+        will be created as individual cloud resource groups under <strong>!{ name }</strong> application.
         </p>
 
         <div class='action-group'>
@@ -30,7 +30,7 @@
         </div>
       {% endcall %}
 
-      {% include "fragments/edit_project_form.html" %}
+      {% include "fragments/edit_application_form.html" %}
 
       <div> {# this extra div prevents this bug: https://www.pivotaltracker.com/story/show/160768940 #}
         <div v-cloak v-for="title in errors" :key="title">
@@ -38,7 +38,7 @@
         </div>
       </div>
 
-      <div class="block-list project-list-item">
+      <div class="block-list application-list-item">
         <header class="block-list__header block-list__header--grow">
           <h2 class="block-list__title">Application Environments</h2>
           <p>
@@ -47,13 +47,13 @@
         </header>
 
         <ul>
-          <li v-for="(environment, i) in environments" class="block-list__item project-edit__env-list-item">
+          <li v-for="(environment, i) in environments" class="block-list__item application-edit__env-list-item">
             <div class="usa-input">
               <label :for="'environment_names-' + i">Environment Name</label>
               <input type="text" :id="'environment_names-' + i" v-model="environment.name" placeholder="e.g. Development, Staging, Production"/>
               <input type="hidden" :name="'environment_names-' + i" v-model="environment.name"/>
             </div>
-            <button v-on:click="removeEnvironment(i)" v-if="environments.length > 1" type="button" class='project-edit__env-list-item__remover'>
+            <button v-on:click="removeEnvironment(i)" v-if="environments.length > 1" type="button" class='application-edit__env-list-item__remover'>
               {{ Icon('trash') }}
               <span>Remove</span>
             </button>
@@ -69,6 +69,6 @@
         <button class="usa-button usa-button-primary" tabindex="0" type="submit">Create Application</button>
       </div>
     </form>
-  </new-project>
+  </new-application>
 
 {% endblock %}

@@ -4,7 +4,7 @@ from sqlalchemy.orm.exc import NoResultFound
 from atst.database import db
 from atst.models.environment import Environment
 from atst.models.environment_role import EnvironmentRole
-from atst.models.project import Project
+from atst.models.application import Application
 from atst.models.permissions import Permissions
 from atst.domain.authz import Authorization
 from atst.domain.environment_roles import EnvironmentRoles
@@ -14,18 +14,18 @@ from .exceptions import NotFoundError
 
 class Environments(object):
     @classmethod
-    def create(cls, project, name):
-        environment = Environment(project=project, name=name)
+    def create(cls, application, name):
+        environment = Environment(application=application, name=name)
         environment.cloud_id = app.csp.cloud.create_application(environment.name)
         db.session.add(environment)
         db.session.commit()
         return environment
 
     @classmethod
-    def create_many(cls, project, names):
+    def create_many(cls, application, names):
         environments = []
         for name in names:
-            environment = Environments.create(project, name)
+            environment = Environments.create(application, name)
             environments.append(environment)
 
         db.session.add_all(environments)
@@ -40,13 +40,13 @@ class Environments(object):
         return environment
 
     @classmethod
-    def for_user(cls, user, project):
+    def for_user(cls, user, application):
         return (
             db.session.query(Environment)
             .join(EnvironmentRole)
-            .join(Project)
+            .join(Application)
             .filter(EnvironmentRole.user_id == user.id)
-            .filter(Environment.project_id == project.id)
+            .filter(Environment.project_id == application.id)
             .all()
         )
 

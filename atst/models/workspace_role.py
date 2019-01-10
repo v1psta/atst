@@ -8,7 +8,7 @@ from .types import Id
 
 from atst.database import db
 from atst.models.environment_role import EnvironmentRole
-from atst.models.project import Project
+from atst.models.application import Application
 from atst.models.environment import Environment
 from atst.models.role import Role
 
@@ -126,9 +126,9 @@ class WorkspaceRole(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
         return (
             db.session.query(EnvironmentRole)
             .join(EnvironmentRole.environment)
-            .join(Environment.project)
-            .join(Project.workspace)
-            .filter(Project.workspace_id == self.workspace_id)
+            .join(Environment.application)
+            .join(Application.workspace)
+            .filter(Application.workspace_id == self.workspace_id)
             .filter(EnvironmentRole.user_id == self.user_id)
             .count()
         )
@@ -138,9 +138,9 @@ class WorkspaceRole(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
         return (
             db.session.query(EnvironmentRole)
             .join(EnvironmentRole.environment)
-            .join(Environment.project)
-            .join(Project.workspace)
-            .filter(Project.workspace_id == self.workspace_id)
+            .join(Environment.application)
+            .join(Application.workspace)
+            .filter(Application.workspace_id == self.workspace_id)
             .filter(EnvironmentRole.user_id == self.user_id)
             .all()
         )

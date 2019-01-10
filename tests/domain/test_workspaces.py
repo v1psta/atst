@@ -4,7 +4,7 @@ from uuid import uuid4
 from atst.domain.exceptions import NotFoundError, UnauthorizedError
 from atst.domain.workspaces import Workspaces, WorkspaceError
 from atst.domain.workspace_roles import WorkspaceRoles
-from atst.domain.projects import Projects
+from atst.domain.applications import Applications
 from atst.domain.environments import Environments
 from atst.models.workspace_role import Status as WorkspaceRoleStatus
 
@@ -69,16 +69,16 @@ def test_workspaces_get_ensures_user_is_in_workspace(workspace, workspace_owner)
         Workspaces.get(outside_user, workspace.id)
 
 
-def test_get_for_update_projects_allows_owner(workspace, workspace_owner):
-    Workspaces.get_for_update_projects(workspace_owner, workspace.id)
+def test_get_for_update_applications_allows_owner(workspace, workspace_owner):
+    Workspaces.get_for_update_applications(workspace_owner, workspace.id)
 
 
-def test_get_for_update_projects_blocks_developer(workspace):
+def test_get_for_update_applications_blocks_developer(workspace):
     developer = UserFactory.create()
     WorkspaceRoles.add(developer, workspace.id, "developer")
 
     with pytest.raises(UnauthorizedError):
-        Workspaces.get_for_update_projects(developer, workspace.id)
+        Workspaces.get_for_update_applications(developer, workspace.id)
 
 
 def test_can_create_workspace_role(workspace, workspace_owner):
@@ -183,45 +183,45 @@ def test_random_user_cannot_view_workspace_members(workspace):
         workspace = Workspaces.get_with_members(developer, workspace.id)
 
 
-def test_scoped_workspace_only_returns_a_users_projects_and_environments(
+def test_scoped_workspace_only_returns_a_users_applications_and_environments(
     workspace, workspace_owner
 ):
-    new_project = Projects.create(
+    new_application = Applications.create(
         workspace_owner,
         workspace,
-        "My Project",
-        "My project",
+        "My Application",
+        "My application",
         ["dev", "staging", "prod"],
     )
-    Projects.create(
+    Applications.create(
         workspace_owner,
         workspace,
-        "My Project 2",
-        "My project 2",
+        "My Application 2",
+        "My application 2",
         ["dev", "staging", "prod"],
     )
     developer = UserFactory.from_atat_role("developer")
     dev_environment = Environments.add_member(
-        new_project.environments[0], developer, "developer"
+        new_application.environments[0], developer, "developer"
     )
 
     scoped_workspace = Workspaces.get(developer, workspace.id)
 
-    # Should only return the project and environment in which the user has an
+    # Should only return the application and environment in which the user has an
     # environment role.
-    assert scoped_workspace.projects == [new_project]
-    assert scoped_workspace.projects[0].environments == [dev_environment]
+    assert scoped_workspace.applications == [new_application]
+    assert scoped_workspace.applications[0].environments == [dev_environment]
 
 
-def test_scoped_workspace_returns_all_projects_for_workspace_admin(
+def test_scoped_workspace_returns_all_applications_for_workspace_admin(
     workspace, workspace_owner
 ):
     for _ in range(5):
-        Projects.create(
+        Applications.create(
             workspace_owner,
             workspace,
-            "My Project",
-            "My project",
+            "My Application",
+            "My application",
             ["dev", "staging", "prod"],
         )
 
@@ -231,26 +231,26 @@ def test_scoped_workspace_returns_all_projects_for_workspace_admin(
     )
     scoped_workspace = Workspaces.get(admin, workspace.id)
 
-    assert len(scoped_workspace.projects) == 5
-    assert len(scoped_workspace.projects[0].environments) == 3
+    assert len(scoped_workspace.applications) == 5
+    assert len(scoped_workspace.applications[0].environments) == 3
 
 
-def test_scoped_workspace_returns_all_projects_for_workspace_owner(
+def test_scoped_workspace_returns_all_applications_for_workspace_owner(
     workspace, workspace_owner
 ):
     for _ in range(5):
-        Projects.create(
+        Applications.create(
             workspace_owner,
             workspace,
-            "My Project",
-            "My project",
+            "My Application",
+            "My application",
             ["dev", "staging", "prod"],
         )
 
     scoped_workspace = Workspaces.get(workspace_owner, workspace.id)
 
-    assert len(scoped_workspace.projects) == 5
-    assert len(scoped_workspace.projects[0].environments) == 3
+    assert len(scoped_workspace.applications) == 5
+    assert len(scoped_workspace.applications[0].environments) == 3
 
 
 def test_for_user_returns_active_workspaces_for_user(workspace, workspace_owner):

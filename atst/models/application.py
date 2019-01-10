@@ -6,7 +6,7 @@ from atst.models.types import Id
 from atst.models import mixins
 
 
-class Project(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
+class Application(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     __tablename__ = "projects"
 
     id = Id()
@@ -15,13 +15,13 @@ class Project(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
 
     workspace_id = Column(ForeignKey("workspaces.id"), nullable=False)
     workspace = relationship("Workspace")
-    environments = relationship("Environment", back_populates="project")
+    environments = relationship("Environment", back_populates="application")
 
     @property
     def displayname(self):
         return self.name
 
     def __repr__(self):  # pragma: no cover
-        return "<Project(name='{}', description='{}', workspace='{}', id='{}')>".format(
+        return "<Application(name='{}', description='{}', workspace='{}', id='{}')>".format(
             self.name, self.description, self.workspace.name, self.id
         )

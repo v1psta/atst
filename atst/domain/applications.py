@@ -3,46 +3,50 @@ from atst.domain.authz import Authorization
 from atst.domain.environments import Environments
 from atst.domain.exceptions import NotFoundError
 from atst.models.permissions import Permissions
-from atst.models.project import Project
+from atst.models.application import Application
 from atst.models.environment import Environment
 from atst.models.environment_role import EnvironmentRole
 
 
-class Projects(object):
+class Applications(object):
     @classmethod
     def create(cls, user, workspace, name, description, environment_names):
-        project = Project(workspace=workspace, name=name, description=description)
-        db.session.add(project)
+        application = Application(
+            workspace=workspace, name=name, description=description
+        )
+        db.session.add(application)
 
-        Environments.create_many(project, environment_names)
+        Environments.create_many(application, environment_names)
 
         db.session.commit()
-        return project
+        return application
 
     @classmethod
-    def get(cls, user, workspace, project_id):
-        # TODO: this should check permission for this particular project
+    def get(cls, user, workspace, application_id):
+        # TODO: this should check permission for this particular application
         Authorization.check_workspace_permission(
             user,
             workspace,
             Permissions.VIEW_APPLICATION_IN_WORKSPACE,
-            "view project in workspace",
+            "view application in workspace",
         )
 
         try:
-            project = db.session.query(Project).filter_by(id=project_id).one()
+            application = (
+                db.session.query(Application).filter_by(id=application_id).one()
+            )
         except NoResultFound:
-            raise NotFoundError("project")
+            raise NotFoundError("application")
 
-        return project
+        return application
 
     @classmethod
     def for_user(self, user, workspace):
         return (
-            db.session.query(Project)
+            db.session.query(Application)
             .join(Environment)
             .join(EnvironmentRole)
-            .filter(Project.workspace_id == workspace.id)
+            .filter(Application.workspace_id == workspace.id)
             .filter(EnvironmentRole.user_id == user.id)
             .all()
         )
@@ -53,26 +57,26 @@ class Projects(object):
             user,
             workspace,
             Permissions.VIEW_APPLICATION_IN_WORKSPACE,
-            "view project in workspace",
+            "view application in workspace",
         )
 
         try:
-            projects = (
-                db.session.query(Project).filter_by(workspace_id=workspace.id).all()
+            applications = (
+                db.session.query(Application).filter_by(workspace_id=workspace.id).all()
             )
         except NoResultFound:
-            raise NotFoundError("projects")
+            raise NotFoundError("applications")
 
-        return projects
+        return applications
 
     @classmethod
-    def update(cls, user, workspace, project, new_data):
+    def update(cls, user, workspace, application, new_data):
         if "name" in new_data:
-            project.name = new_data["name"]
+            application.name = new_data["name"]
         if "description" in new_data:
-            project.description = new_data["description"]
+            application.description = new_data["description"]
 
-        db.session.add(project)
+        db.session.add(application)
         db.session.commit()
 
-        return project
+        return application

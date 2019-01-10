@@ -8,7 +8,7 @@ from .data import WORKSPACE_ROLES
 
 
 class EditMemberForm(FlaskForm):
-    # This form also accepts a field for each environment in each project
+    # This form also accepts a field for each environment in each application
     #  that the user is a member of
 
     workspace_role = SelectField(

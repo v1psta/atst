@@ -10,7 +10,7 @@ from atst.app import make_config, make_app
 from atst.domain.users import Users
 from atst.domain.requests import Requests
 from atst.domain.workspaces import Workspaces
-from atst.domain.projects import Projects
+from atst.domain.applications import Applications
 from atst.domain.workspace_roles import WorkspaceRoles
 from atst.models.invitation import Status as InvitationStatus
 from atst.domain.exceptions import AlreadyExistsError
@@ -122,7 +122,7 @@ def seed_db():
 
         db.session.commit()
 
-        Projects.create(
+        Applications.create(
             user,
             workspace=workspace,
             name="First Project",

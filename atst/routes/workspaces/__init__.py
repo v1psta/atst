@@ -3,7 +3,7 @@ from flask import Blueprint, request as http_request, g, render_template
 workspaces_bp = Blueprint("workspaces", __name__)
 
 from . import index
-from . import projects
+from . import applications
 from . import members
 from . import invitations
 from . import task_orders

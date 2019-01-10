@@ -44,10 +44,10 @@ class Workspaces(object):
         return ScopedWorkspace(user, workspace)
 
     @classmethod
-    def get_for_update_projects(cls, user, workspace_id):
+    def get_for_update_applications(cls, user, workspace_id):
         workspace = WorkspacesQuery.get(workspace_id)
         Authorization.check_workspace_permission(
-            user, workspace, Permissions.ADD_APPLICATION_IN_WORKSPACE, "add project"
+            user, workspace, Permissions.ADD_APPLICATION_IN_WORKSPACE, "add application"
         )
 
         return workspace

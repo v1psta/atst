@@ -2,7 +2,7 @@ import datetime
 
 from atst.domain.environments import Environments
 from atst.domain.workspaces import Workspaces
-from atst.domain.projects import Projects
+from atst.domain.applications import Applications
 from atst.models.workspace_role import Status
 from atst.models.role import Role
 from atst.models.invitation import Status as InvitationStatus
@@ -15,7 +15,7 @@ from tests.factories import (
     WorkspaceRoleFactory,
     EnvironmentFactory,
     EnvironmentRoleFactory,
-    ProjectFactory,
+    ApplicationFactory,
     WorkspaceFactory,
 )
 from atst.domain.workspace_roles import WorkspaceRoles
@@ -90,8 +90,10 @@ def test_has_no_env_role_history(session):
     owner = UserFactory.create()
     user = UserFactory.create()
     workspace = Workspaces.create_from_request(RequestFactory.create(creator=owner))
-    project = ProjectFactory.create(workspace=workspace)
-    environment = EnvironmentFactory.create(project=project, name="new environment!")
+    application = ApplicationFactory.create(workspace=workspace)
+    environment = EnvironmentFactory.create(
+        application=application, name="new environment!"
+    )
 
     env_role = EnvironmentRoleFactory.create(
         user=user, environment=environment, role="developer"
@@ -110,8 +112,10 @@ def test_has_env_role_history(session):
     user = UserFactory.create()
     workspace = Workspaces.create_from_request(RequestFactory.create(creator=owner))
     workspace_role = WorkspaceRoleFactory.create(workspace=workspace, user=user)
-    project = ProjectFactory.create(workspace=workspace)
-    environment = EnvironmentFactory.create(project=project, name="new environment!")
+    application = ApplicationFactory.create(workspace=workspace)
+    environment = EnvironmentFactory.create(
+        application=application, name="new environment!"
+    )
 
     env_role = EnvironmentRoleFactory.create(
         user=user, environment=environment, role="developer"
@@ -168,10 +172,16 @@ def test_has_environment_roles():
 
     workspace = Workspaces.create_from_request(RequestFactory.create(creator=owner))
     workspace_role = Workspaces.create_member(owner, workspace, developer_data)
-    project = Projects.create(
-        owner, workspace, "my test project", "It's mine.", ["dev", "staging", "prod"]
+    application = Applications.create(
+        owner,
+        workspace,
+        "my test application",
+        "It's mine.",
+        ["dev", "staging", "prod"],
     )
-    Environments.add_member(project.environments[0], workspace_role.user, "developer")
+    Environments.add_member(
+        application.environments[0], workspace_role.user, "developer"
+    )
     assert workspace_role.has_environment_roles
 
 
@@ -260,9 +270,9 @@ def test_can_resend_invitation_if_expired():
 
 def test_can_list_all_environments():
     workspace = WorkspaceFactory.create(
-        projects=[
+        applications=[
             {
-                "name": "project1",
+                "name": "application1",
                 "environments": [
                     {"name": "dev"},
                     {"name": "staging"},
@@ -270,7 +280,7 @@ def test_can_list_all_environments():
                 ],
             },
             {
-                "name": "project2",
+                "name": "application2",
                 "environments": [
                     {"name": "dev"},
                     {"name": "staging"},
@@ -278,7 +288,7 @@ def test_can_list_all_environments():
                 ],
             },
             {
-                "name": "project3",
+                "name": "application3",
                 "environments": [
                     {"name": "dev"},
                     {"name": "staging"},

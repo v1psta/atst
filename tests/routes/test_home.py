@@ -61,7 +61,7 @@ def test_non_owner_user_with_no_workspaces_redirected_to_requests(client, user_s
     assert "/requests" in response.location
 
 
-def test_non_owner_user_with_one_workspace_redirected_to_workspace_projects(
+def test_non_owner_user_with_one_workspace_redirected_to_workspace_applications(
     client, user_session
 ):
     user = UserFactory.create()
@@ -71,7 +71,7 @@ def test_non_owner_user_with_one_workspace_redirected_to_workspace_projects(
     user_session(user)
     response = client.get("/home", follow_redirects=False)
 
-    assert "/workspaces/{}/projects".format(workspace.id) in response.location
+    assert "/workspaces/{}/applications".format(workspace.id) in response.location
 
 
 def test_non_owner_user_with_mulitple_workspaces_redirected_to_workspaces(

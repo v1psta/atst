@@ -4,7 +4,7 @@ import textinput from '../text_input'
 const createEnvironment = (name) => ({ name })
 
 export default {
-  name: 'new-project',
+  name: 'new-application',
 
   mixins: [FormMixin],
 

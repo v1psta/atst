@@ -66,7 +66,7 @@ class RequestsIndex(object):
     def _workspace_link_for_request(self, request):
         if request.is_approved:
             return url_for(
-                "workspaces.workspace_projects", workspace_id=request.workspace.id
+                "workspaces.workspace_applications", workspace_id=request.workspace.id
             )
         else:
             return None

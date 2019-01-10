@@ -4,11 +4,11 @@
 
 {% block workspace_content %}
 
-  <form method="POST" action="{{ url_for('workspaces.edit_project', workspace_id=workspace.id, project_id=project.id) }}">
+  <form method="POST" action="{{ url_for('workspaces.edit_application', workspace_id=workspace.id, application_id=application.id) }}">
 
-    {% include "fragments/edit_project_form.html" %}
+    {% include "fragments/edit_application_form.html" %}
 
-    <div class="block-list project-list-item">
+    <div class="block-list application-list-item">
       <header class="block-list__header block-list__header--grow">
         <h2 class="block-list__title">Application Environments</h2>
         <p>
@@ -17,8 +17,8 @@
       </header>
 
       <ul>
-        {% for environment in project.environments %}
-          <li class="block-list__item project-edit__env-list-item">
+        {% for environment in application.environments %}
+          <li class="block-list__item application-edit__env-list-item">
             <div class="usa-input">
               <label>Environment Name</label>
               <input type="text" value="{{ environment.name }}" readonly />

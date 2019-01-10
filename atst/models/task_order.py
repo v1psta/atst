@@ -47,7 +47,7 @@ class TaskOrder(Base, mixins.TimestampsMixin):
     defense_component = Column(String)  # Department of Defense Component
     app_migration = Column(String)  # App Migration
     native_apps = Column(String)  # Native Apps
-    complexity = Column(ARRAY(String))  # Project Complexity
+    complexity = Column(ARRAY(String))  # Application Complexity
     complexity_other = Column(String)
     dev_team = Column(ARRAY(String))  # Development Team
     dev_team_other = Column(String)

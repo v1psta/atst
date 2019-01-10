@@ -1,4 +1,4 @@
-.project-edit__env-list-item {
+.application-edit__env-list-item {
   display: flex;
   flex-direction: row;
   align-items: flex-end;
@@ -8,7 +8,7 @@
     flex-grow: 1;
   }
 
-  .project-edit__env-list-item__remover {
+  .application-edit__env-list-item__remover {
     @include icon-link;
     @include icon-link-vertical;
     @include icon-link-color($color-red, $color-red-lightest);

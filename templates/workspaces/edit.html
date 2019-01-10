@@ -24,7 +24,7 @@
 
   <div class='action-group'>
     <button type="submit" class="usa-button usa-button-big usa-button-primary" tabindex="0">Save</button>
-    <a href='{{ url_for("workspaces.workspace_projects", workspace_id=workspace.id) }}' class='action-group__action icon-link'>
+    <a href='{{ url_for("workspaces.workspace_applications", workspace_id=workspace.id) }}' class='action-group__action icon-link'>
       {{ Icon('x') }}
       <span>Cancel</span>
     </a>

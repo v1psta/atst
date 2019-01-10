@@ -5,29 +5,29 @@ from atst.forms.validators import ListItemRequired, ListItemsUnique
 from atst.utils.localization import translate
 
 
-class ProjectForm(FlaskForm):
+class ApplicationForm(FlaskForm):
     name = StringField(
-        label=translate("forms.project.name_label"), validators=[Required()]
+        label=translate("forms.application.name_label"), validators=[Required()]
     )
     description = TextAreaField(
-        label=translate("forms.project.description_label"), validators=[Required()]
+        label=translate("forms.application.description_label"), validators=[Required()]
     )
 
 
-class NewProjectForm(ProjectForm):
+class NewApplicationForm(ApplicationForm):
     EMPTY_ENVIRONMENT_NAMES = ["", None]
 
     environment_names = FieldList(
-        StringField(label=translate("forms.project.environment_names_label")),
+        StringField(label=translate("forms.application.environment_names_label")),
         validators=[
             ListItemRequired(
                 message=translate(
-                    "forms.project.environment_names_required_validation_message"
+                    "forms.application.environment_names_required_validation_message"
                 )
             ),
             ListItemsUnique(
                 message=translate(
-                    "forms.project.environment_names_unique_validation_message"
+                    "forms.application.environment_names_unique_validation_message"
                 )
             ),
         ],

@@ -250,7 +250,9 @@ def update_financial_verification(request_id):
     if updated_request.legacy_task_order.verified:
         workspace = Requests.auto_approve_and_create_workspace(updated_request)
         flash("new_workspace")
-        return redirect(url_for("workspaces.new_project", workspace_id=workspace.id))
+        return redirect(
+            url_for("workspaces.new_application", workspace_id=workspace.id)
+        )
     else:
         return redirect(url_for("requests.requests_index", modal="pendingCCPOApproval"))
 

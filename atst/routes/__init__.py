@@ -67,7 +67,7 @@ def home():
             )
         else:
             return redirect(
-                url_for("workspaces.workspace_projects", workspace_id=workspace_id)
+                url_for("workspaces.workspace_applications", workspace_id=workspace_id)
             )
     else:
         return redirect(url_for("workspaces.workspaces"))

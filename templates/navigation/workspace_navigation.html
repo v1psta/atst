@@ -3,14 +3,14 @@
 <nav class='sidenav workspace-navigation'>
   <ul>
     {{ SidenavItem(
-      ("navigation.workspace_navigation.projects" | translate),
-      href=url_for("workspaces.workspace_projects", workspace_id=workspace.id),
-      active=request.url_rule.rule.startswith('/workspaces/<workspace_id>/projects'),
+      ("navigation.workspace_navigation.applications" | translate),
+      href=url_for("workspaces.workspace_applications", workspace_id=workspace.id),
+      active=request.url_rule.rule.startswith('/workspaces/<workspace_id>/applications'),
       subnav=None if not user_can(permissions.ADD_APPLICATION_IN_WORKSPACE) else [
         {
-          "label": ("navigation.workspace_navigation.add_new_project_label" | translate),
-          "href": url_for('workspaces.new_project', workspace_id=workspace.id),
-          "active": g.matchesPath('\/workspaces\/[A-Za-z0-9-]*\/projects'),
+          "label": ("navigation.workspace_navigation.add_new_application_label" | translate),
+          "href": url_for('workspaces.new_application', workspace_id=workspace.id),
+          "active": g.matchesPath('\/workspaces\/[A-Za-z0-9-]*\/applications'),
           "icon": "plus"
         }
       ]

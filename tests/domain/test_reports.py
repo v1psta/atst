@@ -25,7 +25,7 @@ def test_monthly_totals():
     monthly = Reports.monthly_totals(workspace)
 
     assert not monthly["environments"]
-    assert not monthly["projects"]
+    assert not monthly["applications"]
     assert not monthly["workspace"]
 
 

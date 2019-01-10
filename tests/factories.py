@@ -12,7 +12,7 @@ from atst.models.request_revision import RequestRevision
 from atst.models.request_review import RequestReview
 from atst.models.request_status_event import RequestStatusEvent, RequestStatus
 from atst.models.pe_number import PENumber
-from atst.models.project import Project
+from atst.models.application import Application
 from atst.models.legacy_task_order import LegacyTaskOrder, Source, FundingType
 from atst.models.task_order import TaskOrder
 from atst.models.user import User
@@ -260,14 +260,15 @@ class WorkspaceFactory(Base):
 
     @classmethod
     def _create(cls, model_class, *args, **kwargs):
-        with_projects = kwargs.pop("projects", [])
+        with_applications = kwargs.pop("applications", [])
         owner = kwargs.pop("owner", UserFactory.create())
         members = kwargs.pop("members", [])
 
         workspace = super()._create(model_class, *args, **kwargs)
 
-        projects = [
-            ProjectFactory.create(workspace=workspace, **p) for p in with_projects
+        applications = [
+            ApplicationFactory.create(workspace=workspace, **p)
+            for p in with_applications
         ]
 
         workspace.request.creator = owner
@@ -288,29 +289,30 @@ class WorkspaceFactory(Base):
                 status=WorkspaceRoleStatus.ACTIVE,
             )
 
-        workspace.projects = projects
+        workspace.applications = applications
         return workspace
 
 
-class ProjectFactory(Base):
+class ApplicationFactory(Base):
     class Meta:
-        model = Project
+        model = Application
 
     workspace = factory.SubFactory(WorkspaceFactory)
     name = factory.Faker("name")
-    description = "A test project"
+    description = "A test application"
 
     @classmethod
     def _create(cls, model_class, *args, **kwargs):
         with_environments = kwargs.pop("environments", [])
-        project = super()._create(model_class, *args, **kwargs)
+        application = super()._create(model_class, *args, **kwargs)
 
         environments = [
-            EnvironmentFactory.create(project=project, **e) for e in with_environments
+            EnvironmentFactory.create(application=application, **e)
+            for e in with_environments
         ]
 
-        project.environments = environments
-        return project
+        application.environments = environments
+        return application
 
 
 class EnvironmentFactory(Base):

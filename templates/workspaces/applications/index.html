@@ -1,0 +1,55 @@
+{% from "components/icon.html" import Icon %}
+{% from "components/empty_state.html" import EmptyState %}
+
+{% extends "workspaces/base.html" %}
+
+
+{% block workspace_content %}
+
+{% if not workspace.applications %}
+
+  {% set can_create_applications = user_can(permissions.ADD_APPLICATION_IN_WORKSPACE) %}
+
+  {{ EmptyState(
+    'This portfolio doesn’t have any applications yet.',
+    action_label='Add a New Application' if can_create_applications else None,
+    action_href=url_for('workspaces.new_application', workspace_id=workspace.id) if can_create_applications else None,
+    icon='cloud',
+    sub_message=None if can_create_applications else 'Please contact your JEDI Cloud portfolio administrator to set up a new application.'
+  ) }}
+
+{% else %}
+
+  {% for application in workspace.applications %}
+    <div v-cloak class='block-list application-list-item'>
+      <header class='block-list__header'>
+        <h2 class='block-list__title'>{{ application.name }} ({{ application.environments|length }} environments)</h2>
+        {% if user_can(permissions.RENAME_APPLICATION_IN_WORKSPACE) %}
+          <a class='icon-link' href='{{ url_for("workspaces.edit_application", workspace_id=workspace.id, application_id=application.id) }}'>
+            {{ Icon('edit') }}
+            <span>edit</span>
+          </a>
+        {% endif %}
+      </header>
+      <ul>
+        {% for environment in application.environments %}
+          <li class='block-list__item application-list-item__environment'>
+            <a href='{{ url_for("workspaces.access_environment", workspace_id=workspace.id, environment_id=environment.id)}}' target='_blank' rel='noopener noreferrer' class='application-list-item__environment__link'>
+              {{ Icon('link') }}
+              <span>{{ environment.name }}</span>
+            </a>
+
+            <div class='application-list-item__environment__members'>
+              <div class='label'>{{ environment.num_users }}</div>
+              <span>members</span>
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endfor %}
+
+{% endif %}
+
+{% endblock %}
+

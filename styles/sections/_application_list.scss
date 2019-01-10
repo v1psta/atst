@@ -1,5 +1,5 @@
-.project-list-item {
-  .project-list-item__environment {
+.application-list-item {
+  .application-list-item__environment {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -8,12 +8,12 @@
       margin: 0;
     }
 
-    .project-list-item__environment__link {
+    .application-list-item__environment__link {
       @include icon-link;
       @include icon-link-large;
     }
 
-    .project-list-item__environment__members {
+    .application-list-item__environment__members {
       display: flex;
       flex-direction: row;
       align-items: center;

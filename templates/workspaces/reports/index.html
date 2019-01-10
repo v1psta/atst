@@ -113,18 +113,18 @@
   {% set two_months_ago_index = two_months_ago.strftime('%m/%Y') %}
   {% set reports_url = url_for("workspaces.workspace_reports", workspace_id=workspace.id) %}
 
-  {% if not workspace.projects %}
+  {% if not workspace.applications %}
 
-    {% set can_create_projects = user_can(permissions.ADD_APPLICATION_IN_WORKSPACE) %}
+    {% set can_create_applications = user_can(permissions.ADD_APPLICATION_IN_WORKSPACE) %}
     {% set message = 'This portfolio has no cloud environments set up, so there is no spending data to report. Create an application with some cloud environments to get started.'
-      if can_create_projects
+      if can_create_applications
       else 'This portfolio has no cloud environments set up, so there is no spending data to report. Contact the portfolio owner to set up some cloud environments.'
     %}
 
     {{ EmptyState(
       'Nothing to report',
-      action_label='Add a New Application' if can_create_projects else None,
-      action_href=url_for('workspaces.new_project', workspace_id=workspace.id) if can_create_projects else None,
+      action_label='Add a New Application' if can_create_applications else None,
+      action_href=url_for('workspaces.new_application', workspace_id=workspace.id) if can_create_applications else None,
       icon='chart',
       sub_message=message
     ) }}
@@ -353,7 +353,7 @@
       </div>
 
       <spend-table
-        v-bind:projects='{{ monthly_totals['projects'] | tojson }}'
+        v-bind:applications='{{ monthly_totals['applications'] | tojson }}'
         v-bind:workspace='{{ workspace_totals | tojson }}'
         v-bind:environments='{{ monthly_totals['environments'] | tojson }}'
         current-month-index='{{ current_month_index }}'
@@ -383,40 +383,40 @@
             </tr>
           </tbody>
 
-          <tbody v-for='(project, name) in projectsState' class='spend-table__project'>
+          <tbody v-for='(application, name) in applicationsState' class='spend-table__application'>
             <tr>
               <th scope='rowgroup'>
-                <button v-on:click='toggle($event, name)' class='icon-link icon-link--large spend-table__project__toggler'>
-                  <template v-if='project.isVisible'>{{ Icon('caret_down') }}</template>
+                <button v-on:click='toggle($event, name)' class='icon-link icon-link--large spend-table__application__toggler'>
+                  <template v-if='application.isVisible'>{{ Icon('caret_down') }}</template>
                   <template v-else>{{ Icon('caret_right') }}</template>
                   <span v-html='name'></span>
                 </button>
               </th>
               <td class='table-cell--align-right previous-month'>
-                <span v-html='formatDollars(project[twoMonthsAgoIndex] || 0)'></span>
+                <span v-html='formatDollars(application[twoMonthsAgoIndex] || 0)'></span>
               </td>
 
               <td class='table-cell--align-right previous-month'>
-                <span v-html='formatDollars(project[prevMonthIndex] || 0)'></span>
+                <span v-html='formatDollars(application[prevMonthIndex] || 0)'></span>
               </td>
 
               <td class='table-cell--align-right current-month'>
-                <span v-html='formatDollars(project[currentMonthIndex] || 0)'></span>
+                <span v-html='formatDollars(application[currentMonthIndex] || 0)'></span>
               </td>
 
               <td class='table-cell--expand current-month meter-cell'>
                 <span class='spend-table__meter-value'>
-                  <span v-html='round( 100 * ((project[currentMonthIndex] || 0) / (workspace[currentMonthIndex] || 1) )) + "%"'></span>
+                  <span v-html='round( 100 * ((application[currentMonthIndex] || 0) / (workspace[currentMonthIndex] || 1) )) + "%"'></span>
                 </span>
-                <meter v-bind:value='project[currentMonthIndex] || 0' min='0' v-bind:max='workspace[currentMonthIndex] || 1'>
-                  <div class='meter__fallback' v-bind:style='"width:" + round( 100 * ((project[currentMonthIndex] || 0) / (workspace[currentMonthIndex] || 1) )) + "%;"'></div>
+                <meter v-bind:value='application[currentMonthIndex] || 0' min='0' v-bind:max='workspace[currentMonthIndex] || 1'>
+                  <div class='meter__fallback' v-bind:style='"width:" + round( 100 * ((application[currentMonthIndex] || 0) / (workspace[currentMonthIndex] || 1) )) + "%;"'></div>
                 </meter>
               </td>
             </tr>
 
-            <tr v-for='(environment, envName) in environments[name]' v-show='project.isVisible' class='spend-table__project__env'>
+            <tr v-for='(environment, envName) in environments[name]' v-show='application.isVisible' class='spend-table__application__env'>
               <th scope='rowgroup'>
-                <a href='#' class='icon-link spend-table__project__env'>
+                <a href='#' class='icon-link spend-table__application__env'>
                   {{ Icon('link') }}
                   <span v-html='envName'></span>
                 </a>

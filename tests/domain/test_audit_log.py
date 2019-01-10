@@ -8,7 +8,7 @@ from tests.factories import (
     UserFactory,
     WorkspaceFactory,
     WorkspaceRoleFactory,
-    ProjectFactory,
+    ApplicationFactory,
 )
 
 
@@ -81,10 +81,10 @@ def test_other_users_cannot_view_ws_audit_log():
 
 def test_paginate_ws_audit_log():
     workspace = WorkspaceFactory.create()
-    project = ProjectFactory.create(workspace=workspace)
+    application = ApplicationFactory.create(workspace=workspace)
     for _ in range(100):
         AuditLog.log_system_event(
-            resource=project, action="create", workspace=workspace
+            resource=application, action="create", workspace=workspace
         )
 
     events = AuditLog.get_workspace_events(
@@ -98,8 +98,8 @@ def test_ws_audit_log_only_includes_current_ws_events():
     workspace = WorkspaceFactory.create(owner=owner)
     other_workspace = WorkspaceFactory.create(owner=owner)
     # Add some audit events
-    project_1 = ProjectFactory.create(workspace=workspace)
-    project_2 = ProjectFactory.create(workspace=other_workspace)
+    application_1 = ApplicationFactory.create(workspace=workspace)
+    application_2 = ApplicationFactory.create(workspace=other_workspace)
 
     events = AuditLog.get_workspace_events(workspace.owner, workspace)
     for event in events:

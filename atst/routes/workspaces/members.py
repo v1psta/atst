@@ -4,7 +4,7 @@ from flask import render_template, request as http_request, g, redirect, url_for
 
 from . import workspaces_bp
 from atst.domain.exceptions import AlreadyExistsError
-from atst.domain.projects import Projects
+from atst.domain.applications import Applications
 from atst.domain.workspaces import Workspaces
 from atst.domain.workspace_roles import WorkspaceRoles, MEMBER_STATUS_CHOICES
 from atst.domain.environments import Environments
@@ -101,7 +101,7 @@ def view_member(workspace_id, member_id):
         "edit this workspace user",
     )
     member = WorkspaceRoles.get(workspace_id, member_id)
-    projects = Projects.get_all(g.current_user, member, workspace)
+    applications = Applications.get_all(g.current_user, member, workspace)
     form = EditMemberForm(workspace_role=member.role_name)
     editable = g.current_user == member.user
     can_revoke_access = Workspaces.can_revoke_access_for(workspace, member)
@@ -113,7 +113,7 @@ def view_member(workspace_id, member_id):
         "workspaces/members/edit.html",
         workspace=workspace,
         member=member,
-        projects=projects,
+        applications=applications,
         form=form,
         choices=ENVIRONMENT_ROLES,
         env_role_modal_description=ENV_ROLE_MODAL_DESCRIPTION,

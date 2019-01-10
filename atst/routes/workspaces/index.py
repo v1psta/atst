@@ -32,7 +32,7 @@ def edit_workspace(workspace_id):
     if form.validate():
         Workspaces.update(workspace, form.data)
         return redirect(
-            url_for("workspaces.workspace_projects", workspace_id=workspace.id)
+            url_for("workspaces.workspace_applications", workspace_id=workspace.id)
         )
     else:
         return render_template("workspaces/edit.html", form=form, workspace=workspace)
@@ -40,7 +40,9 @@ def edit_workspace(workspace_id):
 
 @workspaces_bp.route("/workspaces/<workspace_id>")
 def show_workspace(workspace_id):
-    return redirect(url_for("workspaces.workspace_projects", workspace_id=workspace_id))
+    return redirect(
+        url_for("workspaces.workspace_applications", workspace_id=workspace_id)
+    )
 
 
 @workspaces_bp.route("/workspaces/<workspace_id>/reports")

@@ -289,8 +289,8 @@
       }
     }
 
-    .spend-table__project {
-      .spend-table__project__toggler {
+    .spend-table__application {
+      .spend-table__application__toggler {
         @include icon-link-color($color-black-light, $color-gray-lightest);
         margin-left: -$gap;
 
@@ -300,7 +300,7 @@
         }
       }
 
-      .spend-table__project__env {
+      .spend-table__application__env {
         margin-left: $gap;
 
         &:last-child {

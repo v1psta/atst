@@ -13,7 +13,7 @@ class Environment(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     name = Column(String, nullable=False)
 
     project_id = Column(ForeignKey("projects.id"), nullable=False)
-    project = relationship("Project")
+    application = relationship("Application")
 
     cloud_id = Column(String)
 
@@ -31,16 +31,16 @@ class Environment(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
 
     @property
     def workspace(self):
-        return self.project.workspace
+        return self.application.workspace
 
     def auditable_workspace_id(self):
-        return self.project.workspace_id
+        return self.application.workspace_id
 
     def __repr__(self):
-        return "<Environment(name='{}', num_users='{}', project='{}', workspace='{}', id='{}')>".format(
+        return "<Environment(name='{}', num_users='{}', application='{}', workspace='{}', id='{}')>".format(
             self.name,
             self.num_users,
-            self.project.name,
-            self.project.workspace.name,
+            self.application.name,
+            self.application.workspace.name,
             self.id,
         )

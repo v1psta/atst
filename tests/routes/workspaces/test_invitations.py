@@ -99,7 +99,7 @@ def test_user_who_has_not_accepted_workspace_invite_cannot_view(client, user_ses
 
     # user tries to view workspace before accepting invitation
     user_session(user)
-    response = client.get("/workspaces/{}/projects".format(workspace.id))
+    response = client.get("/workspaces/{}/applications".format(workspace.id))
     assert response.status_code == 404
 
 

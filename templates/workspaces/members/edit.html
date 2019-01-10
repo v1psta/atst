@@ -69,24 +69,24 @@
 
   <div class='search-bar'>
     <div class='usa-input search-input'>
-      <label for='project-search'>Search by application name</label>
-      <input type='search' id='project-search' name='project-search' placeholder="Search by application name"/>
+      <label for='application-search'>Search by application name</label>
+      <input type='search' id='application-search' name='application-search' placeholder="Search by application name"/>
       <button type="submit">
         <span class="hide">Search</span>
       </button>
     </div>
   </div>
 
-  {% for project in projects %}
-  {% set revoke_modal_name = (project.id|string) + 'RevokeModal' %}
-  <edit-project-roles inline-template name="{{ project.name }}" id="{{ project.id }}">
-    <div is='toggler' default-visible class='block-list project-list-item'>
+  {% for application in applications %}
+  {% set revoke_modal_name = (application.id|string) + 'RevokeModal' %}
+  <edit-application-roles inline-template name="{{ application.name }}" id="{{ application.id }}">
+    <div is='toggler' default-visible class='block-list application-list-item'>
       <template slot-scope='props'>
         <header class='block-list__header'>
-        <button v-on:click='props.toggle' class='icon-link icon-link--large icon-link--default spend-table__project__toggler'>
+        <button v-on:click='props.toggle' class='icon-link icon-link--large icon-link--default spend-table__application__toggler'>
             <template v-if='props.isVisible'>{{ Icon('caret_down') }}</template>
             <template v-else>{{ Icon('caret_right') }}</template>
-            <h3 class="block-list__title">{{ project.name }}</h3>
+            <h3 class="block-list__title">{{ application.name }}</h3>
           </button>
           <span><a v-on:click="openModal('{{ revoke_modal_name }}')" class="icon-link icon-link--danger">revoke all access</a></span>
         </header>
@@ -94,7 +94,7 @@
             <div>
               <h1>Revoke Access</h1>
               <p>
-                Confirming will revoke access for {{ member.user.full_name }} to any environments associated with {{ project.name }}.
+                Confirming will revoke access for {{ member.user.full_name }} to any environments associated with {{ application.name }}.
               </p>
               <div class='action-group'>
                 <a v-on:click="doRevoke(); closeModal('{{ revoke_modal_name }}')" class='action-group__action usa-button'>Confirm</a>
@@ -103,19 +103,19 @@
             </div>
           {% endcall %}
         <ul v-show='props.isVisible'>
-          {% for env in project.environments %}
+          {% for env in application.environments %}
 
             {% set role = EnvironmentRoles.get(member.user_id, env.id).role %}
             {% set env_modal_name = (env.id|string) + 'RolesModal' %}
 
           <li class='block-list__item'>
-            <edit-environment-role inline-template initial-data='{{ role or "" }}' v-bind:choices='{{ choices | tojson }}' v-bind:project-id="'{{ project.id }}'">
-            <div class='project-list-item__environment'>
-              <span class='project-list-item__environment__link'>
+            <edit-environment-role inline-template initial-data='{{ role or "" }}' v-bind:choices='{{ choices | tojson }}' v-bind:application-id="'{{ application.id }}'">
+            <div class='application-list-item__environment'>
+              <span class='application-list-item__environment__link'>
                 {{ env.name }}
               </span>
 
-              <div class='project-list-item__environment__actions'>
+              <div class='application-list-item__environment__actions'>
                 <span v-bind:class="label_class" v-html:on=displayName></span>
                 <button v-on:click="openModal('{{env_modal_name}}')" type="button" class="icon-link">set role</button>
                 {% call Modal(name=env_modal_name, dismissable=False) %}
@@ -170,7 +170,7 @@
         </ul>
       </template>
     </div>
-  </edit-project-roles>
+  </edit-application-roles>
   {% endfor %}
 
   <div class='action-group'>

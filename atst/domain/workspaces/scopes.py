@@ -1,6 +1,6 @@
 from atst.domain.authz import Authorization
 from atst.models.permissions import Permissions
-from atst.domain.projects import Projects
+from atst.domain.applications import Applications
 from atst.domain.environments import Environments
 
 
@@ -24,25 +24,27 @@ class ScopedResource(object):
 class ScopedWorkspace(ScopedResource):
     """
     An object that obeys the same API as a Workspace, but with the added
-    functionality that it only returns sub-resources (projects and environments)
+    functionality that it only returns sub-resources (applications and environments)
     that the given user is allowed to see.
     """
 
     @property
-    def projects(self):
-        can_view_all_projects = Authorization.has_workspace_permission(
+    def applications(self):
+        can_view_all_applications = Authorization.has_workspace_permission(
             self.user, self.resource, Permissions.VIEW_APPLICATION_IN_WORKSPACE
         )
 
-        if can_view_all_projects:
-            projects = self.resource.projects
+        if can_view_all_applications:
+            applications = self.resource.applications
         else:
-            projects = Projects.for_user(self.user, self.resource)
+            applications = Applications.for_user(self.user, self.resource)
 
-        return [ScopedProject(self.user, project) for project in projects]
+        return [
+            ScopedApplication(self.user, application) for application in applications
+        ]
 
 
-class ScopedProject(ScopedResource):
+class ScopedApplication(ScopedResource):
     """
     An object that obeys the same API as a Workspace, but with the added
     functionality that it only returns sub-resources (environments)

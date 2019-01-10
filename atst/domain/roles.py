@@ -58,7 +58,7 @@ WORKSPACE_ROLES = [
     {
         "name": "owner",
         "display_name": "Workspace Owner",
-        "description": "Adds, edits, deactivates access to all projects, environments, and members. Views budget reports. Initiates and edits JEDI Cloud requests.",
+        "description": "Adds, edits, deactivates access to all applications, environments, and members. Views budget reports. Initiates and edits JEDI Cloud requests.",
         "permissions": [
             Permissions.REQUEST_JEDI_WORKSPACE,
             Permissions.VIEW_ORIGINAL_JEDI_REQEUST,
@@ -94,7 +94,7 @@ WORKSPACE_ROLES = [
     {
         "name": "admin",
         "display_name": "Administrator",
-        "description": "Adds and edits projects, environments, members, but cannot deactivate. Cannot view budget reports or JEDI Cloud requests.",
+        "description": "Adds and edits applications, environments, members, but cannot deactivate. Cannot view budget reports or JEDI Cloud requests.",
         "permissions": [
             Permissions.VIEW_USAGE_REPORT,
             Permissions.ADD_AND_ASSIGN_CSP_ROLES,
@@ -125,13 +125,13 @@ WORKSPACE_ROLES = [
     {
         "name": "developer",
         "display_name": "Developer",
-        "description": "Views only the projects and environments they are granted access to. Can also view members associated with each environment.",
+        "description": "Views only the applications and environments they are granted access to. Can also view members associated with each environment.",
         "permissions": [Permissions.VIEW_USAGE_REPORT, Permissions.VIEW_WORKSPACE],
     },
     {
         "name": "billing_auditor",
         "display_name": "Billing Auditor",
-        "description": "Views only the projects and environments they are granted access to. Can also view budgets and reports associated with the workspace.",
+        "description": "Views only the applications and environments they are granted access to. Can also view budgets and reports associated with the workspace.",
         "permissions": [
             Permissions.VIEW_USAGE_REPORT,
             Permissions.VIEW_USAGE_DOLLARS,
@@ -140,7 +140,7 @@ WORKSPACE_ROLES = [
     },
     {
         "name": "security_auditor",
-        "description": "Views only the projects and environments they are granted access to. Can also view activity logs.",
+        "description": "Views only the applications and environments they are granted access to. Can also view activity logs.",
         "display_name": "Security Auditor",
         "permissions": [
             Permissions.VIEW_ASSIGNED_ATAT_ROLE_CONFIGURATIONS,

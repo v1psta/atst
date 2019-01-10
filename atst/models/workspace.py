@@ -14,7 +14,7 @@ class Workspace(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     id = types.Id()
     name = Column(String)
     request_id = Column(ForeignKey("requests.id"), nullable=True)
-    projects = relationship("Project", back_populates="workspace")
+    applications = relationship("Application", back_populates="workspace")
     roles = relationship("WorkspaceRole")
 
     task_orders = relationship("TaskOrder")
@@ -54,7 +54,7 @@ class Workspace(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
 
     @property
     def all_environments(self):
-        return list(chain.from_iterable(p.environments for p in self.projects))
+        return list(chain.from_iterable(p.environments for p in self.applications))
 
     def auditable_workspace_id(self):
         return self.id

@@ -2,12 +2,12 @@ from atst.domain.environments import Environments
 from atst.domain.environment_roles import EnvironmentRoles
 from atst.domain.workspace_roles import WorkspaceRoles
 
-from tests.factories import ProjectFactory, UserFactory, WorkspaceFactory
+from tests.factories import ApplicationFactory, UserFactory, WorkspaceFactory
 
 
 def test_create_environments():
-    project = ProjectFactory.create()
-    environments = Environments.create_many(project, ["Staging", "Production"])
+    application = ApplicationFactory.create()
+    environments = Environments.create_many(application, ["Staging", "Production"])
     for env in environments:
         assert env.cloud_id is not None
 
@@ -19,10 +19,12 @@ def test_create_environment_role_creates_cloud_id(session):
     workspace = WorkspaceFactory.create(
         owner=owner,
         members=[{"user": developer, "role_name": "developer"}],
-        projects=[{"name": "project1", "environments": [{"name": "project1 prod"}]}],
+        applications=[
+            {"name": "application1", "environments": [{"name": "application1 prod"}]}
+        ],
     )
 
-    env = workspace.projects[0].environments[0]
+    env = workspace.applications[0].environments[0]
     new_role = [{"id": env.id, "role": "developer"}]
 
     workspace_role = workspace.members[0]
@@ -41,26 +43,26 @@ def test_update_environment_roles():
     workspace = WorkspaceFactory.create(
         owner=owner,
         members=[{"user": developer, "role_name": "developer"}],
-        projects=[
+        applications=[
             {
-                "name": "project1",
+                "name": "application1",
                 "environments": [
                     {
-                        "name": "project1 dev",
+                        "name": "application1 dev",
                         "members": [{"user": developer, "role_name": "devlops"}],
                     },
                     {
-                        "name": "project1 staging",
+                        "name": "application1 staging",
                         "members": [{"user": developer, "role_name": "developer"}],
                     },
-                    {"name": "project1 prod"},
+                    {"name": "application1 prod"},
                 ],
             }
         ],
     )
 
-    dev_env = workspace.projects[0].environments[0]
-    staging_env = workspace.projects[0].environments[1]
+    dev_env = workspace.applications[0].environments[0]
+    staging_env = workspace.applications[0].environments[1]
     new_ids_and_roles = [
         {"id": dev_env.id, "role": "billing_admin"},
         {"id": staging_env.id, "role": "developer"},
@@ -83,34 +85,34 @@ def test_remove_environment_role():
     workspace = WorkspaceFactory.create(
         owner=owner,
         members=[{"user": developer, "role_name": "developer"}],
-        projects=[
+        applications=[
             {
-                "name": "project1",
+                "name": "application1",
                 "environments": [
                     {
-                        "name": "project1 dev",
+                        "name": "application1 dev",
                         "members": [{"user": developer, "role_name": "devops"}],
                     },
                     {
-                        "name": "project1 staging",
+                        "name": "application1 staging",
                         "members": [{"user": developer, "role_name": "developer"}],
                     },
                     {
-                        "name": "project1 uat",
+                        "name": "application1 uat",
                         "members": [
                             {"user": developer, "role_name": "financial_auditor"}
                         ],
                     },
-                    {"name": "project1 prod"},
+                    {"name": "application1 prod"},
                 ],
             }
         ],
     )
 
-    project = workspace.projects[0]
-    now_ba = project.environments[0].id
-    now_none = project.environments[1].id
-    still_fa = project.environments[2].id
+    application = workspace.applications[0]
+    now_ba = application.environments[0].id
+    now_none = application.environments[1].id
+    still_fa = application.environments[2].id
 
     new_environment_roles = [
         {"id": now_ba, "role": "billing_auditor"},
@@ -135,12 +137,12 @@ def test_no_update_to_environment_roles():
     workspace = WorkspaceFactory.create(
         owner=owner,
         members=[{"user": developer, "role_name": "developer"}],
-        projects=[
+        applications=[
             {
-                "name": "project1",
+                "name": "application1",
                 "environments": [
                     {
-                        "name": "project1 dev",
+                        "name": "application1 dev",
                         "members": [{"user": developer, "role_name": "devops"}],
                     }
                 ],
@@ -148,7 +150,7 @@ def test_no_update_to_environment_roles():
         ],
     )
 
-    dev_env = workspace.projects[0].environments[0]
+    dev_env = workspace.applications[0].environments[0]
     new_ids_and_roles = [{"id": dev_env.id, "role": "devops"}]
 
     workspace_role = WorkspaceRoles.get(workspace.id, developer.id)
@@ -161,34 +163,34 @@ def test_get_scoped_environments(db):
     developer = UserFactory.create()
     workspace = WorkspaceFactory.create(
         members=[{"user": developer, "role_name": "developer"}],
-        projects=[
+        applications=[
             {
-                "name": "project1",
+                "name": "application1",
                 "environments": [
                     {
-                        "name": "project1 dev",
+                        "name": "application1 dev",
                         "members": [{"user": developer, "role_name": "developer"}],
                     },
-                    {"name": "project1 staging"},
-                    {"name": "project1 prod"},
+                    {"name": "application1 staging"},
+                    {"name": "application1 prod"},
                 ],
             },
             {
-                "name": "project2",
+                "name": "application2",
                 "environments": [
-                    {"name": "project2 dev"},
+                    {"name": "application2 dev"},
                     {
-                        "name": "project2 staging",
+                        "name": "application2 staging",
                         "members": [{"user": developer, "role_name": "developer"}],
                     },
-                    {"name": "project2 prod"},
+                    {"name": "application2 prod"},
                 ],
             },
         ],
     )
 
-    project1_envs = Environments.for_user(developer, workspace.projects[0])
-    assert [env.name for env in project1_envs] == ["project1 dev"]
+    application1_envs = Environments.for_user(developer, workspace.applications[0])
+    assert [env.name for env in application1_envs] == ["application1 dev"]
 
-    project2_envs = Environments.for_user(developer, workspace.projects[1])
-    assert [env.name for env in project2_envs] == ["project2 staging"]
+    application2_envs = Environments.for_user(developer, workspace.applications[1])
+    assert [env.name for env in application2_envs] == ["application2 staging"]

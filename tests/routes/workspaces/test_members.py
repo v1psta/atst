@@ -8,7 +8,7 @@ from tests.factories import (
 )
 from atst.domain.workspaces import Workspaces
 from atst.domain.workspace_roles import WorkspaceRoles
-from atst.domain.projects import Projects
+from atst.domain.applications import Applications
 from atst.domain.environments import Environments
 from atst.domain.environment_roles import EnvironmentRoles
 from atst.queue import queue
@@ -144,16 +144,16 @@ def test_update_member_environment_role(client, user_session):
     workspace = WorkspaceFactory.create()
     user = UserFactory.create()
     member = WorkspaceRoles.add(user, workspace.id, "developer")
-    project = Projects.create(
+    application = Applications.create(
         workspace.owner,
         workspace,
-        "Snazzy Project",
-        "A new project for me and my friends",
+        "Snazzy Application",
+        "A new application for me and my friends",
         {"env1", "env2"},
     )
-    env1_id = project.environments[0].id
-    env2_id = project.environments[1].id
-    for env in project.environments:
+    env1_id = application.environments[0].id
+    env2_id = application.environments[1].id
+    for env in application.environments:
         Environments.add_member(env, user, "developer")
     user_session(workspace.owner)
     response = client.post(
@@ -178,15 +178,15 @@ def test_update_member_environment_role_with_no_data(client, user_session):
     workspace = WorkspaceFactory.create()
     user = UserFactory.create()
     member = WorkspaceRoles.add(user, workspace.id, "developer")
-    project = Projects.create(
+    application = Applications.create(
         workspace.owner,
         workspace,
-        "Snazzy Project",
-        "A new project for me and my friends",
+        "Snazzy Application",
+        "A new application for me and my friends",
         {"env1"},
     )
-    env1_id = project.environments[0].id
-    for env in project.environments:
+    env1_id = application.environments[0].id
+    for env in application.environments:
         Environments.add_member(env, user, "developer")
     user_session(workspace.owner)
     response = client.post(
@@ -207,11 +207,11 @@ def test_revoke_active_member_access(client, user_session):
     member = WorkspaceRoleFactory.create(
         workspace=workspace, user=user, status=WorkspaceRoleStatus.ACTIVE
     )
-    Projects.create(
+    Applications.create(
         workspace.owner,
         workspace,
-        "Snazzy Project",
-        "A new project for me and my friends",
+        "Snazzy Application",
+        "A new application for me and my friends",
         {"env1"},
     )
     user_session(workspace.owner)
