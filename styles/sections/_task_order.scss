@@ -119,8 +119,8 @@
       @include icon-color($color-green);
     }
     .uninvited {
-      color: $color-gray-light;
-      @include icon-color($color-gray-light);
+      color: $color-red;
+      @include icon-color($color-red);
     }
 
     .task-order-invitation-status__icon {

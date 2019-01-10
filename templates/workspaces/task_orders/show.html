@@ -55,7 +55,7 @@
   {% set class = "invited" if officer else "uninvited" %}
   <div class="task-order-invitation-status row">
     <div class="task-order-invitation-status__icon col">
-      <span>{{ Icon("ok", classes=class) }}</span>
+      <span>{{ Icon("ok" if officer else "alert", classes=class) }}</span>
     </div>
     <div class="task-order-invitation-status__title col {{ class }}">
       {{ title }}
