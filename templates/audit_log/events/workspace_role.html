@@ -2,7 +2,7 @@
 
 {% block content %}
   for User <code>{{ event.event_details.updated_user_id }}</code> ({{ event.event_details.updated_user_name }})
-  in Workspace <code>{{ event.workspace_id }}</code> ({{ event.workspace.name }})
+  in Portfolio <code>{{ event.workspace_id }}</code> ({{ event.workspace.name }})
 
   {% if event.changed_state.status %}
     from status "{{ event.changed_state.status[0] }}" to "{{ event.changed_state.status[1] }}"

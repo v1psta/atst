@@ -12,7 +12,7 @@ MESSAGES = {
     "revoked_workspace_access": {
         "title_template": "Removed workspace access",
         "message_template": """
-          <p>Workspace access successfully removed from {{ member_name }}.</p>
+          <p>Portfolio access successfully removed from {{ member_name }}.</p>
         """,
         "category": "success",
     },
@@ -24,7 +24,7 @@ MESSAGES = {
         "category": "success",
     },
     "workspace_role_updated": {
-        "title_template": "Workspace role updated successfully",
+        "title_template": "Portfolio role updated successfully",
         "message_template": """
           <p>{{ member_name }}'s role  was successfully updated to {{ updated_role }}</p>
         """,
@@ -45,7 +45,7 @@ MESSAGES = {
         "category": "warning",
     },
     "new_workspace": {
-        "title_template": "Workspace created!",
+        "title_template": "Portfolio created!",
         "message_template": """
              <p>You are now ready to create projects and environments within the JEDI Cloud.</p>
         """,

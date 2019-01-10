@@ -52,7 +52,7 @@
       {% endif %}
       {% if can_revoke_access %}
         {{ ConfirmationButton (
-              "Remove Workspace Access",
+              "Remove Portfolio Access",
               url_for("workspaces.revoke_access", workspace_id=workspace.id, member_id=member.id),
               confirm_msg="Are you sure? This will remove this user from the workspace.",
         )}}

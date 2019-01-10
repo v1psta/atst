@@ -234,7 +234,7 @@ def test_does_not_show_any_buttons_if_owner(client, user_session):
             member_id=workspace.owner.id,
         )
     )
-    assert "Remove Workspace Access" not in response.data.decode()
+    assert "Remove Portfolio Access" not in response.data.decode()
     assert "Resend Invitation" not in response.data.decode()
     assert "Revoke Invitation" not in response.data.decode()
 
@@ -252,7 +252,7 @@ def test_only_shows_revoke_access_button_if_active(client, user_session):
             member_id=member.user.id,
         )
     )
-    assert "Remove Workspace Access" in response.data.decode()
+    assert "Remove Portfolio Access" in response.data.decode()
     assert "Revoke Invitation" not in response.data.decode()
     assert "Resend Invitation" not in response.data.decode()
 
@@ -271,7 +271,7 @@ def test_only_shows_revoke_invite_button_if_pending(client, user_session):
         )
     )
     assert "Revoke Invitation" in response.data.decode()
-    assert "Remove Workspace Access" not in response.data.decode()
+    assert "Remove Portfolio Access" not in response.data.decode()
     assert "Resend Invitation" not in response.data.decode()
 
 
@@ -291,7 +291,7 @@ def test_only_shows_resend_button_if_expired(client, user_session):
     )
     assert "Resend Invitation" in response.data.decode()
     assert "Revoke Invitation" not in response.data.decode()
-    assert "Remove Workspace Access" not in response.data.decode()
+    assert "Remove Portfolio Access" not in response.data.decode()
 
 
 def test_only_shows_resend_button_if_revoked(client, user_session):
@@ -308,5 +308,5 @@ def test_only_shows_resend_button_if_revoked(client, user_session):
         )
     )
     assert "Resend Invitation" in response.data.decode()
-    assert "Remove Workspace Access" not in response.data.decode()
+    assert "Remove Portfolio Access" not in response.data.decode()
     assert "Revoke Invitation" not in response.data.decode()

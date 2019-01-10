@@ -6,7 +6,7 @@
 
 {% block workspace_content %}
 
-  {{ Alert("Budget Report for Workspace " + workspace.name,
+  {{ Alert("Budget Report for Portfolio " + workspace.name,
     message="<p>Track your monthly and cumulative expenditures for your workspace, projects, and environments below.</p>\
       <p>Please note that the projected spend is based on the <em>average expense over the last three completed months</em> and therefore does not account for future changes that might be made in scale or configuration of your cloud services.</p>",
     actions=[
@@ -18,7 +18,7 @@
     <div class='funding-summary-row__col'>
       <div class='panel spend-summary'>
         <div class='row'>
-          <h2 class='spend-summary__heading col'>Workspace Total Spend</h2>
+          <h2 class='spend-summary__heading col'>Portfolio Total Spend</h2>
           <dl class='spend-summary__budget'>
             {% set budget = workspace_totals['budget'] %}
             {% set spent = workspace_totals['spent'] %}
@@ -116,9 +116,9 @@
   {% if not workspace.projects %}
 
     {% set can_create_projects = user_can(permissions.ADD_APPLICATION_IN_WORKSPACE) %}
-    {% set message = 'This workspace has no cloud environments set up, so there is no spending data to report. Create a project with some cloud environments to get started.'
+    {% set message = 'This portfolio has no cloud environments set up, so there is no spending data to report. Create a project with some cloud environments to get started.'
       if can_create_projects
-      else 'This workspace has no cloud environments set up, so there is no spending data to report. Contact the workspace owner to set up some cloud environments.'
+      else 'This portfolio has no cloud environments set up, so there is no spending data to report. Contact the portfolio owner to set up some cloud environments.'
     %}
 
     {{ EmptyState(

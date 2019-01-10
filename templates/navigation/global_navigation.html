@@ -9,7 +9,7 @@
       ) }}
 
     {% if g.current_user.has_workspaces %}
-      {{ SidenavItem("Workspaces", href="/workspaces", icon="cloud", active=g.matchesPath('/workspaces')) }}
+      {{ SidenavItem("Portfolios", href="/workspaces", icon="cloud", active=g.matchesPath('/workspaces')) }}
     {% endif %}
 
     {% if g.Authorization.has_atat_permission(g.current_user, g.Permissions.VIEW_AUDIT_LOG) %}

@@ -7,7 +7,7 @@
 {% if not workspace.task_orders %}
 
   {{ EmptyState(
-    'This workspace doesn’t have any task orders yet.',
+    'This portfolio doesn’t have any task orders yet.',
     action_label='Add a New Task Order',
     action_href=url_for('task_orders.new', screen=1, workspace_id=workspace.id),
     icon='cloud',
