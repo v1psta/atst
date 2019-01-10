@@ -1,8 +1,14 @@
-from sqlalchemy import Column, Numeric, String, ForeignKey, Date
+from enum import Enum
+
+from sqlalchemy import Column, Enum as SQLAEnum, Numeric, String, ForeignKey, Date
 from sqlalchemy.types import ARRAY
 from sqlalchemy.orm import relationship
 
 from atst.models import Base, types, mixins
+
+
+class Status(Enum):
+    PENDING = "pending"
 
 
 class TaskOrder(Base, mixins.TimestampsMixin):
@@ -26,6 +32,8 @@ class TaskOrder(Base, mixins.TimestampsMixin):
 
     so_id = Column(ForeignKey("users.id"))
     security_officer = relationship("User", foreign_keys="TaskOrder.so_id")
+
+    status = Column(SQLAEnum(Status, native_enum=False, default=Status.PENDING))
 
     scope = Column(String)  # Cloud Project Scope
     defense_component = Column(String)  # Department of Defense Component
@@ -66,6 +74,10 @@ class TaskOrder(Base, mixins.TimestampsMixin):
     @property
     def portfolio_name(self):
         return self.workspace.name
+
+    @property
+    def is_pending(self):
+        return self.status == Status.PENDING
 
     def to_dictionary(self):
         return {

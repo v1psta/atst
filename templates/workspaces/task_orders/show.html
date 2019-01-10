@@ -67,7 +67,7 @@
   <div class="panel task-order-heading row">
     <div class="task-order-heading__name row">
       <h2>New Task Order</h2>
-      <span class="label label--warning">Pending</span>
+      <span class="label label--{{ 'warning' if task_order.is_pending }}">{{ task_order.status.value }}</span>
     </div>
     <div class="task_order-heading__details row">
       <div class="task-order-heading__value col">
