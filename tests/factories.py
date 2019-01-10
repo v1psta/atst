@@ -18,7 +18,7 @@ from atst.models.task_order import TaskOrder
 from atst.models.user import User
 from atst.models.role import Role
 from atst.models.workspace import Workspace
-from atst.domain.roles import Roles
+from atst.domain.roles import Roles, WORKSPACE_ROLES
 from atst.models.workspace_role import WorkspaceRole, Status as WorkspaceRoleStatus
 from atst.models.environment_role import EnvironmentRole
 from atst.models.invitation import Invitation, Status as InvitationStatus
@@ -50,20 +50,15 @@ def random_future_date(year_min=1, year_max=5):
     )
 
 
+def random_workspace_role():
+    choice = random.choice(WORKSPACE_ROLES)
+    return Roles.get(choice["name"])
+
+
 class Base(factory.alchemy.SQLAlchemyModelFactory):
     @classmethod
     def dictionary(cls, **attrs):
         return factory.build(dict, FACTORY_CLASS=cls, **attrs)
-
-
-class RoleFactory(Base):
-    class Meta:
-        model = Role
-
-    name = factory.Faker("name")
-    display_name = "Role display name"
-    description = "This is a test role."
-    permissions = []
 
 
 class UserFactory(Base):
@@ -74,7 +69,7 @@ class UserFactory(Base):
     email = factory.Faker("email")
     first_name = factory.Faker("first_name")
     last_name = factory.Faker("last_name")
-    atat_role = factory.SubFactory(RoleFactory)
+    atat_role = factory.LazyFunction(lambda: Roles.get("default"))
     dod_id = factory.LazyFunction(random_dod_id)
     phone_number = factory.LazyFunction(
         lambda: "".join(random.choices(string.digits, k=10))
@@ -340,7 +335,7 @@ class WorkspaceRoleFactory(Base):
         model = WorkspaceRole
 
     workspace = factory.SubFactory(WorkspaceFactory)
-    role = factory.SubFactory(RoleFactory)
+    role = factory.LazyFunction(random_workspace_role)
     user = factory.SubFactory(UserFactory)
     status = WorkspaceRoleStatus.PENDING
 

@@ -1,5 +1,4 @@
 import pytest
-from tests.mocks import MOCK_USER
 from tests.factories import RequestFactory
 from atst.models.request_status_event import RequestStatus
 

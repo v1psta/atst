@@ -9,7 +9,9 @@ from tests.factories import TaskOrderFactory, WorkspaceFactory, UserFactory
 
 
 def xml_translated(val):
-    return re.sub("'", "&#39;", str(val))
+    val = re.sub("'", "&#39;", str(val))
+    val = re.sub(" & ", " &amp; ", str(val))
+    return val
 
 
 def test_download_summary(client, user_session):
