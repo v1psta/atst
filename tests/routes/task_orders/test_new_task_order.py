@@ -100,14 +100,12 @@ def test_show_task_order():
     assert another_workflow.task_order == task_order
 
 
-def test_show_task_order_formdata():
-    task_order = TaskOrderFactory.create()
+def test_show_task_order_form_list_data():
+    complexity = ["oconus", "tactical_edge"]
+    task_order = TaskOrderFactory.create(complexity=complexity)
     workflow = ShowTaskOrderWorkflow(task_order_id=task_order.id)
 
-    assert workflow.task_order.to_dictionary()["user_id"] is None
-    assert workflow.task_order_formdata["user_id"] is ""
-    for field in workflow.task_order_formdata:
-        assert not field is None
+    assert workflow.form.complexity.data == complexity
 
 
 def test_show_task_order_form():
@@ -220,3 +218,16 @@ def test_update_does_not_resend_invitation():
     for i in range(2):
         workflow.update()
     assert len(contracting_officer.invitations) == 1
+
+
+def test_review_task_order_form(client, user_session):
+    creator = UserFactory.create()
+    user_session(creator)
+
+    task_order = TaskOrderFactory.create(creator=creator)
+
+    for idx, section in enumerate(TaskOrders.SECTIONS):
+        response = client.get(
+            url_for("task_orders.new", screen=idx + 1, task_order_id=task_order.id)
+        )
+        assert response.status_code == 200
