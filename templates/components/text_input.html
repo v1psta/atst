@@ -6,6 +6,7 @@
   label=field.label | striptags,
   description=field.description,
   tooltip='',
+  tooltip_title='Help',
   placeholder='',
   validation='anything',
   paragraph=False,
@@ -30,7 +31,7 @@
       <label for={{field.name}}>
         <div class="usa-input__title">
           {{ label }}
-          {% if tooltip %}{{ Tooltip(tooltip) }}{% endif %}
+          {% if tooltip %}{{ Tooltip(tooltip, tooltip_title) }}{% endif %}
         </div>
 
         {% if field.description %}

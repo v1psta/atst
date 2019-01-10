@@ -2,24 +2,51 @@
 
 {% from "components/user_info.html" import UserInfo %}
 {% from "components/checkbox_input.html" import CheckboxInput %}
+{% from "components/text_input.html" import TextInput %}
 
 {% block heading %}
-  Oversight
+  {{ "task_orders.new.oversight.section_title" | translate }}
 {% endblock %}
 
 {% block form %}
 
 <!-- Oversight Section					 -->
-<h3>Contracting Officer (KO) Information</h3>
-{{ UserInfo(form.ko_first_name, form.ko_last_name, form.ko_email, form.ko_dod_id) }}
+<h3>{{ "task_orders.new.oversight.ko_info_title" | translate }}</h3>
+<p>{{ "task_orders.new.oversight.ko_info_paragraph" | translate }}</p>
+<div class='usa-input'>
+  <fieldset class="usa-input__choices">
+    <legend>
+      <input type="checkbox" name="skip_ko" id="skip_ko" value="y" />
+      <label for="skip_ko">{{ "task_orders.new.oversight.skip_ko_label" | translate }}</label>
+    </legend>
+  </fieldset>
+</div>
+{{ UserInfo(form.ko_first_name, form.ko_last_name, form.ko_email, form.ko_phone) }}
 {{ CheckboxInput(form.ko_invite) }}
+{{ TextInput(form.ko_dod_id, placeholder="1234567890", tooltip="Why", tooltip_title='Why')}}
 
-<h3>Contractive Officer Representative (COR) Information</h3>
-{{ UserInfo(form.cor_first_name, form.cor_last_name, form.cor_email, form.cor_dod_id) }}
+<hr />
+
+<h3>{{ "task_orders.new.oversight.cor_info_title" | translate }}</h3>
+<p>{{ "task_orders.new.oversight.cor_info_paragraph" | translate }}</p>
+<div class='usa-input'>
+  <fieldset class="usa-input__choices">
+    <legend>
+      <input type="checkbox" name="am_cor" id="am_cor" value="y" />
+      <label for="am_cor">{{ "task_orders.new.oversight.am_cor_label" | translate }}</label>
+    </legend>
+  </fieldset>
+</div>
+{{ UserInfo(form.cor_first_name, form.cor_last_name, form.cor_email, form.cor_phone) }}
 {{ CheckboxInput(form.cor_invite) }}
+{{ TextInput(form.cor_dod_id, placeholder="1234567890", tooltip="Why", tooltip_title='Why')}}
 
-<h3>Security Officer Information</h3>
-{{ UserInfo(form.so_first_name, form.so_last_name, form.so_email, form.so_dod_id) }}
+<hr />
+
+<h3>{{ "task_orders.new.oversight.so_info_title" | translate }}</h3>
+<p>{{ "task_orders.new.oversight.so_info_paragraph" | translate }}</p>
+{{ UserInfo(form.so_first_name, form.so_last_name, form.so_email, form.so_phone) }}
 {{ CheckboxInput(form.so_invite) }}
+{{ TextInput(form.so_dod_id, placeholder="1234567890", tooltip="Why", tooltip_title='Why')}}
 
 {% endblock %}

@@ -8,11 +8,11 @@ from wtforms.fields import (
     TextAreaField,
     FileField,
 )
-from wtforms.fields.html5 import DateField
+from wtforms.fields.html5 import DateField, TelField
 from wtforms.widgets import ListWidget, CheckboxInput
 from wtforms.validators import Required, Length
 
-from atst.forms.validators import IsNumber
+from atst.forms.validators import IsNumber, PhoneNumber
 
 from .forms import CacheableForm
 from .data import (
@@ -98,7 +98,7 @@ class FundingForm(CacheableForm):
 
 class UnclassifiedFundingForm(FundingForm):
     clin_02 = IntegerField(translate("forms.task_order.unclassified_clin_02_label"))
-    clin_04 = IntegerField(translate("forms.task_order.unclassified_clin_04_label")
+    clin_04 = IntegerField(translate("forms.task_order.unclassified_clin_04_label"))
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -107,52 +107,56 @@ class UnclassifiedFundingForm(FundingForm):
 
 
 class OversightForm(CacheableForm):
-    ko_first_name = StringField("First Name")
-    ko_last_name = StringField("Last Name")
-    ko_email = StringField("Email")
+    ko_first_name = StringField(
+        translate("forms.task_order.oversight_first_name_label")
+    )
+    ko_last_name = StringField(translate("forms.task_order.oversight_last_name_label"))
+    ko_email = StringField(translate("forms.task_order.oversight_email_label"))
+    ko_phone = TelField(
+        translate("forms.task_order.oversight_phone_label"), validators=[PhoneNumber()]
+    )
     ko_dod_id = StringField(
-        "DOD ID", validators=[Required(), Length(min=10), IsNumber()]
+        translate("forms.task_order.oversight_dod_id_label"),
+        validators=[Required(), Length(min=10), IsNumber()],
     )
 
-    cor_first_name = StringField("First Name")
-    cor_last_name = StringField("Last Name")
-    cor_email = StringField("Email")
+    cor_first_name = StringField(
+        translate("forms.task_order.oversight_first_name_label")
+    )
+    cor_last_name = StringField(translate("forms.task_order.oversight_last_name_label"))
+    cor_email = StringField(translate("forms.task_order.oversight_email_label"))
+    cor_phone = TelField(
+        translate("forms.task_order.oversight_phone_label"), validators=[PhoneNumber()]
+    )
     cor_dod_id = StringField(
-        "DOD ID", validators=[Required(), Length(min=10), IsNumber()]
+        translate("forms.task_order.oversight_dod_id_label"),
+        validators=[Required(), Length(min=10), IsNumber()],
     )
 
-    so_first_name = StringField("First Name")
-    so_last_name = StringField("Last Name")
-    so_email = StringField("Email")
+    so_first_name = StringField(
+        translate("forms.task_order.oversight_first_name_label")
+    )
+    so_last_name = StringField(translate("forms.task_order.oversight_last_name_label"))
+    so_email = StringField(translate("forms.task_order.oversight_email_label"))
+    so_phone = TelField(
+        translate("forms.task_order.oversight_phone_label"), validators=[PhoneNumber()]
+    )
     so_dod_id = StringField(
-        "DOD ID", validators=[Required(), Length(min=10), IsNumber()]
+        translate("forms.task_order.oversight_dod_id_label"),
+        validators=[Required(), Length(min=10), IsNumber()],
     )
 
     ko_invite = BooleanField(
-        "Invite KO to Task Order Builder",
-        description="""
-            Your KO will need to approve funding for this Task Order by logging
-            into the JEDI Cloud Portal, submitting the Task Order documents
-            within their official system of record, and electronically signing.
-            <i>You may choose to skip this for now and invite them later.</i>
-            """,
+        translate("forms.task_order.ko_invite_label"),
+        description=translate("forms.task_order.skip_invite_description"),
     )
     cor_invite = BooleanField(
-        "Invite COR to Task Order Builder",
-        description="""
-            Your COR may assist with submitting the Task Order documents within
-            their official system of record. <i>You may choose to skip this for
-            now and invite them later.</i>
-            """,
+        translate("forms.task_order.cor_invite_label"),
+        description=translate("forms.task_order.skip_invite_description"),
     )
     so_invite = BooleanField(
-        "Invite Security Officer to Task Order Builder",
-        description="""
-            Your Security Officer will need to answer some security
-            configuration questions in order to generate a DD-254 document,
-            then electronically sign. <i>You may choose to skip this for now
-            and invite them later.</i>
-            """,
+        translate("forms.task_order.so_invite_label"),
+        description=translate("forms.task_order.skip_invite_description"),
     )
 
 
