@@ -7,7 +7,7 @@
 {% block workspace_content %}
 
   {{ Alert("Budget Report for Portfolio " + workspace.name,
-    message="<p>Track your monthly and cumulative expenditures for your workspace, projects, and environments below.</p>\
+    message="<p>Track your monthly and cumulative expenditures for your portfolio, applications, and environments below.</p>\
       <p>Please note that the projected spend is based on the <em>average expense over the last three completed months</em> and therefore does not account for future changes that might be made in scale or configuration of your cloud services.</p>",
     actions=[
       {"label": "Learn More", "href": url_for('atst.helpdocs'), "icon": "info"}
@@ -116,14 +116,14 @@
   {% if not workspace.projects %}
 
     {% set can_create_projects = user_can(permissions.ADD_APPLICATION_IN_WORKSPACE) %}
-    {% set message = 'This portfolio has no cloud environments set up, so there is no spending data to report. Create a project with some cloud environments to get started.'
+    {% set message = 'This portfolio has no cloud environments set up, so there is no spending data to report. Create an application with some cloud environments to get started.'
       if can_create_projects
       else 'This portfolio has no cloud environments set up, so there is no spending data to report. Contact the portfolio owner to set up some cloud environments.'
     %}
 
     {{ EmptyState(
       'Nothing to report',
-      action_label='Add a New Project' if can_create_projects else None,
+      action_label='Add a New Application' if can_create_projects else None,
       action_href=url_for('workspaces.new_project', workspace_id=workspace.id) if can_create_projects else None,
       icon='chart',
       sub_message=message

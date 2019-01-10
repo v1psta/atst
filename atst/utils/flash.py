@@ -47,7 +47,7 @@ MESSAGES = {
     "new_workspace": {
         "title_template": "Portfolio created!",
         "message_template": """
-             <p>You are now ready to create projects and environments within the JEDI Cloud.</p>
+             <p>You are now ready to create applications and environments within the JEDI Cloud.</p>
         """,
         "category": "success",
     },

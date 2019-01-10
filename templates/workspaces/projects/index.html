@@ -11,8 +11,8 @@
   {% set can_create_projects = user_can(permissions.ADD_APPLICATION_IN_WORKSPACE) %}
 
   {{ EmptyState(
-    'This portfolio doesn’t have any projects yet.',
-    action_label='Add a New Project' if can_create_projects else None,
+    'This portfolio doesn’t have any applications yet.',
+    action_label='Add a New Application' if can_create_projects else None,
     action_href=url_for('workspaces.new_project', workspace_id=workspace.id) if can_create_projects else None,
     icon='cloud',
     sub_message=None if can_create_projects else 'Please contact your JEDI Cloud portfolio administrator to set up a new project.'
