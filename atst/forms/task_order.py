@@ -112,7 +112,7 @@ class OversightForm(CacheableForm):
     )
     ko_last_name = StringField(translate("forms.task_order.oversight_last_name_label"))
     ko_email = StringField(translate("forms.task_order.oversight_email_label"))
-    ko_phone = TelField(
+    ko_phone_number = TelField(
         translate("forms.task_order.oversight_phone_label"), validators=[PhoneNumber()]
     )
     ko_dod_id = StringField(
@@ -125,7 +125,7 @@ class OversightForm(CacheableForm):
     )
     cor_last_name = StringField(translate("forms.task_order.oversight_last_name_label"))
     cor_email = StringField(translate("forms.task_order.oversight_email_label"))
-    cor_phone = TelField(
+    cor_phone_number = TelField(
         translate("forms.task_order.oversight_phone_label"), validators=[PhoneNumber()]
     )
     cor_dod_id = StringField(
@@ -138,7 +138,7 @@ class OversightForm(CacheableForm):
     )
     so_last_name = StringField(translate("forms.task_order.oversight_last_name_label"))
     so_email = StringField(translate("forms.task_order.oversight_email_label"))
-    so_phone = TelField(
+    so_phone_number = TelField(
         translate("forms.task_order.oversight_phone_label"), validators=[PhoneNumber()]
     )
     so_dod_id = StringField(

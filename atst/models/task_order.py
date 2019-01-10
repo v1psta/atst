@@ -1,6 +1,6 @@
 from enum import Enum
 
-from sqlalchemy import Column, Enum as SQLAEnum, Numeric, String, ForeignKey, Date
+from sqlalchemy import Column, Enum as SQLAEnum, Numeric, String, ForeignKey, Date, Integer
 from sqlalchemy.types import ARRAY
 from sqlalchemy.orm import relationship
 
@@ -46,6 +46,9 @@ class TaskOrder(Base, mixins.TimestampsMixin):
     team_experience = Column(String)  # Team Experience
     start_date = Column(Date)  # Period of Performance
     end_date = Column(Date)
+    performance_length = Column(Integer)
+    attachment_id = Column(ForeignKey("attachments.id"))
+    pdf = relationship("Attachment")
     clin_01 = Column(Numeric(scale=2))
     clin_02 = Column(Numeric(scale=2))
     clin_03 = Column(Numeric(scale=2))
@@ -53,14 +56,17 @@ class TaskOrder(Base, mixins.TimestampsMixin):
     ko_first_name = Column(String)  # First Name
     ko_last_name = Column(String)  # Last Name
     ko_email = Column(String)  # Email
+    ko_phone_number = Column(String)  # Phone Number
     ko_dod_id = Column(String)  # DOD ID
     cor_first_name = Column(String)  # First Name
     cor_last_name = Column(String)  # Last Name
     cor_email = Column(String)  # Email
+    cor_phone_number = Column(String)  # Phone Number
     cor_dod_id = Column(String)  # DOD ID
     so_first_name = Column(String)  # First Name
     so_last_name = Column(String)  # Last Name
     so_email = Column(String)  # Email
+    so_phone_number = Column(String)  # Phone Number
     so_dod_id = Column(String)  # DOD ID
     number = Column(String, unique=True)  # Task Order Number
     loa = Column(ARRAY(String))  # Line of Accounting (LOA)

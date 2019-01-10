@@ -167,7 +167,13 @@ class UpdateTaskOrderWorkflow(ShowTaskOrderWorkflow):
                 prefix = officer_type["prefix"]
                 officer_data = {
                     field: getattr(self.task_order, prefix + "_" + field)
-                    for field in ["first_name", "last_name", "email", "dod_id"]
+                    for field in [
+                        "first_name",
+                        "last_name",
+                        "email",
+                        "phone_number",
+                        "dod_id",
+                    ]
                 }
                 officer = TaskOrders.add_officer(
                     self.user, self.task_order, officer_type["role"], officer_data
