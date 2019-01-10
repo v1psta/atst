@@ -24,7 +24,9 @@ class TaskOrders(object):
             "team_experience",
         ],
         "funding": [
+            "performance_length",
             "start_date",
+            "csp_cost_estimate",
             "end_date",
             "clin_01",
             "clin_02",

@@ -6,6 +6,7 @@ from wtforms.fields import (
     SelectMultipleField,
     StringField,
     TextAreaField,
+    FileField,
 )
 from wtforms.fields.html5 import DateField
 from wtforms.widgets import ListWidget, CheckboxInput
@@ -20,6 +21,7 @@ from .data import (
     PROJECT_COMPLEXITY,
     DEV_TEAM,
     TEAM_EXPERIENCE,
+    PERIOD_OF_PERFORMANCE_LENGTH,
 )
 from atst.utils.localization import translate
 
@@ -74,17 +76,29 @@ class AppInfoForm(CacheableForm):
 
 
 class FundingForm(CacheableForm):
-    start_date = DateField("Start Date", format="%m/%d/%Y")
-    end_date = DateField("End Date", format="%m/%d/%Y")
-    clin_01 = IntegerField("CLIN 01 : Unclassified")
-    clin_02 = IntegerField("CLIN 02: Classified")
-    clin_03 = IntegerField("CLIN 03: Unclassified")
-    clin_04 = IntegerField("CLIN 04: Classified")
+    performance_length = SelectField(
+        translate("forms.task_order.performance_length_label"),
+        choices=PERIOD_OF_PERFORMANCE_LENGTH,
+    )
+    start_date = DateField(
+        translate("forms.task_order.start_date_label"), format="%m/%d/%Y"
+    )
+    end_date = DateField(
+        translate("forms.task_order.end_date_label"), format="%m/%d/%Y"
+    )
+    csp_cost_estimate = FileField(
+        translate("forms.task_order.csp_cost_est_label"),
+        description=translate("forms.task_order.csp_cost_est_description"),
+    )
+    clin_01 = IntegerField(translate("forms.task_order.clin_01_label"))
+    clin_02 = IntegerField(translate("forms.task_order.clin_02_label"))
+    clin_03 = IntegerField(translate("forms.task_order.clin_03_label"))
+    clin_04 = IntegerField(translate("forms.task_order.clin_04_label"))
 
 
 class UnclassifiedFundingForm(FundingForm):
-    clin_02 = IntegerField("CLIN 02: Classified (available soon)")
-    clin_04 = IntegerField("CLIN 04: Classified (available soon)")
+    clin_02 = IntegerField(translate("forms.task_order.unclassified_clin_02_label"))
+    clin_04 = IntegerField(translate("forms.task_order.unclassified_clin_04_label")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

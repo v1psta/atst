@@ -181,6 +181,17 @@ forms:
     dev_team_other_label: Development Team Other
     team_experience_label: Team Experience
     team_experience_description: How much experience does your team have with development in the cloud?
+    performance_length_label: Period of Performance length
+    start_date_label: Start Date
+    end_date_label: End Date
+    csp_cost_est_label: Upload a copy of your CSP Cost Estimate Research
+    csp_cost_est_description: Upload a PDF or screenshot fo your usage estimate from the calculator.
+    clin_01_label: 'CLIN 01 : Unclassifie'd
+    clin_02_label: 'CLIN 02: Classified'
+    clin_03_label: 'CLIN 03: Unclassified'
+    clin_04_label: 'CLIN 04: Classified'
+    unclassified_clin_02_label: 'CLIN 02: Classified (available soon)'
+    unclassified_clin_04_label: 'CLIN 04: Classified (available soon)'
   validators:
     is_number_message: Please enter a valid number.
     list_item_required_message: Please provide at least one.
@@ -334,6 +345,24 @@ task_orders:
       team_title: About your team
       market_research_title: Market Research
       market_research_paragraph: 'The JEDI Cloud Computing Program Office (CCPO) has completed the market research requirements for all related task orders. The Department of Defense CIO has approved this research.<br /><a href="#">View JEDI Market Research Memo</a>'
+    funding:
+      section_title: Funding
+      performance_period_title: Period of Performance
+      performance_period_paragraph: |
+        <p>Choose the dates your task order will cover.</p>
+        <p>Because your funds will be lost if you don’t use them, we strongly recommend submitting small, short-duration task orders, usually a three month period. We’ll notify you when your period of performance is nearing the end so you can request your next set of funds with a new task order.</p>
+      estimate_usage_title: Estimate Your Cloud Usage
+      estimate_usage_paragraph: |
+        <p>Calculate how much your cloud usage will cost. A technical representative should help you complete this calculation. These calculatiosnd will become your CLINs.</p>
+        <p><a class="icon-link" href="{{ url_for('atst.jedi_csp_calculator') }}">**link image** Cloud Service Provider's estimate calculator</a></p>
+        <p>This is only an estimation tool to help you make an informed evaluation of what you expect to use. While you're tied to the dollar amount you specify in your task order, you're not obligated by the resources you indicate in the calculator.</p>
+      cloud_calculations_title: Cloud Usage Calculations
+      cloud_calculations_paragraph: Enter the results of your cloud usage calculations.
+      cloud_offerings_title: Cloud Offerings
+      cloud_offerings_paragraph: Infrastructure as a Service (IaaS) and Platform as a Service (PaaS) offerings
+      support_assistance_title: Cloud Support and Assistance
+      support_assistance_paragraph: Technical guidance from the cloud service provider, including architecture, configuration of IaaS and PaaS, integration, troubleshooting assistance, and other services.
+      total: 'Total Task Order Value:'
 testing:
   example_string: Hello World
   example_with_variables: 'Hello, {name}!'
