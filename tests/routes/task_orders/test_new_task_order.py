@@ -111,8 +111,12 @@ def test_show_task_order(task_order):
 
 def test_show_task_order_form_list_data():
     complexity = ["oconus", "tactical_edge"]
-    task_order = TaskOrderFactory.create(complexity=complexity)
-    workflow = ShowTaskOrderWorkflow(task_order_id=task_order.id)
+    user = UserFactory.create()
+    workspace = WorkspaceFactory.create(owner=user)
+    task_order = TaskOrderFactory.create(
+        creator=user, workspace=workspace, complexity=complexity
+    )
+    workflow = ShowTaskOrderWorkflow(user, task_order_id=task_order.id)
 
     assert workflow.form.complexity.data == complexity
 
@@ -221,11 +225,8 @@ def test_update_does_not_resend_invitation():
     assert len(contracting_officer.invitations) == 1
 
 
-def test_review_task_order_form(client, user_session):
-    creator = UserFactory.create()
-    user_session(creator)
-
-    task_order = TaskOrderFactory.create(creator=creator)
+def test_review_task_order_form(client, user_session, task_order):
+    user_session(task_order.creator)
 
     for idx, section in enumerate(TaskOrders.SECTIONS):
         response = client.get(
