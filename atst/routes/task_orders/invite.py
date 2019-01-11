@@ -5,7 +5,6 @@ from atst.domain.task_orders import TaskOrders
 from atst.utils.flash import formatted_flash as flash
 
 
-# TODO: add a real implementation for this
 @task_orders_bp.route("/task_orders/invite/<task_order_id>", methods=["POST"])
 def invite(task_order_id):
     task_order = TaskOrders.get(g.current_user, task_order_id)
