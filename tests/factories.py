@@ -37,6 +37,10 @@ def random_dod_id():
     return "".join(random.choices(string.digits, k=10))
 
 
+def random_phone_number():
+    return "".join(random.choices(string.digits, k=10))
+
+
 def random_future_date(year_min=1, year_max=5):
     if year_min == year_max:
         inc = year_min
@@ -71,9 +75,7 @@ class UserFactory(Base):
     last_name = factory.Faker("last_name")
     atat_role = factory.LazyFunction(lambda: Roles.get("default"))
     dod_id = factory.LazyFunction(random_dod_id)
-    phone_number = factory.LazyFunction(
-        lambda: "".join(random.choices(string.digits, k=10))
-    )
+    phone_number = factory.LazyFunction(random_phone_number)
     service_branch = factory.LazyFunction(random_service_branch)
     citizenship = "United States"
     designation = "military"
@@ -388,21 +390,15 @@ class TaskOrderFactory(Base):
     ko_first_name = factory.Faker("first_name")
     ko_last_name = factory.Faker("last_name")
     ko_email = factory.Faker("email")
-    ko_phone_number = factory.LazyFunction(
-        lambda: "".join(random.choices(string.digits, k=10))
-    )
+    ko_phone_number = factory.LazyFunction(random_phone_number)
     ko_dod_id = factory.LazyFunction(random_dod_id)
     cor_first_name = factory.Faker("first_name")
     cor_last_name = factory.Faker("last_name")
     cor_email = factory.Faker("email")
-    cor_phone_number = factory.LazyFunction(
-        lambda: "".join(random.choices(string.digits, k=10))
-    )
+    cor_phone_number = factory.LazyFunction(random_phone_number)
     cor_dod_id = factory.LazyFunction(random_dod_id)
     so_first_name = factory.Faker("first_name")
     so_last_name = factory.Faker("last_name")
     so_email = factory.Faker("email")
-    so_phone_number = factory.LazyFunction(
-        lambda: "".join(random.choices(string.digits, k=10))
-    )
+    so_phone_number = factory.LazyFunction(random_phone_number)
     so_dod_id = factory.LazyFunction(random_dod_id)

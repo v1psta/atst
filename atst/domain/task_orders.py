@@ -25,9 +25,7 @@ class TaskOrders(object):
         ],
         "funding": [
             "performance_length",
-            "start_date",
             # "pdf",
-            "end_date",
             "clin_01",
             "clin_02",
             "clin_03",

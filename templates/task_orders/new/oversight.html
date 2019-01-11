@@ -13,17 +13,9 @@
 <!-- Oversight Section					 -->
 <h3>{{ "task_orders.new.oversight.ko_info_title" | translate }}</h3>
 <p>{{ "task_orders.new.oversight.ko_info_paragraph" | translate }}</p>
-<div class='usa-input'>
-  <fieldset class="usa-input__choices">
-    <legend>
-      <input type="checkbox" name="skip_ko" id="skip_ko" value="y" />
-      <label for="skip_ko">{{ "task_orders.new.oversight.skip_ko_label" | translate }}</label>
-    </legend>
-  </fieldset>
-</div>
 {{ UserInfo(form.ko_first_name, form.ko_last_name, form.ko_email, form.ko_phone_number) }}
 {{ CheckboxInput(form.ko_invite) }}
-{{ TextInput(form.ko_dod_id, placeholder="1234567890", tooltip="Why", tooltip_title='Why')}}
+{{ TextInput(form.ko_dod_id, placeholder="1234567890", tooltip="Why", tooltip_title='Why', validation='dodId')}}
 
 <hr />
 
@@ -39,7 +31,7 @@
 </div>
 {{ UserInfo(form.cor_first_name, form.cor_last_name, form.cor_email, form.cor_phone_number) }}
 {{ CheckboxInput(form.cor_invite) }}
-{{ TextInput(form.cor_dod_id, placeholder="1234567890", tooltip="Why", tooltip_title='Why')}}
+{{ TextInput(form.cor_dod_id, placeholder="1234567890", tooltip="Why", tooltip_title='Why', validation='dodId')}}
 
 <hr />
 
@@ -47,6 +39,6 @@
 <p>{{ "task_orders.new.oversight.so_info_paragraph" | translate }}</p>
 {{ UserInfo(form.so_first_name, form.so_last_name, form.so_email, form.so_phone_number) }}
 {{ CheckboxInput(form.so_invite) }}
-{{ TextInput(form.so_dod_id, placeholder="1234567890", tooltip="Why", tooltip_title='Why')}}
+{{ TextInput(form.so_dod_id, placeholder="1234567890", tooltip="Why", tooltip_title='Why', validation='dodId')}}
 
 {% endblock %}

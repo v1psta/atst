@@ -189,7 +189,7 @@ APP_MIGRATION = [
 PROJECT_COMPLEXITY = [
     ("storage", "Storage "),
     ("data_analytics", "Data Analytics "),
-    ("conus", "CONUS Only Access "),
+    ("conus", "CONUS Access "),
     ("oconus", "OCONUS Access "),
     ("tactical_edge", "Tactical Edge Access "),
     ("not_sure", "Not Sure "),
