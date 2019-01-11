@@ -125,8 +125,8 @@ that will automatically log you in as Amanda.
 
 ### Seeding the database
 
-We have a helper script that will seed the database with requests, workspaces and
-projects for all of the test users:
+We have a helper script that will seed the database with requests, portfolios and
+applications for all of the test users:
 
 `pipenv run python script/seed_sample.py`
 
