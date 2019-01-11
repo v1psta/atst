@@ -8,7 +8,7 @@ from atst.models import Base, types, mixins
 
 
 class Status(Enum):
-    PENDING = "pending"
+    PENDING = "Pending"
 
 
 class TaskOrder(Base, mixins.TimestampsMixin):
