@@ -6,7 +6,6 @@
   }
 
   .panel {
-    padding: 0 $gap * 2;
     width: 100%;
 
     @include ie-only {
@@ -20,7 +19,6 @@
 
     .task-order-heading__name {
       align-items: center;
-      padding: $gap;
 
       label {
         padding: $gap;
@@ -71,8 +69,7 @@
   }
 
   .task-order-sidebar {
-    flex-basis: 25%;
-    min-width: 30rem;
+    min-width: 35rem;
 
     hr {
       margin: 2rem 0;

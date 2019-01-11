@@ -5,7 +5,7 @@
 {% block workspace_content %}
 
 {% macro Step(title="", description="", link_text=None, link_url=None, complete=True) %}
-  <div class="task-order-next-steps__step row">
+  <div class="task-order-next-steps__step panel__content row">
     <div class="task-order-next-steps__icon col">
       <span>{{ Icon("ok", classes="complete" if complete else "incomplete") }}</span>
     </div>
@@ -65,7 +65,7 @@
 
 <div class="task-order-summary">
   <div class="panel task-order-heading row">
-    <div class="task-order-heading__name row">
+    <div class="panel__content task-order-heading__name row">
       <h2>New Task Order</h2>
       <span class="label label--{{ 'warning' if task_order.is_pending }}">{{ task_order.status.value }}</span>
     </div>
@@ -89,7 +89,7 @@
   <div class="task-order-details row">
     <div class="task-order-next-steps">
       <div class="panel">
-        <h3>What's next?</h3>
+        <h3 class="panel__content">What's next?</h3>
         {{ Step(
           title="Submit draft Task Order",
           description="Complete initial task order request form.",
@@ -112,43 +112,49 @@
           title="Have your KO submit your final task order",
           description="Your KO will submit the final task order into your organization's contracting system and receive an official task order number. Your KO should enter your task order number in this system, along with a copy of the submitted task order.",
           complete=False) }}
-        <h4>Once your required information is submitted in this system, you're funded and ready to start using JEDI cloud services!</h4>
+        <h4 class="panel__content">Once your required information is submitted in this system, you're funded and ready to start using JEDI cloud services!</h4>
       </div>
     </div>
     <div class="task-order-sidebar col">
       <div class="task-order-documents panel">
-        <h3>Download documents</h3>
-        {% set description -%}
-          last updated on <local-datetime
-            timestamp="{{ task_order.time_updated }}"
-            format="M/D/YYYY">
-            </local-datetime>
-        {%- endset %}
-        {{ DocumentLink(
-          title="Task Order Draft",
-          link_url=url_for('task_orders.download_summary', task_order_id=task_order.id),
-          description=description) }}
+        <div class="panel__content">
+          <h3>Download documents</h3>
+          {% set description -%}
+            last updated on <local-datetime
+              timestamp="{{ task_order.time_updated }}"
+              format="M/D/YYYY">
+              </local-datetime>
+          {%- endset %}
+          {{ DocumentLink(
+            title="Task Order Draft",
+            link_url=url_for('task_orders.download_summary', task_order_id=task_order.id),
+            description=description) }}
+        </div>
         <hr />
-        {{ DocumentLink(
-          title="Cloud Services Estimate",
-          link_url="#") }}
-        {{ DocumentLink(
-          title="Market Research",
-          link_url="#") }}
-        {{ DocumentLink(
-          title="DD 254",
-          link_url="") }}
+        <div class="panel__content">
+          {{ DocumentLink(
+            title="Cloud Services Estimate",
+            link_url="#") }}
+          {{ DocumentLink(
+            title="Market Research",
+            link_url="#") }}
+          {{ DocumentLink(
+            title="DD 254",
+            link_url="") }}
+        </div>
       </div>
       <div class="task-order-invitations panel">
-        <h3>Invitations</h3>
-        {{ InvitationStatus('Contracting Officer', task_order.contracting_officer) }}
-        {{ InvitationStatus('Contracting Officer Representative', task_order.contracting_officer_representative) }}
-        {{ InvitationStatus('IA Security Officer', officer=task_order.security_officer) }}
+        <div class="panel__content">
+          <h3>Invitations</h3>
+          {{ InvitationStatus('Contracting Officer', task_order.contracting_officer) }}
+          {{ InvitationStatus('Contracting Officer Representative', task_order.contracting_officer_representative) }}
+          {{ InvitationStatus('IA Security Officer', officer=task_order.security_officer) }}
 
-        <a href="{{ url_for('task_orders.new', screen=3, task_order_id=task_order.id) }}" class="icon-link">
-          {{ Icon("edit") }}
-          <span>manage invitations</span>
-        </a>
+          <a href="{{ url_for('task_orders.new', screen=3, task_order_id=task_order.id) }}" class="icon-link">
+            {{ Icon("edit") }}
+            <span>manage invitations</span>
+          </a>
+        </div>
       </div>
     </div>
   </div>
