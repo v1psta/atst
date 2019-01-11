@@ -46,7 +46,7 @@ class EnvironmentRole(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
             "environment": self.environment.displayname,
             "environment_id": str(self.environment_id),
             "application": self.environment.application.name,
-            "application_id": str(self.environment.project_id),
+            "application_id": str(self.environment.application_id),
             "portfolio": self.environment.application.portfolio.name,
             "portfolio_id": str(self.environment.application.portfolio.id),
         }

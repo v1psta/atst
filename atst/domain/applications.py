@@ -46,7 +46,7 @@ class Applications(object):
             db.session.query(Application)
             .join(Environment)
             .join(EnvironmentRole)
-            .filter(Application.workspace_id == portfolio.id)
+            .filter(Application.portfolio_id == portfolio.id)
             .filter(EnvironmentRole.user_id == user.id)
             .all()
         )

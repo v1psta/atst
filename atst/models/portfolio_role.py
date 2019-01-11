@@ -34,7 +34,7 @@ class PortfolioRole(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     __tablename__ = "workspace_roles"
 
     id = Id()
-    workspace_id = Column(
+    portfolio_id = Column(
         UUID(as_uuid=True), ForeignKey("workspaces.id"), index=True, nullable=False
     )
     portfolio = relationship("Portfolio", back_populates="roles")
@@ -159,6 +159,6 @@ class PortfolioRole(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
 Index(
     "portfolio_role_user_portfolio",
     PortfolioRole.user_id,
-    PortfolioRole.workspace_id,
+    PortfolioRole.portfolio_id,
     unique=True,
 )

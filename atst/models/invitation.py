@@ -27,7 +27,7 @@ class Invitation(Base, TimestampsMixin, AuditableMixin):
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), index=True)
     user = relationship("User", backref="invitations", foreign_keys=[user_id])
 
-    workspace_role_id = Column(
+    portfolio_role_id = Column(
         UUID(as_uuid=True), ForeignKey("workspace_roles.id"), index=True
     )
     portfolio_role = relationship(
@@ -123,4 +123,4 @@ class Invitation(Base, TimestampsMixin, AuditableMixin):
 
     @property
     def portfolio_id(self):
-        return self.portfolio_role.workspace_id
+        return self.portfolio_role.portfolio_id

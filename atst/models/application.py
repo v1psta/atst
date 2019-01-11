@@ -13,7 +13,7 @@ class Application(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     name = Column(String, nullable=False)
     description = Column(String, nullable=False)
 
-    workspace_id = Column(ForeignKey("workspaces.id"), nullable=False)
+    portfolio_id = Column(ForeignKey("workspaces.id"), nullable=False)
     portfolio = relationship("Portfolio")
     environments = relationship("Environment", back_populates="application")
 

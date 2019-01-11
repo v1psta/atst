@@ -46,7 +46,7 @@ class PortfolioRoles(object):
             return (
                 db.session.query(PortfolioRole)
                 .join(User)
-                .filter(User.id == user_id, PortfolioRole.workspace_id == portfolio_id)
+                .filter(User.id == user_id, PortfolioRole.portfolio_id == portfolio_id)
                 .filter(PortfolioRole.status == PortfolioRoleStatus.ACTIVE)
                 .one()
             )
