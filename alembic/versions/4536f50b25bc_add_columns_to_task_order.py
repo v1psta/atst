@@ -1,7 +1,7 @@
 """add funding columns to task order
 
 Revision ID: 4536f50b25bc
-Revises: 71cbe76c3b87
+Revises: 3d346b5c8f19
 Create Date: 2019-01-10 14:24:03.101309
 
 """
@@ -11,7 +11,7 @@ from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
 revision = '4536f50b25bc'
-down_revision = '71cbe76c3b87'
+down_revision = '3d346b5c8f19'
 branch_labels = None
 depends_on = None
 

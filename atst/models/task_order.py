@@ -1,6 +1,14 @@
 from enum import Enum
 
-from sqlalchemy import Column, Enum as SQLAEnum, Numeric, String, ForeignKey, Date, Integer
+from sqlalchemy import (
+    Column,
+    Enum as SQLAEnum,
+    Numeric,
+    String,
+    ForeignKey,
+    Date,
+    Integer,
+)
 from sqlalchemy.types import ARRAY
 from sqlalchemy.orm import relationship
 
