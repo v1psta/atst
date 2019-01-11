@@ -12,7 +12,7 @@ class Environment(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     id = Id()
     name = Column(String, nullable=False)
 
-    application_id = Column(ForeignKey("projects.id"), nullable=False)
+    application_id = Column(ForeignKey("applications.id"), nullable=False)
     application = relationship("Application")
 
     cloud_id = Column(String)

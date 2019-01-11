@@ -24,7 +24,7 @@ class TaskOrder(Base, mixins.TimestampsMixin):
 
     id = types.Id()
 
-    portfolio_id = Column(ForeignKey("workspaces.id"))
+    portfolio_id = Column(ForeignKey("portfolios.id"))
     portfolio = relationship("Portfolio")
 
     user_id = Column(ForeignKey("users.id"))

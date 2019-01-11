@@ -28,7 +28,7 @@ class Invitation(Base, TimestampsMixin, AuditableMixin):
     user = relationship("User", backref="invitations", foreign_keys=[user_id])
 
     portfolio_role_id = Column(
-        UUID(as_uuid=True), ForeignKey("workspace_roles.id"), index=True
+        UUID(as_uuid=True), ForeignKey("portfolio_roles.id"), index=True
     )
     portfolio_role = relationship(
         "PortfolioRole",

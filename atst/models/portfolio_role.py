@@ -31,11 +31,11 @@ class Status(Enum):
 
 
 class PortfolioRole(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
-    __tablename__ = "workspace_roles"
+    __tablename__ = "portfolio_roles"
 
     id = Id()
     portfolio_id = Column(
-        UUID(as_uuid=True), ForeignKey("workspaces.id"), index=True, nullable=False
+        UUID(as_uuid=True), ForeignKey("portfolios.id"), index=True, nullable=False
     )
     portfolio = relationship("Portfolio", back_populates="roles")
 

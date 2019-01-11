@@ -9,7 +9,7 @@ from atst.database import db
 
 
 class Portfolio(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
-    __tablename__ = "workspaces"
+    __tablename__ = "portfolios"
 
     id = types.Id()
     name = Column(String)

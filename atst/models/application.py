@@ -7,13 +7,13 @@ from atst.models import mixins
 
 
 class Application(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
-    __tablename__ = "projects"
+    __tablename__ = "applications"
 
     id = Id()
     name = Column(String, nullable=False)
     description = Column(String, nullable=False)
 
-    portfolio_id = Column(ForeignKey("workspaces.id"), nullable=False)
+    portfolio_id = Column(ForeignKey("portfolios.id"), nullable=False)
     portfolio = relationship("Portfolio")
     environments = relationship("Environment", back_populates="application")
 
