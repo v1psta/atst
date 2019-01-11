@@ -63,21 +63,6 @@ class ShowTaskOrderWorkflow:
         return self._task_order
 
     @property
-    def task_order_formdata(self):
-        task_order_dict = self.task_order.to_dictionary()
-        for field in task_order_dict:
-            if task_order_dict[field] is None:
-                task_order_dict[field] = ""
-
-        # don't save other text in DB unless "other" is checked
-        if "other" not in task_order_dict["complexity"]:
-            task_order_dict["complexity_other"] = ""
-        if "other" not in task_order_dict["dev_team"]:
-            task_order_dict["dev_team_other"] = ""
-
-        return task_order_dict
-
-    @property
     def form(self):
         form_type = (
             "unclassified_form"
@@ -137,11 +122,13 @@ class UpdateTaskOrderWorkflow(ShowTaskOrderWorkflow):
     def task_order_form_data(self):
         to_data = self.form.data.copy()
         if "portfolio_name" in to_data:
-            new_name = self.form.data["portfolio_name"]
-            old_name = self.task_order.to_dictionary()["portfolio_name"]
-            if not new_name is old_name:
-                Portfolios.update(self.task_order.portfolio, {"name": new_name})
             to_data.pop("portfolio_name")
+
+        # don't save other text in DB unless "other" is checked
+        if "complexity" in to_data and "other" not in to_data["complexity"]:
+            to_data["complexity_other"] = ""
+        if "dev_team" in to_data and "other" not in to_data["dev_team"]:
+            to_data["dev_team_other"] = ""
 
         return to_data
 
@@ -150,6 +137,11 @@ class UpdateTaskOrderWorkflow(ShowTaskOrderWorkflow):
 
     def _update_task_order(self):
         if self.task_order:
+            if "portfolio_name" in self.form.data:
+                new_name = self.form.data["portfolio_name"]
+                old_name = self.task_order.to_dictionary()["portfolio_name"]
+                if not new_name is old_name:
+                    Portfolios.update(self.task_order.portfolio, {"name": new_name})
             TaskOrders.update(self.user, self.task_order, **self.task_order_form_data)
         else:
             pf = Portfolios.create(self.user, self.form.portfolio_name.data)
