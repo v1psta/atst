@@ -33,7 +33,7 @@ class TaskOrder(Base, mixins.TimestampsMixin):
     so_id = Column(ForeignKey("users.id"))
     security_officer = relationship("User", foreign_keys="TaskOrder.so_id")
 
-    status = Column(SQLAEnum(Status, native_enum=False, default=Status.PENDING))
+    status = Column(SQLAEnum(Status, native_enum=False))
 
     scope = Column(String)  # Cloud Project Scope
     defense_component = Column(String)  # Department of Defense Component
@@ -64,6 +64,11 @@ class TaskOrder(Base, mixins.TimestampsMixin):
     so_dod_id = Column(String)  # DOD ID
     number = Column(String, unique=True)  # Task Order Number
     loa = Column(ARRAY(String))  # Line of Accounting (LOA)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if "status" not in kwargs:
+            self.status = Status.PENDING
 
     @property
     def budget(self):
