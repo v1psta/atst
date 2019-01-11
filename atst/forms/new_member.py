@@ -7,7 +7,7 @@ from atst.forms.validators import IsNumber
 from atst.forms.fields import SelectField
 from atst.utils.localization import translate
 
-from .data import WORKSPACE_ROLES
+from .data import PORTFOLIO_ROLES
 
 
 class NewMemberForm(FlaskForm):
@@ -27,7 +27,7 @@ class NewMemberForm(FlaskForm):
     )
     portfolio_role = SelectField(
         translate("forms.new_member.portfolio_role_label"),
-        choices=WORKSPACE_ROLES,
+        choices=PORTFOLIO_ROLES,
         validators=[Required()],
         default="",
         description=translate("forms.new_member.portfolio_role_description"),

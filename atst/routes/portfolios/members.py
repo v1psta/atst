@@ -15,7 +15,7 @@ from atst.forms.edit_member import EditMemberForm
 from atst.forms.data import (
     ENVIRONMENT_ROLES,
     ENV_ROLE_MODAL_DESCRIPTION,
-    WORKSPACE_ROLE_DEFINITIONS,
+    PORTFOLIO_ROLE_DEFINITIONS,
 )
 from atst.domain.authz import Authorization
 from atst.models.permissions import Permissions
@@ -47,7 +47,7 @@ def portfolio_members(portfolio_id):
     return render_template(
         "portfolios/members/index.html",
         portfolio=portfolio,
-        role_choices=WORKSPACE_ROLE_DEFINITIONS,
+        role_choices=PORTFOLIO_ROLE_DEFINITIONS,
         status_choices=MEMBER_STATUS_CHOICES,
         members=members_list,
         new_member=new_member,

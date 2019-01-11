@@ -67,7 +67,7 @@ class User(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     @property
     def has_portfolios(self):
         return (
-            Permissions.VIEW_WORKSPACE in self.atat_role.permissions
+            Permissions.VIEW_PORTFOLIO in self.atat_role.permissions
         ) or self.portfolio_roles
 
     @property

@@ -1,4 +1,4 @@
-from atst.domain.roles import WORKSPACE_ROLES as WORKSPACE_ROLE_DEFINITIONS
+from atst.domain.roles import PORTFOLIO_ROLES as PORTFOLIO_ROLE_DEFINITIONS
 
 SERVICE_BRANCHES = [
     ("", "Select an option"),
@@ -105,9 +105,9 @@ COMPLETION_DATE_RANGES = [
     ("Above 12 months", "Above 12 months"),
 ]
 
-WORKSPACE_ROLES = [
+PORTFOLIO_ROLES = [
     (role["name"], {"name": role["display_name"], "description": role["description"]})
-    for role in WORKSPACE_ROLE_DEFINITIONS
+    for role in PORTFOLIO_ROLE_DEFINITIONS
     if role["name"] is not "officer"
 ]
 
@@ -186,7 +186,7 @@ APP_MIGRATION = [
     ("not_sure", "Not Sure"),
 ]
 
-PROJECT_COMPLEXITY = [
+APPLICATION_COMPLEXITY = [
     ("storage", "Storage "),
     ("data_analytics", "Data Analytics "),
     ("conus", "CONUS Access "),

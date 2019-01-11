@@ -4,7 +4,7 @@ from wtforms.validators import Required
 from atst.forms.fields import SelectField
 from atst.utils.localization import translate
 
-from .data import WORKSPACE_ROLES
+from .data import PORTFOLIO_ROLES
 
 
 class EditMemberForm(FlaskForm):
@@ -13,6 +13,6 @@ class EditMemberForm(FlaskForm):
 
     portfolio_role = SelectField(
         translate("forms.edit_member.portfolio_role_label"),
-        choices=WORKSPACE_ROLES,
+        choices=PORTFOLIO_ROLES,
         validators=[Required()],
     )

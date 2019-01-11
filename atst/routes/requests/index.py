@@ -14,7 +14,7 @@ class RequestsIndex(object):
 
     def execute(self):
         if (
-            Permissions.REVIEW_AND_APPROVE_JEDI_WORKSPACE_REQUEST
+            Permissions.REVIEW_AND_APPROVE_JEDI_PORTFOLIO_REQUEST
             in self.user.atat_permissions
         ):
             context = self._ccpo_view(self.user)

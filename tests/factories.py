@@ -18,7 +18,7 @@ from atst.models.task_order import TaskOrder
 from atst.models.user import User
 from atst.models.role import Role
 from atst.models.portfolio import Portfolio
-from atst.domain.roles import Roles, WORKSPACE_ROLES
+from atst.domain.roles import Roles, PORTFOLIO_ROLES
 from atst.models.portfolio_role import PortfolioRole, Status as PortfolioRoleStatus
 from atst.models.environment_role import EnvironmentRole
 from atst.models.invitation import Invitation, Status as InvitationStatus
@@ -55,7 +55,7 @@ def random_future_date(year_min=1, year_max=5):
 
 
 def random_portfolio_role():
-    choice = random.choice(WORKSPACE_ROLES)
+    choice = random.choice(PORTFOLIO_ROLES)
     return Roles.get(choice["name"])
 
 
@@ -376,7 +376,7 @@ class TaskOrderFactory(Base):
     defense_component = factory.LazyFunction(random_service_branch)
     app_migration = random_choice(data.APP_MIGRATION)
     native_apps = random.choices(["yes", "no", "not_sure"])
-    complexity = [random_choice(data.PROJECT_COMPLEXITY)]
+    complexity = [random_choice(data.APPLICATION_COMPLEXITY)]
     dev_team = [random_choice(data.DEV_TEAM)]
     team_experience = random_choice(data.TEAM_EXPERIENCE)
 

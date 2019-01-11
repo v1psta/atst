@@ -46,7 +46,7 @@ class AuditLog(object):
         Authorization.check_portfolio_permission(
             user,
             portfolio,
-            Permissions.VIEW_WORKSPACE_AUDIT_LOG,
+            Permissions.VIEW_PORTFOLIO_AUDIT_LOG,
             "view portfolio audit log",
         )
         return AuditEventQuery.get_ws_events(portfolio.id, pagination_opts)

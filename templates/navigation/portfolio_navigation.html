@@ -6,7 +6,7 @@
       ("navigation.portfolio_navigation.applications" | translate),
       href=url_for("portfolios.portfolio_applications", portfolio_id=portfolio.id),
       active=request.url_rule.rule.startswith('/portfolios/<portfolio_id>/applications'),
-      subnav=None if not user_can(permissions.ADD_APPLICATION_IN_WORKSPACE) else [
+      subnav=None if not user_can(permissions.ADD_APPLICATION_IN_PORTFOLIO) else [
         {
           "label": ("navigation.portfolio_navigation.add_new_application_label" | translate),
           "href": url_for('portfolios.new_application', portfolio_id=portfolio.id),
@@ -16,7 +16,7 @@
       ]
     ) }}
 
-    {% if user_can(permissions.VIEW_WORKSPACE_MEMBERS) %}
+    {% if user_can(permissions.VIEW_PORTFOLIO_MEMBERS) %}
       {{ SidenavItem(
         ("navigation.portfolio_navigation.members" | translate),
         href=url_for("portfolios.portfolio_members", portfolio_id=portfolio.id),
@@ -47,7 +47,7 @@
       subnav=None
     ) }}
 
-    {% if user_can(permissions.EDIT_WORKSPACE_INFORMATION) %}
+    {% if user_can(permissions.EDIT_PORTFOLIO_INFORMATION) %}
       {{ SidenavItem(
         ("navigation.portfolio_navigation.portfolio_settings" | translate),
         href=url_for("portfolios.portfolio", portfolio_id=portfolio.id),
@@ -56,7 +56,7 @@
       ) }}
     {% endif %}
 
-    {% if user_can(permissions.VIEW_WORKSPACE_AUDIT_LOG) %}
+    {% if user_can(permissions.VIEW_PORTFOLIO_AUDIT_LOG) %}
       {{ SidenavItem(
         ("navigation.portfolio_navigation.activity_log" | translate),
         href=url_for("portfolios.portfolio_activity", portfolio_id=portfolio.id),

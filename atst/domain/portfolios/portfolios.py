@@ -38,7 +38,7 @@ class Portfolios(object):
     def get(cls, user, portfolio_id):
         portfolio = PortfoliosQuery.get(portfolio_id)
         Authorization.check_portfolio_permission(
-            user, portfolio, Permissions.VIEW_WORKSPACE, "get portfolio"
+            user, portfolio, Permissions.VIEW_PORTFOLIO, "get portfolio"
         )
 
         return ScopedPortfolio(user, portfolio)
@@ -47,7 +47,7 @@ class Portfolios(object):
     def get_for_update_applications(cls, user, portfolio_id):
         portfolio = PortfoliosQuery.get(portfolio_id)
         Authorization.check_portfolio_permission(
-            user, portfolio, Permissions.ADD_APPLICATION_IN_WORKSPACE, "add application"
+            user, portfolio, Permissions.ADD_APPLICATION_IN_PORTFOLIO, "add application"
         )
 
         return portfolio
@@ -58,7 +58,7 @@ class Portfolios(object):
         Authorization.check_portfolio_permission(
             user,
             portfolio,
-            Permissions.EDIT_WORKSPACE_INFORMATION,
+            Permissions.EDIT_PORTFOLIO_INFORMATION,
             "update portfolio information",
         )
 
@@ -86,7 +86,7 @@ class Portfolios(object):
         Authorization.check_portfolio_permission(
             user,
             portfolio,
-            Permissions.VIEW_WORKSPACE_MEMBERS,
+            Permissions.VIEW_PORTFOLIO_MEMBERS,
             "view portfolio members",
         )
 
@@ -94,7 +94,7 @@ class Portfolios(object):
 
     @classmethod
     def for_user(cls, user):
-        if Authorization.has_atat_permission(user, Permissions.VIEW_WORKSPACE):
+        if Authorization.has_atat_permission(user, Permissions.VIEW_PORTFOLIO):
             portfolios = PortfoliosQuery.get_all()
         else:
             portfolios = PortfoliosQuery.get_for_user(user)
