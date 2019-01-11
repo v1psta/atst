@@ -3,9 +3,9 @@ from sqlalchemy.orm.exc import NoResultFound
 
 from atst.database import db
 from atst.models.invitation import Invitation, Status as InvitationStatus
-from atst.domain.workspace_roles import WorkspaceRoles
+from atst.domain.portfolio_roles import PortfolioRoles
 from atst.domain.authz import Authorization, Permissions
-from atst.domain.workspaces import Workspaces
+from atst.domain.portfolios import Portfolios
 
 from .exceptions import NotFoundError
 
@@ -54,11 +54,11 @@ class Invitations(object):
         return invite
 
     @classmethod
-    def create(cls, inviter, workspace_role, email):
+    def create(cls, inviter, portfolio_role, email):
         invite = Invitation(
-            workspace_role=workspace_role,
+            portfolio_role=portfolio_role,
             inviter=inviter,
-            user=workspace_role.user,
+            user=portfolio_role.user,
             status=InvitationStatus.PENDING,
             expiration_time=Invitations.current_expiration_time(),
             email=email,
@@ -86,7 +86,7 @@ class Invitations(object):
 
         elif invite.is_pending:  # pragma: no branch
             Invitations._update_status(invite, InvitationStatus.ACCEPTED)
-            WorkspaceRoles.enable(invite.workspace_role)
+            PortfolioRoles.enable(invite.portfolio_role)
             return invite
 
     @classmethod
@@ -109,18 +109,18 @@ class Invitations(object):
         return Invitations._update_status(invite, InvitationStatus.REVOKED)
 
     @classmethod
-    def resend(cls, user, workspace_id, token):
-        workspace = Workspaces.get(user, workspace_id)
-        Authorization.check_workspace_permission(
+    def resend(cls, user, portfolio_id, token):
+        portfolio = Portfolios.get(user, portfolio_id)
+        Authorization.check_portfolio_permission(
             user,
-            workspace,
+            portfolio,
             Permissions.ASSIGN_AND_UNASSIGN_ATAT_ROLE,
-            "resend a workspace invitation",
+            "resend a portfolio invitation",
         )
 
         previous_invitation = Invitations._get(token)
         Invitations._update_status(previous_invitation, InvitationStatus.REVOKED)
 
         return Invitations.create(
-            user, previous_invitation.workspace_role, previous_invitation.email
+            user, previous_invitation.portfolio_role, previous_invitation.email
         )

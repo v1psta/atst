@@ -14,7 +14,7 @@ class Application(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     description = Column(String, nullable=False)
 
     workspace_id = Column(ForeignKey("workspaces.id"), nullable=False)
-    workspace = relationship("Workspace")
+    portfolio = relationship("Portfolio")
     environments = relationship("Environment", back_populates="application")
 
     @property
@@ -22,6 +22,6 @@ class Application(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
         return self.name
 
     def __repr__(self):  # pragma: no cover
-        return "<Application(name='{}', description='{}', workspace='{}', id='{}')>".format(
-            self.name, self.description, self.workspace.name, self.id
+        return "<Application(name='{}', description='{}', portfolio='{}', id='{}')>".format(
+            self.name, self.description, self.portfolio.name, self.id
         )

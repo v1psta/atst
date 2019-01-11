@@ -1,10 +1,10 @@
 class Permissions(object):
     VIEW_AUDIT_LOG = "view_audit_log"
-    VIEW_WORKSPACE_AUDIT_LOG = "view_workspace_audit_log"
-    REQUEST_JEDI_WORKSPACE = "request_jedi_workspace"
+    VIEW_WORKSPACE_AUDIT_LOG = "view_portfolio_audit_log"
+    REQUEST_JEDI_WORKSPACE = "request_jedi_portfolio"
     VIEW_ORIGINAL_JEDI_REQEUST = "view_original_jedi_request"
     REVIEW_AND_APPROVE_JEDI_WORKSPACE_REQUEST = (
-        "review_and_approve_jedi_workspace_request"
+        "review_and_approve_jedi_portfolio_request"
     )
     MODIFY_ATAT_ROLE_PERMISSIONS = "modify_atat_role_permissions"
     CREATE_CSP_ROLE = "create_csp_role"
@@ -22,18 +22,18 @@ class Permissions(object):
     VIEW_ASSIGNED_ATAT_ROLE_CONFIGURATIONS = "view_assigned_atat_role_configurations"
     VIEW_ASSIGNED_CSP_ROLE_CONFIGURATIONS = "view_assigned_csp_role_configurations"
 
-    EDIT_WORKSPACE_INFORMATION = "edit_workspace_information"
-    DEACTIVATE_WORKSPACE = "deactivate_workspace"
+    EDIT_WORKSPACE_INFORMATION = "edit_portfolio_information"
+    DEACTIVATE_WORKSPACE = "deactivate_portfolio"
     VIEW_ATAT_PERMISSIONS = "view_atat_permissions"
-    TRANSFER_OWNERSHIP_OF_WORKSPACE = "transfer_ownership_of_workspace"
-    VIEW_WORKSPACE_MEMBERS = "view_workspace_members"
-    VIEW_WORKSPACE = "view_workspace"
+    TRANSFER_OWNERSHIP_OF_WORKSPACE = "transfer_ownership_of_portfolio"
+    VIEW_WORKSPACE_MEMBERS = "view_portfolio_members"
+    VIEW_WORKSPACE = "view_portfolio"
 
-    ADD_APPLICATION_IN_WORKSPACE = "add_application_in_workspace"
-    DELETE_APPLICATION_IN_WORKSPACE = "delete_application_in_workspace"
-    DEACTIVATE_APPLICATION_IN_WORKSPACE = "deactivate_application_in_workspace"
-    VIEW_APPLICATION_IN_WORKSPACE = "view_application_in_workspace"
-    RENAME_APPLICATION_IN_WORKSPACE = "rename_application_in_workspace"
+    ADD_APPLICATION_IN_WORKSPACE = "add_application_in_portfolio"
+    DELETE_APPLICATION_IN_WORKSPACE = "delete_application_in_portfolio"
+    DEACTIVATE_APPLICATION_IN_WORKSPACE = "deactivate_application_in_portfolio"
+    VIEW_APPLICATION_IN_WORKSPACE = "view_application_in_portfolio"
+    RENAME_APPLICATION_IN_WORKSPACE = "rename_application_in_portfolio"
 
     ADD_ENVIRONMENT_IN_APPLICATION = "add_environment_in_application"
     DELETE_ENVIRONMENT_IN_APPLICATION = "delete_environment_in_application"
@@ -41,8 +41,8 @@ class Permissions(object):
     VIEW_ENVIRONMENT_IN_APPLICATION = "view_environment_in_application"
     RENAME_ENVIRONMENT_IN_APPLICATION = "rename_environment_in_application"
 
-    ADD_TAG_TO_WORKSPACE = "add_tag_to_workspace"
-    REMOVE_TAG_FROM_WORKSPACE = "remove_tag_from_workspace"
+    ADD_TAG_TO_WORKSPACE = "add_tag_to_portfolio"
+    REMOVE_TAG_FROM_WORKSPACE = "remove_tag_from_portfolio"
 
     VIEW_TASK_ORDER = "view_task_order"
     UPDATE_TASK_ORDER = "update_task_order"

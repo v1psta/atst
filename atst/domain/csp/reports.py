@@ -200,17 +200,17 @@ class MockReportingProvider(ReportingInterface):
             ]
         )
 
-    def get_budget(self, workspace):
-        if workspace.name in self.REPORT_FIXTURE_MAP:
-            return self.REPORT_FIXTURE_MAP[workspace.name]["budget"]
-        elif workspace.request and workspace.legacy_task_order:
-            return workspace.legacy_task_order.budget
+    def get_budget(self, portfolio):
+        if portfolio.name in self.REPORT_FIXTURE_MAP:
+            return self.REPORT_FIXTURE_MAP[portfolio.name]["budget"]
+        elif portfolio.request and portfolio.legacy_task_order:
+            return portfolio.legacy_task_order.budget
         return 0
 
-    def get_total_spending(self, workspace):
-        if workspace.name in self.REPORT_FIXTURE_MAP:
+    def get_total_spending(self, portfolio):
+        if portfolio.name in self.REPORT_FIXTURE_MAP:
             return self._sum_monthly_spend(
-                self.REPORT_FIXTURE_MAP[workspace.name]["applications"]
+                self.REPORT_FIXTURE_MAP[portfolio.name]["applications"]
             )
         return 0
 
@@ -230,17 +230,17 @@ class MockReportingProvider(ReportingInterface):
 
         return application_totals
 
-    def _rollup_workspace_totals(self, application_totals):
+    def _rollup_portfolio_totals(self, application_totals):
         monthly_spend = [
             (month, spend)
             for application in application_totals.values()
             for month, spend in application.items()
         ]
-        workspace_totals = {}
+        portfolio_totals = {}
         for month, spends in groupby(sorted(monthly_spend), lambda m: m[0]):
-            workspace_totals[month] = sum([spend[1] for spend in spends])
+            portfolio_totals[month] = sum([spend[1] for spend in spends])
 
-        return workspace_totals
+        return portfolio_totals
 
     def monthly_totals_for_environment(self, environment_id):
         """Return the monthly totals for the specified environment.
@@ -253,26 +253,26 @@ class MockReportingProvider(ReportingInterface):
         """
         return self.MONTHLY_SPEND_BY_ENVIRONMENT.get(environment_id, {})
 
-    def monthly_totals(self, workspace):
-        """Return month totals rolled up by environment, application, and workspace.
+    def monthly_totals(self, portfolio):
+        """Return month totals rolled up by environment, application, and portfolio.
 
-        Data should returned with three top level keys, "workspace", "applications",
+        Data should returned with three top level keys, "portfolio", "applications",
         and "environments".
         The "applications" key will have budget data per month for each application,
         The "environments" key will have budget data for each environment.
-        The "workspace" key will be total monthly spending for the workspace.
+        The "portfolio" key will be total monthly spending for the portfolio.
         For example:
 
             {
                 "environments": { "X-Wing": { "Prod": { "01/2018": 75.42 } } },
                 "applications": { "X-Wing": { "01/2018": 75.42 } },
-                "workspace": { "01/2018": 75.42 },
+                "portfolio": { "01/2018": 75.42 },
             }
 
         """
-        applications = workspace.applications
-        if workspace.name in self.REPORT_FIXTURE_MAP:
-            applications = self.REPORT_FIXTURE_MAP[workspace.name]["applications"]
+        applications = portfolio.applications
+        if portfolio.name in self.REPORT_FIXTURE_MAP:
+            applications = self.REPORT_FIXTURE_MAP[portfolio.name]["applications"]
         environments = {
             application.name: {
                 env.name: self.monthly_totals_for_environment(env.id)
@@ -282,17 +282,17 @@ class MockReportingProvider(ReportingInterface):
         }
 
         application_totals = self._rollup_application_totals(environments)
-        workspace_totals = self._rollup_workspace_totals(application_totals)
+        portfolio_totals = self._rollup_portfolio_totals(application_totals)
 
         return {
             "environments": environments,
             "applications": application_totals,
-            "workspace": workspace_totals,
+            "portfolio": portfolio_totals,
         }
 
-    def cumulative_budget(self, workspace):
-        if workspace.name in self.REPORT_FIXTURE_MAP:
-            budget_months = self.REPORT_FIXTURE_MAP[workspace.name]["cumulative"]
+    def cumulative_budget(self, portfolio):
+        if portfolio.name in self.REPORT_FIXTURE_MAP:
+            budget_months = self.REPORT_FIXTURE_MAP[portfolio.name]["cumulative"]
         else:
             budget_months = {}
 

@@ -1,6 +1,6 @@
 import dateutil
 
-from atst.domain.workspaces import Workspaces
+from atst.domain.portfolios import Portfolios
 from atst.models.request_revision import RequestRevision
 from atst.models.request_status_event import RequestStatusEvent, RequestStatus
 from atst.models.request_review import RequestReview
@@ -99,25 +99,25 @@ class Requests(object):
         return RequestsQuery.add_and_commit(request)
 
     @classmethod
-    def approve_and_create_workspace(cls, request):
+    def approve_and_create_portfolio(cls, request):
         approved_request = Requests.set_status(request, RequestStatus.APPROVED)
-        workspace = Workspaces.create_from_request(approved_request)
+        portfolio = Portfolios.create_from_request(approved_request)
 
         RequestsQuery.add_and_commit(approved_request)
 
-        return workspace
+        return portfolio
 
     @classmethod
-    def auto_approve_and_create_workspace(
+    def auto_approve_and_create_portfolio(
         cls,
         request,
         reason="Financial verification information found in Electronic Document Access API",
     ):
-        workspace = Requests.approve_and_create_workspace(request)
+        portfolio = Requests.approve_and_create_portfolio(request)
         Requests._add_review(
             user=None, request=request, review_data={"comment": reason}
         )
-        return workspace
+        return portfolio
 
     @classmethod
     def set_status(cls, request, status: RequestStatus):
@@ -214,7 +214,7 @@ class Requests(object):
         if request.status == RequestStatus.PENDING_CCPO_ACCEPTANCE:
             Requests.set_status(request, RequestStatus.PENDING_FINANCIAL_VERIFICATION)
         elif request.status == RequestStatus.PENDING_CCPO_APPROVAL:
-            Requests.approve_and_create_workspace(request)
+            Requests.approve_and_create_portfolio(request)
 
         return Requests._add_review(user=user, request=request, review_data=review_data)
 

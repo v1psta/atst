@@ -113,9 +113,9 @@ class JEDIRequestFlow(object):
                 "form": request_forms.InformationAboutYouForm,
             },
             {
-                "title": "Workspace Owner",
+                "title": "Portfolio Owner",
                 "section": "primary_poc",
-                "form": request_forms.WorkspaceOwnerForm,
+                "form": request_forms.PortfolioOwnerForm,
             },
             {
                 "title": "Review & Submit",

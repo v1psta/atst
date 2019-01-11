@@ -60,10 +60,10 @@ class Environments(object):
         return env
 
     @classmethod
-    def update_environment_roles(cls, user, workspace, workspace_role, ids_and_roles):
-        Authorization.check_workspace_permission(
+    def update_environment_roles(cls, user, portfolio, portfolio_role, ids_and_roles):
+        Authorization.check_portfolio_permission(
             user,
-            workspace,
+            portfolio,
             Permissions.ADD_AND_ASSIGN_CSP_ROLES,
             "assign environment roles",
         )
@@ -75,13 +75,13 @@ class Environments(object):
 
             if new_role is None:
                 role_deleted = EnvironmentRoles.delete(
-                    workspace_role.user.id, environment.id
+                    portfolio_role.user.id, environment.id
                 )
                 if role_deleted:
                     updated = True
             else:
                 env_role = EnvironmentRoles.get(
-                    workspace_role.user.id, id_and_role["id"]
+                    portfolio_role.user.id, id_and_role["id"]
                 )
                 if env_role and env_role.role != new_role:
                     env_role.role = new_role
@@ -89,7 +89,7 @@ class Environments(object):
                     db.session.add(env_role)
                 elif not env_role:
                     env_role = EnvironmentRoles.create(
-                        user=workspace_role.user, environment=environment, role=new_role
+                        user=portfolio_role.user, environment=environment, role=new_role
                     )
                     updated = True
                     db.session.add(env_role)
@@ -101,9 +101,9 @@ class Environments(object):
 
     @classmethod
     def revoke_access(cls, user, environment, target_user):
-        Authorization.check_workspace_permission(
+        Authorization.check_portfolio_permission(
             user,
-            environment.workspace,
+            environment.portfolio,
             Permissions.REMOVE_CSP_ROLES,
             "revoke environment access",
         )

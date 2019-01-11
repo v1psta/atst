@@ -13,7 +13,7 @@ class AuditableMixin(object):
     @staticmethod
     def create_audit_event(connection, resource, action):
         user_id = getattr_path(g, "current_user.id")
-        workspace_id = resource.workspace_id
+        portfolio_id = resource.workspace_id
         request_id = resource.request_id
         resource_type = resource.resource_type
         display_name = resource.displayname
@@ -23,7 +23,7 @@ class AuditableMixin(object):
 
         audit_event = AuditEvent(
             user_id=user_id,
-            workspace_id=workspace_id,
+            workspace_id=portfolio_id,
             request_id=request_id,
             resource_type=resource_type,
             resource_id=resource.id,

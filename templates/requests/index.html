@@ -50,9 +50,9 @@
 {% if not requests %}
 
   {{ EmptyState(
-    ("requests.index.no_workspaces_label" | translate),
-    sub_message=("requests.index.no_workspaces_sub_message" | translate),
-    action_label=("requests.index.no_workspaces_action_label" | translate),
+    ("requests.index.no_portfolios_label" | translate),
+    sub_message=("requests.index.no_portfolios_sub_message" | translate),
+    action_label=("requests.index.no_portfolios_action_label" | translate),
     action_href=url_for('requests.requests_form_new', screen=1),
     icon='document'
   ) }}
@@ -146,7 +146,7 @@
             {% endif %}
             <td>!{ dollars(r.annual_usage) }</td>
             <td>
-              <a v-if="r.is_approved" class="icon-link icon-link--large" :href="r.workspace_link">
+              <a v-if="r.is_approved" class="icon-link icon-link--large" :href="r.portfolio_link">
                 !{ r.status }
               </a>
               <span v-else>

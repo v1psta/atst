@@ -25,10 +25,10 @@ class NewMemberForm(FlaskForm):
         translate("forms.new_member.dod_id_label"),
         validators=[Required(), Length(min=10), IsNumber()],
     )
-    workspace_role = SelectField(
-        translate("forms.new_member.workspace_role_label"),
+    portfolio_role = SelectField(
+        translate("forms.new_member.portfolio_role_label"),
         choices=WORKSPACE_ROLES,
         validators=[Required()],
         default="",
-        description=translate("forms.new_member.workspace_role_description"),
+        description=translate("forms.new_member.portfolio_role_description"),
     )

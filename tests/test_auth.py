@@ -97,9 +97,9 @@ def test_protected_routes_redirect_to_login(client, app):
 
 
 def test_get_protected_route_encodes_redirect(client):
-    workspace_index = url_for("workspaces.workspaces")
-    response = client.get(workspace_index)
-    redirect = url_for("atst.root", next=workspace_index)
+    portfolio_index = url_for("portfolios.portfolios")
+    response = client.get(portfolio_index)
+    redirect = url_for("atst.root", next=portfolio_index)
     assert redirect in response.headers["Location"]
 
 

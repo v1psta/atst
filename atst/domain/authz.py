@@ -1,24 +1,24 @@
-from atst.domain.workspace_roles import WorkspaceRoles
+from atst.domain.portfolio_roles import PortfolioRoles
 from atst.models.permissions import Permissions
 from atst.domain.exceptions import UnauthorizedError
 
 
 class Authorization(object):
     @classmethod
-    def has_workspace_permission(cls, user, workspace, permission):
-        return permission in WorkspaceRoles.workspace_role_permissions(workspace, user)
+    def has_portfolio_permission(cls, user, portfolio, permission):
+        return permission in PortfolioRoles.portfolio_role_permissions(portfolio, user)
 
     @classmethod
     def has_atat_permission(cls, user, permission):
         return permission in user.atat_role.permissions
 
     @classmethod
-    def is_in_workspace(cls, user, workspace):
-        return user in workspace.users
+    def is_in_portfolio(cls, user, portfolio):
+        return user in portfolio.users
 
     @classmethod
-    def check_workspace_permission(cls, user, workspace, permission, message):
-        if not Authorization.has_workspace_permission(user, workspace, permission):
+    def check_portfolio_permission(cls, user, portfolio, permission, message):
+        if not Authorization.has_portfolio_permission(user, portfolio, permission):
             raise UnauthorizedError(user, message)
 
     @classmethod
@@ -39,8 +39,8 @@ class Authorization(object):
         if Authorization._check_is_task_order_officer(task_order, user):
             return True
 
-        Authorization.check_workspace_permission(
-            user, task_order.workspace, permission, message
+        Authorization.check_portfolio_permission(
+            user, task_order.portfolio, permission, message
         )
 
     @classmethod

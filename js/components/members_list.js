@@ -84,7 +84,7 @@ export default {
         sortFunc: alphabeticalSort
       },
       {
-        displayName: 'Workspace Role',
+        displayName: 'Portfolio Role',
         attr: 'role',
         sortFunc: alphabeticalSort,
       },

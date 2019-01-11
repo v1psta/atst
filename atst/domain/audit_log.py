@@ -15,13 +15,13 @@ class AuditEventQuery(Query):
         return cls.paginate(query, pagination_opts)
 
     @classmethod
-    def get_ws_events(cls, workspace_id, pagination_opts):
+    def get_ws_events(cls, portfolio_id, pagination_opts):
         query = (
             db.session.query(cls.model)
             .filter(
                 or_(
-                    cls.model.workspace_id == workspace_id,
-                    cls.model.resource_id == workspace_id,
+                    cls.model.portfolio_id == portfolio_id,
+                    cls.model.resource_id == portfolio_id,
                 )
             )
             .order_by(cls.model.time_created.desc())
@@ -31,8 +31,8 @@ class AuditEventQuery(Query):
 
 class AuditLog(object):
     @classmethod
-    def log_system_event(cls, resource, action, workspace=None):
-        return cls._log(resource=resource, action=action, workspace=workspace)
+    def log_system_event(cls, resource, action, portfolio=None):
+        return cls._log(resource=resource, action=action, portfolio=portfolio)
 
     @classmethod
     def get_all_events(cls, user, pagination_opts=None):
@@ -42,14 +42,14 @@ class AuditLog(object):
         return AuditEventQuery.get_all(pagination_opts)
 
     @classmethod
-    def get_workspace_events(cls, user, workspace, pagination_opts=None):
-        Authorization.check_workspace_permission(
+    def get_portfolio_events(cls, user, portfolio, pagination_opts=None):
+        Authorization.check_portfolio_permission(
             user,
-            workspace,
+            portfolio,
             Permissions.VIEW_WORKSPACE_AUDIT_LOG,
-            "view workspace audit log",
+            "view portfolio audit log",
         )
-        return AuditEventQuery.get_ws_events(workspace.id, pagination_opts)
+        return AuditEventQuery.get_ws_events(portfolio.id, pagination_opts)
 
     @classmethod
     def get_by_resource(cls, resource_id):
@@ -65,14 +65,14 @@ class AuditLog(object):
         return type(resource).__name__.lower()
 
     @classmethod
-    def _log(cls, user=None, workspace=None, resource=None, action=None):
+    def _log(cls, user=None, portfolio=None, resource=None, action=None):
         resource_id = resource.id if resource else None
         resource_type = cls._resource_type(resource) if resource else None
-        workspace_id = workspace.id if workspace else None
+        portfolio_id = portfolio.id if portfolio else None
 
         audit_event = AuditEventQuery.create(
             user=user,
-            workspace_id=workspace_id,
+            portfolio_id=portfolio_id,
             resource_id=resource_id,
             resource_type=resource_type,
             action=action,

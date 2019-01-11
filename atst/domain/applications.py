@@ -10,9 +10,9 @@ from atst.models.environment_role import EnvironmentRole
 
 class Applications(object):
     @classmethod
-    def create(cls, user, workspace, name, description, environment_names):
+    def create(cls, user, portfolio, name, description, environment_names):
         application = Application(
-            workspace=workspace, name=name, description=description
+            portfolio=portfolio, name=name, description=description
         )
         db.session.add(application)
 
@@ -22,13 +22,13 @@ class Applications(object):
         return application
 
     @classmethod
-    def get(cls, user, workspace, application_id):
+    def get(cls, user, portfolio, application_id):
         # TODO: this should check permission for this particular application
-        Authorization.check_workspace_permission(
+        Authorization.check_portfolio_permission(
             user,
-            workspace,
+            portfolio,
             Permissions.VIEW_APPLICATION_IN_WORKSPACE,
-            "view application in workspace",
+            "view application in portfolio",
         )
 
         try:
@@ -41,28 +41,28 @@ class Applications(object):
         return application
 
     @classmethod
-    def for_user(self, user, workspace):
+    def for_user(self, user, portfolio):
         return (
             db.session.query(Application)
             .join(Environment)
             .join(EnvironmentRole)
-            .filter(Application.workspace_id == workspace.id)
+            .filter(Application.workspace_id == portfolio.id)
             .filter(EnvironmentRole.user_id == user.id)
             .all()
         )
 
     @classmethod
-    def get_all(cls, user, workspace_role, workspace):
-        Authorization.check_workspace_permission(
+    def get_all(cls, user, portfolio_role, portfolio):
+        Authorization.check_portfolio_permission(
             user,
-            workspace,
+            portfolio,
             Permissions.VIEW_APPLICATION_IN_WORKSPACE,
-            "view application in workspace",
+            "view application in portfolio",
         )
 
         try:
             applications = (
-                db.session.query(Application).filter_by(workspace_id=workspace.id).all()
+                db.session.query(Application).filter_by(portfolio_id=portfolio.id).all()
             )
         except NoResultFound:
             raise NotFoundError("applications")
@@ -70,7 +70,7 @@ class Applications(object):
         return applications
 
     @classmethod
-    def update(cls, user, workspace, application, new_data):
+    def update(cls, user, portfolio, application, new_data):
         if "name" in new_data:
             application.name = new_data["name"]
         if "description" in new_data:

@@ -6,7 +6,7 @@ export default {
 
   props: {
     applications: Object,
-    workspace: Object,
+    portfolio: Object,
     environments: Object,
     currentMonthIndex: String,
     prevMonthIndex: String,

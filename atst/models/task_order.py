@@ -25,7 +25,7 @@ class TaskOrder(Base, mixins.TimestampsMixin):
     id = types.Id()
 
     workspace_id = Column(ForeignKey("workspaces.id"))
-    workspace = relationship("Workspace")
+    portfolio = relationship("Portfolio")
 
     user_id = Column(ForeignKey("users.id"))
     creator = relationship("User", foreign_keys="TaskOrder.user_id")
@@ -92,7 +92,7 @@ class TaskOrder(Base, mixins.TimestampsMixin):
 
     @property
     def portfolio_name(self):
-        return self.workspace.name
+        return self.portfolio.name
 
     @property
     def is_pending(self):

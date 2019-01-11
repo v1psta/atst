@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div v-cloak class='col'>
+  <table>
+    <thead>
+      <tr>
+        <th>Portfolio Name</th>
+        <th>Task Order</th>
+        <th>Users</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for portfolio in portfolios %}
+     <tr>
+        <td>
+          <a class='icon-link icon-link--large' href="/portfolios/{{ portfolio.id }}/applications">{{ portfolio.name }}</a><br>
+        </td>
+        <td>
+          #{{ portfolio.legacy_task_order.number }}
+        </td>
+        <td>
+          <span class="label">{{ portfolio.user_count }}</span><span class='h6'>Users</span>
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
+

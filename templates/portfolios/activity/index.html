@@ -1,0 +1,9 @@
+{% extends "portfolios/base.html" %}
+{% from "components/pagination.html" import Pagination %}
+
+{% block portfolio_content %}
+  <div v-cloak>
+    {% include "fragments/audit_events_log.html" %}
+    {{ Pagination(audit_events, 'portfolios.portfolio_activity', portfolio_id=portfolio_id) }}
+  </div>
+{% endblock %}

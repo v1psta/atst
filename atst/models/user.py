@@ -14,7 +14,7 @@ class User(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     atat_role_id = Column(UUID(as_uuid=True), ForeignKey("roles.id"))
 
     atat_role = relationship("Role")
-    workspace_roles = relationship("WorkspaceRole", backref="user")
+    portfolio_roles = relationship("PortfolioRole", backref="user")
 
     email = Column(String, unique=True)
     dod_id = Column(String, unique=True, nullable=False)
@@ -65,22 +65,22 @@ class User(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
         return "{} {}".format(self.first_name, self.last_name)
 
     @property
-    def has_workspaces(self):
+    def has_portfolios(self):
         return (
             Permissions.VIEW_WORKSPACE in self.atat_role.permissions
-        ) or self.workspace_roles
+        ) or self.portfolio_roles
 
     @property
     def displayname(self):
         return self.full_name
 
     def __repr__(self):
-        return "<User(name='{}', dod_id='{}', email='{}', role='{}', has_workspaces='{}', id='{}')>".format(
+        return "<User(name='{}', dod_id='{}', email='{}', role='{}', has_portfolios='{}', id='{}')>".format(
             self.full_name,
             self.dod_id,
             self.email,
             self.atat_role_name,
-            self.has_workspaces,
+            self.has_portfolios,
             self.id,
         )
 

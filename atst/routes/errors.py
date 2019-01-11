@@ -8,7 +8,7 @@ from atst.domain.invitations import (
     ExpiredError as InvitationExpiredError,
     WrongUserError as InvitationWrongUserError,
 )
-from atst.domain.workspaces import WorkspaceError
+from atst.domain.portfolios import PortfolioError
 from atst.utils.flash import formatted_flash as flash
 
 
@@ -26,7 +26,7 @@ def make_error_pages(app):
     @app.errorhandler(werkzeug_exceptions.NotFound)
     @app.errorhandler(exceptions.NotFoundError)
     @app.errorhandler(exceptions.UnauthorizedError)
-    @app.errorhandler(WorkspaceError)
+    @app.errorhandler(PortfolioError)
     # pylint: disable=unused-variable
     def not_found(e):
         return handle_error(e)

@@ -34,7 +34,7 @@ class Request(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
         "RequestStatusEvent", backref="request", order_by="RequestStatusEvent.sequence"
     )
 
-    workspace = relationship("Workspace", uselist=False, backref="request")
+    portfolio = relationship("Portfolio", uselist=False, backref="request")
 
     user_id = Column(ForeignKey("users.id"), nullable=False)
     creator = relationship("User", backref="owned_requests")

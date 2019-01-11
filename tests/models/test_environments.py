@@ -1,5 +1,5 @@
 from atst.domain.environments import Environments
-from atst.domain.workspaces import Workspaces
+from atst.domain.portfolios import Portfolios
 from atst.domain.applications import Applications
 from tests.factories import RequestFactory, UserFactory
 
@@ -8,10 +8,10 @@ def test_add_user_to_environment():
     owner = UserFactory.create()
     developer = UserFactory.from_atat_role("developer")
 
-    workspace = Workspaces.create_from_request(RequestFactory.create(creator=owner))
+    portfolio = Portfolios.create_from_request(RequestFactory.create(creator=owner))
     application = Applications.create(
         owner,
-        workspace,
+        portfolio,
         "my test application",
         "It's mine.",
         ["dev", "staging", "prod"],

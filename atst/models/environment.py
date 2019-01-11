@@ -30,17 +30,17 @@ class Environment(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
         return self.name
 
     @property
-    def workspace(self):
-        return self.application.workspace
+    def portfolio(self):
+        return self.application.portfolio
 
-    def auditable_workspace_id(self):
+    def auditable_portfolio_id(self):
         return self.application.workspace_id
 
     def __repr__(self):
-        return "<Environment(name='{}', num_users='{}', application='{}', workspace='{}', id='{}')>".format(
+        return "<Environment(name='{}', num_users='{}', application='{}', portfolio='{}', id='{}')>".format(
             self.name,
             self.num_users,
             self.application.name,
-            self.application.workspace.name,
+            self.application.portfolio.name,
             self.id,
         )

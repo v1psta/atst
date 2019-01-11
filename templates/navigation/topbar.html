@@ -2,7 +2,7 @@
 
 <header class="topbar">
   <nav class="topbar__navigation">
-    {% if not workspace %}
+    {% if not portfolio %}
       <a href="{{ url_for('atst.home') }}" class="topbar__link topbar__link--home">
         {{ Icon('shield', classes='topbar__link-icon') }}
         <span class="topbar__link-label">
@@ -15,31 +15,31 @@
       </a>
     {% endif %}
 
-    <div class="topbar__context {% if workspace %}topbar__context--workspace{% endif %}">
-      {% if workspace %}
+    <div class="topbar__context {% if portfolio %}topbar__context--portfolio{% endif %}">
+      {% if portfolio %}
 
-          <div is='toggler' class='topbar__workspace-menu'>
+          <div is='toggler' class='topbar__portfolio-menu'>
             <template slot-scope='props'>
               <button
                 v-on:click='props.toggle'
-                class="topbar__link topbar__workspace-menu__toggle"
-                v-bind:class="{ 'topbar__workspace-menu__toggle--open': props.isVisible }">
-                <span class="topbar__link-label">{{ "navigation.topbar.named_workspace" | translate({ "workspace": workspace.name }) }}</span>
+                class="topbar__link topbar__portfolio-menu__toggle"
+                v-bind:class="{ 'topbar__portfolio-menu__toggle--open': props.isVisible }">
+                <span class="topbar__link-label">{{ "navigation.topbar.named_portfolio" | translate({ "portfolio": portfolio.name }) }}</span>
                 <template v-if='props.isVisible'>{{ Icon('caret_up', classes='topbar__link-icon') }}</template>
                 <template v-else>{{ Icon('caret_down', classes='topbar__link-icon') }}</template>
               </button>
 
-              <div v-show='props.isVisible' class='topbar__workspace-menu__panel menu'>
+              <div v-show='props.isVisible' class='topbar__portfolio-menu__panel menu'>
                 <h2 class='menu__heading'>
-                  {{ "navigation.topbar.other_active_workspaces" | translate }}
+                  {{ "navigation.topbar.other_active_portfolios" | translate }}
                 </h2>
-                {% if workspaces %}
+                {% if portfolios %}
 
                   <ul class='menu__list'>
-                    {% for other_workspace in workspaces %}
+                    {% for other_portfolio in portfolios %}
                       <li class='menu__list__item'>
-                        <a href="{{ url_for('workspaces.show_workspace', workspace_id=other_workspace.id)}}">
-                          {{ other_workspace.name }}
+                        <a href="{{ url_for('portfolios.show_portfolio', portfolio_id=other_portfolio.id)}}">
+                          {{ other_portfolio.name }}
                           {{ Icon('caret_right', classes='topbar__link-icon') }}
                         </a>
                       </li>
@@ -49,7 +49,7 @@
                 {% else %}
 
                   <p class='menu__message'>
-                    {{ "navigation.topbar.no_other_active_workspaces" | translate }}
+                    {{ "navigation.topbar.no_other_active_portfolios" | translate }}
                   </p>
 
                 {% endif %}

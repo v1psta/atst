@@ -59,11 +59,11 @@
       align-items: stretch;
       justify-content: flex-end;
 
-      .topbar__workspace-menu {
+      .topbar__portfolio-menu {
         margin-right: auto;
         position: relative;
 
-        .topbar__workspace-menu__toggle {
+        .topbar__portfolio-menu__toggle {
           margin: 0;
           border-radius: 0;
 
@@ -89,12 +89,12 @@
           }
         }
 
-        .topbar__workspace-menu__panel {
+        .topbar__portfolio-menu__panel {
           position: absolute;
         }
       }
 
-      &.topbar__context--workspace {
+      &.topbar__context--portfolio {
         background-color: $color-primary;
         -ms-flex-pack: start;
 

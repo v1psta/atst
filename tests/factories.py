@@ -17,9 +17,9 @@ from atst.models.legacy_task_order import LegacyTaskOrder, Source, FundingType
 from atst.models.task_order import TaskOrder
 from atst.models.user import User
 from atst.models.role import Role
-from atst.models.workspace import Workspace
+from atst.models.portfolio import Portfolio
 from atst.domain.roles import Roles, WORKSPACE_ROLES
-from atst.models.workspace_role import WorkspaceRole, Status as WorkspaceRoleStatus
+from atst.models.portfolio_role import PortfolioRole, Status as PortfolioRoleStatus
 from atst.models.environment_role import EnvironmentRole
 from atst.models.invitation import Invitation, Status as InvitationStatus
 from atst.domain.invitations import Invitations
@@ -54,7 +54,7 @@ def random_future_date(year_min=1, year_max=5):
     )
 
 
-def random_workspace_role():
+def random_portfolio_role():
     choice = random.choice(WORKSPACE_ROLES)
     return Roles.get(choice["name"])
 
@@ -250,9 +250,9 @@ class LegacyTaskOrderFactory(Base):
     clin_2003 = random.randrange(100, 100_000)
 
 
-class WorkspaceFactory(Base):
+class PortfolioFactory(Base):
     class Meta:
-        model = Workspace
+        model = Portfolio
 
     request = factory.SubFactory(RequestFactory, with_task_order=True)
     # name it the same as the request ID by default
@@ -264,40 +264,40 @@ class WorkspaceFactory(Base):
         owner = kwargs.pop("owner", UserFactory.create())
         members = kwargs.pop("members", [])
 
-        workspace = super()._create(model_class, *args, **kwargs)
+        portfolio = super()._create(model_class, *args, **kwargs)
 
         applications = [
-            ApplicationFactory.create(workspace=workspace, **p)
+            ApplicationFactory.create(portfolio=portfolio, **p)
             for p in with_applications
         ]
 
-        workspace.request.creator = owner
-        WorkspaceRoleFactory.create(
-            workspace=workspace,
+        portfolio.request.creator = owner
+        PortfolioRoleFactory.create(
+            portfolio=portfolio,
             role=Roles.get("owner"),
             user=owner,
-            status=WorkspaceRoleStatus.ACTIVE,
+            status=PortfolioRoleStatus.ACTIVE,
         )
 
         for member in members:
             user = member.get("user", UserFactory.create())
             role_name = member["role_name"]
-            WorkspaceRoleFactory.create(
-                workspace=workspace,
+            PortfolioRoleFactory.create(
+                portfolio=portfolio,
                 role=Roles.get(role_name),
                 user=user,
-                status=WorkspaceRoleStatus.ACTIVE,
+                status=PortfolioRoleStatus.ACTIVE,
             )
 
-        workspace.applications = applications
-        return workspace
+        portfolio.applications = applications
+        return portfolio
 
 
 class ApplicationFactory(Base):
     class Meta:
         model = Application
 
-    workspace = factory.SubFactory(WorkspaceFactory)
+    portfolio = factory.SubFactory(PortfolioFactory)
     name = factory.Faker("name")
     description = "A test application"
 
@@ -334,14 +334,14 @@ class EnvironmentFactory(Base):
         return environment
 
 
-class WorkspaceRoleFactory(Base):
+class PortfolioRoleFactory(Base):
     class Meta:
-        model = WorkspaceRole
+        model = PortfolioRole
 
-    workspace = factory.SubFactory(WorkspaceFactory)
-    role = factory.LazyFunction(random_workspace_role)
+    portfolio = factory.SubFactory(PortfolioFactory)
+    role = factory.LazyFunction(random_portfolio_role)
     user = factory.SubFactory(UserFactory)
-    status = WorkspaceRoleStatus.PENDING
+    status = PortfolioRoleStatus.PENDING
 
 
 class EnvironmentRoleFactory(Base):
@@ -366,7 +366,7 @@ class TaskOrderFactory(Base):
     class Meta:
         model = TaskOrder
 
-    workspace = factory.SubFactory(WorkspaceFactory)
+    portfolio = factory.SubFactory(PortfolioFactory)
 
     clin_01 = factory.LazyFunction(lambda *args: random.randrange(100, 100_000))
     clin_03 = factory.LazyFunction(lambda *args: random.randrange(100, 100_000))

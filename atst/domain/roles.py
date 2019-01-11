@@ -57,7 +57,7 @@ ATAT_ROLES = [
 WORKSPACE_ROLES = [
     {
         "name": "owner",
-        "display_name": "Workspace Owner",
+        "display_name": "Portfolio Owner",
         "description": "Adds, edits, deactivates access to all applications, environments, and members. Views budget reports. Initiates and edits JEDI Cloud requests.",
         "permissions": [
             Permissions.REQUEST_JEDI_WORKSPACE,
@@ -131,7 +131,7 @@ WORKSPACE_ROLES = [
     {
         "name": "billing_auditor",
         "display_name": "Billing Auditor",
-        "description": "Views only the applications and environments they are granted access to. Can also view budgets and reports associated with the workspace.",
+        "description": "Views only the applications and environments they are granted access to. Can also view budgets and reports associated with the portfolio.",
         "permissions": [
             Permissions.VIEW_USAGE_REPORT,
             Permissions.VIEW_USAGE_DOLLARS,

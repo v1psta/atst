@@ -12,7 +12,7 @@ from atst.database import db
 from atst.assets import environment as assets_environment
 from atst.filters import register_filters
 from atst.routes import bp
-from atst.routes.workspaces import workspaces_bp as workspace_routes
+from atst.routes.portfolios import portfolios_bp as portfolio_routes
 from atst.routes.requests import requests_bp
 from atst.routes.task_orders import task_orders_bp
 from atst.routes.dev import bp as dev_routes
@@ -63,7 +63,7 @@ def make_app(config):
 
     make_error_pages(app)
     app.register_blueprint(bp)
-    app.register_blueprint(workspace_routes)
+    app.register_blueprint(portfolio_routes)
     app.register_blueprint(task_orders_bp)
     app.register_blueprint(user_routes)
     app.register_blueprint(requests_bp)

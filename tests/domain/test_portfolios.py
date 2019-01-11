@@ -1,0 +1,358 @@
+import pytest
+from uuid import uuid4
+
+from atst.domain.exceptions import NotFoundError, UnauthorizedError
+from atst.domain.portfolios import Portfolios, PortfolioError
+from atst.domain.portfolio_roles import PortfolioRoles
+from atst.domain.applications import Applications
+from atst.domain.environments import Environments
+from atst.models.portfolio_role import Status as PortfolioRoleStatus
+
+from tests.factories import (
+    RequestFactory,
+    UserFactory,
+    PortfolioRoleFactory,
+    PortfolioFactory,
+)
+
+
+@pytest.fixture(scope="function")
+def portfolio_owner():
+    return UserFactory.create()
+
+
+@pytest.fixture(scope="function")
+def request_(portfolio_owner):
+    return RequestFactory.create(creator=portfolio_owner)
+
+
+@pytest.fixture(scope="function")
+def portfolio(request_):
+    portfolio = Portfolios.create_from_request(request_)
+    return portfolio
+
+
+def test_can_create_portfolio(request_):
+    portfolio = Portfolios.create_from_request(request_, name="frugal-whale")
+    assert portfolio.name == "frugal-whale"
+
+
+def test_request_is_associated_with_portfolio(portfolio, request_):
+    assert portfolio.request == request_
+
+
+def test_default_portfolio_name_is_request_name(portfolio, request_):
+    assert portfolio.name == str(request_.displayname)
+
+
+def test_get_nonexistent_portfolio_raises():
+    with pytest.raises(NotFoundError):
+        Portfolios.get(UserFactory.build(), uuid4())
+
+
+def test_can_get_portfolio_by_request(portfolio):
+    found = Portfolios.get_by_request(portfolio.request)
+    assert portfolio == found
+
+
+def test_creating_portfolio_adds_owner(portfolio, portfolio_owner):
+    assert portfolio.roles[0].user == portfolio_owner
+
+
+def test_portfolio_has_timestamps(portfolio):
+    assert portfolio.time_created == portfolio.time_updated
+
+
+def test_portfolios_get_ensures_user_is_in_portfolio(portfolio, portfolio_owner):
+    outside_user = UserFactory.create()
+    with pytest.raises(UnauthorizedError):
+        Portfolios.get(outside_user, portfolio.id)
+
+
+def test_get_for_update_applications_allows_owner(portfolio, portfolio_owner):
+    Portfolios.get_for_update_applications(portfolio_owner, portfolio.id)
+
+
+def test_get_for_update_applications_blocks_developer(portfolio):
+    developer = UserFactory.create()
+    PortfolioRoles.add(developer, portfolio.id, "developer")
+
+    with pytest.raises(UnauthorizedError):
+        Portfolios.get_for_update_applications(developer, portfolio.id)
+
+
+def test_can_create_portfolio_role(portfolio, portfolio_owner):
+    user_data = {
+        "first_name": "New",
+        "last_name": "User",
+        "email": "new.user@mail.com",
+        "portfolio_role": "developer",
+        "dod_id": "1234567890",
+    }
+
+    new_member = Portfolios.create_member(portfolio_owner, portfolio, user_data)
+    assert new_member.portfolio == portfolio
+    assert new_member.user.provisional
+
+
+def test_can_add_existing_user_to_portfolio(portfolio, portfolio_owner):
+    user = UserFactory.create()
+    user_data = {
+        "first_name": "New",
+        "last_name": "User",
+        "email": "new.user@mail.com",
+        "portfolio_role": "developer",
+        "dod_id": user.dod_id,
+    }
+
+    new_member = Portfolios.create_member(portfolio_owner, portfolio, user_data)
+    assert new_member.portfolio == portfolio
+    assert new_member.user.email == user.email
+    assert not new_member.user.provisional
+
+
+def test_need_permission_to_create_portfolio_role(portfolio, portfolio_owner):
+    random_user = UserFactory.create()
+
+    user_data = {
+        "first_name": "New",
+        "last_name": "User",
+        "email": "new.user@mail.com",
+        "portfolio_role": "developer",
+        "dod_id": "1234567890",
+    }
+
+    with pytest.raises(UnauthorizedError):
+        Portfolios.create_member(random_user, portfolio, user_data)
+
+
+def test_update_portfolio_role_role(portfolio, portfolio_owner):
+    user_data = {
+        "first_name": "New",
+        "last_name": "User",
+        "email": "new.user@mail.com",
+        "portfolio_role": "developer",
+        "dod_id": "1234567890",
+    }
+    PortfolioRoleFactory._meta.sqlalchemy_session_persistence = "flush"
+    member = PortfolioRoleFactory.create(portfolio=portfolio)
+    role_name = "admin"
+
+    updated_member = Portfolios.update_member(
+        portfolio_owner, portfolio, member, role_name
+    )
+    assert updated_member.portfolio == portfolio
+    assert updated_member.role_name == role_name
+
+
+def test_need_permission_to_update_portfolio_role_role(portfolio, portfolio_owner):
+    random_user = UserFactory.create()
+    user_data = {
+        "first_name": "New",
+        "last_name": "User",
+        "email": "new.user@mail.com",
+        "portfolio_role": "developer",
+        "dod_id": "1234567890",
+    }
+    member = Portfolios.create_member(portfolio_owner, portfolio, user_data)
+    role_name = "developer"
+
+    with pytest.raises(UnauthorizedError):
+        Portfolios.update_member(random_user, portfolio, member, role_name)
+
+
+def test_owner_can_view_portfolio_members(portfolio, portfolio_owner):
+    portfolio_owner = UserFactory.create()
+    portfolio = Portfolios.create_from_request(
+        RequestFactory.create(creator=portfolio_owner)
+    )
+    portfolio = Portfolios.get_with_members(portfolio_owner, portfolio.id)
+
+    assert portfolio
+
+
+def test_ccpo_can_view_portfolio_members(portfolio, portfolio_owner):
+    ccpo = UserFactory.from_atat_role("ccpo")
+    assert Portfolios.get_with_members(ccpo, portfolio.id)
+
+
+def test_random_user_cannot_view_portfolio_members(portfolio):
+    developer = UserFactory.from_atat_role("developer")
+
+    with pytest.raises(UnauthorizedError):
+        portfolio = Portfolios.get_with_members(developer, portfolio.id)
+
+
+def test_scoped_portfolio_only_returns_a_users_applications_and_environments(
+    portfolio, portfolio_owner
+):
+    new_application = Applications.create(
+        portfolio_owner,
+        portfolio,
+        "My Application",
+        "My application",
+        ["dev", "staging", "prod"],
+    )
+    Applications.create(
+        portfolio_owner,
+        portfolio,
+        "My Application 2",
+        "My application 2",
+        ["dev", "staging", "prod"],
+    )
+    developer = UserFactory.from_atat_role("developer")
+    dev_environment = Environments.add_member(
+        new_application.environments[0], developer, "developer"
+    )
+
+    scoped_portfolio = Portfolios.get(developer, portfolio.id)
+
+    # Should only return the application and environment in which the user has an
+    # environment role.
+    assert scoped_portfolio.applications == [new_application]
+    assert scoped_portfolio.applications[0].environments == [dev_environment]
+
+
+def test_scoped_portfolio_returns_all_applications_for_portfolio_admin(
+    portfolio, portfolio_owner
+):
+    for _ in range(5):
+        Applications.create(
+            portfolio_owner,
+            portfolio,
+            "My Application",
+            "My application",
+            ["dev", "staging", "prod"],
+        )
+
+    admin = UserFactory.from_atat_role("default")
+    Portfolios._create_portfolio_role(
+        admin, portfolio, "admin", status=PortfolioRoleStatus.ACTIVE
+    )
+    scoped_portfolio = Portfolios.get(admin, portfolio.id)
+
+    assert len(scoped_portfolio.applications) == 5
+    assert len(scoped_portfolio.applications[0].environments) == 3
+
+
+def test_scoped_portfolio_returns_all_applications_for_portfolio_owner(
+    portfolio, portfolio_owner
+):
+    for _ in range(5):
+        Applications.create(
+            portfolio_owner,
+            portfolio,
+            "My Application",
+            "My application",
+            ["dev", "staging", "prod"],
+        )
+
+    scoped_portfolio = Portfolios.get(portfolio_owner, portfolio.id)
+
+    assert len(scoped_portfolio.applications) == 5
+    assert len(scoped_portfolio.applications[0].environments) == 3
+
+
+def test_for_user_returns_active_portfolios_for_user(portfolio, portfolio_owner):
+    bob = UserFactory.from_atat_role("default")
+    PortfolioRoleFactory.create(
+        user=bob, portfolio=portfolio, status=PortfolioRoleStatus.ACTIVE
+    )
+    Portfolios.create_from_request(RequestFactory.create())
+
+    bobs_portfolios = Portfolios.for_user(bob)
+
+    assert len(bobs_portfolios) == 1
+
+
+def test_for_user_does_not_return_inactive_portfolios(portfolio, portfolio_owner):
+    bob = UserFactory.from_atat_role("default")
+    Portfolios.add_member(portfolio, bob, "developer")
+    Portfolios.create_from_request(RequestFactory.create())
+    bobs_portfolios = Portfolios.for_user(bob)
+
+    assert len(bobs_portfolios) == 0
+
+
+def test_for_user_returns_all_portfolios_for_ccpo(portfolio, portfolio_owner):
+    sam = UserFactory.from_atat_role("ccpo")
+    Portfolios.create_from_request(RequestFactory.create())
+
+    sams_portfolios = Portfolios.for_user(sam)
+    assert len(sams_portfolios) == 2
+
+
+def test_get_for_update_information():
+    portfolio_owner = UserFactory.create()
+    portfolio = Portfolios.create_from_request(
+        RequestFactory.create(creator=portfolio_owner)
+    )
+    owner_ws = Portfolios.get_for_update_information(portfolio_owner, portfolio.id)
+    assert portfolio == owner_ws
+
+    admin = UserFactory.create()
+    Portfolios._create_portfolio_role(
+        admin, portfolio, "admin", status=PortfolioRoleStatus.ACTIVE
+    )
+    admin_ws = Portfolios.get_for_update_information(admin, portfolio.id)
+    assert portfolio == admin_ws
+
+    ccpo = UserFactory.from_atat_role("ccpo")
+    with pytest.raises(UnauthorizedError):
+        Portfolios.get_for_update_information(ccpo, portfolio.id)
+
+
+def test_can_create_portfolios_with_matching_names():
+    portfolio_name = "Great Portfolio"
+    Portfolios.create_from_request(RequestFactory.create(), name=portfolio_name)
+    Portfolios.create_from_request(RequestFactory.create(), name=portfolio_name)
+
+
+def test_able_to_revoke_portfolio_access_for_active_member():
+    portfolio = PortfolioFactory.create()
+    portfolio_role = PortfolioRoleFactory.create(
+        portfolio=portfolio, status=PortfolioRoleStatus.ACTIVE
+    )
+    Portfolios.revoke_access(portfolio.owner, portfolio.id, portfolio_role.id)
+    assert Portfolios.for_user(portfolio_role.user) == []
+
+
+def test_can_revoke_access():
+    portfolio = PortfolioFactory.create()
+    owner_role = portfolio.roles[0]
+    portfolio_role = PortfolioRoleFactory.create(
+        portfolio=portfolio, status=PortfolioRoleStatus.ACTIVE
+    )
+
+    assert Portfolios.can_revoke_access_for(portfolio, portfolio_role)
+    assert not Portfolios.can_revoke_access_for(portfolio, owner_role)
+
+
+def test_unable_to_revoke_owner_portfolio_access():
+    portfolio = PortfolioFactory.create()
+    owner_portfolio_role = portfolio.roles[0]
+
+    with pytest.raises(PortfolioError):
+        Portfolios.revoke_access(portfolio.owner, portfolio.id, owner_portfolio_role.id)
+
+
+def test_disabled_members_dont_show_up(session):
+    portfolio = PortfolioFactory.create()
+    PortfolioRoleFactory.create(portfolio=portfolio, status=PortfolioRoleStatus.ACTIVE)
+    PortfolioRoleFactory.create(
+        portfolio=portfolio, status=PortfolioRoleStatus.DISABLED
+    )
+
+    # should only return portfolio owner and ACTIVE member
+    assert len(portfolio.members) == 2
+
+
+def test_does_not_count_disabled_members(session):
+    portfolio = PortfolioFactory.create()
+    PortfolioRoleFactory.create(portfolio=portfolio, status=PortfolioRoleStatus.ACTIVE)
+    PortfolioRoleFactory.create(portfolio=portfolio)
+    PortfolioRoleFactory.create(
+        portfolio=portfolio, status=PortfolioRoleStatus.DISABLED
+    )
+
+    assert portfolio.user_count == 3

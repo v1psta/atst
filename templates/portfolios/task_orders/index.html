@@ -1,0 +1,30 @@
+{% from "components/empty_state.html" import EmptyState %}
+
+{% extends "portfolios/base.html" %}
+
+{% block portfolio_content %}
+
+{% if not portfolio.task_orders %}
+
+  {{ EmptyState(
+    'This portfolio doesn’t have any task orders yet.',
+    action_label='Add a New Task Order',
+    action_href=url_for('task_orders.new', screen=1, portfolio_id=portfolio.id),
+    icon='cloud',
+  ) }}
+
+{% else %}
+
+  <ul>
+    {% for task_order in portfolio.task_orders %}
+      <li class='block-list__item'>
+        <a href='{{ url_for("portfolios.view_task_order", portfolio_id=portfolio.id, task_order_id=task_order.id)}}'>
+          <span>{{ task_order.start_date }} - {{ task_order.end_date }}</span>
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+
+{% endif %}
+
+{% endblock %}

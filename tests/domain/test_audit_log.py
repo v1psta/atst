@@ -3,11 +3,11 @@ import pytest
 from atst.domain.audit_log import AuditLog
 from atst.domain.exceptions import UnauthorizedError
 from atst.domain.roles import Roles
-from atst.models.workspace_role import Status as WorkspaceRoleStatus
+from atst.models.portfolio_role import Status as PortfolioRoleStatus
 from tests.factories import (
     UserFactory,
-    WorkspaceFactory,
-    WorkspaceRoleFactory,
+    PortfolioFactory,
+    PortfolioRoleFactory,
     ApplicationFactory,
 )
 
@@ -42,69 +42,69 @@ def test_paginate_audit_log(ccpo):
 
 
 def test_ccpo_can_view_ws_audit_log(ccpo):
-    workspace = WorkspaceFactory.create()
-    events = AuditLog.get_workspace_events(ccpo, workspace)
+    portfolio = PortfolioFactory.create()
+    events = AuditLog.get_portfolio_events(ccpo, portfolio)
     assert len(events) > 0
 
 
 def test_ws_admin_can_view_ws_audit_log():
-    workspace = WorkspaceFactory.create()
+    portfolio = PortfolioFactory.create()
     admin = UserFactory.create()
-    WorkspaceRoleFactory.create(
-        workspace=workspace,
+    PortfolioRoleFactory.create(
+        portfolio=portfolio,
         user=admin,
         role=Roles.get("admin"),
-        status=WorkspaceRoleStatus.ACTIVE,
+        status=PortfolioRoleStatus.ACTIVE,
     )
-    events = AuditLog.get_workspace_events(admin, workspace)
+    events = AuditLog.get_portfolio_events(admin, portfolio)
     assert len(events) > 0
 
 
 def test_ws_owner_can_view_ws_audit_log():
-    workspace = WorkspaceFactory.create()
-    events = AuditLog.get_workspace_events(workspace.owner, workspace)
+    portfolio = PortfolioFactory.create()
+    events = AuditLog.get_portfolio_events(portfolio.owner, portfolio)
     assert len(events) > 0
 
 
 def test_other_users_cannot_view_ws_audit_log():
     with pytest.raises(UnauthorizedError):
-        workspace = WorkspaceFactory.create()
+        portfolio = PortfolioFactory.create()
         dev = UserFactory.create()
-        WorkspaceRoleFactory.create(
-            workspace=workspace,
+        PortfolioRoleFactory.create(
+            portfolio=portfolio,
             user=dev,
             role=Roles.get("developer"),
-            status=WorkspaceRoleStatus.ACTIVE,
+            status=PortfolioRoleStatus.ACTIVE,
         )
-        AuditLog.get_workspace_events(dev, workspace)
+        AuditLog.get_portfolio_events(dev, portfolio)
 
 
 def test_paginate_ws_audit_log():
-    workspace = WorkspaceFactory.create()
-    application = ApplicationFactory.create(workspace=workspace)
+    portfolio = PortfolioFactory.create()
+    application = ApplicationFactory.create(portfolio=portfolio)
     for _ in range(100):
         AuditLog.log_system_event(
-            resource=application, action="create", workspace=workspace
+            resource=application, action="create", portfolio=portfolio
         )
 
-    events = AuditLog.get_workspace_events(
-        workspace.owner, workspace, pagination_opts={"per_page": 25, "page": 2}
+    events = AuditLog.get_portfolio_events(
+        portfolio.owner, portfolio, pagination_opts={"per_page": 25, "page": 2}
     )
     assert len(events) == 25
 
 
 def test_ws_audit_log_only_includes_current_ws_events():
     owner = UserFactory.create()
-    workspace = WorkspaceFactory.create(owner=owner)
-    other_workspace = WorkspaceFactory.create(owner=owner)
+    portfolio = PortfolioFactory.create(owner=owner)
+    other_portfolio = PortfolioFactory.create(owner=owner)
     # Add some audit events
-    application_1 = ApplicationFactory.create(workspace=workspace)
-    application_2 = ApplicationFactory.create(workspace=other_workspace)
+    application_1 = ApplicationFactory.create(portfolio=portfolio)
+    application_2 = ApplicationFactory.create(portfolio=other_portfolio)
 
-    events = AuditLog.get_workspace_events(workspace.owner, workspace)
+    events = AuditLog.get_portfolio_events(portfolio.owner, portfolio)
     for event in events:
-        assert event.workspace_id == workspace.id or event.resource_id == workspace.id
+        assert event.portfolio_id == portfolio.id or event.resource_id == portfolio.id
         assert (
-            not event.workspace_id == other_workspace.id
-            or event.resource_id == other_workspace.id
+            not event.portfolio_id == other_portfolio.id
+            or event.resource_id == other_portfolio.id
         )
