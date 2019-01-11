@@ -1,0 +1,105 @@
+.task-order-summary {
+
+  @include media($medium-screen) {
+    @include grid-row;
+    flex-wrap: wrap;
+  }
+
+  .panel {
+    width: 100%;
+
+    @include ie-only {
+      max-width: 100%;
+    }
+  }
+
+  .task-order-heading {
+    align-items: center;
+    justify-content: space-between;
+
+    .task-order-heading__name {
+      align-items: center;
+
+      label {
+        padding: $gap;
+      }
+    }
+
+    .task-order-heading__value {
+      margin: 0 ($gap * 2);
+      text-align: right;
+
+      dt {
+        font-weight: bold;
+      }
+      dd {
+      }
+    }
+  }
+
+  .task-order-details {
+    flex-grow: 1;
+  }
+
+  .task-order-next-steps {
+    flex-grow: 1;
+    padding-right: $gap;
+
+    .task-order-next-steps__step {
+      .task-order-next-steps__icon {
+        padding: $gap $gap 0 0;
+        justify-content: center;
+        .complete {
+          @include icon-color($color-green);
+        }
+        .incomplete {
+          @include icon-color($color-gray-light);
+        }
+      }
+
+      .task-order-next-steps__heading {
+        h4 {
+          margin: $gap $gap 0 0;
+        }
+      }
+      .task-order-next-steps__description {
+        font-style: italic;
+      }
+    }
+  }
+
+  .task-order-sidebar {
+    min-width: 35rem;
+
+    hr {
+      margin: 2rem 0;
+    }
+  }
+
+  .task-order-document-link {
+    .task-order-document-link__icon {
+      padding-top: 0.5rem;
+    }
+
+    .task-order-document-description {
+      padding-left: 3rem;
+      font-style: italic;
+    }
+  }
+
+  .task-order-invitation-status {
+    .invited {
+      color: $color-green;
+      @include icon-color($color-green);
+    }
+    .uninvited {
+      color: $color-red;
+      @include icon-color($color-red);
+    }
+
+    .task-order-invitation-status__icon {
+      padding: 0 0.5rem;
+    }
+  }
+
+}

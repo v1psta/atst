@@ -1,7 +1,159 @@
 {% extends "workspaces/base.html" %}
 
+{% from "components/icon.html" import Icon %}
+
 {% block workspace_content %}
 
-You're looking at TO {{ task_order.id }}
+{% macro Step(title="", description="", link_text=None, link_url=None, complete=True) %}
+  <div class="task-order-next-steps__step panel__content row">
+    <div class="task-order-next-steps__icon col">
+      <span>{{ Icon("ok", classes="complete" if complete else "incomplete") }}</span>
+    </div>
+    <div>
+      <div class="task-order-next-steps__heading row">
+        <h4>{{ title }}</h4>
+        {% if link_url %}
+          <a href="{{ link_url }}" class="icon-link">
+            {{ Icon("edit") }}
+            <span>{{ link_text }}</span>
+          </a>
+        {% endif %}
+      </div>
+      <div class="task-order-next-steps__description">
+        {{ description }}
+      </div>
+    </div>
+  </div>
+{% endmacro %}
+
+{% macro DocumentLink(title="", link_url="", description="") %}
+  {% set disabled = not link_url %}
+  <div class="task-order-document-link">
+    <div class="row">
+      <a href="{{ link_url }}" class="icon-link {{ 'icon-link--disabled' if disabled }}" aria-disabled="{{ 'true' if disabled else 'false' }}">
+        <div class="task-order-document-link__icon col">
+          <span>{{ Icon("download") }}</span>
+        </div>
+        <div class="task-order-document-title col">
+          {{ title }}
+        </div>
+      </a>
+    </div>
+    {% if description %}
+      <div class="task-order-document-description">
+        {{ description }}
+      </div>
+    {% endif %}
+  </div>
+{% endmacro %}
+
+{% macro InvitationStatus(title, officer) %}
+  {% set class = "invited" if officer else "uninvited" %}
+  <div class="task-order-invitation-status row">
+    <div class="task-order-invitation-status__icon col">
+      <span>{{ Icon("ok" if officer else "alert", classes=class) }}</span>
+    </div>
+    <div class="task-order-invitation-status__title col {{ class }}">
+      {{ title }}
+    </div>
+  </div>
+{% endmacro %}
+
+<div class="task-order-summary">
+  <div class="panel task-order-heading row">
+    <div class="panel__content task-order-heading__name row">
+      <h2>New Task Order</h2>
+      <span class="label label--{{ 'warning' if task_order.is_pending }}">{{ task_order.status.value }}</span>
+    </div>
+    <div class="task_order-heading__details row">
+      <div class="task-order-heading__value col">
+        <dt>Started</dt>
+        <dd>
+          <local-datetime
+            timestamp="{{ task_order.start_date }}"
+            format="M/D/YYYY">
+            </local-datetime>
+        </dd>
+      </div>
+      <div class="task-order-heading__value col">
+        <dt>Task Order Value</dt>
+        <dd>{{ task_order.budget | dollars }}</dd>
+      </div>
+    </div>
+  </div>
+
+  <div class="task-order-details row">
+    <div class="task-order-next-steps">
+      <div class="panel">
+        <h3 class="panel__content">What's next?</h3>
+        {{ Step(
+          title="Submit draft Task Order",
+          description="Complete initial task order request form.",
+          link_text="edit",
+          link_url=url_for("task_orders.new", screen=1, task_order_id=task_order.id),
+          complete=True) }}
+        {{ Step(
+          title="Complete a Security Requirements Document",
+          description="The IA Security Official you specified received an email invitation to complete and sign a DD-254: Security Requirements document that's been customized for the JEDI program here.",
+          complete=False) }}
+        {{ Step(
+          title="Prepare the Task Order Documents for your organization's contracting system",
+          description="You'll file your task order in your organization's contracting system. Change the formatting based on your office prefers.",
+          complete=False) }}
+        {{ Step(
+          title="Get a funding document",
+          description="User your organization's normal process to get a funding document, typically from your financial manager. Your Contracting Officer's Representative (COR) or Contracting Officer (KO) can help with this, too.",
+          complete=False) }}
+        {{ Step(
+          title="Have your KO submit your final task order",
+          description="Your KO will submit the final task order into your organization's contracting system and receive an official task order number. Your KO should enter your task order number in this system, along with a copy of the submitted task order.",
+          complete=False) }}
+        <h4 class="panel__content">Once your required information is submitted in this system, you're funded and ready to start using JEDI cloud services!</h4>
+      </div>
+    </div>
+    <div class="task-order-sidebar col">
+      <div class="task-order-documents panel">
+        <div class="panel__content">
+          <h3>Download documents</h3>
+          {% set description -%}
+            last updated on <local-datetime
+              timestamp="{{ task_order.time_updated }}"
+              format="M/D/YYYY">
+              </local-datetime>
+          {%- endset %}
+          {{ DocumentLink(
+            title="Task Order Draft",
+            link_url=url_for('task_orders.download_summary', task_order_id=task_order.id),
+            description=description) }}
+        </div>
+        <hr />
+        <div class="panel__content">
+          {{ DocumentLink(
+            title="Cloud Services Estimate",
+            link_url="#") }}
+          {{ DocumentLink(
+            title="Market Research",
+            link_url="#") }}
+          {{ DocumentLink(
+            title="DD 254",
+            link_url="") }}
+        </div>
+      </div>
+      <div class="task-order-invitations panel">
+        <div class="panel__content">
+          <h3>Invitations</h3>
+          {{ InvitationStatus('Contracting Officer', task_order.contracting_officer) }}
+          {{ InvitationStatus('Contracting Officer Representative', task_order.contracting_officer_representative) }}
+          {{ InvitationStatus('IA Security Officer', officer=task_order.security_officer) }}
+
+          <a href="{{ url_for('task_orders.new', screen=3, task_order_id=task_order.id) }}" class="icon-link">
+            {{ Icon("edit") }}
+            <span>manage invitations</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 {% endblock %}
