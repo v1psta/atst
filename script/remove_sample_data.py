@@ -1,4 +1,4 @@
-# Add root project dir to the python path
+# Add root application dir to the python path
 import os
 import sys
 
@@ -15,14 +15,14 @@ from atst.app import make_config, make_app
 from atst.models.audit_event import AuditEvent
 from atst.models.environment import Environment
 from atst.models.environment_role import EnvironmentRole
-from atst.models.project import Project
+from atst.models.application import Application
 from atst.models.request import Request
 from atst.models.request_revision import RequestRevision
 from atst.models.request_status_event import RequestStatus, RequestStatusEvent
 from atst.models.role import Role
 from atst.models.user import User
-from atst.models.workspace_role import WorkspaceRole
-from atst.models.workspace import Workspace
+from atst.models.portfolio_role import PortfolioRole
+from atst.models.portfolio import Portfolio
 from atst.models.mixins import AuditableMixin
 
 from atst.domain.environments import Environments
@@ -30,7 +30,7 @@ from atst.domain.exceptions import NotFoundError
 from atst.domain.csp.reports import MockReportingProvider
 from atst.domain.requests import Requests
 from atst.domain.users import Users
-from atst.domain.workspaces import Workspaces
+from atst.domain.portfolios import portfolios
 from tests.factories import RequestFactory, LegacyTaskOrderFactory
 
 
@@ -48,29 +48,29 @@ dod_ids = [
 ]
 
 
-def create_demo_workspace(name, data):
+def create_demo_portfolio(name, data):
     try:
-        workspace_owner = Users.get_by_dod_id("678678678") # Other
+        portfolio_owner = Users.get_by_dod_id("678678678") # Other
         auditor = Users.get_by_dod_id("3453453453") # Sally
     except NotFoundError:
-        print("Could not find demo users; will not create demo workspace {}".format(name))
+        print("Could not find demo users; will not create demo portfolio {}".format(name))
         return
 
-    request = RequestFactory.build(creator=workspace_owner)
+    request = RequestFactory.build(creator=portfolio_owner)
     request.legacy_task_order = LegacyTaskOrderFactory.build()
     request = Requests.update(
         request.id, {"financial_verification": RequestFactory.mock_financial_data()}
     )
     approved_request = Requests.set_status(request, RequestStatus.APPROVED)
 
-    workspace = Requests.approve_and_create_workspace(request)
-    Workspaces.update(workspace, { "name": name })
+    portfolio = Requests.approve_and_create_portfolio(request)
+    portfolios.update(portfolio, { "name": name })
 
-    for mock_project in data["projects"]:
-        project = Project(workspace=workspace, name=mock_project.name, description='')
-        env_names = [env.name for env in mock_project.environments]
-        envs = Environments.create_many(project, env_names)
-        db.session.add(project)
+    for mock_application in data["applications"]:
+        application = application(portfolio=portfolio, name=mock_application.name, description='')
+        env_names = [env.name for env in mock_application.environments]
+        envs = Environments.create_many(application, env_names)
+        db.session.add(application)
         db.session.commit()
 
 
@@ -103,18 +103,18 @@ def remove_sample_data(all_users=False):
         )
         events = [ev for r in requests for ev in r.status_events]
         revisions = [rev for r in requests for rev in r.revisions]
-        workspaces = [r.workspace for r in requests if r.workspace]
+        portfolios = [r.portfolio for r in requests if r.portfolio]
         ws_audit = (
             db.session.query(AuditEvent)
-            .filter(AuditEvent.workspace_id.in_([w.id for w in workspaces]))
+            .filter(AuditEvent.portfolio_id.in_([w.id for w in portfolios]))
             .all()
         )
-        workspace_roles = [role for workspace in workspaces for role in workspace.roles]
-        invites = [invite for role in workspace_roles for invite in role.invitations]
-        projects = [p for workspace in workspaces for p in workspace.projects]
+        portfolio_roles = [role for portfolio in portfolios for role in portfolio.roles]
+        invites = [invite for role in portfolio_roles for invite in role.invitations]
+        applications = [p for portfolio in portfolios for p in portfolio.applications]
         environments = (
             db.session.query(Environment)
-            .filter(Environment.project_id.in_([p.id for p in projects]))
+            .filter(Environment.application_id.in_([p.id for p in applications]))
             .all()
         )
         roles = [role for env in environments for role in env.roles]
@@ -122,9 +122,9 @@ def remove_sample_data(all_users=False):
         for set_of_things in [
             roles,
             environments,
-            projects,
+            applications,
             invites,
-            workspace_roles,
+            portfolio_roles,
             ws_audit,
             events,
             revisions,
@@ -135,9 +135,9 @@ def remove_sample_data(all_users=False):
 
         db.session.commit()
 
-        query = "DELETE FROM workspaces WHERE workspaces.id = ANY(:ids);"
+        query = "DELETE FROM portfolios WHERE portfolios.id = ANY(:ids);"
         db.session.connection().execute(
-            sqlalchemy.text(query), ids=[w.id for w in workspaces]
+            sqlalchemy.text(query), ids=[w.id for w in portfolios]
         )
 
         query = "DELETE FROM requests WHERE requests.id = ANY(:ids);"
@@ -153,5 +153,5 @@ if __name__ == "__main__":
     app = make_app(config)
     with app.app_context():
         remove_sample_data()
-        create_demo_workspace('Aardvark', MockReportingProvider.REPORT_FIXTURE_MAP["Aardvark"])
-        create_demo_workspace('Beluga', MockReportingProvider.REPORT_FIXTURE_MAP["Beluga"])
+        create_demo_portfolio('Aardvark', MockReportingProvider.REPORT_FIXTURE_MAP["Aardvark"])
+        create_demo_portfolio('Beluga', MockReportingProvider.REPORT_FIXTURE_MAP["Beluga"])
