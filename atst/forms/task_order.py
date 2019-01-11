@@ -86,9 +86,9 @@ class FundingForm(CacheableForm):
     end_date = DateField(
         translate("forms.task_order.end_date_label"), format="%m/%d/%Y"
     )
-    csp_cost_estimate = FileField(
-        translate("forms.task_order.csp_cost_est_label"),
-        description=translate("forms.task_order.csp_cost_est_description"),
+    pdf = FileField(
+        translate("forms.task_order.pdf_label"),
+        description=translate("forms.task_order.pdf_description"),
     )
     clin_01 = IntegerField(translate("forms.task_order.clin_01_label"))
     clin_02 = IntegerField(translate("forms.task_order.clin_02_label"))

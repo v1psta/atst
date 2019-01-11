@@ -15,7 +15,6 @@ from atst.domain.workspaces import Workspaces
 from atst.domain.workspace_roles import WorkspaceRoles
 import atst.forms.task_order as task_order_form
 from atst.services.invitation import Invitation as InvitationService
-from atst.utils.localization import translate
 
 
 TASK_ORDER_SECTIONS = [

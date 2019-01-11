@@ -11,15 +11,11 @@
 
 {% block form %}
 
+<!-- App Info Section -->
 <h3>{{ "task_orders.new.app_info.basic_info_title"| translate }}</h3>
 {{ TextInput(form.portfolio_name, placeholder="The name of your office or organization") }}
 {{ TextInput(form.scope, paragraph=True) }}
-<p>
-<i>
-  {{ "task_orders.new.app_info.sample_scope" | translate | safe }}
-</i>
-</p>
-
+<p><i>{{ "task_orders.new.app_info.sample_scope" | translate | safe }}</i></p>
 {{ OptionsInput(form.defense_component) }}
 
 <hr>
@@ -38,9 +34,6 @@
 <hr>
 
 <h3>{{ "task_orders.new.app_info.market_research_title" | translate }}</h3>
-<p>
-{{ "task_orders.new.app_info.market_research_paragraph" | translate | safe }}
-</p>
-
+<p>{{ "task_orders.new.app_info.market_research_paragraph" | translate | safe }}</p>
 
 {% endblock %}
