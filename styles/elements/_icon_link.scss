@@ -63,4 +63,9 @@
   &.icon-link--default {
     @include icon-link-color($color-black-light, $color-gray-lightest);
   }
+
+  &.icon-link--disabled {
+    opacity: 0.3;
+    pointer-events: none;
+  }
 }

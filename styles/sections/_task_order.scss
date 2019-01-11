@@ -77,36 +77,13 @@
   }
 
   .task-order-document-link {
-    &.disabled {
-      color: $color-shadow;
-      .task-order-document-link__icon {
-        span {
-          @include icon-color($color-cool-blue-lighter);
-        }
-      }
-    }
-
     .task-order-document-link__icon {
       padding-top: 0.5rem;
-      span {
-        @include icon-color($color-blue);
-      }
     }
 
-    .task-order-document-details {
-      .task-order-document-details__description {
-        font-style: italic;
-      }
-
-      .task-order-document-details__disabled_link {
-        @include icon-link;
-        cursor: unset;
-        &:hover {
-          background-color: unset;
-          color: $color-cool-blue-lighter;
-        }
-        color: $color-cool-blue-lighter;
-      }
+    .task-order-document-description {
+      padding-left: 3rem;
+      font-style: italic;
     }
   }
 

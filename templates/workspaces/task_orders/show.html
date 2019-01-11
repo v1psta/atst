@@ -28,26 +28,22 @@
 
 {% macro DocumentLink(title="", link_url="", description="") %}
   {% set disabled = not link_url %}
-  <div class="task-order-document-link row {{ 'disabled' if disabled }}">
-    <div class="task-order-document-link__icon col">
-      <span>{{ Icon("download") }}</span>
-    </div>
-    <div class="task-order-document-details col">
-      {% if disabled %}
-        <div class="task-order-document-details__disabled_link">
+  <div class="task-order-document-link">
+    <div class="row">
+      <a href="{{ link_url }}" class="icon-link {{ 'icon-link--disabled' if disabled }}" aria-disabled="{{ 'true' if disabled else 'false' }}">
+        <div class="task-order-document-link__icon col">
+          <span>{{ Icon("download") }}</span>
+        </div>
+        <div class="task-order-document-title col">
           {{ title }}
         </div>
-      {% else %}
-        <a href="{{ link_url }}" class="icon-link">
-          {{ title }}
-        </a>
-      {% endif %}
-      {% if description %}
-        <div class="task-order-document-details__description">
-          {{ description }}
-        </div>
-      {% endif %}
+      </a>
     </div>
+    {% if description %}
+      <div class="task-order-document-description">
+        {{ description }}
+      </div>
+    {% endif %}
   </div>
 {% endmacro %}
 
