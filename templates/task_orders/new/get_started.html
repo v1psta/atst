@@ -1,0 +1,60 @@
+{% from "components/icon.html" import Icon %}
+
+{% extends "base.html" %}
+
+{% macro Help(icon_name="", name="", description="", link_text="") %}
+  <div class="panel__content col">
+    {{ Icon(icon_name, classes="task-order-help__icon") }}
+    <h3>{{ name }}</h3>
+    <p>{{ description }}</p>
+    <a class="icon-link">{{ link_text }}</a>
+  </div>
+{% endmacro %}
+
+{% block content %}
+
+<div class="col col--grow task-order-get-started">
+  <div class="panel task-order-get-started__panel">
+    <h1 class="panel__content">Let's get started</h1>
+    <p class="panel__content">
+        To create a portfolio of JEDI cloud applications, you'll complete and submit a task order in your organization's system of record. We'll help you complete the necessary pieces of that task order, including your:
+    </p>
+    <span class="task-order-get-started__list panel__content">
+      <ul>
+        <li>Statement of work</li>
+        <li>Market research</li>
+        <li>Security documentation</li>
+        <li>Various approvals</li>
+      </ul>
+    </span>
+
+  </div>
+
+  <div class="panel task-order-needs">
+    <h1 class="panel__content">You'll need help getting a task order</h1>
+    <div class="panel__content row">
+      {{ Help(
+        name="Development Lead",
+        icon_name="computer",
+        description="Your development lead will decide and estimate what types of cloud offerings your group needs.",
+        link_text="Share cloud estimate link") }}
+      {{ Help(
+        name="Security Lead",
+        icon_name="shield",
+        description="Your security lead will review and approve your security classification needs, as well as a standardized DD-254.",
+        link_text="You'll need their DOD ID number") }}
+      {{ Help(
+        name="Contracting Officer",
+        icon_name="dollar-sign",
+        description="Your contracting officer will review your funding needs and ultimately approve your task order.",
+        link_text="You'll need their DOD ID number") }}
+    </div>
+  </div>
+
+  <div class='action-group'>
+    <a href='{{ url_for("task_orders.new", screen=1) }}' class='usa-button usa-button-big'>Let's do cloud!</a>
+    <div>Create a JEDI cloud application portfolio & start building a task order</div>
+    <a href='{{ request.referrer }}' class='col action-group__action'>Cancel</a>
+  </div>
+</div>
+{% endblock %}
