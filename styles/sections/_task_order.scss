@@ -18,6 +18,23 @@
   .task-order-help__icon {
     @include icon-size(48);
   }
+
+  .task-order-get-started__actions {
+    .task-order-get-started__button-row {
+      position: relative;
+
+      .icon-link {
+        position: absolute;
+        left: 50%;
+        top: 2.5rem;
+        margin-left: -23rem;
+      }
+    }
+
+    p {
+      max-width: 27rem;
+    }
+  }
 }
 
 .task-order-summary {

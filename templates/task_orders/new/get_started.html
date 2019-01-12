@@ -53,10 +53,17 @@
     </div>
   </div>
 
-  <div class='action-group'>
-    <a href='{{ url_for("task_orders.new", screen=1) }}' class='usa-button usa-button-big'>Let's do cloud!</a>
-    <div>Create a JEDI cloud application portfolio & start building a task order</div>
-    <a href='{{ request.referrer }}' class='col action-group__action'>Cancel</a>
+  <div class="task-order-get-started__actions">
+    <div class="task-order-get-started__button-row">
+      <a href="{{ request.referrer or url_for("atst.home") }}" class="icon-link">
+        {{ Icon("caret_left") }}
+        <span>Cancel</span>
+      </a>
+      <a href="{{ url_for("task_orders.new", screen=1) }}" class="usa-button usa-button-big">Let's do cloud!</a>
+    </div>
+    <div>
+      <p class="centered">Create a JEDI cloud application portfolio & start building a task order</p>
+    </div>
   </div>
 </div>
 {% endblock %}
