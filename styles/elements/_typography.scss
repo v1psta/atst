@@ -12,6 +12,11 @@
 p {
   margin: 0 0 ($gap * 2) 0;
   @include line-max;
+
+  &.centered {
+    margin-left: auto;
+    margin-right: auto;
+  }
 }
 
 h1, h2, h3, h4, h5, h6 {
