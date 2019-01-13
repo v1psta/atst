@@ -19,6 +19,14 @@
     @include icon-size(48);
   }
 
+  .task-order-needs {
+    .task-order-needs__list {
+      @include media($large-screen) {
+        @include grid-row;
+      }
+    }
+  }
+
   .task-order-get-started__actions {
     .task-order-get-started__button-row {
       position: relative;
