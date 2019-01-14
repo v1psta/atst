@@ -15,14 +15,14 @@
 <funding inline-template v-bind:initial-data='{{ form.data|tojson }}'>
   <div>
     <!-- Get Funding Section           -->
-    <h3>{{ "task_orders.new.funding.performance_period_title" | translate }}</h3>
+    <h3 class="subheading">{{ "task_orders.new.funding.performance_period_title" | translate }}</h3>
     <p>{{ "task_orders.new.funding.performance_period_description" | translate }}</p>
     <p>{{ "task_orders.new.funding.performance_period_paragraph" | translate }}</p>
     {{ OptionsInput(form.performance_length) }}
 
     <hr>
 
-    <h3>{{ "task_orders.new.funding.estimate_usage_title" | translate }}</h3>
+    <h3 class="subheading">{{ "task_orders.new.funding.estimate_usage_title" | translate }}</h3>
     <p>{{ "task_orders.new.funding.estimate_usage_description" | translate }}</p>
     <p><a class="icon-link" href="{{ url_for('atst.jedi_csp_calculator') }}">
       {{ Icon("link")}} Cloud Service Provider's estimate calculator
@@ -36,7 +36,7 @@
 
     <hr>
 
-    <h3>{{ "task_orders.new.funding.cloud_calculations_title" | translate }}</h3>
+    <h3 class="subheading">{{ "task_orders.new.funding.cloud_calculations_title" | translate }}</h3>
     <p>{{ "task_orders.new.funding.cloud_calculations_paragraph" | translate }}</p>
 
     <h4>{{ "task_orders.new.funding.cloud_offerings_title" | translate }}</h4>

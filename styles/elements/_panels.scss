@@ -59,6 +59,13 @@
       margin: ($gap * 4) 0;
       padding: 0 ($gap * 4);
     }
+
+    h1, h2, h3, h4, h5, h6 {
+
+      &.subheading {
+        color: $color-gray;
+      }
+    }
   }
 
   .panel__heading {
@@ -80,7 +87,7 @@
       margin: 0;
       display: inline-block;
 
-      .subtitle {
+      .subtitle, &.gray {
         color: $color-gray;
       }
     }
