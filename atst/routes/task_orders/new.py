@@ -20,7 +20,7 @@ from atst.services.invitation import Invitation as InvitationService
 TASK_ORDER_SECTIONS = [
     {
         "section": "app_info",
-        "title": "What You're Building",
+        "title": "What You're Making",
         "template": "task_orders/new/app_info.html",
         "form": task_order_form.AppInfoForm,
     },
@@ -166,7 +166,13 @@ class UpdateTaskOrderWorkflow(ShowTaskOrderWorkflow):
                 prefix = officer_type["prefix"]
                 officer_data = {
                     field: getattr(self.task_order, prefix + "_" + field)
-                    for field in ["first_name", "last_name", "email", "dod_id"]
+                    for field in [
+                        "first_name",
+                        "last_name",
+                        "email",
+                        "phone_number",
+                        "dod_id",
+                    ]
                 }
                 officer = TaskOrders.add_officer(
                     self.user, self.task_order, officer_type["role"], officer_data

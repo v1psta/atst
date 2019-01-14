@@ -176,16 +176,20 @@ FUNDING_TYPES = [
 TASK_ORDER_SOURCES = [("MANUAL", "Manual"), ("EDA", "EDA")]
 
 APP_MIGRATION = [
-    ("on_premise", "Yes, migrating from an on-premise data center"),
-    ("cloud", "Yes, migrating from another cloud provider "),
-    ("none", "Not planning to migrate any applications "),
+    ("on_premise", "Yes, migrating from an <strong>on-premise data center</strong>"),
+    ("cloud", "Yes, migrating from <strong>another cloud provider</strong>"),
+    (
+        "both",
+        "Yes, migrating from an <strong>on-premise data center</strong> and <strong>another cloud provider</strong>",
+    ),
+    ("none", "Not planning to migrate any applications"),
     ("not_sure", "Not Sure"),
 ]
 
 PROJECT_COMPLEXITY = [
     ("storage", "Storage "),
     ("data_analytics", "Data Analytics "),
-    ("conus", "CONUS Only Access "),
+    ("conus", "CONUS Access "),
     ("oconus", "OCONUS Access "),
     ("tactical_edge", "Tactical Edge Access "),
     ("not_sure", "Not Sure "),
@@ -193,11 +197,10 @@ PROJECT_COMPLEXITY = [
 ]
 
 DEV_TEAM = [
-    ("government", "Government"),
-    ("civilians", "Civilians"),
+    ("government_civilians", "Government Civilians"),
     ("military", "Military "),
     ("contractor", "Contractor "),
-    ("other", "Other"),
+    ("other", "Other (E.g. University or other partner)"),
 ]
 
 TEAM_EXPERIENCE = [
@@ -209,4 +212,31 @@ TEAM_EXPERIENCE = [
         "built_many",
         "Built or migrated many applications, or consulted on several such projects",
     ),
+]
+
+PERIOD_OF_PERFORMANCE_LENGTH = [
+    ("1", "1 Month"),
+    ("2", "2 Months"),
+    ("3", "3 Months"),
+    ("4", "4 Months"),
+    ("5", "5 Months"),
+    ("6", "6 Months"),
+    ("7", "7 Months"),
+    ("8", "8 Months"),
+    ("9", "9 Months"),
+    ("10", "10 Months"),
+    ("11", "11 Months"),
+    ("12", "1 Year"),
+    ("13", "1 Year, 1 Month"),
+    ("14", "1 Year, 2 Months"),
+    ("15", "1 Year, 3 Months"),
+    ("16", "1 Year, 4 Months"),
+    ("17", "1 Year, 5 Months"),
+    ("18", "1 Year, 6 Months"),
+    ("19", "1 Year, 7 Months"),
+    ("20", "1 Year, 8 Months"),
+    ("21", "1 Year, 9 Months"),
+    ("22", "1 Year, 10 Months"),
+    ("23", "1 Year, 11 Months"),
+    ("24", "2 Years"),
 ]

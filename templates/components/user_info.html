@@ -1,6 +1,6 @@
 {% from "components/text_input.html" import TextInput %}
 
-{% macro UserInfo(first_name, last_name, email, dod_id) -%}
+{% macro UserInfo(first_name, last_name, email, phone) -%}
 <div class='form-row'>
   <div class='form-col form-col--half'>
     {{ TextInput(first_name) }}
@@ -17,7 +17,7 @@
   </div>
 
   <div class='form-col form-col--half'>
-    {{ TextInput(dod_id, placeholder='1234567890', validation='dodId') }}
+    {{ TextInput(phone, placeholder='(123) 456-7890', validation='usPhone') }}
   </div>
 </div>
 {% endmacro %}

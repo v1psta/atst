@@ -6,12 +6,13 @@ from wtforms.fields import (
     SelectMultipleField,
     StringField,
     TextAreaField,
+    FileField,
 )
-from wtforms.fields.html5 import DateField
+from wtforms.fields.html5 import DateField, TelField
 from wtforms.widgets import ListWidget, CheckboxInput
 from wtforms.validators import Required, Length
 
-from atst.forms.validators import IsNumber
+from atst.forms.validators import IsNumber, PhoneNumber
 
 from .forms import CacheableForm
 from .data import (
@@ -20,70 +21,84 @@ from .data import (
     PROJECT_COMPLEXITY,
     DEV_TEAM,
     TEAM_EXPERIENCE,
+    PERIOD_OF_PERFORMANCE_LENGTH,
 )
+from atst.utils.localization import translate
 
 
 class AppInfoForm(CacheableForm):
     portfolio_name = StringField(
-        "Organization Portfolio Name",
-        description="The name of your office or organization. You can add multiple applications to your portfolio. Your task orders are used to pay for these applications and their environments",
+        translate("forms.task_order.portfolio_name_label"),
+        description=translate("forms.task_order.portfolio_name_description"),
     )
     scope = TextAreaField(
-        "Cloud Project Scope",
-        description="Your team's plan for using the cloud, such as migrating an existing application or creating a prototype.",
+        translate("forms.task_order.scope_label"),
+        description=translate("forms.task_order.scope_description"),
     )
     defense_component = SelectField(
-        "Department of Defense Component", choices=SERVICE_BRANCHES
+        translate("forms.task_order.defense_component_label"), choices=SERVICE_BRANCHES
     )
     app_migration = RadioField(
-        "App Migration",
-        description="Do you plan to migrate existing application(s) to the cloud?",
+        translate("forms.task_order.app_migration_label"),
+        description=translate("forms.task_order.app_migration_description"),
         choices=APP_MIGRATION,
         default="",
     )
     native_apps = RadioField(
-        "Native Apps",
-        description="Do you plan to develop application(s) natively in the cloud? ",
+        translate("forms.task_order.native_apps_label"),
+        description=translate("forms.task_order.native_apps_description"),
         choices=[("yes", "Yes"), ("no", "No"), ("not_sure", "Not Sure")],
     )
     complexity = SelectMultipleField(
-        "Project Complexity",
-        description="Which of these describes how complex your team's use of the cloud will be? (Select all that apply.)",
+        translate("forms.task_order.complexity_label"),
+        description=translate("forms.task_order.complexity_description"),
         choices=PROJECT_COMPLEXITY,
         default="",
         widget=ListWidget(prefix_label=False),
         option_widget=CheckboxInput(),
     )
-    complexity_other = StringField("Project Complexity Other")
+    complexity_other = StringField(translate("forms.task_order.complexity_other_label"))
     dev_team = SelectMultipleField(
-        "Development Team",
-        description="Which people or teams will be completing the development work for your cloud applications?",
+        translate("forms.task_order.dev_team_label"),
+        description=translate("forms.task_order.dev_team_description"),
         choices=DEV_TEAM,
         default="",
         widget=ListWidget(prefix_label=False),
         option_widget=CheckboxInput(),
     )
-    dev_team_other = StringField("Development Team Other")
+    dev_team_other = StringField(translate("forms.task_order.dev_team_other_label"))
     team_experience = RadioField(
-        "Team Experience",
-        description="How much experience does your team have with development in the cloud?",
+        translate("forms.task_order.team_experience_label"),
+        description=translate("forms.task_order.team_experience_description"),
         choices=TEAM_EXPERIENCE,
         default="",
     )
 
 
 class FundingForm(CacheableForm):
-    start_date = DateField("Start Date", format="%m/%d/%Y")
-    end_date = DateField("End Date", format="%m/%d/%Y")
-    clin_01 = IntegerField("CLIN 01 : Unclassified")
-    clin_02 = IntegerField("CLIN 02: Classified")
-    clin_03 = IntegerField("CLIN 03: Unclassified")
-    clin_04 = IntegerField("CLIN 04: Classified")
+    performance_length = SelectField(
+        translate("forms.task_order.performance_length_label"),
+        choices=PERIOD_OF_PERFORMANCE_LENGTH,
+    )
+    start_date = DateField(
+        translate("forms.task_order.start_date_label"), format="%m/%d/%Y"
+    )
+    end_date = DateField(
+        translate("forms.task_order.end_date_label"), format="%m/%d/%Y"
+    )
+    pdf = FileField(
+        translate("forms.task_order.pdf_label"),
+        description=translate("forms.task_order.pdf_description"),
+    )
+    clin_01 = IntegerField(translate("forms.task_order.clin_01_label"))
+    clin_02 = IntegerField(translate("forms.task_order.clin_02_label"))
+    clin_03 = IntegerField(translate("forms.task_order.clin_03_label"))
+    clin_04 = IntegerField(translate("forms.task_order.clin_04_label"))
 
 
 class UnclassifiedFundingForm(FundingForm):
-    clin_02 = IntegerField("CLIN 02: Classified (available soon)")
-    clin_04 = IntegerField("CLIN 04: Classified (available soon)")
+    clin_02 = IntegerField(translate("forms.task_order.unclassified_clin_02_label"))
+    clin_04 = IntegerField(translate("forms.task_order.unclassified_clin_04_label"))
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -92,52 +107,56 @@ class UnclassifiedFundingForm(FundingForm):
 
 
 class OversightForm(CacheableForm):
-    ko_first_name = StringField("First Name")
-    ko_last_name = StringField("Last Name")
-    ko_email = StringField("Email")
+    ko_first_name = StringField(
+        translate("forms.task_order.oversight_first_name_label")
+    )
+    ko_last_name = StringField(translate("forms.task_order.oversight_last_name_label"))
+    ko_email = StringField(translate("forms.task_order.oversight_email_label"))
+    ko_phone_number = TelField(
+        translate("forms.task_order.oversight_phone_label"), validators=[PhoneNumber()]
+    )
     ko_dod_id = StringField(
-        "DOD ID", validators=[Required(), Length(min=10), IsNumber()]
+        translate("forms.task_order.oversight_dod_id_label"),
+        validators=[Required(), Length(min=10), IsNumber()],
     )
 
-    cor_first_name = StringField("First Name")
-    cor_last_name = StringField("Last Name")
-    cor_email = StringField("Email")
+    cor_first_name = StringField(
+        translate("forms.task_order.oversight_first_name_label")
+    )
+    cor_last_name = StringField(translate("forms.task_order.oversight_last_name_label"))
+    cor_email = StringField(translate("forms.task_order.oversight_email_label"))
+    cor_phone_number = TelField(
+        translate("forms.task_order.oversight_phone_label"), validators=[PhoneNumber()]
+    )
     cor_dod_id = StringField(
-        "DOD ID", validators=[Required(), Length(min=10), IsNumber()]
+        translate("forms.task_order.oversight_dod_id_label"),
+        validators=[Required(), Length(min=10), IsNumber()],
     )
 
-    so_first_name = StringField("First Name")
-    so_last_name = StringField("Last Name")
-    so_email = StringField("Email")
+    so_first_name = StringField(
+        translate("forms.task_order.oversight_first_name_label")
+    )
+    so_last_name = StringField(translate("forms.task_order.oversight_last_name_label"))
+    so_email = StringField(translate("forms.task_order.oversight_email_label"))
+    so_phone_number = TelField(
+        translate("forms.task_order.oversight_phone_label"), validators=[PhoneNumber()]
+    )
     so_dod_id = StringField(
-        "DOD ID", validators=[Required(), Length(min=10), IsNumber()]
+        translate("forms.task_order.oversight_dod_id_label"),
+        validators=[Required(), Length(min=10), IsNumber()],
     )
 
     ko_invite = BooleanField(
-        "Invite KO to Task Order Builder",
-        description="""
-            Your KO will need to approve funding for this Task Order by logging
-            into the JEDI Cloud Portal, submitting the Task Order documents
-            within their official system of record, and electronically signing.
-            <i>You may choose to skip this for now and invite them later.</i>
-            """,
+        translate("forms.task_order.ko_invite_label"),
+        description=translate("forms.task_order.skip_invite_description"),
     )
     cor_invite = BooleanField(
-        "Invite COR to Task Order Builder",
-        description="""
-            Your COR may assist with submitting the Task Order documents within
-            their official system of record. <i>You may choose to skip this for
-            now and invite them later.</i>
-            """,
+        translate("forms.task_order.cor_invite_label"),
+        description=translate("forms.task_order.skip_invite_description"),
     )
     so_invite = BooleanField(
-        "Invite Security Officer to Task Order Builder",
-        description="""
-            Your Security Officer will need to answer some security
-            configuration questions in order to generate a DD-254 document,
-            then electronically sign. <i>You may choose to skip this for now
-            and invite them later.</i>
-            """,
+        translate("forms.task_order.so_invite_label"),
+        description=translate("forms.task_order.skip_invite_description"),
     )
 
 

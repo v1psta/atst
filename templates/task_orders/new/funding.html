@@ -4,76 +4,51 @@
 {% from "components/options_input.html" import OptionsInput %}
 {% from "components/date_input.html" import DateInput %}
 
+{% from "components/icon.html" import Icon %}
+
 {% block heading %}
-  Funding
+  {{ "task_orders.new.funding.section_title" | translate }}
 {% endblock %}
 
 {% block form %}
 
 <funding inline-template v-bind:initial-data='{{ form.data|tojson }}'>
-<div>
-  <!-- Get Funding Section           -->
-  <h3>Period of Performance</h3>
+  <div>
+    <!-- Get Funding Section           -->
+    <h3>{{ "task_orders.new.funding.performance_period_title" | translate }}</h3>
+    <p>{{ "task_orders.new.funding.performance_period_description" | translate }}</p>
+    <p>{{ "task_orders.new.funding.performance_period_paragraph" | translate }}</p>
+    {{ OptionsInput(form.performance_length) }}
 
-  <p>Choose the dates your task order will cover.</p>
+    <hr>
 
-  <p>
-  Because your funds will be lost if you don’t use them, we strongly recommend
-  submitting small, short-duration task orders, usually a three month period.
-  We’ll notify you when your period of performance is nearing the end so you can
-  request your next set of funds with a new task order.
-  </p>
+    <h3>{{ "task_orders.new.funding.estimate_usage_title" | translate }}</h3>
+    <p>{{ "task_orders.new.funding.estimate_usage_description" | translate }}</p>
+    <p><a class="icon-link" href="{{ url_for('atst.jedi_csp_calculator') }}">
+      {{ Icon("link")}} Cloud Service Provider's estimate calculator
+    </a></p>
+    <p>{{ "task_orders.new.funding.estimate_usage_paragraph" | translate }}</p>
+    <div class="usa-input">
+      {{ form.pdf.label }}
+      {{ form.pdf.description }}
+      <input type="file" disabled="disabled" />
+    </div>
 
-  {{ DateInput(form.start_date, placeholder='MM / DD / YYYY', validation='date') }}
-  {{ DateInput(form.end_date, placeholder='MM / DD / YYYY', validation='date') }}
+    <hr>
 
-  <hr>
-  <h3>Cloud Usage Estimate</h3>
+    <h3>{{ "task_orders.new.funding.cloud_calculations_title" | translate }}</h3>
+    <p>{{ "task_orders.new.funding.cloud_calculations_paragraph" | translate }}</p>
 
-  <p>
-  Calculate how much your cloud usage will cost. A technical representative
-  should help you complete this calculation.
-  <a href="{{ url_for('atst.jedi_csp_calculator') }}">
-    Cloud Service Provider's estimate calculator
-  </a>
-  </p>
-  <h4>Upload a copy of your CSP Cost Estimate Research</h4>
+    <h4>{{ "task_orders.new.funding.cloud_offerings_title" | translate }}</h4>
+    <p>{{ "task_orders.new.funding.cloud_offerings_paragraph" | translate }}</p>
+    {{ TextInput(form.clin_01, validation='dollars', placeholder="$0.00") }}
+    {{ TextInput(form.clin_02, validation='dollars', disabled=(not config.CLASSIFIED)) }}
 
-  <p>
-  Upload your anticipated cloud usage from the CSP tool linked above. PDFs and
-  screengrabs of the tool are sufficient.
-  </p>
-  <p>
-  This is only an estimation tool to help you make and informed evaluation of
-  what you expect to use. While you're tied to the dollar amount you specify in
-  your task order, you're not obligated by the resources you indicate in the
-  calculator.
-  </p>
-  <input type="file">
-
-  <hr>
-  <h3>Cloud Usage Calculations</h3>
-  <p>
-  Enter the results of your cloud usage calculations. These will correspond with
-  your task order's period of performance.
-  </p>
-  <h4>Cloud Offerings</h4>
-  <p>
-  Infrastructure as a Service (IaaS) and Platform as a Service (PaaS) offerings
-  </p>
-
-  {{ TextInput(form.clin_01, validation='dollars') }}
-  {{ TextInput(form.clin_02, validation='dollars', disabled=(not config.CLASSIFIED)) }}
-
-  <h4>Cloud Support and Assistance</h4>
-  <p>
-  Technical guidance from the cloud service provider, including architecture,
-  configuration of IaaS and PaaS, integration, troubleshooting assistance, and
-  other services.
-  </p>
-  {{ TextInput(form.clin_03, validation='dollars', tooltip='The cloud support and assistance packages cannot be used as a primary development resource.') }}
-  {{ TextInput(form.clin_04, validation='dollars', tooltip='The cloud support and assistance packages cannot be used as a primary development resource.', disabled=(not config.CLASSIFIED)) }}
-</div>
+    <h4>{{ "task_orders.new.funding.support_assistance_title" | translate }}</h4>
+    <p>{{ "task_orders.new.funding.support_assistance_paragraph" | translate }}</p>
+    {{ TextInput(form.clin_03, validation='dollars', tooltip='The cloud support and assistance packages cannot be used as a primary development resource.', placeholder="$0.00") }}
+    {{ TextInput(form.clin_04, validation='dollars', tooltip='The cloud support and assistance packages cannot be used as a primary development resource.', disabled=(not config.CLASSIFIED)) }}
+  </div>
 </funding>
 
 {% endblock %}
@@ -81,13 +56,10 @@
 {% block next %}
 <div class="row">
   <div class="col col--grow">
-    <p>Total Task Order Value:<br><span id="to-target"></span></p>
+    <p>{{ "task_orders.new.funding.total" | translate }}<br><span id="to-target"></span></p>
   </div>
   <div class="col col--grow">
     {{ super() }}
   </div>
 </div>
 {% endblock %}
-
-
-

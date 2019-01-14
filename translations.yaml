@@ -1,3 +1,13 @@
+# How to use text containing html tags in .html files:
+  # In the template add the `safe` filter when referencing the string
+  # from the template file. ie:
+
+  # login:
+  #   title: A title with <a href="#">a link</a>!
+
+  # `{{ "login.title" | translate | safe }}`
+
+
 audit_log:
   events:
     default:
@@ -153,6 +163,45 @@ forms:
     environment_names_required_validation_message: Provide at least one environment name.
     environment_names_unique_validation_message: Environment names must be unique.
     name_label: Project Name
+  task_order:
+    portfolio_name_label: Organization Portfolio Name
+    portfolio_name_description: The name of your office or organization. You can add multiple applications to your portfolio. Your task orders are used to pay for these applications and their environments.
+    scope_label: Cloud Project Scope
+    scope_description: Your team's plan for using the cloud, such as migrating an existing application or creating a prototype.
+    defense_component_label: Department of Defense Component
+    app_migration_label: App Migration
+    app_migration_description: Do you plan to migrate existing application(s) to the cloud?
+    native_apps_label: Native Apps
+    native_apps_description: Do you plan to develop application(s) natively in the cloud?
+    complexity_label: Project Complexity
+    complexity_description: Which of these describes how complex your team's use of the cloud will be? Select all that apply.
+    complexity_other_label: Project Complexity Other
+    dev_team_label: Development Team
+    dev_team_description: Which people or teams will be completing the development work for your cloud applications? Select all that apply.
+    dev_team_other_label: Development Team Other
+    team_experience_label: Team Experience
+    team_experience_description: How much experience does your team have with development in the cloud?
+    performance_length_label: Period of Performance length
+    start_date_label: Start Date
+    end_date_label: End Date
+    pdf_label: Upload a copy of your CSP Cost Estimate Research
+    pdf_description: Upload a PDF or screenshot of your usage estimate from the calculator.
+    clin_01_label: 'CLIN 01 : Unclassified'
+    clin_02_label: 'CLIN 02: Classified'
+    clin_03_label: 'CLIN 03: Unclassified'
+    clin_04_label: 'CLIN 04: Classified'
+    unclassified_clin_02_label: 'CLIN 02: Classified (available soon)'
+    unclassified_clin_04_label: 'CLIN 04: Classified (available soon)'
+    oversight_first_name_label: First Name
+    oversight_last_name_label: Last Name
+    oversight_email_label: Email
+    oversight_phone_label: Phone Number
+    oversight_dod_id_label: DoD ID
+    ko_invite_label: Invite KO to Task Order Builder
+    cor_invite_label: Invite COR to Task Order Builder
+    so_invite_label: Invite Security Officer to Task Order Builder
+    skip_invite_description: |
+      <i>You may choose to skip this for now and invite them later.</i>
   validators:
     is_number_message: Please enter a valid number.
     list_item_required_message: Please provide at least one.
@@ -295,6 +344,42 @@ requests:
     num_software_systems_tooltip: 'A software system can be any code that you plan to host on cloud infrastructure. For example, it could be a custom-developed web application, or a large ERP system.'
     questions_title_text: Questions related to JEDI Cloud migration
     rationalization_software_systems_tooltip: Rationalization is the DoD process to determine whether the application should move to the cloud.
+task_orders:
+  new:
+    app_info:
+      section_title: "What You're Making"
+      basic_info_title: Basic information
+      sample_scope: |
+        Not sure how to describe your scope? <a href="#">Read some Sample Scopes</a> to get an idea of what is appropriate.
+      project_title: About your project
+      team_title: About your team
+      market_research_title: Market Research
+      market_research_paragraph: 'The JEDI Cloud Computing Program Office (CCPO) has completed the market research requirements for all related task orders. The Department of Defense CIO has approved this research.<br /><a href="#">View JEDI Market Research Memo</a>'
+    funding:
+      section_title: Funding
+      performance_period_title: Period of Performance
+      performance_period_description: Choose the length of time your task order will cover.
+      performance_period_paragraph: Because your funds will be lost if you don’t use them, we strongly recommend submitting small, short-duration task orders, usually a three month period. We’ll notify you when your period of performance is nearing the end so you can request your next set of funds with a new task order.
+      estimate_usage_title: Estimate Your Cloud Usage
+      estimate_usage_description: Calculate how much your cloud usage will cost. A technical representative should help you complete this calculation. These calculations will become your CLINs.
+      estimate_usage_paragraph: This is only an estimation tool to help you make an informed evaluation of what you expect to use. While you're tied to the dollar amount you specify in your task order, you're not obligated by the resources you indicate in the calculator.
+      cloud_calculations_title: Cloud Usage Calculations
+      cloud_calculations_paragraph: Enter the results of your cloud usage calculations.
+      cloud_offerings_title: Cloud Offerings
+      cloud_offerings_paragraph: Infrastructure as a Service (IaaS) and Platform as a Service (PaaS) offerings
+      support_assistance_title: Cloud Support and Assistance
+      support_assistance_paragraph: Technical guidance from the cloud service provider, including architecture, configuration of IaaS and PaaS, integration, troubleshooting assistance, and other services.
+      total: 'Total Task Order Value:'
+    oversight:
+      section_title: Oversight
+      ko_info_title: Contracting Officer (KO) Information
+      ko_info_paragraph: Your KO will need to approve funding for this Task Order by logging into the JEDI Cloud Portal, submitting the Task Order documents within their official system of record, and electronically signing. You might want to work with your program Financial Manager to get your TO documents moving in the right dirction.
+      skip_ko_label: "Skip for now (We'll remind you to enter one later)"
+      cor_info_title: Contractive Officer Representative (COR) Information
+      cor_info_paragraph: Your COR may assist in submitting the Task Order documents within thier official system of record. They may also be invited to log in an manage the Task Order entry within the JEDI Cloud portal.
+      am_cor_label: I am the Contracting Officer Representative (COR) for this Task Order
+      so_info_title: Security Officer Information
+      so_info_paragraph: our Security Officer will need to answer some security configuration questions in order to generate a DD-254 document, then electronically sign.
 testing:
   example_string: Hello World
   example_with_variables: 'Hello, {name}!'
