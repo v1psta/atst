@@ -24,8 +24,8 @@ class TaskOrder(Base, mixins.TimestampsMixin):
 
     id = types.Id()
 
-    workspace_id = Column(ForeignKey("workspaces.id"))
-    workspace = relationship("Workspace")
+    portfolio_id = Column(ForeignKey("portfolios.id"))
+    portfolio = relationship("Portfolio")
 
     user_id = Column(ForeignKey("users.id"))
     creator = relationship("User", foreign_keys="TaskOrder.user_id")
@@ -47,7 +47,7 @@ class TaskOrder(Base, mixins.TimestampsMixin):
     defense_component = Column(String)  # Department of Defense Component
     app_migration = Column(String)  # App Migration
     native_apps = Column(String)  # Native Apps
-    complexity = Column(ARRAY(String))  # Project Complexity
+    complexity = Column(ARRAY(String))  # Application Complexity
     complexity_other = Column(String)
     dev_team = Column(ARRAY(String))  # Development Team
     dev_team_other = Column(String)
@@ -92,7 +92,7 @@ class TaskOrder(Base, mixins.TimestampsMixin):
 
     @property
     def portfolio_name(self):
-        return self.workspace.name
+        return self.portfolio.name
 
     @property
     def is_pending(self):

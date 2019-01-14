@@ -12,7 +12,7 @@ class RequestsAuthorization(object):
     def can_view(self):
         return (
             Authorization.has_atat_permission(
-                self.user, Permissions.REVIEW_AND_APPROVE_JEDI_WORKSPACE_REQUEST
+                self.user, Permissions.REVIEW_AND_APPROVE_JEDI_PORTFOLIO_REQUEST
             )
             or self.request.creator == self.user
         )
@@ -24,6 +24,6 @@ class RequestsAuthorization(object):
     def check_can_approve(self):
         return Authorization.check_atat_permission(
             self.user,
-            Permissions.REVIEW_AND_APPROVE_JEDI_WORKSPACE_REQUEST,
+            Permissions.REVIEW_AND_APPROVE_JEDI_PORTFOLIO_REQUEST,
             "cannot review and approve requests",
         )

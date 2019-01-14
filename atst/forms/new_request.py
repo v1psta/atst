@@ -181,7 +181,7 @@ class InformationAboutYouForm(CacheableForm):
     date_latest_training = inherit_field(USER_FIELDS["date_latest_training"])
 
 
-class WorkspaceOwnerForm(CacheableForm):
+class PortfolioOwnerForm(CacheableForm):
     def validate(self, *args, **kwargs):
         if self.am_poc.data:
             # Prepend Optional validators so that the validation chain

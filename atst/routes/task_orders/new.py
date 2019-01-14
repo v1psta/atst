@@ -11,8 +11,8 @@ from flask import (
 
 from . import task_orders_bp
 from atst.domain.task_orders import TaskOrders
-from atst.domain.workspaces import Workspaces
-from atst.domain.workspace_roles import WorkspaceRoles
+from atst.domain.portfolios import Portfolios
+from atst.domain.portfolio_roles import PortfolioRoles
 import atst.forms.task_order as task_order_form
 from atst.services.invitation import Invitation as InvitationService
 
@@ -114,9 +114,9 @@ class UpdateTaskOrderWorkflow(ShowTaskOrderWorkflow):
         return self._form
 
     @property
-    def workspace(self):
+    def portfolio(self):
         if self.task_order:
-            return self.task_order.workspace
+            return self.task_order.portfolio
 
     def validate(self):
         return self.form.validate()
@@ -125,7 +125,7 @@ class UpdateTaskOrderWorkflow(ShowTaskOrderWorkflow):
         if self.task_order:
             TaskOrders.update(self.user, self.task_order, **self.form.data)
         else:
-            ws = Workspaces.create(self.user, self.form.portfolio_name.data)
+            ws = Portfolios.create(self.user, self.form.portfolio_name.data)
             to_data = self.form.data.copy()
             to_data.pop("portfolio_name")
             self._task_order = TaskOrders.create(self.user, ws)
@@ -177,7 +177,7 @@ class UpdateTaskOrderWorkflow(ShowTaskOrderWorkflow):
                 officer = TaskOrders.add_officer(
                     self.user, self.task_order, officer_type["role"], officer_data
                 )
-                ws_officer_member = WorkspaceRoles.get(self.workspace.id, officer.id)
+                ws_officer_member = PortfolioRoles.get(self.portfolio.id, officer.id)
                 invite_service = InvitationService(
                     self.user,
                     ws_officer_member,

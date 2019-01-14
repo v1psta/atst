@@ -224,10 +224,10 @@ def test_random_user_cannot_view_request():
     assert not RequestsAuthorization(user, request).can_view
 
 
-def test_auto_approve_and_create_workspace():
+def test_auto_approve_and_create_portfolio():
     request = RequestFactory.create()
-    workspace = Requests.auto_approve_and_create_workspace(request)
-    assert workspace
+    portfolio = Requests.auto_approve_and_create_portfolio(request)
+    assert portfolio
     assert request.reviews[0]
     assert request.reviews[0].full_name_reviewer == "System"
 

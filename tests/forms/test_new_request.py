@@ -72,7 +72,7 @@ class TestDetailsOfUseForm:
         request_form = self._make_form(data)
         assert request_form.validate()
 
-    def test_sessions_required_for_large_projects(self):
+    def test_sessions_required_for_large_applications(self):
         data = {**self.form_data, **self.migration_data}
         data["estimated_monthly_spend"] = "9999999"
         del data["number_user_sessions"]

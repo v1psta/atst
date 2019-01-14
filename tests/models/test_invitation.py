@@ -2,44 +2,44 @@ import pytest
 import datetime
 
 from atst.models.invitation import Invitation, Status
-from atst.models.workspace_role import Status as WorkspaceRoleStatus
+from atst.models.portfolio_role import Status as PortfolioRoleStatus
 
 from tests.factories import (
     InvitationFactory,
-    WorkspaceFactory,
+    PortfolioFactory,
     UserFactory,
-    WorkspaceRoleFactory,
+    PortfolioRoleFactory,
 )
 
 
 def test_expired_invite_is_not_revokable():
-    workspace = WorkspaceFactory.create()
+    portfolio = PortfolioFactory.create()
     user = UserFactory.create()
-    ws_role = WorkspaceRoleFactory.create(
-        workspace=workspace, user=user, status=WorkspaceRoleStatus.PENDING
+    ws_role = PortfolioRoleFactory.create(
+        portfolio=portfolio, user=user, status=PortfolioRoleStatus.PENDING
     )
     invite = InvitationFactory.create(
         expiration_time=datetime.datetime.now() - datetime.timedelta(minutes=60),
-        workspace_role=ws_role,
+        portfolio_role=ws_role,
     )
     assert not invite.is_revokable
 
 
 def test_unexpired_invite_is_revokable():
-    workspace = WorkspaceFactory.create()
+    portfolio = PortfolioFactory.create()
     user = UserFactory.create()
-    ws_role = WorkspaceRoleFactory.create(
-        workspace=workspace, user=user, status=WorkspaceRoleStatus.PENDING
+    ws_role = PortfolioRoleFactory.create(
+        portfolio=portfolio, user=user, status=PortfolioRoleStatus.PENDING
     )
-    invite = InvitationFactory.create(workspace_role=ws_role)
+    invite = InvitationFactory.create(portfolio_role=ws_role)
     assert invite.is_revokable
 
 
 def test_invite_is_not_revokable_if_invite_is_not_pending():
-    workspace = WorkspaceFactory.create()
+    portfolio = PortfolioFactory.create()
     user = UserFactory.create()
-    ws_role = WorkspaceRoleFactory.create(
-        workspace=workspace, user=user, status=WorkspaceRoleStatus.PENDING
+    ws_role = PortfolioRoleFactory.create(
+        portfolio=portfolio, user=user, status=PortfolioRoleStatus.PENDING
     )
-    invite = InvitationFactory.create(workspace_role=ws_role, status=Status.ACCEPTED)
+    invite = InvitationFactory.create(portfolio_role=ws_role, status=Status.ACCEPTED)
     assert not invite.is_revokable

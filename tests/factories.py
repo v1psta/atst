@@ -12,14 +12,14 @@ from atst.models.request_revision import RequestRevision
 from atst.models.request_review import RequestReview
 from atst.models.request_status_event import RequestStatusEvent, RequestStatus
 from atst.models.pe_number import PENumber
-from atst.models.project import Project
+from atst.models.application import Application
 from atst.models.legacy_task_order import LegacyTaskOrder, Source, FundingType
 from atst.models.task_order import TaskOrder
 from atst.models.user import User
 from atst.models.role import Role
-from atst.models.workspace import Workspace
-from atst.domain.roles import Roles, WORKSPACE_ROLES
-from atst.models.workspace_role import WorkspaceRole, Status as WorkspaceRoleStatus
+from atst.models.portfolio import Portfolio
+from atst.domain.roles import Roles, PORTFOLIO_ROLES
+from atst.models.portfolio_role import PortfolioRole, Status as PortfolioRoleStatus
 from atst.models.environment_role import EnvironmentRole
 from atst.models.invitation import Invitation, Status as InvitationStatus
 from atst.domain.invitations import Invitations
@@ -54,8 +54,8 @@ def random_future_date(year_min=1, year_max=5):
     )
 
 
-def random_workspace_role():
-    choice = random.choice(WORKSPACE_ROLES)
+def random_portfolio_role():
+    choice = random.choice(PORTFOLIO_ROLES)
     return Roles.get(choice["name"])
 
 
@@ -250,9 +250,9 @@ class LegacyTaskOrderFactory(Base):
     clin_2003 = random.randrange(100, 100_000)
 
 
-class WorkspaceFactory(Base):
+class PortfolioFactory(Base):
     class Meta:
-        model = Workspace
+        model = Portfolio
 
     request = factory.SubFactory(RequestFactory, with_task_order=True)
     # name it the same as the request ID by default
@@ -260,57 +260,59 @@ class WorkspaceFactory(Base):
 
     @classmethod
     def _create(cls, model_class, *args, **kwargs):
-        with_projects = kwargs.pop("projects", [])
+        with_applications = kwargs.pop("applications", [])
         owner = kwargs.pop("owner", UserFactory.create())
         members = kwargs.pop("members", [])
 
-        workspace = super()._create(model_class, *args, **kwargs)
+        portfolio = super()._create(model_class, *args, **kwargs)
 
-        projects = [
-            ProjectFactory.create(workspace=workspace, **p) for p in with_projects
+        applications = [
+            ApplicationFactory.create(portfolio=portfolio, **p)
+            for p in with_applications
         ]
 
-        workspace.request.creator = owner
-        WorkspaceRoleFactory.create(
-            workspace=workspace,
+        portfolio.request.creator = owner
+        PortfolioRoleFactory.create(
+            portfolio=portfolio,
             role=Roles.get("owner"),
             user=owner,
-            status=WorkspaceRoleStatus.ACTIVE,
+            status=PortfolioRoleStatus.ACTIVE,
         )
 
         for member in members:
             user = member.get("user", UserFactory.create())
             role_name = member["role_name"]
-            WorkspaceRoleFactory.create(
-                workspace=workspace,
+            PortfolioRoleFactory.create(
+                portfolio=portfolio,
                 role=Roles.get(role_name),
                 user=user,
-                status=WorkspaceRoleStatus.ACTIVE,
+                status=PortfolioRoleStatus.ACTIVE,
             )
 
-        workspace.projects = projects
-        return workspace
+        portfolio.applications = applications
+        return portfolio
 
 
-class ProjectFactory(Base):
+class ApplicationFactory(Base):
     class Meta:
-        model = Project
+        model = Application
 
-    workspace = factory.SubFactory(WorkspaceFactory)
+    portfolio = factory.SubFactory(PortfolioFactory)
     name = factory.Faker("name")
-    description = "A test project"
+    description = "A test application"
 
     @classmethod
     def _create(cls, model_class, *args, **kwargs):
         with_environments = kwargs.pop("environments", [])
-        project = super()._create(model_class, *args, **kwargs)
+        application = super()._create(model_class, *args, **kwargs)
 
         environments = [
-            EnvironmentFactory.create(project=project, **e) for e in with_environments
+            EnvironmentFactory.create(application=application, **e)
+            for e in with_environments
         ]
 
-        project.environments = environments
-        return project
+        application.environments = environments
+        return application
 
 
 class EnvironmentFactory(Base):
@@ -332,14 +334,14 @@ class EnvironmentFactory(Base):
         return environment
 
 
-class WorkspaceRoleFactory(Base):
+class PortfolioRoleFactory(Base):
     class Meta:
-        model = WorkspaceRole
+        model = PortfolioRole
 
-    workspace = factory.SubFactory(WorkspaceFactory)
-    role = factory.LazyFunction(random_workspace_role)
+    portfolio = factory.SubFactory(PortfolioFactory)
+    role = factory.LazyFunction(random_portfolio_role)
     user = factory.SubFactory(UserFactory)
-    status = WorkspaceRoleStatus.PENDING
+    status = PortfolioRoleStatus.PENDING
 
 
 class EnvironmentRoleFactory(Base):
@@ -364,7 +366,7 @@ class TaskOrderFactory(Base):
     class Meta:
         model = TaskOrder
 
-    workspace = factory.SubFactory(WorkspaceFactory)
+    portfolio = factory.SubFactory(PortfolioFactory)
 
     clin_01 = factory.LazyFunction(lambda *args: random.randrange(100, 100_000))
     clin_03 = factory.LazyFunction(lambda *args: random.randrange(100, 100_000))
@@ -374,7 +376,7 @@ class TaskOrderFactory(Base):
     defense_component = factory.LazyFunction(random_service_branch)
     app_migration = random_choice(data.APP_MIGRATION)
     native_apps = random.choices(["yes", "no", "not_sure"])
-    complexity = [random_choice(data.PROJECT_COMPLEXITY)]
+    complexity = [random_choice(data.APPLICATION_COMPLEXITY)]
     dev_team = [random_choice(data.DEV_TEAM)]
     team_experience = random_choice(data.TEAM_EXPERIENCE)
 

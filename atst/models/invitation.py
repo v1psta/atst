@@ -27,11 +27,11 @@ class Invitation(Base, TimestampsMixin, AuditableMixin):
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), index=True)
     user = relationship("User", backref="invitations", foreign_keys=[user_id])
 
-    workspace_role_id = Column(
-        UUID(as_uuid=True), ForeignKey("workspace_roles.id"), index=True
+    portfolio_role_id = Column(
+        UUID(as_uuid=True), ForeignKey("portfolio_roles.id"), index=True
     )
-    workspace_role = relationship(
-        "WorkspaceRole",
+    portfolio_role = relationship(
+        "PortfolioRole",
         backref=backref("invitations", order_by="Invitation.time_created"),
     )
 
@@ -47,8 +47,8 @@ class Invitation(Base, TimestampsMixin, AuditableMixin):
     email = Column(String, nullable=False)
 
     def __repr__(self):
-        return "<Invitation(user='{}', workspace_role='{}', id='{}', email='{}')>".format(
-            self.user_id, self.workspace_role_id, self.id, self.email
+        return "<Invitation(user='{}', portfolio_role='{}', id='{}', email='{}')>".format(
+            self.user_id, self.portfolio_role_id, self.id, self.email
         )
 
     @property
@@ -91,13 +91,13 @@ class Invitation(Base, TimestampsMixin, AuditableMixin):
         ]
 
     @property
-    def workspace(self):
-        if self.workspace_role:  # pragma: no branch
-            return self.workspace_role.workspace
+    def portfolio(self):
+        if self.portfolio_role:  # pragma: no branch
+            return self.portfolio_role.portfolio
 
     @property
     def user_name(self):
-        return self.workspace_role.user.full_name
+        return self.portfolio_role.user.full_name
 
     @property
     def is_revokable(self):
@@ -122,5 +122,5 @@ class Invitation(Base, TimestampsMixin, AuditableMixin):
         return change_set
 
     @property
-    def workspace_id(self):
-        return self.workspace_role.workspace_id
+    def portfolio_id(self):
+        return self.portfolio_role.portfolio_id

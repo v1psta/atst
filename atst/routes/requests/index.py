@@ -14,7 +14,7 @@ class RequestsIndex(object):
 
     def execute(self):
         if (
-            Permissions.REVIEW_AND_APPROVE_JEDI_WORKSPACE_REQUEST
+            Permissions.REVIEW_AND_APPROVE_JEDI_PORTFOLIO_REQUEST
             in self.user.atat_permissions
         ):
             context = self._ccpo_view(self.user)
@@ -63,10 +63,10 @@ class RequestsIndex(object):
             "extended_view": False,
         }
 
-    def _workspace_link_for_request(self, request):
+    def _portfolio_link_for_request(self, request):
         if request.is_approved:
             return url_for(
-                "workspaces.workspace_projects", workspace_id=request.workspace.id
+                "portfolios.portfolio_applications", portfolio_id=request.portfolio.id
             )
         else:
             return None
@@ -80,7 +80,7 @@ class RequestsIndex(object):
         annual_usage = request.annual_spend
 
         return {
-            "workspace_id": request.workspace.id if request.workspace else None,
+            "portfolio_id": request.portfolio.id if request.portfolio else None,
             "name": request.displayname,
             "is_new": is_new,
             "is_approved": request.is_approved,
@@ -93,7 +93,7 @@ class RequestsIndex(object):
             "edit_link": url_for("requests.edit", request_id=request.id),
             "action_required": request.action_required_by == viewing_role,
             "dod_component": request.latest_revision.dod_component,
-            "workspace_link": self._workspace_link_for_request(request),
+            "portfolio_link": self._portfolio_link_for_request(request),
         }
 
 

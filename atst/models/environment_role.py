@@ -45,10 +45,10 @@ class EnvironmentRole(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
             "role": self.role,
             "environment": self.environment.displayname,
             "environment_id": str(self.environment_id),
-            "project": self.environment.project.name,
-            "project_id": str(self.environment.project_id),
-            "workspace": self.environment.project.workspace.name,
-            "workspace_id": str(self.environment.project.workspace.id),
+            "application": self.environment.application.name,
+            "application_id": str(self.environment.application_id),
+            "portfolio": self.environment.application.portfolio.name,
+            "portfolio_id": str(self.environment.application.portfolio.id),
         }
 
 

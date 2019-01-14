@@ -1,30 +1,30 @@
 from flask import flash, render_template_string
 
 MESSAGES = {
-    "new_workspace_member": {
+    "new_portfolio_member": {
         "title_template": "Member added successfully",
         "message_template": """
-          <p>{{ new_member.user_name }} was successfully invited via email to this workspace. They do not yet have access to any environments.</p>
-          <p><a href="{{ url_for('workspaces.update_member', workspace_id=workspace.id, member_id=new_member.user_id) }}">Add environment access.</a></p>
+          <p>{{ new_member.user_name }} was successfully invited via email to this portfolio. They do not yet have access to any environments.</p>
+          <p><a href="{{ url_for('portfolios.update_member', portfolio_id=portfolio.id, member_id=new_member.user_id) }}">Add environment access.</a></p>
         """,
         "category": "success",
     },
-    "revoked_workspace_access": {
-        "title_template": "Removed workspace access",
+    "revoked_portfolio_access": {
+        "title_template": "Removed portfolio access",
         "message_template": """
-          <p>Workspace access successfully removed from {{ member_name }}.</p>
+          <p>Portfolio access successfully removed from {{ member_name }}.</p>
         """,
         "category": "success",
     },
-    "resend_workspace_invitation": {
+    "resend_portfolio_invitation": {
         "title_template": "Invitation resent",
         "message_template": """
           <p>Successfully sent a new invitation to {{ user_name }}.</p>
         """,
         "category": "success",
     },
-    "workspace_role_updated": {
-        "title_template": "Workspace role updated successfully",
+    "portfolio_role_updated": {
+        "title_template": "Portfolio role updated successfully",
         "message_template": """
           <p>{{ member_name }}'s role  was successfully updated to {{ updated_role }}</p>
         """,
@@ -44,14 +44,14 @@ MESSAGES = {
         """,
         "category": "warning",
     },
-    "new_workspace": {
-        "title_template": "Workspace created!",
+    "new_portfolio": {
+        "title_template": "Portfolio created!",
         "message_template": """
-             <p>You are now ready to create projects and environments within the JEDI Cloud.</p>
+             <p>You are now ready to create applications and environments within the JEDI Cloud.</p>
         """,
         "category": "success",
     },
-    "workspace_member_dod_id_error": {
+    "portfolio_member_dod_id_error": {
         "title_template": "CAC ID Error",
         "message_template": """
             The member attempted to accept this invite, but their CAC ID did not match the CAC ID you specified on the invite. Please confirm that the DOD ID is accurate.

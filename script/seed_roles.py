@@ -10,11 +10,11 @@ from sqlalchemy.orm.exc import NoResultFound
 from atst.app import make_config, make_app
 from atst.database import db
 from atst.models import Role, Permissions
-from atst.domain.roles import ATAT_ROLES, WORKSPACE_ROLES
+from atst.domain.roles import ATAT_ROLES, PORTFOLIO_ROLES
 
 
 def seed_roles():
-    for role_info in ATAT_ROLES + WORKSPACE_ROLES:
+    for role_info in ATAT_ROLES + PORTFOLIO_ROLES:
         role = Role(**role_info)
         try:
             existing_role = db.session.query(Role).filter_by(name=role.name).one()

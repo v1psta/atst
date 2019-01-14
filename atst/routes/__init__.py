@@ -52,25 +52,25 @@ def home():
     if user.atat_role_name == "ccpo":
         return redirect(url_for("requests.requests_index"))
 
-    num_workspaces = len(user.workspace_roles)
+    num_portfolios = len(user.portfolio_roles)
 
-    if num_workspaces == 0:
+    if num_portfolios == 0:
         return redirect(url_for("requests.requests_index"))
-    elif num_workspaces == 1:
-        workspace_role = user.workspace_roles[0]
-        workspace_id = workspace_role.workspace.id
-        is_request_owner = workspace_role.role.name == "owner"
+    elif num_portfolios == 1:
+        portfolio_role = user.portfolio_roles[0]
+        portfolio_id = portfolio_role.portfolio.id
+        is_request_owner = portfolio_role.role.name == "owner"
 
         if is_request_owner:
             return redirect(
-                url_for("workspaces.workspace_reports", workspace_id=workspace_id)
+                url_for("portfolios.portfolio_reports", portfolio_id=portfolio_id)
             )
         else:
             return redirect(
-                url_for("workspaces.workspace_projects", workspace_id=workspace_id)
+                url_for("portfolios.portfolio_applications", portfolio_id=portfolio_id)
             )
     else:
-        return redirect(url_for("workspaces.workspaces"))
+        return redirect(url_for("portfolios.portfolios"))
 
 
 @bp.route("/styleguide")

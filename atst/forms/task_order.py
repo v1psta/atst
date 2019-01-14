@@ -18,7 +18,7 @@ from .forms import CacheableForm
 from .data import (
     SERVICE_BRANCHES,
     APP_MIGRATION,
-    PROJECT_COMPLEXITY,
+    APPLICATION_COMPLEXITY,
     DEV_TEAM,
     TEAM_EXPERIENCE,
     PERIOD_OF_PERFORMANCE_LENGTH,
@@ -52,7 +52,7 @@ class AppInfoForm(CacheableForm):
     complexity = SelectMultipleField(
         translate("forms.task_order.complexity_label"),
         description=translate("forms.task_order.complexity_description"),
-        choices=PROJECT_COMPLEXITY,
+        choices=APPLICATION_COMPLEXITY,
         default="",
         widget=ListWidget(prefix_label=False),
         option_widget=CheckboxInput(),

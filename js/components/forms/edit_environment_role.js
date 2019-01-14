@@ -20,7 +20,7 @@ export default {
   props: {
     choices: Array,
     initialData: String,
-    projectId: String
+    applicationId: String
   },
 
   data: function () {
@@ -30,7 +30,7 @@ export default {
   },
 
   mounted: function() {
-    this.$root.$on('revoke-' + this.projectId, this.revoke)
+    this.$root.$on('revoke-' + this.applicationId, this.revoke)
   },
 
   methods: {

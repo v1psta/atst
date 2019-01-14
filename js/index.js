@@ -13,9 +13,9 @@ import DetailsOfUse from './components/forms/details_of_use'
 import poc from './components/forms/poc'
 import financial from './components/forms/financial'
 import toggler from './components/toggler'
-import NewProject from './components/forms/new_project'
+import NewApplication from './components/forms/new_application'
 import EditEnvironmentRole from './components/forms/edit_environment_role'
-import EditProjectRoles from './components/forms/edit_project_roles'
+import EditApplicationRoles from './components/forms/edit_application_roles'
 import funding from './components/forms/funding'
 import Modal from './mixins/modal'
 import selector from './components/selector'
@@ -44,7 +44,7 @@ const app = new Vue({
     DetailsOfUse,
     poc,
     financial,
-    NewProject,
+    NewApplication,
     selector,
     BudgetChart,
     SpendTable,
@@ -52,7 +52,7 @@ const app = new Vue({
     MembersList,
     LocalDatetime,
     EditEnvironmentRole,
-    EditProjectRoles,
+    EditApplicationRoles,
     RequestsList,
     ConfirmationPopover,
     funding,

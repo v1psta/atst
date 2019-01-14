@@ -5,8 +5,8 @@ export default {
   name: 'spend-table',
 
   props: {
-    projects: Object,
-    workspace: Object,
+    applications: Object,
+    portfolio: Object,
     environments: Object,
     currentMonthIndex: String,
     prevMonthIndex: String,
@@ -15,21 +15,21 @@ export default {
 
   data: function () {
     return {
-      projectsState: this.projects
+      applicationsState: this.applications
     }
   },
 
   created: function () {
-    Object.keys(this.projects).forEach(project => {
-      set(this.projectsState[project], 'isVisible', false)
+    Object.keys(this.applications).forEach(application => {
+      set(this.applicationsState[application], 'isVisible', false)
     })
   },
 
   methods: {
-    toggle: function (e, projectName) {
-      this.projectsState = Object.assign(this.projectsState, {
-        [projectName]: Object.assign(this.projectsState[projectName],{
-          isVisible: !this.projectsState[projectName].isVisible
+    toggle: function (e, applicationName) {
+      this.applicationsState = Object.assign(this.applicationsState, {
+        [applicationName]: Object.assign(this.applicationsState[applicationName],{
+          isVisible: !this.applicationsState[applicationName].isVisible
         })
       })
     },

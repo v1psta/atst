@@ -25,7 +25,7 @@
 @import 'components/topbar';
 @import 'components/global_layout';
 @import 'components/global_navigation';
-@import 'components/workspace_layout';
+@import 'components/portfolio_layout';
 @import 'components/site_action';
 @import 'components/empty_state';
 @import 'components/alerts';
@@ -42,8 +42,8 @@
 @import 'sections/login';
 @import 'sections/home';
 @import 'sections/request_approval';
-@import 'sections/projects_list';
-@import 'sections/project_edit';
+@import 'sections/application_list';
+@import 'sections/application_edit';
 @import 'sections/member_edit';
 @import 'sections/reports';
 @import 'sections/task_order';

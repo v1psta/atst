@@ -1,0 +1,26 @@
+.application-list-item {
+  .application-list-item__environment {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    .usa-input {
+      margin: 0;
+    }
+
+    .application-list-item__environment__link {
+      @include icon-link;
+      @include icon-link-large;
+    }
+
+    .application-list-item__environment__members {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+      span {
+        @include h6;
+      }
+    }
+  }
+}

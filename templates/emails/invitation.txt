@@ -1,12 +1,12 @@
-Join this JEDI Cloud Workspace
-{{ owner }} has invited you to join a JEDI Cloud Workspace.  Login now to view or use your JEDI Cloud resources.
+Join this JEDI Cloud Portfolio
+{{ owner }} has invited you to join a JEDI Cloud Portfolio.  Login now to view or use your JEDI Cloud resources.
 
-{{ url_for("workspaces.accept_invitation", token=token, _external=True) }}
+{{ url_for("portfolios.accept_invitation", token=token, _external=True) }}
 
 What is JEDI Cloud?
 JEDI Cloud is a DoD enterprise-wide solution for commercial cloud services.
 
-What is a JEDI Cloud Workspace?
-A JEDI Cloud Workspace is where you may access and manage the cloud resources  associated with your projects and environments.
+What is a JEDI Cloud Portfolio?
+A JEDI Cloud Portfolio is where you may access and manage the cloud resources  associated with your applications and environments.
 
 JEDI Cloud is managed by the Cloud Computing Program Office. Learn more at jedi.cloud.

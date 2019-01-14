@@ -1,0 +1,19 @@
+.application-edit__env-list-item {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+
+  .usa-input {
+    margin: 0 ($gap * 4) 0 0;
+    flex-grow: 1;
+  }
+
+  .application-edit__env-list-item__remover {
+    @include icon-link;
+    @include icon-link-vertical;
+    @include icon-link-color($color-red, $color-red-lightest);
+
+    margin-bottom: 0;
+    margin-right: -$gap;
+  }
+}

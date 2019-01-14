@@ -54,7 +54,7 @@ forms:
     phone_ext_mao_label: Extension (optional)
     phone_mao_label: Mission Owner phone number (optional)
   edit_member:
-    workspace_role_label: Workspace Role
+    portfolio_role_label: Portfolio Role
   edit_user:
     citizenship_description: What is your citizenship status?
     date_latest_training_description: |
@@ -75,7 +75,7 @@ forms:
   exceptions:
     message: Form validation failed.
   financial:
-    ba_code_description: 'BA Code is used to identify the purposes, projects, or types of activities financed by the appropriation fund. <br/><em>It should be two digits, followed by an optional letter.</em>'
+    ba_code_description: 'BA Code is used to identify the purposes, applications, or types of activities financed by the appropriation fund. <br/><em>It should be two digits, followed by an optional letter.</em>'
     ba_code_label: Program Budget Activity (BA) Code
     clin_0001_description: 'Review your task order document, the amounts for each CLIN must match exactly here'
     clin_0001_label: <dl><dt>CLIN 0001</dt> - <dd>Unclassified IaaS and PaaS Amount</dd></dl>
@@ -119,10 +119,10 @@ forms:
     email_label: Email Address
     first_name_label: First Name
     last_name_label: Last Name
-    workspace_role_description: 'The workspace role controls whether a member is permitted to organize a workspace into projects and environments, add members to this workspace, and view billing information.'
-    workspace_role_label: Workspace Role
+    portfolio_role_description: 'The portfolio role controls whether a member is permitted to organize a portfolio into applications and environments, add members to this portfolio, and view billing information.'
+    portfolio_role_label: Portfolio Role
   new_request:
-    am_poc_label: I am the Workspace Owner
+    am_poc_label: I am the Portfolio Owner
     average_daily_traffic_description: What is the average daily traffic you expect the systems under this cloud contract to use?
     average_daily_traffic_gb_description: What is the average daily traffic you expect the systems under this cloud contract to use?
     average_daily_traffic_gb_label: Average Daily Traffic (GB)
@@ -145,7 +145,7 @@ forms:
     jedi_usage_description: Your answer will help us provide tangible examples to DoD leadership how and why commercial cloud resources are accelerating the Department's missions
     jedi_usage_label: JEDI Usage
     lname_poc_label: Last Name
-    name_description: This name serves as a reference for your initial request and the associated workspace that will be created once this request is approved. You may edit this name later.
+    name_description: This name serves as a reference for your initial request and the associated portfolio that will be created once this request is approved. You may edit this name later.
     name_label: Name Your Request
     name_length_validation_message: Request names must be at least 4 and not more than 100 characters
     num_software_systems_description: Estimate the number of software systems that will be supported by this JEDI Cloud access request
@@ -157,12 +157,12 @@ forms:
     start_date_date_range_validation_message: Must be a date in the future.
     start_date_label: When do you expect to start using the JEDI Cloud (not for billing purposes)?
     technical_support_team_description: Are you working with a technical support team experienced in cloud migrations?
-  project:
+  application:
     description_label: Description
     environment_names_label: Environment Name
     environment_names_required_validation_message: Provide at least one environment name.
     environment_names_unique_validation_message: Environment names must be unique.
-    name_label: Project Name
+    name_label: Application Name
   task_order:
     portfolio_name_label: Organization Portfolio Name
     portfolio_name_description: The name of your office or organization. You can add multiple applications to your portfolio. Your task orders are used to pay for these applications and their environments.
@@ -208,14 +208,14 @@ forms:
     list_items_unique_message: Items must be unique
     name_message: 'This field accepts letters, numbers, commas, apostrophes, hyphens, and periods.'
     phone_number_message: Please enter a valid 5 or 10 digit phone number.
-  workspace:
-    name_label: Workspace Name
-    name_length_validation_message: Workspace names must be at least 4 and not more than 50 characters
+  portfolio:
+    name_label: Portfolio Name
+    name_length_validation_message: Portfolio names must be at least 4 and not more than 50 characters
 fragments:
-  edit_project_form:
-    existing_project_title: 'Edit {project_name} project'
-    explain: 'AT-AT allows you to organize your workspace into multiple projects, each of which may have environments.'
-    new_project_title: Add a new project
+  edit_application_form:
+    existing_application_title: 'Edit {application_name} application'
+    explain: 'AT-AT allows you to organize your portfolio into multiple applications, each of which may have environments.'
+    new_application_title: Add a new application
   edit_user_form:
     date_last_training_tooltip: When was the last time you completed the IA training? <br> Information Assurance (IA) training is an important step in cyber awareness.
     save_details_button: Save Details
@@ -225,7 +225,7 @@ fragments:
     paragraph_2: 'While your request is being reviewed, your next step is to create a Task Order (TO) associated with the JEDI Cloud. Please contact a Contracting Officer (KO), Contracting Officer Representative (COR), or a Financial Manager to help with this step.'
   pending_ccpo_approval_modal:
     paragraph_1: The CCPO will review and respond to your Financial Verification submission in 3 business days. You will be notified via email or phone.
-    paragraph_2: Once the financial verification is approved you will be invited to create your JEDI Workspace and set-up your projects. Click here for more details.
+    paragraph_2: Once the financial verification is approved you will be invited to create your JEDI Portfolio and set-up your applications. Click here for more details.
   pending_financial_verification:
     learn_more_link_text: Learn more about the JEDI Cloud Task Order and the Financial Verification process.
     paragraph_1: 'The next step is to create a Task Order associated with JEDI Cloud.  Please contact a Contracting Officer (KO), Contracting Officer Representative (COR), or a Financial Manager to help with this step.'
@@ -243,19 +243,19 @@ navigation:
   topbar:
     jedi_cloud_link_text: JEDI Cloud
     logout_link_title: Log out of JEDI Cloud
-    named_workspace: 'Workspace {workspace}'
-    no_other_active_workspaces: You have no other active JEDI workspaces.
-    other_active_workspaces: Other Active Workspaces
-    request_workspace_link_text: Request a new JEDI Workspace
-  workspace_navigation:
+    named_portfolio: 'Portfolio {portfolio}'
+    no_other_active_portfolios: You have no other active JEDI portfolios.
+    other_active_portfolios: Other Active Portfolios
+    request_portfolio_link_text: Request a new JEDI Portfolio
+  portfolio_navigation:
     add_new_member_label: Add New Member
-    add_new_project_label: Add New Project
+    add_new_application_label: Add New Application
     budget_report: Budget Report
     activity_log: Activity Log
     members: Members
-    projects: Projects
+    applications: Applications
     task_orders: Task Orders
-    workspace_settings: Workspace Settings
+    portfolio_settings: Portfolio Settings
 requests:
   _new:
     new_request: New Request
@@ -307,9 +307,9 @@ requests:
     filter_requests_by_status_label: Filter requests by status
     financial_verification_submitted_title: Financial Verification submitted!
     no_requests_found: No requests found.
-    no_workspaces_action_label: Create a new JEDI Cloud Request
-    no_workspaces_label: You currently have no JEDI Cloud workspaces.
-    no_workspaces_sub_message: A JEDI Cloud Workspace is where you manage your projects and control user access to those projects.
+    no_portfolios_action_label: Create a new JEDI Cloud Request
+    no_portfolios_label: You currently have no JEDI Cloud portfolios.
+    no_portfolios_sub_message: A JEDI Cloud Portfolio is where you manage your applications and control user access to those applications.
     pending_ccpo_action: Pending CCPO Action
     request_submitted_title: Request submitted!
     requests_in_progress: Requests in progress

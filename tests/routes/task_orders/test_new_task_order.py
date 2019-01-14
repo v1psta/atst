@@ -4,7 +4,7 @@ from flask import url_for
 from atst.domain.task_orders import TaskOrders
 from atst.routes.task_orders.new import ShowTaskOrderWorkflow, UpdateTaskOrderWorkflow
 
-from tests.factories import UserFactory, TaskOrderFactory, WorkspaceFactory
+from tests.factories import UserFactory, TaskOrderFactory, PortfolioFactory
 
 
 def test_new_task_order(client, user_session):
@@ -95,9 +95,9 @@ def test_task_order_form_shows_errors(client, user_session):
 @pytest.fixture
 def task_order():
     user = UserFactory.create()
-    workspace = WorkspaceFactory.create(owner=user)
+    portfolio = PortfolioFactory.create(owner=user)
 
-    return TaskOrderFactory.create(creator=user, workspace=workspace)
+    return TaskOrderFactory.create(creator=user, portfolio=portfolio)
 
 
 def test_show_task_order(task_order):
@@ -112,9 +112,9 @@ def test_show_task_order(task_order):
 def test_show_task_order_form_list_data():
     complexity = ["oconus", "tactical_edge"]
     user = UserFactory.create()
-    workspace = WorkspaceFactory.create(owner=user)
+    portfolio = PortfolioFactory.create(owner=user)
     task_order = TaskOrderFactory.create(
-        creator=user, workspace=workspace, complexity=complexity
+        creator=user, portfolio=portfolio, complexity=complexity
     )
     workflow = ShowTaskOrderWorkflow(user, task_order_id=task_order.id)
 
@@ -173,10 +173,10 @@ def test_invite_officers_to_task_order(task_order, queue):
         task_order.creator, to_data, screen=3, task_order_id=task_order.id
     )
     workflow.update()
-    workspace = task_order.workspace
-    # owner and three officers are workspace members
-    assert len(workspace.members) == 4
-    roles = [member.role.name for member in workspace.members]
+    portfolio = task_order.portfolio
+    # owner and three officers are portfolio members
+    assert len(portfolio.members) == 4
+    roles = [member.role.name for member in portfolio.members]
     # officers exist in roles
     assert roles.count("officer") == 3
     # email invitations are enqueued
@@ -198,9 +198,9 @@ def test_add_officer_but_do_not_invite(task_order, queue):
         task_order.creator, to_data, screen=3, task_order_id=task_order.id
     )
     workflow.update()
-    workspace = task_order.workspace
-    # owner is only workspace member
-    assert len(workspace.members) == 1
+    portfolio = task_order.portfolio
+    # owner is only portfolio member
+    assert len(portfolio.members) == 1
     # no invitations are enqueued
     assert len(queue.get_queue()) == 0
 
@@ -208,10 +208,10 @@ def test_add_officer_but_do_not_invite(task_order, queue):
 def test_update_does_not_resend_invitation():
     user = UserFactory.create()
     contracting_officer = UserFactory.create()
-    workspace = WorkspaceFactory.create(owner=user)
+    portfolio = PortfolioFactory.create(owner=user)
     task_order = TaskOrderFactory.create(
         creator=user,
-        workspace=workspace,
+        portfolio=portfolio,
         ko_first_name=contracting_officer.first_name,
         ko_last_name=contracting_officer.last_name,
         ko_dod_id=contracting_officer.dod_id,

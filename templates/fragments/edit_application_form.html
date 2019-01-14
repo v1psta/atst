@@ -1,0 +1,18 @@
+{% from "components/text_input.html" import TextInput %}
+
+{% set title_text = ('fragments.edit_application_form.existing_application_title' | translate({ "application_name": application.name })) if application else ('fragments.edit_application_form.new_application_title' | translate) %}
+
+{{ form.csrf_token }}
+<div class="panel">
+  <div class="panel__heading panel__heading--grow">
+    <h1>{{ title_text }}</h1>
+  </div>
+
+  <div class="panel__content">
+    <p>
+      {{ "fragments.edit_application_form.explain" | translate }}
+    </p>
+    {{ TextInput(form.name) }}
+    {{ TextInput(form.description, paragraph=True) }}
+  </div>
+</div>

@@ -1,4 +1,4 @@
-from atst.domain.roles import WORKSPACE_ROLES as WORKSPACE_ROLE_DEFINITIONS
+from atst.domain.roles import PORTFOLIO_ROLES as PORTFOLIO_ROLE_DEFINITIONS
 
 SERVICE_BRANCHES = [
     ("", "Select an option"),
@@ -6,8 +6,8 @@ SERVICE_BRANCHES = [
     ("Army and Air Force Exchange Service", "Army and Air Force Exchange Service"),
     ("Army, Department of the", "Army, Department of the"),
     (
-        "Defense Advanced Research Projects Agency",
-        "Defense Advanced Research Projects Agency",
+        "Defense Advanced Research Applications Agency",
+        "Defense Advanced Research Applications Agency",
     ),
     ("Defense Commissary Agency", "Defense Commissary Agency"),
     ("Defense Contract Audit Agency", "Defense Contract Audit Agency"),
@@ -105,9 +105,9 @@ COMPLETION_DATE_RANGES = [
     ("Above 12 months", "Above 12 months"),
 ]
 
-WORKSPACE_ROLES = [
+PORTFOLIO_ROLES = [
     (role["name"], {"name": role["display_name"], "description": role["description"]})
-    for role in WORKSPACE_ROLE_DEFINITIONS
+    for role in PORTFOLIO_ROLE_DEFINITIONS
     if role["name"] is not "officer"
 ]
 
@@ -137,7 +137,7 @@ ENVIRONMENT_ROLES = [
         "billing_administrator",
         {
             "name": "Billing Administrator",
-            "description": "Views cloud resource usage, budget reports, and invoices; Tracks budgets, including spend reports, cost planning and projections, and sets limits based on cloud service usage.",
+            "description": "Views cloud resource usage, budget reports, and invoices; Tracks budgets, including spend reports, cost planning and applicationions, and sets limits based on cloud service usage.",
         },
     ),
     (
@@ -162,7 +162,7 @@ ENVIRONMENT_ROLES = [
 
 ENV_ROLE_MODAL_DESCRIPTION = {
     "header": "Assign Environment Role",
-    "body": "An environment role determines the permissions a member of the workspace assumes when using the JEDI Cloud.<br/><br/>A member may have different environment roles across different projects. A member can only have one assigned environment role in a given environment.",
+    "body": "An environment role determines the permissions a member of the portfolio assumes when using the JEDI Cloud.<br/><br/>A member may have different environment roles across different applications. A member can only have one assigned environment role in a given environment.",
 }
 
 FUNDING_TYPES = [
@@ -186,7 +186,7 @@ APP_MIGRATION = [
     ("not_sure", "Not Sure"),
 ]
 
-PROJECT_COMPLEXITY = [
+APPLICATION_COMPLEXITY = [
     ("storage", "Storage "),
     ("data_analytics", "Data Analytics "),
     ("conus", "CONUS Access "),
@@ -210,7 +210,7 @@ TEAM_EXPERIENCE = [
     ("built_3", "Built or Migrated 3-5 applications"),
     (
         "built_many",
-        "Built or migrated many applications, or consulted on several such projects",
+        "Built or migrated many applications, or consulted on several such applications",
     ),
 ]
 

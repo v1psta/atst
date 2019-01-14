@@ -3,7 +3,7 @@ from sqlalchemy.orm.exc import NoResultFound
 from atst.database import db
 from atst.models.task_order import TaskOrder
 from atst.models.permissions import Permissions
-from atst.domain.workspaces import Workspaces
+from atst.domain.portfolios import Portfolios
 from atst.domain.authz import Authorization
 from .exceptions import NotFoundError
 
@@ -63,11 +63,11 @@ class TaskOrders(object):
             raise NotFoundError("task_order")
 
     @classmethod
-    def create(cls, creator, workspace):
-        Authorization.check_workspace_permission(
-            creator, workspace, Permissions.UPDATE_TASK_ORDER, "add task order"
+    def create(cls, creator, portfolio):
+        Authorization.check_portfolio_permission(
+            creator, portfolio, Permissions.UPDATE_TASK_ORDER, "add task order"
         )
-        task_order = TaskOrder(workspace=workspace, creator=creator)
+        task_order = TaskOrder(portfolio=portfolio, creator=creator)
 
         db.session.add(task_order)
         db.session.commit()
@@ -116,39 +116,39 @@ class TaskOrders(object):
 
     @classmethod
     def add_officer(cls, user, task_order, officer_type, officer_data):
-        Authorization.check_workspace_permission(
+        Authorization.check_portfolio_permission(
             user,
-            task_order.workspace,
+            task_order.portfolio,
             Permissions.ADD_TASK_ORDER_OFFICER,
             "add task order officer",
         )
 
         if officer_type in TaskOrders.OFFICERS:
-            workspace = task_order.workspace
+            portfolio = task_order.portfolio
 
             existing_member = next(
                 (
                     member
-                    for member in workspace.members
+                    for member in portfolio.members
                     if member.user.dod_id == officer_data["dod_id"]
                 ),
                 None,
             )
 
             if existing_member:
-                workspace_user = existing_member.user
+                portfolio_user = existing_member.user
             else:
-                member = Workspaces.create_member(
-                    user, workspace, {**officer_data, "workspace_role": "officer"}
+                member = Portfolios.create_member(
+                    user, portfolio, {**officer_data, "portfolio_role": "officer"}
                 )
-                workspace_user = member.user
+                portfolio_user = member.user
 
-            setattr(task_order, officer_type, workspace_user)
+            setattr(task_order, officer_type, portfolio_user)
 
             db.session.add(task_order)
             db.session.commit()
 
-            return workspace_user
+            return portfolio_user
         else:
             raise TaskOrderError(
                 "{} is not an officer role on task orders".format(officer_type)

@@ -7,11 +7,11 @@ from .request_status_event import RequestStatusEvent
 from .permissions import Permissions
 from .role import Role
 from .user import User
-from .workspace_role import WorkspaceRole
+from .portfolio_role import PortfolioRole
 from .pe_number import PENumber
 from .legacy_task_order import LegacyTaskOrder
-from .workspace import Workspace
-from .project import Project
+from .portfolio import Portfolio
+from .application import Application
 from .environment import Environment
 from .attachment import Attachment
 from .request_revision import RequestRevision

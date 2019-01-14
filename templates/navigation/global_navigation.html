@@ -1,6 +1,6 @@
 {% from "components/sidenav_item.html" import SidenavItem %}
 
-<div class="global-navigation sidenav {% if workspace %}global-navigation__context--workspace{% endif %}">
+<div class="global-navigation sidenav {% if portfolio %}global-navigation__context--portfolio{% endif %}">
   <ul>
     {{ SidenavItem("New Task Order",
       href=url_for("task_orders.get_started"),
@@ -8,8 +8,8 @@
       active=g.matchesPath('/task_orders/new'),
       ) }}
 
-    {% if g.current_user.has_workspaces %}
-      {{ SidenavItem("Workspaces", href="/workspaces", icon="cloud", active=g.matchesPath('/workspaces')) }}
+    {% if g.current_user.has_portfolios %}
+      {{ SidenavItem("Portfolios", href="/portfolios", icon="cloud", active=g.matchesPath('/portfolios')) }}
     {% endif %}
 
     {% if g.Authorization.has_atat_permission(g.current_user, g.Permissions.VIEW_AUDIT_LOG) %}

@@ -1,0 +1,113 @@
+{% extends "portfolios/base.html" %}
+
+{% from "components/empty_state.html" import EmptyState %}
+{% from "components/icon.html" import Icon %}
+
+{% block portfolio_content %}
+
+{% if not portfolio.members %}
+
+  {% set user_can_invite = user_can(permissions.ASSIGN_AND_UNASSIGN_ATAT_ROLE) %}
+
+  {{ EmptyState(
+    'There are currently no members in this Portfolio.',
+    action_label='Invite a new Member' if user_can_invite else None,
+    action_href='/members/new' if user_can_invite else None,
+    sub_message=None if user_can_invite else 'Please contact your JEDI Cloud portfolio administrator to invite new members.',
+    icon='avatar'
+  ) }}
+
+
+{% else %}
+
+{% include "fragments/flash.html" %}
+
+<members-list
+  inline-template
+  id="search-template"
+  v-bind:members='{{ members | tojson}}'
+  v-bind:role_choices='{{ role_choices | tojson}}'
+  v-bind:status_choices='{{ status_choices | tojson}}'>
+  <div>
+  <form class='search-bar' @submit.prevent>
+    <div class='usa-input search-input'>
+      <label for='members-search'>Search members by name</label>
+      <input v-model='searchValue' type='search' id='members-search' name='members-search' placeholder="Search by name"/>
+      <button type="button"></button>
+    </div>
+
+    <div class="search-bar__filters">
+      <div class='usa-input'>
+        <label for='filter-status'>Filter members by status</label>
+        <select v-model="status" id="filter-status" name="filter-status">
+          <option value="" selected disabled>Filter by status</option>
+          <option value="all">View All</option>
+          {% for status in status_choices %}
+            <option value='{{ status.name }}'>{{ status.display_name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class='usa-input'>
+        <label for='filter-role'>Filter members by role</label>
+        <select v-model="role" id="filter-role" name="filter-role">
+          <option value="" selected disabled>Filter by role</option>
+          <option value="all">View All</option>
+          {% for role in role_choices %}
+            <option value='{{ role.name }}'>{{ role.display_name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+  </form>
+
+  <div class='responsive-table-wrapper'>
+    <table v-cloak v-if='searchedList && searchedList.length'>
+      <thead>
+        <tr>
+          <th v-for="col in getColumns()" @click="updateSort(col.displayName)" :width="col.width" :class="col.class" scope="col">
+            !{ col.displayName }
+            <span v-if="col.displayName === sortInfo.columnName && sortInfo.isAscending">
+              {{ Icon("caret_down") }}
+            </span>
+            <span v-if="col.displayName === sortInfo.columnName && !sortInfo.isAscending">
+              {{ Icon("caret_up") }}
+            </span>
+          </th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr v-for='member in searchedList'>
+          <td>
+            <a :href="member.edit_link" class="icon-link icon-link--large" v-html="member.name"></a>
+          </td>
+          <td class="table-cell--align-right" v-if='member.num_env'>
+            <span v-html="member.num_env"></span>
+          </td>
+          <td class='table-cell--shrink' v-else>
+            <span class="label label--info">No Environment Access</span>
+          </td>
+          <td v-html="member.status"></td>
+          <td v-html="member.role"></td>
+        </tr>
+      </tbody>
+    </table>
+    <div v-else>
+      {{ EmptyState(
+        'No members found.',
+        action_label=None,
+        action_href=None,
+        sub_message='Please try a different search.',
+        icon=None
+      ) }}
+    </div>
+  </div>
+</div>
+</members-list>
+
+{% endif %}
+
+
+{% endblock %}
+

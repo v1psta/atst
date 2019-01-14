@@ -83,10 +83,10 @@ export default {
     unmask: [],
     validationError: 'Please enter a valid BA Code. Note that it should be two digits, followed by an optional letter.'
   },
-  workspaceName: {
+  portfolioName: {
     mask: false,
     match: /^.{4,100}$/,
     unmask: [],
-    validationError: 'Workspace and request names must be at least 4 and not more than 100 characters'
+    validationError: 'Portfolio and request names must be at least 4 and not more than 100 characters'
   },
 }

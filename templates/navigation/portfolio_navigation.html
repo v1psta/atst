@@ -1,0 +1,68 @@
+{% from "components/sidenav_item.html" import SidenavItem %}
+
+<nav class='sidenav portfolio-navigation'>
+  <ul>
+    {{ SidenavItem(
+      ("navigation.portfolio_navigation.applications" | translate),
+      href=url_for("portfolios.portfolio_applications", portfolio_id=portfolio.id),
+      active=request.url_rule.rule.startswith('/portfolios/<portfolio_id>/applications'),
+      subnav=None if not user_can(permissions.ADD_APPLICATION_IN_PORTFOLIO) else [
+        {
+          "label": ("navigation.portfolio_navigation.add_new_application_label" | translate),
+          "href": url_for('portfolios.new_application', portfolio_id=portfolio.id),
+          "active": g.matchesPath('\/portfolios\/[A-Za-z0-9-]*\/applications'),
+          "icon": "plus"
+        }
+      ]
+    ) }}
+
+    {% if user_can(permissions.VIEW_PORTFOLIO_MEMBERS) %}
+      {{ SidenavItem(
+        ("navigation.portfolio_navigation.members" | translate),
+        href=url_for("portfolios.portfolio_members", portfolio_id=portfolio.id),
+        active=request.url_rule.rule.startswith('/portfolios/<portfolio_id>/members'),
+        subnav=None if not user_can(permissions.ASSIGN_AND_UNASSIGN_ATAT_ROLE) else [
+          {
+            "label": ("navigation.portfolio_navigation.add_new_member_label" | translate),
+            "href": url_for("portfolios.new_member", portfolio_id=portfolio.id),
+            "active": request.url_rule.rule.startswith('/portfolios/<portfolio_id>/members/new'),
+            "icon": "plus"
+          }
+        ]
+      ) }}
+    {% endif %}
+
+    {% if user_can(permissions.VIEW_USAGE_DOLLARS) %}
+      {{ SidenavItem(
+        ("navigation.portfolio_navigation.budget_report" | translate),
+        href=url_for("portfolios.portfolio_reports", portfolio_id=portfolio.id),
+        active=request.url_rule.rule.startswith('/portfolios/<portfolio_id>/reports')
+      ) }}
+    {% endif %}
+
+    {{ SidenavItem(
+      ("navigation.portfolio_navigation.task_orders" | translate),
+      href=url_for("portfolios.portfolio_task_orders", portfolio_id=portfolio.id),
+      active=request.url_rule.rule.startswith('/portfolios/<portfolio_id>/task_order'),
+      subnav=None
+    ) }}
+
+    {% if user_can(permissions.EDIT_PORTFOLIO_INFORMATION) %}
+      {{ SidenavItem(
+        ("navigation.portfolio_navigation.portfolio_settings" | translate),
+        href=url_for("portfolios.portfolio", portfolio_id=portfolio.id),
+        active=request.url_rule.rule.startswith('/portfolios/<portfolio_id>/edit'),
+        subnav=None
+      ) }}
+    {% endif %}
+
+    {% if user_can(permissions.VIEW_PORTFOLIO_AUDIT_LOG) %}
+      {{ SidenavItem(
+        ("navigation.portfolio_navigation.activity_log" | translate),
+        href=url_for("portfolios.portfolio_activity", portfolio_id=portfolio.id),
+        active=request.url_rule.rule.startswith('/portfolios/<portfolio_id>/activity')
+      ) }}
+    {% endif %}
+
+  </ul>
+</nav>

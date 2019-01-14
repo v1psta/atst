@@ -1,26 +1,26 @@
 import pytest
 
-from tests.factories import UserFactory, WorkspaceFactory, RequestFactory
-from atst.domain.workspaces import Workspaces
+from tests.factories import UserFactory, PortfolioFactory, RequestFactory
+from atst.domain.portfolios import Portfolios
 
 
-def test_user_with_workspaces_has_workspaces_nav(client, user_session):
-    workspace = WorkspaceFactory.create()
-    user_session(workspace.owner)
+def test_user_with_portfolios_has_portfolios_nav(client, user_session):
+    portfolio = PortfolioFactory.create()
+    user_session(portfolio.owner)
     response = client.get("/home", follow_redirects=True)
-    assert b'href="/workspaces"' in response.data
+    assert b'href="/portfolios"' in response.data
 
 
 @pytest.mark.skip(reason="this may no longer be accurate")
-def test_user_without_workspaces_has_no_workspaces_nav(client, user_session):
+def test_user_without_portfolios_has_no_portfolios_nav(client, user_session):
     user = UserFactory.create()
     user_session(user)
     response = client.get("/home", follow_redirects=True)
-    assert b'href="/workspaces"' not in response.data
+    assert b'href="/portfolios"' not in response.data
 
 
 @pytest.mark.skip(reason="this may no longer be accurate")
-def test_request_owner_with_no_workspaces_redirected_to_requests(client, user_session):
+def test_request_owner_with_no_portfolios_redirected_to_requests(client, user_session):
     request = RequestFactory.create()
     user_session(request.creator)
     response = client.get("/home", follow_redirects=False)
@@ -28,31 +28,31 @@ def test_request_owner_with_no_workspaces_redirected_to_requests(client, user_se
     assert "/requests" in response.location
 
 
-def test_request_owner_with_one_workspace_redirected_to_reports(client, user_session):
+def test_request_owner_with_one_portfolio_redirected_to_reports(client, user_session):
     request = RequestFactory.create()
-    workspace = Workspaces.create_from_request(request)
+    portfolio = Portfolios.create_from_request(request)
 
     user_session(request.creator)
     response = client.get("/home", follow_redirects=False)
 
-    assert "/workspaces/{}/reports".format(workspace.id) in response.location
+    assert "/portfolios/{}/reports".format(portfolio.id) in response.location
 
 
-def test_request_owner_with_more_than_one_workspace_redirected_to_workspaces(
+def test_request_owner_with_more_than_one_portfolio_redirected_to_portfolios(
     client, user_session
 ):
     request_creator = UserFactory.create()
-    Workspaces.create_from_request(RequestFactory.create(creator=request_creator))
-    Workspaces.create_from_request(RequestFactory.create(creator=request_creator))
+    Portfolios.create_from_request(RequestFactory.create(creator=request_creator))
+    Portfolios.create_from_request(RequestFactory.create(creator=request_creator))
 
     user_session(request_creator)
     response = client.get("/home", follow_redirects=False)
 
-    assert "/workspaces" in response.location
+    assert "/portfolios" in response.location
 
 
 @pytest.mark.skip(reason="this may no longer be accurate")
-def test_non_owner_user_with_no_workspaces_redirected_to_requests(client, user_session):
+def test_non_owner_user_with_no_portfolios_redirected_to_requests(client, user_session):
     user = UserFactory.create()
 
     user_session(user)
@@ -61,39 +61,39 @@ def test_non_owner_user_with_no_workspaces_redirected_to_requests(client, user_s
     assert "/requests" in response.location
 
 
-def test_non_owner_user_with_one_workspace_redirected_to_workspace_projects(
+def test_non_owner_user_with_one_portfolio_redirected_to_portfolio_applications(
     client, user_session
 ):
     user = UserFactory.create()
-    workspace = WorkspaceFactory.create()
-    Workspaces._create_workspace_role(user, workspace, "developer")
+    portfolio = PortfolioFactory.create()
+    Portfolios._create_portfolio_role(user, portfolio, "developer")
 
     user_session(user)
     response = client.get("/home", follow_redirects=False)
 
-    assert "/workspaces/{}/projects".format(workspace.id) in response.location
+    assert "/portfolios/{}/applications".format(portfolio.id) in response.location
 
 
-def test_non_owner_user_with_mulitple_workspaces_redirected_to_workspaces(
+def test_non_owner_user_with_mulitple_portfolios_redirected_to_portfolios(
     client, user_session
 ):
     user = UserFactory.create()
     for _ in range(3):
-        workspace = WorkspaceFactory.create()
-        Workspaces._create_workspace_role(user, workspace, "developer")
+        portfolio = PortfolioFactory.create()
+        Portfolios._create_portfolio_role(user, portfolio, "developer")
 
     user_session(user)
     response = client.get("/home", follow_redirects=False)
 
-    assert "/workspaces" in response.location
+    assert "/portfolios" in response.location
 
 
 @pytest.mark.skip(reason="this may no longer be accurate")
 def test_ccpo_user_redirected_to_requests(client, user_session):
     user = UserFactory.from_atat_role("ccpo")
     for _ in range(3):
-        workspace = WorkspaceFactory.create()
-        Workspaces._create_workspace_role(user, workspace, "developer")
+        portfolio = PortfolioFactory.create()
+        Portfolios._create_portfolio_role(user, portfolio, "developer")
 
     user_session(user)
     response = client.get("/home", follow_redirects=False)

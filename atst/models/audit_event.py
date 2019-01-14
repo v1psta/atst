@@ -14,8 +14,8 @@ class AuditEvent(Base, TimestampsMixin):
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), index=True)
     user = relationship("User", backref="audit_events")
 
-    workspace_id = Column(UUID(as_uuid=True), ForeignKey("workspaces.id"), index=True)
-    workspace = relationship("Workspace", backref="audit_events")
+    portfolio_id = Column(UUID(as_uuid=True), ForeignKey("portfolios.id"), index=True)
+    portfolio = relationship("Portfolio", backref="audit_events")
 
     request_id = Column(UUID(as_uuid=True), ForeignKey("requests.id"), index=True)
     request = relationship("Request", backref="audit_events")

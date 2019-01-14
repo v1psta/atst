@@ -9,7 +9,7 @@ def test_action_required_mission_owner():
     creator = UserFactory.create()
     requests = RequestFactory.create_batch(5, creator=creator)
     Requests.submit(requests[0])
-    Requests.approve_and_create_workspace(requests[1])
+    Requests.approve_and_create_portfolio(requests[1])
 
     context = RequestsIndex(creator).execute()
 
@@ -20,7 +20,7 @@ def test_action_required_ccpo():
     creator = UserFactory.create()
     requests = RequestFactory.create_batch(5, creator=creator)
     Requests.submit(requests[0])
-    Requests.approve_and_create_workspace(requests[1])
+    Requests.approve_and_create_portfolio(requests[1])
 
     ccpo = UserFactory.from_atat_role("ccpo")
     context = RequestsIndex(ccpo).execute()

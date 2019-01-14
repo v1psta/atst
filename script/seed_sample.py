@@ -1,4 +1,4 @@
-# Add root project dir to the python path
+# Add root application dir to the python path
 import os
 import sys
 
@@ -9,44 +9,44 @@ from atst.database import db
 from atst.app import make_config, make_app
 from atst.domain.users import Users
 from atst.domain.requests import Requests
-from atst.domain.workspaces import Workspaces
-from atst.domain.projects import Projects
-from atst.domain.workspace_roles import WorkspaceRoles
+from atst.domain.portfolios import Portfolios
+from atst.domain.applications import Applications
+from atst.domain.portfolio_roles import PortfolioRoles
 from atst.models.invitation import Status as InvitationStatus
 from atst.domain.exceptions import AlreadyExistsError
 from tests.factories import RequestFactory, LegacyTaskOrderFactory, InvitationFactory
 from atst.routes.dev import _DEV_USERS as DEV_USERS
 
-WORKSPACE_USERS = [
+portfolio_USERS = [
     {
         "first_name": "Danny",
         "last_name": "Knight",
         "email": "knight@mil.gov",
-        "workspace_role": "developer",
+        "portfolio_role": "developer",
         "dod_id": "0000000001",
     },
     {
         "first_name": "Mario",
         "last_name": "Hudson",
         "email": "hudson@mil.gov",
-        "workspace_role": "billing_auditor",
+        "portfolio_role": "billing_auditor",
         "dod_id": "0000000002",
     },
     {
         "first_name": "Louise",
         "last_name": "Greer",
         "email": "greer@mil.gov",
-        "workspace_role": "admin",
+        "portfolio_role": "admin",
         "dod_id": "0000000003",
     },
 ]
 
-WORKSPACE_INVITED_USERS = [
+PORTFOLIO_INVITED_USERS = [
     {
         "first_name": "Frederick",
         "last_name": "Fitzgerald",
         "email": "frederick@mil.gov",
-        "workspace_role": "developer",
+        "portfolio_role": "developer",
         "dod_id": "0000000004",
         "status": InvitationStatus.REJECTED_WRONG_USER
     },
@@ -54,7 +54,7 @@ WORKSPACE_INVITED_USERS = [
         "first_name": "Gina",
         "last_name": "Guzman",
         "email": "gina@mil.gov",
-        "workspace_role": "developer",
+        "portfolio_role": "developer",
         "dod_id": "0000000005",
         "status": InvitationStatus.REJECTED_EXPIRED
     },
@@ -62,7 +62,7 @@ WORKSPACE_INVITED_USERS = [
         "first_name": "Hector",
         "last_name": "Harper",
         "email": "hector@mil.gov",
-        "workspace_role": "developer",
+        "portfolio_role": "developer",
         "dod_id": "0000000006",
         "status": InvitationStatus.REVOKED
     },
@@ -70,7 +70,7 @@ WORKSPACE_INVITED_USERS = [
         "first_name": "Isabella",
         "last_name": "Ingram",
         "email": "isabella@mil.gov",
-        "workspace_role": "developer",
+        "portfolio_role": "developer",
         "dod_id": "0000000007",
         "status": InvitationStatus.PENDING
     },
@@ -107,26 +107,26 @@ def seed_db():
             request.id, {"financial_verification": RequestFactory.mock_financial_data()}
         )
 
-        workspace = Workspaces.create(
-            user, name="{}'s workspace".format(user.first_name)
+        portfolio = Portfolios.create(
+            user, name="{}'s portfolio".format(user.first_name)
         )
-        for workspace_role in WORKSPACE_USERS:
-            ws_role = Workspaces.create_member(user, workspace, workspace_role)
+        for portfolio_role in portfolio_USERS:
+            ws_role = Portfolios.create_member(user, portfolio, portfolio_role)
             db.session.refresh(ws_role)
-            WorkspaceRoles.enable(ws_role)
+            PortfolioRoles.enable(ws_role)
 
-        for workspace_role in WORKSPACE_INVITED_USERS:
-            ws_role = Workspaces.create_member(user, workspace, workspace_role)
-            invitation = InvitationFactory.build(workspace_role=ws_role, status=workspace_role["status"])
+        for portfolio_role in PORTFOLIO_INVITED_USERS:
+            ws_role = Portfolios.create_member(user, portfolio, portfolio_role)
+            invitation = InvitationFactory.build(portfolio_role=ws_role, status=portfolio_role["status"])
             db.session.add(invitation)
 
         db.session.commit()
 
-        Projects.create(
+        Applications.create(
             user,
-            workspace=workspace,
-            name="First Project",
-            description="This is our first project.",
+            portfolio=portfolio,
+            name="First Application",
+            description="This is our first application.",
             environment_names=["dev", "staging", "prod"],
         )
 

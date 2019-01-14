@@ -60,7 +60,7 @@ export default {
         sortFunc: defaultSort,
       },
       {
-        displayName: 'Projected Annual Usage ($)',
+        displayName: 'Applicationed Annual Usage ($)',
         attr: 'annual_usage',
         sortFunc: defaultSort,
       },
