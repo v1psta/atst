@@ -1,7 +1,7 @@
 """change workspace and project
 
 Revision ID: acd0c11be93a
-Revises: 71cbe76c3b87
+Revises: 7f2040715b0d
 Create Date: 2019-01-11 10:01:07.667126
 
 """
@@ -11,7 +11,7 @@ from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
 revision = 'acd0c11be93a'
-down_revision = '71cbe76c3b87'
+down_revision = '7f2040715b0d'
 branch_labels = None
 depends_on = None
 
