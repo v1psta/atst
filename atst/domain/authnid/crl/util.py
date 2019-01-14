@@ -72,7 +72,8 @@ def write_crl(out_dir, target_dir, crl_location):
 
 def remove_bad_crl(out_dir, crl_location):
     crl = crl_local_path(out_dir, crl_location)
-    os.remove(crl)
+    if os.path.isfile(crl):
+        os.remove(crl)
 
 
 def refresh_crls(out_dir, target_dir, logger):
@@ -85,7 +86,10 @@ def refresh_crls(out_dir, target_dir, logger):
                 logger.info("successfully synced CRL from {}".format(crl_location))
             else:
                 logger.info("no updates for CRL from {}".format(crl_location))
-        except requests.exceptions.ChunkedEncodingError:
+        except (
+            requests.exceptions.ChunkedEncodingError,
+            requests.exceptions.ConnectionError,
+        ):
             if logger:
                 logger.error(
                     "Error downloading {}, removing file and continuing anyway".format(
