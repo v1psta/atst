@@ -1,5 +1,6 @@
 from enum import Enum
 
+import pendulum
 from sqlalchemy import Column, Numeric, String, ForeignKey, Date, Integer
 from sqlalchemy.types import ARRAY
 from sqlalchemy.orm import relationship
@@ -9,6 +10,8 @@ from atst.models import Base, types, mixins
 
 class Status(Enum):
     PENDING = "Pending"
+    ACTIVE = "Active"
+    EXPIRED = "Expired"
 
 
 class TaskOrder(Base, mixins.TimestampsMixin):
@@ -70,8 +73,20 @@ class TaskOrder(Base, mixins.TimestampsMixin):
     loa = Column(ARRAY(String))  # Line of Accounting (LOA)
 
     @property
+    def is_submitted(self):
+        return self.number is not None
+
+    @property
     def status(self):
-        return Status.PENDING
+        if self.is_submitted:
+            now = pendulum.now().date()
+            if self.start_date > now:
+                return Status.PENDING
+            elif self.end_date < now:
+                return Status.EXPIRED
+            return Status.ACTIVE
+        else:
+            return Status.PENDING
 
     @property
     def budget(self):
