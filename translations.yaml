@@ -425,6 +425,37 @@ task_orders:
       am_cor_label: I am the Contracting Officer Representative (COR) for this Task Order
       so_info_title: Security Officer Information
       so_info_paragraph: our Security Officer will need to answer some security configuration questions in order to generate a DD-254 document, then electronically sign.
+    review:
+      section_title: Review Your Task Order Info
+      app_info: What are you building
+      portfolio: Portfolio
+      dod: DoD Component
+      scope: Scope (Statement of Work)
+      reporting: Reporting
+      migration: App Migration
+      native_apps: Native Apps
+      yes_native: Yes, planning to develop natively in the cloud
+      no_native: No, not planning to develop natively in the cloud
+      not_sure_native: Not sure, unsure if planning to develop natively in the cloud
+      complexity: Project Complexity
+      team: Development Team
+      experience: Team Experience
+      funding: Funding
+      performance_period: Period of Performance length
+      usage_est_link: View Usage Estimate
+      to_value: Task Order Value
+      clin_1: 'CLIN #1: Unclassified Cloud'
+      clin_2: 'CLIN #2: Classified Cloud'
+      clin_3: 'CLIN #3: Unclassified Cloud'
+      clin_4: 'CLIN $4: Classified Cloud'
+      classified_inactive: (Available Soon)
+      oversight: Oversight
+      ko: Contracting Officer (KO)
+      cor: Contracting Officer Representative (COR)
+      so: IA Security Officer
+      dod_id: 'DoD ID:'
+      invited: Invited
+      not_invited: Not Yet Invited
 testing:
   example_string: Hello World
   example_with_variables: 'Hello, {name}!'

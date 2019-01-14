@@ -116,13 +116,10 @@ class TaskOrder(Base, mixins.TimestampsMixin):
 
     @property
     def native_apps_description(self):
-        # move all text into translations file!
-        if self.native_apps == "yes":
-            return "Yes, planning to develop natively in the cloud"
-        elif self.native_apps == "no":
-            return "No, not planning to develop natively in the cloud"
-        elif self.native_apps == "not_sure":
-            return "Not sure, unsure if planning to develop natively in the cloud"
+        if self.native_apps:
+            return translate(
+                "task_orders.new.review.{}_native".format(self.native_apps)
+            )
         else:
             return None
 
