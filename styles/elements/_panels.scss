@@ -70,6 +70,16 @@
         color: $color-gray-light;
       }
     }
+
+    .error {
+      color: $color-red;
+      font-weight: $font-bold;
+    }
+
+    .ok {
+      color: $color-green;
+      font-weight: $font-bold;
+    }
   }
 
   .panel__heading {

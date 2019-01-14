@@ -55,7 +55,11 @@
     @include icon-size(24);
   }
 
-  &.icon--remove {
+  &.icon--remove, &.icon--error {
     @include icon-color($color-red);
+  }
+
+  &.icon--ok {
+    @include icon-color($color-green)
   }
 }

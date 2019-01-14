@@ -123,7 +123,53 @@
       </tbody>
     </table>
   </div>
-</section>
+</div>
+
+<hr>
+
+<h3 class="subheading">Oversight {{ TOEditLink(screen=3) }}</h3>
+
+<div class="row">
+  <div class="col col--grow">
+    <h4>Contracting Officer (KO)</h4>
+    {{ task_order.ko_first_name }} {{ task_order.ko_last_name }}<br>
+    {{ task_order.ko_email }}<br>
+    {{ task_order.ko_phone_number }}<br>
+    DoD ID: {{ task_order.ko_dod_id}}<br>
+    {% if task_order.ko_invite %}
+      <span class="ok">{{ Icon('ok', classes='icon--ok') }} Invited</span>
+    {% else %}
+      <span class="error">{{ Icon('alert', classes='icon--error') }} Not Yet Invited</span>
+    {% endif %}
+  </div>
+
+  <div class="col col--grow">
+    <h4>Contracting Officer Representative (COR)</h4>
+    {{ task_order.cor_first_name }} {{ task_order.cor_last_name }}<br>
+    {{ task_order.cor_email }}<br>
+    {{ task_order.cor_phone_number }}<br>
+    DoD ID: {{ task_order.cor_dod_id}}<br>
+    {% if task_order.cor_invite %}
+      <span class="ok">{{ Icon('ok', classes='icon--ok') }} Invited</span>
+    {% else %}
+      <span class="error">{{ Icon('alert', classes='icon--error') }} Not Yet Invited</span>
+    {% endif %}
+  </div>
+</div>
+<div class="row">
+  <div class="col col--grow">
+    <h4>IA Security Officer</h4>
+    {{ task_order.so_first_name }} {{ task_order.so_last_name }}<br>
+    {{ task_order.so_email }}<br>
+    {{ task_order.so_phone_number }}<br>
+    DoD ID: {{ task_order.so_dod_id}}<br>
+    {% if task_order.so_invite %}
+      <span class="ok">{{ Icon('ok', classes='icon--ok') }} Invited</span>
+    {% else %}
+      <span class="error">{{ Icon('alert', classes='icon--error') }} Not Yet Invited</span>
+    {% endif %}
+  </div>
+</div>
 
 {% endblock %}
 
