@@ -132,24 +132,6 @@ class UpdateTaskOrderWorkflow(ShowTaskOrderWorkflow):
 
         return to_data
 
-    @property
-    def task_order_form_data(self):
-        to_data = self.form.data.copy()
-        if "portfolio_name" in to_data:
-            new_name = self.form.data["portfolio_name"]
-            old_name = self.task_order.to_dictionary()["portfolio_name"]
-            if not new_name is old_name:
-                Portfolios.update(self.task_order.portfolio, {"name": new_name})
-            to_data.pop("portfolio_name")
-
-        # don't save other text in DB unless "other" is checked
-        if "complexity" in to_data and "other" not in to_data["complexity"]:
-            to_data["complexity_other"] = ""
-        if "dev_team" in to_data and "other" not in to_data["dev_team"]:
-            to_data["dev_team_other"] = ""
-
-        return to_data
-
     def validate(self):
         return self.form.validate()
 
@@ -158,6 +140,7 @@ class UpdateTaskOrderWorkflow(ShowTaskOrderWorkflow):
             if "portfolio_name" in self.form.data:
                 new_name = self.form.data["portfolio_name"]
                 old_name = self.task_order.portfolio_name
+                if not new_name is old_name:
                     Portfolios.update(self.task_order.portfolio, {"name": new_name})
             TaskOrders.update(self.user, self.task_order, **self.task_order_form_data)
         else:
