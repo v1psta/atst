@@ -120,6 +120,9 @@ class OversightForm(CacheableForm):
         validators=[Required(), Length(min=10), IsNumber()],
     )
 
+    am_cor = BooleanField(
+        translate("forms.task_order.oversight_am_cor_label"),
+    )
     cor_first_name = StringField(
         translate("forms.task_order.oversight_first_name_label")
     )
