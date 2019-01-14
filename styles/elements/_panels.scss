@@ -65,6 +65,10 @@
       &.subheading {
         color: $color-gray;
       }
+
+      &.inactive {
+        color: $color-gray-light;
+      }
     }
   }
 

@@ -135,6 +135,15 @@ class TaskOrder(Base, mixins.TimestampsMixin):
         else:
             return None
 
+    @property
+    def performance_length_description(self):
+        if self.performance_length:
+            return translate(
+                "forms.task_order.performance_length.{}".format(self.performance_length)
+            )
+        else:
+            return None
+
 
     def to_dictionary(self):
         return {

@@ -88,64 +88,40 @@
 
 <hr>
 
-<section>
-  <h2>Invite Signatories/Collaborators</h2>
+<h3 class="subheading">Funding {{ TOEditLink(screen=2) }}</h3>
 
-  <div class="form-row">
-    <div class="form-col">
-      <div class="usa-input">
-        <fieldset class="usa-input__choices">
-          <legend>Financial Oversight</legend>
-          <p>
-          {% if task_order.ko_first_name %}
-            {{ task_order.ko_first_name }}
-            {{ task_order.ko_last_name }}
-          {% else %}
-            {{ RequiredLabel() }}
-          {% endif %}
-          (Contracting Officer)
-          </p>
-          <p>
-          {% if task_order.ko_first_name %}
-            {{ task_order.cor_first_name }}
-            {{ task_order.cor_last_name }}
-          {% else %}
-            {{ RequiredLabel() }}
-          {% endif %}
-          (Contracting Officer Representative)
-          </p>
-        </fieldset>
-      </div>
-    </div>
-    <div class="form-col">
-      <div class="usa-input">
-        <fieldset class="usa-input__choices">
-          <legend>Invite?</legend>
-        </fieldset>
-      </div>
-    </div>
+<div class="row">
+  <div class="col col--grow">
+    <h4>Period of Performance length</h4>
+    {{ task_order.performance_length_description or RequiredLabel() }}
+    <p><a href="#" class='icon-link' download>{{ Icon('download') }} View Usasge Estimate</a></p>
   </div>
-  <div class="form-row">
-    <div class="form-col">
-      <div class="usa-input">
-        <fieldset class="usa-input__choices">
-          <legend>Security Officer</legend>
-          <p>
-          {% if task_order.so_first_name %}
-            {{ task_order.so_first_name }}
-            {{ task_order.so_last_name }}
-          {% else %}
-            {{ RequiredLabel() }}
-          {% endif %}
-          (Security Officer)
-          </p>
-        </fieldset>
-      </div>
-    </div>
-    <div class="form-col">
-      <div class="usa-input">
-      </div>
-    </div>
+
+  <div class="col col--grow">
+    <table class="funding-summary">
+      <tbody>
+        <tr>
+          <td><h4>Task Order Value</h4></td>
+          <td class="table-cell--align-right">{{ '${:,.2f}'.format(task_order.budget) }}</td>
+        </tr>
+        <tr>
+          <td><h4>CLIN #1 Unclassified Cloud</h4></td>
+          <td class="table-cell--align-right">{{ '${:,.2f}'.format(task_order.clin_01) }}</td>
+        </tr>
+        <tr>
+          <td><h4 class="inactive">CLIN #2 Classified Cloud<div>(Available soon)</div></h4></td>
+          <td class="table-cell--align-right"></td>
+        </tr>
+        <tr>
+          <td><h4>CLIN #3 Unclassified Cloud</h4></td>
+          <td class="table-cell--align-right">{{ '${:,.2f}'.format(task_order.clin_03) }}</td>
+        </tr>
+        <tr>
+            <td><h4 class="inactive">CLIN #4 Classified Cloud<div>(Available soon)</div></h4></td>
+            <td class="table-cell--align-right"></td>
+        <tr>
+      </tbody>
+    </table>
   </div>
 </section>
 

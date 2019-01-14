@@ -77,7 +77,7 @@ class AppInfoForm(CacheableForm):
 
 class FundingForm(CacheableForm):
     performance_length = SelectField(
-        translate("forms.task_order.performance_length_label"),
+        translate("forms.task_order.performance_length.label"),
         choices=PERIOD_OF_PERFORMANCE_LENGTH,
     )
     start_date = DateField(
