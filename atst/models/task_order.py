@@ -1,14 +1,6 @@
 from enum import Enum
 
-from sqlalchemy import (
-    Column,
-    Enum as SQLAEnum,
-    Numeric,
-    String,
-    ForeignKey,
-    Date,
-    Integer,
-)
+from sqlalchemy import Column, Numeric, String, ForeignKey, Date, Integer
 from sqlalchemy.types import ARRAY
 from sqlalchemy.orm import relationship
 
@@ -40,8 +32,6 @@ class TaskOrder(Base, mixins.TimestampsMixin):
 
     so_id = Column(ForeignKey("users.id"))
     security_officer = relationship("User", foreign_keys="TaskOrder.so_id")
-
-    status = Column(SQLAEnum(Status, native_enum=False))
 
     scope = Column(String)  # Cloud Project Scope
     defense_component = Column(String)  # Department of Defense Component
@@ -79,10 +69,9 @@ class TaskOrder(Base, mixins.TimestampsMixin):
     number = Column(String, unique=True)  # Task Order Number
     loa = Column(ARRAY(String))  # Line of Accounting (LOA)
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        if "status" not in kwargs:
-            self.status = Status.PENDING
+    @property
+    def status(self):
+        return Status.PENDING
 
     @property
     def budget(self):
