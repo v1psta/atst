@@ -86,10 +86,7 @@ def refresh_crls(out_dir, target_dir, logger):
                 logger.info("successfully synced CRL from {}".format(crl_location))
             else:
                 logger.info("no updates for CRL from {}".format(crl_location))
-        except (
-            requests.exceptions.ChunkedEncodingError,
-            requests.exceptions.ConnectionError,
-        ):
+        except requests.exceptions.RequestException:
             if logger:
                 logger.error(
                     "Error downloading {}, removing file and continuing anyway".format(
