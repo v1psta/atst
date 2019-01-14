@@ -41,7 +41,7 @@ portfolio_USERS = [
     },
 ]
 
-portfolio_INVITED_USERS = [
+PORTFOLIO_INVITED_USERS = [
     {
         "first_name": "Frederick",
         "last_name": "Fitzgerald",
@@ -115,7 +115,7 @@ def seed_db():
             db.session.refresh(ws_role)
             PortfolioRoles.enable(ws_role)
 
-        for portfolio_role in portfolio_INVITED_USERS:
+        for portfolio_role in PORTFOLIO_INVITED_USERS:
             ws_role = Portfolios.create_member(user, portfolio, portfolio_role)
             invitation = InvitationFactory.build(portfolio_role=ws_role, status=portfolio_role["status"])
             db.session.add(invitation)
