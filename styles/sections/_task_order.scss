@@ -47,10 +47,6 @@
 
 .task-order-summary {
 
-  @include media($medium-screen) {
-    @include grid-row;
-    flex-wrap: wrap;
-  }
 
   .panel {
     width: 100%;
@@ -86,11 +82,16 @@
 
   .task-order-details {
     flex-grow: 1;
+    @include media($xlarge-screen) {
+      @include grid-row;
+    }
   }
 
   .task-order-next-steps {
     flex-grow: 1;
-    padding-right: $gap;
+    @include media($xlarge-screen) {
+      padding-right: $gap;
+    }
 
     .task-order-next-steps__step {
       .task-order-next-steps__icon {
