@@ -1,3 +1,50 @@
+.task-order-get-started {
+  text-align: center;
+  padding: 4rem 6rem;
+
+  .task-order-get-started__list {
+    ul {
+      list-style: none;
+      margin-top: 0;
+      padding: 0;
+
+      li {
+        font-weight: bold;
+        line-height: 2rem;
+      }
+    }
+  }
+
+  .task-order-help__icon {
+    @include icon-size(48);
+  }
+
+  .task-order-needs {
+    .task-order-needs__list {
+      @include media($large-screen) {
+        @include grid-row;
+      }
+    }
+  }
+
+  .task-order-get-started__actions {
+    .task-order-get-started__button-row {
+      position: relative;
+
+      .icon-link {
+        position: absolute;
+        left: 50%;
+        top: 2.5rem;
+        margin-left: -23rem;
+      }
+    }
+
+    p {
+      max-width: 27rem;
+    }
+  }
+}
+
 .task-order-summary {
 
   @include media($medium-screen) {
@@ -101,5 +148,4 @@
       padding: 0 0.5rem;
     }
   }
-
 }

@@ -187,6 +187,11 @@ class UpdateTaskOrderWorkflow(ShowTaskOrderWorkflow):
         return self.task_order
 
 
+@task_orders_bp.route("/task_orders/new/get_started")
+def get_started():
+    return render_template("task_orders/new/get_started.html")  # pragma: no cover
+
+
 @task_orders_bp.route("/task_orders/new/<int:screen>")
 @task_orders_bp.route("/task_orders/new/<int:screen>/<task_order_id>")
 def new(screen, task_order_id=None):
