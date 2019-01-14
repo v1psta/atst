@@ -5,7 +5,7 @@
 {% from "components/icon.html" import Icon %}
 
 {% block heading %}
-  Review & Download
+  Review Your Task Order Info
 {% endblock %}
 
 {% block form %}
@@ -18,24 +18,24 @@
 {% endif %}
 {% endmacro %}
 
-<section>
-  <h3>Scope (Statement of Work) {{ TOEditLink() }}</h3>
-  <p>
-  {{ task_order.scope or RequiredLabel() }}
-  </p>
+<h3 class="subheading">What are you building {{ TOEditLink(screen=1) }}</h3>
 
-  <div class="row">
-    <div class="col col--grow">
-      <h3>Period of Performance length {{ TOEditLink(screen=2) }}</h3>
-      {{ task_order.performance_length or RequiredLabel() }}
-    </div>
-
-    <div class="col col--grow">
-      <h3>Total funding requested {{ TOEditLink(screen=2) }}</h3>
-      {{ task_order.budget }}
-    </div>
+<div class="row">
+  <div class="col col--grow">
+    <h4>Portfolio</h4>
+    <p>{{ task_order.portfolio_name or RequiredLabel() }}</p>
   </div>
-</section>
+
+  <div class="col col--grow">
+    <h4>DoD Component</h4>
+    <p>{{ task_order.defense_component or RequiredLabel() }}</p>
+  </div>
+</div>
+
+<h4>Scope (Statement of Work)</h4>
+<p>
+{{ task_order.scope or RequiredLabel() }}
+</p>
 
 <hr>
 
