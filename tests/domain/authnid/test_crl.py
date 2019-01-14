@@ -127,3 +127,37 @@ def test_skips_crl_if_it_has_not_been_modified(tmpdir, monkeypatch):
         "requests.get", lambda u, **kwargs: MockStreamingResponse([b"it worked"], 304)
     )
     assert not util.write_crl(tmpdir, "random_target_dir", "crl_file_name")
+
+
+class FakeLogger:
+    def __init__(self):
+        self.messages = []
+
+    def info(self, msg):
+        self.messages.append(msg)
+
+    def warning(self, msg):
+        self.messages.append(msg)
+
+    def error(self, msg):
+        self.messages.append(msg)
+
+
+def test_refresh_crls_with_error(tmpdir, monkeypatch):
+    def _mock_create_connection(*args, **kwargs):
+        raise TimeoutError
+
+    fake_crl = "https://fakecrl.com/fake.crl"
+
+    monkeypatch.setattr(
+        "urllib3.util.connection.create_connection", _mock_create_connection
+    )
+    monkeypatch.setattr("atst.domain.authnid.crl.util.fetch_disa", lambda *args: None)
+    monkeypatch.setattr(
+        "atst.domain.authnid.crl.util.crl_list_from_disa_html", lambda *args: [fake_crl]
+    )
+
+    logger = FakeLogger()
+    util.refresh_crls(tmpdir, tmpdir, logger)
+
+    assert "Error downloading {}".format(fake_crl) in logger.messages[-1]
