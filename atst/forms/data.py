@@ -1,4 +1,5 @@
 from atst.domain.roles import PORTFOLIO_ROLES as PORTFOLIO_ROLE_DEFINITIONS
+from atst.utils.localization import translate
 
 SERVICE_BRANCHES = [
     ("", "Select an option"),
@@ -176,24 +177,21 @@ FUNDING_TYPES = [
 TASK_ORDER_SOURCES = [("MANUAL", "Manual"), ("EDA", "EDA")]
 
 APP_MIGRATION = [
-    ("on_premise", "Yes, migrating from an <strong>on-premise data center</strong>"),
-    ("cloud", "Yes, migrating from <strong>another cloud provider</strong>"),
-    (
-        "both",
-        "Yes, migrating from an <strong>on-premise data center</strong> and <strong>another cloud provider</strong>",
-    ),
-    ("none", "Not planning to migrate any applications"),
-    ("not_sure", "Not Sure"),
+    ("on_premise", translate("forms.task_order.app_migration.on_premise")),
+    ("cloud", translate("forms.task_order.app_migration.cloud")),
+    ("both", translate("forms.task_order.app_migration.both")),
+    ("none", translate("forms.task_order.app_migration.none")),
+    ("not_sure", translate("forms.task_order.app_migration.not_sure")),
 ]
 
-APPLICATION_COMPLEXITY = [
-    ("storage", "Storage "),
-    ("data_analytics", "Data Analytics "),
-    ("conus", "CONUS Access "),
-    ("oconus", "OCONUS Access "),
-    ("tactical_edge", "Tactical Edge Access "),
-    ("not_sure", "Not Sure "),
-    ("other", "Other"),
+PROJECT_COMPLEXITY = [
+    ("storage", translate("forms.task_order.complexity.storage")),
+    ("data_analytics", translate("forms.task_order.complexity.data_analytics")),
+    ("conus", translate("forms.task_order.complexity.conus")),
+    ("oconus", translate("forms.task_order.complexity.oconus")),
+    ("tactical_edge", translate("forms.task_order.complexity.tactical_edge")),
+    ("not_sure", translate("forms.task_order.complexity.not_sure")),
+    ("other", translate("forms.task_order.complexity.other")),
 ]
 
 DEV_TEAM = [
@@ -204,14 +202,11 @@ DEV_TEAM = [
 ]
 
 TEAM_EXPERIENCE = [
-    ("none", "No previous experience"),
-    ("planned", "Researched or planned a cloud build or migration"),
-    ("built_1", "Built or Migrated 1-2 applications"),
-    ("built_3", "Built or Migrated 3-5 applications"),
-    (
-        "built_many",
-        "Built or migrated many applications, or consulted on several such applications",
-    ),
+    ("none", translate("forms.task_order.team_experience.none")),
+    ("planned", translate("forms.task_order.team_experience.planned")),
+    ("built_1", translate("forms.task_order.team_experience.built_1")),
+    ("built_3", translate("forms.task_order.team_experience.built_3")),
+    ("built_many", translate("forms.task_order.team_experience.built_many")),
 ]
 
 PERIOD_OF_PERFORMANCE_LENGTH = [

@@ -39,42 +39,52 @@
 
 <hr>
 
-<section>
-  <h2>Generated Documents</h2>
+<h3 class="subheading">Reporting {{ TOEditLink(screen=1) }}</h3>
 
-  <ul class="usa-unstyled-list">
-    <li>
-      <a href="#" download>
-        {{ Icon('download') }}
-        Cover Sheet
-      </a>
-    </li>
+<div class="row">
+  <div class="col col--grow">
+    <h4>App Migration</h4>
+    <p>{{ task_order.app_migration_description or RequiredLabel() }}</p>
+  </div>
 
-    <li>
-      <a href="#" download>
-        {{ Icon('download') }}
-        Market Research
-      </a>
-    </li
-    >
+  <div class="col col--grow">
+    <h4>Native Apps</h4>
+    <p>{{ task_order.native_apps_description or RequiredLabel() }}</p>
+  </div>
+</div>
 
-    {% if task_order %}
-    <li>
-      <a href="{{ url_for('task_orders.download_summary', task_order_id=task_order.id) }}" download>
-        {{ Icon('download') }}
-        Task Order Draft
-      </a>
-    </li>
-    {% endif %}
-
-    <li>
-      <a href="#" download>
-        {{ Icon('download') }}
-        DD 254
-      </a>
-    </li>
+<h4>Project Complextiy</h4>
+{% if task_order.complexity %}
+  <ul class="checked-list">
+  {% for item in task_order.complexity %}
+    <li>{{ "forms.task_order.complexity.{}".format(item) | translate }}</li>
+  {% endfor %}
   </ul>
-</section>
+  <!-- need to add in other here! -->
+{% else %}
+  <p>{{ RequiredLabel() }}</p>
+{% endif %}
+
+<div class="row">
+  <div class="col col--grow">
+    <h4>Development Team</h4>
+    {% if task_order.dev_team %}
+      <ul>
+      {% for item in task_order.dev_team %}
+        <li>{{ item.title() }}</li>
+      {% endfor %}
+      </ul>
+      <!-- need to add in other here -->
+    {% else %}
+      <p>{{ RequiredLabel() }}</p>
+    {% endif %}
+  </div>
+
+  <div class="col col--grow">
+    <h4>Team Experience</h4>
+    <p>{{ task_order.team_experience_description or RequiredLabel() }}</p>
+  </div>
+</div>
 
 <hr>
 

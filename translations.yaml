@@ -169,19 +169,39 @@ forms:
     scope_label: Cloud Project Scope
     scope_description: Your team's plan for using the cloud, such as migrating an existing application or creating a prototype.
     defense_component_label: Department of Defense Component
-    app_migration_label: App Migration
-    app_migration_description: Do you plan to migrate existing application(s) to the cloud?
+    app_migration:
+      label: App Migration
+      description: Do you plan to migrate existing application(s) to the cloud?
+      on_premise: Yes, migrating from an <strong>on-premise data center</strong>
+      cloud: Yes, migrating from <strong>another cloud provider</strong>
+      both: Yes, migrating from an <strong>on-premise data center</strong> and <strong>another cloud provider</strong>
+      none: Not planning to migrate any applications
+      not_sure: "Not Sure"
     native_apps_label: Native Apps
     native_apps_description: Do you plan to develop application(s) natively in the cloud?
-    complexity_label: Project Complexity
-    complexity_description: Which of these describes how complex your team's use of the cloud will be? Select all that apply.
+    complexity:
+      label: Project Complexity
+      description: Which of these describes how complex your team's use of the cloud will be? Select all that apply.
+      storage: Storage
+      data_analytics: Data Analytics
+      conus: CONUS Acess
+      oconus: OCONUS Access
+      tactical_edge: Tactical Edge Access
+      not_sure: Not Sure
+      other: Other
     complexity_other_label: Project Complexity Other
     dev_team_label: Development Team
     dev_team_description: Which people or teams will be completing the development work for your cloud applications? Select all that apply.
     dev_team_other_label: Development Team Other
-    team_experience_label: Team Experience
-    team_experience_description: How much experience does your team have with development in the cloud?
-    performance_length_label: Period of Performance length
+    team_experience:
+      label: Team Experience
+      description: How much experience does your team  have with development in the cloud?
+      none: No previous experience
+      planned: Researched or planned a cloud build or migration
+      built_1: Built or Migrated 1-2 applications
+      built_3: Built or Migrated 3-5 applications
+      built_many: Built or migrated many applications, or consulted on several such projects
+
     start_date_label: Start Date
     end_date_label: End Date
     pdf_label: Upload a copy of your CSP Cost Estimate Research

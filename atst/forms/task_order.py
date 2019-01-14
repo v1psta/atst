@@ -39,8 +39,8 @@ class AppInfoForm(CacheableForm):
         translate("forms.task_order.defense_component_label"), choices=SERVICE_BRANCHES
     )
     app_migration = RadioField(
-        translate("forms.task_order.app_migration_label"),
-        description=translate("forms.task_order.app_migration_description"),
+        translate("forms.task_order.app_migration.label"),
+        description=translate("forms.task_order.app_migration.description"),
         choices=APP_MIGRATION,
         default="",
     )
@@ -50,9 +50,9 @@ class AppInfoForm(CacheableForm):
         choices=[("yes", "Yes"), ("no", "No"), ("not_sure", "Not Sure")],
     )
     complexity = SelectMultipleField(
-        translate("forms.task_order.complexity_label"),
-        description=translate("forms.task_order.complexity_description"),
-        choices=APPLICATION_COMPLEXITY,
+        translate("forms.task_order.complexity.label"),
+        description=translate("forms.task_order.complexity.description"),
+        choices=PROJECT_COMPLEXITY,
         default="",
         widget=ListWidget(prefix_label=False),
         option_widget=CheckboxInput(),
@@ -68,8 +68,8 @@ class AppInfoForm(CacheableForm):
     )
     dev_team_other = StringField(translate("forms.task_order.dev_team_other_label"))
     team_experience = RadioField(
-        translate("forms.task_order.team_experience_label"),
-        description=translate("forms.task_order.team_experience_description"),
+        translate("forms.task_order.team_experience.label"),
+        description=translate("forms.task_order.team_experience.description"),
         choices=TEAM_EXPERIENCE,
         default="",
     )

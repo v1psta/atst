@@ -6,6 +6,7 @@ from sqlalchemy.types import ARRAY
 from sqlalchemy.orm import relationship
 
 from atst.models import Base, types, mixins
+from atst.utils.localization import translate
 
 
 class Status(Enum):
@@ -101,6 +102,39 @@ class TaskOrder(Base, mixins.TimestampsMixin):
     @property
     def is_pending(self):
         return self.status == Status.PENDING
+
+    @property
+    def app_migration_description(self):
+        if self.app_migration:
+            text = translate(
+                "forms.task_order.app_migration.{}".format(self.app_migration)
+            )
+            # remove html tags here?
+            return text
+        else:
+            return None
+
+    @property
+    def native_apps_description(self):
+        # move all text into translations file!
+        if self.native_apps == "yes":
+            return "Yes, planning to develop natively in the cloud"
+        elif self.native_apps == "no":
+            return "No, not planning to develop natively in the cloud"
+        elif self.native_apps == "not_sure":
+            return "Not sure, unsure if planning to develop natively in the cloud"
+        else:
+            return None
+
+    @property
+    def team_experience_description(self):
+        if self.team_experience:
+            return translate(
+                "forms.task_order.team_experience.{}".format(self.team_experience)
+            )
+        else:
+            return None
+
 
     def to_dictionary(self):
         return {
