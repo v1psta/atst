@@ -6,6 +6,7 @@ import alembic.command
 from logging.config import dictConfig
 from werkzeug.datastructures import FileStorage
 from tempfile import TemporaryDirectory
+from collections import OrderedDict
 
 from atst.app import make_app, make_config
 from atst.database import db as _db
@@ -84,19 +85,31 @@ def session(db, request):
 
 
 class DummyForm(dict):
-    pass
+    def __init__(self, data=OrderedDict(), errors=(), raw_data=None):
+        self._fields = data
+        self.errors = list(errors)
 
 
 class DummyField(object):
-    def __init__(self, data=None, errors=(), raw_data=None):
+    def __init__(self, data=None, errors=(), raw_data=None, name=None):
         self.data = data
         self.errors = list(errors)
         self.raw_data = raw_data
+        self.name = name
 
 
 @pytest.fixture
 def dummy_form():
     return DummyForm()
+
+
+@pytest.fixture
+def dummy_form_with_field():
+    def set_field(name, value):
+        data = DummyField(data=value, name=name)
+        return DummyForm(data=OrderedDict({name: data}))
+
+    return set_field
 
 
 @pytest.fixture

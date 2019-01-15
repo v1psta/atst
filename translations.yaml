@@ -209,6 +209,7 @@ forms:
     list_items_unique_message: Items must be unique
     name_message: 'This field accepts letters, numbers, commas, apostrophes, hyphens, and periods.'
     phone_number_message: Please enter a valid 5 or 10 digit phone number.
+    is_required: This field is required.
   portfolio:
     name_label: Portfolio Name
     name_length_validation_message: Portfolio names must be at least 4 and not more than 50 characters

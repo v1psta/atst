@@ -10,9 +10,9 @@ from wtforms.fields import (
 )
 from wtforms.fields.html5 import DateField, TelField
 from wtforms.widgets import ListWidget, CheckboxInput
-from wtforms.validators import Required, Length, StopValidation
+from wtforms.validators import Required, Length
 
-from atst.forms.validators import IsNumber, PhoneNumber
+from atst.forms.validators import IsNumber, PhoneNumber, RequiredIfNot
 
 from .forms import CacheableForm
 from .data import (
@@ -24,24 +24,6 @@ from .data import (
     PERIOD_OF_PERFORMANCE_LENGTH,
 )
 from atst.utils.localization import translate
-
-
-class RequiredIfNot(Required):
-    # a validator which makes a field required only if
-    # another field has a falsy value
-
-    def __init__(self, other_field_name, *args, **kwargs):
-        self.other_field_name = other_field_name
-        super(RequiredIfNot, self).__init__(*args, **kwargs)
-
-    def __call__(self, form, field):
-        other_field = form._fields.get(self.other_field_name)
-        if other_field is None:
-            raise Exception('no field named "%s" in form' % self.other_field_name)
-        if not bool(other_field.data):
-            super(RequiredIfNot, self).__call__(form, field)
-        else:
-            raise StopValidation()
 
 
 class AppInfoForm(CacheableForm):
