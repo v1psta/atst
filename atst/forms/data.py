@@ -198,7 +198,7 @@ DEV_TEAM = [
     ("government_civilians", "Government Civilians"),
     ("military", "Military "),
     ("contractor", "Contractor "),
-    ("other", "Other (E.g. University or other partner)"),
+    ("other", "Other <em>(E.g. University or other partner)</em>"),
 ]
 
 TEAM_EXPERIENCE = [
