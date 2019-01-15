@@ -184,7 +184,7 @@ APP_MIGRATION = [
     ("not_sure", translate("forms.task_order.app_migration.not_sure")),
 ]
 
-PROJECT_COMPLEXITY = [
+APPLICATION_COMPLEXITY = [
     ("storage", translate("forms.task_order.complexity.storage")),
     ("data_analytics", translate("forms.task_order.complexity.data_analytics")),
     ("conus", translate("forms.task_order.complexity.conus")),

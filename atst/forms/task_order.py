@@ -52,7 +52,7 @@ class AppInfoForm(CacheableForm):
     complexity = SelectMultipleField(
         translate("forms.task_order.complexity.label"),
         description=translate("forms.task_order.complexity.description"),
-        choices=PROJECT_COMPLEXITY,
+        choices=APPLICATION_COMPLEXITY,
         default="",
         widget=ListWidget(prefix_label=False),
         option_widget=CheckboxInput(),
