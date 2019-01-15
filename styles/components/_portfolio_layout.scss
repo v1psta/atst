@@ -31,6 +31,27 @@
 }
 
 .portfolio-funding {
+  .portfolio-funding__header {
+    padding: 0;
+    margin: 0 $gap;
+
+    align-items: center;
+
+    .portfolio-funding__header--funded-through {
+      padding: 2 * $gap;
+      flex-grow: 1;
+      text-align: left;
+      font-weight: bold;
+    }
+
+    .funded {
+      color: $color-green;
+      .icon {
+        @include icon-color($color-green);
+      }
+    }
+  }
+
   .pending-task-order {
     background-color: $color-gold-lightest;
 

@@ -1,4 +1,5 @@
 from collections import defaultdict
+from operator import itemgetter
 
 from flask import g, render_template, url_for
 
@@ -34,12 +35,20 @@ def portfolio_task_orders(portfolio_id):
         )
         task_orders_by_status[task_order.status].append(serialized_task_order)
 
+    active_task_orders = task_orders_by_status.get(TaskOrderStatus.ACTIVE, [])
+    funding_end_date = (
+        sorted(active_task_orders, key=itemgetter("end_date"))[-1]["end_date"]
+        if active_task_orders
+        else None
+    )
+
     return render_template(
         "portfolios/task_orders/index.html",
         portfolio=portfolio,
         pending_task_orders=task_orders_by_status.get(TaskOrderStatus.PENDING, []),
-        active_task_orders=task_orders_by_status.get(TaskOrderStatus.ACTIVE, []),
+        active_task_orders=active_task_orders,
         expired_task_orders=task_orders_by_status.get(TaskOrderStatus.EXPIRED, []),
+        funding_end_date=funding_end_date,
     )
 
 

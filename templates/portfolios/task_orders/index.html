@@ -73,6 +73,24 @@
 {% endmacro %}
 
 <div class="portfolio-funding">
+
+  <div class='panel'>
+    <div class='panel__content portfolio-funding__header row'>
+      <h3>Portfolio Funding</h3>
+      <div class='portfolio-funding__header--funded-through {{ "funded" if funding_end_date is not none }}'>
+        {% if funding_end_date %}
+          {{ Icon('ok') }}
+          Funded through
+          <local-datetime
+            timestamp="{{ funding_end_date }}"
+            format="M/D/YYYY">
+            </local-datetime>
+          {% endif %}
+      </div>
+      <a href="{{ url_for("task_orders.new", screen=1, portfolio_id=portfolio.id) }}" class="usa-button">Start a New Task Order</a>
+    </div>
+  </div>
+
   {% for task_order in pending_task_orders %}
     <div class='panel'>
       <div class='panel__content pending-task-order row'>
