@@ -25,6 +25,7 @@ from .data import (
 )
 from atst.utils.localization import translate
 
+
 class RequiredIfNot(Required):
     # a validator which makes a field required only if
     # another field has a falsy value
@@ -137,20 +138,19 @@ class OversightForm(CacheableForm):
         validators=[Required(), Length(min=10), IsNumber()],
     )
 
-    am_cor = BooleanField(
-        translate("forms.task_order.oversight_am_cor_label"),
-    )
+    am_cor = BooleanField(translate("forms.task_order.oversight_am_cor_label"))
     cor_first_name = StringField(
         translate("forms.task_order.oversight_first_name_label")
     )
     cor_last_name = StringField(translate("forms.task_order.oversight_last_name_label"))
     cor_email = StringField(translate("forms.task_order.oversight_email_label"))
     cor_phone_number = TelField(
-        translate("forms.task_order.oversight_phone_label"), validators=[RequiredIfNot('am_cor'), PhoneNumber()]
+        translate("forms.task_order.oversight_phone_label"),
+        validators=[RequiredIfNot("am_cor"), PhoneNumber()],
     )
     cor_dod_id = StringField(
         translate("forms.task_order.oversight_dod_id_label"),
-        validators=[RequiredIfNot('am_cor'), Length(min=10), IsNumber()],
+        validators=[RequiredIfNot("am_cor"), Length(min=10), IsNumber()],
     )
 
     so_first_name = StringField(

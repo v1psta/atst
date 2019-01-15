@@ -175,6 +175,13 @@ def test_other_text_not_saved_if_other_not_checked(task_order):
     assert not workflow.task_order.complexity_other
 
 
+def test_cor_data_set_to_user_data_if_am_cor_is_checked(task_order):
+    to_data = {**task_order.to_dictionary(), "am_cor": True}
+    workflow = UpdateTaskOrderWorkflow(task_order.creator, to_data, 3, task_order.id)
+    workflow.update()
+    assert task_order.cor_dod_id == task_order.creator.dod_id
+
+
 def test_invite_officers_to_task_order(task_order, queue):
     to_data = {
         **TaskOrderFactory.dictionary(),

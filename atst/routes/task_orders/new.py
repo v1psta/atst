@@ -130,6 +130,16 @@ class UpdateTaskOrderWorkflow(ShowTaskOrderWorkflow):
         if "dev_team" in to_data and "other" not in to_data["dev_team"]:
             to_data["dev_team_other"] = None
 
+        if self.form_data.get("am_cor"):
+            cor_data = {
+                "cor_first_name": self.user.first_name,
+                "cor_last_name": self.user.last_name,
+                "cor_email": self.user.email,
+                "cor_phone_number": self.user.phone_number,
+                "cor_dod_id": self.user.dod_id,
+            }
+            to_data = {**to_data, **cor_data}
+
         return to_data
 
     def validate(self):
