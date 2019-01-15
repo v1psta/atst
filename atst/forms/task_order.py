@@ -10,7 +10,7 @@ from wtforms.fields import (
 )
 from wtforms.fields.html5 import DateField, TelField
 from wtforms.widgets import ListWidget, CheckboxInput
-from wtforms.validators import Required, Length
+from wtforms.validators import Required, Length, StopValidation
 
 from atst.forms.validators import IsNumber, PhoneNumber
 
@@ -24,6 +24,23 @@ from .data import (
     PERIOD_OF_PERFORMANCE_LENGTH,
 )
 from atst.utils.localization import translate
+
+class RequiredIfNot(Required):
+    # a validator which makes a field required only if
+    # another field has a falsy value
+
+    def __init__(self, other_field_name, *args, **kwargs):
+        self.other_field_name = other_field_name
+        super(RequiredIfNot, self).__init__(*args, **kwargs)
+
+    def __call__(self, form, field):
+        other_field = form._fields.get(self.other_field_name)
+        if other_field is None:
+            raise Exception('no field named "%s" in form' % self.other_field_name)
+        if not bool(other_field.data):
+            super(RequiredIfNot, self).__call__(form, field)
+        else:
+            raise StopValidation()
 
 
 class AppInfoForm(CacheableForm):
@@ -129,11 +146,11 @@ class OversightForm(CacheableForm):
     cor_last_name = StringField(translate("forms.task_order.oversight_last_name_label"))
     cor_email = StringField(translate("forms.task_order.oversight_email_label"))
     cor_phone_number = TelField(
-        translate("forms.task_order.oversight_phone_label"), validators=[PhoneNumber()]
+        translate("forms.task_order.oversight_phone_label"), validators=[RequiredIfNot('am_cor'), PhoneNumber()]
     )
     cor_dod_id = StringField(
         translate("forms.task_order.oversight_dod_id_label"),
-        validators=[Required(), Length(min=10), IsNumber()],
+        validators=[RequiredIfNot('am_cor'), Length(min=10), IsNumber()],
     )
 
     so_first_name = StringField(
