@@ -17,7 +17,7 @@ from atst.domain.exceptions import AlreadyExistsError
 from tests.factories import RequestFactory, LegacyTaskOrderFactory, InvitationFactory
 from atst.routes.dev import _DEV_USERS as DEV_USERS
 
-portfolio_USERS = [
+PORTFOLIO_USERS = [
     {
         "first_name": "Danny",
         "last_name": "Knight",
@@ -110,7 +110,7 @@ def seed_db():
         portfolio = Portfolios.create(
             user, name="{}'s portfolio".format(user.first_name)
         )
-        for portfolio_role in portfolio_USERS:
+        for portfolio_role in PORTFOLIO_USERS:
             ws_role = Portfolios.create_member(user, portfolio, portfolio_role)
             db.session.refresh(ws_role)
             PortfolioRoles.enable(ws_role)
