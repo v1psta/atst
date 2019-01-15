@@ -6,11 +6,70 @@
 {% block portfolio_content %}
 
 {% macro ViewLink(task_order) %}
-
   <a href="{{ url_for('portfolios.view_task_order', portfolio_id=portfolio.id, task_order_id=task_order.id) }}" class="icon-link view-task-order-link">
     <span>View</span>
     {{ Icon("caret_right") }}
   </a>
+{% endmacro %}
+
+{% macro TaskOrderList(task_orders, label='success') %}
+  <task-order-list
+    inline-template
+    v-bind:data='{{ task_orders | tojson }}'
+    v-cloak
+    >
+    <div class='responsive-table-wrapper'>
+      <table v-cloak>
+        <thead>
+          <tr>
+            <th v-for="col in getColumns()" @click="updateSort(col.displayName)" :width="col.width" :class="col.class" scope="col">
+              !{ col.displayName }
+              <template v-if="col.sortFunc">
+                <span v-if="col.displayName === sortInfo.columnName && sortInfo.isAscending">
+                  {{ Icon("caret_down") }}
+                </span>
+                <span v-if="col.displayName === sortInfo.columnName && !sortInfo.isAscending">
+                  {{ Icon("caret_up") }}
+                </span>
+              </template>
+            </th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr v-for='taskOrder in taskOrders' :key="taskOrder.id">
+            <td>
+              <span class='label label--{{ label }}'>!{ taskOrder.display_status }</span>
+            </td>
+            <td class='table-cell--grow'>
+              <span>
+              <local-datetime
+                v-bind:timestamp="taskOrder.start_date"
+                format="M/D/YYYY">
+                </local-datetime>
+                -
+              <local-datetime
+                v-bind:timestamp="taskOrder.end_date"
+                format="M/D/YYYY">
+                </local-datetime>
+            </td>
+            <td class="table-cell--align-right">
+              <span v-html='formatDollars(taskOrder.budget)'></span>
+            </td>
+            <td class="table-cell--align-right">
+              <span v-html='formatDollars(taskOrder.budget)'></span>
+            </td>
+            <td>
+              <a v-bind:href="taskOrder.url" class="icon-link view-task-order-link">
+                <span>View</span>
+                {{ Icon("caret_right") }}
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </task-order-list>
 {% endmacro %}
 
 <div class="portfolio-funding">
@@ -46,16 +105,12 @@
     ) }}
   {% endif %}
 
-    <ul>
-      {% for task_order in portfolio.task_orders %}
-        <li class='block-list__item'>
-          <a href='{{ url_for("portfolios.view_task_order", portfolio_id=portfolio.id, task_order_id=task_order.id)}}'>
-            <span>{{ task_order.start_date }} - {{ task_order.end_date }}</span>
-          </a>
-        </li>
-      {% endfor %}
-    </ul>
+  {% if active_task_orders %}
+    {{ TaskOrderList(active_task_orders, label='success') }}
+  {% endif %}
 
+  {% if expired_task_orders %}
+    {{ TaskOrderList(expired_task_orders, label='') }}
   {% endif %}
 </div>
 
