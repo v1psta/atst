@@ -60,6 +60,18 @@
     }
   }
 
+  .label--pending {
+    background-color: $color-gold;
+  }
+
+  .label--active {
+    background-color: $color-green;
+  }
+
+  .label--expired {
+    background-color: $color-red;
+  }
+
   .task-order-heading {
     align-items: center;
     justify-content: space-between;
