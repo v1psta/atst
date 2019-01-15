@@ -190,8 +190,13 @@ forms:
       not_sure: Not Sure
       other: Other
     complexity_other_label: Project Complexity Other
-    dev_team_label: Development Team
-    dev_team_description: Which people or teams will be completing the development work for your cloud applications? Select all that apply.
+    dev_team:
+      label: Development Team
+      description: Which people or teams will be completing the development work for your cloud applications? Select all that apply.
+      government_civilians: Government Civilians
+      military: Military
+      contractor: Contractor
+      other: "Other <em>(E.g. University or other partner)</em>"
     dev_team_other_label: Development Team Other
     team_experience:
       label: Team Experience

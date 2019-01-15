@@ -73,7 +73,12 @@
       <ul class="checklist">
       {% for item in task_order.dev_team %}
         <li>
-          {{ Icon('ok', classes='icon--gray icon--medium') }}{{ item.title() }}{% if item == 'other' %}: {{ task_order.dev_team_other }}{% endif %}
+          {% if item == 'other' %}
+            {{ Icon('ok', classes='icon--gray icon--medium') }}Other: {{ task_order.dev_team_other }}
+          {% else %}
+            {{ Icon('ok', classes='icon--gray icon--medium') }}{{ "forms.task_order.dev_team.{}".format(item) | translate }}
+          {% endif %}
+
         </li>
       {% endfor %}
       </ul>

@@ -195,10 +195,13 @@ APPLICATION_COMPLEXITY = [
 ]
 
 DEV_TEAM = [
-    ("government_civilians", "Government Civilians"),
-    ("military", "Military "),
-    ("contractor", "Contractor "),
-    ("other", "Other <em>(E.g. University or other partner)</em>"),
+    (
+        "government_civilians",
+        translate("forms.task_order.dev_team.government_civilians"),
+    ),
+    ("military", translate("forms.task_order.dev_team.military")),
+    ("contractor", translate("forms.task_order.dev_team.contractor")),
+    ("other", translate("forms.task_order.dev_team.other")),
 ]
 
 TEAM_EXPERIENCE = [

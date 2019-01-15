@@ -59,8 +59,8 @@ class AppInfoForm(CacheableForm):
     )
     complexity_other = StringField(translate("forms.task_order.complexity_other_label"))
     dev_team = SelectMultipleField(
-        translate("forms.task_order.dev_team_label"),
-        description=translate("forms.task_order.dev_team_description"),
+        translate("forms.task_order.dev_team.label"),
+        description=translate("forms.task_order.dev_team.description"),
         choices=DEV_TEAM,
         default="",
         widget=ListWidget(prefix_label=False),
