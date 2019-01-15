@@ -8,6 +8,7 @@ import re
 
 from atst.models import Base, types, mixins
 from atst.utils.localization import translate
+from atst.filters import usPhone
 
 
 class Status(Enum):
@@ -148,6 +149,17 @@ class TaskOrder(Base, mixins.TimestampsMixin):
         else:
             return None
 
+    @property
+    def ko_phone(self):
+        return usPhone(self.ko_phone_number)
+
+    @property
+    def cor_phone(self):
+        return usPhone(self.cor_phone_number)
+
+    @property
+    def so_phone(self):
+        return usPhone(self.so_phone_number)
 
     def to_dictionary(self):
         return {
