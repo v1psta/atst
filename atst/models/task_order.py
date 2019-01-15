@@ -4,6 +4,7 @@ import pendulum
 from sqlalchemy import Column, Numeric, String, ForeignKey, Date, Integer
 from sqlalchemy.types import ARRAY
 from sqlalchemy.orm import relationship
+import re
 
 from atst.models import Base, types, mixins
 from atst.utils.localization import translate
@@ -104,13 +105,19 @@ class TaskOrder(Base, mixins.TimestampsMixin):
         return self.status == Status.PENDING
 
     @property
+    def defense_component_description(self):
+        if self.defense_component:
+            return self.normalize_order(self.defense_component)
+        else:
+            return None
+
+    @property
     def app_migration_description(self):
         if self.app_migration:
             text = translate(
                 "forms.task_order.app_migration.{}".format(self.app_migration)
             )
-            # remove html tags here?
-            return text
+            return self.remove_html(text)
         else:
             return None
 
@@ -151,6 +158,16 @@ class TaskOrder(Base, mixins.TimestampsMixin):
                 if c.name not in ["id"]
             },
         }
+
+    def remove_html(self, text):
+        html_tags = re.compile("<.*?>")
+        return re.sub(html_tags, "", text)
+
+    def normalize_order(self, department):
+        text = department.split(", ")
+        reordered_text = text[0:-1]
+        reordered_text.insert(0, text[-1])
+        return " ".join(reordered_text)
 
     def __repr__(self):
         return "<TaskOrder(number='{}', budget='{}', end_date='{}', id='{}')>".format(

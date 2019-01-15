@@ -28,7 +28,7 @@
 
   <div class="col col--grow">
     <h4>{{ "task_orders.new.review.dod"| translate }}</h4>
-    <p>{{ task_order.defense_component or RequiredLabel() }}</p>
+    <p>{{ task_order.defense_component_description or RequiredLabel() }}</p>
   </div>
 </div>
 
@@ -57,10 +57,11 @@
 {% if task_order.complexity %}
   <ul class="checked-list">
   {% for item in task_order.complexity %}
-    <li>{{ "forms.task_order.complexity.{}".format(item) | translate }}</li>
+    <li>
+      {{ "forms.task_order.complexity.{}".format(item) | translate }}{% if item == 'other' %}: {{ task_order.complexity_other }}{% endif %}
+    </li>
   {% endfor %}
   </ul>
-  <!-- need to add in other here! -->
 {% else %}
   <p>{{ RequiredLabel() }}</p>
 {% endif %}
@@ -71,10 +72,11 @@
     {% if task_order.dev_team %}
       <ul>
       {% for item in task_order.dev_team %}
-        <li>{{ item.title() }}</li>
+        <li>
+          {{ item.title() }}{% if item == 'other' %}: {{ task_order.dev_team_other }}{% endif %}
+        </li>
       {% endfor %}
       </ul>
-      <!-- need to add in other here -->
     {% else %}
       <p>{{ RequiredLabel() }}</p>
     {% endif %}
