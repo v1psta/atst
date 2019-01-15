@@ -118,18 +118,35 @@ class UpdateTaskOrderWorkflow(ShowTaskOrderWorkflow):
         if self.task_order:
             return self.task_order.portfolio
 
+    @property
+    def task_order_form_data(self):
+        to_data = self.form.data.copy()
+        if "portfolio_name" in to_data:
+            to_data.pop("portfolio_name")
+
+        # don't save other text in DB unless "other" is checked
+        if "complexity" in to_data and "other" not in to_data["complexity"]:
+            to_data["complexity_other"] = None
+        if "dev_team" in to_data and "other" not in to_data["dev_team"]:
+            to_data["dev_team_other"] = None
+
+        return to_data
+
     def validate(self):
         return self.form.validate()
 
     def _update_task_order(self):
         if self.task_order:
-            TaskOrders.update(self.user, self.task_order, **self.form.data)
+            if "portfolio_name" in self.form.data:
+                new_name = self.form.data["portfolio_name"]
+                old_name = self.task_order.portfolio_name
+                if not new_name == old_name:
+                    Portfolios.update(self.task_order.portfolio, {"name": new_name})
+            TaskOrders.update(self.user, self.task_order, **self.task_order_form_data)
         else:
-            ws = Portfolios.create(self.user, self.form.portfolio_name.data)
-            to_data = self.form.data.copy()
-            to_data.pop("portfolio_name")
-            self._task_order = TaskOrders.create(self.user, ws)
-            TaskOrders.update(self.user, self.task_order, **to_data)
+            pf = Portfolios.create(self.user, self.form.portfolio_name.data)
+            self._task_order = TaskOrders.create(portfolio=pf, creator=self.user)
+            TaskOrders.update(self.user, self.task_order, **self.task_order_form_data)
 
     OFFICER_INVITATIONS = [
         {
@@ -177,10 +194,10 @@ class UpdateTaskOrderWorkflow(ShowTaskOrderWorkflow):
                 officer = TaskOrders.add_officer(
                     self.user, self.task_order, officer_type["role"], officer_data
                 )
-                ws_officer_member = PortfolioRoles.get(self.portfolio.id, officer.id)
+                pf_officer_member = PortfolioRoles.get(self.portfolio.id, officer.id)
                 invite_service = InvitationService(
                     self.user,
-                    ws_officer_member,
+                    pf_officer_member,
                     officer_data["email"],
                     subject=officer_type["subject"],
                     email_template=officer_type["template"],

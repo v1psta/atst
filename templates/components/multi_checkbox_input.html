@@ -39,7 +39,7 @@
                 <label for='{{ field.name }}-{{ loop.index0 }}'>{{ choice[1] }}</label>
 
                 <div v-show="otherChecked">
-                  <input type='text' name='{{ other_input_field.name}}' id='{{ field.name }}-other'  v-bind:value="otherText" aria-expanded='false' />
+                  <input type='text' name='{{ other_input_field.name}}' id='{{ field.name }}-other'  v-model:value="otherText" aria-expanded='false' />
                 </div>
               {% endif %}
             </li>

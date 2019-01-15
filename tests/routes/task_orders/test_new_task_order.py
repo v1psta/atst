@@ -162,6 +162,19 @@ def test_update_task_order_with_existing_task_order(task_order):
     assert workflow.task_order.start_date.strftime("%m/%d/%Y") == to_data["start_date"]
 
 
+def test_other_text_not_saved_if_other_not_checked(task_order):
+    to_data = {
+        **TaskOrderFactory.dictionary(),
+        "complexity": ["conus"],
+        "complexity_other": "quite complex",
+    }
+    workflow = UpdateTaskOrderWorkflow(
+        task_order.creator, to_data, task_order_id=task_order.id
+    )
+    workflow.update()
+    assert not workflow.task_order.complexity_other
+
+
 def test_invite_officers_to_task_order(task_order, queue):
     to_data = {
         **TaskOrderFactory.dictionary(),
