@@ -1,30 +1,64 @@
 {% from "components/empty_state.html" import EmptyState %}
+{% from "components/icon.html" import Icon %}
 
 {% extends "portfolios/base.html" %}
 
 {% block portfolio_content %}
 
-{% if not portfolio.task_orders %}
+{% macro ViewLink(task_order) %}
 
-  {{ EmptyState(
-    'This portfolio doesn’t have any task orders yet.',
-    action_label='Add a New Task Order',
-    action_href=url_for('task_orders.new', screen=1, portfolio_id=portfolio.id),
-    icon='cloud',
-  ) }}
+  <a href="{{ url_for('portfolios.view_task_order', portfolio_id=portfolio.id, task_order_id=task_order.id) }}" class="icon-link view-task-order-link">
+    <span>View</span>
+    {{ Icon("caret_right") }}
+  </a>
+{% endmacro %}
 
-{% else %}
+<div class="portfolio-funding">
+  {% for task_order in pending_task_orders %}
+    <div class='panel'>
+      <div class='panel__content pending-task-order row'>
+        <span class='label label--warning'>Pending</span>
+        <div class="pending-task-order__started col">
+          <dt>Started</dt>
+          <dd>
+            <local-datetime
+              timestamp="{{ task_order.time_created }}"
+              format="M/D/YYYY">
+              </local-datetime>
+          </dd>
+        </div>
+        <div class="pending-task-order__value col">
+          <dt>Value</dt>
+          <dd>{{ task_order.budget | dollars }}</dd>
+        </div>
+        {{ ViewLink(task_order) }}
+      </div>
+    </div>
+  {% endfor %}
 
-  <ul>
-    {% for task_order in portfolio.task_orders %}
-      <li class='block-list__item'>
-        <a href='{{ url_for("portfolios.view_task_order", portfolio_id=portfolio.id, task_order_id=task_order.id)}}'>
-          <span>{{ task_order.start_date }} - {{ task_order.end_date }}</span>
-        </a>
-      </li>
-    {% endfor %}
-  </ul>
 
-{% endif %}
+  {% if not portfolio.task_orders %}
+
+    {{ EmptyState(
+      'This portfolio doesn’t have any task orders yet.',
+      action_label='Add a New Task Order',
+      action_href=url_for('task_orders.new', screen=1, portfolio_id=portfolio.id),
+      icon='cloud',
+    ) }}
+
+  {% else %}
+
+    <ul>
+      {% for task_order in portfolio.task_orders %}
+        <li class='block-list__item'>
+          <a href='{{ url_for("portfolios.view_task_order", portfolio_id=portfolio.id, task_order_id=task_order.id)}}'>
+            <span>{{ task_order.start_date }} - {{ task_order.end_date }}</span>
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+
+  {% endif %}
+</div>
 
 {% endblock %}

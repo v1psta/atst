@@ -29,3 +29,37 @@
     }
   }
 }
+
+.portfolio-funding {
+  .pending-task-order {
+    background-color: $color-gold-lightest;
+
+    align-items: center;
+    margin: 0;
+    padding: 2 * $gap;
+
+    dt {
+      font-weight: bold;
+    }
+
+    dd {
+      margin-left: 0;
+    }
+
+    .label {
+      margin-right: 2 * $gap;
+    }
+
+    .pending-task-order__started {
+      flex-grow: 1;
+    }
+
+    .pending-task-order__value {
+      text-align: right;
+    }
+  }
+
+  .view-task-order-link {
+    margin-left: $gap * 2;
+  }
+}
