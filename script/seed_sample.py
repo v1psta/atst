@@ -48,7 +48,7 @@ PORTFOLIO_INVITED_USERS = [
         "email": "frederick@mil.gov",
         "portfolio_role": "developer",
         "dod_id": "0000000004",
-        "status": InvitationStatus.REJECTED_WRONG_USER
+        "status": InvitationStatus.REJECTED_WRONG_USER,
     },
     {
         "first_name": "Gina",
@@ -56,7 +56,7 @@ PORTFOLIO_INVITED_USERS = [
         "email": "gina@mil.gov",
         "portfolio_role": "developer",
         "dod_id": "0000000005",
-        "status": InvitationStatus.REJECTED_EXPIRED
+        "status": InvitationStatus.REJECTED_EXPIRED,
     },
     {
         "first_name": "Hector",
@@ -64,7 +64,7 @@ PORTFOLIO_INVITED_USERS = [
         "email": "hector@mil.gov",
         "portfolio_role": "developer",
         "dod_id": "0000000006",
-        "status": InvitationStatus.REVOKED
+        "status": InvitationStatus.REVOKED,
     },
     {
         "first_name": "Isabella",
@@ -72,7 +72,7 @@ PORTFOLIO_INVITED_USERS = [
         "email": "isabella@mil.gov",
         "portfolio_role": "developer",
         "dod_id": "0000000007",
-        "status": InvitationStatus.PENDING
+        "status": InvitationStatus.PENDING,
     },
 ]
 
@@ -92,7 +92,7 @@ def seed_db():
             continue
 
         requests = []
-        for dollar_value in [1, 200, 3000, 40000, 500000, 1000000]:
+        for dollar_value in [1, 200, 3000, 40000, 500_000, 1_000_000]:
             request = RequestFactory.build(creator=user)
             request.latest_revision.dollar_value = dollar_value
             db.session.add(request)
@@ -117,7 +117,9 @@ def seed_db():
 
         for portfolio_role in PORTFOLIO_INVITED_USERS:
             ws_role = Portfolios.create_member(user, portfolio, portfolio_role)
-            invitation = InvitationFactory.build(portfolio_role=ws_role, status=portfolio_role["status"])
+            invitation = InvitationFactory.build(
+                portfolio_role=ws_role, status=portfolio_role["status"]
+            )
             db.session.add(invitation)
 
         db.session.commit()

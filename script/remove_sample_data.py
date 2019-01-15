@@ -41,19 +41,21 @@ dod_ids = [
     "4567890123",
     "5678901234",
     "6789012345",
-    "2342342342", # Andy
-    "3453453453", # Sally
-    "4564564564", # Betty
+    "2342342342",  # Andy
+    "3453453453",  # Sally
+    "4564564564",  # Betty
     "6786786786",
 ]
 
 
 def create_demo_portfolio(name, data):
     try:
-        portfolio_owner = Users.get_by_dod_id("678678678") # Other
-        auditor = Users.get_by_dod_id("3453453453") # Sally
+        portfolio_owner = Users.get_by_dod_id("678678678")  # Other
+        auditor = Users.get_by_dod_id("3453453453")  # Sally
     except NotFoundError:
-        print("Could not find demo users; will not create demo portfolio {}".format(name))
+        print(
+            "Could not find demo users; will not create demo portfolio {}".format(name)
+        )
         return
 
     request = RequestFactory.build(creator=portfolio_owner)
@@ -64,10 +66,12 @@ def create_demo_portfolio(name, data):
     approved_request = Requests.set_status(request, RequestStatus.APPROVED)
 
     portfolio = Requests.approve_and_create_portfolio(request)
-    portfolios.update(portfolio, { "name": name })
+    portfolios.update(portfolio, {"name": name})
 
     for mock_application in data["applications"]:
-        application = application(portfolio=portfolio, name=mock_application.name, description='')
+        application = application(
+            portfolio=portfolio, name=mock_application.name, description=""
+        )
         env_names = [env.name for env in mock_application.environments]
         envs = Environments.create_many(application, env_names)
         db.session.add(application)
@@ -153,5 +157,9 @@ if __name__ == "__main__":
     app = make_app(config)
     with app.app_context():
         remove_sample_data()
-        create_demo_portfolio('Aardvark', MockReportingProvider.REPORT_FIXTURE_MAP["Aardvark"])
-        create_demo_portfolio('Beluga', MockReportingProvider.REPORT_FIXTURE_MAP["Beluga"])
+        create_demo_portfolio(
+            "Aardvark", MockReportingProvider.REPORT_FIXTURE_MAP["Aardvark"]
+        )
+        create_demo_portfolio(
+            "Beluga", MockReportingProvider.REPORT_FIXTURE_MAP["Beluga"]
+        )
