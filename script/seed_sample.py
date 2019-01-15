@@ -110,16 +110,33 @@ def seed_db():
             )
             db.session.add(invitation)
 
-        [expired_start, expired_end] = sorted(
+        [old_expired_start, expired_start, expired_end] = sorted(
             [
+                random_past_date(year_max=3, year_min=2),
                 random_past_date(year_max=2, year_min=1),
                 random_past_date(year_max=1, year_min=1),
             ]
         )
-        active_start = expired_end
-        active_end = random_future_date(year_min=1, year_max=1)
+        [
+            first_active_start,
+            second_active_start,
+            first_active_end,
+            second_active_end,
+        ] = sorted(
+            [
+                expired_end,
+                random_past_date(year_max=1, year_min=1),
+                random_future_date(year_min=0, year_max=1),
+                random_future_date(year_min=1, year_max=1),
+            ]
+        )
 
-        date_ranges = [(expired_start, expired_end), (active_start, active_end)]
+        date_ranges = [
+            (old_expired_start, expired_start),
+            (expired_start, expired_end),
+            (first_active_start, first_active_end),
+            (second_active_start, second_active_end),
+        ]
         for (start_date, end_date) in date_ranges:
             task_order = TaskOrderFactory.build(
                 start_date=start_date,
