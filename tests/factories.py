@@ -42,6 +42,10 @@ def random_phone_number():
     return "".join(random.choices(string.digits, k=10))
 
 
+def random_task_order_number():
+    return "-".join([str(random.randint(100, 999)) for _ in range(4)])
+
+
 def random_past_date(year_min=1, year_max=5):
     return _random_date(year_min, year_max, operator.sub)
 
