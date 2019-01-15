@@ -59,27 +59,6 @@
       margin: ($gap * 4) 0;
       padding: 0 ($gap * 4);
     }
-
-    h1, h2, h3, h4, h5, h6 {
-
-      &.subheading {
-        color: $color-gray;
-      }
-
-      &.inactive {
-        color: $color-gray-light;
-      }
-    }
-
-    .error {
-      color: $color-red;
-      font-weight: $font-bold;
-    }
-
-    .ok {
-      color: $color-green;
-      font-weight: $font-bold;
-    }
   }
 
   .panel__heading {
@@ -101,7 +80,7 @@
       margin: 0;
       display: inline-block;
 
-      .subtitle, &.gray {
+      .subtitle {
         color: $color-gray;
       }
     }

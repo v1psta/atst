@@ -162,3 +162,40 @@
     }
   }
 }
+
+.task-order-form {
+  .task-order-form__heading {
+    margin-bottom: 0;
+
+    &.inactive {
+      color: $color-gray-light;
+    }
+
+    &.subheading {
+      color: $color-gray;
+    }
+  }
+
+  .funding-summary__table {
+    tr td {
+      border-bottom: 0;
+      padding: 0.5rem 1.5rem;
+
+      .funding-summary__td {
+        margin-top: 0;
+      }
+    }
+  }
+
+  .task-order-invite-message {
+    &.not-sent {
+      color: $color-red;
+      font-weight: $font-bold;
+    }
+
+    &.sent {
+      color: $color-green;
+      font-weight: $font-bold;
+    }
+  }
+}

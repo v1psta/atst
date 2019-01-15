@@ -22,17 +22,17 @@
 
 <div class="row">
   <div class="col col--grow">
-    <h4>{{ "task_orders.new.review.portfolio"| translate }}</h4>
+    <h4 class='task-order-form__heading'>{{ "task_orders.new.review.portfolio"| translate }}</h4>
     <p>{{ task_order.portfolio_name or RequiredLabel() }}</p>
   </div>
 
   <div class="col col--grow">
-    <h4>{{ "task_orders.new.review.dod"| translate }}</h4>
+    <h4 class='task-order-form__heading'>{{ "task_orders.new.review.dod"| translate }}</h4>
     <p>{{ task_order.defense_component_description or RequiredLabel() }}</p>
   </div>
 </div>
 
-<h4>{{ "task_orders.new.review.scope"| translate }}</h4>
+<h4 class='task-order-form__heading'>{{ "task_orders.new.review.scope"| translate }}</h4>
 <p>
 {{ task_order.scope or RequiredLabel() }}
 </p>
@@ -43,17 +43,17 @@
 
 <div class="row">
   <div class="col col--grow">
-    <h4>{{ "task_orders.new.review.migration"| translate }}</h4>
+    <h4 class='task-order-form__heading'>{{ "task_orders.new.review.migration"| translate }}</h4>
     <p>{{ task_order.app_migration_description or RequiredLabel() }}</p>
   </div>
 
   <div class="col col--grow">
-    <h4>{{ "task_orders.new.review.native_apps"| translate }}</h4>
+    <h4 class='task-order-form__heading'>{{ "task_orders.new.review.native_apps"| translate }}</h4>
     <p>{{ task_order.native_apps_description or RequiredLabel() }}</p>
   </div>
 </div>
 
-<h4>{{ "task_orders.new.review.complexity"| translate }}</h4>
+<h4 class='task-order-form__heading'>{{ "task_orders.new.review.complexity"| translate }}</h4>
 {% if task_order.complexity %}
   <ul class="checklist">
   {% for item in task_order.complexity %}
@@ -68,7 +68,7 @@
 
 <div class="row">
   <div class="col col--grow">
-    <h4>{{ "task_orders.new.review.team"| translate }}</h4>
+    <h4 class='task-order-form__heading'>{{ "task_orders.new.review.team"| translate }}</h4>
     {% if task_order.dev_team %}
       <ul class="checklist">
       {% for item in task_order.dev_team %}
@@ -83,7 +83,7 @@
   </div>
 
   <div class="col col--grow">
-    <h4>{{ "task_orders.new.review.experience"| translate }}</h4>
+    <h4 class='task-order-form__heading'>{{ "task_orders.new.review.experience"| translate }}</h4>
     <p>{{ task_order.team_experience_description or RequiredLabel() }}</p>
   </div>
 </div>
@@ -94,24 +94,24 @@
 
 <div class="row">
   <div class="col col--grow">
-    <h4>{{ "task_orders.new.review.performance_period"| translate }}</h4>
+    <h4 class='task-order-form__heading'>{{ "task_orders.new.review.performance_period"| translate }}</h4>
     {{ task_order.performance_length_description or RequiredLabel() }}
-    <p><a href="#" class='icon-link' download>{{ Icon('download') }} {{ "task_orders.new.review.usage_est_link"| translate }}</a></p>
+    <p><a href="#" class='icon-link icon-link--left' download>{{ Icon('download') }} {{ "task_orders.new.review.usage_est_link"| translate }}</a></p>
   </div>
 
   <div class="col col--grow">
-    <table class="funding-summary">
+    <table class="funding-summary__table">
       <tbody>
         <tr>
           <td><h4>{{ "task_orders.new.review.to_value"| translate }}</h4></td>
           <td class="table-cell--align-right">{{ '${:,.2f}'.format(task_order.budget) }}</td>
         </tr>
         <tr>
-          <td><h4>{{ "task_orders.new.review.clin_1"| translate }}</h4></td>
+          <td><h4 class='task-order-form__heading funding-summary__td'>{{ "task_orders.new.review.clin_1"| translate }}</h4></td>
           <td class="table-cell--align-right">{{ '${:,.2f}'.format(task_order.clin_01) }}</td>
         </tr>
         <tr>
-          <td><h4 {% if not config.CLASSIFIED %} class="inactive" {% endif %}>
+          <td><h4 class="task-order-form__heading funding-summary__td{% if not config.CLASSIFIED %} inactive{% endif %}">
             {{ "task_orders.new.review.clin_2"| translate }}
             {% if not config.CLASSIFIED %}
               <div>{{ "task_orders.new.review.classified_inactive"| translate }}</div>
@@ -124,11 +124,11 @@
           </td>
         </tr>
         <tr>
-          <td><h4>{{ "task_orders.new.review.clin_3"| translate }}</h4></td>
+          <td><h4 class='task-order-form__heading funding-summary__td'>{{ "task_orders.new.review.clin_3"| translate }}</h4></td>
           <td class="table-cell--align-right">{{ '${:,.2f}'.format(task_order.clin_03) }}</td>
         </tr>
         <tr>
-            <td><h4 {% if not config.CLASSIFIED %} class="inactive" {% endif %}>
+            <td><h4 class="task-order-form__heading funding-summary__td{% if not config.CLASSIFIED %} inactive{% endif %}">
               {{ "task_orders.new.review.clin_4"| translate }}
               {% if not config.CLASSIFIED %}
                 <div>{{ "task_orders.new.review.classified_inactive"| translate }}</div>
@@ -151,42 +151,42 @@
 
 <div class="row">
   <div class="col col--grow">
-    <h4>{{ "task_orders.new.review.ko"| translate }}</h4>
+    <h4 class='task-order-form__heading'>{{ "task_orders.new.review.ko"| translate }}</h4>
     {{ task_order.ko_first_name }} {{ task_order.ko_last_name }}<br>
     {{ task_order.ko_email }}<br>
     {{ task_order.ko_phone }}<br>
     {{ "task_orders.new.review.dod_id"| translate }} {{ task_order.ko_dod_id}}<br>
     {% if task_order.ko_invite %}
-      <span class="ok">{{ Icon('ok', classes='icon--ok') }} {{ "task_orders.new.review.invited"| translate }}</span>
+      {{ Icon('ok', classes='icon--green') }} <span class="task-order-invite-message sent">{{ "task_orders.new.review.invited"| translate }}</<span>
     {% else %}
-      <span class="error">{{ Icon('alert', classes='icon--error') }} {{ "task_orders.new.review.not_invited"| translate }}</span>
+      {{ Icon('alert', classes='icon--red') }} <span class="task-order-invite-message not-sent">{{ "task_orders.new.review.not_invited"| translate }}</span>
     {% endif %}
   </div>
 
   <div class="col col--grow">
-    <h4>{{ "task_orders.new.review.cor"| translate }}</h4>
+    <h4 class='task-order-form__heading'>{{ "task_orders.new.review.cor"| translate }}</h4>
     {{ task_order.cor_first_name }} {{ task_order.cor_last_name }}<br>
     {{ task_order.cor_email }}<br>
     {{ task_order.cor_phone }}<br>
     {{ "task_orders.new.review.dod_id"| translate }} {{ task_order.cor_dod_id}}<br>
     {% if task_order.cor_invite %}
-      <span class="ok">{{ Icon('ok', classes='icon--ok') }} {{ "task_orders.new.review.invited"| translate }}</span>
+      {{ Icon('ok', classes='icon--green') }} <span class="task-order-invite-message sent">{{ "task_orders.new.review.invited"| translate }}</<span>
     {% else %}
-      <span class="error">{{ Icon('alert', classes='icon--error') }} {{ "task_orders.new.review.not_invited"| translate }}</span>
+      {{ Icon('alert', classes='icon--red') }} <span class="task-order-invite-message not-sent">{{ "task_orders.new.review.not_invited"| translate }}</span>
     {% endif %}
   </div>
 </div>
 <div class="row">
   <div class="col col--grow">
-    <h4>{{ "task_orders.new.review.so"| translate }}</h4>
+    <h4 class='task-order-form__heading'>{{ "task_orders.new.review.so"| translate }}</h4>
     {{ task_order.so_first_name }} {{ task_order.so_last_name }}<br>
     {{ task_order.so_email }}<br>
     {{ task_order.so_phone }}<br>
     {{ "task_orders.new.review.dod_id"| translate }} {{ task_order.so_dod_id}}<br>
     {% if task_order.so_invite %}
-      <span class="ok">{{ Icon('ok', classes='icon--ok') }} {{ "task_orders.new.review.invited"| translate }}</span>
+      {{ Icon('ok', classes='icon--green') }} <span class="task-order-invite-message sent">{{ "task_orders.new.review.invited"| translate }}</<span>
     {% else %}
-      <span class="error">{{ Icon('alert', classes='icon--error') }} {{ "task_orders.new.review.not_invited"| translate }}</span>
+      {{ Icon('alert', classes='icon--red') }} <span class="task-order-invite-message not-sent">{{ "task_orders.new.review.not_invited"| translate }}</span>
     {% endif %}
   </div>
 </div>
@@ -195,7 +195,7 @@
 
 {% block next %}
   <div class='action-group'>
-    <input type='submit' class='usa-button usa-button-primary' value='Send Invitations' />
+    <input type='submit' class='usa-button usa-button-primary' value='Done' />
   </div>
 {% endblock %}
 
