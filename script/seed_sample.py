@@ -14,10 +14,17 @@ from atst.domain.applications import Applications
 from atst.domain.portfolio_roles import PortfolioRoles
 from atst.models.invitation import Status as InvitationStatus
 from atst.domain.exceptions import AlreadyExistsError
-from tests.factories import RequestFactory, LegacyTaskOrderFactory, InvitationFactory
+from tests.factories import (
+    InvitationFactory,
+    RequestFactory,
+    TaskOrderFactory,
+    random_future_date,
+    random_past_date,
+    random_task_order_number,
+)
 from atst.routes.dev import _DEV_USERS as DEV_USERS
 
-portfolio_USERS = [
+PORTFOLIO_USERS = [
     {
         "first_name": "Danny",
         "last_name": "Knight",
@@ -48,7 +55,7 @@ PORTFOLIO_INVITED_USERS = [
         "email": "frederick@mil.gov",
         "portfolio_role": "developer",
         "dod_id": "0000000004",
-        "status": InvitationStatus.REJECTED_WRONG_USER
+        "status": InvitationStatus.REJECTED_WRONG_USER,
     },
     {
         "first_name": "Gina",
@@ -56,7 +63,7 @@ PORTFOLIO_INVITED_USERS = [
         "email": "gina@mil.gov",
         "portfolio_role": "developer",
         "dod_id": "0000000005",
-        "status": InvitationStatus.REJECTED_EXPIRED
+        "status": InvitationStatus.REJECTED_EXPIRED,
     },
     {
         "first_name": "Hector",
@@ -64,7 +71,7 @@ PORTFOLIO_INVITED_USERS = [
         "email": "hector@mil.gov",
         "portfolio_role": "developer",
         "dod_id": "0000000006",
-        "status": InvitationStatus.REVOKED
+        "status": InvitationStatus.REVOKED,
     },
     {
         "first_name": "Isabella",
@@ -72,7 +79,7 @@ PORTFOLIO_INVITED_USERS = [
         "email": "isabella@mil.gov",
         "portfolio_role": "developer",
         "dod_id": "0000000007",
-        "status": InvitationStatus.PENDING
+        "status": InvitationStatus.PENDING,
     },
 ]
 
@@ -88,37 +95,44 @@ def seed_db():
         users.append(user)
 
     for user in users:
-        if Requests.get_many(creator=user):
-            continue
-
-        requests = []
-        for dollar_value in [1, 200, 3000, 40000, 500000, 1000000]:
-            request = RequestFactory.build(creator=user)
-            request.latest_revision.dollar_value = dollar_value
-            db.session.add(request)
-            db.session.commit()
-
-            Requests.submit(request)
-            requests.append(request)
-
-        request = requests[0]
-        request.legacy_task_order = LegacyTaskOrderFactory.build()
-        request = Requests.update(
-            request.id, {"financial_verification": RequestFactory.mock_financial_data()}
-        )
-
         portfolio = Portfolios.create(
             user, name="{}'s portfolio".format(user.first_name)
         )
-        for portfolio_role in portfolio_USERS:
+        for portfolio_role in PORTFOLIO_USERS:
             ws_role = Portfolios.create_member(user, portfolio, portfolio_role)
             db.session.refresh(ws_role)
             PortfolioRoles.enable(ws_role)
 
         for portfolio_role in PORTFOLIO_INVITED_USERS:
             ws_role = Portfolios.create_member(user, portfolio, portfolio_role)
-            invitation = InvitationFactory.build(portfolio_role=ws_role, status=portfolio_role["status"])
+            invitation = InvitationFactory.build(
+                portfolio_role=ws_role, status=portfolio_role["status"]
+            )
             db.session.add(invitation)
+
+        [expired_start, expired_end] = sorted(
+            [
+                random_past_date(year_max=2, year_min=1),
+                random_past_date(year_max=1, year_min=1),
+            ]
+        )
+        active_start = expired_end
+        active_end = random_future_date(year_min=1, year_max=1)
+
+        date_ranges = [(expired_start, expired_end), (active_start, active_end)]
+        for (start_date, end_date) in date_ranges:
+            task_order = TaskOrderFactory.build(
+                start_date=start_date,
+                end_date=end_date,
+                number=random_task_order_number(),
+                portfolio=portfolio,
+            )
+            db.session.add(task_order)
+
+        pending_task_order = TaskOrderFactory.build(
+            start_date=None, end_date=None, number=None, portfolio=portfolio
+        )
+        db.session.add(pending_task_order)
 
         db.session.commit()
 

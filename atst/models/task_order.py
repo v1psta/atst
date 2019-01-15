@@ -1,14 +1,7 @@
 from enum import Enum
 
-from sqlalchemy import (
-    Column,
-    Enum as SQLAEnum,
-    Numeric,
-    String,
-    ForeignKey,
-    Date,
-    Integer,
-)
+import pendulum
+from sqlalchemy import Column, Numeric, String, ForeignKey, Date, Integer
 from sqlalchemy.types import ARRAY
 from sqlalchemy.orm import relationship
 
@@ -17,6 +10,8 @@ from atst.models import Base, types, mixins
 
 class Status(Enum):
     PENDING = "Pending"
+    ACTIVE = "Active"
+    EXPIRED = "Expired"
 
 
 class TaskOrder(Base, mixins.TimestampsMixin):
@@ -40,8 +35,6 @@ class TaskOrder(Base, mixins.TimestampsMixin):
 
     so_id = Column(ForeignKey("users.id"))
     security_officer = relationship("User", foreign_keys="TaskOrder.so_id")
-
-    status = Column(SQLAEnum(Status, native_enum=False))
 
     scope = Column(String)  # Cloud Project Scope
     defense_component = Column(String)  # Department of Defense Component
@@ -79,10 +72,21 @@ class TaskOrder(Base, mixins.TimestampsMixin):
     number = Column(String, unique=True)  # Task Order Number
     loa = Column(ARRAY(String))  # Line of Accounting (LOA)
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        if "status" not in kwargs:
-            self.status = Status.PENDING
+    @property
+    def is_submitted(self):
+        return self.number is not None
+
+    @property
+    def status(self):
+        if self.is_submitted:
+            now = pendulum.now().date()
+            if self.start_date > now:
+                return Status.PENDING
+            elif self.end_date < now:
+                return Status.EXPIRED
+            return Status.ACTIVE
+        else:
+            return Status.PENDING
 
     @property
     def budget(self):

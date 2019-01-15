@@ -1,3 +1,4 @@
+import operator
 import random
 import string
 import factory
@@ -41,14 +42,26 @@ def random_phone_number():
     return "".join(random.choices(string.digits, k=10))
 
 
+def random_task_order_number():
+    return "-".join([str(random.randint(100, 999)) for _ in range(4)])
+
+
+def random_past_date(year_min=1, year_max=5):
+    return _random_date(year_min, year_max, operator.sub)
+
+
 def random_future_date(year_min=1, year_max=5):
+    return _random_date(year_min, year_max, operator.add)
+
+
+def _random_date(year_min, year_max, operation):
     if year_min == year_max:
         inc = year_min
     else:
         inc = random.randrange(year_min, year_max)
 
     return datetime.date(
-        datetime.date.today().year + inc,
+        operation(datetime.date.today().year, inc),
         random.randrange(1, 12),
         random.randrange(1, 28),
     )
