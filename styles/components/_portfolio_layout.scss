@@ -85,12 +85,15 @@
   }
 
   .portfolio-total-balance {
-    flex-direction: row-reverse;
-    margin: 2 * $gap 0;
-    padding-right: 14rem;
+    margin-top: -$gap;
+    .row {
+      flex-direction: row-reverse;
+      margin: 2 * $gap 0;
+      padding-right: 14rem;
 
-    .label {
-      margin: 0 2 * $gap;
+      .label {
+        margin: 0 2 * $gap;
+      }
     }
   }
 }

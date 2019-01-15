@@ -125,8 +125,8 @@
 
   {% if active_task_orders %}
     {{ TaskOrderList(active_task_orders, label='success') }}
-    <div class='panel'>
-      <div class='panel__content portfolio-total-balance row'>
+    <div class='panel portfolio-total-balance'>
+      <div class='panel__content row'>
         <span>{{ total_balance | dollars }}</span>
         <span class='label label--success'>Total Active Balance</span>
       </div>
