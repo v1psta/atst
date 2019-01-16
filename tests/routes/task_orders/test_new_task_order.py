@@ -48,6 +48,8 @@ def test_create_new_task_order(client, user_session):
 
     task_order_data = TaskOrderFactory.dictionary()
     app_info_data = slice_data_for_section(task_order_data, "app_info")
+    portfolio_name = "Mos Eisley"
+    app_info_data["portfolio_name"] = portfolio_name
 
     response = client.post(
         url_for("task_orders.update", screen=1),
@@ -55,6 +57,11 @@ def test_create_new_task_order(client, user_session):
         follow_redirects=False,
     )
     assert url_for("task_orders.new", screen=2) in response.headers["Location"]
+
+    created_task_order_id = response.headers["Location"].split("/")[-1]
+    created_task_order = TaskOrders.get(creator, created_task_order_id)
+    assert created_task_order.portfolio is not None
+    assert created_task_order.portfolio.name == portfolio_name
 
     funding_data = slice_data_for_section(task_order_data, "funding")
     funding_data = serialize_dates(funding_data)
@@ -68,6 +75,28 @@ def test_create_new_task_order(client, user_session):
         response.headers["Location"], data=oversight_data, follow_redirects=False
     )
     assert url_for("task_orders.new", screen=4) in response.headers["Location"]
+
+
+def test_create_new_task_order_for_portfolio(client, user_session):
+    portfolio = PortfolioFactory.create()
+    creator = portfolio.owner
+    user_session(creator)
+
+    task_order_data = TaskOrderFactory.dictionary()
+    app_info_data = slice_data_for_section(task_order_data, "app_info")
+    portfolio_name = "This is ignored for now"
+    app_info_data["portfolio_name"] = portfolio_name
+
+    response = client.post(
+        url_for("task_orders.update", screen=1, portfolio_id=portfolio.id),
+        data=app_info_data,
+        follow_redirects=False,
+    )
+    assert url_for("task_orders.new", screen=2) in response.headers["Location"]
+
+    created_task_order_id = response.headers["Location"].split("/")[-1]
+    created_task_order = TaskOrders.get(creator, created_task_order_id)
+    assert created_task_order.portfolio == portfolio
 
 
 def test_task_order_form_shows_errors(client, user_session):

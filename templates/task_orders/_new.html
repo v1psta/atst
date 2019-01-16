@@ -12,7 +12,7 @@
     {% if task_order_id %}
       <form method='POST' action="{{ url_for('task_orders.new', screen=current, task_order_id=task_order_id) }}" autocomplete="off">
     {% else %}
-      <form method='POST' action="{{ url_for('task_orders.update', screen=current) }}" autocomplete="off">
+      <form method='POST' action="{{ url_for('task_orders.update', screen=current, portfolio_id=portfolio_id) }}" autocomplete="off">
     {% endif %}
   {% endblock %}
 

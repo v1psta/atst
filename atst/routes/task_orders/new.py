@@ -100,11 +100,14 @@ class ShowTaskOrderWorkflow:
 
 
 class UpdateTaskOrderWorkflow(ShowTaskOrderWorkflow):
-    def __init__(self, user, form_data, screen=1, task_order_id=None):
+    def __init__(
+        self, user, form_data, screen=1, task_order_id=None, portfolio_id=None
+    ):
         self.user = user
         self.form_data = form_data
         self.screen = screen
         self.task_order_id = task_order_id
+        self.portfolio_id = portfolio_id
         self._task_order = None
         self._section = TASK_ORDER_SECTIONS[screen - 1]
         self._form = self._section["form"](self.form_data)
@@ -144,7 +147,10 @@ class UpdateTaskOrderWorkflow(ShowTaskOrderWorkflow):
                     Portfolios.update(self.task_order.portfolio, {"name": new_name})
             TaskOrders.update(self.user, self.task_order, **self.task_order_form_data)
         else:
-            pf = Portfolios.create(self.user, self.form.portfolio_name.data)
+            if self.portfolio_id:
+                pf = Portfolios.get(self.user, self.portfolio_id)
+            else:
+                pf = Portfolios.create(self.user, self.form.portfolio_name.data)
             self._task_order = TaskOrders.create(portfolio=pf, creator=self.user)
             TaskOrders.update(self.user, self.task_order, **self.task_order_form_data)
 
@@ -217,13 +223,15 @@ def get_started():
 
 @task_orders_bp.route("/task_orders/new/<int:screen>")
 @task_orders_bp.route("/task_orders/new/<int:screen>/<task_order_id>")
-def new(screen, task_order_id=None):
+@task_orders_bp.route("/portfolios/<portfolio_id>/task_orders/new/<int:screen>")
+def new(screen, task_order_id=None, portfolio_id=None):
     workflow = ShowTaskOrderWorkflow(g.current_user, screen, task_order_id)
     return render_template(
         workflow.template,
         current=screen,
         task_order_id=task_order_id,
         task_order=workflow.task_order,
+        portfolio_id=portfolio_id,
         screens=workflow.display_screens,
         form=workflow.form,
     )
@@ -231,9 +239,12 @@ def new(screen, task_order_id=None):
 
 @task_orders_bp.route("/task_orders/new/<int:screen>", methods=["POST"])
 @task_orders_bp.route("/task_orders/new/<int:screen>/<task_order_id>", methods=["POST"])
-def update(screen, task_order_id=None):
+@task_orders_bp.route(
+    "/portfolios/<portfolio_id>/task_orders/new/<int:screen>", methods=["POST"]
+)
+def update(screen, task_order_id=None, portfolio_id=None):
     workflow = UpdateTaskOrderWorkflow(
-        g.current_user, http_request.form, screen, task_order_id
+        g.current_user, http_request.form, screen, task_order_id, portfolio_id
     )
 
     if workflow.validate():
@@ -250,6 +261,7 @@ def update(screen, task_order_id=None):
             workflow.template,
             current=screen,
             task_order_id=task_order_id,
+            portfolio_id=portfolio_id,
             screens=TASK_ORDER_SECTIONS,
             form=workflow.form,
         )
