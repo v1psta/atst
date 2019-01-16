@@ -1,19 +1,5 @@
-import math
-from gettext import ngettext
-
 from atst.domain.roles import PORTFOLIO_ROLES as PORTFOLIO_ROLE_DEFINITIONS
-from atst.utils.localization import translate
-
-
-def translate_duration(duration_in_months):
-    duration = []
-    years = math.floor(duration_in_months / 12)
-    months = duration_in_months % 12
-    if years > 0:
-        duration.append("{} {}".format(years, ngettext("year", "years", years)))
-    if months > 0:
-        duration.append("{} {}".format(months, ngettext("month", "months", months)))
-    return (", ").join(duration)
+from atst.utils.localization import translate, translate_duration
 
 
 SERVICE_BRANCHES = [

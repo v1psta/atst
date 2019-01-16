@@ -1,7 +1,6 @@
 import re
 import datetime
-from atst.utils.localization import translate
-from atst.forms.data import translate_duration
+from atst.utils.localization import translate, translate_duration
 from flask import current_app as app, render_template
 from jinja2 import contextfilter
 from jinja2.exceptions import TemplateNotFound
