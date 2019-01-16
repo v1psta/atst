@@ -21,9 +21,21 @@
 
   .task-order-needs {
     .task-order-needs__list {
-      @include media($large-screen) {
+      @include media(960px) {
         @include grid-row;
       }
+
+      @include ie-only {
+        width: 100%;
+        max-width: 100%;
+
+        @include media($large-screen) {
+          .col {
+            max-width: 33%;
+          }
+        }
+      }
+
     }
   }
 
