@@ -10,7 +10,7 @@ from atst.models.task_order import Status as TaskOrderStatus
 
 
 @portfolios_bp.route("/portfolios/<portfolio_id>/task_orders")
-def portfolio_task_orders(portfolio_id):
+def portfolio_funding(portfolio_id):
     portfolio = Portfolios.get(g.current_user, portfolio_id)
     task_orders_by_status = defaultdict(list)
     serialize_task_order = lambda task_order: {

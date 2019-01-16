@@ -254,7 +254,7 @@ navigation:
     activity_log: Activity Log
     members: Members
     applications: Applications
-    task_orders: Funding
+    portfolio_funding: Funding
     portfolio_settings: Portfolio Settings
 requests:
   _new:
