@@ -29,3 +29,77 @@
     }
   }
 }
+
+.portfolio-funding {
+  .portfolio-funding__header {
+    padding: 0;
+    margin: 0 $gap;
+
+    align-items: center;
+
+    .portfolio-funding__header--funded-through {
+      padding: 2 * $gap;
+      flex-grow: 1;
+      text-align: left;
+      font-weight: bold;
+    }
+
+    .funded {
+      color: $color-green;
+      .icon {
+        @include icon-color($color-green);
+      }
+    }
+  }
+
+  .pending-task-order {
+    background-color: $color-gold-lightest;
+
+    align-items: center;
+    margin: 0;
+    padding: 2 * $gap;
+
+    dt {
+      font-weight: bold;
+    }
+
+    dd {
+      margin-left: 0;
+    }
+
+    .label {
+      margin-right: 2 * $gap;
+    }
+
+    .pending-task-order__started {
+      flex-grow: 1;
+    }
+
+    .pending-task-order__value {
+      text-align: right;
+    }
+  }
+
+  .view-task-order-link {
+    margin-left: $gap * 2;
+  }
+
+  .portfolio-total-balance {
+    margin-top: -$gap;
+    .row {
+      flex-direction: row-reverse;
+      margin: 2 * $gap 0;
+      padding-right: 14rem;
+
+      .label {
+        margin: 0 2 * $gap;
+      }
+    }
+  }
+
+  table {
+    td.unused-balance {
+      color: $color-red;
+    }
+  }
+}

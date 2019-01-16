@@ -38,6 +38,7 @@ pytest-env = "*"
 pytest-cov = "*"
 selenium = "*"
 honcho = "*"
+blinker = "*"
 
 [requires]
 python_version = "3.6.6"

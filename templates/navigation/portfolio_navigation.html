@@ -41,8 +41,8 @@
     {% endif %}
 
     {{ SidenavItem(
-      ("navigation.portfolio_navigation.task_orders" | translate),
-      href=url_for("portfolios.portfolio_task_orders", portfolio_id=portfolio.id),
+      ("navigation.portfolio_navigation.portfolio_funding" | translate),
+      href=url_for("portfolios.portfolio_funding", portfolio_id=portfolio.id),
       active=request.url_rule.rule.startswith('/portfolios/<portfolio_id>/task_order'),
       subnav=None
     ) }}

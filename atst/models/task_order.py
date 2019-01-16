@@ -89,10 +89,19 @@ class TaskOrder(Base, mixins.TimestampsMixin):
             return Status.PENDING
 
     @property
+    def display_status(self):
+        return self.status.value
+
+    @property
     def budget(self):
         return sum(
             filter(None, [self.clin_01, self.clin_02, self.clin_03, self.clin_04])
         )
+
+    @property
+    def balance(self):
+        # TODO: somehow calculate the remaining balance. For now, assume $0 spent
+        return self.budget
 
     @property
     def portfolio_name(self):
