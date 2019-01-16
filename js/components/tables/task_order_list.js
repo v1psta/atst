@@ -21,7 +21,8 @@ export default {
   name: 'task-order-list',
 
   props: {
-    data: Array
+    data: Array,
+    expired: Boolean
   },
 
   components: {
@@ -53,7 +54,7 @@ export default {
         sortFunc: numericSort
       },
       {
-        displayName: 'Balance',
+        displayName: this.expired ? 'Expired Balance' : 'Balance',
         attr: 'budget',
         class: "table-cell--align-right",
         sortFunc: numericSort

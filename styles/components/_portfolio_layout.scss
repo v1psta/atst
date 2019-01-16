@@ -96,4 +96,10 @@
       }
     }
   }
+
+  table {
+    td.unused-balance {
+      color: $color-red;
+    }
+  }
 }

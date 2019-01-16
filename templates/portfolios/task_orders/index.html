@@ -12,10 +12,11 @@
   </a>
 {% endmacro %}
 
-{% macro TaskOrderList(task_orders, label='success') %}
+{% macro TaskOrderList(task_orders, label='success', expired=False) %}
   <task-order-list
     inline-template
     v-bind:data='{{ task_orders | tojson }}'
+    v-bind:expired='{{ 'true' if expired else 'false' }}'
     v-cloak
     >
     <div class='responsive-table-wrapper'>
@@ -56,8 +57,8 @@
             <td class="table-cell--align-right">
               <span v-html='formatDollars(taskOrder.budget)'></span>
             </td>
-            <td class="table-cell--align-right">
-              <span v-html='formatDollars(taskOrder.budget)'></span>
+            <td v-bind:class="{ 'table-cell--align-right': true, 'unused-balance': expired && taskOrder.balance > 0 }">
+              <span v-html='formatDollars(taskOrder.balance)'></span>
             </td>
             <td>
               <a v-bind:href="taskOrder.url" class="icon-link view-task-order-link">
@@ -134,7 +135,7 @@
   {% endif %}
 
   {% if expired_task_orders %}
-    {{ TaskOrderList(expired_task_orders, label='') }}
+    {{ TaskOrderList(expired_task_orders, label='', expired=True) }}
   {% endif %}
 </div>
 
