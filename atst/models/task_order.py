@@ -4,11 +4,8 @@ import pendulum
 from sqlalchemy import Column, Numeric, String, ForeignKey, Date, Integer
 from sqlalchemy.types import ARRAY
 from sqlalchemy.orm import relationship
-import re
 
 from atst.models import Base, types, mixins
-from atst.utils.localization import translate
-from atst.filters import usPhone
 
 
 class Status(Enum):
@@ -105,62 +102,6 @@ class TaskOrder(Base, mixins.TimestampsMixin):
     def is_pending(self):
         return self.status == Status.PENDING
 
-    @property
-    def defense_component_description(self):
-        if self.defense_component:
-            return self.normalize_order(self.defense_component)
-        else:
-            return None
-
-    @property
-    def app_migration_description(self):
-        if self.app_migration:
-            text = translate(
-                "forms.task_order.app_migration.{}".format(self.app_migration)
-            )
-            return self.remove_html(text)
-        else:
-            return None
-
-    @property
-    def native_apps_description(self):
-        if self.native_apps:
-            return translate(
-                "task_orders.new.review.{}_native".format(self.native_apps)
-            )
-        else:
-            return None
-
-    @property
-    def team_experience_description(self):
-        if self.team_experience:
-            return translate(
-                "forms.task_order.team_experience.{}".format(self.team_experience)
-            )
-        else:
-            return None
-
-    @property
-    def performance_length_description(self):
-        if self.performance_length:
-            return translate(
-                "forms.task_order.performance_length.{}".format(self.performance_length)
-            )
-        else:
-            return None
-
-    @property
-    def ko_phone(self):
-        return usPhone(self.ko_phone_number)
-
-    @property
-    def cor_phone(self):
-        return usPhone(self.cor_phone_number)
-
-    @property
-    def so_phone(self):
-        return usPhone(self.so_phone_number)
-
     def to_dictionary(self):
         return {
             "portfolio_name": self.portfolio_name,
@@ -170,16 +111,6 @@ class TaskOrder(Base, mixins.TimestampsMixin):
                 if c.name not in ["id"]
             },
         }
-
-    def remove_html(self, text):
-        html_tags = re.compile("<.*?>")
-        return re.sub(html_tags, "", text)
-
-    def normalize_order(self, department):
-        text = department.split(", ")
-        reordered_text = text[0:-1]
-        reordered_text.insert(0, text[-1])
-        return " ".join(reordered_text)
 
     def __repr__(self):
         return "<TaskOrder(number='{}', budget='{}', end_date='{}', id='{}')>".format(

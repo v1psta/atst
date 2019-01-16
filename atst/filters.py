@@ -97,6 +97,19 @@ def renderAuditEvent(event):
         return render_template("audit_log/events/default.html", event=event)
 
 
+def removeHtml(text):
+    html_tags = re.compile("<.*?>")
+    return re.sub(html_tags, "", text)
+
+
+def normalizeOrder(title):
+    # reorders titles from "Army, Department of the" to "Department of the Army"
+    text = title.split(", ")
+    reordered_text = text[0:-1]
+    reordered_text.insert(0, text[-1])
+    return " ".join(reordered_text)
+
+
 def register_filters(app):
     app.jinja_env.filters["iconSvg"] = iconSvg
     app.jinja_env.filters["dollars"] = dollars
@@ -110,6 +123,8 @@ def register_filters(app):
     app.jinja_env.filters["dateFromString"] = dateFromString
     app.jinja_env.filters["pageWindow"] = pageWindow
     app.jinja_env.filters["renderAuditEvent"] = renderAuditEvent
+    app.jinja_env.filters["removeHtml"] = removeHtml
+    app.jinja_env.filters["normalizeOrder"] = normalizeOrder
 
     @contextfilter
     def translateWithoutCache(context, *kwargs):
