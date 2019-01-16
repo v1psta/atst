@@ -47,13 +47,8 @@
 
 .task-order-summary {
 
-
   .panel {
     width: 100%;
-
-    @include ie-only {
-      max-width: 100%;
-    }
   }
 
   .label--pending {
@@ -105,6 +100,10 @@
       padding-right: $gap;
     }
 
+    @include ie-only {
+      width: 100%;
+    }
+
     .task-order-next-steps__step {
       .task-order-next-steps__icon {
         padding: $gap $gap 0 0;
@@ -114,6 +113,12 @@
         }
         .incomplete {
           @include icon-color($color-gray-light);
+        }
+      }
+
+      .task-order-next-steps__text {
+        @include ie-only {
+          width: 100%
         }
       }
 
