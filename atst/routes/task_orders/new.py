@@ -78,6 +78,10 @@ class ShowTaskOrderWorkflow:
             if self._section["section"] == "app_info":
                 self._form.complexity.data = self.task_order.complexity
                 self._form.dev_team.data = self.task_order.dev_team
+            elif self._section["section"] == "oversight":
+                if self.user.dod_id == self.task_order.cor_dod_id:
+                    self._form.am_cor.data = True
+
         else:
             self._form = self._section[form_type]()
 
