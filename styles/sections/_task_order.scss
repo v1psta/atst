@@ -21,7 +21,7 @@
 
   .task-order-needs {
     .task-order-needs__list {
-      @include media($large-screen) {
+      @include media(960px) {
         @include grid-row;
       }
 
