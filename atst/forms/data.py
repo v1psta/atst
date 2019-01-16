@@ -1,5 +1,20 @@
+import math
+from gettext import ngettext
+
 from atst.domain.roles import PORTFOLIO_ROLES as PORTFOLIO_ROLE_DEFINITIONS
 from atst.utils.localization import translate
+
+
+def translate_duration(duration_in_months):
+    duration = []
+    years = math.floor(duration_in_months / 12)
+    months = duration_in_months % 12
+    if years > 0:
+        duration.append("{} {}".format(years, ngettext("year", "years", years)))
+    if months > 0:
+        duration.append("{} {}".format(months, ngettext("month", "months", months)))
+    return (", ").join(duration)
+
 
 SERVICE_BRANCHES = [
     ("", "Select an option"),
@@ -213,28 +228,5 @@ TEAM_EXPERIENCE = [
 ]
 
 PERIOD_OF_PERFORMANCE_LENGTH = [
-    ("1", translate("forms.task_order.performance_length.1")),
-    ("2", translate("forms.task_order.performance_length.2")),
-    ("3", translate("forms.task_order.performance_length.3")),
-    ("4", translate("forms.task_order.performance_length.4")),
-    ("5", translate("forms.task_order.performance_length.5")),
-    ("6", translate("forms.task_order.performance_length.6")),
-    ("7", translate("forms.task_order.performance_length.7")),
-    ("8", translate("forms.task_order.performance_length.8")),
-    ("9", translate("forms.task_order.performance_length.9")),
-    ("10", translate("forms.task_order.performance_length.10")),
-    ("11", translate("forms.task_order.performance_length.11")),
-    ("12", translate("forms.task_order.performance_length.12")),
-    ("13", translate("forms.task_order.performance_length.13")),
-    ("14", translate("forms.task_order.performance_length.14")),
-    ("15", translate("forms.task_order.performance_length.15")),
-    ("16", translate("forms.task_order.performance_length.16")),
-    ("17", translate("forms.task_order.performance_length.17")),
-    ("18", translate("forms.task_order.performance_length.18")),
-    ("19", translate("forms.task_order.performance_length.19")),
-    ("20", translate("forms.task_order.performance_length.20")),
-    ("21", translate("forms.task_order.performance_length.21")),
-    ("22", translate("forms.task_order.performance_length.22")),
-    ("23", translate("forms.task_order.performance_length.23")),
-    ("24", translate("forms.task_order.performance_length.24")),
+    (str(x + 1), translate_duration(x + 1)) for x in range(24)
 ]
