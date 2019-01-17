@@ -1,5 +1,5 @@
 from wtforms.validators import ValidationError, StopValidation
-import pytest, copy
+import pytest
 
 from atst.forms.validators import (
     Name,
