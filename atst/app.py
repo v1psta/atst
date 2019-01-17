@@ -18,7 +18,7 @@ from atst.routes.task_orders import task_orders_bp
 from atst.routes.dev import bp as dev_routes
 from atst.routes.users import bp as user_routes
 from atst.routes.errors import make_error_pages
-from atst.domain.authnid.crl import CRLCache
+from atst.domain.authnid.crl import CRLCache, NoOpCRLCache
 from atst.domain.auth import apply_authentication
 from atst.domain.authz import Authorization
 from atst.domain.csp import make_csp_provider
@@ -48,6 +48,8 @@ def make_app(config):
     app.config.update({"SESSION_REDIS": app.redis})
 
     make_flask_callbacks(app)
+    # TODO: deprecate the REQUIRE_CRLs setting in favor of the
+    # DISABLE_CRL_CHECK; both have the effect of never loading CRLs
     if app.config.get("REQUIRE_CRLS"):
         make_crl_validator(app)
     register_filters(app)
@@ -133,6 +135,7 @@ def map_config(config):
         "REQUIRE_CRLS": config.getboolean("default", "REQUIRE_CRLS"),
         "RQ_REDIS_URL": config["default"]["REDIS_URI"],
         "RQ_QUEUES": [config["default"]["RQ_QUEUES"]],
+        "DISABLE_CRL_CHECK": config.getboolean("default", "DISABLE_CRL_CHECK"),
     }
 
 
@@ -183,10 +186,15 @@ def make_redis(app, config):
 
 
 def make_crl_validator(app):
-    crl_locations = []
-    for filename in pathlib.Path(app.config["CRL_DIRECTORY"]).glob("*.crl"):
-        crl_locations.append(filename.absolute())
-    app.crl_cache = CRLCache(app.config["CA_CHAIN"], crl_locations, logger=app.logger)
+    if app.config.get("DISABLE_CRL_CHECK"):
+        app.crl_cache = NoOpCRLCache(logger=app.logger)
+    else:
+        crl_locations = []
+        for filename in pathlib.Path(app.config["CRL_DIRECTORY"]).glob("*.crl"):
+            crl_locations.append(filename.absolute())
+        app.crl_cache = CRLCache(
+            app.config["CA_CHAIN"], crl_locations, logger=app.logger
+        )
 
 
 def make_eda_client(app):

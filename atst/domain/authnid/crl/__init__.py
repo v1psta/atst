@@ -9,7 +9,42 @@ class CRLRevocationException(Exception):
     pass
 
 
-class CRLCache:
+class CRLInterface:
+    def __init__(self, *args, logger=None, **kwargs):
+        self.logger = logger
+
+    def _log_info(self, message):
+        if self.logger:
+            self.logger.info(message)
+
+    def crl_check(self, cert):
+        raise NotImplementedError()
+
+
+class NoOpCRLCache(CRLInterface):
+    def _get_cn(self, cert):
+        try:
+            parsed = crypto.load_certificate(crypto.FILETYPE_PEM, cert)
+            for comp in parsed.get_subject().get_components():
+                if comp[0] == b"CN":
+                    return comp[1].decode()
+        except crypto.Error:
+            pass
+
+        return "unknown"
+
+    def crl_check(self, cert):
+        cn = self._get_cn(cert)
+        self._log_info(
+            "Did not perform CRL validation for certificate with Common Name '{}'".format(
+                cn
+            )
+        )
+
+        return True
+
+
+class CRLCache(CRLInterface):
 
     _PEM_RE = re.compile(
         b"-----BEGIN CERTIFICATE-----\r?.+?\r?-----END CERTIFICATE-----\r?\n?",
@@ -24,10 +59,6 @@ class CRLCache:
         self._load_roots(root_location)
         self._build_crl_cache(crl_locations)
         self.logger = logger
-
-    def log_info(self, message):
-        if self.logger:
-            self.logger.info(message)
 
     def _get_store(self, cert):
         return self._build_store(cert.get_issuer().der())
@@ -53,13 +84,13 @@ class CRLCache:
 
     def _build_store(self, issuer):
         store = self.store_class()
-        self.log_info("STORE ID: {}. Building store.".format(id(store)))
+        self._log_info("STORE ID: {}. Building store.".format(id(store)))
         store.set_flags(crypto.X509StoreFlags.CRL_CHECK)
         crl_location = self._get_crl_location(issuer)
         with open(crl_location, "rb") as crl_file:
             crl = crypto.load_crl(crypto.FILETYPE_ASN1, crl_file.read())
             store.add_crl(crl)
-            self.log_info(
+            self._log_info(
                 "STORE ID: {}. Adding CRL with issuer {}".format(
                     id(store), crl.get_issuer()
                 )
@@ -81,7 +112,7 @@ class CRLCache:
     def _add_certificate_chain_to_store(self, store, issuer):
         ca = self.certificate_authorities.get(issuer.der())
         store.add_cert(ca)
-        self.log_info(
+        self._log_info(
             "STORE ID: {}. Adding CA with subject {}".format(
                 id(store), ca.get_subject()
             )

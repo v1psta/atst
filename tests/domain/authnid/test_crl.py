@@ -5,7 +5,7 @@ import os
 import shutil
 from OpenSSL import crypto, SSL
 
-from atst.domain.authnid.crl import CRLCache, CRLRevocationException
+from atst.domain.authnid.crl import CRLCache, CRLRevocationException, NoOpCRLCache
 import atst.domain.authnid.crl.util as util
 
 from tests.mocks import FIXTURE_EMAIL_ADDRESS
@@ -161,3 +161,11 @@ def test_refresh_crls_with_error(tmpdir, monkeypatch):
     util.refresh_crls(tmpdir, tmpdir, logger)
 
     assert "Error downloading {}".format(fake_crl) in logger.messages[-1]
+
+
+def test_no_op_crl_cache_logs_common_name():
+    logger = FakeLogger()
+    cert = open("ssl/client-certs/atat.mil.crt", "rb").read()
+    cache = NoOpCRLCache(logger=logger)
+    assert cache.crl_check(cert)
+    assert "ART.GARFUNKEL.1234567890" in logger.messages[-1]
