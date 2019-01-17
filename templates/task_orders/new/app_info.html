@@ -16,7 +16,9 @@
 {{ TextInput(form.portfolio_name, placeholder="The name of your office or organization") }}
 {{ TextInput(form.scope, paragraph=True) }}
 <p><i>{{ "task_orders.new.app_info.sample_scope" | translate | safe }}</i></p>
-{{ OptionsInput(form.defense_component) }}
+<div class="subheading--black">
+  {{ OptionsInput(form.defense_component) }}
+</div>
 
 <hr>
 
