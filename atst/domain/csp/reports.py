@@ -183,7 +183,7 @@ class MockReportingProvider(ReportingInterface):
         "Beluga": {
             "cumulative": CUMULATIVE_BUDGET_BELUGA,
             "applications": [
-                MockApplication("NP02", ["Integ", "PreProd", "NP02_Prod"]),
+                MockApplication("NP02", ["Integ", "PreProd", "Prod"]),
                 MockApplication("FM", ["Integ", "Prod"]),
             ],
             "budget": 70000,
@@ -296,10 +296,13 @@ class MockReportingProvider(ReportingInterface):
         else:
             budget_months = {}
 
-        this_year = pendulum.now().year
+        end = pendulum.now()
+        start = end.subtract(months=12)
+        period = pendulum.period(start, end)
+
         all_months = OrderedDict()
-        for m in range(1, 13):
-            month_str = "{month:02d}/{year}".format(month=m, year=this_year)
+        for t in period.range("months"):
+            month_str = "{month:02d}/{year}".format(month=t.month, year=t.year)
             all_months[month_str] = budget_months.get(month_str, None)
 
         return {"months": all_months}
