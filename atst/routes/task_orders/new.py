@@ -262,6 +262,6 @@ def update(screen, task_order_id=None, portfolio_id=None):
             current=screen,
             task_order_id=task_order_id,
             portfolio_id=portfolio_id,
-            screens=TASK_ORDER_SECTIONS,
+            screens=workflow.display_screens,
             form=workflow.form,
         )
