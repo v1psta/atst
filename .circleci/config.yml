@@ -174,7 +174,8 @@ jobs:
           command: |
             docker image ls
             docker login -u ${REGISTRY_USERNAME} -p ${REGISTRY_PASSWORD} ${ATAT_DOCKER_REGISTRY_URL}
-            docker push ${IMAGE_NAME}
+            docker push ${IMAGE_NAME} | cat
+            curl -s -H "Content-Type: application/json" --user ${REGISTRY_USERNAME}:${REGISTRY_PASSWORD} -XGET https://${ATAT_DOCKER_REGISTRY_URL}/v2/${PROD_IMAGE_NAME}/manifests/${GIT_SHA} || true
             docker logout
 
   deploy:
