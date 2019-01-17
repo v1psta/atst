@@ -146,4 +146,4 @@ def csp_environment_access():
 
 @bp.route("/jedi-csp-calculator")
 def jedi_csp_calculator():
-    return render_template("mock_csp.html", text="service and price calculator")
+    return redirect(app.csp.cloud.calculator_url())

@@ -38,6 +38,10 @@ class CloudProviderInterface:
         """
         raise NotImplementedError()
 
+    def calculator_url(self):  # pragma: no cover
+        """Returns a URL for the CSP's estimate calculator."""
+        raise NotImplementedError()
+
 
 class MockCloudProvider(CloudProviderInterface):
     def create_application(self, name):
@@ -64,3 +68,6 @@ class MockCloudProvider(CloudProviderInterface):
         env_id = environment_role.environment.cloud_id or ""
         role_details = environment_role.role
         return "::".join([user_id, env_id, role_details])
+
+    def calculator_url(self):
+        return "https://www.rackspace.com/en-us/calculator"
