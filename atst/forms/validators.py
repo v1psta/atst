@@ -81,6 +81,15 @@ def ListItemsUnique(message=translate("forms.validators.list_items_unique_messag
 
 
 def RequiredIfNot(other_field_name, message=translate("forms.validators.is_required")):
+    """ A validator which makes a field required only if another field
+        has a falsy value
+        Args:
+            other_field_name (str): the name of the field we check before
+                determining if this field is required; if this other field is falsy,
+                the field will be required
+            message (str): an optional message to display if the field is
+                required but hasNone value
+    """
     def _required_if_not(form, field):
         other_field = form._fields.get(other_field_name)
         if other_field is None:

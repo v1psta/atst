@@ -154,7 +154,7 @@ class UpdateTaskOrderWorkflow(ShowTaskOrderWorkflow):
             if "portfolio_name" in self.form.data:
                 new_name = self.form.data["portfolio_name"]
                 old_name = self.task_order.portfolio_name
-                if not new_name is old_name:
+                if not new_name == old_name:
                     Portfolios.update(self.task_order.portfolio, {"name": new_name})
             TaskOrders.update(self.user, self.task_order, **self.task_order_form_data)
         else:
