@@ -7,7 +7,7 @@
 {% with messages = get_flashed_messages(with_categories=true, category_filter=category_filter) %}
   {% if messages %}
     {% for category, message_config in messages %}
-      {{ Alert(message_config["title"], message=message_config.get("message"), level=category) }}
+      {{ Alert(message_config["title"], message=message_config.get("message"), actions=message_config.get("actions"), level=category) }}
     {% endfor %}
   {% endif %}
 {% endwith %}
