@@ -285,6 +285,10 @@
   &.usa-input--success {
     @include input-state('success');
   }
+
+  [type='file'] {
+    height: auto
+  }
 }
 
 select {
