@@ -46,6 +46,16 @@ def test_can_build_trusted_root_list():
         assert len(cache.certificate_authorities.keys()) == content.count("BEGIN CERT")
 
 
+def test_can_build_crl_list_with_missing_crls():
+    location = "ssl/client-certs/client-ca.der.crl"
+    cache = CRLCache(
+        "ssl/client-certs/client-ca.crt",
+        crl_locations=["tests/fixtures/sample.pdf"],
+        store_class=MockX509Store,
+    )
+    assert len(cache.crl_cache.keys()) == 0
+
+
 def test_can_validate_certificate():
     cache = CRLCache(
         "ssl/server-certs/ca-chain.pem",
