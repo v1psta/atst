@@ -1,40 +1,25 @@
 .app-footer {
-  background-color: $color-gray-lightest;
-  border-top: 1px solid $color-gray-lighter;
+  background-color: $color-white;
+  border-top: 1px solid $color-black;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding: $gap * 2;
+  padding: $gap * 1.5;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
 
   .app-footer__info {
     flex-grow: 1;
 
-    .app-footer__info__title {
-      display: inline-block;
-      padding: 0;
-      margin: 0 $gap 0 0;
-      //margin: ($gap * 2);
-    }
-
     .app-footer__info__link {
       margin: (-$gap * 2) (-$gap);
-    }
-  }
 
-  .app-footer__browser-support {
-    color: $color-gray;
-    margin: 0;
-    text-align: right;
-    dt, dd {
-      @include h5;
-      display: inline-block;
-    }
-
-    dd {
-      font-weight: normal;
-      &::before {
-        content: '・';
+      .icon--footer {
+        @include icon-size(16);
+        margin: 0.8rem;
       }
     }
   }
