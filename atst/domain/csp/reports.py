@@ -183,7 +183,7 @@ class MockReportingProvider(ReportingInterface):
         "Beluga": {
             "cumulative": CUMULATIVE_BUDGET_BELUGA,
             "applications": [
-                MockApplication("NP02", ["Integ", "PreProd", "NP02_Prod"]),
+                MockApplication("NP02", ["Integ", "PreProd", "Prod"]),
                 MockApplication("FM", ["Integ", "Prod"]),
             ],
             "budget": 70000,
