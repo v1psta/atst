@@ -38,6 +38,10 @@
   {% set performance_length = task_order.performance_length | translateDuration %}
 {% endif %}
 
+{% if task_order.budget %}
+  {% set budget = '${:,.2f}'.format(task_order.budget) %}
+{% endif %}
+
 {% if task_order.clin_01 %}
   {% set clin_01 = '${:,.2f}'.format(task_order.clin_01) %}
 {% endif %}
@@ -158,7 +162,7 @@
       <tbody>
         <tr>
           <td><h4>{{ "task_orders.new.review.to_value"| translate }}</h4></td>
-          <td class="table-cell--align-right">{{ '${:,.2f}'.format(task_order.budget) }}</td>
+          <td class="table-cell--align-right">{{ budget or RequiredLabel() }}</td>
         </tr>
         <tr>
           <td><h4 class='task-order-form__heading funding-summary__td'>{{ "task_orders.new.review.clin_1"| translate }}</h4></td>
@@ -254,5 +258,7 @@
 {% endblock %}
 
 {% block form_action %}
-  <form method='POST' action="{{ url_for('task_orders.invite', task_order_id=task_order_id) }}" autocomplete="off">
+  {% if task_order_id %}
+    <form method='POST' action="{{ url_for('task_orders.invite', task_order_id=task_order_id) }}" autocomplete="off">
+  {% endif %}
 {% endblock %}
