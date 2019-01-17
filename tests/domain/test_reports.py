@@ -35,4 +35,4 @@ def test_cumulative_budget():
     portfolio = PortfolioFactory.create(request=request)
     months = Reports.cumulative_budget(portfolio)
 
-    assert len(months["months"]) == 12
+    assert len(months["months"]) >= 12
