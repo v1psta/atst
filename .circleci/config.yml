@@ -174,7 +174,7 @@ jobs:
           command: |
             docker image ls
             docker login -u ${REGISTRY_USERNAME} -p ${REGISTRY_PASSWORD} ${ATAT_DOCKER_REGISTRY_URL}
-            docker push ${IMAGE_NAME}
+            docker push ${IMAGE_NAME} | cat
             docker logout
 
   deploy:
