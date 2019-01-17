@@ -59,6 +59,10 @@
 
 .task-order-summary {
 
+  .alert .alert__actions {
+    margin-top: 2 * $gap;
+  }
+
   .panel {
     width: 100%;
   }
