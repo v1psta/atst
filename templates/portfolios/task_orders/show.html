@@ -59,7 +59,10 @@
   </div>
 {% endmacro %}
 
+
 <div class="task-order-summary">
+  {% include "fragments/flash.html" %}
+
   <div class="panel task-order-heading row">
     <div class="panel__content task-order-heading__name row">
       <h2>New Task Order</h2>
@@ -83,7 +86,7 @@
   </div>
 
   <div class="task-order-details">
-    <div class="task-order-next-steps">
+    <div id="next-steps" class="task-order-next-steps">
       <div class="panel">
         <h3 class="panel__content">What's next?</h3>
         {{ Step(

@@ -108,6 +108,26 @@ MESSAGES = {
         """,
         "category": "success",
     },
+    "task_order_congrats": {
+        "title_template": "Congrats!",
+        "message_template": """
+        You've created a new JEDI portfolio and jump started your first task order!
+        """,
+        "actions": """
+            {% from "components/icon.html" import Icon %}
+            <div class='alert__actions'>
+              <a href='{{ url_for("portfolios.show_portfolio", portfolio_id=portfolio.id) }}' class='icon-link'>
+                {{ Icon('shield') }}
+                <span>Go to my Portfolio Home Page</span>
+              </a>
+              <a href='#next-steps' class='icon-link'>
+                {{ Icon('arrow-down') }}
+                <span>Review Next Steps Below</span>
+              </a>
+            </div>
+        """,
+        "category": "success",
+    },
 }
 
 
@@ -115,4 +135,7 @@ def formatted_flash(message_name, **message_args):
     config = MESSAGES[message_name]
     title = render_template_string(config["title_template"], **message_args)
     message = render_template_string(config["message_template"], **message_args)
-    flash({"title": title, "message": message}, config["category"])
+    actions = None
+    if "actions" in config:
+        actions = render_template_string(config["actions"], **message_args)
+    flash({"title": title, "message": message, "actions": actions}, config["category"])
