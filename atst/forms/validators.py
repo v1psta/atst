@@ -90,6 +90,7 @@ def RequiredIfNot(other_field_name, message=translate("forms.validators.is_requi
             message (str): an optional message to display if the field is
                 required but hasNone value
     """
+
     def _required_if_not(form, field):
         other_field = form._fields.get(other_field_name)
         if other_field is None:
