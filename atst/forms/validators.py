@@ -1,5 +1,5 @@
 import re
-from wtforms.validators import ValidationError
+from wtforms.validators import ValidationError, StopValidation
 import pendulum
 from datetime import datetime
 from atst.utils.localization import translate
@@ -78,3 +78,28 @@ def ListItemsUnique(message=translate("forms.validators.list_items_unique_messag
             raise ValidationError(message)
 
     return _list_items_unique
+
+
+def RequiredIfNot(other_field_name, message=translate("forms.validators.is_required")):
+    """ A validator which makes a field required only if another field
+        has a falsy value
+        Args:
+            other_field_name (str): the name of the field we check before
+                determining if this field is required; if this other field is falsy,
+                the field will be required
+            message (str): an optional message to display if the field is
+                required but hasNone value
+    """
+
+    def _required_if_not(form, field):
+        other_field = form._fields.get(other_field_name)
+        if other_field is None:
+            raise Exception('no field named "%s" in form' % self.other_field_name)
+
+        if not bool(other_field.data):
+            if field.data is None:
+                raise ValidationError(message)
+        else:
+            raise StopValidation()
+
+    return _required_if_not

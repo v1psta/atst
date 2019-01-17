@@ -78,6 +78,10 @@ class ShowTaskOrderWorkflow:
             if self._section["section"] == "app_info":
                 self._form.complexity.data = self.task_order.complexity
                 self._form.dev_team.data = self.task_order.dev_team
+            elif self._section["section"] == "oversight":
+                if self.user.dod_id == self.task_order.cor_dod_id:
+                    self._form.am_cor.data = True
+
         else:
             self._form = self._section[form_type]()
 
@@ -132,6 +136,16 @@ class UpdateTaskOrderWorkflow(ShowTaskOrderWorkflow):
             to_data["complexity_other"] = None
         if "dev_team" in to_data and "other" not in to_data["dev_team"]:
             to_data["dev_team_other"] = None
+
+        if self.form_data.get("am_cor"):
+            cor_data = {
+                "cor_first_name": self.user.first_name,
+                "cor_last_name": self.user.last_name,
+                "cor_email": self.user.email,
+                "cor_phone_number": self.user.phone_number,
+                "cor_dod_id": self.user.dod_id,
+            }
+            to_data = {**to_data, **cor_data}
 
         return to_data
 

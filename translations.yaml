@@ -223,6 +223,7 @@ forms:
     oversight_email_label: Email
     oversight_phone_label: Phone Number
     oversight_dod_id_label: DoD ID
+    oversight_am_cor_label: I am the Contracting Officer Representative (COR) for this Task Order
     ko_invite_label: Invite KO to Task Order Builder
     cor_invite_label: Invite COR to Task Order Builder
     so_invite_label: Invite Security Officer to Task Order Builder
@@ -234,6 +235,7 @@ forms:
     list_items_unique_message: Items must be unique
     name_message: 'This field accepts letters, numbers, commas, apostrophes, hyphens, and periods.'
     phone_number_message: Please enter a valid 5 or 10 digit phone number.
+    is_required: This field is required.
   portfolio:
     name_label: Portfolio Name
     name_length_validation_message: Portfolio names must be at least 4 and not more than 50 characters
@@ -403,7 +405,6 @@ task_orders:
       skip_ko_label: "Skip for now (We'll remind you to enter one later)"
       cor_info_title: Contracting Officer Representative (COR) Information
       cor_info_paragraph: Your COR may assist in submitting the Task Order documents within thier official system of record. They may also be invited to log in an manage the Task Order entry within the JEDI Cloud portal.
-      am_cor_label: I am the Contracting Officer Representative (COR) for this Task Order
       so_info_title: Security Officer Information
       so_info_paragraph: Your Security Officer will need to answer some security configuration questions in order to generate a DD-254 document, then electronically sign.
     review:
