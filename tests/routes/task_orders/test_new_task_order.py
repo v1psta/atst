@@ -100,10 +100,9 @@ def test_create_new_task_order_for_portfolio(client, user_session):
 
 
 def test_task_order_form_shows_errors(client, user_session):
-    creator = UserFactory.create()
+    to = task_order()
+    creator = to.creator
     user_session(creator)
-
-    to = TaskOrderFactory.create()
 
     task_order_data = TaskOrderFactory.dictionary()
     funding_data = slice_data_for_section(task_order_data, "funding")
