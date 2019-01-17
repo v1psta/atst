@@ -68,4 +68,8 @@
     opacity: 0.3;
     pointer-events: none;
   }
+
+  &.icon-link--left {
+    padding-left: 0;
+  }
 }

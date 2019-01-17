@@ -169,19 +169,45 @@ forms:
     scope_label: Cloud Project Scope
     scope_description: Your team's plan for using the cloud, such as migrating an existing application or creating a prototype.
     defense_component_label: Department of Defense Component
-    app_migration_label: App Migration
-    app_migration_description: Do you plan to migrate existing application(s) to the cloud?
+    app_migration:
+      label: App Migration
+      description: Do you plan to migrate existing application(s) to the cloud?
+      on_premise: Yes, migrating from an <strong>on-premise data center</strong>
+      cloud: Yes, migrating from <strong>another cloud provider</strong>
+      both: Yes, migrating from an <strong>on-premise data center</strong> and <strong>another cloud provider</strong>
+      none: Not planning to migrate any applications
+      not_sure: "Not Sure"
     native_apps_label: Native Apps
     native_apps_description: Do you plan to develop application(s) natively in the cloud?
-    complexity_label: Project Complexity
-    complexity_description: Which of these describes how complex your team's use of the cloud will be? Select all that apply.
+    complexity:
+      label: Project Complexity
+      description: Which of these describes how complex your team's use of the cloud will be? Select all that apply.
+      storage: Storage
+      data_analytics: Data Analytics
+      conus: CONUS Acess
+      oconus: OCONUS Access
+      tactical_edge: Tactical Edge Access
+      not_sure: Not Sure
+      other: Other
     complexity_other_label: Project Complexity Other
-    dev_team_label: Development Team
-    dev_team_description: Which people or teams will be completing the development work for your cloud applications? Select all that apply.
+    dev_team:
+      label: Development Team
+      description: Which people or teams will be completing the development work for your cloud applications? Select all that apply.
+      government_civilians: Government Civilians
+      military: Military
+      contractor: Contractor
+      other: "Other <em>(E.g. University or other partner)</em>"
     dev_team_other_label: Development Team Other
-    team_experience_label: Team Experience
-    team_experience_description: How much experience does your team have with development in the cloud?
-    performance_length_label: Period of Performance length
+    team_experience:
+      label: Team Experience
+      description: How much experience does your team  have with development in the cloud?
+      none: No previous experience
+      planned: Researched or planned a cloud build or migration
+      built_1: Built or Migrated 1-2 applications
+      built_3: Built or Migrated 3-5 applications
+      built_many: Built or migrated many applications, or consulted on several such projects
+    performance_length:
+      label: Period of Performance length
     start_date_label: Start Date
     end_date_label: End Date
     pdf_label: Upload a copy of your CSP Cost Estimate Research
@@ -375,11 +401,42 @@ task_orders:
       ko_info_title: Contracting Officer (KO) Information
       ko_info_paragraph: Your KO will need to approve funding for this Task Order by logging into the JEDI Cloud Portal, submitting the Task Order documents within their official system of record, and electronically signing. You might want to work with your program Financial Manager to get your TO documents moving in the right dirction.
       skip_ko_label: "Skip for now (We'll remind you to enter one later)"
-      cor_info_title: Contractive Officer Representative (COR) Information
+      cor_info_title: Contracting Officer Representative (COR) Information
       cor_info_paragraph: Your COR may assist in submitting the Task Order documents within thier official system of record. They may also be invited to log in an manage the Task Order entry within the JEDI Cloud portal.
       am_cor_label: I am the Contracting Officer Representative (COR) for this Task Order
       so_info_title: Security Officer Information
-      so_info_paragraph: our Security Officer will need to answer some security configuration questions in order to generate a DD-254 document, then electronically sign.
+      so_info_paragraph: Your Security Officer will need to answer some security configuration questions in order to generate a DD-254 document, then electronically sign.
+    review:
+      section_title: Review Your Task Order Info
+      app_info: What are you building
+      portfolio: Portfolio
+      dod: DoD Component
+      scope: Scope (Statement of Work)
+      reporting: Reporting
+      migration: App Migration
+      native_apps: Native Apps
+      yes_native: Yes, planning to develop natively in the cloud
+      no_native: No, not planning to develop natively in the cloud
+      not_sure_native: Not sure, unsure if planning to develop natively in the cloud
+      complexity: Project Complexity
+      team: Development Team
+      experience: Team Experience
+      funding: Funding
+      performance_period: Period of Performance length
+      usage_est_link: View Usage Estimate
+      to_value: Task Order Value
+      clin_1: 'CLIN #1: Unclassified Cloud'
+      clin_2: 'CLIN #2: Classified Cloud'
+      clin_3: 'CLIN #3: Unclassified Cloud'
+      clin_4: 'CLIN $4: Classified Cloud'
+      classified_inactive: (Available Soon)
+      oversight: Oversight
+      ko: Contracting Officer (KO)
+      cor: Contracting Officer Representative (COR)
+      so: IA Security Officer
+      dod_id: 'DoD ID:'
+      invited: Invited
+      not_invited: Not Yet Invited
 testing:
   example_string: Hello World
   example_with_variables: 'Hello, {name}!'

@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<div class="col">
+<div class="col task-order-form">
 
   {% include 'task_orders/new/menu.html' %}
 
@@ -19,8 +19,10 @@
     <div class="panel">
 
       <div class="panel__heading">
-        <div class="subtitle h2">Task Order Builder</div>
-        <h1>{% block heading %}{% endblock %}</h1>
+        <h1 class="task-order-form__heading subheading">
+          <div class="h2">Task Order Builder</div>
+          {% block heading %}{% endblock %}
+        </h1>
       </div>
 
       <div class="panel__content">

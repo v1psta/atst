@@ -55,7 +55,19 @@
     @include icon-size(24);
   }
 
-  &.icon--remove {
+  &.icon--remove, &.icon--red {
     @include icon-color($color-red);
+  }
+
+  &.icon--green {
+    @include icon-color($color-green);
+  }
+
+  &.icon--gray {
+    @include icon-color($color-gray);
+  }
+
+  &.icon--medium {
+    @include icon-size(12);
   }
 }
