@@ -8,7 +8,7 @@ from OpenSSL import crypto, SSL
 from atst.domain.authnid.crl import CRLCache, CRLRevocationException, NoOpCRLCache
 import atst.domain.authnid.crl.util as util
 
-from tests.mocks import FIXTURE_EMAIL_ADDRESS
+from tests.mocks import FIXTURE_EMAIL_ADDRESS, DOD_CN
 
 
 class MockX509Store:
@@ -46,6 +46,16 @@ def test_can_build_trusted_root_list():
         assert len(cache.certificate_authorities.keys()) == content.count("BEGIN CERT")
 
 
+def test_can_build_crl_list_with_missing_crls():
+    location = "ssl/client-certs/client-ca.der.crl"
+    cache = CRLCache(
+        "ssl/client-certs/client-ca.crt",
+        crl_locations=["tests/fixtures/sample.pdf"],
+        store_class=MockX509Store,
+    )
+    assert len(cache.crl_cache.keys()) == 0
+
+
 def test_can_validate_certificate():
     cache = CRLCache(
         "ssl/server-certs/ca-chain.pem",
@@ -72,11 +82,17 @@ def test_can_dynamically_update_crls(tmpdir):
 
 def test_throws_error_for_missing_issuer():
     cache = CRLCache("ssl/server-certs/ca-chain.pem", crl_locations=[])
+    # this cert is self-signed, and so the application does not have a
+    # corresponding CRL for it
     cert = open("tests/fixtures/{}.crt".format(FIXTURE_EMAIL_ADDRESS), "rb").read()
     with pytest.raises(CRLRevocationException) as exc:
         assert cache.crl_check(cert)
     (message,) = exc.value.args
+    # objects that the issuer is missing
     assert "issuer" in message
+    # names the issuer we were expecting to find a CRL for; same as the
+    # certificate subject in this case because the cert is self-signed
+    assert DOD_CN in message
 
 
 def test_multistep_certificate_chain():

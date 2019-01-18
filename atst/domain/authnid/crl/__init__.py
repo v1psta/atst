@@ -5,6 +5,12 @@ import hashlib
 from OpenSSL import crypto, SSL
 
 
+def get_common_name(x509_name_object):
+    for comp in x509_name_object.get_components():
+        if comp[0] == b"CN":
+            return comp[1].decode()
+
+
 class CRLRevocationException(Exception):
     pass
 
@@ -25,9 +31,7 @@ class NoOpCRLCache(CRLInterface):
     def _get_cn(self, cert):
         try:
             parsed = crypto.load_certificate(crypto.FILETYPE_PEM, cert)
-            for comp in parsed.get_subject().get_components():
-                if comp[0] == b"CN":
-                    return comp[1].decode()
+            return get_common_name(parsed.get_subject())
         except crypto.Error:
             pass
 
@@ -54,14 +58,14 @@ class CRLCache(CRLInterface):
     def __init__(
         self, root_location, crl_locations=[], store_class=crypto.X509Store, logger=None
     ):
+        self.logger = logger
         self.store_class = store_class
         self.certificate_authorities = {}
         self._load_roots(root_location)
         self._build_crl_cache(crl_locations)
-        self.logger = logger
 
     def _get_store(self, cert):
-        return self._build_store(cert.get_issuer().der())
+        return self._build_store(cert.get_issuer())
 
     def _load_roots(self, root_location):
         with open(root_location, "rb") as f:
@@ -76,35 +80,39 @@ class CRLCache(CRLInterface):
         self.crl_cache = {}
         for crl_location in crl_locations:
             crl = self._load_crl(crl_location)
-            self.crl_cache[crl.get_issuer().der()] = crl_location
+            if crl:
+                self.crl_cache[crl.get_issuer().der()] = crl_location
 
     def _load_crl(self, crl_location):
         with open(crl_location, "rb") as crl_file:
-            return crypto.load_crl(crypto.FILETYPE_ASN1, crl_file.read())
+            try:
+                return crypto.load_crl(crypto.FILETYPE_ASN1, crl_file.read())
+            except crypto.Error:
+                self._log_info("Could not load CRL at location {}".format(crl_location))
 
     def _build_store(self, issuer):
         store = self.store_class()
         self._log_info("STORE ID: {}. Building store.".format(id(store)))
         store.set_flags(crypto.X509StoreFlags.CRL_CHECK)
-        crl_location = self._get_crl_location(issuer)
-        with open(crl_location, "rb") as crl_file:
-            crl = crypto.load_crl(crypto.FILETYPE_ASN1, crl_file.read())
-            store.add_crl(crl)
-            self._log_info(
-                "STORE ID: {}. Adding CRL with issuer {}".format(
-                    id(store), crl.get_issuer()
-                )
-            )
-            store = self._add_certificate_chain_to_store(store, crl.get_issuer())
-            return store
-
-    def _get_crl_location(self, issuer):
-        crl_location = self.crl_cache.get(issuer)
+        crl_location = self.crl_cache.get(issuer.der())
+        issuer_name = get_common_name(issuer)
 
         if not crl_location:
-            raise CRLRevocationException("Could not find matching CRL for issuer")
+            raise CRLRevocationException(
+                "Could not find matching CRL for issuer with Common Name {}".format(
+                    issuer_name
+                )
+            )
 
-        return crl_location
+        crl = self._load_crl(crl_location)
+        store.add_crl(crl)
+        self._log_info(
+            "STORE ID: {}. Adding CRL with issuer Common Name {}".format(
+                id(store), issuer_name
+            )
+        )
+        store = self._add_certificate_chain_to_store(store, crl.get_issuer())
+        return store
 
     # this _should_ happen just twice for the DoD PKI (intermediary, root) but
     # theoretically it can build a longer certificate chain
