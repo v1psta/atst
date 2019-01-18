@@ -32,6 +32,10 @@
         display: table-cell;
       }
     }
+
+    .sorting-direction {
+      position: absolute;
+    }
   }
 
   tbody {

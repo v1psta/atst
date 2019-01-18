@@ -115,10 +115,10 @@
           <tr>
             <th @click.prevent="updateSortValue(column.attr)" v-for="column in getColumns()"scope="col">
               !{ column.displayName }
-              <span v-if="column.attr === sort.columnName && sort.isAscending">
+              <span class="sorting-direction" v-if="column.attr === sort.columnName && sort.isAscending">
                 {{ Icon("caret_down") }}
               </span>
-              <span v-else-if="column.attr === sort.columnName && !sort.isAscending">
+              <span class="sorting-direction" v-else-if="column.attr === sort.columnName && !sort.isAscending">
                 {{ Icon("caret_up") }}
               </span>
             </th>
