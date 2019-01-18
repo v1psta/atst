@@ -9,7 +9,7 @@ from atst.app import make_config, make_app
 from atst.eda_client import EDAClient
 
 
-config = make_config()
+config = make_config({"DISABLE_CRL_CHECK": True})
 
 client = EDAClient(
     base_url=config.get("EDA_HOST"),

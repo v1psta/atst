@@ -19,7 +19,7 @@ def get_pe_numbers(url):
 
 
 if __name__ == "__main__":
-    config = make_config()
+    config = make_config({"DISABLE_CRL_CHECK": True})
     url = config["PE_NUMBER_CSV_URL"]
     print("Fetching PE numbers from {}".format(url))
     pe_numbers = get_pe_numbers(url)
