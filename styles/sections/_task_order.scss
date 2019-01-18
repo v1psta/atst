@@ -229,4 +229,12 @@
       color: $color-black;
     }
   }
+
+  .usa-input {
+    .normal {
+      label {
+        font-weight: 400;
+      }
+    }
+  }
 }

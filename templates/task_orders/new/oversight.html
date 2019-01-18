@@ -23,9 +23,17 @@
 
         <hr />
 
+<<<<<<< HEAD
         <h3 class="subheading">{{ "task_orders.new.oversight.cor_info_title" | translate }}</h3>
         <p>{{ "task_orders.new.oversight.cor_info_paragraph" | translate }}</p>
         {{ CheckboxInput(form.am_cor) }}
+=======
+<h3 class="subheading">{{ "task_orders.new.oversight.cor_info_title" | translate }}</h3>
+<p>{{ "task_orders.new.oversight.cor_info_paragraph" | translate }}</p>
+<cor inline-template v-bind:initial-data='{{ form.data|tojson }}'>
+    <div class='usa-input'>
+        {{ CheckboxInput(form.am_cor, classes="normal") }}
+>>>>>>> Styling and text fixes
         <template v-if="!am_cor">
             {{ UserInfo(form.cor_first_name, form.cor_last_name, form.cor_email, form.cor_phone_number) }}
             {{ CheckboxInput(form.cor_invite) }}

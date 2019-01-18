@@ -39,7 +39,7 @@ TASK_ORDER_SECTIONS = [
     },
     {
         "section": "review",
-        "title": "Review & Download",
+        "title": "Review",
         "template": "task_orders/new/review.html",
         "form": task_order_form.ReviewForm,
     },

@@ -3,7 +3,7 @@ from atst.utils.localization import translate, translate_duration
 
 
 SERVICE_BRANCHES = [
-    ("", "Select an option"),
+    ("", "- Select -"),
     ("Air Force, Department of the", "Air Force, Department of the"),
     ("Army and Air Force Exchange Service", "Army and Air Force Exchange Service"),
     ("Army, Department of the", "Army, Department of the"),
