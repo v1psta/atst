@@ -5,4 +5,4 @@ metadata:
   name: atst-worker-envvars
   namespace: atat-test
 data:
-  REQUIRE_CRLS: "False"
+  DISABLE_CRL_CHECK: "True"

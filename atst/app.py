@@ -48,10 +48,7 @@ def make_app(config):
     app.config.update({"SESSION_REDIS": app.redis})
 
     make_flask_callbacks(app)
-    # TODO: deprecate the REQUIRE_CRLs setting in favor of the
-    # DISABLE_CRL_CHECK; both have the effect of never loading CRLs
-    if app.config.get("REQUIRE_CRLS"):
-        make_crl_validator(app)
+    make_crl_validator(app)
     register_filters(app)
     make_eda_client(app)
     make_csp_provider(app)
@@ -132,14 +129,13 @@ def map_config(config):
         "PERMANENT_SESSION_LIFETIME": config.getint(
             "default", "PERMANENT_SESSION_LIFETIME"
         ),
-        "REQUIRE_CRLS": config.getboolean("default", "REQUIRE_CRLS"),
         "RQ_REDIS_URL": config["default"]["REDIS_URI"],
         "RQ_QUEUES": [config["default"]["RQ_QUEUES"]],
         "DISABLE_CRL_CHECK": config.getboolean("default", "DISABLE_CRL_CHECK"),
     }
 
 
-def make_config():
+def make_config(direct_config=None):
     BASE_CONFIG_FILENAME = os.path.join(os.path.dirname(__file__), "../config/base.ini")
     ENV_CONFIG_FILENAME = os.path.join(
         os.path.dirname(__file__), "../config/", "{}.ini".format(ENV.lower())
@@ -161,6 +157,10 @@ def make_config():
         env_override = os.getenv(confsetting.upper())
         if env_override:
             config.set("default", confsetting, env_override)
+
+    # override if a dictionary of options has been given
+    if direct_config:
+        config.read_dict({"default": direct_config})
 
     # Assemble DATABASE_URI value
     database_uri = (
