@@ -31,7 +31,7 @@ def seed_roles():
 
 
 if __name__ == "__main__":
-    config = make_config()
+    config = make_config({"DISABLE_CRL_CHECK": True})
     app = make_app(config)
     with app.app_context():
         seed_roles()

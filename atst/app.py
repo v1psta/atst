@@ -139,7 +139,7 @@ def map_config(config):
     }
 
 
-def make_config():
+def make_config(direct_config=None):
     BASE_CONFIG_FILENAME = os.path.join(os.path.dirname(__file__), "../config/base.ini")
     ENV_CONFIG_FILENAME = os.path.join(
         os.path.dirname(__file__), "../config/", "{}.ini".format(ENV.lower())
@@ -161,6 +161,10 @@ def make_config():
         env_override = os.getenv(confsetting.upper())
         if env_override:
             config.set("default", confsetting, env_override)
+
+    # override if a dictionary of options has been given
+    if direct_config:
+        config.read_dict({"default": direct_config})
 
     # Assemble DATABASE_URI value
     database_uri = (
