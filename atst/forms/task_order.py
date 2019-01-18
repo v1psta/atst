@@ -132,7 +132,12 @@ class OversightForm(CacheableForm):
     )
     cor_dod_id = StringField(
         translate("forms.task_order.oversight_dod_id_label"),
-        validators=[RequiredIf("am_cor", False), RequiredIf("cor_invite"), Length(min=10), IsNumber()],
+        validators=[
+            RequiredIf("am_cor", False),
+            RequiredIf("cor_invite"),
+            Length(min=10),
+            IsNumber(),
+        ],
     )
 
     so_first_name = StringField(
