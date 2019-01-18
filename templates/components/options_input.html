@@ -13,7 +13,7 @@
 
       <fieldset v-on:change="onInput" class="usa-input__choices {% if inline %}usa-input__choices--inline{% endif %}">
         <legend>
-          <div class="usa-input__title">
+          <div class="usa-input__title{% if not field.description %}-inline{% endif %}">
             {{ field.label | striptags}}
             {% if tooltip %}{{ Tooltip(tooltip) }}{% endif %}
           </div>
