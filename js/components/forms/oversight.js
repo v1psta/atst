@@ -22,12 +22,14 @@ export default {
   data: function () {
     const {
       am_cor = false,
-      ko_invite = false
+      ko_invite = false,
+      so_invite = false,
     } = this.initialData
 
     return {
         am_cor,
-        ko_invite
+        ko_invite,
+        so_invite,
     }
   }
 }

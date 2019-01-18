@@ -145,7 +145,7 @@ class OversightForm(CacheableForm):
     )
     so_dod_id = StringField(
         translate("forms.task_order.oversight_dod_id_label"),
-        validators=[Required(), Length(min=10), IsNumber()],
+        validators=[RequiredIf("so_invite"), Length(min=10), IsNumber()],
     )
 
     ko_invite = BooleanField(
