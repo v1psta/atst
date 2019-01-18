@@ -39,23 +39,23 @@
 {% endif %}
 
 {% if task_order.budget %}
-  {% set budget = '${:,.2f}'.format(task_order.budget) %}
+  {% set budget = task_order.budget | dollarsWithCents %}
 {% endif %}
 
 {% if task_order.clin_01 %}
-  {% set clin_01 = '${:,.2f}'.format(task_order.clin_01) %}
+  {% set clin_01 = task_order.clin_01 | dollarsWithCents %}
 {% endif %}
 
 {% if task_order.clin_02 %}
-  {% set clin_02 = '${:,.2f}'.format(task_order.clin_02) %}
+  {% set clin_02 = task_order.clin_02 | dollarsWithCents %}
 {% endif %}
 
 {% if task_order.clin_03 %}
-  {% set clin_03 = '${:,.2f}'.format(task_order.clin_03) %}
+  {% set clin_03 = task_order.clin_03 | dollarsWithCents %}
 {% endif %}
 
 {% if task_order.clin_04 %}
-  {% set clin_04 = '${:,.2f}'.format(task_order.clin_04) %}
+  {% set clin_04 = task_order.clin_04 | dollarsWithCents %}
 {% endif %}
 
 {% if task_order.ko_phone_number %}
