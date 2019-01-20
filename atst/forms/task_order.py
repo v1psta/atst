@@ -10,7 +10,7 @@ from wtforms.fields import (
 )
 from wtforms.fields.html5 import DateField, TelField
 from wtforms.widgets import ListWidget, CheckboxInput
-from wtforms.validators import Required, Length
+from wtforms.validators import Length
 
 from atst.forms.validators import IsNumber, PhoneNumber, RequiredIf
 
@@ -117,7 +117,11 @@ class OversightForm(CacheableForm):
     )
     ko_dod_id = StringField(
         translate("forms.task_order.oversight_dod_id_label"),
-        validators=[RequiredIf("ko_invite"), Length(min=10), IsNumber()],
+        validators=[
+            RequiredIf(lambda form: form._fields.get("ko_invite").data),
+            Length(min=10),
+            IsNumber(),
+        ],
     )
 
     am_cor = BooleanField(translate("forms.task_order.oversight_am_cor_label"))
@@ -128,13 +132,16 @@ class OversightForm(CacheableForm):
     cor_email = StringField(translate("forms.task_order.oversight_email_label"))
     cor_phone_number = TelField(
         translate("forms.task_order.oversight_phone_label"),
-        validators=[RequiredIf("am_cor", False), PhoneNumber()],
+        validators=[
+            RequiredIf(lambda form: not form._fields.get("am_cor").data),
+            PhoneNumber(),
+        ],
     )
     cor_dod_id = StringField(
         translate("forms.task_order.oversight_dod_id_label"),
         validators=[
-            RequiredIf("am_cor", False),
-            RequiredIf("cor_invite"),
+            RequiredIf(lambda form: not form._fields.get("am_cor").data),
+            RequiredIf(lambda form: form._fields.get("cor_invite").data),
             Length(min=10),
             IsNumber(),
         ],
@@ -150,7 +157,11 @@ class OversightForm(CacheableForm):
     )
     so_dod_id = StringField(
         translate("forms.task_order.oversight_dod_id_label"),
-        validators=[RequiredIf("so_invite"), Length(min=10), IsNumber()],
+        validators=[
+            RequiredIf(lambda form: form._fields.get("so_invite").data),
+            Length(min=10),
+            IsNumber(),
+        ],
     )
 
     ko_invite = BooleanField(

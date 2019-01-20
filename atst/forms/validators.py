@@ -80,32 +80,19 @@ def ListItemsUnique(message=translate("forms.validators.list_items_unique_messag
     return _list_items_unique
 
 
-def RequiredIf(
-    other_field_name, checked=True, message=translate("forms.validators.is_required")
-):
+def RequiredIf(other_field, message=translate("forms.validators.is_required")):
     """ A validator which makes a field required only if another field
         has a truthy value
         Args:
-            other_field_name (str): the name of the field we check before
-                determining if this field is required
-            checked (bool): the value of other_field_name that we want to check against;
-                if checked is True, we require the field if other_field_name's field value
-                is truthy; if checked is False, we require the field if other_field_name's
-                field value is falsy
+            other_field_value (function): calling this on form results in
+                the boolean value of another field that we want to check against;
+                if it's True, we require the field
             message (str): an optional message to display if the field is
                 required but hasNone value
     """
 
     def _required_if(form, field):
-        other_field = form._fields.get(other_field_name)
-        if other_field is None:
-            raise Exception('no field named "%s" in form' % self.other_field_name)
-
-        field_required = (
-            bool(other_field.data) if checked else not bool(other_field.data)
-        )
-
-        if field_required:
+        if other_field(form):
             if field.data is None:
                 raise ValidationError(message)
         else:

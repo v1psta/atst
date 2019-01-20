@@ -82,56 +82,18 @@ class TestListItemsUnique:
 
 
 class TestRequiredIf:
-    def test_RequiredIf_requires_field_if_arg_is_truthy(
-        self, dummy_form_with_field, dummy_field
-    ):
-        form = dummy_form_with_field("arg", True)
-        validator = RequiredIf("arg")
+    def test_RequiredIf_requires_field_if_arg_is_truthy(self, dummy_form, dummy_field):
+        validator = RequiredIf(lambda form: True)
         dummy_field.data = None
 
         with pytest.raises(ValidationError):
-            validator(form, dummy_field)
-
-    def test_RequiredIf_does_not_require_field_if_arg_is_falsy(
-        self, dummy_form_with_field, dummy_field
-    ):
-        form = dummy_form_with_field("arg", False)
-        validator = RequiredIf("arg")
-        dummy_field.data = None
-
-        with pytest.raises(StopValidation):
-            validator(form, dummy_field)
-
-    def test_RequiredIf_arg_is_None_raises_error(self, dummy_form, dummy_field):
-        validator = RequiredIf("arg")
-        dummy_field.data = "some data"
-
-        with pytest.raises(Exception):
             validator(dummy_form, dummy_field)
 
-    def test_not_RequiredIf_requires_field_if_arg_is_falsy(
-        self, dummy_form_with_field, dummy_field
+    def test_RequiredIf_does_not_require_field_if_arg_is_falsy(
+        self, dummy_form, dummy_field
     ):
-        form = dummy_form_with_field("arg", False)
-        validator = RequiredIf("arg", False)
-        dummy_field.data = None
-
-        with pytest.raises(ValidationError):
-            validator(form, dummy_field)
-
-    def test_not_RequiredIf_does_not_require_field_if_arg_is_truthy(
-        self, dummy_form_with_field, dummy_field
-    ):
-        form = dummy_form_with_field("arg", True)
-        validator = RequiredIf("arg", False)
+        validator = RequiredIf(lambda form: False)
         dummy_field.data = None
 
         with pytest.raises(StopValidation):
-            validator(form, dummy_field)
-
-    def test_not_RequiredIf_arg_is_None_raises_error(self, dummy_form, dummy_field):
-        validator = RequiredIf("arg", False)
-        dummy_field.data = "some data"
-
-        with pytest.raises(Exception):
             validator(dummy_form, dummy_field)
