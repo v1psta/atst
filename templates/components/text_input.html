@@ -31,7 +31,9 @@
       <label for={{field.name}}>
         <div class="usa-input__title">
           {{ label }}
-          {% if tooltip %}{{ Tooltip(tooltip, tooltip_title) }}{% endif %}
+          {% if tooltip and not disabled %}
+            {{ Tooltip(tooltip, tooltip_title) }}
+          {% endif %}
         </div>
 
         {% if field.description %}
