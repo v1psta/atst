@@ -214,8 +214,9 @@ forms:
       label: Period of Performance length
     start_date_label: Start Date
     end_date_label: End Date
-    pdf_label: Upload a copy of your CSP Cost Estimate Research
-    pdf_description: Upload a PDF or screenshot of your usage estimate from the calculator.
+    csp_estimate_label: Upload a copy of your CSP Cost Estimate Research
+    csp_estimate_description: Upload a PDF or screenshot of your usage estimate from the calculator.
+    file_format_not_allowed: Only PDF or PNG files can be uploaded.
     clin_01_label: 'CLIN 01 : Unclassified'
     clin_02_label: 'CLIN 02: Classified'
     clin_03_label: 'CLIN 03: Unclassified'

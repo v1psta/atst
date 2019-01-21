@@ -19,6 +19,10 @@ export default {
     initialData: {
       type: Object,
       default: () => ({})
+    },
+    uploadErrors: {
+      type: Array,
+      default: () => ([])
     }
   },
 
@@ -28,6 +32,7 @@ export default {
       clin_02 = 0,
       clin_03 = 0,
       clin_04 = 0,
+      csp_estimate,
     } = this.initialData
 
     return {
@@ -35,6 +40,7 @@ export default {
       clin_02,
       clin_03,
       clin_04,
+      showUpload: !csp_estimate || this.uploadErrors.length > 0
     }
   },
 
@@ -56,6 +62,9 @@ export default {
     formatDollars: function (intValue) {
       const mask = createNumberMask({ prefix: '$', allowDecimal: true })
       return conformToMask(intValue.toString(), mask).conformedValue
+    },
+    showUploadInput: function() {
+      this.showUpload = true
     },
     updateBudget: function() {
       document.querySelector('#to-target').innerText = this.totalBudgetStr
