@@ -13,31 +13,37 @@
 <!-- Oversight Section					 -->
 <h3 class="subheading">{{ "task_orders.new.oversight.ko_info_title" | translate }}</h3>
 <p>{{ "task_orders.new.oversight.ko_info_paragraph" | translate }}</p>
-{{ UserInfo(form.ko_first_name, form.ko_last_name, form.ko_email, form.ko_phone_number) }}
-{{ CheckboxInput(form.ko_invite) }}
-{{ TextInput(form.ko_dod_id, placeholder="1234567890", tooltip="Why", tooltip_title='Why', validation='dodId')}}
-
-<hr />
-
-<h3 class="subheading">{{ "task_orders.new.oversight.cor_info_title" | translate }}</h3>
-<p>{{ "task_orders.new.oversight.cor_info_paragraph" | translate }}</p>
-<cor inline-template v-bind:initial-data='{{ form.data|tojson }}'>
+<oversight inline-template v-bind:initial-data='{{ form.data|tojson }}'>
     <div class='usa-input'>
+        {{ UserInfo(form.ko_first_name, form.ko_last_name, form.ko_email, form.ko_phone_number) }}
+        {{ CheckboxInput(form.ko_invite) }}
+        <template v-if="ko_invite">
+            {{ TextInput(form.ko_dod_id, placeholder="1234567890", tooltip="Why", tooltip_title='Why', validation='dodId')}}
+        </template>
+
+        <hr />
+
+        <h3 class="subheading">{{ "task_orders.new.oversight.cor_info_title" | translate }}</h3>
+        <p>{{ "task_orders.new.oversight.cor_info_paragraph" | translate }}</p>
         {{ CheckboxInput(form.am_cor) }}
         <template v-if="!am_cor">
             {{ UserInfo(form.cor_first_name, form.cor_last_name, form.cor_email, form.cor_phone_number) }}
             {{ CheckboxInput(form.cor_invite) }}
-            {{ TextInput(form.cor_dod_id, placeholder="1234567890", tooltip="Why", tooltip_title='Why', validation='dodId')}}
+            <template v-if="cor_invite">
+                {{ TextInput(form.cor_dod_id, placeholder="1234567890", tooltip="Why", tooltip_title='Why', validation='dodId')}}
+            </template>
+        </template>
+
+        <hr />
+
+        <h3 class="subheading">{{ "task_orders.new.oversight.so_info_title" | translate }}</h3>
+        <p>{{ "task_orders.new.oversight.so_info_paragraph" | translate }}</p>
+        {{ UserInfo(form.so_first_name, form.so_last_name, form.so_email, form.so_phone_number) }}
+        {{ CheckboxInput(form.so_invite) }}
+        <template v-if="so_invite">
+            {{ TextInput(form.so_dod_id, placeholder="1234567890", tooltip="Why", tooltip_title='Why', validation='dodId')}}
         </template>
     </div>
-</cor>
-
-<hr />
-
-<h3 class="subheading">{{ "task_orders.new.oversight.so_info_title" | translate }}</h3>
-<p>{{ "task_orders.new.oversight.so_info_paragraph" | translate }}</p>
-{{ UserInfo(form.so_first_name, form.so_last_name, form.so_email, form.so_phone_number) }}
-{{ CheckboxInput(form.so_invite) }}
-{{ TextInput(form.so_dod_id, placeholder="1234567890", tooltip="Why", tooltip_title='Why', validation='dodId')}}
+</oversight>
 
 {% endblock %}

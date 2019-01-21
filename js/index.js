@@ -11,7 +11,7 @@ import textinput from './components/text_input'
 import checkboxinput from './components/checkbox_input'
 import DetailsOfUse from './components/forms/details_of_use'
 import poc from './components/forms/poc'
-import cor from './components/forms/cor'
+import oversight from './components/forms/oversight'
 import financial from './components/forms/financial'
 import toggler from './components/toggler'
 import NewApplication from './components/forms/new_application'
@@ -45,7 +45,7 @@ const app = new Vue({
     checkboxinput,
     DetailsOfUse,
     poc,
-    cor,
+    oversight,
     financial,
     NewApplication,
     selector,

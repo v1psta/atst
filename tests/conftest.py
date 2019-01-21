@@ -104,15 +104,6 @@ def dummy_form():
 
 
 @pytest.fixture
-def dummy_form_with_field():
-    def set_field(name, value):
-        data = DummyField(data=value, name=name)
-        return DummyForm(data=OrderedDict({name: data}))
-
-    return set_field
-
-
-@pytest.fixture
 def dummy_field():
     return DummyField()
 
