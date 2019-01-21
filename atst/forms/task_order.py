@@ -140,8 +140,10 @@ class OversightForm(CacheableForm):
     cor_dod_id = StringField(
         translate("forms.task_order.oversight_dod_id_label"),
         validators=[
-            RequiredIf(lambda form: not form._fields.get("am_cor").data),
-            RequiredIf(lambda form: form._fields.get("cor_invite").data),
+            RequiredIf(
+                lambda form: not form._fields.get("am_cor").data
+                and form._fields.get("cor_invite").data
+            ),
             Length(min=10),
             IsNumber(),
         ],
