@@ -26,10 +26,10 @@
             <th v-for="col in getColumns()" @click="updateSort(col.displayName)" :width="col.width" :class="col.class" scope="col">
               !{ col.displayName }
               <template v-if="col.sortFunc">
-                <span v-if="col.displayName === sortInfo.columnName && sortInfo.isAscending">
+                <span class="sorting-direction" v-if="col.displayName === sortInfo.columnName && sortInfo.isAscending">
                   {{ Icon("caret_down") }}
                 </span>
-                <span v-if="col.displayName === sortInfo.columnName && !sortInfo.isAscending">
+                <span class="sorting-direction" v-if="col.displayName === sortInfo.columnName && !sortInfo.isAscending">
                   {{ Icon("caret_up") }}
                 </span>
               </template>
