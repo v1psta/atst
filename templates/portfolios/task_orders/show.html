@@ -133,7 +133,7 @@
         <div class="panel__content">
           {{ DocumentLink(
             title="Cloud Services Estimate",
-            link_url="#") }}
+            link_url=task_order.csp_estimate and url_for("task_orders.download_csp_estimate", task_order_id=task_order.id) ) }}
           {{ DocumentLink(
             title="Market Research",
             link_url="#") }}
