@@ -32,7 +32,9 @@
       {% endfor %}
     {% elif pagination.page == pagination.pages %}
       {% for i in range(pagination.pages - 4, pagination.pages + 1) %}
-        {{ Page(pagination, route, i, portfolio_id=portfolio_id) }}
+        {% if i > 0 %}
+          {{ Page(pagination, route, i, portfolio_id=portfolio_id) }}
+        {% endif %}
       {% endfor %}
     {% else %}
       {% set window = pagination | pageWindow %}
