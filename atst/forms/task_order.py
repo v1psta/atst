@@ -45,8 +45,8 @@ class AppInfoForm(CacheableForm):
         default="",
     )
     native_apps = RadioField(
-        translate("forms.task_order.native_apps_label"),
-        description=translate("forms.task_order.native_apps_description"),
+        translate("forms.task_order.native_apps.label"),
+        description=translate("forms.task_order.native_apps.description"),
         choices=[("yes", "Yes"), ("no", "No"), ("not_sure", "Not Sure")],
     )
     complexity = SelectMultipleField(

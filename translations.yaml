@@ -177,8 +177,12 @@ forms:
       both: Yes, migrating from an <strong>on-premise data center</strong> and <strong>another cloud provider</strong>
       none: Not planning to migrate any applications
       not_sure: "Not Sure"
-    native_apps_label: Native Apps
-    native_apps_description: Do you plan to develop application(s) natively in the cloud?
+    native_apps:
+      label: Native Apps
+      description: Do you plan to develop application(s) natively in the cloud?
+      'yes': Yes, planning to develop natively in the cloud
+      'no': No, not planning to develop natively in the cloud
+      not_sure: Not sure, unsure if planning to develop natively in the cloud
     complexity:
       label: Project Complexity
       description: Which of these describes how complex your team's use of the cloud will be? Select all that apply.
@@ -414,14 +418,8 @@ task_orders:
       dod: DoD Component
       scope: Scope (Statement of Work)
       reporting: Reporting
-      migration: App Migration
-      native_apps: Native Apps
-      yes_native: Yes, planning to develop natively in the cloud
-      no_native: No, not planning to develop natively in the cloud
-      not_sure_native: Not sure, unsure if planning to develop natively in the cloud
       complexity: Project Complexity
       team: Development Team
-      experience: Team Experience
       funding: Funding
       performance_period: Period of Performance length
       usage_est_link: View Usage Estimate
@@ -429,7 +427,7 @@ task_orders:
       clin_1: 'CLIN #1: Unclassified Cloud'
       clin_2: 'CLIN #2: Classified Cloud'
       clin_3: 'CLIN #3: Unclassified Cloud'
-      clin_4: 'CLIN $4: Classified Cloud'
+      clin_4: 'CLIN #4: Classified Cloud'
       classified_inactive: (Available Soon)
       oversight: Oversight
       ko: Contracting Officer (KO)
