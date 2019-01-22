@@ -10,8 +10,17 @@
       {% endif %}
 
       <li class="progress-menu__item progress-menu__item--{{ step_indicator }}">
-        <a href="{{ url_for('task_orders.new', screen=loop.index, task_order_id=task_order_id) }}"
-          {% if g.matchesPath(url_for('task_orders.new', screen=loop.index)) %}class="active"{% endif %}
+        <a
+          {% set class='' %}
+          {% if task_order_id %}
+            href="{{ url_for('task_orders.new', screen=loop.index, task_order_id=task_order_id) }}"
+          {% else %}
+            {% set class="disabled"%}
+          {% endif %}
+          {% if g.matchesPath(url_for('task_orders.new', screen=loop.index)) %}
+            {% set class="active" %}
+          {% endif %}
+          class={{class}}
         >
           {{ s['title'] }}
         </a>

@@ -50,6 +50,12 @@
 
     a.active {
       color: $color-blue;
+      cursor: default;
+    }
+
+    a.disabled{
+      color: $color-gray-light;
+      cursor: default;
     }
 
 

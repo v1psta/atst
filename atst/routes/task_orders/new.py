@@ -108,6 +108,14 @@ class ShowTaskOrderWorkflow:
 
         return screen_info
 
+    @property
+    def is_complete(self):
+        if self.task_order:
+            if TaskOrders.all_sections_complete(self.task_order):
+                return True
+        else:
+            return False
+
 
 class UpdateTaskOrderWorkflow(ShowTaskOrderWorkflow):
     def __init__(
@@ -254,6 +262,7 @@ def new(screen, task_order_id=None, portfolio_id=None):
         portfolio_id=portfolio_id,
         screens=workflow.display_screens,
         form=workflow.form,
+        complete=workflow.is_complete,
     )
 
 
