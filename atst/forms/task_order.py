@@ -95,6 +95,7 @@ class FundingForm(CacheableForm):
                 ["pdf", "png"], translate("forms.task_order.file_format_not_allowed")
             )
         ],
+        render_kw={"accept": ".pdf,.png,application/pdf,image/png"},
     )
     clin_01 = IntegerField(translate("forms.task_order.clin_01_label"))
     clin_02 = IntegerField(translate("forms.task_order.clin_02_label"))
