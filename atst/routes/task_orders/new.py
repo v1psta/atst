@@ -108,22 +108,13 @@ class ShowTaskOrderWorkflow:
 
         return screen_info
 
-    def completed(self):
-        screen_info = deepcopy(TASK_ORDER_SECTIONS)
-
+    @property
+    def is_complete(self):
         if self.task_order:
-            for section in screen_info:
-                if (
-                    not TaskOrders.is_section_complete(
-                        self.task_order, section["section"]
-                    )
-                    and section["section"] != "review"
-                ):
-                    return False
+            if TaskOrders.all_sections_complete(self.task_order):
+                return True
         else:
             return False
-
-        return True
 
 
 class UpdateTaskOrderWorkflow(ShowTaskOrderWorkflow):
@@ -271,7 +262,7 @@ def new(screen, task_order_id=None, portfolio_id=None):
         portfolio_id=portfolio_id,
         screens=workflow.display_screens,
         form=workflow.form,
-        complete=workflow.completed(),
+        complete=workflow.is_complete,
     )
 
 
