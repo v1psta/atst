@@ -5,6 +5,7 @@ from sqlalchemy import Column, Numeric, String, ForeignKey, Date, Integer
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.types import ARRAY
 from sqlalchemy.orm import relationship
+from werkzeug.datastructures import FileStorage
 
 from atst.models import Attachment, Base, types, mixins
 
@@ -81,7 +82,7 @@ class TaskOrder(Base, mixins.TimestampsMixin):
     def csp_estimate(self, new_csp_estimate):
         if isinstance(new_csp_estimate, Attachment):
             self._csp_estimate = new_csp_estimate
-        else:
+        elif isinstance(new_csp_estimate, FileStorage):
             self._csp_estimate = Attachment.attach(
                 new_csp_estimate, "task_order", self.id
             )
