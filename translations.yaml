@@ -200,7 +200,7 @@ forms:
       government_civilians: Government Civilians
       military: Military
       contractor: Contractor
-      other: "Other <em class='subheading'>(E.g. University or other partner)</em>"
+      other: "Other <em class='description'>(E.g. University or other partner)</em>"
     dev_team_other_label: Development Team Other
     team_experience:
       label: Team Experience
