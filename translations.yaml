@@ -437,6 +437,7 @@ task_orders:
       dod_id: 'DoD ID:'
       invited: Invited
       not_invited: Not Yet Invited
+      not_uploaded: Not Uploaded
 testing:
   example_string: Hello World
   example_with_variables: 'Hello, {name}!'
