@@ -1,0 +1,102 @@
+{% extends "portfolios/base.html" %}
+
+{% from "components/icon.html" import Icon %}
+
+{% macro OfficerInfo(task_order, officer_type) %}
+  <div class="panel__content officer">
+    <h2 class="officer__title">{{ ("task_orders.invitations." + officer_type + ".title") | translate }}</h2>
+    <p class="officer__description">{{ ("task_orders.invitations." + officer_type + ".description") | translate }}</p>
+
+    {% set prefix = { "contracting_officer": "ko", "contracting_officer_representative": "cor", "security_officer": "so" }[officer_type] %}
+    {% set first_name = task_order[prefix + "_first_name"] %}
+    {% set last_name = task_order[prefix + "_last_name"] %}
+    {% set email = task_order[prefix + "_email"] %}
+    {% set phone_number = task_order[prefix + "_phone_number"] %}
+    {% set dod_id = task_order[prefix + "_dod_id"] %}
+
+    {% if task_order[officer_type] %}
+      <div class="officer__info">
+        <div class="row">
+          <div class="officer__info--name">{{ first_name }} {{ last_name }}</div>
+          <div class="officer__info--status invited">
+            <span>{{ Icon("ok", classes="invited") }}</span>
+            <span>Invited</span>
+          </div>
+        </div>
+        <p class="officer__info--email">{{ email }}</p>
+        <p class="officer__info--phone">{{ phone_number | usPhone }}</p>
+        <p class="officer__info--dod_id">{{ "task_orders.invitations.dod_id_label"  | translate}}: {{ dod_id }}</p>
+      </div>
+      <div class="officer__actions">
+        <a href="#" class="icon-link">
+          {{ Icon("edit") }}
+          <span>Update</span>
+        </a>
+        <a href="#" class="icon-link">
+          {{ Icon("avatar") }}
+          <span>Resend Invitation</span>
+        </a>
+        <a href="#" class="icon-link remove">
+          {{ Icon("trash") }}
+          <span>Remove</span>
+        </a>
+      </div>
+    {% elif first_name and last_name %}
+      <div class="officer__info">
+        <div class="row">
+          <div class="officer__info--name">{{ first_name }} {{ last_name }}</div>
+          <div class="officer__info--status uninvited">
+            <span>{{ Icon("alert", classes="uninvited") }}</span>
+            Not Invited
+          </div>
+        </div>
+        <p class="officer__info--email">{{ email }}</p>
+        <p class="officer__info--phone">{{ phone_number | usPhone }}</p>
+      </div>
+      <div class="officer__actions">
+        <a href="#" class="icon-link">
+          {{ Icon("edit") }}
+          <span>Update</span>
+        </a>
+        <a href="#" class="icon-link remove">
+          {{ Icon("trash") }}
+          <span>Remove</span>
+        </a>
+        <button type='button' class='usa-button usa-button-primary'>
+          {{ ("task_orders.invitations." + officer_type + ".invite_button_text") | translate  }}
+        </button>
+      </div>
+    {% else %}
+      <div class="officer__info">
+        <div class="officer__info--status uninvited">
+          <span>{{ Icon("alert", classes="uninvited") }}</span>
+          Not specified
+        </div>
+      </div>
+      <div class="officer__actions">
+        <button type='button' class='usa-button usa-button-primary'>
+          {{ ("task_orders.invitations." + officer_type + ".add_button_text") | translate }}
+        </button>
+      </div>
+    {% endif %}
+  </div>
+{% endmacro %}
+
+{% block portfolio_content %}
+<div class="task-order-invitations">
+  {% include "fragments/flash.html" %}
+
+  <div class="panel">
+    <div class="panel__heading">
+      <h1 class="task-order-invitations__heading subheading">
+        <div class="h2">Edit Task Order</div>
+        Oversight
+      </h1>
+    </div>
+
+      {% for officer in ["contracting_officer", "contracting_officer_representative", "security_officer"] %}
+        {{ OfficerInfo(task_order, officer) }}
+      {% endfor %}
+  </div>
+</div>
+{% endblock %}
