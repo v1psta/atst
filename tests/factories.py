@@ -7,6 +7,7 @@ import datetime
 from faker import Faker as _Faker
 
 from atst.forms import data
+from atst.models.attachment import Attachment
 from atst.models.environment import Environment
 from atst.models.request import Request
 from atst.models.request_revision import RequestRevision
@@ -375,6 +376,14 @@ class InvitationFactory(Base):
     expiration_time = Invitations.current_expiration_time()
 
 
+class AttachmentFactory(Base):
+    class Meta:
+        model = Attachment
+
+    filename = factory.Faker("domain_word")
+    object_name = factory.Faker("domain_word")
+
+
 class TaskOrderFactory(Base):
     class Meta:
         model = TaskOrder
@@ -401,6 +410,7 @@ class TaskOrderFactory(Base):
         lambda *args: random_future_date(year_min=2, year_max=5)
     )
     performance_length = random.randint(1, 24)
+    csp_estimate = factory.SubFactory(AttachmentFactory)
 
     ko_first_name = factory.Faker("first_name")
     ko_last_name = factory.Faker("last_name")

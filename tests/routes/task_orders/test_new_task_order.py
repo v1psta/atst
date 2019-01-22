@@ -43,7 +43,7 @@ def serialize_dates(data):
 
 # TODO: this test will need to be more complicated when we add validation to
 # the forms
-def test_create_new_task_order(client, user_session):
+def test_create_new_task_order(client, user_session, pdf_upload):
     creator = UserFactory.create()
     user_session(creator)
 
@@ -66,6 +66,7 @@ def test_create_new_task_order(client, user_session):
 
     funding_data = slice_data_for_section(task_order_data, "funding")
     funding_data = serialize_dates(funding_data)
+    funding_data["csp_estimate"] = pdf_upload
     response = client.post(
         response.headers["Location"], data=funding_data, follow_redirects=False
     )

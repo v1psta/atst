@@ -86,6 +86,8 @@ class TaskOrder(Base, mixins.TimestampsMixin):
             self._csp_estimate = Attachment.attach(
                 new_csp_estimate, "task_order", self.id
             )
+        else:
+            raise TypeError("Could not set csp_estimate with invalid type")
 
     @property
     def is_submitted(self):
