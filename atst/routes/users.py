@@ -1,3 +1,4 @@
+import datetime as dt
 from flask import Blueprint, render_template, g, request as http_request, redirect
 from atst.forms.edit_user import EditUserForm
 from atst.domain.users import Users
@@ -16,7 +17,14 @@ def user():
     if next_:
         flash("user_must_complete_profile")
 
-    return render_template("user/edit.html", next=next_, form=form, user=user)
+    return render_template(
+        "user/edit.html",
+        next=next_,
+        form=form,
+        user=user,
+        mindate=(dt.datetime.now() - dt.timedelta(days=365)),
+        maxdate=dt.datetime.now(),
+    )
 
 
 @bp.route("/user", methods=["POST"])

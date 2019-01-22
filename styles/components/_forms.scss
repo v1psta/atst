@@ -116,3 +116,25 @@
   }
 }
 
+.date-picker {
+  display: inline-block;
+  margin-top: 10px;
+  width: 100%;
+
+  label {
+    font-weight: 400;
+  }
+
+  input[type="number"]::-webkit-inner-spin-button {
+    appearance: none;
+  }
+
+  input.usa-input-error {
+    right: 0;
+  }
+
+  .usa-form-group-date-ok {
+    padding-top: 30px;
+  }
+}
+
