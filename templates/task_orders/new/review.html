@@ -194,7 +194,8 @@
 
 {% block next %}
   <div class='action-group'>
-    <input type='submit' class='usa-button usa-button-primary' value='Done' />
+    <input type='submit' class='usa-button usa-button-primary' value='Done'
+    {% if not complete %}disabled{% endif %}/>
   </div>
 {% endblock %}
 
