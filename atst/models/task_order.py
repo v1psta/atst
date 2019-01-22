@@ -86,6 +86,8 @@ class TaskOrder(Base, mixins.TimestampsMixin):
             self._csp_estimate = Attachment.attach(
                 new_csp_estimate, "task_order", self.id
             )
+        elif not new_csp_estimate and self._csp_estimate:
+            self._csp_estimate = None
         else:
             raise TypeError("Could not set csp_estimate with invalid type")
 

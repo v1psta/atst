@@ -58,3 +58,11 @@ class TestCSPEstimate:
         to = TaskOrder()
         with pytest.raises(TypeError):
             to.csp_estimate = "invalid"
+
+    def test_removing_estimate(self):
+        attachment = Attachment(filename="sample.pdf", object_name="sample")
+        to = TaskOrder(csp_estimate=attachment)
+        assert to.csp_estimate is not None
+
+        to.csp_estimate = ""
+        assert to.csp_estimate is None
