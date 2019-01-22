@@ -13,13 +13,14 @@
 
   .app-footer__info {
     flex-grow: 1;
+    padding-left: 0.8rem;
 
     .app-footer__info__link {
       margin: (-$gap * 2) (-$gap);
 
       .icon--footer {
         @include icon-size(16);
-        margin: 0.8rem;
+        margin: 0rem 0.8rem 0rem 0rem;
       }
     }
   }
