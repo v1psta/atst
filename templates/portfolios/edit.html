@@ -7,7 +7,7 @@
 
 {% include "fragments/flash.html" %}
 
-<form method="POST" action="{{ url_for('portfolios.edit_portfolio', portfolio_id=portfolio.id) }}" autocomplete="false">
+<form v-cloak method="POST" action="{{ url_for('portfolios.edit_portfolio', portfolio_id=portfolio.id) }}" autocomplete="false">
   {{ form.csrf_token }}
 
   <div class="panel">
