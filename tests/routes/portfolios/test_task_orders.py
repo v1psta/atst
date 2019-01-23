@@ -1,9 +1,14 @@
 from flask import url_for
 import pytest
 
+from atst.domain.roles import Roles
+from atst.models.portfolio_role import Status as PortfolioStatus
+
 from tests.factories import (
     PortfolioFactory,
+    PortfolioRoleFactory,
     TaskOrderFactory,
+    UserFactory,
     random_future_date,
     random_past_date,
 )
@@ -60,3 +65,24 @@ class TestPortfolioFunding:
             _, context = templates[0]
             assert context["funding_end_date"] is end_date
             assert context["total_balance"] == active_to1.budget + active_to2.budget
+
+
+def test_ko_can_view_task_order(client, user_session):
+    portfolio = PortfolioFactory.create()
+    ko = UserFactory.create()
+    PortfolioRoleFactory.create(
+        role=Roles.get("officer"),
+        portfolio=portfolio,
+        user=ko,
+        status=PortfolioStatus.ACTIVE,
+    )
+    task_order = TaskOrderFactory.create(portfolio=portfolio, contracting_officer=ko)
+    user_session(ko)
+    response = client.get(
+        url_for(
+            "portfolios.view_task_order",
+            portfolio_id=portfolio.id,
+            task_order_id=task_order.id,
+        )
+    )
+    assert response.status_code == 200
