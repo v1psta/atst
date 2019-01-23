@@ -381,7 +381,7 @@ class AttachmentFactory(Base):
         model = Attachment
 
     filename = factory.Faker("domain_word")
-    object_name = factory.Faker("domain_word")
+    object_name = factory.LazyFunction(lambda *args: uuid4().hex)
 
 
 class TaskOrderFactory(Base):
