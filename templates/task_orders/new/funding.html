@@ -29,7 +29,9 @@
     </a></p>
     <p>{{ "task_orders.new.funding.estimate_usage_paragraph" | translate }}</p>
     <div class="usa-input">
-      {{ form.pdf.label }}
+      <div class="usa-input__title">
+        {{ form.pdf.label }}
+      </div>
       {{ form.pdf.description }}
       <input type="file" disabled="disabled" />
     </div>
@@ -39,12 +41,12 @@
     <h3 class="subheading">{{ "task_orders.new.funding.cloud_calculations_title" | translate }}</h3>
     <p>{{ "task_orders.new.funding.cloud_calculations_paragraph" | translate }}</p>
 
-    <h4 class="task-order-form__heading">{{ "task_orders.new.funding.cloud_offerings_title" | translate }}</h4>
+    <h4 class="task-order-form__heading subheading">{{ "task_orders.new.funding.cloud_offerings_title" | translate }}</h4>
     <p>{{ "task_orders.new.funding.cloud_offerings_paragraph" | translate }}</p>
     {{ TextInput(form.clin_01, validation='dollars', placeholder="$0.00") }}
     {{ TextInput(form.clin_02, validation='dollars', disabled=(not config.CLASSIFIED)) }}
 
-    <h4 class="task-order-form__heading">{{ "task_orders.new.funding.support_assistance_title" | translate }}</h4>
+    <h4 class="task-order-form__heading subheading">{{ "task_orders.new.funding.support_assistance_title" | translate }}</h4>
     <p>{{ "task_orders.new.funding.support_assistance_paragraph" | translate }}</p>
     {{ TextInput(form.clin_03, validation='dollars', tooltip='The cloud support and assistance packages cannot be used as a primary development resource.', placeholder="$0.00") }}
     {{ TextInput(form.clin_04, validation='dollars', tooltip='The cloud support and assistance packages cannot be used as a primary development resource.', disabled=(not config.CLASSIFIED)) }}
