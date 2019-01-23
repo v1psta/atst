@@ -6,7 +6,9 @@ from atst.domain.exceptions import UnauthorizedError
 class Authorization(object):
     @classmethod
     def has_portfolio_permission(cls, user, portfolio, permission):
-        return permission in PortfolioRoles.portfolio_role_permissions(portfolio, user)
+        return permission in PortfolioRoles.portfolio_role_permissions(
+            portfolio, user
+        ) or Authorization.is_ccpo(user)
 
     @classmethod
     def has_atat_permission(cls, user, permission):

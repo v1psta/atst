@@ -298,8 +298,11 @@ def test_get_for_update_information():
     assert portfolio == admin_ws
 
     ccpo = UserFactory.from_atat_role("ccpo")
+    assert Portfolios.get_for_update_information(ccpo, portfolio.id)
+
+    developer = UserFactory.from_atat_role("developer")
     with pytest.raises(UnauthorizedError):
-        Portfolios.get_for_update_information(ccpo, portfolio.id)
+        Portfolios.get_for_update_information(developer, portfolio.id)
 
 
 def test_can_create_portfolios_with_matching_names():
