@@ -15,6 +15,7 @@
   noMaxWidth=False) -%}
 
   <textinput
+    v-cloak
     name='{{ field.name }}'
     validation='{{ validation }}'
     {% if paragraph %}paragraph='true'{% endif %}
