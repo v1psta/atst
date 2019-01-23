@@ -2,6 +2,7 @@ import pytest
 
 from atst.domain.task_orders import TaskOrders, TaskOrderError
 from atst.domain.exceptions import UnauthorizedError
+from atst.models.attachment import Attachment
 
 from tests.factories import (
     TaskOrderFactory,
@@ -26,10 +27,18 @@ def test_is_section_complete():
 
 def test_all_sections_complete():
     task_order = TaskOrderFactory.create()
+    attachment = Attachment(
+        filename="sample_attachment",
+        object_name="sample",
+        resource="task_order",
+        resource_id=task_order.id,
+    )
+
+    custom_attrs = {"csp_estimate": attachment}
     for attr_list in TaskOrders.SECTIONS.values():
         for attr in attr_list:
             if not getattr(task_order, attr):
-                setattr(task_order, attr, "str12345")
+                setattr(task_order, attr, custom_attrs.get(attr, "str12345"))
 
     task_order.scope = None
     assert not TaskOrders.all_sections_complete(task_order)

@@ -2,10 +2,12 @@ from enum import Enum
 
 import pendulum
 from sqlalchemy import Column, Numeric, String, ForeignKey, Date, Integer
+from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.types import ARRAY
 from sqlalchemy.orm import relationship
+from werkzeug.datastructures import FileStorage
 
-from atst.models import Base, types, mixins
+from atst.models import Attachment, Base, types, mixins
 
 
 class Status(Enum):
@@ -49,7 +51,7 @@ class TaskOrder(Base, mixins.TimestampsMixin):
     end_date = Column(Date)
     performance_length = Column(Integer)
     attachment_id = Column(ForeignKey("attachments.id"))
-    pdf = relationship("Attachment")
+    _csp_estimate = relationship("Attachment")
     clin_01 = Column(Numeric(scale=2))
     clin_02 = Column(Numeric(scale=2))
     clin_03 = Column(Numeric(scale=2))
@@ -71,6 +73,23 @@ class TaskOrder(Base, mixins.TimestampsMixin):
     so_dod_id = Column(String)  # DOD ID
     number = Column(String, unique=True)  # Task Order Number
     loa = Column(ARRAY(String))  # Line of Accounting (LOA)
+
+    @hybrid_property
+    def csp_estimate(self):
+        return self._csp_estimate
+
+    @csp_estimate.setter
+    def csp_estimate(self, new_csp_estimate):
+        if isinstance(new_csp_estimate, Attachment):
+            self._csp_estimate = new_csp_estimate
+        elif isinstance(new_csp_estimate, FileStorage):
+            self._csp_estimate = Attachment.attach(
+                new_csp_estimate, "task_order", self.id
+            )
+        elif not new_csp_estimate and self._csp_estimate:
+            self._csp_estimate = None
+        else:
+            raise TypeError("Could not set csp_estimate with invalid type")
 
     @property
     def is_submitted(self):

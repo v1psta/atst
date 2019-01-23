@@ -44,3 +44,14 @@ def test_download(app, uploader, pdf_upload):
     stream = uploader.download("abc")
     stream_content = b"".join([b for b in stream])
     assert pdf_content == stream_content
+
+
+def test_downloading_uploaded_object(uploader, pdf_upload):
+    object_name = uploader.upload(pdf_upload)
+    stream = uploader.download(object_name)
+    stream_content = b"".join([b for b in stream])
+
+    pdf_upload.seek(0)
+    pdf_content = pdf_upload.read()
+
+    assert stream_content == pdf_content

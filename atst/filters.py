@@ -54,12 +54,11 @@ def mixedContentToJson(value):
     This coerces the file upload in form data to its filename
     so that the data can be JSON serialized.
     """
-    if (
-        isinstance(value, dict)
-        and "legacy_task_order" in value
-        and hasattr(value["legacy_task_order"]["pdf"], "filename")
-    ):
-        value["legacy_task_order"]["pdf"] = value["legacy_task_order"]["pdf"].filename
+    if isinstance(value, dict):
+        for k, v in value.items():
+            if hasattr(v, "filename"):
+                value[k] = v.filename
+
     return app.jinja_env.filters["tojson"](value)
 
 

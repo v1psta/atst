@@ -10,9 +10,9 @@
 
   {% block form_action %}
     {% if task_order_id %}
-      <form method='POST' action="{{ url_for('task_orders.new', screen=current, task_order_id=task_order_id) }}" autocomplete="off">
+      <form method='POST' action="{{ url_for('task_orders.new', screen=current, task_order_id=task_order_id) }}" autocomplete="off" enctype="multipart/form-data">
     {% else %}
-      <form method='POST' action="{{ url_for('task_orders.update', screen=current, portfolio_id=portfolio_id) }}" autocomplete="off">
+      <form method='POST' action="{{ url_for('task_orders.update', screen=current, portfolio_id=portfolio_id) }}" autocomplete="off" enctype="multipart/form-data">
     {% endif %}
   {% endblock %}
 

@@ -8,7 +8,7 @@ from atst.domain.exceptions import UploadError
 
 
 class FileProviderInterface:
-    _PERMITTED_MIMETYPES = ["application/pdf"]
+    _PERMITTED_MIMETYPES = ["application/pdf", "image/png"]
 
     def _enforce_mimetype(self, fyle):
         # TODO: for hardening, we should probably use a better library for
@@ -57,6 +57,7 @@ class RackspaceFileProvider(FileProviderInterface):
         object_name = uuid4().hex
         with NamedTemporaryFile() as tempfile:
             tempfile.write(fyle.stream.read())
+            tempfile.seek(0)
             self.container.upload_object(
                 file_path=tempfile.name,
                 object_name=object_name,

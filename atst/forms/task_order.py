@@ -11,6 +11,7 @@ from wtforms.fields import (
 from wtforms.fields.html5 import DateField, TelField
 from wtforms.widgets import ListWidget, CheckboxInput
 from wtforms.validators import Length
+from flask_wtf.file import FileAllowed
 
 from atst.forms.validators import IsNumber, PhoneNumber, RequiredIf
 
@@ -86,9 +87,15 @@ class FundingForm(CacheableForm):
     end_date = DateField(
         translate("forms.task_order.end_date_label"), format="%m/%d/%Y"
     )
-    pdf = FileField(
-        translate("forms.task_order.pdf_label"),
-        description=translate("forms.task_order.pdf_description"),
+    csp_estimate = FileField(
+        translate("forms.task_order.csp_estimate_label"),
+        description=translate("forms.task_order.csp_estimate_description"),
+        validators=[
+            FileAllowed(
+                ["pdf", "png"], translate("forms.task_order.file_format_not_allowed")
+            )
+        ],
+        render_kw={"accept": ".pdf,.png,application/pdf,image/png"},
     )
     clin_01 = IntegerField(translate("forms.task_order.clin_01_label"))
     clin_02 = IntegerField(translate("forms.task_order.clin_02_label"))

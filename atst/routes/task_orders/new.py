@@ -272,8 +272,9 @@ def new(screen, task_order_id=None, portfolio_id=None):
     "/portfolios/<portfolio_id>/task_orders/new/<int:screen>", methods=["POST"]
 )
 def update(screen, task_order_id=None, portfolio_id=None):
+    form_data = {**http_request.form, **http_request.files}
     workflow = UpdateTaskOrderWorkflow(
-        g.current_user, http_request.form, screen, task_order_id, portfolio_id
+        g.current_user, form_data, screen, task_order_id, portfolio_id
     )
 
     if workflow.validate():

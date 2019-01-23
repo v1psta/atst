@@ -2,6 +2,7 @@ import pytest
 from flask import url_for
 
 from atst.domain.task_orders import TaskOrders
+from atst.models.attachment import Attachment
 from atst.routes.task_orders.new import ShowTaskOrderWorkflow, UpdateTaskOrderWorkflow
 
 from tests.factories import UserFactory, TaskOrderFactory, PortfolioFactory
@@ -42,7 +43,7 @@ def serialize_dates(data):
 
 # TODO: this test will need to be more complicated when we add validation to
 # the forms
-def test_create_new_task_order(client, user_session):
+def test_create_new_task_order(client, user_session, pdf_upload):
     creator = UserFactory.create()
     user_session(creator)
 
@@ -65,6 +66,7 @@ def test_create_new_task_order(client, user_session):
 
     funding_data = slice_data_for_section(task_order_data, "funding")
     funding_data = serialize_dates(funding_data)
+    funding_data["csp_estimate"] = pdf_upload
     response = client.post(
         response.headers["Location"], data=funding_data, follow_redirects=False
     )
@@ -124,8 +126,11 @@ def test_task_order_form_shows_errors(client, user_session):
 def task_order():
     user = UserFactory.create()
     portfolio = PortfolioFactory.create(owner=user)
+    attachment = Attachment(filename="sample_attachment", object_name="sample")
 
-    return TaskOrderFactory.create(creator=user, portfolio=portfolio)
+    return TaskOrderFactory.create(
+        creator=user, portfolio=portfolio, csp_estimate=attachment
+    )
 
 
 def test_show_task_order(task_order):

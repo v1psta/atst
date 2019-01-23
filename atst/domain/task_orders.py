@@ -25,7 +25,7 @@ class TaskOrders(object):
         ],
         "funding": [
             "performance_length",
-            # "pdf",
+            "csp_estimate",
             "clin_01",
             "clin_02",
             "clin_03",
