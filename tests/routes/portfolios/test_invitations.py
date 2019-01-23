@@ -210,7 +210,7 @@ def test_existing_member_invite_resent_to_email_submitted_in_form(
     assert send_mail_job.args[0] == ["example@example.com"]
 
 
-def test_task_order_officer_accepts_invite(monkeypatch, client, user_session):
+def test_contracting_officer_accepts_invite(monkeypatch, client, user_session):
     portfolio = PortfolioFactory.create()
     task_order = TaskOrderFactory.create(portfolio=portfolio)
     user_info = UserFactory.dictionary()
@@ -246,6 +246,9 @@ def test_task_order_officer_accepts_invite(monkeypatch, client, user_session):
     # user is redirected to the task order review page
     assert response.status_code == 302
     to_review_url = url_for(
-        "task_orders.new", screen=4, task_order_id=task_order.id, _external=True
+        "portfolios.view_task_order",
+        portfolio_id=task_order.portfolio_id,
+        task_order_id=task_order.id,
+        _external=True,
     )
     assert response.headers["Location"] == to_review_url
