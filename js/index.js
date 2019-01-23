@@ -1,5 +1,7 @@
 import 'svg-innerhtml'
 import 'babel-polyfill'
+import ally from 'ally.js'
+
 
 import classes from '../styles/atat.scss'
 import Vue from 'vue/dist/vue'
@@ -28,6 +30,7 @@ import MembersList from './components/members_list'
 import LocalDatetime from './components/local_datetime'
 import RequestsList from './components/requests_list'
 import ConfirmationPopover from './components/confirmation_popover'
+import {isNotInVerticalViewport} from './lib/viewport'
 
 Vue.config.productionTip = false
 
@@ -77,6 +80,14 @@ const app = new Vue({
       const modal = modalOpen.getAttribute("data-modal")
       this.openModal(modal)
     }
+
+    ally.query.focusable().forEach( function(el) {
+      el.addEventListener('focus', function(){
+        if (isNotInVerticalViewport(el)) {
+          el.scrollIntoView({block: 'center'})
+        }
+      })
+    })
   },
   delimiters: ['!{', '}']
 })
