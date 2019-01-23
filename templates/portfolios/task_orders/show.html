@@ -4,25 +4,22 @@
 
 {% block portfolio_content %}
 
-{% macro Step(title="", description="", link_text=None, link_url=None, complete=True) %}
+{% macro Step(title="", description="", link_text=None, complete=True) %}
   <div class="task-order-next-steps__step panel__content row">
     <div class="task-order-next-steps__icon col">
       <span>{{ Icon("ok", classes="complete" if complete else "incomplete") }}</span>
     </div>
-    <div class="task-order-next-steps__text">
+    <div class="task-order-next-steps__text col">
       <div class="task-order-next-steps__heading row">
         <h4>{{ title }}</h4>
-        {% if link_url %}
-          <a href="{{ link_url }}" class="icon-link">
-            {{ Icon("edit") }}
-            <span>{{ link_text }}</span>
-          </a>
-        {% endif %}
       </div>
       <div class="task-order-next-steps__description">
         {{ description }}
       </div>
     </div>
+    {% if caller %}
+      {{ caller() }}
+    {% endif %}
   </div>
 {% endmacro %}
 
@@ -88,13 +85,20 @@
   <div class="task-order-details">
     <div id="next-steps" class="task-order-next-steps">
       <div class="panel">
-        <h3 class="panel__content">What's next?</h3>
-        {{ Step(
+        <h3 class="task-order-next-steps__panel-head panel__content">What's next?</h3>
+        {% call Step(
           title="Submit draft Task Order",
           description="Complete initial task order request form.",
           link_text="edit",
-          link_url=url_for("task_orders.new", screen=1, task_order_id=task_order.id),
-          complete=True) }}
+          complete=True) %}
+          <div class="task-order-next-steps__action col">
+            <a
+              href="{{ url_for("task_orders.new", screen=1, task_order_id=task_order.id) }}"
+              class="usa-button usa-button-primary">
+                Edit
+            </a>
+          </div>
+        {% endcall %}
         {{ Step(
           title="Complete a Security Requirements Document",
           description="The IA Security Official you specified received an email invitation to complete and sign a DD-254: Security Requirements document that's been customized for the JEDI program here.",

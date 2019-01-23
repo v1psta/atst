@@ -28,7 +28,11 @@ def accept_invitation(token):
     for task_order in invite.portfolio.task_orders:
         if g.current_user == task_order.contracting_officer:
             return redirect(
-                url_for("task_orders.new", screen=4, task_order_id=task_order.id)
+                url_for(
+                    "portfolios.view_task_order",
+                    portfolio_id=task_order.portfolio_id,
+                    task_order_id=task_order.id,
+                )
             )
         elif g.current_user == task_order.contracting_officer_representative:
             return redirect(
