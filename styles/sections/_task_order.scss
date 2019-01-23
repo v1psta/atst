@@ -120,8 +120,19 @@
       width: 100%;
     }
 
+    .task-order-next-steps__panel-head {
+      border-bottom: 1px solid black;
+      padding: ($gap * 4) ($gap * 2);
+      margin: 0;
+    }
+
     .task-order-next-steps__step {
+      border-bottom: 1px dotted $color-gray;
+      padding: ($gap * 4) ($gap * 2);
+      margin: 0;
+
       .task-order-next-steps__icon {
+        width: 8%;
         padding: $gap $gap 0 0;
         justify-content: center;
         .complete {
@@ -133,8 +144,17 @@
       }
 
       .task-order-next-steps__text {
+        width: 60%;
         @include ie-only {
           width: 100%
+        }
+      }
+
+      .task-order-next-steps__action {
+        padding: $gap 0 0 $gap;
+        width: 32%;
+        a.usa-button {
+          width: 100%;
         }
       }
 
