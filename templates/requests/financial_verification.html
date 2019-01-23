@@ -21,7 +21,7 @@
   {{ Alert(("requests.financial_verification.pending_financial_verification" | translate), fragment="fragments/pending_financial_verification.html") }}
 {% endif %}
 
-<financial inline-template v-bind:initial-data='{{ f.data|mixedContentToJson }}'>
+<financial inline-template v-bind:initial-data='{{ f.data|tojson }}'>
 <div class="col">
   {% if extended %}
     {{ Alert(("requests.financial_verification.manually_enter_task_information_label" | translate),

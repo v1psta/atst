@@ -14,7 +14,7 @@
 
 <funding
   inline-template
-  v-bind:initial-data='{{ form.data|mixedContentToJson }}'
+  v-bind:initial-data='{{ form.data|tojson }}'
   v-bind:upload-errors='{{ form.csp_estimate.errors | list }}'
   >
   <div>

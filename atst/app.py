@@ -26,6 +26,7 @@ from atst.models.permissions import Permissions
 from atst.eda_client import MockEDAClient
 from atst.utils import mailer
 from atst.utils.form_cache import FormCache
+from atst.utils.json import CustomJSONEncoder
 from atst.queue import queue
 
 
@@ -41,6 +42,7 @@ def make_app(config):
         template_folder=parent_dir.child("templates").absolute(),
         static_folder=parent_dir.child("static").absolute(),
     )
+    app.json_encoder = CustomJSONEncoder
     make_redis(app, config)
     csrf = CSRFProtect()
 
