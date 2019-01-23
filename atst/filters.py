@@ -49,19 +49,6 @@ def getOptionLabel(value, options):
         return
 
 
-def mixedContentToJson(value):
-    """
-    This coerces the file upload in form data to its filename
-    so that the data can be JSON serialized.
-    """
-    if isinstance(value, dict):
-        for k, v in value.items():
-            if hasattr(v, "filename"):
-                value[k] = v.filename
-
-    return app.jinja_env.filters["tojson"](value)
-
-
 def findFilter(value, filter_name, filter_args=[]):
     if not filter_name:
         return value
@@ -124,7 +111,6 @@ def register_filters(app):
     app.jinja_env.filters["usPhone"] = usPhone
     app.jinja_env.filters["readableInteger"] = readableInteger
     app.jinja_env.filters["getOptionLabel"] = getOptionLabel
-    app.jinja_env.filters["mixedContentToJson"] = mixedContentToJson
     app.jinja_env.filters["findFilter"] = findFilter
     app.jinja_env.filters["renderList"] = renderList
     app.jinja_env.filters["formattedDate"] = formattedDate
