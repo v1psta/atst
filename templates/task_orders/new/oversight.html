@@ -17,9 +17,11 @@
     <div class='usa-input'>
         {{ UserInfo(form.ko_first_name, form.ko_last_name, form.ko_email, form.ko_phone_number) }}
         {{ CheckboxInput(form.ko_invite) }}
-        <template v-if="ko_invite">
-            {{ TextInput(form.ko_dod_id, placeholder="1234567890", tooltip="Why", tooltip_title='Why', validation='dodId', classes="task-order__invite-officer")}}
-        </template>
+        <keep-alive>
+            <dodid v-bind:initial-ko-invite="ko_invite" inline-template v-if="ko_invite">
+                {{ TextInput(form.ko_dod_id, placeholder="1234567890", tooltip="Why", tooltip_title='Why', validation='dodId', classes="task-order__invite-officer")}}
+            </dodid>
+        </keep-alive>
 
         <hr />
 
@@ -45,9 +47,11 @@
         <p>{{ "task_orders.new.oversight.so_info_paragraph" | translate }}</p>
         {{ UserInfo(form.so_first_name, form.so_last_name, form.so_email, form.so_phone_number) }}
         {{ CheckboxInput(form.so_invite) }}
-        <template v-if="so_invite">
-            {{ TextInput(form.so_dod_id, placeholder="1234567890", tooltip="Why", tooltip_title='Why', validation='dodId', classes="task-order__invite-officer")}}
-        </template>
+        <keep-alive>
+            <dodid v-bind:initial-so-invite="so_invite" inline-template v-if="so_invite">
+                {{ TextInput(form.so_dod_id, placeholder="1234567890", tooltip="Why", tooltip_title='Why', validation='dodId', classes="task-order__invite-officer")}}
+            </dodid>
+        </keep-alive>
     </div>
 </oversight>
 

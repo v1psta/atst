@@ -2,15 +2,37 @@ import FormMixin from '../../mixins/form'
 import textinput from '../text_input'
 import checkboxinput from '../checkbox_input'
 
+const dodid = {
+  name: 'dodid',
+
+  mixins: [FormMixin],
+
+  components: {
+    textinput,
+  },
+
+  props: {
+    initialKoInvite: Boolean,
+    initialSoInvite: Boolean,
+  },
+
+  data: function() {
+    return {
+      ko_invite: this.initialKoInvite,
+      so_invite: this.initialSoInvite,
+    }
+  },
+}
+
 const cordata = {
   name: 'cordata',
+
+  mixins: [FormMixin],
 
   components: {
     textinput,
     checkboxinput,
   },
-
-  mixins: [FormMixin],
 
   props: {
     initialCorInvite: Boolean,
@@ -32,6 +54,7 @@ export default {
     textinput,
     checkboxinput,
     cordata,
+    dodid,
   },
 
   props: {
