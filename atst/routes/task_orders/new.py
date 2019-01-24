@@ -264,7 +264,6 @@ def new(screen, task_order_id=None, portfolio_id=None):
         screens=workflow.display_screens,
         form=workflow.form,
         complete=workflow.is_complete,
-        user=g.current_user,
     )
 
 
