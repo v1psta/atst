@@ -158,6 +158,7 @@ class UpdateTaskOrderWorkflow(ShowTaskOrderWorkflow):
                 "cor_email": self.user.email,
                 "cor_phone_number": self.user.phone_number,
                 "cor_dod_id": self.user.dod_id,
+                "cor_id": self.user.id,
             }
             to_data = {**to_data, **cor_data}
 

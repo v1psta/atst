@@ -32,7 +32,7 @@
   </div>
 {% endmacro %}
 
-{% macro ReviewOfficerInfo(heading, first_name, last_name, email, phone_number, dod_id, invite) %}
+{% macro ReviewOfficerInfo(heading, first_name, last_name, email, phone_number, dod_id, officer) %}
   <div class="col col--grow">
     <h4 class='task-order-form__heading'>{{ heading | translate }}</h4>
     {{ first_name }} {{ last_name }}<br>
@@ -44,7 +44,7 @@
     {% endif %}
     <br>
     {{ "task_orders.new.review.dod_id" | translate }} {{ dod_id}}<br>
-    {% if invite %}
+    {% if officer %}
       {{ Icon('ok', classes='icon--green') }} <span class="task-order-invite-message sent">{{ "task_orders.new.review.invited"| translate }}</<span>
     {% else %}
       {{ Icon('alert', classes='icon--red') }} <span class="task-order-invite-message not-sent">{{ "task_orders.new.review.not_invited"| translate }}</span>
@@ -190,11 +190,11 @@
 <h3 class="subheading">{{ "task_orders.new.review.oversight"| translate }} {{ TOEditLink(screen=3) }}</h3>
 
 <div class="row">
-  {{ ReviewOfficerInfo("task_orders.new.review.ko", task_order.ko_first_name, task_order.ko_last_name, task_order.ko_email, task_order.ko_phone_number, task_order.ko_dod_id, task_order.ko_invite) }}
-  {{ ReviewOfficerInfo("task_orders.new.review.cor", task_order.cor_first_name, task_order.cor_last_name, task_order.cor_email, task_order.cor_phone_number, task_order.cor_dod_id, task_order.cor_invite) }}
+  {{ ReviewOfficerInfo("task_orders.new.review.ko", task_order.ko_first_name, task_order.ko_last_name, task_order.ko_email, task_order.ko_phone_number, task_order.ko_dod_id, task_order.contracting_officer) }}
+  {{ ReviewOfficerInfo("task_orders.new.review.cor", task_order.cor_first_name, task_order.cor_last_name, task_order.cor_email, task_order.cor_phone_number, task_order.cor_dod_id, task_order.contracting_officer_representative) }}
 </div>
 <div class="row">
-  {{ ReviewOfficerInfo("task_orders.new.review.so", task_order.so_first_name, task_order.so_last_name, task_order.so_email, task_order.so_phone_number, task_order.so_dod_id, task_order.so_invite) }}
+  {{ ReviewOfficerInfo("task_orders.new.review.so", task_order.so_first_name, task_order.so_last_name, task_order.so_email, task_order.so_phone_number, task_order.so_dod_id, task_order.security_officer) }}
 </div>
 
 {% endblock %}
