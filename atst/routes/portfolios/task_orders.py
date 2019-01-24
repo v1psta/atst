@@ -69,6 +69,11 @@ def view_task_order(portfolio_id, task_order_id):
     )
 
 
+@portfolios_bp.route("/portfolios/<portfolio_id>/task_order/<task_order_id>/review")
+def review_task_order(portfolio_id, task_order_id):
+    return render_template("/portfolios/task_orders/review.html")
+
+
 @portfolios_bp.route(
     "/portfolios/<portfolio_id>/task_order/<task_order_id>/invitations"
 )
