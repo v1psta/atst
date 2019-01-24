@@ -88,7 +88,7 @@ class TaskOrder(Base, mixins.TimestampsMixin):
             )
         elif not new_csp_estimate and self._csp_estimate:
             self._csp_estimate = None
-        else:
+        elif new_csp_estimate:
             raise TypeError("Could not set csp_estimate with invalid type")
 
     @property
