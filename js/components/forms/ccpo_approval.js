@@ -6,22 +6,22 @@ export default {
 
   components: {
     textinput,
-    LocalDatetime
+    LocalDatetime,
   },
 
   props: {
-    initialState: String
+    initialState: String,
   },
 
-  data: function () {
+  data: function() {
     return {
       approving: this.initialState === 'approving',
-      denying: this.initialState === 'denying'
+      denying: this.initialState === 'denying',
     }
   },
 
   methods: {
-    setReview: function (e) {
+    setReview: function(e) {
       if (e.target.value === 'approving') {
         this.approving = true
         this.denying = false
@@ -30,5 +30,5 @@ export default {
         this.denying = true
       }
     },
-  }
+  },
 }

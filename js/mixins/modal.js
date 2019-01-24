@@ -8,25 +8,25 @@ export default {
       if (this.allyHandler) this.allyHandler.disengage()
     },
 
-    openModal: function (name) {
+    openModal: function(name) {
       this.activeModal = name
       this.$emit('modalOpen', true)
       const idSelector = `#${this.modalId}`
 
       this.allyHandler = ally.maintain.disabled({
-        filter: idSelector
-      });
-    }
+        filter: idSelector,
+      })
+    },
   },
   data: function() {
     return {
       activeModal: null,
-      allyHandler: null
+      allyHandler: null,
     }
   },
   computed: {
-    modalId: function () {
-      return !!this.activeModal ? `modal--${ this.activeModal }` : null
-    }
-  }
+    modalId: function() {
+      return !!this.activeModal ? `modal--${this.activeModal}` : null
+    },
+  },
 }

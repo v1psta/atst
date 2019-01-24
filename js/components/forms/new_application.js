@@ -1,7 +1,7 @@
 import FormMixin from '../../mixins/form'
 import textinput from '../text_input'
 
-const createEnvironment = (name) => ({ name })
+const createEnvironment = name => ({ name })
 
 export default {
   name: 'new-application',
@@ -9,97 +9,107 @@ export default {
   mixins: [FormMixin],
 
   components: {
-    textinput
+    textinput,
   },
 
   props: {
     initialData: {
       type: Object,
-      default: () => ({})
+      default: () => ({}),
     },
-    modalName: String
+    modalName: String,
   },
 
-  data: function () {
-    const {
-      environment_names,
-      name,
-    } = this.initialData
+  data: function() {
+    const { environment_names, name } = this.initialData
 
-    const environments = (
-      environment_names.length > 0
+    const environments = (environment_names.length > 0
       ? environment_names
-      : ["Development", "Testing", "Staging", "Production"]
+      : ['Development', 'Testing', 'Staging', 'Production']
     ).map(createEnvironment)
 
     return {
       validations: [
-        {func: this.hasEnvironments, message: "Provide at least one environment name."},
-        {func: this.envNamesAreUnique, message: "Environment names must be unique."},
-        {func: this.environmentsHaveNames, message: "Environment names cannot be empty."},
+        {
+          func: this.hasEnvironments,
+          message: 'Provide at least one environment name.',
+        },
+        {
+          func: this.envNamesAreUnique,
+          message: 'Environment names must be unique.',
+        },
+        {
+          func: this.environmentsHaveNames,
+          message: 'Environment names cannot be empty.',
+        },
       ],
       errors: [],
       environments,
       name,
-      readyToSubmit: false
+      readyToSubmit: false,
     }
   },
 
-  mounted: function () {
+  mounted: function() {
     this.$root.$on('onEnvironmentAdded', this.addEnvironment)
   },
 
   methods: {
-    addEnvironment: function (event) {
-      this.environments.push(createEnvironment(""))
+    addEnvironment: function(event) {
+      this.environments.push(createEnvironment(''))
     },
 
-    removeEnvironment: function (index) {
+    removeEnvironment: function(index) {
       if (this.environments.length > 1) {
         this.environments.splice(index, 1)
       }
     },
 
     validate: function() {
-      this.errors = this.validations.map((validation) => {
-        if (!validation.func()) {
-          return validation.message
-        }
-      }).filter(Boolean)
+      this.errors = this.validations
+        .map(validation => {
+          if (!validation.func()) {
+            return validation.message
+          }
+        })
+        .filter(Boolean)
     },
 
-    hasEnvironments: function () {
-      return this.environments.length > 0 && this.environments.some((e) => e.name !== "")
+    hasEnvironments: function() {
+      return (
+        this.environments.length > 0 &&
+        this.environments.some(e => e.name !== '')
+      )
     },
 
-    environmentsHaveNames: function () {
+    environmentsHaveNames: function() {
       if (this.environments.length > 1) {
         // only want to display this error if we have multiple envs and one or
         // more do not have names
-        return this.environments.every((e) => e.name !== "")
+        return this.environments.every(e => e.name !== '')
       } else {
         return true
       }
     },
 
-    envNamesAreUnique: function () {
-      const names = this.environments.map((e) => e.name)
+    envNamesAreUnique: function() {
+      const names = this.environments.map(e => e.name)
       return names.every((n, index) => names.indexOf(n) === index)
     },
 
-    handleSubmit: function (event) {
+    handleSubmit: function(event) {
       if (!this.readyToSubmit) {
         event.preventDefault()
         this.validateAndOpenModal()
       }
     },
 
-    handleCancelSubmit: function () {
+    handleCancelSubmit: function() {
       this.readyToSubmit = false
       this.closeModal(this.modalName)
     },
 
-    validateAndOpenModal: function () {
+    validateAndOpenModal: function() {
       let isValid = this.$children.reduce((previous, newVal) => {
         // display textInput error if it is not valid
         if (!newVal.showValid) {
@@ -116,6 +126,6 @@ export default {
         this.readyToSubmit = true
         this.openModal(this.modalName)
       }
-    }
-  }
+    },
+  },
 }

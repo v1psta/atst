@@ -4,6 +4,8 @@ FILES_TO_FORMAT="atst/ tests/ app.py script/"
 
 if [ "$1" == "check" ]; then
   pipenv run black --check ${FILES_TO_FORMAT}
+  yarn run prettier --check "js/**/*.js" --config ./prettier.config.json
 else
   pipenv run black ${FILES_TO_FORMAT}
+  yarn run prettier --write "js/**/*.js" --config ./prettier.config.json
 fi

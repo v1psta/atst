@@ -1,7 +1,16 @@
 import LocalDatetime from '../components/local_datetime'
 import { formatDollars } from '../lib/dollars'
 import { parse } from 'date-fns'
-import { compose, partial, indexBy, prop, propOr, sortBy, reverse, pipe } from 'ramda'
+import {
+  compose,
+  partial,
+  indexBy,
+  prop,
+  propOr,
+  sortBy,
+  reverse,
+  pipe,
+} from 'ramda'
 
 export default {
   name: 'requests-list',
@@ -26,13 +35,17 @@ export default {
     dodComponents: {
       type: Array,
       default: () => [],
-    }
+    },
   },
 
-  data: function () {
-    const defaultSort = (sort, requests) => sortBy(prop(sort.columnName), requests)
+  data: function() {
+    const defaultSort = (sort, requests) =>
+      sortBy(prop(sort.columnName), requests)
     const dateSort = (sort, requests) => {
-      const parseDate = compose(partial(parse), propOr(sort.columnName, ''))
+      const parseDate = compose(
+        partial(parse),
+        propOr(sort.columnName, '')
+      )
       return sortBy(parseDate, requests)
     }
 
@@ -84,44 +97,41 @@ export default {
       dodComponentValue: '',
       sort: {
         columnName: defaultSortColumn,
-        isAscending: false
+        isAscending: false,
       },
       columns: indexBy(prop('attr'), columnList),
     }
   },
 
   computed: {
-    filteredRequests: function () {
+    filteredRequests: function() {
       return pipe(
         partial(this.applySearch, [this.searchValue]),
         partial(this.applyFilters, [this.statusValue, this.dodComponentValue]),
-        partial(this.applySort, [this.sort]),
+        partial(this.applySort, [this.sort])
       )(this.requests)
-    }
+    },
   },
 
   methods: {
     getColumns: function() {
-      return Object.values(this.columns)
-        .filter((column) => !column.extendedOnly || this.isExtended)
+      return Object.values(this.columns).filter(
+        column => !column.extendedOnly || this.isExtended
+      )
     },
     applySearch: (query, requests) => {
-      return requests.filter(
-        (request) => query !== '' ?
-          request.name.toLowerCase().includes(query.toLowerCase()) :
-          true
+      return requests.filter(request =>
+        query !== ''
+          ? request.name.toLowerCase().includes(query.toLowerCase())
+          : true
       )
     },
     applyFilters: (status, dodComponent, requests) => {
-      return requests.filter(
-        (request) => status !== '' ?
-          request.status === status :
-          true
-      ).filter(
-        (request) => dodComponent !== '' ?
-          request.dod_component === dodComponent :
-          true
-      )
+      return requests
+        .filter(request => (status !== '' ? request.status === status : true))
+        .filter(request =>
+          dodComponent !== '' ? request.dod_component === dodComponent : true
+        )
     },
     applySort: function(sort, requests) {
       if (sort.columnName === '') {
@@ -129,23 +139,23 @@ export default {
       } else {
         const { sortFunc } = this.columns[sort.columnName]
         const sorted = sortFunc(sort, requests)
-        return sort.isAscending ?
-          sorted :
-          reverse(sorted)
+        return sort.isAscending ? sorted : reverse(sorted)
       }
     },
-    dollars: (value) => formatDollars(value, false),
+    dollars: value => formatDollars(value, false),
     updateSortValue: function(columnName) {
-      if (!this.isExtended) { return }
+      if (!this.isExtended) {
+        return
+      }
 
       // toggle ascending / descending if column is clicked twice
       if (columnName === this.sort.columnName) {
         this.sort.isAscending = !this.sort.isAscending
       }
 
-      this.sort.columnName = columnName;
+      this.sort.columnName = columnName
     },
   },
 
-  template: '<div></div>'
+  template: '<div></div>',
 }

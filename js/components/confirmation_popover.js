@@ -7,7 +7,7 @@ export default {
     cancel_btn_text: String,
     confirm_btn_text: String,
     confirm_msg: String,
-    csrf_token: String
+    csrf_token: String,
   },
 
   template: `
@@ -28,5 +28,5 @@ export default {
       </template>
       <button class="tooltip-target" type="button">{{ btn_text }}</button>
     </v-popover>
-  `
+  `,
 }

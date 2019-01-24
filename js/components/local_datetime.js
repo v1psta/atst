@@ -7,15 +7,15 @@ export default {
     timestamp: String,
     format: {
       type: String,
-      default: 'MMM D YYYY H:mm'
-    }
+      default: 'MMM D YYYY H:mm',
+    },
   },
 
   computed: {
-    displayTime: function () {
+    displayTime: function() {
       return format(this.timestamp, this.format)
-    }
+    },
   },
 
-  template: '<time v-bind:datetime="timestamp">{{ displayTime }}</time>'
+  template: '<time v-bind:datetime="timestamp">{{ displayTime }}</time>',
 }

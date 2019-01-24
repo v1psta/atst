@@ -4,7 +4,6 @@ import Selector from '../selector'
 import Modal from '../../mixins/modal'
 import toggler from '../toggler'
 
-
 export default {
   name: 'edit-environment-role',
 
@@ -14,16 +13,16 @@ export default {
     toggler,
     Modal,
     Selector,
-    textinput
+    textinput,
   },
 
   props: {
     choices: Array,
     initialData: String,
-    applicationId: String
+    applicationId: String,
   },
 
-  data: function () {
+  data: function() {
     return {
       new_role: this.initialData,
     }
@@ -34,19 +33,19 @@ export default {
   },
 
   methods: {
-    change: function (e) {
+    change: function(e) {
       this.new_role = e.target.value
     },
-    cancel: function () {
+    cancel: function() {
       this.new_role = this.initialData
     },
-    revoke: function () {
-      this.new_role = ""
-    }
+    revoke: function() {
+      this.new_role = ''
+    },
   },
 
   computed: {
-    displayName: function () {
+    displayName: function() {
       const newRole = this.newRole
       for (var arr in this.choices) {
         if (this.choices[arr][0] == newRole) {
@@ -54,12 +53,11 @@ export default {
         }
       }
     },
-    label_class: function () {
-      return this.newRole === "" ?
-        "label" : "label label--success"
+    label_class: function() {
+      return this.newRole === '' ? 'label' : 'label label--success'
     },
-    newRole: function () {
+    newRole: function() {
       return this.new_role
-    }
+    },
   },
 }

@@ -15,8 +15,8 @@ describe('ConfirmationPopover', () => {
       cancel_btn_text: 'Cancel',
       confirm_btn_text: 'Confirm',
       confirm_msg: 'Are you sure you want to do that?',
-      csrf_token: '42'
-    }
+      csrf_token: '42',
+    },
   })
 
   it('matches snapshot', () => {
@@ -29,4 +29,3 @@ describe('ConfirmationPopover', () => {
     expect(input.attributes('value')).toBe('42')
   })
 })
-

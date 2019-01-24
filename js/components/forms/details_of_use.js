@@ -18,47 +18,47 @@ export default {
   props: {
     initialData: {
       type: Object,
-      default: () => ({})
-    }
+      default: () => ({}),
+    },
   },
 
-  data: function () {
+  data: function() {
     const {
       estimated_monthly_spend = 0,
       jedi_migration = '',
-      technical_support_team = ''
+      technical_support_team = '',
     } = this.initialData
 
     return {
       estimated_monthly_spend,
       jedi_migration,
-      technical_support_team
+      technical_support_team,
     }
   },
 
   computed: {
-    annualSpend: function () {
+    annualSpend: function() {
       const monthlySpend = this.estimated_monthly_spend || 0
       return monthlySpend * 12
     },
-    annualSpendStr: function () {
+    annualSpendStr: function() {
       return this.formatDollars(this.annualSpend)
     },
-    jediMigrationOptionSelected: function () {
+    jediMigrationOptionSelected: function() {
       return this.jedi_migration !== ''
     },
-    isJediMigration: function () {
+    isJediMigration: function() {
       return this.jedi_migration === 'yes'
     },
-    hasTechnicalSupportTeam: function () {
+    hasTechnicalSupportTeam: function() {
       return this.technical_support_team === 'yes'
-    }
+    },
   },
 
   methods: {
-    formatDollars: function (intValue) {
+    formatDollars: function(intValue) {
       const mask = createNumberMask({ prefix: '$', allowDecimal: true })
       return conformToMask(intValue.toString(), mask).conformedValue
-    }
-  }
+    },
+  },
 }

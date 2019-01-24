@@ -11,10 +11,8 @@ const sort = (sortInfo, members) => {
     const sortColumn = sortInfo.columns[sortInfo.columnName]
     const sortedMembers = sortColumn.sortFunc(sortColumn.attr, members)
 
-    return sortInfo.isAscending ?
-      sortedMembers :
-      reverse(sortedMembers)
-    }
+    return sortInfo.isAscending ? sortedMembers : reverse(sortedMembers)
+  }
 }
 
 export default {
@@ -22,16 +20,19 @@ export default {
 
   props: {
     data: Array,
-    expired: Boolean
+    expired: Boolean,
   },
 
   components: {
-    localDatetime
+    localDatetime,
   },
 
-  data: function () {
+  data: function() {
     const alphabeticalSort = (attr, members) => {
-      const lowercaseProp = compose(toLower, prop(attr))
+      const lowercaseProp = compose(
+        toLower,
+        prop(attr)
+      )
       return sortBy(lowercaseProp, members)
     }
 
@@ -45,23 +46,23 @@ export default {
         displayName: 'Period of Performance',
         attr: 'start_date',
         sortFunc: numericSort,
-        width: "50%"
+        width: '50%',
       },
       {
         displayName: 'Initial Value',
         attr: 'budget',
-        class: "table-cell--align-right",
-        sortFunc: numericSort
+        class: 'table-cell--align-right',
+        sortFunc: numericSort,
       },
       {
         displayName: this.expired ? 'Expired Balance' : 'Balance',
         attr: 'budget',
-        class: "table-cell--align-right",
-        sortFunc: numericSort
+        class: 'table-cell--align-right',
+        sortFunc: numericSort,
       },
       {
-        displayName: ''
-      }
+        displayName: '',
+      },
     ]
 
     const defaultSortColumn = 'Period of Performance'
@@ -69,15 +70,15 @@ export default {
       sortInfo: {
         columnName: defaultSortColumn,
         isAscending: false,
-        columns: indexBy(prop('displayName'), columns)
-      }
+        columns: indexBy(prop('displayName'), columns),
+      },
     }
   },
 
   computed: {
-    taskOrders: function () {
+    taskOrders: function() {
       return sort(this.sortInfo, this.data)
-    }
+    },
   },
 
   methods: {
@@ -94,10 +95,10 @@ export default {
       return Object.values(this.sortInfo.columns)
     },
 
-    formatDollars: function (value) {
+    formatDollars: function(value) {
       return formatDollars(value, false)
-    }
+    },
   },
 
-  template: '<div></div>'
+  template: '<div></div>',
 }
