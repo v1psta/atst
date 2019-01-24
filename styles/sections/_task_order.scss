@@ -258,9 +258,15 @@
     }
   }
 
-  input[type="text"]:disabled {
-    color: $color-gray-lighter;
-    font-style: italic;
+  .input--disabled {
+    label .usa-input__title {
+      color: $color-gray-light;
+    }
+
+    input[type="text"]:disabled {
+      color: $color-gray-lighter;
+      font-style: italic;
+    }
   }
 
   .task-order__invite-officer {
