@@ -1,0 +1,50 @@
+{% from "components/icon.html" import Icon %}
+
+{% macro DatePicker(field) -%}
+
+  <date-selector inline-template>
+    <div class="usa-input date-picker" v-bind:class="{ 'usa-input--success': isDateValid }">
+      <input v-bind:value="formattedDate" type="hidden" />
+
+
+      <div class="usa-form-group usa-form-group-month">
+        <label>Month</label>
+        <input
+          max="12"
+          maxlength="2"
+          min="1"
+          type="number"
+          v-bind:class="{ 'usa-input-error': !isMonthValid }"
+          v-model="month"
+        />
+      </div>
+
+      <div class="usa-form-group usa-form-group-day">
+        <label>Day</label>
+        <input
+          maxlength="2"
+          min="1"
+          type="number"
+          v-bind:class="{ 'usa-input-error': !isDayValid }"
+          v-bind:max="daysMaxCalculation"
+          v-model="day"
+        />
+      </div>
+
+      <div class="usa-form-group usa-form-group-year">
+        <label>Year</label>
+        <input
+          maxlength="2"
+          type="number"
+          v-model="year"
+        />
+      </div>
+
+      <div class="usa-form-group-date-ok" v-if="isDateValid">
+        {{ Icon("ok", classes="icon--green") }}
+      </div>
+
+    </div>
+  </date-selector>
+
+{%- endmacro %}

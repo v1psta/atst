@@ -261,6 +261,7 @@ def get_started():
 @task_orders_bp.route("/portfolios/<portfolio_id>/task_orders/new/<int:screen>")
 def new(screen, task_order_id=None, portfolio_id=None):
     workflow = ShowTaskOrderWorkflow(g.current_user, screen, task_order_id)
+    Authorization.check_is_mo_or_cor(g.current_user, task_order)
     return render_template(
         workflow.template,
         current=screen,
@@ -283,6 +284,7 @@ def update(screen, task_order_id=None, portfolio_id=None):
     workflow = UpdateTaskOrderWorkflow(
         g.current_user, form_data, screen, task_order_id, portfolio_id
     )
+    Authorization.check_is_mo_or_cor(g.current_user, task_order)
     if workflow.validate():
         workflow.update()
         return redirect(
