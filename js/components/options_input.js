@@ -5,30 +5,28 @@ export default {
     name: String,
     initialErrors: {
       type: Array,
-      default: () => []
+      default: () => [],
     },
     initialValue: String,
   },
 
-
-  data: function () {
+  data: function() {
     const showError = (this.initialErrors && this.initialErrors.length) || false
     return {
       showError: showError,
       showValid: !showError && !!this.initialValue,
-      validationError: this.initialErrors.join(' ')
+      validationError: this.initialErrors.join(' '),
     }
   },
 
-
   methods: {
-    onInput: function (e) {
+    onInput: function(e) {
       this.$root.$emit('field-change', {
         value: e.target.value,
-        name: this.name
+        name: this.name,
       })
       this.showError = false
       this.showValid = true
-    }
-  }
+    },
+  },
 }

@@ -10,37 +10,36 @@ const SelectorInput = {
     selected: Boolean,
     handleChange: Function,
     handleEnter: Function,
-    handleEsc: Function
+    handleEsc: Function,
   },
 
   computed: {
-    id: function () {
+    id: function() {
       return `${this.name}_${this.value}`
-    }
+    },
   },
 
   methods: {
-    onChange: function (e) {
+    onChange: function(e) {
       this.handleChange(this.value)
     },
 
-    onEnter: function (e) {
+    onEnter: function(e) {
       this.handleEnter()
     },
 
-    onEsc: function (e) {
+    onEsc: function(e) {
       this.handleEsc()
-    }
-  }
+    },
+  },
 }
-
 
 export default {
   name: 'selector',
 
   components: {
     VPopover,
-    SelectorInput
+    SelectorInput,
   },
 
   props: {
@@ -49,41 +48,41 @@ export default {
     initialErrors: Array,
     initialChoice: {
       type: String,
-      default: null
-    }
+      default: null,
+    },
   },
 
-  data: function () {
+  data: function() {
     return {
       value: this.initialChoice || null,
       currentChoice: this.initialChoice || null,
       showError: (this.initialErrors && this.initialErrors.length) || false,
-      usingKeyboard: false
+      usingKeyboard: false,
     }
   },
 
   computed: {
-    label: function () {
+    label: function() {
       if (this.value) {
-        const selectedChoice = this.choices.find((choice) => {
+        const selectedChoice = this.choices.find(choice => {
           return this.value === choice[0]
         })[1]
         return selectedChoice.name
       } else {
         return this.defaultLabel
       }
-    }
+    },
   },
 
   methods: {
-
-    change: function (value) {
+    change: function(value) {
       this.value = value
       this.showError = false
     },
 
-    onShow: function () {
-      setTimeout(() => { // timeout is a hack to make focus work in Chrome
+    onShow: function() {
+      setTimeout(() => {
+        // timeout is a hack to make focus work in Chrome
         const selected = this.$refs.choices.find(choice => choice.selected)
         if (selected) {
           selected.$refs.input[0].focus()
@@ -93,26 +92,26 @@ export default {
       }, 100)
     },
 
-    enter: function () {
+    enter: function() {
       this.$refs.popover.hide()
     },
 
-    esc: function () {
+    esc: function() {
       this.value = this.currentChoice
       this.usingKeyboard = false
       this.$refs.popover.hide()
     },
 
-    handleEnterOption: function (e) {
+    handleEnterOption: function(e) {
       this.change(e.target.value)
       this.currentChoice = e.target.value
       this.usingKeyboard = false
       this.$refs.popover.hide()
     },
 
-    handleButtonArrowDown: function (e) {
+    handleButtonArrowDown: function(e) {
       this.usingKeyboard = true
       this.$refs.popover.show()
-    }
+    },
   },
 }

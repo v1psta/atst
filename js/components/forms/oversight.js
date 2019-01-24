@@ -15,11 +15,11 @@ export default {
   props: {
     initialData: {
       type: Object,
-      default: () => ({})
-    }
+      default: () => ({}),
+    },
   },
 
-  data: function () {
+  data: function() {
     const {
       am_cor = false,
       ko_invite = false,
@@ -28,10 +28,10 @@ export default {
     } = this.initialData
 
     return {
-        am_cor,
-        ko_invite,
-        cor_invite,
-        so_invite,
+      am_cor,
+      ko_invite,
+      cor_invite,
+      so_invite,
     }
-  }
+  },
 }

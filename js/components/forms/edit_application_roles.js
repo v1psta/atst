@@ -15,12 +15,12 @@ export default {
 
   props: {
     name: String,
-    id: String
+    id: String,
   },
 
   methods: {
-    doRevoke: function () {
+    doRevoke: function() {
       this.$root.$emit('revoke-' + this.id)
-    }
-  }
+    },
+  },
 }

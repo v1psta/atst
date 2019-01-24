@@ -6,11 +6,11 @@ export default {
   },
 
   methods: {
-    onInput: function (e) {
+    onInput: function(e) {
       this.$root.$emit('field-change', {
         value: e.target.checked,
-        name: this.name
+        name: this.name,
       })
-    }
-  }
+    },
+  },
 }

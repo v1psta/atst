@@ -4,29 +4,29 @@ export default {
   props: {
     defaultVisible: {
       type: Boolean,
-      default: () => false
-    }
+      default: () => false,
+    },
   },
 
-  data: function () {
+  data: function() {
     return {
-      isVisible: this.defaultVisible
+      isVisible: this.defaultVisible,
     }
   },
 
-  render: function (createElement) {
-    return createElement( this.$vnode.data.tag, [
+  render: function(createElement) {
+    return createElement(this.$vnode.data.tag, [
       this.$scopedSlots.default({
         isVisible: this.isVisible,
-        toggle: this.toggle
-      })
+        toggle: this.toggle,
+      }),
     ])
   },
 
   methods: {
-    toggle: function (e) {
+    toggle: function(e) {
       e.preventDefault()
       this.isVisible = !this.isVisible
-    }
-  }
+    },
+  },
 }

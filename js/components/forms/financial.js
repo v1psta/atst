@@ -17,32 +17,32 @@ export default {
   props: {
     initialData: {
       type: Object,
-      default: () => ({})
-    }
+      default: () => ({}),
+    },
   },
 
-  data: function () {
-    const {
-      funding_type = ""
-    } = this.initialData
+  data: function() {
+    const { funding_type = '' } = this.initialData
 
     return {
       funding_type,
-      shouldForceShowTaskOrder: false
+      shouldForceShowTaskOrder: false,
     }
   },
 
   computed: {
     showTaskOrderUpload: function() {
-      return !this.initialData.legacy_task_order.pdf || this.shouldForceShowTaskOrder
-    }
+      return (
+        !this.initialData.legacy_task_order.pdf || this.shouldForceShowTaskOrder
+      )
+    },
   },
 
   methods: {
     forceShowTaskOrderUpload: function(e) {
-      console.log("forceShowTaskOrder", e)
+      console.log('forceShowTaskOrder', e)
       e.preventDefault()
       this.shouldForceShowTaskOrder = true
-    }
-  }
+    },
+  },
 }

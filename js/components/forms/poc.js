@@ -15,17 +15,15 @@ export default {
   props: {
     initialData: {
       type: Object,
-      default: () => ({})
-    }
+      default: () => ({}),
+    },
   },
 
-  data: function () {
-    const {
-      am_poc = false
-    } = this.initialData
+  data: function() {
+    const { am_poc = false } = this.initialData
 
     return {
-        am_poc
+      am_poc,
     }
-  }
+  },
 }

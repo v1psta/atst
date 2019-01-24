@@ -5,54 +5,58 @@ export default {
   name: 'textinput',
 
   components: {
-    MaskedInput
+    MaskedInput,
   },
 
   props: {
     name: String,
     validation: {
       type: String,
-      default: () => 'anything'
+      default: () => 'anything',
     },
     initialValue: {
       type: String,
-      default: () => ''
+      default: () => '',
     },
     initialErrors: {
       type: Array,
-      default: () => []
+      default: () => [],
     },
     paragraph: String,
-    noMaxWidth: String
+    noMaxWidth: String,
   },
 
-  data: function () {
+  data: function() {
     return {
       showError: (this.initialErrors && this.initialErrors.length) || false,
       showValid: false,
       mask: inputValidations[this.validation].mask,
       pipe: inputValidations[this.validation].pipe || undefined,
-      keepCharPositions: inputValidations[this.validation].keepCharPositions || false,
-      validationError: this.initialErrors.join(' ') || inputValidations[this.validation].validationError,
+      keepCharPositions:
+        inputValidations[this.validation].keepCharPositions || false,
+      validationError:
+        this.initialErrors.join(' ') ||
+        inputValidations[this.validation].validationError,
       value: this.initialValue,
-      modified: false
+      modified: false,
     }
   },
 
-  computed:{
-    rawValue: function () {
+  computed: {
+    rawValue: function() {
       return this._rawValue(this.value)
-    }
+    },
   },
 
-  mounted: function () {
+  mounted: function() {
     if (this.value) {
       this._checkIfValid({ value: this.value, invalidate: true })
 
       if (this.mask && this.validation !== 'email') {
-        const mask = typeof this.mask.mask !== 'function'
-          ? this.mask
-          : mask.mask(this.value).filter((val) => val !== '[]')
+        const mask =
+          typeof this.mask.mask !== 'function'
+            ? this.mask
+            : mask.mask(this.value).filter(val => val !== '[]')
 
         this.value = conformToMask(this.value, mask).conformedValue
       }
@@ -61,7 +65,7 @@ export default {
 
   methods: {
     // When user types a character
-    onInput: function (e) {
+    onInput: function(e) {
       // When we use the native textarea element, we receive an event object
       // When we use the masked-input component, we receive the value directly
       const value = typeof e === 'object' ? e.target.value : e
@@ -71,13 +75,13 @@ export default {
     },
 
     // When field is blurred (un-focused)
-    onChange: function (e) {
+    onChange: function(e) {
       // Only invalidate the field when it blurs
       this._checkIfValid({ value: e.target.value, invalidate: true })
     },
 
     //
-    _checkIfValid: function ({ value, invalidate = false}) {
+    _checkIfValid: function({ value, invalidate = false }) {
       // Validate the value
       let valid = this._validate(value)
 
@@ -95,24 +99,27 @@ export default {
       } else if (invalidate) {
         this.showError = true
       }
-      this.showValid = this.value != "" && valid
+      this.showValid = this.value != '' && valid
 
       // Emit a change event
       this.$root.$emit('field-change', {
         value: this._rawValue(value),
         valid,
-        name: this.name
+        name: this.name,
       })
     },
 
-    _rawValue: function (value) {
-      return inputValidations[this.validation].unmask.reduce((currentValue, character) => {
-        return currentValue.split(character).join('')
-      }, value)
+    _rawValue: function(value) {
+      return inputValidations[this.validation].unmask.reduce(
+        (currentValue, character) => {
+          return currentValue.split(character).join('')
+        },
+        value
+      )
     },
 
-    _validate: function (value) {
+    _validate: function(value) {
       return inputValidations[this.validation].match.test(this._rawValue(value))
-    }
-  }
+    },
+  },
 }

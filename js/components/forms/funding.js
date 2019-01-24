@@ -12,21 +12,21 @@ export default {
 
   components: {
     textinput,
-    optionsinput
+    optionsinput,
   },
 
   props: {
     initialData: {
       type: Object,
-      default: () => ({})
+      default: () => ({}),
     },
     uploadErrors: {
       type: Array,
-      default: () => ([])
-    }
+      default: () => [],
+    },
   },
 
-  data: function () {
+  data: function() {
     const {
       clin_01 = 0,
       clin_02 = 0,
@@ -40,26 +40,27 @@ export default {
       clin_02,
       clin_03,
       clin_04,
-      showUpload: !csp_estimate || this.uploadErrors.length > 0
+      showUpload: !csp_estimate || this.uploadErrors.length > 0,
     }
   },
 
   computed: {
-    totalBudget: function () {
+    totalBudget: function() {
       return [this.clin_01, this.clin_02, this.clin_03, this.clin_04].reduce(
         function(acc, curr) {
           curr = !curr ? 0 : parseInt(curr)
-          return acc + curr;
-        }, 0
+          return acc + curr
+        },
+        0
       )
     },
-    totalBudgetStr: function () {
-      return this.formatDollars(this.totalBudget);
+    totalBudgetStr: function() {
+      return this.formatDollars(this.totalBudget)
     },
   },
 
   methods: {
-    formatDollars: function (intValue) {
+    formatDollars: function(intValue) {
       const mask = createNumberMask({ prefix: '$', allowDecimal: true })
       return conformToMask(intValue.toString(), mask).conformedValue
     },
@@ -68,7 +69,7 @@ export default {
     },
     updateBudget: function() {
       document.querySelector('#to-target').innerText = this.totalBudgetStr
-    }
+    },
   },
 
   watch: {
@@ -80,5 +81,5 @@ export default {
 
   mounted: function() {
     this.updateBudget()
-  }
+  },
 }

@@ -13,33 +13,36 @@ export default {
     name: String,
     initialErrors: {
       type: Array,
-      default: () => []
+      default: () => [],
     },
     initialValue: {
       type: Array,
-      default: () => []
+      default: () => [],
     },
     initialOtherValue: String,
   },
 
-
-  data: function () {
+  data: function() {
     const showError = (this.initialErrors && this.initialErrors.length) || false
     return {
       showError: showError,
       showValid: !showError && this.initialValue.length > 0,
       validationError: this.initialErrors.join(' '),
-      otherChecked: this.initialValue.includes("other") ? true : this.otherChecked,
-      otherText: this.initialValue.includes("other") ? this.initialOtherValue : '',
-      selections: this.initialValue
+      otherChecked: this.initialValue.includes('other')
+        ? true
+        : this.otherChecked,
+      otherText: this.initialValue.includes('other')
+        ? this.initialOtherValue
+        : '',
+      selections: this.initialValue,
     }
   },
 
   methods: {
-    onInput: function (e) {
+    onInput: function(e) {
       this.$root.$emit('field-change', {
         value: e.target.value,
-        name: this.name
+        name: this.name,
       })
       this.showError = false
       this.showValid = true
@@ -47,5 +50,5 @@ export default {
     otherToggle: function() {
       this.otherChecked = !this.otherChecked
     },
-  }
+  },
 }

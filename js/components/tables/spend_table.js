@@ -10,36 +10,39 @@ export default {
     environments: Object,
     currentMonthIndex: String,
     prevMonthIndex: String,
-    twoMonthsAgoIndex: String
+    twoMonthsAgoIndex: String,
   },
 
-  data: function () {
+  data: function() {
     return {
-      applicationsState: this.applications
+      applicationsState: this.applications,
     }
   },
 
-  created: function () {
+  created: function() {
     Object.keys(this.applications).forEach(application => {
       set(this.applicationsState[application], 'isVisible', false)
     })
   },
 
   methods: {
-    toggle: function (e, applicationName) {
+    toggle: function(e, applicationName) {
       this.applicationsState = Object.assign(this.applicationsState, {
-        [applicationName]: Object.assign(this.applicationsState[applicationName],{
-          isVisible: !this.applicationsState[applicationName].isVisible
-        })
+        [applicationName]: Object.assign(
+          this.applicationsState[applicationName],
+          {
+            isVisible: !this.applicationsState[applicationName].isVisible,
+          }
+        ),
       })
     },
 
-    formatDollars: function (value) {
+    formatDollars: function(value) {
       return formatDollars(value, false)
     },
 
-    round: function (value) {
+    round: function(value) {
       return Math.round(value)
-    }
-  }
+    },
+  },
 }

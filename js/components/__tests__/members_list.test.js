@@ -3,17 +3,20 @@ import { shallowMount } from '@vue/test-utils'
 import MembersList from '../members_list'
 
 describe('MembersList', () => {
-  const members = [{
-    name: 'Luke Skywalker',
-    num_env: 2,
-    status: 'active',
-    role: 'developer'
-  }, {
-    name: 'Chewie',
-    num_env: 3,
-    status: 'pending',
-    role: 'admin'
-  }]
+  const members = [
+    {
+      name: 'Luke Skywalker',
+      num_env: 2,
+      status: 'active',
+      role: 'developer',
+    },
+    {
+      name: 'Chewie',
+      num_env: 3,
+      status: 'pending',
+      role: 'admin',
+    },
+  ]
   const role_choices = [
     { display_name: 'Developer', name: 'developer' },
     { display_name: 'Admin', name: 'admin' },
@@ -23,11 +26,14 @@ describe('MembersList', () => {
     { display_name: 'Pending', name: 'pending' },
   ]
 
-  const createWrapper = () => shallowMount(MembersList, {
-    propsData: {
-      members, role_choices, status_choices
-    }
-  })
+  const createWrapper = () =>
+    shallowMount(MembersList, {
+      propsData: {
+        members,
+        role_choices,
+        status_choices,
+      },
+    })
 
   it('should sort by name by default', () => {
     const wrapper = createWrapper()

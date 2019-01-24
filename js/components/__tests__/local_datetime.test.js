@@ -2,9 +2,10 @@ import { shallowMount } from '@vue/test-utils'
 
 import LocalDatetime from '../local_datetime'
 
-
 describe('LocalDatetime', () => {
-  const wrapper = shallowMount(LocalDatetime, { propsData: { timestamp: '1977-05-25 00:00:00' } })
+  const wrapper = shallowMount(LocalDatetime, {
+    propsData: { timestamp: '1977-05-25 00:00:00' },
+  })
 
   it('renders a time element', () => {
     expect(wrapper.html()).toContain('<time')
@@ -16,14 +17,12 @@ describe('LocalDatetime', () => {
   })
 
   it('allows specifying a custom format', () => {
-    const wrapperWithCustomFormat = shallowMount(
-      LocalDatetime, {
-        propsData: {
-          timestamp: '1977-05-25 00:00:00',
-          format: 'MMM Do YY'
-        }
-      }
-    )
+    const wrapperWithCustomFormat = shallowMount(LocalDatetime, {
+      propsData: {
+        timestamp: '1977-05-25 00:00:00',
+        format: 'MMM Do YY',
+      },
+    })
     expect(wrapperWithCustomFormat).toMatchSnapshot()
   })
 })
