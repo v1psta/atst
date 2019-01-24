@@ -266,6 +266,15 @@
       margin: 0;
     }
   }
+
+  input[type="text"]:disabled {
+    color: $color-gray-lighter;
+    font-style: italic;
+  }
+
+  .task-order__invite-dod-id {
+
+  }
 }
 
 .task-order-invitations {

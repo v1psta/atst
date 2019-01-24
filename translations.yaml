@@ -188,7 +188,7 @@ forms:
       description: Which of these describes how complex your team's use of the cloud will be? Select all that apply.
       storage: Storage
       data_analytics: Data Analytics
-      conus: CONUS Acess
+      conus: CONUS Access
       oconus: OCONUS Access
       tactical_edge: Tactical Edge Access
       not_sure: Not Sure

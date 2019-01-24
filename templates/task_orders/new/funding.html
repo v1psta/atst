@@ -29,7 +29,7 @@
     <h3 class="subheading">{{ "task_orders.new.funding.estimate_usage_title" | translate }}</h3>
     <p>{{ "task_orders.new.funding.estimate_usage_description" | translate }}</p>
     <p><a class="icon-link" target="_blank" href="{{ url_for('atst.jedi_csp_calculator') }}">
-      {{ Icon("link")}} Cloud Service Provider's estimate calculator
+      {{ Icon("link")}} Go to Cloud Service Provider’s estimate calculator
     </a></p>
     <p>{{ "task_orders.new.funding.estimate_usage_paragraph" | translate }}</p>
     <template v-if="showUpload">
@@ -51,18 +51,20 @@
 
     <hr>
 
-    <h3 class="subheading">{{ "task_orders.new.funding.cloud_calculations_title" | translate }}</h3>
-    <p>{{ "task_orders.new.funding.cloud_calculations_paragraph" | translate }}</p>
+    <div class="">
+      <h3 class="subheading">{{ "task_orders.new.funding.cloud_calculations_title" | translate }}</h3>
+      <p>{{ "task_orders.new.funding.cloud_calculations_paragraph" | translate }}</p>
 
-    <h4 class="task-order-form__heading subheading">{{ "task_orders.new.funding.cloud_offerings_title" | translate }}</h4>
-    <p>{{ "task_orders.new.funding.cloud_offerings_paragraph" | translate }}</p>
-    {{ TextInput(form.clin_01, validation='dollars', placeholder="$0.00") }}
-    {{ TextInput(form.clin_02, validation='dollars', disabled=(not config.CLASSIFIED)) }}
+      <h4 class="task-order-form__heading subheading">{{ "task_orders.new.funding.cloud_offerings_title" | translate }}</h4>
+      <p>{{ "task_orders.new.funding.cloud_offerings_paragraph" | translate }}</p>
+      {{ TextInput(form.clin_01, validation='dollars', placeholder="$0.00") }}
+      {{ TextInput(form.clin_02, validation='dollars', placeholder="$0.00", disabled=(not config.CLASSIFIED)) }}
 
-    <h4 class="task-order-form__heading subheading">{{ "task_orders.new.funding.support_assistance_title" | translate }}</h4>
-    <p>{{ "task_orders.new.funding.support_assistance_paragraph" | translate }}</p>
-    {{ TextInput(form.clin_03, validation='dollars', tooltip='The cloud support and assistance packages cannot be used as a primary development resource.', placeholder="$0.00") }}
-    {{ TextInput(form.clin_04, validation='dollars', tooltip='The cloud support and assistance packages cannot be used as a primary development resource.', disabled=(not config.CLASSIFIED)) }}
+      <h4 class="task-order-form__heading subheading">{{ "task_orders.new.funding.support_assistance_title" | translate }}</h4>
+      <p>{{ "task_orders.new.funding.support_assistance_paragraph" | translate }}</p>
+      {{ TextInput(form.clin_03, validation='dollars', tooltip='The cloud support and assistance packages cannot be used as a primary development resource.', placeholder="$0.00") }}
+      {{ TextInput(form.clin_04, validation='dollars', tooltip='The cloud support and assistance packages cannot be used as a primary development resource.', placeholder="$0.00", disabled=(not config.CLASSIFIED)) }}
+    </div>
   </div>
 </funding>
 
