@@ -2,6 +2,13 @@
 
 {% from "components/icon.html" import Icon %}
 
+{% macro Link(text, icon_name, url='#', classes='') %}
+  <a href="{{ url }}" class="icon-link {{ classes }}">
+    {{ Icon(icon_name) }}
+    <span>{{ text }}</span>
+  </a>
+{% endmacro %}
+
 {% macro OfficerInfo(task_order, officer_type) %}
   <div class="panel__content officer">
     <h2 class="officer__title">{{ ("task_orders.invitations." + officer_type + ".title") | translate }}</h2>
@@ -28,18 +35,9 @@
         <p class="officer__info--dod_id">{{ "task_orders.invitations.dod_id_label"  | translate}}: {{ dod_id }}</p>
       </div>
       <div class="officer__actions">
-        <a href="#" class="icon-link">
-          {{ Icon("edit") }}
-          <span>Update</span>
-        </a>
-        <a href="#" class="icon-link">
-          {{ Icon("avatar") }}
-          <span>Resend Invitation</span>
-        </a>
-        <a href="#" class="icon-link remove">
-          {{ Icon("trash") }}
-          <span>Remove</span>
-        </a>
+        {{ Link("Update", "edit") }}
+        {{ Link("Resend Invitation", "avatar") }}
+        {{ Link("Remove", "trash", classes="remove") }}
       </div>
     {% elif first_name and last_name %}
       <div class="officer__info">
@@ -54,14 +52,8 @@
         <p class="officer__info--phone">{{ phone_number | usPhone }}</p>
       </div>
       <div class="officer__actions">
-        <a href="#" class="icon-link">
-          {{ Icon("edit") }}
-          <span>Update</span>
-        </a>
-        <a href="#" class="icon-link remove">
-          {{ Icon("trash") }}
-          <span>Remove</span>
-        </a>
+        {{ Link("Update", "edit") }}
+        {{ Link("Remove", "trash", classes="remove") }}
         <button type='button' class='usa-button usa-button-primary'>
           {{ ("task_orders.invitations." + officer_type + ".invite_button_text") | translate  }}
         </button>
