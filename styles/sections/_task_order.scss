@@ -267,3 +267,84 @@
     }
   }
 }
+
+.task-order-invitations {
+  .task-order-invitations__heading {
+    margin-bottom: 0;
+
+    &.subheading .h2 {
+      color: $color-gray;
+    }
+  }
+
+  .officer {
+    margin-top: 0;
+    margin-left: 0;
+    margin-right: 0;
+    margin-bottom: $gap;
+    padding-bottom: 4 * $gap;
+
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    border-bottom-color: $color-gray-light;
+
+    &:last-child {
+      border-bottom-width: 0;
+    }
+
+    h2 {
+      color: $color-gray;
+    }
+
+    .officer__info {
+      .officer__info--name {
+        font-weight: bold;
+      }
+
+      p {
+        margin: .5rem 0;
+      }
+
+      .officer__info--name {
+        margin-right: 2 * $gap;
+      }
+
+      .officer__info--status {
+        font-weight: bold;
+
+        &.invited {
+          color: $color-green;
+          .icon {
+            @include icon-color($color-green);
+          }
+        }
+
+        &.uninvited {
+          color: $color-red;
+          .icon {
+            @include icon-color($color-red);
+          }
+        }
+      }
+    }
+
+    .officer__actions {
+      margin-left: -2 * $gap;
+
+      button {
+        margin-left: 2 * $gap;
+      }
+
+      .icon-link {
+        margin: 0 $gap;
+      }
+
+      .remove {
+        color: $color-red;
+        .icon {
+          @include icon-color($color-red);
+        }
+      }
+    }
+  }
+}

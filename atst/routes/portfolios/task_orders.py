@@ -61,3 +61,16 @@ def view_task_order(portfolio_id, task_order_id):
     return render_template(
         "portfolios/task_orders/show.html", portfolio=portfolio, task_order=task_order
     )
+
+
+@portfolios_bp.route(
+    "/portfolios/<portfolio_id>/task_order/<task_order_id>/invitations"
+)
+def task_order_invitations(portfolio_id, task_order_id):
+    portfolio = Portfolios.get(g.current_user, portfolio_id)
+    task_order = TaskOrders.get(g.current_user, task_order_id)
+    return render_template(
+        "portfolios/task_orders/invitations.html",
+        portfolio=portfolio,
+        task_order=task_order,
+    )

@@ -86,3 +86,17 @@ def test_ko_can_view_task_order(client, user_session):
         )
     )
     assert response.status_code == 200
+
+
+def test_can_view_task_order_invitations(client, user_session):
+    portfolio = PortfolioFactory.create()
+    user_session(portfolio.owner)
+    task_order = TaskOrderFactory.create(portfolio=portfolio)
+    response = client.get(
+        url_for(
+            "portfolios.task_order_invitations",
+            portfolio_id=portfolio.id,
+            task_order_id=task_order.id,
+        )
+    )
+    assert response.status_code == 200
