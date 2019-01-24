@@ -12,6 +12,7 @@
   paragraph=False,
   disabled=False,
   initial_value='',
+  classes='',
   noMaxWidth=False) -%}
 
   <textinput
@@ -26,7 +27,7 @@
     inline-template>
 
     <div
-      {% if disabled %}class="input--disabled"{% endif %}
+      class='{% if disabled %}input--disabled{% endif %}{{ classes }}'
       v-bind:class="['usa-input usa-input--validation--' + validation, { 'usa-input--error': showError, 'usa-input--success': showValid, 'usa-input--validation--paragraph': paragraph, 'no-max-width': noMaxWidth }]">
 
       <label for={{field.name}}>

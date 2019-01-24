@@ -258,22 +258,22 @@
     }
   }
 
-  .alert {
-    padding: 1.5rem;
-
-    .usa-input {
-      width: 100%;
-      margin: 0;
-    }
-  }
-
   input[type="text"]:disabled {
     color: $color-gray-lighter;
     font-style: italic;
   }
 
-  .task-order__invite-dod-id {
+  .task-order__invite-officer {
+    padding: 1.5rem;
+    background-color: $color-aqua-lightest;
+    border-color: $color-blue;
+    border-left-style: solid;
+    border-left-width: $gap / 2;
 
+    .usa-input {
+      width: 100%;
+      margin: 0;
+    }
   }
 }
 
