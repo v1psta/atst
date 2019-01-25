@@ -46,7 +46,8 @@ export default {
         displayName: 'Period of Performance',
         attr: 'start_date',
         sortFunc: numericSort,
-        width: '50%',
+        width: "50%",
+        class: "period-of-performance"
       },
       {
         displayName: 'Initial Value',

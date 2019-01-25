@@ -8,7 +8,7 @@
 {% macro ViewLink(task_order) %}
   <a href="{{ url_for('portfolios.view_task_order', portfolio_id=portfolio.id, task_order_id=task_order.id) }}" class="icon-link view-task-order-link">
     <span>View</span>
-    {{ Icon("caret_right") }}
+    {{ Icon("caret_right", classes="icon--tiny") }}
   </a>
 {% endmacro %}
 
@@ -27,10 +27,10 @@
               !{ col.displayName }
               <template v-if="col.sortFunc">
                 <span class="sorting-direction" v-if="col.displayName === sortInfo.columnName && sortInfo.isAscending">
-                  {{ Icon("caret_down") }}
+                  {{ Icon("caret_down", classes="icon--tiny") }}
                 </span>
                 <span class="sorting-direction" v-if="col.displayName === sortInfo.columnName && !sortInfo.isAscending">
-                  {{ Icon("caret_up") }}
+                  {{ Icon("caret_up", classes="icon--tiny") }}
                 </span>
               </template>
             </th>
@@ -63,7 +63,7 @@
             <td>
               <a v-bind:href="taskOrder.url" class="icon-link view-task-order-link">
                 <span>View</span>
-                {{ Icon("caret_right") }}
+                {{ Icon("caret_right", classes="icon--tiny") }}
               </a>
             </td>
           </tr>
@@ -135,7 +135,7 @@
   {% endif %}
 
   {% if expired_task_orders %}
-    {{ TaskOrderList(expired_task_orders, label='', expired=True) }}
+    {{ TaskOrderList(expired_task_orders, label='expired', expired=True) }}
   {% endif %}
 </div>
 
