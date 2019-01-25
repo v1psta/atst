@@ -81,7 +81,11 @@ def review_task_order(portfolio_id, task_order_id, form=None):
         form=form or KOReviewForm(),
     )
 
-@portfolios_bp.route("/portfolios/<portfolio_id>/task_order/<task_order_id>/submit_review", methods=["POST"])
+
+@portfolios_bp.route(
+    "/portfolios/<portfolio_id>/task_order/<task_order_id>/submit_review",
+    methods=["POST"],
+)
 def submit_review_task_order(portfolio_id, task_order_id, form=None):
     portfolio = Portfolios.get(g.current_user, portfolio_id)
     task_order = TaskOrders.get(g.current_user, task_order_id)

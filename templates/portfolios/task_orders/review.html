@@ -3,6 +3,9 @@
 {% from "components/edit_link.html" import EditLink %}
 {% from "components/required_label.html" import RequiredLabel %}
 {% from "components/icon.html" import Icon %}
+{% from "components/datepicker.html" import DatePicker %}
+{% from "components/text_input.html" import TextInput %}
+
 
 {% block content %}
 
@@ -205,7 +208,10 @@
           </div>
         </div>
 
-        <div class="">Period of Performance Start Date</div>
+        <div class="">{{ "task_orders.ko_review.performance_start"| translate }}</div>
+        {{ DatePicker() }}
+        <div class="">{{ "task_orders.ko_review.performance_end"| translate }}</div>
+        {{ DatePicker() }}
 
         <hr>
 
@@ -223,7 +229,12 @@
 
         <div class="h2">{{ "task_orders.ko_review.task_order_information"| translate }}</div>
 
-        <div class="">Upload a copy of your Task Order document</div>
+        {{ form.pdf.label }}
+        {{ form.pdf.description }}
+        {{ form.pdf }}
+        {{ TextInput(form.to_number) }}
+        {{ TextInput(form.loa) }}
+        {{ TextInput(form.custom_clauses, paragraph=True) }}
 
       </div>
     </div>
