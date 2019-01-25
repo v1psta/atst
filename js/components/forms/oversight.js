@@ -12,14 +12,12 @@ const dodid = {
   },
 
   props: {
-    initialKoInvite: Boolean,
-    initialSoInvite: Boolean,
+    initialInvite: Boolean,
   },
 
   data: function() {
     return {
-      ko_invite: this.initialKoInvite,
-      so_invite: this.initialSoInvite,
+      invite: this.initialInvite,
     }
   },
 }
