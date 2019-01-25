@@ -2,6 +2,47 @@ import FormMixin from '../../mixins/form'
 import textinput from '../text_input'
 import checkboxinput from '../checkbox_input'
 
+const dodid = {
+  name: 'dodid',
+
+  mixins: [FormMixin],
+
+  components: {
+    textinput,
+  },
+
+  props: {
+    initialInvite: Boolean,
+  },
+
+  data: function() {
+    return {
+      invite: this.initialInvite,
+    }
+  },
+}
+
+const cordata = {
+  name: 'cordata',
+
+  mixins: [FormMixin],
+
+  components: {
+    textinput,
+    checkboxinput,
+  },
+
+  props: {
+    initialCorInvite: Boolean,
+  },
+
+  data: function() {
+    return {
+      cor_invite: this.initialCorInvite,
+    }
+  },
+}
+
 export default {
   name: 'oversight',
 
@@ -10,6 +51,8 @@ export default {
   components: {
     textinput,
     checkboxinput,
+    cordata,
+    dodid,
   },
 
   props: {

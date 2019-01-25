@@ -17,22 +17,29 @@
     <div class='usa-input'>
         {{ UserInfo(form.ko_first_name, form.ko_last_name, form.ko_email, form.ko_phone_number) }}
         {{ CheckboxInput(form.ko_invite) }}
-        <template v-if="ko_invite">
-            {{ TextInput(form.ko_dod_id, placeholder="1234567890", tooltip="Why", tooltip_title='Why', validation='dodId', classes="task-order__invite-officer")}}
-        </template>
+        <keep-alive>
+            <dodid v-bind:initial-invite="invite" inline-template v-if="ko_invite">
+                {{ TextInput(form.ko_dod_id, placeholder="1234567890", tooltip="Why", tooltip_title='Why', validation='dodId', classes="task-order__invite-officer")}}
+            </dodid>
+        </keep-alive>
 
         <hr />
 
         <h3 class="subheading">{{ "task_orders.new.oversight.cor_info_title" | translate }}</h3>
         <p>{{ "task_orders.new.oversight.cor_info_paragraph" | translate }}</p>
         {{ CheckboxInput(form.am_cor, classes="normal") }}
-        <template v-if="!am_cor">
-            {{ UserInfo(form.cor_first_name, form.cor_last_name, form.cor_email, form.cor_phone_number) }}
-            {{ CheckboxInput(form.cor_invite) }}
-            <template v-if="cor_invite">
-                {{ TextInput(form.cor_dod_id, placeholder="1234567890", tooltip="Why", tooltip_title='Why', validation='dodId', classes="task-order__invite-officer")}}
-            </template>
-        </template>
+
+        <keep-alive>
+            <cordata v-bind:initial-cor-invite="cor_invite" inline-template v-if="!am_cor">
+                <div>
+                {{ UserInfo(form.cor_first_name, form.cor_last_name, form.cor_email, form.cor_phone_number) }}
+                {{ CheckboxInput(form.cor_invite) }}
+                <template v-if="cor_invite">
+                    {{ TextInput(form.cor_dod_id, placeholder="1234567890", tooltip="Why", tooltip_title='Why', validation='dodId', classes="task-order__invite-officer")}}
+                </template>
+                </div>
+            </cordata>
+        </keep-alive>
 
         <hr />
 
@@ -40,9 +47,11 @@
         <p>{{ "task_orders.new.oversight.so_info_paragraph" | translate }}</p>
         {{ UserInfo(form.so_first_name, form.so_last_name, form.so_email, form.so_phone_number) }}
         {{ CheckboxInput(form.so_invite) }}
-        <template v-if="so_invite">
-            {{ TextInput(form.so_dod_id, placeholder="1234567890", tooltip="Why", tooltip_title='Why', validation='dodId', classes="task-order__invite-officer")}}
-        </template>
+        <keep-alive>
+            <dodid v-bind:initial-invite="invite" inline-template v-if="so_invite">
+                {{ TextInput(form.so_dod_id, placeholder="1234567890", tooltip="Why", tooltip_title='Why', validation='dodId', classes="task-order__invite-officer")}}
+            </dodid>
+        </keep-alive>
     </div>
 </oversight>
 
