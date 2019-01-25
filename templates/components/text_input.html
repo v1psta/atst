@@ -27,7 +27,7 @@
     inline-template>
 
     <div
-      class='{% if disabled %}input--disabled{% endif %}{{ classes }}'
+      class='{% if disabled %}input--disabled{% endif %} {{ classes }}'
       v-bind:class="['usa-input usa-input--validation--' + validation, { 'usa-input--error': showError, 'usa-input--success': showValid, 'usa-input--validation--paragraph': paragraph, 'no-max-width': noMaxWidth }]">
 
       <label for={{field.name}}>
