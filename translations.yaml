@@ -456,6 +456,8 @@ task_orders:
       description: Your Security Officer will need to answer some security configuration questions in order to generate a DD-254 document, then electronically sign.
       add_button_text: Add / Invite Security Officer
       invite_button_text: Invite Security Officer
+  ko_review:
+    task_order_information: Task Order Information
 testing:
   example_string: Hello World
   example_with_variables: 'Hello, {name}!'

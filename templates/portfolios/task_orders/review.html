@@ -1,0 +1,224 @@
+{% extends "base.html" %}
+
+{% from "components/edit_link.html" import EditLink %}
+{% from "components/required_label.html" import RequiredLabel %}
+{% from "components/icon.html" import Icon %}
+
+{% block content %}
+
+<div class="col task-order-form">
+
+  {% include "fragments/flash.html" %}
+
+  {% macro TOEditLink(screen=1, anchor=None) %}
+  {% if task_order %}
+    {{ EditLink(url_for("task_orders.new", screen=screen, task_order_id=task_order.id, _anchor=anchor)) }}
+  {% else %}
+    {{ EditLink(url_for("task_orders.new", screen=screen, _anchor=anchor)) }}
+  {% endif %}
+  {% endmacro %}
+
+  {% macro ReviewField(heading, field, filter=None) %}
+    <div class="col col--grow">
+      <h4 class='task-order-form__heading'>{{ heading }}</h4>
+      {% if field %}
+        <p>{{ field | findFilter(filter) }}</p>
+      {% else %}
+        {{ RequiredLabel() }}
+      {% endif %}
+      {% if caller %}
+        {{ caller() }}
+      {% endif %}
+    </div>
+  {% endmacro %}
+
+  {% macro ReviewOfficerInfo(heading, first_name, last_name, email, phone_number, dod_id, officer) %}
+    <div class="col col--grow">
+      <h4 class='task-order-form__heading'>{{ heading | translate }}</h4>
+      {{ first_name }} {{ last_name }}<br>
+      {{ email }}<br>
+      {% if phone_number %}
+        {{ phone_number | usPhone }}
+      {% else %}
+        {{ RequiredLabel() }}
+      {% endif %}
+      <br>
+      {{ "task_orders.new.review.dod_id" | translate }} {{ dod_id}}<br>
+      {% if officer %}
+        {{ Icon('ok', classes='icon--green') }} <span class="task-order-invite-message sent">{{ "task_orders.new.review.invited"| translate }}</<span>
+      {% else %}
+        {{ Icon('alert', classes='icon--red') }} <span class="task-order-invite-message not-sent">{{ "task_orders.new.review.not_invited"| translate }}</span>
+      {% endif %}
+    </div>
+  {% endmacro %}
+
+    <div class="panel">
+
+      <div class="panel__heading">
+        <h1 class="task-order-form__heading subheading">
+          <div class="h2">Task Order Builder</div>
+          {{ "task_orders.new.review.section_title"| translate }}
+        </h1>
+      </div>
+
+      <div class="panel__content">
+        <div class="h2">{{ "task_orders.new.review.app_info"| translate }}</div>
+
+        <div class="row">
+          {{ ReviewField(("task_orders.new.review.portfolio" | translate), task_order.portfolio_name) }}
+          {{ ReviewField(("task_orders.new.review.dod" | translate), task_order.defense_component, filter="normalizeOrder") }}
+        </div>
+        <div class="row">
+          {{ ReviewField(("task_orders.new.review.scope" | translate), task_order.scope) }}
+        </div>
+        <hr>
+
+        <div class="h2">{{ "task_orders.new.review.reporting"| translate }}</div>
+
+        <div class="row">
+          {{ ReviewField(("forms.task_order.app_migration.label" | translate), ("forms.task_order.app_migration.{}".format(task_order.app_migration) | translate), filter="removeHtml") }}
+          {{ ReviewField(("forms.task_order.native_apps.label" | translate), ("forms.task_order.native_apps.{}".format(task_order.native_apps))| translate) }}
+        </div>
+
+        <h4 class='task-order-form__heading'>{{ "task_orders.new.review.complexity"| translate }}</h4>
+        {% if task_order.complexity %}
+          <ul class="checklist">
+          {% for item in task_order.complexity %}
+            <li>
+              {{ Icon('ok', classes='icon--gray icon--medium') }}{{ "forms.task_order.complexity.{}".format(item) | translate }}{% if item == 'other' %}: {{ task_order.complexity_other }}{% endif %}
+            </li>
+          {% endfor %}
+          </ul>
+        {% else %}
+          <p>{{ RequiredLabel() }}</p>
+        {% endif %}
+
+        <div class="row">
+          <div class="col col--grow">
+            <h4 class='task-order-form__heading'>{{ "task_orders.new.review.team"| translate }}</h4>
+            {% if task_order.dev_team %}
+              <ul class="checklist">
+              {% for item in task_order.dev_team %}
+                <li>
+                  {% if item == 'other' %}
+                    {{ Icon('ok', classes='icon--gray icon--medium') }}Other: {{ task_order.dev_team_other }}
+                  {% else %}
+                    {{ Icon('ok', classes='icon--gray icon--medium') }}{{ "forms.task_order.dev_team.{}".format(item) | translate }}
+                  {% endif %}
+                </li>
+              {% endfor %}
+              </ul>
+            {% else %}
+              <p>{{ RequiredLabel() }}</p>
+            {% endif %}
+          </div>
+
+          {{ ReviewField(("forms.task_order.team_experience.label" |translate), ("forms.task_order.team_experience.{}".format(task_order.team_experience)) | translate) }}
+        </div>
+
+        <hr>
+
+        <div class="h2">{{ "task_orders.new.review.funding"| translate }}</div>
+
+        <div class="row">
+          {% call ReviewField(("task_orders.new.review.performance_period" | translate), task_order.performance_length, filter="translateDuration") %}
+            {% if task_order.csp_estimate %}
+              <p>
+                <a href="{{ url_for("task_orders.download_csp_estimate", task_order_id=task_order.id) }}" class='icon-link icon-link--left' download>{{ Icon('download') }} {{ "task_orders.new.review.usage_est_link"| translate }}</a>
+              </p>
+            {% else %}
+              <br/>
+              <a href="{{ url_for("task_orders.download_csp_estimate", task_order_id=task_order.id) }}" class='icon-link icon-link--left icon-link--disabled' aria-disabled="true">{{ Icon('download') }} {{ "task_orders.new.review.usage_est_link"| translate }}</a>
+              {{ Icon('alert', classes='icon--red') }} <span class="task-order-invite-message not-sent">{{ "task_orders.new.review.not_uploaded"| translate }}</span>
+            {% endif %}
+          {% endcall %}
+
+          <div class="col col--grow">
+            <table class="funding-summary__table">
+              <tbody>
+                <tr>
+                  <td><h4>{{ "task_orders.new.review.to_value"| translate }}</h4></td>
+                  <td class="table-cell--align-right">
+                    {% if task_order.budget %}
+                      {{ task_order.budget | dollarsWithCents }}
+                    {% endif %}
+                  </td>
+                </tr>
+                <tr>
+                  <td><h4 class='task-order-form__heading funding-summary__td'>{{ "task_orders.new.review.clin_1"| translate }}</h4></td>
+                  <td class="table-cell--align-right">
+                    {% if task_order.clin_01 %}
+                      {{ task_order.clin_01 | dollarsWithCents }}
+                    {% else %}
+                      {{ RequiredLabel() }}
+                    {% endif %}
+                  </td>
+                </tr>
+                <tr>
+                  <td><h4 class="task-order-form__heading funding-summary__td{% if not config.CLASSIFIED %} inactive{% endif %}">
+                    {{ "task_orders.new.review.clin_2"| translate }}
+                    {% if not config.CLASSIFIED %}
+                      <div>{{ "task_orders.new.review.classified_inactive"| translate }}</div>
+                    {% endif %}
+                  </h4></td>
+                  <td class="table-cell--align-right">
+                    {% if task_order.clin_02 and config.CLASSIFIED %}
+                      {{ task_order.clin_02 | dollarsWithCents or RequiredLabel() }}
+                    {% endif %}
+                  </td>
+                </tr>
+                <tr>
+                  <td><h4 class='task-order-form__heading funding-summary__td'>{{ "task_orders.new.review.clin_3"| translate }}</h4></td>
+                  <td class="table-cell--align-right">
+                    {% if task_order.clin_03 %}
+                      {{ task_order.clin_03 | dollarsWithCents or RequiredLabel() }}
+                    {% else %}
+                      {{ RequiredLabel() }}
+                    {% endif %}
+                  </td>
+                </tr>
+                <tr>
+                  <td><h4 class="task-order-form__heading funding-summary__td{% if not config.CLASSIFIED %} inactive{% endif %}">
+                    {{ "task_orders.new.review.clin_4"| translate }}
+                    {% if not config.CLASSIFIED %}
+                      <div>{{ "task_orders.new.review.classified_inactive"| translate }}</div>
+                    {% endif %}
+                  </h4></td>
+                  <td class="table-cell--align-right">
+                    {% if task_order.clin_04 and config.CLASSIFIED %}
+                      {{ task_order.clin_04 | dollarsWithCents or RequiredLabel() }}
+                    {% endif %}
+                  </td>
+                <tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <hr>
+
+        <div class="h2">{{ "task_orders.new.review.oversight"| translate }}</div>
+
+        <div class="row">
+          {{ ReviewOfficerInfo("task_orders.new.review.ko", task_order.ko_first_name, task_order.ko_last_name, task_order.ko_email, task_order.ko_phone_number, task_order.ko_dod_id, task_order.contracting_officer) }}
+          {{ ReviewOfficerInfo("task_orders.new.review.cor", task_order.cor_first_name, task_order.cor_last_name, task_order.cor_email, task_order.cor_phone_number, task_order.cor_dod_id, task_order.contracting_officer_representative) }}
+        </div>
+        <div class="row">
+          {{ ReviewOfficerInfo("task_orders.new.review.so", task_order.so_first_name, task_order.so_last_name, task_order.so_email, task_order.so_phone_number, task_order.so_dod_id, task_order.security_officer) }}
+        </div>
+
+        <hr>
+
+        <div class="h2">{{ "task_orders.ko_review.task_order_information"| translate }}</div>
+
+      </div>
+    </div>
+
+      <div class='action-group'>
+        <input type='submit' class='usa-button usa-button-primary' value='Continue' />
+      </div>
+
+  </form>
+
+</div>
+{% endblock %}
