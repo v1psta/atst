@@ -1,6 +1,7 @@
 # Add root application dir to the python path
 import os
 import sys
+from datetime import datetime, timedelta, date
 
 parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 sys.path.append(parent_dir)
@@ -94,6 +95,9 @@ def seed_db():
 
         users.append(user)
 
+    amanda = Users.get_by_dod_id("2345678901")
+
+    # create Portfolios for all users that have funding and are not expiring soon
     for user in users:
         portfolio = Portfolios.create(
             user, name="{}'s portfolio".format(user.first_name)
@@ -160,6 +164,92 @@ def seed_db():
             description="This is our first application.",
             environment_names=["dev", "staging", "prod"],
         )
+
+    # Create Portfolio for Amanda with TO that is expiring soon and does not have another TO
+    unfunded_portfolio = Portfolios.create(
+        amanda, name="{}'s unfunded portfolio".format(amanda.first_name)
+    )
+
+    [past_date_1, past_date_2, past_date_3, future_date] = sorted(
+        [
+            random_past_date(year_max=3, year_min=2),
+            random_past_date(year_max=2, year_min=1),
+            random_past_date(year_max=1, year_min=1),
+            (date.today() + timedelta(days=20)),
+        ]
+    )
+
+    date_ranges = [
+        (past_date_1, past_date_2),
+        (past_date_2, past_date_3),
+        (past_date_3, future_date),
+    ]
+    for (start_date, end_date) in date_ranges:
+        task_order = TaskOrderFactory.build(
+            start_date=start_date,
+            end_date=end_date,
+            number=random_task_order_number(),
+            portfolio=unfunded_portfolio,
+        )
+        db.session.add(task_order)
+
+    db.session.commit()
+
+    Applications.create(
+        amanda,
+        portfolio=unfunded_portfolio,
+        name="First Application",
+        description="This is our first application.",
+        environment_names=["dev", "staging", "prod"],
+    )
+
+    # Create Portfolio for Amanda with TO that is expiring soon and has another TO
+    funded_portfolio = Portfolios.create(
+        amanda, name="{}'s funded portfolio".format(amanda.first_name)
+    )
+
+    [
+        past_date_1,
+        past_date_2,
+        past_date_3,
+        past_date_4,
+        future_date_1,
+        future_date_2,
+    ] = sorted(
+        [
+            random_past_date(year_max=3, year_min=2),
+            random_past_date(year_max=2, year_min=1),
+            random_past_date(year_max=1, year_min=1),
+            random_past_date(year_max=1, year_min=1),
+            (date.today() + timedelta(days=20)),
+            random_future_date(year_min=0, year_max=1),
+        ]
+    )
+
+    date_ranges = [
+        (past_date_1, past_date_2),
+        (past_date_2, past_date_3),
+        (past_date_3, future_date_1),
+        (past_date_4, future_date_2),
+    ]
+    for (start_date, end_date) in date_ranges:
+        task_order = TaskOrderFactory.build(
+            start_date=start_date,
+            end_date=end_date,
+            number=random_task_order_number(),
+            portfolio=funded_portfolio,
+        )
+        db.session.add(task_order)
+
+    db.session.commit()
+
+    Applications.create(
+        amanda,
+        portfolio=funded_portfolio,
+        name="First Application",
+        description="This is our first application.",
+        environment_names=["dev", "staging", "prod"],
+    )
 
 
 if __name__ == "__main__":
