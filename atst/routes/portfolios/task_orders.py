@@ -9,6 +9,7 @@ from atst.domain.task_orders import TaskOrders
 from atst.domain.portfolios import Portfolios
 from atst.forms.officers import EditTaskOrderOfficersForm
 from atst.models.task_order import Status as TaskOrderStatus
+from atst.forms.ko_review import KOReviewForm
 
 
 @portfolios_bp.route("/portfolios/<portfolio_id>/task_orders")
@@ -70,14 +71,26 @@ def view_task_order(portfolio_id, task_order_id):
 
 
 @portfolios_bp.route("/portfolios/<portfolio_id>/task_order/<task_order_id>/review")
-def review_task_order(portfolio_id, task_order_id):
+def review_task_order(portfolio_id, task_order_id, form=None):
     portfolio = Portfolios.get(g.current_user, portfolio_id)
     task_order = TaskOrders.get(g.current_user, task_order_id)
     return render_template(
         "/portfolios/task_orders/review.html",
         portfolio=portfolio,
         task_order=task_order,
+        form=form or KOReviewForm(),
     )
+
+@portfolios_bp.route("/portfolios/<portfolio_id>/task_order/<task_order_id>/submit_review", methods=["POST"])
+def submit_review_task_order(portfolio_id, task_order_id, form=None):
+    portfolio = Portfolios.get(g.current_user, portfolio_id)
+    task_order = TaskOrders.get(g.current_user, task_order_id)
+    form = KOReviewForm(http_request.form)
+
+    if form.validate():
+        return redirect(url_for("task_orders.view_task_order"))
+    else:
+        return review(portfolio.id, task_order.id)
 
 
 @portfolios_bp.route(

@@ -10,6 +10,16 @@
 
   {% include "fragments/flash.html" %}
 
+  {% block form_action %}
+    {% if task_order_id %}
+      <form method='POST' action="{{ url_for('portfolios.submit_review_task_order', portfolio_id=portfolio_id, task_order_id=task_order_id, form=form) }}" autocomplete="off" enctype="multipart/form-data">
+    {% else %}
+      <form method='GET' action="{{ url_for('portfolios.view_task_order', portfolio_id=portfolio_id, task_order_id=task_order_id) }}" autocomplete="off" enctype="multipart/form-data">
+    {% endif %}
+  {% endblock %}
+
+  {% block form %}
+
   {% macro TOEditLink(screen=1, anchor=None) %}
   {% if task_order %}
     {{ EditLink(url_for("task_orders.new", screen=screen, task_order_id=task_order.id, _anchor=anchor)) }}
@@ -195,6 +205,8 @@
           </div>
         </div>
 
+        <div class="">Period of Performance Start Date</div>
+
         <hr>
 
         <div class="h2">{{ "task_orders.new.review.oversight"| translate }}</div>
@@ -211,8 +223,11 @@
 
         <div class="h2">{{ "task_orders.ko_review.task_order_information"| translate }}</div>
 
+        <div class="">Upload a copy of your Task Order document</div>
+
       </div>
     </div>
+    {% endblock %}
 
       <div class='action-group'>
         <input type='submit' class='usa-button usa-button-primary' value='Continue' />
