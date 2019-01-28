@@ -84,20 +84,36 @@ def ko_review(portfolio_id, task_order_id, form=None):
 
 
 @portfolios_bp.route(
-    "/portfolios/<portfolio_id>/task_order/<task_order_id>/submit_review",
-    methods=["POST"],
+    "/portfolios/<portfolio_id>/task_order/<task_order_id>/review", methods=["POST"]
 )
 def submit_ko_review(portfolio_id, task_order_id, form=None):
     task_order = TaskOrders.get(g.current_user, task_order_id)
     form = KOReviewForm(http_request.form)
     portfolio = Portfolios.get(g.current_user, portfolio_id)
+    # import ipdb
+
+    # ipdb.set_trace()
 
     if form.validate():
+        form_data = {**http_request.form, **http_request.files}
         # add form data to TO data
-        return redirect(url_for("task_orders.view_task_order"))
+        import ipdb; ipdb.set_trace()
+        return redirect(
+            url_for(
+                "portfolios.view_task_order",
+                portfolio_id=portfolio_id,
+                task_order_id=task_order_id,
+                form=form,
+            )
+        )
     else:
         # stay on the page and fix the fields that didnt validate
-        return review(portfolio.id, task_order.id)
+        return render_template(
+                "/portfolios/task_orders/review.html",
+                portfolio=portfolio,
+                task_order=task_order,
+                form=form,
+        )
 
 
 @portfolios_bp.route(
