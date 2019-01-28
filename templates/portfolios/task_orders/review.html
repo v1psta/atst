@@ -15,9 +15,7 @@
 
   {% block form_action %}
     {% if task_order_id %}
-      <form method='POST' action="{{ url_for('portfolios.submit_review_task_order', portfolio_id=portfolio_id, task_order_id=task_order_id, form=form) }}" autocomplete="off" enctype="multipart/form-data">
-    {% else %}
-      <form method='GET' action="{{ url_for('portfolios.view_task_order', portfolio_id=portfolio_id, task_order_id=task_order_id) }}" autocomplete="off" enctype="multipart/form-data">
+      <form method='POST' action="{{ url_for('portfolios.submit_ko_review', portfolio_id=portfolio_id, task_order_id=task_order_id, form=form) }}" autocomplete="off" enctype="multipart/form-data">
     {% endif %}
   {% endblock %}
 

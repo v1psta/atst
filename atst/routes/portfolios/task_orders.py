@@ -71,9 +71,10 @@ def view_task_order(portfolio_id, task_order_id):
 
 
 @portfolios_bp.route("/portfolios/<portfolio_id>/task_order/<task_order_id>/review")
-def review_task_order(portfolio_id, task_order_id, form=None):
-    portfolio = Portfolios.get(g.current_user, portfolio_id)
+def ko_review(portfolio_id, task_order_id, form=None):
     task_order = TaskOrders.get(g.current_user, task_order_id)
+    # get permission: make sure g.current_user is task_order.contracting_officer
+    portfolio = Portfolios.get(g.current_user, portfolio_id)
     return render_template(
         "/portfolios/task_orders/review.html",
         portfolio=portfolio,
@@ -86,14 +87,16 @@ def review_task_order(portfolio_id, task_order_id, form=None):
     "/portfolios/<portfolio_id>/task_order/<task_order_id>/submit_review",
     methods=["POST"],
 )
-def submit_review_task_order(portfolio_id, task_order_id, form=None):
-    portfolio = Portfolios.get(g.current_user, portfolio_id)
+def submit_ko_review(portfolio_id, task_order_id, form=None):
     task_order = TaskOrders.get(g.current_user, task_order_id)
     form = KOReviewForm(http_request.form)
+    portfolio = Portfolios.get(g.current_user, portfolio_id)
 
     if form.validate():
+        # add form data to TO data
         return redirect(url_for("task_orders.view_task_order"))
     else:
+        # stay on the page and fix the fields that didnt validate
         return review(portfolio.id, task_order.id)
 
 
