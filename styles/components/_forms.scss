@@ -125,8 +125,12 @@
     font-weight: 400;
   }
 
-  input[type="number"]::-webkit-inner-spin-button {
-    appearance: none;
+  input[type="number"] {
+    -moz-appearance: textfield;
+
+    &::-webkit-inner-spin-button {
+      appearance: none;
+    }
   }
 
   input.usa-input-error {
