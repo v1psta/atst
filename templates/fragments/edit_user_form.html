@@ -2,6 +2,7 @@
 {% from "components/options_input.html" import OptionsInput %}
 {% from "components/date_input.html" import DateInput %}
 {% from "components/phone_input.html" import PhoneInput %}
+{% from "components/date_picker.html" import DatePicker %}
 
 <form method="POST" action='{{ form_action }}'>
   {{ form.csrf_token }}
@@ -23,14 +24,16 @@
       {{ OptionsInput(form.service_branch) }}
       {{ OptionsInput(form.citizenship) }}
       {{ OptionsInput(form.designation) }}
-      {{
-        DateInput(
-          form.date_latest_training,
-          tooltip=("fragments.edit_user_form.date_last_training_tooltip" | translate),
-          placeholder="MM / DD / YYYY",
-          validation="date"
-        )
-      }}
+
+
+      <div class="usa-input">
+        <label>
+          <div class="usa-input__title">{{ form.date_latest_training.label }}</div>
+        </label>
+
+        <span class="usa-form-hint">{{ "forms.date_hint" | translate }}</span>
+        {{ DatePicker(form.date_latest_training, mindate=mindate, maxdate=maxdate) }}
+      </div>
     </div>
   </div>
 

@@ -30,6 +30,7 @@ import LocalDatetime from './components/local_datetime'
 import RequestsList from './components/requests_list'
 import ConfirmationPopover from './components/confirmation_popover'
 import { isNotInVerticalViewport } from './lib/viewport'
+import DateSelector from './components/date_selector'
 
 Vue.config.productionTip = false
 
@@ -62,6 +63,7 @@ const app = new Vue({
     RequestsList,
     ConfirmationPopover,
     funding,
+    DateSelector,
   },
 
   mounted: function() {

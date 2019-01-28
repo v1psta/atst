@@ -1,0 +1,69 @@
+{% from "components/icon.html" import Icon %}
+
+{% macro DatePicker(field, mindate=None, maxdate=None) -%}
+
+<date-selector
+  {% if maxdate %}maxdate="{{ maxdate.strftime("%Y-%m-%d") }}"{% endif %}
+  {% if mindate %}mindate="{{ mindate.strftime("%Y-%m-%d") }}"{% endif %}
+  initialmonth="{{ field.data.month }}"
+  initialday="{{ field.data.day }}"
+  initialyear="{{ field.data.year }}"
+  inline-template>
+
+    <div class="usa-input date-picker" v-bind:class="{ 'usa-input--success': isDateValid }">
+
+      <div class="date-picker-component">
+        <input v-bind:value="formattedDate" type="hidden" />
+
+        <div class="usa-form-group usa-form-group-month">
+          <label>Month</label>
+          <input
+            name="date-month"
+            max="12"
+            maxlength="2"
+            min="1"
+            type="number"
+            v-bind:class="{ 'usa-input-error': (month && !isMonthValid) }"
+            v-model="month"
+          />
+        </div>
+
+        <div class="usa-form-group usa-form-group-day">
+          <label>Day</label>
+          <input
+            name="date-day"
+            maxlength="2"
+            min="1"
+            type="number"
+            v-bind:class="{ 'usa-input-error': (day && !isDayValid) }"
+            v-bind:max="daysMaxCalculation"
+            v-model="day"
+          />
+        </div>
+
+        <div class="usa-form-group usa-form-group-year">
+          <label>Year</label>
+          <input
+            id="date-year"
+            maxlength="4"
+            type="number"
+            v-model="year"
+            {% if maxdate %}max="{{ maxdate.year }}"{% endif %}
+            {% if mindate %}min="{{ mindate.year }}"{% endif %}
+          />
+        </div>
+
+        <div class="usa-form-group-date-ok" v-if="isDateValid">
+          {{ Icon("ok", classes="icon--green") }}
+        </div>
+      </div>
+
+      <p v-if="!isWithinDateRange" class="usa-input-error-message">
+        {% if maxdate and mindate %}Date must be between {{maxdate.strftime("%Y-%m-%d")}} and {{mindate.strftime("%Y-%m-%d")}}{% endif %}
+        {% if maxdate and not mindate %}Date must be before or on {{maxdate.strftime("%Y-%m-%d")}}{% endif %}
+        {% if mindate and not maxdate %}Date must be after or on {{mindate.strftime("%Y-%m-%d")}}{% endif %}
+      </p>
+    </div>
+  </date-selector>
+
+{%- endmacro %}
