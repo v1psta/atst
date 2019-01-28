@@ -32,6 +32,8 @@ describe('DateSelector', () => {
 
   describe('daysMaxCalculation', () => {
     it('calculates correctly for each month', () => {
+      component.year = null
+
       let months = {
         '1': 31,
         '2': 29,
@@ -51,6 +53,19 @@ describe('DateSelector', () => {
         component.month = parseInt(month)
         expect(component.daysMaxCalculation).toEqual(months[month])
       }
+    })
+
+    it('takes year or lack of year into account and calculates leap years', () => {
+      component.month = 2
+
+      component.year = null
+      expect(component.daysMaxCalculation).toEqual(29)
+
+      component.year = 2019
+      expect(component.daysMaxCalculation).toEqual(28)
+
+      component.year = 2016
+      expect(component.daysMaxCalculation).toEqual(29)
     })
   })
 

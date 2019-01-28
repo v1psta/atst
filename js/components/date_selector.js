@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import { getDaysInMonth } from 'date-fns'
 
 var paddedNumber = function(number) {
   if ((number + '').length === 1) {
@@ -78,7 +79,11 @@ export default Vue.component('date-selector', {
     daysMaxCalculation: function() {
       switch (parseInt(this.month)) {
         case 2: // February
-          return 29
+          if (this.year) {
+            return getDaysInMonth(new Date(this.year, this.month - 1))
+          } else {
+            return 29
+          }
           break
 
         case 4: // April
