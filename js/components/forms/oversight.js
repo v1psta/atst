@@ -17,8 +17,7 @@ const dodid = {
 
   data: function() {
     return {
-      ko_invite: this.initialInvite,
-      so_invite: this.initialInvite
+      invite: this.initialInvite,
     }
   },
 }
