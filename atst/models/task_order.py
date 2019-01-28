@@ -1,4 +1,5 @@
 from enum import Enum
+from datetime import date
 
 import pendulum
 from sqlalchemy import Column, Numeric, String, ForeignKey, Date, Integer
@@ -110,6 +111,11 @@ class TaskOrder(Base, mixins.TimestampsMixin):
     @property
     def display_status(self):
         return self.status.value
+
+    @property
+    def days_to_expiration(self):
+        if self.end_date:
+            return (self.end_date - date.today()).days
 
     @property
     def budget(self):

@@ -22,6 +22,7 @@ def portfolio_funding(portfolio_id):
             "start_date",
             "end_date",
             "display_status",
+            "days_to_expiration",
             "balance",
         ]
     }

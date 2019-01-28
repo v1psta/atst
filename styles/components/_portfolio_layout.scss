@@ -126,5 +126,27 @@
     .label--expired {
       background-color: $color-gray-light;
     }
+
+    .to-expiring-soon {
+      font-weight: $font-bold;
+      font-size: 1.5rem;
+      margin-left: $gap;
+
+      &.funded {
+        color: $color-blue;
+
+        .icon {
+          @include icon-color($color-blue);
+        }
+      }
+
+      &.unfunded {
+        color: $color-red;
+
+        .icon {
+          @include icon-color($color-red);
+        }
+      }
+    }
   }
 }

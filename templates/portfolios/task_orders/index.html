@@ -44,15 +44,26 @@
             </td>
             <td class='table-cell--grow'>
               <span>
-              <local-datetime
-                v-bind:timestamp="taskOrder.start_date"
-                format="M/D/YYYY">
+                <local-datetime
+                  v-bind:timestamp="taskOrder.start_date"
+                  format="M/D/YYYY">
+                  </local-datetime>
+                  -
+                <local-datetime
+                  v-bind:timestamp="taskOrder.end_date"
+                  format="M/D/YYYY">
                 </local-datetime>
-                -
-              <local-datetime
-                v-bind:timestamp="taskOrder.end_date"
-                format="M/D/YYYY">
-                </local-datetime>
+                <span
+                  v-if="taskOrder.display_status ==='Active' && (taskOrder.days_to_expiration > 0 && taskOrder.days_to_expiration <= 30) && taskOrders.length > 1"
+                  class="to-expiring-soon funded">
+                    {{ Icon('ok') }} Period ending in !{ taskOrder.days_to_expiration } days, but new period funded
+                </span>
+                <span
+                  v-if="taskOrder.display_status ==='Active' && (taskOrder.days_to_expiration > 0 && taskOrder.days_to_expiration <= 30) && taskOrders.length === 1"
+                  class="to-expiring-soon unfunded">
+                  {{ Icon('alert') }} Period ends in !{ taskOrder.days_to_expiration } days, submit a new task order
+                </span>
+              </span>
             </td>
             <td class="table-cell--align-right">
               <span v-html='formatDollars(taskOrder.budget)'></span>
