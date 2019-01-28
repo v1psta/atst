@@ -170,9 +170,9 @@ def test_show_task_order_display_screen(task_order):
     screens = workflow.display_screens
     # every form section is complete
     for i in range(2):
-        assert screens[i]["complete"]
+        assert screens[i]["completion"] == "complete"
     # the review section is not
-    assert not screens[3].get("complete")
+    assert not screens[3]["completion"]
 
 
 def test_update_task_order_with_no_task_order():

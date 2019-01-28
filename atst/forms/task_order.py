@@ -10,7 +10,7 @@ from wtforms.fields import (
 )
 from wtforms.fields.html5 import DateField, TelField
 from wtforms.widgets import ListWidget, CheckboxInput
-from wtforms.validators import Length, InputRequired
+from wtforms.validators import Length, Required, InputRequired, Optional
 from flask_wtf.file import FileAllowed
 
 from atst.forms.validators import IsNumber, PhoneNumber, RequiredIf
@@ -31,6 +31,7 @@ class AppInfoForm(CacheableForm):
     portfolio_name = StringField(
         translate("forms.task_order.portfolio_name_label"),
         description=translate("forms.task_order.portfolio_name_description"),
+        validators=[Required()],
     )
     scope = TextAreaField(
         translate("forms.task_order.scope_label"),
@@ -100,25 +101,37 @@ class FundingForm(CacheableForm):
     clin_01 = DecimalField(
         translate("forms.task_order.clin_01_label"),
         validators=[
-            InputRequired(message=(translate("forms.task_order.clin_validation_error")))
+            Optional(),
+            InputRequired(
+                message=(translate("forms.task_order.clin_validation_error"))
+            ),
         ],
     )
     clin_02 = DecimalField(
         translate("forms.task_order.clin_02_label"),
         validators=[
-            InputRequired(message=(translate("forms.task_order.clin_validation_error")))
+            Optional(),
+            InputRequired(
+                message=(translate("forms.task_order.clin_validation_error"))
+            ),
         ],
     )
     clin_03 = DecimalField(
         translate("forms.task_order.clin_03_label"),
         validators=[
-            InputRequired(message=(translate("forms.task_order.clin_validation_error")))
+            Optional(),
+            InputRequired(
+                message=(translate("forms.task_order.clin_validation_error"))
+            ),
         ],
     )
     clin_04 = DecimalField(
         translate("forms.task_order.clin_04_label"),
         validators=[
-            InputRequired(message=(translate("forms.task_order.clin_validation_error")))
+            Optional(),
+            InputRequired(
+                message=(translate("forms.task_order.clin_validation_error"))
+            ),
         ],
     )
 
@@ -141,7 +154,8 @@ class OversightForm(CacheableForm):
     ko_last_name = StringField(translate("forms.task_order.oversight_last_name_label"))
     ko_email = StringField(translate("forms.task_order.oversight_email_label"))
     ko_phone_number = TelField(
-        translate("forms.task_order.oversight_phone_label"), validators=[PhoneNumber()]
+        translate("forms.task_order.oversight_phone_label"),
+        validators=[Optional(), PhoneNumber()],
     )
     ko_dod_id = StringField(
         translate("forms.task_order.oversight_dod_id_label"),
@@ -162,6 +176,7 @@ class OversightForm(CacheableForm):
         translate("forms.task_order.oversight_phone_label"),
         validators=[
             RequiredIf(lambda form: not form._fields.get("am_cor").data),
+            Optional(),
             PhoneNumber(),
         ],
     )
@@ -183,7 +198,8 @@ class OversightForm(CacheableForm):
     so_last_name = StringField(translate("forms.task_order.oversight_last_name_label"))
     so_email = StringField(translate("forms.task_order.oversight_email_label"))
     so_phone_number = TelField(
-        translate("forms.task_order.oversight_phone_label"), validators=[PhoneNumber()]
+        translate("forms.task_order.oversight_phone_label"),
+        validators=[Optional(), PhoneNumber()],
     )
     so_dod_id = StringField(
         translate("forms.task_order.oversight_dod_id_label"),

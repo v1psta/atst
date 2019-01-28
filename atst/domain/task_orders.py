@@ -1,5 +1,4 @@
 from sqlalchemy.orm.exc import NoResultFound
-
 from flask import current_app as app
 
 from atst.database import db
@@ -93,21 +92,33 @@ class TaskOrders(object):
         return task_order
 
     @classmethod
-    def is_section_complete(cls, task_order, section):
-        if section in TaskOrders.sections():
+    def section_completion_status(cls, task_order, section):
+        if section in TaskOrders.SECTIONS:
+            passed = []
+            failed = []
+
             for attr in TaskOrders.SECTIONS[section]:
-                if getattr(task_order, attr) is None:
-                    return False
+                if not app.config.get("CLASSIFIED") and attr in ["clin_02", "clin_04"]:
+                    pass
+                elif not getattr(task_order, attr):
+                    failed.append(attr)
+                else:
+                    passed.append(attr)
 
-            return True
-
-        else:
-            return False
+            if not failed:
+                return "complete"
+            elif passed and failed:
+                return "draft"
+            else:
+                return "incomplete"
 
     @classmethod
     def all_sections_complete(cls, task_order):
         for section in TaskOrders.SECTIONS.keys():
-            if not TaskOrders.is_section_complete(task_order, section):
+            if (
+                TaskOrders.section_completion_status(task_order, section)
+                is not "complete"
+            ):
                 return False
 
         return True
