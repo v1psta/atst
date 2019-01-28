@@ -121,6 +121,11 @@
   margin-top: 10px;
   width: 100%;
 
+  .date-picker-component {
+    float: left;
+    width: 100%;
+  }
+
   label {
     font-weight: 400;
   }
@@ -139,6 +144,11 @@
 
   .usa-form-group-date-ok {
     padding-top: 30px;
+  }
+
+  p.usa-input-error-message {
+    padding-top: 20px;
+    display: inline-block;
   }
 }
 
