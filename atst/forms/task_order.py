@@ -1,6 +1,6 @@
 from wtforms.fields import (
     BooleanField,
-    IntegerField,
+    DecimalField,
     RadioField,
     SelectField,
     SelectMultipleField,
@@ -10,7 +10,7 @@ from wtforms.fields import (
 )
 from wtforms.fields.html5 import DateField, TelField
 from wtforms.widgets import ListWidget, CheckboxInput
-from wtforms.validators import Length
+from wtforms.validators import Length, InputRequired
 from flask_wtf.file import FileAllowed
 
 from atst.forms.validators import IsNumber, PhoneNumber, RequiredIf
@@ -97,20 +97,44 @@ class FundingForm(CacheableForm):
         ],
         render_kw={"accept": ".pdf,.png,application/pdf,image/png"},
     )
-    clin_01 = IntegerField(translate("forms.task_order.clin_01_label"))
-    clin_02 = IntegerField(translate("forms.task_order.clin_02_label"))
-    clin_03 = IntegerField(translate("forms.task_order.clin_03_label"))
-    clin_04 = IntegerField(translate("forms.task_order.clin_04_label"))
+    clin_01 = DecimalField(
+        translate("forms.task_order.clin_01_label"),
+        places=2,
+        validators=[InputRequired(message="Please enter a dollar amount")],
+    )
+    clin_02 = DecimalField(
+        translate("forms.task_order.clin_02_label"),
+        places=2,
+        validators=[InputRequired(message="Please enter a dollar amount")],
+    )
+    clin_03 = DecimalField(
+        translate("forms.task_order.clin_03_label"),
+        places=2,
+        validators=[InputRequired(message="Please enter a dollar amount")],
+    )
+    clin_04 = DecimalField(
+        translate("forms.task_order.clin_04_label"),
+        places=2,
+        validators=[InputRequired(message="Please enter a dollar amount")],
+    )
 
 
 class UnclassifiedFundingForm(FundingForm):
-    clin_02 = IntegerField(translate("forms.task_order.unclassified_clin_02_label"))
-    clin_04 = IntegerField(translate("forms.task_order.unclassified_clin_04_label"))
+    clin_02 = DecimalField(
+        translate("forms.task_order.unclassified_clin_02_label"),
+        places=2,
+        validators=[InputRequired(message="Please enter a dollar amount")],
+    )
+    clin_04 = DecimalField(
+        translate("forms.task_order.unclassified_clin_04_label"),
+        places=2,
+        validators=[InputRequired(message="Please enter a dollar amount")],
+    )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.clin_02.data = "0"
-        self.clin_04.data = "0"
+        self.clin_02.data = "0.00"
+        self.clin_04.data = "0.00"
 
 
 class OversightForm(CacheableForm):

@@ -119,7 +119,7 @@ def test_task_order_form_shows_errors(client, user_session):
 
     body = response.data.decode()
     assert "There were some errors" in body
-    assert "Not a valid integer" in body
+    assert "Not a valid decimal" in body
 
 
 @pytest.fixture
