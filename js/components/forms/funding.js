@@ -48,22 +48,21 @@ export default {
     totalBudget: function() {
       return [this.clin_01, this.clin_02, this.clin_03, this.clin_04].reduce(
         function(acc, curr) {
-          curr = !curr ? 0 : parseInt(curr)
+          curr = !curr ? 0 : parseFloat(curr)
           return acc + curr
         },
         0
       )
     },
     totalBudgetStr: function() {
-      return this.formatDollars(this.totalBudget)
+      return this.totalBudget.toLocaleString('us-US', {
+        style: 'currency',
+        currency: 'USD',
+      })
     },
   },
 
   methods: {
-    formatDollars: function(intValue) {
-      const mask = createNumberMask({ prefix: '$', allowDecimal: true })
-      return conformToMask(intValue.toString(), mask).conformedValue
-    },
     showUploadInput: function() {
       this.showUpload = true
     },
