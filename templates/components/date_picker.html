@@ -13,7 +13,7 @@
     <div class="usa-input date-picker" v-bind:class="{ 'usa-input--success': isDateValid }">
 
       <div class="date-picker-component">
-        <input v-bind:value="formattedDate" type="hidden" />
+        <input name="{{ field.name }}" v-bind:value="formattedDate" type="hidden" />
 
         <div class="usa-form-group usa-form-group-month">
           <label>Month</label>
@@ -58,10 +58,10 @@
         </div>
       </div>
 
-      <p v-if="!isWithinDateRange" class="usa-input-error-message">
-        {% if maxdate and mindate %}Date must be between {{maxdate.strftime("%Y-%m-%d")}} and {{mindate.strftime("%Y-%m-%d")}}{% endif %}
-        {% if maxdate and not mindate %}Date must be before or on {{maxdate.strftime("%Y-%m-%d")}}{% endif %}
-        {% if mindate and not maxdate %}Date must be after or on {{mindate.strftime("%Y-%m-%d")}}{% endif %}
+      <p class="usa-input-error-message" v-bind:class="{ 'form-has-errors': !isWithinDateRange }">
+        {% if maxdate and mindate %}Date must be between {{maxdate.strftime("%m/%d/%Y")}} and {{mindate.strftime("%m/%d/%Y")}}{% endif %}
+        {% if maxdate and not mindate %}Date must be before or on {{maxdate.strftime("%m/%d/%Y")}}{% endif %}
+        {% if mindate and not maxdate %}Date must be after or on {{mindate.strftime("%m/%d/%Y")}}{% endif %}
       </p>
     </div>
   </date-selector>
