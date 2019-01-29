@@ -1,76 +1,125 @@
 {% extends "portfolios/base.html" %}
 
+{% from "components/checkbox_input.html" import CheckboxInput %}
 {% from "components/icon.html" import Icon %}
+{% from "components/text_input.html" import TextInput %}
 
-{% macro Link(text, icon_name, url='#', classes='') %}
-  <a href="{{ url }}" class="icon-link {{ classes }}">
+{% macro Link(text, icon_name, onClick=None, url='#', classes='') %}
+<a href="{{ url }}" {% if onClick %}v-on:click="{{ onClick }}"{% endif %} class="icon-link {{ classes }}">
     {{ Icon(icon_name) }}
     <span>{{ text }}</span>
   </a>
 {% endmacro %}
 
-{% macro OfficerInfo(task_order, officer_type) %}
-  <div class="panel__content officer">
+{% macro EditOfficerInfo(form, officer_type) -%}
+<div class='officer__form'>
+  <template v-if="editing">
+    <div class='alert'>
+      <div class='alert__content'>
+        <div class='form-row'>
+          <div class='form-col form-col--half'>
+            {{ TextInput(form.first_name) }}
+          </div>
+
+          <div class='form-col form-col--half'>
+            {{ TextInput(form.last_name) }}
+          </div>
+        </div>
+
+        <div class='form-row'>
+          <div class='form-col form-col--half'>
+            {{ TextInput(form.email, placeholder='name@mail.mil') }}
+          </div>
+
+          <div class='form-col form-col--half'>
+            {{ TextInput(form.phone_number, placeholder='(123) 456-7890', validation='usPhone') }}
+          </div>
+        </div>
+        {% if form.dod_id.data %}
+          {{ TextInput(form.dod_id, validation='dodId', disabled=True)}}
+        {% endif %}
+        <div class='alert__actions officer__form--actions'>
+          <a href="#{{ officer_type }}" v-on:click="cancel" class="icon-link">
+            {{ Icon("x") }}
+            <span>Cancel</span>
+          </a>
+          <input type='submit' class='usa-button usa-button-primary' value='Save Changes' />
+        </div>
+      </div>
+    </div>
+  </template>
+</div>
+{% endmacro %}
+
+{% macro OfficerInfo(task_order, officer_type, form) %}
+  <div class="panel__content officer" id="{{ officer_type }}">
     <h2 class="officer__title">{{ ("task_orders.invitations." + officer_type + ".title") | translate }}</h2>
     <p class="officer__description">{{ ("task_orders.invitations." + officer_type + ".description") | translate }}</p>
 
-    {% set prefix = { "contracting_officer": "ko", "contracting_officer_representative": "cor", "security_officer": "so" }[officer_type] %}
-    {% set first_name = task_order[prefix + "_first_name"] %}
-    {% set last_name = task_order[prefix + "_last_name"] %}
-    {% set email = task_order[prefix + "_email"] %}
-    {% set phone_number = task_order[prefix + "_phone_number"] %}
-    {% set dod_id = task_order[prefix + "_dod_id"] %}
+    <edit-officer-form v-bind:has-errors='{{ ((form.errors|length) > 0)|tojson }}' inline-template>
+      <div>
 
-    {% if task_order[officer_type] %}
-      <div class="officer__info">
-        <div class="row">
-          <div class="officer__info--name">{{ first_name }} {{ last_name }}</div>
-          <div class="officer__info--status invited">
-            <span>{{ Icon("ok", classes="invited") }}</span>
-            <span>Invited</span>
+      {% set prefix = { "contracting_officer": "ko", "contracting_officer_representative": "cor", "security_officer": "so" }[officer_type] %}
+      {% set first_name = task_order[prefix + "_first_name"] %}
+      {% set last_name = task_order[prefix + "_last_name"] %}
+      {% set email = task_order[prefix + "_email"] %}
+      {% set phone_number = task_order[prefix + "_phone_number"] %}
+      {% set dod_id = task_order[prefix + "_dod_id"] %}
+
+      {% if task_order[officer_type] %}
+        <div class="officer__info">
+          <div class="row">
+            <div class="officer__info--name">{{ first_name }} {{ last_name }}</div>
+            <div class="officer__info--status invited">
+              <span>{{ Icon("ok", classes="invited") }}</span>
+              <span>Invited</span>
+            </div>
           </div>
+          <p class="officer__info--email">{{ email }}</p>
+          <p class="officer__info--phone">{{ phone_number | usPhone }}</p>
+          <p class="officer__info--dod_id">{{ "task_orders.invitations.dod_id_label"  | translate}}: {{ dod_id }}</p>
         </div>
-        <p class="officer__info--email">{{ email }}</p>
-        <p class="officer__info--phone">{{ phone_number | usPhone }}</p>
-        <p class="officer__info--dod_id">{{ "task_orders.invitations.dod_id_label"  | translate}}: {{ dod_id }}</p>
-      </div>
-      <div class="officer__actions">
-        {{ Link("Update", "edit") }}
-        {{ Link("Resend Invitation", "avatar") }}
-        {{ Link("Remove", "trash", classes="remove") }}
-      </div>
-    {% elif first_name and last_name %}
-      <div class="officer__info">
-        <div class="row">
-          <div class="officer__info--name">{{ first_name }} {{ last_name }}</div>
+        <div class="officer__actions">
+          {{ Link("Update", "edit", onClick="edit") }}
+          {{ Link("Resend Invitation", "avatar") }}
+          {{ Link("Remove", "trash", classes="remove") }}
+        </div>
+      {% elif first_name and last_name %}
+        <div class="officer__info">
+          <div class="row">
+            <div class="officer__info--name">{{ first_name }} {{ last_name }}</div>
+            <div class="officer__info--status uninvited">
+              <span>{{ Icon("alert", classes="uninvited") }}</span>
+              Not Invited
+            </div>
+          </div>
+          <p class="officer__info--email">{{ email }}</p>
+          <p class="officer__info--phone">{{ phone_number | usPhone }}</p>
+        </div>
+        <div class="officer__actions">
+          {{ Link("Update", "edit", onClick="edit") }}
+          {{ Link("Remove", "trash", classes="remove") }}
+          <button type='button' class='usa-button usa-button-primary'>
+            {{ ("task_orders.invitations." + officer_type + ".invite_button_text") | translate  }}
+          </button>
+        </div>
+      {% else %}
+        <div class="officer__info">
           <div class="officer__info--status uninvited">
             <span>{{ Icon("alert", classes="uninvited") }}</span>
-            Not Invited
+            Not specified
           </div>
         </div>
-        <p class="officer__info--email">{{ email }}</p>
-        <p class="officer__info--phone">{{ phone_number | usPhone }}</p>
-      </div>
-      <div class="officer__actions">
-        {{ Link("Update", "edit") }}
-        {{ Link("Remove", "trash", classes="remove") }}
-        <button type='button' class='usa-button usa-button-primary'>
-          {{ ("task_orders.invitations." + officer_type + ".invite_button_text") | translate  }}
-        </button>
-      </div>
-    {% else %}
-      <div class="officer__info">
-        <div class="officer__info--status uninvited">
-          <span>{{ Icon("alert", classes="uninvited") }}</span>
-          Not specified
+        <div class="officer__actions">
+          <button type='button' class='usa-button usa-button-primary'>
+            {{ ("task_orders.invitations." + officer_type + ".add_button_text") | translate }}
+          </button>
         </div>
+      {% endif %}
+
+      {{ EditOfficerInfo(form, officer_type) }}
       </div>
-      <div class="officer__actions">
-        <button type='button' class='usa-button usa-button-primary'>
-          {{ ("task_orders.invitations." + officer_type + ".add_button_text") | translate }}
-        </button>
-      </div>
-    {% endif %}
+    </edit-officer-form>
   </div>
 {% endmacro %}
 
@@ -78,17 +127,21 @@
 <div class="task-order-invitations">
   {% include "fragments/flash.html" %}
 
-  <div class="panel">
-    <div class="panel__heading">
-      <h1 class="task-order-invitations__heading subheading">
-        <div class="h2">Edit Task Order</div>
-        Oversight
-      </h1>
-    </div>
+  <form method='POST' action="{{ url_for("portfolios.edit_task_order_invitations", portfolio_id=portfolio.id, task_order_id=task_order.id) }}" autocomplete="off">
+    {{ form.csrf_token }}
 
-      {% for officer in ["contracting_officer", "contracting_officer_representative", "security_officer"] %}
-        {{ OfficerInfo(task_order, officer) }}
-      {% endfor %}
-  </div>
+    <div class="panel">
+      <div class="panel__heading">
+        <h1 class="task-order-invitations__heading subheading">
+          <div class="h2">Edit Task Order</div>
+          Oversight
+        </h1>
+      </div>
+
+        {% for officer in ["contracting_officer", "contracting_officer_representative", "security_officer"] %}
+          {{ OfficerInfo(task_order, officer, form[officer]) }}
+        {% endfor %}
+    </div>
+  </form>
 </div>
 {% endblock %}
