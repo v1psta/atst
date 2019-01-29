@@ -1,5 +1,7 @@
 from sqlalchemy.orm.exc import NoResultFound
 
+from flask import current_app as app
+
 from atst.database import db
 from atst.models.task_order import TaskOrder
 from atst.models.permissions import Permissions
@@ -50,6 +52,8 @@ class TaskOrders(object):
         ],
     }
 
+    UNCLASSIFIED_FUNDING = ["performance_length", "csp_estimate", "clin_01", "clin_03"]
+
     @classmethod
     def get(cls, user, task_order_id):
         try:
@@ -90,7 +94,7 @@ class TaskOrders(object):
 
     @classmethod
     def is_section_complete(cls, task_order, section):
-        if section in TaskOrders.SECTIONS:
+        if section in TaskOrders.sections():
             for attr in TaskOrders.SECTIONS[section]:
                 if getattr(task_order, attr) is None:
                     return False
@@ -107,6 +111,13 @@ class TaskOrders(object):
                 return False
 
         return True
+
+    @classmethod
+    def sections(cls):
+        section_list = TaskOrders.SECTIONS
+        if not app.config.get("CLASSIFIED"):
+            section_list["funding"] = TaskOrders.UNCLASSIFIED_FUNDING
+        return section_list
 
     OFFICERS = [
         "contracting_officer",

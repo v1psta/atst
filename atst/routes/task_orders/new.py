@@ -128,7 +128,12 @@ class UpdateTaskOrderWorkflow(ShowTaskOrderWorkflow):
         self.portfolio_id = portfolio_id
         self._task_order = None
         self._section = TASK_ORDER_SECTIONS[screen - 1]
-        self._form = self._section["form"](self.form_data)
+        form_type = (
+            "unclassified_form"
+            if "unclassified_form" in self._section and not app.config.get("CLASSIFIED")
+            else "form"
+        )
+        self._form = self._section[form_type](self.form_data)
 
     @property
     def form(self):
@@ -277,7 +282,6 @@ def update(screen, task_order_id=None, portfolio_id=None):
     workflow = UpdateTaskOrderWorkflow(
         g.current_user, form_data, screen, task_order_id, portfolio_id
     )
-
     if workflow.validate():
         workflow.update()
         return redirect(
