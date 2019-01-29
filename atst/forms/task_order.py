@@ -120,21 +120,14 @@ class FundingForm(CacheableForm):
 
 
 class UnclassifiedFundingForm(FundingForm):
-    clin_02 = DecimalField(
+    clin_02 = StringField(
         translate("forms.task_order.unclassified_clin_02_label"),
-        places=2,
-        validators=[InputRequired(message="Please enter a dollar amount")],
+        filters=[lambda x: x or None],
     )
-    clin_04 = DecimalField(
+    clin_04 = StringField(
         translate("forms.task_order.unclassified_clin_04_label"),
-        places=2,
-        validators=[InputRequired(message="Please enter a dollar amount")],
+        filters=[lambda x: x or None],
     )
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.clin_02.data = "0.00"
-        self.clin_04.data = "0.00"
 
 
 class OversightForm(CacheableForm):
