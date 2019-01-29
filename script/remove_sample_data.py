@@ -82,11 +82,9 @@ def remove_sample_data(all_users=False):
         sqlalchemy_event.remove(model, identifier, AuditableMixin.audit_delete)
 
     for user in users:
-        print(user)
         all_portfolios = Portfolios.for_user(user)
         portfolios = [p for p in all_portfolios if p.owner == user]
 
-        print(portfolios)
         ws_audit = (
             db.session.query(AuditEvent)
             .filter(AuditEvent.portfolio_id.in_([w.id for w in portfolios]))
