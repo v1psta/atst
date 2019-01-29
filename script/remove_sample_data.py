@@ -7,7 +7,7 @@ sys.path.append(parent_dir)
 
 import ctypes
 import sqlalchemy
-from sqlalchemy import or_, event as sqlalchemy_event
+from sqlalchemy import event as sqlalchemy_event
 
 from atst.database import db
 from atst.app import make_config, make_app
@@ -16,9 +16,6 @@ from atst.models.audit_event import AuditEvent
 from atst.models.environment import Environment
 from atst.models.environment_role import EnvironmentRole
 from atst.models.application import Application
-from atst.models.request import Request
-from atst.models.request_revision import RequestRevision
-from atst.models.request_status_event import RequestStatus, RequestStatusEvent
 from atst.models.role import Role
 from atst.models.user import User
 from atst.models.portfolio_role import PortfolioRole
@@ -28,10 +25,8 @@ from atst.models.mixins import AuditableMixin
 from atst.domain.environments import Environments
 from atst.domain.exceptions import NotFoundError
 from atst.domain.csp.reports import MockReportingProvider
-from atst.domain.requests import Requests
+from atst.domain.portfolios import Portfolios
 from atst.domain.users import Users
-from atst.domain.portfolios import portfolios
-from tests.factories import RequestFactory, LegacyTaskOrderFactory
 
 
 dod_ids = [
@@ -50,26 +45,18 @@ dod_ids = [
 
 def create_demo_portfolio(name, data):
     try:
-        portfolio_owner = Users.get_by_dod_id("678678678")  # Other
-        auditor = Users.get_by_dod_id("3453453453")  # Sally
+        portfolio_owner = Users.get_or_create_by_dod_id("2345678901")  # Amanda
+        # auditor = Users.get_by_dod_id("3453453453")  # Sally
     except NotFoundError:
         print(
             "Could not find demo users; will not create demo portfolio {}".format(name)
         )
         return
 
-    request = RequestFactory.build(creator=portfolio_owner)
-    request.legacy_task_order = LegacyTaskOrderFactory.build()
-    request = Requests.update(
-        request.id, {"financial_verification": RequestFactory.mock_financial_data()}
-    )
-    approved_request = Requests.set_status(request, RequestStatus.APPROVED)
-
-    portfolio = Requests.approve_and_create_portfolio(request)
-    portfolios.update(portfolio, {"name": name})
+    portfolio = Portfolios.create(portfolio_owner, name=name)
 
     for mock_application in data["applications"]:
-        application = application(
+        application = Application(
             portfolio=portfolio, name=mock_application.name, description=""
         )
         env_names = [env.name for env in mock_application.environments]
@@ -95,25 +82,18 @@ def remove_sample_data(all_users=False):
         sqlalchemy_event.remove(model, identifier, AuditableMixin.audit_delete)
 
     for user in users:
-        requests = (
-            db.session.query(Request)
-            .filter(Request.id.in_([r.id for r in user.owned_requests]))
-            .all()
-        )
-        request_audit = (
-            db.session.query(AuditEvent)
-            .filter(AuditEvent.request_id.in_([r.id for r in requests]))
-            .all()
-        )
-        events = [ev for r in requests for ev in r.status_events]
-        revisions = [rev for r in requests for rev in r.revisions]
-        portfolios = [r.portfolio for r in requests if r.portfolio]
+        print(user)
+        all_portfolios = Portfolios.for_user(user)
+        portfolios = [p for p in all_portfolios if p.owner == user]
+
+        print(portfolios)
         ws_audit = (
             db.session.query(AuditEvent)
             .filter(AuditEvent.portfolio_id.in_([w.id for w in portfolios]))
             .all()
         )
         portfolio_roles = [role for portfolio in portfolios for role in portfolio.roles]
+        task_orders = [to for portfolio in portfolios for to in portfolio.task_orders]
         invites = [invite for role in portfolio_roles for invite in role.invitations]
         applications = [p for portfolio in portfolios for p in portfolio.applications]
         environments = (
@@ -128,11 +108,9 @@ def remove_sample_data(all_users=False):
             environments,
             applications,
             invites,
+            task_orders,
             portfolio_roles,
             ws_audit,
-            events,
-            revisions,
-            request_audit,
         ]:
             for thing in set_of_things:
                 db.session.delete(thing)
@@ -143,12 +121,6 @@ def remove_sample_data(all_users=False):
         db.session.connection().execute(
             sqlalchemy.text(query), ids=[w.id for w in portfolios]
         )
-
-        query = "DELETE FROM requests WHERE requests.id = ANY(:ids);"
-        db.session.connection().execute(
-            sqlalchemy.text(query), ids=[r.id for r in requests]
-        )
-
         db.session.commit()
 
 
