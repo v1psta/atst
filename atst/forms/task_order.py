@@ -99,23 +99,27 @@ class FundingForm(CacheableForm):
     )
     clin_01 = DecimalField(
         translate("forms.task_order.clin_01_label"),
-        places=2,
-        validators=[InputRequired(message="Please enter a dollar amount")],
+        validators=[
+            InputRequired(message=(translate("forms.task_order.clin_validation_error")))
+        ],
     )
     clin_02 = DecimalField(
         translate("forms.task_order.clin_02_label"),
-        places=2,
-        validators=[InputRequired(message="Please enter a dollar amount")],
+        validators=[
+            InputRequired(message=(translate("forms.task_order.clin_validation_error")))
+        ],
     )
     clin_03 = DecimalField(
         translate("forms.task_order.clin_03_label"),
-        places=2,
-        validators=[InputRequired(message="Please enter a dollar amount")],
+        validators=[
+            InputRequired(message=(translate("forms.task_order.clin_validation_error")))
+        ],
     )
     clin_04 = DecimalField(
         translate("forms.task_order.clin_04_label"),
-        places=2,
-        validators=[InputRequired(message="Please enter a dollar amount")],
+        validators=[
+            InputRequired(message=(translate("forms.task_order.clin_validation_error")))
+        ],
     )
 
 

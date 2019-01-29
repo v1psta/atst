@@ -222,6 +222,7 @@ forms:
     clin_02_label: 'CLIN 02: Classified'
     clin_03_label: 'CLIN 03: Unclassified'
     clin_04_label: 'CLIN 04: Classified'
+    clin_validation_error: Please enter a dollar amount
     unclassified_clin_02_label: 'CLIN 02: Classified (available soon)'
     unclassified_clin_04_label: 'CLIN 04: Classified (available soon)'
     oversight_first_name_label: First Name
