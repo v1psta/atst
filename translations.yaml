@@ -55,6 +55,9 @@ forms:
     phone_ext_mao_label: Extension (optional)
     phone_mao_label: Mission Owner phone number (optional)
   ko_review:
+    start_date_label: Period of Performance Start Date
+    end_date_label: Period of Performance End Date
+    invalid_date: Must be a date in the future.
     pdf_label: Upload a copy of your Task Order document
     pdf_description: Upload a PDF of the Task Order that you entered in your system of record for your organization.
     to_number: Task Order Number
@@ -464,8 +467,6 @@ task_orders:
       add_button_text: Add / Invite Security Officer
       invite_button_text: Invite Security Officer
   ko_review:
-    performance_start: Period of Performance Start Date
-    performance_end: Period of Performance End Date
     task_order_information: Task Order Information
 testing:
   example_string: Hello World

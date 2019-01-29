@@ -31,8 +31,6 @@
       <h4 class='task-order-form__heading'>{{ heading }}</h4>
       {% if field %}
         <p>{{ field | findFilter(filter) }}</p>
-      {% else %}
-        {{ RequiredLabel() }}
       {% endif %}
       {% if caller %}
         {{ caller() }}
@@ -47,8 +45,6 @@
       {{ email }}<br>
       {% if phone_number %}
         {{ phone_number | usPhone }}
-      {% else %}
-        {{ RequiredLabel() }}
       {% endif %}
       <br>
       {{ "task_orders.new.review.dod_id" | translate }} {{ dod_id}}<br>
@@ -97,8 +93,6 @@
             </li>
           {% endfor %}
           </ul>
-        {% else %}
-          <p>{{ RequiredLabel() }}</p>
         {% endif %}
 
         <div class="row">
@@ -116,8 +110,6 @@
                 </li>
               {% endfor %}
               </ul>
-            {% else %}
-              <p>{{ RequiredLabel() }}</p>
             {% endif %}
           </div>
 
@@ -157,8 +149,6 @@
                   <td class="table-cell--align-right">
                     {% if task_order.clin_01 %}
                       {{ task_order.clin_01 | dollarsWithCents }}
-                    {% else %}
-                      {{ RequiredLabel() }}
                     {% endif %}
                   </td>
                 </tr>
@@ -180,8 +170,6 @@
                   <td class="table-cell--align-right">
                     {% if task_order.clin_03 %}
                       {{ task_order.clin_03 | dollarsWithCents or RequiredLabel() }}
-                    {% else %}
-                      {{ RequiredLabel() }}
                     {% endif %}
                   </td>
                 </tr>
@@ -203,10 +191,8 @@
           </div>
         </div>
 
-        <div class="">{{ "task_orders.ko_review.performance_start"| translate }}</div>
-        {{ DatePicker() }}
-        <div class="">{{ "task_orders.ko_review.performance_end"| translate }}</div>
-        {{ DatePicker() }}
+        {{ DatePicker(form.start_date) }}
+        {{ DatePicker(form.end_date) }}
 
         <hr>
 
