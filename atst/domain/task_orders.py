@@ -94,10 +94,7 @@ class TaskOrders(object):
 
     @classmethod
     def is_section_complete(cls, task_order, section):
-        sections = TaskOrders.SECTIONS
-        if not app.config.get("CLASSIFIED"):
-            sections["funding"] = TaskOrders.UNCLASSIFIED_FUNDING
-        if section in sections:
+        if section in TaskOrders.sections():
             for attr in TaskOrders.SECTIONS[section]:
                 if getattr(task_order, attr) is None:
                     return False
@@ -114,6 +111,13 @@ class TaskOrders(object):
                 return False
 
         return True
+
+    @classmethod
+    def sections(cls):
+        section_list = TaskOrders.SECTIONS
+        if not app.config.get("CLASSIFIED"):
+            section_list["funding"] = TaskOrders.UNCLASSIFIED_FUNDING
+        return section_list
 
     OFFICERS = [
         "contracting_officer",
