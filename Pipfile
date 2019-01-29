@@ -23,6 +23,8 @@ lockfile = "*"
 defusedxml = "*"
 "flask-rq2" = "*"
 simplejson = "*"
+pdfrw = "*"
+endesive = "*"
 
 [dev-packages]
 bandit = "*"
