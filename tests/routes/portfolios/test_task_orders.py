@@ -2,6 +2,7 @@ from flask import url_for
 import pytest
 
 from atst.domain.roles import Roles
+from atst.domain.task_orders import TaskOrders
 from atst.models.portfolio_role import Status as PortfolioStatus
 
 from tests.factories import (
@@ -100,3 +101,53 @@ def test_can_view_task_order_invitations(client, user_session):
         )
     )
     assert response.status_code == 200
+
+
+class TestTaskOrderInvitations:
+    def setup(self):
+        self.portfolio = PortfolioFactory.create()
+        self.task_order = TaskOrderFactory.create(portfolio=self.portfolio)
+
+    def _post(self, client, updates):
+        return client.post(
+            url_for(
+                "portfolios.edit_task_order_invitations",
+                portfolio_id=self.portfolio.id,
+                task_order_id=self.task_order.id,
+            ),
+            headers={"Content-Type": "application/x-www-form-urlencoded"},
+            data=updates,
+        )
+
+    def test_editing_with_partial_data(self, user_session, client):
+        user_session(self.portfolio.owner)
+        response = self._post(
+            client,
+            {
+                "contracting_officer-first_name": "Luke",
+                "contracting_officer-last_name": "Skywalker",
+                "security_officer-first_name": "Boba",
+                "security_officer-last_name": "Fett",
+            },
+        )
+        updated_task_order = TaskOrders.get(self.portfolio.owner, self.task_order.id)
+        assert updated_task_order.ko_first_name == "Luke"
+        assert updated_task_order.ko_last_name == "Skywalker"
+        assert updated_task_order.so_first_name == "Boba"
+        assert updated_task_order.so_last_name == "Fett"
+
+    def test_editing_with_invalid_data(self, user_session, client):
+        user_session(self.portfolio.owner)
+        response = self._post(
+            client,
+            {
+                "contracting_officer-phone_number": "invalid input",
+                "security_officer-first_name": "Boba",
+                "security_officer-last_name": "Fett",
+            },
+        )
+
+        assert "There were some errors" in response.data.decode()
+
+        updated_task_order = TaskOrders.get(self.portfolio.owner, self.task_order.id)
+        assert updated_task_order.so_first_name != "Boba"

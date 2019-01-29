@@ -343,6 +343,23 @@
       }
     }
 
+    .officer__form {
+      .officer__form--actions {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-end;
+
+        .usa-button {
+          margin-left: 4 * $gap;
+          margin-top: 0;
+          margin-bottom: 0;
+          padding-top: 0;
+          padding-bottom: 0;
+        }
+      }
+    }
+
     .officer__actions {
       margin-left: -2 * $gap;
 

@@ -11,6 +11,7 @@ import multicheckboxinput from './components/multi_checkbox_input'
 import textinput from './components/text_input'
 import checkboxinput from './components/checkbox_input'
 import DetailsOfUse from './components/forms/details_of_use'
+import EditOfficerForm from './components/forms/edit_officer_form'
 import poc from './components/forms/poc'
 import oversight from './components/forms/oversight'
 import financial from './components/forms/financial'
@@ -64,6 +65,7 @@ const app = new Vue({
     ConfirmationPopover,
     funding,
     DateSelector,
+    EditOfficerForm,
   },
 
   mounted: function() {
