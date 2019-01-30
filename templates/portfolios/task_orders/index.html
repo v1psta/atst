@@ -12,7 +12,7 @@
   </a>
 {% endmacro %}
 
-{% macro TaskOrderList(task_orders, label='success', expired=False) %}
+{% macro TaskOrderList(task_orders, label='success', expired=False, funded=False) %}
   <task-order-list
     inline-template
     v-bind:data='{{ task_orders | tojson }}'
@@ -43,7 +43,7 @@
               <span class='label label--{{ label }}'>!{ taskOrder.display_status }</span>
             </td>
             <td class='table-cell--grow'>
-              <span>
+              <span :class="{ 'to-performance-period': true, 'to-expiring-soon': (taskOrder.days_to_expiration > 0 && taskOrder.days_to_expiration <= 30), 'funded': funded && taskOrder.display_status === 'Active', 'unfunded': !funded && taskOrder.display_status === 'Active' }">
                 <local-datetime
                   v-bind:timestamp="taskOrder.start_date"
                   format="M/D/YYYY">
@@ -51,17 +51,19 @@
                   -
                 <local-datetime
                   v-bind:timestamp="taskOrder.end_date"
-                  format="M/D/YYYY">
+                  format="M/D/YYYY"
+                  class="to-end-date"
+                  >
                 </local-datetime>
                 <span
-                  v-if="taskOrder.display_status ==='Active' && (taskOrder.days_to_expiration > 0 && taskOrder.days_to_expiration <= 30) && taskOrders.length > 1"
-                  class="to-expiring-soon funded">
+                  v-if="taskOrder.days_to_expiration > 0 && taskOrder.days_to_expiration <= 30 && funded"
+                  class="to-expiration-alert">
                     {{ Icon('ok') }} Period ending in !{ taskOrder.days_to_expiration } days, but new period funded
                 </span>
                 <span
-                  v-if="taskOrder.display_status ==='Active' && (taskOrder.days_to_expiration > 0 && taskOrder.days_to_expiration <= 30) && taskOrders.length === 1"
-                  class="to-expiring-soon unfunded">
-                  {{ Icon('alert') }} Period ends in !{ taskOrder.days_to_expiration } days, submit a new task order
+                  v-if="taskOrder.days_to_expiration > 0 && taskOrder.days_to_expiration <= 30 && !funded"
+                  class="to-expiration-alert">
+                  {{ Icon('alert') }} Period ends in !{ taskOrder.days_to_expiration } days, submit a new task order<br>
                 </span>
               </span>
             </td>
@@ -89,15 +91,22 @@
   <div class='panel'>
     <div class='panel__content portfolio-funding__header row'>
       <h3>Portfolio Funding</h3>
-      <div class='portfolio-funding__header--funded-through {{ "funded" if funding_end_date is not none }}'>
-        {% if funding_end_date %}
+      <div class='portfolio-funding__header--funded-through {{ "funded" if funding_end_date is not none and funded else "unfunded"}}'>
+        {% if funding_end_date and funded %}
           {{ Icon('ok') }}
           Funded through
           <local-datetime
-            timestamp="{{ funding_end_date }}"
+            timestamp='{{ funding_end_date }}'
             format="M/D/YYYY">
-            </local-datetime>
-          {% endif %}
+          </local-datetime>
+        {% elif funding_end_date and not funded %}
+          {{ Icon('alert') }}
+          Funded period ends
+          <local-datetime
+            timestamp='{{ funding_end_date }}'
+            format="M/D/YYYY">
+          </local-datetime>
+        {% endif %}
       </div>
       <a href="{{ url_for("task_orders.new", screen=1, portfolio_id=portfolio.id) }}" class="usa-button">Start a New Task Order</a>
     </div>
@@ -136,7 +145,7 @@
   {% endif %}
 
   {% if active_task_orders %}
-    {{ TaskOrderList(active_task_orders, label='success') }}
+    {{ TaskOrderList(active_task_orders, label='success', funded=funded) }}
     <div class='panel portfolio-total-balance'>
       <div class='panel__content row'>
         <span>{{ total_balance | dollars }}</span>

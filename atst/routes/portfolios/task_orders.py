@@ -42,6 +42,7 @@ def portfolio_funding(portfolio_id):
         if active_task_orders
         else None
     )
+    funded = len(active_task_orders) > 1
     total_balance = sum([task_order["balance"] for task_order in active_task_orders])
 
     return render_template(
@@ -51,6 +52,7 @@ def portfolio_funding(portfolio_id):
         active_task_orders=active_task_orders,
         expired_task_orders=task_orders_by_status.get(TaskOrderStatus.EXPIRED, []),
         funding_end_date=funding_end_date,
+        funded=funded,
         total_balance=total_balance,
     )
 

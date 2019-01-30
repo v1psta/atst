@@ -50,6 +50,13 @@
         @include icon-color($color-green);
       }
     }
+
+    .unfunded {
+      color: $color-red;
+      .icon {
+        @include icon-color($color-red);
+      }
+    }
   }
 
   .pending-task-order {
@@ -127,24 +134,36 @@
       background-color: $color-gray-light;
     }
 
-    .to-expiring-soon {
-      font-weight: $font-bold;
-      font-size: 1.5rem;
-      margin-left: $gap;
+    .to-performance-period {
+      &.to-expiring-soon {
 
-      &.funded {
-        color: $color-blue;
-
-        .icon {
-          @include icon-color($color-blue);
+        .to-expiration-alert {
+          font-weight: $font-bold;
+          font-size: 1.5rem;
+          margin-left: $gap;
         }
-      }
 
-      &.unfunded {
-        color: $color-red;
+        &.funded .to-expiration-alert {
+          color: $color-blue;
 
-        .icon {
-          @include icon-color($color-red);
+
+          .icon {
+            @include icon-color($color-blue);
+          }
+        }
+
+        &.unfunded {
+          .to-expiration-alert {
+            color: $color-red;
+          }
+
+          .icon {
+            @include icon-color($color-red);
+          }
+
+          .to-end-date {
+            color: $color-red;
+          }
         }
       }
     }

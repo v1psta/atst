@@ -21,6 +21,7 @@ export default {
   props: {
     data: Array,
     expired: Boolean,
+    funded: Boolean,
   },
 
   components: {
