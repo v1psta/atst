@@ -29,7 +29,6 @@ class KOReviewForm(CacheableForm):
                 message=translate("forms.ko_review.invalid_date"),
             )
         ],
-        format="%m/%d/%Y",
     )
     pdf = FileField(
         translate("forms.ko_review.pdf_label"),
@@ -37,11 +36,11 @@ class KOReviewForm(CacheableForm):
         validators=[
             FileAllowed(
                 ["pdf", "png"], translate("forms.task_order.file_format_not_allowed")
-            ),
+            )
         ],
         render_kw={"required": False, "accept": ".pdf,.png,application/pdf,image/png"},
     )
-    to_number = StringField(
+    number = StringField(
         translate("forms.ko_review.to_number"), validators=[Length(min=10), IsNumber()]
     )
     loa = StringField(
