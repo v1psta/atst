@@ -411,7 +411,7 @@ task_orders:
       ko_info_paragraph: Your KO will need to approve funding for this Task Order by logging into the JEDI Cloud Portal, submitting the Task Order documents within their official system of record, and electronically signing. You might want to work with your program Financial Manager to get your TO documents moving in the right dirction.
       skip_ko_label: "Skip for now (We'll remind you to enter one later)"
       cor_info_title: Contracting Officer Representative (COR) Information
-      cor_info_paragraph: Your COR may assist in submitting the Task Order documents within thier official system of record. They may also be invited to log in and manage the Task Order entry within the JEDI Cloud portal.
+      cor_info_paragraph: Your COR may assist in submitting the Task Order documents within their official system of record. They may also be invited to log in and manage the Task Order entry within the JEDI Cloud portal.
       so_info_title: Security Officer Information
       so_info_paragraph: Your Security Officer will need to answer some security configuration questions in order to generate a DD-254 document, then electronically sign.
     review:
