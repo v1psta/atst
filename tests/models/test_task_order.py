@@ -1,5 +1,5 @@
 from werkzeug.datastructures import FileStorage
-import pytest
+import pytest, datetime
 
 from atst.models.attachment import Attachment
 from atst.models.task_order import TaskOrder, Status
@@ -33,7 +33,11 @@ def test_is_submitted():
     to = TaskOrder()
     assert not to.is_submitted
 
-    to = TaskOrder(number="42")
+    to = TaskOrder(
+        number="42",
+        start_date=datetime.date.today(),
+        end_date=datetime.date.today() + datetime.timedelta(days=1),
+    )
     assert to.is_submitted
 
 
