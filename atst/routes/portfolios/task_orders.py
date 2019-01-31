@@ -73,14 +73,20 @@ def view_task_order(portfolio_id, task_order_id):
 @portfolios_bp.route("/portfolios/<portfolio_id>/task_order/<task_order_id>/review")
 def ko_review(portfolio_id, task_order_id):
     task_order = TaskOrders.get(g.current_user, task_order_id)
-    # get permission: make sure g.current_user is task_order.contracting_officer
     portfolio = Portfolios.get(g.current_user, portfolio_id)
-    return render_template(
-        "/portfolios/task_orders/review.html",
-        portfolio=portfolio,
-        task_order=task_order,
-        form=KOReviewForm(obj=task_order),
-    )
+    if task_order.contracting_officer == g.current_user:
+        return render_template(
+            "/portfolios/task_orders/review.html",
+            portfolio=portfolio,
+            task_order=task_order,
+            form=KOReviewForm(obj=task_order),
+        )
+    else:
+        return render_template(
+            "portfolios/task_orders/show.html",
+            portfolio=portfolio,
+            task_order=task_order,
+        )
 
 
 @portfolios_bp.route(
