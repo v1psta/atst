@@ -73,7 +73,7 @@ class TaskOrder(Base, mixins.TimestampsMixin):
     so_dod_id = Column(String)  # DOD ID
     number = Column(String, unique=True)  # Task Order Number
     loa = Column(String)  # Line of Accounting (LOA)
-    custom_clauses = Column(String) # Custom Clauses
+    custom_clauses = Column(String)  # Custom Clauses
 
     @hybrid_property
     def csp_estimate(self):

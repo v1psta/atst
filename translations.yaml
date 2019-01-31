@@ -274,6 +274,11 @@ fragments:
     learn_more_link_text: Learn more about the JEDI Cloud Task Order and the Financial Verification process.
     paragraph_1: 'The next step is to create a Task Order associated with JEDI Cloud.  Please contact a Contracting Officer (KO), Contracting Officer Representative (COR), or a Financial Manager to help with this step.'
     paragraph_2: 'Once the Task Order has been created, you will be asked to provide details about the task order in the Financial Verification step.'
+  ko_review_alert:
+    make_sure: Make sure to take a moment to
+    bullet_1: Verify that all information is accurate and up-to-date
+    bullet_2: Upload your Task Order (TO) document
+    bullet_3: Add both the Task Order (TO) and Lines of Accounting (LOA)
 login:
   ccpo_logo_alt_text: Cloud Computing Program Office Logo
   certificate_selection:
@@ -467,6 +472,8 @@ task_orders:
       add_button_text: Add / Invite Security Officer
       invite_button_text: Invite Security Officer
   ko_review:
+    alert_title: Verify Your Info
+    submitted_by: Below is an overview of the projected portfolio submitted by {name}
     task_order_information: Task Order Information
 testing:
   example_string: Hello World

@@ -5,6 +5,7 @@
 {% from "components/icon.html" import Icon %}
 {% from "components/date_picker.html" import DatePicker %}
 {% from "components/text_input.html" import TextInput %}
+{% from "components/alert.html" import Alert %}
 
 
 {% block content %}
@@ -55,6 +56,11 @@
       {% endif %}
     </div>
   {% endmacro %}
+
+    {% set message = "task_orders.ko_review.submitted_by" | translate({"name": task_order.creator.full_name}) %}
+
+    {{ Alert(("task_orders.ko_review.alert_title" | translate), message, level='warning',
+    fragment="fragments/ko_review_alert.html") }}
 
     <div class="panel">
 
@@ -191,8 +197,10 @@
           </div>
         </div>
 
-        {{ DatePicker(form.start_date) }}
-        {{ DatePicker(form.end_date) }}
+        <div class="form__sub-fields">
+          {{ DatePicker(form.start_date) }}
+          {{ DatePicker(form.end_date) }}
+        </div>
 
         <hr>
 
@@ -210,13 +218,16 @@
 
         <div class="h2">{{ "task_orders.ko_review.task_order_information"| translate }}</div>
 
-        {{ form.pdf.label }}
-        {{ form.pdf.description }}
-        {{ form.pdf }}
-        {{ TextInput(form.number) }}
-
-        {{ TextInput(form.loa) }}
-        {{ TextInput(form.custom_clauses, paragraph=True) }}
+        <div class="form__sub-fields">
+          <div class="usa-input">
+            <div class="usa-input__title">{{ form.pdf.label }}</div>
+            {{ form.pdf.description }}
+            {{ form.pdf }}
+          </div>
+          {{ TextInput(form.number) }}
+          {{ TextInput(form.loa) }}
+          {{ TextInput(form.custom_clauses, paragraph=True) }}
+        </div>
 
       </div>
     </div>
