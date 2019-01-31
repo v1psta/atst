@@ -1,4 +1,4 @@
-from wtforms.fields import Field, StringField, SelectField as SelectField_
+from wtforms.fields import Field, FormField, StringField, SelectField as SelectField_
 from wtforms.widgets import TextArea
 
 
@@ -39,3 +39,14 @@ class NumberStringField(StringField):
             self.data = str(value)
         else:
             self.data = value
+
+
+class FormFieldWrapper(FormField):
+    def has_changes(self):
+        if not self.object_data:
+            return False
+
+        for (attr, field) in self._fields.items():
+            if attr in self.object_data and self.object_data[attr] != field.data:
+                return True
+        return False
