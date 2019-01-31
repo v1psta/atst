@@ -56,7 +56,7 @@
     <h2 class="officer__title">{{ ("task_orders.invitations." + officer_type + ".title") | translate }}</h2>
     <p class="officer__description">{{ ("task_orders.invitations." + officer_type + ".description") | translate }}</p>
 
-    <edit-officer-form v-bind:has-errors='{{ ((form.errors|length) > 0)|tojson }}' inline-template>
+    <edit-officer-form v-bind:has-errors='{{ ((form.errors|length) > 0)|tojson }}' v-bind:has-changes='{{ form.has_changes() | tojson }}' inline-template>
       <div>
 
       {% set prefix = { "contracting_officer": "ko", "contracting_officer_representative": "cor", "security_officer": "so" }[officer_type] %}
