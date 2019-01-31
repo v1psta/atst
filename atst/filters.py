@@ -16,14 +16,6 @@ def dollars(value):
         numberValue = float(value)
     except ValueError:
         numberValue = 0
-    return "${:,.0f}".format(numberValue)
-
-
-def dollarsWithCents(value):
-    try:
-        numberValue = float(value)
-    except ValueError:
-        numberValue = 0
     return "${:,.2f}".format(numberValue)
 
 
@@ -107,7 +99,6 @@ def normalizeOrder(title):
 def register_filters(app):
     app.jinja_env.filters["iconSvg"] = iconSvg
     app.jinja_env.filters["dollars"] = dollars
-    app.jinja_env.filters["dollarsWithCents"] = dollarsWithCents
     app.jinja_env.filters["usPhone"] = usPhone
     app.jinja_env.filters["readableInteger"] = readableInteger
     app.jinja_env.filters["getOptionLabel"] = getOptionLabel
