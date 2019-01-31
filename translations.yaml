@@ -208,7 +208,7 @@ forms:
     dev_team:
       label: Development Team
       description: Which people or teams will be completing the development work for your cloud applications? Select all that apply.
-      government_civilians: Government Civilians
+      civilians: Government Civilians
       military: Military
       contractor: Contractor
       other: "Other <em class='description'>(E.g. University or other partner)</em>"
