@@ -45,11 +45,13 @@ class AppInfoForm(CacheableForm):
         description=translate("forms.task_order.app_migration.description"),
         choices=APP_MIGRATION,
         default="",
+        validators=[Optional()],
     )
     native_apps = RadioField(
         translate("forms.task_order.native_apps.label"),
         description=translate("forms.task_order.native_apps.description"),
         choices=[("yes", "Yes"), ("no", "No"), ("not_sure", "Not Sure")],
+        validators=[Optional()],
     )
     complexity = SelectMultipleField(
         translate("forms.task_order.complexity.label"),
@@ -74,6 +76,7 @@ class AppInfoForm(CacheableForm):
         description=translate("forms.task_order.team_experience.description"),
         choices=TEAM_EXPERIENCE,
         default="",
+        validators=[Optional()],
     )
 
 
