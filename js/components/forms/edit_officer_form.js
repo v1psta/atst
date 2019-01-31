@@ -13,6 +13,10 @@ export default {
   },
 
   props: {
+    hasChanges: {
+      type: Boolean,
+      default: () => false,
+    },
     hasErrors: {
       type: Boolean,
       default: () => false,
@@ -21,7 +25,7 @@ export default {
 
   data: function() {
     return {
-      editing: this.hasErrors,
+      editing: this.hasErrors || this.hasChanges,
     }
   },
 

@@ -22,6 +22,13 @@ describe('EditOfficerForm', () => {
     expect(wrapper.vm.$data.editing).toEqual(true)
   })
 
+  it('does start in editing mode when the form has changes', () => {
+    const wrapper = shallowMount(EditOfficerForm, {
+      propsData: { hasChanges: true },
+    })
+    expect(wrapper.vm.$data.editing).toEqual(true)
+  })
+
   it('starts editing when edit method called', () => {
     const wrapper = shallowMount(EditOfficerForm)
     wrapper.vm.edit({ preventDefault: () => null })

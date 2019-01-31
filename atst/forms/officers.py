@@ -1,11 +1,12 @@
 from flask_wtf import FlaskForm
-from wtforms.fields import FormField, StringField
+from wtforms.fields import StringField
 from wtforms.fields.html5 import TelField
 from wtforms.validators import Length, Optional
 
 from atst.forms.validators import IsNumber, PhoneNumber
 
 from .forms import CacheableForm
+from .fields import FormFieldWrapper
 
 
 class OfficerForm(FlaskForm):
@@ -18,9 +19,9 @@ class OfficerForm(FlaskForm):
 
 class EditTaskOrderOfficersForm(CacheableForm):
 
-    contracting_officer = FormField(OfficerForm)
-    contracting_officer_representative = FormField(OfficerForm)
-    security_officer = FormField(OfficerForm)
+    contracting_officer = FormFieldWrapper(OfficerForm)
+    contracting_officer_representative = FormFieldWrapper(OfficerForm)
+    security_officer = FormFieldWrapper(OfficerForm)
 
     OFFICER_PREFIXES = {
         "contracting_officer": "ko",
