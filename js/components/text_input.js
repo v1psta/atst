@@ -1,5 +1,6 @@
 import MaskedInput, { conformToMask } from 'vue-text-mask'
 import inputValidations from '../lib/input_validations'
+import { formatDollars } from '../lib/dollars'
 
 export default {
   name: 'textinput',
@@ -78,6 +79,9 @@ export default {
     onChange: function(e) {
       // Only invalidate the field when it blurs
       this._checkIfValid({ value: e.target.value, invalidate: true })
+      if (this.validation === 'dollars') {
+        this.value = formatDollars(this._rawValue(e.target.value))
+      }
     },
 
     //
