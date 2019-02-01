@@ -20,6 +20,7 @@ class KOReviewForm(CacheableForm):
                 message=translate("forms.ko_review.invalid_date"),
             )
         ],
+        format="%m/%d/%Y",
     )
     end_date = DateField(
         translate("forms.ko_review.end_date_label"),
@@ -29,6 +30,7 @@ class KOReviewForm(CacheableForm):
                 message=translate("forms.ko_review.invalid_date"),
             )
         ],
+        format="%m/%d/%Y",
     )
     pdf = FileField(
         translate("forms.ko_review.pdf_label"),
