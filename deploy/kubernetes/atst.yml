@@ -12,6 +12,9 @@ metadata:
   name: atst
   namespace: atat
 spec:
+  selector:
+    matchLabels:
+      role: web
   replicas: 2
   strategy:
     type: RollingUpdate
@@ -19,12 +22,13 @@ spec:
     metadata:
       labels:
         app: atst
+        role: web
     spec:
       securityContext:
         fsGroup: 101
       containers:
         - name: atst
-          image: registry.atat.codes:443/atst-prod:5550eed2
+          image: registry.atat.codes:443/atst-prod:50f0843c
           resources:
             requests:
                memory: "2500Mi"
@@ -133,6 +137,9 @@ metadata:
   name: atst-worker
   namespace: atat
 spec:
+  selector:
+    matchLabels:
+      role: worker
   replicas: 1
   strategy:
     type: RollingUpdate
@@ -140,12 +147,13 @@ spec:
     metadata:
       labels:
         app: atst
+        role: worker
     spec:
       securityContext:
         fsGroup: 101
       containers:
         - name: atst-worker
-          image: registry.atat.codes:443/atst-prod:5550eed2
+          image: registry.atat.codes:443/atst-prod:50f0843c
           args: ["/bin/bash", "-c", "/opt/atat/atst/script/rq_worker"]
           resources:
             requests:
@@ -183,7 +191,7 @@ spec:
     port: 80
     targetPort: 8442
   selector:
-    app: atst
+    role: web
 ---
 apiVersion: v1
 kind: Service
@@ -200,7 +208,7 @@ spec:
     nodePort: 32751
     port: 8443
   selector:
-    app: atst
+    role: web
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
