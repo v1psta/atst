@@ -103,40 +103,16 @@ class FundingForm(CacheableForm):
         render_kw={"accept": ".pdf,.png,application/pdf,image/png"},
     )
     clin_01 = DecimalField(
-        translate("forms.task_order.clin_01_label"),
-        validators=[
-            Optional(),
-            InputRequired(
-                message=(translate("forms.task_order.clin_validation_error"))
-            ),
-        ],
+        translate("forms.task_order.clin_01_label"), validators=[Optional()]
     )
     clin_02 = DecimalField(
-        translate("forms.task_order.clin_02_label"),
-        validators=[
-            Optional(),
-            InputRequired(
-                message=(translate("forms.task_order.clin_validation_error"))
-            ),
-        ],
+        translate("forms.task_order.clin_02_label"), validators=[Optional()]
     )
     clin_03 = DecimalField(
-        translate("forms.task_order.clin_03_label"),
-        validators=[
-            Optional(),
-            InputRequired(
-                message=(translate("forms.task_order.clin_validation_error"))
-            ),
-        ],
+        translate("forms.task_order.clin_03_label"), validators=[Optional()]
     )
     clin_04 = DecimalField(
-        translate("forms.task_order.clin_04_label"),
-        validators=[
-            Optional(),
-            InputRequired(
-                message=(translate("forms.task_order.clin_validation_error"))
-            ),
-        ],
+        translate("forms.task_order.clin_04_label"), validators=[Optional()]
     )
 
 
