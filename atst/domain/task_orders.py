@@ -16,6 +16,7 @@ class TaskOrderError(Exception):
 class TaskOrders(object):
     SECTIONS = {
         "app_info": [
+            "portfolio_name",
             "scope",
             "defense_component",
             "app_migration",

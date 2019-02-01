@@ -16,6 +16,7 @@ def test_section_completion_status():
     dict_keys = [k for k in TaskOrders.SECTIONS.keys()]
     section = dict_keys[0]
     attrs = TaskOrders.SECTIONS[section].copy()
+    attrs.remove("portfolio_name")
     task_order = TaskOrderFactory.create(**{k: None for k in attrs})
     leftover = attrs.pop()
 

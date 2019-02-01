@@ -51,6 +51,7 @@ class AppInfoForm(CacheableForm):
         translate("forms.task_order.native_apps.label"),
         description=translate("forms.task_order.native_apps.description"),
         choices=[("yes", "Yes"), ("no", "No"), ("not_sure", "Not Sure")],
+        default="",
         validators=[Optional()],
     )
     complexity = SelectMultipleField(
