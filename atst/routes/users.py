@@ -38,4 +38,11 @@ def update_user():
         if next_url:
             return redirect(next_url)
 
-    return render_template("user/edit.html", form=form, user=user, next=next_url)
+    return render_template(
+        "user/edit.html",
+        form=form,
+        user=user,
+        next=next_url,
+        mindate=(dt.datetime.now() - dt.timedelta(days=365)),
+        maxdate=dt.datetime.now(),
+    )
