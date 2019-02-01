@@ -1,15 +1,7 @@
 <div class="progress-menu progress-menu--four">
   <ul>
     {% for s in screens %}
-      {% if s.complete %}
-        {% set step_indicator = 'complete' %}
-      {% elif loop.index == current %}
-        {% set step_indicator = 'active' %}
-      {% else %}
-        {% set step_indicator = 'incomplete' %}
-      {% endif %}
-
-      <li class="progress-menu__item progress-menu__item--{{ step_indicator }}">
+      <li class="progress-menu__item progress-menu__item--{{ s.completion }}">
         <a
           {% set class='' %}
           {% if task_order_id %}

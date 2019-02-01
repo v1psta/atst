@@ -1,5 +1,4 @@
 from sqlalchemy.orm.exc import NoResultFound
-
 from flask import current_app as app
 
 from atst.database import db
@@ -17,6 +16,7 @@ class TaskOrderError(Exception):
 class TaskOrders(object):
     SECTIONS = {
         "app_info": [
+            "portfolio_name",
             "scope",
             "defense_component",
             "app_migration",
@@ -93,27 +93,37 @@ class TaskOrders(object):
         return task_order
 
     @classmethod
-    def is_section_complete(cls, task_order, section):
-        if section in TaskOrders.sections():
+    def section_completion_status(cls, task_order, section):
+        if section in TaskOrders.mission_owner_sections():
+            passed = []
+            failed = []
+
             for attr in TaskOrders.SECTIONS[section]:
-                if getattr(task_order, attr) is None:
-                    return False
+                if getattr(task_order, attr):
+                    passed.append(attr)
+                else:
+                    failed.append(attr)
 
-            return True
+            if not failed:
+                return "complete"
+            elif passed and failed:
+                return "draft"
 
-        else:
-            return False
+        return "incomplete"
 
     @classmethod
     def all_sections_complete(cls, task_order):
         for section in TaskOrders.SECTIONS.keys():
-            if not TaskOrders.is_section_complete(task_order, section):
+            if (
+                TaskOrders.section_completion_status(task_order, section)
+                is not "complete"
+            ):
                 return False
 
         return True
 
     @classmethod
-    def sections(cls):
+    def mission_owner_sections(cls):
         section_list = TaskOrders.SECTIONS
         if not app.config.get("CLASSIFIED"):
             section_list["funding"] = TaskOrders.UNCLASSIFIED_FUNDING
