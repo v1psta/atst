@@ -17,6 +17,7 @@
     inline-template
     v-bind:data='{{ task_orders | tojson }}'
     v-bind:expired='{{ 'true' if expired else 'false' }}'
+    v-bind:funded='{{'true' if funded else 'false' }}'
     v-cloak
     >
     <div class='responsive-table-wrapper'>
