@@ -36,11 +36,9 @@ class KOReviewForm(CacheableForm):
         translate("forms.ko_review.pdf_label"),
         description=translate("forms.ko_review.pdf_description"),
         validators=[
-            FileAllowed(
-                ["pdf", "png"], translate("forms.task_order.file_format_not_allowed")
-            )
+            FileAllowed(["pdf"], translate("forms.task_order.file_format_not_allowed"))
         ],
-        render_kw={"required": False, "accept": ".pdf,.png,application/pdf,image/png"},
+        render_kw={"required": False, "accept": ".pdf,application/pdf"},
     )
     number = StringField(
         translate("forms.ko_review.to_number"), validators=[Length(min=10), IsNumber()]

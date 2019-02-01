@@ -7,6 +7,7 @@ from . import portfolios_bp
 from atst.database import db
 from atst.domain.task_orders import TaskOrders
 from atst.domain.portfolios import Portfolios
+from atst.domain.authz import Authorization
 from atst.forms.officers import EditTaskOrderOfficersForm
 from atst.models.task_order import Status as TaskOrderStatus
 from atst.forms.ko_review import KOReviewForm
@@ -74,18 +75,15 @@ def view_task_order(portfolio_id, task_order_id):
 def ko_review(portfolio_id, task_order_id):
     task_order = TaskOrders.get(g.current_user, task_order_id)
     portfolio = Portfolios.get(g.current_user, portfolio_id)
-    if task_order.contracting_officer == g.current_user:
+    if not Authorization.is_ko(g.current_user, task_order):
+        message = "review Task Order {}".format(task_order.id)
+        raise UnauthorizedError(g.current_user, message)
+    else:
         return render_template(
             "/portfolios/task_orders/review.html",
             portfolio=portfolio,
             task_order=task_order,
             form=KOReviewForm(obj=task_order),
-        )
-    else:
-        return render_template(
-            "portfolios/task_orders/show.html",
-            portfolio=portfolio,
-            task_order=task_order,
         )
 
 

@@ -37,8 +37,12 @@ class Authorization(object):
         return user.atat_role.name == "ccpo"
 
     @classmethod
+    def is_ko(cls, user, task_order):
+        return task_order.contracting_officer == user
+
+    @classmethod
     def check_task_order_permission(cls, user, task_order, permission, message):
-        if Authorization._check_is_task_order_officer(task_order, user):
+        if Authorization._check_is_task_order_officer(user, task_order):
             return True
 
         Authorization.check_portfolio_permission(
@@ -46,7 +50,7 @@ class Authorization(object):
         )
 
     @classmethod
-    def _check_is_task_order_officer(cls, task_order, user):
+    def _check_is_task_order_officer(cls, user, task_order):
         for officer in [
             "contracting_officer",
             "contracting_officer_representative",
