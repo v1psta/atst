@@ -67,13 +67,21 @@
 <h3 class="subheading">{{ "task_orders.new.review.reporting"| translate }} {{ TOEditLink(screen=1, anchor="reporting") }}</h3>
 
 <div class="row">
-  {% if task_order.app_migration %}
-    {{ ReviewField(("forms.task_order.app_migration.label" | translate), ("forms.task_order.app_migration.{}".format(task_order.app_migration) | translate), filter="removeHtml") }}
-  {% endif %}
+  {{
+    ReviewField(("forms.task_order.app_migration.label" | translate),
+      (
+        ("forms.task_order.app_migration.{}".format(task_order.app_migration) | translate) if task_order.app_migration else RequiredLabel()
+      ),
+      filter="removeHtml"
+    )
+  }}
 
-  {% if task_order.native_apps %}
-    {{ ReviewField(("forms.task_order.native_apps.label" | translate), ("forms.task_order.native_apps.{}".format(task_order.native_apps))| translate) }}
-  {% endif %}
+  {{
+    ReviewField(("forms.task_order.native_apps.label" | translate),
+    (
+      ("forms.task_order.native_apps.{}".format(task_order.native_apps))| translate) if task_order.native_apps else RequiredLabel()
+    )
+  }}
 </div>
 
 <h4 class='task-order-form__heading'>{{ "task_orders.new.review.complexity"| translate }}</h4>
@@ -109,9 +117,13 @@
     {% endif %}
   </div>
 
-  {% if task_order.team_experience %}
-    {{ ReviewField(("forms.task_order.team_experience.label" |translate), ("forms.task_order.team_experience.{}".format(task_order.team_experience)) | translate) }}
-  {% endif %}
+  {{
+    ReviewField(("forms.task_order.team_experience.label" |translate),
+    (
+
+      ("forms.task_order.team_experience.{}".format(task_order.team_experience)) | translate) if task_order.team_experience else RequiredLabel()
+    )
+  }}
 </div>
 
 <hr>
