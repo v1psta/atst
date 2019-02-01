@@ -154,7 +154,7 @@
           <td><h4>{{ "task_orders.new.review.to_value"| translate }}</h4></td>
           <td class="table-cell--align-right">
             {% if task_order.budget %}
-              {{ task_order.budget | dollarsWithCents }}
+              {{ task_order.budget | dollars }}
             {% endif %}
           </td>
         </tr>
@@ -162,7 +162,7 @@
           <td><h4 class='task-order-form__heading funding-summary__td'>{{ "task_orders.new.review.clin_1"| translate }}</h4></td>
           <td class="table-cell--align-right">
             {% if task_order.clin_01 %}
-              {{ task_order.clin_01 | dollarsWithCents }}
+              {{ task_order.clin_01 | dollars }}
             {% else %}
               {{ RequiredLabel() }}
             {% endif %}
@@ -177,7 +177,7 @@
           </h4></td>
           <td class="table-cell--align-right">
             {% if task_order.clin_02 and config.CLASSIFIED %}
-              {{ task_order.clin_02 | dollarsWithCents or RequiredLabel() }}
+              {{ task_order.clin_02 | dollars or RequiredLabel() }}
             {% endif %}
           </td>
         </tr>
@@ -185,7 +185,7 @@
           <td><h4 class='task-order-form__heading funding-summary__td'>{{ "task_orders.new.review.clin_3"| translate }}</h4></td>
           <td class="table-cell--align-right">
             {% if task_order.clin_03 %}
-              {{ task_order.clin_03 | dollarsWithCents or RequiredLabel() }}
+              {{ task_order.clin_03 | dollars or RequiredLabel() }}
             {% else %}
               {{ RequiredLabel() }}
             {% endif %}
@@ -200,7 +200,7 @@
           </h4></td>
           <td class="table-cell--align-right">
             {% if task_order.clin_04 and config.CLASSIFIED %}
-              {{ task_order.clin_04 | dollarsWithCents or RequiredLabel() }}
+              {{ task_order.clin_04 | dollars or RequiredLabel() }}
             {% endif %}
           </td>
         <tr>

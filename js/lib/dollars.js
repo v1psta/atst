@@ -1,8 +1,14 @@
 export const formatDollars = (value, cents = true) => {
   if (typeof value === 'number') {
-    return cents
-      ? `$${value.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`
-      : `$${value.toFixed(0).replace(/\d(?=(\d{3})+(?!\d))/g, '$&,')}`
+    return value.toLocaleString('us-US', {
+      style: 'currency',
+      currency: 'USD',
+    })
+  } else if (typeof value === 'string') {
+    return parseFloat(value).toLocaleString('us-US', {
+      style: 'currency',
+      currency: 'USD',
+    })
   }
   return ''
 }

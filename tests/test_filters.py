@@ -7,11 +7,11 @@ from atst.models import AuditEvent
 @pytest.mark.parametrize(
     "input,expected",
     [
-        ("0", "$0"),
-        ("123.00", "$123"),
-        ("1234567", "$1,234,567"),
-        ("-1234", "$-1,234"),
-        ("one", "$0"),
+        ("0", "$0.00"),
+        ("123.00", "$123.00"),
+        ("1234567", "$1,234,567.00"),
+        ("-1234", "$-1,234.00"),
+        ("one", "$0.00"),
     ],
 )
 def test_dollar_fomatter(input, expected):
