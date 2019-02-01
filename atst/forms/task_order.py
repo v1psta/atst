@@ -10,7 +10,7 @@ from wtforms.fields import (
 )
 from wtforms.fields.html5 import DateField, TelField
 from wtforms.widgets import ListWidget, CheckboxInput
-from wtforms.validators import Length, Required, InputRequired, Optional
+from wtforms.validators import Length, Required, Optional
 from flask_wtf.file import FileAllowed
 
 from atst.forms.validators import IsNumber, PhoneNumber, RequiredIf
