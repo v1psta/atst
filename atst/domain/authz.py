@@ -37,8 +37,10 @@ class Authorization(object):
         return user.atat_role.name == "ccpo"
 
     @classmethod
-    def is_ko(cls, user, task_order):
-        return task_order.contracting_officer == user
+    def check_is_ko(cls, user, task_order):
+        if task_order.contracting_officer != user:
+            message = "review Task Order {}".format(task_order.id)
+            raise UnauthorizedError(user, message)
 
     @classmethod
     def check_task_order_permission(cls, user, task_order, permission, message):

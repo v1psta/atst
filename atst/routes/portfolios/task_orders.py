@@ -75,16 +75,13 @@ def view_task_order(portfolio_id, task_order_id):
 def ko_review(portfolio_id, task_order_id):
     task_order = TaskOrders.get(g.current_user, task_order_id)
     portfolio = Portfolios.get(g.current_user, portfolio_id)
-    if not Authorization.is_ko(g.current_user, task_order):
-        message = "review Task Order {}".format(task_order.id)
-        raise UnauthorizedError(g.current_user, message)
-    else:
-        return render_template(
-            "/portfolios/task_orders/review.html",
-            portfolio=portfolio,
-            task_order=task_order,
-            form=KOReviewForm(obj=task_order),
-        )
+    Authorization.check_is_ko(g.current_user, task_order)
+    return render_template(
+        "/portfolios/task_orders/review.html",
+        portfolio=portfolio,
+        task_order=task_order,
+        form=KOReviewForm(obj=task_order),
+    )
 
 
 @portfolios_bp.route(
@@ -95,7 +92,7 @@ def submit_ko_review(portfolio_id, task_order_id, form=None):
     form = KOReviewForm(http_request.form)
     portfolio = Portfolios.get(g.current_user, portfolio_id)
 
-    if form.validate():
+    if form.validate() and Authorization.check_is_ko(g.current_user, task_order):
         TaskOrders.update(user=g.current_user, task_order=task_order, **form.data)
         return redirect(
             url_for(

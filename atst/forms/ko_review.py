@@ -41,7 +41,7 @@ class KOReviewForm(CacheableForm):
         render_kw={"required": False, "accept": ".pdf,application/pdf"},
     )
     number = StringField(
-        translate("forms.ko_review.to_number"), validators=[Length(min=10), IsNumber()]
+        translate("forms.ko_review.to_number"), validators=[Length(min=10)]
     )
     loa = StringField(
         translate("forms.ko_review.loa"), validators=[Length(min=10), IsNumber()]
