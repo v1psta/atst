@@ -109,8 +109,8 @@ class TaskOrders(object):
                 return "complete"
             elif passed and failed:
                 return "draft"
-            else:
-                return "incomplete"
+
+        return "incomplete"
 
     @classmethod
     def all_sections_complete(cls, task_order):
