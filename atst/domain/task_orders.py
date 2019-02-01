@@ -99,12 +99,10 @@ class TaskOrders(object):
             failed = []
 
             for attr in TaskOrders.SECTIONS[section]:
-                if not app.config.get("CLASSIFIED") and attr in ["clin_02", "clin_04"]:
-                    pass
-                elif not getattr(task_order, attr):
-                    failed.append(attr)
-                else:
+                if getattr(task_order, attr):
                     passed.append(attr)
+                else:
+                    failed.append(attr)
 
             if not failed:
                 return "complete"
