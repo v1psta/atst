@@ -93,7 +93,7 @@ class TaskOrders(object):
 
     @classmethod
     def section_completion_status(cls, task_order, section):
-        if section in TaskOrders.SECTIONS:
+        if section in TaskOrders.mission_owner_sections():
             passed = []
             failed = []
 
@@ -124,7 +124,7 @@ class TaskOrders(object):
         return True
 
     @classmethod
-    def sections(cls):
+    def mission_owner_sections(cls):
         section_list = TaskOrders.SECTIONS
         if not app.config.get("CLASSIFIED"):
             section_list["funding"] = TaskOrders.UNCLASSIFIED_FUNDING
