@@ -133,7 +133,7 @@ class UpdateTaskOrderWorkflow(ShowTaskOrderWorkflow):
             if "unclassified_form" in self._section and not app.config.get("CLASSIFIED")
             else "form"
         )
-        self._form = self._section[form_type](self.form_data)
+        self._form = self._section[form_type](self.form_data, obj=self.task_order)
 
     @property
     def form(self):
