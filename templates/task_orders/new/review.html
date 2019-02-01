@@ -68,18 +68,20 @@
 
 <div class="row">
   {{
-    ReviewField(("forms.task_order.app_migration.label" | translate),
+    ReviewField(
+      ("forms.task_order.app_migration.label" | translate),
       (
-        ("forms.task_order.app_migration.{}".format(task_order.app_migration) | translate) if task_order.app_migration else RequiredLabel()
-      ),
-      filter="removeHtml"
+        ("forms.task_order.app_migration.{}".format(task_order.app_migration) | translate) if task_order.app_migration
+      )
     )
   }}
 
   {{
-    ReviewField(("forms.task_order.native_apps.label" | translate),
-    (
-      ("forms.task_order.native_apps.{}".format(task_order.native_apps))| translate) if task_order.native_apps else RequiredLabel()
+    ReviewField(
+      ("forms.task_order.native_apps.label" | translate),
+      (
+        ("forms.task_order.native_apps.{}".format(task_order.native_apps) | translate) if task_order.native_apps
+      )
     )
   }}
 </div>
@@ -118,10 +120,11 @@
   </div>
 
   {{
-    ReviewField(("forms.task_order.team_experience.label" |translate),
-    (
-
-      ("forms.task_order.team_experience.{}".format(task_order.team_experience)) | translate) if task_order.team_experience else RequiredLabel()
+    ReviewField(
+      ("forms.task_order.team_experience.label" |translate),
+      (
+        ("forms.task_order.team_experience.{}".format(task_order.team_experience) | translate) if task_order.team_experience
+      )
     )
   }}
 </div>
