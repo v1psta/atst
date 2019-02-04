@@ -54,3 +54,10 @@ class TestEditTaskOrderOfficersForm:
         form.populate_obj(task_order)
         assert task_order.so_first_name == data["security_officer-first_name"]
         assert task_order.so_last_name == data["security_officer-last_name"]
+
+    def test_email_validation(self):
+        data = {"contracting_officer-email": "not_really_an_email_address"}
+        formdata = ImmutableMultiDict(data)
+        form = EditTaskOrderOfficersForm(formdata)
+        assert not form.validate()
+        assert form.contracting_officer.email.errors == ["Invalid email address."]
