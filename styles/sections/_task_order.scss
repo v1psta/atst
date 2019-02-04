@@ -117,7 +117,7 @@
     }
 
     @include ie-only {
-      width: 100%;
+      width: calc(100% - 35rem);
     }
 
     .task-order-next-steps__panel-head {
@@ -130,6 +130,10 @@
       border-bottom: 1px dotted $color-gray;
       padding: ($gap * 4) ($gap * 2);
       margin: 0;
+
+      @include ie-only {
+        width: 100%;
+      }
 
       .task-order-next-steps__icon {
         width: 8%;
@@ -145,9 +149,6 @@
 
       .task-order-next-steps__text {
         width: 60%;
-        @include ie-only {
-          width: 100%
-        }
       }
 
       .task-order-next-steps__action {
@@ -159,7 +160,11 @@
       }
 
       .task-order-next-steps__heading {
+
         h4 {
+        @include ie-only {
+          width: 100%;
+        }
           margin: $gap $gap 0 0;
         }
       }
