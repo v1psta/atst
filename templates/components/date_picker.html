@@ -59,7 +59,7 @@
       </div>
 
       <p class="usa-input-error-message" v-bind:class="{ 'form-has-errors': !isWithinDateRange }">
-        {% if maxdate and mindate %}Date must be between {{maxdate.strftime("%m/%d/%Y")}} and {{mindate.strftime("%m/%d/%Y")}}{% endif %}
+        {% if maxdate and mindate %}Date must be between {{mindate.strftime("%m/%d/%Y")}} and {{maxdate.strftime("%m/%d/%Y")}}{% endif %}
         {% if maxdate and not mindate %}Date must be before or on {{maxdate.strftime("%m/%d/%Y")}}{% endif %}
         {% if mindate and not maxdate %}Date must be after or on {{mindate.strftime("%m/%d/%Y")}}{% endif %}
       </p>
