@@ -38,17 +38,14 @@ class TaskOrders(object):
             "ko_last_name",
             "ko_email",
             "ko_phone_number",
-            "ko_dod_id",
             "cor_first_name",
             "cor_last_name",
             "cor_email",
             "cor_phone_number",
-            "cor_dod_id",
             "so_first_name",
             "so_last_name",
             "so_email",
             "so_phone_number",
-            "so_dod_id",
         ],
     }
 
