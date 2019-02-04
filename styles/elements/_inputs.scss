@@ -155,6 +155,11 @@
       padding: 0 0 $gap 0;
       @include h4;
 
+      .icon {
+        margin-top: 0;
+        margin-bottom: 0;
+      }
+
       label {
         font-weight: $font-bold;
       }
