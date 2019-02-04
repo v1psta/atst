@@ -88,11 +88,11 @@ def ko_review(portfolio_id, task_order_id):
     "/portfolios/<portfolio_id>/task_order/<task_order_id>/review", methods=["POST"]
 )
 def submit_ko_review(portfolio_id, task_order_id, form=None):
+    Authorization.check_is_ko(g.current_user, task_order)
     task_order = TaskOrders.get(g.current_user, task_order_id)
     form = KOReviewForm(http_request.form)
 
     if form.validate():
-        Authorization.check_is_ko(g.current_user, task_order)
         TaskOrders.update(user=g.current_user, task_order=task_order, **form.data)
         return redirect(
             url_for(
