@@ -122,6 +122,26 @@ def test_task_order_form_shows_errors(client, user_session):
     assert "Not a valid decimal" in body
 
 
+def test_task_order_validates_email_address(client, user_session):
+    to = task_order()
+    creator = to.creator
+    user_session(creator)
+
+    task_order_data = TaskOrderFactory.dictionary()
+    oversight_data = slice_data_for_section(task_order_data, "oversight")
+    oversight_data.update({"ko_email": "not an email"})
+
+    response = client.post(
+        url_for("task_orders.update", screen=3, task_order_id=to.id),
+        data=oversight_data,
+        follow_redirects=False,
+    )
+
+    body = response.data.decode()
+    assert "There were some errors" in body
+    assert "Invalid email" in body
+
+
 @pytest.fixture
 def task_order():
     user = UserFactory.create()
