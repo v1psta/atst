@@ -72,7 +72,8 @@
       ("forms.task_order.app_migration.label" | translate),
       (
         ("forms.task_order.app_migration.{}".format(task_order.app_migration) | translate) if task_order.app_migration
-      )
+      ),
+      filter='safe'
     )
   }}
 
