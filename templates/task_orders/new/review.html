@@ -3,6 +3,7 @@
 {% from "components/edit_link.html" import EditLink %}
 {% from "components/required_label.html" import RequiredLabel %}
 {% from "components/icon.html" import Icon %}
+{% from "components/review_field.html" import ReviewField %}
 
 {% block heading %}
   {{ "task_orders.new.review.section_title"| translate }}
@@ -18,50 +19,9 @@
 {% endif %}
 {% endmacro %}
 
-{% macro ReviewField(heading, field, filter=None) %}
-  <div class="col col--grow">
-    <h4 class='task-order-form__heading'>{{ heading }}</h4>
-    {% if field %}
-      <p>{{ field | findFilter(filter) }}</p>
-    {% else %}
-      {{ RequiredLabel() }}
-    {% endif %}
-    {% if caller %}
-      {{ caller() }}
-    {% endif %}
-  </div>
-{% endmacro %}
-
-{% macro ReviewOfficerInfo(heading, first_name, last_name, email, phone_number, dod_id, officer) %}
-  <div class="col col--grow">
-    <h4 class='task-order-form__heading'>{{ heading | translate }}</h4>
-    {{ first_name }} {{ last_name }}<br>
-    {{ email }}<br>
-    {% if phone_number %}
-      {{ phone_number | usPhone }}
-    {% else %}
-      {{ RequiredLabel() }}
-    {% endif %}
-    <br>
-    {{ "task_orders.new.review.dod_id" | translate }} {{ dod_id}}<br>
-    {% if officer %}
-      {{ Icon('ok', classes='icon--green') }} <span class="task-order-invite-message sent">{{ "task_orders.new.review.invited"| translate }}</<span>
-    {% else %}
-      {{ Icon('alert', classes='icon--red') }} <span class="task-order-invite-message not-sent">{{ "task_orders.new.review.not_invited"| translate }}</span>
-    {% endif %}
-  </div>
-{% endmacro %}
-
 
 <h3 class="subheading">{{ "task_orders.new.review.app_info"| translate }} {{ TOEditLink(screen=1) }}</h3>
-
-<div class="row">
-  {{ ReviewField(("task_orders.new.review.portfolio" | translate), task_order.portfolio_name) }}
-  {{ ReviewField(("task_orders.new.review.dod" | translate), task_order.defense_component, filter="normalizeOrder") }}
-</div>
-<div class="row">
-  {{ ReviewField(("task_orders.new.review.scope" | translate), task_order.scope) }}
-</div>
+{% include "fragments/task_order_review/app_info.html" %}
 <hr>
 
 <h3 class="subheading">{{ "task_orders.new.review.reporting"| translate }} {{ TOEditLink(screen=1, anchor="reporting") }}</h3>
@@ -133,95 +93,11 @@
 <hr>
 
 <h3 class="subheading">{{ "task_orders.new.review.funding"| translate }} {{ TOEditLink(screen=2) }}</h3>
-
-<div class="row">
-  {% call ReviewField(("task_orders.new.review.performance_period" | translate), task_order.performance_length, filter="translateDuration") %}
-    {% if task_order.csp_estimate %}
-      <p>
-        <a href="{{ url_for("task_orders.download_csp_estimate", task_order_id=task_order.id) }}" class='icon-link icon-link--left' download>{{ Icon('download') }} {{ "task_orders.new.review.usage_est_link"| translate }}</a>
-      </p>
-    {% else %}
-      <p>
-        <a href="{{ url_for("task_orders.download_csp_estimate", task_order_id=task_order.id) }}" class='icon-link icon-link--left icon-link--disabled' aria-disabled="true">{{ Icon('download') }} {{ "task_orders.new.review.usage_est_link"| translate }}</a><br>
-        {{ Icon('alert', classes='icon--red') }} <span class="task-order-invite-message not-sent">{{ "task_orders.new.review.not_uploaded"| translate }}</span>
-      </p>
-    {% endif %}
-  {% endcall %}
-
-  <div class="col col--grow">
-    <table class="funding-summary__table">
-      <tbody>
-        <tr>
-          <td><h4>{{ "task_orders.new.review.to_value"| translate }}</h4></td>
-          <td class="table-cell--align-right">
-            {% if task_order.budget %}
-              {{ task_order.budget | dollars }}
-            {% endif %}
-          </td>
-        </tr>
-        <tr>
-          <td><h4 class='task-order-form__heading funding-summary__td'>{{ "task_orders.new.review.clin_1"| translate }}</h4></td>
-          <td class="table-cell--align-right">
-            {% if task_order.clin_01 %}
-              {{ task_order.clin_01 | dollars }}
-            {% else %}
-              {{ RequiredLabel() }}
-            {% endif %}
-          </td>
-        </tr>
-        <tr>
-          <td><h4 class="task-order-form__heading funding-summary__td{% if not config.CLASSIFIED %} inactive{% endif %}">
-            {{ "task_orders.new.review.clin_2"| translate }}
-            {% if not config.CLASSIFIED %}
-              <div>{{ "task_orders.new.review.classified_inactive"| translate }}</div>
-            {% endif %}
-          </h4></td>
-          <td class="table-cell--align-right">
-            {% if task_order.clin_02 and config.CLASSIFIED %}
-              {{ task_order.clin_02 | dollars or RequiredLabel() }}
-            {% endif %}
-          </td>
-        </tr>
-        <tr>
-          <td><h4 class='task-order-form__heading funding-summary__td'>{{ "task_orders.new.review.clin_3"| translate }}</h4></td>
-          <td class="table-cell--align-right">
-            {% if task_order.clin_03 %}
-              {{ task_order.clin_03 | dollars or RequiredLabel() }}
-            {% else %}
-              {{ RequiredLabel() }}
-            {% endif %}
-          </td>
-        </tr>
-        <tr>
-          <td><h4 class="task-order-form__heading funding-summary__td{% if not config.CLASSIFIED %} inactive{% endif %}">
-            {{ "task_orders.new.review.clin_4"| translate }}
-            {% if not config.CLASSIFIED %}
-              <div>{{ "task_orders.new.review.classified_inactive"| translate }}</div>
-            {% endif %}
-          </h4></td>
-          <td class="table-cell--align-right">
-            {% if task_order.clin_04 and config.CLASSIFIED %}
-              {{ task_order.clin_04 | dollars or RequiredLabel() }}
-            {% endif %}
-          </td>
-        <tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-
+{% include "fragments/task_order_review/funding.html" %}
 <hr>
 
 <h3 class="subheading">{{ "task_orders.new.review.oversight"| translate }} {{ TOEditLink(screen=3) }}</h3>
-
-<div class="row">
-  {{ ReviewOfficerInfo("task_orders.new.review.ko", task_order.ko_first_name, task_order.ko_last_name, task_order.ko_email, task_order.ko_phone_number, task_order.ko_dod_id, task_order.contracting_officer) }}
-  {{ ReviewOfficerInfo("task_orders.new.review.cor", task_order.cor_first_name, task_order.cor_last_name, task_order.cor_email, task_order.cor_phone_number, task_order.cor_dod_id, task_order.contracting_officer_representative) }}
-</div>
-<div class="row">
-  {{ ReviewOfficerInfo("task_orders.new.review.so", task_order.so_first_name, task_order.so_last_name, task_order.so_email, task_order.so_phone_number, task_order.so_dod_id, task_order.security_officer) }}
-</div>
-
+{% include "fragments/task_order_review/oversight.html" %}
 {% endblock %}
 
 {% block next %}

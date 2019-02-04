@@ -1,0 +1,72 @@
+{% from "components/review_field.html" import ReviewField %}
+
+<div class="row">
+  {% call ReviewField(("task_orders.new.review.performance_period" | translate), task_order.performance_length, filter="translateDuration") %}
+    {% if task_order.csp_estimate %}
+      <p>
+        <a href="{{ url_for("task_orders.download_csp_estimate", task_order_id=task_order.id) }}" class='icon-link icon-link--left' download>{{ Icon('download') }} {{ "task_orders.new.review.usage_est_link"| translate }}</a>
+      </p>
+    {% else %}
+      <br/>
+      <a href="{{ url_for("task_orders.download_csp_estimate", task_order_id=task_order.id) }}" class='icon-link icon-link--left icon-link--disabled' aria-disabled="true">{{ Icon('download') }} {{ "task_orders.new.review.usage_est_link"| translate }}</a>
+      {{ Icon('alert', classes='icon--red') }} <span class="task-order-invite-message not-sent">{{ "task_orders.new.review.not_uploaded"| translate }}</span>
+    {% endif %}
+  {% endcall %}
+
+  <div class="col col--grow">
+    <table class="funding-summary__table">
+      <tbody>
+        <tr>
+          <td><h4>{{ "task_orders.new.review.to_value"| translate }}</h4></td>
+          <td class="table-cell--align-right">
+            {% if task_order.budget %}
+              {{ task_order.budget | dollarsWithCents }}
+            {% endif %}
+          </td>
+        </tr>
+        <tr>
+          <td><h4 class='task-order-form__heading funding-summary__td'>{{ "task_orders.new.review.clin_1"| translate }}</h4></td>
+          <td class="table-cell--align-right">
+            {% if task_order.clin_01 %}
+              {{ task_order.clin_01 | dollarsWithCents }}
+            {% endif %}
+          </td>
+        </tr>
+        <tr>
+          <td><h4 class="task-order-form__heading funding-summary__td{% if not config.CLASSIFIED %} inactive{% endif %}">
+            {{ "task_orders.new.review.clin_2"| translate }}
+            {% if not config.CLASSIFIED %}
+              <div>{{ "task_orders.new.review.classified_inactive"| translate }}</div>
+            {% endif %}
+          </h4></td>
+          <td class="table-cell--align-right">
+            {% if task_order.clin_02 and config.CLASSIFIED %}
+              {{ task_order.clin_02 | dollarsWithCents or RequiredLabel() }}
+            {% endif %}
+          </td>
+        </tr>
+        <tr>
+          <td><h4 class='task-order-form__heading funding-summary__td'>{{ "task_orders.new.review.clin_3"| translate }}</h4></td>
+          <td class="table-cell--align-right">
+            {% if task_order.clin_03 %}
+              {{ task_order.clin_03 | dollarsWithCents or RequiredLabel() }}
+            {% endif %}
+          </td>
+        </tr>
+        <tr>
+          <td><h4 class="task-order-form__heading funding-summary__td{% if not config.CLASSIFIED %} inactive{% endif %}">
+            {{ "task_orders.new.review.clin_4"| translate }}
+            {% if not config.CLASSIFIED %}
+              <div>{{ "task_orders.new.review.classified_inactive"| translate }}</div>
+            {% endif %}
+          </h4></td>
+          <td class="table-cell--align-right">
+            {% if task_order.clin_04 and config.CLASSIFIED %}
+              {{ task_order.clin_04 | dollarsWithCents or RequiredLabel() }}
+            {% endif %}
+          </td>
+        <tr>
+      </tbody>
+    </table>
+  </div>
+</div>

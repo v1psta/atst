@@ -92,7 +92,8 @@ def submit_ko_review(portfolio_id, task_order_id, form=None):
     form = KOReviewForm(http_request.form)
     portfolio = Portfolios.get(g.current_user, portfolio_id)
 
-    if form.validate() and Authorization.check_is_ko(g.current_user, task_order):
+    if form.validate():
+        Authorization.check_is_ko(g.current_user, task_order)
         TaskOrders.update(user=g.current_user, task_order=task_order, **form.data)
         return redirect(
             url_for(

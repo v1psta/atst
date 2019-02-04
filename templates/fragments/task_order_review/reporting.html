@@ -1,0 +1,41 @@
+{% from "components/review_field.html" import ReviewField %}
+
+<div class="row">
+  {{ ReviewField(("forms.task_order.app_migration.label" | translate), ("forms.task_order.app_migration.{}".format(task_order.app_migration) | translate), filter="removeHtml") }}
+  {{ ReviewField(("forms.task_order.native_apps.label" | translate), ("forms.task_order.native_apps.{}".format(task_order.native_apps))| translate) }}
+</div>
+
+<h4 class='task-order-form__heading'>{{ "task_orders.new.review.complexity"| translate }}</h4>
+{% if task_order.complexity %}
+  <ul class="checklist">
+  {% for item in task_order.complexity %}
+    <li>
+      {{ Icon('ok', classes='icon--gray icon--medium') }}{{ "forms.task_order.complexity.{}".format(item) | translate }}{% if item == 'other' %}: {{ task_order.complexity_other }}{% endif %}
+    </li>
+  {% endfor %}
+  </ul>
+{% else %}
+  <p>{{ RequiredLabel() }}</p>
+{% endif %}
+
+<div class="row">
+  <div class="col col--grow">
+    <h4 class='task-order-form__heading'>{{ "task_orders.new.review.team"| translate }}</h4>
+    {% if task_order.dev_team %}
+      <ul class="checklist">
+      {% for item in task_order.dev_team %}
+        <li>
+          {% if item == 'other' %}
+            {{ Icon('ok', classes='icon--gray icon--medium') }}Other: {{ task_order.dev_team_other }}
+          {% else %}
+            {{ Icon('ok', classes='icon--gray icon--medium') }}{{ "forms.task_order.dev_team.{}".format(item) | translate }}
+          {% endif %}
+        </li>
+      {% endfor %}
+      </ul>
+    {% else %}
+      <p>{{ RequiredLabel() }}</p>
+    {% endif %}
+  </div>
+  {{ ReviewField(("forms.task_order.team_experience.label" |translate), ("forms.task_order.team_experience.{}".format(task_order.team_experience)) | translate) }}
+</div>
