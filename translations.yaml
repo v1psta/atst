@@ -473,6 +473,7 @@ task_orders:
       invite_button_text: Invite Security Officer
   ko_review:
     alert_title: Verify Your Info
+    title: Task Order Builder
     submitted_by: Below is an overview of the projected portfolio submitted by {name}
     task_order_information: Task Order Information
 testing:
