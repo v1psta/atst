@@ -90,7 +90,6 @@ def ko_review(portfolio_id, task_order_id):
 def submit_ko_review(portfolio_id, task_order_id, form=None):
     task_order = TaskOrders.get(g.current_user, task_order_id)
     form = KOReviewForm(http_request.form)
-    portfolio = Portfolios.get(g.current_user, portfolio_id)
 
     if form.validate():
         Authorization.check_is_ko(g.current_user, task_order)
@@ -105,7 +104,7 @@ def submit_ko_review(portfolio_id, task_order_id, form=None):
     else:
         return render_template(
             "/portfolios/task_orders/review.html",
-            portfolio=portfolio,
+            portfolio=Portfolios.get(g.current_user, portfolio_id),
             task_order=task_order,
             form=form,
         )
