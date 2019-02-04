@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms.fields import StringField
 from wtforms.fields.html5 import TelField
-from wtforms.validators import Length, Optional
+from wtforms.validators import Email, Length, Optional
 
 from atst.forms.validators import IsNumber, PhoneNumber
 
@@ -12,7 +12,7 @@ from .fields import FormFieldWrapper
 class OfficerForm(FlaskForm):
     first_name = StringField("First Name")
     last_name = StringField("Last Name")
-    email = StringField("Email")
+    email = StringField("Email", validators=[Optional(), Email()])
     phone_number = TelField("Phone Number", validators=[PhoneNumber()])
     dod_id = StringField("DoD ID", validators=[Optional(), Length(min=10), IsNumber()])
 

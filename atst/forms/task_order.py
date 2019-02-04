@@ -10,7 +10,7 @@ from wtforms.fields import (
 )
 from wtforms.fields.html5 import DateField, TelField
 from wtforms.widgets import ListWidget, CheckboxInput
-from wtforms.validators import Length, Required, Optional
+from wtforms.validators import Email, Length, Required, Optional
 from flask_wtf.file import FileAllowed
 
 from atst.forms.validators import IsNumber, PhoneNumber, RequiredIf
@@ -132,7 +132,10 @@ class OversightForm(CacheableForm):
         translate("forms.task_order.oversight_first_name_label")
     )
     ko_last_name = StringField(translate("forms.task_order.oversight_last_name_label"))
-    ko_email = StringField(translate("forms.task_order.oversight_email_label"))
+    ko_email = StringField(
+        translate("forms.task_order.oversight_email_label"),
+        validators=[Optional(), Email()],
+    )
     ko_phone_number = TelField(
         translate("forms.task_order.oversight_phone_label"),
         validators=[Optional(), PhoneNumber()],
@@ -151,7 +154,10 @@ class OversightForm(CacheableForm):
         translate("forms.task_order.oversight_first_name_label")
     )
     cor_last_name = StringField(translate("forms.task_order.oversight_last_name_label"))
-    cor_email = StringField(translate("forms.task_order.oversight_email_label"))
+    cor_email = StringField(
+        translate("forms.task_order.oversight_email_label"),
+        validators=[Optional(), Email()],
+    )
     cor_phone_number = TelField(
         translate("forms.task_order.oversight_phone_label"),
         validators=[
@@ -176,7 +182,10 @@ class OversightForm(CacheableForm):
         translate("forms.task_order.oversight_first_name_label")
     )
     so_last_name = StringField(translate("forms.task_order.oversight_last_name_label"))
-    so_email = StringField(translate("forms.task_order.oversight_email_label"))
+    so_email = StringField(
+        translate("forms.task_order.oversight_email_label"),
+        validators=[Optional(), Email()],
+    )
     so_phone_number = TelField(
         translate("forms.task_order.oversight_phone_label"),
         validators=[Optional(), PhoneNumber()],
