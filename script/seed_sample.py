@@ -100,7 +100,7 @@ def seed_db():
     # create Portfolios for all users that have funding and are not expiring soon
     for user in users:
         portfolio = Portfolios.create(
-            user, name="{}'s portfolio".format(user.first_name)
+            user, name="{}'s portfolio (not expiring)".format(user.first_name)
         )
         for portfolio_role in PORTFOLIO_USERS:
             ws_role = Portfolios.create_member(user, portfolio, portfolio_role)
@@ -167,7 +167,7 @@ def seed_db():
 
     # Create Portfolio for Amanda with TO that is expiring soon and does not have another TO
     unfunded_portfolio = Portfolios.create(
-        amanda, name="{}'s unfunded portfolio".format(amanda.first_name)
+        amanda, name="{}'s portfolio (expiring and unfunded)".format(amanda.first_name)
     )
 
     [past_date_1, past_date_2, past_date_3, future_date] = sorted(
@@ -205,7 +205,7 @@ def seed_db():
 
     # Create Portfolio for Amanda with TO that is expiring soon and has another TO
     funded_portfolio = Portfolios.create(
-        amanda, name="{}'s funded portfolio".format(amanda.first_name)
+        amanda, name="{}'s portfolio (expiring and funded)".format(amanda.first_name)
     )
 
     [
