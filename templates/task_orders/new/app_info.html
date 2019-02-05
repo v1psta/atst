@@ -4,23 +4,12 @@
 {% from "components/options_input.html" import OptionsInput %}
 {% from "components/date_input.html" import DateInput %}
 {% from "components/multi_checkbox_input.html" import MultiCheckboxInput %}
-{% from "components/datepicker.html" import DatePicker %}
 
 {% block heading %}
   {{ "task_orders.new.app_info.section_title"| translate }}
 {% endblock %}
 
 {% block form %}
-
-<div class="usa-input">
-  <label>
-    <div class="usa-input__title">Date picker</div>
-  </label>
-
-  <span class="usa-form-hint">For example: 04 28 1986</span>
-
-  {{ DatePicker() }}
-</div>
 
 
 <!-- App Info Section -->

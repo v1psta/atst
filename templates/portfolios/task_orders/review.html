@@ -17,10 +17,10 @@
   {% include "fragments/flash.html" %}
 
   {% block form_action %}
-    {% if task_order_id %}
-      <form method='POST' action="{{ url_for('portfolios.submit_ko_review', portfolio_id=portfolio_id, task_order_id=task_order_id, form=form) }}" autocomplete="off" enctype="multipart/form-data">
-    {% endif %}
+  <form method='POST' action="{{ url_for('portfolios.submit_ko_review', portfolio_id=portfolio.id, task_order_id=task_order.id, form=form) }}" autocomplete="off" enctype="multipart/form-data">
   {% endblock %}
+
+  {{ form.csrf_token }}
 
   {% block form %}
 
@@ -63,11 +63,28 @@
         <div class="h2">{{ "task_orders.ko_review.task_order_information"| translate }}</div>
 
         <div class="form__sub-fields">
-          <div class="usa-input">
-            <div class="usa-input__title">{{ form.pdf.label }}</div>
-            {{ form.pdf.description }}
-            {{ form.pdf }}
-          </div>
+
+          <upload inline-template v-bind:initial-data='{{ form.data | tojson }}' v-bind:upload-errors='{{ form.pdf.errors | list }}'>
+            <div>
+              <template v-if="showUpload">
+                <div class="usa-input {% if form.pdf.errors %} usa-input--error {% endif %}">
+                  <div class="usa-input__title">{{ form.pdf.label }}</div>
+                  {{ form.pdf.description }}
+                  {{ form.pdf }}
+                  {% for error in form.pdf.errors %}
+                    <span class="usa-input__message">{{error}}</span>
+                  {% endfor %}
+                </div>
+              </template>
+              <template v-else>
+                <p>Uploaded {{ form.pdf.data.filename }}</p>
+                <div>
+                  <button type="button" v-on:click="showUploadInput">Change</button>
+                </div>
+              </template>
+            </div>
+          </upload>
+
           {{ TextInput(form.number) }}
           {{ TextInput(form.loa) }}
           {{ TextInput(form.custom_clauses, paragraph=True) }}

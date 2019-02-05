@@ -51,8 +51,8 @@ class TaskOrder(Base, mixins.TimestampsMixin):
     start_date = Column(Date)  # Period of Performance
     end_date = Column(Date)
     performance_length = Column(Integer)
-    attachment_id = Column(ForeignKey("attachments.id"))
-    _csp_estimate = relationship("Attachment")
+    csp_attachment_id = Column(ForeignKey("attachments.id"))
+    _csp_estimate = relationship("Attachment", foreign_keys=[csp_attachment_id])
     clin_01 = Column(Numeric(scale=2))
     clin_02 = Column(Numeric(scale=2))
     clin_03 = Column(Numeric(scale=2))
@@ -72,6 +72,8 @@ class TaskOrder(Base, mixins.TimestampsMixin):
     so_email = Column(String)  # Email
     so_phone_number = Column(String)  # Phone Number
     so_dod_id = Column(String)  # DOD ID
+    pdf_attachment_id = Column(ForeignKey("attachments.id"))
+    _pdf = relationship("Attachment", foreign_keys=[pdf_attachment_id])
     number = Column(String, unique=True)  # Task Order Number
     loa = Column(String)  # Line of Accounting (LOA)
     custom_clauses = Column(String)  # Custom Clauses
@@ -92,6 +94,21 @@ class TaskOrder(Base, mixins.TimestampsMixin):
             self._csp_estimate = None
         elif new_csp_estimate:
             raise TypeError("Could not set csp_estimate with invalid type")
+
+    @hybrid_property
+    def pdf(self):
+        return self._pdf
+
+    @pdf.setter
+    def pdf(self, new_pdf):
+        if isinstance(new_pdf, Attachment):
+            self._pdf = new_pdf
+        elif isinstance(new_pdf, FileStorage):
+            self._pdf = Attachment.attach(new_pdf, "task_order", self.id)
+        elif not new_pdf and self._pdf:
+            self._pdf = None
+        elif new_pdf:
+            raise TypeError("Could not set pdf with invalid type")
 
     @property
     def is_submitted(self):
