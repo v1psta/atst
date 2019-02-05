@@ -96,8 +96,6 @@
               {% set url=url_for("portfolios.ko_review", portfolio_id=portfolio.id, task_order_id=task_order.id) %}
             {% elif user == task_order.creator or user == task_order.contracting_officer_representative %}
               {% set url = url_for("task_orders.new", screen=1, task_order_id=task_order.id) %}
-            {% else %}
-              {% set url = url_for("portfolios.ko_review", portfolio_id=portfolio.id, task_order_id=task_order.id) %}
             {% endif %}
             <p>creator: {{task_order.creator.full_name}}</p>
             <p>cor: {{task_order.contracting_officer_representative.full_name}}</p>
