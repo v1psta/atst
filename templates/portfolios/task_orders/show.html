@@ -90,7 +90,7 @@
           title="Submit draft Task Order",
           description="Complete initial task order request form.",
           link_text="edit",
-          complete=True) %}
+          complete=all_sections_complete) %}
           <div class="task-order-next-steps__action col">
             <a
               href="{{ url_for("task_orders.new", screen=1, task_order_id=task_order.id) }}"

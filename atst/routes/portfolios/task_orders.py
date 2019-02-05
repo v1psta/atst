@@ -60,8 +60,12 @@ def portfolio_funding(portfolio_id):
 def view_task_order(portfolio_id, task_order_id):
     portfolio = Portfolios.get(g.current_user, portfolio_id)
     task_order = TaskOrders.get(g.current_user, task_order_id)
+    completed = TaskOrders.all_sections_complete(task_order)
     return render_template(
-        "portfolios/task_orders/show.html", portfolio=portfolio, task_order=task_order
+        "portfolios/task_orders/show.html",
+        portfolio=portfolio,
+        task_order=task_order,
+        all_sections_complete=completed,
     )
 
 
