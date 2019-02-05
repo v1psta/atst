@@ -8,15 +8,16 @@
 {% macro ViewLink(task_order) %}
   <a href="{{ url_for('portfolios.view_task_order', portfolio_id=portfolio.id, task_order_id=task_order.id) }}" class="icon-link view-task-order-link">
     <span>View</span>
-    {{ Icon("caret_right") }}
+    {{ Icon("caret_right", classes="icon--tiny") }}
   </a>
 {% endmacro %}
 
-{% macro TaskOrderList(task_orders, label='success', expired=False) %}
+{% macro TaskOrderList(task_orders, label='success', expired=False, funded=False) %}
   <task-order-list
     inline-template
     v-bind:data='{{ task_orders | tojson }}'
     v-bind:expired='{{ 'true' if expired else 'false' }}'
+    v-bind:funded='{{'true' if funded else 'false' }}'
     v-cloak
     >
     <div class='responsive-table-wrapper'>
@@ -27,10 +28,10 @@
               !{ col.displayName }
               <template v-if="col.sortFunc">
                 <span class="sorting-direction" v-if="col.displayName === sortInfo.columnName && sortInfo.isAscending">
-                  {{ Icon("caret_down") }}
+                  {{ Icon("caret_down", classes="icon--tiny") }}
                 </span>
                 <span class="sorting-direction" v-if="col.displayName === sortInfo.columnName && !sortInfo.isAscending">
-                  {{ Icon("caret_up") }}
+                  {{ Icon("caret_up", classes="icon--tiny") }}
                 </span>
               </template>
             </th>
@@ -43,16 +44,29 @@
               <span class='label label--{{ label }}'>!{ taskOrder.display_status }</span>
             </td>
             <td class='table-cell--grow'>
-              <span>
-              <local-datetime
-                v-bind:timestamp="taskOrder.start_date"
-                format="M/D/YYYY">
+              <span :class="{ 'to-performance-period': true, 'to-expiring-soon': (taskOrder.days_to_expiration > 0 && taskOrder.days_to_expiration <= days_to_exp_alert_limit), 'funded': funded && taskOrder.display_status === 'Active', 'unfunded': !funded && taskOrder.display_status === 'Active' }">
+                <local-datetime
+                  v-bind:timestamp="taskOrder.start_date"
+                  format="M/D/YYYY">
+                  </local-datetime>
+                  -
+                <local-datetime
+                  v-bind:timestamp="taskOrder.end_date"
+                  format="M/D/YYYY"
+                  class="to-end-date"
+                  >
                 </local-datetime>
-                -
-              <local-datetime
-                v-bind:timestamp="taskOrder.end_date"
-                format="M/D/YYYY">
-                </local-datetime>
+                <span
+                  v-if="taskOrder.days_to_expiration > 0 && taskOrder.days_to_expiration <= days_to_exp_alert_limit && funded"
+                  class="to-expiration-alert">
+                    {{ Icon('ok') }} Period ending in !{ taskOrder.days_to_expiration } days, but new period funded
+                </span>
+                <span
+                  v-if="taskOrder.days_to_expiration > 0 && taskOrder.days_to_expiration <= days_to_exp_alert_limit && !funded"
+                  class="to-expiration-alert">
+                  {{ Icon('alert') }} Period ends in !{ taskOrder.days_to_expiration } days, submit a new task order<br>
+                </span>
+              </span>
             </td>
             <td class="table-cell--align-right">
               <span v-html='formatDollars(taskOrder.budget)'></span>
@@ -63,7 +77,7 @@
             <td>
               <a v-bind:href="taskOrder.url" class="icon-link view-task-order-link">
                 <span>View</span>
-                {{ Icon("caret_right") }}
+                {{ Icon("caret_right", classes="icon--tiny") }}
               </a>
             </td>
           </tr>
@@ -78,15 +92,22 @@
   <div class='panel'>
     <div class='panel__content portfolio-funding__header row'>
       <h3>Portfolio Funding</h3>
-      <div class='portfolio-funding__header--funded-through {{ "funded" if funding_end_date is not none }}'>
-        {% if funding_end_date %}
+      <div class='portfolio-funding__header--funded-through {{ "funded" if funding_end_date is not none and funded else "unfunded"}}'>
+        {% if funding_end_date and funded %}
           {{ Icon('ok') }}
           Funded through
           <local-datetime
-            timestamp="{{ funding_end_date }}"
+            timestamp='{{ funding_end_date }}'
             format="M/D/YYYY">
-            </local-datetime>
-          {% endif %}
+          </local-datetime>
+        {% elif funding_end_date and not funded %}
+          {{ Icon('alert') }}
+          Funded period ends
+          <local-datetime
+            timestamp='{{ funding_end_date }}'
+            format="M/D/YYYY">
+          </local-datetime>
+        {% endif %}
       </div>
       <a href="{{ url_for("task_orders.new", screen=1, portfolio_id=portfolio.id) }}" class="usa-button">Start a New Task Order</a>
     </div>
@@ -125,7 +146,7 @@
   {% endif %}
 
   {% if active_task_orders %}
-    {{ TaskOrderList(active_task_orders, label='success') }}
+    {{ TaskOrderList(active_task_orders, label='success', funded=funded) }}
     <div class='panel portfolio-total-balance'>
       <div class='panel__content row'>
         <span>{{ total_balance | dollars }}</span>
@@ -135,7 +156,7 @@
   {% endif %}
 
   {% if expired_task_orders %}
-    {{ TaskOrderList(expired_task_orders, label='', expired=True) }}
+    {{ TaskOrderList(expired_task_orders, label='expired', expired=True) }}
   {% endif %}
 </div>
 

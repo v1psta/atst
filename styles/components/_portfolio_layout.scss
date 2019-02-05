@@ -50,6 +50,13 @@
         @include icon-color($color-green);
       }
     }
+
+    .unfunded {
+      color: $color-red;
+      .icon {
+        @include icon-color($color-red);
+      }
+    }
   }
 
   .pending-task-order {
@@ -82,10 +89,17 @@
 
   .view-task-order-link {
     margin-left: $gap * 2;
+
+    .icon--tiny {
+      @include icon-size(10);
+      margin-left: 1rem;
+    }
   }
 
   .portfolio-total-balance {
     margin-top: -$gap;
+    margin-bottom: 3rem;
+
     .row {
       flex-direction: row-reverse;
       margin: 2 * $gap 0;
@@ -98,8 +112,60 @@
   }
 
   table {
+    th{
+      .icon {
+        margin-left: 1rem;
+      }
+
+      &.period-of-performance {
+        color: $color-blue;
+
+        .icon {
+          @include icon-color($color-primary)
+        }
+      }
+    }
+
     td.unused-balance {
       color: $color-red;
+    }
+
+    .label--expired {
+      background-color: $color-gray-light;
+    }
+
+    .to-performance-period {
+      &.to-expiring-soon {
+
+        .to-expiration-alert {
+          font-weight: $font-bold;
+          font-size: 1.5rem;
+          margin-left: $gap;
+        }
+
+        &.funded .to-expiration-alert {
+          color: $color-blue;
+
+
+          .icon {
+            @include icon-color($color-blue);
+          }
+        }
+
+        &.unfunded {
+          .to-expiration-alert {
+            color: $color-red;
+          }
+
+          .icon {
+            @include icon-color($color-red);
+          }
+
+          .to-end-date {
+            color: $color-red;
+          }
+        }
+      }
     }
   }
 }

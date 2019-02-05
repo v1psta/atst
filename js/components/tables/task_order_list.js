@@ -21,6 +21,7 @@ export default {
   props: {
     data: Array,
     expired: Boolean,
+    funded: Boolean,
   },
 
   components: {
@@ -47,6 +48,7 @@ export default {
         attr: 'start_date',
         sortFunc: numericSort,
         width: '50%',
+        class: 'period-of-performance',
       },
       {
         displayName: 'Initial Value',
@@ -72,6 +74,7 @@ export default {
         isAscending: false,
         columns: indexBy(prop('displayName'), columns),
       },
+      days_to_exp_alert_limit: 30,
     }
   },
 
