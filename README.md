@@ -19,9 +19,10 @@ Before running the setup scripts, a couple of dependencies need to be installed
 locally:
 
 * `python` == 3.6
-  Python version 3.6 must be installed on your machine before installing `pipenv`.
+  Python version 3.6 **must** be installed on your machine before installing `pipenv`.
   You can download Python 3.6 [from python.org](https://www.python.org/downloads/)
-  or use your preferred system package manager.
+  or use your preferred system package manager. Multiple versions of Python can exist on one
+  computer, but 3.6 is required for ATAT.
 
 * `pipenv`
   ATST requires `pipenv` to be installed for python dependency management. `pipenv`
