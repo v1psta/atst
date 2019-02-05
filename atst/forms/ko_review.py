@@ -14,22 +14,10 @@ from atst.utils.localization import translate
 class KOReviewForm(CacheableForm):
     start_date = DateField(
         translate("forms.ko_review.start_date_label"),
-        validators=[
-            DateRange(
-                lower_bound=pendulum.duration(days=0),
-                message=translate("forms.ko_review.invalid_date"),
-            )
-        ],
         format="%m/%d/%Y",
     )
     end_date = DateField(
         translate("forms.ko_review.end_date_label"),
-        validators=[
-            DateRange(
-                lower_bound=pendulum.duration(days=0),
-                message=translate("forms.ko_review.invalid_date"),
-            )
-        ],
         format="%m/%d/%Y",
     )
     pdf = FileField(
