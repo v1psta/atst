@@ -443,7 +443,7 @@ task_orders:
     dod_id_label: DoD ID
     contracting_officer:
       title: Contracting Officer (KO) Information
-      description: You'll need a signature from your KO. You might want to work with your program Financial Manager to get your TO documents moved in the right direction.
+      description: You'll need a signature from your KO. You might want to work with your program Financial Manager to get your TO documents moving in the right direction.
       add_button_text: Add / Invite KO
       invite_button_text: Invite KO
     contracting_officer_representative:
@@ -453,7 +453,7 @@ task_orders:
       invite_button_text: Invite COR
     security_officer:
       title: IA Security Officer Information
-      description: Your Security Officer will need to answer some security configuration questions in order to generate a DD-254 document, then electronically sign.
+      description: Your Security Officer will need to answer some security configuration questions in order to generate a DD-254 document, then digitally sign.
       add_button_text: Add / Invite Security Officer
       invite_button_text: Invite Security Officer
 testing:
