@@ -101,11 +101,7 @@ def submit_ko_review(portfolio_id, task_order_id, form=None):
     if form.validate():
         TaskOrders.update(user=g.current_user, task_order=task_order, **form.data)
         return redirect(
-            url_for(
-                "portfolios.view_task_order",
-                portfolio_id=portfolio_id,
-                task_order_id=task_order_id,
-            )
+            url_for("task_orders.signature_requested", task_order_id=task_order_id)
         )
     else:
         return render_template(

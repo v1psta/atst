@@ -6,6 +6,7 @@ import classes from '../styles/atat.scss'
 import Vue from 'vue/dist/vue'
 import VTooltip from 'v-tooltip'
 
+import levelofwarrant from './components/levelofwarrant'
 import optionsinput from './components/options_input'
 import multicheckboxinput from './components/multi_checkbox_input'
 import textinput from './components/text_input'
@@ -45,6 +46,7 @@ const app = new Vue({
   el: '#app-root',
   components: {
     toggler,
+    levelofwarrant,
     optionsinput,
     multicheckboxinput,
     textinput,

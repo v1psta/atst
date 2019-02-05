@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% from "components/text_input.html" import TextInput %}
+{% from "components/checkbox_input.html" import CheckboxInput %}
+{% from "components/icon.html" import Icon %}
+
+{% block content %}
+<form method="POST" action='{{ url_for("task_orders.record_signature", task_order_id=task_order_id) }}'>
+  {{ form.csrf_token }}
+  <div class="row row--pad">
+    <div class="col col--pad">
+      <div class="panel">
+        <div class="panel__heading">
+          <h1 class="task-order-form__heading subheading">
+            <div class="h2">{{ "task_orders.sign.task_order_builder_title" | translate }}</div>
+            {{ "task_orders.sign.title" | translate }}
+          </h1>
+        </div>
+
+        <div class="panel__content">
+          <div is="levelofwarrant" inline-template v-bind:initial-data='{{ form.data|tojson }}'>
+            <div>
+              <span v-bind:class="{ hide: !unlimited_level_of_warrant }">
+                {{ TextInput(form.level_of_warrant, validation='dollars', placeholder='$0.00', disabled=True) }}
+              </span>
+
+              <span v-bind:class="{  hide: unlimited_level_of_warrant }">
+                {{ TextInput(form.level_of_warrant, validation='dollars', placeholder='$0.00') }}
+              </span>
+
+
+              {{ CheckboxInput(form.unlimited_level_of_warrant) }}
+            </div>
+          </div>
+
+          {{ CheckboxInput(form.signature) }}
+        </div>
+      </div>
+      <div class="action-group">
+        <button class="usa-button usa-button-big usa-button-primary">
+          {{ "common.sign" | translate }}
+        </button>
+
+        <a href="" class="action-group__action icon-link">
+          {{ Icon('caret_left') }}
+          <span class="icon icon--x"></span>
+          {{ "common.back" | translate }}
+        </a>
+      </div>
+    </div>
+  </div>
+</form>
+{% endblock %}
+

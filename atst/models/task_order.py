@@ -2,7 +2,7 @@ from enum import Enum
 from datetime import date
 
 import pendulum
-from sqlalchemy import Boolean, Column, Numeric, String, ForeignKey, Date, Integer
+from sqlalchemy import Boolean, Column, Numeric, String, ForeignKey, Date, Integer, DateTime
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.types import ARRAY
 from sqlalchemy.orm import relationship
@@ -80,6 +80,9 @@ class TaskOrder(Base, mixins.TimestampsMixin):
     number = Column(String, unique=True)  # Task Order Number
     loa = Column(String)  # Line of Accounting (LOA)
     custom_clauses = Column(String)  # Custom Clauses
+
+    signer_dod_id = Column(String)
+    signed_at = Column(DateTime)
 
     @hybrid_property
     def csp_estimate(self):
