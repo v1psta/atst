@@ -92,8 +92,13 @@
           link_text="edit",
           complete=all_sections_complete) %}
           <div class="task-order-next-steps__action col">
+            {% if user == task_order.contracting_officer %}
+              {% set url=url_for("portfolios.ko_review", portfolio_id=portfolio.id, task_order_id=task_order.id) %}
+            {% else %}
+              {% set url = url_for("task_orders.new", screen=1, task_order_id=task_order.id) %}
+            {% endif %}
             <a
-              href="{{ url_for("task_orders.new", screen=1, task_order_id=task_order.id) }}"
+              href="{{ url }}"
               class="usa-button usa-button-primary">
                 Edit
             </a>

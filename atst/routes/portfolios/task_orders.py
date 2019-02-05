@@ -7,8 +7,10 @@ from . import portfolios_bp
 from atst.database import db
 from atst.domain.task_orders import TaskOrders
 from atst.domain.portfolios import Portfolios
+from atst.domain.authz import Authorization
 from atst.forms.officers import EditTaskOrderOfficersForm
 from atst.models.task_order import Status as TaskOrderStatus
+from atst.forms.ko_review import KOReviewForm
 
 
 @portfolios_bp.route("/portfolios/<portfolio_id>/task_orders")
@@ -66,7 +68,49 @@ def view_task_order(portfolio_id, task_order_id):
         portfolio=portfolio,
         task_order=task_order,
         all_sections_complete=completed,
+        user=g.current_user,
     )
+
+
+@portfolios_bp.route("/portfolios/<portfolio_id>/task_order/<task_order_id>/review")
+def ko_review(portfolio_id, task_order_id):
+    task_order = TaskOrders.get(g.current_user, task_order_id)
+    portfolio = Portfolios.get(g.current_user, portfolio_id)
+
+    Authorization.check_is_ko(g.current_user, task_order)
+    return render_template(
+        "/portfolios/task_orders/review.html",
+        portfolio=portfolio,
+        task_order=task_order,
+        form=KOReviewForm(obj=task_order),
+    )
+
+
+@portfolios_bp.route(
+    "/portfolios/<portfolio_id>/task_order/<task_order_id>/review", methods=["POST"]
+)
+def submit_ko_review(portfolio_id, task_order_id, form=None):
+    task_order = TaskOrders.get(g.current_user, task_order_id)
+    form_data = {**http_request.form, **http_request.files}
+    form = KOReviewForm(form_data)
+
+    Authorization.check_is_ko(g.current_user, task_order)
+    if form.validate():
+        TaskOrders.update(user=g.current_user, task_order=task_order, **form.data)
+        return redirect(
+            url_for(
+                "portfolios.view_task_order",
+                portfolio_id=portfolio_id,
+                task_order_id=task_order_id,
+            )
+        )
+    else:
+        return render_template(
+            "/portfolios/task_orders/review.html",
+            portfolio=Portfolios.get(g.current_user, portfolio_id),
+            task_order=task_order,
+            form=form,
+        )
 
 
 @portfolios_bp.route(

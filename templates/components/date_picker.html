@@ -1,6 +1,11 @@
 {% from "components/icon.html" import Icon %}
 
-{% macro DatePicker(field, mindate=None, maxdate=None) -%}
+{% macro DatePicker(
+  field,
+  label=field.label | striptags,
+  description=field.description,
+  mindate=None,
+  maxdate=None) -%}
 
 <date-selector
   {% if maxdate %}maxdate="{{ maxdate.strftime("%Y-%m-%d") }}"{% endif %}
@@ -10,7 +15,16 @@
   initialyear="{{ field.data.year }}"
   inline-template>
 
-    <div class="usa-input date-picker" v-bind:class="{ 'usa-input--success': isDateValid }">
+    <fieldset class="usa-input date-picker" v-bind:class="{ 'usa-input--success': isDateValid }">
+      <legend>
+        <div class="usa-input__title">
+          {{ label }}
+        </div>
+
+        {% if description %}
+          <span class='usa-input__help'>{{ description | safe }}</span>
+        {% endif %}
+      </legend>
 
       <div class="date-picker-component">
         <input name="{{ field.name }}" v-bind:value="formattedDate" type="hidden" />
@@ -51,6 +65,7 @@
             {% if maxdate %}max="{{ maxdate.year }}"{% endif %}
             {% if mindate %}min="{{ mindate.year }}"{% endif %}
           />
+
         </div>
 
         <div class="usa-form-group-date-ok" v-if="isDateValid">
@@ -63,7 +78,7 @@
         {% if maxdate and not mindate %}Date must be before or on {{maxdate.strftime("%m/%d/%Y")}}{% endif %}
         {% if mindate and not maxdate %}Date must be after or on {{mindate.strftime("%m/%d/%Y")}}{% endif %}
       </p>
-    </div>
+    </fieldset>
   </date-selector>
 
 {%- endmacro %}

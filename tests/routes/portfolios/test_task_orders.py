@@ -68,41 +68,6 @@ class TestPortfolioFunding:
             assert context["total_balance"] == active_to1.budget + active_to2.budget
 
 
-def test_ko_can_view_task_order(client, user_session):
-    portfolio = PortfolioFactory.create()
-    ko = UserFactory.create()
-    PortfolioRoleFactory.create(
-        role=Roles.get("officer"),
-        portfolio=portfolio,
-        user=ko,
-        status=PortfolioStatus.ACTIVE,
-    )
-    task_order = TaskOrderFactory.create(portfolio=portfolio, contracting_officer=ko)
-    user_session(ko)
-    response = client.get(
-        url_for(
-            "portfolios.view_task_order",
-            portfolio_id=portfolio.id,
-            task_order_id=task_order.id,
-        )
-    )
-    assert response.status_code == 200
-
-
-def test_can_view_task_order_invitations(client, user_session):
-    portfolio = PortfolioFactory.create()
-    user_session(portfolio.owner)
-    task_order = TaskOrderFactory.create(portfolio=portfolio)
-    response = client.get(
-        url_for(
-            "portfolios.task_order_invitations",
-            portfolio_id=portfolio.id,
-            task_order_id=task_order.id,
-        )
-    )
-    assert response.status_code == 200
-
-
 class TestTaskOrderInvitations:
     def setup(self):
         self.portfolio = PortfolioFactory.create()
@@ -151,3 +116,89 @@ class TestTaskOrderInvitations:
 
         updated_task_order = TaskOrders.get(self.portfolio.owner, self.task_order.id)
         assert updated_task_order.so_first_name != "Boba"
+
+
+def test_ko_can_view_task_order(client, user_session):
+    portfolio = PortfolioFactory.create()
+    ko = UserFactory.create()
+    PortfolioRoleFactory.create(
+        role=Roles.get("officer"),
+        portfolio=portfolio,
+        user=ko,
+        status=PortfolioStatus.ACTIVE,
+    )
+    task_order = TaskOrderFactory.create(portfolio=portfolio, contracting_officer=ko)
+    user_session(ko)
+    response = client.get(
+        url_for(
+            "portfolios.view_task_order",
+            portfolio_id=portfolio.id,
+            task_order_id=task_order.id,
+        )
+    )
+    assert response.status_code == 200
+
+
+def test_can_view_task_order_invitations(client, user_session):
+    portfolio = PortfolioFactory.create()
+    user_session(portfolio.owner)
+    task_order = TaskOrderFactory.create(portfolio=portfolio)
+    response = client.get(
+        url_for(
+            "portfolios.task_order_invitations",
+            portfolio_id=portfolio.id,
+            task_order_id=task_order.id,
+        )
+    )
+    assert response.status_code == 200
+
+
+def test_ko_can_view_ko_review_page(client, user_session):
+    portfolio = PortfolioFactory.create()
+    ko = UserFactory.create()
+    PortfolioRoleFactory.create(
+        role=Roles.get("officer"),
+        portfolio=portfolio,
+        user=ko,
+        status=PortfolioStatus.ACTIVE,
+    )
+    task_order = TaskOrderFactory.create(portfolio=portfolio, contracting_officer=ko)
+    user_session(ko)
+    response = client.get(
+        url_for(
+            "portfolios.ko_review",
+            portfolio_id=portfolio.id,
+            task_order_id=task_order.id,
+        )
+    )
+    assert response.status_code == 200
+
+
+def test_mo_redirected_to_build_page(client, user_session):
+    portfolio = PortfolioFactory.create()
+    user_session(portfolio.owner)
+    task_order = TaskOrderFactory.create(portfolio=portfolio)
+
+    response = client.get(
+        url_for("task_orders.new", screen=1, task_order_id=task_order.id)
+    )
+    assert response.status_code == 200
+
+
+def test_cor_redirected_to_build_page(client, user_session):
+    portfolio = PortfolioFactory.create()
+    cor = UserFactory.create()
+    PortfolioRoleFactory.create(
+        role=Roles.get("officer"),
+        portfolio=portfolio,
+        user=cor,
+        status=PortfolioStatus.ACTIVE,
+    )
+    task_order = TaskOrderFactory.create(
+        portfolio=portfolio, contracting_officer_representative=cor
+    )
+    user_session(cor)
+    response = client.get(
+        url_for("task_orders.new", screen=1, task_order_id=task_order.id)
+    )
+    assert response.status_code == 200

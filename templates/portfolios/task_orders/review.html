@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% from "components/edit_link.html" import EditLink %}
+{% from "components/required_label.html" import RequiredLabel %}
+{% from "components/icon.html" import Icon %}
+{% from "components/date_picker.html" import DatePicker %}
+{% from "components/text_input.html" import TextInput %}
+{% from "components/alert.html" import Alert %}
+{% from "components/review_field.html" import ReviewField %}
+
+{% block content %}
+
+<div class="col task-order-form">
+
+  {% include "fragments/flash.html" %}
+
+  <form method='POST' action="{{ url_for('portfolios.submit_ko_review', portfolio_id=portfolio.id, task_order_id=task_order.id, form=form) }}" autocomplete="off" enctype="multipart/form-data">
+  {{ form.csrf_token }}
+
+  {% block form %}
+
+    {% set message = "task_orders.ko_review.submitted_by" | translate({"name": task_order.creator.full_name}) %}
+
+    {{ Alert(("task_orders.ko_review.alert_title" | translate), message, level='warning',
+    fragment="fragments/ko_review_alert.html") }}
+
+    <div class="panel">
+
+      <div class="panel__heading">
+        <h1 class="task-order-form__heading subheading">
+          <div class="h2">{{ "task_orders.ko_review.title" | translate }}</div>
+          {{ "task_orders.new.review.section_title"| translate }}
+        </h1>
+      </div>
+
+      <div class="panel__content">
+        <div class="h2">{{ "task_orders.new.review.app_info"| translate }}</div>
+        {% include "fragments/task_order_review/app_info.html" %}
+        <hr>
+
+        <div class="h2">{{ "task_orders.new.review.reporting"| translate }}</div>
+        {% include "fragments/task_order_review/reporting.html" %}
+        <hr>
+
+        <div class="h2">{{ "task_orders.new.review.funding"| translate }}</div>
+        {% include "fragments/task_order_review/funding.html" %}
+
+        <div class="form__sub-fields">
+          {{ DatePicker(form.start_date) }}
+          {{ DatePicker(form.end_date) }}
+        </div>
+        <hr>
+
+        <div class="h2">{{ "task_orders.new.review.oversight"| translate }}</div>
+        {% include "fragments/task_order_review/oversight.html" %}
+        <hr>
+
+        <div class="h2">{{ "task_orders.ko_review.task_order_information"| translate }}</div>
+
+        <div class="form__sub-fields">
+          <div class="usa-input">
+            <div class="usa-input__title">{{ form.pdf.label }}</div>
+            {{ form.pdf.description }}
+            {{ form.pdf }}
+          </div>
+          {{ TextInput(form.number) }}
+          {{ TextInput(form.loa) }}
+          {{ TextInput(form.custom_clauses, paragraph=True) }}
+        </div>
+
+      </div>
+    </div>
+    {% endblock %}
+
+      <div class='action-group'>
+        <input type='submit' class='usa-button usa-button-primary' value='Continue' />
+      </div>
+
+  </form>
+
+</div>
+{% endblock %}

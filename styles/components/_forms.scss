@@ -126,6 +126,10 @@
     width: 100%;
   }
 
+  legend {
+    @include h4;
+  }
+
   label {
     font-weight: 400;
   }

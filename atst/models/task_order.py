@@ -72,7 +72,8 @@ class TaskOrder(Base, mixins.TimestampsMixin):
     so_phone_number = Column(String)  # Phone Number
     so_dod_id = Column(String)  # DOD ID
     number = Column(String, unique=True)  # Task Order Number
-    loa = Column(ARRAY(String))  # Line of Accounting (LOA)
+    loa = Column(String)  # Line of Accounting (LOA)
+    custom_clauses = Column(String)  # Custom Clauses
 
     @hybrid_property
     def csp_estimate(self):
@@ -93,7 +94,12 @@ class TaskOrder(Base, mixins.TimestampsMixin):
 
     @property
     def is_submitted(self):
-        return self.number is not None
+
+        return (
+            self.number is not None
+            and self.start_date is not None
+            and self.end_date is not None
+        )
 
     @property
     def status(self):

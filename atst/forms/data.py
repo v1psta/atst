@@ -196,10 +196,7 @@ APPLICATION_COMPLEXITY = [
 ]
 
 DEV_TEAM = [
-    (
-        "government_civilians",
-        translate("forms.task_order.dev_team.government_civilians"),
-    ),
+    ("civilians", translate("forms.task_order.dev_team.civilians")),
     ("military", translate("forms.task_order.dev_team.military")),
     ("contractor", translate("forms.task_order.dev_team.contractor")),
     ("other", translate("forms.task_order.dev_team.other")),

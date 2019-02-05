@@ -54,6 +54,16 @@ forms:
     lname_mao_label: Last Name (optional)
     phone_ext_mao_label: Extension (optional)
     phone_mao_label: Mission Owner phone number (optional)
+  ko_review:
+    start_date_label: Period of Performance Start Date
+    end_date_label: Period of Performance End Date
+    invalid_date: Must be a date in the future.
+    pdf_label: Upload a copy of your Task Order document
+    pdf_description: Upload a PDF of the Task Order that you entered in your system of record for your organization.
+    to_number: Task Order Number
+    loa: Line of Accounting (LOA) #1
+    custom_clauses_label: Task Order Custom Clauses (optional)
+    custom_clauses_description: This will put a pause on the CSP access once the KO signs until the CCPO reviews that language to make sure it is legal.
   edit_member:
     portfolio_role_label: Portfolio Role
   edit_user:
@@ -198,7 +208,7 @@ forms:
     dev_team:
       label: Development Team
       description: Which people or teams will be completing the development work for your cloud applications? Select all that apply.
-      government_civilians: Government Civilians
+      civilians: Government Civilians
       military: Military
       contractor: Contractor
       other: "Other <em class='description'>(E.g. University or other partner)</em>"
@@ -264,6 +274,11 @@ fragments:
     learn_more_link_text: Learn more about the JEDI Cloud Task Order and the Financial Verification process.
     paragraph_1: 'The next step is to create a Task Order associated with JEDI Cloud.  Please contact a Contracting Officer (KO), Contracting Officer Representative (COR), or a Financial Manager to help with this step.'
     paragraph_2: 'Once the Task Order has been created, you will be asked to provide details about the task order in the Financial Verification step.'
+  ko_review_alert:
+    make_sure: Make sure to take a moment to
+    bullet_1: Verify that all information is accurate and up-to-date
+    bullet_2: Upload your Task Order (TO) document
+    bullet_3: Add both the Task Order (TO) and Lines of Accounting (LOA)
 login:
   ccpo_logo_alt_text: Cloud Computing Program Office Logo
   certificate_selection:
@@ -456,6 +471,11 @@ task_orders:
       description: Your Security Officer will need to answer some security configuration questions in order to generate a DD-254 document, then electronically sign.
       add_button_text: Add / Invite Security Officer
       invite_button_text: Invite Security Officer
+  ko_review:
+    alert_title: Verify Your Info
+    title: Task Order Builder
+    submitted_by: Below is an overview of the projected portfolio submitted by {name}
+    task_order_information: Task Order Information
 testing:
   example_string: Hello World
   example_with_variables: 'Hello, {name}!'
