@@ -27,7 +27,7 @@ locally:
 * `pipenv`
   ATST requires `pipenv` to be installed for python dependency management. `pipenv`
   will create the virtual environment that the app requires. [See
-  `pipenv`'s documentation for instructions on installing `pipenv](
+  `pipenv`'s documentation for instructions on installing `pipenv`](
   https://pipenv.readthedocs.io/en/latest/install/#installing-pipenv).
 
 * `yarn`
