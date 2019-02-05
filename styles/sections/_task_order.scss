@@ -292,7 +292,7 @@
   .task-order-invitations__heading {
     margin-bottom: 0;
 
-    &.subheading .h2 {
+    &.subheading {
       color: $color-gray;
     }
   }
@@ -314,6 +314,10 @@
 
     h2 {
       color: $color-gray;
+    }
+
+    .officer__description {
+      margin-bottom: 2.5rem;
     }
 
     .officer__info {
@@ -344,6 +348,10 @@
           .icon {
             @include icon-color($color-red);
           }
+        }
+
+        .status-text {
+          vertical-align: top;
         }
       }
     }
