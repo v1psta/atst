@@ -1,4 +1,3 @@
-
 {% macro CheckboxInput(field, inline=False, classes="") -%}
   <checkboxinput name='{{ field.name }}' inline-template key='{{ field.name }}'>
     <div class='usa-input {{ classes }} {% if field.errors %}usa-input--error{% endif %}'>
@@ -11,8 +10,8 @@
           {% if field.description %}
             <span class='usa-input__help'>{{ field.description | safe }}</span>
           {% endif %}
+        </legend>
       </fieldset>
     </div>
   </checkboxinput>
-
 {%- endmacro %}
