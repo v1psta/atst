@@ -74,6 +74,7 @@ export default {
         isAscending: false,
         columns: indexBy(prop('displayName'), columns),
       },
+      days_to_exp_alert_limit: 30,
     }
   },
 

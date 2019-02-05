@@ -44,7 +44,7 @@
               <span class='label label--{{ label }}'>!{ taskOrder.display_status }</span>
             </td>
             <td class='table-cell--grow'>
-              <span :class="{ 'to-performance-period': true, 'to-expiring-soon': (taskOrder.days_to_expiration > 0 && taskOrder.days_to_expiration <= 30), 'funded': funded && taskOrder.display_status === 'Active', 'unfunded': !funded && taskOrder.display_status === 'Active' }">
+              <span :class="{ 'to-performance-period': true, 'to-expiring-soon': (taskOrder.days_to_expiration > 0 && taskOrder.days_to_expiration <= days_to_exp_alert_limit), 'funded': funded && taskOrder.display_status === 'Active', 'unfunded': !funded && taskOrder.display_status === 'Active' }">
                 <local-datetime
                   v-bind:timestamp="taskOrder.start_date"
                   format="M/D/YYYY">
@@ -57,12 +57,12 @@
                   >
                 </local-datetime>
                 <span
-                  v-if="taskOrder.days_to_expiration > 0 && taskOrder.days_to_expiration <= 30 && funded"
+                  v-if="taskOrder.days_to_expiration > 0 && taskOrder.days_to_expiration <= days_to_exp_alert_limit && funded"
                   class="to-expiration-alert">
                     {{ Icon('ok') }} Period ending in !{ taskOrder.days_to_expiration } days, but new period funded
                 </span>
                 <span
-                  v-if="taskOrder.days_to_expiration > 0 && taskOrder.days_to_expiration <= 30 && !funded"
+                  v-if="taskOrder.days_to_expiration > 0 && taskOrder.days_to_expiration <= days_to_exp_alert_limit && !funded"
                   class="to-expiration-alert">
                   {{ Icon('alert') }} Period ends in !{ taskOrder.days_to_expiration } days, submit a new task order<br>
                 </span>
