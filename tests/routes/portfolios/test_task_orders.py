@@ -172,3 +172,33 @@ def test_ko_can_view_ko_review_page(client, user_session):
         )
     )
     assert response.status_code == 200
+
+
+def test_mo_redirected_to_build_page(client, user_session):
+    portfolio = PortfolioFactory.create()
+    user_session(portfolio.owner)
+    task_order = TaskOrderFactory.create(portfolio=portfolio)
+
+    response = client.get(
+        url_for("task_orders.new", screen=1, task_order_id=task_order.id)
+    )
+    assert response.status_code == 200
+
+
+def test_cor_redirected_to_build_page(client, user_session):
+    portfolio = PortfolioFactory.create()
+    cor = UserFactory.create()
+    PortfolioRoleFactory.create(
+        role=Roles.get("officer"),
+        portfolio=portfolio,
+        user=cor,
+        status=PortfolioStatus.ACTIVE,
+    )
+    task_order = TaskOrderFactory.create(
+        portfolio=portfolio, contracting_officer_representative=cor
+    )
+    user_session(cor)
+    response = client.get(
+        url_for("task_orders.new", screen=1, task_order_id=task_order.id)
+    )
+    assert response.status_code == 200

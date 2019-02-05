@@ -68,6 +68,7 @@ def view_task_order(portfolio_id, task_order_id):
         portfolio=portfolio,
         task_order=task_order,
         all_sections_complete=completed,
+        user=g.current_user,
     )
 
 
@@ -75,6 +76,7 @@ def view_task_order(portfolio_id, task_order_id):
 def ko_review(portfolio_id, task_order_id):
     task_order = TaskOrders.get(g.current_user, task_order_id)
     portfolio = Portfolios.get(g.current_user, portfolio_id)
+
     Authorization.check_is_ko(g.current_user, task_order)
     return render_template(
         "/portfolios/task_orders/review.html",
@@ -89,9 +91,10 @@ def ko_review(portfolio_id, task_order_id):
 )
 def submit_ko_review(portfolio_id, task_order_id, form=None):
     task_order = TaskOrders.get(g.current_user, task_order_id)
-    Authorization.check_is_ko(g.current_user, task_order)
-    form = KOReviewForm(http_request.form)
+    form_data = {**http_request.form, **http_request.files}
+    form = KOReviewForm(form_data)
 
+    Authorization.check_is_ko(g.current_user, task_order)
     if form.validate():
         TaskOrders.update(user=g.current_user, task_order=task_order, **form.data)
         return redirect(
