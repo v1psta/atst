@@ -1,4 +1,3 @@
-import pendulum
 from flask_wtf.file import FileAllowed
 
 from wtforms.fields.html5 import DateField
@@ -6,7 +5,7 @@ from wtforms.fields import StringField, TextAreaField, FileField
 from wtforms.validators import Optional, Length
 
 from .forms import CacheableForm
-from .validators import IsNumber, DateRange
+from .validators import IsNumber
 
 from atst.utils.localization import translate
 
