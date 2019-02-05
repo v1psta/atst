@@ -36,7 +36,10 @@ locally:
 
 * `postgres` >= 9.6
   ATST requires a PostgreSQL instance (>= 9.6) for persistence. Have PostgresSQL installed
-  and running on the default port of 5432. You can verify that PostgresSQL is running
+  and running on the default port of 5432. (A good resource for installing and running
+  PostgreSQL for Macs is [Postgres.app](https://postgresapp.com/). Follow the instructions,
+  including the optional Step 3, and add `/Applications/Postgres.app/Contents/Versions/latest/bin`
+  to your `PATH` environment variable.) You can verify that PostgresSQL is running
   by executing `psql` and ensuring that a connection is successfully made.
 
 * `redis`
