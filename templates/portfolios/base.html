@@ -1,30 +1,4 @@
-{% from "components/sidenav_item.html" import SidenavItem %}
-{% from "components/icon.html" import Icon %}
-
 {% extends "base.html" %}
-
-{% block global_sidenav %}
-  <div class="global-navigation sidenav">
-    <div class="sidenav__title">Portfolios</div>
-    <ul class="sidenav__list--padded">
-      {% for other_portfolio in portfolios|sort(attribute='name') %}
-        {{ SidenavItem(other_portfolio.name,
-          href=url_for("portfolios.show_portfolio", portfolio_id=other_portfolio.id),
-          active=other_portfolio == portfolio
-          ) }}
-      {% endfor %}
-    </ul>
-    <div class="sidenav__divider--small"></div>
-    <a class="sidenav__link sidenav__link--add" href="{{ url_for("task_orders.get_started") }}" title="Fund a New Portfolio">
-      <span class="sidenav__link-label">Fund a New Portfolio</span>
-      {{ Icon("plus", classes="sidenav__link-icon") }}
-    </a>
-  </div>
-
-  <div class="global-navigation sidenav--minimized">
-    <div class="sidenav__title">Show >>></div>
-  </div>
-{% endblock %}
 
 {% block content %}
 

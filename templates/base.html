@@ -21,7 +21,9 @@
     {% include 'navigation/topbar.html' %}
 
     <div class='global-layout'>
-      {% block global_sidenav %}{% endblock %}
+      {% block global_sidenav %}
+        {% include 'navigation/global_sidenav.html' %}
+      {% endblock %}
 
       <div class='global-panel-container'>
         {% block sidenav %}{% endblock %}
