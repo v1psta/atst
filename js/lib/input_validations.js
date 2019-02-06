@@ -122,6 +122,6 @@ export default {
     match: /^.{4,100}$/,
     unmask: [],
     validationError:
-      'Portfolio and request names must be at least 4 and not more than 100 characters',
+      'Portfolio names must be at least 4 and not more than 100 characters',
   },
 }
