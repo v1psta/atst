@@ -13,6 +13,7 @@ from atst.domain.authnid import AuthenticationContext
 from atst.domain.audit_log import AuditLog
 from atst.domain.auth import logout as _logout
 from atst.domain.common import Paginator
+from atst.domain.portfolios import Portfolios
 from atst.utils.flash import formatted_flash as flash
 
 
@@ -52,16 +53,16 @@ def home():
     if user.atat_role_name == "ccpo":
         return redirect(url_for("requests.requests_index"))
 
-    num_portfolios = len(user.portfolio_roles)
+    num_portfolios = len([role for role in user.portfolio_roles if role.is_active])
 
     if num_portfolios == 0:
         return redirect(url_for("requests.requests_index"))
     elif num_portfolios == 1:
         portfolio_role = user.portfolio_roles[0]
         portfolio_id = portfolio_role.portfolio.id
-        is_request_owner = portfolio_role.role.name == "owner"
+        is_portfolio_owner = portfolio_role.role.name == "owner"
 
-        if is_request_owner:
+        if is_portfolio_owner:
             return redirect(
                 url_for("portfolios.portfolio_reports", portfolio_id=portfolio_id)
             )
@@ -70,7 +71,13 @@ def home():
                 url_for("portfolios.portfolio_applications", portfolio_id=portfolio_id)
             )
     else:
-        return redirect(url_for("portfolios.portfolios"))
+        portfolios = Portfolios.for_user(g.current_user)
+        first_portfolio = sorted(portfolios, key=lambda portfolio: portfolio.name)[0]
+        return redirect(
+            url_for(
+                "portfolios.portfolio_applications", portfolio_id=first_portfolio.id
+            )
+        )
 
 
 @bp.route("/styleguide")
