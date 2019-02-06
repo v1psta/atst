@@ -26,6 +26,14 @@
 
   }
 
+  .sidenav__divider--small {
+    display: block;
+    width: 4 * $gap;
+    border: 1px solid #D6D7D9;
+    margin-left: 2 * $gap;
+    margin-bottom: $gap;
+  }
+
   .sidenav__link {
     display: block;
     padding: $gap ($gap * 2);
@@ -52,14 +60,6 @@
         @include icon-size(14);
       }
 
-      &:before {
-        content: "";
-        display: block;
-        width: 4 * $gap;
-        border: 1px solid #D6D7D9;
-        margin-left: $gap;
-        margin-bottom: $gap;
-      }
     }
 
     &.sidenav__link--active {
