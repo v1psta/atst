@@ -3,11 +3,13 @@
 {% block content %}
 
   <div class='portfolio-panel-container'>
-    <div class='col'>
-      {% include 'navigation/portfolio_navigation.html' %}
-    </div>
-
     <div class='col col--grow'>
+      {% block portfolio_breadcrumbs %}
+        {% include "portfolios/breadcrumbs.html" %}
+      {% endblock %}
+      {% block portfolio_header %}
+        {% include "portfolios/header.html" %}
+      {% endblock %}
       {% block portfolio_content %}{% endblock %}
     </div>
   </div>
