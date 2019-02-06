@@ -4,30 +4,6 @@ from tests.factories import UserFactory, PortfolioFactory, RequestFactory
 from atst.domain.portfolios import Portfolios
 
 
-def test_user_with_portfolios_has_portfolios_nav(client, user_session):
-    portfolio = PortfolioFactory.create()
-    user_session(portfolio.owner)
-    response = client.get("/home", follow_redirects=True)
-    assert b'href="/portfolios"' in response.data
-
-
-@pytest.mark.skip(reason="this may no longer be accurate")
-def test_user_without_portfolios_has_no_portfolios_nav(client, user_session):
-    user = UserFactory.create()
-    user_session(user)
-    response = client.get("/home", follow_redirects=True)
-    assert b'href="/portfolios"' not in response.data
-
-
-@pytest.mark.skip(reason="this may no longer be accurate")
-def test_request_owner_with_no_portfolios_redirected_to_requests(client, user_session):
-    request = RequestFactory.create()
-    user_session(request.creator)
-    response = client.get("/home", follow_redirects=False)
-
-    assert "/requests" in response.location
-
-
 def test_request_owner_with_one_portfolio_redirected_to_reports(client, user_session):
     request = RequestFactory.create()
     portfolio = Portfolios.create_from_request(request)
@@ -49,16 +25,6 @@ def test_request_owner_with_more_than_one_portfolio_redirected_to_portfolios(
     response = client.get("/home", follow_redirects=False)
 
     assert "/portfolios" in response.location
-
-
-@pytest.mark.skip(reason="this may no longer be accurate")
-def test_non_owner_user_with_no_portfolios_redirected_to_requests(client, user_session):
-    user = UserFactory.create()
-
-    user_session(user)
-    response = client.get("/home", follow_redirects=False)
-
-    assert "/requests" in response.location
 
 
 def test_non_owner_user_with_one_portfolio_redirected_to_portfolio_applications(
