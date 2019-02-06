@@ -22,7 +22,6 @@ def portfolio():
             portfolio = Portfolios.get(
                 g.current_user, http_request.view_args["portfolio_id"]
             )
-            portfolios = [ws for ws in portfolios if not ws.id == portfolio.id]
         except UnauthorizedError:
             pass
 

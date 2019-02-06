@@ -21,6 +21,8 @@
     {% include 'navigation/topbar.html' %}
 
     <div class='global-layout'>
+      {% block global_sidenav %}{% endblock %}
+
       <div class='global-panel-container'>
         {% block sidenav %}{% endblock %}
 
