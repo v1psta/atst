@@ -31,7 +31,14 @@ class AppInfoForm(CacheableForm):
     portfolio_name = StringField(
         translate("forms.task_order.portfolio_name_label"),
         description=translate("forms.task_order.portfolio_name_description"),
-        validators=[Required()],
+        validators=[
+            Required(),
+            Length(
+                min=4,
+                max=100,
+                message=translate("forms.portfolio.name_length_validation_message"),
+            ),
+        ],
     )
     scope = TextAreaField(
         translate("forms.task_order.scope_label"),
