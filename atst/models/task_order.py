@@ -84,8 +84,7 @@ class TaskOrder(Base, mixins.TimestampsMixin):
 
     @csp_estimate.setter
     def csp_estimate(self, new_csp_estimate):
-        if not self._set_attachment_type(new_csp_estimate, "_csp_estimate"):
-            raise TypeError("Could not set csp_estimate with invalid type")
+        self._csp_estimate = self._set_attachment(new_csp_estimate, "_csp_estimate")
 
     @hybrid_property
     def pdf(self):
@@ -93,23 +92,17 @@ class TaskOrder(Base, mixins.TimestampsMixin):
 
     @pdf.setter
     def pdf(self, new_pdf):
-        if not self._set_attachment_type(new_pdf, "_pdf"):
-            raise TypeError("Could not set pdf with invalid type")
+        self._pdf = self._set_attachment(new_pdf, "_pdf")
 
-    def _set_attachment_type(self, new_attachment, property):
+    def _set_attachment(self, new_attachment, property):
         if isinstance(new_attachment, Attachment):
-            setattr(self, property, new_attachment)
-            return True
+            return new_attachment
         elif isinstance(new_attachment, FileStorage):
-            setattr(
-                self, property, Attachment.attach(new_attachment, "task_order", self.id)
-            )
-            return True
+            return Attachment.attach(new_attachment, "task_order", self.id)
         elif not new_attachment and hasattr(self, property):
-            setattr(self, property, None)
-            return True
+            return None
         else:
-            return False
+            raise TypeError("Could not set attachment with invalid type")
 
     @property
     def is_submitted(self):
