@@ -94,12 +94,12 @@ class TaskOrder(Base, mixins.TimestampsMixin):
     def pdf(self, new_pdf):
         self._pdf = self._set_attachment(new_pdf, "_pdf")
 
-    def _set_attachment(self, new_attachment, property):
+    def _set_attachment(self, new_attachment, attribute):
         if isinstance(new_attachment, Attachment):
             return new_attachment
         elif isinstance(new_attachment, FileStorage):
             return Attachment.attach(new_attachment, "task_order", self.id)
-        elif not new_attachment and hasattr(self, property):
+        elif not new_attachment and hasattr(self, attribute):
             return None
         else:
             raise TypeError("Could not set attachment with invalid type")
