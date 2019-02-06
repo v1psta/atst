@@ -235,69 +235,6 @@ def test_cor_data_set_to_user_data_if_am_cor_is_checked(task_order):
     assert task_order.cor_dod_id == task_order.creator.dod_id
 
 
-def test_invite_officers_to_task_order(task_order, queue):
-    to_data = {
-        **TaskOrderFactory.dictionary(),
-        "ko_invite": True,
-        "cor_invite": True,
-        "so_invite": True,
-    }
-    workflow = UpdateTaskOrderWorkflow(
-        task_order.creator, to_data, screen=3, task_order_id=task_order.id
-    )
-    workflow.update()
-    portfolio = task_order.portfolio
-    # owner and three officers are portfolio members
-    assert len(portfolio.members) == 4
-    roles = [member.role.name for member in portfolio.members]
-    # officers exist in roles
-    assert roles.count("officer") == 3
-    # email invitations are enqueued
-    assert len(queue.get_queue()) == 3
-    # task order has relationship to user for each officer role
-    assert task_order.contracting_officer.dod_id == to_data["ko_dod_id"]
-    assert task_order.contracting_officer_representative.dod_id == to_data["cor_dod_id"]
-    assert task_order.security_officer.dod_id == to_data["so_dod_id"]
-
-
-def test_add_officer_but_do_not_invite(task_order, queue):
-    to_data = {
-        **TaskOrderFactory.dictionary(),
-        "ko_invite": False,
-        "cor_invite": False,
-        "so_invite": False,
-    }
-    workflow = UpdateTaskOrderWorkflow(
-        task_order.creator, to_data, screen=3, task_order_id=task_order.id
-    )
-    workflow.update()
-    portfolio = task_order.portfolio
-    # owner is only portfolio member
-    assert len(portfolio.members) == 1
-    # no invitations are enqueued
-    assert len(queue.get_queue()) == 0
-
-
-def test_update_does_not_resend_invitation():
-    user = UserFactory.create()
-    contracting_officer = UserFactory.create()
-    portfolio = PortfolioFactory.create(owner=user)
-    task_order = TaskOrderFactory.create(
-        creator=user,
-        portfolio=portfolio,
-        ko_first_name=contracting_officer.first_name,
-        ko_last_name=contracting_officer.last_name,
-        ko_dod_id=contracting_officer.dod_id,
-    )
-    to_data = {**task_order.to_dictionary(), "ko_invite": True}
-    workflow = UpdateTaskOrderWorkflow(
-        user, to_data, screen=3, task_order_id=task_order.id
-    )
-    for i in range(2):
-        workflow.update()
-    assert len(contracting_officer.invitations) == 1
-
-
 def test_review_task_order_form(client, user_session, task_order):
     user_session(task_order.creator)
 
