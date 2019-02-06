@@ -230,14 +230,18 @@
   }
 
   .task-order-invite-message {
+    font-weight: $font-bold;
+
     &.not-sent {
       color: $color-red;
-      font-weight: $font-bold;
     }
 
     &.sent {
       color: $color-green;
-      font-weight: $font-bold;
+    }
+
+    &.pending {
+      color: $color-gold-dark;
     }
   }
 

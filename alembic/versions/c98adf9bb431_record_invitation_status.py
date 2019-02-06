@@ -1,7 +1,7 @@
 """record invitation status
 
 Revision ID: c98adf9bb431
-Revises: da9d1c911a52
+Revises: 1f690989e38e
 Create Date: 2019-02-06 09:02:28.617202
 
 """
@@ -11,7 +11,7 @@ import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
 revision = 'c98adf9bb431'
-down_revision = 'da9d1c911a52'
+down_revision = '1f690989e38e'
 branch_labels = None
 depends_on = None
 
