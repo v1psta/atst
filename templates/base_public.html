@@ -17,31 +17,7 @@
 <div id='app-root'>
   {% include 'components/usa_header.html' %}
 
-  <header class="topbar topbar--public">
-    <nav class="topbar__navigation">
-      <a href="{{ url_for('atst.home') }}" class="topbar__link topbar__link--home">
-        {{ Icon('shield', classes='topbar__link-icon') }}
-        <span class="topbar__link-label">{{ "base_public.header_title" | translate }}</span>
-      </a>
-
-      {% if g.current_user %}
-        <a href="{{ url_for('users.user') }}" class="topbar__link">
-          <span class="topbar__link-label">{{ g.current_user.first_name + " " + g.current_user.last_name }}</span>
-          {{ Icon('avatar', classes='topbar__link-icon') }}
-        </a>
-
-        <a href="{{ url_for('atst.logout') }}" class="topbar__link" title='Log out of JEDI Cloud'>
-          {{ Icon('logout', classes='topbar__link-icon') }}
-        </a>
-      {% else %}
-        <a href="{{ url_for('atst.home') }}" class="topbar__link" title='Log in'>
-          <span class="topbar__link-label">{{ "base_public.login" | translate }}</span>
-          {{ Icon('avatar', classes='topbar__link-icon') }}
-        </a>
-      {% endif %}
-
-    </nav>
-  </header>
+  {% include 'navigation/topbar.html' %}
 
   {% block content %}{% endblock %}
 

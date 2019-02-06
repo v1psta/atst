@@ -290,7 +290,7 @@ login:
   title_tag: Sign in | JEDI Cloud
 navigation:
   topbar:
-    jedi_cloud_link_text: JEDI Cloud
+    jedi_cloud_link_text: JEDI
     logout_link_title: Log out of JEDI Cloud
     named_portfolio: 'Portfolio {portfolio}'
     no_other_active_portfolios: You have no other active JEDI portfolios.
