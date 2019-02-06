@@ -55,7 +55,7 @@ def home():
     num_portfolios = len(user.portfolio_roles)
 
     if num_portfolios == 0:
-        return redirect(url_for("requests.requests_index"))
+        return redirect(url_for("portfolios.portfolios"))
     elif num_portfolios == 1:
         portfolio_role = user.portfolio_roles[0]
         portfolio_id = portfolio_role.portfolio.id
