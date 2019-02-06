@@ -4,6 +4,7 @@
   @include media($large-screen) {
     @include unhide;
     width: 25rem;
+    margin: 0px;
   }
 
   box-shadow: 0 6px 18px 0 rgba(48,58,65,0.15);
@@ -151,6 +152,7 @@
   @extend .sidenav;
 
   @include unhide;
+  margin: 0px;
 
   @include media($large-screen) {
     @include hide;
