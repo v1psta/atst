@@ -1,4 +1,10 @@
 .sidenav {
+  @include hide;
+
+  @include media($large-screen) {
+    @include unhide;
+  }
+
   width: 25rem;
   box-shadow: 0 6px 18px 0 rgba(48,58,65,0.15);
 
@@ -138,5 +144,15 @@
       }
 
     }
+  }
+}
+
+.sidenav--minimized {
+  @extend .sidenav;
+
+  @include unhide;
+
+  @include media($large-screen) {
+    @include hide;
   }
 }
