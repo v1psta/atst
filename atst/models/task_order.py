@@ -84,15 +84,7 @@ class TaskOrder(Base, mixins.TimestampsMixin):
 
     @csp_estimate.setter
     def csp_estimate(self, new_csp_estimate):
-        if isinstance(new_csp_estimate, Attachment):
-            self._csp_estimate = new_csp_estimate
-        elif isinstance(new_csp_estimate, FileStorage):
-            self._csp_estimate = Attachment.attach(
-                new_csp_estimate, "task_order", self.id
-            )
-        elif not new_csp_estimate and self._csp_estimate:
-            self._csp_estimate = None
-        elif new_csp_estimate:
+        if not self._set_attachment_type(new_csp_estimate, "_csp_estimate"):
             raise TypeError("Could not set csp_estimate with invalid type")
 
     @hybrid_property
@@ -101,14 +93,23 @@ class TaskOrder(Base, mixins.TimestampsMixin):
 
     @pdf.setter
     def pdf(self, new_pdf):
-        if isinstance(new_pdf, Attachment):
-            self._pdf = new_pdf
-        elif isinstance(new_pdf, FileStorage):
-            self._pdf = Attachment.attach(new_pdf, "task_order", self.id)
-        elif not new_pdf and self._pdf:
-            self._pdf = None
-        elif new_pdf:
+        if not self._set_attachment_type(new_pdf, "_pdf"):
             raise TypeError("Could not set pdf with invalid type")
+
+    def _set_attachment_type(self, new_attachment, property):
+        if isinstance(new_attachment, Attachment):
+            setattr(self, property, new_attachment)
+            return True
+        elif isinstance(new_attachment, FileStorage):
+            setattr(
+                self, property, Attachment.attach(new_attachment, "task_order", self.id)
+            )
+            return True
+        elif not new_attachment and hasattr(self, property):
+            setattr(self, property, None)
+            return True
+        else:
+            return False
 
     @property
     def is_submitted(self):
