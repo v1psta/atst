@@ -9,50 +9,7 @@
       </span>
     </a>
 
-    <div class="topbar__context {% if portfolio %}topbar__context--portfolio{% endif %}">
-      {% if portfolio %}
-
-          <div is='toggler' class='topbar__portfolio-menu'>
-            <template slot-scope='props'>
-              <button
-                v-on:click='props.toggle'
-                class="topbar__link topbar__portfolio-menu__toggle"
-                v-bind:class="{ 'topbar__portfolio-menu__toggle--open': props.isVisible }">
-                <span class="topbar__link-label">{{ "navigation.topbar.named_portfolio" | translate({ "portfolio": portfolio.name }) }}</span>
-                <template v-if='props.isVisible'>{{ Icon('caret_up', classes='topbar__link-icon') }}</template>
-                <template v-else>{{ Icon('caret_down', classes='topbar__link-icon') }}</template>
-              </button>
-
-              <div v-show='props.isVisible' class='topbar__portfolio-menu__panel menu'>
-                <h2 class='menu__heading'>
-                  {{ "navigation.topbar.other_active_portfolios" | translate }}
-                </h2>
-                {% if portfolios %}
-
-                  <ul class='menu__list'>
-                    {% for other_portfolio in portfolios %}
-                      <li class='menu__list__item'>
-                        <a href="{{ url_for('portfolios.show_portfolio', portfolio_id=other_portfolio.id)}}">
-                          {{ other_portfolio.name }}
-                          {{ Icon('caret_right', classes='topbar__link-icon') }}
-                        </a>
-                      </li>
-                    {% endfor %}
-                  </ul>
-
-                {% else %}
-
-                  <p class='menu__message'>
-                    {{ "navigation.topbar.no_other_active_portfolios" | translate }}
-                  </p>
-
-                {% endif %}
-              </div>
-            </template>
-          </div>
-
-      {% endif %}
-
+    <div class="topbar__context">
       {% if g.current_user %}
         <a href="{{ url_for('users.user') }}" class="topbar__link">
           <span class="topbar__link-label">{{ g.current_user.first_name + " " + g.current_user.last_name }}</span>
