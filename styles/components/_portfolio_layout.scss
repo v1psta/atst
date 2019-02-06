@@ -2,6 +2,13 @@
   @include media($large-screen) {
     @include grid-row;
   }
+
+  .line {
+    box-sizing: border-box;
+    height: 2px;
+    width: 100%;
+    border: 1px solid $color-gray-lightest;
+  }
 }
 
 .portfolio-breadcrumbs {
