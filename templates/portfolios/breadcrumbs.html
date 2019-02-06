@@ -1,1 +1,13 @@
-{{ portfolio.name }}
+{% from "components/icon.html" import Icon %}
+
+<div class="row portfolio-breadcrumbs">
+  <div class="portfolio-breadcrumbs__home">
+    {{ Icon("briefcase") }}
+    <span>
+      {{ portfolio.name }} Portfolio
+    </span>
+  </div>
+  <div class="portfolio-breadcrumbs__crumb">
+  </div>
+</div
+>

@@ -4,6 +4,15 @@
   }
 }
 
+.portfolio-breadcrumbs {
+  margin-bottom: $gap * 2;
+  color: $color-gray-medium;
+  font-size: $h5-font-size;
+  .icon {
+    @include icon-color($color-gray-medium);
+  }
+}
+
 .portfolio-navigation {
   @include panel-margin;
   margin-bottom: $gap * 4;
