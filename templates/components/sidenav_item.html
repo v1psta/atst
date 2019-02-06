@@ -7,7 +7,14 @@
       {{ Icon(icon, classes="sidenav__link-icon") }}
     {% endif %}
 
-    <span class="sidenav__link-label">{{label}}</span>
+    <span class="sidenav__link-label">
+      {{label}}
+    </span>
+    {% if active %}
+      <span class="sidenav__link-active_indicator">
+        {{ Icon("caret_right") }}
+      </span>
+      {% endif %}
   </a>
 
   {% if subnav and active %}

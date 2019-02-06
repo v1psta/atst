@@ -71,6 +71,13 @@
         @include icon-style-active;
       }
 
+      position: relative;
+      .sidenav__link-active_indicator .icon {
+        @include icon-color($color-primary);
+        position: absolute;
+        right: 0;
+      }
+
       + ul {
         background-color: $color-primary;
 
