@@ -361,6 +361,32 @@
     }
 
     .officer__form {
+        padding: 1.5rem;
+        background-color: $color-aqua-lightest;
+        border-left-color: $color-blue;
+        border-left-style: solid;
+        border-left-width: $gap / 2;
+
+      .edit-officer {
+        h4 {
+          color: $color-gray;
+          margin-bottom: 0.5rem;
+        }
+
+        p {
+          font-size: 1.5rem;
+        }
+      }
+
+      .usa-input__title {
+        font-weight: normal;
+      }
+
+      .form-row {
+        margin-bottom: 0rem;
+        margin-top: 0rem;
+      }
+
       .officer__form--actions {
         display: flex;
         flex-direction: row;

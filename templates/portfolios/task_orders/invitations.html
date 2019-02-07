@@ -14,43 +14,43 @@
 {% endmacro %}
 
 {% macro EditOfficerInfo(form, officer_type) -%}
-<div class='officer__form'>
   <template v-if="editing">
-    <div class='alert'>
-      <div class='alert__content'>
-        <div class='form-row'>
-          <div class='form-col form-col--half'>
-            {{ TextInput(form.first_name) }}
-          </div>
-
-          <div class='form-col form-col--half'>
-            {{ TextInput(form.last_name) }}
-          </div>
+    <div class='officer__form'>
+      <div class="edit-officer">
+        <h4>{{ ("task_orders.invitations." + officer_type + ".edit_title")  | translate}}</h4>
+        <p>{{ "task_orders.invitations.edit_text"  | translate}}</p>
+      </div>
+      <div class='form-row'>
+        <div class='form-col form-col--half'>
+          {{ TextInput(form.first_name) }}
         </div>
 
-        <div class='form-row'>
-          <div class='form-col form-col--half'>
-            {{ TextInput(form.email, placeholder='name@mail.mil', validation='email') }}
-          </div>
+        <div class='form-col form-col--half'>
+          {{ TextInput(form.last_name) }}
+        </div>
+      </div>
 
-          <div class='form-col form-col--half'>
-            {{ TextInput(form.phone_number, placeholder='(123) 456-7890', validation='usPhone') }}
-          </div>
+      <div class='form-row'>
+        <div class='form-col form-col--half'>
+          {{ TextInput(form.email, placeholder='name@mail.mil', validation='email') }}
         </div>
-        {% if form.dod_id.data %}
-          {{ TextInput(form.dod_id, validation='dodId', disabled=True)}}
-        {% endif %}
-        <div class='alert__actions officer__form--actions'>
-          <a href="#{{ officer_type }}" v-on:click="cancel" class="icon-link">
-            {{ Icon("x") }}
-            <span>Cancel</span>
-          </a>
-          <input type='submit' class='usa-button usa-button-primary' value='Save Changes' />
+
+        <div class='form-col form-col--half'>
+          {{ TextInput(form.phone_number, placeholder='(123) 456-7890', validation='usPhone') }}
         </div>
+      </div>
+      {% if form.dod_id.data %}
+        {{ TextInput(form.dod_id, validation='dodId', disabled=True)}}
+      {% endif %}
+      <div class='alert__actions officer__form--actions'>
+        <a href="#{{ officer_type }}" v-on:click="cancel" class="icon-link">
+          {{ Icon("x") }}
+          <span>Cancel</span>
+        </a>
+        <input type='submit' class='usa-button usa-button-primary' value='Save Changes' />
       </div>
     </div>
   </template>
-</div>
 {% endmacro %}
 
 {% macro OfficerInfo(task_order, officer_type, form) %}
