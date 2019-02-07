@@ -13,6 +13,16 @@ from atst.domain.authz import Authorization
 from atst.models.permissions import Permissions
 
 
+def get_breadcrumb_from_request(request):
+    if request.url_rule.rule.startswith("/portfolios/<portfolio_id>/task_order"):
+        return "Funding"
+    if request.url_rule.endpoint == "portfolios.portfolio":
+        return "Admin"
+    if request.url_rule.endpoint == "portfolios.portfolio_reports":
+        return "Reports"
+    return None
+
+
 @portfolios_bp.context_processor
 def portfolio():
     portfolio = None
@@ -31,4 +41,9 @@ def portfolio():
             )
         return False
 
-    return {"portfolio": portfolio, "permissions": Permissions, "user_can": user_can}
+    return {
+        "portfolio": portfolio,
+        "permissions": Permissions,
+        "user_can": user_can,
+        "secondary_breadcrumb": get_breadcrumb_from_request(http_request),
+    }

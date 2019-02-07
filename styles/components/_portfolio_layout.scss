@@ -15,8 +15,29 @@
   margin-bottom: $gap * 2;
   color: $color-gray-medium;
   font-size: $h5-font-size;
+
+  .icon-link {
+    color: $color-gray-medium;
+    font-weight: normal;
+  }
+
+  .icon--tiny {
+    padding: $gap 0;
+  }
+
   .icon {
     @include icon-color($color-gray-medium);
+  }
+
+  .portfolio-breadcrumbs__crumb {
+    .icon {
+      @include icon-color($color-blue);
+    }
+
+    .icon-link {
+      color: $color-blue;
+      pointer-events: none;
+    }
   }
 }
 

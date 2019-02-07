@@ -1,13 +1,19 @@
 {% from "components/icon.html" import Icon %}
 
 <div class="row portfolio-breadcrumbs">
-  <div class="portfolio-breadcrumbs__home">
+  <a class="icon-link portfolio-breadcrumbs__home" href="{{ url_for("portfolios.portfolio_applications", portfolio_id=portfolio.id) }}">
     {{ Icon("briefcase") }}
     <span>
       {{ portfolio.name }} Portfolio
     </span>
-  </div>
+  </a>
   <div class="portfolio-breadcrumbs__crumb">
+    {% if secondary_breadcrumb %}
+      {{ Icon("caret_right", classes="icon--tiny") }}
+      <div class="icon-link">
+        {{ secondary_breadcrumb }}
+      </div>
+    {% endif %}
   </div>
 </div
 >
