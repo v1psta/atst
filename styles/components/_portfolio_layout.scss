@@ -20,6 +20,41 @@
   }
 }
 
+.portfolio-header {
+  margin: 2 * $gap 0;
+
+  .portfolio-header__name {
+    @include h1;
+  }
+
+  .portfolio-header__budget {
+    font-size: $small-font-size;
+    align-items: center;
+
+    button {
+      margin: 0;
+      padding: 0;
+    }
+
+    .portfolio-header__budget--dollars {
+      font-size: $h2-font-size;
+      font-weight: bold;
+    }
+  }
+
+  .links {
+    font-size: $small-font-size;
+
+    .link--icon {
+      text-align: center;
+    }
+
+    .icon {
+      @include icon-size(20);
+    }
+  }
+}
+
 .portfolio-navigation {
   @include panel-margin;
   margin-bottom: $gap * 4;

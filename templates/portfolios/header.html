@@ -1,1 +1,44 @@
-{{ portfolio.name }}
+{% from "components/icon.html" import Icon %}
+
+{% macro Link(icon, text, url, active=False) %}
+  <a class='icon-link' href='{{ url }}'>
+    <div class='col'>
+      <div class='link--icon'>{{ Icon(icon) }}</div>
+      <div class='link--name'>{{ text }}</div>
+    </div>
+  </a>
+{% endmacro %}
+
+<div class='portfolio-header row'>
+  <div class='col col--grow'>
+    <div class='portfolio-header__name'>
+      {{ portfolio.name }}
+    </div>
+    <div class='portfolio-header__budget row'>
+      <span>Available budget</span>
+      <button type="button" tabindex="0" class="icon-tooltip" v-tooltip.right="{content: 'The available budget shown includes the available budget of all active task orders', container: false}">
+        {{ Icon('info') }}
+      </button>
+      <span class='portfolio-header__budget--dollars'>
+        {{ portfolio.task_orders | sum(attribute='budget') | dollars }}
+      </span>
+    </div>
+  </div>
+  <div class='row links'>
+    {{ Link(
+      icon='chart',
+      text='Reports',
+      url=url_for("portfolios.portfolio_reports", portfolio_id=portfolio.id))
+    }}
+    {{ Link(
+      icon='dollar-sign',
+      text='Funding',
+      url=url_for("portfolios.portfolio_funding", portfolio_id=portfolio.id))
+    }}
+    {{ Link(
+      icon='time',
+      text='Admin',
+      url=url_for("portfolios.portfolio", portfolio_id=portfolio.id))
+    }}
+  </div>
+</div>
