@@ -18,6 +18,14 @@ class Application(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     environments = relationship("Environment", back_populates="application")
 
     @property
+    def users(self):
+        return set([user for env in self.environments for user in env.users])
+
+    @property
+    def num_users(self):
+        return len(self.users)
+
+    @property
     def displayname(self):
         return self.name
 

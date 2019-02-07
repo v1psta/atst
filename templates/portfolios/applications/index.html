@@ -48,7 +48,7 @@
                 {% endif %}
                 <a class='icon-link' href='{{ url_for("portfolios.edit_application", portfolio_id=portfolio.id, application_id=application.id) }}'>
                   <span>Team</span>
-                  <span class='counter'>11</span>
+                  <span class='counter'>{{ application.num_users }}</span>
                 </a>
               </div>
             </div>
