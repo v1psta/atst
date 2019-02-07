@@ -46,7 +46,7 @@
                   </a>
                   <div class='separator'></div>
                 {% endif %}
-                <a class='icon-link' href='{{ url_for("portfolios.edit_application", portfolio_id=portfolio.id, application_id=application.id) }}'>
+                <a class='icon-link' href='{{ url_for("portfolios.portfolio_members", portfolio_id=portfolio.id) }}'>
                   <span>Team</span>
                   <span class='counter'>{{ application.num_users }}</span>
                 </a>
