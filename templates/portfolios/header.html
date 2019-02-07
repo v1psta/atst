@@ -28,21 +28,21 @@
     {% if user_can(permissions.VIEW_USAGE_DOLLARS) %}
       {{ Link(
         icon='chart-pie',
-        text='Reports',
+        text='navigation.portfolio_navigation.breadcrumbs.reports' | translate,
         url=url_for("portfolios.portfolio_reports", portfolio_id=portfolio.id),
         active=request.url_rule.endpoint == "portfolios.portfolio_reports",
       ) }}
     {% endif %}
     {{ Link(
       icon='dollar-sign',
-      text='Funding',
+      text='navigation.portfolio_navigation.breadcrumbs.funding' | translate,
       url=url_for("portfolios.portfolio_funding", portfolio_id=portfolio.id),
       active=request.url_rule.endpoint == "portfolios.portfolio_funding",
     ) }}
     {% if user_can(permissions.EDIT_PORTFOLIO_INFORMATION) %}
       {{ Link(
         icon='cog',
-        text='Admin',
+        text='navigation.portfolio_navigation.breadcrumbs.admin' | translate,
         url=url_for("portfolios.portfolio", portfolio_id=portfolio.id),
         active=request.url_rule.endpoint == "portfolios.portfolio",
       ) }}

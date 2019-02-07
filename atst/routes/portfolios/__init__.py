@@ -11,15 +11,16 @@ from atst.domain.exceptions import UnauthorizedError
 from atst.domain.portfolios import Portfolios
 from atst.domain.authz import Authorization
 from atst.models.permissions import Permissions
+from atst.utils.localization import translate
 
 
 def get_breadcrumb_from_request(request):
     if request.url_rule.rule.startswith("/portfolios/<portfolio_id>/task_order"):
-        return "Funding"
+        return translate("navigation.portfolio_navigation.breadcrumbs.funding")
     if request.url_rule.endpoint == "portfolios.portfolio":
-        return "Admin"
+        return translate("navigation.portfolio_navigation.breadcrumbs.admin")
     if request.url_rule.endpoint == "portfolios.portfolio_reports":
-        return "Reports"
+        return translate("navigation.portfolio_navigation.breadcrumbs.reports")
     return None
 
 

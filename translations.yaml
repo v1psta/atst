@@ -305,6 +305,10 @@ navigation:
     applications: Applications
     portfolio_funding: Funding
     portfolio_settings: Portfolio Settings
+    breadcrumbs:
+      admin: Admin
+      funding: Funding
+      reports: Reports
 requests:
   _new:
     new_request: New Request
