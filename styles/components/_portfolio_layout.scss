@@ -2,32 +2,91 @@
   @include media($large-screen) {
     @include grid-row;
   }
+
+  .line {
+    box-sizing: border-box;
+    height: 2px;
+    width: 100%;
+    border: 1px solid $color-gray-lightest;
+  }
 }
 
-.portfolio-navigation {
-  @include panel-margin;
-  margin-bottom: $gap * 4;
+.portfolio-breadcrumbs {
+  margin-bottom: $gap * 2;
+  color: $color-gray-medium;
+  font-size: $h5-font-size;
 
-  ul {
-    display: flex;
-    flex-direction: column;
-    li {
-      flex-grow: 1;
+  .icon-link {
+    color: $color-gray-medium;
+    font-weight: normal;
+  }
+
+  .icon--tiny {
+    padding: $gap 0;
+  }
+
+  .icon {
+    @include icon-color($color-gray-medium);
+  }
+
+  .portfolio-breadcrumbs__crumb {
+    .icon {
+      @include icon-color($color-blue);
+    }
+
+    .icon-link {
+      color: $color-blue;
+      pointer-events: none;
+    }
+  }
+}
+
+.portfolio-header {
+  margin: 2 * $gap 0;
+
+  .portfolio-header__name {
+    @include h1;
+  }
+
+  .portfolio-header__budget {
+    font-size: $small-font-size;
+    align-items: center;
+
+    button {
+      margin: 0;
+      padding: 0;
+    }
+
+    .portfolio-header__budget--dollars {
+      font-size: $h2-font-size;
+      font-weight: bold;
     }
   }
 
-  @include media($medium-screen) {
-    margin-bottom: $gap * 5;
-  }
+  .links {
+    font-size: $small-font-size;
 
-  @include media($large-screen) {
-    width: 20rem;
-    margin-right: $gap * 2;
+    .icon-link {
+      &.active {
+        color: $color-gray;
+        .icon {
+          @include icon-color($color-gray);
+        }
+      }
 
-    ul {
-      display: block;
+      .icon-link--icon {
+        text-align: center;
+      }
+
+      .icon {
+        @include icon-size(20);
+      }
     }
   }
+}
+
+.portfolio-content {
+  margin-top: 6 * $gap;
 }
 
 .portfolio-funding {
