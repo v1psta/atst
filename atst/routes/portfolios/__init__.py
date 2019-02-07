@@ -11,7 +11,6 @@ from atst.domain.exceptions import UnauthorizedError
 from atst.domain.portfolios import Portfolios
 from atst.domain.authz import Authorization
 from atst.models.permissions import Permissions
-from atst.utils.localization import translate
 
 
 @portfolios_bp.context_processor
