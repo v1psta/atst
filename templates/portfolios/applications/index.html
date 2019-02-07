@@ -32,34 +32,48 @@
 
   {% else %}
 
-    {% for application in portfolio.applications %}
-      <div v-cloak class='block-list application-list-item'>
-        <header class='block-list__header'>
-          <h2 class='block-list__title'>{{ application.name }} ({{ application.environments|length }} environments)</h2>
-          {% if user_can(permissions.RENAME_APPLICATION_IN_PORTFOLIO) %}
-            <a class='icon-link' href='{{ url_for("portfolios.edit_application", portfolio_id=portfolio.id, application_id=application.id) }}'>
-              {{ Icon('edit') }}
-              <span>edit</span>
-            </a>
-          {% endif %}
-        </header>
-        <ul>
-          {% for environment in application.environments %}
-            <li class='block-list__item application-list-item__environment'>
-              <a href='{{ url_for("portfolios.access_environment", portfolio_id=portfolio.id, environment_id=environment.id)}}' target='_blank' rel='noopener noreferrer' class='application-list-item__environment__link'>
-                {{ Icon('link') }}
-                <span>{{ environment.name }}</span>
-              </a>
-
-              <div class='application-list-item__environment__members'>
-                <div class='label'>{{ environment.num_users }}</div>
-                <span>members</span>
+    <div class='application-list'>
+      {% for application in portfolio.applications %}
+        <div v-cloak class='accordian application-list-item'>
+          <header class='accordian__header row'>
+            <div class='col col-grow'>
+              <h3 class='accordian__title'>{{ application.name }}</h3>
+              <span class='accordian__description'>{{ application.description }}</span>
+              <div class='accordian__actions'>
+                {% if user_can(permissions.RENAME_APPLICATION_IN_PORTFOLIO) %}
+                  <a class='icon-link' href='{{ url_for("portfolios.edit_application", portfolio_id=portfolio.id, application_id=application.id) }}'>
+                    <span>App Settings</span>
+                  </a>
+                  <div class='separator'></div>
+                {% endif %}
+                <a class='icon-link' href='{{ url_for("portfolios.edit_application", portfolio_id=portfolio.id, application_id=application.id) }}'>
+                  <span>Team</span>
+                  <span class='counter'>11</span>
+                </a>
               </div>
-            </li>
-          {% endfor %}
-        </ul>
-      </div>
-    {% endfor %}
+            </div>
+            <div class='col'>
+              <a href='#' class='icon-link'>{{ Icon('plus') }}</a>
+            </div>
+          </header>
+          <ul>
+            {% for environment in application.environments %}
+              <li class='accordian__item application-list-item__environment'>
+                <a href='{{ url_for("portfolios.access_environment", portfolio_id=portfolio.id, environment_id=environment.id)}}' target='_blank' rel='noopener noreferrer' class='application-list-item__environment__link'>
+                  {{ Icon('link') }}
+                  <span>{{ environment.name }}</span>
+                </a>
+
+                <div class='application-list-item__environment__members'>
+                  <div class='label'>{{ environment.num_users }}</div>
+                  <span>members</span>
+                </div>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endfor %}
+    </div>
 
   {% endif %}
 

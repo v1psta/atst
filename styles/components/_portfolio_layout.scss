@@ -111,6 +111,12 @@
       }
     }
   }
+
+  .application-list {
+    .application-list-item {
+      box-shadow: 0 4px 8px 1px rgba(230,230,230,0.5);
+    }
+  }
 }
 
 .portfolio-funding {
