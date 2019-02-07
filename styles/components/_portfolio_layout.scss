@@ -82,8 +82,11 @@
         @include icon-size(20);
       }
     }
-
   }
+}
+
+.portfolio-content {
+  margin-top: 6 * $gap;
 }
 
 .portfolio-navigation {
