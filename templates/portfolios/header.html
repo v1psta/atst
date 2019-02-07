@@ -1,10 +1,10 @@
 {% from "components/icon.html" import Icon %}
 
 {% macro Link(icon, text, url, active=False) %}
-  <a class='icon-link' href='{{ url }}'>
+  <a class='icon-link {{ "active icon-link--disabled" if active }}' href='{{ url }}'>
     <div class='col'>
-      <div class='link--icon'>{{ Icon(icon) }}</div>
-      <div class='link--name'>{{ text }}</div>
+      <div class='icon-link--icon'>{{ Icon(icon) }}</div>
+      <div class='icon-link--name'>{{ text }}</div>
     </div>
   </a>
 {% endmacro %}
@@ -28,17 +28,20 @@
     {{ Link(
       icon='chart',
       text='Reports',
-      url=url_for("portfolios.portfolio_reports", portfolio_id=portfolio.id))
-    }}
+      url=url_for("portfolios.portfolio_reports", portfolio_id=portfolio.id),
+      active=request.url_rule.endpoint == "portfolios.portfolio_reports",
+    ) }}
     {{ Link(
       icon='dollar-sign',
       text='Funding',
-      url=url_for("portfolios.portfolio_funding", portfolio_id=portfolio.id))
-    }}
+      url=url_for("portfolios.portfolio_funding", portfolio_id=portfolio.id),
+      active=request.url_rule.endpoint == "portfolios.portfolio_funding",
+    ) }}
     {{ Link(
       icon='time',
       text='Admin',
-      url=url_for("portfolios.portfolio", portfolio_id=portfolio.id))
-    }}
+      url=url_for("portfolios.portfolio", portfolio_id=portfolio.id),
+      active=request.url_rule.endpoint == "portfolios.portfolio",
+    ) }}
   </div>
 </div>

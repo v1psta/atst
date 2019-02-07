@@ -45,13 +45,23 @@
   .links {
     font-size: $small-font-size;
 
-    .link--icon {
-      text-align: center;
+    .icon-link {
+      &.active {
+        color: $color-gray;
+        .icon {
+          @include icon-color($color-gray);
+        }
+      }
+
+      .icon-link--icon {
+        text-align: center;
+      }
+
+      .icon {
+        @include icon-size(20);
+      }
     }
 
-    .icon {
-      @include icon-size(20);
-    }
   }
 }
 
