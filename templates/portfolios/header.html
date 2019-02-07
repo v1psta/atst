@@ -27,7 +27,7 @@
   <div class='row links'>
     {% if user_can(permissions.VIEW_USAGE_DOLLARS) %}
       {{ Link(
-        icon='chart',
+        icon='chart-pie',
         text='Reports',
         url=url_for("portfolios.portfolio_reports", portfolio_id=portfolio.id),
         active=request.url_rule.endpoint == "portfolios.portfolio_reports",
@@ -41,7 +41,7 @@
     ) }}
     {% if user_can(permissions.EDIT_PORTFOLIO_INFORMATION) %}
       {{ Link(
-        icon='time',
+        icon='cog',
         text='Admin',
         url=url_for("portfolios.portfolio", portfolio_id=portfolio.id),
         active=request.url_rule.endpoint == "portfolios.portfolio",
