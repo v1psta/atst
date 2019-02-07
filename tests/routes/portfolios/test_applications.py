@@ -1,3 +1,4 @@
+import pytest
 from flask import url_for
 
 from tests.factories import (
@@ -20,7 +21,7 @@ def test_user_with_permission_has_budget_report_link(client, user_session):
     user_session(portfolio.owner)
     response = client.get("/portfolios/{}/applications".format(portfolio.id))
     assert (
-        'href="/portfolios/{}/reports"'.format(portfolio.id).encode() in response.data
+        "href='/portfolios/{}/reports'".format(portfolio.id).encode() in response.data
     )
 
 
@@ -38,6 +39,7 @@ def test_user_without_permission_has_no_budget_report_link(client, user_session)
     )
 
 
+@pytest.mark.skip(reason="Temporarily no add activity log link")
 def test_user_with_permission_has_activity_log_link(client, user_session):
     portfolio = PortfolioFactory.create()
     ccpo = UserFactory.from_atat_role("ccpo")
@@ -69,6 +71,7 @@ def test_user_with_permission_has_activity_log_link(client, user_session):
     )
 
 
+@pytest.mark.skip(reason="Temporarily no add activity log link")
 def test_user_without_permission_has_no_activity_log_link(client, user_session):
     portfolio = PortfolioFactory.create()
     developer = UserFactory.create()
@@ -87,6 +90,7 @@ def test_user_without_permission_has_no_activity_log_link(client, user_session):
     )
 
 
+@pytest.mark.skip(reason="Temporarily no add application link")
 def test_user_with_permission_has_add_application_link(client, user_session):
     portfolio = PortfolioFactory.create()
     user_session(portfolio.owner)
@@ -97,6 +101,7 @@ def test_user_with_permission_has_add_application_link(client, user_session):
     )
 
 
+@pytest.mark.skip(reason="Temporarily no add application link")
 def test_user_without_permission_has_no_add_application_link(client, user_session):
     user = UserFactory.create()
     portfolio = PortfolioFactory.create()
