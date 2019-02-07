@@ -34,42 +34,51 @@
 
     <div class='application-list'>
       {% for application in portfolio.applications %}
-        <div v-cloak class='accordian application-list-item'>
-          <header class='accordian__header row'>
-            <div class='col col-grow'>
-              <h3 class='accordian__title'>{{ application.name }}</h3>
-              <span class='accordian__description'>{{ application.description }}</span>
-              <div class='accordian__actions'>
-                {% if user_can(permissions.RENAME_APPLICATION_IN_PORTFOLIO) %}
-                  <a class='icon-link' href='{{ url_for("portfolios.edit_application", portfolio_id=portfolio.id, application_id=application.id) }}'>
-                    <span>App Settings</span>
+        <div is='toggler' default-visible v-cloak class='accordian application-list-item'>
+          <template slot-scope='props'>
+            <header class='accordian__header row'>
+              <div class='col col-grow'>
+                <h3 class='accordian__title'>{{ application.name }}</h3>
+                <span class='accordian__description'>{{ application.description }}</span>
+                <div class='accordian__actions'>
+                  {% if user_can(permissions.RENAME_APPLICATION_IN_PORTFOLIO) %}
+                    <a class='icon-link' href='{{ url_for("portfolios.edit_application", portfolio_id=portfolio.id, application_id=application.id) }}'>
+                      <span>App Settings</span>
+                    </a>
+                    <div class='separator'></div>
+                  {% endif %}
+                  <a class='icon-link' href='{{ url_for("portfolios.portfolio_members", portfolio_id=portfolio.id) }}'>
+                    <span>Team</span>
+                    <span class='counter'>{{ application.num_users }}</span>
                   </a>
-                  <div class='separator'></div>
-                {% endif %}
-                <a class='icon-link' href='{{ url_for("portfolios.portfolio_members", portfolio_id=portfolio.id) }}'>
-                  <span>Team</span>
-                  <span class='counter'>{{ application.num_users }}</span>
+                </div>
+              </div>
+              <div class='col'>
+                <a v-on:click="props.toggle" href='#' class='icon-link toggle-link'>
+                  <template v-if="props.isVisible">
+                    {{ Icon('minus') }}
+                  </template>
+                  <template v-else>
+                    {{ Icon('plus') }}
+                  </template>
                 </a>
               </div>
-            </div>
-            <div class='col'>
-              <a href='#' class='icon-link'>{{ Icon('plus') }}</a>
-            </div>
-          </header>
-          <ul>
-            {% for environment in application.environments %}
-              <li class='accordian__item application-list-item__environment'>
-                <div class='application-list-item__environment__name'>
-                  <span>{{ environment.name }}</span>
-                </div>
+            </header>
+            <ul v-if="props.isVisible">
+              {% for environment in application.environments %}
+                <li class='accordian__item application-list-item__environment'>
+                  <div class='application-list-item__environment__name'>
+                    <span>{{ environment.name }}</span>
+                  </div>
 
-                <a href='{{ url_for("portfolios.access_environment", portfolio_id=portfolio.id, environment_id=environment.id)}}' target='_blank' rel='noopener noreferrer' class='application-list-item__environment__csp_link icon-link'>
-                  <span>CSP Console</span>
-                </a>
+                  <a href='{{ url_for("portfolios.access_environment", portfolio_id=portfolio.id, environment_id=environment.id)}}' target='_blank' rel='noopener noreferrer' class='application-list-item__environment__csp_link icon-link'>
+                    <span>CSP Console</span>
+                  </a>
 
-              </li>
-            {% endfor %}
-          </ul>
+                </li>
+              {% endfor %}
+            </ul>
+          </template>
         </div>
       {% endfor %}
     </div>
