@@ -9,6 +9,7 @@
 {% from "components/text_input.html" import TextInput %}
 {% from "components/alert.html" import Alert %}
 {% from "components/review_field.html" import ReviewField %}
+{% from "components/upload_input.html" import UploadInput %}
 
 {% block content %}
 
@@ -16,7 +17,10 @@
 
   {% include "fragments/flash.html" %}
 
+  {% block form_action %}
   <form method='POST' action="{{ url_for('portfolios.submit_ko_review', portfolio_id=portfolio.id, task_order_id=task_order.id, form=form) }}" autocomplete="off" enctype="multipart/form-data">
+  {% endblock %}
+
   {{ form.csrf_token }}
 
   {% block form %}
@@ -60,11 +64,7 @@
         <div class="h2">{{ "task_orders.ko_review.task_order_information"| translate }}</div>
 
         <div class="form__sub-fields">
-          <div class="usa-input">
-            <div class="usa-input__title">{{ form.pdf.label }}</div>
-            {{ form.pdf.description }}
-            {{ form.pdf }}
-          </div>
+          {{ UploadInput(form.pdf) }}
           {{ TextInput(form.number) }}
           {{ TextInput(form.loa) }}
           {{ TextInput(form.custom_clauses, paragraph=True) }}

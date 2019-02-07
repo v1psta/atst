@@ -1,0 +1,24 @@
+{% macro UploadInput(field, show_label=False) -%}
+<uploadinput inline-template v-bind:initial-data='{{ field.data | tojson }}' v-bind:upload-errors='{{ field.errors | list }}'>
+  <div>
+    <template v-if="showUpload">
+      <div class="usa-input {% if field.errors %} usa-input--error {% endif %}">
+        {% if show_label %}
+          {{ field.label }}
+        {% endif %}
+        {{ field.description }}
+        {{ field }}
+        {% for error in field.errors %}
+          <span class="usa-input__message">{{error}}</span>
+        {% endfor %}
+      </div>
+    </template>
+    <template v-else>
+      <p>Uploaded {{ field.data.filename }}</p>
+      <div>
+        <button type="button" v-on:click="showUploadInput">Change</button>
+      </div>
+    </template>
+  </div>
+</uploadinput>
+{%- endmacro %}

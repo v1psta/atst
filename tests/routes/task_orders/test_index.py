@@ -53,7 +53,7 @@ class TestDownloadCSPEstimate:
         assert expected_contents == response.data
 
     def test_download_without_attachment(self, client, user_session):
-        self.task_order.attachment_id = None
+        self.task_order.csp_attachment_id = None
         user_session(self.user)
         response = client.get(
             url_for(

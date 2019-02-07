@@ -251,3 +251,41 @@ def test_cor_redirected_to_build_page(client, user_session):
         url_for("task_orders.new", screen=1, task_order_id=task_order.id)
     )
     assert response.status_code == 200
+
+
+def test_submit_completed_ko_review_page(client, user_session, pdf_upload):
+    portfolio = PortfolioFactory.create()
+    ko = UserFactory.create()
+    PortfolioRoleFactory.create(
+        role=Roles.get("officer"),
+        portfolio=portfolio,
+        user=ko,
+        status=PortfolioStatus.ACTIVE,
+    )
+    task_order = TaskOrderFactory.create(portfolio=portfolio, contracting_officer=ko)
+    user_session(ko)
+    form_data = {
+        "start_date": "02/10/2019",
+        "end_date": "03/10/2019",
+        "number": "1938745981",
+        "loa": "0813458013405",
+        "custom_clauses": "hi im a custom clause",
+        "pdf": pdf_upload,
+    }
+
+    response = client.post(
+        url_for(
+            "portfolios.ko_review",
+            portfolio_id=portfolio.id,
+            task_order_id=task_order.id,
+        ),
+        data=form_data,
+    )
+
+    assert task_order.pdf
+    assert response.headers["Location"] == url_for(
+        "portfolios.view_task_order",
+        portfolio_id=portfolio.id,
+        task_order_id=task_order.id,
+        _external=True,
+    )

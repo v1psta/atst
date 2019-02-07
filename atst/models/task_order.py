@@ -51,8 +51,8 @@ class TaskOrder(Base, mixins.TimestampsMixin):
     start_date = Column(Date)  # Period of Performance
     end_date = Column(Date)
     performance_length = Column(Integer)
-    attachment_id = Column(ForeignKey("attachments.id"))
-    _csp_estimate = relationship("Attachment")
+    csp_attachment_id = Column(ForeignKey("attachments.id"))
+    _csp_estimate = relationship("Attachment", foreign_keys=[csp_attachment_id])
     clin_01 = Column(Numeric(scale=2))
     clin_02 = Column(Numeric(scale=2))
     clin_03 = Column(Numeric(scale=2))
@@ -72,6 +72,8 @@ class TaskOrder(Base, mixins.TimestampsMixin):
     so_email = Column(String)  # Email
     so_phone_number = Column(String)  # Phone Number
     so_dod_id = Column(String)  # DOD ID
+    pdf_attachment_id = Column(ForeignKey("attachments.id"))
+    _pdf = relationship("Attachment", foreign_keys=[pdf_attachment_id])
     number = Column(String, unique=True)  # Task Order Number
     loa = Column(String)  # Line of Accounting (LOA)
     custom_clauses = Column(String)  # Custom Clauses
@@ -82,16 +84,25 @@ class TaskOrder(Base, mixins.TimestampsMixin):
 
     @csp_estimate.setter
     def csp_estimate(self, new_csp_estimate):
-        if isinstance(new_csp_estimate, Attachment):
-            self._csp_estimate = new_csp_estimate
-        elif isinstance(new_csp_estimate, FileStorage):
-            self._csp_estimate = Attachment.attach(
-                new_csp_estimate, "task_order", self.id
-            )
-        elif not new_csp_estimate and self._csp_estimate:
-            self._csp_estimate = None
-        elif new_csp_estimate:
-            raise TypeError("Could not set csp_estimate with invalid type")
+        self._csp_estimate = self._set_attachment(new_csp_estimate, "_csp_estimate")
+
+    @hybrid_property
+    def pdf(self):
+        return self._pdf
+
+    @pdf.setter
+    def pdf(self, new_pdf):
+        self._pdf = self._set_attachment(new_pdf, "_pdf")
+
+    def _set_attachment(self, new_attachment, attribute):
+        if isinstance(new_attachment, Attachment):
+            return new_attachment
+        elif isinstance(new_attachment, FileStorage):
+            return Attachment.attach(new_attachment, "task_order", self.id)
+        elif not new_attachment and hasattr(self, attribute):
+            return None
+        else:
+            raise TypeError("Could not set attachment with invalid type")
 
     @property
     def is_submitted(self):
