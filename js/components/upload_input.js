@@ -6,7 +6,7 @@ import textinput from './text_input'
 import optionsinput from './options_input'
 
 export default {
-  name: 'upload',
+  name: 'uploadinput',
 
   mixins: [FormMixin],
 
@@ -17,8 +17,7 @@ export default {
 
   props: {
     initialData: {
-      type: Object,
-      default: () => ({}),
+      type: String,
     },
     uploadErrors: {
       type: Array,
@@ -27,7 +26,7 @@ export default {
   },
 
   data: function() {
-    const { pdf } = this.initialData
+    const pdf = this.initialData
 
     return {
       showUpload: !pdf || this.uploadErrors.length > 0,

@@ -3,6 +3,7 @@
 {% from "components/text_input.html" import TextInput %}
 {% from "components/options_input.html" import OptionsInput %}
 {% from "components/date_input.html" import DateInput %}
+{% from "components/upload_input.html" import UploadInput %}
 
 {% from "components/icon.html" import Icon %}
 
@@ -32,22 +33,7 @@
       {{ Icon("link")}} Go to Cloud Service Provider’s estimate calculator
     </a></p>
     <p>{{ "task_orders.new.funding.estimate_usage_paragraph" | translate }}</p>
-    <template v-if="showUpload">
-      <div class="usa-input {% if form.csp_estimate.errors %} usa-input--error {% endif %}">
-        {{ form.csp_estimate.label }}
-        {{ form.csp_estimate.description }}
-        {{ form.csp_estimate }}
-        {% for error in form.csp_estimate.errors %}
-          <span class="usa-input__message">{{error}}</span>
-        {% endfor %}
-      </div>
-    </template>
-    <template v-else>
-      <p>Uploaded {{ form.csp_estimate.data.filename }}</p>
-      <div>
-        <button type="button" v-on:click="showUploadInput">Change</button>
-      </div>
-    </template>
+    {{ UploadInput(form.csp_estimate, show_label=True) }}
 
     <hr>
 

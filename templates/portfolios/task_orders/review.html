@@ -9,6 +9,7 @@
 {% from "components/text_input.html" import TextInput %}
 {% from "components/alert.html" import Alert %}
 {% from "components/review_field.html" import ReviewField %}
+{% from "components/upload_input.html" import UploadInput %}
 
 {% block content %}
 
@@ -63,28 +64,7 @@
         <div class="h2">{{ "task_orders.ko_review.task_order_information"| translate }}</div>
 
         <div class="form__sub-fields">
-
-          <upload inline-template v-bind:initial-data='{{ form.data | tojson }}' v-bind:upload-errors='{{ form.pdf.errors | list }}'>
-            <div>
-              <template v-if="showUpload">
-                <div class="usa-input {% if form.pdf.errors %} usa-input--error {% endif %}">
-                  <div class="usa-input__title">{{ form.pdf.label }}</div>
-                  {{ form.pdf.description }}
-                  {{ form.pdf }}
-                  {% for error in form.pdf.errors %}
-                    <span class="usa-input__message">{{error}}</span>
-                  {% endfor %}
-                </div>
-              </template>
-              <template v-else>
-                <p>Uploaded {{ form.pdf.data.filename }}</p>
-                <div>
-                  <button type="button" v-on:click="showUploadInput">Change</button>
-                </div>
-              </template>
-            </div>
-          </upload>
-
+          {{ UploadInput(form.pdf) }}
           {{ TextInput(form.number) }}
           {{ TextInput(form.loa) }}
           {{ TextInput(form.custom_clauses, paragraph=True) }}

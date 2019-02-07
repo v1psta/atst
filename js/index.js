@@ -20,7 +20,7 @@ import NewApplication from './components/forms/new_application'
 import EditEnvironmentRole from './components/forms/edit_environment_role'
 import EditApplicationRoles from './components/forms/edit_application_roles'
 import funding from './components/forms/funding'
-import upload from './components/upload'
+import uploadinput from './components/upload_input'
 import Modal from './mixins/modal'
 import selector from './components/selector'
 import BudgetChart from './components/charts/budget_chart'
@@ -65,7 +65,7 @@ const app = new Vue({
     RequestsList,
     ConfirmationPopover,
     funding,
-    upload,
+    uploadinput,
     DateSelector,
     EditOfficerForm,
   },
