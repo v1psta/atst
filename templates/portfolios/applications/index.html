@@ -59,15 +59,14 @@
           <ul>
             {% for environment in application.environments %}
               <li class='accordian__item application-list-item__environment'>
-                <a href='{{ url_for("portfolios.access_environment", portfolio_id=portfolio.id, environment_id=environment.id)}}' target='_blank' rel='noopener noreferrer' class='application-list-item__environment__link'>
-                  {{ Icon('link') }}
+                <div class='application-list-item__environment__name'>
                   <span>{{ environment.name }}</span>
+                </div>
+
+                <a href='{{ url_for("portfolios.access_environment", portfolio_id=portfolio.id, environment_id=environment.id)}}' target='_blank' rel='noopener noreferrer' class='application-list-item__environment__csp_link icon-link'>
+                  <span>CSP Console</span>
                 </a>
 
-                <div class='application-list-item__environment__members'>
-                  <div class='label'>{{ environment.num_users }}</div>
-                  <span>members</span>
-                </div>
               </li>
             {% endfor %}
           </ul>

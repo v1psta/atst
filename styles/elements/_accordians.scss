@@ -1,6 +1,8 @@
 .accordian {
   @include block-list;
 
+  box-shadow: 0 4px 10px 0 rgba(193,193,193,0.5);
+
   .icon-link {
     margin: -$gap 0;
   }
@@ -21,6 +23,8 @@
 .accordian__header {
   @include block-list-header;
   border-top: 3px solid $color-blue;
+  border-bottom: none;
+  box-shadow: 0 2px 4px 0 rgba(216,218,222,0.58);
 }
 
 .accordian__title {
@@ -61,6 +65,10 @@
 
 .accordian__item {
   @include block-list-item;
+
+  opacity: 0.75;
+  background-color: $color-blue-light;
+  border-bottom: 1px solid rgba($color-gray-light, 0.5);
 
   &.accordian__item--selectable {
     > div {
