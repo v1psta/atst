@@ -3,52 +3,66 @@
 
 {% extends "portfolios/base.html" %}
 
+{% set can_create_applications = user_can(permissions.ADD_APPLICATION_IN_PORTFOLIO) %}
+
 {% block portfolio_content %}
 
-{% if not portfolio.applications %}
-
-  {% set can_create_applications = user_can(permissions.ADD_APPLICATION_IN_PORTFOLIO) %}
-
-  {{ EmptyState(
-    'This portfolio doesn’t have any applications yet.',
-    action_label='Add a New Application' if can_create_applications else None,
-    action_href=url_for('portfolios.new_application', portfolio_id=portfolio.id) if can_create_applications else None,
-    icon='cloud',
-    sub_message=None if can_create_applications else 'Please contact your JEDI Cloud portfolio administrator to set up a new application.'
-  ) }}
-
-{% else %}
-
-  {% for application in portfolio.applications %}
-    <div v-cloak class='block-list application-list-item'>
-      <header class='block-list__header'>
-        <h2 class='block-list__title'>{{ application.name }} ({{ application.environments|length }} environments)</h2>
-        {% if user_can(permissions.RENAME_APPLICATION_IN_PORTFOLIO) %}
-          <a class='icon-link' href='{{ url_for("portfolios.edit_application", portfolio_id=portfolio.id, application_id=application.id) }}'>
-            {{ Icon('edit') }}
-            <span>edit</span>
-          </a>
-        {% endif %}
-      </header>
-      <ul>
-        {% for environment in application.environments %}
-          <li class='block-list__item application-list-item__environment'>
-            <a href='{{ url_for("portfolios.access_environment", portfolio_id=portfolio.id, environment_id=environment.id)}}' target='_blank' rel='noopener noreferrer' class='application-list-item__environment__link'>
-              {{ Icon('link') }}
-              <span>{{ environment.name }}</span>
-            </a>
-
-            <div class='application-list-item__environment__members'>
-              <div class='label'>{{ environment.num_users }}</div>
-              <span>members</span>
-            </div>
-          </li>
-        {% endfor %}
-      </ul>
+<div class='portfolio-applications'>
+  <div class='portfolio-applications__header row'>
+    <div class='portfolio-applications__header--title col col--grow'>Applications</div>
+    <div class='portfolio-applications__header--actions col'>
+      {% if can_create_applications %}
+        <a class='icon-link' href='{{ url_for('portfolios.new_application', portfolio_id=portfolio.id) }}'>
+          Add A New Application
+          {{ Icon("plus", classes="sidenav__link-icon") }}
+        </a>
+      {% endif %}
     </div>
-  {% endfor %}
+  </div>
 
-{% endif %}
+  {% if not portfolio.applications %}
+
+    {{ EmptyState(
+      'This portfolio doesn’t have any applications yet.',
+      action_label='Add a New Application' if can_create_applications else None,
+      action_href=url_for('portfolios.new_application', portfolio_id=portfolio.id) if can_create_applications else None,
+      icon='cloud',
+      sub_message=None if can_create_applications else 'Please contact your JEDI Cloud portfolio administrator to set up a new application.'
+    ) }}
+
+  {% else %}
+
+    {% for application in portfolio.applications %}
+      <div v-cloak class='block-list application-list-item'>
+        <header class='block-list__header'>
+          <h2 class='block-list__title'>{{ application.name }} ({{ application.environments|length }} environments)</h2>
+          {% if user_can(permissions.RENAME_APPLICATION_IN_PORTFOLIO) %}
+            <a class='icon-link' href='{{ url_for("portfolios.edit_application", portfolio_id=portfolio.id, application_id=application.id) }}'>
+              {{ Icon('edit') }}
+              <span>edit</span>
+            </a>
+          {% endif %}
+        </header>
+        <ul>
+          {% for environment in application.environments %}
+            <li class='block-list__item application-list-item__environment'>
+              <a href='{{ url_for("portfolios.access_environment", portfolio_id=portfolio.id, environment_id=environment.id)}}' target='_blank' rel='noopener noreferrer' class='application-list-item__environment__link'>
+                {{ Icon('link') }}
+                <span>{{ environment.name }}</span>
+              </a>
+
+              <div class='application-list-item__environment__members'>
+                <div class='label'>{{ environment.num_users }}</div>
+                <span>members</span>
+              </div>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endfor %}
+
+  {% endif %}
+
+</div>
 
 {% endblock %}
-
