@@ -89,32 +89,6 @@
   margin-top: 6 * $gap;
 }
 
-.portfolio-navigation {
-  @include panel-margin;
-  margin-bottom: $gap * 4;
-
-  ul {
-    display: flex;
-    flex-direction: column;
-    li {
-      flex-grow: 1;
-    }
-  }
-
-  @include media($medium-screen) {
-    margin-bottom: $gap * 5;
-  }
-
-  @include media($large-screen) {
-    width: 20rem;
-    margin-right: $gap * 2;
-
-    ul {
-      display: block;
-    }
-  }
-}
-
 .portfolio-funding {
   .portfolio-funding__header {
     padding: 0;
