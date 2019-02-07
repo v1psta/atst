@@ -1,5 +1,6 @@
 import datetime
 import re
+import pytest
 from tests.factories import (
     RequestFactory,
     UserFactory,
@@ -78,6 +79,7 @@ def test_ccpo_can_view_request(client, user_session):
     assert response.status_code == 200
 
 
+@pytest.mark.skip(reason="create request flow no longer active")
 def test_nonexistent_request(client, user_session):
     user_session()
     response = client.get("/requests/new/1/foo", follow_redirects=True)

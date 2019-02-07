@@ -2,30 +2,7 @@ import pytest
 
 from tests.factories import UserFactory, PortfolioFactory, RequestFactory
 from atst.domain.portfolios import Portfolios
-
-
-def test_user_with_portfolios_has_portfolios_nav(client, user_session):
-    portfolio = PortfolioFactory.create()
-    user_session(portfolio.owner)
-    response = client.get("/home", follow_redirects=True)
-    assert b'href="/portfolios"' in response.data
-
-
-@pytest.mark.skip(reason="this may no longer be accurate")
-def test_user_without_portfolios_has_no_portfolios_nav(client, user_session):
-    user = UserFactory.create()
-    user_session(user)
-    response = client.get("/home", follow_redirects=True)
-    assert b'href="/portfolios"' not in response.data
-
-
-@pytest.mark.skip(reason="this may no longer be accurate")
-def test_request_owner_with_no_portfolios_redirected_to_requests(client, user_session):
-    request = RequestFactory.create()
-    user_session(request.creator)
-    response = client.get("/home", follow_redirects=False)
-
-    assert "/requests" in response.location
+from atst.models.portfolio_role import Status as PortfolioRoleStatus
 
 
 def test_request_owner_with_one_portfolio_redirected_to_reports(client, user_session):
@@ -51,22 +28,14 @@ def test_request_owner_with_more_than_one_portfolio_redirected_to_portfolios(
     assert "/portfolios" in response.location
 
 
-@pytest.mark.skip(reason="this may no longer be accurate")
-def test_non_owner_user_with_no_portfolios_redirected_to_requests(client, user_session):
-    user = UserFactory.create()
-
-    user_session(user)
-    response = client.get("/home", follow_redirects=False)
-
-    assert "/requests" in response.location
-
-
 def test_non_owner_user_with_one_portfolio_redirected_to_portfolio_applications(
     client, user_session
 ):
     user = UserFactory.create()
     portfolio = PortfolioFactory.create()
-    Portfolios._create_portfolio_role(user, portfolio, "developer")
+    Portfolios._create_portfolio_role(
+        user, portfolio, "developer", status=PortfolioRoleStatus.ACTIVE
+    )
 
     user_session(user)
     response = client.get("/home", follow_redirects=False)
@@ -78,14 +47,20 @@ def test_non_owner_user_with_mulitple_portfolios_redirected_to_portfolios(
     client, user_session
 ):
     user = UserFactory.create()
+    portfolios = []
     for _ in range(3):
         portfolio = PortfolioFactory.create()
-        Portfolios._create_portfolio_role(user, portfolio, "developer")
+        portfolios.append(portfolio)
+        role = Portfolios._create_portfolio_role(
+            user, portfolio, "developer", status=PortfolioRoleStatus.ACTIVE
+        )
 
     user_session(user)
     response = client.get("/home", follow_redirects=False)
 
+    alphabetically_first_portfolio = sorted(portfolios, key=lambda p: p.name)[0]
     assert "/portfolios" in response.location
+    assert str(alphabetically_first_portfolio.id) in response.location
 
 
 @pytest.mark.skip(reason="this may no longer be accurate")

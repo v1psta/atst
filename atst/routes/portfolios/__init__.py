@@ -15,14 +15,12 @@ from atst.models.permissions import Permissions
 
 @portfolios_bp.context_processor
 def portfolio():
-    portfolios = Portfolios.for_user(g.current_user)
     portfolio = None
     if "portfolio_id" in http_request.view_args:
         try:
             portfolio = Portfolios.get(
                 g.current_user, http_request.view_args["portfolio_id"]
             )
-            portfolios = [ws for ws in portfolios if not ws.id == portfolio.id]
         except UnauthorizedError:
             pass
 
@@ -33,9 +31,4 @@ def portfolio():
             )
         return False
 
-    return {
-        "portfolio": portfolio,
-        "portfolios": portfolios,
-        "permissions": Permissions,
-        "user_can": user_can,
-    }
+    return {"portfolio": portfolio, "permissions": Permissions, "user_can": user_can}

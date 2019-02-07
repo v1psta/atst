@@ -1,5 +1,5 @@
 .topbar {
-  background-color: $color-white;
+  background-color: $color-blue-darkest;
   border-bottom: 1px solid $color-black;
 
   .topbar__navigation {
@@ -9,7 +9,7 @@
     justify-content: space-between;
 
     .topbar__link {
-      color: $color-black;
+      color: $color-white;
       display: inline-flex;
       align-items: center;
       height: $topbar-height;
@@ -18,10 +18,12 @@
 
       .topbar__link-label {
         @include h5;
+        text-decoration: underline;
       }
 
       .topbar__link-icon {
         margin-left: $gap;
+        @include icon-color($color-white);
       }
 
       &.topbar__link--home {
@@ -29,6 +31,7 @@
 
         .topbar__link-label {
           padding-left: $gap;
+          text-decoration: none;
         }
       }
 
@@ -45,10 +48,6 @@
       &:hover {
         background-color: $color-primary-darker;
         color: $color-white;
-
-        .topbar__link-icon {
-          @include icon-style-inverted;
-        }
       }
     }
 
@@ -62,53 +61,6 @@
       .topbar__portfolio-menu {
         margin-right: auto;
         position: relative;
-
-        .topbar__portfolio-menu__toggle {
-          margin: 0;
-          border-radius: 0;
-
-          &--open {
-            background-color: $color-blue-darkest;
-            position: relative;
-
-            &::before {
-              content: '';
-              display: block;
-              position: absolute;
-              bottom: 0;
-              left: $gap * 2;
-              right: $gap * 2;
-              height: $gap / 2;
-              background-color: $color-primary;
-            }
-          }
-
-          .icon {
-            @include icon-size(10);
-            margin-left: $gap * 2;
-          }
-        }
-
-        .topbar__portfolio-menu__panel {
-          position: absolute;
-        }
-      }
-
-      &.topbar__context--portfolio {
-        background-color: $color-primary;
-        -ms-flex-pack: start;
-
-        .topbar__link {
-          color: $color-white;
-
-          .topbar__link-icon {
-            @include icon-style-inverted;
-          }
-
-          &:hover {
-            background-color: $color-primary-darker;
-          }
-        }
       }
     }
   }
