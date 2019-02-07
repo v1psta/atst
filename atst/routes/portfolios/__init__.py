@@ -14,16 +14,6 @@ from atst.models.permissions import Permissions
 from atst.utils.localization import translate
 
 
-def get_breadcrumb_from_request(request):
-    if request.url_rule.rule.startswith("/portfolios/<portfolio_id>/task_order"):
-        return translate("navigation.portfolio_navigation.breadcrumbs.funding")
-    if request.url_rule.endpoint == "portfolios.portfolio":
-        return translate("navigation.portfolio_navigation.breadcrumbs.admin")
-    if request.url_rule.endpoint == "portfolios.portfolio_reports":
-        return translate("navigation.portfolio_navigation.breadcrumbs.reports")
-    return None
-
-
 @portfolios_bp.context_processor
 def portfolio():
     portfolio = None
@@ -42,9 +32,4 @@ def portfolio():
             )
         return False
 
-    return {
-        "portfolio": portfolio,
-        "permissions": Permissions,
-        "user_can": user_can,
-        "secondary_breadcrumb": get_breadcrumb_from_request(http_request),
-    }
+    return {"portfolio": portfolio, "permissions": Permissions, "user_can": user_can}
