@@ -19,7 +19,7 @@
         {{ CheckboxInput(form.ko_invite) }}
         <keep-alive>
             <dodid v-bind:initial-invite="ko_invite" inline-template v-if="ko_invite">
-                {{ TextInput(form.ko_dod_id, placeholder="1234567890", tooltip="Why", tooltip_title='Why', validation='dodId', classes="task-order__invite-officer")}}
+                {{ TextInput(form.ko_dod_id, placeholder="1234567890", tooltip="task_orders.new.oversight.dod_id_tooltip" | translate, tooltip_title='Why', validation='dodId', classes="task-order__invite-officer")}}
             </dodid>
         </keep-alive>
 
@@ -35,7 +35,7 @@
                 {{ UserInfo(form.cor_first_name, form.cor_last_name, form.cor_email, form.cor_phone_number) }}
                 {{ CheckboxInput(form.cor_invite) }}
                 <template v-if="cor_invite">
-                    {{ TextInput(form.cor_dod_id, placeholder="1234567890", tooltip="Why", tooltip_title='Why', validation='dodId', classes="task-order__invite-officer")}}
+                    {{ TextInput(form.cor_dod_id, placeholder="1234567890", tooltip="task_orders.new.oversight.dod_id_tooltip" | translate, tooltip_title='Why', validation='dodId', classes="task-order__invite-officer")}}
                 </template>
                 </div>
             </cordata>
@@ -49,10 +49,11 @@
         {{ CheckboxInput(form.so_invite) }}
         <keep-alive>
             <dodid v-bind:initial-invite="so_invite" inline-template v-if="so_invite">
-                {{ TextInput(form.so_dod_id, placeholder="1234567890", tooltip="Why", tooltip_title='Why', validation='dodId', classes="task-order__invite-officer")}}
+                {{ TextInput(form.so_dod_id, placeholder="1234567890", tooltip="task_orders.new.oversight.dod_id_tooltip" | translate, tooltip_title='Why', validation='dodId', classes="task-order__invite-officer")}}
             </dodid>
         </keep-alive>
     </div>
 </oversight>
+
 
 {% endblock %}
