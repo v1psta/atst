@@ -89,17 +89,21 @@
   margin: 6 * $gap $gap 0 $gap;
 }
 
+@mixin subheading {
+  color: $color-gray-dark;
+  padding: $gap 0;
+  text-transform: uppercase;
+  opacity: 0.54;
+  font-size: $small-font-size;
+  font-weight: bold;
+}
+
 .portfolio-applications {
   .portfolio-applications__header {
     margin-bottom: 4 * $gap;
 
     .portfolio-applications__header--title {
-      color: $color-gray-dark;
-      padding: $gap 0;
-      text-transform: uppercase;
-      opacity: 0.54;
-      font-size: $small-font-size;
-      font-weight: bold;
+      @include subheading;
     }
 
     .portfolio-applications__header--actions {
@@ -278,6 +282,16 @@
           }
         }
       }
+    }
+  }
+}
+
+.portfolio-reports {
+  .portfolio-reports__header {
+    margin-bottom: 4 * $gap;
+
+    .portfolio-reports__header--title {
+      @include subheading;
     }
   }
 }
