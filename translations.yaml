@@ -481,6 +481,12 @@ task_orders:
     title: Task Order Builder
     submitted_by: Below is an overview of the projected portfolio submitted by {name}
     task_order_information: Task Order Information
+portfolios:
+  applications:
+    add_application_text: Add A New Application
+    app_settings_text: App Settings
+    team_text: Team
+    csp_console_text: CSP Console
 testing:
   example_string: Hello World
   example_with_variables: 'Hello, {name}!'

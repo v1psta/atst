@@ -13,7 +13,7 @@
     <div class='portfolio-applications__header--actions col'>
       {% if can_create_applications %}
         <a class='icon-link' href='{{ url_for('portfolios.new_application', portfolio_id=portfolio.id) }}'>
-          Add A New Application
+          {{ 'portfolios.applications.add_application_text' | translate }}
           {{ Icon("plus", classes="sidenav__link-icon") }}
         </a>
       {% endif %}
@@ -43,12 +43,12 @@
                 <div class='accordian__actions'>
                   {% if user_can(permissions.RENAME_APPLICATION_IN_PORTFOLIO) %}
                     <a class='icon-link' href='{{ url_for("portfolios.edit_application", portfolio_id=portfolio.id, application_id=application.id) }}'>
-                      <span>App Settings</span>
+                      <span>{{ "portfolios.applications.app_settings_text" | translate }}</span>
                     </a>
                     <div class='separator'></div>
                   {% endif %}
                   <a class='icon-link' href='{{ url_for("portfolios.portfolio_members", portfolio_id=portfolio.id) }}'>
-                    <span>Team</span>
+                    <span>{{ "portfolios.applications.team_text" | translate }}</span>
                     <span class='counter'>{{ application.num_users }}</span>
                   </a>
                 </div>
@@ -72,7 +72,7 @@
                   </div>
 
                   <a href='{{ url_for("portfolios.access_environment", portfolio_id=portfolio.id, environment_id=environment.id)}}' target='_blank' rel='noopener noreferrer' class='application-list-item__environment__csp_link icon-link'>
-                    <span>CSP Console</span>
+                    <span>{{ "portfolios.applications.csp_console_text" | translate }}</span>
                   </a>
 
                 </li>
