@@ -34,7 +34,7 @@
 
     <div class='application-list'>
       {% for application in portfolio.applications|sort(attribute='name') %}
-        <div is='toggler' default-visible v-cloak class='accordian application-list-item'>
+        <div is='toggler' v-cloak class='accordian application-list-item'>
           <template slot-scope='props'>
             <header class='accordian__header row'>
               <div class='col col-grow'>
