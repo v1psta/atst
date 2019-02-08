@@ -54,14 +54,14 @@
                 </div>
               </div>
               <div class='col'>
-                <a v-on:click="props.toggle" href='#' class='icon-link toggle-link'>
+                <span v-on:click="props.toggle" class='icon-link toggle-link'>
                   <template v-if="props.isVisible">
                     {{ Icon('minus') }}
                   </template>
                   <template v-else>
                     {{ Icon('plus') }}
                   </template>
-                </a>
+                </span>
               </div>
             </header>
             <ul v-if="props.isVisible">
