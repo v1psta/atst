@@ -10,21 +10,18 @@ from atst.services.invitation import Invitation as InvitationService
 OFFICER_INVITATIONS = [
     {
         "field": "ko_invite",
-        "prefix": "ko",
         "role": "contracting_officer",
         "subject": "Review a task order",
         "template": "emails/invitation.txt",
     },
     {
         "field": "cor_invite",
-        "prefix": "cor",
         "role": "contracting_officer_representative",
         "subject": "Help with a task order",
         "template": "emails/invitation.txt",
     },
     {
         "field": "so_invite",
-        "prefix": "so",
         "role": "security_officer",
         "subject": "Review security for a task order",
         "template": "emails/invitation.txt",
@@ -36,17 +33,7 @@ def update_officer_invitations(user, task_order):
     for officer_type in OFFICER_INVITATIONS:
         field = officer_type["field"]
         if getattr(task_order, field) and not getattr(task_order, officer_type["role"]):
-            prefix = officer_type["prefix"]
-            officer_data = {
-                field: getattr(task_order, prefix + "_" + field)
-                for field in [
-                    "first_name",
-                    "last_name",
-                    "email",
-                    "phone_number",
-                    "dod_id",
-                ]
-            }
+            officer_data = task_order.officer_dictionary(officer_type["role"])
             officer = TaskOrders.add_officer(
                 user, task_order, officer_type["role"], officer_data
             )
