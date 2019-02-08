@@ -106,12 +106,15 @@ class TaskOrder(Base, mixins.TimestampsMixin):
 
     @property
     def is_submitted(self):
-
         return (
             self.number is not None
             and self.start_date is not None
             and self.end_date is not None
         )
+
+    @property
+    def is_active(self):
+        return self.status == Status.ACTIVE
 
     @property
     def status(self):

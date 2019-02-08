@@ -20,7 +20,7 @@
         {{ Icon('info') }}
       </button>
       <span class='portfolio-header__budget--dollars'>
-        {{ portfolio.task_orders | sum(attribute='budget') | dollars }}
+        {{ portfolio.task_orders | selectattr('is_active') | sum(attribute='budget') | dollars }}
       </span>
     </div>
   </div>
