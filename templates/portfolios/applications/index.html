@@ -3,52 +3,88 @@
 
 {% extends "portfolios/base.html" %}
 
+{% set can_create_applications = user_can(permissions.ADD_APPLICATION_IN_PORTFOLIO) %}
+
 {% block portfolio_content %}
 
-{% if not portfolio.applications %}
-
-  {% set can_create_applications = user_can(permissions.ADD_APPLICATION_IN_PORTFOLIO) %}
-
-  {{ EmptyState(
-    'This portfolio doesn’t have any applications yet.',
-    action_label='Add a New Application' if can_create_applications else None,
-    action_href=url_for('portfolios.new_application', portfolio_id=portfolio.id) if can_create_applications else None,
-    icon='cloud',
-    sub_message=None if can_create_applications else 'Please contact your JEDI Cloud portfolio administrator to set up a new application.'
-  ) }}
-
-{% else %}
-
-  {% for application in portfolio.applications %}
-    <div v-cloak class='block-list application-list-item'>
-      <header class='block-list__header'>
-        <h2 class='block-list__title'>{{ application.name }} ({{ application.environments|length }} environments)</h2>
-        {% if user_can(permissions.RENAME_APPLICATION_IN_PORTFOLIO) %}
-          <a class='icon-link' href='{{ url_for("portfolios.edit_application", portfolio_id=portfolio.id, application_id=application.id) }}'>
-            {{ Icon('edit') }}
-            <span>edit</span>
-          </a>
-        {% endif %}
-      </header>
-      <ul>
-        {% for environment in application.environments %}
-          <li class='block-list__item application-list-item__environment'>
-            <a href='{{ url_for("portfolios.access_environment", portfolio_id=portfolio.id, environment_id=environment.id)}}' target='_blank' rel='noopener noreferrer' class='application-list-item__environment__link'>
-              {{ Icon('link') }}
-              <span>{{ environment.name }}</span>
-            </a>
-
-            <div class='application-list-item__environment__members'>
-              <div class='label'>{{ environment.num_users }}</div>
-              <span>members</span>
-            </div>
-          </li>
-        {% endfor %}
-      </ul>
+<div class='portfolio-applications'>
+  <div class='portfolio-applications__header row'>
+    <div class='portfolio-applications__header--title col col--grow'>Applications</div>
+    <div class='portfolio-applications__header--actions col'>
+      {% if can_create_applications %}
+        <a class='icon-link' href='{{ url_for('portfolios.new_application', portfolio_id=portfolio.id) }}'>
+          {{ 'portfolios.applications.add_application_text' | translate }}
+          {{ Icon("plus", classes="sidenav__link-icon") }}
+        </a>
+      {% endif %}
     </div>
-  {% endfor %}
+  </div>
 
-{% endif %}
+  {% if not portfolio.applications %}
+
+    {{ EmptyState(
+      'This portfolio doesn’t have any applications yet.',
+      action_label='Add a New Application' if can_create_applications else None,
+      action_href=url_for('portfolios.new_application', portfolio_id=portfolio.id) if can_create_applications else None,
+      icon='cloud',
+      sub_message=None if can_create_applications else 'Please contact your JEDI Cloud portfolio administrator to set up a new application.'
+    ) }}
+
+  {% else %}
+
+    <div class='application-list'>
+      {% for application in portfolio.applications|sort(attribute='name') %}
+        <div is='toggler' v-cloak class='accordian application-list-item'>
+          <template slot-scope='props'>
+            <header class='accordian__header row'>
+              <div class='col col-grow'>
+                <h3 class='accordian__title'>{{ application.name }}</h3>
+                <span class='accordian__description'>{{ application.description }}</span>
+                <div class='accordian__actions'>
+                  {% if user_can(permissions.RENAME_APPLICATION_IN_PORTFOLIO) %}
+                    <a class='icon-link' href='{{ url_for("portfolios.edit_application", portfolio_id=portfolio.id, application_id=application.id) }}'>
+                      <span>{{ "portfolios.applications.app_settings_text" | translate }}</span>
+                    </a>
+                    <div class='separator'></div>
+                  {% endif %}
+                  <a class='icon-link' href='{{ url_for("portfolios.portfolio_members", portfolio_id=portfolio.id) }}'>
+                    <span>{{ "portfolios.applications.team_text" | translate }}</span>
+                    <span class='counter'>{{ application.num_users }}</span>
+                  </a>
+                </div>
+              </div>
+              <div class='col'>
+                <span v-on:click="props.toggle" class='icon-link toggle-link'>
+                  <template v-if="props.isVisible">
+                    {{ Icon('minus') }}
+                  </template>
+                  <template v-else>
+                    {{ Icon('plus') }}
+                  </template>
+                </span>
+              </div>
+            </header>
+            <ul v-if="props.isVisible">
+              {% for environment in application.environments %}
+                <li class='accordian__item application-list-item__environment'>
+                  <div class='application-list-item__environment__name'>
+                    <span>{{ environment.name }}</span>
+                  </div>
+
+                  <a href='{{ url_for("portfolios.access_environment", portfolio_id=portfolio.id, environment_id=environment.id)}}' target='_blank' rel='noopener noreferrer' class='application-list-item__environment__csp_link icon-link'>
+                    <span>{{ "portfolios.applications.csp_console_text" | translate }}</span>
+                  </a>
+
+                </li>
+              {% endfor %}
+            </ul>
+          </template>
+        </div>
+      {% endfor %}
+    </div>
+
+  {% endif %}
+
+</div>
 
 {% endblock %}
-

@@ -1,0 +1,110 @@
+.accordian {
+  @include block-list;
+
+  box-shadow: 0 4px 10px 0 rgba(193,193,193,0.5);
+
+  .icon-link {
+    margin: -$gap 0;
+  }
+
+  .icon-link,
+  .label {
+    &:first-child {
+      margin-left: -$gap;
+    }
+
+    &:last-child {
+      margin-right: -$gap;
+    }
+
+  }
+}
+
+.accordian__header {
+  @include block-list-header;
+  border-top: 3px solid $color-blue;
+  border-bottom: none;
+  box-shadow: 0 2px 4px 0 rgba(216,218,222,0.58);
+}
+
+.accordian__title {
+  @include block-list__title;
+  color: $color-blue;
+  @include h3;
+}
+
+.accordian__description {
+  @include block-list__description;
+  font-style: italic;
+  font-size: $small-font-size;
+  color: $color-gray;
+}
+
+.accordian__actions {
+  margin-top: $gap;
+  display: flex;
+  flex-direction: row;
+
+  .icon-link {
+    font-size: $small-font-size;
+  }
+
+  .counter {
+    background-color: $color-cool-blue-light;
+    color: $color-white;
+    border-radius: 2px;
+    padding: $gap / 2 $gap;
+    margin-left: $gap;
+  }
+
+  .separator {
+    border: 1px solid $color-gray-medium;
+    opacity: 0.75;
+  }
+}
+
+.accordian__item {
+  @include block-list-item;
+
+  opacity: 0.75;
+  background-color: $color-blue-light;
+  border-bottom: 1px solid rgba($color-gray-light, 0.5);
+
+  &.accordian__item--selectable {
+    > div {
+      display: flex;
+      flex-direction: row-reverse;
+
+      @include ie-only {
+        width: 100%;
+      }
+
+      > label {
+        @include block-list-selectable-label;
+      }
+    }
+
+    > label {
+      @include block-list-selectable-label;
+    }
+
+    input:checked {
+      + label {
+        color: $color-primary;
+      }
+    }
+
+    @include ie-only {
+      dl {
+        width: 100%;
+        padding-left: $gap*4;
+      }
+    }
+
+  }
+}
+
+.accordian__footer {
+  @include block-list__footer;
+  border-top: 0;
+}

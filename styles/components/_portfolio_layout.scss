@@ -86,7 +86,60 @@
 }
 
 .portfolio-content {
-  margin-top: 6 * $gap;
+  margin: 6 * $gap $gap 0 $gap;
+}
+
+.portfolio-applications {
+  .portfolio-applications__header {
+    margin-bottom: 4 * $gap;
+
+    .portfolio-applications__header--title {
+      color: $color-gray-dark;
+      padding: $gap 0;
+      text-transform: uppercase;
+      opacity: 0.54;
+      font-size: $small-font-size;
+      font-weight: bold;
+    }
+
+    .portfolio-applications__header--actions {
+      color: $color-blue;
+      font-size: $small-font-size;
+      .icon {
+        @include icon-color($color-blue);
+        @include icon-size(14);
+      }
+    }
+  }
+
+  .application-list {
+    .toggle-link {
+      background-color: $color-blue-light;
+      .icon {
+        margin: $gap / 2;
+      }
+    }
+
+    .application-list-item {
+      border-radius: 5px;
+      box-shadow: 0 4px 8px 1px rgba(230,230,230,0.5), -4px 4px 8px 1px rgba(230,230,230,0.5);
+
+      .col {
+        max-width: 95%;
+      }
+
+      .application-list-item__environment__name {
+      }
+
+      .application-list-item__environment__csp_link {
+        font-size: $small-font-size;
+        font-weight: normal;
+        &:hover {
+          background-color: $color-aqua-light;
+        }
+      }
+    }
+  }
 }
 
 .portfolio-funding {
