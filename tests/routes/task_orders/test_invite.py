@@ -72,3 +72,22 @@ def test_does_not_resend_officer_invitation(client, user_session):
     for i in range(2):
         client.post(url_for("task_orders.invite", task_order_id=task_order.id))
     assert len(contracting_officer.invitations) == 1
+
+
+def test_does_not_invite_if_task_order_incomplete(client, user_session, queue):
+    task_order = TaskOrderFactory.create(
+        scope=None, ko_invite=True, cor_invite=True, so_invite=True
+    )
+    portfolio = task_order.portfolio
+
+    user_session(portfolio.owner)
+    response = client.post(url_for("task_orders.invite", task_order_id=task_order.id))
+
+    # redirected to review screen
+    assert response.headers["Location"] == url_for(
+        "task_orders.new", screen=4, task_order_id=task_order.id, _external=True
+    )
+    # only owner is portfolio member
+    assert len(portfolio.members) == 1
+    # no email invitations are enqueued
+    assert len(queue.get_queue()) == 0
