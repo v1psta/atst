@@ -12,23 +12,25 @@
 
     <div class='funding-summary-row__col'>
       <div class='panel spend-summary'>
+        <h4 class='spend-summary__heading'>Portfolio Total Spend</h4>
         <div class='row'>
-          <h2 class='spend-summary__heading col'>Portfolio Total Spend</h2>
-          <dl class='spend-summary__budget'>
+          <dl class='spend-summary__budget col col--grow row'>
             {% set budget = portfolio_totals['budget'] %}
             {% set spent = portfolio_totals['spent'] %}
             {% set remaining = budget - spent %}
-            <div>
-              <dt>Budget </dt>
+            <dl class='col col--grow'>
+              <dt>Budget</dt>
               <dd>{{ budget | dollars }}</dd>
-            </div>
+            </dl>
 
-            <div>
+            <dl class='col col--grow'>
               <dt>Remaining</dt>
               <dd>{{ remaining | dollars }}</dd>
-            </div>
+            </dl>
           </dl>
         </div>
+
+        <hr></hr>
 
         <div>
           <meter value='{{ spent }}' min='0' max='{{ budget }}' title='{{ spent | dollars }} Total spend to date'>
@@ -36,7 +38,7 @@
           </meter>
 
           <dl class='spend-summary__spent'>
-            <dt>Total spend to date</dt>
+            <dt>Total spending to date</dt>
             <dd>{{ spent | dollars }}</dd>
           </dl>
         </div>

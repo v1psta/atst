@@ -7,6 +7,11 @@
 
   .funding-summary-row__col {
 
+    hr {
+      margin: 2 * $gap 0;
+      border-bottom: 1px solid $color-gray-lightest;
+    }
+
     @include media($medium-screen) {
       @include grid-pad;
       flex-grow: 1;
@@ -54,8 +59,8 @@
         }
 
         .spend-summary__heading {
-          @include h3;
-          margin: 0 $gap 0 0;
+          @include h4;
+          margin: 0 $gap 2 * $gap 0;
           -ms-flex-negative: 1;
         }
 
@@ -65,28 +70,22 @@
           @include ie-only {
             margin: $gap 0 0 0;
           }
+        }
 
-          > div {
-            text-align: right;
-            margin: 0 0 ($gap / 2) 0;
+        dl {
+          text-align: left;
+          margin: 0 0 ($gap / 2) 0;
 
-            @include ie-only {
-              text-align: left;
-            }
+          @include ie-only {
+            text-align: left;
+          }
 
-            dd, dt {
-              display: inline;
-            }
-
-            dt {
-              color: $color-gray;
-              margin-right: $gap;
-              font-weight: normal;
-            }
-
-            dd {
-              font-weight: bold;
-            }
+          dt {
+            text-transform: uppercase;
+            color: $color-gray-light;
+            margin-right: $gap;
+            font-weight: bold;
+            font-size: $small-font-size;
           }
         }
 
@@ -97,22 +96,16 @@
         }
 
         .spend-summary__spent {
-          margin: $gap 0 0 0;
+          margin: 2 * $gap 0;
           display: flex;
-          flex-direction: row-reverse;
+          flex-direction: column;
           justify-content: flex-end;
 
-          dd, dt {
-            @include h5;
-          }
-
           dt {
-            font-weight: normal;
-            margin-left: $gap;
+            letter-spacing: 0.47px;
           }
         }
       }
-
 
 
       // Task Order Summary
