@@ -13,7 +13,7 @@
   </a>
 {% endmacro %}
 
-{% macro EditOfficerInfo(form, officer_type) -%}
+{% macro EditOfficerInfo(form, officer_type, invited) -%}
   <template v-if="editing">
     <div class='officer__form'>
       <div class="edit-officer">
@@ -39,9 +39,26 @@
           {{ TextInput(form.phone_number, placeholder='(123) 456-7890', validation='usPhone') }}
         </div>
       </div>
-      {% if form.dod_id.data %}
-        {{ TextInput(form.dod_id, validation='dodId', disabled=True)}}
-      {% endif %}
+      <div class='form-row officer__form--dodId'>
+        <div class="form-col">
+          {% if not invited %}
+            <div class='form-row'>
+              <div class='usa-input'>
+
+                <fieldset v-on:change="onInput" class="usa-input__choices">
+                  <legend>
+                    {{ form.invite }}
+                    <label for="contracting_officer-invite">{{ ("forms.officers." + officer_type + "_invite") | translate }}</label>
+                  </legend>
+                </fieldset>
+              </div>
+            </div>
+          {% endif %}
+          <div class='form-row'>
+            {{ TextInput(form.dod_id, tooltip="task_orders.new.oversight.dod_id_tooltip" | translate, tooltip_title='Why', validation='dodId', disabled=invited)}}
+          </div>
+        </div>
+      </div>
       <div class='alert__actions officer__form--actions'>
         <a href="#{{ officer_type }}" v-on:click="cancel" class="icon-link">
           {{ Icon("x") }}
@@ -67,8 +84,11 @@
       {% set email = task_order[prefix + "_email"] %}
       {% set phone_number = task_order[prefix + "_phone_number"] %}
       {% set dod_id = task_order[prefix + "_dod_id"] %}
+      {% set invited = False %}
+
 
       {% if task_order[officer_type] %}
+        {% set invited = True %}
         <div class="officer__info">
           <div class="row">
             <div class="officer__info--name">{{ first_name }} {{ last_name }}</div>
@@ -119,7 +139,7 @@
         </div>
       {% endif %}
 
-      {{ EditOfficerInfo(form, officer_type) }}
+      {{ EditOfficerInfo(form, officer_type, invited) }}
       </div>
     </edit-officer-form>
   </div>

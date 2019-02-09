@@ -366,11 +366,13 @@
         border-left-color: $color-blue;
         border-left-style: solid;
         border-left-width: $gap / 2;
+        margin-top: 1.5rem;
 
       .edit-officer {
         h4 {
           color: $color-gray;
           margin-bottom: 0.5rem;
+          margin-top: 0;
         }
 
         p {
@@ -385,6 +387,18 @@
       .form-row {
         margin-bottom: 0rem;
         margin-top: 0rem;
+
+        .usa-input {
+          margin-bottom: 1.5rem;
+        }
+
+        &.officer__form--dodId {
+          margin-top: 1.5rem;
+
+          .usa-input {
+            margin-bottom: 0rem;
+          }
+        }
       }
 
       .officer__form--actions {
