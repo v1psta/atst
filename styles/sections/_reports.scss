@@ -41,6 +41,11 @@
         max-width: 100%;
       }
 
+      .subheading {
+        @include h4;
+        margin: 0 $gap 2 * $gap 0;
+        -ms-flex-negative: 1;
+      }
 
       // Spending Summary
       // ===============================
@@ -56,12 +61,6 @@
             max-width: 100%;
             flex-wrap: wrap;
           }
-        }
-
-        .spend-summary__heading {
-          @include h4;
-          margin: 0 $gap 2 * $gap 0;
-          -ms-flex-negative: 1;
         }
 
         .spend-summary__budget {
@@ -112,20 +111,22 @@
       // ===============================
       &.to-summary {
 
-        .to-summary__row {
-          .to-summary__heading {
-            @include h3;
-            margin: 0;
-          }
+        .subheading {
+          margin-bottom: 0;
+        }
 
-          .to-summary__to-number {
-            margin: 0;
-            dd {
-              &::before {
-                content: '#';
-                color: $color-gray;
-                margin-right: $gap;
-              }
+        .to-summary__heading {
+          @include h4;
+          margin: 0 $gap 0 0;
+        }
+
+        .to-summary__to-number {
+          margin: 0;
+          dd {
+            &::before {
+              content: '#';
+              color: $color-gray;
+              margin-right: $gap;
             }
           }
 
@@ -156,23 +157,26 @@
         .to-summary__expiration {
 
           dl {
-            margin: ($gap * 2) 0 0 0;
+            text-align: right;
 
-            > div {
-              margin: 0 0 ($gap / 2) 0;
+            dd, dt {
+              display: inline;
+            }
 
-              dd, dt {
-                display: block;
-              }
+            dt {
+              font-size: $small-font-size;
+              text-transform: uppercase;
+              font-weight: $font-bold;
+              color: $color-gray-light;
+            }
 
-              dt {
-                color: $color-gray;
-                margin-right: $gap;
-                font-weight: normal;
-              }
+            dd.ending-soon {
+              color: $color-red-dark;
+              font-size: $h2-font-size;
 
-              dd {
-                font-weight: bold;
+              .icon {
+                @include icon-size(28);
+                @include icon-color($color-red-dark);
               }
             }
           }

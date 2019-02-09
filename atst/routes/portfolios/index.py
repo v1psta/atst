@@ -78,7 +78,6 @@ def portfolio_reports(portfolio_id):
         cumulative_budget=Reports.cumulative_budget(portfolio),
         portfolio_totals=Reports.portfolio_totals(portfolio),
         monthly_totals=Reports.monthly_totals(portfolio),
-        jedi_request=portfolio.request,
         task_order=task_order,
         current_month=current_month,
         prev_month=prev_month,

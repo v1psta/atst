@@ -12,7 +12,7 @@
 
     <div class='funding-summary-row__col'>
       <div class='panel spend-summary'>
-        <h4 class='spend-summary__heading'>Portfolio Total Spend</h4>
+        <h4 class='spend-summary__heading subheading'>Portfolio Total Spend</h4>
         <div class='row'>
           <dl class='spend-summary__budget col col--grow row'>
             {% set budget = portfolio_totals['budget'] %}
@@ -50,52 +50,68 @@
         <div class='to-summary__row'>
 
           <div class='to-summary__to'>
-            <h2 class='to-summary__heading'>Task Order</h2>
+            <h2 class='to-summary__heading subheading'>Current Task Order</h2>
             <dl class='to-summary__to-number'>
               <dt class='usa-sr-only'>Task Order Number</dt>
               <dd>{{ task_order.number }}</dd>
             </dl>
           </div>
 
-          <div class='to-summary__expiration'>
-            <dl>
-              <div>
-                <dt>Expires</dt>
-                <dd>
-                  {% if expiration_date %}
-                    <local-datetime
-                      timestamp='{{ expiration_date }}'
-                      format='MMMM D, YYYY'>
-                      </local-datetime>
-                  {% else %}
-                      -
-                  {% endif %}
-                </dd>
-              </div>
+          <hr></hr>
 
+          <div class='to-summary__expiration row'>
+            <div class='col col--grow'>
+              <h4 class='subheading'>Expiration Date</h4>
               <div>
-                <dt>Remaining</dt>
-                <dd>
+                {% if expiration_date %}
+                  <local-datetime
+                    timestamp='{{ expiration_date }}'
+                    format='MMMM D, YYYY'>
+                    </local-datetime>
+                {% else %}
+                    -
+                {% endif %}
+              </div>
+              <a href='{{ url_for("portfolios.portfolio_funding", portfolio_id=portfolio.id) }}' class='icon-link'>
+                {{ Icon('cog') }}
+                Manage Task Order
+              </a>
+            </div>
+            <div class='col col--grow'>
+              <dl>
+                <dt>Remaining Days</dt>
+                <dd class='{{ 'ending-soon' if remaining_days is not none and remaining_days < 190 }}'>
                   {% if remaining_days is not none %}
-                    {{ remaining_days }} days
+                  {{ Icon('arrow-down') }}
+                    {{ remaining_days }}
                   {% else %}
                     -
                   {% endif %}
                 </dd>
-              </div>
-            </dl>
-
-            <a href='{{ url_for("portfolios.portfolio_funding", portfolio_id=portfolio.id) }}' class='icon-link'>
-              Manage Task Order
-            </a>
+              </dl>
+            </div>
           </div>
         </div>
 
+        <hr></hr>
+
         <dl class='to-summary__co'>
-          <dt>Contracting Officer</dt>
-          <dd>
-            {{ jedi_request.contracting_officer_full_name }}
-            <a class='icon-link' href='mailto:{{ jedi_request.contracting_officer_email }}'>{{ jedi_request.contracting_officer_email }}</a>
+          <dt class='subheading'>Contracting Officer</dt>
+          <dd class='row'>
+            <div class='col col--grow'>
+            {% if task_order.ko_first_name and task_order.ko_last_name %}
+              {{ task_order.ko_first_name }} {{ task_order.ko_last_name }}
+            {% endif %}
+            </div>
+
+            <div class='col'>
+            {% if task_order.ko_email %}
+              <a class='icon-link' href='mailto:{{ task_order.ko_email }}'>
+                {{ Icon('envelope') }}
+                {{ task_order.ko_email }}
+              </a>
+            {% endif %}
+            </div>
           </dd>
         </dl>
 
