@@ -101,7 +101,7 @@
         <div class="officer__actions">
           {{ Link("Update", "edit", onClick="edit") }}
           {{ Link("Remove", "trash", classes="remove") }}
-          <button type='button' class='usa-button usa-button-primary'>
+          <button v-if="!editing" type='button' class='usa-button usa-button-primary' v-on:click="edit">
             {{ ("task_orders.invitations." + officer_type + ".invite_button_text") | translate  }}
           </button>
         </div>
@@ -113,7 +113,7 @@
           </div>
         </div>
         <div class="officer__actions">
-          <button type='button' class='usa-button usa-button-primary'>
+          <button v-if="!editing" type='button' class='usa-button usa-button-primary' v-on:click="edit">
             {{ ("task_orders.invitations." + officer_type + ".add_button_text") | translate }}
           </button>
         </div>
