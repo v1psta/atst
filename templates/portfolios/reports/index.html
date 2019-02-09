@@ -342,7 +342,7 @@
 
     <div class='spend-table responsive-table-wrapper'>
       <div class='spend-table__header'>
-        <h2 class='spend-table__title'>Total spend per month </h2>
+        <h2 class='spend-table__title'>Total spent per month</h2>
 
         <select name='month' id='month' onchange='location = this.value' class='spend-table__month-select'>
           {% for m in cumulative_budget["months"] %}
@@ -379,12 +379,12 @@
             <th scope='col' class='table-cell--align-right previous-month'>{{ two_months_ago.strftime('%B %Y') }}</th>
             <th scope='col' class='table-cell--align-right previous-month'>{{ prev_month.strftime('%B %Y') }}</th>
             <th scope='col' class='table-cell--align-right current-month'>{{ current_month.strftime('%B %Y') }}</th>
-            <th class='current-month'>% of total spend this month</th>
+            <th class='current-month'></th>
           </thead>
 
           <tbody class='spend-table__portfolio'>
             <tr>
-              <th scope='row'>Total</th>
+              <th scope='row'>Portfolio Total</th>
               <td class='table-cell--align-right previous-month'>{{ portfolio_totals.get(two_months_ago_index, 0) | dollars }}</td>
               <td class='table-cell--align-right previous-month'>{{ portfolio_totals.get(prev_month_index, 0) | dollars }}</td>
               <td class='table-cell--align-right current-month'>{{ portfolio_totals.get(current_month_index, 0) | dollars }}</td>
@@ -429,10 +429,9 @@
 
             <tr v-for='(environment, envName) in environments[name]' v-show='application.isVisible' class='spend-table__application__env'>
               <th scope='rowgroup'>
-                <a href='#' class='icon-link spend-table__application__env'>
-                  {{ Icon('link') }}
+                <div class='icon-link spend-table__application__env'>
                   <span v-html='envName'></span>
-                </a>
+                </div>
               </th>
 
               <td class='table-cell--align-right previous-month'>
