@@ -26,10 +26,6 @@ from atst.utils.flash import formatted_flash as flash
 @portfolios_bp.route("/portfolios/<portfolio_id>/members")
 def portfolio_members(portfolio_id):
     portfolio = Portfolios.get_with_members(g.current_user, portfolio_id)
-    new_member_name = http_request.args.get("newMemberName")
-    new_member = next(
-        filter(lambda m: m.user_name == new_member_name, portfolio.members), None
-    )
     members_list = [
         {
             "name": k.user_name,
@@ -50,7 +46,6 @@ def portfolio_members(portfolio_id):
         role_choices=PORTFOLIO_ROLE_DEFINITIONS,
         status_choices=MEMBER_STATUS_CHOICES,
         members=members_list,
-        new_member=new_member,
     )
 
 
@@ -76,7 +71,7 @@ def create_member(portfolio_id):
             )
             invite_service.invite()
 
-            flash("new_portfolio_member", new_member=new_member, portfolio=portfolio)
+            flash("new_portfolio_member", new_member=member, portfolio=portfolio)
 
             return redirect(
                 url_for("portfolios.portfolio_members", portfolio_id=portfolio.id)
