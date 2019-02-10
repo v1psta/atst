@@ -42,6 +42,11 @@
 }
 
 .portfolio-header {
+  flex-direction: column;
+  @include media($small-screen) {
+    flex-direction: row;
+  }
+
   margin: 2 * $gap 0;
 
   .portfolio-header__name {
@@ -64,6 +69,7 @@
   }
 
   .links {
+    justify-content: center;
     font-size: $small-font-size;
 
     .icon-link {
