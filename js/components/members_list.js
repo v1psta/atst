@@ -93,7 +93,7 @@ export default {
         displayName: 'Environments',
         attr: 'num_env',
         sortFunc: numericSort,
-        class: 'table-cell--align-right',
+        class: 'table-cell--align-center',
       },
       {
         displayName: 'Status',
