@@ -85,10 +85,6 @@
   }
 }
 
-.portfolio-content {
-  margin: 6 * $gap $gap 0 $gap;
-}
-
 @mixin subheading {
   color: $color-gray-dark;
   padding: $gap 0;
@@ -96,6 +92,23 @@
   opacity: 0.54;
   font-size: $small-font-size;
   font-weight: bold;
+}
+
+.portfolio-content {
+  margin: 6 * $gap $gap 0 $gap;
+
+  .application-content {
+    .subheading {
+      @include subheading;
+    }
+
+    .panel {
+      padding: $gap / 2 0;
+      box-shadow: 0 6px 18px 0 rgba(144,164,183,0.3);
+      border-top: none;
+      border-bottom: none;
+    }
+  }
 }
 
 .portfolio-applications {

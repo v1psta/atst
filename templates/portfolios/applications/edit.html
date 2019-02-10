@@ -6,33 +6,39 @@
 
 {% block application_content %}
 
-  <form method="POST" action="{{ url_for('portfolios.edit_application', portfolio_id=portfolio.id, application_id=application.id) }}">
+  <div class='subheading'>Application Settings</div>
 
-    {% include "fragments/edit_application_form.html" %}
+  <div class="panel">
+    <div class="panel__content">
+      <form method="POST" action="{{ url_for('portfolios.edit_application', portfolio_id=portfolio.id, application_id=application.id) }}">
 
-    <div class="block-list application-list-item">
-      <header class="block-list__header block-list__header--grow">
-        <h2 class="block-list__title">Application Environments</h2>
-        <p>
-          Each environment created within an application is an enclave of cloud resources that is logically separated from each other for increased security.
-        </p>
-      </header>
+        {% include "fragments/edit_application_form.html" %}
 
-      <ul>
-        {% for environment in application.environments %}
-          <li class="block-list__item application-edit__env-list-item">
-            <div class="usa-input">
-              <label>Environment Name</label>
-              <input type="text" value="{{ environment.name }}" readonly />
-            </div>
-          </li>
-        {% endfor %}
-      </ul>
+        <div class="block-list application-list-item">
+          <header class="block-list__header block-list__header--grow">
+            <h2 class="block-list__title">Application Environments</h2>
+            <p>
+              Each environment created within an application is an enclave of cloud resources that is logically separated from each other for increased security.
+            </p>
+          </header>
+
+          <ul>
+            {% for environment in application.environments %}
+              <li class="block-list__item application-edit__env-list-item">
+                <div class="usa-input">
+                  <label>Environment Name</label>
+                  <input type="text" value="{{ environment.name }}" readonly />
+                </div>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+
+        <div class="action-group">
+          <button class="usa-button usa-button-primary" tabindex="0" type="submit">Update Application</button>
+        </div>
+      </form>
     </div>
-
-    <div class="action-group">
-      <button class="usa-button usa-button-primary" tabindex="0" type="submit">Update Application</button>
-    </div>
-  </form>
+  </div>
 
 {% endblock %}

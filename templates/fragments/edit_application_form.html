@@ -1,12 +1,8 @@
 {% from "components/text_input.html" import TextInput %}
 
 {{ form.csrf_token }}
-<div class="panel">
-  <div class="panel__content">
-    <p>
-      {{ "fragments.edit_application_form.explain" | translate }}
-    </p>
-    {{ TextInput(form.name) }}
-    {{ TextInput(form.description, paragraph=True) }}
-  </div>
-</div>
+<p>
+  {{ "fragments.edit_application_form.explain" | translate }}
+</p>
+{{ TextInput(form.name) }}
+{{ TextInput(form.description, paragraph=True) }}

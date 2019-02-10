@@ -173,7 +173,7 @@ forms:
     environment_names_label: Environment Name
     environment_names_required_validation_message: Provide at least one environment name.
     environment_names_unique_validation_message: Environment names must be unique.
-    name_label: Application Name
+    name_label: Name
   task_order:
     portfolio_name_label: Organization Portfolio Name
     portfolio_name_description: The name of your office or organization. You can add multiple applications to your portfolio. Your task orders are used to pay for these applications and their environments.
@@ -258,7 +258,7 @@ forms:
 fragments:
   edit_application_form:
     existing_application_title: 'Edit {application_name} application'
-    explain: 'AT-AT allows you to organize your portfolio into multiple applications, each of which may have environments.'
+    explain: 'AT-AT allows you to create multiple applications within a portfolio. Each application can then be broken down into its own customizable environments.'
     new_application_title: Add a new application
   edit_user_form:
     date_last_training_tooltip: When was the last time you completed the IA training? <br> Information Assurance (IA) training is an important step in cyber awareness.
