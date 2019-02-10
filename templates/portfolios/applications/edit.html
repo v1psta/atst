@@ -1,6 +1,8 @@
-{% extends "portfolios/base.html" %}
+{% extends "portfolios/applications/base.html" %}
 
 {% from "components/text_input.html" import TextInput %}
+
+{% set secondary_breadcrumb = application.name + ' Application Settings' %}
 
 {% block portfolio_content %}
 
