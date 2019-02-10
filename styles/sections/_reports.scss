@@ -111,6 +111,10 @@
       // ===============================
       &.to-summary {
 
+        .icon-link {
+          font-weight: $font-normal
+        }
+
         .subheading {
           margin-bottom: 0;
         }
@@ -173,6 +177,7 @@
             dd.ending-soon {
               color: $color-red-dark;
               font-size: $h2-font-size;
+              white-space: nowrap;
 
               .icon {
                 @include icon-size(28);

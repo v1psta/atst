@@ -82,8 +82,8 @@
                 <dt>Remaining Days</dt>
                 <dd class='{{ 'ending-soon' if remaining_days is not none and remaining_days < 190 }}'>
                   {% if remaining_days is not none %}
-                  {{ Icon('arrow-down') }}
-                    {{ remaining_days }}
+                    {{ Icon('arrow-down') }}
+                    <span>{{ remaining_days }}</span>
                   {% else %}
                     -
                   {% endif %}
@@ -153,7 +153,7 @@
 
       <div class='budget-chart panel' ref='panel'>
         <header class='budget-chart__header panel__heading panel__heading--tight'>
-          <h2 class='h3'>Cumulative Budget</h2>
+          <h4>Cumulative Budget</h4>
 
           <div class='budget-chart__legend'>
             <dl class='budget-chart__legend__spend'>
