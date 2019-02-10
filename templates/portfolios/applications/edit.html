@@ -4,7 +4,7 @@
 
 {% set secondary_breadcrumb = application.name + ' Application Settings' %}
 
-{% block portfolio_content %}
+{% block application_content %}
 
   <form method="POST" action="{{ url_for('portfolios.edit_application', portfolio_id=portfolio.id, application_id=application.id) }}">
 

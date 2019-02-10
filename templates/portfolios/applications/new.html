@@ -1,11 +1,13 @@
-{% extends "portfolios/base.html" %}
+{% extends "portfolios/applications/base.html" %}
 
 {% from "components/alert.html" import Alert %}
 {% from "components/icon.html" import Icon %}
 {% from "components/modal.html" import Modal %}
 {% from "components/text_input.html" import TextInput %}
 
-{% block portfolio_content %}
+{% set secondary_breadcrumb = 'New Application' %}
+
+{% block application_content %}
 
   {% set modalName = "newApplicationConfirmation" %}
   {% include "fragments/flash.html" %}
