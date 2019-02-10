@@ -8,9 +8,9 @@
 
   <div class='subheading'>{{ 'portfolios.applications.settings_heading' | translate }}</div>
 
-  <div class="panel">
-    <div class="panel__content">
-      <form method="POST" action="{{ url_for('portfolios.edit_application', portfolio_id=portfolio.id, application_id=application.id) }}">
+  <form method="POST" action="{{ url_for('portfolios.edit_application', portfolio_id=portfolio.id, application_id=application.id) }}">
+    <div class="panel">
+      <div class="panel__content">
 
         {% include "fragments/edit_application_form.html" %}
 
@@ -34,11 +34,11 @@
           </ul>
         </div>
 
-        <div class="action-group">
-          <button class="usa-button usa-button-primary" tabindex="0" type="submit">{{ 'portfolios.applications.update_button_text' | translate }}</button>
-        </div>
-      </form>
+      </div>
     </div>
-  </div>
+    <div class="action-group">
+      <button class="usa-button usa-button-primary" tabindex="0" type="submit">{{ 'portfolios.applications.update_button_text' | translate }}</button>
+    </div>
+  </form>
 
 {% endblock %}
