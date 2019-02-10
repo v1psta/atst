@@ -45,8 +45,8 @@
             </div>
           </div>
 
-          <div class="block-list application-list-item">
-            <header class="block-list__header--grow">
+          <div class="application-list-item">
+            <header>
               <h2 class="block-list__title">{{ 'portfolios.applications.environments_heading' | translate }}</h2>
               <p>
                 {{ 'portfolios.applications.environments_description' | translate }}
@@ -54,7 +54,7 @@
             </header>
 
             <ul>
-              <li v-for="(environment, i) in environments" class="block-list__item application-edit__env-list-item">
+              <li v-for="(environment, i) in environments" class="application-edit__env-list-item">
                 <div class="usa-input">
                   <label :for="'environment_names-' + i">Environment Name</label>
                   <input type="text" :id="'environment_names-' + i" v-model="environment.name" placeholder="e.g. Development, Staging, Production"/>

@@ -14,8 +14,8 @@
 
         {% include "fragments/edit_application_form.html" %}
 
-        <div class="block-list application-list-item">
-          <header class="block-list__header--grow">
+        <div class="application-list-item">
+          <header>
             <h2 class="block-list__title">{{ 'portfolios.applications.environments_heading' | translate }}</h2>
             <p>
               {{ 'portfolios.applications.environments_description' | translate }}
@@ -24,7 +24,7 @@
 
           <ul>
             {% for environment in application.environments %}
-              <li class="block-list__item application-edit__env-list-item">
+              <li class="application-edit__env-list-item">
                 <div class="usa-input">
                   <label>Environment Name</label>
                   <input type="text" value="{{ environment.name }}" readonly />

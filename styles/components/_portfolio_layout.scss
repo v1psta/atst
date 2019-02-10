@@ -108,6 +108,14 @@
       border-top: none;
       border-bottom: none;
     }
+
+    .application-list-item {
+      ul {
+        padding-left: 0;
+      }
+      .application-edit__env-list-item {
+      }
+    }
   }
 }
 
