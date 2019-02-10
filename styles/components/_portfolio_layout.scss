@@ -116,6 +116,11 @@
       .block-list__footer {
         border-bottom: none;
       }
+      .application-edit__env-list-item {
+        label {
+          color: $color-black;
+        }
+      }
     }
   }
 }
