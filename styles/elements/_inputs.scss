@@ -12,7 +12,7 @@
 
 @mixin input-state($state) {
   $border-width: 1px;
-  $state-color: $color-gray;
+  $state-color: $color-blue;
 
   @if $state == 'error' {
     $border-width: 2px;
@@ -282,6 +282,8 @@
       right: - $gap * 4;
     }
   }
+
+  @include input-state('default');
 
   &.usa-input--error {
     @include input-state('error');
