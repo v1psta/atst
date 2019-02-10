@@ -257,7 +257,6 @@ forms:
     name_length_validation_message: Portfolio names must be at least 4 and not more than 100 characters
 fragments:
   edit_application_form:
-    existing_application_title: 'Edit {application_name} application'
     explain: 'AT-AT allows you to create multiple applications within a portfolio. Each application can then be broken down into its own customizable environments.'
     new_application_title: Add a new application
   edit_user_form:
@@ -487,6 +486,13 @@ portfolios:
     app_settings_text: App Settings
     team_text: Team
     csp_console_text: CSP Console
+    existing_application_title: '{application_name} Application Settings'
+    new_application_title: New Application
+    settings_heading: Application Settings
+    environments_heading: Environments
+    environments_description: Each environment created within an application is logically separated from one another for easier management and security.
+    update_button_text: Save Changes
+    create_button_text: Create Application
 testing:
   example_string: Hello World
   example_with_variables: 'Hello, {name}!'

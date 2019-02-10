@@ -5,12 +5,14 @@
 {% from "components/modal.html" import Modal %}
 {% from "components/text_input.html" import TextInput %}
 
-{% set secondary_breadcrumb = 'New Application' %}
+{% set secondary_breadcrumb = 'portfolios.applications.new_application_title' | translate %}
 
 {% block application_content %}
 
   {% set modalName = "newApplicationConfirmation" %}
   {% include "fragments/flash.html" %}
+
+  <div class='subheading'>{{ 'portfolios.applications.settings_heading' | translate }}</div>
 
   <div class="panel">
     <div class="panel__content">
@@ -22,7 +24,7 @@
             <h1>Create application !{ name }</h1>
 
             <p>
-            When you click <em>Create Application</em>, the environments
+            When you click <em>{{ 'portfolios.applications.create_button_text' | translate }}</em>, the environments
             <span v-for="(environment, index) in environments">
               <strong>!{environment.name}</strong><template v-if="index < (environments.length - 1)">, </template>
             </span>
@@ -30,7 +32,7 @@
             </p>
 
             <div class='action-group'>
-              <button autofocus type='submit' class='action-group__action usa-button' tabindex='0'>Create Application</button>
+              <button autofocus type='submit' class='action-group__action usa-button' tabindex='0'>{{ 'portfolios.applications.create_button_text' | translate }}</button>
               <button type='button' v-on:click="handleCancelSubmit" class='icon-link action-group__action' tabindex='0'>Cancel</button>
             </div>
           {% endcall %}
@@ -44,10 +46,10 @@
           </div>
 
           <div class="block-list application-list-item">
-            <header class="block-list__header block-list__header--grow">
-              <h2 class="block-list__title">Application Environments</h2>
+            <header class="block-list__header--grow">
+              <h2 class="block-list__title">{{ 'portfolios.applications.environments_heading' | translate }}</h2>
               <p>
-                Each environment created within an application is an enclave of cloud resources that is logically separated from each other for increased security.
+                {{ 'portfolios.applications.environments_description' | translate }}
               </p>
             </header>
 
@@ -71,7 +73,7 @@
           </div>
 
           <div class="action-group">
-            <button class="usa-button usa-button-primary" tabindex="0" type="submit">Create Application</button>
+            <button class="usa-button usa-button-primary" tabindex="0" type="submit">{{ 'portfolios.applications.create_button_text' | translate }}</button>
           </div>
         </form>
       </new-application>
