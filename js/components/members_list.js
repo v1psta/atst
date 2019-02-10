@@ -61,8 +61,14 @@ export default {
 
   props: {
     members: Array,
-    role_choices: Array,
-    status_choices: Array,
+    role_choices: {
+      type: Array,
+      default: () => [],
+    },
+    status_choices: {
+      type: Array,
+      default: () => [],
+    },
   },
 
   data: function() {

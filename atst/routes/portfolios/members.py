@@ -23,28 +23,46 @@ from atst.models.permissions import Permissions
 from atst.utils.flash import formatted_flash as flash
 
 
+def serialize_portfolio_role(portfolio_role):
+    return {
+        "name": portfolio_role.user_name,
+        "status": portfolio_role.display_status,
+        "id": portfolio_role.user_id,
+        "role": portfolio_role.role_displayname,
+        "num_env": portfolio_role.num_environment_roles,
+        "edit_link": url_for(
+            "portfolios.view_member",
+            portfolio_id=portfolio_role.portfolio_id,
+            member_id=portfolio_role.user_id,
+        ),
+    }
+
+
 @portfolios_bp.route("/portfolios/<portfolio_id>/members")
 def portfolio_members(portfolio_id):
     portfolio = Portfolios.get_with_members(g.current_user, portfolio_id)
-    members_list = [
-        {
-            "name": k.user_name,
-            "status": k.display_status,
-            "id": k.user_id,
-            "role": k.role_displayname,
-            "num_env": k.num_environment_roles,
-            "edit_link": url_for(
-                "portfolios.view_member", portfolio_id=portfolio.id, member_id=k.user_id
-            ),
-        }
-        for k in portfolio.members
-    ]
+    members_list = [serialize_portfolio_role(k) for k in portfolio.members]
 
     return render_template(
         "portfolios/members/index.html",
         portfolio=portfolio,
         role_choices=PORTFOLIO_ROLE_DEFINITIONS,
         status_choices=MEMBER_STATUS_CHOICES,
+        members=members_list,
+    )
+
+
+@portfolios_bp.route("/portfolios/<portfolio_id>/applications/<application_id>/members")
+def application_members(portfolio_id, application_id):
+    portfolio = Portfolios.get_with_members(g.current_user, portfolio_id)
+    application = Applications.get(g.current_user, portfolio, application_id)
+    # TODO: this should show only members that have env roles in this application
+    members_list = [serialize_portfolio_role(k) for k in portfolio.members]
+
+    return render_template(
+        "portfolios/applications/members.html",
+        portfolio=portfolio,
+        application=application,
         members=members_list,
     )
 
