@@ -400,7 +400,7 @@
             <tr>
               <th scope='rowgroup'>
                 <button v-on:click='toggle($event, name)' class='icon-link icon-link--large spend-table__application__toggler'>
-                  <template v-if='application.isVisible'>{{ Icon('caret_down') }}</template>
+                  <template v-if='application.isVisible'>{{ Icon('caret_down') }}<div class='open-indicator'></div></template>
                   <template v-else>{{ Icon('caret_right') }}</template>
                   <span v-html='name'></span>
                 </button>

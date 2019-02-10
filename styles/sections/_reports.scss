@@ -302,10 +302,26 @@
           @include icon-size(12);
           margin-right: $gap;
         }
+
+        .open-indicator {
+          position: absolute;
+          bottom: 0;
+          left: 5 * $gap;
+          width: 0;
+          height: 0;
+          border-left: 10px solid transparent;
+          border-right: 10px solid transparent;
+
+          border-bottom: 10px solid $color-blue-light;
+        }
       }
 
       th, td {
         border-bottom: none;
+      }
+
+      th[scope=rowgroup] {
+        position: relative;
       }
 
       .spend-table__application__env {
