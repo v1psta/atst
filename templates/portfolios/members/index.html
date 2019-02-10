@@ -3,6 +3,8 @@
 {% from "components/empty_state.html" import EmptyState %}
 {% from "components/icon.html" import Icon %}
 
+{% set secondary_breadcrumb = 'Portfolio Team Management' %}
+
 {% block portfolio_content %}
 
 {% if not portfolio.members %}
@@ -83,7 +85,7 @@
           <td>
             <a :href="member.edit_link" class="icon-link icon-link--large" v-html="member.name"></a>
           </td>
-          <td class="table-cell--align-right" v-if='member.num_env'>
+          <td class="table-cell--align-center" v-if='member.num_env'>
             <span v-html="member.num_env"></span>
           </td>
           <td class='table-cell--shrink' v-else>
