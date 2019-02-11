@@ -2,7 +2,7 @@
 {% from "components/sidenav_item.html" import SidenavItem %}
 
 
-<div is="SidenavToggler" class="sidenav-container">
+<div v-cloak is="SidenavToggler" class="sidenav-container">
   <template slot-scope='props'>
     <div v-bind:class="{'global-navigation': true, 'sidenav': props.isVisible, 'sidenav--minimized': !props.isVisible}">
       <a href="#" v-on:click="props.toggle" class="sidenav__toggle">
