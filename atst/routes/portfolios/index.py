@@ -62,9 +62,11 @@ def portfolio_reports(portfolio_id):
     prev_month = current_month - timedelta(days=28)
     two_months_ago = prev_month - timedelta(days=28)
 
-    expiration_date = (
-        portfolio.legacy_task_order and portfolio.legacy_task_order.expiration_date
+    task_order = next(
+        (task_order for task_order in portfolio.task_orders if task_order.is_active),
+        None,
     )
+    expiration_date = task_order and task_order.end_date
     if expiration_date:
         remaining_difference = expiration_date - today
         remaining_days = remaining_difference.days
@@ -76,8 +78,7 @@ def portfolio_reports(portfolio_id):
         cumulative_budget=Reports.cumulative_budget(portfolio),
         portfolio_totals=Reports.portfolio_totals(portfolio),
         monthly_totals=Reports.monthly_totals(portfolio),
-        jedi_request=portfolio.request,
-        legacy_task_order=portfolio.legacy_task_order,
+        task_order=task_order,
         current_month=current_month,
         prev_month=prev_month,
         two_months_ago=two_months_ago,
