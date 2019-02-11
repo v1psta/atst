@@ -1,4 +1,4 @@
-from flask import render_template, g, request as http_request
+from flask import url_for, redirect, render_template, g, request as http_request
 
 import datetime
 
@@ -53,7 +53,14 @@ def record_signature(task_order_id):
             signed_at=datetime.datetime.now(),
             **form.data,
         )
-        return render_template("task_orders/signing/success.html"), 201
+
+        return redirect(
+            url_for(
+                "portfolios.view_task_order",
+                portfolio_id=task_order.portfolio_id,
+                task_order_id=task_order.id,
+            )
+        )
     else:
         return (
             render_template(

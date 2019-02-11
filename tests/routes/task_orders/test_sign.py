@@ -89,7 +89,15 @@ def test_signing_a_task_order(client, user_session):
         data={"signature": "y", "level_of_warrant": "33.33"},
     )
 
-    assert response.status_code == 201
+    assert (
+        url_for(
+            "portfolios.view_task_order",
+            portfolio_id=task_order.portfolio_id,
+            task_order_id=task_order.id,
+        )
+        in response.headers["Location"]
+    )
+
     assert task_order.signer_dod_id == contracting_officer.dod_id
     assert task_order.signed_at is not None
 
@@ -122,7 +130,15 @@ def test_signing_a_task_order_unlimited_level_of_warrant(client, user_session):
         },
     )
 
-    assert response.status_code == 201
+    assert (
+        url_for(
+            "portfolios.view_task_order",
+            portfolio_id=task_order.portfolio_id,
+            task_order_id=task_order.id,
+        )
+        in response.headers["Location"]
+    )
+
     assert task_order.signed_at is not None
     assert task_order.signer_dod_id == contracting_officer.dod_id
     assert task_order.unlimited_level_of_warrant == True
