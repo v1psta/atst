@@ -37,8 +37,6 @@ def record_signature(task_order_id):
     task_order = find_unsigned_ko_to(task_order_id)
 
     form_data = {**http_request.form}
-    form_data["signer_dod_id"] = g.current_user.dod_id
-    form_data["signed_at"] = datetime.datetime.now()
 
     if "unlimited_level_of_warrant" in form_data and form_data[
         "unlimited_level_of_warrant"
@@ -48,7 +46,13 @@ def record_signature(task_order_id):
     form = SignatureForm(form_data)
 
     if form.validate():
-        TaskOrders.update(user=g.current_user, task_order=task_order, **form.data)
+        TaskOrders.update(
+            user=g.current_user,
+            task_order=task_order,
+            signer_dod_id=g.current_user.dod_id,
+            signed_at=datetime.datetime.now(),
+            **form.data,
+        )
         return render_template("task_orders/signing/success.html"), 201
     else:
         return (

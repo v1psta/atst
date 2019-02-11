@@ -225,10 +225,6 @@ class ReviewForm(CacheableForm):
 
 
 class SignatureForm(CacheableForm):
-    signer_dod_id = StringField("signer_dod_id")
-
-    signed_at = StringField("signed_at")
-
     level_of_warrant = DecimalField(
         translate("task_orders.sign.level_of_warrant_label"),
         description=translate("task_orders.sign.level_of_warrant_description"),
