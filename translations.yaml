@@ -76,7 +76,7 @@ forms:
     date_latest_training_label: Latest Information Assurance (IA) Training Completion Date
     designation_description: What is your designation within the DoD?
     designation_label: Designation of Person
-    email_description: Enter your preferred contact e-mail address
+    email_description: Enter your preferred e-mail address
     email_label: E-mail Address
     first_name_label: First Name
     last_name_label: Last Name
