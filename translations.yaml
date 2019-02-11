@@ -408,7 +408,7 @@ task_orders:
       section_title: Funding
       performance_period_title: Period of Performance
       performance_period_description: Choose the length of time your task order will cover.
-      performance_period_paragraph: Because your funds will be lost if you don’t use them, we strongly recommend submitting small, short-duration task orders, usually a three month period. We’ll notify you when your period of performance is nearing the end so you can request your next set of funds with a new task order.
+      performance_period_paragraph: Be aware that your funds will be lost if you don’t use them. Because of this, we strongly recommend submitting small, short-duration task orders, usually around a three month period. We’ll notify you when your period of performance is nearing its end so you can request your next set of funds with a new task order.
       estimate_usage_title: Estimate Your Cloud Usage
       estimate_usage_description: Calculate how much your cloud usage will cost. A technical representative from your team should help you complete this calculation. These calculations will become your CLINs.
       estimate_usage_paragraph: This is only an estimation tool to help you make an informed evaluation of what you expect to use. While you're tied to the dollar amount you specify in your task order, you're not obligated by the resources you indicate in the calculator.
@@ -438,7 +438,7 @@ task_orders:
       complexity: Project Complexity
       team: Development Team
       funding: Funding
-      performance_period: Period of Performance length
+      performance_period: Period of Performance
       usage_est_link: View Usage Estimate
       to_value: Task Order Value
       clin_1: 'CLIN #1: Unclassified Cloud'
