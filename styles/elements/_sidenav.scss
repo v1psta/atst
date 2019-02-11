@@ -1,3 +1,12 @@
+@mixin sidenav__header {
+  color: $color-gray-dark;
+  padding: $gap ($gap * 2);
+  text-transform: uppercase;
+  opacity: 0.54;
+  font-size: $small-font-size;
+  font-weight: bold;
+}
+
 .sidenav {
   @include hide;
 
@@ -10,12 +19,13 @@
   box-shadow: 0 6px 18px 0 rgba(48,58,65,0.15);
 
   .sidenav__title {
-    color: $color-gray-dark;
-    padding: $gap ($gap * 2);
-    text-transform: uppercase;
-    opacity: 0.54;
-    font-size: $small-font-size;
-    font-weight: bold;
+    @include sidenav__header;
+    width: 50%;
+  }
+
+  .sidenav__toggle {
+    @include sidenav__header;
+    float: right;
   }
 
   ul {
@@ -153,8 +163,4 @@
 
   @include unhide;
   margin: 0px;
-
-  @include media($large-screen) {
-    @include hide;
-  }
 }
