@@ -64,6 +64,7 @@ def invite(task_order_id):
             )
         )
     else:
+        flash("task_order_incomplete")
         return redirect(
             url_for("task_orders.new", screen=4, task_order_id=task_order.id)
         )
