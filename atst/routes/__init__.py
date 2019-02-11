@@ -1,5 +1,14 @@
 import urllib.parse as url
-from flask import Blueprint, render_template, g, redirect, session, url_for, request
+from flask import (
+    Blueprint,
+    render_template,
+    g,
+    redirect,
+    session,
+    url_for,
+    request,
+    make_response,
+)
 
 from flask import current_app as app
 from jinja2.exceptions import TemplateNotFound
@@ -131,7 +140,9 @@ def login_redirect():
 @bp.route("/logout")
 def logout():
     _logout()
-    return redirect(url_for(".root"))
+    response = make_response(redirect(url_for(".root")))
+    response.set_cookie("expandSidenav", "", expires=0)
+    return response
 
 
 @bp.route("/activity-history")
