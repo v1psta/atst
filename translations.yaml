@@ -7,7 +7,6 @@
 
   # `{{ "login.title" | translate | safe }}`
 
-
 audit_log:
   events:
     default:
@@ -481,6 +480,12 @@ task_orders:
     submitted_by: Below is an overview of the projected portfolio submitted by {name}
     task_order_information: Task Order Information
 portfolios:
+  index:
+    empty:
+      title: You have no apps yet
+      help_title: Should I do this?
+      help_message: TODO
+      start_button: Start a New JEDI Portfolio
   applications:
     add_application_text: Add A New Application
     app_settings_text: App Settings

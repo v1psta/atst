@@ -15,7 +15,11 @@ from atst.models.permissions import Permissions
 @portfolios_bp.route("/portfolios")
 def portfolios():
     portfolios = Portfolios.for_user(g.current_user)
-    return render_template("portfolios/index.html", page=5, portfolios=portfolios)
+
+    if portfolios:
+        return render_template("portfolios/index.html", page=5, portfolios=portfolios)
+    else:
+        return render_template("portfolios/blank_slate.html")
 
 
 @portfolios_bp.route("/portfolios/<portfolio_id>/edit")
