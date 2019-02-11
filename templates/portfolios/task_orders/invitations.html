@@ -43,15 +43,7 @@
         <div class="form-col">
           {% if not invited %}
             <div class='form-row'>
-              <div class='usa-input'>
-
-                <fieldset v-on:change="onInput" class="usa-input__choices">
-                  <legend>
-                    {{ form.invite }}
-                    <label for="contracting_officer-invite">{{ ("forms.officers." + officer_type + "_invite") | translate }}</label>
-                  </legend>
-                </fieldset>
-              </div>
+              {{ CheckboxInput(form.invite, label=(("forms.officers." + officer_type + "_invite") | translate)) }}
             </div>
           {% endif %}
           <div class='form-row'>
