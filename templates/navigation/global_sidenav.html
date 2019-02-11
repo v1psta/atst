@@ -2,15 +2,15 @@
 {% from "components/sidenav_item.html" import SidenavItem %}
 
 
-<div is="toggler">
+<div is="toggler" class="sidenav-container">
   <template slot-scope='props'>
     <div v-bind:class="{'global-navigation': true, 'sidenav': props.isVisible, 'sidenav--minimized': !props.isVisible}">
       <a href="#" v-on:click="props.toggle" class="sidenav__toggle">
         <template v-if="props.isVisible">
-          <<< Hide
+          << Hide
         </template>
         <template v-else>
-          Show >>>
+          Show >>
         </template>
       </a>
       <div v-if="props.isVisible">

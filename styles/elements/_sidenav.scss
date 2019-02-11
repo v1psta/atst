@@ -1,10 +1,15 @@
 @mixin sidenav__header {
-  color: $color-gray-dark;
   padding: $gap ($gap * 2);
-  text-transform: uppercase;
-  opacity: 0.54;
   font-size: $small-font-size;
   font-weight: bold;
+}
+
+.sidenav-container {
+  position: relative;
+
+  .global-navigation.sidenav {
+    height: 100%;
+  }
 }
 
 .sidenav {
@@ -20,12 +25,16 @@
 
   .sidenav__title {
     @include sidenav__header;
+    text-transform: uppercase;
     width: 50%;
+    color: $color-gray-dark;
+    opacity: 0.54;
   }
 
   .sidenav__toggle {
     @include sidenav__header;
     float: right;
+    color: $color-blue-darker;
   }
 
   ul {
