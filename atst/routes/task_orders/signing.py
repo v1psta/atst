@@ -7,6 +7,7 @@ from atst.domain.authz import Authorization
 from atst.domain.exceptions import NotFoundError
 from atst.domain.task_orders import TaskOrders
 from atst.forms.task_order import SignatureForm
+from atst.utils.flash import formatted_flash as flash
 
 
 def find_unsigned_ko_to(task_order_id):
@@ -54,6 +55,7 @@ def record_signature(task_order_id):
             **form.data,
         )
 
+        flash("task_order_signed")
         return redirect(
             url_for(
                 "portfolios.view_task_order",
