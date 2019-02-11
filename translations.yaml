@@ -413,7 +413,7 @@ task_orders:
       estimate_usage_description: Calculate how much your cloud usage will cost. A technical representative from your team should help you complete this calculation. These calculations will become your CLINs.
       estimate_usage_paragraph: This is only an estimation tool to help you make an informed evaluation of what you expect to use. While you're tied to the dollar amount you specify in your task order, you're not obligated by the resources you indicate in the calculator.
       cloud_calculations_title: Cloud Usage Calculations
-      cloud_calculations_paragraph: Enter the results of your cloud usage calculations.
+      cloud_calculations_paragraph: Enter the results of your cloud usage calculations below.
       cloud_offerings_title: Cloud Offerings
       cloud_offerings_paragraph: Infrastructure as a Service (IaaS) and Platform as a Service (PaaS) offerings
       support_assistance_title: Cloud Support and Assistance
