@@ -38,7 +38,7 @@
           <template slot-scope='props'>
             <header class='accordian__header row'>
               <div class='col col-grow'>
-                <h3 class='accordian__title'>{{ application.name }}</h3>
+                <h3 class='icon-link accordian__title' v-on:click="props.toggle">{{ application.name }}</h3>
                 <span class='accordian__description'>{{ application.description }}</span>
                 <div class='accordian__actions'>
                   {% if user_can(permissions.RENAME_APPLICATION_IN_PORTFOLIO) %}

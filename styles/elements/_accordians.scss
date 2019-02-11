@@ -31,6 +31,12 @@
   @include block-list__title;
   color: $color-blue;
   @include h3;
+
+  &.icon-link {
+    margin: 0;
+    display: block;
+    padding: 0 $gap;
+  }
 }
 
 .accordian__description {
