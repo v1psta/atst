@@ -1,5 +1,6 @@
 {% extends "portfolios/base.html" %}
 
+{% from "components/pagination.html" import Pagination %}
 {% from "components/icon.html" import Icon %}
 {% from "components/text_input.html" import TextInput %}
 
@@ -7,32 +8,26 @@
 
 {% block portfolio_content %}
 
-{% include "fragments/flash.html" %}
+  {% include "fragments/flash.html" %}
 
-<form method="POST" action="{{ url_for('portfolios.edit_portfolio', portfolio_id=portfolio.id) }}" autocomplete="false">
-  {{ form.csrf_token }}
+  <div v-cloak class="portfolio-admin">
 
-  <div class="panel">
+    <form method="POST" action="{{ url_for('portfolios.edit_portfolio', portfolio_id=portfolio.id) }}" autocomplete="false">
+      {{ form.csrf_token }}
+      <div class='form-row'>
+        <div class='form-col form-col--half'>
+          {{ TextInput(form.name, validation="portfolioName") }}
+        </div>
 
-    <div class="panel__heading">
-      <h1>Portfolio Settings</h1>
-    </div>
+        <div class='form-col form-col--half'>
+          <div class='edit-portfolio-name action-group'>
+            <button type="submit" class="usa-button usa-button-big usa-button-primary" tabindex="0">Save</button>
+          </div>
+        </div>
+      </div>
+    </form>
+    {% include "fragments/audit_events_log.html" %}
 
-    <div class="panel__content">
-      {{ TextInput(form.name, validation="portfolioName") }}
-    </div>
+    {{ Pagination(audit_events, 'portfolios.portfolio_activity', portfolio_id=portfolio_id) }}
   </div>
-
-
-  <div class='action-group'>
-    <button type="submit" class="usa-button usa-button-big usa-button-primary" tabindex="0">Save</button>
-    <a href='{{ url_for("portfolios.portfolio_applications", portfolio_id=portfolio.id) }}' class='action-group__action icon-link'>
-      {{ Icon('x') }}
-      <span>Cancel</span>
-    </a>
-  </div>
-
-
-</form>
-
 {% endblock %}
