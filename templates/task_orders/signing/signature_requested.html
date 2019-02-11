@@ -41,7 +41,9 @@
           {{ "common.sign" | translate }}
         </button>
 
-        <a href="" class="action-group__action icon-link">
+        <a
+          href="{{ request.referrer or url_for("atst.home") }}"
+          class="action-group__action icon-link">
           {{ Icon('caret_left') }}
           <span class="icon icon--x"></span>
           {{ "common.back" | translate }}
