@@ -80,9 +80,10 @@ class TaskOrder(Base, mixins.TimestampsMixin):
     number = Column(String, unique=True)  # Task Order Number
     loa = Column(String)  # Line of Accounting (LOA)
     custom_clauses = Column(String)  # Custom Clauses
-
     signer_dod_id = Column(String)
     signed_at = Column(DateTime)
+    level_of_warrant = Column(Numeric(scale=2))
+    unlimited_level_of_warrant = Column(Boolean)
 
     @hybrid_property
     def csp_estimate(self):
