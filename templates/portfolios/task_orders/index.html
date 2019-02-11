@@ -83,6 +83,7 @@
               </a>
             </td>
           </tr>
+          {{ caller and caller() }}
         </tbody>
       </table>
     </div>
@@ -91,49 +92,30 @@
 
 <div class="portfolio-funding">
 
-  <div class='panel'>
-    <div class='panel__content portfolio-funding__header row'>
-      <h3>Portfolio Funding</h3>
-      <div class='portfolio-funding__header--funded-through {{ "funded" if funding_end_date is not none and funded else "unfunded"}}'>
-        {% if funding_end_date and funded %}
-          {{ Icon('ok') }}
-          Funded through
-          <local-datetime
-            timestamp='{{ funding_end_date }}'
-            format="M/D/YYYY">
-          </local-datetime>
-        {% elif funding_end_date and not funded %}
-          {{ Icon('alert') }}
-          Funded period ends
-          <local-datetime
-            timestamp='{{ funding_end_date }}'
-            format="M/D/YYYY">
-          </local-datetime>
-        {% endif %}
-      </div>
-      <a href="{{ url_for("task_orders.new", screen=1, portfolio_id=portfolio.id) }}" class="usa-button">Start a New Task Order</a>
-    </div>
+  <div class='portfolio-funding__header row'>
+    <a href="{{ url_for("task_orders.new", screen=1, portfolio_id=portfolio.id) }}" class="usa-button">Start a New Task Order</a>
   </div>
 
   {% for task_order in pending_task_orders %}
-    <div class='panel'>
-      <div class='panel__content pending-task-order row'>
-        <span class='label label--warning'>Pending</span>
-        <div class="pending-task-order__started col">
-          <dt>Started</dt>
-          <dd>
-            <local-datetime
-              timestamp="{{ task_order.time_created }}"
-              format="M/D/YYYY">
-              </local-datetime>
-          </dd>
-        </div>
-        <div class="pending-task-order__value col">
-          <dt>Value</dt>
-          <dd>{{ task_order.budget | dollars }}</dd>
-        </div>
-        {{ ViewLink(task_order) }}
+    <div class='subheading'>
+      Pending
+    </div>
+    <div class='panel pending-task-order row'>
+      <span class='label label--warning'>Pending</span>
+      <div class="pending-task-order__started col">
+        <dt>Started</dt>
+        <dd>
+          <local-datetime
+            timestamp="{{ task_order.time_created }}"
+            format="M/D/YYYY">
+            </local-datetime>
+        </dd>
       </div>
+      <div class="pending-task-order__value col">
+        <dt>Value</dt>
+        <dd>{{ task_order.budget | dollars }}</dd>
+      </div>
+      {{ ViewLink(task_order) }}
     </div>
   {% endfor %}
 
@@ -148,16 +130,20 @@
   {% endif %}
 
   {% if active_task_orders %}
-    {{ TaskOrderList(active_task_orders, label='success', funded=funded) }}
-    <div class='panel portfolio-total-balance'>
-      <div class='panel__content row'>
-        <span>{{ total_balance | dollars }}</span>
-        <span class='label label--success'>Total Active Balance</span>
-      </div>
-    </div>
+    <div class='subheading'>Active</div>
+    {% call TaskOrderList(active_task_orders, label='success', funded=funded) %}
+      <tr class='total-balance'>
+        <td colspan='4'>
+          <span class='label label--success'>Total Active Balance</span>
+          <span>{{ total_balance | dollars }}</span>
+        </td>
+        <td>&nbsp;</td>
+      </tr>
+    {% endcall %}
   {% endif %}
 
   {% if expired_task_orders %}
+    <div class='subheading'>Expired</div>
     {{ TaskOrderList(expired_task_orders, label='expired', expired=True) }}
   {% endif %}
 </div>
