@@ -10,166 +10,163 @@
   .global-navigation.sidenav {
     height: 100%;
   }
-}
 
-.sidenav {
-  @include hide;
-
-  @include media($large-screen) {
-    @include unhide;
-    width: 25rem;
-    margin: 0px;
-  }
-
-  box-shadow: 0 6px 18px 0 rgba(48,58,65,0.15);
-
-  .sidenav__title {
-    @include sidenav__header;
-    text-transform: uppercase;
-    width: 50%;
-    color: $color-gray-dark;
-    opacity: 0.54;
-  }
-
-  .sidenav__toggle {
-    @include sidenav__header;
-    float: right;
-    color: $color-blue-darker;
-  }
-
-  ul {
-    &.sidenav__list--padded {
-      margin: 4 * $gap 0;
+  .sidenav {
+    @include media($large-screen) {
+      width: 25rem;
+      margin: 0px;
     }
 
-    list-style: none;
-    padding: 0;
+    box-shadow: 0 6px 18px 0 rgba(48,58,65,0.15);
 
-    li {
-      margin: 0;
-      display: block;
+    .sidenav__title {
+      @include sidenav__header;
+      text-transform: uppercase;
+      width: 50%;
+      color: $color-gray-dark;
+      opacity: 0.54;
     }
 
-  }
-
-  .sidenav__divider--small {
-    display: block;
-    width: 4 * $gap;
-    border: 1px solid #D6D7D9;
-    margin-left: 2 * $gap;
-    margin-bottom: $gap;
-  }
-
-  .sidenav__link {
-    display: block;
-    padding: $gap ($gap * 2);
-    color: $color-black;
-    text-decoration: none;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-
-    .sidenav__link-icon {
-      margin-left: - ($gap * .5);
+    .sidenav__toggle {
+      @include sidenav__header;
+      float: right;
+      color: $color-blue-darker;
     }
 
-    &.sidenav__link--disabled {
-      color: $color-shadow;
-      pointer-events: none;
-    }
+    ul {
+      &.sidenav__list--padded {
+        margin: 4 * $gap 0;
+      }
 
-    &.sidenav__link--add {
-      color: $color-blue;
-      font-size: $small-font-size;
-      .icon {
-        @include icon-color($color-blue);
-        @include icon-size(14);
+      list-style: none;
+      padding: 0;
+
+      li {
+        margin: 0;
+        display: block;
       }
 
     }
 
-    &.sidenav__link--active {
-      @include h4;
-      color: $color-primary;
-      background-color: $color-aqua-lightest;
-      box-shadow: inset ($gap / 2) 0 0 0 $color-primary;
+    .sidenav__divider--small {
+      display: block;
+      width: 4 * $gap;
+      border: 1px solid #D6D7D9;
+      margin-left: 2 * $gap;
+      margin-bottom: $gap;
+    }
+
+    .sidenav__link {
+      display: block;
+      padding: $gap ($gap * 2);
+      color: $color-black;
+      text-decoration: none;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
 
       .sidenav__link-icon {
-        @include icon-style-active;
+        margin-left: - ($gap * .5);
       }
 
-      position: relative;
-      .sidenav__link-active_indicator .icon {
-        @include icon-color($color-primary);
-        position: absolute;
-        right: 0;
+      &.sidenav__link--disabled {
+        color: $color-shadow;
+        pointer-events: none;
+      }
+
+      &.sidenav__link--add {
+        color: $color-blue;
+        font-size: $small-font-size;
+        .icon {
+          @include icon-color($color-blue);
+          @include icon-size(14);
+        }
+
+      }
+
+      &.sidenav__link--active {
+        @include h4;
+        color: $color-primary;
+        background-color: $color-aqua-lightest;
+        box-shadow: inset ($gap / 2) 0 0 0 $color-primary;
+
+        .sidenav__link-icon {
+          @include icon-style-active;
+        }
+
+        position: relative;
+        .sidenav__link-active_indicator .icon {
+          @include icon-color($color-primary);
+          position: absolute;
+          right: 0;
+        }
+
+        + ul {
+          background-color: $color-primary;
+
+          .sidenav__link {
+            color: $color-white;
+            background-color: $color-primary;
+
+            &:hover {
+              background-color: $color-blue-darker;
+            }
+
+            &--active {
+              @include h5;
+              color: $color-white;
+              background-color: $color-primary;
+              box-shadow: none;
+            }
+
+            .icon {
+              @include icon-color($color-white);
+            }
+          }
+        }
       }
 
       + ul {
-        background-color: $color-primary;
+        // padding-bottom: $gap / 2;
 
-        .sidenav__link {
-          color: $color-white;
-          background-color: $color-primary;
-
-          &:hover {
-            background-color: $color-blue-darker;
-          }
-
-          &--active {
+        li {
+          .sidenav__link {
             @include h5;
-            color: $color-white;
-            background-color: $color-primary;
-            box-shadow: none;
-          }
+            padding: $gap * .75;
+            padding-left: 4.5rem;
+            border: 0;
+            font-weight: normal;
 
-          .icon {
-            @include icon-color($color-white);
-          }
-        }
-      }
-    }
+            .sidenav__link-icon {
+              @include icon-size(12);
+              flex-shrink: 0;
+              margin-right: 1.5rem;
+              margin-left: -3rem
+            }
 
-    + ul {
-      // padding-bottom: $gap / 2;
-
-      li {
-        .sidenav__link {
-          @include h5;
-          padding: $gap * .75;
-          padding-left: 4.5rem;
-          border: 0;
-          font-weight: normal;
-
-          .sidenav__link-icon {
-            @include icon-size(12);
-            flex-shrink: 0;
-            margin-right: 1.5rem;
-            margin-left: -3rem
-          }
-
-          .sidenav__link-label {
-            padding-left: 0;
+            .sidenav__link-label {
+              padding-left: 0;
+            }
           }
         }
       }
-    }
 
-    &:hover {
-      color: $color-primary;
-      background-color: $color-aqua-lightest;
+      &:hover {
+        color: $color-primary;
+        background-color: $color-aqua-lightest;
 
-      .sidenav__link-icon {
-        @include icon-style-active;
+        .sidenav__link-icon {
+          @include icon-style-active;
+        }
+
       }
-
     }
   }
-}
 
-.sidenav--minimized {
-  @extend .sidenav;
+  .sidenav--minimized {
+    @extend .sidenav;
 
-  @include unhide;
-  margin: 0px;
+    width: auto;
+    margin: 0px;
+  }
 }
