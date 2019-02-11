@@ -458,6 +458,7 @@ task_orders:
       invited: Invited
       not_invited: Not Yet Invited
       not_uploaded: Not Uploaded
+      pending_to: Pending TO Completion
   invitations:
     dod_id_label: DoD ID
     contracting_officer:

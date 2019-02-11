@@ -2,7 +2,7 @@ from enum import Enum
 from datetime import date
 
 import pendulum
-from sqlalchemy import Column, Numeric, String, ForeignKey, Date, Integer
+from sqlalchemy import Boolean, Column, Numeric, String, ForeignKey, Date, Integer
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.types import ARRAY
 from sqlalchemy.orm import relationship
@@ -62,16 +62,19 @@ class TaskOrder(Base, mixins.TimestampsMixin):
     ko_email = Column(String)  # Email
     ko_phone_number = Column(String)  # Phone Number
     ko_dod_id = Column(String)  # DOD ID
+    ko_invite = Column(Boolean)
     cor_first_name = Column(String)  # First Name
     cor_last_name = Column(String)  # Last Name
     cor_email = Column(String)  # Email
     cor_phone_number = Column(String)  # Phone Number
     cor_dod_id = Column(String)  # DOD ID
+    cor_invite = Column(Boolean)
     so_first_name = Column(String)  # First Name
     so_last_name = Column(String)  # Last Name
     so_email = Column(String)  # Email
     so_phone_number = Column(String)  # Phone Number
     so_dod_id = Column(String)  # DOD ID
+    so_invite = Column(Boolean)
     pdf_attachment_id = Column(ForeignKey("attachments.id"))
     _pdf = relationship("Attachment", foreign_keys=[pdf_attachment_id])
     number = Column(String, unique=True)  # Task Order Number
@@ -155,6 +158,44 @@ class TaskOrder(Base, mixins.TimestampsMixin):
     @property
     def is_pending(self):
         return self.status == Status.PENDING
+
+    @property
+    def ko_invitable(self):
+        """
+        The MO has indicated that the KO should be invited but we have not sent
+        an invite and attached the KO user
+        """
+        return self.ko_invite and not self.contracting_officer
+
+    @property
+    def cor_invitable(self):
+        """
+        The MO has indicated that the COR should be invited but we have not sent
+        an invite and attached the COR user
+        """
+        return self.cor_invite and not self.contracting_officer_representative
+
+    @property
+    def so_invitable(self):
+        """
+        The MO has indicated that the SO should be invited but we have not sent
+        an invite and attached the SO user
+        """
+        return self.so_invite and not self.security_officer
+
+    _OFFICER_PREFIXES = {
+        "contracting_officer": "ko",
+        "contracting_officer_representative": "cor",
+        "security_officer": "so",
+    }
+    _OFFICER_PROPERTIES = ["first_name", "last_name", "phone_number", "email", "dod_id"]
+
+    def officer_dictionary(self, officer_type):
+        prefix = self._OFFICER_PREFIXES[officer_type]
+        return {
+            field: getattr(self, "{}_{}".format(prefix, field))
+            for field in self._OFFICER_PROPERTIES
+        }
 
     def to_dictionary(self):
         return {

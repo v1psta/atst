@@ -70,4 +70,8 @@
   &.icon--medium {
     @include icon-size(12);
   }
+
+  &.icon--gold {
+    @include icon-color($color-gold-dark);
+  }
 }

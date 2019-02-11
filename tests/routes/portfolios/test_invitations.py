@@ -212,27 +212,20 @@ def test_existing_member_invite_resent_to_email_submitted_in_form(
 
 def test_contracting_officer_accepts_invite(monkeypatch, client, user_session):
     portfolio = PortfolioFactory.create()
-    task_order = TaskOrderFactory.create(portfolio=portfolio)
     user_info = UserFactory.dictionary()
+    task_order = TaskOrderFactory.create(
+        portfolio=portfolio,
+        ko_first_name=user_info["first_name"],
+        ko_last_name=user_info["last_name"],
+        ko_email=user_info["email"],
+        ko_phone_number=user_info["phone_number"],
+        ko_dod_id=user_info["dod_id"],
+        ko_invite=True,
+    )
 
     # create contracting officer
     user_session(portfolio.owner)
-    client.post(
-        url_for("task_orders.new", screen=3, task_order_id=task_order.id),
-        data={
-            "portfolio_role": "contracting_officer",
-            "ko_first_name": user_info["first_name"],
-            "ko_last_name": user_info["last_name"],
-            "ko_email": user_info["email"],
-            "ko_phone_number": user_info["phone_number"],
-            "ko_dod_id": user_info["dod_id"],
-            "cor_phone_number": user_info["phone_number"],
-            "so_phone_number": user_info["phone_number"],
-            "so_dod_id": task_order.so_dod_id,
-            "cor_dod_id": task_order.cor_dod_id,
-            "ko_invite": True,
-        },
-    )
+    client.post(url_for("task_orders.invite", task_order_id=task_order.id))
 
     # contracting officer accepts invitation
     user = Users.get_by_dod_id(user_info["dod_id"])

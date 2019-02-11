@@ -128,6 +128,13 @@ MESSAGES = {
         """,
         "category": "success",
     },
+    "task_order_incomplete": {
+        "title_template": "Task Order Incomplete",
+        "message_template": """
+        You must complete your Task Order form before submitting.
+        """,
+        "category": "error",
+    },
 }
 
 
