@@ -304,6 +304,7 @@ navigation:
     applications: Applications
     portfolio_funding: Funding
     portfolio_settings: Portfolio Settings
+    portfolio_admin: Portfolio Administration
     breadcrumbs:
       admin: Admin
       funding: Funding
