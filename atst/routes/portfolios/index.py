@@ -18,7 +18,7 @@ def portfolios():
     return render_template("portfolios/index.html", page=5, portfolios=portfolios)
 
 
-@portfolios_bp.route("/portfolios/<portfolio_id>/edit")
+@portfolios_bp.route("/portfolios/<portfolio_id>/admin")
 def portfolio(portfolio_id):
     portfolio = Portfolios.get_for_update_information(g.current_user, portfolio_id)
     form = PortfolioForm(data={"name": portfolio.name})
