@@ -36,7 +36,7 @@ def signature_requested(task_order_id):
 def record_signature(task_order_id):
     task_order = find_unsigned_ko_to(task_order_id)
 
-    form_data = {**http_request.form, **http_request.files}
+    form_data = {**http_request.form}
     form_data["signer_dod_id"] = g.current_user.dod_id
     form_data["signed_at"] = datetime.datetime.now()
 
