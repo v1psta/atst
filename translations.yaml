@@ -493,6 +493,9 @@ portfolios:
     environments_description: Each environment created within an application is logically separated from one another for easier management and security.
     update_button_text: Save Changes
     create_button_text: Create Application
+    team_management:
+      title: '{application_name} Team Management'
+      subheading: Team Management
 testing:
   example_string: Hello World
   example_with_variables: 'Hello, {name}!'

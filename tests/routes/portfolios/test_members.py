@@ -92,6 +92,7 @@ def test_create_member(client, user_session):
     )
 
     assert response.status_code == 200
+    assert user.full_name in response.data.decode()
     assert user.has_portfolios
     assert user.invitations
     assert len(queue.get_queue()) == queue_length + 1

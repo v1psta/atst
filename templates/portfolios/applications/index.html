@@ -47,10 +47,12 @@
                     </a>
                     <div class='separator'></div>
                   {% endif %}
-                  <a class='icon-link' href='{{ url_for("portfolios.portfolio_members", portfolio_id=portfolio.id) }}'>
-                    <span>{{ "portfolios.applications.team_text" | translate }}</span>
-                    <span class='counter'>{{ application.num_users }}</span>
-                  </a>
+                  {% if user_can(permissions.VIEW_PORTFOLIO_MEMBERS) %}
+                    <a class='icon-link' href='{{ url_for("portfolios.application_members", portfolio_id=portfolio.id, application_id=application.id) }}'>
+                      <span>{{ "portfolios.applications.team_text" | translate }}</span>
+                      <span class='counter'>{{ application.num_users }}</span>
+                    </a>
+                  {% endif %}
                 </div>
               </div>
               <div class='col'>

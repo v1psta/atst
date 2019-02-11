@@ -1,11 +1,13 @@
-{% extends "portfolios/base.html" %}
+{% extends "portfolios/applications/base.html" %}
 
 {% from "components/empty_state.html" import EmptyState %}
 {% from "components/icon.html" import Icon %}
 
-{% set secondary_breadcrumb = 'Portfolio Team Management' %}
+{% set secondary_breadcrumb = 'portfolios.applications.team_management.title' | translate({ "application_name": application.name }) %}
 
-{% block portfolio_content %}
+{% block application_content %}
+
+<div class='subheading'>{{ 'portfolios.applications.team_management.subheading' | translate }}</div>
 
 {% if not portfolio.members %}
 
@@ -28,42 +30,7 @@
   inline-template
   id="search-template"
   class='member-list'
-  v-bind:members='{{ members | tojson}}'
-  v-bind:role_choices='{{ role_choices | tojson}}'
-  v-bind:status_choices='{{ status_choices | tojson}}'>
-  <div>
-  <form class='search-bar' @submit.prevent>
-    <div class='usa-input search-input'>
-      <label for='members-search'>Search members by name</label>
-      <input v-model='searchValue' type='search' id='members-search' name='members-search' placeholder="Search by name"/>
-      <button type="button"></button>
-    </div>
-
-    <div class="search-bar__filters">
-      <div class='usa-input'>
-        <label for='filter-status'>Filter members by status</label>
-        <select v-model="status" id="filter-status" name="filter-status">
-          <option value="" selected disabled>Filter by status</option>
-          <option value="all">View All</option>
-          {% for status in status_choices %}
-            <option value='{{ status.name }}'>{{ status.display_name }}</option>
-          {% endfor %}
-        </select>
-      </div>
-
-      <div class='usa-input'>
-        <label for='filter-role'>Filter members by role</label>
-        <select v-model="role" id="filter-role" name="filter-role">
-          <option value="" selected disabled>Filter by role</option>
-          <option value="all">View All</option>
-          {% for role in role_choices %}
-            <option value='{{ role.name }}'>{{ role.display_name }}</option>
-          {% endfor %}
-        </select>
-      </div>
-    </div>
-  </form>
-
+  v-bind:members='{{ members | tojson}}'>
   <div class='responsive-table-wrapper panel'>
     <table v-cloak v-if='searchedList && searchedList.length'>
       <thead>
@@ -114,7 +81,6 @@
       ) }}
     </div>
   </div>
-</div>
 </members-list>
 
 {% endif %}

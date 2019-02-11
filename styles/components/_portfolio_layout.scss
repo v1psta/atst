@@ -103,6 +103,36 @@
 .portfolio-content {
   margin: 6 * $gap $gap 0 $gap;
 
+  .member-list {
+    .panel {
+      padding: $gap / 2 0;
+      box-shadow: 0 6px 18px 0 rgba(144,164,183,0.3);
+      border-top: none;
+      border-bottom: none;
+    }
+
+    table {
+      box-shadow: 0 6px 18px 0 rgba(144,164,183,0.3);
+      thead {
+        th:first-child {
+          padding-left: 3 * $gap;
+        }
+      }
+
+      th {
+        background-color: $color-gray-lightest;
+        padding: $gap 2 * $gap;
+        border-top: none;
+        border-bottom: none;
+        color: $color-gray;
+      }
+
+      td {
+        border-bottom: 1px solid $color-gray-lightest;
+      }
+    }
+  }
+
   .application-content {
     .subheading {
       @include subheading;
