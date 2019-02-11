@@ -18,6 +18,13 @@ def dollars(value):
         numberValue = 0
     return "${:,.2f}".format(numberValue)
 
+def justDollars(value):
+    raw = dollars(value)
+    return raw[:-3]
+
+def justCents(value):
+    raw = dollars(value)
+    return raw[-3:]
 
 def usPhone(number):
     phone = re.sub(r"\D", "", number)
@@ -99,6 +106,8 @@ def normalizeOrder(title):
 def register_filters(app):
     app.jinja_env.filters["iconSvg"] = iconSvg
     app.jinja_env.filters["dollars"] = dollars
+    app.jinja_env.filters["justDollars"] = justDollars
+    app.jinja_env.filters["justCents"] = justCents
     app.jinja_env.filters["usPhone"] = usPhone
     app.jinja_env.filters["readableInteger"] = readableInteger
     app.jinja_env.filters["getOptionLabel"] = getOptionLabel
