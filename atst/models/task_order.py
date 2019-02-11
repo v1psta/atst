@@ -2,7 +2,16 @@ from enum import Enum
 from datetime import date
 
 import pendulum
-from sqlalchemy import Boolean, Column, Numeric, String, ForeignKey, Date, Integer, DateTime
+from sqlalchemy import (
+    Column,
+    Numeric,
+    String,
+    ForeignKey,
+    Date,
+    Integer,
+    DateTime,
+    Boolean,
+)
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.types import ARRAY
 from sqlalchemy.orm import relationship
