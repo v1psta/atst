@@ -18,13 +18,16 @@ def dollars(value):
         numberValue = 0
     return "${:,.2f}".format(numberValue)
 
+
 def justDollars(value):
     raw = dollars(value)
     return raw[:-3]
 
+
 def justCents(value):
     raw = dollars(value)
     return raw[-3:]
+
 
 def usPhone(number):
     phone = re.sub(r"\D", "", number)

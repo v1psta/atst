@@ -22,7 +22,7 @@
       <span class='portfolio-header__budget--dollars'>
         {{ portfolio.task_orders | selectattr('is_active') | sum(attribute='budget') | justDollars }}
       </span>
-      <span>
+      <span class='cents'>
         {{ portfolio.task_orders | selectattr('is_active') | sum(attribute='budget') | justCents }}
       </span>
     </div>

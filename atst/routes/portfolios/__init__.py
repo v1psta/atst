@@ -1,4 +1,5 @@
 from flask import Blueprint, request as http_request, g, render_template
+from operator import attrgetter
 
 portfolios_bp = Blueprint("portfolios", __name__)
 
@@ -31,4 +32,20 @@ def portfolio():
             )
         return False
 
-    return {"portfolio": portfolio, "permissions": Permissions, "user_can": user_can}
+    active_task_orders = [
+        task_order for task_order in portfolio.task_orders if task_order.is_active
+    ]
+    funding_end_date = (
+        sorted(active_task_orders, key=attrgetter("end_date"))[-1].end_date
+        if active_task_orders
+        else None
+    )
+    funded = len(active_task_orders) > 1
+
+    return {
+        "portfolio": portfolio,
+        "permissions": Permissions,
+        "user_can": user_can,
+        "funding_end_date": funding_end_date,
+        "funded": funded,
+    }

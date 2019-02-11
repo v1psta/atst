@@ -89,6 +89,32 @@
       }
     }
   }
+
+  .cents {
+    font-size: 2rem;
+    margin-top: .75rem;
+    font-weight: bold;
+  }
+
+  .portfolio-funding__header--funded-through {
+    flex-grow: 1;
+    text-align: left;
+    font-weight: bold;
+  }
+
+  .funded {
+    color: $color-blue;
+    .icon {
+      @include icon-color($color-blue);
+    }
+  }
+
+  .unfunded {
+    color: $color-red;
+    .icon {
+      @include icon-color($color-red);
+    }
+    }
 }
 
 @mixin subheading {
