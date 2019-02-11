@@ -67,6 +67,10 @@
     @include icon-color($color-gray);
   }
 
+  &.icon--blue {
+    @include icon-color($color-blue-darker);
+  }
+
   &.icon--medium {
     @include icon-size(12);
   }

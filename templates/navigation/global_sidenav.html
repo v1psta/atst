@@ -7,10 +7,12 @@
     <div v-bind:class="{'global-navigation': true, 'sidenav': props.isVisible, 'sidenav--minimized': !props.isVisible}">
       <a href="#" v-on:click="props.toggle" class="sidenav__toggle">
         <template v-if="props.isVisible">
-          << Hide
+          {{ Icon('angle-double-left-solid', classes="toggle-arrows icon--blue") }}
+          Hide
         </template>
         <template v-else>
-          Show >>
+          Show
+          {{ Icon('angle-double-right-solid', classes="toggle-arrows icon--blue") }}
         </template>
       </a>
       <div v-if="props.isVisible">

@@ -31,6 +31,10 @@
       @include sidenav__header;
       float: right;
       color: $color-blue-darker;
+
+      .toggle-arrows {
+        vertical-align: middle;
+      }
     }
 
     ul {
