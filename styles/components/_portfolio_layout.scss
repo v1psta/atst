@@ -121,10 +121,9 @@
 
   .unfunded {
     color: $color-red;
-
     .icon {
-        @include icon-color($color-red);
-      }
+      @include icon-color($color-red);
+    }
   }
 }
 
