@@ -32,15 +32,19 @@ def portfolio():
             )
         return False
 
-    active_task_orders = [
-        task_order for task_order in portfolio.task_orders if task_order.is_active
-    ]
-    funding_end_date = (
-        sorted(active_task_orders, key=attrgetter("end_date"))[-1].end_date
-        if active_task_orders
-        else None
-    )
-    funded = len(active_task_orders) > 1
+    if not portfolio is None:
+        active_task_orders = [
+            task_order for task_order in portfolio.task_orders if task_order.is_active
+        ]
+        funding_end_date = (
+            sorted(active_task_orders, key=attrgetter("end_date"))[-1].end_date
+            if active_task_orders
+            else None
+        )
+        funded = len(active_task_orders) > 1
+    else:
+        funding_end_date = None
+        funded = None
 
     return {
         "portfolio": portfolio,
