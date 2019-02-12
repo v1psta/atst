@@ -1,3 +1,37 @@
+.member-edit {
+  .panel {
+    @include shadow-panel;
+    margin: $gap;
+    padding: 2 * $gap $gap;
+  }
+
+  .subheading {
+    @include subheading;
+  }
+
+  .manage-access {
+    padding: 2 * $gap;
+
+    .subtitle {
+      font-style: italic;
+      font-size: $small-font-size;
+      color: $color-gray;
+    }
+  }
+
+  .application-list-item {
+    margin: 2 * $gap 3 * $gap;
+
+    .block-list__header {
+      border-top-color: $color-gray-light;
+    }
+  }
+
+  .search-bar {
+    margin: 2 * $gap;
+  }
+}
+
 .member-card {
   @include grid-row;
   padding: $gap*2;
