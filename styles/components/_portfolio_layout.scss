@@ -70,6 +70,10 @@
     font-size: $small-font-size;
     align-items: center;
 
+    .icon-tooltip {
+      margin-left: -$gap / 2;
+    }
+
     button {
       margin: 0;
       padding: 0;
