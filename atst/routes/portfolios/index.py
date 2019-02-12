@@ -27,7 +27,7 @@ def portfolio(portfolio_id):
         g.current_user, portfolio, pagination_opts
     )
     return render_template(
-        "portfolios/edit.html",
+        "portfolios/admin.html",
         form=form,
         portfolio=portfolio,
         portfolio_name=portfolio.name,
