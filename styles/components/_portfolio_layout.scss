@@ -116,7 +116,11 @@
     margin-left: -.4rem;
   }
 
-  .cents {
+  .portfolio-header__budget--amount {
+    white-space: nowrap;
+  }
+
+  .portfolio-header__budget--cents {
     font-size: 2rem;
     margin-top: .75rem;
     margin-left: -.7rem;
