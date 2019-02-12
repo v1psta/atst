@@ -125,13 +125,6 @@
     font-weight: bold;
   }
 
-  .funded {
-    color: $color-blue;
-    .icon {
-      @include icon-color($color-blue);
-    }
-  }
-
   .unfunded {
     color: $color-red;
     .icon {
