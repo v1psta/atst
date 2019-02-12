@@ -369,9 +369,10 @@
         margin-top: 1.5rem;
 
       .edit-officer {
+        margin-bottom: $gap * 2;
+
         h4 {
           color: $color-gray;
-          margin-bottom: 0.5rem;
           margin-top: 0;
         }
 
