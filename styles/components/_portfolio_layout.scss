@@ -425,9 +425,12 @@
     margin-bottom: 0;
 
     .form-col {
-      .usa-input {
+      .usa-input--validation--portfolioName {
         input {
-          max-width: 45em;
+          max-width: 30em;
+        }
+        .icon-validation {
+          left: 30em;
         }
       }
     }
