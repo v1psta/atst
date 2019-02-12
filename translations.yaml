@@ -483,7 +483,6 @@ portfolios:
   index:
     empty:
       title: You have no apps yet
-      help_title: Should I do this?
       start_button: Start a New JEDI Portfolio
   applications:
     add_application_text: Add A New Application
