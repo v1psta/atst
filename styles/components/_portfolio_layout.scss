@@ -90,9 +90,19 @@
     }
   }
 
+  .column-left {
+    width: 12.5rem;
+    float: left;
+  }
+
+  .column-right {
+    margin-left: -.4rem;
+  }
+
   .cents {
     font-size: 2rem;
     margin-top: .75rem;
+    margin-left: -.7rem;
     font-weight: bold;
   }
 
