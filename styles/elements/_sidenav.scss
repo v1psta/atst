@@ -60,6 +60,12 @@
       margin-bottom: $gap;
     }
 
+    .sidenav__text {
+      margin: 2 * $gap;
+      color: $color-gray;
+      font-style: italic;
+    }
+
     .sidenav__link {
       display: block;
       padding: $gap ($gap * 2);
@@ -131,7 +137,6 @@
       }
 
       + ul {
-        // padding-bottom: $gap / 2;
 
         li {
           .sidenav__link {

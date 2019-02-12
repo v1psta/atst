@@ -18,12 +18,16 @@
       <div v-if="props.isVisible">
         <div class="sidenav__title">Portfolios</div>
         <ul class="sidenav__list--padded">
-          {% for other_portfolio in portfolios|sort(attribute='name') %}
-            {{ SidenavItem(other_portfolio.name,
-              href=url_for("portfolios.show_portfolio", portfolio_id=other_portfolio.id),
-              active=(other_portfolio.id | string) == request.view_args.get('portfolio_id')
-              ) }}
-          {% endfor %}
+          {% if portfolios %}
+            {% for other_portfolio in portfolios|sort(attribute='name') %}
+              {{ SidenavItem(other_portfolio.name,
+                href=url_for("portfolios.show_portfolio", portfolio_id=other_portfolio.id),
+                active=(other_portfolio.id | string) == request.view_args.get('portfolio_id')
+                ) }}
+            {% endfor %}
+          {% else %}
+            <li><span class="sidenav__text">You have no portfolios yet</span></li>
+          {% endif %}
         </ul>
         <div class="sidenav__divider--small"></div>
         <a class="sidenav__link sidenav__link--add" href="{{ url_for("task_orders.get_started") }}" title="Fund a New Portfolio">
