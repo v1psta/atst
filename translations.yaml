@@ -244,7 +244,7 @@ forms:
     cor_invite_label: Invite COR to Task Order Builder
     so_invite_label: Invite Security Officer to Task Order Builder
     skip_invite_description: |
-      <i>The invitation won't actually be sent until you click Done on the Review page. You can skip this for now and invite them later.</i>
+      <i>An invitation won't actually be sent until you click Done on the Review page. You can skip this for now and invite them later.</i>
   validators:
     is_number_message: Please enter a valid number.
     list_item_required_message: Please provide at least one.
@@ -397,7 +397,7 @@ task_orders:
   new:
     app_info:
       section_title: "What You're Making"
-      basic_info_title: Basic information
+      basic_info_title: Basic Information
       sample_scope: |
         Not sure how to describe your scope? <a href="#">Read some examples</a> to get some inspiration.
       project_title: About Your Project
