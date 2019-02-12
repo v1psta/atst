@@ -361,6 +361,48 @@
     }
 
     .officer__form {
+        padding: 1.5rem;
+        background-color: $color-aqua-lightest;
+        border-left-color: $color-blue;
+        border-left-style: solid;
+        border-left-width: $gap / 2;
+        margin-top: 1.5rem;
+
+      .edit-officer {
+        margin-bottom: $gap * 2;
+
+        h4 {
+          color: $color-gray;
+          margin-top: 0;
+        }
+
+        p {
+          font-size: 1.5rem;
+        }
+      }
+
+      .usa-input__title {
+        font-weight: normal;
+      }
+
+      .form-row {
+        margin-bottom: 0rem;
+        margin-top: 0rem;
+        margin-right: 2rem;
+
+        .usa-input {
+          margin-bottom: 1.5rem;
+        }
+
+        &.officer__form--dodId {
+          margin-top: 1.5rem;
+
+          .usa-input {
+            margin-bottom: 0rem;
+          }
+        }
+      }
+
       .officer__form--actions {
         display: flex;
         flex-direction: row;

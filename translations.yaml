@@ -254,6 +254,10 @@ forms:
   portfolio:
     name_label: Portfolio Name
     name_length_validation_message: Portfolio names must be at least 4 and not more than 100 characters
+  officers:
+    contracting_officer_invite: Invite KO to Task Order Builder
+    contracting_officer_representative_invite: Invite COR to Task Order Builder
+    security_officer_invite: Invite SO to Task Order Builder
 fragments:
   edit_application_form:
     explain: 'AT-AT allows you to create multiple applications within a portfolio. Each application can then be broken down into its own customizable environments.'
@@ -461,21 +465,25 @@ task_orders:
       pending_to: Pending TO Completion
   invitations:
     dod_id_label: DoD ID
+    edit_text: A new invitation e-mail will be sent when new information is saved.
     contracting_officer:
       title: Contracting Officer (KO) Information
       description: You'll need a signature from your KO. You might want to work with your program Financial Manager to get your TO documents moving in the right direction.
       add_button_text: Add / Invite KO
       invite_button_text: Invite KO
+      edit_title: Edit KO
     contracting_officer_representative:
       title: Contracting Officer Representative (COR) Information
       description: Your COR may assist in submitting the Task Order documents within their official system of record.
       add_button_text: Add / Invite COR
       invite_button_text: Invite COR
+      edit_title: Edit COR
     security_officer:
       title: IA Security Officer Information
       description: Your Security Officer will need to answer some security configuration questions in order to generate a DD-254 document, then digitally sign.
       add_button_text: Add / Invite Security Officer
       invite_button_text: Invite Security Officer
+      edit_title: Edit SO
   ko_review:
     alert_title: Verify Your Info
     title: Task Order Builder

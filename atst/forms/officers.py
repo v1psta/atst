@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms.fields import StringField
+from wtforms.fields import StringField, BooleanField
 from wtforms.fields.html5 import TelField
 from wtforms.validators import Email, Length, Optional
 
@@ -15,6 +15,7 @@ class OfficerForm(FlaskForm):
     email = StringField("Email", validators=[Optional(), Email()])
     phone_number = TelField("Phone Number", validators=[PhoneNumber()])
     dod_id = StringField("DoD ID", validators=[Optional(), Length(min=10), IsNumber()])
+    invite = BooleanField("Invite to Task Order Builder")
 
 
 class EditTaskOrderOfficersForm(CacheableForm):
