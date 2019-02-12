@@ -78,4 +78,13 @@
   &.icon--gold {
     @include icon-color($color-gold-dark);
   }
+
+  &.icon--circle {
+    svg {
+      border-radius: 100%;
+      border-style: solid;
+      border-width: 1px;
+      padding: 2px;
+    }
+  }
 }

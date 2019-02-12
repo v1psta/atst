@@ -14,7 +14,7 @@
       {% if can_create_applications %}
         <a class='icon-link' href='{{ url_for('portfolios.new_application', portfolio_id=portfolio.id) }}'>
           {{ 'portfolios.applications.add_application_text' | translate }}
-          {{ Icon("plus", classes="sidenav__link-icon") }}
+          {{ Icon("plus", classes="sidenav__link-icon icon--circle") }}
         </a>
       {% endif %}
     </div>
