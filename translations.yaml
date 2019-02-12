@@ -207,7 +207,7 @@ forms:
     complexity_other_label: Project Complexity Other
     dev_team:
       label: Development Team
-      description: Which people or teams will be completing the development work for your cloud applications? Select all that apply.
+      description: Who will be completing the development work for your cloud application(s)? Select all that apply.
       civilians: Government Civilians
       military: Military
       contractor: Contractor
@@ -218,8 +218,8 @@ forms:
       description: How much experience does your team  have with development in the cloud?
       none: No previous experience
       planned: Researched or planned a cloud build or migration
-      built_1: Built or Migrated 1-2 applications
-      built_3: Built or Migrated 3-5 applications
+      built_1: Built or migrated 1-2 applications
+      built_3: Built or migrated 3-5 applications
       built_many: Built or migrated many applications, or consulted on several such projects
     performance_length:
       label: Period of Performance length
@@ -244,7 +244,7 @@ forms:
     cor_invite_label: Invite COR to Task Order Builder
     so_invite_label: Invite Security Officer to Task Order Builder
     skip_invite_description: |
-      <i>You may choose to skip this for now and invite them later.</i>
+      <i>The invitation won't actually be sent until you click Done on the Review page. You can skip this for now and invite them later.</i>
   validators:
     is_number_message: Please enter a valid number.
     list_item_required_message: Please provide at least one.
@@ -400,8 +400,8 @@ task_orders:
       basic_info_title: Basic information
       sample_scope: |
         Not sure how to describe your scope? <a href="#">Read some examples</a> to get some inspiration.
-      project_title: About your project
-      team_title: About your team
+      project_title: About Your Project
+      team_title: About Your Team
       market_research_title: Market Research
       market_research_paragraph: 'The JEDI Cloud Computing Program Office (CCPO) has completed the market research requirements for all related task orders. The Department of Defense CIO has approved this research.<br /><a href="#">View JEDI Market Research Memo</a>'
     funding:
