@@ -60,7 +60,7 @@
     flex-direction: row;
   }
 
-  margin: 2 * $gap 0;
+  margin: 2 * $gap;
 
   .portfolio-header__name {
     @include h1;
