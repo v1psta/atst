@@ -2,6 +2,11 @@
   text-align: center;
   padding: 4rem 6rem;
 
+  .panel {
+    @include shadow-panel;
+    margin-bottom: 6 * $gap;
+  }
+
   .task-order-get-started__list {
     ul {
       list-style: none;
