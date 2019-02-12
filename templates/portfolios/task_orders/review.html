@@ -25,16 +25,18 @@
 
   {% block form %}
 
-    {% set message = "task_orders.ko_review.submitted_by" | translate({"name": task_order.creator.full_name}) %}
-
-    {{ Alert(("task_orders.ko_review.alert_title" | translate), message, level='warning',
-    fragment="fragments/ko_review_alert.html") }}
+    <div class="top-message">
+      <h1 class="subheading title">
+        {{ "task_orders.ko_review.title" | translate }}
+      </h1>
+      {% include "fragments/ko_review_message.html" %}
+    </div>
 
     <div class="panel">
 
       <div class="panel__heading">
         <h1 class="task-order-form__heading subheading">
-          <div class="h2">{{ "task_orders.ko_review.title" | translate }}</div>
+          <div class="h2">{{ "task_orders.ko_review.review_title" | translate }}</div>
           {{ "task_orders.new.review.section_title"| translate }}
         </h1>
       </div>
