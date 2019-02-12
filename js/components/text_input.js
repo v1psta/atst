@@ -84,6 +84,10 @@ export default {
       }
     },
 
+    onBlur: function(e) {
+      this._checkIfValid({ value: e.target.value, invalidate: true })
+    },
+
     //
     _checkIfValid: function({ value, invalidate = false }) {
       // Validate the value
