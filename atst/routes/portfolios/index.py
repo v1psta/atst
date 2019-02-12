@@ -22,11 +22,20 @@ def portfolios():
         return render_template("portfolios/blank_slate.html")
 
 
-@portfolios_bp.route("/portfolios/<portfolio_id>/edit")
+@portfolios_bp.route("/portfolios/<portfolio_id>/admin")
 def portfolio(portfolio_id):
     portfolio = Portfolios.get_for_update_information(g.current_user, portfolio_id)
     form = PortfolioForm(data={"name": portfolio.name})
-    return render_template("portfolios/edit.html", form=form, portfolio=portfolio)
+    pagination_opts = Paginator.get_pagination_opts(http_request)
+    audit_events = AuditLog.get_portfolio_events(
+        g.current_user, portfolio, pagination_opts
+    )
+    return render_template(
+        "portfolios/admin.html",
+        form=form,
+        portfolio=portfolio,
+        audit_events=audit_events,
+    )
 
 
 @portfolios_bp.route("/portfolios/<portfolio_id>/edit", methods=["POST"])

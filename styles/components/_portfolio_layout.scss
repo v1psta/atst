@@ -163,6 +163,18 @@
       }
     }
   }
+
+  .activity-log {
+    border-top: 3px solid $color-blue;
+
+    .subheading {
+      border-top: 0;
+      border-bottom: 1px solid $color-gray-lightest;
+      padding: 1.6rem 1.6rem;
+      font-weight: $font-bold;
+    }
+  }
+
 }
 
 .portfolio-applications {
@@ -358,5 +370,23 @@
     box-shadow: 0 6px 18px 0 rgba(144,164,183,0.3);
     border-top: none;
     border-bottom: none;
+  }
+}
+
+.portfolio-admin {
+  .edit-portfolio-name.action-group {
+    margin-top: 2rem;
+  }
+
+  .form-row {
+    margin-bottom: 0;
+
+    .form-col {
+      .usa-input {
+        input {
+          max-width: 45em;
+        }
+      }
+    }
   }
 }

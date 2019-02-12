@@ -303,6 +303,7 @@ navigation:
     applications: Applications
     portfolio_funding: Funding
     portfolio_settings: Portfolio Settings
+    portfolio_admin: Portfolio Administration
     breadcrumbs:
       admin: Admin
       funding: Funding
@@ -500,6 +501,8 @@ portfolios:
     team_management:
       title: '{application_name} Team Management'
       subheading: Team Management
+  admin:
+    activity_log_title: Activity Log
 testing:
   example_string: Hello World
   example_with_variables: 'Hello, {name}!'

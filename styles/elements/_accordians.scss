@@ -25,6 +25,10 @@
   border-top: 3px solid $color-blue;
   border-bottom: none;
   box-shadow: 0 2px 4px 0 rgba(216,218,222,0.58);
+
+  &.row {
+    background: $color-white;
+  }
 }
 
 .accordian__title {
