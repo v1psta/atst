@@ -28,6 +28,6 @@
 
     {% include "fragments/audit_events_log.html" %}
 
-    {{ Pagination(audit_events, 'portfolios.portfolio_activity', portfolio_id=portfolio_id) }}
+    {{ Pagination(audit_events, 'portfolios.portfolio_admin', portfolio_id=portfolio.id) }}
   </div>
 {% endblock %}

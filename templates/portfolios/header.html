@@ -70,8 +70,8 @@
       {{ Link(
         icon='cog',
         text='navigation.portfolio_navigation.breadcrumbs.admin' | translate,
-        url=url_for("portfolios.portfolio", portfolio_id=portfolio.id),
-        active=request.url_rule.endpoint == "portfolios.portfolio",
+        url=url_for("portfolios.portfolio_admin", portfolio_id=portfolio.id),
+        active=request.url_rule.endpoint == "portfolios.portfolio_admin",
       ) }}
     {% endif %}
   </div>

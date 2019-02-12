@@ -23,7 +23,7 @@ def portfolios():
 
 
 @portfolios_bp.route("/portfolios/<portfolio_id>/admin")
-def portfolio(portfolio_id):
+def portfolio_admin(portfolio_id):
     portfolio = Portfolios.get_for_update_information(g.current_user, portfolio_id)
     form = PortfolioForm(data={"name": portfolio.name})
     pagination_opts = Paginator.get_pagination_opts(http_request)
