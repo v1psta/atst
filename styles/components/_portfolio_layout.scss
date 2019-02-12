@@ -140,6 +140,7 @@
   opacity: 0.54;
   font-size: $small-font-size;
   font-weight: bold;
+  margin-bottom: 3 * $gap;
 }
 
 .portfolio-content {
@@ -211,7 +212,6 @@
 
 .portfolio-applications {
   .portfolio-applications__header {
-    margin-bottom: 4 * $gap;
 
     .portfolio-applications__header--title {
       @include subheading;
@@ -266,7 +266,7 @@
   .subheading {
     @include subheading;
     margin-top: 6 * $gap;
-    margin-bottom: $gap;
+    margin-bottom: 2 * $gap;
   }
 
   .portfolio-funding__header {
