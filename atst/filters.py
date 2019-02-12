@@ -21,12 +21,12 @@ def dollars(value):
 
 def justDollars(value):
     raw = dollars(value)
-    return raw[:-3]
+    return raw.split(".")[0]
 
 
 def justCents(value):
     raw = dollars(value)
-    return raw[-3:]
+    return raw.split(".")[1]
 
 
 def usPhone(number):
