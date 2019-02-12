@@ -1,7 +1,7 @@
 {% from "components/icon.html" import Icon %}
 
 <div class="row portfolio-breadcrumbs">
-  <a class="icon-link portfolio-breadcrumbs__home" href="{{ url_for("portfolios.portfolio_applications", portfolio_id=portfolio.id) }}">
+  <a class="icon-link portfolio-breadcrumbs__home {{ 'icon-link--disabled' if not secondary_breadcrumb }}" href="{{ url_for("portfolios.portfolio_applications", portfolio_id=portfolio.id) }}">
     {{ Icon("home") }}
     <span>
       {{ portfolio.name }} Portfolio
