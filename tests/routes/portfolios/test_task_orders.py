@@ -284,8 +284,5 @@ def test_submit_completed_ko_review_page(client, user_session, pdf_upload):
 
     assert task_order.pdf
     assert response.headers["Location"] == url_for(
-        "portfolios.view_task_order",
-        portfolio_id=portfolio.id,
-        task_order_id=task_order.id,
-        _external=True,
+        "task_orders.signature_requested", task_order_id=task_order.id, _external=True
     )
