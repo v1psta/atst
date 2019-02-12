@@ -1,7 +1,7 @@
 {% from "components/pagination.html" import Pagination %}
 
 <section class="block-list activity-log">
-  <div class='subheading'>Activity Log</div>
+  <div class='subheading'>{{ "portfolios.admin.activity_log_title" | translate }}</div>
   <ul>
     {% for event in audit_events %}
       <li class="block-list__item">

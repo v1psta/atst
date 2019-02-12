@@ -498,6 +498,8 @@ portfolios:
     team_management:
       title: '{application_name} Team Management'
       subheading: Team Management
+  admin:
+    activity_log_title: Activity Log
 testing:
   example_string: Hello World
   example_with_variables: 'Hello, {name}!'
