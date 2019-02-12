@@ -1,5 +1,4 @@
 from collections import defaultdict
-from operator import itemgetter
 
 from flask import g, redirect, render_template, url_for, request as http_request
 
