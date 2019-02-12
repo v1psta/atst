@@ -47,6 +47,9 @@
     .icon-link {
       color: $color-gray-medium;
       pointer-events: none;
+      &.icon-link--disabled {
+        opacity: 1;
+      }
     }
   }
 }
