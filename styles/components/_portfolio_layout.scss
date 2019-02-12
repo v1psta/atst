@@ -17,7 +17,7 @@
   font-size: $h5-font-size;
 
   .icon-link {
-    color: $color-gray-medium;
+    color: $color-blue;
     font-weight: normal;
   }
 
@@ -26,16 +26,26 @@
   }
 
   .icon {
-    @include icon-color($color-gray-medium);
+    @include icon-color($color-blue);
+  }
+
+  .portfolio-breadcrumbs__home {
+    &.icon-link--disabled {
+      color: $color-gray-medium;
+      opacity: 1;
+      .icon {
+        @include icon-color($color-gray-medium);
+      }
+    }
   }
 
   .portfolio-breadcrumbs__crumb {
     .icon {
-      @include icon-color($color-blue);
+      @include icon-color($color-gray-medium);
     }
 
     .icon-link {
-      color: $color-blue;
+      color: $color-gray-medium;
       pointer-events: none;
     }
   }
