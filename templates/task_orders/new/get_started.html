@@ -18,7 +18,7 @@
     <h1 class="panel__content">Let's get started</h1>
     <div class="panel__content">
       <p class="centered">
-          To create a portfolio of JEDI cloud applications, you'll complete and submit a task order in your organization's system of record. We'll help you complete the necessary pieces of that task order, including your:
+          To create a portfolio of JEDI cloud applications, you'll need to submit a task order in your organization's system of record. We'll walk you through the necessary steps of that task order, including the following:
       </p>
     </div>
     <span class="task-order-get-started__list panel__content">
@@ -33,7 +33,7 @@
   </div>
 
   <div class="panel task-order-needs">
-    <h1 class="panel__content">You'll need help getting a task order</h1>
+    <h1 class="panel__content">You'll need a little help getting a task order</h1>
     <div class="panel__content task-order-needs__list">
       {{ Help(
         name="Development Lead",
@@ -43,13 +43,13 @@
       {{ Help(
         name="Security Lead",
         icon_name="shield",
-        description="Your security lead will review and approve your security classification needs, as well as a standardized DD-254.",
-        link_text="You'll need their DOD ID number") }}
+        description="Your security lead will review and approve your security classification needs. They will also review and complete a standardized DD-254.",
+        link_text="You'll need their DoD ID number") }}
       {{ Help(
         name="Contracting Officer",
         icon_name="dollar-sign",
         description="Your contracting officer will review your funding needs and ultimately approve your task order.",
-        link_text="You'll need their DOD ID number") }}
+        link_text="You'll need their DoD ID number") }}
     </div>
   </div>
 
@@ -62,7 +62,7 @@
       <a href="{{ url_for("task_orders.new", screen=1) }}" class="usa-button usa-button-big">Let's do cloud!</a>
     </div>
     <div>
-      <p class="centered">Create a JEDI cloud application portfolio & start building a task order</p>
+      <p class="centered">Create a portfolio by starting a new task order</p>
     </div>
   </div>
 </div>

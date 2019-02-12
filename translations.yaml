@@ -75,7 +75,7 @@ forms:
     date_latest_training_label: Latest Information Assurance (IA) Training Completion Date
     designation_description: What is your designation within the DoD?
     designation_label: Designation of Person
-    email_description: Enter your preferred contact e-mail address
+    email_description: Enter your preferred e-mail address
     email_label: E-mail Address
     first_name_label: First Name
     last_name_label: Last Name
@@ -181,15 +181,15 @@ forms:
     defense_component_label: Department of Defense Component
     app_migration:
       label: App Migration
-      description: Do you plan to migrate existing application(s) to the cloud?
+      description: Do you plan to migrate one or more existing application(s) to the cloud?
       on_premise: Yes, migrating from an <strong>on-premise data center</strong>
       cloud: Yes, migrating from <strong>another cloud provider</strong>
       both: Yes, migrating from an <strong>on-premise data center</strong> and <strong>another cloud provider</strong>
       none: Not planning to migrate any applications
-      not_sure: "Not Sure"
+      not_sure: "Not sure"
     native_apps:
       label: Native Apps
-      description: Do you plan to develop application(s) natively in the cloud?
+      description: Do you plan to develop any applications natively in the cloud?
       'yes': Yes, planning to develop natively in the cloud
       'no': No, not planning to develop natively in the cloud
       not_sure: Not sure, unsure if planning to develop natively in the cloud
@@ -201,12 +201,12 @@ forms:
       conus: CONUS Access
       oconus: OCONUS Access
       tactical_edge: Tactical Edge Access
-      not_sure: Not Sure
+      not_sure: Not sure
       other: Other
     complexity_other_label: Project Complexity Other
     dev_team:
       label: Development Team
-      description: Which people or teams will be completing the development work for your cloud applications? Select all that apply.
+      description: Who will be completing the development work for your cloud application(s)? Select all that apply.
       civilians: Government Civilians
       military: Military
       contractor: Contractor
@@ -217,8 +217,8 @@ forms:
       description: How much experience does your team  have with development in the cloud?
       none: No previous experience
       planned: Researched or planned a cloud build or migration
-      built_1: Built or Migrated 1-2 applications
-      built_3: Built or Migrated 3-5 applications
+      built_1: Built or migrated 1-2 applications
+      built_3: Built or migrated 3-5 applications
       built_many: Built or migrated many applications, or consulted on several such projects
     performance_length:
       label: Period of Performance length
@@ -243,7 +243,7 @@ forms:
     cor_invite_label: Invite COR to Task Order Builder
     so_invite_label: Invite Security Officer to Task Order Builder
     skip_invite_description: |
-      <i>You may choose to skip this for now and invite them later.</i>
+      <i>An invitation won't actually be sent until you click Done on the Review page. You can skip this for now and invite them later.</i>
   validators:
     is_number_message: Please enter a valid number.
     list_item_required_message: Please provide at least one.
@@ -404,23 +404,23 @@ task_orders:
   new:
     app_info:
       section_title: "What You're Making"
-      basic_info_title: Basic information
+      basic_info_title: Basic Information
       sample_scope: |
-        Not sure how to describe your scope? <a href="#">Read some Sample Scopes</a> to get an idea of what is appropriate.
-      project_title: About your project
-      team_title: About your team
+        Not sure how to describe your scope? <a href="#">Read some examples</a> to get some inspiration.
+      project_title: About Your Project
+      team_title: About Your Team
       market_research_title: Market Research
       market_research_paragraph: 'The JEDI Cloud Computing Program Office (CCPO) has completed the market research requirements for all related task orders. The Department of Defense CIO has approved this research.<br /><a href="#">View JEDI Market Research Memo</a>'
     funding:
       section_title: Funding
       performance_period_title: Period of Performance
       performance_period_description: Choose the length of time your task order will cover.
-      performance_period_paragraph: Because your funds will be lost if you don’t use them, we strongly recommend submitting small, short-duration task orders, usually a three month period. We’ll notify you when your period of performance is nearing the end so you can request your next set of funds with a new task order.
+      performance_period_paragraph: Be aware that your funds will be lost if you don’t use them. Because of this, we strongly recommend submitting small, short-duration task orders, usually around a three month period. We’ll notify you when your period of performance is nearing its end so you can request your next set of funds with a new task order.
       estimate_usage_title: Estimate Your Cloud Usage
       estimate_usage_description: Calculate how much your cloud usage will cost. A technical representative from your team should help you complete this calculation. These calculations will become your CLINs.
       estimate_usage_paragraph: This is only an estimation tool to help you make an informed evaluation of what you expect to use. While you're tied to the dollar amount you specify in your task order, you're not obligated by the resources you indicate in the calculator.
       cloud_calculations_title: Cloud Usage Calculations
-      cloud_calculations_paragraph: Enter the results of your cloud usage calculations.
+      cloud_calculations_paragraph: Enter the results of your cloud usage calculations below.
       cloud_offerings_title: Cloud Offerings
       cloud_offerings_paragraph: Infrastructure as a Service (IaaS) and Platform as a Service (PaaS) offerings
       support_assistance_title: Cloud Support and Assistance
@@ -429,7 +429,7 @@ task_orders:
     oversight:
       section_title: Oversight
       ko_info_title: Contracting Officer (KO) Information
-      ko_info_paragraph: Your KO will need to approve funding for this Task Order by logging into the JEDI Cloud Portal, submitting the Task Order documents within their official system of record, and electronically signing. You might want to work with your program Financial Manager to get your TO documents moving in the right dirction.
+      ko_info_paragraph: Your KO will need to approve funding for this Task Order by logging into the JEDI Cloud Portal, submitting the Task Order documents within their official system of record, and then finally providing a digital signature. It might be helpful to work with your program's Financial Manager to get your TO documents moving.
       skip_ko_label: "Skip for now (We'll remind you to enter one later)"
       dod_id_tooltip: "The DoD ID is needed to verify the identity of the indicated officer or representative."
       cor_info_title: Contracting Officer Representative (COR) Information
@@ -446,7 +446,7 @@ task_orders:
       complexity: Project Complexity
       team: Development Team
       funding: Funding
-      performance_period: Period of Performance length
+      performance_period: Period of Performance
       usage_est_link: View Usage Estimate
       to_value: Task Order Value
       clin_1: 'CLIN #1: Unclassified Cloud'
