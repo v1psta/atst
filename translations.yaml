@@ -182,15 +182,15 @@ forms:
     defense_component_label: Department of Defense Component
     app_migration:
       label: App Migration
-      description: Do you plan to migrate existing application(s) to the cloud?
+      description: Do you plan to migrate one or more existing application(s) to the cloud?
       on_premise: Yes, migrating from an <strong>on-premise data center</strong>
       cloud: Yes, migrating from <strong>another cloud provider</strong>
       both: Yes, migrating from an <strong>on-premise data center</strong> and <strong>another cloud provider</strong>
       none: Not planning to migrate any applications
-      not_sure: "Not Sure"
+      not_sure: "Not sure"
     native_apps:
       label: Native Apps
-      description: Do you plan to develop application(s) natively in the cloud?
+      description: Do you plan to develop any applications natively in the cloud?
       'yes': Yes, planning to develop natively in the cloud
       'no': No, not planning to develop natively in the cloud
       not_sure: Not sure, unsure if planning to develop natively in the cloud
@@ -202,7 +202,7 @@ forms:
       conus: CONUS Access
       oconus: OCONUS Access
       tactical_edge: Tactical Edge Access
-      not_sure: Not Sure
+      not_sure: Not sure
       other: Other
     complexity_other_label: Project Complexity Other
     dev_team:
@@ -399,7 +399,7 @@ task_orders:
       section_title: "What You're Making"
       basic_info_title: Basic information
       sample_scope: |
-        Not sure how to describe your scope? <a href="#">Read some Sample Scopes</a> to get an idea of what is appropriate.
+        Not sure how to describe your scope? <a href="#">Read some examples</a> to get some inspiration.
       project_title: About your project
       team_title: About your team
       market_research_title: Market Research
