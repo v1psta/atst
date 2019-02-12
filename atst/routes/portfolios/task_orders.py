@@ -41,12 +41,6 @@ def portfolio_funding(portfolio_id):
         task_orders_by_status[task_order.status].append(serialized_task_order)
 
     active_task_orders = task_orders_by_status.get(TaskOrderStatus.ACTIVE, [])
-    funding_end_date = (
-        sorted(active_task_orders, key=itemgetter("end_date"))[-1]["end_date"]
-        if active_task_orders
-        else None
-    )
-    funded = len(active_task_orders) > 1
     total_balance = sum([task_order["balance"] for task_order in active_task_orders])
 
     return render_template(
@@ -55,8 +49,6 @@ def portfolio_funding(portfolio_id):
         pending_task_orders=task_orders_by_status.get(TaskOrderStatus.PENDING, []),
         active_task_orders=active_task_orders,
         expired_task_orders=task_orders_by_status.get(TaskOrderStatus.EXPIRED, []),
-        funding_end_date=funding_end_date,
-        funded=funded,
         total_balance=total_balance,
     )
 
