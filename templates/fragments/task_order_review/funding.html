@@ -8,7 +8,7 @@
       </p>
     {% else %}
       <br/>
-      <a href="{{ url_for("task_orders.download_csp_estimate", task_order_id=task_order.id) }}" class='icon-link icon-link--left icon-link--disabled' aria-disabled="true">{{ Icon('download') }} {{ "task_orders.new.review.usage_est_link"| translate }}</a>
+      <a {% if not disabled %}href="{{ url_for("task_orders.download_csp_estimate", task_order_id=task_order.id) }}"{% endif %} class='icon-link icon-link--left icon-link--disabled' aria-disabled="true">{{ Icon('download') }} {{ "task_orders.new.review.usage_est_link"| translate }}</a>
       {{ Icon('alert', classes='icon--red') }} <span class="task-order-invite-message not-sent">{{ "task_orders.new.review.not_uploaded"| translate }}</span>
     {% endif %}
   {% endcall %}
