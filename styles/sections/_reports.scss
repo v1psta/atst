@@ -64,7 +64,6 @@
         }
 
         .spend-summary__budget {
-          margin: 0 0 0 $gap;
 
           @include ie-only {
             margin: $gap 0 0 0;

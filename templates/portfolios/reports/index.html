@@ -76,7 +76,7 @@
                       -
                   {% endif %}
                 </div>
-                <a href='{{ url_for("portfolios.portfolio_funding", portfolio_id=portfolio.id) }}' class='icon-link'>
+                <a href='{{ url_for("portfolios.view_task_order", portfolio_id=portfolio.id, task_order_id=task_order.id) }}' class='icon-link'>
                   {{ Icon('cog') }}
                   Manage Task Order
                 </a>
