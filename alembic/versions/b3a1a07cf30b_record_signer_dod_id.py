@@ -1,8 +1,8 @@
 """Record signer DOD ID
 
-Revision ID: de5276fad9ef
-Revises: 1f690989e38e
-Create Date: 2019-02-11 10:51:51.419346
+Revision ID: b3a1a07cf30b
+Revises: c98adf9bb431
+Create Date: 2019-02-12 10:16:19.349083
 
 """
 from alembic import op
@@ -10,8 +10,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'de5276fad9ef'
-down_revision = '1f690989e38e'
+revision = 'b3a1a07cf30b'
+down_revision = 'c98adf9bb431'
 branch_labels = None
 depends_on = None
 
