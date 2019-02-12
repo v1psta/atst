@@ -3,6 +3,8 @@
     @include grid-row;
   }
 
+  margin-left: 2 * $gap;
+
   .line {
     box-sizing: border-box;
     height: 2px;
