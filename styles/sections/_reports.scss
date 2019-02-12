@@ -175,13 +175,11 @@
             }
 
             dd.ending-soon {
-              color: $color-red-dark;
               font-size: $h2-font-size;
               white-space: nowrap;
 
               .icon {
                 @include icon-size(28);
-                @include icon-color($color-red-dark);
               }
             }
           }

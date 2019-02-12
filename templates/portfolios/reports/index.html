@@ -80,7 +80,7 @@
             <div class='col col--grow'>
               <dl>
                 <dt>Remaining Days</dt>
-                <dd class='{{ 'ending-soon' if remaining_days is not none and remaining_days < 190 }}'>
+                <dd class='{{ 'ending-soon' if remaining_days is not none }}'>
                   {% if remaining_days is not none %}
                     {{ Icon('arrow-down') }}
                     <span>{{ remaining_days }}</span>
