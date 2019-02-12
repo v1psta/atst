@@ -2,6 +2,7 @@
   @include block-list;
 
   box-shadow: 0 4px 10px 0 rgba(193,193,193,0.5);
+  margin-bottom: 6 * $gap;
 
   .icon-link {
     margin: -$gap 0;
@@ -71,6 +72,7 @@
   .separator {
     border: 1px solid $color-gray-medium;
     opacity: 0.75;
+    margin: 0 .5 * $gap;
   }
 }
 

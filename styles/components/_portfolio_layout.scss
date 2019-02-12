@@ -245,6 +245,7 @@
     .application-list-item {
       border-radius: 5px;
       box-shadow: 0 4px 8px 1px rgba(230,230,230,0.5), -4px 4px 8px 1px rgba(230,230,230,0.5);
+      margin-bottom: 6 * $gap;
 
       .col {
         max-width: 95%;
@@ -371,7 +372,6 @@
 
         &.funded .to-expiration-alert {
           color: $color-blue;
-
 
           .icon {
             @include icon-color($color-blue);
