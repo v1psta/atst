@@ -105,10 +105,7 @@
 
   .member-list {
     .panel {
-      padding: $gap / 2 0;
-      box-shadow: 0 6px 18px 0 rgba(144,164,183,0.3);
-      border-top: none;
-      border-bottom: none;
+      @include shadow-panel;
     }
 
     table {
@@ -139,10 +136,7 @@
     }
 
     .panel {
-      padding: $gap / 2 0;
-      box-shadow: 0 6px 18px 0 rgba(144,164,183,0.3);
-      border-top: none;
-      border-bottom: none;
+      @include shadow-panel;
     }
 
     .application-list-item {
@@ -210,32 +204,18 @@
 }
 
 .portfolio-funding {
+  .panel {
+    @include shadow-panel;
+  }
+
+  .subheading {
+    @include subheading;
+    margin-top: 6 * $gap;
+    margin-bottom: $gap;
+  }
+
   .portfolio-funding__header {
-    padding: 0;
-    margin: 0 $gap;
-
-    align-items: center;
-
-    .portfolio-funding__header--funded-through {
-      padding: 2 * $gap;
-      flex-grow: 1;
-      text-align: left;
-      font-weight: bold;
-    }
-
-    .funded {
-      color: $color-green;
-      .icon {
-        @include icon-color($color-green);
-      }
-    }
-
-    .unfunded {
-      color: $color-red;
-      .icon {
-        @include icon-color($color-red);
-      }
-    }
+    flex-direction: row-reverse;
   }
 
   .pending-task-order {
@@ -243,6 +223,7 @@
 
     align-items: center;
     margin: 0;
+    margin-bottom: 2 * $gap;
     padding: 2 * $gap;
 
     dt {
@@ -275,34 +256,39 @@
     }
   }
 
-  .portfolio-total-balance {
-    margin-top: -$gap;
-    margin-bottom: 3rem;
+  .total-balance {
+    margin-right: 2 * $gap;
+    text-align: right;
+  }
 
-    .row {
-      flex-direction: row-reverse;
-      margin: 2 * $gap 0;
-      padding-right: 14rem;
-
-      .label {
-        margin: 0 2 * $gap;
-      }
-    }
+  .responsive-table-wrapper {
+    margin: 0 (-2 * $gap);
+    padding: 2 * $gap;
+    padding-top: 0;
   }
 
   table {
-    th{
+    box-shadow: 0 6px 18px 0 rgba(144,164,183,0.3);
+    thead {
+      th:first-child {
+        padding-left: 3 * $gap;
+      }
+    }
+
+    th {
+      background-color: $color-gray-lightest;
+      padding: $gap 2 * $gap;
+      border-top: none;
+      border-bottom: none;
+      color: $color-gray;
+
       .icon {
         margin-left: 1rem;
       }
+    }
 
-      &.period-of-performance {
-        color: $color-blue;
-
-        .icon {
-          @include icon-color($color-primary)
-        }
-      }
+    td {
+      border-bottom: 1px solid $color-gray-lightest;
     }
 
     td.unused-balance {
