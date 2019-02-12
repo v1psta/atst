@@ -62,7 +62,7 @@
           <td v-html="member.role"></td>
         </tr>
         <tr>
-          <td colspan=4>
+          <td class="add-member-link" colspan=4>
             <a class="icon-link" href="{{ url_for('portfolios.new_member', portfolio_id=portfolio.id) }}">
               Add A New Member
               {{ Icon('plus') }}
