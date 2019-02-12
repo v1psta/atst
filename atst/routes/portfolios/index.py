@@ -30,8 +30,6 @@ def portfolio(portfolio_id):
         "portfolios/admin.html",
         form=form,
         portfolio=portfolio,
-        portfolio_name=portfolio.name,
-        portfolio_id=portfolio_id,
         audit_events=audit_events,
     )
 
