@@ -1,10 +1,8 @@
-import Vue from 'vue'
-
 import textinput from './text_input'
 import checkboxinput from './checkbox_input'
 import FormMixin from '../mixins/form'
 
-export default Vue.component('levelofwarrant', {
+export default {
   mixins: [FormMixin],
 
   components: {
@@ -26,4 +24,4 @@ export default Vue.component('levelofwarrant', {
       unlimited_level_of_warrant,
     }
   },
-})
+}
