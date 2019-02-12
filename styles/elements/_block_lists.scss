@@ -1,6 +1,7 @@
 @mixin block-list {
   @include panel-margin;
-  box-shadow: 0 6px 18px 0 rgba(144,164,183,0.3);
+  @include shadow-panel
+  padding: 0;
 
   ul, dl {
     list-style: none;
@@ -18,8 +19,6 @@
   justify-content: space-between;
   background-color: $color-gray-lightest;
   padding: $gap 2 * $gap;
-  border-top: none;
-  border-bottom: none;
   color: $color-gray;
 
   .icon-tooltip {
