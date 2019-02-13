@@ -9,7 +9,7 @@
 {% block content %}
   {{
     EmptyState(
-      action_href=url_for("task_orders.new", screen=1),
+      action_href=url_for("task_orders.get_started"),
       action_label=("portfolios.index.empty.start_button" | translate),
       icon="cloud",
       message=("portfolios.index.empty.title" | translate),

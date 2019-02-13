@@ -47,6 +47,7 @@
 .icon-link {
   @include icon-link;
   @include icon-link-color($color-primary);
+  text-decoration: underline;
 
   &.icon-link--vertical {
     @include icon-link-vertical;
@@ -67,6 +68,7 @@
   &.icon-link--disabled {
     opacity: 0.3;
     pointer-events: none;
+    text-decoration: none;
   }
 
   &.icon-link--left {

@@ -3,6 +3,8 @@
     @include grid-row;
   }
 
+  margin-left: 2 * $gap;
+
   .line {
     box-sizing: border-box;
     height: 2px;
@@ -47,6 +49,9 @@
     .icon-link {
       color: $color-gray-medium;
       pointer-events: none;
+      &.icon-link--disabled {
+        opacity: 1;
+      }
     }
   }
 }
@@ -57,7 +62,7 @@
     flex-direction: row;
   }
 
-  margin: 2 * $gap 0;
+  margin: 2 * $gap;
 
   .portfolio-header__name {
     @include h1;
@@ -66,6 +71,10 @@
   .portfolio-header__budget {
     font-size: $small-font-size;
     align-items: center;
+
+    .icon-tooltip {
+      margin-left: -$gap / 2;
+    }
 
     button {
       margin: 0;
@@ -95,7 +104,7 @@
       }
 
       .icon {
-        @include icon-size(20);
+        @include icon-size(30);
       }
     }
   }
@@ -109,7 +118,11 @@
     margin-left: -.4rem;
   }
 
-  .cents {
+  .portfolio-header__budget--amount {
+    white-space: nowrap;
+  }
+
+  .portfolio-header__budget--cents {
     font-size: 2rem;
     margin-top: .75rem;
     margin-left: -.7rem;
@@ -120,13 +133,6 @@
     flex-grow: 1;
     text-align: left;
     font-weight: bold;
-  }
-
-  .funded {
-    color: $color-blue;
-    .icon {
-      @include icon-color($color-blue);
-    }
   }
 
   .unfunded {
@@ -144,6 +150,7 @@
   opacity: 0.54;
   font-size: $small-font-size;
   font-weight: bold;
+  margin-bottom: 3 * $gap;
 }
 
 .portfolio-content {
@@ -172,6 +179,10 @@
 
       td {
         border-bottom: 1px solid $color-gray-lightest;
+      }
+
+      .add-member-link {
+        text-align: right;
       }
     }
   }
@@ -215,7 +226,6 @@
 
 .portfolio-applications {
   .portfolio-applications__header {
-    margin-bottom: 4 * $gap;
 
     .portfolio-applications__header--title {
       @include subheading;
@@ -242,6 +252,7 @@
     .application-list-item {
       border-radius: 5px;
       box-shadow: 0 4px 8px 1px rgba(230,230,230,0.5), -4px 4px 8px 1px rgba(230,230,230,0.5);
+      margin-bottom: 6 * $gap;
 
       .col {
         max-width: 95%;
@@ -269,7 +280,7 @@
   .subheading {
     @include subheading;
     margin-top: 6 * $gap;
-    margin-bottom: $gap;
+    margin-bottom: 2 * $gap;
   }
 
   .portfolio-funding__header {
@@ -369,7 +380,6 @@
         &.funded .to-expiration-alert {
           color: $color-blue;
 
-
           .icon {
             @include icon-color($color-blue);
           }
@@ -403,9 +413,8 @@
   }
 
   .panel {
-    box-shadow: 0 6px 18px 0 rgba(144,164,183,0.3);
-    border-top: none;
-    border-bottom: none;
+    @include shadow-panel;
+    margin-bottom: 4 * $gap;
   }
 }
 
@@ -418,9 +427,12 @@
     margin-bottom: 0;
 
     .form-col {
-      .usa-input {
+      .usa-input--validation--portfolioName {
         input {
-          max-width: 45em;
+          max-width: 30em;
+        }
+        .icon-validation {
+          left: 30em;
         }
       }
     }

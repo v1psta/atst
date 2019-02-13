@@ -21,11 +21,11 @@
           {{ Icon('info') }}
         </button>
       </div>
-      <div>
+      <div class='portfolio-header__budget--amount'>
         <span class='portfolio-header__budget--dollars'>
           {{ portfolio.task_orders | selectattr('is_active') | sum(attribute='budget') | justDollars }}
         </span>
-        <span class='cents'>
+        <span class='portfolio-header__budget--cents'>
           .{{ portfolio.task_orders | selectattr('is_active') | sum(attribute='budget') | justCents }}
         </span>
       </div>
@@ -70,8 +70,8 @@
       {{ Link(
         icon='cog',
         text='navigation.portfolio_navigation.breadcrumbs.admin' | translate,
-        url=url_for("portfolios.portfolio", portfolio_id=portfolio.id),
-        active=request.url_rule.endpoint == "portfolios.portfolio",
+        url=url_for("portfolios.portfolio_admin", portfolio_id=portfolio.id),
+        active=request.url_rule.endpoint == "portfolios.portfolio_admin",
       ) }}
     {% endif %}
   </div>

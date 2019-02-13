@@ -64,7 +64,6 @@
         }
 
         .spend-summary__budget {
-          margin: 0 0 0 $gap;
 
           @include ie-only {
             margin: $gap 0 0 0;
@@ -162,6 +161,7 @@
 
           dl {
             text-align: right;
+            margin-top: -2 * $gap;
 
             dd, dt {
               display: inline;
@@ -175,13 +175,11 @@
             }
 
             dd.ending-soon {
-              color: $color-red-dark;
               font-size: $h2-font-size;
               white-space: nowrap;
 
               .icon {
                 @include icon-size(28);
-                @include icon-color($color-red-dark);
               }
             }
           }
