@@ -9,11 +9,14 @@ from tests.mocks import PDF_FILENAME
 
 
 class TestTaskOrderStatus:
-    def test_pending_status(self):
+    def test_started_status(self):
         to = TaskOrder()
-        assert to.status == Status.PENDING
+        assert to.status == Status.STARTED
 
-        to = TaskOrder(number="42", start_date=random_future_date())
+    def test_pending_status(self):
+        to = TaskOrder(
+            number="42", start_date=random_future_date(), end_date=random_future_date()
+        )
         assert to.status == Status.PENDING
 
     def test_active_status(self):
