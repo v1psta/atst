@@ -177,8 +177,13 @@
         }
       }
 
-      .task-order-next-steps__description {
-        font-style: italic;
+      .task-order-next-steps__text {
+        display: flex;
+        .task-order-next-steps__heading {
+          display: block;
+          max-width: 100%;
+          flex-shrink: 1;
+        }
       }
     }
   }
