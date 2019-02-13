@@ -254,7 +254,7 @@ forms:
     is_required: This field is required.
   portfolio:
     name_label: Portfolio Name
-    name_length_validation_message: Portfolio names must be at least 4 and not more than 100 characters
+    name_length_validation_message: Portfolio names can be anywhere between 4-100 characters
 fragments:
   edit_application_form:
     existing_application_title: 'Edit {application_name} application'
