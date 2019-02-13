@@ -184,7 +184,9 @@
   }
 
   .task-order-sidebar {
-    padding-left: 3 * $gap;
+    @include media($xlarge-screen) {
+      padding-left: 3 * $gap;
+    }
     min-width: 35rem;
 
     hr {
