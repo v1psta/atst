@@ -171,10 +171,17 @@
               format="M/D/YYYY">
               </local-datetime>
           {%- endset %}
-          {{ DocumentLink(
-            title="Task Order Draft",
-            link_url=all_sections_complete and url_for('task_orders.download_summary', task_order_id=task_order.id),
-            description=description) }}
+          {% if task_order.pdf %}
+            {{ DocumentLink(
+              title="Task Order",
+              link_url=url_for('task_orders.download_task_order_pdf', task_order_id=task_order.id),
+              description=description) }}
+          {% else %}
+            {{ DocumentLink(
+              title="Task Order Draft",
+              link_url=all_sections_complete and url_for('task_orders.download_summary', task_order_id=task_order.id),
+              description=description) }}
+          {% endif %}
         </div>
         <hr />
         <div class="panel__content">
