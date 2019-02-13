@@ -120,6 +120,11 @@
 
   .task-order-next-steps {
     flex-grow: 1;
+
+    .panel {
+      padding-bottom: 0;
+    }
+
     @include media($xlarge-screen) {
       padding-right: $gap;
     }
@@ -143,8 +148,17 @@
         width: 100%;
       }
 
+      .alert {
+        margin-top: 3 * $gap;
+        margin-bottom: 0;
+        padding: 2 * $gap;
+
+        .alert__message {
+          font-style: italic;
+        }
+      }
+
       .task-order-next-steps__icon {
-        width: 8%;
         padding: $gap $gap 0 0;
         justify-content: center;
         .complete {
@@ -155,27 +169,14 @@
         }
       }
 
-      .task-order-next-steps__text {
-        width: 60%;
-      }
-
       .task-order-next-steps__action {
+        min-width: 10 * $gap;
         padding: $gap 0 0 $gap;
-        width: 32%;
         a.usa-button {
           width: 100%;
         }
       }
 
-      .task-order-next-steps__heading {
-
-        h4 {
-        @include ie-only {
-          width: 100%;
-        }
-          margin: $gap $gap 0 0;
-        }
-      }
       .task-order-next-steps__description {
         font-style: italic;
       }
