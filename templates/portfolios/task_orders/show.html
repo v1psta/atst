@@ -32,7 +32,7 @@
         </div>
       </div>
       <div class="task-order-next-steps__action col">
-        {% if button_text and button_url %}
+        {% if not task_order.is_active and button_text and button_url %}
           <a
             href="{{ button_url }}"
             class="usa-button usa-button-primary">
