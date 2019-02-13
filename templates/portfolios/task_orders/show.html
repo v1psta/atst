@@ -6,6 +6,16 @@
 
 {% block portfolio_content %}
 
+{% macro officer_name(officer) -%}
+  {%- if not officer -%}
+    Not specified
+  {%- elif officer == g.current_user -%}
+    You
+  {%- else -%}
+    {{ officer.full_name }}
+  {%- endif -%}
+{%- endmacro -%}
+
 {% macro Step(description="", complete=True, button_text=None, button_url=None) %}
   <div class="task-order-next-steps__step panel__content">
     <div class="row">
@@ -102,16 +112,23 @@
       <div class="panel">
         <h3 class="task-order-next-steps__panel-head panel__content">{{ "task_orders.view.whats_next" | translate }}</h3>
         {% call Step(
-          description="task_orders.view.steps.draft" | translate | safe,
+          description="task_orders.view.steps.draft" | translate({
+            "contact": officer_name(task_order.creator)
+          })| safe,
           button_url=url_for("task_orders.new", screen=1, task_order_id=task_order.id),
           button_text='Edit',
           complete=all_sections_complete) %}
         {% endcall %}
         {{ Step(
-          description="task_orders.view.steps.security" | translate | safe,
+          description="task_orders.view.steps.security" | translate({
+            "security_officer": officer_name(task_order.security_officer)
+          }) | safe,
           complete=False) }}
         {% call Step(
-          description="task_orders.view.steps.record" | translate | safe,
+          description="task_orders.view.steps.record" | translate({
+            "contracting_officer": officer_name(task_order.contracting_officer),
+            "contracting_officer_representative": officer_name(task_order.contracting_officer_representative)
+          }) | safe,
           complete=False) %}
           <div class='alert alert--warning'>
             <div class='alert__content'>
@@ -123,7 +140,9 @@
         {% endcall %}
         {% set is_ko = user == task_order.contracting_officer %}
         {{ Step(
-          description="task_orders.view.steps.sign" | translate | safe,
+          description="task_orders.view.steps.sign" | translate({
+            "contracting_officer": officer_name(task_order.contracting_officer)
+          }) | safe,
           button_url=is_ko and url_for("portfolios.ko_review", portfolio_id=portfolio.id, task_order_id=task_order.id),
           button_text=is_ko and 'Sign',
           complete=False) }}

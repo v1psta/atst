@@ -415,11 +415,11 @@ task_orders:
   view:
     whats_next: Here are the remaining tasks to get your Task Order approved.
     steps:
-      draft: '<b>Primary Point of contact (you)</b> completes initial Task Order form.'
-      security: '<b>IA Security Officer (Frank Fontaine)</b> completes a Security Requirements Document. <a href="#">Send a reminder</a>'
-      record: '<b>Contracting Officer (Steward Kayou) or Contracting Officer Representative (Not specified)</b> records Task Order information. <a href="#">Send a reminder</a>'
+      draft: '<strong>Primary Point of contact ({contact})</strong> completes initial Task Order form.'
+      security: '<strong>IA Security Officer ({security_officer})</strong> completes a Security Requirements Document. <a href="#">Send a reminder</a>'
+      record: '<strong>Contracting Officer ({contracting_officer}) or Contracting Officer Representative ({contracting_officer_representative})</strong> records Task Order information. <a href="#">Send a reminder</a>'
       record_description: Obtain a funding document and file a Task Order in the appropriate system of record. Once this is complete, come back here and record the task order information.
-      sign: '<b>Contracting Officer (Steward Kayou)</b> verifies funding to unlock cloud services.'
+      sign: '<strong>Contracting Officer ({contracting_officer})</strong> verifies funding to unlock cloud services.'
   new:
     app_info:
       section_title: "What You're Making"
