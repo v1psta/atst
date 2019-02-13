@@ -69,14 +69,27 @@
   </div>
 {% endmacro %}
 
-{% macro InvitationStatus(title, officer) %}
+{% macro InvitationStatus(title, officer, officer_info) %}
   {% set class = "invited" if officer else "uninvited" %}
   <div class="task-order-invitation-status row">
     <div class="task-order-invitation-status__icon col">
-      <span>{{ Icon("ok" if officer else "alert", classes=class) }}</span>
+      <span>{{ Icon("avatar" if officer else "alert", classes=class) }}</span>
     </div>
-    <div class="task-order-invitation-status__title col {{ class }}">
-      {{ title }}
+    <div class="col">
+      <div class="task-order-invitation-status__title {{ class }}">
+        {{ title }}
+      </div>
+      <div class="task-order-invitation-details">
+        {% if officer_info %}
+          <div class="col">
+            <div>{{ officer_info.first_name }} {{ officer_info.last_name }}</div>
+            <div>{{ officer_info.email }}</div>
+            <div>{{ officer_info.phone_number | usPhone }}</div>
+          </div>
+        {% else %}
+          <span>Not specified</span>
+        {% endif %}
+      </div>
     </div>
   </div>
 {% endmacro %}
@@ -178,15 +191,16 @@
       </div>
       <div class="task-order-invitations panel">
         <div class="panel__content">
-          <h3>Invitations</h3>
-          {{ InvitationStatus('Contracting Officer', task_order.contracting_officer) }}
-          {{ InvitationStatus('Contracting Officer Representative', task_order.contracting_officer_representative) }}
-          {{ InvitationStatus('IA Security Officer', officer=task_order.security_officer) }}
-
-          <a href="{{ url_for('portfolios.task_order_invitations', portfolio_id=portfolio.id, task_order_id=task_order.id) }}" class="icon-link">
-            {{ Icon("edit") }}
-            <span>manage invitations</span>
-          </a>
+          <div class="task-order-invitations__heading row">
+            <h3>Invitations</h3>
+            <a href="{{ url_for('portfolios.task_order_invitations', portfolio_id=portfolio.id, task_order_id=task_order.id) }}" class="icon-link">
+              <span>manage</span>
+              {{ Icon("edit") }}
+            </a>
+          </div>
+          {{ InvitationStatus('Contracting Officer', task_order.contracting_officer, officer_info=task_order.officer_dictionary('contracting_officer')) }}
+          {{ InvitationStatus('Contracting Officer Representative', task_order.contracting_officer_representative, officer_info=task_order.officer_dictionary('contracting_officer_representative')) }}
+          {{ InvitationStatus('IA Security Officer', officer=task_order.security_officer, officer_info=task_order.officer_dictionary('security_officer')) }}
         </div>
       </div>
     </div>

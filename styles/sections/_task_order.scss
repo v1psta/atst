@@ -203,18 +203,33 @@
     }
   }
 
-  .task-order-invitation-status {
-    .invited {
-      color: $color-green;
-      @include icon-color($color-green);
-    }
-    .uninvited {
-      color: $color-red;
-      @include icon-color($color-red);
+  .task-order-invitations {
+    .task-order-invitations__heading {
+      justify-content: space-between;
     }
 
-    .task-order-invitation-status__icon {
-      padding: 0 0.5rem;
+    .task-order-invitation-status {
+      margin-bottom: 3 * $gap;
+      .task-order-invitation-status__title {
+        font-weight: $font-bold;
+      }
+
+      .invited {
+        color: $color-green;
+        @include icon-color($color-green);
+      }
+      .uninvited {
+        color: $color-red;
+        @include icon-color($color-red);
+      }
+
+      .task-order-invitation-status__icon {
+        padding: 0 0.5rem;
+      }
+    }
+
+    .task-order-invitation-details {
+      font-style: italic;
     }
   }
 }
