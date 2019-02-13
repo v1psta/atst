@@ -29,7 +29,7 @@
   {% set disabled = not link_url %}
   <div class="task-order-document-link">
     <div class="row">
-      <a href="{{ link_url }}" class="icon-link {{ 'icon-link--disabled' if disabled }}" aria-disabled="{{ 'true' if disabled else 'false' }}">
+      <a {% if not disabled %}href="{{ link_url }}"{% endif %} class="icon-link {{ 'icon-link--disabled' if disabled }}" aria-disabled="{{ 'true' if disabled else 'false' }}">
         <div class="task-order-document-link__icon col">
           <span>{{ Icon("download") }}</span>
         </div>
