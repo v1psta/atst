@@ -5,6 +5,10 @@ export const formatDollars = (value, cents = true) => {
       currency: 'USD',
     })
   } else if (typeof value === 'string') {
+    if (value === '') {
+      return value
+    }
+
     return parseFloat(value).toLocaleString('us-US', {
       style: 'currency',
       currency: 'USD',

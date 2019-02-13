@@ -85,9 +85,6 @@ export default {
     },
 
     onBlur: function(e) {
-      if (this.validation === 'dollars' && this.value === '$NaN') {
-        this.value = this.initialValue
-      }
       this._checkIfValid({ value: e.target.value, invalidate: true })
     },
 
