@@ -63,6 +63,9 @@
 }
 
 .task-order-summary {
+  .panel {
+    @include shadow-panel;
+  }
 
   .alert .alert__actions {
     margin-top: 2 * $gap;
@@ -180,6 +183,7 @@
   }
 
   .task-order-sidebar {
+    padding-left: 3 * $gap;
     min-width: 35rem;
 
     hr {
