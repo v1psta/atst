@@ -1,6 +1,6 @@
 import pytest
 
-from atst.filters import dollars, renderAuditEvent
+from atst.filters import dollars, renderAuditEvent, usPhone
 from atst.models import AuditEvent
 
 
@@ -28,3 +28,9 @@ def test_render_audit_event_with_unknown_resource_type():
     event = AuditEvent(resource_type="boat")
     result = renderAuditEvent(event)
     assert "<article" in result
+
+
+def test_usPhone():
+    assert usPhone("1234567890") == "+1 (123) 456 - 7890"
+    assert usPhone(number=None) == ""
+    assert usPhone(number="") == ""
