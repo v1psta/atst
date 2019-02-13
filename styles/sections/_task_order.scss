@@ -63,6 +63,9 @@
 }
 
 .task-order-summary {
+  .panel {
+    @include shadow-panel;
+  }
 
   .alert .alert__actions {
     margin-top: 2 * $gap;
@@ -72,7 +75,7 @@
     width: 100%;
   }
 
-  .label--pending {
+  .label--pending, .label--started {
     background-color: $color-gold;
   }
 
@@ -117,6 +120,11 @@
 
   .task-order-next-steps {
     flex-grow: 1;
+
+    .panel {
+      padding-bottom: 0;
+    }
+
     @include media($xlarge-screen) {
       padding-right: $gap;
     }
@@ -140,8 +148,17 @@
         width: 100%;
       }
 
+      .alert {
+        margin-top: 3 * $gap;
+        margin-bottom: 0;
+        padding: 2 * $gap;
+
+        .alert__message {
+          font-style: italic;
+        }
+      }
+
       .task-order-next-steps__icon {
-        width: 8%;
         padding: $gap $gap 0 0;
         justify-content: center;
         .complete {
@@ -152,34 +169,29 @@
         }
       }
 
-      .task-order-next-steps__text {
-        width: 60%;
-      }
-
       .task-order-next-steps__action {
+        min-width: 10 * $gap;
         padding: $gap 0 0 $gap;
-        width: 32%;
         a.usa-button {
           width: 100%;
         }
       }
 
-      .task-order-next-steps__heading {
-
-        h4 {
-        @include ie-only {
-          width: 100%;
+      .task-order-next-steps__text {
+        display: flex;
+        .task-order-next-steps__heading {
+          display: block;
+          max-width: 100%;
+          flex-shrink: 1;
         }
-          margin: $gap $gap 0 0;
-        }
-      }
-      .task-order-next-steps__description {
-        font-style: italic;
       }
     }
   }
 
   .task-order-sidebar {
+    @include media($xlarge-screen) {
+      padding-left: 3 * $gap;
+    }
     min-width: 35rem;
 
     hr {
@@ -198,18 +210,33 @@
     }
   }
 
-  .task-order-invitation-status {
-    .invited {
-      color: $color-green;
-      @include icon-color($color-green);
-    }
-    .uninvited {
-      color: $color-red;
-      @include icon-color($color-red);
+  .task-order-invitations {
+    .task-order-invitations__heading {
+      justify-content: space-between;
     }
 
-    .task-order-invitation-status__icon {
-      padding: 0 0.5rem;
+    .task-order-invitation-status {
+      margin-bottom: 3 * $gap;
+      .task-order-invitation-status__title {
+        font-weight: $font-bold;
+      }
+
+      .invited {
+        color: $color-green;
+        @include icon-color($color-green);
+      }
+      .uninvited {
+        color: $color-red;
+        @include icon-color($color-red);
+      }
+
+      .task-order-invitation-status__icon {
+        padding: 0 0.5rem;
+      }
+    }
+
+    .task-order-invitation-details {
+      font-style: italic;
     }
   }
 }

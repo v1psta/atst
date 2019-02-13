@@ -21,6 +21,7 @@ from atst.models import Attachment, Base, types, mixins
 
 
 class Status(Enum):
+    STARTED = "Started"
     PENDING = "Pending"
     ACTIVE = "Active"
     EXPIRED = "Expired"
@@ -142,7 +143,7 @@ class TaskOrder(Base, mixins.TimestampsMixin):
                 return Status.EXPIRED
             return Status.ACTIVE
         else:
-            return Status.PENDING
+            return Status.STARTED
 
     @property
     def display_status(self):

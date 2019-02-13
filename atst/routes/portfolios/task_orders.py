@@ -45,7 +45,10 @@ def portfolio_funding(portfolio_id):
     return render_template(
         "portfolios/task_orders/index.html",
         portfolio=portfolio,
-        pending_task_orders=task_orders_by_status.get(TaskOrderStatus.PENDING, []),
+        pending_task_orders=(
+            task_orders_by_status.get(TaskOrderStatus.STARTED, [])
+            + task_orders_by_status.get(TaskOrderStatus.PENDING, [])
+        ),
         active_task_orders=active_task_orders,
         expired_task_orders=task_orders_by_status.get(TaskOrderStatus.EXPIRED, []),
         total_balance=total_balance,

@@ -20,20 +20,29 @@ def download_summary(task_order_id):
     )
 
 
+def send_file(attachment):
+    generator = app.csp.files.download(attachment.object_name)
+    return Response(
+        generator,
+        headers={
+            "Content-Disposition": "attachment; filename={}".format(attachment.filename)
+        },
+    )
+
+
 @task_orders_bp.route("/task_orders/csp_estimate/<task_order_id>")
 def download_csp_estimate(task_order_id):
     task_order = TaskOrders.get(g.current_user, task_order_id)
     if task_order.csp_estimate:
-        estimate = task_order.csp_estimate
-        generator = app.csp.files.download(estimate.object_name)
-        return Response(
-            generator,
-            headers={
-                "Content-Disposition": "attachment; filename={}".format(
-                    estimate.filename
-                )
-            },
-        )
-
+        return send_file(task_order.csp_estimate)
     else:
         raise NotFoundError("task_order CSP estimate")
+
+
+@task_orders_bp.route("/task_orders/pdf/<task_order_id>")
+def download_task_order_pdf(task_order_id):
+    task_order = TaskOrders.get(g.current_user, task_order_id)
+    if task_order.pdf:
+        return send_file(task_order.pdf)
+    else:
+        raise NotFoundError("task_order pdf")

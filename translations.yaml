@@ -412,6 +412,14 @@ task_orders:
     title: Sign Task Order
     unlimited_level_of_warrant_description: Unlimited Level of Warrant funds
     verify_warrant_level_paragraph: Verify your level of warrant and provide your digital signature to authorize this Task Order.
+  view:
+    whats_next: Here are the remaining tasks to get your Task Order approved.
+    steps:
+      draft: '<strong>Primary Point of contact ({contact})</strong> completes initial Task Order form.'
+      security: '<strong>IA Security Officer ({security_officer})</strong> completes a Security Requirements Document. <a href="#">Send a reminder</a>'
+      record: '<strong>Contracting Officer ({contracting_officer}) or Contracting Officer Representative ({contracting_officer_representative})</strong> records Task Order information. <a href="#">Send a reminder</a>'
+      record_description: Obtain a funding document and file a Task Order in the appropriate system of record. Once this is complete, come back here and record the task order information.
+      sign: '<strong>Contracting Officer ({contracting_officer})</strong> verifies funding to unlock cloud services.'
   new:
     app_info:
       section_title: "What You're Making"

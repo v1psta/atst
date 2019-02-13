@@ -30,6 +30,8 @@ def justCents(value):
 
 
 def usPhone(number):
+    if not number:
+        return ""
     phone = re.sub(r"\D", "", number)
     return "+1 ({}) {} - {}".format(phone[0:3], phone[3:6], phone[6:])
 

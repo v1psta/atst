@@ -6,19 +6,42 @@
 
 {% block portfolio_content %}
 
-{% macro Step(title="", description="", link_text=None, complete=True) %}
-  <div class="task-order-next-steps__step panel__content row">
-    <div class="task-order-next-steps__icon col">
-      <span>{{ Icon("ok", classes="complete" if complete else "incomplete") }}</span>
-    </div>
-    <div class="task-order-next-steps__text col">
-      <div class="task-order-next-steps__heading row">
-        <h4>{{ title }}</h4>
+{% macro officer_name(officer) -%}
+  {%- if not officer -%}
+    Not specified
+  {%- elif officer == g.current_user -%}
+    You
+  {%- else -%}
+    {{ officer.full_name }}
+  {%- endif -%}
+{%- endmacro -%}
+
+{% macro Step(description="", complete=True, button_text=None, button_url=None) %}
+  <div class="task-order-next-steps__step panel__content">
+    <div class="row">
+      <div class="task-order-next-steps__icon col">
+        {% if complete %}
+          <span class="label label--success">Completed</span>
+        {% else %}
+          <span class="label">Not Started</span>
+        {% endif %}
       </div>
-      <div class="task-order-next-steps__description">
-        {{ description }}
+      <div class="task-order-next-steps__text col col--grow">
+        <div class="task-order-next-steps__heading row">
+          <span>{{ description }}</span>
+        </div>
+      </div>
+      <div class="task-order-next-steps__action col">
+        {% if not task_order.is_active and button_text and button_url %}
+          <a
+            href="{{ button_url }}"
+            class="usa-button usa-button-primary">
+            {{ button_text }}
+          </a>
+        {% endif %}
       </div>
     </div>
+
     {% if caller %}
       {{ caller() }}
     {% endif %}
@@ -46,14 +69,27 @@
   </div>
 {% endmacro %}
 
-{% macro InvitationStatus(title, officer) %}
+{% macro InvitationStatus(title, officer, officer_info) %}
   {% set class = "invited" if officer else "uninvited" %}
   <div class="task-order-invitation-status row">
     <div class="task-order-invitation-status__icon col">
-      <span>{{ Icon("ok" if officer else "alert", classes=class) }}</span>
+      <span>{{ Icon("avatar" if officer else "alert", classes=class) }}</span>
     </div>
-    <div class="task-order-invitation-status__title col {{ class }}">
-      {{ title }}
+    <div class="col">
+      <div class="task-order-invitation-status__title {{ class }}">
+        {{ title }}
+      </div>
+      <div class="task-order-invitation-details">
+        {% if officer_info %}
+          <div class="col">
+            <div>{{ officer_info.first_name }} {{ officer_info.last_name }}</div>
+            <div>{{ officer_info.email }}</div>
+            <div>{{ officer_info.phone_number | usPhone }}</div>
+          </div>
+        {% else %}
+          <span>Not specified</span>
+        {% endif %}
+      </div>
     </div>
   </div>
 {% endmacro %}
@@ -87,42 +123,42 @@
   <div class="task-order-details">
     <div id="next-steps" class="task-order-next-steps">
       <div class="panel">
-        <h3 class="task-order-next-steps__panel-head panel__content">What's next?</h3>
+        <h3 class="task-order-next-steps__panel-head panel__content">{{ "task_orders.view.whats_next" | translate }}</h3>
         {% call Step(
-          title="Submit draft Task Order",
-          description="Complete initial task order request form.",
-          link_text="edit",
+          description="task_orders.view.steps.draft" | translate({
+            "contact": officer_name(task_order.creator)
+          })| safe,
+          button_url=url_for("task_orders.new", screen=1, task_order_id=task_order.id),
+          button_text='Edit',
           complete=all_sections_complete) %}
-          <div class="task-order-next-steps__action col">
-            {% if user == task_order.contracting_officer %}
-              {% set url=url_for("portfolios.ko_review", portfolio_id=portfolio.id, task_order_id=task_order.id) %}
-            {% else %}
-              {% set url = url_for("task_orders.new", screen=1, task_order_id=task_order.id) %}
-            {% endif %}
-            <a
-              href="{{ url }}"
-              class="usa-button usa-button-primary">
-                Edit
-            </a>
-          </div>
         {% endcall %}
         {{ Step(
-          title="Complete a Security Requirements Document",
-          description="The IA Security Official you specified received an email invitation to complete and sign a DD-254: Security Requirements document that's been customized for the JEDI program here.",
+          description="task_orders.view.steps.security" | translate({
+            "security_officer": officer_name(task_order.security_officer)
+          }) | safe,
           complete=False) }}
+        {% call Step(
+          description="task_orders.view.steps.record" | translate({
+            "contracting_officer": officer_name(task_order.contracting_officer),
+            "contracting_officer_representative": officer_name(task_order.contracting_officer_representative)
+          }) | safe,
+          complete=False) %}
+          <div class='alert alert--warning'>
+            <div class='alert__content'>
+              <div class='alert__message'>
+                {{ "task_orders.view.steps.record_description" | translate | safe }}
+              </div>
+            </div>
+          </div>
+        {% endcall %}
+        {% set is_ko = user == task_order.contracting_officer %}
         {{ Step(
-          title="Prepare the Task Order Documents for your organization's contracting system",
-          description="You'll file your task order in your organization's contracting system. Change the formatting based on your office prefers.",
+          description="task_orders.view.steps.sign" | translate({
+            "contracting_officer": officer_name(task_order.contracting_officer)
+          }) | safe,
+          button_url=is_ko and url_for("portfolios.ko_review", portfolio_id=portfolio.id, task_order_id=task_order.id),
+          button_text=is_ko and 'Sign',
           complete=False) }}
-        {{ Step(
-          title="Get a funding document",
-          description="User your organization's normal process to get a funding document, typically from your financial manager. Your Contracting Officer's Representative (COR) or Contracting Officer (KO) can help with this, too.",
-          complete=False) }}
-        {{ Step(
-          title="Have your KO submit your final task order",
-          description="Your KO will submit the final task order into your organization's contracting system and receive an official task order number. Your KO should enter your task order number in this system, along with a copy of the submitted task order.",
-          complete=False) }}
-        <h4 class="panel__content">Once your required information is submitted in this system, you're funded and ready to start using JEDI cloud services!</h4>
       </div>
     </div>
     <div class="task-order-sidebar col">
@@ -135,13 +171,23 @@
               format="M/D/YYYY">
               </local-datetime>
           {%- endset %}
-          {{ DocumentLink(
-            title="Task Order Draft",
-            link_url=all_sections_complete and url_for('task_orders.download_summary', task_order_id=task_order.id),
-            description=description) }}
+          {% if task_order.pdf %}
+            {{ DocumentLink(
+              title="Task Order",
+              link_url=url_for('task_orders.download_task_order_pdf', task_order_id=task_order.id),
+              description=description) }}
+          {% else %}
+            {{ DocumentLink(
+              title="Task Order Draft",
+              link_url=all_sections_complete and url_for('task_orders.download_summary', task_order_id=task_order.id),
+              description=description) }}
+          {% endif %}
         </div>
         <hr />
         <div class="panel__content">
+          {{ DocumentLink(
+            title="Instruction Sheet",
+            link_url="#") }}
           {{ DocumentLink(
             title="Cloud Services Estimate",
             link_url=task_order.csp_estimate and url_for("task_orders.download_csp_estimate", task_order_id=task_order.id) ) }}
@@ -155,15 +201,16 @@
       </div>
       <div class="task-order-invitations panel">
         <div class="panel__content">
-          <h3>Invitations</h3>
-          {{ InvitationStatus('Contracting Officer', task_order.contracting_officer) }}
-          {{ InvitationStatus('Contracting Officer Representative', task_order.contracting_officer_representative) }}
-          {{ InvitationStatus('IA Security Officer', officer=task_order.security_officer) }}
-
-          <a href="{{ url_for('portfolios.task_order_invitations', portfolio_id=portfolio.id, task_order_id=task_order.id) }}" class="icon-link">
-            {{ Icon("edit") }}
-            <span>manage invitations</span>
-          </a>
+          <div class="task-order-invitations__heading row">
+            <h3>Invitations</h3>
+            <a href="{{ url_for('portfolios.task_order_invitations', portfolio_id=portfolio.id, task_order_id=task_order.id) }}" class="icon-link">
+              <span>manage</span>
+              {{ Icon("edit") }}
+            </a>
+          </div>
+          {{ InvitationStatus('Contracting Officer', task_order.contracting_officer, officer_info=task_order.officer_dictionary('contracting_officer')) }}
+          {{ InvitationStatus('Contracting Officer Representative', task_order.contracting_officer_representative, officer_info=task_order.officer_dictionary('contracting_officer_representative')) }}
+          {{ InvitationStatus('IA Security Officer', officer=task_order.security_officer, officer_info=task_order.officer_dictionary('security_officer')) }}
         </div>
       </div>
     </div>
