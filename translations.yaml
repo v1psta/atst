@@ -259,7 +259,7 @@ forms:
   officers:
     contracting_officer_invite: Invite KO to Task Order Builder
     contracting_officer_representative_invite: Invite COR to Task Order Builder
-    security_officer_invite: Invite SO to Task Order Builder
+    security_officer_invite: Invite Security Officer to Task Order Builder
 fragments:
   edit_application_form:
     explain: 'AT-AT allows you to create multiple applications within a portfolio. Each application can then be broken down into its own customizable environments.'
@@ -502,7 +502,7 @@ task_orders:
       description: Your Security Officer will need to answer some security configuration questions in order to generate a DD-254 document, then digitally sign.
       add_button_text: Add / Invite Security Officer
       invite_button_text: Invite Security Officer
-      edit_title: Edit SO
+      edit_title: Edit Security Officer
   ko_review:
     title: Verify Task Order Information
     message: Grant your team access to the cloud by verifying the Task Order info below.
