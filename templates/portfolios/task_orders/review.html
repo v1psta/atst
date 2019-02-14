@@ -67,8 +67,8 @@
 
         <div class="form__sub-fields">
           {{ UploadInput(form.pdf, show_label=True) }}
-          {{ TextInput(form.number) }}
-          {{ TextInput(form.loa) }}
+          {{ TextInput(form.number, placeholder='1234567890') }}
+          {{ TextInput(form.loa, placeholder='1234567890') }}
           {{ TextInput(form.custom_clauses, paragraph=True) }}
         </div>
 
