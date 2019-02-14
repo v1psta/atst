@@ -2,23 +2,39 @@
 {% from "components/sidenav_item.html" import SidenavItem %}
 
 
-<div class="global-navigation sidenav">
-  <div class="sidenav__title">Portfolios</div>
-  <ul class="sidenav__list--padded">
-    {% for other_portfolio in portfolios|sort(attribute='name') %}
-      {{ SidenavItem(other_portfolio.name,
-        href=url_for("portfolios.show_portfolio", portfolio_id=other_portfolio.id),
-        active=(other_portfolio.id | string) == request.view_args.get('portfolio_id')
-        ) }}
-    {% endfor %}
-  </ul>
-  <div class="sidenav__divider--small"></div>
-  <a class="sidenav__link sidenav__link--add" href="{{ url_for("task_orders.get_started") }}" title="Fund a New Portfolio">
-    <span class="sidenav__link-label">Fund a New Portfolio</span>
-    {{ Icon("plus", classes="sidenav__link-icon") }}
-  </a>
-</div>
-
-<div class="global-navigation sidenav--minimized">
-  <div class="sidenav__title">Show >>></div>
+<div v-cloak is="SidenavToggler" class="sidenav-container">
+  <template slot-scope='props'>
+    <div v-bind:class="{'global-navigation': true, 'sidenav': props.isVisible, 'sidenav--minimized': !props.isVisible}">
+      <a href="#" v-on:click="props.toggle" class="sidenav__toggle">
+        <template v-if="props.isVisible">
+          {{ Icon('angle-double-left-solid', classes="toggle-arrows icon--blue") }}
+          Hide
+        </template>
+        <template v-else>
+          Show
+          {{ Icon('angle-double-right-solid', classes="toggle-arrows icon--blue") }}
+        </template>
+      </a>
+      <div v-if="props.isVisible">
+        <div class="sidenav__title">Portfolios</div>
+        <ul class="sidenav__list--padded">
+          {% if portfolios %}
+            {% for other_portfolio in portfolios|sort(attribute='name') %}
+              {{ SidenavItem(other_portfolio.name,
+                href=url_for("portfolios.show_portfolio", portfolio_id=other_portfolio.id),
+                active=(other_portfolio.id | string) == request.view_args.get('portfolio_id')
+                ) }}
+            {% endfor %}
+          {% else %}
+            <li><span class="sidenav__text">You have no portfolios yet</span></li>
+          {% endif %}
+        </ul>
+        <div class="sidenav__divider--small"></div>
+        <a class="sidenav__link sidenav__link--add" href="{{ url_for("task_orders.get_started") }}" title="Fund a New Portfolio">
+          <span class="sidenav__link-label">Fund a New Portfolio</span>
+          {{ Icon("plus", classes="sidenav__link-icon icon--circle") }}
+        </a>
+      </div>
+    </div>
+  </template>
 </div>

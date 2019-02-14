@@ -1,0 +1,78 @@
+{% from "components/icon.html" import Icon %}
+
+{% macro Link(icon, text, url, active=False) %}
+  <a class='icon-link {{ "active icon-link--disabled" if active }}' href='{{ url }}'>
+    <div class='col'>
+      <div class='icon-link--icon'>{{ Icon(icon) }}</div>
+      <div class='icon-link--name'>{{ text }}</div>
+    </div>
+  </a>
+{% endmacro %}
+
+<div class='portfolio-header row'>
+  <div class='col col--grow'>
+    <div class='portfolio-header__name'>
+      {{ secondary_breadcrumb or portfolio.name }}
+    </div>
+    <div class='portfolio-header__budget row'>
+      <div class='column-left'>
+        <span>Available budget</span>
+        <button type="button" tabindex="0" class="icon-tooltip" v-tooltip.right="{content: 'The available budget shown includes the available budget of all active task orders', container: false}">
+          {{ Icon('info') }}
+        </button>
+      </div>
+      <div class='portfolio-header__budget--amount'>
+        <span class='portfolio-header__budget--dollars'>
+          {{ portfolio.task_orders | selectattr('is_active') | sum(attribute='budget') | justDollars }}
+        </span>
+        <span class='portfolio-header__budget--cents'>
+          .{{ portfolio.task_orders | selectattr('is_active') | sum(attribute='budget') | justCents }}
+        </span>
+      </div>
+    </div>
+    <div class='row'>
+      <div class='column-left'></div>
+      <div class='column-right portfolio-funding__header--funded-through {{ "funded" if funding_end_date is not none and funded else "unfunded"}}'>
+          {% if funding_end_date and funded %}
+            {{ Icon('ok') }}
+            Funded through
+            <local-datetime
+              timestamp='{{ funding_end_date }}'
+              format="M/D/YYYY">
+            </local-datetime>
+          {% elif funding_end_date and not funded %}
+            {{ Icon('alert') }}
+            Funded period ends
+            <local-datetime
+              timestamp='{{ funding_end_date }}'
+              format="M/D/YYYY">
+            </local-datetime>
+          {% endif %}
+        </div>
+      </div>
+  </div>
+  <div class='row links'>
+    {% if user_can(permissions.VIEW_USAGE_DOLLARS) %}
+      {{ Link(
+        icon='chart-pie',
+        text='navigation.portfolio_navigation.breadcrumbs.reports' | translate,
+        url=url_for("portfolios.portfolio_reports", portfolio_id=portfolio.id),
+        active=request.url_rule.endpoint == "portfolios.portfolio_reports",
+      ) }}
+    {% endif %}
+    {{ Link(
+      icon='dollar-sign',
+      text='navigation.portfolio_navigation.breadcrumbs.funding' | translate,
+      url=url_for("portfolios.portfolio_funding", portfolio_id=portfolio.id),
+      active=request.url_rule.endpoint == "portfolios.portfolio_funding",
+    ) }}
+    {% if user_can(permissions.EDIT_PORTFOLIO_INFORMATION) %}
+      {{ Link(
+        icon='cog',
+        text='navigation.portfolio_navigation.breadcrumbs.admin' | translate,
+        url=url_for("portfolios.portfolio_admin", portfolio_id=portfolio.id),
+        active=request.url_rule.endpoint == "portfolios.portfolio_admin",
+      ) }}
+    {% endif %}
+  </div>
+</div>

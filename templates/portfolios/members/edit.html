@@ -13,165 +13,170 @@
 <form method="POST" action="{{ url_for('portfolios.update_member', portfolio_id=portfolio.id, member_id=member.user_id) }}" autocomplete="false">
   {{ form.csrf_token }}
 
-  <div class='panel member-card'>
-    <div class='member-card__header'>
-      <h1 class='member-card__heading'>{{ member.user.full_name }}</h1>
+  <div class='member-edit'>
+    <div class="subheading">Edit Portfolio Member</div>
+    <div class="panel">
+      <div class='member-card'>
+        <div class='member-card__header'>
+          <h1 class='member-card__heading'>{{ member.user.full_name }}</h1>
 
-        <div class="usa-input member-card__input">
-          {{ Selector(form.portfolio_role) }}
+            <div class="usa-input member-card__input">
+              {{ Selector(form.portfolio_role) }}
+            </div>
+
         </div>
-
-    </div>
-    <div class='member-card__details'>
-      <dl>
-        <div>
-          <dt>DOD ID:</dt>
-          <dd>{{ member.user.dod_id }}</dd>
-        </div>
-        <div>
-          <dt>Email:</dt>
-          <dd>{{ member.user.email }}</dd>
-        </div>
-      </dl>
-      {% if editable %}
-        <a href='{{ url_for("users.user") }}' class='icon-link'>edit account details</a>
-      {% endif %}
-      <div>
-      {% if member.latest_invitation.is_revokable %}
-        {{ ConfirmationButton(
-              "Revoke Invitation",
-              url_for("portfolios.revoke_invitation", portfolio_id=portfolio.id, token=member.latest_invitation.token),
-           ) }}
-      {% endif %}
-      {% if member.can_resend_invitation %}
-        {{ ConfirmationButton (
-              "Resend Invitation",
-              url_for("portfolios.resend_invitation", portfolio_id=portfolio.id, token=member.latest_invitation.token),
-              confirm_msg="Are you sure? This will send an email to invite the user to join this portfolio."
-        )}}
-      {% endif %}
-      {% if can_revoke_access %}
-        {{ ConfirmationButton (
-              "Remove Portfolio Access",
-              url_for("portfolios.revoke_access", portfolio_id=portfolio.id, member_id=member.id),
-              confirm_msg="Are you sure? This will remove this user from the portfolio.",
-        )}}
-      {% endif %}
-      </div>
-    </div>
-  </div>
-
-  <div class="panel">
-    <div class="panel__heading panel__heading--tight">
-      <h2 class="h3">Manage Access <div class="subtitle">Grant access to an environment</div></h2>
-    </div>
-  </div>
-
-  <div class='search-bar'>
-    <div class='usa-input search-input'>
-      <label for='application-search'>Search by application name</label>
-      <input type='search' id='application-search' name='application-search' placeholder="Search by application name"/>
-      <button type="submit">
-        <span class="hide">Search</span>
-      </button>
-    </div>
-  </div>
-
-  {% for application in applications %}
-  {% set revoke_modal_name = (application.id|string) + 'RevokeModal' %}
-  <edit-application-roles inline-template name="{{ application.name }}" id="{{ application.id }}">
-    <div is='toggler' default-visible class='block-list application-list-item'>
-      <template slot-scope='props'>
-        <header class='block-list__header'>
-        <button v-on:click='props.toggle' class='icon-link icon-link--large icon-link--default spend-table__application__toggler'>
-            <template v-if='props.isVisible'>{{ Icon('caret_down') }}</template>
-            <template v-else>{{ Icon('caret_right') }}</template>
-            <h3 class="block-list__title">{{ application.name }}</h3>
-          </button>
-          <span><a v-on:click="openModal('{{ revoke_modal_name }}')" class="icon-link icon-link--danger">revoke all access</a></span>
-        </header>
-          {% call Modal(name=revoke_modal_name, dismissable=False) %}
+        <div class='member-card__details'>
+          <dl>
             <div>
-              <h1>Revoke Access</h1>
-              <p>
-                Confirming will revoke access for {{ member.user.full_name }} to any environments associated with {{ application.name }}.
-              </p>
-              <div class='action-group'>
-                <a v-on:click="doRevoke(); closeModal('{{ revoke_modal_name }}')" class='action-group__action usa-button'>Confirm</a>
-                <a class='action-group__action icon-link icon-link--danger' v-on:click="closeModal('{{ revoke_modal_name }}'); cancel();">Cancel</a>
-              </div>
+              <dt>DOD ID:</dt>
+              <dd>{{ member.user.dod_id }}</dd>
             </div>
-          {% endcall %}
-        <ul v-show='props.isVisible'>
-          {% for env in application.environments %}
-
-            {% set role = EnvironmentRoles.get(member.user_id, env.id).role %}
-            {% set env_modal_name = (env.id|string) + 'RolesModal' %}
-
-          <li class='block-list__item'>
-            <edit-environment-role inline-template initial-data='{{ role or "" }}' v-bind:choices='{{ choices | tojson }}' v-bind:application-id="'{{ application.id }}'">
-            <div class='application-list-item__environment'>
-              <span class='application-list-item__environment__link'>
-                {{ env.name }}
-              </span>
-
-              <div class='application-list-item__environment__actions'>
-                <span v-bind:class="label_class" v-html:on=displayName></span>
-                <button v-on:click="openModal('{{env_modal_name}}')" type="button" class="icon-link">set role</button>
-                {% call Modal(name=env_modal_name, dismissable=False) %}
-                    <div class='block-list'>
-                      <div class='block-list__header'>
-                        <div>
-                        {% if env_role_modal_description %}
-                          <h1>{{ env_role_modal_description.header }}</h1>
-                          <p>{{ env_role_modal_description.body | safe }}</p>
-                        {% endif %}
-                        </div>
-                      </div>
-                      <ul>
-                        {% for choice in choices %}
-                        <li class='block-list__item block-list__item--selectable'>
-                            <input
-                              name='radio_input_{{ env.id }}'
-                              v-on:change.prevent='change'
-                              type='radio'
-                              id="env_{{ env.id }}_{{ choice[0] }}"
-                              value='{{ choice[0] }}'
-                              :checked="new_role === '{{ choice[0]}}'"
-                            />
-                            <label for="env_{{ env.id }}_{{ choice[0] }}">
-                              {% if choice[1].description %}
-                                <dl>
-                                  <dt>{{ choice[1].name }}</dt>
-                                  <dd>{{ choice[1].description }}</dd>
-                                </dl>
-                              {% else %}
-                                {{ choice[1].name }}
-                              {% endif %}
-                            </label>
-                        </li>
-                        {% endfor %}
-                      </ul>
-                      <input type='hidden' name='env_{{ env.id }}' v-bind:value='newRole'/>
-                      <div class='block-list__footer'>
-                        <div class='action-group'>
-                          <a v-on:click="closeModal('{{env_modal_name}}')" class='action-group__action usa-button'>Select Access Role</a>
-                          <a class='action-group__action icon-link icon-link--danger' v-on:click="closeModal('{{env_modal_name}}'); cancel();" value="{{ value if value == role else role }}" >Cancel</a>
-                        </div>
-                      </div>
-                    </div>
-                {% endcall %}
-              </div>
+            <div>
+              <dt>Email:</dt>
+              <dd>{{ member.user.email }}</dd>
             </div>
-            </edit-environment-role>
-          </li>
+          </dl>
+          {% if editable %}
+            <a href='{{ url_for("users.user") }}' class='icon-link'>edit account details</a>
+          {% endif %}
+          <div>
+          {% if member.latest_invitation.is_revokable %}
+            {{ ConfirmationButton(
+                  "Revoke Invitation",
+                  url_for("portfolios.revoke_invitation", portfolio_id=portfolio.id, token=member.latest_invitation.token),
+              ) }}
+          {% endif %}
+          {% if member.can_resend_invitation %}
+            {{ ConfirmationButton (
+                  "Resend Invitation",
+                  url_for("portfolios.resend_invitation", portfolio_id=portfolio.id, token=member.latest_invitation.token),
+                  confirm_msg="Are you sure? This will send an email to invite the user to join this portfolio."
+            )}}
+          {% endif %}
+          {% if can_revoke_access %}
+            {{ ConfirmationButton (
+                  "Remove Portfolio Access",
+                  url_for("portfolios.revoke_access", portfolio_id=portfolio.id, member_id=member.id),
+                  confirm_msg="Are you sure? This will remove this user from the portfolio.",
+            )}}
+          {% endif %}
+          </div>
+        </div>
+      </div>
 
-          {% endfor %}
-        </ul>
-      </template>
+      <div class="manage-access">
+        <div class="subheading">Manage Access</div>
+        <div class="subtitle">Grant access to an environment</div>
+      </div>
+
+      <div class='search-bar'>
+        <div class='usa-input search-input'>
+          <label for='application-search'>Search by application name</label>
+          <input type='search' id='application-search' name='application-search' placeholder="Search by application name"/>
+          <button type="submit">
+            <span class="hide">Search</span>
+          </button>
+        </div>
+      </div>
+
+      {% for application in applications %}
+      {% set revoke_modal_name = (application.id|string) + 'RevokeModal' %}
+      <edit-application-roles inline-template name="{{ application.name }}" id="{{ application.id }}">
+        <div is='toggler' default-visible class='block-list application-list-item'>
+          <template slot-scope='props'>
+            <header class='block-list__header'>
+              <button v-on:click='props.toggle' class='icon-link icon-link--large icon-link--default spend-table__application__toggler'>
+                <template v-if='props.isVisible'>{{ Icon('caret_down') }}</template>
+                <template v-else>{{ Icon('caret_right') }}</template>
+                <h3 class="block-list__title">{{ application.name }}</h3>
+              </button>
+              <span><a v-on:click="openModal('{{ revoke_modal_name }}')" class="icon-link icon-link--danger">revoke all access</a></span>
+            </header>
+              {% call Modal(name=revoke_modal_name, dismissable=False) %}
+                <div>
+                  <h1>Revoke Access</h1>
+                  <p>
+                    Confirming will revoke access for {{ member.user.full_name }} to any environments associated with {{ application.name }}.
+                  </p>
+                  <div class='action-group'>
+                    <a v-on:click="doRevoke(); closeModal('{{ revoke_modal_name }}')" class='action-group__action usa-button'>Confirm</a>
+                    <a class='action-group__action icon-link icon-link--danger' v-on:click="closeModal('{{ revoke_modal_name }}'); cancel();">Cancel</a>
+                  </div>
+                </div>
+              {% endcall %}
+            <ul v-show='props.isVisible'>
+              {% for env in application.environments %}
+
+                {% set role = EnvironmentRoles.get(member.user_id, env.id).role %}
+                {% set env_modal_name = (env.id|string) + 'RolesModal' %}
+
+              <li class='block-list__item'>
+                <edit-environment-role inline-template initial-data='{{ role or "" }}' v-bind:choices='{{ choices | tojson }}' v-bind:application-id="'{{ application.id }}'">
+                <div class='application-list-item__environment'>
+                  <span class='application-list-item__environment__link'>
+                    {{ env.name }}
+                  </span>
+
+                  <div class='application-list-item__environment__actions'>
+                    <span v-bind:class="label_class" v-html:on=displayName></span>
+                    <button v-on:click="openModal('{{env_modal_name}}')" type="button" class="icon-link">set role</button>
+                    {% call Modal(name=env_modal_name, dismissable=False) %}
+                        <div class='block-list'>
+                          <div class='block-list__header'>
+                            <div>
+                            {% if env_role_modal_description %}
+                              <h1>{{ env_role_modal_description.header }}</h1>
+                              <p>{{ env_role_modal_description.body | safe }}</p>
+                            {% endif %}
+                            </div>
+                          </div>
+                          <ul>
+                            {% for choice in choices %}
+                            <li class='block-list__item block-list__item--selectable'>
+                                <input
+                                  name='radio_input_{{ env.id }}'
+                                  v-on:change.prevent='change'
+                                  type='radio'
+                                  id="env_{{ env.id }}_{{ choice[0] }}"
+                                  value='{{ choice[0] }}'
+                                  :checked="new_role === '{{ choice[0]}}'"
+                                />
+                                <label for="env_{{ env.id }}_{{ choice[0] }}">
+                                  {% if choice[1].description %}
+                                    <dl>
+                                      <dt>{{ choice[1].name }}</dt>
+                                      <dd>{{ choice[1].description }}</dd>
+                                    </dl>
+                                  {% else %}
+                                    {{ choice[1].name }}
+                                  {% endif %}
+                                </label>
+                            </li>
+                            {% endfor %}
+                          </ul>
+                          <input type='hidden' name='env_{{ env.id }}' v-bind:value='newRole'/>
+                          <div class='block-list__footer'>
+                            <div class='action-group'>
+                              <a v-on:click="closeModal('{{env_modal_name}}')" class='action-group__action usa-button'>Select Access Role</a>
+                              <a class='action-group__action icon-link icon-link--danger' v-on:click="closeModal('{{env_modal_name}}'); cancel();" value="{{ value if value == role else role }}" >Cancel</a>
+                            </div>
+                          </div>
+                        </div>
+                    {% endcall %}
+                  </div>
+                </div>
+                </edit-environment-role>
+              </li>
+
+              {% endfor %}
+            </ul>
+          </template>
+        </div>
+      </edit-application-roles>
+      {% endfor %}
+
     </div>
-  </edit-application-roles>
-  {% endfor %}
+  </div>
 
   <div class='action-group'>
     <button class='action-group__action usa-button usa-button-big'>
@@ -183,8 +188,6 @@
     </a>
   </div>
 
-  </form>
-
-
+</form>
 
 {% endblock %}

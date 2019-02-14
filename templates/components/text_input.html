@@ -64,6 +64,7 @@
 
         <masked-input
           v-on:input='onInput'
+          v-on:blur='onBlur'
           v-on:change='onChange'
           v-bind:value='value'
           v-bind:mask='mask'
@@ -86,6 +87,9 @@
 
       <template v-if='showError'>
         <span class='usa-input__message' v-html='validationError'></span>
+      </template>
+      <template v-else>
+        <span class='usa-input__message'></span>
       </template>
 
     </div>

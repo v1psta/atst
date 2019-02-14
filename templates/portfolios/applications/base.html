@@ -1,0 +1,15 @@
+{% extends "portfolios/base.html" %}
+
+{% block portfolio_header %}
+<div class='portfolio-header'>
+  <div class='portfolio-header__name'>
+    {{ secondary_breadcrumb }}
+  </div>
+</div>
+{% endblock %}
+
+{% block portfolio_content %}
+  <div class='application-content'>
+    {% block application_content %}{% endblock %}
+  </div>
+{% endblock %}

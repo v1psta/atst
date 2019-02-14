@@ -1,5 +1,14 @@
 import urllib.parse as url
-from flask import Blueprint, render_template, g, redirect, session, url_for, request
+from flask import (
+    Blueprint,
+    render_template,
+    g,
+    redirect,
+    session,
+    url_for,
+    request,
+    make_response,
+)
 
 from flask import current_app as app
 from jinja2.exceptions import TemplateNotFound
@@ -56,7 +65,7 @@ def home():
     num_portfolios = len([role for role in user.portfolio_roles if role.is_active])
 
     if num_portfolios == 0:
-        return redirect(url_for("requests.requests_index"))
+        return redirect(url_for("portfolios.portfolios"))
     elif num_portfolios == 1:
         portfolio_role = user.portfolio_roles[0]
         portfolio_id = portfolio_role.portfolio.id
@@ -131,7 +140,9 @@ def login_redirect():
 @bp.route("/logout")
 def logout():
     _logout()
-    return redirect(url_for(".root"))
+    response = make_response(redirect(url_for(".root")))
+    response.set_cookie("expandSidenav", "", expires=0)
+    return response
 
 
 @bp.route("/activity-history")

@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% set secondary_breadcrumb = "navigation.portfolio_navigation.breadcrumbs.funding" | translate %}
+
 {% from "components/edit_link.html" import EditLink %}
 {% from "components/required_label.html" import RequiredLabel %}
 {% from "components/icon.html" import Icon %}
@@ -7,6 +9,7 @@
 {% from "components/text_input.html" import TextInput %}
 {% from "components/alert.html" import Alert %}
 {% from "components/review_field.html" import ReviewField %}
+{% from "components/upload_input.html" import UploadInput %}
 
 {% block content %}
 
@@ -14,21 +17,26 @@
 
   {% include "fragments/flash.html" %}
 
+  {% block form_action %}
   <form method='POST' action="{{ url_for('portfolios.submit_ko_review', portfolio_id=portfolio.id, task_order_id=task_order.id, form=form) }}" autocomplete="off" enctype="multipart/form-data">
+  {% endblock %}
+
   {{ form.csrf_token }}
 
   {% block form %}
 
-    {% set message = "task_orders.ko_review.submitted_by" | translate({"name": task_order.creator.full_name}) %}
-
-    {{ Alert(("task_orders.ko_review.alert_title" | translate), message, level='warning',
-    fragment="fragments/ko_review_alert.html") }}
+    <div class="top-message">
+      <h1 class="subheading title">
+        {{ "task_orders.ko_review.title" | translate }}
+      </h1>
+      {% include "fragments/ko_review_message.html" %}
+    </div>
 
     <div class="panel">
 
       <div class="panel__heading">
         <h1 class="task-order-form__heading subheading">
-          <div class="h2">{{ "task_orders.ko_review.title" | translate }}</div>
+          <div class="h2">{{ "task_orders.ko_review.review_title" | translate }}</div>
           {{ "task_orders.new.review.section_title"| translate }}
         </h1>
       </div>
@@ -58,11 +66,7 @@
         <div class="h2">{{ "task_orders.ko_review.task_order_information"| translate }}</div>
 
         <div class="form__sub-fields">
-          <div class="usa-input">
-            <div class="usa-input__title">{{ form.pdf.label }}</div>
-            {{ form.pdf.description }}
-            {{ form.pdf }}
-          </div>
+          {{ UploadInput(form.pdf) }}
           {{ TextInput(form.number) }}
           {{ TextInput(form.loa) }}
           {{ TextInput(form.custom_clauses, paragraph=True) }}

@@ -1,5 +1,4 @@
 from collections import defaultdict
-from operator import itemgetter
 
 from flask import g, redirect, render_template, url_for, request as http_request
 
@@ -41,22 +40,17 @@ def portfolio_funding(portfolio_id):
         task_orders_by_status[task_order.status].append(serialized_task_order)
 
     active_task_orders = task_orders_by_status.get(TaskOrderStatus.ACTIVE, [])
-    funding_end_date = (
-        sorted(active_task_orders, key=itemgetter("end_date"))[-1]["end_date"]
-        if active_task_orders
-        else None
-    )
-    funded = len(active_task_orders) > 1
     total_balance = sum([task_order["balance"] for task_order in active_task_orders])
 
     return render_template(
         "portfolios/task_orders/index.html",
         portfolio=portfolio,
-        pending_task_orders=task_orders_by_status.get(TaskOrderStatus.PENDING, []),
+        pending_task_orders=(
+            task_orders_by_status.get(TaskOrderStatus.STARTED, [])
+            + task_orders_by_status.get(TaskOrderStatus.PENDING, [])
+        ),
         active_task_orders=active_task_orders,
         expired_task_orders=task_orders_by_status.get(TaskOrderStatus.EXPIRED, []),
-        funding_end_date=funding_end_date,
-        funded=funded,
         total_balance=total_balance,
     )
 
@@ -101,11 +95,7 @@ def submit_ko_review(portfolio_id, task_order_id, form=None):
     if form.validate():
         TaskOrders.update(user=g.current_user, task_order=task_order, **form.data)
         return redirect(
-            url_for(
-                "portfolios.view_task_order",
-                portfolio_id=portfolio_id,
-                task_order_id=task_order_id,
-            )
+            url_for("task_orders.signature_requested", task_order_id=task_order_id)
         )
     else:
         return render_template(

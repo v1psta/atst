@@ -61,8 +61,14 @@ export default {
 
   props: {
     members: Array,
-    role_choices: Array,
-    status_choices: Array,
+    role_choices: {
+      type: Array,
+      default: () => [],
+    },
+    status_choices: {
+      type: Array,
+      default: () => [],
+    },
   },
 
   data: function() {
@@ -87,7 +93,7 @@ export default {
         displayName: 'Environments',
         attr: 'num_env',
         sortFunc: numericSort,
-        class: 'table-cell--align-right',
+        class: 'table-cell--align-center',
       },
       {
         displayName: 'Status',

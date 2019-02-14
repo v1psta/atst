@@ -2,7 +2,16 @@ from enum import Enum
 from datetime import date
 
 import pendulum
-from sqlalchemy import Column, Numeric, String, ForeignKey, Date, Integer
+from sqlalchemy import (
+    Column,
+    Numeric,
+    String,
+    ForeignKey,
+    Date,
+    Integer,
+    DateTime,
+    Boolean,
+)
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.types import ARRAY
 from sqlalchemy.orm import relationship
@@ -12,6 +21,7 @@ from atst.models import Attachment, Base, types, mixins
 
 
 class Status(Enum):
+    STARTED = "Started"
     PENDING = "Pending"
     ACTIVE = "Active"
     EXPIRED = "Expired"
@@ -51,8 +61,8 @@ class TaskOrder(Base, mixins.TimestampsMixin):
     start_date = Column(Date)  # Period of Performance
     end_date = Column(Date)
     performance_length = Column(Integer)
-    attachment_id = Column(ForeignKey("attachments.id"))
-    _csp_estimate = relationship("Attachment")
+    csp_attachment_id = Column(ForeignKey("attachments.id"))
+    _csp_estimate = relationship("Attachment", foreign_keys=[csp_attachment_id])
     clin_01 = Column(Numeric(scale=2))
     clin_02 = Column(Numeric(scale=2))
     clin_03 = Column(Numeric(scale=2))
@@ -62,19 +72,28 @@ class TaskOrder(Base, mixins.TimestampsMixin):
     ko_email = Column(String)  # Email
     ko_phone_number = Column(String)  # Phone Number
     ko_dod_id = Column(String)  # DOD ID
+    ko_invite = Column(Boolean)
     cor_first_name = Column(String)  # First Name
     cor_last_name = Column(String)  # Last Name
     cor_email = Column(String)  # Email
     cor_phone_number = Column(String)  # Phone Number
     cor_dod_id = Column(String)  # DOD ID
+    cor_invite = Column(Boolean)
     so_first_name = Column(String)  # First Name
     so_last_name = Column(String)  # Last Name
     so_email = Column(String)  # Email
     so_phone_number = Column(String)  # Phone Number
     so_dod_id = Column(String)  # DOD ID
+    so_invite = Column(Boolean)
+    pdf_attachment_id = Column(ForeignKey("attachments.id"))
+    _pdf = relationship("Attachment", foreign_keys=[pdf_attachment_id])
     number = Column(String, unique=True)  # Task Order Number
     loa = Column(String)  # Line of Accounting (LOA)
     custom_clauses = Column(String)  # Custom Clauses
+    signer_dod_id = Column(String)
+    signed_at = Column(DateTime)
+    level_of_warrant = Column(Numeric(scale=2))
+    unlimited_level_of_warrant = Column(Boolean)
 
     @hybrid_property
     def csp_estimate(self):
@@ -82,25 +101,37 @@ class TaskOrder(Base, mixins.TimestampsMixin):
 
     @csp_estimate.setter
     def csp_estimate(self, new_csp_estimate):
-        if isinstance(new_csp_estimate, Attachment):
-            self._csp_estimate = new_csp_estimate
-        elif isinstance(new_csp_estimate, FileStorage):
-            self._csp_estimate = Attachment.attach(
-                new_csp_estimate, "task_order", self.id
-            )
-        elif not new_csp_estimate and self._csp_estimate:
-            self._csp_estimate = None
-        elif new_csp_estimate:
-            raise TypeError("Could not set csp_estimate with invalid type")
+        self._csp_estimate = self._set_attachment(new_csp_estimate, "_csp_estimate")
+
+    @hybrid_property
+    def pdf(self):
+        return self._pdf
+
+    @pdf.setter
+    def pdf(self, new_pdf):
+        self._pdf = self._set_attachment(new_pdf, "_pdf")
+
+    def _set_attachment(self, new_attachment, attribute):
+        if isinstance(new_attachment, Attachment):
+            return new_attachment
+        elif isinstance(new_attachment, FileStorage):
+            return Attachment.attach(new_attachment, "task_order", self.id)
+        elif not new_attachment and hasattr(self, attribute):
+            return None
+        else:
+            raise TypeError("Could not set attachment with invalid type")
 
     @property
     def is_submitted(self):
-
         return (
             self.number is not None
             and self.start_date is not None
             and self.end_date is not None
         )
+
+    @property
+    def is_active(self):
+        return self.status == Status.ACTIVE
 
     @property
     def status(self):
@@ -112,7 +143,7 @@ class TaskOrder(Base, mixins.TimestampsMixin):
                 return Status.EXPIRED
             return Status.ACTIVE
         else:
-            return Status.PENDING
+            return Status.STARTED
 
     @property
     def display_status(self):
@@ -141,6 +172,44 @@ class TaskOrder(Base, mixins.TimestampsMixin):
     @property
     def is_pending(self):
         return self.status == Status.PENDING
+
+    @property
+    def ko_invitable(self):
+        """
+        The MO has indicated that the KO should be invited but we have not sent
+        an invite and attached the KO user
+        """
+        return self.ko_invite and not self.contracting_officer
+
+    @property
+    def cor_invitable(self):
+        """
+        The MO has indicated that the COR should be invited but we have not sent
+        an invite and attached the COR user
+        """
+        return self.cor_invite and not self.contracting_officer_representative
+
+    @property
+    def so_invitable(self):
+        """
+        The MO has indicated that the SO should be invited but we have not sent
+        an invite and attached the SO user
+        """
+        return self.so_invite and not self.security_officer
+
+    _OFFICER_PREFIXES = {
+        "contracting_officer": "ko",
+        "contracting_officer_representative": "cor",
+        "security_officer": "so",
+    }
+    _OFFICER_PROPERTIES = ["first_name", "last_name", "phone_number", "email", "dod_id"]
+
+    def officer_dictionary(self, officer_type):
+        prefix = self._OFFICER_PREFIXES[officer_type]
+        return {
+            field: getattr(self, "{}_{}".format(prefix, field))
+            for field in self._OFFICER_PROPERTIES
+        }
 
     def to_dictionary(self):
         return {

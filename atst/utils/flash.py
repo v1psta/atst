@@ -1,6 +1,13 @@
 from flask import flash, render_template_string
 
 MESSAGES = {
+    "task_order_signed": {
+        "title_template": "Task Order Signed",
+        "message_template": """
+        <p>Task order has been signed successfully</p>
+        """,
+        "category": "success",
+    },
     "new_portfolio_member": {
         "title_template": "Member added successfully",
         "message_template": """
@@ -127,6 +134,13 @@ MESSAGES = {
             </div>
         """,
         "category": "success",
+    },
+    "task_order_incomplete": {
+        "title_template": "Task Order Incomplete",
+        "message_template": """
+        You must complete your Task Order form before submitting.
+        """,
+        "category": "error",
     },
 }
 

@@ -222,3 +222,28 @@ class OversightForm(CacheableForm):
 
 class ReviewForm(CacheableForm):
     pass
+
+
+class SignatureForm(CacheableForm):
+    level_of_warrant = DecimalField(
+        translate("task_orders.sign.level_of_warrant_label"),
+        description=translate("task_orders.sign.level_of_warrant_description"),
+        validators=[
+            RequiredIf(
+                lambda form: (
+                    form._fields.get("unlimited_level_of_warrant").data is not True
+                )
+            )
+        ],
+    )
+
+    unlimited_level_of_warrant = BooleanField(
+        translate("task_orders.sign.unlimited_level_of_warrant_description"),
+        validators=[Optional()],
+    )
+
+    signature = BooleanField(
+        translate("task_orders.sign.digital_signature_label"),
+        description=translate("task_orders.sign.digital_signature_description"),
+        validators=[Required()],
+    )

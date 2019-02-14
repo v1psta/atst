@@ -17,6 +17,10 @@
       text-align: right;
     }
 
+    &.table-cell--align-center {
+      text-align: center;
+    }
+
     &.table-cell--shrink {
       width: 1%;
     }
@@ -32,9 +36,20 @@
         display: table-cell;
       }
     }
+  }
 
-    .sorting-direction {
-      position: absolute;
+  thead {
+    tr th {
+      .sorting-direction {
+        position: inherit;
+        margin-right: -16px;
+        width: 16px;
+        .icon {
+          height: 14px;
+          width: 16px;
+          margin: 0;
+        }
+      }
     }
   }
 

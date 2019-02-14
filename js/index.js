@@ -6,6 +6,7 @@ import classes from '../styles/atat.scss'
 import Vue from 'vue/dist/vue'
 import VTooltip from 'v-tooltip'
 
+import levelofwarrant from './components/levelofwarrant'
 import optionsinput from './components/options_input'
 import multicheckboxinput from './components/multi_checkbox_input'
 import textinput from './components/text_input'
@@ -20,6 +21,7 @@ import NewApplication from './components/forms/new_application'
 import EditEnvironmentRole from './components/forms/edit_environment_role'
 import EditApplicationRoles from './components/forms/edit_application_roles'
 import funding from './components/forms/funding'
+import uploadinput from './components/upload_input'
 import Modal from './mixins/modal'
 import selector from './components/selector'
 import BudgetChart from './components/charts/budget_chart'
@@ -32,6 +34,7 @@ import RequestsList from './components/requests_list'
 import ConfirmationPopover from './components/confirmation_popover'
 import { isNotInVerticalViewport } from './lib/viewport'
 import DateSelector from './components/date_selector'
+import SidenavToggler from './components/sidenav_toggler'
 
 Vue.config.productionTip = false
 
@@ -43,6 +46,7 @@ const app = new Vue({
   el: '#app-root',
   components: {
     toggler,
+    levelofwarrant,
     optionsinput,
     multicheckboxinput,
     textinput,
@@ -64,8 +68,10 @@ const app = new Vue({
     RequestsList,
     ConfirmationPopover,
     funding,
+    uploadinput,
     DateSelector,
     EditOfficerForm,
+    SidenavToggler,
   },
 
   mounted: function() {

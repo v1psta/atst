@@ -1,5 +1,7 @@
 @mixin block-list {
   @include panel-margin;
+  @include shadow-panel
+  padding: 0;
 
   ul, dl {
     list-style: none;
@@ -15,6 +17,9 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  background-color: $color-gray-lightest;
+  padding: $gap 2 * $gap;
+  color: $color-gray;
 
   .icon-tooltip {
     margin: -$gap;
@@ -59,7 +64,7 @@
   margin: 0;
   padding: $gap * 2;
   border-top: 0;
-  border-bottom: 1px dashed $color-gray-light;
+  border-bottom: 1px solid $color-gray-lightest;
 
   @at-root li#{&} {
     &:last-child {

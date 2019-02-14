@@ -19,14 +19,15 @@ Before running the setup scripts, a couple of dependencies need to be installed
 locally:
 
 * `python` == 3.6
-  Python version 3.6 must be installed on your machine before installing `pipenv`.
+  Python version 3.6 **must** be installed on your machine before installing `pipenv`.
   You can download Python 3.6 [from python.org](https://www.python.org/downloads/)
-  or use your preferred system package manager.
+  or use your preferred system package manager. Multiple versions of Python can exist on one
+  computer, but 3.6 is required for ATAT.
 
 * `pipenv`
   ATST requires `pipenv` to be installed for python dependency management. `pipenv`
   will create the virtual environment that the app requires. [See
-  `pipenv`'s documentation for instructions on installing `pipenv](
+  `pipenv`'s documentation for instructions on installing `pipenv`](
   https://pipenv.readthedocs.io/en/latest/install/#installing-pipenv).
 
 * `yarn`
@@ -35,7 +36,10 @@ locally:
 
 * `postgres` >= 9.6
   ATST requires a PostgreSQL instance (>= 9.6) for persistence. Have PostgresSQL installed
-  and running on the default port of 5432. You can verify that PostgresSQL is running
+  and running on the default port of 5432. (A good resource for installing and running
+  PostgreSQL for Macs is [Postgres.app](https://postgresapp.com/). Follow the instructions,
+  including the optional Step 3, and add `/Applications/Postgres.app/Contents/Versions/latest/bin`
+  to your `PATH` environment variable.) You can verify that PostgresSQL is running
   by executing `psql` and ensuring that a connection is successfully made.
 
 * `redis`

@@ -2,6 +2,11 @@
   text-align: center;
   padding: 4rem 6rem;
 
+  .panel {
+    @include shadow-panel;
+    margin-bottom: 6 * $gap;
+  }
+
   .task-order-get-started__list {
     ul {
       list-style: none;
@@ -49,6 +54,10 @@
         top: 2.5rem;
         margin-left: -23rem;
       }
+
+      .usa-button {
+        margin: 0.5em;
+      }
     }
 
     p {
@@ -58,6 +67,9 @@
 }
 
 .task-order-summary {
+  .panel {
+    @include shadow-panel;
+  }
 
   .alert .alert__actions {
     margin-top: 2 * $gap;
@@ -67,7 +79,7 @@
     width: 100%;
   }
 
-  .label--pending {
+  .label--pending, .label--started {
     background-color: $color-gold;
   }
 
@@ -112,6 +124,11 @@
 
   .task-order-next-steps {
     flex-grow: 1;
+
+    .panel {
+      padding-bottom: 0;
+    }
+
     @include media($xlarge-screen) {
       padding-right: $gap;
     }
@@ -135,8 +152,17 @@
         width: 100%;
       }
 
+      .alert {
+        margin-top: 3 * $gap;
+        margin-bottom: 0;
+        padding: 2 * $gap;
+
+        .alert__message {
+          font-style: italic;
+        }
+      }
+
       .task-order-next-steps__icon {
-        width: 8%;
         padding: $gap $gap 0 0;
         justify-content: center;
         .complete {
@@ -147,34 +173,29 @@
         }
       }
 
-      .task-order-next-steps__text {
-        width: 60%;
-      }
-
       .task-order-next-steps__action {
+        min-width: 10 * $gap;
         padding: $gap 0 0 $gap;
-        width: 32%;
         a.usa-button {
           width: 100%;
         }
       }
 
-      .task-order-next-steps__heading {
-
-        h4 {
-        @include ie-only {
-          width: 100%;
+      .task-order-next-steps__text {
+        display: flex;
+        .task-order-next-steps__heading {
+          display: block;
+          max-width: 100%;
+          flex-shrink: 1;
         }
-          margin: $gap $gap 0 0;
-        }
-      }
-      .task-order-next-steps__description {
-        font-style: italic;
       }
     }
   }
 
   .task-order-sidebar {
+    @include media($xlarge-screen) {
+      padding-left: 3 * $gap;
+    }
     min-width: 35rem;
 
     hr {
@@ -193,18 +214,33 @@
     }
   }
 
-  .task-order-invitation-status {
-    .invited {
-      color: $color-green;
-      @include icon-color($color-green);
-    }
-    .uninvited {
-      color: $color-red;
-      @include icon-color($color-red);
+  .task-order-invitations {
+    .task-order-invitations__heading {
+      justify-content: space-between;
     }
 
-    .task-order-invitation-status__icon {
-      padding: 0 0.5rem;
+    .task-order-invitation-status {
+      margin-bottom: 3 * $gap;
+      .task-order-invitation-status__title {
+        font-weight: $font-bold;
+      }
+
+      .invited {
+        color: $color-green;
+        @include icon-color($color-green);
+      }
+      .uninvited {
+        color: $color-red;
+        @include icon-color($color-red);
+      }
+
+      .task-order-invitation-status__icon {
+        padding: 0 0.5rem;
+      }
+    }
+
+    .task-order-invitation-details {
+      font-style: italic;
     }
   }
 }
@@ -230,14 +266,18 @@
   }
 
   .task-order-invite-message {
+    font-weight: $font-bold;
+
     &.not-sent {
       color: $color-red;
-      font-weight: $font-bold;
     }
 
     &.sent {
       color: $color-green;
-      font-weight: $font-bold;
+    }
+
+    &.pending {
+      color: $color-gold-dark;
     }
   }
 
@@ -357,6 +397,48 @@
     }
 
     .officer__form {
+        padding: 1.5rem;
+        background-color: $color-aqua-lightest;
+        border-left-color: $color-blue;
+        border-left-style: solid;
+        border-left-width: $gap / 2;
+        margin-top: 1.5rem;
+
+      .edit-officer {
+        margin-bottom: $gap * 2;
+
+        h4 {
+          color: $color-gray;
+          margin-top: 0;
+        }
+
+        p {
+          font-size: 1.5rem;
+        }
+      }
+
+      .usa-input__title {
+        font-weight: normal;
+      }
+
+      .form-row {
+        margin-bottom: 0rem;
+        margin-top: 0rem;
+        margin-right: 2rem;
+
+        .usa-input {
+          margin-bottom: 1.5rem;
+        }
+
+        &.officer__form--dodId {
+          margin-top: 1.5rem;
+
+          .usa-input {
+            margin-bottom: 0rem;
+          }
+        }
+      }
+
       .officer__form--actions {
         display: flex;
         flex-direction: row;

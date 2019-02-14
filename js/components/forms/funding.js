@@ -4,6 +4,7 @@ import { conformToMask } from 'vue-text-mask'
 import FormMixin from '../../mixins/form'
 import textinput from '../text_input'
 import optionsinput from '../options_input'
+import uploadinput from '../upload_input'
 
 export default {
   name: 'funding',
@@ -13,6 +14,7 @@ export default {
   components: {
     textinput,
     optionsinput,
+    uploadinput,
   },
 
   props: {
@@ -32,7 +34,6 @@ export default {
       clin_02 = 0,
       clin_03 = 0,
       clin_04 = 0,
-      csp_estimate,
     } = this.initialData
 
     return {
@@ -40,7 +41,6 @@ export default {
       clin_02,
       clin_03,
       clin_04,
-      showUpload: !csp_estimate || this.uploadErrors.length > 0,
     }
   },
 
@@ -63,9 +63,6 @@ export default {
   },
 
   methods: {
-    showUploadInput: function() {
-      this.showUpload = true
-    },
     updateBudget: function() {
       document.querySelector('#to-target').innerText = this.totalBudgetStr
     },

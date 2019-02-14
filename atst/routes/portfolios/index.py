@@ -15,14 +15,27 @@ from atst.models.permissions import Permissions
 @portfolios_bp.route("/portfolios")
 def portfolios():
     portfolios = Portfolios.for_user(g.current_user)
-    return render_template("portfolios/index.html", page=5, portfolios=portfolios)
+
+    if portfolios:
+        return render_template("portfolios/index.html", page=5, portfolios=portfolios)
+    else:
+        return render_template("portfolios/blank_slate.html")
 
 
-@portfolios_bp.route("/portfolios/<portfolio_id>/edit")
-def portfolio(portfolio_id):
+@portfolios_bp.route("/portfolios/<portfolio_id>/admin")
+def portfolio_admin(portfolio_id):
     portfolio = Portfolios.get_for_update_information(g.current_user, portfolio_id)
     form = PortfolioForm(data={"name": portfolio.name})
-    return render_template("portfolios/edit.html", form=form, portfolio=portfolio)
+    pagination_opts = Paginator.get_pagination_opts(http_request)
+    audit_events = AuditLog.get_portfolio_events(
+        g.current_user, portfolio, pagination_opts
+    )
+    return render_template(
+        "portfolios/admin.html",
+        form=form,
+        portfolio=portfolio,
+        audit_events=audit_events,
+    )
 
 
 @portfolios_bp.route("/portfolios/<portfolio_id>/edit", methods=["POST"])
@@ -62,9 +75,11 @@ def portfolio_reports(portfolio_id):
     prev_month = current_month - timedelta(days=28)
     two_months_ago = prev_month - timedelta(days=28)
 
-    expiration_date = (
-        portfolio.legacy_task_order and portfolio.legacy_task_order.expiration_date
+    task_order = next(
+        (task_order for task_order in portfolio.task_orders if task_order.is_active),
+        None,
     )
+    expiration_date = task_order and task_order.end_date
     if expiration_date:
         remaining_difference = expiration_date - today
         remaining_days = remaining_difference.days
@@ -76,8 +91,7 @@ def portfolio_reports(portfolio_id):
         cumulative_budget=Reports.cumulative_budget(portfolio),
         portfolio_totals=Reports.portfolio_totals(portfolio),
         monthly_totals=Reports.monthly_totals(portfolio),
-        jedi_request=portfolio.request,
-        legacy_task_order=portfolio.legacy_task_order,
+        task_order=task_order,
         current_month=current_month,
         prev_month=prev_month,
         two_months_ago=two_months_ago,

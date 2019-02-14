@@ -1,0 +1,33 @@
+{% extends "portfolios/base.html" %}
+
+{% from "components/pagination.html" import Pagination %}
+{% from "components/icon.html" import Icon %}
+{% from "components/text_input.html" import TextInput %}
+
+{% set secondary_breadcrumb = "navigation.portfolio_navigation.portfolio_admin" | translate %}
+
+{% block portfolio_content %}
+
+  {% include "fragments/flash.html" %}
+
+  <div v-cloak class="portfolio-admin portfolio-content">
+
+
+    <form method="POST" action="{{ url_for('portfolios.edit_portfolio', portfolio_id=portfolio.id) }}" autocomplete="false">
+      {{ form.csrf_token }}
+      <div class='form-row'>
+        <div class='form-col form-col--half'>
+          {{ TextInput(form.name, validation="portfolioName") }}
+        </div>
+
+        <div class='edit-portfolio-name action-group'>
+          <button type="submit" class="usa-button usa-button-big usa-button-primary" tabindex="0">Save</button>
+        </div>
+      </div>
+    </form>
+
+    {% include "fragments/audit_events_log.html" %}
+
+    {{ Pagination(audit_events, 'portfolios.portfolio_admin', portfolio_id=portfolio.id) }}
+  </div>
+{% endblock %}

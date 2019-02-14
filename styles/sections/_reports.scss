@@ -7,6 +7,11 @@
 
   .funding-summary-row__col {
 
+    hr {
+      margin: 2 * $gap 0;
+      border-bottom: 1px solid $color-gray-lightest;
+    }
+
     @include media($medium-screen) {
       @include grid-pad;
       flex-grow: 1;
@@ -36,6 +41,11 @@
         max-width: 100%;
       }
 
+      .subheading {
+        @include h4;
+        margin: 0 $gap 2 * $gap 0;
+        -ms-flex-negative: 1;
+      }
 
       // Spending Summary
       // ===============================
@@ -53,40 +63,27 @@
           }
         }
 
-        .spend-summary__heading {
-          @include h3;
-          margin: 0 $gap 0 0;
-          -ms-flex-negative: 1;
-        }
-
         .spend-summary__budget {
-          margin: 0 0 0 $gap;
 
           @include ie-only {
             margin: $gap 0 0 0;
           }
+        }
 
-          > div {
-            text-align: right;
-            margin: 0 0 ($gap / 2) 0;
+        dl {
+          text-align: left;
+          margin: 0 0 ($gap / 2) 0;
 
-            @include ie-only {
-              text-align: left;
-            }
+          @include ie-only {
+            text-align: left;
+          }
 
-            dd, dt {
-              display: inline;
-            }
-
-            dt {
-              color: $color-gray;
-              margin-right: $gap;
-              font-weight: normal;
-            }
-
-            dd {
-              font-weight: bold;
-            }
+          dt {
+            text-transform: uppercase;
+            color: $color-gray-light;
+            margin-right: $gap;
+            font-weight: bold;
+            font-size: $small-font-size;
           }
         }
 
@@ -97,42 +94,42 @@
         }
 
         .spend-summary__spent {
-          margin: $gap 0 0 0;
+          margin: 2 * $gap 0;
           display: flex;
-          flex-direction: row-reverse;
+          flex-direction: column;
           justify-content: flex-end;
 
-          dd, dt {
-            @include h5;
-          }
-
           dt {
-            font-weight: normal;
-            margin-left: $gap;
+            letter-spacing: 0.47px;
           }
         }
       }
-
 
 
       // Task Order Summary
       // ===============================
       &.to-summary {
 
-        .to-summary__row {
-          .to-summary__heading {
-            @include h3;
-            margin: 0;
-          }
+        .icon-link {
+          font-weight: $font-normal
+        }
 
-          .to-summary__to-number {
-            margin: 0;
-            dd {
-              &::before {
-                content: '#';
-                color: $color-gray;
-                margin-right: $gap;
-              }
+        .subheading {
+          margin-bottom: 0;
+        }
+
+        .to-summary__heading {
+          @include h4;
+          margin: 0 $gap 0 0;
+        }
+
+        .to-summary__to-number {
+          margin: 0;
+          dd {
+            &::before {
+              content: '#';
+              color: $color-gray;
+              margin-right: $gap;
             }
           }
 
@@ -163,23 +160,26 @@
         .to-summary__expiration {
 
           dl {
-            margin: ($gap * 2) 0 0 0;
+            text-align: right;
+            margin-top: -2 * $gap;
 
-            > div {
-              margin: 0 0 ($gap / 2) 0;
+            dd, dt {
+              display: inline;
+            }
 
-              dd, dt {
-                display: block;
-              }
+            dt {
+              font-size: $small-font-size;
+              text-transform: uppercase;
+              font-weight: $font-bold;
+              color: $color-gray-light;
+            }
 
-              dt {
-                color: $color-gray;
-                margin-right: $gap;
-                font-weight: normal;
-              }
+            dd.ending-soon {
+              font-size: $h2-font-size;
+              white-space: nowrap;
 
-              dd {
-                font-weight: bold;
+              .icon {
+                @include icon-size(28);
               }
             }
           }
@@ -203,9 +203,12 @@
 
 
 .spend-table {
+  box-shadow: 0 6px 18px 0 rgba(144,164,183,0.3);
+
   .spend-table__header {
     @include panel-base;
     @include panel-theme-default;
+    border-top: none;
     border-bottom: 0;
     display: flex;
     flex-direction: row;
@@ -215,8 +218,8 @@
     padding: $gap * 2;
 
     .spend-table__title {
-      @include h3;
-      margin: 0;
+      @include h4;
+      font-size: $lead-font-size;
       flex: 2;
     }
 
@@ -227,15 +230,17 @@
   }
 
   table {
+    thead th {
+      text-transform: uppercase;
+      border-bottom: 1px solid $color-gray-lightest;
+      border-top: none;
+    }
+
     th, td {
       white-space: nowrap;
 
       button {
         margin: 0;
-      }
-
-      &.current-month {
-        background-color: $color-aqua-lightest;
       }
 
       &.previous-month {
@@ -286,28 +291,53 @@
     .spend-table__portfolio {
       th, td {
         font-weight: bold;
+        border-bottom: 1px solid $color-gray-lightest;
       }
     }
 
     .spend-table__application {
       .spend-table__application__toggler {
-        @include icon-link-color($color-black-light, $color-gray-lightest);
+        @include icon-link-color($color-blue, $color-gray-lightest);
         margin-left: -$gap;
+        color: $color-blue;
 
         .icon {
           @include icon-size(12);
           margin-right: $gap;
         }
+
+        .open-indicator {
+          position: absolute;
+          bottom: 0;
+          left: 5 * $gap;
+          width: 0;
+          height: 0;
+          border-left: 10px solid transparent;
+          border-right: 10px solid transparent;
+
+          border-bottom: 10px solid $color-blue-light;
+        }
+      }
+
+      th, td {
+        border-bottom: none;
+      }
+
+      th[scope=rowgroup] {
+        position: relative;
       }
 
       .spend-table__application__env {
-        margin-left: $gap;
+        margin-left: 2 * $gap;
 
-        &:last-child {
-          td, th {
-            padding-bottom: $gap * 5;
-            box-shadow: inset 0 (-$gap * 2.5) 0 $color-gray-lightest;
+        th, td {
+          .icon-link {
+            font-weight: $font-normal;
+            font-size: $base-font-size;
           }
+
+          border-bottom: 1px dashed $color-white;
+          background-color: $color-blue-light;
         }
       }
     }

@@ -2,61 +2,289 @@
   @include media($large-screen) {
     @include grid-row;
   }
+
+  margin-left: 2 * $gap;
+
+  .line {
+    box-sizing: border-box;
+    height: 2px;
+    width: 100%;
+    border: 1px solid $color-gray-lightest;
+  }
 }
 
-.portfolio-navigation {
-  @include panel-margin;
-  margin-bottom: $gap * 4;
+.portfolio-breadcrumbs {
+  margin-bottom: $gap * 2;
+  color: $color-gray-medium;
+  font-size: $h5-font-size;
 
-  ul {
-    display: flex;
-    flex-direction: column;
-    li {
-      flex-grow: 1;
+  .icon-link {
+    color: $color-blue;
+    font-weight: normal;
+  }
+
+  .icon--tiny {
+    padding: $gap 0;
+  }
+
+  .icon {
+    @include icon-color($color-blue);
+  }
+
+  .portfolio-breadcrumbs__home {
+    &.icon-link--disabled {
+      color: $color-gray-medium;
+      opacity: 1;
+      .icon {
+        @include icon-color($color-gray-medium);
+      }
     }
   }
 
-  @include media($medium-screen) {
-    margin-bottom: $gap * 5;
+  .portfolio-breadcrumbs__crumb {
+    .icon {
+      @include icon-color($color-gray-medium);
+    }
+
+    .icon-link {
+      color: $color-gray-medium;
+      pointer-events: none;
+      &.icon-link--disabled {
+        opacity: 1;
+      }
+    }
+  }
+}
+
+.portfolio-header {
+  flex-direction: column;
+  @include media($small-screen) {
+    flex-direction: row;
   }
 
-  @include media($large-screen) {
-    width: 20rem;
-    margin-right: $gap * 2;
+  margin: 2 * $gap;
 
-    ul {
-      display: block;
+  .portfolio-header__name {
+    @include h1;
+  }
+
+  .portfolio-header__budget {
+    font-size: $small-font-size;
+    align-items: center;
+
+    .icon-tooltip {
+      margin-left: -$gap / 2;
+    }
+
+    button {
+      margin: 0;
+      padding: 0;
+    }
+
+    .portfolio-header__budget--dollars {
+      font-size: $h2-font-size;
+      font-weight: bold;
+    }
+  }
+
+  .links {
+    justify-content: center;
+    font-size: $small-font-size;
+
+    .icon-link {
+      &.active {
+        color: $color-gray;
+        .icon {
+          @include icon-color($color-gray);
+        }
+      }
+
+      .icon-link--icon {
+        text-align: center;
+      }
+
+      .icon {
+        @include icon-size(30);
+      }
+    }
+  }
+
+  .column-left {
+    width: 12.5rem;
+    float: left;
+  }
+
+  .column-right {
+    margin-left: -.4rem;
+  }
+
+  .portfolio-header__budget--amount {
+    white-space: nowrap;
+  }
+
+  .portfolio-header__budget--cents {
+    font-size: 2rem;
+    margin-top: .75rem;
+    margin-left: -.7rem;
+    font-weight: bold;
+  }
+
+  .portfolio-funding__header--funded-through {
+    flex-grow: 1;
+    text-align: left;
+    font-weight: bold;
+  }
+
+  .unfunded {
+    color: $color-red;
+    .icon {
+      @include icon-color($color-red);
+    }
+  }
+}
+
+@mixin subheading {
+  color: $color-gray-dark;
+  padding: $gap 0;
+  text-transform: uppercase;
+  opacity: 0.54;
+  font-size: $small-font-size;
+  font-weight: bold;
+  margin-bottom: 3 * $gap;
+}
+
+.portfolio-content {
+  margin: 6 * $gap $gap 0 $gap;
+
+  .member-list {
+    .panel {
+      @include shadow-panel;
+    }
+
+    table {
+      box-shadow: 0 6px 18px 0 rgba(144,164,183,0.3);
+      thead {
+        th:first-child {
+          padding-left: 3 * $gap;
+        }
+      }
+
+      th {
+        background-color: $color-gray-lightest;
+        padding: $gap 2 * $gap;
+        border-top: none;
+        border-bottom: none;
+        color: $color-gray;
+      }
+
+      td {
+        border-bottom: 1px solid $color-gray-lightest;
+      }
+
+      .add-member-link {
+        text-align: right;
+      }
+    }
+  }
+
+  .application-content {
+    .subheading {
+      @include subheading;
+    }
+
+    .panel {
+      @include shadow-panel;
+    }
+
+    .application-list-item {
+      ul {
+        padding-left: 0;
+      }
+      .block-list__footer {
+        border-bottom: none;
+      }
+      .application-edit__env-list-item {
+        label {
+          color: $color-black;
+        }
+      }
+    }
+  }
+
+  .activity-log {
+    border-top: 3px solid $color-blue;
+
+    .subheading {
+      border-top: 0;
+      border-bottom: 1px solid $color-gray-lightest;
+      padding: 1.6rem 1.6rem;
+      font-weight: $font-bold;
+    }
+  }
+
+}
+
+.portfolio-applications {
+  .portfolio-applications__header {
+
+    .portfolio-applications__header--title {
+      @include subheading;
+    }
+
+    .portfolio-applications__header--actions {
+      color: $color-blue;
+      font-size: $small-font-size;
+      .icon {
+        @include icon-color($color-blue);
+        @include icon-size(14);
+      }
+    }
+  }
+
+  .application-list {
+    .toggle-link {
+      background-color: $color-blue-light;
+      .icon {
+        margin: $gap / 2;
+      }
+    }
+
+    .application-list-item {
+      border-radius: 5px;
+      box-shadow: 0 4px 8px 1px rgba(230,230,230,0.5), -4px 4px 8px 1px rgba(230,230,230,0.5);
+      margin-bottom: 6 * $gap;
+
+      .col {
+        max-width: 95%;
+      }
+
+      .application-list-item__environment__name {
+      }
+
+      .application-list-item__environment__csp_link {
+        font-size: $small-font-size;
+        font-weight: normal;
+        &:hover {
+          background-color: $color-aqua-light;
+        }
+      }
     }
   }
 }
 
 .portfolio-funding {
+  .panel {
+    @include shadow-panel;
+  }
+
+  .subheading {
+    @include subheading;
+    margin-top: 6 * $gap;
+    margin-bottom: 2 * $gap;
+  }
+
   .portfolio-funding__header {
-    padding: 0;
-    margin: 0 $gap;
-
-    align-items: center;
-
-    .portfolio-funding__header--funded-through {
-      padding: 2 * $gap;
-      flex-grow: 1;
-      text-align: left;
-      font-weight: bold;
-    }
-
-    .funded {
-      color: $color-green;
-      .icon {
-        @include icon-color($color-green);
-      }
-    }
-
-    .unfunded {
-      color: $color-red;
-      .icon {
-        @include icon-color($color-red);
-      }
-    }
+    flex-direction: row-reverse;
   }
 
   .pending-task-order {
@@ -64,6 +292,7 @@
 
     align-items: center;
     margin: 0;
+    margin-bottom: 2 * $gap;
     padding: 2 * $gap;
 
     dt {
@@ -96,34 +325,39 @@
     }
   }
 
-  .portfolio-total-balance {
-    margin-top: -$gap;
-    margin-bottom: 3rem;
+  .total-balance {
+    margin-right: 2 * $gap;
+    text-align: right;
+  }
 
-    .row {
-      flex-direction: row-reverse;
-      margin: 2 * $gap 0;
-      padding-right: 14rem;
-
-      .label {
-        margin: 0 2 * $gap;
-      }
-    }
+  .responsive-table-wrapper {
+    margin: 0 (-2 * $gap);
+    padding: 2 * $gap;
+    padding-top: 0;
   }
 
   table {
-    th{
+    box-shadow: 0 6px 18px 0 rgba(144,164,183,0.3);
+    thead {
+      th:first-child {
+        padding-left: 3 * $gap;
+      }
+    }
+
+    th {
+      background-color: $color-gray-lightest;
+      padding: $gap 2 * $gap;
+      border-top: none;
+      border-bottom: none;
+      color: $color-gray;
+
       .icon {
         margin-left: 1rem;
       }
+    }
 
-      &.period-of-performance {
-        color: $color-blue;
-
-        .icon {
-          @include icon-color($color-primary)
-        }
-      }
+    td {
+      border-bottom: 1px solid $color-gray-lightest;
     }
 
     td.unused-balance {
@@ -146,7 +380,6 @@
         &.funded .to-expiration-alert {
           color: $color-blue;
 
-
           .icon {
             @include icon-color($color-blue);
           }
@@ -164,6 +397,42 @@
           .to-end-date {
             color: $color-red;
           }
+        }
+      }
+    }
+  }
+}
+
+.portfolio-reports {
+  .portfolio-reports__header {
+    margin-bottom: 4 * $gap;
+
+    .portfolio-reports__header--title {
+      @include subheading;
+    }
+  }
+
+  .panel {
+    @include shadow-panel;
+    margin-bottom: 4 * $gap;
+  }
+}
+
+.portfolio-admin {
+  .edit-portfolio-name.action-group {
+    margin-top: 2rem;
+  }
+
+  .form-row {
+    margin-bottom: 0;
+
+    .form-col {
+      .usa-input--validation--portfolioName {
+        input {
+          max-width: 30em;
+        }
+        .icon-validation {
+          left: 30em;
         }
       }
     }

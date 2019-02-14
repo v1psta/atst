@@ -1,39 +1,36 @@
 {% extends "portfolios/base.html" %}
 
-{% from "components/alert.html" import Alert %}
 {% from "components/icon.html" import Icon %}
 {% from "components/empty_state.html" import EmptyState %}
 
+{% set secondary_breadcrumb = "navigation.portfolio_navigation.breadcrumbs.reports" | translate %}
+
 {% block portfolio_content %}
 
-  {{ Alert("Budget Report for Portfolio " + portfolio.name,
-    message="<p>Track your monthly and cumulative expenditures for your portfolio, applications, and environments below.</p>\
-      <p>Please note that the projected spend is based on the <em>average expense over the last three completed months</em> and therefore does not account for future changes that might be made in scale or configuration of your cloud services.</p>",
-    actions=[
-      {"label": "Learn More", "href": url_for('atst.helpdocs'), "icon": "info"}
-    ]  ) }}
-
+<div class='portfolio-reports'>
   <div v-cloak class='funding-summary-row'>
 
     <div class='funding-summary-row__col'>
       <div class='panel spend-summary'>
+        <h4 class='spend-summary__heading subheading'>Portfolio Total Spend</h4>
         <div class='row'>
-          <h2 class='spend-summary__heading col'>Portfolio Total Spend</h2>
-          <dl class='spend-summary__budget'>
+          <dl class='spend-summary__budget col col--grow row'>
             {% set budget = portfolio_totals['budget'] %}
             {% set spent = portfolio_totals['spent'] %}
             {% set remaining = budget - spent %}
-            <div>
-              <dt>Budget </dt>
+            <dl class='col col--grow'>
+              <dt>Budget</dt>
               <dd>{{ budget | dollars }}</dd>
-            </div>
+            </dl>
 
-            <div>
+            <dl class='col col--grow'>
               <dt>Remaining</dt>
               <dd>{{ remaining | dollars }}</dd>
-            </div>
+            </dl>
           </dl>
         </div>
+
+        <hr></hr>
 
         <div>
           <meter value='{{ spent }}' min='0' max='{{ budget }}' title='{{ spent | dollars }} Total spend to date'>
@@ -41,7 +38,7 @@
           </meter>
 
           <dl class='spend-summary__spent'>
-            <dt>Total spend to date</dt>
+            <dt>Total spending to date</dt>
             <dd>{{ spent | dollars }}</dd>
           </dl>
         </div>
@@ -53,18 +50,23 @@
         <div class='to-summary__row'>
 
           <div class='to-summary__to'>
-            <h2 class='to-summary__heading'>Task Order</h2>
+            <h2 class='to-summary__heading subheading'>Current Task Order</h2>
             <dl class='to-summary__to-number'>
               <dt class='usa-sr-only'>Task Order Number</dt>
-              <dd>{{ legacy_task_order.number }}</dd>
+              <dd>{{ task_order.number }}</dd>
             </dl>
           </div>
 
+          <hr></hr>
+
           <div class='to-summary__expiration'>
-            <dl>
-              <div>
-                <dt>Expires</dt>
-                <dd>
+            <div class='row'>
+              <h4 class='subheading'>Expiration Date</h4>
+            </div>
+            <div class='row'>
+
+              <div class='col col--grow'>
+                <div>
                   {% if expiration_date %}
                     <local-datetime
                       timestamp='{{ expiration_date }}'
@@ -73,32 +75,49 @@
                   {% else %}
                       -
                   {% endif %}
-                </dd>
+                </div>
+                <a href='{{ url_for("portfolios.view_task_order", portfolio_id=portfolio.id, task_order_id=task_order.id) }}' class='icon-link'>
+                  {{ Icon('cog') }}
+                  Manage Task Order
+                </a>
+              </div>
+              <div class='col col--grow'>
+                <dl>
+                  <dt>Remaining Days</dt>
+                  <dd class='{{ 'ending-soon' if remaining_days is not none }}'>
+                    {% if remaining_days is not none %}
+                      {{ Icon('arrow-down') }}
+                      <span>{{ remaining_days }}</span>
+                    {% else %}
+                      -
+                    {% endif %}
+                  </dd>
+                </dl>
               </div>
 
-              <div>
-                <dt>Remaining</dt>
-                <dd>
-                  {% if remaining_days is not none %}
-                    {{ remaining_days }} days
-                  {% else %}
-                    -
-                  {% endif %}
-                </dd>
-              </div>
-            </dl>
-
-            <a href='{{ url_for("portfolios.portfolio", portfolio_id=portfolio.id) }}' class='icon-link'>
-              Manage Task Order
-            </a>
+            </div>
           </div>
         </div>
 
+        <hr></hr>
+
         <dl class='to-summary__co'>
-          <dt>Contracting Officer</dt>
-          <dd>
-            {{ jedi_request.contracting_officer_full_name }}
-            <a class='icon-link' href='mailto:{{ jedi_request.contracting_officer_email }}'>{{ jedi_request.contracting_officer_email }}</a>
+          <dt class='subheading'>Contracting Officer</dt>
+          <dd class='row'>
+            <div class='col col--grow'>
+            {% if task_order.ko_first_name and task_order.ko_last_name %}
+              {{ task_order.ko_first_name }} {{ task_order.ko_last_name }}
+            {% endif %}
+            </div>
+
+            <div class='col'>
+            {% if task_order.ko_email %}
+              <a class='icon-link' href='mailto:{{ task_order.ko_email }}'>
+                {{ Icon('envelope') }}
+                {{ task_order.ko_email }}
+              </a>
+            {% endif %}
+            </div>
           </dd>
         </dl>
 
@@ -140,7 +159,7 @@
 
       <div class='budget-chart panel' ref='panel'>
         <header class='budget-chart__header panel__heading panel__heading--tight'>
-          <h2 class='h3'>Cumulative Budget</h2>
+          <h4>Cumulative Budget</h4>
 
           <div class='budget-chart__legend'>
             <dl class='budget-chart__legend__spend'>
@@ -329,7 +348,7 @@
 
     <div class='spend-table responsive-table-wrapper'>
       <div class='spend-table__header'>
-        <h2 class='spend-table__title'>Total spend per month </h2>
+        <h2 class='spend-table__title'>Total spent per month</h2>
 
         <select name='month' id='month' onchange='location = this.value' class='spend-table__month-select'>
           {% for m in cumulative_budget["months"] %}
@@ -366,12 +385,12 @@
             <th scope='col' class='table-cell--align-right previous-month'>{{ two_months_ago.strftime('%B %Y') }}</th>
             <th scope='col' class='table-cell--align-right previous-month'>{{ prev_month.strftime('%B %Y') }}</th>
             <th scope='col' class='table-cell--align-right current-month'>{{ current_month.strftime('%B %Y') }}</th>
-            <th class='current-month'>% of total spend this month</th>
+            <th class='current-month'></th>
           </thead>
 
           <tbody class='spend-table__portfolio'>
             <tr>
-              <th scope='row'>Total</th>
+              <th scope='row'>Portfolio Total</th>
               <td class='table-cell--align-right previous-month'>{{ portfolio_totals.get(two_months_ago_index, 0) | dollars }}</td>
               <td class='table-cell--align-right previous-month'>{{ portfolio_totals.get(prev_month_index, 0) | dollars }}</td>
               <td class='table-cell--align-right current-month'>{{ portfolio_totals.get(current_month_index, 0) | dollars }}</td>
@@ -387,7 +406,7 @@
             <tr>
               <th scope='rowgroup'>
                 <button v-on:click='toggle($event, name)' class='icon-link icon-link--large spend-table__application__toggler'>
-                  <template v-if='application.isVisible'>{{ Icon('caret_down') }}</template>
+                  <template v-if='application.isVisible'>{{ Icon('caret_down') }}<div class='open-indicator'></div></template>
                   <template v-else>{{ Icon('caret_right') }}</template>
                   <span v-html='name'></span>
                 </button>
@@ -416,10 +435,9 @@
 
             <tr v-for='(environment, envName) in environments[name]' v-show='application.isVisible' class='spend-table__application__env'>
               <th scope='rowgroup'>
-                <a href='#' class='icon-link spend-table__application__env'>
-                  {{ Icon('link') }}
+                <div class='icon-link spend-table__application__env'>
                   <span v-html='envName'></span>
-                </a>
+                </div>
               </th>
 
               <td class='table-cell--align-right previous-month'>
@@ -440,7 +458,7 @@
         </table>
       </spend-table>
     </div>
-
   {% endif %}
+</div>
 
 {% endblock %}

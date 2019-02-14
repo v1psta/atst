@@ -1,15 +1,17 @@
-{% macro ReviewOfficerInfo(heading, first_name, last_name, email, phone_number, dod_id, officer) %}
+{% macro ReviewOfficerInfo(heading, officer_data, has_officer, invite_pending) %}
     <div class="col col--grow">
       <h4 class='task-order-form__heading'>{{ heading | translate }}</h4>
-      {{ first_name }} {{ last_name }}<br>
-      {{ email }}<br>
-      {% if phone_number %}
-        {{ phone_number | usPhone }}
+      {{ officer_data.first_name }} {{ officer_data.last_name }}<br>
+      {{ officer_data.email }}<br>
+      {% if officer_data.phone_number %}
+        {{ officer_data.phone_number | usPhone }}
       {% endif %}
       <br>
-      {{ "task_orders.new.review.dod_id" | translate }} {{ dod_id}}<br>
-      {% if officer %}
+      {{ "task_orders.new.review.dod_id" | translate }} {{ officer_data.dod_id}}<br>
+      {% if has_officer %}
         {{ Icon('ok', classes='icon--green') }} <span class="task-order-invite-message sent">{{ "task_orders.new.review.invited"| translate }}</<span>
+      {% elif invite_pending %}
+        {{ Icon('alert', classes='icon--gold') }} <span class="task-order-invite-message pending">{{ "task_orders.new.review.pending_to"| translate }}</<span>
       {% else %}
         {{ Icon('alert', classes='icon--red') }} <span class="task-order-invite-message not-sent">{{ "task_orders.new.review.not_invited"| translate }}</span>
       {% endif %}
@@ -17,9 +19,24 @@
 {% endmacro %}
 
 <div class="row">
-          {{ ReviewOfficerInfo("task_orders.new.review.ko", task_order.ko_first_name, task_order.ko_last_name, task_order.ko_email, task_order.ko_phone_number, task_order.ko_dod_id, task_order.contracting_officer) }}
-          {{ ReviewOfficerInfo("task_orders.new.review.cor", task_order.cor_first_name, task_order.cor_last_name, task_order.cor_email, task_order.cor_phone_number, task_order.cor_dod_id, task_order.contracting_officer_representative) }}
-        </div>
-        <div class="row">
-          {{ ReviewOfficerInfo("task_orders.new.review.so", task_order.so_first_name, task_order.so_last_name, task_order.so_email, task_order.so_phone_number, task_order.so_dod_id, task_order.security_officer) }}
-        </div>
+  {{ ReviewOfficerInfo(
+      "task_orders.new.review.ko",
+      task_order.officer_dictionary("contracting_officer"),
+      task_order.contracting_officer,
+      task_order.ko_invitable
+      ) }}
+  {{ ReviewOfficerInfo(
+      "task_orders.new.review.cor",
+      task_order.officer_dictionary("contracting_officer_representative"),
+      task_order.contracting_officer_representative,
+      task_order.cor_invitable
+      ) }}
+</div>
+<div class="row">
+  {{ ReviewOfficerInfo(
+      "task_orders.new.review.so",
+      task_order.officer_dictionary("security_officer"),
+      task_order.security_officer,
+      task_order.so_invitable
+      ) }}
+</div>

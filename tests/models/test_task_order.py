@@ -9,11 +9,14 @@ from tests.mocks import PDF_FILENAME
 
 
 class TestTaskOrderStatus:
-    def test_pending_status(self):
+    def test_started_status(self):
         to = TaskOrder()
-        assert to.status == Status.PENDING
+        assert to.status == Status.STARTED
 
-        to = TaskOrder(number="42", start_date=random_future_date())
+    def test_pending_status(self):
+        to = TaskOrder(
+            number="42", start_date=random_future_date(), end_date=random_future_date()
+        )
         assert to.status == Status.PENDING
 
     def test_active_status(self):
@@ -47,7 +50,7 @@ class TestCSPEstimate:
         attachment = Attachment(filename="sample.pdf", object_name="sample")
         to.csp_estimate = attachment
 
-        assert to.attachment_id == attachment.id
+        assert to.csp_attachment_id == attachment.id
 
     def test_setting_estimate_with_file_storage(self):
         to = TaskOrder()
@@ -77,3 +80,41 @@ class TestCSPEstimate:
 
         to.csp_estimate = ""
         assert to.csp_estimate is None
+
+
+class TestPDF:
+    def test_setting_pdf_with_attachment(self):
+        to = TaskOrder()
+        attachment = Attachment(filename="sample.pdf", object_name="sample")
+        to.pdf = attachment
+
+        assert to.pdf_attachment_id == attachment.id
+
+    def test_setting_pdf_with_file_storage(self):
+        to = TaskOrder()
+        with open(PDF_FILENAME, "rb") as fp:
+            fs = FileStorage(fp, content_type="application/pdf")
+            to.pdf = fs
+
+        assert to.pdf is not None
+        assert to.pdf.filename == PDF_FILENAME
+
+    def test_setting_pdf_with_invalid_object(self):
+        to = TaskOrder()
+        with pytest.raises(TypeError):
+            to.pdf = "invalid"
+
+    def test_setting_pdf_with_empty_value(self):
+        to = TaskOrder()
+        assert to.pdf is None
+
+        to.pdf = ""
+        assert to.pdf is None
+
+    def test_removing_pdf(self):
+        attachment = Attachment(filename="sample.pdf", object_name="sample")
+        to = TaskOrder(pdf=attachment)
+        assert to.pdf is not None
+
+        to.pdf = ""
+        assert to.pdf is None
