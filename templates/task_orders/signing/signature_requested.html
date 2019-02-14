@@ -42,7 +42,7 @@
         </button>
 
         <a
-          href="{{ request.referrer or url_for("atst.home") }}"
+          href="{{ url_for("portfolios.ko_review", portfolio_id=portfolio_id, task_order_id=task_order_id) }}"
           class="action-group__action icon-link">
           {{ Icon('caret_left') }}
           <span class="icon icon--x"></span>
