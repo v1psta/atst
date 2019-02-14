@@ -21,21 +21,25 @@
   }}
 </div>
 
-<h4 class='task-order-form__heading'>{{ "task_orders.new.review.complexity"| translate }}</h4>
-{% if task_order.complexity %}
-  <ul class="checklist">
-  {% for item in task_order.complexity %}
-    <li>
-      {{ Icon('ok', classes='icon--gray icon--medium') }}{{ "forms.task_order.complexity.{}".format(item) | translate }}{% if item == 'other' %}: {{ task_order.complexity_other }}{% endif %}
-    </li>
-  {% endfor %}
-  </ul>
-{% else %}
-  <p>{{ RequiredLabel() }}</p>
-{% endif %}
+<div class="row">
+  <div class="col col--grow panel__body">
+    <h4 class='task-order-form__heading'>{{ "task_orders.new.review.complexity"| translate }}</h4>
+    {% if task_order.complexity %}
+      <ul class="checklist">
+      {% for item in task_order.complexity %}
+        <li>
+          {{ Icon('ok', classes='icon--gray icon--medium') }}{{ "forms.task_order.complexity.{}".format(item) | translate }}{% if item == 'other' %}: {{ task_order.complexity_other }}{% endif %}
+        </li>
+      {% endfor %}
+      </ul>
+    {% else %}
+      <p>{{ RequiredLabel() }}</p>
+    {% endif %}
+  </div>
+</div>
 
 <div class="row">
-  <div class="col col--grow">
+  <div class="col col--grow panel__body">
     <h4 class='task-order-form__heading'>{{ "task_orders.new.review.team"| translate }}</h4>
     {% if task_order.dev_team %}
       <ul class="checklist">

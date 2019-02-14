@@ -68,6 +68,10 @@
     }
   }
 
+  .panel__body {
+    margin-right: $gap * 2;
+  }
+
   .panel__heading {
     padding: $gap * 2;
 

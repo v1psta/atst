@@ -62,7 +62,7 @@ forms:
     pdf_label: Upload a copy of your Task Order document
     pdf_description: Upload a PDF of the Task Order that you entered in your system of record for your organization.
     to_number: Task Order Number
-    loa: Line of Accounting (LOA) #1
+    loa: Line of Accounting (LOA) &#35;1
     custom_clauses_label: Task Order Custom Clauses (optional)
     custom_clauses_description: This will put a pause on the CSP access once the KO signs until the CCPO reviews that language to make sure it is legal.
   edit_member:

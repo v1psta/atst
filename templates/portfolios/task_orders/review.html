@@ -66,9 +66,9 @@
         <div class="h2">{{ "task_orders.ko_review.task_order_information"| translate }}</div>
 
         <div class="form__sub-fields">
-          {{ UploadInput(form.pdf) }}
-          {{ TextInput(form.number) }}
-          {{ TextInput(form.loa) }}
+          {{ UploadInput(form.pdf, show_label=True) }}
+          {{ TextInput(form.number, placeholder='1234567890') }}
+          {{ TextInput(form.loa, placeholder='1234567890') }}
           {{ TextInput(form.custom_clauses, paragraph=True) }}
         </div>
 
