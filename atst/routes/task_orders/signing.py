@@ -27,6 +27,7 @@ def signature_requested(task_order_id):
     return render_template(
         "task_orders/signing/signature_requested.html",
         task_order_id=task_order.id,
+        portfolio_id=task_order.portfolio_id,
         form=SignatureForm(),
     )
 
@@ -68,6 +69,7 @@ def record_signature(task_order_id):
             render_template(
                 "task_orders/signing/signature_requested.html",
                 task_order_id=task_order_id,
+                portfolio_id=task_order.portfolio_id,
                 form=form,
             ),
             400,
