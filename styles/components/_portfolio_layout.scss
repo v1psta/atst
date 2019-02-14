@@ -370,12 +370,23 @@
     }
 
     .to-performance-period {
-      &.to-expiring-soon {
+      display: flex;
+      flex-wrap: wrap;
 
+      .to-end-date {
+        margin-right: 1.2rem;
+      }
+
+      &.to-expiring-soon {
         .to-expiration-alert {
           font-weight: $font-bold;
           font-size: 1.5rem;
-          margin-left: $gap;
+          word-break: normal;
+          white-space: normal;
+
+          .icon {
+            margin-left: 0;
+          }
         }
 
         &.funded .to-expiration-alert {
