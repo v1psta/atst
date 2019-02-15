@@ -2,7 +2,7 @@
 
 {% set secondary_breadcrumb = "navigation.portfolio_navigation.breadcrumbs.funding" | translate %}
 
-{% from "components/edit_link.html" import EditLink %}
+{% from "components/to_edit_link.html" import TOEditLink %}
 {% from "components/required_label.html" import RequiredLabel %}
 {% from "components/icon.html" import Icon %}
 {% from "components/date_picker.html" import DatePicker %}
@@ -42,15 +42,23 @@
       </div>
 
       <div class="panel__content">
-        <div class="h2">{{ "task_orders.new.review.app_info"| translate }}</div>
+        <div class="h2">
+          {{ "task_orders.new.review.app_info"| translate }}
+        </div>
         {% include "fragments/task_order_review/app_info.html" %}
         <hr>
 
-        <div class="h2">{{ "task_orders.new.review.reporting"| translate }}</div>
+        <div class="h2">
+          {{ "task_orders.new.review.reporting"| translate }}
+          {{ TOEditLink(screen=1, anchor="reporting") }}
+        </div>
         {% include "fragments/task_order_review/reporting.html" %}
         <hr>
 
-        <div class="h2">{{ "task_orders.new.review.funding"| translate }}</div>
+        <div class="h2">
+          {{ "task_orders.new.review.funding"| translate }}
+          {{ TOEditLink(screen=2) }}
+        </div>
         {% include "fragments/task_order_review/funding.html" %}
 
         <div class="form__sub-fields">
@@ -59,7 +67,10 @@
         </div>
         <hr>
 
-        <div class="h2">{{ "task_orders.new.review.oversight"| translate }}</div>
+        <div class="h2">
+          {{ "task_orders.new.review.oversight"| translate }}
+          {{ TOEditLink(screen=3) }}
+        </div>
         {% include "fragments/task_order_review/oversight.html" %}
         <hr>
 
