@@ -50,3 +50,7 @@
 @import 'sections/member_edit';
 @import 'sections/reports';
 @import 'sections/task_order';
+
+a:focus:not([href]) {
+  outline: none;
+}
