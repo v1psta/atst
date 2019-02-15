@@ -4,6 +4,7 @@ from flask import url_for
 from atst.domain.task_orders import TaskOrders
 from atst.models.attachment import Attachment
 from atst.routes.task_orders.new import ShowTaskOrderWorkflow, UpdateTaskOrderWorkflow
+from atst.utils.localization import translate
 
 from tests.factories import UserFactory, TaskOrderFactory, PortfolioFactory
 
@@ -142,6 +143,27 @@ def test_task_order_validates_email_address(client, user_session):
     assert "Invalid email" in body
 
 
+def test_review_screen_when_all_sections_complete(client, user_session):
+    to = task_order()
+    user_session(to.creator)
+    response = client.get(url_for("task_orders.new", screen=4, task_order_id=to.id))
+
+    body = response.data.decode()
+    assert translate("task_orders.form.draft_alert_title") not in body
+    assert response.status_code == 200
+
+
+def test_review_screen_when_not_all_sections_complete(client, user_session):
+    to = task_order()
+    TaskOrders.update(to.creator, to, clin_01=None)
+    user_session(to.creator)
+    response = client.get(url_for("task_orders.new", screen=4, task_order_id=to.id))
+
+    body = response.data.decode()
+    assert translate("task_orders.form.draft_alert_title") in body
+    assert response.status_code == 200
+
+
 @pytest.fixture
 def task_order():
     user = UserFactory.create()
@@ -242,4 +264,5 @@ def test_review_task_order_form(client, user_session, task_order):
         response = client.get(
             url_for("task_orders.new", screen=idx + 1, task_order_id=task_order.id)
         )
+
         assert response.status_code == 200
