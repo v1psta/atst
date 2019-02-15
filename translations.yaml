@@ -255,7 +255,7 @@ forms:
     is_required: This field is required.
   portfolio:
     name_label: Portfolio Name
-    name_length_validation_message: Portfolio names must be at least 4 and not more than 100 characters
+    name_length_validation_message: Portfolio names can be between 4-100 characters
   officers:
     contracting_officer_invite: Invite KO to Task Order Builder
     contracting_officer_representative_invite: Invite COR to Task Order Builder

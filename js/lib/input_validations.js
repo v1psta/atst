@@ -121,7 +121,6 @@ export default {
     mask: false,
     match: /^.{4,100}$/,
     unmask: [],
-    validationError:
-      'Portfolio names must be at least 4 and not more than 100 characters',
+    validationError: 'Portfolio names can be between 4-100 characters',
   },
 }
