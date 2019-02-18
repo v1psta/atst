@@ -108,10 +108,9 @@
     }
 
     &--draft:before {
-      background: $color-gold;
       border: none;
       font-size: $h6-font-size;
-      mask-image: url('#{$asset-path}/icons/alert.svg');
+      content: url('#{$asset-path}/icons/alert.svg');
     }
 
     &--incomplete:before {
