@@ -12,6 +12,7 @@ from flask import (
 from . import task_orders_bp
 from atst.domain.task_orders import TaskOrders
 from atst.domain.portfolios import Portfolios
+from atst.utils.flash import formatted_flash as flash
 import atst.forms.task_order as task_order_form
 
 
@@ -200,6 +201,12 @@ def get_started():
 @task_orders_bp.route("/portfolios/<portfolio_id>/task_orders/new/<int:screen>")
 def new(screen, task_order_id=None, portfolio_id=None):
     workflow = ShowTaskOrderWorkflow(g.current_user, screen, task_order_id)
+
+    if task_order_id and screen is 4:
+        task_order = TaskOrders.get(g.current_user, task_order_id)
+        if not TaskOrders.all_sections_complete(task_order):
+            flash("task_order_draft")
+
     return render_template(
         workflow.template,
         current=screen,

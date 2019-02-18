@@ -1,6 +1,14 @@
 from flask import flash, render_template_string
+from atst.utils.localization import translate
 
 MESSAGES = {
+    "task_order_draft": {
+        "title_template": translate("task_orders.form.draft_alert_title"),
+        "message_template": """
+        <p>Please complete your Task Order before submitting it for approval.</p>
+        """,
+        "category": "warning",
+    },
     "task_order_signed": {
         "title_template": "Task Order Signed",
         "message_template": """
