@@ -213,3 +213,12 @@ TEAM_EXPERIENCE = [
 PERIOD_OF_PERFORMANCE_LENGTH = [
     (str(x + 1), translate_duration(x + 1)) for x in range(24)
 ]
+
+REQUIRED_DISTRIBUTIONS = [
+    ("contractor", "Contractor"),
+    ("subcontractor", "Subcontractor"),
+    ("cognizant_so", "Cognizant Security Office for Prime and Subcontractor"),
+    ("overseas", "U.S. Activity Responsible for Overseas Security Administration"),
+    ("administrative_ko", "Administrative Contracting Officer"),
+    ("other", "Other as necessary"),
+]
