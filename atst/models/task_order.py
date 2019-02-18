@@ -49,6 +49,9 @@ class TaskOrder(Base, mixins.TimestampsMixin):
     so_id = Column(ForeignKey("users.id"))
     security_officer = relationship("User", foreign_keys="TaskOrder.so_id")
 
+    dd_254_id = Column(ForeignKey("dd_254s.id"))
+    dd_254 = relationship("DD254")
+
     scope = Column(String)  # Cloud Project Scope
     defense_component = Column(String)  # Department of Defense Component
     app_migration = Column(String)  # App Migration
