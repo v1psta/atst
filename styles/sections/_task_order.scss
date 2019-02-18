@@ -323,6 +323,37 @@
       margin: 0;
     }
   }
+
+  .task-order__loa-list {
+    ul {
+      padding-left: 0;
+    }
+
+
+
+    .task-order__loa-add-item {
+      display: flex;
+      flex-direction: row-reverse;
+      justify-content: space-between;
+      max-width: 30em;
+
+      .icon-link {
+        &:first-child {
+          margin-right: -$gap;
+        }
+      }
+    }
+  }
+
+  .task-order__loa-list-item {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+
+    .usa-input {
+      flex-grow: 1;
+    }
+  }
 }
 
 .task-order-invitations {

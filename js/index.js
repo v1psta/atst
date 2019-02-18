@@ -31,6 +31,7 @@ import ConfirmationPopover from './components/confirmation_popover'
 import { isNotInVerticalViewport } from './lib/viewport'
 import DateSelector from './components/date_selector'
 import SidenavToggler from './components/sidenav_toggler'
+import KoReview from './components/forms/ko_review'
 
 Vue.config.productionTip = false
 
@@ -64,6 +65,7 @@ const app = new Vue({
     DateSelector,
     EditOfficerForm,
     SidenavToggler,
+    KoReview,
   },
 
   mounted: function() {

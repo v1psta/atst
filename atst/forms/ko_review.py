@@ -1,7 +1,8 @@
 from flask_wtf.file import FileAllowed
+from flask_wtf import FlaskForm
 
 from wtforms.fields.html5 import DateField
-from wtforms.fields import StringField, TextAreaField, FileField
+from wtforms.fields import StringField, TextAreaField, FileField, FieldList
 from wtforms.validators import Optional, Length
 
 from .forms import CacheableForm
@@ -11,6 +12,8 @@ from atst.utils.localization import translate
 
 
 class KOReviewForm(CacheableForm):
+    EMPTY_LOA = ["", None]
+
     start_date = DateField(
         translate("forms.ko_review.start_date_label"), format="%m/%d/%Y"
     )
@@ -26,11 +29,19 @@ class KOReviewForm(CacheableForm):
     number = StringField(
         translate("forms.ko_review.to_number"), validators=[Length(min=10)]
     )
-    loa = StringField(
-        translate("forms.ko_review.loa"), validators=[Length(min=10), IsNumber()]
+    loa = FieldList(
+        StringField(
+            translate("forms.ko_review.loa"), validators=[Length(min=10), IsNumber()]
+        )
     )
     custom_clauses = TextAreaField(
         translate("forms.ko_review.custom_clauses_label"),
         description=translate("forms.ko_review.custom_clauses_description"),
         validators=[Optional()],
     )
+
+    @property
+    def data(self):
+        _data = super(FlaskForm, self).data
+        _data["loa"] = [n for n in _data["loa"] if n not in self.EMPTY_LOA]
+        return _data
