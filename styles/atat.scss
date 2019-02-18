@@ -51,6 +51,10 @@
 @import 'sections/reports';
 @import 'sections/task_order';
 
-a:focus:not([href]) {
-  outline: none;
+//
+// IE likes to display an outline when focusing on an element. This
+// fix removes that unwanted outline on focus.
+//
+*:focus {
+  outline: 0;
 }
