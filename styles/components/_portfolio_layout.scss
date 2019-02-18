@@ -65,6 +65,10 @@
 
   margin: 2 * $gap;
 
+  .col--grow {
+    overflow: inherit;
+  }
+
   .portfolio-header__name {
     @include h1;
   }
