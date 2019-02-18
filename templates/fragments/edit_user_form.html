@@ -27,11 +27,6 @@
 
 
       <div class="usa-input">
-        <label>
-          <div class="usa-input__title">{{ form.date_latest_training.label }}</div>
-        </label>
-
-        <span class="usa-form-hint">{{ "forms.date_hint" | translate }}</span>
         {{ DatePicker(form.date_latest_training, mindate=mindate, maxdate=maxdate) }}
       </div>
     </div>
