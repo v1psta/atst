@@ -102,9 +102,8 @@ def test_create_new_task_order_for_portfolio(client, user_session):
     assert created_task_order.portfolio == portfolio
 
 
-def test_task_order_form_shows_errors(client, user_session):
-    to = task_order()
-    creator = to.creator
+def test_task_order_form_shows_errors(client, user_session, task_order):
+    creator = task_order.creator
     user_session(creator)
 
     task_order_data = TaskOrderFactory.dictionary()
@@ -113,7 +112,7 @@ def test_task_order_form_shows_errors(client, user_session):
     funding_data.update({"clin_01": "one milllllion dollars"})
 
     response = client.post(
-        url_for("task_orders.update", screen=2, task_order_id=to.id),
+        url_for("task_orders.update", screen=2, task_order_id=task_order.id),
         data=funding_data,
         follow_redirects=False,
     )
@@ -123,9 +122,8 @@ def test_task_order_form_shows_errors(client, user_session):
     assert "Not a valid decimal" in body
 
 
-def test_task_order_validates_email_address(client, user_session):
-    to = task_order()
-    creator = to.creator
+def test_task_order_validates_email_address(client, user_session, task_order):
+    creator = task_order.creator
     user_session(creator)
 
     task_order_data = TaskOrderFactory.dictionary()
@@ -133,7 +131,7 @@ def test_task_order_validates_email_address(client, user_session):
     oversight_data.update({"ko_email": "not an email"})
 
     response = client.post(
-        url_for("task_orders.update", screen=3, task_order_id=to.id),
+        url_for("task_orders.update", screen=3, task_order_id=task_order.id),
         data=oversight_data,
         follow_redirects=False,
     )
@@ -143,21 +141,23 @@ def test_task_order_validates_email_address(client, user_session):
     assert "Invalid email" in body
 
 
-def test_review_screen_when_all_sections_complete(client, user_session):
-    to = task_order()
-    user_session(to.creator)
-    response = client.get(url_for("task_orders.new", screen=4, task_order_id=to.id))
+def test_review_screen_when_all_sections_complete(client, user_session, task_order):
+    user_session(task_order.creator)
+    response = client.get(
+        url_for("task_orders.new", screen=4, task_order_id=task_order.id)
+    )
 
     body = response.data.decode()
     assert translate("task_orders.form.draft_alert_title") not in body
     assert response.status_code == 200
 
 
-def test_review_screen_when_not_all_sections_complete(client, user_session):
-    to = task_order()
-    TaskOrders.update(to.creator, to, clin_01=None)
-    user_session(to.creator)
-    response = client.get(url_for("task_orders.new", screen=4, task_order_id=to.id))
+def test_review_screen_when_not_all_sections_complete(client, user_session, task_order):
+    TaskOrders.update(task_order.creator, task_order, clin_01=None)
+    user_session(task_order.creator)
+    response = client.get(
+        url_for("task_orders.new", screen=4, task_order_id=task_order.id)
+    )
 
     body = response.data.decode()
     assert translate("task_orders.form.draft_alert_title") in body
