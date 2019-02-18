@@ -1,0 +1,31 @@
+{% extends 'portfolios/base.html' %}
+
+{% from "components/text_input.html" import TextInput %}
+{% from "components/multi_checkbox_input.html" import MultiCheckboxInput %}
+
+{% block content %}
+
+<div class="col">
+  <div class="panel">
+
+    <div class="panel__heading">
+      <h1 class="subheading">
+        <div class="h2">{{ "task_orders.so_review.title" | translate }}</div>
+      </h1>
+    </div>
+
+    <div class="panel__content">
+      <h3 class="subheading">{{ "task_orders.so_review.certification" | translate }}</h3>
+      {{ TextInput(form.certifying_official) }}
+      {{ TextInput(form.co_title) }}
+      {{ TextInput(form.co_phone, placeholder='(123) 456-7890', validation='usPhone') }}
+      {{ TextInput(form.co_address, paragraph=True) }}
+
+      <hr>
+
+      {{ MultiCheckboxInput(form.required_distribution) }}
+    </div>
+  </div>
+</div>
+
+{% endblock %}

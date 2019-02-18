@@ -132,10 +132,13 @@
           button_text='Edit',
           complete=all_sections_complete) %}
         {% endcall %}
+        {% set is_so = user == task_order.security_officer %}
         {{ Step(
           description="task_orders.view.steps.security" | translate({
             "security_officer": officer_name(task_order.security_officer)
           }) | safe,
+          button_url=is_so and url_for("portfolios.so_review", portfolio_id=portfolio.id, task_order_id=task_order.id),
+          button_text=is_so and 'Edit',
           complete=False) }}
         {% call Step(
           description="task_orders.view.steps.record" | translate({

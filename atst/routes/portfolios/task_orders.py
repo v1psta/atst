@@ -11,6 +11,7 @@ from atst.domain.authz import Authorization
 from atst.forms.officers import EditTaskOrderOfficersForm
 from atst.models.task_order import Status as TaskOrderStatus
 from atst.forms.ko_review import KOReviewForm
+from atst.forms.dd_254 import DD254Form
 
 
 @portfolios_bp.route("/portfolios/<portfolio_id>/task_orders")
@@ -154,3 +155,12 @@ def edit_task_order_invitations(portfolio_id, task_order_id):
             task_order=task_order,
             form=form,
         )
+
+
+@portfolios_bp.route("/portfolios/<portfolio_id>/task_order/<task_order_id>/dd254")
+def so_review(portfolio_id, task_order_id):
+    task_order = TaskOrders.get(g.current_user, task_order_id)
+    form = DD254Form()
+
+    Authorization.check_is_so(g.current_user, task_order)
+    return render_template("portfolios/task_orders/so_review.html", form=form)

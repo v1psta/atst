@@ -1,31 +1,39 @@
 {% from "components/icon.html" import Icon %}
 {% from "components/tooltip.html" import Tooltip %}
 
-{% macro MultiCheckboxInput(field, other_input_field, tooltip, inline=False) -%}
+{% macro MultiCheckboxInput(field, other_input_field=None, tooltip=None, inline=False) -%}
   <multicheckboxinput
     v-cloak
     name='{{ field.name }}'
     inline-template
     {% if field.errors %}v-bind:initial-errors='{{ field.errors | list }}'{% endif %}
     {% if field.data and field.data != "None" %}v-bind:initial-value="{{ field.data }}"{% endif %}
-    {% if other_input_field.data and other_input_field.data != "None" %}initial-other-value="{{ other_input_field.data }}"{% endif %}
+    {% if other_input_field and other_input_field.data and other_input_field.data != "None" %}
+      initial-other-value="{{ other_input_field.data }}"
+    {% endif %}
     key='{{ field.name }}'>
     <div
       v-bind:class="['usa-input', { 'usa-input--error': showError, 'usa-input--success': showValid }]">
+
+      {% set validation_icons %}
+          <span v-show='showError'>{{ Icon('alert',classes="icon-validation") }}</span>
+          <span v-show='showValid'>{{ Icon('ok',classes="icon-validation") }}</span>
+      {% endset %}
 
       <fieldset v-on:change="onInput" class="usa-input__choices {% if inline %}usa-input__choices--inline{% endif %}">
         <legend>
           <div class="usa-input__title">
             {{ field.label | striptags}}
             {% if tooltip %}{{ Tooltip(tooltip) }}{% endif %}
+            {% if not field.description %}
+              {{ validation_icons }}
+            {% endif %}
           </div>
 
           {% if field.description %}
             <span class='usa-input__help'>{{ field.description | safe }}</span>
+            {{ validation_icons }}
           {% endif %}
-
-          <span v-show='showError'>{{ Icon('alert',classes="icon-validation") }}</span>
-          <span v-show='showValid'>{{ Icon('ok',classes="icon-validation") }}</span>
         </legend>
 
         <ul>
@@ -38,9 +46,11 @@
                 <input @click="otherToggle" type='checkbox' name='{{ field.name }}' id='{{ field.name }}-{{ loop.index0 }}' value='other' v-model="selections"/>
                 <label for='{{ field.name }}-{{ loop.index0 }}'>{{ choice[1] | safe }}</label>
 
-                <div v-show="otherChecked">
-                  <input type='text' name='{{ other_input_field.name}}' id='{{ field.name }}-other'  v-model:value="otherText" aria-expanded='false' />
-                </div>
+                {% if other_input_field %}
+                  <div v-show="otherChecked">
+                    <input type='text' name='{{ other_input_field.name}}' id='{{ field.name }}-other'  v-model:value="otherText" aria-expanded='false' />
+                  </div>
+                {% endif %}
               {% endif %}
             </li>
           {% endfor %}

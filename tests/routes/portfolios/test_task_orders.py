@@ -314,3 +314,35 @@ def test_submit_completed_ko_review_page(client, user_session, pdf_upload):
     assert response.headers["Location"] == url_for(
         "task_orders.signature_requested", task_order_id=task_order.id, _external=True
     )
+
+
+def test_so_can_view_so_review_page(client, user_session):
+    portfolio = PortfolioFactory.create()
+    so = UserFactory.create()
+    PortfolioRoleFactory.create(
+        role=Roles.get("officer"),
+        portfolio=portfolio,
+        user=so,
+        status=PortfolioStatus.ACTIVE,
+    )
+    task_order = TaskOrderFactory.create(portfolio=portfolio, security_officer=so)
+
+    user_session(portfolio.owner)
+    owner_response = client.get(
+        url_for(
+            "portfolios.so_review",
+            portfolio_id=portfolio.id,
+            task_order_id=task_order.id,
+        )
+    )
+    assert owner_response.status_code == 404
+
+    user_session(so)
+    so_response = client.get(
+        url_for(
+            "portfolios.so_review",
+            portfolio_id=portfolio.id,
+            task_order_id=task_order.id,
+        )
+    )
+    assert so_response.status_code == 200
