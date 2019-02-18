@@ -1,3 +1,7 @@
+html, body, #app-root {
+  height: 100%;
+}
+
 #app-root {
   background-color: $color-offwhite;
   display: flex;
