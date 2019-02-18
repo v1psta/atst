@@ -11,37 +11,29 @@
 {% from "components/review_field.html" import ReviewField %}
 {% from "components/upload_input.html" import UploadInput %}
 
+
 {% block content %}
+<ko-review inline-template v-bind:initial-data='{{ form.data|tojson }}'>
+  <div class="col task-order-form">
 
-<div class="col task-order-form">
+    {% include "fragments/flash.html" %}
 
-  {% include "fragments/flash.html" %}
+    {% block form_action %}
+    <form method='POST' action="{{ url_for('portfolios.submit_ko_review', portfolio_id=portfolio.id, task_order_id=task_order.id, form=form) }}" autocomplete="off" enctype="multipart/form-data">
+    {% endblock %}
 
-  {% block form_action %}
-  <form method='POST' action="{{ url_for('portfolios.submit_ko_review', portfolio_id=portfolio.id, task_order_id=task_order.id, form=form) }}" autocomplete="off" enctype="multipart/form-data">
-  {% endblock %}
+    {{ form.csrf_token }}
 
-  {{ form.csrf_token }}
+    {% block form %}
 
-  {% block form %}
-
-    <div class="top-message">
-      <h1 class="subheading title">
-        {{ "task_orders.ko_review.title" | translate }}
-      </h1>
-      {% include "fragments/ko_review_message.html" %}
-    </div>
-
-    <div class="panel">
-
-      <div class="panel__heading">
-        <h1 class="task-order-form__heading subheading">
-          <div class="h2">{{ "task_orders.ko_review.review_title" | translate }}</div>
-          {{ "task_orders.new.review.section_title"| translate }}
+      <div class="top-message">
+        <h1 class="subheading title">
+          {{ "task_orders.ko_review.title" | translate }}
         </h1>
+        {% include "fragments/ko_review_message.html" %}
       </div>
 
-      <div class="panel__content">
+      <div class="panel">
         <div class="h2">
           {{ "task_orders.new.review.app_info"| translate }}
         </div>
@@ -74,24 +66,64 @@
         {% include "fragments/task_order_review/oversight.html" %}
         <hr>
 
-        <div class="h2">{{ "task_orders.ko_review.task_order_information"| translate }}</div>
+        <div class="panel__content">
+          <div class="h2">{{ "task_orders.new.review.app_info"| translate }}</div>
+          {% include "fragments/task_order_review/app_info.html" %}
+          <hr>
 
-        <div class="form__sub-fields">
-          {{ UploadInput(form.pdf, show_label=True) }}
-          {{ TextInput(form.number, placeholder='1234567890') }}
-          {{ TextInput(form.loa, placeholder='1234567890') }}
-          {{ TextInput(form.custom_clauses, paragraph=True) }}
+          <div class="h2">{{ "task_orders.new.review.reporting"| translate }}</div>
+          {% include "fragments/task_order_review/reporting.html" %}
+          <hr>
+
+          <div class="h2">{{ "task_orders.new.review.funding"| translate }}</div>
+          {% include "fragments/task_order_review/funding.html" %}
+
+          <div class="form__sub-fields">
+            {{ DatePicker(form.start_date) }}
+            {{ DatePicker(form.end_date) }}
+          </div>
+          <hr>
+
+          <div class="h2">{{ "task_orders.new.review.oversight"| translate }}</div>
+          {% include "fragments/task_order_review/oversight.html" %}
+          <hr>
+
+          <div class="h2">{{ "task_orders.ko_review.task_order_information"| translate }}</div>
+
+          <div class="form__sub-fields">
+            {{ UploadInput(form.pdf, show_label=True) }}
+            {{ TextInput(form.number, placeholder='1234567890') }}
+
+            <div class="task-order__loa-list">
+              <ul>
+                <li v-for="(loa, i) in loas" class="task-order__loa-list-item">
+                  <div class="usa-input usa-input--validation--anything">
+                    <label :for="'loa-' + i">
+                      <div class="usa-input__title">Line of Accounting (LOA) #</div>
+                    </label>
+                    <input type="text" :id="'loa-' + i" placeholder="1234567890"/>
+                    <input type="hidden" :name="'environment_names-' + i"/>
+                  </div>
+                </li>
+              </ul>
+              <div class="task-order__loa-add-item">
+                <button v-on:click="addLOA" class="icon-link" tabindex="0" type="button">{{ Icon('plus') }} Add another LOA</button>
+              </div>
+            </div>
+
+            {{ TextInput(form.custom_clauses, paragraph=True) }}
+          </div>
+
         </div>
-
       </div>
-    </div>
-    {% endblock %}
+      {% endblock %}
 
       <div class='action-group'>
         <input type='submit' class='usa-button usa-button-primary' value='Continue' />
       </div>
 
-  </form>
+    </form>
 
-</div>
+  </div>
+</ko-review>
 {% endblock %}
