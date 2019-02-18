@@ -316,7 +316,7 @@ def test_submit_completed_ko_review_page(client, user_session, pdf_upload):
     )
 
 
-def test_so_can_view_so_review_page(client, user_session):
+def test_so_review_page(app, client, user_session):
     portfolio = PortfolioFactory.create()
     so = UserFactory.create()
     PortfolioRoleFactory.create(
@@ -337,12 +337,19 @@ def test_so_can_view_so_review_page(client, user_session):
     )
     assert owner_response.status_code == 404
 
-    user_session(so)
-    so_response = client.get(
-        url_for(
-            "portfolios.so_review",
-            portfolio_id=portfolio.id,
-            task_order_id=task_order.id,
+    with captured_templates(app) as templates:
+        user_session(so)
+        so_response = app.test_client().get(
+            url_for(
+                "portfolios.so_review",
+                portfolio_id=portfolio.id,
+                task_order_id=task_order.id,
+            )
         )
-    )
-    assert so_response.status_code == 200
+        _, context = templates[0]
+        form = context["form"]
+        co_name = form.certifying_official.data
+        assert so_response.status_code == 200
+        assert (
+            task_order.so_first_name in co_name and task_order.so_last_name in co_name
+        )

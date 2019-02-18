@@ -157,10 +157,28 @@ def edit_task_order_invitations(portfolio_id, task_order_id):
         )
 
 
+def so_review_form(task_order):
+    if task_order.dd_254:
+        dd_254 = task_order.dd_254
+        form = DD254Form(obj=dd_254)
+        form.required_distribution.data = dd_254.required_distribution
+        return form
+    else:
+        so = task_order.officer_dictionary("security_officer")
+        form_data = {
+            "certifying_official": "{} {}".format(
+                so.get("first_name"), so.get("last_name")
+            ),
+            "co_phone": so["phone_number"],
+        }
+        return DD254Form(data=form_data)
+
+
 @portfolios_bp.route("/portfolios/<portfolio_id>/task_order/<task_order_id>/dd254")
 def so_review(portfolio_id, task_order_id):
     task_order = TaskOrders.get(g.current_user, task_order_id)
-    form = DD254Form()
-
     Authorization.check_is_so(g.current_user, task_order)
+
+    form = so_review_form(task_order)
+
     return render_template("portfolios/task_orders/so_review.html", form=form)
