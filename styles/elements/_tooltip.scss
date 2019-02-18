@@ -8,8 +8,6 @@
     background-color: $color-aqua-lightest;
     padding: $gap * 3;
     border-left: ($gap / 2) solid $color-blue;
-    position: relative;
-    z-index: 2;
   }
 
   .tooltip-arrow {
