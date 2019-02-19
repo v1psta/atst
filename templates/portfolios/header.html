@@ -1,4 +1,5 @@
 {% from "components/icon.html" import Icon %}
+{% from "components/tooltip.html" import Tooltip %}
 
 {% macro Link(icon, text, url, active=False) %}
   <a class='icon-link {{ "active icon-link--disabled" if active }}' href='{{ url }}'>
@@ -17,9 +18,12 @@
     <div class='portfolio-header__budget row'>
       <div class='column-left'>
         <span>Available budget</span>
-        <button type="button" tabindex="0" class="icon-tooltip" v-tooltip.right="{content: 'The available budget shown includes the available budget of all active task orders', container: false}">
-          {{ Icon('info') }}
-        </button>
+        {{
+          Tooltip(
+            ('portfolios.task_orders.available_budget_help_description' | translate),
+            title=''
+          )
+        }}
       </div>
       <div class='portfolio-header__budget--amount'>
         <span class='portfolio-header__budget--dollars'>
