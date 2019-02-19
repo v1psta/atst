@@ -11,12 +11,11 @@
 
 {% block form %}
 
-
-<h3 class="subheading">{{ "task_orders.new.review.app_info"| translate }} {{ TOEditLink(screen=1) }}</h3>
+<h3 class="subheading">{{ "task_orders.new.review.app_info"| translate }} {{ TOEditLink(task_order=task_order, screen=1) }}</h3>
 {% include "fragments/task_order_review/app_info.html" %}
 <hr>
 
-<h3 class="subheading">{{ "task_orders.new.review.reporting"| translate }} {{ TOEditLink(screen=1, anchor="reporting") }}</h3>
+<h3 class="subheading">{{ "task_orders.new.review.reporting"| translate }} {{ TOEditLink(task_order=task_order, screen=1, anchor="reporting") }}</h3>
 
 <div class="row">
   {{
@@ -84,11 +83,11 @@
 
 <hr>
 
-<h3 class="subheading">{{ "task_orders.new.review.funding"| translate }} {{ TOEditLink(screen=2) }}</h3>
+<h3 class="subheading">{{ "task_orders.new.review.funding"| translate }} {{ TOEditLink(task_order=task_order, screen=2) }}</h3>
 {% include "fragments/task_order_review/funding.html" %}
 <hr>
 
-<h3 class="subheading">{{ "task_orders.new.review.oversight"| translate }} {{ TOEditLink(screen=3) }}</h3>
+<h3 class="subheading">{{ "task_orders.new.review.oversight"| translate }} {{ TOEditLink(task_order=task_order, screen=3) }}</h3>
 {% include "fragments/task_order_review/oversight.html" %}
 {% endblock %}
 

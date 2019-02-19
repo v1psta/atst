@@ -50,14 +50,14 @@
 
         <div class="h2">
           {{ "task_orders.new.review.reporting"| translate }}
-          {{ TOEditLink(screen=1, anchor="reporting") }}
+          {{ TOEditLink(task_order=task_order, screen=1, anchor="reporting") }}
         </div>
         {% include "fragments/task_order_review/reporting.html" %}
         <hr>
 
         <div class="h2">
           {{ "task_orders.new.review.funding"| translate }}
-          {{ TOEditLink(screen=2) }}
+          {{ TOEditLink(task_order=task_order, screen=2) }}
         </div>
         {% include "fragments/task_order_review/funding.html" %}
 
@@ -69,7 +69,7 @@
 
         <div class="h2">
           {{ "task_orders.new.review.oversight"| translate }}
-          {{ TOEditLink(screen=3) }}
+          {{ TOEditLink(task_order=task_order, screen=3) }}
         </div>
         {% include "fragments/task_order_review/oversight.html" %}
         <hr>

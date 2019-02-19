@@ -1,8 +1,8 @@
 {% from "components/edit_link.html" import EditLink %}
 
-{% macro TOEditLink(screen=1, anchor=None) %}
+{% macro TOEditLink(task_order=None, screen=1, anchor=None) %}
 {% if task_order %}
-  {{ EditLink(url_for("task_orders.new", screen=screen, task_order_id=task_order.id, _anchor=anchor)) }}
+  {{ EditLink(url_for("task_orders.new", screen=screen, task_order_id=task_order.id,  _anchor=anchor)) }}
 {% else %}
   {{ EditLink(url_for("task_orders.new", screen=screen, _anchor=anchor)) }}
 {% endif %}
