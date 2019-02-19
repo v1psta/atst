@@ -113,12 +113,22 @@ def task_order_invitations(portfolio_id, task_order_id):
     portfolio = Portfolios.get(g.current_user, portfolio_id)
     task_order = TaskOrders.get(g.current_user, task_order_id)
     form = EditTaskOrderOfficersForm(obj=task_order)
-    return render_template(
-        "portfolios/task_orders/invitations.html",
-        portfolio=portfolio,
-        task_order=task_order,
-        form=form,
-    )
+
+    if TaskOrders.all_sections_complete(task_order):
+        return render_template(
+            "portfolios/task_orders/invitations.html",
+            portfolio=portfolio,
+            task_order=task_order,
+            form=form,
+        )
+    else:
+        return redirect(
+            url_for(
+                "portfolios.view_task_order",
+                task_order_id=task_order.id,
+                portfolio_id=portfolio.id,
+            )
+        )
 
 
 @portfolios_bp.route(

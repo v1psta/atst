@@ -203,10 +203,12 @@
         <div class="panel__content">
           <div class="task-order-invitations__heading row">
             <h3>Invitations</h3>
-            <a href="{{ url_for('portfolios.task_order_invitations', portfolio_id=portfolio.id, task_order_id=task_order.id) }}" class="icon-link">
-              <span>manage</span>
-              {{ Icon("edit") }}
-            </a>
+            {% if all_sections_complete %}
+              <a href="{{ url_for('portfolios.task_order_invitations', portfolio_id=portfolio.id, task_order_id=task_order.id) }}" class="icon-link">
+                <span>{{ "common.manage" | translate }}</span>
+                {{ Icon("edit") }}
+              </a>
+            {% endif %}
           </div>
           {{ InvitationStatus('Contracting Officer', task_order.contracting_officer, officer_info=task_order.officer_dictionary('contracting_officer')) }}
           {{ InvitationStatus('Contracting Officer Representative', task_order.contracting_officer_representative, officer_info=task_order.officer_dictionary('contracting_officer_representative')) }}
