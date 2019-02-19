@@ -5,6 +5,8 @@
 
 {% block content %}
 
+{% include "fragments/flash.html" %}
+
 <div class="col">
   <div class="panel">
 
@@ -14,16 +16,26 @@
       </h1>
     </div>
 
+
     <div class="panel__content">
-      <h3 class="subheading">{{ "task_orders.so_review.certification" | translate }}</h3>
-      {{ TextInput(form.certifying_official) }}
-      {{ TextInput(form.co_title) }}
-      {{ TextInput(form.co_phone, placeholder='(123) 456-7890', validation='usPhone') }}
-      {{ TextInput(form.co_address, paragraph=True) }}
+      <form method="POST" action='{{ url_for("portfolios.submit_so_review", portfolio_id=portfolio.id, task_order_id=task_order.id) }}'>
+        {{ form.csrf_token }}
+        <h3 class="subheading">{{ "task_orders.so_review.certification" | translate }}</h3>
+        {{ TextInput(form.certifying_official) }}
+        {{ TextInput(form.co_title) }}
+        {{ TextInput(form.co_phone, placeholder='(123) 456-7890', validation='usPhone') }}
+        {{ TextInput(form.co_address, paragraph=True) }}
 
-      <hr>
+        <hr>
 
-      {{ MultiCheckboxInput(form.required_distribution) }}
+        {{ MultiCheckboxInput(form.required_distribution) }}
+
+        <div class="action-group">
+          <button class="usa-button usa-button-big usa-button-primary">
+            Continue
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 </div>

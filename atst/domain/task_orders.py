@@ -173,6 +173,14 @@ class TaskOrders(object):
                 "{} is not an officer role on task orders".format(officer_type)
             )
 
+    @classmethod
+    def add_dd_254(user, task_order, dd_254_data):
+        dd_254 = DD254(**dd_254_data)
+        task_order.dd_254 = dd_254
+
+        db.session.add(task_order)
+        db.session.commit()
+
 
 class DD254s:
     # TODO: standin implementation until we have a real download,

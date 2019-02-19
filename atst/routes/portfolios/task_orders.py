@@ -181,4 +181,37 @@ def so_review(portfolio_id, task_order_id):
 
     form = so_review_form(task_order)
 
-    return render_template("portfolios/task_orders/so_review.html", form=form)
+    return render_template(
+        "portfolios/task_orders/so_review.html",
+        form=form,
+        portfolio=task_order.portfolio,
+        task_order=task_order,
+    )
+
+
+@portfolios_bp.route(
+    "/portfolios/<portfolio_id>/task_order/<task_order_id>/dd254", methods=["POST"]
+)
+def submit_so_review(portfolio_id, task_order_id):
+    task_order = TaskOrders.get(g.current_user, task_order_id)
+    Authorization.check_is_so(g.current_user, task_order)
+
+    form = DD254Form(http_request.form)
+
+    if form.validate():
+        TaskOrders.add_dd_254(task_order, form.data)
+        # TODO: will redirect to download, sign, upload page
+        return redirect(
+            url_for(
+                "portfolios.view_task_order",
+                portfolio_id=task_order.portfolio.id,
+                task_order_id=task_order.id,
+            )
+        )
+    else:
+        return render_template(
+            "portfolios/task_orders/so_review.html",
+            form=form,
+            portfolio=task_order.portfolio,
+            task_order=task_order,
+        )
