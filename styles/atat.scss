@@ -50,3 +50,11 @@
 @import 'sections/member_edit';
 @import 'sections/reports';
 @import 'sections/task_order';
+
+//
+// IE likes to display an outline when focusing on an element. This
+// fix removes that unwanted outline on focus.
+//
+*:focus {
+  outline: 0;
+}
