@@ -207,6 +207,33 @@ def new(screen, task_order_id=None, portfolio_id=None):
         if not TaskOrders.all_sections_complete(task_order):
             flash("task_order_draft")
 
+    if workflow.task_order:
+        ko_review_url = url_for(
+            "portfolios.ko_review",
+            portfolio_id=workflow.task_order.portfolio.id,
+            task_order_id=task_order_id,
+            _external=True,
+        )
+        redirect_url = url_for(
+            "portfolios.ko_review",
+            portfolio_id=workflow.task_order.portfolio.id,
+            task_order_id=task_order_id,
+        )
+
+        if http_request.referrer == ko_review_url:
+            return render_template(
+                workflow.template,
+                current=screen,
+                task_order_id=task_order_id,
+                task_order=workflow.task_order,
+                portfolio_id=portfolio_id,
+                screens=workflow.display_screens,
+                form=workflow.form,
+                complete=workflow.is_complete,
+                from_ko_review=True,
+                next=redirect_url,
+            )
+
     return render_template(
         workflow.template,
         current=screen,
@@ -229,15 +256,19 @@ def update(screen, task_order_id=None, portfolio_id=None):
     workflow = UpdateTaskOrderWorkflow(
         g.current_user, form_data, screen, task_order_id, portfolio_id
     )
+
     if workflow.validate():
         workflow.update()
-        return redirect(
-            url_for(
-                "task_orders.new",
-                screen=screen + 1,
-                task_order_id=workflow.task_order.id,
+        if http_request.args.get("next"):
+            return redirect(http_request.args.get("next"))
+        else:
+            return redirect(
+                url_for(
+                    "task_orders.new",
+                    screen=screen + 1,
+                    task_order_id=workflow.task_order.id,
+                )
             )
-        )
     else:
         return render_template(
             workflow.template,

@@ -9,6 +9,10 @@
   {% include "fragments/flash.html" %}
 
   {% block form_action %}
+    {% if from_ko_review %}
+      <form method='POST' action="{{ url_for('task_orders.update', screen=current, task_order_id=task_order_id, next=next) }}" autocomplete="off" enctype="multipart/form-data">
+    {% endif %}
+
     {% if task_order_id %}
       <form method='POST' action="{{ url_for('task_orders.new', screen=current, task_order_id=task_order_id) }}" autocomplete="off" enctype="multipart/form-data">
     {% else %}
@@ -39,7 +43,11 @@
     {% block next %}
 
       <div class='action-group'>
-        <input type='submit' class='usa-button usa-button-primary' value='Save & Continue' />
+        {% if from_ko_review %}
+          <input type='submit' class='usa-button usa-button-primary' value='Save' />
+        {% else %}
+          <input type='submit' class='usa-button usa-button-primary' value='Save & Continue' />
+        {% endif %}
       </div>
 
     {% endblock %}
