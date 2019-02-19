@@ -510,6 +510,8 @@ task_orders:
     review_title: Task Order Builder
     task_order_information: Task Order Information
 portfolios:
+  task_orders:
+    available_budget_help_description: The available budget shown includes the available budget of all active task orders
   index:
     empty:
       title: You have no apps yet

@@ -33,7 +33,7 @@
         <hr></hr>
 
         <div>
-          <meter value='{{ spent }}' min='0' max='{{ budget }}' title='{{ spent | dollars }} Total spend to date'>
+          <meter value='{{ spent }}' min='0' {% if budget %}max='{{ budget }}' {% endif %}title='{{ spent | dollars }} Total spend to date'>
             <div class='meter__fallback' style='width:{{ (spent / budget) * 100 if budget else 0 }}%;'></div>
           </meter>
 
