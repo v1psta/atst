@@ -130,7 +130,7 @@
           })| safe,
           button_url=url_for("task_orders.new", screen=1, task_order_id=task_order.id),
           button_text='Edit',
-          complete=all_sections_complete) %}
+          complete=to_form_complete) %}
         {% endcall %}
         {% set is_so = user == task_order.security_officer %}
         {{ Step(
@@ -139,7 +139,7 @@
           }) | safe,
           button_url=is_so and url_for("portfolios.so_review", portfolio_id=portfolio.id, task_order_id=task_order.id),
           button_text=is_so and 'Edit',
-          complete=False) }}
+          complete=dd_254_complete) }}
         {% call Step(
           description="task_orders.view.steps.record" | translate({
             "contracting_officer": officer_name(task_order.contracting_officer),
@@ -182,7 +182,7 @@
           {% else %}
             {{ DocumentLink(
               title="Task Order Draft",
-              link_url=all_sections_complete and url_for('task_orders.download_summary', task_order_id=task_order.id),
+              link_url=to_form_complete and url_for('task_orders.download_summary', task_order_id=task_order.id),
               description=description) }}
           {% endif %}
         </div>

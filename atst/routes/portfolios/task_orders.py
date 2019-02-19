@@ -4,7 +4,7 @@ from flask import g, redirect, render_template, url_for, request as http_request
 
 from . import portfolios_bp
 from atst.database import db
-from atst.domain.task_orders import TaskOrders
+from atst.domain.task_orders import TaskOrders, DD254s
 from atst.domain.exceptions import NotFoundError
 from atst.domain.portfolios import Portfolios
 from atst.domain.authz import Authorization
@@ -61,12 +61,14 @@ def portfolio_funding(portfolio_id):
 def view_task_order(portfolio_id, task_order_id):
     portfolio = Portfolios.get(g.current_user, portfolio_id)
     task_order = TaskOrders.get(g.current_user, task_order_id)
-    completed = TaskOrders.all_sections_complete(task_order)
+    to_form_complete = TaskOrders.all_sections_complete(task_order)
+    dd_254_complete = DD254s.complete(task_order.dd_254)
     return render_template(
         "portfolios/task_orders/show.html",
         portfolio=portfolio,
         task_order=task_order,
-        all_sections_complete=completed,
+        to_form_complete=to_form_complete,
+        dd_254_complete=dd_254_complete,
         user=g.current_user,
     )
 

@@ -187,6 +187,9 @@ class DD254s:
     # sign, and verify process for the DD 254 PDF
     @classmethod
     def complete(cls, dd254):
+        if dd254 is None:
+            return False
+
         for col in DD254.__table__.columns:
             if getattr(dd254, col.name) is None:
                 return False
