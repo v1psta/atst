@@ -237,6 +237,24 @@ def test_update_task_order_with_existing_task_order(task_order):
     assert workflow.task_order.start_date.strftime("%m/%d/%Y") == to_data["start_date"]
 
 
+def test_update_to_redirects_to_ko_review(client, user_session, task_order):
+    ko = UserFactory.create()
+    task_order.contracting_officer = ko
+    user_session(ko)
+    url = url_for(
+        "portfolios.ko_review",
+        portfolio_id=task_order.portfolio.id,
+        task_order_id=task_order.id,
+    )
+    response = client.post(
+        url_for("task_orders.new", screen=1, task_order_id=task_order.id, next=url)
+    )
+    body = response.data.decode()
+
+    assert url in body
+    assert response.status_code == 302
+
+
 def test_other_text_not_saved_if_other_not_checked(task_order):
     to_data = {
         **TaskOrderFactory.dictionary(),
