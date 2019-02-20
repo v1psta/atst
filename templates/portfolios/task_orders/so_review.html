@@ -22,9 +22,9 @@
         {{ form.csrf_token }}
         <h3 class="subheading">{{ "task_orders.so_review.certification" | translate }}</h3>
         {{ TextInput(form.certifying_official) }}
-        {{ TextInput(form.co_title) }}
-        {{ TextInput(form.co_phone, placeholder='(123) 456-7890', validation='usPhone') }}
-        {{ TextInput(form.co_address, paragraph=True) }}
+        {{ TextInput(form.certifying_official_title) }}
+        {{ TextInput(form.certifying_official_phone, placeholder='(123) 456-7890', validation='usPhone') }}
+        {{ TextInput(form.certifying_official_address, paragraph=True) }}
 
         <hr>
 

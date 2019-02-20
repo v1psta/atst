@@ -250,12 +250,12 @@ forms:
     certifying_official:
       label: Name of Certifying Official
       description: (First, Last, Middle)
-    co_title:
+    certifying_official_title:
       label: Title
-    co_address:
+    certifying_official_address:
       label: Address
       description: (Include ZIP Code)
-    co_phone:
+    certifying_official_phone:
       label: Telephone
       description: (Include Area Code)
     required_distribution:

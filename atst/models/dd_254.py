@@ -11,9 +11,9 @@ class DD254(Base, mixins.TimestampsMixin):
     id = types.Id()
 
     certifying_official = Column(String)
-    co_title = Column(String)
-    co_address = Column(String)
-    co_phone = Column(String)
+    certifying_official_title = Column(String)
+    certifying_official_address = Column(String)
+    certifying_official_phone = Column(String)
     required_distribution = Column(ARRAY(String))
 
     task_order = relationship("TaskOrder", uselist=False, backref="task_order")

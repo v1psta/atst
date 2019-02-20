@@ -435,9 +435,9 @@ class DD254Factory(Base):
         model = DD254
 
     certifying_official = factory.Faker("name")
-    co_title = factory.Faker("job")
-    co_address = factory.Faker("address")
-    co_phone = factory.LazyFunction(random_phone_number)
+    certifying_official_title = factory.Faker("job")
+    certifying_official_address = factory.Faker("address")
+    certifying_official_phone = factory.LazyFunction(random_phone_number)
     required_distribution = factory.LazyFunction(
         lambda: [random_choice(data.REQUIRED_DISTRIBUTIONS)]
     )

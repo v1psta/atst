@@ -16,17 +16,18 @@ class DD254Form(CacheableForm):
         description=translate("forms.dd_254.certifying_official.description"),
         validators=[Required()],
     )
-    co_title = StringField(
-        translate("forms.dd_254.co_title.label"), validators=[Required()]
-    )
-    co_address = StringField(
-        translate("forms.dd_254.co_address.label"),
-        description=translate("forms.dd_254.co_address.description"),
+    certifying_official_title = StringField(
+        translate("forms.dd_254.certifying_official_title.label"),
         validators=[Required()],
     )
-    co_phone = TelField(
-        translate("forms.dd_254.co_phone.label"),
-        description=translate("forms.dd_254.co_phone.description"),
+    certifying_official_address = StringField(
+        translate("forms.dd_254.certifying_official_address.label"),
+        description=translate("forms.dd_254.certifying_official_address.description"),
+        validators=[Required()],
+    )
+    certifying_official_phone = TelField(
+        translate("forms.dd_254.certifying_official_phone.label"),
+        description=translate("forms.dd_254.certifying_official_phone.description"),
         validators=[Required(), PhoneNumber()],
     )
     required_distribution = SelectMultipleField(
