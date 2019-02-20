@@ -9,10 +9,6 @@ from faker import Faker as _Faker
 from atst.forms import data
 from atst.models.attachment import Attachment
 from atst.models.environment import Environment
-from atst.models.request import Request
-from atst.models.request_revision import RequestRevision
-from atst.models.request_review import RequestReview
-from atst.models.request_status_event import RequestStatusEvent, RequestStatus
 from atst.models.pe_number import PENumber
 from atst.models.application import Application
 from atst.models.legacy_task_order import LegacyTaskOrder, Source, FundingType
@@ -105,142 +101,6 @@ class UserFactory(Base):
         return cls.create(atat_role=role, **kwargs)
 
 
-class RequestStatusEventFactory(Base):
-    class Meta:
-        model = RequestStatusEvent
-
-    id = factory.Sequence(lambda x: uuid4())
-    sequence = 1
-
-
-class RequestRevisionFactory(Base):
-    class Meta:
-        model = RequestRevision
-
-    id = factory.Sequence(lambda x: uuid4())
-
-
-class RequestReviewFactory(Base):
-    class Meta:
-        model = RequestReview
-
-    comment = factory.Faker("sentence")
-    fname_mao = factory.Faker("first_name")
-    lname_mao = factory.Faker("last_name")
-    email_mao = factory.Faker("email")
-    phone_mao = factory.LazyFunction(
-        lambda: "".join(random.choices(string.digits, k=10))
-    )
-    fname_ccpo = factory.Faker("first_name")
-    lname_ccpo = factory.Faker("last_name")
-
-
-class RequestFactory(Base):
-    class Meta:
-        model = Request
-
-    id = factory.Sequence(lambda x: uuid4())
-    creator = factory.SubFactory(UserFactory)
-    revisions = factory.LazyAttribute(
-        lambda r: [RequestFactory.create_initial_revision(r)]
-    )
-    status_events = factory.RelatedFactory(
-        RequestStatusEventFactory,
-        "request",
-        new_status=RequestStatus.STARTED,
-        revision=factory.LazyAttribute(lambda se: se.factory_parent.revisions[-1]),
-    )
-
-    class Params:
-        initial_revision = None
-
-    @classmethod
-    def _adjust_kwargs(cls, **kwargs):
-        if kwargs.pop("with_task_order", False) and "legacy_task_order" not in kwargs:
-            kwargs["legacy_task_order"] = LegacyTaskOrderFactory.build()
-        return kwargs
-
-    @classmethod
-    def create_initial_status_event(cls, request):
-        return RequestStatusEventFactory(
-            request=request,
-            new_status=RequestStatus.STARTED,
-            revision=request.revisions,
-        )
-
-    @classmethod
-    def create_initial_revision(cls, request, dollar_value=1_000_000):
-        user = request.creator
-        default_data = dict(
-            name=factory.Faker("domain_word"),
-            am_poc=False,
-            dodid_poc=user.dod_id,
-            email_poc=user.email,
-            fname_poc=user.first_name,
-            lname_poc=user.last_name,
-            jedi_usage="adf",
-            start_date=datetime.date(2050, 1, 1),
-            cloud_native="yes",
-            dollar_value=dollar_value,
-            dod_component=random_service_branch(),
-            data_transfers="Less than 100GB",
-            expected_completion_date="Less than 1 month",
-            jedi_migration="yes",
-            num_software_systems=1,
-            number_user_sessions=2,
-            average_daily_traffic=1,
-            engineering_assessment="yes",
-            technical_support_team="yes",
-            estimated_monthly_spend=100,
-            average_daily_traffic_gb=4,
-            rationalization_software_systems="yes",
-            organization_providing_assistance="In-house staff",
-            citizenship="United States",
-            designation="military",
-            phone_number="1234567890",
-            phone_ext="123",
-            email_request=user.email,
-            fname_request=user.first_name,
-            lname_request=user.last_name,
-            service_branch=random_service_branch(),
-            date_latest_training=datetime.date(2018, 8, 6),
-        )
-
-        data = (
-            request.initial_revision
-            if request.initial_revision is not None
-            else default_data
-        )
-
-        return RequestRevisionFactory.build(**data)
-
-    @classmethod
-    def create_with_status(cls, status=RequestStatus.STARTED, **kwargs):
-        request = RequestFactory(**kwargs)
-        RequestStatusEventFactory.create(
-            request=request, revision=request.latest_revision, new_status=status
-        )
-        return request
-
-    @classmethod
-    def mock_financial_data(cls):
-        fake = _Faker()
-        return {
-            "pe_id": "0101110F",
-            "fname_co": fake.first_name(),
-            "lname_co": fake.last_name(),
-            "email_co": fake.email(),
-            "office_co": fake.phone_number(),
-            "fname_cor": fake.first_name(),
-            "lname_cor": fake.last_name(),
-            "email_cor": fake.email(),
-            "office_cor": fake.phone_number(),
-            "uii_ids": "123abc",
-            "treasury_code": "00123456",
-            "ba_code": "02A",
-        }
-
-
 class PENumberFactory(Base):
     class Meta:
         model = PENumber
@@ -269,9 +129,7 @@ class PortfolioFactory(Base):
     class Meta:
         model = Portfolio
 
-    request = factory.SubFactory(RequestFactory, with_task_order=True)
-    # name it the same as the request ID by default
-    name = factory.LazyAttribute(lambda w: w.request.id)
+    name = factory.Faker("name")
 
     @classmethod
     def _create(cls, model_class, *args, **kwargs):
@@ -286,7 +144,6 @@ class PortfolioFactory(Base):
             for p in with_applications
         ]
 
-        portfolio.request.creator = owner
         PortfolioRoleFactory.create(
             portfolio=portfolio,
             role=Roles.get("owner"),

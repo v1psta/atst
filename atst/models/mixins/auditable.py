@@ -14,7 +14,6 @@ class AuditableMixin(object):
     def create_audit_event(connection, resource, action):
         user_id = getattr_path(g, "current_user.id")
         portfolio_id = resource.portfolio_id
-        request_id = resource.request_id
         resource_type = resource.resource_type
         display_name = resource.displayname
         event_details = resource.event_details
@@ -24,7 +23,6 @@ class AuditableMixin(object):
         audit_event = AuditEvent(
             user_id=user_id,
             portfolio_id=portfolio_id,
-            request_id=request_id,
             resource_type=resource_type,
             resource_id=resource.id,
             display_name=display_name,
@@ -89,10 +87,6 @@ class AuditableMixin(object):
 
     @property
     def portfolio_id(self):
-        return None
-
-    @property
-    def request_id(self):
         return None
 
     @property

@@ -1,4 +1,4 @@
-from tests.factories import RequestFactory, UserFactory
+from tests.factories import UserFactory
 
 
 DOD_SDN_INFO = {"first_name": "ART", "last_name": "GARFUNKEL", "dod_id": "5892460358"}

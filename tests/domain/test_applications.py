@@ -1,11 +1,10 @@
 from atst.domain.applications import Applications
-from tests.factories import RequestFactory, UserFactory, PortfolioFactory
+from tests.factories import UserFactory, PortfolioFactory
 from atst.domain.portfolios import Portfolios
 
 
 def test_create_application_with_multiple_environments():
-    request = RequestFactory.create()
-    portfolio = Portfolios.create_from_request(request)
+    portfolio = PortfolioFactory.create()
     application = Applications.create(
         portfolio.owner, portfolio, "My Test Application", "Test", ["dev", "prod"]
     )

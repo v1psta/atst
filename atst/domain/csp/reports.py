@@ -225,8 +225,6 @@ class MockReportingProvider(ReportingInterface):
     def get_budget(self, portfolio):
         if portfolio.name in self.REPORT_FIXTURE_MAP:
             return self.REPORT_FIXTURE_MAP[portfolio.name]["budget"]
-        elif portfolio.request and portfolio.legacy_task_order:
-            return portfolio.legacy_task_order.budget
         return 0
 
     def get_total_spending(self, portfolio):

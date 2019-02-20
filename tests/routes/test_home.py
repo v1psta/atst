@@ -1,28 +1,27 @@
 import pytest
 
-from tests.factories import UserFactory, PortfolioFactory, RequestFactory
+from tests.factories import UserFactory, PortfolioFactory
 from atst.domain.portfolios import Portfolios
 from atst.models.portfolio_role import Status as PortfolioRoleStatus
 
 
-def test_request_owner_with_one_portfolio_redirected_to_reports(client, user_session):
-    request = RequestFactory.create()
-    portfolio = Portfolios.create_from_request(request)
+def test_portfolio_owner_with_one_portfolio_redirected_to_reports(client, user_session):
+    portfolio = PortfolioFactory.create()
 
-    user_session(request.creator)
+    user_session(portfolio.owner)
     response = client.get("/home", follow_redirects=False)
 
     assert "/portfolios/{}/reports".format(portfolio.id) in response.location
 
 
-def test_request_owner_with_more_than_one_portfolio_redirected_to_portfolios(
+def test_portfolio_owner_with_more_than_one_portfolio_redirected_to_portfolios(
     client, user_session
 ):
-    request_creator = UserFactory.create()
-    Portfolios.create_from_request(RequestFactory.create(creator=request_creator))
-    Portfolios.create_from_request(RequestFactory.create(creator=request_creator))
+    owner = UserFactory.create()
+    PortfolioFactory.create(owner=owner)
+    PortfolioFactory.create(owner=owner)
 
-    user_session(request_creator)
+    user_session(owner)
     response = client.get("/home", follow_redirects=False)
 
     assert "/portfolios" in response.location
