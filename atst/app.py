@@ -72,6 +72,7 @@ def make_app(config):
 
     if ENV != "prod":
         app.register_blueprint(dev_routes)
+        app.config["SQLALCHEMY_ECHO"] = True
 
     app.form_cache = FormCache(app.redis)
 
