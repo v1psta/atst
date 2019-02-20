@@ -9,10 +9,18 @@ var paddedNumber = function(number) {
   }
 }
 
-export default Vue.component('date-selector', {
-  props: ['initialday', 'initialmonth', 'initialyear', 'mindate', 'maxdate'],
+export default {
+  name: 'date-selector',
 
-  data() {
+  props: {
+    initialday: { type: String },
+    initialmonth: { type: String },
+    initialyear: { type: String },
+    mindate: { type: String },
+    maxdate: { type: String },
+  },
+
+  data: function() {
     return {
       day: this.initialday,
       month: this.initialmonth,
@@ -41,7 +49,7 @@ export default Vue.component('date-selector', {
   },
 
   computed: {
-    formattedDate() {
+    formattedDate: function() {
       let day = paddedNumber(this.day)
       let month = paddedNumber(this.month)
 
@@ -52,23 +60,23 @@ export default Vue.component('date-selector', {
       return `${month}/${day}/${this.year}`
     },
 
-    isMonthValid() {
+    isMonthValid: function() {
       var _month = parseInt(this.month)
 
       return _month >= 0 && _month <= 12
     },
 
-    isDayValid() {
+    isDayValid: function() {
       var _day = parseInt(this.day)
 
       return _day >= 0 && _day <= this.daysMaxCalculation
     },
 
-    isYearValid() {
+    isYearValid: function() {
       return parseInt(this.year) >= 1
     },
 
-    isWithinDateRange() {
+    isWithinDateRange: function() {
       let _mindate = this.mindate ? Date.parse(this.mindate) : null
       let _maxdate = this.maxdate ? Date.parse(this.maxdate) : null
       let _dateTimestamp = Date.UTC(this.year, this.month - 1, this.day)
@@ -84,7 +92,7 @@ export default Vue.component('date-selector', {
       return true
     },
 
-    isDateValid() {
+    isDateValid: function() {
       return (
         this.day &&
         this.month &&
@@ -96,7 +104,7 @@ export default Vue.component('date-selector', {
       )
     },
 
-    daysMaxCalculation() {
+    daysMaxCalculation: function() {
       switch (parseInt(this.month)) {
         case 2: // February
           if (this.year) {
@@ -119,8 +127,4 @@ export default Vue.component('date-selector', {
       }
     },
   },
-
-  render(createElement) {
-    return createElement('p', 'Please implement inline-template')
-  },
-})
+}
