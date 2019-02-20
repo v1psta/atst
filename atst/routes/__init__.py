@@ -16,7 +16,6 @@ import pendulum
 import os
 from werkzeug.exceptions import NotFound
 
-from atst.domain.requests import Requests
 from atst.domain.users import Users
 from atst.domain.authnid import AuthenticationContext
 from atst.domain.audit_log import AuditLog
