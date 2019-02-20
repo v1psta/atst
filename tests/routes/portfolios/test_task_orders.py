@@ -5,6 +5,7 @@ from datetime import timedelta, date
 from atst.domain.roles import Roles
 from atst.domain.task_orders import TaskOrders
 from atst.models.portfolio_role import Status as PortfolioStatus
+from atst.utils.localization import translate
 
 from tests.factories import (
     PortfolioFactory,
@@ -178,6 +179,7 @@ def test_ko_can_view_task_order(client, user_session):
     )
     task_order = TaskOrderFactory.create(portfolio=portfolio, contracting_officer=ko)
     user_session(ko)
+
     response = client.get(
         url_for(
             "portfolios.view_task_order",
@@ -186,9 +188,21 @@ def test_ko_can_view_task_order(client, user_session):
         )
     )
     assert response.status_code == 200
+    assert translate("common.manage") in response.data.decode()
+
+    TaskOrders.update(ko, task_order, clin_01=None)
+    response = client.get(
+        url_for(
+            "portfolios.view_task_order",
+            portfolio_id=portfolio.id,
+            task_order_id=task_order.id,
+        )
+    )
+    assert response.status_code == 200
+    assert translate("common.manage") not in response.data.decode()
 
 
-def test_can_view_task_order_invitations(client, user_session):
+def test_can_view_task_order_invitations_when_complete(client, user_session):
     portfolio = PortfolioFactory.create()
     user_session(portfolio.owner)
     task_order = TaskOrderFactory.create(portfolio=portfolio)
@@ -200,6 +214,20 @@ def test_can_view_task_order_invitations(client, user_session):
         )
     )
     assert response.status_code == 200
+
+
+def test_cant_view_task_order_invitations_when_not_complete(client, user_session):
+    portfolio = PortfolioFactory.create()
+    user_session(portfolio.owner)
+    task_order = TaskOrderFactory.create(portfolio=portfolio, clin_01=None)
+    response = client.get(
+        url_for(
+            "portfolios.task_order_invitations",
+            portfolio_id=portfolio.id,
+            task_order_id=task_order.id,
+        )
+    )
+    assert response.status_code == 404
 
 
 def test_ko_can_view_ko_review_page(client, user_session):
