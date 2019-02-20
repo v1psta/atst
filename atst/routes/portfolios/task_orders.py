@@ -168,8 +168,8 @@ def so_review_form(task_order):
     else:
         so = task_order.officer_dictionary("security_officer")
         form_data = {
-            "certifying_official": "{} {}".format(
-                so.get("first_name", ""), so.get("last_name", "")
+            "certifying_official": "{}, {}".format(
+                so.get("last_name", ""), so.get("first_name", "")
             ),
             "co_phone": so.get("phone_number", ""),
         }

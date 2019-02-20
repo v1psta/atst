@@ -249,7 +249,7 @@ forms:
   dd_254:
     certifying_official:
       label: Name of Certifying Official
-      description: (First, Last, Middle)
+      description: (Last, First, Middle Initial)
     certifying_official_title:
       label: Title
     certifying_official_address:
