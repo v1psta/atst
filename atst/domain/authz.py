@@ -39,7 +39,13 @@ class Authorization(object):
     @classmethod
     def check_is_ko(cls, user, task_order):
         if task_order.contracting_officer != user:
-            message = "review Task Order {}".format(task_order.id)
+            message = "review task order {}".format(task_order.id)
+            raise UnauthorizedError(user, message)
+
+    @classmethod
+    def check_is_so(cls, user, task_order):
+        if task_order.security_officer != user:
+            message = "review task order {}".format(task_order.id)
             raise UnauthorizedError(user, message)
 
     @classmethod

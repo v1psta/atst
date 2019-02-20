@@ -24,6 +24,7 @@ from atst.domain.roles import Roles, PORTFOLIO_ROLES
 from atst.models.portfolio_role import PortfolioRole, Status as PortfolioRoleStatus
 from atst.models.environment_role import EnvironmentRole
 from atst.models.invitation import Invitation, Status as InvitationStatus
+from atst.models.dd_254 import DD254
 from atst.domain.invitations import Invitations
 
 
@@ -427,3 +428,16 @@ class TaskOrderFactory(Base):
     so_email = factory.Faker("email")
     so_phone_number = factory.LazyFunction(random_phone_number)
     so_dod_id = factory.LazyFunction(random_dod_id)
+
+
+class DD254Factory(Base):
+    class Meta:
+        model = DD254
+
+    certifying_official = factory.Faker("name")
+    certifying_official_title = factory.Faker("job")
+    certifying_official_address = factory.Faker("address")
+    certifying_official_phone = factory.LazyFunction(random_phone_number)
+    required_distribution = factory.LazyFunction(
+        lambda: [random_choice(data.REQUIRED_DISTRIBUTIONS)]
+    )

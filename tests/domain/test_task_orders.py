@@ -1,6 +1,6 @@
 import pytest
 
-from atst.domain.task_orders import TaskOrders, TaskOrderError
+from atst.domain.task_orders import TaskOrders, TaskOrderError, DD254s
 from atst.domain.exceptions import UnauthorizedError
 from atst.models.attachment import Attachment
 
@@ -9,6 +9,7 @@ from tests.factories import (
     UserFactory,
     PortfolioRoleFactory,
     PortfolioFactory,
+    DD254Factory,
 )
 
 
@@ -113,3 +114,11 @@ def test_task_order_access():
         "add_officer",
         [task_order, "contracting_officer", rando.to_dictionary()],
     )
+
+
+def test_dd254_complete():
+    finished = DD254Factory.create()
+    unfinished = DD254Factory.create(certifying_official=None)
+
+    assert DD254s.is_complete(finished)
+    assert not DD254s.is_complete(unfinished)

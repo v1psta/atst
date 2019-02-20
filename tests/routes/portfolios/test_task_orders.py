@@ -12,6 +12,7 @@ from tests.factories import (
     PortfolioRoleFactory,
     TaskOrderFactory,
     UserFactory,
+    DD254Factory,
     random_future_date,
     random_past_date,
 )
@@ -314,3 +315,76 @@ def test_submit_completed_ko_review_page(client, user_session, pdf_upload):
     assert response.headers["Location"] == url_for(
         "task_orders.signature_requested", task_order_id=task_order.id, _external=True
     )
+
+
+def test_so_review_page(app, client, user_session):
+    portfolio = PortfolioFactory.create()
+    so = UserFactory.create()
+    PortfolioRoleFactory.create(
+        role=Roles.get("officer"),
+        portfolio=portfolio,
+        user=so,
+        status=PortfolioStatus.ACTIVE,
+    )
+    task_order = TaskOrderFactory.create(portfolio=portfolio, security_officer=so)
+
+    user_session(portfolio.owner)
+    owner_response = client.get(
+        url_for(
+            "portfolios.so_review",
+            portfolio_id=portfolio.id,
+            task_order_id=task_order.id,
+        )
+    )
+    assert owner_response.status_code == 404
+
+    with captured_templates(app) as templates:
+        user_session(so)
+        so_response = app.test_client().get(
+            url_for(
+                "portfolios.so_review",
+                portfolio_id=portfolio.id,
+                task_order_id=task_order.id,
+            )
+        )
+        _, context = templates[0]
+        form = context["form"]
+        co_name = form.certifying_official.data
+        assert so_response.status_code == 200
+        assert (
+            task_order.so_first_name in co_name and task_order.so_last_name in co_name
+        )
+
+
+def test_submit_so_review(app, client, user_session):
+    portfolio = PortfolioFactory.create()
+    so = UserFactory.create()
+    PortfolioRoleFactory.create(
+        role=Roles.get("officer"),
+        portfolio=portfolio,
+        user=so,
+        status=PortfolioStatus.ACTIVE,
+    )
+    task_order = TaskOrderFactory.create(portfolio=portfolio, security_officer=so)
+    dd_254_data = DD254Factory.dictionary()
+
+    user_session(so)
+    response = client.post(
+        url_for(
+            "portfolios.submit_so_review",
+            portfolio_id=portfolio.id,
+            task_order_id=task_order.id,
+        ),
+        data=dd_254_data,
+    )
+    expected_redirect = url_for(
+        "portfolios.view_task_order",
+        portfolio_id=portfolio.id,
+        task_order_id=task_order.id,
+        _external=True,
+    )
+    assert response.status_code == 302
+    assert response.headers["Location"] == expected_redirect
+
+    assert task_order.dd_254
+    assert task_order.dd_254.certifying_official == dd_254_data["certifying_official"]

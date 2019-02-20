@@ -4,6 +4,7 @@ from flask import current_app as app
 from atst.database import db
 from atst.models.task_order import TaskOrder
 from atst.models.permissions import Permissions
+from atst.models.dd_254 import DD254
 from atst.domain.portfolios import Portfolios
 from atst.domain.authz import Authorization
 from .exceptions import NotFoundError
@@ -171,3 +172,26 @@ class TaskOrders(object):
             raise TaskOrderError(
                 "{} is not an officer role on task orders".format(officer_type)
             )
+
+    @classmethod
+    def add_dd_254(user, task_order, dd_254_data):
+        dd_254 = DD254(**dd_254_data)
+        task_order.dd_254 = dd_254
+
+        db.session.add(task_order)
+        db.session.commit()
+
+
+class DD254s:
+    # TODO: standin implementation until we have a real download,
+    # sign, and verify process for the DD 254 PDF
+    @classmethod
+    def is_complete(cls, dd254):
+        if dd254 is None:
+            return False
+
+        for col in DD254.__table__.columns:
+            if getattr(dd254, col.name) is None:
+                return False
+
+        return True

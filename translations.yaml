@@ -246,6 +246,20 @@ forms:
     so_invite_label: Invite Security Officer to Task Order Builder
     skip_invite_description: |
       <i>An invitation won't actually be sent until you click Done on the Review page. You can skip this for now and invite them later.</i>
+  dd_254:
+    certifying_official:
+      label: Name of Certifying Official
+      description: (Last, First, Middle Initial)
+    certifying_official_title:
+      label: Title
+    certifying_official_address:
+      label: Address
+      description: (Include ZIP Code)
+    certifying_official_phone:
+      label: Telephone
+      description: (Include Area Code)
+    required_distribution:
+      label: Required Distribution by the Certifying Official
   validators:
     is_number_message: Please enter a valid number.
     list_item_required_message: Please provide at least one.
@@ -510,6 +524,9 @@ task_orders:
     message: Grant your team access to the cloud by verifying the Task Order info below.
     review_title: Task Order Builder
     task_order_information: Task Order Information
+  so_review:
+    title: DD-254 Information
+    certification: Certification
 portfolios:
   task_orders:
     available_budget_help_description: The available budget shown includes the available budget of all active task orders
