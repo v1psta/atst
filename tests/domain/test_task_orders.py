@@ -120,5 +120,5 @@ def test_dd254_complete():
     finished = DD254Factory.create()
     unfinished = DD254Factory.create(certifying_official=None)
 
-    assert DD254s.complete(finished)
-    assert not DD254s.complete(unfinished)
+    assert DD254s.is_complete(finished)
+    assert not DD254s.is_complete(unfinished)

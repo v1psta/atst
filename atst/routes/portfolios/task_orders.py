@@ -62,7 +62,7 @@ def view_task_order(portfolio_id, task_order_id):
     portfolio = Portfolios.get(g.current_user, portfolio_id)
     task_order = TaskOrders.get(g.current_user, task_order_id)
     to_form_complete = TaskOrders.all_sections_complete(task_order)
-    dd_254_complete = DD254s.complete(task_order.dd_254)
+    dd_254_complete = DD254s.is_complete(task_order.dd_254)
     return render_template(
         "portfolios/task_orders/show.html",
         portfolio=portfolio,

@@ -186,7 +186,7 @@ class DD254s:
     # TODO: standin implementation until we have a real download,
     # sign, and verify process for the DD 254 PDF
     @classmethod
-    def complete(cls, dd254):
+    def is_complete(cls, dd254):
         if dd254 is None:
             return False
 
