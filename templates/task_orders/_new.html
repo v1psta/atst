@@ -43,11 +43,7 @@
     {% block next %}
 
       <div class='action-group'>
-        {% if from_ko_review %}
-          <input type='submit' class='usa-button usa-button-primary' value='Save' />
-        {% else %}
-          <input type='submit' class='usa-button usa-button-primary' value='Save & Continue' />
-        {% endif %}
+        <input type='submit' class='usa-button usa-button-primary' value='{{ "Save" if from_ko_review else "Save & Continue" }}' />
       </div>
 
     {% endblock %}
