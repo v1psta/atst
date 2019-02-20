@@ -10,7 +10,6 @@ from atst.forms import data
 from atst.models.attachment import Attachment
 from atst.models.environment import Environment
 from atst.models.application import Application
-from atst.models.legacy_task_order import LegacyTaskOrder, Source, FundingType
 from atst.models.task_order import TaskOrder
 from atst.models.user import User
 from atst.models.role import Role
@@ -98,25 +97,6 @@ class UserFactory(Base):
     def from_atat_role(cls, atat_role_name, **kwargs):
         role = Roles.get(atat_role_name)
         return cls.create(atat_role=role, **kwargs)
-
-
-class LegacyTaskOrderFactory(Base):
-    class Meta:
-        model = LegacyTaskOrder
-
-    source = Source.MANUAL
-    funding_type = FundingType.PROC
-    funding_type_other = None
-    number = factory.LazyFunction(
-        lambda: "".join(random.choices(string.ascii_uppercase + string.digits, k=13))
-    )
-    expiration_date = factory.LazyFunction(random_future_date)
-    clin_0001 = random.randrange(100, 100_000)
-    clin_0003 = random.randrange(100, 100_000)
-    clin_1001 = random.randrange(100, 100_000)
-    clin_1003 = random.randrange(100, 100_000)
-    clin_2001 = random.randrange(100, 100_000)
-    clin_2003 = random.randrange(100, 100_000)
 
 
 class PortfolioFactory(Base):
