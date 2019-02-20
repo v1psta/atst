@@ -227,14 +227,7 @@ def test_cant_view_task_order_invitations_when_not_complete(client, user_session
             task_order_id=task_order.id,
         )
     )
-    assert (
-        url_for(
-            "portfolios.view_task_order",
-            task_order_id=task_order.id,
-            portfolio_id=portfolio.id,
-        )
-        in response.location
-    )
+    assert response.status_code == 404
 
 
 def test_ko_can_view_ko_review_page(client, user_session):

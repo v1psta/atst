@@ -5,6 +5,7 @@ from flask import g, redirect, render_template, url_for, request as http_request
 from . import portfolios_bp
 from atst.database import db
 from atst.domain.task_orders import TaskOrders
+from atst.domain.exceptions import NotFoundError
 from atst.domain.portfolios import Portfolios
 from atst.domain.authz import Authorization
 from atst.forms.officers import EditTaskOrderOfficersForm
@@ -122,13 +123,7 @@ def task_order_invitations(portfolio_id, task_order_id):
             form=form,
         )
     else:
-        return redirect(
-            url_for(
-                "portfolios.view_task_order",
-                task_order_id=task_order.id,
-                portfolio_id=portfolio.id,
-            )
-        )
+        raise NotFoundError("task_order")
 
 
 @portfolios_bp.route(
