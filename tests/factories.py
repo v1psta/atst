@@ -9,7 +9,6 @@ from faker import Faker as _Faker
 from atst.forms import data
 from atst.models.attachment import Attachment
 from atst.models.environment import Environment
-from atst.models.pe_number import PENumber
 from atst.models.application import Application
 from atst.models.legacy_task_order import LegacyTaskOrder, Source, FundingType
 from atst.models.task_order import TaskOrder
@@ -99,11 +98,6 @@ class UserFactory(Base):
     def from_atat_role(cls, atat_role_name, **kwargs):
         role = Roles.get(atat_role_name)
         return cls.create(atat_role=role, **kwargs)
-
-
-class PENumberFactory(Base):
-    class Meta:
-        model = PENumber
 
 
 class LegacyTaskOrderFactory(Base):

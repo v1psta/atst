@@ -6,7 +6,6 @@ from .permissions import Permissions
 from .role import Role
 from .user import User
 from .portfolio_role import PortfolioRole
-from .pe_number import PENumber
 from .legacy_task_order import LegacyTaskOrder
 from .portfolio import Portfolio
 from .application import Application
