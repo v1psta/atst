@@ -169,9 +169,9 @@ def so_review_form(task_order):
         so = task_order.officer_dictionary("security_officer")
         form_data = {
             "certifying_official": "{} {}".format(
-                so.get("first_name"), so.get("last_name")
+                so.get("first_name", ""), so.get("last_name", "")
             ),
-            "co_phone": so["phone_number"],
+            "co_phone": so.get("phone_number", ""),
         }
         return DD254Form(data=form_data)
 
