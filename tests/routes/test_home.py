@@ -60,16 +60,3 @@ def test_non_owner_user_with_mulitple_portfolios_redirected_to_portfolios(
     alphabetically_first_portfolio = sorted(portfolios, key=lambda p: p.name)[0]
     assert "/portfolios" in response.location
     assert str(alphabetically_first_portfolio.id) in response.location
-
-
-@pytest.mark.skip(reason="this may no longer be accurate")
-def test_ccpo_user_redirected_to_requests(client, user_session):
-    user = UserFactory.from_atat_role("ccpo")
-    for _ in range(3):
-        portfolio = PortfolioFactory.create()
-        Portfolios._create_portfolio_role(user, portfolio, "developer")
-
-    user_session(user)
-    response = client.get("/home", follow_redirects=False)
-
-    assert "/requests" in response.location
