@@ -385,4 +385,10 @@ select {
       box-shadow: none;
     }
   }
+
+  &.usa-input--success {
+    input[disabled] {
+      color: $color-gray-light;
+    }
+  }
 }
