@@ -200,50 +200,32 @@ def get_started():
 @task_orders_bp.route("/task_orders/new/<int:screen>/<task_order_id>")
 @task_orders_bp.route("/portfolios/<portfolio_id>/task_orders/new/<int:screen>")
 def new(screen, task_order_id=None, portfolio_id=None):
-    workflow = ShowTaskOrderWorkflow(g.current_user, screen, task_order_id)
-
     if task_order_id and screen is 4:
         task_order = TaskOrders.get(g.current_user, task_order_id)
         if not TaskOrders.all_sections_complete(task_order):
             flash("task_order_draft")
 
-    if workflow.task_order:
-        ko_review_url = url_for(
-            "portfolios.ko_review",
-            portfolio_id=workflow.task_order.portfolio.id,
-            task_order_id=task_order_id,
-            _external=True,
-        )
-        redirect_url = url_for(
-            "portfolios.ko_review",
-            portfolio_id=workflow.task_order.portfolio.id,
-            task_order_id=task_order_id,
-        )
+    workflow = ShowTaskOrderWorkflow(g.current_user, screen, task_order_id)
+    template_args = {
+        "current": screen,
+        "task_order_id": task_order_id,
+        "portfolio_id": portfolio_id,
+        "screens": workflow.display_screens,
+        "form": workflow.form,
+        "complete": workflow.is_complete,
+    }
 
-        if http_request.referrer == ko_review_url:
-            return render_template(
-                workflow.template,
-                current=screen,
+    if workflow.task_order:
+        template_args["task_order"] = workflow.task_order
+        if http_request.args.get("ko_edit"):
+            template_args["ko_edit"] = True
+            template_args["next"] = url_for(
+                "portfolios.ko_review",
+                portfolio_id=workflow.task_order.portfolio.id,
                 task_order_id=task_order_id,
-                task_order=workflow.task_order,
-                portfolio_id=portfolio_id,
-                screens=workflow.display_screens,
-                form=workflow.form,
-                complete=workflow.is_complete,
-                from_ko_review=True,
-                next=redirect_url,
             )
 
-    return render_template(
-        workflow.template,
-        current=screen,
-        task_order_id=task_order_id,
-        task_order=workflow.task_order,
-        portfolio_id=portfolio_id,
-        screens=workflow.display_screens,
-        form=workflow.form,
-        complete=workflow.is_complete,
-    )
+    return render_template(workflow.template, **template_args)
 
 
 @task_orders_bp.route("/task_orders/new/<int:screen>", methods=["POST"])
