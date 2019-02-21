@@ -260,15 +260,14 @@ def update(screen, task_order_id=None, portfolio_id=None):
     if workflow.validate():
         workflow.update()
         if http_request.args.get("next"):
-            return redirect(http_request.args.get("next"))
+            redirect_url = http_request.args.get("next")
         else:
-            return redirect(
-                url_for(
-                    "task_orders.new",
-                    screen=screen + 1,
-                    task_order_id=workflow.task_order.id,
-                )
+            redirect_url = url_for(
+                "task_orders.new",
+                screen=screen + 1,
+                task_order_id=workflow.task_order.id,
             )
+        return redirect(redirect_url)
     else:
         return render_template(
             workflow.template,
