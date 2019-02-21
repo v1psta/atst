@@ -101,8 +101,8 @@
                     <label :for="'loa-' + i">
                       <div class="usa-input__title">Line of Accounting (LOA) #</div>
                     </label>
-                    <input type="text" :id="'loa-' + i" placeholder="1234567890"/>
-                    <input type="hidden" :name="'loa-' + i"/>
+                    <input type="text" v-model='loa.number' :id="'loa-' + i" placeholder="1234567890"/>
+                    <input type="hidden" :name="'loa-' + i" v-model='loa.number'/>
                   </div>
                 </li>
               </ul>
