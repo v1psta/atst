@@ -215,6 +215,12 @@ def new(screen, task_order_id=None, portfolio_id=None):
         "complete": workflow.is_complete,
     }
 
+    url_args = {"screen": screen}
+    if task_order_id:
+        url_args["task_order_id"] = task_order_id
+    else:
+        url_args["portfolio_id"] = portfolio_id
+
     if workflow.task_order:
         template_args["task_order"] = workflow.task_order
         if http_request.args.get("ko_edit"):
@@ -224,6 +230,9 @@ def new(screen, task_order_id=None, portfolio_id=None):
                 portfolio_id=workflow.task_order.portfolio.id,
                 task_order_id=task_order_id,
             )
+            url_args["next"] = template_args["next"]
+
+    template_args["action_url"] = url_for("task_orders.update", **url_args)
 
     return render_template(workflow.template, **template_args)
 

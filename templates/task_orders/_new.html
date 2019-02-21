@@ -9,15 +9,7 @@
   {% include "fragments/flash.html" %}
 
   {% block form_action %}
-    {% if ko_edit %}
-      <form method='POST' action="{{ url_for('task_orders.update', screen=current, task_order_id=task_order_id, next=next) }}" autocomplete="off" enctype="multipart/form-data">
-    {% endif %}
-
-    {% if task_order_id %}
-      <form method='POST' action="{{ url_for('task_orders.new', screen=current, task_order_id=task_order_id) }}" autocomplete="off" enctype="multipart/form-data">
-    {% else %}
-      <form method='POST' action="{{ url_for('task_orders.update', screen=current, portfolio_id=portfolio_id) }}" autocomplete="off" enctype="multipart/form-data">
-    {% endif %}
+    <form method='POST' action="{{ action_url }}" autocomplete="off" enctype="multipart/form-data">
   {% endblock %}
 
     <div class="panel">
