@@ -20,11 +20,6 @@ def camel_to_snake(camel_cased):
     return re.sub("([a-z0-9])([A-Z])", r"\1_\2", s1).lower()
 
 
-def drop(keys, dct):
-    _keys = set(keys)
-    return {k: v for k, v in dct.items() if k not in _keys}
-
-
 def pick(keys, dct):
     _keys = set(keys)
     return {k: v for (k, v) in dct.items() if k in _keys}
