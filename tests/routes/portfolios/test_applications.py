@@ -112,6 +112,24 @@ def test_user_without_permission_has_no_add_application_link(client, user_sessio
     )
 
 
+def test_creating_application(client, user_session):
+    portfolio = PortfolioFactory.create()
+    user_session(portfolio.owner)
+    response = client.post(
+        url_for("portfolios.create_application", portfolio_id=portfolio.id),
+        data={
+            "name": "Test Application",
+            "description": "This is only a test",
+            "environment_names-0": "dev",
+            "environment_names-1": "staging",
+            "environment_names-2": "prod",
+        },
+    )
+    assert response.status_code == 302
+    assert len(portfolio.applications) == 1
+    assert len(portfolio.applications[0].environments) == 3
+
+
 def test_view_edit_application(client, user_session):
     portfolio = PortfolioFactory.create()
     application = Applications.create(
