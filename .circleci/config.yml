@@ -84,8 +84,11 @@ jobs:
             - ./node_modules
           key: node-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
       - run:
+          name: "Add jq for JSON parsing"
+          command: apk update && apk add jq
+      - run:
           name: "Download and unpack CRLs"
-          command: ./script/sync-crls
+          command: ./script/install_crls
       - run:
           name: "Generate build info"
           command: ./script/generate_build_info.sh
