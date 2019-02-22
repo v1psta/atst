@@ -84,6 +84,10 @@
                     <input type="text" v-model='loa.number' :id="'loas-' + i" placeholder="1234567890"/>
                     <input type="hidden" :name="'loas-' + i" v-model='loa.number'/>
                   </div>
+                  <button v-on:click="removeLOA(i)" v-if="loas.length > 1" type="button" class='application-edit__env-list-item__remover'>
+                    {{ Icon('trash') }}
+                    <span>Remove</span>
+                  </button>
                 </li>
               </ul>
               <div class="task-order__loa-add-item">
