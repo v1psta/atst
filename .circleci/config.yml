@@ -62,7 +62,9 @@ jobs:
           name: "Load Cache: Node Modules"
           keys:
             - node-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
-      - run: ./script/setup
+      - run:
+          name: "Run App Setup script"
+          command: ./script/setup
       - save_cache:
           name: "Save Cache: Pipenv Refrences"
           paths:
