@@ -42,5 +42,11 @@ export default {
     addLOA: function(event) {
       this.loas.push(createLOA(''))
     },
+
+    removeLOA: function(index) {
+      if (this.loas.length > 1) {
+        this.loas.splice(index, 1)
+      }
+    },
   },
 }
