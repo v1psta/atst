@@ -200,23 +200,41 @@ def get_started():
 @task_orders_bp.route("/task_orders/new/<int:screen>/<task_order_id>")
 @task_orders_bp.route("/portfolios/<portfolio_id>/task_orders/new/<int:screen>")
 def new(screen, task_order_id=None, portfolio_id=None):
-    workflow = ShowTaskOrderWorkflow(g.current_user, screen, task_order_id)
-
     if task_order_id and screen is 4:
         task_order = TaskOrders.get(g.current_user, task_order_id)
         if not TaskOrders.all_sections_complete(task_order):
             flash("task_order_draft")
 
-    return render_template(
-        workflow.template,
-        current=screen,
-        task_order_id=task_order_id,
-        task_order=workflow.task_order,
-        portfolio_id=portfolio_id,
-        screens=workflow.display_screens,
-        form=workflow.form,
-        complete=workflow.is_complete,
-    )
+    workflow = ShowTaskOrderWorkflow(g.current_user, screen, task_order_id)
+    template_args = {
+        "current": screen,
+        "task_order_id": task_order_id,
+        "portfolio_id": portfolio_id,
+        "screens": workflow.display_screens,
+        "form": workflow.form,
+        "complete": workflow.is_complete,
+    }
+
+    url_args = {"screen": screen}
+    if task_order_id:
+        url_args["task_order_id"] = task_order_id
+    else:
+        url_args["portfolio_id"] = portfolio_id
+
+    if workflow.task_order:
+        template_args["task_order"] = workflow.task_order
+        if http_request.args.get("ko_edit"):
+            template_args["ko_edit"] = True
+            template_args["next"] = url_for(
+                "portfolios.ko_review",
+                portfolio_id=workflow.task_order.portfolio.id,
+                task_order_id=task_order_id,
+            )
+            url_args["next"] = template_args["next"]
+
+    template_args["action_url"] = url_for("task_orders.update", **url_args)
+
+    return render_template(workflow.template, **template_args)
 
 
 @task_orders_bp.route("/task_orders/new/<int:screen>", methods=["POST"])
@@ -229,15 +247,18 @@ def update(screen, task_order_id=None, portfolio_id=None):
     workflow = UpdateTaskOrderWorkflow(
         g.current_user, form_data, screen, task_order_id, portfolio_id
     )
+
     if workflow.validate():
         workflow.update()
-        return redirect(
-            url_for(
+        if http_request.args.get("next"):
+            redirect_url = http_request.args.get("next")
+        else:
+            redirect_url = url_for(
                 "task_orders.new",
                 screen=screen + 1,
                 task_order_id=workflow.task_order.id,
             )
-        )
+        return redirect(redirect_url)
     else:
         return render_template(
             workflow.template,
