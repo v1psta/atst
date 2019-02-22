@@ -31,7 +31,8 @@ class KOReviewForm(CacheableForm):
     )
     loas = FieldList(
         StringField(
-            translate("forms.ko_review.loa"), validators=[Length(min=10), IsNumber()]
+            translate("forms.ko_review.loa"),
+            validators=[Length(min=10), IsNumber(), Optional()],
         )
     )
     custom_clauses = TextAreaField(
