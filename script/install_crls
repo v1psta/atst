@@ -9,6 +9,9 @@ source "$(dirname "${0}")"/../script/include/global_header.inc.sh
 RACKSPACE_TOKEN=$(curl -H 'Content-type: application/json' -XPOST ${RACKSPACE_AUTH_URL} -d "{\"auth\":{\"RAX-KSKEY:apiKeyCredentials\":{\"username\":\"${RACKSPACE_USERNAME}\",\"apiKey\":\"${RACKSPACE_PASSWORD}\"}}}" | jq -r '.access.token.id')
 export RACKSPACE_TOKEN
 
+# Ensure the ./crl director exists
+mkdir -p ./crl
+
 # Fetch DoD CRL archive
 curl -H 'Content-type: application/json' -H "X-Auth-Token: ${RACKSPACE_TOKEN}" -XGET ${RACKSPACE_STORAGE_URL}/MossoCloudFS_1095493/crls/dod_crls.tar.bz -o ./crl/crls.tar.bz
 
