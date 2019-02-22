@@ -297,7 +297,7 @@ def test_submit_completed_ko_review_page(client, user_session, pdf_upload):
         "start_date": "02/10/2019",
         "end_date": "03/10/2019",
         "number": "1938745981",
-        "loa": ["0813458013405"],
+        "loas": ["0813458013405"],
         "custom_clauses": "hi im a custom clause",
         "pdf": pdf_upload,
     }
@@ -332,7 +332,7 @@ def test_submit_to_with_multiple_loas(client, user_session, pdf_upload):
         "start_date": "02/10/2019",
         "end_date": "03/10/2019",
         "number": "1938745981",
-        "loa": ["0813458013405", "1234567890", "5678901234"],
+        "loas": ["0813458013405", "1234567890", "5678901234"],
         "custom_clauses": "hi im a custom clause",
         "pdf": pdf_upload,
     }

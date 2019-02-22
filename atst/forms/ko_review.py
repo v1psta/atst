@@ -29,7 +29,7 @@ class KOReviewForm(CacheableForm):
     number = StringField(
         translate("forms.ko_review.to_number"), validators=[Length(min=10)]
     )
-    loa = FieldList(
+    loas = FieldList(
         StringField(
             translate("forms.ko_review.loa"), validators=[Length(min=10), IsNumber()]
         )
@@ -43,5 +43,5 @@ class KOReviewForm(CacheableForm):
     @property
     def data(self):
         _data = super(FlaskForm, self).data
-        _data["loa"] = [n for n in _data["loa"] if n not in self.EMPTY_LOA]
+        _data["loas"] = [n for n in _data["loas"] if n not in self.EMPTY_LOA]
         return _data

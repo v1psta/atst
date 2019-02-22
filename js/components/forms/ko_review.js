@@ -26,7 +26,7 @@ export default {
   },
 
   data: function() {
-    const loa_list = this.initialData['loa']
+    const loa_list = this.initialData['loas']
     const loas = (loa_list.length > 0 ? loa_list : ['']).map(createLOA)
 
     return {
