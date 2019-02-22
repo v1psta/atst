@@ -67,10 +67,6 @@ class Portfolios(object):
         return portfolio
 
     @classmethod
-    def get_by_request(cls, request):
-        return PortfoliosQuery.get_by_request(request)
-
-    @classmethod
     def get_with_members(cls, user, portfolio_id):
         portfolio = PortfoliosQuery.get(portfolio_id)
         Authorization.check_portfolio_permission(
