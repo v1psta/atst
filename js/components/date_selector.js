@@ -127,4 +127,8 @@ export default {
       }
     },
   },
+
+  render: function(createElement) {
+    return createElement('p', 'Please implement inline-template')
+  },
 }
