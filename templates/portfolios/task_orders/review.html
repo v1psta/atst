@@ -79,7 +79,7 @@
                 <li v-for="(loa, i) in loas" class="task-order__loa-list-item">
                   <div class="usa-input usa-input--validation--anything">
                     <label :for="'loas-' + i">
-                      <div class="usa-input__title">Line of Accounting (LOA) #</div>
+                      <div class="usa-input__title" v-html="'Line of Accounting (LOA) #' + (i + 1)"></div>
                     </label>
                     <input type="text" v-model='loa.number' :id="'loas-' + i" placeholder="1234567890"/>
                     <input type="hidden" :name="'loas-' + i" v-model='loa.number'/>
