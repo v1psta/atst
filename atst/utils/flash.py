@@ -88,29 +88,6 @@ MESSAGES = {
         "message_template": "",
         "category": "success",
     },
-    "request_incomplete": {
-        "title_template": "Please complete all sections",
-        "message_template": """
-            <p>In order to submit your JEDI Cloud request, you'll need to complete all required sections of this form without error. Missing or invalid fields are noted below.</p>
-        """,
-        "category": "error",
-    },
-    "requests_action_required": {
-        "title_template": "Action required on {{ count }} requests.",
-        "message_template": "",
-        "category": "info",
-    },
-    "request_review_comment": {
-        "title_template": "Changes Requested",
-        "message_template": """
-            <p>CCPO has requested changes to your submission with the following notes:
-            <br>
-            {{ comment }}
-            <br>
-            Please contact info@jedi.cloud or 123-123-4567 for further discussion.</p>
-        """,
-        "category": "warning",
-    },
     "environment_access_changed": {
         "title_template": "User access successfully changed.",
         "message_template": "",
