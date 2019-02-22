@@ -67,8 +67,13 @@
 
   &.icon-link--disabled {
     opacity: 0.3;
-    pointer-events: none;
     text-decoration: none;
+    pointer-events: none;
+
+    &:hover {
+      cursor: default;
+      background: inherit;
+    }
   }
 
   &.icon-link--left {
