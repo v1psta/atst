@@ -15,13 +15,6 @@ def getattr_path(obj, path, default=None):
     return _obj
 
 
-def update_obj(obj, dct, ignore_vals=[None]):
-    for k, v in dct.items():
-        if hasattr(obj, k) and v not in ignore_vals:
-            setattr(obj, k, v)
-    return obj
-
-
 def camel_to_snake(camel_cased):
     s1 = re.sub("(.)([A-Z][a-z]+)", r"\1_\2", camel_cased)
     return re.sub("([a-z0-9])([A-Z])", r"\1_\2", s1).lower()
