@@ -1,22 +1,14 @@
-#!/bin/bash
+#! .venv/bin/python
+# Add root application dir to the python path
+import os
+import sys
 
-# script/sync-crls: update the DOD CRLs and place them where authnid expects them
-set -e
-cd "$(dirname "$0")/.."
+parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+sys.path.append(parent_dir)
 
-if [[ $# -eq 0 ]]; then
-  TMP_DIR=crl-tmp
-else
-  TMP_DIR=$1
-fi
+from atst.app import make_config, make_app
 
-mkdir -p $TMP_DIR
-pipenv run python ./atst/domain/authnid/crl/util.py $TMP_DIR crl
-mkdir -p crl
-rsync -rq --min-size 400 $TMP_DIR/. crl/.
-rm -rf $TMP_DIR
-
-if [[ $FLASK_ENV != "prod" ]]; then
-  # place our test CRL there
-  cp ssl/client-certs/client-ca.der.crl crl/
-fi
+if __name__ == "__main__":
+    config = make_config({"DISABLE_CRL_CHECK": True})
+    app = make_app(config)
+    app.csp.crls.sync_crls()

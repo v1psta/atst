@@ -1,5 +1,5 @@
 from .cloud import MockCloudProvider
-from .files import RackspaceFileProvider
+from .files import RackspaceFileProvider, RackspaceCRLProvider
 from .reports import MockReportingProvider
 
 
@@ -8,6 +8,7 @@ class MockCSP:
         self.cloud = MockCloudProvider()
         self.files = RackspaceFileProvider(app)
         self.reports = MockReportingProvider()
+        self.crls = RackspaceCRLProvider(app)
 
 
 def make_csp_provider(app):

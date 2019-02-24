@@ -36,6 +36,7 @@ config/dev.ini
 
 # CRLs
 /crl
+/crls
 /crl-tmp
 *.bk
 
