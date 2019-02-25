@@ -6,6 +6,7 @@ from atst.domain.roles import Roles
 from atst.domain.task_orders import TaskOrders
 from atst.models.portfolio_role import Status as PortfolioStatus
 from atst.utils.localization import translate
+from atst.queue import queue
 
 from tests.factories import (
     PortfolioFactory,
@@ -136,6 +137,7 @@ class TestTaskOrderInvitations:
         )
 
     def test_editing_with_partial_data(self, user_session, client):
+        queue_length = len(queue.get_queue())
         user_session(self.portfolio.owner)
         response = self._post(
             client,
@@ -151,8 +153,34 @@ class TestTaskOrderInvitations:
         assert updated_task_order.ko_last_name == "Skywalker"
         assert updated_task_order.so_first_name == "Boba"
         assert updated_task_order.so_last_name == "Fett"
+        assert len(queue.get_queue()) == queue_length
+
+    def test_editing_with_complete_data(self, user_session, client):
+        queue_length = len(queue.get_queue())
+
+        user_session(self.portfolio.owner)
+        response = self._post(
+            client,
+            {
+                "contracting_officer-first_name": "Luke",
+                "contracting_officer-last_name": "Skywalker",
+                "contracting_officer-dod_id": "0123456789",
+                "contracting_officer-email": "luke@skywalker.mil",
+                "contracting_officer-phone_number": "0123456789",
+                "contracting_officer-invite": "y",
+            },
+        )
+        updated_task_order = TaskOrders.get(self.portfolio.owner, self.task_order.id)
+
+        assert updated_task_order.ko_invite == True
+        assert updated_task_order.ko_first_name == "Luke"
+        assert updated_task_order.ko_last_name == "Skywalker"
+        assert updated_task_order.ko_email == "luke@skywalker.mil"
+        assert updated_task_order.ko_phone_number == "0123456789"
+        assert len(queue.get_queue()) == queue_length + 1
 
     def test_editing_with_invalid_data(self, user_session, client):
+        queue_length = len(queue.get_queue())
         user_session(self.portfolio.owner)
         response = self._post(
             client,
@@ -167,6 +195,7 @@ class TestTaskOrderInvitations:
 
         updated_task_order = TaskOrders.get(self.portfolio.owner, self.task_order.id)
         assert updated_task_order.so_first_name != "Boba"
+        assert len(queue.get_queue()) == queue_length
 
 
 def test_ko_can_view_task_order(client, user_session):

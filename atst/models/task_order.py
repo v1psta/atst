@@ -74,19 +74,19 @@ class TaskOrder(Base, mixins.TimestampsMixin):
     ko_email = Column(String)  # Email
     ko_phone_number = Column(String)  # Phone Number
     ko_dod_id = Column(String)  # DOD ID
-    ko_invite = Column(Boolean)
+    ko_invite = Column(Boolean, default=False)
     cor_first_name = Column(String)  # First Name
     cor_last_name = Column(String)  # Last Name
     cor_email = Column(String)  # Email
     cor_phone_number = Column(String)  # Phone Number
     cor_dod_id = Column(String)  # DOD ID
-    cor_invite = Column(Boolean)
+    cor_invite = Column(Boolean, default=False)
     so_first_name = Column(String)  # First Name
     so_last_name = Column(String)  # Last Name
     so_email = Column(String)  # Email
     so_phone_number = Column(String)  # Phone Number
     so_dod_id = Column(String)  # DOD ID
-    so_invite = Column(Boolean)
+    so_invite = Column(Boolean, default=False)
     pdf_attachment_id = Column(ForeignKey("attachments.id"))
     _pdf = relationship("Attachment", foreign_keys=[pdf_attachment_id])
     number = Column(String, unique=True)  # Task Order Number
@@ -95,7 +95,7 @@ class TaskOrder(Base, mixins.TimestampsMixin):
     signer_dod_id = Column(String)
     signed_at = Column(DateTime)
     level_of_warrant = Column(Numeric(scale=2))
-    unlimited_level_of_warrant = Column(Boolean)
+    unlimited_level_of_warrant = Column(Boolean, default=False)
 
     @hybrid_property
     def csp_estimate(self):
