@@ -88,4 +88,4 @@ def test_portfolio_reports_with_mock_portfolio(client, user_session):
     )
     assert response.status_code == 200
     assert portfolio.name in response.data.decode()
-    assert "$237,617.00 Total spend to date" in response.data.decode()
+    assert "$251,626.00 Total spend to date" in response.data.decode()
