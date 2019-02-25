@@ -13,6 +13,8 @@ class Portfolio(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
 
     id = types.Id()
     name = Column(String)
+    defense_component = Column(String)  # Department of Defense Component
+
     applications = relationship("Application", back_populates="portfolio")
     roles = relationship("PortfolioRole")
 
