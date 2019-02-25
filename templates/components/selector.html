@@ -10,7 +10,7 @@
   {% if field.errors %}v-bind:initial-errors='{{ field.errors }}'{% endif %}
   inline-template>
 
-  <fieldset v-bind:class="['selector usa-input', { 'usa-input--error': initialErrors }]">
+  <fieldset data-ally-disabled="true" v-bind:class="['selector usa-input', { 'usa-input--error': initialErrors }]">
     <v-popover v-bind:container='false' ref='popover' v-on:show='onShow'>
       <legend>
         <div class="usa-input__title">{{ field.label | striptags }}</div>

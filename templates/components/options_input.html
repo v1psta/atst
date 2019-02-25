@@ -11,7 +11,7 @@
     <div
       v-bind:class="['usa-input', { 'usa-input--error': showError, 'usa-input--success': showValid }]">
 
-      <fieldset v-on:change="onInput" class="usa-input__choices {% if inline %}usa-input__choices--inline{% endif %}">
+      <fieldset data-ally-disabled="true" v-on:change="onInput" class="usa-input__choices {% if inline %}usa-input__choices--inline{% endif %}">
         <legend>
           <div class="usa-input__title{% if not field.description %}-inline{% endif %}">
             {{ field.label | striptags}}

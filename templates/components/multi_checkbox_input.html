@@ -20,7 +20,7 @@
           <span v-show='showValid'>{{ Icon('ok',classes="icon-validation") }}</span>
       {% endset %}
 
-      <fieldset v-on:change="onInput" class="usa-input__choices {% if inline %}usa-input__choices--inline{% endif %}">
+      <fieldset data-ally-disabled="true" v-on:change="onInput" class="usa-input__choices {% if inline %}usa-input__choices--inline{% endif %}">
         <legend>
           <div class="usa-input__title">
             {{ field.label | striptags}}
