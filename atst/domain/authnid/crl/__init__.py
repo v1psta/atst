@@ -81,7 +81,12 @@ class CRLCache(CRLInterface):
         for crl_location in crl_locations:
             crl = self._load_crl(crl_location)
             if crl:
-                self.crl_cache[crl.get_issuer().der()] = crl_location
+                issuer_der = crl.get_issuer().der()
+                expires = crl.to_cryptography().next_update
+                self.crl_cache[issuer_der] = {
+                    "location": crl_location,
+                    "expires": expires,
+                }
 
     def _load_crl(self, crl_location):
         with open(crl_location, "rb") as crl_file:
@@ -94,23 +99,25 @@ class CRLCache(CRLInterface):
         store = self.store_class()
         self._log_info("STORE ID: {}. Building store.".format(id(store)))
         store.set_flags(crypto.X509StoreFlags.CRL_CHECK)
-        crl_location = self.crl_cache.get(issuer.der())
+        crl_info = self.crl_cache.get(issuer.der(), {})
         issuer_name = get_common_name(issuer)
 
-        if not crl_location:
+        if not crl_info:
             raise CRLRevocationException(
                 "Could not find matching CRL for issuer with Common Name {}".format(
                     issuer_name
                 )
             )
 
-        crl = self._load_crl(crl_location)
+        crl = self._load_crl(crl_info["location"])
         store.add_crl(crl)
+
         self._log_info(
             "STORE ID: {}. Adding CRL with issuer Common Name {}".format(
                 id(store), issuer_name
             )
         )
+
         store = self._add_certificate_chain_to_store(store, crl.get_issuer())
         return store
 
