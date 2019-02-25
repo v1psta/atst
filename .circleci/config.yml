@@ -13,6 +13,7 @@ defaults:
     PGDATABASE: circle_test
     REDIS_URI: redis://localhost:6379
     PIP_VERSION: 18.*
+    CRL_STORAGE_PROVIDER: CLOUDFILES
   dockerCmdEnvironment: &dockerCmdEnvironment
     APP_USER: atst
     APP_GROUP: atat
