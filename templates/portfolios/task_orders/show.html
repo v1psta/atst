@@ -167,7 +167,11 @@
         {{
           Step(
             button_text=is_ko and not is_to_signed and ("common.sign" | translate),
-            button_url=is_ko and url_for("task_orders.signature_requested", task_order_id=task_order.id),
+            button_url=is_ko and url_for(
+              "portfolios.ko_review",
+              portfolio_id=portfolio.id,
+              task_order_id=task_order.id,
+            ),
             complete=is_to_signed,
             description="task_orders.view.steps.sign" | translate({
               "contracting_officer": officer_name(task_order.contracting_officer)
