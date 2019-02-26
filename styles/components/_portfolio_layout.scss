@@ -446,6 +446,8 @@
 
     .form-col {
       .usa-input--validation--portfolioName {
+        margin-bottom: 0;
+
         input {
           max-width: 30em;
         }
@@ -453,6 +455,22 @@
           left: 30em;
         }
       }
+    }
+  }
+
+  .defense-row {
+    .admin-title {
+      padding: 0 0 0.4rem 0;
+      margin-top: 0;
+      font-size: 1.7rem;
+      font-weight: 700;
+      max-width: 45em;
+      position: relative;
+      clear: both;
+    }
+
+    .admin-content {
+      margin-bottom: 2rem;
     }
   }
 }
