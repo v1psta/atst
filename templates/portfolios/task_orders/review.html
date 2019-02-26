@@ -13,13 +13,13 @@
 
 
 {% block content %}
-<ko-review inline-template v-bind:initial-data='{{ form.data|tojson }}'>
+<ko-review inline-template>
   <div class="col task-order-form">
 
     {% include "fragments/flash.html" %}
 
     {% block form_action %}
-    <form method='POST' action="{{ url_for('portfolios.submit_ko_review', portfolio_id=portfolio.id, task_order_id=task_order.id, form=form) }}" autocomplete="off" enctype="multipart/form-data">
+    <form method='POST' action="{{ url_for('portfolios.submit_ko_review', portfolio_id=portfolio.id, task_order_id=task_order.id, form=form) }}" autocomplete="off" enctype="multipart/form-data" v-on:submit="handleSubmit">
     {% endblock %}
 
     {{ form.csrf_token }}
@@ -69,31 +69,38 @@
           <hr>
 
           <div class="h2">{{ "task_orders.ko_review.task_order_information"| translate }}</div>
-
           <div class="form__sub-fields">
             {{ UploadInput(form.pdf, show_label=True) }}
             {{ TextInput(form.number, placeholder='1234567890') }}
 
-            <div class="task-order__loa-list">
-              <ul>
-                <li v-for="(loa, i) in loas" class="task-order__loa-list-item">
-                  <div class="usa-input usa-input--validation--anything">
-                    <label :for="'loas-' + i">
-                      <div class="usa-input__title" v-html="'Line of Accounting (LOA) #' + (i + 1)"></div>
-                    </label>
-                    <input type="text" v-model='loa.number' :id="'loas-' + i" placeholder="1234567890"/>
-                    <input type="hidden" :name="'loas-' + i" v-model='loa.number'/>
+            <multi-loa-input inline-template v-bind:initial-data='{{form.loas.data|tojson}}'>
+              <div class="task-order__loa-list">
+                <div> {# this extra div prevents this bug: https://www.pivotaltracker.com/story/show/160768940 #}
+                  <div v-cloak v-for="title in loaErrors" :key="title">
+                    {{ Alert(message=None, level="error", vue_template=True) }}
                   </div>
-                  <button v-on:click="removeLOA(i)" v-if="loas.length > 1" type="button" class='loa-list-item__remover'>
-                    {{ Icon('trash') }}
-                    <span>Remove</span>
-                  </button>
-                </li>
-              </ul>
-              <div class="task-order__loa-add-item">
-                <button v-on:click="addLOA" class="icon-link" tabindex="0" type="button">{{ Icon('plus') }} Add another LOA</button>
+                </div>
+
+                <ul>
+                  <li v-for="(loa, i) in loas" class="task-order__loa-list-item">
+                    <div class="usa-input usa-input--validation--anything">
+                      <label :for="'loas-' + i">
+                        <div class="usa-input__title" v-html="'Line of Accounting (LOA) #' + (i + 1)"></div>
+                      </label>
+                      <input type="text" v-model='loa.number' :id="'loas-' + i" placeholder="1234567890"/>
+                      <input type="hidden" :name="'loas-' + i" v-model='loa.number'/>
+                    </div>
+                    <button v-on:click="removeLOA(i)" v-if="loas.length > 1" type="button" class='loa-list-item__remover'>
+                      {{ Icon('trash') }}
+                      <span>Remove</span>
+                    </button>
+                  </li>
+                </ul>
+                <div class="task-order__loa-add-item">
+                  <button v-on:click="addLOA" class="icon-link" tabindex="0" type="button">{{ Icon('plus') }} Add another LOA</button>
+                </div>
               </div>
-            </div>
+            </multi-loa-input>
 
             {{ TextInput(form.custom_clauses, paragraph=True) }}
           </div>
