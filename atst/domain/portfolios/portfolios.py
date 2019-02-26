@@ -16,8 +16,10 @@ class PortfolioError(Exception):
 
 class Portfolios(object):
     @classmethod
-    def create(cls, user, name):
-        portfolio = PortfoliosQuery.create(name=name)
+    def create(cls, user, name, defense_component):
+        portfolio = PortfoliosQuery.create(
+            name=name, defense_component=defense_component
+        )
         Portfolios._create_portfolio_role(
             user, portfolio, "owner", status=PortfolioRoleStatus.ACTIVE
         )

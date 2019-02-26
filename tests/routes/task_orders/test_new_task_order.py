@@ -51,7 +51,9 @@ def test_create_new_task_order(client, user_session, pdf_upload):
     task_order_data = TaskOrderFactory.dictionary()
     app_info_data = slice_data_for_section(task_order_data, "app_info")
     portfolio_name = "Mos Eisley"
+    defense_component = "Defense Health Agency"
     app_info_data["portfolio_name"] = portfolio_name
+    app_info_data["defense_component"] = defense_component
 
     response = client.post(
         url_for("task_orders.update", screen=1),
@@ -64,6 +66,8 @@ def test_create_new_task_order(client, user_session, pdf_upload):
     created_task_order = TaskOrders.get(creator, created_task_order_id)
     assert created_task_order.portfolio is not None
     assert created_task_order.portfolio.name == portfolio_name
+    assert created_task_order.portfolio is not None
+    assert created_task_order.portfolio.defense_component == defense_component
 
     funding_data = slice_data_for_section(task_order_data, "funding")
     funding_data = serialize_dates(funding_data)
@@ -89,6 +93,8 @@ def test_create_new_task_order_for_portfolio(client, user_session):
     app_info_data = slice_data_for_section(task_order_data, "app_info")
     portfolio_name = "This is ignored for now"
     app_info_data["portfolio_name"] = portfolio_name
+    defense_component = "Defense Health Agency"  # this is also ignored
+    app_info_data["defense_component"] = defense_component
 
     response = client.post(
         url_for("task_orders.update", screen=1, portfolio_id=portfolio.id),
@@ -203,7 +209,8 @@ def test_show_task_order_form(task_order):
         task_order.creator, task_order_id=task_order.id
     )
     assert (
-        another_workflow.form.data["defense_component"] == task_order.defense_component
+        another_workflow.form.data["defense_component"]
+        == task_order.portfolio.defense_component
     )
 
 

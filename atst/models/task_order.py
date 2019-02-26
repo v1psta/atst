@@ -53,7 +53,6 @@ class TaskOrder(Base, mixins.TimestampsMixin):
     dd_254 = relationship("DD254")
 
     scope = Column(String)  # Cloud Project Scope
-    defense_component = Column(String)  # Department of Defense Component
     app_migration = Column(String)  # App Migration
     native_apps = Column(String)  # Native Apps
     complexity = Column(ARRAY(String))  # Application Complexity
@@ -171,6 +170,10 @@ class TaskOrder(Base, mixins.TimestampsMixin):
     @property
     def portfolio_name(self):
         return self.portfolio.name
+
+    @property
+    def defense_component(self):
+        return self.portfolio.defense_component
 
     @property
     def is_pending(self):
