@@ -25,6 +25,8 @@ export default {
       day: this.initialday,
       month: this.initialmonth,
       year: this.initialyear,
+      showError: false,
+      showValid: false,
     }
   },
 
@@ -93,7 +95,7 @@ export default {
     },
 
     isDateValid: function() {
-      return (
+      let valid = (
         this.day &&
         this.month &&
         this.year &&
@@ -102,6 +104,14 @@ export default {
         this.isYearValid &&
         this.isWithinDateRange
       )
+      if (!valid) {
+        this.showError = true
+        this.showValid = false
+      } else {
+        this.showError = false
+        this.showValid = true
+      }
+      return valid
     },
 
     daysMaxCalculation: function() {

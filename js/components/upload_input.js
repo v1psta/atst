@@ -30,6 +30,8 @@ export default {
 
     return {
       showUpload: !pdf || this.uploadErrors.length > 0,
+      showError: (this.uploadErrors.length > 0) || false,
+      showValid: (this.uploadErrors.length === 0) || false,
     }
   },
 
