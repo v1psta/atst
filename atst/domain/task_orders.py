@@ -15,8 +15,6 @@ class TaskOrderError(Exception):
 
 
 class TaskOrders(object):
-    INFORMATION_RECORDED_ATTRIBUTES = ["end_date", "loa", "number", "start_date"]
-
     SECTIONS = {
         "app_info": [
             "portfolio_name",
