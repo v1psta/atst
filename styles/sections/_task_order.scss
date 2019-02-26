@@ -348,10 +348,25 @@
   .task-order__loa-list-item {
     display: flex;
     flex-direction: row;
-    align-items: flex-end;
+    align-items: flex-start;
 
     .usa-input {
       flex-grow: 1;
+    }
+
+    .loa-list-item__remover {
+      @include icon-link;
+      @include icon-link-vertical;
+      @include icon-link-color($color-red, $color-red-lightest);
+
+      margin-bottom: 0;
+      margin-right: -$gap;
+
+      position: absolute;
+      margin-top: 3 * $gap;
+      margin-left: $gap;
+      left: 45em;
+      max-width: 30em;
     }
   }
 }
