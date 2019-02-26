@@ -1,7 +1,7 @@
 """Move defense component to Portfolio level
 
 Revision ID: ec1ba2363191
-Revises: fa3ba4049218
+Revises: fb22e47972a3
 Create Date: 2019-02-22 14:43:49.408446
 
 """
@@ -12,7 +12,7 @@ from sqlalchemy.sql import text
 
 # revision identifiers, used by Alembic.
 revision = 'ec1ba2363191'
-down_revision = 'fa3ba4049218'
+down_revision = 'fb22e47972a3'
 branch_labels = None
 depends_on = None
 
