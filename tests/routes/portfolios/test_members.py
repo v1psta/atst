@@ -37,7 +37,6 @@ def create_portfolio_and_invite_user(
     return portfolio
 
 
-@pytest.mark.skip(reason="Temporarily no add member link")
 def test_user_with_permission_has_add_member_link(client, user_session):
     portfolio = PortfolioFactory.create()
     user_session(portfolio.owner)
@@ -48,7 +47,6 @@ def test_user_with_permission_has_add_member_link(client, user_session):
     )
 
 
-@pytest.mark.skip(reason="Temporarily no add member link")
 def test_user_without_permission_has_no_add_member_link(client, user_session):
     user = UserFactory.create()
     portfolio = PortfolioFactory.create()

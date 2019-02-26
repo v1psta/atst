@@ -90,18 +90,16 @@ def test_user_without_permission_has_no_activity_log_link(client, user_session):
     )
 
 
-@pytest.mark.skip(reason="Temporarily no add application link")
 def test_user_with_permission_has_add_application_link(client, user_session):
     portfolio = PortfolioFactory.create()
     user_session(portfolio.owner)
     response = client.get("/portfolios/{}/applications".format(portfolio.id))
     assert (
-        'href="/portfolios/{}/applications/new"'.format(portfolio.id).encode()
+        "href='/portfolios/{}/applications/new'".format(portfolio.id).encode()
         in response.data
     )
 
 
-@pytest.mark.skip(reason="Temporarily no add application link")
 def test_user_without_permission_has_no_add_application_link(client, user_session):
     user = UserFactory.create()
     portfolio = PortfolioFactory.create()
@@ -109,9 +107,27 @@ def test_user_without_permission_has_no_add_application_link(client, user_sessio
     user_session(user)
     response = client.get("/portfolios/{}/applications".format(portfolio.id))
     assert (
-        'href="/portfolios/{}/applications/new"'.format(portfolio.id).encode()
+        "href='/portfolios/{}/applications/new'".format(portfolio.id).encode()
         not in response.data
     )
+
+
+def test_creating_application(client, user_session):
+    portfolio = PortfolioFactory.create()
+    user_session(portfolio.owner)
+    response = client.post(
+        url_for("portfolios.create_application", portfolio_id=portfolio.id),
+        data={
+            "name": "Test Application",
+            "description": "This is only a test",
+            "environment_names-0": "dev",
+            "environment_names-1": "staging",
+            "environment_names-2": "prod",
+        },
+    )
+    assert response.status_code == 302
+    assert len(portfolio.applications) == 1
+    assert len(portfolio.applications[0].environments) == 3
 
 
 def test_view_edit_application(client, user_session):

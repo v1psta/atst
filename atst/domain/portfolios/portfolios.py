@@ -25,16 +25,6 @@ class Portfolios(object):
         return portfolio
 
     @classmethod
-    def create_from_request(cls, request, name=None):
-        name = name or request.displayname
-        portfolio = PortfoliosQuery.create(request=request, name=name)
-        Portfolios._create_portfolio_role(
-            request.creator, portfolio, "owner", status=PortfolioRoleStatus.ACTIVE
-        )
-        PortfoliosQuery.add_and_commit(portfolio)
-        return portfolio
-
-    @classmethod
     def get(cls, user, portfolio_id):
         portfolio = PortfoliosQuery.get(portfolio_id)
         Authorization.check_portfolio_permission(
@@ -75,10 +65,6 @@ class Portfolios(object):
         )
 
         return portfolio
-
-    @classmethod
-    def get_by_request(cls, request):
-        return PortfoliosQuery.get_by_request(request)
 
     @classmethod
     def get_with_members(cls, user, portfolio_id):

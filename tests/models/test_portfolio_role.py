@@ -9,7 +9,6 @@ from atst.models.invitation import Status as InvitationStatus
 from atst.models.audit_event import AuditEvent
 from atst.models.portfolio_role import Status as PortfolioRoleStatus
 from tests.factories import (
-    RequestFactory,
     UserFactory,
     InvitationFactory,
     PortfolioRoleFactory,
@@ -25,7 +24,7 @@ def test_has_no_ws_role_history(session):
     owner = UserFactory.create()
     user = UserFactory.create()
 
-    portfolio = Portfolios.create_from_request(RequestFactory.create(creator=owner))
+    portfolio = PortfolioFactory.create(owner=owner)
     portfolio_role = PortfolioRoles.add(user, portfolio.id, "developer")
     create_event = (
         session.query(AuditEvent)
@@ -42,7 +41,7 @@ def test_has_ws_role_history(session):
     owner = UserFactory.create()
     user = UserFactory.create()
 
-    portfolio = Portfolios.create_from_request(RequestFactory.create(creator=owner))
+    portfolio = PortfolioFactory.create(owner=owner)
     role = session.query(Role).filter(Role.name == "developer").one()
     # in order to get the history, we don't want the PortfolioRoleFactory
     #  to commit after create()
@@ -67,7 +66,7 @@ def test_has_ws_status_history(session):
     owner = UserFactory.create()
     user = UserFactory.create()
 
-    portfolio = Portfolios.create_from_request(RequestFactory.create(creator=owner))
+    portfolio = PortfolioFactory.create(owner=owner)
     # in order to get the history, we don't want the PortfolioRoleFactory
     #  to commit after create()
     PortfolioRoleFactory._meta.sqlalchemy_session_persistence = "flush"
@@ -89,7 +88,7 @@ def test_has_ws_status_history(session):
 def test_has_no_env_role_history(session):
     owner = UserFactory.create()
     user = UserFactory.create()
-    portfolio = Portfolios.create_from_request(RequestFactory.create(creator=owner))
+    portfolio = PortfolioFactory.create(owner=owner)
     application = ApplicationFactory.create(portfolio=portfolio)
     environment = EnvironmentFactory.create(
         application=application, name="new environment!"
@@ -110,7 +109,7 @@ def test_has_no_env_role_history(session):
 def test_has_env_role_history(session):
     owner = UserFactory.create()
     user = UserFactory.create()
-    portfolio = Portfolios.create_from_request(RequestFactory.create(creator=owner))
+    portfolio = PortfolioFactory.create(owner=owner)
     portfolio_role = PortfolioRoleFactory.create(portfolio=portfolio, user=user)
     application = ApplicationFactory.create(portfolio=portfolio)
     environment = EnvironmentFactory.create(
@@ -137,7 +136,7 @@ def test_event_details():
     owner = UserFactory.create()
     user = UserFactory.create()
 
-    portfolio = Portfolios.create_from_request(RequestFactory.create(creator=owner))
+    portfolio = PortfolioFactory.create(owner=owner)
     portfolio_role = PortfolioRoles.add(user, portfolio.id, "developer")
 
     assert portfolio_role.event_details["updated_user_name"] == user.displayname
@@ -154,7 +153,7 @@ def test_has_no_environment_roles():
         "portfolio_role": "developer",
     }
 
-    portfolio = Portfolios.create_from_request(RequestFactory.create(creator=owner))
+    portfolio = PortfolioFactory.create(owner=owner)
     portfolio_role = Portfolios.create_member(owner, portfolio, developer_data)
 
     assert not portfolio_role.has_environment_roles
@@ -170,7 +169,7 @@ def test_has_environment_roles():
         "portfolio_role": "developer",
     }
 
-    portfolio = Portfolios.create_from_request(RequestFactory.create(creator=owner))
+    portfolio = PortfolioFactory.create(owner=owner)
     portfolio_role = Portfolios.create_member(owner, portfolio, developer_data)
     application = Applications.create(
         owner,
@@ -195,7 +194,7 @@ def test_role_displayname():
         "portfolio_role": "developer",
     }
 
-    portfolio = Portfolios.create_from_request(RequestFactory.create(creator=owner))
+    portfolio = PortfolioFactory.create(owner=owner)
     portfolio_role = Portfolios.create_member(owner, portfolio, developer_data)
 
     assert portfolio_role.role_displayname == "Developer"

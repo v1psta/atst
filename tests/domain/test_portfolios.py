@@ -8,12 +8,7 @@ from atst.domain.applications import Applications
 from atst.domain.environments import Environments
 from atst.models.portfolio_role import Status as PortfolioRoleStatus
 
-from tests.factories import (
-    RequestFactory,
-    UserFactory,
-    PortfolioRoleFactory,
-    PortfolioFactory,
-)
+from tests.factories import UserFactory, PortfolioRoleFactory, PortfolioFactory
 
 
 @pytest.fixture(scope="function")
@@ -22,37 +17,19 @@ def portfolio_owner():
 
 
 @pytest.fixture(scope="function")
-def request_(portfolio_owner):
-    return RequestFactory.create(creator=portfolio_owner)
-
-
-@pytest.fixture(scope="function")
-def portfolio(request_):
-    portfolio = Portfolios.create_from_request(request_)
+def portfolio(portfolio_owner):
+    portfolio = PortfolioFactory.create(owner=portfolio_owner)
     return portfolio
 
 
-def test_can_create_portfolio(request_):
-    portfolio = Portfolios.create_from_request(request_, name="frugal-whale")
+def test_can_create_portfolio():
+    portfolio = PortfolioFactory.create(name="frugal-whale")
     assert portfolio.name == "frugal-whale"
-
-
-def test_request_is_associated_with_portfolio(portfolio, request_):
-    assert portfolio.request == request_
-
-
-def test_default_portfolio_name_is_request_name(portfolio, request_):
-    assert portfolio.name == str(request_.displayname)
 
 
 def test_get_nonexistent_portfolio_raises():
     with pytest.raises(NotFoundError):
         Portfolios.get(UserFactory.build(), uuid4())
-
-
-def test_can_get_portfolio_by_request(portfolio):
-    found = Portfolios.get_by_request(portfolio.request)
-    assert portfolio == found
 
 
 def test_creating_portfolio_adds_owner(portfolio, portfolio_owner):
@@ -162,10 +139,6 @@ def test_need_permission_to_update_portfolio_role_role(portfolio, portfolio_owne
 
 
 def test_owner_can_view_portfolio_members(portfolio, portfolio_owner):
-    portfolio_owner = UserFactory.create()
-    portfolio = Portfolios.create_from_request(
-        RequestFactory.create(creator=portfolio_owner)
-    )
     portfolio = Portfolios.get_with_members(portfolio_owner, portfolio.id)
 
     assert portfolio
@@ -258,7 +231,7 @@ def test_for_user_returns_active_portfolios_for_user(portfolio, portfolio_owner)
     PortfolioRoleFactory.create(
         user=bob, portfolio=portfolio, status=PortfolioRoleStatus.ACTIVE
     )
-    Portfolios.create_from_request(RequestFactory.create())
+    PortfolioFactory.create()
 
     bobs_portfolios = Portfolios.for_user(bob)
 
@@ -268,7 +241,7 @@ def test_for_user_returns_active_portfolios_for_user(portfolio, portfolio_owner)
 def test_for_user_does_not_return_inactive_portfolios(portfolio, portfolio_owner):
     bob = UserFactory.from_atat_role("default")
     Portfolios.add_member(portfolio, bob, "developer")
-    Portfolios.create_from_request(RequestFactory.create())
+    PortfolioFactory.create()
     bobs_portfolios = Portfolios.for_user(bob)
 
     assert len(bobs_portfolios) == 0
@@ -276,17 +249,13 @@ def test_for_user_does_not_return_inactive_portfolios(portfolio, portfolio_owner
 
 def test_for_user_returns_all_portfolios_for_ccpo(portfolio, portfolio_owner):
     sam = UserFactory.from_atat_role("ccpo")
-    Portfolios.create_from_request(RequestFactory.create())
+    PortfolioFactory.create()
 
     sams_portfolios = Portfolios.for_user(sam)
     assert len(sams_portfolios) == 2
 
 
-def test_get_for_update_information():
-    portfolio_owner = UserFactory.create()
-    portfolio = Portfolios.create_from_request(
-        RequestFactory.create(creator=portfolio_owner)
-    )
+def test_get_for_update_information(portfolio, portfolio_owner):
     owner_ws = Portfolios.get_for_update_information(portfolio_owner, portfolio.id)
     assert portfolio == owner_ws
 
@@ -307,8 +276,8 @@ def test_get_for_update_information():
 
 def test_can_create_portfolios_with_matching_names():
     portfolio_name = "Great Portfolio"
-    Portfolios.create_from_request(RequestFactory.create(), name=portfolio_name)
-    Portfolios.create_from_request(RequestFactory.create(), name=portfolio_name)
+    PortfolioFactory.create(name=portfolio_name)
+    PortfolioFactory.create(name=portfolio_name)
 
 
 def test_able_to_revoke_portfolio_access_for_active_member():

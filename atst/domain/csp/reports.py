@@ -1,4 +1,3 @@
-import datetime
 from itertools import groupby
 from collections import OrderedDict
 import pendulum
@@ -33,10 +32,10 @@ class MockApplication:
 
 
 def generate_sample_dates(_max=8):
-    current = datetime.datetime.today()
+    current = pendulum.now()
     sample_dates = []
     for _i in range(_max):
-        current = current - datetime.timedelta(days=29)
+        current = current.subtract(months=1)
         sample_dates.append(current.strftime("%m/%Y"))
 
     reversed(sample_dates)
@@ -225,8 +224,6 @@ class MockReportingProvider(ReportingInterface):
     def get_budget(self, portfolio):
         if portfolio.name in self.REPORT_FIXTURE_MAP:
             return self.REPORT_FIXTURE_MAP[portfolio.name]["budget"]
-        elif portfolio.request and portfolio.legacy_task_order:
-            return portfolio.legacy_task_order.budget
         return 0
 
     def get_total_spending(self, portfolio):

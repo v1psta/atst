@@ -16,7 +16,6 @@ import pendulum
 import os
 from werkzeug.exceptions import NotFound
 
-from atst.domain.requests import Requests
 from atst.domain.users import Users
 from atst.domain.authnid import AuthenticationContext
 from atst.domain.audit_log import AuditLog
@@ -58,10 +57,6 @@ def helpdocs(doc=None):
 @bp.route("/home")
 def home():
     user = g.current_user
-
-    if user.atat_role_name == "ccpo":
-        return redirect(url_for("requests.requests_index"))
-
     num_portfolios = len([role for role in user.portfolio_roles if role.is_active])
 
     if num_portfolios == 0:

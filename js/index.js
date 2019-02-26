@@ -11,11 +11,9 @@ import optionsinput from './components/options_input'
 import multicheckboxinput from './components/multi_checkbox_input'
 import textinput from './components/text_input'
 import checkboxinput from './components/checkbox_input'
-import DetailsOfUse from './components/forms/details_of_use'
 import EditOfficerForm from './components/forms/edit_officer_form'
 import poc from './components/forms/poc'
 import oversight from './components/forms/oversight'
-import financial from './components/forms/financial'
 import toggler from './components/toggler'
 import NewApplication from './components/forms/new_application'
 import EditEnvironmentRole from './components/forms/edit_environment_role'
@@ -27,10 +25,8 @@ import selector from './components/selector'
 import BudgetChart from './components/charts/budget_chart'
 import SpendTable from './components/tables/spend_table'
 import TaskOrderList from './components/tables/task_order_list.js'
-import CcpoApproval from './components/forms/ccpo_approval'
 import MembersList from './components/members_list'
 import LocalDatetime from './components/local_datetime'
-import RequestsList from './components/requests_list'
 import ConfirmationPopover from './components/confirmation_popover'
 import { isNotInVerticalViewport } from './lib/viewport'
 import DateSelector from './components/date_selector'
@@ -51,21 +47,17 @@ const app = new Vue({
     multicheckboxinput,
     textinput,
     checkboxinput,
-    DetailsOfUse,
     poc,
     oversight,
-    financial,
     NewApplication,
     selector,
     BudgetChart,
     SpendTable,
     TaskOrderList,
-    CcpoApproval,
     MembersList,
     LocalDatetime,
     EditEnvironmentRole,
     EditApplicationRoles,
-    RequestsList,
     ConfirmationPopover,
     funding,
     uploadinput,

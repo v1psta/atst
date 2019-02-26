@@ -36,23 +36,6 @@ def usPhone(number):
     return "+1 ({}) {} - {}".format(phone[0:3], phone[3:6], phone[6:])
 
 
-def readableInteger(value):
-    try:
-        numberValue = int(value)
-    except ValueError:
-        numberValue = 0
-    return "{:,}".format(numberValue)
-
-
-def getOptionLabel(value, options):
-    if hasattr(value, "value"):
-        value = value.name
-    try:
-        return next(tup[1] for tup in options if tup[0] == value)  # pragma: no branch
-    except StopIteration:
-        return
-
-
 def findFilter(value, filter_name, filter_args=[]):
     if not filter_name:
         return value
@@ -60,10 +43,6 @@ def findFilter(value, filter_name, filter_args=[]):
         return app.jinja_env.filters[filter_name](value, *filter_args)
     else:
         raise ValueError("filter name {} not found".format(filter_name))
-
-
-def renderList(value):
-    return app.jinja_env.filters["safe"]("<br>".join(value))
 
 
 def formattedDate(value, formatter="%m/%d/%Y"):
@@ -95,11 +74,6 @@ def renderAuditEvent(event):
         return render_template("audit_log/events/default.html", event=event)
 
 
-def removeHtml(text):
-    html_tags = re.compile("<.*?>")
-    return re.sub(html_tags, "", text)
-
-
 def normalizeOrder(title):
     # reorders titles from "Army, Department of the" to "Department of the Army"
     text = title.split(", ")
@@ -114,15 +88,11 @@ def register_filters(app):
     app.jinja_env.filters["justDollars"] = justDollars
     app.jinja_env.filters["justCents"] = justCents
     app.jinja_env.filters["usPhone"] = usPhone
-    app.jinja_env.filters["readableInteger"] = readableInteger
-    app.jinja_env.filters["getOptionLabel"] = getOptionLabel
     app.jinja_env.filters["findFilter"] = findFilter
-    app.jinja_env.filters["renderList"] = renderList
     app.jinja_env.filters["formattedDate"] = formattedDate
     app.jinja_env.filters["dateFromString"] = dateFromString
     app.jinja_env.filters["pageWindow"] = pageWindow
     app.jinja_env.filters["renderAuditEvent"] = renderAuditEvent
-    app.jinja_env.filters["removeHtml"] = removeHtml
     app.jinja_env.filters["normalizeOrder"] = normalizeOrder
     app.jinja_env.filters["translateDuration"] = translate_duration
 

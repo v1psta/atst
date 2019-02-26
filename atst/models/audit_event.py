@@ -17,9 +17,6 @@ class AuditEvent(Base, TimestampsMixin):
     portfolio_id = Column(UUID(as_uuid=True), ForeignKey("portfolios.id"), index=True)
     portfolio = relationship("Portfolio", backref="audit_events")
 
-    request_id = Column(UUID(as_uuid=True), ForeignKey("requests.id"), index=True)
-    request = relationship("Request", backref="audit_events")
-
     changed_state = Column(JSONB())
     event_details = Column(JSONB())
 

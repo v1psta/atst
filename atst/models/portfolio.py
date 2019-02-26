@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey, String
+from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
 from itertools import chain
 
@@ -13,7 +13,6 @@ class Portfolio(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
 
     id = types.Id()
     name = Column(String)
-    request_id = Column(ForeignKey("requests.id"), nullable=True)
     applications = relationship("Application", back_populates="portfolio")
     roles = relationship("PortfolioRole")
 
@@ -36,10 +35,6 @@ class Portfolio(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
         return len(self.members)
 
     @property
-    def legacy_task_order(self):
-        return self.request.legacy_task_order if self.request else None
-
-    @property
     def members(self):
         return (
             db.session.query(PortfolioRole)
@@ -60,6 +55,6 @@ class Portfolio(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
         return self.id
 
     def __repr__(self):
-        return "<Portfolio(name='{}', request='{}', user_count='{}', id='{}')>".format(
-            self.name, self.request_id, self.user_count, self.id
+        return "<Portfolio(name='{}', user_count='{}', id='{}')>".format(
+            self.name, self.user_count, self.id
         )

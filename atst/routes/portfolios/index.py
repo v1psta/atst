@@ -98,19 +98,3 @@ def portfolio_reports(portfolio_id):
         expiration_date=expiration_date,
         remaining_days=remaining_days,
     )
-
-
-@portfolios_bp.route("/portfolios/<portfolio_id>/activity")
-def portfolio_activity(portfolio_id):
-    portfolio = Portfolios.get(g.current_user, portfolio_id)
-    pagination_opts = Paginator.get_pagination_opts(http_request)
-    audit_events = AuditLog.get_portfolio_events(
-        g.current_user, portfolio, pagination_opts
-    )
-
-    return render_template(
-        "portfolios/activity/index.html",
-        portfolio_name=portfolio.name,
-        portfolio_id=portfolio_id,
-        audit_events=audit_events,
-    )
