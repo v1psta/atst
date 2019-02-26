@@ -9,7 +9,6 @@ sys.path.append(parent_dir)
 from atst.database import db
 from atst.app import make_config, make_app
 from atst.domain.users import Users
-from atst.domain.requests import Requests
 from atst.domain.portfolios import Portfolios
 from atst.domain.applications import Applications
 from atst.domain.portfolio_roles import PortfolioRoles
@@ -17,7 +16,6 @@ from atst.models.invitation import Status as InvitationStatus
 from atst.domain.exceptions import AlreadyExistsError
 from tests.factories import (
     InvitationFactory,
-    RequestFactory,
     TaskOrderFactory,
     random_future_date,
     random_past_date,
