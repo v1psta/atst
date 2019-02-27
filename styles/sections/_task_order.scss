@@ -349,6 +349,7 @@
     display: flex;
     flex-direction: row;
     align-items: flex-start;
+    position: relative;
 
     .usa-input {
       flex-grow: 1;
@@ -365,7 +366,7 @@
       position: absolute;
       margin-top: 3 * $gap;
       margin-left: $gap;
-      left: 45em;
+      left: 35em;
       max-width: 30em;
     }
   }
