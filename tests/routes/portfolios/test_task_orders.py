@@ -378,49 +378,6 @@ def test_submit_completed_ko_review_page_as_cor(client, user_session, pdf_upload
     )
 
 
-def test_submit_to_with_multiple_loas(client, user_session, pdf_upload):
-    portfolio = PortfolioFactory.create()
-    ko = UserFactory.create()
-    PortfolioRoleFactory.create(
-        role=Roles.get("officer"),
-        portfolio=portfolio,
-        user=ko,
-        status=PortfolioStatus.ACTIVE,
-    )
-    task_order = TaskOrderFactory.create(portfolio=portfolio, contracting_officer=ko)
-    loa_list = ["0813458013405", "1234567890", "5678901234"]
-    user_session(ko)
-    form_data = {
-        "start_date": "02/10/2019",
-        "end_date": "03/10/2019",
-        "number": "1938745981",
-        "loas-0": loa_list[0],
-        "loas-1": loa_list[1],
-        "loas-2": loa_list[2],
-        "custom_clauses": "hi im a custom clause",
-        "pdf": pdf_upload,
-    }
-
-    user_session(cor)
-
-    response = client.post(
-        url_for(
-            "portfolios.ko_review",
-            portfolio_id=portfolio.id,
-            task_order_id=task_order.id,
-        ),
-        data=form_data,
-    )
-
-    assert task_order.pdf
-    assert response.headers["Location"] == url_for(
-        "portfolios.view_task_order",
-        task_order_id=task_order.id,
-        portfolio_id=portfolio.id,
-        _external=True,
-    )
-
-
 def test_submit_completed_ko_review_page_as_ko(client, user_session, pdf_upload):
     portfolio = PortfolioFactory.create()
 
@@ -440,7 +397,9 @@ def test_submit_completed_ko_review_page_as_ko(client, user_session, pdf_upload)
         "start_date": "02/10/2019",
         "end_date": "03/10/2019",
         "number": "1938745981",
-        "loa": "0813458013405",
+        "loas-0": loa_list[0],
+        "loas-1": loa_list[1],
+        "loas-2": loa_list[2],
         "custom_clauses": "hi im a custom clause",
         "pdf": pdf_upload,
     }
