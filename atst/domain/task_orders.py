@@ -121,6 +121,10 @@ class TaskOrders(object):
         return True
 
     @classmethod
+    def is_signed_by_ko(cls, task_order):
+        return task_order.signer_dod_id is not None
+
+    @classmethod
     def mission_owner_sections(cls):
         section_list = TaskOrders.SECTIONS
         if not app.config.get("CLASSIFIED"):
