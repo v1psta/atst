@@ -97,7 +97,7 @@ class TaskOrders(object):
             failed = []
 
             for attr in TaskOrders.SECTIONS[section]:
-                if getattr(task_order, attr):
+                if getattr(task_order, attr) is not None:
                     passed.append(attr)
                 else:
                     failed.append(attr)
