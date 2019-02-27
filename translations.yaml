@@ -6,7 +6,6 @@
   #   title: A title with <a href="#">a link</a>!
 
   # `{{ "login.title" | translate | safe }}`
-
 audit_log:
   events:
     default:
@@ -298,6 +297,8 @@ fragments:
     bullet_1: Make sure the information below matches the final task order and is accurate and up-to-date
     bullet_2: Upload your Task Order (TO) document
     bullet_3: Add both the Task Order (TO) and Line(s) of Accounting (LOA) numbers
+  portfolio_admin:
+    none: Not Selected
 login:
   ccpo_logo_alt_text: Cloud Computing Program Office Logo
   certificate_selection:
