@@ -209,8 +209,7 @@ def test_show_task_order_form(task_order):
         task_order.creator, task_order_id=task_order.id
     )
     assert (
-        another_workflow.form.data["defense_component"]
-        == task_order.portfolio.defense_component
+        another_workflow.form.data["defense_component"] == task_order.defense_component
     )
 
 

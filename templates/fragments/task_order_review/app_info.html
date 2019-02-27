@@ -2,7 +2,7 @@
 
 <div class="row">
   {{ ReviewField(("task_orders.new.review.portfolio" | translate), task_order.portfolio_name) }}
-  {{ ReviewField(("task_orders.new.review.dod" | translate), task_order.portfolio.defense_component, filter="normalizeOrder") }}
+  {{ ReviewField(("task_orders.new.review.dod" | translate), task_order.defense_component, filter="normalizeOrder") }}
 </div>
 <div class="row">
   {{ ReviewField(("task_orders.new.review.scope" | translate), task_order.scope) }}
