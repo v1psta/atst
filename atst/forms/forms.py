@@ -24,8 +24,18 @@ class ValidatedForm(FlaskForm):
 
 
 class CacheableForm(ValidatedForm):
+    EMPTY_LIST_FIELD = ["", None]
+
     def __init__(self, formdata=None, **kwargs):
         formdata = formdata or {}
         cached_data = current_app.form_cache.from_request(http_request)
         cached_data.update(formdata)
         super().__init__(cached_data, **kwargs)
+
+    @property
+    def data(self):
+        _data = super(FlaskForm, self).data
+        for field in _data:
+            if _data[field].__class__.__name__ == "list":
+                _data[field] = [el for el in _data[field] if el not in self.EMPTY_LIST_FIELD]
+        return _data

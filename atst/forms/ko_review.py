@@ -11,8 +11,6 @@ from atst.utils.localization import translate
 
 
 class KOReviewForm(CacheableForm):
-    EMPTY_LOA = ["", None]
-
     start_date = DateField(
         translate("forms.ko_review.start_date_label"), format="%m/%d/%Y"
     )
@@ -36,9 +34,3 @@ class KOReviewForm(CacheableForm):
         description=translate("forms.ko_review.custom_clauses_description"),
         validators=[Optional()],
     )
-
-    @property
-    def data(self):
-        _data = super(FlaskForm, self).data
-        _data["loas"] = [n for n in _data["loas"] if n not in self.EMPTY_LOA]
-        return _data
