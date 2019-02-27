@@ -2,13 +2,13 @@ from wtforms.fields.html5 import EmailField, TelField
 from wtforms.fields import StringField, TextAreaField
 from wtforms.validators import Email, Optional
 
-from .forms import CacheableForm
+from .forms import BaseForm
 from .validators import Name, PhoneNumber
 
 from atst.utils.localization import translate
 
 
-class CCPOReviewForm(CacheableForm):
+class CCPOReviewForm(BaseForm):
     comment = TextAreaField(
         translate("forms.ccpo_review.comment_label"),
         description=translate("forms.ccpo_review.comment_description"),

@@ -5,12 +5,12 @@ from wtforms.validators import Required
 
 from atst.forms.validators import PhoneNumber
 
-from .forms import CacheableForm
+from .forms import BaseForm
 from .data import REQUIRED_DISTRIBUTIONS
 from atst.utils.localization import translate
 
 
-class DD254Form(CacheableForm):
+class DD254Form(BaseForm):
     certifying_official = StringField(
         translate("forms.dd_254.certifying_official.label"),
         description=translate("forms.dd_254.certifying_official.description"),

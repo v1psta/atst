@@ -1,11 +1,11 @@
 from wtforms.fields import StringField
 from wtforms.validators import Length
 
-from .forms import CacheableForm
+from .forms import BaseForm
 from atst.utils.localization import translate
 
 
-class PortfolioForm(CacheableForm):
+class PortfolioForm(BaseForm):
     name = StringField(
         translate("forms.portfolio.name_label"),
         validators=[

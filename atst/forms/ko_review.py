@@ -4,12 +4,12 @@ from wtforms.fields.html5 import DateField
 from wtforms.fields import StringField, TextAreaField, FileField, FieldList
 from wtforms.validators import Optional, Length
 
-from .forms import CacheableForm
+from .forms import BaseForm
 
 from atst.utils.localization import translate
 
 
-class KOReviewForm(CacheableForm):
+class KOReviewForm(BaseForm):
     start_date = DateField(
         translate("forms.ko_review.start_date_label"), format="%m/%d/%Y"
     )
