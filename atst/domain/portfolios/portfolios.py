@@ -16,7 +16,7 @@ class PortfolioError(Exception):
 
 class Portfolios(object):
     @classmethod
-    def create(cls, user, name, defense_component):
+    def create(cls, user, name, defense_component=None):
         portfolio = PortfoliosQuery.create(
             name=name, defense_component=defense_component
         )

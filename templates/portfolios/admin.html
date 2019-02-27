@@ -24,12 +24,16 @@
           <button type="submit" class="usa-button usa-button-big usa-button-primary" tabindex="0">Save</button>
         </div>
       </div>
-      <div class='defense-row'>
-        <div>
-          <div class='admin-title'>{{ "forms.task_order.defense_component_label" | translate }}</div>
-          <div class='admin-content'>{{ portfolio.defense_component }}</div>
+        <div class='defense-row'>
+          <div>
+            <div class='admin-title'>{{ "forms.task_order.defense_component_label" | translate }}</div>
+            {% if portfolio.defense_component %}
+              <div class='admin-content'>{{ portfolio.defense_component }}</div>
+            {% else %}
+              <div class='admin-content'>{{ "fragments.portfolio_admin.none" | translate }}</div>
+            {% endif %}
+          </div>
         </div>
-      </div>
     </form>
 
     {% include "fragments/audit_events_log.html" %}
