@@ -37,5 +37,7 @@ class CacheableForm(ValidatedForm):
         _data = super(FlaskForm, self).data
         for field in _data:
             if _data[field].__class__.__name__ == "list":
-                _data[field] = [el for el in _data[field] if el not in self.EMPTY_LIST_FIELD]
+                _data[field] = [
+                    el for el in _data[field] if el not in self.EMPTY_LIST_FIELD
+                ]
         return _data
