@@ -29,12 +29,12 @@ def test_section_completion_status():
     section = dict_keys[0]
     attrs = TaskOrders.SECTIONS[section].copy()
     attrs.remove("portfolio_name")
+    attrs.remove("defense_component")
     task_order = TaskOrderFactory.create(**{k: None for k in attrs})
     leftover = attrs.pop()
 
     for attr in attrs:
         setattr(task_order, attr, "str12345")
-
     assert TaskOrders.section_completion_status(task_order, section) == "draft"
 
     setattr(task_order, leftover, "str12345")

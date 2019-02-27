@@ -104,6 +104,7 @@ class PortfolioFactory(Base):
         model = Portfolio
 
     name = factory.Faker("name")
+    defense_component = factory.LazyFunction(random_service_branch)
 
     @classmethod
     def _create(cls, model_class, *args, **kwargs):
@@ -227,7 +228,6 @@ class TaskOrderFactory(Base):
     clin_02 = factory.LazyFunction(lambda *args: random.randrange(100, 100_000))
     clin_04 = factory.LazyFunction(lambda *args: random.randrange(100, 100_000))
 
-    defense_component = factory.LazyFunction(random_service_branch)
     app_migration = random_choice(data.APP_MIGRATION)
     native_apps = random.choice(["yes", "no", "not_sure"])
     complexity = [random_choice(data.APPLICATION_COMPLEXITY)]

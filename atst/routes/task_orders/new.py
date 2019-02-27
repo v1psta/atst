@@ -149,6 +149,8 @@ class UpdateTaskOrderWorkflow(ShowTaskOrderWorkflow):
         to_data = self.form.data.copy()
         if "portfolio_name" in to_data:
             to_data.pop("portfolio_name")
+        if "defense_component" in to_data:
+            to_data.pop("defense_component")
 
         # don't save other text in DB unless "other" is checked
         if "complexity" in to_data and "other" not in to_data["complexity"]:
@@ -184,7 +186,11 @@ class UpdateTaskOrderWorkflow(ShowTaskOrderWorkflow):
             if self.portfolio_id:
                 pf = Portfolios.get(self.user, self.portfolio_id)
             else:
-                pf = Portfolios.create(self.user, self.form.portfolio_name.data)
+                pf = Portfolios.create(
+                    self.user,
+                    self.form.portfolio_name.data,
+                    self.form.defense_component.data,
+                )
             self._task_order = TaskOrders.create(portfolio=pf, creator=self.user)
             TaskOrders.update(self.user, self.task_order, **self.task_order_form_data)
 
