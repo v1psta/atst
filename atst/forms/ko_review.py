@@ -1,5 +1,4 @@
 from flask_wtf.file import FileAllowed
-from flask_wtf import FlaskForm
 
 from wtforms.fields.html5 import DateField
 from wtforms.fields import StringField, TextAreaField, FileField, FieldList
