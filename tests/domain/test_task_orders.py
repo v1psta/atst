@@ -1,6 +1,11 @@
 import pytest
 
-from atst.domain.task_orders import TaskOrders, TaskOrderError, DD254s
+from atst.domain.task_orders import (
+    TaskOrders,
+    TaskOrderError,
+    InvalidOfficerError,
+    DD254s,
+)
 from atst.domain.exceptions import UnauthorizedError
 from atst.models.attachment import Attachment
 
@@ -125,6 +130,26 @@ def test_task_order_access():
         "add_officer",
         [task_order, "contracting_officer", rando.to_dictionary()],
     )
+
+
+def test_remove_valid_officer():
+    task_order = TaskOrderFactory.create()
+    owner = task_order.portfolio.owner
+    TaskOrders.add_officer(
+        owner, task_order, "contracting_officer", owner.to_dictionary()
+    )
+
+    assert task_order.contracting_officer == owner
+
+    TaskOrders.remove_officer(task_order, "contracting_officer")
+    assert task_order.contracting_officer is None
+
+
+def test_remove_invalid_officer():
+    task_order = TaskOrderFactory.create()
+
+    with pytest.raises(InvalidOfficerError):
+        TaskOrders.remove_officer(task_order, "invalid_officer_type")
 
 
 def test_dd254_complete():

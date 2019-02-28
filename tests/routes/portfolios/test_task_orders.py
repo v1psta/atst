@@ -5,11 +5,14 @@ from datetime import timedelta, date
 from atst.domain.roles import Roles
 from atst.domain.task_orders import TaskOrders
 from atst.models.portfolio_role import Status as PortfolioStatus
+from atst.models.invitation import Status as InvitationStatus
 from atst.utils.localization import translate
 from atst.queue import queue
+from atst.domain.invitations import Invitations
 
 from tests.factories import (
     PortfolioFactory,
+    InvitationFactory,
     PortfolioRoleFactory,
     TaskOrderFactory,
     UserFactory,
@@ -20,9 +23,18 @@ from tests.factories import (
 from tests.utils import captured_templates
 
 
+@pytest.fixture
+def portfolio():
+    return PortfolioFactory.create()
+
+
+@pytest.fixture
+def user():
+    return UserFactory.create()
+
+
 class TestPortfolioFunding:
-    def test_portfolio_with_no_task_orders(self, app, user_session):
-        portfolio = PortfolioFactory.create()
+    def test_portfolio_with_no_task_orders(self, app, user_session, portfolio):
         user_session(portfolio.owner)
 
         with captured_templates(app) as templates:
@@ -38,8 +50,7 @@ class TestPortfolioFunding:
             assert context["active_task_orders"] == []
             assert context["expired_task_orders"] == []
 
-    def test_funded_portfolio(self, app, user_session):
-        portfolio = PortfolioFactory.create()
+    def test_funded_portfolio(self, app, user_session, portfolio):
         user_session(portfolio.owner)
 
         pending_to = TaskOrderFactory.create(portfolio=portfolio)
@@ -71,8 +82,7 @@ class TestPortfolioFunding:
             assert context["funding_end_date"] is end_date
             assert context["total_balance"] == active_to1.budget + active_to2.budget
 
-    def test_expiring_and_funded_portfolio(self, app, user_session):
-        portfolio = PortfolioFactory.create()
+    def test_expiring_and_funded_portfolio(self, app, user_session, portfolio):
         user_session(portfolio.owner)
 
         expiring_to = TaskOrderFactory.create(
@@ -98,8 +108,7 @@ class TestPortfolioFunding:
             assert context["funding_end_date"] is active_to.end_date
             assert context["funded"] == True
 
-    def test_expiring_and_unfunded_portfolio(self, app, user_session):
-        portfolio = PortfolioFactory.create()
+    def test_expiring_and_unfunded_portfolio(self, app, user_session, portfolio):
         user_session(portfolio.owner)
 
         expiring_to = TaskOrderFactory.create(
@@ -154,6 +163,16 @@ class TestTaskOrderInvitations:
         assert updated_task_order.so_first_name == "Boba"
         assert updated_task_order.so_last_name == "Fett"
         assert len(queue.get_queue()) == queue_length
+        assert response.status_code == 302
+        assert (
+            url_for(
+                "portfolios.task_order_invitations",
+                portfolio_id=self.portfolio.id,
+                task_order_id=self.task_order.id,
+                _external=True,
+            )
+            == response.headers["Location"]
+        )
 
     def test_editing_with_complete_data(self, user_session, client):
         queue_length = len(queue.get_queue())
@@ -178,6 +197,16 @@ class TestTaskOrderInvitations:
         assert updated_task_order.ko_email == "luke@skywalker.mil"
         assert updated_task_order.ko_phone_number == "0123456789"
         assert len(queue.get_queue()) == queue_length + 1
+        assert response.status_code == 302
+        assert (
+            url_for(
+                "portfolios.task_order_invitations",
+                portfolio_id=self.portfolio.id,
+                task_order_id=self.task_order.id,
+                _external=True,
+            )
+            == response.headers["Location"]
+        )
 
     def test_editing_with_invalid_data(self, user_session, client):
         queue_length = len(queue.get_queue())
@@ -196,19 +225,18 @@ class TestTaskOrderInvitations:
         updated_task_order = TaskOrders.get(self.portfolio.owner, self.task_order.id)
         assert updated_task_order.so_first_name != "Boba"
         assert len(queue.get_queue()) == queue_length
+        assert response.status_code == 400
 
 
-def test_ko_can_view_task_order(client, user_session):
-    portfolio = PortfolioFactory.create()
-    ko = UserFactory.create()
+def test_ko_can_view_task_order(client, user_session, portfolio, user):
     PortfolioRoleFactory.create(
-        role=Roles.get("officer"),
+        role=Roles.get("owner"),
         portfolio=portfolio,
-        user=ko,
+        user=user,
         status=PortfolioStatus.ACTIVE,
     )
-    task_order = TaskOrderFactory.create(portfolio=portfolio, contracting_officer=ko)
-    user_session(ko)
+    task_order = TaskOrderFactory.create(portfolio=portfolio, contracting_officer=user)
+    user_session(user)
 
     response = client.get(
         url_for(
@@ -220,7 +248,7 @@ def test_ko_can_view_task_order(client, user_session):
     assert response.status_code == 200
     assert translate("common.manage") in response.data.decode()
 
-    TaskOrders.update(ko, task_order, clin_01=None)
+    TaskOrders.update(user, task_order, clin_01=None)
     response = client.get(
         url_for(
             "portfolios.view_task_order",
@@ -232,8 +260,7 @@ def test_ko_can_view_task_order(client, user_session):
     assert translate("common.manage") not in response.data.decode()
 
 
-def test_can_view_task_order_invitations_when_complete(client, user_session):
-    portfolio = PortfolioFactory.create()
+def test_can_view_task_order_invitations_when_complete(client, user_session, portfolio):
     user_session(portfolio.owner)
     task_order = TaskOrderFactory.create(portfolio=portfolio)
     response = client.get(
@@ -246,8 +273,9 @@ def test_can_view_task_order_invitations_when_complete(client, user_session):
     assert response.status_code == 200
 
 
-def test_cant_view_task_order_invitations_when_not_complete(client, user_session):
-    portfolio = PortfolioFactory.create()
+def test_cant_view_task_order_invitations_when_not_complete(
+    client, user_session, portfolio
+):
     user_session(portfolio.owner)
     task_order = TaskOrderFactory.create(portfolio=portfolio, clin_01=None)
     response = client.get(
@@ -324,8 +352,7 @@ def test_cor_cant_view_review_until_to_completed(client, user_session):
     assert response.status_code == 404
 
 
-def test_mo_redirected_to_build_page(client, user_session):
-    portfolio = PortfolioFactory.create()
+def test_mo_redirected_to_build_page(client, user_session, portfolio):
     user_session(portfolio.owner)
     task_order = TaskOrderFactory.create(portfolio=portfolio)
 
@@ -335,8 +362,7 @@ def test_mo_redirected_to_build_page(client, user_session):
     assert response.status_code == 200
 
 
-def test_cor_redirected_to_build_page(client, user_session):
-    portfolio = PortfolioFactory.create()
+def test_cor_redirected_to_build_page(client, user_session, portfolio):
     cor = UserFactory.create()
     PortfolioRoleFactory.create(
         role=Roles.get("officer"),
@@ -354,20 +380,18 @@ def test_cor_redirected_to_build_page(client, user_session):
     assert response.status_code == 200
 
 
-def test_submit_completed_ko_review_page_as_cor(client, user_session, pdf_upload):
-    portfolio = PortfolioFactory.create()
-
-    cor = UserFactory.create()
-
+def test_submit_completed_ko_review_page_as_cor(
+    client, user_session, pdf_upload, portfolio, user
+):
     PortfolioRoleFactory.create(
         role=Roles.get("officer"),
         portfolio=portfolio,
-        user=cor,
+        user=user,
         status=PortfolioStatus.ACTIVE,
     )
 
     task_order = TaskOrderFactory.create(
-        portfolio=portfolio, contracting_officer_representative=cor
+        portfolio=portfolio, contracting_officer_representative=user
     )
 
     form_data = {
@@ -379,7 +403,7 @@ def test_submit_completed_ko_review_page_as_cor(client, user_session, pdf_upload
         "pdf": pdf_upload,
     }
 
-    user_session(cor)
+    user_session(user)
 
     response = client.post(
         url_for(
@@ -399,9 +423,9 @@ def test_submit_completed_ko_review_page_as_cor(client, user_session, pdf_upload
     )
 
 
-def test_submit_completed_ko_review_page_as_ko(client, user_session, pdf_upload):
-    portfolio = PortfolioFactory.create()
-
+def test_submit_completed_ko_review_page_as_ko(
+    client, user_session, pdf_upload, portfolio
+):
     ko = UserFactory.create()
 
     PortfolioRoleFactory.create(
@@ -443,8 +467,7 @@ def test_submit_completed_ko_review_page_as_ko(client, user_session, pdf_upload)
     assert task_order.loas == loa_list
 
 
-def test_so_review_page(app, client, user_session):
-    portfolio = PortfolioFactory.create()
+def test_so_review_page(app, client, user_session, portfolio):
     so = UserFactory.create()
     PortfolioRoleFactory.create(
         role=Roles.get("officer"),
@@ -482,8 +505,7 @@ def test_so_review_page(app, client, user_session):
         )
 
 
-def test_submit_so_review(app, client, user_session):
-    portfolio = PortfolioFactory.create()
+def test_submit_so_review(app, client, user_session, portfolio):
     so = UserFactory.create()
     PortfolioRoleFactory.create(
         role=Roles.get("officer"),
@@ -514,3 +536,111 @@ def test_submit_so_review(app, client, user_session):
 
     assert task_order.dd_254
     assert task_order.dd_254.certifying_official == dd_254_data["certifying_official"]
+
+
+def test_resend_invite_when_invalid_invite_officer(
+    app, client, user_session, portfolio, user
+):
+    queue_length = len(queue.get_queue())
+
+    task_order = TaskOrderFactory.create(
+        portfolio=portfolio, contracting_officer=user, ko_invite=True
+    )
+
+    PortfolioRoleFactory.create(
+        role=Roles.get("owner"),
+        portfolio=portfolio,
+        user=user,
+        status=PortfolioStatus.ACTIVE,
+    )
+
+    user_session(user)
+
+    response = client.post(
+        url_for(
+            "portfolios.resend_invite",
+            portfolio_id=portfolio.id,
+            task_order_id=task_order.id,
+            _external=True,
+        ),
+        data={"invite_type": "invalid_invite_type"},
+    )
+
+    assert response.status_code == 404
+    assert len(queue.get_queue()) == queue_length
+
+
+def test_resend_invite_when_officer_type_missing(
+    app, client, user_session, portfolio, user
+):
+    queue_length = len(queue.get_queue())
+
+    task_order = TaskOrderFactory.create(
+        portfolio=portfolio, contracting_officer=None, ko_invite=True
+    )
+
+    PortfolioRoleFactory.create(
+        role=Roles.get("owner"),
+        portfolio=portfolio,
+        user=user,
+        status=PortfolioStatus.ACTIVE,
+    )
+
+    user_session(user)
+
+    response = client.post(
+        url_for(
+            "portfolios.resend_invite",
+            portfolio_id=portfolio.id,
+            task_order_id=task_order.id,
+            _external=True,
+        ),
+        data={"invite_type": "contracting_officer_invite"},
+    )
+
+    assert response.status_code == 404
+    assert len(queue.get_queue()) == queue_length
+
+
+def test_resend_invite_when_ko(app, client, user_session, portfolio, user):
+    queue_length = len(queue.get_queue())
+
+    task_order = TaskOrderFactory.create(
+        portfolio=portfolio, contracting_officer=user, ko_invite=True
+    )
+
+    portfolio_role = PortfolioRoleFactory.create(
+        role=Roles.get("owner"),
+        portfolio=portfolio,
+        user=user,
+        status=PortfolioStatus.ACTIVE,
+    )
+
+    original_invitation = Invitations.create(
+        inviter=user, portfolio_role=portfolio_role, email=user.email
+    )
+
+    user_session(user)
+
+    response = client.post(
+        url_for(
+            "portfolios.resend_invite",
+            portfolio_id=portfolio.id,
+            task_order_id=task_order.id,
+            _external=True,
+        ),
+        data={"invite_type": "ko_invite"},
+    )
+
+    assert original_invitation.status == InvitationStatus.REVOKED
+    assert response.status_code == 302
+    assert (
+        url_for(
+            "portfolios.task_order_invitations",
+            portfolio_id=portfolio.id,
+            task_order_id=task_order.id,
+            _external=True,
+        )
+        == response.headers["Location"]
+    )
+    assert len(queue.get_queue()) == queue_length + 1

@@ -14,6 +14,10 @@ class TaskOrderError(Exception):
     pass
 
 
+class InvalidOfficerError(Exception):
+    pass
+
+
 class TaskOrders(object):
     SECTIONS = {
         "app_info": [
@@ -144,6 +148,15 @@ class TaskOrders(object):
         "contracting_officer_representative",
         "security_officer",
     ]
+
+    @classmethod
+    def remove_officer(cls, task_order, officer_type):
+        if officer_type in TaskOrders.OFFICERS:
+            setattr(task_order, officer_type, None)
+            db.session.add(task_order)
+            db.session.commit()
+        else:
+            raise (InvalidOfficerError)
 
     @classmethod
     def add_officer(cls, user, task_order, officer_type, officer_data):

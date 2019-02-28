@@ -23,6 +23,11 @@ common:
   manage: manage
   save_and_continue: Save & Continue
   sign: Sign
+  officer_helpers:
+    underscore_to_friendly:
+      contracting_officer: Contracting Officer
+      security_officer: Security Officer
+      contracting_officer_representative: Contracting Officer Representative
 components:
   modal:
     close: Close

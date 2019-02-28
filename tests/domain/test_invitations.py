@@ -7,6 +7,7 @@ from atst.domain.invitations import (
     InvitationError,
     WrongUserError,
     ExpiredError,
+    NotFoundError,
 )
 from atst.models.invitation import Status
 
@@ -144,3 +145,15 @@ def test_audit_event_for_accepted_invite():
     accepted_event = AuditLog.get_by_resource(invite.id)[0]
     assert "email" in accepted_event.event_details
     assert "dod_id" in accepted_event.event_details
+
+
+def test_lookup_by_user_and_portfolio():
+    portfolio = PortfolioFactory.create()
+    user = UserFactory.create()
+    ws_role = PortfolioRoleFactory.create(user=user, portfolio=portfolio)
+    invite = Invitations.create(portfolio.owner, ws_role, user.email)
+
+    assert Invitations.lookup_by_portfolio_and_user(portfolio, user) == invite
+
+    with pytest.raises(NotFoundError):
+        Invitations.lookup_by_portfolio_and_user(portfolio, UserFactory.create())
