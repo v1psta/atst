@@ -363,6 +363,8 @@ def test_submit_completed_ko_review_page_as_cor(client, user_session, pdf_upload
         "pdf": pdf_upload,
     }
 
+    user_session(cor)
+
     response = client.post(
         url_for(
             "portfolios.ko_review",
@@ -374,7 +376,10 @@ def test_submit_completed_ko_review_page_as_cor(client, user_session, pdf_upload
 
     assert task_order.pdf
     assert response.headers["Location"] == url_for(
-        "task_orders.signature_requested", task_order_id=task_order.id, _external=True
+        "portfolios.view_task_order",
+        task_order_id=task_order.id,
+        portfolio_id=portfolio.id,
+        _external=True,
     )
 
 
@@ -392,6 +397,7 @@ def test_submit_completed_ko_review_page_as_ko(client, user_session, pdf_upload)
 
     task_order = TaskOrderFactory.create(portfolio=portfolio, contracting_officer=ko)
     user_session(ko)
+    loa_list = ["123123123", "456456456", "789789789"]
 
     form_data = {
         "start_date": "02/10/2019",

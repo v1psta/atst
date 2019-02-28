@@ -1,7 +1,7 @@
 """Update LOA to Array Type
 
 Revision ID: db161adbafdf
-Revises: fb22e47972a3
+Revises: ec1ba2363191
 Create Date: 2019-02-15 14:28:33.181136
 
 """
@@ -11,7 +11,7 @@ import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
 revision = 'db161adbafdf'
-down_revision = 'fb22e47972a3'
+down_revision = 'ec1ba2363191'
 branch_labels = None
 depends_on = None
 
