@@ -91,10 +91,8 @@ def test_create_new_task_order_for_portfolio(client, user_session):
 
     task_order_data = TaskOrderFactory.dictionary()
     app_info_data = slice_data_for_section(task_order_data, "app_info")
-    portfolio_name = "This is ignored for now"
-    app_info_data["portfolio_name"] = portfolio_name
-    defense_component = "Defense Health Agency"  # this is also ignored
-    app_info_data["defense_component"] = defense_component
+    app_info_data["portfolio_name"] = portfolio.name
+    app_info_data["defense_component"] = portfolio.defense_component
 
     response = client.post(
         url_for("task_orders.update", screen=1, portfolio_id=portfolio.id),
@@ -105,6 +103,8 @@ def test_create_new_task_order_for_portfolio(client, user_session):
 
     created_task_order_id = response.headers["Location"].split("/")[-1]
     created_task_order = TaskOrders.get(creator, created_task_order_id)
+    assert created_task_order.portfolio_name == portfolio.name
+    assert created_task_order.defense_component == portfolio.defense_component
     assert created_task_order.portfolio == portfolio
 
 
