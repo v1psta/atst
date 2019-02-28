@@ -17,11 +17,13 @@ depends_on = None
 
 
 def upgrade():
+    op.alter_column('task_orders', 'cor_invite', type_=sa.Boolean(), server_default=False)
     op.alter_column('task_orders', 'ko_invite', type_=sa.Boolean(), server_default=False)
     op.alter_column('task_orders', 'so_invite', type_=sa.Boolean(), server_default=False)
-    op.alter_column('task_orders', 'cor_invite', type_=sa.Boolean(), server_default=False)
+    op.alter_column('task_orders', 'unlimited_level_of_warrant', type_=sa.Boolean(), server_default=False)
 
 def downgrade():
+    op.alter_column('task_orders', 'cor_invite', server_default=sa.Boolean())
     op.alter_column('task_orders', 'ko_invite', server_default=sa.Boolean())
     op.alter_column('task_orders', 'so_invite', server_default=sa.Boolean())
-    op.alter_column('task_orders', 'cor_invite', server_default=sa.Boolean())
+    op.alter_column('task_orders', 'unlimited_level_of_warrant', server_default=sa.Boolean())
