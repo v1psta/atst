@@ -237,6 +237,11 @@ def new(screen, task_order_id=None, portfolio_id=None):
                 task_order_id=task_order_id,
             )
             url_args["next"] = template_args["next"]
+    elif http_request.args.get("new_to_on_portfolio"):
+        portfolio = Portfolios.get(g.current_user, portfolio_id)
+        template_args["portfolio_name"] = portfolio.name
+        template_args["defense_component"] = portfolio.defense_component
+        template_args["new_to_on_portfolio"] = True
 
     template_args["action_url"] = url_for("task_orders.update", **url_args)
 
