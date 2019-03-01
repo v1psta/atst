@@ -25,7 +25,11 @@
 {% endif %}
 
 <div class="subheading--black">
-    {{ ReviewField(heading="forms.task_order.defense_component_label" | translate, field=defense_component) if new_to_on_portfolio else OptionsInput(form.defense_component) }}
+    {% if new_to_on_portfolio %}
+        {{ ReviewField(heading="forms.task_order.defense_component_label" | translate, field=defense_component) }}
+    {% else %}
+        {{ OptionsInput(form.defense_component) }}
+    {% endif %}
 </div>
 
 <hr>
