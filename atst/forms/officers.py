@@ -35,6 +35,7 @@ class EditTaskOrderOfficersForm(CacheableForm):
         "email",
         "phone_number",
         "dod_id",
+        "invite",
     ]
 
     def process(self, formdata=None, obj=None, data=None, **kwargs):

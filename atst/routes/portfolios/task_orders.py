@@ -12,6 +12,7 @@ from atst.forms.officers import EditTaskOrderOfficersForm
 from atst.models.task_order import Status as TaskOrderStatus
 from atst.forms.ko_review import KOReviewForm
 from atst.forms.dd_254 import DD254Form
+from atst.services.invitation import update_officer_invitations
 
 
 @portfolios_bp.route("/portfolios/<portfolio_id>/task_orders")
@@ -157,6 +158,7 @@ def edit_task_order_invitations(portfolio_id, task_order_id):
         form.populate_obj(task_order)
         db.session.add(task_order)
         db.session.commit()
+        update_officer_invitations(g.current_user, task_order)
 
         return redirect(
             url_for(
