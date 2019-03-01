@@ -2,6 +2,7 @@
 import os
 import sys
 from datetime import datetime, timedelta, date
+import random
 
 parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 sys.path.append(parent_dir)
@@ -20,6 +21,7 @@ from tests.factories import (
     random_future_date,
     random_past_date,
     random_task_order_number,
+    random_service_branch,
 )
 from atst.routes.dev import _DEV_USERS as DEV_USERS
 from atst.domain.csp.reports import MockReportingProvider
@@ -187,7 +189,9 @@ def create_demo_portfolio(name, data):
         )
         return
 
-    portfolio = Portfolios.create(portfolio_owner, name=name)
+    portfolio = Portfolios.create(
+        portfolio_owner, name=name, defense_component=random_service_branch()
+    )
     clin_01 = data["budget"] * 0.8
     clin_03 = data["budget"] * 0.2
 
@@ -222,14 +226,18 @@ def seed_db():
     create_demo_portfolio("B-Wing", MockReportingProvider.REPORT_FIXTURE_MAP["B-Wing"])
 
     # Create Portfolio for Amanda with TO that is expiring soon and does not have another TO
-    unfunded_portfolio = Portfolios.create(amanda, name="TIE Interceptor")
+    unfunded_portfolio = Portfolios.create(
+        amanda, name="TIE Interceptor", defense_component=random_service_branch()
+    )
     add_active_task_order(unfunded_portfolio, active_exp_days=20)
     add_expired_task_order(unfunded_portfolio)
     add_members_to_portfolio(unfunded_portfolio, users=users)
     add_applications_to_portfolio(unfunded_portfolio, application_info)
 
     # Create Portfolio for Amanda with TO that is expiring soon and has another TO
-    funded_portfolio = Portfolios.create(amanda, name="TIE Fighter")
+    funded_portfolio = Portfolios.create(
+        amanda, name="TIE Fighter", defense_component=random_service_branch()
+    )
     add_active_task_order(funded_portfolio, active_exp_days=20)
     add_expired_task_order(funded_portfolio)
     add_pending_task_order(funded_portfolio)
@@ -238,7 +246,9 @@ def seed_db():
 
     # create a portfolio 'Y-Wing' for each user
     for user in users:
-        portfolio = Portfolios.create(user, name="Y-Wing")
+        portfolio = Portfolios.create(
+            user, name="Y-Wing", defense_component=random_service_branch()
+        )
         add_members_to_portfolio(portfolio, users=users)
         add_active_task_order(portfolio)
         add_expired_task_order(portfolio)
