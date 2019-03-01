@@ -19,6 +19,11 @@ from werkzeug.datastructures import FileStorage
 
 from atst.models import Attachment, Base, types, mixins
 
+# Imports used for mocking TO balance
+from atst.domain.csp.reports import MockReportingProvider
+from flask import current_app as app
+import random
+
 
 class Status(Enum):
     STARTED = "Started"
@@ -136,6 +141,10 @@ class TaskOrder(Base, mixins.TimestampsMixin):
         return self.status == Status.ACTIVE
 
     @property
+    def is_expired(self):
+        return self.status == Status.EXPIRED
+
+    @property
     def status(self):
         if self.is_submitted:
             now = pendulum.now().date()
@@ -164,6 +173,15 @@ class TaskOrder(Base, mixins.TimestampsMixin):
 
     @property
     def balance(self):
+        # Faking the remaining balance using the stubbed reporting data for A-Wing & B-Wing
+        if (
+            self.portfolio_name in MockReportingProvider.REPORT_FIXTURE_MAP
+            and self.is_active
+        ):
+            return self.budget - app.csp.reports.get_total_spending(self.portfolio)
+        # Faking an almost fully spent TO if the TO is expired
+        if self.is_expired:
+            return random.randrange(300) / 100  # nosec
         # TODO: somehow calculate the remaining balance. For now, assume $0 spent
         return self.budget
 

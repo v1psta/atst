@@ -27,10 +27,10 @@
       </div>
       <div class='portfolio-header__budget--amount'>
         <span class='portfolio-header__budget--dollars'>
-          {{ portfolio.task_orders | selectattr('is_active') | sum(attribute='budget') | justDollars }}
+          {{ portfolio.task_orders | selectattr('is_active') | sum(attribute='balance') | justDollars }}
         </span>
         <span class='portfolio-header__budget--cents'>
-          .{{ portfolio.task_orders | selectattr('is_active') | sum(attribute='budget') | justCents }}
+          .{{ portfolio.task_orders | selectattr('is_active') | sum(attribute='balance') | justCents }}
         </span>
       </div>
     </div>
