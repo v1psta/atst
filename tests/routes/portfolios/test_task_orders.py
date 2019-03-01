@@ -358,7 +358,7 @@ def test_submit_completed_ko_review_page_as_cor(client, user_session, pdf_upload
         "start_date": "02/10/2019",
         "end_date": "03/10/2019",
         "number": "1938745981",
-        "loa": "0813458013405",
+        "loas-0": "0813458013405",
         "custom_clauses": "hi im a custom clause",
         "pdf": pdf_upload,
     }
@@ -397,12 +397,15 @@ def test_submit_completed_ko_review_page_as_ko(client, user_session, pdf_upload)
 
     task_order = TaskOrderFactory.create(portfolio=portfolio, contracting_officer=ko)
     user_session(ko)
+    loa_list = ["123123123", "456456456", "789789789"]
 
     form_data = {
         "start_date": "02/10/2019",
         "end_date": "03/10/2019",
         "number": "1938745981",
-        "loa": "0813458013405",
+        "loas-0": loa_list[0],
+        "loas-1": loa_list[1],
+        "loas-2": loa_list[2],
         "custom_clauses": "hi im a custom clause",
         "pdf": pdf_upload,
     }
@@ -419,6 +422,7 @@ def test_submit_completed_ko_review_page_as_ko(client, user_session, pdf_upload)
     assert response.headers["Location"] == url_for(
         "task_orders.signature_requested", task_order_id=task_order.id, _external=True
     )
+    assert task_order.loas == loa_list
 
 
 def test_so_review_page(app, client, user_session):

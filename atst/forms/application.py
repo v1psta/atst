@@ -15,8 +15,6 @@ class ApplicationForm(FlaskForm):
 
 
 class NewApplicationForm(ApplicationForm):
-    EMPTY_ENVIRONMENT_NAMES = ["", None]
-
     environment_names = FieldList(
         StringField(label=translate("forms.application.environment_names_label")),
         validators=[
@@ -32,13 +30,3 @@ class NewApplicationForm(ApplicationForm):
             ),
         ],
     )
-
-    @property
-    def data(self):
-        _data = super(FlaskForm, self).data
-        _data["environment_names"] = [
-            n
-            for n in _data["environment_names"]
-            if n not in self.EMPTY_ENVIRONMENT_NAMES
-        ]
-        return _data

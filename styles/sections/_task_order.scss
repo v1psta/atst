@@ -323,6 +323,53 @@
       margin: 0;
     }
   }
+
+  .task-order__loa-list {
+    ul {
+      padding-left: 0;
+    }
+
+
+
+    .task-order__loa-add-item {
+      display: flex;
+      flex-direction: row-reverse;
+      justify-content: space-between;
+      max-width: 30em;
+
+      .icon-link {
+        &:first-child {
+          margin-right: -$gap;
+        }
+      }
+    }
+  }
+
+  .task-order__loa-list-item {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    position: relative;
+
+    .usa-input {
+      flex-grow: 1;
+    }
+
+    .loa-list-item__remover {
+      @include icon-link;
+      @include icon-link-vertical;
+      @include icon-link-color($color-red, $color-red-lightest);
+
+      margin-bottom: 0;
+      margin-right: -$gap;
+
+      position: absolute;
+      margin-top: 3 * $gap;
+      margin-left: $gap;
+      left: 35em;
+      max-width: 30em;
+    }
+  }
 }
 
 .task-order-invitations {

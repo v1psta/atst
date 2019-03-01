@@ -5,6 +5,8 @@ from atst.utils.flash import formatted_flash as flash
 
 
 class ValidatedForm(FlaskForm):
+    EMPTY_LIST_FIELD = ["", None]
+
     def perform_extra_validation(self, *args, **kwargs):
         """Performs any applicable extra validation. Must
         return True if the form is valid or False otherwise."""
@@ -13,6 +15,11 @@ class ValidatedForm(FlaskForm):
     @property
     def data(self):
         _data = super().data
+        for field in _data:
+            if _data[field].__class__.__name__ == "list":
+                _data[field] = [
+                    el for el in _data[field] if el not in self.EMPTY_LIST_FIELD
+                ]
         _data.pop("csrf_token", None)
         return _data
 

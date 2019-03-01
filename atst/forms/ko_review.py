@@ -1,11 +1,10 @@
 from flask_wtf.file import FileAllowed
 
 from wtforms.fields.html5 import DateField
-from wtforms.fields import StringField, TextAreaField, FileField
+from wtforms.fields import StringField, TextAreaField, FileField, FieldList
 from wtforms.validators import Optional, Length
 
 from .forms import CacheableForm
-from .validators import IsNumber
 
 from atst.utils.localization import translate
 
@@ -26,8 +25,8 @@ class KOReviewForm(CacheableForm):
     number = StringField(
         translate("forms.ko_review.to_number"), validators=[Length(min=10)]
     )
-    loa = StringField(
-        translate("forms.ko_review.loa"), validators=[Length(min=10), IsNumber()]
+    loas = FieldList(
+        StringField(translate("forms.ko_review.loa"), validators=[Optional()])
     )
     custom_clauses = TextAreaField(
         translate("forms.ko_review.custom_clauses_label"),
