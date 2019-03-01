@@ -206,20 +206,22 @@ def get_started():
 @task_orders_bp.route("/task_orders/new/<int:screen>/<task_order_id>")
 @task_orders_bp.route("/portfolios/<portfolio_id>/task_orders/new/<int:screen>")
 def new(screen, task_order_id=None, portfolio_id=None):
+    workflow = ShowTaskOrderWorkflow(g.current_user, screen, task_order_id)
+    template_args = {
+        "current": screen,
+        "task_order_id": task_order_id,
+        "screens": workflow.display_screens,
+        "form": workflow.form,
+        "complete": workflow.is_complete,
+    }
+
     if task_order_id and screen is 4:
         task_order = TaskOrders.get(g.current_user, task_order_id)
         if not TaskOrders.all_sections_complete(task_order):
             flash("task_order_draft")
 
-    workflow = ShowTaskOrderWorkflow(g.current_user, screen, task_order_id)
-    template_args = {
-        "current": screen,
-        "task_order_id": task_order_id,
-        "portfolio_id": portfolio_id,
-        "screens": workflow.display_screens,
-        "form": workflow.form,
-        "complete": workflow.is_complete,
-    }
+    if portfolio_id:
+        template_args["portfolio"] = Portfolios.get(g.current_user, portfolio_id)
 
     url_args = {"screen": screen}
     if task_order_id:
@@ -237,11 +239,6 @@ def new(screen, task_order_id=None, portfolio_id=None):
                 task_order_id=task_order_id,
             )
             url_args["next"] = template_args["next"]
-    elif http_request.args.get("new_to_on_portfolio"):
-        portfolio = Portfolios.get(g.current_user, portfolio_id)
-        template_args["portfolio_name"] = portfolio.name
-        template_args["defense_component"] = portfolio.defense_component
-        template_args["new_to_on_portfolio"] = True
 
     template_args["action_url"] = url_for("task_orders.update", **url_args)
 

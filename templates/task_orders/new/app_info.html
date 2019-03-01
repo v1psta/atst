@@ -16,8 +16,8 @@
 <!-- App Info Section -->
 <h3 class="task-order-form__heading subheading">{{ "task_orders.new.app_info.basic_info_title"| translate }}</h3>
 
-{% if new_to_on_portfolio %}
-    {{ ReviewField(heading="forms.portfolio.name_label" | translate, field=portfolio_name) }}
+{% if portfolio %}
+    {{ ReviewField(heading="forms.portfolio.name_label" | translate, field=portfolio.name) }}
 {% else %}
     {{ TextInput(form.portfolio_name, placeholder="The name of your office or organization", validation="portfolioName") }}
     {{ TextInput(form.scope, paragraph=True) }}
@@ -25,8 +25,8 @@
 {% endif %}
 
 <div class="subheading--black">
-    {% if new_to_on_portfolio %}
-        {{ ReviewField(heading="forms.task_order.defense_component_label" | translate, field=defense_component) }}
+    {% if portfolio %}
+        {{ ReviewField(heading="forms.task_order.defense_component_label" | translate, field=portfolio.defense_component) }}
     {% else %}
         {{ OptionsInput(form.defense_component) }}
     {% endif %}

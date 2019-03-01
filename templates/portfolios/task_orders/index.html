@@ -93,7 +93,7 @@
 <div class="portfolio-funding">
 
   <div class='portfolio-funding__header row'>
-    <a href="{{ url_for("task_orders.new", screen=1, portfolio_id=portfolio.id, new_to_on_portfolio=True) }}" class="usa-button">Start a New Task Order</a>
+    <a href="{{ url_for("task_orders.new", screen=1, portfolio_id=portfolio.id) }}" class="usa-button">Start a New Task Order</a>
   </div>
 
   {% for task_order in pending_task_orders %}
