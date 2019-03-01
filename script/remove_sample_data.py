@@ -43,28 +43,6 @@ dod_ids = [
 ]
 
 
-def create_demo_portfolio(name, data):
-    try:
-        portfolio_owner = Users.get_or_create_by_dod_id("2345678901")  # Amanda
-        # auditor = Users.get_by_dod_id("3453453453")  # Sally
-    except NotFoundError:
-        print(
-            "Could not find demo users; will not create demo portfolio {}".format(name)
-        )
-        return
-
-    portfolio = Portfolios.create(portfolio_owner, name=name)
-
-    for mock_application in data["applications"]:
-        application = Application(
-            portfolio=portfolio, name=mock_application.name, description=""
-        )
-        env_names = [env.name for env in mock_application.environments]
-        envs = Environments.create_many(application, env_names)
-        db.session.add(application)
-        db.session.commit()
-
-
 def remove_sample_data(all_users=False):
     query = db.session.query(User)
     if not all_users:
@@ -123,13 +101,7 @@ def remove_sample_data(all_users=False):
 
 
 if __name__ == "__main__":
-    config = make_config({"DISABLE_CRL_CHECK": True})
+    config = make_config({"DISABLE_CRL_CHECK": True, "DEBUG": False})
     app = make_app(config)
     with app.app_context():
         remove_sample_data()
-        create_demo_portfolio(
-            "Aardvark", MockReportingProvider.REPORT_FIXTURE_MAP["Aardvark"]
-        )
-        create_demo_portfolio(
-            "Beluga", MockReportingProvider.REPORT_FIXTURE_MAP["Beluga"]
-        )
