@@ -22,7 +22,9 @@ def app(request):
     upload_dir = TemporaryDirectory()
 
     config = make_config()
-    config.update({"STORAGE_CONTAINER": upload_dir.name})
+    config.update(
+        {"STORAGE_CONTAINER": upload_dir.name, "CRL_STORAGE_PROVIDER": "LOCAL"}
+    )
 
     _app = make_app(config)
 

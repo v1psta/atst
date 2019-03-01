@@ -200,7 +200,7 @@ def make_crl_validator(app):
         app.crl_cache = NoOpCRLCache(logger=app.logger)
     else:
         crl_locations = []
-        for filename in pathlib.Path(app.config["CRL_CONTAINER"]).glob("*.crl"):
+        for filename in pathlib.Path(app.config["CRL_STORAGE_CONTAINER"]).glob("*.crl"):
             crl_locations.append(filename.absolute())
         app.crl_cache = CRLCache(
             app.config["CA_CHAIN"],
