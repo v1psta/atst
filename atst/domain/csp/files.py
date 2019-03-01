@@ -1,4 +1,6 @@
-from tempfile import NamedTemporaryFile
+import os
+import tarfile
+from tempfile import NamedTemporaryFile, TemporaryDirectory
 from uuid import uuid4
 
 from libcloud.storage.types import Provider
@@ -34,22 +36,25 @@ class FileProviderInterface:
         raise NotImplementedError()
 
 
+def get_rackspace_container(provider, container=None, **kwargs):
+    if provider == "LOCAL":  # pragma: no branch
+        kwargs["key"] = container
+        if not os.path.exists(container):
+            os.mkdir(container)
+        container = ""
+
+    driver = get_driver(getattr(Provider, provider))(**kwargs)
+    return driver.get_container(container)
+
+
 class RackspaceFileProvider(FileProviderInterface):
     def __init__(self, app):
-        self.container = self._get_container(
+        self.container = get_rackspace_container(
             provider=app.config.get("STORAGE_PROVIDER"),
             container=app.config.get("STORAGE_CONTAINER"),
             key=app.config.get("STORAGE_KEY"),
             secret=app.config.get("STORAGE_SECRET"),
         )
-
-    def _get_container(self, provider, container=None, key=None, secret=None):
-        if provider == "LOCAL":  # pragma: no branch
-            key = container
-            container = ""
-
-        driver = get_driver(getattr(Provider, provider))(key=key, secret=secret)
-        return driver.get_container(container)
 
     def upload(self, fyle):
         self._enforce_mimetype(fyle)
@@ -70,3 +75,38 @@ class RackspaceFileProvider(FileProviderInterface):
         with NamedTemporaryFile() as tempfile:
             obj.download(tempfile.name, overwrite_existing=True)
             return open(tempfile.name, "rb")
+
+
+class CRLProviderInterface:
+    def sync_crls(self):  # pragma: no cover
+        """
+        Retrieve copies of the CRLs and unpack them to disk.
+        """
+        raise NotImplementedError()
+
+
+class RackspaceCRLProvider(CRLProviderInterface):
+    def __init__(self, app):
+        provider = app.config.get("CRL_STORAGE_PROVIDER") or app.config.get(
+            "STORAGE_PROVIDER"
+        )
+        self.container = get_rackspace_container(
+            provider=provider,
+            container=app.config.get("CRL_STORAGE_CONTAINER"),
+            key=app.config.get("STORAGE_KEY"),
+            secret=app.config.get("STORAGE_SECRET"),
+            region=app.config.get("CRL_STORAGE_REGION"),
+        )
+        self._crl_dir = app.config.get("CRL_STORAGE_CONTAINER")
+        self._object_name = app.config.get("STORAGE_CRL_ARCHIVE_NAME")
+
+    def sync_crls(self):
+        if not os.path.exists(self._crl_dir):
+            os.mkdir(self._crl_dir)
+
+        obj = self.container.get_object(object_name=self._object_name)
+        with TemporaryDirectory() as tempdir:
+            dl_path = os.path.join(tempdir, self._object_name)
+            obj.download(dl_path, overwrite_existing=True)
+            archive = tarfile.open(dl_path, "r:bz2")
+            archive.extractall(self._crl_dir)

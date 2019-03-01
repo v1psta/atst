@@ -13,6 +13,7 @@ defaults:
     PGDATABASE: circle_test
     REDIS_URI: redis://localhost:6379
     PIP_VERSION: 18.*
+    CRL_STORAGE_PROVIDER: CLOUDFILES
   dockerCmdEnvironment: &dockerCmdEnvironment
     APP_USER: atst
     APP_GROUP: atat
@@ -83,18 +84,9 @@ jobs:
           paths:
             - ./node_modules
           key: node-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
-      - restore_cache:
-          name: "Load Cache: CRLs"
-          keys:
-            - disa-crls-v2
       - run:
           name: "Update CRLs"
           command: ./script/sync-crls
-      - save_cache:
-          name: "Save Cache: CRLs"
-          paths:
-            - ./crl
-          key: disa-crls-v2-{{ .Branch }}-{{ epoch}}
       - run:
           name: "Generate build info"
           command: ./script/generate_build_info.sh

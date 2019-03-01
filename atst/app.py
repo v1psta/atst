@@ -50,10 +50,10 @@ def make_app(config):
     app.config.update({"SESSION_REDIS": app.redis})
 
     make_flask_callbacks(app)
-    make_crl_validator(app)
     register_filters(app)
     make_eda_client(app)
     make_csp_provider(app)
+    make_crl_validator(app)
     make_mailer(app)
     queue.init_app(app)
 
@@ -200,10 +200,13 @@ def make_crl_validator(app):
         app.crl_cache = NoOpCRLCache(logger=app.logger)
     else:
         crl_locations = []
-        for filename in pathlib.Path(app.config["CRL_DIRECTORY"]).glob("*.crl"):
+        for filename in pathlib.Path(app.config["CRL_CONTAINER"]).glob("*.crl"):
             crl_locations.append(filename.absolute())
         app.crl_cache = CRLCache(
-            app.config["CA_CHAIN"], crl_locations, logger=app.logger
+            app.config["CA_CHAIN"],
+            crl_locations,
+            logger=app.logger,
+            crl_update_func=app.csp.crls.sync_crls,
         )
 
 

@@ -2,6 +2,7 @@ import sys
 import os
 import re
 import hashlib
+from datetime import datetime
 from OpenSSL import crypto, SSL
 
 
@@ -56,13 +57,20 @@ class CRLCache(CRLInterface):
     )
 
     def __init__(
-        self, root_location, crl_locations=[], store_class=crypto.X509Store, logger=None
+        self,
+        root_location,
+        crl_locations=[],
+        store_class=crypto.X509Store,
+        logger=None,
+        crl_update_func=None,
     ):
+        self._crl_locations = crl_locations
         self.logger = logger
         self.store_class = store_class
         self.certificate_authorities = {}
+        self._crl_update_func = crl_update_func
         self._load_roots(root_location)
-        self._build_crl_cache(crl_locations)
+        self._build_crl_cache()
 
     def _get_store(self, cert):
         return self._build_store(cert.get_issuer())
@@ -76,12 +84,17 @@ class CRLCache(CRLInterface):
     def _parse_roots(self, root_str):
         return [match.group(0) for match in self._PEM_RE.finditer(root_str)]
 
-    def _build_crl_cache(self, crl_locations):
+    def _build_crl_cache(self):
         self.crl_cache = {}
-        for crl_location in crl_locations:
+        for crl_location in self._crl_locations:
             crl = self._load_crl(crl_location)
             if crl:
-                self.crl_cache[crl.get_issuer().der()] = crl_location
+                issuer_der = crl.get_issuer().der()
+                expires = crl.to_cryptography().next_update
+                self.crl_cache[issuer_der] = {
+                    "location": crl_location,
+                    "expires": expires,
+                }
 
     def _load_crl(self, crl_location):
         with open(crl_location, "rb") as crl_file:
@@ -94,25 +107,40 @@ class CRLCache(CRLInterface):
         store = self.store_class()
         self._log_info("STORE ID: {}. Building store.".format(id(store)))
         store.set_flags(crypto.X509StoreFlags.CRL_CHECK)
-        crl_location = self.crl_cache.get(issuer.der())
+        crl_info = self.crl_cache.get(issuer.der(), {})
         issuer_name = get_common_name(issuer)
 
-        if not crl_location:
+        if not crl_info:
             raise CRLRevocationException(
                 "Could not find matching CRL for issuer with Common Name {}".format(
                     issuer_name
                 )
             )
 
-        crl = self._load_crl(crl_location)
+        self._manage_expiring(crl_info["expires"])
+
+        crl = self._load_crl(crl_info["location"])
         store.add_crl(crl)
+
         self._log_info(
             "STORE ID: {}. Adding CRL with issuer Common Name {}".format(
                 id(store), issuer_name
             )
         )
+
         store = self._add_certificate_chain_to_store(store, crl.get_issuer())
         return store
+
+    def _manage_expiring(self, crl_expiry):
+        """
+        If a CRL is expired and CRLCache has been given a function for updating
+        the physical CRL locations, run the update function and then rebuild
+        the CRL cache.
+        """
+        current = datetime.now(crl_expiry.tzinfo)
+        if self._crl_update_func and current > crl_expiry:
+            self._crl_update_func()
+            self._build_crl_cache()
 
     # this _should_ happen just twice for the DoD PKI (intermediary, root) but
     # theoretically it can build a longer certificate chain
