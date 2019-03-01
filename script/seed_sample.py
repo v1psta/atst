@@ -2,6 +2,7 @@
 import os
 import sys
 from datetime import datetime, timedelta, date
+import random
 
 parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 sys.path.append(parent_dir)
@@ -20,8 +21,13 @@ from tests.factories import (
     random_future_date,
     random_past_date,
     random_task_order_number,
+    random_service_branch,
 )
 from atst.routes.dev import _DEV_USERS as DEV_USERS
+from atst.domain.csp.reports import MockReportingProvider
+from atst.models.application import Application
+from atst.domain.environments import Environments
+
 
 PORTFOLIO_USERS = [
     {
@@ -83,7 +89,7 @@ PORTFOLIO_INVITED_USERS = [
 ]
 
 
-def seed_db():
+def get_users():
     users = []
     for dev_user in DEV_USERS.values():
         try:
@@ -92,166 +98,166 @@ def seed_db():
             user = Users.get_by_dod_id(dev_user["dod_id"])
 
         users.append(user)
+    return users
 
-    amanda = Users.get_by_dod_id("2345678901")
 
-    # create Portfolios for all users that have funding and are not expiring soon
+def add_members_to_portfolio(portfolio, users):
     for user in users:
-        portfolio = Portfolios.create(
-            user, name="{}'s portfolio (not expiring)".format(user.first_name)
-        )
         for portfolio_role in PORTFOLIO_USERS:
-            ws_role = Portfolios.create_member(user, portfolio, portfolio_role)
+            ws_role = Portfolios.create_member(
+                portfolio.owner, portfolio, portfolio_role
+            )
             db.session.refresh(ws_role)
             PortfolioRoles.enable(ws_role)
 
         for portfolio_role in PORTFOLIO_INVITED_USERS:
-            ws_role = Portfolios.create_member(user, portfolio, portfolio_role)
+            ws_role = Portfolios.create_member(
+                portfolio.owner, portfolio, portfolio_role
+            )
             invitation = InvitationFactory.build(
                 portfolio_role=ws_role, status=portfolio_role["status"]
             )
             db.session.add(invitation)
 
-        [old_expired_start, expired_start, expired_end] = sorted(
-            [
-                random_past_date(year_max=3, year_min=2),
-                random_past_date(year_max=2, year_min=1),
-                random_past_date(year_max=1, year_min=1),
-            ]
-        )
-        [
-            first_active_start,
-            second_active_start,
-            first_active_end,
-            second_active_end,
-        ] = sorted(
-            [
-                expired_end,
-                random_past_date(year_max=1, year_min=1),
-                random_future_date(year_min=0, year_max=1),
-                random_future_date(year_min=1, year_max=1),
-            ]
+    db.session.commit()
+
+
+def add_active_task_order(portfolio, active_exp_days=90, clin_01=None, clin_03=None):
+    start = random_past_date(year_max=1, year_min=1)
+    default_kwargs = {
+        "start_date": start,
+        "end_date": (date.today() + timedelta(days=active_exp_days)),
+        "number": random_task_order_number(),
+        "portfolio": portfolio,
+        "clin_02": 0,
+        "clin_04": 0,
+    }
+
+    if clin_01:
+        default_kwargs["clin_01"] = clin_01
+    if clin_03:
+        default_kwargs["clin_03"] = clin_03
+
+    task_order = TaskOrderFactory.build(**default_kwargs)
+    db.session.add(task_order)
+    db.session.commit()
+
+
+def add_expired_task_order(portfolio):
+    start = random_past_date(year_max=3, year_min=2)
+    task_order = TaskOrderFactory.build(
+        start_date=start,
+        end_date=(start + timedelta(days=90)),
+        number=random_task_order_number(),
+        portfolio=portfolio,
+    )
+    db.session.add(task_order)
+    db.session.commit()
+
+
+def add_pending_task_order(portfolio):
+    start_date = random_future_date(year_min=1, year_max=2)
+
+    task_order = TaskOrderFactory.build(
+        start_date=start_date,
+        end_date=(start_date + timedelta(days=90)),
+        number=random_task_order_number(),
+        portfolio=portfolio,
+    )
+    db.session.add(task_order)
+    db.session.commit()
+
+
+def add_applications_to_portfolio(portfolio, applications):
+    for application in applications:
+        Applications.create(
+            portfolio.owner,
+            portfolio=portfolio,
+            name=application["name"],
+            description=application["description"],
+            environment_names=application["environments"],
         )
 
-        date_ranges = [
-            (old_expired_start, expired_start),
-            (expired_start, expired_end),
-            (first_active_start, first_active_end),
-            (second_active_start, second_active_end),
-        ]
-        for (start_date, end_date) in date_ranges:
-            task_order = TaskOrderFactory.build(
-                start_date=start_date,
-                end_date=end_date,
-                number=random_task_order_number(),
-                portfolio=portfolio,
-            )
-            db.session.add(task_order)
 
-        pending_task_order = TaskOrderFactory.build(
-            start_date=None, end_date=None, number=None, portfolio=portfolio
+def create_demo_portfolio(name, data):
+    try:
+        portfolio_owner = Users.get_or_create_by_dod_id("2345678901")  # Amanda
+        # auditor = Users.get_by_dod_id("3453453453")  # Sally
+    except NotFoundError:
+        print(
+            "Could not find demo users; will not create demo portfolio {}".format(name)
         )
-        db.session.add(pending_task_order)
+        return
 
+    portfolio = Portfolios.create(
+        portfolio_owner, name=name, defense_component=random_service_branch()
+    )
+    clin_01 = data["budget"] * 0.8
+    clin_03 = data["budget"] * 0.2
+
+    add_active_task_order(portfolio, clin_01=clin_01, clin_03=clin_03)
+    add_expired_task_order(portfolio)
+    add_pending_task_order(portfolio)
+    add_members_to_portfolio(portfolio, users=get_users())
+
+    for mock_application in data["applications"]:
+        application = Application(
+            portfolio=portfolio, name=mock_application.name, description=""
+        )
+        env_names = [env.name for env in mock_application.environments]
+        envs = Environments.create_many(application, env_names)
+        db.session.add(application)
         db.session.commit()
 
-        Applications.create(
-            user,
-            portfolio=portfolio,
-            name="First Application",
-            description="This is our first application.",
-            environment_names=["dev", "staging", "prod"],
-        )
+
+def seed_db():
+    users = get_users()
+    amanda = Users.get_by_dod_id("2345678901")
+    application_info = [
+        {
+            "name": "First Application",
+            "description": "This is our first application",
+            "environments": ["dev", "staging", "prod"],
+        }
+    ]
+
+    # Create Portfolios for Amanda with mocked reporting data
+    create_demo_portfolio("A-Wing", MockReportingProvider.REPORT_FIXTURE_MAP["A-Wing"])
+    create_demo_portfolio("B-Wing", MockReportingProvider.REPORT_FIXTURE_MAP["B-Wing"])
 
     # Create Portfolio for Amanda with TO that is expiring soon and does not have another TO
     unfunded_portfolio = Portfolios.create(
-        amanda, name="{}'s portfolio (expiring and unfunded)".format(amanda.first_name)
+        amanda, name="TIE Interceptor", defense_component=random_service_branch()
     )
-
-    [past_date_1, past_date_2, past_date_3, future_date] = sorted(
-        [
-            random_past_date(year_max=3, year_min=2),
-            random_past_date(year_max=2, year_min=1),
-            random_past_date(year_max=1, year_min=1),
-            (date.today() + timedelta(days=20)),
-        ]
-    )
-
-    date_ranges = [
-        (past_date_1, past_date_2),
-        (past_date_2, past_date_3),
-        (past_date_3, future_date),
-    ]
-    for (start_date, end_date) in date_ranges:
-        task_order = TaskOrderFactory.build(
-            start_date=start_date,
-            end_date=end_date,
-            number=random_task_order_number(),
-            portfolio=unfunded_portfolio,
-        )
-        db.session.add(task_order)
-
-    db.session.commit()
-
-    Applications.create(
-        amanda,
-        portfolio=unfunded_portfolio,
-        name="First Application",
-        description="This is our first application.",
-        environment_names=["dev", "staging", "prod"],
-    )
+    add_active_task_order(unfunded_portfolio, active_exp_days=20)
+    add_expired_task_order(unfunded_portfolio)
+    add_members_to_portfolio(unfunded_portfolio, users=users)
+    add_applications_to_portfolio(unfunded_portfolio, application_info)
 
     # Create Portfolio for Amanda with TO that is expiring soon and has another TO
     funded_portfolio = Portfolios.create(
-        amanda, name="{}'s portfolio (expiring and funded)".format(amanda.first_name)
+        amanda, name="TIE Fighter", defense_component=random_service_branch()
     )
+    add_active_task_order(funded_portfolio, active_exp_days=20)
+    add_expired_task_order(funded_portfolio)
+    add_pending_task_order(funded_portfolio)
+    add_members_to_portfolio(funded_portfolio, users=users)
+    add_applications_to_portfolio(funded_portfolio, application_info)
 
-    [
-        past_date_1,
-        past_date_2,
-        past_date_3,
-        past_date_4,
-        future_date_1,
-        future_date_2,
-    ] = sorted(
-        [
-            random_past_date(year_max=3, year_min=2),
-            random_past_date(year_max=2, year_min=1),
-            random_past_date(year_max=1, year_min=1),
-            random_past_date(year_max=1, year_min=1),
-            (date.today() + timedelta(days=20)),
-            random_future_date(year_min=0, year_max=1),
-        ]
-    )
-
-    date_ranges = [
-        (past_date_1, past_date_2),
-        (past_date_2, past_date_3),
-        (past_date_3, future_date_1),
-        (past_date_4, future_date_2),
-    ]
-    for (start_date, end_date) in date_ranges:
-        task_order = TaskOrderFactory.build(
-            start_date=start_date,
-            end_date=end_date,
-            number=random_task_order_number(),
-            portfolio=funded_portfolio,
+    # create a portfolio 'Y-Wing' for each user
+    for user in users:
+        portfolio = Portfolios.create(
+            user, name="Y-Wing", defense_component=random_service_branch()
         )
-        db.session.add(task_order)
-
-    db.session.commit()
-
-    Applications.create(
-        amanda,
-        portfolio=funded_portfolio,
-        name="First Application",
-        description="This is our first application.",
-        environment_names=["dev", "staging", "prod"],
-    )
+        add_members_to_portfolio(portfolio, users=users)
+        add_active_task_order(portfolio)
+        add_expired_task_order(portfolio)
+        add_pending_task_order(portfolio)
+        add_applications_to_portfolio(portfolio, application_info)
 
 
 if __name__ == "__main__":
-    config = make_config({"DISABLE_CRL_CHECK": True})
+    config = make_config({"DISABLE_CRL_CHECK": True, "DEBUG": False})
     app = make_app(config)
     with app.app_context():
         seed_db()

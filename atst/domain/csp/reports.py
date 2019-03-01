@@ -163,7 +163,7 @@ class MockReportingProvider(ReportingInterface):
         "FM_Prod": {FIXTURE_MONTHS[0]: 5686},
     }
 
-    CUMULATIVE_BUDGET_AARDVARK = {
+    CUMULATIVE_BUDGET_A_WING = {
         FIXTURE_MONTHS[7]: {"spend": 9857, "cumulative": 9857},
         FIXTURE_MONTHS[6]: {"spend": 7881, "cumulative": 17738},
         FIXTURE_MONTHS[5]: {"spend": 14010, "cumulative": 31748},
@@ -174,14 +174,14 @@ class MockReportingProvider(ReportingInterface):
         FIXTURE_MONTHS[0]: {"spend": 36028, "cumulative": 241_831},
     }
 
-    CUMULATIVE_BUDGET_BELUGA = {
+    CUMULATIVE_BUDGET_B_WING = {
         FIXTURE_MONTHS[1]: {"spend": 4838, "cumulative": 4838},
         FIXTURE_MONTHS[0]: {"spend": 14500, "cumulative": 19338},
     }
 
     REPORT_FIXTURE_MAP = {
-        "Aardvark": {
-            "cumulative": CUMULATIVE_BUDGET_AARDVARK,
+        "A-Wing": {
+            "cumulative": CUMULATIVE_BUDGET_A_WING,
             "applications": [
                 MockApplication("LC04", ["Integ", "PreProd", "Prod"]),
                 MockApplication("SF18", ["Integ", "PreProd", "Prod"]),
@@ -201,8 +201,8 @@ class MockReportingProvider(ReportingInterface):
             ],
             "budget": 500_000,
         },
-        "Beluga": {
-            "cumulative": CUMULATIVE_BUDGET_BELUGA,
+        "B-Wing": {
+            "cumulative": CUMULATIVE_BUDGET_B_WING,
             "applications": [
                 MockApplication("NP02", ["Integ", "PreProd", "Prod"]),
                 MockApplication("FM", ["Integ", "Prod"]),

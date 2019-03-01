@@ -81,7 +81,7 @@ def test_portfolio_reports(client, user_session):
 
 
 def test_portfolio_reports_with_mock_portfolio(client, user_session):
-    portfolio = PortfolioFactory.create(name="Aardvark")
+    portfolio = PortfolioFactory.create(name="A-Wing")
     user_session(portfolio.owner)
     response = client.get(
         url_for("portfolios.portfolio_reports", portfolio_id=portfolio.id)
