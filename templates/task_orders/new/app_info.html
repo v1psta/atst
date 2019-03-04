@@ -20,9 +20,9 @@
     {{ ReviewField(heading="forms.portfolio.name_label" | translate, field=portfolio.name) }}
 {% else %}
     {{ TextInput(form.portfolio_name, placeholder="The name of your office or organization", validation="portfolioName") }}
-    {{ TextInput(form.scope, paragraph=True) }}
-    <p><i>{{ "task_orders.new.app_info.sample_scope" | translate | safe }}</i></p>
 {% endif %}
+{{ TextInput(form.scope, paragraph=True) }}
+<p><i>{{ "task_orders.new.app_info.sample_scope" | translate | safe }}</i></p>
 
 <div class="subheading--black">
     {% if portfolio %}
