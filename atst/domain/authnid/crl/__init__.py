@@ -16,6 +16,12 @@ class CRLRevocationException(Exception):
     pass
 
 
+class CRLInvalidException(Exception):
+    # CRL expired
+    # CRL missing
+    pass
+
+
 class CRLInterface:
     def __init__(self, *args, logger=None, **kwargs):
         self.logger = logger
@@ -111,7 +117,7 @@ class CRLCache(CRLInterface):
         issuer_name = get_common_name(issuer)
 
         if not crl_info:
-            raise CRLRevocationException(
+            raise CRLInvalidException(
                 "Could not find matching CRL for issuer with Common Name {}".format(
                     issuer_name
                 )
@@ -170,6 +176,10 @@ class CRLCache(CRLInterface):
             return True
 
         except crypto.X509StoreContextError as err:
+            if (
+                err.args[0][2] == "CRL has expired"
+            ):  # there has to be a better way than this
+                raise CRLInvalidException("CRL expired. Args: {}".format(err.args))
             raise CRLRevocationException(
                 "Certificate revoked or errored. Error: {}. Args: {}".format(
                     type(err), err.args

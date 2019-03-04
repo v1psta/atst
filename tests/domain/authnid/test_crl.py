@@ -12,7 +12,12 @@ from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.hazmat.primitives.serialization import Encoding
 from cryptography.x509.oid import NameOID
 
-from atst.domain.authnid.crl import CRLCache, CRLRevocationException, NoOpCRLCache
+from atst.domain.authnid.crl import (
+    CRLCache,
+    CRLRevocationException,
+    CRLInvalidException,
+    NoOpCRLCache,
+)
 
 from tests.mocks import FIXTURE_EMAIL_ADDRESS, DOD_CN
 
@@ -231,6 +236,16 @@ def test_no_op_crl_cache_logs_common_name():
     cache = NoOpCRLCache(logger=logger)
     assert cache.crl_check(cert)
     assert "ART.GARFUNKEL.1234567890" in logger.messages[-1]
+
+
+def test_expired_crl_raises_CRLInvalidException(
+    ca_file, expired_crl_file, ca_key, make_x509
+):
+    client_cert = make_x509(rsa_key(), signer_key=ca_key, cn="chewbacca")
+    client_pem = client_cert.public_bytes(Encoding.PEM)
+    crl_cache = CRLCache(ca_file, crl_locations=[expired_crl_file])
+    with pytest.raises(CRLInvalidException):
+        crl_cache.crl_check(client_pem)
 
 
 def test_updates_expired_certs(ca_file, expired_crl_file, crl_file, ca_key, make_x509):
