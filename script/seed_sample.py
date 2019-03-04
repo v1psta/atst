@@ -104,9 +104,7 @@ def get_users():
 def add_members_to_portfolio(portfolio):
     get_users()
     for portfolio_role in PORTFOLIO_USERS:
-        ws_role = Portfolios.create_member(
-            portfolio.owner, portfolio, portfolio_role
-        )
+        ws_role = Portfolios.create_member(portfolio.owner, portfolio, portfolio_role)
         db.session.refresh(ws_role)
         PortfolioRoles.enable(ws_role)
 
@@ -116,9 +114,7 @@ def add_members_to_portfolio(portfolio):
 def invite_members_to_portfolio(portfolio):
     get_users()
     for portfolio_role in PORTFOLIO_INVITED_USERS:
-        ws_role = Portfolios.create_member(
-            portfolio.owner, portfolio, portfolio_role
-        )
+        ws_role = Portfolios.create_member(portfolio.owner, portfolio, portfolio_role)
         invitation = InvitationFactory.build(
             portfolio_role=ws_role, status=portfolio_role["status"]
         )
@@ -128,14 +124,18 @@ def invite_members_to_portfolio(portfolio):
 
 
 def add_task_orders_to_portfolio(portfolio, to_length=90, clin_01=None, clin_03=None):
-    active_to_offset = random.randint(10,31)
-    active_start = (date.today() - timedelta(days=active_to_offset)) # exp TO ends same day as active TO starts
-    active_end = (active_start + timedelta(to_length)) # pending TO starts the same day active TO ends
-    pending_end = (active_end + timedelta(to_length))
-    exp_start = (active_start - timedelta(to_length))
+    active_to_offset = random.randint(10, 31)
+    # exp TO ends same day as active TO starts
+    active_start = date.today() - timedelta(days=active_to_offset)
+    # pending TO starts the same day active TO ends
+    active_end = active_start + timedelta(to_length)
+    pending_end = active_end + timedelta(to_length)
+    exp_start = active_start - timedelta(to_length)
 
     create_task_order(portfolio, start=exp_start, end=active_start)
-    create_task_order(portfolio, start=active_start, end=active_end, clin_01=clin_01, clin_03=clin_03)
+    create_task_order(
+        portfolio, start=active_start, end=active_end, clin_01=clin_01, clin_03=clin_03
+    )
     create_task_order(portfolio, start=active_end, end=pending_end)
 
 
