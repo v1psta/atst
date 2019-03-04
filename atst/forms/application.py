@@ -1,11 +1,11 @@
-from flask_wtf import FlaskForm
+from .forms import BaseForm
 from wtforms.fields import StringField, TextAreaField, FieldList
 from wtforms.validators import Required
 from atst.forms.validators import ListItemRequired, ListItemsUnique
 from atst.utils.localization import translate
 
 
-class ApplicationForm(FlaskForm):
+class ApplicationForm(BaseForm):
     name = StringField(
         label=translate("forms.application.name_label"), validators=[Required()]
     )
