@@ -101,23 +101,28 @@ def get_users():
     return users
 
 
-def add_members_to_portfolio(portfolio, users):
-    for user in users:
-        for portfolio_role in PORTFOLIO_USERS:
-            ws_role = Portfolios.create_member(
-                portfolio.owner, portfolio, portfolio_role
-            )
-            db.session.refresh(ws_role)
-            PortfolioRoles.enable(ws_role)
+def add_members_to_portfolio(portfolio):
+    get_users()
+    for portfolio_role in PORTFOLIO_USERS:
+        ws_role = Portfolios.create_member(
+            portfolio.owner, portfolio, portfolio_role
+        )
+        db.session.refresh(ws_role)
+        PortfolioRoles.enable(ws_role)
 
-        for portfolio_role in PORTFOLIO_INVITED_USERS:
-            ws_role = Portfolios.create_member(
-                portfolio.owner, portfolio, portfolio_role
-            )
-            invitation = InvitationFactory.build(
-                portfolio_role=ws_role, status=portfolio_role["status"]
-            )
-            db.session.add(invitation)
+    db.session.commit()
+
+
+def invite_members_to_portfolio(portfolio):
+    get_users()
+    for portfolio_role in PORTFOLIO_INVITED_USERS:
+        ws_role = Portfolios.create_member(
+            portfolio.owner, portfolio, portfolio_role
+        )
+        invitation = InvitationFactory.build(
+            portfolio_role=ws_role, status=portfolio_role["status"]
+        )
+        db.session.add(invitation)
 
     db.session.commit()
 
@@ -182,7 +187,7 @@ def create_demo_portfolio(name, data):
     clin_03 = data["budget"] * 0.2
 
     add_task_orders_to_portfolio(portfolio, clin_01=clin_01, clin_03=clin_03)
-    add_members_to_portfolio(portfolio, users=get_users())
+    add_members_to_portfolio(portfolio)
 
     for mock_application in data["applications"]:
         application = Application(
@@ -195,7 +200,6 @@ def create_demo_portfolio(name, data):
 
 
 def seed_db():
-    users = get_users()
     amanda = Users.get_by_dod_id("2345678901")
     application_info = [
         {
@@ -213,23 +217,23 @@ def seed_db():
         amanda, name="TIE Interceptor", defense_component=random_service_branch()
     )
     add_task_orders_to_portfolio(tie_interceptor)
-    add_members_to_portfolio(tie_interceptor, users=users)
+    add_members_to_portfolio(tie_interceptor)
     add_applications_to_portfolio(tie_interceptor, application_info)
 
     tie_fighter = Portfolios.create(
         amanda, name="TIE Fighter", defense_component=random_service_branch()
     )
     add_task_orders_to_portfolio(tie_fighter)
-    add_members_to_portfolio(tie_fighter, users=users)
+    add_members_to_portfolio(tie_fighter)
     add_applications_to_portfolio(tie_fighter, application_info)
 
     # create a portfolio 'Y-Wing' for each user
-    for user in users:
+    for user in get_users():
         portfolio = Portfolios.create(
             user, name="Y-Wing", defense_component=random_service_branch()
         )
         add_task_orders_to_portfolio(portfolio)
-        add_members_to_portfolio(portfolio, users=users)
+        add_members_to_portfolio(portfolio)
         add_applications_to_portfolio(portfolio, application_info)
 
 
