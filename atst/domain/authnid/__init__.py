@@ -1,7 +1,7 @@
 from atst.domain.exceptions import UnauthenticatedError, NotFoundError
 from atst.domain.users import Users
 from .utils import parse_sdn, email_from_certificate
-from .crl import CRLRevocationException
+from .crl import CRLRevocationException, CRLInvalidException
 
 
 class AuthenticationContext:
@@ -47,6 +47,8 @@ class AuthenticationContext:
     def _crl_check(self):
         try:
             self.crl_cache.crl_check(self.cert)
+        except CRLInvalidException as exc:
+            raise UnauthenticatedError("CRL expired. " + str(exc))
         except CRLRevocationException as exc:
             raise UnauthenticatedError("CRL check failed. " + str(exc))
 

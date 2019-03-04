@@ -1,7 +1,11 @@
 import pytest
 
 from atst.domain.authnid import AuthenticationContext
-from atst.domain.authnid.crl import CRLCache, CRLRevocationException
+from atst.domain.authnid.crl import (
+    CRLCache,
+    CRLRevocationException,
+    CRLInvalidException,
+)
 from atst.domain.exceptions import UnauthenticatedError, NotFoundError
 from atst.domain.users import Users
 
@@ -12,12 +16,15 @@ CERT = open("tests/fixtures/{}.crt".format(FIXTURE_EMAIL_ADDRESS)).read()
 
 
 class MockCRLCache:
-    def __init__(self, valid=True):
+    def __init__(self, valid=True, expired=False):
         self.valid = valid
+        self.expired = expired
 
     def crl_check(self, cert):
         if self.valid:
             return True
+        elif self.expired == True:
+            raise CRLInvalidException()
 
         raise CRLRevocationException()
 
@@ -43,6 +50,17 @@ def test_crl_check_fails():
 
     (message,) = excinfo.value.args
     assert "CRL check" in message
+
+
+def test_expired_crl_check_fails():
+    auth_context = AuthenticationContext(
+        MockCRLCache(valid=False, expired=True), "SUCCESS", DOD_SDN, CERT
+    )
+    with pytest.raises(UnauthenticatedError) as excinfo:
+        assert auth_context.authenticate()
+
+    (message,) = excinfo.value.args
+    assert "CRL expired" in message
 
 
 def test_bad_sdn():

@@ -188,7 +188,7 @@ def test_can_dynamically_update_crls(tmpdir):
     assert cache.crl_check(cert)
     # override the original CRL with one that revokes atat.mil.crt
     shutil.copyfile("tests/fixtures/test.der.crl", crl_file)
-    with pytest.raises(CRLRevocationException):
+    with pytest.raises(CRLInvalidException):
         assert cache.crl_check(cert)
 
 
@@ -197,7 +197,7 @@ def test_throws_error_for_missing_issuer():
     # this cert is self-signed, and so the application does not have a
     # corresponding CRL for it
     cert = open("tests/fixtures/{}.crt".format(FIXTURE_EMAIL_ADDRESS), "rb").read()
-    with pytest.raises(CRLRevocationException) as exc:
+    with pytest.raises(CRLInvalidException) as exc:
         assert cache.crl_check(cert)
     (message,) = exc.value.args
     # objects that the issuer is missing
