@@ -101,32 +101,48 @@ def get_users():
     return users
 
 
-def add_members_to_portfolio(portfolio, users):
-    for user in users:
-        for portfolio_role in PORTFOLIO_USERS:
-            ws_role = Portfolios.create_member(
-                portfolio.owner, portfolio, portfolio_role
-            )
-            db.session.refresh(ws_role)
-            PortfolioRoles.enable(ws_role)
-
-        for portfolio_role in PORTFOLIO_INVITED_USERS:
-            ws_role = Portfolios.create_member(
-                portfolio.owner, portfolio, portfolio_role
-            )
-            invitation = InvitationFactory.build(
-                portfolio_role=ws_role, status=portfolio_role["status"]
-            )
-            db.session.add(invitation)
+def add_members_to_portfolio(portfolio):
+    get_users()
+    for portfolio_role in PORTFOLIO_USERS:
+        ws_role = Portfolios.create_member(portfolio.owner, portfolio, portfolio_role)
+        db.session.refresh(ws_role)
+        PortfolioRoles.enable(ws_role)
 
     db.session.commit()
 
 
-def add_active_task_order(portfolio, active_exp_days=90, clin_01=None, clin_03=None):
-    start = random_past_date(year_max=1, year_min=1)
+def invite_members_to_portfolio(portfolio):
+    get_users()
+    for portfolio_role in PORTFOLIO_INVITED_USERS:
+        ws_role = Portfolios.create_member(portfolio.owner, portfolio, portfolio_role)
+        invitation = InvitationFactory.build(
+            portfolio_role=ws_role, status=portfolio_role["status"]
+        )
+        db.session.add(invitation)
+
+    db.session.commit()
+
+
+def add_task_orders_to_portfolio(portfolio, to_length=90, clin_01=None, clin_03=None):
+    active_to_offset = random.randint(10, 31)
+    # exp TO ends same day as active TO starts
+    active_start = date.today() - timedelta(days=active_to_offset)
+    # pending TO starts the same day active TO ends
+    active_end = active_start + timedelta(to_length)
+    pending_end = active_end + timedelta(to_length)
+    exp_start = active_start - timedelta(to_length)
+
+    create_task_order(portfolio, start=exp_start, end=active_start)
+    create_task_order(
+        portfolio, start=active_start, end=active_end, clin_01=clin_01, clin_03=clin_03
+    )
+    create_task_order(portfolio, start=active_end, end=pending_end)
+
+
+def create_task_order(portfolio, start, end, clin_01=None, clin_03=None):
     default_kwargs = {
         "start_date": start,
-        "end_date": (date.today() + timedelta(days=active_exp_days)),
+        "end_date": end,
         "number": random_task_order_number(),
         "portfolio": portfolio,
         "clin_02": 0,
@@ -139,31 +155,6 @@ def add_active_task_order(portfolio, active_exp_days=90, clin_01=None, clin_03=N
         default_kwargs["clin_03"] = clin_03
 
     task_order = TaskOrderFactory.build(**default_kwargs)
-    db.session.add(task_order)
-    db.session.commit()
-
-
-def add_expired_task_order(portfolio):
-    start = random_past_date(year_max=3, year_min=2)
-    task_order = TaskOrderFactory.build(
-        start_date=start,
-        end_date=(start + timedelta(days=90)),
-        number=random_task_order_number(),
-        portfolio=portfolio,
-    )
-    db.session.add(task_order)
-    db.session.commit()
-
-
-def add_pending_task_order(portfolio):
-    start_date = random_future_date(year_min=1, year_max=2)
-
-    task_order = TaskOrderFactory.build(
-        start_date=start_date,
-        end_date=(start_date + timedelta(days=90)),
-        number=random_task_order_number(),
-        portfolio=portfolio,
-    )
     db.session.add(task_order)
     db.session.commit()
 
@@ -195,10 +186,8 @@ def create_demo_portfolio(name, data):
     clin_01 = data["budget"] * 0.8
     clin_03 = data["budget"] * 0.2
 
-    add_active_task_order(portfolio, clin_01=clin_01, clin_03=clin_03)
-    add_expired_task_order(portfolio)
-    add_pending_task_order(portfolio)
-    add_members_to_portfolio(portfolio, users=get_users())
+    add_task_orders_to_portfolio(portfolio, clin_01=clin_01, clin_03=clin_03)
+    add_members_to_portfolio(portfolio)
 
     for mock_application in data["applications"]:
         application = Application(
@@ -211,7 +200,6 @@ def create_demo_portfolio(name, data):
 
 
 def seed_db():
-    users = get_users()
     amanda = Users.get_by_dod_id("2345678901")
     application_info = [
         {
@@ -225,34 +213,27 @@ def seed_db():
     create_demo_portfolio("A-Wing", MockReportingProvider.REPORT_FIXTURE_MAP["A-Wing"])
     create_demo_portfolio("B-Wing", MockReportingProvider.REPORT_FIXTURE_MAP["B-Wing"])
 
-    # Create Portfolio for Amanda with TO that is expiring soon and does not have another TO
-    unfunded_portfolio = Portfolios.create(
+    tie_interceptor = Portfolios.create(
         amanda, name="TIE Interceptor", defense_component=random_service_branch()
     )
-    add_active_task_order(unfunded_portfolio, active_exp_days=20)
-    add_expired_task_order(unfunded_portfolio)
-    add_members_to_portfolio(unfunded_portfolio, users=users)
-    add_applications_to_portfolio(unfunded_portfolio, application_info)
+    add_task_orders_to_portfolio(tie_interceptor)
+    add_members_to_portfolio(tie_interceptor)
+    add_applications_to_portfolio(tie_interceptor, application_info)
 
-    # Create Portfolio for Amanda with TO that is expiring soon and has another TO
-    funded_portfolio = Portfolios.create(
+    tie_fighter = Portfolios.create(
         amanda, name="TIE Fighter", defense_component=random_service_branch()
     )
-    add_active_task_order(funded_portfolio, active_exp_days=20)
-    add_expired_task_order(funded_portfolio)
-    add_pending_task_order(funded_portfolio)
-    add_members_to_portfolio(funded_portfolio, users=users)
-    add_applications_to_portfolio(funded_portfolio, application_info)
+    add_task_orders_to_portfolio(tie_fighter)
+    add_members_to_portfolio(tie_fighter)
+    add_applications_to_portfolio(tie_fighter, application_info)
 
     # create a portfolio 'Y-Wing' for each user
-    for user in users:
+    for user in get_users():
         portfolio = Portfolios.create(
             user, name="Y-Wing", defense_component=random_service_branch()
         )
-        add_members_to_portfolio(portfolio, users=users)
-        add_active_task_order(portfolio)
-        add_expired_task_order(portfolio)
-        add_pending_task_order(portfolio)
+        add_task_orders_to_portfolio(portfolio)
+        add_members_to_portfolio(portfolio)
         add_applications_to_portfolio(portfolio, application_info)
 
 
