@@ -92,6 +92,10 @@ class ShowTaskOrderWorkflow:
 
         return self._form
 
+    @form.setter
+    def form(self, value):
+        self._form = value
+
     @property
     def template(self):
         return self._section["template"]
@@ -137,6 +141,8 @@ class UpdateTaskOrderWorkflow(ShowTaskOrderWorkflow):
 
     @property
     def form(self):
+        if self.screen == 1 and self.portfolio_id:
+            return task_order_form.AppInfoWithExistingPortfolioForm()
         return self._form
 
     @property
@@ -222,6 +228,8 @@ def new(screen, task_order_id=None, portfolio_id=None):
 
     if portfolio_id:
         template_args["portfolio"] = Portfolios.get(g.current_user, portfolio_id)
+        if screen == 1:
+            workflow.form = task_order_form.AppInfoWithExistingPortfolioForm()
 
     url_args = {"screen": screen}
     if task_order_id:

@@ -27,25 +27,10 @@ from .data import (
 from atst.utils.localization import translate
 
 
-class AppInfoForm(BaseForm):
-    portfolio_name = StringField(
-        translate("forms.task_order.portfolio_name_label"),
-        description=translate("forms.task_order.portfolio_name_description"),
-        validators=[
-            Required(),
-            Length(
-                min=4,
-                max=100,
-                message=translate("forms.portfolio.name_length_validation_message"),
-            ),
-        ],
-    )
+class AppInfoWithExistingPortfolioForm(BaseForm):
     scope = TextAreaField(
         translate("forms.task_order.scope_label"),
         description=translate("forms.task_order.scope_description"),
-    )
-    defense_component = SelectField(
-        translate("forms.task_order.defense_component_label"), choices=SERVICE_BRANCHES
     )
     app_migration = RadioField(
         translate("forms.task_order.app_migration.label"),
@@ -85,6 +70,24 @@ class AppInfoForm(BaseForm):
         choices=TEAM_EXPERIENCE,
         default="",
         validators=[Optional()],
+    )
+
+
+class AppInfoForm(AppInfoWithExistingPortfolioForm):
+    portfolio_name = StringField(
+        translate("forms.task_order.portfolio_name_label"),
+        description=translate("forms.task_order.portfolio_name_description"),
+        validators=[
+            Required(),
+            Length(
+                min=4,
+                max=100,
+                message=translate("forms.portfolio.name_length_validation_message"),
+            ),
+        ],
+    )
+    defense_component = SelectField(
+        translate("forms.task_order.defense_component_label"), choices=SERVICE_BRANCHES
     )
 
 
