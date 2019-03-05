@@ -308,6 +308,22 @@ def test_ko_can_view_ko_review_page(client, user_session):
     assert response.status_code == 404
 
 
+def test_cor_cant_view_review_until_to_completed(client, user_session):
+    portfolio = PortfolioFactory.create()
+    user_session(portfolio.owner)
+    task_order = TaskOrderFactory.create(
+        portfolio=portfolio, clin_01=None, cor_dod_id=portfolio.owner.dod_id
+    )
+    response = client.get(
+        url_for(
+            "portfolios.ko_review",
+            portfolio_id=portfolio.id,
+            task_order_id=task_order.id,
+        )
+    )
+    assert response.status_code == 404
+
+
 def test_mo_redirected_to_build_page(client, user_session):
     portfolio = PortfolioFactory.create()
     user_session(portfolio.owner)

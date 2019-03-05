@@ -85,12 +85,15 @@ def ko_review(portfolio_id, task_order_id):
 
     Authorization.check_is_ko_or_cor(g.current_user, task_order)
 
-    return render_template(
-        "/portfolios/task_orders/review.html",
-        portfolio=portfolio,
-        task_order=task_order,
-        form=KOReviewForm(obj=task_order),
-    )
+    if TaskOrders.all_sections_complete(task_order):
+        return render_template(
+            "/portfolios/task_orders/review.html",
+            portfolio=portfolio,
+            task_order=task_order,
+            form=KOReviewForm(obj=task_order),
+        )
+    else:
+        raise NotFoundError("task_order")
 
 
 @portfolios_bp.route(
