@@ -1,13 +1,13 @@
-from flask_wtf import FlaskForm
 from wtforms.validators import Required
 
+from .forms import BaseForm
 from atst.forms.fields import SelectField
 from atst.utils.localization import translate
 
 from .data import PORTFOLIO_ROLES
 
 
-class EditMemberForm(FlaskForm):
+class EditMemberForm(BaseForm):
     # This form also accepts a field for each environment in each application
     #  that the user is a member of
 

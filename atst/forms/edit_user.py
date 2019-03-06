@@ -5,7 +5,7 @@ from wtforms.fields import RadioField, StringField
 from wtforms.validators import Email, DataRequired, Optional
 
 from .fields import SelectField
-from .forms import CacheableForm
+from .forms import BaseForm
 from .data import SERVICE_BRANCHES
 from atst.models.user import User
 from atst.utils.localization import translate
@@ -84,7 +84,7 @@ def inherit_user_field(field_name):
     return inherit_field(USER_FIELDS[field_name], required=required)
 
 
-class EditUserForm(CacheableForm):
+class EditUserForm(BaseForm):
 
     first_name = inherit_user_field("first_name")
     last_name = inherit_user_field("last_name")

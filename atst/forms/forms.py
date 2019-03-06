@@ -3,24 +3,26 @@ from flask import current_app, request as http_request
 
 from atst.utils.flash import formatted_flash as flash
 
+EMPTY_LIST_FIELD = ["", None]
 
-class ValidatedForm(FlaskForm):
-    EMPTY_LIST_FIELD = ["", None]
 
-    def perform_extra_validation(self, *args, **kwargs):
-        """Performs any applicable extra validation. Must
-        return True if the form is valid or False otherwise."""
-        return True
+class BaseForm(FlaskForm):
+    def __init__(self, formdata=None, **kwargs):
+        # initialize the form with data from the cache
+        formdata = formdata or {}
+        cached_data = current_app.form_cache.from_request(http_request)
+        cached_data.update(formdata)
+        super().__init__(cached_data, **kwargs)
 
     @property
     def data(self):
+        # remove 'csrf_token' key/value pair
+        # remove empty strings and None from list fields
         _data = super().data
+        _data.pop("csrf_token", None)
         for field in _data:
             if _data[field].__class__.__name__ == "list":
-                _data[field] = [
-                    el for el in _data[field] if el not in self.EMPTY_LIST_FIELD
-                ]
-        _data.pop("csrf_token", None)
+                _data[field] = [el for el in _data[field] if el not in EMPTY_LIST_FIELD]
         return _data
 
     def validate(self, *args, **kwargs):
@@ -28,11 +30,3 @@ class ValidatedForm(FlaskForm):
         if not valid:
             flash("form_errors")
         return valid
-
-
-class CacheableForm(ValidatedForm):
-    def __init__(self, formdata=None, **kwargs):
-        formdata = formdata or {}
-        cached_data = current_app.form_cache.from_request(http_request)
-        cached_data.update(formdata)
-        super().__init__(cached_data, **kwargs)

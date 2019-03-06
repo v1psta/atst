@@ -15,7 +15,7 @@ from flask_wtf.file import FileAllowed
 
 from atst.forms.validators import IsNumber, PhoneNumber, RequiredIf
 
-from .forms import CacheableForm
+from .forms import BaseForm
 from .data import (
     SERVICE_BRANCHES,
     APP_MIGRATION,
@@ -27,7 +27,7 @@ from .data import (
 from atst.utils.localization import translate
 
 
-class AppInfoForm(CacheableForm):
+class AppInfoForm(BaseForm):
     portfolio_name = StringField(
         translate("forms.task_order.portfolio_name_label"),
         description=translate("forms.task_order.portfolio_name_description"),
@@ -88,7 +88,7 @@ class AppInfoForm(CacheableForm):
     )
 
 
-class FundingForm(CacheableForm):
+class FundingForm(BaseForm):
     performance_length = SelectField(
         translate("forms.task_order.performance_length.label"),
         choices=PERIOD_OF_PERFORMANCE_LENGTH,
@@ -134,7 +134,7 @@ class UnclassifiedFundingForm(FundingForm):
     )
 
 
-class OversightForm(CacheableForm):
+class OversightForm(BaseForm):
     ko_first_name = StringField(
         translate("forms.task_order.oversight_first_name_label")
     )
@@ -220,11 +220,11 @@ class OversightForm(CacheableForm):
     )
 
 
-class ReviewForm(CacheableForm):
+class ReviewForm(BaseForm):
     pass
 
 
-class SignatureForm(CacheableForm):
+class SignatureForm(BaseForm):
     level_of_warrant = DecimalField(
         translate("task_orders.sign.level_of_warrant_label"),
         description=translate("task_orders.sign.level_of_warrant_description"),
