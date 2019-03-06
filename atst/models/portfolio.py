@@ -37,6 +37,10 @@ class Portfolio(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
         return len(self.members)
 
     @property
+    def num_task_orders(self):
+        return len(self.task_orders)
+
+    @property
     def members(self):
         return (
             db.session.query(PortfolioRole)
