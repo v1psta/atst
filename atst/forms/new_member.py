@@ -1,8 +1,8 @@
-from flask_wtf import FlaskForm
 from wtforms.fields import StringField
 from wtforms.fields.html5 import EmailField
 from wtforms.validators import Required, Email, Length
 
+from .forms import BaseForm
 from atst.forms.validators import IsNumber
 from atst.forms.fields import SelectField
 from atst.utils.localization import translate
@@ -10,7 +10,7 @@ from atst.utils.localization import translate
 from .data import PORTFOLIO_ROLES
 
 
-class NewMemberForm(FlaskForm):
+class NewMemberForm(BaseForm):
 
     first_name = StringField(
         label=translate("forms.new_member.first_name_label"), validators=[Required()]

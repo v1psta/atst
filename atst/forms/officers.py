@@ -1,4 +1,3 @@
-from flask_wtf import FlaskForm
 from wtforms.fields import StringField, BooleanField
 from wtforms.fields.html5 import TelField
 from wtforms.validators import Email, Length, Optional
@@ -9,7 +8,7 @@ from .forms import BaseForm
 from .fields import FormFieldWrapper
 
 
-class OfficerForm(FlaskForm):
+class OfficerForm(BaseForm):
     first_name = StringField("First Name")
     last_name = StringField("Last Name")
     email = StringField("Email", validators=[Optional(), Email()])
