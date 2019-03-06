@@ -42,6 +42,54 @@ def serialize_dates(data):
     return data
 
 
+def test_new_to_can_edit_pf_attributes_screen_1():
+    portfolio = PortfolioFactory.create()
+    workflow = ShowTaskOrderWorkflow(user=portfolio.owner)
+    assert workflow.can_edit_pf_attributes(portfolio.id)
+
+
+def test_new_to_can_edit_pf_attributes_on_return_to_screen_1():
+    portfolio = PortfolioFactory.create()
+    workflow = ShowTaskOrderWorkflow(user=portfolio.owner)
+    assert workflow.can_edit_pf_attributes()
+
+
+def test_to_on_pf_cannot_edit_pf_attributes():
+    portfolio = PortfolioFactory.create()
+    pf_task_order = TaskOrderFactory(portfolio=portfolio)
+
+    workflow = ShowTaskOrderWorkflow(user=portfolio.owner)
+    assert portfolio.num_task_orders == 1
+    # case: TO is created from am existing portfolio
+    assert not workflow.can_edit_pf_attributes(portfolio.id)
+    # case: Portfolio is being created and user navigates back to app_info screen
+    assert workflow.can_edit_pf_attributes()
+
+    second_task_order = TaskOrderFactory(portfolio=portfolio)
+    workflow = ShowTaskOrderWorkflow(
+        user=second_task_order.creator, task_order_id=second_task_order.id
+    )
+    assert portfolio.num_task_orders > 1
+    assert not workflow.can_edit_pf_attributes()
+
+def test_get_portfolio_when_task_order_exists():
+    portfolio = PortfolioFactory.create()
+    task_order = TaskOrderFactory(portfolio=portfolio)
+    assert portfolio.num_task_orders > 0
+
+    workflow = ShowTaskOrderWorkflow(
+        user=task_order.creator, task_order_id=task_order.id
+    )
+    assert portfolio == workflow.get_portfolio()
+
+
+def test_get_portfolio_with_portfolio_id():
+    user = UserFactory.create()
+    portfolio = PortfolioFactory.create(owner=user)
+    workflow = ShowTaskOrderWorkflow(user=portfolio.owner)
+    assert portfolio == workflow.get_portfolio(portfolio_id=portfolio.id)
+
+
 # TODO: this test will need to be more complicated when we add validation to
 # the forms
 def test_create_new_task_order(client, user_session, pdf_upload):

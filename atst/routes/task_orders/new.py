@@ -120,6 +120,23 @@ class ShowTaskOrderWorkflow:
         else:
             return False
 
+    def can_edit_pf_attributes(self, portfolio_id=None):
+        if self.task_order:
+            if (
+                self.task_order.portfolio.num_task_orders > 1
+                or not portfolio_id is None
+            ):
+                return False
+        elif portfolio_id:
+            if self.get_portfolio(portfolio_id).num_task_orders > 0:
+                return False
+        return True
+
+    def get_portfolio(self, portfolio_id=None):
+        if self.task_order:
+            return self.task_order.portfolio
+        return Portfolios.get(self.user, portfolio_id)
+
 
 class UpdateTaskOrderWorkflow(ShowTaskOrderWorkflow):
     def __init__(
@@ -220,6 +237,9 @@ def new(screen, task_order_id=None, portfolio_id=None):
         "form": workflow.form,
         "complete": workflow.is_complete,
     }
+
+    if not workflow.can_edit_pf_attributes(portfolio_id):
+        template_args["portfolio"] = workflow.get_portfolio(portfolio_id=portfolio_id)
 
     if task_order_id and screen is 4:
         task_order = TaskOrders.get(g.current_user, task_order_id)
