@@ -53,41 +53,6 @@ PORTFOLIO_USERS = [
     },
 ]
 
-PORTFOLIO_INVITED_USERS = [
-    {
-        "first_name": "Frederick",
-        "last_name": "Fitzgerald",
-        "email": "frederick@mil.gov",
-        "portfolio_role": "developer",
-        "dod_id": "0000000004",
-        "status": InvitationStatus.REJECTED_WRONG_USER,
-    },
-    {
-        "first_name": "Gina",
-        "last_name": "Guzman",
-        "email": "gina@mil.gov",
-        "portfolio_role": "developer",
-        "dod_id": "0000000005",
-        "status": InvitationStatus.REJECTED_EXPIRED,
-    },
-    {
-        "first_name": "Hector",
-        "last_name": "Harper",
-        "email": "hector@mil.gov",
-        "portfolio_role": "developer",
-        "dod_id": "0000000006",
-        "status": InvitationStatus.REVOKED,
-    },
-    {
-        "first_name": "Isabella",
-        "last_name": "Ingram",
-        "email": "isabella@mil.gov",
-        "portfolio_role": "developer",
-        "dod_id": "0000000007",
-        "status": InvitationStatus.PENDING,
-    },
-]
-
 
 def get_users():
     users = []
@@ -107,18 +72,6 @@ def add_members_to_portfolio(portfolio):
         ws_role = Portfolios.create_member(portfolio.owner, portfolio, portfolio_role)
         db.session.refresh(ws_role)
         PortfolioRoles.enable(ws_role)
-
-    db.session.commit()
-
-
-def invite_members_to_portfolio(portfolio):
-    get_users()
-    for portfolio_role in PORTFOLIO_INVITED_USERS:
-        ws_role = Portfolios.create_member(portfolio.owner, portfolio, portfolio_role)
-        invitation = InvitationFactory.build(
-            portfolio_role=ws_role, status=portfolio_role["status"]
-        )
-        db.session.add(invitation)
 
     db.session.commit()
 
