@@ -200,6 +200,7 @@ def create_demo_portfolio(name, data):
 
 
 def seed_db():
+    get_users()
     amanda = Users.get_by_dod_id("2345678901")
     application_info = [
         {
