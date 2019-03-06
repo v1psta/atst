@@ -67,7 +67,6 @@ def get_users():
 
 
 def add_members_to_portfolio(portfolio):
-    get_users()
     for portfolio_role in PORTFOLIO_USERS:
         ws_role = Portfolios.create_member(portfolio.owner, portfolio, portfolio_role)
         db.session.refresh(ws_role)
