@@ -48,10 +48,13 @@ def test_new_to_can_edit_pf_attributes_screen_1():
     assert workflow.can_edit_pf_attributes(portfolio.id)
 
 
-def test_new_to_can_edit_pf_attributes_on_return_to_screen_1():
+def test_new_pf_can_edit_pf_attributes_on_back_navigation():
     portfolio = PortfolioFactory.create()
-    workflow = ShowTaskOrderWorkflow(user=portfolio.owner)
-    assert workflow.can_edit_pf_attributes()
+    pf_task_order = TaskOrderFactory(portfolio=portfolio)
+    pf_workflow = ShowTaskOrderWorkflow(
+        user=pf_task_order.creator, task_order_id=pf_task_order.id
+    )
+    assert pf_workflow.can_edit_pf_attributes()
 
 
 def test_to_on_pf_cannot_edit_pf_attributes():
@@ -60,10 +63,7 @@ def test_to_on_pf_cannot_edit_pf_attributes():
 
     workflow = ShowTaskOrderWorkflow(user=portfolio.owner)
     assert portfolio.num_task_orders == 1
-    # case: TO is created from am existing portfolio
     assert not workflow.can_edit_pf_attributes(portfolio.id)
-    # case: Portfolio is being created and user navigates back to app_info screen
-    assert workflow.can_edit_pf_attributes()
 
     second_task_order = TaskOrderFactory(portfolio=portfolio)
     workflow = ShowTaskOrderWorkflow(
@@ -71,6 +71,7 @@ def test_to_on_pf_cannot_edit_pf_attributes():
     )
     assert portfolio.num_task_orders > 1
     assert not workflow.can_edit_pf_attributes()
+
 
 def test_get_portfolio_when_task_order_exists():
     portfolio = PortfolioFactory.create()
