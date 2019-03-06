@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# script/get_crl_expiry: Will print the names and expiration dates
+# for CRLs that exist in a given ATAT namespace.
+# usage: `script/get_crl_expiry [NAMESPACE]`
+# defaults to `atat` for the namespace
+# You must have a valid k8s config for the ATAT clusters to run
+# this. Keep in mind it parses every CRL so it is slow.
+
+if [[ $# -eq 0 ]]; then
+  NAMESPACE=atat
+else
+  NAMESPACE=$1
+fi
+
+# we only need to run these commands against one existing pod
+ATST_POD=$(kubectl -n ${NAMESPACE} get pods -l app=atst -o custom-columns=NAME:.metadata.name --no-headers | sed -n 1p)
+
+echo "expiration information for $NAMESPACE namespace, pod $ATST_POD"
+
+for i in $(kubectl -n $NAMESPACE exec $ATST_POD -c atst -- ls crls); do
+  expiry=$(kubectl -n $NAMESPACE exec $ATST_POD -c atst -- cat crls/$i | \
+    openssl crl -inform def -noout -text | \
+    grep "Next Update" | \
+    sed -E "s/ +Next Update: //g")
+  echo "$i: $expiry";
+done
