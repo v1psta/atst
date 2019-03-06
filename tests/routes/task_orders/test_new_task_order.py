@@ -66,7 +66,6 @@ def test_create_new_task_order(client, user_session, pdf_upload):
     created_task_order = TaskOrders.get(creator, created_task_order_id)
     assert created_task_order.portfolio is not None
     assert created_task_order.portfolio.name == portfolio_name
-    assert created_task_order.portfolio is not None
     assert created_task_order.portfolio.defense_component == defense_component
 
     funding_data = slice_data_for_section(task_order_data, "funding")
