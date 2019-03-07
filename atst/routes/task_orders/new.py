@@ -155,8 +155,8 @@ class UpdateTaskOrderWorkflow(ShowTaskOrderWorkflow):
 
     @property
     def form(self):
-        if self.screen == 1 and self.portfolio_id:
-            return task_order_form.AppInfoWithExistingPortfolioForm()
+        if not self.can_edit_pf_attributes(self.portfolio_id) and self.screen == 1:
+            return task_order_form.AppInfoWithExistingPortfolioForm(self.form_data)
         return self._form
 
     @property
@@ -234,24 +234,18 @@ def new(screen, task_order_id=None, portfolio_id=None):
         "form": workflow.form,
         "complete": workflow.is_complete,
     }
-    if not workflow.can_edit_pf_attributes(portfolio_id):
-        template_args["portfolio"] = workflow.get_portfolio(
-            user=g.current_user, portfolio_id=portfolio_id
-        )
 
     if not workflow.can_edit_pf_attributes(portfolio_id):
         template_args["portfolio"] = workflow.get_portfolio(portfolio_id=portfolio_id)
+        if screen == 1:
+            workflow.form = task_order_form.AppInfoWithExistingPortfolioForm(
+                obj=workflow.task_order
+            )
 
     if task_order_id and screen is 4:
         task_order = TaskOrders.get(g.current_user, task_order_id)
         if not TaskOrders.all_sections_complete(task_order):
             flash("task_order_draft")
-
-    if screen == 1:
-        if portfolio_id or workflow.task_order.portfolio.num_task_orders > 1:
-            workflow.form = task_order_form.AppInfoWithExistingPortfolioForm(
-                obj=workflow.task_order
-            )
 
     url_args = {"screen": screen}
     if task_order_id:
