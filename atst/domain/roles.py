@@ -161,6 +161,90 @@ PORTFOLIO_ROLES = [
     },
 ]
 
+PORTFOLIO_PERMISSION_SETS = [
+    {
+        "name": "view_portfolio_application_management",
+        "description": "View applications and related resources",
+        "display_name": "Application Management",
+        "permissions": [
+            Permissions.VIEW_APPLICATION,
+            Permissions.VIEW_APPLICATION_MEMBER,
+            Permissions.VIEW_ENVIRONMENT,
+        ],
+    },
+    {
+        "name": "edit_portfolio_application_management",
+        "description": "Edit applications and related resources",
+        "display_name": "Application Management",
+        "permissions": [
+            Permissions.EDIT_APPLICATION,
+            Permissions.CREATE_APPLICATION,
+            Permissions.EDIT_APPLICATION_MEMBER,
+            Permissions.CREATE_APPLICATION_MEMBER,
+            Permissions.EDIT_ENVIRONMENT,
+            Permissions.CREATE_ENVIRONMENT,
+        ],
+    },
+    {
+        "name": "view_portfolio_funding",
+        "description": "View a portfolio's task orders",
+        "display_name": "Funding",
+        "permissions": [
+            Permissions.VIEW_PORTFOLIO_FUNDING,
+            Permissions.VIEW_TASK_ORDER_DETAILS,
+        ],
+    },
+    {
+        "name": "edit_portfolio_funding",
+        "description": "Edit a portfolio's task orders and add new ones",
+        "display_name": "Funding",
+        "permissions": [
+            Permissions.CREATE_TASK_ORDER,
+            Permissions.EDIT_TASK_ORDER_DETAILS,
+        ],
+    },
+    {
+        "name": "view_portfolio_reports",
+        "description": "View a portfolio's reports",
+        "display_name": "Reporting",
+        "permissions": [Permissions.VIEW_PORTFOLIO_REPORTS],
+    },
+    {
+        "name": "edit_portfolio_reports",
+        "description": "Edit a portfolio's reports (no-op)",
+        "display_name": "Reporting",
+        "permissions": [],
+    },
+    {
+        "name": "view_portfolio_admin",
+        "description": "View a portfolio's admin options",
+        "display_name": "Portfolio Administration",
+        "permissions": [
+            Permissions.VIEW_PORTFOLIO_ADMIN,
+            Permissions.VIEW_PORTFOLIO_NAME,
+            Permissions.VIEW_PORTFOLIO_USERS,
+            Permissions.VIEW_PORTFOLIO_ACTIVITY_LOG,
+            Permissions.VIEW_PORTFOLIO_POC,
+        ],
+    },
+    {
+        "name": "edit_portfolio_admin",
+        "description": "Edit a portfolio's admin options",
+        "display_name": "Portfolio Administration",
+        "permissions": [
+            Permissions.EDIT_PORTFOLIO_NAME,
+            Permissions.EDIT_PORTFOLIO_USERS,
+            Permissions.CREATE_PORTFOLIO_USERS,
+        ],
+    },
+    {
+        "name": "portfolio_poc",
+        "description": "Permissions belonging to the Portfolio POC",
+        "display_name": "Portfolio Point of Contact",
+        "permissions": [Permissions.EDIT_PORTFOLIO_POC, Permissions.ARCHIVE_PORTFOLIO],
+    },
+]
+
 
 class Roles(object):
     @classmethod
