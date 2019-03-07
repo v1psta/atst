@@ -1,5 +1,5 @@
 from enum import Enum
-from sqlalchemy import Index, ForeignKey, Column, Enum as SQLAEnum
+from sqlalchemy import Index, ForeignKey, Column, Enum as SQLAEnum, Table
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
@@ -30,6 +30,14 @@ class Status(Enum):
     PENDING = "pending"
 
 
+portfolio_roles_roles = Table(
+    "portfolio_roles_roles",
+    Base.metadata,
+    Column("portfolio_role_id", UUID(as_uuid=True), ForeignKey("portfolio_roles.id")),
+    Column("role_id", UUID(as_uuid=True), ForeignKey("roles.id")),
+)
+
+
 class PortfolioRole(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     __tablename__ = "portfolio_roles"
 
@@ -47,6 +55,8 @@ class PortfolioRole(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     )
 
     status = Column(SQLAEnum(Status, native_enum=False), default=Status.PENDING)
+
+    permission_sets = relationship("Role", secondary=portfolio_roles_roles)
 
     def __repr__(self):
         return "<PortfolioRole(role='{}', portfolio='{}', user_id='{}', id='{}')>".format(
