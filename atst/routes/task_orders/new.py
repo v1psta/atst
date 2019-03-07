@@ -120,14 +120,14 @@ class ShowTaskOrderWorkflow:
         else:
             return False
 
-    def can_edit_pf_attributes(self, portfolio_id=None):
+    def pf_attributes_read_only(self, portfolio_id=None):
         if self.task_order:
             if self.task_order.portfolio.num_task_orders > 1:
-                return False
+                return True
         elif portfolio_id:
             if self.get_portfolio(portfolio_id).num_task_orders > 0:
-                return False
-        return True
+                return True
+        return False
 
     def get_portfolio(self, portfolio_id=None):
         if self.task_order:
@@ -155,7 +155,7 @@ class UpdateTaskOrderWorkflow(ShowTaskOrderWorkflow):
 
     @property
     def form(self):
-        if not self.can_edit_pf_attributes(self.portfolio_id) and self.screen == 1:
+        if self.pf_attributes_read_only(self.portfolio_id) and self.screen == 1:
             return task_order_form.AppInfoWithExistingPortfolioForm(self.form_data)
         return self._form
 
@@ -235,7 +235,7 @@ def new(screen, task_order_id=None, portfolio_id=None):
         "complete": workflow.is_complete,
     }
 
-    if not workflow.can_edit_pf_attributes(portfolio_id):
+    if workflow.pf_attributes_read_only(portfolio_id):
         template_args["portfolio"] = workflow.get_portfolio(portfolio_id=portfolio_id)
         if screen == 1:
             workflow.form = task_order_form.AppInfoWithExistingPortfolioForm(
