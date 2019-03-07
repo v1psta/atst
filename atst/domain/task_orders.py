@@ -121,6 +121,14 @@ class TaskOrders(object):
         return True
 
     @classmethod
+    def can_ko_sign(cls, task_order):
+        return (
+            TaskOrders.all_sections_complete(task_order)
+            and DD254s.is_complete(task_order.dd_254)
+            and not TaskOrders.is_signed_by_ko(task_order)
+        )
+
+    @classmethod
     def is_signed_by_ko(cls, task_order):
         return task_order.signer_dod_id is not None
 

@@ -412,6 +412,8 @@ def test_submit_completed_ko_review_page_as_ko(client, user_session, pdf_upload)
     )
 
     task_order = TaskOrderFactory.create(portfolio=portfolio, contracting_officer=ko)
+    dd_254 = DD254Factory.create()
+    TaskOrders.add_dd_254(task_order, dd_254.to_dictionary())
     user_session(ko)
     loa_list = ["123123123", "456456456", "789789789"]
 

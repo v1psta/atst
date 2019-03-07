@@ -108,7 +108,9 @@ def submit_ko_review(portfolio_id, task_order_id, form=None):
 
     if form.validate():
         TaskOrders.update(user=g.current_user, task_order=task_order, **form.data)
-        if Authorization.is_ko(g.current_user, task_order):
+        if Authorization.is_ko(g.current_user, task_order) and TaskOrders.can_ko_sign(
+            task_order
+        ):
             return redirect(
                 url_for("task_orders.signature_requested", task_order_id=task_order_id)
             )
