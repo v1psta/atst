@@ -644,3 +644,40 @@ def test_resend_invite_when_ko(app, client, user_session, portfolio, user):
         == response.headers["Location"]
     )
     assert len(queue.get_queue()) == queue_length + 1
+
+
+def test_resend_invite_when_not_pending(app, client, user_session, portfolio, user):
+    queue_length = len(queue.get_queue())
+
+    task_order = TaskOrderFactory.create(
+        portfolio=portfolio, contracting_officer=user, ko_invite=True
+    )
+
+    portfolio_role = PortfolioRoleFactory.create(
+        role=Roles.get("owner"),
+        portfolio=portfolio,
+        user=user,
+        status=PortfolioStatus.ACTIVE,
+    )
+
+    original_invitation = Invitations.create(
+        inviter=user, portfolio_role=portfolio_role, email=user.email
+    )
+
+    Invitations.accept(user=user, token=original_invitation.token)
+
+    user_session(user)
+
+    response = client.post(
+        url_for(
+            "portfolios.resend_invite",
+            portfolio_id=portfolio.id,
+            task_order_id=task_order.id,
+            _external=True,
+        ),
+        data={"invite_type": "ko_invite"},
+    )
+
+    assert original_invitation.status == InvitationStatus.ACCEPTED
+    assert response.status_code == 404
+    assert len(queue.get_queue()) == queue_length
