@@ -63,6 +63,12 @@ class ShowTaskOrderWorkflow:
         return self._task_order
 
     @property
+    def portfolio(self):
+        if self.task_order:
+            return self.task_order.portfolio
+        return Portfolios.get(self.user, self.portfolio_id)
+
+    @property
     def form(self):
         form_type = (
             "unclassified_form"
@@ -128,11 +134,6 @@ class ShowTaskOrderWorkflow:
         elif self.portfolio_id:
             return True
         return False
-
-    def get_portfolio(self):
-        if self.task_order:
-            return self.task_order.portfolio
-        return Portfolios.get(self.user, self.portfolio_id)
 
 
 class UpdateTaskOrderWorkflow(ShowTaskOrderWorkflow):
@@ -238,7 +239,7 @@ def new(screen, task_order_id=None, portfolio_id=None):
     }
 
     if workflow.pf_attributes_read_only():
-        template_args["portfolio"] = workflow.get_portfolio()
+        template_args["portfolio"] = workflow.portfolio
         if screen == 1:
             workflow.form = task_order_form.AppInfoWithExistingPortfolioForm(
                 obj=workflow.task_order

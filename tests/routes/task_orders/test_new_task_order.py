@@ -9,6 +9,26 @@ from atst.utils.localization import translate
 from tests.factories import UserFactory, TaskOrderFactory, PortfolioFactory
 
 
+class TestShowTaskOrderWorkflow:
+    def test_portfolio_when_task_order_exists(self):
+        portfolio = PortfolioFactory.create()
+        task_order = TaskOrderFactory(portfolio=portfolio)
+        assert portfolio.num_task_orders > 0
+
+        workflow = ShowTaskOrderWorkflow(
+            user=task_order.creator, task_order_id=task_order.id
+        )
+        assert portfolio == workflow.portfolio
+
+    def test_portfolio_with_portfolio_id(self):
+        user = UserFactory.create()
+        portfolio = PortfolioFactory.create(owner=user)
+        workflow = ShowTaskOrderWorkflow(
+            user=portfolio.owner, portfolio_id=portfolio.id
+        )
+        assert portfolio == workflow.portfolio
+
+
 def test_new_task_order(client, user_session):
     creator = UserFactory.create()
     user_session()
@@ -71,24 +91,6 @@ def test_to_on_pf_cannot_edit_pf_attributes():
     )
     assert portfolio.num_task_orders > 1
     assert second_workflow.pf_attributes_read_only()
-
-
-def test_get_portfolio_when_task_order_exists():
-    portfolio = PortfolioFactory.create()
-    task_order = TaskOrderFactory(portfolio=portfolio)
-    assert portfolio.num_task_orders > 0
-
-    workflow = ShowTaskOrderWorkflow(
-        user=task_order.creator, task_order_id=task_order.id
-    )
-    assert portfolio == workflow.get_portfolio()
-
-
-def test_get_portfolio_with_portfolio_id():
-    user = UserFactory.create()
-    portfolio = PortfolioFactory.create(owner=user)
-    workflow = ShowTaskOrderWorkflow(user=portfolio.owner, portfolio_id=portfolio.id)
-    assert portfolio == workflow.get_portfolio()
 
 
 # TODO: this test will need to be more complicated when we add validation to
