@@ -50,9 +50,10 @@ class ShowTaskOrderWorkflow:
         self.user = user
         self.screen = screen
         self.task_order_id = task_order_id
-        self.portfolio_id = portfolio_id
-        self._section = TASK_ORDER_SECTIONS[screen - 1]
         self._task_order = None
+        self.portfolio_id = portfolio_id
+        self._portfolio = None
+        self._section = TASK_ORDER_SECTIONS[screen - 1]
         self._form = None
 
     @property
@@ -64,9 +65,13 @@ class ShowTaskOrderWorkflow:
 
     @property
     def portfolio(self):
-        if self.task_order:
-            return self.task_order.portfolio
-        return Portfolios.get(self.user, self.portfolio_id)
+        if not self._portfolio:
+            if self.task_order:
+                self._portfolio = self.task_order.portfolio
+            elif self.portfolio_id:
+                self._portfolio = Portfolios.get(self.user, self.portfolio_id)
+
+        return self._portfolio
 
     @property
     def form(self):
@@ -97,16 +102,12 @@ class ShowTaskOrderWorkflow:
         else:
             self._form = self._section[form_type]()
 
-        if self.pf_attributes_read_only() and self.screen == 1:
+        if self.pf_attributes_read_only and self.screen == 1:
             self._form = task_order_form.AppInfoWithExistingPortfolioForm(
                 obj=self.task_order
             )
 
         return self._form
-
-    @form.setter
-    def form(self, value):
-        self._form = value
 
     @property
     def template(self):
@@ -126,19 +127,19 @@ class ShowTaskOrderWorkflow:
 
     @property
     def is_complete(self):
-        if self.task_order:
-            if TaskOrders.all_sections_complete(self.task_order):
-                return True
+        if self.task_order and TaskOrders.all_sections_complete(self.task_order):
+            return True
         else:
             return False
 
+    @property
     def pf_attributes_read_only(self):
-        if self.task_order:
-            if self.task_order.portfolio.num_task_orders > 1:
-                return True
+        if self.task_order and self.portfolio.num_task_orders > 1:
+            return True
         elif self.portfolio_id:
             return True
-        return False
+        else:
+            return False
 
 
 class UpdateTaskOrderWorkflow(ShowTaskOrderWorkflow):
@@ -152,17 +153,27 @@ class UpdateTaskOrderWorkflow(ShowTaskOrderWorkflow):
         self.portfolio_id = portfolio_id
         self._task_order = None
         self._section = TASK_ORDER_SECTIONS[screen - 1]
-        form_type = (
-            "unclassified_form"
-            if "unclassified_form" in self._section and not app.config.get("CLASSIFIED")
-            else "form"
-        )
-        self._form = self._section[form_type](self.form_data, obj=self.task_order)
+        self._form = None
 
     @property
     def form(self):
-        if self.pf_attributes_read_only() and self.screen == 1:
-            return task_order_form.AppInfoWithExistingPortfolioForm(self.form_data)
+        if not self._form:
+            form_type = (
+                "unclassified_form"
+                if "unclassified_form" in self._section
+                and not app.config.get("CLASSIFIED")
+                else "form"
+            )
+
+            if self.pf_attributes_read_only and self.screen == 1:
+                self._form = task_order_form.AppInfoWithExistingPortfolioForm(
+                    self.form_data
+                )
+            else:
+                self._form = self._section[form_type](
+                    self.form_data, obj=self.task_order
+                )
+
         return self._form
 
     @property
@@ -247,7 +258,7 @@ def new(screen, task_order_id=None, portfolio_id=None):
         if not TaskOrders.all_sections_complete(workflow.task_order):
             flash("task_order_draft")
 
-    if workflow.pf_attributes_read_only():
+    if workflow.pf_attributes_read_only:
         template_args["portfolio"] = workflow.portfolio
 
     url_args = {"screen": screen}
