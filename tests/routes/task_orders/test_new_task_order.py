@@ -44,7 +44,7 @@ def serialize_dates(data):
 
 def test_new_to_can_edit_pf_attributes_screen_1():
     portfolio = PortfolioFactory.create()
-    workflow = ShowTaskOrderWorkflow(user=portfolio.owner, portfolio_id=portfolio.id)
+    workflow = ShowTaskOrderWorkflow(user=portfolio.owner)
     assert not workflow.pf_attributes_read_only()
 
 

@@ -126,8 +126,7 @@ class ShowTaskOrderWorkflow:
             if self.task_order.portfolio.num_task_orders > 1:
                 return True
         elif self.portfolio_id:
-            if self.get_portfolio().num_task_orders > 0:
-                return True
+            return True
         return False
 
     def get_portfolio(self):
