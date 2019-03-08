@@ -32,3 +32,42 @@ class NewMemberForm(BaseForm):
         default="",
         description=translate("forms.new_member.portfolio_role_description"),
     )
+
+    perms_app_mgmt = SelectField(
+        None,
+        choices=[
+            ("view_portfolio_application_management", "View Only"),
+            ("edit_portfolio_application_management", "Edit Access"),
+        ],
+    )
+    perms_funding = SelectField(
+        None,
+        choices=[
+            ("view_portfolio_funding", "View Only"),
+            ("edit_portfolio_funding", "Edit Access"),
+        ],
+    )
+    perms_reporting = SelectField(
+        None,
+        choices=[
+            ("view_portfolio_reports", "View Only"),
+            ("edit_portfolio_reports", "Edit Access"),
+        ],
+    )
+    perms_portfolio_mgmt = SelectField(
+        None,
+        choices=[
+            ("view_portfolio_admin", "View Only"),
+            ("edit_portfolio_admin", "Edit Access"),
+        ],
+    )
+
+    @property
+    def data(self):
+        _data = super().data
+        _data["permission_sets"] = []
+        for field in _data:
+            if "perms" in field:
+                _data["permission_sets"].append(_data[field])
+
+        return _data

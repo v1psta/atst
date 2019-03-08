@@ -63,3 +63,22 @@ def test_portfolio_role_permissions():
         PortfolioRoles.portfolio_role_permissions(portfolio_two, new_user)
         == default_perms
     )
+
+
+def test_add_portfolio_role_with_permission_sets():
+    portfolio = PortfolioFactory.create()
+    new_user = UserFactory.create()
+    permission_sets = ["edit_portfolio_application_management"]
+    port_role = PortfolioRoles.add(
+        new_user, portfolio.id, "developer", permission_sets=permission_sets
+    )
+    assert len(port_role.permission_sets) == 5
+    expected_names = [
+        "edit_portfolio_application_management",
+        "view_portfolio_application_management",
+        "view_portfolio_funding",
+        "view_portfolio_reports",
+        "view_portfolio_admin",
+    ]
+    actual_names = [prms.name for prms in port_role.permission_sets]
+    assert expected_names == expected_names

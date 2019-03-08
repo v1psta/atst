@@ -80,7 +80,7 @@ class PortfolioRoles(object):
             raise NotFoundError("portfolio role")
 
     @classmethod
-    def add(cls, user, portfolio_id, role_name):
+    def add(cls, user, portfolio_id, role_name, permission_sets=None):
         role = Roles.get(role_name)
 
         new_portfolio_role = None
@@ -103,11 +103,30 @@ class PortfolioRoles(object):
                 status=PortfolioRoleStatus.PENDING,
             )
 
+        if permission_sets:
+            new_portfolio_role.permission_sets = PortfolioRoles._permission_sets_for_names(
+                permission_sets
+            )
+
         user.portfolio_roles.append(new_portfolio_role)
         db.session.add(user)
         db.session.commit()
 
         return new_portfolio_role
+
+    _DEFAULT_PORTFOLIO_PERMS_SETS = {
+        "view_portfolio_application_management",
+        "view_portfolio_funding",
+        "view_portfolio_reports",
+        "view_portfolio_admin",
+    }
+
+    @classmethod
+    def _permission_sets_for_names(cls, set_names):
+        perms_set_names = PortfolioRoles._DEFAULT_PORTFOLIO_PERMS_SETS.union(
+            set(set_names)
+        )
+        return [Roles.get(perms_set_name) for perms_set_name in perms_set_names]
 
     @classmethod
     def update_role(cls, portfolio_role, role_name):

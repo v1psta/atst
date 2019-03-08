@@ -105,11 +105,16 @@ class Portfolios(object):
             atat_role_name="default",
             provisional=True,
         )
-        return Portfolios.add_member(portfolio, new_user, data["portfolio_role"])
+        permission_sets = data.get("permission_sets", [])
+        return Portfolios.add_member(
+            portfolio, new_user, data["portfolio_role"], permission_sets=permission_sets
+        )
 
     @classmethod
-    def add_member(cls, portfolio, member, role_name):
-        portfolio_role = PortfolioRoles.add(member, portfolio.id, role_name)
+    def add_member(cls, portfolio, member, role_name, permission_sets=None):
+        portfolio_role = PortfolioRoles.add(
+            member, portfolio.id, role_name, permission_sets
+        )
         return portfolio_role
 
     @classmethod

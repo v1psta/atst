@@ -47,7 +47,14 @@ def test_new_member_accepts_valid_invite(monkeypatch, client, user_session):
     user_session(portfolio.owner)
     client.post(
         url_for("portfolios.create_member", portfolio_id=portfolio.id),
-        data={"portfolio_role": "developer", **user_info},
+        data={
+            "portfolio_role": "developer",
+            "perms_app_mgmt": "view_portfolio_application_management",
+            "perms_funding": "view_portfolio_funding",
+            "perms_reporting": "view_portfolio_reports",
+            "perms_portfolio_mgmt": "view_portfolio_admin",
+            **user_info,
+        },
     )
 
     user = Users.get_by_dod_id(user_info["dod_id"])

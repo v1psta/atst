@@ -85,6 +85,10 @@ def test_create_member(client, user_session):
             "last_name": "Zuckerman",
             "email": "some_pig@zuckermans.com",
             "portfolio_role": "developer",
+            "perms_app_mgmt": "view_portfolio_application_management",
+            "perms_funding": "view_portfolio_funding",
+            "perms_reporting": "view_portfolio_reports",
+            "perms_portfolio_mgmt": "view_portfolio_admin",
         },
         follow_redirects=True,
     )
@@ -94,6 +98,8 @@ def test_create_member(client, user_session):
     assert user.has_portfolios
     assert user.invitations
     assert len(queue.get_queue()) == queue_length + 1
+    portfolio_role = user.portfolio_roles[0]
+    assert len(portfolio_role.permission_sets) == 4
 
 
 def test_view_member_shows_role(client, user_session):
