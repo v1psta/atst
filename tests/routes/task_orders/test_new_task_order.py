@@ -44,8 +44,8 @@ def serialize_dates(data):
 
 def test_new_to_can_edit_pf_attributes_screen_1():
     portfolio = PortfolioFactory.create()
-    workflow = ShowTaskOrderWorkflow(user=portfolio.owner)
-    assert not workflow.pf_attributes_read_only(portfolio.id)
+    workflow = ShowTaskOrderWorkflow(user=portfolio.owner, portfolio_id=portfolio.id)
+    assert not workflow.pf_attributes_read_only()
 
 
 def test_new_pf_can_edit_pf_attributes_on_back_navigation():
@@ -61,9 +61,9 @@ def test_to_on_pf_cannot_edit_pf_attributes():
     portfolio = PortfolioFactory.create()
     pf_task_order = TaskOrderFactory(portfolio=portfolio)
 
-    workflow = ShowTaskOrderWorkflow(user=portfolio.owner)
+    workflow = ShowTaskOrderWorkflow(user=portfolio.owner, portfolio_id=portfolio.id)
     assert portfolio.num_task_orders == 1
-    assert workflow.pf_attributes_read_only(portfolio.id)
+    assert workflow.pf_attributes_read_only()
 
     second_task_order = TaskOrderFactory(portfolio=portfolio)
     second_workflow = ShowTaskOrderWorkflow(
@@ -87,8 +87,8 @@ def test_get_portfolio_when_task_order_exists():
 def test_get_portfolio_with_portfolio_id():
     user = UserFactory.create()
     portfolio = PortfolioFactory.create(owner=user)
-    workflow = ShowTaskOrderWorkflow(user=portfolio.owner)
-    assert portfolio == workflow.get_portfolio(portfolio_id=portfolio.id)
+    workflow = ShowTaskOrderWorkflow(user=portfolio.owner, portfolio_id=portfolio.id)
+    assert portfolio == workflow.get_portfolio()
 
 
 # TODO: this test will need to be more complicated when we add validation to

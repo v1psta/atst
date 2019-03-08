@@ -46,10 +46,11 @@ TASK_ORDER_SECTIONS = [
 
 
 class ShowTaskOrderWorkflow:
-    def __init__(self, user, screen=1, task_order_id=None):
+    def __init__(self, user, screen=1, task_order_id=None, portfolio_id=None):
         self.user = user
         self.screen = screen
         self.task_order_id = task_order_id
+        self.portfolio_id = portfolio_id
         self._section = TASK_ORDER_SECTIONS[screen - 1]
         self._task_order = None
         self._form = None
@@ -120,19 +121,19 @@ class ShowTaskOrderWorkflow:
         else:
             return False
 
-    def pf_attributes_read_only(self, portfolio_id=None):
+    def pf_attributes_read_only(self):
         if self.task_order:
             if self.task_order.portfolio.num_task_orders > 1:
                 return True
-        elif portfolio_id:
-            if self.get_portfolio(portfolio_id).num_task_orders > 0:
+        elif self.portfolio_id:
+            if self.get_portfolio().num_task_orders > 0:
                 return True
         return False
 
-    def get_portfolio(self, portfolio_id=None):
+    def get_portfolio(self):
         if self.task_order:
             return self.task_order.portfolio
-        return Portfolios.get(self.user, portfolio_id)
+        return Portfolios.get(self.user, self.portfolio_id)
 
 
 class UpdateTaskOrderWorkflow(ShowTaskOrderWorkflow):
@@ -155,7 +156,7 @@ class UpdateTaskOrderWorkflow(ShowTaskOrderWorkflow):
 
     @property
     def form(self):
-        if self.pf_attributes_read_only(self.portfolio_id) and self.screen == 1:
+        if self.pf_attributes_read_only() and self.screen == 1:
             return task_order_form.AppInfoWithExistingPortfolioForm(self.form_data)
         return self._form
 
@@ -226,7 +227,9 @@ def get_started():
 @task_orders_bp.route("/task_orders/new/<int:screen>/<task_order_id>")
 @task_orders_bp.route("/portfolios/<portfolio_id>/task_orders/new/<int:screen>")
 def new(screen, task_order_id=None, portfolio_id=None):
-    workflow = ShowTaskOrderWorkflow(g.current_user, screen, task_order_id)
+    workflow = ShowTaskOrderWorkflow(
+        g.current_user, screen, task_order_id, portfolio_id
+    )
     template_args = {
         "current": screen,
         "task_order_id": task_order_id,
@@ -235,8 +238,8 @@ def new(screen, task_order_id=None, portfolio_id=None):
         "complete": workflow.is_complete,
     }
 
-    if workflow.pf_attributes_read_only(portfolio_id):
-        template_args["portfolio"] = workflow.get_portfolio(portfolio_id=portfolio_id)
+    if workflow.pf_attributes_read_only():
+        template_args["portfolio"] = workflow.get_portfolio()
         if screen == 1:
             workflow.form = task_order_form.AppInfoWithExistingPortfolioForm(
                 obj=workflow.task_order
