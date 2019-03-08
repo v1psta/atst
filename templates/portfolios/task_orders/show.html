@@ -6,6 +6,10 @@
 
 {% block portfolio_content %}
 
+{% set show_dd_254_button = is_so and to_form_complete %}
+{% set show_to_info_button = (is_cor or is_ko) and to_form_complete %}
+{% set show_sign_to_button = is_ko and dd_254_complete and not is_to_signed %}
+
 {% macro officer_name(officer) -%}
   {%- if not officer -%}
     Not specified
@@ -136,8 +140,8 @@
         }}
         {{
           Step(
-            button_text=is_so and ("common.edit" | translate),
-            button_url=is_so and url_for("portfolios.so_review", portfolio_id=portfolio.id, task_order_id=task_order.id),
+            button_text=show_dd_254_button and ("common.edit" | translate),
+            button_url=show_dd_254_button and url_for("portfolios.so_review", portfolio_id=portfolio.id, task_order_id=task_order.id),
             complete=dd_254_complete,
             description="task_orders.view.steps.security" | translate({
               "security_officer": officer_name(task_order.security_officer)
@@ -149,12 +153,12 @@
             "contracting_officer": officer_name(task_order.contracting_officer),
             "contracting_officer_representative": officer_name(task_order.contracting_officer_representative)
           }) | safe,
-          button_url=url_for(
+          button_url=show_to_info_button and url_for(
             "portfolios.ko_review",
             portfolio_id=portfolio.id,
             task_order_id=task_order.id,
           ),
-          button_text=(is_cor or is_ko) and ("common.edit" | translate),
+          button_text=show_to_info_button and ("common.edit" | translate),
           complete=False) %}
           <div class='alert alert--warning'>
             <div class='alert__content'>
@@ -166,8 +170,8 @@
         {% endcall %}
         {{
           Step(
-            button_text=is_ko and not is_to_signed and ("common.sign" | translate),
-            button_url=is_ko and url_for(
+            button_text=show_sign_to_button and ("common.sign" | translate),
+            button_url=show_sign_to_button and url_for(
               "portfolios.ko_review",
               portfolio_id=portfolio.id,
               task_order_id=task_order.id,

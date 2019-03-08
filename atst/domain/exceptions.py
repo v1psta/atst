@@ -34,3 +34,12 @@ class UnauthenticatedError(Exception):
 
 class UploadError(Exception):
     pass
+
+
+class NoAccessError(Exception):
+    def __init__(self, resource_name):
+        self.resource_name = resource_name
+
+    @property
+    def message(self):
+        return "Route for {} cannot be accessed".format(self.resource_name)

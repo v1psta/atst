@@ -5,7 +5,7 @@ from flask import g, redirect, render_template, url_for, request as http_request
 from . import portfolios_bp
 from atst.database import db
 from atst.domain.task_orders import TaskOrders, DD254s
-from atst.domain.exceptions import NotFoundError
+from atst.domain.exceptions import NotFoundError, NoAccessError
 from atst.domain.portfolios import Portfolios
 from atst.domain.authz import Authorization
 from atst.forms.officers import EditTaskOrderOfficersForm
@@ -85,12 +85,15 @@ def ko_review(portfolio_id, task_order_id):
 
     Authorization.check_is_ko_or_cor(g.current_user, task_order)
 
-    return render_template(
-        "/portfolios/task_orders/review.html",
-        portfolio=portfolio,
-        task_order=task_order,
-        form=KOReviewForm(obj=task_order),
-    )
+    if TaskOrders.all_sections_complete(task_order):
+        return render_template(
+            "/portfolios/task_orders/review.html",
+            portfolio=portfolio,
+            task_order=task_order,
+            form=KOReviewForm(obj=task_order),
+        )
+    else:
+        raise NoAccessError("task_order")
 
 
 @portfolios_bp.route(

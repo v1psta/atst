@@ -27,6 +27,7 @@ def make_error_pages(app):
     @app.errorhandler(exceptions.NotFoundError)
     @app.errorhandler(exceptions.UnauthorizedError)
     @app.errorhandler(PortfolioError)
+    @app.errorhandler(exceptions.NoAccessError)
     # pylint: disable=unused-variable
     def not_found(e):
         return handle_error(e)
