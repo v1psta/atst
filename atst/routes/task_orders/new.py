@@ -246,8 +246,7 @@ def new(screen, task_order_id=None, portfolio_id=None):
             )
 
     if task_order_id and screen is 4:
-        task_order = TaskOrders.get(g.current_user, task_order_id)
-        if not TaskOrders.all_sections_complete(task_order):
+        if not TaskOrders.all_sections_complete(workflow.task_order):
             flash("task_order_draft")
 
     url_args = {"screen": screen}
