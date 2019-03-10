@@ -58,6 +58,12 @@ class PortfolioRole(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
 
     permission_sets = relationship("Role", secondary=portfolio_roles_roles)
 
+    @property
+    def permissions(self):
+        return [
+            perm for permset in self.permission_sets for perm in permset.permissions
+        ]
+
     def __repr__(self):
         return "<PortfolioRole(role='{}', portfolio='{}', user_id='{}', id='{}')>".format(
             self.role.name, self.portfolio.name, self.user_id, self.id
