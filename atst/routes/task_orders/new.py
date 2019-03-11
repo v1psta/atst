@@ -190,9 +190,17 @@ class UpdateTaskOrderWorkflow(ShowTaskOrderWorkflow):
             to_data.pop("defense_component")
 
         # don't save other text in DB unless "other" is checked
-        if "complexity" in to_data and "other" not in to_data["complexity"]:
+        if (
+            "complexity" in to_data
+            and bool(to_data["complexity"])
+            and "other" not in to_data["complexity"]
+        ):
             to_data["complexity_other"] = None
-        if "dev_team" in to_data and "other" not in to_data["dev_team"]:
+        if (
+            "dev_team" in to_data
+            and bool(to_data["dev_team"])
+            and "other" not in to_data["dev_team"]
+        ):
             to_data["dev_team_other"] = None
 
         if self.form_data.get("am_cor"):
