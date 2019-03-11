@@ -4,6 +4,7 @@
 {% from "components/options_input.html" import OptionsInput %}
 {% from "components/date_input.html" import DateInput %}
 {% from "components/multi_checkbox_input.html" import MultiCheckboxInput %}
+{% from "components/review_field.html" import ReviewField %}
 
 {% block heading %}
   {{ "task_orders.new.app_info.section_title"| translate }}
@@ -14,11 +15,21 @@
 
 <!-- App Info Section -->
 <h3 class="task-order-form__heading subheading">{{ "task_orders.new.app_info.basic_info_title"| translate }}</h3>
-{{ TextInput(form.portfolio_name, placeholder="The name of your office or organization", validation="portfolioName") }}
+
+{% if portfolio %}
+    {{ ReviewField(heading="forms.portfolio.name_label" | translate, field=portfolio.name) }}
+{% else %}
+    {{ TextInput(form.portfolio_name, placeholder="The name of your office or organization", validation="portfolioName") }}
+{% endif %}
 {{ TextInput(form.scope, paragraph=True) }}
 <p><i>{{ "task_orders.new.app_info.sample_scope" | translate | safe }}</i></p>
+
 <div class="subheading--black">
-  {{ OptionsInput(form.defense_component) }}
+    {% if portfolio %}
+        {{ ReviewField(heading="forms.task_order.defense_component_label" | translate, field=portfolio.defense_component) }}
+    {% else %}
+        {{ OptionsInput(form.defense_component) }}
+    {% endif %}
 </div>
 
 <hr>

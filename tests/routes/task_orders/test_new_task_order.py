@@ -9,6 +9,26 @@ from atst.utils.localization import translate
 from tests.factories import UserFactory, TaskOrderFactory, PortfolioFactory
 
 
+class TestShowTaskOrderWorkflow:
+    def test_portfolio_when_task_order_exists(self):
+        portfolio = PortfolioFactory.create()
+        task_order = TaskOrderFactory(portfolio=portfolio)
+        assert portfolio.num_task_orders > 0
+
+        workflow = ShowTaskOrderWorkflow(
+            user=task_order.creator, task_order_id=task_order.id
+        )
+        assert portfolio == workflow.portfolio
+
+    def test_portfolio_with_portfolio_id(self):
+        user = UserFactory.create()
+        portfolio = PortfolioFactory.create(owner=user)
+        workflow = ShowTaskOrderWorkflow(
+            user=portfolio.owner, portfolio_id=portfolio.id
+        )
+        assert portfolio == workflow.portfolio
+
+
 def test_new_task_order(client, user_session):
     creator = UserFactory.create()
     user_session()
@@ -42,6 +62,37 @@ def serialize_dates(data):
     return data
 
 
+def test_new_to_can_edit_pf_attributes_screen_1():
+    portfolio = PortfolioFactory.create()
+    workflow = ShowTaskOrderWorkflow(user=portfolio.owner)
+    assert not workflow.pf_attributes_read_only
+
+
+def test_new_pf_can_edit_pf_attributes_on_back_navigation():
+    portfolio = PortfolioFactory.create()
+    pf_task_order = TaskOrderFactory(portfolio=portfolio)
+    pf_workflow = ShowTaskOrderWorkflow(
+        user=pf_task_order.creator, task_order_id=pf_task_order.id
+    )
+    assert not pf_workflow.pf_attributes_read_only
+
+
+def test_to_on_pf_cannot_edit_pf_attributes():
+    portfolio = PortfolioFactory.create()
+    pf_task_order = TaskOrderFactory(portfolio=portfolio)
+
+    workflow = ShowTaskOrderWorkflow(user=portfolio.owner, portfolio_id=portfolio.id)
+    assert portfolio.num_task_orders == 1
+    assert workflow.pf_attributes_read_only
+
+    second_task_order = TaskOrderFactory(portfolio=portfolio)
+    second_workflow = ShowTaskOrderWorkflow(
+        user=portfolio.owner, task_order_id=second_task_order.id
+    )
+    assert portfolio.num_task_orders > 1
+    assert second_workflow.pf_attributes_read_only
+
+
 # TODO: this test will need to be more complicated when we add validation to
 # the forms
 def test_create_new_task_order(client, user_session, pdf_upload):
@@ -66,7 +117,6 @@ def test_create_new_task_order(client, user_session, pdf_upload):
     created_task_order = TaskOrders.get(creator, created_task_order_id)
     assert created_task_order.portfolio is not None
     assert created_task_order.portfolio.name == portfolio_name
-    assert created_task_order.portfolio is not None
     assert created_task_order.portfolio.defense_component == defense_component
 
     funding_data = slice_data_for_section(task_order_data, "funding")
@@ -91,10 +141,8 @@ def test_create_new_task_order_for_portfolio(client, user_session):
 
     task_order_data = TaskOrderFactory.dictionary()
     app_info_data = slice_data_for_section(task_order_data, "app_info")
-    portfolio_name = "This is ignored for now"
-    app_info_data["portfolio_name"] = portfolio_name
-    defense_component = "Defense Health Agency"  # this is also ignored
-    app_info_data["defense_component"] = defense_component
+    app_info_data["portfolio_name"] = portfolio.name
+    app_info_data["defense_component"] = portfolio.defense_component
 
     response = client.post(
         url_for("task_orders.update", screen=1, portfolio_id=portfolio.id),
@@ -105,6 +153,8 @@ def test_create_new_task_order_for_portfolio(client, user_session):
 
     created_task_order_id = response.headers["Location"].split("/")[-1]
     created_task_order = TaskOrders.get(creator, created_task_order_id)
+    assert created_task_order.portfolio_name == portfolio.name
+    assert created_task_order.defense_component == portfolio.defense_component
     assert created_task_order.portfolio == portfolio
 
 

@@ -46,12 +46,14 @@ TASK_ORDER_SECTIONS = [
 
 
 class ShowTaskOrderWorkflow:
-    def __init__(self, user, screen=1, task_order_id=None):
+    def __init__(self, user, screen=1, task_order_id=None, portfolio_id=None):
         self.user = user
         self.screen = screen
         self.task_order_id = task_order_id
-        self._section = TASK_ORDER_SECTIONS[screen - 1]
         self._task_order = None
+        self.portfolio_id = portfolio_id
+        self._portfolio = None
+        self._section = TASK_ORDER_SECTIONS[screen - 1]
         self._form = None
 
     @property
@@ -60,6 +62,16 @@ class ShowTaskOrderWorkflow:
             self._task_order = TaskOrders.get(self.user, self.task_order_id)
 
         return self._task_order
+
+    @property
+    def portfolio(self):
+        if not self._portfolio:
+            if self.task_order:
+                self._portfolio = self.task_order.portfolio
+            elif self.portfolio_id:
+                self._portfolio = Portfolios.get(self.user, self.portfolio_id)
+
+        return self._portfolio
 
     @property
     def form(self):
@@ -90,6 +102,11 @@ class ShowTaskOrderWorkflow:
         else:
             self._form = self._section[form_type]()
 
+        if self.pf_attributes_read_only and self.screen == 1:
+            self._form = task_order_form.AppInfoWithExistingPortfolioForm(
+                obj=self.task_order
+            )
+
         return self._form
 
     @property
@@ -110,9 +127,17 @@ class ShowTaskOrderWorkflow:
 
     @property
     def is_complete(self):
-        if self.task_order:
-            if TaskOrders.all_sections_complete(self.task_order):
-                return True
+        if self.task_order and TaskOrders.all_sections_complete(self.task_order):
+            return True
+        else:
+            return False
+
+    @property
+    def pf_attributes_read_only(self):
+        if self.task_order and self.portfolio.num_task_orders > 1:
+            return True
+        elif self.portfolio_id:
+            return True
         else:
             return False
 
@@ -128,15 +153,27 @@ class UpdateTaskOrderWorkflow(ShowTaskOrderWorkflow):
         self.portfolio_id = portfolio_id
         self._task_order = None
         self._section = TASK_ORDER_SECTIONS[screen - 1]
-        form_type = (
-            "unclassified_form"
-            if "unclassified_form" in self._section and not app.config.get("CLASSIFIED")
-            else "form"
-        )
-        self._form = self._section[form_type](self.form_data, obj=self.task_order)
+        self._form = None
 
     @property
     def form(self):
+        if not self._form:
+            form_type = (
+                "unclassified_form"
+                if "unclassified_form" in self._section
+                and not app.config.get("CLASSIFIED")
+                else "form"
+            )
+
+            if self.pf_attributes_read_only and self.screen == 1:
+                self._form = task_order_form.AppInfoWithExistingPortfolioForm(
+                    self.form_data
+                )
+            else:
+                self._form = self._section[form_type](
+                    self.form_data, obj=self.task_order
+                )
+
         return self._form
 
     @property
@@ -206,20 +243,23 @@ def get_started():
 @task_orders_bp.route("/task_orders/new/<int:screen>/<task_order_id>")
 @task_orders_bp.route("/portfolios/<portfolio_id>/task_orders/new/<int:screen>")
 def new(screen, task_order_id=None, portfolio_id=None):
-    if task_order_id and screen is 4:
-        task_order = TaskOrders.get(g.current_user, task_order_id)
-        if not TaskOrders.all_sections_complete(task_order):
-            flash("task_order_draft")
-
-    workflow = ShowTaskOrderWorkflow(g.current_user, screen, task_order_id)
+    workflow = ShowTaskOrderWorkflow(
+        g.current_user, screen, task_order_id, portfolio_id
+    )
     template_args = {
         "current": screen,
         "task_order_id": task_order_id,
-        "portfolio_id": portfolio_id,
         "screens": workflow.display_screens,
         "form": workflow.form,
         "complete": workflow.is_complete,
     }
+
+    if task_order_id and screen is 4:
+        if not TaskOrders.all_sections_complete(workflow.task_order):
+            flash("task_order_draft")
+
+    if workflow.pf_attributes_read_only:
+        template_args["portfolio"] = workflow.portfolio
 
     url_args = {"screen": screen}
     if task_order_id:
