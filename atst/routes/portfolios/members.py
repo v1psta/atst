@@ -110,7 +110,7 @@ def view_member(portfolio_id, member_id):
     Authorization.check_portfolio_permission(
         g.current_user,
         portfolio,
-        Permissions.ASSIGN_AND_UNASSIGN_ATAT_ROLE,
+        Permissions.EDIT_PORTFOLIO_USERS,
         "edit this portfolio user",
     )
     member = PortfolioRoles.get(portfolio_id, member_id)
@@ -144,7 +144,7 @@ def update_member(portfolio_id, member_id):
     Authorization.check_portfolio_permission(
         g.current_user,
         portfolio,
-        Permissions.ASSIGN_AND_UNASSIGN_ATAT_ROLE,
+        Permissions.EDIT_PORTFOLIO_USERS,
         "edit this portfolio user",
     )
     member = PortfolioRoles.get(portfolio_id, member_id)

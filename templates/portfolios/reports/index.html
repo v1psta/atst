@@ -134,7 +134,7 @@
 
   {% if not portfolio.applications %}
 
-    {% set can_create_applications = user_can(permissions.ADD_APPLICATION_IN_PORTFOLIO) %}
+    {% set can_create_applications = user_can(permissions.CREATE_APPLICATION) %}
     {% set message = 'This portfolio has no cloud environments set up, so there is no spending data to report. Create an application with some cloud environments to get started.'
       if can_create_applications
       else 'This portfolio has no cloud environments set up, so there is no spending data to report. Contact the portfolio owner to set up some cloud environments.'

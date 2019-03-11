@@ -64,7 +64,7 @@ class Environments(object):
         Authorization.check_portfolio_permission(
             user,
             portfolio,
-            Permissions.ADD_AND_ASSIGN_CSP_ROLES,
+            Permissions.EDIT_APPLICATION_MEMBER,
             "assign environment roles",
         )
         updated = False
@@ -104,7 +104,7 @@ class Environments(object):
         Authorization.check_portfolio_permission(
             user,
             environment.portfolio,
-            Permissions.REMOVE_CSP_ROLES,
+            Permissions.EDIT_APPLICATION_MEMBER,
             "revoke environment access",
         )
         EnvironmentRoles.delete(environment.id, target_user.id)

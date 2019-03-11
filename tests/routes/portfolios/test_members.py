@@ -22,19 +22,23 @@ def create_portfolio_and_invite_user(
     ws_status=PortfolioRoleStatus.PENDING,
     invite_status=InvitationStatus.PENDING,
 ):
-    portfolio = PortfolioFactory.create()
+    owner = UserFactory.create()
+    portfolio = PortfolioFactory.create(owner=owner)
     if ws_role != "owner":
         user = UserFactory.create()
         member = PortfolioRoleFactory.create(
             user=user, portfolio=portfolio, status=ws_status
         )
         InvitationFactory.create(
-            user=portfolio.owner,
+            inviter=portfolio.owner,
+            user=user,
             portfolio_role=member,
             email=member.user.email,
             status=invite_status,
         )
-    return portfolio
+        return (portfolio, member)
+    else:
+        return (portfolio, portfolio.members[0])
 
 
 def test_user_with_permission_has_add_member_link(client, user_session):
@@ -248,11 +252,10 @@ def test_does_not_show_any_buttons_if_owner(client, user_session):
 
 
 def test_only_shows_revoke_access_button_if_active(client, user_session):
-    portfolio = create_portfolio_and_invite_user(
+    portfolio, member = create_portfolio_and_invite_user(
         ws_status=PortfolioRoleStatus.ACTIVE, invite_status=InvitationStatus.ACCEPTED
     )
     user_session(portfolio.owner)
-    member = portfolio.members[1]
     response = client.get(
         url_for(
             "portfolios.view_member",
@@ -266,11 +269,11 @@ def test_only_shows_revoke_access_button_if_active(client, user_session):
 
 
 def test_only_shows_revoke_invite_button_if_pending(client, user_session):
-    portfolio = create_portfolio_and_invite_user(
+    portfolio, member = create_portfolio_and_invite_user(
         ws_status=PortfolioRoleStatus.PENDING, invite_status=InvitationStatus.PENDING
     )
     user_session(portfolio.owner)
-    member = portfolio.members[1]
+    # member = next((memb for memb in portfolio.members if memb != portfolio.owner), None)
     response = client.get(
         url_for(
             "portfolios.view_member",
@@ -284,12 +287,11 @@ def test_only_shows_revoke_invite_button_if_pending(client, user_session):
 
 
 def test_only_shows_resend_button_if_expired(client, user_session):
-    portfolio = create_portfolio_and_invite_user(
+    portfolio, member = create_portfolio_and_invite_user(
         ws_status=PortfolioRoleStatus.PENDING,
         invite_status=InvitationStatus.REJECTED_EXPIRED,
     )
     user_session(portfolio.owner)
-    member = portfolio.members[1]
     response = client.get(
         url_for(
             "portfolios.view_member",
@@ -303,11 +305,10 @@ def test_only_shows_resend_button_if_expired(client, user_session):
 
 
 def test_only_shows_resend_button_if_revoked(client, user_session):
-    portfolio = create_portfolio_and_invite_user(
+    portfolio, member = create_portfolio_and_invite_user(
         ws_status=PortfolioRoleStatus.PENDING, invite_status=InvitationStatus.REVOKED
     )
     user_session(portfolio.owner)
-    member = portfolio.members[1]
     response = client.get(
         url_for(
             "portfolios.view_member",

@@ -93,6 +93,9 @@ def test_add_officer_who_is_already_portfolio_member():
     assert member.user == owner and member.role_name == "owner"
 
 
+from atst.domain.roles import Roles, _VIEW_PORTFOLIO_PERMISSION_SETS
+
+
 def test_task_order_access():
     creator = UserFactory.create()
     member = UserFactory.create()
@@ -111,19 +114,25 @@ def test_task_order_access():
 
     portfolio = PortfolioFactory.create(owner=creator)
     task_order = TaskOrderFactory.create(creator=creator, portfolio=portfolio)
-    PortfolioRoleFactory.create(user=member, portfolio=task_order.portfolio)
+    PortfolioRoleFactory.create(
+        user=member,
+        portfolio=task_order.portfolio,
+        permission_sets=[
+            Roles.get(prms["name"]) for prms in _VIEW_PORTFOLIO_PERMISSION_SETS
+        ],
+    )
     TaskOrders.add_officer(
         creator, task_order, "contracting_officer", officer.to_dictionary()
     )
 
-    check_access([creator, officer], [member, rando], "get", [task_order.id])
-    check_access([creator], [officer, member, rando], "create", [portfolio])
+    check_access([creator, officer, member], [rando], "get", [task_order.id])
+    check_access([creator, officer], [member, rando], "create", [portfolio])
     check_access([creator, officer], [member, rando], "update", [task_order])
     check_access(
-        [creator],
-        [officer, member, rando],
+        [creator, officer],
+        [member, rando],
         "add_officer",
-        [task_order, "contracting_officer", rando.to_dictionary()],
+        [task_order, "contracting_officer", UserFactory.dictionary()],
     )
 
 
