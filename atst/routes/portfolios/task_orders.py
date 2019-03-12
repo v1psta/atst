@@ -112,7 +112,7 @@ def resend_invite(portfolio_id, task_order_id, form=None):
     form_data = {**http_request.form}
     invite_type = form_data["invite_type"][0]
 
-    if invite_type not in dict.keys(OFFICER_INVITATIONS):
+    if invite_type not in OFFICER_INVITATIONS:
         raise NotFoundError("invite_type")
 
     invite_type_info = OFFICER_INVITATIONS[invite_type]
