@@ -660,11 +660,12 @@ def test_resend_invite_when_not_pending(app, client, user_session, portfolio, us
         status=PortfolioStatus.ACTIVE,
     )
 
-    original_invitation = Invitations.create(
-        inviter=user, portfolio_role=portfolio_role, email=user.email
+    original_invitation = InvitationFactory.create(
+        inviter=user,
+        portfolio_role=portfolio_role,
+        email=user.email,
+        status=InvitationStatus.ACCEPTED,
     )
-
-    Invitations.accept(user=user, token=original_invitation.token)
 
     user_session(user)
 
