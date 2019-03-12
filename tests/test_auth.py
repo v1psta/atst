@@ -6,6 +6,7 @@ from .mocks import DOD_SDN_INFO, DOD_SDN, FIXTURE_EMAIL_ADDRESS
 from atst.domain.users import Users
 from atst.domain.roles import Roles
 from atst.domain.exceptions import NotFoundError
+from atst.domain.authnid.crl import CRLInvalidException
 from atst.domain.auth import UNPROTECTED_ROUTES
 from .factories import UserFactory
 
@@ -211,3 +212,15 @@ def test_redirected_on_login(client, monkeypatch):
     target_route = url_for("users.user")
     response = _login(client, next=target_route)
     assert target_route in response.headers.get("Location")
+
+
+def test_error_on_invalid_crl(client, monkeypatch):
+    def _raise_crl_error(*args):
+        raise CRLInvalidException()
+
+    monkeypatch.setattr(
+        "atst.domain.authnid.AuthenticationContext.authenticate", _raise_crl_error
+    )
+    response = _login(client)
+    assert response.status_code == 401
+    assert "Error Code 008" in response.data.decode()

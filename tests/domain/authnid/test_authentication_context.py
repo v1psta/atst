@@ -56,11 +56,8 @@ def test_expired_crl_check_fails():
     auth_context = AuthenticationContext(
         MockCRLCache(valid=False, expired=True), "SUCCESS", DOD_SDN, CERT
     )
-    with pytest.raises(UnauthenticatedError) as excinfo:
+    with pytest.raises(CRLInvalidException) as excinfo:
         assert auth_context.authenticate()
-
-    (message,) = excinfo.value.args
-    assert "CRL expired" in message
 
 
 def test_bad_sdn():

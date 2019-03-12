@@ -8,6 +8,7 @@ from atst.domain.invitations import (
     ExpiredError as InvitationExpiredError,
     WrongUserError as InvitationWrongUserError,
 )
+from atst.domain.authnid.crl import CRLInvalidException
 from atst.domain.portfolios import PortfolioError
 from atst.utils.flash import formatted_flash as flash
 
@@ -31,6 +32,11 @@ def make_error_pages(app):
     # pylint: disable=unused-variable
     def not_found(e):
         return handle_error(e)
+
+    @app.errorhandler(CRLInvalidException)
+    # pylint: disable=unused-variable
+    def missing_crl(e):
+        return handle_error(e, message="Error Code 008", code=401)
 
     @app.errorhandler(exceptions.UnauthenticatedError)
     # pylint: disable=unused-variable
