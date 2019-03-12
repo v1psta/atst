@@ -5,6 +5,7 @@ metadata:
   name: atst-envvars
   namespace: atat-test
 data:
+  TZ: UTC
   FLASK_ENV: dev
   OVERRIDE_CONFIG_FULLPATH: /opt/atat/atst/atst-overrides.ini
   UWSGI_CONFIG_FULLPATH: /opt/atat/atst/uwsgi-config.ini

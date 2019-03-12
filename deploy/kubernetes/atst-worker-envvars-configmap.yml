@@ -5,4 +5,5 @@ metadata:
   name: atst-worker-envvars
   namespace: atat
 data:
+  TZ: UTC
   DISABLE_CRL_CHECK: "True"
