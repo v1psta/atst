@@ -36,9 +36,6 @@ class AppInfoWithExistingPortfolioForm(BaseForm):
         translate("forms.task_order.scope_label"),
         description=translate("forms.task_order.scope_description"),
     )
-    defense_component = SelectField(
-        translate("forms.task_order.defense_component_label"), choices=SERVICE_BRANCHES
-    )
     app_migration = RadioField(
         translate("forms.task_order.app_migration.label"),
         description=translate("forms.task_order.app_migration.description"),
