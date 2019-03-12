@@ -1,16 +1,33 @@
 from flask import url_for
 
 from atst.domain.task_orders import TaskOrders
-from tests.factories import UserFactory, TaskOrderFactory, PortfolioFactory
+from tests.factories import (
+    UserFactory,
+    TaskOrderFactory,
+    PortfolioFactory,
+    DD254Factory,
+)
 
 
 def create_ko_task_order(user_session, contracting_officer):
     portfolio = PortfolioFactory.create(owner=contracting_officer)
     user_session(contracting_officer)
 
-    return TaskOrderFactory.create(
+    task_order = TaskOrderFactory.create(
         portfolio=portfolio, contracting_officer=contracting_officer
     )
+
+    TaskOrders.add_officer(
+        contracting_officer,
+        task_order,
+        "contracting_officer",
+        contracting_officer.to_dictionary(),
+    )
+
+    dd_254 = DD254Factory.create()
+    TaskOrders.add_dd_254(task_order, dd_254.to_dictionary())
+
+    return task_order
 
 
 def test_show_signature_requested_not_ko(client, user_session):
@@ -27,12 +44,35 @@ def test_show_signature_requested_not_ko(client, user_session):
 
 def test_show_signature_requested(client, user_session):
     contracting_officer = UserFactory.create()
-    task_order = create_ko_task_order(user_session, contracting_officer)
+    portfolio = PortfolioFactory.create(owner=contracting_officer)
+    user_session(contracting_officer)
 
+    # create unfinished TO
+    task_order = TaskOrderFactory.create(portfolio=portfolio, clin_01=None)
+    TaskOrders.add_officer(
+        contracting_officer,
+        task_order,
+        "contracting_officer",
+        contracting_officer.to_dictionary(),
+    )
     response = client.get(
         url_for("task_orders.signature_requested", task_order_id=task_order.id)
     )
+    assert response.status_code == 404
 
+    # Finish TO
+    TaskOrders.update(contracting_officer, task_order, clin_01=100)
+    response = client.get(
+        url_for("task_orders.signature_requested", task_order_id=task_order.id)
+    )
+    assert response.status_code == 404
+
+    # Complete DD 254
+    dd_254 = DD254Factory.create()
+    TaskOrders.add_dd_254(task_order, dd_254.to_dictionary())
+    response = client.get(
+        url_for("task_orders.signature_requested", task_order_id=task_order.id)
+    )
     assert response.status_code == 200
 
 

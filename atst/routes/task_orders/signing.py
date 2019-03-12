@@ -4,7 +4,7 @@ import datetime
 
 from . import task_orders_bp
 from atst.domain.authz import Authorization
-from atst.domain.exceptions import NotFoundError
+from atst.domain.exceptions import NoAccessError
 from atst.domain.task_orders import TaskOrders
 from atst.forms.task_order import SignatureForm
 from atst.utils.flash import formatted_flash as flash
@@ -14,8 +14,8 @@ def find_unsigned_ko_to(task_order_id):
     task_order = TaskOrders.get(g.current_user, task_order_id)
     Authorization.check_is_ko(g.current_user, task_order)
 
-    if TaskOrders.is_signed_by_ko(task_order):
-        raise NotFoundError("task_order")
+    if not TaskOrders.can_ko_sign(task_order):
+        raise NoAccessError("task_order")
 
     return task_order
 
