@@ -142,6 +142,7 @@ def map_config(config):
         "RQ_REDIS_URL": config["default"]["REDIS_URI"],
         "RQ_QUEUES": [config["default"]["RQ_QUEUES"]],
         "DISABLE_CRL_CHECK": config.getboolean("default", "DISABLE_CRL_CHECK"),
+        "CRL_FAIL_OPEN": config.getboolean("default", "CRL_FAIL_OPEN"),
     }
 
 
