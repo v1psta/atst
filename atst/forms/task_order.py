@@ -31,13 +31,9 @@ class AppInfoWithExistingPortfolioForm(BaseForm):
     scope = TextAreaField(
         translate("forms.task_order.scope_label"),
         description=translate("forms.task_order.scope_description"),
-        filters=[lambda x: x or None],
     )
     defense_component = SelectField(
-        translate("forms.task_order.defense_component_label"),
-        choices=SERVICE_BRANCHES,
-        default="",
-        filters=[lambda x: x or None],
+        translate("forms.task_order.defense_component_label"), choices=SERVICE_BRANCHES
     )
     app_migration = RadioField(
         translate("forms.task_order.app_migration.label"),
@@ -94,6 +90,7 @@ class AppInfoForm(AppInfoWithExistingPortfolioForm):
     portfolio_name = StringField(
         translate("forms.task_order.portfolio_name_label"),
         description=translate("forms.task_order.portfolio_name_description"),
+        filters=[lambda x: x or None],
         validators=[
             Required(),
             Length(
@@ -104,7 +101,10 @@ class AppInfoForm(AppInfoWithExistingPortfolioForm):
         ],
     )
     defense_component = SelectField(
-        translate("forms.task_order.defense_component_label"), choices=SERVICE_BRANCHES
+        translate("forms.task_order.defense_component_label"),
+        choices=SERVICE_BRANCHES,
+        default="",
+        filters=[lambda x: x or None],
     )
 
 
