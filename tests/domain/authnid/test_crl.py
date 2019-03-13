@@ -131,14 +131,27 @@ def test_no_op_crl_cache_logs_common_name():
     assert "ART.GARFUNKEL.1234567890" in logger.messages[-1]
 
 
-def test_expired_crl_raises_CRLInvalidException(
-    ca_file, expired_crl_file, ca_key, make_x509, rsa_key
+def test_expired_crl_raises_CRLInvalidException_with_failover_config_false(
+    app, ca_file, expired_crl_file, ca_key, make_x509, rsa_key, monkeypatch
 ):
+    app.config.update({"CRL_FAIL_OPEN": False})
     client_cert = make_x509(rsa_key(), signer_key=ca_key, cn="chewbacca")
     client_pem = client_cert.public_bytes(Encoding.PEM)
     crl_cache = CRLCache(ca_file, crl_locations=[expired_crl_file])
     with pytest.raises(CRLInvalidException):
         crl_cache.crl_check(client_pem)
+
+
+def test_expired_crl_passes_with_failover_config_true(
+    ca_file, expired_crl_file, ca_key, make_x509, rsa_key, monkeypatch, app
+):
+    app.config.update({"CRL_FAIL_OPEN": True})
+    client_cert = make_x509(rsa_key(), signer_key=ca_key, cn="chewbacca")
+    client_pem = client_cert.public_bytes(Encoding.PEM)
+    crl_cache = CRLCache(ca_file, crl_locations=[expired_crl_file])
+
+    assert crl_cache.crl_check(client_pem)
+    app.config.update({"CRL_FAIL_OPEN": False})
 
 
 def test_updates_expired_certs(
