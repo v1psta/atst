@@ -9,8 +9,8 @@ def test_get_all_roles():
 
 
 def test_get_existing_role():
-    role = PermissionSets.get("developer")
-    assert role.name == "developer"
+    role = PermissionSets.get("portfolio_poc")
+    assert role.name == "portfolio_poc"
 
 
 def test_get_nonexistent_role():

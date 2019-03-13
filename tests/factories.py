@@ -16,7 +16,6 @@ from atst.models.permission_set import PermissionSet
 from atst.models.portfolio import Portfolio
 from atst.domain.permission_sets import (
     PermissionSets,
-    PORTFOLIO_ROLES,
     PORTFOLIO_PERMISSION_SETS,
     _VIEW_PORTFOLIO_PERMISSION_SETS,
     _EDIT_PORTFOLIO_PERMISSION_SETS,

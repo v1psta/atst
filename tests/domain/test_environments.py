@@ -14,7 +14,7 @@ def test_create_environments():
 
 def test_create_environment_role_creates_cloud_id(session):
     owner = UserFactory.create()
-    developer = UserFactory.from_atat_role("developer")
+    developer = UserFactory.create()
 
     portfolio = PortfolioFactory.create(
         owner=owner,
@@ -38,7 +38,7 @@ def test_create_environment_role_creates_cloud_id(session):
 
 def test_update_environment_roles():
     owner = UserFactory.create()
-    developer = UserFactory.from_atat_role("developer")
+    developer = UserFactory.create()
 
     portfolio = PortfolioFactory.create(
         owner=owner,
@@ -81,7 +81,7 @@ def test_update_environment_roles():
 
 def test_remove_environment_role():
     owner = UserFactory.create()
-    developer = UserFactory.from_atat_role("developer")
+    developer = UserFactory.create()
     portfolio = PortfolioFactory.create(
         owner=owner,
         members=[{"user": developer, "role_name": "developer"}],
@@ -132,7 +132,7 @@ def test_remove_environment_role():
 
 def test_no_update_to_environment_roles():
     owner = UserFactory.create()
-    developer = UserFactory.from_atat_role("developer")
+    developer = UserFactory.create()
 
     portfolio = PortfolioFactory.create(
         owner=owner,

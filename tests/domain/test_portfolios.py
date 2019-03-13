@@ -151,7 +151,7 @@ def test_ccpo_can_view_portfolio_members(portfolio, portfolio_owner):
 
 
 def test_random_user_cannot_view_portfolio_members(portfolio):
-    developer = UserFactory.from_atat_role("developer")
+    developer = UserFactory.create()
 
     with pytest.raises(UnauthorizedError):
         portfolio = Portfolios.get_with_members(developer, portfolio.id)
@@ -175,7 +175,7 @@ def test_scoped_portfolio_only_returns_a_users_applications_and_environments(
         "My application 2",
         ["dev", "staging", "prod"],
     )
-    developer = UserFactory.from_atat_role("developer")
+    developer = UserFactory.create()
     dev_environment = Environments.add_member(
         new_application.environments[0], developer, "developer"
     )
@@ -200,7 +200,7 @@ def test_scoped_portfolio_returns_all_applications_for_portfolio_admin(
             ["dev", "staging", "prod"],
         )
 
-    admin = UserFactory.from_atat_role("default")
+    admin = UserFactory.create()
     perm_sets = [PermissionSets.get(prms["name"]) for prms in PORTFOLIO_PERMISSION_SETS]
     PortfolioRoleFactory.create(
         user=admin, portfolio=portfolio, permission_sets=perm_sets
@@ -230,7 +230,7 @@ def test_scoped_portfolio_returns_all_applications_for_portfolio_owner(
 
 
 def test_for_user_returns_active_portfolios_for_user(portfolio, portfolio_owner):
-    bob = UserFactory.from_atat_role("default")
+    bob = UserFactory.create()
     PortfolioRoleFactory.create(
         user=bob, portfolio=portfolio, status=PortfolioRoleStatus.ACTIVE
     )
@@ -242,7 +242,7 @@ def test_for_user_returns_active_portfolios_for_user(portfolio, portfolio_owner)
 
 
 def test_for_user_does_not_return_inactive_portfolios(portfolio, portfolio_owner):
-    bob = UserFactory.from_atat_role("default")
+    bob = UserFactory.create()
     Portfolios.add_member(portfolio, bob)
     PortfolioFactory.create()
     bobs_portfolios = Portfolios.for_user(bob)
@@ -274,7 +274,7 @@ def test_get_for_update_information(portfolio, portfolio_owner):
     # ccpo = UserFactory.from_atat_role("ccpo")
     # assert Portfolios.get_for_update_information(ccpo, portfolio.id)
 
-    developer = UserFactory.from_atat_role("developer")
+    developer = UserFactory.create()
     with pytest.raises(UnauthorizedError):
         Portfolios.get_for_update_information(developer, portfolio.id)
 

@@ -19,7 +19,7 @@ def ccpo():
 
 @pytest.fixture(scope="function")
 def developer():
-    return UserFactory.from_atat_role("default")
+    return UserFactory.create()
 
 
 def test_non_admin_cannot_view_audit_log(developer):

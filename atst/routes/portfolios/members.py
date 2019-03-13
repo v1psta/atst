@@ -11,11 +11,7 @@ from atst.domain.environments import Environments
 from atst.domain.environment_roles import EnvironmentRoles
 from atst.services.invitation import Invitation as InvitationService
 import atst.forms.portfolio_member as member_forms
-from atst.forms.data import (
-    ENVIRONMENT_ROLES,
-    ENV_ROLE_MODAL_DESCRIPTION,
-    PORTFOLIO_ROLE_DEFINITIONS,
-)
+from atst.forms.data import ENVIRONMENT_ROLES, ENV_ROLE_MODAL_DESCRIPTION
 from atst.domain.authz import Authorization
 from atst.models.permissions import Permissions
 
@@ -45,7 +41,6 @@ def portfolio_members(portfolio_id):
     return render_template(
         "portfolios/members/index.html",
         portfolio=portfolio,
-        role_choices=PORTFOLIO_ROLE_DEFINITIONS,
         status_choices=MEMBER_STATUS_CHOICES,
         members=members_list,
     )
