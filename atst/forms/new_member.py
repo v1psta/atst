@@ -7,8 +7,6 @@ from atst.forms.validators import IsNumber
 from atst.forms.fields import SelectField
 from atst.utils.localization import translate
 
-from .data import PORTFOLIO_ROLES
-
 
 class NewMemberForm(BaseForm):
 
@@ -25,14 +23,6 @@ class NewMemberForm(BaseForm):
         translate("forms.new_member.dod_id_label"),
         validators=[Required(), Length(min=10), IsNumber()],
     )
-    portfolio_role = SelectField(
-        translate("forms.new_member.portfolio_role_label"),
-        choices=PORTFOLIO_ROLES,
-        validators=[Required()],
-        default="",
-        description=translate("forms.new_member.portfolio_role_description"),
-    )
-
     perms_app_mgmt = SelectField(
         None,
         choices=[

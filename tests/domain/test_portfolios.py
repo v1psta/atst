@@ -243,7 +243,7 @@ def test_for_user_returns_active_portfolios_for_user(portfolio, portfolio_owner)
 
 def test_for_user_does_not_return_inactive_portfolios(portfolio, portfolio_owner):
     bob = UserFactory.from_atat_role("default")
-    Portfolios.add_member(portfolio, bob, "developer")
+    Portfolios.add_member(portfolio, bob)
     PortfolioFactory.create()
     bobs_portfolios = Portfolios.for_user(bob)
 
