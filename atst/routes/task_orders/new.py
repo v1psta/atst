@@ -92,11 +92,14 @@ class ShowTaskOrderWorkflow:
             elif self._section["section"] == "oversight":
                 if self.user.dod_id == self.task_order.cor_dod_id:
                     self._form.am_cor.data = True
-                if self.task_order.contracting_officer:
+                if self.task_order.contracting_officer or self.task_order.ko_invite:
                     self._form.ko_invite.data = True
-                if self.task_order.contracting_officer_representative:
+                if (
+                    self.task_order.contracting_officer_representative
+                    or self.task_order.cor_invite
+                ):
                     self._form.cor_invite.data = True
-                if self.task_order.security_officer:
+                if self.task_order.security_officer or self.task_order.so_invite:
                     self._form.so_invite.data = True
 
         else:
