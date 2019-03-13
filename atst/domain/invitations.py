@@ -109,6 +109,11 @@ class Invitations(object):
         return Invitations._update_status(invite, InvitationStatus.REVOKED)
 
     @classmethod
+    def lookup_by_portfolio_and_user(cls, portfolio, user):
+        portfolio_role = PortfolioRoles.get(portfolio.id, user.id)
+        return portfolio_role.latest_invitation
+
+    @classmethod
     def resend(cls, user, portfolio_id, token):
         portfolio = Portfolios.get(user, portfolio_id)
         Authorization.check_portfolio_permission(

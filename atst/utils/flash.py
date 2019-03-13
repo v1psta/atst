@@ -2,6 +2,11 @@ from flask import flash, render_template_string
 from atst.utils.localization import translate
 
 MESSAGES = {
+    "invitation_resent": {
+        "title_template": "The {{ officer_type }} invite has been resent",
+        "message_template": "Invitation has been resent",
+        "category": "success",
+    },
     "task_order_draft": {
         "title_template": translate("task_orders.form.draft_alert_title"),
         "message_template": """

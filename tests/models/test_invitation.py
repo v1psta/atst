@@ -15,12 +15,12 @@ from tests.factories import (
 def test_expired_invite_is_not_revokable():
     portfolio = PortfolioFactory.create()
     user = UserFactory.create()
-    ws_role = PortfolioRoleFactory.create(
+    portfolio_role = PortfolioRoleFactory.create(
         portfolio=portfolio, user=user, status=PortfolioRoleStatus.PENDING
     )
     invite = InvitationFactory.create(
         expiration_time=datetime.datetime.now() - datetime.timedelta(minutes=60),
-        portfolio_role=ws_role,
+        portfolio_role=portfolio_role,
     )
     assert not invite.is_revokable
 
@@ -28,18 +28,20 @@ def test_expired_invite_is_not_revokable():
 def test_unexpired_invite_is_revokable():
     portfolio = PortfolioFactory.create()
     user = UserFactory.create()
-    ws_role = PortfolioRoleFactory.create(
+    portfolio_role = PortfolioRoleFactory.create(
         portfolio=portfolio, user=user, status=PortfolioRoleStatus.PENDING
     )
-    invite = InvitationFactory.create(portfolio_role=ws_role)
+    invite = InvitationFactory.create(portfolio_role=portfolio_role)
     assert invite.is_revokable
 
 
 def test_invite_is_not_revokable_if_invite_is_not_pending():
     portfolio = PortfolioFactory.create()
     user = UserFactory.create()
-    ws_role = PortfolioRoleFactory.create(
+    portfolio_role = PortfolioRoleFactory.create(
         portfolio=portfolio, user=user, status=PortfolioRoleStatus.PENDING
     )
-    invite = InvitationFactory.create(portfolio_role=ws_role, status=Status.ACCEPTED)
+    invite = InvitationFactory.create(
+        portfolio_role=portfolio_role, status=Status.ACCEPTED
+    )
     assert not invite.is_revokable

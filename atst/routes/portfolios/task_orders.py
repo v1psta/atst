@@ -4,15 +4,23 @@ from flask import g, redirect, render_template, url_for, request as http_request
 
 from . import portfolios_bp
 from atst.database import db
-from atst.domain.task_orders import TaskOrders, DD254s
-from atst.domain.exceptions import NotFoundError, NoAccessError
-from atst.domain.portfolios import Portfolios
 from atst.domain.authz import Authorization
+from atst.domain.exceptions import NotFoundError, NoAccessError
+from atst.domain.invitations import Invitations
+from atst.domain.portfolios import Portfolios
+from atst.domain.task_orders import TaskOrders, DD254s
+from atst.utils.localization import translate
+from atst.forms.dd_254 import DD254Form
+from atst.forms.ko_review import KOReviewForm
 from atst.forms.officers import EditTaskOrderOfficersForm
 from atst.models.task_order import Status as TaskOrderStatus
-from atst.forms.ko_review import KOReviewForm
-from atst.forms.dd_254 import DD254Form
-from atst.services.invitation import update_officer_invitations
+from atst.models.invitation import Status as InvitationStatus
+from atst.utils.flash import formatted_flash as flash
+from atst.services.invitation import (
+    update_officer_invitations,
+    OFFICER_INVITATIONS,
+    Invitation as InvitationService,
+)
 
 
 @portfolios_bp.route("/portfolios/<portfolio_id>/task_orders")
@@ -97,6 +105,61 @@ def ko_review(portfolio_id, task_order_id):
 
 
 @portfolios_bp.route(
+    "/portfolios/<portfolio_id>/task_order/<task_order_id>/resend_invite",
+    methods=["POST"],
+)
+def resend_invite(portfolio_id, task_order_id, form=None):
+    invite_type = http_request.args.get("invite_type")
+
+    if invite_type not in OFFICER_INVITATIONS:
+        raise NotFoundError("invite_type")
+
+    invite_type_info = OFFICER_INVITATIONS[invite_type]
+
+    task_order = TaskOrders.get(g.current_user, task_order_id)
+    portfolio = Portfolios.get(g.current_user, portfolio_id)
+
+    officer = getattr(task_order, invite_type_info["role"])
+
+    if not officer:
+        raise NotFoundError("officer")
+
+    invitation = Invitations.lookup_by_portfolio_and_user(portfolio, officer)
+
+    if not invitation or (invitation.status is not InvitationStatus.PENDING):
+        raise NotFoundError("invitation")
+
+    Invitations.revoke(token=invitation.token)
+
+    invite_service = InvitationService(
+        g.current_user,
+        invitation.portfolio_role,
+        invitation.email,
+        subject=invite_type_info["subject"],
+        email_template=invite_type_info["template"],
+    )
+
+    invite_service.invite()
+
+    flash(
+        "invitation_resent",
+        officer_type=translate(
+            "common.officer_helpers.underscore_to_friendly.{}".format(
+                invite_type_info["role"]
+            )
+        ),
+    )
+
+    return redirect(
+        url_for(
+            "portfolios.task_order_invitations",
+            portfolio_id=portfolio.id,
+            task_order_id=task_order.id,
+        )
+    )
+
+
+@portfolios_bp.route(
     "/portfolios/<portfolio_id>/task_order/<task_order_id>/review", methods=["POST"]
 )
 def submit_ko_review(portfolio_id, task_order_id, form=None):
@@ -173,11 +236,14 @@ def edit_task_order_invitations(portfolio_id, task_order_id):
             )
         )
     else:
-        return render_template(
-            "portfolios/task_orders/invitations.html",
-            portfolio=portfolio,
-            task_order=task_order,
-            form=form,
+        return (
+            render_template(
+                "portfolios/task_orders/invitations.html",
+                portfolio=portfolio,
+                task_order=task_order,
+                form=form,
+            ),
+            400,
         )
 
 

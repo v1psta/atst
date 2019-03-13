@@ -4,10 +4,13 @@ export default {
   props: {
     action: String,
     btn_text: String,
+    btn_icon: String,
+    btn_class: String,
     cancel_btn_text: String,
     confirm_btn_text: String,
     confirm_msg: String,
     csrf_token: String,
+    name: String,
   },
 
   template: `
@@ -26,7 +29,10 @@ export default {
           </button>
         </div>
       </template>
-      <button class="tooltip-target" type="button">{{ btn_text }}</button>
+      <button class="tooltip-target" v-bind:class="[btn_class]" type="button">
+        <div v-html="btn_icon" />
+        {{ btn_text }}
+      </button>
     </v-popover>
   `,
 }
