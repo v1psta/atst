@@ -120,8 +120,6 @@ def resend_invite(portfolio_id, task_order_id, form=None):
     task_order = TaskOrders.get(g.current_user, task_order_id)
     portfolio = Portfolios.get(g.current_user, portfolio_id)
 
-    Authorization.check_is_ko(g.current_user, task_order)
-
     officer = getattr(task_order, invite_type_info["role"])
 
     if not officer:
