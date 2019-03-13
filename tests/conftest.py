@@ -165,6 +165,13 @@ def queue():
 
 
 @pytest.fixture
+def crl_failover_open_app(app):
+    app.config.update({"CRL_FAIL_OPEN": True})
+    yield app
+    app.config.update({"CRL_FAIL_OPEN": False})
+
+
+@pytest.fixture
 def rsa_key():
     def _rsa_key():
         return rsa.generate_private_key(
