@@ -230,10 +230,13 @@ class TestTaskOrderInvitations:
 
 def test_ko_can_view_task_order(client, user_session, portfolio, user):
     PortfolioRoleFactory.create(
-        role=Roles.get("owner"),
         portfolio=portfolio,
         user=user,
         status=PortfolioStatus.ACTIVE,
+        permission_sets=[
+            Roles.get("view_portfolio"),
+            Roles.get("view_portfolio_funding"),
+        ],
     )
     task_order = TaskOrderFactory.create(portfolio=portfolio, contracting_officer=user)
     user_session(user)
@@ -294,16 +297,22 @@ def test_ko_can_view_ko_review_page(client, user_session):
     cor = UserFactory.create()
 
     PortfolioRoleFactory.create(
-        role=Roles.get("officer"),
         portfolio=portfolio,
         user=ko,
         status=PortfolioStatus.ACTIVE,
+        permission_sets=[
+            Roles.get("view_portfolio"),
+            Roles.get("view_portfolio_funding"),
+        ],
     )
     PortfolioRoleFactory.create(
-        role=Roles.get("officer"),
         portfolio=portfolio,
         user=cor,
         status=PortfolioStatus.ACTIVE,
+        permission_sets=[
+            Roles.get("view_portfolio"),
+            Roles.get("view_portfolio_funding"),
+        ],
     )
     task_order = TaskOrderFactory.create(
         portfolio=portfolio,
@@ -365,10 +374,13 @@ def test_mo_redirected_to_build_page(client, user_session, portfolio):
 def test_cor_redirected_to_build_page(client, user_session, portfolio):
     cor = UserFactory.create()
     PortfolioRoleFactory.create(
-        role=Roles.get("officer"),
         portfolio=portfolio,
         user=cor,
         status=PortfolioStatus.ACTIVE,
+        permission_sets=[
+            Roles.get("view_portfolio"),
+            Roles.get("view_portfolio_funding"),
+        ],
     )
     task_order = TaskOrderFactory.create(
         portfolio=portfolio, contracting_officer_representative=cor
@@ -384,10 +396,13 @@ def test_submit_completed_ko_review_page_as_cor(
     client, user_session, pdf_upload, portfolio, user
 ):
     PortfolioRoleFactory.create(
-        role=Roles.get("officer"),
         portfolio=portfolio,
         user=user,
         status=PortfolioStatus.ACTIVE,
+        permission_sets=[
+            Roles.get("view_portfolio"),
+            Roles.get("view_portfolio_funding"),
+        ],
     )
 
     task_order = TaskOrderFactory.create(
@@ -429,10 +444,13 @@ def test_submit_completed_ko_review_page_as_ko(
     ko = UserFactory.create()
 
     PortfolioRoleFactory.create(
-        role=Roles.get("officer"),
         portfolio=portfolio,
         user=ko,
         status=PortfolioStatus.ACTIVE,
+        permission_sets=[
+            Roles.get("view_portfolio"),
+            Roles.get("view_portfolio_funding"),
+        ],
     )
 
     task_order = TaskOrderFactory.create(portfolio=portfolio, contracting_officer=ko)
@@ -470,10 +488,13 @@ def test_submit_completed_ko_review_page_as_ko(
 def test_so_review_page(app, client, user_session, portfolio):
     so = UserFactory.create()
     PortfolioRoleFactory.create(
-        role=Roles.get("officer"),
         portfolio=portfolio,
         user=so,
         status=PortfolioStatus.ACTIVE,
+        permission_sets=[
+            Roles.get("view_portfolio"),
+            Roles.get("view_portfolio_funding"),
+        ],
     )
     task_order = TaskOrderFactory.create(portfolio=portfolio, security_officer=so)
 
@@ -508,10 +529,13 @@ def test_so_review_page(app, client, user_session, portfolio):
 def test_submit_so_review(app, client, user_session, portfolio):
     so = UserFactory.create()
     PortfolioRoleFactory.create(
-        role=Roles.get("officer"),
         portfolio=portfolio,
         user=so,
         status=PortfolioStatus.ACTIVE,
+        permission_sets=[
+            Roles.get("view_portfolio"),
+            Roles.get("view_portfolio_funding"),
+        ],
     )
     task_order = TaskOrderFactory.create(portfolio=portfolio, security_officer=so)
     dd_254_data = DD254Factory.dictionary()

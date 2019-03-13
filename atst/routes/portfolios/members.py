@@ -28,7 +28,7 @@ def serialize_portfolio_role(portfolio_role):
         "name": portfolio_role.user_name,
         "status": portfolio_role.display_status,
         "id": portfolio_role.user_id,
-        "role": portfolio_role.role_displayname,
+        "role": "admin",
         "num_env": portfolio_role.num_environment_roles,
         "edit_link": url_for(
             "portfolios.view_member",
@@ -115,7 +115,7 @@ def view_member(portfolio_id, member_id):
     )
     member = PortfolioRoles.get(portfolio_id, member_id)
     applications = Applications.get_all(g.current_user, member, portfolio)
-    form = EditMemberForm(portfolio_role=member.role_name)
+    form = EditMemberForm(portfolio_role="admin")
     editable = g.current_user == member.user
     can_revoke_access = Portfolios.can_revoke_access_for(portfolio, member)
 

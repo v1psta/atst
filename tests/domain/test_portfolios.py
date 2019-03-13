@@ -53,7 +53,7 @@ def test_get_for_update_applications_allows_owner(portfolio, portfolio_owner):
 
 def test_get_for_update_applications_blocks_developer(portfolio):
     developer = UserFactory.create()
-    PortfolioRoles.add(developer, portfolio.id, "developer")
+    PortfolioRoles.add(developer, portfolio.id)
 
     with pytest.raises(UnauthorizedError):
         Portfolios.get_for_update_applications(developer, portfolio.id)
@@ -120,7 +120,6 @@ def test_update_portfolio_role_role(portfolio, portfolio_owner):
         portfolio_owner, portfolio, member, role_name
     )
     assert updated_member.portfolio == portfolio
-    assert updated_member.role_name == role_name
 
 
 def test_need_permission_to_update_portfolio_role_role(portfolio, portfolio_owner):

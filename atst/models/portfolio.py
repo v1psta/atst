@@ -23,7 +23,9 @@ class Portfolio(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     @property
     def owner(self):
         def _is_portfolio_owner(portfolio_role):
-            return portfolio_role.role.name == "owner"
+            return "portfolio_poc" in [
+                perms_set.name for perms_set in portfolio_role.permission_sets
+            ]
 
         owner = first_or_none(_is_portfolio_owner, self.roles)
         return owner.user if owner else None

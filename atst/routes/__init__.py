@@ -64,7 +64,9 @@ def home():
     elif num_portfolios == 1:
         portfolio_role = user.portfolio_roles[0]
         portfolio_id = portfolio_role.portfolio.id
-        is_portfolio_owner = portfolio_role.role.name == "owner"
+        is_portfolio_owner = "portfolio_poc" in [
+            ps.name for ps in portfolio_role.permission_sets
+        ]
 
         if is_portfolio_owner:
             return redirect(

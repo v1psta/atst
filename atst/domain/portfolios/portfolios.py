@@ -24,7 +24,6 @@ class Portfolios(object):
         Portfolios._create_portfolio_role(
             user,
             portfolio,
-            "owner",
             status=PortfolioRoleStatus.ACTIVE,
             permission_sets=perms_sets,
         )
@@ -111,9 +110,7 @@ class Portfolios(object):
 
     @classmethod
     def add_member(cls, portfolio, member, role_name, permission_sets=None):
-        portfolio_role = PortfolioRoles.add(
-            member, portfolio.id, role_name, permission_sets
-        )
+        portfolio_role = PortfolioRoles.add(member, portfolio.id, permission_sets)
         return portfolio_role
 
     @classmethod
@@ -126,20 +123,13 @@ class Portfolios(object):
 
     @classmethod
     def _create_portfolio_role(
-        cls,
-        user,
-        portfolio,
-        role_name,
-        status=PortfolioRoleStatus.PENDING,
-        permission_sets=None,
+        cls, user, portfolio, status=PortfolioRoleStatus.PENDING, permission_sets=None
     ):
-        role = Roles.get(role_name)
-
         if permission_sets is None:
             permission_sets = []
 
         portfolio_role = PortfoliosQuery.create_portfolio_role(
-            user, role, portfolio, status=status, permission_sets=permission_sets
+            user, portfolio, status=status, permission_sets=permission_sets
         )
         PortfoliosQuery.add_and_commit(portfolio_role)
         return portfolio_role

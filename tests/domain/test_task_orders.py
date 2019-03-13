@@ -2,6 +2,7 @@ import pytest
 
 from atst.domain.task_orders import TaskOrders, TaskOrderError, DD254s
 from atst.domain.exceptions import UnauthorizedError
+from atst.domain.roles import Roles, _VIEW_PORTFOLIO_PERMISSION_SETS
 from atst.models.attachment import Attachment
 
 from tests.factories import (
@@ -90,10 +91,7 @@ def test_add_officer_who_is_already_portfolio_member():
 
     assert task_order.contracting_officer == owner
     member = task_order.portfolio.members[0]
-    assert member.user == owner and member.role_name == "owner"
-
-
-from atst.domain.roles import Roles, _VIEW_PORTFOLIO_PERMISSION_SETS
+    assert member.user == owner
 
 
 def test_task_order_access():

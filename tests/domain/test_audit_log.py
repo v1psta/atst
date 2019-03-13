@@ -53,10 +53,7 @@ def test_ws_admin_can_view_ws_audit_log():
     portfolio = PortfolioFactory.create()
     admin = UserFactory.create()
     PortfolioRoleFactory.create(
-        portfolio=portfolio,
-        user=admin,
-        role=Roles.get("admin"),
-        status=PortfolioRoleStatus.ACTIVE,
+        portfolio=portfolio, user=admin, status=PortfolioRoleStatus.ACTIVE
     )
     events = AuditLog.get_portfolio_events(admin, portfolio)
     assert len(events) > 0

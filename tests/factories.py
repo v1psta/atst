@@ -69,11 +69,6 @@ def _random_date(year_min, year_max, operation):
     )
 
 
-def random_portfolio_role():
-    choice = random.choice(PORTFOLIO_ROLES)
-    return Roles.get(choice["name"])
-
-
 def base_portfolio_permission_sets():
     return [Roles.get(prms["name"]) for prms in _VIEW_PORTFOLIO_PERMISSION_SETS]
 
@@ -135,7 +130,6 @@ class PortfolioFactory(Base):
 
         PortfolioRoleFactory.create(
             portfolio=portfolio,
-            role=Roles.get("owner"),
             user=owner,
             status=PortfolioRoleStatus.ACTIVE,
             permission_sets=get_all_portfolio_permission_sets(),
@@ -155,7 +149,6 @@ class PortfolioFactory(Base):
 
             PortfolioRoleFactory.create(
                 portfolio=portfolio,
-                role=Roles.get(role_name),
                 user=user,
                 status=PortfolioRoleStatus.ACTIVE,
                 permission_sets=perms_set,
@@ -211,7 +204,6 @@ class PortfolioRoleFactory(Base):
         model = PortfolioRole
 
     portfolio = factory.SubFactory(PortfolioFactory)
-    role = factory.LazyFunction(random_portfolio_role)
     user = factory.SubFactory(UserFactory)
     status = PortfolioRoleStatus.PENDING
     permission_sets = factory.LazyFunction(base_portfolio_permission_sets)
