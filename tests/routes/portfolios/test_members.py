@@ -12,9 +12,17 @@ from atst.domain.portfolio_roles import PortfolioRoles
 from atst.domain.applications import Applications
 from atst.domain.environments import Environments
 from atst.domain.environment_roles import EnvironmentRoles
+from atst.domain.roles import Roles
 from atst.queue import queue
 from atst.models.portfolio_role import Status as PortfolioRoleStatus
 from atst.models.invitation import Status as InvitationStatus
+
+_DEFAULT_PERMS_FORM_DATA = {
+    "perms_app_mgmt": "view_portfolio_application_management",
+    "perms_funding": "view_portfolio_funding",
+    "perms_reporting": "view_portfolio_reports",
+    "perms_portfolio_mgmt": "view_portfolio_admin",
+}
 
 
 def create_portfolio_and_invite_user(
@@ -90,10 +98,7 @@ def test_create_member(client, user_session):
             "last_name": "Zuckerman",
             "email": "some_pig@zuckermans.com",
             "portfolio_role": "developer",
-            "perms_app_mgmt": "view_portfolio_application_management",
-            "perms_funding": "view_portfolio_funding",
-            "perms_reporting": "view_portfolio_reports",
-            "perms_portfolio_mgmt": "view_portfolio_admin",
+            **_DEFAULT_PERMS_FORM_DATA,
         },
         follow_redirects=True,
     )
@@ -121,7 +126,6 @@ def test_view_member_shows_role(client, user_session):
     assert "initial-choice='developer'".encode() in response.data
 
 
-@pytest.mark.skip(reason="need to re-implement for permission set changes")
 def test_update_member_portfolio_role(client, user_session):
     portfolio = PortfolioFactory.create()
     user = UserFactory.create()
@@ -131,20 +135,20 @@ def test_update_member_portfolio_role(client, user_session):
         url_for(
             "portfolios.update_member", portfolio_id=portfolio.id, member_id=user.id
         ),
-        data={"portfolio_role": "security_auditor"},
+        data={**_DEFAULT_PERMS_FORM_DATA, "perms_funding": "edit_portfolio_funding"},
         follow_redirects=True,
     )
     assert response.status_code == 200
-    assert b"role updated successfully" in response.data
-    assert member.role_name == "security_auditor"
+    edit_funding = Roles.get("edit_portfolio_funding")
+    assert edit_funding in member.permission_sets
 
 
-@pytest.mark.skip(reason="update member permission sets not implemented")
 def test_update_member_portfolio_role_with_no_data(client, user_session):
     portfolio = PortfolioFactory.create()
     user = UserFactory.create()
     member = PortfolioRoles.add(user, portfolio.id)
     user_session(portfolio.owner)
+    original_perms_len = len(member.permission_sets)
     response = client.post(
         url_for(
             "portfolios.update_member", portfolio_id=portfolio.id, member_id=user.id
@@ -153,10 +157,9 @@ def test_update_member_portfolio_role_with_no_data(client, user_session):
         follow_redirects=True,
     )
     assert response.status_code == 200
-    assert member.role_name == "developer"
+    assert len(member.permission_sets) == original_perms_len
 
 
-@pytest.mark.skip(reason="update member permission sets not implemented")
 def test_update_member_environment_role(client, user_session):
     portfolio = PortfolioFactory.create()
     user = UserFactory.create()
@@ -180,6 +183,7 @@ def test_update_member_environment_role(client, user_session):
         data={
             "env_" + str(env1_id): "security_auditor",
             "env_" + str(env2_id): "devops",
+            **_DEFAULT_PERMS_FORM_DATA,
         },
         follow_redirects=True,
     )

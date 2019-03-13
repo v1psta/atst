@@ -114,12 +114,13 @@ class Portfolios(object):
         return portfolio_role
 
     @classmethod
-    def update_member(cls, user, portfolio, member, role_name):
+    def update_member(cls, user, portfolio, member, permission_sets):
         Authorization.check_portfolio_permission(
             user, portfolio, Permissions.EDIT_PORTFOLIO_USERS, "edit portfolio member"
         )
 
-        return PortfolioRoles.update_role(member, role_name)
+        # need to update perms sets here
+        return PortfolioRoles.update(member, permission_sets)
 
     @classmethod
     def _create_portfolio_role(

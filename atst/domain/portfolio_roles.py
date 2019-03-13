@@ -111,12 +111,13 @@ class PortfolioRoles(object):
         return [Roles.get(perms_set_name) for perms_set_name in perms_set_names]
 
     @classmethod
-    def update_role(cls, portfolio_role, role_name):
-        new_role = Roles.get(role_name)
-        portfolio_role.role = new_role
+    def update(cls, portfolio_role, set_names):
+        new_permission_sets = PortfolioRoles._permission_sets_for_names(set_names)
+        portfolio_role.permission_sets = new_permission_sets
 
         db.session.add(portfolio_role)
         db.session.commit()
+
         return portfolio_role
 
     @classmethod
