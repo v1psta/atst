@@ -18,11 +18,16 @@ class BaseForm(FlaskForm):
     def data(self):
         # remove 'csrf_token' key/value pair
         # remove empty strings and None from list fields
+        # prevent values that are not an option in a RadioField from being saved to the DB
         _data = super().data
         _data.pop("csrf_token", None)
         for field in _data:
             if _data[field].__class__.__name__ == "list":
                 _data[field] = [el for el in _data[field] if el not in EMPTY_LIST_FIELD]
+            if self[field].__class__.__name__ == "RadioField":
+                choices = [el[0] for el in self[field].choices]
+                if _data[field] not in choices:
+                    _data[field] = None
         return _data
 
     def validate(self, *args, **kwargs):
