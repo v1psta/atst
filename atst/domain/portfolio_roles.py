@@ -8,7 +8,7 @@ from atst.models.portfolio_role import (
 )
 from atst.models.user import User
 
-from .roles import Roles
+from .permission_sets import PermissionSets
 from .exceptions import NotFoundError
 
 
@@ -108,7 +108,9 @@ class PortfolioRoles(object):
         perms_set_names = PortfolioRoles._DEFAULT_PORTFOLIO_PERMS_SETS.union(
             set(set_names)
         )
-        return [Roles.get(perms_set_name) for perms_set_name in perms_set_names]
+        return [
+            PermissionSets.get(perms_set_name) for perms_set_name in perms_set_names
+        ]
 
     @classmethod
     def update(cls, portfolio_role, set_names):

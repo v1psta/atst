@@ -12,7 +12,7 @@ from tests.factories import (
 
 from atst.domain.applications import Applications
 from atst.domain.portfolios import Portfolios
-from atst.domain.roles import Roles
+from atst.domain.permission_sets import PermissionSets
 from atst.models.portfolio_role import Status as PortfolioRoleStatus
 
 

@@ -2,7 +2,7 @@ import pytest
 
 from atst.domain.audit_log import AuditLog
 from atst.domain.exceptions import UnauthorizedError
-from atst.domain.roles import Roles
+from atst.domain.permission_sets import PermissionSets
 from atst.models.portfolio_role import Status as PortfolioRoleStatus
 from tests.factories import (
     UserFactory,

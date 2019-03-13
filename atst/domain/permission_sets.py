@@ -1,7 +1,7 @@
 from sqlalchemy.orm.exc import NoResultFound
 
 from atst.database import db
-from atst.models import Role, Permissions
+from atst.models import PermissionSet, Permissions
 from .exceptions import NotFoundError
 
 
@@ -265,16 +265,16 @@ PORTFOLIO_PERMISSION_SETS = (
 )
 
 
-class Roles(object):
+class PermissionSets(object):
     @classmethod
-    def get(cls, role_name):
+    def get(cls, perms_set_name):
         try:
-            role = db.session.query(Role).filter_by(name=role_name).one()
+            role = db.session.query(PermissionSet).filter_by(name=perms_set_name).one()
         except NoResultFound:
-            raise NotFoundError("role")
+            raise NotFoundError("permission_set")
 
         return role
 
     @classmethod
     def get_all(cls):
-        return db.session.query(Role).all()
+        return db.session.query(PermissionSet).all()

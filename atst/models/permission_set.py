@@ -5,8 +5,8 @@ from sqlalchemy.orm.attributes import flag_modified
 from atst.models import Base, types, mixins
 
 
-class Role(Base, mixins.TimestampsMixin):
-    __tablename__ = "roles"
+class PermissionSet(Base, mixins.TimestampsMixin):
+    __tablename__ = "permission_sets"
 
     id = types.Id()
     name = Column(String, index=True, unique=True, nullable=False)
@@ -27,6 +27,6 @@ class Role(Base, mixins.TimestampsMixin):
         flag_modified(self, "permissions")
 
     def __repr__(self):
-        return "<Role(name='{}', description='{}', permissions='{}', id='{}')>".format(
+        return "<PermissionSet(name='{}', description='{}', permissions='{}', id='{}')>".format(
             self.name, self.description, self.permissions, self.id
         )

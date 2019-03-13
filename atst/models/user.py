@@ -11,9 +11,9 @@ class User(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
 
     id = types.Id()
     username = Column(String)
-    atat_role_id = Column(UUID(as_uuid=True), ForeignKey("roles.id"))
+    atat_role_id = Column(UUID(as_uuid=True), ForeignKey("permission_sets.id"))
 
-    atat_role = relationship("Role")
+    atat_role = relationship("PermissionSet")
     portfolio_roles = relationship("PortfolioRole", backref="user")
 
     email = Column(String, unique=True)

@@ -12,10 +12,10 @@ from atst.models.environment import Environment
 from atst.models.application import Application
 from atst.models.task_order import TaskOrder
 from atst.models.user import User
-from atst.models.role import Role
+from atst.models.permission_set import PermissionSet
 from atst.models.portfolio import Portfolio
-from atst.domain.roles import (
-    Roles,
+from atst.domain.permission_sets import (
+    PermissionSets,
     PORTFOLIO_ROLES,
     PORTFOLIO_PERMISSION_SETS,
     _VIEW_PORTFOLIO_PERMISSION_SETS,
@@ -70,11 +70,13 @@ def _random_date(year_min, year_max, operation):
 
 
 def base_portfolio_permission_sets():
-    return [Roles.get(prms["name"]) for prms in _VIEW_PORTFOLIO_PERMISSION_SETS]
+    return [
+        PermissionSets.get(prms["name"]) for prms in _VIEW_PORTFOLIO_PERMISSION_SETS
+    ]
 
 
 def get_all_portfolio_permission_sets():
-    return [Roles.get(prms["name"]) for prms in PORTFOLIO_PERMISSION_SETS]
+    return [PermissionSets.get(prms["name"]) for prms in PORTFOLIO_PERMISSION_SETS]
 
 
 class Base(factory.alchemy.SQLAlchemyModelFactory):
@@ -91,7 +93,7 @@ class UserFactory(Base):
     email = factory.Faker("email")
     first_name = factory.Faker("first_name")
     last_name = factory.Faker("last_name")
-    atat_role = factory.LazyFunction(lambda: Roles.get("default"))
+    atat_role = factory.LazyFunction(lambda: PermissionSets.get("default"))
     dod_id = factory.LazyFunction(random_dod_id)
     phone_number = factory.LazyFunction(random_phone_number)
     service_branch = factory.LazyFunction(random_service_branch)
@@ -104,7 +106,7 @@ class UserFactory(Base):
 
     @classmethod
     def from_atat_role(cls, atat_role_name, **kwargs):
-        role = Roles.get(atat_role_name)
+        role = PermissionSets.get(atat_role_name)
         return cls.create(atat_role=role, **kwargs)
 
 
@@ -142,7 +144,8 @@ class PortfolioFactory(Base):
             perms_set = None
             if member.get("permissions_sets"):
                 perms_set = [
-                    Roles.get(perm_set) for perm_set in member.get("permission_sets")
+                    PermissionSets.get(perm_set)
+                    for perm_set in member.get("permission_sets")
                 ]
             else:
                 perms_set = []

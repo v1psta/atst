@@ -1,4 +1,4 @@
-from atst.domain.roles import Roles, PORTFOLIO_PERMISSION_SETS
+from atst.domain.permission_sets import PermissionSets, PORTFOLIO_PERMISSION_SETS
 from atst.domain.authz import Authorization
 from atst.models.permissions import Permissions
 from atst.domain.users import Users
@@ -20,7 +20,9 @@ class Portfolios(object):
         portfolio = PortfoliosQuery.create(
             name=name, defense_component=defense_component
         )
-        perms_sets = [Roles.get(prms["name"]) for prms in PORTFOLIO_PERMISSION_SETS]
+        perms_sets = [
+            PermissionSets.get(prms["name"]) for prms in PORTFOLIO_PERMISSION_SETS
+        ]
         Portfolios._create_portfolio_role(
             user,
             portfolio,

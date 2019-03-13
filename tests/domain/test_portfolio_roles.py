@@ -1,7 +1,7 @@
 from atst.domain.portfolio_roles import PortfolioRoles
 from atst.domain.users import Users
 from atst.models.portfolio_role import Status as PortfolioRoleStatus
-from atst.domain.roles import Roles
+from atst.domain.permission_sets import PermissionSets
 
 from tests.factories import (
     PortfolioFactory,

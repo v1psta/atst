@@ -2,7 +2,7 @@ from flask import url_for
 import pytest
 from datetime import timedelta, date
 
-from atst.domain.roles import Roles
+from atst.domain.permission_sets import PermissionSets
 from atst.domain.task_orders import TaskOrders
 from atst.models.portfolio_role import Status as PortfolioStatus
 from atst.models.invitation import Status as InvitationStatus
@@ -234,8 +234,8 @@ def test_ko_can_view_task_order(client, user_session, portfolio, user):
         user=user,
         status=PortfolioStatus.ACTIVE,
         permission_sets=[
-            Roles.get("view_portfolio"),
-            Roles.get("view_portfolio_funding"),
+            PermissionSets.get("view_portfolio"),
+            PermissionSets.get("view_portfolio_funding"),
         ],
     )
     task_order = TaskOrderFactory.create(portfolio=portfolio, contracting_officer=user)
@@ -301,8 +301,8 @@ def test_ko_can_view_ko_review_page(client, user_session):
         user=ko,
         status=PortfolioStatus.ACTIVE,
         permission_sets=[
-            Roles.get("view_portfolio"),
-            Roles.get("view_portfolio_funding"),
+            PermissionSets.get("view_portfolio"),
+            PermissionSets.get("view_portfolio_funding"),
         ],
     )
     PortfolioRoleFactory.create(
@@ -310,8 +310,8 @@ def test_ko_can_view_ko_review_page(client, user_session):
         user=cor,
         status=PortfolioStatus.ACTIVE,
         permission_sets=[
-            Roles.get("view_portfolio"),
-            Roles.get("view_portfolio_funding"),
+            PermissionSets.get("view_portfolio"),
+            PermissionSets.get("view_portfolio_funding"),
         ],
     )
     task_order = TaskOrderFactory.create(
@@ -378,8 +378,8 @@ def test_cor_redirected_to_build_page(client, user_session, portfolio):
         user=cor,
         status=PortfolioStatus.ACTIVE,
         permission_sets=[
-            Roles.get("view_portfolio"),
-            Roles.get("view_portfolio_funding"),
+            PermissionSets.get("view_portfolio"),
+            PermissionSets.get("view_portfolio_funding"),
         ],
     )
     task_order = TaskOrderFactory.create(
@@ -400,8 +400,8 @@ def test_submit_completed_ko_review_page_as_cor(
         user=user,
         status=PortfolioStatus.ACTIVE,
         permission_sets=[
-            Roles.get("view_portfolio"),
-            Roles.get("view_portfolio_funding"),
+            PermissionSets.get("view_portfolio"),
+            PermissionSets.get("view_portfolio_funding"),
         ],
     )
 
@@ -448,8 +448,8 @@ def test_submit_completed_ko_review_page_as_ko(
         user=ko,
         status=PortfolioStatus.ACTIVE,
         permission_sets=[
-            Roles.get("view_portfolio"),
-            Roles.get("view_portfolio_funding"),
+            PermissionSets.get("view_portfolio"),
+            PermissionSets.get("view_portfolio_funding"),
         ],
     )
 
@@ -492,8 +492,8 @@ def test_so_review_page(app, client, user_session, portfolio):
         user=so,
         status=PortfolioStatus.ACTIVE,
         permission_sets=[
-            Roles.get("view_portfolio"),
-            Roles.get("view_portfolio_funding"),
+            PermissionSets.get("view_portfolio"),
+            PermissionSets.get("view_portfolio_funding"),
         ],
     )
     task_order = TaskOrderFactory.create(portfolio=portfolio, security_officer=so)
@@ -533,8 +533,8 @@ def test_submit_so_review(app, client, user_session, portfolio):
         user=so,
         status=PortfolioStatus.ACTIVE,
         permission_sets=[
-            Roles.get("view_portfolio"),
-            Roles.get("view_portfolio_funding"),
+            PermissionSets.get("view_portfolio"),
+            PermissionSets.get("view_portfolio_funding"),
         ],
     )
     task_order = TaskOrderFactory.create(portfolio=portfolio, security_officer=so)

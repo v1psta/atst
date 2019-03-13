@@ -2,7 +2,7 @@ import pytest
 
 from tests.factories import TaskOrderFactory, UserFactory, PortfolioRoleFactory
 from atst.domain.authz import Authorization
-from atst.domain.roles import Roles
+from atst.domain.permission_sets import PermissionSets
 from atst.domain.exceptions import UnauthorizedError
 from atst.models.permissions import Permissions
 
@@ -45,8 +45,8 @@ def test_check_is_ko_or_cor(task_order, invalid_user):
 
 
 def test_has_portfolio_permission():
-    role_one = Roles.get("view_portfolio_funding")
-    role_two = Roles.get("view_portfolio_reports")
+    role_one = PermissionSets.get("view_portfolio_funding")
+    role_two = PermissionSets.get("view_portfolio_reports")
     port_role = PortfolioRoleFactory.create(permission_sets=[role_one, role_two])
     different_user = UserFactory.create()
     assert Authorization.has_portfolio_permission(

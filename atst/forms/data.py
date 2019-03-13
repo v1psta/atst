@@ -1,4 +1,4 @@
-from atst.domain.roles import PORTFOLIO_ROLES as PORTFOLIO_ROLE_DEFINITIONS
+from atst.domain.permission_sets import PORTFOLIO_ROLES as PORTFOLIO_ROLE_DEFINITIONS
 from atst.utils.localization import translate, translate_duration
 
 

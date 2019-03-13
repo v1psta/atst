@@ -6,7 +6,7 @@ from atst.domain.portfolios import Portfolios, PortfolioError
 from atst.domain.portfolio_roles import PortfolioRoles
 from atst.domain.applications import Applications
 from atst.domain.environments import Environments
-from atst.domain.roles import Roles, PORTFOLIO_PERMISSION_SETS
+from atst.domain.permission_sets import PermissionSets, PORTFOLIO_PERMISSION_SETS
 from atst.models.portfolio_role import Status as PortfolioRoleStatus
 
 from tests.factories import UserFactory, PortfolioRoleFactory, PortfolioFactory
@@ -201,7 +201,7 @@ def test_scoped_portfolio_returns_all_applications_for_portfolio_admin(
         )
 
     admin = UserFactory.from_atat_role("default")
-    perm_sets = [Roles.get(prms["name"]) for prms in PORTFOLIO_PERMISSION_SETS]
+    perm_sets = [PermissionSets.get(prms["name"]) for prms in PORTFOLIO_PERMISSION_SETS]
     PortfolioRoleFactory.create(
         user=admin, portfolio=portfolio, permission_sets=perm_sets
     )
@@ -263,7 +263,7 @@ def test_get_for_update_information(portfolio, portfolio_owner):
     assert portfolio == owner_ws
 
     admin = UserFactory.create()
-    perm_sets = [Roles.get(prms["name"]) for prms in PORTFOLIO_PERMISSION_SETS]
+    perm_sets = [PermissionSets.get(prms["name"]) for prms in PORTFOLIO_PERMISSION_SETS]
     PortfolioRoleFactory.create(
         user=admin, portfolio=portfolio, permission_sets=perm_sets
     )

@@ -3,7 +3,7 @@ from sqlalchemy.ext.declarative import declarative_base
 Base = declarative_base()
 
 from .permissions import Permissions
-from .role import Role
+from .permission_set import PermissionSet
 from .user import User
 from .portfolio_role import PortfolioRole
 from .portfolio import Portfolio

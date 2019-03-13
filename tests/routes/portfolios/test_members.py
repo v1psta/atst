@@ -12,7 +12,7 @@ from atst.domain.portfolio_roles import PortfolioRoles
 from atst.domain.applications import Applications
 from atst.domain.environments import Environments
 from atst.domain.environment_roles import EnvironmentRoles
-from atst.domain.roles import Roles
+from atst.domain.permission_sets import PermissionSets
 from atst.queue import queue
 from atst.models.portfolio_role import Status as PortfolioRoleStatus
 from atst.models.invitation import Status as InvitationStatus
@@ -139,7 +139,7 @@ def test_update_member_portfolio_role(client, user_session):
         follow_redirects=True,
     )
     assert response.status_code == 200
-    edit_funding = Roles.get("edit_portfolio_funding")
+    edit_funding = PermissionSets.get("edit_portfolio_funding")
     assert edit_funding in member.permission_sets
 
 

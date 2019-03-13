@@ -4,9 +4,8 @@ import datetime
 from atst.domain.environments import Environments
 from atst.domain.portfolios import Portfolios
 from atst.domain.applications import Applications
-from atst.domain.roles import Roles
+from atst.domain.permission_sets import PermissionSets
 from atst.models.portfolio_role import Status
-from atst.models.role import Role
 from atst.models.invitation import Status as InvitationStatus
 from atst.models.audit_event import AuditEvent
 from atst.models.portfolio_role import Status as PortfolioRoleStatus
@@ -286,8 +285,8 @@ def test_can_list_all_environments():
 
 
 def test_can_list_all_permissions():
-    role_one = Roles.get("view_portfolio_funding")
-    role_two = Roles.get("view_portfolio_reports")
+    role_one = PermissionSets.get("view_portfolio_funding")
+    role_two = PermissionSets.get("view_portfolio_reports")
     port_role = PortfolioRoleFactory.create(permission_sets=[role_one, role_two])
     expected_perms = role_one.permissions + role_two.permissions
     assert expected_perms == expected_perms
