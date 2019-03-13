@@ -129,7 +129,7 @@ def resend_invite(portfolio_id, task_order_id, form=None):
     if not invitation or (invitation.status is not InvitationStatus.PENDING):
         raise NotFoundError("invitation")
 
-    Invitations.resend(g.current_user, portfolio.id, invitation.token)
+    Invitations.revoke(token=invitation.token)
 
     invite_service = InvitationService(
         g.current_user,
