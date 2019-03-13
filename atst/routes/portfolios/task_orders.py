@@ -109,8 +109,7 @@ def ko_review(portfolio_id, task_order_id):
     methods=["POST"],
 )
 def resend_invite(portfolio_id, task_order_id, form=None):
-    form_data = {**http_request.form}
-    invite_type = form_data["invite_type"][0]
+    invite_type = http_request.args.get("invite_type")
 
     if invite_type not in OFFICER_INVITATIONS:
         raise NotFoundError("invite_type")

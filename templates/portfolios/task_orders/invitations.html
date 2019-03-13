@@ -5,6 +5,7 @@
 {% from "components/checkbox_input.html" import CheckboxInput %}
 {% from "components/icon.html" import Icon %}
 {% from "components/text_input.html" import TextInput %}
+{% from "components/confirmation_button.html" import ConfirmationButton %}
 
 
 {% macro Link(text, icon_name, onClick=None, url='#', classes='') %}
@@ -96,15 +97,21 @@
         </div>
         <div class="officer__actions">
           {{ Link("Update", "edit", onClick="edit") }}
+          {% set invite_type = [prefix + "_invite"] %}
 
-          <form method='POST' action="{{ url_for("portfolios.resend_invite", portfolio_id=portfolio.id, task_order_id=task_order.id) }}" class="inline-form">
-            {{ form.csrf_token }}
-            <input name="invite_type" value="{{ prefix }}_invite" type="hidden" />
-            <button class="icon-link">
-              {{ Icon('avatar') }}
-              Resend Invitation
-            </button>
-          </form>
+          {{
+            ConfirmationButton(
+              btn_text="Resend Invitation",
+              action=url_for(
+                "portfolios.resend_invite",
+                portfolio_id=portfolio.id,
+                task_order_id=task_order.id,
+                invite_type=invite_type,
+              ),
+              btn_icon=Icon('avatar'),
+              btn_class="icon-link",
+            )
+          }}
 
           {{ Link("Remove", "trash", classes="remove") }}
         </div>

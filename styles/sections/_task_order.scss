@@ -510,6 +510,10 @@
         margin: 0 $gap;
       }
 
+      .v-popover {
+        display: inline-block;
+      }
+
       .remove {
         color: $color-red;
         .icon {

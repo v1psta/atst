@@ -1,6 +1,16 @@
-{% macro ConfirmationButton(btn_text, action, confirm_msg="Are you sure?", confirm_btn="Confirm", cancel_btn="Cancel") -%}
+{% macro ConfirmationButton(
+  btn_text,
+  action,
+  btn_icon=None,
+  btn_class=None,
+  confirm_msg="Are you sure?",
+  confirm_btn="Confirm",
+  cancel_btn="Cancel")
+-%}
   <confirmation-popover
     btn_text='{{ btn_text }}'
+    btn_icon='{{ btn_icon }}'
+    btn_class='{{ btn_class }}'
     action='{{ action }}'
     csrf_token='{{ csrf_token() }}'
     confirm_msg='{{ confirm_msg }}'

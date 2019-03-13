@@ -627,9 +627,9 @@ def test_resend_invite_when_ko(app, client, user_session, portfolio, user):
             "portfolios.resend_invite",
             portfolio_id=portfolio.id,
             task_order_id=task_order.id,
+            invite_type="ko_invite",
             _external=True,
-        ),
-        data={"invite_type": "ko_invite"},
+        )
     )
 
     assert original_invitation.status == InvitationStatus.REVOKED
