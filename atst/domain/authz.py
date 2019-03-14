@@ -1,3 +1,4 @@
+from atst.utils import first_or_none
 from atst.models.permissions import Permissions
 from atst.domain.exceptions import UnauthorizedError
 
@@ -5,8 +6,8 @@ from atst.domain.exceptions import UnauthorizedError
 class Authorization(object):
     @classmethod
     def has_portfolio_permission(cls, user, portfolio, permission):
-        port_role = next(
-            (pr for pr in user.portfolio_roles if pr.portfolio == portfolio), None
+        port_role = first_or_none(
+            lambda pr: pr.portfolio == portfolio, user.portfolio_roles
         )
         if port_role:
             return permission in port_role.permissions
