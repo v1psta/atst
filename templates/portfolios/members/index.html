@@ -9,7 +9,7 @@
 
 {% if not portfolio.members %}
 
-  {% set user_can_invite = user_can(Permissions.CREATE_PORTFOLIO_USERS) %}
+  {% set user_can_invite = user_can(permissions.CREATE_PORTFOLIO_USERS) %}
 
   {{ EmptyState(
     'There are currently no members in this Portfolio.',
