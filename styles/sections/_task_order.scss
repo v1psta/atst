@@ -265,6 +265,11 @@
     }
   }
 
+  .usa-input {
+    margin-bottom: $gap;
+    margin-top: $gap;
+  }
+
   .task-order-invite-message {
     font-weight: $font-bold;
 
@@ -327,9 +332,8 @@
   .task-order__loa-list {
     ul {
       padding-left: 0;
+      margin-bottom: 0;
     }
-
-
 
     .task-order__loa-add-item {
       display: flex;
