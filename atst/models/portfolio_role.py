@@ -29,7 +29,7 @@ class Status(Enum):
     PENDING = "pending"
 
 
-portfolio_roles_roles = Table(
+portfolio_roles_permission_sets = Table(
     "portfolio_roles_permission_sets",
     Base.metadata,
     Column("portfolio_role_id", UUID(as_uuid=True), ForeignKey("portfolio_roles.id")),
@@ -52,7 +52,9 @@ class PortfolioRole(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
 
     status = Column(SQLAEnum(Status, native_enum=False), default=Status.PENDING)
 
-    permission_sets = relationship("PermissionSet", secondary=portfolio_roles_roles)
+    permission_sets = relationship(
+        "PermissionSet", secondary=portfolio_roles_permission_sets
+    )
 
     @property
     def permissions(self):
@@ -116,10 +118,6 @@ class PortfolioRole(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     @property
     def user_name(self):
         return self.user.full_name
-
-    @property
-    def role_displayname(self):
-        return self.role.display_name
 
     @property
     def is_active(self):
