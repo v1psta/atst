@@ -7,6 +7,7 @@ from atst.models.permissions import Permissions
 from atst.models.dd_254 import DD254
 from atst.domain.portfolios import Portfolios
 from atst.domain.authz import Authorization
+from atst.domain.permission_sets import PermissionSets
 from .exceptions import NotFoundError
 
 
@@ -174,8 +175,7 @@ class TaskOrders(object):
                     portfolio,
                     {
                         **officer_data,
-                        "portfolio_role": "officer",
-                        "permission_sets": ["edit_portfolio_funding"],
+                        "permission_sets": [PermissionSets.EDIT_PORTFOLIO_FUNDING],
                     },
                 )
                 portfolio_user = member.user

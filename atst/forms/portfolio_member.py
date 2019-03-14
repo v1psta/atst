@@ -2,6 +2,7 @@ from wtforms.fields import StringField
 from wtforms.fields.html5 import EmailField
 from wtforms.validators import Required, Email, Length
 
+from atst.domain.permission_sets import PermissionSets
 from .forms import BaseForm
 from atst.forms.validators import IsNumber
 from atst.forms.fields import SelectField
@@ -12,29 +13,29 @@ class PermissionsForm(BaseForm):
     perms_app_mgmt = SelectField(
         None,
         choices=[
-            ("view_portfolio_application_management", "View Only"),
-            ("edit_portfolio_application_management", "Edit Access"),
+            (PermissionSets.VIEW_PORTFOLIO_APPLICATION_MANAGEMENT, "View Only"),
+            (PermissionSets.EDIT_PORTFOLIO_APPLICATION_MANAGEMENT, "Edit Access"),
         ],
     )
     perms_funding = SelectField(
         None,
         choices=[
-            ("view_portfolio_funding", "View Only"),
-            ("edit_portfolio_funding", "Edit Access"),
+            (PermissionSets.VIEW_PORTFOLIO_FUNDING, "View Only"),
+            (PermissionSets.EDIT_PORTFOLIO_FUNDING, "Edit Access"),
         ],
     )
     perms_reporting = SelectField(
         None,
         choices=[
-            ("view_portfolio_reports", "View Only"),
-            ("edit_portfolio_reports", "Edit Access"),
+            (PermissionSets.VIEW_PORTFOLIO_REPORTS, "View Only"),
+            (PermissionSets.EDIT_PORTFOLIO_REPORTS, "Edit Access"),
         ],
     )
     perms_portfolio_mgmt = SelectField(
         None,
         choices=[
-            ("view_portfolio_admin", "View Only"),
-            ("edit_portfolio_admin", "Edit Access"),
+            (PermissionSets.VIEW_PORTFOLIO_ADMIN, "View Only"),
+            (PermissionSets.EDIT_PORTFOLIO_ADMIN, "Edit Access"),
         ],
     )
 

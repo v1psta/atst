@@ -5,6 +5,32 @@ from atst.models import PermissionSet, Permissions
 from .exceptions import NotFoundError
 
 
+class PermissionSets(object):
+    VIEW_PORTFOLIO = "view_portfolio"
+    VIEW_PORTFOLIO_APPLICATION_MANAGEMENT = "view_portfolio_application_management"
+    VIEW_PORTFOLIO_FUNDING = "view_portfolio_funding"
+    VIEW_PORTFOLIO_REPORTS = "view_portfolio_reports"
+    VIEW_PORTFOLIO_ADMIN = "view_portfolio_admin"
+    EDIT_PORTFOLIO_APPLICATION_MANAGEMENT = "edit_portfolio_application_management"
+    EDIT_PORTFOLIO_FUNDING = "edit_portfolio_funding"
+    EDIT_PORTFOLIO_REPORTS = "edit_portfolio_reports"
+    EDIT_PORTFOLIO_ADMIN = "edit_portfolio_admin"
+    PORTFOLIO_POC = "portfolio_poc"
+
+    @classmethod
+    def get(cls, perms_set_name):
+        try:
+            role = db.session.query(PermissionSet).filter_by(name=perms_set_name).one()
+        except NoResultFound:
+            raise NotFoundError("permission_set")
+
+        return role
+
+    @classmethod
+    def get_all(cls):
+        return db.session.query(PermissionSet).all()
+
+
 ATAT_ROLES = [
     {
         "name": "ccpo",
@@ -57,13 +83,13 @@ ATAT_ROLES = [
 
 _VIEW_PORTFOLIO_PERMISSION_SETS = [
     {
-        "name": "view_portfolio",
+        "name": PermissionSets.VIEW_PORTFOLIO,
         "description": "View basic portfolio info",
         "display_name": "View Portfolio",
         "permissions": [Permissions.VIEW_PORTFOLIO],
     },
     {
-        "name": "view_portfolio_application_management",
+        "name": PermissionSets.VIEW_PORTFOLIO_APPLICATION_MANAGEMENT,
         "description": "View applications and related resources",
         "display_name": "Application Management",
         "permissions": [
@@ -73,7 +99,7 @@ _VIEW_PORTFOLIO_PERMISSION_SETS = [
         ],
     },
     {
-        "name": "view_portfolio_funding",
+        "name": PermissionSets.VIEW_PORTFOLIO_FUNDING,
         "description": "View a portfolio's task orders",
         "display_name": "Funding",
         "permissions": [
@@ -82,13 +108,13 @@ _VIEW_PORTFOLIO_PERMISSION_SETS = [
         ],
     },
     {
-        "name": "view_portfolio_reports",
+        "name": PermissionSets.VIEW_PORTFOLIO_REPORTS,
         "description": "View a portfolio's reports",
         "display_name": "Reporting",
         "permissions": [Permissions.VIEW_PORTFOLIO_REPORTS],
     },
     {
-        "name": "view_portfolio_admin",
+        "name": PermissionSets.VIEW_PORTFOLIO_ADMIN,
         "description": "View a portfolio's admin options",
         "display_name": "Portfolio Administration",
         "permissions": [
@@ -103,7 +129,7 @@ _VIEW_PORTFOLIO_PERMISSION_SETS = [
 
 _EDIT_PORTFOLIO_PERMISSION_SETS = [
     {
-        "name": "edit_portfolio_application_management",
+        "name": PermissionSets.EDIT_PORTFOLIO_APPLICATION_MANAGEMENT,
         "description": "Edit applications and related resources",
         "display_name": "Application Management",
         "permissions": [
@@ -116,7 +142,7 @@ _EDIT_PORTFOLIO_PERMISSION_SETS = [
         ],
     },
     {
-        "name": "edit_portfolio_funding",
+        "name": PermissionSets.EDIT_PORTFOLIO_FUNDING,
         "description": "Edit a portfolio's task orders and add new ones",
         "display_name": "Funding",
         "permissions": [
@@ -125,13 +151,13 @@ _EDIT_PORTFOLIO_PERMISSION_SETS = [
         ],
     },
     {
-        "name": "edit_portfolio_reports",
+        "name": PermissionSets.EDIT_PORTFOLIO_REPORTS,
         "description": "Edit a portfolio's reports (no-op)",
         "display_name": "Reporting",
         "permissions": [],
     },
     {
-        "name": "edit_portfolio_admin",
+        "name": PermissionSets.EDIT_PORTFOLIO_ADMIN,
         "description": "Edit a portfolio's admin options",
         "display_name": "Portfolio Administration",
         "permissions": [
@@ -157,18 +183,3 @@ PORTFOLIO_PERMISSION_SETS = (
         }
     ]
 )
-
-
-class PermissionSets(object):
-    @classmethod
-    def get(cls, perms_set_name):
-        try:
-            role = db.session.query(PermissionSet).filter_by(name=perms_set_name).one()
-        except NoResultFound:
-            raise NotFoundError("permission_set")
-
-        return role
-
-    @classmethod
-    def get_all(cls):
-        return db.session.query(PermissionSet).all()

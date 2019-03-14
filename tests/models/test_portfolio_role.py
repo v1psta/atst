@@ -285,8 +285,8 @@ def test_can_list_all_environments():
 
 
 def test_can_list_all_permissions():
-    role_one = PermissionSets.get("view_portfolio_funding")
-    role_two = PermissionSets.get("view_portfolio_reports")
+    role_one = PermissionSets.get(PermissionSets.VIEW_PORTFOLIO_FUNDING)
+    role_two = PermissionSets.get(PermissionSets.VIEW_PORTFOLIO_REPORTS)
     port_role = PortfolioRoleFactory.create(permission_sets=[role_one, role_two])
     expected_perms = role_one.permissions + role_two.permissions
     assert expected_perms == expected_perms

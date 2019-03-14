@@ -97,10 +97,10 @@ class PortfolioRoles(object):
         return new_portfolio_role
 
     _DEFAULT_PORTFOLIO_PERMS_SETS = {
-        "view_portfolio_application_management",
-        "view_portfolio_funding",
-        "view_portfolio_reports",
-        "view_portfolio_admin",
+        PermissionSets.VIEW_PORTFOLIO_APPLICATION_MANAGEMENT,
+        PermissionSets.VIEW_PORTFOLIO_FUNDING,
+        PermissionSets.VIEW_PORTFOLIO_REPORTS,
+        PermissionSets.VIEW_PORTFOLIO_ADMIN,
     }
 
     @classmethod

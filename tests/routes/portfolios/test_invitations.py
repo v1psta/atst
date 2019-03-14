@@ -12,6 +12,7 @@ from atst.domain.portfolios import Portfolios
 from atst.models.portfolio_role import Status as PortfolioRoleStatus
 from atst.models.invitation import Status as InvitationStatus
 from atst.domain.users import Users
+from atst.domain.permission_sets import PermissionSets
 
 
 def test_existing_member_accepts_valid_invite(client, user_session):
@@ -48,10 +49,10 @@ def test_new_member_accepts_valid_invite(monkeypatch, client, user_session):
     response = client.post(
         url_for("portfolios.create_member", portfolio_id=portfolio.id),
         data={
-            "perms_app_mgmt": "view_portfolio_application_management",
-            "perms_funding": "view_portfolio_funding",
-            "perms_reporting": "view_portfolio_reports",
-            "perms_portfolio_mgmt": "view_portfolio_admin",
+            "perms_app_mgmt": PermissionSets.VIEW_PORTFOLIO_APPLICATION_MANAGEMENT,
+            "perms_funding": PermissionSets.VIEW_PORTFOLIO_FUNDING,
+            "perms_reporting": PermissionSets.VIEW_PORTFOLIO_REPORTS,
+            "perms_portfolio_mgmt": PermissionSets.VIEW_PORTFOLIO_ADMIN,
             **user_info,
         },
     )

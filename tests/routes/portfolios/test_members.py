@@ -18,10 +18,10 @@ from atst.models.portfolio_role import Status as PortfolioRoleStatus
 from atst.models.invitation import Status as InvitationStatus
 
 _DEFAULT_PERMS_FORM_DATA = {
-    "perms_app_mgmt": "view_portfolio_application_management",
-    "perms_funding": "view_portfolio_funding",
-    "perms_reporting": "view_portfolio_reports",
-    "perms_portfolio_mgmt": "view_portfolio_admin",
+    "perms_app_mgmt": PermissionSets.VIEW_PORTFOLIO_APPLICATION_MANAGEMENT,
+    "perms_funding": PermissionSets.VIEW_PORTFOLIO_FUNDING,
+    "perms_reporting": PermissionSets.VIEW_PORTFOLIO_REPORTS,
+    "perms_portfolio_mgmt": PermissionSets.VIEW_PORTFOLIO_ADMIN,
 }
 
 
@@ -135,11 +135,14 @@ def test_update_member_portfolio_role(client, user_session):
         url_for(
             "portfolios.update_member", portfolio_id=portfolio.id, member_id=user.id
         ),
-        data={**_DEFAULT_PERMS_FORM_DATA, "perms_funding": "edit_portfolio_funding"},
+        data={
+            **_DEFAULT_PERMS_FORM_DATA,
+            "perms_funding": PermissionSets.EDIT_PORTFOLIO_FUNDING,
+        },
         follow_redirects=True,
     )
     assert response.status_code == 200
-    edit_funding = PermissionSets.get("edit_portfolio_funding")
+    edit_funding = PermissionSets.get(PermissionSets.EDIT_PORTFOLIO_FUNDING)
     assert edit_funding in member.permission_sets
 
 

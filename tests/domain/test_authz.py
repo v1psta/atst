@@ -45,8 +45,8 @@ def test_check_is_ko_or_cor(task_order, invalid_user):
 
 
 def test_has_portfolio_permission():
-    role_one = PermissionSets.get("view_portfolio_funding")
-    role_two = PermissionSets.get("view_portfolio_reports")
+    role_one = PermissionSets.get(PermissionSets.VIEW_PORTFOLIO_FUNDING)
+    role_two = PermissionSets.get(PermissionSets.VIEW_PORTFOLIO_REPORTS)
     port_role = PortfolioRoleFactory.create(permission_sets=[role_one, role_two])
     different_user = UserFactory.create()
     assert Authorization.has_portfolio_permission(

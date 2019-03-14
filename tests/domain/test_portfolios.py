@@ -114,7 +114,7 @@ def test_update_portfolio_role_role(portfolio, portfolio_owner):
     }
     PortfolioRoleFactory._meta.sqlalchemy_session_persistence = "flush"
     member = PortfolioRoleFactory.create(portfolio=portfolio)
-    permission_sets = ["edit_portfolio_funding"]
+    permission_sets = [PermissionSets.EDIT_PORTFOLIO_FUNDING]
 
     updated_member = Portfolios.update_member(
         portfolio_owner, portfolio, member, permission_sets=permission_sets
