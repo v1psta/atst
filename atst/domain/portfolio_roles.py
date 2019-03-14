@@ -96,7 +96,7 @@ class PortfolioRoles(object):
 
         return new_portfolio_role
 
-    _DEFAULT_PORTFOLIO_PERMS_SETS = {
+    DEFAULT_PORTFOLIO_PERMISSION_SETS = {
         PermissionSets.VIEW_PORTFOLIO_APPLICATION_MANAGEMENT,
         PermissionSets.VIEW_PORTFOLIO_FUNDING,
         PermissionSets.VIEW_PORTFOLIO_REPORTS,
@@ -105,7 +105,7 @@ class PortfolioRoles(object):
 
     @classmethod
     def _permission_sets_for_names(cls, set_names):
-        perms_set_names = PortfolioRoles._DEFAULT_PORTFOLIO_PERMS_SETS.union(
+        perms_set_names = PortfolioRoles.DEFAULT_PORTFOLIO_PERMISSION_SETS.union(
             set(set_names)
         )
         return [

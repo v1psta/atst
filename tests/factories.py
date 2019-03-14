@@ -14,17 +14,13 @@ from atst.models.task_order import TaskOrder
 from atst.models.user import User
 from atst.models.permission_set import PermissionSet
 from atst.models.portfolio import Portfolio
-from atst.domain.permission_sets import (
-    PermissionSets,
-    PORTFOLIO_PERMISSION_SETS,
-    _VIEW_PORTFOLIO_PERMISSION_SETS,
-    _EDIT_PORTFOLIO_PERMISSION_SETS,
-)
+from atst.domain.permission_sets import PermissionSets, PORTFOLIO_PERMISSION_SETS
 from atst.models.portfolio_role import PortfolioRole, Status as PortfolioRoleStatus
 from atst.models.environment_role import EnvironmentRole
 from atst.models.invitation import Invitation, Status as InvitationStatus
 from atst.models.dd_254 import DD254
 from atst.domain.invitations import Invitations
+from atst.domain.portfolio_roles import PortfolioRoles
 
 
 def random_choice(choices):
@@ -70,7 +66,8 @@ def _random_date(year_min, year_max, operation):
 
 def base_portfolio_permission_sets():
     return [
-        PermissionSets.get(prms["name"]) for prms in _VIEW_PORTFOLIO_PERMISSION_SETS
+        PermissionSets.get(prms)
+        for prms in PortfolioRoles.DEFAULT_PORTFOLIO_PERMISSION_SETS
     ]
 
 

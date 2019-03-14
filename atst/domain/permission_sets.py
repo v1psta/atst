@@ -81,13 +81,16 @@ ATAT_ROLES = [
     },
 ]
 
-_VIEW_PORTFOLIO_PERMISSION_SETS = [
+_PORTFOLIO_BASIC_PERMISSION_SETS = [
     {
         "name": PermissionSets.VIEW_PORTFOLIO,
         "description": "View basic portfolio info",
         "display_name": "View Portfolio",
         "permissions": [Permissions.VIEW_PORTFOLIO],
-    },
+    }
+]
+
+_PORTFOLIO_APP_MGMT_PERMISSION_SETS = [
     {
         "name": PermissionSets.VIEW_PORTFOLIO_APPLICATION_MANAGEMENT,
         "description": "View applications and related resources",
@@ -98,36 +101,6 @@ _VIEW_PORTFOLIO_PERMISSION_SETS = [
             Permissions.VIEW_ENVIRONMENT,
         ],
     },
-    {
-        "name": PermissionSets.VIEW_PORTFOLIO_FUNDING,
-        "description": "View a portfolio's task orders",
-        "display_name": "Funding",
-        "permissions": [
-            Permissions.VIEW_PORTFOLIO_FUNDING,
-            Permissions.VIEW_TASK_ORDER_DETAILS,
-        ],
-    },
-    {
-        "name": PermissionSets.VIEW_PORTFOLIO_REPORTS,
-        "description": "View a portfolio's reports",
-        "display_name": "Reporting",
-        "permissions": [Permissions.VIEW_PORTFOLIO_REPORTS],
-    },
-    {
-        "name": PermissionSets.VIEW_PORTFOLIO_ADMIN,
-        "description": "View a portfolio's admin options",
-        "display_name": "Portfolio Administration",
-        "permissions": [
-            Permissions.VIEW_PORTFOLIO_ADMIN,
-            Permissions.VIEW_PORTFOLIO_NAME,
-            Permissions.VIEW_PORTFOLIO_USERS,
-            Permissions.VIEW_PORTFOLIO_ACTIVITY_LOG,
-            Permissions.VIEW_PORTFOLIO_POC,
-        ],
-    },
-]
-
-_EDIT_PORTFOLIO_PERMISSION_SETS = [
     {
         "name": PermissionSets.EDIT_PORTFOLIO_APPLICATION_MANAGEMENT,
         "description": "Edit applications and related resources",
@@ -141,6 +114,18 @@ _EDIT_PORTFOLIO_PERMISSION_SETS = [
             Permissions.CREATE_ENVIRONMENT,
         ],
     },
+]
+
+_PORTFOLIO_FUNDING_PERMISSION_SETS = [
+    {
+        "name": PermissionSets.VIEW_PORTFOLIO_FUNDING,
+        "description": "View a portfolio's task orders",
+        "display_name": "Funding",
+        "permissions": [
+            Permissions.VIEW_PORTFOLIO_FUNDING,
+            Permissions.VIEW_TASK_ORDER_DETAILS,
+        ],
+    },
     {
         "name": PermissionSets.EDIT_PORTFOLIO_FUNDING,
         "description": "Edit a portfolio's task orders and add new ones",
@@ -150,11 +135,35 @@ _EDIT_PORTFOLIO_PERMISSION_SETS = [
             Permissions.EDIT_TASK_ORDER_DETAILS,
         ],
     },
+]
+
+_PORTFOLIO_REPORTS_PERMISSION_SETS = [
+    {
+        "name": PermissionSets.VIEW_PORTFOLIO_REPORTS,
+        "description": "View a portfolio's reports",
+        "display_name": "Reporting",
+        "permissions": [Permissions.VIEW_PORTFOLIO_REPORTS],
+    },
     {
         "name": PermissionSets.EDIT_PORTFOLIO_REPORTS,
         "description": "Edit a portfolio's reports (no-op)",
         "display_name": "Reporting",
         "permissions": [],
+    },
+]
+
+_PORTFOLIO_ADMIN_PERMISSION_SETS = [
+    {
+        "name": PermissionSets.VIEW_PORTFOLIO_ADMIN,
+        "description": "View a portfolio's admin options",
+        "display_name": "Portfolio Administration",
+        "permissions": [
+            Permissions.VIEW_PORTFOLIO_ADMIN,
+            Permissions.VIEW_PORTFOLIO_NAME,
+            Permissions.VIEW_PORTFOLIO_USERS,
+            Permissions.VIEW_PORTFOLIO_ACTIVITY_LOG,
+            Permissions.VIEW_PORTFOLIO_POC,
+        ],
     },
     {
         "name": PermissionSets.EDIT_PORTFOLIO_ADMIN,
@@ -168,18 +177,20 @@ _EDIT_PORTFOLIO_PERMISSION_SETS = [
     },
 ]
 
+_PORTFOLIO_POC_PERMISSION_SETS = [
+    {
+        "name": "portfolio_poc",
+        "description": "Permissions belonging to the Portfolio POC",
+        "display_name": "Portfolio Point of Contact",
+        "permissions": [Permissions.EDIT_PORTFOLIO_POC, Permissions.ARCHIVE_PORTFOLIO],
+    }
+]
+
 PORTFOLIO_PERMISSION_SETS = (
-    _VIEW_PORTFOLIO_PERMISSION_SETS
-    + _EDIT_PORTFOLIO_PERMISSION_SETS
-    + [
-        {
-            "name": "portfolio_poc",
-            "description": "Permissions belonging to the Portfolio POC",
-            "display_name": "Portfolio Point of Contact",
-            "permissions": [
-                Permissions.EDIT_PORTFOLIO_POC,
-                Permissions.ARCHIVE_PORTFOLIO,
-            ],
-        }
-    ]
+    _PORTFOLIO_BASIC_PERMISSION_SETS
+    + _PORTFOLIO_APP_MGMT_PERMISSION_SETS
+    + _PORTFOLIO_FUNDING_PERMISSION_SETS
+    + _PORTFOLIO_REPORTS_PERMISSION_SETS
+    + _PORTFOLIO_ADMIN_PERMISSION_SETS
+    + _PORTFOLIO_POC_PERMISSION_SETS
 )

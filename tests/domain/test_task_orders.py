@@ -2,7 +2,8 @@ import pytest
 
 from atst.domain.task_orders import TaskOrders, TaskOrderError, DD254s
 from atst.domain.exceptions import UnauthorizedError
-from atst.domain.permission_sets import PermissionSets, _VIEW_PORTFOLIO_PERMISSION_SETS
+from atst.domain.permission_sets import PermissionSets
+from atst.domain.portfolio_roles import PortfolioRoles
 from atst.models.attachment import Attachment
 
 from tests.factories import (
@@ -116,7 +117,8 @@ def test_task_order_access():
         user=member,
         portfolio=task_order.portfolio,
         permission_sets=[
-            PermissionSets.get(prms["name"]) for prms in _VIEW_PORTFOLIO_PERMISSION_SETS
+            PermissionSets.get(prms)
+            for prms in PortfolioRoles.DEFAULT_PORTFOLIO_PERMISSION_SETS
         ],
     )
     TaskOrders.add_officer(
