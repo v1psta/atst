@@ -73,16 +73,26 @@ def test_can_validate_certificate():
         cache.crl_check(bad_cert)
 
 
-def test_can_dynamically_update_crls(tmpdir):
-    crl_file = tmpdir.join("test.crl")
-    shutil.copyfile("ssl/client-certs/client-ca.der.crl", crl_file)
-    cache = CRLCache("ssl/server-certs/ca-chain.pem", crl_locations=[crl_file])
-    cert = open("ssl/client-certs/atat.mil.crt", "rb").read()
-    assert cache.crl_check(cert)
-    # override the original CRL with one that revokes atat.mil.crt
-    shutil.copyfile("tests/fixtures/test.der.crl", crl_file)
-    with pytest.raises(CRLInvalidException):
-        assert cache.crl_check(cert)
+def test_can_dynamically_update_crls(
+    ca_key,
+    ca_file,
+    crl_file,
+    rsa_key,
+    make_x509,
+    make_crl,
+    serialize_pki_object_to_disk,
+):
+    cache = CRLCache(ca_file, crl_locations=[crl_file])
+    client_cert = make_x509(rsa_key(), signer_key=ca_key, cn="chewbacca")
+    client_pem = client_cert.public_bytes(Encoding.PEM)
+    assert cache.crl_check(client_pem)
+
+    revoked_crl = make_crl(ca_key, expired_serials=[client_cert.serial_number])
+    # override the original CRL with one that revokes client_cert
+    serialize_pki_object_to_disk(revoked_crl, crl_file, encoding=Encoding.DER)
+
+    with pytest.raises(CRLRevocationException):
+        assert cache.crl_check(client_pem)
 
 
 def test_throws_error_for_missing_issuer():

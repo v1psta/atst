@@ -1,5 +1,4 @@
 import os
-import datetime
 import pytest
 import alembic.config
 import alembic.command
@@ -220,14 +219,26 @@ def make_x509():
 
 @pytest.fixture
 def make_crl():
-    def _make_crl(private_key, last_update_days=-1, next_update_days=30, cn="ATAT"):
+    def _make_crl(
+        private_key,
+        last_update_days=-1,
+        next_update_days=30,
+        cn="ATAT",
+        expired_serials=None,
+    ):
         one_day = timedelta(1, 0, 0)
         builder = x509.CertificateRevocationListBuilder()
         builder = builder.issuer_name(
             x509.Name([x509.NameAttribute(NameOID.COMMON_NAME, cn)])
         )
-        builder = builder.last_update(datetime.today() + (one_day * last_update_days))
-        builder = builder.next_update(datetime.today() + (one_day * next_update_days))
+        last_update = datetime.today() + (one_day * last_update_days)
+        next_update = datetime.today() + (one_day * next_update_days)
+        builder = builder.last_update(last_update)
+        builder = builder.next_update(next_update)
+        if expired_serials:
+            for serial in expired_serials:
+                builder = add_revoked_cert(builder, serial, last_update)
+
         crl = builder.sign(
             private_key=private_key,
             algorithm=hashes.SHA256(),
@@ -239,15 +250,29 @@ def make_crl():
     return _make_crl
 
 
-def serialize_pki_object_to_disk(obj, name, encoding=Encoding.PEM):
-    with open(name, "wb") as file_:
-        file_.write(obj.public_bytes(encoding))
-
-        return name
+def add_revoked_cert(crl_builder, serial, revocation_date):
+    revoked_cert = (
+        x509.RevokedCertificateBuilder()
+        .serial_number(serial)
+        .revocation_date(revocation_date)
+        .build(default_backend())
+    )
+    return crl_builder.add_revoked_certificate(revoked_cert)
 
 
 @pytest.fixture
-def ca_file(make_x509, ca_key, tmpdir):
+def serialize_pki_object_to_disk():
+    def _serialize_pki_object_to_disk(obj, name, encoding=Encoding.PEM):
+        with open(name, "wb") as file_:
+            file_.write(obj.public_bytes(encoding))
+
+            return name
+
+    return _serialize_pki_object_to_disk
+
+
+@pytest.fixture
+def ca_file(make_x509, ca_key, tmpdir, serialize_pki_object_to_disk):
     ca = make_x509(ca_key)
     ca_out = tmpdir.join("atat-ca.crt")
     serialize_pki_object_to_disk(ca, ca_out)
@@ -256,7 +281,7 @@ def ca_file(make_x509, ca_key, tmpdir):
 
 
 @pytest.fixture
-def expired_crl_file(make_crl, ca_key, tmpdir):
+def expired_crl_file(make_crl, ca_key, tmpdir, serialize_pki_object_to_disk):
     crl = make_crl(ca_key, last_update_days=-7, next_update_days=-1)
     crl_out = tmpdir.join("atat-expired.crl")
     serialize_pki_object_to_disk(crl, crl_out, encoding=Encoding.DER)
@@ -265,7 +290,7 @@ def expired_crl_file(make_crl, ca_key, tmpdir):
 
 
 @pytest.fixture
-def crl_file(make_crl, ca_key, tmpdir):
+def crl_file(make_crl, ca_key, tmpdir, serialize_pki_object_to_disk):
     crl = make_crl(ca_key)
     crl_out = tmpdir.join("atat-valid.crl")
     serialize_pki_object_to_disk(crl, crl_out, encoding=Encoding.DER)
