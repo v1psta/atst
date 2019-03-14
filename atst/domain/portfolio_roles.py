@@ -101,16 +101,25 @@ class PortfolioRoles(object):
         PermissionSets.VIEW_PORTFOLIO_FUNDING,
         PermissionSets.VIEW_PORTFOLIO_REPORTS,
         PermissionSets.VIEW_PORTFOLIO_ADMIN,
+        PermissionSets.VIEW_PORTFOLIO,
     }
+
+    PORTFOLIO_PERMISSION_SETS = DEFAULT_PORTFOLIO_PERMISSION_SETS.union(
+        {
+            PermissionSets.EDIT_PORTFOLIO_APPLICATION_MANAGEMENT,
+            PermissionSets.EDIT_PORTFOLIO_FUNDING,
+            PermissionSets.EDIT_PORTFOLIO_REPORTS,
+            PermissionSets.EDIT_PORTFOLIO_ADMIN,
+            PermissionSets.PORTFOLIO_POC,
+        }
+    )
 
     @classmethod
     def _permission_sets_for_names(cls, set_names):
         perms_set_names = PortfolioRoles.DEFAULT_PORTFOLIO_PERMISSION_SETS.union(
             set(set_names)
         )
-        return [
-            PermissionSets.get(perms_set_name) for perms_set_name in perms_set_names
-        ]
+        return PermissionSets.get_many(perms_set_names)
 
     @classmethod
     def update(cls, portfolio_role, set_names):

@@ -9,7 +9,12 @@ from atst.domain.environments import Environments
 from atst.domain.permission_sets import PermissionSets, PORTFOLIO_PERMISSION_SETS
 from atst.models.portfolio_role import Status as PortfolioRoleStatus
 
-from tests.factories import UserFactory, PortfolioRoleFactory, PortfolioFactory
+from tests.factories import (
+    UserFactory,
+    PortfolioRoleFactory,
+    PortfolioFactory,
+    get_all_portfolio_permission_sets,
+)
 
 
 @pytest.fixture(scope="function")
@@ -201,7 +206,7 @@ def test_scoped_portfolio_returns_all_applications_for_portfolio_admin(
         )
 
     admin = UserFactory.create()
-    perm_sets = [PermissionSets.get(prms["name"]) for prms in PORTFOLIO_PERMISSION_SETS]
+    perm_sets = get_all_portfolio_permission_sets()
     PortfolioRoleFactory.create(
         user=admin, portfolio=portfolio, permission_sets=perm_sets
     )
@@ -263,7 +268,7 @@ def test_get_for_update_information(portfolio, portfolio_owner):
     assert portfolio == owner_ws
 
     admin = UserFactory.create()
-    perm_sets = [PermissionSets.get(prms["name"]) for prms in PORTFOLIO_PERMISSION_SETS]
+    perm_sets = get_all_portfolio_permission_sets()
     PortfolioRoleFactory.create(
         user=admin, portfolio=portfolio, permission_sets=perm_sets
     )

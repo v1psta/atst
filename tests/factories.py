@@ -72,7 +72,7 @@ def base_portfolio_permission_sets():
 
 
 def get_all_portfolio_permission_sets():
-    return [PermissionSets.get(prms["name"]) for prms in PORTFOLIO_PERMISSION_SETS]
+    return PermissionSets.get_many(PortfolioRoles.PORTFOLIO_PERMISSION_SETS)
 
 
 class Base(factory.alchemy.SQLAlchemyModelFactory):

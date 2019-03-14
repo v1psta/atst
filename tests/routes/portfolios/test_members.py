@@ -109,7 +109,7 @@ def test_create_member(client, user_session):
     assert user.invitations
     assert len(queue.get_queue()) == queue_length + 1
     portfolio_role = user.portfolio_roles[0]
-    assert len(portfolio_role.permission_sets) == 4
+    assert len(portfolio_role.permission_sets) == 5
 
 
 @pytest.mark.skip(reason="permission set display not implemented")

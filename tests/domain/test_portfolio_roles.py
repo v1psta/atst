@@ -18,13 +18,14 @@ def test_add_portfolio_role_with_permission_sets():
     port_role = PortfolioRoles.add(
         new_user, portfolio.id, permission_sets=permission_sets
     )
-    assert len(port_role.permission_sets) == 5
+    assert len(port_role.permission_sets) == 6
     expected_names = [
         PermissionSets.EDIT_PORTFOLIO_APPLICATION_MANAGEMENT,
         PermissionSets.VIEW_PORTFOLIO_APPLICATION_MANAGEMENT,
         PermissionSets.VIEW_PORTFOLIO_FUNDING,
         PermissionSets.VIEW_PORTFOLIO_REPORTS,
         PermissionSets.VIEW_PORTFOLIO_ADMIN,
+        PermissionSets.VIEW_PORTFOLIO,
     ]
     actual_names = [prms.name for prms in port_role.permission_sets]
     assert expected_names == expected_names
