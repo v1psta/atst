@@ -572,10 +572,7 @@ def test_resend_invite_when_invalid_invite_officer(
     )
 
     PortfolioRoleFactory.create(
-        role=Roles.get("owner"),
-        portfolio=portfolio,
-        user=user,
-        status=PortfolioStatus.ACTIVE,
+        portfolio=portfolio, user=user, status=PortfolioStatus.ACTIVE
     )
 
     user_session(user)
@@ -604,10 +601,7 @@ def test_resend_invite_when_officer_type_missing(
     )
 
     PortfolioRoleFactory.create(
-        role=Roles.get("owner"),
-        portfolio=portfolio,
-        user=user,
-        status=PortfolioStatus.ACTIVE,
+        portfolio=portfolio, user=user, status=PortfolioStatus.ACTIVE
     )
 
     user_session(user)
@@ -634,10 +628,7 @@ def test_resend_invite_when_ko(app, client, user_session, portfolio, user):
     )
 
     portfolio_role = PortfolioRoleFactory.create(
-        role=Roles.get("owner"),
-        portfolio=portfolio,
-        user=user,
-        status=PortfolioStatus.ACTIVE,
+        portfolio=portfolio, user=user, status=PortfolioStatus.ACTIVE
     )
 
     original_invitation = Invitations.create(
@@ -678,10 +669,7 @@ def test_resend_invite_when_not_pending(app, client, user_session, portfolio, us
     )
 
     portfolio_role = PortfolioRoleFactory.create(
-        role=Roles.get("owner"),
-        portfolio=portfolio,
-        user=user,
-        status=PortfolioStatus.ACTIVE,
+        portfolio=portfolio, user=user, status=PortfolioStatus.ACTIVE
     )
 
     original_invitation = InvitationFactory.create(
