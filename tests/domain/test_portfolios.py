@@ -255,6 +255,7 @@ def test_for_user_does_not_return_inactive_portfolios(portfolio, portfolio_owner
     assert len(bobs_portfolios) == 0
 
 
+@pytest.mark.skip(reason="CCPO status not fully implemented")
 def test_for_user_returns_all_portfolios_for_ccpo(portfolio, portfolio_owner):
     sam = UserFactory.from_atat_role("ccpo")
     PortfolioFactory.create()
