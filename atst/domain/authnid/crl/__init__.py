@@ -2,8 +2,12 @@ import sys
 import os
 import re
 import hashlib
+from flask import current_app as app
 from datetime import datetime
 from OpenSSL import crypto, SSL
+
+# error codes from OpenSSL: https://github.com/openssl/openssl/blob/2c75f03b39de2fa7d006bc0f0d7c58235a54d9bb/include/openssl/x509_vfy.h#L111
+CRL_EXPIRED_ERROR_CODE = 12
 
 
 def get_common_name(x509_name_object):
@@ -13,6 +17,12 @@ def get_common_name(x509_name_object):
 
 
 class CRLRevocationException(Exception):
+    pass
+
+
+class CRLInvalidException(Exception):
+    # CRL expired
+    # CRL missing
     pass
 
 
@@ -111,7 +121,7 @@ class CRLCache(CRLInterface):
         issuer_name = get_common_name(issuer)
 
         if not crl_info:
-            raise CRLRevocationException(
+            raise CRLInvalidException(
                 "Could not find matching CRL for issuer with Common Name {}".format(
                     issuer_name
                 )
@@ -170,6 +180,16 @@ class CRLCache(CRLInterface):
             return True
 
         except crypto.X509StoreContextError as err:
+            if err.args[0][0] == CRL_EXPIRED_ERROR_CODE:
+                if app.config.get("CRL_FAIL_OPEN"):
+                    self._log_info(
+                        "Encountered expired CRL for certificate with CN {} and issuer CN {}, failing open.".format(
+                            parsed.get_subject().CN, parsed.get_issuer().CN
+                        )
+                    )
+                    return True
+                else:
+                    raise CRLInvalidException("CRL expired. Args: {}".format(err.args))
             raise CRLRevocationException(
                 "Certificate revoked or errored. Error: {}. Args: {}".format(
                     type(err), err.args
