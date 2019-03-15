@@ -24,5 +24,5 @@ def upgrade():
 
 def downgrade():
     op.rename_table("permission_sets", "roles")
-    op.rename_table("portfolio_roles_permission_sets", "portfolio_roles_roles")
     op.alter_column("portfolio_roles_permission_sets", "permission_set_id", new_column_name="role_id")
+    op.rename_table("portfolio_roles_permission_sets", "portfolio_roles_roles")
