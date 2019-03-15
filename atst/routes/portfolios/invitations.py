@@ -3,7 +3,6 @@ from flask import g, redirect, url_for, render_template
 from . import portfolios_bp
 from atst.domain.portfolios import Portfolios
 from atst.domain.invitations import Invitations
-from atst.domain.task_orders import TaskOrders
 from atst.queue import queue
 from atst.utils.flash import formatted_flash as flash
 
@@ -27,7 +26,7 @@ def accept_invitation(token):
     #   - the logged-in user has multiple roles on the TO (e.g., KO and COR)
     #   - the logged-in user has officer roles on multiple unsigned TOs
     for task_order in invite.portfolio.task_orders:
-        if TaskOrders.is_officer_for_to(task_order, g.current_user):
+        if g.current_user in task_order.officers:
             return redirect(
                 url_for(
                     "portfolios.view_task_order",

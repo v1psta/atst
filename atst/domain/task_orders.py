@@ -186,17 +186,6 @@ class TaskOrders(object):
             )
 
     @classmethod
-    def is_officer_for_to(cls, task_order, user):
-        if (
-            user == task_order.contracting_officer
-            or user == task_order.contracting_officer_representative
-            or user == task_order.security_officer
-        ):
-            return True
-        else:
-            return False
-
-    @classmethod
     def add_dd_254(user, task_order, dd_254_data):
         dd_254 = DD254(**dd_254_data)
         task_order.dd_254 = dd_254
