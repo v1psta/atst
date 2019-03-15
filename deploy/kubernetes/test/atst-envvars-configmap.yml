@@ -10,3 +10,4 @@ data:
   OVERRIDE_CONFIG_FULLPATH: /opt/atat/atst/atst-overrides.ini
   UWSGI_CONFIG_FULLPATH: /opt/atat/atst/uwsgi-config.ini
   RQ_QUEUES: atat-test
+  CRL_STORAGE_PROVIDER: CLOUDFILES
