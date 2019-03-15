@@ -111,6 +111,10 @@ class Invitations(object):
     @classmethod
     def lookup_by_portfolio_and_user(cls, portfolio, user):
         portfolio_role = PortfolioRoles.get(portfolio.id, user.id)
+
+        if portfolio_role.latest_invitation is None:
+            raise NotFoundError("invitation")
+
         return portfolio_role.latest_invitation
 
     @classmethod

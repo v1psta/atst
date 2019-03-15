@@ -126,9 +126,6 @@ def resend_invite(portfolio_id, task_order_id, form=None):
 
     invitation = Invitations.lookup_by_portfolio_and_user(portfolio, officer)
 
-    if not invitation:
-        raise NotFoundError("invitation")
-
     if invitation.status is not InvitationStatus.PENDING:
         raise NoAccessError("invitation")
 
