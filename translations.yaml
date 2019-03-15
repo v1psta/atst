@@ -77,7 +77,7 @@ forms:
     date_latest_training_description: |
       To complete the training, you can find it in
       <a class="icon-link" href="https://iatraining.disa.mil/eta/disa_cac2018/launchPage.htm" target="_blank">
-        Information Assurance Cyber Awareness Challange
+        Information Assurance Cyber Awareness Challenge
       </a> website.
     date_latest_training_label: Latest Information Assurance (IA) Training Completion Date
     designation_description: What is your designation within the DoD?
