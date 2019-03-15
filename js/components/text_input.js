@@ -79,14 +79,15 @@ export default {
     onChange: function(e) {
       // Only invalidate the field when it blurs
       this._checkIfValid({ value: e.target.value, invalidate: true })
-      if (this.validation === 'dollars') {
-        this.value = formatDollars(this._rawValue(e.target.value))
-      }
     },
 
     onBlur: function(e) {
       this._checkIfValid({ value: e.target.value.trim(), invalidate: true })
       this.value = e.target.value.trim()
+
+      if (this.validation === 'dollars') {
+        this.value = formatDollars(this._rawValue(e.target.value))
+      }
     },
 
     //
