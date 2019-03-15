@@ -26,21 +26,13 @@ def accept_invitation(token):
     #   - the logged-in user has multiple roles on the TO (e.g., KO and COR)
     #   - the logged-in user has officer roles on multiple unsigned TOs
     for task_order in invite.portfolio.task_orders:
-        if g.current_user == task_order.contracting_officer:
+        if g.current_user in task_order.officers:
             return redirect(
                 url_for(
                     "portfolios.view_task_order",
                     portfolio_id=task_order.portfolio_id,
                     task_order_id=task_order.id,
                 )
-            )
-        elif g.current_user == task_order.contracting_officer_representative:
-            return redirect(
-                url_for("task_orders.new", screen=4, task_order_id=task_order.id)
-            )
-        elif g.current_user == task_order.security_officer:
-            return redirect(
-                url_for("task_orders.new", screen=4, task_order_id=task_order.id)
             )
 
     return redirect(

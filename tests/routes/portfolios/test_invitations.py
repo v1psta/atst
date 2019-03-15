@@ -245,3 +245,77 @@ def test_contracting_officer_accepts_invite(monkeypatch, client, user_session):
         _external=True,
     )
     assert response.headers["Location"] == to_review_url
+
+
+def test_cor_accepts_invite(monkeypatch, client, user_session):
+    portfolio = PortfolioFactory.create()
+    user_info = UserFactory.dictionary()
+    task_order = TaskOrderFactory.create(
+        portfolio=portfolio,
+        cor_first_name=user_info["first_name"],
+        cor_last_name=user_info["last_name"],
+        cor_email=user_info["email"],
+        cor_phone_number=user_info["phone_number"],
+        cor_dod_id=user_info["dod_id"],
+        cor_invite=True,
+    )
+
+    # create contracting officer representative
+    user_session(portfolio.owner)
+    client.post(url_for("task_orders.invite", task_order_id=task_order.id))
+
+    # contracting officer representative accepts invitation
+    user = Users.get_by_dod_id(user_info["dod_id"])
+    token = user.invitations[0].token
+    monkeypatch.setattr(
+        "atst.domain.auth.should_redirect_to_user_profile", lambda *args: False
+    )
+    user_session(user)
+    response = client.get(url_for("portfolios.accept_invitation", token=token))
+
+    # user is redirected to the task order review page
+    assert response.status_code == 302
+    to_review_url = url_for(
+        "portfolios.view_task_order",
+        portfolio_id=task_order.portfolio_id,
+        task_order_id=task_order.id,
+        _external=True,
+    )
+    assert response.headers["Location"] == to_review_url
+
+
+def test_so_accepts_invite(monkeypatch, client, user_session):
+    portfolio = PortfolioFactory.create()
+    user_info = UserFactory.dictionary()
+    task_order = TaskOrderFactory.create(
+        portfolio=portfolio,
+        so_first_name=user_info["first_name"],
+        so_last_name=user_info["last_name"],
+        so_email=user_info["email"],
+        so_phone_number=user_info["phone_number"],
+        so_dod_id=user_info["dod_id"],
+        so_invite=True,
+    )
+
+    # create security officer
+    user_session(portfolio.owner)
+    client.post(url_for("task_orders.invite", task_order_id=task_order.id))
+
+    # security officer accepts invitation
+    user = Users.get_by_dod_id(user_info["dod_id"])
+    token = user.invitations[0].token
+    monkeypatch.setattr(
+        "atst.domain.auth.should_redirect_to_user_profile", lambda *args: False
+    )
+    user_session(user)
+    response = client.get(url_for("portfolios.accept_invitation", token=token))
+
+    # user is redirected to the task order review page
+    assert response.status_code == 302
+    to_review_url = url_for(
+        "portfolios.view_task_order",
+        portfolio_id=task_order.portfolio_id,
+        task_order_id=task_order.id,
+        _external=True,
+    )
+    assert response.headers["Location"] == to_review_url
