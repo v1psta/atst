@@ -221,6 +221,14 @@ class TaskOrder(Base, mixins.TimestampsMixin):
         """
         return self.so_invite and not self.security_officer
 
+    @property
+    def officers(self):
+        return [
+            self.contracting_officer,
+            self.contracting_officer_representative,
+            self.security_officer,
+        ]
+
     _OFFICER_PREFIXES = {
         "contracting_officer": "ko",
         "contracting_officer_representative": "cor",
