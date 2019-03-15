@@ -21,7 +21,7 @@ from tests.factories import (
 from atst.domain.portfolio_roles import PortfolioRoles
 
 
-def test_has_no_ws_role_history(session):
+def test_has_no_portfolio_role_history(session):
     owner = UserFactory.create()
     user = UserFactory.create()
 
@@ -39,7 +39,7 @@ def test_has_no_ws_role_history(session):
 
 
 @pytest.mark.skip(reason="need to update audit log permission set handling")
-def test_has_ws_role_history(session):
+def test_has_portfolio_role_history(session):
     owner = UserFactory.create()
     user = UserFactory.create()
 
@@ -62,7 +62,7 @@ def test_has_ws_role_history(session):
     assert changed_events[0].changed_state["role"][1] == "admin"
 
 
-def test_has_ws_status_history(session):
+def test_has_portfolio_status_history(session):
     owner = UserFactory.create()
     user = UserFactory.create()
 
@@ -189,6 +189,11 @@ def test_status_when_member_is_active():
     assert portfolio_role.display_status == "Active"
 
 
+def test_status_when_member_is_disabled():
+    portfolio_role = PortfolioRoleFactory.create(status=Status.DISABLED)
+    assert portfolio_role.display_status == "Disabled"
+
+
 def test_status_when_invitation_has_been_rejected_for_expirations():
     portfolio = PortfolioFactory.create()
     user = UserFactory.create()
@@ -211,6 +216,18 @@ def test_status_when_invitation_has_been_rejected_for_wrong_user():
         portfolio_role=portfolio_role, status=InvitationStatus.REJECTED_WRONG_USER
     )
     assert portfolio_role.display_status == "Error on invite"
+
+
+def test_status_when_invitation_has_been_revoked():
+    portfolio = PortfolioFactory.create()
+    user = UserFactory.create()
+    portfolio_role = PortfolioRoleFactory.create(
+        portfolio=portfolio, user=user, status=PortfolioRoleStatus.PENDING
+    )
+    invitation = InvitationFactory.create(
+        portfolio_role=portfolio_role, status=InvitationStatus.REVOKED
+    )
+    assert portfolio_role.display_status == "Invite revoked"
 
 
 def test_status_when_invitation_is_expired():

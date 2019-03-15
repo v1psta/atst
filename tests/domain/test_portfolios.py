@@ -162,6 +162,26 @@ def test_random_user_cannot_view_portfolio_members(portfolio):
         portfolio = Portfolios.get_with_members(developer, portfolio.id)
 
 
+def test_scoped_portfolio_for_admin_missing_view_apps_perms(portfolio_owner, portfolio):
+    Applications.create(
+        portfolio_owner,
+        portfolio,
+        "My Application 2",
+        "My application 2",
+        ["dev", "staging", "prod"],
+    )
+    restricted_admin = UserFactory.create()
+    PortfolioRoleFactory.create(
+        portfolio=portfolio,
+        user=restricted_admin,
+        permission_sets=[PermissionSets.get(PermissionSets.VIEW_PORTFOLIO)],
+    )
+    scoped_portfolio = Portfolios.get(restricted_admin, portfolio.id)
+    assert scoped_portfolio.id == portfolio.id
+    assert len(portfolio.applications) == 1
+    assert len(scoped_portfolio.applications) == 0
+
+
 @pytest.mark.skip(reason="should be reworked pending application member changes")
 def test_scoped_portfolio_only_returns_a_users_applications_and_environments(
     portfolio, portfolio_owner

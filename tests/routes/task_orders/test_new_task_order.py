@@ -340,3 +340,15 @@ def test_review_task_order_form(client, user_session, task_order):
         )
 
         assert response.status_code == 200
+
+
+def test_update_task_order_clears_unnecessary_other_responses():
+    user = UserFactory.create()
+    to_data = TaskOrderFactory.dictionary()
+    to_data["complexity"] = ["storage"]
+    to_data["complexity_other"] = "something else"
+    to_data["dev_team"] = ["civilians"]
+    to_data["dev_team_other"] = "something else"
+    workflow = UpdateTaskOrderWorkflow(user, to_data)
+    assert workflow.task_order_form_data["complexity_other"] is None
+    assert workflow.task_order_form_data["dev_team_other"] is None
