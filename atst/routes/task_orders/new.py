@@ -84,7 +84,12 @@ class ShowTaskOrderWorkflow:
         if self._form:
             pass
         elif self.task_order:
-            self._form = self._section[form_type](obj=self.task_order)
+            if self.pf_attributes_read_only and self.screen == 1:
+                self._form = task_order_form.AppInfoWithExistingPortfolioForm(
+                    obj=self.task_order
+                )
+            else:
+                self._form = self._section[form_type](obj=self.task_order)
             # manually set SelectMultipleFields
             if self._section["section"] == "app_info":
                 self._form.complexity.data = self.task_order.complexity
@@ -104,12 +109,6 @@ class ShowTaskOrderWorkflow:
 
         else:
             self._form = self._section[form_type]()
-
-        if self.pf_attributes_read_only and self.screen == 1:
-            self._form = task_order_form.AppInfoWithExistingPortfolioForm(
-                obj=self.task_order
-            )
-
         return self._form
 
     @property
