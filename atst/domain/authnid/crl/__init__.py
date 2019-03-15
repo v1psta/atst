@@ -182,6 +182,11 @@ class CRLCache(CRLInterface):
         except crypto.X509StoreContextError as err:
             if err.args[0][0] == CRL_EXPIRED_ERROR_CODE:
                 if app.config.get("CRL_FAIL_OPEN"):
+                    self._log_info(
+                        "Encountered expired CRL for certificate with CN {} and issuer CN {}, failing open.".format(
+                            parsed.get_subject().CN, parsed.get_issuer().CN
+                        )
+                    )
                     return True
                 else:
                     raise CRLInvalidException("CRL expired. Args: {}".format(err.args))
