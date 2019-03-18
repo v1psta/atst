@@ -1,0 +1,63 @@
+<section class="member-list">
+  <div class='responsive-table-wrapper panel'>
+    <div class='title'>{{ "portfolios.admin.portfolio_members_title" | translate }}</div>
+    <div class='subheading'>{{ "portfolios.admin.portfolio_members_subheading" | translate }}</div>
+    <a class='icon-link'>{{ "portfolios.admin.settings_info" | translate }}</a>
+
+  {% if not portfolio.members %}
+
+    <p>There are currently no members in this Portfolio.</p>
+
+  {% else %}
+
+    <table>
+
+      <thead>
+        <tr>
+            <td class='members-table-cell'>{{ "portfolios.members.permissions.name" | translate }}</td>
+            <td class='members-table-cell'>{{ "portfolios.members.permissions.app_mgmt" | translate }}</td>
+            <td class='members-table-cell'>{{ "portfolios.members.permissions.funding" | translate }}</td>
+            <td class='members-table-cell'>{{ "portfolios.members.permissions.reporting" | translate }}</td>
+            <td class='members-table-cell'>{{ "portfolios.members.permissions.portfolio_mgmt" | translate }}</td>
+            <td class='members-table-cell'></td>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for member in portfolio.members %}
+        <tr>
+            <td>{{ member.user_name }}</td>
+
+            {% if 'edit_application' in member.permissions %}
+              <td>Edit Access</td>
+            {% else %}
+              <td>View Only</td>
+            {% endif %}
+
+            {% if 'view_portfolio_funding' in member.permissions %}
+              <td>Edit Access</td>
+            {% else %}
+              <td>View Only</td>
+            {% endif %}
+
+            {% if 'view_portfolio_reports' in member.permissions %}
+              <td>Edit Access</td>
+            {% else %}
+              <td>View Only</td>
+            {% endif %}
+
+            {% if 'edit_portfolio_name' in member.permissions %}
+              <td>Edit Access</td>
+            {% else %}
+              <td>View Only</td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+      </tbody>
+
+    </table>
+  </div>
+
+{% endif %}
+
+</section>
