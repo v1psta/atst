@@ -26,7 +26,11 @@
       <tbody>
         {% for member in portfolio.members %}
         <tr>
-            <td>{{ member.user_name }}</td>
+            <td>{{ member.user_name }}
+              {% if member.user == user %}
+                (you)
+              {% endif %}
+            </td>
 
             {% if 'edit_application' in member.permissions %}
               <td>Edit Access</td>

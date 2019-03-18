@@ -35,6 +35,7 @@ def portfolio_admin(portfolio_id):
         form=form,
         portfolio=portfolio,
         audit_events=audit_events,
+        user=g.current_user,
     )
 
 
