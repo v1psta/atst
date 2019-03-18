@@ -4,7 +4,7 @@ import pytest
 from flask import session, url_for
 from .mocks import DOD_SDN_INFO, DOD_SDN, FIXTURE_EMAIL_ADDRESS
 from atst.domain.users import Users
-from atst.domain.roles import Roles
+from atst.domain.permission_sets import PermissionSets
 from atst.domain.exceptions import NotFoundError
 from atst.domain.authnid.crl import CRLInvalidException
 from atst.domain.auth import UNPROTECTED_ROUTES
@@ -49,7 +49,7 @@ def test_successful_login_redirect_ccpo(client, monkeypatch):
     monkeypatch.setattr(
         "atst.domain.authnid.AuthenticationContext.authenticate", lambda *args: True
     )
-    role = Roles.get("ccpo")
+    role = PermissionSets.get("ccpo")
     monkeypatch.setattr(
         "atst.domain.authnid.AuthenticationContext.get_user",
         lambda *args: UserFactory.create(atat_role=role),

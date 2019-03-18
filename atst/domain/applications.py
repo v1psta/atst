@@ -27,7 +27,7 @@ class Applications(object):
         Authorization.check_portfolio_permission(
             user,
             portfolio,
-            Permissions.VIEW_APPLICATION_IN_PORTFOLIO,
+            Permissions.VIEW_APPLICATION,
             "view application in portfolio",
         )
 
@@ -56,7 +56,7 @@ class Applications(object):
         Authorization.check_portfolio_permission(
             user,
             portfolio,
-            Permissions.VIEW_APPLICATION_IN_PORTFOLIO,
+            Permissions.VIEW_APPLICATION,
             "view application in portfolio",
         )
 

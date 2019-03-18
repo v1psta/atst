@@ -7,6 +7,7 @@ from atst.models.permissions import Permissions
 from atst.models.dd_254 import DD254
 from atst.domain.portfolios import Portfolios
 from atst.domain.authz import Authorization
+from atst.domain.permission_sets import PermissionSets
 from .exceptions import NotFoundError
 
 
@@ -57,7 +58,7 @@ class TaskOrders(object):
         try:
             task_order = db.session.query(TaskOrder).filter_by(id=task_order_id).one()
             Authorization.check_task_order_permission(
-                user, task_order, Permissions.VIEW_TASK_ORDER, "view task order"
+                user, task_order, Permissions.VIEW_TASK_ORDER_DETAILS, "view task order"
             )
 
             return task_order
@@ -67,7 +68,7 @@ class TaskOrders(object):
     @classmethod
     def create(cls, creator, portfolio):
         Authorization.check_portfolio_permission(
-            creator, portfolio, Permissions.UPDATE_TASK_ORDER, "add task order"
+            creator, portfolio, Permissions.CREATE_TASK_ORDER, "add task order"
         )
         task_order = TaskOrder(portfolio=portfolio, creator=creator)
 
@@ -79,7 +80,7 @@ class TaskOrders(object):
     @classmethod
     def update(cls, user, task_order, **kwargs):
         Authorization.check_task_order_permission(
-            user, task_order, Permissions.UPDATE_TASK_ORDER, "update task order"
+            user, task_order, Permissions.EDIT_TASK_ORDER_DETAILS, "update task order"
         )
 
         for key, value in kwargs.items():
@@ -150,7 +151,7 @@ class TaskOrders(object):
         Authorization.check_portfolio_permission(
             user,
             task_order.portfolio,
-            Permissions.ADD_TASK_ORDER_OFFICER,
+            Permissions.EDIT_TASK_ORDER_DETAILS,
             "add task order officer",
         )
 
@@ -170,7 +171,12 @@ class TaskOrders(object):
                 portfolio_user = existing_member.user
             else:
                 member = Portfolios.create_member(
-                    user, portfolio, {**officer_data, "portfolio_role": "officer"}
+                    user,
+                    portfolio,
+                    {
+                        **officer_data,
+                        "permission_sets": [PermissionSets.EDIT_PORTFOLIO_FUNDING],
+                    },
                 )
                 portfolio_user = member.user
 

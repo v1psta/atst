@@ -558,6 +558,12 @@ portfolios:
       subheading: Team Management
   admin:
     activity_log_title: Activity Log
+  members:
+    permissions:
+      app_mgmt: App Mgmt
+      funding: Funding
+      reporting: Reporting
+      portfolio_mgmt: Portfolio Mgmt
 testing:
   example_string: Hello World
   example_with_variables: 'Hello, {name}!'

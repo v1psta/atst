@@ -64,7 +64,7 @@ def portfolio_reports(portfolio_id):
     Authorization.check_portfolio_permission(
         g.current_user,
         portfolio,
-        Permissions.VIEW_USAGE_DOLLARS,
+        Permissions.VIEW_PORTFOLIO_REPORTS,
         "view portfolio reports",
     )
 

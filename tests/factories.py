@@ -12,14 +12,15 @@ from atst.models.environment import Environment
 from atst.models.application import Application
 from atst.models.task_order import TaskOrder
 from atst.models.user import User
-from atst.models.role import Role
+from atst.models.permission_set import PermissionSet
 from atst.models.portfolio import Portfolio
-from atst.domain.roles import Roles, PORTFOLIO_ROLES
+from atst.domain.permission_sets import PermissionSets, PORTFOLIO_PERMISSION_SETS
 from atst.models.portfolio_role import PortfolioRole, Status as PortfolioRoleStatus
 from atst.models.environment_role import EnvironmentRole
 from atst.models.invitation import Invitation, Status as InvitationStatus
 from atst.models.dd_254 import DD254
 from atst.domain.invitations import Invitations
+from atst.domain.portfolio_roles import PortfolioRoles
 
 
 def random_choice(choices):
@@ -63,9 +64,15 @@ def _random_date(year_min, year_max, operation):
     )
 
 
-def random_portfolio_role():
-    choice = random.choice(PORTFOLIO_ROLES)
-    return Roles.get(choice["name"])
+def base_portfolio_permission_sets():
+    return [
+        PermissionSets.get(prms)
+        for prms in PortfolioRoles.DEFAULT_PORTFOLIO_PERMISSION_SETS
+    ]
+
+
+def get_all_portfolio_permission_sets():
+    return PermissionSets.get_many(PortfolioRoles.PORTFOLIO_PERMISSION_SETS)
 
 
 class Base(factory.alchemy.SQLAlchemyModelFactory):
@@ -82,7 +89,7 @@ class UserFactory(Base):
     email = factory.Faker("email")
     first_name = factory.Faker("first_name")
     last_name = factory.Faker("last_name")
-    atat_role = factory.LazyFunction(lambda: Roles.get("default"))
+    atat_role = factory.LazyFunction(lambda: PermissionSets.get("default"))
     dod_id = factory.LazyFunction(random_dod_id)
     phone_number = factory.LazyFunction(random_phone_number)
     service_branch = factory.LazyFunction(random_service_branch)
@@ -95,7 +102,7 @@ class UserFactory(Base):
 
     @classmethod
     def from_atat_role(cls, atat_role_name, **kwargs):
-        role = Roles.get(atat_role_name)
+        role = PermissionSets.get(atat_role_name)
         return cls.create(atat_role=role, **kwargs)
 
 
@@ -121,19 +128,29 @@ class PortfolioFactory(Base):
 
         PortfolioRoleFactory.create(
             portfolio=portfolio,
-            role=Roles.get("owner"),
             user=owner,
             status=PortfolioRoleStatus.ACTIVE,
+            permission_sets=get_all_portfolio_permission_sets(),
         )
 
         for member in members:
             user = member.get("user", UserFactory.create())
             role_name = member["role_name"]
+
+            perms_set = None
+            if member.get("permissions_sets"):
+                perms_set = [
+                    PermissionSets.get(perm_set)
+                    for perm_set in member.get("permission_sets")
+                ]
+            else:
+                perms_set = []
+
             PortfolioRoleFactory.create(
                 portfolio=portfolio,
-                role=Roles.get(role_name),
                 user=user,
                 status=PortfolioRoleStatus.ACTIVE,
+                permission_sets=perms_set,
             )
 
         portfolio.applications = applications
@@ -186,9 +203,9 @@ class PortfolioRoleFactory(Base):
         model = PortfolioRole
 
     portfolio = factory.SubFactory(PortfolioFactory)
-    role = factory.LazyFunction(random_portfolio_role)
     user = factory.SubFactory(UserFactory)
     status = PortfolioRoleStatus.PENDING
+    permission_sets = factory.LazyFunction(base_portfolio_permission_sets)
 
 
 class EnvironmentRoleFactory(Base):

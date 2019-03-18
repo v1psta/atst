@@ -21,7 +21,30 @@
           <h1 class='member-card__heading'>{{ member.user.full_name }}</h1>
 
             <div class="usa-input member-card__input">
-              {{ Selector(form.portfolio_role) }}
+              <table>
+                <thead>
+                  <tr>
+                    <th>{{ "portfolios.members.permissions.app_mgmt" | translate }}</th>
+                    <th>{{ "portfolios.members.permissions.funding" | translate }}</th>
+                    <th>{{ "portfolios.members.permissions.reporting" | translate }}</th>
+                    <th>{{ "portfolios.members.permissions.portfolio_mgmt" | translate }}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <td>
+                    {{ form.perms_app_mgmt() }}
+                  </td>
+                  <td>
+                    {{ form.perms_funding() }}
+                  </td>
+                  <td>
+                    {{ form.perms_reporting() }}
+                  </td>
+                  <td>
+                    {{ form.perms_portfolio_mgmt() }}
+                  </td>
+                </tbody>
+              </table>
             </div>
 
         </div>

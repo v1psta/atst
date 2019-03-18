@@ -9,23 +9,31 @@ sys.path.append(parent_dir)
 from sqlalchemy.orm.exc import NoResultFound
 from atst.app import make_config, make_app
 from atst.database import db
-from atst.models import Role, Permissions
-from atst.domain.roles import ATAT_ROLES, PORTFOLIO_ROLES
+from atst.models import PermissionSet, Permissions
+from atst.domain.permission_sets import ATAT_ROLES, PORTFOLIO_PERMISSION_SETS
 
 
 def seed_roles():
-    for role_info in ATAT_ROLES + PORTFOLIO_ROLES:
-        role = Role(**role_info)
+    for permission_set_info in ATAT_ROLES + PORTFOLIO_PERMISSION_SETS:
+        permission_set = PermissionSet(**permission_set_info)
         try:
-            existing_role = db.session.query(Role).filter_by(name=role.name).one()
-            existing_role.description = role.description
-            existing_role.permissions = role.permissions
-            existing_role.display_name = role.display_name
-            db.session.add(existing_role)
-            print("Updated existing role {}".format(existing_role.name))
+            existing_permission_set = (
+                db.session.query(PermissionSet)
+                .filter_by(name=permission_set.name)
+                .one()
+            )
+            existing_permission_set.description = permission_set.description
+            existing_permission_set.permissions = permission_set.permissions
+            existing_permission_set.display_name = permission_set.display_name
+            db.session.add(existing_permission_set)
+            print(
+                "Updated existing permission_set {}".format(
+                    existing_permission_set.name
+                )
+            )
         except NoResultFound:
-            db.session.add(role)
-            print("Added new role {}".format(role.name))
+            db.session.add(permission_set)
+            print("Added new permission_set {}".format(permission_set.name))
 
     db.session.commit()
 

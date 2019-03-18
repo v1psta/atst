@@ -18,5 +18,5 @@ class PortfoliosQuery(Query):
         )
 
     @classmethod
-    def create_portfolio_role(cls, user, role, portfolio, **kwargs):
-        return PortfolioRole(user=user, role=role, portfolio=portfolio, **kwargs)
+    def create_portfolio_role(cls, user, portfolio, **kwargs):
+        return PortfolioRole(user=user, portfolio=portfolio, **kwargs)

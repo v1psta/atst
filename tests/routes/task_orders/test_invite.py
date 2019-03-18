@@ -28,9 +28,6 @@ def test_invite_officers_to_task_order(client, user_session, queue):
 
     # owner and three officers are portfolio members
     assert len(portfolio.members) == 4
-    roles = [member.role.name for member in portfolio.members]
-    # officers exist in roles
-    assert roles.count("officer") == 3
     # email invitations are enqueued
     assert len(queue.get_queue()) == 3
     # task order has relationship to user for each officer role

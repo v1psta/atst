@@ -1,4 +1,3 @@
-from atst.domain.roles import PORTFOLIO_ROLES as PORTFOLIO_ROLE_DEFINITIONS
 from atst.utils.localization import translate, translate_duration
 
 
@@ -105,12 +104,6 @@ COMPLETION_DATE_RANGES = [
     ("1-3 months", "1-3 months"),
     ("3-6 months", "3-6 months"),
     ("Above 12 months", "Above 12 months"),
-]
-
-PORTFOLIO_ROLES = [
-    (role["name"], {"name": role["display_name"], "description": role["description"]})
-    for role in PORTFOLIO_ROLE_DEFINITIONS
-    if role["name"] is not "officer"
 ]
 
 ENVIRONMENT_ROLES = [

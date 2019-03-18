@@ -2,6 +2,8 @@ import pytest
 
 from atst.domain.task_orders import TaskOrders, TaskOrderError, DD254s
 from atst.domain.exceptions import UnauthorizedError
+from atst.domain.permission_sets import PermissionSets
+from atst.domain.portfolio_roles import PortfolioRoles
 from atst.models.attachment import Attachment
 
 from tests.factories import (
@@ -90,7 +92,7 @@ def test_add_officer_who_is_already_portfolio_member():
 
     assert task_order.contracting_officer == owner
     member = task_order.portfolio.members[0]
-    assert member.user == owner and member.role_name == "owner"
+    assert member.user == owner
 
 
 def test_task_order_access():
@@ -111,19 +113,26 @@ def test_task_order_access():
 
     portfolio = PortfolioFactory.create(owner=creator)
     task_order = TaskOrderFactory.create(creator=creator, portfolio=portfolio)
-    PortfolioRoleFactory.create(user=member, portfolio=task_order.portfolio)
+    PortfolioRoleFactory.create(
+        user=member,
+        portfolio=task_order.portfolio,
+        permission_sets=[
+            PermissionSets.get(prms)
+            for prms in PortfolioRoles.DEFAULT_PORTFOLIO_PERMISSION_SETS
+        ],
+    )
     TaskOrders.add_officer(
         creator, task_order, "contracting_officer", officer.to_dictionary()
     )
 
-    check_access([creator, officer], [member, rando], "get", [task_order.id])
-    check_access([creator], [officer, member, rando], "create", [portfolio])
+    check_access([creator, officer, member], [rando], "get", [task_order.id])
+    check_access([creator, officer], [member, rando], "create", [portfolio])
     check_access([creator, officer], [member, rando], "update", [task_order])
     check_access(
-        [creator],
-        [officer, member, rando],
+        [creator, officer],
+        [member, rando],
         "add_officer",
-        [task_order, "contracting_officer", rando.to_dictionary()],
+        [task_order, "contracting_officer", UserFactory.dictionary()],
     )
 
 

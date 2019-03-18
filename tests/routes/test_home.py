@@ -33,7 +33,7 @@ def test_non_owner_user_with_one_portfolio_redirected_to_portfolio_applications(
     user = UserFactory.create()
     portfolio = PortfolioFactory.create()
     Portfolios._create_portfolio_role(
-        user, portfolio, "developer", status=PortfolioRoleStatus.ACTIVE
+        user, portfolio, status=PortfolioRoleStatus.ACTIVE
     )
 
     user_session(user)
@@ -51,7 +51,7 @@ def test_non_owner_user_with_mulitple_portfolios_redirected_to_portfolios(
         portfolio = PortfolioFactory.create()
         portfolios.append(portfolio)
         role = Portfolios._create_portfolio_role(
-            user, portfolio, "developer", status=PortfolioRoleStatus.ACTIVE
+            user, portfolio, status=PortfolioRoleStatus.ACTIVE
         )
 
     user_session(user)

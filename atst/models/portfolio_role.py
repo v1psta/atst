@@ -1,5 +1,5 @@
 from enum import Enum
-from sqlalchemy import Index, ForeignKey, Column, Enum as SQLAEnum
+from sqlalchemy import Index, ForeignKey, Column, Enum as SQLAEnum, Table
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
@@ -10,7 +10,6 @@ from atst.database import db
 from atst.models.environment_role import EnvironmentRole
 from atst.models.application import Application
 from atst.models.environment import Environment
-from atst.models.role import Role
 
 
 MEMBER_STATUSES = {
@@ -30,6 +29,14 @@ class Status(Enum):
     PENDING = "pending"
 
 
+portfolio_roles_permission_sets = Table(
+    "portfolio_roles_permission_sets",
+    Base.metadata,
+    Column("portfolio_role_id", UUID(as_uuid=True), ForeignKey("portfolio_roles.id")),
+    Column("permission_set_id", UUID(as_uuid=True), ForeignKey("permission_sets.id")),
+)
+
+
 class PortfolioRole(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     __tablename__ = "portfolio_roles"
 
@@ -39,29 +46,32 @@ class PortfolioRole(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     )
     portfolio = relationship("Portfolio", back_populates="roles")
 
-    role_id = Column(UUID(as_uuid=True), ForeignKey("roles.id"), nullable=False)
-    role = relationship("Role")
-
     user_id = Column(
         UUID(as_uuid=True), ForeignKey("users.id"), index=True, nullable=False
     )
 
     status = Column(SQLAEnum(Status, native_enum=False), default=Status.PENDING)
 
+    permission_sets = relationship(
+        "PermissionSet", secondary=portfolio_roles_permission_sets
+    )
+
+    @property
+    def permissions(self):
+        return [
+            perm for permset in self.permission_sets for perm in permset.permissions
+        ]
+
     def __repr__(self):
-        return "<PortfolioRole(role='{}', portfolio='{}', user_id='{}', id='{}')>".format(
-            self.role.name, self.portfolio.name, self.user_id, self.id
+        return "<PortfolioRole(portfolio='{}', user_id='{}', id='{}', permissions={})>".format(
+            self.portfolio.name, self.user_id, self.id, self.permissions
         )
 
     @property
     def history(self):
         previous_state = self.get_changes()
         change_set = {}
-        if "role_id" in previous_state:
-            from_role_id = previous_state["role_id"][0]
-            from_role = db.session.query(Role).filter(Role.id == from_role_id).one()
-            to_role = self.role_name
-            change_set["role"] = [from_role.name, to_role]
+        # TODO: need to update to include permission_sets
         if "status" in previous_state:
             from_status = previous_state["status"][0].value
             to_status = self.status.value
@@ -106,16 +116,8 @@ class PortfolioRole(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
         return self.latest_invitation and self.latest_invitation.is_rejected_wrong_user
 
     @property
-    def role_name(self):
-        return self.role.name
-
-    @property
     def user_name(self):
         return self.user.full_name
-
-    @property
-    def role_displayname(self):
-        return self.role.display_name
 
     @property
     def is_active(self):

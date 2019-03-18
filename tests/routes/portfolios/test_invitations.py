@@ -12,6 +12,7 @@ from atst.domain.portfolios import Portfolios
 from atst.models.portfolio_role import Status as PortfolioRoleStatus
 from atst.models.invitation import Status as InvitationStatus
 from atst.domain.users import Users
+from atst.domain.permission_sets import PermissionSets
 
 
 def test_existing_member_accepts_valid_invite(client, user_session):
@@ -45,11 +46,18 @@ def test_new_member_accepts_valid_invite(monkeypatch, client, user_session):
     user_info = UserFactory.dictionary()
 
     user_session(portfolio.owner)
-    client.post(
+    response = client.post(
         url_for("portfolios.create_member", portfolio_id=portfolio.id),
-        data={"portfolio_role": "developer", **user_info},
+        data={
+            "perms_app_mgmt": PermissionSets.VIEW_PORTFOLIO_APPLICATION_MANAGEMENT,
+            "perms_funding": PermissionSets.VIEW_PORTFOLIO_FUNDING,
+            "perms_reporting": PermissionSets.VIEW_PORTFOLIO_REPORTS,
+            "perms_portfolio_mgmt": PermissionSets.VIEW_PORTFOLIO_ADMIN,
+            **user_info,
+        },
     )
 
+    assert response.status_code == 302
     user = Users.get_by_dod_id(user_info["dod_id"])
     token = user.invitations[0].token
 
@@ -94,7 +102,7 @@ def test_user_who_has_not_accepted_portfolio_invite_cannot_view(client, user_ses
     user_session(portfolio.owner)
     response = client.post(
         url_for("portfolios.create_member", portfolio_id=portfolio.id),
-        data={"portfolio_role": "developer", **user.to_dictionary()},
+        data=user.to_dictionary(),
     )
 
     # user tries to view portfolio before accepting invitation

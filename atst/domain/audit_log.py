@@ -36,6 +36,7 @@ class AuditLog(object):
 
     @classmethod
     def get_all_events(cls, user, pagination_opts=None):
+        # TODO: general audit log permissions
         Authorization.check_atat_permission(
             user, Permissions.VIEW_AUDIT_LOG, "view audit log"
         )
@@ -46,7 +47,7 @@ class AuditLog(object):
         Authorization.check_portfolio_permission(
             user,
             portfolio,
-            Permissions.VIEW_PORTFOLIO_AUDIT_LOG,
+            Permissions.VIEW_PORTFOLIO_ACTIVITY_LOG,
             "view portfolio audit log",
         )
         return AuditEventQuery.get_ws_events(portfolio.id, pagination_opts)

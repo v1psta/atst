@@ -16,7 +16,7 @@ from atst.models.audit_event import AuditEvent
 from atst.models.environment import Environment
 from atst.models.environment_role import EnvironmentRole
 from atst.models.application import Application
-from atst.models.role import Role
+from atst.models.permission_set import PermissionSet
 from atst.models.user import User
 from atst.models.portfolio_role import PortfolioRole
 from atst.models.portfolio import Portfolio

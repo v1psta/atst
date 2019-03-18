@@ -12,7 +12,7 @@ from tests.factories import (
 
 from atst.domain.applications import Applications
 from atst.domain.portfolios import Portfolios
-from atst.domain.roles import Roles
+from atst.domain.permission_sets import PermissionSets
 from atst.models.portfolio_role import Status as PortfolioRoleStatus
 
 
@@ -29,7 +29,7 @@ def test_user_without_permission_has_no_budget_report_link(client, user_session)
     user = UserFactory.create()
     portfolio = PortfolioFactory.create()
     Portfolios._create_portfolio_role(
-        user, portfolio, "developer", status=PortfolioRoleStatus.ACTIVE
+        user, portfolio, status=PortfolioRoleStatus.ACTIVE
     )
     user_session(user)
     response = client.get("/portfolios/{}/applications".format(portfolio.id))
@@ -45,10 +45,7 @@ def test_user_with_permission_has_activity_log_link(client, user_session):
     ccpo = UserFactory.from_atat_role("ccpo")
     admin = UserFactory.create()
     PortfolioRoleFactory.create(
-        portfolio=portfolio,
-        user=admin,
-        role=Roles.get("admin"),
-        status=PortfolioRoleStatus.ACTIVE,
+        portfolio=portfolio, user=admin, status=PortfolioRoleStatus.ACTIVE
     )
 
     user_session(portfolio.owner)
@@ -103,7 +100,7 @@ def test_user_with_permission_has_add_application_link(client, user_session):
 def test_user_without_permission_has_no_add_application_link(client, user_session):
     user = UserFactory.create()
     portfolio = PortfolioFactory.create()
-    Portfolios._create_portfolio_role(user, portfolio, "developer")
+    Portfolios._create_portfolio_role(user, portfolio)
     user_session(user)
     response = client.get("/portfolios/{}/applications".format(portfolio.id))
     assert (

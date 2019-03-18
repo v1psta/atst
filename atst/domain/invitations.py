@@ -119,7 +119,7 @@ class Invitations(object):
         Authorization.check_portfolio_permission(
             user,
             portfolio,
-            Permissions.ASSIGN_AND_UNASSIGN_ATAT_ROLE,
+            Permissions.CREATE_PORTFOLIO_USERS,
             "resend a portfolio invitation",
         )
 

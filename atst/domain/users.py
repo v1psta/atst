@@ -4,7 +4,7 @@ from sqlalchemy.exc import IntegrityError
 from atst.database import db
 from atst.models import User
 
-from .roles import Roles
+from .permission_sets import PermissionSets
 from .exceptions import NotFoundError, AlreadyExistsError, UnauthorizedError
 
 
@@ -29,7 +29,7 @@ class Users(object):
 
     @classmethod
     def create(cls, dod_id, atat_role_name=None, **kwargs):
-        atat_role = Roles.get(atat_role_name)
+        atat_role = PermissionSets.get(atat_role_name)
 
         try:
             user = User(dod_id=dod_id, atat_role=atat_role, **kwargs)
@@ -56,7 +56,7 @@ class Users(object):
     def update_role(cls, user_id, atat_role_name):
 
         user = Users.get(user_id)
-        atat_role = Roles.get(atat_role_name)
+        atat_role = PermissionSets.get(atat_role_name)
         user.atat_role = atat_role
 
         db.session.add(user)

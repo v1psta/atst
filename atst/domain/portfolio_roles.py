@@ -8,8 +8,7 @@ from atst.models.portfolio_role import (
 )
 from atst.models.user import User
 
-from .roles import Roles
-from .users import Users
+from .permission_sets import PermissionSets
 from .exceptions import NotFoundError
 
 
@@ -54,17 +53,6 @@ class PortfolioRoles(object):
             return None
 
     @classmethod
-    def portfolio_role_permissions(cls, portfolio, user):
-        portfolio_role = PortfolioRoles._get_active_portfolio_role(
-            portfolio.id, user.id
-        )
-        atat_permissions = set(user.atat_role.permissions)
-        portfolio_permissions = (
-            [] if portfolio_role is None else portfolio_role.role.permissions
-        )
-        return set(portfolio_permissions).union(atat_permissions)
-
-    @classmethod
     def _get_portfolio_role(cls, user, portfolio_id):
         try:
             existing_portfolio_role = (
@@ -80,9 +68,7 @@ class PortfolioRoles(object):
             raise NotFoundError("portfolio role")
 
     @classmethod
-    def add(cls, user, portfolio_id, role_name):
-        role = Roles.get(role_name)
-
+    def add(cls, user, portfolio_id, permission_sets=None):
         new_portfolio_role = None
         try:
             existing_portfolio_role = (
@@ -94,13 +80,14 @@ class PortfolioRoles(object):
                 .one()
             )
             new_portfolio_role = existing_portfolio_role
-            new_portfolio_role.role = role
         except NoResultFound:
             new_portfolio_role = PortfolioRole(
-                user=user,
-                role_id=role.id,
-                portfolio_id=portfolio_id,
-                status=PortfolioRoleStatus.PENDING,
+                user=user, portfolio_id=portfolio_id, status=PortfolioRoleStatus.PENDING
+            )
+
+        if permission_sets:
+            new_portfolio_role.permission_sets = PortfolioRoles._permission_sets_for_names(
+                permission_sets
             )
 
         user.portfolio_roles.append(new_portfolio_role)
@@ -109,55 +96,40 @@ class PortfolioRoles(object):
 
         return new_portfolio_role
 
+    DEFAULT_PORTFOLIO_PERMISSION_SETS = {
+        PermissionSets.VIEW_PORTFOLIO_APPLICATION_MANAGEMENT,
+        PermissionSets.VIEW_PORTFOLIO_FUNDING,
+        PermissionSets.VIEW_PORTFOLIO_REPORTS,
+        PermissionSets.VIEW_PORTFOLIO_ADMIN,
+        PermissionSets.VIEW_PORTFOLIO,
+    }
+
+    PORTFOLIO_PERMISSION_SETS = DEFAULT_PORTFOLIO_PERMISSION_SETS.union(
+        {
+            PermissionSets.EDIT_PORTFOLIO_APPLICATION_MANAGEMENT,
+            PermissionSets.EDIT_PORTFOLIO_FUNDING,
+            PermissionSets.EDIT_PORTFOLIO_REPORTS,
+            PermissionSets.EDIT_PORTFOLIO_ADMIN,
+            PermissionSets.PORTFOLIO_POC,
+        }
+    )
+
     @classmethod
-    def update_role(cls, portfolio_role, role_name):
-        new_role = Roles.get(role_name)
-        portfolio_role.role = new_role
+    def _permission_sets_for_names(cls, set_names):
+        perms_set_names = PortfolioRoles.DEFAULT_PORTFOLIO_PERMISSION_SETS.union(
+            set(set_names)
+        )
+        return PermissionSets.get_many(perms_set_names)
+
+    @classmethod
+    def update(cls, portfolio_role, set_names):
+        new_permission_sets = PortfolioRoles._permission_sets_for_names(set_names)
+        portfolio_role.permission_sets = new_permission_sets
 
         db.session.add(portfolio_role)
         db.session.commit()
+
         return portfolio_role
-
-    @classmethod
-    def add_many(cls, portfolio_id, portfolio_role_dicts):
-        portfolio_roles = []
-
-        for user_dict in portfolio_role_dicts:
-            try:
-                user = Users.get(user_dict["id"])
-            except NoResultFound:
-                default_role = Roles.get("developer")
-                user = User(id=user_dict["id"], atat_role=default_role)
-
-            try:
-                role = Roles.get(user_dict["portfolio_role"])
-            except NoResultFound:
-                raise NotFoundError("role")
-
-            try:
-                existing_portfolio_role = (
-                    db.session.query(PortfolioRole)
-                    .filter(
-                        PortfolioRole.user == user,
-                        PortfolioRole.portfolio_id == portfolio_id,
-                    )
-                    .one()
-                )
-                new_portfolio_role = existing_portfolio_role
-                new_portfolio_role.role = role
-            except NoResultFound:
-                new_portfolio_role = PortfolioRole(
-                    user=user, role_id=role.id, portfolio_id=portfolio_id
-                )
-
-            user.portfolio_roles.append(new_portfolio_role)
-            portfolio_roles.append(new_portfolio_role)
-
-            db.session.add(user)
-
-        db.session.commit()
-
-        return portfolio_roles
 
     @classmethod
     def enable(cls, portfolio_role):

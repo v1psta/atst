@@ -31,7 +31,7 @@ class ScopedPortfolio(ScopedResource):
     @property
     def applications(self):
         can_view_all_applications = Authorization.has_portfolio_permission(
-            self.user, self.resource, Permissions.VIEW_APPLICATION_IN_PORTFOLIO
+            self.user, self.resource, Permissions.VIEW_APPLICATION
         )
 
         if can_view_all_applications:
@@ -54,9 +54,7 @@ class ScopedApplication(ScopedResource):
     @property
     def environments(self):
         can_view_all_environments = Authorization.has_portfolio_permission(
-            self.user,
-            self.resource.portfolio,
-            Permissions.VIEW_ENVIRONMENT_IN_APPLICATION,
+            self.user, self.resource.portfolio, Permissions.VIEW_ENVIRONMENT
         )
 
         if can_view_all_environments:

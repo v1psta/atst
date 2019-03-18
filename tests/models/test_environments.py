@@ -5,7 +5,7 @@ from tests.factories import PortfolioFactory, UserFactory
 
 def test_add_user_to_environment():
     owner = UserFactory.create()
-    developer = UserFactory.from_atat_role("developer")
+    developer = UserFactory.create()
 
     portfolio = PortfolioFactory.create(owner=owner)
     application = Applications.create(

@@ -10,13 +10,8 @@ from atst.domain.portfolio_roles import PortfolioRoles, MEMBER_STATUS_CHOICES
 from atst.domain.environments import Environments
 from atst.domain.environment_roles import EnvironmentRoles
 from atst.services.invitation import Invitation as InvitationService
-from atst.forms.new_member import NewMemberForm
-from atst.forms.edit_member import EditMemberForm
-from atst.forms.data import (
-    ENVIRONMENT_ROLES,
-    ENV_ROLE_MODAL_DESCRIPTION,
-    PORTFOLIO_ROLE_DEFINITIONS,
-)
+import atst.forms.portfolio_member as member_forms
+from atst.forms.data import ENVIRONMENT_ROLES, ENV_ROLE_MODAL_DESCRIPTION
 from atst.domain.authz import Authorization
 from atst.models.permissions import Permissions
 
@@ -28,7 +23,7 @@ def serialize_portfolio_role(portfolio_role):
         "name": portfolio_role.user_name,
         "status": portfolio_role.display_status,
         "id": portfolio_role.user_id,
-        "role": portfolio_role.role_displayname,
+        "role": "admin",
         "num_env": portfolio_role.num_environment_roles,
         "edit_link": url_for(
             "portfolios.view_member",
@@ -46,7 +41,6 @@ def portfolio_members(portfolio_id):
     return render_template(
         "portfolios/members/index.html",
         portfolio=portfolio,
-        role_choices=PORTFOLIO_ROLE_DEFINITIONS,
         status_choices=MEMBER_STATUS_CHOICES,
         members=members_list,
     )
@@ -70,7 +64,7 @@ def application_members(portfolio_id, application_id):
 @portfolios_bp.route("/portfolios/<portfolio_id>/members/new")
 def new_member(portfolio_id):
     portfolio = Portfolios.get(g.current_user, portfolio_id)
-    form = NewMemberForm()
+    form = member_forms.NewForm()
     return render_template(
         "portfolios/members/new.html", portfolio=portfolio, form=form
     )
@@ -79,7 +73,7 @@ def new_member(portfolio_id):
 @portfolios_bp.route("/portfolios/<portfolio_id>/members/new", methods=["POST"])
 def create_member(portfolio_id):
     portfolio = Portfolios.get(g.current_user, portfolio_id)
-    form = NewMemberForm(http_request.form)
+    form = member_forms.NewForm(http_request.form)
 
     if form.validate():
         try:
@@ -110,12 +104,12 @@ def view_member(portfolio_id, member_id):
     Authorization.check_portfolio_permission(
         g.current_user,
         portfolio,
-        Permissions.ASSIGN_AND_UNASSIGN_ATAT_ROLE,
+        Permissions.EDIT_PORTFOLIO_USERS,
         "edit this portfolio user",
     )
     member = PortfolioRoles.get(portfolio_id, member_id)
     applications = Applications.get_all(g.current_user, member, portfolio)
-    form = EditMemberForm(portfolio_role=member.role_name)
+    form = member_forms.EditForm(portfolio_role="admin")
     editable = g.current_user == member.user
     can_revoke_access = Portfolios.can_revoke_access_for(portfolio, member)
 
@@ -144,7 +138,7 @@ def update_member(portfolio_id, member_id):
     Authorization.check_portfolio_permission(
         g.current_user,
         portfolio,
-        Permissions.ASSIGN_AND_UNASSIGN_ATAT_ROLE,
+        Permissions.EDIT_PORTFOLIO_USERS,
         "edit this portfolio user",
     )
     member = PortfolioRoles.get(portfolio_id, member_id)
@@ -157,20 +151,11 @@ def update_member(portfolio_id, member_id):
             env_role = form_dict[entry] or None
             ids_and_roles.append({"id": env_id, "role": env_role})
 
-    form = EditMemberForm(http_request.form)
+    form = member_forms.EditForm(http_request.form)
     if form.validate():
-        new_role_name = None
-        if form.data["portfolio_role"] != member.role.name:
-            member = Portfolios.update_member(
-                g.current_user, portfolio, member, form.data["portfolio_role"]
-            )
-            new_role_name = member.role_displayname
-            flash(
-                "portfolio_role_updated",
-                member_name=member.user_name,
-                updated_role=new_role_name,
-            )
-
+        member = Portfolios.update_member(
+            g.current_user, portfolio, member, form.data["permission_sets"]
+        )
         updated_roles = Environments.update_environment_roles(
             g.current_user, portfolio, member, ids_and_roles
         )

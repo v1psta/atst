@@ -1,4 +1,4 @@
-from atst.domain.roles import Roles
+from atst.domain.permission_sets import PermissionSets
 from atst.domain.authz import Authorization
 from atst.models.permissions import Permissions
 from atst.domain.users import Users
@@ -20,8 +20,12 @@ class Portfolios(object):
         portfolio = PortfoliosQuery.create(
             name=name, defense_component=defense_component
         )
+        perms_sets = PermissionSets.get_many(PortfolioRoles.PORTFOLIO_PERMISSION_SETS)
         Portfolios._create_portfolio_role(
-            user, portfolio, "owner", status=PortfolioRoleStatus.ACTIVE
+            user,
+            portfolio,
+            status=PortfolioRoleStatus.ACTIVE,
+            permission_sets=perms_sets,
         )
         PortfoliosQuery.add_and_commit(portfolio)
         return portfolio
@@ -39,7 +43,7 @@ class Portfolios(object):
     def get_for_update_applications(cls, user, portfolio_id):
         portfolio = PortfoliosQuery.get(portfolio_id)
         Authorization.check_portfolio_permission(
-            user, portfolio, Permissions.ADD_APPLICATION_IN_PORTFOLIO, "add application"
+            user, portfolio, Permissions.CREATE_APPLICATION, "add application"
         )
 
         return portfolio
@@ -50,7 +54,7 @@ class Portfolios(object):
         Authorization.check_portfolio_permission(
             user,
             portfolio,
-            Permissions.EDIT_PORTFOLIO_INFORMATION,
+            Permissions.EDIT_PORTFOLIO_NAME,
             "update portfolio information",
         )
 
@@ -62,7 +66,7 @@ class Portfolios(object):
         Authorization.check_portfolio_permission(
             user,
             portfolio,
-            Permissions.ASSIGN_AND_UNASSIGN_ATAT_ROLE,
+            Permissions.EDIT_PORTFOLIO_USERS,
             "update a portfolio member",
         )
 
@@ -72,10 +76,7 @@ class Portfolios(object):
     def get_with_members(cls, user, portfolio_id):
         portfolio = PortfoliosQuery.get(portfolio_id)
         Authorization.check_portfolio_permission(
-            user,
-            portfolio,
-            Permissions.VIEW_PORTFOLIO_MEMBERS,
-            "view portfolio members",
+            user, portfolio, Permissions.VIEW_PORTFOLIO_USERS, "view portfolio members"
         )
 
         return portfolio
@@ -91,10 +92,7 @@ class Portfolios(object):
     @classmethod
     def create_member(cls, user, portfolio, data):
         Authorization.check_portfolio_permission(
-            user,
-            portfolio,
-            Permissions.ASSIGN_AND_UNASSIGN_ATAT_ROLE,
-            "create portfolio member",
+            user, portfolio, Permissions.EDIT_PORTFOLIO_USERS, "create portfolio member"
         )
 
         new_user = Users.get_or_create_by_dod_id(
@@ -105,31 +103,34 @@ class Portfolios(object):
             atat_role_name="default",
             provisional=True,
         )
-        return Portfolios.add_member(portfolio, new_user, data["portfolio_role"])
+        permission_sets = data.get("permission_sets", [])
+        return Portfolios.add_member(
+            portfolio, new_user, permission_sets=permission_sets
+        )
 
     @classmethod
-    def add_member(cls, portfolio, member, role_name):
-        portfolio_role = PortfolioRoles.add(member, portfolio.id, role_name)
+    def add_member(cls, portfolio, member, permission_sets=None):
+        portfolio_role = PortfolioRoles.add(member, portfolio.id, permission_sets)
         return portfolio_role
 
     @classmethod
-    def update_member(cls, user, portfolio, member, role_name):
+    def update_member(cls, user, portfolio, member, permission_sets):
         Authorization.check_portfolio_permission(
-            user,
-            portfolio,
-            Permissions.ASSIGN_AND_UNASSIGN_ATAT_ROLE,
-            "edit portfolio member",
+            user, portfolio, Permissions.EDIT_PORTFOLIO_USERS, "edit portfolio member"
         )
 
-        return PortfolioRoles.update_role(member, role_name)
+        # need to update perms sets here
+        return PortfolioRoles.update(member, permission_sets)
 
     @classmethod
     def _create_portfolio_role(
-        cls, user, portfolio, role_name, status=PortfolioRoleStatus.PENDING
+        cls, user, portfolio, status=PortfolioRoleStatus.PENDING, permission_sets=None
     ):
-        role = Roles.get(role_name)
+        if permission_sets is None:
+            permission_sets = []
+
         portfolio_role = PortfoliosQuery.create_portfolio_role(
-            user, role, portfolio, status=status
+            user, portfolio, status=status, permission_sets=permission_sets
         )
         PortfoliosQuery.add_and_commit(portfolio_role)
         return portfolio_role
@@ -152,10 +153,7 @@ class Portfolios(object):
     def revoke_access(cls, user, portfolio_id, portfolio_role_id):
         portfolio = PortfoliosQuery.get(portfolio_id)
         Authorization.check_portfolio_permission(
-            user,
-            portfolio,
-            Permissions.ASSIGN_AND_UNASSIGN_ATAT_ROLE,
-            "revoke portfolio access",
+            user, portfolio, Permissions.EDIT_PORTFOLIO_USERS, "revoke portfolio access"
         )
         portfolio_role = PortfolioRoles.get_by_id(portfolio_role_id)
 
