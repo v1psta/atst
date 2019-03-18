@@ -3,8 +3,8 @@ from atst.utils.localization import translate
 
 MESSAGES = {
     "invitation_resent": {
-        "title_template": "The {{ officer_type }} invite has been resent",
-        "message_template": "Invitation has been resent",
+        "title_template": "The {{ officer_type }}  has been resent instructions to join this portfolio.",
+        "message_template": "Invitation resent",
         "category": "success",
     },
     "task_order_draft": {
