@@ -1,0 +1,23 @@
+<div class="panel">
+  <div class="panel__content">
+    <h2>Primary Point of Contact</h2>
+    <p>The PoC has the ability to edit all aspects of a portfolio.</p>
+
+    <p>
+      <strong>
+        {{ portfolio.owner.first_name }}
+        {{ portfolio.owner.last_name }}
+      </strong>
+      <br />
+      {{ portfolio.owner.email }}
+      <br />
+      {{ portfolio.owner.phone_number | usPhone }}
+    </p>
+
+    <div class="flex-reverse-row">
+      <a class="usa-button-primary">
+        Update Primary PoC
+      </a>
+    </div>
+  </div>
+</div>

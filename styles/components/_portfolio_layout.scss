@@ -161,6 +161,10 @@
 .portfolio-content {
   margin: 6 * $gap $gap 0 $gap;
 
+  .panel {
+    @include shadow-panel;
+  }
+
   .member-list {
     .panel {
       @include shadow-panel;
@@ -456,6 +460,11 @@
         }
       }
     }
+  }
+
+  .flex-reverse-row {
+    display: flex;
+    flex-direction: row-reverse;
   }
 
   .defense-row {
