@@ -508,6 +508,8 @@ task_orders:
   invitations:
     dod_id_label: DoD ID
     edit_text: A new invitation e-mail will be sent when new information is saved.
+    resend_btn: Resend
+    resend_confirmation_message: Are you sure you'd like to resend this invitation?
     contracting_officer:
       title: Contracting Officer (KO) Information
       description: You'll need a signature from your KO. You might want to work with your program Financial Manager to get your TO documents moving in the right direction.
