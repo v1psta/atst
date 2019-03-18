@@ -102,6 +102,8 @@
           {{
             ConfirmationButton(
               btn_text="Resend Invitation",
+              confirm_btn=('task_orders.invitations.resend_btn' | translate),
+              confirm_msg=('task_orders.invitations.resend_confirmation_message' | translate),
               action=url_for(
                 "portfolios.resend_invite",
                 portfolio_id=portfolio.id,
