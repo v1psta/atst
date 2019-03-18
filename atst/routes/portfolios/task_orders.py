@@ -126,8 +126,8 @@ def resend_invite(portfolio_id, task_order_id, form=None):
 
     invitation = Invitations.lookup_by_portfolio_and_user(portfolio, officer)
 
-    if not invitation or (invitation.status is not InvitationStatus.PENDING):
-        raise NotFoundError("invitation")
+    if invitation.status is not InvitationStatus.PENDING:
+        raise NoAccessError("invitation")
 
     Invitations.revoke(token=invitation.token)
 
@@ -210,7 +210,7 @@ def task_order_invitations(portfolio_id, task_order_id):
             form=form,
         )
     else:
-        raise NotFoundError("task_order")
+        raise NoAccessError("task_order")
 
 
 @portfolios_bp.route(
