@@ -28,11 +28,14 @@ class Users(object):
         return user
 
     @classmethod
-    def create(cls, dod_id, atat_role_name=None, **kwargs):
-        atat_role = PermissionSets.get(atat_role_name)
+    def create(cls, dod_id, permission_sets=None, **kwargs):
+        if permission_sets:
+            permission_sets = PermissionSets.get_many(permission_sets)
+        else:
+            permission_sets = []
 
         try:
-            user = User(dod_id=dod_id, atat_role=atat_role, **kwargs)
+            user = User(dod_id=dod_id, permission_sets=permission_sets, **kwargs)
             db.session.add(user)
             db.session.commit()
         except IntegrityError:
@@ -49,18 +52,6 @@ class Users(object):
             user = Users.create(dod_id, **kwargs)
             db.session.add(user)
             db.session.commit()
-
-        return user
-
-    @classmethod
-    def update_role(cls, user_id, atat_role_name):
-
-        user = Users.get(user_id)
-        atat_role = PermissionSets.get(atat_role_name)
-        user.atat_role = atat_role
-
-        db.session.add(user)
-        db.session.commit()
 
         return user
 

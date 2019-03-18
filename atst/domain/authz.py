@@ -16,7 +16,7 @@ class Authorization(object):
 
     @classmethod
     def has_atat_permission(cls, user, permission):
-        return permission in user.atat_role.permissions
+        return permission in user.permissions
 
     @classmethod
     def is_in_portfolio(cls, user, portfolio):
@@ -35,10 +35,6 @@ class Authorization(object):
     @classmethod
     def can_view_audit_log(cls, user):
         return Authorization.has_atat_permission(user, Permissions.VIEW_AUDIT_LOG)
-
-    @classmethod
-    def is_ccpo(cls, user):
-        return user.atat_role.name == "ccpo"
 
     @classmethod
     def is_ko(cls, user, task_order):

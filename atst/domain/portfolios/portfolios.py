@@ -100,7 +100,6 @@ class Portfolios(object):
             first_name=data["first_name"],
             last_name=data["last_name"],
             email=data["email"],
-            atat_role_name="default",
             provisional=True,
         )
         permission_sets = data.get("permission_sets", [])

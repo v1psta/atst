@@ -52,7 +52,7 @@ def test_successful_login_redirect_ccpo(client, monkeypatch):
     role = PermissionSets.get("ccpo")
     monkeypatch.setattr(
         "atst.domain.authnid.AuthenticationContext.get_user",
-        lambda *args: UserFactory.create(atat_role=role),
+        lambda *args: UserFactory.create(),
     )
 
     resp = _login(client)

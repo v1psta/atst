@@ -151,7 +151,7 @@ def test_owner_can_view_portfolio_members(portfolio, portfolio_owner):
 
 @pytest.mark.skip(reason="no ccpo access yet")
 def test_ccpo_can_view_portfolio_members(portfolio, portfolio_owner):
-    ccpo = UserFactory.from_atat_role("ccpo")
+    ccpo = UserFactory.create_ccpo()
     assert Portfolios.get_with_members(ccpo, portfolio.id)
 
 
@@ -277,7 +277,7 @@ def test_for_user_does_not_return_inactive_portfolios(portfolio, portfolio_owner
 
 @pytest.mark.skip(reason="CCPO status not fully implemented")
 def test_for_user_returns_all_portfolios_for_ccpo(portfolio, portfolio_owner):
-    sam = UserFactory.from_atat_role("ccpo")
+    sam = UserFactory.create_ccpo()
     PortfolioFactory.create()
 
     sams_portfolios = Portfolios.for_user(sam)
@@ -297,7 +297,7 @@ def test_get_for_update_information(portfolio, portfolio_owner):
     assert portfolio == admin_ws
 
     # TODO: implement ccpo roles
-    # ccpo = UserFactory.from_atat_role("ccpo")
+    # ccpo = UserFactory.create_ccpo()
     # assert Portfolios.get_for_update_information(ccpo, portfolio.id)
 
     developer = UserFactory.create()

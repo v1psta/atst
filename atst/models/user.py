@@ -1,4 +1,4 @@
-from sqlalchemy import String, ForeignKey, Column, Date, Boolean
+from sqlalchemy import String, ForeignKey, Column, Date, Boolean, Table
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import UUID
 
@@ -6,14 +6,24 @@ from atst.models import Base, types, mixins
 from atst.models.permissions import Permissions
 
 
-class User(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
+users_permission_sets = Table(
+    "users_permission_sets",
+    Base.metadata,
+    Column("user_id", UUID(as_uuid=True), ForeignKey("users.id")),
+    Column("permission_set_id", UUID(as_uuid=True), ForeignKey("permission_sets.id")),
+)
+
+
+class User(
+    Base, mixins.TimestampsMixin, mixins.AuditableMixin, mixins.PermissionsMixin
+):
     __tablename__ = "users"
 
     id = types.Id()
     username = Column(String)
-    atat_role_id = Column(UUID(as_uuid=True), ForeignKey("permission_sets.id"))
 
-    atat_role = relationship("PermissionSet")
+    permission_sets = relationship("PermissionSet", secondary=users_permission_sets)
+
     portfolio_roles = relationship("PortfolioRole", backref="user")
 
     email = Column(String, unique=True)
@@ -53,35 +63,20 @@ class User(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
         )
 
     @property
-    def atat_permissions(self):
-        return self.atat_role.permissions
-
-    @property
-    def atat_role_name(self):
-        return self.atat_role.name
-
-    @property
     def full_name(self):
         return "{} {}".format(self.first_name, self.last_name)
 
     @property
     def has_portfolios(self):
-        return (
-            Permissions.VIEW_PORTFOLIO in self.atat_role.permissions
-        ) or self.portfolio_roles
+        return (Permissions.VIEW_PORTFOLIO in self.permissions) or self.portfolio_roles
 
     @property
     def displayname(self):
         return self.full_name
 
     def __repr__(self):
-        return "<User(name='{}', dod_id='{}', email='{}', role='{}', has_portfolios='{}', id='{}')>".format(
-            self.full_name,
-            self.dod_id,
-            self.email,
-            self.atat_role_name,
-            self.has_portfolios,
-            self.id,
+        return "<User(name='{}', dod_id='{}', email='{}', has_portfolios='{}', id='{}')>".format(
+            self.full_name, self.dod_id, self.email, self.has_portfolios, self.id
         )
 
     def to_dictionary(self):

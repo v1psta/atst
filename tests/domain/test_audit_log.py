@@ -14,7 +14,7 @@ from tests.factories import (
 
 @pytest.fixture(scope="function")
 def ccpo():
-    return UserFactory.from_atat_role("ccpo")
+    return UserFactory.create_ccpo()
 
 
 @pytest.fixture(scope="function")
