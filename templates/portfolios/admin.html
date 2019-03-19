@@ -12,29 +12,34 @@
 
   <div v-cloak class="portfolio-admin portfolio-content">
 
+    <div class="panel">
+      <div class="panel__content">
+        <form method="POST" action="{{ url_for('portfolios.edit_portfolio', portfolio_id=portfolio.id) }}" autocomplete="false">
+          {{ form.csrf_token }}
+          <div class='form-row'>
+            <div class='form-col form-col--half'>
+              {{ TextInput(form.name, validation="portfolioName") }}
+            </div>
 
-    <form method="POST" action="{{ url_for('portfolios.edit_portfolio', portfolio_id=portfolio.id) }}" autocomplete="false">
-      {{ form.csrf_token }}
-      <div class='form-row'>
-        <div class='form-col form-col--half'>
-          {{ TextInput(form.name, validation="portfolioName") }}
-        </div>
-
-        <div class='edit-portfolio-name action-group'>
-          <button type="submit" class="usa-button usa-button-big usa-button-primary" tabindex="0">Save</button>
-        </div>
-      </div>
-        <div class='defense-row'>
-          <div>
-            <div class='admin-title'>{{ "forms.task_order.defense_component_label" | translate }}</div>
-            {% if portfolio.defense_component %}
-              <div class='admin-content'>{{ portfolio.defense_component }}</div>
-            {% else %}
-              <div class='admin-content'>{{ "fragments.portfolio_admin.none" | translate }}</div>
-            {% endif %}
+            <div class='edit-portfolio-name action-group'>
+              <button type="submit" class="usa-button usa-button-big usa-button-primary" tabindex="0">Save</button>
+            </div>
           </div>
-        </div>
-    </form>
+            <div class='defense-row'>
+              <div>
+                <div class='admin-title'>{{ "forms.task_order.defense_component_label" | translate }}</div>
+                {% if portfolio.defense_component %}
+                  <div class='admin-content'>{{ portfolio.defense_component }}</div>
+                {% else %}
+                  <div class='admin-content'>{{ "fragments.portfolio_admin.none" | translate }}</div>
+                {% endif %}
+              </div>
+            </div>
+        </form>
+      </div>
+    </div>
+
+    {% include "fragments/primary_point_of_contact.html" %}
 
     {% include "fragments/audit_events_log.html" %}
 
