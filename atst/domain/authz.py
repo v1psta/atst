@@ -24,7 +24,10 @@ class Authorization(object):
 
     @classmethod
     def check_portfolio_permission(cls, user, portfolio, permission, message):
-        if not Authorization.has_portfolio_permission(user, portfolio, permission):
+        if not (
+            Authorization.has_atat_permission(user, permission)
+            or Authorization.has_portfolio_permission(user, portfolio, permission)
+        ):
             raise UnauthorizedError(user, message)
 
     @classmethod

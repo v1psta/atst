@@ -27,7 +27,6 @@ def test_non_admin_cannot_view_audit_log(developer):
         AuditLog.get_all_events(developer)
 
 
-@pytest.mark.skip(reason="no ccpo access yet")
 def test_ccpo_can_view_audit_log(ccpo):
     events = AuditLog.get_all_events(ccpo)
     assert len(events) > 0
@@ -42,7 +41,6 @@ def test_paginate_audit_log(ccpo):
     assert len(events) == 25
 
 
-@pytest.mark.skip(reason="no ccpo access yet")
 def test_ccpo_can_view_ws_audit_log(ccpo):
     portfolio = PortfolioFactory.create()
     events = AuditLog.get_portfolio_events(ccpo, portfolio)
