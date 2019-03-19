@@ -1,17 +1,33 @@
 import pytest
+from atst.domain.authnid.crl import CRLCache, CRLRevocationException
 from atst.utils.pdf_verification import pdf_signature_validations
 
 
-def test_unsigned_pdf():
+@pytest.fixture
+def crl_check():
+    def _crl_check(signers_cert):
+        try:
+            cache = CRLCache(
+                "ssl/server-certs/ca-chain.pem",
+                crl_locations=["ssl/client-certs/client-ca.der.crl"],
+            )
+            return cache.crl_check(signers_cert)
+        except CRLRevocationException:
+            return False
+
+    return _crl_check
+
+
+def test_unsigned_pdf(crl_check):
     unsigned_pdf = open("tests/fixtures/sample.pdf", "rb").read()
-    result = pdf_signature_validations(pdf=unsigned_pdf)
+    result = pdf_signature_validations(pdf=unsigned_pdf, crl_check=crl_check)
 
     assert result == {"result": "FAILURE", "signature_count": 0, "signatures": []}
 
 
-def test_valid_signed_pdf():
+def test_valid_signed_pdf(crl_check):
     valid_signed_pdf = open("tests/fixtures/sally-darth-signed.pdf", "rb").read()
-    result = pdf_signature_validations(pdf=valid_signed_pdf)
+    result = pdf_signature_validations(pdf=valid_signed_pdf, crl_check=crl_check)
 
     assert result == {
         "result": "OK",
@@ -41,10 +57,10 @@ def test_valid_signed_pdf():
     }
 
 
-def test_signed_pdf_thats_been_modified():
+def test_signed_pdf_thats_been_modified(crl_check):
     valid_signed_pdf = open("tests/fixtures/sally-darth-signed.pdf", "rb").read()
     modified_pdf = valid_signed_pdf.replace(b"PDF-1.6", b"PDF-1.7")
-    result = pdf_signature_validations(pdf=modified_pdf)
+    result = pdf_signature_validations(pdf=modified_pdf, crl_check=crl_check)
 
     assert result == {
         "result": "FAILURE",
@@ -74,9 +90,9 @@ def test_signed_pdf_thats_been_modified():
     }
 
 
-def test_signed_pdf_not_on_chain():
+def test_signed_pdf_not_on_chain(crl_check):
     signed_pdf_not_on_chain = open("tests/fixtures/signed-pdf-not-dod.pdf", "rb").read()
-    result = pdf_signature_validations(pdf=signed_pdf_not_on_chain)
+    result = pdf_signature_validations(pdf=signed_pdf_not_on_chain, crl_check=crl_check)
 
     assert result == {
         "result": "FAILURE",
@@ -97,11 +113,11 @@ def test_signed_pdf_not_on_chain():
 
 
 @pytest.mark.skip(reason="Need fixture file")
-def test_signed_pdf_dod_revoked():
+def test_signed_pdf_dod_revoked(crl_check):
     signed_pdf_dod_revoked = open(
         "tests/fixtures/signed-pdf-dod_revoked.pdf", "rb"
     ).read()
-    result = pdf_signature_validations(pdf=signed_pdf_dod_revoked)
+    result = pdf_signature_validations(pdf=signed_pdf_dod_revoked, crl_check=crl_check)
 
     assert result == {
         "result": "FAILURE",
@@ -120,13 +136,13 @@ def test_signed_pdf_dod_revoked():
     }
 
 
-def test_signed_dod_pdf_signer_cert_expired():
+def test_signed_dod_pdf_signer_cert_expired(crl_check):
     #
     # TODO: Is this good enough? Do we want an expired DOD certificate? This test is using
     #       a fake DOD certificate.
     #
     signed_pdf_dod_revoked = open("tests/fixtures/signed-expired-cert.pdf", "rb").read()
-    result = pdf_signature_validations(pdf=signed_pdf_dod_revoked)
+    result = pdf_signature_validations(pdf=signed_pdf_dod_revoked, crl_check=crl_check)
 
     assert result == {
         "result": "FAILURE",

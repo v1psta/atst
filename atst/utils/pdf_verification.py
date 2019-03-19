@@ -1,16 +1,16 @@
 import hashlib
 from OpenSSL import crypto
 from asn1crypto import cms, pem, core
-from atst.domain.authnid.crl import CRLCache, CRLRevocationException
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.asymmetric import padding
 
 
 class PDFSignature:
-    def __init__(self, byte_range_start=None, pdf=None):
-        self.pdf = pdf
-        self.byte_range_start = byte_range_start
+    def __init__(self, byte_range_start=None, crl_check=None, pdf=None):
         self._signers_cert = None
+        self.byte_range_start = byte_range_start
+        self.crl_check = crl_check
+        self.pdf = pdf
 
     @property
     def byte_range(self):
@@ -132,14 +132,7 @@ class PDFSignature:
         Takes the signing certificate and runs it through the CRLCache
         checker. Returns a boolean.
         """
-        try:
-            cache = CRLCache(
-                "ssl/server-certs/ca-chain.pem",
-                crl_locations=["ssl/client-certs/client-ca.der.crl"],
-            )
-            return cache.crl_check(self.signers_cert)
-        except CRLRevocationException:
-            return False
+        return self.crl_check(self.signers_cert)
 
     @property
     def is_signature_valid(self):
@@ -157,6 +150,7 @@ class PDFSignature:
 
         if attrs is not None and not isinstance(attrs, core.Void):
             signed_data = attrs.dump()
+            print(signed_data)
             signed_data = b"\x31" + signed_data[1:]
         else:
             signed_data = self.binary_data
@@ -192,7 +186,12 @@ class PDFSignature:
         }
 
 
-def pdf_signature_validations(pdf=None):
+def pdf_signature_validations(pdf=None, crl_check=None):
+    """
+    As arguments we accept a pdf binary blob and a callable crl_check.
+    An example implementation of the crl_check can be found in the
+    tests (test/utils/test_pdf_verification.py)
+    """
     signatures = []
     start_byte = 0
 
@@ -203,7 +202,9 @@ def pdf_signature_validations(pdf=None):
         if n == -1:
             break
 
-        signatures.append(PDFSignature(byte_range_start=n, pdf=pdf))
+        signatures.append(
+            PDFSignature(byte_range_start=n, crl_check=crl_check, pdf=pdf)
+        )
         start_byte = n
 
     response = {"result": None, "signature_count": len(signatures), "signatures": []}
