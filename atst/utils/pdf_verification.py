@@ -150,7 +150,6 @@ class PDFSignature:
 
         if attrs is not None and not isinstance(attrs, core.Void):
             signed_data = attrs.dump()
-            print(signed_data)
             signed_data = b"\x31" + signed_data[1:]
         else:
             signed_data = self.binary_data

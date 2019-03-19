@@ -90,28 +90,6 @@ def test_signed_pdf_thats_been_modified(crl_check):
     }
 
 
-def test_signed_pdf_not_on_chain(crl_check):
-    signed_pdf_not_on_chain = open("tests/fixtures/signed-pdf-not-dod.pdf", "rb").read()
-    result = pdf_signature_validations(pdf=signed_pdf_not_on_chain, crl_check=crl_check)
-
-    assert result == {
-        "result": "FAILURE",
-        "signature_count": 1,
-        "signatures": [
-            {
-                "cert_common_name": "John B Harris",
-                "hashed_binary_data": "3f0047e6cb5b9bb089254b20d174445c3ba4f513",
-                "hashing_algorithm": "sha1",
-                "is_valid": False,
-                "is_valid_cert": False,
-                "is_valid_hash": True,
-                "is_valid_signature": True,
-                "signers_serial": 514,
-            }
-        ],
-    }
-
-
 @pytest.mark.skip(reason="Need fixture file")
 def test_signed_pdf_dod_revoked(crl_check):
     signed_pdf_dod_revoked = open(
@@ -160,8 +138,3 @@ def test_signed_dod_pdf_signer_cert_expired(crl_check):
             }
         ],
     }
-
-
-@pytest.mark.skip(reason="TODO")
-def test_crl_check_unavailable():
-    pass
