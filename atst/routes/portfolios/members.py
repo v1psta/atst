@@ -12,8 +12,6 @@ from atst.domain.environment_roles import EnvironmentRoles
 from atst.services.invitation import Invitation as InvitationService
 import atst.forms.portfolio_member as member_forms
 from atst.forms.data import ENVIRONMENT_ROLES, ENV_ROLE_MODAL_DESCRIPTION
-from atst.domain.authz import Authorization
-from atst.models.permissions import Permissions
 
 from atst.utils.flash import formatted_flash as flash
 
@@ -101,12 +99,6 @@ def create_member(portfolio_id):
 @portfolios_bp.route("/portfolios/<portfolio_id>/members/<member_id>/member_edit")
 def view_member(portfolio_id, member_id):
     portfolio = Portfolios.get(g.current_user, portfolio_id)
-    Authorization.check_portfolio_permission(
-        g.current_user,
-        portfolio,
-        Permissions.EDIT_PORTFOLIO_USERS,
-        "edit this portfolio user",
-    )
     member = PortfolioRoles.get(portfolio_id, member_id)
     applications = Applications.get_all(g.current_user, member, portfolio)
     form = member_forms.EditForm(portfolio_role="admin")
@@ -135,12 +127,6 @@ def view_member(portfolio_id, member_id):
 )
 def update_member(portfolio_id, member_id):
     portfolio = Portfolios.get(g.current_user, portfolio_id)
-    Authorization.check_portfolio_permission(
-        g.current_user,
-        portfolio,
-        Permissions.EDIT_PORTFOLIO_USERS,
-        "edit this portfolio user",
-    )
     member = PortfolioRoles.get(portfolio_id, member_id)
 
     ids_and_roles = []

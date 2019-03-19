@@ -5,8 +5,6 @@ from atst.database import db
 from atst.models.environment import Environment
 from atst.models.environment_role import EnvironmentRole
 from atst.models.application import Application
-from atst.models.permissions import Permissions
-from atst.domain.authz import Authorization
 from atst.domain.environment_roles import EnvironmentRoles
 
 from .exceptions import NotFoundError
@@ -61,12 +59,6 @@ class Environments(object):
 
     @classmethod
     def update_environment_roles(cls, user, portfolio, portfolio_role, ids_and_roles):
-        Authorization.check_portfolio_permission(
-            user,
-            portfolio,
-            Permissions.EDIT_APPLICATION_MEMBER,
-            "assign environment roles",
-        )
         updated = False
 
         for id_and_role in ids_and_roles:
@@ -101,10 +93,4 @@ class Environments(object):
 
     @classmethod
     def revoke_access(cls, user, environment, target_user):
-        Authorization.check_portfolio_permission(
-            user,
-            environment.portfolio,
-            Permissions.EDIT_APPLICATION_MEMBER,
-            "revoke environment access",
-        )
         EnvironmentRoles.delete(environment.id, target_user.id)

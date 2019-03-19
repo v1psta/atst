@@ -46,16 +46,19 @@ def test_portfolio_has_timestamps(portfolio):
     assert portfolio.time_created == portfolio.time_updated
 
 
+@pytest.mark.auth
 def test_portfolios_get_ensures_user_is_in_portfolio(portfolio, portfolio_owner):
     outside_user = UserFactory.create()
     with pytest.raises(UnauthorizedError):
         Portfolios.get(outside_user, portfolio.id)
 
 
+@pytest.mark.auth
 def test_get_for_update_applications_allows_owner(portfolio, portfolio_owner):
     Portfolios.get_for_update_applications(portfolio_owner, portfolio.id)
 
 
+@pytest.mark.auth
 def test_get_for_update_applications_blocks_developer(portfolio):
     developer = UserFactory.create()
     PortfolioRoles.add(developer, portfolio.id)
@@ -94,6 +97,7 @@ def test_can_add_existing_user_to_portfolio(portfolio, portfolio_owner):
     assert not new_member.user.provisional
 
 
+@pytest.mark.auth
 def test_need_permission_to_create_portfolio_role(portfolio, portfolio_owner):
     random_user = UserFactory.create()
 
@@ -127,6 +131,7 @@ def test_update_portfolio_role_role(portfolio, portfolio_owner):
     assert updated_member.portfolio == portfolio
 
 
+@pytest.mark.auth
 def test_need_permission_to_update_portfolio_role_role(portfolio, portfolio_owner):
     random_user = UserFactory.create()
     user_data = {
@@ -154,6 +159,7 @@ def test_ccpo_can_view_portfolio_members(portfolio, portfolio_owner):
     assert Portfolios.get_with_members(ccpo, portfolio.id)
 
 
+@pytest.mark.auth
 def test_random_user_cannot_view_portfolio_members(portfolio):
     developer = UserFactory.create()
 
@@ -282,6 +288,7 @@ def test_for_user_returns_all_portfolios_for_ccpo(portfolio, portfolio_owner):
     assert len(sams_portfolios) == 2
 
 
+@pytest.mark.auth
 def test_get_for_update_information(portfolio, portfolio_owner):
     owner_ws = Portfolios.get_for_update_information(portfolio_owner, portfolio.id)
     assert portfolio == owner_ws

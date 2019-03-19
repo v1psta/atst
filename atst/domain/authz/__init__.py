@@ -19,10 +19,6 @@ class Authorization(object):
         return permission in user.permissions
 
     @classmethod
-    def is_in_portfolio(cls, user, portfolio):
-        return user in portfolio.users
-
-    @classmethod
     def check_portfolio_permission(cls, user, portfolio, permission, message):
         if not (
             Authorization.has_atat_permission(user, permission)
@@ -30,14 +26,14 @@ class Authorization(object):
         ):
             raise UnauthorizedError(user, message)
 
+        return True
+
     @classmethod
     def check_atat_permission(cls, user, permission, message):
         if not Authorization.has_atat_permission(user, permission):
             raise UnauthorizedError(user, message)
 
-    @classmethod
-    def can_view_audit_log(cls, user):
-        return Authorization.has_atat_permission(user, Permissions.VIEW_AUDIT_LOG)
+        return True
 
     @classmethod
     def is_ko(cls, user, task_order):
@@ -72,23 +68,11 @@ class Authorization(object):
             message = "review task order {}".format(task_order.id)
             raise UnauthorizedError(user, message)
 
-    @classmethod
-    def check_task_order_permission(cls, user, task_order, permission, message):
-        if Authorization._check_is_task_order_officer(user, task_order):
-            return True
 
-        Authorization.check_portfolio_permission(
-            user, task_order.portfolio, permission, message
-        )
+def user_can_access(user, permission, portfolio=None, message=None):
+    if portfolio:
+        Authorization.check_portfolio_permission(user, portfolio, permission, message)
+    else:
+        Authorization.check_atat_permission(user, permission, message)
 
-    @classmethod
-    def _check_is_task_order_officer(cls, user, task_order):
-        for officer in [
-            "contracting_officer",
-            "contracting_officer_representative",
-            "security_officer",
-        ]:
-            if getattr(task_order, officer, None) == user:
-                return True
-
-        return False
+    return True

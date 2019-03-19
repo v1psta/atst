@@ -175,6 +175,7 @@ def test_user_with_permission_can_update_application(client, user_session):
     assert application.description == "A very cool application."
 
 
+@pytest.mark.auth
 def test_user_without_permission_cannot_update_application(client, user_session):
     dev = UserFactory.create()
     owner = UserFactory.create()

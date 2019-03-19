@@ -6,7 +6,6 @@ from . import portfolios_bp
 from atst.domain.reports import Reports
 from atst.domain.portfolios import Portfolios
 from atst.domain.audit_log import AuditLog
-from atst.domain.authz import Authorization
 from atst.domain.common import Paginator
 from atst.forms.portfolio import PortfolioForm
 from atst.models.permissions import Permissions
@@ -79,13 +78,6 @@ def show_portfolio(portfolio_id):
 @portfolios_bp.route("/portfolios/<portfolio_id>/reports")
 def portfolio_reports(portfolio_id):
     portfolio = Portfolios.get(g.current_user, portfolio_id)
-    Authorization.check_portfolio_permission(
-        g.current_user,
-        portfolio,
-        Permissions.VIEW_PORTFOLIO_REPORTS,
-        "view portfolio reports",
-    )
-
     today = date.today()
     month = http_request.args.get("month", today.month)
     year = http_request.args.get("year", today.year)

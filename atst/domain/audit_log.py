@@ -2,7 +2,6 @@ from sqlalchemy import or_
 
 from atst.database import db
 from atst.domain.common import Query
-from atst.domain.authz import Authorization, Permissions
 from atst.models.audit_event import AuditEvent
 
 
@@ -36,20 +35,10 @@ class AuditLog(object):
 
     @classmethod
     def get_all_events(cls, user, pagination_opts=None):
-        # TODO: general audit log permissions
-        Authorization.check_atat_permission(
-            user, Permissions.VIEW_AUDIT_LOG, "view audit log"
-        )
         return AuditEventQuery.get_all(pagination_opts)
 
     @classmethod
     def get_portfolio_events(cls, user, portfolio, pagination_opts=None):
-        Authorization.check_portfolio_permission(
-            user,
-            portfolio,
-            Permissions.VIEW_PORTFOLIO_ACTIVITY_LOG,
-            "view portfolio audit log",
-        )
         return AuditEventQuery.get_ws_events(portfolio.id, pagination_opts)
 
     @classmethod

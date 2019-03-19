@@ -33,51 +33,29 @@ class Portfolios(object):
     @classmethod
     def get(cls, user, portfolio_id):
         portfolio = PortfoliosQuery.get(portfolio_id)
-        Authorization.check_portfolio_permission(
-            user, portfolio, Permissions.VIEW_PORTFOLIO, "get portfolio"
-        )
-
         return ScopedPortfolio(user, portfolio)
 
     @classmethod
     def get_for_update_applications(cls, user, portfolio_id):
         portfolio = PortfoliosQuery.get(portfolio_id)
-        Authorization.check_portfolio_permission(
-            user, portfolio, Permissions.CREATE_APPLICATION, "add application"
-        )
 
         return portfolio
 
     @classmethod
     def get_for_update_information(cls, user, portfolio_id):
         portfolio = PortfoliosQuery.get(portfolio_id)
-        Authorization.check_portfolio_permission(
-            user,
-            portfolio,
-            Permissions.EDIT_PORTFOLIO_NAME,
-            "update portfolio information",
-        )
 
         return portfolio
 
     @classmethod
     def get_for_update_member(cls, user, portfolio_id):
         portfolio = PortfoliosQuery.get(portfolio_id)
-        Authorization.check_portfolio_permission(
-            user,
-            portfolio,
-            Permissions.EDIT_PORTFOLIO_USERS,
-            "update a portfolio member",
-        )
 
         return portfolio
 
     @classmethod
     def get_with_members(cls, user, portfolio_id):
         portfolio = PortfoliosQuery.get(portfolio_id)
-        Authorization.check_portfolio_permission(
-            user, portfolio, Permissions.VIEW_PORTFOLIO_USERS, "view portfolio members"
-        )
 
         return portfolio
 
@@ -91,10 +69,6 @@ class Portfolios(object):
 
     @classmethod
     def create_member(cls, user, portfolio, data):
-        Authorization.check_portfolio_permission(
-            user, portfolio, Permissions.EDIT_PORTFOLIO_USERS, "create portfolio member"
-        )
-
         new_user = Users.get_or_create_by_dod_id(
             data["dod_id"],
             first_name=data["first_name"],
@@ -114,11 +88,6 @@ class Portfolios(object):
 
     @classmethod
     def update_member(cls, user, portfolio, member, permission_sets):
-        Authorization.check_portfolio_permission(
-            user, portfolio, Permissions.EDIT_PORTFOLIO_USERS, "edit portfolio member"
-        )
-
-        # need to update perms sets here
         return PortfolioRoles.update(member, permission_sets)
 
     @classmethod
@@ -151,9 +120,6 @@ class Portfolios(object):
     @classmethod
     def revoke_access(cls, user, portfolio_id, portfolio_role_id):
         portfolio = PortfoliosQuery.get(portfolio_id)
-        Authorization.check_portfolio_permission(
-            user, portfolio, Permissions.EDIT_PORTFOLIO_USERS, "revoke portfolio access"
-        )
         portfolio_role = PortfolioRoles.get_by_id(portfolio_role_id)
 
         if not Portfolios.can_revoke_access_for(portfolio, portfolio_role):

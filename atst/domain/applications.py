@@ -1,5 +1,4 @@
 from atst.database import db
-from atst.domain.authz import Authorization
 from atst.domain.environments import Environments
 from atst.domain.exceptions import NotFoundError
 from atst.models.permissions import Permissions
@@ -23,14 +22,6 @@ class Applications(object):
 
     @classmethod
     def get(cls, user, portfolio, application_id):
-        # TODO: this should check permission for this particular application
-        Authorization.check_portfolio_permission(
-            user,
-            portfolio,
-            Permissions.VIEW_APPLICATION,
-            "view application in portfolio",
-        )
-
         try:
             application = (
                 db.session.query(Application).filter_by(id=application_id).one()
@@ -53,13 +44,6 @@ class Applications(object):
 
     @classmethod
     def get_all(cls, user, portfolio_role, portfolio):
-        Authorization.check_portfolio_permission(
-            user,
-            portfolio,
-            Permissions.VIEW_APPLICATION,
-            "view application in portfolio",
-        )
-
         try:
             applications = (
                 db.session.query(Application).filter_by(portfolio_id=portfolio.id).all()

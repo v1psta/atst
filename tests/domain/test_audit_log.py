@@ -22,6 +22,7 @@ def developer():
     return UserFactory.create()
 
 
+@pytest.mark.auth
 def test_non_admin_cannot_view_audit_log(developer):
     with pytest.raises(UnauthorizedError):
         AuditLog.get_all_events(developer)
@@ -63,6 +64,7 @@ def test_ws_owner_can_view_ws_audit_log():
     assert len(events) > 0
 
 
+@pytest.mark.auth
 def test_other_users_cannot_view_portfolio_audit_log():
     with pytest.raises(UnauthorizedError):
         portfolio = PortfolioFactory.create()

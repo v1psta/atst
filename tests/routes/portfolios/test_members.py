@@ -60,6 +60,7 @@ def test_user_with_permission_has_add_member_link(client, user_session):
     )
 
 
+@pytest.mark.auth
 def test_user_without_permission_has_no_add_member_link(client, user_session):
     user = UserFactory.create()
     portfolio = PortfolioFactory.create()
@@ -72,6 +73,7 @@ def test_user_without_permission_has_no_add_member_link(client, user_session):
     )
 
 
+@pytest.mark.auth
 def test_permissions_for_view_member(client, user_session):
     user = UserFactory.create()
     portfolio = PortfolioFactory.create()
