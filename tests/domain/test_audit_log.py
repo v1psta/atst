@@ -63,17 +63,10 @@ def test_ws_owner_can_view_ws_audit_log():
     assert len(events) > 0
 
 
-@pytest.mark.skip(reason="all portfolio users can view audit log")
-def test_other_users_cannot_view_ws_audit_log():
+def test_other_users_cannot_view_portfolio_audit_log():
     with pytest.raises(UnauthorizedError):
         portfolio = PortfolioFactory.create()
         dev = UserFactory.create()
-        PortfolioRoleFactory.create(
-            portfolio=portfolio,
-            user=dev,
-            role=Roles.get("developer"),
-            status=PortfolioRoleStatus.ACTIVE,
-        )
         AuditLog.get_portfolio_events(dev, portfolio)
 
 
