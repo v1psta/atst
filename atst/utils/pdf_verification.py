@@ -12,8 +12,6 @@ class PDFSignature:
         self.byte_range_start = byte_range_start
         self._signers_cert = None
 
-        # assert byte_range_start != -1 and self.start != -1 and self.stop != -1
-
     @property
     def byte_range(self):
         """
