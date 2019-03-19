@@ -1,8 +1,19 @@
+{% from "components/icon.html" import Icon %}
+
 <section class="member-list">
   <div class='responsive-table-wrapper panel'>
-    <div class='title'>{{ "portfolios.admin.portfolio_members_title" | translate }}</div>
-    <div class='subheading'>{{ "portfolios.admin.portfolio_members_subheading" | translate }}</div>
-    <a class='icon-link'>{{ "portfolios.admin.settings_info" | translate }}</a>
+    <div class='member-list-header'>
+      <div class='left'>
+        <div class='h3'>{{ "portfolios.admin.portfolio_members_title" | translate }}</div>
+        <div class='subheading'>
+          {{ "portfolios.admin.portfolio_members_subheading" | translate }}
+        </div>
+      </div>
+      <a class='icon-link'>
+        <span class='icon'>{{ Icon('info') }}</span>
+        {{ "portfolios.admin.settings_info" | translate }}
+      </a>
+    </div>
 
   {% if not portfolio.members %}
 
@@ -14,47 +25,33 @@
 
       <thead>
         <tr>
-            <td class='members-table-cell'>{{ "portfolios.members.permissions.name" | translate }}</td>
-            <td class='members-table-cell'>{{ "portfolios.members.permissions.app_mgmt" | translate }}</td>
-            <td class='members-table-cell'>{{ "portfolios.members.permissions.funding" | translate }}</td>
-            <td class='members-table-cell'>{{ "portfolios.members.permissions.reporting" | translate }}</td>
-            <td class='members-table-cell'>{{ "portfolios.members.permissions.portfolio_mgmt" | translate }}</td>
-            <td class='members-table-cell'></td>
+            <td>{{ "portfolios.members.permissions.name" | translate }}</td>
+            <td>{{ "portfolios.members.permissions.app_mgmt" | translate }}</td>
+            <td>{{ "portfolios.members.permissions.funding" | translate }}</td>
+            <td>{{ "portfolios.members.permissions.reporting" | translate }}</td>
+            <td>{{ "portfolios.members.permissions.portfolio_mgmt" | translate }}</td>
+            <td></td>
         </tr>
       </thead>
 
       <tbody>
         {% for member in portfolio.members %}
         <tr>
-            <td>{{ member.user_name }}
+            <td class='name'>{{ member.user_name }}
               {% if member.user == user %}
-                (you)
+                <span class='you'>(<a>you</a>)</span>
               {% endif %}
             </td>
+            {% set heading_perms = ['edit_application', 'view_portfolio_funding', 'view_portfolio_reports', 'edit_portfolio_name'] %}
 
-            {% if 'edit_application' in member.permissions %}
-              <td>Edit Access</td>
-            {% else %}
-              <td>View Only</td>
-            {% endif %}
+            {% for perm in heading_perms %}
+              {% if perm in member.permissions %}
+                <td><a>Edit Access</a></td>
+              {% else %}
+                <td>View Only</td>
+              {% endif %}
+            {% endfor %}
 
-            {% if 'view_portfolio_funding' in member.permissions %}
-              <td>Edit Access</td>
-            {% else %}
-              <td>View Only</td>
-            {% endif %}
-
-            {% if 'view_portfolio_reports' in member.permissions %}
-              <td>Edit Access</td>
-            {% else %}
-              <td>View Only</td>
-            {% endif %}
-
-            {% if 'edit_portfolio_name' in member.permissions %}
-              <td>Edit Access</td>
-            {% else %}
-              <td>View Only</td>
-            {% endif %}
         </tr>
         {% endfor %}
       </tbody>

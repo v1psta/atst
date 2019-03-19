@@ -168,13 +168,50 @@
   .member-list {
     .panel {
       @include shadow-panel;
+      padding-bottom: 0;
+    }
+
+    .member-list-header {
+      margin: 2 * $gap 5 * $gap;
+      padding: inherit;
+      overflow: auto;
+
+      .left {
+        float: left;
+        padding-bottom: 0.8rem;
+      }
+
+      .icon-link {
+        float: right;
+        margin-top: 0.8rem;
+      }
+
+      .icon {
+
+      }
+    }
+
+    .subheading {
+      font-size: 1.4rem;
+      color: $color-gray;
     }
 
     table {
       box-shadow: 0 6px 18px 0 rgba(144,164,183,0.3);
+
       thead {
         th:first-child {
           padding-left: 3 * $gap;
+        }
+
+        tr:first-child {
+          padding: 0 2 * $gap 0 5 * $gap;
+        }
+
+        td {
+          font-weight: bold;
+          font-size: 1.4rem;
+          border-top: 0;
         }
       }
 
@@ -186,8 +223,29 @@
         color: $color-gray;
       }
 
-      td {
-        border-bottom: 1px solid $color-gray-lightest;
+      td:first-child {
+        padding: 2 * $gap 2 * $gap 2 * $gap 5 * $gap;
+      }
+
+      tbody {
+        td {
+          border-bottom: 1px solid $color-gray-lightest;
+          font-size: 1.6rem;
+          border-top: 0;
+          padding: 3 * $gap 2 * $gap;
+        }
+
+        .green {
+          color: $color-green;
+        }
+
+        .name {
+          font-weight: bold;
+
+          .you {
+            font-size: 1.2rem;
+          }
+        }
       }
 
       .add-member-link {
