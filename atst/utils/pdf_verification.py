@@ -153,18 +153,18 @@ class PDFSignature:
             .to_cryptography_key()
         )
         attrs = self.signed_binary_data["signer_infos"][0]["signed_attrs"]
-        signedData = None
+        signed_data = None
 
         if attrs is not None and not isinstance(attrs, core.Void):
-            signedData = attrs.dump()
-            signedData = b"\x31" + signedData[1:]
+            signed_data = attrs.dump()
+            signed_data = b"\x31" + signed_data[1:]
         else:
-            signedData = self.binary_data
+            signed_data = self.binary_data
 
         try:
             public_key.verify(
                 bytes(self.signed_binary_data["signer_infos"][0]["signature"]),
-                signedData,
+                signed_data,
                 padding.PKCS1v15(),
                 getattr(hashes, self.hashing_algorithm.upper())(),
             )
