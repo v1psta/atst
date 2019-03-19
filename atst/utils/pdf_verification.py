@@ -49,7 +49,7 @@ class PDFSignature:
         """
         This returns the certificate used to sign the PDF
         """
-        if self._signers_cert == None:
+        if self._signers_cert is None:
             for cert in self.signed_binary_data["certificates"]:
                 if (
                     self.signers_serial
