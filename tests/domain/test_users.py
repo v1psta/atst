@@ -20,10 +20,9 @@ def test_create_user_with_existing_email():
         Users.create(DOD_ID, email="thisusersemail@usersRus.com")
 
 
-@pytest.mark.skip(reason="no more roles")
-def test_create_user_with_nonexistent_role():
+def test_create_user_with_nonexistent_permission_set():
     with pytest.raises(NotFoundError):
-        Users.create(DOD_ID, "nonexistent")
+        Users.create(DOD_ID, permission_sets=["nonexistent"])
 
 
 def test_get_or_create_nonexistent_user():

@@ -32,11 +32,16 @@ class PermissionSets(object):
 
     @classmethod
     def get_many(cls, perms_set_names):
-        return (
+        permission_sets = (
             db.session.query(PermissionSet)
             .filter(PermissionSet.name.in_(perms_set_names))
             .all()
         )
+
+        if len(permission_sets) != len(perms_set_names):
+            raise NotFoundError("permission_set")
+
+        return permission_sets
 
 
 ATAT_ROLES = [
