@@ -22,7 +22,7 @@ def test_unsigned_pdf(crl_check):
     unsigned_pdf = open("tests/fixtures/sample.pdf", "rb").read()
     result = pdf_signature_validations(pdf=unsigned_pdf, crl_check=crl_check)
 
-    assert result == {"result": "FAILURE", "signature_count": 0, "signatures": []}
+    assert result == {"result": False, "signature_count": 0, "signatures": []}
 
 
 def test_valid_signed_pdf(crl_check):
@@ -30,7 +30,7 @@ def test_valid_signed_pdf(crl_check):
     result = pdf_signature_validations(pdf=valid_signed_pdf, crl_check=crl_check)
 
     assert result == {
-        "result": "OK",
+        "result": True,
         "signature_count": 2,
         "signatures": [
             {
@@ -63,7 +63,7 @@ def test_signed_pdf_thats_been_modified(crl_check):
     result = pdf_signature_validations(pdf=modified_pdf, crl_check=crl_check)
 
     assert result == {
-        "result": "FAILURE",
+        "result": False,
         "signature_count": 2,
         "signatures": [
             {
@@ -98,7 +98,7 @@ def test_signed_pdf_dod_revoked(crl_check):
     result = pdf_signature_validations(pdf=signed_pdf_dod_revoked, crl_check=crl_check)
 
     assert result == {
-        "result": "FAILURE",
+        "result": False,
         "signature_count": 1,
         "signatures": [
             {
@@ -123,7 +123,7 @@ def test_signed_dod_pdf_signer_cert_expired(crl_check):
     result = pdf_signature_validations(pdf=signed_pdf_dod_revoked, crl_check=crl_check)
 
     assert result == {
-        "result": "FAILURE",
+        "result": False,
         "signature_count": 1,
         "signatures": [
             {

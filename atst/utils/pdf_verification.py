@@ -213,11 +213,11 @@ def pdf_signature_validations(pdf=None, crl_check=None):
         response["signatures"].append(sig)
 
         if not sig["is_valid"]:
-            response["result"] = "FAILURE"
-        elif response["result"] is not "FAILURE":
-            response["result"] = "OK"
+            response["result"] = False
+        elif response["result"] is not False:
+            response["result"] = True
 
     if len(signatures) == 0:
-        response["result"] = "FAILURE"
+        response["result"] = False
 
     return response
