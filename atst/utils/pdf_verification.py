@@ -8,6 +8,7 @@ from cryptography.hazmat.primitives.asymmetric import padding
 class PDFSignature:
     def __init__(self, byte_range_start=None, crl_check=None, pdf=None):
         self._signers_cert = None
+        self._openssl_loaded_certificate = None
         self.byte_range_start = byte_range_start
         self.crl_check = crl_check
         self.pdf = pdf
@@ -79,16 +80,20 @@ class PDFSignature:
         return self.signed_binary_data["digest_algorithms"][0]["algorithm"].native
 
     @property
+    def openssl_loaded_certificate(self):
+        if self._openssl_loaded_certificate is None:
+            self._openssl_loaded_certificate = crypto.load_certificate(
+                crypto.FILETYPE_PEM, self.signers_cert
+            )
+        return self._openssl_loaded_certificate
+
+    @property
     def cert_common_name(self):
         """
         This returns the common name on the certificate. This might be a name or
         a DOD ID for example.
         """
-        return (
-            crypto.load_certificate(crypto.FILETYPE_PEM, self.signers_cert)
-            .get_subject()
-            .commonName
-        )
+        return self.openssl_loaded_certificate.get_subject().commonName
 
     @property
     def encrypted_hash_of_signed_document(self):
@@ -140,11 +145,7 @@ class PDFSignature:
         Get signed PDF signature and determine if it was actually signed
         by the certificate that it claims it was. Returns a boolean.
         """
-        public_key = (
-            crypto.load_certificate(crypto.FILETYPE_PEM, self.signers_cert)
-            .get_pubkey()
-            .to_cryptography_key()
-        )
+        public_key = self.openssl_loaded_certificate.get_pubkey().to_cryptography_key()
         attrs = self.signed_binary_data["signer_infos"][0]["signed_attrs"]
         signed_data = None
 
