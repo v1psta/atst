@@ -39,14 +39,14 @@
         <tr>
             <td class='name'>{{ member.user_name }}
               {% if member.user == user %}
-                <span class='you'>(<a>you</a>)</span>
+                <span class='you'>(<span class='green'>you</span>)</span>
               {% endif %}
             </td>
             {% set heading_perms = ['edit_application', 'view_portfolio_funding', 'view_portfolio_reports', 'edit_portfolio_name'] %}
 
             {% for perm in heading_perms %}
               {% if perm in member.permissions %}
-                <td><a>Edit Access</a></td>
+                <td class='green'>Edit Access</td>
               {% else %}
                 <td>View Only</td>
               {% endif %}
