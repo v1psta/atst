@@ -112,29 +112,3 @@ def test_signed_pdf_dod_revoked(crl_check):
             }
         ],
     }
-
-
-def test_signed_dod_pdf_signer_cert_expired(crl_check):
-    #
-    # TODO: Is this good enough? Do we want an expired DOD certificate? This test is using
-    #       a fake DOD certificate.
-    #
-    signed_pdf_dod_revoked = open("tests/fixtures/signed-expired-cert.pdf", "rb").read()
-    result = pdf_signature_validations(pdf=signed_pdf_dod_revoked, crl_check=crl_check)
-
-    assert result == {
-        "result": False,
-        "signature_count": 1,
-        "signatures": [
-            {
-                "cert_common_name": "Bob Alice",
-                "hashed_binary_data": "bcfad46c89b1695325f5b6e73b589d086e3925ab384def6fcb13904991e69077",
-                "hashing_algorithm": "sha256",
-                "is_valid": False,
-                "is_valid_cert": False,
-                "is_valid_hash": True,
-                "is_valid_signature": True,
-                "signers_serial": -180_673_825_300_246_991_177_196,
-            }
-        ],
-    }
