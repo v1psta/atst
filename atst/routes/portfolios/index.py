@@ -10,6 +10,7 @@ from atst.domain.authz import Authorization
 from atst.domain.common import Paginator
 from atst.forms.portfolio import PortfolioForm
 from atst.models.permissions import Permissions
+from atst.domain.permission_sets import PermissionSets
 
 
 @portfolios_bp.route("/portfolios")
@@ -22,6 +23,20 @@ def portfolios():
         return render_template("portfolios/blank_slate.html")
 
 
+def serialize_member(member):
+    return {
+        "member": member,
+        "app_mgmt": member.has_permission_set(
+            PermissionSets.EDIT_PORTFOLIO_APPLICATION_MANAGEMENT
+        ),
+        "funding": member.has_permission_set(PermissionSets.EDIT_PORTFOLIO_FUNDING),
+        "reporting": member.has_permission_set(PermissionSets.EDIT_PORTFOLIO_REPORTS),
+        "portfolio_mgmt": member.has_permission_set(
+            PermissionSets.EDIT_PORTFOLIO_ADMIN
+        ),
+    }
+
+
 @portfolios_bp.route("/portfolios/<portfolio_id>/admin")
 def portfolio_admin(portfolio_id):
     portfolio = Portfolios.get_for_update_information(g.current_user, portfolio_id)
@@ -30,12 +45,14 @@ def portfolio_admin(portfolio_id):
     audit_events = AuditLog.get_portfolio_events(
         g.current_user, portfolio, pagination_opts
     )
+    members_data = [serialize_member(member) for member in portfolio.members]
     return render_template(
         "portfolios/admin.html",
         form=form,
         portfolio=portfolio,
         audit_events=audit_events,
         user=g.current_user,
+        members_data=members_data,
     )
 
 

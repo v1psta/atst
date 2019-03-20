@@ -7,6 +7,7 @@ from atst.models import Base, mixins
 from .types import Id
 
 from atst.database import db
+from atst.utils import first_or_none
 from atst.models.environment_role import EnvironmentRole
 from atst.models.application import Application
 from atst.models.environment import Environment
@@ -110,6 +111,11 @@ class PortfolioRole(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
                 return MEMBER_STATUSES["pending"]
         else:
             return MEMBER_STATUSES["unknown"]
+
+    def has_permission_set(self, perm_set_name):
+        return first_or_none(
+            lambda prms: prms.name == perm_set_name, self.permission_sets
+        )
 
     @property
     def has_dod_id_error(self):

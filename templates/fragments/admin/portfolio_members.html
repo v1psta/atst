@@ -35,17 +35,17 @@
       </thead>
 
       <tbody>
-        {% for member in portfolio.members %}
+        {% for member_data in members_data %}
         <tr>
-            <td class='name'>{{ member.user_name }}
-              {% if member.user == user %}
+            <td class='name'>{{ member_data.member.user_name }}
+              {% if member_data.member.user == user %}
                 <span class='you'>(<span class='green'>you</span>)</span>
               {% endif %}
             </td>
-            {% set heading_perms = ['edit_application', 'view_portfolio_funding', 'view_portfolio_reports', 'edit_portfolio_name'] %}
+            {% set heading_perms = [member_data.app_mgmt, member_data.funding, member_data.reporting, member_data.portfolio_mgmt] %}
 
-            {% for perm in heading_perms %}
-              {% if perm in member.permissions %}
+            {% for has_perm in heading_perms %}
+              {% if has_perm %}
                 <td class='green'>Edit Access</td>
               {% else %}
                 <td>View Only</td>
