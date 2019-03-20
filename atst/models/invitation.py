@@ -104,6 +104,10 @@ class Invitation(Base, TimestampsMixin, AuditableMixin):
         return self.is_pending and not self.is_expired
 
     @property
+    def can_resend(self):
+        return self.is_pending or self.is_expired
+
+    @property
     def user_dod_id(self):
         return self.user.dod_id if self.user is not None else None
 

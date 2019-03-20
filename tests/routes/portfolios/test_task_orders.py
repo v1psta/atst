@@ -1,6 +1,6 @@
 from flask import url_for
 import pytest
-from datetime import timedelta, date
+from datetime import timedelta, date, datetime
 
 from atst.domain.permission_sets import PermissionSets
 from atst.domain.task_orders import TaskOrders
@@ -694,3 +694,63 @@ def test_resend_invite_when_not_pending(app, client, user_session, portfolio, us
     assert original_invitation.status == InvitationStatus.ACCEPTED
     assert response.status_code == 404
     assert len(queue.get_queue()) == queue_length
+
+
+def test_resending_revoked_invite(app, client, user_session, portfolio, user):
+    task_order = TaskOrderFactory.create(
+        portfolio=portfolio, contracting_officer=user, ko_invite=True
+    )
+
+    portfolio_role = PortfolioRoleFactory.create(portfolio=portfolio, user=user)
+
+    invite = InvitationFactory.create(
+        inviter=user,
+        portfolio_role=portfolio_role,
+        email=user.email,
+        status=InvitationStatus.REVOKED,
+    )
+
+    user_session(user)
+
+    response = client.post(
+        url_for(
+            "portfolios.resend_invite",
+            portfolio_id=portfolio.id,
+            task_order_id=task_order.id,
+            invite_type="ko_invite",
+            _external=True,
+        )
+    )
+
+    assert invite.is_revoked
+    assert response.status_code == 404
+
+
+def test_resending_expired_invite(app, client, user_session, portfolio, user):
+    queue_length = len(queue.get_queue())
+
+    task_order = TaskOrderFactory.create(
+        portfolio=portfolio, contracting_officer=user, ko_invite=True
+    )
+    portfolio_role = PortfolioRoleFactory.create(portfolio=portfolio, user=user)
+    invite = InvitationFactory.create(
+        inviter=user,
+        portfolio_role=portfolio_role,
+        email=user.email,
+        expiration_time=datetime.now() - timedelta(days=1),
+    )
+    user_session(user)
+
+    response = client.post(
+        url_for(
+            "portfolios.resend_invite",
+            portfolio_id=portfolio.id,
+            task_order_id=task_order.id,
+            invite_type="ko_invite",
+            _external=True,
+        )
+    )
+
+    assert invite.is_expired
+    assert response.status_code == 302
+    assert len(queue.get_queue()) == queue_length + 1

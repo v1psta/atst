@@ -14,7 +14,6 @@ from atst.forms.dd_254 import DD254Form
 from atst.forms.ko_review import KOReviewForm
 from atst.forms.officers import EditTaskOrderOfficersForm
 from atst.models.task_order import Status as TaskOrderStatus
-from atst.models.invitation import Status as InvitationStatus
 from atst.utils.flash import formatted_flash as flash
 from atst.services.invitation import (
     update_officer_invitations,
@@ -126,7 +125,10 @@ def resend_invite(portfolio_id, task_order_id, form=None):
 
     invitation = Invitations.lookup_by_portfolio_and_user(portfolio, officer)
 
-    if invitation.status is not InvitationStatus.PENDING:
+    if not invitation:
+        raise NotFoundError("invitation")
+
+    if not invitation.can_resend:
         raise NoAccessError("invitation")
 
     Invitations.revoke(token=invitation.token)
@@ -210,7 +212,7 @@ def task_order_invitations(portfolio_id, task_order_id):
             form=form,
         )
     else:
-        raise NoAccessError("task_order")
+        raise NotFoundError("task_order")
 
 
 @portfolios_bp.route(
