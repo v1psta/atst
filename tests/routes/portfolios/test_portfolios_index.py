@@ -66,7 +66,9 @@ def test_portfolio_admin_screen_when_ppoc(client, user_session):
 def test_portfolio_admin_screen_when_not_ppoc(client, user_session):
     portfolio = PortfolioFactory.create()
     user = UserFactory.create()
-    permission_sets = PermissionSets.get_all()
+    permission_sets = PermissionSets.get_many(
+        [PermissionSets.EDIT_PORTFOLIO_ADMIN, PermissionSets.VIEW_PORTFOLIO_ADMIN]
+    )
     PortfolioRoleFactory.create(
         portfolio=portfolio, user=user, permission_sets=permission_sets
     )
