@@ -4,6 +4,15 @@ from flask import g
 
 from . import user_can_access
 from atst.domain.portfolios import Portfolios
+from atst.domain.task_orders import TaskOrders
+
+
+def evaluate_exceptions(user, permission, exceptions, **kwargs):
+    return (
+        True
+        if True in [exc(g.current_user, permission, **kwargs) for exc in exceptions]
+        else False
+    )
 
 
 def user_can_access_decorator(permission, message=None, exceptions=None):
@@ -16,13 +25,14 @@ def user_can_access_decorator(permission, message=None, exceptions=None):
                 access_args["portfolio"] = Portfolios.get(
                     g.current_user, kwargs["portfolio_id"]
                 )
+            elif "task_order_id" in kwargs:
+                task_order = TaskOrders.get(g.current_user, kwargs["task_order_id"])
+                access_args["portfolio"] = task_order.portfolio
 
-            if exceptions:
-                evaluated = [
-                    exc(g.current_user, permission, **access_args) for exc in exceptions
-                ]
-                if True in evaluated:
-                    return True
+            if exceptions and evaluate_exceptions(
+                g.current_user, permission, exceptions, **access_args, **kwargs
+            ):
+                return f(*args, **kwargs)
 
             user_can_access(g.current_user, permission, **access_args)
 

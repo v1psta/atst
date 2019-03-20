@@ -14,6 +14,8 @@ from atst.domain.task_orders import TaskOrders
 from atst.domain.portfolios import Portfolios
 from atst.utils.flash import formatted_flash as flash
 import atst.forms.task_order as task_order_form
+from atst.domain.authz.decorator import user_can_access_decorator as user_can
+from atst.models.permissions import Permissions
 
 
 TASK_ORDER_SECTIONS = [
@@ -249,9 +251,19 @@ def get_started():
     return render_template("task_orders/new/get_started.html")  # pragma: no cover
 
 
+def is_new_task_order(*args, **kwargs):
+    return (
+        "screen" in kwargs
+        and kwargs["screen"] == 1
+        and "task_order_id" not in kwargs
+        and "portfolio_id" not in kwargs
+    )
+
+
 @task_orders_bp.route("/task_orders/new/<int:screen>")
 @task_orders_bp.route("/task_orders/new/<int:screen>/<task_order_id>")
 @task_orders_bp.route("/portfolios/<portfolio_id>/task_orders/new/<int:screen>")
+@user_can(Permissions.CREATE_TASK_ORDER, exceptions=[is_new_task_order])
 def new(screen, task_order_id=None, portfolio_id=None):
     workflow = ShowTaskOrderWorkflow(
         g.current_user, screen, task_order_id, portfolio_id
@@ -298,6 +310,7 @@ def new(screen, task_order_id=None, portfolio_id=None):
 @task_orders_bp.route(
     "/portfolios/<portfolio_id>/task_orders/new/<int:screen>", methods=["POST"]
 )
+@user_can(Permissions.CREATE_TASK_ORDER, exceptions=[is_new_task_order])
 def update(screen, task_order_id=None, portfolio_id=None):
     form_data = {**http_request.form, **http_request.files}
     workflow = UpdateTaskOrderWorkflow(

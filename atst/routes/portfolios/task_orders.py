@@ -20,9 +20,12 @@ from atst.services.invitation import (
     OFFICER_INVITATIONS,
     Invitation as InvitationService,
 )
+from atst.domain.authz.decorator import user_can_access_decorator as user_can
+from atst.models.permissions import Permissions
 
 
 @portfolios_bp.route("/portfolios/<portfolio_id>/task_orders")
+@user_can(Permissions.VIEW_PORTFOLIO_FUNDING)
 def portfolio_funding(portfolio_id):
     portfolio = Portfolios.get(g.current_user, portfolio_id)
     task_orders_by_status = defaultdict(list)
@@ -66,6 +69,7 @@ def portfolio_funding(portfolio_id):
 
 
 @portfolios_bp.route("/portfolios/<portfolio_id>/task_order/<task_order_id>")
+@user_can(Permissions.VIEW_TASK_ORDER_DETAILS)
 def view_task_order(portfolio_id, task_order_id):
     portfolio = Portfolios.get(g.current_user, portfolio_id)
     task_order = TaskOrders.get(g.current_user, task_order_id)
@@ -85,12 +89,18 @@ def view_task_order(portfolio_id, task_order_id):
     )
 
 
+def wrap_check_is_ko_or_cor(user, _perm, task_order_id=None, **_kwargs):
+    task_order = TaskOrders.get(user, task_order_id)
+    Authorization.check_is_ko_or_cor(user, task_order)
+
+    return True
+
+
 @portfolios_bp.route("/portfolios/<portfolio_id>/task_order/<task_order_id>/review")
+@user_can(None, exceptions=[wrap_check_is_ko_or_cor])
 def ko_review(portfolio_id, task_order_id):
     task_order = TaskOrders.get(g.current_user, task_order_id)
     portfolio = Portfolios.get(g.current_user, portfolio_id)
-
-    Authorization.check_is_ko_or_cor(g.current_user, task_order)
 
     if TaskOrders.all_sections_complete(task_order):
         return render_template(
@@ -107,6 +117,7 @@ def ko_review(portfolio_id, task_order_id):
     "/portfolios/<portfolio_id>/task_order/<task_order_id>/resend_invite",
     methods=["POST"],
 )
+@user_can(Permissions.EDIT_TASK_ORDER_DETAILS)
 def resend_invite(portfolio_id, task_order_id, form=None):
     invite_type = http_request.args.get("invite_type")
 
@@ -164,12 +175,11 @@ def resend_invite(portfolio_id, task_order_id, form=None):
 @portfolios_bp.route(
     "/portfolios/<portfolio_id>/task_order/<task_order_id>/review", methods=["POST"]
 )
+@user_can(None, exceptions=[wrap_check_is_ko_or_cor])
 def submit_ko_review(portfolio_id, task_order_id, form=None):
     task_order = TaskOrders.get(g.current_user, task_order_id)
     form_data = {**http_request.form, **http_request.files}
     form = KOReviewForm(form_data)
-
-    Authorization.check_is_ko_or_cor(g.current_user, task_order)
 
     if form.validate():
         TaskOrders.update(user=g.current_user, task_order=task_order, **form.data)
@@ -199,6 +209,7 @@ def submit_ko_review(portfolio_id, task_order_id, form=None):
 @portfolios_bp.route(
     "/portfolios/<portfolio_id>/task_order/<task_order_id>/invitations"
 )
+@user_can(Permissions.EDIT_TASK_ORDER_DETAILS)
 def task_order_invitations(portfolio_id, task_order_id):
     portfolio = Portfolios.get(g.current_user, portfolio_id)
     task_order = TaskOrders.get(g.current_user, task_order_id)
@@ -219,6 +230,7 @@ def task_order_invitations(portfolio_id, task_order_id):
     "/portfolios/<portfolio_id>/task_order/<task_order_id>/invitations",
     methods=["POST"],
 )
+@user_can(Permissions.EDIT_TASK_ORDER_DETAILS)
 def edit_task_order_invitations(portfolio_id, task_order_id):
     portfolio = Portfolios.get(g.current_user, portfolio_id)
     task_order = TaskOrders.get(g.current_user, task_order_id)
@@ -266,11 +278,17 @@ def so_review_form(task_order):
         return DD254Form(data=form_data)
 
 
+def wrap_check_is_so(user, _perm, task_order_id=None, **_kwargs):
+    task_order = TaskOrders.get(user, task_order_id)
+    Authorization.check_is_so(user, task_order)
+
+    return True
+
+
 @portfolios_bp.route("/portfolios/<portfolio_id>/task_order/<task_order_id>/dd254")
+@user_can(None, exceptions=[wrap_check_is_so])
 def so_review(portfolio_id, task_order_id):
     task_order = TaskOrders.get(g.current_user, task_order_id)
-    Authorization.check_is_so(g.current_user, task_order)
-
     form = so_review_form(task_order)
 
     return render_template(
@@ -284,10 +302,9 @@ def so_review(portfolio_id, task_order_id):
 @portfolios_bp.route(
     "/portfolios/<portfolio_id>/task_order/<task_order_id>/dd254", methods=["POST"]
 )
+@user_can(None, exceptions=[wrap_check_is_so])
 def submit_so_review(portfolio_id, task_order_id):
     task_order = TaskOrders.get(g.current_user, task_order_id)
-    Authorization.check_is_so(g.current_user, task_order)
-
     form = DD254Form(http_request.form)
 
     if form.validate():

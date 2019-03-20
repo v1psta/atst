@@ -63,7 +63,6 @@ class TestDownloadCSPEstimate:
         )
         assert response.status_code == 404
 
-    @pytest.mark.auth
     def test_download_with_wrong_user(self, client, user_session):
         other_user = UserFactory.create()
         user_session(other_user)

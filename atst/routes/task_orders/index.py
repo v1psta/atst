@@ -5,9 +5,12 @@ from . import task_orders_bp
 from atst.domain.task_orders import TaskOrders
 from atst.domain.exceptions import NotFoundError
 from atst.utils.docx import Docx
+from atst.domain.authz.decorator import user_can_access_decorator as user_can
+from atst.models.permissions import Permissions
 
 
 @task_orders_bp.route("/task_orders/download_summary/<task_order_id>")
+@user_can(Permissions.VIEW_TASK_ORDER_DETAILS)
 def download_summary(task_order_id):
     task_order = TaskOrders.get(g.current_user, task_order_id)
     byte_str = BytesIO()
@@ -31,6 +34,7 @@ def send_file(attachment):
 
 
 @task_orders_bp.route("/task_orders/csp_estimate/<task_order_id>")
+@user_can(Permissions.VIEW_TASK_ORDER_DETAILS)
 def download_csp_estimate(task_order_id):
     task_order = TaskOrders.get(g.current_user, task_order_id)
     if task_order.csp_estimate:
@@ -40,6 +44,7 @@ def download_csp_estimate(task_order_id):
 
 
 @task_orders_bp.route("/task_orders/pdf/<task_order_id>")
+@user_can(Permissions.VIEW_TASK_ORDER_DETAILS)
 def download_task_order_pdf(task_order_id):
     task_order = TaskOrders.get(g.current_user, task_order_id)
     if task_order.pdf:

@@ -371,27 +371,6 @@ def test_mo_redirected_to_build_page(client, user_session, portfolio):
     assert response.status_code == 200
 
 
-def test_cor_redirected_to_build_page(client, user_session, portfolio):
-    cor = UserFactory.create()
-    PortfolioRoleFactory.create(
-        portfolio=portfolio,
-        user=cor,
-        status=PortfolioStatus.ACTIVE,
-        permission_sets=[
-            PermissionSets.get(PermissionSets.VIEW_PORTFOLIO),
-            PermissionSets.get(PermissionSets.VIEW_PORTFOLIO_FUNDING),
-        ],
-    )
-    task_order = TaskOrderFactory.create(
-        portfolio=portfolio, contracting_officer_representative=cor
-    )
-    user_session(cor)
-    response = client.get(
-        url_for("task_orders.new", screen=1, task_order_id=task_order.id)
-    )
-    assert response.status_code == 200
-
-
 def test_submit_completed_ko_review_page_as_cor(
     client, user_session, pdf_upload, portfolio, user
 ):
@@ -620,6 +599,7 @@ def test_resend_invite_when_officer_type_missing(
     assert len(queue.get_queue()) == queue_length
 
 
+@pytest.mark.skip(reason="KO should not be able to resend invites")
 def test_resend_invite_when_ko(app, client, user_session, portfolio, user):
     queue_length = len(queue.get_queue())
 

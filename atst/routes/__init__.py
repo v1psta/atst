@@ -22,6 +22,8 @@ from atst.domain.audit_log import AuditLog
 from atst.domain.auth import logout as _logout
 from atst.domain.common import Paginator
 from atst.domain.portfolios import Portfolios
+from atst.domain.authz.decorator import user_can_access_decorator as user_can
+from atst.models.permissions import Permissions
 from atst.utils.flash import formatted_flash as flash
 
 
@@ -143,6 +145,7 @@ def logout():
 
 
 @bp.route("/activity-history")
+@user_can(Permissions.VIEW_AUDIT_LOG, message="view activity log")
 def activity_history():
     pagination_opts = Paginator.get_pagination_opts(request)
     audit_events = AuditLog.get_all_events(g.current_user, pagination_opts)

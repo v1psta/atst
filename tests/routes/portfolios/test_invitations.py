@@ -95,7 +95,6 @@ def test_member_accepts_invalid_invite(client, user_session):
     assert response.status_code == 404
 
 
-@pytest.mark.auth
 def test_user_who_has_not_accepted_portfolio_invite_cannot_view(client, user_session):
     user = UserFactory.create()
     portfolio = PortfolioFactory.create()

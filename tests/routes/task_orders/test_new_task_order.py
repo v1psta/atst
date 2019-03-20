@@ -2,11 +2,17 @@ import pytest
 from flask import url_for
 
 from atst.domain.task_orders import TaskOrders
+from atst.domain.permission_sets import PermissionSets
 from atst.models.attachment import Attachment
 from atst.routes.task_orders.new import ShowTaskOrderWorkflow, UpdateTaskOrderWorkflow
 from atst.utils.localization import translate
 
-from tests.factories import UserFactory, TaskOrderFactory, PortfolioFactory
+from tests.factories import (
+    UserFactory,
+    TaskOrderFactory,
+    PortfolioFactory,
+    PortfolioRoleFactory,
+)
 
 
 class TestShowTaskOrderWorkflow:
@@ -93,8 +99,6 @@ def test_to_on_pf_cannot_edit_pf_attributes():
     assert second_workflow.pf_attributes_read_only
 
 
-# TODO: this test will need to be more complicated when we add validation to
-# the forms
 def test_create_new_task_order(client, user_session, pdf_upload):
     creator = UserFactory.create()
     user_session(creator)
@@ -296,6 +300,11 @@ def test_update_task_order_with_existing_task_order(task_order):
 def test_update_to_redirects_to_ko_review(client, user_session, task_order):
     ko = UserFactory.create()
     task_order.contracting_officer = ko
+    PortfolioRoleFactory.create(
+        user=ko,
+        portfolio=task_order.portfolio,
+        permission_sets=[PermissionSets.get(PermissionSets.EDIT_PORTFOLIO_FUNDING)],
+    )
     user_session(ko)
     url = url_for(
         "portfolios.ko_review",

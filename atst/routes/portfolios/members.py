@@ -12,6 +12,8 @@ from atst.domain.environment_roles import EnvironmentRoles
 from atst.services.invitation import Invitation as InvitationService
 import atst.forms.portfolio_member as member_forms
 from atst.forms.data import ENVIRONMENT_ROLES, ENV_ROLE_MODAL_DESCRIPTION
+from atst.domain.authz.decorator import user_can_access_decorator as user_can
+from atst.models.permissions import Permissions
 
 from atst.utils.flash import formatted_flash as flash
 
@@ -32,6 +34,7 @@ def serialize_portfolio_role(portfolio_role):
 
 
 @portfolios_bp.route("/portfolios/<portfolio_id>/members")
+@user_can(Permissions.VIEW_PORTFOLIO_USERS)
 def portfolio_members(portfolio_id):
     portfolio = Portfolios.get_with_members(g.current_user, portfolio_id)
     members_list = [serialize_portfolio_role(k) for k in portfolio.members]
@@ -45,6 +48,7 @@ def portfolio_members(portfolio_id):
 
 
 @portfolios_bp.route("/portfolios/<portfolio_id>/applications/<application_id>/members")
+@user_can(Permissions.VIEW_APPLICATION_MEMBER)
 def application_members(portfolio_id, application_id):
     portfolio = Portfolios.get_with_members(g.current_user, portfolio_id)
     application = Applications.get(g.current_user, portfolio, application_id)
@@ -60,6 +64,7 @@ def application_members(portfolio_id, application_id):
 
 
 @portfolios_bp.route("/portfolios/<portfolio_id>/members/new")
+@user_can(Permissions.CREATE_PORTFOLIO_USERS)
 def new_member(portfolio_id):
     portfolio = Portfolios.get(g.current_user, portfolio_id)
     form = member_forms.NewForm()
@@ -69,6 +74,7 @@ def new_member(portfolio_id):
 
 
 @portfolios_bp.route("/portfolios/<portfolio_id>/members/new", methods=["POST"])
+@user_can(Permissions.CREATE_PORTFOLIO_USERS)
 def create_member(portfolio_id):
     portfolio = Portfolios.get(g.current_user, portfolio_id)
     form = member_forms.NewForm(http_request.form)
@@ -97,6 +103,7 @@ def create_member(portfolio_id):
 
 
 @portfolios_bp.route("/portfolios/<portfolio_id>/members/<member_id>/member_edit")
+@user_can(Permissions.VIEW_PORTFOLIO_USERS)
 def view_member(portfolio_id, member_id):
     portfolio = Portfolios.get(g.current_user, portfolio_id)
     member = PortfolioRoles.get(portfolio_id, member_id)
@@ -125,6 +132,7 @@ def view_member(portfolio_id, member_id):
 @portfolios_bp.route(
     "/portfolios/<portfolio_id>/members/<member_id>/member_edit", methods=["POST"]
 )
+@user_can(Permissions.EDIT_PORTFOLIO_USERS)
 def update_member(portfolio_id, member_id):
     portfolio = Portfolios.get(g.current_user, portfolio_id)
     member = PortfolioRoles.get(portfolio_id, member_id)
@@ -163,6 +171,7 @@ def update_member(portfolio_id, member_id):
 @portfolios_bp.route(
     "/portfolios/<portfolio_id>/members/<member_id>/revoke_access", methods=["POST"]
 )
+@user_can(Permissions.EDIT_PORTFOLIO_USERS)
 def revoke_access(portfolio_id, member_id):
     revoked_role = Portfolios.revoke_access(g.current_user, portfolio_id, member_id)
     flash("revoked_portfolio_access", member_name=revoked_role.user.full_name)

@@ -95,7 +95,7 @@ def test_add_officer_who_is_already_portfolio_member():
     assert member.user == owner
 
 
-@pytest.mark.auth
+@pytest.mark.skip(reason="redo as route access test")
 def test_task_order_access():
     creator = UserFactory.create()
     member = UserFactory.create()

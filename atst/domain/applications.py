@@ -1,7 +1,6 @@
 from atst.database import db
 from atst.domain.environments import Environments
 from atst.domain.exceptions import NotFoundError
-from atst.models.permissions import Permissions
 from atst.models.application import Application
 from atst.models.environment import Environment
 from atst.models.environment_role import EnvironmentRole

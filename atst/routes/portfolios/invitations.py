@@ -5,6 +5,8 @@ from atst.domain.portfolios import Portfolios
 from atst.domain.invitations import Invitations
 from atst.queue import queue
 from atst.utils.flash import formatted_flash as flash
+from atst.domain.authz.decorator import user_can_access_decorator as user_can
+from atst.models.permissions import Permissions
 
 
 def send_invite_email(owner_name, token, new_member_email):
@@ -43,6 +45,7 @@ def accept_invitation(token):
 @portfolios_bp.route(
     "/portfolios/<portfolio_id>/invitations/<token>/revoke", methods=["POST"]
 )
+@user_can(Permissions.EDIT_PORTFOLIO_USERS)
 def revoke_invitation(portfolio_id, token):
     portfolio = Portfolios.get_for_update_member(g.current_user, portfolio_id)
     Invitations.revoke(token)
@@ -53,6 +56,7 @@ def revoke_invitation(portfolio_id, token):
 @portfolios_bp.route(
     "/portfolios/<portfolio_id>/invitations/<token>/resend", methods=["POST"]
 )
+@user_can(Permissions.EDIT_PORTFOLIO_USERS)
 def resend_invitation(portfolio_id, token):
     invite = Invitations.resend(g.current_user, portfolio_id, token)
     send_invite_email(g.current_user.full_name, invite.token, invite.email)
