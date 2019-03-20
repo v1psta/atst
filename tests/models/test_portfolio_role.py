@@ -307,3 +307,23 @@ def test_can_list_all_permissions():
     port_role = PortfolioRoleFactory.create(permission_sets=[role_one, role_two])
     expected_perms = role_one.permissions + role_two.permissions
     assert expected_perms == expected_perms
+
+
+def test_has_permission_set():
+    perm_sets = PermissionSets.get_many(
+        [PermissionSets.VIEW_PORTFOLIO_FUNDING, PermissionSets.VIEW_PORTFOLIO_REPORTS]
+    )
+    port_role = PortfolioRoleFactory.create(permission_sets=perm_sets)
+
+    assert port_role.has_permission_set(PermissionSets.VIEW_PORTFOLIO_REPORTS)
+
+
+def test_does_not_have_permission_set():
+    perm_sets = PermissionSets.get_many(
+        [PermissionSets.VIEW_PORTFOLIO_FUNDING, PermissionSets.VIEW_PORTFOLIO_REPORTS]
+    )
+    port_role = PortfolioRoleFactory.create(permission_sets=perm_sets)
+
+    assert not port_role.has_permission_set(
+        PermissionSets.EDIT_PORTFOLIO_APPLICATION_MANAGEMENT
+    )
