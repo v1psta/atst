@@ -1,7 +1,7 @@
 <div class="panel">
   <div class="panel__content">
-    <h2>Primary Point of Contact</h2>
-    <p>The PoC has the ability to edit all aspects of a portfolio.</p>
+    <h2>{{ "fragments.ppoc.title" | translate }}</h2>
+    <p>{{ "fragments.ppoc.subtitle" | translate }}</p>
 
     <p>
       <strong>
@@ -14,10 +14,12 @@
       {{ portfolio.owner.phone_number | usPhone }}
     </p>
 
-    <div class="flex-reverse-row">
-      <a class="usa-button-primary">
-        Update Primary PoC
-      </a>
-    </div>
+    {% if portfolio.owner == current_user %}
+      <div class="flex-reverse-row">
+        <a class="usa-button-primary">
+          {{ "fragments.ppoc.update_btn" | translate }}
+        </a>
+      </div>
+    {% endif %}
   </div>
 </div>

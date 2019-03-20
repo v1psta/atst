@@ -304,6 +304,10 @@ fragments:
     bullet_3: Add both the Task Order (TO) and Line(s) of Accounting (LOA) numbers
   portfolio_admin:
     none: Not Selected
+  ppoc:
+    title: Primary Point of Contact
+    subtitle: The PoC has the ability to edit all aspects of a portfolio.
+    update_btn: Update Primary PoC
 login:
   ccpo_logo_alt_text: Cloud Computing Program Office Logo
   certificate_selection:

@@ -1,9 +1,13 @@
 from flask import url_for
 
+from atst.domain.permission_sets import PermissionSets
+from atst.models.permissions import Permissions
+
 from tests.factories import (
     random_future_date,
     random_past_date,
     PortfolioFactory,
+    PortfolioRoleFactory,
     TaskOrderFactory,
     UserFactory,
 )
@@ -48,7 +52,7 @@ def test_portfolio_index_without_existing_portfolios(client, user_session):
     )
 
 
-def test_portfolio_admin_screen(client, user_session):
+def test_portfolio_admin_screen_when_ppoc(client, user_session):
     portfolio = PortfolioFactory.create()
     user_session(portfolio.owner)
     response = client.get(
@@ -56,6 +60,23 @@ def test_portfolio_admin_screen(client, user_session):
     )
     assert response.status_code == 200
     assert portfolio.name in response.data.decode()
+    assert translate("fragments.ppoc.update_btn").encode("utf8") in response.data
+
+
+def test_portfolio_admin_screen_when_not_ppoc(client, user_session):
+    portfolio = PortfolioFactory.create()
+    user = UserFactory.create()
+    permission_sets = PermissionSets.get_all()
+    PortfolioRoleFactory.create(
+        portfolio=portfolio, user=user, permission_sets=permission_sets
+    )
+    user_session(user)
+    response = client.get(
+        url_for("portfolios.portfolio_admin", portfolio_id=portfolio.id)
+    )
+    assert response.status_code == 200
+    assert portfolio.name in response.data.decode()
+    assert translate("fragments.ppoc.update_btn").encode("utf8") not in response.data
 
 
 def test_portfolio_reports(client, user_session):
