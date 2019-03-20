@@ -2,6 +2,8 @@
 
 <section class="member-list">
   <div class='responsive-table-wrapper panel'>
+    <form method='POST' autocomplete="off" enctype="multipart/form-data">
+
     <div class='member-list-header'>
       <div class='left'>
         <div class='h3'>{{ "portfolios.admin.portfolio_members_title" | translate }}</div>
@@ -61,8 +63,10 @@
         </tr>
         {% endfor %}
       </tbody>
-
     </table>
+    <input type='submit' class='usa-button usa-button-primary' value='{{ "Save" }}' />
+    </form>
+
   </div>
 
 {% endif %}

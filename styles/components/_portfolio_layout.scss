@@ -268,17 +268,13 @@
         }
       }
 
-      .usa-button-disabled {
-        color: $color-gray;
-      }
-
-      .usa-button-secondary {
-        color: $color-red;
-        background-color: $color-red-light;
-      }
-
       .add-member-link {
         text-align: right;
+      }
+
+      .usa-button-primary .usa-button {
+        padding: 2 * $gap;
+        float: right;
       }
     }
   }
