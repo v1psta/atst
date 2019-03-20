@@ -40,6 +40,9 @@
             <td class='name'>{{ member_data.member.user_name }}
               {% if member_data.member.user == user %}
                 <span class='you'>(<span class='green'>you</span>)</span>
+                {% set archive_button_class = 'usa-button-disabled' %}
+              {% else %}
+                {% set archive_button_class = 'usa-button-secondary' %}
               {% endif %}
             </td>
             {% set heading_perms = [member_data.app_mgmt, member_data.funding, member_data.reporting, member_data.portfolio_mgmt] %}
@@ -51,6 +54,9 @@
                 <td>View Only</td>
               {% endif %}
             {% endfor %}
+
+            <td><button type="button" class='{{ archive_button_class }}'>{{ "portfolios.members.archive_button" | translate }}</button>
+            </td>
 
         </tr>
         {% endfor %}

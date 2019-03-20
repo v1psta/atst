@@ -568,6 +568,7 @@ portfolios:
     settings_info: Learn more about these settings
     activity_log_title: Activity Log
   members:
+    archive_button: Archive User
     permissions:
       name: Name
       app_mgmt: App Mgmt
