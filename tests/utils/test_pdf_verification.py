@@ -1,4 +1,6 @@
 import pytest
+import mock
+import cryptography
 from atst.domain.authnid.crl import CRLCache, CRLRevocationException
 from atst.utils.pdf_verification import pdf_signature_validations
 
@@ -90,6 +92,9 @@ def test_signed_pdf_thats_been_modified(crl_check):
     }
 
 
+@mock.patch.object(
+    cryptography.hazmat.backends.openssl.rsa._RSAPublicKey, "verify", Exception()
+)
 def test_signed_pdf_that_has_invalid_signature():
     def mock_crl_check(_):
         return True

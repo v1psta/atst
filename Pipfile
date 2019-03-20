@@ -28,6 +28,7 @@ asn1crypto = "*"
 [dev-packages]
 bandit = "*"
 pytest = "~= 3.8.2"
+mock = "*"
 ipython = "*"
 ipdb = "*"
 pylint = "*"
