@@ -19,7 +19,6 @@ from atst.utils import pick
 bp = Blueprint("dev", __name__)
 
 _ALL_PERMS = [
-    "ccpo",
     PermissionSets.VIEW_PORTFOLIO,
     PermissionSets.VIEW_PORTFOLIO_APPLICATION_MANAGEMENT,
     PermissionSets.VIEW_PORTFOLIO_FUNDING,
@@ -30,6 +29,7 @@ _ALL_PERMS = [
     PermissionSets.EDIT_PORTFOLIO_REPORTS,
     PermissionSets.EDIT_PORTFOLIO_ADMIN,
     PermissionSets.PORTFOLIO_POC,
+    PermissionSets.VIEW_AUDIT_LOG,
 ]
 
 _DEV_USERS = {
