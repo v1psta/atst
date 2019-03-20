@@ -103,13 +103,13 @@ def test_signed_pdf_that_has_invalid_signature():
         "signatures": [
             {
                 "cert_common_name": "John B Harris",
-                "hashed_binary_data": '3f0047e6cb5b9bb089254b20d174445c3ba4f513',
+                "hashed_binary_data": "3f0047e6cb5b9bb089254b20d174445c3ba4f513",
                 "hashing_algorithm": "sha1",
                 "is_valid": False,
                 "is_valid_cert": True,
                 "is_valid_hash": True,
                 "is_valid_signature": False,
-                "signers_serial": 514
+                "signers_serial": 514,
             }
         ],
     }
