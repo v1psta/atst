@@ -29,9 +29,7 @@ def test_create_environment_role_creates_cloud_id(session):
 
     portfolio_role = portfolio.members[0]
     assert not portfolio_role.user.cloud_id
-    assert Environments.update_environment_roles(
-        owner, portfolio, portfolio_role, new_role
-    )
+    assert Environments.update_environment_roles(portfolio_role, new_role)
 
     assert portfolio_role.user.cloud_id is not None
 
@@ -69,9 +67,7 @@ def test_update_environment_roles():
     ]
 
     portfolio_role = portfolio.members[0]
-    assert Environments.update_environment_roles(
-        owner, portfolio, portfolio_role, new_ids_and_roles
-    )
+    assert Environments.update_environment_roles(portfolio_role, new_ids_and_roles)
     new_dev_env_role = EnvironmentRoles.get(portfolio_role.user.id, dev_env.id)
     staging_env_role = EnvironmentRoles.get(portfolio_role.user.id, staging_env.id)
 
@@ -120,9 +116,7 @@ def test_remove_environment_role():
     ]
 
     portfolio_role = PortfolioRoles.get(portfolio.id, developer.id)
-    assert Environments.update_environment_roles(
-        owner, portfolio, portfolio_role, new_environment_roles
-    )
+    assert Environments.update_environment_roles(portfolio_role, new_environment_roles)
 
     assert portfolio_role.num_environment_roles == 2
     assert EnvironmentRoles.get(developer.id, now_ba).role == "billing_auditor"
@@ -154,9 +148,7 @@ def test_no_update_to_environment_roles():
     new_ids_and_roles = [{"id": dev_env.id, "role": "devops"}]
 
     portfolio_role = PortfolioRoles.get(portfolio.id, developer.id)
-    assert not Environments.update_environment_roles(
-        owner, portfolio, portfolio_role, new_ids_and_roles
-    )
+    assert not Environments.update_environment_roles(portfolio_role, new_ids_and_roles)
 
 
 def test_get_scoped_environments(db):

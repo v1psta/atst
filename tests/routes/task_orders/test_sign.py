@@ -18,10 +18,7 @@ def create_ko_task_order(user_session, contracting_officer):
     )
 
     TaskOrders.add_officer(
-        contracting_officer,
-        task_order,
-        "contracting_officer",
-        contracting_officer.to_dictionary(),
+        task_order, "contracting_officer", contracting_officer.to_dictionary()
     )
 
     dd_254 = DD254Factory.create()
@@ -33,7 +30,7 @@ def create_ko_task_order(user_session, contracting_officer):
 def test_show_signature_requested_not_ko(client, user_session):
     contracting_officer = UserFactory.create()
     task_order = create_ko_task_order(user_session, contracting_officer)
-    TaskOrders.update(contracting_officer, task_order, contracting_officer=None)
+    TaskOrders.update(task_order, contracting_officer=None)
 
     response = client.get(
         url_for("task_orders.signature_requested", task_order_id=task_order.id)
@@ -50,10 +47,7 @@ def test_show_signature_requested(client, user_session):
     # create unfinished TO
     task_order = TaskOrderFactory.create(portfolio=portfolio, clin_01=None)
     TaskOrders.add_officer(
-        contracting_officer,
-        task_order,
-        "contracting_officer",
-        contracting_officer.to_dictionary(),
+        task_order, "contracting_officer", contracting_officer.to_dictionary()
     )
     response = client.get(
         url_for("task_orders.signature_requested", task_order_id=task_order.id)
@@ -61,7 +55,7 @@ def test_show_signature_requested(client, user_session):
     assert response.status_code == 404
 
     # Finish TO
-    TaskOrders.update(contracting_officer, task_order, clin_01=100)
+    TaskOrders.update(task_order, clin_01=100)
     response = client.get(
         url_for("task_orders.signature_requested", task_order_id=task_order.id)
     )
@@ -79,9 +73,7 @@ def test_show_signature_requested(client, user_session):
 def test_show_signature_requested_already_signed(client, user_session):
     contracting_officer = UserFactory.create()
     task_order = create_ko_task_order(user_session, contracting_officer)
-    TaskOrders.update(
-        contracting_officer, task_order, signer_dod_id=contracting_officer.dod_id
-    )
+    TaskOrders.update(task_order, signer_dod_id=contracting_officer.dod_id)
 
     response = client.get(
         url_for("task_orders.signature_requested", task_order_id=task_order.id)
@@ -93,7 +85,7 @@ def test_show_signature_requested_already_signed(client, user_session):
 def test_signing_task_order_not_ko(client, user_session):
     contracting_officer = UserFactory.create()
     task_order = create_ko_task_order(user_session, contracting_officer)
-    TaskOrders.update(contracting_officer, task_order, contracting_officer=None)
+    TaskOrders.update(task_order, contracting_officer=None)
 
     response = client.post(
         url_for("task_orders.record_signature", task_order_id=task_order.id), data={}
@@ -105,9 +97,7 @@ def test_signing_task_order_not_ko(client, user_session):
 def test_singing_an_already_signed_task_order(client, user_session):
     contracting_officer = UserFactory.create()
     task_order = create_ko_task_order(user_session, contracting_officer)
-    TaskOrders.update(
-        contracting_officer, task_order, signer_dod_id=contracting_officer.dod_id
-    )
+    TaskOrders.update(task_order, signer_dod_id=contracting_officer.dod_id)
 
     response = client.post(
         url_for("task_orders.record_signature", task_order_id=task_order.id),

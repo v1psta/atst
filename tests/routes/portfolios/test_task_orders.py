@@ -157,7 +157,7 @@ class TestTaskOrderInvitations:
                 "security_officer-last_name": "Fett",
             },
         )
-        updated_task_order = TaskOrders.get(self.portfolio.owner, self.task_order.id)
+        updated_task_order = TaskOrders.get(self.task_order.id)
         assert updated_task_order.ko_first_name == "Luke"
         assert updated_task_order.ko_last_name == "Skywalker"
         assert updated_task_order.so_first_name == "Boba"
@@ -189,7 +189,7 @@ class TestTaskOrderInvitations:
                 "contracting_officer-invite": "y",
             },
         )
-        updated_task_order = TaskOrders.get(self.portfolio.owner, self.task_order.id)
+        updated_task_order = TaskOrders.get(self.task_order.id)
 
         assert updated_task_order.ko_invite == True
         assert updated_task_order.ko_first_name == "Luke"
@@ -222,7 +222,7 @@ class TestTaskOrderInvitations:
 
         assert "There were some errors" in response.data.decode()
 
-        updated_task_order = TaskOrders.get(self.portfolio.owner, self.task_order.id)
+        updated_task_order = TaskOrders.get(self.task_order.id)
         assert updated_task_order.so_first_name != "Boba"
         assert len(queue.get_queue()) == queue_length
         assert response.status_code == 400
@@ -251,7 +251,7 @@ def test_ko_can_view_task_order(client, user_session, portfolio, user):
     assert response.status_code == 200
     assert translate("common.manage") in response.data.decode()
 
-    TaskOrders.update(user, task_order, clin_01=None)
+    TaskOrders.update(task_order, clin_01=None)
     response = client.get(
         url_for(
             "portfolios.view_task_order",
@@ -706,20 +706,21 @@ def test_resending_revoked_invite(app, client, user_session, portfolio, user):
     assert response.status_code == 404
 
 
-def test_resending_expired_invite(app, client, user_session, portfolio, user):
+def test_resending_expired_invite(app, client, user_session, portfolio):
     queue_length = len(queue.get_queue())
 
+    ko = UserFactory.create()
     task_order = TaskOrderFactory.create(
-        portfolio=portfolio, contracting_officer=user, ko_invite=True
+        portfolio=portfolio, contracting_officer=ko, ko_invite=True
     )
-    portfolio_role = PortfolioRoleFactory.create(portfolio=portfolio, user=user)
+    portfolio_role = PortfolioRoleFactory.create(portfolio=portfolio, user=ko)
     invite = InvitationFactory.create(
-        inviter=user,
+        inviter=portfolio.owner,
         portfolio_role=portfolio_role,
-        email=user.email,
+        email=ko.email,
         expiration_time=datetime.now() - timedelta(days=1),
     )
-    user_session(user)
+    user_session(portfolio.owner)
 
     response = client.post(
         url_for(

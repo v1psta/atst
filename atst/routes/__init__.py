@@ -148,7 +148,7 @@ def logout():
 @user_can(Permissions.VIEW_AUDIT_LOG, message="view activity log")
 def activity_history():
     pagination_opts = Paginator.get_pagination_opts(request)
-    audit_events = AuditLog.get_all_events(g.current_user, pagination_opts)
+    audit_events = AuditLog.get_all_events(pagination_opts)
     return render_template("audit_log/audit_log.html", audit_events=audit_events)
 
 

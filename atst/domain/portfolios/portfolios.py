@@ -36,25 +36,7 @@ class Portfolios(object):
         return ScopedPortfolio(user, portfolio)
 
     @classmethod
-    def get_for_update_applications(cls, user, portfolio_id):
-        portfolio = PortfoliosQuery.get(portfolio_id)
-
-        return portfolio
-
-    @classmethod
-    def get_for_update_information(cls, user, portfolio_id):
-        portfolio = PortfoliosQuery.get(portfolio_id)
-
-        return portfolio
-
-    @classmethod
-    def get_for_update_member(cls, user, portfolio_id):
-        portfolio = PortfoliosQuery.get(portfolio_id)
-
-        return portfolio
-
-    @classmethod
-    def get_with_members(cls, user, portfolio_id):
+    def get_for_update(cls, portfolio_id):
         portfolio = PortfoliosQuery.get(portfolio_id)
 
         return portfolio
@@ -68,7 +50,7 @@ class Portfolios(object):
         return portfolios
 
     @classmethod
-    def create_member(cls, user, portfolio, data):
+    def create_member(cls, portfolio, data):
         new_user = Users.get_or_create_by_dod_id(
             data["dod_id"],
             first_name=data["first_name"],
@@ -87,7 +69,7 @@ class Portfolios(object):
         return portfolio_role
 
     @classmethod
-    def update_member(cls, user, portfolio, member, permission_sets):
+    def update_member(cls, member, permission_sets):
         return PortfolioRoles.update(member, permission_sets)
 
     @classmethod
@@ -118,7 +100,7 @@ class Portfolios(object):
         )
 
     @classmethod
-    def revoke_access(cls, user, portfolio_id, portfolio_role_id):
+    def revoke_access(cls, portfolio_id, portfolio_role_id):
         portfolio = PortfoliosQuery.get(portfolio_id)
         portfolio_role = PortfolioRoles.get_by_id(portfolio_role_id)
 
@@ -127,7 +109,7 @@ class Portfolios(object):
 
         portfolio_role.status = PortfolioRoleStatus.DISABLED
         for environment in portfolio.all_environments:
-            Environments.revoke_access(user, environment, portfolio_role.user)
+            Environments.revoke_access(environment, portfolio_role.user)
         PortfoliosQuery.add_and_commit(portfolio_role)
 
         return portfolio_role

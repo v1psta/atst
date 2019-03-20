@@ -12,7 +12,7 @@ from atst.domain.authz.decorator import user_can_access_decorator as user_can
 
 
 def find_unsigned_ko_to(task_order_id):
-    task_order = TaskOrders.get(g.current_user, task_order_id)
+    task_order = TaskOrders.get(task_order_id)
 
     if not TaskOrders.can_ko_sign(task_order):
         raise NoAccessError("task_order")
@@ -21,7 +21,7 @@ def find_unsigned_ko_to(task_order_id):
 
 
 def wrap_check_is_ko(user, _perm, task_order_id=None, **_kwargs):
-    task_order = TaskOrders.get(user, task_order_id)
+    task_order = TaskOrders.get(task_order_id)
     Authorization.check_is_ko(user, task_order)
 
     return True
@@ -58,7 +58,6 @@ def record_signature(task_order_id):
 
     if form.validate():
         TaskOrders.update(
-            user=g.current_user,
             task_order=task_order,
             signer_dod_id=g.current_user.dod_id,
             signed_at=datetime.datetime.now(),

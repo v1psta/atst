@@ -116,7 +116,7 @@ class Invitations(object):
         return portfolio_role.latest_invitation
 
     @classmethod
-    def resend(cls, user, portfolio_id, token):
+    def resend(cls, user, token):
         previous_invitation = Invitations._get(token)
         Invitations._update_status(previous_invitation, InvitationStatus.REVOKED)
 

@@ -34,11 +34,11 @@ class AuditLog(object):
         return cls._log(resource=resource, action=action, portfolio=portfolio)
 
     @classmethod
-    def get_all_events(cls, user, pagination_opts=None):
+    def get_all_events(cls, pagination_opts=None):
         return AuditEventQuery.get_all(pagination_opts)
 
     @classmethod
-    def get_portfolio_events(cls, user, portfolio, pagination_opts=None):
+    def get_portfolio_events(cls, portfolio, pagination_opts=None):
         return AuditEventQuery.get_ws_events(portfolio.id, pagination_opts)
 
     @classmethod

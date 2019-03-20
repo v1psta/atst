@@ -58,7 +58,7 @@ class Environments(object):
         return env
 
     @classmethod
-    def update_environment_roles(cls, user, portfolio, portfolio_role, ids_and_roles):
+    def update_environment_roles(cls, portfolio_role, ids_and_roles):
         updated = False
 
         for id_and_role in ids_and_roles:
@@ -92,5 +92,5 @@ class Environments(object):
         return updated
 
     @classmethod
-    def revoke_access(cls, user, environment, target_user):
+    def revoke_access(cls, environment, target_user):
         EnvironmentRoles.delete(environment.id, target_user.id)

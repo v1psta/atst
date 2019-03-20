@@ -118,7 +118,7 @@ def test_create_new_task_order(client, user_session, pdf_upload):
     assert url_for("task_orders.new", screen=2) in response.headers["Location"]
 
     created_task_order_id = response.headers["Location"].split("/")[-1]
-    created_task_order = TaskOrders.get(creator, created_task_order_id)
+    created_task_order = TaskOrders.get(created_task_order_id)
     assert created_task_order.portfolio is not None
     assert created_task_order.portfolio.name == portfolio_name
     assert created_task_order.portfolio.defense_component == defense_component
@@ -156,7 +156,7 @@ def test_create_new_task_order_for_portfolio(client, user_session):
     assert url_for("task_orders.new", screen=2) in response.headers["Location"]
 
     created_task_order_id = response.headers["Location"].split("/")[-1]
-    created_task_order = TaskOrders.get(creator, created_task_order_id)
+    created_task_order = TaskOrders.get(created_task_order_id)
     assert created_task_order.portfolio_name == portfolio.name
     assert created_task_order.defense_component == portfolio.defense_component
     assert created_task_order.portfolio == portfolio
@@ -213,7 +213,7 @@ def test_review_screen_when_all_sections_complete(client, user_session, task_ord
 
 
 def test_review_screen_when_not_all_sections_complete(client, user_session, task_order):
-    TaskOrders.update(task_order.creator, task_order, clin_01=None)
+    TaskOrders.update(task_order, clin_01=None)
     user_session(task_order.creator)
     response = client.get(
         url_for("task_orders.new", screen=4, task_order_id=task_order.id)

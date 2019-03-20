@@ -130,7 +130,6 @@ def test_creating_application(client, user_session):
 def test_view_edit_application(client, user_session):
     portfolio = PortfolioFactory.create()
     application = Applications.create(
-        portfolio.owner,
         portfolio,
         "Snazzy Application",
         "A new application for me and my friends",

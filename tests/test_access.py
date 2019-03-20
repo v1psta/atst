@@ -8,18 +8,18 @@ import atst.domain.authz as authz
 from tests.factories import UserFactory
 
 _NO_ACCESS_CHECK_REQUIRED = _NO_LOGIN_REQUIRED + [
-    "task_orders.get_started",
-    "atst.csp_environment_access",
-    "atst.jedi_csp_calculator",
-    "atst.styleguide",
-    "dev.test_email",
-    "dev.messages",
-    "atst.home",
-    "users.user",
-    "users.update_user",
-    "portfolios.accept_invitation",
-    "atst.catch_all",
-    "portfolios.portfolios",
+    "task_orders.get_started",  # all users can start a new TO
+    "atst.csp_environment_access",  # internal redirect
+    "atst.jedi_csp_calculator",  # internal redirect
+    "atst.styleguide",  # dev reference
+    "dev.test_email",  # dev tool
+    "dev.messages",  # dev tool
+    "atst.home",  # available to all users
+    "users.user",  # available to all users
+    "users.update_user",  # available to all users
+    "portfolios.accept_invitation",  # available to all users; access control is built into invitation logic
+    "atst.catch_all",  # available to all users
+    "portfolios.portfolios",  # the portfolios list is scoped to the user separately
 ]
 
 
@@ -38,10 +38,19 @@ def protected_routes(app):
     return _protected_routes
 
 
-_PROTECTED_ROUTES = protected_routes(make_app(make_config()))
+sample_config = make_config()
+sample_app = make_app(sample_config)
+_PROTECTED_ROUTES = protected_routes(sample_app)
 
 
 class Null:
+    """
+    Very simple null object. Will return itself for all attribute
+    calls:
+    > foo = Null()
+    > foo.bar.baz == foo
+    """
+
     def __init__(self, *args, **kwargs):
         pass
 
@@ -53,10 +62,18 @@ class Null:
 def test_all_protected_routes_have_access_control(
     rule, route, mocker, client, user_session, monkeypatch
 ):
+    """
+    This tests that all routes, except the ones in
+    _NO_ACCESS_CHECK_REQUIRED, are protected by the access
+    decorator.
+    """
+    # monkeypatch any object lookups that might happen in the access decorator
     monkeypatch.setattr("atst.domain.portfolios.Portfolios.for_user", lambda *a: [])
     monkeypatch.setattr("atst.domain.portfolios.Portfolios.get", lambda *a: None)
     monkeypatch.setattr("atst.domain.task_orders.TaskOrders.get", lambda *a: Null())
 
+    # patch the two internal functions the access decorator uses so
+    # that we can check that one or the other was called
     mocker.patch("atst.domain.authz.decorator.user_can_access")
     mocker.patch("atst.domain.authz.decorator.evaluate_exceptions")
 

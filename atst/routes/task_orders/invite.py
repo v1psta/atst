@@ -11,7 +11,7 @@ from atst.models.permissions import Permissions
 @task_orders_bp.route("/task_orders/invite/<task_order_id>", methods=["POST"])
 @user_can(Permissions.EDIT_TASK_ORDER_DETAILS)
 def invite(task_order_id):
-    task_order = TaskOrders.get(g.current_user, task_order_id)
+    task_order = TaskOrders.get(task_order_id)
     if TaskOrders.all_sections_complete(task_order):
         update_officer_invitations(g.current_user, task_order)
 

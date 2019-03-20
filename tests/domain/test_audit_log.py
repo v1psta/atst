@@ -28,39 +28,43 @@ def test_non_admin_cannot_view_audit_log(developer):
         AuditLog.get_all_events(developer)
 
 
-def test_ccpo_can_view_audit_log(ccpo):
-    events = AuditLog.get_all_events(ccpo)
+@pytest.mark.skip(reason="redo as a route access test")
+def test_ccpo_can_view_audit_log():
+    events = AuditLog.get_all_events()
     assert len(events) > 0
 
 
-def test_paginate_audit_log(ccpo):
+def test_paginate_audit_log():
     user = UserFactory.create()
     for _ in range(100):
         AuditLog.log_system_event(user, action="create")
 
-    events = AuditLog.get_all_events(ccpo, pagination_opts={"per_page": 25, "page": 2})
+    events = AuditLog.get_all_events(pagination_opts={"per_page": 25, "page": 2})
     assert len(events) == 25
 
 
-def test_ccpo_can_view_ws_audit_log(ccpo):
+@pytest.mark.skip(reason="redo as a route access test")
+def test_ccpo_can_view_ws_audit_log():
     portfolio = PortfolioFactory.create()
-    events = AuditLog.get_portfolio_events(ccpo, portfolio)
+    events = AuditLog.get_portfolio_events(portfolio)
     assert len(events) > 0
 
 
+@pytest.mark.skip(reason="redo as a route access test")
 def test_ws_admin_can_view_ws_audit_log():
     portfolio = PortfolioFactory.create()
     admin = UserFactory.create()
     PortfolioRoleFactory.create(
         portfolio=portfolio, user=admin, status=PortfolioRoleStatus.ACTIVE
     )
-    events = AuditLog.get_portfolio_events(admin, portfolio)
+    events = AuditLog.get_portfolio_events(portfolio)
     assert len(events) > 0
 
 
+@pytest.mark.skip(reason="redo as a route access test")
 def test_ws_owner_can_view_ws_audit_log():
     portfolio = PortfolioFactory.create()
-    events = AuditLog.get_portfolio_events(portfolio.owner, portfolio)
+    events = AuditLog.get_portfolio_events(portfolio)
     assert len(events) > 0
 
 
@@ -81,7 +85,7 @@ def test_paginate_ws_audit_log():
         )
 
     events = AuditLog.get_portfolio_events(
-        portfolio.owner, portfolio, pagination_opts={"per_page": 25, "page": 2}
+        portfolio, pagination_opts={"per_page": 25, "page": 2}
     )
     assert len(events) == 25
 
@@ -94,7 +98,7 @@ def test_ws_audit_log_only_includes_current_ws_events():
     application_1 = ApplicationFactory.create(portfolio=portfolio)
     application_2 = ApplicationFactory.create(portfolio=other_portfolio)
 
-    events = AuditLog.get_portfolio_events(portfolio.owner, portfolio)
+    events = AuditLog.get_portfolio_events(portfolio)
     for event in events:
         assert event.portfolio_id == portfolio.id or event.resource_id == portfolio.id
         assert (

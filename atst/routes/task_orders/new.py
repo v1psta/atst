@@ -61,7 +61,7 @@ class ShowTaskOrderWorkflow:
     @property
     def task_order(self):
         if not self._task_order and self.task_order_id:
-            self._task_order = TaskOrders.get(self.user, self.task_order_id)
+            self._task_order = TaskOrders.get(self.task_order_id)
 
         return self._task_order
 
@@ -230,7 +230,7 @@ class UpdateTaskOrderWorkflow(ShowTaskOrderWorkflow):
                 old_name = self.task_order.portfolio_name
                 if not new_name == old_name:
                     Portfolios.update(self.task_order.portfolio, {"name": new_name})
-            TaskOrders.update(self.user, self.task_order, **self.task_order_form_data)
+            TaskOrders.update(self.task_order, **self.task_order_form_data)
         else:
             if self.portfolio_id:
                 pf = Portfolios.get(self.user, self.portfolio_id)
@@ -241,7 +241,7 @@ class UpdateTaskOrderWorkflow(ShowTaskOrderWorkflow):
                     self.form.defense_component.data,
                 )
             self._task_order = TaskOrders.create(portfolio=pf, creator=self.user)
-            TaskOrders.update(self.user, self.task_order, **self.task_order_form_data)
+            TaskOrders.update(self.task_order, **self.task_order_form_data)
 
         return self.task_order
 
@@ -251,7 +251,7 @@ def get_started():
     return render_template("task_orders/new/get_started.html")  # pragma: no cover
 
 
-def is_new_task_order(*args, **kwargs):
+def is_new_task_order(*_args, **kwargs):
     return (
         "screen" in kwargs
         and kwargs["screen"] == 1

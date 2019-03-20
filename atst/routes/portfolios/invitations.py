@@ -47,7 +47,7 @@ def accept_invitation(token):
 )
 @user_can(Permissions.EDIT_PORTFOLIO_USERS)
 def revoke_invitation(portfolio_id, token):
-    portfolio = Portfolios.get_for_update_member(g.current_user, portfolio_id)
+    portfolio = Portfolios.get_for_update(portfolio_id)
     Invitations.revoke(token)
 
     return redirect(url_for("portfolios.portfolio_members", portfolio_id=portfolio.id))
@@ -58,7 +58,7 @@ def revoke_invitation(portfolio_id, token):
 )
 @user_can(Permissions.EDIT_PORTFOLIO_USERS)
 def resend_invitation(portfolio_id, token):
-    invite = Invitations.resend(g.current_user, portfolio_id, token)
+    invite = Invitations.resend(g.current_user, token)
     send_invite_email(g.current_user.full_name, invite.token, invite.email)
     flash("resend_portfolio_invitation", user_name=invite.user_name)
     return redirect(url_for("portfolios.portfolio_members", portfolio_id=portfolio_id))

@@ -52,7 +52,7 @@ class TaskOrders(object):
     UNCLASSIFIED_FUNDING = ["performance_length", "csp_estimate", "clin_01", "clin_03"]
 
     @classmethod
-    def get(cls, user, task_order_id):
+    def get(cls, task_order_id):
         try:
             task_order = db.session.query(TaskOrder).filter_by(id=task_order_id).one()
 
@@ -70,7 +70,7 @@ class TaskOrders(object):
         return task_order
 
     @classmethod
-    def update(cls, user, task_order, **kwargs):
+    def update(cls, task_order, **kwargs):
         for key, value in kwargs.items():
             setattr(task_order, key, value)
 
@@ -135,7 +135,7 @@ class TaskOrders(object):
     ]
 
     @classmethod
-    def add_officer(cls, user, task_order, officer_type, officer_data):
+    def add_officer(cls, task_order, officer_type, officer_data):
         if officer_type in TaskOrders.OFFICERS:
             portfolio = task_order.portfolio
 
@@ -152,7 +152,6 @@ class TaskOrders(object):
                 portfolio_user = existing_member.user
             else:
                 member = Portfolios.create_member(
-                    user,
                     portfolio,
                     {
                         **officer_data,

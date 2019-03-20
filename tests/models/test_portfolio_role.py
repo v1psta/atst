@@ -120,7 +120,7 @@ def test_has_env_role_history(session):
         user=user, environment=environment, role="developer"
     )
     Environments.update_environment_roles(
-        owner, portfolio, portfolio_role, [{"role": "admin", "id": environment.id}]
+        portfolio_role, [{"role": "admin", "id": environment.id}]
     )
     changed_events = (
         session.query(AuditEvent)
@@ -154,7 +154,7 @@ def test_has_no_environment_roles():
     }
 
     portfolio = PortfolioFactory.create(owner=owner)
-    portfolio_role = Portfolios.create_member(owner, portfolio, developer_data)
+    portfolio_role = Portfolios.create_member(portfolio, developer_data)
 
     assert not portfolio_role.has_environment_roles
 
@@ -170,13 +170,9 @@ def test_has_environment_roles():
     }
 
     portfolio = PortfolioFactory.create(owner=owner)
-    portfolio_role = Portfolios.create_member(owner, portfolio, developer_data)
+    portfolio_role = Portfolios.create_member(portfolio, developer_data)
     application = Applications.create(
-        owner,
-        portfolio,
-        "my test application",
-        "It's mine.",
-        ["dev", "staging", "prod"],
+        portfolio, "my test application", "It's mine.", ["dev", "staging", "prod"]
     )
     Environments.add_member(
         application.environments[0], portfolio_role.user, "developer"
