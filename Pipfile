@@ -40,6 +40,7 @@ pytest-cov = "*"
 selenium = "*"
 honcho = "*"
 blinker = "*"
+pytest-mock = "*"
 
 [requires]
 python_version = "3.6.6"

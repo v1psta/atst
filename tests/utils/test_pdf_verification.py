@@ -1,4 +1,6 @@
 import pytest
+
+import cryptography
 from atst.domain.authnid.crl import CRLCache, CRLRevocationException
 from atst.utils.pdf_verification import pdf_signature_validations
 
@@ -86,6 +88,35 @@ def test_signed_pdf_thats_been_modified(crl_check):
                 "is_valid_signature": True,
                 "signers_serial": 9_662_248_800_192_484_627,
             },
+        ],
+    }
+
+
+def test_signed_pdf_that_has_invalid_signature(mocker):
+    def mock_crl_check(_):
+        return True
+
+    mocker.patch.object(
+        cryptography.hazmat.backends.openssl.rsa._RSAPublicKey, "verify", Exception()
+    )
+
+    valid_signed_pdf = open("tests/fixtures/signed-pdf-not-dod.pdf", "rb").read()
+    result = pdf_signature_validations(pdf=valid_signed_pdf, crl_check=mock_crl_check)
+
+    assert result == {
+        "result": False,
+        "signature_count": 1,
+        "signatures": [
+            {
+                "cert_common_name": "John B Harris",
+                "hashed_binary_data": "3f0047e6cb5b9bb089254b20d174445c3ba4f513",
+                "hashing_algorithm": "sha1",
+                "is_valid": False,
+                "is_valid_cert": True,
+                "is_valid_hash": True,
+                "is_valid_signature": False,
+                "signers_serial": 514,
+            }
         ],
     }
 

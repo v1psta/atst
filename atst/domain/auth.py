@@ -52,7 +52,7 @@ def get_current_user():
 
 def logout():
     if session.get("user_id"):  # pragma: no branch
-        del (session["user_id"])
+        del session["user_id"]
 
 
 def _unprotected_route(request):
