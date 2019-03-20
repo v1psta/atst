@@ -23,6 +23,7 @@ lockfile = "*"
 defusedxml = "*"
 "flask-rq2" = "*"
 simplejson = "*"
+asn1crypto = "*"
 
 [dev-packages]
 bandit = "*"
@@ -39,6 +40,7 @@ pytest-cov = "*"
 selenium = "*"
 honcho = "*"
 blinker = "*"
+pytest-mock = "*"
 
 [requires]
 python_version = "3.6.6"
