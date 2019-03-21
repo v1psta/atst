@@ -38,7 +38,9 @@ portfolio_roles_permission_sets = Table(
 )
 
 
-class PortfolioRole(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
+class PortfolioRole(
+    Base, mixins.TimestampsMixin, mixins.AuditableMixin, mixins.PermissionsMixin
+):
     __tablename__ = "portfolio_roles"
 
     id = Id()
@@ -56,12 +58,6 @@ class PortfolioRole(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     permission_sets = relationship(
         "PermissionSet", secondary=portfolio_roles_permission_sets
     )
-
-    @property
-    def permissions(self):
-        return [
-            perm for permset in self.permission_sets for perm in permset.permissions
-        ]
 
     def __repr__(self):
         return "<PortfolioRole(portfolio='{}', user_id='{}', id='{}', permissions={})>".format(

@@ -89,7 +89,7 @@ class UserFactory(Base):
     email = factory.Faker("email")
     first_name = factory.Faker("first_name")
     last_name = factory.Faker("last_name")
-    atat_role = factory.LazyFunction(lambda: PermissionSets.get("default"))
+    permission_sets = []
     dod_id = factory.LazyFunction(random_dod_id)
     phone_number = factory.LazyFunction(random_phone_number)
     service_branch = factory.LazyFunction(random_service_branch)
@@ -101,9 +101,8 @@ class UserFactory(Base):
     )
 
     @classmethod
-    def from_atat_role(cls, atat_role_name, **kwargs):
-        role = PermissionSets.get(atat_role_name)
-        return cls.create(atat_role=role, **kwargs)
+    def create_ccpo(cls, **kwargs):
+        return cls.create(permission_sets=PermissionSets.get_all(), **kwargs)
 
 
 class PortfolioFactory(Base):

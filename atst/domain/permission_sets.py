@@ -16,6 +16,7 @@ class PermissionSets(object):
     EDIT_PORTFOLIO_REPORTS = "edit_portfolio_reports"
     EDIT_PORTFOLIO_ADMIN = "edit_portfolio_admin"
     PORTFOLIO_POC = "portfolio_poc"
+    VIEW_AUDIT_LOG = "view_audit_log"
 
     @classmethod
     def get(cls, perms_set_name):
@@ -32,26 +33,25 @@ class PermissionSets(object):
 
     @classmethod
     def get_many(cls, perms_set_names):
-        return (
+        permission_sets = (
             db.session.query(PermissionSet)
             .filter(PermissionSet.name.in_(perms_set_names))
             .all()
         )
 
+        if len(permission_sets) != len(perms_set_names):
+            raise NotFoundError("permission_set")
 
-ATAT_ROLES = [
+        return permission_sets
+
+
+ATAT_PERMISSION_SETS = [
     {
-        "name": "ccpo",
-        "display_name": "CCPO",
+        "name": PermissionSets.VIEW_AUDIT_LOG,
+        "display_name": "View Audit Log",
         "description": "",
         "permissions": [Permissions.VIEW_AUDIT_LOG],
-    },
-    {
-        "name": "default",
-        "display_name": "Default",
-        "description": "",
-        "permissions": [],
-    },
+    }
 ]
 
 _PORTFOLIO_BASIC_PERMISSION_SETS = [

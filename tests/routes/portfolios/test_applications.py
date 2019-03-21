@@ -42,7 +42,7 @@ def test_user_without_permission_has_no_budget_report_link(client, user_session)
 @pytest.mark.skip(reason="Temporarily no add activity log link")
 def test_user_with_permission_has_activity_log_link(client, user_session):
     portfolio = PortfolioFactory.create()
-    ccpo = UserFactory.from_atat_role("ccpo")
+    ccpo = UserFactory.create_ccpo()
     admin = UserFactory.create()
     PortfolioRoleFactory.create(
         portfolio=portfolio, user=admin, status=PortfolioRoleStatus.ACTIVE

@@ -11,18 +11,33 @@ import pendulum
 
 from . import redirect_after_login_url
 from atst.domain.users import Users
+from atst.domain.permission_sets import PermissionSets
 from atst.queue import queue
 from tests.factories import random_service_branch
 from atst.utils import pick
 
 bp = Blueprint("dev", __name__)
 
+_ALL_PERMS = [
+    PermissionSets.VIEW_PORTFOLIO,
+    PermissionSets.VIEW_PORTFOLIO_APPLICATION_MANAGEMENT,
+    PermissionSets.VIEW_PORTFOLIO_FUNDING,
+    PermissionSets.VIEW_PORTFOLIO_REPORTS,
+    PermissionSets.VIEW_PORTFOLIO_ADMIN,
+    PermissionSets.EDIT_PORTFOLIO_APPLICATION_MANAGEMENT,
+    PermissionSets.EDIT_PORTFOLIO_FUNDING,
+    PermissionSets.EDIT_PORTFOLIO_REPORTS,
+    PermissionSets.EDIT_PORTFOLIO_ADMIN,
+    PermissionSets.PORTFOLIO_POC,
+    PermissionSets.VIEW_AUDIT_LOG,
+]
+
 _DEV_USERS = {
     "sam": {
         "dod_id": "6346349876",
         "first_name": "Sam",
         "last_name": "Stevenson",
-        "atat_role_name": "ccpo",
+        "permission_sets": _ALL_PERMS,
         "email": "sam@example.com",
         "service_branch": random_service_branch(),
         "phone_number": "1234567890",
@@ -34,7 +49,6 @@ _DEV_USERS = {
         "dod_id": "2345678901",
         "first_name": "Amanda",
         "last_name": "Adamson",
-        "atat_role_name": "default",
         "email": "amanda@example.com",
         "service_branch": random_service_branch(),
         "phone_number": "1234567890",
@@ -46,7 +60,6 @@ _DEV_USERS = {
         "dod_id": "3456789012",
         "first_name": "Brandon",
         "last_name": "Buchannan",
-        "atat_role_name": "default",
         "email": "brandon@example.com",
         "service_branch": random_service_branch(),
         "phone_number": "1234567890",
@@ -58,7 +71,6 @@ _DEV_USERS = {
         "dod_id": "4567890123",
         "first_name": "Christina",
         "last_name": "Collins",
-        "atat_role_name": "default",
         "email": "christina@example.com",
         "service_branch": random_service_branch(),
         "phone_number": "1234567890",
@@ -70,7 +82,6 @@ _DEV_USERS = {
         "dod_id": "5678901234",
         "first_name": "Dominick",
         "last_name": "Domingo",
-        "atat_role_name": "default",
         "email": "dominick@example.com",
         "service_branch": random_service_branch(),
         "phone_number": "1234567890",
@@ -82,7 +93,6 @@ _DEV_USERS = {
         "dod_id": "6789012345",
         "first_name": "Erica",
         "last_name": "Eichner",
-        "atat_role_name": "default",
         "email": "erica@example.com",
         "service_branch": random_service_branch(),
         "phone_number": "1234567890",
@@ -101,7 +111,7 @@ def login_dev():
         user_data["dod_id"],
         **pick(
             [
-                "atat_role_name",
+                "permission_sets",
                 "first_name",
                 "last_name",
                 "email",

@@ -31,9 +31,7 @@ class AuthenticationContext:
 
         except NotFoundError:
             email = self._get_user_email()
-            return Users.create(
-                atat_role_name="default", email=email, **self.parsed_sdn
-            )
+            return Users.create(permission_sets=[], email=email, **self.parsed_sdn)
 
     def _get_user_email(self):
         try:

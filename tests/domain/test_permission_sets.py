@@ -30,3 +30,8 @@ def test_get_many():
     assert first_or_none(
         lambda p: p.name == PermissionSets.EDIT_PORTFOLIO_FUNDING, perms_sets
     )
+
+
+def test_get_many_nonexistent():
+    with pytest.raises(NotFoundError):
+        PermissionSets.get_many(["nonexistent", "not real"])
