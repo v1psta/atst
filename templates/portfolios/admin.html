@@ -41,6 +41,7 @@
 
     {% include "fragments/primary_point_of_contact.html" %}
 
+    {% include "fragments/admin/portfolio_members.html" %}
     {% include "fragments/audit_events_log.html" %}
 
     {{ Pagination(audit_events, 'portfolios.portfolio_admin', portfolio_id=portfolio.id) }}

@@ -1,0 +1,64 @@
+{% from "components/icon.html" import Icon %}
+
+<section class="member-list">
+  <div class='responsive-table-wrapper panel'>
+    <div class='member-list-header'>
+      <div class='left'>
+        <div class='h3'>{{ "portfolios.admin.portfolio_members_title" | translate }}</div>
+        <div class='subheading'>
+          {{ "portfolios.admin.portfolio_members_subheading" | translate }}
+        </div>
+      </div>
+      <a class='icon-link'>
+        <span class='icon'>{{ Icon('info') }}</span>
+        {{ "portfolios.admin.settings_info" | translate }}
+      </a>
+    </div>
+
+  {% if not portfolio.members %}
+
+    <p>There are currently no members in this Portfolio.</p>
+
+  {% else %}
+
+    <table>
+
+      <thead>
+        <tr>
+            <td>{{ "portfolios.members.permissions.name" | translate }}</td>
+            <td>{{ "portfolios.members.permissions.app_mgmt" | translate }}</td>
+            <td>{{ "portfolios.members.permissions.funding" | translate }}</td>
+            <td>{{ "portfolios.members.permissions.reporting" | translate }}</td>
+            <td>{{ "portfolios.members.permissions.portfolio_mgmt" | translate }}</td>
+            <td></td>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for member_data in members_data %}
+        <tr>
+            <td class='name'>{{ member_data.member.user_name }}
+              {% if member_data.member.user == user %}
+                <span class='you'>(<span class='green'>you</span>)</span>
+              {% endif %}
+            </td>
+            {% set heading_perms = [member_data.app_mgmt, member_data.funding, member_data.reporting, member_data.portfolio_mgmt] %}
+
+            {% for has_perm in heading_perms %}
+              {% if has_perm %}
+                <td class='green'>Edit Access</td>
+              {% else %}
+                <td>View Only</td>
+              {% endif %}
+            {% endfor %}
+
+        </tr>
+        {% endfor %}
+      </tbody>
+
+    </table>
+  </div>
+
+{% endif %}
+
+</section>
