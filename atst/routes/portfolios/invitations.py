@@ -45,7 +45,7 @@ def accept_invitation(token):
 @portfolios_bp.route(
     "/portfolios/<portfolio_id>/invitations/<token>/revoke", methods=["POST"]
 )
-@user_can(Permissions.EDIT_PORTFOLIO_USERS)
+@user_can(Permissions.EDIT_PORTFOLIO_USERS, message="revoke invitation")
 def revoke_invitation(portfolio_id, token):
     portfolio = Portfolios.get_for_update(portfolio_id)
     Invitations.revoke(token)
@@ -56,7 +56,7 @@ def revoke_invitation(portfolio_id, token):
 @portfolios_bp.route(
     "/portfolios/<portfolio_id>/invitations/<token>/resend", methods=["POST"]
 )
-@user_can(Permissions.EDIT_PORTFOLIO_USERS)
+@user_can(Permissions.EDIT_PORTFOLIO_USERS, message="resend invitation")
 def resend_invitation(portfolio_id, token):
     invite = Invitations.resend(g.current_user, token)
     send_invite_email(g.current_user.full_name, invite.token, invite.email)

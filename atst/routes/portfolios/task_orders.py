@@ -25,7 +25,7 @@ from atst.models.permissions import Permissions
 
 
 @portfolios_bp.route("/portfolios/<portfolio_id>/task_orders")
-@user_can(Permissions.VIEW_PORTFOLIO_FUNDING)
+@user_can(Permissions.VIEW_PORTFOLIO_FUNDING, message="view portfolio funding")
 def portfolio_funding(portfolio_id):
     portfolio = Portfolios.get(g.current_user, portfolio_id)
     task_orders_by_status = defaultdict(list)
@@ -69,7 +69,7 @@ def portfolio_funding(portfolio_id):
 
 
 @portfolios_bp.route("/portfolios/<portfolio_id>/task_order/<task_order_id>")
-@user_can(Permissions.VIEW_TASK_ORDER_DETAILS)
+@user_can(Permissions.VIEW_TASK_ORDER_DETAILS, message="view task order details")
 def view_task_order(portfolio_id, task_order_id):
     portfolio = Portfolios.get(g.current_user, portfolio_id)
     task_order = TaskOrders.get(task_order_id)
@@ -97,7 +97,11 @@ def wrap_check_is_ko_or_cor(user, _perm, task_order_id=None, **_kwargs):
 
 
 @portfolios_bp.route("/portfolios/<portfolio_id>/task_order/<task_order_id>/review")
-@user_can(None, exceptions=[wrap_check_is_ko_or_cor])
+@user_can(
+    None,
+    exceptions=[wrap_check_is_ko_or_cor],
+    message="view contracting officer review form",
+)
 def ko_review(portfolio_id, task_order_id):
     task_order = TaskOrders.get(task_order_id)
     portfolio = Portfolios.get(g.current_user, portfolio_id)
@@ -117,7 +121,9 @@ def ko_review(portfolio_id, task_order_id):
     "/portfolios/<portfolio_id>/task_order/<task_order_id>/resend_invite",
     methods=["POST"],
 )
-@user_can(Permissions.EDIT_TASK_ORDER_DETAILS)
+@user_can(
+    Permissions.EDIT_TASK_ORDER_DETAILS, message="resend task order officer invites"
+)
 def resend_invite(portfolio_id, task_order_id):
     invite_type = http_request.args.get("invite_type")
 
@@ -175,7 +181,11 @@ def resend_invite(portfolio_id, task_order_id):
 @portfolios_bp.route(
     "/portfolios/<portfolio_id>/task_order/<task_order_id>/review", methods=["POST"]
 )
-@user_can(None, exceptions=[wrap_check_is_ko_or_cor])
+@user_can(
+    None,
+    exceptions=[wrap_check_is_ko_or_cor],
+    message="submit contracting officer review",
+)
 def submit_ko_review(portfolio_id, task_order_id, form=None):
     task_order = TaskOrders.get(task_order_id)
     form_data = {**http_request.form, **http_request.files}
@@ -209,7 +219,9 @@ def submit_ko_review(portfolio_id, task_order_id, form=None):
 @portfolios_bp.route(
     "/portfolios/<portfolio_id>/task_order/<task_order_id>/invitations"
 )
-@user_can(Permissions.EDIT_TASK_ORDER_DETAILS)
+@user_can(
+    Permissions.EDIT_TASK_ORDER_DETAILS, message="view task order invitations page"
+)
 def task_order_invitations(portfolio_id, task_order_id):
     portfolio = Portfolios.get(g.current_user, portfolio_id)
     task_order = TaskOrders.get(task_order_id)
@@ -230,7 +242,7 @@ def task_order_invitations(portfolio_id, task_order_id):
     "/portfolios/<portfolio_id>/task_order/<task_order_id>/invitations",
     methods=["POST"],
 )
-@user_can(Permissions.EDIT_TASK_ORDER_DETAILS)
+@user_can(Permissions.EDIT_TASK_ORDER_DETAILS, message="edit task order invitations")
 def edit_task_order_invitations(portfolio_id, task_order_id):
     portfolio = Portfolios.get(g.current_user, portfolio_id)
     task_order = TaskOrders.get(task_order_id)
@@ -286,7 +298,9 @@ def wrap_check_is_so(user, _perm, task_order_id=None, **_kwargs):
 
 
 @portfolios_bp.route("/portfolios/<portfolio_id>/task_order/<task_order_id>/dd254")
-@user_can(None, exceptions=[wrap_check_is_so])
+@user_can(
+    None, exceptions=[wrap_check_is_so], message="view security officer review form"
+)
 def so_review(portfolio_id, task_order_id):
     task_order = TaskOrders.get(task_order_id)
     form = so_review_form(task_order)
@@ -302,7 +316,9 @@ def so_review(portfolio_id, task_order_id):
 @portfolios_bp.route(
     "/portfolios/<portfolio_id>/task_order/<task_order_id>/dd254", methods=["POST"]
 )
-@user_can(None, exceptions=[wrap_check_is_so])
+@user_can(
+    None, exceptions=[wrap_check_is_so], message="submit security officer review form"
+)
 def submit_so_review(portfolio_id, task_order_id):
     task_order = TaskOrders.get(task_order_id)
     form = DD254Form(http_request.form)

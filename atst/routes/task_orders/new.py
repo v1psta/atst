@@ -263,7 +263,11 @@ def is_new_task_order(*_args, **kwargs):
 @task_orders_bp.route("/task_orders/new/<int:screen>")
 @task_orders_bp.route("/task_orders/new/<int:screen>/<task_order_id>")
 @task_orders_bp.route("/portfolios/<portfolio_id>/task_orders/new/<int:screen>")
-@user_can(Permissions.CREATE_TASK_ORDER, exceptions=[is_new_task_order])
+@user_can(
+    Permissions.CREATE_TASK_ORDER,
+    exceptions=[is_new_task_order],
+    message="view new task order form",
+)
 def new(screen, task_order_id=None, portfolio_id=None):
     workflow = ShowTaskOrderWorkflow(
         g.current_user, screen, task_order_id, portfolio_id
@@ -310,7 +314,11 @@ def new(screen, task_order_id=None, portfolio_id=None):
 @task_orders_bp.route(
     "/portfolios/<portfolio_id>/task_orders/new/<int:screen>", methods=["POST"]
 )
-@user_can(Permissions.CREATE_TASK_ORDER, exceptions=[is_new_task_order])
+@user_can(
+    Permissions.CREATE_TASK_ORDER,
+    exceptions=[is_new_task_order],
+    message="update task order",
+)
 def update(screen, task_order_id=None, portfolio_id=None):
     form_data = {**http_request.form, **http_request.files}
     workflow = UpdateTaskOrderWorkflow(

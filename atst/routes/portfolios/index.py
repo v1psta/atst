@@ -52,7 +52,7 @@ def render_admin_page(portfolio, form):
 
 
 @portfolios_bp.route("/portfolios/<portfolio_id>/admin")
-@user_can(Permissions.VIEW_PORTFOLIO_ADMIN)
+@user_can(Permissions.VIEW_PORTFOLIO_ADMIN, message="view portfolio admin page")
 def portfolio_admin(portfolio_id):
     portfolio = Portfolios.get_for_update(portfolio_id)
     form = PortfolioForm(data={"name": portfolio.name})
@@ -60,7 +60,7 @@ def portfolio_admin(portfolio_id):
 
 
 @portfolios_bp.route("/portfolios/<portfolio_id>/edit", methods=["POST"])
-@user_can(Permissions.EDIT_PORTFOLIO_NAME)
+@user_can(Permissions.EDIT_PORTFOLIO_NAME, message="edit portfolio")
 def edit_portfolio(portfolio_id):
     portfolio = Portfolios.get_for_update(portfolio_id)
     form = PortfolioForm(http_request.form)
@@ -75,7 +75,7 @@ def edit_portfolio(portfolio_id):
 
 
 @portfolios_bp.route("/portfolios/<portfolio_id>")
-@user_can(Permissions.VIEW_PORTFOLIO)
+@user_can(Permissions.VIEW_PORTFOLIO, message="view portfolio")
 def show_portfolio(portfolio_id):
     return redirect(
         url_for("portfolios.portfolio_applications", portfolio_id=portfolio_id)
@@ -83,7 +83,7 @@ def show_portfolio(portfolio_id):
 
 
 @portfolios_bp.route("/portfolios/<portfolio_id>/reports")
-@user_can(Permissions.VIEW_PORTFOLIO_REPORTS)
+@user_can(Permissions.VIEW_PORTFOLIO_REPORTS, message="view portfolio reports")
 def portfolio_reports(portfolio_id):
     portfolio = Portfolios.get(g.current_user, portfolio_id)
     today = date.today()

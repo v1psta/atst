@@ -18,14 +18,14 @@ from atst.models.permissions import Permissions
 
 
 @portfolios_bp.route("/portfolios/<portfolio_id>/applications")
-@user_can(Permissions.VIEW_APPLICATION)
+@user_can(Permissions.VIEW_APPLICATION, message="view portfolio applications")
 def portfolio_applications(portfolio_id):
     portfolio = Portfolios.get(g.current_user, portfolio_id)
     return render_template("portfolios/applications/index.html", portfolio=portfolio)
 
 
 @portfolios_bp.route("/portfolios/<portfolio_id>/applications/new")
-@user_can(Permissions.CREATE_APPLICATION)
+@user_can(Permissions.CREATE_APPLICATION, message="view create new application form")
 def new_application(portfolio_id):
     portfolio = Portfolios.get_for_update(portfolio_id)
     form = NewApplicationForm()
@@ -35,7 +35,7 @@ def new_application(portfolio_id):
 
 
 @portfolios_bp.route("/portfolios/<portfolio_id>/applications/new", methods=["POST"])
-@user_can(Permissions.CREATE_APPLICATION)
+@user_can(Permissions.CREATE_APPLICATION, message="create new application")
 def create_application(portfolio_id):
     portfolio = Portfolios.get_for_update(portfolio_id)
     form = NewApplicationForm(http_request.form)
@@ -58,7 +58,7 @@ def create_application(portfolio_id):
 
 
 @portfolios_bp.route("/portfolios/<portfolio_id>/applications/<application_id>/edit")
-@user_can(Permissions.EDIT_APPLICATION)
+@user_can(Permissions.EDIT_APPLICATION, message="view application edit form")
 def edit_application(portfolio_id, application_id):
     portfolio = Portfolios.get_for_update(portfolio_id)
     application = Applications.get(application_id)
@@ -75,7 +75,7 @@ def edit_application(portfolio_id, application_id):
 @portfolios_bp.route(
     "/portfolios/<portfolio_id>/applications/<application_id>/edit", methods=["POST"]
 )
-@user_can(Permissions.EDIT_APPLICATION)
+@user_can(Permissions.EDIT_APPLICATION, message="update application")
 def update_application(portfolio_id, application_id):
     portfolio = Portfolios.get_for_update(portfolio_id)
     application = Applications.get(application_id)
@@ -107,7 +107,7 @@ def wrap_environment_role_lookup(
 
 
 @portfolios_bp.route("/portfolios/<portfolio_id>/environments/<environment_id>/access")
-@user_can(None, exceptions=[wrap_environment_role_lookup])
+@user_can(None, exceptions=[wrap_environment_role_lookup], message="access environment")
 def access_environment(portfolio_id, environment_id):
     env_role = EnvironmentRoles.get(g.current_user.id, environment_id)
     token = app.csp.cloud.get_access_token(env_role)

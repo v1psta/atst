@@ -10,7 +10,7 @@ from atst.models.permissions import Permissions
 
 
 @task_orders_bp.route("/task_orders/download_summary/<task_order_id>")
-@user_can(Permissions.VIEW_TASK_ORDER_DETAILS)
+@user_can(Permissions.VIEW_TASK_ORDER_DETAILS, message="download task order summary")
 def download_summary(task_order_id):
     task_order = TaskOrders.get(task_order_id)
     byte_str = BytesIO()
@@ -34,7 +34,10 @@ def send_file(attachment):
 
 
 @task_orders_bp.route("/task_orders/csp_estimate/<task_order_id>")
-@user_can(Permissions.VIEW_TASK_ORDER_DETAILS)
+@user_can(
+    Permissions.VIEW_TASK_ORDER_DETAILS,
+    message="download task order cloud service provider estimate",
+)
 def download_csp_estimate(task_order_id):
     task_order = TaskOrders.get(task_order_id)
     if task_order.csp_estimate:
@@ -44,7 +47,7 @@ def download_csp_estimate(task_order_id):
 
 
 @task_orders_bp.route("/task_orders/pdf/<task_order_id>")
-@user_can(Permissions.VIEW_TASK_ORDER_DETAILS)
+@user_can(Permissions.VIEW_TASK_ORDER_DETAILS, message="download task order PDF")
 def download_task_order_pdf(task_order_id):
     task_order = TaskOrders.get(task_order_id)
     if task_order.pdf:
