@@ -46,26 +46,6 @@ def test_portfolio_has_timestamps(portfolio):
     assert portfolio.time_created == portfolio.time_updated
 
 
-@pytest.mark.skip(reason="redo as a route access test")
-def test_portfolios_get_ensures_user_is_in_portfolio(portfolio, portfolio_owner):
-    outside_user = UserFactory.create()
-    with pytest.raises(UnauthorizedError):
-        Portfolios.get(outside_user, portfolio.id)
-
-
-def test_get_for_update_applications_allows_owner(portfolio, portfolio_owner):
-    Portfolios.get_for_update(portfolio.id)
-
-
-@pytest.mark.skip(reason="redo as a route access test")
-def test_get_for_update_applications_blocks_developer(portfolio):
-    developer = UserFactory.create()
-    PortfolioRoles.add(developer, portfolio.id)
-
-    with pytest.raises(UnauthorizedError):
-        Portfolios.get_for_update(portfolio.id)
-
-
 def test_can_create_portfolio_role(portfolio, portfolio_owner):
     user_data = {
         "first_name": "New",
@@ -96,22 +76,6 @@ def test_can_add_existing_user_to_portfolio(portfolio, portfolio_owner):
     assert not new_member.user.provisional
 
 
-@pytest.mark.skip(reason="redo as a route access test")
-def test_need_permission_to_create_portfolio_role(portfolio, portfolio_owner):
-    random_user = UserFactory.create()
-
-    user_data = {
-        "first_name": "New",
-        "last_name": "User",
-        "email": "new.user@mail.com",
-        "portfolio_role": "developer",
-        "dod_id": "1234567890",
-    }
-
-    with pytest.raises(UnauthorizedError):
-        Portfolios.create_member(portfolio, user_data)
-
-
 def test_update_portfolio_role_role(portfolio, portfolio_owner):
     user_data = {
         "first_name": "New",
@@ -126,42 +90,6 @@ def test_update_portfolio_role_role(portfolio, portfolio_owner):
 
     updated_member = Portfolios.update_member(member, permission_sets=permission_sets)
     assert updated_member.portfolio == portfolio
-
-
-@pytest.mark.skip(reason="redo as a route access test")
-def test_need_permission_to_update_portfolio_role_role(portfolio, portfolio_owner):
-    random_user = UserFactory.create()
-    user_data = {
-        "first_name": "New",
-        "last_name": "User",
-        "email": "new.user@mail.com",
-        "portfolio_role": "developer",
-        "dod_id": "1234567890",
-    }
-    member = Portfolios.create_member(portfolio, user_data)
-    role_name = "developer"
-
-    with pytest.raises(UnauthorizedError):
-        Portfolios.update_member(member, role_name)
-
-
-def test_owner_can_view_portfolio_members(portfolio, portfolio_owner):
-    portfolio = Portfolios.get_for_update(portfolio.id)
-
-    assert portfolio
-
-
-def test_ccpo_can_view_portfolio_members(portfolio, portfolio_owner):
-    ccpo = UserFactory.create_ccpo()
-    assert Portfolios.get_for_update(portfolio.id)
-
-
-@pytest.mark.skip(reason="redo as a route access test")
-def test_random_user_cannot_view_portfolio_members(portfolio):
-    developer = UserFactory.create()
-
-    with pytest.raises(UnauthorizedError):
-        portfolio = Portfolios.get_for_update(portfolio.id)
 
 
 def test_scoped_portfolio_for_admin_missing_view_apps_perms(portfolio_owner, portfolio):
@@ -263,28 +191,6 @@ def test_for_user_returns_all_portfolios_for_ccpo(portfolio, portfolio_owner):
 
     sams_portfolios = Portfolios.for_user(sam)
     assert len(sams_portfolios) == 2
-
-
-@pytest.mark.skip(reason="redo as a route access test")
-def test_get_for_update_information(portfolio, portfolio_owner):
-    owner_ws = Portfolios.get_for_update(portfolio.id)
-    assert portfolio == owner_ws
-
-    admin = UserFactory.create()
-    perm_sets = get_all_portfolio_permission_sets()
-    PortfolioRoleFactory.create(
-        user=admin, portfolio=portfolio, permission_sets=perm_sets
-    )
-    admin_ws = Portfolios.get_for_update(portfolio.id)
-    assert portfolio == admin_ws
-
-    # TODO: implement ccpo roles
-    # ccpo = UserFactory.create_ccpo()
-    # assert Portfolios.get_for_update(portfolio.id)
-
-    developer = UserFactory.create()
-    with pytest.raises(UnauthorizedError):
-        Portfolios.get_for_update(portfolio.id)
 
 
 def test_can_create_portfolios_with_matching_names():

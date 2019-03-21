@@ -37,11 +37,7 @@ def serialize_member(member):
     }
 
 
-@portfolios_bp.route("/portfolios/<portfolio_id>/admin")
-@user_can(Permissions.VIEW_PORTFOLIO_ADMIN)
-def portfolio_admin(portfolio_id):
-    portfolio = Portfolios.get_for_update(portfolio_id)
-    form = PortfolioForm(data={"name": portfolio.name})
+def render_admin_page(portfolio, form):
     pagination_opts = Paginator.get_pagination_opts(http_request)
     audit_events = AuditLog.get_portfolio_events(portfolio, pagination_opts)
     members_data = [serialize_member(member) for member in portfolio.members]
@@ -55,6 +51,14 @@ def portfolio_admin(portfolio_id):
     )
 
 
+@portfolios_bp.route("/portfolios/<portfolio_id>/admin")
+@user_can(Permissions.VIEW_PORTFOLIO_ADMIN)
+def portfolio_admin(portfolio_id):
+    portfolio = Portfolios.get_for_update(portfolio_id)
+    form = PortfolioForm(data={"name": portfolio.name})
+    return render_admin_page(portfolio, form)
+
+
 @portfolios_bp.route("/portfolios/<portfolio_id>/edit", methods=["POST"])
 @user_can(Permissions.EDIT_PORTFOLIO_NAME)
 def edit_portfolio(portfolio_id):
@@ -66,7 +70,8 @@ def edit_portfolio(portfolio_id):
             url_for("portfolios.portfolio_applications", portfolio_id=portfolio.id)
         )
     else:
-        return render_template("portfolios/edit.html", form=form, portfolio=portfolio)
+        # rerender portfolio admin page
+        return render_admin_page(portfolio, form)
 
 
 @portfolios_bp.route("/portfolios/<portfolio_id>")

@@ -96,15 +96,20 @@ def update_application(portfolio_id, application_id):
         )
 
 
+def wrap_environment_role_lookup(
+    user, _perm, portfolio_id=None, environment_id=None, **kwargs
+):
+    env_role = EnvironmentRoles.get(user.id, environment_id)
+    if not env_role:
+        raise UnauthorizedError(user, "access environment {}".format(environment_id))
+
+    return True
+
+
 @portfolios_bp.route("/portfolios/<portfolio_id>/environments/<environment_id>/access")
-# TODO: we probably need a different permission for this
-@user_can(Permissions.VIEW_ENVIRONMENT)
+@user_can(None, exceptions=[wrap_environment_role_lookup])
 def access_environment(portfolio_id, environment_id):
     env_role = EnvironmentRoles.get(g.current_user.id, environment_id)
-    if not env_role:
-        raise UnauthorizedError(
-            g.current_user, "access environment {}".format(environment_id)
-        )
-    else:
-        token = app.csp.cloud.get_access_token(env_role)
-        return redirect(url_for("atst.csp_environment_access", token=token))
+    token = app.csp.cloud.get_access_token(env_role)
+
+    return redirect(url_for("atst.csp_environment_access", token=token))

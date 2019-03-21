@@ -129,6 +129,8 @@ def view_member(portfolio_id, member_id):
     )
 
 
+# TODO: check if member_id is consistent with other routes here;
+# user ID vs portfolio role ID
 @portfolios_bp.route(
     "/portfolios/<portfolio_id>/members/<member_id>/member_edit", methods=["POST"]
 )

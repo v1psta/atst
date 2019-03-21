@@ -22,18 +22,6 @@ def developer():
     return UserFactory.create()
 
 
-@pytest.mark.skip(reason="redo as a route access test")
-def test_non_admin_cannot_view_audit_log(developer):
-    with pytest.raises(UnauthorizedError):
-        AuditLog.get_all_events(developer)
-
-
-@pytest.mark.skip(reason="redo as a route access test")
-def test_ccpo_can_view_audit_log():
-    events = AuditLog.get_all_events()
-    assert len(events) > 0
-
-
 def test_paginate_audit_log():
     user = UserFactory.create()
     for _ in range(100):
@@ -41,39 +29,6 @@ def test_paginate_audit_log():
 
     events = AuditLog.get_all_events(pagination_opts={"per_page": 25, "page": 2})
     assert len(events) == 25
-
-
-@pytest.mark.skip(reason="redo as a route access test")
-def test_ccpo_can_view_ws_audit_log():
-    portfolio = PortfolioFactory.create()
-    events = AuditLog.get_portfolio_events(portfolio)
-    assert len(events) > 0
-
-
-@pytest.mark.skip(reason="redo as a route access test")
-def test_ws_admin_can_view_ws_audit_log():
-    portfolio = PortfolioFactory.create()
-    admin = UserFactory.create()
-    PortfolioRoleFactory.create(
-        portfolio=portfolio, user=admin, status=PortfolioRoleStatus.ACTIVE
-    )
-    events = AuditLog.get_portfolio_events(portfolio)
-    assert len(events) > 0
-
-
-@pytest.mark.skip(reason="redo as a route access test")
-def test_ws_owner_can_view_ws_audit_log():
-    portfolio = PortfolioFactory.create()
-    events = AuditLog.get_portfolio_events(portfolio)
-    assert len(events) > 0
-
-
-@pytest.mark.skip(reason="redo as a route access test")
-def test_other_users_cannot_view_portfolio_audit_log():
-    with pytest.raises(UnauthorizedError):
-        portfolio = PortfolioFactory.create()
-        dev = UserFactory.create()
-        AuditLog.get_portfolio_events(dev, portfolio)
 
 
 def test_paginate_ws_audit_log():

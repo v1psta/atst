@@ -599,48 +599,6 @@ def test_resend_invite_when_officer_type_missing(
     assert len(queue.get_queue()) == queue_length
 
 
-@pytest.mark.skip(reason="KO should not be able to resend invites")
-def test_resend_invite_when_ko(app, client, user_session, portfolio, user):
-    queue_length = len(queue.get_queue())
-
-    task_order = TaskOrderFactory.create(
-        portfolio=portfolio, contracting_officer=user, ko_invite=True
-    )
-
-    portfolio_role = PortfolioRoleFactory.create(
-        portfolio=portfolio, user=user, status=PortfolioStatus.ACTIVE
-    )
-
-    original_invitation = Invitations.create(
-        inviter=user, portfolio_role=portfolio_role, email=user.email
-    )
-
-    user_session(user)
-
-    response = client.post(
-        url_for(
-            "portfolios.resend_invite",
-            portfolio_id=portfolio.id,
-            task_order_id=task_order.id,
-            invite_type="ko_invite",
-            _external=True,
-        )
-    )
-
-    assert original_invitation.status == InvitationStatus.REVOKED
-    assert response.status_code == 302
-    assert (
-        url_for(
-            "portfolios.task_order_invitations",
-            portfolio_id=portfolio.id,
-            task_order_id=task_order.id,
-            _external=True,
-        )
-        == response.headers["Location"]
-    )
-    assert len(queue.get_queue()) == queue_length + 1
-
-
 def test_resend_invite_when_not_pending(app, client, user_session, portfolio, user):
     queue_length = len(queue.get_queue())
 
