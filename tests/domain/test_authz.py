@@ -12,6 +12,8 @@ from atst.domain.permission_sets import PermissionSets
 from atst.domain.exceptions import UnauthorizedError
 from atst.models.permissions import Permissions
 
+from tests.utils import FakeLogger
+
 
 @pytest.fixture
 def invalid_user():
@@ -146,3 +148,41 @@ def test_user_can_access_decorator_exceptions(set_current_user):
 
     set_current_user(rando_calrissian)
     assert _edit_portfolio_name(portfolio_id=portfolio.id)
+
+
+@pytest.fixture
+def mock_logger(app):
+    real_logger = app.logger
+    app.logger = FakeLogger()
+
+    yield app.logger
+
+    app.logger = real_logger
+
+
+def test_user_can_access_decorator_logs_access(
+    set_current_user, monkeypatch, mock_logger
+):
+    user = UserFactory.create()
+
+    @user_can_access_decorator(Permissions.EDIT_PORTFOLIO_NAME)
+    def _do_something(*args, **kwargs):
+        return True
+
+    set_current_user(user)
+
+    monkeypatch.setattr(
+        "atst.domain.authz.decorator.check_access", lambda *a, **k: True
+    )
+    _do_something()
+    assert len(mock_logger.messages) == 1
+    assert "accessed" in mock_logger.messages[0]
+
+    def _unauthorized(*a, **k):
+        raise UnauthorizedError(user, "do something")
+
+    monkeypatch.setattr("atst.domain.authz.decorator.check_access", _unauthorized)
+    with pytest.raises(UnauthorizedError):
+        _do_something()
+    assert len(mock_logger.messages) == 2
+    assert "denied access" in mock_logger.messages[1]
