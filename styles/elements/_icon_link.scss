@@ -26,8 +26,18 @@
 
   .icon {
     @include icon-color($color-primary);
-    @include icon-size(12);
+    @include icon-size(16);
     margin-right: $gap;
+
+    &--help {
+      position: relative;
+      bottom: -3px;
+    }
+
+    &--info {
+      position: relative;
+      bottom: 3px;
+    }
   }
 }
 
