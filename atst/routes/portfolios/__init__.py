@@ -18,12 +18,9 @@ from atst.models.permissions import Permissions
 def portfolio():
     portfolio = None
     if "portfolio_id" in http_request.view_args:
-        try:
-            portfolio = Portfolios.get(
-                g.current_user, http_request.view_args["portfolio_id"]
-            )
-        except UnauthorizedError:
-            pass
+        portfolio = Portfolios.get(
+            g.current_user, http_request.view_args["portfolio_id"]
+        )
 
     def user_can(permission):
         if portfolio:
