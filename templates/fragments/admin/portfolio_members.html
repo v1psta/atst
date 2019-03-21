@@ -1,4 +1,5 @@
 {% from "components/icon.html" import Icon %}
+{% from "components/options_input.html" import OptionsInput %}
 
 <section class="member-list">
   <div class='responsive-table-wrapper panel'>
@@ -37,31 +38,27 @@
       </thead>
 
       <tbody>
-        {% for member_data in members_data %}
-        <tr>
-            <td class='name'>{{ member_data.member.user_name }}
-              {% if member_data.member.user == user %}
+        {% for subform in permissions_form.members_permissions %}
+          <tr>
+            <td class='name'>{{ subform.member.data }}
+              {% if subform.member.data == user.full_name %}
                 <span class='you'>(<span class='green'>you</span>)</span>
                 {% set archive_button_class = 'usa-button-disabled' %}
               {% else %}
                 {% set archive_button_class = 'usa-button-secondary' %}
               {% endif %}
             </td>
-            {% set heading_perms = [member_data.app_mgmt, member_data.funding, member_data.reporting, member_data.portfolio_mgmt] %}
 
-            {% for has_perm in heading_perms %}
-              {% if has_perm %}
-                <td class='green'>Edit Access</td>
-              {% else %}
-                <td>View Only</td>
-              {% endif %}
-            {% endfor %}
+            <td>{{ OptionsInput(subform.perms_app_mgmt, label=False) }}</td>
+            <td>{{ OptionsInput(subform.perms_funding, label=False) }}</td>
+            <td>{{ OptionsInput(subform.perms_reporting, label=False) }}</td>
+            <td>{{ OptionsInput(subform.perms_portfolio_mgmt, label=False) }}</td>
 
-            <td><button type="button" class='{{ archive_button_class }}'>{{ "portfolios.members.archive_button" | translate }}</button>
-            </td>
-
+        <td><button type="button" class='{{ archive_button_class }}'>{{ "portfolios.members.archive_button" | translate }}</button>
+        </td>
         </tr>
         {% endfor %}
+
       </tbody>
     </table>
     <input type='submit' class='usa-button usa-button-primary' value='{{ "Save" }}' />
@@ -69,6 +66,6 @@
 
   </div>
 
-{% endif %}
+  {% endif %}
 
 </section>

@@ -138,6 +138,7 @@ forms:
     last_name_label: Last Name
     portfolio_role_description: 'The portfolio role controls whether a member is permitted to organize a portfolio into applications and environments, add members to this portfolio, and view billing information.'
     portfolio_role_label: Portfolio Role
+    access: Access Level
   new_request:
     am_poc_label: I am the Portfolio Owner
     average_daily_traffic_description: What is the average daily traffic you expect the systems under this cloud contract to use?
@@ -575,6 +576,8 @@ portfolios:
       funding: Funding
       reporting: Reporting
       portfolio_mgmt: Portfolio Mgmt
+      view_only: View Only
+      edit_access: Edit Access
 testing:
   example_string: Hello World
   example_with_variables: 'Hello, {name}!'

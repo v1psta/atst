@@ -197,8 +197,6 @@
     }
 
     table {
-      box-shadow: 0 6px 18px 0 rgba(144,164,183,0.3);
-
       thead {
         th:first-child {
           padding-left: 3 * $gap;
@@ -265,6 +263,14 @@
           .you {
             font-size: 1.2rem;
           }
+        }
+
+        .usa-input.usa-input--success {
+          margin: 0;
+        }
+
+        select {
+          border: none;
         }
       }
 

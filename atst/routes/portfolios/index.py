@@ -8,9 +8,10 @@ from atst.domain.portfolios import Portfolios
 from atst.domain.audit_log import AuditLog
 from atst.domain.common import Paginator
 from atst.forms.portfolio import PortfolioForm
+from atst.forms.portfolio_member import MembersPermissionsForm
+from atst.models.permissions import Permissions
 from atst.domain.permission_sets import PermissionSets
 from atst.domain.authz.decorator import user_can_access_decorator as user_can
-from atst.models.permissions import Permissions
 
 
 @portfolios_bp.route("/portfolios")
@@ -23,27 +24,53 @@ def portfolios():
         return render_template("portfolios/blank_slate.html")
 
 
-def serialize_member(member):
+def permission_str(member, edit_perm_set, view_perm_set):
+    if member.has_permission_set(edit_perm_set):
+        return edit_perm_set
+    else:
+        return view_perm_set
+
+
+def serialize_member_form_data(member):
     return {
-        "member": member,
-        "app_mgmt": member.has_permission_set(
-            PermissionSets.EDIT_PORTFOLIO_APPLICATION_MANAGEMENT
+        "member": member.user.full_name,
+        "perms_app_mgmt": permission_str(
+            member,
+            PermissionSets.EDIT_PORTFOLIO_APPLICATION_MANAGEMENT,
+            PermissionSets.VIEW_PORTFOLIO_APPLICATION_MANAGEMENT,
         ),
-        "funding": member.has_permission_set(PermissionSets.EDIT_PORTFOLIO_FUNDING),
-        "reporting": member.has_permission_set(PermissionSets.EDIT_PORTFOLIO_REPORTS),
-        "portfolio_mgmt": member.has_permission_set(
-            PermissionSets.EDIT_PORTFOLIO_ADMIN
+        "perms_funding": permission_str(
+            member,
+            PermissionSets.EDIT_PORTFOLIO_FUNDING,
+            PermissionSets.VIEW_PORTFOLIO_FUNDING,
+        ),
+        "perms_reporting": permission_str(
+            member,
+            PermissionSets.EDIT_PORTFOLIO_REPORTS,
+            PermissionSets.VIEW_PORTFOLIO_REPORTS,
+        ),
+        "perms_portfolio_mgmt": permission_str(
+            member,
+            PermissionSets.EDIT_PORTFOLIO_ADMIN,
+            PermissionSets.VIEW_PORTFOLIO_ADMIN,
         ),
     }
 
 
-def render_admin_page(portfolio, form):
+def render_admin_page(portfolio, form=None):
     pagination_opts = Paginator.get_pagination_opts(http_request)
     audit_events = AuditLog.get_portfolio_events(portfolio, pagination_opts)
-    members_data = [serialize_member(member) for member in portfolio.members]
+    members_data = [serialize_member_form_data(member) for member in portfolio.members]
+
+    portfolio_form = PortfolioForm(data={"name": portfolio.name})
+    permissions_form = MembersPermissionsForm(
+        data={"members_permissions": members_data}
+    )
     return render_template(
         "portfolios/admin.html",
         form=form,
+        portfolio_form=portfolio_form,
+        permissions_form=permissions_form,
         portfolio=portfolio,
         audit_events=audit_events,
         user=g.current_user,
@@ -55,8 +82,7 @@ def render_admin_page(portfolio, form):
 @user_can(Permissions.VIEW_PORTFOLIO_ADMIN, message="view portfolio admin page")
 def portfolio_admin(portfolio_id):
     portfolio = Portfolios.get_for_update(portfolio_id)
-    form = PortfolioForm(data={"name": portfolio.name})
-    return render_admin_page(portfolio, form)
+    return render_admin_page(portfolio)
 
 
 @portfolios_bp.route("/portfolios/<portfolio_id>/edit", methods=["POST"])
