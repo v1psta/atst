@@ -89,7 +89,7 @@ def view_task_order(portfolio_id, task_order_id):
     )
 
 
-def wrap_check_is_ko_or_cor(user, _perm, task_order_id=None, **_kwargs):
+def wrap_check_is_ko_or_cor(user, task_order_id=None, **_kwargs):
     task_order = TaskOrders.get(task_order_id)
     Authorization.check_is_ko_or_cor(user, task_order)
 
@@ -290,7 +290,7 @@ def so_review_form(task_order):
         return DD254Form(data=form_data)
 
 
-def wrap_check_is_so(user, _perm, task_order_id=None, **_kwargs):
+def wrap_check_is_so(user, task_order_id=None, **_kwargs):
     task_order = TaskOrders.get(task_order_id)
     Authorization.check_is_so(user, task_order)
 

@@ -8,12 +8,8 @@ from atst.domain.task_orders import TaskOrders
 from atst.domain.exceptions import UnauthorizedError
 
 
-def evaluate_exceptions(user, permission, exceptions, **kwargs):
-    return (
-        True
-        if True in [exc(user, permission, **kwargs) for exc in exceptions]
-        else False
-    )
+def evaluate_exceptions(user, exceptions, **kwargs):
+    return True if True in [exc(user, **kwargs) for exc in exceptions] else False
 
 
 def check_access(permission, message, exceptions, *args, **kwargs):
@@ -28,7 +24,7 @@ def check_access(permission, message, exceptions, *args, **kwargs):
         access_args["portfolio"] = task_order.portfolio
 
     if exceptions and evaluate_exceptions(
-        g.current_user, permission, exceptions, **access_args, **kwargs
+        g.current_user, exceptions, **access_args, **kwargs
     ):
         return True
 

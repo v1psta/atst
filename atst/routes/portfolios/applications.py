@@ -97,7 +97,7 @@ def update_application(portfolio_id, application_id):
 
 
 def wrap_environment_role_lookup(
-    user, _perm, portfolio_id=None, environment_id=None, **kwargs
+    user, portfolio_id=None, environment_id=None, **kwargs
 ):
     env_role = EnvironmentRoles.get(user.id, environment_id)
     if not env_role:

@@ -20,7 +20,7 @@ def find_unsigned_ko_to(task_order_id):
     return task_order
 
 
-def wrap_check_is_ko(user, _perm, task_order_id=None, **_kwargs):
+def wrap_check_is_ko(user, task_order_id=None, **_kwargs):
     task_order = TaskOrders.get(task_order_id)
     Authorization.check_is_ko(user, task_order)
 
