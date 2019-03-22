@@ -138,18 +138,27 @@ def test_user_can_access_decorator(set_current_user):
 
 def test_user_can_access_decorator_exceptions(set_current_user):
     rando_calrissian = UserFactory.create()
+    darth_vader = UserFactory.create()
     portfolio = PortfolioFactory.create()
 
-    because_i_said_so = lambda *args, **kwargs: True
+    def _can_fly_the_millenium_falcon(u, *args, **kwargs):
+        if u == rando_calrissian:
+            return True
+        else:
+            raise UnauthorizedError(u, "is not rando")
 
     @user_can_access_decorator(
-        Permissions.EDIT_PORTFOLIO_NAME, exception=because_i_said_so
+        Permissions.EDIT_PORTFOLIO_NAME, exception=_can_fly_the_millenium_falcon
     )
-    def _edit_portfolio_name(*args, **kwargs):
+    def _cloud_city(*args, **kwargs):
         return True
 
     set_current_user(rando_calrissian)
-    assert _edit_portfolio_name(portfolio_id=portfolio.id)
+    assert _cloud_city()
+
+    set_current_user(darth_vader)
+    with pytest.raises(UnauthorizedError):
+        assert _cloud_city()
 
 
 @pytest.fixture
