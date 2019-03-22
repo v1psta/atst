@@ -1,10 +1,10 @@
 from wtforms.fields import StringField, FormField, FieldList
-from wtforms.fields.html5 import EmailField
-from wtforms.validators import Required, Email, Length
+from wtforms.fields.html5 import EmailField, TelField
+from wtforms.validators import Required, Email, Length, Optional
 
 from atst.domain.permission_sets import PermissionSets
 from .forms import BaseForm
-from atst.forms.validators import IsNumber
+from atst.forms.validators import IsNumber, PhoneNumber
 from atst.forms.fields import SelectField
 from atst.utils.localization import translate
 
@@ -70,6 +70,10 @@ class NewForm(PermissionsForm):
     )
     email = EmailField(
         translate("forms.new_member.email_label"), validators=[Required(), Email()]
+    )
+    phone_number = TelField(
+        translate("forms.new_member.phone_number_label"),
+        validators=[Optional(), PhoneNumber()],
     )
     dod_id = StringField(
         translate("forms.new_member.dod_id_label"),

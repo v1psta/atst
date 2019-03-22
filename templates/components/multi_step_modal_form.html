@@ -1,0 +1,45 @@
+{% from "components/modal.html" import Modal %}
+
+{% set numbers = ['one', 'two', 'three', 'four', 'five'] %}
+
+{% macro FormSteps(step_count, current_step) -%}
+  {% set count = numbers[step_count - 1] %}
+  <div class="progress-menu progress-menu--{{ count }}">
+    <ul>
+      {% for step in range(step_count) %}
+        <li class="progress-menu__item
+        {% if loop.index < current_step %}
+          progress-menu__item--complete
+        {% elif loop.index == current_step %}
+          progress-menu__item--active
+        {% else %}
+          progress-menu__item--incomplete
+        {% endif %}">
+          <a v-on:click="goToStep({{ step }})">
+            Step {{ loop.index }}
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endmacro %}
+
+{% macro MultiStepModalForm(name, form, form_action, steps, button_text="", dismissable=False) -%}
+  {% set step_count = steps|length %}
+  <multi-step-modal-form inline-template>
+    <div>
+      <button v-on:click="openModal('{{ name }}')" type="button" class="icon-link">{{ button_text }}</button>
+      <form action="{{ form_action }}" method="POST">
+        {{ form.csrf_token }}
+        {% call Modal(name=name, dismissable=dismissable) %}
+          {% for step in steps %}
+            <div v-show="step === {{ loop.index0 }}">
+              {{ FormSteps(step_count, loop.index) }}
+              {{ step }}
+            </div>
+          {% endfor %}
+        {% endcall %}
+      </form>
+    </div>
+  </multi-step-modal-form>
+{% endmacro %}

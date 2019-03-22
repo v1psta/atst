@@ -18,6 +18,7 @@ import toggler from './components/toggler'
 import NewApplication from './components/forms/new_application'
 import EditEnvironmentRole from './components/forms/edit_environment_role'
 import EditApplicationRoles from './components/forms/edit_application_roles'
+import MultiStepModalForm from './components/forms/multi_step_modal_form'
 import funding from './components/forms/funding'
 import uploadinput from './components/upload_input'
 import Modal from './mixins/modal'
@@ -59,6 +60,7 @@ const app = new Vue({
     LocalDatetime,
     EditEnvironmentRole,
     EditApplicationRoles,
+    MultiStepModalForm,
     ConfirmationPopover,
     funding,
     uploadinput,
