@@ -107,7 +107,7 @@ def wrap_environment_role_lookup(
 
 
 @portfolios_bp.route("/portfolios/<portfolio_id>/environments/<environment_id>/access")
-@user_can(None, exceptions=[wrap_environment_role_lookup], message="access environment")
+@user_can(None, exception=wrap_environment_role_lookup, message="access environment")
 def access_environment(portfolio_id, environment_id):
     env_role = EnvironmentRoles.get(g.current_user.id, environment_id)
     token = app.csp.cloud.get_access_token(env_role)

@@ -137,11 +137,10 @@ def test_user_can_access_decorator_exceptions(set_current_user):
     rando_calrissian = UserFactory.create()
     portfolio = PortfolioFactory.create()
 
-    wont_work = lambda *args, **kwargs: False
     because_i_said_so = lambda *args, **kwargs: True
 
     @user_can_access_decorator(
-        Permissions.EDIT_PORTFOLIO_NAME, exceptions=[wont_work, because_i_said_so]
+        Permissions.EDIT_PORTFOLIO_NAME, exception=because_i_said_so
     )
     def _edit_portfolio_name(*args, **kwargs):
         return True

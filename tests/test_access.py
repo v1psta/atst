@@ -84,10 +84,9 @@ def test_all_protected_routes_have_access_control(
     monkeypatch.setattr("atst.domain.portfolios.Portfolios.get", lambda *a: None)
     monkeypatch.setattr("atst.domain.task_orders.TaskOrders.get", lambda *a: Null())
 
-    # patch the two internal functions the access decorator uses so
-    # that we can check that one or the other was called
-    mocker.patch("atst.domain.authz.decorator.user_can_access")
-    mocker.patch("atst.domain.authz.decorator.evaluate_exceptions")
+    # patch the internal function the access decorator uses so that
+    # we can check that it was called
+    mocker.patch("atst.domain.authz.decorator.check_access")
 
     user = UserFactory.create()
     user_session(user)
@@ -96,8 +95,7 @@ def test_all_protected_routes_have_access_control(
     getattr(client, method)(route)
 
     assert (
-        atst.domain.authz.decorator.user_can_access.call_count == 1
-        or atst.domain.authz.decorator.evaluate_exceptions.call_count == 1
+        atst.domain.authz.decorator.check_access.call_count == 1
     ), "no access control for {}".format(rule.endpoint)
 
 
