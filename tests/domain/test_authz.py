@@ -176,6 +176,7 @@ def test_user_can_access_decorator_logs_access(
     _do_something()
     assert len(mock_logger.messages) == 1
     assert "accessed" in mock_logger.messages[0]
+    assert "GET" in mock_logger.messages[0]
 
     def _unauthorized(*a, **k):
         raise UnauthorizedError(user, "do something")
@@ -183,5 +184,7 @@ def test_user_can_access_decorator_logs_access(
     monkeypatch.setattr("atst.domain.authz.decorator.check_access", _unauthorized)
     with pytest.raises(UnauthorizedError):
         _do_something()
+
     assert len(mock_logger.messages) == 2
     assert "denied access" in mock_logger.messages[1]
+    assert "GET" in mock_logger.messages[1]

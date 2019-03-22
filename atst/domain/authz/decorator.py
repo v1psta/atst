@@ -34,16 +34,16 @@ def user_can_access_decorator(permission, message=None, exception=None):
             try:
                 check_access(permission, message, exception, *args, **kwargs)
                 app.logger.info(
-                    "[access] User {} accessed {}".format(
-                        g.current_user.id, g.current_user.dod_id, request.path
+                    "[access] User {} accessed {} {}".format(
+                        g.current_user.id, request.method, request.path
                     )
                 )
 
                 return f(*args, **kwargs)
             except UnauthorizedError as err:
                 app.logger.warning(
-                    "[access] User {} denied access to {}".format(
-                        g.current_user.id, g.current_user.dod_id, request.path
+                    "[access] User {} denied access {} {}".format(
+                        g.current_user.id, request.method, request.path
                     )
                 )
 
