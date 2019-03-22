@@ -15,7 +15,8 @@ def check_access(permission, message, exception, *args, **kwargs):
         access_args["portfolio"] = Portfolios.get(
             g.current_user, kwargs["portfolio_id"]
         )
-    elif "task_order_id" in kwargs:
+
+    if "task_order_id" in kwargs:
         task_order = TaskOrders.get(kwargs["task_order_id"])
         access_args["portfolio"] = task_order.portfolio
 
