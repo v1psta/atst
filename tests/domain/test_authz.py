@@ -79,8 +79,11 @@ def test_user_can_access():
 
     # check a site-wide permission
     assert user_can_access(ccpo, Permissions.VIEW_AUDIT_LOG)
+
     with pytest.raises(UnauthorizedError):
         user_can_access(edit_admin, Permissions.VIEW_AUDIT_LOG)
+
+    with pytest.raises(UnauthorizedError):
         user_can_access(view_admin, Permissions.VIEW_AUDIT_LOG)
 
     # check a portfolio view permission
