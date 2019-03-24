@@ -33,7 +33,7 @@
         {{ form.csrf_token }}
         {% call Modal(name=name, dismissable=dismissable) %}
           {% for step in steps %}
-            <div v-show="step === {{ loop.index0 }}">
+            <div class="modal--form" v-show="step === {{ loop.index0 }}">
               {{ FormSteps(step_count, loop.index) }}
               {{ step }}
             </div>
