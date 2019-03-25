@@ -197,6 +197,7 @@
     }
 
     table {
+
       thead {
         th:first-child {
           padding-left: 3 * $gap;
@@ -293,6 +294,21 @@
     .members-table-footer {
       float: right;
       padding: 3 * $gap;
+    }
+
+    a.modal-link.icon-link {
+      float: right;
+
+      .icon {
+        width: 1.7rem;
+        height: 1.7rem;
+
+        svg {
+          width: 1.7rem;
+          height: 1.7rem;
+        }
+      }
+
     }
   }
 

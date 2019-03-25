@@ -571,6 +571,7 @@ portfolios:
     add_member: Add a New Member
     permissions_info: Learn more about these permissions
     activity_log_title: Activity Log
+    add_new_member: Add a New Member
   members:
     archive_button: Archive User
     permissions:

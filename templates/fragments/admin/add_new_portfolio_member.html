@@ -1,0 +1,80 @@
+{% from "components/icon.html" import Icon %}
+{% from "components/text_input.html" import TextInput %}
+{% from "components/multi_step_modal_form.html" import MultiStepModalForm %}
+
+{% macro SimpleOptionsInput(field) %}
+  <div class="usa-input">
+    <fieldset data-ally-disabled="true" class="usa-input__choices">
+      <legend>
+        <div class="usa-input__title-inline">
+          {{ field.label | striptags}}
+        </div>
+      </legend>
+      {{ field() }}
+    </fieldset>
+  </div>
+{% endmacro %}
+
+{% set step_one %}
+  <div class="modal__form--header">
+    <h1>Invite New Portfolio Member</h1>
+  </div>
+  <div class='form-row'>
+    <div class='form-col form-col--half'>
+      {{ TextInput(member_form.first_name, validation='requiredField') }}
+    </div>
+    <div class='form-col form-col--half'>
+      {{ TextInput(member_form.last_name, validation='requiredField') }}
+    </div>
+  </div>
+  <div class='form-row'>
+    <div class='form-col form-col--half'>
+      {{ TextInput(member_form.email, validation='email') }}
+    </div>
+    <div class='form-col form-col--half'>
+      {{ TextInput(member_form.phone_number, validation='usPhone', optional=True) }}
+    </div>
+  </div>
+  <div class='form-row'>
+    <div class='form-col form-col--half'>
+      {{ TextInput(member_form.dod_id, validation='dodId') }}
+    </div>
+    <div class='form-col form-col--half'>
+    </div>
+  </div>
+  <div class='action-group'>
+    <input
+        type='button'
+        v-on:click="next()"
+        v-bind:disabled="invalid"
+        class='action-group__action usa-button'
+        value='Next Step'>
+    <a class='action-group__action icon-link icon-link--default' v-on:click="closeModal('{{ new_port_mem }}')">Cancel</a>
+  </div>
+{% endset %}
+{% set step_two %}
+  <div class="modal__form--padded">
+    <div class="modal__form--header">
+      <h1>Assign Member Permissions</h1>
+      <a class='icon-link'>
+        {{ Icon('info') }}
+        {{ "portfolios.admin.permissions_info" | translate }}
+      </a>
+    </div>
+    {{ SimpleOptionsInput(member_form.perms_app_mgmt) }}
+    {{ SimpleOptionsInput(member_form.perms_funding) }}
+    {{ SimpleOptionsInput(member_form.perms_reporting) }}
+    {{ SimpleOptionsInput(member_form.perms_portfolio_mgmt) }}
+    <div class='action-group'>
+      <input type="submit" v-on:click="closeModal('{{ new_port_mem }}')" class='action-group__action usa-button' value='Invite Member'>
+      <a class='action-group__action icon-link icon-link--default' v-on:click="closeModal('{{ new_port_mem }}')">Cancel</a>
+    </div>
+  </div>
+{% endset %}
+{{ MultiStepModalForm(
+    'add-port-mem',
+    member_form,
+    url_for("portfolios.create_member", portfolio_id=portfolio.id),
+    [step_one, step_two],
+    button_text="portfolios.admin.add_new_member" | translate)
+  }}

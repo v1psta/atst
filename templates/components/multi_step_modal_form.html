@@ -1,4 +1,5 @@
 {% from "components/modal.html" import Modal %}
+{% from "components/icon.html" import Icon %}
 
 {% set numbers = ['one', 'two', 'three', 'four', 'five'] %}
 
@@ -28,7 +29,10 @@
   {% set step_count = steps|length %}
   <multi-step-modal-form inline-template>
     <div>
-      <button v-on:click="openModal('{{ name }}')" type="button" class="icon-link">{{ button_text }}</button>
+      <a class='icon-link modal-link' v-on:click="openModal('{{ name }}')">
+        {{ button_text }}
+        {{ Icon('plus-circle-solid') }}
+      </a>
       <form action="{{ form_action }}" method="POST">
         {{ form.csrf_token }}
         {% call Modal(name=name, dismissable=dismissable, classes="wide") %}

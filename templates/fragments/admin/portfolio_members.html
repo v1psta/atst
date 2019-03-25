@@ -47,19 +47,20 @@
 
     </table>
 
-    {% if user_can(permissions.EDIT_PORTFOLIO_USERS) %}
       <div class="members-table-footer">
-        <a class='icon-link'>
-          {{ "portfolios.admin.add_member" | translate }}
-          {{ Icon('plus-circle-solid') }}
-        </a>
-        <input type='submit' class='usa-button usa-button-primary' value='{{ "Save" }}' />
+        {% if user_can(permissions.CREATE_PORTFOLIO_USERS) %}
+          {% include "fragments/admin/add_new_portfolio_member.html" %}
+        {% endif %}
+        {% if user_can(permissions.EDIT_PORTFOLIO_USERS) %}
+          <input type='submit' class='usa-button usa-button-primary' value='{{ "Save" }}' />
+        {% endif %}
       </div>
-    {% endif %}
 
     </form>
   </div>
 
   {% endif %}
+  </div>
+
 
 </section>
