@@ -31,9 +31,9 @@
       <button v-on:click="openModal('{{ name }}')" type="button" class="icon-link">{{ button_text }}</button>
       <form action="{{ form_action }}" method="POST">
         {{ form.csrf_token }}
-        {% call Modal(name=name, dismissable=dismissable) %}
+        {% call Modal(name=name, dismissable=dismissable, classes="wide") %}
           {% for step in steps %}
-            <div class="modal--form" v-show="step === {{ loop.index0 }}">
+            <div class="modal__form" v-show="step === {{ loop.index0 }}">
               {{ FormSteps(step_count, loop.index) }}
               {{ step }}
             </div>

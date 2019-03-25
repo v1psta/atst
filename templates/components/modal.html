@@ -1,8 +1,8 @@
 {% from "components/icon.html" import Icon %}
 
-{% macro Modal(name, dismissable=False) -%}
+{% macro Modal(name, dismissable=False, classes="") -%}
   <div v-show="activeModal === '{{name}}'" v-cloak>
-    <div id='modal--{{name}}' class='modal {% if dismissable %}modal--dismissable{% endif%}'>
+    <div id='modal--{{name}}' class='modal {% if dismissable %}modal--dismissable{% endif%} {{ classes }}'>
       <div class='modal__container'>
         <div class='modal__dialog' role='dialog' aria-modal='true'>
           <div class='modal__body'>

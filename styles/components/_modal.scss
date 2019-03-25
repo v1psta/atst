@@ -140,7 +140,36 @@ body {
     }
   }
 
-  .modal--form {
+  &.wide {
+    .modal__dialog {
+      max-width: 90rem;
+    }
+
+    .modal__body {
+      padding-left: 4rem;
+      padding-right: 4rem;
+    }
+  }
+
+  .modal__form {
+
+    .modal__form--header {
+      margin-bottom: 4rem;
+
+      h1 {
+        margin-bottom: 0;
+      }
+
+      .icon-link {
+        padding-top: 0.5rem;
+        padding-left: 0;
+
+        .icon {
+          margin-left: 0;
+        }
+      }
+    }
+
     .progress-menu ul {
       width: 40%;
       margin-left: 30%;
@@ -155,6 +184,33 @@ body {
       .progress-menu__item--complete::before {
         content: url('#{$asset-path}/icons/checkmark-alt.svg');
         padding-top: 0.4rem;
+      }
+    }
+
+    .form-row {
+      margin-top: 0;
+
+      .form-col {
+        .usa-input {
+          margin-bottom: 1.5rem;
+        }
+      }
+    }
+
+    .icon-link--default {
+      font-size: 1.7rem;
+    }
+
+    .usa-button {
+      margin-left: 2rem;
+    }
+
+    .modal__form--padded {
+      padding-left: 5%;
+      padding-right: 5%;
+
+      .usa-input .usa-input__choices select {
+        max-width: 100%;
       }
     }
   }
