@@ -63,11 +63,13 @@ export default {
         this.value = conformToMask(this.value, mask).conformedValue
       }
     }
-
   },
 
   created: function() {
-    this.$root.$emit('field-mount', { name: this.name, optional: this.optional })
+    this.$root.$emit('field-mount', {
+      name: this.name,
+      optional: this.optional,
+    })
   },
 
   methods: {
@@ -88,7 +90,7 @@ export default {
     },
 
     onBlur: function(e) {
-      if (!(this.optional && e.target.value === "")) {
+      if (!(this.optional && e.target.value === '')) {
         this._checkIfValid({ value: e.target.value.trim(), invalidate: true })
       }
       this.value = e.target.value.trim()
@@ -105,7 +107,7 @@ export default {
 
       if (!this.modified && this.initialErrors && this.initialErrors.length) {
         valid = false
-      } else if (this.optional && value == "") {
+      } else if (this.optional && value == '') {
         valid = true
       }
 

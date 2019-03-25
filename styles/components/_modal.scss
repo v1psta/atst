@@ -203,6 +203,11 @@ body {
 
     .usa-button {
       margin-left: 2rem;
+
+      &[type='button']:disabled {
+        background-color: $color-gray-lighter;
+        opacity: inherit;
+      }
     }
 
     .modal__form--padded {

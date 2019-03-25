@@ -24,6 +24,7 @@ export default {
     return {
       step: 0,
       fields: {},
+      invalid: true,
     }
   },
 
@@ -37,26 +38,29 @@ export default {
 
   methods: {
     next: function() {
-      if (this.isValid()) {
+      if (this._checkIsValid()) {
         this.step += 1
       }
     },
     goToStep: function(step) {
-      if (this.isValid()) {
+      if (this._checkIsValid()) {
         this.step = step
       }
     },
     handleValidChange: function(event) {
       const { name, valid } = event
       this.fields[name] = valid
+      this._checkIsValid()
     },
-    isValid: function() {
-      return !Object.values(this.fields).some(field => field === false)
+    _checkIsValid: function() {
+      const valid = !Object.values(this.fields).some(field => field === false)
+      this.invalid = !valid
+      return valid
     },
     handleFieldMount: function(event) {
       const { name, optional } = event
       this.fields[name] = optional
-    }
+    },
   },
 
   computed: {},

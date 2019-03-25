@@ -92,7 +92,12 @@
         </div>
       </div>
       <div class='action-group'>
-        <a v-on:click="next()" class='action-group__action usa-button'>Next Step</a>
+        <input
+            type='button'
+            v-on:click="next()"
+            v-bind:disabled="invalid"
+            class='action-group__action usa-button'
+            value='Next Step'>
         <a class='action-group__action icon-link icon-link--default' v-on:click="closeModal('{{ new_port_mem }}')">Cancel</a>
       </div>
     {% endset %}
