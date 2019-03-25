@@ -63,6 +63,11 @@ export default {
         this.value = conformToMask(this.value, mask).conformedValue
       }
     }
+
+  },
+
+  created: function() {
+    this.$root.$emit('field-mount', { name: this.name, optional: this.optional })
   },
 
   methods: {

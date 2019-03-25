@@ -23,20 +23,40 @@ export default {
   data: function() {
     return {
       step: 0,
+      fields: {},
     }
   },
 
+  created: function() {
+    this.$root.$on('field-mount', this.handleFieldMount)
+  },
+
   mounted: function() {
-    return {}
+    this.$root.$on('field-change', this.handleValidChange)
   },
 
   methods: {
     next: function() {
-      this.step += 1
+      if (this.isValid()) {
+        this.step += 1
+      }
     },
     goToStep: function(step) {
-      this.step = step
+      if (this.isValid()) {
+        this.step = step
+      }
     },
+    handleValidChange: function(event) {
+      const { name, valid } = event
+      this.fields[name] = valid
+    },
+    isValid: function() {
+      return !Object.values(this.fields).some(field => field === false)
+    },
+    handleFieldMount: function(event) {
+      const { name, optional } = event
+      this.fields[name] = optional
+    }
   },
 
   computed: {},
