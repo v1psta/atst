@@ -25,6 +25,7 @@ export default {
     },
     paragraph: String,
     noMaxWidth: String,
+    optional: Boolean,
   },
 
   data: function() {
@@ -82,7 +83,9 @@ export default {
     },
 
     onBlur: function(e) {
-      this._checkIfValid({ value: e.target.value.trim(), invalidate: true })
+      if (!(this.optional && e.target.value === "")) {
+        this._checkIfValid({ value: e.target.value.trim(), invalidate: true })
+      }
       this.value = e.target.value.trim()
 
       if (this.validation === 'dollars') {
@@ -97,6 +100,8 @@ export default {
 
       if (!this.modified && this.initialErrors && this.initialErrors.length) {
         valid = false
+      } else if (this.optional && value == "") {
+        valid = true
       }
 
       if (this.modified) {
