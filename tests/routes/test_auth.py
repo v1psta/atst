@@ -4,7 +4,7 @@ from urllib.parse import quote
 from tests.factories import UserFactory
 
 
-PROTECTED_URL = "/portfolios"
+PROTECTED_URL = "/task_orders/new/get_started"
 
 
 def test_request_page_with_complete_profile(client, user_session):

@@ -39,54 +39,6 @@ def test_user_without_permission_has_no_budget_report_link(client, user_session)
     )
 
 
-@pytest.mark.skip(reason="Temporarily no add activity log link")
-def test_user_with_permission_has_activity_log_link(client, user_session):
-    portfolio = PortfolioFactory.create()
-    ccpo = UserFactory.create_ccpo()
-    admin = UserFactory.create()
-    PortfolioRoleFactory.create(
-        portfolio=portfolio, user=admin, status=PortfolioRoleStatus.ACTIVE
-    )
-
-    user_session(portfolio.owner)
-    response = client.get("/portfolios/{}/applications".format(portfolio.id))
-    assert (
-        'href="/portfolios/{}/activity"'.format(portfolio.id).encode() in response.data
-    )
-
-    # logs out previous user before creating a new session
-    user_session(admin)
-    response = client.get("/portfolios/{}/applications".format(portfolio.id))
-    assert (
-        'href="/portfolios/{}/activity"'.format(portfolio.id).encode() in response.data
-    )
-
-    user_session(ccpo)
-    response = client.get("/portfolios/{}/applications".format(portfolio.id))
-    assert (
-        'href="/portfolios/{}/activity"'.format(portfolio.id).encode() in response.data
-    )
-
-
-@pytest.mark.skip(reason="Temporarily no add activity log link")
-def test_user_without_permission_has_no_activity_log_link(client, user_session):
-    portfolio = PortfolioFactory.create()
-    developer = UserFactory.create()
-    PortfolioRoleFactory.create(
-        portfolio=portfolio,
-        user=developer,
-        role=Roles.get("developer"),
-        status=PortfolioRoleStatus.ACTIVE,
-    )
-
-    user_session(developer)
-    response = client.get("/portfolios/{}/applications".format(portfolio.id))
-    assert (
-        'href="/portfolios/{}/activity"'.format(portfolio.id).encode()
-        not in response.data
-    )
-
-
 def test_user_with_permission_has_add_application_link(client, user_session):
     portfolio = PortfolioFactory.create()
     user_session(portfolio.owner)
@@ -130,7 +82,6 @@ def test_creating_application(client, user_session):
 def test_view_edit_application(client, user_session):
     portfolio = PortfolioFactory.create()
     application = Applications.create(
-        portfolio.owner,
         portfolio,
         "Snazzy Application",
         "A new application for me and my friends",

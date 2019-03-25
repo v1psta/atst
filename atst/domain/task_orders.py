@@ -3,10 +3,8 @@ from flask import current_app as app
 
 from atst.database import db
 from atst.models.task_order import TaskOrder
-from atst.models.permissions import Permissions
 from atst.models.dd_254 import DD254
 from atst.domain.portfolios import Portfolios
-from atst.domain.authz import Authorization
 from atst.domain.permission_sets import PermissionSets
 from .exceptions import NotFoundError
 
@@ -54,12 +52,9 @@ class TaskOrders(object):
     UNCLASSIFIED_FUNDING = ["performance_length", "csp_estimate", "clin_01", "clin_03"]
 
     @classmethod
-    def get(cls, user, task_order_id):
+    def get(cls, task_order_id):
         try:
             task_order = db.session.query(TaskOrder).filter_by(id=task_order_id).one()
-            Authorization.check_task_order_permission(
-                user, task_order, Permissions.VIEW_TASK_ORDER_DETAILS, "view task order"
-            )
 
             return task_order
         except NoResultFound:
@@ -67,9 +62,6 @@ class TaskOrders(object):
 
     @classmethod
     def create(cls, creator, portfolio):
-        Authorization.check_portfolio_permission(
-            creator, portfolio, Permissions.CREATE_TASK_ORDER, "add task order"
-        )
         task_order = TaskOrder(portfolio=portfolio, creator=creator)
 
         db.session.add(task_order)
@@ -78,11 +70,7 @@ class TaskOrders(object):
         return task_order
 
     @classmethod
-    def update(cls, user, task_order, **kwargs):
-        Authorization.check_task_order_permission(
-            user, task_order, Permissions.EDIT_TASK_ORDER_DETAILS, "update task order"
-        )
-
+    def update(cls, task_order, **kwargs):
         for key, value in kwargs.items():
             setattr(task_order, key, value)
 
@@ -147,14 +135,7 @@ class TaskOrders(object):
     ]
 
     @classmethod
-    def add_officer(cls, user, task_order, officer_type, officer_data):
-        Authorization.check_portfolio_permission(
-            user,
-            task_order.portfolio,
-            Permissions.EDIT_TASK_ORDER_DETAILS,
-            "add task order officer",
-        )
-
+    def add_officer(cls, task_order, officer_type, officer_data):
         if officer_type in TaskOrders.OFFICERS:
             portfolio = task_order.portfolio
 
@@ -171,7 +152,6 @@ class TaskOrders(object):
                 portfolio_user = existing_member.user
             else:
                 member = Portfolios.create_member(
-                    user,
                     portfolio,
                     {
                         **officer_data,

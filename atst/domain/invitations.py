@@ -4,8 +4,6 @@ from sqlalchemy.orm.exc import NoResultFound
 from atst.database import db
 from atst.models.invitation import Invitation, Status as InvitationStatus
 from atst.domain.portfolio_roles import PortfolioRoles
-from atst.domain.authz import Authorization, Permissions
-from atst.domain.portfolios import Portfolios
 
 from .exceptions import NotFoundError
 
@@ -118,15 +116,7 @@ class Invitations(object):
         return portfolio_role.latest_invitation
 
     @classmethod
-    def resend(cls, user, portfolio_id, token):
-        portfolio = Portfolios.get(user, portfolio_id)
-        Authorization.check_portfolio_permission(
-            user,
-            portfolio,
-            Permissions.CREATE_PORTFOLIO_USERS,
-            "resend a portfolio invitation",
-        )
-
+    def resend(cls, user, token):
         previous_invitation = Invitations._get(token)
         Invitations._update_status(previous_invitation, InvitationStatus.REVOKED)
 

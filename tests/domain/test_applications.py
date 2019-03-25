@@ -6,7 +6,7 @@ from atst.domain.portfolios import Portfolios
 def test_create_application_with_multiple_environments():
     portfolio = PortfolioFactory.create()
     application = Applications.create(
-        portfolio.owner, portfolio, "My Test Application", "Test", ["dev", "prod"]
+        portfolio, "My Test Application", "Test", ["dev", "prod"]
     )
 
     assert application.portfolio == portfolio
@@ -21,7 +21,7 @@ def test_portfolio_owner_can_view_environments():
         owner=owner,
         applications=[{"environments": [{"name": "dev"}, {"name": "prod"}]}],
     )
-    application = Applications.get(owner, portfolio, portfolio.applications[0].id)
+    application = Applications.get(portfolio.applications[0].id)
 
     assert len(application.environments) == 2
 
@@ -38,11 +38,9 @@ def test_can_only_update_name_and_description():
             }
         ],
     )
-    application = Applications.get(owner, portfolio, portfolio.applications[0].id)
+    application = Applications.get(portfolio.applications[0].id)
     env_name = application.environments[0].name
     Applications.update(
-        owner,
-        portfolio,
         application,
         {
             "name": "New Name",

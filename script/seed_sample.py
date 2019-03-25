@@ -68,7 +68,7 @@ def get_users():
 
 def add_members_to_portfolio(portfolio):
     for portfolio_role in PORTFOLIO_USERS:
-        ws_role = Portfolios.create_member(portfolio.owner, portfolio, portfolio_role)
+        ws_role = Portfolios.create_member(portfolio, portfolio_role)
         db.session.refresh(ws_role)
         PortfolioRoles.enable(ws_role)
 
@@ -114,7 +114,6 @@ def create_task_order(portfolio, start, end, clin_01=None, clin_03=None):
 def add_applications_to_portfolio(portfolio, applications):
     for application in applications:
         Applications.create(
-            portfolio.owner,
             portfolio=portfolio,
             name=application["name"],
             description=application["description"],

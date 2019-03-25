@@ -33,7 +33,7 @@ def update_officer_invitations(user, task_order):
         ):
             officer_data = task_order.officer_dictionary(invite_opts["role"])
             officer = TaskOrders.add_officer(
-                user, task_order, invite_opts["role"], officer_data
+                task_order, invite_opts["role"], officer_data
             )
             pf_officer_member = PortfolioRoles.get(task_order.portfolio.id, officer.id)
             invite_service = Invitation(

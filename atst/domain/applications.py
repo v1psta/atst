@@ -1,8 +1,6 @@
 from atst.database import db
-from atst.domain.authz import Authorization
 from atst.domain.environments import Environments
 from atst.domain.exceptions import NotFoundError
-from atst.models.permissions import Permissions
 from atst.models.application import Application
 from atst.models.environment import Environment
 from atst.models.environment_role import EnvironmentRole
@@ -10,7 +8,7 @@ from atst.models.environment_role import EnvironmentRole
 
 class Applications(object):
     @classmethod
-    def create(cls, user, portfolio, name, description, environment_names):
+    def create(cls, portfolio, name, description, environment_names):
         application = Application(
             portfolio=portfolio, name=name, description=description
         )
@@ -22,15 +20,7 @@ class Applications(object):
         return application
 
     @classmethod
-    def get(cls, user, portfolio, application_id):
-        # TODO: this should check permission for this particular application
-        Authorization.check_portfolio_permission(
-            user,
-            portfolio,
-            Permissions.VIEW_APPLICATION,
-            "view application in portfolio",
-        )
-
+    def get(cls, application_id):
         try:
             application = (
                 db.session.query(Application).filter_by(id=application_id).one()
@@ -52,14 +42,7 @@ class Applications(object):
         )
 
     @classmethod
-    def get_all(cls, user, portfolio_role, portfolio):
-        Authorization.check_portfolio_permission(
-            user,
-            portfolio,
-            Permissions.VIEW_APPLICATION,
-            "view application in portfolio",
-        )
-
+    def get_all(cls, portfolio):
         try:
             applications = (
                 db.session.query(Application).filter_by(portfolio_id=portfolio.id).all()
@@ -70,7 +53,7 @@ class Applications(object):
         return applications
 
     @classmethod
-    def update(cls, user, portfolio, application, new_data):
+    def update(cls, application, new_data):
         if "name" in new_data:
             application.name = new_data["name"]
         if "description" in new_data:

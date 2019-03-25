@@ -13,17 +13,21 @@ from atst.domain.exceptions import UnauthorizedError
 from atst.domain.applications import Applications
 from atst.domain.portfolios import Portfolios
 from atst.forms.application import NewApplicationForm, ApplicationForm
+from atst.domain.authz.decorator import user_can_access_decorator as user_can
+from atst.models.permissions import Permissions
 
 
 @portfolios_bp.route("/portfolios/<portfolio_id>/applications")
+@user_can(Permissions.VIEW_APPLICATION, message="view portfolio applications")
 def portfolio_applications(portfolio_id):
     portfolio = Portfolios.get(g.current_user, portfolio_id)
     return render_template("portfolios/applications/index.html", portfolio=portfolio)
 
 
 @portfolios_bp.route("/portfolios/<portfolio_id>/applications/new")
+@user_can(Permissions.CREATE_APPLICATION, message="view create new application form")
 def new_application(portfolio_id):
-    portfolio = Portfolios.get_for_update_applications(g.current_user, portfolio_id)
+    portfolio = Portfolios.get_for_update(portfolio_id)
     form = NewApplicationForm()
     return render_template(
         "portfolios/applications/new.html", portfolio=portfolio, form=form
@@ -31,14 +35,14 @@ def new_application(portfolio_id):
 
 
 @portfolios_bp.route("/portfolios/<portfolio_id>/applications/new", methods=["POST"])
+@user_can(Permissions.CREATE_APPLICATION, message="create new application")
 def create_application(portfolio_id):
-    portfolio = Portfolios.get_for_update_applications(g.current_user, portfolio_id)
+    portfolio = Portfolios.get_for_update(portfolio_id)
     form = NewApplicationForm(http_request.form)
 
     if form.validate():
         application_data = form.data
         Applications.create(
-            g.current_user,
             portfolio,
             application_data["name"],
             application_data["description"],
@@ -54,9 +58,10 @@ def create_application(portfolio_id):
 
 
 @portfolios_bp.route("/portfolios/<portfolio_id>/applications/<application_id>/edit")
+@user_can(Permissions.EDIT_APPLICATION, message="view application edit form")
 def edit_application(portfolio_id, application_id):
-    portfolio = Portfolios.get_for_update_applications(g.current_user, portfolio_id)
-    application = Applications.get(g.current_user, portfolio, application_id)
+    portfolio = Portfolios.get_for_update(portfolio_id)
+    application = Applications.get(application_id)
     form = ApplicationForm(name=application.name, description=application.description)
 
     return render_template(
@@ -70,13 +75,14 @@ def edit_application(portfolio_id, application_id):
 @portfolios_bp.route(
     "/portfolios/<portfolio_id>/applications/<application_id>/edit", methods=["POST"]
 )
+@user_can(Permissions.EDIT_APPLICATION, message="update application")
 def update_application(portfolio_id, application_id):
-    portfolio = Portfolios.get_for_update_applications(g.current_user, portfolio_id)
-    application = Applications.get(g.current_user, portfolio, application_id)
+    portfolio = Portfolios.get_for_update(portfolio_id)
+    application = Applications.get(application_id)
     form = ApplicationForm(http_request.form)
     if form.validate():
         application_data = form.data
-        Applications.update(g.current_user, portfolio, application, application_data)
+        Applications.update(application, application_data)
 
         return redirect(
             url_for("portfolios.portfolio_applications", portfolio_id=portfolio.id)
@@ -90,13 +96,20 @@ def update_application(portfolio_id, application_id):
         )
 
 
+def wrap_environment_role_lookup(
+    user, portfolio_id=None, environment_id=None, **kwargs
+):
+    env_role = EnvironmentRoles.get(user.id, environment_id)
+    if not env_role:
+        raise UnauthorizedError(user, "access environment {}".format(environment_id))
+
+    return True
+
+
 @portfolios_bp.route("/portfolios/<portfolio_id>/environments/<environment_id>/access")
+@user_can(None, exception=wrap_environment_role_lookup, message="access environment")
 def access_environment(portfolio_id, environment_id):
     env_role = EnvironmentRoles.get(g.current_user.id, environment_id)
-    if not env_role:
-        raise UnauthorizedError(
-            g.current_user, "access environment {}".format(environment_id)
-        )
-    else:
-        token = app.csp.cloud.get_access_token(env_role)
-        return redirect(url_for("atst.csp_environment_access", token=token))
+    token = app.csp.cloud.get_access_token(env_role)
+
+    return redirect(url_for("atst.csp_environment_access", token=token))

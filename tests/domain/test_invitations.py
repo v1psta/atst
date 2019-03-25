@@ -130,7 +130,7 @@ def test_resend_invitation():
     user = UserFactory.create()
     ws_role = PortfolioRoleFactory.create(user=user, portfolio=portfolio)
     invite = Invitations.create(portfolio.owner, ws_role, user.email)
-    Invitations.resend(portfolio.owner, portfolio.id, invite.token)
+    Invitations.resend(user, invite.token)
     assert ws_role.invitations[0].is_revoked
     assert ws_role.invitations[1].is_pending
 

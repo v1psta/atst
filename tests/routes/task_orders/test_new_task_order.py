@@ -2,11 +2,17 @@ import pytest
 from flask import url_for
 
 from atst.domain.task_orders import TaskOrders
+from atst.domain.permission_sets import PermissionSets
 from atst.models.attachment import Attachment
 from atst.routes.task_orders.new import ShowTaskOrderWorkflow, UpdateTaskOrderWorkflow
 from atst.utils.localization import translate
 
-from tests.factories import UserFactory, TaskOrderFactory, PortfolioFactory
+from tests.factories import (
+    UserFactory,
+    TaskOrderFactory,
+    PortfolioFactory,
+    PortfolioRoleFactory,
+)
 
 
 class TestShowTaskOrderWorkflow:
@@ -93,8 +99,6 @@ def test_to_on_pf_cannot_edit_pf_attributes():
     assert second_workflow.pf_attributes_read_only
 
 
-# TODO: this test will need to be more complicated when we add validation to
-# the forms
 def test_create_new_task_order(client, user_session, pdf_upload):
     creator = UserFactory.create()
     user_session(creator)
@@ -114,7 +118,7 @@ def test_create_new_task_order(client, user_session, pdf_upload):
     assert url_for("task_orders.new", screen=2) in response.headers["Location"]
 
     created_task_order_id = response.headers["Location"].split("/")[-1]
-    created_task_order = TaskOrders.get(creator, created_task_order_id)
+    created_task_order = TaskOrders.get(created_task_order_id)
     assert created_task_order.portfolio is not None
     assert created_task_order.portfolio.name == portfolio_name
     assert created_task_order.portfolio.defense_component == defense_component
@@ -152,7 +156,7 @@ def test_create_new_task_order_for_portfolio(client, user_session):
     assert url_for("task_orders.new", screen=2) in response.headers["Location"]
 
     created_task_order_id = response.headers["Location"].split("/")[-1]
-    created_task_order = TaskOrders.get(creator, created_task_order_id)
+    created_task_order = TaskOrders.get(created_task_order_id)
     assert created_task_order.portfolio_name == portfolio.name
     assert created_task_order.defense_component == portfolio.defense_component
     assert created_task_order.portfolio == portfolio
@@ -209,7 +213,7 @@ def test_review_screen_when_all_sections_complete(client, user_session, task_ord
 
 
 def test_review_screen_when_not_all_sections_complete(client, user_session, task_order):
-    TaskOrders.update(task_order.creator, task_order, clin_01=None)
+    TaskOrders.update(task_order, clin_01=None)
     user_session(task_order.creator)
     response = client.get(
         url_for("task_orders.new", screen=4, task_order_id=task_order.id)
@@ -296,6 +300,11 @@ def test_update_task_order_with_existing_task_order(task_order):
 def test_update_to_redirects_to_ko_review(client, user_session, task_order):
     ko = UserFactory.create()
     task_order.contracting_officer = ko
+    PortfolioRoleFactory.create(
+        user=ko,
+        portfolio=task_order.portfolio,
+        permission_sets=[PermissionSets.get(PermissionSets.EDIT_PORTFOLIO_FUNDING)],
+    )
     user_session(ko)
     url = url_for(
         "portfolios.ko_review",

@@ -168,7 +168,6 @@ def test_update_member_environment_role(client, user_session):
     user = UserFactory.create()
     member = PortfolioRoles.add(user, portfolio.id)
     application = Applications.create(
-        portfolio.owner,
         portfolio,
         "Snazzy Application",
         "A new application for me and my friends",
@@ -202,7 +201,6 @@ def test_update_member_environment_role_with_no_data(client, user_session):
     user = UserFactory.create()
     member = PortfolioRoles.add(user, portfolio.id)
     application = Applications.create(
-        portfolio.owner,
         portfolio,
         "Snazzy Application",
         "A new application for me and my friends",
@@ -231,7 +229,6 @@ def test_revoke_active_member_access(client, user_session):
         portfolio=portfolio, user=user, status=PortfolioRoleStatus.ACTIVE
     )
     Applications.create(
-        portfolio.owner,
         portfolio,
         "Snazzy Application",
         "A new application for me and my friends",

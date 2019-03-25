@@ -6,11 +6,11 @@ from . import portfolios_bp
 from atst.domain.reports import Reports
 from atst.domain.portfolios import Portfolios
 from atst.domain.audit_log import AuditLog
-from atst.domain.authz import Authorization
 from atst.domain.common import Paginator
 from atst.forms.portfolio import PortfolioForm
-from atst.models.permissions import Permissions
 from atst.domain.permission_sets import PermissionSets
+from atst.domain.authz.decorator import user_can_access_decorator as user_can
+from atst.models.permissions import Permissions
 
 
 @portfolios_bp.route("/portfolios")
@@ -37,14 +37,9 @@ def serialize_member(member):
     }
 
 
-@portfolios_bp.route("/portfolios/<portfolio_id>/admin")
-def portfolio_admin(portfolio_id):
-    portfolio = Portfolios.get_for_update_information(g.current_user, portfolio_id)
-    form = PortfolioForm(data={"name": portfolio.name})
+def render_admin_page(portfolio, form):
     pagination_opts = Paginator.get_pagination_opts(http_request)
-    audit_events = AuditLog.get_portfolio_events(
-        g.current_user, portfolio, pagination_opts
-    )
+    audit_events = AuditLog.get_portfolio_events(portfolio, pagination_opts)
     members_data = [serialize_member(member) for member in portfolio.members]
     return render_template(
         "portfolios/admin.html",
@@ -56,9 +51,18 @@ def portfolio_admin(portfolio_id):
     )
 
 
+@portfolios_bp.route("/portfolios/<portfolio_id>/admin")
+@user_can(Permissions.VIEW_PORTFOLIO_ADMIN, message="view portfolio admin page")
+def portfolio_admin(portfolio_id):
+    portfolio = Portfolios.get_for_update(portfolio_id)
+    form = PortfolioForm(data={"name": portfolio.name})
+    return render_admin_page(portfolio, form)
+
+
 @portfolios_bp.route("/portfolios/<portfolio_id>/edit", methods=["POST"])
+@user_can(Permissions.EDIT_PORTFOLIO_NAME, message="edit portfolio")
 def edit_portfolio(portfolio_id):
-    portfolio = Portfolios.get_for_update_information(g.current_user, portfolio_id)
+    portfolio = Portfolios.get_for_update(portfolio_id)
     form = PortfolioForm(http_request.form)
     if form.validate():
         Portfolios.update(portfolio, form.data)
@@ -66,10 +70,12 @@ def edit_portfolio(portfolio_id):
             url_for("portfolios.portfolio_applications", portfolio_id=portfolio.id)
         )
     else:
-        return render_template("portfolios/edit.html", form=form, portfolio=portfolio)
+        # rerender portfolio admin page
+        return render_admin_page(portfolio, form)
 
 
 @portfolios_bp.route("/portfolios/<portfolio_id>")
+@user_can(Permissions.VIEW_PORTFOLIO, message="view portfolio")
 def show_portfolio(portfolio_id):
     return redirect(
         url_for("portfolios.portfolio_applications", portfolio_id=portfolio_id)
@@ -77,15 +83,9 @@ def show_portfolio(portfolio_id):
 
 
 @portfolios_bp.route("/portfolios/<portfolio_id>/reports")
+@user_can(Permissions.VIEW_PORTFOLIO_REPORTS, message="view portfolio reports")
 def portfolio_reports(portfolio_id):
     portfolio = Portfolios.get(g.current_user, portfolio_id)
-    Authorization.check_portfolio_permission(
-        g.current_user,
-        portfolio,
-        Permissions.VIEW_PORTFOLIO_REPORTS,
-        "view portfolio reports",
-    )
-
     today = date.today()
     month = http_request.args.get("month", today.month)
     year = http_request.args.get("year", today.year)

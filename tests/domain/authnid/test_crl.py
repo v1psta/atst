@@ -14,6 +14,7 @@ from atst.domain.authnid.crl import (
 )
 
 from tests.mocks import FIXTURE_EMAIL_ADDRESS, DOD_CN
+from tests.utils import FakeLogger
 
 
 class MockX509Store:
@@ -117,20 +118,6 @@ def test_multistep_certificate_chain():
     )
     cert = open("tests/fixtures/chain/client.crt", "rb").read()
     assert cache.crl_check(cert)
-
-
-class FakeLogger:
-    def __init__(self):
-        self.messages = []
-
-    def info(self, msg):
-        self.messages.append(msg)
-
-    def warning(self, msg):
-        self.messages.append(msg)
-
-    def error(self, msg):
-        self.messages.append(msg)
 
 
 def test_no_op_crl_cache_logs_common_name():
