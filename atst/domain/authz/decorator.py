@@ -5,6 +5,7 @@ from flask import g, current_app as app, request
 from . import user_can_access
 from atst.domain.portfolios import Portfolios
 from atst.domain.task_orders import TaskOrders
+from atst.domain.applications import Applications
 from atst.domain.exceptions import UnauthorizedError
 
 
@@ -15,6 +16,10 @@ def check_access(permission, message, exception, *args, **kwargs):
         access_args["portfolio"] = Portfolios.get(
             g.current_user, kwargs["portfolio_id"]
         )
+
+    if "application_id" in kwargs:
+        application = Applications.get(kwargs["application_id"])
+        access_args["portfolio"] = application.portfolio
 
     if "task_order_id" in kwargs:
         task_order = TaskOrders.get(kwargs["task_order_id"])
