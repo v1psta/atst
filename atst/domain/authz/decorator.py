@@ -6,6 +6,7 @@ from . import user_can_access
 from atst.domain.portfolios import Portfolios
 from atst.domain.task_orders import TaskOrders
 from atst.domain.applications import Applications
+from atst.domain.invitations import Invitations
 from atst.domain.exceptions import UnauthorizedError
 
 
@@ -24,6 +25,10 @@ def check_access(permission, message, exception, *args, **kwargs):
     if "task_order_id" in kwargs:
         task_order = TaskOrders.get(kwargs["task_order_id"])
         access_args["portfolio"] = task_order.portfolio
+
+    if "token" in kwargs:
+        invite = Invitations._get(kwargs["token"])
+        access_args["portfolio"] = invite.portfolio_role.portfolio
 
     if exception is not None and exception(g.current_user, **access_args, **kwargs):
         return True
