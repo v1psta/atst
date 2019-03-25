@@ -567,6 +567,7 @@ portfolios:
     portfolio_members_title: Portfolio Members
     portfolio_members_subheading: These members have different levels of access to the portfolio.
     settings_info: Learn more about these settings
+    add_member: Add a New Member
     activity_log_title: Activity Log
   members:
     archive_button: Archive User
