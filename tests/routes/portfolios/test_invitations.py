@@ -169,6 +169,58 @@ def test_revoke_invitation(client, user_session):
     assert invite.is_revoked
 
 
+def test_user_can_only_revoke_invites_in_their_portfolio(client, user_session):
+    portfolio = PortfolioFactory.create()
+    other_portfolio = PortfolioFactory.create()
+    user = UserFactory.create()
+    portfolio_role = PortfolioRoleFactory.create(
+        user=user, portfolio=other_portfolio, status=PortfolioRoleStatus.PENDING
+    )
+    invite = InvitationFactory.create(
+        user_id=user.id,
+        portfolio_role=portfolio_role,
+        status=InvitationStatus.REJECTED_EXPIRED,
+        expiration_time=datetime.datetime.now() - datetime.timedelta(seconds=1),
+    )
+    user_session(portfolio.owner)
+    response = client.post(
+        url_for(
+            "portfolios.revoke_invitation",
+            portfolio_id=portfolio.id,
+            token=invite.token,
+        )
+    )
+
+    assert response.status_code == 404
+    assert not invite.is_revoked
+
+
+def test_user_can_only_resend_invites_in_their_portfolio(client, user_session, queue):
+    portfolio = PortfolioFactory.create()
+    other_portfolio = PortfolioFactory.create()
+    user = UserFactory.create()
+    portfolio_role = PortfolioRoleFactory.create(
+        user=user, portfolio=other_portfolio, status=PortfolioRoleStatus.PENDING
+    )
+    invite = InvitationFactory.create(
+        user_id=user.id,
+        portfolio_role=portfolio_role,
+        status=InvitationStatus.REJECTED_EXPIRED,
+        expiration_time=datetime.datetime.now() - datetime.timedelta(seconds=1),
+    )
+    user_session(portfolio.owner)
+    response = client.post(
+        url_for(
+            "portfolios.resend_invitation",
+            portfolio_id=portfolio.id,
+            token=invite.token,
+        )
+    )
+
+    assert response.status_code == 404
+    assert len(queue.get_queue()) == 0
+
+
 def test_resend_invitation_sends_email(client, user_session, queue):
     user = UserFactory.create()
     portfolio = PortfolioFactory.create()

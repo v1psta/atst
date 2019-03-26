@@ -157,6 +157,54 @@ def test_user_without_permission_cannot_update_application(client, user_session)
     assert application.description == "Cool stuff happening here!"
 
 
+def test_user_can_only_access_apps_in_their_portfolio(client, user_session):
+    portfolio = PortfolioFactory.create()
+    other_portfolio = PortfolioFactory.create(
+        applications=[
+            {
+                "name": "Awesome Application",
+                "description": "More cool stuff happening here!",
+                "environments": [{"name": "dev"}],
+            }
+        ]
+    )
+    other_application = other_portfolio.applications[0]
+    user_session(portfolio.owner)
+
+    # user can't view application edit form
+    response = client.get(
+        url_for(
+            "portfolios.edit_application",
+            portfolio_id=portfolio.id,
+            application_id=other_application.id,
+        )
+    )
+    assert response.status_code == 404
+
+    # user can't post update application form
+    time_updated = other_application.time_updated
+    response = client.post(
+        url_for(
+            "portfolios.update_application",
+            portfolio_id=portfolio.id,
+            application_id=other_application.id,
+        ),
+        data={"name": "New Name", "description": "A new description."},
+    )
+    assert response.status_code == 404
+    assert time_updated == other_application.time_updated
+
+    # user can't view application members
+    response = client.get(
+        url_for(
+            "portfolios.application_members",
+            portfolio_id=portfolio.id,
+            application_id=other_application.id,
+        )
+    )
+    assert response.status_code == 404
+
+
 def create_environment(user):
     portfolio = PortfolioFactory.create()
     portfolio_role = PortfolioRoleFactory.create(portfolio=portfolio, user=user)
