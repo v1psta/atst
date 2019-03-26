@@ -1,7 +1,10 @@
 {% from "components/icon.html" import Icon %}
+{% from "components/options_input.html" import OptionsInput %}
 
 <section class="member-list">
   <div class='responsive-table-wrapper panel'>
+    <form method='POST' autocomplete="off" enctype="multipart/form-data">
+
     <div class='member-list-header'>
       <div class='left'>
         <div class='h3'>{{ "portfolios.admin.portfolio_members_title" | translate }}</div>
@@ -35,30 +38,28 @@
       </thead>
 
       <tbody>
-        {% for member_data in members_data %}
-        <tr>
-            <td class='name'>{{ member_data.member.user_name }}
-              {% if member_data.member.user == user %}
-                <span class='you'>(<span class='green'>you</span>)</span>
-              {% endif %}
-            </td>
-            {% set heading_perms = [member_data.app_mgmt, member_data.funding, member_data.reporting, member_data.portfolio_mgmt] %}
-
-            {% for has_perm in heading_perms %}
-              {% if has_perm %}
-                <td class='green'>Edit Access</td>
-              {% else %}
-                <td>View Only</td>
-              {% endif %}
-            {% endfor %}
-
-        </tr>
-        {% endfor %}
+        {% if user_can(permissions.EDIT_PORTFOLIO_USERS) %}
+          {% include "fragments/admin/members_edit.html" %}
+        {% elif user_can(permissions.VIEW_PORTFOLIO_USERS) %}
+          {% include "fragments/admin/members_view.html" %}
+        {% endif %}
       </tbody>
 
     </table>
+
+    {% if user_can(permissions.EDIT_PORTFOLIO_USERS) %}
+      <div class="members-table-footer">
+        <a class='icon-link'>
+          {{ "portfolios.admin.add_member" | translate }}
+          {{ Icon('plus-circle-solid') }}
+        </a>
+        <input type='submit' class='usa-button usa-button-primary' value='{{ "Save" }}' />
+      </div>
+    {% endif %}
+
+    </form>
   </div>
 
-{% endif %}
+  {% endif %}
 
 </section>

@@ -1,7 +1,7 @@
 {% from "components/icon.html" import Icon %}
 {% from "components/tooltip.html" import Tooltip %}
 
-{% macro OptionsInput(field, tooltip, inline=False) -%}
+{% macro OptionsInput(field, tooltip, inline=False, label=True) -%}
   <optionsinput
     name='{{ field.name }}'
     inline-template
@@ -12,19 +12,21 @@
       v-bind:class="['usa-input', { 'usa-input--error': showError, 'usa-input--success': showValid }]">
 
       <fieldset data-ally-disabled="true" v-on:change="onInput" class="usa-input__choices {% if inline %}usa-input__choices--inline{% endif %}">
-        <legend>
-          <div class="usa-input__title{% if not field.description %}-inline{% endif %}">
-            {{ field.label | striptags}}
-            {% if tooltip %}{{ Tooltip(tooltip) }}{% endif %}
-          </div>
+        {% if label %}
+          <legend>
+            <div class="usa-input__title{% if not field.description %}-inline{% endif %}">
+              {{ field.label | striptags}}
+              {% if tooltip %}{{ Tooltip(tooltip) }}{% endif %}
+            </div>
 
-          {% if field.description %}
-            <span class='usa-input__help'>{{ field.description | safe }}</span>
-          {% endif %}
+            {% if field.description %}
+              <span class='usa-input__help'>{{ field.description | safe }}</span>
+            {% endif %}
 
-          <span v-show='showError'>{{ Icon('alert',classes="icon-validation") }}</span>
-          <span v-show='showValid'>{{ Icon('ok',classes="icon-validation") }}</span>
-        </legend>
+            <span v-show='showError'>{{ Icon('alert',classes="icon-validation") }}</span>
+            <span v-show='showValid'>{{ Icon('ok',classes="icon-validation") }}</span>
+          </legend>
+        {% endif %}
 
         {{ field() }}
 

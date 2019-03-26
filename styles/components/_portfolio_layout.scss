@@ -197,8 +197,6 @@
     }
 
     table {
-      box-shadow: 0 6px 18px 0 rgba(144,164,183,0.3);
-
       thead {
         th:first-child {
           padding-left: 3 * $gap;
@@ -233,6 +231,26 @@
           font-size: 1.6rem;
           border-top: 0;
           padding: 3 * $gap 2 * $gap;
+
+          .usa-button-secondary {
+            color: $color-red;
+            background-color: $color-red-lightest;
+            box-shadow: inset 0 0 0 1px $color-red;
+          }
+
+          .usa-button-disabled {
+            color: $color-gray-medium;
+            background-color: $color-gray-lightest;
+            box-shadow: inset 0 0 0 1px $color-gray-medium;
+          }
+
+          button {
+            padding: 0;
+            margin: 0;
+            font-size: 1.5rem;
+            width: 11rem;
+            height: 3rem;
+          }
         }
 
         .green {
@@ -246,11 +264,35 @@
             font-size: 1.2rem;
           }
         }
+
+        .usa-input.usa-input--success {
+          margin: 0;
+        }
+
+        select {
+          border: none;
+        }
       }
 
       .add-member-link {
         text-align: right;
       }
+
+      .usa-button-primary .usa-button {
+        padding: 2 * $gap;
+        float: right;
+      }
+    }
+
+    input.usa-button.usa-button-primary {
+      margin: 0;
+      width: 9rem;
+      height: 4rem;
+    }
+
+    .members-table-footer {
+      float: right;
+      padding: 3 * $gap;
     }
   }
 
