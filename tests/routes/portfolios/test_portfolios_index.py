@@ -1,7 +1,11 @@
-from flask import url_for
+import pytest
 
+from flask import url_for
 from atst.domain.permission_sets import PermissionSets
+from atst.domain.portfolios import Portfolios
 from atst.models.permissions import Permissions
+from atst.domain.portfolio_roles import PortfolioRoles
+from atst.domain.exceptions import UnauthorizedError
 
 from tests.factories import (
     random_future_date,
@@ -24,6 +28,112 @@ def test_update_portfolio_name(client, user_session):
     )
     assert response.status_code == 200
     assert portfolio.name == "a cool new name"
+
+
+def updating_ppoc_successfully(client, old_ppoc, new_ppoc, portfolio):
+    response = client.post(
+        url_for("portfolios.update_ppoc", portfolio_id=portfolio.id, _external=True),
+        data={"user_id": new_ppoc.id},
+        follow_redirects=False,
+    )
+
+    assert response.status_code == 302
+    assert response.headers["Location"] == url_for(
+        "portfolios.portfolio_applications", portfolio_id=portfolio.id, _external=True
+    )
+    assert portfolio.owner.id == new_ppoc.id
+    assert (
+        Permissions.EDIT_PORTFOLIO_POC
+        not in PortfolioRoles.get(portfolio.id, old_ppoc.id).permissions
+    )
+    assert (
+        Permissions.EDIT_PORTFOLIO_POC
+        in PortfolioRoles.get(
+            portfolio_id=portfolio.id, user_id=new_ppoc.id
+        ).permissions
+    )
+
+    #
+    # TODO: assert ppoc change is in audit trail
+    #
+
+
+def test_update_ppoc_to_member_not_on_portfolio(client, user_session):
+    portfolio = PortfolioFactory.create()
+    original_ppoc = portfolio.owner
+    non_portfolio_member = UserFactory.create()
+
+    user_session(original_ppoc)
+
+    response = client.post(
+        url_for("portfolios.update_ppoc", portfolio_id=portfolio.id, _external=True),
+        data={"user_id": non_portfolio_member.id},
+        follow_redirects=False,
+    )
+
+    assert response.status_code == 404
+    assert portfolio.owner.id == original_ppoc.id
+
+
+def test_update_ppoc_when_ppoc(client, user_session):
+    portfolio = PortfolioFactory.create()
+    original_ppoc = portfolio.owner
+    portfolio_member = UserFactory.create()
+    Portfolios.add_member(
+        member=portfolio_member,
+        portfolio=portfolio,
+        permission_sets=[PermissionSets.PORTFOLIO_POC],
+    )
+
+    user_session(original_ppoc)
+
+    updating_ppoc_successfully(
+        client=client,
+        new_ppoc=portfolio_member,
+        old_ppoc=original_ppoc,
+        portfolio=portfolio,
+    )
+
+
+def test_update_ppoc_when_cpo(client, user_session):
+    ccpo = UserFactory.create_ccpo()
+    portfolio = PortfolioFactory.create()
+    original_ppoc = portfolio.owner
+    portfolio_member = UserFactory.create()
+    Portfolios.add_member(
+        member=portfolio_member,
+        portfolio=portfolio,
+        permission_sets=[PermissionSets.PORTFOLIO_POC],
+    )
+
+    user_session(ccpo)
+
+    updating_ppoc_successfully(
+        client=client,
+        new_ppoc=portfolio_member,
+        old_ppoc=original_ppoc,
+        portfolio=portfolio,
+    )
+
+
+def test_update_ppoc_when_not_ppoc(client, user_session):
+    portfolio = PortfolioFactory.create()
+    new_owner = UserFactory.create()
+
+    user_session(new_owner)
+
+    response = client.post(
+        url_for("portfolios.update_ppoc", portfolio_id=portfolio.id, _external=True),
+        data={"dod_id": new_owner.dod_id},
+        follow_redirects=False,
+    )
+
+    assert response.status_code == 404
+
+    # No update to portfolio ppoc
+    # No audit log change? Do we log invalid request?
+    # No permission change for old ppoc
+    # No permission change for attempted new ppoc
 
 
 def test_portfolio_index_with_existing_portfolios(client, user_session):

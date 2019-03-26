@@ -115,6 +115,13 @@ class PortfolioRoles(object):
     )
 
     @classmethod
+    def reset_default_permission_sets(cls, portfolio_role):
+        PortfolioRoles.update(
+            portfolio_role=portfolio_role,
+            set_names=PortfolioRoles.DEFAULT_PORTFOLIO_PERMISSION_SETS,
+        )
+
+    @classmethod
     def _permission_sets_for_names(cls, set_names):
         perms_set_names = PortfolioRoles.DEFAULT_PORTFOLIO_PERMISSION_SETS.union(
             set(set_names)

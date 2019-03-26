@@ -1,7 +1,8 @@
+from atst.domain.permission_sets import PermissionSets
 from atst.domain.portfolio_roles import PortfolioRoles
 from atst.domain.users import Users
+from atst.models.permissions import Permissions
 from atst.models.portfolio_role import Status as PortfolioRoleStatus
-from atst.domain.permission_sets import PermissionSets
 
 from tests.factories import (
     PortfolioFactory,
@@ -29,3 +30,15 @@ def test_add_portfolio_role_with_permission_sets():
     ]
     actual_names = [prms.name for prms in port_role.permission_sets]
     assert expected_names == expected_names
+
+
+def test_reset_default_permission_sets():
+    portfolio = PortfolioFactory.create()
+    user = portfolio.owner
+    portfolio_role = PortfolioRoles.get(portfolio_id=portfolio.id, user_id=user.id)
+
+    assert Permissions.EDIT_PORTFOLIO_POC in portfolio_role.permissions
+
+    PortfolioRoles.reset_default_permission_sets(portfolio_role=portfolio_role)
+
+    assert Permissions.EDIT_PORTFOLIO_POC not in portfolio_role.permissions

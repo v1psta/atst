@@ -19,6 +19,8 @@ base_public:
   title_tag: JEDI Cloud
 common:
   back: Back
+  cancel: Cancel
+  confirm: Confirm
   edit: Edit
   manage: manage
   save_and_continue: Save & Continue
@@ -50,6 +52,8 @@ footer:
   browser_support: JEDI Cloud supported on these web browsers
   jedi_help_link_text: Questions? Contact your CCPO representative
 forms:
+  assign_ppoc:
+    dod_id: "Select new primary point of contact:"
   ccpo_review:
     comment_description: Provide instructions or notes for additional information that is necessary to approve the request here. The requestor may then re-submit the updated request or initiate contact outside of AT-AT if further discussion is required. <strong>This message will be shared with the person making the JEDI request.</strong>.
     comment_label: Instructions or comments
@@ -305,9 +309,17 @@ fragments:
   portfolio_admin:
     none: Not Selected
   ppoc:
-    title: Primary Point of Contact
+    assign_user_button_text: Assign User
     subtitle: The PoC has the ability to edit all aspects of a portfolio.
+    title: Primary Point of Contact
     update_btn: Update Primary PoC
+    update_ppoc_confirmation_title: Confirmation
+    update_ppoc_title: Update Primary Point of Contact.
+    confirm_alert:
+      title: Once you assign a new point of contact, you will no longer be able to request portfolio deactivation or manage the point of contact role.
+    alert:
+      title: Warning!
+      message: Selecting a new primary contact gives that member full access to the portfolio and removes your PoC rights. Please be sure you want to proceed.
 login:
   ccpo_logo_alt_text: Cloud Computing Program Office Logo
   certificate_selection:
