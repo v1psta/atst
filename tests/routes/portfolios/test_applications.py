@@ -173,11 +173,16 @@ def test_user_can_only_access_apps_in_their_portfolio(client, user_session):
 
     # user can't view application edit form
     response = client.get(
-        "/portfolios/{}/applications/{}/edit".format(portfolio.id, other_application.id)
+        url_for(
+            "portfolios.edit_application",
+            portfolio_id=portfolio.id,
+            application_id=other_application.id,
+        )
     )
     assert response.status_code == 404
 
     # user can't post update application form
+    time_updated = other_application.time_updated
     response = client.post(
         url_for(
             "portfolios.update_application",
@@ -185,9 +190,9 @@ def test_user_can_only_access_apps_in_their_portfolio(client, user_session):
             application_id=other_application.id,
         ),
         data={"name": "New Name", "description": "A new description."},
-        follow_redirects=True,
     )
     assert response.status_code == 404
+    assert time_updated == other_application.time_updated
 
     # user can't view application members
     response = client.get(

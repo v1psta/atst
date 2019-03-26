@@ -173,12 +173,12 @@ def test_user_can_only_revoke_invites_in_their_portfolio(client, user_session):
     portfolio = PortfolioFactory.create()
     other_portfolio = PortfolioFactory.create()
     user = UserFactory.create()
-    ws_role = PortfolioRoleFactory.create(
+    portfolio_role = PortfolioRoleFactory.create(
         user=user, portfolio=other_portfolio, status=PortfolioRoleStatus.PENDING
     )
     invite = InvitationFactory.create(
         user_id=user.id,
-        portfolio_role=ws_role,
+        portfolio_role=portfolio_role,
         status=InvitationStatus.REJECTED_EXPIRED,
         expiration_time=datetime.datetime.now() - datetime.timedelta(seconds=1),
     )
@@ -199,12 +199,12 @@ def test_user_can_only_resend_invites_in_their_portfolio(client, user_session, q
     portfolio = PortfolioFactory.create()
     other_portfolio = PortfolioFactory.create()
     user = UserFactory.create()
-    ws_role = PortfolioRoleFactory.create(
+    portfolio_role = PortfolioRoleFactory.create(
         user=user, portfolio=other_portfolio, status=PortfolioRoleStatus.PENDING
     )
     invite = InvitationFactory.create(
         user_id=user.id,
-        portfolio_role=ws_role,
+        portfolio_role=portfolio_role,
         status=InvitationStatus.REJECTED_EXPIRED,
         expiration_time=datetime.datetime.now() - datetime.timedelta(seconds=1),
     )
