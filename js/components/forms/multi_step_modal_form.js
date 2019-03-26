@@ -34,6 +34,7 @@ export default {
 
   mounted: function() {
     this.$root.$on('field-change', this.handleValidChange)
+    this.$on('modalOpen', this.handleModalOpen)
   },
 
   methods: {
@@ -61,6 +62,9 @@ export default {
       const { name, optional } = event
       this.fields[name] = optional
     },
+    handleModalOpen: function(_bool) {
+      this.step = 0
+    }
   },
 
   computed: {},
