@@ -196,8 +196,10 @@ def test_user_can_only_access_apps_in_their_portfolio(client, user_session):
 
     # user can't view application members
     response = client.get(
-        "/portfolios/{}/applications/{}/members".format(
-            portfolio.id, other_application.id
+        url_for(
+            "portfolios.application_members",
+            portfolio_id=portfolio.id,
+            application_id=other_application.id,
         )
     )
     assert response.status_code == 404
