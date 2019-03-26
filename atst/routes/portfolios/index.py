@@ -5,12 +5,14 @@ from flask import render_template, request as http_request, g, redirect, url_for
 from . import portfolios_bp
 from atst.domain.reports import Reports
 from atst.domain.portfolios import Portfolios
+from atst.domain.portfolio_roles import PortfolioRoles
+from atst.domain.permission_sets import PermissionSets
+from atst.domain.users import Users
 from atst.domain.audit_log import AuditLog
 from atst.domain.common import Paginator
 from atst.forms.portfolio import PortfolioForm
 import atst.forms.portfolio_member as member_forms
 from atst.models.permissions import Permissions
-from atst.domain.permission_sets import PermissionSets
 from atst.domain.authz.decorator import user_can_access_decorator as user_can
 
 
@@ -84,6 +86,35 @@ def render_admin_page(portfolio, form=None):
 def portfolio_admin(portfolio_id):
     portfolio = Portfolios.get_for_update(portfolio_id)
     return render_admin_page(portfolio)
+
+
+@portfolios_bp.route("/portfolios/<portfolio_id>/update_ppoc", methods=["POST"])
+@user_can(Permissions.EDIT_PORTFOLIO_POC, message="update portfolio ppoc")
+def update_ppoc(portfolio_id):
+    dod_id = http_request.form.get("dod_id")
+
+    portfolio = Portfolios.get(g.current_user, portfolio_id)
+    owner = portfolio.owner
+
+    #
+    # Revoke permissions from last PPOC
+    #
+    pr = PortfolioRoles.get(portfolio_id=portfolio.id, user_id=owner.id)
+    Portfolios.update_member(
+        member=pr, permission_sets=[PermissionSets.EDIT_PORTFOLIO_FUNDING]
+    )
+
+    #
+    # Add new user with permissions
+    #
+    user = Users.get_by_dod_id(dod_id)
+    Portfolios.add_member(
+        member=user, portfolio=portfolio, permission_sets=[PermissionSets.PORTFOLIO_POC]
+    )
+
+    return redirect(
+        url_for("portfolios.portfolio_applications", portfolio_id=portfolio.id)
+    )
 
 
 @portfolios_bp.route("/portfolios/<portfolio_id>/edit", methods=["POST"])
