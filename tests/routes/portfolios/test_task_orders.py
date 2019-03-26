@@ -128,6 +128,20 @@ class TestPortfolioFunding:
             assert context["funding_end_date"] is expiring_to.end_date
             assert context["funded"] == False
 
+    def test_user_can_only_access_to_in_their_portfolio(
+        self, app, user_session, portfolio
+    ):
+        other_task_order = TaskOrderFactory.create()
+        user_session(portfolio.owner)
+        response = app.test_client().get(
+            url_for(
+                "portfolios.view_task_order",
+                portfolio_id=portfolio.id,
+                task_order_id=other_task_order.id,
+            )
+        )
+        assert response.status_code == 404
+
 
 class TestTaskOrderInvitations:
     def setup(self):
@@ -226,6 +240,54 @@ class TestTaskOrderInvitations:
         assert updated_task_order.so_first_name != "Boba"
         assert len(queue.get_queue()) == queue_length
         assert response.status_code == 400
+
+    def test_user_can_only_invite_to_task_order_in_their_portfolio(
+        self, user_session, client, portfolio
+    ):
+        other_task_order = TaskOrderFactory.create()
+        user_session(portfolio.owner)
+
+        # user can't see invites
+        response = client.get(
+            url_for(
+                "portfolios.task_order_invitations",
+                portfolio_id=portfolio.id,
+                task_order_id=other_task_order.id,
+            )
+        )
+        assert response.status_code == 404
+
+        # user can't send invites
+        time_updated = other_task_order.time_updated
+        response = client.post(
+            url_for(
+                "portfolios.edit_task_order_invitations",
+                portfolio_id=portfolio.id,
+                task_order_id=other_task_order.id,
+            ),
+            data={
+                "contracting_officer-first_name": "Luke",
+                "contracting_officer-last_name": "Skywalker",
+                "contracting_officer-dod_id": "0123456789",
+                "contracting_officer-email": "luke@skywalker.mil",
+                "contracting_officer-phone_number": "0123456789",
+                "contracting_officer-invite": "y",
+            },
+        )
+        assert response.status_code == 404
+        assert time_updated == other_task_order.time_updated
+
+        # user can't resend invites
+        response = client.post(
+            url_for(
+                "portfolios.resend_invite",
+                portfolio_id=portfolio.id,
+                task_order_id=other_task_order.id,
+                invite_type="ko_invite",
+            )
+        )
+        assert response.status_code == 404
+        assert time_updated == other_task_order.time_updated
 
 
 def test_ko_can_view_task_order(client, user_session, portfolio, user):
@@ -464,6 +526,57 @@ def test_submit_completed_ko_review_page_as_ko(
     assert task_order.loas == loa_list
 
 
+def test_ko_can_only_access_their_to(app, user_session, client, portfolio, pdf_upload):
+    ko = UserFactory.create()
+
+    PortfolioRoleFactory.create(
+        portfolio=portfolio,
+        user=ko,
+        status=PortfolioStatus.ACTIVE,
+        permission_sets=[
+            PermissionSets.get(PermissionSets.VIEW_PORTFOLIO),
+            PermissionSets.get(PermissionSets.VIEW_PORTFOLIO_FUNDING),
+        ],
+    )
+
+    task_order = TaskOrderFactory.create(portfolio=portfolio, contracting_officer=ko)
+    dd_254 = DD254Factory.create()
+    TaskOrders.add_dd_254(task_order, dd_254.to_dictionary())
+    other_task_order = TaskOrderFactory.create()
+    user_session(ko)
+
+    # KO can't see TO
+    response = client.get(
+        url_for(
+            "portfolios.ko_review",
+            portfolio_id=portfolio.id,
+            task_order_id=other_task_order.id,
+        )
+    )
+    assert response.status_code == 404
+
+    # KO can't submit review for TO
+    form_data = {
+        "start_date": "02/10/2019",
+        "end_date": "03/10/2019",
+        "number": "1938745981",
+        "loas-0": "1231231231",
+        "custom_clauses": "hi im a custom clause",
+        "pdf": pdf_upload,
+    }
+
+    response = client.post(
+        url_for(
+            "portfolios.submit_ko_review",
+            portfolio_id=portfolio.id,
+            task_order_id=other_task_order.id,
+        ),
+        data=form_data,
+    )
+    assert response.status_code == 404
+    assert not TaskOrders.is_signed_by_ko(other_task_order)
+
+
 def test_so_review_page(app, client, user_session, portfolio):
     so = UserFactory.create()
     PortfolioRoleFactory.create(
@@ -539,6 +652,45 @@ def test_submit_so_review(app, client, user_session, portfolio):
 
     assert task_order.dd_254
     assert task_order.dd_254.certifying_official == dd_254_data["certifying_official"]
+
+
+def test_so_can_only_access_their_to(app, client, user_session, portfolio):
+    so = UserFactory.create()
+    PortfolioRoleFactory.create(
+        portfolio=portfolio,
+        user=so,
+        status=PortfolioStatus.ACTIVE,
+        permission_sets=[
+            PermissionSets.get(PermissionSets.VIEW_PORTFOLIO),
+            PermissionSets.get(PermissionSets.VIEW_PORTFOLIO_FUNDING),
+        ],
+    )
+    task_order = TaskOrderFactory.create(portfolio=portfolio, security_officer=so)
+    dd_254_data = DD254Factory.dictionary()
+    other_task_order = TaskOrderFactory.create()
+    user_session(so)
+
+    # SO can't view dd254
+    response = client.get(
+        url_for(
+            "portfolios.so_review",
+            portfolio_id=portfolio.id,
+            task_order_id=other_task_order.id,
+        )
+    )
+    assert response.status_code == 404
+
+    # SO can't submit dd254
+    response = client.post(
+        url_for(
+            "portfolios.submit_so_review",
+            portfolio_id=portfolio.id,
+            task_order_id=other_task_order.id,
+        ),
+        data=dd_254_data,
+    )
+    assert response.status_code == 404
+    assert not other_task_order.dd_254
 
 
 def test_resend_invite_when_invalid_invite_officer(
