@@ -107,7 +107,7 @@ export default {
 
       if (!this.modified && this.initialErrors && this.initialErrors.length) {
         valid = false
-      } else if (this.optional && value == '') {
+      } else if (this.optional && value === '') {
         valid = true
       }
 
