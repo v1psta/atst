@@ -283,6 +283,17 @@
         float: right;
       }
     }
+
+    input.usa-button.usa-button-primary {
+      margin: 0;
+      width: 9rem;
+      height: 4rem;
+    }
+
+    .members-table-footer {
+      float: right;
+      padding: 3 * $gap;
+    }
   }
 
   .application-content {

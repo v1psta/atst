@@ -61,11 +61,13 @@
 
       </tbody>
     </table>
-    <a class='icon-link'>
-      {{ "portfolios.admin.add_member" | translate }}
-      <span class='icon'>{{ Icon('plus') }}</span>
-    </a>
-    <input type='submit' class='usa-button usa-button-primary' value='{{ "Save" }}' />
+    <div class="members-table-footer">
+      <a class='icon-link'>
+        {{ "portfolios.admin.add_member" | translate }}
+        {{ Icon('plus-circle-solid') }}
+      </a>
+      <input type='submit' class='usa-button usa-button-primary' value='{{ "Save" }}' />
+    </div>
     </form>
 
   </div>
