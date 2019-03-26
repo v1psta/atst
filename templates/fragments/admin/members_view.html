@@ -1,0 +1,20 @@
+{% for subform in permissions_form.members_permissions %}
+
+  <tr>
+    <td class='name'>{{ subform.member.data }}
+      {% if subform.member.data == user.full_name %}
+        <span class='you'>(<span class='green'>you</span>)</span>
+      {% endif %}
+    </td>
+    {% set heading_perms = [subform.perms_app_mgmt, subform.perms_funding, subform.perms_reporting, subform.perms_portfolio_mgmt] %}
+
+    {% for access in heading_perms %}
+      {% if dict(access.choices).get(access.data) == 'Edit Access'  %}
+        <td class='green'>Edit Access</td>
+      {% else %}
+        <td>View Only</td>
+      {% endif %}
+    {% endfor %}
+
+  </tr>
+{% endfor %}

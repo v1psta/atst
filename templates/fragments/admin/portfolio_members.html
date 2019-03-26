@@ -38,38 +38,26 @@
       </thead>
 
       <tbody>
-        {% for subform in permissions_form.members_permissions %}
-          <tr>
-            <td class='name'>{{ subform.member.data }}
-              {% if subform.member.data == user.full_name %}
-                <span class='you'>(<span class='green'>you</span>)</span>
-                {% set archive_button_class = 'usa-button-disabled' %}
-              {% else %}
-                {% set archive_button_class = 'usa-button-secondary' %}
-              {% endif %}
-            </td>
-
-            <td>{{ OptionsInput(subform.perms_app_mgmt, label=False) }}</td>
-            <td>{{ OptionsInput(subform.perms_funding, label=False) }}</td>
-            <td>{{ OptionsInput(subform.perms_reporting, label=False) }}</td>
-            <td>{{ OptionsInput(subform.perms_portfolio_mgmt, label=False) }}</td>
-
-        <td><button type="button" class='{{ archive_button_class }}'>{{ "portfolios.members.archive_button" | translate }}</button>
-        </td>
-        </tr>
-        {% endfor %}
-
+        {% if user_can(permissions.EDIT_PORTFOLIO_USERS) %}
+          {% include "fragments/admin/members_edit.html" %}
+        {% else %}
+          {% include "fragments/admin/members_view.html" %}
+        {% endif %}
       </tbody>
-    </table>
-    <div class="members-table-footer">
-      <a class='icon-link'>
-        {{ "portfolios.admin.add_member" | translate }}
-        {{ Icon('plus-circle-solid') }}
-      </a>
-      <input type='submit' class='usa-button usa-button-primary' value='{{ "Save" }}' />
-    </div>
-    </form>
 
+    </table>
+
+    {% if user_can(permissions.EDIT_PORTFOLIO_USERS) %}
+      <div class="members-table-footer">
+        <a class='icon-link'>
+          {{ "portfolios.admin.add_member" | translate }}
+          {{ Icon('plus-circle-solid') }}
+        </a>
+        <input type='submit' class='usa-button usa-button-primary' value='{{ "Save" }}' />
+      </div>
+    {% endif %}
+
+    </form>
   </div>
 
   {% endif %}
