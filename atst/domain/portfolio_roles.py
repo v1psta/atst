@@ -122,6 +122,28 @@ class PortfolioRoles(object):
         return PermissionSets.get_many(perms_set_names)
 
     @classmethod
+    def make_ppoc(cls, portfolio_role):
+        portfolio = portfolio_role.portfolio
+        original_owner_role = PortfolioRoles.get(
+            portfolio_id=portfolio.id, user_id=portfolio.owner.id
+        )
+        PortfolioRoles.revoke_ppoc_permissions(portfolio_role=original_owner_role)
+        PortfolioRoles.add(
+            user=portfolio_role.user,
+            portfolio_id=portfolio.id,
+            permission_sets=PortfolioRoles.PORTFOLIO_PERMISSION_SETS,
+        )
+
+    @classmethod
+    def revoke_ppoc_permissions(cls, portfolio_role):
+        permission_sets = [
+            permission_set.name
+            for permission_set in portfolio_role.permission_sets
+            if permission_set.name != PermissionSets.PORTFOLIO_POC
+        ]
+        PortfolioRoles.update(portfolio_role=portfolio_role, set_names=permission_sets)
+
+    @classmethod
     def disable(cls, portfolio_role):
         portfolio_role.status = PortfolioRoleStatus.DISABLED
 

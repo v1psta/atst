@@ -1,7 +1,8 @@
+from atst.domain.permission_sets import PermissionSets
 from atst.domain.portfolio_roles import PortfolioRoles
 from atst.domain.users import Users
+from atst.models.permissions import Permissions
 from atst.models.portfolio_role import Status as PortfolioRoleStatus
-from atst.domain.permission_sets import PermissionSets
 
 from tests.factories import (
     PortfolioFactory,
@@ -37,3 +38,34 @@ def test_disable_portfolio_role():
 
     PortfolioRoles.disable(portfolio_role=portfolio_role)
     assert portfolio_role.status == PortfolioRoleStatus.DISABLED
+
+
+def test_revoke_ppoc_permissions():
+    portfolio = PortfolioFactory.create()
+    portfolio_role = PortfolioRoles.get(
+        portfolio_id=portfolio.id, user_id=portfolio.owner.id
+    )
+
+    assert Permissions.EDIT_PORTFOLIO_POC in portfolio_role.permissions
+
+    PortfolioRoles.revoke_ppoc_permissions(portfolio_role=portfolio_role)
+    assert Permissions.EDIT_PORTFOLIO_POC not in portfolio_role.permissions
+
+
+def test_make_ppoc():
+    portfolio = PortfolioFactory.create()
+    original_owner = portfolio.owner
+    new_owner = UserFactory.create()
+
+    new_owner_role = PortfolioRoles.add(user=new_owner, portfolio_id=portfolio.id)
+
+    PortfolioRoles.make_ppoc(portfolio_role=new_owner_role)
+
+    assert portfolio.owner is new_owner
+    assert Permissions.EDIT_PORTFOLIO_POC in new_owner_role.permissions
+    assert (
+        Permissions.EDIT_PORTFOLIO_POC
+        not in PortfolioRoles.get(
+            portfolio_id=portfolio.id, user_id=original_owner.id
+        ).permissions
+    )

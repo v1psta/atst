@@ -1,5 +1,9 @@
-<div class="panel">
+<section id="primary-point-of-contact" class="panel">
   <div class="panel__content">
+    {% if g.matchesPath("primary-point-of-contact") %}
+      {% include "fragments/flash.html" %}
+    {% endif %}
+
     <h2>{{ "fragments.ppoc.title" | translate }}</h2>
     <p>{{ "fragments.ppoc.subtitle" | translate }}</p>
 
@@ -15,11 +19,7 @@
     </p>
 
     {% if user_can(permissions.EDIT_PORTFOLIO_POC) %}
-      <div class="flex-reverse-row">
-        <a class="usa-button-primary">
-          {{ "fragments.ppoc.update_btn" | translate }}
-        </a>
-      </div>
+      {% include "fragments/admin/change_ppoc.html" %}
     {% endif %}
   </div>
-</div>
+</section>
