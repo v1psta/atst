@@ -63,14 +63,14 @@ def render_admin_page(portfolio, form=None):
     members_data = [serialize_member_form_data(member) for member in portfolio.members]
 
     portfolio_form = PortfolioForm(data={"name": portfolio.name})
-    permissions_form = MembersPermissionsForm(
+    member_perms_form = MembersPermissionsForm(
         data={"members_permissions": members_data}
     )
     return render_template(
         "portfolios/admin.html",
         form=form,
         portfolio_form=portfolio_form,
-        permissions_form=permissions_form,
+        member_perms_form=member_perms_form,
         portfolio=portfolio,
         audit_events=audit_events,
         user=g.current_user,

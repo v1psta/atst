@@ -1,4 +1,4 @@
-{% for subform in permissions_form.members_permissions %}
+{% for subform in member_perms_form.members_permissions %}
   <tr>
     <td class='name'>{{ subform.member.data }}
       {% if subform.member.data == user.full_name %}
