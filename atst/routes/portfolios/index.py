@@ -15,6 +15,7 @@ import atst.forms.portfolio_member as member_forms
 from atst.models.permissions import Permissions
 from atst.domain.permission_sets import PermissionSets
 from atst.domain.authz.decorator import user_can_access_decorator as user_can
+from atst.utils.flash import formatted_flash as flash
 
 
 @portfolios_bp.route("/portfolios")
@@ -173,4 +174,31 @@ def portfolio_reports(portfolio_id):
         two_months_ago=two_months_ago,
         expiration_date=expiration_date,
         remaining_days=remaining_days,
+    )
+
+
+@portfolios_bp.route(
+    "/portfolios/<portfolio_id>/members/<member_id>/delete", methods=["POST"]
+)
+@user_can(Permissions.EDIT_PORTFOLIO_USERS, message="update portfolio members")
+def remove_member(portfolio_id, member_id):
+    if member_id == str(g.current_user.id):
+        raise UnauthorizedError(
+            user=user, message="you cant remove yourself from the portfolio"
+        )
+
+    portfolio = Portfolios.get(g.current_user, portfolio_id)
+    portfolio_role = PortfolioRoles.get(portfolio_id=portfolio_id, user_id=member_id)
+
+    PortfolioRoles.disable(portfolio_role=portfolio_role)
+
+    flash("portfolio_member_removed", member_name=portfolio_role.user.full_name)
+
+    return redirect(
+        url_for(
+            "portfolios.portfolio_admin",
+            portfolio_id=portfolio.id,
+            _anchor="portfolio-members",
+            fragment="portfolio-members",
+        )
     )

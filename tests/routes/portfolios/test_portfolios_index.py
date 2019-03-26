@@ -2,6 +2,8 @@ from flask import url_for
 
 from atst.domain.permission_sets import PermissionSets
 from atst.models.permissions import Permissions
+from atst.domain.portfolio_roles import PortfolioRoles
+from atst.models.portfolio_role import Status as PortfolioRoleStatus
 
 from tests.factories import (
     random_future_date,
@@ -79,6 +81,56 @@ def test_portfolio_admin_screen_when_not_ppoc(client, user_session):
     assert response.status_code == 200
     assert portfolio.name in response.data.decode()
     assert translate("fragments.ppoc.update_btn").encode("utf8") not in response.data
+
+
+def test_remove_portfolio_member(client, user_session):
+    portfolio = PortfolioFactory.create()
+
+    user = UserFactory.create()
+    PortfolioRoleFactory.create(portfolio=portfolio, user=user)
+
+    user_session(portfolio.owner)
+
+    response = client.post(
+        url_for(
+            "portfolios.remove_member", portfolio_id=portfolio.id, member_id=user.id
+        ),
+        follow_redirects=False,
+    )
+
+    assert response.status_code == 302
+    assert response.headers["Location"] == url_for(
+        "portfolios.portfolio_admin",
+        portfolio_id=portfolio.id,
+        _anchor="portfolio-members",
+        fragment="portfolio-members",
+        _external=True,
+    )
+    assert (
+        PortfolioRoles.get(portfolio_id=portfolio.id, user_id=user.id).status
+        == PortfolioRoleStatus.DISABLED
+    )
+
+
+def test_remove_portfolio_member_self(client, user_session):
+    portfolio = PortfolioFactory.create()
+
+    user_session(portfolio.owner)
+
+    response = client.post(
+        url_for(
+            "portfolios.remove_member",
+            portfolio_id=portfolio.id,
+            member_id=portfolio.owner.id,
+        ),
+        follow_redirects=False,
+    )
+
+    assert response.status_code == 500
+    assert (
+        PortfolioRoles.get(portfolio_id=portfolio.id, user_id=portfolio.owner.id).status
+        == PortfolioRoleStatus.ACTIVE
+    )
 
 
 def test_portfolio_reports(client, user_session):
