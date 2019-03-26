@@ -84,7 +84,7 @@ def make_flask_callbacks(app):
     def _set_globals():
         g.current_user = None
         g.dev = os.getenv("FLASK_ENV", "dev") == "dev"
-        g.matchesPath = lambda href: re.match("^" + href, request.path)
+        g.matchesPath = lambda href: re.search(href, request.full_path)
         g.modal = request.args.get("modal", None)
         g.Authorization = Authorization
         g.Permissions = Permissions

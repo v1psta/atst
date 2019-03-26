@@ -22,10 +22,9 @@ MESSAGES = {
         "category": "success",
     },
     "new_portfolio_member": {
-        "title_template": "Member added successfully",
+        "title_template": "Success!",
         "message_template": """
-          <p>{{ new_member.user_name }} was successfully invited via email to this portfolio. They do not yet have access to any environments.</p>
-          <p><a href="{{ url_for('portfolios.update_member', portfolio_id=portfolio.id, member_id=new_member.user_id) }}">Add environment access.</a></p>
+          <p>You have successfully invited {{ new_member.user_name }} to the portfolio admin.</p>
         """,
         "category": "success",
     },

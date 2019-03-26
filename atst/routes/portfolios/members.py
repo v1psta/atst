@@ -92,7 +92,12 @@ def create_member(portfolio_id):
             flash("new_portfolio_member", new_member=member, portfolio=portfolio)
 
             return redirect(
-                url_for("portfolios.portfolio_members", portfolio_id=portfolio.id)
+                url_for(
+                    "portfolios.portfolio_admin",
+                    portfolio_id=portfolio.id,
+                    fragment="portfolio-members",
+                    _anchor="portfolio-members",
+                )
             )
         except AlreadyExistsError:
             return render_template(
