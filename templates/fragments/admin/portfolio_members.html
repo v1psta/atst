@@ -40,7 +40,7 @@
       <tbody>
         {% if user_can(permissions.EDIT_PORTFOLIO_USERS) %}
           {% include "fragments/admin/members_edit.html" %}
-        {% else %}
+        {% elif user_can(permissions.VIEW_PORTFOLIO_USERS) %}
           {% include "fragments/admin/members_view.html" %}
         {% endif %}
       </tbody>
