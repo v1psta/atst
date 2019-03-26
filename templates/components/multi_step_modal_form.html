@@ -33,19 +33,19 @@
         {{ button_text }}
         {{ Icon('plus-circle-solid') }}
       </a>
-      <form action="{{ form_action }}" method="POST">
-        {{ form.csrf_token }}
         {% call Modal(name=name, dismissable=dismissable, classes="wide") %}
-          <div v-if="activeModal === '{{ name }}'">
-            {% for step in steps %}
-              <div class="modal__form" v-show="step === {{ loop.index0 }}">
-                {{ FormSteps(step_count, loop.index) }}
-                {{ step }}
-              </div>
-            {% endfor %}
-          </div>
+          <form id="{{ name }}" action="{{ form_action }}" method="POST">
+            {{ form.csrf_token }}
+            <div v-if="activeModal === '{{ name }}'">
+              {% for step in steps %}
+                <div class="modal__form" v-show="step === {{ loop.index0 }}">
+                  {{ FormSteps(step_count, loop.index) }}
+                  {{ step }}
+                </div>
+              {% endfor %}
+            </div>
+          </form>
         {% endcall %}
-      </form>
     </div>
   </multi-step-modal-form>
 {% endmacro %}

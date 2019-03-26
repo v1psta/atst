@@ -66,7 +66,12 @@
     {{ SimpleOptionsInput(member_form.perms_reporting) }}
     {{ SimpleOptionsInput(member_form.perms_portfolio_mgmt) }}
     <div class='action-group'>
-      <input type="submit" v-on:click="closeModal('{{ new_port_mem }}')" class='action-group__action usa-button' value='Invite Member'>
+      <input
+        type="submit"
+        v-on:click="closeModal('{{ new_port_mem }}')"
+        class='action-group__action usa-button'
+        form="add-port-mem"
+        value='Invite Member'>
       <a class='action-group__action icon-link icon-link--default' v-on:click="closeModal('{{ new_port_mem }}')">Cancel</a>
     </div>
   </div>
