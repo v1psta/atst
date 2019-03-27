@@ -18,7 +18,9 @@ export default {
     optionsinput,
   },
 
-  props: {},
+  props: {
+    steps: Number,
+  },
 
   data: function() {
     return {
@@ -64,6 +66,15 @@ export default {
     },
     handleModalOpen: function(_bool) {
       this.step = 0
+    },
+    _onLastPage: function() {
+      return this.step === this.steps - 1
+    },
+    handleSubmit: function(e) {
+      if (this.invalid || !this._onLastPage()) {
+        e.preventDefault()
+        this.next()
+      }
     },
   },
 

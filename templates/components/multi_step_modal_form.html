@@ -27,14 +27,14 @@
 
 {% macro MultiStepModalForm(name, form, form_action, steps, button_text="", dismissable=False) -%}
   {% set step_count = steps|length %}
-  <multi-step-modal-form inline-template>
+  <multi-step-modal-form inline-template :steps={{ step_count }}>
     <div>
       <a class='icon-link modal-link' v-on:click="openModal('{{ name }}')">
         {{ button_text }}
         {{ Icon('plus-circle-solid') }}
       </a>
         {% call Modal(name=name, dismissable=dismissable, classes="wide") %}
-          <form id="{{ name }}" action="{{ form_action }}" method="POST">
+          <form id="{{ name }}" action="{{ form_action }}" method="POST" v-on:submit="handleSubmit">
             {{ form.csrf_token }}
             <div v-if="activeModal === '{{ name }}'">
               {% for step in steps %}
