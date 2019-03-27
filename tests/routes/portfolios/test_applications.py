@@ -1,4 +1,3 @@
-import pytest
 from flask import url_for
 
 from tests.factories import (
@@ -12,16 +11,18 @@ from tests.factories import (
 
 from atst.domain.applications import Applications
 from atst.domain.portfolios import Portfolios
-from atst.domain.permission_sets import PermissionSets
 from atst.models.portfolio_role import Status as PortfolioRoleStatus
 
 
 def test_user_with_permission_has_budget_report_link(client, user_session):
     portfolio = PortfolioFactory.create()
     user_session(portfolio.owner)
-    response = client.get("/portfolios/{}/applications".format(portfolio.id))
+    response = client.get(
+        url_for("portfolios.portfolio_applications", portfolio_id=portfolio.id)
+    )
     assert (
-        "href='/portfolios/{}/reports'".format(portfolio.id).encode() in response.data
+        url_for("portfolios.portfolio_reports", portfolio_id=portfolio.id)
+        in response.data.decode()
     )
 
 
@@ -32,20 +33,24 @@ def test_user_without_permission_has_no_budget_report_link(client, user_session)
         user, portfolio, status=PortfolioRoleStatus.ACTIVE
     )
     user_session(user)
-    response = client.get("/portfolios/{}/applications".format(portfolio.id))
+    response = client.get(
+        url_for("portfolios.portfolio_applications", portfolio_id=portfolio.id)
+    )
     assert (
-        'href="/portfolios/{}/reports"'.format(portfolio.id).encode()
-        not in response.data
+        url_for("portfolios.portfolio_reports", portfolio_id=portfolio.id)
+        not in response.data.decode()
     )
 
 
 def test_user_with_permission_has_add_application_link(client, user_session):
     portfolio = PortfolioFactory.create()
     user_session(portfolio.owner)
-    response = client.get("/portfolios/{}/applications".format(portfolio.id))
+    response = client.get(
+        url_for("portfolios.portfolio_applications", portfolio_id=portfolio.id)
+    )
     assert (
-        "href='/portfolios/{}/applications/new'".format(portfolio.id).encode()
-        in response.data
+        url_for("portfolios.create_application", portfolio_id=portfolio.id)
+        in response.data.decode()
     )
 
 
@@ -54,10 +59,12 @@ def test_user_without_permission_has_no_add_application_link(client, user_sessio
     portfolio = PortfolioFactory.create()
     Portfolios._create_portfolio_role(user, portfolio)
     user_session(user)
-    response = client.get("/portfolios/{}/applications".format(portfolio.id))
+    response = client.get(
+        url_for("portfolios.portfolio_applications", portfolio_id=portfolio.id)
+    )
     assert (
-        "href='/portfolios/{}/applications/new'".format(portfolio.id).encode()
-        not in response.data
+        url_for("portfolios.create_application", portfolio_id=portfolio.id)
+        not in response.data.decode()
     )
 
 
@@ -89,7 +96,11 @@ def test_view_edit_application(client, user_session):
     )
     user_session(portfolio.owner)
     response = client.get(
-        "/portfolios/{}/applications/{}/edit".format(portfolio.id, application.id)
+        url_for(
+            "portfolios.update_application",
+            portfolio_id=portfolio.id,
+            application_id=application.id,
+        )
     )
     assert response.status_code == 200
 
