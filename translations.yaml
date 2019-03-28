@@ -207,20 +207,20 @@ forms:
     complexity_other_label: Project Complexity Other
     dev_team:
       label: Development Team
-      description: Which people or teams will be completing the development work for your cloud applications? Select all that apply.
+      description: Who will be developing your cloud application(s)? Select all that apply.
       civilians: Government Civilians
       military: Military
       contractor: Contractor
-      other: "Other <em class='description'>(E.g. University or other partner)</em>"
+      other: "Other"
     dev_team_other_label: Development Team Other
     team_experience:
       label: Team Experience
-      description: How much experience does your team  have with development in the cloud?
+      description: How much experience does your team have collectively with development in the cloud?
       none: No previous experience
       planned: Researched or planned a cloud build or migration
-      built_1: Built or Migrated 1-2 applications
-      built_3: Built or Migrated 3-5 applications
-      built_many: Built or migrated many applications, or consulted on several such projects
+      built_1: Built, migrated, or consulted on 1-2 applications
+      built_3: Built, migrated, or consulted on 3-5 applications
+      built_many: Built, migrated, or consulted on more than 5 applications
     performance_length:
       label: Period of Performance length
     start_date_label: Start Date
