@@ -5,6 +5,7 @@ from flask import render_template, request as http_request, g, redirect, url_for
 from . import portfolios_bp
 from atst.domain.reports import Reports
 from atst.domain.portfolios import Portfolios
+from atst.domain.portfolio_roles import PortfolioRoles
 from atst.domain.audit_log import AuditLog
 from atst.domain.common import Paginator
 from atst.forms.portfolio import PortfolioForm
@@ -91,9 +92,15 @@ def portfolio_admin(portfolio_id):
 @user_can(Permissions.EDIT_PORTFOLIO_USERS, message="view portfolio admin page")
 def edit_portfolio_members(portfolio_id):
     portfolio = Portfolios.get_for_update(portfolio_id)
-    member_perms_form = MembersPermissionsForm(
-        http_request.form
-    )
+    member_perms_form = MembersPermissionsForm(http_request.form)
+
+    for subform in member_perms_form.members_permissions:
+        new_perm_set = subform.data["permission_sets"]
+        user_id = subform.user_id.data
+        portfolio_role = PortfolioRoles.get(portfolio.id, user_id)
+        if portfolio_role.permission_sets != new_perm_set:
+            PortfolioRoles.update(portfolio_role, new_perm_set)
+
     return render_admin_page(portfolio)
 
 
