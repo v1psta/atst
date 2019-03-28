@@ -41,7 +41,7 @@ components:
 footer:
   about_link_text: Joint Enterprise Defense Infrastructure
   browser_support: JEDI Cloud supported on these web browsers
-  jedi_help_link_text: Questions? Contact your CCPO Representative
+  jedi_help_link_text: Contact your CCPO officer for help
 forms:
   date_hint: "For example: 11 28 1986"
   ccpo_review:
@@ -175,25 +175,25 @@ forms:
     environment_names_unique_validation_message: Environment names must be unique.
     name_label: Application Name
   task_order:
-    portfolio_name_label: Organization Portfolio Name
-    portfolio_name_description: The name of your office or organization. You can add multiple applications to your portfolio. Your task orders are used to pay for these applications and their environments.
+    portfolio_name_label: Portfolio Name
+    portfolio_name_description: The name of your office or organization. You can add multiple applications to your portfolio. Your task orders are used to fund these applications and their environments.
     scope_label: Cloud Project Scope
     scope_description: Your team's plan for using the cloud, such as migrating an existing application or creating a prototype.
     defense_component_label: Department of Defense Component
     app_migration:
       label: App Migration
-      description: Do you plan to migrate existing application(s) to the cloud?
-      on_premise: Yes, migrating from an <strong>on-premise data center</strong>
-      cloud: Yes, migrating from <strong>another cloud provider</strong>
-      both: Yes, migrating from an <strong>on-premise data center</strong> and <strong>another cloud provider</strong>
+      description: Do you plan to migrate one or more existing application(s) to the cloud?
+      on_premise: Yes, migrating from an on-premise data center
+      cloud: Yes, migrating from another cloud provider
+      both: Yes, migrating from an on-premise data center <strong>and</strong> another cloud provider
       none: Not planning to migrate any applications
-      not_sure: "Not Sure"
+      not_sure: "Not sure"
     native_apps:
       label: Native Apps
-      description: Do you plan to develop application(s) natively in the cloud?
-      'yes': Yes, planning to develop natively in the cloud
-      'no': No, not planning to develop natively in the cloud
-      not_sure: Not sure, unsure if planning to develop natively in the cloud
+      description: Do you plan to develop application(s) in the cloud?
+      'yes': Yes, planning to develop in the cloud
+      'no': No, not planning to develop in the cloud
+      not_sure: Not sure, unsure if planning to develop in the cloud
     complexity:
       label: Project Complexity
       description: Which of these describes how complex your team's use of the cloud will be? Select all that apply.
@@ -202,13 +202,13 @@ forms:
       conus: CONUS Access
       oconus: OCONUS Access
       tactical_edge: Tactical Edge Access
-      not_sure: Not Sure
+      not_sure: Not sure
       other: Other
     complexity_other_label: Project Complexity Other
     dev_team:
       label: Development Team
       description: Who will be developing your cloud application(s)? Select all that apply.
-      civilians: Government Civilians
+      civilians: Government civilian
       military: Military
       contractor: Contractor
       other: "Other"
@@ -222,7 +222,7 @@ forms:
       built_3: Built, migrated, or consulted on 3-5 applications
       built_many: Built, migrated, or consulted on more than 5 applications
     performance_length:
-      label: Period of Performance length
+      label: Period of performance length
     start_date_label: Start Date
     end_date_label: End Date
     csp_estimate_label: Upload a copy of your CSP Cost Estimate Research
@@ -239,7 +239,7 @@ forms:
     oversight_email_label: Email
     oversight_phone_label: Phone Number
     oversight_dod_id_label: DoD ID
-    oversight_am_cor_label: I am the Contracting Officer Representative (COR) for this task order
+    oversight_am_cor_label: I am the Contracting Officer Representative (COR) for this task order.
     ko_invite_label: Invite KO to Task Order Builder
     cor_invite_label: Invite COR to Task Order Builder
     so_invite_label: Invite Security Officer to Task Order Builder
@@ -258,18 +258,18 @@ forms:
 fragments:
   edit_application_form:
     existing_application_title: 'Edit {application_name} application'
-    explain: 'AT-AT allows you to organize your portfolio into multiple applications, each of which may have environments.'
+    explain: 'Your portfolio enables you to organize work by application. Each application can then be broken down into multiple instances, or environments. Once you create an application, the environments indicated below will be established with the CSP, giving you access to the cloud.'
     new_application_title: Add a new application
   edit_user_form:
-    date_last_training_tooltip: When was the last time you completed the IA training? <br> Information Assurance (IA) training is an important step in cyber awareness.
-    save_details_button: Save Details
+    date_last_training_tooltip: When was the last time you completed the Information Assurance (IA) training? <br> IA training is an important step in cyber awareness.
+    save_details_button: Save
   pending_ccpo_acceptance_alert:
     learn_more_link_text: Learn more about the JEDI Cloud task order and the Financial Verification process.
     paragraph_1: The CCPO will review and respond to your request in 3 business days. You’ll be notified via email or phone. Please note if your request is for over $1M of JEDI cloud resources it will require a manual review by the CCPO.
     paragraph_2: 'While your request is being reviewed, your next step is to create a task order (TO) associated with the JEDI Cloud. Please contact a Contracting Officer (KO), Contracting Officer Representative (COR), or a Financial Manager to help with this step.'
   pending_ccpo_approval_modal:
     paragraph_1: The CCPO will review and respond to your Financial Verification submission in 3 business days. You will be notified via email or phone.
-    paragraph_2: Once the financial verification is approved you will be invited to create your JEDI Portfolio and set-up your applications. Click here for more details.
+    paragraph_2: Once the financial verification is approved you will be invited to create your JEDI portfolio and set up your applications. Click here for more details.
   pending_financial_verification:
     learn_more_link_text: Learn more about the JEDI Cloud task order and the Financial Verification process.
     paragraph_1: 'The next step is to create a task order associated with JEDI Cloud.  Please contact a Contracting Officer (KO), Contracting Officer Representative (COR), or a Financial Manager to help with this step.'
@@ -278,7 +278,7 @@ fragments:
     make_sure: Make sure to take a moment to
     bullet_1: Verify that all information is accurate and up-to-date
     bullet_2: Upload your task order (TO) document
-    bullet_3: Add both the task order (TO) and lines of accounting (LOA)
+    bullet_3: Add both the TO number and lines of accounting (LOA)
 login:
   ccpo_logo_alt_text: Cloud Computing Program Office Logo
   certificate_selection:
@@ -335,12 +335,12 @@ requests:
     enter_task_order_manually_link_text: Enter task order information manually
     expiration_date_placeholder: Please enter the expiration date for the task order only and do not include options that you may choose to exercise in the future.
     financial_verification_title: Financial Verification
-    manually_enter_task_information_description: 'Additional fields are displayed below, where you can manually enter financial information as documented in your Task Order.'
+    manually_enter_task_information_description: 'Additional fields are displayed below, where you can manually enter financial information as documented in your task order.'
     manually_enter_task_information_help_label: Learn more about the JEDI Cloud task order and the Financial Verification process.
     manually_enter_task_information_label: Manually enter task order information
     number_placeholder: A Contracting Officer will likely be the best source for this number.
     pending_financial_verification: Pending Financial Verification
-    permissions_paragraph: 'In order to get you access to the JEDI Cloud, we will need you to enter the details below that will help us verify and account for your Task Order.'
+    permissions_paragraph: 'In order to get you access to the JEDI Cloud, we will need you to enter the details below that will help us verify and account for your task order.'
     request_title: 'Request: {displayname}'
     some_errors_label: There were some errors
     task_order_not_found_eda_description: 'We could not find your task order in our system of record, EDA. Please confirm that you have entered it correctly.'
@@ -467,8 +467,8 @@ task_orders:
       add_button_text: Add / Invite COR
       invite_button_text: Invite COR
     security_officer:
-      title: IA Security Officer Information
-      description: Your Security Officer will need to answer some security configuration questions in order to generate a DD-254 document, then digitally sign.
+      title: Security Officer Information
+      description: Your security officer will need to answer some security configuration questions in order to generate a DD-254 document, then digitally sign.
       add_button_text: Add / Invite Security Officer
       invite_button_text: Invite Security Officer
   ko_review:

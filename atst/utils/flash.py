@@ -111,7 +111,7 @@ MESSAGES = {
     "task_order_congrats": {
         "title_template": "Congrats!",
         "message_template": """
-        You've created a new JEDI portfolio and jump started your first task order!
+        You've created a new JEDI portfolio and jump-started your first task order!
         """,
         "actions": """
             {% from "components/icon.html" import Icon %}
