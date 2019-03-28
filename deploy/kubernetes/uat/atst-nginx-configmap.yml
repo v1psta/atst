@@ -7,6 +7,7 @@ metadata:
 data:
   nginx-config: |-
     server {
+        access_log /var/log/nginx/access.log json;
         server_name uat.atat.code.mil;
         listen 8442;
         listen [::]:8442 ipv6only=on;
@@ -25,15 +26,18 @@ data:
         location @app {
             include uwsgi_params;
             uwsgi_pass unix:///var/run/uwsgi/uwsgi.socket;
+            uwsgi_param HTTP_X_REQUEST_ID $request_id;
         }
         location @appbasicauth {
             include uwsgi_params;
             uwsgi_pass unix:///var/run/uwsgi/uwsgi.socket;
             auth_basic "Developer Access";
             auth_basic_user_file /etc/nginx/.htpasswd;
+            uwsgi_param HTTP_X_REQUEST_ID $request_id;
         }
     }
     server {
+        access_log /var/log/nginx/access.log json;
         server_name auth-uat.atat.code.mil;
         listen 8443 ssl;
         listen [::]:8443 ssl ipv6only=on;
@@ -75,5 +79,21 @@ data:
             uwsgi_param HTTP_X_SSL_CLIENT_S_DN_LEGACY $ssl_client_s_dn_legacy;
             uwsgi_param HTTP_X_SSL_CLIENT_I_DN $ssl_client_i_dn;
             uwsgi_param HTTP_X_SSL_CLIENT_I_DN_LEGACY $ssl_client_i_dn_legacy;
+            uwsgi_param HTTP_X_REQUEST_ID $request_id;
         }
     }
+  nginx-json-log-config: |-
+    log_format json escape=json
+      '{'
+        '"timestamp":"$time_iso8601",'
+        '"msec":"$msec",'
+        '"request_id":"$request_id",'
+        '"remote_addr":"$remote_addr",'
+        '"remote_user":"$remote_user",'
+        '"request":"$request",'
+        '"status":$status,'
+        '"body_bytes_sent":$body_bytes_sent,'
+        '"referer":"$http_referer",'
+        '"user_agent":"$http_user_agent",'
+        '"http_x_forwarded_for":"$http_x_forwarded_for"'
+      '}';

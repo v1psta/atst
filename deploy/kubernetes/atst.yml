@@ -28,7 +28,7 @@ spec:
         fsGroup: 101
       containers:
         - name: atst
-          image: registry.atat.codes:443/atst-prod:50f0843c
+          image: registry.atat.codes:443/atst-prod:4d50a80e
           resources:
             requests:
                memory: "2500Mi"
@@ -63,6 +63,9 @@ spec:
             - name: nginx-config
               mountPath: "/etc/nginx/conf.d/atst.conf"
               subPath: atst.conf
+            - name: nginx-config
+              mountPath: "/etc/nginx/conf.d/00json_log.conf"
+              subPath: 00json_log.conf
             - name: nginx-dhparam
               mountPath: "/etc/ssl/dhparam.pem"
               subPath: dhparam.pem
@@ -104,6 +107,8 @@ spec:
             items:
             - key: nginx-config
               path: atst.conf
+            - key: nginx-json-log-config
+              path: 00json_log.conf
         - name: nginx-dhparam
           secret:
             secretName: dhparam-4096
@@ -153,7 +158,7 @@ spec:
         fsGroup: 101
       containers:
         - name: atst-worker
-          image: registry.atat.codes:443/atst-prod:50f0843c
+          image: registry.atat.codes:443/atst-prod:4d50a80e
           args: ["/bin/bash", "-c", "/opt/atat/atst/script/rq_worker"]
           resources:
             requests:
