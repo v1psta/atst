@@ -55,15 +55,15 @@ forms:
     phone_ext_mao_label: Extension (optional)
     phone_mao_label: Mission Owner phone number (optional)
   ko_review:
-    start_date_label: Period of Performance Start Date
-    end_date_label: Period of Performance End Date
+    start_date_label: Period of performance start date
+    end_date_label: Period of performance end date
     invalid_date: Must be a date in the future.
     pdf_label: Upload a copy of your task order document
-    pdf_description: Upload a PDF of the task order that you entered in your organization's system of record.
-    to_number: Task Order Number
-    loa: Line of Accounting (LOA) #1
-    custom_clauses_label: Task Order Custom Clauses (optional)
-    custom_clauses_description: This will put a pause on the CSP access once the KO signs until the CCPO reviews that language to make sure it is legal.
+    pdf_description: Upload a PDF or screenshot of the task order that you entered in your organization's system of record.
+    to_number: Task order number
+    loa: Line of accounting (LOA) #1
+    custom_clauses_label: Task order custom clauses (optional)
+    custom_clauses_description: CCPO will need to review this. Once it has been approved, CSP access will be granted.
   edit_member:
     portfolio_role_label: Portfolio Role
   edit_user:
@@ -73,9 +73,9 @@ forms:
       <a class="icon-link" href="https://iatraining.disa.mil/eta/disa_cac2018/launchPage.htm" target="_blank">
         Information Assurance Cyber Awareness Challange
       </a> website.
-    date_latest_training_label: Latest Information Assurance (IA) Training Completion Date
+    date_latest_training_label: Latest information assurance (IA) training completion date
     designation_description: What is your designation within the DoD?
-    designation_label: Designation of Person
+    designation_label: Designation of person
     email_description: Enter your preferred contact email address
     email_label: Email Address
     first_name_label: First Name
@@ -103,7 +103,7 @@ forms:
     email_co_label: KO Email
     email_cor_label: COR Email
     expiration_date_description: Please enter the expiration date for the task order
-    expiration_date_label: Task Order Expiration Date
+    expiration_date_label: Task order expiration date
     fname_co_label: KO First Name
     fname_cor_label: COR First Name
     funding_type_description: What is the source of funding?
@@ -295,7 +295,7 @@ navigation:
     named_portfolio: 'Portfolio {portfolio}'
     no_other_active_portfolios: You have no other active JEDI portfolios.
     other_active_portfolios: Other Active Portfolios
-    request_portfolio_link_text: Request a new JEDI Portfolio
+    request_portfolio_link_text: Request a new JEDI portfolio
   portfolio_navigation:
     add_new_member_label: Add New Member
     add_new_application_label: Add New Application
@@ -432,13 +432,13 @@ task_orders:
       section_title: Review Your Task Order
       app_info: What you're building
       portfolio: Portfolio
-      dod: DoD Component
-      scope: Scope (Statement of Work)
+      dod: DoD component
+      scope: Scope (statement of work)
       reporting: Reporting
-      complexity: Project Complexity
-      team: Development Team
+      complexity: Project complexity
+      team: Development team
       funding: Funding
-      performance_period: Period of Performance length
+      performance_period: Period of performance length
       usage_est_link: View Usage Estimate
       to_value: Task Order Value
       clin_1: 'CLIN #1: Unclassified Cloud'
@@ -452,8 +452,8 @@ task_orders:
       so: Security Officer
       dod_id: 'DoD ID:'
       invited: Invited
-      not_invited: Not Yet Invited
-      not_uploaded: Not Uploaded
+      not_invited: Not yet invited
+      not_uploaded: Not uploaded
   invitations:
     dod_id_label: DoD ID
     contracting_officer:
@@ -472,7 +472,7 @@ task_orders:
       add_button_text: Add / Invite Security Officer
       invite_button_text: Invite Security Officer
   ko_review:
-    alert_title: Verify Your Info
+    alert_title: Verify Your Information
     title: Task Order Builder
     submitted_by: Below is an overview of the projected portfolio submitted by {name}
     task_order_information: Task Order Information

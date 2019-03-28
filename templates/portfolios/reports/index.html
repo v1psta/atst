@@ -18,7 +18,7 @@
     <div class='funding-summary-row__col'>
       <div class='panel spend-summary'>
         <div class='row'>
-          <h2 class='spend-summary__heading col'>Portfolio Total Spend</h2>
+          <h2 class='spend-summary__heading col'>Portfolio total spend</h2>
           <dl class='spend-summary__budget'>
             {% set budget = portfolio_totals['budget'] %}
             {% set spent = portfolio_totals['spent'] %}
@@ -95,7 +95,7 @@
         </div>
 
         <dl class='to-summary__co'>
-          <dt>Contracting Officer</dt>
+          <dt>Contracting officer</dt>
           <dd>
             {{ jedi_request.contracting_officer_full_name }}
             <a class='icon-link' href='mailto:{{ jedi_request.contracting_officer_email }}'>{{ jedi_request.contracting_officer_email }}</a>
@@ -140,17 +140,17 @@
 
       <div class='budget-chart panel' ref='panel'>
         <header class='budget-chart__header panel__heading panel__heading--tight'>
-          <h2 class='h3'>Cumulative Budget</h2>
+          <h2 class='h3'>Cumulative budget</h2>
 
           <div class='budget-chart__legend'>
             <dl class='budget-chart__legend__spend'>
               <div>
-                <dt>Monthly Spend</dt>
+                <dt>Monthly spend</dt>
                 <dd class='budget-chart__legend__dot monthly'><span class='usa-sr-only'>Monthly spend visual key</span></dd>
               </div>
 
               <div>
-                <dt>Accumulated Spend</dt>
+                <dt>Accumulated spend</dt>
                 <dd class='budget-chart__legend__dot accumulated'><span class='usa-sr-only'>Accumulated spend visual key</span></dd>
               </div>
             </dl>
@@ -210,11 +210,11 @@
                 <span v-html='month.date.month + " " + month.date.year'></span>&nbsp;|&nbsp;<!--
                 --><template v-if='month.cumulativeTotal'><!--
                   --><template v-if='month.budget && month.budget.spend'>Spend:</template><!--
-                  --><template v-else>Projected Spend:</template><!--
+                  --><template v-else>Projected spend:</template><!--
                   --><span v-html='month.spendAmount'></span><!--
                   -->&nbsp;|&nbsp;<!--
                   --><template v-if='month.budget'>Total:</template><!--
-                  --><template v-else>Projected Total:</template><!--
+                  --><template v-else>Projected total:</template><!--
                   --><span v-html='month.cumulativeAmount'></span><!--
                 --></template><!--
 
