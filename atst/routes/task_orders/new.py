@@ -265,7 +265,7 @@ def is_new_task_order(*_args, **kwargs):
 @task_orders_bp.route("/portfolios/<portfolio_id>/task_orders/new/<int:screen>")
 @user_can(
     Permissions.CREATE_TASK_ORDER,
-    exception=is_new_task_order,
+    override=is_new_task_order,
     message="view new task order form",
 )
 def new(screen, task_order_id=None, portfolio_id=None):
@@ -316,7 +316,7 @@ def new(screen, task_order_id=None, portfolio_id=None):
 )
 @user_can(
     Permissions.CREATE_TASK_ORDER,
-    exception=is_new_task_order,
+    override=is_new_task_order,
     message="update task order",
 )
 def update(screen, task_order_id=None, portfolio_id=None):

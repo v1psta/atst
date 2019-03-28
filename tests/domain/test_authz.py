@@ -136,10 +136,9 @@ def test_user_can_access_decorator(set_current_user):
         _edit_portfolio_name(portfolio_id=portfolio.id)
 
 
-def test_user_can_access_decorator_exceptions(set_current_user):
+def test_user_can_access_decorator_override(set_current_user):
     rando_calrissian = UserFactory.create()
     darth_vader = UserFactory.create()
-    portfolio = PortfolioFactory.create()
 
     def _can_fly_the_millenium_falcon(u, *args, **kwargs):
         if u == rando_calrissian:
@@ -148,7 +147,7 @@ def test_user_can_access_decorator_exceptions(set_current_user):
             raise UnauthorizedError(u, "is not rando")
 
     @user_can_access_decorator(
-        Permissions.EDIT_PORTFOLIO_NAME, exception=_can_fly_the_millenium_falcon
+        Permissions.EDIT_PORTFOLIO_NAME, override=_can_fly_the_millenium_falcon
     )
     def _cloud_city(*args, **kwargs):
         return True

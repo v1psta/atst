@@ -29,7 +29,7 @@ def wrap_check_is_ko(user, task_order_id=None, **_kwargs):
 
 @task_orders_bp.route("/task_orders/<task_order_id>/digital_signature", methods=["GET"])
 @user_can(
-    None, exception=wrap_check_is_ko, message="view contracting officer signature page"
+    None, override=wrap_check_is_ko, message="view contracting officer signature page"
 )
 def signature_requested(task_order_id):
     task_order = find_unsigned_ko_to(task_order_id)
@@ -46,7 +46,7 @@ def signature_requested(task_order_id):
     "/task_orders/<task_order_id>/digital_signature", methods=["POST"]
 )
 @user_can(
-    None, exception=wrap_check_is_ko, message="submit contracting officer signature"
+    None, override=wrap_check_is_ko, message="submit contracting officer signature"
 )
 def record_signature(task_order_id):
     task_order = find_unsigned_ko_to(task_order_id)
