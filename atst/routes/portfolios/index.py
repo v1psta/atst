@@ -34,6 +34,7 @@ def permission_str(member, edit_perm_set, view_perm_set):
 def serialize_member_form_data(member):
     return {
         "member": member.user.full_name,
+        "user_id": member.user_id,
         "perms_app_mgmt": permission_str(
             member,
             PermissionSets.EDIT_PORTFOLIO_APPLICATION_MANAGEMENT,
@@ -83,6 +84,16 @@ def render_admin_page(portfolio, form=None):
 @user_can(Permissions.VIEW_PORTFOLIO_ADMIN, message="view portfolio admin page")
 def portfolio_admin(portfolio_id):
     portfolio = Portfolios.get_for_update(portfolio_id)
+    return render_admin_page(portfolio)
+
+
+@portfolios_bp.route("/portfolios/<portfolio_id>/admin", methods=["POST"])
+@user_can(Permissions.EDIT_PORTFOLIO_USERS, message="view portfolio admin page")
+def edit_portfolio_members(portfolio_id):
+    portfolio = Portfolios.get_for_update(portfolio_id)
+    member_perms_form = MembersPermissionsForm(
+        http_request.form
+    )
     return render_admin_page(portfolio)
 
 

@@ -6,13 +6,14 @@
     {% if g.matchesPath("portfolio-members") %}
       {% include "fragments/flash.html" %}
     {% endif %}
-    <form method='POST' id="member-perms" autocomplete="off" enctype="multipart/form-data">
-      <div class='member-list-header'>
-        <div class='left'>
-          <div class='h3'>{{ "portfolios.admin.portfolio_members_title" | translate }}</div>
-          <div class='subheading'>
-            {{ "portfolios.admin.portfolio_members_subheading" | translate }}
-          </div>
+    <form method='POST' action='{{ url_for("portfolios.edit_portfolio_members", portfolio_id=portfolio.id) }}' autocomplete="off">
+    {{ member_perms_form.csrf_token }}
+
+    <div class='member-list-header'>
+      <div class='left'>
+        <div class='h3'>{{ "portfolios.admin.portfolio_members_title" | translate }}</div>
+        <div class='subheading'>
+          {{ "portfolios.admin.portfolio_members_subheading" | translate }}
         </div>
         <a class='icon-link'>
           {{ Icon('info') }}
