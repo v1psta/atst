@@ -24,6 +24,7 @@ defusedxml = "*"
 "flask-rq2" = "*"
 simplejson = "*"
 asn1crypto = "*"
+werkzeug = "~= 0.14.1"
 
 [dev-packages]
 bandit = "*"
