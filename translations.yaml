@@ -147,7 +147,7 @@ forms:
     dollar_value_label: Total Spend
     email_poc_label: Email Address
     engineering_assessment_description: Have you completed an engineering assessment of your systems for cloud readiness?
-    estimated_monthly_spend_description: 'Use the <a href="/jedi-csp-calculator" target="_blank" class="icon-link">JEDI CSP Calculator</a> to estimate your <b>monthly</b> cloud resource usage and enter the dollar amount below. Note these estimates are for initial approval only. After the request is approved, you will be asked to provide a valid Task Order number with specific CLIN amounts for cloud services.'
+    estimated_monthly_spend_description: 'Use the <a href="/jedi-csp-calculator" target="_blank" class="icon-link">JEDI CSP Calculator</a> to estimate your <b>monthly</b> cloud resource usage and enter the dollar amount below. Note these estimates are for initial approval only. After the request is approved, you will be asked to provide a valid task order number with specific CLIN amounts for cloud services.'
     estimated_monthly_spend_label: Estimated Monthly Spend
     expected_completion_date_description: When do you expect to complete your migration to the JEDI Cloud?
     fname_poc_label: First Name
@@ -277,8 +277,8 @@ fragments:
   ko_review_alert:
     make_sure: Make sure to take a moment to
     bullet_1: Verify that all information is accurate and up-to-date
-    bullet_2: Upload your Task Order (TO) document
-    bullet_3: Add both the Task Order (TO) and Lines of Accounting (LOA)
+    bullet_2: Upload your task order (TO) document
+    bullet_3: Add both the task order (TO) and lines of accounting (LOA)
 login:
   ccpo_logo_alt_text: Cloud Computing Program Office Logo
   certificate_selection:
@@ -380,7 +380,7 @@ requests:
     average_daily_traffic_tooltip: Requests are the client-to-server network traffic that is being transferred to your systems
     cloud_native_tooltip: 'Cloud native is architecting and designing your application to use all the benefits of the commercial cloud. Specifically, designing applications so that they are decoupled from a physical resource.'
     cloud_readiness_title_text: Cloud Readiness
-    dollar_value_tooltip: You may specify a different Total Spend amount to cover other JEDI Cloud services that the JEDI Cloud cost calculator was not able to estimate. Examples may include support packages from the cloud service provider.
+    dollar_value_tooltip: You may specify a different total spend amount to cover other JEDI Cloud services that the JEDI Cloud cost calculator was not able to estimate. Examples may include support packages from the cloud service provider.
     engineering_assessment_tooltip: An engineering assessment is an evaluation to convert your application architecture from on-premises to using the commercial cloud
     estimated_monthly_spend_tooltip: Refer to financial verification step help docs
     financial_usage_title: Financial Usage
@@ -410,8 +410,8 @@ task_orders:
       performance_period_description: Choose the length of time your task order will cover.
       performance_period_paragraph: Because your funds will be lost if you don’t use them, we strongly recommend submitting small, short-duration task orders, usually a three month period. We’ll notify you when your period of performance is nearing the end so you can request your next set of funds with a new task order.
       estimate_usage_title: Estimate Your Cloud Usage
-      estimate_usage_description: Calculate how much your cloud usage will cost. A technical representative from your team should help you complete this calculation. These calculations will become your CLINs.
-      estimate_usage_paragraph: This is only an estimation tool to help you make an informed evaluation of what you expect to use. While you're tied to the dollar amount you specify in your task order, you're not obligated by the resources you indicate in the calculator.
+      estimate_usage_description: Work with a technical representative on your team to calculate how much your cloud usage will cost. These calculations will become your contract line item numbers (CLINs).
+      estimate_usage_paragraph: The total value of a task order cannot be changed once submitted. However, any amounts entered within this calculator won’t have an effect on funding.
       cloud_calculations_title: Cloud Usage Calculations
       cloud_calculations_paragraph: Enter the results of your cloud usage calculations.
       cloud_offerings_title: Cloud Offerings
@@ -422,15 +422,15 @@ task_orders:
     oversight:
       section_title: Oversight
       ko_info_title: Contracting Officer (KO) Information
-      ko_info_paragraph: Your KO will need to approve funding for this Task Order by logging into the JEDI Cloud Portal, submitting the Task Order documents within their official system of record, and electronically signing. You might want to work with your program Financial Manager to get your TO documents moving in the right dirction.
+      ko_info_paragraph: Your KO will provide final approval for the requested funds. Once you invite them to the task order, they will be able to access necessary documents, submit these within their official system of record, and then finally return to the task order to provide their digital signature.
       skip_ko_label: "Skip for now (We'll remind you to enter one later)"
       cor_info_title: Contracting Officer Representative (COR) Information
-      cor_info_paragraph: Your COR may assist in submitting the Task Order documents within their official system of record. They may also be invited to log in and manage the Task Order entry within the JEDI Cloud portal.
+      cor_info_paragraph: Your COR can assist in submitting the task order documents within their official system of record. Once you invite them to the task order, they will be able to log in and manage this request.
       so_info_title: Security Officer Information
-      so_info_paragraph: Your Security Officer will need to answer some security configuration questions in order to generate a DD-254 document, then electronically sign.
+      so_info_paragraph: Your Security Officer will answer some security configuration questions in order to generate a Security Requirements Document (DD-254) for this task order. Once this has been generated, they will sign and submit within their system of record.
     review:
-      section_title: Review Your Task Order Info
-      app_info: What are you building
+      section_title: Review Your Task Order
+      app_info: What you're building
       portfolio: Portfolio
       dod: DoD Component
       scope: Scope (Statement of Work)
@@ -449,7 +449,7 @@ task_orders:
       oversight: Oversight
       ko: Contracting Officer (KO)
       cor: Contracting Officer Representative (COR)
-      so: IA Security Officer
+      so: Security Officer
       dod_id: 'DoD ID:'
       invited: Invited
       not_invited: Not Yet Invited
