@@ -1,3 +1,5 @@
+from unittest.mock import Mock
+
 import pytest
 
 from flask import url_for, Response
@@ -5,7 +7,6 @@ from flask import url_for, Response
 import atst
 from atst.app import make_app, make_config
 from atst.domain.auth import UNPROTECTED_ROUTES as _NO_LOGIN_REQUIRED
-import atst.domain.authz as authz
 from atst.domain.permission_sets import PermissionSets
 from atst.models.portfolio_role import Status as PortfolioRoleStatus
 
@@ -54,21 +55,6 @@ sample_app = make_app(sample_config)
 _PROTECTED_ROUTES = protected_routes(sample_app)
 
 
-class Null:
-    """
-    Very simple null object. Will return itself for all attribute
-    calls:
-    > foo = Null()
-    > foo.bar.baz == foo
-    """
-
-    def __init__(self, *args, **kwargs):
-        pass
-
-    def __getattr__(self, name):
-        return self
-
-
 @pytest.mark.access_check
 @pytest.mark.parametrize("rule,route", _PROTECTED_ROUTES)
 def test_all_protected_routes_have_access_control(
@@ -82,7 +68,7 @@ def test_all_protected_routes_have_access_control(
     # monkeypatch any object lookups that might happen in the access decorator
     monkeypatch.setattr("atst.domain.portfolios.Portfolios.for_user", lambda *a: [])
     monkeypatch.setattr("atst.domain.portfolios.Portfolios.get", lambda *a: None)
-    monkeypatch.setattr("atst.domain.task_orders.TaskOrders.get", lambda *a: Null())
+    monkeypatch.setattr("atst.domain.task_orders.TaskOrders.get", lambda *a: Mock())
 
     # patch the internal function the access decorator uses so that
     # we can check that it was called
