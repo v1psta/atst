@@ -99,7 +99,7 @@ def wrap_check_is_ko_or_cor(user, task_order_id=None, **_kwargs):
 @portfolios_bp.route("/portfolios/<portfolio_id>/task_order/<task_order_id>/review")
 @user_can(
     None,
-    exception=wrap_check_is_ko_or_cor,
+    override=wrap_check_is_ko_or_cor,
     message="view contracting officer review form",
 )
 def ko_review(portfolio_id, task_order_id):
@@ -182,7 +182,7 @@ def resend_invite(portfolio_id, task_order_id):
     "/portfolios/<portfolio_id>/task_order/<task_order_id>/review", methods=["POST"]
 )
 @user_can(
-    None, exception=wrap_check_is_ko_or_cor, message="submit contracting officer review"
+    None, override=wrap_check_is_ko_or_cor, message="submit contracting officer review"
 )
 def submit_ko_review(portfolio_id, task_order_id, form=None):
     task_order = TaskOrders.get(task_order_id)
@@ -296,7 +296,7 @@ def wrap_check_is_so(user, task_order_id=None, **_kwargs):
 
 
 @portfolios_bp.route("/portfolios/<portfolio_id>/task_order/<task_order_id>/dd254")
-@user_can(None, exception=wrap_check_is_so, message="view security officer review form")
+@user_can(None, override=wrap_check_is_so, message="view security officer review form")
 def so_review(portfolio_id, task_order_id):
     task_order = TaskOrders.get(task_order_id)
     form = so_review_form(task_order)
@@ -313,7 +313,7 @@ def so_review(portfolio_id, task_order_id):
     "/portfolios/<portfolio_id>/task_order/<task_order_id>/dd254", methods=["POST"]
 )
 @user_can(
-    None, exception=wrap_check_is_so, message="submit security officer review form"
+    None, override=wrap_check_is_so, message="submit security officer review form"
 )
 def submit_so_review(portfolio_id, task_order_id):
     task_order = TaskOrders.get(task_order_id)

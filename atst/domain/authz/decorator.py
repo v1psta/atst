@@ -10,7 +10,7 @@ from atst.domain.invitations import Invitations
 from atst.domain.exceptions import UnauthorizedError
 
 
-def check_access(permission, message, exception, *args, **kwargs):
+def check_access(permission, message, override, *args, **kwargs):
     access_args = {"message": message}
 
     if "application_id" in kwargs:
@@ -30,7 +30,7 @@ def check_access(permission, message, exception, *args, **kwargs):
             g.current_user, kwargs["portfolio_id"]
         )
 
-    if exception is not None and exception(g.current_user, **access_args, **kwargs):
+    if override is not None and override(g.current_user, **access_args, **kwargs):
         return True
 
     user_can_access(g.current_user, permission, **access_args)
@@ -38,12 +38,12 @@ def check_access(permission, message, exception, *args, **kwargs):
     return True
 
 
-def user_can_access_decorator(permission, message=None, exception=None):
+def user_can_access_decorator(permission, message=None, override=None):
     def decorator(f):
         @wraps(f)
         def decorated_function(*args, **kwargs):
             try:
-                check_access(permission, message, exception, *args, **kwargs)
+                check_access(permission, message, override, *args, **kwargs)
                 app.logger.info(
                     "[access] User {} accessed {} {}".format(
                         g.current_user.id, request.method, request.path
