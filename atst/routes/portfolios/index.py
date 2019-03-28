@@ -2,6 +2,8 @@ from datetime import date, timedelta
 
 from flask import render_template, request as http_request, g, redirect, url_for
 
+from atst.utils.flash import formatted_flash as flash
+
 from . import portfolios_bp
 from atst.domain.reports import Reports
 from atst.domain.portfolios import Portfolios
@@ -92,7 +94,7 @@ def portfolio_admin(portfolio_id):
 @user_can(Permissions.EDIT_PORTFOLIO_USERS, message="view portfolio admin page")
 def edit_portfolio_members(portfolio_id):
     portfolio = Portfolios.get_for_update(portfolio_id)
-    member_perms_form = MembersPermissionsForm(http_request.form)
+    member_perms_form = member_forms.MembersPermissionsForm(http_request.form)
 
     for subform in member_perms_form.members_permissions:
         new_perm_set = subform.data["permission_sets"]
@@ -100,6 +102,17 @@ def edit_portfolio_members(portfolio_id):
         portfolio_role = PortfolioRoles.get(portfolio.id, user_id)
         if portfolio_role.permission_sets != new_perm_set:
             PortfolioRoles.update(portfolio_role, new_perm_set)
+
+    flash("update_portfolio_members", portfolio=portfolio)
+
+    return redirect(
+        url_for(
+            "portfolios.portfolio_admin",
+            portfolio_id=portfolio.id,
+            fragment="portfolio-members",
+            _anchor="portfolio-members",
+        )
+    )
 
     return render_admin_page(portfolio)
 
