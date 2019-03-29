@@ -3,7 +3,7 @@
 
 <section class="member-list" id="portfolio-members">
   <div class='responsive-table-wrapper panel'>
-    {% if g.matchesPath("portfolio-members") and has_changed %}
+    {% if g.matchesPath("portfolio-members") %}
       {% include "fragments/flash.html" %}
     {% endif %}
     <form method='POST' id="member-perms" action='{{ url_for("portfolios.edit_portfolio_members", portfolio_id=portfolio.id) }}' autocomplete="off" enctype="multipart/form-data">

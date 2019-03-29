@@ -109,17 +109,19 @@ def permission_set_has_changed(old_perm_set_names, new_perm_set_names):
 def edit_portfolio_members(portfolio_id):
     portfolio = Portfolios.get_for_update(portfolio_id)
     member_perms_form = member_forms.MembersPermissionsForm(http_request.form)
-    has_changed = False
+    have_any_perms_changed = False
 
     for subform in member_perms_form.members_permissions:
         new_perm_set = subform.data["permission_sets"]
         user_id = subform.user_id.data
         portfolio_role = PortfolioRoles.get(portfolio.id, user_id)
-        if portfolio_role.permission_sets != new_perm_set:
-            PortfolioRoles.update(portfolio_role, new_perm_set)
-            has_changed = True
+        old_perm_set = [perm.name for perm in portfolio_role.permission_sets]
 
-    if has_changed:
+        if permission_set_has_changed(old_perm_set, new_perm_set):
+            PortfolioRoles.update(portfolio_role, new_perm_set)
+            have_any_perms_changed = True
+
+    if have_any_perms_changed:
         flash("update_portfolio_members", portfolio=portfolio)
 
     return redirect(
@@ -128,7 +130,6 @@ def edit_portfolio_members(portfolio_id):
             portfolio_id=portfolio.id,
             fragment="portfolio-members",
             _anchor="portfolio-members",
-            has_changed=has_changed,
         )
     )
 
