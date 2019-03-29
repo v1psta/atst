@@ -95,6 +95,7 @@ def portfolio_admin(portfolio_id):
 def edit_portfolio_members(portfolio_id):
     portfolio = Portfolios.get_for_update(portfolio_id)
     member_perms_form = member_forms.MembersPermissionsForm(http_request.form)
+    has_changed = False
 
     for subform in member_perms_form.members_permissions:
         new_perm_set = subform.data["permission_sets"]
@@ -102,8 +103,10 @@ def edit_portfolio_members(portfolio_id):
         portfolio_role = PortfolioRoles.get(portfolio.id, user_id)
         if portfolio_role.permission_sets != new_perm_set:
             PortfolioRoles.update(portfolio_role, new_perm_set)
+            has_changed = True
 
-    flash("update_portfolio_members", portfolio=portfolio)
+    if has_changed:
+        flash("update_portfolio_members", portfolio=portfolio)
 
     return redirect(
         url_for(
@@ -111,6 +114,7 @@ def edit_portfolio_members(portfolio_id):
             portfolio_id=portfolio.id,
             fragment="portfolio-members",
             _anchor="portfolio-members",
+            has_changed=has_changed,
         )
     )
 
