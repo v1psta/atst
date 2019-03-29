@@ -76,7 +76,7 @@
                 {{ "portfolios.members.archive_button" | translate }}
               </button>
             </form>
-            <a v-on:click="closeModal('{{ modal_id }}')">Cancel</a>
+            <a v-on:click="closeModal('{{ modal_id }}')" class="action-group__action icon-link icon-link--default">Cancel</a>
           </div>
         {% endcall %}
       {% endfor %}
