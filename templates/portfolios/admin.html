@@ -3,12 +3,11 @@
 {% from "components/pagination.html" import Pagination %}
 {% from "components/icon.html" import Icon %}
 {% from "components/text_input.html" import TextInput %}
+{% from "components/multi_step_modal_form.html" import MultiStepModalForm %}
 
 {% set secondary_breadcrumb = "navigation.portfolio_navigation.portfolio_admin" | translate %}
 
 {% block portfolio_content %}
-
-  {% include "fragments/flash.html" %}
 
   <div v-cloak class="portfolio-admin portfolio-content">
 

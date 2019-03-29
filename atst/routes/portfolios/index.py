@@ -8,7 +8,7 @@ from atst.domain.portfolios import Portfolios
 from atst.domain.audit_log import AuditLog
 from atst.domain.common import Paginator
 from atst.forms.portfolio import PortfolioForm
-from atst.forms.portfolio_member import MembersPermissionsForm
+import atst.forms.portfolio_member as member_forms
 from atst.models.permissions import Permissions
 from atst.domain.permission_sets import PermissionSets
 from atst.domain.authz.decorator import user_can_access_decorator as user_can
@@ -63,7 +63,7 @@ def render_admin_page(portfolio, form=None):
     members_data = [serialize_member_form_data(member) for member in portfolio.members]
 
     portfolio_form = PortfolioForm(data={"name": portfolio.name})
-    member_perms_form = MembersPermissionsForm(
+    member_perms_form = member_forms.MembersPermissionsForm(
         data={"members_permissions": members_data}
     )
     return render_template(
@@ -71,6 +71,7 @@ def render_admin_page(portfolio, form=None):
         form=form,
         portfolio_form=portfolio_form,
         member_perms_form=member_perms_form,
+        member_form=member_forms.NewForm(),
         portfolio=portfolio,
         audit_events=audit_events,
         user=g.current_user,

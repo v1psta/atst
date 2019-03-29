@@ -1,65 +1,69 @@
 {% from "components/icon.html" import Icon %}
 {% from "components/options_input.html" import OptionsInput %}
 
-<section class="member-list">
+<section class="member-list" id="portfolio-members">
   <div class='responsive-table-wrapper panel'>
-    <form method='POST' autocomplete="off" enctype="multipart/form-data">
-
-    <div class='member-list-header'>
-      <div class='left'>
-        <div class='h3'>{{ "portfolios.admin.portfolio_members_title" | translate }}</div>
-        <div class='subheading'>
-          {{ "portfolios.admin.portfolio_members_subheading" | translate }}
+    {% if g.matchesPath("portfolio-members") %}
+      {% include "fragments/flash.html" %}
+    {% endif %}
+    <form method='POST' id="member-perms" autocomplete="off" enctype="multipart/form-data">
+      <div class='member-list-header'>
+        <div class='left'>
+          <div class='h3'>{{ "portfolios.admin.portfolio_members_title" | translate }}</div>
+          <div class='subheading'>
+            {{ "portfolios.admin.portfolio_members_subheading" | translate }}
+          </div>
         </div>
-      </div>
-      <a class='icon-link'>
-        <span class='icon'>{{ Icon('info') }}</span>
-        {{ "portfolios.admin.settings_info" | translate }}
-      </a>
-    </div>
-
-  {% if not portfolio.members %}
-
-    <p>There are currently no members in this Portfolio.</p>
-
-  {% else %}
-
-    <table>
-
-      <thead>
-        <tr>
-            <td>{{ "portfolios.members.permissions.name" | translate }}</td>
-            <td>{{ "portfolios.members.permissions.app_mgmt" | translate }}</td>
-            <td>{{ "portfolios.members.permissions.funding" | translate }}</td>
-            <td>{{ "portfolios.members.permissions.reporting" | translate }}</td>
-            <td>{{ "portfolios.members.permissions.portfolio_mgmt" | translate }}</td>
-            <td></td>
-        </tr>
-      </thead>
-
-      <tbody>
-        {% if user_can(permissions.EDIT_PORTFOLIO_USERS) %}
-          {% include "fragments/admin/members_edit.html" %}
-        {% elif user_can(permissions.VIEW_PORTFOLIO_USERS) %}
-          {% include "fragments/admin/members_view.html" %}
-        {% endif %}
-      </tbody>
-
-    </table>
-
-    {% if user_can(permissions.EDIT_PORTFOLIO_USERS) %}
-      <div class="members-table-footer">
         <a class='icon-link'>
-          {{ "portfolios.admin.add_member" | translate }}
-          {{ Icon('plus-circle-solid') }}
+          {{ Icon('info') }}
+          {{ "portfolios.admin.settings_info" | translate }}
         </a>
-        <input type='submit' class='usa-button usa-button-primary' value='{{ "Save" }}' />
       </div>
+
+    {% if not portfolio.members %}
+      <p>There are currently no members in this Portfolio.</p>
+    {% else %}
+      <table>
+
+        <thead>
+          <tr>
+              <td>{{ "portfolios.members.permissions.name" | translate }}</td>
+              <td>{{ "portfolios.members.permissions.app_mgmt" | translate }}</td>
+              <td>{{ "portfolios.members.permissions.funding" | translate }}</td>
+              <td>{{ "portfolios.members.permissions.reporting" | translate }}</td>
+              <td>{{ "portfolios.members.permissions.portfolio_mgmt" | translate }}</td>
+              <td></td>
+          </tr>
+        </thead>
+
+        <tbody>
+          {% if user_can(permissions.EDIT_PORTFOLIO_USERS) %}
+            {% include "fragments/admin/members_edit.html" %}
+          {% elif user_can(permissions.VIEW_PORTFOLIO_USERS) %}
+            {% include "fragments/admin/members_view.html" %}
+          {% endif %}
+        </tbody>
+
+      </table>
+
     {% endif %}
 
     </form>
-  </div>
+    <div class="members-table-footer">
+      <div class="action-group">
+        {% if user_can(permissions.EDIT_PORTFOLIO_USERS) %}
+          <input
+            type='submit'
+            form="member-perms"
+            class='usa-button usa-button-primary'
+            value='Save' />
+        {% endif %}
+        {% if user_can(permissions.CREATE_PORTFOLIO_USERS) %}
+          {% include "fragments/admin/add_new_portfolio_member.html" %}
+        {% endif %}
+      </div>
+    </div>
 
-  {% endif %}
+  </div>
 
 </section>

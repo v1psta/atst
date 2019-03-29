@@ -13,7 +13,8 @@
   disabled=False,
   initial_value='',
   classes='',
-  noMaxWidth=False) -%}
+  noMaxWidth=False,
+  optional=False) -%}
 
   <textinput
     v-cloak
@@ -23,6 +24,7 @@
     {% if noMaxWidth %}no-max-width='true'{% endif %}
     {% if initial_value or field.data is not none %}initial-value='{{ initial_value or field.data }}'{% endif %}
     {% if field.errors %}v-bind:initial-errors='{{ field.errors | list }}'{% endif %}
+    v-bind:optional={{ optional|lower }}
     key='{{ field.name }}'
     inline-template>
 

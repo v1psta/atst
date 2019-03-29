@@ -1,0 +1,51 @@
+{% from "components/modal.html" import Modal %}
+{% from "components/icon.html" import Icon %}
+
+{% set numbers = ['one', 'two', 'three', 'four', 'five'] %}
+
+{% macro FormSteps(step_count, current_step) -%}
+  {% set count = numbers[step_count - 1] %}
+  <div class="progress-menu progress-menu--{{ count }}">
+    <ul>
+      {% for step in range(step_count) %}
+        <li class="progress-menu__item
+        {% if loop.index < current_step %}
+          progress-menu__item--complete
+        {% elif loop.index == current_step %}
+          progress-menu__item--active
+        {% else %}
+          progress-menu__item--incomplete
+        {% endif %}">
+          <a v-on:click="goToStep({{ step }})">
+            Step {{ loop.index }}
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endmacro %}
+
+{% macro MultiStepModalForm(name, form, form_action, steps, button_text="", dismissable=False) -%}
+  {% set step_count = steps|length %}
+  <multi-step-modal-form inline-template :steps={{ step_count }}>
+    <div>
+      <a class='icon-link modal-link' v-on:click="openModal('{{ name }}')">
+        {{ button_text }}
+        {{ Icon('plus-circle-solid') }}
+      </a>
+        {% call Modal(name=name, dismissable=dismissable, classes="wide") %}
+          <form id="{{ name }}" action="{{ form_action }}" method="POST" v-on:submit="handleSubmit">
+            {{ form.csrf_token }}
+            <div v-if="activeModal === '{{ name }}'">
+              {% for step in steps %}
+                <div class="modal__form" v-show="step === {{ loop.index0 }}">
+                  {{ FormSteps(step_count, loop.index) }}
+                  {{ step }}
+                </div>
+              {% endfor %}
+            </div>
+          </form>
+        {% endcall %}
+    </div>
+  </multi-step-modal-form>
+{% endmacro %}

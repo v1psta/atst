@@ -134,6 +134,7 @@ forms:
   new_member:
     dod_id_label: DOD ID
     email_label: Email Address
+    phone_number_label: Phone Number (Optional)
     first_name_label: First Name
     last_name_label: Last Name
     portfolio_role_description: 'The portfolio role controls whether a member is permitted to organize a portfolio into applications and environments, add members to this portfolio, and view billing information.'
@@ -568,7 +569,9 @@ portfolios:
     portfolio_members_subheading: These members have different levels of access to the portfolio.
     settings_info: Learn more about these settings
     add_member: Add a New Member
+    permissions_info: Learn more about these permissions
     activity_log_title: Activity Log
+    add_new_member: Add a New Member
   members:
     archive_button: Archive User
     permissions:
