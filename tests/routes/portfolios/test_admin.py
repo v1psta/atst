@@ -1,6 +1,7 @@
 from flask import url_for
 
 from atst.domain.permission_sets import PermissionSets
+from atst.routes.portfolios.index import permission_set_has_changed
 
 from tests.factories import PortfolioFactory, PortfolioRoleFactory, UserFactory
 
@@ -26,6 +27,32 @@ def test_member_table_access(client, user_session):
     user_session(rando)
     view_resp = client.get(url)
     assert "<select" not in view_resp.data.decode()
+
+
+def test_permission_set_has_changed_with_changes():
+    old_set = [
+        "edit_portfolio_application_management",
+        "view_portfolio_application_management",
+    ]
+    new_set = ["view_portfolio_application_management"]
+    assert permission_set_has_changed(old_set, new_set)
+
+    old_set = ["view_funding"]
+    new_set = ["edit_funding"]
+    assert permission_set_has_changed(old_set, new_set)
+
+
+def test_permission_set_has_changed_without_changes():
+    old_set = [
+        "edit_portfolio_application_management",
+        "view_portfolio_application_management",
+    ]
+    new_set = ["edit_portfolio_application_management"]
+    assert not permission_set_has_changed(old_set, new_set)
+
+    old_set = ["view_funding"]
+    new_set = ["view_funding"]
+    assert not permission_set_has_changed(old_set, new_set)
 
 
 def test_update_member_permissions(client, user_session):

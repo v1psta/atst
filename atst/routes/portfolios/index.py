@@ -90,6 +90,20 @@ def portfolio_admin(portfolio_id):
     return render_admin_page(portfolio)
 
 
+def permission_set_has_changed(old_perm_set_names, new_perm_set_names):
+    has_changed = False
+    for perm_name in new_perm_set_names:
+        base = perm_name[4:]
+        if perm_name.split("_")[0] == "edit":
+            if perm_name not in old_perm_set_names:
+                has_changed = True
+        elif perm_name.split("_")[0] == "view":
+            edit_version = "edit" + base
+            if edit_version in old_perm_set_names:
+                has_changed = True
+    return has_changed
+
+
 @portfolios_bp.route("/portfolios/<portfolio_id>/admin", methods=["POST"])
 @user_can(Permissions.EDIT_PORTFOLIO_USERS, message="view portfolio admin page")
 def edit_portfolio_members(portfolio_id):
