@@ -126,7 +126,7 @@ def test_remove_portfolio_member_self(client, user_session):
         follow_redirects=False,
     )
 
-    assert response.status_code == 500
+    assert response.status_code == 404
     assert (
         PortfolioRoles.get(portfolio_id=portfolio.id, user_id=portfolio.owner.id).status
         == PortfolioRoleStatus.ACTIVE

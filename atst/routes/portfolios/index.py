@@ -16,6 +16,7 @@ from atst.models.permissions import Permissions
 from atst.domain.permission_sets import PermissionSets
 from atst.domain.authz.decorator import user_can_access_decorator as user_can
 from atst.utils.flash import formatted_flash as flash
+from atst.domain.exceptions import UnauthorizedError
 
 
 @portfolios_bp.route("/portfolios")
@@ -184,7 +185,7 @@ def portfolio_reports(portfolio_id):
 def remove_member(portfolio_id, member_id):
     if member_id == str(g.current_user.id):
         raise UnauthorizedError(
-            user=user, message="you cant remove yourself from the portfolio"
+            user=g.current_user, action="you cant remove yourself from the portfolio"
         )
 
     portfolio = Portfolios.get(g.current_user, portfolio_id)
