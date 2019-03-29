@@ -403,7 +403,7 @@ task_orders:
       project_title: About your project
       team_title: About your team
       market_research_title: Market Research
-      market_research_paragraph: 'The JEDI Cloud Computing Program Office (CCPO) has completed the market research requirements for all related task orders. The Department of Defense CIO has approved this research.<br /><a href="#">View JEDI Market Research Memo</a>'
+      market_research_paragraph: 'The JEDI Cloud Computing Program Office (CCPO) has completed the market research requirements for all related task orders. The Department of Defense CIO has approved this research.<br /><a href="#">View JEDI market research memo</a>'
     funding:
       section_title: Funding
       performance_period_title: Period of Performance
@@ -439,7 +439,7 @@ task_orders:
       team: Development team
       funding: Funding
       performance_period: Period of performance length
-      usage_est_link: View Usage Estimate
+      usage_est_link: View usage estimate
       to_value: Task Order Value
       clin_1: 'CLIN #1: Unclassified Cloud'
       clin_2: 'CLIN #2: Classified Cloud'
