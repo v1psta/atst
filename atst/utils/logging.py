@@ -2,10 +2,18 @@ import datetime
 import json
 import logging
 
+from flask import g, request
 
-class ContextFilter(logging.Filter):
-    # this should impart the request_id and user_id if available
-    pass
+
+class RequestContextFilter(logging.Filter):
+    def filter(self, record):
+        if getattr(g, "current_user", None):
+            record.user_id = str(g.current_user.id)
+
+        if request.environ.get("HTTP_X_REQUEST_ID"):
+            record.request_id = request.environ.get("HTTP_X_REQUEST_ID")
+
+        return True
 
 
 def epoch_to_iso8601(ts):
