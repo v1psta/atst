@@ -63,7 +63,7 @@ forms:
     to_number: Task order number
     loa: Line of accounting (LOA) #1
     custom_clauses_label: Task order custom clauses (optional)
-    custom_clauses_description: CCPO will need to review this. Once it has been approved, CSP access will be granted.
+    custom_clauses_description: CCPO will need to review any custom clauses. Once they have been approved, CSP access will be gained.
   edit_member:
     portfolio_role_label: Portfolio Role
   edit_user:
@@ -177,11 +177,11 @@ forms:
   task_order:
     portfolio_name_label: Portfolio Name
     portfolio_name_description: The name of your office or organization. You can add multiple applications to your portfolio. Your task orders are used to fund these applications and their environments.
-    scope_label: Cloud Project Scope
+    scope_label: Cloud project scope
     scope_description: Your team's plan for using the cloud, such as migrating an existing application or creating a prototype.
-    defense_component_label: Department of Defense Component
+    defense_component_label: Department of Defense component
     app_migration:
-      label: App Migration
+      label: App migration
       description: Do you plan to migrate one or more existing application(s) to the cloud?
       on_premise: Yes, migrating from an on-premise data center
       cloud: Yes, migrating from another cloud provider
@@ -189,13 +189,13 @@ forms:
       none: Not planning to migrate any applications
       not_sure: "Not sure"
     native_apps:
-      label: Native Apps
+      label: Native apps
       description: Do you plan to develop application(s) in the cloud?
       'yes': Yes, planning to develop in the cloud
       'no': No, not planning to develop in the cloud
       not_sure: Not sure, unsure if planning to develop in the cloud
     complexity:
-      label: Project Complexity
+      label: Project complexity
       description: Which of these describes how complex your team's use of the cloud will be? Select all that apply.
       storage: Storage
       data_analytics: Data Analytics
@@ -206,7 +206,7 @@ forms:
       other: Other
     complexity_other_label: Project Complexity Other
     dev_team:
-      label: Development Team
+      label: Development team
       description: Who will be developing your cloud application(s)? Select all that apply.
       civilians: Government civilian
       military: Military
@@ -214,7 +214,7 @@ forms:
       other: "Other"
     dev_team_other_label: Development Team Other
     team_experience:
-      label: Team Experience
+      label: Team experience
       description: How much experience does your team have collectively with development in the cloud?
       none: No previous experience
       planned: Researched or planned a cloud build or migration
@@ -223,9 +223,9 @@ forms:
       built_many: Built, migrated, or consulted on more than 5 applications
     performance_length:
       label: Period of performance length
-    start_date_label: Start Date
-    end_date_label: End Date
-    csp_estimate_label: Upload a copy of your CSP Cost Estimate Research
+    start_date_label: Start date
+    end_date_label: End date
+    csp_estimate_label: Upload a copy of your CSP cost estimate research
     csp_estimate_description: Upload a PDF or screenshot of your usage estimate from the calculator.
     file_format_not_allowed: Only PDF or PNG files can be uploaded.
     clin_01_label: 'CLIN 01 : Unclassified'
@@ -253,7 +253,7 @@ forms:
     phone_number_message: Please enter a valid 5 or 10 digit phone number.
     is_required: This field is required.
   portfolio:
-    name_label: Portfolio Name
+    name_label: Portfolio name
     name_length_validation_message: Portfolio names must be at least 4 and not more than 100 characters
 fragments:
   edit_application_form:
@@ -264,7 +264,7 @@ fragments:
     date_last_training_tooltip: When was the last time you completed the Information Assurance (IA) training? <br> IA training is an important step in cyber awareness.
     save_details_button: Save
   pending_ccpo_acceptance_alert:
-    learn_more_link_text: Learn more about the JEDI Cloud task order and the Financial Verification process.
+    learn_more_link_text: Learn more about the JEDI cloud task order and the financial verification process.
     paragraph_1: The CCPO will review and respond to your request in 3 business days. You’ll be notified via email or phone. Please note if your request is for over $1M of JEDI cloud resources it will require a manual review by the CCPO.
     paragraph_2: 'While your request is being reviewed, your next step is to create a task order (TO) associated with the JEDI Cloud. Please contact a Contracting Officer (KO), Contracting Officer Representative (COR), or a Financial Manager to help with this step.'
   pending_ccpo_approval_modal:
@@ -399,7 +399,7 @@ task_orders:
       section_title: "What You're Making"
       basic_info_title: Basic information
       sample_scope: |
-        Not sure how to describe your scope? <a href="#">Read some Sample Scopes</a> to get an idea of what is appropriate.
+        Not sure how to describe your scope? <a href="#">Read some sample scopes</a> to get an idea of what is appropriate.
       project_title: About your project
       team_title: About your team
       market_research_title: Market Research
@@ -414,11 +414,11 @@ task_orders:
       estimate_usage_paragraph: The total value of a task order cannot be changed once submitted. However, any amounts entered within this calculator won’t have an effect on funding.
       cloud_calculations_title: Cloud Usage Calculations
       cloud_calculations_paragraph: Enter the results of your cloud usage calculations.
-      cloud_offerings_title: Cloud Offerings
+      cloud_offerings_title: Cloud offerings
       cloud_offerings_paragraph: Infrastructure as a Service (IaaS) and Platform as a Service (PaaS) offerings
-      support_assistance_title: Cloud Support and Assistance
+      support_assistance_title: Cloud support and assistance
       support_assistance_paragraph: Technical guidance from the cloud service provider, including architecture, configuration of IaaS and PaaS, integration, troubleshooting assistance, and other services.
-      total: 'Total Task Order Value:'
+      total: 'Total task order value:'
     oversight:
       section_title: Oversight
       ko_info_title: Contracting Officer (KO) Information
