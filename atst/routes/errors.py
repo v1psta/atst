@@ -15,7 +15,7 @@ from atst.utils.flash import formatted_flash as flash
 
 def log_error(e):
     error_message = e.message if hasattr(e, "message") else str(e)
-    current_app.logger.error(error_message)
+    current_app.logger.exception(error_message)
 
 
 def handle_error(e, message="Not Found", code=404):

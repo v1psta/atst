@@ -45,17 +45,19 @@ def user_can_access_decorator(permission, message=None, override=None):
             try:
                 check_access(permission, message, override, *args, **kwargs)
                 app.logger.info(
-                    "[access] User {} accessed {} {}".format(
+                    "User {} accessed {} {}".format(
                         g.current_user.id, request.method, request.path
-                    )
+                    ),
+                    extra={"tags": ["access", "success"]},
                 )
 
                 return f(*args, **kwargs)
             except UnauthorizedError as err:
                 app.logger.warning(
-                    "[access] User {} denied access {} {}".format(
+                    "User {} denied access {} {}".format(
                         g.current_user.id, request.method, request.path
-                    )
+                    ),
+                    extra={"tags": ["access", "failure"]},
                 )
 
                 raise (err)
