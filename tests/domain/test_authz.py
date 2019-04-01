@@ -76,7 +76,7 @@ def test_user_can_access():
 
     portfolio = PortfolioFactory.create(owner=edit_admin)
     # factory gives view perms by default
-    PortfolioRoleFactory.create(user=view_admin, portfolio=portfolio)
+    view_admin_pr = PortfolioRoleFactory.create(user=view_admin, portfolio=portfolio)
 
     # check a site-wide permission
     assert user_can_access(ccpo, Permissions.VIEW_AUDIT_LOG)
@@ -103,7 +103,6 @@ def test_user_can_access():
         )
 
     # check when portfolio_role is disabled
-    view_admin_pr = PortfolioRoles.get(portfolio_id=portfolio.id, user_id=view_admin.id)
     PortfolioRoles.disable(portfolio_role=view_admin_pr)
     with pytest.raises(UnauthorizedError):
         user_can_access(
