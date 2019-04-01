@@ -33,7 +33,7 @@ def test_update_portfolio_name(client, user_session):
 def updating_ppoc_successfully(client, old_ppoc, new_ppoc, portfolio):
     response = client.post(
         url_for("portfolios.update_ppoc", portfolio_id=portfolio.id, _external=True),
-        data={"dod_id": new_ppoc.dod_id},
+        data={"user_id": new_ppoc.id},
         follow_redirects=False,
     )
 
@@ -58,15 +58,40 @@ def updating_ppoc_successfully(client, old_ppoc, new_ppoc, portfolio):
     #
 
 
+def test_update_ppoc_to_member_not_on_portfolio(client, user_session):
+    portfolio = PortfolioFactory.create()
+    original_ppoc = portfolio.owner
+    non_portfolio_member = UserFactory.create()
+
+    user_session(original_ppoc)
+
+    response = client.post(
+        url_for("portfolios.update_ppoc", portfolio_id=portfolio.id, _external=True),
+        data={"user_id": non_portfolio_member.id},
+        follow_redirects=False,
+    )
+
+    assert response.status_code == 404
+    assert portfolio.owner.id == original_ppoc.id
+
+
 def test_update_ppoc_when_ppoc(client, user_session):
     portfolio = PortfolioFactory.create()
     original_ppoc = portfolio.owner
-    new_ppoc = UserFactory.create()
+    portfolio_member = UserFactory.create()
+    Portfolios.add_member(
+        member=portfolio_member,
+        portfolio=portfolio,
+        permission_sets=[PermissionSets.PORTFOLIO_POC],
+    )
 
     user_session(original_ppoc)
 
     updating_ppoc_successfully(
-        client=client, new_ppoc=new_ppoc, old_ppoc=original_ppoc, portfolio=portfolio
+        client=client,
+        new_ppoc=portfolio_member,
+        old_ppoc=original_ppoc,
+        portfolio=portfolio,
     )
 
 
@@ -74,12 +99,20 @@ def test_update_ppoc_when_cpo(client, user_session):
     ccpo = UserFactory.create_ccpo()
     portfolio = PortfolioFactory.create()
     original_ppoc = portfolio.owner
-    new_ppoc = UserFactory.create()
+    portfolio_member = UserFactory.create()
+    Portfolios.add_member(
+        member=portfolio_member,
+        portfolio=portfolio,
+        permission_sets=[PermissionSets.PORTFOLIO_POC],
+    )
 
     user_session(ccpo)
 
     updating_ppoc_successfully(
-        client=client, new_ppoc=new_ppoc, old_ppoc=original_ppoc, portfolio=portfolio
+        client=client,
+        new_ppoc=portfolio_member,
+        old_ppoc=original_ppoc,
+        portfolio=portfolio,
     )
 
 

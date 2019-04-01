@@ -1,0 +1,82 @@
+{% from "components/icon.html" import Icon %}
+{% from "components/selector.html" import Selector %}
+{% from "components/text_input.html" import TextInput %}
+{% from "components/multi_step_modal_form.html" import MultiStepModalForm %}
+{% from "components/alert.html" import Alert %}
+{% from "components/options_input.html" import OptionsInput %}
+
+{% set step_one %}
+  <div class="modal__form--header">
+    <h1>{{ "fragments.ppoc.update_ppoc_title" | translate }}</h1>
+  </div>
+
+  {{
+    Alert(
+      level="warning",
+      title=("fragments.ppoc.alert.title" | translate),
+      message=("fragments.ppoc.alert.message" | translate),
+    )
+  }}
+
+  <div class='form-row'>
+    <div class='form-col form-col--half'>
+      {{
+        OptionsInput(
+          assign_ppoc_form.user_id
+        )
+      }}
+    </div>
+    <div class='form-col form-col--half'>
+    </div>
+  </div>
+  <div class='action-group'>
+    <input
+        type='button'
+        v-on:click="next()"
+        v-bind:disabled="invalid"
+        class='action-group__action usa-button'
+        value='{{ "fragments.ppoc.assign_user_button_text" | translate }}'>
+    <a class='action-group__action icon-link icon-link--default' v-on:click="closeModal('change-ppoc-form')">
+      {{ "common.cancel" | translate }}
+    </a>
+  </div>
+{% endset %}
+
+{% set step_two %}
+  <div class="modal__form--padded">
+    <div class="modal__form--header">
+      <h1>{{ "fragments.ppoc.update_ppoc_confirmation_title" | translate }}</h1>
+    </div>
+
+    {{
+      Alert(
+        level="info",
+        title=("fragments.ppoc.confirm_alert.title" | translate),
+      )
+    }}
+
+    <div class='action-group'>
+      <input
+        type="submit"
+        class='action-group__action usa-button'
+        form="change-ppoc-form"
+        value='{{ "common.confirm" | translate }}'>
+      <a class='action-group__action icon-link icon-link--default' v-on:click="closeModal('change-ppoc-form')">
+        {{ "common.cancel" | translate }}
+      </a>
+    </div>
+  </div>
+{% endset %}
+
+<div class="flex-reverse-row">
+  {{
+    MultiStepModalForm(
+      'change-ppoc-form',
+      assign_ppoc_form,
+      form_action=url_for("portfolios.update_ppoc", portfolio_id=portfolio.id),
+      steps=[step_one, step_two],
+      button_text=("fragments.ppoc.update_btn" | translate),
+      link_classes="usa-button-primary"
+    )
+  }}
+</div>
