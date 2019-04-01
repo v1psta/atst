@@ -20,19 +20,13 @@ USER_FIELDS = {
     "last_name": StringField(
         translate("forms.edit_user.last_name_label"), validators=[Name()]
     ),
-    "email": EmailField(
-        translate("forms.edit_user.email_label"),
-        description=translate("forms.edit_user.email_description"),
-        validators=[Email()],
-    ),
+    "email": EmailField(translate("forms.edit_user.email_label"), validators=[Email()]),
     "phone_number": TelField(
         translate("forms.edit_user.phone_number_label"), validators=[PhoneNumber()]
     ),
     "phone_ext": StringField("Extension"),
     "service_branch": SelectField(
-        translate("forms.edit_user.service_branch_label"),
-        description=translate("forms.edit_user.service_branch_description"),
-        choices=SERVICE_BRANCHES,
+        translate("forms.edit_user.service_branch_label"), choices=SERVICE_BRANCHES
     ),
     "citizenship": RadioField(
         description=translate("forms.edit_user.citizenship_description"),
