@@ -2,8 +2,7 @@ from flask import url_for
 
 from atst.domain.permission_sets import PermissionSets
 from atst.models.permissions import Permissions
-from atst.domain.portfolio_roles import PortfolioRoles
-from atst.models.portfolio_role import Status as PortfolioRoleStatus
+from atst.domain.portfolio_roles import PortfolioRoles, Status as PortfolioRoleStatus
 
 from tests.factories import (
     random_future_date,
