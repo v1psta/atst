@@ -2,16 +2,17 @@ import datetime
 import json
 import logging
 
-from flask import g, request
+from flask import g, request, has_request_context
 
 
 class RequestContextFilter(logging.Filter):
     def filter(self, record):
-        if getattr(g, "current_user", None):
-            record.user_id = str(g.current_user.id)
+        if has_request_context():
+            if getattr(g, "current_user", None):
+                record.user_id = str(g.current_user.id)
 
-        if request.environ.get("HTTP_X_REQUEST_ID"):
-            record.request_id = request.environ.get("HTTP_X_REQUEST_ID")
+            if request.environ.get("HTTP_X_REQUEST_ID"):
+                record.request_id = request.environ.get("HTTP_X_REQUEST_ID")
 
         return True
 
