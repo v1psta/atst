@@ -36,9 +36,7 @@ class User(
     citizenship = Column(String)
     designation = Column(String)
     date_latest_training = Column(Date)
-    last_login = Column(
-        TIMESTAMP(timezone=True), nullable=True
-    )
+    last_login = Column(TIMESTAMP(timezone=True), nullable=True)
 
     provisional = Column(Boolean)
 
