@@ -21,6 +21,7 @@
 {% else %}
     {{ TextInput(form.portfolio_name, placeholder="The name of your office or organization", validation="portfolioName") }}
 {% endif %}
+
 {{ TextInput(form.scope, paragraph=True) }}
 <p><i>{{ "task_orders.new.app_info.sample_scope" | translate | safe }}</i></p>
 
