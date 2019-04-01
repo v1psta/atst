@@ -1,7 +1,6 @@
 from atst.utils import first_or_none
 from atst.models.permissions import Permissions
 from atst.domain.exceptions import UnauthorizedError
-from atst.domain.portfolio_roles import PortfolioRoles
 from atst.models.portfolio_role import Status as PortfolioRoleStatus
 
 
