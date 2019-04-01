@@ -11,6 +11,7 @@ from atst.domain.authz.decorator import user_can_access_decorator
 from atst.domain.permission_sets import PermissionSets
 from atst.domain.exceptions import UnauthorizedError
 from atst.models.permissions import Permissions
+from atst.domain.portfolio_roles import PortfolioRoles
 
 from tests.utils import FakeLogger
 
@@ -96,6 +97,14 @@ def test_user_can_access():
     assert user_can_access(
         edit_admin, Permissions.EDIT_PORTFOLIO_NAME, portfolio=portfolio
     )
+    with pytest.raises(UnauthorizedError):
+        user_can_access(
+            view_admin, Permissions.EDIT_PORTFOLIO_NAME, portfolio=portfolio
+        )
+
+    # check when portfolio_role is disabled
+    view_admin_pr = PortfolioRoles.get(portfolio_id=portfolio.id, user_id=view_admin.id)
+    PortfolioRoles.disable(portfolio_role=view_admin_pr)
     with pytest.raises(UnauthorizedError):
         user_can_access(
             view_admin, Permissions.EDIT_PORTFOLIO_NAME, portfolio=portfolio
