@@ -81,7 +81,7 @@ forms:
       </a> website.
     date_latest_training_label: Latest Information Assurance (IA) training completion date
     designation_description: What is your designation within the DoD?
-    designation_label: Designation of Person
+    designation_label: Designation of person
     email_label: Email Address
     first_name_label: First Name
     last_name_label: Last Name
