@@ -128,6 +128,7 @@ export default {
         value: this._rawValue(value),
         valid,
         name: this.name,
+        parent_uid: this.$parent._uid,
       })
     },
 

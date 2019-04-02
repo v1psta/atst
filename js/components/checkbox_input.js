@@ -10,6 +10,7 @@ export default {
       this.$root.$emit('field-change', {
         value: e.target.checked,
         name: this.name,
+        parent_uid: this.$parent._uid,
       })
     },
   },
