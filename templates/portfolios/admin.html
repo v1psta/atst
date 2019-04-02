@@ -15,28 +15,30 @@
       <div class="panel__content">
 
         {% if user_can(permissions.VIEW_PORTFOLIO_NAME) %}
-        <form method="POST" action="{{ url_for('portfolios.edit_portfolio', portfolio_id=portfolio.id) }}" autocomplete="false">
-          {{ portfolio_form.csrf_token }}
-          <div class='form-row'>
-            <div class='form-col form-col--half'>
-              {{ TextInput(portfolio_form.name, validation="portfolioName") }}
-            </div>
-
-              <div class='edit-portfolio-name action-group'>
-                <button type="submit" class="usa-button usa-button-big usa-button-primary" tabindex="0">Save</button>
+        <base-form inline-template>
+          <form method="POST" action="{{ url_for('portfolios.edit_portfolio', portfolio_id=portfolio.id) }}" autocomplete="false">
+            {{ portfolio_form.csrf_token }}
+            <div class='form-row'>
+              <div class='form-col form-col--half'>
+                {{ TextInput(portfolio_form.name, validation="portfolioName") }}
               </div>
-            </div>
-              <div class='defense-row'>
-                <div>
-                  <div class='admin-title'>{{ "forms.task_order.defense_component_label" | translate }}</div>
-                  {% if portfolio.defense_component %}
-                    <div class='admin-content'>{{ portfolio.defense_component }}</div>
-                  {% else %}
-                    <div class='admin-content'>{{ "fragments.portfolio_admin.none" | translate }}</div>
-                  {% endif %}
+
+                <div class='edit-portfolio-name action-group'>
+                  <savebutton text="Save" classes="usa-button-big" :disabled="disabled"></savebutton>
                 </div>
               </div>
-          </form>
+                <div class='defense-row'>
+                  <div>
+                    <div class='admin-title'>{{ "forms.task_order.defense_component_label" | translate }}</div>
+                    {% if portfolio.defense_component %}
+                      <div class='admin-content'>{{ portfolio.defense_component }}</div>
+                    {% else %}
+                      <div class='admin-content'>{{ "fragments.portfolio_admin.none" | translate }}</div>
+                    {% endif %}
+                  </div>
+                </div>
+            </form>
+          </base-form>
         {% endif %}
       </div>
     </div>
