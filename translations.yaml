@@ -48,7 +48,7 @@ components:
 footer:
   about_link_text: Joint Enterprise Defense Infrastructure
   browser_support: JEDI Cloud supported on these web browsers
-  jedi_help_link_text: Questions? Contact your CCPO Representative
+  jedi_help_link_text: Questions? Contact your CCPO representative
 forms:
   ccpo_review:
     comment_description: Provide instructions or notes for additional information that is necessary to approve the request here. The requestor may then re-submit the updated request or initiate contact outside of AT-AT if further discussion is required. <strong>This message will be shared with the person making the JEDI request.</strong>.
@@ -146,18 +146,18 @@ forms:
     average_daily_traffic_label: Average Daily Traffic (Number of Requests)
     cloud_native_description: Are your software systems being developed cloud native?
     data_transfers_description: How much data is being transferred to the cloud?
-    dod_component_description: Identify the DoD component that is requesting access to the JEDI Cloud
+    dod_component_description: Identify the DoD component that is requesting access to the JEDI cloud
     dod_component_label: DoD Component
     dodid_poc_label: DoD ID
-    dollar_value_description: What is your total expected budget for this JEDI Cloud Request?
+    dollar_value_description: What is your total expected budget for this JEDI cloud Request?
     dollar_value_label: Total Spend
     email_poc_label: Email Address
     engineering_assessment_description: Have you completed an engineering assessment of your systems for cloud readiness?
     estimated_monthly_spend_description: 'Use the <a href="/jedi-csp-calculator" target="_blank" class="icon-link">JEDI CSP Calculator</a> to estimate your <b>monthly</b> cloud resource usage and enter the dollar amount below. Note these estimates are for initial approval only. After the request is approved, you will be asked to provide a valid task order number with specific CLIN amounts for cloud services.'
     estimated_monthly_spend_label: Estimated Monthly Spend
-    expected_completion_date_description: When do you expect to complete your migration to the JEDI Cloud?
+    expected_completion_date_description: When do you expect to complete your migration to the JEDI cloud?
     fname_poc_label: First Name
-    jedi_migration_description: Are you using the JEDI Cloud to migrate existing systems?
+    jedi_migration_description: Are you using the JEDI cloud to migrate existing systems?
     jedi_migration_label: JEDI Migration
     jedi_usage_description: Your answer will help us provide tangible examples to DoD leadership how and why commercial cloud resources are accelerating the Department's missions
     jedi_usage_label: JEDI Usage
@@ -165,14 +165,14 @@ forms:
     name_description: This name serves as a reference for your initial request and the associated portfolio that will be created once this request is approved. You may edit this name later.
     name_label: Name Your Request
     name_length_validation_message: Request names must be at least 4 and not more than 100 characters
-    num_software_systems_description: Estimate the number of software systems that will be supported by this JEDI Cloud access request
+    num_software_systems_description: Estimate the number of software systems that will be supported by this JEDI cloud access request
     num_software_systems_label: Number of Software Systems
     number_user_sessions_description: How many user sessions do you expect on these systems each day?
     organization_providing_assistance_description: 'If you are receiving migration assistance, what is the type of organization providing assistance?'
     rationalization_software_systems_description: Have you completed a “rationalization” of your software systems to move to the cloud?
     reviewed_label: I have reviewed this data and it is correct.
     start_date_date_range_validation_message: Must be a date in the future.
-    start_date_label: When do you expect to start using the JEDI Cloud (not for billing purposes)?
+    start_date_label: When do you expect to start using the JEDI cloud (not for billing purposes)?
     technical_support_team_description: Are you working with a technical support team experienced in cloud migrations?
   application:
     description_label: Description
@@ -181,13 +181,13 @@ forms:
     environment_names_unique_validation_message: Environment names must be unique.
     name_label: Name
   task_order:
-    portfolio_name_label: Organization Portfolio Name
+    portfolio_name_label: Portfolio name
     portfolio_name_description: The name of your office or organization. You can add multiple applications to your portfolio. Your task orders are used to pay for these applications and their environments.
-    scope_label: Cloud Project Scope
+    scope_label: Cloud project scope
     scope_description: Your team's plan for using the cloud, such as migrating an existing application or creating a prototype.
-    defense_component_label: Department of Defense Component
+    defense_component_label: Department of Defense component
     app_migration:
-      label: App Migration
+      label: App migration
       description: Do you plan to migrate one or more existing application(s) to the cloud?
       on_premise: Yes, migrating from an <strong>on-premise data center</strong>
       cloud: Yes, migrating from <strong>another cloud provider</strong>
@@ -195,43 +195,43 @@ forms:
       none: Not planning to migrate any applications
       not_sure: "Not sure"
     native_apps:
-      label: Native Apps
+      label: Native apps
       description: Do you plan to develop any applications natively in the cloud?
       'yes': Yes, planning to develop natively in the cloud
       'no': No, not planning to develop natively in the cloud
       not_sure: Not sure, unsure if planning to develop natively in the cloud
     complexity:
-      label: Project Complexity
+      label: Project complexity
       description: Which of these describes how complex your team's use of the cloud will be? Select all that apply.
       storage: Storage
-      data_analytics: Data Analytics
-      conus: CONUS Access
-      oconus: OCONUS Access
-      tactical_edge: Tactical Edge Access
+      data_analytics: Data analytics
+      conus: CONUS access
+      oconus: OCONUS access
+      tactical_edge: Tactical edge access
       not_sure: Not sure
       other: Other
     complexity_other_label: Project Complexity Other
     dev_team:
-      label: Development Team
+      label: Development team
       description: Who will be completing the development work for your cloud application(s)? Select all that apply.
-      civilians: Government Civilians
+      civilians: Government civilians
       military: Military
       contractor: Contractor
       other: "Other <em class='description'>(E.g. University or other partner)</em>"
     dev_team_other_label: Development Team Other
     team_experience:
-      label: Team Experience
-      description: How much experience does your team  have with development in the cloud?
+      label: Team experience
+      description: How much experience does your team have with development in the cloud?
       none: No previous experience
       planned: Researched or planned a cloud build or migration
       built_1: Built or migrated 1-2 applications
       built_3: Built or migrated 3-5 applications
       built_many: Built or migrated many applications, or consulted on several such projects
     performance_length:
-      label: Period of Performance length
+      label: Period of performance length
     start_date_label: Start Date
     end_date_label: End Date
-    csp_estimate_label: Upload a copy of your CSP Cost Estimate Research
+    csp_estimate_label: Upload a copy of your CSP cost estimate research
     csp_estimate_description: Upload a PDF or screenshot of your usage estimate from the calculator.
     file_format_not_allowed: Only PDF or PNG files can be uploaded.
     clin_01_label: 'CLIN 01 : Unclassified'
@@ -273,7 +273,7 @@ forms:
     phone_number_message: Please enter a valid 5 or 10 digit phone number.
     is_required: This field is required.
   portfolio:
-    name_label: Portfolio Name
+    name_label: Portfolio name
     name_length_validation_message: Portfolio names can be between 4-100 characters
   officers:
     contracting_officer_invite: Invite KO to Task Order Builder
@@ -287,15 +287,15 @@ fragments:
     date_last_training_tooltip: When was the last time you completed the IA training? <br> Information Assurance (IA) training is an important step in cyber awareness.
     save_details_button: Save Details
   pending_ccpo_acceptance_alert:
-    learn_more_link_text: Learn more about the JEDI Cloud task order and the financial verification process.
+    learn_more_link_text: Learn more about the JEDI cloud task order and the financial verification process.
     paragraph_1: The CCPO will review and respond to your request in 3 business days. You’ll be notified via email or phone. Please note if your request is for over $1M of JEDI cloud resources it will require a manual review by the CCPO.
-    paragraph_2: 'While your request is being reviewed, your next step is to create a task order (TO) associated with the JEDI Cloud. Please contact a Contracting Officer (KO), Contracting Officer Representative (COR), or a Financial Manager to help with this step.'
+    paragraph_2: 'While your request is being reviewed, your next step is to create a task order (TO) associated with the JEDI cloud. Please contact a Contracting Officer (KO), Contracting Officer Representative (COR), or a Financial Manager to help with this step.'
   pending_ccpo_approval_modal:
     paragraph_1: The CCPO will review and respond to your Financial Verification submission in 3 business days. You will be notified via email or phone.
     paragraph_2: Once the financial verification is approved you will be invited to create your JEDI Portfolio and set-up your applications. Click here for more details.
   pending_financial_verification:
-    learn_more_link_text: Learn more about the JEDI Cloud task order and the financial verification process.
-    paragraph_1: 'The next step is to create a task order associated with JEDI Cloud.  Please contact a Contracting Officer (KO), Contracting Officer Representative (COR), or a Financial Manager to help with this step.'
+    learn_more_link_text: Learn more about the JEDI cloud task order and the financial verification process.
+    paragraph_1: 'The next step is to create a task order associated with JEDI cloud.  Please contact a Contracting Officer (KO), Contracting Officer Representative (COR), or a Financial Manager to help with this step.'
     paragraph_2: 'Once the task order has been created, you will be asked to provide details about the task order in the Financial Verification step.'
   ko_review_message:
     title: Steps
@@ -314,13 +314,13 @@ login:
     learn_more: Learn more
     message: 'When you are prompted to select a certificate, please select Email Certificate from the provided choices.'
     title: Certificate Selection
-  h1_title: Access the JEDI Cloud
+  h1_title: Access the JEDI cloud
   login_button: Sign in with CAC
-  title_tag: Sign in | JEDI Cloud
+  title_tag: Sign in | JEDI cloud
 navigation:
   topbar:
     jedi_cloud_link_text: JEDI
-    logout_link_title: Log out of JEDI Cloud
+    logout_link_title: Log out of JEDI cloud
     named_portfolio: 'Portfolio {portfolio}'
     no_other_active_portfolios: You have no other active JEDI portfolios.
     other_active_portfolios: Other Active Portfolios
@@ -329,7 +329,7 @@ navigation:
     add_new_member_label: Add new member
     add_new_application_label: Add new application
     budget_report: Budget Report
-    activity_log: Activity Log
+    activity_log: Activity log
     members: Members
     applications: Applications
     portfolio_funding: Funding
@@ -456,44 +456,44 @@ task_orders:
       project_title: About your project
       team_title: About your team
       market_research_title: Market research
-      market_research_paragraph: 'The JEDI Cloud Computing Program Office (CCPO) has completed the market research requirements for all related task orders. The Department of Defense CIO has approved this research.<br /><a href="#">View JEDI Market Research Memo</a>'
+      market_research_paragraph: 'The JEDI Cloud Computing Program Office (CCPO) has completed the market research requirements for all related task orders. The Department of Defense CIO has approved this research.<br /><a href="#">View JEDI market research memo</a>'
     funding:
       section_title: Funding
-      performance_period_title: Period of Performance
+      performance_period_title: Period of performance
       performance_period_description: Choose the length of time your task order will cover.
       performance_period_paragraph: Be aware that your funds will be lost if you don’t use them. Because of this, we strongly recommend submitting small, short-duration task orders, usually around a three month period. We’ll notify you when your period of performance is nearing its end so you can request your next set of funds with a new task order.
-      estimate_usage_title: Estimate Your Cloud Usage
+      estimate_usage_title: Estimate your cloud usage
       estimate_usage_description: Calculate how much your cloud usage will cost. A technical representative from your team should help you complete this calculation. These calculations will become your CLINs.
       estimate_usage_paragraph: This is only an estimation tool to help you make an informed evaluation of what you expect to use. While you're tied to the dollar amount you specify in your task order, you're not obligated by the resources you indicate in the calculator.
-      cloud_calculations_title: Cloud Usage Calculations
+      cloud_calculations_title: Cloud usage calculations
       cloud_calculations_paragraph: Enter the results of your cloud usage calculations below.
-      cloud_offerings_title: Cloud Offerings
+      cloud_offerings_title: Cloud offerings
       cloud_offerings_paragraph: Infrastructure as a Service (IaaS) and Platform as a Service (PaaS) offerings
-      support_assistance_title: Cloud Support and Assistance
+      support_assistance_title: Cloud support and assistance
       support_assistance_paragraph: Technical guidance from the cloud service provider, including architecture, configuration of IaaS and PaaS, integration, troubleshooting assistance, and other services.
-      total: 'Total Task Order Value:'
+      total: 'Total task order value:'
     oversight:
       section_title: Oversight
       ko_info_title: Contracting Officer (KO) Information
-      ko_info_paragraph: Your KO will need to approve funding for this task order by logging into the JEDI Cloud Portal, submitting the task order documents within their official system of record, and then finally providing a digital signature. It might be helpful to work with your program's Financial Manager to get your TO documents moving.
+      ko_info_paragraph: Your KO will need to approve funding for this task order by logging into the JEDI cloud portal, submitting the task order documents within their official system of record, and then finally providing a digital signature. It might be helpful to work with your program's Financial Manager to get your TO documents moving.
       skip_ko_label: "Skip for now (We'll remind you to enter one later)"
       dod_id_tooltip: "The DoD ID is needed to verify the identity of the indicated officer or representative."
       cor_info_title: Contracting Officer Representative (COR) Information
-      cor_info_paragraph: Your COR may assist in submitting the task order documents within their official system of record. They may also be invited to log in and manage the Task Order entry within the JEDI Cloud portal.
+      cor_info_paragraph: Your COR may assist in submitting the task order documents within their official system of record. They may also be invited to log in and manage the Task Order entry within the JEDI cloud portal.
       so_info_title: Security Officer Information
       so_info_paragraph: Your Security Officer will need to answer some security configuration questions in order to generate a DD-254 document, then electronically sign.
     review:
       section_title: Review Your Task Order
       app_info: What you're making
       portfolio: Portfolio
-      dod: DoD Component
-      scope: Scope (Statement of Work)
+      dod: DoD component
+      scope: Scope (statement of work)
       reporting: Reporting
       complexity: Project complexity
       team: Development team
       funding: Funding
       performance_period: Period of performance
-      usage_est_link: View Usage Estimate
+      usage_est_link: View usage estimate
       to_value: Task order value
       clin_1: 'CLIN #1: Unclassified Cloud'
       clin_2: 'CLIN #2: Classified Cloud'
@@ -546,7 +546,7 @@ portfolios:
   index:
     empty:
       title: You have no apps yet
-      start_button: Start a New JEDI Portfolio
+      start_button: Start a new JEDI portfolio
   applications:
     add_application_text: Add a new application
     app_settings_text: App settings
@@ -558,7 +558,7 @@ portfolios:
     environments_heading: Environments
     environments_description: Each environment created within an application is logically separated from one another for easier management and security.
     update_button_text: Save
-    create_button_text: Create Application
+    create_button_text: Create
     team_management:
       title: '{application_name} Team Management'
       subheading: Team Management
@@ -566,20 +566,20 @@ portfolios:
     portfolio_members_title: Portfolio Members
     portfolio_members_subheading: These members have different levels of access to the portfolio.
     settings_info: Learn more about these settings
-    add_member: Add a New Member
+    add_member: Add a new member
     permissions_info: Learn more about these permissions
-    activity_log_title: Activity Log
+    activity_log_title: Activity log
     add_new_member: Add a new member
   members:
-    archive_button: Archive User
+    archive_button: Archive user
     permissions:
       name: Name
-      app_mgmt: App Mgmt
+      app_mgmt: App management
       funding: Funding
       reporting: Reporting
-      portfolio_mgmt: Portfolio Mgmt
-      view_only: View Only
-      edit_access: Edit Access
+      portfolio_mgmt: Portfolio management
+      view_only: View only
+      edit_access: Edit access
 testing:
   example_string: Hello World
   example_with_variables: 'Hello, {name}!'

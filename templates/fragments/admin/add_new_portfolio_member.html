@@ -17,7 +17,7 @@
 
 {% set step_one %}
   <div class="modal__form--header">
-    <h1>Invite New Portfolio Member</h1>
+    <h1>Invite new portfolio member</h1>
   </div>
   <div class='form-row'>
     <div class='form-col form-col--half'>
@@ -48,14 +48,14 @@
         v-on:click="next()"
         v-bind:disabled="invalid"
         class='action-group__action usa-button'
-        value='Next Step'>
+        value='Next'>
     <a class='action-group__action icon-link icon-link--default' v-on:click="closeModal('{{ new_port_mem }}')">Cancel</a>
   </div>
 {% endset %}
 {% set step_two %}
   <div class="modal__form--padded">
     <div class="modal__form--header">
-      <h1>Assign Member Permissions</h1>
+      <h1>Assign member permissions</h1>
       <a class='icon-link'>
         {{ Icon('info') }}
         {{ "portfolios.admin.permissions_info" | translate }}
@@ -70,7 +70,7 @@
         type="submit"
         class='action-group__action usa-button'
         form="add-port-mem"
-        value='Invite Member'>
+        value='Invite member'>
       <a class='action-group__action icon-link icon-link--default' v-on:click="closeModal('{{ new_port_mem }}')">Cancel</a>
     </div>
   </div>
