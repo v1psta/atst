@@ -12,9 +12,9 @@
 
 {% macro officer_name(officer) -%}
   {%- if not officer -%}
-    Not specified
+    not yet invited
   {%- elif officer == g.current_user -%}
-    You
+    you
   {%- else -%}
     {{ officer.full_name }}
   {%- endif -%}
@@ -91,7 +91,7 @@
             <div>{{ officer_info.phone_number | usPhone }}</div>
           </div>
         {% else %}
-          <span>Not specified</span>
+          <span>not yet invited</span>
         {% endif %}
       </div>
     </div>
