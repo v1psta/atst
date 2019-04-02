@@ -21,6 +21,13 @@ MESSAGES = {
         """,
         "category": "success",
     },
+    "update_portfolio_members": {
+        "title_template": "Success!",
+        "message_template": """
+            <p>You have successfully updated access permissions for members of {{ portfolio.name }}.</p>
+        """,
+        "category": "success",
+    },
     "new_portfolio_member": {
         "title_template": "Success!",
         "message_template": """

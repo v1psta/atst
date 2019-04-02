@@ -1,6 +1,6 @@
-from wtforms.fields import StringField, FormField, FieldList
 from wtforms.fields.html5 import EmailField, TelField
 from wtforms.validators import Required, Email, Length, Optional
+from wtforms.fields import StringField, FormField, FieldList, HiddenField
 
 from atst.domain.permission_sets import PermissionSets
 from .forms import BaseForm
@@ -11,6 +11,7 @@ from atst.utils.localization import translate
 
 class PermissionsForm(BaseForm):
     member = StringField()
+    user_id = HiddenField()
     perms_app_mgmt = SelectField(
         None,
         choices=[
