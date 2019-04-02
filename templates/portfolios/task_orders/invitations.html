@@ -99,21 +99,23 @@
           {{ Link("Update", "edit", onClick="edit") }}
           {% set invite_type = [prefix + "_invite"] %}
 
-          {{
-            ConfirmationButton(
-              btn_text="Resend Invitation",
-              confirm_btn=('task_orders.invitations.resend_btn' | translate),
-              confirm_msg=('task_orders.invitations.resend_confirmation_message' | translate),
-              action=url_for(
-                "portfolios.resend_invite",
-                portfolio_id=portfolio.id,
-                task_order_id=task_order.id,
-                invite_type=invite_type,
-              ),
-              btn_icon=Icon('avatar'),
-              btn_class="icon-link",
-            )
-          }}
+          {% if not (user == task_order.creator and user == task_order[officer_type]) %}
+            {{
+              ConfirmationButton(
+                btn_text="Resend Invitation",
+                confirm_btn=('task_orders.invitations.resend_btn' | translate),
+                confirm_msg=('task_orders.invitations.resend_confirmation_message' | translate),
+                action=url_for(
+                  "portfolios.resend_invite",
+                  portfolio_id=portfolio.id,
+                  task_order_id=task_order.id,
+                  invite_type=invite_type,
+                ),
+                btn_icon=Icon('avatar'),
+                btn_class="icon-link",
+              )
+            }}
+          {% endif %}
 
           {{ Link("Remove", "trash", classes="remove") }}
         </div>
