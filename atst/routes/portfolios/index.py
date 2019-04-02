@@ -96,24 +96,25 @@ def edit_portfolio_members(portfolio_id):
     portfolio = Portfolios.get_for_update(portfolio_id)
     member_perms_form = member_forms.MembersPermissionsForm(http_request.form)
 
-    for subform in member_perms_form.members_permissions:
-        new_perm_set = subform.data["permission_sets"]
-        user_id = subform.user_id.data
-        portfolio_role = PortfolioRoles.get(portfolio.id, user_id)
-        PortfolioRoles.update(portfolio_role, new_perm_set)
+    if member_perms_form.validate():
+        for subform in member_perms_form.members_permissions:
+            new_perm_set = subform.data["permission_sets"]
+            user_id = subform.user_id.data
+            portfolio_role = PortfolioRoles.get(portfolio.id, user_id)
+            PortfolioRoles.update(portfolio_role, new_perm_set)
 
-    flash("update_portfolio_members", portfolio=portfolio)
+        flash("update_portfolio_members", portfolio=portfolio)
 
-    return redirect(
-        url_for(
-            "portfolios.portfolio_admin",
-            portfolio_id=portfolio.id,
-            fragment="portfolio-members",
-            _anchor="portfolio-members",
+        return redirect(
+            url_for(
+                "portfolios.portfolio_admin",
+                portfolio_id=portfolio.id,
+                fragment="portfolio-members",
+                _anchor="portfolio-members",
+            )
         )
-    )
-
-    return render_admin_page(portfolio)
+    else:
+        return render_admin_page(portfolio)
 
 
 @portfolios_bp.route("/portfolios/<portfolio_id>/edit", methods=["POST"])
