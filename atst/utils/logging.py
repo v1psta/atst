@@ -34,7 +34,7 @@ class JsonFormatter(logging.Formatter):
     ]
 
     def format(self, record):
-        message_dict = {}
+        message_dict = {"source": "atst"}
         for field, func in self._DEFAULT_RECORD_FIELDS:
             message_dict[field] = func(record)
 

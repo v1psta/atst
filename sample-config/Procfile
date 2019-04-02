@@ -1,0 +1,2 @@
+uwsgi: LOG_JSON=true DEBUG=false uwsgi --ini sample-config/uwsgi.ini
+nginx: nginx -c $(pwd)/sample-config/nginx.conf
