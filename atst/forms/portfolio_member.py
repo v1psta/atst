@@ -1,6 +1,6 @@
-from wtforms.fields import StringField, FormField, FieldList
 from wtforms.fields.html5 import EmailField, TelField
 from wtforms.validators import Required, Email, Length, Optional
+from wtforms.fields import StringField, FormField, FieldList, HiddenField
 
 from atst.domain.permission_sets import PermissionSets
 from .forms import BaseForm
@@ -11,32 +11,33 @@ from atst.utils.localization import translate
 
 class PermissionsForm(BaseForm):
     member = StringField()
+    user_id = HiddenField()
     perms_app_mgmt = SelectField(
         None,
         choices=[
-            (PermissionSets.VIEW_PORTFOLIO_APPLICATION_MANAGEMENT, "View Only"),
-            (PermissionSets.EDIT_PORTFOLIO_APPLICATION_MANAGEMENT, "Edit Access"),
+            (PermissionSets.VIEW_PORTFOLIO_APPLICATION_MANAGEMENT, "View only"),
+            (PermissionSets.EDIT_PORTFOLIO_APPLICATION_MANAGEMENT, "Edit access"),
         ],
     )
     perms_funding = SelectField(
         None,
         choices=[
-            (PermissionSets.VIEW_PORTFOLIO_FUNDING, "View Only"),
-            (PermissionSets.EDIT_PORTFOLIO_FUNDING, "Edit Access"),
+            (PermissionSets.VIEW_PORTFOLIO_FUNDING, "View only"),
+            (PermissionSets.EDIT_PORTFOLIO_FUNDING, "Edit access"),
         ],
     )
     perms_reporting = SelectField(
         None,
         choices=[
-            (PermissionSets.VIEW_PORTFOLIO_REPORTS, "View Only"),
-            (PermissionSets.EDIT_PORTFOLIO_REPORTS, "Edit Access"),
+            (PermissionSets.VIEW_PORTFOLIO_REPORTS, "View only"),
+            (PermissionSets.EDIT_PORTFOLIO_REPORTS, "Edit access"),
         ],
     )
     perms_portfolio_mgmt = SelectField(
         None,
         choices=[
-            (PermissionSets.VIEW_PORTFOLIO_ADMIN, "View Only"),
-            (PermissionSets.EDIT_PORTFOLIO_ADMIN, "Edit Access"),
+            (PermissionSets.VIEW_PORTFOLIO_ADMIN, "View only"),
+            (PermissionSets.EDIT_PORTFOLIO_ADMIN, "Edit access"),
         ],
     )
 

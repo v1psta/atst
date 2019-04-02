@@ -2,9 +2,12 @@ from datetime import date, timedelta
 
 from flask import render_template, request as http_request, g, redirect, url_for
 
+from atst.utils.flash import formatted_flash as flash
+
 from . import portfolios_bp
 from atst.domain.reports import Reports
 from atst.domain.portfolios import Portfolios
+from atst.domain.portfolio_roles import PortfolioRoles
 from atst.domain.audit_log import AuditLog
 from atst.domain.common import Paginator
 from atst.forms.portfolio import PortfolioForm
@@ -34,6 +37,7 @@ def permission_str(member, edit_perm_set, view_perm_set):
 def serialize_member_form_data(member):
     return {
         "member": member.user.full_name,
+        "user_id": member.user_id,
         "perms_app_mgmt": permission_str(
             member,
             PermissionSets.EDIT_PORTFOLIO_APPLICATION_MANAGEMENT,
@@ -84,6 +88,33 @@ def render_admin_page(portfolio, form=None):
 def portfolio_admin(portfolio_id):
     portfolio = Portfolios.get_for_update(portfolio_id)
     return render_admin_page(portfolio)
+
+
+@portfolios_bp.route("/portfolios/<portfolio_id>/admin", methods=["POST"])
+@user_can(Permissions.EDIT_PORTFOLIO_USERS, message="view portfolio admin page")
+def edit_portfolio_members(portfolio_id):
+    portfolio = Portfolios.get_for_update(portfolio_id)
+    member_perms_form = member_forms.MembersPermissionsForm(http_request.form)
+
+    if member_perms_form.validate():
+        for subform in member_perms_form.members_permissions:
+            new_perm_set = subform.data["permission_sets"]
+            user_id = subform.user_id.data
+            portfolio_role = PortfolioRoles.get(portfolio.id, user_id)
+            PortfolioRoles.update(portfolio_role, new_perm_set)
+
+        flash("update_portfolio_members", portfolio=portfolio)
+
+        return redirect(
+            url_for(
+                "portfolios.portfolio_admin",
+                portfolio_id=portfolio.id,
+                fragment="portfolio-members",
+                _anchor="portfolio-members",
+            )
+        )
+    else:
+        return render_admin_page(portfolio)
 
 
 @portfolios_bp.route("/portfolios/<portfolio_id>/edit", methods=["POST"])

@@ -10,7 +10,7 @@ MESSAGES = {
     "task_order_draft": {
         "title_template": translate("task_orders.form.draft_alert_title"),
         "message_template": """
-        <p>Please complete your Task Order before submitting it for approval.</p>
+        <p>Please complete your task order before submitting it for approval.</p>
         """,
         "category": "warning",
     },
@@ -18,6 +18,13 @@ MESSAGES = {
         "title_template": "Task Order Signed",
         "message_template": """
         <p>Task order has been signed successfully</p>
+        """,
+        "category": "success",
+    },
+    "update_portfolio_members": {
+        "title_template": "Success!",
+        "message_template": """
+            <p>You have successfully updated access permissions for members of {{ portfolio.name }}.</p>
         """,
         "category": "success",
     },
@@ -73,7 +80,7 @@ MESSAGES = {
     "portfolio_member_dod_id_error": {
         "title_template": "CAC ID Error",
         "message_template": """
-            The member attempted to accept this invite, but their CAC ID did not match the CAC ID you specified on the invite. Please confirm that the DOD ID is accurate.
+            The member attempted to accept this invite, but their CAC ID did not match the CAC ID you specified on the invite. Please confirm that the DoD ID is accurate.
         """,
         "category": "error",
     },
@@ -127,7 +134,7 @@ MESSAGES = {
     "task_order_incomplete": {
         "title_template": "Task Order Incomplete",
         "message_template": """
-        You must complete your Task Order form before submitting.
+        You must complete your task order form before submitting.
         """,
         "category": "error",
     },
