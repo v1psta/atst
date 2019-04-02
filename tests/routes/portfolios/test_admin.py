@@ -68,7 +68,9 @@ def test_update_member_permissions(client, user_session):
     PortfolioRoleFactory.create(
         user=user,
         portfolio=portfolio,
-        permission_sets=[PermissionSets.get(PermissionSets.EDIT_PORTFOLIO_ADMIN)],
+        permission_sets=PermissionSets.get_many(
+            [PermissionSets.EDIT_PORTFOLIO_ADMIN, PermissionSets.VIEW_PORTFOLIO_ADMIN]
+        ),
     )
     user_session(user)
 
