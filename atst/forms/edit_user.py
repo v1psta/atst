@@ -29,16 +29,14 @@ USER_FIELDS = {
         translate("forms.edit_user.service_branch_label"), choices=SERVICE_BRANCHES
     ),
     "citizenship": RadioField(
-        description=translate("forms.edit_user.citizenship_description"),
         choices=[
             ("United States", "United States"),
             ("Foreign National", "Foreign National"),
             ("Other", "Other"),
-        ],
+        ]
     ),
     "designation": RadioField(
         translate("forms.edit_user.designation_label"),
-        description=translate("forms.edit_user.designation_description"),
         choices=[
             ("military", "Military"),
             ("civilian", "Civilian"),
