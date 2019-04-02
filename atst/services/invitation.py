@@ -52,7 +52,7 @@ class Invitation:
         inviter,
         member,
         email,
-        subject="{} has invited you to a JEDI Cloud Portfolio",
+        subject="{} has invited you to a JEDI cloud portfolio",
         email_template="emails/invitation.txt",
     ):
         self.inviter = inviter
