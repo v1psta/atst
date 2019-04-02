@@ -29,11 +29,16 @@ from atst.utils.form_cache import FormCache
 from atst.utils.json import CustomJSONEncoder
 from atst.queue import queue
 
+from logging.config import dictConfig
+from atst.utils.logging import JsonFormatter, RequestContextFilter
+
 
 ENV = os.getenv("FLASK_ENV", "dev")
 
 
 def make_app(config):
+    if ENV == "prod" or config.get("LOG_JSON"):
+        apply_json_logger()
 
     parent_dir = Path().parent
 
@@ -143,6 +148,7 @@ def map_config(config):
         "RQ_QUEUES": [config["default"]["RQ_QUEUES"]],
         "DISABLE_CRL_CHECK": config.getboolean("default", "DISABLE_CRL_CHECK"),
         "CRL_FAIL_OPEN": config.getboolean("default", "CRL_FAIL_OPEN"),
+        "LOG_JSON": config.getboolean("default", "LOG_JSON"),
     }
 
 
@@ -228,3 +234,22 @@ def make_mailer(app):
         )
     sender = app.config.get("MAIL_SENDER")
     app.mailer = mailer.Mailer(mailer_connection, sender)
+
+
+def apply_json_logger():
+    dictConfig(
+        {
+            "version": 1,
+            "formatters": {"default": {"()": lambda *a, **k: JsonFormatter()}},
+            "filters": {"requests": {"()": lambda *a, **k: RequestContextFilter()}},
+            "handlers": {
+                "wsgi": {
+                    "class": "logging.StreamHandler",
+                    "stream": "ext://flask.logging.wsgi_errors_stream",
+                    "formatter": "default",
+                    "filters": ["requests"],
+                }
+            },
+            "root": {"level": "INFO", "handlers": ["wsgi"]},
+        }
+    )
