@@ -4,6 +4,7 @@
 {% from "components/icon.html" import Icon %}
 {% from "components/modal.html" import Modal %}
 {% from "components/text_input.html" import TextInput %}
+{% from 'components/save_button.html' import SaveButton %}
 
 {% set secondary_breadcrumb = 'portfolios.applications.new_application_title' | translate %}
 
@@ -76,10 +77,7 @@
       </div>
 
       <div class="action-group">
-        <savebutton
-          text="{{ 'portfolios.applications.create_button_text' | translate }}"
-          :disabled="disabled">
-        </savebutton>
+        {{ SaveButton(text=('portfolios.applications.create_button_text' | translate)) }}
       </div>
     </form>
   </new-application>

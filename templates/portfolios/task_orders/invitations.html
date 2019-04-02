@@ -6,6 +6,7 @@
 {% from "components/icon.html" import Icon %}
 {% from "components/text_input.html" import TextInput %}
 {% from "components/confirmation_button.html" import ConfirmationButton %}
+{% from 'components/save_button.html' import SaveButton %}
 
 
 {% macro Link(text, icon_name, onClick=None, url='#', classes='') %}
@@ -59,7 +60,7 @@
             {{ Icon("x") }}
             <span>Cancel</span>
           </a>
-          <savebutton text="Save Changes" :disabled="disabled"></savebutton>
+          {{ SaveButton(text='Save Changes') }}
         </div>
       </div>
     </template>

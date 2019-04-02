@@ -3,6 +3,7 @@
 {% from "components/date_input.html" import DateInput %}
 {% from "components/phone_input.html" import PhoneInput %}
 {% from "components/date_picker.html" import DatePicker %}
+{% from 'components/save_button.html' import SaveButton %}
 
 <base-form inline-template>
   <form method="POST" action='{{ form_action }}'>
@@ -34,11 +35,7 @@
     </div>
 
     <div class='action-group'>
-      <savebutton
-        text='{{ "fragments.edit_user_form.save_details_button" | translate }}'
-        classes="usa-button-big"
-        :disabled="disabled">
-      </savebutton>
+      {{ SaveButton(text=("fragments.edit_user_form.save_details_button" | translate), additional_classes="usa-button-big" )}}
     </div>
   </form>
 </base-form>

@@ -33,7 +33,6 @@ import { isNotInVerticalViewport } from './lib/viewport'
 import DateSelector from './components/date_selector'
 import SidenavToggler from './components/sidenav_toggler'
 import KoReview from './components/forms/ko_review'
-import savebutton from './components/save_button'
 import BaseForm from './components/forms/base_form'
 
 Vue.config.productionTip = false
@@ -70,7 +69,6 @@ const app = new Vue({
     EditOfficerForm,
     SidenavToggler,
     KoReview,
-    savebutton,
     BaseForm,
   },
 

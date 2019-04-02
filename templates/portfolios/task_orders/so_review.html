@@ -2,6 +2,7 @@
 
 {% from "components/text_input.html" import TextInput %}
 {% from "components/multi_checkbox_input.html" import MultiCheckboxInput %}
+{% from 'components/save_button.html' import SaveButton %}
 
 {% block content %}
 
@@ -31,7 +32,7 @@
           {{ MultiCheckboxInput(form.required_distribution) }}
 
           <div class="action-group">
-            <savebutton text="Continue" :disabled="disabled"></savebutton>
+            {{ SaveButton(text='Continue') }}
           </div>
         </form>
       </div>

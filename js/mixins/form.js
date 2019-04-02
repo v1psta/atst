@@ -1,5 +1,3 @@
-import savebutton from '../components/save_button'
-
 export default {
   mounted: function() {
     this.$root.$on('field-change', this.handleFieldChange)
@@ -28,9 +26,5 @@ export default {
       type: Boolean,
       default: true,
     },
-  },
-
-  components: {
-    savebutton,
   },
 }
