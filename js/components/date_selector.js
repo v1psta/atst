@@ -62,18 +62,23 @@ export default {
 
     isMonthValid: function() {
       var _month = parseInt(this.month)
-
-      return _month >= 0 && _month <= 12
+      var valid = _month >= 0 && _month <= 12
+      this._emitChange('month', this.month, valid)
+      return valid
     },
 
     isDayValid: function() {
       var _day = parseInt(this.day)
-
-      return _day >= 0 && _day <= this.daysMaxCalculation
+      var valid = _day >= 0 && _day <= this.daysMaxCalculation
+      this._emitChange('day', this.day, valid)
+      return valid
     },
 
     isYearValid: function() {
-      return parseInt(this.year) >= 1
+      // Emit a change event
+      var valid = parseInt(this.year) >= 1
+      this._emitChange('year', this.year, valid)
+      return valid
     },
 
     isWithinDateRange: function() {
@@ -125,6 +130,12 @@ export default {
           // All other months, or null, go with 31
           return 31
       }
+    },
+  },
+
+  methods: {
+    _emitChange: function(name, value, valid) {
+      this.$root.$emit('field-change', { value, valid, name })
     },
   },
 
