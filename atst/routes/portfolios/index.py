@@ -90,39 +90,19 @@ def portfolio_admin(portfolio_id):
     return render_admin_page(portfolio)
 
 
-def permission_set_has_changed(old_perm_set_names, new_perm_set_names):
-    has_changed = False
-    for perm_name in new_perm_set_names:
-        base = perm_name[4:]
-        if perm_name.split("_")[0] == "edit":
-            if perm_name not in old_perm_set_names:
-                has_changed = True
-        elif perm_name.split("_")[0] == "view":
-            edit_version = "edit" + base
-            if edit_version in old_perm_set_names:
-                has_changed = True
-    return has_changed
-
-
 @portfolios_bp.route("/portfolios/<portfolio_id>/admin", methods=["POST"])
 @user_can(Permissions.EDIT_PORTFOLIO_USERS, message="view portfolio admin page")
 def edit_portfolio_members(portfolio_id):
     portfolio = Portfolios.get_for_update(portfolio_id)
     member_perms_form = member_forms.MembersPermissionsForm(http_request.form)
-    have_any_perms_changed = False
 
     for subform in member_perms_form.members_permissions:
         new_perm_set = subform.data["permission_sets"]
         user_id = subform.user_id.data
         portfolio_role = PortfolioRoles.get(portfolio.id, user_id)
-        old_perm_set = [perm.name for perm in portfolio_role.permission_sets]
+        PortfolioRoles.update(portfolio_role, new_perm_set)
 
-        if permission_set_has_changed(old_perm_set, new_perm_set):
-            PortfolioRoles.update(portfolio_role, new_perm_set)
-            have_any_perms_changed = True
-
-    if have_any_perms_changed:
-        flash("update_portfolio_members", portfolio=portfolio)
+    flash("update_portfolio_members", portfolio=portfolio)
 
     return redirect(
         url_for(
