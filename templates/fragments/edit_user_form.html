@@ -4,37 +4,41 @@
 {% from "components/phone_input.html" import PhoneInput %}
 {% from "components/date_picker.html" import DatePicker %}
 
-<form method="POST" action='{{ form_action }}'>
-  {{ form.csrf_token }}
-  <div class='panel'>
-    <div class='panel__content'>
-      <div class='form-row'>
-        <div class='form-col form-col--half'>
-          {{ TextInput(form.first_name, validation='requiredField') }}
+<base-form inline-template>
+  <form method="POST" action='{{ form_action }}'>
+    {{ form.csrf_token }}
+    <div class='panel'>
+      <div class='panel__content'>
+        <div class='form-row'>
+          <div class='form-col form-col--half'>
+            {{ TextInput(form.first_name, validation='requiredField') }}
+          </div>
+
+          <div class='form-col form-col--half'>
+            {{ TextInput(form.last_name, validation='requiredField') }}
+          </div>
         </div>
 
-        <div class='form-col form-col--half'>
-          {{ TextInput(form.last_name, validation='requiredField') }}
+        {{ TextInput(form.email, validation='email') }}
+        {{ PhoneInput(form.phone_number, form.phone_ext) }}
+
+        {{ OptionsInput(form.service_branch) }}
+        {{ OptionsInput(form.citizenship) }}
+        {{ OptionsInput(form.designation) }}
+
+
+        <div class="usa-input">
+          {{ DatePicker(form.date_latest_training, mindate=mindate, maxdate=maxdate) }}
         </div>
-      </div>
-
-      {{ TextInput(form.email, validation='email') }}
-      {{ PhoneInput(form.phone_number, form.phone_ext) }}
-
-      {{ OptionsInput(form.service_branch) }}
-      {{ OptionsInput(form.citizenship) }}
-      {{ OptionsInput(form.designation) }}
-
-
-      <div class="usa-input">
-        {{ DatePicker(form.date_latest_training, mindate=mindate, maxdate=maxdate) }}
       </div>
     </div>
-  </div>
 
-  <div class='action-group'>
-    <button class='usa-button usa-button-big' type='submit'>
-      {{ "fragments.edit_user_form.save_details_button" | translate }}
-    </button>
-  </div>
-</form>
+    <div class='action-group'>
+      <savebutton
+        text='{{ "fragments.edit_user_form.save_details_button" | translate }}'
+        classes="usa-button-big"
+        :disabled="disabled">
+      </savebutton>
+    </div>
+  </form>
+</base-form>
