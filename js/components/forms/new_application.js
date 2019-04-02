@@ -112,13 +112,16 @@ export default {
     validateAndOpenModal: function() {
       let isValid = this.$children.reduce((previous, newVal) => {
         // display textInput error if it is not valid
-        if (!newVal.showValid) {
-          newVal.showError = true
+        if (newVal.$options.name == 'savebutton') {
+          return true
+        } else {
+          if (!newVal.showValid) {
+            newVal.showError = true
+          }
+
+          return newVal.showValid && previous
         }
-
-        return newVal.showValid && previous
       }, true)
-
       this.validate()
       isValid = this.errors.length == 0 && isValid
 

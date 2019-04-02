@@ -76,7 +76,10 @@
       </div>
 
       <div class="action-group">
-        <button class="usa-button usa-button-primary" tabindex="0" type="submit">{{ 'portfolios.applications.create_button_text' | translate }}</button>
+        <savebutton
+          text="{{ 'portfolios.applications.create_button_text' | translate }}"
+          :disabled="disabled">
+        </savebutton>
       </div>
     </form>
   </new-application>
