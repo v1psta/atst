@@ -10,7 +10,9 @@ export default {
       const { value, name } = event
       if (typeof this[name] !== undefined) {
         this[name] = value
-        this.disabled = false
+        if (event['parent_uid'] === this._uid) {
+          this.disabled = false
+        }
       }
     },
   },

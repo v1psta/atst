@@ -43,6 +43,7 @@ export default {
       this.$root.$emit('field-change', {
         value: e.target.value,
         name: this.name,
+        parent_uid: this.$parent._uid,
       })
       this.showError = false
       this.showValid = true

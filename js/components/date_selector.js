@@ -135,7 +135,11 @@ export default {
 
   methods: {
     _emitChange: function(name, value, valid) {
-      this.$root.$emit('field-change', { value, valid, name })
+      this.$root.$emit('field-change', {
+        value,
+        name,
+        parent_uid: this.$parent && this.$parent._uid,
+      })
     },
   },
 
