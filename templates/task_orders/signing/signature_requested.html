@@ -3,6 +3,7 @@
 {% from "components/text_input.html" import TextInput %}
 {% from "components/checkbox_input.html" import CheckboxInput %}
 {% from "components/icon.html" import Icon %}
+{% from 'components/save_button.html' import SaveButton %}
 
 {% block content %}
 <base-form inline-template>
@@ -38,7 +39,7 @@
           </div>
         </div>
         <div class="action-group">
-          <savebutton text="{{ 'common.sign' | translate }}" :disabled="disabled"></savebutton>
+          {{ SaveButton(text=('common.sign' | translate)) }}
           <a
             href="{{ url_for("portfolios.ko_review", portfolio_id=portfolio_id, task_order_id=task_order_id) }}"
             class="action-group__action icon-link">

@@ -4,6 +4,7 @@
 {% from "components/icon.html" import Icon %}
 {% from "components/text_input.html" import TextInput %}
 {% from "components/multi_step_modal_form.html" import MultiStepModalForm %}
+{% from 'components/save_button.html' import SaveButton %}
 
 {% set secondary_breadcrumb = "navigation.portfolio_navigation.portfolio_admin" | translate %}
 
@@ -24,7 +25,7 @@
               </div>
 
                 <div class='edit-portfolio-name action-group'>
-                  <savebutton text="Save" classes="usa-button-big" :disabled="disabled"></savebutton>
+                  {{ SaveButton(text='Save', additional_classes='usa-button-big') }}
                 </div>
               </div>
                 <div class='defense-row'>

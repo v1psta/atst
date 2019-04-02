@@ -10,7 +10,7 @@
 {% from "components/alert.html" import Alert %}
 {% from "components/review_field.html" import ReviewField %}
 {% from "components/upload_input.html" import UploadInput %}
-
+{% from 'components/save_button.html' import SaveButton %}
 
 {% block content %}
 <ko-review inline-template v-bind:initial-data='{{ form.data|tojson }}'>
@@ -103,7 +103,7 @@
       {% endblock %}
 
       <div class='action-group'>
-        <savebutton text="Continue" :disabled="disabled"></savebutton>
+        {{ SaveButton(text="Continue") }}
       </div>
 
     </form>
