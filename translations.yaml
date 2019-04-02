@@ -184,7 +184,7 @@ forms:
     portfolio_name_label: Portfolio name
     portfolio_name_description: The name of your office or organization. You can add multiple applications to your portfolio. Your task orders are used to pay for these applications and their environments.
     scope_label: Cloud project scope
-    scope_description: Your team's plan for using the cloud, such as migrating an existing application or creating a prototype.
+    scope_description: Your team's plan for using the cloud, such as migrating an existing application or creating a prototype. <p>Not sure how to describe your scope? <a href="#">Read some examples</a> to get some inspiration.</p>
     defense_component_label: Department of Defense component
     app_migration:
       label: App migration
