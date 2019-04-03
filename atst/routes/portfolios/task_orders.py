@@ -231,6 +231,7 @@ def task_order_invitations(portfolio_id, task_order_id):
             portfolio=portfolio,
             task_order=task_order,
             form=form,
+            user=g.current_user,
         )
     else:
         raise NotFoundError("task_order")
