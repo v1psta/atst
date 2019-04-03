@@ -12,6 +12,7 @@ from atst.database import db as _db
 from atst.queue import queue as atst_queue
 import tests.factories as factories
 from tests.mocks import PDF_FILENAME, PDF_FILENAME2
+from tests.utils import FakeLogger
 
 from datetime import datetime, timezone, timedelta
 from cryptography.hazmat.primitives.asymmetric import rsa
@@ -296,3 +297,13 @@ def crl_file(make_crl, ca_key, tmpdir, serialize_pki_object_to_disk):
     serialize_pki_object_to_disk(crl, crl_out, encoding=Encoding.DER)
 
     return crl_out
+
+
+@pytest.fixture
+def mock_logger(app):
+    real_logger = app.logger
+    app.logger = FakeLogger()
+
+    yield app.logger
+
+    app.logger = real_logger
