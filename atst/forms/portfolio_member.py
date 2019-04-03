@@ -84,5 +84,7 @@ class NewForm(PermissionsForm):
 
 class AssignPPOCForm(PermissionsForm):
     user_id = SelectField(
-        label=translate("forms.assign_ppoc.dod_id"), validators=[Required()]
+        label=translate("forms.assign_ppoc.dod_id"),
+        validators=[Required()],
+        choices=[("", "- Select -")],
     )
