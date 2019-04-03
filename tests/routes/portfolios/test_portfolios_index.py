@@ -92,9 +92,7 @@ def test_remove_portfolio_member(client, user_session):
     user_session(portfolio.owner)
 
     response = client.post(
-        url_for(
-            "portfolios.remove_member", portfolio_id=portfolio.id, member_id=user.id
-        ),
+        url_for("portfolios.remove_member", portfolio_id=portfolio.id, user_id=user.id),
         follow_redirects=False,
     )
 
@@ -121,7 +119,7 @@ def test_remove_portfolio_member_self(client, user_session):
         url_for(
             "portfolios.remove_member",
             portfolio_id=portfolio.id,
-            member_id=portfolio.owner.id,
+            user_id=portfolio.owner.id,
         ),
         follow_redirects=False,
     )

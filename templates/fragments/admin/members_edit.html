@@ -1,8 +1,8 @@
 {% from "components/confirmation_button.html" import ConfirmationButton %}
 
-{% set modal_id = "portfolio_id_{}_user_id_{}".format(portfolio.id, user.id) %}
-
 {% for subform in member_perms_form.members_permissions %}
+  {% set modal_id = "portfolio_id_{}_user_id_{}".format(portfolio.id, subform.user_id.data) %}
+
   <tr>
     <td class='name'>{{ subform.member.data }}
       {% if subform.member.data == user.full_name %}

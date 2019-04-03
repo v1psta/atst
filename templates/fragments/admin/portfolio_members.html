@@ -70,7 +70,7 @@
           }}
 
           <div class="action-group">
-            <form method="POST" action="{{ url_for('portfolios.remove_member', portfolio_id=portfolio.id, member_id=member.user_id)  }}">
+            <form method="POST" action="{{ url_for('portfolios.remove_member', portfolio_id=portfolio.id, user_id=member.user_id)  }}">
               {{ member_perms_form.csrf_token }}
               <button class="usa-button usa-button-danger">
                 {{ "portfolios.members.archive_button" | translate }}

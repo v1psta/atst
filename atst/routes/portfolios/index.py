@@ -177,18 +177,16 @@ def portfolio_reports(portfolio_id):
 
 
 @portfolios_bp.route(
-    "/portfolios/<portfolio_id>/members/<member_id>/delete", methods=["POST"]
+    "/portfolios/<portfolio_id>/members/<user_id>/delete", methods=["POST"]
 )
 @user_can(Permissions.EDIT_PORTFOLIO_USERS, message="update portfolio members")
-def remove_member(portfolio_id, member_id):
-    if member_id == str(g.current_user.id):
+def remove_member(portfolio_id, user_id):
+    if str(g.current_user.id) == user_id:
         raise UnauthorizedError(
-            user=g.current_user, action="you cant remove yourself from the portfolio"
+            g.current_user, "you cant remove yourself from the portfolio"
         )
 
-    portfolio = Portfolios.get(g.current_user, portfolio_id)
-    portfolio_role = PortfolioRoles.get(portfolio_id=portfolio_id, user_id=member_id)
-
+    portfolio_role = PortfolioRoles.get(portfolio_id=portfolio_id, user_id=user_id)
     PortfolioRoles.disable(portfolio_role=portfolio_role)
 
     flash("portfolio_member_removed", member_name=portfolio_role.user.full_name)
@@ -196,7 +194,7 @@ def remove_member(portfolio_id, member_id):
     return redirect(
         url_for(
             "portfolios.portfolio_admin",
-            portfolio_id=portfolio.id,
+            portfolio_id=portfolio_id,
             _anchor="portfolio-members",
             fragment="portfolio-members",
         )
