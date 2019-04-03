@@ -1,4 +1,8 @@
+{% from "components/confirmation_button.html" import ConfirmationButton %}
+
 {% for subform in member_perms_form.members_permissions %}
+  {% set modal_id = "portfolio_id_{}_user_id_{}".format(portfolio.id, subform.user_id.data) %}
+
   <tr>
     <td class='name'>{{ subform.member.data }}
       {% if subform.member.data == user.full_name %}
@@ -14,7 +18,10 @@
     <td>{{ OptionsInput(subform.perms_reporting, label=False) }}</td>
     <td>{{ OptionsInput(subform.perms_portfolio_mgmt, label=False) }}</td>
 
-    <td><button type="button" class='{{ archive_button_class }}'>{{ "portfolios.members.archive_button" | translate }}</button>
+    <td>
+      <a v-on:click="openModal('{{ modal_id }}')" class='usa-button {{ archive_button_class }}'>
+        {{ "portfolios.members.archive_button" | translate }}
+      </a>
     </td>
     {{ subform.user_id() }}
   </tr>

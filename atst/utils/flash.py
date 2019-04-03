@@ -138,6 +138,11 @@ MESSAGES = {
         """,
         "category": "error",
     },
+    "portfolio_member_removed": {
+        "title_template": "Portfolio Member Removed",
+        "message_template": "You have successfully removed {{ member_name }} from the portfolio.",
+        "category": "success",
+    },
 }
 
 

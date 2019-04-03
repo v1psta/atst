@@ -2,8 +2,6 @@ from datetime import date, timedelta
 
 from flask import render_template, request as http_request, g, redirect, url_for
 
-from atst.utils.flash import formatted_flash as flash
-
 from . import portfolios_bp
 from atst.domain.reports import Reports
 from atst.domain.portfolios import Portfolios
@@ -15,6 +13,8 @@ import atst.forms.portfolio_member as member_forms
 from atst.models.permissions import Permissions
 from atst.domain.permission_sets import PermissionSets
 from atst.domain.authz.decorator import user_can_access_decorator as user_can
+from atst.utils.flash import formatted_flash as flash
+from atst.domain.exceptions import UnauthorizedError
 
 
 @portfolios_bp.route("/portfolios")
@@ -173,4 +173,29 @@ def portfolio_reports(portfolio_id):
         two_months_ago=two_months_ago,
         expiration_date=expiration_date,
         remaining_days=remaining_days,
+    )
+
+
+@portfolios_bp.route(
+    "/portfolios/<portfolio_id>/members/<user_id>/delete", methods=["POST"]
+)
+@user_can(Permissions.EDIT_PORTFOLIO_USERS, message="update portfolio members")
+def remove_member(portfolio_id, user_id):
+    if str(g.current_user.id) == user_id:
+        raise UnauthorizedError(
+            g.current_user, "you cant remove yourself from the portfolio"
+        )
+
+    portfolio_role = PortfolioRoles.get(portfolio_id=portfolio_id, user_id=user_id)
+    PortfolioRoles.disable(portfolio_role=portfolio_role)
+
+    flash("portfolio_member_removed", member_name=portfolio_role.user.full_name)
+
+    return redirect(
+        url_for(
+            "portfolios.portfolio_admin",
+            portfolio_id=portfolio_id,
+            _anchor="portfolio-members",
+            fragment="portfolio-members",
+        )
     )

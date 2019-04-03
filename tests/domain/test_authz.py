@@ -11,6 +11,7 @@ from atst.domain.authz.decorator import user_can_access_decorator
 from atst.domain.permission_sets import PermissionSets
 from atst.domain.exceptions import UnauthorizedError
 from atst.models.permissions import Permissions
+from atst.domain.portfolio_roles import PortfolioRoles
 
 from tests.utils import FakeLogger
 
@@ -75,7 +76,7 @@ def test_user_can_access():
 
     portfolio = PortfolioFactory.create(owner=edit_admin)
     # factory gives view perms by default
-    PortfolioRoleFactory.create(user=view_admin, portfolio=portfolio)
+    view_admin_pr = PortfolioRoleFactory.create(user=view_admin, portfolio=portfolio)
 
     # check a site-wide permission
     assert user_can_access(ccpo, Permissions.VIEW_AUDIT_LOG)
@@ -96,6 +97,13 @@ def test_user_can_access():
     assert user_can_access(
         edit_admin, Permissions.EDIT_PORTFOLIO_NAME, portfolio=portfolio
     )
+    with pytest.raises(UnauthorizedError):
+        user_can_access(
+            view_admin, Permissions.EDIT_PORTFOLIO_NAME, portfolio=portfolio
+        )
+
+    # check when portfolio_role is disabled
+    PortfolioRoles.disable(portfolio_role=view_admin_pr)
     with pytest.raises(UnauthorizedError):
         user_can_access(
             view_admin, Permissions.EDIT_PORTFOLIO_NAME, portfolio=portfolio
