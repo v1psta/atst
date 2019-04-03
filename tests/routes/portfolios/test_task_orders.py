@@ -289,6 +289,159 @@ class TestTaskOrderInvitations:
         assert response.status_code == 404
         assert time_updated == other_task_order.time_updated
 
+    def test_does_not_render_resend_invite_if_user_is_mo_and_user_is_ko(
+        self, client, user_session
+    ):
+        task_order = TaskOrderFactory.create(
+            portfolio=self.portfolio,
+            creator=self.portfolio.owner,
+            ko_first_name=self.portfolio.owner.first_name,
+            ko_last_name=self.portfolio.owner.last_name,
+            ko_email=self.portfolio.owner.email,
+            ko_phone_number=self.portfolio.owner.phone_number,
+            ko_dod_id=self.portfolio.owner.dod_id,
+            ko_invite=True,
+        )
+        user_session(self.portfolio.owner)
+        response = client.get(
+            url_for(
+                "portfolios.task_order_invitations",
+                portfolio_id=self.portfolio.id,
+                task_order_id=task_order.id,
+            )
+        )
+        assert "Resend Invitation" not in response.data.decode()
+
+    def test_renders_resend_invite_if_user_is_mo_and_user_is_not_ko(
+        self, client, user_session
+    ):
+        ko = UserFactory.create()
+        task_order = TaskOrderFactory.create(
+            portfolio=self.portfolio,
+            creator=self.portfolio.owner,
+            contracting_officer=ko,
+            ko_invite=True,
+        )
+        portfolio_role = PortfolioRoleFactory.create(portfolio=self.portfolio, user=ko)
+        invitation = InvitationFactory.create(
+            inviter=self.portfolio.owner,
+            portfolio_role=portfolio_role,
+            user=ko,
+            status=InvitationStatus.PENDING,
+        )
+
+        user_session(self.portfolio.owner)
+        response = client.get(
+            url_for(
+                "portfolios.task_order_invitations",
+                portfolio_id=self.portfolio.id,
+                task_order_id=task_order.id,
+            )
+        )
+        assert "Resend Invitation" in response.data.decode()
+
+    def test_does_not_render_resend_invite_if_user_is_mo_and_user_is_cor(
+        self, client, user_session
+    ):
+        task_order = TaskOrderFactory.create(
+            portfolio=self.portfolio,
+            creator=self.portfolio.owner,
+            cor_first_name=self.portfolio.owner.first_name,
+            cor_last_name=self.portfolio.owner.last_name,
+            cor_email=self.portfolio.owner.email,
+            cor_phone_number=self.portfolio.owner.phone_number,
+            cor_dod_id=self.portfolio.owner.dod_id,
+            cor_invite=True,
+        )
+        user_session(self.portfolio.owner)
+        response = client.get(
+            url_for(
+                "portfolios.task_order_invitations",
+                portfolio_id=self.portfolio.id,
+                task_order_id=task_order.id,
+            )
+        )
+        assert "Resend Invitation" not in response.data.decode()
+
+    def test_renders_resend_invite_if_user_is_mo_and_user_is_not_cor(
+        self, client, user_session
+    ):
+        cor = UserFactory.create()
+        task_order = TaskOrderFactory.create(
+            portfolio=self.portfolio,
+            creator=self.portfolio.owner,
+            contracting_officer_representative=cor,
+            cor_invite=True,
+        )
+        portfolio_role = PortfolioRoleFactory.create(portfolio=self.portfolio, user=cor)
+        invitation = InvitationFactory.create(
+            inviter=self.portfolio.owner,
+            portfolio_role=portfolio_role,
+            user=cor,
+            status=InvitationStatus.PENDING,
+        )
+
+        user_session(self.portfolio.owner)
+        response = client.get(
+            url_for(
+                "portfolios.task_order_invitations",
+                portfolio_id=self.portfolio.id,
+                task_order_id=task_order.id,
+            )
+        )
+        assert "Resend Invitation" in response.data.decode()
+
+    def test_does_not_render_resend_invite_if_user_is_mo_and_user_is_so(
+        self, client, user_session
+    ):
+        task_order = TaskOrderFactory.create(
+            portfolio=self.portfolio,
+            creator=self.portfolio.owner,
+            so_first_name=self.portfolio.owner.first_name,
+            so_last_name=self.portfolio.owner.last_name,
+            so_email=self.portfolio.owner.email,
+            so_phone_number=self.portfolio.owner.phone_number,
+            so_dod_id=self.portfolio.owner.dod_id,
+            so_invite=True,
+        )
+        user_session(self.portfolio.owner)
+        response = client.get(
+            url_for(
+                "portfolios.task_order_invitations",
+                portfolio_id=self.portfolio.id,
+                task_order_id=task_order.id,
+            )
+        )
+        assert "Resend Invitation" not in response.data.decode()
+
+    def test_renders_resend_invite_if_user_is_mo_and_user_is_not_so(
+        self, client, user_session
+    ):
+        so = UserFactory.create()
+        task_order = TaskOrderFactory.create(
+            portfolio=self.portfolio,
+            creator=self.portfolio.owner,
+            security_officer=so,
+            so_invite=True,
+        )
+        portfolio_role = PortfolioRoleFactory.create(portfolio=self.portfolio, user=so)
+        invitation = InvitationFactory.create(
+            inviter=self.portfolio.owner,
+            portfolio_role=portfolio_role,
+            user=so,
+            status=InvitationStatus.PENDING,
+        )
+
+        user_session(self.portfolio.owner)
+        response = client.get(
+            url_for(
+                "portfolios.task_order_invitations",
+                portfolio_id=self.portfolio.id,
+                task_order_id=task_order.id,
+            )
+        )
+        assert "Resend Invitation" in response.data.decode()
+
 
 def test_ko_can_view_task_order(client, user_session, portfolio, user):
     PortfolioRoleFactory.create(
