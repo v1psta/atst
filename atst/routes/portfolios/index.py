@@ -2,8 +2,6 @@ from datetime import date, timedelta
 
 from flask import render_template, request as http_request, g, redirect, url_for
 
-from atst.utils.flash import formatted_flash as flash
-
 from . import portfolios_bp
 from atst.domain.reports import Reports
 from atst.domain.portfolios import Portfolios
