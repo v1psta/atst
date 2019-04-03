@@ -69,12 +69,8 @@ def test_update_user_with_dod_id():
 
 
 def test_update_user_with_last_login():
-    new_user = UserFactory.create(last_login=datetime.now())
+    new_user = UserFactory.create()
     Users.update_last_login(new_user)
     last_login = new_user.last_login
-
-    with pytest.raises(UnauthorizedError):
-        Users.update(new_user, {"last_login": datetime.now()})
-
     Users.update_last_login(new_user)
     assert new_user.last_login > last_login

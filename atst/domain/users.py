@@ -85,7 +85,7 @@ class Users(object):
 
     @classmethod
     def update_last_login(cls, user):
-        setattr(user, "last_login", datetime.now())
+        user.last_login = datetime.now()
         db.session.add(user)
         db.session.commit()
 
