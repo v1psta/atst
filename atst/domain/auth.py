@@ -53,11 +53,7 @@ def get_current_user():
 
 
 def get_last_login():
-    last_login = session.get("last_login")
-    if last_login and session.get("user_id"):
-        return last_login
-    else:
-        return False
+    return session.get("user_id") and session.get("last_login")
 
 
 def logout():
