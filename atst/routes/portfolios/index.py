@@ -74,9 +74,9 @@ def render_admin_page(portfolio, form=None):
     )
 
     assign_ppoc_form = member_forms.AssignPPOCForm()
-
-    for user in portfolio.users:
-        assign_ppoc_form.user_id.choices.append((user.id, user.full_name))
+    assign_ppoc_form.user_id.choices += [
+        (user.id, user.full_name) for user in portfolio.users
+    ]
 
     return render_template(
         "portfolios/admin.html",
