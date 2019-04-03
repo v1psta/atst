@@ -31,6 +31,7 @@ class JsonFormatter(logging.Formatter):
         ("severity", lambda r: r.levelname),
         ("tags", lambda r: r.__dict__.get("tags")),
         ("message", lambda r: r.msg),
+        ("audit_event", lambda r: r.__dict__.get("audit_event")),
     ]
 
     def format(self, record):

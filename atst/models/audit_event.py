@@ -25,6 +25,19 @@ class AuditEvent(Base, TimestampsMixin):
     display_name = Column(String())
     action = Column(String(), nullable=False)
 
+    @property
+    def log(self):
+        return {
+            "user_id": str(self.id),
+            "portfolio_id": str(self.portfolio_id),
+            "changed_state": self.changed_state,
+            "event_details": self.event_details,
+            "resource_type": self.resource_type,
+            "resource_id": str(self.resource_id),
+            "display_name": self.display_name,
+            "action": self.action,
+        }
+
     def save(self, connection):
         attrs = inspect(self).dict
 

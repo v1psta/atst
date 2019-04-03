@@ -1,5 +1,5 @@
 from sqlalchemy import event, inspect
-from flask import g
+from flask import g, current_app as app
 
 from atst.models.audit_event import AuditEvent
 from atst.utils import camel_to_snake, getattr_path
@@ -32,6 +32,7 @@ class AuditableMixin(object):
         )
 
         audit_event.save(connection)
+        return audit_event
 
     @classmethod
     def __declare_last__(cls):
@@ -42,17 +43,29 @@ class AuditableMixin(object):
     @staticmethod
     def audit_insert(mapper, connection, target):
         """Listen for the `after_insert` event and create an AuditLog entry"""
-        target.create_audit_event(connection, target, ACTION_CREATE)
+        event = target.create_audit_event(connection, target, ACTION_CREATE)
+        app.logger.info(
+            "Audit Event insert",
+            extra={"audit_event": event.log, "tags": ["audit_event", "insert"]},
+        )
 
     @staticmethod
     def audit_delete(mapper, connection, target):
         """Listen for the `after_delete` event and create an AuditLog entry"""
-        target.create_audit_event(connection, target, ACTION_DELETE)
+        event = target.create_audit_event(connection, target, ACTION_DELETE)
+        app.logger.info(
+            "Audit Event delete",
+            extra={"audit_event": event.log, "tags": ["audit_event", "delete"]},
+        )
 
     @staticmethod
     def audit_update(mapper, connection, target):
         if AuditableMixin.get_changes(target):
-            target.create_audit_event(connection, target, ACTION_UPDATE)
+            event = target.create_audit_event(connection, target, ACTION_UPDATE)
+            app.logger.info(
+                "Audit Event update",
+                extra={"audit_event": event.log, "tags": ["audit_event", "update"]},
+            )
 
     def get_changes(self):
         """
