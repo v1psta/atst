@@ -44,13 +44,13 @@ def updating_ppoc_successfully(client, old_ppoc, new_ppoc, portfolio):
     assert portfolio.owner.id == new_ppoc.id
     assert (
         Permissions.EDIT_PORTFOLIO_POC
-        not in PortfolioRoles.get(portfolio.id, old_ppoc.id).permissions
-    )
-    assert (
-        Permissions.EDIT_PORTFOLIO_POC
         in PortfolioRoles.get(
             portfolio_id=portfolio.id, user_id=new_ppoc.id
         ).permissions
+    )
+    assert (
+        Permissions.EDIT_PORTFOLIO_POC
+        not in PortfolioRoles.get(portfolio.id, old_ppoc.id).permissions
     )
 
     #
@@ -78,20 +78,17 @@ def test_update_ppoc_to_member_not_on_portfolio(client, user_session):
 def test_update_ppoc_when_ppoc(client, user_session):
     portfolio = PortfolioFactory.create()
     original_ppoc = portfolio.owner
-    portfolio_member = UserFactory.create()
+    new_ppoc = UserFactory.create()
     Portfolios.add_member(
-        member=portfolio_member,
+        member=new_ppoc,
         portfolio=portfolio,
-        permission_sets=[PermissionSets.PORTFOLIO_POC],
+        permission_sets=[PermissionSets.VIEW_PORTFOLIO],
     )
 
     user_session(original_ppoc)
 
     updating_ppoc_successfully(
-        client=client,
-        new_ppoc=portfolio_member,
-        old_ppoc=original_ppoc,
-        portfolio=portfolio,
+        client=client, new_ppoc=new_ppoc, old_ppoc=original_ppoc, portfolio=portfolio
     )
 
 
@@ -99,20 +96,17 @@ def test_update_ppoc_when_cpo(client, user_session):
     ccpo = UserFactory.create_ccpo()
     portfolio = PortfolioFactory.create()
     original_ppoc = portfolio.owner
-    portfolio_member = UserFactory.create()
+    new_ppoc = UserFactory.create()
     Portfolios.add_member(
-        member=portfolio_member,
+        member=new_ppoc,
         portfolio=portfolio,
-        permission_sets=[PermissionSets.PORTFOLIO_POC],
+        permission_sets=[PermissionSets.VIEW_PORTFOLIO],
     )
 
     user_session(ccpo)
 
     updating_ppoc_successfully(
-        client=client,
-        new_ppoc=portfolio_member,
-        old_ppoc=original_ppoc,
-        portfolio=portfolio,
+        client=client, new_ppoc=new_ppoc, old_ppoc=original_ppoc, portfolio=portfolio
     )
 
 

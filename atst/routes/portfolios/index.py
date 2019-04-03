@@ -140,10 +140,13 @@ def update_ppoc(portfolio_id):
     #
     # Reset original PPOCs permissions to default for a portfolio
     #
-    original_portfolio_role = PortfolioRoles.get(
-        portfolio_id=portfolio.id, user_id=owner.id
-    )
-    PortfolioRoles.reset_default_permission_sets(portfolio_role=original_portfolio_role)
+    portfolio_role = PortfolioRoles.get(portfolio_id=portfolio.id, user_id=owner.id)
+    permission_sets = [
+        permission_set.name
+        for permission_set in portfolio_role.permission_sets
+        if permission_set.name != "portfolio_poc"
+    ]
+    PortfolioRoles.update(portfolio_role=portfolio_role, set_names=permission_sets)
 
     #
     # Add PORTFOLIO_POC permissions to new ppoc
