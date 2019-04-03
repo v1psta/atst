@@ -7,4 +7,9 @@
       <span>{{ "footer.jedi_help_link_text" | translate }}</span>
     </a>
   </div>
+  {% if g.last_login %}
+    <div class="">
+      Last Login: <local-datetime timestamp='{{ g.last_login }}'></local-datetime>
+    </div>
+  {% endif %}
 </footer>

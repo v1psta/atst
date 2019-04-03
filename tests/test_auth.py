@@ -1,6 +1,7 @@
 from urllib.parse import urlparse
 
 import pytest
+from datetime import datetime
 from flask import session, url_for
 from .mocks import DOD_SDN_INFO, DOD_SDN, FIXTURE_EMAIL_ADDRESS
 from atst.domain.users import Users
@@ -224,3 +225,18 @@ def test_error_on_invalid_crl(client, monkeypatch):
     response = _login(client)
     assert response.status_code == 401
     assert "Error Code 008" in response.data.decode()
+
+
+def test_last_login_set_when_user_logs_in(client, monkeypatch):
+    last_login = datetime.now()
+    user = UserFactory.create(last_login=last_login)
+    monkeypatch.setattr(
+        "atst.domain.authnid.AuthenticationContext.authenticate", lambda *args: True
+    )
+    monkeypatch.setattr(
+        "atst.domain.authnid.AuthenticationContext.get_user", lambda *args: user
+    )
+    response = _login(client)
+    assert session["last_login"]
+    assert user.last_login > session["last_login"]
+    assert isinstance(session["last_login"], datetime)

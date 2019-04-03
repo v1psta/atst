@@ -22,6 +22,8 @@ def apply_authentication(app):
         user = get_current_user()
         if user:
             g.current_user = user
+            g.last_login = get_last_login()
+
             if should_redirect_to_user_profile(request, user):
                 return redirect(url_for("users.user", next=request.path))
         elif not _unprotected_route(request):
@@ -50,9 +52,14 @@ def get_current_user():
         return False
 
 
+def get_last_login():
+    return session.get("user_id") and session.get("last_login")
+
+
 def logout():
     if session.get("user_id"):  # pragma: no branch
         del session["user_id"]
+        del session["last_login"]
 
 
 def _unprotected_route(request):

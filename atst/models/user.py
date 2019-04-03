@@ -1,4 +1,4 @@
-from sqlalchemy import String, ForeignKey, Column, Date, Boolean, Table
+from sqlalchemy import String, ForeignKey, Column, Date, Boolean, Table, TIMESTAMP
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import UUID
 
@@ -36,6 +36,7 @@ class User(
     citizenship = Column(String)
     designation = Column(String)
     date_latest_training = Column(Date)
+    last_login = Column(TIMESTAMP(timezone=True), nullable=True)
 
     provisional = Column(Boolean)
 

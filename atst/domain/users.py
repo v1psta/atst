@@ -1,5 +1,6 @@
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.exc import IntegrityError
+from datetime import datetime
 
 from atst.database import db
 from atst.models import User
@@ -81,6 +82,12 @@ class Users(object):
         db.session.commit()
 
         return user
+
+    @classmethod
+    def update_last_login(cls, user):
+        user.last_login = datetime.now()
+        db.session.add(user)
+        db.session.commit()
 
     @classmethod
     def finalize(cls, user):
