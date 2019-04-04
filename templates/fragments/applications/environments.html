@@ -1,0 +1,19 @@
+<div class="application-list-item">
+  <header>
+    <h2 class="block-list__title">{{ 'portfolios.applications.environments_heading' | translate }}</h2>
+    <p>
+      {{ 'portfolios.applications.environments_description' | translate }}
+    </p>
+  </header>
+
+  <ul>
+    {% for environment in application.environments %}
+      <li class="application-edit__env-list-item">
+        <div class="usa-input input--disabled">
+          <label>Environment Name</label>
+          <input type="text" disabled value="{{ environment.name }}" readonly />
+        </div>
+      </li>
+    {% endfor %}
+  </ul>
+</div>
