@@ -14,6 +14,8 @@ class Permissions(object):
     VIEW_ENVIRONMENT = "view_environment"
     EDIT_ENVIRONMENT = "edit_environment"
     CREATE_ENVIRONMENT = "create_environment"
+    DELETE_ENVIRONMENT = "delete_environment"
+    ASSIGN_ENVIRONMENT_MEMBER = "assign_environment_member"
 
     # funding
     VIEW_PORTFOLIO_FUNDING = "view_portfolio_funding"  # TO summary page
