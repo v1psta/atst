@@ -571,7 +571,7 @@ portfolios:
     activity_log_title: Activity Log
     add_new_member: Add a new member
   members:
-    archive_button: Archive User
+    archive_button: Delete member
     permissions:
       name: Name
       app_mgmt: App Mgmt
