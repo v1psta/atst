@@ -1,6 +1,7 @@
 import MaskedInput, { conformToMask } from 'vue-text-mask'
 import inputValidations from '../lib/input_validations'
 import { formatDollars } from '../lib/dollars'
+import { emitFieldChange } from '../lib/emitters'
 
 export default {
   name: 'textinput',
@@ -124,11 +125,10 @@ export default {
       this.showValid = this.value != '' && valid
 
       // Emit a change event
-      this.$root.$emit('field-change', {
+      emitFieldChange(this, {
         value: this._rawValue(value),
         valid,
         name: this.name,
-        parent_uid: this.$parent._uid,
       })
     },
 

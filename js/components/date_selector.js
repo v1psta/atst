@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import { getDaysInMonth } from 'date-fns'
+import { emitFieldChange } from '../lib/emitters'
 
 var paddedNumber = function(number) {
   if ((number + '').length === 1) {
@@ -135,11 +136,7 @@ export default {
 
   methods: {
     _emitChange: function(name, value, valid) {
-      this.$root.$emit('field-change', {
-        value,
-        name,
-        parent_uid: this.$parent && this.$parent._uid,
-      })
+      emitFieldChange(this, { value, name })
     },
   },
 
