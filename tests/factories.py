@@ -63,6 +63,10 @@ def base_portfolio_permission_sets():
     ]
 
 
+def base_application_permission_sets():
+    return [PermissionSets.get(PermissionSets.VIEW_APPLICATION)]
+
+
 def get_all_portfolio_permission_sets():
     return PermissionSets.get_many(PortfolioRoles.PORTFOLIO_PERMISSION_SETS)
 
@@ -220,7 +224,7 @@ class ApplicationRoleFactory(Base):
     application = factory.SubFactory(ApplicationFactory)
     user = factory.SubFactory(UserFactory)
     status = ApplicationRoleStatus.PENDING
-    permission_sets = []
+    permission_sets = factory.LazyFunction(base_application_permission_sets)
 
 
 class EnvironmentRoleFactory(Base):
