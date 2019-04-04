@@ -4,9 +4,9 @@ from atst.models.mixins.auditable import AuditableMixin
 from atst.domain.users import Users
 
 
-def test_audit_insert(mock_logger):
+def test_logging_audit_event_on_create(mock_logger):
     user = UserFactory.create()
-    assert "Audit Event insert" in mock_logger.messages
+    assert "Audit Event create" in mock_logger.messages
     assert len(mock_logger.messages) == 1
 
     event_log = mock_logger.extras[0]["audit_event"]
@@ -15,12 +15,12 @@ def test_audit_insert(mock_logger):
     assert event_log["display_name"] == user.full_name
     assert event_log["action"] == "create"
 
-    assert "insert" in mock_logger.extras[0]["tags"]
+    assert "create" in mock_logger.extras[0]["tags"]
 
 
-def test_audit_delete(mock_logger):
+def test_logging_audit_event_on_delete(mock_logger):
     user = UserFactory.create()
-    assert "Audit Event insert" in mock_logger.messages
+    assert "Audit Event create" in mock_logger.messages
 
     db.session.delete(user)
     db.session.commit()
@@ -36,9 +36,9 @@ def test_audit_delete(mock_logger):
     assert "delete" in mock_logger.extras[1]["tags"]
 
 
-def test_audit_insert(mock_logger):
+def test_logging_audit_event_on_update(mock_logger):
     user = UserFactory.create()
-    assert "Audit Event insert" in mock_logger.messages
+    assert "Audit Event create" in mock_logger.messages
 
     Users.update(user, {"first_name": "Greedo"})
     assert "Audit Event update" in mock_logger.messages

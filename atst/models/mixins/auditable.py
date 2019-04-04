@@ -31,6 +31,10 @@ class AuditableMixin(object):
             event_details=event_details,
         )
 
+        app.logger.info(
+            "Audit Event {}".format(action),
+            extra={"audit_event": audit_event.log, "tags": ["audit_event", action]},
+        )
         audit_event.save(connection)
         return audit_event
 
@@ -43,29 +47,17 @@ class AuditableMixin(object):
     @staticmethod
     def audit_insert(mapper, connection, target):
         """Listen for the `after_insert` event and create an AuditLog entry"""
-        event = target.create_audit_event(connection, target, ACTION_CREATE)
-        app.logger.info(
-            "Audit Event insert",
-            extra={"audit_event": event.log, "tags": ["audit_event", "insert"]},
-        )
+        target.create_audit_event(connection, target, ACTION_CREATE)
 
     @staticmethod
     def audit_delete(mapper, connection, target):
         """Listen for the `after_delete` event and create an AuditLog entry"""
-        event = target.create_audit_event(connection, target, ACTION_DELETE)
-        app.logger.info(
-            "Audit Event delete",
-            extra={"audit_event": event.log, "tags": ["audit_event", "delete"]},
-        )
+        target.create_audit_event(connection, target, ACTION_DELETE)
 
     @staticmethod
     def audit_update(mapper, connection, target):
         if AuditableMixin.get_changes(target):
-            event = target.create_audit_event(connection, target, ACTION_UPDATE)
-            app.logger.info(
-                "Audit Event update",
-                extra={"audit_event": event.log, "tags": ["audit_event", "update"]},
-            )
+            target.create_audit_event(connection, target, ACTION_UPDATE)
 
     def get_changes(self):
         """
