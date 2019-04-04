@@ -143,3 +143,6 @@ def test_signed_pdf_dod_revoked(crl_check):
             }
         ],
     }
+
+def test_against_known_bad_pdfs():
+    pass
