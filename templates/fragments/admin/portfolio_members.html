@@ -59,12 +59,12 @@
       {% for member in portfolio.members %}
         {% set modal_id = "portfolio_id_{}_user_id_{}".format(portfolio.id, member.user_id) %}
         {% call Modal(name=modal_id, dismissable=False) %}
-          <h1>Are you sure you want to archive this user?</h1>
+          <h1>Are you sure you want to delete this member?</h1>
 
           {{
             Alert(
-              title="Warning! You  are about to  archive a user from the portfolio  admin.",
-              message="User will be removed from the portfolio, but their log history will be retained.",
+              title="Warning! You  are about to delete a member from the portfolio.",
+              message="The member will be removed from the portfolio, but their log history will be retained.",
               level="warning"
             )
           }}
