@@ -122,6 +122,15 @@ class PortfolioRoles(object):
         return PermissionSets.get_many(perms_set_names)
 
     @classmethod
+    def disable(cls, portfolio_role):
+        portfolio_role.status = PortfolioRoleStatus.DISABLED
+
+        db.session.add(portfolio_role)
+        db.session.commit()
+
+        return portfolio_role
+
+    @classmethod
     def update(cls, portfolio_role, set_names):
         new_permission_sets = PortfolioRoles._permission_sets_for_names(set_names)
         portfolio_role.permission_sets = new_permission_sets

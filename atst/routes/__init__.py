@@ -122,6 +122,12 @@ def redirect_after_login_url():
         return url_for("atst.home")
 
 
+def current_user_setup(user):
+    session["user_id"] = user.id
+    session["last_login"] = user.last_login
+    Users.update_last_login(user)
+
+
 @bp.route("/login-redirect")
 def login_redirect():
     auth_context = _make_authentication_context()
@@ -131,8 +137,7 @@ def login_redirect():
     if user.provisional:
         Users.finalize(user)
 
-    session["user_id"] = user.id
-
+    current_user_setup(user)
     return redirect(redirect_after_login_url())
 
 

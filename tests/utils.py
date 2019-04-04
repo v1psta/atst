@@ -20,11 +20,14 @@ class FakeLogger:
     def __init__(self):
         self.messages = []
 
-    def info(self, msg):
+    def log(self, _lvl, msg, *args, **kwargs):
         self.messages.append(msg)
 
-    def warning(self, msg):
+    def info(self, msg, *args, **kwargs):
         self.messages.append(msg)
 
-    def error(self, msg):
+    def warning(self, msg, *args, **kwargs):
+        self.messages.append(msg)
+
+    def error(self, msg, *args, **kwargs):
         self.messages.append(msg)

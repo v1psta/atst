@@ -1,7 +1,6 @@
 from flask import (
     Blueprint,
     request,
-    session,
     redirect,
     render_template,
     url_for,
@@ -9,7 +8,7 @@ from flask import (
 )
 import pendulum
 
-from . import redirect_after_login_url
+from . import redirect_after_login_url, current_user_setup
 from atst.domain.users import Users
 from atst.domain.permission_sets import PermissionSets
 from atst.queue import queue
@@ -124,8 +123,7 @@ def login_dev():
             user_data,
         ),
     )
-    session["user_id"] = user.id
-
+    current_user_setup(user)
     return redirect(redirect_after_login_url())
 
 

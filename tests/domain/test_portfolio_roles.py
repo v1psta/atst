@@ -29,3 +29,11 @@ def test_add_portfolio_role_with_permission_sets():
     ]
     actual_names = [prms.name for prms in port_role.permission_sets]
     assert expected_names == expected_names
+
+
+def test_disable_portfolio_role():
+    portfolio_role = PortfolioRoleFactory.create(status=PortfolioRoleStatus.ACTIVE)
+    assert portfolio_role.status == PortfolioRoleStatus.ACTIVE
+
+    PortfolioRoles.disable(portfolio_role=portfolio_role)
+    assert portfolio_role.status == PortfolioRoleStatus.DISABLED

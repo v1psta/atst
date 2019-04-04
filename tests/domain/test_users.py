@@ -1,4 +1,5 @@
 import pytest
+from datetime import datetime
 from uuid import uuid4
 
 from atst.domain.users import Users
@@ -65,3 +66,11 @@ def test_update_user_with_dod_id():
         Users.update(new_user, {"dod_id": "1234567890"})
 
     assert "dod_id" in str(excinfo.value)
+
+
+def test_update_user_with_last_login():
+    new_user = UserFactory.create()
+    Users.update_last_login(new_user)
+    last_login = new_user.last_login
+    Users.update_last_login(new_user)
+    assert new_user.last_login > last_login
