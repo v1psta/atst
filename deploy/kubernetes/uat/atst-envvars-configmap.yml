@@ -11,3 +11,4 @@ data:
   UWSGI_CONFIG_FULLPATH: /opt/atat/atst/uwsgi-config.ini
   RQ_QUEUES: atat-uat
   CRL_STORAGE_PROVIDER: CLOUDFILES
+  LOG_JSON: "true"
