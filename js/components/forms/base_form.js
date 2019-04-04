@@ -1,3 +1,5 @@
+import ally from 'ally.js'
+
 import FormMixin from '../../mixins/form'
 import textinput from '../text_input'
 import optionsinput from '../options_input'
@@ -19,4 +21,34 @@ export default {
     levelofwarrant,
   },
   mixins: [FormMixin],
+  methods: {
+    closeModal: function(name) {
+      this.activeModal = null
+      this.$root.$emit('modalOpen', false)
+      if (this.$root.allyHandler) this.$root.allyHandler.disengage()
+    },
+
+    openModal: function(name) {
+      this.$root.activeModal = name
+      this.$root.$emit('modalOpen', true)
+      const idSelector = `#${this.$root.modalId}`
+
+      this.$root.allyHandler = ally.maintain.disabled({
+        filter: idSelector,
+      })
+    },
+  },
+  data: function() {
+    return {
+      activeModal: null,
+      allyHandler: null,
+    }
+  },
+  computed: {
+    modalId: function() {
+      return !!this.$root.activeModal
+        ? `modal--${this.$root.activeModal}`
+        : null
+    },
+  },
 }
