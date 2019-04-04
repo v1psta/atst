@@ -1,6 +1,8 @@
-{% macro SaveButton(text, additional_classes="") -%}
+{% macro SaveButton(text, element="button", additional_classes="", other_attrs="") -%}
   {% set class = "usa-button usa-button-primary" + additional_classes %}
-  <button type="submit" class="{{ class }}" tabindex="0" v-bind:disabled="!changed">
-    {{ text }}
-  </button>
+  <{{ element }} type="submit" class="{{ class }}" tabindex="0" v-bind:disabled="!changed" value="{{ text }}" {{ other_attrs }}>
+    {% if element == 'button'%}
+      {{ text }}
+    {% endif %}
+  </{{ element }}>
 {%- endmacro %}

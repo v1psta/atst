@@ -39,7 +39,7 @@
           </div>
         </div>
         <div class="action-group">
-          {{ SaveButton(text=('common.sign' | translate)) }}
+          {{ SaveButton(text=('common.sign' | translate), additional_classes="usa-button-big") }}
           <a
             href="{{ url_for("portfolios.ko_review", portfolio_id=portfolio_id, task_order_id=task_order_id) }}"
             class="action-group__action icon-link">
