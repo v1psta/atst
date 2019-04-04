@@ -19,15 +19,21 @@ def captured_templates(app):
 class FakeLogger:
     def __init__(self):
         self.messages = []
+        self.extras = []
 
     def log(self, _lvl, msg, *args, **kwargs):
-        self.messages.append(msg)
+        self._log(_lvl, msg, *args, **kwargs)
 
     def info(self, msg, *args, **kwargs):
-        self.messages.append(msg)
+        self._log("info", msg, *args, **kwargs)
 
     def warning(self, msg, *args, **kwargs):
-        self.messages.append(msg)
+        self._log("warning", msg, *args, **kwargs)
 
     def error(self, msg, *args, **kwargs):
+        self._log("error", msg, *args, **kwargs)
+
+    def _log(self, _lvl, msg, *args, **kwargs):
         self.messages.append(msg)
+        if "extra" in kwargs:
+            self.extras.append(kwargs["extra"])

@@ -1,5 +1,5 @@
 from sqlalchemy import event, inspect
-from flask import g
+from flask import g, current_app as app
 
 from atst.models.audit_event import AuditEvent
 from atst.utils import camel_to_snake, getattr_path
@@ -31,7 +31,12 @@ class AuditableMixin(object):
             event_details=event_details,
         )
 
+        app.logger.info(
+            "Audit Event {}".format(action),
+            extra={"audit_event": audit_event.log, "tags": ["audit_event", action]},
+        )
         audit_event.save(connection)
+        return audit_event
 
     @classmethod
     def __declare_last__(cls):
