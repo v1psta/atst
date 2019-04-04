@@ -9,7 +9,7 @@ export default {
       if (typeof this[name] !== undefined) {
         this[name] = value
         if (event['parent_uid'] === this._uid) {
-          this.disabled = false
+          this.changed = true
         }
       }
     },
@@ -17,14 +17,14 @@ export default {
 
   data: function() {
     return {
-      disabled: this.disableSave,
+      changed: this.hasChanges,
     }
   },
 
   props: {
-    disableSave: {
+    hasChanges: {
       type: Boolean,
-      default: true,
+      default: false,
     },
   },
 }

@@ -1,6 +1,6 @@
 {% macro SaveButton(text, additional_classes="") -%}
   {% set class = "usa-button usa-button-primary" + additional_classes %}
-  <button type="submit" class="{{ class }}" tabindex="0" v-bind:disabled="disabled">
+  <button type="submit" class="{{ class }}" tabindex="0" v-bind:disabled="!changed">
     {{ text }}
   </button>
 {%- endmacro %}
