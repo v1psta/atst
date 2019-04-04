@@ -16,6 +16,7 @@ class Application(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     portfolio_id = Column(ForeignKey("portfolios.id"), nullable=False)
     portfolio = relationship("Portfolio")
     environments = relationship("Environment", back_populates="application")
+    roles = relationship("ApplicationRole")
 
     @property
     def users(self):

@@ -14,3 +14,4 @@ from .audit_event import AuditEvent
 from .invitation import Invitation
 from .task_order import TaskOrder
 from .dd_254 import DD254
+from .application_role import ApplicationRole
