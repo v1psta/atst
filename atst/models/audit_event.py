@@ -28,7 +28,6 @@ class AuditEvent(Base, TimestampsMixin):
     @property
     def log(self):
         return {
-            "user_id": str(self.id),
             "portfolio_id": str(self.portfolio_id),
             "changed_state": self.changed_state,
             "event_details": self.event_details,
