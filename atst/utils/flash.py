@@ -29,7 +29,7 @@ MESSAGES = {
         "category": "success",
     },
     "new_portfolio_member": {
-        "title_template": """{{ "flash.success" | translate }}""",
+        "title_template": translate("flash.success"),
         "message_template": """
           <p>{{ "flash.new_portfolio_member" | translate({ "user_name": new_member.user_name }) }}</p>
         """,
@@ -112,8 +112,8 @@ MESSAGES = {
         "category": "success",
     },
     "task_order_congrats": {
-        "title_template": """{{ "flash.congrats" | translate }}""",
-        "message_template": """{{ "flash.new_portfolio" | translate }}""",
+        "title_template": translate("flash.congrats"),
+        "message_template": translate("flash.new_portfolio"),
         "actions": """
             {% from "components/icon.html" import Icon %}
             <div class='alert__actions'>
@@ -137,8 +137,10 @@ MESSAGES = {
         "category": "error",
     },
     "portfolio_member_removed": {
-        "title_template": """{{ "flash.deleted_member" | translate }}""",
-        "message_template": """{{ "flash.delete_member_success" | translate({ "member_name": member_name }) }}""",
+        "title_template": translate("flash.deleted_member"),
+        "message_template": """
+            {{ "flash.delete_member_success" | translate({ "member_name": member_name }) }}
+        """,
         "category": "success",
     },
 }
