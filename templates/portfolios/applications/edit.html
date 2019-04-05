@@ -1,6 +1,7 @@
 {% extends "portfolios/applications/base.html" %}
 
 {% from "components/text_input.html" import TextInput %}
+{% from "components/icon.html" import Icon %}
 
 {% set secondary_breadcrumb = 'portfolios.applications.existing_application_title' | translate({ "application_name": application.name }) %}
 
@@ -26,6 +27,10 @@
         {% include "fragments/applications/environments.html" %}
       </div>
       <div class="action-group">
+        <a class='icon-link'>
+          {{ "portfolios.applications.add_environment" | translate }}
+          {{ Icon('plus-circle-solid') }}
+        </a>
         <button class="usa-button usa-button-primary" tabindex="0" type="submit">{{ 'portfolios.applications.update_button_text' | translate }}</button>
       </div>
     </div>
