@@ -29,9 +29,9 @@ MESSAGES = {
         "category": "success",
     },
     "new_portfolio_member": {
-        "title_template": "Success!",
+        "title_template": """{{ "flash.success" | translate }}""",
         "message_template": """
-          <p>You have successfully invited {{ new_member.user_name }} to the portfolio.</p>
+          <p>{{ "flash.new_portfolio_member" | translate({ "user_name": new_member.user_name }) }}</p>
         """,
         "category": "success",
     },
@@ -112,20 +112,18 @@ MESSAGES = {
         "category": "success",
     },
     "task_order_congrats": {
-        "title_template": "Congrats!",
-        "message_template": """
-        You've created a new JEDI portfolio and jump-started your first task order!
-        """,
+        "title_template": """{{ "flash.congrats" | translate }}""",
+        "message_template": """{{ "flash.new_portfolio" | translate }}""",
         "actions": """
             {% from "components/icon.html" import Icon %}
             <div class='alert__actions'>
               <a href='{{ url_for("portfolios.show_portfolio", portfolio_id=portfolio.id) }}' class='icon-link'>
                 {{ Icon('shield') }}
-                <span>Go to my portfolio home page</span>
+                <span>{{ "flash.portfolio_home" | translate }}</span>
               </a>
               <a href='#next-steps' class='icon-link'>
                 {{ Icon('arrow-down') }}
-                <span>Review next steps below</span>
+                <span>{{ "flash.next_steps" | translate }}</span>
               </a>
             </div>
         """,
@@ -139,8 +137,8 @@ MESSAGES = {
         "category": "error",
     },
     "portfolio_member_removed": {
-        "title_template": "Portfolio member deleted",
-        "message_template": "You have successfully deleted {{ member_name }} from the portfolio.",
+        "title_template": """{{ "flash.deleted_member" | translate }}""",
+        "message_template": """{{ "flash.delete_member_success" | translate({ "member_name": member_name }) }}""",
         "category": "success",
     },
 }

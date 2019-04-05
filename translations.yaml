@@ -17,6 +17,15 @@ base_public:
   header_title: JEDI Cloud
   login: Log in
   title_tag: JEDI Cloud
+flash:
+  new_portfolio_member: You have successfully invited {user_name} to the portfolio.
+  success: Success!
+  congrats: Congrats!
+  new_portfolio: You've created a new JEDI portfolio and jump-started your first task order!
+  portfolio_home: Go to my portfolio home page
+  next_steps: Review next steps below
+  deleted_member: Portfolio member deleted
+  delete_member_success: You have successfully deleted {member_name} from the portfolio.
 common:
   back: Back
   edit: Edit
