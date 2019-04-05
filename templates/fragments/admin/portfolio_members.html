@@ -26,7 +26,7 @@
       </div>
 
     {% if not portfolio.members %}
-      <p>There are currently no members in this Portfolio.</p>
+      <p>{{ "portfolios.admin.no_members" | translate }}</p>
     {% else %}
       <table>
 
@@ -59,12 +59,12 @@
       {% for member in portfolio.members %}
         {% set modal_id = "portfolio_id_{}_user_id_{}".format(portfolio.id, member.user_id) %}
         {% call Modal(name=modal_id, dismissable=False) %}
-          <h1>Are you sure you want to archive this user?</h1>
+          <h1>{{ "portfolios.admin.alert_header" | translate }}</h1>
 
           {{
             Alert(
-              title="Warning! You  are about to  archive a user from the portfolio  admin.",
-              message="User will be removed from the portfolio, but their log history will be retained.",
+              title="portfolios.admin.alert_title" | translate,
+              message="portfolios.admin.alert_message" | translate,
               level="warning"
             )
           }}
@@ -76,7 +76,7 @@
                 {{ "portfolios.members.archive_button" | translate }}
               </button>
             </form>
-            <a v-on:click="closeModal('{{ modal_id }}')" class="action-group__action icon-link icon-link--default">Cancel</a>
+            <a v-on:click="closeModal('{{ modal_id }}')" class="action-group__action icon-link icon-link--default">{{ "common.cancel" | translate }}</a>
           </div>
         {% endcall %}
       {% endfor %}
@@ -89,7 +89,7 @@
             type='submit'
             form="member-perms"
             class='usa-button usa-button-primary'
-            value='Save' />
+            value={{ "common.save" | translate }} />
         {% endif %}
         {% if user_can(permissions.CREATE_PORTFOLIO_USERS) %}
           {% include "fragments/admin/add_new_portfolio_member.html" %}
