@@ -8,40 +8,29 @@
 
   <div class='subheading'>{{ 'portfolios.applications.settings_heading' | translate }}</div>
 
-  <div class="panel">
-    <form method="POST" action="{{ url_for('portfolios.edit_application', portfolio_id=portfolio.id, application_id=application.id) }}">
-      <div class="panel__content">
-
-        {% include "fragments/edit_application_form.html" %}
-
-        <div class="application-list-item">
-          <header>
-            <h2 class="block-list__title">{{ 'portfolios.applications.environments_heading' | translate }}</h2>
-            <p>
-              {{ 'portfolios.applications.environments_description' | translate }}
-            </p>
-          </header>
-
-          <ul>
-            {% for environment in application.environments %}
-              <li class="application-edit__env-list-item">
-                <div class="usa-input input--disabled">
-                  <label>Environment Name</label>
-                  <input type="text" disabled value="{{ environment.name }}" readonly />
-                </div>
-              </li>
-            {% endfor %}
-          </ul>
-        </div>
-
-        <button class="usa-button usa-button-primary" tabindex="0" type="submit">{{ 'portfolios.applications.update_button_text' | translate }}</button>
-      </div>
-    </form>
-  </div>
+  {% include "fragments/edit_application_form.html" %}
 
   <div class="panel">
     <div class="panel__content">
-      HI
+      <div class="application-list-item">
+        <header>
+          <h2 class="block-list__title">{{ 'portfolios.applications.environments_heading' | translate }}</h2>
+          <p>
+            {{ 'portfolios.applications.environments_description' | translate }}
+          </p>
+        </header>
+
+        <ul>
+          {% for environment in application.environments %}
+            <li class="application-edit__env-list-item">
+              <div class="usa-input input--disabled">
+                <label>Environment Name</label>
+                <input type="text" disabled value="{{ environment.name }}" readonly />
+              </div>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
     </div>
   </div>
 

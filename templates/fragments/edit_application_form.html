@@ -1,8 +1,16 @@
 {% from "components/text_input.html" import TextInput %}
 
-{{ form.csrf_token }}
-<p>
-  {{ "fragments.edit_application_form.explain" | translate }}
-</p>
-{{ TextInput(form.name) }}
-{{ TextInput(form.description, paragraph=True) }}
+<div class="panel">
+  <div class="panel__content">
+    <form method="POST" action="{{ url_for('portfolios.edit_application', portfolio_id=portfolio.id, application_id=application.id) }}">
+      {{ form.csrf_token }}
+      <p>
+        {{ "fragments.edit_application_form.explain" | translate }}
+      </p>
+      {{ TextInput(form.name) }}
+      {{ TextInput(form.description, paragraph=True) }}
+
+      <button class="usa-button usa-button-primary" tabindex="0" type="submit">{{ 'portfolios.applications.update_button_text' | translate }}</button>
+    </form>
+  </div>
+</div>
