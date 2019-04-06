@@ -73,9 +73,10 @@ const app = new Vue({
   },
 
   mounted: function() {
-    this.$on('modalOpen', isOpen => {
-      if (isOpen) {
+    this.$on('modalOpen', data => {
+      if (data['isOpen']) {
         document.body.className += ' modal-open'
+        this.activeModal = data['name']
       } else {
         document.body.className = document.body.className.replace(
           ' modal-open',

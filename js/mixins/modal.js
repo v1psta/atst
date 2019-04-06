@@ -10,7 +10,7 @@ export default {
 
     openModal: function(name) {
       this.activeModal = name
-      this.$emit('modalOpen', true)
+      this.$root.$emit('modalOpen', { isOpen: true, name: name })
       const idSelector = `#${this.modalId}`
 
       this.allyHandler = ally.maintain.disabled({
