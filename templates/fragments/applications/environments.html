@@ -11,22 +11,42 @@
     </a>
   </header>
 
-  <table>
-    <thead>
-      <tr>
-          <td>{{ "portfolios.applications.environments.name" | translate }}</td>
-          <td>{{ "portfolios.applications.environments.members" | translate }}</td>
-      </tr>
-    </thead>
+  <div is='toggler' v-cloak>
+    <template slot-scope='props'>
+    <table>
+      <thead>
+        <tr>
+            <td>{{ "portfolios.applications.environments.name" | translate }}</td>
+            <td>{{ "portfolios.applications.environments.members" | translate }}</td>
+        </tr>
+      </thead>
 
-    <tbody>
-        {% for environment in application.environments %}
-          <tr>
-            <td>{{ environment.name }}</td>
-            <td>Show Members({{ environment.num_users }}){{ Icon('caret_down') }}</td>
-          </tr>
-        {% endfor %}
-    </tbody>
-  </table>
+      <tbody>
+          {% for environment in application.environments %}
+            <tr>
+              <td v-on:click="props.toggle">{{ environment.name }}</td>
 
+              <template v-if="props.isVisible">
+                <span v-on:click="props.toggle" class='icon-link toggle-link'>
+                <td>Hide Members({{ environment.num_users }}){{ Icon('caret_up') }}</td>
+              </template>
+              <template v-else>
+                <span v-on:click="props.toggle" class='icon-link toggle-link'>
+                <td>Show Members({{ environment.num_users }}){{ Icon('caret_down') }}</td>
+              </template>
+
+              <tr v-if="props.isVisible">
+                <td class='accordian__item application-list-item__environment'>
+                  <div class='application-list-item__environment__name'>
+                    <span>User Name here</span>
+                  </div>
+                </td>
+              </tr>
+
+            </tr>
+          {% endfor %}
+      </tbody>
+    </table>
+    </template>
+  </div>
 </div>
