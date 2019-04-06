@@ -8,6 +8,7 @@ import MultiStepModalForm from './multi_step_modal_form'
 import multicheckboxinput from '../multi_checkbox_input'
 import checkboxinput from '../checkbox_input'
 import levelofwarrant from '../levelofwarrant'
+import Modal from '../../mixins/modal'
 
 export default {
   name: 'base-form',
@@ -19,36 +20,7 @@ export default {
     multicheckboxinput,
     checkboxinput,
     levelofwarrant,
+    Modal,
   },
-  mixins: [FormMixin],
-  methods: {
-    closeModal: function(name) {
-      this.activeModal = null
-      this.$root.$emit('modalOpen', false)
-      if (this.$root.allyHandler) this.$root.allyHandler.disengage()
-    },
-
-    openModal: function(name) {
-      this.$root.activeModal = name
-      this.$root.$emit('modalOpen', true)
-      const idSelector = `#${this.$root.modalId}`
-
-      this.$root.allyHandler = ally.maintain.disabled({
-        filter: idSelector,
-      })
-    },
-  },
-  data: function() {
-    return {
-      activeModal: null,
-      allyHandler: null,
-    }
-  },
-  computed: {
-    modalId: function() {
-      return !!this.$root.activeModal
-        ? `modal--${this.$root.activeModal}`
-        : null
-    },
-  },
+  mixins: [FormMixin, Modal],
 }
