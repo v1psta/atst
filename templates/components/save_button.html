@@ -1,8 +1,15 @@
-{% macro SaveButton(text, element="button", additional_classes="", other_attrs="") -%}
+{% macro SaveButton(text, element="button", additional_classes="", form=None) -%}
   {% set class = "usa-button usa-button-primary" + additional_classes %}
-  <{{ element }} type="submit" class="{{ class }}" tabindex="0" v-bind:disabled="!changed" value="{{ text }}" {{ other_attrs }}>
-    {% if element == 'button'%}
+  {% if form %}
+    {% set form_attr = 'form="{{ form }}"' %}
+  {% else %}
+    {% set form_attr = "" %}
+  {% endif %}
+  {% if element == "button" %}
+    <button type="submit" class="{{ class }}" tabindex="0" v-bind:disabled="!changed" {{ form_attr }} >
       {{ text }}
-    {% endif %}
-  </{{ element }}>
+    </button>
+  {% elif element == 'input' %}
+    <input type="submit" class="{{ class }}" tabindex="0" v-bind:disabled="!changed" value="{{ text }}" {{ form_attr }} />
+  {% endif %}
 {%- endmacro %}

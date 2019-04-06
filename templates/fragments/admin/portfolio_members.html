@@ -55,7 +55,7 @@
         <div class="members-table-footer">
           <div class="action-group save">
             {% if user_can(permissions.EDIT_PORTFOLIO_USERS) %}
-              {{ SaveButton(text="Save", element="input", other_attrs="form=member-perms") }}
+              {{ SaveButton(text="Save", element="input", form="member-perms") }}
             {% endif %}
           </div>
         </div>
