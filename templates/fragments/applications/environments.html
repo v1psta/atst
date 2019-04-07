@@ -2,17 +2,18 @@
 
 <div class="application-list-item">
   <header>
-    <div class='left'>
-      <div class='h3'>{{ 'portfolios.applications.environments_heading' | translate }}</div>
+    <div class="list-header">
+      <div class='left'>
+        <div class='h3'>{{ 'portfolios.applications.environments_heading' | translate }}</div>
+      </div>
+      <a class='icon-link'>
+        {{ Icon('info') }}
+        {{ "portfolios.admin.settings_info" | translate }}
+      </a>
     </div>
-    <a class='icon-link'>
-      {{ Icon('info') }}
-      {{ "portfolios.admin.settings_info" | translate }}
-    </a>
   </header>
 
-  <div is='toggler' v-cloak>
-    <template slot-scope='props'>
+  <div>
     <table>
       <thead>
         <tr>
@@ -23,8 +24,10 @@
 
       <tbody>
           {% for environment in application.environments %}
-            <tr>
-              <td v-on:click="props.toggle">{{ environment.name }}</td>
+            <tr is='toggler' v-cloak>
+            <template slot-scope='props'>
+
+              <th v-on:click="props.toggle">{{ environment.name }}</th>
 
               <template v-if="props.isVisible">
                 <span v-on:click="props.toggle" class='icon-link toggle-link'>
@@ -35,18 +38,19 @@
                 <td>Show Members({{ environment.num_users }}){{ Icon('caret_down') }}</td>
               </template>
 
-              <tr v-if="props.isVisible">
-                <td class='accordian__item application-list-item__environment'>
-                  <div class='application-list-item__environment__name'>
-                    <span>User Name here</span>
-                  </div>
-                </td>
-              </tr>
+            </template>
+            </tr>
 
+            <tr >
+              <td class='accordian__item application-list-item__environment'>
+                <div class='application-list-item__environment__name'>
+                  <span>User Name here</span>
+                </div>
+              </td>
             </tr>
           {% endfor %}
+
       </tbody>
     </table>
-    </template>
   </div>
 </div>

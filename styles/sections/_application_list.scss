@@ -24,7 +24,51 @@
     }
   }
 
+  .list-header {
+    margin: 2 * $gap 5 * $gap;
+    padding: inherit;
+    overflow: auto;
+  }
+
   header.accordian__header {
     padding: 1.6rem;
+  }
+
+  .icon-link {
+    float: right;
+
+    .icon--info {
+      bottom: -1px;
+      left: 4px;
+    }
+  }
+
+  .left {
+    float: left;
+  }
+
+  table {
+
+    thead {
+      td {
+          font-weight: bold;
+          font-size: 1.4rem;
+          border-top: 0;
+        }
+    }
+
+    tbody {
+      th {
+        font-weight: bold;
+        font-size: 1.6rem;
+      }
+      td {
+        font-size: 1.6rem;
+        border-bottom: 1px solid $color-gray-lightest;
+        border-top: 0;
+        padding: 3 * $gap 2 * $gap;
+      }
+    }
+
   }
 }
