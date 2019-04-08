@@ -1,6 +1,7 @@
 import pytest
 
 from tests.factories import (
+    ApplicationRoleFactory,
     TaskOrderFactory,
     UserFactory,
     PortfolioFactory,
@@ -69,6 +70,22 @@ def test_has_portfolio_permission():
     )
 
 
+def test_has_application_permission():
+    role_one = PermissionSets.get(PermissionSets.EDIT_APPLICATION_TEAM)
+    role_two = PermissionSets.get(PermissionSets.EDIT_APPLICATION_ENVIRONMENTS)
+    app_role = ApplicationRoleFactory.create(permission_sets=[role_one, role_two])
+    different_user = UserFactory.create()
+    assert Authorization.has_application_permission(
+        app_role.user, app_role.application, Permissions.EDIT_ENVIRONMENT
+    )
+    assert not Authorization.has_portfolio_permission(
+        app_role.user, app_role.application, Permissions.DELETE_ENVIRONMENT
+    )
+    assert not Authorization.has_portfolio_permission(
+        different_user, app_role.application, Permissions.DELETE_ENVIRONMENT
+    )
+
+
 def test_user_can_access():
     ccpo = UserFactory.create_ccpo()
     edit_admin = UserFactory.create()
@@ -120,7 +137,23 @@ def set_current_user(request_ctx):
     request_ctx.g.current_user = None
 
 
-def test_user_can_access_decorator(set_current_user):
+def test_user_can_access_decorator_atat_level(set_current_user):
+    ccpo = UserFactory.create_ccpo()
+    rando = UserFactory.create()
+
+    @user_can_access_decorator(Permissions.VIEW_AUDIT_LOG)
+    def _access_activity_log(*args, **kwargs):
+        return True
+
+    set_current_user(ccpo)
+    assert _access_activity_log()
+
+    set_current_user(rando)
+    with pytest.raises(UnauthorizedError):
+        _access_activity_log()
+
+
+def test_user_can_access_decorator_portfolio_level(set_current_user):
     ccpo = UserFactory.create_ccpo()
     edit_admin = UserFactory.create()
     view_admin = UserFactory.create()
@@ -142,6 +175,36 @@ def test_user_can_access_decorator(set_current_user):
     set_current_user(view_admin)
     with pytest.raises(UnauthorizedError):
         _edit_portfolio_name(portfolio_id=portfolio.id)
+
+
+def test_user_can_access_decorator_application_level(set_current_user):
+    ccpo = UserFactory.create_ccpo()
+    port_admin = UserFactory.create()
+    app_user = UserFactory.create()
+    rando = UserFactory.create()
+
+    portfolio = PortfolioFactory.create(
+        owner=port_admin, applications=[{"name": "Mos Eisley"}]
+    )
+    app = portfolio.applications[0]
+    ApplicationRoleFactory.create(application=app, user=app_user)
+
+    @user_can_access_decorator(Permissions.VIEW_APPLICATION)
+    def _stroll_into_mos_eisley(*args, **kwargs):
+        return True
+
+    set_current_user(ccpo)
+    assert _stroll_into_mos_eisley(application_id=app.id)
+
+    set_current_user(port_admin)
+    assert _stroll_into_mos_eisley(application_id=app.id)
+
+    set_current_user(app_user)
+    assert _stroll_into_mos_eisley(application_id=app.id)
+
+    set_current_user(rando)
+    with pytest.raises(UnauthorizedError):
+        _stroll_into_mos_eisley(application_id=app.id)
 
 
 def test_user_can_access_decorator_override(set_current_user):

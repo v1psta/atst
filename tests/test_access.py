@@ -12,6 +12,7 @@ from atst.models.portfolio_role import Status as PortfolioRoleStatus
 
 from tests.factories import (
     AttachmentFactory,
+    ApplicationRoleFactory,
     InvitationFactory,
     PortfolioFactory,
     PortfolioRoleFactory,
@@ -156,12 +157,14 @@ def test_portfolios_access_environment_access(get_url_assert_status):
 def test_portfolios_application_members_access(get_url_assert_status):
     ccpo = user_with(PermissionSets.VIEW_PORTFOLIO_APPLICATION_MANAGEMENT)
     owner = user_with()
+    app_dev = user_with()
     rando = user_with()
     portfolio = PortfolioFactory.create(
         owner=owner,
         applications=[{"name": "Mos Eisley", "description": "Where Han shot first"}],
     )
     app = portfolio.applications[0]
+    ApplicationRoleFactory.create(application=app, user=app_dev)
 
     url = url_for(
         "portfolios.application_members",
@@ -170,6 +173,7 @@ def test_portfolios_application_members_access(get_url_assert_status):
     )
     get_url_assert_status(ccpo, url, 200)
     get_url_assert_status(owner, url, 200)
+    get_url_assert_status(app_dev, url, 200)
     get_url_assert_status(rando, url, 404)
 
 
@@ -570,7 +574,7 @@ def test_portfolios_update_member_access(post_url_assert_status):
     prt_member = user_with()
 
     portfolio = PortfolioFactory.create(owner=owner)
-    prr = PortfolioRoleFactory.create(user=prt_member, portfolio=portfolio)
+    PortfolioRoleFactory.create(user=prt_member, portfolio=portfolio)
 
     url = url_for(
         "portfolios.update_member", portfolio_id=portfolio.id, member_id=prt_member.id
@@ -588,7 +592,7 @@ def test_portfolios_view_member_access(get_url_assert_status):
     prt_member = user_with()
 
     portfolio = PortfolioFactory.create(owner=owner)
-    prr = PortfolioRoleFactory.create(user=prt_member, portfolio=portfolio)
+    PortfolioRoleFactory.create(user=prt_member, portfolio=portfolio)
 
     url = url_for(
         "portfolios.view_member", portfolio_id=portfolio.id, member_id=prt_member.id

@@ -4,22 +4,14 @@ import string
 import factory
 from uuid import uuid4
 import datetime
-from faker import Faker as _Faker
 
 from atst.forms import data
-from atst.models.attachment import Attachment
-from atst.models.environment import Environment
-from atst.models.application import Application
-from atst.models.task_order import TaskOrder
-from atst.models.user import User
-from atst.models.permission_set import PermissionSet
-from atst.models.portfolio import Portfolio
-from atst.domain.permission_sets import PermissionSets, PORTFOLIO_PERMISSION_SETS
-from atst.models.portfolio_role import PortfolioRole, Status as PortfolioRoleStatus
-from atst.models.environment_role import EnvironmentRole
-from atst.models.invitation import Invitation, Status as InvitationStatus
-from atst.models.dd_254 import DD254
+from atst.models import *
+from atst.models.portfolio_role import Status as PortfolioRoleStatus
+from atst.models.application_role import Status as ApplicationRoleStatus
+from atst.models.invitation import Status as InvitationStatus
 from atst.domain.invitations import Invitations
+from atst.domain.permission_sets import PermissionSets
 from atst.domain.portfolio_roles import PortfolioRoles
 
 
@@ -69,6 +61,10 @@ def base_portfolio_permission_sets():
         PermissionSets.get(prms)
         for prms in PortfolioRoles.DEFAULT_PORTFOLIO_PERMISSION_SETS
     ]
+
+
+def base_application_permission_sets():
+    return [PermissionSets.get(PermissionSets.VIEW_APPLICATION)]
 
 
 def get_all_portfolio_permission_sets():
@@ -169,6 +165,20 @@ class ApplicationFactory(Base):
         with_environments = kwargs.pop("environments", [])
         application = super()._create(model_class, *args, **kwargs)
 
+        # need to create application roles for environment users
+        app_members_from_envs = set()
+        for env in with_environments:
+            with_members = env.get("members", [])
+            for member_data in with_members:
+                member = member_data.get("user", UserFactory.create())
+                app_members_from_envs.add(member)
+                # set for environments in case we just created the
+                # user for the application
+                member_data["user"] = member
+
+        for member in app_members_from_envs:
+            ApplicationRoleFactory.create(application=application, user=member)
+
         environments = [
             EnvironmentFactory.create(application=application, **e)
             for e in with_environments
@@ -205,6 +215,16 @@ class PortfolioRoleFactory(Base):
     user = factory.SubFactory(UserFactory)
     status = PortfolioRoleStatus.PENDING
     permission_sets = factory.LazyFunction(base_portfolio_permission_sets)
+
+
+class ApplicationRoleFactory(Base):
+    class Meta:
+        model = ApplicationRole
+
+    application = factory.SubFactory(ApplicationFactory)
+    user = factory.SubFactory(UserFactory)
+    status = ApplicationRoleStatus.PENDING
+    permission_sets = factory.LazyFunction(base_application_permission_sets)
 
 
 class EnvironmentRoleFactory(Base):

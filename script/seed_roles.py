@@ -9,12 +9,18 @@ sys.path.append(parent_dir)
 from sqlalchemy.orm.exc import NoResultFound
 from atst.app import make_config, make_app
 from atst.database import db
-from atst.models import PermissionSet, Permissions
-from atst.domain.permission_sets import ATAT_PERMISSION_SETS, PORTFOLIO_PERMISSION_SETS
+from atst.models import PermissionSet
+from atst.domain.permission_sets import (
+    ATAT_PERMISSION_SETS,
+    PORTFOLIO_PERMISSION_SETS,
+    APPLICATION_PERMISSION_SETS,
+)
 
 
 def seed_roles():
-    for permission_set_info in ATAT_PERMISSION_SETS + PORTFOLIO_PERMISSION_SETS:
+    for permission_set_info in (
+        ATAT_PERMISSION_SETS + PORTFOLIO_PERMISSION_SETS + APPLICATION_PERMISSION_SETS
+    ):
         permission_set = PermissionSet(**permission_set_info)
         try:
             existing_permission_set = (

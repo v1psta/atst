@@ -15,6 +15,7 @@ def check_access(permission, message, override, *args, **kwargs):
 
     if "application_id" in kwargs:
         application = Applications.get(kwargs["application_id"])
+        access_args["application"] = application
         access_args["portfolio"] = application.portfolio
 
     elif "task_order_id" in kwargs:

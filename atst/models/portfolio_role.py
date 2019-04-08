@@ -1,7 +1,8 @@
 from enum import Enum
-from sqlalchemy import Index, ForeignKey, Column, Enum as SQLAEnum, Table, event
+from sqlalchemy import Index, ForeignKey, Column, Enum as SQLAEnum, Table
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
+from sqlalchemy.event import listen
 
 from atst.models import Base, mixins
 from .types import Id
@@ -11,7 +12,7 @@ from atst.utils import first_or_none
 from atst.models.environment_role import EnvironmentRole
 from atst.models.application import Application
 from atst.models.environment import Environment
-from atst.models.mixins.auditable import ACTION_UPDATE as AUDIT_ACTION_UPDATE
+from atst.models.mixins.auditable import record_permission_sets_updates
 
 
 MEMBER_STATUSES = {
@@ -168,17 +169,9 @@ Index(
 )
 
 
-@event.listens_for(PortfolioRole.permission_sets, "bulk_replace", raw=True)
-def record_permission_sets_updates(instance_state, permission_sets, initiator):
-    old_perm_sets = instance_state.attrs.get("permission_sets").value
-    if instance_state.persistent and old_perm_sets != permission_sets:
-        connection = instance_state.session.connection()
-        old_state = [p.name for p in old_perm_sets]
-        new_state = [p.name for p in permission_sets]
-        changed_state = {"permission_sets": (old_state, new_state)}
-        instance_state.object.create_audit_event(
-            connection,
-            instance_state.object,
-            AUDIT_ACTION_UPDATE,
-            changed_state=changed_state,
-        )
+listen(
+    PortfolioRole.permission_sets,
+    "bulk_replace",
+    record_permission_sets_updates,
+    raw=True,
+)

@@ -2,11 +2,19 @@ from atst.utils import first_or_none
 from atst.models.permissions import Permissions
 from atst.domain.exceptions import UnauthorizedError
 from atst.models.portfolio_role import Status as PortfolioRoleStatus
+from atst.models.application_role import Status as ApplicationRoleStatus
 
 
 class Authorization(object):
     @classmethod
+    def has_atat_permission(cls, user, permission):
+        return permission in user.permissions
+
+    @classmethod
     def has_portfolio_permission(cls, user, portfolio, permission):
+        if Authorization.has_atat_permission(user, permission):
+            return True
+
         port_role = first_or_none(
             lambda pr: pr.portfolio == portfolio, user.portfolio_roles
         )
@@ -16,22 +24,37 @@ class Authorization(object):
             return False
 
     @classmethod
-    def has_atat_permission(cls, user, permission):
-        return permission in user.permissions
+    def has_application_permission(cls, user, application, permission):
+        if Authorization.has_portfolio_permission(
+            user, application.portfolio, permission
+        ):
+            return True
+
+        app_role = first_or_none(
+            lambda app_role: app_role.application == application, user.application_roles
+        )
+        if app_role and app_role.status is not ApplicationRoleStatus.DISABLED:
+            return permission in app_role.permissions
+        else:
+            return False
 
     @classmethod
-    def check_portfolio_permission(cls, user, portfolio, permission, message):
-        if not (
-            Authorization.has_atat_permission(user, permission)
-            or Authorization.has_portfolio_permission(user, portfolio, permission)
-        ):
+    def check_atat_permission(cls, user, permission, message):
+        if not Authorization.has_atat_permission(user, permission):
             raise UnauthorizedError(user, message)
 
         return True
 
     @classmethod
-    def check_atat_permission(cls, user, permission, message):
-        if not Authorization.has_atat_permission(user, permission):
+    def check_portfolio_permission(cls, user, portfolio, permission, message):
+        if not Authorization.has_portfolio_permission(user, portfolio, permission):
+            raise UnauthorizedError(user, message)
+
+        return True
+
+    @classmethod
+    def check_application_permission(cls, user, portfolio, permission, message):
+        if not Authorization.has_application_permission(user, portfolio, permission):
             raise UnauthorizedError(user, message)
 
         return True
@@ -70,8 +93,12 @@ class Authorization(object):
             raise UnauthorizedError(user, message)
 
 
-def user_can_access(user, permission, portfolio=None, message=None):
-    if portfolio:
+def user_can_access(user, permission, portfolio=None, application=None, message=None):
+    if application:
+        Authorization.check_application_permission(
+            user, application, permission, message
+        )
+    elif portfolio:
         Authorization.check_portfolio_permission(user, portfolio, permission, message)
     else:
         Authorization.check_atat_permission(user, permission, message)

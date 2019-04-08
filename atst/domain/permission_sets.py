@@ -18,6 +18,11 @@ class PermissionSets(object):
     PORTFOLIO_POC = "portfolio_poc"
     VIEW_AUDIT_LOG = "view_audit_log"
 
+    VIEW_APPLICATION = "view_application"
+    EDIT_APPLICATION_ENVIRONMENTS = "edit_application_environments"
+    EDIT_APPLICATION_TEAM = "edit_application_team"
+    DELETE_APPLICATION_ENVIRONMENTS = "delete_application_environments"
+
     @classmethod
     def get(cls, perms_set_name):
         try:
@@ -85,6 +90,8 @@ _PORTFOLIO_APP_MGMT_PERMISSION_SETS = [
             Permissions.CREATE_APPLICATION_MEMBER,
             Permissions.EDIT_ENVIRONMENT,
             Permissions.CREATE_ENVIRONMENT,
+            Permissions.DELETE_ENVIRONMENT,
+            Permissions.ASSIGN_ENVIRONMENT_MEMBER,
         ],
     },
 ]
@@ -167,3 +174,51 @@ PORTFOLIO_PERMISSION_SETS = (
     + _PORTFOLIO_ADMIN_PERMISSION_SETS
     + _PORTFOLIO_POC_PERMISSION_SETS
 )
+
+_APPLICATION_BASIC_PERMISSION_SET = {
+    "name": PermissionSets.VIEW_APPLICATION,
+    "description": "View application data",
+    "display_name": "View applications",
+    "permissions": [
+        Permissions.VIEW_APPLICATION,
+        Permissions.VIEW_APPLICATION_MEMBER,
+        Permissions.VIEW_ENVIRONMENT,
+    ],
+}
+
+# need perm to assign and unassign users to environments
+_APPLICATION_ENVIRONMENTS_PERMISSION_SET = {
+    "name": PermissionSets.EDIT_APPLICATION_ENVIRONMENTS,
+    "description": "Manage environments for an application",
+    "display_name": "Manage environments",
+    "permissions": [
+        Permissions.EDIT_ENVIRONMENT,
+        Permissions.CREATE_ENVIRONMENT,
+        Permissions.ASSIGN_ENVIRONMENT_MEMBER,
+    ],
+}
+
+_APPLICATION_TEAM_PERMISSION_SET = {
+    "name": PermissionSets.EDIT_APPLICATION_TEAM,
+    "description": "Manage team members for an application",
+    "display_name": "Manage team",
+    "permissions": [
+        Permissions.EDIT_APPLICATION_MEMBER,
+        Permissions.CREATE_APPLICATION_MEMBER,
+        Permissions.ASSIGN_ENVIRONMENT_MEMBER,
+    ],
+}
+
+_APPLICATION_ENVIRONMENT_DELETE_PERMISSION_SET = {
+    "name": PermissionSets.DELETE_APPLICATION_ENVIRONMENTS,
+    "description": "Delete environments within an application",
+    "display_name": "Delete environments",
+    "permissions": [Permissions.DELETE_ENVIRONMENT],
+}
+
+APPLICATION_PERMISSION_SETS = [
+    _APPLICATION_BASIC_PERMISSION_SET,
+    _APPLICATION_TEAM_PERMISSION_SET,
+    _APPLICATION_ENVIRONMENTS_PERMISSION_SET,
+    _APPLICATION_ENVIRONMENT_DELETE_PERMISSION_SET,
+]

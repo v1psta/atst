@@ -25,6 +25,7 @@ class User(
     permission_sets = relationship("PermissionSet", secondary=users_permission_sets)
 
     portfolio_roles = relationship("PortfolioRole", backref="user")
+    application_roles = relationship("ApplicationRole", backref="user")
 
     email = Column(String, unique=True)
     dod_id = Column(String, unique=True, nullable=False)

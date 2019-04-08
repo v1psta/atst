@@ -16,10 +16,11 @@ class Application(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     portfolio_id = Column(ForeignKey("portfolios.id"), nullable=False)
     portfolio = relationship("Portfolio")
     environments = relationship("Environment", back_populates="application")
+    roles = relationship("ApplicationRole")
 
     @property
     def users(self):
-        return set([user for env in self.environments for user in env.users])
+        return set(role.user for role in self.roles)
 
     @property
     def num_users(self):
