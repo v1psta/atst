@@ -1,3 +1,5 @@
+import { emitFieldChange } from '../lib/emitters'
+
 export default {
   name: 'checkboxinput',
 
@@ -7,10 +9,7 @@ export default {
 
   methods: {
     onInput: function(e) {
-      this.$root.$emit('field-change', {
-        value: e.target.checked,
-        name: this.name,
-      })
+      emitFieldChange(this, { value: e.target.checked, name: this.name })
     },
   },
 }

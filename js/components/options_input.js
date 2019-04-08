@@ -1,3 +1,5 @@
+import { emitFieldChange } from '../lib/emitters'
+
 export default {
   name: 'optionsinput',
 
@@ -21,10 +23,7 @@ export default {
 
   methods: {
     onInput: function(e) {
-      this.$root.$emit('field-change', {
-        value: e.target.value,
-        name: this.name,
-      })
+      emitFieldChange(this, { value: e.target.value, name: this.name })
       this.showError = false
       this.showValid = true
     },

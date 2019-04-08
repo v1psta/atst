@@ -33,6 +33,7 @@ import { isNotInVerticalViewport } from './lib/viewport'
 import DateSelector from './components/date_selector'
 import SidenavToggler from './components/sidenav_toggler'
 import KoReview from './components/forms/ko_review'
+import BaseForm from './components/forms/base_form'
 
 Vue.config.productionTip = false
 
@@ -68,12 +69,14 @@ const app = new Vue({
     EditOfficerForm,
     SidenavToggler,
     KoReview,
+    BaseForm,
   },
 
   mounted: function() {
-    this.$on('modalOpen', isOpen => {
-      if (isOpen) {
+    this.$on('modalOpen', data => {
+      if (data['isOpen']) {
         document.body.className += ' modal-open'
+        this.activeModal = data['name']
       } else {
         document.body.className = document.body.className.replace(
           ' modal-open',

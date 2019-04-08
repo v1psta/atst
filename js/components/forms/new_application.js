@@ -118,7 +118,6 @@ export default {
 
         return newVal.showValid && previous
       }, true)
-
       this.validate()
       isValid = this.errors.length == 0 && isValid
 

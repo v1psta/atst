@@ -8,7 +8,23 @@ export default {
       const { value, name } = event
       if (typeof this[name] !== undefined) {
         this[name] = value
+        if (event['parent_uid'] === this._uid) {
+          this.changed = true
+        }
       }
+    },
+  },
+
+  data: function() {
+    return {
+      changed: this.hasChanges,
+    }
+  },
+
+  props: {
+    hasChanges: {
+      type: Boolean,
+      default: false,
     },
   },
 }
