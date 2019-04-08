@@ -347,4 +347,40 @@ def test_edit_application_scope(client, user_session):
             application_id=port1.applications[0].id,
         )
     )
+
+    assert response.status_code == 404
+
+
+def test_application_team_with_permissions(client, user_session):
+    portfolio = PortfolioFactory.create()
+    application = ApplicationFactory.create(portfolio=portfolio)
+
+    user_session(portfolio.owner)
+
+    response = client.get(
+        url_for(
+            "portfolios.application_team",
+            portfolio_id=portfolio.id,
+            application_id=application.id,
+        )
+    )
+
+    assert response.status_code == 200
+
+
+def test_application_team_without_permissions(client, user_session):
+    random_user = UserFactory.create()
+    portfolio = PortfolioFactory.create()
+    application = ApplicationFactory.create(portfolio=portfolio)
+
+    user_session(random_user)
+
+    response = client.get(
+        url_for(
+            "portfolios.application_team",
+            portfolio_id=portfolio.id,
+            application_id=application.id,
+        )
+    )
+
     assert response.status_code == 404

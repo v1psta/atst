@@ -4,6 +4,7 @@ from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy.event import listen
 
+from atst.utils import first_or_none
 from atst.models import Base, mixins
 from atst.models.mixins.auditable import record_permission_sets_updates
 from .types import Id
@@ -58,6 +59,11 @@ class ApplicationRole(
     @property
     def history(self):
         return self.get_changes()
+
+    def has_permission_set(self, perm_set_name):
+        return first_or_none(
+            lambda prms: prms.name == perm_set_name, self.permission_sets
+        )
 
 
 Index(

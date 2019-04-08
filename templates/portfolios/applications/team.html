@@ -1,0 +1,104 @@
+{% extends "portfolios/applications/base.html" %}
+
+{% from "components/empty_state.html" import EmptyState %}
+{% from "components/icon.html" import Icon %}
+{% from "components/toggle_list.html" import ToggleList %}
+
+{% set secondary_breadcrumb = 'portfolios.applications.team_settings.title' | translate({ "application_name": application.name }) %}
+
+{% block application_content %}
+  {% if not application.members %}
+    {% set user_can_invite = user_can(permissions.CREATE_APPLICATION_MEMBER) %}
+
+    {{ EmptyState(
+      ("portfolios.applications.team_settings.blank_slate.title" | translate),
+      action_label=("portfolios.applications.team_settings.blank_slate.action_label" | translate),
+      action_href='#' if user_can_invite else None,
+      sub_message=None if user_can_invite else ("portfolios.team_settings.blank_slate.sub_message" | translate),
+      icon='avatar'
+    ) }}
+
+  {% else %}
+    <div class='subheading'>
+      {{ 'portfolios.applications.team_settings.subheading' | translate }}
+    </div>
+
+    <section class="member-list" id="portfolio-members">
+      <div class='responsive-table-wrapper panel'>
+        {% if g.matchesPath("portfolio-members") %}
+          {% include "fragments/flash.html" %}
+        {% endif %}
+        <form>
+          <header>
+            <div class="responsive-table-wrapper__header">
+              <div class="responsive-table-wrapper__title">
+                <div class="h3">
+                  {{ "portfolios.applications.team_settings.section.title" | translate({ "application_name": application.name }) }}
+                </div>
+              </div>
+              <a class='icon-link'>
+                {{ Icon('info') }}
+                {{ "portfolios.admin.settings_info" | translate }}
+              </a>
+            </div>
+          </header>
+
+          <div class="accordion-table accordion-table-list">
+            <div class="accordion-table__head">
+              <span>
+                <span>
+                  {{ "portfolios.applications.team_settings.user" | translate }}
+                </span>
+                <span>
+                  {{ "portfolios.applications.team_settings.section.table.delete_access" | translate }}
+                </span>
+                <span>
+                  {{ "portfolios.applications.team_settings.section.table.environment_management" | translate }}
+                </span>
+                <span>
+                  {{ "portfolios.applications.team_settings.section.table.team_management" | translate }}
+                </span>
+              </span>
+            </div>
+            <ul class="accordion-table__items">
+              {% for member in application.members %}
+                {% set user = member.user %}
+                {% set user_info = environment_users[user.id] %}
+                {% set user_permissions = user_info["permissions"] %}
+
+                {% set user_row %}
+                  <span>{{ user.full_name }}</span>
+                  <span>{{ user_permissions["delete_access"] }}</span>
+                  <span>{{ user_permissions["environment_management"] }}</span>
+                  <span>{{ user_permissions["team_management"] }}</span>
+                {% endset %}
+
+                {% call ToggleList(
+                    item_name=user_row,
+                    item_type=("portfolios.applications.team_settings.environments" | translate),
+                    length=(user_info["environments"] | length)
+                  )
+                %}
+                  <ul>
+                    {% for environment in user_info["environments"] %}
+                      <li class="accordion-table__item__expanded">
+                        <div class="accordion-table__item-content">
+                          {{ environment.name }}
+                        </div>
+                      </li>
+                    {% endfor %}
+                  </ul>
+                {% endcall %}
+              {% endfor %}
+            </ul>
+          </div>
+
+          <div class="members-table-footer">
+            <div class="action-group save">
+            </div>
+          </div>
+        </form>
+      </div>
+    </section>
+  {% endif %}
+{% endblock %}

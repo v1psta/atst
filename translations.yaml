@@ -601,6 +601,24 @@ portfolios:
     environments_description: Each environment created within an application is logically separated from one another for easier management and security.
     update_button_text: Save
     create_button_text: Create
+    team_settings:
+      title: '{application_name} Team Settings'
+      subheading: Team Settings
+      user: User
+      environments: Environments
+      blank_slate:
+        action_label: Invite a new team member
+        sub_message: Please contact your JEDI Cloud portfolio administrator to invite new members.
+        title: There are currently no team members for this application.
+      section:
+        title: '{application_name} Team'
+        members_count: 'Members ({members_count})'
+        table:
+          delete_access: Delete Access
+          environment_management: Environment Management
+          environments: Environments
+          name: Name
+          team_management: Team Management
     team_management:
       title: '{application_name} Team Management'
       subheading: Team Management

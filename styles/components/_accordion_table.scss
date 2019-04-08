@@ -117,3 +117,28 @@
     }
   }
 }
+
+#portfolio-members {
+  .accordion-table {
+    .accordion-table__head {
+      font-size: $small-font-size;
+      padding-left: $gap*3;
+    }
+
+    .accordion-table__item-content, .accordion-table__head {
+      display: flex;
+
+      & > span {
+        width: 75%;
+        &.icon-link {
+          width: 25%;
+        }
+      }
+    }
+
+    span {
+      display: flex;
+      width: 25%;
+    }
+  }
+}
