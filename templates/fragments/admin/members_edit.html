@@ -2,10 +2,11 @@
 
 {% for subform in member_perms_form.members_permissions %}
   {% set modal_id = "portfolio_id_{}_user_id_{}".format(portfolio.id, subform.user_id.data) %}
+  {% set ppoc = subform.user_id.data == portfolio.owner.id %}
 
-  <tr>
+  <tr {% if ppoc %}class="members-table-ppoc"{% endif %}>
     <td class='name'>{{ subform.member.data }}
-      {% if subform.member.data == user.full_name %}
+      {% if subform.user_id.data == user.id %}
         <span class='you'>(<span class='green'>you</span>)</span>
         {% set archive_button_class = 'usa-button-disabled' %}
       {% else %}
@@ -13,16 +14,18 @@
       {% endif %}
     </td>
 
-    <td>{{ OptionsInput(subform.perms_app_mgmt, label=False) }}</td>
-    <td>{{ OptionsInput(subform.perms_funding, label=False) }}</td>
-    <td>{{ OptionsInput(subform.perms_reporting, label=False) }}</td>
-    <td>{{ OptionsInput(subform.perms_portfolio_mgmt, label=False) }}</td>
+    <td>{{ OptionsInput(subform.perms_app_mgmt, label=False, disabled=ppoc) }}</td>
+    <td>{{ OptionsInput(subform.perms_funding, label=False, disabled=ppoc) }}</td>
+    <td>{{ OptionsInput(subform.perms_reporting, label=False, disabled=ppoc) }}</td>
+    <td>{{ OptionsInput(subform.perms_portfolio_mgmt, label=False, disabled=ppoc) }}</td>
 
     <td>
       <a v-on:click="openModal('{{ modal_id }}')" class='usa-button {{ archive_button_class }}'>
         {{ "portfolios.members.archive_button" | translate }}
       </a>
     </td>
-    {{ subform.user_id() }}
+    {% if not ppoc %}
+      {{ subform.user_id() }}
+    {% endif %}
   </tr>
 {% endfor %}

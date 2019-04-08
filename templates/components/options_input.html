@@ -1,7 +1,7 @@
 {% from "components/icon.html" import Icon %}
 {% from "components/tooltip.html" import Tooltip %}
 
-{% macro OptionsInput(field, tooltip, inline=False, label=True) -%}
+{% macro OptionsInput(field, tooltip, inline=False, label=True, disabled=False) -%}
   <optionsinput
     name='{{ field.name }}'
     inline-template
@@ -29,7 +29,7 @@
           </legend>
         {% endif %}
 
-        {{ field() }}
+        {{ field(disabled=disabled) }}
 
         <template v-if='showError'>
           <span class='usa-input__message' v-html='validationError'></span>
