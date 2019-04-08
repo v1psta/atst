@@ -6,12 +6,14 @@ from . import portfolios_bp
 from atst.domain.reports import Reports
 from atst.domain.portfolios import Portfolios
 from atst.domain.portfolio_roles import PortfolioRoles
+from atst.domain.permission_sets import PermissionSets
+from atst.domain.users import Users
 from atst.domain.audit_log import AuditLog
 from atst.domain.common import Paginator
+from atst.domain.exceptions import NotFoundError
 from atst.forms.portfolio import PortfolioForm
 import atst.forms.portfolio_member as member_forms
 from atst.models.permissions import Permissions
-from atst.domain.permission_sets import PermissionSets
 from atst.domain.authz.decorator import user_can_access_decorator as user_can
 from atst.utils.flash import formatted_flash as flash
 from atst.domain.exceptions import UnauthorizedError
@@ -70,12 +72,19 @@ def render_admin_page(portfolio, form=None):
     member_perms_form = member_forms.MembersPermissionsForm(
         data={"members_permissions": members_data}
     )
+
+    assign_ppoc_form = member_forms.AssignPPOCForm()
+    assign_ppoc_form.user_id.choices += [
+        (user.id, user.full_name) for user in portfolio.users
+    ]
+
     return render_template(
         "portfolios/admin.html",
         form=form,
         portfolio_form=portfolio_form,
         member_perms_form=member_perms_form,
         member_form=member_forms.NewForm(),
+        assign_ppoc_form=assign_ppoc_form,
         portfolio=portfolio,
         audit_events=audit_events,
         user=g.current_user,
@@ -115,6 +124,32 @@ def edit_portfolio_members(portfolio_id):
         )
     else:
         return render_admin_page(portfolio)
+
+
+@portfolios_bp.route("/portfolios/<portfolio_id>/update_ppoc", methods=["POST"])
+@user_can(Permissions.EDIT_PORTFOLIO_POC, message="update portfolio ppoc")
+def update_ppoc(portfolio_id):
+    user_id = http_request.form.get("user_id")
+
+    portfolio = Portfolios.get(g.current_user, portfolio_id)
+    new_ppoc = Users.get(user_id)
+
+    if new_ppoc not in portfolio.users:
+        raise NotFoundError("user not in portfolio")
+
+    portfolio_role = PortfolioRoles.get(portfolio_id=portfolio_id, user_id=user_id)
+    PortfolioRoles.make_ppoc(portfolio_role=portfolio_role)
+
+    flash("primary_point_of_contact_changed", ppoc_name=new_ppoc.full_name)
+
+    return redirect(
+        url_for(
+            "portfolios.portfolio_admin",
+            portfolio_id=portfolio.id,
+            fragment="primary-point-of-contact",
+            _anchor="primary-point-of-contact",
+        )
+    )
 
 
 @portfolios_bp.route("/portfolios/<portfolio_id>/edit", methods=["POST"])

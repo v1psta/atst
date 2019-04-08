@@ -2,6 +2,11 @@ from flask import flash, render_template_string
 from atst.utils.localization import translate
 
 MESSAGES = {
+    "primary_point_of_contact_changed": {
+        "title_template": "Primary Point of Contact Changed",
+        "message_template": "You have successfully added {{ ppoc_name }} as Point of Contact. You are no longer the PoC.",
+        "category": "success",
+    },
     "invitation_resent": {
         "title_template": "Invitation resent",
         "message_template": "The {{ officer_type }}  has been resent instructions to join this portfolio.",
