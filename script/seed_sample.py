@@ -36,6 +36,7 @@ PORTFOLIO_USERS = [
         "email": "knight@mil.gov",
         "portfolio_role": "developer",
         "dod_id": "0000000001",
+        "permission_sets": PortfolioRoles.DEFAULT_PORTFOLIO_PERMISSION_SETS,
     },
     {
         "first_name": "Mario",
@@ -43,6 +44,7 @@ PORTFOLIO_USERS = [
         "email": "hudson@mil.gov",
         "portfolio_role": "billing_auditor",
         "dod_id": "0000000002",
+        "permission_sets": PortfolioRoles.DEFAULT_PORTFOLIO_PERMISSION_SETS,
     },
     {
         "first_name": "Louise",
@@ -50,6 +52,7 @@ PORTFOLIO_USERS = [
         "email": "greer@mil.gov",
         "portfolio_role": "admin",
         "dod_id": "0000000003",
+        "permission_sets": PortfolioRoles.DEFAULT_PORTFOLIO_PERMISSION_SETS,
     },
 ]
 
