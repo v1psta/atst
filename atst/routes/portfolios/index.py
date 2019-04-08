@@ -107,10 +107,12 @@ def edit_portfolio_members(portfolio_id):
 
     if member_perms_form.validate():
         for subform in member_perms_form.members_permissions:
-            new_perm_set = subform.data["permission_sets"]
             user_id = subform.user_id.data
-            portfolio_role = PortfolioRoles.get(portfolio.id, user_id)
-            PortfolioRoles.update(portfolio_role, new_perm_set)
+            member = Users.get(user_id=user_id)
+            if member is not portfolio.owner:
+                new_perm_set = subform.data["permission_sets"]
+                portfolio_role = PortfolioRoles.get(portfolio.id, user_id)
+                PortfolioRoles.update(portfolio_role, new_perm_set)
 
         flash("update_portfolio_members", portfolio=portfolio)
 
