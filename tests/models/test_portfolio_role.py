@@ -3,6 +3,7 @@ import datetime
 
 from atst.domain.environments import Environments
 from atst.domain.portfolios import Portfolios
+from atst.domain.portfolio_roles import PortfolioRoles
 from atst.domain.applications import Applications
 from atst.domain.permission_sets import PermissionSets
 from atst.models.portfolio_role import Status
@@ -38,28 +39,31 @@ def test_has_no_portfolio_role_history(session):
     assert not create_event.changed_state
 
 
-@pytest.mark.skip(reason="need to update audit log permission set handling")
 def test_has_portfolio_role_history(session):
     owner = UserFactory.create()
     user = UserFactory.create()
 
     portfolio = PortfolioFactory.create(owner=owner)
-    role = session.query(Role).filter(Role.name == "developer").one()
     # in order to get the history, we don't want the PortfolioRoleFactory
     #  to commit after create()
-    PortfolioRoleFactory._meta.sqlalchemy_session_persistence = "flush"
-    portfolio_role = PortfolioRoleFactory.create(portfolio=portfolio, user=user)
-    PortfolioRoles.update_role(portfolio_role, "admin")
-    changed_events = (
+    # PortfolioRoleFactory._meta.sqlalchemy_session_persistence = "flush"
+    portfolio_role = PortfolioRoleFactory.create(
+        portfolio=portfolio, user=user, permission_sets=[]
+    )
+    PortfolioRoles.update(
+        portfolio_role, PortfolioRoles.DEFAULT_PORTFOLIO_PERMISSION_SETS
+    )
+
+    changed_event = (
         session.query(AuditEvent)
         .filter(
             AuditEvent.resource_id == portfolio_role.id, AuditEvent.action == "update"
         )
-        .all()
+        .one()
     )
-    # changed_state["role"] returns a list [previous role, current role]
-    assert changed_events[0].changed_state["role"][0] == "developer"
-    assert changed_events[0].changed_state["role"][1] == "admin"
+    old_state, new_state = changed_event.changed_state["permission_sets"]
+    assert old_state == []
+    assert set(new_state) == PortfolioRoles.DEFAULT_PORTFOLIO_PERMISSION_SETS
 
 
 def test_has_portfolio_status_history(session):

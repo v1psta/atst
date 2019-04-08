@@ -11,14 +11,15 @@ ACTION_DELETE = "delete"
 
 class AuditableMixin(object):
     @staticmethod
-    def create_audit_event(connection, resource, action):
+    def create_audit_event(connection, resource, action, changed_state=None):
         user_id = getattr_path(g, "current_user.id")
         portfolio_id = resource.portfolio_id
         resource_type = resource.resource_type
         display_name = resource.displayname
         event_details = resource.event_details
 
-        changed_state = resource.history if action == ACTION_UPDATE else None
+        if changed_state is None:
+            changed_state = resource.history if action == ACTION_UPDATE else None
 
         audit_event = AuditEvent(
             user_id=user_id,
