@@ -2,8 +2,10 @@ from enum import Enum
 from sqlalchemy import Index, ForeignKey, Column, Enum as SQLAEnum, Table
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
+from sqlalchemy.event import listen
 
 from atst.models import Base, mixins
+from atst.models.mixins.auditable import record_permission_sets_updates
 from .types import Id
 
 
@@ -55,4 +57,12 @@ Index(
     ApplicationRole.user_id,
     ApplicationRole.application_id,
     unique=True,
+)
+
+
+listen(
+    ApplicationRole.permission_sets,
+    "bulk_replace",
+    record_permission_sets_updates,
+    raw=True,
 )

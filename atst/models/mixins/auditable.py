@@ -98,3 +98,18 @@ class AuditableMixin(object):
     @property
     def displayname(self):
         return None
+
+
+def record_permission_sets_updates(instance_state, permission_sets, initiator):
+    old_perm_sets = instance_state.attrs.get("permission_sets").value
+    if instance_state.persistent and old_perm_sets != permission_sets:
+        connection = instance_state.session.connection()
+        old_state = [p.name for p in old_perm_sets]
+        new_state = [p.name for p in permission_sets]
+        changed_state = {"permission_sets": (old_state, new_state)}
+        instance_state.object.create_audit_event(
+            connection,
+            instance_state.object,
+            ACTION_UPDATE,
+            changed_state=changed_state,
+        )
