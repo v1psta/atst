@@ -23,26 +23,25 @@
         <th scope='col' class='table-cell--align-right'>{{ "portfolios.applications.environments.members" | translate }}</th>
       </thead>
 
-      <tbody v-for='(members_list, name) in environments' class='spend-table__portfolio'>
+      <tbody v-for='(members_list, name) in environments' class='accordion-table__items'>
         <tr>
           <th scope='rowgroup' v-on:click="toggle($event, name)" v-html='name'></th>
 
           <template v-if="environmentsState[name].isVisible">
-            <span v-on:click="toggle($event, name)" class='icon-link icon-link--large spend-table__application__toggler'>
-            <td>Hide Members(<span v-html='members_list.length'></span>){{ Icon('caret_up') }}</td>
+            <td v-on:click="toggle($event, name)" class='icon-link icon-link--large accordion-table__item__toggler'>Hide Members(<span v-html='members_list.length'></span>){{ Icon('caret_up') }}</td>
           </template>
           <template v-else>
-            <span v-on:click="toggle($event, name)" class='icon-link icon-link--large spend-table__application__toggler'>
-            <td>Show Members(<span v-html='members_list.length'></span>){{ Icon('caret_down') }}</td>
+            <td v-on:click="toggle($event, name)" class='icon-link icon-link--large accordion-table__item__toggler'>Show Members(<span v-html='members_list.length'></span>){{ Icon('caret_down') }}</td>
           </template>
         </tr>
 
-        <tr scope='rowgroup' v-for='member in members_list' v-show='environmentsState[name].isVisible' class='spend-table__application__env'>
-          <td class='accordion__item application-list-item__environment table-cell--expand'>
-            <div class='application-list-item__environment__name'>
+        <tr scope='rowgroup' v-for='member in members_list' v-show='environmentsState[name].isVisible' class='accordion-table__item__expanded'>
+          <td class='table-cell--expand'>
+            <div>
               <span v-html='member'></span>
             </div>
           </td>
+          <td class='table-cell--expand'></td>
         </tr>
       </tbody>
 
