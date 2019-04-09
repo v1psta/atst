@@ -580,7 +580,7 @@ portfolios:
     existing_application_title: '{application_name} Application Settings'
     new_application_title: New Application
     settings_heading: Application Settings
-    environments_heading: Environments
+    environments_heading: Application Environments
     environments_description: Each environment created within an application is logically separated from one another for easier management and security.
     update_button_text: Save
     create_button_text: Create

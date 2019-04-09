@@ -16,20 +16,24 @@
         {% include "fragments/applications/edit_application_form.html" %}
 
       </div>
-      <div class="action-group">
-        <button class="usa-button usa-button-primary" tabindex="0" type="submit">{{ 'portfolios.applications.update_button_text' | translate }}</button>
+      <div class="panel__footer">
+        <div class="action-group">
+          <button class="usa-button usa-button-primary" tabindex="0" type="submit">{{ 'portfolios.applications.update_button_text' | translate }}</button>
+        </div>
       </div>
     </div>
   </form>
 
     <div class="accordion-table responsive-table-wrapper panel">
         {% include "fragments/applications/environments.html" %}
-      <div class="action-group">
-        <a class='icon-link'>
-          {{ "portfolios.applications.add_environment" | translate }}
-          {{ Icon('plus-circle-solid') }}
-        </a>
-        <button class="usa-button usa-button-primary" tabindex="0" type="submit">{{ 'portfolios.applications.update_button_text' | translate }}</button>
+      <div class="panel__footer">
+        <div class="action-group">
+          <button class="usa-button usa-button-primary" tabindex="0" type="submit">{{ 'portfolios.applications.update_button_text' | translate }}</button>
+          <a class='icon-link'>
+            {{ "portfolios.applications.add_environment" | translate }}
+            {{ Icon('plus-circle-solid') }}
+          </a>
+        </div>
       </div>
     </div>
 

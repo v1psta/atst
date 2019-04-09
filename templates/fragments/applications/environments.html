@@ -2,8 +2,8 @@
 
 <div class="application-list-item">
   <header>
-    <div class="list-header">
-      <div class='left'>
+    <div class="accordion-table__header">
+      <div class='accordion-table__title'>
         <div class='h3'>{{ 'portfolios.applications.environments_heading' | translate }}</div>
       </div>
       <a class='icon-link'>
@@ -36,7 +36,7 @@
         </tr>
 
         <tr scope='rowgroup' v-for='member in members_list' v-show='environmentsState[name].isVisible' class='accordion-table__item__expanded'>
-          <td class='table-cell--expand'>
+          <td>
             <div>
               <span v-html='member'></span>
             </div>

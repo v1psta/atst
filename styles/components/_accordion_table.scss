@@ -38,6 +38,7 @@
     .accordion-table__items {
       .accordion-table__item__toggler {
         @include icon-link-color($color-blue, $color-gray-lightest);
+        float: right;
         margin-left: -$gap;
         color: $color-blue;
 
