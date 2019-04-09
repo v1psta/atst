@@ -346,9 +346,9 @@
       </div>
     </budget-chart>
 
-    <div class='spend-table responsive-table-wrapper'>
-      <div class='spend-table__header'>
-        <h2 class='spend-table__title'>Total spent per month</h2>
+    <div class='accordion-table responsive-table-wrapper'>
+      <div class='accordion-table__header'>
+        <h2 class='accordion-table__title'>Total spent per month</h2>
 
         <select name='month' id='month' onchange='location = this.value' class='spend-table__month-select'>
           {% for m in cumulative_budget["months"] %}
@@ -402,10 +402,10 @@
             </tr>
           </tbody>
 
-          <tbody v-for='(application, name) in applicationsState' class='spend-table__application'>
+          <tbody v-for='(application, name) in applicationsState' class='accordion-table__items'>
             <tr>
               <th scope='rowgroup'>
-                <button v-on:click='toggle($event, name)' class='icon-link icon-link--large spend-table__application__toggler'>
+                <button v-on:click='toggle($event, name)' class='icon-link icon-link--large accordion-table__item__toggler'>
                   <template v-if='application.isVisible'>{{ Icon('caret_down') }}<div class='open-indicator'></div></template>
                   <template v-else>{{ Icon('caret_right') }}</template>
                   <span v-html='name'></span>
@@ -433,9 +433,9 @@
               </td>
             </tr>
 
-            <tr v-for='(environment, envName) in environments[name]' v-show='application.isVisible' class='spend-table__application__env'>
+            <tr v-for='(environment, envName) in environments[name]' v-show='application.isVisible' class='accordion-table__item__expanded'>
               <th scope='rowgroup'>
-                <div class='icon-link spend-table__application__env'>
+                <div class='icon-link accordion-table__item__expanded'>
                   <span v-html='envName'></span>
                 </div>
               </th>

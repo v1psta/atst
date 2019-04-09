@@ -1,0 +1,85 @@
+.accordion-table {
+  box-shadow: 0 6px 18px 0 rgba(144,164,183,0.3);
+
+  .accordion-table__header {
+    @include panel-base;
+    @include panel-theme-default;
+    border-top: none;
+    border-bottom: 0;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    padding: $gap * 2;
+
+    .accordion-table__title {
+      @include h4;
+      font-size: $lead-font-size;
+      flex: 2;
+    }
+  }
+
+  table {
+    thead th {
+      text-transform: uppercase;
+      border-bottom: 1px solid $color-gray-lightest;
+      border-top: none;
+    }
+
+    th, td {
+      white-space: nowrap;
+
+      button {
+        margin: 0;
+      }
+    }
+
+    .accordion-table__items {
+      .accordion-table__item__toggler {
+        @include icon-link-color($color-blue, $color-gray-lightest);
+        margin-left: -$gap;
+        color: $color-blue;
+
+        .icon {
+          @include icon-size(12);
+          margin-right: $gap;
+        }
+
+        .open-indicator {
+          position: absolute;
+          bottom: 0;
+          left: 5 * $gap;
+          width: 0;
+          height: 0;
+          border-left: 10px solid transparent;
+          border-right: 10px solid transparent;
+
+          border-bottom: 10px solid $color-blue-light;
+        }
+      }
+
+      th, td {
+        border-bottom: none;
+      }
+
+      th[scope=rowgroup] {
+        position: relative;
+      }
+
+      .accordion-table__item__expanded {
+        margin-left: 2 * $gap;
+
+        th, td {
+          .icon-link {
+            font-weight: $font-normal;
+            font-size: $base-font-size;
+          }
+
+          border-bottom: 1px dashed $color-white;
+          background-color: $color-blue-light;
+        }
+      }
+    }
+  }
+}
