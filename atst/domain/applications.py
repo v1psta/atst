@@ -67,3 +67,13 @@ class Applications(object):
         db.session.commit()
 
         return application
+
+    @classmethod
+    def delete(cls, application):
+        for env in application.environments:
+            Environments.delete(env)
+
+        application.deleted = True
+
+        db.session.add(application)
+        db.session.commit()

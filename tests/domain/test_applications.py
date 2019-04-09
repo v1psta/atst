@@ -3,7 +3,12 @@ import pytest
 from atst.domain.applications import Applications
 from atst.domain.exceptions import NotFoundError
 
-from tests.factories import ApplicationFactory, UserFactory, PortfolioFactory
+from tests.factories import (
+    ApplicationFactory,
+    UserFactory,
+    PortfolioFactory,
+    EnvironmentFactory,
+)
 
 
 def test_create_application_with_multiple_environments():
@@ -62,3 +67,21 @@ def test_get_excludes_deleted():
     app = ApplicationFactory.create(deleted=True)
     with pytest.raises(NotFoundError):
         Applications.get(app.id)
+
+
+def test_delete_application(session):
+    app = ApplicationFactory.create()
+    env1 = EnvironmentFactory.create(application=app)
+    env2 = EnvironmentFactory.create(application=app)
+    assert not app.deleted
+    assert not env1.deleted
+    assert not env2.deleted
+
+    Applications.delete(app)
+
+    assert app.deleted
+    assert env1.deleted
+    assert env2.deleted
+
+    # changes are flushed
+    assert not session.dirty

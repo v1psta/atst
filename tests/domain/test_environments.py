@@ -202,3 +202,17 @@ def test_get_excludes_deleted():
     )
     with pytest.raises(NotFoundError):
         Environments.get(env.id)
+
+
+def test_delete_environment(session):
+    env = EnvironmentFactory.create(application=ApplicationFactory.create())
+    assert not env.deleted
+    Environments.delete(env)
+    assert env.deleted
+    # did not flush
+    assert env in session.dirty
+
+    Environments.delete(env, commit=True)
+    assert env.deleted
+    # flushed the change
+    assert not session.dirty

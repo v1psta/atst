@@ -98,3 +98,13 @@ class Environments(object):
     @classmethod
     def revoke_access(cls, environment, target_user):
         EnvironmentRoles.delete(environment.id, target_user.id)
+
+    @classmethod
+    def delete(cls, environment, commit=False):
+        environment.deleted = True
+
+        db.session.add(environment)
+        if commit:
+            db.session.commit()
+
+        return environment
