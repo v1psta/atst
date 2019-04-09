@@ -9,6 +9,8 @@
       {% if subform.user_id.data == user.id %}
         <span class='you'>(<span class='green'>you</span>)</span>
         {% set archive_button_class = 'usa-button-disabled' %}
+      {% elif ppoc %}
+        {% set archive_button_class = 'usa-button-disabled' %}
       {% else %}
         {% set archive_button_class = 'usa-button-secondary' %}
       {% endif %}
