@@ -13,6 +13,8 @@ from atst.domain.applications import Applications
 from atst.domain.portfolios import Portfolios
 from atst.models.portfolio_role import Status as PortfolioRoleStatus
 
+from tests.utils import captured_templates
+
 
 def test_user_with_permission_has_budget_report_link(client, user_session):
     portfolio = PortfolioFactory.create()
@@ -103,6 +105,41 @@ def test_view_edit_application(client, user_session):
         )
     )
     assert response.status_code == 200
+
+
+def test_edit_application_environments_obj(app, client, user_session):
+    portfolio = PortfolioFactory.create()
+    application = Applications.create(
+        portfolio,
+        "Snazzy Application",
+        "A new application for me and my friends",
+        {"env1", "env2"},
+    )
+    user1 = UserFactory.create()
+    user2 = UserFactory.create()
+    env1 = application.environments[0]
+    env2 = application.environments[1]
+    EnvironmentRoleFactory.create(environment=env1, user=user1)
+    EnvironmentRoleFactory.create(environment=env1, user=user2)
+    EnvironmentRoleFactory.create(environment=env2, user=user1)
+
+    user_session(portfolio.owner)
+
+    with captured_templates(app) as templates:
+        response = app.test_client().get(
+            url_for(
+                "portfolios.edit_application",
+                portfolio_id=portfolio.id,
+                application_id=application.id,
+            )
+        )
+
+        assert response.status_code == 200
+        _, context = templates[0]
+        assert context["environments_obj"] == {
+            env1.name: [user1.full_name, user2.full_name],
+            env2.name: [user1.full_name],
+        }
 
 
 def test_user_with_permission_can_update_application(client, user_session):
