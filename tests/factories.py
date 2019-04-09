@@ -105,7 +105,7 @@ class PortfolioFactory(Base):
     class Meta:
         model = Portfolio
 
-    name = factory.Faker("name")
+    name = factory.Faker("domain_word")
     defense_component = factory.LazyFunction(random_service_branch)
 
     @classmethod
@@ -157,7 +157,7 @@ class ApplicationFactory(Base):
         model = Application
 
     portfolio = factory.SubFactory(PortfolioFactory)
-    name = factory.Faker("name")
+    name = factory.Faker("domain_word")
     description = "A test application"
 
     @classmethod
@@ -191,6 +191,8 @@ class ApplicationFactory(Base):
 class EnvironmentFactory(Base):
     class Meta:
         model = Environment
+
+    name = factory.Faker("domain_word")
 
     @classmethod
     def _create(cls, model_class, *args, **kwargs):

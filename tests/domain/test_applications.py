@@ -1,6 +1,9 @@
+import pytest
+
 from atst.domain.applications import Applications
-from tests.factories import UserFactory, PortfolioFactory
-from atst.domain.portfolios import Portfolios
+from atst.domain.exceptions import NotFoundError
+
+from tests.factories import ApplicationFactory, UserFactory, PortfolioFactory
 
 
 def test_create_application_with_multiple_environments():
@@ -53,3 +56,9 @@ def test_can_only_update_name_and_description():
     assert application.description == "a new application"
     assert len(application.environments) == 1
     assert application.environments[0].name == env_name
+
+
+def test_get_excludes_deleted():
+    app = ApplicationFactory.create(deleted=True)
+    with pytest.raises(NotFoundError):
+        Applications.get(app.id)

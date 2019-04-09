@@ -1,3 +1,5 @@
+from sqlalchemy.orm.exc import NoResultFound
+
 from atst.database import db
 from atst.domain.environments import Environments
 from atst.domain.exceptions import NotFoundError
@@ -23,7 +25,9 @@ class Applications(object):
     def get(cls, application_id):
         try:
             application = (
-                db.session.query(Application).filter_by(id=application_id).one()
+                db.session.query(Application)
+                .filter_by(id=application_id, deleted=False)
+                .one()
             )
         except NoResultFound:
             raise NotFoundError("application")

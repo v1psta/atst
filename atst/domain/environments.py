@@ -51,7 +51,11 @@ class Environments(object):
     @classmethod
     def get(cls, environment_id):
         try:
-            env = db.session.query(Environment).filter_by(id=environment_id).one()
+            env = (
+                db.session.query(Environment)
+                .filter_by(id=environment_id, deleted=False)
+                .one()
+            )
         except NoResultFound:
             raise NotFoundError("environment")
 

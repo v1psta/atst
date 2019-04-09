@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey, String
+from sqlalchemy import Column, ForeignKey, String, Boolean
 from sqlalchemy.orm import relationship
 
 from atst.models import Base
@@ -16,6 +16,8 @@ class Environment(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     application = relationship("Application")
 
     cloud_id = Column(String)
+
+    deleted = Column(Boolean, default=False)
 
     @property
     def users(self):

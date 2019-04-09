@@ -1,8 +1,16 @@
+import pytest
+
 from atst.domain.environments import Environments
 from atst.domain.environment_roles import EnvironmentRoles
 from atst.domain.portfolio_roles import PortfolioRoles
+from atst.domain.exceptions import NotFoundError
 
-from tests.factories import ApplicationFactory, UserFactory, PortfolioFactory
+from tests.factories import (
+    ApplicationFactory,
+    UserFactory,
+    PortfolioFactory,
+    EnvironmentFactory,
+)
 
 
 def test_create_environments():
@@ -186,3 +194,11 @@ def test_get_scoped_environments(db):
 
     application2_envs = Environments.for_user(developer, portfolio.applications[1])
     assert [env.name for env in application2_envs] == ["application2 staging"]
+
+
+def test_get_excludes_deleted():
+    env = EnvironmentFactory.create(
+        deleted=True, application=ApplicationFactory.create()
+    )
+    with pytest.raises(NotFoundError):
+        Environments.get(env.id)

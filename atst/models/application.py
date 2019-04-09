@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey, String
+from sqlalchemy import Column, ForeignKey, String, Boolean
 from sqlalchemy.orm import relationship
 
 from atst.models import Base
@@ -15,8 +15,14 @@ class Application(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
 
     portfolio_id = Column(ForeignKey("portfolios.id"), nullable=False)
     portfolio = relationship("Portfolio")
-    environments = relationship("Environment", back_populates="application")
+    environments = relationship(
+        "Environment",
+        back_populates="application",
+        primaryjoin="and_(Environment.application_id==Application.id, Environment.deleted==False)",
+    )
     roles = relationship("ApplicationRole")
+
+    deleted = Column(Boolean, default=False)
 
     @property
     def users(self):
