@@ -295,6 +295,37 @@
       background: $color-red;
     }
 
+    select {
+      padding-left: 1.2rem
+    }
+
+    .members-table-ppoc {
+      select::-ms-expand {
+        display: none;
+      }
+
+      select {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        display: block;
+        width: 100%;
+        float: right;
+        margin: 5px 0px;
+        padding: 0px 24px;
+        background-image: none;
+        -ms-word-break: normal;
+        word-break: normal;
+        padding-right: 3rem;
+        padding-left: 1.2rem;
+      }
+
+      select:hover {
+        box-shadow: none;
+        color: $color-base;
+      }
+    }
+
     .members-table-footer {
       float: right;
       padding: 3 * $gap 0;

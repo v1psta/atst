@@ -1,6 +1,7 @@
 from flask import url_for
 
 from atst.domain.permission_sets import PermissionSets
+from atst.domain.portfolio_roles import PortfolioRoles
 
 from tests.factories import PortfolioFactory, PortfolioRoleFactory, UserFactory
 
@@ -130,3 +131,32 @@ def test_rerender_admin_page_if_member_perms_form_does_not_validate(
     )
     assert response.status_code == 200
     assert "Portfolio Administration" in response.data.decode()
+
+
+def test_cannot_update_portfolio_ppoc_perms(client, user_session):
+    portfolio = PortfolioFactory.create()
+    ppoc = portfolio.owner
+    ppoc_pf_role = PortfolioRoles.get(portfolio_id=portfolio.id, user_id=ppoc.id)
+    user = UserFactory.create()
+    PortfolioRoleFactory.create(portfolio=portfolio, user=user)
+
+    user_session(user)
+
+    assert ppoc_pf_role.has_permission_set(PermissionSets.PORTFOLIO_POC)
+
+    member_perms_data = {
+        "members_permissions-0-user_id": ppoc.id,
+        "members_permissions-0-perms_app_mgmt": "view_portfolio_application_management",
+        "members_permissions-0-perms_funding": "view_portfolio_funding",
+        "members_permissions-0-perms_reporting": "view_portfolio_reports",
+        "members_permissions-0-perms_portfolio_mgmt": "view_portfolio_admin",
+    }
+
+    response = client.post(
+        url_for("portfolios.edit_portfolio_members", portfolio_id=portfolio.id),
+        data=member_perms_data,
+        follow_redirects=True,
+    )
+
+    assert response.status_code == 404
+    assert ppoc_pf_role.has_permission_set(PermissionSets.PORTFOLIO_POC)
