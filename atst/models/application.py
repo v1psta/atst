@@ -40,3 +40,12 @@ class Application(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
         return "<Application(name='{}', description='{}', portfolio='{}', id='{}')>".format(
             self.name, self.description, self.portfolio.name, self.id
         )
+
+    @property
+    def history(self):
+        previous_state = self.get_changes()
+        change_set = {}
+        if "deleted" in previous_state:
+            change_set["deleted"] = previous_state["deleted"]
+
+        return change_set
