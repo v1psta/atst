@@ -13,44 +13,39 @@
     </div>
   </header>
 
-  <div>
+  <environments-table
+    v-cloak
+    v-bind:environments='{{ environments_obj }}'
+    inline-template>
     <table>
       <thead>
-        <tr>
-            <td>{{ "portfolios.applications.environments.name" | translate }}</td>
-            <td>{{ "portfolios.applications.environments.members" | translate }}</td>
-        </tr>
+        <th scope='col'>{{ "portfolios.applications.environments.name" | translate }}</th>
+        <th scope='col' class='table-cell--align-right'>{{ "portfolios.applications.environments.members" | translate }}</th>
       </thead>
 
-      <tbody>
-          {% for environment in application.environments %}
-            <tr is='toggler' v-cloak>
-            <template slot-scope='props'>
+      <tbody v-for='(members_list, name) in environments' class='spend-table__portfolio'>
+        <tr>
+          <th scope='rowgroup' v-on:click="toggle($event, name)" v-html='name'></th>
 
-              <th v-on:click="props.toggle">{{ environment.name }}</th>
+          <template v-if="environmentsState[name].isVisible">
+            <span v-on:click="toggle($event, name)" class='icon-link icon-link--large spend-table__application__toggler'>
+            <td>Hide Members(<span v-html='members_list.length'></span>){{ Icon('caret_up') }}</td>
+          </template>
+          <template v-else>
+            <span v-on:click="toggle($event, name)" class='icon-link icon-link--large spend-table__application__toggler'>
+            <td>Show Members(<span v-html='members_list.length'></span>){{ Icon('caret_down') }}</td>
+          </template>
+        </tr>
 
-              <template v-if="props.isVisible">
-                <span v-on:click="props.toggle" class='icon-link toggle-link'>
-                <td>Hide Members({{ environment.num_users }}){{ Icon('caret_up') }}</td>
-              </template>
-              <template v-else>
-                <span v-on:click="props.toggle" class='icon-link toggle-link'>
-                <td>Show Members({{ environment.num_users }}){{ Icon('caret_down') }}</td>
-              </template>
-
-            </template>
-            </tr>
-
-            <tr >
-              <td class='accordian__item application-list-item__environment'>
-                <div class='application-list-item__environment__name'>
-                  <span>User Name here</span>
-                </div>
-              </td>
-            </tr>
-          {% endfor %}
-
+        <tr scope='rowgroup' v-for='member in members_list' v-show='environmentsState[name].isVisible' class='spend-table__application__env'>
+          <td class='accordian__item application-list-item__environment table-cell--expand'>
+            <div class='application-list-item__environment__name'>
+              <span v-html='member'></span>
+            </div>
+          </td>
+        </tr>
       </tbody>
+
     </table>
-  </div>
+  </environments-table>
 </div>

@@ -73,7 +73,7 @@ def edit_application(portfolio_id, application_id):
         portfolio=portfolio,
         application=application,
         form=form,
-        environments_obj=environments_obj
+        environments_obj=environments_obj,
     )
 
 
