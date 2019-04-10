@@ -13,7 +13,9 @@ class CSPRole(Enum):
     TECHNICAL_READ = "Technical Read-only"
 
 
-class EnvironmentRole(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
+class EnvironmentRole(
+    Base, mixins.TimestampsMixin, mixins.AuditableMixin, mixins.DeletableMixin
+):
     __tablename__ = "environment_roles"
 
     id = types.Id()

@@ -5,6 +5,7 @@ from atst.domain.exceptions import NotFoundError
 
 from tests.factories import (
     ApplicationFactory,
+    ApplicationRoleFactory,
     UserFactory,
     PortfolioFactory,
     EnvironmentFactory,
@@ -71,17 +72,20 @@ def test_get_excludes_deleted():
 
 def test_delete_application(session):
     app = ApplicationFactory.create()
+    app_role = ApplicationRoleFactory.create(user=UserFactory.create(), application=app)
     env1 = EnvironmentFactory.create(application=app)
     env2 = EnvironmentFactory.create(application=app)
     assert not app.deleted
     assert not env1.deleted
     assert not env2.deleted
+    assert not app_role.deleted
 
     Applications.delete(app)
 
     assert app.deleted
     assert env1.deleted
     assert env2.deleted
+    assert app_role.deleted
 
     # changes are flushed
     assert not session.dirty

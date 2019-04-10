@@ -10,6 +10,7 @@ from tests.factories import (
     UserFactory,
     PortfolioFactory,
     EnvironmentFactory,
+    EnvironmentRoleFactory,
 )
 
 
@@ -206,13 +207,17 @@ def test_get_excludes_deleted():
 
 def test_delete_environment(session):
     env = EnvironmentFactory.create(application=ApplicationFactory.create())
+    env_role = EnvironmentRoleFactory.create(user=UserFactory.create(), environment=env)
     assert not env.deleted
+    assert not env_role.deleted
     Environments.delete(env)
     assert env.deleted
+    assert env_role.deleted
     # did not flush
-    assert env in session.dirty
+    assert session.dirty
 
     Environments.delete(env, commit=True)
     assert env.deleted
+    assert env_role.deleted
     # flushed the change
     assert not session.dirty

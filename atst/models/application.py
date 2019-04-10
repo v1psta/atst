@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey, String, Boolean
+from sqlalchemy import Column, ForeignKey, String
 from sqlalchemy.orm import relationship
 
 from atst.models import Base
@@ -6,7 +6,9 @@ from atst.models.types import Id
 from atst.models import mixins
 
 
-class Application(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
+class Application(
+    Base, mixins.TimestampsMixin, mixins.AuditableMixin, mixins.DeletableMixin
+):
     __tablename__ = "applications"
 
     id = Id()
@@ -21,8 +23,6 @@ class Application(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
         primaryjoin="and_(Environment.application_id==Application.id, Environment.deleted==False)",
     )
     roles = relationship("ApplicationRole")
-
-    deleted = Column(Boolean, default=False)
 
     @property
     def users(self):
@@ -43,9 +43,4 @@ class Application(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
 
     @property
     def history(self):
-        previous_state = self.get_changes()
-        change_set = {}
-        if "deleted" in previous_state:
-            change_set["deleted"] = previous_state["deleted"]
-
-        return change_set
+        return self.get_changes()

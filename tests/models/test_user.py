@@ -3,7 +3,7 @@ from sqlalchemy.exc import InternalError
 
 from atst.models.user import User
 
-from tests.factories import UserFactory
+from tests.factories import UserFactory, ApplicationFactory, ApplicationRoleFactory
 
 
 def test_profile_complete_with_all_info():
@@ -24,3 +24,16 @@ def test_cannot_update_dod_id(session):
     session.add(user)
     with pytest.raises(InternalError):
         session.commit()
+
+
+def test_deleted_application_roles_are_ignored(session):
+    user = UserFactory.create()
+    app = ApplicationFactory.create()
+    app_role = ApplicationRoleFactory.create(user=user, application=app)
+    assert len(user.application_roles) == 1
+
+    app_role.deleted = True
+    session.add(app_role)
+    session.commit()
+
+    assert len(user.application_roles) == 0

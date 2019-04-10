@@ -75,5 +75,9 @@ class Applications(object):
 
         application.deleted = True
 
+        for role in application.roles:
+            role.deleted = True
+            db.session.add(role)
+
         db.session.add(application)
         db.session.commit()

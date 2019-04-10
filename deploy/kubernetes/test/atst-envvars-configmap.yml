@@ -12,3 +12,4 @@ data:
   RQ_QUEUES: atat-test
   CRL_STORAGE_PROVIDER: CLOUDFILES
   LOG_JSON: "true"
+  DEBUG: "false"

@@ -25,8 +25,6 @@ def test_add_user_to_environment():
 
 
 def test_audit_event_for_environment_deletion(session):
-    EnvironmentFactory._meta.sqlalchemy_session_persistence = "flush"
-
     env = EnvironmentFactory.create(application=ApplicationFactory.create())
     env.deleted = True
     session.add(env)
@@ -38,4 +36,6 @@ def test_audit_event_for_environment_deletion(session):
         .one()
     )
     assert update_event.changed_state.get("deleted")
-    assert update_event.changed_state["deleted"] == [False, True]
+    before, after = update_event.changed_state["deleted"]
+    assert not before
+    assert after

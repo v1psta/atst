@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey, String, Boolean
+from sqlalchemy import Column, ForeignKey, String
 from sqlalchemy.orm import relationship
 
 from atst.models import Base
@@ -6,7 +6,9 @@ from atst.models.types import Id
 from atst.models import mixins
 
 
-class Environment(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
+class Environment(
+    Base, mixins.TimestampsMixin, mixins.AuditableMixin, mixins.DeletableMixin
+):
     __tablename__ = "environments"
 
     id = Id()
@@ -16,8 +18,6 @@ class Environment(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     application = relationship("Application")
 
     cloud_id = Column(String)
-
-    deleted = Column(Boolean, default=False)
 
     @property
     def users(self):
@@ -49,9 +49,4 @@ class Environment(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
 
     @property
     def history(self):
-        previous_state = self.get_changes()
-        change_set = {}
-        if "deleted" in previous_state:
-            change_set["deleted"] = previous_state["deleted"]
-
-        return change_set
+        return self.get_changes()

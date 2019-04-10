@@ -102,8 +102,12 @@ class Environments(object):
     @classmethod
     def delete(cls, environment, commit=False):
         environment.deleted = True
-
         db.session.add(environment)
+
+        for role in environment.roles:
+            role.deleted = True
+            db.session.add(role)
+
         if commit:
             db.session.commit()
 
