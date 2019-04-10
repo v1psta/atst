@@ -21,26 +21,25 @@
     }
   } %}
 
-  <div class='alert alert--{{level}}' role='{{role}}' aria-live='{{levels.get(level).get('tone')}}'>
-    {{ Icon(levels.get(level).get('icon'), classes='alert__icon icon--large') }}
+  <div class='usa-alert usa-alert-{{level}}' role='{{role}}' aria-live='{{levels.get(level).get('tone')}}'>
 
-    <div class='alert__content'>
+    <div class='usa-alert-body'>
       {% if vue_template %}
-        <h2 class='alert__title' v-html='title'></h2>
+        <h2 class='usa-alert-heading' v-html='title'></h2>
       {% else %}
-        <h2 class='alert__title'>{{title}}</h2>
+        <h2 class='usa-alert-heading'>{{title}}</h2>
       {% endif %}
 
       {% if message %}
-        <div class='alert__message'>{{ message | safe }}</div>
+        <div class='usa-alert-text'>{{ message | safe }}</div>
       {% endif %}
 
       {% if caller %}
-        <div class='alert__message'>{{ caller() }}</div>
+        <div class='usa-alert-text'>{{ caller() }}</div>
       {% endif %}
 
       {% if fragment %}
-        <div class='alert__message'>
+        <div class='usa-alert-text'>
           {% include fragment %}
         </div>
       {% endif %}
