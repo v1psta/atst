@@ -111,4 +111,6 @@ class Environments(object):
         if commit:
             db.session.commit()
 
+        app.csp.cloud.delete_application(environment.cloud_id)
+
         return environment
