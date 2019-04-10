@@ -26,6 +26,8 @@ flash:
   next_steps: Review next steps below
   deleted_member: Portfolio member deleted
   delete_member_success: You have successfully deleted {member_name} from the portfolio.
+  new_ppoc_title: Primary point of contact updated
+  new_ppoc_message: You have successfully added {ppoc_name} as the primary point of contact. You are no longer the PPoC.
 common:
   back: Back
   cancel: Cancel
@@ -323,14 +325,14 @@ fragments:
     title: Primary point of contact (PPoC)
     subtitle: The PPoC has the ability to edit all aspects of a portfolio and is the only one who can manage the PPoC role.
     update_btn: Update
-    assign_user_button_text: Assign User
+    assign_user_button_text: Assign Member
     update_ppoc_confirmation_title: Confirmation
-    update_ppoc_title: Update Primary Point of Contact.
+    update_ppoc_title: Update primary point of contact
     confirm_alert:
-      title: Once you assign a new point of contact, you will no longer be able to request portfolio deactivation or manage the point of contact role.
+      title: Once you assign a new PPoC, you will no longer be able to request portfolio deactivation or manage the PPoC role.
     alert:
       title: Warning!
-      message: Selecting a new primary contact gives that member full access to the portfolio and removes your PoC rights. Please be sure you want to proceed.
+      message: Selecting a new PPoC gives that member full access to the portfolio and removes your ability to manage the PPoC role. The rest of your permissions will remain untouched. Please be sure you want to proceed.
 login:
   ccpo_logo_alt_text: Cloud Computing Program Office Logo
   certificate_selection:

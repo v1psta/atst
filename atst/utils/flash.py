@@ -3,8 +3,8 @@ from atst.utils.localization import translate
 
 MESSAGES = {
     "primary_point_of_contact_changed": {
-        "title_template": "Primary Point of Contact Changed",
-        "message_template": "You have successfully added {{ ppoc_name }} as Point of Contact. You are no longer the PoC.",
+        "title_template": translate("flash.new_ppoc_title"),
+        "message_template": """{{ "flash.new_ppoc_message" | translate({ "ppoc_name": ppoc_name }) }}""",
         "category": "success",
     },
     "invitation_resent": {
