@@ -26,7 +26,8 @@
           <ul>
             {% for member in members_list %}
             <li class="accordion-table__item__expanded">
-              <div class="accordion-table__item-content">{{ member }}</div>
+              <div class="accordion-table__item__expanded_first">{{ member.name }}</div>
+              <div class="right">{{ member.role }}</div>
             </li>
             {% endfor %}
           </ul>

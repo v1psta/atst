@@ -105,8 +105,15 @@
         }
 
         border-bottom: 1px dashed $color-white;
-        background-color: $color-gray-lightest;
       }
+
+      .accordion-table__item__expanded_first {
+        float: left;
+        font-weight: bold;
+      }
+
+      background-color: $color-gray-lightest;
+      padding: $gap $gap * 5 $gap * 4 $gap * 5;
     }
   }
 }
