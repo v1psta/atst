@@ -15,6 +15,7 @@ from atst.domain.portfolios import Portfolios
 from atst.forms.application import NewApplicationForm, ApplicationForm
 from atst.domain.authz.decorator import user_can_access_decorator as user_can
 from atst.models.permissions import Permissions
+from atst.utils.flash import formatted_flash as flash
 
 
 @portfolios_bp.route("/portfolios/<portfolio_id>/applications")
@@ -118,3 +119,18 @@ def access_environment(portfolio_id, environment_id):
     token = app.csp.cloud.get_access_token(env_role)
 
     return redirect(url_for("atst.csp_environment_access", token=token))
+
+
+@portfolios_bp.route(
+    "/portfolios/<portfolio_id>/applications/<application_id>/delete", methods=["POST"]
+)
+@user_can(Permissions.DELETE_APPLICATION, message="delete application")
+def delete_application(portfolio_id, application_id):
+    application = Applications.get(application_id)
+    Applications.delete(application)
+
+    flash("application_deleted", application_name=application.name)
+
+    return redirect(
+        url_for("portfolios.portfolio_applications", portfolio_id=portfolio_id)
+    )

@@ -86,6 +86,7 @@ _PORTFOLIO_APP_MGMT_PERMISSION_SETS = [
         "permissions": [
             Permissions.EDIT_APPLICATION,
             Permissions.CREATE_APPLICATION,
+            Permissions.DELETE_APPLICATION,
             Permissions.EDIT_APPLICATION_MEMBER,
             Permissions.CREATE_APPLICATION_MEMBER,
             Permissions.EDIT_ENVIRONMENT,

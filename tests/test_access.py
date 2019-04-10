@@ -203,6 +203,44 @@ def test_portfolios_create_member_access(post_url_assert_status):
     post_url_assert_status(rando, url, 404)
 
 
+# portfolios.delete_application
+def test_portfolios_delete_application_access(post_url_assert_status, monkeypatch):
+    ccpo = UserFactory.create_ccpo()
+    owner = user_with()
+    app_admin = user_with()
+    rando = user_with()
+
+    portfolio = PortfolioFactory.create(
+        owner=owner, applications=[{"name": "mos eisley"}]
+    )
+    application = portfolio.applications[0]
+
+    ApplicationRoleFactory.create(
+        user=app_admin,
+        application=application,
+        permission_sets=PermissionSets.get_many(
+            [
+                PermissionSets.VIEW_APPLICATION,
+                PermissionSets.EDIT_APPLICATION_ENVIRONMENTS,
+                PermissionSets.EDIT_APPLICATION_TEAM,
+                PermissionSets.DELETE_APPLICATION_ENVIRONMENTS,
+            ]
+        ),
+    )
+
+    monkeypatch.setattr("atst.domain.applications.Applications.delete", lambda *a: True)
+
+    url = url_for(
+        "portfolios.delete_application",
+        portfolio_id=portfolio.id,
+        application_id=application.id,
+    )
+    post_url_assert_status(app_admin, url, 404)
+    post_url_assert_status(rando, url, 404)
+    post_url_assert_status(owner, url, 302)
+    post_url_assert_status(ccpo, url, 302)
+
+
 # portfolios.edit_application
 def test_portfolios_edit_application_access(get_url_assert_status):
     ccpo = user_with(PermissionSets.EDIT_PORTFOLIO_APPLICATION_MANAGEMENT)

@@ -148,6 +148,15 @@ MESSAGES = {
         """,
         "category": "success",
     },
+    "application_deleted": {
+        "title_template": "Success!",
+        "message_template": """
+        You have successfully deleted the {{ application_name }} application.
+        To view the retained activity log, visit the portfolio administration
+        page. <a href="#">Undo this action</a>.
+        """,
+        "category": "success",
+    },
 }
 
 

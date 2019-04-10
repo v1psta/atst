@@ -8,6 +8,7 @@ class Permissions(object):
     VIEW_APPLICATION = "view_application"
     EDIT_APPLICATION = "edit_application"
     CREATE_APPLICATION = "create_application"
+    DELETE_APPLICATION = "delete_application"
     VIEW_APPLICATION_MEMBER = "view_application_member"
     EDIT_APPLICATION_MEMBER = "edit_application_member"
     CREATE_APPLICATION_MEMBER = "create_application_member"
