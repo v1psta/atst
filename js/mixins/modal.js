@@ -4,7 +4,7 @@ export default {
   methods: {
     closeModal: function(name) {
       this.activeModal = null
-      this.$emit('modalOpen', false)
+      this.$root.$emit('modalOpen', { isOpen: false, name: name })
       if (this.allyHandler) this.allyHandler.disengage()
     },
 
