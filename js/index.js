@@ -35,6 +35,7 @@ import DateSelector from './components/date_selector'
 import SidenavToggler from './components/sidenav_toggler'
 import KoReview from './components/forms/ko_review'
 import BaseForm from './components/forms/base_form'
+import DeleteConfirmation from './components/delete_confirmation'
 
 Vue.config.productionTip = false
 
@@ -72,6 +73,7 @@ const app = new Vue({
     SidenavToggler,
     KoReview,
     BaseForm,
+    DeleteConfirmation,
   },
 
   mounted: function() {
