@@ -28,6 +28,8 @@ flash:
   delete_member_success: You have successfully deleted {member_name} from the portfolio.
   new_ppoc_title: Primary point of contact updated
   new_ppoc_message: You have successfully added {ppoc_name} as the primary point of contact. You are no longer the PPoC.
+  application:
+    deleted: You have successfully deleted the {application_name} application. To view the retained activity log, visit the portfolio administration page.
 common:
   back: Back
   cancel: Cancel

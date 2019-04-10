@@ -149,11 +149,10 @@ MESSAGES = {
         "category": "success",
     },
     "application_deleted": {
-        "title_template": "Success!",
+        "title_template": translate("flash.success"),
         "message_template": """
-        You have successfully deleted the {{ application_name }} application.
-        To view the retained activity log, visit the portfolio administration
-        page. <a href="#">Undo this action</a>.
+            {{ "flash.application.deleted" | translate({"application_name": application_name}) }}
+            <a href="#">Undo</a>.
         """,
         "category": "success",
     },
