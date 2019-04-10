@@ -56,7 +56,12 @@ def get_environments_obj_for_app(application):
     environments_obj = {}
 
     for env in application.environments:
-        environments_obj[env.name] = [user.full_name for user in env.users]
+        environments_obj[env.name] = []
+        for user in env.users:
+            env_role = EnvironmentRoles.get(user.id, env.id)
+            environments_obj[env.name].append(
+                {"name": user.full_name, "role": env_role.displayname}
+            )
 
     return environments_obj
 
