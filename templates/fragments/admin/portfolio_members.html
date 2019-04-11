@@ -6,7 +6,7 @@
 {% from "components/alert.html" import Alert %}
 
 <section class="member-list" id="portfolio-members">
-  <div class='responsive-table-wrapper panel'>
+  <div class='responsive-table-wrapper panel accordion-table'>
     {% if g.matchesPath("portfolio-members") %}
       {% include "fragments/flash.html" %}
     {% endif %}
@@ -14,44 +14,49 @@
       <form method='POST' id="member-perms" action='{{ url_for("portfolios.edit_portfolio_members", portfolio_id=portfolio.id) }}' autocomplete="off" enctype="multipart/form-data">
       {{ member_perms_form.csrf_token }}
 
-      <div class='member-list-header'>
-        <div class='left'>
-          <div class='h3'>{{ "portfolios.admin.portfolio_members_title" | translate }}</div>
-          <div class='subheading'>
-            {{ "portfolios.admin.portfolio_members_subheading" | translate }}
+      <div class='application-list-item'>
+        <header>
+          <div class='accordion-table__header'>
+            <div class='accordion-table__title'>
+              <div class='h3'>{{ "portfolios.admin.portfolio_members_title" | translate }}</div>
+              <div class='subheading'>
+                {{ "portfolios.admin.portfolio_members_subheading" | translate }}
+              </div>
+            </div>
+
+            <a class='icon-link'>
+              {{ Icon('info') }}
+              {{ "portfolios.admin.settings_info" | translate }}
+            </a>
           </div>
+        </header>
+
+        {% if not portfolio.members %}
+          <p>{{ "portfolios.admin.no_members" | translate }}</p>
+        {% else %}
+          <table>
+
+            <thead>
+              <tr>
+                  <td>{{ "portfolios.members.permissions.name" | translate }}</td>
+                  <td>{{ "portfolios.members.permissions.app_mgmt" | translate }}</td>
+                  <td>{{ "portfolios.members.permissions.funding" | translate }}</td>
+                  <td>{{ "portfolios.members.permissions.reporting" | translate }}</td>
+                  <td>{{ "portfolios.members.permissions.portfolio_mgmt" | translate }}</td>
+                  <td></td>
+              </tr>
+            </thead>
+
+            <tbody>
+              {% if user_can(permissions.EDIT_PORTFOLIO_USERS) %}
+                {% include "fragments/admin/members_edit.html" %}
+              {% elif user_can(permissions.VIEW_PORTFOLIO_USERS) %}
+                {% include "fragments/admin/members_view.html" %}
+              {% endif %}
+            </tbody>
+
+          </table>
         </div>
-        <a class='icon-link'>
-          {{ Icon('info') }}
-          {{ "portfolios.admin.settings_info" | translate }}
-        </a>
-      </div>
-
-      {% if not portfolio.members %}
-        <p>{{ "portfolios.admin.no_members" | translate }}</p>
-      {% else %}
-        <table>
-
-          <thead>
-            <tr>
-                <td>{{ "portfolios.members.permissions.name" | translate }}</td>
-                <td>{{ "portfolios.members.permissions.app_mgmt" | translate }}</td>
-                <td>{{ "portfolios.members.permissions.funding" | translate }}</td>
-                <td>{{ "portfolios.members.permissions.reporting" | translate }}</td>
-                <td>{{ "portfolios.members.permissions.portfolio_mgmt" | translate }}</td>
-                <td></td>
-            </tr>
-          </thead>
-
-          <tbody>
-            {% if user_can(permissions.EDIT_PORTFOLIO_USERS) %}
-              {% include "fragments/admin/members_edit.html" %}
-            {% elif user_can(permissions.VIEW_PORTFOLIO_USERS) %}
-              {% include "fragments/admin/members_view.html" %}
-            {% endif %}
-          </tbody>
-
-        </table>
         <div class="members-table-footer">
           <div class="action-group save">
             {% if user_can(permissions.EDIT_PORTFOLIO_USERS) %}
@@ -59,8 +64,8 @@
             {% endif %}
           </div>
         </div>
-      {% endif %}
 
+      {% endif %}
       </form>
     </base-form>
 
@@ -90,6 +95,8 @@
         {% endcall %}
       {% endfor %}
     {% endif %}
+</div>
+
 
     <div class="members-table-footer">
       <div class="action-group">
