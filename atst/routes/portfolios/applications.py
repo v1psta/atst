@@ -64,11 +64,16 @@ def edit_application(portfolio_id, application_id):
     application = Applications.get(application_id)
     form = ApplicationForm(name=application.name, description=application.description)
 
+    environments_obj = {}
+    for env in application.environments:
+        environments_obj[env.name] = [user.full_name for user in env.users]
+
     return render_template(
         "portfolios/applications/edit.html",
         portfolio=portfolio,
         application=application,
         form=form,
+        environments_obj=environments_obj,
     )
 
 

@@ -37,7 +37,7 @@
             </div>
           {% endcall %}
 
-          {% include "fragments/edit_application_form.html" %}
+          {% include "fragments/applications/edit_application_form.html" %}
 
           <div> {# this extra div prevents this bug: https://www.pivotaltracker.com/story/show/160768940 #}
             <div v-cloak v-for="title in errors" :key="title">

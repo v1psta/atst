@@ -1,0 +1,50 @@
+{% from "components/icon.html" import Icon %}
+
+<div class="application-list-item">
+  <header>
+    <div class="responsive-table-wrapper__header">
+      <div class='responsive-table-wrapper__title'>
+        <div class='h3'>{{ 'portfolios.applications.environments_heading' | translate }}</div>
+      </div>
+      <a class='icon-link'>
+        {{ Icon('info') }}
+        {{ "portfolios.admin.settings_info" | translate }}
+      </a>
+    </div>
+  </header>
+
+  <environments-table
+    v-cloak
+    v-bind:environments='{{ environments_obj }}'
+    inline-template>
+    <table>
+      <thead>
+        <th scope='col'>{{ "portfolios.applications.environments.name" | translate }}</th>
+        <th scope='col' class='table-cell--align-right'>{{ "portfolios.applications.environments.members" | translate }}</th>
+      </thead>
+
+      <tbody v-for='(members_list, name) in environments' class='accordion-table__items'>
+        <tr>
+          <th scope='rowgroup' v-on:click="toggle($event, name)" v-html='name'></th>
+
+          <template v-if="environmentsState[name].isVisible">
+            <td v-on:click="toggle($event, name)" class='icon-link icon-link--large accordion-table__item__toggler'>Hide Members (<span v-html='members_list.length'></span>){{ Icon('caret_up') }}</td>
+          </template>
+          <template v-else>
+            <td v-on:click="toggle($event, name)" class='icon-link icon-link--large accordion-table__item__toggler'>Show Members (<span v-html='members_list.length'></span>){{ Icon('caret_down') }}</td>
+          </template>
+        </tr>
+
+        <tr scope='rowgroup' v-for='member in members_list' v-show='environmentsState[name].isVisible' class='accordion-table__item__expanded'>
+          <td>
+            <div>
+              <span v-html='member'></span>
+            </div>
+          </td>
+          <td class='table-cell--expand'></td>
+        </tr>
+      </tbody>
+
+    </table>
+  </environments-table>
+</div>

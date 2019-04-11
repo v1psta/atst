@@ -1,4 +1,4 @@
-.accordian {
+.accordion {
   @include block-list;
 
   box-shadow: 0 4px 10px 0 rgba(193,193,193,0.5);
@@ -21,7 +21,7 @@
   }
 }
 
-.accordian__header {
+.accordion__header {
   @include block-list-header;
   border-top: 3px solid $color-blue;
   border-bottom: none;
@@ -32,7 +32,7 @@
   }
 }
 
-.accordian__title {
+.accordion__title {
   @include block-list__title;
   color: $color-blue;
   @include h3;
@@ -45,14 +45,14 @@
   }
 }
 
-.accordian__description {
+.accordion__description {
   @include block-list__description;
   font-style: italic;
   font-size: $small-font-size;
   color: $color-gray;
 }
 
-.accordian__actions {
+.accordion__actions {
   margin-top: $gap;
   display: flex;
   flex-direction: row;
@@ -76,14 +76,14 @@
   }
 }
 
-.accordian__item {
+.accordion__item {
   @include block-list-item;
 
   opacity: 0.75;
   background-color: $color-blue-light;
   border-bottom: 1px solid rgba($color-gray-light, 0.5);
 
-  &.accordian__item--selectable {
+  &.accordion__item--selectable {
     > div {
       display: flex;
       flex-direction: row-reverse;
@@ -117,7 +117,7 @@
   }
 }
 
-.accordian__footer {
+.accordion__footer {
   @include block-list__footer;
   border-top: 0;
 }
