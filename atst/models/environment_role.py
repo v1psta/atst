@@ -7,7 +7,10 @@ from atst.models import Base, types, mixins
 
 
 class CSPRole(Enum):
-    NONSENSE_ROLE = "nonsense_role"
+    BASIC_ACCESS = "Basic Access"
+    NETWORK_ADMIN = "Network Admin"
+    BUSINESS_READ = "Business Read-only"
+    TECHNICAL_READ = "Technical Read-only"
 
 
 class EnvironmentRole(Base, mixins.TimestampsMixin, mixins.AuditableMixin):

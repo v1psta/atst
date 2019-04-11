@@ -1,34 +1,36 @@
 # Add root application dir to the python path
 import os
 import sys
-from datetime import datetime, timedelta, date
+from datetime import timedelta, date
 import random
+from faker import Faker
 
 parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 sys.path.append(parent_dir)
 
-from atst.database import db
 from atst.app import make_config, make_app
-from atst.domain.users import Users
-from atst.domain.portfolios import Portfolios
-from atst.domain.applications import Applications
-from atst.domain.portfolio_roles import PortfolioRoles
+from atst.database import db
 from atst.domain.application_roles import ApplicationRoles
-from atst.models.invitation import Status as InvitationStatus
-from atst.domain.exceptions import AlreadyExistsError
+from atst.domain.applications import Applications
+from atst.domain.csp.reports import MockReportingProvider
+from atst.domain.environments import Environments
+from atst.domain.exceptions import AlreadyExistsError, NotFoundError
+from atst.domain.permission_sets import PermissionSets, APPLICATION_PERMISSION_SETS
+from atst.domain.portfolio_roles import PortfolioRoles
+from atst.domain.environment_roles import EnvironmentRoles
+from atst.domain.portfolios import Portfolios
+from atst.domain.users import Users
+from atst.models.application import Application
+from atst.models.environment_role import CSPRole
+from atst.routes.dev import _DEV_USERS as DEV_USERS
+
 from tests.factories import (
-    InvitationFactory,
     TaskOrderFactory,
-    random_future_date,
-    random_past_date,
     random_task_order_number,
     random_service_branch,
 )
-from atst.routes.dev import _DEV_USERS as DEV_USERS
-from atst.domain.csp.reports import MockReportingProvider
-from atst.models.application import Application
-from atst.domain.environments import Environments
-from atst.domain.permission_sets import PermissionSets
+
+fake = Faker()
 
 
 PORTFOLIO_USERS = [
@@ -36,7 +38,6 @@ PORTFOLIO_USERS = [
         "first_name": "Danny",
         "last_name": "Knight",
         "email": "knight@mil.gov",
-        "portfolio_role": "developer",
         "dod_id": "0000000001",
         "permission_sets": PortfolioRoles.DEFAULT_PORTFOLIO_PERMISSION_SETS,
     },
@@ -44,7 +45,6 @@ PORTFOLIO_USERS = [
         "first_name": "Mario",
         "last_name": "Hudson",
         "email": "hudson@mil.gov",
-        "portfolio_role": "billing_auditor",
         "dod_id": "0000000002",
         "permission_sets": PortfolioRoles.DEFAULT_PORTFOLIO_PERMISSION_SETS,
     },
@@ -52,11 +52,87 @@ PORTFOLIO_USERS = [
         "first_name": "Louise",
         "last_name": "Greer",
         "email": "greer@mil.gov",
-        "portfolio_role": "admin",
         "dod_id": "0000000003",
         "permission_sets": PortfolioRoles.DEFAULT_PORTFOLIO_PERMISSION_SETS,
     },
 ]
+
+
+APPLICATION_USERS = [
+    {
+        "first_name": "Jean Luc",
+        "last_name": "Picard",
+        "email": "picard@mil.gov",
+        "dod_id": "0000000004",
+        "permission_sets": random.sample(
+            APPLICATION_PERMISSION_SETS, k=random.randint(1, 4)
+        ),
+    },
+    {
+        "first_name": "()",
+        "last_name": "Spock",
+        "email": "spock@mil.gov",
+        "dod_id": "0000000005",
+        "permission_sets": random.sample(
+            APPLICATION_PERMISSION_SETS, k=random.randint(1, 4)
+        ),
+    },
+    {
+        "first_name": "William",
+        "last_name": "Shatner",
+        "email": "shatner@mil.gov",
+        "dod_id": "0000000006",
+        "permission_sets": random.sample(
+            APPLICATION_PERMISSION_SETS, k=random.randint(1, 4)
+        ),
+    },
+    {
+        "first_name": "Nyota",
+        "last_name": "Uhura",
+        "email": "uhura@mil.gov",
+        "dod_id": "0000000007",
+        "permission_sets": random.sample(
+            APPLICATION_PERMISSION_SETS, k=random.randint(1, 4)
+        ),
+    },
+    {
+        "first_name": "Kathryn",
+        "last_name": "Janeway",
+        "email": "janeway@mil.gov",
+        "dod_id": "0000000008",
+        "permission_sets": random.sample(
+            APPLICATION_PERMISSION_SETS, k=random.randint(1, 4)
+        ),
+    },
+]
+
+
+SHIP_NAMES = [
+    "Millenium Falcon",
+    "Star Destroyer",
+    "Attack Cruiser",
+    "Sith Infiltrator",
+    "Death Star",
+    "Lambda Shuttle",
+    "Corellian Corvette",
+]
+
+
+SOFTWARE_WORDS = [
+    "Enterprise",
+    "Scalable",
+    "Solution",
+    "Blockchain",
+    "Cloud",
+    "Micro",
+    "Macro",
+    "Software",
+    "Global",
+    "Team",
+]
+
+
+ENVIRONMENT_NAMES = ["production", "staging", "test", "uat", "dev", "qa"]
 
 
 def get_users():
@@ -72,8 +148,8 @@ def get_users():
 
 
 def add_members_to_portfolio(portfolio):
-    for portfolio_role in PORTFOLIO_USERS:
-        ws_role = Portfolios.create_member(portfolio, portfolio_role)
+    for user_data in PORTFOLIO_USERS:
+        ws_role = Portfolios.create_member(portfolio, user_data)
         db.session.refresh(ws_role)
         PortfolioRoles.enable(ws_role)
 
@@ -116,21 +192,52 @@ def create_task_order(portfolio, start, end, clin_01=None, clin_03=None):
     db.session.commit()
 
 
-def add_applications_to_portfolio(portfolio, applications):
-    for application in applications:
+def random_applications():
+    return [
+        {
+            "name": fake.sentence(nb_words=3, ext_word_list=SOFTWARE_WORDS)[0:-1],
+            "description": fake.bs(),
+            "environments": random.sample(ENVIRONMENT_NAMES, k=random.randint(1, 4)),
+        }
+        for n in range(random.randint(1, 4))
+    ]
+
+
+def add_applications_to_portfolio(portfolio):
+    applications = random_applications()
+    for application_data in applications:
         application = Applications.create(
             portfolio=portfolio,
-            name=application["name"],
-            description=application["description"],
-            environment_names=application["environments"],
+            name=application_data["name"],
+            description=application_data["description"],
+            environment_names=application_data["environments"],
         )
 
-        for user in get_users():
+        users = random.sample(APPLICATION_USERS, k=random.randint(1, 5))
+        for user_data in users:
+            try:
+                user = Users.get_by_dod_id(user_data["dod_id"])
+            except NotFoundError:
+                user = Users.create(
+                    user_data["dod_id"],
+                    None,
+                    first_name=user_data["first_name"],
+                    last_name=user_data["last_name"],
+                )
+
             ApplicationRoles.create(
                 user=user,
                 application=application,
                 permission_set_names=[PermissionSets.EDIT_APPLICATION_TEAM],
             )
+
+            user_environments = random.sample(
+                application.environments,
+                k=random.randint(1, len(application.environments)),
+            )
+            for env in user_environments:
+                role = random.choice([e.value for e in CSPRole])
+                EnvironmentRoles.create(user=user, environment=env, role=role)
 
 
 def create_demo_portfolio(name, data):
@@ -165,13 +272,6 @@ def create_demo_portfolio(name, data):
 def seed_db():
     get_users()
     amanda = Users.get_by_dod_id("2345678901")
-    application_info = [
-        {
-            "name": "First Application",
-            "description": "This is our first application",
-            "environments": ["dev", "staging", "prod"],
-        }
-    ]
 
     # Create Portfolios for Amanda with mocked reporting data
     create_demo_portfolio("A-Wing", MockReportingProvider.REPORT_FIXTURE_MAP["A-Wing"])
@@ -182,23 +282,26 @@ def seed_db():
     )
     add_task_orders_to_portfolio(tie_interceptor)
     add_members_to_portfolio(tie_interceptor)
-    add_applications_to_portfolio(tie_interceptor, application_info)
+    add_applications_to_portfolio(tie_interceptor)
 
     tie_fighter = Portfolios.create(
         amanda, name="TIE Fighter", defense_component=random_service_branch()
     )
     add_task_orders_to_portfolio(tie_fighter)
     add_members_to_portfolio(tie_fighter)
-    add_applications_to_portfolio(tie_fighter, application_info)
+    add_applications_to_portfolio(tie_fighter)
 
-    # create a portfolio 'Y-Wing' for each user
+    # create a portfolio for each user
+    ships = SHIP_NAMES.copy()
     for user in get_users():
+        ship = random.choice(ships)
+        ships.remove(ship)
         portfolio = Portfolios.create(
-            user, name="Y-Wing", defense_component=random_service_branch()
+            user, name=ship, defense_component=random_service_branch()
         )
         add_task_orders_to_portfolio(portfolio)
         add_members_to_portfolio(portfolio)
-        add_applications_to_portfolio(portfolio, application_info)
+        add_applications_to_portfolio(portfolio)
 
 
 if __name__ == "__main__":
