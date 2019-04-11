@@ -28,10 +28,10 @@
           <th scope='rowgroup' v-on:click="toggle($event, name)" v-html='name'></th>
 
           <template v-if="environmentsState[name].isVisible">
-            <td v-on:click="toggle($event, name)" class='icon-link icon-link--large accordion-table__item__toggler'>Hide Members(<span v-html='members_list.length'></span>){{ Icon('caret_up') }}</td>
+            <td v-on:click="toggle($event, name)" class='icon-link icon-link--large accordion-table__item__toggler'>Hide Members (<span v-html='members_list.length'></span>){{ Icon('caret_up') }}</td>
           </template>
           <template v-else>
-            <td v-on:click="toggle($event, name)" class='icon-link icon-link--large accordion-table__item__toggler'>Show Members(<span v-html='members_list.length'></span>){{ Icon('caret_down') }}</td>
+            <td v-on:click="toggle($event, name)" class='icon-link icon-link--large accordion-table__item__toggler'>Show Members (<span v-html='members_list.length'></span>){{ Icon('caret_down') }}</td>
           </template>
         </tr>
 
