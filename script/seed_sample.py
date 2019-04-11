@@ -117,10 +117,6 @@ def create_task_order(portfolio, start, end, clin_01=None, clin_03=None):
 
 
 def add_applications_to_portfolio(portfolio, applications):
-    application_permission_sets = PermissionSets.get_many(
-        [PermissionSets.EDIT_APPLICATION_TEAM]
-    )
-
     for application in applications:
         application = Applications.create(
             portfolio=portfolio,
@@ -133,7 +129,7 @@ def add_applications_to_portfolio(portfolio, applications):
             ApplicationRoles.create(
                 user=user,
                 application=application,
-                permission_sets=application_permission_sets,
+                permission_set_names=[PermissionSets.EDIT_APPLICATION_TEAM],
             )
 
 
