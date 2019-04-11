@@ -3,17 +3,20 @@
 {% for subform in member_perms_form.members_permissions %}
   {% set modal_id = "portfolio_id_{}_user_id_{}".format(portfolio.id, subform.user_id.data) %}
   {% set ppoc = subform.user_id.data == portfolio.owner.id %}
+  {% set archive_button_class = 'button-danger-outline' %}
 
   <tr {% if ppoc %}class="members-table-ppoc"{% endif %}>
     <td class='name'>{{ subform.member.data }}
-      {% if subform.user_id.data == user.id %}
-        <span class='you'>(<span class='green'>you</span>)</span>
-        {% set archive_button_class = 'usa-button-disabled' %}
-      {% elif ppoc %}
-        {% set archive_button_class = 'usa-button-disabled' %}
-      {% else %}
-        {% set archive_button_class = 'button-danger-outline' %}
-      {% endif %}
+      <div>
+        {% if ppoc %}
+          {% set archive_button_class = 'usa-button-disabled' %}
+          <span class='you'>PPoC</span>
+        {% endif %}
+        {% if subform.user_id.data == user.id %}
+          {% set archive_button_class = 'usa-button-disabled' %}
+          <span class='you'>(<span class='green'>you</span>)</span>
+        {% endif %}
+      </div>
     </td>
 
     <td>{{ OptionsInput(subform.perms_app_mgmt, label=False, disabled=ppoc) }}</td>

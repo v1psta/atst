@@ -1,18 +1,24 @@
 {% for subform in member_perms_form.members_permissions %}
+  {% set ppoc = subform.user_id.data == portfolio.owner.id %}
+  {% set heading_perms = [subform.perms_app_mgmt, subform.perms_funding, subform.perms_reporting, subform.perms_portfolio_mgmt] %}
 
   <tr>
     <td class='name'>{{ subform.member.data }}
-      {% if subform.member.data == user.full_name %}
-        <span class='you'>(<span class='green'>you</span>)</span>
-      {% endif %}
+      <div>
+        {% if ppoc %}
+          <span class='you'>PPoC</span>
+        {% endif %}
+        {% if subform.user_id.data == user.id %}
+          <span class='you'>(<span class='green'>you</span>)</span>
+        {% endif %}
+      </div>
     </td>
-    {% set heading_perms = [subform.perms_app_mgmt, subform.perms_funding, subform.perms_reporting, subform.perms_portfolio_mgmt] %}
 
     {% for access in heading_perms %}
-      {% if dict(access.choices).get(access.data) == 'Edit Access'  %}
-        <td class='green'>Edit Access</td>
+      {% if dict(access.choices).get(access.data) == ('portfolios.members.permissions.edit_access' | translate)  %}
+        <td class='green'>{{ 'portfolios.members.permissions.edit_access' | translate }}</td>
       {% else %}
-        <td>View Only</td>
+        <td>{{ 'portfolios.members.permissions.view_only' | translate }}</td>
       {% endif %}
     {% endfor %}
 
