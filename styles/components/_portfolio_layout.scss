@@ -171,26 +171,6 @@
       padding-bottom: 0;
     }
 
-    .member-list-header {
-      margin: 2 * $gap 5 * $gap;
-      padding: inherit;
-      overflow: auto;
-
-      .left {
-        float: left;
-        padding-bottom: 0.8rem;
-      }
-
-      .icon-link {
-        float: right;
-        margin-top: 0.8rem;
-      }
-
-      .icon {
-
-      }
-    }
-
     .subheading {
       font-size: 1.4rem;
       color: $color-gray;

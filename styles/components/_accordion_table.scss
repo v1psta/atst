@@ -1,24 +1,5 @@
 .accordion-table {
 
-  .accordion-table__header {
-    @include panel-base;
-    @include panel-theme-default;
-    border-top: none;
-    border-bottom: 0;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: center;
-    padding: $gap * 2;
-
-    .accordion-table__title {
-      @include h4;
-      font-size: $lead-font-size;
-      flex: 2;
-    }
-  }
-
   table {
     thead th {
       text-transform: uppercase;
