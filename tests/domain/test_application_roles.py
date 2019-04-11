@@ -7,12 +7,14 @@ def test_create_application_role():
     application = ApplicationFactory.create()
     user = UserFactory.create()
 
-    permission_sets = PermissionSets.get_many([PermissionSets.EDIT_APPLICATION_TEAM])
-
     application_role = ApplicationRoles.create(
-        application=application, user=user, permission_sets=permission_sets
+        application=application,
+        user=user,
+        permission_set_names=[PermissionSets.EDIT_APPLICATION_TEAM],
     )
 
-    assert application_role.permission_sets == permission_sets
+    assert application_role.permission_sets == PermissionSets.get_many(
+        [PermissionSets.EDIT_APPLICATION_TEAM]
+    )
     assert application_role.application == application
     assert application_role.user == user
