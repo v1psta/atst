@@ -13,6 +13,7 @@ from atst.domain.users import Users
 from atst.domain.portfolios import Portfolios
 from atst.domain.applications import Applications
 from atst.domain.portfolio_roles import PortfolioRoles
+from atst.domain.application_roles import ApplicationRoles
 from atst.models.invitation import Status as InvitationStatus
 from atst.domain.exceptions import AlreadyExistsError
 from tests.factories import (
@@ -27,6 +28,7 @@ from atst.routes.dev import _DEV_USERS as DEV_USERS
 from atst.domain.csp.reports import MockReportingProvider
 from atst.models.application import Application
 from atst.domain.environments import Environments
+from atst.domain.permission_sets import PermissionSets
 
 
 PORTFOLIO_USERS = [
@@ -115,13 +117,24 @@ def create_task_order(portfolio, start, end, clin_01=None, clin_03=None):
 
 
 def add_applications_to_portfolio(portfolio, applications):
+    application_permission_sets = PermissionSets.get_many(
+        [PermissionSets.EDIT_APPLICATION_TEAM]
+    )
+
     for application in applications:
-        Applications.create(
+        application = Applications.create(
             portfolio=portfolio,
             name=application["name"],
             description=application["description"],
             environment_names=application["environments"],
         )
+
+        for user in get_users():
+            ApplicationRoles.create(
+                user=user,
+                application=application,
+                permission_sets=application_permission_sets,
+            )
 
 
 def create_demo_portfolio(name, data):
