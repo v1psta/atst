@@ -8,6 +8,18 @@
 
   <div class='subheading'>{{ 'portfolios.applications.settings_heading' | translate }}</div>
 
+  <foo inline-template>
+    <div>
+      <input v-model="foocontent" />
+      <bar inline-template v-bind:foocontent="foocontent">
+      <div>
+        <input v-model="barcontent" />
+        <span v-html="fooBarContent"></span>
+      </div>
+      </bar>
+    </div>
+  </foo>
+
   <form method="POST" action="{{ url_for('portfolios.edit_application', portfolio_id=portfolio.id, application_id=application.id) }}">
     <div class="panel">
       <div class="panel__content">

@@ -34,6 +34,8 @@ import DateSelector from './components/date_selector'
 import SidenavToggler from './components/sidenav_toggler'
 import KoReview from './components/forms/ko_review'
 import BaseForm from './components/forms/base_form'
+import Foo from './components/foo'
+import Bar from './components/bar'
 
 Vue.config.productionTip = false
 
@@ -70,6 +72,8 @@ const app = new Vue({
     SidenavToggler,
     KoReview,
     BaseForm,
+    Foo,
+    Bar,
   },
 
   mounted: function() {
