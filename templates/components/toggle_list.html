@@ -15,10 +15,24 @@
         <span v-on:click="props.toggle">{{ item_name }}</span>
 
         <template v-if="props.isVisible">
-          {{ ToggleItem("Hide", item_type, length, "caret_up") }}
+          {{
+            ToggleItem(
+              ("common.hide" | translate),
+              item_type,
+              length,
+              "caret_up",
+            )
+          }}
         </template>
         <template v-else>
-          {{ ToggleItem("Show", item_type, length, "caret_down") }}
+          {{
+            ToggleItem(
+              ("common.show" | translate),
+              item_type,
+              length,
+              "caret_down",
+            )
+          }}
         </template>
       </div>
       <div v-show="props.isVisible">

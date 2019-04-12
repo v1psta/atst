@@ -29,6 +29,8 @@ flash:
   new_ppoc_title: Primary point of contact updated
   new_ppoc_message: You have successfully added {ppoc_name} as the primary point of contact. You are no longer the PPoC.
 common:
+  hide: Hide
+  show: Show
   back: Back
   cancel: Cancel
   confirm: Confirm
