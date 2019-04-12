@@ -1,5 +1,3 @@
-$accordion-padding: 0.8rem 1.6rem;
-
 .float-right {
   float: right;
 }
@@ -12,7 +10,7 @@ $accordion-padding: 0.8rem 1.6rem;
   }
 
   .accordion-table__head {
-    padding: $accordion-padding;
+    padding: $gap $gap*2;
     font-weight: 700;
     color: $color-gray;
     text-transform: uppercase;
@@ -36,8 +34,13 @@ $accordion-padding: 0.8rem 1.6rem;
   }
 
   .accordion-table__items {
+    margin: 0;
+
     li {
-      padding: $accordion-padding;
+      padding: $gap*2;
+
+      border-bottom: 1px dashed $color-gray-lightest;
+      margin: 0;
     }
 
     .accordion-table__item__toggler {
