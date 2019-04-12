@@ -1,4 +1,5 @@
 {% from "components/icon.html" import Icon %}
+{% from "components/toggle_list.html" import ToggleList %}
 
 <div class="application-list-item">
   <header>
@@ -13,6 +14,25 @@
     </div>
   </header>
 
+  <div class="accordion-table accordion-table-list">
+    <div class="accordion-table__head">
+      <span>{{ "portfolios.applications.environments.name" | translate }}</span>
+      <span class="right">{{ "portfolios.applications.environments.members" | translate }}</span>
+    </div>
+
+    <ul class='accordion-table__items'>
+      {% for name, members_list in environments_obj.items() %}
+        {% call ToggleList(item_name=name, item_type="Members", length=(members_list|length)) %}
+          {% for member in members_list %}
+            <li>
+              {{ member }}
+            </li>
+          {% endfor %}
+        {% endcall %}
+      {% endfor %}
+    </ul>
+  </div>
+
   <environments-table
     v-cloak
     v-bind:environments='{{ environments_obj }}'
@@ -24,6 +44,7 @@
       </thead>
 
       <tbody v-for='(members_list, name) in environments' class='accordion-table__items'>
+
         <tr>
           <th scope='rowgroup' v-on:click="toggle($event, name)" v-html='name'></th>
 
