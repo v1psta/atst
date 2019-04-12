@@ -33,21 +33,39 @@
     }
   }
 
+  .accordion-table__item-content {
+    padding-top: $gap*3;
+    padding-right: $gap;
+    padding-bottom: $gap*3;
+    padding-left: $gap*3;
+  }
+
   .accordion-table__items {
     margin: 0;
 
     li {
-      padding: $gap*2;
 
-      border-bottom: 1px dashed $color-gray-lightest;
+      list-style-type: none;
+
+      border-bottom: 1px solid $color-gray-lightest;
       margin: 0;
+
+      ul {
+        margin-top: 0;
+        margin-bottom: 0;
+        background-color: $color-gray-lightest;
+
+        li {
+          border-bottom: 1px solid $color-gray-lighter;
+        }
+      }
     }
 
     .accordion-table__item__toggler {
       @include icon-link-color($color-blue, $color-gray-lightest);
       float: right;
-      margin-left: -$gap;
       color: $color-blue;
+      padding: 0;
 
       .icon {
         @include icon-size(12);
@@ -76,8 +94,6 @@
     }
 
     .accordion-table__item__expanded {
-      margin-left: 2 * $gap;
-
       th, td {
         .icon-link {
           font-weight: $font-normal;
