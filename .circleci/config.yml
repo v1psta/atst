@@ -2,7 +2,7 @@ version: 2.0
 
 defaults:
   working_directory: &workingDirectory /opt/atat/atst
-  sourceImage: &sourceImage registry.atat.codes:443/atat-app-builder:circleci-cd
+  sourceImage: &sourceImage registry.atat.code.mil:443/atat-app-builder:circleci-cd
   sourceAuth: &sourceAuth
     username: $REGISTRY_USERNAME
     password: $REGISTRY_PASSWORD
@@ -18,7 +18,7 @@ defaults:
     APP_USER: atst
     APP_GROUP: atat
     APP_DIR: /opt/atat/atst
-    ATAT_DOCKER_REGISTRY_URL: registry.atat.codes:443
+    ATAT_DOCKER_REGISTRY_URL: registry.atat.code.mil:443
     CONTAINER_NAME: atst-container
     USR_BIN_DIR: /usr/bin
     PYTHON_SITE_PACKAGES_DIR: /usr/lib/python3.6/site-packages
