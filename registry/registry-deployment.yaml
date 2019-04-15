@@ -1,0 +1,44 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: registry
+  name: registry
+  namespace: container-registry
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: registry
+    spec:
+      containers:
+      - env:
+        - name: REGISTRY_AUTH
+          value: htpasswd
+        - name: REGISTRY_AUTH_HTPASSWD_PATH
+          value: /auth/htpasswd
+        - name: REGISTRY_AUTH_HTPASSWD_REALM
+          value: Registry Realm
+        image: registry:latest
+        name: registry
+        ports:
+        - containerPort: 5000
+        volumeMounts:
+          - name: auth
+            mountPath: /auth
+          - name: config
+            mountPath: /etc/docker/registry
+      volumes:
+        - name: auth
+          configMap:
+            name: auth
+        - name: config
+          configMap:
+            name: auth
+            items:
+            - key: registry-config
+              path: config.yml
