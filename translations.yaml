@@ -28,6 +28,8 @@ flash:
   delete_member_success: You have successfully deleted {member_name} from the portfolio.
   new_ppoc_title: Primary point of contact updated
   new_ppoc_message: You have successfully added {ppoc_name} as the primary point of contact. You are no longer the PPoC.
+  application:
+    deleted: You have successfully deleted the {application_name} application. To view the retained activity log, visit the portfolio administration page.
 common:
   back: Back
   cancel: Cancel
@@ -43,6 +45,7 @@ common:
       contracting_officer: Contracting Officer
       security_officer: Security Officer
       contracting_officer_representative: Contracting Officer Representative
+  delete_confirm: "Please type the word DELETE to confirm:"
 components:
   modal:
     close: Close
@@ -599,6 +602,12 @@ portfolios:
       name: Name
       members: Members
     add_environment: Add New Environment
+    delete:
+      button: Delete Application
+      header: Are you sure you want to delete this application?
+      alert:
+        title: Warning! This action is permanent.
+        message: You will lose access to this application and all of its reporting and metrics tools. The activity log will be retained.
   admin:
     portfolio_members_title: Portfolio members
     portfolio_members_subheading: These members have different levels of access to the portfolio.

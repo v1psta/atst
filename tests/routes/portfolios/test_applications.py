@@ -1,4 +1,4 @@
-from flask import url_for
+from flask import url_for, get_flashed_messages
 
 from tests.factories import (
     UserFactory,
@@ -290,3 +290,42 @@ def test_environment_access_with_no_role(client, user_session):
         )
     )
     assert response.status_code == 404
+
+
+def test_delete_application(client, user_session):
+    user = UserFactory.create()
+    port = PortfolioFactory.create(
+        owner=user,
+        applications=[
+            {
+                "name": "mos eisley",
+                "environments": [
+                    {"name": "bar"},
+                    {"name": "booth"},
+                    {"name": "band stage"},
+                ],
+            }
+        ],
+    )
+    application = port.applications[0]
+    user_session(user)
+
+    response = client.post(
+        url_for(
+            "portfolios.delete_application",
+            portfolio_id=port.id,
+            application_id=application.id,
+        )
+    )
+    # appropriate response and redirect
+    assert response.status_code == 302
+    assert response.location == url_for(
+        "portfolios.portfolio_applications", portfolio_id=port.id, _external=True
+    )
+    # appropriate flash message
+    message = get_flashed_messages()[0]
+    assert "deleted" in message["message"]
+    assert application.name in message["message"]
+    # app and envs are soft deleted
+    assert len(port.applications) == 0
+    assert len(application.environments) == 0

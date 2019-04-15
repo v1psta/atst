@@ -6,7 +6,9 @@ from atst.models.types import Id
 from atst.models import mixins
 
 
-class Application(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
+class Application(
+    Base, mixins.TimestampsMixin, mixins.AuditableMixin, mixins.DeletableMixin
+):
     __tablename__ = "applications"
 
     id = Id()
@@ -15,7 +17,11 @@ class Application(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
 
     portfolio_id = Column(ForeignKey("portfolios.id"), nullable=False)
     portfolio = relationship("Portfolio")
-    environments = relationship("Environment", back_populates="application")
+    environments = relationship(
+        "Environment",
+        back_populates="application",
+        primaryjoin="and_(Environment.application_id==Application.id, Environment.deleted==False)",
+    )
     roles = relationship("ApplicationRole")
 
     @property
@@ -34,3 +40,7 @@ class Application(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
         return "<Application(name='{}', description='{}', portfolio='{}', id='{}')>".format(
             self.name, self.description, self.portfolio.name, self.id
         )
+
+    @property
+    def history(self):
+        return self.get_changes()

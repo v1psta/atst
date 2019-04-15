@@ -8,6 +8,12 @@ class CloudProviderInterface:
         """
         raise NotImplementedError()
 
+    def delete_application(self, cloud_id):  # pragma: no cover
+        """Delete an application in the cloud with the provided cloud_id. Returns
+        True for success or raises an error.
+        """
+        raise NotImplementedError()
+
     def create_user(self, user):  # pragma: no cover
         """Create an account in the CSP for specified user. Returns the ID of
         the created user.
@@ -48,6 +54,11 @@ class MockCloudProvider(CloudProviderInterface):
         """Returns an id that represents what would be an application in the
         cloud."""
         return uuid4().hex
+
+    def delete_application(self, name):
+        """Returns an id that represents what would be an application in the
+        cloud."""
+        return True
 
     def create_user(self, user):
         """Returns an id that represents what would be an user in the cloud."""

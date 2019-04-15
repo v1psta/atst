@@ -26,7 +26,11 @@ application_roles_permission_sets = Table(
 
 
 class ApplicationRole(
-    Base, mixins.TimestampsMixin, mixins.AuditableMixin, mixins.PermissionsMixin
+    Base,
+    mixins.TimestampsMixin,
+    mixins.AuditableMixin,
+    mixins.PermissionsMixin,
+    mixins.DeletableMixin,
 ):
     __tablename__ = "application_roles"
 
@@ -50,6 +54,10 @@ class ApplicationRole(
         return "<ApplicationRole(application='{}', user_id='{}', id='{}', permissions={})>".format(
             self.application.name, self.user_id, self.id, self.permissions
         )
+
+    @property
+    def history(self):
+        return self.get_changes()
 
 
 Index(

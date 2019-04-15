@@ -51,7 +51,11 @@ class Environments(object):
     @classmethod
     def get(cls, environment_id):
         try:
-            env = db.session.query(Environment).filter_by(id=environment_id).one()
+            env = (
+                db.session.query(Environment)
+                .filter_by(id=environment_id, deleted=False)
+                .one()
+            )
         except NoResultFound:
             raise NotFoundError("environment")
 
@@ -94,3 +98,19 @@ class Environments(object):
     @classmethod
     def revoke_access(cls, environment, target_user):
         EnvironmentRoles.delete(environment.id, target_user.id)
+
+    @classmethod
+    def delete(cls, environment, commit=False):
+        environment.deleted = True
+        db.session.add(environment)
+
+        for role in environment.roles:
+            role.deleted = True
+            db.session.add(role)
+
+        if commit:
+            db.session.commit()
+
+        app.csp.cloud.delete_application(environment.cloud_id)
+
+        return environment

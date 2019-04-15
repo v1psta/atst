@@ -148,6 +148,14 @@ MESSAGES = {
         """,
         "category": "success",
     },
+    "application_deleted": {
+        "title_template": translate("flash.success"),
+        "message_template": """
+            {{ "flash.application.deleted" | translate({"application_name": application_name}) }}
+            <a href="#">Undo</a>.
+        """,
+        "category": "success",
+    },
 }
 
 

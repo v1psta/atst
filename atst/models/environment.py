@@ -6,7 +6,9 @@ from atst.models.types import Id
 from atst.models import mixins
 
 
-class Environment(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
+class Environment(
+    Base, mixins.TimestampsMixin, mixins.AuditableMixin, mixins.DeletableMixin
+):
     __tablename__ = "environments"
 
     id = Id()
@@ -44,3 +46,7 @@ class Environment(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
             self.application.portfolio.name,
             self.id,
         )
+
+    @property
+    def history(self):
+        return self.get_changes()
