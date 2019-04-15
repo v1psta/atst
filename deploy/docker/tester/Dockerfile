@@ -1,4 +1,4 @@
-FROM registry.atat.codes:443/atat-app-builder:latest
+FROM registry.atat.code.mil:443/atat-app-builder:latest
 
 ### Very low chance of changing
 ###############################

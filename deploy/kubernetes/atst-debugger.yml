@@ -10,7 +10,7 @@ spec:
     fsGroup: 101
   containers:
     - name: atst
-      image: registry.atat.codes:443/atst-prod:6329f8e
+      image: registry.atat.code.mil:443/atst-prod:6329f8e
       args: ["/bin/bash", "-c", "while true; do date; sleep 45; done"]
       envFrom:
       - configMapRef:
