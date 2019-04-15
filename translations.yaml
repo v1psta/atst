@@ -473,6 +473,14 @@ task_orders:
       record_description: Obtain a funding document and file a task order in the appropriate system of record. Once this is complete, come back here and record the task order information.
       sign: '<strong>Contracting Officer ({contracting_officer})</strong> verifies funding to unlock cloud services.'
   new:
+    get_started:
+      title: Let's get started
+      intro: Your portfolio is where you can organize all your JEDI cloud applications, funding information, and reporting in one place. It’s also where you can begin the process of securing funds for your new cloud project.
+      intro2: "To get started, you’ll need to prepare your first task order, which you’ll then submit separately through your organization’s system of record. There are some important steps you’ll need to complete for any task order, including:"
+      intro3: It should only take about half an hour to complete the task order process from start to finish. Need to know more? You’ll be able to get help at each step along the way. If you’re unable to complete your task order in one session, your work will be saved, and you can continue when you’re ready.
+      intro4: Not looking to create a whole new portfolio? If you’d like to add a new task order to an existing portfolio, select that portfolio from the list at the left and follow the instructions.
+      team_header: Before you begin, you’ll need to assemble your team
+      button: Create a portfolio
     app_info:
       section_title: "What You're Making"
       basic_info_title: Basic Information
