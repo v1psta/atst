@@ -3,6 +3,9 @@
 }
 
 .accordion-table {
+  ul {
+    padding-left: 0;
+  }
 
   &.accordion-table-list {
     display: table;
