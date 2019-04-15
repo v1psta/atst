@@ -65,7 +65,8 @@
       @include icon-link-color($color-blue, $color-gray-lightest);
       float: right;
       color: $color-blue;
-      padding: 0;
+      padding: $gap;
+      margin: -$gap 0;
 
       .icon {
         @include icon-size(12);
