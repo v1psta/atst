@@ -40,7 +40,7 @@ common:
   manage: manage
   cancel: Cancel
   save: Save
-  save_and_continue: Save & Continue
+  save_and_continue: Save & continue
   sign: Sign
   officer_helpers:
     underscore_to_friendly:
@@ -83,8 +83,8 @@ forms:
     phone_ext_mao_label: Extension (optional)
     phone_mao_label: Mission Owner phone number (optional)
   ko_review:
-    start_date_label: Period of Performance Start Date
-    end_date_label: Period of Performance End Date
+    start_date_label: Period of performance start date
+    end_date_label: Period of performance end date
     invalid_date: Must be a date in the future.
     pdf_label: Upload a copy of your task order document
     pdf_description: Upload a PDF of the task order that you entered in your system of record for your organization.
@@ -101,13 +101,13 @@ forms:
       <a class="icon-link" href="https://iatraining.disa.mil/eta/disa_cac2018/launchPage.htm" target="_blank">
         Information Assurance Cyber Awareness Challenge
       </a> website.
-    date_latest_training_label: Latest Information Assurance (IA) training completion date
+    date_latest_training_label: Latest information assurance (IA) training completion date
     designation_description: What is your designation within the DoD?
     designation_label: Designation of person
-    email_label: Email Address
-    first_name_label: First Name
-    last_name_label: Last Name
-    phone_number_label: Phone Number
+    email_label: Email address
+    first_name_label: First name
+    last_name_label: Last name
+    phone_number_label: Phone number
     service_branch_label: Service branch or agency
   exceptions:
     message: Form validation failed.
@@ -153,13 +153,17 @@ forms:
     text_label: CCPO Internal Notes
   new_member:
     dod_id_label: DoD ID
-    email_label: Email Address
-    phone_number_label: Phone Number (Optional)
-    first_name_label: First Name
-    last_name_label: Last Name
+    email_label: Email address
+    phone_number_label: Phone number (optional)
+    first_name_label: First name
+    last_name_label: Last name
     portfolio_role_description: 'The portfolio role controls whether a member is permitted to organize a portfolio into applications and environments, add members to this portfolio, and view billing information.'
     portfolio_role_label: Portfolio Role
     access: Access Level
+    app_mgmt: App management
+    funding: Funding
+    reporting: Reporting
+    portfolio_mgmt: Portfolio management
   new_request:
     am_poc_label: I am the Portfolio Owner
     average_daily_traffic_description: What is the average daily traffic you expect the systems under this cloud contract to use?
@@ -211,9 +215,9 @@ forms:
     app_migration:
       label: App migration
       description: Do you plan to migrate one or more existing application(s) to the cloud?
-      on_premise: Yes, migrating from an <strong>on-premise data center</strong>
-      cloud: Yes, migrating from <strong>another cloud provider</strong>
-      both: Yes, migrating from an <strong>on-premise data center</strong> and <strong>another cloud provider</strong>
+      on_premise: Yes, migrating from an on-premise data center
+      cloud: Yes, migrating from another cloud provider
+      both: Yes, migrating from both an on-premise data center <strong>and</strong> another cloud provider
       none: Not planning to migrate any applications
       not_sure: "Not sure"
     native_apps:
@@ -470,11 +474,11 @@ task_orders:
     unlimited_level_of_warrant_description: Unlimited Level of Warrant funds
     verify_warrant_level_paragraph: Verify your level of warrant and provide your digital signature to authorize this task order.
   view:
-    whats_next: Here are the remaining tasks to get your task order approved.
+    whats_next: Here are the remaining steps to get your task order approved.
     steps:
-      draft: '<strong>Primary Point of contact ({contact})</strong> completes initial task order form.'
-      security: '<strong>IA Security Officer ({security_officer})</strong> completes a Security Requirements Document. <a href="#">Send a reminder</a>'
-      record: '<strong>Contracting Officer ({contracting_officer}) or Contracting Officer Representative ({contracting_officer_representative})</strong> records Task Order information. <a href="#">Send a reminder</a>'
+      draft: '<strong>Primary Point of Contact ({contact})</strong> completes initial task order form.'
+      security: '<strong>Security Officer ({security_officer})</strong> completes a Security Requirements Document. <a href="#">Send a reminder</a>'
+      record: '<strong>Contracting Officer ({contracting_officer}) or Contracting Officer Representative ({contracting_officer_representative})</strong> records task order information. <a href="#">Send a reminder</a>'
       record_description: Obtain a funding document and file a task order in the appropriate system of record. Once this is complete, come back here and record the task order information.
       sign: '<strong>Contracting Officer ({contracting_officer})</strong> verifies funding to unlock cloud services.'
   new:
@@ -512,14 +516,14 @@ task_orders:
       total: 'Total task order value:'
     oversight:
       section_title: Oversight
-      ko_info_title: Contracting Officer (KO) Information
+      ko_info_title: Contracting officer (KO) information
       ko_info_paragraph: Your KO will need to approve funding for this task order by logging into the JEDI cloud portal, submitting the task order documents within their official system of record, and then finally providing a digital signature. It might be helpful to work with your program's Financial Manager to get your TO documents moving.
       skip_ko_label: "Skip for now (We'll remind you to enter one later)"
       dod_id_tooltip: "The DoD ID is needed to verify the identity of the indicated officer or representative."
-      cor_info_title: Contracting Officer Representative (COR) Information
+      cor_info_title: Contracting officer representative (COR) information
       cor_info_paragraph: Your COR may assist in submitting the task order documents within their official system of record. They may also be invited to log in and manage the Task Order entry within the JEDI cloud portal.
-      so_info_title: Security Officer Information
-      so_info_paragraph: Your Security Officer will need to answer some security configuration questions in order to generate a DD-254 document, then electronically sign.
+      so_info_title: Security officer information
+      so_info_paragraph: Your security officer will need to answer some security configuration questions in order to generate a DD-254 document, then electronically sign.
     review:
       section_title: Review Your Task Order
       app_info: What you're making
@@ -553,23 +557,23 @@ task_orders:
     resend_btn: Resend
     resend_confirmation_message: Are you sure you'd like to resend this invitation?
     contracting_officer:
-      title: Contracting Officer (KO) Information
+      title: Contracting officer (KO) information
       description: You'll need a signature from your KO. You might want to work with your program Financial Manager to get your TO documents moving in the right direction.
       add_button_text: Add / Invite KO
       invite_button_text: Invite KO
       edit_title: Edit KO
     contracting_officer_representative:
-      title: Contracting Officer Representative (COR) Information
+      title: Contracting officer representative (COR) information
       description: Your COR may assist in submitting the task order documents within their official system of record.
       add_button_text: Add / Invite COR
       invite_button_text: Invite COR
       edit_title: Edit COR
     security_officer:
-      title: IA Security Officer Information
-      description: Your Security Officer will need to answer some security configuration questions in order to generate a DD-254 document, then digitally sign.
+      title: Security officer information
+      description: Your security officer will need to answer some security configuration questions in order to generate a DD-254 document, then digitally sign.
       add_button_text: Add / Invite Security Officer
-      invite_button_text: Invite Security Officer
-      edit_title: Edit Security Officer
+      invite_button_text: Invite security officer
+      edit_title: Edit security officer
   ko_review:
     title: Verify task order information
     message: Grant your team access to the cloud by verifying the task order info below.
@@ -603,13 +607,13 @@ portfolios:
     environments:
       name: Name
       members: Members
-    add_environment: Add New Environment
     delete:
       button: Delete application
       header: Are you sure you want to delete this application?
       alert:
         title: Warning! This action is permanent.
         message: You will lose access to this application and all of its reporting and metrics tools. The activity log will be retained.
+    add_environment: Add new environment
   admin:
     portfolio_members_title: Portfolio members
     portfolio_members_subheading: These members have different levels of access to the portfolio.
