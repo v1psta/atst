@@ -22,5 +22,5 @@ export default {
     levelofwarrant,
     Modal,
   },
-  mixins: [FormMixin, Modal],
+  mixins: [FormMixin],
 }
