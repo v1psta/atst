@@ -13,28 +13,28 @@ class PermissionsForm(BaseForm):
     member = StringField()
     user_id = HiddenField()
     perms_app_mgmt = SelectField(
-        "App management",
+        translate("forms.new_member.app_mgmt"),
         choices=[
             (PermissionSets.VIEW_PORTFOLIO_APPLICATION_MANAGEMENT, "View only"),
             (PermissionSets.EDIT_PORTFOLIO_APPLICATION_MANAGEMENT, "Edit access"),
         ],
     )
     perms_funding = SelectField(
-        "Funding",
+        translate("forms.new_member.funding"),
         choices=[
             (PermissionSets.VIEW_PORTFOLIO_FUNDING, "View only"),
             (PermissionSets.EDIT_PORTFOLIO_FUNDING, "Edit access"),
         ],
     )
     perms_reporting = SelectField(
-        "Reporting",
+        translate("forms.new_member.reporting"),
         choices=[
             (PermissionSets.VIEW_PORTFOLIO_REPORTS, "View only"),
             (PermissionSets.EDIT_PORTFOLIO_REPORTS, "Edit access"),
         ],
     )
     perms_portfolio_mgmt = SelectField(
-        "Portfolio management",
+        translate("forms.new_member.portfolio_mgmt"),
         choices=[
             (PermissionSets.VIEW_PORTFOLIO_ADMIN, "View only"),
             (PermissionSets.EDIT_PORTFOLIO_ADMIN, "Edit access"),
