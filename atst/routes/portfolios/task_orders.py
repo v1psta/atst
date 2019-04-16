@@ -57,7 +57,6 @@ def portfolio_funding(portfolio_id):
 
     return render_template(
         "portfolios/task_orders/index.html",
-        portfolio=portfolio,
         pending_task_orders=(
             task_orders_by_status.get(TaskOrderStatus.STARTED, [])
             + task_orders_by_status.get(TaskOrderStatus.PENDING, [])
@@ -71,7 +70,6 @@ def portfolio_funding(portfolio_id):
 @portfolios_bp.route("/portfolios/<portfolio_id>/task_order/<task_order_id>")
 @user_can(Permissions.VIEW_TASK_ORDER_DETAILS, message="view task order details")
 def view_task_order(portfolio_id, task_order_id):
-    portfolio = Portfolios.get(g.current_user, portfolio_id)
     task_order = TaskOrders.get(task_order_id)
     to_form_complete = TaskOrders.all_sections_complete(task_order)
     dd_254_complete = DD254s.is_complete(task_order.dd_254)
@@ -82,7 +80,6 @@ def view_task_order(portfolio_id, task_order_id):
         is_ko=Authorization.is_ko(g.current_user, task_order),
         is_so=Authorization.is_so(g.current_user, task_order),
         is_to_signed=TaskOrders.is_signed_by_ko(task_order),
-        portfolio=portfolio,
         task_order=task_order,
         to_form_complete=to_form_complete,
         user=g.current_user,
@@ -104,12 +101,10 @@ def wrap_check_is_ko_or_cor(user, task_order_id=None, **_kwargs):
 )
 def ko_review(portfolio_id, task_order_id):
     task_order = TaskOrders.get(task_order_id)
-    portfolio = Portfolios.get(g.current_user, portfolio_id)
 
     if TaskOrders.all_sections_complete(task_order):
         return render_template(
             "/portfolios/task_orders/review.html",
-            portfolio=portfolio,
             task_order=task_order,
             form=KOReviewForm(obj=task_order),
         )
@@ -172,8 +167,8 @@ def resend_invite(portfolio_id, task_order_id):
     return redirect(
         url_for(
             "portfolios.task_order_invitations",
-            portfolio_id=portfolio.id,
-            task_order_id=task_order.id,
+            portfolio_id=portfolio_id,
+            task_order_id=task_order_id,
         )
     )
 
@@ -207,10 +202,7 @@ def submit_ko_review(portfolio_id, task_order_id, form=None):
             )
     else:
         return render_template(
-            "/portfolios/task_orders/review.html",
-            portfolio=Portfolios.get(g.current_user, portfolio_id),
-            task_order=task_order,
-            form=form,
+            "/portfolios/task_orders/review.html", task_order=task_order, form=form
         )
 
 
@@ -221,14 +213,12 @@ def submit_ko_review(portfolio_id, task_order_id, form=None):
     Permissions.EDIT_TASK_ORDER_DETAILS, message="view task order invitations page"
 )
 def task_order_invitations(portfolio_id, task_order_id):
-    portfolio = Portfolios.get(g.current_user, portfolio_id)
     task_order = TaskOrders.get(task_order_id)
     form = EditTaskOrderOfficersForm(obj=task_order)
 
     if TaskOrders.all_sections_complete(task_order):
         return render_template(
             "portfolios/task_orders/invitations.html",
-            portfolio=portfolio,
             task_order=task_order,
             form=form,
             user=g.current_user,
@@ -243,7 +233,6 @@ def task_order_invitations(portfolio_id, task_order_id):
 )
 @user_can(Permissions.EDIT_TASK_ORDER_DETAILS, message="edit task order invitations")
 def edit_task_order_invitations(portfolio_id, task_order_id):
-    portfolio = Portfolios.get(g.current_user, portfolio_id)
     task_order = TaskOrders.get(task_order_id)
     form = EditTaskOrderOfficersForm(formdata=http_request.form, obj=task_order)
 
@@ -256,7 +245,7 @@ def edit_task_order_invitations(portfolio_id, task_order_id):
         return redirect(
             url_for(
                 "portfolios.task_order_invitations",
-                portfolio_id=portfolio.id,
+                portfolio_id=portfolio_id,
                 task_order_id=task_order.id,
             )
         )
@@ -264,7 +253,6 @@ def edit_task_order_invitations(portfolio_id, task_order_id):
         return (
             render_template(
                 "portfolios/task_orders/invitations.html",
-                portfolio=portfolio,
                 task_order=task_order,
                 form=form,
             ),
@@ -303,10 +291,7 @@ def so_review(portfolio_id, task_order_id):
     form = so_review_form(task_order)
 
     return render_template(
-        "portfolios/task_orders/so_review.html",
-        form=form,
-        portfolio=task_order.portfolio,
-        task_order=task_order,
+        "portfolios/task_orders/so_review.html", form=form, task_order=task_order
     )
 
 
@@ -332,8 +317,5 @@ def submit_so_review(portfolio_id, task_order_id):
         )
     else:
         return render_template(
-            "portfolios/task_orders/so_review.html",
-            form=form,
-            portfolio=task_order.portfolio,
-            task_order=task_order,
+            "portfolios/task_orders/so_review.html", form=form, task_order=task_order
         )

@@ -21,18 +21,14 @@ from atst.utils.flash import formatted_flash as flash
 @portfolios_bp.route("/portfolios/<portfolio_id>/applications")
 @user_can(Permissions.VIEW_APPLICATION, message="view portfolio applications")
 def portfolio_applications(portfolio_id):
-    portfolio = Portfolios.get(g.current_user, portfolio_id)
-    return render_template("portfolios/applications/index.html", portfolio=portfolio)
+    return render_template("portfolios/applications/index.html")
 
 
 @portfolios_bp.route("/portfolios/<portfolio_id>/applications/new")
 @user_can(Permissions.CREATE_APPLICATION, message="view create new application form")
 def new_application(portfolio_id):
-    portfolio = Portfolios.get_for_update(portfolio_id)
     form = NewApplicationForm()
-    return render_template(
-        "portfolios/applications/new.html", portfolio=portfolio, form=form
-    )
+    return render_template("portfolios/applications/new.html", form=form)
 
 
 @portfolios_bp.route("/portfolios/<portfolio_id>/applications/new", methods=["POST"])
@@ -50,12 +46,10 @@ def create_application(portfolio_id):
             application_data["environment_names"],
         )
         return redirect(
-            url_for("portfolios.portfolio_applications", portfolio_id=portfolio.id)
+            url_for("portfolios.portfolio_applications", portfolio_id=portfolio_id)
         )
     else:
-        return render_template(
-            "portfolios/applications/new.html", portfolio=portfolio, form=form
-        )
+        return render_template("portfolios/applications/new.html", form=form)
 
 
 def get_environments_obj_for_app(application):
@@ -70,13 +64,11 @@ def get_environments_obj_for_app(application):
 @portfolios_bp.route("/portfolios/<portfolio_id>/applications/<application_id>/edit")
 @user_can(Permissions.EDIT_APPLICATION, message="view application edit form")
 def edit_application(portfolio_id, application_id):
-    portfolio = Portfolios.get_for_update(portfolio_id)
     application = Applications.get(application_id)
     form = ApplicationForm(name=application.name, description=application.description)
 
     return render_template(
         "portfolios/applications/edit.html",
-        portfolio=portfolio,
         application=application,
         form=form,
         environments_obj=get_environments_obj_for_app(application=application),
@@ -88,7 +80,6 @@ def edit_application(portfolio_id, application_id):
 )
 @user_can(Permissions.EDIT_APPLICATION, message="update application")
 def update_application(portfolio_id, application_id):
-    portfolio = Portfolios.get_for_update(portfolio_id)
     application = Applications.get(application_id)
     form = ApplicationForm(http_request.form)
     if form.validate():
@@ -96,12 +87,11 @@ def update_application(portfolio_id, application_id):
         Applications.update(application, application_data)
 
         return redirect(
-            url_for("portfolios.portfolio_applications", portfolio_id=portfolio.id)
+            url_for("portfolios.portfolio_applications", portfolio_id=portfolio_id)
         )
     else:
         return render_template(
             "portfolios/applications/edit.html",
-            portfolio=portfolio,
             application=application,
             form=form,
             environments_obj=get_environments_obj_for_app(application=application),

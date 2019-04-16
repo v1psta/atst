@@ -41,7 +41,6 @@ def portfolio_members(portfolio_id):
 
     return render_template(
         "portfolios/members/index.html",
-        portfolio=portfolio,
         status_choices=MEMBER_STATUS_CHOICES,
         members=members_list,
     )
@@ -57,7 +56,6 @@ def application_members(portfolio_id, application_id):
 
     return render_template(
         "portfolios/applications/members.html",
-        portfolio=portfolio,
         application=application,
         members=members_list,
     )
@@ -68,11 +66,8 @@ def application_members(portfolio_id, application_id):
     Permissions.CREATE_PORTFOLIO_USERS, message="view create new portfolio member form"
 )
 def new_member(portfolio_id):
-    portfolio = Portfolios.get(g.current_user, portfolio_id)
     form = member_forms.NewForm()
-    return render_template(
-        "portfolios/members/new.html", portfolio=portfolio, form=form
-    )
+    return render_template("portfolios/members/new.html", form=form)
 
 
 @portfolios_bp.route("/portfolios/<portfolio_id>/members/new", methods=["POST"])
@@ -94,7 +89,7 @@ def create_member(portfolio_id):
             return redirect(
                 url_for(
                     "portfolios.portfolio_admin",
-                    portfolio_id=portfolio.id,
+                    portfolio_id=portfolio_id,
                     fragment="portfolio-members",
                     _anchor="portfolio-members",
                 )
@@ -104,9 +99,7 @@ def create_member(portfolio_id):
                 "error.html", message="There was an error processing your request."
             )
     else:
-        return render_template(
-            "portfolios/members/new.html", portfolio=portfolio, form=form
-        )
+        return render_template("portfolios/members/new.html", form=form)
 
 
 @portfolios_bp.route("/portfolios/<portfolio_id>/members/<member_id>/member_edit")
@@ -124,7 +117,6 @@ def view_member(portfolio_id, member_id):
 
     return render_template(
         "portfolios/members/edit.html",
-        portfolio=portfolio,
         member=member,
         applications=applications,
         form=form,
@@ -143,7 +135,6 @@ def view_member(portfolio_id, member_id):
 )
 @user_can(Permissions.EDIT_PORTFOLIO_USERS, message="update portfolio member")
 def update_member(portfolio_id, member_id):
-    portfolio = Portfolios.get(g.current_user, portfolio_id)
     member = PortfolioRoles.get(portfolio_id, member_id)
 
     ids_and_roles = []
@@ -162,15 +153,10 @@ def update_member(portfolio_id, member_id):
             flash("environment_access_changed")
 
         return redirect(
-            url_for("portfolios.portfolio_members", portfolio_id=portfolio.id)
+            url_for("portfolios.portfolio_members", portfolio_id=portfolio_id)
         )
     else:
-        return render_template(
-            "portfolios/members/edit.html",
-            form=form,
-            portfolio=portfolio,
-            member=member,
-        )
+        return render_template("portfolios/members/edit.html", form=form, member=member)
 
 
 @portfolios_bp.route(
