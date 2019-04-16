@@ -1,0 +1,43 @@
+{% from "components/icon.html" import Icon %}
+
+{% macro ToggleItem(action, item_type, length, icon) %}
+  <span
+    v-on:click="props.toggle"
+    class="icon-link icon-link--large accordion-table__item__toggler">
+    {{ action }} {{ item_type }} ({{ length }}){{ Icon(icon) }}
+  </span>
+{% endmacro %}
+
+{% macro ToggleList(item_name, item_type, length) %}
+  <li is="toggler" class="accordion-table__item">
+    <template slot-scope="props">
+      <div class="accordion-table__item-content">
+        <span v-on:click="props.toggle">{{ item_name }}</span>
+
+        <template v-if="props.isVisible">
+          {{
+            ToggleItem(
+              ("common.hide" | translate),
+              item_type,
+              length,
+              "caret_up",
+            )
+          }}
+        </template>
+        <template v-else>
+          {{
+            ToggleItem(
+              ("common.show" | translate),
+              item_type,
+              length,
+              "caret_down",
+            )
+          }}
+        </template>
+      </div>
+      <div v-show="props.isVisible">
+        {{ caller() }}
+      </div>
+    </template>
+  </li>
+{% endmacro %}

@@ -31,6 +31,8 @@ flash:
   application:
     deleted: You have successfully deleted the {application_name} application. To view the retained activity log, visit the portfolio administration page.
 common:
+  hide: Hide
+  show: Show
   back: Back
   cancel: Cancel
   confirm: Confirm

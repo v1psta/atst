@@ -58,6 +58,15 @@ def create_application(portfolio_id):
         )
 
 
+def get_environments_obj_for_app(application):
+    environments_obj = {}
+
+    for env in application.environments:
+        environments_obj[env.name] = [user.full_name for user in env.users]
+
+    return environments_obj
+
+
 @portfolios_bp.route("/portfolios/<portfolio_id>/applications/<application_id>/edit")
 @user_can(Permissions.EDIT_APPLICATION, message="view application edit form")
 def edit_application(portfolio_id, application_id):
@@ -65,16 +74,12 @@ def edit_application(portfolio_id, application_id):
     application = Applications.get(application_id)
     form = ApplicationForm(name=application.name, description=application.description)
 
-    environments_obj = {}
-    for env in application.environments:
-        environments_obj[env.name] = [user.full_name for user in env.users]
-
     return render_template(
         "portfolios/applications/edit.html",
         portfolio=portfolio,
         application=application,
         form=form,
-        environments_obj=environments_obj,
+        environments_obj=get_environments_obj_for_app(application=application),
     )
 
 
@@ -99,6 +104,7 @@ def update_application(portfolio_id, application_id):
             portfolio=portfolio,
             application=application,
             form=form,
+            environments_obj=get_environments_obj_for_app(application=application),
         )
 
 

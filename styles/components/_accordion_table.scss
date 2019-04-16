@@ -1,65 +1,111 @@
+.float-right {
+  float: right;
+}
+
 .accordion-table {
+  ul {
+    padding-left: 0;
+  }
 
-  table {
-    thead th {
-      text-transform: uppercase;
+  &.accordion-table-list {
+    display: table;
+    width: 100%;
+  }
+
+  .accordion-table__head {
+    padding: $gap $gap*2;
+    font-weight: 700;
+    color: $color-gray;
+    text-transform: uppercase;
+    background-color: $color-gray-lightest;
+    border-bottom: 1px solid $color-gray-lightest;
+    border-top: none;
+  }
+
+  thead th {
+    text-transform: uppercase;
+    border-bottom: 1px solid $color-gray-lightest;
+    border-top: none;
+  }
+
+  th, td {
+    white-space: nowrap;
+
+    button {
+      margin: 0;
+    }
+  }
+
+  .accordion-table__item-content {
+    padding-top: $gap*3;
+    padding-right: $gap;
+    padding-bottom: $gap*3;
+    padding-left: $gap*3;
+  }
+
+  .accordion-table__items {
+    margin: 0;
+
+    li {
+
+      list-style-type: none;
+
       border-bottom: 1px solid $color-gray-lightest;
-      border-top: none;
+      margin: 0;
+
+      ul {
+        margin-top: 0;
+        margin-bottom: 0;
+        background-color: $color-gray-lightest;
+
+        li {
+          border-bottom: 1px solid $color-gray-lighter;
+        }
+      }
     }
 
-    th, td {
-      white-space: nowrap;
+    .accordion-table__item__toggler {
+      @include icon-link-color($color-blue, $color-gray-lightest);
+      float: right;
+      color: $color-blue;
+      padding: $gap;
+      margin: -$gap 0;
 
-      button {
-        margin: 0;
+      .icon {
+        @include icon-size(12);
+        margin-right: $gap;
+      }
+
+      .open-indicator {
+        position: absolute;
+        bottom: 0;
+        left: 5 * $gap;
+        width: 0;
+        height: 0;
+        border-left: 10px solid transparent;
+        border-right: 10px solid transparent;
+
+        border-bottom: 10px solid $color-blue-light;
       }
     }
 
-    .accordion-table__items {
-      .accordion-table__item__toggler {
-        @include icon-link-color($color-blue, $color-gray-lightest);
-        float: right;
-        margin-left: -$gap;
-        color: $color-blue;
+    th, td, tr {
+      border-bottom: 1px dashed $color-gray-lightest;
+    }
 
-        .icon {
-          @include icon-size(12);
-          margin-right: $gap;
+    th[scope=rowgroup] {
+      position: relative;
+    }
+
+    .accordion-table__item__expanded {
+      th, td {
+        .icon-link {
+          font-weight: $font-normal;
+          font-size: $base-font-size;
         }
 
-        .open-indicator {
-          position: absolute;
-          bottom: 0;
-          left: 5 * $gap;
-          width: 0;
-          height: 0;
-          border-left: 10px solid transparent;
-          border-right: 10px solid transparent;
-
-          border-bottom: 10px solid $color-blue-light;
-        }
-      }
-
-      th, td, tr {
-        border-bottom: 1px dashed $color-gray-lightest;
-      }
-
-      th[scope=rowgroup] {
-        position: relative;
-      }
-
-      .accordion-table__item__expanded {
-        margin-left: 2 * $gap;
-
-        th, td {
-          .icon-link {
-            font-weight: $font-normal;
-            font-size: $base-font-size;
-          }
-
-          border-bottom: 1px dashed $color-white;
-          background-color: $color-gray-lightest;
-        }
+        border-bottom: 1px dashed $color-white;
+        background-color: $color-gray-lightest;
       }
     }
   }

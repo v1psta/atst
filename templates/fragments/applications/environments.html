@@ -1,4 +1,5 @@
 {% from "components/icon.html" import Icon %}
+{% from "components/toggle_list.html" import ToggleList %}
 
 <div class="application-list-item">
   <header>
@@ -13,38 +14,24 @@
     </div>
   </header>
 
-  <environments-table
-    v-cloak
-    v-bind:environments='{{ environments_obj }}'
-    inline-template>
-    <table>
-      <thead>
-        <th scope='col'>{{ "portfolios.applications.environments.name" | translate }}</th>
-        <th scope='col' class='table-cell--align-right'>{{ "portfolios.applications.environments.members" | translate }}</th>
-      </thead>
+  <div class="accordion-table accordion-table-list">
+    <div class="accordion-table__head">
+      <span>{{ "portfolios.applications.environments.name" | translate }}</span>
+      <span class="float-right">{{ "portfolios.applications.environments.members" | translate }}</span>
+    </div>
 
-      <tbody v-for='(members_list, name) in environments' class='accordion-table__items'>
-        <tr>
-          <th scope='rowgroup' v-on:click="toggle($event, name)" v-html='name'></th>
-
-          <template v-if="environmentsState[name].isVisible">
-            <td v-on:click="toggle($event, name)" class='icon-link icon-link--large accordion-table__item__toggler'>Hide Members (<span v-html='members_list.length'></span>){{ Icon('caret_up') }}</td>
-          </template>
-          <template v-else>
-            <td v-on:click="toggle($event, name)" class='icon-link icon-link--large accordion-table__item__toggler'>Show Members (<span v-html='members_list.length'></span>){{ Icon('caret_down') }}</td>
-          </template>
-        </tr>
-
-        <tr scope='rowgroup' v-for='member in members_list' v-show='environmentsState[name].isVisible' class='accordion-table__item__expanded'>
-          <td>
-            <div>
-              <span v-html='member'></span>
-            </div>
-          </td>
-          <td class='table-cell--expand'></td>
-        </tr>
-      </tbody>
-
-    </table>
-  </environments-table>
+    <ul class="accordion-table__items">
+      {% for name, members_list in environments_obj.items() %}
+        {% call ToggleList(item_name=name, item_type="Members", length=(members_list|length)) %}
+          <ul>
+            {% for member in members_list %}
+            <li class="accordion-table__item__expanded">
+              <div class="accordion-table__item-content">{{ member }}</div>
+            </li>
+            {% endfor %}
+          </ul>
+        {% endcall %}
+      {% endfor %}
+    </ul>
+  </div>
 </div>
