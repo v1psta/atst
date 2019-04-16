@@ -70,7 +70,7 @@ def portfolio_funding(portfolio_id):
 @portfolios_bp.route("/portfolios/<portfolio_id>/task_order/<task_order_id>")
 @user_can(Permissions.VIEW_TASK_ORDER_DETAILS, message="view task order details")
 def view_task_order(portfolio_id, task_order_id):
-    task_order = TaskOrders.get(task_order_id)
+    task_order = TaskOrders.get(task_order_id, portfolio_id=portfolio_id)
     to_form_complete = TaskOrders.all_sections_complete(task_order)
     dd_254_complete = DD254s.is_complete(task_order.dd_254)
     return render_template(
@@ -86,8 +86,8 @@ def view_task_order(portfolio_id, task_order_id):
     )
 
 
-def wrap_check_is_ko_or_cor(user, task_order_id=None, **_kwargs):
-    task_order = TaskOrders.get(task_order_id)
+def wrap_check_is_ko_or_cor(user, task_order_id=None, portfolio_id=None, **_kwargs):
+    task_order = TaskOrders.get(task_order_id, portfolio_id=portfolio_id)
     Authorization.check_is_ko_or_cor(user, task_order)
 
     return True
@@ -100,7 +100,7 @@ def wrap_check_is_ko_or_cor(user, task_order_id=None, **_kwargs):
     message="view contracting officer review form",
 )
 def ko_review(portfolio_id, task_order_id):
-    task_order = TaskOrders.get(task_order_id)
+    task_order = TaskOrders.get(task_order_id, portfolio_id=portfolio_id)
 
     if TaskOrders.all_sections_complete(task_order):
         return render_template(
@@ -127,7 +127,7 @@ def resend_invite(portfolio_id, task_order_id):
 
     invite_type_info = OFFICER_INVITATIONS[invite_type]
 
-    task_order = TaskOrders.get(task_order_id)
+    task_order = TaskOrders.get(task_order_id, portfolio_id=portfolio_id)
     portfolio = Portfolios.get(g.current_user, portfolio_id)
 
     officer = getattr(task_order, invite_type_info["role"])
@@ -180,7 +180,7 @@ def resend_invite(portfolio_id, task_order_id):
     None, override=wrap_check_is_ko_or_cor, message="submit contracting officer review"
 )
 def submit_ko_review(portfolio_id, task_order_id, form=None):
-    task_order = TaskOrders.get(task_order_id)
+    task_order = TaskOrders.get(task_order_id, portfolio_id=portfolio_id)
     form_data = {**http_request.form, **http_request.files}
     form = KOReviewForm(form_data)
 
@@ -213,7 +213,7 @@ def submit_ko_review(portfolio_id, task_order_id, form=None):
     Permissions.EDIT_TASK_ORDER_DETAILS, message="view task order invitations page"
 )
 def task_order_invitations(portfolio_id, task_order_id):
-    task_order = TaskOrders.get(task_order_id)
+    task_order = TaskOrders.get(task_order_id, portfolio_id=portfolio_id)
     form = EditTaskOrderOfficersForm(obj=task_order)
 
     if TaskOrders.all_sections_complete(task_order):
@@ -233,7 +233,7 @@ def task_order_invitations(portfolio_id, task_order_id):
 )
 @user_can(Permissions.EDIT_TASK_ORDER_DETAILS, message="edit task order invitations")
 def edit_task_order_invitations(portfolio_id, task_order_id):
-    task_order = TaskOrders.get(task_order_id)
+    task_order = TaskOrders.get(task_order_id, portfolio_id=portfolio_id)
     form = EditTaskOrderOfficersForm(formdata=http_request.form, obj=task_order)
 
     if form.validate():
@@ -277,8 +277,8 @@ def so_review_form(task_order):
         return DD254Form(data=form_data)
 
 
-def wrap_check_is_so(user, task_order_id=None, **_kwargs):
-    task_order = TaskOrders.get(task_order_id)
+def wrap_check_is_so(user, task_order_id=None, portfolio_id=None, **_kwargs):
+    task_order = TaskOrders.get(task_order_id, portfolio_id=portfolio_id)
     Authorization.check_is_so(user, task_order)
 
     return True
@@ -287,7 +287,7 @@ def wrap_check_is_so(user, task_order_id=None, **_kwargs):
 @portfolios_bp.route("/portfolios/<portfolio_id>/task_order/<task_order_id>/dd254")
 @user_can(None, override=wrap_check_is_so, message="view security officer review form")
 def so_review(portfolio_id, task_order_id):
-    task_order = TaskOrders.get(task_order_id)
+    task_order = TaskOrders.get(task_order_id, portfolio_id=portfolio_id)
     form = so_review_form(task_order)
 
     return render_template(
@@ -302,7 +302,7 @@ def so_review(portfolio_id, task_order_id):
     None, override=wrap_check_is_so, message="submit security officer review form"
 )
 def submit_so_review(portfolio_id, task_order_id):
-    task_order = TaskOrders.get(task_order_id)
+    task_order = TaskOrders.get(task_order_id, portfolio_id=portfolio_id)
     form = DD254Form(http_request.form)
 
     if form.validate():

@@ -61,7 +61,12 @@ class ShowTaskOrderWorkflow:
     @property
     def task_order(self):
         if not self._task_order and self.task_order_id:
-            self._task_order = TaskOrders.get(self.task_order_id)
+            if self.portfolio_id:
+                self._task_order = TaskOrders.get(
+                    self.task_order_id, portfolio_id=self.portfolio_id
+                )
+            else:
+                self._task_order = TaskOrders.get(self.task_order_id)
 
         return self._task_order
 
@@ -260,6 +265,7 @@ def is_new_task_order(*_args, **kwargs):
     )
 
 
+# TODO: /task_orders/new/<int:screen>/<task_order_id> should not exist
 @task_orders_bp.route("/task_orders/new/<int:screen>")
 @task_orders_bp.route("/task_orders/new/<int:screen>/<task_order_id>")
 @task_orders_bp.route("/portfolios/<portfolio_id>/task_orders/new/<int:screen>")
@@ -309,6 +315,7 @@ def new(screen, task_order_id=None, portfolio_id=None):
     return render_template(workflow.template, **template_args)
 
 
+# TODO: /task_orders/new/<int:screen>/<task_order_id> should not exist
 @task_orders_bp.route("/task_orders/new/<int:screen>", methods=["POST"])
 @task_orders_bp.route("/task_orders/new/<int:screen>/<task_order_id>", methods=["POST"])
 @task_orders_bp.route(

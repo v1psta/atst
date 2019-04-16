@@ -50,7 +50,7 @@ def portfolio_members(portfolio_id):
 @user_can(Permissions.VIEW_APPLICATION_MEMBER, message="view application members")
 def application_members(portfolio_id, application_id):
     portfolio = Portfolios.get_for_update(portfolio_id)
-    application = Applications.get(application_id)
+    application = Applications.get(application_id, portfolio_id=portfolio_id)
     # TODO: this should show only members that have env roles in this application
     members_list = [serialize_portfolio_role(k) for k in portfolio.members]
 

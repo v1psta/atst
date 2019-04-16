@@ -329,3 +329,19 @@ def test_delete_application(client, user_session):
     # app and envs are soft deleted
     assert len(port.applications) == 0
     assert len(application.environments) == 0
+
+
+def test_edit_application_scope(client, user_session):
+    owner = UserFactory.create()
+    port1 = PortfolioFactory.create(owner=owner, applications=[{"name": "first app"}])
+    port2 = PortfolioFactory.create(owner=owner, applications=[{"name": "second app"}])
+
+    user_session(owner)
+    response = client.get(
+        url_for(
+            "portfolios.edit_application",
+            portfolio_id=port2.id,
+            application_id=port1.applications[0].id,
+        )
+    )
+    assert response.status_code == 404

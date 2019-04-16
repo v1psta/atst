@@ -64,7 +64,7 @@ def get_environments_obj_for_app(application):
 @portfolios_bp.route("/portfolios/<portfolio_id>/applications/<application_id>/edit")
 @user_can(Permissions.EDIT_APPLICATION, message="view application edit form")
 def edit_application(portfolio_id, application_id):
-    application = Applications.get(application_id)
+    application = Applications.get(application_id, portfolio_id=portfolio_id)
     form = ApplicationForm(name=application.name, description=application.description)
 
     return render_template(
@@ -80,7 +80,7 @@ def edit_application(portfolio_id, application_id):
 )
 @user_can(Permissions.EDIT_APPLICATION, message="update application")
 def update_application(portfolio_id, application_id):
-    application = Applications.get(application_id)
+    application = Applications.get(application_id, portfolio_id=portfolio_id)
     form = ApplicationForm(http_request.form)
     if form.validate():
         application_data = form.data
@@ -101,7 +101,9 @@ def update_application(portfolio_id, application_id):
 def wrap_environment_role_lookup(
     user, portfolio_id=None, environment_id=None, **kwargs
 ):
-    env_role = EnvironmentRoles.get(user.id, environment_id)
+    env_role = EnvironmentRoles.get_for_portfolio(
+        user.id, environment_id, portfolio_id=portfolio_id
+    )
     if not env_role:
         raise UnauthorizedError(user, "access environment {}".format(environment_id))
 
@@ -111,7 +113,9 @@ def wrap_environment_role_lookup(
 @portfolios_bp.route("/portfolios/<portfolio_id>/environments/<environment_id>/access")
 @user_can(None, override=wrap_environment_role_lookup, message="access environment")
 def access_environment(portfolio_id, environment_id):
-    env_role = EnvironmentRoles.get(g.current_user.id, environment_id)
+    env_role = EnvironmentRoles.get_for_portfolio(
+        g.current_user.id, environment_id, portfolio_id=portfolio_id
+    )
     token = app.csp.cloud.get_access_token(env_role)
 
     return redirect(url_for("atst.csp_environment_access", token=token))
@@ -122,7 +126,7 @@ def access_environment(portfolio_id, environment_id):
 )
 @user_can(Permissions.DELETE_APPLICATION, message="delete application")
 def delete_application(portfolio_id, application_id):
-    application = Applications.get(application_id)
+    application = Applications.get(application_id, portfolio_id=portfolio_id)
     Applications.delete(application)
 
     flash("application_deleted", application_name=application.name)
