@@ -57,7 +57,7 @@ def create_application(portfolio_id):
         )
 
 
-def environments_obj(application):
+def get_environments_obj_for_app(application):
     environments_obj = {}
 
     for env in application.environments:
@@ -78,7 +78,7 @@ def edit_application(portfolio_id, application_id):
         portfolio=portfolio,
         application=application,
         form=form,
-        environments_obj=environments_obj(application=application),
+        environments_obj=get_environments_obj_for_app(application=application),
     )
 
 
@@ -103,7 +103,7 @@ def update_application(portfolio_id, application_id):
             portfolio=portfolio,
             application=application,
             form=form,
-            environments_obj=environments_obj(application=application),
+            environments_obj=get_environments_obj_for_app(application=application),
         )
 
 
