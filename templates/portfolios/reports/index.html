@@ -142,7 +142,7 @@
 
     {{ EmptyState(
       'Nothing to report',
-      action_label='Add a New Application' if can_create_applications else None,
+      action_label='Add a new application' if can_create_applications else None,
       action_href=url_for('portfolios.new_application', portfolio_id=portfolio.id) if can_create_applications else None,
       icon='chart',
       sub_message=message
