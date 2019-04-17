@@ -12,7 +12,9 @@
   <li is="toggler" class="accordion-table__item">
     <template slot-scope="props">
       <div class="accordion-table__item-content">
-        <span v-on:click="props.toggle">{{ item_name }}</span>
+        <span v-on:click="props.toggle">
+          {{ item_name }}
+        </span>
 
         <template v-if="props.isVisible">
           {{
