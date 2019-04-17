@@ -12,6 +12,7 @@ from atst.models.portfolio_role import Status as PortfolioRoleStatus
 
 from tests.factories import (
     AttachmentFactory,
+    ApplicationFactory,
     ApplicationRoleFactory,
     InvitationFactory,
     PortfolioFactory,
@@ -815,3 +816,21 @@ def test_task_orders_update_access(post_url_assert_status):
     post_url_assert_status(owner, url, 302)
     post_url_assert_status(ccpo, url, 302)
     post_url_assert_status(rando, url, 404)
+
+
+def test_portfolio_application_team_access(get_url_assert_status):
+    ccpo = UserFactory.create_ccpo()
+    rando = UserFactory.create()
+
+    portfolio = PortfolioFactory.create()
+    application = ApplicationFactory.create(portfolio=portfolio)
+
+    url = url_for(
+        "portfolios.application_team",
+        portfolio_id=portfolio.id,
+        application_id=application.id,
+    )
+
+    get_url_assert_status(ccpo, url, 200)
+    get_url_assert_status(portfolio.owner, url, 200)
+    get_url_assert_status(rando, url, 404)
