@@ -31,7 +31,7 @@ class User(
         primaryjoin="and_(ApplicationRole.user_id==User.id, ApplicationRole.deleted==False)",
     )
 
-    email = Column(String, unique=True)
+    email = Column(String)
     dod_id = Column(String, unique=True, nullable=False)
     first_name = Column(String)
     last_name = Column(String)
