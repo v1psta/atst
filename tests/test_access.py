@@ -243,7 +243,7 @@ def test_portfolios_delete_application_access(post_url_assert_status, monkeypatc
 
 # portfolios.edit_application
 def test_portfolios_edit_application_access(get_url_assert_status):
-    ccpo = user_with(PermissionSets.EDIT_PORTFOLIO_APPLICATION_MANAGEMENT)
+    ccpo = user_with(PermissionSets.VIEW_PORTFOLIO_APPLICATION_MANAGEMENT)
     owner = user_with()
     rando = user_with()
     portfolio = PortfolioFactory.create(

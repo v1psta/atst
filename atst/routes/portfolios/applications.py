@@ -67,7 +67,7 @@ def get_environments_obj_for_app(application):
 
 
 @portfolios_bp.route("/portfolios/<portfolio_id>/applications/<application_id>/edit")
-@user_can(Permissions.EDIT_APPLICATION, message="view application edit form")
+@user_can(Permissions.VIEW_APPLICATION, message="view application edit form")
 def edit_application(portfolio_id, application_id):
     application = Applications.get(application_id, portfolio_id=portfolio_id)
     form = ApplicationForm(name=application.name, description=application.description)
