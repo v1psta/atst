@@ -154,7 +154,6 @@ def permission_str(member, edit_perm_set):
 @portfolios_bp.route("/portfolios/<portfolio_id>/applications/<application_id>/team")
 @user_can(Permissions.VIEW_APPLICATION, message="view portfolio applications")
 def application_team(portfolio_id, application_id):
-    portfolio = Portfolios.get(g.current_user, portfolio_id)
     application = Applications.get(
         resource_id=application_id, portfolio_id=portfolio_id
     )
@@ -182,6 +181,5 @@ def application_team(portfolio_id, application_id):
     return render_template(
         "portfolios/applications/team.html",
         application=application,
-        portfolio=portfolio,
         environment_users=environment_users,
     )
