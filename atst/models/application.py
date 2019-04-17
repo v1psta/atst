@@ -5,6 +5,13 @@ from atst.models import Base
 from atst.models.types import Id
 from atst.models import mixins
 
+from atst.models.application_role import (
+    ApplicationRole,
+    Status as ApplicationRoleStatuses,
+)
+
+from atst.database import db
+
 
 class Application(
     Base, mixins.TimestampsMixin, mixins.AuditableMixin, mixins.DeletableMixin
@@ -27,6 +34,15 @@ class Application(
     @property
     def users(self):
         return set(role.user for role in self.roles)
+
+    @property
+    def members(self):
+        return (
+            db.session.query(ApplicationRole)
+            .filter(ApplicationRole.application_id == self.id)
+            .filter(ApplicationRole.status != ApplicationRoleStatuses.DISABLED)
+            .all()
+        )
 
     @property
     def num_users(self):

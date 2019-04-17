@@ -117,3 +117,30 @@
     }
   }
 }
+
+#application-members {
+  .accordion-table {
+    .accordion-table__head {
+      font-size: $small-font-size;
+      padding-left: $gap*3;
+    }
+
+    .accordion-table__item-content, .accordion-table__head {
+      display: flex;
+
+      & > span {
+        flex-grow: 3;
+        display: flex;
+        flex-basis: 0;
+        &.icon-link {
+          flex-grow: 1;
+        }
+      }
+    }
+
+    span {
+      flex-grow: 1;
+      flex-basis: 0;
+    }
+  }
+}

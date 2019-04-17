@@ -49,7 +49,9 @@
                     <div class='separator'></div>
                   {% endif %}
                   {% if user_can(permissions.VIEW_PORTFOLIO_USERS) %}
-                    <a class='icon-link'>
+                  <a
+                    href="{{ url_for('portfolios.application_team', portfolio_id=portfolio.id, application_id=application.id) }}"
+                    class='icon-link'>
                       <span>{{ "portfolios.applications.team_text" | translate }}</span>
                       <span class='counter'>{{ application.num_users }}</span>
                     </a>
