@@ -1,6 +1,7 @@
 from sqlalchemy.orm.exc import NoResultFound
 
 from atst.database import db
+from . import BaseDomainClass
 from atst.domain.environments import Environments
 from atst.domain.exceptions import NotFoundError
 from atst.models.application import Application
@@ -8,7 +9,10 @@ from atst.models.environment import Environment
 from atst.models.environment_role import EnvironmentRole
 
 
-class Applications(object):
+class Applications(BaseDomainClass):
+    model = Application
+    resource_name = "application"
+
     @classmethod
     def create(cls, portfolio, name, description, environment_names):
         application = Application(
@@ -19,19 +23,6 @@ class Applications(object):
         Environments.create_many(application, environment_names)
 
         db.session.commit()
-        return application
-
-    @classmethod
-    def get(cls, application_id):
-        try:
-            application = (
-                db.session.query(Application)
-                .filter_by(id=application_id, deleted=False)
-                .one()
-            )
-        except NoResultFound:
-            raise NotFoundError("application")
-
         return application
 
     @classmethod

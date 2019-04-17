@@ -1,7 +1,6 @@
 from flask import g, redirect, url_for, render_template
 
 from . import portfolios_bp
-from atst.domain.portfolios import Portfolios
 from atst.domain.invitations import Invitations
 from atst.queue import queue
 from atst.utils.flash import formatted_flash as flash
@@ -47,10 +46,9 @@ def accept_invitation(token):
 )
 @user_can(Permissions.EDIT_PORTFOLIO_USERS, message="revoke invitation")
 def revoke_invitation(portfolio_id, token):
-    portfolio = Portfolios.get_for_update(portfolio_id)
     Invitations.revoke(token)
 
-    return redirect(url_for("portfolios.portfolio_members", portfolio_id=portfolio.id))
+    return redirect(url_for("portfolios.portfolio_members", portfolio_id=portfolio_id))
 
 
 @portfolios_bp.route(

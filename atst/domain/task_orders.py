@@ -1,19 +1,21 @@
-from sqlalchemy.orm.exc import NoResultFound
 from flask import current_app as app
 
 from atst.database import db
 from atst.models.task_order import TaskOrder
 from atst.models.dd_254 import DD254
+from . import BaseDomainClass
 from atst.domain.portfolios import Portfolios
 from atst.domain.permission_sets import PermissionSets
-from .exceptions import NotFoundError
 
 
 class TaskOrderError(Exception):
     pass
 
 
-class TaskOrders(object):
+class TaskOrders(BaseDomainClass):
+    model = TaskOrder
+    resource_name = "task_order"
+
     SECTIONS = {
         "app_info": [
             "portfolio_name",
@@ -50,15 +52,6 @@ class TaskOrders(object):
     }
 
     UNCLASSIFIED_FUNDING = ["performance_length", "csp_estimate", "clin_01", "clin_03"]
-
-    @classmethod
-    def get(cls, task_order_id):
-        try:
-            task_order = db.session.query(TaskOrder).filter_by(id=task_order_id).one()
-
-            return task_order
-        except NoResultFound:
-            raise NotFoundError("task_order")
 
     @classmethod
     def create(cls, creator, portfolio):

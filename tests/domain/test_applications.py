@@ -1,4 +1,5 @@
 import pytest
+from uuid import uuid4
 
 from atst.domain.applications import Applications
 from atst.domain.exceptions import NotFoundError
@@ -68,6 +69,16 @@ def test_get_excludes_deleted():
     app = ApplicationFactory.create(deleted=True)
     with pytest.raises(NotFoundError):
         Applications.get(app.id)
+
+
+def test_get_application():
+    app = ApplicationFactory.create()
+    assert Applications.get(app.id) == app
+    assert Applications.get(app.id, portfolio_id=app.portfolio_id) == app
+    with pytest.raises(NotFoundError):
+        # make the uuid a string like you'd get from a route
+        rando_id = str(uuid4())
+        Applications.get(app.id, portfolio_id=rando_id)
 
 
 def test_delete_application(session):

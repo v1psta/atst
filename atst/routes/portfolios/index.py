@@ -119,7 +119,7 @@ def edit_portfolio_members(portfolio_id):
         return redirect(
             url_for(
                 "portfolios.portfolio_admin",
-                portfolio_id=portfolio.id,
+                portfolio_id=portfolio_id,
                 fragment="portfolio-members",
                 _anchor="portfolio-members",
             )
