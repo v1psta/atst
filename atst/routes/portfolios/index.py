@@ -63,11 +63,20 @@ def serialize_member_form_data(member):
     }
 
 
+def get_members_data(portfolio):
+    members = [serialize_member_form_data(member) for member in portfolio.members]
+    for member in members:
+        if member["user_id"] == portfolio.owner.id:
+            ppoc = member
+            members.remove(member)
+    members.insert(0, ppoc)
+    return members
+
+
 def render_admin_page(portfolio, form=None):
     pagination_opts = Paginator.get_pagination_opts(http_request)
     audit_events = AuditLog.get_portfolio_events(portfolio, pagination_opts)
-    members_data = [serialize_member_form_data(member) for member in portfolio.members]
-
+    members_data = get_members_data(portfolio)
     portfolio_form = PortfolioForm(data={"name": portfolio.name})
     member_perms_form = member_forms.MembersPermissionsForm(
         data={"members_permissions": members_data}

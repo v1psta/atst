@@ -272,6 +272,7 @@
     .members-table-ppoc {
       select::-ms-expand {
         display: none;
+        color: $color-gray;
       }
 
       select {
@@ -288,11 +289,12 @@
         word-break: normal;
         padding-right: 3rem;
         padding-left: 1.2rem;
+        color: $color-gray;
       }
 
       select:hover {
         box-shadow: none;
-        color: $color-base;
+        color: $color-gray;
       }
     }
 
