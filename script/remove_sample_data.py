@@ -72,6 +72,9 @@ def remove_sample_data(all_users=False):
         task_orders = [to for portfolio in portfolios for to in portfolio.task_orders]
         invites = [invite for role in portfolio_roles for invite in role.invitations]
         applications = [p for portfolio in portfolios for p in portfolio.applications]
+        application_roles = [
+            a for application in applications for a in application.roles
+        ]
         environments = (
             db.session.query(Environment)
             .filter(Environment.application_id.in_([p.id for p in applications]))
@@ -80,12 +83,13 @@ def remove_sample_data(all_users=False):
         roles = [role for env in environments for role in env.roles]
 
         for set_of_things in [
-            roles,
-            environments,
+            application_roles,
             applications,
+            environments,
             invites,
-            task_orders,
             portfolio_roles,
+            roles,
+            task_orders,
             ws_audit,
         ]:
             for thing in set_of_things:
