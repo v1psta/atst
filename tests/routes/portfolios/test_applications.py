@@ -119,9 +119,9 @@ def test_edit_application_environments_obj(app, client, user_session):
     user2 = UserFactory.create()
     env1 = application.environments[0]
     env2 = application.environments[1]
-    EnvironmentRoleFactory.create(environment=env1, user=user1)
-    EnvironmentRoleFactory.create(environment=env1, user=user2)
-    EnvironmentRoleFactory.create(environment=env2, user=user1)
+    env_role1 = EnvironmentRoleFactory.create(environment=env1, user=user1)
+    env_role2 = EnvironmentRoleFactory.create(environment=env1, user=user2)
+    env_role3 = EnvironmentRoleFactory.create(environment=env2, user=user1)
 
     user_session(portfolio.owner)
 
@@ -137,8 +137,11 @@ def test_edit_application_environments_obj(app, client, user_session):
         assert response.status_code == 200
         _, context = templates[0]
         assert context["environments_obj"] == {
-            env1.name: [user1.full_name, user2.full_name],
-            env2.name: [user1.full_name],
+            env1.name: [
+                {"name": user1.full_name, "role": env_role1.role},
+                {"name": user2.full_name, "role": env_role2.role},
+            ],
+            env2.name: [{"name": user1.full_name, "role": env_role3.role}],
         }
 
 

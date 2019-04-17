@@ -18,6 +18,10 @@
   @include hide;
 }
 
+.right {
+  float: right;
+}
+
 @mixin unhide {
   clip: auto;
   clip-path: none;
