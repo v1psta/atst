@@ -129,16 +129,18 @@
       display: flex;
 
       & > span {
-        width: 75%;
+        flex-grow: 3;
+        display: flex;
+        flex-basis: 0;
         &.icon-link {
-          width: 25%;
+          flex-grow: 1;
         }
       }
     }
 
     span {
-      display: flex;
-      width: 25%;
+      flex-grow: 1;
+      flex-basis: 0;
     }
   }
 }
