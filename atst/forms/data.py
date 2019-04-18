@@ -1,4 +1,5 @@
 from atst.utils.localization import translate, translate_duration
+from atst.models.environment_role import CSPRole
 
 
 SERVICE_BRANCHES = [
@@ -215,3 +216,5 @@ REQUIRED_DISTRIBUTIONS = [
     ("administrative_ko", "Administrative Contracting Officer"),
     ("other", "Other as necessary"),
 ]
+
+ENV_ROLES = [(role.value, role.value) for role in CSPRole]
