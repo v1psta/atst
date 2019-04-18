@@ -1,14 +1,19 @@
-import ToggleMixin from '../mixins/toggle'
-
 export default {
   name: 'toggler',
 
-  mixins: [ToggleMixin],
+  data: function() {
+    return {
+      selectedSection: null,
+    }
+  },
 
-  props: {
-    defaultVisible: {
-      type: Boolean,
-      default: () => false,
+  methods: {
+    toggleSection: function(sectionName) {
+      if (this.selectedSection === sectionName) {
+        this.selectedSection = null
+      } else {
+        this.selectedSection = sectionName
+      }
     },
   },
 }

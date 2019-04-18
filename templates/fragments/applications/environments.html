@@ -1,5 +1,5 @@
 {% from "components/icon.html" import Icon %}
-{% from "components/toggle_list.html" import ToggleList %}
+{% from "components/toggle_list.html" import ToggleList, ToggleButton, ToggleSection %}
 
 <div class="application-list-item">
   <header>
@@ -22,16 +22,68 @@
 
     <ul class="accordion-table__items">
       {% for name, members_list in environments_obj.items() %}
-        {% call ToggleList(item_name=name, item_type="Members", length=(members_list|length)) %}
-          <ul>
-            {% for member in members_list %}
-            <li class="accordion-table__item__expanded">
-              <div class="accordion-table__item__expanded_first">{{ member.name }}</div>
-              <div class="right">{{ member.role }}</div>
-            </li>
-            {% endfor %}
-          </ul>
-        {% endcall %}
+        <toggler inline-template>
+          <li class="accordion-table__item">
+            <div class="accordion-table__item-content">
+              <span>
+                {{ name }}
+              </span>
+              <span class="icon-link">
+                {% macro EditEnvironmentButton() %}
+                  {{ Icon('edit') }}
+                {% endmacro %}
+
+                {{
+                  ToggleButton(
+                    open_html=EditEnvironmentButton(),
+                    close_html=EditEnvironmentButton(),
+                    section_name="edit"
+                  )
+                }}
+              </span>
+              <span class="icon-link icon-link--large accordion-table__item__toggler">
+                {% macro OpenEnvironmentsButton() %}
+                  {{ "common.show" | translate }} Environments ({{ members_list | length }})
+                {% endmacro %}
+
+                {% macro CloseEnvironmentsButton() %}
+                  {{ "common.hide" | translate }} Environments ({{ members_list | length }})
+                {% endmacro %}
+
+                {{
+                  ToggleButton(
+                    open_html=OpenEnvironmentsButton(),
+                    close_html=CloseEnvironmentsButton(),
+                    section_name="environments"
+                  )
+                }}
+              </span>
+            </div>
+
+            {% call ToggleList() %}
+              {% call ToggleSection(section_name="environments") %}
+                <ul>
+                  {% for member in members_list %}
+                  <li class="accordion-table__item__expanded">
+                    <div class="accordion-table__item__expanded_first">{{ member.name }}</div>
+                    <div class="right">{{ member.role }}</div>
+                  </li>
+                  {% endfor %}
+                </ul>
+              {% endcall %}
+
+              {% call ToggleSection(section_name="edit") %}
+                <ul>
+                  <li class="accordion-table__item__expanded">
+                    <div class="accordion-table__item__expanded_first">
+                      <strong>Edit section</strong>
+                    </div>
+                  </li>
+                </ul>
+              {% endcall %}
+            {% endcall %}
+          </li>
+        </toggler>
       {% endfor %}
     </ul>
   </div>

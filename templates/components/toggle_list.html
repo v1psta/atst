@@ -1,45 +1,22 @@
-{% from "components/icon.html" import Icon %}
-
-{% macro ToggleItem(action, item_type, length, icon) %}
-  <span
-    v-on:click="props.toggle"
-    class="icon-link icon-link--large accordion-table__item__toggler">
-    {{ action }} {{ item_type }} ({{ length }}){{ Icon(icon) }}
+{% macro ToggleButton(action, open_html, close_html, section_name) %}
+  <span v-on:click="toggleSection('{{ section_name }}')">
+    <div v-if="selectedSection === '{{ section_name }}'">
+      {{ close_html }}
+    </div>
+    <div v-else>
+      {{ open_html }}
+    </div>
   </span>
 {% endmacro %}
 
 {% macro ToggleList(item_name, item_type, length) %}
-  <li is="toggler" class="accordion-table__item">
-    <template slot-scope="props">
-      <div class="accordion-table__item-content">
-        <span v-on:click="props.toggle">
-          {{ item_name }}
-        </span>
+  <div>
+    {{ caller() }}
+  </div>
+{% endmacro %}
 
-        <template v-if="props.isVisible">
-          {{
-            ToggleItem(
-              ("common.hide" | translate),
-              item_type,
-              length,
-              "caret_up",
-            )
-          }}
-        </template>
-        <template v-else>
-          {{
-            ToggleItem(
-              ("common.show" | translate),
-              item_type,
-              length,
-              "caret_down",
-            )
-          }}
-        </template>
-      </div>
-      <div v-show="props.isVisible">
-        {{ caller() }}
-      </div>
-    </template>
-  </li>
+{% macro ToggleSection(section_name) %}
+  <div v-show="selectedSection === '{{ section_name }}'">
+    {{ caller() }}
+  </div>
 {% endmacro %}
