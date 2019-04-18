@@ -71,6 +71,11 @@ def test_all_protected_routes_have_access_control(
     monkeypatch.setattr("atst.domain.portfolios.Portfolios.for_user", lambda *a: [])
     monkeypatch.setattr("atst.domain.portfolios.Portfolios.get", lambda *a: None)
     monkeypatch.setattr("atst.domain.task_orders.TaskOrders.get", lambda *a: Mock())
+    monkeypatch.setattr("atst.domain.applications.Applications.get", lambda *a: Mock())
+    monkeypatch.setattr("atst.domain.invitations.Invitations._get", lambda *a: Mock())
+    monkeypatch.setattr(
+        "atst.utils.context_processors.get_portfolio_from_context", lambda *a: None
+    )
 
     # patch the internal function the access decorator uses so that
     # we can check that it was called
