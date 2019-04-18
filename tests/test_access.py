@@ -154,30 +154,6 @@ def test_portfolios_access_environment_access(get_url_assert_status):
     get_url_assert_status(ccpo, url, 404)
 
 
-# portfolios.application_members
-def test_portfolios_application_members_access(get_url_assert_status):
-    ccpo = user_with(PermissionSets.VIEW_PORTFOLIO_APPLICATION_MANAGEMENT)
-    owner = user_with()
-    app_dev = user_with()
-    rando = user_with()
-    portfolio = PortfolioFactory.create(
-        owner=owner,
-        applications=[{"name": "Mos Eisley", "description": "Where Han shot first"}],
-    )
-    app = portfolio.applications[0]
-    ApplicationRoleFactory.create(application=app, user=app_dev)
-
-    url = url_for(
-        "portfolios.application_members",
-        portfolio_id=portfolio.id,
-        application_id=app.id,
-    )
-    get_url_assert_status(ccpo, url, 200)
-    get_url_assert_status(owner, url, 200)
-    get_url_assert_status(app_dev, url, 200)
-    get_url_assert_status(rando, url, 404)
-
-
 # portfolios.create_application
 def test_portfolios_create_application_access(post_url_assert_status):
     ccpo = user_with(PermissionSets.EDIT_PORTFOLIO_APPLICATION_MANAGEMENT)
@@ -199,8 +175,8 @@ def test_portfolios_create_member_access(post_url_assert_status):
     portfolio = PortfolioFactory.create(owner=owner)
 
     url = url_for("portfolios.create_member", portfolio_id=portfolio.id)
-    post_url_assert_status(ccpo, url, 200)
-    post_url_assert_status(owner, url, 200)
+    post_url_assert_status(ccpo, url, 302)
+    post_url_assert_status(owner, url, 302)
     post_url_assert_status(rando, url, 404)
 
 
@@ -327,19 +303,6 @@ def test_portfolios_new_application_access(get_url_assert_status):
     get_url_assert_status(rando, url, 404)
 
 
-# portfolios.new_member
-def test_portfolios_new_member_access(get_url_assert_status):
-    ccpo = user_with(PermissionSets.EDIT_PORTFOLIO_ADMIN)
-    owner = user_with()
-    rando = user_with()
-    portfolio = PortfolioFactory.create(owner=owner)
-
-    url = url_for("portfolios.new_member", portfolio_id=portfolio.id)
-    get_url_assert_status(ccpo, url, 200)
-    get_url_assert_status(owner, url, 200)
-    get_url_assert_status(rando, url, 404)
-
-
 # portfolios.portfolio_admin
 def test_portfolios_portfolio_admin_access(get_url_assert_status):
     ccpo = user_with(PermissionSets.VIEW_PORTFOLIO_ADMIN)
@@ -374,19 +337,6 @@ def test_portfolios_portfolio_funding_access(get_url_assert_status):
     portfolio = PortfolioFactory.create(owner=owner)
 
     url = url_for("portfolios.portfolio_funding", portfolio_id=portfolio.id)
-    get_url_assert_status(ccpo, url, 200)
-    get_url_assert_status(owner, url, 200)
-    get_url_assert_status(rando, url, 404)
-
-
-# portfolios.portfolio_members
-def test_portfolios_portfolio_members_access(get_url_assert_status):
-    ccpo = user_with(PermissionSets.VIEW_PORTFOLIO_ADMIN)
-    owner = user_with()
-    rando = user_with()
-    portfolio = PortfolioFactory.create(owner=owner)
-
-    url = url_for("portfolios.portfolio_members", portfolio_id=portfolio.id)
     get_url_assert_status(ccpo, url, 200)
     get_url_assert_status(owner, url, 200)
     get_url_assert_status(rando, url, 404)
@@ -447,25 +397,6 @@ def test_portfolios_resend_invite_access(post_url_assert_status):
     post_url_assert_status(owner, url, 302)
     post_url_assert_status(ko, url, 404)
     post_url_assert_status(rando, url, 404)
-
-
-# portfolios.revoke_access
-def test_portfolios_revoke_access_access(post_url_assert_status):
-    ccpo = user_with(PermissionSets.EDIT_PORTFOLIO_ADMIN)
-    owner = user_with()
-    rando = user_with()
-
-    portfolio = PortfolioFactory.create(owner=owner)
-
-    for user, status in [(ccpo, 302), (owner, 302), (rando, 404)]:
-        prt_member = user_with()
-        prr = PortfolioRoleFactory.create(
-            user=prt_member, portfolio=portfolio, status=PortfolioRoleStatus.ACTIVE
-        )
-        url = url_for(
-            "portfolios.revoke_access", portfolio_id=portfolio.id, member_id=prr.id
-        )
-        post_url_assert_status(user, url, status)
 
 
 # portfolios.revoke_invitation
@@ -603,42 +534,6 @@ def test_portfolios_update_application_access(post_url_assert_status):
     post_url_assert_status(dev, url, 200)
     post_url_assert_status(ccpo, url, 200)
     post_url_assert_status(rando, url, 404)
-
-
-# portfolios.update_member
-def test_portfolios_update_member_access(post_url_assert_status):
-    ccpo = user_with(PermissionSets.EDIT_PORTFOLIO_ADMIN)
-    owner = user_with()
-    rando = user_with()
-    prt_member = user_with()
-
-    portfolio = PortfolioFactory.create(owner=owner)
-    PortfolioRoleFactory.create(user=prt_member, portfolio=portfolio)
-
-    url = url_for(
-        "portfolios.update_member", portfolio_id=portfolio.id, member_id=prt_member.id
-    )
-    post_url_assert_status(owner, url, 200)
-    post_url_assert_status(ccpo, url, 200)
-    post_url_assert_status(rando, url, 404)
-
-
-# portfolios.view_member
-def test_portfolios_view_member_access(get_url_assert_status):
-    ccpo = user_with(PermissionSets.VIEW_PORTFOLIO_ADMIN)
-    owner = user_with()
-    rando = user_with()
-    prt_member = user_with()
-
-    portfolio = PortfolioFactory.create(owner=owner)
-    PortfolioRoleFactory.create(user=prt_member, portfolio=portfolio)
-
-    url = url_for(
-        "portfolios.view_member", portfolio_id=portfolio.id, member_id=prt_member.id
-    )
-    get_url_assert_status(owner, url, 200)
-    get_url_assert_status(ccpo, url, 200)
-    get_url_assert_status(rando, url, 404)
 
 
 # portfolios.view_task_order

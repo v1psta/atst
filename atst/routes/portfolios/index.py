@@ -233,6 +233,8 @@ def remove_member(portfolio_id, user_id):
         )
 
     portfolio_role = PortfolioRoles.get(portfolio_id=portfolio_id, user_id=user_id)
+    # TODO: should this cascade and disable any application and environment
+    # roles they might have?
     PortfolioRoles.disable(portfolio_role=portfolio_role)
 
     flash("portfolio_member_removed", member_name=portfolio_role.user.full_name)

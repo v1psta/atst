@@ -48,7 +48,14 @@ def accept_invitation(token):
 def revoke_invitation(portfolio_id, token):
     Invitations.revoke(token)
 
-    return redirect(url_for("portfolios.portfolio_members", portfolio_id=portfolio_id))
+    return redirect(
+        url_for(
+            "portfolios.portfolio_admin",
+            portfolio_id=portfolio_id,
+            _anchor="portfolio-members",
+            fragment="portfolio-members",
+        )
+    )
 
 
 @portfolios_bp.route(
@@ -59,4 +66,11 @@ def resend_invitation(portfolio_id, token):
     invite = Invitations.resend(g.current_user, token)
     send_invite_email(g.current_user.full_name, invite.token, invite.email)
     flash("resend_portfolio_invitation", user_name=invite.user_name)
-    return redirect(url_for("portfolios.portfolio_members", portfolio_id=portfolio_id))
+    return redirect(
+        url_for(
+            "portfolios.portfolio_admin",
+            portfolio_id=portfolio_id,
+            fragment="portfolio-members",
+            _anchor="portfolio-members",
+        )
+    )
