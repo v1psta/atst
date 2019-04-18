@@ -10,6 +10,7 @@ from atst.models import *
 from atst.models.portfolio_role import Status as PortfolioRoleStatus
 from atst.models.application_role import Status as ApplicationRoleStatus
 from atst.models.invitation import Status as InvitationStatus
+from atst.models.environment_role import CSPRole
 from atst.domain.invitations import Invitations
 from atst.domain.permission_sets import PermissionSets
 from atst.domain.portfolio_roles import PortfolioRoles
@@ -234,7 +235,7 @@ class EnvironmentRoleFactory(Base):
         model = EnvironmentRole
 
     environment = factory.SubFactory(EnvironmentFactory)
-    role = factory.Faker("name")
+    role = random.choice([e.value for e in CSPRole])
     user = factory.SubFactory(UserFactory)
 
 

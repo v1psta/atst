@@ -4,6 +4,7 @@ from . import applications_bp
 from atst.domain.environment_roles import EnvironmentRoles
 from atst.domain.applications import Applications
 from atst.forms.application import ApplicationForm
+from atst.forms.app_settings import EnvironmentForm
 from atst.domain.authz.decorator import user_can_access_decorator as user_can
 from atst.models.permissions import Permissions
 from atst.utils.flash import formatted_flash as flash
@@ -23,17 +24,39 @@ def get_environments_obj_for_app(application):
     return environments_obj
 
 
+def serialize_env_member_form_data(application):
+    environments_list = []
+    for env in application.environments:
+        env_info = {"env_id": env.id, "team_roles": []}
+        for user in env.users:
+            env_role = EnvironmentRoles.get(user.id, env.id)
+            env_info["team_roles"].append(
+                {
+                    "name": user.full_name,
+                    "user_id": user.id,
+                    "role": env_role.displayname,
+                }
+            )
+        environments_list.append(env_info)
+    return environments_list
+
+
 @applications_bp.route("/applications/<application_id>/settings")
 @user_can(Permissions.VIEW_APPLICATION, message="view application edit form")
 def settings(application_id):
     application = Applications.get(application_id)
     form = ApplicationForm(name=application.name, description=application.description)
+    env_data = serialize_env_member_form_data(application)
+    env_forms = {}
+    for data in env_data:
+        env_forms[data["env_id"]] = EnvironmentForm(data=data)
 
     return render_template(
         "portfolios/applications/edit.html",
         application=application,
         form=form,
         environments_obj=get_environments_obj_for_app(application=application),
+        env_forms=env_forms,
     )
 
 
