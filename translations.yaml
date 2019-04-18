@@ -207,10 +207,12 @@ forms:
     environment_names_unique_validation_message: Environment names must be unique.
     name_label: Name
   task_order:
+    first_step_title: Basics
+    basic_intro: The first step of obtaining funding for cloud access is to provide more information about how you intend to  use these funds. Before you can submit your task order, you’ll have to complete all sections, but while you’re working on it, you can skip around the form, once you’ve supplied the portfolio name and DoD component.
     portfolio_name_label: Portfolio name
     portfolio_name_description: The name of your office or organization. You can add multiple applications to your portfolio. Your task orders are used to pay for these applications and their environments.
     scope_label: Cloud project scope
-    scope_description: Your team's plan for using the cloud, such as migrating an existing application or creating a prototype. <p>Not sure how to describe your scope? <a href="#">Read some examples</a> to get some inspiration.</p>
+    scope_description: What do you plan to do on the cloud? Some examples might include migrating an existing application or creating a prototype. You don’t need to include a detailed plan of execution, but should list key requirements. This section will be reviewed by your contracting officer, but won’t be sent to the CCPO. <p>Not sure how to describe your scope? <a href="#">Read some examples</a> to get some inspiration.</p>
     defense_component_label: Department of Defense component
     app_migration:
       label: App migration
@@ -491,12 +493,13 @@ task_orders:
       team_header: Before you begin, you’ll need to assemble your team
       button: Create a portfolio
     app_info:
-      section_title: "What You're Making"
-      basic_info_title: Basic Information
+      section_title: "Basics"
+      basic_info_title: Basic information
       sample_scope: |
         Not sure how to describe your scope? <a href="#">Read some examples</a> to get some inspiration.
-      project_title: About your project
-      team_title: About your team
+      project_title: Project details
+      details_description: Provide a few more details about the work you will be doing. The CCPO will use this section for reporting purposes, but it won’t be included in the final task order.
+      team_title: Your team
       market_research_title: Market research
       market_research_paragraph: 'The JEDI Cloud Computing Program Office (CCPO) has completed the market research requirements for all related task orders. The Department of Defense CIO has approved this research.<br /><a href="#">View JEDI market research memo</a>'
     funding:
@@ -526,7 +529,7 @@ task_orders:
       so_info_paragraph: Your security officer will need to answer some security configuration questions in order to generate a DD-254 document, then electronically sign.
     review:
       section_title: Review Your Task Order
-      app_info: What you're making
+      app_info: Basics
       portfolio: Portfolio
       dod: DoD component
       scope: Scope (statement of work)
