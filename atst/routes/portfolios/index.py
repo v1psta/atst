@@ -171,7 +171,7 @@ def edit_portfolio(portfolio_id):
     if form.validate():
         Portfolios.update(portfolio, form.data)
         return redirect(
-            url_for("portfolios.portfolio_applications", portfolio_id=portfolio.id)
+            url_for("applications.portfolio_applications", portfolio_id=portfolio.id)
         )
     else:
         # rerender portfolio admin page
@@ -182,7 +182,7 @@ def edit_portfolio(portfolio_id):
 @user_can(Permissions.VIEW_PORTFOLIO, message="view portfolio")
 def show_portfolio(portfolio_id):
     return redirect(
-        url_for("portfolios.portfolio_applications", portfolio_id=portfolio_id)
+        url_for("applications.portfolio_applications", portfolio_id=portfolio_id)
     )
 
 
