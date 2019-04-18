@@ -12,41 +12,7 @@ from atst.domain.exceptions import UnauthorizedError
 from atst.domain.portfolios import Portfolios
 from atst.domain.authz import Authorization
 from atst.models.permissions import Permissions
+from atst.utils.context_processors import portfolio as portfolio_context_processor
 
 
-@portfolios_bp.context_processor
-def portfolio():
-    portfolio = None
-    if "portfolio_id" in http_request.view_args:
-        portfolio = Portfolios.get(
-            g.current_user, http_request.view_args["portfolio_id"]
-        )
-
-    def user_can(permission):
-        if portfolio:
-            return Authorization.has_portfolio_permission(
-                g.current_user, portfolio, permission
-            )
-        return False
-
-    if not portfolio is None:
-        active_task_orders = [
-            task_order for task_order in portfolio.task_orders if task_order.is_active
-        ]
-        funding_end_date = (
-            sorted(active_task_orders, key=attrgetter("end_date"))[-1].end_date
-            if active_task_orders
-            else None
-        )
-        funded = len(active_task_orders) > 1
-    else:
-        funding_end_date = None
-        funded = None
-
-    return {
-        "portfolio": portfolio,
-        "permissions": Permissions,
-        "user_can": user_can,
-        "funding_end_date": funding_end_date,
-        "funded": funded,
-    }
+portfolios_bp.context_processor(portfolio_context_processor)
