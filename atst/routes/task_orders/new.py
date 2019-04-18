@@ -16,12 +16,13 @@ from atst.utils.flash import formatted_flash as flash
 import atst.forms.task_order as task_order_form
 from atst.domain.authz.decorator import user_can_access_decorator as user_can
 from atst.models.permissions import Permissions
+from atst.utils.localization import translate
 
 
 TASK_ORDER_SECTIONS = [
     {
         "section": "app_info",
-        "title": "What You're Making",
+        "title": translate("forms.task_order.first_step_title"),
         "template": "task_orders/new/app_info.html",
         "form": task_order_form.AppInfoForm,
     },

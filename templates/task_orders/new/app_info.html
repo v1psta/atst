@@ -14,6 +14,7 @@
 
 
 <!-- App Info Section -->
+<p>{{ "forms.task_order.basic_intro" | translate }}</p>
 <h3 class="task-order-form__heading subheading">{{ "task_orders.new.app_info.basic_info_title"| translate }}</h3>
 
 {% if portfolio %}
@@ -35,6 +36,7 @@
 <hr>
 
 <h3 id="reporting" class="subheading">{{ "task_orders.new.app_info.project_title" | translate }}</h3>
+<p>{{ "task_orders.new.app_info.details_description" | translate }}</p>
 {{ OptionsInput(form.app_migration) }}
 {{ OptionsInput(form.native_apps) }}
 {{ MultiCheckboxInput(form.complexity, form.complexity_other) }}
