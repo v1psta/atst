@@ -11,7 +11,7 @@
 
   <div class='subheading'>{{ 'portfolios.applications.settings_heading' | translate }}</div>
 
-  <form method="POST" action="{{ url_for('portfolios.edit_application', portfolio_id=portfolio.id, application_id=application.id) }}">
+  <form method="POST" action="{{ url_for('applications.edit_application', portfolio_id=portfolio.id, application_id=application.id) }}">
     <div class="panel">
       <div class="panel__content">
 
@@ -112,7 +112,7 @@
             <input id="deleted-text" v-model="deleteText">
           </div>
           <div class="action-group">
-            <form method="POST" action="{{ url_for('portfolios.delete_application', portfolio_id=portfolio.id, application_id=application.id)  }}">
+            <form method="POST" action="{{ url_for('applications.delete_application', portfolio_id=portfolio.id, application_id=application.id)  }}">
               {{ form.csrf_token }}
               <button class="usa-button button-danger" v-bind:disabled="!valid">
                 {{ "portfolios.applications.delete.button" | translate }}

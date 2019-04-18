@@ -20,7 +20,7 @@ def test_user_with_permission_has_budget_report_link(client, user_session):
     portfolio = PortfolioFactory.create()
     user_session(portfolio.owner)
     response = client.get(
-        url_for("portfolios.portfolio_applications", portfolio_id=portfolio.id)
+        url_for("applications.portfolio_applications", portfolio_id=portfolio.id)
     )
     assert (
         url_for("portfolios.portfolio_reports", portfolio_id=portfolio.id)
@@ -36,7 +36,7 @@ def test_user_without_permission_has_no_budget_report_link(client, user_session)
     )
     user_session(user)
     response = client.get(
-        url_for("portfolios.portfolio_applications", portfolio_id=portfolio.id)
+        url_for("applications.portfolio_applications", portfolio_id=portfolio.id)
     )
     assert (
         url_for("portfolios.portfolio_reports", portfolio_id=portfolio.id)
@@ -48,10 +48,10 @@ def test_user_with_permission_has_add_application_link(client, user_session):
     portfolio = PortfolioFactory.create()
     user_session(portfolio.owner)
     response = client.get(
-        url_for("portfolios.portfolio_applications", portfolio_id=portfolio.id)
+        url_for("applications.portfolio_applications", portfolio_id=portfolio.id)
     )
     assert (
-        url_for("portfolios.create_application", portfolio_id=portfolio.id)
+        url_for("applications.create_application", portfolio_id=portfolio.id)
         in response.data.decode()
     )
 
@@ -62,10 +62,10 @@ def test_user_without_permission_has_no_add_application_link(client, user_sessio
     Portfolios._create_portfolio_role(user, portfolio)
     user_session(user)
     response = client.get(
-        url_for("portfolios.portfolio_applications", portfolio_id=portfolio.id)
+        url_for("applications.portfolio_applications", portfolio_id=portfolio.id)
     )
     assert (
-        url_for("portfolios.create_application", portfolio_id=portfolio.id)
+        url_for("applications.create_application", portfolio_id=portfolio.id)
         not in response.data.decode()
     )
 
@@ -74,7 +74,7 @@ def test_creating_application(client, user_session):
     portfolio = PortfolioFactory.create()
     user_session(portfolio.owner)
     response = client.post(
-        url_for("portfolios.create_application", portfolio_id=portfolio.id),
+        url_for("applications.create_application", portfolio_id=portfolio.id),
         data={
             "name": "Test Application",
             "description": "This is only a test",
@@ -99,7 +99,7 @@ def test_view_edit_application(client, user_session):
     user_session(portfolio.owner)
     response = client.get(
         url_for(
-            "portfolios.update_application",
+            "applications.update_application",
             portfolio_id=portfolio.id,
             application_id=application.id,
         )
@@ -128,7 +128,7 @@ def test_edit_application_environments_obj(app, client, user_session):
     with captured_templates(app) as templates:
         response = app.test_client().get(
             url_for(
-                "portfolios.edit_application",
+                "applications.edit_application",
                 portfolio_id=portfolio.id,
                 application_id=application.id,
             )
@@ -161,7 +161,7 @@ def test_user_with_permission_can_update_application(client, user_session):
     user_session(owner)
     response = client.post(
         url_for(
-            "portfolios.update_application",
+            "applications.update_application",
             portfolio_id=portfolio.id,
             application_id=application.id,
         ),
@@ -195,7 +195,7 @@ def test_user_without_permission_cannot_update_application(client, user_session)
     user_session(dev)
     response = client.post(
         url_for(
-            "portfolios.update_application",
+            "applications.update_application",
             portfolio_id=portfolio.id,
             application_id=application.id,
         ),
@@ -225,7 +225,7 @@ def test_user_can_only_access_apps_in_their_portfolio(client, user_session):
     # user can't view application edit form
     response = client.get(
         url_for(
-            "portfolios.edit_application",
+            "applications.edit_application",
             portfolio_id=portfolio.id,
             application_id=other_application.id,
         )
@@ -236,7 +236,7 @@ def test_user_can_only_access_apps_in_their_portfolio(client, user_session):
     time_updated = other_application.time_updated
     response = client.post(
         url_for(
-            "portfolios.update_application",
+            "applications.update_application",
             portfolio_id=portfolio.id,
             application_id=other_application.id,
         ),
@@ -262,7 +262,7 @@ def test_environment_access_with_env_role(client, user_session):
     user_session(user)
     response = client.get(
         url_for(
-            "portfolios.access_environment",
+            "applications.access_environment",
             portfolio_id=environment.portfolio.id,
             environment_id=environment.id,
         )
@@ -277,7 +277,7 @@ def test_environment_access_with_no_role(client, user_session):
     user_session(user)
     response = client.get(
         url_for(
-            "portfolios.access_environment",
+            "applications.access_environment",
             portfolio_id=environment.portfolio.id,
             environment_id=environment.id,
         )
@@ -305,7 +305,7 @@ def test_delete_application(client, user_session):
 
     response = client.post(
         url_for(
-            "portfolios.delete_application",
+            "applications.delete_application",
             portfolio_id=port.id,
             application_id=application.id,
         )
@@ -313,7 +313,7 @@ def test_delete_application(client, user_session):
     # appropriate response and redirect
     assert response.status_code == 302
     assert response.location == url_for(
-        "portfolios.portfolio_applications", portfolio_id=port.id, _external=True
+        "applications.portfolio_applications", portfolio_id=port.id, _external=True
     )
     # appropriate flash message
     message = get_flashed_messages()[0]
@@ -332,7 +332,7 @@ def test_edit_application_scope(client, user_session):
     user_session(owner)
     response = client.get(
         url_for(
-            "portfolios.edit_application",
+            "applications.edit_application",
             portfolio_id=port2.id,
             application_id=port1.applications[0].id,
         )
@@ -349,7 +349,7 @@ def test_application_team(client, user_session):
 
     response = client.get(
         url_for(
-            "portfolios.application_team",
+            "applications.application_team",
             portfolio_id=portfolio.id,
             application_id=application.id,
         )
