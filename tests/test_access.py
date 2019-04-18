@@ -149,11 +149,7 @@ def test_applications_access_environment_access(get_url_assert_status):
     )
     env = portfolio.applications[0].environments[0]
 
-    url = url_for(
-        "applications.access_environment",
-        portfolio_id=portfolio.id,
-        environment_id=env.id,
-    )
+    url = url_for("applications.access_environment", environment_id=env.id)
     get_url_assert_status(dev, url, 302)
     get_url_assert_status(rando, url, 404)
     get_url_assert_status(ccpo, url, 404)
@@ -212,11 +208,7 @@ def test_applications_delete_application_access(post_url_assert_status, monkeypa
 
     monkeypatch.setattr("atst.domain.applications.Applications.delete", lambda *a: True)
 
-    url = url_for(
-        "applications.delete_application",
-        portfolio_id=portfolio.id,
-        application_id=application.id,
-    )
+    url = url_for("applications.delete_application", application_id=application.id)
     post_url_assert_status(app_admin, url, 404)
     post_url_assert_status(rando, url, 404)
     post_url_assert_status(owner, url, 302)
@@ -234,11 +226,7 @@ def test_portfolios_edit_application_access(get_url_assert_status):
     )
     app = portfolio.applications[0]
 
-    url = url_for(
-        "applications.edit_application",
-        portfolio_id=portfolio.id,
-        application_id=app.id,
-    )
+    url = url_for("applications.edit_application", application_id=app.id)
     get_url_assert_status(ccpo, url, 200)
     get_url_assert_status(owner, url, 200)
     get_url_assert_status(rando, url, 404)
@@ -533,11 +521,7 @@ def test_applications_update_application_access(post_url_assert_status):
     )
     app = portfolio.applications[0]
 
-    url = url_for(
-        "applications.update_application",
-        portfolio_id=portfolio.id,
-        application_id=app.id,
-    )
+    url = url_for("applications.update_application", application_id=app.id)
     post_url_assert_status(dev, url, 200)
     post_url_assert_status(ccpo, url, 200)
     post_url_assert_status(rando, url, 404)
@@ -727,11 +711,7 @@ def test_applications_application_team_access(get_url_assert_status):
     portfolio = PortfolioFactory.create()
     application = ApplicationFactory.create(portfolio=portfolio)
 
-    url = url_for(
-        "applications.application_team",
-        portfolio_id=portfolio.id,
-        application_id=application.id,
-    )
+    url = url_for("applications.application_team", application_id=application.id)
 
     get_url_assert_status(ccpo, url, 200)
     get_url_assert_status(portfolio.owner, url, 200)

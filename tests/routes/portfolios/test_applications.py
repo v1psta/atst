@@ -98,11 +98,7 @@ def test_view_edit_application(client, user_session):
     )
     user_session(portfolio.owner)
     response = client.get(
-        url_for(
-            "applications.update_application",
-            portfolio_id=portfolio.id,
-            application_id=application.id,
-        )
+        url_for("applications.update_application", application_id=application.id)
     )
     assert response.status_code == 200
 
@@ -127,11 +123,7 @@ def test_edit_application_environments_obj(app, client, user_session):
 
     with captured_templates(app) as templates:
         response = app.test_client().get(
-            url_for(
-                "applications.edit_application",
-                portfolio_id=portfolio.id,
-                application_id=application.id,
-            )
+            url_for("applications.edit_application", application_id=application.id)
         )
 
         assert response.status_code == 200
@@ -160,11 +152,7 @@ def test_user_with_permission_can_update_application(client, user_session):
     application = portfolio.applications[0]
     user_session(owner)
     response = client.post(
-        url_for(
-            "applications.update_application",
-            portfolio_id=portfolio.id,
-            application_id=application.id,
-        ),
+        url_for("applications.update_application", application_id=application.id),
         data={
             "name": "Really Cool Application",
             "description": "A very cool application.",
@@ -194,11 +182,7 @@ def test_user_without_permission_cannot_update_application(client, user_session)
     application = portfolio.applications[0]
     user_session(dev)
     response = client.post(
-        url_for(
-            "applications.update_application",
-            portfolio_id=portfolio.id,
-            application_id=application.id,
-        ),
+        url_for("applications.update_application", application_id=application.id),
         data={"name": "New Name", "description": "A new description."},
         follow_redirects=True,
     )
@@ -224,22 +208,14 @@ def test_user_can_only_access_apps_in_their_portfolio(client, user_session):
 
     # user can't view application edit form
     response = client.get(
-        url_for(
-            "applications.edit_application",
-            portfolio_id=portfolio.id,
-            application_id=other_application.id,
-        )
+        url_for("applications.edit_application", application_id=other_application.id)
     )
     assert response.status_code == 404
 
     # user can't post update application form
     time_updated = other_application.time_updated
     response = client.post(
-        url_for(
-            "applications.update_application",
-            portfolio_id=portfolio.id,
-            application_id=other_application.id,
-        ),
+        url_for("applications.update_application", application_id=other_application.id),
         data={"name": "New Name", "description": "A new description."},
     )
     assert response.status_code == 404
@@ -261,11 +237,7 @@ def test_environment_access_with_env_role(client, user_session):
     )
     user_session(user)
     response = client.get(
-        url_for(
-            "applications.access_environment",
-            portfolio_id=environment.portfolio.id,
-            environment_id=environment.id,
-        )
+        url_for("applications.access_environment", environment_id=environment.id)
     )
     assert response.status_code == 302
     assert "csp-environment-access" in response.location
@@ -276,11 +248,7 @@ def test_environment_access_with_no_role(client, user_session):
     environment = create_environment(user)
     user_session(user)
     response = client.get(
-        url_for(
-            "applications.access_environment",
-            portfolio_id=environment.portfolio.id,
-            environment_id=environment.id,
-        )
+        url_for("applications.access_environment", environment_id=environment.id)
     )
     assert response.status_code == 404
 
@@ -304,11 +272,7 @@ def test_delete_application(client, user_session):
     user_session(user)
 
     response = client.post(
-        url_for(
-            "applications.delete_application",
-            portfolio_id=port.id,
-            application_id=application.id,
-        )
+        url_for("applications.delete_application", application_id=application.id)
     )
     # appropriate response and redirect
     assert response.status_code == 302
@@ -324,23 +288,6 @@ def test_delete_application(client, user_session):
     assert len(application.environments) == 0
 
 
-def test_edit_application_scope(client, user_session):
-    owner = UserFactory.create()
-    port1 = PortfolioFactory.create(owner=owner, applications=[{"name": "first app"}])
-    port2 = PortfolioFactory.create(owner=owner, applications=[{"name": "second app"}])
-
-    user_session(owner)
-    response = client.get(
-        url_for(
-            "applications.edit_application",
-            portfolio_id=port2.id,
-            application_id=port1.applications[0].id,
-        )
-    )
-
-    assert response.status_code == 404
-
-
 def test_application_team(client, user_session):
     portfolio = PortfolioFactory.create()
     application = ApplicationFactory.create(portfolio=portfolio)
@@ -348,11 +295,7 @@ def test_application_team(client, user_session):
     user_session(portfolio.owner)
 
     response = client.get(
-        url_for(
-            "applications.application_team",
-            portfolio_id=portfolio.id,
-            application_id=application.id,
-        )
+        url_for("applications.application_team", application_id=application.id)
     )
 
     assert response.status_code == 200

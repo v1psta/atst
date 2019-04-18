@@ -39,7 +39,7 @@ def new_application(portfolio_id):
     return render_template("portfolios/applications/new.html", form=form)
 
 
-@applications_bp.route("/portfolios/<portfolio_id>/applications/new", methods=["POST"])
+@applications_bp.route("/portfolios/<portfolio_id>/applications", methods=["POST"])
 @user_can(Permissions.CREATE_APPLICATION, message="create new application")
 def create_application(portfolio_id):
     portfolio = Portfolios.get_for_update(portfolio_id)
@@ -74,10 +74,10 @@ def get_environments_obj_for_app(application):
     return environments_obj
 
 
-@applications_bp.route("/portfolios/<portfolio_id>/applications/<application_id>/edit")
+@applications_bp.route("/applications/<application_id>/edit")
 @user_can(Permissions.VIEW_APPLICATION, message="view application edit form")
-def edit_application(portfolio_id, application_id):
-    application = Applications.get(application_id, portfolio_id=portfolio_id)
+def edit_application(application_id):
+    application = Applications.get(application_id)
     form = ApplicationForm(name=application.name, description=application.description)
 
     return render_template(
@@ -88,19 +88,20 @@ def edit_application(portfolio_id, application_id):
     )
 
 
-@applications_bp.route(
-    "/portfolios/<portfolio_id>/applications/<application_id>/edit", methods=["POST"]
-)
+@applications_bp.route("/applications/<application_id>/edit", methods=["POST"])
 @user_can(Permissions.EDIT_APPLICATION, message="update application")
-def update_application(portfolio_id, application_id):
-    application = Applications.get(application_id, portfolio_id=portfolio_id)
+def update_application(application_id):
+    application = Applications.get(application_id)
     form = ApplicationForm(http_request.form)
     if form.validate():
         application_data = form.data
         Applications.update(application, application_data)
 
         return redirect(
-            url_for("applications.portfolio_applications", portfolio_id=portfolio_id)
+            url_for(
+                "applications.portfolio_applications",
+                portfolio_id=application.portfolio_id,
+            )
         )
     else:
         return render_template(
@@ -111,43 +112,35 @@ def update_application(portfolio_id, application_id):
         )
 
 
-def wrap_environment_role_lookup(
-    user, portfolio_id=None, environment_id=None, **kwargs
-):
-    env_role = EnvironmentRoles.get_for_portfolio(
-        user.id, environment_id, portfolio_id=portfolio_id
-    )
+def wrap_environment_role_lookup(user, environment_id=None, **kwargs):
+    env_role = EnvironmentRoles.get(user.id, environment_id)
     if not env_role:
         raise UnauthorizedError(user, "access environment {}".format(environment_id))
 
     return True
 
 
-@applications_bp.route(
-    "/portfolios/<portfolio_id>/environments/<environment_id>/access"
-)
+@applications_bp.route("/environments/<environment_id>/access")
 @user_can(None, override=wrap_environment_role_lookup, message="access environment")
-def access_environment(portfolio_id, environment_id):
-    env_role = EnvironmentRoles.get_for_portfolio(
-        g.current_user.id, environment_id, portfolio_id=portfolio_id
-    )
+def access_environment(environment_id):
+    env_role = EnvironmentRoles.get(g.current_user.id, environment_id)
     token = app.csp.cloud.get_access_token(env_role)
 
     return redirect(url_for("atst.csp_environment_access", token=token))
 
 
-@applications_bp.route(
-    "/portfolios/<portfolio_id>/applications/<application_id>/delete", methods=["POST"]
-)
+@applications_bp.route("/applications/<application_id>/delete", methods=["POST"])
 @user_can(Permissions.DELETE_APPLICATION, message="delete application")
-def delete_application(portfolio_id, application_id):
-    application = Applications.get(application_id, portfolio_id=portfolio_id)
+def delete_application(application_id):
+    application = Applications.get(application_id)
     Applications.delete(application)
 
     flash("application_deleted", application_name=application.name)
 
     return redirect(
-        url_for("applications.portfolio_applications", portfolio_id=portfolio_id)
+        url_for(
+            "applications.portfolio_applications", portfolio_id=application.portfolio_id
+        )
     )
 
 
@@ -158,12 +151,10 @@ def permission_str(member, edit_perm_set):
         return translate("portfolios.members.permissions.view_only")
 
 
-@applications_bp.route("/portfolios/<portfolio_id>/applications/<application_id>/team")
+@applications_bp.route("/applications/<application_id>/team")
 @user_can(Permissions.VIEW_APPLICATION, message="view portfolio applications")
-def application_team(portfolio_id, application_id):
-    application = Applications.get(
-        resource_id=application_id, portfolio_id=portfolio_id
-    )
+def application_team(application_id):
+    application = Applications.get(resource_id=application_id)
 
     environment_users = {}
     for member in application.members:
