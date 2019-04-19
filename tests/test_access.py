@@ -245,8 +245,8 @@ def test_portfolios_edit_portfolio_access(post_url_assert_status):
     post_url_assert_status(rando, url, 404)
 
 
-# portfolios.edit_task_order_invitations
-def test_portfolios_edit_task_order_invitations_access(post_url_assert_status):
+# task_orders.invitations_edit
+def test_task_orders_invitations_edit_access(post_url_assert_status):
     ccpo = user_with(PermissionSets.EDIT_PORTFOLIO_FUNDING)
     owner = user_with()
     rando = user_with()
@@ -254,7 +254,7 @@ def test_portfolios_edit_task_order_invitations_access(post_url_assert_status):
     task_order = TaskOrderFactory.create(portfolio=portfolio)
 
     url = url_for(
-        "portfolios.edit_task_order_invitations",
+        "task_orders.invitations_edit",
         portfolio_id=portfolio.id,
         task_order_id=task_order.id,
     )
@@ -263,8 +263,8 @@ def test_portfolios_edit_task_order_invitations_access(post_url_assert_status):
     post_url_assert_status(rando, url, 404)
 
 
-# portfolios.ko_review
-def test_portfolios_ko_review_access(get_url_assert_status):
+# task_orders.ko_review
+def test_task_orders_ko_review_access(get_url_assert_status):
     ccpo = UserFactory.create_ccpo()
     owner = user_with()
     cor = user_with()
@@ -276,9 +276,7 @@ def test_portfolios_ko_review_access(get_url_assert_status):
         contracting_officer_representative=cor,
     )
 
-    url = url_for(
-        "portfolios.ko_review", portfolio_id=portfolio.id, task_order_id=task_order.id
-    )
+    url = url_for("task_orders.ko_review", task_order_id=task_order.id)
     get_url_assert_status(ccpo, url, 404)
     get_url_assert_status(owner, url, 404)
     get_url_assert_status(ko, url, 200)
@@ -324,14 +322,14 @@ def test_applications_portfolio_applications_access(get_url_assert_status):
     get_url_assert_status(rando, url, 404)
 
 
-# portfolios.portfolio_funding
-def test_portfolios_portfolio_funding_access(get_url_assert_status):
+# task_orders.portfolio_funding
+def test_task_orders_portfolio_funding_access(get_url_assert_status):
     ccpo = user_with(PermissionSets.VIEW_PORTFOLIO_FUNDING)
     owner = user_with()
     rando = user_with()
     portfolio = PortfolioFactory.create(owner=owner)
 
-    url = url_for("portfolios.portfolio_funding", portfolio_id=portfolio.id)
+    url = url_for("task_orders.portfolio_funding", portfolio_id=portfolio.id)
     get_url_assert_status(ccpo, url, 200)
     get_url_assert_status(owner, url, 200)
     get_url_assert_status(rando, url, 404)
@@ -370,8 +368,8 @@ def test_portfolios_resend_invitation_access(post_url_assert_status):
     post_url_assert_status(rando, url, 404)
 
 
-# portfolios.resend_invite
-def test_portfolios_resend_invite_access(post_url_assert_status):
+# task_orders.resend_invite
+def test_task_orders_resend_invite_access(post_url_assert_status):
     ccpo = UserFactory.create_ccpo()
     owner = user_with()
     rando = user_with()
@@ -383,8 +381,7 @@ def test_portfolios_resend_invite_access(post_url_assert_status):
     invite = InvitationFactory.create(user=UserFactory.create(), portfolio_role=prr)
 
     url = url_for(
-        "portfolios.resend_invite",
-        portfolio_id=portfolio.id,
+        "task_orders.resend_invite",
         task_order_id=task_order.id,
         invite_type="ko_invite",
     )
@@ -429,8 +426,8 @@ def test_portfolios_show_portfolio_access(get_url_assert_status):
     get_url_assert_status(rando, url, 404)
 
 
-# portfolios.so_review
-def test_portfolios_so_review_access(get_url_assert_status):
+# task_orders.so_review
+def test_task_orders_so_review_access(get_url_assert_status):
     ccpo = UserFactory.create_ccpo()
     owner = user_with()
     rando = user_with()
@@ -438,17 +435,15 @@ def test_portfolios_so_review_access(get_url_assert_status):
     portfolio = PortfolioFactory.create(owner=owner)
     task_order = TaskOrderFactory.create(portfolio=portfolio, security_officer=so)
 
-    url = url_for(
-        "portfolios.so_review", portfolio_id=portfolio.id, task_order_id=task_order.id
-    )
+    url = url_for("task_orders.so_review", task_order_id=task_order.id)
     get_url_assert_status(so, url, 200)
     get_url_assert_status(ccpo, url, 404)
     get_url_assert_status(owner, url, 404)
     get_url_assert_status(rando, url, 404)
 
 
-# portfolios.submit_ko_review
-def test_portfolios_submit_ko_review_access(post_url_assert_status):
+# task_orders.submit_ko_review
+def test_task_orders_submit_ko_review_access(post_url_assert_status):
     ccpo = UserFactory.create_ccpo()
     owner = user_with()
     cor = user_with()
@@ -460,19 +455,15 @@ def test_portfolios_submit_ko_review_access(post_url_assert_status):
         contracting_officer_representative=cor,
     )
 
-    url = url_for(
-        "portfolios.submit_ko_review",
-        portfolio_id=portfolio.id,
-        task_order_id=task_order.id,
-    )
+    url = url_for("task_orders.submit_ko_review", task_order_id=task_order.id)
     post_url_assert_status(ccpo, url, 404)
     post_url_assert_status(owner, url, 404)
     post_url_assert_status(ko, url, 200)
     post_url_assert_status(cor, url, 200)
 
 
-# portfolios.submit_so_review
-def test_portfolios_submit_so_review_access(post_url_assert_status):
+# task_orders.submit_so_review
+def test_task_orders_submit_so_review_access(post_url_assert_status):
     ccpo = UserFactory.create_ccpo()
     owner = user_with()
     rando = user_with()
@@ -480,30 +471,22 @@ def test_portfolios_submit_so_review_access(post_url_assert_status):
     portfolio = PortfolioFactory.create(owner=owner)
     task_order = TaskOrderFactory.create(portfolio=portfolio, security_officer=so)
 
-    url = url_for(
-        "portfolios.submit_so_review",
-        portfolio_id=portfolio.id,
-        task_order_id=task_order.id,
-    )
+    url = url_for("task_orders.submit_so_review", task_order_id=task_order.id)
     post_url_assert_status(so, url, 200)
     post_url_assert_status(ccpo, url, 404)
     post_url_assert_status(owner, url, 404)
     post_url_assert_status(rando, url, 404)
 
 
-# portfolios.task_order_invitations
-def test_portfolios_task_order_invitations_access(get_url_assert_status):
+# task_orders.invitations
+def test_task_orders_invitations_access(get_url_assert_status):
     ccpo = user_with(PermissionSets.EDIT_PORTFOLIO_FUNDING)
     owner = user_with()
     rando = user_with()
     portfolio = PortfolioFactory.create(owner=owner)
     task_order = TaskOrderFactory.create(portfolio=portfolio)
 
-    url = url_for(
-        "portfolios.task_order_invitations",
-        portfolio_id=portfolio.id,
-        task_order_id=task_order.id,
-    )
+    url = url_for("task_orders.invitations", task_order_id=task_order.id)
     get_url_assert_status(ccpo, url, 200)
     get_url_assert_status(owner, url, 200)
     get_url_assert_status(rando, url, 404)
@@ -527,8 +510,8 @@ def test_applications_update_application_access(post_url_assert_status):
     post_url_assert_status(rando, url, 404)
 
 
-# portfolios.view_task_order
-def test_portfolios_view_task_order_access(get_url_assert_status):
+# task_orders.view_task_order
+def test_task_orders_view_task_order_access(get_url_assert_status):
     ccpo = user_with(PermissionSets.VIEW_PORTFOLIO_FUNDING)
     owner = user_with()
     rando = user_with()
@@ -536,11 +519,7 @@ def test_portfolios_view_task_order_access(get_url_assert_status):
     portfolio = PortfolioFactory.create(owner=owner)
     task_order = TaskOrderFactory.create(portfolio=portfolio)
 
-    url = url_for(
-        "portfolios.view_task_order",
-        portfolio_id=portfolio.id,
-        task_order_id=task_order.id,
-    )
+    url = url_for("task_orders.view_task_order", task_order_id=task_order.id)
     get_url_assert_status(owner, url, 200)
     get_url_assert_status(ccpo, url, 200)
     get_url_assert_status(rando, url, 404)
@@ -549,7 +528,7 @@ def test_portfolios_view_task_order_access(get_url_assert_status):
 # task_orders.download_csp_estimate
 def test_task_orders_download_csp_estimate_access(get_url_assert_status, monkeypatch):
     monkeypatch.setattr(
-        "atst.routes.task_orders.index.send_file", lambda a: Response("")
+        "atst.routes.task_orders.downloads.send_file", lambda a: Response("")
     )
     ccpo = user_with(PermissionSets.VIEW_PORTFOLIO_FUNDING)
     owner = user_with()
@@ -582,7 +561,7 @@ def test_task_orders_download_summary_access(get_url_assert_status):
 # task_orders.download_task_order_pdf
 def test_task_orders_download_task_order_pdf_access(get_url_assert_status, monkeypatch):
     monkeypatch.setattr(
-        "atst.routes.task_orders.index.send_file", lambda a: Response("")
+        "atst.routes.task_orders.downloads.send_file", lambda a: Response("")
     )
     ccpo = user_with(PermissionSets.VIEW_PORTFOLIO_FUNDING)
     owner = user_with()

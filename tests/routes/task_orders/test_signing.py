@@ -120,11 +120,7 @@ def test_signing_a_task_order(client, user_session):
     )
 
     assert (
-        url_for(
-            "portfolios.view_task_order",
-            portfolio_id=task_order.portfolio_id,
-            task_order_id=task_order.id,
-        )
+        url_for("task_orders.view_task_order", task_order_id=task_order.id)
         in response.headers["Location"]
     )
 
@@ -161,11 +157,7 @@ def test_signing_a_task_order_unlimited_level_of_warrant(client, user_session):
     )
 
     assert (
-        url_for(
-            "portfolios.view_task_order",
-            portfolio_id=task_order.portfolio_id,
-            task_order_id=task_order.id,
-        )
+        url_for("task_orders.view_task_order", task_order_id=task_order.id)
         in response.headers["Location"]
     )
 

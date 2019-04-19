@@ -21,19 +21,10 @@ def send_invite_email(owner_name, token, new_member_email):
 def accept_invitation(token):
     invite = Invitations.accept(g.current_user, token)
 
-    # TODO: this will eventually redirect to different places depending on
-    # whether the user is an officer for the TO and what kind of officer they
-    # are. It will also have to manage cases like:
-    #   - the logged-in user has multiple roles on the TO (e.g., KO and COR)
-    #   - the logged-in user has officer roles on multiple unsigned TOs
     for task_order in invite.portfolio.task_orders:
         if g.current_user in task_order.officers:
             return redirect(
-                url_for(
-                    "portfolios.view_task_order",
-                    portfolio_id=task_order.portfolio_id,
-                    task_order_id=task_order.id,
-                )
+                url_for("task_orders.view_task_order", task_order_id=task_order.id)
             )
 
     return redirect(

@@ -141,7 +141,7 @@
         {{
           Step(
             button_text=show_dd_254_button and ("common.edit" | translate),
-            button_url=show_dd_254_button and url_for("portfolios.so_review", portfolio_id=portfolio.id, task_order_id=task_order.id),
+            button_url=show_dd_254_button and url_for("task_orders.so_review", task_order_id=task_order.id),
             complete=dd_254_complete,
             description="task_orders.view.steps.security" | translate({
               "security_officer": officer_name(task_order.security_officer)
@@ -154,8 +154,7 @@
             "contracting_officer_representative": officer_name(task_order.contracting_officer_representative)
           }) | safe,
           button_url=show_to_info_button and url_for(
-            "portfolios.ko_review",
-            portfolio_id=portfolio.id,
+            "task_orders.ko_review",
             task_order_id=task_order.id,
           ),
           button_text=show_to_info_button and ("common.edit" | translate),
@@ -172,8 +171,7 @@
           Step(
             button_text=show_sign_to_button and ("common.sign" | translate),
             button_url=show_sign_to_button and url_for(
-              "portfolios.ko_review",
-              portfolio_id=portfolio.id,
+              "task_orders.ko_review",
               task_order_id=task_order.id,
             ),
             complete=is_to_signed,
@@ -227,7 +225,7 @@
           <div class="task-order-invitations__heading row">
             <h3>Invitations</h3>
             {% if to_form_complete %}
-              <a href="{{ url_for('portfolios.task_order_invitations', portfolio_id=portfolio.id, task_order_id=task_order.id) }}" class="icon-link">
+              <a href="{{ url_for('task_orders.invitations', task_order_id=task_order.id) }}" class="icon-link">
                 <span>{{ "common.manage" | translate }}</span>
                 {{ Icon("edit") }}
               </a>
