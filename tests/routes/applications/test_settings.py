@@ -16,79 +16,7 @@ from atst.models.portfolio_role import Status as PortfolioRoleStatus
 from tests.utils import captured_templates
 
 
-def test_user_with_permission_has_budget_report_link(client, user_session):
-    portfolio = PortfolioFactory.create()
-    user_session(portfolio.owner)
-    response = client.get(
-        url_for("applications.portfolio_applications", portfolio_id=portfolio.id)
-    )
-    assert (
-        url_for("portfolios.portfolio_reports", portfolio_id=portfolio.id)
-        in response.data.decode()
-    )
-
-
-def test_user_without_permission_has_no_budget_report_link(client, user_session):
-    user = UserFactory.create()
-    portfolio = PortfolioFactory.create()
-    Portfolios._create_portfolio_role(
-        user, portfolio, status=PortfolioRoleStatus.ACTIVE
-    )
-    user_session(user)
-    response = client.get(
-        url_for("applications.portfolio_applications", portfolio_id=portfolio.id)
-    )
-    assert (
-        url_for("portfolios.portfolio_reports", portfolio_id=portfolio.id)
-        not in response.data.decode()
-    )
-
-
-def test_user_with_permission_has_add_application_link(client, user_session):
-    portfolio = PortfolioFactory.create()
-    user_session(portfolio.owner)
-    response = client.get(
-        url_for("applications.portfolio_applications", portfolio_id=portfolio.id)
-    )
-    assert (
-        url_for("applications.create_application", portfolio_id=portfolio.id)
-        in response.data.decode()
-    )
-
-
-def test_user_without_permission_has_no_add_application_link(client, user_session):
-    user = UserFactory.create()
-    portfolio = PortfolioFactory.create()
-    Portfolios._create_portfolio_role(user, portfolio)
-    user_session(user)
-    response = client.get(
-        url_for("applications.portfolio_applications", portfolio_id=portfolio.id)
-    )
-    assert (
-        url_for("applications.create_application", portfolio_id=portfolio.id)
-        not in response.data.decode()
-    )
-
-
-def test_creating_application(client, user_session):
-    portfolio = PortfolioFactory.create()
-    user_session(portfolio.owner)
-    response = client.post(
-        url_for("applications.create_application", portfolio_id=portfolio.id),
-        data={
-            "name": "Test Application",
-            "description": "This is only a test",
-            "environment_names-0": "dev",
-            "environment_names-1": "staging",
-            "environment_names-2": "prod",
-        },
-    )
-    assert response.status_code == 302
-    assert len(portfolio.applications) == 1
-    assert len(portfolio.applications[0].environments) == 3
-
-
-def test_view_edit_application(client, user_session):
+def test_application_settings(client, user_session):
     portfolio = PortfolioFactory.create()
     application = Applications.create(
         portfolio,
@@ -98,7 +26,7 @@ def test_view_edit_application(client, user_session):
     )
     user_session(portfolio.owner)
     response = client.get(
-        url_for("applications.update_application", application_id=application.id)
+        url_for("applications.settings", application_id=application.id)
     )
     assert response.status_code == 200
 
@@ -123,7 +51,7 @@ def test_edit_application_environments_obj(app, client, user_session):
 
     with captured_templates(app) as templates:
         response = app.test_client().get(
-            url_for("applications.edit_application", application_id=application.id)
+            url_for("applications.settings", application_id=application.id)
         )
 
         assert response.status_code == 200
@@ -152,7 +80,7 @@ def test_user_with_permission_can_update_application(client, user_session):
     application = portfolio.applications[0]
     user_session(owner)
     response = client.post(
-        url_for("applications.update_application", application_id=application.id),
+        url_for("applications.update", application_id=application.id),
         data={
             "name": "Really Cool Application",
             "description": "A very cool application.",
@@ -182,7 +110,7 @@ def test_user_without_permission_cannot_update_application(client, user_session)
     application = portfolio.applications[0]
     user_session(dev)
     response = client.post(
-        url_for("applications.update_application", application_id=application.id),
+        url_for("applications.update", application_id=application.id),
         data={"name": "New Name", "description": "A new description."},
         follow_redirects=True,
     )
@@ -208,49 +136,18 @@ def test_user_can_only_access_apps_in_their_portfolio(client, user_session):
 
     # user can't view application edit form
     response = client.get(
-        url_for("applications.edit_application", application_id=other_application.id)
+        url_for("applications.settings", application_id=other_application.id)
     )
     assert response.status_code == 404
 
     # user can't post update application form
     time_updated = other_application.time_updated
     response = client.post(
-        url_for("applications.update_application", application_id=other_application.id),
+        url_for("applications.update", application_id=other_application.id),
         data={"name": "New Name", "description": "A new description."},
     )
     assert response.status_code == 404
     assert time_updated == other_application.time_updated
-
-
-def create_environment(user):
-    portfolio = PortfolioFactory.create()
-    portfolio_role = PortfolioRoleFactory.create(portfolio=portfolio, user=user)
-    application = ApplicationFactory.create(portfolio=portfolio)
-    return EnvironmentFactory.create(application=application, name="new environment!")
-
-
-def test_environment_access_with_env_role(client, user_session):
-    user = UserFactory.create()
-    environment = create_environment(user)
-    env_role = EnvironmentRoleFactory.create(
-        user=user, environment=environment, role="developer"
-    )
-    user_session(user)
-    response = client.get(
-        url_for("applications.access_environment", environment_id=environment.id)
-    )
-    assert response.status_code == 302
-    assert "csp-environment-access" in response.location
-
-
-def test_environment_access_with_no_role(client, user_session):
-    user = UserFactory.create()
-    environment = create_environment(user)
-    user_session(user)
-    response = client.get(
-        url_for("applications.access_environment", environment_id=environment.id)
-    )
-    assert response.status_code == 404
 
 
 def test_delete_application(client, user_session):
@@ -272,7 +169,7 @@ def test_delete_application(client, user_session):
     user_session(user)
 
     response = client.post(
-        url_for("applications.delete_application", application_id=application.id)
+        url_for("applications.delete", application_id=application.id)
     )
     # appropriate response and redirect
     assert response.status_code == 302
@@ -286,16 +183,3 @@ def test_delete_application(client, user_session):
     # app and envs are soft deleted
     assert len(port.applications) == 0
     assert len(application.environments) == 0
-
-
-def test_application_team(client, user_session):
-    portfolio = PortfolioFactory.create()
-    application = ApplicationFactory.create(portfolio=portfolio)
-
-    user_session(portfolio.owner)
-
-    response = client.get(
-        url_for("applications.application_team", application_id=application.id)
-    )
-
-    assert response.status_code == 200

@@ -16,7 +16,7 @@
   <div class='subheading'>{{ 'portfolios.applications.settings_heading' | translate }}</div>
 
   <new-application inline-template v-bind:initial-data='{{ form.data|tojson }}' modal-name='{{ modalName }}'>
-    <form method="POST" action="{{ url_for('applications.create_application', portfolio_id=portfolio.id) }}" v-on:submit="handleSubmit">
+    <form method="POST" action="{{ url_for('applications.create', portfolio_id=portfolio.id) }}" v-on:submit="handleSubmit">
       <div class="panel">
         <div class="panel__content">
 
