@@ -27,6 +27,7 @@ export default {
       step: 0,
       fields: {},
       invalid: true,
+      parent_uid: '',
     }
   },
 
@@ -51,9 +52,12 @@ export default {
       }
     },
     handleValidChange: function(event) {
-      const { name, valid } = event
-      this.fields[name] = valid
-      this._checkIsValid()
+      const { name, valid, parent_uid } = event
+      // check that this field is in the modal and not on some other form
+      if (parent_uid === this.parent_uid) {
+        this.fields[name] = valid
+        this._checkIsValid()
+      }
     },
     _checkIsValid: function() {
       const valid = !Object.values(this.fields).some(field => field === false)
@@ -61,8 +65,9 @@ export default {
       return valid
     },
     handleFieldMount: function(event) {
-      const { name, optional } = event
+      const { name, optional, parent_uid } = event
       this.fields[name] = optional
+      this.parent_uid = parent_uid
     },
     handleModalOpen: function(_bool) {
       this.step = 0
