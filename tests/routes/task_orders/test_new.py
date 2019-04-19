@@ -15,6 +15,16 @@ from tests.factories import (
 )
 
 
+@pytest.fixture
+def portfolio():
+    return PortfolioFactory.create()
+
+
+@pytest.fixture
+def user():
+    return UserFactory.create()
+
+
 class TestShowTaskOrderWorkflow:
     def test_portfolio_when_task_order_exists(self):
         portfolio = PortfolioFactory.create()
@@ -306,11 +316,7 @@ def test_update_to_redirects_to_ko_review(client, user_session, task_order):
         permission_sets=[PermissionSets.get(PermissionSets.EDIT_PORTFOLIO_FUNDING)],
     )
     user_session(ko)
-    url = url_for(
-        "portfolios.ko_review",
-        portfolio_id=task_order.portfolio.id,
-        task_order_id=task_order.id,
-    )
+    url = url_for("task_orders.ko_review", task_order_id=task_order.id)
     response = client.post(
         url_for("task_orders.new", screen=1, task_order_id=task_order.id, next=url)
     )
@@ -361,3 +367,13 @@ def test_update_task_order_clears_unnecessary_other_responses():
     workflow = UpdateTaskOrderWorkflow(user, to_data)
     assert workflow.task_order_form_data["complexity_other"] is None
     assert workflow.task_order_form_data["dev_team_other"] is None
+
+
+def test_mo_redirected_to_build_page(client, user_session, portfolio):
+    user_session(portfolio.owner)
+    task_order = TaskOrderFactory.create(portfolio=portfolio)
+
+    response = client.get(
+        url_for("task_orders.new", screen=1, task_order_id=task_order.id)
+    )
+    assert response.status_code == 200

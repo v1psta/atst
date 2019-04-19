@@ -1,56 +1,74 @@
-from io import BytesIO
-from flask import Response, current_app as app
+from collections import defaultdict
+
+from flask import g, render_template, url_for
 
 from . import task_orders_bp
-from atst.domain.task_orders import TaskOrders
-from atst.domain.exceptions import NotFoundError
-from atst.utils.docx import Docx
+from atst.domain.authz import Authorization
 from atst.domain.authz.decorator import user_can_access_decorator as user_can
-from atst.models.permissions import Permissions
+from atst.domain.portfolios import Portfolios
+from atst.domain.task_orders import TaskOrders, DD254s
+from atst.models import Permissions
+from atst.models.task_order import Status as TaskOrderStatus
 
 
-@task_orders_bp.route("/task_orders/download_summary/<task_order_id>")
-@user_can(Permissions.VIEW_TASK_ORDER_DETAILS, message="download task order summary")
-def download_summary(task_order_id):
+@task_orders_bp.route("/task_orders/<task_order_id>")
+@user_can(Permissions.VIEW_TASK_ORDER_DETAILS, message="view task order details")
+def view_task_order(task_order_id):
     task_order = TaskOrders.get(task_order_id)
-    byte_str = BytesIO()
-    Docx.render(byte_str, data=task_order.to_dictionary())
-    filename = "{}.docx".format(task_order.portfolio_name)
-    return Response(
-        byte_str,
-        headers={"Content-Disposition": "attachment; filename={}".format(filename)},
-        mimetype="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    to_form_complete = TaskOrders.all_sections_complete(task_order)
+    dd_254_complete = DD254s.is_complete(task_order.dd_254)
+    return render_template(
+        "portfolios/task_orders/show.html",
+        dd_254_complete=dd_254_complete,
+        is_cor=Authorization.is_cor(g.current_user, task_order),
+        is_ko=Authorization.is_ko(g.current_user, task_order),
+        is_so=Authorization.is_so(g.current_user, task_order),
+        is_to_signed=TaskOrders.is_signed_by_ko(task_order),
+        task_order=task_order,
+        to_form_complete=to_form_complete,
+        user=g.current_user,
     )
 
 
-def send_file(attachment):
-    generator = app.csp.files.download(attachment.object_name)
-    return Response(
-        generator,
-        headers={
-            "Content-Disposition": "attachment; filename={}".format(attachment.filename)
-        },
+def serialize_task_order(task_order):
+    return {
+        key: getattr(task_order, key)
+        for key in [
+            "id",
+            "budget",
+            "time_created",
+            "start_date",
+            "end_date",
+            "display_status",
+            "days_to_expiration",
+            "balance",
+        ]
+    }
+
+
+@task_orders_bp.route("/portfolios/<portfolio_id>/task_orders")
+@user_can(Permissions.VIEW_PORTFOLIO_FUNDING, message="view portfolio funding")
+def portfolio_funding(portfolio_id):
+    portfolio = Portfolios.get(g.current_user, portfolio_id)
+    task_orders_by_status = defaultdict(list)
+
+    for task_order in portfolio.task_orders:
+        serialized_task_order = serialize_task_order(task_order)
+        serialized_task_order["url"] = url_for(
+            "task_orders.view_task_order", task_order_id=task_order.id
+        )
+        task_orders_by_status[task_order.status].append(serialized_task_order)
+
+    active_task_orders = task_orders_by_status.get(TaskOrderStatus.ACTIVE, [])
+    total_balance = sum([task_order["balance"] for task_order in active_task_orders])
+
+    return render_template(
+        "portfolios/task_orders/index.html",
+        pending_task_orders=(
+            task_orders_by_status.get(TaskOrderStatus.STARTED, [])
+            + task_orders_by_status.get(TaskOrderStatus.PENDING, [])
+        ),
+        active_task_orders=active_task_orders,
+        expired_task_orders=task_orders_by_status.get(TaskOrderStatus.EXPIRED, []),
+        total_balance=total_balance,
     )
-
-
-@task_orders_bp.route("/task_orders/csp_estimate/<task_order_id>")
-@user_can(
-    Permissions.VIEW_TASK_ORDER_DETAILS,
-    message="download task order cloud service provider estimate",
-)
-def download_csp_estimate(task_order_id):
-    task_order = TaskOrders.get(task_order_id)
-    if task_order.csp_estimate:
-        return send_file(task_order.csp_estimate)
-    else:
-        raise NotFoundError("task_order CSP estimate")
-
-
-@task_orders_bp.route("/task_orders/pdf/<task_order_id>")
-@user_can(Permissions.VIEW_TASK_ORDER_DETAILS, message="download task order PDF")
-def download_task_order_pdf(task_order_id):
-    task_order = TaskOrders.get(task_order_id)
-    if task_order.pdf:
-        return send_file(task_order.pdf)
-    else:
-        raise NotFoundError("task_order pdf")

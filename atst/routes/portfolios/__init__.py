@@ -6,7 +6,6 @@ portfolios_bp = Blueprint("portfolios", __name__)
 from . import index
 from . import members
 from . import invitations
-from . import task_orders
 from atst.domain.exceptions import UnauthorizedError
 from atst.domain.portfolios import Portfolios
 from atst.domain.authz import Authorization

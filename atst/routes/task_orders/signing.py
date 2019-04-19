@@ -72,11 +72,7 @@ def record_signature(task_order_id):
 
         flash("task_order_signed")
         return redirect(
-            url_for(
-                "portfolios.view_task_order",
-                portfolio_id=task_order.portfolio_id,
-                task_order_id=task_order.id,
-            )
+            url_for("task_orders.view_task_order", task_order_id=task_order.id)
         )
     else:
         return (

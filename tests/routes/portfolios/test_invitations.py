@@ -300,10 +300,7 @@ def test_contracting_officer_accepts_invite(monkeypatch, client, user_session):
     # user is redirected to the task order review page
     assert response.status_code == 302
     to_review_url = url_for(
-        "portfolios.view_task_order",
-        portfolio_id=task_order.portfolio_id,
-        task_order_id=task_order.id,
-        _external=True,
+        "task_orders.view_task_order", task_order_id=task_order.id, _external=True
     )
     assert response.headers["Location"] == to_review_url
 
@@ -337,10 +334,7 @@ def test_cor_accepts_invite(monkeypatch, client, user_session):
     # user is redirected to the task order review page
     assert response.status_code == 302
     to_review_url = url_for(
-        "portfolios.view_task_order",
-        portfolio_id=task_order.portfolio_id,
-        task_order_id=task_order.id,
-        _external=True,
+        "task_orders.view_task_order", task_order_id=task_order.id, _external=True
     )
     assert response.headers["Location"] == to_review_url
 
@@ -374,9 +368,6 @@ def test_so_accepts_invite(monkeypatch, client, user_session):
     # user is redirected to the task order review page
     assert response.status_code == 302
     to_review_url = url_for(
-        "portfolios.view_task_order",
-        portfolio_id=task_order.portfolio_id,
-        task_order_id=task_order.id,
-        _external=True,
+        "task_orders.view_task_order", task_order_id=task_order.id, _external=True
     )
     assert response.headers["Location"] == to_review_url
