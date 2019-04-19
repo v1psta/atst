@@ -1,7 +1,7 @@
 import MaskedInput, { conformToMask } from 'vue-text-mask'
 import inputValidations from '../lib/input_validations'
 import { formatDollars } from '../lib/dollars'
-import { emitFieldChange } from '../lib/emitters'
+import { emitFieldChange, emitFieldMount } from '../lib/emitters'
 
 export default {
   name: 'textinput',
@@ -27,6 +27,7 @@ export default {
     paragraph: String,
     noMaxWidth: String,
     optional: Boolean,
+    parent_uid: String,
   },
 
   data: function() {
@@ -67,9 +68,9 @@ export default {
   },
 
   created: function() {
-    this.$root.$emit('field-mount', {
-      name: this.name,
+    emitFieldMount(this, {
       optional: this.optional,
+      name: this.name,
     })
   },
 
