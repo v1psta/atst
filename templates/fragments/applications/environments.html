@@ -43,11 +43,11 @@
               </span>
               <span class="icon-link icon-link--large accordion-table__item__toggler">
                 {% set open_environments_button %}
-                  {{ "common.show" | translate }} Environments ({{ members_list | length }})
+                  {{ "common.show" | translate }} Environments ({{ members_list | length }}) {{ Icon('caret_down') }}
                 {% endset %}
 
                 {% set close_environments_button %}
-                  {{ "common.hide" | translate }} Environments ({{ members_list | length }})
+                  {{ "common.hide" | translate }} Environments ({{ members_list | length }}) {{ Icon('caret_up') }}
                 {% endset %}
 
                 {{
