@@ -70,9 +70,11 @@ def render_admin_page(portfolio, form=None):
     )
 
     assign_ppoc_form = member_forms.AssignPPOCForm()
-    assign_ppoc_form.user_id.choices += [
-        (user.id, user.full_name) for user in portfolio.users if user != portfolio.owner
-    ]
+    for pf_role in portfolio.roles:
+        if pf_role.user != portfolio.owner and pf_role.is_active:
+            assign_ppoc_form.user_id.choices += [
+                (pf_role.user.id, pf_role.user.full_name)
+            ]
 
     return render_template(
         "portfolios/admin.html",
