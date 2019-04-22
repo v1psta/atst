@@ -10,6 +10,6 @@ class EnvMemberRoleForm(BaseForm):
     role = RadioField(choices=ENV_ROLES)
 
 
-class EnvironmentForm(BaseForm):
+class EnvironmentRolesForm(BaseForm):
     team_roles = FieldList(FormField(EnvMemberRoleForm))
     env_id = HiddenField()

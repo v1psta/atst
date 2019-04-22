@@ -4,7 +4,7 @@ from . import applications_bp
 from atst.domain.environment_roles import EnvironmentRoles
 from atst.domain.applications import Applications
 from atst.forms.application import ApplicationForm
-from atst.forms.app_settings import EnvironmentForm
+from atst.forms.app_settings import EnvironmentRolesForm
 from atst.domain.authz.decorator import user_can_access_decorator as user_can
 from atst.models.permissions import Permissions
 from atst.utils.flash import formatted_flash as flash
@@ -49,7 +49,7 @@ def settings(application_id):
     env_data = serialize_env_member_form_data(application)
     env_forms = {}
     for data in env_data:
-        env_forms[data["env_id"]] = EnvironmentForm(data=data)
+        env_forms[data["env_id"]] = EnvironmentRolesForm(data=data)
 
     return render_template(
         "portfolios/applications/edit.html",
