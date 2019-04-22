@@ -76,7 +76,7 @@
                       -
                   {% endif %}
                 </div>
-                <a href='{{ url_for("portfolios.view_task_order", portfolio_id=portfolio.id, task_order_id=task_order.id) }}' class='icon-link'>
+                <a href='{{ url_for("task_orders.view_task_order", task_order_id=task_order.id) }}' class='icon-link'>
                   {{ Icon('cog') }}
                   Manage Task Order
                 </a>
@@ -130,7 +130,7 @@
   {% set current_month_index = current_month.strftime('%m/%Y') %}
   {% set prev_month_index = prev_month.strftime('%m/%Y') %}
   {% set two_months_ago_index = two_months_ago.strftime('%m/%Y') %}
-  {% set reports_url = url_for("portfolios.portfolio_reports", portfolio_id=portfolio.id) %}
+  {% set reports_url = url_for("portfolios.reports", portfolio_id=portfolio.id) %}
 
   {% if not portfolio.applications %}
 
@@ -143,7 +143,7 @@
     {{ EmptyState(
       'Nothing to report',
       action_label='Add a new application' if can_create_applications else None,
-      action_href=url_for('portfolios.new_application', portfolio_id=portfolio.id) if can_create_applications else None,
+      action_href=url_for('applications.new', portfolio_id=portfolio.id) if can_create_applications else None,
       icon='chart',
       sub_message=message
     ) }}
@@ -357,7 +357,7 @@
               {% if month.month == current_month.month and month.year == current_month.year %}
                 selected='selected'
               {% endif %}
-              value='{{ url_for("portfolios.portfolio_reports",
+              value='{{ url_for("portfolios.reports",
                                 portfolio_id=portfolio.id,
                                 month=month.month,
                                 year=month.year) }}'

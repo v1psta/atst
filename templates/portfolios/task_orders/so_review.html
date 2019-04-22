@@ -19,7 +19,7 @@
 
 
       <div class="panel__content">
-        <form method="POST" action='{{ url_for("portfolios.submit_so_review", portfolio_id=portfolio.id, task_order_id=task_order.id) }}'>
+        <form method="POST" action='{{ url_for("task_orders.submit_so_review", task_order_id=task_order.id) }}'>
           {{ form.csrf_token }}
           <h3 class="subheading">{{ "task_orders.so_review.certification" | translate }}</h3>
           {{ TextInput(form.certifying_official) }}

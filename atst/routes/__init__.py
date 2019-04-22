@@ -71,19 +71,19 @@ def home():
         ]
 
         if is_portfolio_owner:
-            return redirect(
-                url_for("portfolios.portfolio_reports", portfolio_id=portfolio_id)
-            )
+            return redirect(url_for("portfolios.reports", portfolio_id=portfolio_id))
         else:
             return redirect(
-                url_for("portfolios.portfolio_applications", portfolio_id=portfolio_id)
+                url_for(
+                    "applications.portfolio_applications", portfolio_id=portfolio_id
+                )
             )
     else:
         portfolios = Portfolios.for_user(g.current_user)
         first_portfolio = sorted(portfolios, key=lambda portfolio: portfolio.name)[0]
         return redirect(
             url_for(
-                "portfolios.portfolio_applications", portfolio_id=first_portfolio.id
+                "applications.portfolio_applications", portfolio_id=first_portfolio.id
             )
         )
 

@@ -305,9 +305,7 @@ def new(screen, task_order_id=None, portfolio_id=None):
         if http_request.args.get("ko_edit"):
             template_args["ko_edit"] = True
             template_args["next"] = url_for(
-                "portfolios.ko_review",
-                portfolio_id=workflow.task_order.portfolio.id,
-                task_order_id=task_order_id,
+                "task_orders.ko_review", task_order_id=task_order_id
             )
             url_args["next"] = template_args["next"]
 

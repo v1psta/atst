@@ -9,7 +9,7 @@
     {% if g.matchesPath("portfolio-members") %}
       {% include "fragments/flash.html" %}
     {% endif %}
-      <form method='POST' id="member-perms" action='{{ url_for("portfolios.edit_portfolio_members", portfolio_id=portfolio.id) }}' autocomplete="off" enctype="multipart/form-data">
+      <form method='POST' id="member-perms" action='{{ url_for("portfolios.edit_members", portfolio_id=portfolio.id) }}' autocomplete="off" enctype="multipart/form-data">
       {{ member_perms_form.csrf_token }}
 
       <div class='application-list-item'>

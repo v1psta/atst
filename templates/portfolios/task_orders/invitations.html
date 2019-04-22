@@ -17,7 +17,7 @@
 {% endmacro %}
 
 {% macro EditOfficerInfo(form, officer_type, invited) -%}
-  <form method='POST' action="{{ url_for("portfolios.edit_task_order_invitations", portfolio_id=portfolio.id, task_order_id=task_order.id) }}" autocomplete="off">
+  <form method='POST' action="{{ url_for("task_orders.invitations_edit", task_order_id=task_order.id) }}" autocomplete="off">
     {{ form.csrf_token }}
     <template v-if="editing">
       <div class='officer__form'>
@@ -107,8 +107,7 @@
                 confirm_btn=('task_orders.invitations.resend_btn' | translate),
                 confirm_msg=('task_orders.invitations.resend_confirmation_message' | translate),
                 action=url_for(
-                  "portfolios.resend_invite",
-                  portfolio_id=portfolio.id,
+                  "task_orders.resend_invite",
                   task_order_id=task_order.id,
                   invite_type=invite_type,
                 ),
