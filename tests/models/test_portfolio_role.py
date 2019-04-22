@@ -123,8 +123,8 @@ def test_has_env_role_history(session):
     env_role = EnvironmentRoleFactory.create(
         user=user, environment=environment, role="developer"
     )
-    Environments.update_environment_roles(
-        portfolio_role, [{"role": "admin", "id": environment.id}]
+    Environments.update_env_roles_by_member(
+        user, [{"role": "admin", "id": environment.id}]
     )
     changed_events = (
         session.query(AuditEvent)

@@ -6,6 +6,7 @@ from atst.models.environment import Environment
 from atst.models.environment_role import EnvironmentRole
 from atst.models.application import Application
 from atst.domain.environment_roles import EnvironmentRoles
+from atst.domain.users import Users
 
 from .exceptions import NotFoundError
 
@@ -62,38 +63,50 @@ class Environments(object):
         return env
 
     @classmethod
-    def update_environment_roles(cls, portfolio_role, ids_and_roles):
+    def update_env_role(cls, environment, user, new_role):
         updated = False
 
-        for id_and_role in ids_and_roles:
-            new_role = id_and_role["role"]
-            environment = Environments.get(id_and_role["id"])
-
-            if new_role is None:
-                role_deleted = EnvironmentRoles.delete(
-                    portfolio_role.user.id, environment.id
+        if new_role is None or new_role == "No access":
+            role_deleted = EnvironmentRoles.delete(user.id, environment.id)
+            if role_deleted:
+                updated = True
+        else:
+            env_role = EnvironmentRoles.get(user.id, environment.id)
+            if env_role and env_role.role != new_role:
+                env_role.role = new_role
+                updated = True
+                db.session.add(env_role)
+            elif not env_role:
+                env_role = EnvironmentRoles.create(
+                    user=user, environment=environment, role=new_role
                 )
-                if role_deleted:
-                    updated = True
-            else:
-                env_role = EnvironmentRoles.get(
-                    portfolio_role.user.id, id_and_role["id"]
-                )
-                if env_role and env_role.role != new_role:
-                    env_role.role = new_role
-                    updated = True
-                    db.session.add(env_role)
-                elif not env_role:
-                    env_role = EnvironmentRoles.create(
-                        user=portfolio_role.user, environment=environment, role=new_role
-                    )
-                    updated = True
-                    db.session.add(env_role)
+                updated = True
+                db.session.add(env_role)
 
         if updated:
             db.session.commit()
 
         return updated
+
+    @classmethod
+    def update_env_roles_by_environment(cls, environment_id, team_roles):
+        environment = Environments.get(environment_id)
+
+        for member in team_roles:
+            new_role = member["role"]
+            user = Users.get(member["user_id"])
+            Environments.update_env_role(
+                environment=environment, user=user, new_role=new_role
+            )
+
+    @classmethod
+    def update_env_roles_by_member(cls, member, env_roles):
+        for env_roles in env_roles:
+            new_role = env_roles["role"]
+            environment = Environments.get(env_roles["id"])
+            Environments.update_env_role(
+                environment=environment, user=member, new_role=new_role
+            )
 
     @classmethod
     def revoke_access(cls, environment, target_user):

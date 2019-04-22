@@ -194,6 +194,7 @@ class EnvironmentFactory(Base):
         model = Environment
 
     name = factory.Faker("domain_word")
+    application = factory.SubFactory(ApplicationFactory)
 
     @classmethod
     def _create(cls, model_class, *args, **kwargs):
