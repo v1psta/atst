@@ -37,10 +37,10 @@
   }
 
   .accordion-table__item-content {
-    padding-top: $gap*3;
+    padding-top: $gap*2;
     padding-right: $gap;
-    padding-bottom: $gap*3;
-    padding-left: $gap*3;
+    padding-bottom: $gap*2;
+    padding-left: $gap*2;
   }
 
   .accordion-table__items {
@@ -69,7 +69,6 @@
       float: right;
       color: $color-blue;
       padding: $gap;
-      margin: -$gap 0;
 
       .icon {
         @include icon-size(12);

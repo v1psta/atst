@@ -2,7 +2,7 @@
 
 {% from "components/empty_state.html" import EmptyState %}
 {% from "components/icon.html" import Icon %}
-{% from "components/toggle_list.html" import ToggleList %}
+{% from "components/toggle_list.html" import ToggleButton, ToggleSection %}
 
 {% set secondary_breadcrumb = 'portfolios.applications.team_settings.title' | translate({ "application_name": application.name }) %}
 
@@ -67,29 +67,48 @@
                 {% set user_info = environment_users[user.id] %}
                 {% set user_permissions = user_info["permissions"] %}
 
-                {% set user_row %}
-                  <span>{{ user.full_name }}</span>
-                  <span>{{ user_permissions["delete_access"] }}</span>
-                  <span>{{ user_permissions["environment_management"] }}</span>
-                  <span>{{ user_permissions["team_management"] }}</span>
-                {% endset %}
 
-                {% call ToggleList(
-                    item_name=user_row,
-                    item_type=("portfolios.applications.team_settings.environments" | translate),
-                    length=(user_info["environments"] | length)
-                  )
-                %}
-                  <ul>
-                    {% for environment in user_info["environments"] %}
-                      <li class="accordion-table__item__expanded">
-                        <div class="accordion-table__item-content">
-                          {{ environment.name }}
-                        </div>
-                      </li>
-                    {% endfor %}
-                  </ul>
-                {% endcall %}
+                <toggler inline-template>
+                  <li class="accordion-table__item">
+                    <div class="accordion-table__item-content">
+                      <span>
+                        {{ name }}
+                        <span>{{ user.full_name }}</span>
+                        <span>{{ user_permissions["delete_access"] }}</span>
+                        <span>{{ user_permissions["environment_management"] }}</span>
+                        <span>{{ user_permissions["team_management"] }}</span>
+                      </span>
+                      <span class="icon-link icon-link--large accordion-table__item__toggler">
+                        {% set open_html %}
+                        {{ "common.show" | translate }} {{ "portfolios.applications.team_settings.environments" | translate }} ({{ user_info['environments'] | length }})
+                        {% endset %}
+
+                        {% set close_html %}
+                          {{ "common.hide" | translate }} {{ "portfolios.applications.team_settings.environments" | translate }} ({{ user_info['environments'] | length }})
+                        {% endset %}
+
+                        {{
+                          ToggleButton(
+                            open_html=open_html,
+                            close_html=close_html,
+                            section_name="environments"
+                          )
+                        }}
+                      </span>
+                    </div>
+                    {% call ToggleSection(section_name="environments") %}
+                      <ul>
+                        {% for environment in user_info["environments"] %}
+                          <li>
+                            <div class="accordion-table__item-content">
+                              {{ environment.name }}
+                            </div>
+                          </li>
+                        {% endfor %}
+                      </ul>
+                    {% endcall %}
+                  </li>
+                </toggler>
               {% endfor %}
             </ul>
           </div>
