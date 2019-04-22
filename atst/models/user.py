@@ -4,6 +4,7 @@ from sqlalchemy.dialects.postgresql import UUID
 
 from atst.models import Base, types, mixins
 from atst.models.permissions import Permissions
+from atst.models.portfolio_invitation import PortfolioInvitation
 
 
 users_permission_sets = Table(
@@ -29,6 +30,13 @@ class User(
         "ApplicationRole",
         backref="user",
         primaryjoin="and_(ApplicationRole.user_id==User.id, ApplicationRole.deleted==False)",
+    )
+
+    portfolio_invitations = relationship(
+        "PortfolioInvitation", foreign_keys=PortfolioInvitation.user_id
+    )
+    sent_portfolio_invitations = relationship(
+        "PortfolioInvitation", foreign_keys=PortfolioInvitation.inviter_id
     )
 
     email = Column(String)

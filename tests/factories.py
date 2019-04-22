@@ -7,11 +7,8 @@ import datetime
 
 from atst.forms import data
 from atst.models import *
-from atst.models.portfolio_role import Status as PortfolioRoleStatus
-from atst.models.application_role import Status as ApplicationRoleStatus
-from atst.models.invitation import Status as InvitationStatus
-from atst.models.environment_role import CSPRole
-from atst.domain.invitations import Invitations
+
+from atst.domain.invitations import PortfolioInvitations
 from atst.domain.permission_sets import PermissionSets
 from atst.domain.portfolio_roles import PortfolioRoles
 
@@ -240,13 +237,13 @@ class EnvironmentRoleFactory(Base):
     user = factory.SubFactory(UserFactory)
 
 
-class InvitationFactory(Base):
+class PortfolioInvitationFactory(Base):
     class Meta:
-        model = Invitation
+        model = PortfolioInvitation
 
     email = factory.Faker("email")
     status = InvitationStatus.PENDING
-    expiration_time = Invitations.current_expiration_time()
+    expiration_time = PortfolioInvitations.current_expiration_time()
 
 
 class AttachmentFactory(Base):

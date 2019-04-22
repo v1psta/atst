@@ -1,11 +1,9 @@
-import pytest
 import datetime
 
-from atst.models.invitation import Invitation, Status
-from atst.models.portfolio_role import Status as PortfolioRoleStatus
+from atst.models import InvitationStatus, PortfolioRoleStatus
 
 from tests.factories import (
-    InvitationFactory,
+    PortfolioInvitationFactory,
     PortfolioFactory,
     UserFactory,
     PortfolioRoleFactory,
@@ -18,9 +16,9 @@ def test_expired_invite_is_not_revokable():
     portfolio_role = PortfolioRoleFactory.create(
         portfolio=portfolio, user=user, status=PortfolioRoleStatus.PENDING
     )
-    invite = InvitationFactory.create(
+    invite = PortfolioInvitationFactory.create(
         expiration_time=datetime.datetime.now() - datetime.timedelta(minutes=60),
-        portfolio_role=portfolio_role,
+        role=portfolio_role,
     )
     assert not invite.is_revokable
 
@@ -31,7 +29,7 @@ def test_unexpired_invite_is_revokable():
     portfolio_role = PortfolioRoleFactory.create(
         portfolio=portfolio, user=user, status=PortfolioRoleStatus.PENDING
     )
-    invite = InvitationFactory.create(portfolio_role=portfolio_role)
+    invite = PortfolioInvitationFactory.create(role=portfolio_role)
     assert invite.is_revokable
 
 
@@ -41,7 +39,7 @@ def test_invite_is_not_revokable_if_invite_is_not_pending():
     portfolio_role = PortfolioRoleFactory.create(
         portfolio=portfolio, user=user, status=PortfolioRoleStatus.PENDING
     )
-    invite = InvitationFactory.create(
-        portfolio_role=portfolio_role, status=Status.ACCEPTED
+    invite = PortfolioInvitationFactory.create(
+        role=portfolio_role, status=InvitationStatus.ACCEPTED
     )
     assert not invite.is_revokable

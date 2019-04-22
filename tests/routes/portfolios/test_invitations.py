@@ -6,12 +6,11 @@ from tests.factories import (
     UserFactory,
     PortfolioFactory,
     PortfolioRoleFactory,
-    InvitationFactory,
+    PortfolioInvitationFactory,
     TaskOrderFactory,
 )
 from atst.domain.portfolios import Portfolios
-from atst.models.portfolio_role import Status as PortfolioRoleStatus
-from atst.models.invitation import Status as InvitationStatus
+from atst.models import InvitationStatus, PortfolioRoleStatus
 from atst.domain.users import Users
 from atst.domain.permission_sets import PermissionSets
 
@@ -22,7 +21,7 @@ def test_existing_member_accepts_valid_invite(client, user_session):
     ws_role = PortfolioRoleFactory.create(
         portfolio=portfolio, user=user, status=PortfolioRoleStatus.PENDING
     )
-    invite = InvitationFactory.create(user_id=user.id, portfolio_role=ws_role)
+    invite = PortfolioInvitationFactory.create(user_id=user.id, role=ws_role)
 
     # the user does not have access to the portfolio before accepting the invite
     assert len(Portfolios.for_user(user)) == 0
@@ -60,7 +59,7 @@ def test_new_member_accepts_valid_invite(monkeypatch, client, user_session):
 
     assert response.status_code == 302
     user = Users.get_by_dod_id(user_info["dod_id"])
-    token = user.invitations[0].token
+    token = user.portfolio_invitations[0].token
 
     monkeypatch.setattr(
         "atst.domain.auth.should_redirect_to_user_profile", lambda *args: False
@@ -84,10 +83,8 @@ def test_member_accepts_invalid_invite(client, user_session):
     ws_role = PortfolioRoleFactory.create(
         user=user, portfolio=portfolio, status=PortfolioRoleStatus.PENDING
     )
-    invite = InvitationFactory.create(
-        user_id=user.id,
-        portfolio_role=ws_role,
-        status=InvitationStatus.REJECTED_WRONG_USER,
+    invite = PortfolioInvitationFactory.create(
+        user_id=user.id, role=ws_role, status=InvitationStatus.REJECTED_WRONG_USER
     )
     user_session(user)
     response = client.get(url_for("portfolios.accept_invitation", token=invite.token))
@@ -119,7 +116,7 @@ def test_user_accepts_invite_with_wrong_dod_id(client, user_session):
     ws_role = PortfolioRoleFactory.create(
         user=user, portfolio=portfolio, status=PortfolioRoleStatus.PENDING
     )
-    invite = InvitationFactory.create(user_id=user.id, portfolio_role=ws_role)
+    invite = PortfolioInvitationFactory.create(user_id=user.id, role=ws_role)
     user_session(different_user)
     response = client.get(url_for("portfolios.accept_invitation", token=invite.token))
 
@@ -132,9 +129,9 @@ def test_user_accepts_expired_invite(client, user_session):
     ws_role = PortfolioRoleFactory.create(
         user=user, portfolio=portfolio, status=PortfolioRoleStatus.PENDING
     )
-    invite = InvitationFactory.create(
+    invite = PortfolioInvitationFactory.create(
         user_id=user.id,
-        portfolio_role=ws_role,
+        role=ws_role,
         status=InvitationStatus.REJECTED_EXPIRED,
         expiration_time=datetime.datetime.now() - datetime.timedelta(seconds=1),
     )
@@ -150,9 +147,9 @@ def test_revoke_invitation(client, user_session):
     ws_role = PortfolioRoleFactory.create(
         user=user, portfolio=portfolio, status=PortfolioRoleStatus.PENDING
     )
-    invite = InvitationFactory.create(
+    invite = PortfolioInvitationFactory.create(
         user_id=user.id,
-        portfolio_role=ws_role,
+        role=ws_role,
         status=InvitationStatus.REJECTED_EXPIRED,
         expiration_time=datetime.datetime.now() - datetime.timedelta(seconds=1),
     )
@@ -176,9 +173,9 @@ def test_user_can_only_revoke_invites_in_their_portfolio(client, user_session):
     portfolio_role = PortfolioRoleFactory.create(
         user=user, portfolio=other_portfolio, status=PortfolioRoleStatus.PENDING
     )
-    invite = InvitationFactory.create(
+    invite = PortfolioInvitationFactory.create(
         user_id=user.id,
-        portfolio_role=portfolio_role,
+        role=portfolio_role,
         status=InvitationStatus.REJECTED_EXPIRED,
         expiration_time=datetime.datetime.now() - datetime.timedelta(seconds=1),
     )
@@ -202,9 +199,9 @@ def test_user_can_only_resend_invites_in_their_portfolio(client, user_session, q
     portfolio_role = PortfolioRoleFactory.create(
         user=user, portfolio=other_portfolio, status=PortfolioRoleStatus.PENDING
     )
-    invite = InvitationFactory.create(
+    invite = PortfolioInvitationFactory.create(
         user_id=user.id,
-        portfolio_role=portfolio_role,
+        role=portfolio_role,
         status=InvitationStatus.REJECTED_EXPIRED,
         expiration_time=datetime.datetime.now() - datetime.timedelta(seconds=1),
     )
@@ -227,8 +224,8 @@ def test_resend_invitation_sends_email(client, user_session, queue):
     ws_role = PortfolioRoleFactory.create(
         user=user, portfolio=portfolio, status=PortfolioRoleStatus.PENDING
     )
-    invite = InvitationFactory.create(
-        user_id=user.id, portfolio_role=ws_role, status=InvitationStatus.PENDING
+    invite = PortfolioInvitationFactory.create(
+        user_id=user.id, role=ws_role, status=InvitationStatus.PENDING
     )
     user_session(portfolio.owner)
     client.post(
@@ -250,9 +247,9 @@ def test_existing_member_invite_resent_to_email_submitted_in_form(
     ws_role = PortfolioRoleFactory.create(
         user=user, portfolio=portfolio, status=PortfolioRoleStatus.PENDING
     )
-    invite = InvitationFactory.create(
+    invite = PortfolioInvitationFactory.create(
         user_id=user.id,
-        portfolio_role=ws_role,
+        role=ws_role,
         status=InvitationStatus.PENDING,
         email="example@example.com",
     )
@@ -290,7 +287,7 @@ def test_contracting_officer_accepts_invite(monkeypatch, client, user_session):
 
     # contracting officer accepts invitation
     user = Users.get_by_dod_id(user_info["dod_id"])
-    token = user.invitations[0].token
+    token = user.portfolio_invitations[0].token
     monkeypatch.setattr(
         "atst.domain.auth.should_redirect_to_user_profile", lambda *args: False
     )
@@ -324,7 +321,7 @@ def test_cor_accepts_invite(monkeypatch, client, user_session):
 
     # contracting officer representative accepts invitation
     user = Users.get_by_dod_id(user_info["dod_id"])
-    token = user.invitations[0].token
+    token = user.portfolio_invitations[0].token
     monkeypatch.setattr(
         "atst.domain.auth.should_redirect_to_user_profile", lambda *args: False
     )
@@ -358,7 +355,7 @@ def test_so_accepts_invite(monkeypatch, client, user_session):
 
     # security officer accepts invitation
     user = Users.get_by_dod_id(user_info["dod_id"])
-    token = user.invitations[0].token
+    token = user.portfolio_invitations[0].token
     monkeypatch.setattr(
         "atst.domain.auth.should_redirect_to_user_profile", lambda *args: False
     )

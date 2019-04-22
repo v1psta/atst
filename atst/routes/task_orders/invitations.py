@@ -7,7 +7,7 @@ from atst.domain.authz.decorator import user_can_access_decorator as user_can
 from atst.models.permissions import Permissions
 from atst.database import db
 from atst.domain.exceptions import NotFoundError, NoAccessError
-from atst.domain.invitations import Invitations
+from atst.domain.invitations import PortfolioInvitations
 from atst.domain.portfolios import Portfolios
 from atst.utils.localization import translate
 from atst.forms.officers import EditTaskOrderOfficersForm
@@ -57,7 +57,7 @@ def resend_invite(task_order_id):
     if not officer:
         raise NotFoundError("officer")
 
-    invitation = Invitations.lookup_by_portfolio_and_user(portfolio, officer)
+    invitation = PortfolioInvitations.lookup_by_portfolio_and_user(portfolio, officer)
 
     if not invitation:
         raise NotFoundError("invitation")
@@ -65,11 +65,11 @@ def resend_invite(task_order_id):
     if not invitation.can_resend:
         raise NoAccessError("invitation")
 
-    Invitations.revoke(token=invitation.token)
+    PortfolioInvitations.revoke(token=invitation.token)
 
     invite_service = InvitationService(
         g.current_user,
-        invitation.portfolio_role,
+        invitation.role,
         invitation.email,
         subject=invite_type_info["subject"],
         email_template=invite_type_info["template"],

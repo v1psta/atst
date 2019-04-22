@@ -6,8 +6,8 @@ from . import user_can_access
 from atst.domain.portfolios import Portfolios
 from atst.domain.task_orders import TaskOrders
 from atst.domain.applications import Applications
-from atst.domain.invitations import Invitations
 from atst.domain.environments import Environments
+from atst.domain.invitations import PortfolioInvitations
 from atst.domain.exceptions import UnauthorizedError
 
 
@@ -24,8 +24,8 @@ def check_access(permission, message, override, *args, **kwargs):
         access_args["portfolio"] = task_order.portfolio
 
     elif "token" in kwargs:
-        invite = Invitations._get(kwargs["token"])
-        access_args["portfolio"] = invite.portfolio_role.portfolio
+        invite = PortfolioInvitations._get(kwargs["token"])
+        access_args["portfolio"] = invite.role.portfolio
 
     elif "portfolio_id" in kwargs:
         access_args["portfolio"] = Portfolios.get(

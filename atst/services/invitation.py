@@ -1,6 +1,6 @@
 from flask import render_template
 
-from atst.domain.invitations import Invitations
+from atst.domain.invitations import PortfolioInvitations
 from atst.queue import queue
 from atst.domain.task_orders import TaskOrders
 from atst.domain.portfolio_roles import PortfolioRoles
@@ -68,7 +68,7 @@ class Invitation:
         return invite
 
     def _create_invite(self):
-        return Invitations.create(self.inviter, self.member, self.email)
+        return PortfolioInvitations.create(self.inviter, self.member, self.email)
 
     def _send_invite_email(self, token):
         body = render_template(

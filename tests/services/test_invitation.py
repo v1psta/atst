@@ -10,5 +10,5 @@ def test_invite_member(queue):
     ws_member = PortfolioRoleFactory.create(user=new_member, portfolio=portfolio)
     invite_service = Invitation(inviter, ws_member, new_member.email)
     new_invitation = invite_service.invite()
-    assert new_invitation == new_member.invitations[0]
+    assert new_invitation == new_member.portfolio_invitations[0]
     assert len(queue.get_queue()) == 1

@@ -1,7 +1,7 @@
 from flask import g, redirect, url_for, render_template
 
 from . import portfolios_bp
-from atst.domain.invitations import Invitations
+from atst.domain.invitations import PortfolioInvitations
 from atst.queue import queue
 from atst.utils.flash import formatted_flash as flash
 from atst.domain.authz.decorator import user_can_access_decorator as user_can
@@ -19,7 +19,7 @@ def send_invite_email(owner_name, token, new_member_email):
 
 @portfolios_bp.route("/portfolios/invitations/<token>", methods=["GET"])
 def accept_invitation(token):
-    invite = Invitations.accept(g.current_user, token)
+    invite = PortfolioInvitations.accept(g.current_user, token)
 
     for task_order in invite.portfolio.task_orders:
         if g.current_user in task_order.officers:
@@ -37,7 +37,7 @@ def accept_invitation(token):
 )
 @user_can(Permissions.EDIT_PORTFOLIO_USERS, message="revoke invitation")
 def revoke_invitation(portfolio_id, token):
-    Invitations.revoke(token)
+    PortfolioInvitations.revoke(token)
 
     return redirect(
         url_for(
@@ -54,7 +54,7 @@ def revoke_invitation(portfolio_id, token):
 )
 @user_can(Permissions.EDIT_PORTFOLIO_USERS, message="resend invitation")
 def resend_invitation(portfolio_id, token):
-    invite = Invitations.resend(g.current_user, token)
+    invite = PortfolioInvitations.resend(g.current_user, token)
     send_invite_email(g.current_user.full_name, invite.token, invite.email)
     flash("resend_portfolio_invitation", user_name=invite.user_name)
     return redirect(

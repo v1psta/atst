@@ -6,14 +6,11 @@ from atst.domain.portfolios import Portfolios
 from atst.domain.portfolio_roles import PortfolioRoles
 from atst.domain.applications import Applications
 from atst.domain.permission_sets import PermissionSets
-from atst.models.portfolio_role import Status
-from atst.models.invitation import Status as InvitationStatus
-from atst.models.audit_event import AuditEvent
-from atst.models.portfolio_role import Status as PortfolioRoleStatus
-from atst.models.environment_role import CSPRole
+from atst.models import AuditEvent, InvitationStatus, PortfolioRoleStatus, CSPRole
+
 from tests.factories import (
     UserFactory,
-    InvitationFactory,
+    PortfolioInvitationFactory,
     PortfolioRoleFactory,
     EnvironmentFactory,
     EnvironmentRoleFactory,
@@ -189,12 +186,12 @@ def test_has_environment_roles():
 
 
 def test_status_when_member_is_active():
-    portfolio_role = PortfolioRoleFactory.create(status=Status.ACTIVE)
+    portfolio_role = PortfolioRoleFactory.create(status=PortfolioRoleStatus.ACTIVE)
     assert portfolio_role.display_status == "Active"
 
 
 def test_status_when_member_is_disabled():
-    portfolio_role = PortfolioRoleFactory.create(status=Status.DISABLED)
+    portfolio_role = PortfolioRoleFactory.create(status=PortfolioRoleStatus.DISABLED)
     assert portfolio_role.display_status == "Disabled"
 
 
@@ -204,8 +201,8 @@ def test_status_when_invitation_has_been_rejected_for_expirations():
     portfolio_role = PortfolioRoleFactory.create(
         portfolio=portfolio, user=user, status=PortfolioRoleStatus.PENDING
     )
-    invitation = InvitationFactory.create(
-        portfolio_role=portfolio_role, status=InvitationStatus.REJECTED_EXPIRED
+    PortfolioInvitationFactory.create(
+        role=portfolio_role, status=InvitationStatus.REJECTED_EXPIRED
     )
     assert portfolio_role.display_status == "Invite expired"
 
@@ -216,8 +213,8 @@ def test_status_when_invitation_has_been_rejected_for_wrong_user():
     portfolio_role = PortfolioRoleFactory.create(
         portfolio=portfolio, user=user, status=PortfolioRoleStatus.PENDING
     )
-    invitation = InvitationFactory.create(
-        portfolio_role=portfolio_role, status=InvitationStatus.REJECTED_WRONG_USER
+    PortfolioInvitationFactory.create(
+        role=portfolio_role, status=InvitationStatus.REJECTED_WRONG_USER
     )
     assert portfolio_role.display_status == "Error on invite"
 
@@ -228,8 +225,8 @@ def test_status_when_invitation_has_been_revoked():
     portfolio_role = PortfolioRoleFactory.create(
         portfolio=portfolio, user=user, status=PortfolioRoleStatus.PENDING
     )
-    invitation = InvitationFactory.create(
-        portfolio_role=portfolio_role, status=InvitationStatus.REVOKED
+    PortfolioInvitationFactory.create(
+        role=portfolio_role, status=InvitationStatus.REVOKED
     )
     assert portfolio_role.display_status == "Invite revoked"
 
@@ -240,8 +237,8 @@ def test_status_when_invitation_is_expired():
     portfolio_role = PortfolioRoleFactory.create(
         portfolio=portfolio, user=user, status=PortfolioRoleStatus.PENDING
     )
-    invitation = InvitationFactory.create(
-        portfolio_role=portfolio_role,
+    PortfolioInvitationFactory.create(
+        role=portfolio_role,
         status=InvitationStatus.PENDING,
         expiration_time=datetime.datetime.now() - datetime.timedelta(seconds=1),
     )
@@ -254,8 +251,8 @@ def test_can_not_resend_invitation_if_active():
     portfolio_role = PortfolioRoleFactory.create(
         portfolio=portfolio, user=user, status=PortfolioRoleStatus.PENDING
     )
-    invitation = InvitationFactory.create(
-        portfolio_role=portfolio_role, status=InvitationStatus.ACCEPTED
+    PortfolioInvitationFactory.create(
+        role=portfolio_role, status=InvitationStatus.ACCEPTED
     )
     assert not portfolio_role.can_resend_invitation
 
@@ -266,8 +263,8 @@ def test_can_resend_invitation_if_expired():
     portfolio_role = PortfolioRoleFactory.create(
         portfolio=portfolio, user=user, status=PortfolioRoleStatus.PENDING
     )
-    invitation = InvitationFactory.create(
-        portfolio_role=portfolio_role, status=InvitationStatus.REJECTED_EXPIRED
+    PortfolioInvitationFactory.create(
+        role=portfolio_role, status=InvitationStatus.REJECTED_EXPIRED
     )
     assert portfolio_role.can_resend_invitation
 
