@@ -61,13 +61,13 @@
                 </div>
               </div>
               <div class='col'>
-                <span v-if="selectedSection === '{{ section_name }}'" class='icon-link toggle-link'>
-                  <template v-if="props.isVisible">
+                <span class='icon-link toggle-link' v-on:click="toggleSection('{{ section_name }}')">
+                  <span v-if="selectedSection === '{{ section_name }}'">
                     {{ Icon('minus') }}
-                  </template>
-                  <template v-else>
+                  </span>
+                  <span v-else>
                     {{ Icon('plus') }}
-                  </template>
+                  </span>
                 </span>
               </div>
             </header>
