@@ -15,9 +15,7 @@ _DEFAULT_PERMS_FORM_DATA = {
 def test_user_with_permission_has_add_member_link(client, user_session):
     portfolio = PortfolioFactory.create()
     user_session(portfolio.owner)
-    response = client.get(
-        url_for("portfolios.portfolio_admin", portfolio_id=portfolio.id)
-    )
+    response = client.get(url_for("portfolios.admin", portfolio_id=portfolio.id))
     assert response.status_code == 200
     assert (
         url_for("portfolios.create_member", portfolio_id=portfolio.id).encode()

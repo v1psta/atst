@@ -41,7 +41,7 @@ def revoke_invitation(portfolio_id, token):
 
     return redirect(
         url_for(
-            "portfolios.portfolio_admin",
+            "portfolios.admin",
             portfolio_id=portfolio_id,
             _anchor="portfolio-members",
             fragment="portfolio-members",
@@ -59,7 +59,7 @@ def resend_invitation(portfolio_id, token):
     flash("resend_portfolio_invitation", user_name=invite.user_name)
     return redirect(
         url_for(
-            "portfolios.portfolio_admin",
+            "portfolios.admin",
             portfolio_id=portfolio_id,
             fragment="portfolio-members",
             _anchor="portfolio-members",

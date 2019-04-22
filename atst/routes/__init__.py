@@ -71,9 +71,7 @@ def home():
         ]
 
         if is_portfolio_owner:
-            return redirect(
-                url_for("portfolios.portfolio_reports", portfolio_id=portfolio_id)
-            )
+            return redirect(url_for("portfolios.reports", portfolio_id=portfolio_id))
         else:
             return redirect(
                 url_for(

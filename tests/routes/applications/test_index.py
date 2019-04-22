@@ -23,7 +23,7 @@ def test_user_with_permission_has_budget_report_link(client, user_session):
         url_for("applications.portfolio_applications", portfolio_id=portfolio.id)
     )
     assert (
-        url_for("portfolios.portfolio_reports", portfolio_id=portfolio.id)
+        url_for("portfolios.reports", portfolio_id=portfolio.id)
         in response.data.decode()
     )
 
@@ -39,7 +39,7 @@ def test_user_without_permission_has_no_budget_report_link(client, user_session)
         url_for("applications.portfolio_applications", portfolio_id=portfolio.id)
     )
     assert (
-        url_for("portfolios.portfolio_reports", portfolio_id=portfolio.id)
+        url_for("portfolios.reports", portfolio_id=portfolio.id)
         not in response.data.decode()
     )
 

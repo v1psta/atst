@@ -232,14 +232,14 @@ def test_application_settings_access(get_url_assert_status):
     get_url_assert_status(rando, url, 404)
 
 
-# portfolios.edit_portfolio
-def test_portfolios_edit_portfolio_access(post_url_assert_status):
+# portfolios.edit
+def test_portfolios_edit_access(post_url_assert_status):
     ccpo = user_with(PermissionSets.EDIT_PORTFOLIO_ADMIN)
     owner = user_with()
     rando = user_with()
     portfolio = PortfolioFactory.create(owner=owner)
 
-    url = url_for("portfolios.edit_portfolio", portfolio_id=portfolio.id)
+    url = url_for("portfolios.edit", portfolio_id=portfolio.id)
     post_url_assert_status(ccpo, url, 200)
     post_url_assert_status(owner, url, 200)
     post_url_assert_status(rando, url, 404)
@@ -296,14 +296,14 @@ def test_applications_new_access(get_url_assert_status):
     get_url_assert_status(rando, url, 404)
 
 
-# portfolios.portfolio_admin
-def test_portfolios_portfolio_admin_access(get_url_assert_status):
+# portfolios.admin
+def test_portfolios_admin_access(get_url_assert_status):
     ccpo = user_with(PermissionSets.VIEW_PORTFOLIO_ADMIN)
     owner = user_with()
     rando = user_with()
     portfolio = PortfolioFactory.create(owner=owner)
 
-    url = url_for("portfolios.portfolio_admin", portfolio_id=portfolio.id)
+    url = url_for("portfolios.admin", portfolio_id=portfolio.id)
     get_url_assert_status(ccpo, url, 200)
     get_url_assert_status(owner, url, 200)
     get_url_assert_status(rando, url, 404)
@@ -335,14 +335,14 @@ def test_task_orders_portfolio_funding_access(get_url_assert_status):
     get_url_assert_status(rando, url, 404)
 
 
-# portfolios.portfolio_reports
+# portfolios.reports
 def test_portfolios_portfolio_reports_access(get_url_assert_status):
     ccpo = user_with(PermissionSets.VIEW_PORTFOLIO_REPORTS)
     owner = user_with()
     rando = user_with()
     portfolio = PortfolioFactory.create(owner=owner)
 
-    url = url_for("portfolios.portfolio_reports", portfolio_id=portfolio.id)
+    url = url_for("portfolios.reports", portfolio_id=portfolio.id)
     get_url_assert_status(ccpo, url, 200)
     get_url_assert_status(owner, url, 200)
     get_url_assert_status(rando, url, 404)

@@ -52,7 +52,7 @@ def create_member(portfolio_id):
 
     return redirect(
         url_for(
-            "portfolios.portfolio_admin",
+            "portfolios.admin",
             portfolio_id=portfolio_id,
             fragment="portfolio-members",
             _anchor="portfolio-members",

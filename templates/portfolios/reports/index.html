@@ -130,7 +130,7 @@
   {% set current_month_index = current_month.strftime('%m/%Y') %}
   {% set prev_month_index = prev_month.strftime('%m/%Y') %}
   {% set two_months_ago_index = two_months_ago.strftime('%m/%Y') %}
-  {% set reports_url = url_for("portfolios.portfolio_reports", portfolio_id=portfolio.id) %}
+  {% set reports_url = url_for("portfolios.reports", portfolio_id=portfolio.id) %}
 
   {% if not portfolio.applications %}
 
@@ -357,7 +357,7 @@
               {% if month.month == current_month.month and month.year == current_month.year %}
                 selected='selected'
               {% endif %}
-              value='{{ url_for("portfolios.portfolio_reports",
+              value='{{ url_for("portfolios.reports",
                                 portfolio_id=portfolio.id,
                                 month=month.month,
                                 year=month.year) }}'
