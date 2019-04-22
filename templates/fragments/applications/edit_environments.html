@@ -1,5 +1,7 @@
 {% from "components/icon.html" import Icon %}
 {% from "components/toggle_list.html" import ToggleButton, ToggleSection %}
+{% from "components/text_input.html" import TextInput %}
+{% from "components/save_button.html" import SaveButton %}
 
 <div class="application-list-item">
   <header>
@@ -20,7 +22,7 @@
     </div>
 
     <ul class="accordion-table__items">
-      {% for name, members_list in environments_obj.items() %}
+      {% for name, environment_info in environments_obj.items() %}
         <toggler inline-template>
           <li class="accordion-table__item">
             <div class="accordion-table__item-content">
@@ -61,7 +63,7 @@
 
             {% call ToggleSection(section_name="members") %}
               <ul>
-                {% for member in members_list %}
+                {% for member in environment_info['members'] %}
                 <li class="accordion-table__item__expanded">
                   <div class="accordion-table__item__expanded_first">{{ member.name }}</div>
                   <div class="right">{{ member.role }}</div>
@@ -73,15 +75,16 @@
             {% call ToggleSection(section_name="edit") %}
               <ul>
                 <li class="accordion-table__item__expanded">
-                  <div>
-                    <form>
-                      <div class="form-row">
-                        <div class="form-col form-col--half">
-                          Row here
-                        </div>
-                      </div>
-                    </form>
-                  </div>
+                  {% set edit_form = environment_info['edit_form'] %}
+                  <form action="{{ url_for('applications.update_environment', environment_id=environment_info['id']) }}" method="post">
+                    {{ edit_form.csrf_token }}
+                    {{ TextInput(edit_form.name) }}
+                    {{
+                      SaveButton(
+                        text=("portfolios.applications.update_button_text" | translate)
+                      )
+                    }}
+                  </form>
                 </li>
               </ul>
             {% endcall %}

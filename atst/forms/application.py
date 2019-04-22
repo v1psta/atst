@@ -5,6 +5,12 @@ from atst.forms.validators import ListItemRequired, ListItemsUnique
 from atst.utils.localization import translate
 
 
+class EditEnvironmentForm(BaseForm):
+    name = StringField(
+        label=translate("forms.environments.name_label"), validators=[Required()]
+    )
+
+
 class ApplicationForm(BaseForm):
     name = StringField(
         label=translate("forms.application.name_label"), validators=[Required()]

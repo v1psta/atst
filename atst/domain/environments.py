@@ -50,6 +50,13 @@ class Environments(object):
         )
 
     @classmethod
+    def update(cls, environment, name=None):
+        if name is not None:
+            environment.name = name
+            db.session.add(environment)
+            db.session.commit()
+
+    @classmethod
     def get(cls, environment_id):
         try:
             env = (

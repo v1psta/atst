@@ -3,6 +3,11 @@
 }
 
 .accordion-table {
+  .usa-alert {
+    margin: $gap*2;
+    margin-bottom: 0;
+  }
+
   ul {
     padding-left: 0;
   }

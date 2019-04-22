@@ -547,6 +547,25 @@ def test_applications_update_access(post_url_assert_status):
     post_url_assert_status(rando, url, 404)
 
 
+# applications.update_environments
+def test_applications_update_environments(post_url_assert_status):
+    ccpo = UserFactory.create_ccpo()
+    dev = UserFactory.create()
+    rando = UserFactory.create()
+
+    portfolio = PortfolioFactory.create(
+        owner=dev,
+        applications=[{"name": "Mos Eisley", "description": "Where Han shot first"}],
+    )
+    app = portfolio.applications[0]
+    environment = EnvironmentFactory.create(application=app)
+
+    url = url_for("applications.update_environment", environment_id=environment.id)
+    post_url_assert_status(dev, url, 302)
+    post_url_assert_status(ccpo, url, 302)
+    post_url_assert_status(rando, url, 404)
+
+
 # task_orders.view_task_order
 def test_task_orders_view_task_order_access(get_url_assert_status):
     ccpo = user_with(PermissionSets.VIEW_PORTFOLIO_FUNDING)

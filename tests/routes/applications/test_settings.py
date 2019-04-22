@@ -17,8 +17,34 @@ from atst.domain.permission_sets import PermissionSets
 from atst.domain.portfolios import Portfolios
 from atst.models.environment_role import CSPRole
 from atst.models.portfolio_role import Status as PortfolioRoleStatus
+from atst.forms.application import EditEnvironmentForm
 
 from tests.utils import captured_templates
+
+
+def test_updating_application_environments(client, user_session):
+    portfolio = PortfolioFactory.create()
+    application = ApplicationFactory.create(portfolio=portfolio)
+    environment = EnvironmentFactory.create(application=application)
+
+    user_session(portfolio.owner)
+
+    form_data = {"name": "new name a"}
+
+    response = client.post(
+        url_for("applications.update_environment", environment_id=environment.id),
+        data=form_data,
+    )
+
+    assert response.status_code == 302
+    assert response.location == url_for(
+        "applications.settings",
+        application_id=application.id,
+        _external=True,
+        fragment="application-environments",
+        _anchor="application-environments",
+    )
+    assert environment.name == "new name a"
 
 
 def test_application_settings(client, user_session):
@@ -61,13 +87,14 @@ def test_edit_application_environments_obj(app, client, user_session):
 
         assert response.status_code == 200
         _, context = templates[0]
-        assert context["environments_obj"] == {
-            env1.name: [
-                {"name": user1.full_name, "role": env_role1.role},
-                {"name": user2.full_name, "role": env_role2.role},
-            ],
-            env2.name: [{"name": user1.full_name, "role": env_role3.role}],
-        }
+
+        env_obj_1 = context["environments_obj"][env1.name]
+        assert env_obj_1["id"] == env1.id
+        assert isinstance(env_obj_1["edit_form"], EditEnvironmentForm)
+        assert env_obj_1["members"] == [
+            {"name": user1.full_name, "role": env_role1.role},
+            {"name": user2.full_name, "role": env_role2.role},
+        ]
 
 
 def test_edit_app_serialize_env_member_form_data(app, client, user_session):

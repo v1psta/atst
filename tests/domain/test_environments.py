@@ -187,3 +187,10 @@ def test_delete_environment(session):
     assert env_role.deleted
     # flushed the change
     assert not session.dirty
+
+
+def test_update_environment():
+    environment = EnvironmentFactory.create()
+    assert environment.name is not "name 2"
+    Environments.update(environment, name="name 2")
+    assert environment.name == "name 2"
