@@ -2,7 +2,7 @@
 
 {% from "components/empty_state.html" import EmptyState %}
 {% from "components/icon.html" import Icon %}
-{% from "components/toggle_list.html" import ToggleList, ToggleButton, ToggleSection %}
+{% from "components/toggle_list.html" import ToggleButton, ToggleSection %}
 
 {% set secondary_breadcrumb = 'portfolios.applications.team_settings.title' | translate({ "application_name": application.name }) %}
 
@@ -96,18 +96,16 @@
                         }}
                       </span>
                     </div>
-                    {% call ToggleList() %}
-                      {% call ToggleSection(section_name="environments") %}
-                        <ul>
-                          {% for environment in user_info["environments"] %}
-                            <li>
-                              <div class="accordion-table__item-content">
-                                {{ environment.name }}
-                              </div>
-                            </li>
-                          {% endfor %}
-                        </ul>
-                      {% endcall %}
+                    {% call ToggleSection(section_name="environments") %}
+                      <ul>
+                        {% for environment in user_info["environments"] %}
+                          <li>
+                            <div class="accordion-table__item-content">
+                              {{ environment.name }}
+                            </div>
+                          </li>
+                        {% endfor %}
+                      </ul>
                     {% endcall %}
                   </li>
                 </toggler>

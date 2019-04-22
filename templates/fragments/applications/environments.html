@@ -1,5 +1,5 @@
 {% from "components/icon.html" import Icon %}
-{% from "components/toggle_list.html" import ToggleList, ToggleButton, ToggleSection %}
+{% from "components/toggle_list.html" import ToggleButton, ToggleSection %}
 
 <div class="application-list-item">
   <header>
@@ -60,27 +60,31 @@
               </span>
             </div>
 
-            {% call ToggleList() %}
-              {% call ToggleSection(section_name="environments") %}
-                <ul>
-                  {% for member in members_list %}
-                  <li class="accordion-table__item__expanded">
-                    <div class="accordion-table__item__expanded_first">{{ member.name }}</div>
-                    <div class="right">{{ member.role }}</div>
-                  </li>
-                  {% endfor %}
-                </ul>
-              {% endcall %}
+            {% call ToggleSection(section_name="environments") %}
+              <ul>
+                {% for member in members_list %}
+                <li class="accordion-table__item__expanded">
+                  <div class="accordion-table__item__expanded_first">{{ member.name }}</div>
+                  <div class="right">{{ member.role }}</div>
+                </li>
+                {% endfor %}
+              </ul>
+            {% endcall %}
 
-              {% call ToggleSection(section_name="edit") %}
-                <ul>
-                  <li class="accordion-table__item__expanded">
-                    <div class="accordion-table__item__expanded_first">
-                      <strong>Edit section</strong>
-                    </div>
-                  </li>
-                </ul>
-              {% endcall %}
+            {% call ToggleSection(section_name="edit") %}
+              <ul>
+                <li class="accordion-table__item__expanded">
+                  <div>
+                    <form>
+                      <div class="form-row">
+                        <div class="form-col form-col--half">
+                          Row here
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </li>
+              </ul>
             {% endcall %}
           </li>
         </toggler>
