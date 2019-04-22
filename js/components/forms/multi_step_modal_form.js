@@ -51,9 +51,12 @@ export default {
       }
     },
     handleValidChange: function(event) {
-      const { name, valid } = event
-      this.fields[name] = valid
-      this._checkIsValid()
+      const { name, valid, parent_uid } = event
+      // check that this field is in the modal and not on some other form
+      if (parent_uid === this._uid) {
+        this.fields[name] = valid
+        this._checkIsValid()
+      }
     },
     _checkIsValid: function() {
       const valid = !Object.values(this.fields).some(field => field === false)

@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import { getDaysInMonth } from 'date-fns'
-import { emitFieldChange } from '../lib/emitters'
+import { emitEvent } from '../lib/emitters'
 
 var paddedNumber = function(number) {
   if ((number + '').length === 1) {
@@ -136,7 +136,7 @@ export default {
 
   methods: {
     _emitChange: function(name, value, valid) {
-      emitFieldChange(this, { value, name })
+      emitEvent('field-change', this, { value, name })
     },
   },
 

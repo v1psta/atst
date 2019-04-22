@@ -1,6 +1,6 @@
 import optionsinput from '../components/options_input'
 import textinput from '../components/text_input'
-import { emitFieldChange } from '../lib/emitters'
+import { emitEvent } from '../lib/emitters'
 
 export default {
   name: 'multicheckboxinput',
@@ -41,7 +41,10 @@ export default {
 
   methods: {
     onInput: function(e) {
-      emitFieldChange(this, { value: e.target.value, name: this.name })
+      emitEvent('field-change', this, {
+        value: e.target.value,
+        name: this.name,
+      })
       this.showError = false
       this.showValid = true
     },

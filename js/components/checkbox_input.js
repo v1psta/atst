@@ -1,4 +1,4 @@
-import { emitFieldChange } from '../lib/emitters'
+import { emitEvent } from '../lib/emitters'
 
 export default {
   name: 'checkboxinput',
@@ -9,7 +9,10 @@ export default {
 
   methods: {
     onInput: function(e) {
-      emitFieldChange(this, { value: e.target.checked, name: this.name })
+      emitEvent('field-change', this, {
+        value: e.target.checked,
+        name: this.name,
+      })
     },
   },
 }

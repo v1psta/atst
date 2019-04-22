@@ -1,7 +1,7 @@
 import MaskedInput, { conformToMask } from 'vue-text-mask'
 import inputValidations from '../lib/input_validations'
 import { formatDollars } from '../lib/dollars'
-import { emitFieldChange } from '../lib/emitters'
+import { emitEvent } from '../lib/emitters'
 
 export default {
   name: 'textinput',
@@ -67,9 +67,9 @@ export default {
   },
 
   created: function() {
-    this.$root.$emit('field-mount', {
-      name: this.name,
+    emitEvent('field-mount', this, {
       optional: this.optional,
+      name: this.name,
     })
   },
 
@@ -125,7 +125,7 @@ export default {
       this.showValid = this.value != '' && valid
 
       // Emit a change event
-      emitFieldChange(this, {
+      emitEvent('field-change', this, {
         value: this._rawValue(value),
         valid,
         name: this.name,
