@@ -29,14 +29,14 @@
                 {{ name }}
               </span>
               <span class="icon-link">
-                {% macro EditEnvironmentButton() %}
+                {% set edit_environment_button %}
                   {{ Icon('edit') }}
-                {% endmacro %}
+                {% endset %}
 
                 {{
                   ToggleButton(
-                    open_html=EditEnvironmentButton(),
-                    close_html=EditEnvironmentButton(),
+                    open_html=edit_environment_button,
+                    close_html=edit_environment_button,
                     section_name="edit"
                   )
                 }}
