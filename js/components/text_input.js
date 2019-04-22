@@ -27,7 +27,6 @@ export default {
     paragraph: String,
     noMaxWidth: String,
     optional: Boolean,
-    parent_uid: String,
   },
 
   data: function() {

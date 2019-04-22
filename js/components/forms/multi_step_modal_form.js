@@ -64,7 +64,7 @@ export default {
       return valid
     },
     handleFieldMount: function(event) {
-      const { name, optional, parent_uid } = event
+      const { name, optional } = event
       this.fields[name] = optional
     },
     handleModalOpen: function(_bool) {
