@@ -42,18 +42,18 @@
                 }}
               </span>
               <span class="icon-link icon-link--large accordion-table__item__toggler">
-                {% macro OpenEnvironmentsButton() %}
+                {% set open_environments_button %}
                   {{ "common.show" | translate }} Environments ({{ members_list | length }})
-                {% endmacro %}
+                {% endset %}
 
-                {% macro CloseEnvironmentsButton() %}
+                {% set close_environments_button %}
                   {{ "common.hide" | translate }} Environments ({{ members_list | length }})
-                {% endmacro %}
+                {% endset %}
 
                 {{
                   ToggleButton(
-                    open_html=OpenEnvironmentsButton(),
-                    close_html=CloseEnvironmentsButton(),
+                    open_html=open_environments_button,
+                    close_html=close_environments_button,
                     section_name="environments"
                   )
                 }}
