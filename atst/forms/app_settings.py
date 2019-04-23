@@ -9,6 +9,13 @@ class EnvMemberRoleForm(BaseForm):
     user_id = HiddenField()
     role = RadioField(choices=ENV_ROLES)
 
+    @property
+    def data(self):
+        _data = super().data
+        if _data["role"] == "":
+            _data["role"] = None
+        return _data
+
 
 class EnvironmentRolesForm(BaseForm):
     team_roles = FieldList(FormField(EnvMemberRoleForm))

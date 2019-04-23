@@ -66,7 +66,7 @@ class Environments(object):
     def update_env_role(cls, environment, user, new_role):
         updated = False
 
-        if new_role is None or new_role == "No access":
+        if new_role is None:
             role_deleted = EnvironmentRoles.delete(user.id, environment.id)
             if role_deleted:
                 updated = True
