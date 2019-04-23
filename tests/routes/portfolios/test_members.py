@@ -5,10 +5,10 @@ from atst.domain.permission_sets import PermissionSets
 from atst.queue import queue
 
 _DEFAULT_PERMS_FORM_DATA = {
-    "perms_app_mgmt": PermissionSets.VIEW_PORTFOLIO_APPLICATION_MANAGEMENT,
-    "perms_funding": PermissionSets.VIEW_PORTFOLIO_FUNDING,
-    "perms_reporting": PermissionSets.VIEW_PORTFOLIO_REPORTS,
-    "perms_portfolio_mgmt": PermissionSets.VIEW_PORTFOLIO_ADMIN,
+    "permission_sets-perms_app_mgmt": PermissionSets.VIEW_PORTFOLIO_APPLICATION_MANAGEMENT,
+    "permission_sets-perms_funding": PermissionSets.VIEW_PORTFOLIO_FUNDING,
+    "permission_sets-perms_reporting": PermissionSets.VIEW_PORTFOLIO_REPORTS,
+    "permission_sets-perms_portfolio_mgmt": PermissionSets.VIEW_PORTFOLIO_ADMIN,
 }
 
 
@@ -32,11 +32,11 @@ def test_create_member(client, user_session):
     response = client.post(
         url_for("portfolios.create_member", portfolio_id=portfolio.id),
         data={
-            "dod_id": user.dod_id,
-            "first_name": "Wilbur",
-            "last_name": "Zuckerman",
-            "email": "some_pig@zuckermans.com",
-            "portfolio_role": "developer",
+            "user_data-dod_id": user.dod_id,
+            "user_data-first_name": "user_data-Wilbur",
+            "user_data-last_name": "user_data-Zuckerman",
+            "user_data-email": "user_data-some_pig@zuckermans.com",
+            "user_data-portfolio_role": "user_data-developer",
             **_DEFAULT_PERMS_FORM_DATA,
         },
         follow_redirects=True,

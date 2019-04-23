@@ -34,9 +34,9 @@ def create_member(portfolio_id):
 
     if form.validate():
         try:
-            member = Portfolios.create_member(portfolio, form.data)
+            member = Portfolios.create_member(portfolio, form.update_data)
             invite_service = InvitationService(
-                g.current_user, member, form.data.get("email")
+                g.current_user, member, form.update_data.get("email")
             )
             invite_service.invite()
 
