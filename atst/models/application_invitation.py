@@ -6,25 +6,25 @@ from atst.models import Base
 from atst.models.mixins import TimestampsMixin, AuditableMixin, InvitesMixin
 
 
-class PortfolioInvitation(Base, TimestampsMixin, AuditableMixin, InvitesMixin):
-    __tablename__ = "portfolio_invitations"
+class ApplicationInvitation(Base, TimestampsMixin, AuditableMixin, InvitesMixin):
+    __tablename__ = "application_invitations"
 
-    portfolio_role_id = Column(
-        UUID(as_uuid=True), ForeignKey("portfolio_roles.id"), index=True
+    application_role_id = Column(
+        UUID(as_uuid=True), ForeignKey("application_roles.id"), index=True
     )
     role = relationship(
-        "PortfolioRole",
-        backref=backref("invitations", order_by="PortfolioInvitation.time_created"),
+        "ApplicationRole",
+        backref=backref("invitations", order_by="ApplicationInvitation.time_created"),
     )
 
     @property
-    def portfolio(self):
+    def application(self):
         if self.role:  # pragma: no branch
-            return self.role.portfolio
+            return self.role.application
 
     @property
-    def portfolio_id(self):
-        return self.role.portfolio_id
+    def application_id(self):
+        return self.role.application_id
 
     @property
     def event_details(self):

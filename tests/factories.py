@@ -246,6 +246,15 @@ class PortfolioInvitationFactory(Base):
     expiration_time = PortfolioInvitations.current_expiration_time()
 
 
+class ApplicationInvitationFactory(Base):
+    class Meta:
+        model = ApplicationInvitation
+
+    email = factory.Faker("email")
+    status = InvitationStatus.PENDING
+    expiration_time = PortfolioInvitations.current_expiration_time()
+
+
 class AttachmentFactory(Base):
     class Meta:
         model = Attachment
