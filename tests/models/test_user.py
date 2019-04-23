@@ -26,6 +26,19 @@ def test_cannot_update_dod_id(session):
         session.commit()
 
 
+def test_is_app_member():
+    user = UserFactory.create()
+    app = ApplicationFactory.create()
+    ApplicationRoleFactory.create(user=user, application=app)
+    assert user.is_app_member(app)
+
+
+def test_is_not_app_member():
+    user = UserFactory.create()
+    app = ApplicationFactory.create()
+    assert not user.is_app_member(app)
+
+
 def test_deleted_application_roles_are_ignored(session):
     user = UserFactory.create()
     app = ApplicationFactory.create()
