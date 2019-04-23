@@ -178,6 +178,9 @@ def test_update_team_env_roles(client, user_session):
     env_role_3 = EnvironmentRoleFactory.create(
         environment=environment, role=CSPRole.BASIC_ACCESS.value
     )
+    for user in [env_role_1.user, env_role_2.user, env_role_3.user]:
+        ApplicationRoleFactory.create(user=user, application=application)
+
     app_role = ApplicationRoleFactory.create(application=application)
     form_data = {
         "env_id": environment.id,

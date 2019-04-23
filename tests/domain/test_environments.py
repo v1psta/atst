@@ -11,6 +11,7 @@ from tests.factories import (
     PortfolioFactory,
     EnvironmentFactory,
     EnvironmentRoleFactory,
+    ApplicationRoleFactory,
 )
 
 
@@ -24,6 +25,9 @@ def test_create_environments():
 def test_update_env_role():
     env_role = EnvironmentRoleFactory.create(role=CSPRole.BASIC_ACCESS.value)
     new_role = CSPRole.TECHNICAL_READ.value
+    ApplicationRoleFactory.create(
+        user=env_role.user, application=env_role.environment.application
+    )
 
     assert Environments.update_env_role(env_role.environment, env_role.user, new_role)
     assert env_role.role == new_role
@@ -31,6 +35,9 @@ def test_update_env_role():
 
 def test_update_env_role_no_access():
     env_role = EnvironmentRoleFactory.create(role=CSPRole.BASIC_ACCESS.value)
+    ApplicationRoleFactory.create(
+        user=env_role.user, application=env_role.environment.application
+    )
 
     assert Environments.update_env_role(env_role.environment, env_role.user, None)
     assert not EnvironmentRoles.get(env_role.user.id, env_role.environment.id)
@@ -48,6 +55,7 @@ def test_update_env_role_no_change():
 def test_update_env_role_creates_cloud_id_for_new_member(session):
     user = UserFactory.create()
     env = EnvironmentFactory.create()
+    ApplicationRoleFactory.create(user=user, application=env.application)
     assert not user.cloud_id
     assert Environments.update_env_role(env, user, CSPRole.TECHNICAL_READ.value)
     assert EnvironmentRoles.get(user.id, env.id)
@@ -65,6 +73,8 @@ def test_update_env_roles_by_environment():
     env_role_3 = EnvironmentRoleFactory.create(
         environment=environment, role=CSPRole.TECHNICAL_READ.value
     )
+    for user in [env_role_1.user, env_role_2.user, env_role_3.user]:
+        ApplicationRoleFactory.create(user=user, application=environment.application)
 
     team_roles = [
         {

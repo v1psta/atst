@@ -17,6 +17,7 @@ from tests.factories import (
     EnvironmentFactory,
     EnvironmentRoleFactory,
     ApplicationFactory,
+    ApplicationRoleFactory,
     PortfolioFactory,
 )
 from atst.domain.portfolio_roles import PortfolioRoles
@@ -116,6 +117,7 @@ def test_has_env_role_history(session):
     portfolio = PortfolioFactory.create(owner=owner)
     portfolio_role = PortfolioRoleFactory.create(portfolio=portfolio, user=user)
     application = ApplicationFactory.create(portfolio=portfolio)
+    ApplicationRoleFactory.create(user=user, application=application)
     environment = EnvironmentFactory.create(
         application=application, name="new environment!"
     )

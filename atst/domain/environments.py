@@ -5,6 +5,7 @@ from atst.database import db
 from atst.models.environment import Environment
 from atst.models.environment_role import EnvironmentRole
 from atst.models.application import Application
+from atst.domain.application_roles import ApplicationRoles
 from atst.domain.environment_roles import EnvironmentRoles
 from atst.domain.users import Users
 
@@ -32,6 +33,7 @@ class Environments(object):
 
     @classmethod
     def add_member(cls, environment, user, role):
+        ApplicationRoles.create(user=user, application=environment.application)
         environment_user = EnvironmentRoles.create(
             user=user, environment=environment, role=role
         )
@@ -66,23 +68,24 @@ class Environments(object):
     def update_env_role(cls, environment, user, new_role):
         updated = False
 
-        if new_role is None:
-            updated = EnvironmentRoles.delete(user.id, environment.id)
-        else:
-            env_role = EnvironmentRoles.get(user.id, environment.id)
-            if env_role and env_role.role != new_role:
-                env_role.role = new_role
-                updated = True
-                db.session.add(env_role)
-            elif not env_role:
-                env_role = EnvironmentRoles.create(
-                    user=user, environment=environment, role=new_role
-                )
-                updated = True
-                db.session.add(env_role)
+        if user.is_app_member(environment.application):
+            if new_role is None:
+                updated = EnvironmentRoles.delete(user.id, environment.id)
+            else:
+                env_role = EnvironmentRoles.get(user.id, environment.id)
+                if env_role and env_role.role != new_role:
+                    env_role.role = new_role
+                    updated = True
+                    db.session.add(env_role)
+                elif not env_role:
+                    env_role = EnvironmentRoles.create(
+                        user=user, environment=environment, role=new_role
+                    )
+                    updated = True
+                    db.session.add(env_role)
 
-        if updated:
-            db.session.commit()
+            if updated:
+                db.session.commit()
 
         return updated
 
