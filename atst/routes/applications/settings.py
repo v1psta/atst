@@ -2,6 +2,7 @@ from flask import redirect, render_template, request as http_request, url_for
 
 from . import applications_bp
 from atst.domain.environment_roles import EnvironmentRoles
+from atst.domain.environments import Environments
 from atst.domain.applications import Applications
 from atst.forms.application import ApplicationForm
 from atst.forms.app_settings import EnvironmentRolesForm
@@ -76,11 +77,43 @@ def update(application_id):
             )
         )
     else:
+        env_data = serialize_env_member_form_data(application)
+        env_forms = {}
+        for data in env_data:
+            env_forms[data["env_id"]] = EnvironmentRolesForm(data=data)
+
         return render_template(
             "portfolios/applications/edit.html",
             application=application,
             form=form,
             environments_obj=get_environments_obj_for_app(application=application),
+            env_forms=env_forms,
+        )
+
+
+@applications_bp.route(
+    "/applications/<application_id>/update_env_roles", methods=["POST"]
+)
+@user_can(Permissions.ASSIGN_ENVIRONMENT_MEMBER, message="update application")
+def update_env_roles(application_id):
+    application = Applications.get(application_id)
+    env_roles_form = EnvironmentRolesForm(http_request.form)
+
+    if env_roles_form.validate():
+        env_data = env_roles_form.data
+        Environments.update_env_roles_by_environment(
+            environment_id=env_data["env_id"], team_roles=env_data["team_roles"]
+        )
+        return redirect(url_for("applications.settings", application_id=application.id))
+    else:
+        return render_template(
+            "portfolios/applications/edit.html",
+            application=application,
+            form=ApplicationForm(
+                name=application.name, description=application.description
+            ),
+            environments_obj=get_environments_obj_for_app(application=application),
+            env_forms=env_roles_form,
         )
 
 
