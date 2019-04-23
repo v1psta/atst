@@ -2,7 +2,7 @@ import datetime
 from sqlalchemy.orm.exc import NoResultFound
 
 from atst.database import db
-from atst.models import InvitationStatus, PortfolioInvitation
+from atst.models import ApplicationInvitation, InvitationStatus, PortfolioInvitation
 from atst.domain.portfolio_roles import PortfolioRoles
 
 from .exceptions import NotFoundError
@@ -127,3 +127,7 @@ class BaseInvitations(object):
 
 class PortfolioInvitations(BaseInvitations):
     model = PortfolioInvitation
+
+
+class ApplicationInvitations(BaseInvitations):
+    model = ApplicationInvitation

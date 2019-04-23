@@ -1,7 +1,9 @@
 import pytest
 from uuid import uuid4
 
+from atst.models import CSPRole
 from atst.domain.applications import Applications
+from atst.domain.permission_sets import PermissionSets
 from atst.domain.exceptions import NotFoundError
 
 from tests.factories import (
@@ -100,3 +102,29 @@ def test_delete_application(session):
 
     # changes are flushed
     assert not session.dirty
+
+
+def test_create_member():
+    application = ApplicationFactory.create()
+    env1 = EnvironmentFactory.create(application=application)
+    env2 = EnvironmentFactory.create(application=application)
+    user_data = UserFactory.dictionary()
+    permission_set_names = [PermissionSets.EDIT_APPLICATION_TEAM]
+
+    member_role = Applications.create_member(
+        application,
+        user_data,
+        permission_set_names,
+        environment_roles_data=[
+            {"environment_id": env1.id, "role": CSPRole.BASIC_ACCESS.value},
+            {"environment_id": env2.id, "role": None},
+        ],
+    )
+
+    assert member_role.user.dod_id == user_data["dod_id"]
+    # view application AND edit application team
+    assert len(member_role.permission_sets) == 2
+
+    env_roles = member_role.user.environment_roles
+    assert len(env_roles) == 1
+    assert env_roles[0].environment == env1

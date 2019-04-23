@@ -7,7 +7,7 @@ from .permission_set import PermissionSet
 from .user import User
 from .portfolio_role import PortfolioRole, Status as PortfolioRoleStatus
 from .application_role import ApplicationRole, Status as ApplicationRoleStatus
-from .environment_role import EnvironmentRole
+from .environment_role import EnvironmentRole, CSPRole
 from .portfolio import Portfolio
 from .application import Application
 from .environment import Environment

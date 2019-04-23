@@ -65,6 +65,7 @@ flash:
   next_steps: Review next steps below
   portfolio_home: Go to my portfolio home page
   success: Success!
+  new_application_member: 'You have successfully invited {user_name} to the team.'
 footer:
   about_link_text: Joint Enterprise Defense Infrastructure
   browser_support: JEDI Cloud supported on these web browsers

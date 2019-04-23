@@ -9,7 +9,9 @@ from atst.models.permissions import Permissions
 
 
 def send_invite_email(owner_name, token, new_member_email):
-    body = render_template("emails/invitation.txt", owner=owner_name, token=token)
+    body = render_template(
+        "emails/portfolio/invitation.txt", owner=owner_name, token=token
+    )
     queue.send_mail(
         [new_member_email],
         "{} has invited you to a JEDI Cloud Portfolio".format(owner_name),

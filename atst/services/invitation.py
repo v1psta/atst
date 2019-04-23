@@ -1,25 +1,26 @@
 from flask import render_template
 
-from atst.domain.invitations import PortfolioInvitations
+from atst.domain.invitations import PortfolioInvitations, ApplicationInvitations
 from atst.queue import queue
 from atst.domain.task_orders import TaskOrders
 from atst.domain.portfolio_roles import PortfolioRoles
+from atst.models import ApplicationRole, PortfolioRole
 
 OFFICER_INVITATIONS = {
     "ko_invite": {
         "role": "contracting_officer",
         "subject": "Review a task order",
-        "template": "emails/invitation.txt",
+        "template": "emails/portfolio/invitation.txt",
     },
     "cor_invite": {
         "role": "contracting_officer_representative",
         "subject": "Help with a task order",
-        "template": "emails/invitation.txt",
+        "template": "emails/portfolio/invitation.txt",
     },
     "so_invite": {
         "role": "security_officer",
         "subject": "Review security for a task order",
-        "template": "emails/invitation.txt",
+        "template": "emails/portfolio/invitation.txt",
     },
 }
 
@@ -47,19 +48,37 @@ def update_officer_invitations(user, task_order):
 
 
 class Invitation:
-    def __init__(
-        self,
-        inviter,
-        member,
-        email,
-        subject="{} has invited you to a JEDI cloud portfolio",
-        email_template="emails/invitation.txt",
-    ):
+    def __init__(self, inviter, member, email, subject="", email_template=None):
         self.inviter = inviter
         self.member = member
         self.email = email
         self.subject = subject
         self.email_template = email_template
+
+        if isinstance(member, PortfolioRole):
+            self.email_template = (
+                "emails/portfolio/invitation.txt"
+                if self.email_template is None
+                else self.email_template
+            )
+            self.subject = (
+                "{} has invited you to a JEDI cloud portfolio"
+                if self.subject is None
+                else self.subject
+            )
+            self.domain_class = PortfolioInvitations
+        elif isinstance(member, ApplicationRole):
+            self.email_template = (
+                "emails/application/invitation.txt"
+                if self.email_template is None
+                else self.email_template
+            )
+            self.subject = (
+                "{} has invited you to a JEDI cloud application"
+                if self.subject is None
+                else self.subject
+            )
+            self.domain_class = ApplicationInvitations
 
     def invite(self):
         invite = self._create_invite()
@@ -68,7 +87,7 @@ class Invitation:
         return invite
 
     def _create_invite(self):
-        return PortfolioInvitations.create(self.inviter, self.member, self.email)
+        return self.domain_class.create(self.inviter, self.member, self.email)
 
     def _send_invite_email(self, token):
         body = render_template(
