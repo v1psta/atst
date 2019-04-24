@@ -67,9 +67,7 @@ class Environments(object):
         updated = False
 
         if new_role is None:
-            role_deleted = EnvironmentRoles.delete(user.id, environment.id)
-            if role_deleted:
-                updated = True
+            updated = EnvironmentRoles.delete(user.id, environment.id)
         else:
             env_role = EnvironmentRoles.get(user.id, environment.id)
             if env_role and env_role.role != new_role:
