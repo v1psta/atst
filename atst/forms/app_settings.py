@@ -7,14 +7,7 @@ from .data import ENV_ROLES
 class EnvMemberRoleForm(BaseForm):
     name = StringField()
     user_id = HiddenField()
-    role = RadioField(choices=ENV_ROLES)
-
-    @property
-    def data(self):
-        _data = super().data
-        if _data["role"] == "":
-            _data["role"] = None
-        return _data
+    role = RadioField(choices=ENV_ROLES, coerce=BaseForm.remove_empty_string)
 
 
 class EnvironmentRolesForm(BaseForm):

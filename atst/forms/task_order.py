@@ -27,10 +27,6 @@ from .data import (
 from atst.utils.localization import translate
 
 
-def remove_empty_string(value):
-    return value or None
-
-
 class AppInfoWithExistingPortfolioForm(BaseForm):
     scope = TextAreaField(
         translate("forms.task_order.scope_label"),
@@ -55,28 +51,28 @@ class AppInfoWithExistingPortfolioForm(BaseForm):
         description=translate("forms.task_order.complexity.description"),
         choices=APPLICATION_COMPLEXITY,
         default=None,
-        filters=[remove_empty_string],
+        filters=[BaseForm.remove_empty_string],
         widget=ListWidget(prefix_label=False),
         option_widget=CheckboxInput(),
     )
     complexity_other = StringField(
         translate("forms.task_order.complexity_other_label"),
         default=None,
-        filters=[remove_empty_string],
+        filters=[BaseForm.remove_empty_string],
     )
     dev_team = SelectMultipleField(
         translate("forms.task_order.dev_team.label"),
         description=translate("forms.task_order.dev_team.description"),
         choices=DEV_TEAM,
         default=None,
-        filters=[remove_empty_string],
+        filters=[BaseForm.remove_empty_string],
         widget=ListWidget(prefix_label=False),
         option_widget=CheckboxInput(),
     )
     dev_team_other = StringField(
         translate("forms.task_order.dev_team_other_label"),
         default=None,
-        filters=[remove_empty_string],
+        filters=[BaseForm.remove_empty_string],
     )
     team_experience = RadioField(
         translate("forms.task_order.team_experience.label"),
@@ -91,7 +87,7 @@ class AppInfoForm(AppInfoWithExistingPortfolioForm):
     portfolio_name = StringField(
         translate("forms.task_order.portfolio_name_label"),
         description=translate("forms.task_order.portfolio_name_description"),
-        filters=[remove_empty_string],
+        filters=[BaseForm.remove_empty_string],
         validators=[
             Required(),
             Length(
@@ -105,7 +101,7 @@ class AppInfoForm(AppInfoWithExistingPortfolioForm):
         translate("forms.task_order.defense_component_label"),
         choices=SERVICE_BRANCHES,
         default="",
-        filters=[remove_empty_string],
+        filters=[BaseForm.remove_empty_string],
     )
 
 
@@ -147,36 +143,36 @@ class FundingForm(BaseForm):
 class UnclassifiedFundingForm(FundingForm):
     clin_02 = StringField(
         translate("forms.task_order.unclassified_clin_02_label"),
-        filters=[remove_empty_string],
+        filters=[BaseForm.remove_empty_string],
     )
     clin_04 = StringField(
         translate("forms.task_order.unclassified_clin_04_label"),
-        filters=[remove_empty_string],
+        filters=[BaseForm.remove_empty_string],
     )
 
 
 class OversightForm(BaseForm):
     ko_first_name = StringField(
         translate("forms.task_order.oversight_first_name_label"),
-        filters=[remove_empty_string],
+        filters=[BaseForm.remove_empty_string],
     )
     ko_last_name = StringField(
         translate("forms.task_order.oversight_last_name_label"),
-        filters=[remove_empty_string],
+        filters=[BaseForm.remove_empty_string],
     )
     ko_email = StringField(
         translate("forms.task_order.oversight_email_label"),
         validators=[Optional(), Email()],
-        filters=[remove_empty_string],
+        filters=[BaseForm.remove_empty_string],
     )
     ko_phone_number = TelField(
         translate("forms.task_order.oversight_phone_label"),
         validators=[Optional(), PhoneNumber()],
-        filters=[remove_empty_string],
+        filters=[BaseForm.remove_empty_string],
     )
     ko_dod_id = StringField(
         translate("forms.task_order.oversight_dod_id_label"),
-        filters=[remove_empty_string],
+        filters=[BaseForm.remove_empty_string],
         validators=[
             RequiredIf(lambda form: form._fields.get("ko_invite").data),
             Length(min=10),
@@ -187,20 +183,20 @@ class OversightForm(BaseForm):
     am_cor = BooleanField(translate("forms.task_order.oversight_am_cor_label"))
     cor_first_name = StringField(
         translate("forms.task_order.oversight_first_name_label"),
-        filters=[remove_empty_string],
+        filters=[BaseForm.remove_empty_string],
     )
     cor_last_name = StringField(
         translate("forms.task_order.oversight_last_name_label"),
-        filters=[remove_empty_string],
+        filters=[BaseForm.remove_empty_string],
     )
     cor_email = StringField(
         translate("forms.task_order.oversight_email_label"),
-        filters=[remove_empty_string],
+        filters=[BaseForm.remove_empty_string],
         validators=[Optional(), Email()],
     )
     cor_phone_number = TelField(
         translate("forms.task_order.oversight_phone_label"),
-        filters=[remove_empty_string],
+        filters=[BaseForm.remove_empty_string],
         validators=[
             RequiredIf(lambda form: not form._fields.get("am_cor").data),
             Optional(),
@@ -209,7 +205,7 @@ class OversightForm(BaseForm):
     )
     cor_dod_id = StringField(
         translate("forms.task_order.oversight_dod_id_label"),
-        filters=[remove_empty_string],
+        filters=[BaseForm.remove_empty_string],
         validators=[
             RequiredIf(
                 lambda form: not form._fields.get("am_cor").data
@@ -222,25 +218,25 @@ class OversightForm(BaseForm):
 
     so_first_name = StringField(
         translate("forms.task_order.oversight_first_name_label"),
-        filters=[remove_empty_string],
+        filters=[BaseForm.remove_empty_string],
     )
     so_last_name = StringField(
         translate("forms.task_order.oversight_last_name_label"),
-        filters=[remove_empty_string],
+        filters=[BaseForm.remove_empty_string],
     )
     so_email = StringField(
         translate("forms.task_order.oversight_email_label"),
-        filters=[remove_empty_string],
+        filters=[BaseForm.remove_empty_string],
         validators=[Optional(), Email()],
     )
     so_phone_number = TelField(
         translate("forms.task_order.oversight_phone_label"),
-        filters=[remove_empty_string],
+        filters=[BaseForm.remove_empty_string],
         validators=[Optional(), PhoneNumber()],
     )
     so_dod_id = StringField(
         translate("forms.task_order.oversight_dod_id_label"),
-        filters=[remove_empty_string],
+        filters=[BaseForm.remove_empty_string],
         validators=[
             RequiredIf(lambda form: form._fields.get("so_invite").data),
             Length(min=10),
