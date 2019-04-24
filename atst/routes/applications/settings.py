@@ -45,12 +45,13 @@ def serialize_env_member_form_data(application):
 @applications_bp.route("/applications/<application_id>/settings")
 @user_can(Permissions.VIEW_APPLICATION, message="view application edit form")
 def settings(application_id):
+    # refactor like portfolio admin render function
     application = Applications.get(application_id)
     form = ApplicationForm(name=application.name, description=application.description)
-    env_data = serialize_env_member_form_data(application)
+    app_envs_data = serialize_env_member_form_data(application)
     env_forms = {}
-    for data in env_data:
-        env_forms[data["env_id"]] = EnvironmentRolesForm(data=data)
+    for env_data in app_envs_data:
+        env_forms[env_data["env_id"]] = EnvironmentRolesForm(data=env_data)
 
     return render_template(
         "portfolios/applications/edit.html",
