@@ -2,9 +2,10 @@ from wtforms.fields import FormField, FieldList, HiddenField, BooleanField
 
 from .forms import BaseForm
 from .member import NewForm as BaseNewMemberForm
-from .data import ENV_ROLES
+from .data import FORMATTED_ENV_ROLES as ENV_ROLES
 from atst.forms.fields import SelectField
 from atst.domain.permission_sets import PermissionSets
+from atst.utils.localization import translate
 
 
 class EnvironmentForm(BaseForm):
@@ -14,9 +15,15 @@ class EnvironmentForm(BaseForm):
 
 
 class PermissionsForm(BaseForm):
-    perms_env_mgmt = BooleanField(None, default=False)
-    perms_team_mgmt = BooleanField(None, default=False)
-    perms_del_env = BooleanField(None, default=False)
+    perms_env_mgmt = BooleanField(
+        translate("portfolios.applications.members.new.manage_envs"), default=False
+    )
+    perms_team_mgmt = BooleanField(
+        translate("portfolios.applications.members.new.manage_team"), default=False
+    )
+    perms_del_env = BooleanField(
+        translate("portfolios.applications.members.new.delete_envs"), default=False
+    )
 
     @property
     def data(self):

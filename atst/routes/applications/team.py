@@ -6,6 +6,7 @@ from atst.domain.environments import Environments
 from atst.domain.applications import Applications
 from atst.domain.authz.decorator import user_can_access_decorator as user_can
 from atst.domain.permission_sets import PermissionSets
+from atst.domain.exceptions import AlreadyExistsError
 from atst.forms.application_member import NewForm as NewMemberForm
 from atst.models.permissions import Permissions
 from atst.services.invitation import Invitation as InvitationService
@@ -45,10 +46,17 @@ def team(application_id):
             ),
         }
 
+    env_roles = [
+        {"environment_id": e.id, "environment_name": e.name}
+        for e in application.environments
+    ]
+    member_form = NewMemberForm(data={"environment_roles": env_roles})
+
     return render_template(
         "portfolios/applications/team.html",
         application=application,
         environment_users=environment_users,
+        member_form=member_form,
     )
 
 

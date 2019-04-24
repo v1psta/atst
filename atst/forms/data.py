@@ -219,3 +219,6 @@ REQUIRED_DISTRIBUTIONS = [
 ]
 
 ENV_ROLES = [(role.value, role.value) for role in CSPRole] + [(None, "No access")]
+FORMATTED_ENV_ROLES = [(role.value, "- {} -".format(role.value)) for role in CSPRole] + [
+    (None, "- No Access -")
+]

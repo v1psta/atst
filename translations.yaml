@@ -35,6 +35,9 @@ common:
   save_and_continue: Save & continue
   show: Show
   sign: Sign
+  resource_names:
+    environments: Environments
+  choose_role: Choose a role
 components:
   modal:
     close: Close
@@ -434,6 +437,14 @@ portfolios:
       user: User
     team_text: Team
     update_button_text: Save
+    members:
+      new:
+        assign_roles: Assign Member Environments and Roles
+        learn_more: Learn more about these roles
+        manage_perms: 'Manage permissions for {application_name}'
+        manage_envs: 'Allow member to <strong>add</strong> and <strong>rename environments</strong> within the application.'
+        delete_envs: 'Allow member to <strong>delete environments</strong> within the application.'
+        manage_team: 'Allow member to <strong>add, update</strong> and <strong>remove members</strong> from the application team.'
   index:
     empty:
       start_button: Start a new JEDI portfolio

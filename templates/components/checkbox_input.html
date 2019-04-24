@@ -1,6 +1,6 @@
 {% macro CheckboxInput(
   field,
-  label=field.label | striptags,
+  label=field.label,
   inline=False,
   classes="") -%}
   <checkboxinput name='{{ field.name }}' inline-template key='{{ field.name }}'>
@@ -9,9 +9,7 @@
       <fieldset data-ally-disabled="true" v-on:change="onInput" class="usa-input__choices {% if inline %}usa-input__choices--inline{% endif %}">
         <legend>
           {{ field() }}
-          <label for={{field.name}}>
-            {{ label }}
-          </label>
+          {{ label | safe }}
 
           {% if field.description %}
             <span class='usa-input__help'>{{ field.description | safe }}</span>
