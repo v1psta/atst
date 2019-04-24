@@ -107,6 +107,9 @@ def update_env_roles(application_id):
         )
         return redirect(url_for("applications.settings", application_id=application.id))
     else:
+        # TODO: Create a better pattern to handle when a form doesn't validate
+            # if a user is submitting the data via the web page then they
+            # should never have any form validation errors
         return render_template(
             "portfolios/applications/edit.html",
             application=application,
