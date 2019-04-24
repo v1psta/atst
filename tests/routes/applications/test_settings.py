@@ -166,7 +166,7 @@ def test_user_without_permission_cannot_update_application(client, user_session)
     assert application.description == "Cool stuff happening here!"
 
 
-def test_user_with_permission_can_update_team_env_roles(client, user_session):
+def test_update_team_env_roles(client, user_session):
     environment = EnvironmentFactory.create()
     application = environment.application
     env_role_1 = EnvironmentRoleFactory.create(
@@ -207,46 +207,6 @@ def test_user_with_permission_can_update_team_env_roles(client, user_session):
     assert env_role_2.role == CSPRole.BASIC_ACCESS.value
     assert not EnvironmentRoles.get(env_role_3.user.id, environment.id)
     assert EnvironmentRoles.get(app_role.user.id, environment.id)
-
-
-def test_user_without_permission_cannot_update_team_env_roles(client, user_session):
-    environment = EnvironmentFactory.create()
-    application = environment.application
-    app_role_without_perms = ApplicationRoleFactory.create(application=application)
-    env_role_1 = EnvironmentRoleFactory.create(
-        environment=environment, role=CSPRole.BASIC_ACCESS.value
-    )
-    env_role_2 = EnvironmentRoleFactory.create(
-        environment=environment, role=CSPRole.BASIC_ACCESS.value
-    )
-    app_role = ApplicationRoleFactory.create(application=application)
-    form_data = {
-        "env_id": environment.id,
-        "team_roles-0-user_id": env_role_1.user.id,
-        "team_roles-0-name": env_role_1.user.full_name,
-        "team_roles-0-role": CSPRole.NETWORK_ADMIN.value,
-        "team_roles-1-user_id": env_role_2.user.id,
-        "team_roles-1-name": env_role_2.user.full_name,
-        "team_roles-1-role": "",
-        "team_roles-2-user_id": app_role.user.id,
-        "team_roles-2-name": app_role.user.full_name,
-        "team_roles-2-role": CSPRole.TECHNICAL_READ.value,
-    }
-
-    user_session(app_role_without_perms.user)
-    response = client.post(
-        url_for("applications.update_env_roles", environment_id=environment.id),
-        data=form_data,
-        follow_redirects=True,
-    )
-
-    assert response.status_code == 404
-    assert env_role_1.role == CSPRole.BASIC_ACCESS.value
-    assert (
-        EnvironmentRoles.get(env_role_2.user.id, environment.id).role
-        == CSPRole.BASIC_ACCESS.value
-    )
-    assert not EnvironmentRoles.get(app_role.user.id, environment.id)
 
 
 def test_user_can_only_access_apps_in_their_portfolio(client, user_session):
