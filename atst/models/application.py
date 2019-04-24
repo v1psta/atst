@@ -52,6 +52,9 @@ class Application(
     def displayname(self):
         return self.name
 
+    def has_member(self, user):
+        return user in self.users
+
     def __repr__(self):  # pragma: no cover
         return "<Application(name='{}', description='{}', portfolio='{}', id='{}')>".format(
             self.name, self.description, self.portfolio.name, self.id

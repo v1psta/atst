@@ -80,9 +80,6 @@ class User(
     def displayname(self):
         return self.full_name
 
-    def is_app_member(self, application):
-        return self in application.users
-
     def __repr__(self):
         return "<User(name='{}', dod_id='{}', email='{}', has_portfolios='{}', id='{}')>".format(
             self.full_name, self.dod_id, self.email, self.has_portfolios, self.id
