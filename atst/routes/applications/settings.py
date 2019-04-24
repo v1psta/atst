@@ -54,7 +54,7 @@ def settings(application_id):
         env_forms[env_data["env_id"]] = EnvironmentRolesForm(data=env_data)
 
     return render_template(
-        "portfolios/applications/edit.html",
+        "portfolios/applications/settings.html",
         application=application,
         form=form,
         environments_obj=get_environments_obj_for_app(application=application),
@@ -84,7 +84,7 @@ def update(application_id):
             env_forms[data["env_id"]] = EnvironmentRolesForm(data=data)
 
         return render_template(
-            "portfolios/applications/edit.html",
+            "portfolios/applications/settings.html",
             application=application,
             form=form,
             environments_obj=get_environments_obj_for_app(application=application),
@@ -111,7 +111,7 @@ def update_env_roles(application_id):
             # if a user is submitting the data via the web page then they
             # should never have any form validation errors
         return render_template(
-            "portfolios/applications/edit.html",
+            "portfolios/applications/settings.html",
             application=application,
             form=ApplicationForm(
                 name=application.name, description=application.description
