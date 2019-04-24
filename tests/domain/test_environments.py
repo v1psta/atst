@@ -1,9 +1,7 @@
 import pytest
-import random
 
 from atst.domain.environments import Environments
 from atst.domain.environment_roles import EnvironmentRoles
-from atst.domain.portfolio_roles import PortfolioRoles
 from atst.domain.exceptions import NotFoundError
 from atst.models.environment_role import CSPRole
 
