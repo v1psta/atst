@@ -234,6 +234,7 @@ forms:
       label: App migration
       none: Not planning to migrate any applications
       not_sure: Not sure
+      not_sure_help: Not sure? Check in with the technical lead on your team to help figure out your migration needs.
       on_premise: 'Yes, migrating from an on-premise data center'
     basic_intro: 'The first step of obtaining funding for cloud access is to provide more information about how you intend to  use these funds. Before you can submit your task order, you’ll have to complete all sections, but while you’re working on it, you can skip around the form, once you’ve supplied the portfolio name and DoD component.'
     clin_01_label: 'CLIN 01 : Unclassified'
@@ -268,11 +269,12 @@ forms:
     first_step_title: Basics
     ko_invite_label: Invite contracting officer to Task Order Builder
     native_apps:
-      description: Do you plan to develop any applications natively in the cloud?
+      description: Do you plan to develop any applications in the cloud?
       label: Native apps
       'no': 'No, not planning to develop natively in the cloud'
       not_sure: 'Not sure, unsure if planning to develop natively in the cloud'
       'yes': 'Yes, planning to develop natively in the cloud'
+      not_sure_help: Not sure? Talk to your technical lead about where and how they plan on developing your application.
     oversight_am_cor_label: I am the Contracting Officer Representative (COR) for this task order
     oversight_dod_id_label: DoD ID
     oversight_email_label: Email
