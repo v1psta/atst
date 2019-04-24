@@ -5,7 +5,7 @@ from sqlalchemy.orm.exc import NoResultFound
 
 from atst.database import db
 from atst.domain.authz import Authorization
-from atst.models import Application, Portfolio, TaskOrder
+from atst.models import Application, Environment, Portfolio, TaskOrder
 from atst.models.permissions import Permissions
 from atst.domain.portfolios.scopes import ScopedPortfolio
 
@@ -23,6 +23,14 @@ def get_portfolio_from_context(view_args):
             db.session.query(Portfolio)
             .join(Application, Application.portfolio_id == Portfolio.id)
             .filter(Application.id == view_args["application_id"])
+        )
+
+    elif "environment_id" in view_args:
+        query = (
+            db.session.query(Portfolio)
+            .join(Application, Application.portfolio_id == Portfolio.id)
+            .join(Environment, Environment.application_id == Application.id)
+            .filter(Environment.id == view_args["environment_id"])
         )
 
     elif "task_order_id" in view_args:

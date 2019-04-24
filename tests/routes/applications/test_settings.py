@@ -197,7 +197,7 @@ def test_user_with_permission_can_update_team_env_roles(client, user_session):
 
     user_session(application.portfolio.owner)
     response = client.post(
-        url_for("applications.update_env_roles", application_id=application.id),
+        url_for("applications.update_env_roles", environment_id=environment.id),
         data=form_data,
         follow_redirects=True,
     )
@@ -235,7 +235,7 @@ def test_user_without_permission_cannot_update_team_env_roles(client, user_sessi
 
     user_session(app_role_without_perms.user)
     response = client.post(
-        url_for("applications.update_env_roles", application_id=application.id),
+        url_for("applications.update_env_roles", environment_id=environment.id),
         data=form_data,
         follow_redirects=True,
     )

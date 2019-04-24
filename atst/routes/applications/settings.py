@@ -92,18 +92,17 @@ def update(application_id):
         )
 
 
-@applications_bp.route(
-    "/applications/<application_id>/update_env_roles", methods=["POST"]
-)
-@user_can(Permissions.ASSIGN_ENVIRONMENT_MEMBER, message="update application")
-def update_env_roles(application_id):
-    application = Applications.get(application_id)
+@applications_bp.route("/environments/<environment_id>/roles", methods=["POST"])
+@user_can(Permissions.ASSIGN_ENVIRONMENT_MEMBER, message="update environment roles")
+def update_env_roles(environment_id):
+    environment = Environments.get(environment_id)
+    application = environment.application
     env_roles_form = EnvironmentRolesForm(http_request.form)
 
     if env_roles_form.validate():
         env_data = env_roles_form.data
         Environments.update_env_roles_by_environment(
-            environment_id=env_data["env_id"], team_roles=env_data["team_roles"]
+            environment_id=environment_id, team_roles=env_data["team_roles"]
         )
         return redirect(url_for("applications.settings", application_id=application.id))
     else:
