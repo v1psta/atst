@@ -6,6 +6,7 @@ import classes from '../styles/atat.scss'
 import Vue from 'vue/dist/vue'
 import VTooltip from 'v-tooltip'
 
+import fullpagenotice from './components/fullpagenotice'
 import levelofwarrant from './components/levelofwarrant'
 import optionsinput from './components/options_input'
 import multicheckboxinput from './components/multi_checkbox_input'
@@ -46,6 +47,7 @@ Vue.mixin(Modal)
 const app = new Vue({
   el: '#app-root',
   components: {
+    fullpagenotice,
     toggler,
     levelofwarrant,
     optionsinput,
