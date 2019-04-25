@@ -43,6 +43,7 @@ body {
       background-color: $color-white;
       padding: $gap * 2;
       width: 100%;
+      border-radius: 5px;
 
       overflow-y: auto;
       -ms-overflow-style: scrollbar;
@@ -52,7 +53,7 @@ body {
       }
 
       @include media($medium-screen) {
-        padding: $gap * 4;
+        padding: $gap * 5;
       }
 
       h1, h2 {
@@ -186,6 +187,7 @@ body {
 
     .form-row {
       margin-top: 0;
+      margin-bottom: 0;
 
       .form-col {
         .usa-input {

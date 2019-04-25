@@ -51,6 +51,10 @@ class ApplicationRole(
         "PermissionSet", secondary=application_roles_permission_sets
     )
 
+    @property
+    def user_name(self):
+        return self.user.full_name
+
     def __repr__(self):
         return "<ApplicationRole(application='{}', user_id='{}', id='{}', permissions={})>".format(
             self.application.name, self.user_id, self.id, self.permissions
