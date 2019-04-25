@@ -47,6 +47,9 @@ export default {
         this.step += 1
       }
     },
+    previous: function() {
+      this.step -= 1
+    },
     goToStep: function(step) {
       if (this._checkIsValid()) {
         this.step = step

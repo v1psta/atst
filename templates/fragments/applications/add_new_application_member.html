@@ -118,6 +118,11 @@
         form="add-app-mem"
         value='Invite member'>
       <a class='action-group__action icon-link icon-link--default' v-on:click="closeModal('{{ new_port_mem }}')">Cancel</a>
+      <input
+          type='button'
+          v-on:click="previous()"
+          class='action-group__action usa-button action-group__action--left'
+          value='Previous step'>
     </div>
   </div>
 {% endset %}

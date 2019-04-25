@@ -21,4 +21,9 @@
   &:last-child {
     margin-bottom: $gap * 3;
   }
+
+  .action-group__action--left {
+    margin-left: 0;
+    margin-right: auto;
+  }
 }
