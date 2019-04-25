@@ -35,3 +35,7 @@ class BaseForm(FlaskForm):
         if not valid:
             flash("form_errors")
         return valid
+
+    @classmethod
+    def remove_empty_string(cls, value):
+        return value or None

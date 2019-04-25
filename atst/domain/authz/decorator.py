@@ -7,6 +7,7 @@ from atst.domain.portfolios import Portfolios
 from atst.domain.task_orders import TaskOrders
 from atst.domain.applications import Applications
 from atst.domain.invitations import Invitations
+from atst.domain.environments import Environments
 from atst.domain.exceptions import UnauthorizedError
 
 
@@ -30,6 +31,11 @@ def check_access(permission, message, override, *args, **kwargs):
         access_args["portfolio"] = Portfolios.get(
             g.current_user, kwargs["portfolio_id"]
         )
+
+    elif "environment_id" in kwargs:
+        environment = Environments.get(kwargs["environment_id"])
+        access_args["application"] = environment.application
+        access_args["portfolio"] = environment.application.portfolio
 
     if override is not None and override(g.current_user, **access_args, **kwargs):
         return True

@@ -8,12 +8,14 @@ import atst
 from atst.app import make_app, make_config
 from atst.domain.auth import UNPROTECTED_ROUTES as _NO_LOGIN_REQUIRED
 from atst.domain.permission_sets import PermissionSets
+from atst.models.environment_role import CSPRole
 from atst.models.portfolio_role import Status as PortfolioRoleStatus
 
 from tests.factories import (
     AttachmentFactory,
     ApplicationFactory,
     ApplicationRoleFactory,
+    EnvironmentFactory,
     InvitationFactory,
     PortfolioFactory,
     PortfolioRoleFactory,
@@ -165,6 +167,41 @@ def test_applications_create_access(post_url_assert_status):
     url = url_for("applications.create", portfolio_id=portfolio.id)
     post_url_assert_status(ccpo, url, 200)
     post_url_assert_status(owner, url, 200)
+    post_url_assert_status(rando, url, 404)
+
+
+# applications.update_env_roles
+def test_applications_update_team_env_roles(post_url_assert_status):
+    ccpo = UserFactory.create_ccpo()
+    owner = user_with()
+    app_admin = user_with()
+    rando = user_with()
+    app_member = UserFactory.create()
+
+    portfolio = PortfolioFactory.create(
+        owner=owner, applications=[{"name": "mos eisley"}]
+    )
+    application = portfolio.applications[0]
+    environment = EnvironmentFactory.create(application=application)
+
+    ApplicationRoleFactory.create(
+        user=app_admin,
+        application=application,
+        permission_sets=PermissionSets.get_many(
+            [
+                PermissionSets.VIEW_APPLICATION,
+                PermissionSets.EDIT_APPLICATION_ENVIRONMENTS,
+                PermissionSets.EDIT_APPLICATION_TEAM,
+                PermissionSets.DELETE_APPLICATION_ENVIRONMENTS,
+            ]
+        ),
+    )
+    ApplicationRoleFactory.create(user=app_member)
+
+    url = url_for("applications.update_env_roles", environment_id=environment.id)
+    post_url_assert_status(ccpo, url, 302)
+    post_url_assert_status(owner, url, 302)
+    post_url_assert_status(app_admin, url, 302)
     post_url_assert_status(rando, url, 404)
 
 
