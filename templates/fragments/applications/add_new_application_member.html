@@ -66,16 +66,18 @@
             v-bind:initial-value="'{{ environment_data.role.data | string }}'"
           >
             <div class="usa-input">
-              <fieldset data-ally-disabled="true" class="form-row usa-input__choices">
-                <div class="form-col form-col--quarter">
-                  <legend>
-                    <div v-bind:class='["usa-input__title-inline", {"environment-name--gray": value === "None" }]'>
-                      {{ environment_data.environment_name.data }}
-                    </div>
-                  </legend>
-                </div>
-                <div class="form-col form-col--three-quarters">
-                  {{ environment_data.role(**{"v-model": "value"}) }}
+              <fieldset data-ally-disabled="true" class="usa-input__choices">
+                <div class="form-row">
+                  <div class="form-col form-col--quarter">
+                    <legend>
+                      <div v-bind:class='["usa-input__title-inline", {"environment-name--gray": value === "None" }]'>
+                        {{ environment_data.environment_name.data }}
+                      </div>
+                    </legend>
+                  </div>
+                  <div class="form-col form-col--three-quarters">
+                    {{ environment_data.role(**{"v-model": "value"}) }}
+                  </div>
                 </div>
               </fieldset>
             </div>
