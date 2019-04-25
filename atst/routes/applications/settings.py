@@ -29,19 +29,31 @@ def get_environments_obj_for_app(application):
     return environments_obj
 
 
-def serialize_env_member_form_data(application):
+def serialize_env_member_forms(application):
     environments_list = []
+
     for env in application.environments:
-        env_info = {"env_id": env.id, "team_roles": []}
-        for user in env.users:
-            env_role = EnvironmentRoles.get(user.id, env.id)
-            env_info["team_roles"].append(
-                {
-                    "name": user.full_name,
-                    "user_id": user.id,
-                    "role": env_role.displayname,
-                }
-            )
+        env_info = {"env_name": env.name, "no_access": []}
+        env_team_list = []
+
+        for user in application.users:
+            if user in env.users:
+                env_role = EnvironmentRoles.get(user.id, env.id)
+                env_team_list.append(
+                    {
+                        "name": user.full_name,
+                        "user_id": user.id,
+                        "role": env_role.displayname,
+                    }
+                )
+            else:
+                env_info["no_access"].append(
+                    {"name": user.full_name, "user_id": user.id}
+                )
+
+        env_info["form"] = EnvironmentRolesForm(
+            data={"env_id": env.id, "team_roles": env_team_list}
+        )
         environments_list.append(env_info)
     return environments_list
 
@@ -52,18 +64,13 @@ def settings(application_id):
     # refactor like portfolio admin render function
     application = Applications.get(application_id)
     form = ApplicationForm(name=application.name, description=application.description)
-    app_envs_data = serialize_env_member_form_data(application)
-
-    env_forms = {}
-    for env_data in app_envs_data:
-        env_forms[env_data["env_id"]] = EnvironmentRolesForm(data=env_data)
 
     return render_template(
         "portfolios/applications/settings.html",
         application=application,
         form=form,
         environments_obj=get_environments_obj_for_app(application=application),
-        env_forms=env_forms,
+        env_forms=serialize_env_member_forms(application=application),
     )
 
 
@@ -106,17 +113,12 @@ def update(application_id):
             )
         )
     else:
-        env_data = serialize_env_member_form_data(application)
-        env_forms = {}
-        for data in env_data:
-            env_forms[data["env_id"]] = EnvironmentRolesForm(data=data)
-
         return render_template(
             "portfolios/applications/settings.html",
             application=application,
             form=form,
             environments_obj=get_environments_obj_for_app(application=application),
-            env_forms=env_forms,
+            env_forms=serialize_env_member_forms(application=application),
         )
 
 

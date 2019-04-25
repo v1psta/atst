@@ -98,44 +98,43 @@ def test_edit_application_environments_obj(app, client, user_session):
 
 
 def test_edit_app_serialize_env_member_form_data(app, client, user_session):
-    portfolio = PortfolioFactory.create()
-    application = Applications.create(
-        portfolio,
-        "Snazzy Application",
-        "A new application for me and my friends",
-        {"env1", "env2"},
-    )
-    user1 = UserFactory.create()
-    user2 = UserFactory.create()
-    env1 = application.environments[0]
-    env2 = application.environments[1]
-    env_role1 = EnvironmentRoleFactory.create(environment=env1, user=user1)
-    env_role2 = EnvironmentRoleFactory.create(environment=env1, user=user2)
-    env_role3 = EnvironmentRoleFactory.create(environment=env2, user=user1)
+    env = EnvironmentFactory.create()
+    application = env.application
 
-    user_session(portfolio.owner)
+    _app_role = ApplicationRoleFactory.create(application=application)
+    env_role = EnvironmentRoleFactory.create(environment=env, user=_app_role.user)
+
+    app_role = ApplicationRoleFactory.create(application=application)
+
+    user_session(application.portfolio.owner)
 
     with captured_templates(app) as templates:
         response = app.test_client().get(
             url_for("applications.settings", application_id=application.id)
         )
-
         assert response.status_code == 200
         _, context = templates[0]
-        for env_id in context["env_forms"]:
-            env = Environments.get(environment_id=env_id)
-            form_data = {"env_id": env_id, "team_roles": []}
-            for user in env.users:
-                env_role = EnvironmentRoles.get(user.id, env.id)
-                form_data["team_roles"].append(
+
+        serialized_data = {
+            "env_name": env.name,
+            "no_access": [
+                {"name": app_role.user.full_name, "user_id": app_role.user_id}
+            ],
+            "form": {
+                "env_id": env.id,
+                "team_roles": [
                     {
-                        "name": user.full_name,
-                        "user_id": user.id,
+                        "name": env_role.user.full_name,
+                        "user_id": env_role.user_id,
                         "role": env_role.displayname,
                     }
-                )
+                ],
+            },
+        }
 
-            assert context["env_forms"][env_id].data == form_data
+        assert context["env_forms"][0]["env_name"] == serialized_data["env_name"]
+        assert context["env_forms"][0]["form"].data == serialized_data["form"]
+        assert context["env_forms"][0]["no_access"] == serialized_data["no_access"]
 
 
 def test_user_with_permission_can_update_application(client, user_session):
