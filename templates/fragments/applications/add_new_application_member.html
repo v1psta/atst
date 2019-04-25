@@ -5,7 +5,7 @@
 
 {% set step_one %}
   <div class="modal__form--header">
-    <h1>Invite new portfolio member</h1>
+    <h1>Invite new member</h1>
   </div>
   <div class='form-row'>
     <div class='form-col form-col--half'>
@@ -62,20 +62,24 @@
           </div>
         </div>
         {% for environment_data in member_form.environment_roles %}
-          <div class="usa-input">
-            <fieldset data-ally-disabled="true" class="form-row usa-input__choices">
-              <div class="form-col form-col--quarter">
-                <legend>
-                  <div class="usa-input__title-inline">
-                    {{ environment_data.environment_name.data }}
-                  </div>
-                </legend>
-              </div>
-              <div class="form-col form-col--three-quarters">
-                {{ environment_data.role() }}
-              </div>
-            </fieldset>
-          </div>
+          <optionsinput inline-template
+            v-bind:initial-value="'{{ environment_data.role.data | string }}'"
+          >
+            <div class="usa-input">
+              <fieldset data-ally-disabled="true" class="form-row usa-input__choices">
+                <div class="form-col form-col--quarter">
+                  <legend>
+                    <div v-bind:class='["usa-input__title-inline", {"environment-name--gray": value === "None" }]'>
+                      {{ environment_data.environment_name.data }}
+                    </div>
+                  </legend>
+                </div>
+                <div class="form-col form-col--three-quarters">
+                  {{ environment_data.role(**{"v-model": "value"}) }}
+                </div>
+              </fieldset>
+            </div>
+          </optionsinput>
           {{ environment_data.environment_id() }}
         {% endfor %}
       </div>

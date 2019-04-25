@@ -1,3 +1,4 @@
+from flask_wtf import FlaskForm
 from wtforms.fields import FormField, FieldList, HiddenField, BooleanField
 
 from .forms import BaseForm
@@ -8,13 +9,18 @@ from atst.domain.permission_sets import PermissionSets
 from atst.utils.localization import translate
 
 
-class EnvironmentForm(BaseForm):
+class EnvironmentForm(FlaskForm):
     environment_id = HiddenField()
     environment_name = HiddenField()
-    role = SelectField(environment_name, choices=ENV_ROLES, default=None)
+    role = SelectField(
+        environment_name,
+        choices=ENV_ROLES,
+        default=None,
+        filters=[lambda x: None if x == "None" else x],
+    )
 
 
-class PermissionsForm(BaseForm):
+class PermissionsForm(FlaskForm):
     perms_env_mgmt = BooleanField(
         translate("portfolios.applications.members.new.manage_envs"), default=False
     )
