@@ -84,9 +84,30 @@
         {% endfor %}
       </div>
       <h1>{{ "portfolios.applications.members.new.manage_perms" | translate({"application_name": application.name}) }}</h1>
-      {{ CheckboxInput(member_form.permission_sets.perms_env_mgmt, classes="input__inline-fields") }}
-      {{ CheckboxInput(member_form.permission_sets.perms_del_env, classes="input__inline-fields") }}
       {{ CheckboxInput(member_form.permission_sets.perms_team_mgmt, classes="input__inline-fields") }}
+      {% call CheckboxInput(member_form.permission_sets.perms_env_mgmt, classes="input__inline-fields") %}
+        {% set field=member_form.permission_sets.perms_del_env %}
+        <checkboxinput
+          name='{{ field.name }}'
+          inline-template
+          key='{{ field.name }}'
+          v-bind:initial-checked='{{ field.data|string|lower }}'
+          >
+          <div class="usa-input input__inline-fields input__inline-fields--indented">
+            <fieldset data-ally-disabled="true" class="usa-input__choices usa-input__choices--inline">
+              <legend>
+                <input
+                  id="permission_sets-perms_del_env"
+                  name="permission_sets-perms_del_env"
+                  type="checkbox"
+                  v-model="checked"
+                  v-bind:disabled="!$parent.checked">
+                {{ field.label | safe }}
+              </legend>
+            </fieldset>
+          </div>
+        </checkboxinput>
+      {% endcall %}
     </div>
     <div class='action-group'>
       <input

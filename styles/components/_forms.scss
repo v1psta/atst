@@ -182,8 +182,12 @@
 .input__inline-fields  {
   margin: 1rem 0 1rem 0;
 
+  &.input__inline-fields--indented {
+    margin-left: 4*$gap;
+  }
+
   &> fieldset.usa-input__choices label {
     display: inline;
     font-weight: $font-normal;
   }
- }
+}

@@ -3,19 +3,29 @@
   label=field.label,
   inline=False,
   classes="") -%}
-  <checkboxinput name='{{ field.name }}' inline-template key='{{ field.name }}'>
-    <div class='usa-input {{ classes }} {% if field.errors %}usa-input--error{% endif %}'>
+  <checkboxinput
+    name='{{ field.name }}'
+    inline-template
+    key='{{ field.name }}'
+    v-bind:initial-checked='{{ field.data|string|lower }}'
+    >
+    <div>
+      <div class='usa-input {{ classes }} {% if field.errors %}usa-input--error{% endif %}'>
 
-      <fieldset data-ally-disabled="true" v-on:change="onInput" class="usa-input__choices {% if inline %}usa-input__choices--inline{% endif %}">
-        <legend>
-          {{ field() }}
-          {{ label | safe }}
+        <fieldset data-ally-disabled="true" v-on:change="onInput" class="usa-input__choices {% if inline %}usa-input__choices--inline{% endif %}">
+          <legend>
+            {{ field(**{"v-model": "checked"}) }}
+            {{ label | safe }}
 
-          {% if field.description %}
+            {% if field.description %}
             <span class='usa-input__help'>{{ field.description | safe }}</span>
-          {% endif %}
-        </legend>
-      </fieldset>
+            {% endif %}
+          </legend>
+        </fieldset>
+      </div>
+      {% if caller %}
+        {{ caller() }}
+      {% endif %}
     </div>
   </checkboxinput>
 {%- endmacro %}
