@@ -13,7 +13,6 @@
   <div class="accordion-table accordion-table-list">
     <div class="accordion-table__head">
       <span>{{ "portfolios.applications.environments.name" | translate }}</span>
-      <span class="float-right">{{ "portfolios.applications.environments.members" | translate }}</span>
     </div>
 
     <ul class="accordion-table__items">
@@ -27,11 +26,11 @@
 
               <span class="icon-link icon-link--large accordion-table__item__toggler">
                 {% set open_members_button %}
-                  Members ({{ members_list | length }}) {{ Icon('caret_down') }}
+                  {{ "common.members" | translate }} ({{ members_list | length }}) {{ Icon('caret_down') }}
                 {% endset %}
 
                 {% set close_members_button %}
-                  Members ({{ members_list | length }}) {{ Icon('caret_up') }}
+                  {{ "common.members" | translate }} ({{ members_list | length }}) {{ Icon('caret_up') }}
                 {% endset %}
 
                 {{
