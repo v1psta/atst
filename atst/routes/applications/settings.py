@@ -9,6 +9,7 @@ from atst.forms.application import ApplicationForm, EditEnvironmentForm
 from atst.domain.authz.decorator import user_can_access_decorator as user_can
 from atst.models.environment_role import CSPRole
 from atst.domain.exceptions import NotFoundError
+from atst.models.environment_role import CSPRole
 from atst.models.permissions import Permissions
 from atst.utils.flash import formatted_flash as flash
 
@@ -70,6 +71,7 @@ def settings(application_id):
     # refactor like portfolio admin render function
     application = Applications.get(application_id)
     form = ApplicationForm(name=application.name, description=application.description)
+    csp_roles = [role.value for role in CSPRole]
 
     return render_template(
         "portfolios/applications/settings.html",
