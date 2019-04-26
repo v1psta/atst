@@ -17,7 +17,6 @@
   <div class="accordion-table accordion-table-list">
     <div class="accordion-table__head">
       <span>{{ "portfolios.applications.environments.name" | translate }}</span>
-      <span class="float-right">{{ "portfolios.applications.environments.members" | translate }}</span>
     </div>
 
     <ul class="accordion-table__items">
@@ -42,25 +41,25 @@
                 }}
               </span>
               <span class="icon-link icon-link--large accordion-table__item__toggler">
-                {% set open_environments_button %}
-                  {{ "common.show" | translate }} Environments ({{ members_list | length }}) {{ Icon('caret_down') }}
+                {% set open_members_button %}
+                  {{ "common.members" | translate }} ({{ members_list | length }}) {{ Icon('caret_down') }}
                 {% endset %}
 
-                {% set close_environments_button %}
-                  {{ "common.hide" | translate }} Environments ({{ members_list | length }}) {{ Icon('caret_up') }}
+                {% set close_members_button %}
+                  {{ "common.members" | translate }} ({{ members_list | length }}) {{ Icon('caret_up') }}
                 {% endset %}
 
                 {{
                   ToggleButton(
-                    open_html=open_environments_button,
-                    close_html=close_environments_button,
-                    section_name="environments"
+                    open_html=open_members_button,
+                    close_html=close_members_button,
+                    section_name="members"
                   )
                 }}
               </span>
             </div>
 
-            {% call ToggleSection(section_name="environments") %}
+            {% call ToggleSection(section_name="members") %}
               <ul>
                 {% for member in members_list %}
                 <li class="accordion-table__item__expanded">

@@ -78,16 +78,21 @@
   </form>
 
     <div class="accordion-table responsive-table-wrapper panel">
-        {% include "fragments/applications/environments.html" %}
-      <div class="panel__footer">
-        <div class="action-group">
-          <button class="usa-button usa-button-primary" tabindex="0" type="submit">{{ 'portfolios.applications.update_button_text' | translate }}</button>
-          <a class='icon-link'>
-            {{ "portfolios.applications.add_environment" | translate }}
-            {{ Icon('plus-circle-solid') }}
-          </a>
-        </div>
-      </div>
+        {% if user_can(permissions.EDIT_APPLICATION) %}
+          {% include "fragments/applications/edit_environments.html" %}
+          <div class="panel__footer">
+            <div class="action-group">
+              <button class="usa-button usa-button-primary" tabindex="0" type="submit">{{ 'portfolios.applications.update_button_text' | translate }}</button>
+              <a class='icon-link'>
+                {{ "portfolios.applications.add_environment" | translate }}
+                {{ Icon('plus-circle-solid') }}
+              </a>
+            </div>
+          </div>
+        {% elif user_can(permissions.VIEW_ENVIRONMENT) %}
+          {% include "fragments/applications/read_only_environments.html" %}
+        {% endif %}
+
     </div>
   {% if user_can(permissions.DELETE_APPLICATION) %}
     {% call Modal(name="delete-application") %}

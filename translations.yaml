@@ -25,6 +25,7 @@ common:
   edit: Edit
   hide: Hide
   manage: manage
+  members: Members
   officer_helpers:
     underscore_to_friendly:
       contracting_officer: Contracting Officer
@@ -365,7 +366,6 @@ navigation:
       funding: Funding
       reports: Reports
     budget_report: Budget Report
-    members: Members
     portfolio_admin: Portfolio Administration
     portfolio_funding: Funding
     portfolio_settings: Portfolio Settings
@@ -402,7 +402,6 @@ portfolios:
       button: Delete application
       header: Are you sure you want to delete this application?
     environments:
-      members: Members
       name: Name
     environments_description: Each environment created within an application is logically separated from one another for easier management and security.
     environments_heading: Application environments
