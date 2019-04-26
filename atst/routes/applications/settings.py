@@ -7,26 +7,37 @@ from atst.domain.applications import Applications
 from atst.forms.app_settings import EnvironmentRolesForm
 from atst.forms.application import ApplicationForm, EditEnvironmentForm
 from atst.domain.authz.decorator import user_can_access_decorator as user_can
+from atst.models.environment_role import CSPRole
 from atst.models.permissions import Permissions
 from atst.utils.flash import formatted_flash as flash
 
 
 def get_environments_obj_for_app(application):
     environments_obj = {}
-
     for env in application.environments:
         environments_obj[env.name] = {
             "edit_form": EditEnvironmentForm(obj=env),
             "id": env.id,
-            "members": [],
         }
-        for user in env.users:
-            env_role = EnvironmentRoles.get(user.id, env.id)
-            environments_obj[env.name]["members"].append(
-                {"name": user.full_name, "role": env_role.displayname}
-            )
+
+        environments_obj[env.name]["members"] = sort_env_users_by_role(env)
 
     return environments_obj
+    # {env_name: {edit_form, env_id, members: {csp_role: [], csp_role: []}}}
+
+
+def sort_env_users_by_role(env):
+    users_dict = {}
+    for role in CSPRole:
+        users_dict[role.value] = []
+
+    for r in env.roles:
+        users_dict[r.displayname].append(
+            {"name": r.user.full_name, "user_id": r.user_id}
+        )
+
+    return users_dict
+    # {csp_role: [{user info}, {user info}], csp_role: [...]}
 
 
 def serialize_env_member_forms(application):
@@ -64,6 +75,7 @@ def settings(application_id):
     # refactor like portfolio admin render function
     application = Applications.get(application_id)
     form = ApplicationForm(name=application.name, description=application.description)
+    csp_roles = [role.value for role in CSPRole]
 
     return render_template(
         "portfolios/applications/settings.html",
@@ -71,6 +83,7 @@ def settings(application_id):
         form=form,
         environments_obj=get_environments_obj_for_app(application=application),
         env_forms=serialize_env_member_forms(application=application),
+        csp_roles=csp_roles,
     )
 
 

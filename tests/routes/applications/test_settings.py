@@ -68,15 +68,17 @@ def test_edit_application_environments_obj(app, client, user_session):
         portfolio,
         "Snazzy Application",
         "A new application for me and my friends",
-        {"env1", "env2"},
+        {"env"},
     )
     user1 = UserFactory.create()
     user2 = UserFactory.create()
-    env1 = application.environments[0]
-    env2 = application.environments[1]
-    env_role1 = EnvironmentRoleFactory.create(environment=env1, user=user1)
-    env_role2 = EnvironmentRoleFactory.create(environment=env1, user=user2)
-    env_role3 = EnvironmentRoleFactory.create(environment=env2, user=user1)
+    env = application.environments[0]
+    env_role1 = EnvironmentRoleFactory.create(
+        environment=env, user=user1, role=CSPRole.BASIC_ACCESS.value
+    )
+    env_role2 = EnvironmentRoleFactory.create(
+        environment=env, user=user2, role=CSPRole.NETWORK_ADMIN.value
+    )
 
     user_session(portfolio.owner)
 
@@ -88,13 +90,19 @@ def test_edit_application_environments_obj(app, client, user_session):
         assert response.status_code == 200
         _, context = templates[0]
 
-        env_obj_1 = context["environments_obj"][env1.name]
-        assert env_obj_1["id"] == env1.id
-        assert isinstance(env_obj_1["edit_form"], EditEnvironmentForm)
-        assert env_obj_1["members"] == [
-            {"name": user1.full_name, "role": env_role1.role},
-            {"name": user2.full_name, "role": env_role2.role},
-        ]
+        env_obj = context["environments_obj"][env.name]
+        assert env_obj["id"] == env.id
+        assert isinstance(env_obj["edit_form"], EditEnvironmentForm)
+        assert env_obj["members"] == {
+            CSPRole.BASIC_ACCESS.value: [
+                {"name": env_role1.user.full_name, "user_id": env_role1.user_id}
+            ],
+            CSPRole.NETWORK_ADMIN.value: [
+                {"name": env_role2.user.full_name, "user_id": env_role2.user_id}
+            ],
+            CSPRole.BUSINESS_READ.value: [],
+            CSPRole.TECHNICAL_READ.value: [],
+        }
 
 
 def test_edit_app_serialize_env_member_form_data(app, client, user_session):
