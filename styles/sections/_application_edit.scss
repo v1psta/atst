@@ -17,3 +17,38 @@
     margin-right: -$gap;
   }
 }
+
+.environment-role {
+  padding: $gap * 3;
+
+  h4 {
+    margin-bottom: $gap / 4;
+  }
+
+  .environment-role__users {
+    background-color: $color-gray-lightest;
+    padding: ($gap * 1.2) ($gap * 0.6);
+    font-size: $small-font-size;
+    display: flex;
+    flex-wrap: wrap;
+
+    .environment-role__user {
+      background-color: $color-white;
+      border-radius: 0.5rem;
+      padding: ($gap / 2) $gap;
+      border: solid 2px $color-blue;
+      margin: $gap;
+      white-space: nowrap;
+      width: 20rem;
+
+      &.unassigned {
+        border: solid 1px $color-gray-light;
+      }
+    }
+
+    .environment-role__no-user {
+      margin: $gap;
+      padding: ($gap / 2) $gap;
+    }
+  }
+}
