@@ -87,10 +87,10 @@
               <div>
                 {{ RolePanel(users=unassigned) }}
 
-                {% for role in csp_roles %}
-                  {{ RolePanel(users=members_by_role[role], role=role) }}
-                {% endfor %}
-              </div>
+                  {% for role, members in members_by_role.items() %}
+                    {{ RolePanel(users=members, role=role) }}
+                  {% endfor %}
+                </div>
             {% endcall %}
 
             {% call ToggleSection(section_name="edit") %}

@@ -75,7 +75,6 @@ def settings(application_id):
     # refactor like portfolio admin render function
     application = Applications.get(application_id)
     form = ApplicationForm(name=application.name, description=application.description)
-    csp_roles = [role.value for role in CSPRole]
 
     return render_template(
         "portfolios/applications/settings.html",
@@ -83,7 +82,6 @@ def settings(application_id):
         form=form,
         environments_obj=get_environments_obj_for_app(application=application),
         env_forms=serialize_env_member_forms(application=application),
-        csp_roles=csp_roles,
     )
 
 
