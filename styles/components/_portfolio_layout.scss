@@ -97,6 +97,7 @@
     font-size: $small-font-size;
 
     .icon-link {
+      padding: 0.8rem 1.2rem;
       &.active {
         color: $color-gray;
         .icon {
