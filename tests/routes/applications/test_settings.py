@@ -18,6 +18,7 @@ from atst.domain.portfolios import Portfolios
 from atst.models.environment_role import CSPRole
 from atst.models.portfolio_role import Status as PortfolioRoleStatus
 from atst.forms.application import EditEnvironmentForm
+from atst.forms.app_settings import EnvironmentRolesForm
 
 from tests.utils import captured_templates
 
@@ -70,15 +71,16 @@ def test_edit_application_environments_obj(app, client, user_session):
         "A new application for me and my friends",
         {"env"},
     )
-    user1 = UserFactory.create()
-    user2 = UserFactory.create()
     env = application.environments[0]
+    app_role = ApplicationRoleFactory.create(application=application)
     env_role1 = EnvironmentRoleFactory.create(
-        environment=env, user=user1, role=CSPRole.BASIC_ACCESS.value
+        environment=env, role=CSPRole.BASIC_ACCESS.value
     )
+    ApplicationRoleFactory.create(application=application, user=env_role1.user)
     env_role2 = EnvironmentRoleFactory.create(
-        environment=env, user=user2, role=CSPRole.NETWORK_ADMIN.value
+        environment=env, role=CSPRole.NETWORK_ADMIN.value
     )
+    ApplicationRoleFactory.create(application=application, user=env_role2.user)
 
     user_session(portfolio.owner)
 
@@ -90,10 +92,15 @@ def test_edit_application_environments_obj(app, client, user_session):
         assert response.status_code == 200
         _, context = templates[0]
 
-        env_obj = context["environments_obj"][env.name]
+        env_obj = context["environments_obj"][0]
+        assert env_obj["name"] == env.name
         assert env_obj["id"] == env.id
         assert isinstance(env_obj["edit_form"], EditEnvironmentForm)
+        assert isinstance(env_obj["members_form"], EnvironmentRolesForm)
         assert env_obj["members"] == {
+            "no_access": [
+                {"name": app_role.user.full_name, "user_id": app_role.user_id}
+            ],
             CSPRole.BASIC_ACCESS.value: [
                 {"name": env_role1.user.full_name, "user_id": env_role1.user_id}
             ],
@@ -103,46 +110,6 @@ def test_edit_application_environments_obj(app, client, user_session):
             CSPRole.BUSINESS_READ.value: [],
             CSPRole.TECHNICAL_READ.value: [],
         }
-
-
-def test_edit_app_serialize_env_member_form_data(app, client, user_session):
-    env = EnvironmentFactory.create()
-    application = env.application
-
-    _app_role = ApplicationRoleFactory.create(application=application)
-    env_role = EnvironmentRoleFactory.create(environment=env, user=_app_role.user)
-
-    app_role = ApplicationRoleFactory.create(application=application)
-
-    user_session(application.portfolio.owner)
-
-    with captured_templates(app) as templates:
-        response = app.test_client().get(
-            url_for("applications.settings", application_id=application.id)
-        )
-        assert response.status_code == 200
-        _, context = templates[0]
-
-        serialized_data = {
-            "env_name": env.name,
-            "no_access": [
-                {"name": app_role.user.full_name, "user_id": app_role.user_id}
-            ],
-            "form": {
-                "env_id": env.id,
-                "team_roles": [
-                    {
-                        "name": env_role.user.full_name,
-                        "user_id": env_role.user_id,
-                        "role": env_role.displayname,
-                    }
-                ],
-            },
-        }
-
-        assert context["env_forms"][0]["env_name"] == serialized_data["env_name"]
-        assert context["env_forms"][0]["form"].data == serialized_data["form"]
-        assert context["env_forms"][0]["no_access"] == serialized_data["no_access"]
 
 
 def test_user_with_permission_can_update_application(client, user_session):

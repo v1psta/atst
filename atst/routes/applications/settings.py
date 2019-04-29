@@ -13,60 +13,46 @@ from atst.utils.flash import formatted_flash as flash
 
 
 def get_environments_obj_for_app(application):
-    environments_obj = {}
+    environments_obj = []
     for env in application.environments:
-        environments_obj[env.name] = {
-            "edit_form": EditEnvironmentForm(obj=env),
+        env_data = {
             "id": env.id,
+            "name": env.name,
+            "edit_form": EditEnvironmentForm(obj=env),
+            "members_form": EnvironmentRolesForm(data=data_for_env_members_form(env)),
+            "members": sort_env_users_by_role(env),
         }
-
-        environments_obj[env.name]["members"] = sort_env_users_by_role(env)
+        environments_obj.append(env_data)
 
     return environments_obj
-    # {env_name: {edit_form, env_id, members: {csp_role: [], csp_role: []}}}
 
 
 def sort_env_users_by_role(env):
-    users_dict = {}
+    users_dict = {"no_access": []}
     for role in CSPRole:
         users_dict[role.value] = []
 
-    for r in env.roles:
-        users_dict[r.displayname].append(
-            {"name": r.user.full_name, "user_id": r.user_id}
-        )
+    for user in env.application.users:
+        if user in env.users:
+            role = EnvironmentRoles.get(user.id, env.id)
+            users_dict[role.displayname].append(
+                {"name": user.full_name, "user_id": user.id}
+            )
+        else:
+            users_dict["no_access"].append({"name": user.full_name, "user_id": user.id})
 
     return users_dict
-    # {csp_role: [{user info}, {user info}], csp_role: [...]}
 
 
-def serialize_env_member_forms(application):
-    environments_list = []
-
-    for env in application.environments:
-        env_info = {"env_name": env.name, "no_access": []}
-        env_team_list = []
-
-        for user in application.users:
-            if user in env.users:
-                env_role = EnvironmentRoles.get(user.id, env.id)
-                env_team_list.append(
-                    {
-                        "name": user.full_name,
-                        "user_id": user.id,
-                        "role": env_role.displayname,
-                    }
-                )
-            else:
-                env_info["no_access"].append(
-                    {"name": user.full_name, "user_id": user.id}
-                )
-
-        env_info["form"] = EnvironmentRolesForm(
-            data={"env_id": env.id, "team_roles": env_team_list}
+def data_for_env_members_form(environment):
+    data = {"env_id": environment.id, "team_roles": []}
+    for user in environment.users:
+        env_role = EnvironmentRoles.get(user.id, environment.id)
+        data["team_roles"].append(
+            {"name": user.full_name, "user_id": user.id, "role": env_role.displayname}
         )
-        environments_list.append(env_info)
-    return environments_list
+
+    return data
 
 
 @applications_bp.route("/applications/<application_id>/settings")
@@ -81,7 +67,6 @@ def settings(application_id):
         application=application,
         form=form,
         environments_obj=get_environments_obj_for_app(application=application),
-        env_forms=serialize_env_member_forms(application=application),
     )
 
 
@@ -129,7 +114,6 @@ def update(application_id):
             application=application,
             form=form,
             environments_obj=get_environments_obj_for_app(application=application),
-            env_forms=serialize_env_member_forms(application=application),
         )
 
 
@@ -157,7 +141,6 @@ def update_env_roles(environment_id):
                 name=application.name, description=application.description
             ),
             environments_obj=get_environments_obj_for_app(application=application),
-            env_forms=env_roles_form,
         )
 
 

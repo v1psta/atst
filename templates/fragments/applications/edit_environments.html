@@ -3,8 +3,12 @@
 {% from "components/text_input.html" import TextInput %}
 {% from "components/save_button.html" import SaveButton %}
 
-{% macro RolePanel(users=[], role='Unassigned(No Access)') %}
-  {% set unassigned = role == 'Unassigned(No Access)' %}
+{% macro RolePanel(users=[], role='no_access') %}
+  {% if role == 'no_access' %}
+    {% set role = 'Unassigned (No Access)' %}
+    {% set unassigned = True %}
+  {% endif %}
+
   <div class='environment-role'>
     <h4>{{ role }}</h4>
       <ul class='environment-role__users'>
@@ -40,16 +44,16 @@
     </div>
 
     <ul class="accordion-table__items">
-      {% for env in env_forms %}
-        {% set member_count = env['form'].data['team_roles'] | length %}
-        {% set unassigned = env['no_access'] %}
-        {% set members_by_role = environments_obj[env['env_name']]['members'] %}
+      {% for env in environments_obj %}
+        {% set member_count = env['members_form'].data['team_roles'] | length %}
+        {% set members_by_role = env['members'] %}
+        {% set unassigned = members_by_role['no_access'] %}
 
         <toggler inline-template>
           <li class="accordion-table__item">
             <div class="accordion-table__item-content">
               <span>
-                {{ env['env_name'] }}
+                {{ env['name'] }}
               </span>
               <span class="icon-link">
                 {% set edit_environment_button %}
@@ -84,20 +88,16 @@
             </div>
 
             {% call ToggleSection(section_name="members") %}
-              <div>
-                {{ RolePanel(users=unassigned) }}
-
-                  {% for role, members in members_by_role.items() %}
-                    {{ RolePanel(users=members, role=role) }}
-                  {% endfor %}
-                </div>
+                {% for role, members in members_by_role.items() %}
+                  {{ RolePanel(users=members, role=role) }}
+                {% endfor %}
             {% endcall %}
 
             {% call ToggleSection(section_name="edit") %}
               <ul>
                 <li class="accordion-table__item__expanded">
-                  {% set edit_form = environments_obj[env['env_name']]['edit_form'] %}
-                  <form action="{{ url_for('applications.update_environment', environment_id=environments_obj[env['env_name']]['id']) }}" method="post">
+                  {% set edit_form = env['edit_form'] %}
+                  <form action="{{ url_for('applications.update_environment', environment_id=env['id']) }}" method="post">
                     {{ edit_form.csrf_token }}
                     {{ TextInput(edit_form.name) }}
                     {{

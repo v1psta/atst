@@ -16,6 +16,7 @@ from tests.factories import (
     ApplicationFactory,
     ApplicationRoleFactory,
     EnvironmentFactory,
+    EnvironmentRoleFactory,
     InvitationFactory,
     PortfolioFactory,
     PortfolioRoleFactory,
@@ -262,6 +263,11 @@ def test_application_settings_access(get_url_assert_status):
         applications=[{"name": "Mos Eisley", "description": "Where Han shot first"}],
     )
     app = portfolio.applications[0]
+    env = EnvironmentFactory.create(application=app)
+    env_role = EnvironmentRoleFactory.create(
+        environment=env, role=CSPRole.NETWORK_ADMIN.value
+    )
+    ApplicationRoleFactory.create(application=app, user=env_role.user)
 
     url = url_for("applications.settings", application_id=app.id)
     get_url_assert_status(ccpo, url, 200)
