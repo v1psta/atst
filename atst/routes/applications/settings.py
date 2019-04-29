@@ -179,3 +179,21 @@ def delete(application_id):
             "applications.portfolio_applications", portfolio_id=application.portfolio_id
         )
     )
+
+
+@applications_bp.route("/environments/<environment_id>/delete", methods=["POST"])
+@user_can(Permissions.DELETE_ENVIRONMENT, message="delete delete_environment")
+def delete_environment(environment_id):
+    environment = Environments.get(environment_id)
+    Environments.delete(environment=environment, commit=True)
+
+    flash("environment_deleted", environment_name=environment.name)
+
+    return redirect(
+        url_for(
+            "applications.settings",
+            application_id=environment.application_id,
+            _anchor="application-environments",
+            fragment="application-environments",
+        )
+    )
