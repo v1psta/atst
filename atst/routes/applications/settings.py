@@ -4,8 +4,8 @@ from . import applications_bp
 from atst.domain.environment_roles import EnvironmentRoles
 from atst.domain.environments import Environments
 from atst.domain.applications import Applications
-from atst.forms.application import ApplicationForm
 from atst.forms.app_settings import EnvironmentRolesForm
+from atst.forms.application import ApplicationForm, EditEnvironmentForm
 from atst.domain.authz.decorator import user_can_access_decorator as user_can
 from atst.models.permissions import Permissions
 from atst.utils.flash import formatted_flash as flash
@@ -15,10 +15,14 @@ def get_environments_obj_for_app(application):
     environments_obj = {}
 
     for env in application.environments:
-        environments_obj[env.name] = []
+        environments_obj[env.name] = {
+            "edit_form": EditEnvironmentForm(obj=env),
+            "id": env.id,
+            "members": [],
+        }
         for user in env.users:
             env_role = EnvironmentRoles.get(user.id, env.id)
-            environments_obj[env.name].append(
+            environments_obj[env.name]["members"].append(
                 {"name": user.full_name, "role": env_role.displayname}
             )
 
@@ -49,6 +53,7 @@ def settings(application_id):
     application = Applications.get(application_id)
     form = ApplicationForm(name=application.name, description=application.description)
     app_envs_data = serialize_env_member_form_data(application)
+
     env_forms = {}
     for env_data in app_envs_data:
         env_forms[env_data["env_id"]] = EnvironmentRolesForm(data=env_data)
@@ -59,6 +64,29 @@ def settings(application_id):
         form=form,
         environments_obj=get_environments_obj_for_app(application=application),
         env_forms=env_forms,
+    )
+
+
+@applications_bp.route("/environments/<environment_id>/edit", methods=["POST"])
+@user_can(Permissions.EDIT_ENVIRONMENT, message="edit application environments")
+def update_environment(environment_id):
+    environment = Environments.get(environment_id)
+    application = environment.application
+
+    form = EditEnvironmentForm(formdata=http_request.form)
+
+    if form.validate():
+        Environments.update(environment=environment, name=form.name.data)
+
+    flash("application_environments_updated")
+
+    return redirect(
+        url_for(
+            "applications.settings",
+            application_id=application.id,
+            fragment="application-environments",
+            _anchor="application-environments",
+        )
     )
 
 

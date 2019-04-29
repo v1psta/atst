@@ -2,6 +2,11 @@ from flask import flash, render_template_string
 from atst.utils.localization import translate
 
 MESSAGES = {
+    "application_environments_updated": {
+        "title_template": "Application environments updated",
+        "message_template": "Application environments have been updated",
+        "category": "success",
+    },
     "primary_point_of_contact_changed": {
         "title_template": translate("flash.new_ppoc_title"),
         "message_template": """{{ "flash.new_ppoc_message" | translate({ "ppoc_name": ppoc_name }) }}""",
