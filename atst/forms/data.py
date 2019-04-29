@@ -1,6 +1,5 @@
 from atst.models import CSPRole
 from atst.utils.localization import translate, translate_duration
-from atst.models.environment_role import CSPRole
 
 
 SERVICE_BRANCHES = [
@@ -219,6 +218,6 @@ REQUIRED_DISTRIBUTIONS = [
 ]
 
 ENV_ROLES = [(role.value, role.value) for role in CSPRole] + [(None, "No access")]
-FORMATTED_ENV_ROLES = [(role.value, "- {} -".format(role.value)) for role in CSPRole] + [
-    (None, "- No Access -")
-]
+FORMATTED_ENV_ROLES = [
+    (role.value, "- {} -".format(role.value)) for role in CSPRole
+] + [(None, "- No Access -")]
