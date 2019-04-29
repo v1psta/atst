@@ -7,17 +7,17 @@
   {% set unassigned = role == 'Unassigned(No Access)' %}
   <div class='environment-role'>
     <h4>{{ role }}</h4>
-      <div class='environment-role__users'>
+      <ul class='environment-role__users'>
         {% for user in users %}
-          <div class="environment-role__user {{ 'unassigned' if unassigned }}">
+          <li class="environment-role__user {{ 'unassigned' if unassigned }}">
             {{ user.name }}{{ Icon('edit', classes="icon--medium right") }}
-          </div>
+          </li>
         {% endfor %}
 
         {% if users == [] %}
           <div class='environment-role__no-user'>Currently no members are in this role</div>
         {% endif %}
-      </div>
+      </ul>
     </div>
 {% endmacro %}
 
