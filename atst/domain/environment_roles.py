@@ -7,12 +7,11 @@ from atst.models import EnvironmentRole
 class EnvironmentRoles(object):
     @classmethod
     def create(cls, user, environment, role):
-        if environment.application.has_member(user.id):
-            env_role = EnvironmentRole(user=user, environment=environment, role=role)
-            if not user.cloud_id:
-                user.cloud_id = app.csp.cloud.create_user(user)
-            app.csp.cloud.create_role(env_role)
-            return env_role
+        env_role = EnvironmentRole(user=user, environment=environment, role=role)
+        if not user.cloud_id:
+            user.cloud_id = app.csp.cloud.create_user(user)
+        app.csp.cloud.create_role(env_role)
+        return env_role
 
     @classmethod
     def get(cls, user_id, environment_id):

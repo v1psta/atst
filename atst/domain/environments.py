@@ -70,24 +70,23 @@ class Environments(object):
     def update_env_role(cls, environment, user, new_role):
         updated = False
 
-        if environment.application.has_member(user.id):
-            if new_role is None:
-                updated = EnvironmentRoles.delete(user.id, environment.id)
-            else:
-                env_role = EnvironmentRoles.get(user.id, environment.id)
-                if env_role and env_role.role != new_role:
-                    env_role.role = new_role
-                    updated = True
-                    db.session.add(env_role)
-                elif not env_role:
-                    env_role = EnvironmentRoles.create(
-                        user=user, environment=environment, role=new_role
-                    )
-                    updated = True
-                    db.session.add(env_role)
+        if new_role is None:
+            updated = EnvironmentRoles.delete(user.id, environment.id)
+        else:
+            env_role = EnvironmentRoles.get(user.id, environment.id)
+            if env_role and env_role.role != new_role:
+                env_role.role = new_role
+                updated = True
+                db.session.add(env_role)
+            elif not env_role:
+                env_role = EnvironmentRoles.create(
+                    user=user, environment=environment, role=new_role
+                )
+                updated = True
+                db.session.add(env_role)
 
-            if updated:
-                db.session.commit()
+        if updated:
+            db.session.commit()
 
         return updated
 
