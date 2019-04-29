@@ -10,6 +10,7 @@ from atst.models.portfolio_role import Status
 from atst.models.invitation import Status as InvitationStatus
 from atst.models.audit_event import AuditEvent
 from atst.models.portfolio_role import Status as PortfolioRoleStatus
+from atst.models.environment_role import CSPRole
 from tests.factories import (
     UserFactory,
     InvitationFactory,
@@ -180,8 +181,9 @@ def test_has_environment_roles():
     application = Applications.create(
         portfolio, "my test application", "It's mine.", ["dev", "staging", "prod"]
     )
+    ApplicationRoleFactory.create(user=portfolio_role.user, application=application)
     Environments.add_member(
-        application.environments[0], portfolio_role.user, "developer"
+        application.environments[0], portfolio_role.user, CSPRole.BASIC_ACCESS.value
     )
     assert portfolio_role.has_environment_roles
 

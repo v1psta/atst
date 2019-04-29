@@ -5,7 +5,6 @@ from atst.database import db
 from atst.models.environment import Environment
 from atst.models.environment_role import EnvironmentRole
 from atst.models.application import Application
-from atst.domain.application_roles import ApplicationRoles
 from atst.domain.environment_roles import EnvironmentRoles
 from atst.domain.users import Users
 
@@ -33,9 +32,6 @@ class Environments(object):
 
     @classmethod
     def add_member(cls, environment, user, role):
-        ApplicationRoles.create(
-            user=user, application=environment.application, permission_set_names=[]
-        )
         environment_user = EnvironmentRoles.create(
             user=user, environment=environment, role=role
         )
