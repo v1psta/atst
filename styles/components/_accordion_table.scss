@@ -19,9 +19,9 @@
 
   .accordion-table__head {
     padding: $gap $gap*2;
+    font-size: $small-font-size;
     font-weight: 700;
     color: $color-gray;
-    text-transform: uppercase;
     background-color: $color-gray-lightest;
     border-bottom: 1px solid $color-gray-lightest;
     border-top: none;
@@ -107,6 +107,11 @@
     }
 
     .accordion-table__item__expanded {
+      font-size: $small-font-size;
+      font-weight: $font-normal;
+      background-color: $color-gray-lightest;
+      padding: $gap*2 $gap*7 $gap*5 $gap*4;
+
       th, td {
         .icon-link {
           font-weight: $font-normal;
@@ -118,12 +123,7 @@
 
       .accordion-table__item__expanded_first {
         float: left;
-        font-weight: bold;
       }
-
-      font-size: $small-font-size;
-      background-color: $color-gray-lightest;
-      padding: $gap*2.5 $gap*7 $gap*5 $gap*7;
     }
   }
 }
@@ -131,8 +131,6 @@
 #application-members {
   .accordion-table {
     .accordion-table__head {
-      font-size: $small-font-size;
-      padding-left: $gap*3;
     }
 
     .accordion-table__item-content, .accordion-table__head {
