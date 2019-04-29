@@ -7,7 +7,6 @@ from atst.domain.applications import Applications
 from atst.forms.application import ApplicationForm
 from atst.forms.app_settings import EnvironmentRolesForm
 from atst.domain.authz.decorator import user_can_access_decorator as user_can
-from atst.domain.exceptions import UnauthorizedError
 
 from atst.models.permissions import Permissions
 from atst.utils.flash import formatted_flash as flash

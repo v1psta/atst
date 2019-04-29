@@ -33,7 +33,9 @@ class Environments(object):
 
     @classmethod
     def add_member(cls, environment, user, role):
-        ApplicationRoles.create(user=user, application=environment.application)
+        ApplicationRoles.create(
+            user=user, application=environment.application, permission_set_names=[]
+        )
         environment_user = EnvironmentRoles.create(
             user=user, environment=environment, role=role
         )
