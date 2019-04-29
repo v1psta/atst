@@ -14,7 +14,7 @@
 
         <fieldset data-ally-disabled="true" v-on:change="onInput" class="usa-input__choices {% if inline %}usa-input__choices--inline{% endif %}">
           <legend>
-            {{ field(**{"v-model": "checked"}) }}
+            {{ field(**{"v-model": "isChecked"}) }}
             {{ label | safe }}
 
             {% if field.description %}
