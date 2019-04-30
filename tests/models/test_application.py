@@ -4,6 +4,7 @@ from tests.factories import (
     ApplicationFactory,
     ApplicationRoleFactory,
     EnvironmentFactory,
+    UserFactory,
 )
 
 

@@ -14,7 +14,7 @@ def test_create_application_role():
     )
 
     assert application_role.permission_sets == PermissionSets.get_many(
-        [PermissionSets.EDIT_APPLICATION_TEAM]
+        [PermissionSets.EDIT_APPLICATION_TEAM, PermissionSets.VIEW_APPLICATION]
     )
     assert application_role.application == application
     assert application_role.user == user

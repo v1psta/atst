@@ -9,7 +9,6 @@ from atst.models.application_role import (
     ApplicationRole,
     Status as ApplicationRoleStatuses,
 )
-
 from atst.database import db
 
 

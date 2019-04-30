@@ -1,6 +1,7 @@
 class NotFoundError(Exception):
-    def __init__(self, resource_name):
+    def __init__(self, resource_name, resource_id=None):
         self.resource_name = resource_name
+        self.resource_id = resource_id
 
     @property
     def message(self):

@@ -10,6 +10,7 @@ from atst.models.portfolio_role import Status
 from atst.models.invitation import Status as InvitationStatus
 from atst.models.audit_event import AuditEvent
 from atst.models.portfolio_role import Status as PortfolioRoleStatus
+from atst.models.environment_role import CSPRole
 from tests.factories import (
     UserFactory,
     InvitationFactory,
@@ -17,6 +18,7 @@ from tests.factories import (
     EnvironmentFactory,
     EnvironmentRoleFactory,
     ApplicationFactory,
+    ApplicationRoleFactory,
     PortfolioFactory,
 )
 from atst.domain.portfolio_roles import PortfolioRoles
@@ -116,6 +118,7 @@ def test_has_env_role_history(session):
     portfolio = PortfolioFactory.create(owner=owner)
     portfolio_role = PortfolioRoleFactory.create(portfolio=portfolio, user=user)
     application = ApplicationFactory.create(portfolio=portfolio)
+    ApplicationRoleFactory.create(user=user, application=application)
     environment = EnvironmentFactory.create(
         application=application, name="new environment!"
     )
@@ -178,8 +181,9 @@ def test_has_environment_roles():
     application = Applications.create(
         portfolio, "my test application", "It's mine.", ["dev", "staging", "prod"]
     )
+    ApplicationRoleFactory.create(user=portfolio_role.user, application=application)
     Environments.add_member(
-        application.environments[0], portfolio_role.user, "developer"
+        application.environments[0], portfolio_role.user, CSPRole.BASIC_ACCESS.value
     )
     assert portfolio_role.has_environment_roles
 

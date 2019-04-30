@@ -196,7 +196,9 @@ def test_applications_update_team_env_roles(post_url_assert_status):
             ]
         ),
     )
-    ApplicationRoleFactory.create(user=app_member)
+    ApplicationRoleFactory.create(user=app_member, application=application)
+    ApplicationRoleFactory.create(user=ccpo, application=application)
+    ApplicationRoleFactory.create(user=owner, application=application)
 
     url = url_for("applications.update_env_roles", environment_id=environment.id)
     post_url_assert_status(ccpo, url, 302)

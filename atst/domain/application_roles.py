@@ -6,6 +6,7 @@ from atst.domain.permission_sets import PermissionSets
 class ApplicationRoles(object):
     @classmethod
     def _permission_sets_for_names(cls, set_names):
+        set_names = set(set_names).union({PermissionSets.VIEW_APPLICATION})
         return PermissionSets.get_many(set_names)
 
     @classmethod
