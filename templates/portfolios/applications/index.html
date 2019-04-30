@@ -58,7 +58,7 @@
                     </a>
                     <div class='separator'></div>
                   {% endif %}
-                  <a class='icon-link' v-on:click="toggleSection('{{ section_name }}')">
+                  <a class='icon-link triangle-box' v-on:click="toggleSection('{{ section_name }}')">
                     <span>Environments ({{ application.environments|length }})</span>
                     <span v-if="selectedSection === '{{ section_name }}'">
                       {{ Icon('caret_up') }}
@@ -66,6 +66,7 @@
                     <span v-else>
                       {{ Icon('caret_down') }}
                     </span>
+                    <div class="triangle-up" v-if="selectedSection === '{{ section_name }}'"></div>
                   </a>
                 </div>
               </div>
