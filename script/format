@@ -8,4 +8,5 @@ if [ "$1" == "check" ]; then
 else
   pipenv run black ${FILES_TO_FORMAT}
   yarn run prettier --write "js/**/*.js" --config ./prettier.config.json
+  sass-convert ./styles --in-place --recursive --from scss --to scss --quiet
 fi
