@@ -1,4 +1,5 @@
 from atst.models import AuditEvent
+from atst.models.environment_role import CSPRole
 from atst.domain.environments import Environments
 from atst.domain.applications import Applications
 
@@ -7,6 +8,7 @@ from tests.factories import (
     UserFactory,
     EnvironmentFactory,
     ApplicationFactory,
+    ApplicationRoleFactory,
 )
 
 
@@ -20,7 +22,10 @@ def test_add_user_to_environment():
     )
     dev_environment = application.environments[0]
 
-    dev_environment = Environments.add_member(dev_environment, developer, "developer")
+    ApplicationRoleFactory.create(user=developer, application=application)
+    dev_environment = Environments.add_member(
+        dev_environment, developer, CSPRole.BASIC_ACCESS.value
+    )
     assert developer in dev_environment.users
 
 

@@ -1,3 +1,4 @@
+import pytest
 from flask import url_for, get_flashed_messages
 
 from tests.factories import (
@@ -9,12 +10,15 @@ from tests.factories import (
     ApplicationFactory,
     ApplicationRoleFactory,
 )
+from atst.routes.applications.settings import check_users_are_in_application
 
 from atst.domain.applications import Applications
 from atst.domain.environment_roles import EnvironmentRoles
 from atst.domain.environments import Environments
 from atst.domain.permission_sets import PermissionSets
 from atst.domain.portfolios import Portfolios
+from atst.domain.exceptions import NotFoundError
+
 from atst.models.environment_role import CSPRole
 from atst.models.portfolio_role import Status as PortfolioRoleStatus
 from atst.forms.application import EditEnvironmentForm
@@ -167,6 +171,32 @@ def test_user_without_permission_cannot_update_application(client, user_session)
     assert application.description == "Cool stuff happening here!"
 
 
+def test_check_users_are_in_application_raises_NotFoundError():
+    application = ApplicationFactory.create()
+    app_user_1 = UserFactory.create()
+    app_user_2 = UserFactory.create()
+    for user in [app_user_1, app_user_2]:
+        ApplicationRoleFactory.create(user=user, application=application)
+
+    non_app_user = UserFactory.create()
+    user_ids = [app_user_1.id, app_user_2.id, non_app_user.id]
+    with pytest.raises(NotFoundError):
+        check_users_are_in_application(user_ids, application)
+
+
+def test_check_users_are_in_application():
+    application = ApplicationFactory.create()
+    app_user_1 = UserFactory.create()
+    app_user_2 = UserFactory.create()
+    app_user_3 = UserFactory.create()
+
+    for user in [app_user_1, app_user_2, app_user_3]:
+        ApplicationRoleFactory.create(user=user, application=application)
+
+    user_ids = [str(app_user_1.id), str(app_user_2.id), str(app_user_3.id)]
+    assert check_users_are_in_application(user_ids, application)
+
+
 def test_update_team_env_roles(client, user_session):
     environment = EnvironmentFactory.create()
     application = environment.application
@@ -179,6 +209,9 @@ def test_update_team_env_roles(client, user_session):
     env_role_3 = EnvironmentRoleFactory.create(
         environment=environment, role=CSPRole.BASIC_ACCESS.value
     )
+    for user in [env_role_1.user, env_role_2.user, env_role_3.user]:
+        ApplicationRoleFactory.create(user=user, application=application)
+
     app_role = ApplicationRoleFactory.create(application=application)
     form_data = {
         "env_id": environment.id,

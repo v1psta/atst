@@ -8,6 +8,7 @@ from atst.forms.app_settings import EnvironmentRolesForm
 from atst.forms.application import ApplicationForm, EditEnvironmentForm
 from atst.domain.authz.decorator import user_can_access_decorator as user_can
 from atst.models.environment_role import CSPRole
+from atst.domain.exceptions import NotFoundError
 from atst.models.permissions import Permissions
 from atst.utils.flash import formatted_flash as flash
 
@@ -53,6 +54,14 @@ def data_for_env_members_form(environment):
         )
 
     return data
+
+
+def check_users_are_in_application(user_ids, application):
+    existing_ids = [str(role.user_id) for role in application.roles]
+    for user_id in user_ids:
+        if not user_id in existing_ids:
+            raise NotFoundError("application user", user_id)
+    return True
 
 
 @applications_bp.route("/applications/<application_id>/settings")
@@ -125,6 +134,19 @@ def update_env_roles(environment_id):
     env_roles_form = EnvironmentRolesForm(http_request.form)
 
     if env_roles_form.validate():
+
+        try:
+            user_ids = [user["user_id"] for user in env_roles_form.data["team_roles"]]
+            check_users_are_in_application(user_ids, application)
+        except NotFoundError as err:
+            app.logger.warning(
+                "User {} requested environment role change for unauthorized user {} in application {}.".format(
+                    g.current_user.id, err.resource_id, application.id
+                ),
+                extra={"tags": ["update", "failure"], "security_warning": True},
+            )
+
+            raise (err)
         env_data = env_roles_form.data
         Environments.update_env_roles_by_environment(
             environment_id=environment_id, team_roles=env_data["team_roles"]
