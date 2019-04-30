@@ -22,6 +22,7 @@ from atst.domain.exceptions import NotFoundError
 from atst.models.environment_role import CSPRole
 from atst.models.portfolio_role import Status as PortfolioRoleStatus
 from atst.forms.application import EditEnvironmentForm
+from atst.forms.app_settings import EnvironmentRolesForm
 
 from tests.utils import captured_templates
 
@@ -72,15 +73,18 @@ def test_edit_application_environments_obj(app, client, user_session):
         portfolio,
         "Snazzy Application",
         "A new application for me and my friends",
-        {"env1", "env2"},
+        {"env"},
     )
-    user1 = UserFactory.create()
-    user2 = UserFactory.create()
-    env1 = application.environments[0]
-    env2 = application.environments[1]
-    env_role1 = EnvironmentRoleFactory.create(environment=env1, user=user1)
-    env_role2 = EnvironmentRoleFactory.create(environment=env1, user=user2)
-    env_role3 = EnvironmentRoleFactory.create(environment=env2, user=user1)
+    env = application.environments[0]
+    app_role = ApplicationRoleFactory.create(application=application)
+    env_role1 = EnvironmentRoleFactory.create(
+        environment=env, role=CSPRole.BASIC_ACCESS.value
+    )
+    ApplicationRoleFactory.create(application=application, user=env_role1.user)
+    env_role2 = EnvironmentRoleFactory.create(
+        environment=env, role=CSPRole.NETWORK_ADMIN.value
+    )
+    ApplicationRoleFactory.create(application=application, user=env_role2.user)
 
     user_session(portfolio.owner)
 
@@ -92,54 +96,24 @@ def test_edit_application_environments_obj(app, client, user_session):
         assert response.status_code == 200
         _, context = templates[0]
 
-        env_obj_1 = context["environments_obj"][env1.name]
-        assert env_obj_1["id"] == env1.id
-        assert isinstance(env_obj_1["edit_form"], EditEnvironmentForm)
-        assert env_obj_1["members"] == [
-            {"name": user1.full_name, "role": env_role1.role},
-            {"name": user2.full_name, "role": env_role2.role},
-        ]
-
-
-def test_edit_app_serialize_env_member_form_data(app, client, user_session):
-    portfolio = PortfolioFactory.create()
-    application = Applications.create(
-        portfolio,
-        "Snazzy Application",
-        "A new application for me and my friends",
-        {"env1", "env2"},
-    )
-    user1 = UserFactory.create()
-    user2 = UserFactory.create()
-    env1 = application.environments[0]
-    env2 = application.environments[1]
-    env_role1 = EnvironmentRoleFactory.create(environment=env1, user=user1)
-    env_role2 = EnvironmentRoleFactory.create(environment=env1, user=user2)
-    env_role3 = EnvironmentRoleFactory.create(environment=env2, user=user1)
-
-    user_session(portfolio.owner)
-
-    with captured_templates(app) as templates:
-        response = app.test_client().get(
-            url_for("applications.settings", application_id=application.id)
-        )
-
-        assert response.status_code == 200
-        _, context = templates[0]
-        for env_id in context["env_forms"]:
-            env = Environments.get(environment_id=env_id)
-            form_data = {"env_id": env_id, "team_roles": []}
-            for user in env.users:
-                env_role = EnvironmentRoles.get(user.id, env.id)
-                form_data["team_roles"].append(
-                    {
-                        "name": user.full_name,
-                        "user_id": user.id,
-                        "role": env_role.displayname,
-                    }
-                )
-
-            assert context["env_forms"][env_id].data == form_data
+        env_obj = context["environments_obj"][0]
+        assert env_obj["name"] == env.name
+        assert env_obj["id"] == env.id
+        assert isinstance(env_obj["edit_form"], EditEnvironmentForm)
+        assert isinstance(env_obj["members_form"], EnvironmentRolesForm)
+        assert env_obj["members"] == {
+            "no_access": [
+                {"name": app_role.user.full_name, "user_id": app_role.user_id}
+            ],
+            CSPRole.BASIC_ACCESS.value: [
+                {"name": env_role1.user.full_name, "user_id": env_role1.user_id}
+            ],
+            CSPRole.NETWORK_ADMIN.value: [
+                {"name": env_role2.user.full_name, "user_id": env_role2.user_id}
+            ],
+            CSPRole.BUSINESS_READ.value: [],
+            CSPRole.TECHNICAL_READ.value: [],
+        }
 
 
 def test_user_with_permission_can_update_application(client, user_session):

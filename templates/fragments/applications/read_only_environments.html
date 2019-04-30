@@ -16,21 +16,21 @@
     </div>
 
     <ul class="accordion-table__items">
-      {% for name, members_list in environments_obj.items() %}
+      {% for env in environments_obj %}
         <toggler inline-template>
           <li class="accordion-table__item">
             <div class="accordion-table__item-content">
               <span>
-                {{ name }}
+                {{ env['name'] }}
               </span>
 
               <span class="icon-link icon-link--large accordion-table__item__toggler">
                 {% set open_members_button %}
-                  {{ "common.members" | translate }} ({{ members_list | length }}) {{ Icon('caret_down') }}
+                  {{ "common.members" | translate }} ({{ env['members'] | length }}) {{ Icon('caret_down') }}
                 {% endset %}
 
                 {% set close_members_button %}
-                  {{ "common.members" | translate }} ({{ members_list | length }}) {{ Icon('caret_up') }}
+                  {{ "common.members" | translate }} ({{ env['members'] | length }}) {{ Icon('caret_up') }}
                 {% endset %}
 
                 {{
@@ -45,7 +45,7 @@
 
             {% call ToggleSection(section_name="members") %}
               <ul>
-                {% for member in members_list %}
+                {% for member in env['members'] %}
                 <li class="accordion-table__item__expanded">
                   <div class="accordion-table__item__expanded_first">{{ member.name }}</div>
                 </li>

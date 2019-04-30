@@ -7,45 +7,53 @@ from atst.domain.applications import Applications
 from atst.forms.app_settings import EnvironmentRolesForm
 from atst.forms.application import ApplicationForm, EditEnvironmentForm
 from atst.domain.authz.decorator import user_can_access_decorator as user_can
+from atst.models.environment_role import CSPRole
 from atst.domain.exceptions import NotFoundError
-
 from atst.models.permissions import Permissions
 from atst.utils.flash import formatted_flash as flash
 
 
 def get_environments_obj_for_app(application):
-    environments_obj = {}
-
+    environments_obj = []
     for env in application.environments:
-        environments_obj[env.name] = {
-            "edit_form": EditEnvironmentForm(obj=env),
+        env_data = {
             "id": env.id,
-            "members": [],
+            "name": env.name,
+            "edit_form": EditEnvironmentForm(obj=env),
+            "members_form": EnvironmentRolesForm(data=data_for_env_members_form(env)),
+            "members": sort_env_users_by_role(env),
         }
-        for user in env.users:
-            env_role = EnvironmentRoles.get(user.id, env.id)
-            environments_obj[env.name]["members"].append(
-                {"name": user.full_name, "role": env_role.displayname}
-            )
+        environments_obj.append(env_data)
 
     return environments_obj
 
 
-def serialize_env_member_form_data(application):
-    environments_list = []
-    for env in application.environments:
-        env_info = {"env_id": env.id, "team_roles": []}
-        for user in env.users:
-            env_role = EnvironmentRoles.get(user.id, env.id)
-            env_info["team_roles"].append(
-                {
-                    "name": user.full_name,
-                    "user_id": user.id,
-                    "role": env_role.displayname,
-                }
+def sort_env_users_by_role(env):
+    users_dict = {"no_access": []}
+    for role in CSPRole:
+        users_dict[role.value] = []
+
+    for user in env.application.users:
+        if user in env.users:
+            role = EnvironmentRoles.get(user.id, env.id)
+            users_dict[role.displayname].append(
+                {"name": user.full_name, "user_id": user.id}
             )
-        environments_list.append(env_info)
-    return environments_list
+        else:
+            users_dict["no_access"].append({"name": user.full_name, "user_id": user.id})
+
+    return users_dict
+
+
+def data_for_env_members_form(environment):
+    data = {"env_id": environment.id, "team_roles": []}
+    for user in environment.users:
+        env_role = EnvironmentRoles.get(user.id, environment.id)
+        data["team_roles"].append(
+            {"name": user.full_name, "user_id": user.id, "role": env_role.displayname}
+        )
+
+    return data
 
 
 def check_users_are_in_application(user_ids, application):
@@ -62,18 +70,12 @@ def settings(application_id):
     # refactor like portfolio admin render function
     application = Applications.get(application_id)
     form = ApplicationForm(name=application.name, description=application.description)
-    app_envs_data = serialize_env_member_form_data(application)
-
-    env_forms = {}
-    for env_data in app_envs_data:
-        env_forms[env_data["env_id"]] = EnvironmentRolesForm(data=env_data)
 
     return render_template(
         "portfolios/applications/settings.html",
         application=application,
         form=form,
         environments_obj=get_environments_obj_for_app(application=application),
-        env_forms=env_forms,
     )
 
 
@@ -116,17 +118,11 @@ def update(application_id):
             )
         )
     else:
-        env_data = serialize_env_member_form_data(application)
-        env_forms = {}
-        for data in env_data:
-            env_forms[data["env_id"]] = EnvironmentRolesForm(data=data)
-
         return render_template(
             "portfolios/applications/settings.html",
             application=application,
             form=form,
             environments_obj=get_environments_obj_for_app(application=application),
-            env_forms=env_forms,
         )
 
 
@@ -167,7 +163,6 @@ def update_env_roles(environment_id):
                 name=application.name, description=application.description
             ),
             environments_obj=get_environments_obj_for_app(application=application),
-            env_forms=env_roles_form,
         )
 
 
