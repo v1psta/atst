@@ -18,6 +18,12 @@
   }
 }
 
+.app-team-settings-link {
+  font-size: $small-font-size;
+  font-weight: $font-normal;
+  padding-left: $gap * 2;
+}
+
 .environment-role {
   padding: $gap * 3;
 
@@ -49,6 +55,7 @@
     .environment-role__no-user {
       margin: $gap;
       padding: ($gap / 2) $gap;
+      font-weight: $font-normal;
     }
   }
 }
