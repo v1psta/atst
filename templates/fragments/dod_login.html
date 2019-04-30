@@ -1,10 +1,10 @@
-<fullpagenotice inline-template key="notice">
+<dodlogin inline-template key="notice">
   <div>
     <div class="usa-button usa-button-primary usa-button-big login-banner__button" v-on:click="displayNotice()">
       {{ "login.login_button" | translate }}
     </div>
 
-    <div class="full-page-notice" v-if="visible" v-cloak>
+    <div class="dod-login-notice" v-if="visible" v-cloak>
       <div class='usa-alert usa-alert-info'>
         <div class='usa-alert-body'>
           <h3>You are accessing a U.S. Government (USG) Information System (IS) that is provided for USG-authorized use only.</h3>
@@ -30,4 +30,4 @@
       </div>
     </div>
   </div>
-</fullpagenotice>
+</dodlogin>

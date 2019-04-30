@@ -1,5 +1,5 @@
 export default {
-  name: 'fullpagenotice',
+  name: 'dodlogin',
 
   data: function() {
     return {
