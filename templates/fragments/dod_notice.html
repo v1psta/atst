@@ -1,41 +1,31 @@
 <fullpagenotice inline-template key="notice">
-  <div class="full-page-notice" v-show="visible">
-    <div class='usa-alert usa-alert-info'>
-      <div class='usa-alert-body'>
-        <h3>You are accessing a U.S. Government (USG) Information System (IS) that is provided for USG-authorized use only.</h3>
+  <div>
+    <div class="usa-button usa-button-primary usa-button-big login-banner__button" v-on:click="displayNotice()">
+      {{ "login.login_button" | translate }}
+    </div>
 
-        <h4>By using this IS (which includes any device attached to this IS), you consent to the following conditions:</h4>
+    <div class="full-page-notice" v-if="visible" v-cloak>
+      <div class='usa-alert usa-alert-info'>
+        <div class='usa-alert-body'>
+          <h3>You are accessing a U.S. Government (USG) Information System (IS) that is provided for USG-authorized use only.</h3>
 
-        <ul>
-          <li> The USG routinely intercepts and monitors communications on this IS for purposes including, but not limited to, penetration testing, COMSEC monitoring, network operations and defense, personnel misconduct (PM), law enforcement (LE), and counterintelligence (CI) investigations.</li>
+          <h4>By using this IS (which includes any device attached to this IS), you consent to the following conditions:</h4>
 
-          <li>At any time, the USG may inspect and seize data stored on this IS.</li>
+          <ul>
+            <li> The USG routinely intercepts and monitors communications on this IS for purposes including, but not limited to, penetration testing, COMSEC monitoring, network operations and defense, personnel misconduct (PM), law enforcement (LE), and counterintelligence (CI) investigations.</li>
 
-          <li>Communications using, or data stored on, this IS are not private, are subject to routine monitoring, interception, and search, and may be disclosed or used for any USG-authorized purpose.</li>
+            <li>At any time, the USG may inspect and seize data stored on this IS.</li>
 
-          <li>This IS includes security measures (e.g., authentication and access controls) to protect USG interests--not for your personal benefit or privacy.</li>
+            <li>Communications using, or data stored on, this IS are not private, are subject to routine monitoring, interception, and search, and may be disclosed or used for any USG-authorized purpose.</li>
 
-          <li>Notwithstanding the above, using this IS does not constitute consent to PM, LE or CI investigative searching or monitoring of the content of privileged communications, or work product, related to personal representation or services by attorneys, psychotherapists, or clergy, and their assistants. Such communications and work product are private and confidential. See User Agreement for details.</li>
-        </ul>
+            <li>This IS includes security measures (e.g., authentication and access controls) to protect USG interests--not for your personal benefit or privacy.</li>
 
-        <checkboxinput inline-template key="agree">
-          <div class="usa-input">
-            <fieldset data-ally-disabled="true" v-on:change="onInput">
-              <legend>
-                <input id="abc" type="checkbox" name="abc" value="y" />
-                <label for="abc">
-                  I've read and consent to the terms in the IS user agreement
-                </label>
-              </legend>
-            </fieldset>
-          </div>
-        </checkboxinput>
+            <li>Notwithstanding the above, using this IS does not constitute consent to PM, LE or CI investigative searching or monitoring of the content of privileged communications, or work product, related to personal representation or services by attorneys, psychotherapists, or clergy, and their assistants. Such communications and work product are private and confidential. See User Agreement for details.</li>
+          </ul>
 
-        <div
-          class="usa-button usa-button-primary float-right"
-          v-on:click="agreeToTermsClick"
-          v-bind:class="{ 'usa-button-disabled': !agree }">
-          {{ "common.continue" | translate }}
+          <a href='{{ redirect_url }}' class="usa-button usa-button-primary float-right">
+            {{ "common.continue" | translate }}
+          </a>
         </div>
       </div>
     </div>
