@@ -1,6 +1,6 @@
 @mixin block-list {
   @include panel-margin;
-  @include shadow-panel
+  @include shadow-panel;
   padding: 0;
 
   ul, dl {
