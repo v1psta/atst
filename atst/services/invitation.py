@@ -57,26 +57,18 @@ class Invitation:
 
         if isinstance(member, PortfolioRole):
             self.email_template = (
-                "emails/portfolio/invitation.txt"
-                if self.email_template is None
-                else self.email_template
+                self.email_template or "emails/portfolio/invitation.txt"
             )
             self.subject = (
-                "{} has invited you to a JEDI cloud portfolio"
-                if self.subject is None
-                else self.subject
+                self.subject or "{} has invited you to a JEDI cloud portfolio"
             )
             self.domain_class = PortfolioInvitations
         elif isinstance(member, ApplicationRole):
             self.email_template = (
-                "emails/application/invitation.txt"
-                if self.email_template is None
-                else self.email_template
+                self.email_template or "emails/application/invitation.txt"
             )
             self.subject = (
-                "{} has invited you to a JEDI cloud application"
-                if self.subject is None
-                else self.subject
+                self.subject or "{} has invited you to a JEDI cloud application"
             )
             self.domain_class = ApplicationInvitations
 

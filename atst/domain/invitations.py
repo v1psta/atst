@@ -4,6 +4,7 @@ from sqlalchemy.orm.exc import NoResultFound
 from atst.database import db
 from atst.models import ApplicationInvitation, InvitationStatus, PortfolioInvitation
 from atst.domain.portfolio_roles import PortfolioRoles
+from atst.domain.application_roles import ApplicationRoles
 
 from .exceptions import NotFoundError
 
@@ -40,6 +41,7 @@ class InvitationError(Exception):
 
 class BaseInvitations(object):
     model = None
+    role_domain_class = None
     # number of minutes a given invitation is considered valid
     EXPIRATION_LIMIT_MINUTES = 360
 
@@ -48,7 +50,7 @@ class BaseInvitations(object):
         try:
             invite = db.session.query(cls.model).filter_by(token=token).one()
         except NoResultFound:
-            raise NotFoundError("invite")
+            raise NotFoundError(cls.model.__tablename__)
 
         return invite
 
@@ -86,7 +88,7 @@ class BaseInvitations(object):
 
         elif invite.is_pending:  # pragma: no branch
             cls._update_status(invite, InvitationStatus.ACCEPTED)
-            PortfolioRoles.enable(invite.role)
+            cls.role_domain_class.enable(invite.role)
             return invite
 
     @classmethod
@@ -109,11 +111,11 @@ class BaseInvitations(object):
         return cls._update_status(invite, InvitationStatus.REVOKED)
 
     @classmethod
-    def lookup_by_portfolio_and_user(cls, portfolio, user):
-        role = PortfolioRoles.get(portfolio.id, user.id)
+    def lookup_by_resource_and_user(cls, resource, user):
+        role = cls.role_domain_class.get(resource.id, user.id)
 
         if role.latest_invitation is None:
-            raise NotFoundError("invitation")
+            raise NotFoundError(cls.model.__tablename__)
 
         return role.latest_invitation
 
@@ -127,7 +129,9 @@ class BaseInvitations(object):
 
 class PortfolioInvitations(BaseInvitations):
     model = PortfolioInvitation
+    role_domain_class = PortfolioRoles
 
 
 class ApplicationInvitations(BaseInvitations):
     model = ApplicationInvitation
+    role_domain_class = ApplicationRoles

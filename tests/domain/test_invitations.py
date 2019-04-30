@@ -152,9 +152,9 @@ def test_lookup_by_user_and_portfolio():
     ws_role = PortfolioRoleFactory.create(user=user, portfolio=portfolio)
     invite = PortfolioInvitations.create(portfolio.owner, ws_role, user.email)
 
-    assert PortfolioInvitations.lookup_by_portfolio_and_user(portfolio, user) == invite
+    assert PortfolioInvitations.lookup_by_resource_and_user(portfolio, user) == invite
 
     with pytest.raises(NotFoundError):
-        PortfolioInvitations.lookup_by_portfolio_and_user(
+        PortfolioInvitations.lookup_by_resource_and_user(
             portfolio, UserFactory.create()
         )

@@ -180,10 +180,10 @@
 }
 
 .input__inline-fields  {
-  margin: 1rem 0 1rem 0;
+  margin: 1rem 0;
 
   &.input__inline-fields--indented {
-    margin-left: 4*$gap;
+    margin-left: $gap*4;
   }
 
   &> fieldset.usa-input__choices label {

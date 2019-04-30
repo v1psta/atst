@@ -8,7 +8,7 @@ from atst.domain.authz.decorator import user_can_access_decorator as user_can
 from atst.domain.permission_sets import PermissionSets
 from atst.domain.exceptions import AlreadyExistsError
 from atst.forms.application_member import NewForm as NewMemberForm
-from atst.models.permissions import Permissions
+from atst.models import Permissions
 from atst.services.invitation import Invitation as InvitationService
 from atst.utils.flash import formatted_flash as flash
 from atst.utils.localization import translate

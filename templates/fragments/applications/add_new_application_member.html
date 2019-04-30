@@ -37,7 +37,7 @@
         v-bind:disabled="invalid"
         class='action-group__action usa-button'
         value='Next'>
-    <a class='action-group__action icon-link icon-link--default' v-on:click="closeModal('{{ new_port_mem }}')">Cancel</a>
+    <a class='action-group__action icon-link icon-link--default' v-on:click="closeModal('{{ new_port_mem }}')">{{ "common.cancel" | translate }}</a>
   </div>
 {% endset %}
 {% set step_two %}
@@ -117,7 +117,7 @@
         class='action-group__action usa-button'
         form="add-app-mem"
         value='Invite member'>
-      <a class='action-group__action icon-link icon-link--default' v-on:click="closeModal('{{ new_port_mem }}')">Cancel</a>
+      <a class='action-group__action icon-link icon-link--default' v-on:click="closeModal('{{ new_port_mem }}')">{{ "common.cancel" | translate }}</a>
       <input
           type='button'
           v-on:click="previous()"

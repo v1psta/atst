@@ -57,7 +57,7 @@ def resend_invite(task_order_id):
     if not officer:
         raise NotFoundError("officer")
 
-    invitation = PortfolioInvitations.lookup_by_portfolio_and_user(portfolio, officer)
+    invitation = PortfolioInvitations.lookup_by_resource_and_user(portfolio, officer)
 
     if not invitation:
         raise NotFoundError("invitation")

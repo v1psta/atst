@@ -3,7 +3,7 @@ from wtforms.fields import FormField, FieldList, HiddenField, BooleanField
 
 from .forms import BaseForm
 from .member import NewForm as BaseNewMemberForm
-from .data import FORMATTED_ENV_ROLES as ENV_ROLES
+from .data import ENV_ROLES
 from atst.forms.fields import SelectField
 from atst.domain.permission_sets import PermissionSets
 from atst.utils.localization import translate
