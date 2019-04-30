@@ -47,7 +47,7 @@ def serialize_env_member_form_data(application):
 def check_users_are_in_application(user_ids, application):
     for user_id in user_ids:
         if not application.has_member(user_id):
-            raise NotFoundError("application user {}".format(user_id))
+            raise NotFoundError("application user", user_id)
     return True
 
 
@@ -115,8 +115,8 @@ def update_env_roles(environment_id):
             check_users_are_in_application(user_ids, application)
         except NotFoundError as err:
             app.logger.warning(
-                "Security violation for user {}, {} {}".format(
-                    g.current_user.id, request.method, request.path
+                "User {} requested environment role change for unauthorized user {} in application {}.".format(
+                    g.current_user.id, err.resource_id, application.id
                 ),
                 extra={"tags": ["update", "failure"], "security_warning": True},
             )
