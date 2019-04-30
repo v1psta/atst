@@ -54,11 +54,16 @@
 
 .accordion__actions {
   margin-top: $gap;
+  margin-bottom: $gap * 0.5;
   display: flex;
   flex-direction: row;
 
   .icon-link {
     font-size: $small-font-size;
+
+    svg {
+      width: 1rem;
+    }
   }
 
   .counter {

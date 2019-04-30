@@ -34,10 +34,10 @@
 
   .portfolio-breadcrumbs__home {
     &.icon-link--disabled {
-      color: $color-gray-medium;
+      color: $color-gray-dark;
       opacity: 1;
       .icon {
-        @include icon-color($color-gray-medium);
+        @include icon-color($color-gray-dark);
       }
     }
   }
@@ -153,8 +153,6 @@
   color: $color-gray-dark;
   padding: $gap 0;
   text-transform: uppercase;
-  opacity: 0.54;
-  font-size: $small-font-size;
   font-weight: bold;
   margin-bottom: 3 * $gap;
 }

@@ -54,21 +54,20 @@
                   <a
                     href="{{ url_for('applications.team', application_id=application.id) }}"
                     class='icon-link'>
-                      <span>{{ "portfolios.applications.team_text" | translate }}</span>
-                      <span class='counter'>{{ application.num_users }}</span>
+                      <span>{{ "portfolios.applications.team_text" | translate }} ({{ application.num_users }})</span>
                     </a>
+                    <div class='separator'></div>
                   {% endif %}
+                  <a class='icon-link' v-on:click="toggleSection('{{ section_name }}')">
+                    <span>Environments ({{ application.environments|length }})</span>
+                    <span v-if="selectedSection === '{{ section_name }}'">
+                      {{ Icon('caret_up') }}
+                    </span>
+                    <span v-else>
+                      {{ Icon('caret_down') }}
+                    </span>
+                  </a>
                 </div>
-              </div>
-              <div class='col'>
-                <span class='icon-link toggle-link' v-on:click="toggleSection('{{ section_name }}')">
-                  <span v-if="selectedSection === '{{ section_name }}'">
-                    {{ Icon('minus') }}
-                  </span>
-                  <span v-else>
-                    {{ Icon('plus') }}
-                  </span>
-                </span>
               </div>
             </header>
             <ul v-show="selectedSection === '{{ section_name }}'">
