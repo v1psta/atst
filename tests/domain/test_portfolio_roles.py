@@ -7,7 +7,7 @@ from atst.models.portfolio_role import Status as PortfolioRoleStatus
 from tests.factories import (
     PortfolioFactory,
     UserFactory,
-    InvitationFactory,
+    PortfolioInvitationFactory,
     PortfolioRoleFactory,
 )
 

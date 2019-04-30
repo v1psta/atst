@@ -46,6 +46,14 @@
         flex-basis: 16.66%;
       }
 
+      &.form-col--quarter {
+        flex-basis: 25%;
+      }
+
+      &.form-col--three-quarters {
+        flex-basis: 75%;
+      }
+
       .usa-input {
         margin-left: ($gap * 4);
         margin-right: ($gap * 4);
@@ -171,3 +179,15 @@
   }
 }
 
+.input__inline-fields  {
+  margin: 1rem 0;
+
+  &.input__inline-fields--indented {
+    margin-left: $gap*4;
+  }
+
+  &> fieldset.usa-input__choices label {
+    display: inline;
+    font-weight: $font-normal;
+  }
+}

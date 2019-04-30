@@ -11,6 +11,7 @@ import optionsinput from './components/options_input'
 import multicheckboxinput from './components/multi_checkbox_input'
 import textinput from './components/text_input'
 import checkboxinput from './components/checkbox_input'
+import nestedcheckboxinput from './components/nested_checkbox_input'
 import EditOfficerForm from './components/forms/edit_officer_form'
 import poc from './components/forms/poc'
 import oversight from './components/forms/oversight'
@@ -74,6 +75,7 @@ const app = new Vue({
     KoReview,
     BaseForm,
     DeleteConfirmation,
+    nestedcheckboxinput,
   },
 
   mounted: function() {

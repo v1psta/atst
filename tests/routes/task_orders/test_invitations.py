@@ -4,7 +4,7 @@ from flask import url_for
 import pytest
 
 from atst.domain.task_orders import TaskOrders
-from atst.models.invitation import Status as InvitationStatus
+from atst.models import InvitationStatus
 from atst.models.portfolio_role import Status as PortfolioStatus
 from atst.queue import queue
 
@@ -13,7 +13,7 @@ from tests.factories import (
     TaskOrderFactory,
     UserFactory,
     PortfolioRoleFactory,
-    InvitationFactory,
+    PortfolioInvitationFactory,
 )
 
 
@@ -79,7 +79,7 @@ def test_does_not_resend_officer_invitation(client, user_session):
     user_session(user)
     for i in range(2):
         client.post(url_for("task_orders.invite", task_order_id=task_order.id))
-    assert len(contracting_officer.invitations) == 1
+    assert len(contracting_officer.portfolio_invitations) == 1
 
 
 def test_does_not_invite_if_task_order_incomplete(client, user_session, queue):
@@ -272,9 +272,9 @@ class TestTaskOrderInvitations:
             cor_invite=True,
         )
         portfolio_role = PortfolioRoleFactory.create(portfolio=self.portfolio, user=cor)
-        invitation = InvitationFactory.create(
+        PortfolioInvitationFactory.create(
             inviter=self.portfolio.owner,
-            portfolio_role=portfolio_role,
+            role=portfolio_role,
             user=cor,
             status=InvitationStatus.PENDING,
         )
@@ -369,9 +369,9 @@ def test_resend_invite_when_not_pending(app, client, user_session, portfolio, us
         portfolio=portfolio, user=user, status=PortfolioStatus.ACTIVE
     )
 
-    original_invitation = InvitationFactory.create(
+    original_invitation = PortfolioInvitationFactory.create(
         inviter=user,
-        portfolio_role=portfolio_role,
+        role=portfolio_role,
         email=user.email,
         status=InvitationStatus.ACCEPTED,
     )
@@ -397,9 +397,9 @@ def test_resending_revoked_invite(app, client, user_session, portfolio, user):
 
     portfolio_role = PortfolioRoleFactory.create(portfolio=portfolio, user=user)
 
-    invite = InvitationFactory.create(
+    invite = PortfolioInvitationFactory.create(
         inviter=user,
-        portfolio_role=portfolio_role,
+        role=portfolio_role,
         email=user.email,
         status=InvitationStatus.REVOKED,
     )
@@ -427,9 +427,9 @@ def test_resending_expired_invite(app, client, user_session, portfolio):
         portfolio=portfolio, contracting_officer=ko, ko_invite=True
     )
     portfolio_role = PortfolioRoleFactory.create(portfolio=portfolio, user=ko)
-    invite = InvitationFactory.create(
+    invite = PortfolioInvitationFactory.create(
         inviter=portfolio.owner,
-        portfolio_role=portfolio_role,
+        role=portfolio_role,
         email=ko.email,
         expiration_time=datetime.now() - timedelta(days=1),
     )

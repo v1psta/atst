@@ -161,6 +161,13 @@ MESSAGES = {
         """,
         "category": "success",
     },
+    "new_application_member": {
+        "title_template": translate("flash.success"),
+        "message_template": """
+          <p>{{ "flash.new_application_member" | translate({ "user_name": new_member.user_name }) }}</p>
+        """,
+        "category": "success",
+    },
 }
 
 

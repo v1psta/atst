@@ -1,5 +1,5 @@
+from atst.models import CSPRole
 from atst.utils.localization import translate, translate_duration
-from atst.models.environment_role import CSPRole
 
 
 SERVICE_BRANCHES = [

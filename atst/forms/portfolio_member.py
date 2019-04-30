@@ -1,10 +1,9 @@
-from wtforms.fields.html5 import EmailField, TelField
-from wtforms.validators import Required, Email, Length, Optional
+from wtforms.validators import Required
 from wtforms.fields import StringField, FormField, FieldList, HiddenField
 
 from atst.domain.permission_sets import PermissionSets
 from .forms import BaseForm
-from atst.forms.validators import IsNumber, PhoneNumber
+from .member import NewForm as BaseNewMemberForm
 from atst.forms.fields import SelectField
 from atst.utils.localization import translate
 
@@ -62,24 +61,16 @@ class EditForm(PermissionsForm):
     pass
 
 
-class NewForm(PermissionsForm):
-    first_name = StringField(
-        label=translate("forms.new_member.first_name_label"), validators=[Required()]
-    )
-    last_name = StringField(
-        label=translate("forms.new_member.last_name_label"), validators=[Required()]
-    )
-    email = EmailField(
-        translate("forms.new_member.email_label"), validators=[Required(), Email()]
-    )
-    phone_number = TelField(
-        translate("forms.new_member.phone_number_label"),
-        validators=[Optional(), PhoneNumber()],
-    )
-    dod_id = StringField(
-        translate("forms.new_member.dod_id_label"),
-        validators=[Required(), Length(min=10), IsNumber()],
-    )
+class NewForm(BaseForm):
+    user_data = FormField(BaseNewMemberForm)
+    permission_sets = FormField(PermissionsForm)
+
+    @property
+    def update_data(self):
+        return {
+            "permission_sets": self.data.get("permission_sets").get("permission_sets"),
+            **self.data.get("user_data"),
+        }
 
 
 class AssignPPOCForm(PermissionsForm):

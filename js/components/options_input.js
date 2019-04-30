@@ -18,6 +18,7 @@ export default {
       showError: showError,
       showValid: !showError && !!this.initialValue,
       validationError: this.initialErrors.join(' '),
+      value: this.initialValue,
     }
   },
 

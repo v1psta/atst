@@ -17,7 +17,7 @@ from tests.factories import (
     ApplicationRoleFactory,
     EnvironmentFactory,
     EnvironmentRoleFactory,
-    InvitationFactory,
+    PortfolioInvitationFactory,
     PortfolioFactory,
     PortfolioRoleFactory,
     TaskOrderFactory,
@@ -75,7 +75,9 @@ def test_all_protected_routes_have_access_control(
     monkeypatch.setattr("atst.domain.portfolios.Portfolios.get", lambda *a: None)
     monkeypatch.setattr("atst.domain.task_orders.TaskOrders.get", lambda *a: Mock())
     monkeypatch.setattr("atst.domain.applications.Applications.get", lambda *a: Mock())
-    monkeypatch.setattr("atst.domain.invitations.Invitations._get", lambda *a: Mock())
+    monkeypatch.setattr(
+        "atst.domain.invitations.PortfolioInvitations._get", lambda *a: Mock()
+    )
     monkeypatch.setattr(
         "atst.utils.context_processors.get_portfolio_from_context", lambda *a: None
     )
@@ -402,7 +404,7 @@ def test_portfolios_resend_invitation_access(post_url_assert_status):
 
     portfolio = PortfolioFactory.create(owner=owner)
     prr = PortfolioRoleFactory.create(user=invitee, portfolio=portfolio)
-    invite = InvitationFactory.create(user=UserFactory.create(), portfolio_role=prr)
+    invite = PortfolioInvitationFactory.create(user=UserFactory.create(), role=prr)
 
     url = url_for(
         "portfolios.resend_invitation", portfolio_id=portfolio.id, token=invite.token
@@ -423,7 +425,7 @@ def test_task_orders_resend_invite_access(post_url_assert_status):
     portfolio = PortfolioFactory.create(owner=owner)
     task_order = TaskOrderFactory.create(portfolio=portfolio, contracting_officer=ko)
     prr = PortfolioRoleFactory.create(user=ko, portfolio=portfolio)
-    invite = InvitationFactory.create(user=UserFactory.create(), portfolio_role=prr)
+    PortfolioInvitationFactory.create(user=UserFactory.create(), role=prr)
 
     url = url_for(
         "task_orders.resend_invite",
@@ -449,7 +451,7 @@ def test_portfolios_revoke_invitation_access(post_url_assert_status):
         prr = PortfolioRoleFactory.create(
             user=prt_member, portfolio=portfolio, status=PortfolioRoleStatus.ACTIVE
         )
-        invite = InvitationFactory.create(user=prt_member, portfolio_role=prr)
+        invite = PortfolioInvitationFactory.create(user=prt_member, role=prr)
         url = url_for(
             "portfolios.revoke_invitation",
             portfolio_id=portfolio.id,

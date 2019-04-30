@@ -2,8 +2,9 @@ import datetime
 from sqlalchemy.orm.exc import NoResultFound
 
 from atst.database import db
-from atst.models.invitation import Invitation, Status as InvitationStatus
+from atst.models import ApplicationInvitation, InvitationStatus, PortfolioInvitation
 from atst.domain.portfolio_roles import PortfolioRoles
+from atst.domain.application_roles import ApplicationRoles
 
 from .exceptions import NotFoundError
 
@@ -38,27 +39,30 @@ class InvitationError(Exception):
         return "{} has a status of {}".format(self.invite.id, self.invite.status.value)
 
 
-class Invitations(object):
+class BaseInvitations(object):
+    model = None
+    role_domain_class = None
     # number of minutes a given invitation is considered valid
     EXPIRATION_LIMIT_MINUTES = 360
 
     @classmethod
     def _get(cls, token):
         try:
-            invite = db.session.query(Invitation).filter_by(token=token).one()
+            invite = db.session.query(cls.model).filter_by(token=token).one()
         except NoResultFound:
-            raise NotFoundError("invite")
+            raise NotFoundError(cls.model.__tablename__)
 
         return invite
 
     @classmethod
-    def create(cls, inviter, portfolio_role, email):
-        invite = Invitation(
-            portfolio_role=portfolio_role,
+    def create(cls, inviter, role, email):
+        # pylint: disable=not-callable
+        invite = cls.model(
+            role=role,
             inviter=inviter,
-            user=portfolio_role.user,
+            user=role.user,
             status=InvitationStatus.PENDING,
-            expiration_time=Invitations.current_expiration_time(),
+            expiration_time=cls.current_expiration_time(),
             email=email,
         )
         db.session.add(invite)
@@ -68,29 +72,29 @@ class Invitations(object):
 
     @classmethod
     def accept(cls, user, token):
-        invite = Invitations._get(token)
+        invite = cls._get(token)
 
         if invite.user.dod_id != user.dod_id:
             if invite.is_pending:
-                Invitations._update_status(invite, InvitationStatus.REJECTED_WRONG_USER)
+                cls._update_status(invite, InvitationStatus.REJECTED_WRONG_USER)
             raise WrongUserError(user, invite)
 
         elif invite.is_expired:
-            Invitations._update_status(invite, InvitationStatus.REJECTED_EXPIRED)
+            cls._update_status(invite, InvitationStatus.REJECTED_EXPIRED)
             raise ExpiredError(invite)
 
         elif invite.is_accepted or invite.is_revoked or invite.is_rejected:
             raise InvitationError(invite)
 
         elif invite.is_pending:  # pragma: no branch
-            Invitations._update_status(invite, InvitationStatus.ACCEPTED)
-            PortfolioRoles.enable(invite.portfolio_role)
+            cls._update_status(invite, InvitationStatus.ACCEPTED)
+            cls.role_domain_class.enable(invite.role)
             return invite
 
     @classmethod
     def current_expiration_time(cls):
         return datetime.datetime.now() + datetime.timedelta(
-            minutes=Invitations.EXPIRATION_LIMIT_MINUTES
+            minutes=cls.EXPIRATION_LIMIT_MINUTES
         )
 
     @classmethod
@@ -103,23 +107,31 @@ class Invitations(object):
 
     @classmethod
     def revoke(cls, token):
-        invite = Invitations._get(token)
-        return Invitations._update_status(invite, InvitationStatus.REVOKED)
+        invite = cls._get(token)
+        return cls._update_status(invite, InvitationStatus.REVOKED)
 
     @classmethod
-    def lookup_by_portfolio_and_user(cls, portfolio, user):
-        portfolio_role = PortfolioRoles.get(portfolio.id, user.id)
+    def lookup_by_resource_and_user(cls, resource, user):
+        role = cls.role_domain_class.get(resource.id, user.id)
 
-        if portfolio_role.latest_invitation is None:
-            raise NotFoundError("invitation")
+        if role.latest_invitation is None:
+            raise NotFoundError(cls.model.__tablename__)
 
-        return portfolio_role.latest_invitation
+        return role.latest_invitation
 
     @classmethod
     def resend(cls, user, token):
-        previous_invitation = Invitations._get(token)
-        Invitations._update_status(previous_invitation, InvitationStatus.REVOKED)
+        previous_invitation = cls._get(token)
+        cls._update_status(previous_invitation, InvitationStatus.REVOKED)
 
-        return Invitations.create(
-            user, previous_invitation.portfolio_role, previous_invitation.email
-        )
+        return cls.create(user, previous_invitation.role, previous_invitation.email)
+
+
+class PortfolioInvitations(BaseInvitations):
+    model = PortfolioInvitation
+    role_domain_class = PortfolioRoles
+
+
+class ApplicationInvitations(BaseInvitations):
+    model = ApplicationInvitation
+    role_domain_class = ApplicationRoles
