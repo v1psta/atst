@@ -39,16 +39,3 @@ def test_audit_event_for_application_deletion(session):
     )
     assert update_event.changed_state.get("deleted")
     assert update_event.changed_state["deleted"] == [False, True]
-
-
-def test_has_app_member():
-    user = UserFactory.create()
-    app = ApplicationFactory.create()
-    ApplicationRoleFactory.create(user=user, application=app)
-    assert app.has_member(user.id)
-
-
-def test_does_not_have_app_member():
-    user = UserFactory.create()
-    app = ApplicationFactory.create()
-    assert not app.has_member(user.id)

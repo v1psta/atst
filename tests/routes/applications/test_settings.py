@@ -192,7 +192,7 @@ def test_check_users_are_in_application():
     for user in [app_user_1, app_user_2, app_user_3]:
         ApplicationRoleFactory.create(user=user, application=application)
 
-    user_ids = [app_user_1.id, app_user_2.id, app_user_3.id]
+    user_ids = [str(app_user_1.id), str(app_user_2.id), str(app_user_3.id)]
     assert check_users_are_in_application(user_ids, application)
 
 

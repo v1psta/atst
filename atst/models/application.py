@@ -51,10 +51,6 @@ class Application(
     def displayname(self):
         return self.name
 
-    def has_member(self, user_id):
-        user_ids = set(str(user.id) for user in self.users)
-        return str(user_id) in user_ids
-
     def __repr__(self):  # pragma: no cover
         return "<Application(name='{}', description='{}', portfolio='{}', id='{}')>".format(
             self.name, self.description, self.portfolio.name, self.id

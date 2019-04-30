@@ -45,8 +45,9 @@ def serialize_env_member_form_data(application):
 
 
 def check_users_are_in_application(user_ids, application):
+    existing_ids = [str(role.user_id) for role in application.roles]
     for user_id in user_ids:
-        if not application.has_member(user_id):
+        if not user_id in existing_ids:
             raise NotFoundError("application user", user_id)
     return True
 
