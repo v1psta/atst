@@ -9,7 +9,6 @@ from atst.forms.application import ApplicationForm, EditEnvironmentForm
 from atst.domain.authz.decorator import user_can_access_decorator as user_can
 from atst.models.environment_role import CSPRole
 from atst.domain.exceptions import NotFoundError
-from atst.models.environment_role import CSPRole
 from atst.models.permissions import Permissions
 from atst.utils.flash import formatted_flash as flash
 
@@ -48,11 +47,15 @@ def sort_env_users_by_role(env):
 
 def data_for_env_members_form(environment):
     data = {"env_id": environment.id, "team_roles": []}
-    for user in environment.users:
+    for user in environment.application.users:
         env_role = EnvironmentRoles.get(user.id, environment.id)
-        data["team_roles"].append(
-            {"name": user.full_name, "user_id": user.id, "role": env_role.displayname}
-        )
+
+        if env_role:
+            role = env_role.displayname
+        else:
+            role = "no_access"
+
+        data["team_roles"].append({"user_id": user.id, "role": role})
 
     return data
 
@@ -68,10 +71,8 @@ def check_users_are_in_application(user_ids, application):
 @applications_bp.route("/applications/<application_id>/settings")
 @user_can(Permissions.VIEW_APPLICATION, message="view application edit form")
 def settings(application_id):
-    # refactor like portfolio admin render function
     application = Applications.get(application_id)
     form = ApplicationForm(name=application.name, description=application.description)
-    csp_roles = [role.value for role in CSPRole]
 
     return render_template(
         "portfolios/applications/settings.html",
@@ -145,12 +146,12 @@ def update(application_id):
 def update_env_roles(environment_id):
     environment = Environments.get(environment_id)
     application = environment.application
-    env_roles_form = EnvironmentRolesForm(http_request.form)
+    form = EnvironmentRolesForm(formdata=http_request.form)
 
-    if env_roles_form.validate():
+    if form.validate():
 
         try:
-            user_ids = [user["user_id"] for user in env_roles_form.data["team_roles"]]
+            user_ids = [user["user_id"] for user in form.data["team_roles"]]
             check_users_are_in_application(user_ids, application)
         except NotFoundError as err:
             app.logger.warning(
@@ -161,11 +162,21 @@ def update_env_roles(environment_id):
             )
 
             raise (err)
-        env_data = env_roles_form.data
+        env_data = form.data
         Environments.update_env_roles_by_environment(
             environment_id=environment_id, team_roles=env_data["team_roles"]
         )
-        return redirect(url_for("applications.settings", application_id=application.id))
+
+        flash("application_environment_members_updated")
+
+        return redirect(
+            url_for(
+                "applications.settings",
+                application_id=application.id,
+                fragment="application-environments",
+                _anchor="application-environments",
+            )
+        )
     else:
         # TODO: Create a better pattern to handle when a form doesn't validate
         # if a user is submitting the data via the web page then they

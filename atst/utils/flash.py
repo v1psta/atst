@@ -7,6 +7,11 @@ MESSAGES = {
         "message_template": 'The environment "{{ environment_name }}" has been deleted',
         "category": "success",
     },
+    "application_environment_members_updated": {
+        "title_template": "Application environment members updated",
+        "message_template": "Application environment members have been updated",
+        "category": "success",
+    },
     "application_environments_updated": {
         "title_template": "Application environments updated",
         "message_template": "Application environments have been updated",

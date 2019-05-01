@@ -123,13 +123,13 @@ def test_edit_application_environments_obj(app, client, user_session):
         assert isinstance(env_obj["members_form"], EnvironmentRolesForm)
         assert env_obj["members"] == {
             "no_access": [
-                {"name": app_role.user.full_name, "user_id": app_role.user_id}
+                {"user_id": app_role.user_id, "name": app_role.user.full_name}
             ],
             CSPRole.BASIC_ACCESS.value: [
-                {"name": env_role1.user.full_name, "user_id": env_role1.user_id}
+                {"user_id": env_role1.user_id, "name": env_role1.user.full_name}
             ],
             CSPRole.NETWORK_ADMIN.value: [
-                {"name": env_role2.user.full_name, "user_id": env_role2.user_id}
+                {"user_id": env_role2.user_id, "name": env_role2.user.full_name}
             ],
             CSPRole.BUSINESS_READ.value: [],
             CSPRole.TECHNICAL_READ.value: [],
@@ -236,16 +236,12 @@ def test_update_team_env_roles(client, user_session):
     form_data = {
         "env_id": environment.id,
         "team_roles-0-user_id": env_role_1.user.id,
-        "team_roles-0-name": env_role_1.user.full_name,
         "team_roles-0-role": CSPRole.NETWORK_ADMIN.value,
         "team_roles-1-user_id": env_role_2.user.id,
-        "team_roles-1-name": env_role_2.user.full_name,
         "team_roles-1-role": CSPRole.BASIC_ACCESS.value,
         "team_roles-2-user_id": env_role_3.user.id,
-        "team_roles-2-name": env_role_3.user.full_name,
-        "team_roles-2-role": "",
+        "team_roles-2-role": "no_access",
         "team_roles-3-user_id": app_role.user.id,
-        "team_roles-3-name": app_role.user.full_name,
         "team_roles-3-role": CSPRole.TECHNICAL_READ.value,
     }
 

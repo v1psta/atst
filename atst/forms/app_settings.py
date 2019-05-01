@@ -1,14 +1,19 @@
 from flask_wtf import FlaskForm
-from wtforms.fields import StringField, HiddenField, RadioField, FieldList, FormField
+from wtforms.fields import FieldList, FormField, HiddenField, RadioField
 
 from .forms import BaseForm
 from .data import ENV_ROLES
 
 
 class EnvMemberRoleForm(FlaskForm):
-    name = StringField()
     user_id = HiddenField()
-    role = RadioField(choices=ENV_ROLES, coerce=BaseForm.remove_empty_string)
+    role = RadioField(choices=ENV_ROLES, default="no_access")
+
+    @property
+    def data(self):
+        _data = super().data
+        _data.pop("csrf_token", None)
+        return _data
 
 
 class EnvironmentRolesForm(BaseForm):

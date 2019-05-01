@@ -25,11 +25,14 @@
 .app-team-settings-link {
   font-size: $small-font-size;
   font-weight: $font-normal;
-  padding-left: $gap * 2;
+}
+
+.environment-roles {
+  padding: 0 ($gap * 3) ($gap * 3);
 }
 
 .environment-role {
-  padding: $gap * 3;
+  padding: ($gap * 2) 0;
 
   h4 {
     margin-bottom: $gap / 4;
@@ -50,9 +53,34 @@
       margin: $gap;
       white-space: nowrap;
       width: 20rem;
+      position: relative;
 
       &.unassigned {
         border: solid 1px $color-gray-light;
+      }
+
+      .icon-link {
+        padding: 0;
+      }
+
+      .environment-role__user-field {
+        position: absolute;
+        background-color: $color-white;
+        margin-top: $gap * 2;
+        padding: $gap;
+        left: -0.1rem;
+        border: solid 1px $color-gray-light;
+        width: 20rem;
+        z-index: 3;
+
+        .usa-input {
+          margin: 0;
+
+          li {
+            background-color: white;
+            border: none;
+          }
+        }
       }
     }
 
@@ -93,4 +121,20 @@
 .environment-name--gray {
   font-weight: $font-normal;
   color: $color-gray-medium;
+}
+
+.application-list-item {
+  .usa-button-primary {
+    width: $search-button-width * 2;
+  }
+
+  .action-group-cancel {
+    position: relative;
+
+    .action-group-cancel__action {
+      position: absolute;
+      right: ($search-button-width * 2) + ($gap * 2);
+      top: -($gap * 8);
+    }
+  }
 }
