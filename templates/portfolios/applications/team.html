@@ -70,26 +70,6 @@
                   <span class="user-permission{% if "Edit" in value %} green{% endif %}">{{ value }}</span>
                 {% endmacro %}
 
-<<<<<<< HEAD
-              <toggler inline-template>
-                <li class="accordion-table__item">
-                  <div class="accordion-table__item-content">
-                    <span>
-                      {{ name }}
-                      <span>{{ user.full_name }}</span>
-                      <span>{{ user_permissions["delete_access"] }}</span>
-                      <span>{{ user_permissions["environment_management"] }}</span>
-                      <span>{{ user_permissions["team_management"] }}</span>
-                    </span>
-                    <span class="icon-link icon-link--large accordion-table__item__toggler">
-                      {% set open_html %}
-                      {{ "common.show" | translate }} {{ "portfolios.applications.team_settings.environments" | translate }} ({{ user_info['environments'] | length }})
-                      {% endset %}
-
-                      {% set close_html %}
-                        {{ "common.hide" | translate }} {{ "portfolios.applications.team_settings.environments" | translate }} ({{ user_info['environments'] | length }})
-                      {% endset %}
-=======
                 <toggler inline-template>
                   <li class="accordion-table__item">
                     <div class="accordion-table__item-content">
@@ -108,7 +88,6 @@
                         {% set close_html %}
                           {{ "portfolios.applications.team_settings.environments" | translate }} ({{ user_info['environments'] | length }}) {{ Icon('caret_up') }}
                         {% endset %}
->>>>>>> Style updates to portfolio team page:
 
                       {{
                         ToggleButton(
@@ -122,10 +101,8 @@
                   {% call ToggleSection(section_name="environments") %}
                     <ul>
                       {% for environment in user_info["environments"] %}
-                        <li>
-                          <div class="accordion-table__item-content">
-                            {{ environment.name }}
-                          </div>
+                        <li class="accordion-table__item__expanded">
+                          {{ environment.name }}
                         </li>
                       {% endfor %}
                     </ul>
