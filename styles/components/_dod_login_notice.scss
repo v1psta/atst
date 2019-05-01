@@ -13,5 +13,12 @@
   .usa-alert {
     margin: 0 auto;
     max-width: $article-max-width + $nav-width;
+
+    a.usa-button, a.usa-button:hover {
+      -moz-transition: none;
+      -webkit-transition: none;
+      -o-transition: color 0 ease-in;
+      transition: none;
+    }
   }
 }
