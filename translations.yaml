@@ -38,6 +38,7 @@ common:
   resource_names:
     environments: Environments
   choose_role: Choose a role
+  name: Name
 components:
   modal:
     close: Close
