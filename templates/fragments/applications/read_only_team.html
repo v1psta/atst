@@ -1,0 +1,46 @@
+{% for member in application.members %}
+  {% set user = member.user %}
+  {% set user_info = environment_users[user.id] %}
+  {% set user_permissions = user_info["permissions"] %}
+
+    {% macro PermissionField(value) %}
+      <div class="col col--grow user-permission{% if "Edit" in value %} green{% endif %}">{{ value }}</div>
+    {% endmacro %}
+
+    <toggler inline-template>
+      <li class="accordion-table__item">
+        <div class="accordion-table__item-content row">
+          <div class="col col--grow">{{ user.full_name }}</div>
+          {{ PermissionField(user_permissions["delete_access"]) }}
+          {{ PermissionField(user_permissions["environment_management"]) }}
+          {{ PermissionField(user_permissions["team_management"]) }}
+          <div class="col col--grow icon-link icon-link--large accordion-table__item__toggler">
+            {% set open_html %}
+            {{ "portfolios.applications.team_settings.environments" | translate }} ({{ user_info['environments'] | length }}) {{ Icon('caret_down') }}
+            {% endset %}
+
+            {% set close_html %}
+              {{ "portfolios.applications.team_settings.environments" | translate }} ({{ user_info['environments'] | length }}) {{ Icon('caret_up') }}
+            {% endset %}
+
+            {{
+              ToggleButton(
+                open_html=open_html,
+                close_html=close_html,
+                section_name="environments"
+              )
+            }}
+          </div>
+      </div>
+      {% call ToggleSection(section_name="environments") %}
+        <ul>
+          {% for environment in user_info["environments"] %}
+            <li class="accordion-table__item__expanded">
+              {{ environment.name }}
+            </li>
+          {% endfor %}
+        </ul>
+      {% endcall %}
+    </li>
+  </toggler>
+{% endfor %}

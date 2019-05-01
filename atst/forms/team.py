@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms.fields import FormField, FieldList, HiddenField
+from wtforms.fields import FormField, FieldList, HiddenField, StringField
 
 from .application_member import EnvironmentForm
 from .forms import BaseForm
@@ -43,6 +43,7 @@ class PermissionsForm(FlaskForm):
 
 class MemberForm(FlaskForm):
     user_id = HiddenField()
+    user_name = StringField()
     environment_roles = FieldList(FormField(EnvironmentForm))
     permission_sets = FormField(PermissionsForm)
 

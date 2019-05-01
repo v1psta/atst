@@ -2,12 +2,14 @@ from flask import render_template, request as http_request, g, url_for, redirect
 
 
 from . import applications_bp
-from atst.domain.environments import Environments
 from atst.domain.applications import Applications
+from atst.domain.environments import Environments
+from atst.domain.environment_roles import EnvironmentRoles
 from atst.domain.authz.decorator import user_can_access_decorator as user_can
 from atst.domain.permission_sets import PermissionSets
 from atst.domain.exceptions import AlreadyExistsError
 from atst.forms.application_member import NewForm as NewMemberForm
+from atst.forms.team import TeamForm
 from atst.models import Permissions
 from atst.services.invitation import Invitation as InvitationService
 from atst.utils.flash import formatted_flash as flash
@@ -27,8 +29,10 @@ def team(application_id):
     application = Applications.get(resource_id=application_id)
 
     environment_users = {}
+    team_data = []
     for member in application.members:
         user_id = member.user.id
+        user_name = member.user.full_name
         environment_users[user_id] = {
             "permissions": {
                 "delete_access": permission_str(
@@ -45,18 +49,51 @@ def team(application_id):
                 user=member.user, application=application
             ),
         }
+        permission_sets = {
+            "perms_env_mgmt": PermissionSets.EDIT_APPLICATION_ENVIRONMENTS
+            if member.has_permission_set(PermissionSets.EDIT_APPLICATION_ENVIRONMENTS)
+            else "",
+            "perms_team_mgmt": PermissionSets.EDIT_APPLICATION_TEAM
+            if member.has_permission_set(PermissionSets.EDIT_APPLICATION_TEAM)
+            else "",
+            "perms_del_env": PermissionSets.DELETE_APPLICATION_ENVIRONMENTS
+            if member.has_permission_set(PermissionSets.DELETE_APPLICATION_ENVIRONMENTS)
+            else "",
+        }
+        roles = EnvironmentRoles.get_for_application_and_user(
+            member.user.id, application.id
+        )
+        environment_roles = [
+            {
+                "environment_id": str(role.environment.id),
+                "environment_name": role.environment.name,
+                "role": role.role,
+            }
+            for role in roles
+        ]
+        team_data.append(
+            {
+                "user_id": str(user_id),
+                "user_name": user_name,
+                "permission_sets": permission_sets,
+                "environment_roles": environment_roles,
+            }
+        )
+
+        team_form = TeamForm(data={"members": team_data})
 
     env_roles = [
         {"environment_id": e.id, "environment_name": e.name}
         for e in application.environments
     ]
-    member_form = NewMemberForm(data={"environment_roles": env_roles})
+    new_member_form = NewMemberForm(data={"environment_roles": env_roles})
 
     return render_template(
         "portfolios/applications/team.html",
         application=application,
         environment_users=environment_users,
-        member_form=member_form,
+        team_form=team_form,
+        new_member_form=new_member_form,
     )
 
 

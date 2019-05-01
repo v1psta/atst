@@ -28,6 +28,7 @@ class Application(
         back_populates="application",
         primaryjoin="and_(Environment.application_id==Application.id, Environment.deleted==False)",
     )
+    # TODO: filter condition on this relationship?
     roles = relationship("ApplicationRole")
 
     @property

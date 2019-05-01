@@ -1,7 +1,7 @@
 from flask import current_app as app
 
 from atst.database import db
-from atst.models import EnvironmentRole
+from atst.models import EnvironmentRole, Application, Environment
 
 
 class EnvironmentRoles(object):
@@ -35,3 +35,15 @@ class EnvironmentRoles(object):
             return True
         else:
             return False
+
+    @classmethod
+    def get_for_application_and_user(cls, user_id, application_id):
+        return (
+            db.session.query(EnvironmentRole)
+            .join(Environment)
+            .join(Application, Environment.application_id == Application.id)
+            .filter(EnvironmentRole.user_id == user_id)
+            .filter(Application.id == application_id)
+            .filter(EnvironmentRole.environment_id == Environment.id)
+            .all()
+        )
