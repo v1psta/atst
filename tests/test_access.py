@@ -16,7 +16,7 @@ from tests.factories import (
     ApplicationRoleFactory,
     EnvironmentFactory,
     EnvironmentRoleFactory,
-    InvitationFactory,
+    PortfolioInvitationFactory,
     PortfolioFactory,
     PortfolioRoleFactory,
     TaskOrderFactory,

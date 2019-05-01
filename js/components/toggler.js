@@ -8,6 +8,7 @@ export default {
   mixins: [FormMixin],
 
   components: {
+    optionsinput,
     textinput,
     optionsinput,
   },

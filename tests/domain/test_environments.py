@@ -39,7 +39,9 @@ def test_update_env_role_no_access():
         user=env_role.user, application=env_role.environment.application
     )
 
-    assert Environments.update_env_role(env_role.environment, env_role.user, None)
+    assert Environments.update_env_role(
+        env_role.environment, env_role.user, "no_access"
+    )
     assert not EnvironmentRoles.get(env_role.user.id, env_role.environment.id)
 
 
@@ -90,7 +92,7 @@ def test_update_env_roles_by_environment():
         {
             "user_id": env_role_3.user.id,
             "name": env_role_3.user.full_name,
-            "role": None,
+            "role": "no_access",
         },
     ]
 
@@ -125,7 +127,7 @@ def test_update_env_roles_by_member():
         {"id": dev.id, "role": CSPRole.NETWORK_ADMIN.value},
         {"id": staging.id, "role": CSPRole.BUSINESS_READ.value},
         {"id": prod.id, "role": CSPRole.TECHNICAL_READ.value},
-        {"id": testing.id, "role": None},
+        {"id": testing.id, "role": "no_access"},
     ]
 
     Environments.update_env_roles_by_member(user, env_roles)
