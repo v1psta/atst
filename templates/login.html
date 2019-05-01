@@ -21,11 +21,7 @@
 
           <img class="login-banner__logo" src="{{url_for('static', filename='img/ccpo-logo.svg')}}" alt="{{ "login.ccpo_logo_alt_text" | translate }}">
 
-          <a class="usa-button usa-button-big login-banner__button" href='{{ redirect_url }}'>
-            <span>
-              {{ "login.login_button" | translate }}
-            </span>
-          </a>
+          {% include "fragments/dod_login.html" %}
         </div>
 
         {% with %}

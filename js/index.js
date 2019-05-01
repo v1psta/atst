@@ -6,6 +6,7 @@ import classes from '../styles/atat.scss'
 import Vue from 'vue/dist/vue'
 import VTooltip from 'v-tooltip'
 
+import dodlogin from './components/dodlogin'
 import levelofwarrant from './components/levelofwarrant'
 import optionsinput from './components/options_input'
 import multicheckboxinput from './components/multi_checkbox_input'
@@ -47,6 +48,7 @@ Vue.mixin(Modal)
 const app = new Vue({
   el: '#app-root',
   components: {
+    dodlogin,
     toggler,
     levelofwarrant,
     optionsinput,

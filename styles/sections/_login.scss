@@ -19,6 +19,10 @@
         max-width: 25rem;
         margin: ($gap * 2) auto;
       }
+
+      .login-banner__button {
+        margin-right: 0;
+      }
     }
   }
 }

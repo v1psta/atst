@@ -1,0 +1,24 @@
+.dod-login-notice {
+  background: rgba(0,0,0,.5);
+  bottom: 0;
+  left: 0;
+  overflow: scroll;
+  padding: $gap*4 0;
+  position: fixed;
+  right: 0;
+  text-align: left;
+  top: 0;
+  z-index: 999;
+
+  .usa-alert {
+    margin: 0 auto;
+    max-width: $article-max-width + $nav-width;
+
+    a.usa-button, a.usa-button:hover {
+      -moz-transition: none;
+      -webkit-transition: none;
+      -o-transition: color 0 ease-in;
+      transition: none;
+    }
+  }
+}
