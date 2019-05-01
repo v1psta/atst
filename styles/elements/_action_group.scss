@@ -11,10 +11,10 @@
 
   .usa-button,
   a {
-    margin: 0 0 0 ($gap * 2);
+    margin: 0 0 0 $gap;
 
     @include media($medium-screen) {
-      margin: 0 0 0 ($gap * 4);
+      margin: 0 0 0 ($gap * 2);
     }
   }
 
