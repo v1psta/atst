@@ -26,6 +26,7 @@
 
   @include media($medium-screen) {
     @include grid-row;
+
     align-items: flex-start;
     justify-content: flex-start;
 
@@ -55,8 +56,8 @@
       }
 
       .usa-input {
-        margin-left: ($gap * 4);
-        margin-right: ($gap * 4);
+        margin-left: $gap * 4;
+        margin-right: $gap * 4;
 
         label {
           .icon-validation {
@@ -81,10 +82,10 @@
   }
 }
 
-
 .form__sub-fields {
   @include alert;
-  @include alert-level('default');
+  @include alert-level("default");
+
   margin-top: $gap * 2;
   display: block;
 
@@ -115,12 +116,14 @@
   }
 
   &--warning {
-    @include alert-level('warning');
+    @include alert-level("warning");
+
     display: block;
   }
 
   &--error {
-    @include alert-level('error');
+    @include alert-level("error");
+
     display: block;
   }
 }
@@ -179,14 +182,14 @@
   }
 }
 
-.input__inline-fields  {
+.input__inline-fields {
   margin: 1rem 0;
 
   &.input__inline-fields--indented {
-    margin-left: $gap*4;
+    margin-left: $gap * 4;
   }
 
-  &> fieldset.usa-input__choices label {
+  & > fieldset.usa-input__choices label {
     display: inline;
     font-weight: $font-normal;
   }

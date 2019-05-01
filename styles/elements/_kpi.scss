@@ -1,9 +1,9 @@
 .kpi {
-
-    margin-bottom: $gap;
+  margin-bottom: $gap;
 
   .kpi__item {
     @include panel-base;
+
     text-align: center;
     margin: $gap;
     padding: $gap * 2;
@@ -19,7 +19,7 @@
 
   .kpi__item__value {
     @include h1;
+
     padding-bottom: $gap / 2;
   }
-
 }

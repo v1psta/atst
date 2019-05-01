@@ -6,6 +6,7 @@
 
   .audit-log__item__timestamp {
     @include small-label;
+
     width: 6rem;
     flex-shrink: 0;
     margin-right: $gap * 2;

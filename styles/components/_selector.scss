@@ -7,6 +7,7 @@
 
   legend {
     @include h4;
+
     padding-bottom: $gap / 2;
   }
 
@@ -14,7 +15,7 @@
     width: 100%;
     height: $input-height;
     margin: 0;
-    padding: $input-padding-vertical ($gap*5) $input-padding-vertical 0.7em;
+    padding: $input-padding-vertical ($gap * 5) $input-padding-vertical 0.7em;
     line-height: $input-line-height;
     color: $color-base;
     font-size: $base-font-size;
@@ -26,7 +27,7 @@
     border-radius: 0;
     box-sizing: border-box;
     background-color: $color-white;
-    background-image: none, url('#{$image-path}/arrow-both.svg'), url('#{$image-path}/arrow-both.png');
+    background-image: none, url("#{$image-path}/arrow-both.svg"), url("#{$image-path}/arrow-both.png");
     background-position: right 1.3rem center;
     background-repeat: no-repeat;
     background-size: 1rem;
@@ -42,6 +43,7 @@
 
           label {
             padding: 0;
+
             dt {
               font-weight: $font-bold;
             }

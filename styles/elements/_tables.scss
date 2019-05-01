@@ -6,11 +6,13 @@
 
 table {
   @include panel-margin;
+
   min-width: 100%;
 
   @include ie-only {
     border-collapse: separate;
   }
+
 
   th, td {
     &.table-cell--align-right {
@@ -44,6 +46,7 @@ table {
         position: inherit;
         margin-right: -16px;
         width: 16px;
+
         .icon {
           height: 14px;
           width: 16px;
@@ -58,6 +61,7 @@ table {
       th,
       td {
         @include block-list-item;
+
         display: table-cell;
         white-space: nowrap;
         border-bottom-style: dashed;
@@ -81,6 +85,7 @@ table {
     tr {
       th, td {
         @include block-list-header;
+
         display: table-cell;
         white-space: nowrap;
       }
@@ -100,11 +105,13 @@ table {
 
 .responsive-table-wrapper {
   overflow-x: auto;
+
   @include panel-margin;
 
   .responsive-table-wrapper__header {
     @include panel-base;
     @include panel-theme-default;
+
     border-top: none;
     border-bottom: 0;
     display: flex;
@@ -116,6 +123,7 @@ table {
 
     .responsive-table-wrapper__title {
       @include h4;
+
       font-size: $lead-font-size;
       flex: 2;
     }
@@ -141,7 +149,7 @@ table {
 
   table {
     max-width: 100%;
-    table-layout:fixed;
+    table-layout: fixed;
 
     th, td {
       white-space: normal;

@@ -2,7 +2,6 @@
   display: block;
   background-color: $color-white;
 
-
   .home-container {
     max-width: 90rem;
     margin-left: auto;
@@ -14,6 +13,7 @@
     @include media($medium-screen) {
       display: flex;
     }
+
 
     h1 {
       font-weight: 200;
@@ -29,7 +29,6 @@
       img {
         width: 20rem;
 
-
         @include media($medium-screen) {
           width: 25rem;
         }
@@ -41,7 +40,6 @@
     }
 
     .home-container__list {
-
       ol {
         list-style: none;
         counter-reset: home-counter;
@@ -58,13 +56,8 @@
             position: absolute;
             left: -2rem;
           }
-
         }
       }
-
-
-
     }
-
   }
 }

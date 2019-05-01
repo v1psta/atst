@@ -1,8 +1,9 @@
 .member-edit {
   .panel {
     @include shadow-panel;
+
     margin: $gap;
-    padding: 2 * $gap $gap;
+    padding: (2 * $gap) $gap;
   }
 
   .subheading {
@@ -20,7 +21,7 @@
   }
 
   .application-list-item {
-    margin: 2 * $gap 3 * $gap;
+    margin: (2 * $gap) (3 * $gap);
 
     .block-list__header {
       border-top-color: $color-gray-light;
@@ -34,7 +35,8 @@
 
 .member-card {
   @include grid-row;
-  padding: $gap*2;
+
+  padding: $gap * 2;
   justify-content: space-between;
 
   .member-card__header {
@@ -45,6 +47,7 @@
 
   .member-card__heading {
     margin: 0;
+
     @include h2;
   }
 
@@ -52,23 +55,23 @@
     margin: 0;
     display: flex;
     margin-top: $gap;
+
     fieldset {
       margin: 0;
     }
 
     legend {
       flex: none;
-      margin-top: $gap*1.5;
-      margin-right: $gap*2;
+      margin-top: $gap * 1.5;
+      margin-right: $gap * 2;
     }
   }
-
 
   .member-card__details {
     text-align: right;
 
     .icon-link {
-      margin: 0 -$gap;
+      margin: 0 - $gap;
     }
 
     dl {

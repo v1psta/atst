@@ -14,15 +14,15 @@
   $border-width: 1px;
   $state-color: $color-blue;
 
-  @if $state == 'error' {
+  @if $state == "error" {
     $border-width: 2px;
     $state-color: $color-red;
-
-  } @else if $state == 'warning' {
+  }
+  @else if $state == "warning" {
     $border-width: 2px;
     $state-color: $color-gold;
-
-  } @else if $state == 'success' {
+  }
+  @else if $state == "success" {
     $border-width: 2px;
     $state-color: $color-green;
   }
@@ -65,11 +65,14 @@
     margin: ($gap * 4) 0;
   }
 
+
   label {
-    padding: 0 0 $gap/2 0;
+    padding: 0 0 ($gap / 2) 0;
     margin: 0;
+
     @include h4;
     @include line-max;
+
     position: relative;
     clear: both;
 
@@ -83,7 +86,6 @@
       margin-top: 1.4rem;
       margin-left: $gap;
     }
-
   }
 
   .usa-input__title {
@@ -95,7 +97,7 @@
     }
 
     .icon-tooltip {
-      padding: 0 $gap/2;
+      padding: 0 ($gap / 2);
       cursor: default;
       margin: 0 0 0 ($gap / 2);
     }
@@ -103,17 +105,19 @@
 
   .usa-input__help {
     @include h5;
+
     font-weight: normal;
 
     @include line-max;
 
     .icon-link {
-      padding: 0 $gap/2;
+      padding: 0 ($gap / 2);
     }
   }
 
   .usa-input__coming-soon {
     @include h5;
+
     font-weight: normal;
 
     @include line-max;
@@ -126,6 +130,7 @@
   select,
   .selector__button {
     @include line-max;
+
     margin: 0;
     box-sizing: border-box;
     resize: none;
@@ -140,6 +145,7 @@
       border-color: $color-blue !important;
       color: $color-blue-darker;
       box-shadow: inset 0 0 0 1px $color-blue;
+
       &::placeholder {
         color: $color-blue;
       }
@@ -150,9 +156,11 @@
     color: grey;
   }
 
-  .usa-input__choices { // checkbox & radio sets
+  .usa-input__choices {
+    // checkbox & radio sets
     legend {
       padding: 0 0 $gap 0;
+
       @include h4;
 
       .icon {
@@ -163,7 +171,6 @@
       label {
         font-weight: $font-bold;
       }
-
     }
 
     select {
@@ -181,8 +188,10 @@
         [type='radio'] + label,
         [type='checkbox'] + label {
           margin: 0;
+
           &:hover {
             color: $color-blue;
+
             &:before {
               box-shadow: 0 0 0 1px $color-white, 0 0 0 3px $color-blue;
             }
@@ -210,11 +219,11 @@
 
   .usa-input__message {
     @include h5;
+
     display: inline-block;
   }
 
   &--validation {
-
     &--anything,
     &--portfolioName,
     &--requiredField,
@@ -222,6 +231,7 @@
       input {
         max-width: 30em;
       }
+
       .icon-validation {
         left: 30em;
       }
@@ -231,6 +241,7 @@
       textarea {
         max-width: 30em;
       }
+
       .icon-validation {
         left: 30em;
       }
@@ -244,6 +255,7 @@
       input {
         max-width: 16em;
       }
+
       .icon-validation {
         left: 16em;
       }
@@ -255,6 +267,7 @@
       input {
         max-width: 10em;
       }
+
       .icon-validation {
         left: 10em;
       }
@@ -264,6 +277,7 @@
       input {
         max-width: 18em;
       }
+
       .icon-validation {
         left: 18em;
       }
@@ -279,26 +293,26 @@
 
     .icon-validation {
       left: auto;
-      right: - $gap * 4;
+      right: -$gap * 4;
     }
   }
 
-  @include input-state('default');
+  @include input-state("default");
 
   &.usa-input--error {
-    @include input-state('error');
+    @include input-state("error");
   }
 
   &.usa-input--warning {
-    @include input-state('warning');
+    @include input-state("warning");
   }
 
   &.usa-input--success {
-    @include input-state('success');
+    @include input-state("success");
   }
 
   [type='file'] {
-    height: auto
+    height: auto;
   }
 }
 
@@ -337,7 +351,6 @@ select {
   button {
     min-height: 4.4rem;
   }
-
 }
 
 .phone-input {
@@ -345,7 +358,7 @@ select {
   flex-direction: row;
 
   .phone-input__phone {
-    margin-right: ($gap * 4);
+    margin-right: $gap * 4;
 
     .usa-input {
       input, label, .usa-input__message {
@@ -359,7 +372,7 @@ select {
   }
 
   .phone-input__extension {
-    margin-left: ($gap * 4);
+    margin-left: $gap * 4;
 
     .usa-input {
       input, label {

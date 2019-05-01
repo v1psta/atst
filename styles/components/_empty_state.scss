@@ -10,13 +10,15 @@
     padding: 8rem ($gap * 4) 0;
   }
 
+
   .icon {
-     @include icon-size(50);
-     @include icon-color($color-gray-light);
+    @include icon-size(50);
+    @include icon-color($color-gray-light);
   }
 
   .empty-state__message {
     @include h2;
+
     line-height: 1.2;
     max-width: 15em;
     color: $color-gray;
@@ -28,6 +30,7 @@
 
   .empty-state__sub-message {
     @include h4;
+
     color: $color-gray;
     max-width: 100%;
 

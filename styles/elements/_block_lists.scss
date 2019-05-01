@@ -1,6 +1,7 @@
 @mixin block-list {
   @include panel-margin;
-  @include shadow-panel
+  @include shadow-panel;
+
   padding: 0;
 
   ul, dl {
@@ -13,11 +14,12 @@
 @mixin block-list-header {
   @include panel-base;
   @include panel-theme-default;
+
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   background-color: $color-gray-lightest;
-  padding: $gap 3 * $gap;
+  padding: $gap (3 * $gap);
   color: $color-gray;
 
   .icon-tooltip {
@@ -27,6 +29,7 @@
   &--grow {
     display: inline-block;
     width: 100%;
+
     p {
       margin-bottom: 0;
     }
@@ -35,17 +38,19 @@
 
 @mixin block-list__title {
   @include h4;
+
   margin: 0;
   line-height: 3rem;
 }
 
 @mixin block-list__description {
-  margin-top: $gap*2;
+  margin-top: $gap * 2;
 }
 
 @mixin block-list__footer {
   @include panel-base;
   @include panel-theme-default;
+
   padding: $gap * 2;
   display: flex;
   flex-direction: row-reverse;
@@ -60,6 +65,7 @@
 
 @mixin block-list-item {
   @include panel-base;
+
   margin: 0;
   padding: $gap * 2;
   border-top: 0;
@@ -79,6 +85,7 @@
   flex-direction: row-reverse;
   align-items: center;
   justify-content: space-between;
+
   &::before {
     flex-shrink: 0;
     margin-right: 0;
@@ -90,12 +97,11 @@
   }
 }
 
-
 .block-list {
   @include block-list;
 
   .icon-link {
-    margin: -$gap 0;
+    margin: (-$gap) 0;
   }
 
   .icon-link,
@@ -107,7 +113,6 @@
     &:last-child {
       margin-right: -$gap;
     }
-
   }
 }
 
@@ -135,6 +140,7 @@
         width: 100%;
       }
 
+
       > label {
         @include block-list-selectable-label;
       }
@@ -151,17 +157,16 @@
     }
 
     @include ie-only {
-
       dl {
         width: 100%;
-        padding-left: $gap*4;
+        padding-left: $gap * 4;
       }
     }
-
   }
 }
 
 .block-list__footer {
   @include block-list__footer;
+
   border-top: 0;
 }
