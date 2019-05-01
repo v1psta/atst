@@ -22,10 +22,10 @@
   margin-top: 0;
   margin-left: 0;
   margin-right: 0;
-  margin-bottom: $site-margins-mobile * 2;
+  margin-bottom: $site-margins-mobile * 6;
 
   @include media($medium-screen) {
-    margin-bottom: $site-margins * 2;
+    margin-bottom: $site-margins * 8;
   }
 }
 
