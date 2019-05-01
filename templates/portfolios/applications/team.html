@@ -62,8 +62,7 @@
           </div>
           <ul class="accordion-table__items">
             {% if user_can(permissions.EDIT_APPLICATION_MEMBER) %}
-              {# edit version goes here #}
-              {% include "fragments/applications/read_only_team.html" %}
+              {% include "fragments/applications/edit_team.html" %}
             {% elif user_can(permissions.VIEW_APPLICATION_MEMBER) %}
               {% include "fragments/applications/read_only_team.html" %}
             {% endif %}

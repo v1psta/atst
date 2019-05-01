@@ -1,5 +1,6 @@
 import FormMixin from '../mixins/form'
 import textinput from './text_input'
+import optionsinput from './options_input'
 
 export default {
   name: 'toggler',
@@ -8,6 +9,7 @@ export default {
 
   components: {
     textinput,
+    optionsinput,
   },
 
   data: function() {
