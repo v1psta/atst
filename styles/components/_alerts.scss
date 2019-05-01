@@ -4,6 +4,11 @@
  * @source https://github.com/uswds/uswds/blob/develop/src/stylesheets/components/_alerts.scss
  */
 
+.usa-alert-heading {
+  line-height: 2.4rem;
+  margin-bottom: $gap;
+}
+
 @mixin alert {
   padding: $gap * 2;
   border-left-width: $gap / 2;

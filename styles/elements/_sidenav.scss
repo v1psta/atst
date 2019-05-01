@@ -1,6 +1,5 @@
 @mixin sidenav__header {
   padding: $gap ($gap * 2);
-  font-size: $small-font-size;
   font-weight: bold;
 }
 
@@ -17,10 +16,11 @@
     }
     width: 25rem;
 
-    box-shadow: 0 6px 18px 0 rgba(48,58,65,0.15);
+    box-shadow: $box-shadow;
 
     .sidenav__title {
       @include sidenav__header;
+      font-size: $h3-font-size;
       text-transform: uppercase;
       width: 50%;
       color: $color-gray-dark;
@@ -29,6 +29,8 @@
 
     .sidenav__toggle {
       @include sidenav__header;
+      font-size: $small-font-size;
+      line-height: 2.8rem;
       float: right;
       color: $color-blue-darker;
 

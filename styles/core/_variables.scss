@@ -113,7 +113,7 @@ $color-focus:                $color-gray-light;
 $color-visited:              $color-purple;
 
 $color-overlay:              rgba(#000, 0.5);
-$color-shadow:               rgba(#000, 0.3);
+$color-shadow:               rgba(208, 219, 231, 0.5);
 $color-transparent:          rgba(#000, 0);
 
 // Mobile First Breakpoints
@@ -154,7 +154,7 @@ $label-border-radius:           2px;
 $checkbox-border-radius:        2px;
 $border-radius:                 3px;
 $button-border-radius:          5px;
-$box-shadow:                    0 0 2px $color-shadow;
+$box-shadow:                    0px 2px 5px 0px $color-shadow;
 $focus-outline:                 2px dotted $color-gray-light;
 $focus-spacing:                 3px;
 $nav-width:                     300px; // previously 951px;

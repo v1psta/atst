@@ -1,3 +1,19 @@
+.triangle-box {
+  position: relative;
+
+  .triangle-up {
+    $triangle-size: ($gap * 1.5);
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-left: $triangle-size solid transparent;
+    border-right: $triangle-size solid transparent;
+    border-bottom: $triangle-size solid $color-blue-light;
+    bottom: -4px;
+    right: 50%;
+  }
+}
+
 .accordion {
   @include block-list;
 
@@ -54,11 +70,16 @@
 
 .accordion__actions {
   margin-top: $gap;
+  margin-bottom: $gap * 0.5;
   display: flex;
   flex-direction: row;
 
   .icon-link {
     font-size: $small-font-size;
+
+    svg {
+      width: 1rem;
+    }
   }
 
   .counter {

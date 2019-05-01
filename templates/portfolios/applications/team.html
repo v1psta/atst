@@ -46,7 +46,7 @@
           <div class="accordion-table__head">
             <span>
               <span>
-                {{ "portfolios.applications.team_settings.user" | translate }}
+                {{ "common.name" | translate }}
               </span>
               <span>
                 {{ "portfolios.applications.team_settings.section.table.delete_access" | translate }}
@@ -66,25 +66,28 @@
               {% set user_info = environment_users[user.id] %}
               {% set user_permissions = user_info["permissions"] %}
 
+                {% macro PermissionField(value) %}
+                  <span class="user-permission{% if "Edit" in value %} green{% endif %}">{{ value }}</span>
+                {% endmacro %}
 
-              <toggler inline-template>
-                <li class="accordion-table__item">
-                  <div class="accordion-table__item-content">
-                    <span>
-                      {{ name }}
-                      <span>{{ user.full_name }}</span>
-                      <span>{{ user_permissions["delete_access"] }}</span>
-                      <span>{{ user_permissions["environment_management"] }}</span>
-                      <span>{{ user_permissions["team_management"] }}</span>
-                    </span>
-                    <span class="icon-link icon-link--large accordion-table__item__toggler">
-                      {% set open_html %}
-                      {{ "common.show" | translate }} {{ "portfolios.applications.team_settings.environments" | translate }} ({{ user_info['environments'] | length }})
-                      {% endset %}
+                <toggler inline-template>
+                  <li class="accordion-table__item">
+                    <div class="accordion-table__item-content">
+                      <span>
+                        {{ name }}
+                        <span>{{ user.full_name }}</span>
+                        {{ PermissionField(user_permissions["delete_access"]) }}
+                        {{ PermissionField(user_permissions["environment_management"]) }}
+                        {{ PermissionField(user_permissions["team_management"]) }}
+                      </span>
+                      <span class="icon-link icon-link--large accordion-table__item__toggler">
+                        {% set open_html %}
+                        {{ "portfolios.applications.team_settings.environments" | translate }} ({{ user_info['environments'] | length }}) {{ Icon('caret_down') }}
+                        {% endset %}
 
-                      {% set close_html %}
-                        {{ "common.hide" | translate }} {{ "portfolios.applications.team_settings.environments" | translate }} ({{ user_info['environments'] | length }})
-                      {% endset %}
+                        {% set close_html %}
+                          {{ "portfolios.applications.team_settings.environments" | translate }} ({{ user_info['environments'] | length }}) {{ Icon('caret_up') }}
+                        {% endset %}
 
                       {{
                         ToggleButton(
@@ -98,10 +101,8 @@
                   {% call ToggleSection(section_name="environments") %}
                     <ul>
                       {% for environment in user_info["environments"] %}
-                        <li>
-                          <div class="accordion-table__item-content">
-                            {{ environment.name }}
-                          </div>
+                        <li class="accordion-table__item__expanded">
+                          {{ environment.name }}
                         </li>
                       {% endfor %}
                     </ul>

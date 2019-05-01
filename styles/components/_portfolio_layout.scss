@@ -16,7 +16,7 @@
 
 .portfolio-breadcrumbs {
   margin-bottom: $gap * 2;
-  color: $color-gray-medium;
+  color: $color-gray-dark;
   font-size: $h5-font-size;
 
   .icon-link {
@@ -34,10 +34,10 @@
 
   .portfolio-breadcrumbs__home {
     &.icon-link--disabled {
-      color: $color-gray-medium;
+      color: $color-gray-dark;
       opacity: 1;
       .icon {
-        @include icon-color($color-gray-medium);
+        @include icon-color($color-gray-dark);
       }
     }
   }
@@ -97,6 +97,7 @@
     font-size: $small-font-size;
 
     .icon-link {
+      padding: 0.8rem 1.2rem;
       &.active {
         color: $color-gray;
         .icon {
@@ -152,8 +153,6 @@
   color: $color-gray-dark;
   padding: $gap 0;
   text-transform: uppercase;
-  opacity: 0.54;
-  font-size: $small-font-size;
   font-weight: bold;
   margin-bottom: 3 * $gap;
 }
@@ -226,10 +225,6 @@
             width: 11rem;
             height: 3rem;
           }
-        }
-
-        .green {
-          color: $color-green;
         }
 
         .name {
@@ -337,6 +332,16 @@
         }
       }
     }
+
+    textarea {
+      max-height: 9rem;
+      max-width: none;
+    }
+
+    .panel__footer {
+      padding-bottom: 0;
+      padding-top: 0;
+    }
   }
 
   .activity-log {
@@ -378,8 +383,8 @@
     }
 
     .application-list-item {
+      box-shadow: $box-shadow;
       border-radius: 5px;
-      box-shadow: 0 4px 8px 1px rgba(230,230,230,0.5), -4px 4px 8px 1px rgba(230,230,230,0.5);
       margin-bottom: 6 * $gap;
 
       .col {
@@ -467,7 +472,6 @@
   }
 
   table {
-    box-shadow: 0 6px 18px 0 rgba(144,164,183,0.3);
     thead {
       th:first-child {
         padding-left: 3 * $gap;
