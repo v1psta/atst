@@ -4,6 +4,7 @@
 
   .panel {
     @include shadow-panel;
+
     margin-bottom: 6 * $gap;
   }
 
@@ -30,6 +31,7 @@
         @include grid-row;
       }
 
+
       @include ie-only {
         width: 100%;
         max-width: 100%;
@@ -40,7 +42,6 @@
           }
         }
       }
-
     }
   }
 
@@ -110,13 +111,14 @@
       dt {
         font-weight: bold;
       }
-      dd {
-      }
+
+      dd {}
     }
   }
 
   .task-order-details {
     flex-grow: 1;
+
     @include media($xlarge-screen) {
       @include grid-row;
     }
@@ -133,9 +135,11 @@
       padding-right: $gap;
     }
 
+
     @include ie-only {
       width: calc(100% - 35rem);
     }
+
 
     .task-order-next-steps__panel-head {
       border-bottom: 1px solid black;
@@ -152,6 +156,7 @@
         width: 100%;
       }
 
+
       .alert {
         margin-top: 3 * $gap;
         margin-bottom: 0;
@@ -165,9 +170,11 @@
       .task-order-next-steps__icon {
         padding: $gap $gap 0 0;
         justify-content: center;
+
         .complete {
           @include icon-color($color-green);
         }
+
         .incomplete {
           @include icon-color($color-gray-light);
         }
@@ -176,6 +183,7 @@
       .task-order-next-steps__action {
         min-width: 10 * $gap;
         padding: $gap 0 0 $gap;
+
         a.usa-button {
           width: 100%;
         }
@@ -183,6 +191,7 @@
 
       .task-order-next-steps__text {
         display: flex;
+
         .task-order-next-steps__heading {
           display: block;
           max-width: 100%;
@@ -196,6 +205,8 @@
     @include media($xlarge-screen) {
       padding-left: 3 * $gap;
     }
+
+
     min-width: 35rem;
 
     hr {
@@ -221,16 +232,20 @@
 
     .task-order-invitation-status {
       margin-bottom: 3 * $gap;
+
       .task-order-invitation-status__title {
         font-weight: $font-bold;
       }
 
       .invited {
         color: $color-green;
+
         @include icon-color($color-green);
       }
+
       .uninvited {
         color: $color-red;
+
         @include icon-color($color-red);
       }
 
@@ -285,7 +300,6 @@
       color: $color-gold-dark;
     }
   }
-
 
   .subheading, .description {
     color: $color-gray;
@@ -366,7 +380,6 @@
 
       margin-bottom: 0;
       margin-right: -$gap;
-
       position: absolute;
       margin-top: 3 * $gap;
       margin-left: $gap;
@@ -391,7 +404,6 @@
     margin-right: 0;
     margin-bottom: $gap;
     padding-bottom: 4 * $gap;
-
     border-bottom-width: 1px;
     border-bottom-style: solid;
     border-bottom-color: $color-gray-light;
@@ -426,6 +438,7 @@
 
         &.invited {
           color: $color-green;
+
           .icon {
             @include icon-color($color-green);
           }
@@ -433,6 +446,7 @@
 
         &.uninvited {
           color: $color-red;
+
           .icon {
             @include icon-color($color-red);
           }
@@ -445,12 +459,12 @@
     }
 
     .officer__form {
-        padding: 1.5rem;
-        background-color: $color-aqua-lightest;
-        border-left-color: $color-blue;
-        border-left-style: solid;
-        border-left-width: $gap / 2;
-        margin-top: 1.5rem;
+      padding: 1.5rem;
+      background-color: $color-aqua-lightest;
+      border-left-color: $color-blue;
+      border-left-style: solid;
+      border-left-width: $gap / 2;
+      margin-top: 1.5rem;
 
       .edit-officer {
         margin-bottom: $gap * 2;
@@ -518,6 +532,7 @@
 
       .remove {
         color: $color-red;
+
         .icon {
           @include icon-color($color-red);
         }

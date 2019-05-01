@@ -13,6 +13,7 @@
   padding: $gap * 2;
   border-left-width: $gap / 2;
   border-left-style: solid;
+
   @include panel-margin;
 
   @include media($medium-screen) {
@@ -24,23 +25,25 @@
   $background-color: $color-aqua-lightest;
   $border-color: $color-blue;
 
-  @if $level == 'success' {
+  @if $level == "success" {
     $background-color: $color-green-lightest;
     $border-color: $color-green;
-
-  } @else if $level == 'warning' {
+  }
+  @else if $level == "warning" {
     $background-color: $color-gold-lightest;
     $border-color: $color-gold;
+
     .usa-button {
       background-color: $color-gold;
       box-shadow: inset 0 0 0 2px $color-gold;
+
       &:hover {
         background-color: $color-gold-dark;
         box-shadow: inset 0 0 0 2px $color-gold-dark;
       }
     }
-
-  } @else if $level == 'error' {
+  }
+  @else if $level == "error" {
     $background-color: $color-red-lightest;
     $border-color: $color-red;
   }
@@ -53,6 +56,7 @@
 
   .alert__icon {
     @include icon-color($border-color);
+
     flex-grow: 0;
     flex-shrink: 0;
     margin-right: $gap * 2;
@@ -61,6 +65,7 @@
 
   .alert__title {
     @include h3;
+
     margin-top: 0;
 
     &:last-child {
@@ -93,10 +98,10 @@
 
 .alert {
   @include alert;
-  @include alert-level('info');
+  @include alert-level("info");
 
   &.alert--success {
-    @include alert-level('success');
+    @include alert-level("success");
 
     .alert__actions {
       .icon-link {
@@ -106,7 +111,7 @@
   }
 
   &.alert--warning {
-    @include alert-level('warning');
+    @include alert-level("warning");
 
     .alert__actions {
       .icon-link {
@@ -116,7 +121,7 @@
   }
 
   &.alert--error {
-    @include alert-level('error');
+    @include alert-level("error");
 
     .alert__actions {
       .icon-link {

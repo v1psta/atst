@@ -17,6 +17,7 @@
         &:first-child {
           padding-right: $gap * 2;
         }
+
         &:last-child {
           padding-left: $gap * 2;
         }
@@ -33,7 +34,6 @@
   }
 
   .request-approval__review {
-
     .request-approval__review__heading {
       border-top: 1px solid $color-gray-light;
       padding-bottom: 0;
@@ -64,6 +64,7 @@
         }
       }
     }
+
     .approval-log__log-item,
     .comment-log__log-item {
       display: flex;
@@ -74,15 +75,18 @@
         flex-direction: row-reverse;
       }
 
+
       .approval-log__log-item__header,
       .comment-log__log-item__header {
         @include h4;
+
         margin: 0 0 $gap 0;
       }
 
       .approval-log__log-item__timestamp,
       .comment-log__log-item__timestamp {
         @include h5;
+
         margin-right: $gap * 2;
         color: $color-gray;
         flex-grow: 0;
@@ -102,6 +106,7 @@
           @include media($medium-screen) {
             margin-right: $gap * 4;
           }
+
 
           span {
             display: block;

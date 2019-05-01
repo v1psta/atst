@@ -1,8 +1,10 @@
 .portfolio-panel-container {
   @include media($large-screen) {
     @include grid-row;
+
     min-height: 500px;
   }
+
 
   margin-left: 2 * $gap;
 
@@ -36,6 +38,7 @@
     &.icon-link--disabled {
       color: $color-gray-dark;
       opacity: 1;
+
       .icon {
         @include icon-color($color-gray-dark);
       }
@@ -50,6 +53,7 @@
     .icon-link {
       color: $color-gray-medium;
       pointer-events: none;
+
       &.icon-link--disabled {
         opacity: 1;
       }
@@ -59,9 +63,11 @@
 
 .portfolio-header {
   flex-direction: column;
+
   @include media($small-screen) {
     flex-direction: row;
   }
+
 
   margin: 2 * $gap;
 
@@ -98,8 +104,10 @@
 
     .icon-link {
       padding: 0.8rem 1.2rem;
+
       &.active {
         color: $color-gray;
+
         .icon {
           @include icon-color($color-gray);
         }
@@ -143,6 +151,7 @@
 
   .unfunded {
     color: $color-red;
+
     .icon {
       @include icon-color($color-red);
     }
@@ -158,7 +167,7 @@
 }
 
 .portfolio-content {
-  margin: 6 * $gap $gap 0 $gap;
+  margin: (6 * $gap) $gap 0 $gap;
 
   .panel {
     @include shadow-panel;
@@ -167,6 +176,7 @@
   .member-list {
     .panel {
       @include shadow-panel;
+
       padding-bottom: 0;
     }
 
@@ -176,14 +186,13 @@
     }
 
     table {
-
       thead {
         th:first-child {
           padding-left: 3 * $gap;
         }
 
         tr:first-child {
-          padding: 0 2 * $gap 0 5 * $gap;
+          padding: 0 (2 * $gap) 0 (5 * $gap);
         }
 
         td {
@@ -195,14 +204,14 @@
 
       th {
         background-color: $color-gray-lightest;
-        padding: $gap 2 * $gap;
+        padding: $gap (2 * $gap);
         border-top: none;
         border-bottom: none;
         color: $color-gray;
       }
 
       td:first-child {
-        padding: 2 * $gap 2 * $gap 2 * $gap 5 * $gap;
+        padding: (2 * $gap) (2 * $gap) (2 * $gap) (5 * $gap);
       }
 
       tbody {
@@ -210,7 +219,7 @@
           border-bottom: 1px solid $color-gray-lightest;
           font-size: 1.6rem;
           border-top: 0;
-          padding: 3 * $gap 2 * $gap;
+          padding: (3 * $gap) (2 * $gap);
 
           .usa-button-disabled {
             color: $color-gray-medium;
@@ -261,7 +270,7 @@
     }
 
     select {
-      padding-left: 1.2rem
+      padding-left: 1.2rem;
     }
 
     .members-table-ppoc {
@@ -305,7 +314,6 @@
           height: 1.7rem;
         }
       }
-
     }
 
     .alert {
@@ -326,6 +334,7 @@
       .block-list__footer {
         border-bottom: none;
       }
+
       .application-edit__env-list-item {
         label {
           color: $color-black;
@@ -354,12 +363,10 @@
       font-weight: $font-bold;
     }
   }
-
 }
 
 .portfolio-applications {
   .portfolio-applications__header {
-
     .portfolio-applications__header--title {
       @include subheading;
     }
@@ -367,6 +374,7 @@
     .portfolio-applications__header--actions {
       color: $color-blue;
       font-size: $small-font-size;
+
       .icon {
         @include icon-color($color-blue);
         @include icon-size(14);
@@ -377,6 +385,7 @@
   .application-list {
     .toggle-link {
       background-color: $color-blue-light;
+
       .icon {
         margin: $gap / 2;
       }
@@ -391,12 +400,12 @@
         max-width: 95%;
       }
 
-      .application-list-item__environment__name {
-      }
+      .application-list-item__environment__name {}
 
       .application-list-item__environment__csp_link {
         font-size: $small-font-size;
         font-weight: normal;
+
         &:hover {
           background-color: $color-aqua-light;
         }
@@ -414,6 +423,7 @@
 
   .subheading {
     @include subheading;
+
     margin-top: 6 * $gap;
     margin-bottom: 2 * $gap;
   }
@@ -424,7 +434,6 @@
 
   .pending-task-order {
     background-color: $color-gold-lightest;
-
     align-items: center;
     margin: 0;
     margin-bottom: 2 * $gap;
@@ -456,6 +465,7 @@
 
     .icon--tiny {
       @include icon-size(10);
+
       margin-left: 1rem;
     }
   }
@@ -480,7 +490,7 @@
 
     th {
       background-color: $color-gray-lightest;
-      padding: $gap 2 * $gap;
+      padding: $gap (2 * $gap);
       border-top: none;
       border-bottom: none;
       color: $color-gray;
@@ -559,6 +569,7 @@
 
   .panel {
     @include shadow-panel;
+
     margin-bottom: 4 * $gap;
   }
 }
@@ -578,6 +589,7 @@
         input {
           max-width: 30em;
         }
+
         .icon-validation {
           left: 30em;
         }

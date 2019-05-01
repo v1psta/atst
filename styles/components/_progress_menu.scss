@@ -53,12 +53,10 @@
       cursor: default;
     }
 
-    a.disabled{
+    a.disabled {
       color: $color-gray-light;
       cursor: default;
     }
-
-
 
     &:first-child:after {
       display: none;
@@ -100,7 +98,7 @@
     }
 
     &--complete:before {
-      content: url('#{$asset-path}/icons/checkmark.svg');
+      content: url("#{$asset-path}/icons/checkmark.svg");
       background-color: $color-blue;
       border: 2px solid $color-blue;
       font-size: $h6-font-size;
@@ -110,12 +108,11 @@
     &--draft:before {
       border: none;
       font-size: $h6-font-size;
-      content: url('#{$asset-path}/icons/alert.svg');
+      content: url("#{$asset-path}/icons/alert.svg");
     }
 
     &--incomplete:before {
       border: 2px solid $color-gray-light;
     }
-
   }
 }

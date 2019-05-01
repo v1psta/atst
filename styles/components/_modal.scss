@@ -1,4 +1,4 @@
-$fixed-footer-height: 5rem + ($gap * 4);
+$fixed-footer-height: 5rem + $gap * 4;
 
 body {
   &.modal-open {
@@ -35,16 +35,17 @@ body {
       padding: $gap * 2;
     }
 
+
     @include media($large-screen) {
       padding: $gap * 4;
     }
+
 
     .modal__body {
       background-color: $color-white;
       padding: $gap * 2;
       width: 100%;
       border-radius: 5px;
-
       overflow-y: auto;
       -ms-overflow-style: scrollbar;
 
@@ -52,9 +53,11 @@ body {
         max-height: calc(100vh - #{$gap * 8});
       }
 
+
       @include media($medium-screen) {
         padding: $gap * 5;
       }
+
 
       h1, h2 {
         @include h3;
@@ -75,6 +78,7 @@ body {
           right: $gap * 2;
         }
 
+
         @include media($large-screen) {
           top: $gap * 4;
           right: $gap * 4;
@@ -88,6 +92,7 @@ body {
         @include media($medium-screen) {
           margin: -$gap * 4;
         }
+
 
         .block-list__header {
           border-top: 0;
@@ -118,18 +123,19 @@ body {
             right: $gap * 2;
           }
 
+
           @include media($large-screen) {
             bottom: $gap * 4;
             left: $gap * 4;
             right: $gap * 4;
           }
 
+
           .action-group {
             margin: 0;
           }
         }
       }
-
     }
   }
 
@@ -153,7 +159,6 @@ body {
   }
 
   .modal__form {
-
     .modal__form--header {
       margin-bottom: 4rem;
 
@@ -180,7 +185,7 @@ body {
       }
 
       .progress-menu__item--complete::before {
-        content: url('#{$asset-path}/icons/checkmark-alt.svg');
+        content: url("#{$asset-path}/icons/checkmark-alt.svg");
         padding-top: 0.4rem;
       }
     }

@@ -3,7 +3,7 @@
  * A generic block container
  */
 
- @mixin panel-base {
+@mixin panel-base {
   background-color: $color-white;
   border-top-width: 1px;
   border-bottom-width: 1px;
@@ -33,13 +33,12 @@
   @include grid-row;
 
   .col {
-    margin: 0 $site-margins-mobile * 2;
+    margin: 0 ($site-margins-mobile * 2);
 
     @include media($medium-screen) {
-      margin: 0 $site-margins * 2;
+      margin: 0 ($site-margins * 2);
     }
   }
-
 }
 
 @mixin panel-actions {
@@ -47,7 +46,7 @@
 }
 
 @mixin shadow-panel {
-  padding: $gap /2 0;
+  padding: ($gap / 2) 0;
   box-shadow: $box-shadow;
   border-top: none;
   border-bottom: none;
@@ -80,8 +79,9 @@
       padding: $gap * 4;
     }
 
+
     &--tight {
-      padding: $gap*2;
+      padding: $gap * 2;
     }
 
     &--divider {
@@ -98,7 +98,7 @@
     }
 
     .icon-tooltip {
-      margin-left: $gap*2;
+      margin-left: $gap * 2;
     }
 
     &--grow {
@@ -115,12 +115,10 @@
   hr {
     border: 0;
     border-bottom: 1px dashed $color-gray-light;
-    margin: ($gap * 4) ($site-margins*-4);
+    margin: ($gap * 4) ($site-margins * -4);
   }
 }
 
 .panel__actions {
   @include panel-actions;
 }
-
-

@@ -4,6 +4,7 @@
   > svg {
     width: 100%;
     height: 100%;
+
     * {
       transition: fill $hover-transition-time;
     }
@@ -11,7 +12,8 @@
 }
 
 @mixin icon-size($size) {
-  $icon-size: $size * .1rem;
+  $icon-size: $size * 0.1rem;
+
   width: $icon-size;
   height: $icon-size;
   margin: $icon-size / 4;

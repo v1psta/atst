@@ -6,10 +6,11 @@
   max-height: 80vh;
   overflow-y: auto;
   padding-bottom: $gap * 2;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.25);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
 
   .menu__heading {
     @include h5;
+
     margin: 0;
     padding: ($gap * 3) ($gap * 2) $gap;
   }
@@ -23,15 +24,17 @@
 
       > a {
         @include h5;
+
         font-weight: normal;
         text-decoration: none;
         display: block;
         color: $color-white;
-        padding: ($gap * .75) ($gap * 2);
+        padding: ($gap * 0.75) ($gap * 2);
 
         .icon {
           @include icon-color($color-white);
           @include icon-size(10);
+
           margin-left: $gap;
         }
 
@@ -44,6 +47,7 @@
 
   .menu__message {
     @include h5;
+
     font-weight: normal;
     font-style: italic;
     padding: 0 ($gap * 2);
