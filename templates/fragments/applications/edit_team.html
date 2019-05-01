@@ -8,9 +8,9 @@
     <li class="accordion-table__item">
       <div class="accordion-table__item-content row">
         <div class="col col--grow">{{ member_form.user_name.data }}</div>
-        <div class="col col--grow">{{ OptionsInput(permissions_form.perms_team_mgmt, label=False) }}</div>
-        <div class="col col--grow">{{ OptionsInput(permissions_form.perms_env_mgmt, label=False) }}</div>
-        <div class="col col--grow">{{ OptionsInput(permissions_form.perms_del_env, label=False) }}</div>
+        <div class="col col--grow">{{ OptionsInput(permissions_form.perms_team_mgmt, label=False, watch=True) }}</div>
+        <div class="col col--grow">{{ OptionsInput(permissions_form.perms_env_mgmt, label=False, watch=True) }}</div>
+        <div class="col col--grow">{{ OptionsInput(permissions_form.perms_del_env, label=False, watch=True) }}</div>
         <div class="col col--grow icon-link icon-link--large accordion-table__item__toggler">
           {% set open_html %}
             {{ "portfolios.applications.team_settings.environments" | translate }} ({{ environment_roles_form | length }}) {{ Icon('caret_down') }}

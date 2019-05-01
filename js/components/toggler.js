@@ -1,6 +1,6 @@
 import FormMixin from '../mixins/form'
-import textinput from './text_input'
 import optionsinput from './options_input'
+import textinput from './text_input'
 
 export default {
   name: 'toggler',

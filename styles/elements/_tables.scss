@@ -126,6 +126,7 @@ table {
       @include h4;
 
       font-size: $lead-font-size;
+      justify-content: space-between;
       flex: 2;
     }
   }
