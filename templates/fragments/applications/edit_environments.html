@@ -25,7 +25,7 @@
     </div>
 {% endmacro %}
 
-<div class="application-list-item">
+<div class="application-list-item application-list">
   <header>
     <div class="responsive-table-wrapper__header">
       <div class='responsive-table-wrapper__title'>
@@ -39,8 +39,11 @@
   </header>
 
   <div class="accordion-table accordion-table-list">
-    <div class="accordion-table__head">
-      <span>{{ "portfolios.applications.environments.name" | translate }}</span>
+    <div class="accordion-table__head row">
+      <div class="col col--grow">{{ "portfolios.applications.environments.name" | translate }}</div>
+      <div class="col col--grow">{{ "portfolios.applications.environments.edit_name" | translate }}</div>
+      <div class="col col--grow">{{ "common.delete" | translate }}</div>
+      <div class="col col--grow">{{ "common.members" | translate }}</div>
     </div>
 
     <ul class="accordion-table__items">
@@ -51,40 +54,47 @@
 
         <toggler inline-template>
           <li class="accordion-table__item">
-            <div class="accordion-table__item-content">
-              <span>
+            <div class="accordion-table__item-content row">
+              <div class="col col--grow">
                 {{ env['name'] }}
-              </span>
-              <span class="icon-link">
-                {% set edit_environment_button %}
+              </div>
+              <div class="col col--grow">
+                <span class="icon-link">
+                  {% set edit_environment_button %}
                   {{ Icon('edit') }}
-                {% endset %}
+                  {% endset %}
 
-                {{
+                  {{
                   ToggleButton(
-                    open_html=edit_environment_button,
-                    close_html=edit_environment_button,
-                    section_name="edit"
+                  open_html=edit_environment_button,
+                  close_html=edit_environment_button,
+                  section_name="edit"
                   )
-                }}
-              </span>
-              <span class="icon-link icon-link--large accordion-table__item__toggler">
+                  }}
+                </span>
+              </div>
+              <div class="col col--grow">
+                <span class="icon-link icon-link--danger">
+                  {{ Icon('trash') }}
+                </span>
+              </div>
+              <div class="col col--grow icon-link icon-link--large accordion-table__item__toggler">
                 {% set open_members_button %}
-                  {{ "common.members" | translate }} ({{ member_count }}) {{ Icon('caret_down') }}
+                {{ "common.members" | translate }} ({{ member_count }}) {{ Icon('caret_down') }}
                 {% endset %}
 
                 {% set close_members_button %}
-                  {{ "common.members" | translate }} ({{ member_count }}) {{ Icon('caret_up') }}
+                {{ "common.members" | translate }} ({{ member_count }}) {{ Icon('caret_up') }}
                 {% endset %}
 
                 {{
-                  ToggleButton(
-                    open_html=open_members_button,
-                    close_html=close_members_button,
-                    section_name="members"
-                  )
+                ToggleButton(
+                open_html=open_members_button,
+                close_html=close_members_button,
+                section_name="members"
+                )
                 }}
-              </span>
+              </div>
             </div>
 
             {% call ToggleSection(section_name="members") %}

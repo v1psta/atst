@@ -23,7 +23,7 @@
       {{ 'portfolios.applications.team_settings.subheading' | translate }}
     </div>
 
-    <section class="member-list" id="application-members">
+    <section class="member-list application-list" id="application-members">
       <div class='responsive-table-wrapper panel'>
         {% if g.matchesPath("application-members") %}
           {% include "fragments/flash.html" %}
@@ -43,22 +43,22 @@
         </header>
 
         <div class="accordion-table accordion-table-list">
-          <div class="accordion-table__head">
-            <span>
-              <span>
-                {{ "common.name" | translate }}
-              </span>
-              <span>
-                {{ "portfolios.applications.team_settings.section.table.delete_access" | translate }}
-              </span>
-              <span>
-                {{ "portfolios.applications.team_settings.section.table.environment_management" | translate }}
-              </span>
-              <span>
-                {{ "portfolios.applications.team_settings.section.table.team_management" | translate }}
-              </span>
-            </span>
-            <span class="icon-link" />
+          <div class="accordion-table__head row">
+            <div class="col col--grow">
+              {{ "common.name" | translate }}
+            </div>
+            <div class="col col--grow">
+              {{ "portfolios.applications.team_settings.section.table.delete_access" | translate }}
+            </div>
+            <div class="col col--grow">
+              {{ "portfolios.applications.team_settings.section.table.environment_management" | translate }}
+            </div>
+            <div class="col col--grow">
+              {{ "portfolios.applications.team_settings.section.table.team_management" | translate }}
+            </div>
+            <div class="col col--grow">
+              &nbsp;
+            </div>
           </div>
           <ul class="accordion-table__items">
             {% for member in application.members %}
@@ -67,20 +67,17 @@
               {% set user_permissions = user_info["permissions"] %}
 
                 {% macro PermissionField(value) %}
-                  <span class="user-permission{% if "Edit" in value %} green{% endif %}">{{ value }}</span>
+                  <div class="col col--grow user-permission{% if "Edit" in value %} green{% endif %}">{{ value }}</div>
                 {% endmacro %}
 
                 <toggler inline-template>
                   <li class="accordion-table__item">
-                    <div class="accordion-table__item-content">
-                      <span>
-                        {{ name }}
-                        <span>{{ user.full_name }}</span>
-                        {{ PermissionField(user_permissions["delete_access"]) }}
-                        {{ PermissionField(user_permissions["environment_management"]) }}
-                        {{ PermissionField(user_permissions["team_management"]) }}
-                      </span>
-                      <span class="icon-link icon-link--large accordion-table__item__toggler">
+                    <div class="accordion-table__item-content row">
+                      <div class="col col--grow">{{ user.full_name }}</div>
+                      {{ PermissionField(user_permissions["delete_access"]) }}
+                      {{ PermissionField(user_permissions["environment_management"]) }}
+                      {{ PermissionField(user_permissions["team_management"]) }}
+                      <div class="col col--grow icon-link icon-link--large accordion-table__item__toggler">
                         {% set open_html %}
                         {{ "portfolios.applications.team_settings.environments" | translate }} ({{ user_info['environments'] | length }}) {{ Icon('caret_down') }}
                         {% endset %}
@@ -89,14 +86,14 @@
                           {{ "portfolios.applications.team_settings.environments" | translate }} ({{ user_info['environments'] | length }}) {{ Icon('caret_up') }}
                         {% endset %}
 
-                      {{
-                        ToggleButton(
-                          open_html=open_html,
-                          close_html=close_html,
-                          section_name="environments"
-                        )
-                      }}
-                    </span>
+                        {{
+                          ToggleButton(
+                            open_html=open_html,
+                            close_html=close_html,
+                            section_name="environments"
+                          )
+                        }}
+                      </div>
                   </div>
                   {% call ToggleSection(section_name="environments") %}
                     <ul>
