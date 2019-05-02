@@ -111,6 +111,7 @@ def update_team(application_id):
             app_role = ApplicationRoles.get(member.data["user_id"], application.id)
             new_perms = [perm for perm in member.data["permission_sets"] if perm != ""]
             ApplicationRoles.update_permission_sets(app_role, new_perms)
+        flash("updated_application_members_permissions")
 
     return redirect(
         url_for(
