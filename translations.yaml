@@ -400,6 +400,7 @@ portfolios:
   applications:
     add_application_text: Add a new application
     add_environment: Add new environment
+    add_another_environment: Add another environment
     app_settings_text: App settings
     create_button_text: Create
     csp_console_text: CSP console

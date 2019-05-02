@@ -5,6 +5,10 @@
 
   .usa-input {
     margin: 0 ($gap * 4) 0 0;
+    flex-grow: 2;
+  }
+
+  .application-edit__env-list-item-block {
     flex-grow: 1;
   }
 
