@@ -3,6 +3,7 @@ from flask import render_template, request as http_request, g, url_for, redirect
 
 from . import applications_bp
 from atst.domain.applications import Applications
+from atst.domain.application_roles import ApplicationRoles
 from atst.domain.environments import Environments
 from atst.domain.environment_roles import EnvironmentRoles
 from atst.domain.authz.decorator import user_can_access_decorator as user_can
@@ -95,6 +96,29 @@ def team(application_id):
         environment_users=environment_users,
         team_form=team_form,
         new_member_form=new_member_form,
+    )
+
+
+@applications_bp.route("/application/<application_id>/team", methods=["POST"])
+@user_can(Permissions.EDIT_APPLICATION_MEMBER, message="update application member")
+def update_team(application_id):
+    application = Applications.get(application_id)
+    form = TeamForm(http_request.form)
+
+    if form.validate():
+        # TODO check that all users coming through are app members
+        for member in form.members:
+            app_role = ApplicationRoles.get(member.data["user_id"], application.id)
+            new_perms = [perm for perm in member.data["permission_sets"] if perm != ""]
+            ApplicationRoles.update_permission_sets(app_role, new_perms)
+
+    return redirect(
+        url_for(
+            "applications.team",
+            application_id=application_id,
+            fragment="application-members",
+            _anchor="application-members",
+        )
     )
 
 

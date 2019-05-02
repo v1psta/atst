@@ -28,3 +28,24 @@ class ApplicationRoles(object):
 
         db.session.add(role)
         db.session.commit()
+
+    @classmethod
+    def get(cls, user_id, application_id):
+        existing_app_role = (
+            db.session.query(ApplicationRole)
+            .filter_by(user_id=user_id, application_id=application_id)
+            .one_or_none()
+        )
+
+        return existing_app_role
+
+    @classmethod
+    def update_permission_sets(cls, application_role, new_perm_sets_names):
+        application_role.permission_sets = ApplicationRoles._permission_sets_for_names(
+            new_perm_sets_names
+        )
+
+        db.session.add(application_role)
+        db.session.commit()
+
+        return application_role
