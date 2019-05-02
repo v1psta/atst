@@ -12,27 +12,25 @@ class PermissionsForm(FlaskForm):
     perms_env_mgmt = SelectField(
         translate("portfolios.applications.members.new.manage_envs"),
         choices=[
-            (None, "View only"),
+            ("", "View only"),
             (PermissionSets.EDIT_APPLICATION_ENVIRONMENTS, "Edit access"),
         ],
-        filters=[BaseForm.remove_empty_string],
     )
     perms_team_mgmt = SelectField(
         translate("portfolios.applications.members.new.manage_team"),
         choices=[
-            (None, "View only"),
+            ("", "View only"),
             (PermissionSets.EDIT_APPLICATION_TEAM, "Edit access"),
         ],
-        filters=[BaseForm.remove_empty_string],
     )
     perms_del_env = SelectField(
-        choices=[(None, "No"), (PermissionSets.DELETE_APPLICATION_ENVIRONMENTS, "Yes")],
-        filters=[BaseForm.remove_empty_string],
+        choices=[("", "No"), (PermissionSets.DELETE_APPLICATION_ENVIRONMENTS, "Yes")]
     )
 
     @property
     def data(self):
         _data = super().data
+        _data.pop("csrf_token", None)
         permission_sets = []
         for field in _data:
             if _data[field] is not None:
@@ -46,6 +44,13 @@ class MemberForm(FlaskForm):
     user_name = StringField()
     environment_roles = FieldList(FormField(EnvironmentForm))
     permission_sets = FormField(PermissionsForm)
+
+    @property
+    def data(self):
+        _data = super().data
+        _data.pop("csrf_token", None)
+
+        return _data
 
 
 class TeamForm(BaseForm):

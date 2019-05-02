@@ -32,6 +32,7 @@ def team(application_id):
     team_data = []
     for member in application.members:
         user_id = member.user.id
+        # TODO: if no members, we get a server error
         user_name = member.user.full_name
         environment_users[user_id] = {
             "permissions": {
