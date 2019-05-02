@@ -137,7 +137,7 @@ def map_config(config):
         **config["default"],
         "ENV": config["default"]["ENVIRONMENT"],
         "DEBUG": config["default"].getboolean("DEBUG"),
-        "SQLALCHEMY_ECHO": config["default"].getboolean("DEBUG"),
+        "SQLALCHEMY_ECHO": config["default"].getboolean("SQLALCHEMY_ECHO"),
         "CLASSIFIED": config["default"].getboolean("CLASSIFIED"),
         "PORT": int(config["default"]["PORT"]),
         "SQLALCHEMY_DATABASE_URI": config["default"]["DATABASE_URI"],
