@@ -4,11 +4,11 @@ from flask import render_template, request as http_request, g, url_for, redirect
 from . import applications_bp
 from atst.domain.applications import Applications
 from atst.domain.application_roles import ApplicationRoles
+from atst.domain.authz.decorator import user_can_access_decorator as user_can
 from atst.domain.environments import Environments
 from atst.domain.environment_roles import EnvironmentRoles
-from atst.domain.authz.decorator import user_can_access_decorator as user_can
-from atst.domain.permission_sets import PermissionSets
 from atst.domain.exceptions import AlreadyExistsError
+from atst.domain.permission_sets import PermissionSets
 from atst.forms.application_member import NewForm as NewMemberForm
 from atst.forms.team import TeamForm
 from atst.models import Permissions
@@ -33,7 +33,6 @@ def team(application_id):
     team_data = []
     for member in application.members:
         user_id = member.user.id
-        # TODO: if no members, we get a server error
         user_name = member.user.full_name
         environment_users[user_id] = {
             "permissions": {
@@ -82,12 +81,11 @@ def team(application_id):
             }
         )
 
-        team_form = TeamForm(data={"members": team_data})
-
     env_roles = [
         {"environment_id": e.id, "environment_name": e.name}
         for e in application.environments
     ]
+    team_form = TeamForm(data={"members": team_data})
     new_member_form = NewMemberForm(data={"environment_roles": env_roles})
 
     return render_template(

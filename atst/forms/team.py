@@ -9,22 +9,25 @@ from atst.utils.localization import translate
 
 
 class PermissionsForm(FlaskForm):
-    perms_env_mgmt = SelectField(
-        translate("portfolios.applications.members.new.manage_envs"),
-        choices=[
-            ("", "View only"),
-            (PermissionSets.EDIT_APPLICATION_ENVIRONMENTS, "Edit access"),
-        ],
-    )
     perms_team_mgmt = SelectField(
         translate("portfolios.applications.members.new.manage_team"),
         choices=[
-            ("", "View only"),
+            (PermissionSets.VIEW_APPLICATION, "View only"),
             (PermissionSets.EDIT_APPLICATION_TEAM, "Edit access"),
         ],
     )
+    perms_env_mgmt = SelectField(
+        translate("portfolios.applications.members.new.manage_envs"),
+        choices=[
+            (PermissionSets.VIEW_APPLICATION, "View only"),
+            (PermissionSets.EDIT_APPLICATION_ENVIRONMENTS, "Edit access"),
+        ],
+    )
     perms_del_env = SelectField(
-        choices=[("", "No"), (PermissionSets.DELETE_APPLICATION_ENVIRONMENTS, "Yes")]
+        choices=[
+            ("View only", "No"),
+            (PermissionSets.DELETE_APPLICATION_ENVIRONMENTS, "Yes"),
+        ]
     )
 
     @property

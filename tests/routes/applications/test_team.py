@@ -10,7 +10,6 @@ def test_application_team(client, user_session):
     user_session(portfolio.owner)
 
     response = client.get(url_for("applications.team", application_id=application.id))
-
     assert response.status_code == 200
 
 

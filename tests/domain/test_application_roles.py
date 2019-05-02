@@ -33,3 +33,30 @@ def test_enabled_application_role():
     ApplicationRoles.enable(app_role)
 
     assert app_role.status == ApplicationRoleStatus.ACTIVE
+
+
+def test_get():
+    user = UserFactory.create()
+    application = ApplicationFactory.create()
+    app_role = ApplicationRoleFactory.create(user=user, application=application)
+
+    assert ApplicationRoles.get(user.id, application.id)
+    assert app_role.application == application
+    assert app_role.user == user
+
+
+def test_update_permission_sets():
+    user = UserFactory.create()
+    application = ApplicationFactory.create()
+    app_role = ApplicationRoleFactory.create(user=user, application=application)
+
+    view_app = [PermissionSets.get(PermissionSets.VIEW_APPLICATION)]
+    new_perms_names = [
+        PermissionSets.EDIT_APPLICATION_TEAM,
+        PermissionSets.DELETE_APPLICATION_ENVIRONMENTS,
+    ]
+    new_perms = PermissionSets.get_many(new_perms_names)
+    # view application permission is included by default
+    assert app_role.permission_sets == view_app
+    assert ApplicationRoles.update_permission_sets(app_role, new_perms_names)
+    assert set(app_role.permission_sets) == set(new_perms + view_app)

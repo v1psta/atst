@@ -4,7 +4,7 @@
   {% set environment_roles_form = member_form.environment_roles %}
   {% set permissions_form = member_form.permission_sets %}
 
-  <form method='POST' id="team" action='{{ url_for("applications.team", application_id=application.id) }}' autocomplete="off" enctype="multipart/form-data">
+  <form method='POST' id="team" action='{{ url_for("applications.update_team", application_id=application.id) }}' autocomplete="off" enctype="multipart/form-data">
     {{ team_form.csrf_token }}
     <toggler inline-template>
       <li class="accordion-table__item">
