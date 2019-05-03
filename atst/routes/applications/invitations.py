@@ -10,6 +10,7 @@ def accept_invitation(token):
 
     return redirect(
         url_for(
-            "portfolios.show_portfolio", portfolio_id=invite.application.portfolio_id
+            "applications.portfolio_applications",
+            portfolio_id=invite.application.portfolio_id,
         )
     )
