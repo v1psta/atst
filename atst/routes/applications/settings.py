@@ -13,20 +13,13 @@ from atst.models.permissions import Permissions
 from atst.utils.flash import formatted_flash as flash
 
 
-def get_environments_obj_for_app(application, form=None):
+def get_environments_obj_for_app(application):
     environments_obj = []
     for env in application.environments:
-        edit_form = None
-
-        if form == None or form.data["id"] != env.id:
-            edit_form = EditEnvironmentForm(obj=env)
-        else:
-            edit_form = form
-
         env_data = {
             "id": env.id,
             "name": env.name,
-            "edit_form": edit_form,
+            "edit_form": EditEnvironmentForm(obj=env),
             "members_form": EnvironmentRolesForm(data=data_for_env_members_form(env)),
             "members": sort_env_users_by_role(env),
         }
@@ -115,9 +108,7 @@ def update_environment(environment_id):
                 form=ApplicationForm(
                     name=application.name, description=application.description
                 ),
-                environments_obj=get_environments_obj_for_app(
-                    application=application, form=env_form
-                ),
+                environments_obj=get_environments_obj_for_app(application=application),
             ),
             400,
         )

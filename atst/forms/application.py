@@ -1,12 +1,11 @@
 from .forms import BaseForm
-from wtforms.fields import StringField, TextAreaField, FieldList, HiddenField
+from wtforms.fields import StringField, TextAreaField, FieldList
 from wtforms.validators import Required
 from atst.forms.validators import ListItemRequired, ListItemsUnique
 from atst.utils.localization import translate
 
 
 class EditEnvironmentForm(BaseForm):
-    id = HiddenField()
     name = StringField(
         label=translate("forms.environments.name_label"), validators=[Required()]
     )
