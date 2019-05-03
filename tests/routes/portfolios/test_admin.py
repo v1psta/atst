@@ -358,6 +358,7 @@ def test_remove_portfolio_member_self(client, user_session):
         == PortfolioRoleStatus.ACTIVE
     )
 
+
 def test_remove_portfolio_member_ppoc(client, user_session):
     portfolio = PortfolioFactory.create()
 
@@ -384,5 +385,3 @@ def test_remove_portfolio_member_ppoc(client, user_session):
         PortfolioRoles.get(portfolio_id=portfolio.id, user_id=portfolio.owner.id).status
         == PortfolioRoleStatus.ACTIVE
     )
-
-
