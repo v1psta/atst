@@ -108,7 +108,7 @@
             {% call ToggleSection(section_name="edit") %}
               <ul>
                 <li class="accordion-table__item__expanded">
-                  <form action="{{ url_for('applications.update_environment', environment_id=env['id'], fragment='application-environments', _anchor='application-environments') }}" method="post">
+                  <form action="{{ url_for('applications.update_environment', environment_id=env['id']) }}" method="post" v-on:submit="handleSubmit">
                     {{ edit_form.csrf_token }}
                     {{ TextInput(edit_form.name, validation='requiredField') }}
                     {{
