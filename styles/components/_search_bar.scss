@@ -51,7 +51,7 @@
     margin-top: 0;
     flex-basis: 100%;
 
-    input[type='search'] {
+    input[type="search"] {
       width: auto;
       height: $search-input-height;
       width: calc(100% - #{$search-button-width});

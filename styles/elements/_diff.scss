@@ -1,4 +1,4 @@
-[class*='diff--'] {
+[class*="diff--"] {
   border-left-style: solid;
   border-left-width: $gap / 2;
   padding-left: $gap / 2;
@@ -20,7 +20,7 @@
   text-decoration-color: $color-overlay;
 
   &::before {
-    content: '-';
+    content: "-";
     color: $color-red-dark;
   }
 }
@@ -30,7 +30,7 @@
   border-left-color: $color-aqua-dark;
 
   &::before {
-    content: '+';
+    content: "+";
     color: $color-aqua-dark;
   }
 }

@@ -5,7 +5,6 @@
     min-height: 500px;
   }
 
-
   margin-left: 2 * $gap;
 
   .line {
@@ -69,7 +68,6 @@
     flex-direction: row;
   }
 
-
   margin: 2 * $gap;
 
   .col--grow {
@@ -130,7 +128,7 @@
   }
 
   .column-right {
-    margin-left: -.4rem;
+    margin-left: -0.4rem;
   }
 
   .portfolio-header__budget--amount {
@@ -139,8 +137,8 @@
 
   .portfolio-header__budget--cents {
     font-size: 2rem;
-    margin-top: .75rem;
-    margin-left: -.7rem;
+    margin-top: 0.75rem;
+    margin-left: -0.7rem;
     font-weight: bold;
   }
 

@@ -28,7 +28,8 @@
     border-top: none;
   }
 
-  th, td {
+  th,
+  td {
     white-space: nowrap;
 
     button {
@@ -90,11 +91,13 @@
       }
     }
 
-    th, td, tr {
+    th,
+    td,
+    tr {
       border-bottom: 1px dashed $color-gray-lightest;
     }
 
-    th[scope=rowgroup] {
+    th[scope="rowgroup"] {
       position: relative;
     }
 
@@ -104,7 +107,8 @@
       background-color: $color-gray-lightest;
       padding: ($gap * 2) ($gap * 4);
 
-      th, td {
+      th,
+      td {
         .icon-link {
           font-weight: $font-normal;
           font-size: $base-font-size;

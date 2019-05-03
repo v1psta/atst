@@ -4,7 +4,8 @@
 
   padding: 0;
 
-  ul, dl {
+  ul,
+  dl {
     list-style: none;
     margin: 0;
     padding: 0;
@@ -139,7 +140,6 @@
       @include ie-only {
         width: 100%;
       }
-
 
       > label {
         @include block-list-selectable-label;

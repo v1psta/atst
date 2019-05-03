@@ -13,8 +13,8 @@ table {
     border-collapse: separate;
   }
 
-
-  th, td {
+  th,
+  td {
     &.table-cell--align-right {
       text-align: right;
     }
@@ -83,7 +83,8 @@ table {
 
   thead {
     tr {
-      th, td {
+      th,
+      td {
         @include block-list-header;
 
         display: table-cell;
@@ -151,7 +152,8 @@ table {
     max-width: 100%;
     table-layout: fixed;
 
-    th, td {
+    th,
+    td {
       white-space: normal;
     }
   }
