@@ -62,7 +62,13 @@ class ApplicationRole(
 
     @property
     def history(self):
-        return self.get_changes()
+        previous_state = self.get_changes()
+        change_set = {}
+        if "status" in previous_state:
+            from_status = previous_state["status"][0].value
+            to_status = self.status.value
+            change_set["status"] = [from_status, to_status]
+        return change_set
 
     def has_permission_set(self, perm_set_name):
         return first_or_none(

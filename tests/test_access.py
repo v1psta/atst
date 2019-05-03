@@ -35,6 +35,7 @@ _NO_ACCESS_CHECK_REQUIRED = _NO_LOGIN_REQUIRED + [
     "users.user",  # available to all users
     "users.update_user",  # available to all users
     "portfolios.accept_invitation",  # available to all users; access control is built into invitation logic
+    "applications.accept_invitation",  # available to all users; access control is built into invitation logic
     "atst.catch_all",  # available to all users
     "portfolios.portfolios",  # the portfolios list is scoped to the user separately
 ]
