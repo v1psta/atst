@@ -6,9 +6,7 @@ from atst.domain.application_roles import ApplicationRoles
 from atst.domain.environments import Environments
 from atst.domain.exceptions import NotFoundError
 from atst.domain.users import Users
-from atst.models.application import Application
-from atst.models.environment import Environment
-from atst.models.environment_role import EnvironmentRole
+from atst.models import Application, ApplicationRole, ApplicationRoleStatus
 
 
 class Applications(BaseDomainClass):
@@ -31,10 +29,11 @@ class Applications(BaseDomainClass):
     def for_user(self, user, portfolio):
         return (
             db.session.query(Application)
-            .join(Environment)
-            .join(EnvironmentRole)
+            .join(ApplicationRole)
             .filter(Application.portfolio_id == portfolio.id)
-            .filter(EnvironmentRole.user_id == user.id)
+            .filter(ApplicationRole.application_id == Application.id)
+            .filter(ApplicationRole.user_id == user.id)
+            .filter(ApplicationRole.status == ApplicationRoleStatus.ACTIVE)
             .all()
         )
 
