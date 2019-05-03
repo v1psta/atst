@@ -1,6 +1,6 @@
 from operator import attrgetter
 
-from flask import request as http_request, g
+from flask import g
 from sqlalchemy.orm.exc import NoResultFound
 
 from atst.database import db
@@ -10,7 +10,7 @@ from atst.models.permissions import Permissions
 from atst.domain.portfolios.scopes import ScopedPortfolio
 
 
-def get_portfolio_from_context(view_args):
+def get_resources_from_context(view_args):
     query = None
 
     if "portfolio_id" in view_args:
@@ -20,14 +20,14 @@ def get_portfolio_from_context(view_args):
 
     elif "application_id" in view_args:
         query = (
-            db.session.query(Portfolio)
+            db.session.query(Portfolio, Application)
             .join(Application, Application.portfolio_id == Portfolio.id)
             .filter(Application.id == view_args["application_id"])
         )
 
     elif "environment_id" in view_args:
         query = (
-            db.session.query(Portfolio)
+            db.session.query(Portfolio, Application)
             .join(Application, Application.portfolio_id == Portfolio.id)
             .join(Environment, Environment.application_id == Application.id)
             .filter(Environment.id == view_args["environment_id"])
@@ -35,33 +35,45 @@ def get_portfolio_from_context(view_args):
 
     elif "task_order_id" in view_args:
         query = (
-            db.session.query(Portfolio)
+            db.session.query(Portfolio, TaskOrder)
             .join(TaskOrder, TaskOrder.portfolio_id == Portfolio.id)
             .filter(TaskOrder.id == view_args["task_order_id"])
         )
 
     if query:
         try:
-            portfolio = query.one()
-
-            return ScopedPortfolio(g.current_user, portfolio)
+            return query.only_return_tuples(True).one()
         except NoResultFound:
             raise NotFoundError("portfolio")
 
 
-def portfolio():
-    portfolio = get_portfolio_from_context(http_request.view_args)
+def assign_resources(view_args):
+    g.portfolio = None
+    g.application = None
+    g.task_order = None
 
+    resources = get_resources_from_context(view_args)
+    if resources:
+        for resource in resources:
+            if isinstance(resource, Portfolio):
+                g.portfolio = ScopedPortfolio(g.current_user, resource)
+            elif isinstance(resource, Application):
+                g.application = resource
+            elif isinstance(resource, TaskOrder):
+                g.task_order = resource
+
+
+def portfolio():
     def user_can(permission):
-        if portfolio:
+        if g.portfolio:
             return Authorization.has_portfolio_permission(
-                g.current_user, portfolio, permission
+                g.current_user, g.portfolio, permission
             )
         return False
 
-    if not portfolio is None:
+    if not g.portfolio is None:
         active_task_orders = [
-            task_order for task_order in portfolio.task_orders if task_order.is_active
+            task_order for task_order in g.portfolio.task_orders if task_order.is_active
         ]
         funding_end_date = (
             sorted(active_task_orders, key=attrgetter("end_date"))[-1].end_date
@@ -74,7 +86,7 @@ def portfolio():
         funded = None
 
     return {
-        "portfolio": portfolio,
+        "portfolio": g.portfolio,
         "permissions": Permissions,
         "user_can": user_can,
         "funding_end_date": funding_end_date,

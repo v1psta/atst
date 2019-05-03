@@ -12,30 +12,19 @@ from atst.domain.exceptions import UnauthorizedError
 
 
 def check_access(permission, message, override, *args, **kwargs):
-    access_args = {"message": message}
+    access_args = {
+        "message": message,
+        "portfolio": g.portfolio,
+        "application": g.application,
+    }
 
-    if "application_id" in kwargs:
-        application = Applications.get(kwargs["application_id"])
-        access_args["application"] = application
-        access_args["portfolio"] = application.portfolio
-
-    elif "task_order_id" in kwargs:
-        task_order = TaskOrders.get(kwargs["task_order_id"])
-        access_args["portfolio"] = task_order.portfolio
-
-    elif "token" in kwargs:
+    # TODO: We should change the `token` arg in routes to be either
+    # `portfolio_token` or `application_token` and have
+    # atst.utils.context_processors.assign_resources take care of
+    # this.
+    if "token" in kwargs:
         invite = PortfolioInvitations._get(kwargs["token"])
         access_args["portfolio"] = invite.role.portfolio
-
-    elif "portfolio_id" in kwargs:
-        access_args["portfolio"] = Portfolios.get(
-            g.current_user, kwargs["portfolio_id"]
-        )
-
-    elif "environment_id" in kwargs:
-        environment = Environments.get(kwargs["environment_id"])
-        access_args["application"] = environment.application
-        access_args["portfolio"] = environment.application.portfolio
 
     if override is not None and override(g.current_user, **access_args, **kwargs):
         return True

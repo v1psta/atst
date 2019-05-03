@@ -153,7 +153,7 @@ def test_user_can_access_decorator_atat_level(set_current_user):
         _access_activity_log()
 
 
-def test_user_can_access_decorator_portfolio_level(set_current_user):
+def test_user_can_access_decorator_portfolio_level(set_current_user, request_ctx):
     ccpo = UserFactory.create_ccpo()
     edit_admin = UserFactory.create()
     view_admin = UserFactory.create()
@@ -161,6 +161,9 @@ def test_user_can_access_decorator_portfolio_level(set_current_user):
     portfolio = PortfolioFactory.create(owner=edit_admin)
     # factory gives view perms by default
     PortfolioRoleFactory.create(user=view_admin, portfolio=portfolio)
+
+    request_ctx.g.portfolio = portfolio
+    request_ctx.g.application = None
 
     @user_can_access_decorator(Permissions.EDIT_PORTFOLIO_NAME)
     def _edit_portfolio_name(*args, **kwargs):
@@ -177,7 +180,7 @@ def test_user_can_access_decorator_portfolio_level(set_current_user):
         _edit_portfolio_name(portfolio_id=portfolio.id)
 
 
-def test_user_can_access_decorator_application_level(set_current_user):
+def test_user_can_access_decorator_application_level(set_current_user, request_ctx):
     ccpo = UserFactory.create_ccpo()
     port_admin = UserFactory.create()
     app_user = UserFactory.create()
@@ -188,6 +191,9 @@ def test_user_can_access_decorator_application_level(set_current_user):
     )
     app = portfolio.applications[0]
     ApplicationRoleFactory.create(application=app, user=app_user)
+
+    request_ctx.g.portfolio = portfolio
+    request_ctx.g.application = app
 
     @user_can_access_decorator(Permissions.VIEW_APPLICATION)
     def _stroll_into_mos_eisley(*args, **kwargs):
