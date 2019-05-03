@@ -177,6 +177,12 @@ def remove_member(portfolio_id, user_id):
             g.current_user, "you cant remove yourself from the portfolio"
         )
 
+    portfolio = Portfolios.get(user=g.current_user, portfolio_id=portfolio_id)
+    if user_id == str(portfolio.owner.id):
+        raise UnauthorizedError(
+            g.current_user, "you can't delete the portfolios PPoC from the portfolio"
+        )
+
     portfolio_role = PortfolioRoles.get(portfolio_id=portfolio_id, user_id=user_id)
     # TODO: should this cascade and disable any application and environment
     # roles they might have?
