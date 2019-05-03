@@ -57,7 +57,8 @@
     @include icon-size(24);
   }
 
-  &.icon--remove, &.icon--red {
+  &.icon--remove,
+  &.icon--red {
     @include icon-color($color-red);
   }
 

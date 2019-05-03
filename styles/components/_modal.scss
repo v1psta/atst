@@ -35,11 +35,9 @@ body {
       padding: $gap * 2;
     }
 
-
     @include media($large-screen) {
       padding: $gap * 4;
     }
-
 
     .modal__body {
       background-color: $color-white;
@@ -53,13 +51,12 @@ body {
         max-height: calc(100vh - #{$gap * 8});
       }
 
-
       @include media($medium-screen) {
         padding: $gap * 5;
       }
 
-
-      h1, h2 {
+      h1,
+      h2 {
         @include h3;
       }
 
@@ -78,7 +75,6 @@ body {
           right: $gap * 2;
         }
 
-
         @include media($large-screen) {
           top: $gap * 4;
           right: $gap * 4;
@@ -92,7 +88,6 @@ body {
         @include media($medium-screen) {
           margin: -$gap * 4;
         }
-
 
         .block-list__header {
           border-top: 0;
@@ -123,13 +118,11 @@ body {
             right: $gap * 2;
           }
 
-
           @include media($large-screen) {
             bottom: $gap * 4;
             left: $gap * 4;
             right: $gap * 4;
           }
-
 
           .action-group {
             margin: 0;
@@ -208,7 +201,7 @@ body {
     .usa-button {
       margin-left: 2rem;
 
-      &[type='button']:disabled {
+      &[type="button"]:disabled {
         background-color: $color-gray-lighter;
         opacity: inherit;
       }

@@ -17,12 +17,10 @@
   @if $state == "error" {
     $border-width: 2px;
     $state-color: $color-red;
-  }
-  @else if $state == "warning" {
+  } @else if $state == "warning" {
     $border-width: 2px;
     $state-color: $color-gold;
-  }
-  @else if $state == "success" {
+  } @else if $state == "success" {
     $border-width: 2px;
     $state-color: $color-green;
   }
@@ -44,13 +42,13 @@
   }
 
   fieldset {
-    input[type='radio'] {
+    input[type="radio"] {
       + label::before {
         box-shadow: 0 0 0 1px $color-white, 0 0 0 3px $state-color;
       }
     }
 
-    input[type='checkbox'] {
+    input[type="checkbox"] {
       + label::before {
         box-shadow: 0 0 0 2px $state-color;
       }
@@ -64,7 +62,6 @@
   @include media($medium-screen) {
     margin: ($gap * 4) 0;
   }
-
 
   label {
     padding: 0 0 ($gap / 2) 0;
@@ -185,8 +182,8 @@
       > li {
         margin: 0;
 
-        [type='radio'] + label,
-        [type='checkbox'] + label {
+        [type="radio"] + label,
+        [type="checkbox"] + label {
           margin: 0;
 
           &:hover {
@@ -287,7 +284,10 @@
   &.no-max-width {
     padding-right: $gap * 3;
 
-    input, textarea, select, label {
+    input,
+    textarea,
+    select,
+    label {
       max-width: none;
     }
 
@@ -311,7 +311,7 @@
     @include input-state("success");
   }
 
-  [type='file'] {
+  [type="file"] {
     height: auto;
   }
 }
@@ -342,7 +342,7 @@ select {
   padding-top: 2px;
   margin-right: 2rem;
 
-  input[type=search] {
+  input[type="search"] {
     height: 4.4rem;
     font-size: 1.7rem;
     color: $color-black;
@@ -361,7 +361,9 @@ select {
     margin-right: $gap * 4;
 
     .usa-input {
-      input, label, .usa-input__message {
+      input,
+      label,
+      .usa-input__message {
         max-width: 20rem;
       }
 
@@ -375,7 +377,8 @@ select {
     margin-left: $gap * 4;
 
     .usa-input {
-      input, label {
+      input,
+      label {
         max-width: 12rem;
       }
 

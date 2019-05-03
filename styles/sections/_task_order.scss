@@ -31,7 +31,6 @@
         @include grid-row;
       }
 
-
       @include ie-only {
         width: 100%;
         max-width: 100%;
@@ -80,7 +79,8 @@
     width: 100%;
   }
 
-  .label--pending, .label--started {
+  .label--pending,
+  .label--started {
     background-color: $color-gold;
   }
 
@@ -133,11 +133,9 @@
       padding-right: $gap;
     }
 
-
     @include ie-only {
       width: calc(100% - 35rem);
     }
-
 
     .task-order-next-steps__panel-head {
       border-bottom: 1px solid black;
@@ -153,7 +151,6 @@
       @include ie-only {
         width: 100%;
       }
-
 
       .alert {
         margin-top: 3 * $gap;
@@ -203,7 +200,6 @@
     @include media($xlarge-screen) {
       padding-left: 3 * $gap;
     }
-
 
     min-width: 35rem;
 
@@ -299,7 +295,8 @@
     }
   }
 
-  .subheading, .description {
+  .subheading,
+  .description {
     color: $color-gray;
   }
 
@@ -424,7 +421,7 @@
       }
 
       p {
-        margin: .5rem 0;
+        margin: 0.5rem 0;
       }
 
       .officer__info--name {

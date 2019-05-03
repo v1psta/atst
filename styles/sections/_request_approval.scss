@@ -75,7 +75,6 @@
         flex-direction: row-reverse;
       }
 
-
       .approval-log__log-item__header,
       .comment-log__log-item__header {
         @include h4;
@@ -106,7 +105,6 @@
           @include media($medium-screen) {
             margin-right: $gap * 4;
           }
-
 
           span {
             display: block;

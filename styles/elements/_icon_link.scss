@@ -1,4 +1,7 @@
-@mixin icon-link-color($color: $color-blue, $hover-color: $color-aqua-lightest) {
+@mixin icon-link-color(
+  $color: $color-blue,
+  $hover-color: $color-aqua-lightest
+) {
   color: $color;
 
   &:hover {

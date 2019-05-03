@@ -5,7 +5,6 @@
     flex-wrap: wrap;
   }
 
-
   .funding-summary-row__col {
     hr {
       margin: (2 * $gap) 0;
@@ -24,7 +23,6 @@
         max-width: 50%;
       }
 
-
       &:first-child {
         padding-left: 0;
       }
@@ -33,7 +31,6 @@
         padding-right: 0;
       }
     }
-
 
     align-items: stretch;
 
@@ -44,7 +41,6 @@
       @include ie-only {
         max-width: 100%;
       }
-
 
       .subheading {
         @include h4;
@@ -82,7 +78,6 @@
           @include ie-only {
             text-align: left;
           }
-
 
           dt {
             text-transform: uppercase;
@@ -133,7 +128,7 @@
 
           dd {
             &::before {
-              content: '#';
+              content: "#";
               color: $color-gray;
               margin-right: $gap;
             }
@@ -155,7 +150,8 @@
               dl {
                 margin: 0 0 0 $gap;
 
-                dd, dt {
+                dd,
+                dt {
                   display: inline;
                 }
               }
@@ -168,7 +164,8 @@
             text-align: right;
             margin-top: -2 * $gap;
 
-            dd, dt {
+            dd,
+            dt {
               display: inline;
             }
 
@@ -213,13 +210,15 @@
 
 table {
   .spend-table__portfolio {
-    th, td {
+    th,
+    td {
       font-weight: bold;
       border-bottom: 1px solid $color-gray-lightest;
     }
   }
 
-  th, td {
+  th,
+  td {
     &.previous-month {
       color: $color-gray;
     }
@@ -233,7 +232,6 @@ table {
         min-width: 12rem;
       }
 
-
       meter {
         width: 100%;
         height: 3rem;
@@ -243,7 +241,6 @@ table {
         @include media($medium-screen) {
           display: block;
         }
-
 
         &::-webkit-meter-bar {
           background: $color-white;
