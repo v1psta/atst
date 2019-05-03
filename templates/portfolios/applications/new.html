@@ -37,7 +37,26 @@
             </div>
           {% endcall %}
 
-          {% include "fragments/applications/edit_application_form.html" %}
+          {{ form.csrf_token }}
+          <p>
+            {{ "fragments.edit_application_form.explain" | translate }}
+          </p>
+          <div class="form-row">
+            <div class="form-col form-col--two-thirds">
+              {{ TextInput(form.name) }}
+            </div>
+            <div class="form-col form-col--third">
+              &nbsp;
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-col form-col--two-thirds">
+              {{ TextInput(form.description, paragraph=True) }}
+            </div>
+            <div class="form-col form-col--third">
+              &nbsp;
+            </div>
+          </div>
 
           <div> {# this extra div prevents this bug: https://www.pivotaltracker.com/story/show/160768940 #}
             <div v-cloak v-for="title in errors" :key="title">
@@ -57,21 +76,28 @@
               <li v-for="(environment, i) in environments" class="application-edit__env-list-item">
                 <div class="usa-input">
                   <label :for="'environment_names-' + i">Environment Name</label>
-                  <input type="text" :id="'environment_names-' + i" v-model="environment.name" placeholder="e.g. Development, Staging, Production"/>
-                  <input type="hidden" :name="'environment_names-' + i" v-model="environment.name"/>
+                  <input type="text" :id="'environment_names-' + i" v-model="environment.name" placeholder="e.g. Development, Staging, Production"/> <input type="hidden" :name="'environment_names-' + i" v-model="environment.name"/>
                 </div>
-                <button v-on:click="removeEnvironment(i)" v-if="environments.length > 1" type="button" class='application-edit__env-list-item__remover'>
-                  {{ Icon('trash') }}
-                  <span>Remove</span>
-                </button>
+                <div class="application-edit__env-list-item-block">
+                  <button v-on:click="removeEnvironment(i)" v-if="environments.length > 1" type="button" class="application-edit__env-list-item__remover">
+                    {{ Icon('trash') }}
+                    <span>Remove</span>
+                  </button>
+                </div>
               </li>
             </ul>
 
             <div class="block-list__footer">
-              <button v-on:click="addEnvironment" class="icon-link" tabindex="0" type="button">Add another environment</button>
+              <button
+                v-on:click="addEnvironment"
+                class="icon-link"
+                tabindex="0"
+                type="button">
+                {{ 'portfolios.applications.add_another_environment' | translate }}
+                {{ Icon("plus") }}
+              </button>
             </div>
           </div>
-
 
         </div>
       </div>

@@ -22,6 +22,7 @@ common:
   cancel: Cancel
   confirm: Confirm
   continue: Continue
+  delete: Delete
   delete_confirm: 'Please type the word DELETE to confirm:'
   edit: Edit
   hide: Hide
@@ -400,6 +401,7 @@ portfolios:
   applications:
     add_application_text: Add a new application
     add_environment: Add new environment
+    add_another_environment: Add another environment
     app_settings_text: App settings
     create_button_text: Create
     csp_console_text: CSP console
@@ -411,6 +413,7 @@ portfolios:
       header: Are you sure you want to delete this application?
     environments:
       name: Name
+      edit_name: Edit name
     environments_description: Each environment created within an application is logically separated from one another for easier management and security.
     environments_heading: Application environments
     existing_application_title: '{application_name} Application Settings'

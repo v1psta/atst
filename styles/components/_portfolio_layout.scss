@@ -32,6 +32,7 @@
 
   .icon {
     @include icon-color($color-blue);
+    margin: 0 ($gap * 0.5) 0 0;
   }
 
   .portfolio-breadcrumbs__home {

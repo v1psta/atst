@@ -12,11 +12,6 @@
     padding-left: 0;
   }
 
-  &.accordion-table-list {
-    display: table;
-    width: 100%;
-  }
-
   .accordion-table__head {
     padding: $gap ($gap * 2);
     font-size: $small-font-size;
@@ -42,10 +37,7 @@
   }
 
   .accordion-table__item-content {
-    padding-top: $gap * 2;
-    padding-right: $gap;
-    padding-left: $gap * 2;
-    padding-bottom: $gap * 3;
+    padding: ($gap * 2);
   }
 
   .accordion-table__items {
@@ -128,29 +120,27 @@
   }
 }
 
-#application-members {
+.application-list {
   .accordion-table {
-    .accordion-table__item-content, .accordion-table__head {
-      display: flex;
-
-      & > span {
-        flex-grow: 3;
-        display: flex;
-        flex-basis: 0;
-
-        &.icon-link {
-          flex-grow: 1;
-        }
-      }
-    }
-
-    span {
-      flex-grow: 1;
-      flex-basis: 0;
-    }
-
     .accordion-table__item__toggler {
       text-align: right;
+      padding-right: 0;
+      padding-left: 0;
+    }
+
+    .accordion-table__item-content {
+      .icon-link {
+        padding-right: 0;
+        padding-left: 0;
+      }
+    }
+  }
+}
+
+#application-environments {
+  .row {
+    & > .col:first-child {
+      flex-grow: 5;
     }
   }
 }
