@@ -357,3 +357,32 @@ def test_remove_portfolio_member_self(client, user_session):
         PortfolioRoles.get(portfolio_id=portfolio.id, user_id=portfolio.owner.id).status
         == PortfolioRoleStatus.ACTIVE
     )
+
+def test_remove_portfolio_member_ppoc(client, user_session):
+    portfolio = PortfolioFactory.create()
+
+    user = UserFactory.create()
+    PortfolioRoleFactory.create(
+        portfolio=portfolio,
+        user=user,
+        permission_sets=[PermissionSets.get(PermissionSets.EDIT_PORTFOLIO_ADMIN)],
+    )
+
+    user_session(user)
+
+    response = client.post(
+        url_for(
+            "portfolios.remove_member",
+            portfolio_id=portfolio.id,
+            user_id=portfolio.owner.id,
+        ),
+        follow_redirects=False,
+    )
+
+    assert response.status_code == 404
+    assert (
+        PortfolioRoles.get(portfolio_id=portfolio.id, user_id=portfolio.owner.id).status
+        == PortfolioRoleStatus.ACTIVE
+    )
+
+
