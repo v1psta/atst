@@ -411,7 +411,9 @@ def test_portfolios_resend_invitation_access(post_url_assert_status):
     invite = PortfolioInvitationFactory.create(user=UserFactory.create(), role=prr)
 
     url = url_for(
-        "portfolios.resend_invitation", portfolio_id=portfolio.id, token=invite.token
+        "portfolios.resend_invitation",
+        portfolio_id=portfolio.id,
+        portfolio_token=invite.token,
     )
     post_url_assert_status(ccpo, url, 302)
     post_url_assert_status(owner, url, 302)
@@ -459,7 +461,7 @@ def test_portfolios_revoke_invitation_access(post_url_assert_status):
         url = url_for(
             "portfolios.revoke_invitation",
             portfolio_id=portfolio.id,
-            token=invite.token,
+            portfolio_token=invite.token,
         )
         post_url_assert_status(user, url, status)
 

@@ -5,7 +5,14 @@ from sqlalchemy.orm.exc import NoResultFound
 
 from atst.database import db
 from atst.domain.authz import Authorization
-from atst.models import Application, Environment, Portfolio, TaskOrder
+from atst.models import (
+    Application,
+    Environment,
+    Portfolio,
+    PortfolioInvitation,
+    PortfolioRole,
+    TaskOrder,
+)
 from atst.models.permissions import Permissions
 from atst.domain.portfolios.scopes import ScopedPortfolio
 
@@ -13,7 +20,18 @@ from atst.domain.portfolios.scopes import ScopedPortfolio
 def get_resources_from_context(view_args):
     query = None
 
-    if "portfolio_id" in view_args:
+    if "portfolio_token" in view_args:
+        query = (
+            db.session.query(Portfolio)
+            .join(PortfolioRole, PortfolioRole.portfolio_id == Portfolio.id)
+            .join(
+                PortfolioInvitation,
+                PortfolioInvitation.portfolio_role_id == PortfolioRole.id,
+            )
+            .filter(PortfolioInvitation.token == view_args["portfolio_token"])
+        )
+
+    elif "portfolio_id" in view_args:
         query = db.session.query(Portfolio).filter(
             Portfolio.id == view_args["portfolio_id"]
         )

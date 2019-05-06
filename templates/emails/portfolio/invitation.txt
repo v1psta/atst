@@ -5,6 +5,6 @@
 Join this JEDI Cloud Portfolio
 {{ owner }} has invited you to join a JEDI Cloud Portfolio.  Login now to view or use your JEDI Cloud resources.
 
-{{ url_for("portfolios.accept_invitation", token=token, _external=True) }}
+{{ url_for("portfolios.accept_invitation", portfolio_token=token, _external=True) }}
 
 {% endblock %}

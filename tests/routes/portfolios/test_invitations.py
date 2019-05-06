@@ -27,7 +27,9 @@ def test_existing_member_accepts_valid_invite(client, user_session):
     assert len(Portfolios.for_user(user)) == 0
 
     user_session(user)
-    response = client.get(url_for("portfolios.accept_invitation", token=invite.token))
+    response = client.get(
+        url_for("portfolios.accept_invitation", portfolio_token=invite.token)
+    )
 
     # user is redirected to the portfolio view
     assert response.status_code == 302
@@ -68,7 +70,9 @@ def test_new_member_accepts_valid_invite(monkeypatch, client, user_session):
         "atst.domain.auth.should_redirect_to_user_profile", lambda *args: False
     )
     user_session(user)
-    response = client.get(url_for("portfolios.accept_invitation", token=token))
+    response = client.get(
+        url_for("portfolios.accept_invitation", portfolio_token=token)
+    )
 
     # user is redirected to the portfolio view
     assert response.status_code == 302
@@ -90,7 +94,9 @@ def test_member_accepts_invalid_invite(client, user_session):
         user_id=user.id, role=ws_role, status=InvitationStatus.REJECTED_WRONG_USER
     )
     user_session(user)
-    response = client.get(url_for("portfolios.accept_invitation", token=invite.token))
+    response = client.get(
+        url_for("portfolios.accept_invitation", portfolio_token=invite.token)
+    )
 
     assert response.status_code == 404
 
@@ -121,7 +127,9 @@ def test_user_accepts_invite_with_wrong_dod_id(client, user_session):
     )
     invite = PortfolioInvitationFactory.create(user_id=user.id, role=ws_role)
     user_session(different_user)
-    response = client.get(url_for("portfolios.accept_invitation", token=invite.token))
+    response = client.get(
+        url_for("portfolios.accept_invitation", portfolio_token=invite.token)
+    )
 
     assert response.status_code == 404
 
@@ -139,7 +147,9 @@ def test_user_accepts_expired_invite(client, user_session):
         expiration_time=datetime.datetime.now() - datetime.timedelta(seconds=1),
     )
     user_session(user)
-    response = client.get(url_for("portfolios.accept_invitation", token=invite.token))
+    response = client.get(
+        url_for("portfolios.accept_invitation", portfolio_token=invite.token)
+    )
 
     assert response.status_code == 404
 
@@ -161,7 +171,7 @@ def test_revoke_invitation(client, user_session):
         url_for(
             "portfolios.revoke_invitation",
             portfolio_id=portfolio.id,
-            token=invite.token,
+            portfolio_token=invite.token,
         )
     )
 
@@ -187,7 +197,7 @@ def test_user_can_only_revoke_invites_in_their_portfolio(client, user_session):
         url_for(
             "portfolios.revoke_invitation",
             portfolio_id=portfolio.id,
-            token=invite.token,
+            portfolio_token=invite.token,
         )
     )
 
@@ -213,7 +223,7 @@ def test_user_can_only_resend_invites_in_their_portfolio(client, user_session, q
         url_for(
             "portfolios.resend_invitation",
             portfolio_id=portfolio.id,
-            token=invite.token,
+            portfolio_token=invite.token,
         )
     )
 
@@ -235,7 +245,7 @@ def test_resend_invitation_sends_email(client, user_session, queue):
         url_for(
             "portfolios.resend_invitation",
             portfolio_id=portfolio.id,
-            token=invite.token,
+            portfolio_token=invite.token,
         )
     )
 
@@ -261,7 +271,7 @@ def test_existing_member_invite_resent_to_email_submitted_in_form(
         url_for(
             "portfolios.resend_invitation",
             portfolio_id=portfolio.id,
-            token=invite.token,
+            portfolio_token=invite.token,
         )
     )
 
@@ -295,7 +305,9 @@ def test_contracting_officer_accepts_invite(monkeypatch, client, user_session):
         "atst.domain.auth.should_redirect_to_user_profile", lambda *args: False
     )
     user_session(user)
-    response = client.get(url_for("portfolios.accept_invitation", token=token))
+    response = client.get(
+        url_for("portfolios.accept_invitation", portfolio_token=token)
+    )
 
     # user is redirected to the task order review page
     assert response.status_code == 302
@@ -329,7 +341,9 @@ def test_cor_accepts_invite(monkeypatch, client, user_session):
         "atst.domain.auth.should_redirect_to_user_profile", lambda *args: False
     )
     user_session(user)
-    response = client.get(url_for("portfolios.accept_invitation", token=token))
+    response = client.get(
+        url_for("portfolios.accept_invitation", portfolio_token=token)
+    )
 
     # user is redirected to the task order review page
     assert response.status_code == 302
@@ -363,7 +377,9 @@ def test_so_accepts_invite(monkeypatch, client, user_session):
         "atst.domain.auth.should_redirect_to_user_profile", lambda *args: False
     )
     user_session(user)
-    response = client.get(url_for("portfolios.accept_invitation", token=token))
+    response = client.get(
+        url_for("portfolios.accept_invitation", portfolio_token=token)
+    )
 
     # user is redirected to the task order review page
     assert response.status_code == 302
