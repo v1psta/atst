@@ -5,16 +5,16 @@ from sqlalchemy.orm.exc import NoResultFound
 
 from atst.database import db
 from atst.domain.authz import Authorization
+from atst.domain.portfolios.scopes import ScopedPortfolio
 from atst.models import (
     Application,
     Environment,
+    Permissions,
     Portfolio,
     PortfolioInvitation,
     PortfolioRole,
     TaskOrder,
 )
-from atst.models.permissions import Permissions
-from atst.domain.portfolios.scopes import ScopedPortfolio
 
 
 def get_resources_from_context(view_args):
@@ -81,15 +81,21 @@ def assign_resources(view_args):
                 g.task_order = resource
 
 
-def portfolio():
-    def user_can(permission):
-        if g.portfolio:
-            return Authorization.has_portfolio_permission(
-                g.current_user, g.portfolio, permission
-            )
-        return False
+def user_can_view(permission):
+    if g.application:
+        return Authorization.has_application_permission(
+            g.current_user, g.application, permission
+        )
+    elif g.portfolio:
+        return Authorization.has_portfolio_permission(
+            g.current_user, g.portfolio, permission
+        )
+    else:
+        return Authorization.has_atat_permission(g.current_user, permission)
 
-    if not g.portfolio is None:
+
+def portfolio():
+    if g.portfolio is not None:
         active_task_orders = [
             task_order for task_order in g.portfolio.task_orders if task_order.is_active
         ]
@@ -106,7 +112,7 @@ def portfolio():
     return {
         "portfolio": g.portfolio,
         "permissions": Permissions,
-        "user_can": user_can,
+        "user_can": user_can_view,
         "funding_end_date": funding_end_date,
         "funded": funded,
     }
