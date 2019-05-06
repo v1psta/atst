@@ -182,7 +182,7 @@ def delete(application_id):
 
 
 @applications_bp.route("/environments/<environment_id>/delete", methods=["POST"])
-@user_can(Permissions.DELETE_ENVIRONMENT, message="delete delete_environment")
+@user_can(Permissions.DELETE_ENVIRONMENT, message="delete environment")
 def delete_environment(environment_id):
     environment = Environments.get(environment_id)
     Environments.delete(environment=environment, commit=True)
