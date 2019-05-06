@@ -1,9 +1,9 @@
-{% from "components/icon.html" import Icon %}
-{% from "components/toggle_list.html" import ToggleButton, ToggleSection %}
-{% from "components/text_input.html" import TextInput %}
-{% from "components/save_button.html" import SaveButton %}
-{% from "components/modal.html" import Modal %}
 {% from "components/delete_confirmation.html" import DeleteConfirmation %}
+{% from "components/icon.html" import Icon %}
+{% from "components/modal.html" import Modal %}
+{% from "components/save_button.html" import SaveButton %}
+{% from "components/text_input.html" import TextInput %}
+{% from "components/toggle_list.html" import ToggleButton, ToggleSection %}
 
 {% macro RolePanel(users=[], role='no_access') %}
   {% if role == 'no_access' %}
