@@ -51,15 +51,15 @@ def team(application_id):
             ),
         }
         permission_sets = {
-            "perms_env_mgmt": PermissionSets.EDIT_APPLICATION_ENVIRONMENTS
-            if member.has_permission_set(PermissionSets.EDIT_APPLICATION_ENVIRONMENTS)
-            else "",
-            "perms_team_mgmt": PermissionSets.EDIT_APPLICATION_TEAM
-            if member.has_permission_set(PermissionSets.EDIT_APPLICATION_TEAM)
-            else "",
             "perms_del_env": PermissionSets.DELETE_APPLICATION_ENVIRONMENTS
             if member.has_permission_set(PermissionSets.DELETE_APPLICATION_ENVIRONMENTS)
-            else "",
+            else translate("portfolios.members.permissions.view_only"),
+            "perms_env_mgmt": PermissionSets.EDIT_APPLICATION_ENVIRONMENTS
+            if member.has_permission_set(PermissionSets.EDIT_APPLICATION_ENVIRONMENTS)
+            else translate("portfolios.members.permissions.view_only"),
+            "perms_team_mgmt": PermissionSets.EDIT_APPLICATION_TEAM
+            if member.has_permission_set(PermissionSets.EDIT_APPLICATION_TEAM)
+            else translate("portfolios.members.permissions.view_only"),
         }
         roles = EnvironmentRoles.get_for_application_and_user(
             member.user.id, application.id
@@ -107,7 +107,9 @@ def update_team(application_id):
         # TODO check that all users coming through are app members
         for member in form.members:
             app_role = ApplicationRoles.get(member.data["user_id"], application.id)
-            new_perms = [perm for perm in member.data["permission_sets"] if perm != ""]
+            new_perms = [
+                perm for perm in member.data["permission_sets"] if perm != "View only"
+            ]
             ApplicationRoles.update_permission_sets(app_role, new_perms)
         flash("updated_application_members_permissions")
 
