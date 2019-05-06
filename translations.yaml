@@ -33,6 +33,7 @@ common:
       contracting_officer: Contracting Officer
       contracting_officer_representative: Contracting Officer Representative
       security_officer: Security Officer
+  response_label: Response required
   save: Save
   save_and_continue: Save & continue
   show: Show
@@ -76,6 +77,7 @@ footer:
   about_link_text: Joint Enterprise Defense Infrastructure
   browser_support: JEDI Cloud supported on these web browsers
   jedi_help_link_text: Questions? Contact your CCPO representative
+  login: 'Last login:'
 forms:
   application:
     description_label: Description
@@ -324,7 +326,7 @@ fragments:
     new_application_title: Add a new application
   edit_user_form:
     date_last_training_tooltip: When was the last time you completed the IA training? <br> Information Assurance (IA) training is an important step in cyber awareness.
-    save_details_button: Save Details
+    save_details_button: Save
   ko_review_message:
     bullet_1: Make sure the information below matches the final task order and is accurate and up-to-date
     bullet_2: Upload your task order (TO) document
@@ -347,7 +349,7 @@ fragments:
     alert:
       message: Selecting a new PPoC gives that member full access to the portfolio and removes your ability to manage the PPoC role. The rest of your permissions will remain untouched. Please be sure you want to proceed.
       title: Warning!
-    assign_user_button_text: Assign Member
+    assign_user_button_text: Assign member
     confirm_alert:
       title: 'Once you assign a new PPoC, you will no longer be able to request portfolio deactivation or manage the PPoC role.'
     subtitle: The PPoC has the ability to edit all aspects of a portfolio and is the only one who can manage the PPoC role.
