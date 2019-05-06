@@ -73,7 +73,7 @@ class Environments(object):
     def update_env_role(cls, environment, user, new_role):
         updated = False
 
-        if new_role == "no_access":
+        if new_role == None:
             updated = EnvironmentRoles.delete(user.id, environment.id)
         else:
             env_role = EnvironmentRoles.get(user.id, environment.id)
@@ -112,6 +112,27 @@ class Environments(object):
             Environments.update_env_role(
                 environment=environment, user=member, new_role=new_role
             )
+
+    @classmethod
+    def get_members_by_role(cls, env, role):
+        env_roles = (
+            db.session.query(EnvironmentRole)
+            .filter(EnvironmentRole.environment_id == env.id)
+            .filter(EnvironmentRole.role == role)
+            .all()
+        )
+
+        members_list = []
+        for env_role in env_roles:
+            members_list.append(
+                {
+                    "user_id": env_role.user_id,
+                    "user_name": env_role.user.full_name,
+                    "role": role,
+                }
+            )
+
+        return members_list
 
     @classmethod
     def revoke_access(cls, environment, target_user):

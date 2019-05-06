@@ -133,7 +133,7 @@
 
     .action-group-cancel__action {
       position: absolute;
-      right: ($search-button-width * 2) + ($gap * 2);
+      right: $search-button-width * 2 + $gap * 2;
       top: -($gap * 8);
     }
   }

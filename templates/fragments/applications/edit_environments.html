@@ -6,7 +6,8 @@
 {% from "components/text_input.html" import TextInput %}
 {% from "components/toggle_list.html" import ToggleButton, ToggleSection %}
 
-{% macro RolePanel(users=[], role='no_access', members_form=[]) %}
+{% macro RolePanel(role_form) %}
+  {% set role = role_form.role.data %}
   {% if role == 'no_access' %}
     {% set role = 'Unassigned (No Access)' %}
     {% set unassigned = True %}
@@ -15,11 +16,11 @@
   <div class='environment-role'>
     <h4>{{ role }}</h4>
       <ul class='environment-role__users'>
-        {% for user in users %}
-          {% set section_name = "env_member_{}".format(user.user_id) %}
+        {% for member in role_form.members %}
+          {% set section_name = "env_member_{}".format(member.user_id) %}
 
           <li class="environment-role__user {{ 'unassigned' if unassigned }}">
-            {{ user.name }}
+            {{ member.user_name.data }}
             <span class="icon-link right">
               {% set edit_env_members_button %}
                 {{ Icon('edit', classes="icon--medium") }}
@@ -34,17 +35,13 @@
               }}
             </span>
             {% call ToggleSection(section_name=section_name, classes="environment-role__user-field") %}
-                {% for member in members_form %}
-                  {% if member.user_id.data == user.user_id %}
-                    {{ OptionsInput(member.role, label=False) }}
-                    {{ member.user_id() }}
-                  {% endif %}
-                {% endfor %}
+              {{ OptionsInput(member.role, label=False) }}
+              {{ member.user_id() }}
             {% endcall %}
           </li>
         {% endfor %}
 
-        {% if users == [] %}
+        {% if role_form.members.data == [] %}
           <div class='environment-role__no-user'>Currently no members are in this role</div>
         {% endif %}
       </ul>
@@ -74,10 +71,6 @@
 
     <ul class="accordion-table__items">
       {% for env in environments_obj %}
-        {% set edit_form = env['edit_form'] %}
-        {% set member_count = env['members_form'].data['team_roles'] | length %}
-        {% set members_by_role = env['members'] %}
-        {% set unassigned = members_by_role['no_access'] %}
         {% set delete_environment_modal_id = "delete_modal_environment{}".format(env['id']) %}
 
         <toggler inline-template {% if edit_form.errors %}initial-selected-section="edit"{% endif %}>
@@ -108,11 +101,11 @@
               </div>
               <div class="col col--grow icon-link icon-link--large accordion-table__item__toggler">
                 {% set open_members_button %}
-                {{ "common.members" | translate }} ({{ member_count }}) {{ Icon('caret_down') }}
+                  {{ "common.members" | translate }} ({{ env['member_count'] }}) {{ Icon('caret_down') }}
                 {% endset %}
 
                 {% set close_members_button %}
-                {{ "common.members" | translate }} ({{ member_count }}) {{ Icon('caret_up') }}
+                  {{ "common.members" | translate }} ({{ env['member_count'] }}) {{ Icon('caret_up') }}
                 {% endset %}
 
                 {{
@@ -128,13 +121,16 @@
             {% call ToggleSection(section_name="members", classes="environment-roles") %}
                 <div class='app-team-settings-link'>Need to add someone new to the team? <a href='{{ url_for("applications.team", application_id=application.id) }}'>Jump to Team Settings</a></div>
                 <toggler inline-template>
-                  {% set members_form = env['members_form'] %}
                   <form action="{{ url_for('applications.update_env_roles', environment_id=env['id']) }}" method="post">
                     {{ members_form.csrf_token }}
-                    {% for role, members in members_by_role.items() %}
-                      {{ RolePanel(users=members, role=role, members_form=env['members_form']['team_roles']) }}
+                    {% for env_form in members_form.envs %}
+                      {{ env_form.env_id() }}
+                      {% if env_form.env_id.data == env['id'] %}
+                        {% for role_form in env_form.team_roles %}
+                          {{ RolePanel(role_form) }}
+                        {% endfor %}
+                      {% endif %}
                     {% endfor %}
-                    {{ env['members_form'].env_id() }}
                     <div class='action-group'>
                       {{
                         SaveButton(
@@ -197,7 +193,7 @@
   <div class="action-group">
     <a class='icon-link'>
       {{ "portfolios.applications.add_environment" | translate }}
-      {{ Icon('plus-circle-solid') }}
+      {{ Icon('plus') }}
     </a>
   </div>
 </div>
