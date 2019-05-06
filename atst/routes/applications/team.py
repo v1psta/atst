@@ -36,14 +36,14 @@ def team(application_id):
         user_name = member.user.full_name
         environment_users[user_id] = {
             "permissions": {
-                "delete_access": permission_str(
-                    member, PermissionSets.DELETE_APPLICATION_ENVIRONMENTS
+                "team_management": permission_str(
+                    member, PermissionSets.EDIT_APPLICATION_TEAM
                 ),
                 "environment_management": permission_str(
                     member, PermissionSets.EDIT_APPLICATION_ENVIRONMENTS
                 ),
-                "team_management": permission_str(
-                    member, PermissionSets.EDIT_APPLICATION_TEAM
+                "delete_access": permission_str(
+                    member, PermissionSets.DELETE_APPLICATION_ENVIRONMENTS
                 ),
             },
             "environments": Environments.for_user(
@@ -51,15 +51,15 @@ def team(application_id):
             ),
         }
         permission_sets = {
-            "perms_del_env": PermissionSets.DELETE_APPLICATION_ENVIRONMENTS
-            if member.has_permission_set(PermissionSets.DELETE_APPLICATION_ENVIRONMENTS)
-            else translate("portfolios.members.permissions.view_only"),
-            "perms_env_mgmt": PermissionSets.EDIT_APPLICATION_ENVIRONMENTS
-            if member.has_permission_set(PermissionSets.EDIT_APPLICATION_ENVIRONMENTS)
-            else translate("portfolios.members.permissions.view_only"),
             "perms_team_mgmt": PermissionSets.EDIT_APPLICATION_TEAM
             if member.has_permission_set(PermissionSets.EDIT_APPLICATION_TEAM)
-            else translate("portfolios.members.permissions.view_only"),
+            else "View only",
+            "perms_env_mgmt": PermissionSets.EDIT_APPLICATION_ENVIRONMENTS
+            if member.has_permission_set(PermissionSets.EDIT_APPLICATION_ENVIRONMENTS)
+            else "View only",
+            "perms_del_env": PermissionSets.DELETE_APPLICATION_ENVIRONMENTS
+            if member.has_permission_set(PermissionSets.DELETE_APPLICATION_ENVIRONMENTS)
+            else "View only",
         }
         roles = EnvironmentRoles.get_for_application_and_user(
             member.user.id, application.id
