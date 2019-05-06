@@ -413,6 +413,8 @@ portfolios:
       header: Are you sure you want to delete this application?
     environments:
       name: Name
+      delete:
+        button: Delete environment
       edit_name: Edit name
     environments_description: Each environment created within an application is logically separated from one another for easier management and security.
     environments_heading: Application environments
