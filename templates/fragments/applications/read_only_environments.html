@@ -26,11 +26,11 @@
 
               <span class="icon-link icon-link--large accordion-table__item__toggler">
                 {% set open_members_button %}
-                  {{ "common.members" | translate }} ({{ env['members'] | length }}) {{ Icon('caret_down') }}
+                  {{ "common.members" | translate }} ({{ env['member_count'] }}) {{ Icon('caret_down') }}
                 {% endset %}
 
                 {% set close_members_button %}
-                  {{ "common.members" | translate }} ({{ env['members'] | length }}) {{ Icon('caret_up') }}
+                  {{ "common.members" | translate }} ({{ env['member_count'] }}) {{ Icon('caret_up') }}
                 {% endset %}
 
                 {{
@@ -47,7 +47,7 @@
               <ul>
                 {% for member in env['members'] %}
                 <li class="accordion-table__item__expanded">
-                  <div class="accordion-table__item__expanded_first">{{ member.name }}</div>
+                  <div class="accordion-table__item__expanded_first">{{ member }}</div>
                 </li>
                 {% endfor %}
               </ul>

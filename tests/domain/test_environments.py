@@ -39,9 +39,7 @@ def test_update_env_role_no_access():
         user=env_role.user, application=env_role.environment.application
     )
 
-    assert Environments.update_env_role(
-        env_role.environment, env_role.user, "no_access"
-    )
+    assert Environments.update_env_role(env_role.environment, env_role.user, None)
     assert not EnvironmentRoles.get(env_role.user.id, env_role.environment.id)
 
 
@@ -92,7 +90,7 @@ def test_update_env_roles_by_environment():
         {
             "user_id": env_role_3.user.id,
             "name": env_role_3.user.full_name,
-            "role": "no_access",
+            "role": None,
         },
     ]
 
@@ -127,7 +125,7 @@ def test_update_env_roles_by_member():
         {"id": dev.id, "role": CSPRole.NETWORK_ADMIN.value},
         {"id": staging.id, "role": CSPRole.BUSINESS_READ.value},
         {"id": prod.id, "role": CSPRole.TECHNICAL_READ.value},
-        {"id": testing.id, "role": "no_access"},
+        {"id": testing.id, "role": None},
     ]
 
     Environments.update_env_roles_by_member(user, env_roles)
@@ -136,6 +134,56 @@ def test_update_env_roles_by_member():
     assert EnvironmentRoles.get(user.id, staging.id).role == CSPRole.BUSINESS_READ.value
     assert EnvironmentRoles.get(user.id, prod.id).role == CSPRole.TECHNICAL_READ.value
     assert not EnvironmentRoles.get(user.id, testing.id)
+
+
+def test_get_members_by_role(db):
+    environment = EnvironmentFactory.create()
+    env_role_1 = EnvironmentRoleFactory.create(
+        environment=environment, role=CSPRole.BASIC_ACCESS.value
+    )
+    env_role_2 = EnvironmentRoleFactory.create(
+        environment=environment, role=CSPRole.TECHNICAL_READ.value
+    )
+    env_role_3 = EnvironmentRoleFactory.create(
+        environment=environment, role=CSPRole.TECHNICAL_READ.value
+    )
+    rando_env = EnvironmentFactory.create()
+    rando_env_role = EnvironmentRoleFactory.create(
+        environment=rando_env, role=CSPRole.BASIC_ACCESS.value
+    )
+
+    basic_access_members = Environments.get_members_by_role(
+        environment, CSPRole.BASIC_ACCESS.value
+    )
+    assert basic_access_members == [
+        {
+            "user_id": env_role_1.user_id,
+            "user_name": env_role_1.user.full_name,
+            "role": CSPRole.BASIC_ACCESS.value,
+        }
+    ]
+    assert {
+        "user_id": rando_env_role.user_id,
+        "user_name": rando_env_role.user.full_name,
+        "role": CSPRole.BASIC_ACCESS.value,
+    } not in basic_access_members
+    assert Environments.get_members_by_role(
+        environment, CSPRole.TECHNICAL_READ.value
+    ) == [
+        {
+            "user_id": env_role_2.user_id,
+            "user_name": env_role_2.user.full_name,
+            "role": CSPRole.TECHNICAL_READ.value,
+        },
+        {
+            "user_id": env_role_3.user_id,
+            "user_name": env_role_3.user.full_name,
+            "role": CSPRole.TECHNICAL_READ.value,
+        },
+    ]
+    assert (
+        Environments.get_members_by_role(environment, CSPRole.BUSINESS_READ.value) == []
+    )
 
 
 def test_get_scoped_environments(db):

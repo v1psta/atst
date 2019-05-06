@@ -22,7 +22,7 @@ from atst.domain.exceptions import NotFoundError
 from atst.models.environment_role import CSPRole
 from atst.models.portfolio_role import Status as PortfolioRoleStatus
 from atst.forms.application import EditEnvironmentForm
-from atst.forms.app_settings import EnvironmentRolesForm
+from atst.forms.app_settings import AppEnvRolesForm
 
 from tests.utils import captured_templates
 
@@ -116,23 +116,88 @@ def test_edit_application_environments_obj(app, client, user_session):
         assert response.status_code == 200
         _, context = templates[0]
 
+        assert isinstance(context["members_form"], AppEnvRolesForm)
         env_obj = context["environments_obj"][0]
         assert env_obj["name"] == env.name
         assert env_obj["id"] == env.id
         assert isinstance(env_obj["edit_form"], EditEnvironmentForm)
-        assert isinstance(env_obj["members_form"], EnvironmentRolesForm)
-        assert env_obj["members"] == {
-            "no_access": [
-                {"user_id": app_role.user_id, "name": app_role.user.full_name}
-            ],
-            CSPRole.BASIC_ACCESS.value: [
-                {"user_id": env_role1.user_id, "name": env_role1.user.full_name}
-            ],
-            CSPRole.NETWORK_ADMIN.value: [
-                {"user_id": env_role2.user_id, "name": env_role2.user.full_name}
-            ],
-            CSPRole.BUSINESS_READ.value: [],
-            CSPRole.TECHNICAL_READ.value: [],
+        assert (
+            env_obj["members"].sort()
+            == [env_role1.user.full_name, env_role2.user.full_name].sort()
+        )
+
+
+def test_data_for_app_env_roles_form(app, client, user_session):
+    portfolio = PortfolioFactory.create()
+    application = Applications.create(
+        portfolio,
+        "Snazzy Application",
+        "A new application for me and my friends",
+        {"env"},
+    )
+    env = application.environments[0]
+    app_role = ApplicationRoleFactory.create(application=application)
+    env_role1 = EnvironmentRoleFactory.create(
+        environment=env, role=CSPRole.BASIC_ACCESS.value
+    )
+    ApplicationRoleFactory.create(application=application, user=env_role1.user)
+    env_role2 = EnvironmentRoleFactory.create(
+        environment=env, role=CSPRole.NETWORK_ADMIN.value
+    )
+    ApplicationRoleFactory.create(application=application, user=env_role2.user)
+
+    user_session(portfolio.owner)
+
+    with captured_templates(app) as templates:
+        response = app.test_client().get(
+            url_for("applications.settings", application_id=application.id)
+        )
+
+        assert response.status_code == 200
+        _, context = templates[0]
+
+        members_form = context["members_form"]
+        assert isinstance(members_form, AppEnvRolesForm)
+        assert members_form.data == {
+            "envs": [
+                {
+                    "env_id": env.id,
+                    "team_roles": [
+                        {
+                            "role": "no_access",
+                            "members": [
+                                {
+                                    "user_id": app_role.user_id,
+                                    "user_name": app_role.user.full_name,
+                                    "role": None,
+                                }
+                            ],
+                        },
+                        {
+                            "role": CSPRole.BASIC_ACCESS.value,
+                            "members": [
+                                {
+                                    "user_id": env_role1.user_id,
+                                    "user_name": env_role1.user.full_name,
+                                    "role": CSPRole.BASIC_ACCESS.value,
+                                }
+                            ],
+                        },
+                        {
+                            "role": CSPRole.NETWORK_ADMIN.value,
+                            "members": [
+                                {
+                                    "user_id": env_role2.user_id,
+                                    "user_name": env_role2.user.full_name,
+                                    "role": CSPRole.NETWORK_ADMIN.value,
+                                }
+                            ],
+                        },
+                        {"role": CSPRole.BUSINESS_READ.value, "members": []},
+                        {"role": CSPRole.TECHNICAL_READ.value, "members": []},
+                    ],
+                }
+            ]
         }
 
 
@@ -234,15 +299,15 @@ def test_update_team_env_roles(client, user_session):
 
     app_role = ApplicationRoleFactory.create(application=application)
     form_data = {
-        "env_id": environment.id,
-        "team_roles-0-user_id": env_role_1.user.id,
-        "team_roles-0-role": CSPRole.NETWORK_ADMIN.value,
-        "team_roles-1-user_id": env_role_2.user.id,
-        "team_roles-1-role": CSPRole.BASIC_ACCESS.value,
-        "team_roles-2-user_id": env_role_3.user.id,
-        "team_roles-2-role": "no_access",
-        "team_roles-3-user_id": app_role.user.id,
-        "team_roles-3-role": CSPRole.TECHNICAL_READ.value,
+        "envs-0-env_id": environment.id,
+        "envs-0-team_roles-0-members-0-user_id": app_role.user.id,
+        "envs-0-team_roles-0-members-0-role": CSPRole.TECHNICAL_READ.value,
+        "envs-0-team_roles-1-members-0-user_id": env_role_1.user.id,
+        "envs-0-team_roles-1-members-0-role": CSPRole.NETWORK_ADMIN.value,
+        "envs-0-team_roles-1-members-1-user_id": env_role_2.user.id,
+        "envs-0-team_roles-1-members-1-role": CSPRole.BASIC_ACCESS.value,
+        "envs-0-team_roles-1-members-2-user_id": env_role_3.user.id,
+        "envs-0-team_roles-1-members-2-role": "no_access",
     }
 
     user_session(application.portfolio.owner)
