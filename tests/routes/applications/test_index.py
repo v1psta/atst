@@ -1,13 +1,6 @@
 from flask import url_for, get_flashed_messages
 
-from tests.factories import (
-    UserFactory,
-    PortfolioFactory,
-    PortfolioRoleFactory,
-    EnvironmentRoleFactory,
-    EnvironmentFactory,
-    ApplicationFactory,
-)
+from tests.factories import *
 
 from atst.domain.applications import Applications
 from atst.domain.portfolios import Portfolios
@@ -68,3 +61,31 @@ def test_user_without_permission_has_no_add_application_link(client, user_sessio
         url_for("applications.create", portfolio_id=portfolio.id)
         not in response.data.decode()
     )
+
+
+def test_portfolio_applications_user_with_application_roles(client, user_session):
+    user = UserFactory.create()
+    portfolio = PortfolioFactory.create()
+
+    app1 = ApplicationFactory.create(portfolio=portfolio, name="X-Wing")
+    app2 = ApplicationFactory.create(portfolio=portfolio, name="TIE Fighter")
+    app3 = ApplicationFactory.create(portfolio=portfolio, name="Millenium Falcon")
+
+    ApplicationRoleFactory.create(
+        application=app1, user=user, status=ApplicationRoleStatus.ACTIVE
+    )
+    ApplicationRoleFactory.create(
+        application=app2, user=user, status=ApplicationRoleStatus.ACTIVE
+    )
+
+    user_session(user)
+    response = client.get(
+        url_for("applications.portfolio_applications", portfolio_id=portfolio.id)
+    )
+    assert response.status_code == 200
+
+    body = response.data.decode()
+
+    assert app1.name in body
+    assert app2.name in body
+    assert app3.name not in body

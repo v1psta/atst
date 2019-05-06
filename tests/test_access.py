@@ -8,8 +8,7 @@ import atst
 from atst.app import make_app, make_config
 from atst.domain.auth import UNPROTECTED_ROUTES as _NO_LOGIN_REQUIRED
 from atst.domain.permission_sets import PermissionSets
-from atst.models.environment_role import CSPRole
-from atst.models.portfolio_role import Status as PortfolioRoleStatus
+from atst.models import CSPRole, PortfolioRoleStatus, ApplicationRoleStatus
 
 from tests.factories import (
     AttachmentFactory,
@@ -35,6 +34,7 @@ _NO_ACCESS_CHECK_REQUIRED = _NO_LOGIN_REQUIRED + [
     "users.user",  # available to all users
     "users.update_user",  # available to all users
     "portfolios.accept_invitation",  # available to all users; access control is built into invitation logic
+    "applications.accept_invitation",  # available to all users; access control is built into invitation logic
     "atst.catch_all",  # available to all users
     "portfolios.portfolios",  # the portfolios list is scoped to the user separately
 ]
@@ -360,12 +360,18 @@ def test_portfolios_admin_access(get_url_assert_status):
 def test_applications_portfolio_applications_access(get_url_assert_status):
     ccpo = user_with(PermissionSets.VIEW_PORTFOLIO_APPLICATION_MANAGEMENT)
     owner = user_with()
+    app_user = user_with()
     rando = user_with()
     portfolio = PortfolioFactory.create(owner=owner)
+    application = ApplicationFactory.create(portfolio=portfolio)
+    ApplicationRoleFactory.create(
+        application=application, user=app_user, status=ApplicationRoleStatus.ACTIVE
+    )
 
     url = url_for("applications.portfolio_applications", portfolio_id=portfolio.id)
     get_url_assert_status(ccpo, url, 200)
     get_url_assert_status(owner, url, 200)
+    get_url_assert_status(app_user, url, 200)
     get_url_assert_status(rando, url, 404)
 
 

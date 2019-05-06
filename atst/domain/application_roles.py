@@ -1,5 +1,5 @@
 from atst.database import db
-from atst.models.application_role import ApplicationRole
+from atst.models import ApplicationRole, ApplicationRoleStatus
 from atst.domain.permission_sets import PermissionSets
 
 
@@ -21,3 +21,10 @@ class ApplicationRoles(object):
         db.session.commit()
 
         return application_role
+
+    @classmethod
+    def enable(cls, role):
+        role.status = ApplicationRoleStatus.ACTIVE
+
+        db.session.add(role)
+        db.session.commit()

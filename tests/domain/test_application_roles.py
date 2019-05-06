@@ -1,6 +1,8 @@
 from atst.domain.application_roles import ApplicationRoles
 from atst.domain.permission_sets import PermissionSets
-from tests.factories import UserFactory, ApplicationFactory
+from atst.models import ApplicationRoleStatus
+
+from tests.factories import *
 
 
 def test_create_application_role():
@@ -18,3 +20,16 @@ def test_create_application_role():
     )
     assert application_role.application == application
     assert application_role.user == user
+
+
+def test_enabled_application_role():
+    application = ApplicationFactory.create()
+    user = UserFactory.create()
+    app_role = ApplicationRoleFactory.create(
+        application=application, user=user, status=ApplicationRoleStatus.DISABLED
+    )
+    assert app_role.status == ApplicationRoleStatus.DISABLED
+
+    ApplicationRoles.enable(app_role)
+
+    assert app_role.status == ApplicationRoleStatus.ACTIVE

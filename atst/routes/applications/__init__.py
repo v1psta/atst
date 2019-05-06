@@ -6,6 +6,7 @@ from . import index
 from . import new
 from . import settings
 from . import team
+from . import invitations
 from atst.domain.environment_roles import EnvironmentRoles
 from atst.domain.exceptions import UnauthorizedError
 from atst.domain.authz.decorator import user_can_access_decorator as user_can

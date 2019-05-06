@@ -1,7 +1,6 @@
 from atst.domain.authz import Authorization
 from atst.models.permissions import Permissions
 from atst.domain.applications import Applications
-from atst.domain.environments import Environments
 
 
 class ScopedResource(object):
@@ -35,31 +34,6 @@ class ScopedPortfolio(ScopedResource):
         )
 
         if can_view_all_applications:
-            applications = self.resource.applications
+            return self.resource.applications
         else:
-            applications = Applications.for_user(self.user, self.resource)
-
-        return [
-            ScopedApplication(self.user, application) for application in applications
-        ]
-
-
-class ScopedApplication(ScopedResource):
-    """
-    An object that obeys the same API as a Portfolio, but with the added
-    functionality that it only returns sub-resources (environments)
-    that the given user is allowed to see.
-    """
-
-    @property
-    def environments(self):
-        can_view_all_environments = Authorization.has_portfolio_permission(
-            self.user, self.resource.portfolio, Permissions.VIEW_ENVIRONMENT
-        )
-
-        if can_view_all_environments:
-            environments = self.resource.environments
-        else:
-            environments = Environments.for_user(self.user, self.resource)
-
-        return environments
+            return Applications.for_user(self.user, self.resource)

@@ -1,7 +1,7 @@
 import pytest
 from uuid import uuid4
 
-from atst.models import CSPRole
+from atst.models import CSPRole, ApplicationRoleStatus
 from atst.domain.applications import Applications
 from atst.domain.permission_sets import PermissionSets
 from atst.domain.exceptions import NotFoundError
@@ -128,3 +128,30 @@ def test_create_member():
     env_roles = member_role.user.environment_roles
     assert len(env_roles) == 1
     assert env_roles[0].environment == env1
+
+
+def test_for_user():
+    user = UserFactory.create()
+    portfolio = PortfolioFactory.create()
+    for _x in range(4):
+        ApplicationFactory.create(portfolio=portfolio)
+
+    ApplicationRoleFactory.create(
+        application=portfolio.applications[0],
+        user=user,
+        status=ApplicationRoleStatus.ACTIVE,
+    )
+    ApplicationRoleFactory.create(
+        application=portfolio.applications[1],
+        user=user,
+        status=ApplicationRoleStatus.ACTIVE,
+    )
+    ApplicationRoleFactory.create(
+        application=portfolio.applications[2],
+        user=user,
+        status=ApplicationRoleStatus.PENDING,
+    )
+
+    assert len(portfolio.applications) == 4
+    user_applications = Applications.for_user(user, portfolio)
+    assert len(user_applications) == 2
