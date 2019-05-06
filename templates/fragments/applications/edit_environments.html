@@ -52,7 +52,7 @@
         {% set member_count = env['members_form'].data['team_roles'] | length %}
         {% set members_by_role = env['members'] %}
         {% set unassigned = members_by_role['no_access'] %}
-        {% set delete_environment_modal_id = 'delete' %}
+        {% set delete_environment_modal_id = "delete_modal_environment{}".format(env['id']) %}
 
         <toggler inline-template>
           <li class="accordion-table__item">
@@ -154,7 +154,7 @@
                   </button>
                 </form>
                 <div class="action-group">
-                  <a v-on:click="deleteText = ''; $root.closeModal('delete-application')" class="action-group__action icon-link icon-link--default">{{ "common.cancel" | translate }}</a>
+                  <a v-on:click="deleteText = ''; $root.closeModal({{ delete_modal_environment_id }})" class="action-group__action icon-link icon-link--default">{{ "common.cancel" | translate }}</a>
                 </div>
               </div>
             </div>
