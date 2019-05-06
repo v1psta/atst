@@ -269,14 +269,14 @@ forms:
     dev_team:
       civilians: Government civilians
       contractor: Contractor
-      description: Who will be completing the development work for your cloud application(s)? Select all that apply.
+      description: Who is building your cloud application(s)? Select all that apply.
       label: Development team
       military: Military
       other: Other <em class='description'>(E.g. University or other partner)</em>
     dev_team_other_label: Development Team Other
     end_date_label: End Date
     file_format_not_allowed: Only PDF or PNG files can be uploaded.
-    first_step_title: Basics
+    first_step_title: Overview
     ko_invite_label: Invite contracting officer to Task Order Builder
     native_apps:
       description: Do you plan to develop any applications in the cloud?
@@ -293,7 +293,7 @@ forms:
     oversight_phone_label: Phone Number
     performance_length:
       label: Period of performance length
-    portfolio_name_description: The name of your office or organization. You can add multiple applications to your portfolio. Your task orders are used to pay for these applications and their environments.
+    portfolio_name_description: Your portfolio is where the information on all of your applications for one specific project lives. This will include all corresponding funding and reporting information. You can add additional task orders to your portfolio later, but you have to have at least one task order to get started. You should name your portfolio something simple and straightforward that makes it easy for you to remember where your data lives.
     portfolio_name_label: Portfolio name
     scope_description: 'What do you plan to do on the cloud? Some examples might include migrating an existing application or creating a prototype. You don’t need to include a detailed plan of execution, but should list key requirements. This section will be reviewed by your contracting officer, but won’t be sent to the CCPO. <p>Not sure how to describe your scope? <a href="#">Read some examples</a> to get some inspiration.</p>'
     scope_label: Cloud project scope
@@ -302,10 +302,10 @@ forms:
     so_invite_label: Invite Security Officer to Task Order Builder
     start_date_label: Start Date
     team_experience:
-      built_1: Built or migrated 1-2 applications
-      built_3: Built or migrated 3-5 applications
-      built_many: 'Built or migrated many applications, or consulted on several such projects'
-      description: How much experience does your team have with development in the cloud?
+      built_1: Built, migrated, or consulted on 1-2 applications
+      built_3: Built, migrated, or consulted on 3-5 applications
+      built_many: Built, migrated, or consulted on more than 5 applications
+      description: How much combined experience does your team have with development in the cloud?
       label: Team experience
       none: No previous experience
       planned: Researched or planned a cloud build or migration
@@ -594,7 +594,8 @@ task_orders:
       project_title: Project details
       sample_scope: |
         Not sure how to describe your scope? <a href="#">Read some examples</a> to get some inspiration.
-      section_title: Basics
+      section_title: Overview
+      subtitle: Who will be involved in the work funded by this task order?
       team_title: Your team
     funding:
       cloud_calculations_paragraph: Enter the results of your cloud usage calculations below.
@@ -603,16 +604,17 @@ task_orders:
       cloud_offerings_title: Cloud offerings
       estimate_usage_description: Calculate how much your cloud usage will cost. A technical representative from your team should help you complete this calculation. These calculations will become your CLINs.
       estimate_usage_paragraph: 'This is only an estimation tool to help you make an informed evaluation of what you expect to use. While you''re tied to the dollar amount you specify in your task order, you''re not obligated by the resources you indicate in the calculator.'
-      estimate_usage_title: Estimate your cloud usage
-      performance_period_description: Choose the length of time your task order will cover.
-      performance_period_paragraph: 'Be aware that your funds will be lost if you don’t use them. Because of this, we strongly recommend submitting small, short-duration task orders, usually around a three month period. We’ll notify you when your period of performance is nearing its end so you can request your next set of funds with a new task order.'
+      estimate_usage_title: Cloud usage estimate
+      performance_period_description: Choose the length of time your task order covers.
+      performance_period_paragraph: Consider starting with a shorter period of performance (PoP)—three to six months. After your task order is approved and funds are obligated, that money is committed to the cloud service provider—meaning that even if you don’t wind up needing all of the money you requested in your task order, you won’t be able to retrieve unspent funds. Submitting smaller, more manageable task orders (with smaller, more manageable budgets) allows you to avoid over-obligating funds. You’ll be notified when your period of performance is nearing its end, in time to request your next set of funds through a new task order.
       performance_period_title: Period of performance
       section_title: Funding
+      subtitle: In order to complete your task order, you need to add detailed information about your proposed period of performance and the amount of funds you’re requesting.
       support_assistance_paragraph: 'Technical guidance from the cloud service provider, including architecture, configuration of IaaS and PaaS, integration, troubleshooting assistance, and other services.'
       support_assistance_title: Cloud support and assistance
       total: 'Total task order value:'
     get_started:
-      button: Create a portfolio
+      button: Let's get started!
       intro: 'Your portfolio is where you can organize all your JEDI cloud applications, funding information, and reporting in one place. It’s also where you can begin the process of securing funds for your new cloud project.'
       intro2: 'To get started, you’ll need to prepare your first task order, which you’ll then submit separately through your organization’s system of record. There are some important steps you’ll need to complete for any task order, including:'
       intro3: 'It should only take about half an hour to complete the task order process from start to finish. Need to know more? You’ll be able to get help at each step along the way. If you’re unable to complete your task order in one session, your work will be saved, and you can continue when you’re ready.'
@@ -630,7 +632,7 @@ task_orders:
       so_info_paragraph: 'Your security officer will need to answer some security configuration questions in order to generate a DD-254 document, then electronically sign.'
       so_info_title: Security officer information
     review:
-      app_info: Basics
+      app_info: Overview
       classified_inactive: (Available Soon)
       clin_1: 'CLIN #1: Unclassified Cloud'
       clin_2: 'CLIN #2: Classified Cloud'
