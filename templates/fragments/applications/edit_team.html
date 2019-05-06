@@ -1,11 +1,12 @@
 {% from "components/options_input.html" import OptionsInput %}
 
-{% for member_form in team_form.members %}
-  {% set environment_roles_form = member_form.environment_roles %}
-  {% set permissions_form = member_form.permission_sets %}
+<form method='POST' id="team" action='{{ url_for("applications.update_team", application_id=application.id) }}' autocomplete="off" enctype="multipart/form-data">
+  {{ team_form.csrf_token }}
 
-  <form method='POST' id="team" action='{{ url_for("applications.update_team", application_id=application.id) }}' autocomplete="off" enctype="multipart/form-data">
-    {{ team_form.csrf_token }}
+  {% for member_form in team_form.members %}
+    {% set environment_roles_form = member_form.environment_roles %}
+    {% set permissions_form = member_form.permission_sets %}
+
     <toggler inline-template>
       <li class="accordion-table__item">
         <div class="accordion-table__item-content row">
@@ -43,5 +44,5 @@
       {{ member_form.user_id() }}
       </li>
     </toggler>
-  </form>
-{% endfor %}
+  {% endfor %}
+</form>
