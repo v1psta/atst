@@ -9,6 +9,5 @@ if [ "$1" == "check" ]; then
 else
   pipenv run black ${FILES_TO_FORMAT}
   yarn run prettier --list-different --write "js/**/*.js" --config ./prettier.config.json
-  tt
   yarn run prettier --list-different --write "styles/**/*.scss"
 fi
