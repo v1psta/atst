@@ -104,7 +104,6 @@ def update_team(application_id):
     form = TeamForm(http_request.form)
 
     if form.validate():
-        # TODO check that all users coming through are app members
         for member in form.members:
             app_role = ApplicationRoles.get(member.data["user_id"], application.id)
             new_perms = [

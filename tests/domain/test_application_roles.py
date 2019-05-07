@@ -1,4 +1,7 @@
+import pytest
+
 from atst.domain.application_roles import ApplicationRoles
+from atst.domain.exceptions import NotFoundError
 from atst.domain.permission_sets import PermissionSets
 from atst.models import ApplicationRoleStatus
 
@@ -43,6 +46,14 @@ def test_get():
     assert ApplicationRoles.get(user.id, application.id)
     assert app_role.application == application
     assert app_role.user == user
+
+
+def test_get_handles_invalid_id():
+    user = UserFactory.create()
+    application = ApplicationFactory.create()
+
+    with pytest.raises(NotFoundError):
+        ApplicationRoles.get(user.id, application.id)
 
 
 def test_update_permission_sets():
