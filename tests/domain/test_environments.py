@@ -157,13 +157,13 @@ def test_get_members_by_role(db):
     )
     assert basic_access_members == [
         {
-            "user_id": env_role_1.user_id,
+            "user_id": str(env_role_1.user_id),
             "user_name": env_role_1.user.full_name,
             "role": CSPRole.BASIC_ACCESS.value,
         }
     ]
     assert {
-        "user_id": rando_env_role.user_id,
+        "user_id": str(rando_env_role.user_id),
         "user_name": rando_env_role.user.full_name,
         "role": CSPRole.BASIC_ACCESS.value,
     } not in basic_access_members
@@ -171,12 +171,12 @@ def test_get_members_by_role(db):
         environment, CSPRole.TECHNICAL_READ.value
     ) == [
         {
-            "user_id": env_role_2.user_id,
+            "user_id": str(env_role_2.user_id),
             "user_name": env_role_2.user.full_name,
             "role": CSPRole.TECHNICAL_READ.value,
         },
         {
-            "user_id": env_role_3.user_id,
+            "user_id": str(env_role_3.user_id),
             "user_name": env_role_3.user.full_name,
             "role": CSPRole.TECHNICAL_READ.value,
         },

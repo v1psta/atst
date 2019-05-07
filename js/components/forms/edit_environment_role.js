@@ -1,63 +1,88 @@
 import FormMixin from '../../mixins/form'
-import textinput from '../text_input'
-import Selector from '../selector'
 import Modal from '../../mixins/modal'
-import toggler from '../toggler'
 
 export default {
   name: 'edit-environment-role',
 
-  mixins: [FormMixin, Modal],
-
-  components: {
-    toggler,
-    Modal,
-    Selector,
-    textinput,
-  },
+  mixins: [FormMixin],
 
   props: {
-    choices: Array,
-    initialData: String,
-    applicationId: String,
+    initialRoles: Array,
   },
 
   data: function() {
     return {
-      new_role: this.initialData,
+      selectedSection: null,
+      roles: this.sanitizeValues(this.initialRoles),
     }
   },
 
-  mounted: function() {
-    this.$root.$on('revoke-' + this.applicationId, this.revoke)
-  },
-
   methods: {
-    change: function(e) {
-      this.new_role = e.target.value
+    sanitizeValues: function(roles) {
+      roles.forEach(role => {
+        role.members.forEach(member => {
+          if (member.role === null) {
+            member.role = 'no_access'
+          }
+        })
+      })
+      return roles
     },
-    cancel: function() {
-      this.new_role = this.initialData
-    },
-    revoke: function() {
-      this.new_role = ''
-    },
-  },
 
-  computed: {
-    displayName: function() {
-      const newRole = this.newRole
-      for (var arr in this.choices) {
-        if (this.choices[arr][0] == newRole) {
-          return this.choices[arr][1].name
+    checkNoAccess: function(role) {
+      return role === 'no_access'
+    },
+
+    toggleSection: function(sectionName) {
+      if (this.selectedSection === sectionName) {
+        this.selectedSection = null
+      } else {
+        this.selectedSection = sectionName
+      }
+    },
+
+    onInput: function(e) {
+      this.changed = true
+      this.updateRoles(e.target.attributes['user-id'].value, e.target.value)
+      this.showError = false
+      this.showValid = true
+    },
+
+    getUserInfo: function(userId) {
+      for (let role of this.roles) {
+        for (let member of role.members) {
+          if (member.user_id === userId) {
+            return member
+          }
         }
       }
     },
-    label_class: function() {
-      return this.newRole === '' ? 'label' : 'label label--success'
+
+    removeUser: function(userId) {
+      for (let role of this.roles) {
+        role.members = role.members.filter(member => {
+          return member.user_id !== userId
+        })
+        if (!role.members) {
+          role.members = []
+        }
+      }
     },
-    newRole: function() {
-      return this.new_role
+
+    addUser: function(userInfo, newRole) {
+      this.roles.forEach(role => {
+        if (role.role === newRole) {
+          userInfo.role = newRole
+          role.members.push(userInfo)
+        }
+      })
+    },
+
+    updateRoles: function(userId, newRole) {
+      var userInfo = this.getUserInfo(userId)
+      this.removeUser(userId)
+      this.addUser(userInfo, newRole)
+      this.toggleSection()
     },
   },
 }
