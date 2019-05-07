@@ -4,6 +4,8 @@
 {% from "components/icon.html" import Icon %}
 {% from 'components/save_button.html' import SaveButton %}
 {% from "components/toggle_list.html" import ToggleButton, ToggleSection %}
+{% from "components/multi_step_modal_form.html" import MultiStepModalForm %}
+{% import "fragments/applications/new_member_modal_content.html" as member_steps %}
 
 {% set secondary_breadcrumb = 'portfolios.applications.team_settings.title' | translate({ "application_name": application.name }) %}
 
@@ -11,13 +13,29 @@
   {% if not application.members %}
     {% set user_can_invite = user_can(permissions.CREATE_APPLICATION_MEMBER) %}
 
-    {{ EmptyState(
-      ("portfolios.applications.team_settings.blank_slate.title" | translate),
-      action_label=("portfolios.applications.team_settings.blank_slate.action_label" | translate),
-      action_href='#' if user_can_invite else None,
-      sub_message=None if user_can_invite else ("portfolios.applications.team_settings.blank_slate.sub_message" | translate),
-      icon='avatar'
-    ) }}
+    <div class='empty-state'>
+      <p class='empty-state__message'>{{ ("portfolios.applications.team_settings.blank_slate.title" | translate) }}</p>
+
+      {{ Icon('avatar') }}
+
+      {% if not user_can_invite %}
+        <p class='empty-state__sub-message'>{{ ("portfolios.applications.team_settings.blank_slate.sub_message" | translate) }}</p>
+      {% endif %}
+
+      {% if user_can_invite %}
+        {{ MultiStepModalForm(
+            name='add-app-mem',
+            form=new_member_form,
+            form_action=url_for("applications.create_member", application_id=application.id),
+            steps=[
+              member_steps.MemberStepOne(new_member_form),
+              member_steps.MemberStepTwo(new_member_form, application)
+            ],
+            button_text=("portfolios.applications.team_settings.blank_slate.action_label" | translate),
+            link_classes="usa-button usa-button-big"
+          ) }}
+      {% endif %}
+    </div>
 
   {% else %}
     <div class='subheading'>
