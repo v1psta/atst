@@ -1,3 +1,4 @@
+import pytest
 from flask import url_for
 
 from atst.domain.permission_sets import PermissionSets
@@ -62,6 +63,7 @@ def test_update_team_with_bad_permission_sets(client, user_session):
             "members-0-permission_sets-perms_env_mgmt": "some random string",
         },
     )
+    assert response.status_code == 400
     assert app_user.permission_sets == permission_sets
 
 

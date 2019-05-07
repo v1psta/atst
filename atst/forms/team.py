@@ -26,7 +26,7 @@ class PermissionsForm(FlaskForm):
     )
     perms_del_env = SelectField(
         choices=[
-            ("View only", "No"),
+            (PermissionSets.VIEW_APPLICATION, "No"),
             (PermissionSets.DELETE_APPLICATION_ENVIRONMENTS, "Yes"),
         ]
     )
@@ -48,13 +48,6 @@ class MemberForm(FlaskForm):
     user_name = StringField()
     environment_roles = FieldList(FormField(EnvironmentForm))
     permission_sets = FormField(PermissionsForm)
-
-    @property
-    def data(self):
-        _data = super().data
-        _data.pop("csrf_token", None)
-
-        return _data
 
 
 class TeamForm(BaseForm):

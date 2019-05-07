@@ -5,7 +5,6 @@ from . import applications_bp
 from atst.domain.applications import Applications
 from atst.domain.application_roles import ApplicationRoles
 from atst.domain.authz.decorator import user_can_access_decorator as user_can
-from atst.domain.environments import Environments
 from atst.domain.environment_roles import EnvironmentRoles
 from atst.domain.exceptions import AlreadyExistsError
 from atst.domain.permission_sets import PermissionSets
@@ -14,52 +13,30 @@ from atst.forms.team import TeamForm
 from atst.models import Permissions
 from atst.services.invitation import Invitation as InvitationService
 from atst.utils.flash import formatted_flash as flash
-from atst.utils.localization import translate
 
 
-def permission_str(member, edit_perm_set):
+def get_form_permission_value(member, edit_perm_set):
     if member.has_permission_set(edit_perm_set):
-        return translate("portfolios.members.permissions.edit_access")
+        return edit_perm_set
     else:
-        return translate("portfolios.members.permissions.view_only")
+        return PermissionSets.VIEW_APPLICATION
 
 
-@applications_bp.route("/applications/<application_id>/team")
-@user_can(Permissions.VIEW_APPLICATION, message="view portfolio applications")
-def team(application_id):
-    application = Applications.get(resource_id=application_id)
-
-    environment_users = {}
+def get_team_form(application):
     team_data = []
     for member in application.members:
         user_id = member.user.id
         user_name = member.user.full_name
-        environment_users[user_id] = {
-            "permissions": {
-                "team_management": permission_str(
-                    member, PermissionSets.EDIT_APPLICATION_TEAM
-                ),
-                "environment_management": permission_str(
-                    member, PermissionSets.EDIT_APPLICATION_ENVIRONMENTS
-                ),
-                "delete_access": permission_str(
-                    member, PermissionSets.DELETE_APPLICATION_ENVIRONMENTS
-                ),
-            },
-            "environments": Environments.for_user(
-                user=member.user, application=application
-            ),
-        }
         permission_sets = {
-            "perms_team_mgmt": PermissionSets.EDIT_APPLICATION_TEAM
-            if member.has_permission_set(PermissionSets.EDIT_APPLICATION_TEAM)
-            else "View only",
-            "perms_env_mgmt": PermissionSets.EDIT_APPLICATION_ENVIRONMENTS
-            if member.has_permission_set(PermissionSets.EDIT_APPLICATION_ENVIRONMENTS)
-            else "View only",
-            "perms_del_env": PermissionSets.DELETE_APPLICATION_ENVIRONMENTS
-            if member.has_permission_set(PermissionSets.DELETE_APPLICATION_ENVIRONMENTS)
-            else "View only",
+            "perms_team_mgmt": get_form_permission_value(
+                member, PermissionSets.EDIT_APPLICATION_TEAM
+            ),
+            "perms_env_mgmt": get_form_permission_value(
+                member, PermissionSets.EDIT_APPLICATION_ENVIRONMENTS
+            ),
+            "perms_del_env": get_form_permission_value(
+                member, PermissionSets.DELETE_APPLICATION_ENVIRONMENTS
+            ),
         }
         roles = EnvironmentRoles.get_for_application_and_user(
             member.user.id, application.id
@@ -81,20 +58,35 @@ def team(application_id):
             }
         )
 
+    return TeamForm(data={"members": team_data})
+
+
+def get_new_member_form(application):
     env_roles = [
         {"environment_id": e.id, "environment_name": e.name}
         for e in application.environments
     ]
-    team_form = TeamForm(data={"members": team_data})
-    new_member_form = NewMemberForm(data={"environment_roles": env_roles})
+
+    return NewMemberForm(data={"environment_roles": env_roles})
+
+
+def render_team_page(application):
+    team_form = get_team_form(application)
+    new_member_form = get_new_member_form(application)
 
     return render_template(
         "portfolios/applications/team.html",
         application=application,
-        environment_users=environment_users,
         team_form=team_form,
         new_member_form=new_member_form,
     )
+
+
+@applications_bp.route("/applications/<application_id>/team")
+@user_can(Permissions.VIEW_APPLICATION, message="view portfolio applications")
+def team(application_id):
+    application = Applications.get(resource_id=application_id)
+    return render_team_page(application)
 
 
 @applications_bp.route("/application/<application_id>/team", methods=["POST"])
@@ -107,19 +99,23 @@ def update_team(application_id):
         for member in form.members:
             app_role = ApplicationRoles.get(member.data["user_id"], application.id)
             new_perms = [
-                perm for perm in member.data["permission_sets"] if perm != "View only"
+                perm
+                for perm in member.data["permission_sets"]
+                if perm != PermissionSets.VIEW_APPLICATION
             ]
             ApplicationRoles.update_permission_sets(app_role, new_perms)
         flash("updated_application_members_permissions")
 
-    return redirect(
-        url_for(
-            "applications.team",
-            application_id=application_id,
-            fragment="application-members",
-            _anchor="application-members",
+        return redirect(
+            url_for(
+                "applications.team",
+                application_id=application_id,
+                fragment="application-members",
+                _anchor="application-members",
+            )
         )
-    )
+    else:
+        return (render_team_page(application), 400)
 
 
 @applications_bp.route("/application/<application_id>/members/new", methods=["POST"])

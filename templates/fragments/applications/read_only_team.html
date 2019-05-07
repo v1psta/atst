@@ -1,26 +1,25 @@
-{% for member in application.members %}
-  {% set user = member.user %}
-  {% set user_info = environment_users[user.id] %}
-  {% set user_permissions = user_info["permissions"] %}
+{% for member in team_form.members %}
+  {% set user_permissions = [member.permission_sets.perms_team_mgmt, member.permission_sets.perms_env_mgmt, member.permission_sets.perms_del_env] %}
 
   {% macro PermissionField(value) %}
-    <div class="col col--grow user-permission{% if "Edit" in value %} green{% endif %}">{{ value }}</div>
+    <div class="col col--grow user-permission{% if "Edit" in value or "Yes" in value %} green{% endif %}">{{ value }}</div>
   {% endmacro %}
 
   <toggler inline-template>
     <li class="accordion-table__item">
       <div class="accordion-table__item-content row">
-        <div class="col col--grow">{{ user.full_name }}</div>
-        {{ PermissionField(user_permissions["delete_access"]) }}
-        {{ PermissionField(user_permissions["environment_management"]) }}
-        {{ PermissionField(user_permissions["team_management"]) }}
+        <div class="col col--grow">{{ member.user_name.data }}</div>
+        {% for permission in user_permissions %}
+          {% set perm = dict(permission.choices).get(permission.data) %}
+          {{ PermissionField(perm) }}
+        {% endfor %}
         <div class="col col--grow icon-link icon-link--large accordion-table__item__toggler">
           {% set open_html %}
-          {{ "portfolios.applications.team_settings.environments" | translate }} ({{ user_info['environments'] | length }}) {{ Icon('caret_down') }}
+          {{ "portfolios.applications.team_settings.environments" | translate }} ({{ member.environment_roles | length }}) {{ Icon('caret_down') }}
           {% endset %}
 
           {% set close_html %}
-            {{ "portfolios.applications.team_settings.environments" | translate }} ({{ user_info['environments'] | length }}) {{ Icon('caret_up') }}
+            {{ "portfolios.applications.team_settings.environments" | translate }} ({{ member.environment_roles | length }}) {{ Icon('caret_up') }}
           {% endset %}
 
           {{
@@ -34,9 +33,9 @@
       </div>
       {% call ToggleSection(section_name="environments") %}
         <ul>
-          {% for environment in user_info["environments"] %}
+          {% for environment in member.environment_roles %}
             <li class="accordion-table__item__expanded">
-              {{ environment.name }}
+              {{ environment.environment_name.data }}
             </li>
           {% endfor %}
         </ul>
