@@ -39,6 +39,15 @@
 
   .accordion-table__item-content {
     padding: ($gap * 2);
+
+    .usa-input {
+      margin: 0;
+    }
+
+    select {
+      border: none;
+      font-weight: $font-normal;
+    }
   }
 
   .accordion-table__items {

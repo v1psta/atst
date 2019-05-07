@@ -173,6 +173,13 @@ MESSAGES = {
         """,
         "category": "success",
     },
+    "updated_application_members_permissions": {
+        "title_template": translate("flash.success"),
+        "message_template": """
+          <p>{{ "flash.updated_application_members_permissions" | translate }}</p>
+        """,
+        "category": "success",
+    },
 }
 
 

@@ -1,6 +1,9 @@
+from sqlalchemy.orm.exc import NoResultFound
+
 from atst.database import db
 from atst.models import ApplicationRole, ApplicationRoleStatus
-from atst.domain.permission_sets import PermissionSets
+from .permission_sets import PermissionSets
+from .exceptions import NotFoundError
 
 
 class ApplicationRoles(object):
@@ -28,3 +31,27 @@ class ApplicationRoles(object):
 
         db.session.add(role)
         db.session.commit()
+
+    @classmethod
+    def get(cls, user_id, application_id):
+        try:
+            app_role = (
+                db.session.query(ApplicationRole)
+                .filter_by(user_id=user_id, application_id=application_id)
+                .one()
+            )
+        except NoResultFound:
+            raise NotFoundError("application_role")
+
+        return app_role
+
+    @classmethod
+    def update_permission_sets(cls, application_role, new_perm_sets_names):
+        application_role.permission_sets = ApplicationRoles._permission_sets_for_names(
+            new_perm_sets_names
+        )
+
+        db.session.add(application_role)
+        db.session.commit()
+
+        return application_role

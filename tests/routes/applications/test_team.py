@@ -1,6 +1,9 @@
+import pytest
 from flask import url_for
 
-from tests.factories import PortfolioFactory, ApplicationFactory, UserFactory
+from atst.domain.permission_sets import PermissionSets
+
+from tests.factories import *
 
 
 def test_application_team(client, user_session):
@@ -10,8 +13,81 @@ def test_application_team(client, user_session):
     user_session(portfolio.owner)
 
     response = client.get(url_for("applications.team", application_id=application.id))
-
     assert response.status_code == 200
+
+
+def test_update_team(client, user_session):
+    application = ApplicationFactory.create()
+    owner = application.portfolio.owner
+    app_role = ApplicationRoleFactory.create(
+        application=application, permission_sets=[]
+    )
+    app_user = app_role.user
+    user_session(owner)
+    response = client.post(
+        url_for("applications.update_team", application_id=application.id),
+        data={
+            "members-0-user_id": app_user.id,
+            "members-0-permission_sets-perms_team_mgmt": PermissionSets.EDIT_APPLICATION_TEAM,
+            "members-0-permission_sets-perms_env_mgmt": PermissionSets.EDIT_APPLICATION_ENVIRONMENTS,
+            "members-0-permission_sets-perms_del_env": PermissionSets.DELETE_APPLICATION_ENVIRONMENTS,
+        },
+    )
+
+    assert response.status_code == 302
+    actual_perms_names = [perm.name for perm in app_role.permission_sets]
+    expected_perms_names = [
+        PermissionSets.VIEW_APPLICATION,
+        PermissionSets.EDIT_APPLICATION_TEAM,
+        PermissionSets.EDIT_APPLICATION_ENVIRONMENTS,
+        PermissionSets.DELETE_APPLICATION_ENVIRONMENTS,
+    ]
+    assert expected_perms_names == actual_perms_names
+
+
+def test_update_team_with_bad_permission_sets(client, user_session):
+    application = ApplicationFactory.create()
+    owner = application.portfolio.owner
+    app_role = ApplicationRoleFactory.create(
+        application=application, permission_sets=[]
+    )
+    app_user = app_role.user
+    permission_sets = app_user.permission_sets
+
+    user_session(owner)
+    response = client.post(
+        url_for("applications.update_team", application_id=application.id),
+        data={
+            "members-0-user_id": app_user.id,
+            "members-0-permission_sets-perms_team_mgmt": PermissionSets.EDIT_APPLICATION_TEAM,
+            "members-0-permission_sets-perms_env_mgmt": "some random string",
+        },
+    )
+    assert response.status_code == 400
+    assert app_user.permission_sets == permission_sets
+
+
+def test_update_team_with_non_app_user(client, user_session):
+    application = ApplicationFactory.create()
+    owner = application.portfolio.owner
+    app_role = ApplicationRoleFactory.create(
+        application=application, permission_sets=[]
+    )
+    non_app_user = UserFactory.create()
+    app_user = app_role.user
+
+    user_session(owner)
+    response = client.post(
+        url_for("applications.update_team", application_id=application.id),
+        data={
+            "members-0-user_id": non_app_user.id,
+            "members-0-permission_sets-perms_team_mgmt": PermissionSets.EDIT_APPLICATION_TEAM,
+            "members-0-permission_sets-perms_env_mgmt": PermissionSets.EDIT_APPLICATION_ENVIRONMENTS,
+            "members-0-permission_sets-perms_del_env": PermissionSets.DELETE_APPLICATION_ENVIRONMENTS,
+        },
+    )
+
+    assert response.status_code == 404
 
 
 def test_create_member(client, user_session):

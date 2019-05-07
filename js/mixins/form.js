@@ -16,8 +16,7 @@ export default {
       const { name, valid, parent_uid } = event
       if (typeof this[name] !== undefined) {
         this.fields[name] = valid
-
-        if (parent_uid === this._uid) {
+        if (event['parent_uid'] === this._uid || event['watch']) {
           this.changed = true
         }
       }

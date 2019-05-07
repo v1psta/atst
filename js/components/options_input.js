@@ -1,7 +1,10 @@
 import { emitEvent } from '../lib/emitters'
+import FormMixin from '../mixins/form'
 
 export default {
   name: 'optionsinput',
+
+  mixins: [FormMixin],
 
   props: {
     name: String,
@@ -10,6 +13,10 @@ export default {
       default: () => [],
     },
     initialValue: String,
+    watch: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   data: function() {
@@ -27,6 +34,7 @@ export default {
       emitEvent('field-change', this, {
         value: e.target.value,
         name: this.name,
+        watch: this.watch,
       })
       this.showError = false
       this.showValid = true

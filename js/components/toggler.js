@@ -1,4 +1,5 @@
 import FormMixin from '../mixins/form'
+import optionsinput from './options_input'
 import textinput from './text_input'
 
 export default {
@@ -8,6 +9,7 @@ export default {
 
   components: {
     textinput,
+    optionsinput,
   },
 
   data: function() {
