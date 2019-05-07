@@ -1,3 +1,4 @@
+import editEnvironmentRole from './forms/edit_environment_role'
 import FormMixin from '../mixins/form'
 import optionsinput from './options_input'
 import textinput from './text_input'
@@ -7,7 +8,15 @@ export default {
 
   mixins: [FormMixin],
 
+  props: {
+    initialSelectedSection: {
+      type: String,
+      default: null,
+    },
+  },
+
   components: {
+    editEnvironmentRole,
     optionsinput,
     textinput,
     optionsinput,

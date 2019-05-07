@@ -48,6 +48,8 @@ def test_updating_application_environments_success(client, user_session):
         _external=True,
         fragment="application-environments",
         _anchor="application-environments",
+        active_toggler=environment.id,
+        active_toggler_section="edit",
     )
     assert environment.name == "new name a"
 
@@ -167,7 +169,7 @@ def test_data_for_app_env_roles_form(app, client, user_session):
                             "role": "no_access",
                             "members": [
                                 {
-                                    "user_id": app_role.user_id,
+                                    "user_id": str(app_role.user_id),
                                     "user_name": app_role.user.full_name,
                                     "role": None,
                                 }
@@ -177,7 +179,7 @@ def test_data_for_app_env_roles_form(app, client, user_session):
                             "role": CSPRole.BASIC_ACCESS.value,
                             "members": [
                                 {
-                                    "user_id": env_role1.user_id,
+                                    "user_id": str(env_role1.user_id),
                                     "user_name": env_role1.user.full_name,
                                     "role": CSPRole.BASIC_ACCESS.value,
                                 }
@@ -187,7 +189,7 @@ def test_data_for_app_env_roles_form(app, client, user_session):
                             "role": CSPRole.NETWORK_ADMIN.value,
                             "members": [
                                 {
-                                    "user_id": env_role2.user_id,
+                                    "user_id": str(env_role2.user_id),
                                     "user_name": env_role2.user.full_name,
                                     "role": CSPRole.NETWORK_ADMIN.value,
                                 }

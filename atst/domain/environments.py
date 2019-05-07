@@ -126,7 +126,7 @@ class Environments(object):
         for env_role in env_roles:
             members_list.append(
                 {
-                    "user_id": env_role.user_id,
+                    "user_id": str(env_role.user_id),
                     "user_name": env_role.user.full_name,
                     "role": role,
                 }

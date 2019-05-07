@@ -31,7 +31,7 @@ def sort_env_users_by_role(env):
     users_list = []
     no_access_users = env.application.users - env.users
     no_access_list = [
-        {"user_id": user.id, "user_name": user.full_name, "role": "no_access"}
+        {"user_id": str(user.id), "user_name": user.full_name, "role": "no_access"}
         for user in no_access_users
     ]
     users_list.append({"role": "no_access", "members": no_access_list})
@@ -82,6 +82,8 @@ def settings(application_id):
         form=form,
         environments_obj=environments_obj,
         members_form=members_form,
+        active_toggler=http_request.args.get("active_toggler"),
+        active_toggler_section=http_request.args.get("active_toggler_section"),
     )
 
 
@@ -104,6 +106,8 @@ def update_environment(environment_id):
                 application_id=application.id,
                 fragment="application-environments",
                 _anchor="application-environments",
+                active_toggler=environment.id,
+                active_toggler_section="edit",
             )
         )
     else:
@@ -115,6 +119,11 @@ def update_environment(environment_id):
                     name=application.name, description=application.description
                 ),
                 environments_obj=get_environments_obj_for_app(application=application),
+                members_form=AppEnvRolesForm(
+                    data=data_for_app_env_roles_form(application)
+                ),
+                active_toggler=environment.id,
+                active_toggler_section="edit",
             ),
             400,
         )
@@ -182,6 +191,8 @@ def update_env_roles(environment_id):
                 application_id=application.id,
                 fragment="application-environments",
                 _anchor="application-environments",
+                active_toggler=environment.id,
+                active_toggler_section="members",
             )
         )
     else:
@@ -195,6 +206,8 @@ def update_env_roles(environment_id):
                 name=application.name, description=application.description
             ),
             environments_obj=get_environments_obj_for_app(application=application),
+            active_toggler=environment.id,
+            active_toggler_section="edit",
         )
 
 
