@@ -1,0 +1,127 @@
+{% from "components/icon.html" import Icon %}
+{% from "components/text_input.html" import TextInput %}
+{% from "components/checkbox_input.html" import CheckboxInput %}
+
+{% macro MemberStepOne(new_member_form) %}
+  <div class="modal__form--header">
+    <h1>Invite new member</h1>
+  </div>
+  <div class='form-row'>
+    <div class='form-col form-col--half'>
+      {{ TextInput(new_member_form.user_data.first_name, validation='requiredField') }}
+    </div>
+    <div class='form-col form-col--half'>
+      {{ TextInput(new_member_form.user_data.last_name, validation='requiredField') }}
+    </div>
+  </div>
+  <div class='form-row'>
+    <div class='form-col form-col--half'>
+      {{ TextInput(new_member_form.user_data.email, validation='email') }}
+    </div>
+    <div class='form-col form-col--half'>
+      {{ TextInput(new_member_form.user_data.phone_number, validation='usPhone', optional=True) }}
+    </div>
+  </div>
+  <div class='form-row'>
+    <div class='form-col form-col--half'>
+      {{ TextInput(new_member_form.user_data.dod_id, validation='dodId') }}
+    </div>
+    <div class='form-col form-col--half'>
+    </div>
+  </div>
+  <div class='action-group'>
+    <input
+        type='button'
+        v-on:click="next()"
+        v-bind:disabled="invalid"
+        class='action-group__action usa-button'
+        value='Next'>
+    <a class='action-group__action icon-link icon-link--default' v-on:click="closeModal('{{ new_port_mem }}')">{{ "common.cancel" | translate }}</a>
+  </div>
+{% endmacro %}
+{% macro MemberStepTwo(new_member_form, application) %}
+  <div class="modal__form">
+    <div class="modal__form--header">
+      <h1>{{ "portfolios.applications.members.new.assign_roles" | translate }}</h1>
+      <a class='icon-link'>
+        {{ Icon('info') }}
+        {{ "portfolios.applications.members.new.learn_more" | translate }}
+      </a>
+      <div class="environment-roles-new">
+        <div class="form-row">
+          <div class="form-col form-col--quarter">
+            <span class="environment-roles-new__head">
+              {{ "common.resource_names.environments" | translate }}:
+            </span>
+          </div>
+          <div class="form-col form-col--three-quarters">
+            <span class="environment-roles-new__head">
+              {{ "common.choose_role" | translate }}:
+            </span>
+          </div>
+        </div>
+        {% for environment_data in new_member_form.environment_roles %}
+          <optionsinput inline-template
+            v-bind:initial-value="'{{ environment_data.role.data | string }}'"
+          >
+            <div class="usa-input">
+              <fieldset data-ally-disabled="true" class="usa-input__choices">
+                <div class="form-row">
+                  <div class="form-col form-col--quarter">
+                    <legend>
+                      <div v-bind:class='["usa-input__title-inline", {"environment-name--gray": value === "None" }]'>
+                        {{ environment_data.environment_name.data }}
+                      </div>
+                    </legend>
+                  </div>
+                  <div class="form-col form-col--three-quarters">
+                    {{ environment_data.role(**{"v-model": "value"}) }}
+                  </div>
+                </div>
+              </fieldset>
+            </div>
+          </optionsinput>
+          {{ environment_data.environment_id() }}
+        {% endfor %}
+      </div>
+      <h1>{{ "portfolios.applications.members.new.manage_perms" | translate({"application_name": application.name}) }}</h1>
+      {{ CheckboxInput(new_member_form.permission_sets.perms_team_mgmt, classes="input__inline-fields") }}
+      {% call CheckboxInput(new_member_form.permission_sets.perms_env_mgmt, classes="input__inline-fields") %}
+        {% set field=new_member_form.permission_sets.perms_del_env %}
+        <nestedcheckboxinput
+          name='{{ field.name }}'
+          inline-template
+          key='{{ field.name }}'
+          v-bind:is-parent-checked="isChecked"
+          >
+          <div class="usa-input input__inline-fields input__inline-fields--indented">
+            <fieldset data-ally-disabled="true" class="usa-input__choices usa-input__choices--inline">
+              <legend>
+                <input
+                  id="permission_sets-perms_del_env"
+                  name="permission_sets-perms_del_env"
+                  type="checkbox"
+                  v-model="isChecked"
+                  v-bind:disabled="!$parent.isChecked">
+                {{ field.label | safe }}
+              </legend>
+            </fieldset>
+          </div>
+        </checkboxinput>
+      {% endcall %}
+    </div>
+    <div class='action-group'>
+      <input
+        type="submit"
+        class='action-group__action usa-button'
+        form="add-app-mem"
+        value='Invite member'>
+      <a class='action-group__action icon-link icon-link--default' v-on:click="closeModal('{{ new_port_mem }}')">{{ "common.cancel" | translate }}</a>
+      <input
+          type='button'
+          v-on:click="previous()"
+          class='action-group__action usa-button action-group__action--left'
+          value='Previous step'>
+    </div>
+  </div>
+{% endmacro %}

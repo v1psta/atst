@@ -10,7 +10,7 @@
     padding: 8rem ($gap * 4) 0;
   }
 
-  .icon {
+  > .icon {
     @include icon-size(50);
     @include icon-color($color-gray-light);
   }
