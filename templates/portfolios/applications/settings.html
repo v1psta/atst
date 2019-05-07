@@ -1,9 +1,10 @@
 {% extends "portfolios/applications/base.html" %}
 
 {% from "components/alert.html" import Alert %}
-{% from "components/text_input.html" import TextInput %}
+{% from "components/delete_confirmation.html" import DeleteConfirmation %}
 {% from "components/icon.html" import Icon %}
 {% from "components/modal.html" import Modal %}
+{% from "components/text_input.html" import TextInput %}
 
 {% set secondary_breadcrumb = 'portfolios.applications.existing_application_title' | translate({ "application_name": application.name }) %}
 
@@ -94,29 +95,14 @@
         )
       }}
 
-      <delete-confirmation inline-template>
-        <div>
-          <div class="usa-input">
-            <label for="deleted-text">
-              <span class="usa-input__help">
-                {{ "common.delete_confirm" | translate }}
-              </span>
-            </label>
-            <input id="deleted-text" v-model="deleteText">
-          </div>
-          <div class="action-group">
-            <form method="POST" action="{{ url_for('applications.delete', application_id=application.id)  }}">
-              {{ form.csrf_token }}
-              <button class="usa-button button-danger" v-bind:disabled="!valid">
-                {{ "portfolios.applications.delete.button" | translate }}
-              </button>
-            </form>
-            <div class="action-group">
-              <a v-on:click="deleteText = ''; $root.closeModal('delete-application')" class="action-group__action icon-link icon-link--default">{{ "common.cancel" | translate }}</a>
-            </div>
-          </div>
-        </div>
-      </delete-confirmation>
+      {{
+        DeleteConfirmation(
+          modal_id=delete_modal_environment_id,
+          delete_text=('portfolios.applications.delete.button' | translate),
+          delete_action= url_for('applications.delete', application_id=application.id),
+          form=form
+        )
+      }}
     {% endcall %}
   {% endif %}
 

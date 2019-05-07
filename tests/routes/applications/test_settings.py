@@ -326,3 +326,32 @@ def test_delete_application(client, user_session):
     # app and envs are soft deleted
     assert len(port.applications) == 0
     assert len(application.environments) == 0
+
+
+def test_delete_environment(client, user_session):
+    user = UserFactory.create()
+    portfolio = PortfolioFactory(owner=user)
+    application = ApplicationFactory.create(portfolio=portfolio)
+    environment = EnvironmentFactory.create(application=application)
+
+    user_session(user)
+
+    response = client.post(
+        url_for("applications.delete_environment", environment_id=environment.id)
+    )
+
+    # appropriate response and redirect
+    assert response.status_code == 302
+    assert response.location == url_for(
+        "applications.settings",
+        application_id=application.id,
+        _anchor="application-environments",
+        _external=True,
+        fragment="application-environments",
+    )
+    # appropriate flash message
+    message = get_flashed_messages()[0]
+    assert "deleted" in message["message"]
+    assert environment.name in message["message"]
+    # deletes environment
+    assert len(application.environments) == 0
