@@ -1,10 +1,8 @@
 {% extends "portfolios/applications/base.html" %}
 
-{% from "components/empty_state.html" import EmptyState %}
 {% from "components/icon.html" import Icon %}
-{% from 'components/save_button.html' import SaveButton %}
-{% from "components/toggle_list.html" import ToggleButton, ToggleSection %}
 {% from "components/multi_step_modal_form.html" import MultiStepModalForm %}
+{% from 'components/save_button.html' import SaveButton %}
 {% import "fragments/applications/new_member_modal_content.html" as member_steps %}
 
 {% set secondary_breadcrumb = 'portfolios.applications.team_settings.title' | translate({ "application_name": application.name }) %}
