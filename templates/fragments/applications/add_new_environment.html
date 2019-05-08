@@ -1,0 +1,33 @@
+{% from "components/toggle_list.html" import ToggleButton, ToggleSection %}
+
+<form method='POST' id="add-new-env" action='{{ url_for("applications.add_environment", application_id=application.id) }}' autocomplete="off" enctype="multipart/form-data">
+  {{ form.csrf_token }}
+
+  <toggler inline-template>
+    <div>
+      {% set add_env_link %}
+        <a class='icon-link'>
+          {{ "portfolios.applications.add_environment" | translate }}
+          {{ Icon('plus') }}
+        </a>
+      {% endset %}
+
+      {% call ToggleSection(section_name="add-new-environment") %}
+        <div class="accordion-table__item-content">
+          <span>{{ "portfolios.applications.create_new_env" | translate }}</span>
+          <div>{{ "portfolios.applications.create_new_env_info" | translate }}</div>
+          <span>{{ "portfolios.applications.enter_env_name" | translate }}</span>
+        </div>
+      {% endcall %}
+
+      {{
+        ToggleButton(
+          open_html=add_env_link,
+          close_html=add_env_link,
+          section_name="add-new-environment"
+        )
+      }}
+    </div>
+  </toggler>
+
+</form>

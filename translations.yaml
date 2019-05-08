@@ -420,6 +420,8 @@ portfolios:
     add_another_environment: Add another environment
     app_settings_text: App settings
     create_button_text: Create
+    create_new_env: Create a new environment.
+    create_new_env_info: Creating an environment gives you access to the Cloud Service Provider. This environment will function within the constraints of the task order, and any costs will be billed against the portfolio.
     csp_console_text: CSP console
     delete:
       alert:
@@ -427,6 +429,7 @@ portfolios:
         title: Warning! This action is permanent.
       button: Delete application
       header: Are you sure you want to delete this application?
+    enter_env_name: "Enter environment name:"
     environments:
       name: Name
       delete:

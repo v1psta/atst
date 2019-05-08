@@ -69,6 +69,10 @@
       {% if user_can(permissions.EDIT_APPLICATION) %}
         {% include "fragments/applications/edit_environments.html" %}
 
+        {% if user_can(permissions.CREATE_ENVIRONMENT) %}
+          {% include "fragments/applications/add_new_environment.html" %}
+        {% endif %}
+
       {% elif user_can(permissions.VIEW_ENVIRONMENT) %}
         {% include "fragments/applications/read_only_environments.html" %}
       {% endif %}

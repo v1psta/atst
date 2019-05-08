@@ -169,6 +169,19 @@ def update(application_id):
             environments_obj=get_environments_obj_for_app(application=application),
         )
 
+@applications_bp.route("/applications/<application_id>/add_environment", methods=["POST"])
+@user_can(Permissions.EDIT_APPLICATION, message="add application environment")
+def add_environment(application_id):
+    application = Applications.get(application_id)
+    form = ApplicationForm(http_request.form)
+
+    return render_template(
+        "portfolios/applications/settings.html",
+        application=application,
+        form=form,
+        environments_obj=get_environments_obj_for_app(application=application),
+    )
+
 
 @applications_bp.route("/environments/<environment_id>/roles", methods=["POST"])
 @user_can(Permissions.ASSIGN_ENVIRONMENT_MEMBER, message="update environment roles")
