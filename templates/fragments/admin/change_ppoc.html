@@ -69,14 +69,15 @@
 {% endset %}
 
 <div class="flex-reverse-row">
+  <a class="usa-button-primary" v-on:click="openModal('change-ppoc-form')">
+    {{ "fragments.ppoc.update_btn" | translate }}
+  </a>
   {{
     MultiStepModalForm(
       'change-ppoc-form',
       assign_ppoc_form,
       form_action=url_for("portfolios.update_ppoc", portfolio_id=portfolio.id),
       steps=[step_one, step_two],
-      button_text=("fragments.ppoc.update_btn" | translate),
-      link_classes="usa-button-primary"
     )
   }}
 </div>
