@@ -101,6 +101,7 @@ def settings(application_id):
         members_form=members_form,
         active_toggler=http_request.args.get("active_toggler"),
         active_toggler_section=http_request.args.get("active_toggler_section"),
+        new_env_form=EditEnvironmentForm(),
     )
 
 
@@ -135,12 +136,52 @@ def update_environment(environment_id):
                 form=ApplicationForm(
                     name=application.name, description=application.description
                 ),
+                new_env_form=EditEnvironmentForm(),
+                members_form=AppEnvRolesForm(
+                    data=data_for_app_env_roles_form(application)
+                ),
+                environments_obj=get_environments_obj_for_app(application=application),
+                active_toggler=environment.id,
+                active_toggler_section="edit",
+            ),
+            400,
+        )
+
+
+@applications_bp.route(
+    "/applications/<application_id>/environments/new", methods=["POST"]
+)
+@user_can(Permissions.CREATE_ENVIRONMENT, message="create application environment")
+def new_environment(application_id):
+    application = Applications.get(application_id)
+    env_form = EditEnvironmentForm(formdata=http_request.form)
+
+    if env_form.validate():
+        Environments.create(application=application, name=env_form.name.data)
+
+        flash("application_environments_updated")
+
+        return redirect(
+            url_for(
+                "applications.settings",
+                application_id=application.id,
+                fragment="application-environments",
+                _anchor="application-environments",
+            )
+        )
+    else:
+        return (
+            render_template(
+                "portfolios/applications/settings.html",
+                application=application,
+                form=ApplicationForm(
+                    name=application.name, description=application.description
+                ),
+                new_env_form=env_form,
                 environments_obj=get_environments_obj_for_app(application=application),
                 members_form=AppEnvRolesForm(
                     data=data_for_app_env_roles_form(application)
                 ),
-                active_toggler=environment.id,
-                active_toggler_section="edit",
             ),
             400,
         )
@@ -166,21 +207,9 @@ def update(application_id):
             "portfolios/applications/settings.html",
             application=application,
             form=form,
+            new_env_form=EditEnvironmentForm(),
             environments_obj=get_environments_obj_for_app(application=application),
         )
-
-@applications_bp.route("/applications/<application_id>/add_environment", methods=["POST"])
-@user_can(Permissions.EDIT_APPLICATION, message="add application environment")
-def add_environment(application_id):
-    application = Applications.get(application_id)
-    form = ApplicationForm(http_request.form)
-
-    return render_template(
-        "portfolios/applications/settings.html",
-        application=application,
-        form=form,
-        environments_obj=get_environments_obj_for_app(application=application),
-    )
 
 
 @applications_bp.route("/environments/<environment_id>/roles", methods=["POST"])
@@ -233,6 +262,7 @@ def update_env_roles(environment_id):
                 form=ApplicationForm(
                     name=application.name, description=application.description
                 ),
+                new_env_form=EditEnvironmentForm(),
                 environments_obj=get_environments_obj_for_app(application=application),
                 active_toggler=environment.id,
                 active_toggler_section="edit",

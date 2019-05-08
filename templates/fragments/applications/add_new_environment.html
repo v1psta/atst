@@ -1,7 +1,9 @@
+{% from 'components/save_button.html' import SaveButton %}
+{% from "components/text_input.html" import TextInput %}
 {% from "components/toggle_list.html" import ToggleButton, ToggleSection %}
 
-<form method='POST' id="add-new-env" action='{{ url_for("applications.add_environment", application_id=application.id) }}' autocomplete="off" enctype="multipart/form-data">
-  {{ form.csrf_token }}
+<form method='POST' id="add-new-env" action='{{ url_for("applications.new_environment", application_id=application.id) }}' autocomplete="off" enctype="multipart/form-data">
+  {{ new_env_form.csrf_token }}
 
   <toggler inline-template>
     <div>
@@ -17,7 +19,9 @@
           <span>{{ "portfolios.applications.create_new_env" | translate }}</span>
           <div>{{ "portfolios.applications.create_new_env_info" | translate }}</div>
           <span>{{ "portfolios.applications.enter_env_name" | translate }}</span>
+            {{ TextInput(new_env_form.name) }}
         </div>
+        {{ SaveButton(text=('common.save' | translate), element="input", form="add-new-env") }}
       {% endcall %}
 
       {{
