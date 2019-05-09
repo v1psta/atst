@@ -91,6 +91,30 @@
           border-bottom: 1px solid $color-gray-lighter;
         }
       }
+
+      .accordion-table__item__action-group {
+        padding: 1rem 3.2rem;
+        background-color: $color-gray-lightest;
+
+        button,
+        a {
+          margin: 0;
+          font-size: $small-font-size;
+        }
+
+        .icon-link {
+          padding-top: 0.5rem;
+          float: none;
+        }
+
+        > *:first-child {
+          padding-left: 0;
+        }
+
+        > *:last-child {
+          float: right;
+        }
+      }
     }
 
     .accordion-table__item__toggler {
@@ -99,6 +123,10 @@
       float: right;
       color: $color-blue;
       padding: $gap;
+
+      > span {
+        margin-left: auto;
+      }
 
       .icon {
         @include icon-size(12);
@@ -146,6 +174,17 @@
 
       .accordion-table__item__expanded_first {
         float: left;
+      }
+
+      .accordion-table__item__expanded-role {
+        .icon-link {
+          padding: 0;
+          vertical-align: text-top;
+
+          .icon {
+            margin: 0 0 0 0.25rem;
+          }
+        }
       }
     }
   }

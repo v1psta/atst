@@ -468,6 +468,7 @@ portfolios:
       subheading: Team Settings
       title: '{application_name} Team Settings'
       user: User
+      add_to_environment: Add to existing environment
     team_text: Team
     update_button_text: Save
     members:
