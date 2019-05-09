@@ -1,7 +1,6 @@
 import FormMixin from '../../mixins/form'
 import Modal from '../../mixins/modal'
 
-
 // Note: If refactoring consider using nested vue components as suggested by Dan:
 // https://github.com/dod-ccpo/atst/pull/799/files#r282240663
 // May also want to reconsider the data structure by storing the roles and members separately
@@ -89,5 +88,9 @@ export default {
       this.addUser(userInfo, newRole)
       this.toggleSection()
     },
+  },
+
+  render: function(createElement) {
+    return createElement('p', 'Please implement inline-template')
   },
 }
