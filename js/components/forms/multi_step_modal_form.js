@@ -9,7 +9,7 @@ import toggler from '../toggler'
 export default {
   name: 'multi-step-modal-form',
 
-  mixins: [FormMixin, Modal],
+  mixins: [FormMixin],
 
   components: {
     toggler,
@@ -38,7 +38,7 @@ export default {
 
   mounted: function() {
     this.$root.$on('field-change', this.handleValidChange)
-    this.$on('modalOpen', this.handleModalOpen)
+    this.$root.$on('modalOpen', this.handleModalOpen)
   },
 
   methods: {

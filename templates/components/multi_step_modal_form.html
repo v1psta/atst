@@ -25,30 +25,21 @@
   </div>
 {% endmacro %}
 
-{% macro MultiStepModalForm(name, form, form_action, steps, button_icon="", button_text="", link_classes="icon-link modal-link", dismissable=False) -%}
+{% macro MultiStepModalForm(name, form, form_action, steps, dismissable=False) -%}
   {% set step_count = steps|length %}
   <multi-step-modal-form inline-template :steps={{ step_count }}>
-    <div>
-      <a class='{{ link_classes }}' v-on:click="openModal('{{ name }}')">
-        {{ button_text }}
-
-        {% if button_icon != "" %}
-          {{ Icon(button_icon) }}
-        {% endif %}
-      </a>
-        {% call Modal(name=name, dismissable=dismissable, classes="wide") %}
-          <form id="{{ name }}" action="{{ form_action }}" method="POST" v-on:submit="handleSubmit">
-            {{ form.csrf_token }}
-            <div v-if="activeModal === '{{ name }}'">
-              {% for step in steps %}
-                <div class="modal__form" v-show="step === {{ loop.index0 }}">
-                  {{ FormSteps(step_count, loop.index) }}
-                  {{ step }}
-                </div>
-              {% endfor %}
+    {% call Modal(name=name, dismissable=dismissable, classes="wide") %}
+      <form id="{{ name }}" action="{{ form_action }}" method="POST" v-on:submit="handleSubmit">
+        {{ form.csrf_token }}
+        <div v-if="this.$root.activeModal === '{{ name }}'">
+          {% for step in steps %}
+            <div class="modal__form" v-show="step === {{ loop.index0 }}">
+              {{ FormSteps(step_count, loop.index) }}
+              {{ step }}
             </div>
-          </form>
-        {% endcall %}
-    </div>
+          {% endfor %}
+        </div>
+      </form>
+    {% endcall %}
   </multi-step-modal-form>
 {% endmacro %}

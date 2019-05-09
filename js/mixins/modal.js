@@ -17,8 +17,21 @@ export default {
         filter: idSelector,
       })
     },
+
+    // TODO: activeModal should be tracked on the root
+    handleModalOpen: function(event) {
+      if (!event.isOpen) {
+        this.activeModal = null
+      }
+    },
   },
+
+  mounted: function() {
+    this.$root.$on('modalOpen', this.handleModalOpen)
+  },
+
   data: function() {
+    // TODO: only the root component should know about the activeModal
     return {
       activeModal: null,
       allyHandler: null,
