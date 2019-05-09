@@ -6,47 +6,6 @@
 {% from "components/text_input.html" import TextInput %}
 {% from "components/toggle_list.html" import ToggleButton, ToggleSection %}
 
-{% macro RolePanel(role_form) %}
-  {% set role = role_form.role.data %}
-  {% if role == 'no_access' %}
-    {% set role = 'Unassigned (No Access)' %}
-    {% set unassigned = True %}
-  {% endif %}
-
-  <div class='environment-role'>
-    <h4>{{ role }}</h4>
-      <ul class='environment-role__users'>
-        {% for member in role_form.members %}
-          {% set section_name = "env_member_{}".format(member.user_id) %}
-
-          <li class="environment-role__user {{ 'unassigned' if unassigned }}">
-            {{ member.user_name.data }}
-            <span class="icon-link right">
-              {% set edit_env_members_button %}
-                {{ Icon('edit', classes="icon--medium") }}
-              {% endset %}
-
-              {{
-                ToggleButton(
-                  open_html=edit_env_members_button,
-                  close_html=edit_env_members_button,
-                  section_name=section_name
-                )
-              }}
-            </span>
-            {% call ToggleSection(section_name=section_name, classes="environment-role__user-field") %}
-              {{ OptionsInput(member.role, label=False) }}
-              {{ member.user_id() }}
-            {% endcall %}
-          </li>
-        {% endfor %}
-
-        {% if role_form.members.data == [] %}
-          <div class='environment-role__no-user'>Currently no members are in this role</div>
-        {% endif %}
-      </ul>
-    </div>
-{% endmacro %}
 
 <div class="application-list-item application-list">
   <header>
@@ -120,74 +79,7 @@
             </div>
 
             {% call ToggleSection(section_name="members", classes="environment-roles") %}
-              {% for env_form in members_form.envs %}
-                {% if env_form.env_id.data == env['id'] %}
-                  <div class='app-team-settings-link'>
-                    Need to add someone new to the team? <a href='{{ url_for("applications.team", application_id=application.id) }}'>Jump to Team Settings</a>
-                  </div>
-                  <form action="{{ url_for('applications.update_env_roles', environment_id=env['id']) }}" method="post">
-                    {{ members_form.csrf_token }}
-                    {{ env_form.env_id() }}
-                    <edit-environment-role inline-template v-bind:initial-roles='{{ env_form.team_roles.data | tojson }}'>
-                      <div>
-                        <div v-for='(role, roleindex) in roles' class='environment-role'>
-                          <h4 v-if='checkNoAccess(role.role)'>Unassigned (No Access)</h4>
-                          <h4 v-else v-html='role.role'></h4>
-                          <ul class='environment-role__users'>
-                            <div v-if="role.members && !role.members.length" class='environment-role__no-user'>Currently no members are in this role</div>
-                            <li v-for='(member, memberindex) in role.members' class="environment-role__user" v-bind:class="{'unassigned': checkNoAccess(member.role)}">
-                              <span v-html='member.user_name'>
-                              </span>
-                              <span v-on:click="toggleSection(member.user_id)" class="icon-link right">
-                                {{ Icon('edit', classes="icon--medium") }}
-                              </span>
-                              <div v-show="selectedSection === member.user_id" class='environment-role__user-field'>
-                                <div class="usa-input">
-                                  <fieldset data-ally-disabled="true" class="usa-input__choices" v-on:change="onInput">
-                                    <ul v-for='(role, roleinputindex) in roles' v-bind:id="'envs-{{ loop.index0 }}-team_roles-' + roleindex + '-members-' + memberindex + '-role'">
-                                      <li>
-                                        <input
-                                          v-bind:checked="member.role === role.role"
-                                          v-bind:name="'envs-{{ loop.index0 }}-team_roles-' + roleindex + '-members-' + memberindex + '-role'"
-                                          v-bind:id="'envs-{{ loop.index0 }}-team_roles-' + roleindex + '-members-' + memberindex + '-role-' + roleinputindex"
-                                          type="radio"
-                                          v-bind:user-id='member.user_id'
-                                          v-bind:value='role.role'>
-                                        <label
-                                          v-bind:for="'envs-{{ loop.index0 }}-team_roles-' + roleindex + '-members-' + memberindex + '-role-' + roleinputindex">
-                                          <span v-if='checkNoAccess(role.role)'>No Access</span>
-                                          <span v-else v-html='role.role'></span>
-                                        </label>
-                                      </li>
-                                    </ul>
-                                  </fieldset>
-                                </div>
-                              </div>
-                              <input
-                                v-bind:id="'envs-{{ loop.index0 }}-team_roles-' + roleindex + '-members-' + memberindex + '-user_id'"
-                                v-bind:name="'envs-{{ loop.index0 }}-team_roles-' + roleindex + '-members-' + memberindex + '-user_id'"
-                                type="hidden"
-                                v-bind:value='member.user_id'>
-                            </li>
-                          </ul>
-                        </div>
-                        <div class='action-group'>
-                          {{
-                            SaveButton(
-                              text=("portfolios.applications.update_button_text" | translate)
-                            )
-                          }}
-                        </div>
-                      </div>
-                    </edit-environment-role>
-                    <div class='action-group-cancel'>
-                      <a class='action-group-cancel__action icon-link icon-link--default' v-on:click="toggleSection('members')">
-                        {{ "common.cancel" | translate }}
-                      </a>
-                    </div>
-                  </form>
-                {% endif %}
-              {% endfor %}
+              {% include 'fragments/applications/edit_environment_team_form.html' %}
             {% endcall %}
 
             {% call ToggleSection(section_name="edit") %}
