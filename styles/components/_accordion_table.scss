@@ -42,12 +42,30 @@
 
     .usa-input {
       margin: 0;
+
+      .icon-validation {
+        left: 135%;
+      }
+    }
+
+    #name {
+      max-width: none;
+      border-color: black;
+    }
+
+    .usa-alert {
+      margin: 2.5rem 0;
     }
 
     select {
       border: none;
       font-weight: $font-normal;
     }
+  }
+
+  .new-env {
+    margin-top: 5rem;
+    padding: 0 5rem;;
   }
 
   .accordion-table__items {
