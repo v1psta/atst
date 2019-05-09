@@ -5,9 +5,9 @@
 {% for env_form in members_form.envs %}
   {% if env_form.env_id.data == env['id'] %}
     <div class='app-team-settings-link'>
-      Need to add someone new to the team?
+      {{ 'fragments.edit_environment_team_form.add_new_member_text' | translate }}
       <a href='{{ url_for("applications.team", application_id=application.id) }}'>
-        Jump to Team Settings
+        {{ 'fragments.edit_environment_team_form.add_new_member_link' | translate }}
       </a>
     </div>
     <form
@@ -20,13 +20,15 @@
         v-bind:initial-roles='{{ env_form.team_roles.data | tojson }}'>
         <div>
           <div v-for='(role, roleindex) in roles' class='environment-role'>
-            <h4 v-if='checkNoAccess(role.role)'>Unassigned (No Access)</h4>
+            <h4 v-if='checkNoAccess(role.role)'>
+              {{ 'fragments.edit_environment_team_form.unassigned_title' | translate }}
+            </h4>
             <h4 v-else v-html='role.role'></h4>
             <ul class='environment-role__users'>
               <div
                 v-if="role.members && !role.members.length"
                 class='environment-role__no-user'>
-                Currently no members are in this role
+                {{ 'fragments.edit_environment_team_form.no_members' | translate }}
               </div>
               <li
                 v-for='(member, memberindex) in role.members'
@@ -58,7 +60,9 @@
                             v-bind:value='role.role'>
                           <label
                             v-bind:for="'envs-{{ loop.index0 }}-team_roles-' + roleindex + '-members-' + memberindex + '-role-' + roleinputindex">
-                            <span v-if='checkNoAccess(role.role)'>No Access</span>
+                            <span v-if='checkNoAccess(role.role)'>
+                              {{ 'fragments.edit_environment_team_form.no_access' | translate }}
+                            </span>
                             <span v-else v-html='role.role'></span>
                           </label>
                         </li>
