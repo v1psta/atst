@@ -40,7 +40,7 @@
           <ul>
             {% for environment_form in environment_roles_form %}
               <li class="accordion-table__item__expanded">
-                <toggler inline-template>
+                <environment-role inline-template v-bind:initial-role="'{{ environment_form.role.data }}'">
                   <div>
                     <div class="row">
                       <div class="col col--grow">
@@ -48,28 +48,27 @@
                       </div>
                       <div class="accordion-table__item__expanded-role col col--grow">
                         <div class="right">
-                          <span>
-                            {{ environment_form.role.data }}
+                          <span v-html="role">
                           </span>
-                          <div class="icon-link" v-on:click="toggleSection('edit-env-role')">
+                          <div class="icon-link" v-on:click="toggle">
                             {{ Icon("edit") }}
                           </div>
                         </div>
                       </div>
                     </div>
-                    <div class="member-list__role-select" v-show="selectedSection === 'edit-env-role'">
+                    <div class="member-list__role-select" v-show="expanded">
                       {{ environment_form.role.label }}
-                      {{ environment_form.role(class="member-list____role-select__radio") }}
+                      {{ environment_form.role(**{"v-on:change": "radioChange", "class": "member-list____role-select__radio"}) }}
                       <button
                         class="usa-button"
                         type="button"
-                        v-on:click="toggleSection('edit-env-role')"
+                        v-on:click="toggle"
                         >
                         {{ "common.close" | translate }}
                       </button>
                     </div>
                   </div>
-                </toggler>
+                </environment-role>
               </li>
             {% endfor %}
           </ul>
