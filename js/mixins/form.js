@@ -13,10 +13,11 @@ export default {
 
   methods: {
     handleFieldChange: function(event) {
-      const { name, valid, parent_uid } = event
-      if (typeof this[name] !== undefined) {
+      const { value, name, valid, parent_uid, watch } = event
+      if (typeof this.fields[name] !== undefined) {
+        this[name] = value
         this.fields[name] = valid
-        if (event['parent_uid'] === this._uid || event['watch']) {
+        if (parent_uid === this._uid || watch) {
           this.changed = true
         }
       }
