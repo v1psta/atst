@@ -14,7 +14,7 @@
   {% set user_can_invite = user_can(permissions.CREATE_PORTFOLIO_USERS) %}
 
   {{ EmptyState(
-    'There are currently no members in this Portfolio.',
+    'There are currently no members in this portfolio',
     action_label='Invite a new Member' if user_can_invite else None,
     action_href='/members/new' if user_can_invite else None,
     sub_message=None if user_can_invite else 'Please contact your JEDI Cloud portfolio administrator to invite new members.',

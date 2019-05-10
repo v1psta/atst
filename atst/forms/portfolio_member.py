@@ -14,29 +14,29 @@ class PermissionsForm(BaseForm):
     perms_app_mgmt = SelectField(
         translate("forms.new_member.app_mgmt"),
         choices=[
-            (PermissionSets.VIEW_PORTFOLIO_APPLICATION_MANAGEMENT, "View only"),
-            (PermissionSets.EDIT_PORTFOLIO_APPLICATION_MANAGEMENT, "Edit access"),
+            (PermissionSets.VIEW_PORTFOLIO_APPLICATION_MANAGEMENT, "View"),
+            (PermissionSets.EDIT_PORTFOLIO_APPLICATION_MANAGEMENT, "Edit"),
         ],
     )
     perms_funding = SelectField(
         translate("forms.new_member.funding"),
         choices=[
-            (PermissionSets.VIEW_PORTFOLIO_FUNDING, "View only"),
-            (PermissionSets.EDIT_PORTFOLIO_FUNDING, "Edit access"),
+            (PermissionSets.VIEW_PORTFOLIO_FUNDING, "View"),
+            (PermissionSets.EDIT_PORTFOLIO_FUNDING, "Edit"),
         ],
     )
     perms_reporting = SelectField(
         translate("forms.new_member.reporting"),
         choices=[
-            (PermissionSets.VIEW_PORTFOLIO_REPORTS, "View only"),
-            (PermissionSets.EDIT_PORTFOLIO_REPORTS, "Edit access"),
+            (PermissionSets.VIEW_PORTFOLIO_REPORTS, "View"),
+            (PermissionSets.EDIT_PORTFOLIO_REPORTS, "Edit"),
         ],
     )
     perms_portfolio_mgmt = SelectField(
         translate("forms.new_member.portfolio_mgmt"),
         choices=[
-            (PermissionSets.VIEW_PORTFOLIO_ADMIN, "View only"),
-            (PermissionSets.EDIT_PORTFOLIO_ADMIN, "Edit access"),
+            (PermissionSets.VIEW_PORTFOLIO_ADMIN, "View"),
+            (PermissionSets.EDIT_PORTFOLIO_ADMIN, "Edit"),
         ],
     )
 
