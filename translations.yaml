@@ -20,6 +20,7 @@ base_public:
 common:
   back: Back
   cancel: Cancel
+  close: Close
   confirm: Confirm
   continue: Continue
   delete: Delete
@@ -46,7 +47,6 @@ common:
   name: Name
 components:
   modal:
-    close: Close
     destructive_message: You will no longer be able to access this {resource}
     destructive_title: Warning! This action is permanent
   usa_header:

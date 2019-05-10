@@ -609,3 +609,40 @@
 .member-list__name {
   margin-top: 1rem;
 }
+
+.member-list__role-select {
+  overflow: auto;
+  margin: 1.6rem -3.2rem -1.6rem -3.2rem;
+  padding: 2rem 3.2rem 2rem 5rem;
+  background: $color-gray-cool-light;
+  border-top: 1px solid $color-gray-lighter;
+
+  > label {
+    font-weight: $font-bold;
+    margin: 0;
+  }
+
+  > label:first-child + ul.member-list____role-select__radio {
+    display: flex;
+    background: $color-gray-cool-light;
+
+    li {
+      border-bottom: none;
+
+      label {
+        margin-top: 1rem;
+        margin-left: 2rem;
+      }
+    }
+
+    li:first-child > label {
+      margin-left: 0;
+    }
+  }
+
+  button {
+    font-size: $small-font-size;
+    float: right;
+    margin-right: 0;
+  }
+}

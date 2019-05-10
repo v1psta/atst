@@ -37,40 +37,57 @@
           }}
         </div>
         {% call ToggleSection(section_name="environments") %}
-        <ul>
-          {% for environment_form in environment_roles_form %}
-          <li class="accordion-table__item__expanded row">
-            <div class="col col--grow">
-              {{ environment_form.environment_name.data }}
-            </div>
-            <div class="accordion-table__item__expanded-role col col--grow">
-              <div class="right">
-                <span>
-                  {{ environment_form.role.data }}
-                </span>
-                <div class="icon-link">
-                  {{ Icon("edit") }}
-                </div>
-              </div>
-            </div>
-          </li>
-          {% endfor %}
-        </ul>
-        <div class="accordion-table__item__action-group">
-          <a class="icon-link">
-            {{ "portfolios.applications.team_settings.add_to_environment" | translate }}
-            {{ Icon("plus") }}
-          </a>
-          <button
-            id="delete-application"
-            type="button"
-            class='usa-button button-danger'
+          <ul>
+            {% for environment_form in environment_roles_form %}
+              <li class="accordion-table__item__expanded">
+                <toggler inline-template>
+                  <div>
+                    <div class="row">
+                      <div class="col col--grow">
+                        {{ environment_form.environment_name.data }}
+                      </div>
+                      <div class="accordion-table__item__expanded-role col col--grow">
+                        <div class="right">
+                          <span>
+                            {{ environment_form.role.data }}
+                          </span>
+                          <div class="icon-link" v-on:click="toggleSection('edit-env-role')">
+                            {{ Icon("edit") }}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="member-list__role-select" v-show="selectedSection === 'edit-env-role'">
+                      {{ environment_form.role.label }}
+                      {{ environment_form.role(class="member-list____role-select__radio") }}
+                      <button
+                        class="usa-button"
+                        type="button"
+                        v-on:click="toggleSection('edit-env-role')"
+                        >
+                        {{ "common.close" | translate }}
+                      </button>
+                    </div>
+                  </div>
+                </toggler>
+              </li>
+            {% endfor %}
+          </ul>
+          <div class="accordion-table__item__action-group">
+            <a class="icon-link">
+              {{ "portfolios.applications.team_settings.add_to_environment" | translate }}
+              {{ Icon("plus") }}
+            </a>
+            <button
+              id="delete-application"
+              type="button"
+              class='usa-button button-danger'
             >
-            {{ "portfolios.members.archive_button" | translate }}
-          </button>
-        </div>
+              {{ "portfolios.members.archive_button" | translate }}
+            </button>
+          </div>
         {% endcall %}
         {{ member_form.user_id() }}
-    </li>
+      </li>
   </toggler>
 {% endfor %}

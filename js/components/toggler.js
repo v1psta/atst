@@ -20,6 +20,7 @@ export default {
     optionsinput,
     textinput,
     optionsinput,
+    toggler: this,
   },
 
   data: function() {
