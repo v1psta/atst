@@ -127,13 +127,15 @@
         </toggler>
 
         {% call Modal(name=delete_environment_modal_id, dismissable=True) %}
-          <h1>Are you sure you want to delete this environment?</h1>
+          <h1>
+            {{ 'fragments.edit_environment_team_form.delete_environment_title' | translate }}
+          </h1>
 
           {{
             Alert(
               level="warning",
-              title="Warning! This action is permanent",
-              message="You will no longer be able to access this environment",
+              title=('components.modal.destructive_title' | translate),
+              message=('components.modal.destructive_message' | translate),
             )
           }}
 
