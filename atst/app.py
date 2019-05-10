@@ -33,6 +33,8 @@ from atst.queue import queue
 from logging.config import dictConfig
 from atst.utils.logging import JsonFormatter, RequestContextFilter
 
+from atst.utils.context_processors import assign_resources
+
 
 ENV = os.getenv("FLASK_ENV", "dev")
 
@@ -83,6 +85,10 @@ def make_app(config):
     apply_authentication(app)
     set_default_headers(app)
 
+    @app.before_request
+    def _set_resources():
+        assign_resources(request.view_args)
+
     return app
 
 
@@ -107,6 +113,9 @@ def make_flask_callbacks(app):
     @app.after_request
     def _cleanup(response):
         g.current_user = None
+        g.portfolio = None
+        g.application = None
+        g.task_order = None
         return response
 
 

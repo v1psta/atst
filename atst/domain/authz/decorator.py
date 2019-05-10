@@ -3,39 +3,15 @@ from functools import wraps
 from flask import g, current_app as app, request
 
 from . import user_can_access
-from atst.domain.portfolios import Portfolios
-from atst.domain.task_orders import TaskOrders
-from atst.domain.applications import Applications
-from atst.domain.environments import Environments
-from atst.domain.invitations import PortfolioInvitations
 from atst.domain.exceptions import UnauthorizedError
 
 
 def check_access(permission, message, override, *args, **kwargs):
-    access_args = {"message": message}
-
-    if "application_id" in kwargs:
-        application = Applications.get(kwargs["application_id"])
-        access_args["application"] = application
-        access_args["portfolio"] = application.portfolio
-
-    elif "task_order_id" in kwargs:
-        task_order = TaskOrders.get(kwargs["task_order_id"])
-        access_args["portfolio"] = task_order.portfolio
-
-    elif "token" in kwargs:
-        invite = PortfolioInvitations._get(kwargs["token"])
-        access_args["portfolio"] = invite.role.portfolio
-
-    elif "portfolio_id" in kwargs:
-        access_args["portfolio"] = Portfolios.get(
-            g.current_user, kwargs["portfolio_id"]
-        )
-
-    elif "environment_id" in kwargs:
-        environment = Environments.get(kwargs["environment_id"])
-        access_args["application"] = environment.application
-        access_args["portfolio"] = environment.application.portfolio
+    access_args = {
+        "message": message,
+        "portfolio": g.portfolio,
+        "application": g.application,
+    }
 
     if override is not None and override(g.current_user, **access_args, **kwargs):
         return True

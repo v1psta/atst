@@ -19,9 +19,9 @@ def send_invite_email(owner_name, token, new_member_email):
     )
 
 
-@portfolios_bp.route("/portfolios/invitations/<token>", methods=["GET"])
-def accept_invitation(token):
-    invite = PortfolioInvitations.accept(g.current_user, token)
+@portfolios_bp.route("/portfolios/invitations/<portfolio_token>", methods=["GET"])
+def accept_invitation(portfolio_token):
+    invite = PortfolioInvitations.accept(g.current_user, portfolio_token)
 
     for task_order in invite.portfolio.task_orders:
         if g.current_user in task_order.officers:
@@ -35,11 +35,11 @@ def accept_invitation(token):
 
 
 @portfolios_bp.route(
-    "/portfolios/<portfolio_id>/invitations/<token>/revoke", methods=["POST"]
+    "/portfolios/<portfolio_id>/invitations/<portfolio_token>/revoke", methods=["POST"]
 )
 @user_can(Permissions.EDIT_PORTFOLIO_USERS, message="revoke invitation")
-def revoke_invitation(portfolio_id, token):
-    PortfolioInvitations.revoke(token)
+def revoke_invitation(portfolio_id, portfolio_token):
+    PortfolioInvitations.revoke(portfolio_token)
 
     return redirect(
         url_for(
@@ -52,11 +52,11 @@ def revoke_invitation(portfolio_id, token):
 
 
 @portfolios_bp.route(
-    "/portfolios/<portfolio_id>/invitations/<token>/resend", methods=["POST"]
+    "/portfolios/<portfolio_id>/invitations/<portfolio_token>/resend", methods=["POST"]
 )
 @user_can(Permissions.EDIT_PORTFOLIO_USERS, message="resend invitation")
-def resend_invitation(portfolio_id, token):
-    invite = PortfolioInvitations.resend(g.current_user, token)
+def resend_invitation(portfolio_id, portfolio_token):
+    invite = PortfolioInvitations.resend(g.current_user, portfolio_token)
     send_invite_email(g.current_user.full_name, invite.token, invite.email)
     flash("resend_portfolio_invitation", user_name=invite.user_name)
     return redirect(

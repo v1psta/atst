@@ -78,9 +78,7 @@ def test_all_protected_routes_have_access_control(
     monkeypatch.setattr(
         "atst.domain.invitations.PortfolioInvitations._get", lambda *a: Mock()
     )
-    monkeypatch.setattr(
-        "atst.utils.context_processors.get_portfolio_from_context", lambda *a: None
-    )
+    monkeypatch.setattr("atst.app.assign_resources", lambda *a: None)
 
     # patch the internal function the access decorator uses so that
     # we can check that it was called
@@ -413,7 +411,9 @@ def test_portfolios_resend_invitation_access(post_url_assert_status):
     invite = PortfolioInvitationFactory.create(user=UserFactory.create(), role=prr)
 
     url = url_for(
-        "portfolios.resend_invitation", portfolio_id=portfolio.id, token=invite.token
+        "portfolios.resend_invitation",
+        portfolio_id=portfolio.id,
+        portfolio_token=invite.token,
     )
     post_url_assert_status(ccpo, url, 302)
     post_url_assert_status(owner, url, 302)
@@ -461,7 +461,7 @@ def test_portfolios_revoke_invitation_access(post_url_assert_status):
         url = url_for(
             "portfolios.revoke_invitation",
             portfolio_id=portfolio.id,
-            token=invite.token,
+            portfolio_token=invite.token,
         )
         post_url_assert_status(user, url, status)
 
