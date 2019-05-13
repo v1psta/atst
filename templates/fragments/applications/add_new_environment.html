@@ -21,8 +21,8 @@
 
       {% call ToggleSection(section_name="add-new-environment") %}
         <div class="accordion-table__item-content new-env">
-          <div class="h3">{{ "portfolios.applications.create_new_env" | translate }}</div>
-          {{ Alert('',
+          {{ Alert(
+            title=("portfolios.applications.create_new_env" | translate),
             message=("portfolios.applications.create_new_env_info" | translate )
           ) }}
           <div class="h4">{{ "portfolios.applications.enter_env_name" | translate }}</div>

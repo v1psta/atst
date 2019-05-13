@@ -159,7 +159,7 @@ def new_environment(application_id):
     if env_form.validate():
         Environments.create(application=application, name=env_form.name.data)
 
-        flash("application_environments_updated")
+        flash("environment_added", environment_name=env_form.data["name"])
 
         return redirect(
             url_for(
