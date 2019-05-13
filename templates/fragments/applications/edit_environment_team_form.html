@@ -17,23 +17,23 @@
       {{ env_form.env_id() }}
       <edit-environment-role
         inline-template
-        v-bind:initial-roles='{{ env_form.team_roles.data | tojson }}'>
+        v-bind:initial-role-categories='{{ env_form.team_roles.data | tojson }}'>
         <div>
-          <div v-for='(role, roleindex) in roles' class='environment-role'>
-            <h4 v-if='checkNoAccess(role.role)'>
+          <div v-for='(roleCategory, roleindex) in roleCategories' class='environment-role'>
+            <h4 v-if='checkNoAccess(roleCategory.role)'>
               {{ 'fragments.edit_environment_team_form.unassigned_title' | translate }}
             </h4>
-            <h4 v-else v-html='role.role'></h4>
+            <h4 v-else v-html='roleCategory.role'></h4>
             <ul class='environment-role__users'>
               <div
-                v-if="role.members && !role.members.length"
+                v-if="roleCategory.members && !roleCategory.members.length"
                 class='environment-role__no-user'>
                 {{ 'fragments.edit_environment_team_form.no_members' | translate }}
               </div>
               <li
-                v-for='(member, memberindex) in role.members'
+                v-for='(member, memberindex) in roleCategory.members'
                 class="environment-role__user"
-                v-bind:class="{'unassigned': checkNoAccess(member.role)}">
+                v-bind:class="{'unassigned': checkNoAccess(member.role_name)}">
                 <span v-html='member.user_name'>
                 </span>
                 <span v-on:click="toggleSection(member.user_id)" class="icon-link right">
@@ -48,22 +48,22 @@
                       class="usa-input__choices"
                       v-on:change="onInput">
                       <ul
-                        v-for='(role, roleinputindex) in roles'
-                        v-bind:id="'envs-{{ loop.index0 }}-team_roles-' + roleindex + '-members-' + memberindex + '-role'">
+                        v-for='(roleCategory, roleinputindex) in roleCategories'
+                        v-bind:id="'envs-{{ loop.index0 }}-team_roles-' + roleindex + '-members-' + memberindex + '-role_name'">
                         <li>
                           <input
-                            v-bind:checked="member.role === role.role"
-                            v-bind:name="'envs-{{ loop.index0 }}-team_roles-' + roleindex + '-members-' + memberindex + '-role'"
-                            v-bind:id="'envs-{{ loop.index0 }}-team_roles-' + roleindex + '-members-' + memberindex + '-role-' + roleinputindex"
+                            v-bind:checked="member.role_name === roleCategory.role"
+                            v-bind:name="'envs-{{ loop.index0 }}-team_roles-' + roleindex + '-members-' + memberindex + '-role_name'"
+                            v-bind:id="'envs-{{ loop.index0 }}-team_roles-' + roleindex + '-members-' + memberindex + '-role_name-' + roleinputindex"
                             type="radio"
                             v-bind:user-id='member.user_id'
-                            v-bind:value='role.role'>
+                            v-bind:value='roleCategory.role'>
                           <label
-                            v-bind:for="'envs-{{ loop.index0 }}-team_roles-' + roleindex + '-members-' + memberindex + '-role-' + roleinputindex">
-                            <span v-if='checkNoAccess(role.role)'>
+                            v-bind:for="'envs-{{ loop.index0 }}-team_roles-' + roleindex + '-members-' + memberindex + '-role_name-' + roleinputindex">
+                            <span v-if='checkNoAccess(roleCategory.role)'>
                               {{ 'fragments.edit_environment_team_form.no_access' | translate }}
                             </span>
-                            <span v-else v-html='role.role'></span>
+                            <span v-else v-html='roleCategory.role'></span>
                           </label>
                         </li>
                       </ul>

@@ -303,13 +303,13 @@ def test_update_team_env_roles(client, user_session):
     form_data = {
         "envs-0-env_id": environment.id,
         "envs-0-team_roles-0-members-0-user_id": app_role.user.id,
-        "envs-0-team_roles-0-members-0-role": CSPRole.TECHNICAL_READ.value,
+        "envs-0-team_roles-0-members-0-role_name": CSPRole.TECHNICAL_READ.value,
         "envs-0-team_roles-1-members-0-user_id": env_role_1.user.id,
-        "envs-0-team_roles-1-members-0-role": CSPRole.NETWORK_ADMIN.value,
+        "envs-0-team_roles-1-members-0-role_name": CSPRole.NETWORK_ADMIN.value,
         "envs-0-team_roles-1-members-1-user_id": env_role_2.user.id,
-        "envs-0-team_roles-1-members-1-role": CSPRole.BASIC_ACCESS.value,
+        "envs-0-team_roles-1-members-1-role_name": CSPRole.BASIC_ACCESS.value,
         "envs-0-team_roles-1-members-2-user_id": env_role_3.user.id,
-        "envs-0-team_roles-1-members-2-role": "no_access",
+        "envs-0-team_roles-1-members-2-role_name": "no_access",
     }
 
     user_session(application.portfolio.owner)

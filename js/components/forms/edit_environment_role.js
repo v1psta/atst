@@ -11,13 +11,13 @@ export default {
   mixins: [FormMixin],
 
   props: {
-    initialRoles: Array,
+    initialRoleCategories: Array,
   },
 
   data: function() {
     return {
       selectedSection: null,
-      roles: this.sanitizeValues(this.initialRoles),
+      roleCategories: this.sanitizeValues(this.initialRoleCategories),
     }
   },
 
@@ -25,8 +25,8 @@ export default {
     sanitizeValues: function(roles) {
       roles.forEach(role => {
         role.members.forEach(member => {
-          if (member.role === null) {
-            member.role = 'no_access'
+          if (member.role_name === null) {
+            member.role_name = 'no_access'
           }
         })
       })
@@ -53,7 +53,7 @@ export default {
     },
 
     getUserInfo: function(userId) {
-      for (let role of this.roles) {
+      for (let role of this.roleCategories) {
         for (let member of role.members) {
           if (member.user_id === userId) {
             return member
@@ -63,7 +63,7 @@ export default {
     },
 
     removeUser: function(userId) {
-      for (let role of this.roles) {
+      for (let role of this.roleCategories) {
         role.members = role.members.filter(member => {
           return member.user_id !== userId
         })
@@ -74,9 +74,9 @@ export default {
     },
 
     addUser: function(userInfo, newRole) {
-      this.roles.forEach(role => {
+      this.roleCategories.forEach(role => {
         if (role.role === newRole) {
-          userInfo.role = newRole
+          userInfo.role_name = newRole
           role.members.push(userInfo)
         }
       })
