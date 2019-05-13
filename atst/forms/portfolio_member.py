@@ -14,29 +14,35 @@ class PermissionsForm(BaseForm):
     perms_app_mgmt = SelectField(
         translate("forms.new_member.app_mgmt"),
         choices=[
-            (PermissionSets.VIEW_PORTFOLIO_APPLICATION_MANAGEMENT, "View"),
-            (PermissionSets.EDIT_PORTFOLIO_APPLICATION_MANAGEMENT, "Edit"),
+            (
+                PermissionSets.VIEW_PORTFOLIO_APPLICATION_MANAGEMENT,
+                translate("common.view"),
+            ),
+            (
+                PermissionSets.EDIT_PORTFOLIO_APPLICATION_MANAGEMENT,
+                translate("common.edit"),
+            ),
         ],
     )
     perms_funding = SelectField(
         translate("forms.new_member.funding"),
         choices=[
-            (PermissionSets.VIEW_PORTFOLIO_FUNDING, "View"),
-            (PermissionSets.EDIT_PORTFOLIO_FUNDING, "Edit"),
+            (PermissionSets.VIEW_PORTFOLIO_FUNDING, translate("common.view")),
+            (PermissionSets.EDIT_PORTFOLIO_FUNDING, translate("common.edit")),
         ],
     )
     perms_reporting = SelectField(
         translate("forms.new_member.reporting"),
         choices=[
-            (PermissionSets.VIEW_PORTFOLIO_REPORTS, "View"),
-            (PermissionSets.EDIT_PORTFOLIO_REPORTS, "Edit"),
+            (PermissionSets.VIEW_PORTFOLIO_REPORTS, translate("common.view")),
+            (PermissionSets.EDIT_PORTFOLIO_REPORTS, translate("common.edit")),
         ],
     )
     perms_portfolio_mgmt = SelectField(
         translate("forms.new_member.portfolio_mgmt"),
         choices=[
-            (PermissionSets.VIEW_PORTFOLIO_ADMIN, "View"),
-            (PermissionSets.EDIT_PORTFOLIO_ADMIN, "Edit"),
+            (PermissionSets.VIEW_PORTFOLIO_ADMIN, translate("common.view")),
+            (PermissionSets.EDIT_PORTFOLIO_ADMIN, translate("common.edit")),
         ],
     )
 

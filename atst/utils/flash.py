@@ -160,7 +160,7 @@ MESSAGES = {
         "title_template": translate("flash.success"),
         "message_template": """
             {{ "flash.application.deleted" | translate({"application_name": application_name}) }}
-            <a href="#">translate("common.undo")</a>
+            <a href="#">{{ "common.undo" | translate }}</a>
         """,
         "category": "success",
     },

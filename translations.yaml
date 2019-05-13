@@ -39,6 +39,7 @@ common:
   show: Show
   sign: Sign
   undo: Undo
+  view: View
   resource_names:
     environments: Environments
   choose_role: Choose a role
@@ -473,7 +474,6 @@ portfolios:
       name: Name
       portfolio_mgmt: Portfolio management
       reporting: Reporting
-      view_only: View
   task_orders:
     available_budget_help_description: The available budget shown includes the available budget of all active task orders
 requests:
