@@ -18,7 +18,7 @@
       {% if dict(access.choices).get(access.data) == ('portfolios.members.permissions.edit_access' | translate)  %}
         <td class='green'>{{ 'portfolios.members.permissions.edit_access' | translate }}</td>
       {% else %}
-        <td>{{ 'portfolios.members.permissions.view_only' | translate }}</td>
+        <td>{{ 'common.view' | translate }}</td>
       {% endif %}
     {% endfor %}
 

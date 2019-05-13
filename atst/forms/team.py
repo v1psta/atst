@@ -13,15 +13,15 @@ class PermissionsForm(FlaskForm):
     perms_team_mgmt = SelectField(
         translate("portfolios.applications.members.new.manage_team"),
         choices=[
-            (PermissionSets.VIEW_APPLICATION, "View only"),
-            (PermissionSets.EDIT_APPLICATION_TEAM, "Edit access"),
+            (PermissionSets.VIEW_APPLICATION, "View"),
+            (PermissionSets.EDIT_APPLICATION_TEAM, "Edit"),
         ],
     )
     perms_env_mgmt = SelectField(
         translate("portfolios.applications.members.new.manage_envs"),
         choices=[
-            (PermissionSets.VIEW_APPLICATION, "View only"),
-            (PermissionSets.EDIT_APPLICATION_ENVIRONMENTS, "Edit access"),
+            (PermissionSets.VIEW_APPLICATION, "View"),
+            (PermissionSets.EDIT_APPLICATION_ENVIRONMENTS, "Edit"),
         ],
     )
     perms_del_env = SelectField(

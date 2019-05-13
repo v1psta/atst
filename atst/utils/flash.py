@@ -79,10 +79,8 @@ MESSAGES = {
         "category": "error",
     },
     "login_next": {
-        "title_template": "Log in Required.",
-        "message_template": """
-            After you log in, you will be redirected to your destination page.
-        """,
+        "title_template": translate("flash.login_required_title"),
+        "message_template": translate("flash.login_required_message"),
         "category": "warning",
     },
     "new_portfolio": {
@@ -162,7 +160,7 @@ MESSAGES = {
         "title_template": translate("flash.success"),
         "message_template": """
             {{ "flash.application.deleted" | translate({"application_name": application_name}) }}
-            <a href="#">Undo</a>.
+            <a href="#">{{ "common.undo" | translate }}</a>
         """,
         "category": "success",
     },

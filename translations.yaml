@@ -38,6 +38,8 @@ common:
   save_and_continue: Save & continue
   show: Show
   sign: Sign
+  undo: Undo
+  view: View
   resource_names:
     environments: Environments
   choose_role: Choose a role
@@ -65,6 +67,8 @@ flash:
   congrats: Congrats!
   delete_member_success: 'You have successfully deleted {member_name} from the portfolio.'
   deleted_member: Portfolio member deleted
+  login_required_message: After you log in, you will be redirected to your destination page.
+  login_required_title: Log in required
   new_portfolio: You've created a new JEDI portfolio and jump-started your first task order!
   new_portfolio_member: 'You have successfully invited {user_name} to the portfolio.'
   new_ppoc_message: 'You have successfully added {ppoc_name} as the primary point of contact. You are no longer the PPoC.'
@@ -423,6 +427,8 @@ portfolios:
     environments_heading: Application environments
     existing_application_title: '{application_name} Application Settings'
     new_application_title: New Application
+    no_applications: This portfolio doesn’t have any applications yet
+    no_members: There are currently no members in this portfolio
     settings_heading: Application Settings
     team_management:
       subheading: Team Management
@@ -463,12 +469,11 @@ portfolios:
     archive_button: Delete member
     permissions:
       app_mgmt: App management
-      edit_access: Edit access
+      edit_access: Edit
       funding: Funding
       name: Name
       portfolio_mgmt: Portfolio management
       reporting: Reporting
-      view_only: View only
   task_orders:
     available_budget_help_description: The available budget shown includes the available budget of all active task orders
 requests:
@@ -638,7 +643,7 @@ task_orders:
       so_info_title: Security officer information
     review:
       app_info: Overview
-      classified_inactive: (Available Soon)
+      classified_inactive: (Available soon)
       clin_1: 'CLIN #1: Unclassified Cloud'
       clin_2: 'CLIN #2: Classified Cloud'
       clin_3: 'CLIN #3: Unclassified Cloud'

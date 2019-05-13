@@ -24,7 +24,7 @@
   {% if not portfolio.applications %}
 
     {{ EmptyState(
-      'This portfolio doesn’t have any applications yet.',
+      'This portfolio doesn’t have any applications',
       action_label='Add a new application' if can_create_applications else None,
       action_href=url_for('applications.new', portfolio_id=portfolio.id) if can_create_applications else None,
       icon='cloud',
