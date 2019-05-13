@@ -171,7 +171,7 @@ def test_data_for_app_env_roles_form(app, client, user_session):
                                 {
                                     "user_id": str(app_role.user_id),
                                     "user_name": app_role.user.full_name,
-                                    "role": None,
+                                    "role_name": None,
                                 }
                             ],
                         },
@@ -181,7 +181,7 @@ def test_data_for_app_env_roles_form(app, client, user_session):
                                 {
                                     "user_id": str(env_role1.user_id),
                                     "user_name": env_role1.user.full_name,
-                                    "role": CSPRole.BASIC_ACCESS.value,
+                                    "role_name": CSPRole.BASIC_ACCESS.value,
                                 }
                             ],
                         },
@@ -191,7 +191,7 @@ def test_data_for_app_env_roles_form(app, client, user_session):
                                 {
                                     "user_id": str(env_role2.user_id),
                                     "user_name": env_role2.user.full_name,
-                                    "role": CSPRole.NETWORK_ADMIN.value,
+                                    "role_name": CSPRole.NETWORK_ADMIN.value,
                                 }
                             ],
                         },

@@ -79,18 +79,18 @@ def test_update_env_roles_by_environment():
     team_roles = [
         {
             "user_id": env_role_1.user.id,
-            "name": env_role_1.user.full_name,
-            "role": CSPRole.BUSINESS_READ.value,
+            "user_name": env_role_1.user.full_name,
+            "role_name": CSPRole.BUSINESS_READ.value,
         },
         {
             "user_id": env_role_2.user.id,
-            "name": env_role_2.user.full_name,
-            "role": CSPRole.NETWORK_ADMIN.value,
+            "user_name": env_role_2.user.full_name,
+            "role_name": CSPRole.NETWORK_ADMIN.value,
         },
         {
             "user_id": env_role_3.user.id,
-            "name": env_role_3.user.full_name,
-            "role": None,
+            "user_name": env_role_3.user.full_name,
+            "role_name": None,
         },
     ]
 
@@ -155,32 +155,12 @@ def test_get_members_by_role(db):
     basic_access_members = Environments.get_members_by_role(
         environment, CSPRole.BASIC_ACCESS.value
     )
-    assert basic_access_members == [
-        {
-            "user_id": str(env_role_1.user_id),
-            "user_name": env_role_1.user.full_name,
-            "role": CSPRole.BASIC_ACCESS.value,
-        }
-    ]
-    assert {
-        "user_id": str(rando_env_role.user_id),
-        "user_name": rando_env_role.user.full_name,
-        "role": CSPRole.BASIC_ACCESS.value,
-    } not in basic_access_members
-    assert Environments.get_members_by_role(
+    technical_read_members = Environments.get_members_by_role(
         environment, CSPRole.TECHNICAL_READ.value
-    ) == [
-        {
-            "user_id": str(env_role_2.user_id),
-            "user_name": env_role_2.user.full_name,
-            "role": CSPRole.TECHNICAL_READ.value,
-        },
-        {
-            "user_id": str(env_role_3.user_id),
-            "user_name": env_role_3.user.full_name,
-            "role": CSPRole.TECHNICAL_READ.value,
-        },
-    ]
+    )
+    assert basic_access_members == [env_role_1]
+    assert rando_env_role not in basic_access_members
+    assert technical_read_members == [env_role_2, env_role_3]
     assert (
         Environments.get_members_by_role(environment, CSPRole.BUSINESS_READ.value) == []
     )

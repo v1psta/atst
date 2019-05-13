@@ -54,6 +54,7 @@
       white-space: nowrap;
       width: 20rem;
       position: relative;
+      height: 3.6rem;
 
       &.unassigned {
         border: solid 1px $color-gray-light;
@@ -88,6 +89,7 @@
       margin: $gap;
       padding: ($gap / 2) $gap;
       font-weight: $font-normal;
+      height: 3.6rem;
     }
   }
 }

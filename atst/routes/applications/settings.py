@@ -27,11 +27,26 @@ def get_environments_obj_for_app(application):
     return environments_obj
 
 
+def serialize_members(member_list, role):
+    serialized_list = []
+
+    for member in member_list:
+        serialized_list.append(
+            {
+                "user_id": str(member.user_id),
+                "user_name": member.user.full_name,
+                "role_name": role,
+            }
+        )
+
+    return serialized_list
+
+
 def sort_env_users_by_role(env):
     users_list = []
     no_access_users = env.application.users - env.users
     no_access_list = [
-        {"user_id": str(user.id), "user_name": user.full_name, "role": "no_access"}
+        {"user_id": str(user.id), "user_name": user.full_name, "role_name": "no_access"}
         for user in no_access_users
     ]
     users_list.append({"role": "no_access", "members": no_access_list})
@@ -40,7 +55,9 @@ def sort_env_users_by_role(env):
         users_list.append(
             {
                 "role": role.value,
-                "members": Environments.get_members_by_role(env, role.value),
+                "members": serialize_members(
+                    Environments.get_members_by_role(env, role.value), role.value
+                ),
             }
         )
 
@@ -196,18 +213,18 @@ def update_env_roles(environment_id):
             )
         )
     else:
-        # TODO: Create a better pattern to handle when a form doesn't validate
-        # if a user is submitting the data via the web page then they
-        # should never have any form validation errors
-        return render_template(
-            "portfolios/applications/settings.html",
-            application=application,
-            form=ApplicationForm(
-                name=application.name, description=application.description
+        return (
+            render_template(
+                "portfolios/applications/settings.html",
+                application=application,
+                form=ApplicationForm(
+                    name=application.name, description=application.description
+                ),
+                environments_obj=get_environments_obj_for_app(application=application),
+                active_toggler=environment.id,
+                active_toggler_section="edit",
             ),
-            environments_obj=get_environments_obj_for_app(application=application),
-            active_toggler=environment.id,
-            active_toggler_section="edit",
+            400,
         )
 
 

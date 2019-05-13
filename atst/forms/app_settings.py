@@ -8,14 +8,13 @@ from .data import ENV_ROLES
 class MemberForm(FlaskForm):
     user_id = HiddenField()
     user_name = StringField()
-    role = RadioField(choices=ENV_ROLES, default="no_access")
+    role_name = RadioField(choices=ENV_ROLES, default="no_access")
 
     @property
     def data(self):
         _data = super().data
-        for field in _data:
-            if field == "role" and _data[field] == "no_access":
-                _data[field] = None
+        if "role_name" in _data and _data["role_name"] == "no_access":
+            _data["role_name"] = None
         return _data
 
 
