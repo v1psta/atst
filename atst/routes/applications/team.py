@@ -158,3 +158,31 @@ def create_member(application_id):
             _anchor="application-members",
         )
     )
+
+
+@applications_bp.route(
+    "/applications/<application_id>/members/<user_id>/delete", methods=["POST"]
+)
+# TODO: Is this correct??
+@user_can(Permissions.EDIT_APPLICATION_MEMBER, message="remove application member")
+def remove_member(application_id, user_id):
+    application_role = ApplicationRoles.get(
+        application_id=application_id, user_id=user_id
+    )
+
+    Applications.remove_member(application=g.application, user=application_role.user)
+
+    flash(
+        "application_member_removed",
+        user_name=application_role.user.full_name,
+        application_name=g.application.name,
+    )
+
+    return redirect(
+        url_for(
+            "applications.team",
+            _anchor="application-members",
+            application_id=g.application.id,
+            fragment="application-members",
+        )
+    )

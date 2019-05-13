@@ -2,6 +2,11 @@ from flask import flash, render_template_string
 from atst.utils.localization import translate
 
 MESSAGES = {
+    "application_member_removed": {
+        "title_template": "Team member removed from application",
+        "message_template": "You have successfully deleted {{ user_name }} from {{ application_name }}",
+        "category": "success",
+    },
     "environment_deleted": {
         "title_template": "{{ environment_name }} deleted",
         "message_template": 'The environment "{{ environment_name }}" has been deleted',

@@ -1,4 +1,5 @@
 import pytest
+import uuid
 from flask import url_for
 
 from atst.domain.permission_sets import PermissionSets
@@ -128,3 +129,43 @@ def test_create_member(client, user_session):
     assert user.application_roles[0].application == application
     assert len(user.environment_roles) == 1
     assert user.environment_roles[0].environment == env
+
+
+def test_remove_member_success(client, user_session):
+    user = UserFactory.create()
+    application = ApplicationFactory.create()
+    application_role = ApplicationRoleFactory.create(application=application, user=user)
+
+    user_session(application.portfolio.owner)
+
+    response = client.post(
+        url_for(
+            "applications.remove_member", application_id=application.id, user_id=user.id
+        )
+    )
+
+    assert response.status_code == 302
+    assert response.location == url_for(
+        "applications.team",
+        _anchor="application-members",
+        _external=True,
+        application_id=application.id,
+        fragment="application-members",
+    )
+
+
+def test_remove_member_failure(client, user_session):
+    user = UserFactory.create()
+    application = ApplicationFactory.create()
+
+    user_session(application.portfolio.owner)
+
+    response = client.post(
+        url_for(
+            "applications.remove_member",
+            application_id=application.id,
+            user_id=uuid.uuid4(),
+        )
+    )
+
+    assert response.status_code == 404

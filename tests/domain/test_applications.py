@@ -2,16 +2,19 @@ import pytest
 from uuid import uuid4
 
 from atst.models import CSPRole, ApplicationRoleStatus
+from atst.domain.application_roles import ApplicationRoles
 from atst.domain.applications import Applications
-from atst.domain.permission_sets import PermissionSets
+from atst.domain.environment_roles import EnvironmentRoles
 from atst.domain.exceptions import NotFoundError
+from atst.domain.permission_sets import PermissionSets
 
 from tests.factories import (
     ApplicationFactory,
     ApplicationRoleFactory,
-    UserFactory,
-    PortfolioFactory,
     EnvironmentFactory,
+    EnvironmentRoleFactory,
+    PortfolioFactory,
+    UserFactory,
 )
 
 
@@ -155,3 +158,25 @@ def test_for_user():
     assert len(portfolio.applications) == 4
     user_applications = Applications.for_user(user, portfolio)
     assert len(user_applications) == 2
+
+
+def test_remove_member():
+    application = ApplicationFactory.create()
+    user = UserFactory.create()
+    member_role = ApplicationRoleFactory.create(application=application, user=user)
+    environment = EnvironmentFactory.create(application=application)
+    environment_role = EnvironmentRoleFactory.create(user=user, environment=environment)
+
+    assert member_role == ApplicationRoles.get(
+        user_id=user.id, application_id=application.id
+    )
+
+    Applications.remove_member(application=application, user=member_role.user)
+
+    with pytest.raises(NotFoundError):
+        ApplicationRoles.get(user_id=user.id, application_id=application.id)
+
+    #
+    # TODO: Why does above raise NotFoundError and this returns None
+    #
+    assert EnvironmentRoles.get(user_id=user.id, environment_id=environment.id) == None

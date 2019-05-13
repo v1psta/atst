@@ -3,6 +3,7 @@ from sqlalchemy.orm.exc import NoResultFound
 from atst.database import db
 from . import BaseDomainClass
 from atst.domain.application_roles import ApplicationRoles
+from atst.domain.environment_roles import EnvironmentRoles
 from atst.domain.environments import Environments
 from atst.domain.exceptions import NotFoundError
 from atst.domain.users import Users
@@ -100,3 +101,15 @@ class Applications(BaseDomainClass):
                 Environments.add_member(environment, user, env_role_data.get("role"))
 
         return application_role
+
+    @classmethod
+    def remove_member(cls, application, user):
+        application_role = ApplicationRoles.get(
+            user_id=user.id, application_id=application.id
+        )
+
+        db.session.delete(application_role)
+        db.session.commit()
+
+        for env in application.environments:
+            EnvironmentRoles.delete(user_id=user.id, environment_id=env.id)
