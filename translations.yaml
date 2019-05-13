@@ -45,7 +45,7 @@ common:
 components:
   modal:
     close: Close
-    destructive_message: You will no longer be able to access this environment
+    destructive_message: You will no longer be able to access this {resource}
     destructive_title: Warning! This action is permanent
   usa_header:
     flag_image_alt: U.S. Flag
