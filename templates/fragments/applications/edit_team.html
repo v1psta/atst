@@ -12,10 +12,11 @@
     <li class="accordion-table__item">
       <div class="accordion-table__item-content row">
         <div class="col col--grow">
-          <div class="member-list__name">
+          <div class="dropdown-row-text">
             {{ member_form.user_name.data }}
           </div>
         </div>
+
         <div class="col col--grow">{{ OptionsInput(permissions_form.perms_team_mgmt, label=False, watch=True) }}</div>
         <div class="col col--grow">{{ OptionsInput(permissions_form.perms_env_mgmt, label=False, watch=True) }}</div>
 
@@ -24,7 +25,7 @@
         {% if "Edit" in env_mgmt_permission %}
         <div class="col col--grow">{{ OptionsInput(permissions_form.perms_del_env, label=False, watch=True) }}</div>
         {% elif "View" in env_mgmt_permission %}
-          <div class="col col--grow user-permission">{{ "portfolios.applications.team_settings.no_delete_access" | translate }}</div>
+          <div class="col col--grow user-permission dropdown-row-text">{{ "portfolios.applications.team_settings.no_delete_access" | translate }}</div>
         {% endif %}
 
         <div class="col col--grow icon-link icon-link--large accordion-table__item__toggler">

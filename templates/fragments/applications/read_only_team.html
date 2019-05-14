@@ -4,13 +4,13 @@
   {% set user_permissions = [member.permission_sets.perms_team_mgmt, member.permission_sets.perms_env_mgmt, member.permission_sets.perms_del_env] %}
 
   {% macro PermissionField(value) %}
-    <div class="col col--grow user-permission{% if "Edit" in value or "Yes" in value %} green{% endif %}">{{ value }}</div>
+    <div class="col col--grow user-permission dropdown-row-text{% if "Edit" in value or "Yes" in value %} green{% endif %}">{{ value }}</div>
   {% endmacro %}
 
   <toggler inline-template>
     <li class="accordion-table__item">
       <div class="accordion-table__item-content row">
-        <div class="col col--grow">{{ member.user_name.data }}</div>
+        <div class="col col--grow dropdown-row-text">{{ member.user_name.data }}</div>
         {% for permission in user_permissions %}
           {% set perm = dict(permission.choices).get(permission.data) %}
           {{ PermissionField(perm) }}
