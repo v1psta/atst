@@ -173,8 +173,10 @@ def test_remove_member():
 
     Applications.remove_member(application=application, user_id=member_role.user.id)
 
-    with pytest.raises(NotFoundError):
-        ApplicationRoles.get(user_id=user.id, application_id=application.id)
+    assert (
+        ApplicationRoles.get(user_id=user.id, application_id=application.id).status
+        == ApplicationRoleStatus.DISABLED
+    )
 
     #
     # TODO: Why does above raise NotFoundError and this returns None

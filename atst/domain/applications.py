@@ -108,7 +108,8 @@ class Applications(BaseDomainClass):
             user_id=user_id, application_id=application.id
         )
 
-        db.session.delete(application_role)
+        application_role.status = ApplicationRoleStatus.DISABLED
+        db.session.add(application_role)
         db.session.commit()
 
         for env in application.environments:
