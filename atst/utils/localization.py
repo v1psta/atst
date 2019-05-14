@@ -1,12 +1,9 @@
 import yaml
-import os
 from functools import lru_cache
 import math
 from gettext import ngettext
 from flask import current_app as app
 from atst.utils import getattr_path
-
-ENV = os.getenv("FLASK_ENV", "dev")
 
 
 class LocalizationInvalidKeyError(Exception):
