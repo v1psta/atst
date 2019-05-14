@@ -18,7 +18,15 @@
         </div>
         <div class="col col--grow">{{ OptionsInput(permissions_form.perms_team_mgmt, label=False, watch=True) }}</div>
         <div class="col col--grow">{{ OptionsInput(permissions_form.perms_env_mgmt, label=False, watch=True) }}</div>
+
+        {% set env_mgmt_permission = dict(permissions_form.perms_env_mgmt.choices).get(permissions_form.perms_env_mgmt.data) %}
+
+        {% if "Edit" in env_mgmt_permission %}
         <div class="col col--grow">{{ OptionsInput(permissions_form.perms_del_env, label=False, watch=True) }}</div>
+        {% elif "View" in env_mgmt_permission %}
+          <div class="col col--grow user-permission">{{ "portfolios.applications.team_settings.no_delete_access" | translate }}</div>
+        {% endif %}
+
         <div class="col col--grow icon-link icon-link--large accordion-table__item__toggler">
           {% set open_html %}
             {{ "portfolios.applications.team_settings.environments" | translate }} ({{ environment_roles_form | length }}) {{ Icon('caret_down') }}

@@ -456,6 +456,7 @@ portfolios:
         sub_message: Please contact your JEDI Cloud portfolio administrator to invite new members.
         title: There are currently no team members for this application.
       environments: Environments
+      no_delete_access: 'No'
       section:
         members_count: 'Members ({members_count})'
         table:
