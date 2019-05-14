@@ -36,57 +36,59 @@
           )
           }}
         </div>
-        {% call ToggleSection(section_name="environments") %}
-          <ul>
-            {% for environment_form in environment_roles_form %}
-              <li class="accordion-table__item__expanded">
-                <environment-role inline-template v-bind:initial-role="'{{ environment_form.role.data }}'">
-                  <div>
-                    <div class="row">
-                      <div class="col col--grow">
-                        {{ environment_form.environment_name.data }}
-                      </div>
-                      <div class="accordion-table__item__expanded-role col col--grow">
-                        <div class="right">
-                          <span v-html="role">
-                          </span>
-                          <div class="icon-link" v-on:click="toggle">
-                            {{ Icon("edit") }}
-                          </div>
+      </div>
+      {% call ToggleSection(section_name="environments") %}
+        <ul>
+          {% for environment_form in environment_roles_form %}
+            <li class="accordion-table__item__expanded">
+              <environment-role inline-template v-bind:initial-role="'{{ environment_form.role.data }}'">
+                <div>
+                  <div class="row">
+                    <div class="col col--grow">
+                      {{ environment_form.environment_name.data }}
+                    </div>
+                    <div class="accordion-table__item__expanded-role col col--grow">
+                      <div class="right">
+                        <span v-html="role">
+                        </span>
+                        <div class="icon-link" v-on:click="toggle">
+                          {{ Icon("edit") }}
                         </div>
                       </div>
                     </div>
-                    <div class="member-list__role-select" v-show="expanded">
-                      {{ environment_form.role.label }}
-                      {{ environment_form.role(**{"v-on:change": "radioChange", "class": "member-list____role-select__radio"}) }}
-                      <button
-                        class="usa-button"
-                        type="button"
-                        v-on:click="toggle"
-                        >
-                        {{ "common.close" | translate }}
-                      </button>
-                    </div>
                   </div>
-                </environment-role>
-              </li>
-            {% endfor %}
-          </ul>
-          <div class="accordion-table__item__action-group">
-            <a class="icon-link">
-              {{ "portfolios.applications.team_settings.add_to_environment" | translate }}
-              {{ Icon("plus") }}
-            </a>
-            <button
-              id="delete-application"
-              type="button"
-              class='usa-button button-danger'
-            >
-              {{ "portfolios.members.archive_button" | translate }}
-            </button>
-          </div>
-        {% endcall %}
-        {{ member_form.user_id() }}
-      </li>
+                  <div class="member-list__role-select" v-show="expanded">
+                    {{ environment_form.role.label }}
+                    {{ environment_form.role(**{"v-on:change": "radioChange", "class": "member-list____role-select__radio"}) }}
+                    <button
+                      class="usa-button"
+                      type="button"
+                      v-on:click="toggle"
+                      >
+                      {{ "common.close" | translate }}
+                    </button>
+                    {{ environment_form.environment_id() }}
+                  </div>
+                </div>
+              </environment-role>
+            </li>
+          {% endfor %}
+        </ul>
+        <div class="accordion-table__item__action-group">
+          <a class="icon-link">
+            {{ "portfolios.applications.team_settings.add_to_environment" | translate }}
+            {{ Icon("plus") }}
+          </a>
+          <button
+            type="button"
+            class='usa-button button-danger'
+            v-on:click="openModal('{{ delete_modal_id }}')"
+          >
+            {{ "portfolios.members.archive_button" | translate }}
+          </button>
+        </div>
+      {% endcall %}
+      {{ member_form.user_id() }}
+    </li>
   </toggler>
 {% endfor %}
