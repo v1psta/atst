@@ -103,13 +103,13 @@ class Applications(BaseDomainClass):
         return application_role
 
     @classmethod
-    def remove_member(cls, application, user):
+    def remove_member(cls, application, user_id):
         application_role = ApplicationRoles.get(
-            user_id=user.id, application_id=application.id
+            user_id=user_id, application_id=application.id
         )
 
         db.session.delete(application_role)
         db.session.commit()
 
         for env in application.environments:
-            EnvironmentRoles.delete(user_id=user.id, environment_id=env.id)
+            EnvironmentRoles.delete(user_id=user_id, environment_id=env.id)

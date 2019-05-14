@@ -171,7 +171,7 @@ def test_remove_member():
         user_id=user.id, application_id=application.id
     )
 
-    Applications.remove_member(application=application, user=member_role.user)
+    Applications.remove_member(application=application, user_id=member_role.user.id)
 
     with pytest.raises(NotFoundError):
         ApplicationRoles.get(user_id=user.id, application_id=application.id)

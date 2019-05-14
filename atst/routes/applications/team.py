@@ -8,6 +8,7 @@ from atst.domain.authz.decorator import user_can_access_decorator as user_can
 from atst.domain.environment_roles import EnvironmentRoles
 from atst.domain.exceptions import AlreadyExistsError
 from atst.domain.permission_sets import PermissionSets
+from atst.domain.users import Users
 from atst.forms.application_member import NewForm as NewMemberForm
 from atst.forms.team import TeamForm
 from atst.models import Permissions
@@ -166,15 +167,12 @@ def create_member(application_id):
 # TODO: Is this correct??
 @user_can(Permissions.EDIT_APPLICATION_MEMBER, message="remove application member")
 def remove_member(application_id, user_id):
-    application_role = ApplicationRoles.get(
-        application_id=application_id, user_id=user_id
-    )
-
-    Applications.remove_member(application=g.application, user=application_role.user)
+    Applications.remove_member(application=g.application, user_id=user_id)
+    user = Users.get(user_id)
 
     flash(
         "application_member_removed",
-        user_name=application_role.user.full_name,
+        user_name=user.full_name,
         application_name=g.application.name,
     )
 
