@@ -88,6 +88,7 @@ _PORTFOLIO_APP_MGMT_PERMISSION_SETS = [
             Permissions.CREATE_APPLICATION,
             Permissions.DELETE_APPLICATION,
             Permissions.EDIT_APPLICATION_MEMBER,
+            Permissions.DELETE_APPLICATION_MEMBER,
             Permissions.CREATE_APPLICATION_MEMBER,
             Permissions.EDIT_ENVIRONMENT,
             Permissions.CREATE_ENVIRONMENT,
@@ -205,6 +206,7 @@ _APPLICATION_TEAM_PERMISSION_SET = {
     "display_name": "Manage team",
     "permissions": [
         Permissions.EDIT_APPLICATION_MEMBER,
+        Permissions.DELETE_APPLICATION_MEMBER,
         Permissions.CREATE_APPLICATION_MEMBER,
         Permissions.ASSIGN_ENVIRONMENT_MEMBER,
     ],

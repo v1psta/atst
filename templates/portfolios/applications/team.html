@@ -113,7 +113,7 @@
         </form>
       </base-form>
 
-      {% if user_can(permissions.EDIT_APPLICATION_MEMBER) %}
+      {% if user_can(permissions.DELETE_APPLICATION_MEMBER) %}
         {% for member_form in team_form.members %}
           {% set delete_modal_id = "delete-user-{}".format(member_form.id) %}
           {% call Modal(name=delete_modal_id, dismissable=True) %}

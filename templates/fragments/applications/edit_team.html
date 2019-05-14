@@ -39,7 +39,7 @@
               {{ environment_form.environment_name.data }}
             </li>
           {% endfor %}
-          {% if user_can(permissions.EDIT_APPLICATION_MEMBER) %}
+          {% if user_can(permissions.DELETE_APPLICATION_MEMBER) %}
             <li class="accordion-table__item__expanded action-group">
               <span class="usa-button button-danger" v-on:click="openModal('{{ delete_modal_id }}')">
                 {{ "portfolios.members.archive_button" | translate }}

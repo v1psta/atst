@@ -164,8 +164,7 @@ def create_member(application_id):
 @applications_bp.route(
     "/applications/<application_id>/members/<user_id>/delete", methods=["POST"]
 )
-# TODO: Is this correct??
-@user_can(Permissions.EDIT_APPLICATION_MEMBER, message="remove application member")
+@user_can(Permissions.DELETE_APPLICATION_MEMBER, message="remove application member")
 def remove_member(application_id, user_id):
     Applications.remove_member(application=g.application, user_id=user_id)
     user = Users.get(user_id)
