@@ -93,7 +93,7 @@
 
       {{
         DeleteConfirmation(
-          modal_id=delete_modal_environment_id,
+          modal_id="delete_application",
           delete_text=('portfolios.applications.delete.button' | translate),
           delete_action= url_for('applications.delete', application_id=application.id),
           form=application_form

@@ -115,10 +115,10 @@
 
           {{
             DeleteConfirmation(
-              modal_id=delete_modal_environment_id,
+              modal_id=delete_environment_modal_id,
               delete_text=('portfolios.applications.environments.delete.button' | translate),
               delete_action= url_for('applications.delete_environment', environment_id=env['id']),
-              form=form
+              form=edit_form
             )
           }}
         {% endcall %}
