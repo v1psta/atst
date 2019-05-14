@@ -8,6 +8,7 @@ from atst.domain.authz.decorator import user_can_access_decorator as user_can
 from atst.domain.environment_roles import EnvironmentRoles
 from atst.domain.exceptions import AlreadyExistsError
 from atst.domain.permission_sets import PermissionSets
+from atst.domain.users import Users
 from atst.forms.application_member import NewForm as NewMemberForm
 from atst.forms.team import TeamForm
 from atst.models import Permissions
@@ -156,5 +157,29 @@ def create_member(application_id):
             application_id=application_id,
             fragment="application-members",
             _anchor="application-members",
+        )
+    )
+
+
+@applications_bp.route(
+    "/applications/<application_id>/members/<user_id>/delete", methods=["POST"]
+)
+@user_can(Permissions.DELETE_APPLICATION_MEMBER, message="remove application member")
+def remove_member(application_id, user_id):
+    Applications.remove_member(application=g.application, user_id=user_id)
+    user = Users.get(user_id)
+
+    flash(
+        "application_member_removed",
+        user_name=user.full_name,
+        application_name=g.application.name,
+    )
+
+    return redirect(
+        url_for(
+            "applications.team",
+            _anchor="application-members",
+            application_id=g.application.id,
+            fragment="application-members",
         )
     )

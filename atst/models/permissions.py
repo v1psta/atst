@@ -11,6 +11,7 @@ class Permissions(object):
     DELETE_APPLICATION = "delete_application"
     VIEW_APPLICATION_MEMBER = "view_application_member"
     EDIT_APPLICATION_MEMBER = "edit_application_member"
+    DELETE_APPLICATION_MEMBER = "delete_application_member"
     CREATE_APPLICATION_MEMBER = "create_application_member"
     VIEW_ENVIRONMENT = "view_environment"
     EDIT_ENVIRONMENT = "edit_environment"
