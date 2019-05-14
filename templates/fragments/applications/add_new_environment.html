@@ -1,53 +1,42 @@
 {% from "components/alert.html" import Alert %}
 {% from 'components/save_button.html' import SaveButton %}
 {% from "components/text_input.html" import TextInput %}
-{% from "components/toggle_list.html" import ToggleButton, ToggleSection %}
 
-<form method='POST' id="add-new-env" action='{{ url_for("applications.new_environment", application_id=application.id) }}' autocomplete="off" enctype="multipart/form-data">
-  {{ new_env_form.csrf_token }}
+<new-environment inline-template>
+  <div>
+    <div v-if="open">
+      <form method='POST' id="add-new-env" action='{{ url_for("applications.new_environment", application_id=application.id) }}' autocomplete="off" enctype="multipart/form-data">
+        {{ new_env_form.csrf_token }}
 
-  <toggler inline-template>
-    <div>
-      {% set add_env_link %}
-      <div class="panel__footer">
-        <div class="action-group">
-          <a class='icon-link'>
-            {{ "portfolios.applications.add_environment" | translate }}
-            {{ Icon('plus') }}
-          </a>
-        </div>
-      </div>
-      {% endset %}
-
-      {% call ToggleSection(section_name="add-new-environment") %}
         <div class="accordion-table__item-content new-env">
           {{ Alert(
             title=("portfolios.applications.create_new_env" | translate),
             message=("portfolios.applications.create_new_env_info" | translate )
           ) }}
           <div class="h4">{{ "portfolios.applications.enter_env_name" | translate }}</div>
-            {{ TextInput(new_env_form.name, label="") }}
+            {{ TextInput(new_env_form.name, label="", validation="requiredField") }}
         </div>
         <div class="panel__footer">
           <div class="action-group">
             <div class='action-group-cancel'>
-              <a class='action-group-cancel__action icon-link icon-link--default' v-on:click="toggleSection('members')">
+              <a class='action-group-cancel__action icon-link icon-link--default' v-on:click="toggle">
                 {{ "common.cancel" | translate }}
               </a>
               {{ SaveButton(text=('common.save' | translate), element="input", form="add-new-env") }}
             </div>
           </div>
         </div>
-      {% endcall %}
-
-      {{
-        ToggleButton(
-          open_html=add_env_link,
-          close_html="",
-          section_name="add-new-environment"
-        )
-      }}
+      </form>
     </div>
-  </toggler>
 
-</form>
+    <div v-else class="panel__footer">
+      <div class="action-group">
+        <a class='icon-link' v-on:click="toggle">
+          {{ "portfolios.applications.add_environment" | translate }}
+          {{ Icon('plus') }}
+        </a>
+      </div>
+    </div>
+  </div>
+</new-environment>
+
