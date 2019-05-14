@@ -1,10 +1,9 @@
 from flask import redirect, render_template, request as http_request, url_for
 
 from . import applications_bp
-from atst.domain.environment_roles import EnvironmentRoles
 from atst.domain.environments import Environments
 from atst.domain.applications import Applications
-from atst.forms.app_settings import EnvironmentRolesForm
+from atst.forms.app_settings import AppEnvRolesForm
 from atst.forms.application import ApplicationForm, EditEnvironmentForm
 from atst.domain.authz.decorator import user_can_access_decorator as user_can
 from atst.models.environment_role import CSPRole
@@ -20,37 +19,59 @@ def get_environments_obj_for_app(application):
             "id": env.id,
             "name": env.name,
             "edit_form": EditEnvironmentForm(obj=env),
-            "members_form": EnvironmentRolesForm(data=data_for_env_members_form(env)),
-            "members": sort_env_users_by_role(env),
+            "member_count": len(env.users),
+            "members": [user.full_name for user in env.users],
         }
         environments_obj.append(env_data)
 
     return environments_obj
 
 
+def serialize_members(member_list, role):
+    serialized_list = []
+
+    for member in member_list:
+        serialized_list.append(
+            {
+                "user_id": str(member.user_id),
+                "user_name": member.user.full_name,
+                "role_name": role,
+            }
+        )
+
+    return serialized_list
+
+
 def sort_env_users_by_role(env):
-    users_dict = {"no_access": []}
+    users_list = []
+    no_access_users = env.application.users - env.users
+    no_access_list = [
+        {"user_id": str(user.id), "user_name": user.full_name, "role_name": "no_access"}
+        for user in no_access_users
+    ]
+    users_list.append({"role": "no_access", "members": no_access_list})
+
     for role in CSPRole:
-        users_dict[role.value] = []
+        users_list.append(
+            {
+                "role": role.value,
+                "members": serialize_members(
+                    Environments.get_members_by_role(env, role.value), role.value
+                ),
+            }
+        )
 
-    for user in env.application.users:
-        if user in env.users:
-            role = EnvironmentRoles.get(user.id, env.id)
-            users_dict[role.displayname].append(
-                {"name": user.full_name, "user_id": user.id}
-            )
-        else:
-            users_dict["no_access"].append({"name": user.full_name, "user_id": user.id})
-
-    return users_dict
+    return users_list
 
 
-def data_for_env_members_form(environment):
-    data = {"env_id": environment.id, "team_roles": []}
-    for user in environment.users:
-        env_role = EnvironmentRoles.get(user.id, environment.id)
-        data["team_roles"].append(
-            {"name": user.full_name, "user_id": user.id, "role": env_role.displayname}
+def data_for_app_env_roles_form(application):
+    data = {"envs": []}
+    for environment in application.environments:
+        data["envs"].append(
+            {
+                "env_id": environment.id,
+                "team_roles": sort_env_users_by_role(environment),
+            }
         )
 
     return data
@@ -67,15 +88,19 @@ def check_users_are_in_application(user_ids, application):
 @applications_bp.route("/applications/<application_id>/settings")
 @user_can(Permissions.VIEW_APPLICATION, message="view application edit form")
 def settings(application_id):
-    # refactor like portfolio admin render function
     application = Applications.get(application_id)
     form = ApplicationForm(name=application.name, description=application.description)
+    environments_obj = get_environments_obj_for_app(application=application)
+    members_form = AppEnvRolesForm(data=data_for_app_env_roles_form(application))
 
     return render_template(
         "portfolios/applications/settings.html",
         application=application,
         form=form,
-        environments_obj=get_environments_obj_for_app(application=application),
+        environments_obj=environments_obj,
+        members_form=members_form,
+        active_toggler=http_request.args.get("active_toggler"),
+        active_toggler_section=http_request.args.get("active_toggler_section"),
     )
 
 
@@ -98,6 +123,8 @@ def update_environment(environment_id):
                 application_id=application.id,
                 fragment="application-environments",
                 _anchor="application-environments",
+                active_toggler=environment.id,
+                active_toggler_section="edit",
             )
         )
     else:
@@ -109,6 +136,11 @@ def update_environment(environment_id):
                     name=application.name, description=application.description
                 ),
                 environments_obj=get_environments_obj_for_app(application=application),
+                members_form=AppEnvRolesForm(
+                    data=data_for_app_env_roles_form(application)
+                ),
+                active_toggler=environment.id,
+                active_toggler_section="edit",
             ),
             400,
         )
@@ -143,13 +175,17 @@ def update(application_id):
 def update_env_roles(environment_id):
     environment = Environments.get(environment_id)
     application = environment.application
-    env_roles_form = EnvironmentRolesForm(http_request.form)
+    form = AppEnvRolesForm(formdata=http_request.form)
 
-    if env_roles_form.validate():
-
+    if form.validate():
+        env_data = []
         try:
-            user_ids = [user["user_id"] for user in env_roles_form.data["team_roles"]]
-            check_users_are_in_application(user_ids, application)
+            for env in form.envs.data:
+                if env["env_id"] == str(environment.id):
+                    for role in env["team_roles"]:
+                        user_ids = [user["user_id"] for user in role["members"]]
+                        check_users_are_in_application(user_ids, application)
+                        env_data = env_data + role["members"]
         except NotFoundError as err:
             app.logger.warning(
                 "User {} requested environment role change for unauthorized user {} in application {}.".format(
@@ -159,22 +195,36 @@ def update_env_roles(environment_id):
             )
 
             raise (err)
-        env_data = env_roles_form.data
+
         Environments.update_env_roles_by_environment(
-            environment_id=environment_id, team_roles=env_data["team_roles"]
+            environment_id=environment_id, team_roles=env_data
         )
-        return redirect(url_for("applications.settings", application_id=application.id))
+
+        flash("application_environment_members_updated")
+
+        return redirect(
+            url_for(
+                "applications.settings",
+                application_id=application.id,
+                fragment="application-environments",
+                _anchor="application-environments",
+                active_toggler=environment.id,
+                active_toggler_section="members",
+            )
+        )
     else:
-        # TODO: Create a better pattern to handle when a form doesn't validate
-        # if a user is submitting the data via the web page then they
-        # should never have any form validation errors
-        return render_template(
-            "portfolios/applications/settings.html",
-            application=application,
-            form=ApplicationForm(
-                name=application.name, description=application.description
+        return (
+            render_template(
+                "portfolios/applications/settings.html",
+                application=application,
+                form=ApplicationForm(
+                    name=application.name, description=application.description
+                ),
+                environments_obj=get_environments_obj_for_app(application=application),
+                active_toggler=environment.id,
+                active_toggler_section="edit",
             ),
-            environments_obj=get_environments_obj_for_app(application=application),
+            400,
         )
 
 

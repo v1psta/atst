@@ -333,6 +333,11 @@ fragments:
     new_application_title: Add a new application
   edit_environment_team_form:
     delete_environment_title: Are you sure you want to delete this environment?
+    add_new_member_text: Need to add someone new to the team?
+    add_new_member_link: Jump to Team Settings
+    unassigned_title: Unassigned (No Access)
+    no_members: Currently no members are in this role
+    no_access: No Access
   edit_user_form:
     date_last_training_tooltip: When was the last time you completed the IA training? <br> Information Assurance (IA) training is an important step in cyber awareness.
     save_details_button: Save

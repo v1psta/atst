@@ -98,7 +98,7 @@ class Environments(object):
         environment = Environments.get(environment_id)
 
         for member in team_roles:
-            new_role = member["role"]
+            new_role = member["role_name"]
             user = Users.get(member["user_id"])
             Environments.update_env_role(
                 environment=environment, user=user, new_role=new_role
@@ -112,6 +112,15 @@ class Environments(object):
             Environments.update_env_role(
                 environment=environment, user=member, new_role=new_role
             )
+
+    @classmethod
+    def get_members_by_role(cls, env, role):
+        return (
+            db.session.query(EnvironmentRole)
+            .filter(EnvironmentRole.environment_id == env.id)
+            .filter(EnvironmentRole.role == role)
+            .all()
+        )
 
     @classmethod
     def revoke_access(cls, environment, target_user):

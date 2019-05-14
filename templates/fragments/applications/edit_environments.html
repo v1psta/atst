@@ -1,31 +1,11 @@
 {% from "components/delete_confirmation.html" import DeleteConfirmation %}
 {% from "components/icon.html" import Icon %}
 {% from "components/modal.html" import Modal %}
+{% from "components/options_input.html" import OptionsInput %}
 {% from "components/save_button.html" import SaveButton %}
 {% from "components/text_input.html" import TextInput %}
 {% from "components/toggle_list.html" import ToggleButton, ToggleSection %}
 
-{% macro RolePanel(users=[], role='no_access') %}
-  {% if role == 'no_access' %}
-    {% set role = 'Unassigned (No Access)' %}
-    {% set unassigned = True %}
-  {% endif %}
-
-  <div class='environment-role'>
-    <h4>{{ role }}</h4>
-      <ul class='environment-role__users'>
-        {% for user in users %}
-          <li class="environment-role__user {{ 'unassigned' if unassigned }}">
-            {{ user.name }}{{ Icon('edit', classes="icon--medium right") }}
-          </li>
-        {% endfor %}
-
-        {% if users == [] %}
-          <div class='environment-role__no-user'>Currently no members are in this role</div>
-        {% endif %}
-      </ul>
-    </div>
-{% endmacro %}
 
 <div class="application-list-item application-list">
   <header>
@@ -50,13 +30,10 @@
 
     <ul class="accordion-table__items">
       {% for env in environments_obj %}
-        {% set edit_form = env['edit_form'] %}
-        {% set member_count = env['members_form'].data['team_roles'] | length %}
-        {% set members_by_role = env['members'] %}
-        {% set unassigned = members_by_role['no_access'] %}
         {% set delete_environment_modal_id = "delete_modal_environment{}".format(env['id']) %}
+        {% set edit_form = env['edit_form'] %}
 
-        <toggler inline-template {% if edit_form.errors %}initial-selected-section="edit"{% endif %}>
+        <toggler inline-template {% if active_toggler == (env['id'] | safe) %}initial-selected-section="{{ active_toggler_section }}"{% endif %}>
           <li class="accordion-table__item">
             <div class="accordion-table__item-content row">
               <div class="col col--grow">
@@ -65,15 +42,15 @@
               <div class="col col--grow">
                 <span class="icon-link">
                   {% set edit_environment_button %}
-                  {{ Icon('edit') }}
+                    {{ Icon('edit') }}
                   {% endset %}
 
                   {{
                   ToggleButton(
-                  open_html=edit_environment_button,
-                  close_html=edit_environment_button,
-                  section_name="edit"
-                  )
+                    open_html=edit_environment_button,
+                    close_html=edit_environment_button,
+                    section_name="edit"
+                    )
                   }}
                 </span>
               </div>
@@ -84,28 +61,25 @@
               </div>
               <div class="col col--grow icon-link icon-link--large accordion-table__item__toggler">
                 {% set open_members_button %}
-                {{ "common.members" | translate }} ({{ member_count }}) {{ Icon('caret_down') }}
+                  {{ "common.members" | translate }} ({{ env['member_count'] }}) {{ Icon('caret_down') }}
                 {% endset %}
 
                 {% set close_members_button %}
-                {{ "common.members" | translate }} ({{ member_count }}) {{ Icon('caret_up') }}
+                  {{ "common.members" | translate }} ({{ env['member_count'] }}) {{ Icon('caret_up') }}
                 {% endset %}
 
                 {{
                 ToggleButton(
-                open_html=open_members_button,
-                close_html=close_members_button,
-                section_name="members"
-                )
+                  open_html=open_members_button,
+                  close_html=close_members_button,
+                  section_name="members"
+                  )
                 }}
               </div>
             </div>
 
-            {% call ToggleSection(section_name="members") %}
-                <div class='app-team-settings-link'>Need to add someone new to the team? <a href='{{ url_for("applications.team", application_id=application.id) }}'>Jump to Team Settings</a></div>
-                {% for role, members in members_by_role.items() %}
-                  {{ RolePanel(users=members, role=role) }}
-                {% endfor %}
+            {% call ToggleSection(section_name="members", classes="environment-roles") %}
+              {% include 'fragments/applications/edit_environment_team_form.html' %}
             {% endcall %}
 
             {% call ToggleSection(section_name="edit") %}
@@ -150,5 +124,13 @@
         {% endcall %}
       {% endfor %}
     </ul>
+  </div>
+</div>
+<div class="panel__footer">
+  <div class="action-group">
+    <a class='icon-link'>
+      {{ "portfolios.applications.add_environment" | translate }}
+      {{ Icon('plus') }}
+    </a>
   </div>
 </div>

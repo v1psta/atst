@@ -9,8 +9,8 @@
   </span>
 {% endmacro %}
 
-{% macro ToggleSection(section_name) %}
-  <div v-show="selectedSection === '{{ section_name }}'">
+{% macro ToggleSection(section_name, classes="") %}
+  <div v-show="selectedSection === '{{ section_name }}'" class='{{ classes }}'>
     {{ caller() }}
   </div>
 {% endmacro %}
