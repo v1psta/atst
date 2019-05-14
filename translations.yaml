@@ -332,7 +332,8 @@ fragments:
     explain: AT-AT allows you to create multiple applications within a portfolio. Each application can then be broken down into its own customizable environments.
     new_application_title: Add a new application
   edit_environment_team_form:
-    delete_environment_title: Are you sure you want to delete this environment?add_new_member_text: Need to add someone new to the team?
+    delete_environment_title: Are you sure you want to delete this environment?
+    add_new_member_text: Need to add someone new to the team?
     add_new_member_link: Jump to Team Settings
     unassigned_title: Unassigned (No Access)
     no_members: Currently no members are in this role
