@@ -17,7 +17,7 @@ class TestIsNumber:
         dummy_field.data = valid
         validator(dummy_form, dummy_field)
 
-    @pytest.mark.parametrize("invalid", ["12.1", "two", ""])
+    @pytest.mark.parametrize("invalid", ["12.1", "two", "", None])
     def test_IsNumber_rejects_anything_else(self, invalid, dummy_form, dummy_field):
         validator = IsNumber()
         dummy_field.data = invalid
