@@ -75,10 +75,12 @@
           {% endfor %}
         </ul>
         <div class="accordion-table__item__action-group">
-          <a class="icon-link">
-            {{ "portfolios.applications.team_settings.add_to_environment" | translate }}
-            {{ Icon("plus") }}
-          </a>
+          {% if user_can(permissions.ASSIGN_ENVIRONMENT_MEMBER) %}
+            <a class="icon-link">
+              {{ "portfolios.applications.team_settings.add_to_environment" | translate }}
+              {{ Icon("plus") }}
+            </a>
+          {% endif %}
           {% if user_can(permissions.DELETE_APPLICATION_MEMBER) %}
             <button
               type="button"
