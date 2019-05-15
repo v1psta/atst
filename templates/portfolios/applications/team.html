@@ -116,7 +116,7 @@
       {% if user_can(permissions.DELETE_APPLICATION_MEMBER) %}
         {% for member_form in team_form.members %}
           {% set delete_modal_id = "delete-user-{}".format(member_form.id) %}
-          {% call Modal(name=delete_modal_id, dismissable=True) %}
+          {% call Modal(name=delete_modal_id) %}
             <h1>
               {{ "portfolios.applications.remove_member.header" | translate }}
             </h1>
