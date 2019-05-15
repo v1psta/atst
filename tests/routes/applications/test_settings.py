@@ -15,6 +15,7 @@ from atst.routes.applications.settings import check_users_are_in_application
 from atst.domain.applications import Applications
 from atst.domain.environment_roles import EnvironmentRoles
 from atst.domain.environments import Environments
+from atst.domain.common import Paginator
 from atst.domain.permission_sets import PermissionSets
 from atst.domain.portfolios import Portfolios
 from atst.domain.exceptions import NotFoundError
@@ -116,7 +117,7 @@ def test_edit_application_environments_obj(app, client, user_session):
         )
 
         assert response.status_code == 200
-        _, context = templates[0]
+        _, context = templates[-1]
 
         assert isinstance(context["members_form"], AppEnvRolesForm)
         env_obj = context["environments_obj"][0]
@@ -127,6 +128,7 @@ def test_edit_application_environments_obj(app, client, user_session):
             env_obj["members"].sort()
             == [env_role1.user.full_name, env_role2.user.full_name].sort()
         )
+        assert isinstance(context["audit_events"], Paginator)
 
 
 def test_data_for_app_env_roles_form(app, client, user_session):
@@ -156,7 +158,7 @@ def test_data_for_app_env_roles_form(app, client, user_session):
         )
 
         assert response.status_code == 200
-        _, context = templates[0]
+        _, context = templates[-1]
 
         members_form = context["members_form"]
         assert isinstance(members_form, AppEnvRolesForm)

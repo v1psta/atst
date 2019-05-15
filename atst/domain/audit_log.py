@@ -22,6 +22,15 @@ class AuditEventQuery(Query):
         )
         return cls.paginate(query, pagination_opts)
 
+    @classmethod
+    def get_application_events(cls, application_id, pagination_opts):
+        query = (
+            db.session.query(cls.model)
+            .filter(cls.model.application_id == application_id)
+            .order_by(cls.model.time_created.desc())
+        )
+        return cls.paginate(query, pagination_opts)
+
 
 class AuditLog(object):
     @classmethod
@@ -36,6 +45,9 @@ class AuditLog(object):
     def get_portfolio_events(cls, portfolio, pagination_opts=None):
         return AuditEventQuery.get_portfolio_events(portfolio.id, pagination_opts)
 
+    @classmethod
+    def get_application_events(cls, application, pagination_opts=None):
+        return AuditEventQuery.get_application_events(application.id, pagination_opts)
 
     @classmethod
     def get_by_resource(cls, resource_id):
