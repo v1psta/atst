@@ -9,6 +9,10 @@ from libcloud.storage.providers import get_driver
 from atst.domain.exceptions import UploadError
 
 
+class CSPFileError(Exception):
+    pass
+
+
 class FileProviderInterface:
     _PERMITTED_MIMETYPES = ["application/pdf", "image/png"]
 
@@ -99,14 +103,23 @@ class RackspaceCRLProvider(CRLProviderInterface):
         )
         self._crl_dir = app.config.get("CRL_STORAGE_CONTAINER")
         self._object_name = app.config.get("STORAGE_CRL_ARCHIVE_NAME")
+        self._object = None
+
+    @property
+    def object(self):
+        if self._object is None:
+            self._object = self.container.get_object(object_name=self._object_name)
+
+        return self._object
 
     def sync_crls(self):
         if not os.path.exists(self._crl_dir):
             os.mkdir(self._crl_dir)
 
-        obj = self.container.get_object(object_name=self._object_name)
         with TemporaryDirectory() as tempdir:
             dl_path = os.path.join(tempdir, self._object_name)
-            obj.download(dl_path, overwrite_existing=True)
+            success = self.object.download(dl_path, overwrite_existing=True)
+            if not success:
+                raise CSPFileError("The CRL package was not downloaded")
             archive = tarfile.open(dl_path, "r:bz2")
             archive.extractall(self._crl_dir)
