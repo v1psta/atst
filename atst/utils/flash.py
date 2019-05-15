@@ -41,9 +41,7 @@ MESSAGES = {
     },
     "task_order_draft": {
         "title_template": translate("task_orders.form.draft_alert_title"),
-        "message_template": """
-        <p>Please complete your task order before submitting it for approval.</p>
-        """,
+        "message_template": translate("task_orders.form.draft_alert_message"),
         "category": "warning",
     },
     "task_order_signed": {
