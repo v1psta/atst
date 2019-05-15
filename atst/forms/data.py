@@ -217,6 +217,7 @@ REQUIRED_DISTRIBUTIONS = [
     ("other", "Other as necessary"),
 ]
 
+ENV_ROLE_NO_ACCESS = "No Access"
 ENV_ROLES = [(role.value, role.value) for role in CSPRole] + [
-    ("no_access", "No access")
+    (ENV_ROLE_NO_ACCESS, "No access")
 ]

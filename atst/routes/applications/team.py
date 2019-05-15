@@ -113,7 +113,7 @@ def update_team(application_id):
                     environment_role_form.environment_id.data
                 )
                 Environments.update_env_role(
-                    environment, user, environment_role_form.role.data
+                    environment, user, environment_role_form.data.get("role")
                 )
 
         flash("updated_application_team_settings", application_name=application.name)

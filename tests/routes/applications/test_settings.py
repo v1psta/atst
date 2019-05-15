@@ -18,11 +18,11 @@ from atst.domain.environments import Environments
 from atst.domain.permission_sets import PermissionSets
 from atst.domain.portfolios import Portfolios
 from atst.domain.exceptions import NotFoundError
-
 from atst.models.environment_role import CSPRole
 from atst.models.portfolio_role import Status as PortfolioRoleStatus
 from atst.forms.application import EditEnvironmentForm
 from atst.forms.app_settings import AppEnvRolesForm
+from atst.forms.data import ENV_ROLE_NO_ACCESS as NO_ACCESS
 
 from tests.utils import captured_templates
 
@@ -166,7 +166,7 @@ def test_data_for_app_env_roles_form(app, client, user_session):
                     "env_id": env.id,
                     "team_roles": [
                         {
-                            "role": "no_access",
+                            "role": NO_ACCESS,
                             "members": [
                                 {
                                     "user_id": str(app_role.user_id),
@@ -309,7 +309,7 @@ def test_update_team_env_roles(client, user_session):
         "envs-0-team_roles-1-members-1-user_id": env_role_2.user.id,
         "envs-0-team_roles-1-members-1-role_name": CSPRole.BASIC_ACCESS.value,
         "envs-0-team_roles-1-members-2-user_id": env_role_3.user.id,
-        "envs-0-team_roles-1-members-2-role_name": "no_access",
+        "envs-0-team_roles-1-members-2-role_name": NO_ACCESS,
     }
 
     user_session(application.portfolio.owner)
