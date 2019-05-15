@@ -5,6 +5,7 @@ from sqlalchemy.orm.exc import NoResultFound
 
 from atst.database import db
 from atst.domain.authz import Authorization
+from atst.domain.exceptions import NotFoundError
 from atst.domain.portfolios.scopes import ScopedPortfolio
 from atst.models import (
     Application,

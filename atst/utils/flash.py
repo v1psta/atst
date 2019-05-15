@@ -17,6 +17,13 @@ MESSAGES = {
         "message_template": "Application environment members have been updated",
         "category": "success",
     },
+    "environment_added": {
+        "title_template": translate("flash.success"),
+        "message_template": """
+            {{ "flash.environment_added" | translate({ "env_name": environment_name }) }}
+        """,
+        "category": "success",
+    },
     "application_environments_updated": {
         "title_template": "Application environments updated",
         "message_template": "Application environments have been updated",
@@ -29,7 +36,7 @@ MESSAGES = {
     },
     "invitation_resent": {
         "title_template": "Invitation resent",
-        "message_template": "The {{ officer_type }}  has been resent instructions to join this portfolio.",
+        "message_template": "The {{ officer_type }} has been resent instructions to join this portfolio.",
         "category": "success",
     },
     "task_order_draft": {

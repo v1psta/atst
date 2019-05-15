@@ -38,6 +38,7 @@ import SidenavToggler from './components/sidenav_toggler'
 import KoReview from './components/forms/ko_review'
 import BaseForm from './components/forms/base_form'
 import DeleteConfirmation from './components/delete_confirmation'
+import NewEnvironment from './components/forms/new_environment'
 
 Vue.config.productionTip = false
 
@@ -78,6 +79,7 @@ const app = new Vue({
     BaseForm,
     DeleteConfirmation,
     nestedcheckboxinput,
+    NewEnvironment,
   },
 
   mounted: function() {

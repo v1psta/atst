@@ -54,7 +54,7 @@ def test_updating_application_environments_success(client, user_session):
     assert environment.name == "new name a"
 
 
-def test_updating_application_environments_failure(client, user_session):
+def test_update_environment_failure(client, user_session):
     portfolio = PortfolioFactory.create()
     application = ApplicationFactory.create(portfolio=portfolio)
     environment = EnvironmentFactory.create(
@@ -389,6 +389,38 @@ def test_delete_application(client, user_session):
     # app and envs are soft deleted
     assert len(port.applications) == 0
     assert len(application.environments) == 0
+
+
+def test_new_environment(client, user_session):
+    user = UserFactory.create()
+    portfolio = PortfolioFactory(owner=user)
+    application = ApplicationFactory.create(portfolio=portfolio)
+    num_envs = len(application.environments)
+
+    user_session(user)
+    response = client.post(
+        url_for("applications.new_environment", application_id=application.id),
+        data={"name": "dabea"},
+    )
+
+    assert response.status_code == 302
+    assert len(application.environments) == num_envs + 1
+
+
+def test_new_environment_with_bad_data(client, user_session):
+    user = UserFactory.create()
+    portfolio = PortfolioFactory(owner=user)
+    application = ApplicationFactory.create(portfolio=portfolio)
+    num_envs = len(application.environments)
+
+    user_session(user)
+    response = client.post(
+        url_for("applications.new_environment", application_id=application.id),
+        data={"name": None},
+    )
+
+    assert response.status_code == 400
+    assert len(application.environments) == num_envs
 
 
 def test_delete_environment(client, user_session):
