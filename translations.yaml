@@ -423,7 +423,7 @@ portfolios:
     csp_console_text: CSP console
     remove_member:
       alert:
-        message: '{user_name} will no longer be able to access this application'
+        message: '{user_name} will no longer be able to access this application or any of its environments'
       button: Remove member
       header: Are you sure you want to remove this team member?
     delete:
@@ -645,14 +645,14 @@ task_orders:
       team_header: 'Before you begin, you’ll need to assemble your team'
       title: Let's get started
     oversight:
-      cor_info_paragraph: Your COR may assist in submitting the task order documents within their official system of record. They may also be invited to log in and manage the Task Order entry within the JEDI cloud portal.
+      cor_info_paragraph: Your contracting specialist, or contracting officer representative, manages the task order documents within their official system of record. They will also need to co-sign your DD-254, along with your security officer (below). Once you invite them to the task order, they will be able to log in to access any necessary information.
       cor_info_title: Contracting officer representative (COR) information
       dod_id_tooltip: The DoD ID is needed to verify the identity of the indicated officer or representative.
-      ko_info_paragraph: 'Your contracting officer will need to approve funding for this task order by logging into the JEDI cloud portal, submitting the task order documents within their official system of record, and then finally providing a digital signature. It might be helpful to work with your program''s Financial Manager to get your TO documents moving.'
+      ko_info_paragraph: Your contracting officer will decide whether to approve this task order. After you invite them to see your draft, they will need to download the necessary documents, enter the information into their official system of record and put their warrant to it, and then return to this interface to re-upload the approved documents, complete with their digital signature. In some cases, a contracting specialist or contracting officer representative may handle some of the data entry between this system and the contracting system of record.
       ko_info_title: Contracting officer information
       section_title: Oversight
       skip_ko_label: Skip for now (We'll remind you to enter one later)
-      so_info_paragraph: 'Your security officer will need to answer some security configuration questions in order to generate a DD-254 document, then electronically sign.'
+      so_info_paragraph: Your Security Officer will answer some security configuration questions in order to generate a DD-254 for this task order. Once this has been generated, they will sign and submit within their system of record after obtaining a co-signature from the contracting specialist (above).
       so_info_title: Security officer information
     review:
       app_info: Overview
