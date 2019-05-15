@@ -1,5 +1,6 @@
 import pytest
 
+from atst.domain.applications import Applications
 from atst.domain.audit_log import AuditLog
 from atst.domain.exceptions import UnauthorizedError
 from atst.domain.permission_sets import PermissionSets
@@ -45,7 +46,7 @@ def test_paginate_ws_audit_log():
     assert len(events) == 25
 
 
-def test_ws_audit_log_only_includes_current_ws_events():
+def test_portfolio_audit_log_only_includes_current_portfolio_events():
     owner = UserFactory.create()
     portfolio = PortfolioFactory.create(owner=owner)
     other_portfolio = PortfolioFactory.create(owner=owner)
@@ -55,8 +56,30 @@ def test_ws_audit_log_only_includes_current_ws_events():
 
     events = AuditLog.get_portfolio_events(portfolio)
     for event in events:
-        assert event.portfolio_id == portfolio.id or event.resource_id == portfolio.id
+        assert event.portfolio_id == portfolio.id
         assert (
             not event.portfolio_id == other_portfolio.id
             or event.resource_id == other_portfolio.id
         )
+
+
+def test_portfolio_audit_log_includes_app_and_env_events():
+    # TODO: add in events for
+    # creating/updating/deleting env_role and app_role
+    # creating an app_invitation
+    owner = UserFactory.create()
+    portfolio = PortfolioFactory.create(owner=owner)
+    application = ApplicationFactory.create(portfolio=portfolio)
+    Applications.update(application, {"name": "Star Cruiser"})
+
+    events = AuditLog.get_portfolio_events(portfolio)
+
+    for event in events:
+        assert event.portfolio_id == portfolio.id
+        if event.resource_type == 'application':
+            assert event.application_id == application.id
+    pass
+
+
+def test_application_audit_log_does_not_include_portfolio_events():
+    pass

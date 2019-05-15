@@ -14,15 +14,10 @@ class AuditEventQuery(Query):
         return cls.paginate(query, pagination_opts)
 
     @classmethod
-    def get_ws_events(cls, portfolio_id, pagination_opts):
+    def get_portfolio_events(cls, portfolio_id, pagination_opts):
         query = (
             db.session.query(cls.model)
-            .filter(
-                or_(
-                    cls.model.portfolio_id == portfolio_id,
-                    cls.model.resource_id == portfolio_id,
-                )
-            )
+            .filter(cls.model.portfolio_id == portfolio_id)
             .order_by(cls.model.time_created.desc())
         )
         return cls.paginate(query, pagination_opts)
@@ -39,7 +34,8 @@ class AuditLog(object):
 
     @classmethod
     def get_portfolio_events(cls, portfolio, pagination_opts=None):
-        return AuditEventQuery.get_ws_events(portfolio.id, pagination_opts)
+        return AuditEventQuery.get_portfolio_events(portfolio.id, pagination_opts)
+
 
     @classmethod
     def get_by_resource(cls, resource_id):

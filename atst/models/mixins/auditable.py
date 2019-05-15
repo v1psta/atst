@@ -13,10 +13,19 @@ class AuditableMixin(object):
     @staticmethod
     def create_audit_event(connection, resource, action, changed_state=None):
         user_id = getattr_path(g, "current_user.id")
-        portfolio_id = resource.portfolio_id
         resource_type = resource.resource_type
         display_name = resource.displayname
         event_details = resource.event_details
+
+        if resource_type == "portfolio":
+            portfolio_id = resource.id
+        else:
+            portfolio_id = resource.portfolio_id
+
+        if resource_type == "application":
+            application_id = resource.id
+        else:
+            application_id = resource.application_id
 
         if changed_state is None:
             changed_state = resource.history if action == ACTION_UPDATE else None
@@ -24,6 +33,7 @@ class AuditableMixin(object):
         audit_event = AuditEvent(
             user_id=user_id,
             portfolio_id=portfolio_id,
+            application_id=application_id,
             resource_type=resource_type,
             resource_id=resource.id,
             display_name=display_name,
@@ -93,6 +103,10 @@ class AuditableMixin(object):
 
     @property
     def portfolio_id(self):
+        return None
+
+    @property
+    def application_id(self):
         return None
 
     @property
