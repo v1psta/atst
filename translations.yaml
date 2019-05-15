@@ -431,7 +431,7 @@ portfolios:
       header: Are you sure you want to remove this team member?
     delete:
       alert:
-        message: You will lose access to this application and all of its reporting and metrics tools. The activity log will be retained.
+        message: You will lose access to this application and all environments will be removed from the CSP. Your reporting and activity will still be accessible.
       button: Delete application
       header: Are you sure you want to delete this application?
     enter_env_name: "Enter environment name:"
@@ -583,7 +583,8 @@ requests:
     rationalization_software_systems_tooltip: Rationalization is the DoD process to determine whether the application should move to the cloud.
 task_orders:
   form:
-    draft_alert_title: Your draft has been saved
+    draft_alert_title: Your information has been saved
+    draft_alert_message: You can return to the Task Order Builder to enter missing information. Once you are finished, you’ll be ready to submit this request.
   invitations:
     contracting_officer:
       add_button_text: Add / Invite contracting officer
