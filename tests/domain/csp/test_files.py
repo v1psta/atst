@@ -1,8 +1,13 @@
 import os
 import pytest
 from werkzeug.datastructures import FileStorage
+from unittest.mock import Mock
 
-from atst.domain.csp.files import RackspaceFileProvider
+from atst.domain.csp.files import (
+    CSPFileError,
+    RackspaceFileProvider,
+    RackspaceCRLProvider,
+)
 from atst.domain.exceptions import UploadError
 
 from tests.mocks import PDF_FILENAME
@@ -55,3 +60,16 @@ def test_downloading_uploaded_object(uploader, pdf_upload):
     pdf_content = pdf_upload.read()
 
     assert stream_content == pdf_content
+
+
+def test_crl_download_fails(app, monkeypatch):
+    mock_object = Mock()
+    mock_object.download.return_value = False
+    monkeypatch.setattr(
+        "atst.domain.csp.files.RackspaceCRLProvider.object", mock_object
+    )
+
+    rs_crl_provider = RackspaceCRLProvider(app)
+
+    with pytest.raises(CSPFileError):
+        rs_crl_provider.sync_crls()
