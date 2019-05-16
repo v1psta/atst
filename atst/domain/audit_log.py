@@ -1,5 +1,3 @@
-from sqlalchemy import or_
-
 from atst.database import db
 from atst.domain.common import Query
 from atst.models.audit_event import AuditEvent

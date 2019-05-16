@@ -4,12 +4,17 @@ from atst.domain.applications import Applications
 from atst.domain.audit_log import AuditLog
 from atst.domain.exceptions import UnauthorizedError
 from atst.domain.permission_sets import PermissionSets
+from atst.domain.portfolios import Portfolios
 from atst.models.portfolio_role import Status as PortfolioRoleStatus
 from tests.factories import (
-    UserFactory,
+    ApplicationFactory,
+    ApplicationInvitationFactory,
+    ApplicationRoleFactory,
+    EnvironmentFactory,
+    EnvironmentRoleFactory,
     PortfolioFactory,
     PortfolioRoleFactory,
-    ApplicationFactory,
+    UserFactory,
 )
 
 
@@ -63,23 +68,52 @@ def test_portfolio_audit_log_only_includes_current_portfolio_events():
         )
 
 
-def test_portfolio_audit_log_includes_app_and_env_events():
-    # TODO: add in events for
-    # creating/updating/deleting env_role and app_role
-    # creating an app_invitation
+def test_get_portfolio_events_includes_app_and_env_events():
     owner = UserFactory.create()
+    # add portfolio level events
     portfolio = PortfolioFactory.create(owner=owner)
+    portfolio_events = AuditLog.get_portfolio_events(portfolio)
+
+    # add application level events
     application = ApplicationFactory.create(portfolio=portfolio)
     Applications.update(application, {"name": "Star Cruiser"})
+    app_role = ApplicationRoleFactory.create(application=application)
+    app_invite = ApplicationInvitationFactory.create(role=app_role)
+    portfolio_and_app_events = AuditLog.get_portfolio_events(portfolio)
+    assert len(portfolio_events) < len(portfolio_and_app_events)
 
-    events = AuditLog.get_portfolio_events(portfolio)
+    # add environment level events
+    env = EnvironmentFactory.create(application=application)
+    env_role = EnvironmentRoleFactory.create(environment=env, user=app_role.user)
+    portfolio_app_and_env_events = AuditLog.get_portfolio_events(portfolio)
+    assert len(portfolio_and_app_events) < len(portfolio_app_and_env_events)
 
+    resource_types = [event.resource_type for event in portfolio_app_and_env_events]
+    assert "application" in resource_types
+    assert "application_role" in resource_types
+    assert "application_invitation" in resource_types
+    assert "environment" in resource_types
+    assert "environment_role" in resource_types
+
+
+def test_get_application_events():
+    # add in some portfolio level events
+    portfolio = PortfolioFactory.create()
+    Portfolios.update(portfolio, {"name": "New Name"})
+    # add app level events
+    application = ApplicationFactory.create(portfolio=portfolio)
+    Applications.update(application, {"name": "Star Cruiser"})
+    app_role = ApplicationRoleFactory.create(application=application)
+    app_invite = ApplicationInvitationFactory.create(role=app_role)
+    env = EnvironmentFactory.create(application=application)
+    env_role = EnvironmentRoleFactory.create(environment=env, user=app_role.user)
+    # add rando app
+    rando_app = ApplicationFactory.create(portfolio=portfolio)
+
+    events = AuditLog.get_application_events(application)
     for event in events:
-        assert event.portfolio_id == portfolio.id
-        if event.resource_type == 'application':
-            assert event.application_id == application.id
-    pass
+        assert event.application_id == application.id
+        assert not event.application_id == rando_app.id
 
-
-def test_application_audit_log_does_not_include_portfolio_events():
-    pass
+    resource_types = [event.resource_type for event in events]
+    assert "portfolio" not in resource_types

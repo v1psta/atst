@@ -75,6 +75,9 @@ class ApplicationRole(
             lambda prms: prms.name == perm_set_name, self.permission_sets
         )
 
+    @property
+    def portfolio_id(self):
+        return self.application.portfolio_id
 
 Index(
     "application_role_user_application",

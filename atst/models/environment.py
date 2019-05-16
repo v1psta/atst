@@ -35,7 +35,8 @@ class Environment(
     def portfolio(self):
         return self.application.portfolio
 
-    def auditable_portfolio_id(self):
+    @property
+    def portfolio_id(self):
         return self.application.portfolio_id
 
     def __repr__(self):
