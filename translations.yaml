@@ -84,7 +84,7 @@ flash:
 footer:
   about_link_text: Joint Enterprise Defense Infrastructure
   browser_support: JEDI Cloud supported on these web browsers
-  jedi_help_link_text: Questions? Contact your CCPO representative
+  jedi_help_link_text: Need help?  Click here!
   login: 'Last login:'
 forms:
   application:
