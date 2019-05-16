@@ -26,14 +26,18 @@ class Portfolio(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     task_orders = relationship("TaskOrder")
 
     @property
-    def owner(self):
+    def owner_role(self):
         def _is_portfolio_owner(portfolio_role):
             return PermissionSets.PORTFOLIO_POC in [
                 perms_set.name for perms_set in portfolio_role.permission_sets
             ]
 
-        owner = first_or_none(_is_portfolio_owner, self.roles)
-        return owner.user if owner else None
+        return first_or_none(_is_portfolio_owner, self.roles)
+
+    @property
+    def owner(self):
+        owner_role = self.owner_role
+        return owner_role.user if owner_role else None
 
     @property
     def users(self):

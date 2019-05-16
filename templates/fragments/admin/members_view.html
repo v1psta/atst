@@ -1,14 +1,14 @@
 {% for subform in member_perms_form.members_permissions %}
-  {% set ppoc = subform.user_id.data == portfolio.owner.id %}
+  {% set ppoc = subform.member_id.data == ppoc_id %}
   {% set heading_perms = [subform.perms_app_mgmt, subform.perms_funding, subform.perms_reporting, subform.perms_portfolio_mgmt] %}
 
   <tr>
-    <td class='name'>{{ subform.member.data }}
+    <td class='name'>{{ subform.member_name.data }}
       <div>
         {% if ppoc %}
           <span class='you'>PPoC</span>
         {% endif %}
-        {% if subform.user_id.data == user.id %}
+        {% if subform.member_id.data == current_member_id %}
           <span class='you'>(<span class='green'>you</span>)</span>
         {% endif %}
       </div>

@@ -160,6 +160,10 @@ class PortfolioRole(
             self.latest_invitation and self.latest_invitation.is_inactive
         )
 
+    @property
+    def full_name(self):
+        return self.user.full_name
+
 
 Index(
     "portfolio_role_user_portfolio",
