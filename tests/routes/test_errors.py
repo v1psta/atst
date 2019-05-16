@@ -24,9 +24,8 @@ def test_csrf_error(csrf_enabled_app, client):
     assert "Log in required" in body
 
 
-def test_portfolio_route_without_user_session(client, csrf_enabled_app, user_session):
+def test_portfolio_route_without_user_session(csrf_enabled_app, client):
     task_order = TaskOrderFactory.create()
-    user_session()
 
     endpoint_url = url_for("task_orders.update", task_order_id=task_order.id, screen=1)
     response = client.post(
