@@ -6,7 +6,7 @@ from atst.models import Base
 from atst.models.mixins import TimestampsMixin, AuditableMixin, InvitesMixin
 
 
-class PortfolioInvitation(Base, TimestampsMixin, AuditableMixin, InvitesMixin):
+class PortfolioInvitation(Base, TimestampsMixin, InvitesMixin, AuditableMixin):
     __tablename__ = "portfolio_invitations"
 
     portfolio_role_id = Column(
@@ -25,17 +25,3 @@ class PortfolioInvitation(Base, TimestampsMixin, AuditableMixin, InvitesMixin):
     @property
     def portfolio_id(self):
         return self.role.portfolio_id
-
-    @property
-    def event_details(self):
-        return {"email": self.email, "dod_id": self.user_dod_id}
-
-    @property
-    def history(self):
-        changes = self.get_changes()
-        change_set = {}
-
-        if "status" in changes:
-            change_set["status"] = [s.name for s in changes["status"]]
-
-        return change_set
