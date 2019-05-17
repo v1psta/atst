@@ -96,7 +96,9 @@ def user_can_view(permission):
 
 
 def portfolio():
-    if g.portfolio is not None:
+    if g.current_user is None:
+        return {}
+    elif g.portfolio is not None:
         active_task_orders = [
             task_order for task_order in g.portfolio.task_orders if task_order.is_active
         ]
