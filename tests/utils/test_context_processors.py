@@ -2,7 +2,11 @@ import pytest
 
 from atst.domain.permission_sets import PermissionSets
 from atst.models import Permissions
-from atst.utils.context_processors import get_resources_from_context, user_can_view
+from atst.utils.context_processors import (
+    get_resources_from_context,
+    user_can_view,
+    portfolio as portfolio_context,
+)
 
 from tests.factories import *
 
@@ -63,3 +67,14 @@ def test_user_can_view(set_g):
 
     set_g("current_user", rando)
     assert not user_can_view(Permissions.VIEW_APPLICATION)
+
+
+def test_portfolio_no_user(set_g):
+    set_g("current_user", None)
+    assert portfolio_context() == {}
+
+
+def test_portfolio_with_user(set_g):
+    user = UserFactory.create()
+    set_g("current_user", user)
+    assert portfolio_context() != {}
