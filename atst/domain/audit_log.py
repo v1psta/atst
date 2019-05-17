@@ -32,6 +32,7 @@ class AuditEventQuery(Query):
 
 class AuditLog(object):
     @classmethod
+    # TODO: see if this is being used anywhere and remove if not
     def log_system_event(cls, resource, action, portfolio=None):
         return cls._log(resource=resource, action=action, portfolio=portfolio)
 
@@ -61,6 +62,7 @@ class AuditLog(object):
         return type(resource).__name__.lower()
 
     @classmethod
+    # TODO: see if this is being used anywhere and remove if not
     def _log(cls, user=None, portfolio=None, resource=None, action=None):
         resource_id = resource.id if resource else None
         resource_type = cls._resource_type(resource) if resource else None
