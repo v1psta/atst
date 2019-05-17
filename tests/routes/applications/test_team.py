@@ -3,6 +3,8 @@ import uuid
 from flask import url_for
 
 from atst.domain.permission_sets import PermissionSets
+from atst.models import CSPRole
+from atst.forms.data import ENV_ROLE_NO_ACCESS as NO_ACCESS
 
 from tests.factories import *
 
@@ -17,7 +19,7 @@ def test_application_team(client, user_session):
     assert response.status_code == 200
 
 
-def test_update_team(client, user_session):
+def test_update_team_permissions(client, user_session):
     application = ApplicationFactory.create()
     owner = application.portfolio.owner
     app_role = ApplicationRoleFactory.create(
@@ -89,6 +91,63 @@ def test_update_team_with_non_app_user(client, user_session):
     )
 
     assert response.status_code == 404
+
+
+def test_update_team_environment_roles(client, user_session):
+    application = ApplicationFactory.create()
+    owner = application.portfolio.owner
+    app_role = ApplicationRoleFactory.create(
+        application=application, permission_sets=[]
+    )
+    app_user = app_role.user
+    environment = EnvironmentFactory.create(application=application)
+    env_role = EnvironmentRoleFactory.create(
+        user=app_user, environment=environment, role=CSPRole.NETWORK_ADMIN.value
+    )
+    user_session(owner)
+    response = client.post(
+        url_for("applications.update_team", application_id=application.id),
+        data={
+            "members-0-user_id": app_user.id,
+            "members-0-permission_sets-perms_team_mgmt": PermissionSets.EDIT_APPLICATION_TEAM,
+            "members-0-permission_sets-perms_env_mgmt": PermissionSets.EDIT_APPLICATION_ENVIRONMENTS,
+            "members-0-permission_sets-perms_del_env": PermissionSets.DELETE_APPLICATION_ENVIRONMENTS,
+            "members-0-environment_roles-0-environment_id": environment.id,
+            "members-0-environment_roles-0-role": CSPRole.TECHNICAL_READ.value,
+        },
+    )
+
+    assert response.status_code == 302
+    assert env_role.role == CSPRole.TECHNICAL_READ.value
+
+
+def test_update_team_revoke_environment_access(client, user_session, db, session):
+    application = ApplicationFactory.create()
+    owner = application.portfolio.owner
+    app_role = ApplicationRoleFactory.create(
+        application=application, permission_sets=[]
+    )
+    app_user = app_role.user
+    environment = EnvironmentFactory.create(application=application)
+    env_role = EnvironmentRoleFactory.create(
+        user=app_user, environment=environment, role=CSPRole.BASIC_ACCESS.value
+    )
+    user_session(owner)
+    response = client.post(
+        url_for("applications.update_team", application_id=application.id),
+        data={
+            "members-0-user_id": app_user.id,
+            "members-0-permission_sets-perms_team_mgmt": PermissionSets.EDIT_APPLICATION_TEAM,
+            "members-0-permission_sets-perms_env_mgmt": PermissionSets.EDIT_APPLICATION_ENVIRONMENTS,
+            "members-0-permission_sets-perms_del_env": PermissionSets.DELETE_APPLICATION_ENVIRONMENTS,
+            "members-0-environment_roles-0-environment_id": environment.id,
+            "members-0-environment_roles-0-role": NO_ACCESS,
+        },
+    )
+
+    assert response.status_code == 302
+    env_role_exists = db.exists().where(EnvironmentRole.id == env_role.id)
+    assert not session.query(env_role_exists).scalar()
 
 
 def test_create_member(client, user_session):

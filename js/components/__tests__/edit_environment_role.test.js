@@ -1,5 +1,5 @@
 import { shallowMount } from '@vue/test-utils'
-import EditEnvironmentRole from '../forms/edit_environment_role'
+import { NO_ACCESS, EditEnvironmentRole } from '../forms/edit_environment_role'
 
 describe('EditEnvironmentRole', () => {
   var initialRoleCategories, wrapper
@@ -7,7 +7,7 @@ describe('EditEnvironmentRole', () => {
   beforeEach(() => {
     initialRoleCategories = [
       {
-        role: 'no_access',
+        role: NO_ACCESS,
         members: [
           { role_name: null, user_id: '123' },
           { role_name: null, user_id: '456' },
@@ -41,10 +41,10 @@ describe('EditEnvironmentRole', () => {
 
   it('removes null roles to no_access', () => {
     let roles = wrapper.vm.sanitizeValues([
-      { role: 'no_access', members: [{ role_name: null }] },
+      { role: NO_ACCESS, members: [{ role_name: null }] },
     ])
     expect(roles).toEqual([
-      { role: 'no_access', members: [{ role_name: 'no_access' }] },
+      { role: NO_ACCESS, members: [{ role_name: NO_ACCESS }] },
     ])
   })
 

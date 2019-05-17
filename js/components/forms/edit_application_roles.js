@@ -1,7 +1,7 @@
 import FormMixin from '../../mixins/form'
 import Modal from '../../mixins/modal'
 import toggler from '../toggler'
-import EditEnvironmentRole from './edit_environment_role'
+import { EditEnvironmentRole } from './edit_environment_role'
 
 export default {
   name: 'edit-application-roles',

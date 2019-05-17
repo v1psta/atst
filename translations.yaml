@@ -20,6 +20,7 @@ base_public:
 common:
   back: Back
   cancel: Cancel
+  close: Close
   confirm: Confirm
   continue: Continue
   delete: Delete
@@ -46,7 +47,6 @@ common:
   name: Name
 components:
   modal:
-    close: Close
     destructive_message: You will no longer be able to access this {resource}
     destructive_title: Warning! This action is permanent
   usa_header:
@@ -80,7 +80,7 @@ flash:
   portfolio_home: Go to my portfolio home page
   success: Success!
   new_application_member: 'You have successfully invited {user_name} to the team.'
-  updated_application_members_permissions: 'You have successfully updated member permissions.'
+  updated_application_team_settings: 'You have updated the {application_name} team settings.'
 footer:
   about_link_text: Joint Enterprise Defense Infrastructure
   browser_support: JEDI Cloud supported on these web browsers
@@ -468,6 +468,7 @@ portfolios:
       subheading: Team Settings
       title: '{application_name} Team Settings'
       user: User
+      add_to_environment: Add to existing environment
     team_text: Team
     update_button_text: Save
     members:

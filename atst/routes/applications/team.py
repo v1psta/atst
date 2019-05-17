@@ -6,6 +6,7 @@ from atst.domain.applications import Applications
 from atst.domain.application_roles import ApplicationRoles
 from atst.domain.authz.decorator import user_can_access_decorator as user_can
 from atst.domain.environment_roles import EnvironmentRoles
+from atst.domain.environments import Environments
 from atst.domain.exceptions import AlreadyExistsError
 from atst.domain.permission_sets import PermissionSets
 from atst.domain.users import Users
@@ -97,15 +98,25 @@ def update_team(application_id):
     form = TeamForm(http_request.form)
 
     if form.validate():
-        for member in form.members:
-            app_role = ApplicationRoles.get(member.data["user_id"], application.id)
+        for member_form in form.members:
+            app_role = ApplicationRoles.get(member_form.user_id.data, application.id)
             new_perms = [
                 perm
-                for perm in member.data["permission_sets"]
+                for perm in member_form.data["permission_sets"]
                 if perm != PermissionSets.VIEW_APPLICATION
             ]
             ApplicationRoles.update_permission_sets(app_role, new_perms)
-        flash("updated_application_members_permissions")
+
+            for environment_role_form in member_form.environment_roles:
+                user = Users.get(member_form.user_id.data)
+                environment = Environments.get(
+                    environment_role_form.environment_id.data
+                )
+                Environments.update_env_role(
+                    environment, user, environment_role_form.data.get("role")
+                )
+
+        flash("updated_application_team_settings", application_name=application.name)
 
         return redirect(
             url_for(

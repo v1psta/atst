@@ -186,10 +186,10 @@ MESSAGES = {
         """,
         "category": "success",
     },
-    "updated_application_members_permissions": {
+    "updated_application_team_settings": {
         "title_template": translate("flash.success"),
         "message_template": """
-          <p>{{ "flash.updated_application_members_permissions" | translate }}</p>
+          <p>{{ "flash.updated_application_team_settings" | translate({"application_name": application_name}) }}</p>
         """,
         "category": "success",
     },

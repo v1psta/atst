@@ -18,7 +18,7 @@ import poc from './components/forms/poc'
 import oversight from './components/forms/oversight'
 import toggler from './components/toggler'
 import NewApplication from './components/forms/new_application'
-import EditEnvironmentRole from './components/forms/edit_environment_role'
+import { EditEnvironmentRole } from './components/forms/edit_environment_role'
 import EditApplicationRoles from './components/forms/edit_application_roles'
 import MultiStepModalForm from './components/forms/multi_step_modal_form'
 import funding from './components/forms/funding'
@@ -39,6 +39,7 @@ import KoReview from './components/forms/ko_review'
 import BaseForm from './components/forms/base_form'
 import DeleteConfirmation from './components/delete_confirmation'
 import NewEnvironment from './components/forms/new_environment'
+import EnvironmentRole from './components/environment_role'
 
 Vue.config.productionTip = false
 
@@ -80,6 +81,7 @@ const app = new Vue({
     DeleteConfirmation,
     nestedcheckboxinput,
     NewEnvironment,
+    EnvironmentRole,
   },
 
   mounted: function() {

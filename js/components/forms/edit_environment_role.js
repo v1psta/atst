@@ -5,7 +5,9 @@ import Modal from '../../mixins/modal'
 // https://github.com/dod-ccpo/atst/pull/799/files#r282240663
 // May also want to reconsider the data structure by storing the roles and members separately
 
-export default {
+export const NO_ACCESS = 'No Access'
+
+export const EditEnvironmentRole = {
   name: 'edit-environment-role',
 
   mixins: [FormMixin],
@@ -26,7 +28,7 @@ export default {
       roles.forEach(role => {
         role.members.forEach(member => {
           if (member.role_name === null) {
-            member.role_name = 'no_access'
+            member.role_name = NO_ACCESS
           }
         })
       })
@@ -34,7 +36,7 @@ export default {
     },
 
     checkNoAccess: function(role) {
-      return role === 'no_access'
+      return role === NO_ACCESS
     },
 
     toggleSection: function(sectionName) {

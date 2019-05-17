@@ -1,12 +1,29 @@
 from flask_wtf import FlaskForm
-from wtforms.fields import FormField, FieldList, HiddenField, StringField
+from wtforms.fields import FormField, FieldList, HiddenField, RadioField, StringField
 from wtforms.validators import Required
 
-from .application_member import EnvironmentForm
+from .application_member import EnvironmentForm as BaseEnvironmentForm
+from .data import ENV_ROLES, ENV_ROLE_NO_ACCESS as NO_ACCESS
 from .forms import BaseForm
 from atst.forms.fields import SelectField
 from atst.domain.permission_sets import PermissionSets
 from atst.utils.localization import translate
+
+
+class EnvironmentForm(BaseEnvironmentForm):
+    role = RadioField(
+        "Role",
+        choices=ENV_ROLES,
+        default=None,
+        filters=[lambda x: None if x == "None" else x],
+    )
+
+    @property
+    def data(self):
+        _data = super().data
+        if "role" in _data and _data["role"] == NO_ACCESS:
+            _data["role"] = None
+        return _data
 
 
 class PermissionsForm(FlaskForm):

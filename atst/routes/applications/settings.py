@@ -5,6 +5,7 @@ from atst.domain.environments import Environments
 from atst.domain.applications import Applications
 from atst.forms.app_settings import AppEnvRolesForm
 from atst.forms.application import ApplicationForm, EditEnvironmentForm
+from atst.forms.data import ENV_ROLE_NO_ACCESS as NO_ACCESS
 from atst.domain.authz.decorator import user_can_access_decorator as user_can
 from atst.models.environment_role import CSPRole
 from atst.domain.exceptions import NotFoundError
@@ -46,10 +47,10 @@ def sort_env_users_by_role(env):
     users_list = []
     no_access_users = env.application.users - env.users
     no_access_list = [
-        {"user_id": str(user.id), "user_name": user.full_name, "role_name": "no_access"}
+        {"user_id": str(user.id), "user_name": user.full_name, "role_name": NO_ACCESS}
         for user in no_access_users
     ]
-    users_list.append({"role": "no_access", "members": no_access_list})
+    users_list.append({"role": NO_ACCESS, "members": no_access_list})
 
     for role in CSPRole:
         users_list.append(
