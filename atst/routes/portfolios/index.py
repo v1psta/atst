@@ -1,6 +1,6 @@
 from datetime import date, timedelta
 
-from flask import render_template, request as http_request, g, redirect, url_for
+from flask import render_template, request as http_request, g
 
 from . import portfolios_bp
 from atst.domain.reports import Reports
@@ -17,14 +17,6 @@ def portfolios():
         return render_template("portfolios/index.html", page=5, portfolios=portfolios)
     else:
         return render_template("portfolios/blank_slate.html")
-
-
-@portfolios_bp.route("/portfolios/<portfolio_id>")
-@user_can(Permissions.VIEW_PORTFOLIO, message="view portfolio")
-def show_portfolio(portfolio_id):
-    return redirect(
-        url_for("applications.portfolio_applications", portfolio_id=portfolio_id)
-    )
 
 
 @portfolios_bp.route("/portfolios/<portfolio_id>/reports")

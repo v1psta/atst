@@ -145,7 +145,7 @@ MESSAGES = {
         "actions": """
             {% from "components/icon.html" import Icon %}
             <div class='alert__actions'>
-              <a href='{{ url_for("portfolios.show_portfolio", portfolio_id=portfolio.id) }}' class='icon-link'>
+              <a href='{{ url_for("applications.portfolio_applications", portfolio_id=portfolio.id) }}' class='icon-link'>
                 {{ Icon('shield') }}
                 <span>{{ "flash.portfolio_home" | translate }}</span>
               </a>
