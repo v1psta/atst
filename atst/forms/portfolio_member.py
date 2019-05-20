@@ -9,8 +9,8 @@ from atst.utils.localization import translate
 
 
 class PermissionsForm(BaseForm):
-    member = StringField()
-    user_id = HiddenField()
+    member_name = StringField()
+    member_id = HiddenField()
     perms_app_mgmt = SelectField(
         translate("forms.new_member.app_mgmt"),
         choices=[

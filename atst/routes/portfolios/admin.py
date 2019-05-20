@@ -12,6 +12,7 @@ from atst.forms.portfolio import PortfolioForm
 import atst.forms.portfolio_member as member_forms
 from atst.models.permissions import Permissions
 from atst.domain.authz.decorator import user_can_access_decorator as user_can
+from atst.utils import first_or_none
 from atst.utils.flash import formatted_flash as flash
 from atst.domain.exceptions import UnauthorizedError
 
@@ -25,8 +26,8 @@ def permission_str(member, edit_perm_set, view_perm_set):
 
 def serialize_member_form_data(member):
     return {
-        "member": member.user.full_name,
-        "user_id": member.user_id,
+        "member_name": member.full_name,
+        "member_id": member.id,
         "perms_app_mgmt": permission_str(
             member,
             PermissionSets.EDIT_PORTFOLIO_APPLICATION_MANAGEMENT,
@@ -53,7 +54,7 @@ def serialize_member_form_data(member):
 def get_members_data(portfolio):
     members = [serialize_member_form_data(member) for member in portfolio.members]
     for member in members:
-        if member["user_id"] == portfolio.owner.id:
+        if member["member_id"] == portfolio.owner_role.id:
             ppoc = member
             members.remove(member)
     members.insert(0, ppoc)
@@ -76,6 +77,11 @@ def render_admin_page(portfolio, form=None):
                 (pf_role.user.id, pf_role.user.full_name)
             ]
 
+    current_member = first_or_none(
+        lambda m: m.user_id == g.current_user.id, portfolio.members
+    )
+    current_member_id = current_member.id if current_member else None
+
     return render_template(
         "portfolios/admin.html",
         form=form,
@@ -86,7 +92,8 @@ def render_admin_page(portfolio, form=None):
         portfolio=portfolio,
         audit_events=audit_events,
         user=g.current_user,
-        members_data=members_data,
+        ppoc_id=members_data[0].get("member_id"),
+        current_member_id=current_member_id,
     )
 
 
@@ -105,12 +112,11 @@ def edit_members(portfolio_id):
 
     if member_perms_form.validate():
         for subform in member_perms_form.members_permissions:
-            user_id = subform.user_id.data
-            member = Users.get(user_id=user_id)
-            if member is not portfolio.owner:
+            member_id = subform.member_id.data
+            member = PortfolioRoles.get_by_id(member_id)
+            if member is not portfolio.owner_role:
                 new_perm_set = subform.data["permission_sets"]
-                portfolio_role = PortfolioRoles.get(portfolio.id, user_id)
-                PortfolioRoles.update(portfolio_role, new_perm_set)
+                PortfolioRoles.update(member, new_perm_set)
 
         flash("update_portfolio_members", portfolio=portfolio)
 

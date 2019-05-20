@@ -53,7 +53,7 @@ def test_update_member_permissions(client, user_session):
     user_session(user)
 
     form_data = {
-        "members_permissions-0-user_id": rando.id,
+        "members_permissions-0-member_id": rando_pf_role.id,
         "members_permissions-0-perms_app_mgmt": "edit_portfolio_application_management",
         "members_permissions-0-perms_funding": "view_portfolio_funding",
         "members_permissions-0-perms_reporting": "view_portfolio_reports",
@@ -90,7 +90,7 @@ def test_no_update_member_permissions_without_edit_access(client, user_session):
     user_session(user)
 
     form_data = {
-        "members_permissions-0-user_id": rando.id,
+        "members_permissions-0-member_id": rando_pf_role.id,
         "members_permissions-0-perms_app_mgmt": "edit_portfolio_application_management",
         "members_permissions-0-perms_funding": "view_portfolio_funding",
         "members_permissions-0-perms_reporting": "view_portfolio_reports",
@@ -114,14 +114,14 @@ def test_rerender_admin_page_if_member_perms_form_does_not_validate(
 ):
     portfolio = PortfolioFactory.create()
     user = UserFactory.create()
-    PortfolioRoleFactory.create(
+    role = PortfolioRoleFactory.create(
         user=user,
         portfolio=portfolio,
         permission_sets=[PermissionSets.get(PermissionSets.EDIT_PORTFOLIO_ADMIN)],
     )
     user_session(user)
     form_data = {
-        "members_permissions-0-user_id": user.id,
+        "members_permissions-0-member_id": role.id,
         "members_permissions-0-perms_app_mgmt": "bad input",
         "members_permissions-0-perms_funding": "view_portfolio_funding",
         "members_permissions-0-perms_reporting": "view_portfolio_reports",
@@ -149,7 +149,7 @@ def test_cannot_update_portfolio_ppoc_perms(client, user_session):
     assert ppoc_pf_role.has_permission_set(PermissionSets.PORTFOLIO_POC)
 
     member_perms_data = {
-        "members_permissions-0-user_id": ppoc.id,
+        "members_permissions-0-member_id": ppoc_pf_role.id,
         "members_permissions-0-perms_app_mgmt": "view_portfolio_application_management",
         "members_permissions-0-perms_funding": "view_portfolio_funding",
         "members_permissions-0-perms_reporting": "view_portfolio_reports",
