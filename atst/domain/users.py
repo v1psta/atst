@@ -89,7 +89,6 @@ class Users(object):
         db.session.add(user)
         db.session.commit()
 
-
     @classmethod
     def update_last_session_id(cls, user, session_id):
         user.last_session_id = session_id

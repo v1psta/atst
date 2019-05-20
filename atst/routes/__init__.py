@@ -8,7 +8,7 @@ from flask import (
     url_for,
     request,
     make_response,
-    current_app as app
+    current_app as app,
 )
 
 from jinja2.exceptions import TemplateNotFound
@@ -123,11 +123,9 @@ def redirect_after_login_url():
 
 
 def current_user_setup(user):
-    session_id = session.sid
-    app.redis.delete("session:{}".format(user.last_session_id))
     session["user_id"] = user.id
     session["last_login"] = user.last_login
-    Users.update_last_session_id(user, session_id)
+    app.session_limiter.on_login(user)
     Users.update_last_login(user)
 
 
