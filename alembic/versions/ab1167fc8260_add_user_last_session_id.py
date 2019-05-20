@@ -1,7 +1,7 @@
 """add_user_last_session_id
 
 Revision ID: ab1167fc8260
-Revises: 432c5287256d
+Revises: 404bb5bb3a0e
 Create Date: 2019-05-15 16:25:48.766451
 
 """
@@ -11,7 +11,7 @@ from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
 revision = 'ab1167fc8260'
-down_revision = '432c5287256d'
+down_revision = '404bb5bb3a0e'
 branch_labels = None
 depends_on = None
 
