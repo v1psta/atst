@@ -12,9 +12,9 @@ from atst.database import db as _db
 from atst.queue import queue as atst_queue
 import tests.factories as factories
 from tests.mocks import PDF_FILENAME, PDF_FILENAME2
-from tests.utils import FakeLogger
+from tests.utils import FakeLogger, FakeNotificationSender
 
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timedelta
 from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography import x509
 from cryptography.hazmat.backends import default_backend
@@ -307,3 +307,13 @@ def mock_logger(app):
     yield app.logger
 
     app.logger = real_logger
+
+
+@pytest.fixture(scope="function", autouse=True)
+def notification_sender(app):
+    real_notification_sender = app.notification_sender
+    app.notification_sender = FakeNotificationSender()
+
+    yield app.notification_sender
+
+    app.notification_sender = real_notification_sender
