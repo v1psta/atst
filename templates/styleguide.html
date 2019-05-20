@@ -5,8 +5,57 @@
 {% from "components/alert.html" import Alert %}
 {% from "components/tooltip.html" import Tooltip %}
 
+{% from "components/delete_confirmation.html" import DeleteConfirmation %}
+{% from "components/modal.html" import Modal %}
+
 
 {% block content %}
+
+
+
+<header class="accordion__header row"><div class="col col-grow"><h3 class="icon-link accordion__title">Blockchain Enterprise</h3> <span class="accordion__description">engineer one-to-one portals</span> <div class="accordion__actions"><a href="/applications/014f6899-ab1f-4748-ba69-6a063a259c04/settings" class="icon-link"><span>App settings</span></a> <div class="separator"></div> <a href="/applications/014f6899-ab1f-4748-ba69-6a063a259c04/team" class="icon-link"><span>Team (5)</span></a> <div class="separator"></div> <a class="icon-link triangle-box"><span>Environments (2)</span> <span><span aria-hidden="true" class="icon icon--caret_up "><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M15 12c-.256 0-.512-.098-.707-.293L8 5.414l-6.293 6.293c-.391.391-1.023.391-1.414 0s-.391-1.023 0-1.414l7-7c.391-.391 1.023-.391 1.414 0l7 7c.391.391.391 1.023 0 1.414-.195.195-.451.293-.707.293z"></path></svg></span></span> </a></div></div></header>
+
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+
+
+<h4>Modals</h4>
+
+<a class="icon-link modal-link" v-on:click="openModal('delete_modal')">
+  {{ "portfolios.admin.add_new_member" | translate }}
+  {{ Icon("plus") }}
+</a>
+
+{% call Modal(name="delete_modal") %}
+<h1>
+  {{ "portfolios.applications.remove_member.header" | translate }}
+</h1>
+
+{{
+  Alert(
+  title=("components.modal.destructive_title" | translate),
+  message="hello world",
+  level="warning"
+  )
+}}
+
+{{
+  DeleteConfirmation(
+  modal_id="delete_modal",
+  delete_text=('portfolios.applications.remove_member.button' | translate),
+  delete_action="url_for('applications.remove_member', application_id=application.id, user_id=member_form.data.user_id)",
+  form="member_form"
+  )
+}}
+{% endcall %}
+
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
 
   {% call Modal(name='styleguideModal', dismissable=True) %}
     <h1>A modal dialog</h1>
