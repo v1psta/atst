@@ -45,5 +45,6 @@ class EnvironmentRoles(object):
             .filter(EnvironmentRole.user_id == user_id)
             .filter(Application.id == application_id)
             .filter(EnvironmentRole.environment_id == Environment.id)
+            .filter(EnvironmentRole.deleted != True)
             .all()
         )
