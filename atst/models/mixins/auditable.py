@@ -90,11 +90,11 @@ class AuditableMixin(object):
 
     @property
     def portfolio_id(self):
-        return None
+        raise NotImplementedError()
 
     @property
     def application_id(self):
-        return None
+        raise NotImplementedError()
 
     @property
     def displayname(self):

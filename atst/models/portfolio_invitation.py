@@ -25,3 +25,7 @@ class PortfolioInvitation(Base, TimestampsMixin, InvitesMixin, AuditableMixin):
     @property
     def portfolio_id(self):
         return self.role.portfolio_id
+
+    @property
+    def application_id(self):
+        return None

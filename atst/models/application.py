@@ -52,6 +52,10 @@ class Application(
     def displayname(self):
         return self.name
 
+    @property
+    def application_id(self):
+        return self.id
+
     def __repr__(self):  # pragma: no cover
         return "<Application(name='{}', description='{}', portfolio='{}', id='{}')>".format(
             self.name, self.description, self.portfolio.name, self.id

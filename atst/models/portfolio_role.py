@@ -164,6 +164,10 @@ class PortfolioRole(
     def full_name(self):
         return self.user.full_name
 
+    @property
+    def application_id(self):
+        return None
+
 
 Index(
     "portfolio_role_user_portfolio",

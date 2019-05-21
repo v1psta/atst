@@ -96,6 +96,14 @@ class User(
     def displayname(self):
         return self.full_name
 
+    @property
+    def portfolio_id(self):
+        return None
+
+    @property
+    def application_id(self):
+        return None
+
     def __repr__(self):
         return "<User(name='{}', dod_id='{}', email='{}', has_portfolios='{}', id='{}')>".format(
             self.full_name, self.dod_id, self.email, self.has_portfolios, self.id
