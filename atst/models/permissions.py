@@ -18,6 +18,7 @@ class Permissions(object):
     CREATE_ENVIRONMENT = "create_environment"
     DELETE_ENVIRONMENT = "delete_environment"
     ASSIGN_ENVIRONMENT_MEMBER = "assign_environment_member"
+    VIEW_APPLICATION_ACTIVITY_LOG = "view_application_activity_log"
 
     # funding
     VIEW_PORTFOLIO_FUNDING = "view_portfolio_funding"  # TO summary page

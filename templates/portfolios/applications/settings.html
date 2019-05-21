@@ -103,7 +103,7 @@
     {% endcall %}
   {% endif %}
 
-  {% if user_can(permissions.VIEW_APPLICATION) %}
+  {% if user_can(permissions.VIEW_APPLICATION_ACTIVITY_LOG) %}
     {% include "fragments/audit_events_log.html" %}
     {{ Pagination(audit_events, url=url_for('applications.settings', application_id=application.id)) }}
   {% endif %}
