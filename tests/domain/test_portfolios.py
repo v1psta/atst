@@ -7,9 +7,12 @@ from atst.domain.portfolio_roles import PortfolioRoles
 from atst.domain.applications import Applications
 from atst.domain.environments import Environments
 from atst.domain.permission_sets import PermissionSets, PORTFOLIO_PERMISSION_SETS
+from atst.models.application_role import Status as ApplicationRoleStatus
 from atst.models.portfolio_role import Status as PortfolioRoleStatus
 
 from tests.factories import (
+    ApplicationFactory,
+    ApplicationRoleFactory,
     UserFactory,
     PortfolioRoleFactory,
     PortfolioFactory,
@@ -162,6 +165,17 @@ def test_scoped_portfolio_returns_all_applications_for_portfolio_owner(
 
     assert len(scoped_portfolio.applications) == 5
     assert len(scoped_portfolio.applications[0].environments) == 3
+
+
+def test_for_user_returns_portfolios_for_applications_user_invited_to():
+    bob = UserFactory.create()
+    portfolio = PortfolioFactory.create()
+    application = ApplicationFactory.create(portfolio=portfolio)
+    ApplicationRoleFactory.create(
+        application=application, user=bob, status=ApplicationRoleStatus.ACTIVE
+    )
+
+    assert portfolio in Portfolios.for_user(user=bob)
 
 
 def test_for_user_returns_active_portfolios_for_user(portfolio, portfolio_owner):
