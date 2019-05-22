@@ -34,7 +34,7 @@ def test_existing_member_accepts_valid_invite(client, user_session):
     # user is redirected to the portfolio view
     assert response.status_code == 302
     assert (
-        url_for("portfolios.show_portfolio", portfolio_id=invite.portfolio.id)
+        url_for("applications.portfolio_applications", portfolio_id=invite.portfolio.id)
         in response.headers["Location"]
     )
     # the one-time use invite is no longer usable
@@ -77,7 +77,7 @@ def test_new_member_accepts_valid_invite(monkeypatch, client, user_session):
     # user is redirected to the portfolio view
     assert response.status_code == 302
     assert (
-        url_for("portfolios.show_portfolio", portfolio_id=portfolio.id)
+        url_for("applications.portfolio_applications", portfolio_id=portfolio.id)
         in response.headers["Location"]
     )
     # the user has access to the portfolio

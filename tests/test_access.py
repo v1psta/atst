@@ -466,19 +466,6 @@ def test_portfolios_revoke_invitation_access(post_url_assert_status):
         post_url_assert_status(user, url, status)
 
 
-# portfolios.show_portfolio
-def test_portfolios_show_portfolio_access(get_url_assert_status):
-    ccpo = user_with(PermissionSets.VIEW_PORTFOLIO)
-    owner = user_with()
-    rando = user_with()
-    portfolio = PortfolioFactory.create(owner=owner)
-
-    url = url_for("portfolios.show_portfolio", portfolio_id=portfolio.id)
-    get_url_assert_status(ccpo, url, 302)
-    get_url_assert_status(owner, url, 302)
-    get_url_assert_status(rando, url, 404)
-
-
 # task_orders.so_review
 def test_task_orders_so_review_access(get_url_assert_status):
     ccpo = UserFactory.create_ccpo()
