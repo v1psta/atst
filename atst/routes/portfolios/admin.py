@@ -4,10 +4,8 @@ from . import portfolios_bp
 from atst.domain.portfolios import Portfolios
 from atst.domain.portfolio_roles import PortfolioRoles
 from atst.domain.permission_sets import PermissionSets
-from atst.domain.users import Users
 from atst.domain.audit_log import AuditLog
 from atst.domain.common import Paginator
-from atst.domain.exceptions import NotFoundError
 from atst.forms.portfolio import PortfolioForm
 import atst.forms.portfolio_member as member_forms
 from atst.models.permissions import Permissions
@@ -73,9 +71,7 @@ def render_admin_page(portfolio, form=None):
     assign_ppoc_form = member_forms.AssignPPOCForm()
     for pf_role in portfolio.roles:
         if pf_role.user != portfolio.owner and pf_role.is_active:
-            assign_ppoc_form.user_id.choices += [
-                (pf_role.user.id, pf_role.user.full_name)
-            ]
+            assign_ppoc_form.role_id.choices += [(pf_role.id, pf_role.full_name)]
 
     current_member = first_or_none(
         lambda m: m.user_id == g.current_user.id, portfolio.members
@@ -135,18 +131,14 @@ def edit_members(portfolio_id):
 @portfolios_bp.route("/portfolios/<portfolio_id>/update_ppoc", methods=["POST"])
 @user_can(Permissions.EDIT_PORTFOLIO_POC, message="update portfolio ppoc")
 def update_ppoc(portfolio_id):
-    user_id = http_request.form.get("user_id")
+    role_id = http_request.form.get("role_id")
 
     portfolio = Portfolios.get(g.current_user, portfolio_id)
-    new_ppoc = Users.get(user_id)
+    new_ppoc_role = PortfolioRoles.get_by_id(role_id)
 
-    if new_ppoc not in portfolio.users:
-        raise NotFoundError("user not in portfolio")
+    PortfolioRoles.make_ppoc(portfolio_role=new_ppoc_role)
 
-    portfolio_role = PortfolioRoles.get(portfolio_id=portfolio_id, user_id=user_id)
-    PortfolioRoles.make_ppoc(portfolio_role=portfolio_role)
-
-    flash("primary_point_of_contact_changed", ppoc_name=new_ppoc.full_name)
+    flash("primary_point_of_contact_changed", ppoc_name=new_ppoc_role.full_name)
 
     return redirect(
         url_for(
