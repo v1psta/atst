@@ -58,7 +58,7 @@ class User(
     designation = Column(String)
     date_latest_training = Column(Date)
     last_login = Column(TIMESTAMP(timezone=True), nullable=True)
-    last_session_id = types.Id()
+    last_session_id = Column(UUID(as_uuid=True), nullable=True)
 
     provisional = Column(Boolean)
 
