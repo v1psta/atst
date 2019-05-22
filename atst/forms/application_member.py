@@ -3,9 +3,9 @@ from wtforms.fields import FormField, FieldList, HiddenField, BooleanField
 
 from .forms import BaseForm
 from .member import NewForm as BaseNewMemberForm
-from .data import ENV_ROLES
-from atst.forms.fields import SelectField
+from .data import ENV_ROLES, ENV_ROLE_NO_ACCESS as NO_ACCESS
 from atst.domain.permission_sets import PermissionSets
+from atst.forms.fields import SelectField
 from atst.utils.localization import translate
 
 
@@ -15,7 +15,7 @@ class EnvironmentForm(FlaskForm):
     role = SelectField(
         environment_name,
         choices=ENV_ROLES,
-        default=None,
+        default=NO_ACCESS,
         filters=[lambda x: None if x == "None" else x],
     )
 

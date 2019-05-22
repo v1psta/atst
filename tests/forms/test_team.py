@@ -1,5 +1,4 @@
 from wtforms.validators import ValidationError
-import pytest
 
 from atst.domain.permission_sets import PermissionSets
 from atst.forms.team import *
