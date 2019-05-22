@@ -3,6 +3,8 @@ from flask import redirect, render_template, request as http_request, url_for
 from . import applications_bp
 from atst.domain.environments import Environments
 from atst.domain.applications import Applications
+from atst.domain.audit_log import AuditLog
+from atst.domain.common import Paginator
 from atst.forms.app_settings import AppEnvRolesForm
 from atst.forms.application import ApplicationForm, EditEnvironmentForm
 from atst.forms.data import ENV_ROLE_NO_ACCESS as NO_ACCESS
@@ -90,6 +92,8 @@ def render_settings_page(application, **kwargs):
     environments_obj = get_environments_obj_for_app(application=application)
     members_form = AppEnvRolesForm(data=data_for_app_env_roles_form(application))
     new_env_form = EditEnvironmentForm()
+    pagination_opts = Paginator.get_pagination_opts(http_request)
+    audit_events = AuditLog.get_application_events(application, pagination_opts)
 
     if "application_form" not in kwargs:
         kwargs["application_form"] = ApplicationForm(
@@ -102,6 +106,7 @@ def render_settings_page(application, **kwargs):
         environments_obj=environments_obj,
         members_form=members_form,
         new_env_form=new_env_form,
+        audit_events=audit_events,
         **kwargs,
     )
 

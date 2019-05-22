@@ -4,6 +4,6 @@
 {% block content %}
   <div v-cloak>
     {% include "fragments/audit_events_log.html" %}
-    {{ Pagination(audit_events, 'atst.activity_history')}}
+    {{ Pagination(audit_events, url_for('atst.activity_history'))}}
   </div>
 {% endblock %}

@@ -68,8 +68,13 @@ class Portfolio(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     def all_environments(self):
         return list(chain.from_iterable(p.environments for p in self.applications))
 
-    def auditable_portfolio_id(self):
+    @property
+    def portfolio_id(self):
         return self.id
+
+    @property
+    def application_id(self):
+        return None
 
     def __repr__(self):
         return "<Portfolio(name='{}', user_count='{}', id='{}')>".format(

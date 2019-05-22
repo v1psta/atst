@@ -39,6 +39,14 @@ class EnvironmentRole(
         return self.get_changes()
 
     @property
+    def portfolio_id(self):
+        return self.environment.application.portfolio_id
+
+    @property
+    def application_id(self):
+        return self.environment.application_id
+
+    @property
     def displayname(self):
         return self.role
 

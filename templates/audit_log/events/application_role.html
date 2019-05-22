@@ -1,0 +1,9 @@
+{% extends 'audit_log/events/_base.html' %}
+
+{% block content %}
+  for User <code>{{ event.event_details.updated_user_id }}</code> ({{ event.event_details.updated_user_name }})
+  <br>
+  in Application <code>{{ event.application_id}}</code> ({{ event.event_details.application }})
+  <br>
+  in Portfolio <code>{{ event.portfolio_id }}</code> ({{ event.event_details.portfolio }})
+{% endblock %}

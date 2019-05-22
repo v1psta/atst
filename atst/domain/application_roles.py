@@ -14,7 +14,9 @@ class ApplicationRoles(object):
 
     @classmethod
     def create(cls, user, application, permission_set_names):
-        application_role = ApplicationRole(user=user, application_id=application.id)
+        application_role = ApplicationRole(
+            user=user, application_id=application.id, application=application
+        )
 
         application_role.permission_sets = ApplicationRoles._permission_sets_for_names(
             permission_set_names

@@ -105,3 +105,23 @@ class InvitesMixin(object):
     @property
     def user_dod_id(self):
         return self.user.dod_id if self.user is not None else None
+
+    @property
+    def event_details(self):
+        """Overrides the same property in AuditableMixin.
+        Provides the event details for an invite that are required for the audit log
+        """
+        return {"email": self.email, "dod_id": self.user_dod_id}
+
+    @property
+    def history(self):
+        """Overrides the same property in AuditableMixin
+        Determines whether or not invite status has been updated
+        """
+        changes = self.get_changes()
+        change_set = {}
+
+        if "status" in changes:
+            change_set["status"] = [s.name for s in changes["status"]]
+
+        return change_set

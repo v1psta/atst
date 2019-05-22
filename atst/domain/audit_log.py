@@ -1,5 +1,3 @@
-from sqlalchemy import or_
-
 from atst.database import db
 from atst.domain.common import Query
 from atst.models.audit_event import AuditEvent
@@ -14,15 +12,19 @@ class AuditEventQuery(Query):
         return cls.paginate(query, pagination_opts)
 
     @classmethod
-    def get_ws_events(cls, portfolio_id, pagination_opts):
+    def get_portfolio_events(cls, portfolio_id, pagination_opts):
         query = (
             db.session.query(cls.model)
-            .filter(
-                or_(
-                    cls.model.portfolio_id == portfolio_id,
-                    cls.model.resource_id == portfolio_id,
-                )
-            )
+            .filter(cls.model.portfolio_id == portfolio_id)
+            .order_by(cls.model.time_created.desc())
+        )
+        return cls.paginate(query, pagination_opts)
+
+    @classmethod
+    def get_application_events(cls, application_id, pagination_opts):
+        query = (
+            db.session.query(cls.model)
+            .filter(cls.model.application_id == application_id)
             .order_by(cls.model.time_created.desc())
         )
         return cls.paginate(query, pagination_opts)
@@ -30,6 +32,7 @@ class AuditEventQuery(Query):
 
 class AuditLog(object):
     @classmethod
+    # TODO: see if this is being used anywhere and remove if not
     def log_system_event(cls, resource, action, portfolio=None):
         return cls._log(resource=resource, action=action, portfolio=portfolio)
 
@@ -39,7 +42,11 @@ class AuditLog(object):
 
     @classmethod
     def get_portfolio_events(cls, portfolio, pagination_opts=None):
-        return AuditEventQuery.get_ws_events(portfolio.id, pagination_opts)
+        return AuditEventQuery.get_portfolio_events(portfolio.id, pagination_opts)
+
+    @classmethod
+    def get_application_events(cls, application, pagination_opts=None):
+        return AuditEventQuery.get_application_events(application.id, pagination_opts)
 
     @classmethod
     def get_by_resource(cls, resource_id):
@@ -55,6 +62,7 @@ class AuditLog(object):
         return type(resource).__name__.lower()
 
     @classmethod
+    # TODO: see if this is being used anywhere and remove if not
     def _log(cls, user=None, portfolio=None, resource=None, action=None):
         resource_id = resource.id if resource else None
         resource_type = cls._resource_type(resource) if resource else None

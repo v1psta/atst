@@ -17,11 +17,17 @@ class AuditEvent(Base, TimestampsMixin):
     portfolio_id = Column(UUID(as_uuid=True), ForeignKey("portfolios.id"), index=True)
     portfolio = relationship("Portfolio", backref="audit_events")
 
+    application_id = Column(
+        UUID(as_uuid=True), ForeignKey("applications.id"), index=True
+    )
+    application = relationship("Application", backref="audit_events")
+
     changed_state = Column(JSONB())
     event_details = Column(JSONB())
 
     resource_type = Column(String(), nullable=False)
     resource_id = Column(UUID(as_uuid=True), index=True, nullable=False)
+
     display_name = Column(String())
     action = Column(String(), nullable=False)
 
@@ -29,6 +35,7 @@ class AuditEvent(Base, TimestampsMixin):
     def log(self):
         return {
             "portfolio_id": str(self.portfolio_id),
+            "application_id": str(self.application_id),
             "changed_state": self.changed_state,
             "event_details": self.event_details,
             "resource_type": self.resource_type,

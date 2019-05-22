@@ -27,6 +27,10 @@ class ApplicationInvitation(Base, TimestampsMixin, AuditableMixin, InvitesMixin)
         return self.role.application_id
 
     @property
+    def portfolio_id(self):
+        return self.role.portfolio_id
+
+    @property
     def event_details(self):
         return {"email": self.email, "dod_id": self.user_dod_id}
 

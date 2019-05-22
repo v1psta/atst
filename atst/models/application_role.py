@@ -53,7 +53,10 @@ class ApplicationRole(
 
     @property
     def user_name(self):
-        return self.user.full_name
+        if self.user:
+            return self.user.full_name
+        else:
+            return None
 
     def __repr__(self):
         return "<ApplicationRole(application='{}', user_id='{}', id='{}', permissions={})>".format(
@@ -74,6 +77,19 @@ class ApplicationRole(
         return first_or_none(
             lambda prms: prms.name == perm_set_name, self.permission_sets
         )
+
+    @property
+    def portfolio_id(self):
+        return self.application.portfolio_id
+
+    @property
+    def event_details(self):
+        return {
+            "updated_user_name": self.user_name,
+            "updated_user_id": str(self.user_id),
+            "application": self.application.name,
+            "portfolio": self.application.portfolio.name,
+        }
 
 
 Index(
