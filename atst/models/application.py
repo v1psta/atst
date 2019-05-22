@@ -33,7 +33,7 @@ class Application(
 
     @property
     def users(self):
-        return set(role.user for role in self.roles)
+        return set(role.user for role in self.members)
 
     @property
     def members(self):
