@@ -47,8 +47,8 @@ class ATSTQueue(RQ):
     @classmethod
     def _send_notification_mail(self, recipients, subject, body):
         app.logger.info(
-            "Sending a notification to these recipients: {}\n\n{}".format(
-                recipients, body
+            "Sending a notification to these recipients: {}\n\nSubject: {}\n\n{}".format(
+                recipients, subject, body
             )
         )
         app.mailer.send(recipients, subject, body)
