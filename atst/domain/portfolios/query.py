@@ -1,3 +1,4 @@
+from sqlalchemy import or_
 from atst.database import db
 from atst.domain.common import Query
 from atst.models.portfolio import Portfolio
@@ -17,29 +18,34 @@ class PortfoliosQuery(Query):
         return (
             db.session.query(Portfolio)
             .filter(
-                Portfolio.id.in_(
-                    db.session.query(Portfolio.id)
-                    .join(Application)
-                    .filter(Portfolio.id == Application.portfolio_id)
-                    .filter(
-                        Application.id.in_(
-                            db.session.query(Application.id)
-                            .join(ApplicationRole)
-                            .filter(ApplicationRole.application_id == Application.id)
-                            .filter(ApplicationRole.user_id == user.id)
-                            .filter(
-                                ApplicationRole.status == ApplicationRoleStatus.ACTIVE
+                or_(
+                    Portfolio.id.in_(
+                        db.session.query(Portfolio.id)
+                        .join(Application)
+                        .filter(Portfolio.id == Application.portfolio_id)
+                        .filter(
+                            Application.id.in_(
+                                db.session.query(Application.id)
+                                .join(ApplicationRole)
+                                .filter(
+                                    ApplicationRole.application_id == Application.id
+                                )
+                                .filter(ApplicationRole.user_id == user.id)
+                                .filter(
+                                    ApplicationRole.status
+                                    == ApplicationRoleStatus.ACTIVE
+                                )
+                                .subquery()
                             )
-                            .subquery()
                         )
-                    )
-                )
-                | Portfolio.id.in_(
-                    db.session.query(Portfolio.id)
-                    .join(PortfolioRole)
-                    .filter(PortfolioRole.user == user)
-                    .filter(PortfolioRole.status == PortfolioRoleStatus.ACTIVE)
-                    .subquery()
+                    ),
+                    Portfolio.id.in_(
+                        db.session.query(Portfolio.id)
+                        .join(PortfolioRole)
+                        .filter(PortfolioRole.user == user)
+                        .filter(PortfolioRole.status == PortfolioRoleStatus.ACTIVE)
+                        .subquery()
+                    ),
                 )
             )
             .order_by(Portfolio.name.asc())
