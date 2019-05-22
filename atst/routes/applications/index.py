@@ -15,6 +15,7 @@ def has_portfolio_applications(_user, portfolio=None, **_kwargs):
         return True
 
 
+@applications_bp.route("/portfolios/<portfolio_id>")
 @applications_bp.route("/portfolios/<portfolio_id>/applications")
 @user_can(
     Permissions.VIEW_APPLICATION,
