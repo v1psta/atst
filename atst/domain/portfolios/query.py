@@ -14,15 +14,6 @@ class PortfoliosQuery(Query):
 
     @classmethod
     def get_for_user(cls, user):
-        granted_applications = (
-            db.session.query(Application)
-            .join(ApplicationRole)
-            .filter(ApplicationRole.application_id == Application.id)
-            .filter(ApplicationRole.user_id == user.id)
-            .filter(ApplicationRole.status == ApplicationRoleStatus.ACTIVE)
-            .subquery()
-        )
-
         return (
             db.session.query(Portfolio)
             .filter(
@@ -30,8 +21,18 @@ class PortfoliosQuery(Query):
                     db.session.query(Portfolio.id)
                     .join(Application)
                     .filter(Portfolio.id == Application.portfolio_id)
-                    .filter(Application.id == granted_applications.c.id)
-                    .subquery()
+                    .filter(
+                        Application.id.in_(
+                            db.session.query(Application.id)
+                            .join(ApplicationRole)
+                            .filter(ApplicationRole.application_id == Application.id)
+                            .filter(ApplicationRole.user_id == user.id)
+                            .filter(
+                                ApplicationRole.status == ApplicationRoleStatus.ACTIVE
+                            )
+                            .subquery()
+                        )
+                    )
                 )
                 | Portfolio.id.in_(
                     db.session.query(Portfolio.id)
