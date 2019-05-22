@@ -23,31 +23,25 @@ class PortfoliosQuery(Query):
             .subquery()
         )
 
-        application_portfolios = (
-            db.session.query(Portfolio)
-            .join(Application)
-            .filter(Portfolio.id == Application.portfolio_id)
-            .filter(Application.id == granted_applications.c.id)
-            .all()
-        )
-
-        portfolios = (
-            db.session.query(Portfolio)
-            .join(PortfolioRole)
-            .filter(PortfolioRole.user == user)
-            .filter(PortfolioRole.status == PortfolioRoleStatus.ACTIVE)
-            .all()
-        )
-
-        portfolio_ids = []
-
-        [portfolio_ids.append(p.id) for p in portfolios]
-        [portfolio_ids.append(p.id) for p in application_portfolios]
-
         return (
             db.session.query(Portfolio)
-            .filter(Portfolio.id.in_(portfolio_ids))
-            .order_by(Portfolio.name.desc())
+            .filter(
+                Portfolio.id.in_(
+                    db.session.query(Portfolio.id)
+                    .join(Application)
+                    .filter(Portfolio.id == Application.portfolio_id)
+                    .filter(Application.id == granted_applications.c.id)
+                    .subquery()
+                )
+                | Portfolio.id.in_(
+                    db.session.query(Portfolio.id)
+                    .join(PortfolioRole)
+                    .filter(PortfolioRole.user == user)
+                    .filter(PortfolioRole.status == PortfolioRoleStatus.ACTIVE)
+                    .subquery()
+                )
+            )
+            .order_by(Portfolio.name.asc())
             .all()
         )
 
