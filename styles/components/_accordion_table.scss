@@ -124,10 +124,6 @@
       color: $color-blue;
       padding: $gap;
 
-      > span {
-        margin-left: auto;
-      }
-
       .icon {
         @include icon-size(12);
 

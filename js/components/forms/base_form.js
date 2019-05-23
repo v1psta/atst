@@ -10,6 +10,7 @@ import multicheckboxinput from '../multi_checkbox_input'
 import optionsinput from '../options_input'
 import textinput from '../text_input'
 import toggler from '../toggler'
+import Team from '../tables/team'
 
 export default {
   name: 'base-form',
@@ -23,6 +24,7 @@ export default {
     optionsinput,
     textinput,
     toggler,
+    Team,
   },
   mixins: [FormMixin],
 }
