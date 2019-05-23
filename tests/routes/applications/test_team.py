@@ -25,12 +25,11 @@ def test_update_team_permissions(client, user_session):
     app_role = ApplicationRoleFactory.create(
         application=application, permission_sets=[]
     )
-    app_user = app_role.user
     user_session(owner)
     response = client.post(
         url_for("applications.update_team", application_id=application.id),
         data={
-            "members-0-user_id": app_user.id,
+            "members-0-role_id": app_role.id,
             "members-0-permission_sets-perms_team_mgmt": PermissionSets.EDIT_APPLICATION_TEAM,
             "members-0-permission_sets-perms_env_mgmt": PermissionSets.EDIT_APPLICATION_ENVIRONMENTS,
             "members-0-permission_sets-perms_del_env": PermissionSets.DELETE_APPLICATION_ENVIRONMENTS,
@@ -54,36 +53,30 @@ def test_update_team_with_bad_permission_sets(client, user_session):
     app_role = ApplicationRoleFactory.create(
         application=application, permission_sets=[]
     )
-    app_user = app_role.user
-    permission_sets = app_user.permission_sets
+    permission_sets = app_role.permission_sets
 
     user_session(owner)
     response = client.post(
         url_for("applications.update_team", application_id=application.id),
         data={
-            "members-0-user_id": app_user.id,
+            "members-0-role_id": app_role.id,
             "members-0-permission_sets-perms_team_mgmt": PermissionSets.EDIT_APPLICATION_TEAM,
             "members-0-permission_sets-perms_env_mgmt": "some random string",
         },
     )
     assert response.status_code == 400
-    assert app_user.permission_sets == permission_sets
+    assert app_role.permission_sets == permission_sets
 
 
 def test_update_team_with_non_app_user(client, user_session):
     application = ApplicationFactory.create()
     owner = application.portfolio.owner
-    app_role = ApplicationRoleFactory.create(
-        application=application, permission_sets=[]
-    )
-    non_app_user = UserFactory.create()
-    app_user = app_role.user
 
     user_session(owner)
     response = client.post(
         url_for("applications.update_team", application_id=application.id),
         data={
-            "members-0-user_id": non_app_user.id,
+            "members-0-role_id": str(uuid.uuid4()),
             "members-0-permission_sets-perms_team_mgmt": PermissionSets.EDIT_APPLICATION_TEAM,
             "members-0-permission_sets-perms_env_mgmt": PermissionSets.EDIT_APPLICATION_ENVIRONMENTS,
             "members-0-permission_sets-perms_del_env": PermissionSets.DELETE_APPLICATION_ENVIRONMENTS,
@@ -99,16 +92,15 @@ def test_update_team_environment_roles(client, user_session):
     app_role = ApplicationRoleFactory.create(
         application=application, permission_sets=[]
     )
-    app_user = app_role.user
     environment = EnvironmentFactory.create(application=application)
     env_role = EnvironmentRoleFactory.create(
-        user=app_user, environment=environment, role=CSPRole.NETWORK_ADMIN.value
+        user=app_role.user, environment=environment, role=CSPRole.NETWORK_ADMIN.value
     )
     user_session(owner)
     response = client.post(
         url_for("applications.update_team", application_id=application.id),
         data={
-            "members-0-user_id": app_user.id,
+            "members-0-role_id": app_role.id,
             "members-0-permission_sets-perms_team_mgmt": PermissionSets.EDIT_APPLICATION_TEAM,
             "members-0-permission_sets-perms_env_mgmt": PermissionSets.EDIT_APPLICATION_ENVIRONMENTS,
             "members-0-permission_sets-perms_del_env": PermissionSets.DELETE_APPLICATION_ENVIRONMENTS,
@@ -127,16 +119,15 @@ def test_update_team_revoke_environment_access(client, user_session, db, session
     app_role = ApplicationRoleFactory.create(
         application=application, permission_sets=[]
     )
-    app_user = app_role.user
     environment = EnvironmentFactory.create(application=application)
     env_role = EnvironmentRoleFactory.create(
-        user=app_user, environment=environment, role=CSPRole.BASIC_ACCESS.value
+        user=app_role.user, environment=environment, role=CSPRole.BASIC_ACCESS.value
     )
     user_session(owner)
     response = client.post(
         url_for("applications.update_team", application_id=application.id),
         data={
-            "members-0-user_id": app_user.id,
+            "members-0-role_id": app_role.id,
             "members-0-permission_sets-perms_team_mgmt": PermissionSets.EDIT_APPLICATION_TEAM,
             "members-0-permission_sets-perms_env_mgmt": PermissionSets.EDIT_APPLICATION_ENVIRONMENTS,
             "members-0-permission_sets-perms_del_env": PermissionSets.DELETE_APPLICATION_ENVIRONMENTS,

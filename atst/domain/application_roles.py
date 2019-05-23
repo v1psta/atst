@@ -48,6 +48,18 @@ class ApplicationRoles(object):
         return app_role
 
     @classmethod
+    def get_by_id(cls, id_):
+        try:
+            return (
+                db.session.query(ApplicationRole)
+                .filter(ApplicationRole.id == id_)
+                .filter(ApplicationRole.status != ApplicationRoleStatus.DISABLED)
+                .one()
+            )
+        except NoResultFound:
+            raise NotFoundError("portfolio_role")
+
+    @classmethod
     def update_permission_sets(cls, application_role, new_perm_sets_names):
         application_role.permission_sets = ApplicationRoles._permission_sets_for_names(
             new_perm_sets_names

@@ -61,7 +61,7 @@ class PermissionsForm(FlaskForm):
 
 
 class MemberForm(FlaskForm):
-    user_id = HiddenField(validators=[Required()])
+    role_id = HiddenField(validators=[Required()])
     user_name = StringField()
     environment_roles = FieldList(FormField(EnvironmentForm))
     permission_sets = FormField(PermissionsForm)
