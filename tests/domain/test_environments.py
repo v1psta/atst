@@ -136,36 +136,6 @@ def test_update_env_roles_by_member():
     assert not EnvironmentRoles.get(user.id, testing.id)
 
 
-def test_get_members_by_role(db):
-    environment = EnvironmentFactory.create()
-    env_role_1 = EnvironmentRoleFactory.create(
-        environment=environment, role=CSPRole.BASIC_ACCESS.value
-    )
-    env_role_2 = EnvironmentRoleFactory.create(
-        environment=environment, role=CSPRole.TECHNICAL_READ.value
-    )
-    env_role_3 = EnvironmentRoleFactory.create(
-        environment=environment, role=CSPRole.TECHNICAL_READ.value
-    )
-    rando_env = EnvironmentFactory.create()
-    rando_env_role = EnvironmentRoleFactory.create(
-        environment=rando_env, role=CSPRole.BASIC_ACCESS.value
-    )
-
-    basic_access_members = Environments.get_members_by_role(
-        environment, CSPRole.BASIC_ACCESS.value
-    )
-    technical_read_members = Environments.get_members_by_role(
-        environment, CSPRole.TECHNICAL_READ.value
-    )
-    assert basic_access_members == [env_role_1]
-    assert rando_env_role not in basic_access_members
-    assert technical_read_members == [env_role_2, env_role_3]
-    assert (
-        Environments.get_members_by_role(environment, CSPRole.BUSINESS_READ.value) == []
-    )
-
-
 def test_get_scoped_environments(db):
     developer = UserFactory.create()
     portfolio = PortfolioFactory.create(

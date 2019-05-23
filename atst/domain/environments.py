@@ -114,15 +114,6 @@ class Environments(object):
             )
 
     @classmethod
-    def get_members_by_role(cls, env, role):
-        return (
-            db.session.query(EnvironmentRole)
-            .filter(EnvironmentRole.environment_id == env.id)
-            .filter(EnvironmentRole.role == role)
-            .all()
-        )
-
-    @classmethod
     def revoke_access(cls, environment, target_user):
         EnvironmentRoles.delete(environment.id, target_user.id)
 

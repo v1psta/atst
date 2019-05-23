@@ -1,12 +1,14 @@
 from enum import Enum
 from sqlalchemy import Index, ForeignKey, Column, Enum as SQLAEnum, Table
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import object_session, relationship
 from sqlalchemy.event import listen
 
 from atst.utils import first_or_none
 from atst.models import Base, mixins
 from atst.models.mixins.auditable import record_permission_sets_updates
+from atst.models.environment import Environment
+from atst.models.environment_role import EnvironmentRole
 from .types import Id
 
 
@@ -90,6 +92,22 @@ class ApplicationRole(
             "application": self.application.name,
             "portfolio": self.application.portfolio.name,
         }
+
+    @property
+    def environment_roles(self):
+        if getattr(self, "_environment_roles", None) is None:
+            roles = (
+                object_session(self)
+                .query(EnvironmentRole)
+                .join(Environment, Environment.application_id == self.application_id)
+                .filter(EnvironmentRole.environment_id == Environment.id)
+                .filter(EnvironmentRole.user_id == self.user_id)
+                .all()
+            )
+
+            setattr(self, "_environment_roles", roles)
+
+        return self._environment_roles
 
 
 Index(
