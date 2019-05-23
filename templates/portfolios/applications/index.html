@@ -54,7 +54,7 @@
                   <a
                     href="{{ url_for('applications.team', application_id=application.id) }}"
                     class='icon-link'>
-                      <span>{{ "portfolios.applications.team_text" | translate }} ({{ application.num_users }})</span>
+                      <span>{{ "portfolios.applications.team_text" | translate }} ({{ application.users | length }})</span>
                     </a>
                     <div class='separator'></div>
                   {% endif %}

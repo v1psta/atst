@@ -109,6 +109,7 @@ class Applications(BaseDomainClass):
         )
 
         application_role.status = ApplicationRoleStatus.DISABLED
+        application_role.deleted = True
         db.session.add(application_role)
         db.session.commit()
 

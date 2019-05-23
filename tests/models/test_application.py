@@ -8,16 +8,6 @@ from tests.factories import (
 )
 
 
-def test_application_num_users():
-    application = ApplicationFactory.create(
-        environments=[{"name": "dev"}, {"name": "staging"}, {"name": "prod"}]
-    )
-    assert application.num_users == 0
-
-    ApplicationRoleFactory.create(application=application)
-    assert application.num_users == 1
-
-
 def test_application_environments_excludes_deleted():
     app = ApplicationFactory.create()
     env = EnvironmentFactory.create(application=app)
