@@ -71,3 +71,15 @@ def test_update_permission_sets():
     assert app_role.permission_sets == view_app
     assert ApplicationRoles.update_permission_sets(app_role, new_perms_names)
     assert set(app_role.permission_sets) == set(new_perms + view_app)
+
+
+def test_get_by_id():
+    user = UserFactory.create()
+    application = ApplicationFactory.create()
+    app_role = ApplicationRoleFactory.create(user=user, application=application)
+
+    assert ApplicationRoles.get_by_id(app_role.id) == app_role
+    app_role.status = ApplicationRoleStatus.DISABLED
+
+    with pytest.raises(NotFoundError):
+        ApplicationRoles.get_by_id(app_role.id)

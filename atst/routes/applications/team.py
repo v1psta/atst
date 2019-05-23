@@ -27,8 +27,6 @@ def get_form_permission_value(member, edit_perm_set):
 def get_team_form(application):
     team_data = []
     for member in application.members:
-        user_id = member.user.id
-        user_name = member.user.full_name
         permission_sets = {
             "perms_team_mgmt": get_form_permission_value(
                 member, PermissionSets.EDIT_APPLICATION_TEAM
@@ -53,8 +51,8 @@ def get_team_form(application):
         ]
         team_data.append(
             {
-                "user_id": str(user_id),
-                "user_name": user_name,
+                "role_id": member.id,
+                "user_name": member.user_name,
                 "permission_sets": permission_sets,
                 "environment_roles": environment_roles,
             }
@@ -99,7 +97,7 @@ def update_team(application_id):
 
     if form.validate():
         for member_form in form.members:
-            app_role = ApplicationRoles.get(member_form.user_id.data, application.id)
+            app_role = ApplicationRoles.get_by_id(member_form.role_id.data)
             new_perms = [
                 perm
                 for perm in member_form.data["permission_sets"]
@@ -108,12 +106,11 @@ def update_team(application_id):
             ApplicationRoles.update_permission_sets(app_role, new_perms)
 
             for environment_role_form in member_form.environment_roles:
-                user = Users.get(member_form.user_id.data)
                 environment = Environments.get(
                     environment_role_form.environment_id.data
                 )
                 Environments.update_env_role(
-                    environment, user, environment_role_form.data.get("role")
+                    environment, app_role.user, environment_role_form.data.get("role")
                 )
 
         flash("updated_application_team_settings", application_name=application.name)
