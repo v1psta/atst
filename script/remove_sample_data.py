@@ -63,17 +63,22 @@ def remove_sample_data(all_users=False):
         all_portfolios = Portfolios.for_user(user)
         portfolios = [p for p in all_portfolios if p.owner == user]
 
-        ws_audit = (
+        portfolio_audit = (
             db.session.query(AuditEvent)
             .filter(AuditEvent.portfolio_id.in_([w.id for w in portfolios]))
             .all()
         )
         portfolio_roles = [role for portfolio in portfolios for role in portfolio.roles]
         task_orders = [to for portfolio in portfolios for to in portfolio.task_orders]
-        invites = [invite for role in portfolio_roles for invite in role.invitations]
+        portfolio_invites = [
+            invite for role in portfolio_roles for invite in role.invitations
+        ]
         applications = [p for portfolio in portfolios for p in portfolio.applications]
         application_roles = [
             a for application in applications for a in application.roles
+        ]
+        application_invites = [
+            invite for role in application_roles for invite in role.invitations
         ]
         environments = (
             db.session.query(Environment)
@@ -83,14 +88,15 @@ def remove_sample_data(all_users=False):
         roles = [role for env in environments for role in env.roles]
 
         for set_of_things in [
+            portfolio_invites,
+            application_invites,
+            roles,
+            environments,
             application_roles,
             applications,
-            environments,
-            invites,
             portfolio_roles,
-            roles,
             task_orders,
-            ws_audit,
+            portfolio_audit,
         ]:
             for thing in set_of_things:
                 db.session.delete(thing)
