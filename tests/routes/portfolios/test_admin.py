@@ -181,7 +181,7 @@ def test_update_portfolio_name(client, user_session):
 def updating_ppoc_successfully(client, old_ppoc, new_ppoc, portfolio):
     response = client.post(
         url_for("portfolios.update_ppoc", portfolio_id=portfolio.id, _external=True),
-        data={"user_id": new_ppoc.id},
+        data={"role_id": new_ppoc.id},
         follow_redirects=False,
     )
 
@@ -193,17 +193,9 @@ def updating_ppoc_successfully(client, old_ppoc, new_ppoc, portfolio):
         _anchor="primary-point-of-contact",
         _external=True,
     )
-    assert portfolio.owner.id == new_ppoc.id
-    assert (
-        Permissions.EDIT_PORTFOLIO_POC
-        in PortfolioRoles.get(
-            portfolio_id=portfolio.id, user_id=new_ppoc.id
-        ).permissions
-    )
-    assert (
-        Permissions.EDIT_PORTFOLIO_POC
-        not in PortfolioRoles.get(portfolio.id, old_ppoc.id).permissions
-    )
+    assert portfolio.owner_role.id == new_ppoc.id
+    assert Permissions.EDIT_PORTFOLIO_POC in new_ppoc.permissions
+    assert Permissions.EDIT_PORTFOLIO_POC not in old_ppoc.permissions
 
 
 def test_update_ppoc_no_user_id_specified(client, user_session):
@@ -238,15 +230,14 @@ def test_update_ppoc_to_member_not_on_portfolio(client, user_session):
 
 def test_update_ppoc_when_ppoc(client, user_session):
     portfolio = PortfolioFactory.create()
-    original_ppoc = portfolio.owner
-    new_ppoc = UserFactory.create()
-    Portfolios.add_member(
-        member=new_ppoc,
+    original_ppoc = portfolio.owner_role
+    new_ppoc = Portfolios.add_member(
+        member=UserFactory.create(),
         portfolio=portfolio,
         permission_sets=[PermissionSets.VIEW_PORTFOLIO],
     )
 
-    user_session(original_ppoc)
+    user_session(original_ppoc.user)
 
     updating_ppoc_successfully(
         client=client, new_ppoc=new_ppoc, old_ppoc=original_ppoc, portfolio=portfolio
@@ -256,10 +247,9 @@ def test_update_ppoc_when_ppoc(client, user_session):
 def test_update_ppoc_when_cpo(client, user_session):
     ccpo = UserFactory.create_ccpo()
     portfolio = PortfolioFactory.create()
-    original_ppoc = portfolio.owner
-    new_ppoc = UserFactory.create()
-    Portfolios.add_member(
-        member=new_ppoc,
+    original_ppoc = portfolio.owner_role
+    new_ppoc = Portfolios.add_member(
+        member=UserFactory.create(),
         portfolio=portfolio,
         permission_sets=[PermissionSets.VIEW_PORTFOLIO],
     )
