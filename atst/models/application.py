@@ -1,15 +1,9 @@
 from sqlalchemy import Column, ForeignKey, String
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, synonym
 
 from atst.models import Base
 from atst.models.types import Id
 from atst.models import mixins
-
-from atst.models.application_role import (
-    ApplicationRole,
-    Status as ApplicationRoleStatuses,
-)
-from atst.database import db
 
 
 class Application(
@@ -28,25 +22,15 @@ class Application(
         back_populates="application",
         primaryjoin="and_(Environment.application_id==Application.id, Environment.deleted==False)",
     )
-    # TODO: filter condition on this relationship?
-    roles = relationship("ApplicationRole")
+    roles = relationship(
+        "ApplicationRole",
+        primaryjoin="and_(ApplicationRole.application_id==Application.id, ApplicationRole.deleted==False)",
+    )
+    members = synonym("roles")
 
     @property
     def users(self):
-        return set(role.user for role in self.roles)
-
-    @property
-    def members(self):
-        return (
-            db.session.query(ApplicationRole)
-            .filter(ApplicationRole.application_id == self.id)
-            .filter(ApplicationRole.status != ApplicationRoleStatuses.DISABLED)
-            .all()
-        )
-
-    @property
-    def num_users(self):
-        return len(self.users)
+        return set(role.user for role in self.members)
 
     @property
     def displayname(self):
