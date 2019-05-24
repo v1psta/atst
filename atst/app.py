@@ -162,6 +162,7 @@ def map_config(config):
         "DISABLE_CRL_CHECK": config.getboolean("default", "DISABLE_CRL_CHECK"),
         "CRL_FAIL_OPEN": config.getboolean("default", "CRL_FAIL_OPEN"),
         "LOG_JSON": config.getboolean("default", "LOG_JSON"),
+        "ENCRYPT_HIDDEN_FIELDS": config.getboolean("default", "ENCRYPT_HIDDEN_FIELDS"),
     }
 
 

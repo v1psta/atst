@@ -40,12 +40,18 @@ class TestFormFieldWrapper:
         assert not form.person.has_changes()
 
     def test_when_form_data_matches_obj_data(self):
-        encrypted_id = encrypt_value(self.obj.uuid)
         form_data = ImmutableMultiDict(
-            {"person-first_name": "Luke", "uuid": encrypted_id}
+            {"person-first_name": "Luke", "uuid": self.obj.uuid}
         )
         form = FormWithFormField(form_data, obj=self.obj)
         assert not form.person.has_changes()
+
+
+@pytest.fixture
+def encryption_enabled_app(app):
+    app.config.update({"ENCRYPT_HIDDEN_FIELDS": True})
+    yield app
+    app.config.update({"ENCRYPT_HIDDEN_FIELDS": False})
 
 
 class TestEncryptedHiddenField:
@@ -55,18 +61,18 @@ class TestEncryptedHiddenField:
 
     obj = Foo()
 
-    def test_encrypt_value(self):
+    def test_encrypt_value(self, encryption_enabled_app):
         assert self.obj.uuid != encrypt_value(self.obj.uuid)
 
-    def test_decrypt_value(self):
+    def test_decrypt_value(self, encryption_enabled_app):
         encrypted_value = encrypt_value(self.obj.uuid)
         assert str(self.obj.uuid) == decrypt_value(encrypted_value)
 
-    def test_process_data(self):
+    def test_process_data(self, encryption_enabled_app):
         form = FormWithFormField(None, obj=self.obj)
         assert self.obj.uuid != form.uuid.data
 
-    def test_process_formdata(self):
+    def test_process_formdata(self, encryption_enabled_app):
         form = FormWithFormField(None, obj=self.obj)
         EncryptedHiddenField.process_formdata(form.uuid, [form.uuid.data])
         assert str(self.obj.uuid) == form.uuid.data

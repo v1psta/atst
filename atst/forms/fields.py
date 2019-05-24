@@ -1,3 +1,4 @@
+from flask import current_app as app
 from wtforms.fields import FormField, SelectField as SelectField_, HiddenField
 from atst.utils.encryption import encrypt_value, decrypt_value
 
@@ -22,11 +23,17 @@ class FormFieldWrapper(FormField):
 
 class EncryptedHiddenField(HiddenField):
     def process_data(self, value):
-        self.data = encrypt_value(value)
+        if app.config.get("ENCRYPT_HIDDEN_FIELDS"):
+            self.data = encrypt_value(value)
+        else:
+            super().process_data(value)
 
     def process_formdata(self, valuelist):
-        if valuelist:
-            try:
-                self.data = decrypt_value(valuelist[0])
-            except ValueError:
-                raise ValueError(self.gettext("Invalid Choice: could not coerce"))
+        if app.config.get("ENCRYPT_HIDDEN_FIELDS"):
+            if valuelist:
+                try:
+                    self.data = decrypt_value(valuelist[0])
+                except ValueError:
+                    raise ValueError(self.gettext("Invalid Choice: could not coerce"))
+        else:
+            super().process_formdata(valuelist)

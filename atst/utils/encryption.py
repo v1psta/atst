@@ -8,10 +8,16 @@ def create_fernet():
 
 
 def encrypt_value(value):
-    fernet = create_fernet()
-    return fernet.encrypt(str(value).encode()).decode()
+    if app.config.get("ENCRYPT_HIDDEN_FIELDS"):
+        fernet = create_fernet()
+        return fernet.encrypt(str(value).encode()).decode()
+    else:
+        return value
 
 
 def decrypt_value(value):
-    fernet = create_fernet()
-    return fernet.decrypt(value.encode()).decode()
+    if app.config.get("ENCRYPT_HIDDEN_FIELDS"):
+        fernet = create_fernet()
+        return fernet.decrypt(value.encode()).decode()
+    else:
+        return value
