@@ -6,7 +6,7 @@ from atst.models.environment import Environment
 from atst.models.environment_role import EnvironmentRole
 from atst.models.application import Application
 from atst.domain.environment_roles import EnvironmentRoles
-from atst.domain.users import Users
+from atst.domain.application_roles import ApplicationRoles
 
 from .exceptions import NotFoundError
 
@@ -99,9 +99,9 @@ class Environments(object):
 
         for member in team_roles:
             new_role = member["role_name"]
-            user = Users.get(member["user_id"])
+            app_role = ApplicationRoles.get_by_id(member["application_role_id"])
             Environments.update_env_role(
-                environment=environment, user=user, new_role=new_role
+                environment=environment, user=app_role.user, new_role=new_role
             )
 
     @classmethod

@@ -67,28 +67,35 @@ def test_update_env_roles_by_environment():
     env_role_1 = EnvironmentRoleFactory.create(
         environment=environment, role=CSPRole.BASIC_ACCESS.value
     )
+    app_role_1 = ApplicationRoleFactory.create(
+        user=env_role_1.user, application=environment.application
+    )
     env_role_2 = EnvironmentRoleFactory.create(
         environment=environment, role=CSPRole.NETWORK_ADMIN.value
+    )
+    app_role_2 = ApplicationRoleFactory.create(
+        user=env_role_2.user, application=environment.application
     )
     env_role_3 = EnvironmentRoleFactory.create(
         environment=environment, role=CSPRole.TECHNICAL_READ.value
     )
-    for user in [env_role_1.user, env_role_2.user, env_role_3.user]:
-        ApplicationRoleFactory.create(user=user, application=environment.application)
+    app_role_3 = ApplicationRoleFactory.create(
+        user=env_role_3.user, application=environment.application
+    )
 
     team_roles = [
         {
-            "user_id": env_role_1.user.id,
+            "application_role_id": app_role_1.id,
             "user_name": env_role_1.user.full_name,
             "role_name": CSPRole.BUSINESS_READ.value,
         },
         {
-            "user_id": env_role_2.user.id,
+            "application_role_id": app_role_2.id,
             "user_name": env_role_2.user.full_name,
             "role_name": CSPRole.NETWORK_ADMIN.value,
         },
         {
-            "user_id": env_role_3.user.id,
+            "application_role_id": app_role_3.id,
             "user_name": env_role_3.user.full_name,
             "role_name": None,
         },

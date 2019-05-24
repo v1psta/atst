@@ -36,11 +36,11 @@
                 v-bind:class="{'unassigned': checkNoAccess(member.role_name)}">
                 <span v-html='member.user_name'>
                 </span>
-                <span v-on:click="toggleSection(member.user_id)" class="icon-link right">
+                <span v-on:click="toggleSection(member.application_role_id)" class="icon-link right">
                   {{ Icon('edit', classes="icon--medium") }}
                 </span>
                 <div
-                  v-show="selectedSection === member.user_id"
+                  v-show="selectedSection === member.application_role_id"
                   class='environment-role__user-field'>
                   <div class="usa-input">
                     <fieldset
@@ -56,7 +56,7 @@
                             v-bind:name="'envs-{{ loop.index0 }}-team_roles-' + roleindex + '-members-' + memberindex + '-role_name'"
                             v-bind:id="'envs-{{ loop.index0 }}-team_roles-' + roleindex + '-members-' + memberindex + '-role_name-' + roleinputindex"
                             type="radio"
-                            v-bind:user-id='member.user_id'
+                            v-bind:user-id='member.application_role_id'
                             v-bind:value='roleCategory.role'>
                           <label
                             v-bind:for="'envs-{{ loop.index0 }}-team_roles-' + roleindex + '-members-' + memberindex + '-role_name-' + roleinputindex">
@@ -71,10 +71,10 @@
                   </div>
                 </div>
                 <input
-                  v-bind:id="'envs-{{ loop.index0 }}-team_roles-' + roleindex + '-members-' + memberindex + '-user_id'"
-                  v-bind:name="'envs-{{ loop.index0 }}-team_roles-' + roleindex + '-members-' + memberindex + '-user_id'"
+                  v-bind:id="'envs-{{ loop.index0 }}-team_roles-' + roleindex + '-members-' + memberindex + '-application_role_id'"
+                  v-bind:name="'envs-{{ loop.index0 }}-team_roles-' + roleindex + '-members-' + memberindex + '-application_role_id'"
                   type="hidden"
-                  v-bind:value='member.user_id'>
+                  v-bind:value='member.application_role_id'>
               </li>
             </ul>
           </div>

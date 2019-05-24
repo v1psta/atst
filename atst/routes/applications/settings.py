@@ -10,7 +10,6 @@ from atst.forms.application import ApplicationForm, EditEnvironmentForm
 from atst.forms.data import ENV_ROLE_NO_ACCESS as NO_ACCESS
 from atst.domain.authz.decorator import user_can_access_decorator as user_can
 from atst.models.environment_role import CSPRole
-from atst.domain.exceptions import NotFoundError
 from atst.models.permissions import Permissions
 from atst.utils.flash import formatted_flash as flash
 
@@ -47,7 +46,7 @@ def data_for_app_env_roles_form(application):
             ]
             role_members_list.append(
                 {
-                    "user_id": str(member.user.id),
+                    "application_role_id": str(member.id),
                     "user_name": member.user_name,
                     "role_name": env_role.role,
                 }
@@ -60,7 +59,7 @@ def data_for_app_env_roles_form(application):
             role_members_list = environments_dict[env_id][NO_ACCESS]
             role_members_list.append(
                 {
-                    "user_id": str(member.user.id),
+                    "application_role_id": str(member.id),
                     "user_name": member.user_name,
                     "role_name": NO_ACCESS,
                 }
@@ -78,14 +77,6 @@ def data_for_app_env_roles_form(application):
     ]
 
     return {"envs": nested_data}
-
-
-def check_users_are_in_application(user_ids, application):
-    existing_ids = [str(role.user_id) for role in application.roles]
-    for user_id in user_ids:
-        if not user_id in existing_ids:
-            raise NotFoundError("application user", user_id)
-    return True
 
 
 def render_settings_page(application, **kwargs):
@@ -210,22 +201,10 @@ def update_env_roles(environment_id):
 
     if form.validate():
         env_data = []
-        try:
-            for env in form.envs.data:
-                if env["env_id"] == str(environment.id):
-                    for role in env["team_roles"]:
-                        user_ids = [user["user_id"] for user in role["members"]]
-                        check_users_are_in_application(user_ids, application)
-                        env_data = env_data + role["members"]
-        except NotFoundError as err:
-            app.logger.warning(
-                "User {} requested environment role change for unauthorized user {} in application {}.".format(
-                    g.current_user.id, err.resource_id, application.id
-                ),
-                extra={"tags": ["update", "failure"], "security_warning": True},
-            )
-
-            raise (err)
+        for env in form.envs.data:
+            if env["env_id"] == str(environment.id):
+                for role in env["team_roles"]:
+                    env_data = env_data + role["members"]
 
         Environments.update_env_roles_by_environment(
             environment_id=environment_id, team_roles=env_data
