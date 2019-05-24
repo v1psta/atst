@@ -8,7 +8,7 @@
   {% set environment_roles_form = member_form.environment_roles %}
   {% set permissions_form = member_form.permission_sets %}
 
-  <team v-bind:initial-value="'{{ permissions_form.perms_env_mgmt.data }}'" inline-template>
+  <team-member v-bind:initial-value="'{{ permissions_form.perms_env_mgmt.data }}'" inline-template>
     <li class="accordion-table__item">
       <div class="accordion-table__item-content row">
         <div class="col col--grow">
@@ -86,5 +86,5 @@
 
       {{ member_form.role_id() }}
     </li>
-  </team>
+  </team-member>
 {% endfor %}

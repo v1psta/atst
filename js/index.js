@@ -39,7 +39,7 @@ import KoReview from './components/forms/ko_review'
 import BaseForm from './components/forms/base_form'
 import DeleteConfirmation from './components/delete_confirmation'
 import NewEnvironment from './components/forms/new_environment'
-import Team from './components/tables/team'
+import TeamMember from './components/tables/team_member'
 import EnvironmentRole from './components/environment_role'
 
 Vue.config.productionTip = false
@@ -82,7 +82,7 @@ const app = new Vue({
     DeleteConfirmation,
     nestedcheckboxinput,
     NewEnvironment,
-    Team,
+    TeamMember,
     EnvironmentRole,
   },
 

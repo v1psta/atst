@@ -2,7 +2,7 @@ import EnvironmentRole from '../environment_role'
 import optionsinput from '../options_input'
 
 export default {
-  name: 'team',
+  name: 'team-member',
 
   props: {
     initialValue: String,
