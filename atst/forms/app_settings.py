@@ -3,10 +3,11 @@ from wtforms.fields import FieldList, FormField, HiddenField, RadioField, String
 
 from .forms import BaseForm
 from .data import ENV_ROLES, ENV_ROLE_NO_ACCESS as NO_ACCESS
+from atst.forms.fields import EncryptedHiddenField
 
 
 class MemberForm(FlaskForm):
-    application_role_id = HiddenField()
+    application_role_id = EncryptedHiddenField()
     user_name = StringField()
     role_name = RadioField(choices=ENV_ROLES, default=NO_ACCESS)
 
