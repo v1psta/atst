@@ -193,6 +193,13 @@ MESSAGES = {
         """,
         "category": "success",
     },
+    "logged_out": {
+        "title_template": translate("flash.logged_out"),
+        "message_template": """
+            You've been logged out.
+        """,
+        "category": "info",
+    },
 }
 
 
