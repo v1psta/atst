@@ -47,5 +47,5 @@ def test_session_limiter_updates_users_last_sesion_id(mock_redis, mock_session, 
     user = UserFactory.create(last_session_id=last_session_id)
     session_limiter.on_login(user)
 
-    user = db.query(User).get(user.id)
-    assert user.last_session_id == last_session_id
+    user = db.session.query(User).get(user.id)
+    assert user.last_session_id == current_session_id
