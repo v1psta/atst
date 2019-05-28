@@ -2,6 +2,7 @@ from io import StringIO
 import json
 import logging
 from uuid import uuid4
+from unittest.mock import Mock
 
 import pytest
 
@@ -62,13 +63,16 @@ def test_json_formatter_for_exceptions(logger, log_stream_content):
     assert log.get("details")
 
 
-def test_request_context_filter(logger, log_stream_content, request_ctx):
-    user = UserFactory.create()
-    uuid = str(uuid4())
+def test_request_context_filter(logger, log_stream_content, request_ctx, monkeypatch):
+    request_uuid = str(uuid4())
+    user_uuid = str(uuid4())
 
-    request_ctx.g.current_user = user
-    request_ctx.request.environ["HTTP_X_REQUEST_ID"] = uuid
+    user = Mock(spec=["id"])
+    user.id = user_uuid
+
+    monkeypatch.setattr("atst.utils.logging.g", Mock(current_user=user))
+    request_ctx.request.environ["HTTP_X_REQUEST_ID"] = request_uuid
     logger.info("this user is doing something")
     log = json.loads(log_stream_content())
-    assert log["user_id"] == str(user.id)
-    assert log["request_id"] == uuid
+    assert log["user_id"] == str(user_uuid)
+    assert log["request_id"] == request_uuid
