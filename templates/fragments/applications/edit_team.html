@@ -19,9 +19,13 @@
         <div class="col col--grow">{{ OptionsInput(permissions_form.perms_team_mgmt, label=False, watch=True) }}</div>
         <div v-on:change="flip" class="col col--grow">{{ OptionsInput(permissions_form.perms_env_mgmt, label=False, watch=True) }}</div>
 
-        <div v-if="edit_access" class="col col--grow">{{ OptionsInput(permissions_form.perms_del_env, label=False, watch=True) }}</div>
-        <div v-else class="col col--grow user-permission dropdown-row-text">{{ "portfolios.applications.team_settings.no_delete_access" | translate }}
-          <input type="hidden" name={{permissions_form.perms_del_env.id}} value={{permissions_form.perms_del_env.data}}></div>
+        <div v-if="edit_access" class="col col--grow">
+          {{ OptionsInput(permissions_form.perms_del_env, label=False, watch=True) }}
+        </div>
+        <div v-else class="col col--grow disabled">
+          {{ OptionsInput(permissions_form.perms_del_env, label=False, disabled=True, watch=True) }}
+          <input type="hidden" name={{permissions_form.perms_del_env.id}} value={{permissions_form.perms_del_env.data}}>
+        </div>
 
         <div v-on:click="toggle" class="col col--grow icon-link icon-link--large accordion-table__item__toggler">
           {{ "portfolios.applications.team_settings.environments" | translate }} ({{ environment_roles_form | length }}) <span v-if="open">{{ Icon('caret_down') }}</span><span v-else>{{ Icon('caret_up') }}</span>

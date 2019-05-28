@@ -5,7 +5,7 @@
   {% set ppoc = subform.member_id.data == ppoc_id %}
   {% set archive_button_class = 'button-danger-outline' %}
 
-  <tr {% if ppoc %}class="members-table-ppoc"{% endif %}>
+  <tr {% if ppoc %}class="members-table-ppoc disabled"{% endif %}>
     <td class='name'>{{ subform.member_name.data }}
       <div>
         {% if ppoc %}
