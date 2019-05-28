@@ -129,7 +129,7 @@
               DeleteConfirmation(
                 modal_id=delete_modal_id,
                 delete_text=('portfolios.applications.remove_member.button' | translate),
-                delete_action=url_for('applications.remove_member', application_id=application.id, user_id=member_form.data.user_id),
+                delete_action=url_for('applications.remove_member', application_id=application.id, application_role_id=member_form.data.role_id),
                 form=member_form
               )
             }}

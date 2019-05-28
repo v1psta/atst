@@ -170,12 +170,17 @@ def create_member(application_id):
 
 
 @applications_bp.route(
-    "/applications/<application_id>/members/<user_id>/delete", methods=["POST"]
+    "/applications/<application_id>/members/<application_role_id>/delete",
+    methods=["POST"],
 )
 @user_can(Permissions.DELETE_APPLICATION_MEMBER, message="remove application member")
-def remove_member(application_id, user_id):
-    Applications.remove_member(application=g.application, user_id=user_id)
-    user = Users.get(user_id)
+def remove_member(application_id, application_role_id):
+    application_role = ApplicationRoles.get_by_id(application_role_id)
+
+    Applications.remove_member(
+        application=g.application, user_id=application_role.user_id
+    )
+    user = Users.get(application_role.user_id)
 
     flash(
         "application_member_removed",
