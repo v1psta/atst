@@ -9,13 +9,13 @@ describe('EditEnvironmentRole', () => {
       {
         role: NO_ACCESS,
         members: [
-          { role_name: null, user_id: '123' },
-          { role_name: null, user_id: '456' },
+          { role_name: null, application_role_id: '123' },
+          { role_name: null, application_role_id: '456' },
         ],
       },
       {
         role: 'Basic Access',
-        members: [{ role_name: 'Basic Access', user_id: '789' }],
+        members: [{ role_name: 'Basic Access', application_role_id: '789' }],
       },
       {
         role: 'Network Admin',
@@ -24,13 +24,15 @@ describe('EditEnvironmentRole', () => {
       {
         role: 'Business Read-only',
         members: [
-          { role_name: 'Business Read-only', user_id: '012' },
-          { role_name: 'Business Read-only', user_id: '345' },
+          { role_name: 'Business Read-only', application_role_id: '012' },
+          { role_name: 'Business Read-only', application_role_id: '345' },
         ],
       },
       {
         role: 'Technical Read-only',
-        members: [{ role_name: 'Technical Read-only', user_id: '678' }],
+        members: [
+          { role_name: 'Technical Read-only', application_role_id: '678' },
+        ],
       },
     ]
 
@@ -53,7 +55,7 @@ describe('EditEnvironmentRole', () => {
 
     expect(member_data).toEqual({
       role_name: 'Technical Read-only',
-      user_id: '678',
+      application_role_id: '678',
     })
   })
 
@@ -73,7 +75,7 @@ describe('EditEnvironmentRole', () => {
     })
 
     expect(techRole.members.length).toEqual(1)
-    wrapper.vm.addUser({ user_id: '901' }, 'Technical Read-only')
+    wrapper.vm.addUser({ application_role_id: '901' }, 'Technical Read-only')
     expect(techRole.members.length).toEqual(2)
   })
 

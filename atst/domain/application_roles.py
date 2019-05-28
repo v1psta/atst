@@ -57,7 +57,7 @@ class ApplicationRoles(object):
                 .one()
             )
         except NoResultFound:
-            raise NotFoundError("portfolio_role")
+            raise NotFoundError("application_role")
 
     @classmethod
     def update_permission_sets(cls, application_role, new_perm_sets_names):

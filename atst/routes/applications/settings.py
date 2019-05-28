@@ -10,7 +10,6 @@ from atst.forms.application import ApplicationForm, EditEnvironmentForm
 from atst.forms.data import ENV_ROLE_NO_ACCESS as NO_ACCESS
 from atst.domain.authz.decorator import user_can_access_decorator as user_can
 from atst.models.environment_role import CSPRole
-from atst.domain.exceptions import NotFoundError
 from atst.models.permissions import Permissions
 from atst.utils.flash import formatted_flash as flash
 
@@ -30,62 +29,54 @@ def get_environments_obj_for_app(application):
     return environments_obj
 
 
-def serialize_members(member_list, role):
-    serialized_list = []
-
-    for member in member_list:
-        serialized_list.append(
-            {
-                "user_id": str(member.user_id),
-                "user_name": member.user.full_name,
-                "role_name": role,
-            }
-        )
-
-    return serialized_list
-
-
-def sort_env_users_by_role(env):
-    users_list = []
-    no_access_users = env.application.users - env.users
-    no_access_list = [
-        {"user_id": str(user.id), "user_name": user.full_name, "role_name": NO_ACCESS}
-        for user in no_access_users
-    ]
-    users_list.append({"role": NO_ACCESS, "members": no_access_list})
-
-    for role in CSPRole:
-        users_list.append(
-            {
-                "role": role.value,
-                "members": serialize_members(
-                    Environments.get_members_by_role(env, role.value), role.value
-                ),
-            }
-        )
-
-    return users_list
-
-
 def data_for_app_env_roles_form(application):
-    data = {"envs": []}
-    for environment in application.environments:
-        data["envs"].append(
-            {
-                "env_id": environment.id,
-                "team_roles": sort_env_users_by_role(environment),
-            }
-        )
+    csp_roles = [role.value for role in CSPRole]
+    csp_roles.insert(0, NO_ACCESS)
+    # dictionary for sorting application members by environments
+    # and roles within those environments
+    environments_dict = {
+        e.id: {role_name: [] for role_name in csp_roles}
+        for e in application.environments
+    }
+    for member in application.members:
+        env_ids = set(environments_dict.keys())
+        for env_role in member.environment_roles:
+            role_members_list = environments_dict[env_role.environment_id][
+                env_role.role
+            ]
+            role_members_list.append(
+                {
+                    "application_role_id": str(member.id),
+                    "user_name": member.user_name,
+                    "role_name": env_role.role,
+                }
+            )
+            env_ids.remove(env_role.environment_id)
 
-    return data
+        # any leftover environment IDs are ones the app member
+        # does not have access to
+        for env_id in env_ids:
+            role_members_list = environments_dict[env_id][NO_ACCESS]
+            role_members_list.append(
+                {
+                    "application_role_id": str(member.id),
+                    "user_name": member.user_name,
+                    "role_name": NO_ACCESS,
+                }
+            )
 
+    # transform the data into the shape the form needs
+    nested_data = [
+        {
+            "env_id": env_id,
+            "team_roles": [
+                {"role": role, "members": members} for role, members in roles.items()
+            ],
+        }
+        for env_id, roles in environments_dict.items()
+    ]
 
-def check_users_are_in_application(user_ids, application):
-    existing_ids = [str(role.user_id) for role in application.roles]
-    for user_id in user_ids:
-        if not user_id in existing_ids:
-            raise NotFoundError("application user", user_id)
-    return True
+    return {"envs": nested_data}
 
 
 def render_settings_page(application, **kwargs):
@@ -210,22 +201,10 @@ def update_env_roles(environment_id):
 
     if form.validate():
         env_data = []
-        try:
-            for env in form.envs.data:
-                if env["env_id"] == str(environment.id):
-                    for role in env["team_roles"]:
-                        user_ids = [user["user_id"] for user in role["members"]]
-                        check_users_are_in_application(user_ids, application)
-                        env_data = env_data + role["members"]
-        except NotFoundError as err:
-            app.logger.warning(
-                "User {} requested environment role change for unauthorized user {} in application {}.".format(
-                    g.current_user.id, err.resource_id, application.id
-                ),
-                extra={"tags": ["update", "failure"], "security_warning": True},
-            )
-
-            raise (err)
+        for env in form.envs.data:
+            if env["env_id"] == str(environment.id):
+                for role in env["team_roles"]:
+                    env_data = env_data + role["members"]
 
         Environments.update_env_roles_by_environment(
             environment_id=environment_id, team_roles=env_data

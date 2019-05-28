@@ -57,7 +57,7 @@ export const EditEnvironmentRole = {
     getUserInfo: function(userId) {
       for (let role of this.roleCategories) {
         for (let member of role.members) {
-          if (member.user_id === userId) {
+          if (member.application_role_id === userId) {
             return member
           }
         }
@@ -67,7 +67,7 @@ export const EditEnvironmentRole = {
     removeUser: function(userId) {
       for (let role of this.roleCategories) {
         role.members = role.members.filter(member => {
-          return member.user_id !== userId
+          return member.application_role_id !== userId
         })
         if (!role.members) {
           role.members = []

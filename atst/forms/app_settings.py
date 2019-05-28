@@ -6,7 +6,7 @@ from .data import ENV_ROLES, ENV_ROLE_NO_ACCESS as NO_ACCESS
 
 
 class MemberForm(FlaskForm):
-    user_id = HiddenField()
+    application_role_id = HiddenField()
     user_name = StringField()
     role_name = RadioField(choices=ENV_ROLES, default=NO_ACCESS)
 
