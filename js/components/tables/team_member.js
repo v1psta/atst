@@ -15,7 +15,7 @@ export default {
 
   data: function() {
     return {
-      edit_access: this.initialValue.includes('edit') ? true : false,
+      edit_access: this.initialValue.includes('edit'),
       open: false,
     }
   },
