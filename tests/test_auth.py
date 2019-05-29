@@ -202,6 +202,20 @@ def test_logout(app, client, monkeypatch):
     assert destination == url_for("atst.root")
 
 
+def test_logging_out_creates_a_flash_message(app, client, monkeypatch):
+    monkeypatch.setattr(
+        "atst.domain.authnid.AuthenticationContext.authenticate", lambda s: True
+    )
+    monkeypatch.setattr(
+        "atst.domain.authnid.AuthenticationContext.get_user",
+        lambda s: UserFactory.create(),
+    )
+    _login(client)
+    logout_response = client.get(url_for("atst.logout"), follow_redirects=True)
+
+    assert "Logged out" in logout_response.data.decode()
+
+
 def test_redirected_on_login(client, monkeypatch):
     monkeypatch.setattr(
         "atst.domain.authnid.AuthenticationContext.authenticate", lambda *args: True

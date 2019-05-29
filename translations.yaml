@@ -81,6 +81,7 @@ flash:
   success: Success!
   new_application_member: 'You have successfully invited {user_name} to the team.'
   updated_application_team_settings: 'You have updated the {application_name} team settings.'
+  logged_out: Logged out
 footer:
   about_link_text: Joint Enterprise Defense Infrastructure
   browser_support: JEDI Cloud supported on these web browsers
