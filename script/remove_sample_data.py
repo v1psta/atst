@@ -17,7 +17,7 @@ def remove_sample_data():
     meta = sqlalchemy.MetaData(bind=conn, reflect=True)
     trans = conn.begin()
 
-    retained_tables = ["permission_sets"]
+    retained_tables = ["alembic_version", "permission_sets"]
 
     for t in meta.sorted_tables:
         if str(t) not in retained_tables:
