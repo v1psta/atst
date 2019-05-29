@@ -2,7 +2,7 @@ import os
 import re
 import pathlib
 from configparser import ConfigParser
-from flask import Flask, request, g
+from flask import Flask, request, g, session
 from flask_session import Session
 import redis
 from unipath import Path
@@ -30,6 +30,7 @@ from atst.utils.form_cache import FormCache
 from atst.utils.json import CustomJSONEncoder
 from atst.queue import queue
 from atst.utils.notification_sender import NotificationSender
+from atst.utils.session_limiter import SessionLimiter
 
 from logging.config import dictConfig
 from atst.utils.logging import JsonFormatter, RequestContextFilter
@@ -70,6 +71,7 @@ def make_app(config):
     db.init_app(app)
     csrf.init_app(app)
     Session(app)
+    make_session_limiter(app, session, config)
     assets_environment.init_app(app)
 
     make_error_pages(app)
@@ -162,6 +164,9 @@ def map_config(config):
         "DISABLE_CRL_CHECK": config.getboolean("default", "DISABLE_CRL_CHECK"),
         "CRL_FAIL_OPEN": config.getboolean("default", "CRL_FAIL_OPEN"),
         "LOG_JSON": config.getboolean("default", "LOG_JSON"),
+        "LIMIT_CONCURRENT_SESSIONS": config.getboolean(
+            "default", "LIMIT_CONCURRENT_SESSIONS"
+        ),
     }
 
 
@@ -251,6 +256,10 @@ def make_mailer(app):
 
 def make_notification_sender(app):
     app.notification_sender = NotificationSender(queue)
+
+
+def make_session_limiter(app, session, config):
+    app.session_limiter = SessionLimiter(config, session, app.redis)
 
 
 def apply_json_logger():

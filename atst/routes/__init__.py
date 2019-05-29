@@ -8,9 +8,9 @@ from flask import (
     url_for,
     request,
     make_response,
+    current_app as app,
 )
 
-from flask import current_app as app
 from jinja2.exceptions import TemplateNotFound
 import pendulum
 import os
@@ -125,6 +125,7 @@ def redirect_after_login_url():
 def current_user_setup(user):
     session["user_id"] = user.id
     session["last_login"] = user.last_login
+    app.session_limiter.on_login(user)
     Users.update_last_login(user)
 
 
