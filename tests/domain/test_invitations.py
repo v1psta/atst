@@ -124,12 +124,12 @@ def test_revoke_invitation():
     assert invite.is_revoked
 
 
-def test_resend_invitation():
+def test_resend_invitation(session):
     portfolio = PortfolioFactory.create()
     user = UserFactory.create()
     ws_role = PortfolioRoleFactory.create(user=user, portfolio=portfolio)
     invite = PortfolioInvitations.create(portfolio.owner, ws_role, user.email)
-    PortfolioInvitations.resend(user, invite.token)
+    second_invite = PortfolioInvitations.resend(user, invite.token)
     assert ws_role.invitations[0].is_revoked
     assert ws_role.invitations[1].is_pending
 

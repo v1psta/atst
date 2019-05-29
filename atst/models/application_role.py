@@ -43,9 +43,7 @@ class ApplicationRole(
     )
     application = relationship("Application", back_populates="roles")
 
-    user_id = Column(
-        UUID(as_uuid=True), ForeignKey("users.id"), index=True, nullable=False
-    )
+    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), index=True)
 
     status = Column(SQLAEnum(Status, native_enum=False), default=Status.PENDING)
 
