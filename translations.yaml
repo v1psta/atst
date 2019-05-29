@@ -17,6 +17,8 @@ base_public:
   header_title: JEDI Cloud
   login: Log in
   title_tag: JEDI Cloud
+home:
+  add_portfolio_button_text: Add New Portfolio
 common:
   back: Back
   cancel: Cancel
