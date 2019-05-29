@@ -190,7 +190,9 @@ def test_remove_member_success(client, user_session):
 
     response = client.post(
         url_for(
-            "applications.remove_member", application_id=application.id, user_id=user.id
+            "applications.remove_member",
+            application_id=application.id,
+            application_role_id=application_role.id,
         )
     )
 
@@ -214,7 +216,7 @@ def test_remove_member_failure(client, user_session):
         url_for(
             "applications.remove_member",
             application_id=application.id,
-            user_id=uuid.uuid4(),
+            application_role_id=uuid.uuid4(),
         )
     )
 
