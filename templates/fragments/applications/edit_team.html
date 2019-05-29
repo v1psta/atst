@@ -82,13 +82,9 @@
             </a>
           {% endif %}
           {% if user_can(permissions.DELETE_APPLICATION_MEMBER) %}
-            <button
-              type="button"
-              class='usa-button button-danger'
-              v-on:click="openModal('{{ delete_modal_id }}')"
-            >
+            <a class="usa-button button-danger" v-on:click="openModal('{{ delete_modal_id }}')">
               {{ "portfolios.applications.remove_member.button" | translate }}
-            </button>
+            </a>
           {% endif %}
         </div>
       {% endcall %}

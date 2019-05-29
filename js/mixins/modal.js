@@ -3,19 +3,11 @@ import ally from 'ally.js'
 export default {
   methods: {
     closeModal: function(name) {
-      this.activeModal = null
       this.$root.$emit('modalOpen', { isOpen: false, name: name })
-      if (this.allyHandler) this.allyHandler.disengage()
     },
 
     openModal: function(name) {
-      this.activeModal = name
       this.$root.$emit('modalOpen', { isOpen: true, name: name })
-      const idSelector = `#${this.modalId}`
-
-      this.allyHandler = ally.maintain.disabled({
-        filter: idSelector,
-      })
     },
 
     // TODO: activeModal should be tracked on the root

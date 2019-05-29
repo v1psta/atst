@@ -89,7 +89,18 @@ const app = new Vue({
       if (data['isOpen']) {
         document.body.className += ' modal-open'
         this.activeModal = data['name']
+
+        var handler = ally.maintain.disabled({
+          filter: `#${this.modalId}`,
+        })
+
+        this.allyHandler = handler
       } else {
+        this.activeModal = null
+        if (this.allyHandler) {
+          this.allyHandler.disengage()
+          this.allyHandler = null
+        }
         document.body.className = document.body.className.replace(
           ' modal-open',
           ''

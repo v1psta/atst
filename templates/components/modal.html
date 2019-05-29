@@ -6,16 +6,16 @@
       <div class='modal__container'>
         <div class='modal__dialog' role='dialog' aria-modal='true'>
           <div class='modal__body'>
-              {{ caller() }}
+            {{ caller() }}
 
-              {% if dismissable %}
-                <button type='button' class='icon-link modal__dismiss' v-on:click='closeModal("{{name}}")'>
-                  {{ Icon('x') }}
-                  <span>
-                    {{ "common.close" | translate }}
-                  </span>
-                </button>
-              {% endif %}
+            {% if dismissable %}
+              <button type='button' class='icon-link modal__dismiss' v-on:click='closeModal("{{name}}")'>
+                {{ Icon('x') }}
+                <span>
+                  {{ "common.close" | translate }}
+                </span>
+              </button>
+            {% endif %}
           </div>
         </div>
       </div>
