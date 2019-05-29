@@ -254,10 +254,6 @@ def make_mailer(app):
     app.mailer = mailer.Mailer(mailer_connection, sender)
 
 
-def make_session_limiter(app, session, config):
-    app.session_limiter = SessionLimiter(config, session, app.redis)
-
-
 def make_notification_sender(app):
     app.notification_sender = NotificationSender(queue)
 
