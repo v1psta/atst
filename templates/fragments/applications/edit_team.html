@@ -17,7 +17,7 @@
           </div>
         </div>
         <div class="col col--grow">{{ OptionsInput(permissions_form.perms_team_mgmt, label=False, watch=True) }}</div>
-        <div v-on:change="flip" class="col col--grow">{{ OptionsInput(permissions_form.perms_env_mgmt, label=False, watch=True) }}</div>
+        <div v-on:change="switchEditAccess" class="col col--grow">{{ OptionsInput(permissions_form.perms_env_mgmt, label=False, watch=True) }}</div>
 
         <div v-if="edit_access" class="col col--grow">
           {{ OptionsInput(permissions_form.perms_del_env, label=False, watch=True) }}

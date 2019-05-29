@@ -21,7 +21,7 @@ export default {
   },
 
   methods: {
-    flip: function() {
+    switchEditAccess: function() {
       this.edit_access = !this.edit_access
     },
     toggle: function() {
