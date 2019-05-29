@@ -1,6 +1,7 @@
 import re
 import datetime
 from atst.utils.localization import translate, translate_duration
+from atst.utils.encryption import decrypt_value
 from flask import current_app as app, render_template
 from jinja2 import contextfilter
 from jinja2.exceptions import TemplateNotFound
@@ -95,6 +96,7 @@ def register_filters(app):
     app.jinja_env.filters["renderAuditEvent"] = renderAuditEvent
     app.jinja_env.filters["normalizeOrder"] = normalizeOrder
     app.jinja_env.filters["translateDuration"] = translate_duration
+    app.jinja_env.filters["decryptValue"] = decrypt_value
 
     @contextfilter
     def translateWithoutCache(context, *kwargs):

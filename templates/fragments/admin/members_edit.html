@@ -1,8 +1,9 @@
 {% from "components/options_input.html" import OptionsInput %}
 
 {% for subform in member_perms_form.members_permissions %}
+  {% set member_id = subform.member_id.data | decryptValue %}
   {% set modal_id = "portfolio_id_{}_user_id_{}".format(portfolio.id, subform.member_id.data) %}
-  {% set ppoc = subform.member_id.data == ppoc_id %}
+  {% set ppoc = member_id == ppoc_id | string %}
   {% set archive_button_class = 'button-danger-outline' %}
 
   <tr {% if ppoc %}class="members-table-ppoc"{% endif %}>
@@ -12,7 +13,7 @@
           {% set archive_button_class = 'usa-button-disabled' %}
           <span class='you'>PPoC</span>
         {% endif %}
-        {% if subform.member_id.data == current_member_id %}
+        {% if member_id == current_member_id | string %}
           {% set archive_button_class = 'usa-button-disabled' %}
           <span class='you'>(<span class='green'>you</span>)</span>
         {% endif %}
