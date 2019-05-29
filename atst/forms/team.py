@@ -45,7 +45,12 @@ class PermissionsForm(FlaskForm):
         choices=[
             (PermissionSets.VIEW_APPLICATION, "No"),
             (PermissionSets.DELETE_APPLICATION_ENVIRONMENTS, "Yes"),
-        ]
+        ],
+    )
+    perms_view_only = SelectField(
+        choices=[
+            (PermissionSets.VIEW_APPLICATION, "No"),
+        ],
     )
 
     @property

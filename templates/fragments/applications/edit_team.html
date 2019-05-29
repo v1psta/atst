@@ -23,8 +23,8 @@
           {{ OptionsInput(permissions_form.perms_del_env, label=False, watch=True) }}
         </div>
         <div v-else class="col col--grow disabled">
-          {{ OptionsInput(permissions_form.perms_del_env, label=False, disabled=True, watch=True) }}
-          <input type="hidden" name={{permissions_form.perms_del_env.id}} value={{permissions_form.perms_del_env.data}}>
+          {{ OptionsInput(permissions_form.perms_view_only, label=False, disabled=True, watch=True) }}
+          <input type="hidden" name={{permissions_form.perms_view_only.id}} value={{permissions_form.perms_view_only.data}}>
         </div>
 
         <div v-on:click="toggle" class="col col--grow icon-link icon-link--large accordion-table__item__toggler">

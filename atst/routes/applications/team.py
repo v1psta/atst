@@ -37,6 +37,7 @@ def get_team_form(application):
             "perms_del_env": get_form_permission_value(
                 member, PermissionSets.DELETE_APPLICATION_ENVIRONMENTS
             ),
+            "perms_view_only": PermissionSets.VIEW_APPLICATION,
         }
         roles = EnvironmentRoles.get_for_application_and_user(
             member.user.id, application.id
