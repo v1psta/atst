@@ -305,12 +305,16 @@ def test_remove_portfolio_member(client, user_session):
     portfolio = PortfolioFactory.create()
 
     user = UserFactory.create()
-    PortfolioRoleFactory.create(portfolio=portfolio, user=user)
+    member = PortfolioRoleFactory.create(portfolio=portfolio, user=user)
 
     user_session(portfolio.owner)
 
     response = client.post(
-        url_for("portfolios.remove_member", portfolio_id=portfolio.id, user_id=user.id),
+        url_for(
+            "portfolios.remove_member",
+            portfolio_id=portfolio.id,
+            portfolio_role_id=member.id,
+        ),
         follow_redirects=False,
     )
 
@@ -330,6 +334,9 @@ def test_remove_portfolio_member(client, user_session):
 
 def test_remove_portfolio_member_self(client, user_session):
     portfolio = PortfolioFactory.create()
+    portfolio_role = PortfolioRoles.get(
+        portfolio_id=portfolio.id, user_id=portfolio.owner.id
+    )
 
     user_session(portfolio.owner)
 
@@ -337,7 +344,7 @@ def test_remove_portfolio_member_self(client, user_session):
         url_for(
             "portfolios.remove_member",
             portfolio_id=portfolio.id,
-            user_id=portfolio.owner.id,
+            portfolio_role_id=portfolio_role.id,
         ),
         follow_redirects=False,
     )
@@ -358,6 +365,9 @@ def test_remove_portfolio_member_ppoc(client, user_session):
         user=user,
         permission_sets=[PermissionSets.get(PermissionSets.EDIT_PORTFOLIO_ADMIN)],
     )
+    ppoc_port_role = PortfolioRoles.get(
+        portfolio_id=portfolio.id, user_id=portfolio.owner.id
+    )
 
     user_session(user)
 
@@ -365,7 +375,7 @@ def test_remove_portfolio_member_ppoc(client, user_session):
         url_for(
             "portfolios.remove_member",
             portfolio_id=portfolio.id,
-            user_id=portfolio.owner.id,
+            portfolio_role_id=ppoc_port_role.id,
         ),
         follow_redirects=False,
     )

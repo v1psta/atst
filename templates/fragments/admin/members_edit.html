@@ -1,3 +1,5 @@
+{% from "components/alert.html" import Alert %}
+{% from "components/modal.html" import Modal %}
 {% from "components/options_input.html" import OptionsInput %}
 
 {% for subform in member_perms_form.members_permissions %}
@@ -29,6 +31,7 @@
         {{ "portfolios.members.archive_button" | translate }}
       </a>
     </td>
+
     {% if not ppoc %}
       {{ subform.member_id() }}
     {% endif %}

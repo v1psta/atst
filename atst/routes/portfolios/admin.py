@@ -166,22 +166,23 @@ def edit(portfolio_id):
 
 
 @portfolios_bp.route(
-    "/portfolios/<portfolio_id>/members/<user_id>/delete", methods=["POST"]
+    "/portfolios/<portfolio_id>/members/<portfolio_role_id>/delete", methods=["POST"]
 )
 @user_can(Permissions.EDIT_PORTFOLIO_USERS, message="update portfolio members")
-def remove_member(portfolio_id, user_id):
-    if str(g.current_user.id) == user_id:
+def remove_member(portfolio_id, portfolio_role_id):
+    portfolio_role = PortfolioRoles.get_by_id(portfolio_role_id)
+
+    if g.current_user.id == portfolio_role.user_id:
         raise UnauthorizedError(
             g.current_user, "you cant remove yourself from the portfolio"
         )
 
     portfolio = Portfolios.get(user=g.current_user, portfolio_id=portfolio_id)
-    if user_id == str(portfolio.owner.id):
+    if portfolio_role.user_id == portfolio.owner.id:
         raise UnauthorizedError(
             g.current_user, "you can't delete the portfolios PPoC from the portfolio"
         )
 
-    portfolio_role = PortfolioRoles.get(portfolio_id=portfolio_id, user_id=user_id)
     # TODO: should this cascade and disable any application and environment
     # roles they might have?
     PortfolioRoles.disable(portfolio_role=portfolio_role)
