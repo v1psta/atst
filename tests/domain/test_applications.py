@@ -128,7 +128,7 @@ def test_create_member():
     # view application AND edit application team
     assert len(member_role.permission_sets) == 2
 
-    env_roles = member_role.user.environment_roles
+    env_roles = member_role.environment_roles
     assert len(env_roles) == 1
     assert env_roles[0].environment == env1
 
@@ -165,7 +165,9 @@ def test_remove_member():
     user = UserFactory.create()
     member_role = ApplicationRoleFactory.create(application=application, user=user)
     environment = EnvironmentFactory.create(application=application)
-    environment_role = EnvironmentRoleFactory.create(user=user, environment=environment)
+    environment_role = EnvironmentRoleFactory.create(
+        application_role=member_role, environment=environment
+    )
 
     assert member_role == ApplicationRoles.get(
         user_id=user.id, application_id=application.id
@@ -181,4 +183,9 @@ def test_remove_member():
     #
     # TODO: Why does above raise NotFoundError and this returns None
     #
-    assert EnvironmentRoles.get(user_id=user.id, environment_id=environment.id) == None
+    assert (
+        EnvironmentRoles.get(
+            application_role_id=member_role.id, environment_id=environment.id
+        )
+        is None
+    )

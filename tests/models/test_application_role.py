@@ -45,6 +45,8 @@ def test_environment_roles():
     environment = EnvironmentFactory.create(application=application)
     user = UserFactory.create()
     application_role = ApplicationRoleFactory.create(application=application, user=user)
-    environment_role = EnvironmentRoleFactory.create(environment=environment, user=user)
+    environment_role = EnvironmentRoleFactory.create(
+        environment=environment, application_role=application_role
+    )
 
     assert application_role.environment_roles == [environment_role]

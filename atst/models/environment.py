@@ -21,7 +21,7 @@ class Environment(
 
     @property
     def users(self):
-        return {r.user for r in self.roles}
+        return {r.application_role.user for r in self.roles}
 
     @property
     def num_users(self):

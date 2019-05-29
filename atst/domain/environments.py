@@ -3,8 +3,6 @@ from sqlalchemy.orm.exc import NoResultFound
 
 from atst.database import db
 from atst.models.environment import Environment
-from atst.models.environment_role import EnvironmentRole
-from atst.models.application import Application
 from atst.domain.environment_roles import EnvironmentRoles
 from atst.domain.application_roles import ApplicationRoles
 
@@ -31,23 +29,12 @@ class Environments(object):
         return environments
 
     @classmethod
-    def add_member(cls, environment, user, role):
+    def add_member(cls, environment, application_role, role):
         environment_user = EnvironmentRoles.create(
-            user=user, environment=environment, role=role
+            application_role=application_role, environment=environment, role=role
         )
         db.session.add(environment_user)
         return environment
-
-    @classmethod
-    def for_user(cls, user, application):
-        return (
-            db.session.query(Environment)
-            .join(EnvironmentRole)
-            .join(Application)
-            .filter(EnvironmentRole.user_id == user.id)
-            .filter(Environment.application_id == application.id)
-            .all()
-        )
 
     @classmethod
     def update(cls, environment, name=None):
@@ -70,20 +57,22 @@ class Environments(object):
         return env
 
     @classmethod
-    def update_env_role(cls, environment, user, new_role):
+    def update_env_role(cls, environment, application_role, new_role):
         updated = False
 
         if new_role is None:
-            updated = EnvironmentRoles.delete(user.id, environment.id)
+            updated = EnvironmentRoles.delete(application_role.id, environment.id)
         else:
-            env_role = EnvironmentRoles.get(user.id, environment.id)
+            env_role = EnvironmentRoles.get(application_role.id, environment.id)
             if env_role and env_role.role != new_role:
                 env_role.role = new_role
                 updated = True
                 db.session.add(env_role)
             elif not env_role:
                 env_role = EnvironmentRoles.create(
-                    user=user, environment=environment, role=new_role
+                    application_role=application_role,
+                    environment=environment,
+                    role=new_role,
                 )
                 updated = True
                 db.session.add(env_role)
@@ -101,16 +90,7 @@ class Environments(object):
             new_role = member["role_name"]
             app_role = ApplicationRoles.get_by_id(member["application_role_id"])
             Environments.update_env_role(
-                environment=environment, user=app_role.user, new_role=new_role
-            )
-
-    @classmethod
-    def update_env_roles_by_member(cls, member, env_roles):
-        for env_roles in env_roles:
-            new_role = env_roles["role"]
-            environment = Environments.get(env_roles["id"])
-            Environments.update_env_role(
-                environment=environment, user=member, new_role=new_role
+                environment=environment, application_role=app_role, new_role=new_role
             )
 
     @classmethod

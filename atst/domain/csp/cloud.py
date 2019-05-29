@@ -75,7 +75,7 @@ class MockCloudProvider(CloudProviderInterface):
     def get_access_token(self, environment_role):
         # for now, just create a mock token using the user and environment
         # cloud IDs and the name of the role in the environment
-        user_id = environment_role.user.cloud_id or ""
+        user_id = environment_role.application_role.user.cloud_id or ""
         env_id = environment_role.environment.cloud_id or ""
         role_details = environment_role.role
         return "::".join([user_id, env_id, role_details])

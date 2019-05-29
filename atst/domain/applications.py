@@ -98,7 +98,9 @@ class Applications(BaseDomainClass):
             role = env_role_data.get("role")
             if role:
                 environment = Environments.get(env_role_data.get("environment_id"))
-                Environments.add_member(environment, user, env_role_data.get("role"))
+                Environments.add_member(
+                    environment, application_role, env_role_data.get("role")
+                )
 
         return application_role
 
@@ -110,8 +112,11 @@ class Applications(BaseDomainClass):
 
         application_role.status = ApplicationRoleStatus.DISABLED
         application_role.deleted = True
-        db.session.add(application_role)
-        db.session.commit()
 
         for env in application.environments:
-            EnvironmentRoles.delete(user_id=user_id, environment_id=env.id)
+            EnvironmentRoles.delete(
+                application_role_id=application_role.id, environment_id=env.id
+            )
+
+        db.session.add(application_role)
+        db.session.commit()

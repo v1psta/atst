@@ -26,12 +26,14 @@ class EnvironmentRole(
 
     role = Column(String())
 
-    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
-    user = relationship("User", backref="environment_roles")
+    application_role_id = Column(
+        UUID(as_uuid=True), ForeignKey("application_roles.id"), nullable=False
+    )
+    application_role = relationship("ApplicationRole", backref="environment_roles")
 
     def __repr__(self):
         return "<EnvironmentRole(role='{}', user='{}', environment='{}', id='{}')>".format(
-            self.role, self.user.full_name, self.environment.name, self.id
+            self.role, self.application_role.user_name, self.environment.name, self.id
         )
 
     @property
@@ -53,8 +55,8 @@ class EnvironmentRole(
     @property
     def event_details(self):
         return {
-            "updated_user_name": self.user.displayname,
-            "updated_user_id": str(self.user_id),
+            "updated_user_name": self.application_role.user_name,
+            "updated_application_role_id": str(self.application_role_id),
             "role": self.role,
             "environment": self.environment.displayname,
             "environment_id": str(self.environment_id),
@@ -67,7 +69,7 @@ class EnvironmentRole(
 
 Index(
     "environments_role_user_environment",
-    EnvironmentRole.user_id,
+    EnvironmentRole.application_role_id,
     EnvironmentRole.environment_id,
     unique=True,
 )

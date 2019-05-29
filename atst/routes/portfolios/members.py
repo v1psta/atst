@@ -11,21 +11,6 @@ from atst.models.permissions import Permissions
 from atst.utils.flash import formatted_flash as flash
 
 
-def serialize_portfolio_role(portfolio_role):
-    return {
-        "name": portfolio_role.user_name,
-        "status": portfolio_role.display_status,
-        "id": portfolio_role.user_id,
-        "role": "admin",
-        "num_env": portfolio_role.num_environment_roles,
-        "edit_link": url_for(
-            "portfolios.view_member",
-            portfolio_id=portfolio_role.portfolio_id,
-            member_id=portfolio_role.user_id,
-        ),
-    }
-
-
 @portfolios_bp.route("/portfolios/<portfolio_id>/members/new", methods=["POST"])
 @user_can(Permissions.CREATE_PORTFOLIO_USERS, message="create new portfolio member")
 def create_member(portfolio_id):

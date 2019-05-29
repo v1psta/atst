@@ -163,20 +163,6 @@ class ApplicationFactory(Base):
         with_environments = kwargs.pop("environments", [])
         application = super()._create(model_class, *args, **kwargs)
 
-        # need to create application roles for environment users
-        app_members_from_envs = set()
-        for env in with_environments:
-            with_members = env.get("members", [])
-            for member_data in with_members:
-                member = member_data.get("user", UserFactory.create())
-                app_members_from_envs.add(member)
-                # set for environments in case we just created the
-                # user for the application
-                member_data["user"] = member
-
-        for member in app_members_from_envs:
-            ApplicationRoleFactory.create(application=application, user=member)
-
         environments = [
             EnvironmentFactory.create(application=application, **e)
             for e in with_environments
@@ -200,9 +186,14 @@ class EnvironmentFactory(Base):
 
         for member in with_members:
             user = member.get("user", UserFactory.create())
+            application_role = ApplicationRoleFactory.create(
+                application=environment.application, user=user
+            )
             role_name = member["role_name"]
             EnvironmentRoleFactory.create(
-                environment=environment, role=role_name, user=user
+                environment=environment,
+                role=role_name,
+                application_role=application_role,
             )
 
         return environment
@@ -234,7 +225,7 @@ class EnvironmentRoleFactory(Base):
 
     environment = factory.SubFactory(EnvironmentFactory)
     role = random.choice([e.value for e in CSPRole])
-    user = factory.SubFactory(UserFactory)
+    application_role = factory.SubFactory(ApplicationRoleFactory)
 
 
 class PortfolioInvitationFactory(Base):

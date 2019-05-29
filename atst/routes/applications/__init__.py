@@ -17,7 +17,7 @@ applications_bp.context_processor(portfolio_context_processor)
 
 
 def wrap_environment_role_lookup(user, environment_id=None, **kwargs):
-    env_role = EnvironmentRoles.get(user.id, environment_id)
+    env_role = EnvironmentRoles.get_by_user_and_environment(user.id, environment_id)
     if not env_role:
         raise UnauthorizedError(user, "access environment {}".format(environment_id))
 
@@ -27,7 +27,9 @@ def wrap_environment_role_lookup(user, environment_id=None, **kwargs):
 @applications_bp.route("/environments/<environment_id>/access")
 @user_can(None, override=wrap_environment_role_lookup, message="access environment")
 def access_environment(environment_id):
-    env_role = EnvironmentRoles.get(g.current_user.id, environment_id)
+    env_role = EnvironmentRoles.get_by_user_and_environment(
+        g.current_user.id, environment_id
+    )
     token = app.csp.cloud.get_access_token(env_role)
 
     return redirect(url_for("atst.csp_environment_access", token=token))
