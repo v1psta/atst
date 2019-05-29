@@ -10,6 +10,7 @@ from atst.utils.localization import translate
 
 class PermissionsForm(BaseForm):
     member_name = StringField()
+    # TODO: Use EncryptedHiddenField for member_id
     member_id = HiddenField()
     perms_app_mgmt = SelectField(
         translate("forms.new_member.app_mgmt"),

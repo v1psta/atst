@@ -175,6 +175,9 @@ def create_member(application_id):
 )
 @user_can(Permissions.DELETE_APPLICATION_MEMBER, message="remove application member")
 def remove_member(application_id, application_role_id):
+    # TODO: Review the best way to delete an app member
+    # currently getting application_role_id from the form, so it would be encrypted
+    # if we encrypt that field
     application_role = ApplicationRoles.get_by_id(application_role_id)
 
     Applications.remove_member(

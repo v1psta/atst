@@ -61,6 +61,8 @@ class PermissionsForm(FlaskForm):
 
 
 class MemberForm(FlaskForm):
+    # TODO: use EncryptedHiddenField for role_id
+    # see notes in routes/applications/team.py about deleting member
     role_id = HiddenField(validators=[Required()])
     user_name = StringField()
     environment_roles = FieldList(FormField(EnvironmentForm))
