@@ -394,6 +394,7 @@ navigation:
       admin: Admin
       funding: Funding
       reports: Reports
+      applications: Applications
     budget_report: Budget Report
     portfolio_admin: Portfolio Administration
     portfolio_funding: Funding
