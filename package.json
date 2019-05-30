@@ -24,6 +24,7 @@
     "uswds": "^1.6.9",
     "v-tooltip": "^2.0.0-rc.33",
     "vue": "2.5.15",
+    "vue-sticky": "^3.3.4",
     "vue-text-mask": "^6.1.2"
   },
   "devDependencies": {

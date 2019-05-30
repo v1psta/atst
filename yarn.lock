@@ -9295,6 +9295,11 @@ vue-resize@^0.4.3:
   version "0.4.4"
   resolved "https://registry.yarnpkg.com/vue-resize/-/vue-resize-0.4.4.tgz#dee9b8dd1b189e7e3f6ec47f86c60694a241bb17"
 
+vue-sticky@^3.3.4:
+  version "3.3.4"
+  resolved "https://registry.yarnpkg.com/vue-sticky/-/vue-sticky-3.3.4.tgz#d06288c4d28cfefdc7037e90b2ce51e5b51585c9"
+  integrity sha512-7Hcvw7MjzyQo3/rb2R2LvuxiIymJv49Gg6pXslFDjTr7UZoFxFvp8QYG1WFfKuk8V8eZHRKi1QD5dxRMQkm2OQ==
+
 vue-template-compiler@2.5.15:
   version "2.5.15"
   resolved "https://registry.yarnpkg.com/vue-template-compiler/-/vue-template-compiler-2.5.15.tgz#cc004097e37167be8b85ea22ab2840d8e8cca1c0"

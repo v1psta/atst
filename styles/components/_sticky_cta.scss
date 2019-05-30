@@ -1,0 +1,40 @@
+.sticky-cta {
+  @include media($small-screen) {
+    margin-left: -$gap * 4;
+  }
+
+  @include media($medium-screen) {
+    margin-left: -$gap * 5;
+  }
+
+  background-color: $color-gray-lightest;
+
+  border-top: 1px solid $color-gray-lighter;
+  border-bottom: 1px solid $color-gray-lighter;
+
+  padding: 0 40px 0 40px;
+  box-shadow: $box-shadow;
+
+  margin-bottom: 20px;
+}
+
+.sticky-cta-container {
+  display: flex;
+  justify-content: center;
+}
+
+.sticky-cta-text {
+  flex-grow: 1;
+}
+
+.sticky-cta-buttons {
+  display: flex;
+  justify-content: center;
+
+  button {
+    margin-top: auto;
+    margin-bottom: auto;
+    width: 144px;
+    margin-left: 33px;
+  }
+}
