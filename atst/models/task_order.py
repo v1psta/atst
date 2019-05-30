@@ -1,18 +1,12 @@
 from enum import Enum
 from datetime import date
 
-import pendulum
 from sqlalchemy import Column, DateTime, ForeignKey, String
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import relationship
 from werkzeug.datastructures import FileStorage
 
 from atst.models import Attachment, Base, types, mixins
-
-# Imports used for mocking TO balance
-from atst.domain.csp.reports import MockReportingProvider
-from flask import current_app as app
-import random
 
 
 class Status(Enum):
@@ -40,14 +34,6 @@ class TaskOrder(Base, mixins.TimestampsMixin):
     signed_at = Column(DateTime)
 
     @hybrid_property
-    def csp_estimate(self):
-        return self._csp_estimate
-
-    @csp_estimate.setter
-    def csp_estimate(self, new_csp_estimate):
-        self._csp_estimate = self._set_attachment(new_csp_estimate, "_csp_estimate")
-
-    @hybrid_property
     def pdf(self):
         return self._pdf
 
@@ -66,14 +52,6 @@ class TaskOrder(Base, mixins.TimestampsMixin):
             raise TypeError("Could not set attachment with invalid type")
 
     @property
-    def is_submitted(self):
-        return (
-            self.number is not None
-            and self.start_date is not None
-            and self.end_date is not None
-        )
-
-    @property
     def is_active(self):
         return self.status == Status.ACTIVE
 
@@ -83,19 +61,21 @@ class TaskOrder(Base, mixins.TimestampsMixin):
 
     @property
     def status(self):
-        if self.is_submitted:
-            now = pendulum.now().date()
-            if self.start_date > now:
-                return Status.PENDING
-            elif self.end_date < now:
-                return Status.EXPIRED
-            return Status.ACTIVE
-        else:
-            return Status.STARTED
+        # TODO: fix task order -- implement correctly using CLINs
+        # Faked for display purposes
+        return Status.ACTIVE
 
     @property
-    def display_status(self):
-        return self.status.value
+    def start_date(self):
+        # TODO: fix task order -- reimplement using CLINs
+        # Faked for display purposes
+        return date.today()
+
+    @property
+    def end_date(self):
+        # TODO: fix task order -- reimplement using CLINs
+        # Faked for display purposes
+        return date.today()
 
     @property
     def days_to_expiration(self):
@@ -104,81 +84,27 @@ class TaskOrder(Base, mixins.TimestampsMixin):
 
     @property
     def budget(self):
-        return sum(
-            filter(None, [self.clin_01, self.clin_02, self.clin_03, self.clin_04])
-        )
+        # TODO: fix task order -- reimplement using CLINs
+        # Faked for display purposes
+        return 100000
 
     @property
     def balance(self):
-        # Faking the remaining balance using the stubbed reporting data for A-Wing & B-Wing
-        if (
-            self.portfolio_name in MockReportingProvider.REPORT_FIXTURE_MAP
-            and self.is_active
-        ):
-            return self.budget - app.csp.reports.get_total_spending(self.portfolio)
-        # Faking an almost fully spent TO if the TO is expired
-        if self.is_expired:
-            return random.randrange(300) / 100  # nosec
-        # TODO: somehow calculate the remaining balance. For now, assume $0 spent
-        return self.budget
+        # TODO: fix task order -- reimplement using CLINs
+        # Faked for display purposes
+        return 50
+
+    @property
+    def display_status(self):
+        return self.status.value
 
     @property
     def portfolio_name(self):
         return self.portfolio.name
 
     @property
-    def defense_component(self):
-        return self.portfolio.defense_component
-
-    @property
     def is_pending(self):
         return self.status == Status.PENDING
-
-    @property
-    def ko_invitable(self):
-        """
-        The MO has indicated that the KO should be invited but we have not sent
-        an invite and attached the KO user
-        """
-        return self.ko_invite and not self.contracting_officer
-
-    @property
-    def cor_invitable(self):
-        """
-        The MO has indicated that the COR should be invited but we have not sent
-        an invite and attached the COR user
-        """
-        return self.cor_invite and not self.contracting_officer_representative
-
-    @property
-    def so_invitable(self):
-        """
-        The MO has indicated that the SO should be invited but we have not sent
-        an invite and attached the SO user
-        """
-        return self.so_invite and not self.security_officer
-
-    @property
-    def officers(self):
-        return [
-            self.contracting_officer,
-            self.contracting_officer_representative,
-            self.security_officer,
-        ]
-
-    _OFFICER_PREFIXES = {
-        "contracting_officer": "ko",
-        "contracting_officer_representative": "cor",
-        "security_officer": "so",
-    }
-    _OFFICER_PROPERTIES = ["first_name", "last_name", "phone_number", "email", "dod_id"]
-
-    def officer_dictionary(self, officer_type):
-        prefix = self._OFFICER_PREFIXES[officer_type]
-        return {
-            field: getattr(self, "{}_{}".format(prefix, field))
-            for field in self._OFFICER_PROPERTIES
-        }
 
     def to_dictionary(self):
         return {
@@ -191,6 +117,4 @@ class TaskOrder(Base, mixins.TimestampsMixin):
         }
 
     def __repr__(self):
-        return "<TaskOrder(number='{}', budget='{}', end_date='{}', id='{}')>".format(
-            self.number, self.budget, self.end_date, self.id
-        )
+        return "<TaskOrder(number='{}', id='{}')>".format(self.number, self.id)

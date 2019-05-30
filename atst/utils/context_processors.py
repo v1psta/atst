@@ -1,5 +1,3 @@
-from operator import attrgetter
-
 from flask import g
 from sqlalchemy.orm.exc import NoResultFound
 
@@ -103,9 +101,11 @@ def portfolio():
             task_order for task_order in g.portfolio.task_orders if task_order.is_active
         ]
         funding_end_date = (
-            sorted(active_task_orders, key=attrgetter("end_date"))[-1].end_date
-            if active_task_orders
-            else None
+            # TODO: fix task order -- reimplement logic to get end date from CLINs
+            # sorted(active_task_orders, key=attrgetter("end_date"))[-1].end_date
+            # if active_task_orders
+            # else None
+            None
         )
         funded = len(active_task_orders) > 1
     else:

@@ -260,56 +260,6 @@ class TaskOrderFactory(Base):
 
     portfolio = factory.SubFactory(PortfolioFactory)
 
-    clin_01 = factory.LazyFunction(lambda *args: random.randrange(100, 100_000))
-    clin_03 = factory.LazyFunction(lambda *args: random.randrange(100, 100_000))
-    clin_02 = factory.LazyFunction(lambda *args: random.randrange(100, 100_000))
-    clin_04 = factory.LazyFunction(lambda *args: random.randrange(100, 100_000))
-
-    app_migration = random_choice(data.APP_MIGRATION)
-    native_apps = random.choice(["yes", "no", "not_sure"])
-    complexity = [random_choice(data.APPLICATION_COMPLEXITY)]
-    dev_team = [random_choice(data.DEV_TEAM)]
-    team_experience = random_choice(data.TEAM_EXPERIENCE)
-
-    scope = factory.Faker("sentence")
-    start_date = factory.LazyFunction(
-        lambda *args: random_future_date(year_min=1, year_max=1)
-    )
-    end_date = factory.LazyFunction(
-        lambda *args: random_future_date(year_min=2, year_max=5)
-    )
-    performance_length = random.randint(1, 24)
-    csp_estimate = factory.SubFactory(AttachmentFactory)
-
-    ko_first_name = factory.Faker("first_name")
-    ko_last_name = factory.Faker("last_name")
-    ko_email = factory.Faker("email")
-    ko_phone_number = factory.LazyFunction(random_phone_number)
-    ko_dod_id = factory.LazyFunction(random_dod_id)
-    cor_first_name = factory.Faker("first_name")
-    cor_last_name = factory.Faker("last_name")
-    cor_email = factory.Faker("email")
-    cor_phone_number = factory.LazyFunction(random_phone_number)
-    cor_dod_id = factory.LazyFunction(random_dod_id)
-    so_first_name = factory.Faker("first_name")
-    so_last_name = factory.Faker("last_name")
-    so_email = factory.Faker("email")
-    so_phone_number = factory.LazyFunction(random_phone_number)
-    so_dod_id = factory.LazyFunction(random_dod_id)
-
-
-class DD254Factory(Base):
-    class Meta:
-        model = DD254
-
-    certifying_official = factory.Faker("name")
-    certifying_official_title = factory.Faker("job")
-    certifying_official_address = factory.Faker("address")
-    certifying_official_phone = factory.LazyFunction(random_phone_number)
-    required_distribution = factory.LazyFunction(
-        lambda: [random_choice(data.REQUIRED_DISTRIBUTIONS)]
-    )
-
 
 class NotificationRecipientFactory(Base):
     class Meta:

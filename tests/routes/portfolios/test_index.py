@@ -42,12 +42,7 @@ def test_portfolio_reports(client, user_session):
             {"name": "application1", "environments": [{"name": "application1 prod"}]}
         ]
     )
-    task_order = TaskOrderFactory.create(
-        number="42",
-        start_date=random_past_date(),
-        end_date=random_future_date(),
-        portfolio=portfolio,
-    )
+    task_order = TaskOrderFactory.create(number="42", portfolio=portfolio)
     user_session(portfolio.owner)
     response = client.get(url_for("portfolios.reports", portfolio_id=portfolio.id))
     assert response.status_code == 200

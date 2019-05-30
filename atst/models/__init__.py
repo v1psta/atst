@@ -16,7 +16,6 @@ from .audit_event import AuditEvent
 from .portfolio_invitation import PortfolioInvitation
 from .application_invitation import ApplicationInvitation
 from .task_order import TaskOrder
-from .dd_254 import DD254
 from .notification_recipient import NotificationRecipient
 
 from .mixins.invites import Status as InvitationStatus
