@@ -1,8 +1,9 @@
 from datetime import date, timedelta
 
-from flask import render_template, request as http_request, g
+from flask import redirect, render_template, url_for, request as http_request, g
 
 from . import portfolios_bp
+from atst.forms.portfolio import PortfolioCreationForm
 from atst.domain.reports import Reports
 from atst.domain.portfolios import Portfolios
 from atst.models.permissions import Permissions
@@ -17,6 +18,26 @@ def portfolios():
         return render_template("portfolios/index.html", page=5, portfolios=portfolios)
     else:
         return render_template("portfolios/blank_slate.html")
+
+
+@portfolios_bp.route("/portfolios/new")
+def new_portfolio():
+    form = PortfolioCreationForm()
+
+    return render_template("portfolios/new.html", form=form)
+
+
+@portfolios_bp.route("/portfolios", methods=["POST"])
+def create_portfolio():
+    form = PortfolioCreationForm(http_request.form)
+
+    if form.validate():
+        portfolio = Portfolios.create(user=g.current_user, portfolio_attrs=form.data)
+        return redirect(
+            url_for("applications.portfolio_applications", portfolio_id=portfolio.id)
+        )
+    else:
+        return render_template("portfolios/new.html", form=form), 400
 
 
 @portfolios_bp.route("/portfolios/<portfolio_id>/reports")
