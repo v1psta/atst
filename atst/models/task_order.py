@@ -2,18 +2,8 @@ from enum import Enum
 from datetime import date
 
 import pendulum
-from sqlalchemy import (
-    Column,
-    Numeric,
-    String,
-    ForeignKey,
-    Date,
-    Integer,
-    DateTime,
-    Boolean,
-)
+from sqlalchemy import Column, DateTime, ForeignKey, String
 from sqlalchemy.ext.hybrid import hybrid_property
-from sqlalchemy.types import ARRAY
 from sqlalchemy.orm import relationship
 from werkzeug.datastructures import FileStorage
 
@@ -43,64 +33,11 @@ class TaskOrder(Base, mixins.TimestampsMixin):
     user_id = Column(ForeignKey("users.id"))
     creator = relationship("User", foreign_keys="TaskOrder.user_id")
 
-    ko_id = Column(ForeignKey("users.id"))
-    contracting_officer = relationship("User", foreign_keys="TaskOrder.ko_id")
-
-    cor_id = Column(ForeignKey("users.id"))
-    contracting_officer_representative = relationship(
-        "User", foreign_keys="TaskOrder.cor_id"
-    )
-
-    so_id = Column(ForeignKey("users.id"))
-    security_officer = relationship("User", foreign_keys="TaskOrder.so_id")
-
-    dd_254_id = Column(ForeignKey("dd_254s.id"))
-    dd_254 = relationship("DD254")
-
-    scope = Column(String)  # Cloud Project Scope
-    app_migration = Column(String)  # App Migration
-    native_apps = Column(String)  # Native Apps
-    complexity = Column(ARRAY(String))  # Application Complexity
-    complexity_other = Column(String)
-    dev_team = Column(ARRAY(String))  # Development Team
-    dev_team_other = Column(String)
-    team_experience = Column(String)  # Team Experience
-    start_date = Column(Date)  # Period of Performance
-    end_date = Column(Date)
-    performance_length = Column(Integer)
-    csp_attachment_id = Column(ForeignKey("attachments.id"))
-    _csp_estimate = relationship("Attachment", foreign_keys=[csp_attachment_id])
-    clin_01 = Column(Numeric(scale=2))
-    clin_02 = Column(Numeric(scale=2))
-    clin_03 = Column(Numeric(scale=2))
-    clin_04 = Column(Numeric(scale=2))
-    ko_first_name = Column(String)  # First Name
-    ko_last_name = Column(String)  # Last Name
-    ko_email = Column(String)  # Email
-    ko_phone_number = Column(String)  # Phone Number
-    ko_dod_id = Column(String)  # DOD ID
-    ko_invite = Column(Boolean, default=False)
-    cor_first_name = Column(String)  # First Name
-    cor_last_name = Column(String)  # Last Name
-    cor_email = Column(String)  # Email
-    cor_phone_number = Column(String)  # Phone Number
-    cor_dod_id = Column(String)  # DOD ID
-    cor_invite = Column(Boolean, default=False)
-    so_first_name = Column(String)  # First Name
-    so_last_name = Column(String)  # Last Name
-    so_email = Column(String)  # Email
-    so_phone_number = Column(String)  # Phone Number
-    so_dod_id = Column(String)  # DOD ID
-    so_invite = Column(Boolean, default=False)
     pdf_attachment_id = Column(ForeignKey("attachments.id"))
     _pdf = relationship("Attachment", foreign_keys=[pdf_attachment_id])
     number = Column(String, unique=True)  # Task Order Number
-    loas = Column(ARRAY(String))  # Line of Accounting (LOA)
-    custom_clauses = Column(String)  # Custom Clauses
     signer_dod_id = Column(String)
     signed_at = Column(DateTime)
-    level_of_warrant = Column(Numeric(scale=2))
-    unlimited_level_of_warrant = Column(Boolean, default=False)
 
     @hybrid_property
     def csp_estimate(self):
