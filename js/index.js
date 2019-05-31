@@ -115,5 +115,5 @@ const app = new Vue({
   },
   delimiters: ['!{', '}'],
 
-  directives: {'sticky': VueSticky}
+  directives: { sticky: VueSticky },
 })
