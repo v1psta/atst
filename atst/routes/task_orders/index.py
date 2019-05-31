@@ -3,10 +3,9 @@ from collections import defaultdict
 from flask import g, render_template, url_for
 
 from . import task_orders_bp
-from atst.domain.authz import Authorization
 from atst.domain.authz.decorator import user_can_access_decorator as user_can
 from atst.domain.portfolios import Portfolios
-from atst.domain.task_orders import TaskOrders, DD254s
+from atst.domain.task_orders import TaskOrders
 from atst.models import Permissions
 from atst.models.task_order import Status as TaskOrderStatus
 
@@ -16,14 +15,8 @@ from atst.models.task_order import Status as TaskOrderStatus
 def view_task_order(task_order_id):
     task_order = TaskOrders.get(task_order_id)
     to_form_complete = TaskOrders.all_sections_complete(task_order)
-    dd_254_complete = DD254s.is_complete(task_order.dd_254)
     return render_template(
         "portfolios/task_orders/show.html",
-        dd_254_complete=dd_254_complete,
-        is_cor=Authorization.is_cor(g.current_user, task_order),
-        is_ko=Authorization.is_ko(g.current_user, task_order),
-        is_so=Authorization.is_so(g.current_user, task_order),
-        is_to_signed=TaskOrders.is_signed_by_ko(task_order),
         task_order=task_order,
         to_form_complete=to_form_complete,
         user=g.current_user,

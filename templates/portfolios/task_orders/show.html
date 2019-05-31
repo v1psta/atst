@@ -6,10 +6,6 @@
 
 {% block portfolio_content %}
 
-{% set show_dd_254_button = is_so and to_form_complete %}
-{% set show_to_info_button = (is_cor or is_ko) and to_form_complete %}
-{% set show_sign_to_button = is_ko and dd_254_complete and not is_to_signed %}
-
 {% macro officer_name(officer) -%}
   {%- if not officer -%}
     not yet invited
@@ -73,31 +69,6 @@
   </div>
 {% endmacro %}
 
-{% macro InvitationStatus(title, officer, officer_info) %}
-  {% set class = "invited" if officer else "uninvited" %}
-  <div class="task-order-invitation-status row">
-    <div class="task-order-invitation-status__icon col">
-      <span>{{ Icon("avatar" if officer else "alert", classes=class) }}</span>
-    </div>
-    <div class="col">
-      <div class="task-order-invitation-status__title {{ class }}">
-        {{ title }}
-      </div>
-      <div class="task-order-invitation-details">
-        {% if officer_info %}
-          <div class="col">
-            <div>{{ officer_info.first_name }} {{ officer_info.last_name }}</div>
-            <div>{{ officer_info.email }}</div>
-            <div>{{ officer_info.phone_number | usPhone }}</div>
-          </div>
-        {% else %}
-          <span>not yet invited</span>
-        {% endif %}
-      </div>
-    </div>
-  </div>
-{% endmacro %}
-
 
 <div class="task-order-summary">
   {% include "fragments/flash.html" %}
@@ -138,48 +109,6 @@
             })| safe,
           )
         }}
-        {{
-          Step(
-            button_text=show_dd_254_button and ("common.edit" | translate),
-            button_url=show_dd_254_button and url_for("task_orders.so_review", task_order_id=task_order.id),
-            complete=dd_254_complete,
-            description="task_orders.view.steps.security" | translate({
-              "security_officer": officer_name(task_order.security_officer)
-            }) | safe,
-          )
-        }}
-        {% call Step(
-          description="task_orders.view.steps.record" | translate({
-            "contracting_officer": officer_name(task_order.contracting_officer),
-            "contracting_officer_representative": officer_name(task_order.contracting_officer_representative)
-          }) | safe,
-          button_url=show_to_info_button and url_for(
-            "task_orders.ko_review",
-            task_order_id=task_order.id,
-          ),
-          button_text=show_to_info_button and ("common.edit" | translate),
-          complete=False) %}
-          <div class='alert alert--warning'>
-            <div class='alert__content'>
-              <div class='alert__message'>
-                {{ "task_orders.view.steps.record_description" | translate | safe }}
-              </div>
-            </div>
-          </div>
-        {% endcall %}
-        {{
-          Step(
-            button_text=show_sign_to_button and ("common.sign" | translate),
-            button_url=show_sign_to_button and url_for(
-              "task_orders.ko_review",
-              task_order_id=task_order.id,
-            ),
-            complete=is_to_signed,
-            description="task_orders.view.steps.sign" | translate({
-              "contracting_officer": officer_name(task_order.contracting_officer)
-            }) | safe,
-          )
-        }}
       </div>
     </div>
     <div class="task-order-sidebar col">
@@ -210,14 +139,8 @@
             title="Instruction Sheet",
             link_url="#") }}
           {{ DocumentLink(
-            title="Cloud Services Estimate",
-            link_url=task_order.csp_estimate and url_for("task_orders.download_csp_estimate", task_order_id=task_order.id) ) }}
-          {{ DocumentLink(
             title="Market Research",
             link_url="#") }}
-          {{ DocumentLink(
-            title="DD 254",
-            link_url="") }}
         </div>
       </div>
       <div class="task-order-invitations panel">
@@ -225,15 +148,12 @@
           <div class="task-order-invitations__heading row">
             <h3>Invitations</h3>
             {% if to_form_complete %}
-              <a href="{{ url_for('task_orders.invitations', task_order_id=task_order.id) }}" class="icon-link">
+              <a href="#" class="icon-link">
                 <span>{{ "common.manage" | translate }}</span>
                 {{ Icon("edit") }}
               </a>
             {% endif %}
           </div>
-          {{ InvitationStatus('Contracting Officer', task_order.contracting_officer, officer_info=task_order.officer_dictionary('contracting_officer')) }}
-          {{ InvitationStatus('Contracting Officer Representative', task_order.contracting_officer_representative, officer_info=task_order.officer_dictionary('contracting_officer_representative')) }}
-          {{ InvitationStatus('IA Security Officer', officer=task_order.security_officer, officer_info=task_order.officer_dictionary('security_officer')) }}
         </div>
       </div>
     </div>

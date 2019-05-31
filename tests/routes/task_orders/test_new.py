@@ -109,16 +109,13 @@ def test_to_on_pf_cannot_edit_pf_attributes():
     assert second_workflow.pf_attributes_read_only
 
 
+@pytest.mark.skip(reason="Reimplement after TO form is updated")
 def test_create_new_task_order(client, user_session, pdf_upload):
     creator = UserFactory.create()
     user_session(creator)
 
     task_order_data = TaskOrderFactory.dictionary()
     app_info_data = slice_data_for_section(task_order_data, "app_info")
-    portfolio_name = "Mos Eisley"
-    defense_component = "Defense Health Agency"
-    app_info_data["portfolio_name"] = portfolio_name
-    app_info_data["defense_component"] = defense_component
 
     response = client.post(
         url_for("task_orders.update", screen=1),
@@ -130,12 +127,9 @@ def test_create_new_task_order(client, user_session, pdf_upload):
     created_task_order_id = response.headers["Location"].split("/")[-1]
     created_task_order = TaskOrders.get(created_task_order_id)
     assert created_task_order.portfolio is not None
-    assert created_task_order.portfolio.name == portfolio_name
-    assert created_task_order.portfolio.defense_component == defense_component
 
     funding_data = slice_data_for_section(task_order_data, "funding")
     funding_data = serialize_dates(funding_data)
-    funding_data["csp_estimate"] = pdf_upload
     response = client.post(
         response.headers["Location"], data=funding_data, follow_redirects=False
     )
@@ -156,7 +150,6 @@ def test_create_new_task_order_for_portfolio(client, user_session):
     task_order_data = TaskOrderFactory.dictionary()
     app_info_data = slice_data_for_section(task_order_data, "app_info")
     app_info_data["portfolio_name"] = portfolio.name
-    app_info_data["defense_component"] = portfolio.defense_component
 
     response = client.post(
         url_for("task_orders.update", screen=1, portfolio_id=portfolio.id),
@@ -168,10 +161,10 @@ def test_create_new_task_order_for_portfolio(client, user_session):
     created_task_order_id = response.headers["Location"].split("/")[-1]
     created_task_order = TaskOrders.get(created_task_order_id)
     assert created_task_order.portfolio_name == portfolio.name
-    assert created_task_order.defense_component == portfolio.defense_component
     assert created_task_order.portfolio == portfolio
 
 
+@pytest.mark.skip(reason="Update after implementing new TO form")
 def test_task_order_form_shows_errors(client, user_session, task_order):
     creator = task_order.creator
     user_session(creator)
@@ -192,25 +185,7 @@ def test_task_order_form_shows_errors(client, user_session, task_order):
     assert "Not a valid decimal" in body
 
 
-def test_task_order_validates_email_address(client, user_session, task_order):
-    creator = task_order.creator
-    user_session(creator)
-
-    task_order_data = TaskOrderFactory.dictionary()
-    oversight_data = slice_data_for_section(task_order_data, "oversight")
-    oversight_data.update({"ko_email": "not an email"})
-
-    response = client.post(
-        url_for("task_orders.update", screen=3, task_order_id=task_order.id),
-        data=oversight_data,
-        follow_redirects=False,
-    )
-
-    body = response.data.decode()
-    assert "There were some errors" in body
-    assert "Invalid email" in body
-
-
+@pytest.mark.skip(reason="Update after implementing new TO form")
 def test_review_screen_when_all_sections_complete(client, user_session, task_order):
     user_session(task_order.creator)
     response = client.get(
@@ -222,6 +197,7 @@ def test_review_screen_when_all_sections_complete(client, user_session, task_ord
     assert response.status_code == 200
 
 
+@pytest.mark.skip(reason="Update after implementing new TO form")
 def test_review_screen_when_not_all_sections_complete(client, user_session, task_order):
     TaskOrders.update(task_order, clin_01=None)
     user_session(task_order.creator)
@@ -240,9 +216,7 @@ def task_order():
     portfolio = PortfolioFactory.create(owner=user)
     attachment = Attachment(filename="sample_attachment", object_name="sample")
 
-    return TaskOrderFactory.create(
-        creator=user, portfolio=portfolio, csp_estimate=attachment
-    )
+    return TaskOrderFactory.create(creator=user, portfolio=portfolio)
 
 
 def test_show_task_order(task_order):
@@ -252,29 +226,6 @@ def test_show_task_order(task_order):
         task_order.creator, task_order_id=task_order.id
     )
     assert another_workflow.task_order == task_order
-
-
-def test_show_task_order_form_list_data():
-    complexity = ["oconus", "tactical_edge"]
-    user = UserFactory.create()
-    portfolio = PortfolioFactory.create(owner=user)
-    task_order = TaskOrderFactory.create(
-        creator=user, portfolio=portfolio, complexity=complexity
-    )
-    workflow = ShowTaskOrderWorkflow(user, task_order_id=task_order.id)
-
-    assert workflow.form.complexity.data == complexity
-
-
-def test_show_task_order_form(task_order):
-    workflow = ShowTaskOrderWorkflow(task_order.creator)
-    assert not workflow.form.data["app_migration"]
-    another_workflow = ShowTaskOrderWorkflow(
-        task_order.creator, task_order_id=task_order.id
-    )
-    assert (
-        another_workflow.form.data["defense_component"] == task_order.defense_component
-    )
 
 
 def test_show_task_order_display_screen(task_order):
@@ -287,16 +238,7 @@ def test_show_task_order_display_screen(task_order):
     assert screens[3]["completion"] == "incomplete"
 
 
-def test_update_task_order_with_no_task_order():
-    user = UserFactory.create()
-    to_data = TaskOrderFactory.dictionary()
-    workflow = UpdateTaskOrderWorkflow(user, to_data)
-    assert workflow.task_order is None
-    workflow.update()
-    assert workflow.task_order
-    assert workflow.task_order.scope == to_data["scope"]
-
-
+@pytest.mark.skip(reason="Update after implementing new TO form")
 def test_update_task_order_with_existing_task_order(task_order):
     to_data = serialize_dates(TaskOrderFactory.dictionary())
     workflow = UpdateTaskOrderWorkflow(
@@ -307,45 +249,7 @@ def test_update_task_order_with_existing_task_order(task_order):
     assert workflow.task_order.start_date.strftime("%m/%d/%Y") == to_data["start_date"]
 
 
-def test_update_to_redirects_to_ko_review(client, user_session, task_order):
-    ko = UserFactory.create()
-    task_order.contracting_officer = ko
-    PortfolioRoleFactory.create(
-        user=ko,
-        portfolio=task_order.portfolio,
-        permission_sets=[PermissionSets.get(PermissionSets.EDIT_PORTFOLIO_FUNDING)],
-    )
-    user_session(ko)
-    url = url_for("task_orders.ko_review", task_order_id=task_order.id)
-    response = client.post(
-        url_for("task_orders.new", screen=1, task_order_id=task_order.id, next=url)
-    )
-    body = response.data.decode()
-
-    assert url in body
-    assert response.status_code == 302
-
-
-def test_other_text_not_saved_if_other_not_checked(task_order):
-    to_data = {
-        **TaskOrderFactory.dictionary(),
-        "complexity": ["conus"],
-        "complexity_other": "quite complex",
-    }
-    workflow = UpdateTaskOrderWorkflow(
-        task_order.creator, to_data, task_order_id=task_order.id
-    )
-    workflow.update()
-    assert not workflow.task_order.complexity_other
-
-
-def test_cor_data_set_to_user_data_if_am_cor_is_checked(task_order):
-    to_data = {**task_order.to_dictionary(), "am_cor": True}
-    workflow = UpdateTaskOrderWorkflow(task_order.creator, to_data, 3, task_order.id)
-    workflow.update()
-    assert task_order.cor_dod_id == task_order.creator.dod_id
-
-
+@pytest.mark.skip(reason="Update after implementing new TO form")
 def test_review_task_order_form(client, user_session, task_order):
     user_session(task_order.creator)
 
@@ -357,18 +261,7 @@ def test_review_task_order_form(client, user_session, task_order):
         assert response.status_code == 200
 
 
-def test_update_task_order_clears_unnecessary_other_responses():
-    user = UserFactory.create()
-    to_data = TaskOrderFactory.dictionary()
-    to_data["complexity"] = ["storage"]
-    to_data["complexity_other"] = "something else"
-    to_data["dev_team"] = ["civilians"]
-    to_data["dev_team_other"] = "something else"
-    workflow = UpdateTaskOrderWorkflow(user, to_data)
-    assert workflow.task_order_form_data["complexity_other"] is None
-    assert workflow.task_order_form_data["dev_team_other"] is None
-
-
+@pytest.mark.skip(reason="Reimplement after TO form is updated")
 def test_mo_redirected_to_build_page(client, user_session, portfolio):
     user_session(portfolio.owner)
     task_order = TaskOrderFactory.create(portfolio=portfolio)
