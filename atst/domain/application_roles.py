@@ -28,8 +28,9 @@ class ApplicationRoles(object):
         return application_role
 
     @classmethod
-    def enable(cls, role):
+    def enable(cls, role, user):
         role.status = ApplicationRoleStatus.ACTIVE
+        role.user = user
 
         db.session.add(role)
         db.session.commit()

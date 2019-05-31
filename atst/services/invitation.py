@@ -79,7 +79,13 @@ class Invitation:
         return invite
 
     def _create_invite(self):
-        return self.domain_class.create(self.inviter, self.member, self.email)
+        user = self.member.user
+        return self.domain_class.create(
+            self.inviter,
+            self.member,
+            {"email": self.email, "dod_id": user.dod_id},
+            commit=True,
+        )
 
     def _send_invite_email(self, token):
         body = render_template(

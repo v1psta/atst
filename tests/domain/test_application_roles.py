@@ -33,7 +33,7 @@ def test_enabled_application_role():
     )
     assert app_role.status == ApplicationRoleStatus.DISABLED
 
-    ApplicationRoles.enable(app_role)
+    ApplicationRoles.enable(app_role, app_role.user)
 
     assert app_role.status == ApplicationRoleStatus.ACTIVE
 

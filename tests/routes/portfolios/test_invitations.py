@@ -18,10 +18,10 @@ from atst.domain.permission_sets import PermissionSets
 def test_existing_member_accepts_valid_invite(client, user_session):
     portfolio = PortfolioFactory.create()
     user = UserFactory.create()
-    ws_role = PortfolioRoleFactory.create(
+    role = PortfolioRoleFactory.create(
         portfolio=portfolio, user=user, status=PortfolioRoleStatus.PENDING
     )
-    invite = PortfolioInvitationFactory.create(user_id=user.id, role=ws_role)
+    invite = PortfolioInvitationFactory.create(dod_id=user.dod_id, role=role)
 
     # the user does not have access to the portfolio before accepting the invite
     assert len(Portfolios.for_user(user)) == 0
@@ -46,32 +46,15 @@ def test_existing_member_accepts_valid_invite(client, user_session):
 def test_new_member_accepts_valid_invite(monkeypatch, client, user_session):
     portfolio = PortfolioFactory.create()
     user_info = UserFactory.dictionary()
-
-    user_session(portfolio.owner)
-    response = client.post(
-        url_for("portfolios.create_member", portfolio_id=portfolio.id),
-        data={
-            "permission_sets-perms_app_mgmt": PermissionSets.VIEW_PORTFOLIO_APPLICATION_MANAGEMENT,
-            "permission_sets-perms_funding": PermissionSets.VIEW_PORTFOLIO_FUNDING,
-            "permission_sets-perms_reporting": PermissionSets.VIEW_PORTFOLIO_REPORTS,
-            "permission_sets-perms_portfolio_mgmt": PermissionSets.VIEW_PORTFOLIO_ADMIN,
-            "user_data-first_name": user_info["first_name"],
-            "user_data-last_name": user_info["last_name"],
-            "user_data-dod_id": user_info["dod_id"],
-            "user_data-email": user_info["email"],
-        },
-    )
-
-    assert response.status_code == 302
-    user = Users.get_by_dod_id(user_info["dod_id"])
-    token = user.portfolio_invitations[0].token
+    role = PortfolioRoleFactory.create(portfolio=portfolio)
+    invite = PortfolioInvitationFactory.create(role=role, dod_id=user_info["dod_id"])
 
     monkeypatch.setattr(
         "atst.domain.auth.should_redirect_to_user_profile", lambda *args: False
     )
-    user_session(user)
+    user_session(UserFactory.create(dod_id=user_info["dod_id"]))
     response = client.get(
-        url_for("portfolios.accept_invitation", portfolio_token=token)
+        url_for("portfolios.accept_invitation", portfolio_token=invite.token)
     )
 
     # user is redirected to the portfolio view
@@ -81,7 +64,8 @@ def test_new_member_accepts_valid_invite(monkeypatch, client, user_session):
         in response.headers["Location"]
     )
     # the user has access to the portfolio
-    assert len(Portfolios.for_user(user)) == 1
+    assert role.user.dod_id == user_info["dod_id"]
+    assert len(role.user.portfolio_roles) == 1
 
 
 def test_member_accepts_invalid_invite(client, user_session):

@@ -1,7 +1,7 @@
 """add user data fields to invitations
 
 Revision ID: 8467440c4ae6
-Revises: d2390c547dca
+Revises: 24700d113ea9
 Create Date: 2019-05-31 12:40:10.457529
 
 """
@@ -11,7 +11,7 @@ from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
 revision = '8467440c4ae6'
-down_revision = 'd2390c547dca'
+down_revision = '24700d113ea9'
 branch_labels = None
 depends_on = None
 

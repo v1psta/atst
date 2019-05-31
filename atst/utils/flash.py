@@ -61,7 +61,7 @@ MESSAGES = {
     "new_portfolio_member": {
         "title_template": translate("flash.success"),
         "message_template": """
-          <p>{{ "flash.new_portfolio_member" | translate({ "user_name": new_member.user_name }) }}</p>
+          <p>{{ "flash.new_portfolio_member" | translate({ "user_name": user_name }) }}</p>
         """,
         "category": "success",
     },

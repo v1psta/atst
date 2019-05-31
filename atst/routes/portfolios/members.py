@@ -3,12 +3,23 @@ from flask import render_template, request as http_request, g, redirect, url_for
 from . import portfolios_bp
 from atst.domain.exceptions import AlreadyExistsError
 from atst.domain.portfolios import Portfolios
-from atst.services.invitation import Invitation as InvitationService
 import atst.forms.portfolio_member as member_forms
 from atst.domain.authz.decorator import user_can_access_decorator as user_can
 from atst.models.permissions import Permissions
 
 from atst.utils.flash import formatted_flash as flash
+from atst.queue import queue
+
+
+def send_portfolio_invitation(invitee_email, inviter_name, token):
+    body = render_template(
+        "emails/portfolio/invitation.txt", owner=inviter_name, token=token
+    )
+    queue.send_mail(
+        [invitee_email],
+        "{} has invited you to a JEDI cloud portfolio".format(inviter_name),
+        body,
+    )
 
 
 @portfolios_bp.route("/portfolios/<portfolio_id>/members/new", methods=["POST"])
@@ -19,13 +30,14 @@ def create_member(portfolio_id):
 
     if form.validate():
         try:
-            member = Portfolios.create_member(portfolio, form.update_data)
-            invite_service = InvitationService(
-                g.current_user, member, form.update_data.get("email")
+            invite = Portfolios.invite(portfolio, g.current_user, form.update_data)
+            send_portfolio_invitation(
+                invite.email, g.current_user.full_name, invite.token
             )
-            invite_service.invite()
 
-            flash("new_portfolio_member", new_member=member, portfolio=portfolio)
+            flash(
+                "new_portfolio_member", user_name=invite.user_name, portfolio=portfolio
+            )
 
         except AlreadyExistsError:
             return render_template(

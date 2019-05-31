@@ -97,7 +97,7 @@ class InvitesMixin(object):
 
     @property
     def user_name(self):
-        return self.role.user.full_name
+        return "{} {}".format(self.first_name, self.last_name)
 
     @property
     def is_revokable(self):
