@@ -67,6 +67,31 @@
 }
 
 .task-order-summary {
+  margin: $gap * 4;
+
+  hr {
+    border: 0;
+    border-bottom: 1px solid $color-gray-light;
+    margin-top: $gap * 4;
+  }
+
+  .col {
+    margin: $gap * 4 0;
+    flex-grow: 1;
+  }
+
+  .h4 {
+    margin-top: $gap * 2;
+  }
+
+  .to-sidebar {
+    padding: $gap * 4;
+    flex-grow: unset;
+    margin-left: $gap * 6;
+    width: 33.77%;
+    background-color: $color-gray-lightest;
+  }
+
   .panel {
     @include shadow-panel;
   }
