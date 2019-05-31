@@ -10,24 +10,27 @@ sys.path.append(parent_dir)
 
 from atst.app import make_config, make_app
 from atst.database import db
+
+from atst.models.application import Application
+from atst.models.environment_role import CSPRole
+
 from atst.domain.application_roles import ApplicationRoles
 from atst.domain.applications import Applications
 from atst.domain.csp.reports import MockReportingProvider
 from atst.domain.environments import Environments
+from atst.domain.environment_roles import EnvironmentRoles
 from atst.domain.exceptions import AlreadyExistsError, NotFoundError
 from atst.domain.permission_sets import PermissionSets, APPLICATION_PERMISSION_SETS
 from atst.domain.portfolio_roles import PortfolioRoles
-from atst.domain.environment_roles import EnvironmentRoles
 from atst.domain.portfolios import Portfolios
 from atst.domain.users import Users
-from atst.models.application import Application
-from atst.models.environment_role import CSPRole
+
 from atst.routes.dev import _DEV_USERS as DEV_USERS
 
 from tests.factories import (
-    TaskOrderFactory,
-    random_task_order_number,
     random_service_branch,
+    random_task_order_number,
+    TaskOrderFactory,
 )
 
 fake = Faker()
@@ -156,38 +159,16 @@ def add_members_to_portfolio(portfolio):
     db.session.commit()
 
 
-def add_task_orders_to_portfolio(portfolio, to_length=90, clin_01=None, clin_03=None):
-    active_to_offset = random.randint(10, 31)
-    # exp TO ends same day as active TO starts
-    active_start = date.today() - timedelta(days=active_to_offset)
-    # pending TO starts the same day active TO ends
-    active_end = active_start + timedelta(to_length)
-    pending_end = active_end + timedelta(to_length)
-    exp_start = active_start - timedelta(to_length)
-
-    create_task_order(portfolio, start=exp_start, end=active_start)
-    create_task_order(
-        portfolio, start=active_start, end=active_end, clin_01=clin_01, clin_03=clin_03
-    )
-    create_task_order(portfolio, start=active_end, end=pending_end)
+def add_task_orders_to_portfolio(portfolio):
+    # TODO: after CLINs are implemented, vary the start/end dates of TOs
+    create_task_order(portfolio)
+    create_task_order(portfolio)
+    create_task_order(portfolio)
 
 
-def create_task_order(portfolio, start, end, clin_01=None, clin_03=None):
-    default_kwargs = {
-        "start_date": start,
-        "end_date": end,
-        "number": random_task_order_number(),
-        "portfolio": portfolio,
-        "clin_02": 0,
-        "clin_04": 0,
-    }
-
-    if clin_01:
-        default_kwargs["clin_01"] = clin_01
-    if clin_03:
-        default_kwargs["clin_03"] = clin_03
-
-    task_order = TaskOrderFactory.build(**default_kwargs)
+def create_task_order(portfolio):
+    # TODO: after CLINs are implemented add them to TO
+    task_order = TaskOrderFactory.build(portfolio=portfolio)
     db.session.add(task_order)
     db.session.commit()
 
@@ -255,10 +236,8 @@ def create_demo_portfolio(name, data):
     portfolio = Portfolios.create(
         portfolio_owner, name=name, defense_component=random_service_branch()
     )
-    clin_01 = data["budget"] * 0.8
-    clin_03 = data["budget"] * 0.2
 
-    add_task_orders_to_portfolio(portfolio, clin_01=clin_01, clin_03=clin_03)
+    add_task_orders_to_portfolio(portfolio)
     add_members_to_portfolio(portfolio)
 
     for mock_application in data["applications"]:

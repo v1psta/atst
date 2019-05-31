@@ -259,6 +259,7 @@ class TaskOrderFactory(Base):
         model = TaskOrder
 
     portfolio = factory.SubFactory(PortfolioFactory)
+    number = factory.LazyFunction(random_task_order_number)
 
 
 class NotificationRecipientFactory(Base):
