@@ -48,7 +48,7 @@ class PortfolioRole(
     portfolio = relationship("Portfolio", back_populates="roles")
 
     user_id = Column(
-        UUID(as_uuid=True), ForeignKey("users.id"), index=True, nullable=False
+        UUID(as_uuid=True), ForeignKey("users.id"), index=True, nullable=True
     )
 
     status = Column(SQLAEnum(Status, native_enum=False), default=Status.PENDING)

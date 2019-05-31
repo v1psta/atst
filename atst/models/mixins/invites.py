@@ -45,6 +45,11 @@ class InvitesMixin(object):
 
     email = Column(String, nullable=False)
 
+    dod_id = Column(String)
+    first_name = Column(String)
+    last_name = Column(String)
+    phone_number = Column(String)
+
     def __repr__(self):
         role_id = self.role.id if self.role else None
         return "<{}(user='{}', role='{}', id='{}', email='{}')>".format(
