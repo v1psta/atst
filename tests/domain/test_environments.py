@@ -25,22 +25,22 @@ def test_create_environments():
 def test_update_env_role():
     env_role = EnvironmentRoleFactory.create(role=CSPRole.BASIC_ACCESS.value)
     new_role = CSPRole.TECHNICAL_READ.value
-    ApplicationRoleFactory.create(
-        user=env_role.user, application=env_role.environment.application
-    )
 
-    assert Environments.update_env_role(env_role.environment, env_role.user, new_role)
+    assert Environments.update_env_role(
+        env_role.environment, env_role.application_role, new_role
+    )
     assert env_role.role == new_role
 
 
 def test_update_env_role_no_access():
     env_role = EnvironmentRoleFactory.create(role=CSPRole.BASIC_ACCESS.value)
-    ApplicationRoleFactory.create(
-        user=env_role.user, application=env_role.environment.application
-    )
 
-    assert Environments.update_env_role(env_role.environment, env_role.user, None)
-    assert not EnvironmentRoles.get(env_role.user.id, env_role.environment.id)
+    assert Environments.update_env_role(
+        env_role.environment, env_role.application_role, None
+    )
+    assert not EnvironmentRoles.get(
+        env_role.application_role.id, env_role.environment.id
+    )
 
 
 def test_update_env_role_no_change():
@@ -48,55 +48,45 @@ def test_update_env_role_no_change():
     new_role = CSPRole.BASIC_ACCESS.value
 
     assert not Environments.update_env_role(
-        env_role.environment, env_role.user, new_role
+        env_role.environment, env_role.application_role, new_role
     )
-
-
-def test_update_env_role_creates_cloud_id_for_new_member(session):
-    user = UserFactory.create()
-    env = EnvironmentFactory.create()
-    ApplicationRoleFactory.create(user=user, application=env.application)
-    assert not user.cloud_id
-    assert Environments.update_env_role(env, user, CSPRole.TECHNICAL_READ.value)
-    assert EnvironmentRoles.get(user.id, env.id)
-    assert user.cloud_id is not None
 
 
 def test_update_env_roles_by_environment():
     environment = EnvironmentFactory.create()
+    app_role_1 = ApplicationRoleFactory.create(application=environment.application)
     env_role_1 = EnvironmentRoleFactory.create(
-        environment=environment, role=CSPRole.BASIC_ACCESS.value
+        application_role=app_role_1,
+        environment=environment,
+        role=CSPRole.BASIC_ACCESS.value,
     )
-    app_role_1 = ApplicationRoleFactory.create(
-        user=env_role_1.user, application=environment.application
-    )
+    app_role_2 = ApplicationRoleFactory.create(application=environment.application)
     env_role_2 = EnvironmentRoleFactory.create(
-        environment=environment, role=CSPRole.NETWORK_ADMIN.value
+        application_role=app_role_2,
+        environment=environment,
+        role=CSPRole.NETWORK_ADMIN.value,
     )
-    app_role_2 = ApplicationRoleFactory.create(
-        user=env_role_2.user, application=environment.application
-    )
+    app_role_3 = ApplicationRoleFactory.create(application=environment.application)
     env_role_3 = EnvironmentRoleFactory.create(
-        environment=environment, role=CSPRole.TECHNICAL_READ.value
-    )
-    app_role_3 = ApplicationRoleFactory.create(
-        user=env_role_3.user, application=environment.application
+        application_role=app_role_3,
+        environment=environment,
+        role=CSPRole.TECHNICAL_READ.value,
     )
 
     team_roles = [
         {
             "application_role_id": app_role_1.id,
-            "user_name": env_role_1.user.full_name,
+            "user_name": app_role_1.user_name,
             "role_name": CSPRole.BUSINESS_READ.value,
         },
         {
             "application_role_id": app_role_2.id,
-            "user_name": env_role_2.user.full_name,
+            "user_name": app_role_2.user_name,
             "role_name": CSPRole.NETWORK_ADMIN.value,
         },
         {
             "application_role_id": app_role_3.id,
-            "user_name": env_role_3.user.full_name,
+            "user_name": app_role_3.user_name,
             "role_name": None,
         },
     ]
@@ -104,80 +94,7 @@ def test_update_env_roles_by_environment():
     Environments.update_env_roles_by_environment(environment.id, team_roles)
     assert env_role_1.role == CSPRole.BUSINESS_READ.value
     assert env_role_2.role == CSPRole.NETWORK_ADMIN.value
-    assert not EnvironmentRoles.get(env_role_3.user.id, environment.id)
-
-
-def test_update_env_roles_by_member():
-    user = UserFactory.create()
-    application = ApplicationFactory.create(
-        environments=[
-            {
-                "name": "dev",
-                "members": [{"user": user, "role_name": CSPRole.BUSINESS_READ.value}],
-            },
-            {
-                "name": "staging",
-                "members": [{"user": user, "role_name": CSPRole.BUSINESS_READ.value}],
-            },
-            {"name": "prod"},
-            {
-                "name": "testing",
-                "members": [{"user": user, "role_name": CSPRole.BUSINESS_READ.value}],
-            },
-        ]
-    )
-
-    dev, staging, prod, testing = application.environments
-    env_roles = [
-        {"id": dev.id, "role": CSPRole.NETWORK_ADMIN.value},
-        {"id": staging.id, "role": CSPRole.BUSINESS_READ.value},
-        {"id": prod.id, "role": CSPRole.TECHNICAL_READ.value},
-        {"id": testing.id, "role": None},
-    ]
-
-    Environments.update_env_roles_by_member(user, env_roles)
-
-    assert EnvironmentRoles.get(user.id, dev.id).role == CSPRole.NETWORK_ADMIN.value
-    assert EnvironmentRoles.get(user.id, staging.id).role == CSPRole.BUSINESS_READ.value
-    assert EnvironmentRoles.get(user.id, prod.id).role == CSPRole.TECHNICAL_READ.value
-    assert not EnvironmentRoles.get(user.id, testing.id)
-
-
-def test_get_scoped_environments(db):
-    developer = UserFactory.create()
-    portfolio = PortfolioFactory.create(
-        members=[{"user": developer, "role_name": "developer"}],
-        applications=[
-            {
-                "name": "application1",
-                "environments": [
-                    {
-                        "name": "application1 dev",
-                        "members": [{"user": developer, "role_name": "developer"}],
-                    },
-                    {"name": "application1 staging"},
-                    {"name": "application1 prod"},
-                ],
-            },
-            {
-                "name": "application2",
-                "environments": [
-                    {"name": "application2 dev"},
-                    {
-                        "name": "application2 staging",
-                        "members": [{"user": developer, "role_name": "developer"}],
-                    },
-                    {"name": "application2 prod"},
-                ],
-            },
-        ],
-    )
-
-    application1_envs = Environments.for_user(developer, portfolio.applications[0])
-    assert [env.name for env in application1_envs] == ["application1 dev"]
-
-    application2_envs = Environments.for_user(developer, portfolio.applications[1])
-    assert [env.name for env in application2_envs] == ["application2 staging"]
+    assert not EnvironmentRoles.get(app_role_3.id, environment.id)
 
 
 def test_get_excludes_deleted():
@@ -190,7 +107,10 @@ def test_get_excludes_deleted():
 
 def test_delete_environment(session):
     env = EnvironmentFactory.create(application=ApplicationFactory.create())
-    env_role = EnvironmentRoleFactory.create(user=UserFactory.create(), environment=env)
+    env_role = EnvironmentRoleFactory.create(
+        application_role=ApplicationRoleFactory.create(application=env.application),
+        environment=env,
+    )
     assert not env.deleted
     assert not env_role.deleted
     Environments.delete(env)

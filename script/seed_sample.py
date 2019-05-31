@@ -225,7 +225,7 @@ def add_applications_to_portfolio(portfolio):
                     last_name=user_data["last_name"],
                 )
 
-            ApplicationRoles.create(
+            app_role = ApplicationRoles.create(
                 user=user,
                 application=application,
                 permission_set_names=[PermissionSets.EDIT_APPLICATION_TEAM],
@@ -237,7 +237,9 @@ def add_applications_to_portfolio(portfolio):
             )
             for env in user_environments:
                 role = random.choice([e.value for e in CSPRole])
-                EnvironmentRoles.create(user=user, environment=env, role=role)
+                EnvironmentRoles.create(
+                    application_role=app_role, environment=env, role=role
+                )
 
 
 def create_demo_portfolio(name, data):

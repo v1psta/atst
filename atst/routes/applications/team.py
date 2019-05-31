@@ -38,9 +38,7 @@ def get_team_form(application):
                 member, PermissionSets.DELETE_APPLICATION_ENVIRONMENTS
             ),
         }
-        roles = EnvironmentRoles.get_for_application_and_user(
-            member.user.id, application.id
-        )
+        roles = EnvironmentRoles.get_for_application_member(member.id)
         environment_roles = [
             {
                 "environment_id": str(role.environment.id),
@@ -110,7 +108,7 @@ def update_team(application_id):
                     environment_role_form.environment_id.data
                 )
                 Environments.update_env_role(
-                    environment, app_role.user, environment_role_form.data.get("role")
+                    environment, app_role, environment_role_form.data.get("role")
                 )
 
         flash("updated_application_team_settings", application_name=application.name)

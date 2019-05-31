@@ -8,16 +8,7 @@ from atst.domain.applications import Applications
 from atst.domain.permission_sets import PermissionSets
 from atst.models import AuditEvent, InvitationStatus, PortfolioRoleStatus, CSPRole
 
-from tests.factories import (
-    UserFactory,
-    PortfolioInvitationFactory,
-    PortfolioRoleFactory,
-    EnvironmentFactory,
-    EnvironmentRoleFactory,
-    ApplicationFactory,
-    ApplicationRoleFactory,
-    PortfolioFactory,
-)
+from tests.factories import *
 from atst.domain.portfolio_roles import PortfolioRoles
 
 
@@ -97,8 +88,9 @@ def test_has_no_env_role_history(session):
         application=application, name="new environment!"
     )
 
+    app_role = ApplicationRoleFactory.create(user=user, application=application)
     env_role = EnvironmentRoleFactory.create(
-        user=user, environment=environment, role="developer"
+        application_role=app_role, environment=environment, role="developer"
     )
     create_event = (
         session.query(AuditEvent)
@@ -110,22 +102,24 @@ def test_has_no_env_role_history(session):
 
 
 def test_has_env_role_history(session):
-    owner = UserFactory.create()
     user = UserFactory.create()
-    portfolio = PortfolioFactory.create(owner=owner)
-    portfolio_role = PortfolioRoleFactory.create(portfolio=portfolio, user=user)
-    application = ApplicationFactory.create(portfolio=portfolio)
-    ApplicationRoleFactory.create(user=user, application=application)
+    application = ApplicationFactory.create()
+    app_role = ApplicationRoleFactory.create(user=user, application=application)
     environment = EnvironmentFactory.create(
         application=application, name="new environment!"
     )
 
     env_role = EnvironmentRoleFactory.create(
-        user=user, environment=environment, role="developer"
+        application_role=app_role, environment=environment, role="developer"
     )
-    Environments.update_env_roles_by_member(
-        user, [{"role": "admin", "id": environment.id}]
-    )
+    session.add(env_role)
+    session.commit()
+    session.refresh(env_role)
+
+    env_role.role = "admin"
+    session.add(env_role)
+    session.commit()
+
     changed_events = (
         session.query(AuditEvent)
         .filter(AuditEvent.resource_id == env_role.id, AuditEvent.action == "update")
@@ -145,44 +139,6 @@ def test_event_details():
 
     assert portfolio_role.event_details["updated_user_name"] == user.displayname
     assert portfolio_role.event_details["updated_user_id"] == str(user.id)
-
-
-def test_has_no_environment_roles():
-    owner = UserFactory.create()
-    developer_data = {
-        "dod_id": "1234567890",
-        "first_name": "Test",
-        "last_name": "User",
-        "email": "test.user@mail.com",
-        "portfolio_role": "developer",
-    }
-
-    portfolio = PortfolioFactory.create(owner=owner)
-    portfolio_role = Portfolios.create_member(portfolio, developer_data)
-
-    assert not portfolio_role.has_environment_roles
-
-
-def test_has_environment_roles():
-    owner = UserFactory.create()
-    developer_data = {
-        "dod_id": "1234567890",
-        "first_name": "Test",
-        "last_name": "User",
-        "email": "test.user@mail.com",
-        "portfolio_role": "developer",
-    }
-
-    portfolio = PortfolioFactory.create(owner=owner)
-    portfolio_role = Portfolios.create_member(portfolio, developer_data)
-    application = Applications.create(
-        portfolio, "my test application", "It's mine.", ["dev", "staging", "prod"]
-    )
-    ApplicationRoleFactory.create(user=portfolio_role.user, application=application)
-    Environments.add_member(
-        application.environments[0], portfolio_role.user, CSPRole.BASIC_ACCESS.value
-    )
-    assert portfolio_role.has_environment_roles
 
 
 def test_status_when_member_is_active():

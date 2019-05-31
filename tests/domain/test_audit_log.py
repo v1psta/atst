@@ -84,7 +84,7 @@ def test_get_portfolio_events_includes_app_and_env_events():
 
     # add environment level events
     env = EnvironmentFactory.create(application=application)
-    env_role = EnvironmentRoleFactory.create(environment=env, user=app_role.user)
+    env_role = EnvironmentRoleFactory.create(environment=env, application_role=app_role)
     portfolio_app_and_env_events = AuditLog.get_portfolio_events(portfolio)
     assert len(portfolio_and_app_events) < len(portfolio_app_and_env_events)
 
@@ -106,7 +106,7 @@ def test_get_application_events():
     app_role = ApplicationRoleFactory.create(application=application)
     app_invite = ApplicationInvitationFactory.create(role=app_role)
     env = EnvironmentFactory.create(application=application)
-    env_role = EnvironmentRoleFactory.create(environment=env, user=app_role.user)
+    env_role = EnvironmentRoleFactory.create(environment=env, application_role=app_role)
     # add rando app
     rando_app = ApplicationFactory.create(portfolio=portfolio)
 

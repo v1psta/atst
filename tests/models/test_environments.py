@@ -3,13 +3,7 @@ from atst.models.environment_role import CSPRole
 from atst.domain.environments import Environments
 from atst.domain.applications import Applications
 
-from tests.factories import (
-    PortfolioFactory,
-    UserFactory,
-    EnvironmentFactory,
-    ApplicationFactory,
-    ApplicationRoleFactory,
-)
+from tests.factories import *
 
 
 def test_add_user_to_environment():
@@ -22,9 +16,13 @@ def test_add_user_to_environment():
     )
     dev_environment = application.environments[0]
 
-    ApplicationRoleFactory.create(user=developer, application=application)
-    dev_environment = Environments.add_member(
-        dev_environment, developer, CSPRole.BASIC_ACCESS.value
+    application_role = ApplicationRoleFactory.create(
+        user=developer, application=application
+    )
+    EnvironmentRoleFactory.create(
+        application_role=application_role,
+        environment=dev_environment,
+        role=CSPRole.BASIC_ACCESS.value,
     )
     assert developer in dev_environment.users
 

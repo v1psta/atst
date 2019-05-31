@@ -111,29 +111,6 @@ def test_scoped_portfolio_for_admin_missing_view_apps_perms(portfolio_owner, por
     assert len(scoped_portfolio.applications) == 0
 
 
-@pytest.mark.skip(reason="should be reworked pending application member changes")
-def test_scoped_portfolio_only_returns_a_users_applications_and_environments(
-    portfolio, portfolio_owner
-):
-    new_application = Applications.create(
-        portfolio, "My Application", "My application", ["dev", "staging", "prod"]
-    )
-    Applications.create(
-        portfolio, "My Application 2", "My application 2", ["dev", "staging", "prod"]
-    )
-    developer = UserFactory.create()
-    dev_environment = Environments.add_member(
-        new_application.environments[0], developer, "developer"
-    )
-
-    scoped_portfolio = Portfolios.get(developer, portfolio.id)
-
-    # Should only return the application and environment in which the user has an
-    # environment role.
-    assert scoped_portfolio.applications == [new_application]
-    assert scoped_portfolio.applications[0].environments == [dev_environment]
-
-
 def test_scoped_portfolio_returns_all_applications_for_portfolio_admin(
     portfolio, portfolio_owner
 ):

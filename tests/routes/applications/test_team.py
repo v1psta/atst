@@ -94,7 +94,9 @@ def test_update_team_environment_roles(client, user_session):
     )
     environment = EnvironmentFactory.create(application=application)
     env_role = EnvironmentRoleFactory.create(
-        user=app_role.user, environment=environment, role=CSPRole.NETWORK_ADMIN.value
+        application_role=app_role,
+        environment=environment,
+        role=CSPRole.NETWORK_ADMIN.value,
     )
     user_session(owner)
     response = client.post(
@@ -121,7 +123,9 @@ def test_update_team_revoke_environment_access(client, user_session, db, session
     )
     environment = EnvironmentFactory.create(application=application)
     env_role = EnvironmentRoleFactory.create(
-        user=app_role.user, environment=environment, role=CSPRole.BASIC_ACCESS.value
+        application_role=app_role,
+        environment=environment,
+        role=CSPRole.BASIC_ACCESS.value,
     )
     user_session(owner)
     response = client.post(
@@ -177,8 +181,11 @@ def test_create_member(client, user_session):
     assert response.location == expected_url
     assert len(user.application_roles) == 1
     assert user.application_roles[0].application == application
-    assert len(user.environment_roles) == 1
-    assert user.environment_roles[0].environment == env
+    environment_roles = [
+        er for ar in user.application_roles for er in ar.environment_roles
+    ]
+    assert len(environment_roles) == 1
+    assert environment_roles[0].environment == env
 
 
 def test_remove_member_success(client, user_session):

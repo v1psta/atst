@@ -10,18 +10,7 @@ from atst.domain.auth import UNPROTECTED_ROUTES as _NO_LOGIN_REQUIRED
 from atst.domain.permission_sets import PermissionSets
 from atst.models import CSPRole, PortfolioRoleStatus, ApplicationRoleStatus
 
-from tests.factories import (
-    AttachmentFactory,
-    ApplicationFactory,
-    ApplicationRoleFactory,
-    EnvironmentFactory,
-    EnvironmentRoleFactory,
-    PortfolioInvitationFactory,
-    PortfolioFactory,
-    PortfolioRoleFactory,
-    TaskOrderFactory,
-    UserFactory,
-)
+from tests.factories import *
 
 _NO_ACCESS_CHECK_REQUIRED = _NO_LOGIN_REQUIRED + [
     "task_orders.get_started",  # all users can start a new TO
@@ -265,11 +254,6 @@ def test_application_settings_access(get_url_assert_status):
         applications=[{"name": "Mos Eisley", "description": "Where Han shot first"}],
     )
     app = portfolio.applications[0]
-    env = EnvironmentFactory.create(application=app)
-    env_role = EnvironmentRoleFactory.create(
-        environment=env, role=CSPRole.NETWORK_ADMIN.value
-    )
-    ApplicationRoleFactory.create(application=app, user=env_role.user)
 
     url = url_for("applications.settings", application_id=app.id)
     get_url_assert_status(ccpo, url, 200)

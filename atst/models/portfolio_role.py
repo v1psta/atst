@@ -7,11 +7,7 @@ from sqlalchemy.event import listen
 from atst.models import Base, mixins
 from .types import Id
 
-from atst.database import db
 from atst.utils import first_or_none
-from atst.models.environment_role import EnvironmentRole
-from atst.models.application import Application
-from atst.models.environment import Environment
 from atst.models.mixins.auditable import record_permission_sets_updates
 
 
@@ -125,34 +121,6 @@ class PortfolioRole(
     @property
     def is_active(self):
         return self.status == Status.ACTIVE
-
-    @property
-    def num_environment_roles(self):
-        return (
-            db.session.query(EnvironmentRole)
-            .join(EnvironmentRole.environment)
-            .join(Environment.application)
-            .join(Application.portfolio)
-            .filter(Application.portfolio_id == self.portfolio_id)
-            .filter(EnvironmentRole.user_id == self.user_id)
-            .count()
-        )
-
-    @property
-    def environment_roles(self):
-        return (
-            db.session.query(EnvironmentRole)
-            .join(EnvironmentRole.environment)
-            .join(Environment.application)
-            .join(Application.portfolio)
-            .filter(Application.portfolio_id == self.portfolio_id)
-            .filter(EnvironmentRole.user_id == self.user_id)
-            .all()
-        )
-
-    @property
-    def has_environment_roles(self):
-        return self.num_environment_roles > 0
 
     @property
     def can_resend_invitation(self):

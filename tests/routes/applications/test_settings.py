@@ -98,15 +98,14 @@ def test_edit_application_environments_obj(app, client, user_session):
         {"env"},
     )
     env = application.environments[0]
-    app_role = ApplicationRoleFactory.create(application=application)
+    app_role1 = ApplicationRoleFactory.create(application=application)
     env_role1 = EnvironmentRoleFactory.create(
-        environment=env, role=CSPRole.BASIC_ACCESS.value
+        application_role=app_role1, environment=env, role=CSPRole.BASIC_ACCESS.value
     )
-    ApplicationRoleFactory.create(application=application, user=env_role1.user)
+    app_role2 = ApplicationRoleFactory.create(application=application)
     env_role2 = EnvironmentRoleFactory.create(
-        environment=env, role=CSPRole.NETWORK_ADMIN.value
+        application_role=app_role2, environment=env, role=CSPRole.NETWORK_ADMIN.value
     )
-    ApplicationRoleFactory.create(application=application, user=env_role2.user)
 
     user_session(portfolio.owner)
 
@@ -125,7 +124,7 @@ def test_edit_application_environments_obj(app, client, user_session):
         assert isinstance(env_obj["edit_form"], EditEnvironmentForm)
         assert (
             env_obj["members"].sort()
-            == [env_role1.user.full_name, env_role2.user.full_name].sort()
+            == [app_role1.user_name, app_role2.user_name].sort()
         )
         assert isinstance(context["audit_events"], Paginator)
 
@@ -140,17 +139,13 @@ def test_data_for_app_env_roles_form(app, client, user_session):
     )
     env = application.environments[0]
     app_role0 = ApplicationRoleFactory.create(application=application)
+    app_role1 = ApplicationRoleFactory.create(application=application)
     env_role1 = EnvironmentRoleFactory.create(
-        environment=env, role=CSPRole.BASIC_ACCESS.value
+        application_role=app_role1, environment=env, role=CSPRole.BASIC_ACCESS.value
     )
-    app_role1 = ApplicationRoleFactory.create(
-        application=application, user=env_role1.user
-    )
+    app_role2 = ApplicationRoleFactory.create(application=application)
     env_role2 = EnvironmentRoleFactory.create(
-        environment=env, role=CSPRole.NETWORK_ADMIN.value
-    )
-    app_role2 = ApplicationRoleFactory.create(
-        application=application, user=env_role2.user
+        application_role=app_role2, environment=env, role=CSPRole.NETWORK_ADMIN.value
     )
 
     user_session(portfolio.owner)
@@ -175,7 +170,7 @@ def test_data_for_app_env_roles_form(app, client, user_session):
                             "members": [
                                 {
                                     "application_role_id": str(app_role0.id),
-                                    "user_name": app_role0.user.full_name,
+                                    "user_name": app_role0.user_name,
                                     "role_name": None,
                                 }
                             ],
@@ -185,7 +180,7 @@ def test_data_for_app_env_roles_form(app, client, user_session):
                             "members": [
                                 {
                                     "application_role_id": str(app_role1.id),
-                                    "user_name": env_role1.user.full_name,
+                                    "user_name": app_role1.user_name,
                                     "role_name": CSPRole.BASIC_ACCESS.value,
                                 }
                             ],
@@ -195,7 +190,7 @@ def test_data_for_app_env_roles_form(app, client, user_session):
                             "members": [
                                 {
                                     "application_role_id": str(app_role2.id),
-                                    "user_name": env_role2.user.full_name,
+                                    "user_name": app_role2.user_name,
                                     "role_name": CSPRole.NETWORK_ADMIN.value,
                                 }
                             ],
@@ -268,15 +263,21 @@ def test_update_team_env_roles(client, user_session):
     application = environment.application
     app_role_1 = ApplicationRoleFactory.create(application=application)
     env_role_1 = EnvironmentRoleFactory.create(
-        environment=environment, role=CSPRole.BASIC_ACCESS.value, user=app_role_1.user
+        environment=environment,
+        role=CSPRole.BASIC_ACCESS.value,
+        application_role=app_role_1,
     )
     app_role_2 = ApplicationRoleFactory.create(application=application)
     env_role_2 = EnvironmentRoleFactory.create(
-        environment=environment, role=CSPRole.BASIC_ACCESS.value, user=app_role_2.user
+        environment=environment,
+        role=CSPRole.BASIC_ACCESS.value,
+        application_role=app_role_2,
     )
     app_role_3 = ApplicationRoleFactory.create(application=application)
     env_role_3 = EnvironmentRoleFactory.create(
-        environment=environment, role=CSPRole.BASIC_ACCESS.value, user=app_role_3.user
+        environment=environment,
+        role=CSPRole.BASIC_ACCESS.value,
+        application_role=app_role_3,
     )
 
     app_role_4 = ApplicationRoleFactory.create(application=application)
@@ -302,8 +303,8 @@ def test_update_team_env_roles(client, user_session):
     assert response.status_code == 200
     assert env_role_1.role == CSPRole.NETWORK_ADMIN.value
     assert env_role_2.role == CSPRole.BASIC_ACCESS.value
-    assert not EnvironmentRoles.get(env_role_3.user.id, environment.id)
-    assert EnvironmentRoles.get(app_role_4.user.id, environment.id)
+    assert not EnvironmentRoles.get(app_role_3.id, environment.id)
+    assert EnvironmentRoles.get(app_role_4.id, environment.id)
 
 
 def test_user_can_only_access_apps_in_their_portfolio(client, user_session):
