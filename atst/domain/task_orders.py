@@ -18,8 +18,10 @@ class TaskOrders(BaseDomainClass):
     UNCLASSIFIED_FUNDING = []
 
     @classmethod
-    def create(cls, creator, portfolio):
-        task_order = TaskOrder(portfolio=portfolio, creator=creator)
+    def create(cls, creator, portfolio_id, **kwargs):
+        task_order = TaskOrder(portfolio_id=portfolio_id, creator=creator)
+        for key, value in kwargs.items():
+            setattr(task_order, key, value)
 
         db.session.add(task_order)
         db.session.commit()
@@ -27,7 +29,8 @@ class TaskOrders(BaseDomainClass):
         return task_order
 
     @classmethod
-    def update(cls, task_order, **kwargs):
+    def update(cls, task_order_id, **kwargs):
+        task_order = TaskOrders.get(task_order_id)
         for key, value in kwargs.items():
             setattr(task_order, key, value)
 

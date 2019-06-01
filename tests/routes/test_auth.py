@@ -3,11 +3,11 @@ from urllib.parse import quote
 
 from tests.factories import UserFactory
 
+# TODO:  update w/ new home url
+PROTECTED_URL = "/home"
 
-PROTECTED_URL = "/task_orders/new/get_started"
 
-
-def test_request_page_with_complete_profile(client, user_session):
+def test_home_page_with_complete_profile(client, user_session):
     user = UserFactory.create()
     user_session(user)
     response = client.get(PROTECTED_URL, follow_redirects=False)
