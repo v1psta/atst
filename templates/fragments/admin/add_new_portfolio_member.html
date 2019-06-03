@@ -78,6 +78,6 @@
 {{ MultiStepModalForm(
     'add-port-mem',
     member_form,
-    url_for("portfolios.create_member", portfolio_id=portfolio.id),
+    url_for("portfolios.invite_member", portfolio_id=portfolio.id),
     [step_one, step_two],
   ) }}
