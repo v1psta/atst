@@ -477,7 +477,7 @@ def test_task_orders_download_task_order_pdf_access(get_url_assert_status, monke
     get_url_assert_status(rando, url, 404)
 
 
-# task_orders.new
+# task_orders.edit
 @pytest.mark.skip(reason="Update after new TO form implemented")
 def test_task_orders_new_access(get_url_assert_status):
     ccpo = user_with(PermissionSets.EDIT_PORTFOLIO_FUNDING)
@@ -485,7 +485,7 @@ def test_task_orders_new_access(get_url_assert_status):
     rando = user_with()
     portfolio = PortfolioFactory.create(owner=owner)
 
-    url = url_for("task_orders.new", portfolio_id=portfolio.id)
+    url = url_for("task_orders.edit", portfolio_id=portfolio.id)
     get_url_assert_status(owner, url, 200)
     get_url_assert_status(ccpo, url, 200)
     get_url_assert_status(rando, url, 404)
@@ -535,21 +535,23 @@ def test_task_orders_update_access(post_url_assert_status):
     ccpo = user_with(PermissionSets.EDIT_PORTFOLIO_FUNDING)
     owner = user_with()
     rando = user_with()
+    portfolio = PortfolioFactory.create(owner=owner)
 
-    url = url_for("task_orders.update", screen=1)
+    url = url_for("task_orders.update", portfolio_id=portfolio.id)
     post_url_assert_status(owner, url, 200)
     post_url_assert_status(ccpo, url, 200)
     post_url_assert_status(rando, url, 200)
 
-    portfolio = PortfolioFactory.create(owner=owner)
     task_order = TaskOrderFactory.create(portfolio=portfolio)
 
-    url = url_for("task_orders.update", screen=2, task_order_id=task_order.id)
+    url = url_for(
+        "task_orders.update", portfolio_id=portfolio.id, task_order_id=task_order.id
+    )
     post_url_assert_status(owner, url, 302)
     post_url_assert_status(ccpo, url, 302)
     post_url_assert_status(rando, url, 404)
 
-    url = url_for("task_orders.update", screen=1, portfolio_id=portfolio.id)
+    url = url_for("task_orders.update", portfolio_id=portfolio.id)
     post_url_assert_status(owner, url, 302)
     post_url_assert_status(ccpo, url, 302)
     post_url_assert_status(rando, url, 404)

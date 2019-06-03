@@ -35,14 +35,14 @@ def user():
 
 def test_task_orders_new(client, user_session, portfolio):
     user_session(portfolio.owner)
-    response = client.get(url_for("task_orders.new", portfolio_id=portfolio.id))
+    response = client.get(url_for("task_orders.edit", portfolio_id=portfolio.id))
     assert response.status_code == 200
 
 
 def test_task_orders_create(client, user_session, portfolio):
     user_session(portfolio.owner)
     response = client.post(
-        url_for("task_orders.create", portfolio_id=portfolio.id),
+        url_for("task_orders.update", portfolio_id=portfolio.id),
         data={"number": "0123456789"},
     )
     assert response.status_code == 302
@@ -52,7 +52,7 @@ def test_task_orders_create_invalid_data(client, user_session, portfolio):
     user_session(portfolio.owner)
     num_task_orders = len(portfolio.task_orders)
     response = client.post(
-        url_for("task_orders.create", portfolio_id=portfolio.id), data={"number": ""}
+        url_for("task_orders.update", portfolio_id=portfolio.id), data={"number": ""}
     )
     assert response.status_code == 200
     assert num_task_orders == len(portfolio.task_orders)
@@ -78,7 +78,9 @@ def test_task_order_form_shows_errors(client, user_session, task_order):
     funding_data.update({"clin_01": "one milllllion dollars"})
 
     response = client.post(
-        url_for("task_orders.update", screen=2, task_order_id=task_order.id),
+        url_for(
+            "task_orders.update", portfolio_id=portfolio.id, task_order_id=task_order.id
+        ),
         data=funding_data,
         follow_redirects=False,
     )
