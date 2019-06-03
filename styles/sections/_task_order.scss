@@ -92,6 +92,11 @@
     background-color: $color-gray-lightest;
   }
 
+  .semi-collapsed {
+    overflow: hidden;
+    height: $gap * 5.5;
+  }
+
   .panel {
     @include shadow-panel;
   }
