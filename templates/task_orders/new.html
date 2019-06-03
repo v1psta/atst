@@ -16,12 +16,18 @@
           <div class="panel__content">
             <!-- TODO: implement save bar with component -->
             <span class="h3">Add Funding</span>
+            <a
+              href="{{ cancel_url }}"
+              class="action-group__action icon-link">
+              <span class="icon icon--x"></span>
+              {{ "common.cancel" | translate }}
+            </a>
             {{ SaveButton(text=('common.save' | translate), element='input', form='new-task-order') }}
           </div>
           <div class="panel__content">
             {{ "task_orders.new.form_help_text" | translate }}
             <hr>
-            {{ TextInput(form.number) }}
+            {{ TextInput(form.number, validation='taskOrderNumber') }}
           </div>
         </form>
       </base-form>
