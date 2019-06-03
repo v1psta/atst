@@ -23,12 +23,6 @@ def send_invite_email(owner_name, token, new_member_email):
 def accept_invitation(portfolio_token):
     invite = PortfolioInvitations.accept(g.current_user, portfolio_token)
 
-    for task_order in invite.portfolio.task_orders:
-        if g.current_user in task_order.officers:
-            return redirect(
-                url_for("task_orders.view_task_order", task_order_id=task_order.id)
-            )
-
     return redirect(
         url_for("applications.portfolio_applications", portfolio_id=invite.portfolio.id)
     )
