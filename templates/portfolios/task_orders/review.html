@@ -12,24 +12,73 @@
         <div v-bind:class="{ 'semi-collapsed' : !open }">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
         </div>
-        <a v-on:click='toggle' v-show="!open" class="right">More{{ Icon('caret_down') }}</a>
-        <a v-on:click='toggle' v-show="open" class="right">Less{{ Icon('caret_up') }}</a>
+        <a v-on:click='toggle' v-show="!open" class="right more">More{{ Icon('caret_down') }}</a>
+        <a v-on:click='toggle' v-show="open" class="right more">Less{{ Icon('caret_up') }}</a>
       </div>
     </semi-collapsible-text>
 
     <hr>
 
+
+  <div class="h1">Review your task order</div>
+  <div>Check to make sure the information you entered is correct. After submission, you will confirm this task order was signed by a contracting officer. Thereafter, you will be informed as soon as CCPO completes their review.</div>
   <div class="row">
     <div class="col">
-      <div class="h1">Review your task order</div>
       <div class="h4">Task order number - 10 digit found in your system of record</div>
       <div>{{task_order.number}}</div>
 
       <hr>
 
       <div class="h3">Funding summary</div>
-      <div>CLIN 1</div>
-      <div>CLIN 2</div>
+      <div>CLIN 1: Unclassified Cloud Services 001</div>
+      <div class='responsive-table-wrapper'>
+        <table>
+          <thead>
+            <tr>
+              <th class='table-cell--expand'>Amount</th>
+              <th class='table-cell--expand'>Obligated</th>
+              <th class='table-cell--expand'>PoP Start</th>
+              <th class='table-cell--expand'>PoP End</th>
+              <th class='table-cell--expand'>LOA</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td class='table-cell--expand'>$500,000</td>
+              <td class='table-cell--expand'>Yes</td>
+              <td class='table-cell--expand'>9/07/19</td>
+              <td class='table-cell--expand'>9/07/20</td>
+              <td class='table-cell--expand'>34820394</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div>CLIN 2: Unclassified Cloud Services 002</div>
+      <div class='responsive-table-wrapper'>
+        <table>
+          <thead>
+            <tr>
+              <th class='table-cell--expand'>Amount</th>
+              <th class='table-cell--expand'>Obligated</th>
+              <th class='table-cell--expand'>PoP Start</th>
+              <th class='table-cell--expand'>PoP End</th>
+              <th class='table-cell--expand'>LOA</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td class='table-cell--expand'>$300,000</td>
+              <td class='table-cell--expand'>No</td>
+              <td class='table-cell--expand'>9/08/20</td>
+              <td class='table-cell--expand'>9/08/21</td>
+              <td class='table-cell--expand'>q9384751934</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
       <hr>
 
@@ -40,12 +89,13 @@
     <div class="col to-sidebar">
       <div class="h4">Total obligated funds</div>
       <div class="h3">$500,000</div>
-      <div>reprehenderit in voluptate velit</div>
+      <div>This is the funding allocated to cloud services. It may be 100% or a portion of the total task order budget.</div>
 
       <hr>
 
       <div class="h4">Total contract amount</div>
       <div class="h3">$800,000</div>
+      <div>This is the value of all funds obligated for this contract, including -- but not limited to -- funds obligated for the cloud.</div>
 
     </div>
   </div>

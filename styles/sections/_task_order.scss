@@ -73,11 +73,20 @@
     border: 0;
     border-bottom: 1px solid $color-gray-light;
     margin-top: $gap * 4;
+    margin-bottom: $gap * 4;
+  }
+
+  table {
+    margin-top: 1rem;
   }
 
   .col {
-    margin: $gap * 4 0;
     flex-grow: 1;
+  }
+
+  .h1,
+  .h3 {
+    margin-bottom: $gap * 2;
   }
 
   .h4 {
@@ -86,15 +95,22 @@
 
   .to-sidebar {
     padding: $gap * 4;
+    padding-top: $gap * 2;
     flex-grow: unset;
     margin-left: $gap * 6;
+    margin-top: $gap * 3;
     width: 33.77%;
+    max-height: 45rem;
     background-color: $color-gray-lightest;
   }
 
   .semi-collapsed {
     overflow: hidden;
     height: $gap * 5.5;
+  }
+
+  .more {
+    margin-top: -2.5rem;
   }
 
   .panel {
