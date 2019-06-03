@@ -152,9 +152,9 @@ def get_users():
 
 def add_members_to_portfolio(portfolio):
     for user_data in PORTFOLIO_USERS:
-        ws_role = Portfolios.create_member(portfolio, user_data)
-        db.session.refresh(ws_role)
-        PortfolioRoles.enable(ws_role)
+        invite = Portfolios.invite(portfolio, portfolio.owner, user_data)
+        user = Users.get_or_create_by_dod_id(user_data["dod_id"])
+        PortfolioRoles.enable(invite.role, user)
 
     db.session.commit()
 
