@@ -298,6 +298,8 @@ forms:
       not_sure: 'Not sure, unsure if planning to develop natively in the cloud'
       'yes': 'Yes, planning to develop natively in the cloud'
       not_sure_help: Not sure? Talk to your technical lead about where and how they plan on developing your application.
+    number_description: Task order number (10 digit number from your system of record)
+    number_label: Add your task order
     oversight_am_cor_label: I am the Contracting Officer Representative (COR) for this task order
     oversight_dod_id_label: DoD ID
     oversight_email_label: Email
@@ -619,6 +621,7 @@ task_orders:
     task_order_information: Task order information
     title: Verify task order information
   new:
+    form_help_text: Before you can begin work in the cloud, you'll need to complete the information below and upload your approved task order for reference by the CCPO.
     app_info:
       basic_info_title: Basic information
       details_description: 'Provide a few more details about the work you will be doing. The CCPO will use this section for reporting purposes, but it won’t be included in the final task order.'

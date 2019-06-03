@@ -33,12 +33,20 @@ def user():
     return UserFactory.create()
 
 
-def test_task_orders_new():
-    pass
+def test_task_orders_new(client, user_session, portfolio):
+    user_session(portfolio.owner)
+    response = client.get(url_for("task_orders.new", portfolio_id=portfolio.id))
+    assert response.status_code == 200
 
 
-def test_task_orders_create():
-    pass
+def test_task_orders_create(client, user_session, portfolio):
+    user_session(portfolio.owner)
+    response = client.post(
+        url_for("task_orders.create", portfolio_id=portfolio.id),
+        data={"number": "0123456789"},
+    )
+    assert response.status_code == 200
+    assert translate("task_orders.form.draft_alert_message") in response.data.decode()
 
 
 def test_task_orders_edit():

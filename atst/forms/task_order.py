@@ -1,7 +1,4 @@
-from wtforms.fields import (
-    BooleanField,
-    StringField,
-)
+from wtforms.fields import BooleanField, DecimalField, StringField
 from wtforms.fields.html5 import DateField
 from wtforms.validators import Required, Optional
 
@@ -10,7 +7,11 @@ from atst.utils.localization import translate
 
 
 class TaskOrderForm(BaseForm):
-    number = StringField(validators=[Required()])
+    number = StringField(
+        translate("forms.task_order.number_label"),
+        description=translate("forms.task_order.number_description"),
+        validators=[Required()],
+    )
 
 
 class FundingForm(BaseForm):
