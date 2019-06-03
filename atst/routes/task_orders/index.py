@@ -23,6 +23,13 @@ def view_task_order(task_order_id):
     )
 
 
+@task_orders_bp.route("/task_orders/<task_order_id>/review")
+@user_can(Permissions.VIEW_TASK_ORDER_DETAILS, message="review task order details")
+def review_task_order(task_order_id):
+    task_order = TaskOrders.get(task_order_id)
+    return render_template("portfolios/task_orders/review.html", task_order=task_order)
+
+
 def serialize_task_order(task_order):
     return {
         key: getattr(task_order, key)
