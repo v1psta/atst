@@ -49,36 +49,6 @@ def test_portfolio_has_timestamps(portfolio):
     assert portfolio.time_created == portfolio.time_updated
 
 
-def test_can_create_portfolio_role(portfolio, portfolio_owner):
-    user_data = {
-        "first_name": "New",
-        "last_name": "User",
-        "email": "new.user@mail.com",
-        "portfolio_role": "developer",
-        "dod_id": "1234567890",
-    }
-
-    new_member = Portfolios.create_member(portfolio, user_data)
-    assert new_member.portfolio == portfolio
-    assert new_member.user.provisional
-
-
-def test_can_add_existing_user_to_portfolio(portfolio, portfolio_owner):
-    user = UserFactory.create()
-    user_data = {
-        "first_name": "New",
-        "last_name": "User",
-        "email": "new.user@mail.com",
-        "portfolio_role": "developer",
-        "dod_id": user.dod_id,
-    }
-
-    new_member = Portfolios.create_member(portfolio, user_data)
-    assert new_member.portfolio == portfolio
-    assert new_member.user.email == user.email
-    assert not new_member.user.provisional
-
-
 def test_update_portfolio_role_role(portfolio, portfolio_owner):
     user_data = {
         "first_name": "New",
@@ -238,3 +208,16 @@ def test_does_not_count_disabled_members(session):
     )
 
     assert portfolio.user_count == 3
+
+
+def test_invite():
+    portfolio = PortfolioFactory.create()
+    inviter = UserFactory.create()
+    member_data = UserFactory.dictionary()
+
+    invitation = Portfolios.invite(portfolio, inviter, member_data)
+
+    assert invitation.role
+    assert invitation.role.portfolio == portfolio
+    assert invitation.role.user is None
+    assert invitation.dod_id == member_data["dod_id"]

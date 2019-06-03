@@ -8,7 +8,7 @@ def test_accept_application_invitation(client, user_session):
     application = ApplicationFactory.create()
     app_role = ApplicationRoleFactory.create(application=application, user=user)
     invite = ApplicationInvitationFactory.create(
-        role=app_role, user=user, inviter=application.portfolio.owner
+        role=app_role, inviter=application.portfolio.owner, dod_id=user.dod_id
     )
 
     user_session(user)
@@ -28,7 +28,7 @@ def test_accept_application_invitation_end_to_end(client, user_session):
     application = ApplicationFactory.create(name="Millenium Falcon")
     app_role = ApplicationRoleFactory.create(application=application, user=user)
     invite = ApplicationInvitationFactory.create(
-        role=app_role, user=user, inviter=application.portfolio.owner
+        role=app_role, dod_id=user.dod_id, inviter=application.portfolio.owner
     )
 
     user_session(user)

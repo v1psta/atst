@@ -163,8 +163,9 @@ class PortfolioRoles(object):
         return portfolio_role
 
     @classmethod
-    def enable(cls, portfolio_role):
+    def enable(cls, portfolio_role, user):
         portfolio_role.status = PortfolioRoleStatus.ACTIVE
+        portfolio_role.user = user
 
         db.session.add(portfolio_role)
         db.session.commit()

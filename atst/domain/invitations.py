@@ -55,7 +55,7 @@ class BaseInvitations(object):
         return invite
 
     @classmethod
-    def create(cls, inviter, role, email):
+    def create(cls, inviter, role, member_data, commit=False):
         # pylint: disable=not-callable
         invite = cls.model(
             role=role,
@@ -63,10 +63,16 @@ class BaseInvitations(object):
             user=role.user,
             status=InvitationStatus.PENDING,
             expiration_time=cls.current_expiration_time(),
-            email=email,
+            email=member_data.get("email"),
+            dod_id=member_data.get("dod_id"),
+            first_name=member_data.get("first_name"),
+            phone_number=member_data.get("phone_number"),
+            last_name=member_data.get("last_name"),
         )
         db.session.add(invite)
-        db.session.commit()
+
+        if commit:
+            db.session.commit()
 
         return invite
 
@@ -74,7 +80,7 @@ class BaseInvitations(object):
     def accept(cls, user, token):
         invite = cls._get(token)
 
-        if invite.user.dod_id != user.dod_id:
+        if invite.dod_id != user.dod_id:
             if invite.is_pending:
                 cls._update_status(invite, InvitationStatus.REJECTED_WRONG_USER)
             raise WrongUserError(user, invite)
@@ -88,7 +94,7 @@ class BaseInvitations(object):
 
         elif invite.is_pending:  # pragma: no branch
             cls._update_status(invite, InvitationStatus.ACCEPTED)
-            cls.role_domain_class.enable(invite.role)
+            cls.role_domain_class.enable(invite.role, user)
             return invite
 
     @classmethod
@@ -111,20 +117,22 @@ class BaseInvitations(object):
         return cls._update_status(invite, InvitationStatus.REVOKED)
 
     @classmethod
-    def lookup_by_resource_and_user(cls, resource, user):
-        role = cls.role_domain_class.get(resource.id, user.id)
-
-        if role.latest_invitation is None:
-            raise NotFoundError(cls.model.__tablename__)
-
-        return role.latest_invitation
-
-    @classmethod
-    def resend(cls, user, token):
+    def resend(cls, inviter, token):
         previous_invitation = cls._get(token)
         cls._update_status(previous_invitation, InvitationStatus.REVOKED)
 
-        return cls.create(user, previous_invitation.role, previous_invitation.email)
+        return cls.create(
+            inviter,
+            previous_invitation.role,
+            {
+                "email": previous_invitation.email,
+                "dod_id": previous_invitation.dod_id,
+                "first_name": previous_invitation.first_name,
+                "last_name": previous_invitation.last_name,
+                "phone_number": previous_invitation.last_name,
+            },
+            commit=True,
+        )
 
 
 class PortfolioInvitations(BaseInvitations):

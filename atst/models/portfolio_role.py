@@ -48,7 +48,7 @@ class PortfolioRole(
     portfolio = relationship("Portfolio", back_populates="roles")
 
     user_id = Column(
-        UUID(as_uuid=True), ForeignKey("users.id"), index=True, nullable=False
+        UUID(as_uuid=True), ForeignKey("users.id"), index=True, nullable=True
     )
 
     status = Column(SQLAEnum(Status, native_enum=False), default=Status.PENDING)
@@ -116,7 +116,14 @@ class PortfolioRole(
 
     @property
     def user_name(self):
-        return self.user.full_name
+        if self.user:
+            return self.user.full_name
+        else:
+            return self.latest_invitation.user_name
+
+    @property
+    def full_name(self):
+        return self.user_name
 
     @property
     def is_active(self):
@@ -127,10 +134,6 @@ class PortfolioRole(
         return not self.is_active and (
             self.latest_invitation and self.latest_invitation.is_inactive
         )
-
-    @property
-    def full_name(self):
-        return self.user.full_name
 
     @property
     def application_id(self):

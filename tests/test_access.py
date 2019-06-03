@@ -197,14 +197,14 @@ def test_applications_update_team_env_roles(post_url_assert_status):
     post_url_assert_status(rando, url, 404)
 
 
-# portfolios.create_member
-def test_portfolios_create_member_access(post_url_assert_status):
+# portfolios.invite_member
+def test_portfolios_invite_member_access(post_url_assert_status):
     ccpo = user_with(PermissionSets.EDIT_PORTFOLIO_ADMIN)
     owner = user_with()
     rando = user_with()
     portfolio = PortfolioFactory.create(owner=owner)
 
-    url = url_for("portfolios.create_member", portfolio_id=portfolio.id)
+    url = url_for("portfolios.invite_member", portfolio_id=portfolio.id)
     post_url_assert_status(ccpo, url, 302)
     post_url_assert_status(owner, url, 302)
     post_url_assert_status(rando, url, 404)

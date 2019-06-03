@@ -65,7 +65,10 @@ def test_has_portfolio_status_history(session):
     #  to commit after create()
     PortfolioRoleFactory._meta.sqlalchemy_session_persistence = "flush"
     portfolio_role = PortfolioRoleFactory.create(portfolio=portfolio, user=user)
-    PortfolioRoles.enable(portfolio_role)
+    portfolio_role.status = PortfolioRoleStatus.ACTIVE
+    session.add(portfolio_role)
+    session.commit()
+
     changed_events = (
         session.query(AuditEvent)
         .filter(

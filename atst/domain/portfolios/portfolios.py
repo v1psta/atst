@@ -1,10 +1,9 @@
 from atst.domain.permission_sets import PermissionSets
 from atst.domain.authz import Authorization
-from atst.models.permissions import Permissions
-from atst.domain.users import Users
 from atst.domain.portfolio_roles import PortfolioRoles
+from atst.domain.invitations import PortfolioInvitations
 from atst.domain.environments import Environments
-from atst.models.portfolio_role import Status as PortfolioRoleStatus
+from atst.models import Permissions, PortfolioRole, PortfolioRoleStatus
 
 from .query import PortfoliosQuery
 from .scopes import ScopedPortfolio
@@ -50,23 +49,24 @@ class Portfolios(object):
         return portfolios
 
     @classmethod
-    def create_member(cls, portfolio, data):
-        new_user = Users.get_or_create_by_dod_id(
-            data["dod_id"],
-            first_name=data["first_name"],
-            last_name=data["last_name"],
-            email=data["email"],
-            provisional=True,
-        )
-        permission_sets = data.get("permission_sets", [])
-        return Portfolios.add_member(
-            portfolio, new_user, permission_sets=permission_sets
-        )
-
-    @classmethod
     def add_member(cls, portfolio, member, permission_sets=None):
         portfolio_role = PortfolioRoles.add(member, portfolio.id, permission_sets)
         return portfolio_role
+
+    @classmethod
+    def invite(cls, portfolio, inviter, member_data):
+        permission_sets = PortfolioRoles._permission_sets_for_names(
+            member_data.get("permission_sets", [])
+        )
+        role = PortfolioRole(portfolio_id=portfolio.id, permission_sets=permission_sets)
+
+        invitation = PortfolioInvitations.create(
+            inviter=inviter, role=role, member_data=member_data
+        )
+
+        PortfoliosQuery.add_and_commit(role)
+
+        return invitation
 
     @classmethod
     def update_member(cls, member, permission_sets):
