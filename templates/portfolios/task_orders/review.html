@@ -1,6 +1,7 @@
 {% extends 'portfolios/base.html' %}
 
 {% from "components/icon.html" import Icon %}
+{% from "components/to_sidebar.html" import TOSidebar %}
 
 {% block content %}
 
@@ -82,18 +83,8 @@
       <div class="h4">{{ Icon('ok',classes="icon-validation") }}document</div>
     </div>
 
-    <div class="col to-sidebar">
-      <div class="h4">Total obligated funds</div>
-      <div class="h3">$500,000</div>
-      <div>This is the funding allocated to cloud services. It may be 100% or a portion of the total task order budget.</div>
+    {{ TOSidebar() }}
 
-      <hr>
-
-      <div class="h4">Total contract amount</div>
-      <div class="h3">$800,000</div>
-      <div>This is the value of all funds obligated for this contract, including -- but not limited to -- funds obligated for the cloud.</div>
-
-    </div>
   </div>
 
   </div>
