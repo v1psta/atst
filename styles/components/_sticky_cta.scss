@@ -6,6 +6,11 @@
   @include media($medium-screen) {
     margin-left: -$gap * 7;
   }
+}
+
+.sticky-cta-container {
+  display: flex;
+  justify-content: center;
 
   background-color: $color-gray-lightest;
   border-top: 1px solid $color-gray-lighter;
@@ -13,11 +18,6 @@
   padding: 0 40px 0 40px;
   box-shadow: $box-shadow;
   margin-bottom: 20px;
-}
-
-.sticky-cta-container {
-  display: flex;
-  justify-content: center;
 }
 
 .sticky-cta-text {
