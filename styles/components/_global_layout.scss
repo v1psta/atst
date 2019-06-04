@@ -24,7 +24,6 @@ body {
   .global-panel-container {
     margin: $gap;
     max-width: $site-max-width;
-    overflow-x: auto;
     flex-grow: 1;
     -ms-flex-negative: 1;
 
