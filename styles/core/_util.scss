@@ -47,6 +47,15 @@
   }
 }
 
+.semi-collapsed {
+  overflow: hidden;
+  height: $gap * 5.5;
+}
+
+.more {
+  margin-top: -2.5rem;
+}
+
 .green {
   color: $color-green;
 }
