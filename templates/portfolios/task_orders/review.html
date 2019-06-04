@@ -1,7 +1,7 @@
 {% extends 'portfolios/base.html' %}
 
 {% from "components/icon.html" import Icon %}
-{% from "components/to_sidebar.html" import TOSidebar %}
+{% from "components/totals_box.html" import TotalsBox %}
 
 {% block content %}
 
@@ -83,7 +83,7 @@
       <div class="h4">{{ Icon('ok',classes="icon-validation") }}document</div>
     </div>
 
-    {{ TOSidebar(task_order=task_order) }}
+    {{ TotalsBox(task_order=task_order) }}
 
   </div>
 
