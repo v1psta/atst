@@ -1,4 +1,5 @@
 from flask import url_for
+from unittest.mock import Mock
 
 from atst.domain.permission_sets import PermissionSets
 from atst.domain.portfolio_roles import PortfolioRoles
@@ -110,7 +111,7 @@ def test_no_update_member_permissions_without_edit_access(client, user_session):
 
 
 def test_rerender_admin_page_if_member_perms_form_does_not_validate(
-    client, user_session
+    client, user_session, monkeypatch
 ):
     portfolio = PortfolioFactory.create()
     user = UserFactory.create()
@@ -128,13 +129,12 @@ def test_rerender_admin_page_if_member_perms_form_does_not_validate(
         "members_permissions-0-perms_portfolio_mgmt": "view_portfolio_admin",
     }
 
-    response = client.post(
-        url_for("portfolios.edit_members", portfolio_id=portfolio.id),
-        data=form_data,
-        follow_redirects=True,
+    mock_route = Mock()
+    monkeypatch.setattr("atst.routes.portfolios.admin.render_admin_page", mock_route)
+    client.post(
+        url_for("portfolios.edit_members", portfolio_id=portfolio.id), data=form_data
     )
-    assert response.status_code == 200
-    assert "Portfolio Administration" in response.data.decode()
+    mock_route.assert_called()
 
 
 def test_cannot_update_portfolio_ppoc_perms(client, user_session):
