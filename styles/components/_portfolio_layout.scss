@@ -14,57 +14,13 @@
   }
 }
 
-.portfolio-breadcrumbs {
-  margin-bottom: $gap * 2;
-  color: $color-gray-dark;
-  font-size: $h5-font-size;
-
-  .icon-link {
-    color: $color-blue;
-    font-weight: normal;
-  }
-
-  .icon--tiny {
-    padding: $gap 0;
-  }
-
-  .icon {
-    @include icon-color($color-blue);
-    margin: 0 ($gap * 0.5) 0 0;
-  }
-
-  .portfolio-breadcrumbs__home {
-    &.icon-link--disabled {
-      color: $color-gray-dark;
-      opacity: 1;
-      .icon {
-        @include icon-color($color-gray-dark);
-      }
-    }
-  }
-
-  .portfolio-breadcrumbs__crumb {
-    .icon {
-      @include icon-color($color-gray-medium);
-    }
-
-    .icon-link {
-      color: $color-gray-medium;
-      pointer-events: none;
-      &.icon-link--disabled {
-        opacity: 1;
-      }
-    }
-  }
-}
-
 .portfolio-header {
   flex-direction: column;
   @include media($small-screen) {
     flex-direction: row;
   }
 
-  margin: 2 * $gap;
+  margin-bottom: $gap * 4;
 
   .col--grow {
     overflow: inherit;
@@ -72,6 +28,10 @@
 
   .portfolio-header__name {
     @include h1;
+    h1 {
+      margin: ($gap * 2) $gap ($gap * 2) $gap;
+      font-size: 3.5rem;
+    }
   }
 
   .portfolio-header__budget {
@@ -98,11 +58,19 @@
     font-size: $small-font-size;
 
     .icon-link {
-      padding: 0.8rem 1.2rem;
+      padding: 0.8rem 1.6rem;
+
+      color: $color-gray;
+      opacity: 0.3;
+      .icon {
+        @include icon-color($color-gray);
+      }
+
       &.active {
-        color: $color-gray;
+        opacity: 1;
+        color: $color-blue;
         .icon {
-          @include icon-color($color-gray);
+          @include icon-color($color-blue);
         }
       }
 
