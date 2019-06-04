@@ -20,7 +20,7 @@
     flex-direction: row;
   }
 
-  margin: 2 * $gap;
+  margin-bottom: $gap * 4;
 
   .col--grow {
     overflow: inherit;
@@ -28,6 +28,10 @@
 
   .portfolio-header__name {
     @include h1;
+    h1 {
+      margin: ($gap * 2) $gap ($gap * 2) $gap;
+      font-size: 3.5rem;
+    }
   }
 
   .portfolio-header__budget {
@@ -54,7 +58,7 @@
     font-size: $small-font-size;
 
     .icon-link {
-      padding: 0.8rem 1.2rem;
+      padding: 0.8rem 1.6rem;
 
       color: $color-gray;
       opacity: 0.3;
