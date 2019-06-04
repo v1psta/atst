@@ -15,23 +15,6 @@
     <div class='portfolio-header__name'>
       {{ secondary_breadcrumb or portfolio.name }}
     </div>
-    <div class='portfolio-header__budget row'>
-      <div class='column-left'>
-        <span>Available budget</span>
-        {{
-          Tooltip(
-            ('portfolios.task_orders.available_budget_help_description' | translate),
-            title=''
-          )
-        }}
-      </div>
-      <div class='portfolio-header__budget--amount'>
-        <span class='portfolio-header__budget--dollars'>
-        </span>
-        <span class='portfolio-header__budget--cents'>
-        </span>
-      </div>
-    </div>
     <div class='row'>
       <div class='column-left'></div>
         <div class='column-right portfolio-funding__header--funded-through {{ "funded" if funding_end_date is not none and funded else "unfunded"}}'>
