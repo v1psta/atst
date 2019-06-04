@@ -67,7 +67,7 @@
       }
 
       &.active {
-        opacity: 1.0;
+        opacity: 1;
         color: $color-blue;
         .icon {
           @include icon-color($color-blue);
