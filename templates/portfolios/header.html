@@ -41,13 +41,13 @@
   </div>
   <div class='row links'>
     {{ Link(
-      icon='dollar-sign',
+      icon='funding',
       text='navigation.portfolio_navigation.breadcrumbs.funding' | translate,
       url=url_for("task_orders.portfolio_funding", portfolio_id=portfolio.id),
       active=request.url_rule.endpoint == "task_orders.portfolio_funding",
     ) }}
     {{ Link(
-      icon='dollar-sign',
+      icon='applications',
       text='navigation.portfolio_navigation.breadcrumbs.applications' | translate,
       url=url_for("applications.portfolio_applications", portfolio_id=portfolio.id),
       active=request.url_rule.endpoint == "applications.portfolio_applications",
