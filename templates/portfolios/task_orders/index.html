@@ -13,93 +13,37 @@
   </a>
 {% endmacro %}
 
-{% macro TaskOrderList(task_orders, label='success', expired=False, funded=False) %}
-    <div class="card">
-      <div class="card__status">
-        <span class='label label--warning'>Pending</span>
-        <span class='datetime'>Started May 21, 2019</span>
-      </div>
-      <div class="card__header">
-        <h3>Task Order #12345</h3>
-      </div>
-      <div class="card__body">
-        This is a TO description. This is a TO description. This is a TO description. This is a TO description. This is a TO description. This is a TO description.
-      </div>
-    </div>
+{% macro TaskOrderDate(task_order) %}
+  <span class="datetime">
+    {% if task_order.is_active %}
+      Began {{ task_order.start_date }} &nbsp;&nbsp;|&nbsp;&nbsp; Ends {{ task_order.end_date }}
+    {% elif task_order.is_expired %}
+      Started {{ task_order.start_date }} &nbsp;&nbsp;|&nbsp;&nbsp; Ended {{ task_order.end_date }}
+    {% else %}
+      Started {{ task_order.start_date }}
+    {% endif %}
+  </span>
+{% endmacro %}
 
-  <task-order-list
-    inline-template
-    v-bind:data='{{ task_orders | tojson }}'
-    v-bind:expired='{{ 'true' if expired else 'false' }}'
-    v-bind:funded='{{'true' if funded else 'false' }}'
-    v-cloak
-    >
-    <div class='responsive-table-wrapper'>
-      <table v-cloak class="atat-table">
-        <thead>
-          <tr>
-            <th v-for="col in getColumns()" @click="updateSort(col.displayName)" :width="col.width" :class="col.class" scope="col">
-              !{ col.displayName }
-              <template v-if="col.sortFunc">
-                <span class="sorting-direction" v-if="col.displayName === sortInfo.columnName && sortInfo.isAscending">
-                  {{ Icon("caret_down", classes="icon--tiny") }}
-                </span>
-                <span class="sorting-direction" v-if="col.displayName === sortInfo.columnName && !sortInfo.isAscending">
-                  {{ Icon("caret_up", classes="icon--tiny") }}
-                </span>
-              </template>
-            </th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <tr v-for='taskOrder in taskOrders' :key="taskOrder.id">
-            <td>
-              <span class='label label--{{ label }}'>!{ taskOrder.display_status }</span>
-            </td>
-            <td>
-              <span :class="{ 'to-performance-period': true, 'to-expiring-soon': (taskOrder.days_to_expiration > 0 && taskOrder.days_to_expiration <= days_to_exp_alert_limit), 'funded': funded && taskOrder.display_status === 'Active', 'unfunded': !funded && taskOrder.display_status === 'Active' }">
-                <local-datetime
-                  v-bind:timestamp="taskOrder.start_date"
-                  format="M/D/YYYY">
-                  </local-datetime>
-                  -
-                <local-datetime
-                  v-bind:timestamp="taskOrder.end_date"
-                  format="M/D/YYYY"
-                  class="to-end-date"
-                  >
-                </local-datetime>
-                <span
-                  v-if="taskOrder.days_to_expiration > 0 && taskOrder.days_to_expiration <= days_to_exp_alert_limit && funded"
-                  class="to-expiration-alert">
-                    {{ Icon('ok') }} Period ending in !{ taskOrder.days_to_expiration } days, but new period funded
-                </span>
-                <span
-                  v-if="taskOrder.days_to_expiration > 0 && taskOrder.days_to_expiration <= days_to_exp_alert_limit && !funded"
-                  class="to-expiration-alert">
-                  {{ Icon('alert') }} Period ends in !{ taskOrder.days_to_expiration } days, submit a new task order
-                </span>
-              </span>
-            </td>
-            <td class="table-cell--align-right">
-              <span v-html='formatDollars(taskOrder.budget)'></span>
-            </td>
-            <td v-bind:class="{ 'table-cell--align-right': true, 'unused-balance': expired && taskOrder.balance > 0 }">
-              <span v-html='formatDollars(taskOrder.balance)'></span>
-            </td>
-            <td>
-              <a v-bind:href="taskOrder.url" class="icon-link view-task-order-link">
-                <span>View</span>
-                {{ Icon("caret_right", classes="icon--tiny") }}
-              </a>
-            </td>
-          </tr>
-          {{ caller and caller() }}
-        </tbody>
-      </table>
-    </div>
-  </task-order-list>
+{% macro TaskOrderList(task_orders) %}
+  <div>
+    {% for task_order in task_orders %}
+      <div class="card">
+        <div class="card__status">
+          <span class='label label--{{ task_order.display_status|taskOrderStatusLabel }}'>{{ task_order.display_status }}</span>
+          {{ TaskOrderDate(task_order) }}
+          <span class="card__button">
+          </span>
+        </div>
+        <div class="card__header">
+          <h3>Task Order {{ task_order.number }}</h3>
+        </div>
+        <div class="card__body">
+          This is a TO description. This is a TO description. This is a TO description. This is a TO description. This is a TO description. This is a TO description.
+        </div>
+      </div>
+    {% endfor %}
+  </div>
 {% endmacro %}
 
 <div class="portfolio-funding">
@@ -144,21 +88,11 @@
   {% endif %}
 
   {% if active_task_orders %}
-    <div class='subheading'>Active</div>
-    {% call TaskOrderList(active_task_orders, label='success', funded=funded) %}
-      <tr class='total-balance'>
-        <td colspan='4'>
-          <span class='label label--success'>Total Active Balance</span>
-          <span>{{ total_balance | dollars }}</span>
-        </td>
-        <td>&nbsp;</td>
-      </tr>
-    {% endcall %}
+    {{ TaskOrderList(active_task_orders) }}
   {% endif %}
 
   {% if expired_task_orders %}
-    <div class='subheading'>Expired</div>
-    {{ TaskOrderList(expired_task_orders, label='expired', expired=True) }}
+    {{ TaskOrderList(expired_task_orders) }}
   {% endif %}
 </div>
 

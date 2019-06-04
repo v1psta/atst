@@ -82,6 +82,10 @@ def normalizeOrder(title):
     return " ".join(reordered_text)
 
 
+def task_order_status_label(status):
+    return {"Pending": "warning", "Active": "success", "Expired": "error"}.get(status, "info")
+
+
 def register_filters(app):
     app.jinja_env.filters["iconSvg"] = iconSvg
     app.jinja_env.filters["dollars"] = dollars
@@ -95,6 +99,7 @@ def register_filters(app):
     app.jinja_env.filters["renderAuditEvent"] = renderAuditEvent
     app.jinja_env.filters["normalizeOrder"] = normalizeOrder
     app.jinja_env.filters["translateDuration"] = translate_duration
+    app.jinja_env.filters["taskOrderStatusLabel"] = task_order_status_label
 
     @contextfilter
     def translateWithoutCache(context, *kwargs):
