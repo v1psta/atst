@@ -33,24 +33,75 @@ def user():
     return UserFactory.create()
 
 
-def test_task_orders_new(client, user_session, portfolio):
+def test_task_orders_edit(client, user_session, portfolio):
     user_session(portfolio.owner)
     response = client.get(url_for("task_orders.edit", portfolio_id=portfolio.id))
     assert response.status_code == 200
 
 
-def test_task_orders_create(client, user_session, portfolio, pdf_upload, session):
+def test_task_orders_update(client, user_session, portfolio):
     user_session(portfolio.owner)
-    data = {"number": "0123456789", "pdf": pdf_upload}
+    form_data = {
+        "number": "0123456789",
+        "pdf": pdf_upload,
+        "clins-0-jedi_clin_type": "jedi_clin_0001",
+        "clins-0-clin_number": "12312",
+        "clins-0-start_date": "01/01/2020",
+        "clins-0-end_date": "01/01/2021",
+        "clins-0-obligated_funds": "5000",
+        "clins-0-loas-0-loa": "123123123123",
+        "clins-0-loas-1-loa": "345345234",
+        "clins-1-jedi_clin_type": "jedi_clin_0001",
+        "clins-1-clin_number": "12312",
+        "clins-1-start_date": "01/01/2020",
+        "clins-1-end_date": "01/01/2021",
+        "clins-1-obligated_funds": "5000",
+        "clins-1-loas-0-loa": "78979087",
+    }
     response = client.post(
-        url_for("task_orders.update", portfolio_id=portfolio.id), data=data
+        url_for("task_orders.update", portfolio_id=portfolio.id), data=form_data
     )
     assert response.status_code == 302
     task_order = session.query(TaskOrder).filter_by(number=data["number"]).one()
     assert task_order.pdf.filename == pdf_upload.filename
 
 
-def test_task_orders_create_invalid_data(client, user_session, portfolio):
+def test_task_orders_edit_existing_to(client, user_session, task_order):
+    user_session(task_order.creator)
+    response = client.get(
+        url_for(
+            "task_orders.edit",
+            portfolio_id=task_order.portfolio_id,
+            task_order_id=task_order.id,
+        )
+    )
+    assert response.status_code == 200
+
+
+def test_task_orders_update_existing_to(client, user_session, task_order):
+    user_session(task_order.creator)
+    form_data = {
+        "number": "0123456789",
+        "clins-0-jedi_clin_type": "jedi_clin_0001",
+        "clins-0-clin_number": "12312",
+        "clins-0-start_date": "01/01/2020",
+        "clins-0-end_date": "01/01/2021",
+        "clins-0-obligated_funds": "5000",
+        "clins-0-loas-0-loa": "123123123123",
+    }
+    response = client.post(
+        url_for(
+            "task_orders.update",
+            portfolio_id=task_order.portfolio_id,
+            task_order_id=task_order.id,
+        ),
+        data=form_data,
+    )
+    assert response.status_code == 302
+    assert task_order.number == "0123456789"
+
+
+def test_task_orders_update_invalid_data(client, user_session, portfolio):
     user_session(portfolio.owner)
     num_task_orders = len(portfolio.task_orders)
     response = client.post(

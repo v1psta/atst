@@ -1,11 +1,35 @@
-from wtforms.fields import BooleanField, DecimalField, FileField, StringField
+from wtforms.fields import BooleanField, DecimalField, FieldList, FileField, FormField, StringField
 from wtforms.fields.html5 import DateField
 from wtforms.validators import Required, Optional
 from flask_wtf.file import FileAllowed
 
+from .data import JEDI_CLIN_TYPES
+from .fields import SelectField
 from .forms import BaseForm
 from atst.forms.validators import FileLength
 from atst.utils.localization import translate
+
+
+class CLINForm(FlaskForm):
+    jedi_clin_type = SelectField("Jedi CLIN type", choices=JEDI_CLIN_TYPES)
+    clin_number = StringField(validators=[Required()])
+    start_date = DateField(
+        translate("forms.task_order.start_date_label"),
+        format="%m/%d/%Y",
+        validators=[Required()],
+    )
+    end_date = DateField(
+        translate("forms.task_order.end_date_label"),
+        format="%m/%d/%Y",
+        validators=[Required()],
+    )
+    obligated_funds = DecimalField()
+    loas = FieldList(StringField())
+
+
+class UnclassifiedCLINForm(CLINForm):
+    # TODO: overwrite jedi_clin_type to only include the unclassified options
+    pass
 
 
 class TaskOrderForm(BaseForm):
@@ -22,38 +46,7 @@ class TaskOrderForm(BaseForm):
         ],
         render_kw={"accept": ".pdf,application/pdf"},
     )
-
-
-class FundingForm(BaseForm):
-    start_date = DateField(
-        translate("forms.task_order.start_date_label"), format="%m/%d/%Y"
-    )
-    end_date = DateField(
-        translate("forms.task_order.end_date_label"), format="%m/%d/%Y"
-    )
-    clin_01 = DecimalField(
-        translate("forms.task_order.clin_01_label"), validators=[Optional()]
-    )
-    clin_02 = DecimalField(
-        translate("forms.task_order.clin_02_label"), validators=[Optional()]
-    )
-    clin_03 = DecimalField(
-        translate("forms.task_order.clin_03_label"), validators=[Optional()]
-    )
-    clin_04 = DecimalField(
-        translate("forms.task_order.clin_04_label"), validators=[Optional()]
-    )
-
-
-class UnclassifiedFundingForm(FundingForm):
-    clin_02 = StringField(
-        translate("forms.task_order.unclassified_clin_02_label"),
-        filters=[BaseForm.remove_empty_string],
-    )
-    clin_04 = StringField(
-        translate("forms.task_order.unclassified_clin_04_label"),
-        filters=[BaseForm.remove_empty_string],
-    )
+    clins = FieldList(FormField(CLINForm))
 
 
 class SignatureForm(BaseForm):
