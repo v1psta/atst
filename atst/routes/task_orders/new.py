@@ -242,9 +242,11 @@ class UpdateTaskOrderWorkflow(ShowTaskOrderWorkflow):
                 pf = Portfolios.get(self.user, self.portfolio_id)
             else:
                 pf = Portfolios.create(
-                    self.user,
-                    self.form.portfolio_name.data,
-                    self.form.defense_component.data,
+                    user=self.user,
+                    portfolio_attrs={
+                        "name": self.form.portfolio_name.data,
+                        "defense_component": self.form.defense_component.data,
+                    },
                 )
             self._task_order = TaskOrders.create(portfolio=pf, creator=self.user)
             TaskOrders.update(self.task_order, **self.task_order_form_data)

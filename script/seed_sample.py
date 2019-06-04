@@ -234,7 +234,8 @@ def create_demo_portfolio(name, data):
         return
 
     portfolio = Portfolios.create(
-        portfolio_owner, name=name, defense_component=random_service_branch()
+        user=portfolio_owner,
+        portfolio_attrs={"name": name, "defense_component": random_service_branch()},
     )
 
     add_task_orders_to_portfolio(portfolio)
@@ -259,14 +260,22 @@ def seed_db():
     create_demo_portfolio("B-Wing", MockReportingProvider.REPORT_FIXTURE_MAP["B-Wing"])
 
     tie_interceptor = Portfolios.create(
-        amanda, name="TIE Interceptor", defense_component=random_service_branch()
+        user=amanda,
+        portfolio_attrs={
+            "name": "TIE Interceptor",
+            "defense_component": random_service_branch(),
+        },
     )
     add_task_orders_to_portfolio(tie_interceptor)
     add_members_to_portfolio(tie_interceptor)
     add_applications_to_portfolio(tie_interceptor)
 
     tie_fighter = Portfolios.create(
-        amanda, name="TIE Fighter", defense_component=random_service_branch()
+        user=amanda,
+        portfolio_attrs={
+            "name": "TIE Fighter",
+            "defense_component": random_service_branch(),
+        },
     )
     add_task_orders_to_portfolio(tie_fighter)
     add_members_to_portfolio(tie_fighter)
@@ -278,7 +287,11 @@ def seed_db():
         ship = random.choice(ships)
         ships.remove(ship)
         portfolio = Portfolios.create(
-            user, name=ship, defense_component=random_service_branch()
+            user=user,
+            portfolio_attrs={
+                "name": ship,
+                "defense_component": random_service_branch(),
+            },
         )
         add_task_orders_to_portfolio(portfolio)
         add_members_to_portfolio(portfolio)
