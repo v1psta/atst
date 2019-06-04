@@ -7,10 +7,10 @@ from atst.models import Base, mixins, types
 
 
 class JEDICLINType(Enum):
-    JEDI_CLIN_1 = "jedi clin 0001"
-    JEDI_CLIN_2 = "jedi clin 0002"
-    JEDI_CLIN_3 = "jedi clin 0003"
-    JEDI_CLIN_4 = "jedi clin 0004"
+    JEDI_CLIN_1 = "JEDI_CLIN_1"
+    JEDI_CLIN_2 = "JEDI_CLIN_2"
+    JEDI_CLIN_3 = "JEDI_CLIN_3"
+    JEDI_CLIN_4 = "JEDI_CLIN_4"
 
 
 class CLIN(Base, mixins.TimestampsMixin):

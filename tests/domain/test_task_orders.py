@@ -1,4 +1,6 @@
 import pytest
+from datetime import date
+from decimal import Decimal
 
 from atst.domain.task_orders import TaskOrders, TaskOrderError
 from atst.domain.exceptions import UnauthorizedError
@@ -51,3 +53,91 @@ def test_all_sections_complete():
     assert not TaskOrders.all_sections_complete(task_order)
     task_order.scope = "str12345"
     assert TaskOrders.all_sections_complete(task_order)
+
+
+def test_create_adds_clins():
+    portfolio = PortfolioFactory.create()
+    clins = [
+        {
+            "jedi_clin_type": "JEDI_CLIN_1",
+            "number": "12312",
+            "start_date": date(2020, 1, 1),
+            "end_date": date(2021, 1, 1),
+            "obligated_amount": Decimal("5000"),
+            "loas": ["123123123123", "345345234"],
+        },
+        {
+            "jedi_clin_type": "JEDI_CLIN_1",
+            "number": "12312",
+            "start_date": date(2020, 1, 1),
+            "end_date": date(2021, 1, 1),
+            "obligated_amount": Decimal("5000"),
+            "loas": ["78979087"],
+        },
+    ]
+    task_order = TaskOrders.create(
+        creator=portfolio.owner,
+        portfolio_id=portfolio.id,
+        number="0123456789",
+        clins=clins,
+    )
+    assert len(task_order.clins) == 2
+
+
+def test_update_adds_clins():
+    task_order = TaskOrderFactory.create(number="1231231234")
+    to_number = task_order.number
+    clins = [
+        {
+            "jedi_clin_type": "JEDI_CLIN_1",
+            "number": "12312",
+            "start_date": date(2020, 1, 1),
+            "end_date": date(2021, 1, 1),
+            "obligated_amount": Decimal("5000"),
+            "loas": ["123123123123", "345345234"],
+        },
+        {
+            "jedi_clin_type": "JEDI_CLIN_1",
+            "number": "12312",
+            "start_date": date(2020, 1, 1),
+            "end_date": date(2021, 1, 1),
+            "obligated_amount": Decimal("5000"),
+            "loas": ["78979087"],
+        },
+    ]
+    task_order = TaskOrders.create(
+        creator=task_order.creator,
+        portfolio_id=task_order.portfolio_id,
+        number="0000000000",
+        clins=clins,
+    )
+    assert task_order.number != to_number
+    assert len(task_order.clins) == 2
+
+
+def test_update_does_not_duplicate_clins():
+    task_order = TaskOrderFactory.create(number="3453453456", clins=["123", "456"])
+    clins = [
+        {
+            "jedi_clin_type": "JEDI_CLIN_1",
+            "number": "123",
+            "start_date": date(2020, 1, 1),
+            "end_date": date(2021, 1, 1),
+            "obligated_amount": Decimal("5000"),
+            "loas": ["123123123123", "345345234"],
+        },
+        {
+            "jedi_clin_type": "JEDI_CLIN_1",
+            "number": "111",
+            "start_date": date(2020, 1, 1),
+            "end_date": date(2021, 1, 1),
+            "obligated_amount": Decimal("5000"),
+            "loas": ["78979087"],
+        },
+    ]
+    task_order = TaskOrders.update(
+        task_order_id=task_order.id, number="0000000000", clins=clins
+    )
+    assert len(task_order.clins) == 2
+    for clin in task_order.clins:
+        assert clin.number != "456"

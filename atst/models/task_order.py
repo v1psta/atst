@@ -34,7 +34,7 @@ class TaskOrder(Base, mixins.TimestampsMixin):
     signer_dod_id = Column(String)
     signed_at = Column(DateTime)
 
-    clins = relationship("CLIN")
+    clins = relationship("CLIN", back_populates="task_order")
 
     @hybrid_property
     def pdf(self):

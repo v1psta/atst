@@ -223,8 +223,8 @@ ENV_ROLES = [(role.value, role.value) for role in CSPRole] + [
 ]
 
 JEDI_CLIN_TYPES = [
-    ("jedi_clin_0001", translate("forms.task_order.clin_01_label")),
-    ("jedi_clin_0002", translate("forms.task_order.clin_02_label")),
-    ("jedi_clin_0003", translate("forms.task_order.clin_03_label")),
-    ("jedi_clin_0004", translate("forms.task_order.clin_04_label")),
+    ("JEDI_CLIN_1", translate("forms.task_order.clin_01_label")),
+    ("JEDI_CLIN_2", translate("forms.task_order.clin_02_label")),
+    ("JEDI_CLIN_3", translate("forms.task_order.clin_03_label")),
+    ("JEDI_CLIN_4", translate("forms.task_order.clin_04_label")),
 ]

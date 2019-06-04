@@ -41,6 +41,10 @@ def random_future_date(year_min=1, year_max=5):
     return _random_date(year_min, year_max, operator.add)
 
 
+def random_loa_numbers():
+    return ["".join(random.choices(string.digits, k=43))]
+
+
 def _random_date(year_min, year_max, operation):
     if year_min == year_max:
         inc = year_min
@@ -267,6 +271,17 @@ class TaskOrderFactory(Base):
 
     portfolio = factory.SubFactory(PortfolioFactory)
     number = factory.LazyFunction(random_task_order_number)
+    creator = factory.SubFactory(UserFactory)
+
+    @classmethod
+    def _create(cls, model_class, *args, **kwargs):
+        with_clins = kwargs.pop("clins", [])
+        task_order = super()._create(model_class, *args, **kwargs)
+
+        for clin in with_clins:
+            CLINFactory.create(task_order=task_order, number=clin)
+
+        return task_order
 
 
 class CLINFactory(Base):

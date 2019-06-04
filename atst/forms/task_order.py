@@ -12,7 +12,7 @@ from atst.utils.localization import translate
 
 class CLINForm(FlaskForm):
     jedi_clin_type = SelectField("Jedi CLIN type", choices=JEDI_CLIN_TYPES)
-    clin_number = StringField(validators=[Required()])
+    number = StringField(validators=[Required()])
     start_date = DateField(
         translate("forms.task_order.start_date_label"),
         format="%m/%d/%Y",
@@ -23,7 +23,7 @@ class CLINForm(FlaskForm):
         format="%m/%d/%Y",
         validators=[Required()],
     )
-    obligated_funds = DecimalField()
+    obligated_amount = DecimalField()
     loas = FieldList(StringField())
 
 

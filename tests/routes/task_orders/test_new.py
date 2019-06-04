@@ -44,19 +44,19 @@ def test_task_orders_update(client, user_session, portfolio):
     form_data = {
         "number": "0123456789",
         "pdf": pdf_upload,
-        "clins-0-jedi_clin_type": "jedi_clin_0001",
+        "clins-0-jedi_clin_type": "JEDI_CLIN_1",
         "clins-0-clin_number": "12312",
         "clins-0-start_date": "01/01/2020",
         "clins-0-end_date": "01/01/2021",
-        "clins-0-obligated_funds": "5000",
-        "clins-0-loas-0-loa": "123123123123",
-        "clins-0-loas-1-loa": "345345234",
-        "clins-1-jedi_clin_type": "jedi_clin_0001",
-        "clins-1-clin_number": "12312",
+        "clins-0-obligated_amount": "5000",
+        "clins-0-loas-0": "123123123123",
+        "clins-0-loas-1": "345345234",
+        "clins-1-jedi_clin_type": "JEDI_CLIN_1",
+        "clins-1-number": "12312",
         "clins-1-start_date": "01/01/2020",
         "clins-1-end_date": "01/01/2021",
-        "clins-1-obligated_funds": "5000",
-        "clins-1-loas-0-loa": "78979087",
+        "clins-1-obligated_amount": "5000",
+        "clins-1-loas-0": "78979087",
     }
     response = client.post(
         url_for("task_orders.update", portfolio_id=portfolio.id), data=form_data
@@ -82,12 +82,12 @@ def test_task_orders_update_existing_to(client, user_session, task_order):
     user_session(task_order.creator)
     form_data = {
         "number": "0123456789",
-        "clins-0-jedi_clin_type": "jedi_clin_0001",
-        "clins-0-clin_number": "12312",
+        "clins-0-jedi_clin_type": "JEDI_CLIN_1",
+        "clins-0-number": "12312",
         "clins-0-start_date": "01/01/2020",
         "clins-0-end_date": "01/01/2021",
-        "clins-0-obligated_funds": "5000",
-        "clins-0-loas-0-loa": "123123123123",
+        "clins-0-obligated_amount": "5000",
+        "clins-0-loas-0": "123123123123",
     }
     response = client.post(
         url_for(
