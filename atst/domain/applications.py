@@ -1,13 +1,20 @@
 from sqlalchemy.orm.exc import NoResultFound
 
-from atst.database import db
 from . import BaseDomainClass
+from atst.database import db
 from atst.domain.application_roles import ApplicationRoles
 from atst.domain.environment_roles import EnvironmentRoles
 from atst.domain.environments import Environments
 from atst.domain.exceptions import NotFoundError
+from atst.domain.invitations import ApplicationInvitations
 from atst.domain.users import Users
-from atst.models import Application, ApplicationRole, ApplicationRoleStatus
+from atst.models import (
+    Application,
+    ApplicationRole,
+    ApplicationRoleStatus,
+    EnvironmentRole,
+)
+from atst.utils import first_or_none
 
 
 class Applications(BaseDomainClass):
@@ -103,6 +110,52 @@ class Applications(BaseDomainClass):
                 )
 
         return application_role
+
+    @classmethod
+    def invite(
+        cls,
+        application,
+        inviter,
+        user_data,
+        permission_sets_names=None,
+        environment_roles_data=None,
+    ):
+        permission_sets_names = permission_sets_names or []
+        permission_sets = ApplicationRoles._permission_sets_for_names(
+            permission_sets_names
+        )
+        app_role = ApplicationRole(
+            application=application, permission_sets=permission_sets
+        )
+
+        db.session.add(app_role)
+
+        for env_role_data in environment_roles_data:
+            env_role_name = env_role_data.get("role")
+            environment_id = env_role_data.get("environment_id")
+            if env_role_name is not None:
+                # pylint: disable=cell-var-from-loop
+                environment = first_or_none(
+                    lambda e: str(e.id) == str(environment_id), application.environments
+                )
+                if environment is None:
+                    raise NotFoundError("environment")
+                else:
+                    env_role = EnvironmentRole(
+                        application_role=app_role,
+                        environment=environment,
+                        role=env_role_name,
+                    )
+                    db.session.add(env_role)
+
+        invitation = ApplicationInvitations.create(
+            inviter=inviter, role=app_role, member_data=user_data
+        )
+        db.session.add(invitation)
+
+        db.session.commit()
+
+        return invitation
 
     @classmethod
     def remove_member(cls, application, user_id):

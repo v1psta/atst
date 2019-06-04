@@ -67,7 +67,7 @@ MESSAGES = {
     "new_application_member": {
         "title_template": translate("flash.success"),
         "message_template": """
-          <p>{{ "flash.new_application_member" | translate({ "user_name": new_member.user_name }) }}</p>
+          <p>{{ "flash.new_application_member" | translate({ "user_name": user_name }) }}</p>
         """,
         "category": "success",
     },
@@ -179,7 +179,7 @@ MESSAGES = {
     "update_portfolio_members": {
         "title_template": "Success!",
         "message_template": """
-            <p>You have successfully updated access permissions for members of {{ portfolio.name }}.</p>
+        <p>You have successfully updated access permissions for members of {{ portfolio.name }}.</p>
         """,
         "category": "success",
     },

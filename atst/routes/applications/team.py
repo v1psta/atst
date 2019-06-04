@@ -13,8 +13,8 @@ from atst.domain.users import Users
 from atst.forms.application_member import NewForm as NewMemberForm
 from atst.forms.team import TeamForm
 from atst.models import Permissions
-from atst.services.invitation import Invitation as InvitationService
 from atst.utils.flash import formatted_flash as flash
+from atst.queue import queue
 
 
 def get_form_permission_value(member, edit_perm_set):
@@ -125,6 +125,17 @@ def update_team(application_id):
         return (render_team_page(application), 400)
 
 
+def send_application_invitation(invitee_email, inviter_name, token):
+    body = render_template(
+        "emails/application/invitation.txt", owner=inviter_name, token=token
+    )
+    queue.send_mail(
+        [invitee_email],
+        "{} has invited you to a JEDI cloud application".format(inviter_name),
+        body,
+    )
+
+
 @applications_bp.route("/application/<application_id>/members/new", methods=["POST"])
 @user_can(
     Permissions.CREATE_APPLICATION_MEMBER, message="create new application member"
@@ -135,19 +146,19 @@ def create_member(application_id):
 
     if form.validate():
         try:
-            member = Applications.create_member(
-                application,
-                form.user_data.data,
-                permission_sets=form.permission_sets.data,
+            invite = Applications.invite(
+                application=application,
+                inviter=g.current_user,
+                user_data=form.user_data.data,
+                permission_sets_names=form.permission_sets.data,
                 environment_roles_data=form.environment_roles.data,
             )
 
-            invite_service = InvitationService(
-                g.current_user, member, form.user_data.data.get("email")
+            send_application_invitation(
+                invite.email, g.current_user.full_name, invite.token
             )
-            invite_service.invite()
 
-            flash("new_portfolio_member", new_member=member)
+            flash("new_application_member", user_name=invite.user_name)
 
         except AlreadyExistsError:
             return render_template(
