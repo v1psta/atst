@@ -23,7 +23,7 @@
     v-cloak
     >
     <div class='responsive-table-wrapper'>
-      <table v-cloak>
+      <table v-cloak class="atat-table">
         <thead>
           <tr>
             <th v-for="col in getColumns()" @click="updateSort(col.displayName)" :width="col.width" :class="col.class" scope="col">
