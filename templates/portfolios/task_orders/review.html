@@ -1,113 +1,91 @@
-{% extends "base.html" %}
+{% extends 'portfolios/base.html' %}
 
-{% set secondary_breadcrumb = "navigation.portfolio_navigation.breadcrumbs.funding" | translate %}
-
-{% from "components/edit_link.html" import EditLink %}
-{% from "components/required_label.html" import RequiredLabel %}
 {% from "components/icon.html" import Icon %}
-{% from "components/date_picker.html" import DatePicker %}
-{% from "components/text_input.html" import TextInput %}
-{% from "components/alert.html" import Alert %}
-{% from "components/review_field.html" import ReviewField %}
-{% from "components/upload_input.html" import UploadInput %}
-{% from 'components/save_button.html' import SaveButton %}
+{% from "components/to_sidebar.html" import TOSidebar %}
 
 {% block content %}
-<ko-review inline-template v-bind:initial-data='{{ form.data|tojson }}'>
-  <div class="col task-order-form">
 
-    {% include "fragments/flash.html" %}
+  <div class="task-order-summary">
+    <div class="h2">Portfolio Name</div>
 
-    {% block form_action %}
-    <form method='POST' action="{{ url_for('task_orders.submit_ko_review', task_order_id=task_order.id, form=form) }}" autocomplete="off" enctype="multipart/form-data">
-    {% endblock %}
-
-    {{ form.csrf_token }}
-
-    {% block form %}
-
-      <div class="top-message panel">
-        <h1 class="subheading title">
-          {{ "task_orders.ko_review.title" | translate }}
-        </h1>
-        {% include "fragments/ko_review_message.html" %}
-      </div>
-
-      <div class="panel">
-        <div class="panel__content">
-
-          <div class="h2">
-            {{ "task_orders.new.review.app_info"| translate }}
-          </div>
-          {% include "fragments/task_order_review/app_info.html" %}
-          <hr>
-
-          <div class="h2">
-            {{ "task_orders.new.review.reporting"| translate }}
-            {{ EditLink(url_for("task_orders.new", screen=1, task_order_id=task_order.id,  _anchor="reporting", ko_edit=True)) }}
-          </div>
-          {% include "fragments/task_order_review/reporting.html" %}
-          <hr>
-
-          <div class="h2">
-            {{ "task_orders.new.review.funding"| translate }}
-            {{ EditLink(url_for("task_orders.new", screen=2, task_order_id=task_order.id, ko_edit=True)) }}
-          </div>
-          {% include "fragments/task_order_review/funding.html" %}
-
-          <div class="form__sub-fields">
-            {{ DatePicker(form.start_date) }}
-            {{ DatePicker(form.end_date) }}
-          </div>
-          <hr>
-
-          <div class="h2">
-            {{ "task_orders.new.review.oversight"| translate }}
-            {{ EditLink(url_for("task_orders.new", screen=3, task_order_id=task_order.id, ko_edit=True)) }}
-          </div>
-          {% include "fragments/task_order_review/oversight.html" %}
-          <hr>
-
-          <div class="h2">{{ "task_orders.ko_review.task_order_information"| translate }}</div>
-
-          <div class="form__sub-fields">
-            {{ UploadInput(form.pdf, show_label=True) }}
-            {{ TextInput(form.number, placeholder='1234567890') }}
-
-            <div class="task-order__loa-list">
-              <ul>
-                <li v-for="(loa, i) in loas" class="task-order__loa-list-item">
-                  <div class="usa-input usa-input--validation--anything">
-                    <label :for="'loas-' + i">
-                      <div class="usa-input__title" v-html="'Line of Accounting (LOA) #' + (i + 1)"></div>
-                    </label>
-                    <input type="text" v-model='loa.number' :id="'loas-' + i" placeholder="1234567890"/>
-                    <input type="hidden" :name="'loas-' + i" v-model='loa.number'/>
-                  </div>
-                  <button v-on:click="removeLOA(i)" v-if="loas.length > 1" type="button" class='loa-list-item__remover'>
-                    {{ Icon('trash') }}
-                    <span>Remove</span>
-                  </button>
-                </li>
-              </ul>
-              <div class="task-order__loa-add-item">
-                <button v-on:click="addLOA" class="icon-link" tabindex="0" type="button">{{ Icon('plus') }} Add another LOA</button>
-              </div>
-            </div>
-
-            {{ TextInput(form.custom_clauses, paragraph=True) }}
-          </div>
-
+    <semi-collapsible-text inline-template>
+      <div>
+        <div v-bind:class="{ 'semi-collapsed' : !open }">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
         </div>
+        <a v-on:click='toggle' v-show="!open" class="right more">More{{ Icon('caret_down') }}</a>
+        <a v-on:click='toggle' v-show="open" class="right more">Less{{ Icon('caret_up') }}</a>
       </div>
-      {% endblock %}
+    </semi-collapsible-text>
 
-      <div class='action-group'>
-        {{ SaveButton(text="Continue", element="input") }}
-      </div>
+    <hr>
 
-    </form>
+
+  <div class="h1">Review your task order</div>
+  <div>Check to make sure the information you entered is correct. After submission, you will confirm this task order was signed by a contracting officer. Thereafter, you will be informed as soon as CCPO completes their review.</div>
+  <div class="row">
+    <div class="col">
+      <div class="h4">Task order number - 10 digit found in your system of record</div>
+      <div>{{task_order.number}}</div>
+
+      <hr>
+
+      <div class="h3">Funding summary</div>
+      <div>CLIN 1: Unclassified Cloud Services 001</div>
+        <table>
+          <thead>
+            <tr>
+              <th>Amount</th>
+              <th>Obligated</th>
+              <th>PoP Start</th>
+              <th>PoP End</th>
+              <th>LOA</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td>$500,000</td>
+              <td>Yes</td>
+              <td>9/07/19</td>
+              <td>9/07/20</td>
+              <td>34820394</td>
+            </tr>
+          </tbody>
+        </table>
+
+      <div>CLIN 2: Unclassified Cloud Services 002</div>
+        <table>
+          <thead>
+            <tr>
+              <th>Amount</th>
+              <th>Obligated</th>
+              <th>PoP Start</th>
+              <th>PoP End</th>
+              <th>LOA</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td>$300,000</td>
+              <td>No</td>
+              <td>9/08/20</td>
+              <td>9/08/21</td>
+              <td>q9384751934</td>
+            </tr>
+          </tbody>
+        </table>
+
+      <hr>
+
+      <div class="h3">Supporting document</div>
+      <div class="h4">{{ Icon('ok',classes="icon-validation") }}document</div>
+    </div>
+
+    {{ TOSidebar() }}
 
   </div>
-</ko-review>
+
+  </div>
 {% endblock %}

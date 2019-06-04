@@ -32,7 +32,7 @@
   class='member-list'
   v-bind:members='{{ members | tojson}}'>
   <div class='responsive-table-wrapper panel'>
-    <table v-cloak v-if='searchedList && searchedList.length'>
+    <table v-cloak v-if='searchedList && searchedList.length' class="atat-table">
       <thead>
         <tr>
           <th v-for="col in getColumns()" @click="updateSort(col.displayName)" :width="col.width" :class="col.class" scope="col">
