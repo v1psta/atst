@@ -2,13 +2,13 @@
 
   <div class="col totals-box">
     <div class="h4">Total obligated funds</div>
-    <div class="h3">$500,000</div>
+    <div class="h3">{{ task_order.total_obligated_funds | dollars }}</div>
     <div>This is the funding allocated to cloud services. It may be 100% or a portion of the total task order budget.</div>
 
     <hr>
 
     <div class="h4">Total contract amount</div>
-    <div class="h3">{{ task_order.budget | dollars }}</div>
+    <div class="h3">{{ task_order.total_contract_amount | dollars }}</div>
     <div>This is the value of all funds obligated for this contract, including -- but not limited to -- funds obligated for the cloud.</div>
 
   </div>
