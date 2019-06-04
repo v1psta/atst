@@ -1,4 +1,4 @@
-{% macro TOSidebar() -%}
+{% macro TOSidebar(task_order) -%}
 
   <div class="col to-sidebar">
     <div class="h4">Total obligated funds</div>
@@ -8,7 +8,7 @@
     <hr>
 
     <div class="h4">Total contract amount</div>
-    <div class="h3">$800,000</div>
+    <div class="h3">{{ task_order.budget | dollars }}</div>
     <div>This is the value of all funds obligated for this contract, including -- but not limited to -- funds obligated for the cloud.</div>
 
   </div>
