@@ -2,7 +2,7 @@
 {% from "components/tooltip.html" import Tooltip %}
 
 {% macro Link(icon, text, url, active=False) %}
-  <a class='icon-link {{ "active icon-link--disabled" if active }}' href='{{ url }}'>
+  <a class='icon-link {{ "active" if active }}' href='{{ url }}'>
     <div class='col'>
       <div class='icon-link--icon'>{{ Icon(icon) }}</div>
       <div class='icon-link--name'>{{ text }}</div>

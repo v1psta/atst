@@ -55,10 +55,18 @@
 
     .icon-link {
       padding: 0.8rem 1.2rem;
+
+      color: $color-gray;
+      opacity: 0.3;
+      .icon {
+        @include icon-color($color-gray);
+      }
+
       &.active {
-        color: $color-gray;
+        opacity: 1.0;
+        color: $color-blue;
         .icon {
-          @include icon-color($color-gray);
+          @include icon-color($color-blue);
         }
       }
 
