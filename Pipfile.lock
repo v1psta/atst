@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "6ef877d5410a0644cbfb1538e91e720d5b94cd905eb32553b2f2b00b39c2549f"
+            "sha256": "1823191416044420fc546f0fe698bcfdb0b9b88c525d7456a5684a4ae3ec7241"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -383,10 +383,10 @@
         },
         "sqlalchemy": {
             "hashes": [
-                "sha256:5bb2c4fc2bcc3447ad45716c66581eab982c007dcf925482498d8733f86f17c7"
+                "sha256:c7fef198b43ef31dfd783d094fd5ee435ce8717592e6784c45ba337254998017"
             ],
             "index": "pypi",
-            "version": "==1.2.19"
+            "version": "==1.3.4"
         },
         "unipath": {
             "hashes": [
