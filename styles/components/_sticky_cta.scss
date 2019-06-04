@@ -6,6 +6,11 @@
   @include media($medium-screen) {
     margin-left: -$gap * 7;
   }
+
+}
+
+.sticky-cta.js-is-sticky {
+  width: 78.5%;
 }
 
 .sticky-cta-container {
