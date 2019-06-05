@@ -25,12 +25,12 @@
   </span>
 {% endmacro %}
 
-{% macro TaskOrderList(task_orders) %}
+{% macro TaskOrderList(task_orders, label='success') %}
   <div>
     {% for task_order in task_orders %}
       <div class="card">
         <div class="card__status">
-          <span class='label label--{{ task_order.display_status|taskOrderStatusLabel }}'>{{ task_order.display_status }}</span>
+          <span class='label label--{{ label }}'>{{ task_order.display_status }}</span>
           {{ TaskOrderDate(task_order) }}
           <span class="card__button">
           </span>
@@ -54,30 +54,6 @@
     </div>
   {% endcall %}
 
-  {% for task_order in pending_task_orders %}
-    <div class='subheading'>
-      Pending
-    </div>
-    <div class='panel pending-task-order row'>
-      <span class='label label--warning'>Pending</span>
-      <div class="pending-task-order__started col">
-        <dt>Started</dt>
-        <dd>
-          <local-datetime
-            timestamp="{{ task_order.time_created }}"
-            format="M/D/YYYY">
-            </local-datetime>
-        </dd>
-      </div>
-      <div class="pending-task-order__value col">
-        <dt>Value</dt>
-        <dd>{{ task_order.budget | dollars }}</dd>
-      </div>
-      {{ ViewLink(task_order) }}
-    </div>
-  {% endfor %}
-
-
   {% if not active_task_orders and not pending_task_orders %}
     {{ EmptyState(
       'This portfolio doesn’t have any active or pending task orders.',
@@ -87,12 +63,16 @@
     ) }}
   {% endif %}
 
+  {% if pending_task_orders %}
+    {{ TaskOrderList(pending_task_orders, label='warning') }}
+  {% endif %}
+
   {% if active_task_orders %}
-    {{ TaskOrderList(active_task_orders) }}
+    {{ TaskOrderList(active_task_orders, label='success') }}
   {% endif %}
 
   {% if expired_task_orders %}
-    {{ TaskOrderList(expired_task_orders) }}
+    {{ TaskOrderList(expired_task_orders, label='error') }}
   {% endif %}
 </div>
 

@@ -1,5 +1,6 @@
 from enum import Enum
 from datetime import date
+import random
 
 from sqlalchemy import Column, DateTime, ForeignKey, String
 from sqlalchemy.ext.hybrid import hybrid_property
@@ -66,7 +67,7 @@ class TaskOrder(Base, mixins.TimestampsMixin):
     def status(self):
         # TODO: fix task order -- implement correctly using CLINs
         # Faked for display purposes
-        return Status.ACTIVE
+        return random.choice(list(Status.__members__.values()))
 
     @property
     def start_date(self):
