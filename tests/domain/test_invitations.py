@@ -2,21 +2,21 @@ import datetime
 import pytest
 import re
 
-from atst.domain.invitations import (
-    PortfolioInvitations,
-    InvitationError,
-    WrongUserError,
-    ExpiredError,
-    NotFoundError,
-)
 from atst.domain.audit_log import AuditLog
+from atst.domain.invitations import (
+    ExpiredError,
+    InvitationError,
+    NotFoundError,
+    PortfolioInvitations,
+    WrongUserError,
+)
 from atst.models import InvitationStatus
 
 from tests.factories import (
     PortfolioFactory,
+    PortfolioInvitationFactory,
     PortfolioRoleFactory,
     UserFactory,
-    PortfolioInvitationFactory,
 )
 
 
