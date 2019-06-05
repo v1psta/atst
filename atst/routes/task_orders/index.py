@@ -48,5 +48,5 @@ def portfolio_funding(portfolio_id):
             + task_orders_by_status.get(TaskOrderStatus.PENDING, [])
         ),
         active_task_orders=active_task_orders,
-        expired_task_orders=task_orders_by_status.get(TaskOrderStatus.EXPIRED, [])
+        expired_task_orders=task_orders_by_status.get(TaskOrderStatus.EXPIRED, []),
     )
