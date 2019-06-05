@@ -67,7 +67,9 @@ class TaskOrder(Base, mixins.TimestampsMixin):
     def status(self):
         # TODO: fix task order -- implement correctly using CLINs
         # Faked for display purposes
-        return random.choice(list(Status.__members__.values()))
+        possible_statuses = list(Status.__members__.values())
+        index = self.time_created.microsecond % len(possible_statuses)
+        return possible_statuses[index]
 
     @property
     def start_date(self):
