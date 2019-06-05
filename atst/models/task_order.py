@@ -6,7 +6,8 @@ from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import relationship
 from werkzeug.datastructures import FileStorage
 
-from atst.models import Attachment, Base, types, mixins
+from atst.models import Attachment, Base, mixins, types
+from atst.models.clin import JEDICLINType
 
 
 class Status(Enum):
@@ -32,6 +33,8 @@ class TaskOrder(Base, mixins.TimestampsMixin):
     number = Column(String, unique=True)  # Task Order Number
     signer_dod_id = Column(String)
     signed_at = Column(DateTime)
+
+    clins = relationship("CLIN")
 
     @hybrid_property
     def pdf(self):
@@ -83,9 +86,26 @@ class TaskOrder(Base, mixins.TimestampsMixin):
             return (self.end_date - date.today()).days
 
     @property
+    def total_obligated_funds(self):
+        total = 0
+        for clin in self.clins:
+            if clin.jedi_clin_type in [
+                JEDICLINType.JEDI_CLIN_1,
+                JEDICLINType.JEDI_CLIN_3,
+            ]:
+                total += clin.obligated_amount
+        return total
+
+    @property
+    def total_contract_amount(self):
+        total = 0
+        for clin in self.clins:
+            total += clin.obligated_amount
+        return total
+
+    @property
+    # TODO delete when we delete task_order_review flow
     def budget(self):
-        # TODO: fix task order -- reimplement using CLINs
-        # Faked for display purposes
         return 100000
 
     @property

@@ -269,6 +269,18 @@ class TaskOrderFactory(Base):
     number = factory.LazyFunction(random_task_order_number)
 
 
+class CLINFactory(Base):
+    class Meta:
+        model = CLIN
+
+    task_order = factory.SubFactory(TaskOrderFactory)
+    number = factory.LazyFunction(random_task_order_number)
+    start_date = datetime.date.today()
+    end_date = factory.LazyFunction(random_future_date)
+    obligated_amount = random.randint(100, 999999)
+    jedi_clin_type = random.choice([e.value for e in clin.JEDICLINType])
+
+
 class NotificationRecipientFactory(Base):
     class Meta:
         model = NotificationRecipient
