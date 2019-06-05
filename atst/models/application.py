@@ -1,9 +1,11 @@
-from sqlalchemy import Column, ForeignKey, String
+from sqlalchemy import and_, Column, ForeignKey, String
 from sqlalchemy.orm import relationship, synonym
 
 from atst.models import Base
-from atst.models.types import Id
+from atst.models.application_role import ApplicationRole
+from atst.models.environment import Environment
 from atst.models import mixins
+from atst.models.types import Id
 
 
 class Application(
@@ -20,11 +22,15 @@ class Application(
     environments = relationship(
         "Environment",
         back_populates="application",
-        primaryjoin="and_(Environment.application_id==Application.id, Environment.deleted==False)",
+        primaryjoin=and_(
+            Environment.application_id == id, Environment.deleted == False
+        ),
     )
     roles = relationship(
         "ApplicationRole",
-        primaryjoin="and_(ApplicationRole.application_id==Application.id, ApplicationRole.deleted==False)",
+        primaryjoin=and_(
+            ApplicationRole.application_id == id, ApplicationRole.deleted == False
+        ),
     )
     members = synonym("roles")
 
