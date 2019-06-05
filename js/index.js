@@ -41,6 +41,8 @@ import DeleteConfirmation from './components/delete_confirmation'
 import NewEnvironment from './components/forms/new_environment'
 import EnvironmentRole from './components/environment_role'
 import SemiCollapsibleText from './components/semi_collapsible_text'
+import ToForm from './components/forms/to_form'
+import ClinFields from './components/clin_fields'
 
 Vue.config.productionTip = false
 
@@ -83,6 +85,8 @@ const app = new Vue({
     NewEnvironment,
     EnvironmentRole,
     SemiCollapsibleText,
+    ToForm,
+    ClinFields,
   },
 
   mounted: function() {

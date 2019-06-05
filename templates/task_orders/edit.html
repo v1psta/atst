@@ -1,19 +1,31 @@
 {% extends "portfolios/base.html" %}
 
+{% from 'components/date_picker.html' import DatePicker %}
 {% from 'components/save_button.html' import SaveButton %}
+{% from 'components/options_input.html' import OptionsInput %}
 {% from 'components/text_input.html' import TextInput %}
 {% from 'components/upload_input.html' import UploadInput %}
+
+{% macro CLINFields(fields) %}
+  <div>
+    {{ OptionsInput(fields.jedi_clin_type) }}
+    {{ TextInput(fields.number) }}
+    {{ DatePicker(fields.start_date) }}
+    {{ DatePicker(fields.end_date) }}
+    {{ TextInput(fields.obligated_amount) }}
+  </div>
+{% endmacro %}
 
 {% block portfolio_content %}
   <div class="col task-order-form">
     {% include "fragments/flash.html" %}
-    <base-form inline-template>
+    <to-form inline-template initial-clin-count='{{ form.clins | length }}'>
       {% if task_order_id %}
         {% set action = url_for("task_orders.update", portfolio_id=portfolio.id, task_order_id=task_order_id) %}
       {% else %}
         {% set action = url_for("task_orders.update", portfolio_id=portfolio.id) %}
       {% endif %}
-      <form id="new-task-order" action='{{ action }}' method="POST" autocomplete="off" enctype="multipart/form-data">
+      <form id="new-task-order" action='{{ action }}' method="POST" autocomplete="off">
         {{ form.csrf_token }}
         <!-- TODO: implement save bar with component -->
         <span class="h3">Add Funding</span>
@@ -29,8 +41,24 @@
         </p>
         <hr>
         {{ TextInput(form.number, validation='taskOrderNumber') }}
+        {% for clin in form.clins %}
+          {{ CLINFields(clin) }}
+        {% endfor %}
+        <div v-for="clin in clins">
+            <!-- do something to display this when no clins exist -->
+            <!-- fix names and ids -->
+            <!-- make new vue component for clin -->
+            <!-- try <clin inline-template v-for="clin in clins"> -->
+            <!-- create CLIN vue component with a template in the component -->
+            <!-- use it to iterate through or if clinCount === 0 -->
+          <clin-fields v-bind:clin-index='clinCount'></clin-fields>
+        </div>
+
+        <button v-on:click="addClin" type="button">
+          Add CLIN
+        </button>
         {{ UploadInput(form.pdf) }}
       </form>
-    </base-form>
+    </to-form>
   </div>
 {% endblock %}
