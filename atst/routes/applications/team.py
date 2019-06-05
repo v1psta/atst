@@ -14,6 +14,7 @@ from atst.forms.application_member import NewForm as NewMemberForm
 from atst.forms.team import TeamForm
 from atst.models import Permissions
 from atst.utils.flash import formatted_flash as flash
+from atst.utils.localization import translate
 from atst.queue import queue
 
 
@@ -131,7 +132,7 @@ def send_application_invitation(invitee_email, inviter_name, token):
     )
     queue.send_mail(
         [invitee_email],
-        "{} has invited you to a JEDI cloud application".format(inviter_name),
+        translate("email.application_invite", {"inviter_name": inviter_name}),
         body,
     )
 
@@ -155,7 +156,9 @@ def create_member(application_id):
             )
 
             send_application_invitation(
-                invite.email, g.current_user.full_name, invite.token
+                invitee_email=invite.email,
+                inviter_name=g.current_user.full_name,
+                token=invite.token,
             )
 
             flash("new_application_member", user_name=invite.user_name)

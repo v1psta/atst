@@ -8,6 +8,7 @@ from atst.domain.portfolios import Portfolios
 from atst.models import Permissions
 from atst.queue import queue
 from atst.utils.flash import formatted_flash as flash
+from atst.utils.localization import translate
 import atst.forms.portfolio_member as member_forms
 
 
@@ -17,7 +18,7 @@ def send_portfolio_invitation(invitee_email, inviter_name, token):
     )
     queue.send_mail(
         [invitee_email],
-        "{} has invited you to a JEDI cloud portfolio".format(inviter_name),
+        translate("email.portfolio_invite", {"inviter_name": inviter_name}),
         body,
     )
 
@@ -54,7 +55,11 @@ def revoke_invitation(portfolio_id, portfolio_token):
 @user_can(Permissions.EDIT_PORTFOLIO_USERS, message="resend invitation")
 def resend_invitation(portfolio_id, portfolio_token):
     invite = PortfolioInvitations.resend(g.current_user, portfolio_token)
-    send_portfolio_invitation(invite.email, g.current_user.full_name, invite.token)
+    send_portfolio_invitation(
+        invitee_email=invite.email,
+        inviter_name=g.current_user.full_name,
+        token=invite.token,
+    )
     flash("resend_portfolio_invitation", user_name=invite.user_name)
     return redirect(
         url_for(
@@ -76,7 +81,9 @@ def invite_member(portfolio_id):
         try:
             invite = Portfolios.invite(portfolio, g.current_user, form.update_data)
             send_portfolio_invitation(
-                invite.email, g.current_user.full_name, invite.token
+                invitee_email=invite.email,
+                inviter_name=g.current_user.full_name,
+                token=invite.token,
             )
 
             flash(
