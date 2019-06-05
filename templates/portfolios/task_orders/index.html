@@ -6,10 +6,9 @@
 
 {% block portfolio_content %}
 
-{% macro ViewLink(task_order) %}
-  <a href="{{ url_for('task_orders.view_task_order', task_order_id=task_order.id) }}" class="icon-link view-task-order-link">
-    <span>View</span>
-    {{ Icon("caret_right", classes="icon--tiny") }}
+{% macro ViewLink(task_order, text="Edit", className="usa-button-primary") %}
+  <a href="{{ url_for('task_orders.view_task_order', task_order_id=task_order.id) }}" class="usa-button {{ className }} task-order-card__action">
+    {{ text }}
   </a>
 {% endmacro %}
 
@@ -29,12 +28,15 @@
   </span>
 {% endmacro %}
 
-
 {% macro TaskOrderActions(task_order) %}
   <div class="task-order-buttons">
-    {% if task_order.is_active %}
-    {% elif task_order.is_expired %}
+    {% if task_order.is_pending %}
+      {{ ViewLink(task_order, text="Edit") }}
+    {% elif task_order.is_active %}
+      {{ ViewLink(task_order, text="Add Funding", className="usa-button-secondary") }}
+      {{ ViewLink(task_order, text="Modify") }}
     {% else %}
+      {{ ViewLink(task_order, text="View") }}
     {% endif %}
   </div>
 {% endmacro %}
@@ -46,7 +48,9 @@
         <div class="card__status">
           <span class='label label--{{ label }}'>{{ task_order.display_status }}</span>
           {{ TaskOrderDate(task_order) }}
+          <span class="card__status-spacer"></span>
           <span class="card__button">
+            {{ TaskOrderActions(task_order) }}
           </span>
         </div>
         <div class="card__header">

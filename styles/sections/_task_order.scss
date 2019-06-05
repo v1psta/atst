@@ -66,6 +66,10 @@
   }
 }
 
+.task-order-card__action {
+  min-width: 10rem;
+}
+
 .task-order-summary {
   margin: $gap * 4;
 
@@ -583,6 +587,11 @@
     margin-bottom: $gap * 2;
     display: flex;
     align-items: baseline;
+    justify-content: space-around;
+
+    .card__status-spacer {
+      flex-grow: 10;
+    }
   }
 
   .card__header {
