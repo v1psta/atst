@@ -65,6 +65,9 @@ components:
           The <strong>https://</strong> ensures that you are connecting to the official website and that any information you provide is encrypted and transmitted securely.
         </p>
       title: Here’s how you know
+email:
+  application_invite: "{inviter_name} has invited you to a JEDI cloud application"
+  portfolio_invite: "{inviter_name} has invited you to a JEDI cloud portfolio"
 flash:
   application:
     deleted: 'You have successfully deleted the {application_name} application. To view the retained activity log, visit the portfolio administration page.'

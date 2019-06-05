@@ -107,32 +107,6 @@ def test_delete_application(session):
     assert not session.dirty
 
 
-def test_create_member():
-    application = ApplicationFactory.create()
-    env1 = EnvironmentFactory.create(application=application)
-    env2 = EnvironmentFactory.create(application=application)
-    user_data = UserFactory.dictionary()
-    permission_set_names = [PermissionSets.EDIT_APPLICATION_TEAM]
-
-    member_role = Applications.create_member(
-        application,
-        user_data,
-        permission_set_names,
-        environment_roles_data=[
-            {"environment_id": env1.id, "role": CSPRole.BASIC_ACCESS.value},
-            {"environment_id": env2.id, "role": None},
-        ],
-    )
-
-    assert member_role.user.dod_id == user_data["dod_id"]
-    # view application AND edit application team
-    assert len(member_role.permission_sets) == 2
-
-    env_roles = member_role.environment_roles
-    assert len(env_roles) == 1
-    assert env_roles[0].environment == env1
-
-
 def test_for_user():
     user = UserFactory.create()
     portfolio = PortfolioFactory.create()
@@ -189,3 +163,48 @@ def test_remove_member():
         )
         is None
     )
+
+
+def test_invite():
+    application = ApplicationFactory.create()
+    env1 = EnvironmentFactory.create(application=application)
+    env2 = EnvironmentFactory.create(application=application)
+    user_data = UserFactory.dictionary()
+    permission_sets_names = [PermissionSets.EDIT_APPLICATION_TEAM]
+
+    invitation = Applications.invite(
+        application=application,
+        inviter=application.portfolio.owner,
+        user_data=user_data,
+        permission_sets_names=permission_sets_names,
+        environment_roles_data=[
+            {"environment_id": env1.id, "role": CSPRole.BASIC_ACCESS.value},
+            {"environment_id": env2.id, "role": None},
+        ],
+    )
+
+    member_role = invitation.role
+    assert invitation.dod_id == user_data["dod_id"]
+    # view application AND edit application team
+    assert len(member_role.permission_sets) == 2
+
+    env_roles = member_role.environment_roles
+    assert len(env_roles) == 1
+    assert env_roles[0].environment == env1
+
+
+def test_invite_to_nonexistent_environment():
+    application = ApplicationFactory.create()
+    env1 = EnvironmentFactory.create(application=application)
+    user_data = UserFactory.dictionary()
+
+    with pytest.raises(NotFoundError):
+        Applications.invite(
+            application=application,
+            inviter=application.portfolio.owner,
+            user_data=user_data,
+            environment_roles_data=[
+                {"environment_id": env1.id, "role": CSPRole.BASIC_ACCESS.value},
+                {"environment_id": uuid4(), "role": CSPRole.BASIC_ACCESS.value},
+            ],
+        )

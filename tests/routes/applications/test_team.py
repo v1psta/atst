@@ -1,10 +1,10 @@
-import pytest
 import uuid
 from flask import url_for
 
 from atst.domain.permission_sets import PermissionSets
 from atst.models import CSPRole
 from atst.forms.data import ENV_ROLE_NO_ACCESS as NO_ACCESS
+from atst.queue import queue
 
 from tests.factories import *
 
@@ -145,7 +145,8 @@ def test_update_team_revoke_environment_access(client, user_session, db, session
     assert not session.query(env_role_exists).scalar()
 
 
-def test_create_member(client, user_session):
+def test_create_member(client, user_session, session):
+    queue_length = len(queue.get_queue())
     user = UserFactory.create()
     application = ApplicationFactory.create(
         environments=[{"name": "Naboo"}, {"name": "Endor"}]
@@ -179,13 +180,17 @@ def test_create_member(client, user_session):
         _external=True,
     )
     assert response.location == expected_url
-    assert len(user.application_roles) == 1
-    assert user.application_roles[0].application == application
-    environment_roles = [
-        er for ar in user.application_roles for er in ar.environment_roles
-    ]
+    assert len(application.roles) == 1
+    environment_roles = application.roles[0].environment_roles
     assert len(environment_roles) == 1
     assert environment_roles[0].environment == env
+
+    invitation = (
+        session.query(ApplicationInvitation).filter_by(dod_id=user.dod_id).one()
+    )
+    assert invitation.role.application == application
+
+    assert len(queue.get_queue()) == queue_length + 1
 
 
 def test_remove_member_success(client, user_session):

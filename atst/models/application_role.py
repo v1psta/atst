@@ -60,11 +60,16 @@ class ApplicationRole(
     )
 
     @property
+    def latest_invitation(self):
+        if self.invitations:
+            return self.invitations[-1]
+
+    @property
     def user_name(self):
         if self.user:
             return self.user.full_name
-        else:
-            return None
+        elif self.latest_invitation:
+            return self.latest_invitation.user_name
 
     def __repr__(self):
         return "<ApplicationRole(application='{}', user_id='{}', id='{}', permissions={})>".format(
