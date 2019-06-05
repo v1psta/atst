@@ -9,6 +9,7 @@ import levelofwarrant from '../levelofwarrant'
 import multicheckboxinput from '../multi_checkbox_input'
 import optionsinput from '../options_input'
 import textinput from '../text_input'
+import uploadinput from '../upload_input'
 import toggler from '../toggler'
 
 export default {
@@ -23,6 +24,7 @@ export default {
     optionsinput,
     textinput,
     toggler,
+    uploadinput,
   },
   mixins: [FormMixin],
 }

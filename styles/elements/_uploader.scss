@@ -1,0 +1,48 @@
+.upload-widget {
+  label.upload-label {
+    text-align: right;
+    border: 1px solid black;
+    padding: 0;
+    display: block;
+
+    .upload-button {
+      padding: 1rem 1.5rem;
+      display: inline-block;
+      background-color: $color-blue;
+      border: 1px solid $color-blue;
+      margin: -1px;
+      color: white;
+
+      &:hover {
+        background-color: $color-blue-darker;
+      }
+    }
+  }
+
+  input {
+    opacity: 0;
+  }
+}
+
+.uploaded-file {
+  .icon {
+    vertical-align: middle;
+
+    svg * {
+      fill: $color-green;
+    }
+  }
+
+  .uploaded-file__name {
+    vertical-align: middle;
+    margin-left: 0.5rem;
+    font-weight: $font-bold;
+    text-decoration: underline;
+  }
+
+  .uploaded-file__remove {
+    vertical-align: middle;
+    margin-left: 2rem;
+    font-size: $small-font-size;
+  }
+}

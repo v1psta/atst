@@ -29,13 +29,32 @@ export default {
     const pdf = this.initialData
 
     return {
-      showUpload: !pdf || this.uploadErrors.length > 0,
+      attachment: pdf || null,
     }
   },
 
   methods: {
     showUploadInput: function() {
       this.showUpload = true
+    },
+    addAttachment: function(e) {
+      this.attachment = e.target.value
+    },
+    removeAttachment: function(e) {
+      e.preventDefault()
+      this.attachment = null
+      this.$refs.attachmentInput.value = null
+    },
+  },
+
+  computed: {
+    baseName: function() {
+      if (this.attachment) {
+        return this.attachment.split(/[\\/]/).pop()
+      }
+    },
+    hasAttachment: function() {
+      return !!this.attachment
     },
   },
 }
