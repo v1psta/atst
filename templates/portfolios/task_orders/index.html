@@ -13,16 +13,30 @@
   </a>
 {% endmacro %}
 
+{% macro TaskOrderDateTime(dt, className="") %}
+  <local-datetime timestamp="{{ dt }}" format="M/D/YYYY" class="{{ className }}"></local-datetime>
+{% endmacro %}
+
 {% macro TaskOrderDate(task_order) %}
   <span class="datetime">
     {% if task_order.is_active %}
-      Began {{ task_order.start_date }} &nbsp;&nbsp;|&nbsp;&nbsp; Ends {{ task_order.end_date }}
+      Began {{ TaskOrderDateTime(task_order.start_date) }} &nbsp;&nbsp;|&nbsp;&nbsp; Ends {{ TaskOrderDateTime(task_order.end_date) }}
     {% elif task_order.is_expired %}
-      Started {{ task_order.start_date }} &nbsp;&nbsp;|&nbsp;&nbsp; Ended {{ task_order.end_date }}
+      Started {{ TaskOrderDateTime(task_order.start_date) }} &nbsp;&nbsp;|&nbsp;&nbsp; Ended {{ TaskOrderDateTime(task_order.end_date) }}
     {% else %}
-      Started {{ task_order.start_date }}
+      Started {{ TaskOrderDateTime(task_order.start_date) }}
     {% endif %}
   </span>
+{% endmacro %}
+
+
+{% macro TaskOrderActions(task_order) %}
+  <div class="task-order-buttons">
+    {% if task_order.is_active %}
+    {% elif task_order.is_expired %}
+    {% else %}
+    {% endif %}
+  </div>
 {% endmacro %}
 
 {% macro TaskOrderList(task_orders, label='success') %}
