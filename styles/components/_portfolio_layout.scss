@@ -373,7 +373,7 @@
 }
 
 .portfolio-funding {
-  padding: 2 * $gap;
+  padding: (2 * $gap) 0;
 
   .panel {
     @include shadow-panel;
