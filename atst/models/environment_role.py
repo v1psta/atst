@@ -29,7 +29,7 @@ class EnvironmentRole(
     application_role_id = Column(
         UUID(as_uuid=True), ForeignKey("application_roles.id"), nullable=False
     )
-    application_role = relationship("ApplicationRole", backref="environment_roles")
+    application_role = relationship("ApplicationRole")
 
     def __repr__(self):
         return "<EnvironmentRole(role='{}', user='{}', environment='{}', id='{}')>".format(

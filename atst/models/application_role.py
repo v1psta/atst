@@ -51,6 +51,11 @@ class ApplicationRole(
         "PermissionSet", secondary=application_roles_permission_sets
     )
 
+    environment_roles = relationship(
+        "EnvironmentRole",
+        primaryjoin="and_(EnvironmentRole.application_role_id==ApplicationRole.id, EnvironmentRole.deleted==False)",
+    )
+
     @property
     def user_name(self):
         if self.user:
