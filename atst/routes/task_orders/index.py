@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from flask import g, render_template, url_for
+from flask import g, render_template
 
 from . import task_orders_bp
 from atst.domain.authz.decorator import user_can_access_decorator as user_can
