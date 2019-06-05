@@ -13,7 +13,7 @@
 {% endmacro %}
 
 {% macro TaskOrderDateTime(dt, className="") %}
-  <local-datetime timestamp="{{ dt }}" format="M/D/YYYY" class="{{ className }}"></local-datetime>
+  <local-datetime timestamp="{{ dt }}" format="MMMM D, YYYY" class="{{ className }}"></local-datetime>
 {% endmacro %}
 
 {% macro TaskOrderDate(task_order) %}
