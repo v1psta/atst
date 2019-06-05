@@ -1,9 +1,9 @@
-from sqlalchemy import Column, String
+from sqlalchemy import and_, Column, String
 from sqlalchemy.orm import relationship
 from sqlalchemy.types import ARRAY
 from itertools import chain
 
-from atst.models import Base, mixins, types
+from atst.models import Base, Application, mixins, types
 from atst.models.portfolio_role import PortfolioRole, Status as PortfolioRoleStatus
 from atst.domain.permission_sets import PermissionSets
 from atst.utils import first_or_none
@@ -29,7 +29,7 @@ class Portfolio(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
     applications = relationship(
         "Application",
         back_populates="portfolio",
-        primaryjoin="and_(Application.portfolio_id==Portfolio.id, Application.deleted==False)",
+        primaryjoin=and_(Application.portfolio_id == id, Application.deleted == False),
     )
     roles = relationship("PortfolioRole")
 
