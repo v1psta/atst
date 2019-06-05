@@ -1,10 +1,16 @@
 from werkzeug.datastructures import FileStorage
 import pytest, datetime
 
-from atst.models.attachment import Attachment
+from atst.models import *
+from atst.models.clin import JEDICLINType
 from atst.models.task_order import TaskOrder, Status
 
-from tests.factories import random_future_date, random_past_date
+from tests.factories import (
+    CLINFactory,
+    random_future_date,
+    random_past_date,
+    TaskOrderFactory,
+)
 from tests.mocks import PDF_FILENAME
 
 
@@ -28,6 +34,33 @@ class TestTaskOrderStatus:
     def test_expired_status(self):
         to = TaskOrder(number="42")
         assert to.status == Status.EXPIRED
+
+
+class TestBudget:
+    def test_total_contract_amount(self):
+        to = TaskOrder()
+        assert to.total_contract_amount == 0
+
+        clin1 = CLINFactory(task_order=to, jedi_clin_type=JEDICLINType.JEDI_CLIN_1)
+        clin2 = CLINFactory(task_order=to, jedi_clin_type=JEDICLINType.JEDI_CLIN_2)
+        clin3 = CLINFactory(task_order=to, jedi_clin_type=JEDICLINType.JEDI_CLIN_3)
+
+        assert (
+            to.total_contract_amount
+            == clin1.obligated_amount + clin2.obligated_amount + clin3.obligated_amount
+        )
+
+    def test_total_obligated_funds(self):
+        to = TaskOrder()
+        clin4 = CLINFactory(task_order=to, jedi_clin_type=JEDICLINType.JEDI_CLIN_4)
+        assert to.total_obligated_funds == 0
+
+        clin1 = CLINFactory(task_order=to, jedi_clin_type=JEDICLINType.JEDI_CLIN_1)
+        clin2 = CLINFactory(task_order=to, jedi_clin_type=JEDICLINType.JEDI_CLIN_2)
+        clin3 = CLINFactory(task_order=to, jedi_clin_type=JEDICLINType.JEDI_CLIN_3)
+        assert (
+            to.total_obligated_funds == clin1.obligated_amount + clin3.obligated_amount
+        )
 
 
 class TestPDF:
