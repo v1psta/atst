@@ -6,8 +6,8 @@
 
 {% block portfolio_content %}
 
-{% macro ViewLink(task_order, text="Edit", className="usa-button-primary") %}
-  <a href="{{ url_for('task_orders.view_task_order', task_order_id=task_order.id) }}" class="usa-button {{ className }} task-order-card__action">
+{% macro ViewLink(task_order, text="Edit") %}
+  <a href="{{ url_for('task_orders.view_task_order', task_order_id=task_order.id) }}" class="usa-button">
     {{ text }}
   </a>
 {% endmacro %}
@@ -29,11 +29,10 @@
 {% endmacro %}
 
 {% macro TaskOrderActions(task_order) %}
-  <div class="task-order-buttons">
+  <div class="task-order-card__buttons">
     {% if task_order.is_pending %}
       {{ ViewLink(task_order, text="Edit") }}
     {% elif task_order.is_active %}
-      {{ ViewLink(task_order, text="Add Funding", className="usa-button-secondary") }}
       {{ ViewLink(task_order, text="Modify") }}
     {% else %}
       {{ ViewLink(task_order, text="View") }}
@@ -44,7 +43,7 @@
 {% macro TaskOrderList(task_orders, label='success') %}
   <div>
     {% for task_order in task_orders %}
-      <div class="card">
+      <div class="card task-order-card">
         <div class="card__status">
           <span class='label label--{{ label }}'>{{ task_order.display_status }}</span>
           {{ TaskOrderDate(task_order) }}
