@@ -49,11 +49,15 @@
 
 .semi-collapsed {
   overflow: hidden;
-  height: $gap * 5.5;
+  height: 5.1rem;
 }
 
 .more {
-  margin-top: -2.5rem;
+  margin-top: -4.4rem;
+  padding-left: 1.25rem;
+  background-color: $color-offwhite;
+  position: relative;
+  cursor: pointer;
 }
 
 .green {
