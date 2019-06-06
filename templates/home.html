@@ -1,13 +1,106 @@
 {% extends "base.html" %}
 
+{% from "components/sticky_cta.html" import StickyCTA %}
+{% from "components/icon.html" import Icon %}
+
 {% block content %}
 
-<main class="usa-section usa-content">
+<main class="home">
 
-  <a href="{{ url_for("portfolios.new_portfolio") }}" class="usa-button-primary">
-    {{ "home.add_portfolio_button_text" | translate }}
-  </a>
+  {% if portfolios %}
+     {% set sticky_header = "home.new_portfolio" | translate  %}
+  {% else %}
+     {% set sticky_header = "home.get_started" | translate  %}
+  {% endif %}
 
+  {% call StickyCTA(sticky_header) %}
+      <a href="{{ url_for("portfolios.new_portfolio") }}" class="usa-button-primary">
+        {{ "home.add_portfolio_button_text" | translate }}
+      </a>
+  {% endcall %}
+
+  <div class="about-cloud">
+    <h1>{{ "home.head" | translate }}</h1>
+
+    <semi-collapsible-text inline-template>
+      <div>
+        <p v-bind:class="{ 'semi-collapsed' : !open }">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        </p>
+        <a v-on:click='toggle' v-show="!open" class="right more">More{{ Icon('caret_down') }}</a>
+        <a v-on:click='toggle' v-show="open" class="right more">Less{{ Icon('caret_up') }}</a>
+      </div>
+    </semi-collapsible-text>
+
+    <div class="your-project">
+      <h2 class="h3">{{ "home.your_project" | translate }}</h2>
+      <p>{{ "home.your_project_descrip" | translate }}</p>
+
+      <hr>
+
+      {% macro Link(icon, text, section, default=False) %}
+      {% if default %}
+        <div v-bind:class='{"icon-link": true, active: selectedSection === "{{ section }}" || selectedSection === null}' v-on:click="toggleSection('{{ section }}')">
+      {% else %}
+        <div v-bind:class='{"icon-link": true, active: selectedSection === "{{ section }}"}' v-on:click="toggleSection('{{ section }}')">
+      {% endif %}
+          <div class="col">
+            <div class='icon-link--icon'>{{ Icon(icon) }}</div>
+            <div class='icon-link--name'>{{ text }}</div>
+          </div>
+        </div>
+      {% endmacro %}
+
+      <toggler inline-template v-bind:initial-selected-section="'funding'">
+        <div>
+          <div class="portfolio-header">
+            <div class="links row">
+              {{ Link(
+              icon='funding',
+              section='funding',
+              text='navigation.portfolio_navigation.breadcrumbs.funding' | translate,
+              default=True
+              ) }}
+              {{ Link(
+              icon='applications',
+              section='applications',
+              text='navigation.portfolio_navigation.breadcrumbs.applications' | translate,
+              ) }}
+              {{ Link(
+              icon='chart-pie',
+              section='reports',
+              text='navigation.portfolio_navigation.breadcrumbs.reports' | translate,
+              ) }}
+              {{ Link(
+              icon='cog',
+              section='admin',
+              text='navigation.portfolio_navigation.breadcrumbs.admin' | translate,
+              ) }}
+            </div>
+          </div>
+          {% macro Description(section, default=False) %}
+          {% if default %}
+            <p v-show="selectedSection === '{{ section }}' || selectedSection === null">
+          {% else %}
+            <p v-show="selectedSection === '{{ section }}'">
+          {% endif %}
+              <strong>
+                {{ "navigation.portfolio_navigation.breadcrumbs.%s" | format(section) | translate }}
+              </strong>
+              {{ "home.%s_descrip" | format(section) | translate }}
+            </p>
+          {% endmacro %}
+          <div class="project-section-descriptions">
+            {{ Description('funding', default=True) }}
+            {{ Description('applications') }}
+            {{ Description('reports') }}
+            {{ Description('admin') }}
+          </div>
+        </div>
+      </toggler>
+
+    </div>
+  </div>
 </main>
 
 {% endblock %}
