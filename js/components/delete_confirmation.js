@@ -1,6 +1,13 @@
 export default {
   name: 'delete-confirmation',
 
+  props: {
+    confirmationText: {
+      type: String,
+      default: 'delete',
+    },
+  },
+
   data: function() {
     return {
       deleteText: '',
@@ -9,7 +16,7 @@ export default {
 
   computed: {
     valid: function() {
-      return this.deleteText.toLowerCase() === 'delete'
+      return this.deleteText.toLowerCase() === this.confirmationText
     },
   },
 }

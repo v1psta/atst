@@ -570,3 +570,34 @@ def test_applications_application_team_access(get_url_assert_status):
     get_url_assert_status(ccpo, url, 200)
     get_url_assert_status(portfolio.owner, url, 200)
     get_url_assert_status(rando, url, 404)
+
+
+def test_portfolio_delete_access(post_url_assert_status):
+    rando = UserFactory.create()
+    owner = UserFactory.create()
+    ccpo = UserFactory.create_ccpo()
+
+    post_url_assert_status(
+        ccpo,
+        url_for(
+            "portfolios.delete_portfolio", portfolio_id=PortfolioFactory.create().id
+        ),
+        302,
+    )
+
+    post_url_assert_status(
+        owner,
+        url_for(
+            "portfolios.delete_portfolio",
+            portfolio_id=PortfolioFactory.create(owner=owner).id,
+        ),
+        302,
+    )
+
+    post_url_assert_status(
+        rando,
+        url_for(
+            "portfolios.delete_portfolio", portfolio_id=PortfolioFactory.create().id
+        ),
+        404,
+    )

@@ -1,3 +1,4 @@
+from atst.database import db
 from atst.domain.permission_sets import PermissionSets
 from atst.domain.authz import Authorization
 from atst.domain.portfolio_roles import PortfolioRoles
@@ -10,6 +11,10 @@ from .scopes import ScopedPortfolio
 
 
 class PortfolioError(Exception):
+    pass
+
+
+class PortfolioDeletionApplicationsExistError(Exception):
     pass
 
 
@@ -31,6 +36,21 @@ class Portfolios(object):
     def get(cls, user, portfolio_id):
         portfolio = PortfoliosQuery.get(portfolio_id)
         return ScopedPortfolio(user, portfolio)
+
+    @classmethod
+    def delete(cls, portfolio):
+        if len(portfolio.applications) != 0:
+            raise PortfolioDeletionApplicationsExistError()
+
+        for portfolio_role in portfolio.roles:
+            PortfolioRoles.disable(portfolio_role)
+
+        portfolio.deleted = True
+
+        db.session.add(portfolio)
+        db.session.commit()
+
+        return portfolio
 
     @classmethod
     def get_for_update(cls, portfolio_id):

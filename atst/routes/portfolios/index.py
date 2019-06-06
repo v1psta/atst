@@ -74,3 +74,11 @@ def reports(portfolio_id):
         expiration_date=expiration_date,
         remaining_days=remaining_days,
     )
+
+
+@portfolios_bp.route("/portfolios/<portfolio_id>/destroy", methods=["POST"])
+@user_can(Permissions.ARCHIVE_PORTFOLIO, message="archive portfolio")
+def delete_portfolio(portfolio_id):
+    Portfolios.delete(portfolio=g.portfolio)
+
+    return redirect(url_for("atst.home"))

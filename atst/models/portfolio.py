@@ -10,7 +10,9 @@ from atst.utils import first_or_none
 from atst.database import db
 
 
-class Portfolio(Base, mixins.TimestampsMixin, mixins.AuditableMixin):
+class Portfolio(
+    Base, mixins.TimestampsMixin, mixins.AuditableMixin, mixins.DeletableMixin
+):
     __tablename__ = "portfolios"
 
     id = types.Id()

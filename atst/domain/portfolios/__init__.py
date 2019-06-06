@@ -1,1 +1,5 @@
-from .portfolios import Portfolios, PortfolioError
+from .portfolios import (
+    Portfolios,
+    PortfolioError,
+    PortfolioDeletionApplicationsExistError,
+)
