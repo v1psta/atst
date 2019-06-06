@@ -20,7 +20,7 @@
     flex-direction: row;
   }
 
-  margin-bottom: $gap * 4;
+  margin-bottom: $gap * 1;
 
   .col--grow {
     overflow: inherit;
@@ -127,7 +127,7 @@
 }
 
 .portfolio-content {
-  margin: 6 * $gap $gap 0 $gap;
+  margin: 1 * $gap $gap 0 $gap;
 
   .panel {
     @include shadow-panel;
@@ -373,7 +373,7 @@
 }
 
 .portfolio-funding {
-  padding: 2 * $gap;
+  padding: (2 * $gap) 0;
 
   .panel {
     @include shadow-panel;

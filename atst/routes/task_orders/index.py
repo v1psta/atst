@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from flask import g, render_template, url_for
+from flask import g, render_template
 
 from . import task_orders_bp
 from atst.domain.authz.decorator import user_can_access_decorator as user_can
@@ -30,22 +30,6 @@ def review_task_order(task_order_id):
     return render_template("portfolios/task_orders/review.html", task_order=task_order)
 
 
-def serialize_task_order(task_order):
-    return {
-        key: getattr(task_order, key)
-        for key in [
-            "id",
-            "budget",
-            "time_created",
-            "start_date",
-            "end_date",
-            "display_status",
-            "days_to_expiration",
-            "balance",
-        ]
-    }
-
-
 @task_orders_bp.route("/portfolios/<portfolio_id>/task_orders")
 @user_can(Permissions.VIEW_PORTFOLIO_FUNDING, message="view portfolio funding")
 def portfolio_funding(portfolio_id):
@@ -53,14 +37,9 @@ def portfolio_funding(portfolio_id):
     task_orders_by_status = defaultdict(list)
 
     for task_order in portfolio.task_orders:
-        serialized_task_order = serialize_task_order(task_order)
-        serialized_task_order["url"] = url_for(
-            "task_orders.view_task_order", task_order_id=task_order.id
-        )
-        task_orders_by_status[task_order.status].append(serialized_task_order)
+        task_orders_by_status[task_order.status].append(task_order)
 
     active_task_orders = task_orders_by_status.get(TaskOrderStatus.ACTIVE, [])
-    total_balance = sum([task_order["balance"] for task_order in active_task_orders])
 
     return render_template(
         "portfolios/task_orders/index.html",
@@ -70,5 +49,4 @@ def portfolio_funding(portfolio_id):
         ),
         active_task_orders=active_task_orders,
         expired_task_orders=task_orders_by_status.get(TaskOrderStatus.EXPIRED, []),
-        total_balance=total_balance,
     )

@@ -66,6 +66,19 @@
   }
 }
 
+.task-order-list {
+  margin-top: 6 * $gap;
+}
+
+.task-order-card .label {
+  font-size: $small-font-size;
+  margin-right: 2 * $gap;
+}
+
+.task-order-card__buttons .usa-button {
+  min-width: 10rem;
+}
+
 .task-order-summary {
   margin: $gap * 4;
 

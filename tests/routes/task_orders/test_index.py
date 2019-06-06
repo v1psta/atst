@@ -29,22 +29,6 @@ def user():
 
 
 class TestPortfolioFunding:
-    def test_portfolio_with_no_task_orders(self, app, user_session, portfolio):
-        user_session(portfolio.owner)
-
-        with captured_templates(app) as templates:
-            response = app.test_client().get(
-                url_for("task_orders.portfolio_funding", portfolio_id=portfolio.id)
-            )
-
-            assert response.status_code == 200
-            _, context = templates[0]
-            assert context["funding_end_date"] is None
-            assert context["total_balance"] == 0
-            assert context["pending_task_orders"] == []
-            assert context["active_task_orders"] == []
-            assert context["expired_task_orders"] == []
-
     @pytest.mark.skip(reason="Update later when CLINs are implemented")
     def test_funded_portfolio(self, app, user_session, portfolio):
         user_session(portfolio.owner)
