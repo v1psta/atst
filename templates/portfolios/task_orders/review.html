@@ -1,26 +1,21 @@
 {% from "components/icon.html" import Icon %}
 {% from "components/totals_box.html" import TotalsBox %}
+{% from "components/semi_collapsible_text.html" import SemiCollapsibleText %}
 {% from "components/sticky_cta.html" import StickyCTA %}
 
 {% extends 'portfolios/base.html' %}
 
 {% block portfolio_content %}
   {% call StickyCTA(text="Review Funding") %}
-      <a href="{{ url_for("task_orders.edit", portfolio_id=portfolio.id) }}" class="usa-button">Edit</a>
-      <a href="{{ url_for("task_orders.edit", portfolio_id=portfolio.id) }}" class="usa-button">Submit task order</a>
+      <a href="{{ url_for("task_orders.edit", portfolio_id=portfolio.id) }}" class="usa-button usa-button-primary" type="submit">Edit</a>
+      <a href="{{ url_for("task_orders.edit", portfolio_id=portfolio.id) }}" class="usa-button usa-button-primary" type="submit">Submit task order</a>
   {% endcall %}
 
   <div class="task-order-summary">
 
-    <semi-collapsible-text inline-template>
-      <div>
-        <p v-bind:class="{ 'semi-collapsed' : !open }">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-        </p>
-        <a v-on:click='toggle' v-show="!open" class="right more">More{{ Icon('caret_down') }}</a>
-        <a v-on:click='toggle' v-show="open" class="right more">Less{{ Icon('caret_up') }}</a>
-      </div>
-    </semi-collapsible-text>
+    {% set description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." %}
+
+    {{ SemiCollapsibleText(paragraph=description) }}
 
     <hr>
 

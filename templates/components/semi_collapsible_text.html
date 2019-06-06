@@ -1,0 +1,15 @@
+{% from "components/icon.html" import Icon %}
+
+{% macro SemiCollapsibleText(paragraph) -%}
+
+  <semi-collapsible-text inline-template>
+    <div>
+      <p v-bind:class="{ 'semi-collapsed' : !open }">
+        {{ paragraph }}
+      </p>
+      <a v-on:click='toggle' v-show="!open" class="right more">More{{ Icon('caret_down') }}</a>
+      <a v-on:click='toggle' v-show="open" class="right more">Less{{ Icon('caret_up') }}</a>
+    </div>
+  </semi-collapsible-text>
+
+{%- endmacro %}
