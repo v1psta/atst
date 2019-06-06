@@ -99,3 +99,17 @@ def RequiredIf(criteria_function, message=translate("forms.validators.is_require
             raise StopValidation()
 
     return _required_if
+
+
+def FileLength(max_length=50000000, message=None):
+    def _file_length(_form, field):
+        if field.data is None:
+            return True
+
+        content = field.data.read()
+        if len(content) > max_length:
+            raise ValidationError(message)
+        else:
+            field.data.seek(0)
+
+    return _file_length

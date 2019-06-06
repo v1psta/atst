@@ -4,6 +4,7 @@ from wtforms.validators import Required, Optional
 from flask_wtf.file import FileAllowed
 
 from .forms import BaseForm
+from atst.forms.validators import FileLength
 from atst.utils.localization import translate
 
 
@@ -16,7 +17,8 @@ class TaskOrderForm(BaseForm):
     pdf = FileField(
         None,
         validators=[
-            FileAllowed(["pdf"], translate("forms.task_order.file_format_not_allowed"))
+            FileAllowed(["pdf"], translate("forms.task_order.file_format_not_allowed")),
+            FileLength(),
         ],
         render_kw={"accept": ".pdf,application/pdf"},
     )
