@@ -12,7 +12,12 @@
         {% include "portfolios/header.html" %}
       {% endblock %}
       <base-form inline-template>
-        <form id="new-task-order" action='{{ url_for("task_orders.update", portfolio_id=portfolio.id) }}' method="POST" autocomplete="off" enctype="multipart/form-data">
+        {% if task_order_id %}
+          {% set action = url_for("task_orders.update", portfolio_id=portfolio.id, task_order_id=task_order_id) %}
+        {% else %}
+          {% set action = url_for("task_orders.update", portfolio_id=portfolio.id) %}
+        {% endif %}
+        <form id="new-task-order" action='{{ action }}' method="POST" autocomplete="off" enctype="multipart/form-data">
           {{ form.csrf_token }}
           <div class="panel__content">
             <!-- TODO: implement save bar with component -->

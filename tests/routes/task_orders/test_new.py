@@ -3,7 +3,7 @@ from flask import url_for
 
 from atst.domain.permission_sets import PermissionSets
 from atst.domain.task_orders import TaskOrders
-from atst.models.attachment import Attachment
+from atst.models import Attachment, TaskOrder
 from atst.utils.localization import translate
 
 from tests.factories import (
@@ -39,13 +39,15 @@ def test_task_orders_new(client, user_session, portfolio):
     assert response.status_code == 200
 
 
-def test_task_orders_create(client, user_session, portfolio):
+def test_task_orders_create(client, user_session, portfolio, pdf_upload, session):
     user_session(portfolio.owner)
+    data = {"number": "0123456789", "pdf": pdf_upload}
     response = client.post(
-        url_for("task_orders.update", portfolio_id=portfolio.id),
-        data={"number": "0123456789"},
+        url_for("task_orders.update", portfolio_id=portfolio.id), data=data
     )
     assert response.status_code == 302
+    task_order = session.query(TaskOrder).filter_by(number=data["number"]).one()
+    assert task_order.pdf.filename == pdf_upload.filename
 
 
 def test_task_orders_create_invalid_data(client, user_session, portfolio):
@@ -54,17 +56,53 @@ def test_task_orders_create_invalid_data(client, user_session, portfolio):
     response = client.post(
         url_for("task_orders.update", portfolio_id=portfolio.id), data={"number": ""}
     )
-    assert response.status_code == 200
+    assert response.status_code == 400
     assert num_task_orders == len(portfolio.task_orders)
     assert "There were some errors" in response.data.decode()
 
 
-def test_task_orders_edit():
-    pass
+def test_task_orders_update(client, user_session, portfolio, pdf_upload):
+    user_session(portfolio.owner)
+    data = {"number": "0123456789", "pdf": pdf_upload}
+    task_order = TaskOrderFactory.create(number="0987654321")
+    response = client.post(
+        url_for(
+            "task_orders.update", portfolio_id=portfolio.id, task_order_id=task_order.id
+        ),
+        data=data,
+    )
+    assert response.status_code == 302
+    assert task_order.number == data["number"]
 
 
-def test_task_orders_update():
-    pass
+def test_task_orders_update_pdf(
+    client, user_session, portfolio, pdf_upload, pdf_upload2
+):
+    user_session(portfolio.owner)
+    task_order = TaskOrderFactory.create(pdf=pdf_upload)
+    data = {"number": "0123456789", "pdf": pdf_upload2}
+    response = client.post(
+        url_for(
+            "task_orders.update", portfolio_id=portfolio.id, task_order_id=task_order.id
+        ),
+        data=data,
+    )
+    assert response.status_code == 302
+    assert task_order.pdf.filename == pdf_upload2.filename
+
+
+def test_task_orders_update_delete_pdf(client, user_session, portfolio, pdf_upload):
+    user_session(portfolio.owner)
+    task_order = TaskOrderFactory.create(pdf=pdf_upload)
+    data = {"number": "0123456789", "pdf": None}
+    response = client.post(
+        url_for(
+            "task_orders.update", portfolio_id=portfolio.id, task_order_id=task_order.id
+        ),
+        data=data,
+    )
+    assert response.status_code == 302
+    assert task_order.pdf is None
 
 
 @pytest.mark.skip(reason="Update after implementing new TO form")
