@@ -1,12 +1,16 @@
-{% extends 'portfolios/base.html' %}
-
 {% from "components/icon.html" import Icon %}
 {% from "components/totals_box.html" import TotalsBox %}
+{% from "components/sticky_cta.html" import StickyCTA %}
 
-{% block content %}
+{% extends 'portfolios/base.html' %}
+
+{% block portfolio_content %}
+  {% call StickyCTA(text="Review Funding") %}
+      <a href="{{ url_for("task_orders.edit", portfolio_id=portfolio.id) }}" class="usa-button">Edit</a>
+      <a href="{{ url_for("task_orders.edit", portfolio_id=portfolio.id) }}" class="usa-button">Submit task order</a>
+  {% endcall %}
 
   <div class="task-order-summary">
-    <div class="h2">Portfolio Name</div>
 
     <semi-collapsible-text inline-template>
       <div>
