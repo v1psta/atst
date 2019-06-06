@@ -272,6 +272,7 @@ class TaskOrderFactory(Base):
     portfolio = factory.SubFactory(PortfolioFactory)
     number = factory.LazyFunction(random_task_order_number)
     creator = factory.SubFactory(UserFactory)
+    _pdf = factory.SubFactory(AttachmentFactory)
 
     @classmethod
     def _create(cls, model_class, *args, **kwargs):
