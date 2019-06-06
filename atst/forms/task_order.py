@@ -18,7 +18,7 @@ class TaskOrderForm(BaseForm):
         None,
         validators=[
             FileAllowed(["pdf"], translate("forms.task_order.file_format_not_allowed")),
-            FileLength(),
+            FileLength(message=translate("forms.validators.file_length")),
         ],
         render_kw={"accept": ".pdf,application/pdf"},
     )

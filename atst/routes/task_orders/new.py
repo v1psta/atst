@@ -8,17 +8,17 @@ from atst.models.permissions import Permissions
 from atst.utils.flash import formatted_flash as flash
 
 
-def render_task_orders_edit(portfolio_id, task_order_id=None):
+def render_task_orders_edit(portfolio_id, task_order_id=None, form=None):
     render_args = {}
 
     if task_order_id:
         task_order = TaskOrders.get(task_order_id)
-        render_args["form"] = TaskOrderForm(
+        render_args["form"] = form or TaskOrderForm(
             number=task_order.number, pdf=task_order.pdf
         )
         render_args["task_order_id"] = task_order_id
     else:
-        render_args["form"] = TaskOrderForm()
+        render_args["form"] = form or TaskOrderForm()
 
     render_args["cancel_url"] = (
         http_request.referrer
@@ -64,4 +64,4 @@ def update(portfolio_id, task_order_id=None):
         )
     else:
         flash("form_errors")
-        return render_task_orders_edit(portfolio_id, task_order_id), 400
+        return render_task_orders_edit(portfolio_id, task_order_id, form), 400

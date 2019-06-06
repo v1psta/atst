@@ -1,14 +1,21 @@
 {% from "components/icon.html" import Icon %}
 
 {% macro UploadInput(field, show_label=False) -%}
-<uploadinput inline-template v-bind:initial-data='{{ field.data | tojson }}' v-bind:upload-errors='{{ field.errors | list }}'>
+<uploadinput
+  inline-template
+  {% if not field.errors %}
+    v-bind:initial-data='{{ field.data | tojson }}'
+  {% else %}
+    v-bind:initial-errors='true'
+  {% endif %}
+  >
   <div>
     <div v-show="hasAttachment" class="uploaded-file">
       {{ Icon("check-circle-solid") }}
       <span class="uploaded-file__name" v-html="baseName"></span>
       <a href="#" class="uploaded-file__remove" v-on:click="removeAttachment">Remove</a>
     </div>
-    <div v-show="hasAttachment === false" class="usa-input {% if field.errors %} usa-input--error {% endif %}">
+    <div v-show="hasAttachment === false" v-bind:class='{ "usa-input": true, "usa-input--error": showErrors }'>
       {% if show_label %}
         {{ field.label }}
       {% endif %}
@@ -18,6 +25,9 @@
           <span class="upload-button">
             Browse
           </span>
+          {% if field.errors %}
+            <span v-show="showErrors">{{ Icon('alert',classes="icon-validation") }}</span>
+          {% endif %}
         </label>
         <input
           v-on:change="addAttachment"
@@ -29,7 +39,7 @@
           type="file">
       </div>
       {% for error in field.errors %}
-        <span class="usa-input__message">{{error}}</span>
+        <span v-show="showErrors" class="usa-input__message">{{error}}</span>
       {% endfor %}
     </div>
   </div>

@@ -1,4 +1,6 @@
 .upload-widget {
+  position: relative;
+
   label.upload-label {
     text-align: right;
     border: 1px solid black;
@@ -21,6 +23,8 @@
 
   input {
     opacity: 0;
+    position: absolute;
+    top: 0;
   }
 }
 
@@ -44,5 +48,24 @@
     vertical-align: middle;
     margin-left: 2rem;
     font-size: $small-font-size;
+  }
+}
+
+.usa-input--error {
+  .upload-widget {
+    label.upload-label {
+      border: 1px solid $color-red;
+      box-shadow: inset 0 0 0 2px $color-red;
+      position: relative;
+
+      .upload-button {
+        margin-left: -3px;
+        border-left: 3px solid $color-red;
+      }
+
+      .icon {
+        top: 0;
+      }
+    }
   }
 }

@@ -19,17 +19,15 @@ export default {
     initialData: {
       type: String,
     },
-    uploadErrors: {
-      type: Array,
-      default: () => [],
+    initialErrors: {
+      type: Boolean,
     },
   },
 
   data: function() {
-    const pdf = this.initialData
-
     return {
-      attachment: pdf || null,
+      attachment: this.initialData || null,
+      showErrors: this.initialErrors,
     }
   },
 
@@ -39,11 +37,13 @@ export default {
     },
     addAttachment: function(e) {
       this.attachment = e.target.value
+      this.showErrors = false
     },
     removeAttachment: function(e) {
       e.preventDefault()
       this.attachment = null
       this.$refs.attachmentInput.value = null
+      this.showErrors = false
     },
   },
 
