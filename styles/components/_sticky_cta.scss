@@ -13,13 +13,20 @@
 
 .sticky-cta-container {
   display: flex;
-  justify-content: center;
+  align-items: center;
 
   background-color: $color-gray-lightest;
   border-top: 1px solid $color-gray-lighter;
   border-bottom: 1px solid $color-gray-lighter;
-  padding: 0 40px 0 40px;
+  padding: 0 $gap * 2 0 $gap * 5;
   box-shadow: $box-shadow;
+
+  a {
+    margin: $gap $gap * 1.5 $gap 0;
+    width: 19rem;
+    height: 3.2rem;
+    font-size: $small-font-size;
+  }
 }
 
 .sticky-cta-text {
@@ -28,12 +35,4 @@
 
 .sticky-cta-buttons {
   display: flex;
-  justify-content: center;
-
-  button {
-    margin-top: auto;
-    margin-bottom: auto;
-    width: 144px;
-    margin-left: 33px;
-  }
 }

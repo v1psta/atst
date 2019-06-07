@@ -7,7 +7,7 @@
 
 {% block portfolio_content %}
   {% call StickyCTA(text="Review Funding") %}
-      <a href="{{ url_for("task_orders.edit", portfolio_id=portfolio.id) }}" class="usa-button usa-button-primary" type="submit">Edit</a>
+      <a href="{{ url_for("task_orders.edit", portfolio_id=portfolio.id) }}" class="usa-button usa-button-secondary" type="submit">Edit</a>
       <a href="{{ url_for("task_orders.edit", portfolio_id=portfolio.id) }}" class="usa-button usa-button-primary" type="submit">Submit task order</a>
   {% endcall %}
 
@@ -18,7 +18,6 @@
     {{ SemiCollapsibleText(paragraph=description) }}
 
     <hr>
-
 
   <div class="h1">Review your task order</div>
   <p>Check to make sure the information you entered is correct. After submission, you will confirm this task order was signed by a contracting officer. Thereafter, you will be informed as soon as CCPO completes their review.</p>
