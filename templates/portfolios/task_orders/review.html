@@ -1,14 +1,29 @@
 {% from "components/icon.html" import Icon %}
-{% from "components/totals_box.html" import TotalsBox %}
+{% from "components/modal.html" import Modal %}
 {% from "components/semi_collapsible_text.html" import SemiCollapsibleText %}
 {% from "components/sticky_cta.html" import StickyCTA %}
+{% from "components/submit_confirmation.html" import SubmitConfirmation %}
+{% from "components/totals_box.html" import TotalsBox %}
 
 {% extends 'portfolios/base.html' %}
 
 {% block portfolio_content %}
+  {% set submit_modal_id = "submit-to-1" %}
+  {% call Modal(name=submit_modal_id) %}
+    {{
+      SubmitConfirmation(
+        modal_id=submit_modal_id,
+        submit_text="Confirm & Submit",
+        submit_action=url_for('task_orders.submit_task_order', task_order_id=task_order.id),
+        form=signature_form,
+        task_order=task_order,
+      )
+    }}
+  {% endcall %}
+
   {% call StickyCTA(text="Review Funding") %}
       <a href="{{ url_for("task_orders.edit", portfolio_id=portfolio.id) }}" class="usa-button usa-button-secondary" type="submit">Edit</a>
-      <a href="{{ url_for("task_orders.edit", portfolio_id=portfolio.id) }}" class="usa-button usa-button-primary" type="submit">Submit task order</a>
+      <a v-on:click="openModal('submit-to-1')" class="usa-button usa-button-primary" type="submit">Submit task order</a>
   {% endcall %}
 
   <div class="task-order-summary">
