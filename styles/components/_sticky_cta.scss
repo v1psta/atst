@@ -1,5 +1,6 @@
 .sticky-cta {
   margin-left: -$gap * 4;
+  z-index: 10;
 
   @include media($medium-screen) {
     margin-left: -$gap * 5;
