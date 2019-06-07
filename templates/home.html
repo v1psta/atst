@@ -6,6 +6,7 @@
 {% block content %}
 
 <main class="home">
+  {% include "fragments/flash.html" %}
 
   {% if portfolios %}
      {% set sticky_header = "home.new_portfolio" | translate  %}

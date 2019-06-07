@@ -8,6 +8,7 @@ from atst.domain.reports import Reports
 from atst.domain.portfolios import Portfolios
 from atst.models.permissions import Permissions
 from atst.domain.authz.decorator import user_can_access_decorator as user_can
+from atst.utils.flash import formatted_flash as flash
 
 
 @portfolios_bp.route("/portfolios")
@@ -80,5 +81,7 @@ def reports(portfolio_id):
 @user_can(Permissions.ARCHIVE_PORTFOLIO, message="archive portfolio")
 def delete_portfolio(portfolio_id):
     Portfolios.delete(portfolio=g.portfolio)
+
+    flash("portfolio_deleted", portfolio_name=g.portfolio.name)
 
     return redirect(url_for("atst.home"))
