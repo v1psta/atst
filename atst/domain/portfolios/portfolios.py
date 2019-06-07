@@ -43,7 +43,7 @@ class Portfolios(object):
             raise PortfolioDeletionApplicationsExistError()
 
         for portfolio_role in portfolio.roles:
-            PortfolioRoles.disable(portfolio_role)
+            PortfolioRoles.disable(portfolio_role=portfolio_role, commit=False)
 
         portfolio.deleted = True
 
