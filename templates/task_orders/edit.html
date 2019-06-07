@@ -1,6 +1,7 @@
 {% extends "portfolios/base.html" %}
 
 {% from 'components/date_picker.html' import DatePicker %}
+{% from 'components/icon.html' import Icon %}
 {% from 'components/save_button.html' import SaveButton %}
 {% from 'components/options_input.html' import OptionsInput %}
 {% from 'components/text_input.html' import TextInput %}
@@ -8,6 +9,7 @@
 
 {% macro CLINFields(fields) %}
   <div>
+    <hr>
     {{ OptionsInput(fields.jedi_clin_type) }}
     {{ TextInput(fields.number) }}
     {{ DatePicker(fields.start_date) }}
@@ -67,60 +69,117 @@
                     <input type="text" :id="'clins-' + clinIndex + '-number'" placeholder="">
                     <input type="hidden" :name="'clins-' + clinIndex + '-number'">
                   </div>
-                  <fieldset class="usa-input date-picker">
-                    <legend>
-                      <div class="usa-input__title"> Start Date
+
+                  <date-selector :name-tag="'clins-' + clinIndex + '-start_date'" inline-template>
+                    <fieldset class="usa-input date-picker" v-bind:class="{ 'usa-input--success': isDateValid }">
+                      <legend>
+                        <div class="usa-input__title">
+                          Start of period of performance (PoP)
+                        </div>
+                      </legend>
+
+                      <div class="date-picker-component">
+                        <input :name="name" v-bind:value="formattedDate" type="hidden" />
+
+                        <div class="usa-form-group usa-form-group-month">
+                          <label>Month</label>
+                          <input
+                            name="date-month"
+                            max="12"
+                            maxlength="2"
+                            min="1"
+                            type="number"
+                            v-bind:class="{ 'usa-input-error': (month && !isMonthValid) }"
+                            v-model="month"
+                          />
+                        </div>
+
+                        <div class="usa-form-group usa-form-group-day">
+                          <label>Day</label>
+                          <input
+                            name="date-day"
+                            maxlength="2"
+                            min="1"
+                            type="number"
+                            v-bind:class="{ 'usa-input-error': (day && !isDayValid) }"
+                            v-bind:max="daysMaxCalculation"
+                            v-model="day"
+                          />
+                        </div>
+
+                        <div class="usa-form-group usa-form-group-year">
+                          <label>Year</label>
+                          <input
+                            name="date-year"
+                            maxlength="4"
+                            type="number"
+                            v-model="year"
+                          />
+
+                        </div>
+
+                        <div class="usa-form-group-date-ok" v-if="isDateValid">
+                          {{ Icon("ok", classes="icon--green") }}
+                        </div>
                       </div>
-                    </legend>
-                    <div class="date-picker-component">
-                      <input :name="'clins-' + clinIndex + '-start_date'" type="hidden">
-                      <div class="usa-form-group usa-form-group-month">
-                        <label>Month
-                        </label>
-                        <input name="date-month" max="12" maxlength="2" min="1" type="number" class="">
+                    </fieldset>
+                  </date-selector>
+
+                  <date-selector :name-tag="'clins-' + clinIndex + '-end_date'" inline-template>
+                    <fieldset class="usa-input date-picker" v-bind:class="{ 'usa-input--success': isDateValid }">
+                      <legend>
+                        <div class="usa-input__title">
+                          End of period of performance (PoP)
+                        </div>
+                      </legend>
+
+                      <div class="date-picker-component">
+                        <input :name="name" v-bind:value="formattedDate" type="hidden" />
+
+                        <div class="usa-form-group usa-form-group-month">
+                          <label>Month</label>
+                          <input
+                            name="date-month"
+                            max="12"
+                            maxlength="2"
+                            min="1"
+                            type="number"
+                            v-bind:class="{ 'usa-input-error': (month && !isMonthValid) }"
+                            v-model="month"
+                          />
+                        </div>
+
+                        <div class="usa-form-group usa-form-group-day">
+                          <label>Day</label>
+                          <input
+                            name="date-day"
+                            maxlength="2"
+                            min="1"
+                            type="number"
+                            v-bind:class="{ 'usa-input-error': (day && !isDayValid) }"
+                            v-bind:max="daysMaxCalculation"
+                            v-model="day"
+                          />
+                        </div>
+
+                        <div class="usa-form-group usa-form-group-year">
+                          <label>Year</label>
+                          <input
+                            name="date-year"
+                            maxlength="4"
+                            type="number"
+                            v-model="year"
+                          />
+
+                        </div>
+
+                        <div class="usa-form-group-date-ok" v-if="isDateValid">
+                          {{ Icon("ok", classes="icon--green") }}
+                        </div>
                       </div>
-                      <div class="usa-form-group usa-form-group-day">
-                        <label>Day
-                        </label>
-                        <input name="date-day" maxlength="2" min="1" type="number" max="31" class="">
-                      </div>
-                      <div class="usa-form-group usa-form-group-year">
-                        <label>Year
-                        </label>
-                        <input id="date-year" maxlength="4" type="number">
-                      </div>
-                      <!---->
-                    </div>
-                    <p class="usa-input-error-message">
-                    </p>
-                  </fieldset>
-                  <fieldset class="usa-input date-picker">
-                    <legend>
-                      <div class="usa-input__title"> End Date
-                      </div>
-                    </legend>
-                    <div class="date-picker-component">
-                      <input :name="'clins-' + clinIndex + '-end_date'" type="hidden">
-                      <div class="usa-form-group usa-form-group-month">
-                        <label>Month
-                        </label>
-                        <input name="date-month" max="12" maxlength="2" min="1" type="number" class="">
-                      </div>
-                      <div class="usa-form-group usa-form-group-day">
-                        <label>Day
-                        </label>
-                        <input name="date-day" maxlength="2" min="1" type="number" max="31" class="">
-                      </div>
-                      <div class="usa-form-group usa-form-group-year">
-                        <label>Year
-                        </label>
-                        <input id="date-year" maxlength="4" type="number">
-                      </div>
-                      <!---->
-                    </div>
-                    <p class="usa-input-error-message">
-                    </p>
-                  </fieldset>
+                    </fieldset>
+                  </date-selector>
+
                   <div class="  usa-input usa-input--validation--anything">
                     <label :for="'clins-' + clinIndex + '-obligated_amount'">
                       <div class="usa-input__title"> Obligated Amount
