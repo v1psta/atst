@@ -129,6 +129,7 @@ class TaskOrder(Base, mixins.TimestampsMixin):
     def to_dictionary(self):
         return {
             "portfolio_name": self.portfolio_name,
+            "pdf": self.pdf,
             "clins": [
                 clin.to_dictionary() for clin in self.clins
             ],
