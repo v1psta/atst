@@ -19,23 +19,42 @@ export default {
     initialData: {
       type: String,
     },
-    uploadErrors: {
-      type: Array,
-      default: () => [],
+    initialErrors: {
+      type: Boolean,
     },
   },
 
   data: function() {
-    const pdf = this.initialData
-
     return {
-      showUpload: !pdf || this.uploadErrors.length > 0,
+      attachment: this.initialData || null,
+      showErrors: this.initialErrors,
     }
   },
 
   methods: {
     showUploadInput: function() {
       this.showUpload = true
+    },
+    addAttachment: function(e) {
+      this.attachment = e.target.value
+      this.showErrors = false
+    },
+    removeAttachment: function(e) {
+      e.preventDefault()
+      this.attachment = null
+      this.$refs.attachmentInput.value = null
+      this.showErrors = false
+    },
+  },
+
+  computed: {
+    baseName: function() {
+      if (this.attachment) {
+        return this.attachment.split(/[\\/]/).pop()
+      }
+    },
+    hasAttachment: function() {
+      return !!this.attachment
     },
   },
 }

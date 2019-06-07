@@ -1,13 +1,7 @@
 from wtforms.validators import ValidationError, StopValidation
 import pytest
 
-from atst.forms.validators import (
-    Name,
-    IsNumber,
-    PhoneNumber,
-    ListItemsUnique,
-    RequiredIf,
-)
+from atst.forms.validators import *
 
 
 class TestIsNumber:
@@ -96,4 +90,13 @@ class TestRequiredIf:
         dummy_field.data = None
 
         with pytest.raises(StopValidation):
+            validator(dummy_form, dummy_field)
+
+
+class TestFileLength:
+    def test_FileLength(self, dummy_form, dummy_field, pdf_upload):
+        validator = FileLength(max_length=1)
+        dummy_field.data = pdf_upload
+
+        with pytest.raises(ValidationError):
             validator(dummy_form, dummy_field)

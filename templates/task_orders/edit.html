@@ -1,36 +1,36 @@
-{% extends "base.html" %}
+{% extends "portfolios/base.html" %}
 
 {% from 'components/save_button.html' import SaveButton %}
 {% from 'components/text_input.html' import TextInput %}
+{% from 'components/upload_input.html' import UploadInput %}
 
-{% block content %}
+{% block portfolio_content %}
   <div class="col task-order-form">
     {% include "fragments/flash.html" %}
-    <div class="panel">
-      {% block portfolio_header %}
-        {% include "portfolios/header.html" %}
-      {% endblock %}
-      <base-form inline-template>
-        <form id="new-task-order" action='{{ url_for("task_orders.update", portfolio_id=portfolio.id) }}' method="POST" autocomplete="off">
-          {{ form.csrf_token }}
-          <div class="panel__content">
-            <!-- TODO: implement save bar with component -->
-            <span class="h3">Add Funding</span>
-            <a
-              href="{{ cancel_url }}"
-              class="action-group__action icon-link">
-              <span class="icon icon--x"></span>
-              {{ "common.cancel" | translate }}
-            </a>
-            {{ SaveButton(text=('common.save' | translate), element='input', form='new-task-order') }}
-          </div>
-          <div class="panel__content">
-            {{ "task_orders.new.form_help_text" | translate }}
-            <hr>
-            {{ TextInput(form.number, validation='taskOrderNumber') }}
-          </div>
-        </form>
-      </base-form>
-    </div>
+    <base-form inline-template>
+      {% if task_order_id %}
+        {% set action = url_for("task_orders.update", portfolio_id=portfolio.id, task_order_id=task_order_id) %}
+      {% else %}
+        {% set action = url_for("task_orders.update", portfolio_id=portfolio.id) %}
+      {% endif %}
+      <form id="new-task-order" action='{{ action }}' method="POST" autocomplete="off" enctype="multipart/form-data">
+        {{ form.csrf_token }}
+        <!-- TODO: implement save bar with component -->
+        <span class="h3">Add Funding</span>
+        <a
+          href="{{ cancel_url }}"
+          class="action-group__action icon-link">
+          <span class="icon icon--x"></span>
+          {{ "common.cancel" | translate }}
+        </a>
+        {{ SaveButton(text=('common.save' | translate), element='input', form='new-task-order') }}
+        <p>
+          {{ "task_orders.new.form_help_text" | translate }}
+        </p>
+        <hr>
+        {{ TextInput(form.number, validation='taskOrderNumber') }}
+        {{ UploadInput(form.pdf) }}
+      </form>
+    </base-form>
   </div>
 {% endblock %}

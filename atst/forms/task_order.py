@@ -1,8 +1,10 @@
-from wtforms.fields import BooleanField, DecimalField, StringField
+from wtforms.fields import BooleanField, DecimalField, FileField, StringField
 from wtforms.fields.html5 import DateField
 from wtforms.validators import Required, Optional
+from flask_wtf.file import FileAllowed
 
 from .forms import BaseForm
+from atst.forms.validators import FileLength
 from atst.utils.localization import translate
 
 
@@ -11,6 +13,14 @@ class TaskOrderForm(BaseForm):
         translate("forms.task_order.number_label"),
         description=translate("forms.task_order.number_description"),
         validators=[Required()],
+    )
+    pdf = FileField(
+        None,
+        validators=[
+            FileAllowed(["pdf"], translate("forms.task_order.file_format_not_allowed")),
+            FileLength(message=translate("forms.validators.file_length")),
+        ],
+        render_kw={"accept": ".pdf,application/pdf"},
     )
 
 

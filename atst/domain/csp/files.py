@@ -14,7 +14,7 @@ class CSPFileError(Exception):
 
 
 class FileProviderInterface:
-    _PERMITTED_MIMETYPES = ["application/pdf", "image/png"]
+    _PERMITTED_MIMETYPES = ["application/pdf"]
 
     def _enforce_mimetype(self, fyle):
         # TODO: for hardening, we should probably use a better library for

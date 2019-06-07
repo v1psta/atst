@@ -8,25 +8,32 @@ from atst.models.permissions import Permissions
 from atst.utils.flash import formatted_flash as flash
 
 
-@task_orders_bp.route("/portfolios/<portfolio_id>/task_orders/new")
-@task_orders_bp.route("/portfolios/<portfolio_id>/task_orders/<task_order_id>/edit")
-@user_can(Permissions.CREATE_TASK_ORDER, message="view new task order form")
-def edit(portfolio_id, task_order_id=None):
-    form = None
+def render_task_orders_edit(portfolio_id, task_order_id=None, form=None):
+    render_args = {}
 
     if task_order_id:
         task_order = TaskOrders.get(task_order_id)
-        form = TaskOrderForm(number=task_order.number)
+        render_args["form"] = form or TaskOrderForm(
+            number=task_order.number, pdf=task_order.pdf
+        )
+        render_args["task_order_id"] = task_order_id
     else:
-        form = TaskOrderForm()
+        render_args["form"] = form or TaskOrderForm()
 
-    cancel_url = (
+    render_args["cancel_url"] = (
         http_request.referrer
         if http_request.referrer
         else url_for("task_orders.portfolio_funding", portfolio_id=portfolio_id)
     )
 
-    return render_template("task_orders/edit.html", form=form, cancel_url=cancel_url)
+    return render_template("task_orders/edit.html", **render_args)
+
+
+@task_orders_bp.route("/portfolios/<portfolio_id>/task_orders/new")
+@task_orders_bp.route("/portfolios/<portfolio_id>/task_orders/<task_order_id>/edit")
+@user_can(Permissions.CREATE_TASK_ORDER, message="view new task order form")
+def edit(portfolio_id, task_order_id=None):
+    return render_task_orders_edit(portfolio_id, task_order_id)
 
 
 @task_orders_bp.route("/portfolios/<portfolio_id>/task_orders/new", methods=["POST"])
@@ -35,7 +42,8 @@ def edit(portfolio_id, task_order_id=None):
 )
 @user_can(Permissions.CREATE_TASK_ORDER, message="create new task order")
 def update(portfolio_id, task_order_id=None):
-    form_data = http_request.form
+    form_data = {**http_request.form, **http_request.files}
+
     form = TaskOrderForm(form_data)
 
     if form.validate():
@@ -56,4 +64,4 @@ def update(portfolio_id, task_order_id=None):
         )
     else:
         flash("form_errors")
-        return render_template("task_orders/edit.html", form=form)
+        return render_task_orders_edit(portfolio_id, task_order_id, form), 400
