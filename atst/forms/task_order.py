@@ -2,6 +2,7 @@ from wtforms.fields import BooleanField, DecimalField, FieldList, FileField, For
 from wtforms.fields.html5 import DateField
 from wtforms.validators import Required, Optional
 from flask_wtf.file import FileAllowed
+from flask_wtf import FlaskForm
 
 from .data import JEDI_CLIN_TYPES
 from .fields import SelectField

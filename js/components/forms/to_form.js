@@ -3,6 +3,7 @@ import DateSelector from '../date_selector'
 import FormMixin from '../../mixins/form'
 import optionsinput from '../options_input'
 import textinput from '../text_input'
+import uploadinput from '../upload_input'
 
 export default {
   name: 'to-form',
@@ -14,6 +15,7 @@ export default {
     DateSelector,
     optionsinput,
     textinput,
+    uploadinput,
   },
 
   props: {
