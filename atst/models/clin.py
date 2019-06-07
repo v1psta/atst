@@ -27,3 +27,10 @@ class CLIN(Base, mixins.TimestampsMixin):
     end_date = Column(Date, nullable=False)
     obligated_amount = Column(Numeric(scale=2), nullable=False)
     jedi_clin_type = Column(SQLAEnum(JEDICLINType, native_enum=False), nullable=False)
+
+    def to_dictionary(self):
+        return {
+            c.name: getattr(self, c.name)
+            for c in self.__table__.columns
+            if c.name not in ["id"]
+        }

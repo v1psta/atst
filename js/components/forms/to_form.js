@@ -17,15 +17,16 @@ export default {
   },
 
   props: {
-    initialClinCount: String,
+    initialClinCount: Number,
   },
 
   data: function() {
     const clins = this.initialClinCount == 0 ? [''] : []
+    const clinIndex = this.initialClinCount == 0 ? 0 : this.initialClinCount - 1
 
     return {
       clins,
-      clinCount: this.initalClinCount - 1,
+      clinIndex,
     }
     // pass initialCLINIndex in props and add one each time a clin is added...
     // this way we can keep track of the clin id for the html name/id/etc
@@ -34,7 +35,7 @@ export default {
   methods: {
     addClin: function(event) {
       this.clins.push('')
-      this.clinCount = this.clinCount + 1
+      this.clinIndex = this.clinIndex + 1
     },
   },
 }
