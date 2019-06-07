@@ -19,9 +19,9 @@ class TaskOrders(BaseDomainClass):
     UNCLASSIFIED_FUNDING = []
 
     @classmethod
-    def create(cls, creator, portfolio_id, number, clins):
+    def create(cls, creator, portfolio_id, number, clins, pdf):
         task_order = TaskOrder(
-            portfolio_id=portfolio_id, creator=creator, number=number
+            portfolio_id=portfolio_id, creator=creator, number=number, pdf=pdf
         )
         db.session.add(task_order)
         db.session.commit()
@@ -31,8 +31,9 @@ class TaskOrders(BaseDomainClass):
         return task_order
 
     @classmethod
-    def update(cls, task_order_id, number, clins):
+    def update(cls, task_order_id, number, clins, pdf):
         task_order = TaskOrders.get(task_order_id)
+        task_order.pdf = pdf
 
         for clin in task_order.clins:
             db.session.delete(clin)

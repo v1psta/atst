@@ -64,13 +64,39 @@
                         </select>
                     </fieldset>
                   </div>
-                  <div class="usa-input usa-input--validation--anything usa-input--success">
-                    <label :for="'clins-' + clinIndex + '-number'">
-                      <div class="usa-input__title"> Number </div>
-                    </label>
-                    <input type="text" :id="'clins-' + clinIndex + '-number'" placeholder="">
-                    <input type="hidden" :name="'clins-' + clinIndex + '-number'">
-                  </div>
+
+                  <textinput :name="'clins-' + clinIndex + '-number'" inline-template>
+                    <div>
+                      <label :for="name">
+                        <span v-show='showError'>{{ Icon('alert',classes="icon-validation") }}</span>
+                        <span v-show='showValid'>{{ Icon('ok',classes="icon-validation") }}</span>
+                        <div class="usa-input__title"> Number </div>
+                      </label>
+
+                      <masked-input
+                        v-on:input='onInput'
+                        v-on:blur='onBlur'
+                        v-on:change='onChange'
+                        v-bind:value='value'
+                        v-bind:mask='mask'
+                        v-bind:pipe='pipe'
+                        v-bind:keep-char-positions='keepCharPositions'
+                        v-bind:aria-invalid='showError'
+                        type='text'
+                        :id='name'
+                        ref='input'>
+                      </masked-input>
+
+                      <input type='hidden' v-bind:value='rawValue' :name='name' />
+
+                      <template v-if='showError'>
+                        <span class='usa-input__message' v-html='validationError'></span>
+                      </template>
+                      <template v-else>
+                        <span class='usa-input__message'></span>
+                      </template>
+                    </div>
+                  </textinput>
 
                   <date-selector :name-tag="'clins-' + clinIndex + '-start_date'" inline-template>
                     <fieldset class="usa-input date-picker" v-bind:class="{ 'usa-input--success': isDateValid }">
@@ -182,14 +208,40 @@
                     </fieldset>
                   </date-selector>
 
-                  <div class="  usa-input usa-input--validation--anything">
-                    <label :for="'clins-' + clinIndex + '-obligated_amount'">
-                      <div class="usa-input__title"> Obligated Amount
-                      </div>
-                    </label>
-                    <input type="text" :id="'clins-' + clinIndex + '-obligated_amount'" placeholder="">
-                    <input type="hidden" :name="'clins-' + clinIndex + '-obligated_amount'">
-                  </div>
+                  <textinput :name="'clins-' + clinIndex + '-obligated_amount'" validation="dollars" inline-template>
+                    <div>
+                      <label :for="name">
+                        <span v-show='showError'>{{ Icon('alert',classes="icon-validation") }}</span>
+                        <span v-show='showValid'>{{ Icon('ok',classes="icon-validation") }}</span>
+                        <div class="usa-input__title">Obligated Amount</div>
+                      </label>
+
+                      <masked-input
+                        v-on:input='onInput'
+                        v-on:blur='onBlur'
+                        v-on:change='onChange'
+                        v-bind:value='value'
+                        v-bind:mask='mask'
+                        v-bind:pipe='pipe'
+                        v-bind:keep-char-positions='keepCharPositions'
+                        v-bind:aria-invalid='showError'
+                        v-bind:show-mask='true'
+                        type='text'
+                        :id='name'
+                        ref='input'>
+                      </masked-input>
+
+                      <input type='hidden' v-bind:value='rawValue' :name='name' />
+
+                      <template v-if='showError'>
+                        <span class='usa-input__message' v-html='validationError'></span>
+                      </template>
+                      <template v-else>
+                        <span class='usa-input__message'></span>
+                      </template>
+                    </div>
+                  </textinput>
+
                 </div>
               </clin-fields>
             </div>
