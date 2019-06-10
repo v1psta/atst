@@ -2,8 +2,9 @@
 
 {% from 'components/date_picker.html' import DatePicker %}
 {% from 'components/icon.html' import Icon %}
-{% from 'components/save_button.html' import SaveButton %}
 {% from 'components/options_input.html' import OptionsInput %}
+{% from 'components/save_button.html' import SaveButton %}
+{% from "components/sticky_cta.html" import StickyCTA %}
 {% from 'components/text_input.html' import TextInput %}
 {% from 'components/upload_input.html' import UploadInput %}
 
@@ -71,6 +72,18 @@
 {% endmacro %}
 
 {% block portfolio_content %}
+
+  {% call StickyCTA(text="Add Funding") %}
+    <span class="action-group">
+      <input type="submit" tabindex="0" value="Review task order" form="new-task-order" class="usa-button usa-button-primary">
+      <input type="submit" tabindex="0" value="Save" form="new-task-order" class="usa-button usa-button-secondary">
+      <a
+        href="{{ cancel_url }}"
+        class="action-group__action icon-link">
+        {{ "common.cancel" | translate }}
+      </a>
+    </span>
+  {% endcall %}
   <div class="col task-order-form">
     {% include "fragments/flash.html" %}
       <to-form inline-template v-bind:initial-clin-count="{{ form.clins.data | length }}">
@@ -81,15 +94,8 @@
         {% endif %}
         <form id="new-task-order" action='{{ action }}' method="POST" autocomplete="off" enctype="multipart/form-data">
           {{ form.csrf_token }}
-            <!-- TODO: implement save bar with component -->
-            <span class="h3">Add Funding</span>
-            <a
-              href="{{ cancel_url }}"
-              class="action-group__action icon-link">
-              <span class="icon icon--x"></span>
-              {{ "common.cancel" | translate }}
-            </a>
-            <input type="submit" tabindex="0" value="Save" form="new-task-order" class="usa-button usa-button-primary">
+
+
             <p>
               {{ "task_orders.new.form_help_text" | translate }}
             </p>
