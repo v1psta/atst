@@ -1,7 +1,7 @@
 from werkzeug.datastructures import FileStorage
 import pytest
-from datetime import date, datetime
-from unittest.mock import Mock, patch, PropertyMock
+from datetime import date
+from unittest.mock import patch, PropertyMock
 import pendulum
 
 from atst.models import *
@@ -10,8 +10,6 @@ from atst.models.task_order import TaskOrder, Status
 
 from tests.factories import (
     CLINFactory,
-    random_future_date,
-    random_past_date,
     TaskOrderFactory,
 )
 from tests.mocks import PDF_FILENAME
