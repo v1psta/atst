@@ -120,6 +120,7 @@ def logout():
     _logout()
     response = make_response(redirect(url_for(".root")))
     response.set_cookie("expandSidenav", "", expires=0)
+    flash("logged_out")
     return response
 
 
