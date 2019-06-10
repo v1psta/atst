@@ -8,10 +8,7 @@ from atst.models import *
 from atst.models.clin import JEDICLINType
 from atst.models.task_order import TaskOrder, Status
 
-from tests.factories import (
-    CLINFactory,
-    TaskOrderFactory,
-)
+from tests.factories import CLINFactory, TaskOrderFactory
 from tests.mocks import PDF_FILENAME
 
 
