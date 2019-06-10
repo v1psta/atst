@@ -9,7 +9,6 @@ from atst.domain.environment_roles import EnvironmentRoles
 from atst.domain.environments import Environments
 from atst.domain.exceptions import AlreadyExistsError
 from atst.domain.permission_sets import PermissionSets
-from atst.domain.users import Users
 from atst.forms.application_member import NewForm as NewMemberForm
 from atst.forms.team import TeamForm
 from atst.models import Permissions
@@ -188,15 +187,11 @@ def create_member(application_id):
 @user_can(Permissions.DELETE_APPLICATION_MEMBER, message="remove application member")
 def remove_member(application_id, application_role_id):
     application_role = ApplicationRoles.get_by_id(application_role_id)
-
-    Applications.remove_member(
-        application=g.application, user_id=application_role.user_id
-    )
-    user = Users.get(application_role.user_id)
+    Applications.remove_member(application_role)
 
     flash(
         "application_member_removed",
-        user_name=user.full_name,
+        user_name=application_role.user_name,
         application_name=g.application.name,
     )
 

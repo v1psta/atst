@@ -128,15 +128,11 @@ class Applications(BaseDomainClass):
         return invitation
 
     @classmethod
-    def remove_member(cls, application, user_id):
-        application_role = ApplicationRoles.get(
-            user_id=user_id, application_id=application.id
-        )
-
+    def remove_member(cls, application_role):
         application_role.status = ApplicationRoleStatus.DISABLED
         application_role.deleted = True
 
-        for env in application.environments:
+        for env in application_role.application.environments:
             EnvironmentRoles.delete(
                 application_role_id=application_role.id, environment_id=env.id
             )
