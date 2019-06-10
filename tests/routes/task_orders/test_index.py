@@ -4,6 +4,7 @@ from datetime import timedelta, date
 
 from atst.domain.permission_sets import PermissionSets
 from atst.domain.task_orders import TaskOrders
+from atst.models import *
 from atst.models.portfolio_role import Status as PortfolioStatus
 from atst.utils.localization import translate
 
@@ -22,10 +23,32 @@ from tests.utils import captured_templates
 def portfolio():
     return PortfolioFactory.create()
 
-
 @pytest.fixture
 def user():
     return UserFactory.create()
+
+@pytest.fixture
+def task_order():
+    user = UserFactory.create()
+    portfolio = PortfolioFactory.create(owner=user)
+    attachment = Attachment(filename="sample_attachment", object_name="sample")
+
+    return TaskOrderFactory.create(creator=user, portfolio=portfolio)
+
+
+def test_review_task_order(client, user_session, task_order):
+    user_session(task_order.portfolio.owner)
+    response = client.get(url_for("task_orders.review_task_order", task_order_id=task_order.id))
+    assert response.status_code == 200
+
+def test_submit_task_order(client, user_session, task_order):
+    user_session(task_order.portfolio.owner)
+    response = client.post(
+        url_for(
+            "task_orders.submit_task_order", task_order_id=task_order.id
+        ),
+    )
+    assert response.status_code == 302
 
 
 class TestPortfolioFunding:

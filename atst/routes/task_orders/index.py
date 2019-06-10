@@ -39,7 +39,6 @@ def review_task_order(task_order_id):
     )
 
 
-# TODO write test, verify permission
 @task_orders_bp.route("/task_orders/<task_order_id>/submit", methods=["POST"])
 @user_can(Permissions.CREATE_TASK_ORDER, "submit task order")
 def submit_task_order(task_order_id):
