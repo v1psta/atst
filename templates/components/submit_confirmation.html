@@ -6,16 +6,16 @@
     <div>
       <div class="usa-input">
         <label for="{{ modal_id }}-deleted-text">
-          <span class="usa-input__help">
-            Signature confirmation: Task Order #{{task_order.number}}
-          </span>
+          <div class="modal__form--header">
+            <h1>Signature confirmation: <em>Task Order #{{task_order.number}}</em></h1>
+          </div>
           {{ Alert('',
             message="All task orders require a Contracting Officer signature."
           ) }}
         </label>
-        <span v-on:change="toggleValid">
+        <div v-on:change="toggleValid" class="checkbox">
           {{ CheckboxInput(field=form.signature) }}
-        </span>
+        </div>
       </div>
       <div class="action-group">
         <form method="POST" action="{{ submit_action }}">
@@ -23,9 +23,8 @@
           <button class="usa-button usa-button-primary" v-bind:disabled="!valid">
             {{ submit_text }}
           </button>
-          <button v-on:click="deleteText = ''; $root.closeModal('{{ modal_id }}')" class="usa-button usa-button-secondary">{{ "common.cancel" | translate }}</button>
         </form>
-
+        <button v-on:click="$root.closeModal('{{ modal_id }}')" class="usa-button usa-button-secondary">{{ "common.cancel" | translate }}</button>
       </div>
     </div>
   </submit-confirmation>
