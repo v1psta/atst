@@ -188,16 +188,11 @@ def create_member(application_id):
 @user_can(Permissions.DELETE_APPLICATION_MEMBER, message="remove application member")
 def remove_member(application_id, application_role_id):
     application_role = ApplicationRoles.get_by_id(application_role_id)
-
-    user_name = "a user"
-    if application_role.user:
-        user_name = application_role.user.full_name
-
     Applications.remove_member(application_role)
 
     flash(
         "application_member_removed",
-        user_name=user_name,
+        user_name=application_role.user_name,
         application_name=g.application.name,
     )
 
