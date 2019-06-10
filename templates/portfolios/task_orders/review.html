@@ -34,66 +34,74 @@
 
     <hr>
 
-  <div class="h1">Review your task order</div>
-  <p>Check to make sure the information you entered is correct. After submission, you will confirm this task order was signed by a contracting officer. Thereafter, you will be informed as soon as CCPO completes their review.</p>
+  <div class="h1">
+    {{ "task_orders.review.review_your_task_order" | translate }}
+  </div>
+  <p>
+    {{ "task_orders.review.check_paragraph" | translate }}
+  </p>
   <div class="row">
     <div class="col">
-      <div class="h4">Task order number - 10 digit found in your system of record</div>
+      <div class="h4">
+        {{ "task_orders.review.task_order_number" | translate }}
+      </div>
       <div>{{task_order.number}}</div>
 
       <hr>
 
-      <div class="h3">Funding summary</div>
-      <div>CLIN 1: Unclassified Cloud Services 001</div>
+      <div class="h3">
+        {{ "task_orders.review.funding_summary" | translate }}
+      </div>
+
+      {% for clin in task_order.clins %}
+        <div>
+          {{ "{}".format(clin.jedi_clin_type) | translate}}
+        </div>
         <table>
           <thead>
             <tr>
-              <th>Amount</th>
-              <th>Obligated</th>
-              <th>PoP Start</th>
-              <th>PoP End</th>
-              <th>LOA</th>
+              <th>{{ "task_orders.review.clins.amount" | translate }}</th>
+              <th>{{ "task_orders.review.clins.obligated" | translate }}</th>
+              <th>{{ "task_orders.review.clins.pop_start" | translate }}</th>
+              <th>{{ "task_orders.review.clins.pop_end" | translate }}</th>
+              <th>{{ "task_orders.review.clins.loa" | translate }}</th>
             </tr>
           </thead>
 
           <tbody>
             <tr>
-              <td>$500,000</td>
-              <td>Yes</td>
-              <td>9/07/19</td>
-              <td>9/07/20</td>
-              <td>34820394</td>
+              <td>{{ clin.obligated_amount | dollars }}</td>
+              <td>
+                {% if clin.is_obligated() %}
+                  {{ "common.yes" | translate }}
+                {% else %}
+                  {{ "common.no" | translate }}
+                {% endif %}
+              </td>
+              <td>{{ clin.start_date | formattedDate }}</td>
+              <td>{{ clin.end_date | formattedDate }}</td>
+              <td>
+                {% for loa in clin.loas %}
+                  {{ loa }}
+                  <br />
+                {% endfor %}
+              </td>
             </tr>
           </tbody>
         </table>
-
-      <div>CLIN 2: Unclassified Cloud Services 002</div>
-        <table>
-          <thead>
-            <tr>
-              <th>Amount</th>
-              <th>Obligated</th>
-              <th>PoP Start</th>
-              <th>PoP End</th>
-              <th>LOA</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            <tr>
-              <td>$300,000</td>
-              <td>No</td>
-              <td>9/08/20</td>
-              <td>9/08/21</td>
-              <td>q9384751934</td>
-            </tr>
-          </tbody>
-        </table>
+      {% endfor %}
 
       <hr>
 
-      <div class="h3">Supporting document</div>
-      <div class="h4">{{ Icon('ok',classes="icon-validation") }}document</div>
+      <div class="h3">
+        {{ "task_orders.review.supporting_document.title" | translate }}
+      </div>
+      <div class="h4">
+        <a class="icon-link icon-link--download" href="{{ url_for('task_orders.download_task_order_pdf', task_order_id=task_order.id) }}">
+          {{ Icon('check-circle-solid') }}
+          {{ task_order.pdf.filename }}
+        </a>
+      </div>
     </div>
 
     {{ TotalsBox(task_order=task_order) }}

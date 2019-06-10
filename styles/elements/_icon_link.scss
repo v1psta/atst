@@ -82,6 +82,12 @@
     @include icon-link-color($color-black-light, $color-gray-lightest);
   }
 
+  &.icon-link--download {
+    @include icon-link-color($color-black) .icon {
+      @include icon-color($color-green);
+    }
+  }
+
   &.icon-link--disabled {
     opacity: 0.3;
     text-decoration: none;
