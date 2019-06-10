@@ -31,5 +31,8 @@ contract = client.get_contract(contract_number=contract_number, status="Y")
 
 requested_clins = ",".join(["'0001'", "'0003'", "'1001'", "'1003'", "'2001'", "'2003'"])
 clins = client.get_clins(
-    record_key=contract_number, duns_number="", cage_code="1U305", with_clins=requested_clins
+    record_key=contract_number,
+    duns_number="",
+    cage_code="1U305",
+    with_clins=requested_clins,
 )

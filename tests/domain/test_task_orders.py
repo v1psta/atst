@@ -177,7 +177,9 @@ def test_update_adds_clins(pdf_upload):
 
 
 def test_update_does_not_duplicate_clins(pdf_upload):
-    task_order = TaskOrderFactory.create(number="3453453456", create_clins=["123", "456"])
+    task_order = TaskOrderFactory.create(
+        number="3453453456", create_clins=["123", "456"]
+    )
     clins = [
         {
             "jedi_clin_type": "JEDI_CLIN_1",
