@@ -9,7 +9,6 @@ from atst.domain.environment_roles import EnvironmentRoles
 from atst.domain.environments import Environments
 from atst.domain.exceptions import AlreadyExistsError
 from atst.domain.permission_sets import PermissionSets
-from atst.domain.users import Users
 from atst.forms.application_member import NewForm as NewMemberForm
 from atst.forms.team import TeamForm
 from atst.models import Permissions
