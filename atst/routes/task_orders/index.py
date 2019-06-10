@@ -6,9 +6,10 @@ from . import task_orders_bp
 from atst.domain.authz.decorator import user_can_access_decorator as user_can
 from atst.domain.portfolios import Portfolios
 from atst.domain.task_orders import TaskOrders
-from atst.models import Permissions
-from atst.models.task_order import Status
 from atst.forms.task_order import TaskOrderForm, SignatureForm
+from atst.models import Permissions
+from atst.models.task_order import Status as TaskOrderStatus
+from atst.utils.flash import formatted_flash as flash
 
 
 @task_orders_bp.route("/task_orders/<task_order_id>")
@@ -43,6 +44,8 @@ def review_task_order(task_order_id):
 @user_can(Permissions.CREATE_TASK_ORDER, "submit task order")
 def submit_task_order(task_order_id):
     task_order = TaskOrders.get(task_order_id)
+    flash("task_order_submitted", task_order=task_order)
+
     return redirect(
         url_for("task_orders.portfolio_funding", portfolio_id=task_order.portfolio.id)
     )

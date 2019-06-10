@@ -170,7 +170,7 @@ MESSAGES = {
         "category": "success",
     },
     "task_order_submitted": {
-        "title_template": "Task Order Form Submitted",
+        "title_template": "Your Task Order has been uploaded successfully.",
         "message_template": """
         Your task order form for {{ task_order.portfolio_name }} has been submitted.
         """,
