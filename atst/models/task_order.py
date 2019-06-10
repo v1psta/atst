@@ -1,5 +1,4 @@
 from enum import Enum
-from datetime import date
 
 from sqlalchemy import Column, DateTime, ForeignKey, String
 from sqlalchemy.ext.hybrid import hybrid_property
@@ -8,13 +7,23 @@ from werkzeug.datastructures import FileStorage
 
 from atst.models import Attachment, Base, mixins, types
 from atst.models.clin import JEDICLINType
+from atst.utils.clock import Clock
 
 
 class Status(Enum):
-    STARTED = "Started"
-    PENDING = "Pending"
+    DRAFT = "Draft"
     ACTIVE = "Active"
+    UPCOMING = "Upcoming"
     EXPIRED = "Expired"
+    UNSIGNED = "Not signed"
+
+
+SORT_ORDERING = {
+    status: order
+    for (order, status) in enumerate(
+        [Status.DRAFT, Status.ACTIVE, Status.UPCOMING, Status.EXPIRED, Status.UNSIGNED]
+    )
+}
 
 
 class TaskOrder(Base, mixins.TimestampsMixin):
@@ -63,27 +72,40 @@ class TaskOrder(Base, mixins.TimestampsMixin):
         return self.status == Status.EXPIRED
 
     @property
+    def is_completed(self):
+        return all([self.pdf, self.number, len(self.clins)])
+
+    @property
+    def is_signed(self):
+        return self.signed_at is not None
+
+    @property
     def status(self):
-        # TODO: fix task order -- implement correctly using CLINs
-        # Faked for display purposes
-        return Status.ACTIVE
+        today = Clock.today()
+
+        if not self.is_completed and not self.is_signed:
+            return Status.DRAFT
+        elif self.is_completed and not self.is_signed:
+            return Status.UNSIGNED
+        elif today < self.start_date:
+            return Status.UPCOMING
+        elif today >= self.end_date:
+            return Status.EXPIRED
+        elif self.start_date <= today < self.end_date:
+            return Status.ACTIVE
 
     @property
     def start_date(self):
-        # TODO: fix task order -- reimplement using CLINs
-        # Faked for display purposes
-        return date.today()
+        return min((c.start_date for c in self.clins), default=self.time_created.date())
 
     @property
     def end_date(self):
-        # TODO: fix task order -- reimplement using CLINs
-        # Faked for display purposes
-        return date.today()
+        return max((c.end_date for c in self.clins), default=None)
 
     @property
     def days_to_expiration(self):
         if self.end_date:
-            return (self.end_date - date.today()).days
+            return (self.end_date - Clock.today()).days
 
     @property
     def total_obligated_funds(self):

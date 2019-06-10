@@ -1,19 +1,78 @@
 import pytest
-from datetime import date
+from datetime import date, timedelta
 from decimal import Decimal
 
-from atst.domain.task_orders import TaskOrders, TaskOrderError
-from atst.domain.exceptions import UnauthorizedError
-from atst.domain.permission_sets import PermissionSets
-from atst.domain.portfolio_roles import PortfolioRoles
+from atst.domain.task_orders import TaskOrders
 from atst.models.attachment import Attachment
+from tests.factories import TaskOrderFactory, CLINFactory, PortfolioFactory
 
-from tests.factories import (
-    TaskOrderFactory,
-    UserFactory,
-    PortfolioRoleFactory,
-    PortfolioFactory,
-)
+
+def test_task_order_sorting():
+    """
+    Task orders should be listed first by status, and then by time_created.
+    """
+
+    today = date.today()
+    yesterday = today - timedelta(days=1)
+    future = today + timedelta(days=100)
+
+    task_orders = [
+        # Draft
+        TaskOrderFactory.create(pdf=None),
+        TaskOrderFactory.create(pdf=None),
+        TaskOrderFactory.create(pdf=None),
+        # Active
+        TaskOrderFactory.create(
+            signed_at=yesterday,
+            clins=[CLINFactory.create(start_date=yesterday, end_date=future)],
+        ),
+        TaskOrderFactory.create(
+            signed_at=yesterday,
+            clins=[CLINFactory.create(start_date=yesterday, end_date=future)],
+        ),
+        TaskOrderFactory.create(
+            signed_at=yesterday,
+            clins=[CLINFactory.create(start_date=yesterday, end_date=future)],
+        ),
+        # Upcoming
+        TaskOrderFactory.create(
+            signed_at=yesterday,
+            clins=[CLINFactory.create(start_date=future, end_date=future)],
+        ),
+        TaskOrderFactory.create(
+            signed_at=yesterday,
+            clins=[CLINFactory.create(start_date=future, end_date=future)],
+        ),
+        TaskOrderFactory.create(
+            signed_at=yesterday,
+            clins=[CLINFactory.create(start_date=future, end_date=future)],
+        ),
+        # Expired
+        TaskOrderFactory.create(
+            signed_at=yesterday,
+            clins=[CLINFactory.create(start_date=yesterday, end_date=yesterday)],
+        ),
+        TaskOrderFactory.create(
+            signed_at=yesterday,
+            clins=[CLINFactory.create(start_date=yesterday, end_date=yesterday)],
+        ),
+        TaskOrderFactory.create(
+            signed_at=yesterday,
+            clins=[CLINFactory.create(start_date=yesterday, end_date=yesterday)],
+        ),
+        # Unsigned
+        TaskOrderFactory.create(
+            clins=[CLINFactory.create(start_date=today, end_date=today)]
+        ),
+        TaskOrderFactory.create(
+            clins=[CLINFactory.create(start_date=today, end_date=today)]
+        ),
+        TaskOrderFactory.create(
+            clins=[CLINFactory.create(start_date=today, end_date=today)]
+        ),
+    ]
+
+    assert TaskOrders.sort(task_orders) == task_orders
 
 
 @pytest.mark.skip(reason="Need to reimplement after new TO form is created")
@@ -118,7 +177,9 @@ def test_update_adds_clins(pdf_upload):
 
 
 def test_update_does_not_duplicate_clins(pdf_upload):
-    task_order = TaskOrderFactory.create(number="3453453456", clins=["123", "456"])
+    task_order = TaskOrderFactory.create(
+        number="3453453456", create_clins=["123", "456"]
+    )
     clins = [
         {
             "jedi_clin_type": "JEDI_CLIN_1",

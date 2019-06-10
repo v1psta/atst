@@ -272,13 +272,14 @@ class TaskOrderFactory(Base):
     portfolio = factory.SubFactory(PortfolioFactory)
     number = factory.LazyFunction(random_task_order_number)
     creator = factory.SubFactory(UserFactory)
+    _pdf = factory.SubFactory(AttachmentFactory)
 
     @classmethod
     def _create(cls, model_class, *args, **kwargs):
-        with_clins = kwargs.pop("clins", [])
+        create_clins = kwargs.pop("create_clins", [])
         task_order = super()._create(model_class, *args, **kwargs)
 
-        for clin in with_clins:
+        for clin in create_clins:
             CLINFactory.create(task_order=task_order, number=clin)
 
         return task_order
@@ -293,7 +294,7 @@ class CLINFactory(Base):
     start_date = datetime.date.today()
     end_date = factory.LazyFunction(random_future_date)
     obligated_amount = random.randint(100, 999999)
-    jedi_clin_type = random.choice([e.value for e in clin.JEDICLINType])
+    jedi_clin_type = random.choice(list(clin.JEDICLINType))
 
 
 class NotificationRecipientFactory(Base):
