@@ -8,6 +8,7 @@ from werkzeug.datastructures import FileStorage
 
 from atst.models import Attachment, Base, mixins, types
 from atst.models.clin import JEDICLINType
+from atst.utils.clock import Clock
 
 
 class Status(Enum):
@@ -81,7 +82,7 @@ class TaskOrder(Base, mixins.TimestampsMixin):
 
     @property
     def status(self):
-        today = date.today()
+        today = Clock.today()
 
         if not self.is_completed and not self.is_signed:
             return Status.DRAFT
@@ -105,7 +106,7 @@ class TaskOrder(Base, mixins.TimestampsMixin):
     @property
     def days_to_expiration(self):
         if self.end_date:
-            return (self.end_date - date.today()).days
+            return (self.end_date - Clock.today()).days
 
     @property
     def total_obligated_funds(self):
