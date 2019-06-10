@@ -100,3 +100,6 @@ class TestFileLength:
 
         with pytest.raises(ValidationError):
             validator(dummy_form, dummy_field)
+
+        dummy_field.data = "random string"
+        assert validator(dummy_form, dummy_field)
