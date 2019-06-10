@@ -34,7 +34,7 @@ class TaskOrder(Base, mixins.TimestampsMixin):
     signer_dod_id = Column(String)
     signed_at = Column(DateTime)
 
-    clins = relationship("CLIN")
+    clins = relationship("CLIN", back_populates="task_order")
 
     @hybrid_property
     def pdf(self):
@@ -129,6 +129,8 @@ class TaskOrder(Base, mixins.TimestampsMixin):
     def to_dictionary(self):
         return {
             "portfolio_name": self.portfolio_name,
+            "pdf": self.pdf,
+            "clins": [clin.to_dictionary() for clin in self.clins],
             **{
                 c.name: getattr(self, c.name)
                 for c in self.__table__.columns

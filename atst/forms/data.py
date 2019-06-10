@@ -221,3 +221,10 @@ ENV_ROLE_NO_ACCESS = "No Access"
 ENV_ROLES = [(role.value, role.value) for role in CSPRole] + [
     (ENV_ROLE_NO_ACCESS, "No access")
 ]
+
+JEDI_CLIN_TYPES = [
+    ("JEDI_CLIN_1", translate("forms.task_order.clin_01_label")),
+    ("JEDI_CLIN_2", translate("forms.task_order.clin_02_label")),
+    ("JEDI_CLIN_3", translate("forms.task_order.clin_03_label")),
+    ("JEDI_CLIN_4", translate("forms.task_order.clin_04_label")),
+]

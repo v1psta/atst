@@ -7,10 +7,10 @@ from atst.models import Base, mixins, types
 
 
 class JEDICLINType(Enum):
-    JEDI_CLIN_1 = "jedi clin 0001"
-    JEDI_CLIN_2 = "jedi clin 0002"
-    JEDI_CLIN_3 = "jedi clin 0003"
-    JEDI_CLIN_4 = "jedi clin 0004"
+    JEDI_CLIN_1 = "JEDI_CLIN_1"
+    JEDI_CLIN_2 = "JEDI_CLIN_2"
+    JEDI_CLIN_3 = "JEDI_CLIN_3"
+    JEDI_CLIN_4 = "JEDI_CLIN_4"
 
 
 class CLIN(Base, mixins.TimestampsMixin):
@@ -27,3 +27,10 @@ class CLIN(Base, mixins.TimestampsMixin):
     end_date = Column(Date, nullable=False)
     obligated_amount = Column(Numeric(scale=2), nullable=False)
     jedi_clin_type = Column(SQLAEnum(JEDICLINType, native_enum=False), nullable=False)
+
+    def to_dictionary(self):
+        return {
+            c.name: getattr(self, c.name)
+            for c in self.__table__.columns
+            if c.name not in ["id"]
+        }
