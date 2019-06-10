@@ -19,6 +19,15 @@ base_public:
   title_tag: JEDI Cloud
 home:
   add_portfolio_button_text: Add New Portfolio
+  new_portfolio: New Portfolio
+  get_started: Get Started
+  head: About Cloud Services
+  your_project: Your Project
+  your_project_descrip: Your portfolio is where all task orders pertaining to a specific project or set of related projects live. In JEDI, every task order in your portfolio has four components.
+  funding_descrip: is information about all approved task orders associated to your portfolio.
+  applications_descrip: ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+  reports_descrip: enim ad minim veniam, quis nostrud exercitation ullamco
+  admin_descrip: aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
 common:
   back: Back
   cancel: Cancel

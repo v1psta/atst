@@ -1,3 +1,54 @@
+.home {
+  .sticky-cta {
+    margin: -1.6rem -1.6rem 0 -1.6rem;
+  }
+}
+
+.about-cloud {
+  margin-top: 4rem;
+  margin-left: 2rem;
+
+  max-width: 900px;
+}
+
+.your-project {
+  margin-top: 3rem;
+  padding: 3rem;
+  background-color: $color-gray-lightest;
+
+  h2 {
+    margin-top: 0;
+  }
+
+  hr {
+    border: 0;
+    border-bottom: 1px solid $color-gray-light;
+    margin-top: $gap * 4;
+    margin-bottom: $gap * 4;
+  }
+
+  .links {
+    justify-content: normal;
+
+    .icon-link:first-child {
+      padding-left: 0;
+    }
+
+    .icon-link:hover {
+      background-color: transparent;
+      color: $color-gray-dark;
+
+      .svg * {
+        fill: $color-gray-dark;
+      }
+    }
+
+    .icon-link.active:hover {
+      color: $color-blue;
+    }
+  }
+}
+
 .home-layout {
   display: block;
   background-color: $color-white;
