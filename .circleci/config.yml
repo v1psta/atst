@@ -27,28 +27,6 @@ jobs:
             git submodule update --init --recursive
       - attach_workspace:
           at: .
-      - restore_cache:
-          name: "Load Cache: Pipenv References"
-          keys:
-            - pipenv-v1-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
-            - pipenv-v1-{{ .Branch }}-
-            - pipenv-v1-
-      - restore_cache:
-          name: "Load Cache: Python Venv"
-          keys:
-            - venv-v1-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
-            - venv-v1-{{ .Branch }}-
-            - venv-v1-
-      - restore_cache:
-          name: "Load Cache: Yarn"
-          keys:
-            - yarn-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
-            - yarn-v1-{{ .Branch }}-
-            - yarn-v1-
-      - restore_cache:
-          name: "Load Cache: Node Modules"
-          keys:
-            - node-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
       - run: ./script/setup
       - save_cache:
           name: "Save Cache: Pipenv Refrences"
