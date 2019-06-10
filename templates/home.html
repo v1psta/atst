@@ -6,8 +6,6 @@
 {% block content %}
 
 <main class="home">
-  {% include "fragments/flash.html" %}
-
   {% if portfolios %}
      {% set sticky_header = "home.new_portfolio" | translate  %}
   {% else %}
@@ -21,6 +19,8 @@
   {% endcall %}
 
   <div class="about-cloud">
+    {% include "fragments/flash.html" %}
+
     <h1>{{ "home.head" | translate }}</h1>
 
     <semi-collapsible-text inline-template>
