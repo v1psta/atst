@@ -55,7 +55,7 @@ def test_all_sections_complete():
     assert TaskOrders.all_sections_complete(task_order)
 
 
-def test_create_adds_clins():
+def test_create_adds_clins(pdf_upload):
     portfolio = PortfolioFactory.create()
     clins = [
         {
@@ -80,11 +80,12 @@ def test_create_adds_clins():
         portfolio_id=portfolio.id,
         number="0123456789",
         clins=clins,
+        pdf=pdf_upload,
     )
     assert len(task_order.clins) == 2
 
 
-def test_update_adds_clins():
+def test_update_adds_clins(pdf_upload):
     task_order = TaskOrderFactory.create(number="1231231234")
     to_number = task_order.number
     clins = [
@@ -110,12 +111,13 @@ def test_update_adds_clins():
         portfolio_id=task_order.portfolio_id,
         number="0000000000",
         clins=clins,
+        pdf=pdf_upload,
     )
     assert task_order.number != to_number
     assert len(task_order.clins) == 2
 
 
-def test_update_does_not_duplicate_clins():
+def test_update_does_not_duplicate_clins(pdf_upload):
     task_order = TaskOrderFactory.create(number="3453453456", clins=["123", "456"])
     clins = [
         {
@@ -136,7 +138,7 @@ def test_update_does_not_duplicate_clins():
         },
     ]
     task_order = TaskOrders.update(
-        task_order_id=task_order.id, number="0000000000", clins=clins
+        task_order_id=task_order.id, number="0000000000", clins=clins, pdf=pdf_upload
     )
     assert len(task_order.clins) == 2
     for clin in task_order.clins:

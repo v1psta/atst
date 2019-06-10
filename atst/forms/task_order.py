@@ -1,6 +1,13 @@
-from wtforms.fields import BooleanField, DecimalField, FieldList, FileField, FormField, StringField
+from wtforms.fields import (
+    BooleanField,
+    DecimalField,
+    FieldList,
+    FileField,
+    FormField,
+    StringField,
+)
 from wtforms.fields.html5 import DateField
-from wtforms.validators import Required, Optional
+from wtforms.validators import Required
 from flask_wtf.file import FileAllowed
 from flask_wtf import FlaskForm
 

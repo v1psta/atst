@@ -30,8 +30,6 @@ export default {
       clins,
       clinIndex,
     }
-    // pass initialCLINIndex in props and add one each time a clin is added...
-    // this way we can keep track of the clin id for the html name/id/etc
   },
 
   methods: {

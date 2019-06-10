@@ -19,7 +19,7 @@ export default {
     initialyear: { type: String },
     mindate: { type: String },
     maxdate: { type: String },
-    nameTag: { type: String }
+    nameTag: { type: String },
   },
 
   data: function() {

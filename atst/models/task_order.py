@@ -130,9 +130,7 @@ class TaskOrder(Base, mixins.TimestampsMixin):
         return {
             "portfolio_name": self.portfolio_name,
             "pdf": self.pdf,
-            "clins": [
-                clin.to_dictionary() for clin in self.clins
-            ],
+            "clins": [clin.to_dictionary() for clin in self.clins],
             **{
                 c.name: getattr(self, c.name)
                 for c in self.__table__.columns

@@ -14,6 +14,6 @@ export default {
   },
 
   data: function() {
-    return {clinIndex: this.initialClinIndex}
+    return { clinIndex: this.initialClinIndex }
   },
 }
