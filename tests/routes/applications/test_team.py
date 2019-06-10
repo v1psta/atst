@@ -218,6 +218,30 @@ def test_remove_member_success(client, user_session):
     )
 
 
+def test_remove_new_member_success(client, user_session):
+    application = ApplicationFactory.create()
+    application_role = ApplicationRoleFactory.create(application=application, user=None)
+
+    user_session(application.portfolio.owner)
+
+    response = client.post(
+        url_for(
+            "applications.remove_member",
+            application_id=application.id,
+            application_role_id=application_role.id,
+        )
+    )
+
+    assert response.status_code == 302
+    assert response.location == url_for(
+        "applications.team",
+        _anchor="application-members",
+        _external=True,
+        application_id=application.id,
+        fragment="application-members",
+    )
+
+
 def test_remove_member_failure(client, user_session):
     user = UserFactory.create()
     application = ApplicationFactory.create()

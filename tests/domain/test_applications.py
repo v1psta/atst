@@ -147,7 +147,7 @@ def test_remove_member():
         user_id=user.id, application_id=application.id
     )
 
-    Applications.remove_member(application=application, user_id=member_role.user.id)
+    Applications.remove_member(member_role)
 
     assert (
         ApplicationRoles.get(user_id=user.id, application_id=application.id).status

@@ -189,14 +189,15 @@ def create_member(application_id):
 def remove_member(application_id, application_role_id):
     application_role = ApplicationRoles.get_by_id(application_role_id)
 
-    Applications.remove_member(
-        application=g.application, user_id=application_role.user_id
-    )
-    user = Users.get(application_role.user_id)
+    user_name = "a user"
+    if application_role.user:
+        user_name = application_role.user.full_name
+
+    Applications.remove_member(application_role)
 
     flash(
         "application_member_removed",
-        user_name=user.full_name,
+        user_name=user_name,
         application_name=g.application.name,
     )
 
