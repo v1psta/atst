@@ -18,7 +18,7 @@ def xml_translated(val):
 def test_download_summary(client, user_session):
     user = UserFactory.create()
     portfolio = PortfolioFactory.create(owner=user)
-    task_order = TaskOrderFactory.create(creator=user, portfolio=portfolio)
+    task_order = TaskOrderFactory.create(creator=user, portfolio=portfolio, _pdf=None)
     user_session(user)
     response = client.get(
         url_for("task_orders.download_summary", task_order_id=task_order.id)

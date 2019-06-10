@@ -276,10 +276,10 @@ class TaskOrderFactory(Base):
 
     @classmethod
     def _create(cls, model_class, *args, **kwargs):
-        with_clins = kwargs.pop("clins", [])
+        create_clins = kwargs.pop("create_clins", [])
         task_order = super()._create(model_class, *args, **kwargs)
 
-        for clin in with_clins:
+        for clin in create_clins:
             CLINFactory.create(task_order=task_order, number=clin)
 
         return task_order
