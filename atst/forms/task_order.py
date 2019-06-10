@@ -19,8 +19,8 @@ from atst.utils.localization import translate
 
 
 class CLINForm(FlaskForm):
-    jedi_clin_type = SelectField("Jedi CLIN type", choices=JEDI_CLIN_TYPES)
-    number = StringField(validators=[Required()])
+    jedi_clin_type = SelectField("CLIN type", choices=JEDI_CLIN_TYPES)
+    number = StringField(label="CLIN", validators=[Required()])
     start_date = DateField(
         translate("forms.task_order.start_date_label"),
         format="%m/%d/%Y",
@@ -31,7 +31,7 @@ class CLINForm(FlaskForm):
         format="%m/%d/%Y",
         validators=[Required()],
     )
-    obligated_amount = DecimalField()
+    obligated_amount = DecimalField(label="Funds obligated for cloud")
     loas = FieldList(StringField())
 
 
@@ -42,8 +42,7 @@ class UnclassifiedCLINForm(CLINForm):
 
 class TaskOrderForm(BaseForm):
     number = StringField(
-        translate("forms.task_order.number_label"),
-        description=translate("forms.task_order.number_description"),
+        label=translate("forms.task_order.number_description"),
         validators=[Required()],
     )
     pdf = FileField(

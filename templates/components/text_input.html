@@ -14,7 +14,8 @@
   initial_value='',
   classes='',
   noMaxWidth=False,
-  optional=False) -%}
+  optional=False,
+  showLabel=True) -%}
 
   <textinput
     v-cloak
@@ -32,24 +33,26 @@
       class='{% if disabled %}input--disabled{% endif %} {{ classes }}'
       v-bind:class="['usa-input usa-input--validation--' + validation, { 'usa-input--error': showError, 'usa-input--success': showValid, 'usa-input--validation--paragraph': paragraph, 'no-max-width': noMaxWidth }]">
 
-      <label for={{field.name}}>
-        <div class="usa-input__title">
-          {{ label }}
-          {% if tooltip and not disabled %}
-            {{ Tooltip(tooltip, tooltip_title) }}
+      {% if showLabel %}
+        <label for={{field.name}}>
+          <div class="usa-input__title">
+            {{ label }}
+            {% if tooltip and not disabled %}
+              {{ Tooltip(tooltip, tooltip_title) }}
+            {% endif %}
+          </div>
+
+          {% if field.description %}
+            <span class='usa-input__help'>{{ description | safe }}</span>
           {% endif %}
-        </div>
 
-        {% if field.description %}
-          <span class='usa-input__help'>{{ description | safe }}</span>
-        {% endif %}
+          {% if not disabled %}
+            <span v-show='showError'>{{ Icon('alert',classes="icon-validation") }}</span>
+            <span v-show='showValid'>{{ Icon('ok',classes="icon-validation") }}</span>
+          {% endif %}
 
-        {% if not disabled %}
-          <span v-show='showError'>{{ Icon('alert',classes="icon-validation") }}</span>
-          <span v-show='showValid'>{{ Icon('ok',classes="icon-validation") }}</span>
-        {% endif %}
-
-      </label>
+        </label>
+      {% endif %}
 
       {% if paragraph %}
 
