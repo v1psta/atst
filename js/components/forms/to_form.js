@@ -23,7 +23,7 @@ export default {
   },
 
   data: function() {
-    const clins = this.initialClinCount == 0 ? [''] : []
+    const clins = this.initialClinCount == 0 ? 1 : 0
     const clinIndex = this.initialClinCount == 0 ? 0 : this.initialClinCount - 1
 
     return {
@@ -34,7 +34,7 @@ export default {
 
   methods: {
     addClin: function(event) {
-      this.clins.push('')
+      this.clins = this.clins + 1
       this.clinIndex = this.clinIndex + 1
     },
   },
