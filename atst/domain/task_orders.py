@@ -1,3 +1,4 @@
+import datetime
 from flask import current_app as app
 
 from atst.database import db
@@ -44,6 +45,16 @@ class TaskOrders(BaseDomainClass):
 
         db.session.commit()
         TaskOrders.create_clins(task_order_id, clins)
+
+        return task_order
+
+    @classmethod
+    def sign(cls, task_order, signer_dod_id):
+        task_order.signer_dod_id = signer_dod_id
+        task_order.signed_at = datetime.datetime.now()
+
+        db.session.add(task_order)
+        db.session.commit()
 
         return task_order
 

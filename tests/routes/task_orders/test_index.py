@@ -1,3 +1,4 @@
+from datetime import date
 from flask import url_for
 import pytest
 from datetime import timedelta, date
@@ -6,16 +7,10 @@ from atst.domain.permission_sets import PermissionSets
 from atst.domain.task_orders import TaskOrders
 from atst.models import *
 from atst.models.portfolio_role import Status as PortfolioStatus
+from atst.models.task_order import Status as TaskOrderStatus
 from atst.utils.localization import translate
 
-from tests.factories import (
-    PortfolioFactory,
-    PortfolioRoleFactory,
-    TaskOrderFactory,
-    UserFactory,
-    random_future_date,
-    random_past_date,
-)
+from tests.factories import *
 from tests.utils import captured_templates
 
 
@@ -23,9 +18,11 @@ from tests.utils import captured_templates
 def portfolio():
     return PortfolioFactory.create()
 
+
 @pytest.fixture
 def user():
     return UserFactory.create()
+
 
 @pytest.fixture
 def task_order():
@@ -38,17 +35,36 @@ def task_order():
 
 def test_review_task_order(client, user_session, task_order):
     user_session(task_order.portfolio.owner)
-    response = client.get(url_for("task_orders.review_task_order", task_order_id=task_order.id))
+    response = client.get(
+        url_for("task_orders.review_task_order", task_order_id=task_order.id)
+    )
     assert response.status_code == 200
+
 
 def test_submit_task_order(client, user_session, task_order):
     user_session(task_order.portfolio.owner)
     response = client.post(
-        url_for(
-            "task_orders.submit_task_order", task_order_id=task_order.id
-        ),
+        url_for("task_orders.submit_task_order", task_order_id=task_order.id)
     )
     assert response.status_code == 302
+
+    active_start_date = date.today() - timedelta(days=1)
+    active_task_order = TaskOrderFactory(portfolio=task_order.portfolio)
+    CLINFactory(task_order=active_task_order, start_date=active_start_date)
+    assert active_task_order.status == TaskOrderStatus.UNSIGNED
+    response = client.post(
+        url_for("task_orders.submit_task_order", task_order_id=active_task_order.id)
+    )
+    assert active_task_order.status == TaskOrderStatus.ACTIVE
+
+    upcoming_start_date = date.today() + timedelta(days=1)
+    upcoming_task_order = TaskOrderFactory(portfolio=task_order.portfolio)
+    CLINFactory(task_order=upcoming_task_order, start_date=upcoming_start_date)
+    assert upcoming_task_order.status == TaskOrderStatus.UNSIGNED
+    response = client.post(
+        url_for("task_orders.submit_task_order", task_order_id=upcoming_task_order.id)
+    )
+    assert upcoming_task_order.status == TaskOrderStatus.UPCOMING
 
 
 class TestPortfolioFunding:
