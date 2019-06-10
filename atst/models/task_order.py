@@ -1,5 +1,4 @@
 from enum import Enum
-from datetime import date
 
 from sqlalchemy import Column, DateTime, ForeignKey, String
 from sqlalchemy.ext.hybrid import hybrid_property
