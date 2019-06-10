@@ -57,10 +57,10 @@
                           </div>
                         </legend>
                         <select :id="'clins-' + clinIndex + '-jedi_clin_type'" :name="'clins-' + clinIndex + '-jedi_clin_type'">
-                          <option value="JEDI_CLIN_1">CLIN 01 : Unclassified</option>
-                          <option value="JEDI_CLIN_2">CLIN 02: Classified</option>
-                          <option value="JEDI_CLIN_3">CLIN 03: Unclassified</option>
-                          <option value="JEDI_CLIN_4">CLIN 04: Classified</option>
+                          <option value="JEDI_CLIN_1">{{ "forms.task_order.clin_01_label" | translate }}</option>
+                          <option value="JEDI_CLIN_2">{{ "forms.task_order.clin_02_label" | translate }}</option>
+                          <option value="JEDI_CLIN_3">{{ "forms.task_order.clin_03_label" | translate }}</option>
+                          <option value="JEDI_CLIN_4">{{ "forms.task_order.clin_04_label" | translate }}</option>
                         </select>
                     </fieldset>
                   </div>

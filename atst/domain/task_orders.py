@@ -37,13 +37,12 @@ class TaskOrders(BaseDomainClass):
 
         for clin in task_order.clins:
             db.session.delete(clin)
-            db.session.commit()
 
         if number != task_order.number:
             task_order.number = number
             db.session.add(task_order)
-            db.session.commit()
 
+        db.session.commit()
         TaskOrders.create_clins(task_order_id, clins)
 
         return task_order
