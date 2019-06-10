@@ -80,7 +80,7 @@
 }
 
 .task-order-summary {
-  margin: $gap * 4;
+  margin-top: $gap * 4;
 
   hr {
     border: 0;
@@ -113,7 +113,7 @@
     margin-left: $gap * 6;
     margin-top: $gap * 3;
     width: 33.77%;
-    max-height: 45rem;
+    height: fit-content;
     background-color: $color-gray-lightest;
   }
 

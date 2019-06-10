@@ -373,7 +373,8 @@
 }
 
 .portfolio-funding {
-  padding: (2 * $gap) 0;
+  padding: 2 * $gap;
+  padding-top: 0;
 
   .panel {
     @include shadow-panel;
@@ -383,10 +384,6 @@
     @include subheading;
     margin-top: 6 * $gap;
     margin-bottom: 2 * $gap;
-  }
-
-  .portfolio-funding__header {
-    flex-direction: row-reverse;
   }
 
   .pending-task-order {

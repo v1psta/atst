@@ -1,12 +1,10 @@
 .sticky-cta {
-  z-index: 100;
-
-  @include media($small-screen) {
-    margin-left: -$gap * 4;
-  }
+  margin-left: -$gap * 4;
+  z-index: 10;
 
   @include media($medium-screen) {
     margin-left: -$gap * 5;
+    margin-right: -$gap * 3;
   }
 }
 
@@ -16,14 +14,20 @@
 
 .sticky-cta-container {
   display: flex;
-  justify-content: center;
+  align-items: center;
 
   background-color: $color-gray-lightest;
   border-top: 1px solid $color-gray-lighter;
   border-bottom: 1px solid $color-gray-lighter;
-  padding: 0 40px 0 40px;
+  padding: 0 $gap * 2 0 $gap * 5;
   box-shadow: $box-shadow;
-  margin-bottom: 20px;
+
+  a {
+    margin: $gap $gap * 1.5 $gap 0;
+    width: 19rem;
+    height: 3.2rem;
+    font-size: $small-font-size;
+  }
 }
 
 .sticky-cta-text {
@@ -32,12 +36,4 @@
 
 .sticky-cta-buttons {
   display: flex;
-  justify-content: center;
-
-  button {
-    margin-top: auto;
-    margin-bottom: auto;
-    width: 144px;
-    margin-left: 33px;
-  }
 }
