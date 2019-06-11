@@ -91,23 +91,23 @@
   {% endcall %}
 
   <to-form inline-template v-bind:initial-clin-count="{{ form.clins.data | length }}">
-    <div class="task-order-summary">
+    <div>
       {% include "fragments/flash.html" %}
         {% if task_order_id %}
           {% set action = url_for("task_orders.update", portfolio_id=portfolio.id, task_order_id=task_order_id) %}
         {% else %}
           {% set action = url_for("task_orders.update", portfolio_id=portfolio.id) %}
         {% endif %}
-        <form id="new-task-order" action='{{ action }}' method="POST" autocomplete="off" enctype="multipart/form-data">
+        <form id="new-task-order" class="task-order task_order__form" action='{{ action }}' method="POST" autocomplete="off" enctype="multipart/form-data">
           {{ form.csrf_token }}
 
           {{ SemiCollapsibleText(paragraph="task_orders.new.form_help_text" | translate) }}
 
           <hr>
 
-          <div class="h1">Add your task order</div>
           <div class="row">
             <div class="col">
+              <div class="h1">Add your task order</div>
               {{ TextInput(form.number, validation='taskOrderNumber') }}
 
               <hr>
@@ -339,7 +339,9 @@
               </div>
             {{ UploadInput(form.pdf) }}
           </div>
-          {{ TotalsBox(task_order=task_order) }}
+          <div class="col totals">
+            {{ TotalsBox(task_order=task_order) }}
+          </div>
         </div>
       </form>
     </div>

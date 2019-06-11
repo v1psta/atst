@@ -26,7 +26,7 @@
       <a v-on:click="openModal('submit-to-1')" class="usa-button usa-button-primary" type="submit">Submit task order</a>
   {% endcall %}
 
-  <div class="task-order-summary">
+  <div class="task-order">
 
     {{ SemiCollapsibleText() }}
 
@@ -101,8 +101,9 @@
         </a>
       </div>
     </div>
-
-    {{ TotalsBox(task_order=task_order) }}
+    <div class="col totals">
+      {{ TotalsBox(task_order=task_order) }}
+    </div>
 
   </div>
 
