@@ -7,15 +7,67 @@
 {% from 'components/text_input.html' import TextInput %}
 {% from 'components/upload_input.html' import UploadInput %}
 
-{% macro CLINFields(fields) %}
-  <div>
-    <hr>
-    {{ OptionsInput(fields.jedi_clin_type) }}
-    {{ TextInput(fields.number) }}
-    {{ DatePicker(fields.start_date) }}
-    {{ DatePicker(fields.end_date) }}
-    {{ TextInput(fields.obligated_amount, validation='dollars') }}
+{% macro LOAInput() %}
+  <div v-for="loa in loas">
+    <textinput :name="'clins-' + clinIndex + '-loas-' + loaIndex(loa)" inline-template>
+      <div>
+        <label :for="name">
+          <span v-show='showError'>{{ Icon('alert',classes="icon-validation") }}</span>
+          <span v-show='showValid'>{{ Icon('ok',classes="icon-validation") }}</span>
+          <div class="usa-input__title">Line of Accounting</div>
+        </label>
+
+        <masked-input
+          v-on:input='onInput'
+          v-on:blur='onBlur'
+          v-on:change='onChange'
+          v-bind:value='value'
+          v-bind:mask='mask'
+          v-bind:pipe='pipe'
+          v-bind:keep-char-positions='keepCharPositions'
+          v-bind:aria-invalid='showError'
+          type='text'
+          :id='name'
+          ref='input'>
+        </masked-input>
+
+        <input type='hidden' v-bind:value='rawValue' :name='name' />
+
+        <template v-if='showError'>
+          <span class='usa-input__message' v-html='validationError'></span>
+        </template>
+        <template v-else>
+          <span class='usa-input__message'></span>
+        </template>
+      </div>
+    </textinput>
   </div>
+
+  <button v-on:click="addLoa" type="button">
+    Add another line of accounting
+  </button>
+{% endmacro %}
+
+{% macro CLINFields(fields, index) %}
+  <clin-fields
+    v-bind:initial-clin-index='{{ index }}'
+    v-bind:initial-loa-count="{{ fields.loas.data | length }}"
+    inline-template>
+    <div>
+      <hr>
+      {{ OptionsInput(fields.jedi_clin_type) }}
+      {{ TextInput(fields.number) }}
+
+      {% for loa in fields.loas %}
+        {{ TextInput(loa) }}
+      {% endfor %}
+
+      {{ LOAInput() }}
+      {{ DatePicker(fields.start_date) }}
+      {{ DatePicker(fields.end_date) }}
+      {{ TextInput(fields.obligated_amount, validation='dollars') }}
+    </div>
+  </clin-fields>
 {% endmacro %}
 
 {% block portfolio_content %}
@@ -44,7 +96,7 @@
             <hr>
             {{ TextInput(form.number, validation='taskOrderNumber') }}
             {% for clin in form.clins %}
-              {{ CLINFields(clin) }}
+              {{ CLINFields(clin, index=loop.index - 1) }}
             {% endfor %}
             <div v-for="clin in clins">
               <hr>
@@ -97,6 +149,8 @@
                       </template>
                     </div>
                   </textinput>
+
+                  {{ LOAInput() }}
 
                   <date-selector :name-tag="'clins-' + clinIndex + '-start_date'" inline-template>
                     <fieldset class="usa-input date-picker" v-bind:class="{ 'usa-input--success': isDateValid }">

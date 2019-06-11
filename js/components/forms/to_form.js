@@ -34,8 +34,8 @@ export default {
 
   methods: {
     addClin: function(event) {
-      this.clins = this.clins + 1
-      this.clinIndex = this.clinIndex + 1
+      ++this.clins
+      ++this.clinIndex
     },
   },
 }
