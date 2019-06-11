@@ -36,7 +36,7 @@ export default {
   },
   email: {
     mask: emailMask,
-    match: /^.+@[^.].*\.[a-z]{2,10}$/,
+    match: /^.+@[^.].*\.[a-zA-Z]{2,10}$/,
     unmask: [],
     validationError: 'Please enter a valid e-mail address',
   },
