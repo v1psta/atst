@@ -114,21 +114,21 @@
     margin-top: $gap * 2;
   }
 
-  &.task-order__form {
-    .totals-box {
-      margin-top: 0;
-    }
-  }
-
   .totals-box {
     padding: $gap * 4;
     padding-top: $gap * 2;
     flex-grow: unset;
     margin-left: $gap * 6;
     margin-top: $gap * 3;
-    max-width: 336px;
+    width: 33.77%;
     height: fit-content;
     background-color: $color-gray-lightest;
+  }
+
+  .task-order__form {
+    .totals-box {
+      margin-top: 0;
+    }
   }
 
   .panel {

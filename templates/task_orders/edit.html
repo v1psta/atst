@@ -91,14 +91,14 @@
   {% endcall %}
 
   <to-form inline-template v-bind:initial-clin-count="{{ form.clins.data | length }}">
-    <div>
+    <div class="task-order">
       {% include "fragments/flash.html" %}
         {% if task_order_id %}
           {% set action = url_for("task_orders.update", portfolio_id=portfolio.id, task_order_id=task_order_id) %}
         {% else %}
           {% set action = url_for("task_orders.update", portfolio_id=portfolio.id) %}
         {% endif %}
-        <form id="new-task-order" class="task-order task_order__form" action='{{ action }}' method="POST" autocomplete="off" enctype="multipart/form-data">
+        <form id="new-task-order" class="task_order__form" action='{{ action }}' method="POST" autocomplete="off" enctype="multipart/form-data">
           {{ form.csrf_token }}
 
           {{ SemiCollapsibleText(paragraph="task_orders.new.form_help_text" | translate) }}
@@ -339,9 +339,7 @@
               </div>
             {{ UploadInput(form.pdf) }}
           </div>
-          <div class="col totals">
-            {{ TotalsBox(task_order=task_order) }}
-          </div>
+          {{ TotalsBox(task_order=task_order) }}
         </div>
       </form>
     </div>
