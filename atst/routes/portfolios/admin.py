@@ -90,6 +90,7 @@ def render_admin_page(portfolio, form=None):
         user=g.current_user,
         ppoc_id=members_data[0].get("member_id"),
         current_member_id=current_member_id,
+        applications_count=len(portfolio.applications),
     )
 
 

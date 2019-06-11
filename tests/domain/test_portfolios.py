@@ -2,7 +2,11 @@ import pytest
 from uuid import uuid4
 
 from atst.domain.exceptions import NotFoundError, UnauthorizedError
-from atst.domain.portfolios import Portfolios, PortfolioError
+from atst.domain.portfolios import (
+    Portfolios,
+    PortfolioError,
+    PortfolioDeletionApplicationsExistError,
+)
 from atst.domain.portfolio_roles import PortfolioRoles
 from atst.domain.applications import Applications
 from atst.domain.environments import Environments
@@ -221,3 +225,25 @@ def test_invite():
     assert invitation.role.portfolio == portfolio
     assert invitation.role.user is None
     assert invitation.dod_id == member_data["dod_id"]
+
+
+def test_delete_success():
+    portfolio = PortfolioFactory.create()
+
+    assert not portfolio.deleted
+
+    Portfolios.delete(portfolio=portfolio)
+
+    assert portfolio.deleted
+
+
+def test_delete_failure_with_applications():
+    portfolio = PortfolioFactory.create()
+    application = ApplicationFactory.create(portfolio=portfolio)
+
+    assert not portfolio.deleted
+
+    with pytest.raises(PortfolioDeletionApplicationsExistError):
+        Portfolios.delete(portfolio=portfolio)
+
+    assert not portfolio.deleted

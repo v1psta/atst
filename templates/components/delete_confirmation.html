@@ -1,10 +1,10 @@
-{% macro DeleteConfirmation(modal_id, delete_text, delete_action, form) %}
-  <delete-confirmation inline-template name="{{ modal_id }}" key="{{ modal_id }}">
+{% macro DeleteConfirmation(modal_id, delete_text, delete_action, form, confirmation_text="delete") %}
+<delete-confirmation inline-template name="{{ modal_id }}" key="{{ modal_id }}" confirmation-text="{{ confirmation_text }}">
     <div>
       <div class="usa-input">
         <label for="{{ modal_id }}-deleted-text">
           <span class="usa-input__help">
-            {{ "common.delete_confirm" | translate }}
+            {{ "common.delete_confirm" | translate({"word": confirmation_text.upper()}) }}
           </span>
         </label>
         <input id="{{ modal_id }}-deleted-text" v-model="deleteText">

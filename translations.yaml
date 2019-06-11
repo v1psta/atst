@@ -35,7 +35,8 @@ common:
   confirm: Confirm
   continue: Continue
   delete: Delete
-  delete_confirm: 'Please type the word DELETE to confirm:'
+  deactivate: Deactivate
+  delete_confirm: 'Please type the word {word} to confirm:'
   edit: Edit
   hide: Hide
   manage: manage
@@ -347,6 +348,9 @@ forms:
     phone_number_message: Please enter a valid 5 or 10 digit phone number.
     file_length: Your file may not exceed 50 MB.
 fragments:
+  delete_portfolio:
+    title: Deactivate Portfolio
+    subtitle: Portfolio deactivation is available only if there are no applications in the portfolio.
   edit_application_form:
     explain: AT-AT allows you to create multiple applications within a portfolio. Each application can then be broken down into its own customizable environments.
     new_application_title: Add a new application

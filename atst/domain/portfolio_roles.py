@@ -144,11 +144,13 @@ class PortfolioRoles(object):
         PortfolioRoles.update(portfolio_role=portfolio_role, set_names=permission_sets)
 
     @classmethod
-    def disable(cls, portfolio_role):
+    def disable(cls, portfolio_role, commit=True):
         portfolio_role.status = PortfolioRoleStatus.DISABLED
 
         db.session.add(portfolio_role)
-        db.session.commit()
+
+        if commit:
+            db.session.commit()
 
         return portfolio_role
 
