@@ -85,6 +85,14 @@ class TaskOrder(Base, mixins.TimestampsMixin):
         return self.status == Status.UNSIGNED
 
     @property
+    def has_begun(self):
+        return Clock.today() >= self.start_date
+
+    @property
+    def has_ended(self):
+        return Clock.today() >= self.end_date
+
+    @property
     def is_completed(self):
         return all([self.pdf, self.number, len(self.clins)])
 
