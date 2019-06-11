@@ -27,15 +27,15 @@
       {% else %}
         Starts on
       {% endif %}
+      {{ TaskOrderDateTime(task_order.time_created) }}
     {% else %}
       {% if task_order.has_begun %}
         Began
       {% else %}
         Begins
       {% endif %}
+      {{ TaskOrderDateTime(task_order.start_date) }}
     {% endif %}
-
-    {{ TaskOrderDateTime(task_order.start_date) }}
 
     {% if not task_order.is_draft %}
       &nbsp;&nbsp;|&nbsp;&nbsp;
