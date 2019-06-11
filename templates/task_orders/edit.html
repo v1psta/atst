@@ -61,8 +61,14 @@
     v-bind:initial-loa-count="{{ fields.loas.data | length }}"
     inline-template>
     <div>
-      {{ OptionsInput(fields.jedi_clin_type) }}
-      {{ TextInput(fields.number) }}
+      <div class="row row__form-fields">
+        <div class="col">
+          {{ OptionsInput(fields.jedi_clin_type) }}
+        </div>
+        <div class="col">
+          {{ TextInput(fields.number) }}
+        </div>
+      </div>
 
       <div>Line of accounting (43 characters)</div>
       {% for loa in fields.loas %}
@@ -125,54 +131,59 @@
                 <hr v-if="clinIndex !== 0">
                 <clin-fields v-bind:initial-clin-index='clinIndex' inline-template>
                   <div>
-                    <div class="usa-input">
-                      <fieldset data-ally-disabled="true" class="usa-input__choices">
-                          <legend>
-                            <div class="usa-input__title">
-                              CLIN type
-                            </div>
-                          </legend>
-                          <select :id="'clins-' + clinIndex + '-jedi_clin_type'" :name="'clins-' + clinIndex + '-jedi_clin_type'">
-                            <option value="JEDI_CLIN_1">{{ "forms.task_order.clin_01_label" | translate }}</option>
-                            <option value="JEDI_CLIN_2">{{ "forms.task_order.clin_02_label" | translate }}</option>
-                            <option value="JEDI_CLIN_3">{{ "forms.task_order.clin_03_label" | translate }}</option>
-                            <option value="JEDI_CLIN_4">{{ "forms.task_order.clin_04_label" | translate }}</option>
-                          </select>
-                      </fieldset>
-                    </div>
-
-                    <textinput :name="'clins-' + clinIndex + '-number'" inline-template>
-                      <div>
-                        <label :for="name">
-                          <span v-show='showError'>{{ Icon('alert',classes="icon-validation") }}</span>
-                          <span v-show='showValid'>{{ Icon('ok',classes="icon-validation") }}</span>
-                          <div class="usa-input__title">CLIN</div>
-                        </label>
-
-                        <masked-input
-                          v-on:input='onInput'
-                          v-on:blur='onBlur'
-                          v-on:change='onChange'
-                          v-bind:value='value'
-                          v-bind:mask='mask'
-                          v-bind:pipe='pipe'
-                          v-bind:keep-char-positions='keepCharPositions'
-                          v-bind:aria-invalid='showError'
-                          type='text'
-                          :id='name'
-                          ref='input'>
-                        </masked-input>
-
-                        <input type='hidden' v-bind:value='rawValue' :name='name' />
-
-                        <template v-if='showError'>
-                          <span class='usa-input__message' v-html='validationError'></span>
-                        </template>
-                        <template v-else>
-                          <span class='usa-input__message'></span>
-                        </template>
+                    <div class="row row__form-fields">
+                      <div class="col">
+                        <div class="usa-input">
+                          <fieldset data-ally-disabled="true" class="usa-input__choices">
+                              <legend>
+                                <div class="usa-input__title">
+                                  CLIN type
+                                </div>
+                              </legend>
+                              <select :id="'clins-' + clinIndex + '-jedi_clin_type'" :name="'clins-' + clinIndex + '-jedi_clin_type'">
+                                <option value="JEDI_CLIN_1">{{ "forms.task_order.clin_01_label" | translate }}</option>
+                                <option value="JEDI_CLIN_2">{{ "forms.task_order.clin_02_label" | translate }}</option>
+                                <option value="JEDI_CLIN_3">{{ "forms.task_order.clin_03_label" | translate }}</option>
+                                <option value="JEDI_CLIN_4">{{ "forms.task_order.clin_04_label" | translate }}</option>
+                              </select>
+                          </fieldset>
+                        </div>
                       </div>
-                    </textinput>
+                      <div class="col">
+                        <textinput :name="'clins-' + clinIndex + '-number'" inline-template>
+                          <div class="usa-input">
+                            <label :for="name">
+                              <span v-show='showError'>{{ Icon('alert',classes="icon-validation") }}</span>
+                              <span v-show='showValid'>{{ Icon('ok',classes="icon-validation") }}</span>
+                              <div class="usa-input__title">CLIN</div>
+                            </label>
+
+                            <masked-input
+                              v-on:input='onInput'
+                              v-on:blur='onBlur'
+                              v-on:change='onChange'
+                              v-bind:value='value'
+                              v-bind:mask='mask'
+                              v-bind:pipe='pipe'
+                              v-bind:keep-char-positions='keepCharPositions'
+                              v-bind:aria-invalid='showError'
+                              type='text'
+                              :id='name'
+                              ref='input'>
+                            </masked-input>
+
+                            <input type='hidden' v-bind:value='rawValue' :name='name' />
+
+                            <template v-if='showError'>
+                              <span class='usa-input__message' v-html='validationError'></span>
+                            </template>
+                            <template v-else>
+                              <span class='usa-input__message'></span>
+                            </template>
+                          </div>
+                        </textinput>
+                      </div>
+                    </div>
 
                     <div>Line of accounting (43 characters)</div>
                     {{ LOAInput() }}

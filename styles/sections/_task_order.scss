@@ -131,6 +131,16 @@
     }
   }
 
+  .row.row__form-fields {
+    .col {
+      margin-left: $gap;
+    }
+
+    .col:first-child {
+      margin-left: 0;
+    }
+  }
+
   .panel {
     @include shadow-panel;
   }
