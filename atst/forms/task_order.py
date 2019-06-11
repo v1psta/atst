@@ -59,7 +59,6 @@ class TaskOrderForm(BaseForm):
 
 class SignatureForm(BaseForm):
     signature = BooleanField(
-        translate("task_orders.sign.digital_signature_label"),
-        description=translate("task_orders.sign.digital_signature_description"),
+        translate("task_orders.sign.digital_signature_description"),
         validators=[Required()],
     )

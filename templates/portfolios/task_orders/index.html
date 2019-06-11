@@ -68,6 +68,8 @@
     <a href="{{ url_for("task_orders.edit", portfolio_id=portfolio.id) }}" class="usa-button usa-button-primary" type="submit">Start a new task order</a>
 {% endcall %}
 
+{% include "fragments/flash.html" %}
+
 <div class="portfolio-funding">
 
   {% if task_orders  %}

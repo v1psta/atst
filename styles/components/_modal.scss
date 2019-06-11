@@ -8,7 +8,7 @@ body {
 
 .modal {
   position: fixed;
-  z-index: 6;
+  z-index: 11;
   left: 0;
   right: 0;
   top: 0;
@@ -52,7 +52,7 @@ body {
       }
 
       @include media($medium-screen) {
-        padding: $gap * 5;
+        padding: $gap * 2.5 $gap * 5;
       }
 
       h1,
@@ -215,5 +215,13 @@ body {
         max-width: 100%;
       }
     }
+  }
+
+  .usa-button {
+    min-width: 17rem;
+  }
+
+  .usa-input .checkbox {
+    margin-left: 3rem;
   }
 }

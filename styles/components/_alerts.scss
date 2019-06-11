@@ -9,6 +9,10 @@
   margin-bottom: $gap;
 }
 
+.usa-alert {
+  padding-bottom: 2.4rem;
+}
+
 @mixin alert {
   padding: $gap * 2;
   border-left-width: $gap / 2;

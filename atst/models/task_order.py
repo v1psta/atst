@@ -1,3 +1,4 @@
+from datetime import timedelta
 from enum import Enum
 
 from sqlalchemy import Column, DateTime, ForeignKey, String
@@ -100,7 +101,8 @@ class TaskOrder(Base, mixins.TimestampsMixin):
 
     @property
     def end_date(self):
-        return max((c.end_date for c in self.clins), default=None)
+        default_end_date = self.start_date + timedelta(days=1)
+        return max((c.end_date for c in self.clins), default=default_end_date)
 
     @property
     def days_to_expiration(self):

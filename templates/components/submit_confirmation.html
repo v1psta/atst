@@ -1,0 +1,31 @@
+{% from "components/alert.html" import Alert %}
+{% from "components/checkbox_input.html" import CheckboxInput %}
+
+{% macro SubmitConfirmation(modal_id, submit_text, submit_action, form, task_order) %}
+  <submit-confirmation inline-template name="{{ modal_id }}" key="{{ modal_id }}">
+    <div>
+      <div class="usa-input">
+        <label for="{{ modal_id }}-deleted-text">
+          <div class="modal__form--header">
+            <h1>Signature confirmation: <em>Task Order #{{task_order.number}}</em></h1>
+          </div>
+          {{ Alert('',
+            message="All task orders require a Contracting Officer signature."
+          ) }}
+        </label>
+        <div v-on:change="toggleValid" class="checkbox">
+          {{ CheckboxInput(field=form.signature) }}
+        </div>
+      </div>
+      <div class="action-group">
+        <form method="POST" action="{{ submit_action }}">
+          {{ form.csrf_token }}
+          <button class="usa-button usa-button-primary" v-bind:disabled="!valid">
+            {{ submit_text }}
+          </button>
+        </form>
+        <button v-on:click="$root.closeModal('{{ modal_id }}')" class="usa-button usa-button-secondary">{{ "common.cancel" | translate }}</button>
+      </div>
+    </div>
+  </submit-confirmation>
+{% endmacro %}
