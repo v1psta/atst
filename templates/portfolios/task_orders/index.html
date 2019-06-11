@@ -6,14 +6,8 @@
 
 {% block portfolio_content %}
 
-{% macro ViewLink(task_order, text="Edit") %}
-  <a href="{{ url_for('task_orders.review_task_order', task_order_id=task_order.id) }}" class="usa-button">
-    {{ text }}
-  </a>
-{% endmacro %}
-
-{% macro TaskOrderAction(task_order, text="Edit", route="review_task_order", secondary=False) %}
-  <a href="{{ url_for('task_orders.' + route, task_order_id=task_order.id) }}" class="usa-button {{ 'usa-button-secondary' if secondary else '' }}">
+{% macro TaskOrderAction(task_order, text="Edit", route="review_task_order", secondary=False, modal=None) %}
+  <a href="{{ url_for('task_orders.' + route, task_order_id=task_order.id, modal=modal) }}" class="usa-button {{ 'usa-button-secondary' if secondary else '' }}">
     {{ text }}
   </a>
 {% endmacro %}
@@ -64,7 +58,7 @@
     {% elif task_order.is_expired %}
       {{ TaskOrderAction(task_order, text="View") }}
     {% elif task_order.is_unsigned %}
-      {{ TaskOrderAction(task_order, text="Sign", secondary=True) }}
+      {{ TaskOrderAction(task_order, text="Sign", secondary=True, modal="submit-to-1") }}
       {{ TaskOrderAction(task_order, text="View") }}
     {% else %}
     {% endif %}
