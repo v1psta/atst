@@ -20,7 +20,7 @@
         {{ field.label }}
       {% endif %}
       {{ field.description }}
-      <div class="upload-widget">
+      <div v-if="!hideInput" class="upload-widget">
         <label class="upload-label" for="{{ field.name }}">
           <span class="upload-button">
             Browse

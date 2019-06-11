@@ -26,24 +26,27 @@ export default {
 
   data: function() {
     return {
+      hasInitialData: !!this.initialData,
       attachment: this.initialData || null,
       showErrors: this.initialErrors,
+      changed: false,
     }
   },
 
   methods: {
-    showUploadInput: function() {
-      this.showUpload = true
-    },
     addAttachment: function(e) {
       this.attachment = e.target.value
       this.showErrors = false
+      this.changed = true
     },
     removeAttachment: function(e) {
       e.preventDefault()
       this.attachment = null
-      this.$refs.attachmentInput.value = null
+      if (this.$refs.attachmentInput) {
+        this.$refs.attachmentInput.value = null
+      }
       this.showErrors = false
+      this.changed = true
     },
   },
 
@@ -55,6 +58,9 @@ export default {
     },
     hasAttachment: function() {
       return !!this.attachment
+    },
+    hideInput: function() {
+      return this.hasInitialData && !this.changed
     },
   },
 }

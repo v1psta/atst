@@ -42,7 +42,12 @@ def edit(portfolio_id, task_order_id=None):
 def update(portfolio_id, task_order_id=None):
     form_data = {**http_request.form, **http_request.files}
 
-    form = TaskOrderForm(form_data)
+    form = None
+    if task_order_id:
+        task_order = TaskOrders.get(task_order_id)
+        form = TaskOrderForm(form_data, obj=task_order)
+    else:
+        form = TaskOrderForm(form_data)
 
     if form.validate():
         task_order = None
