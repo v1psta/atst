@@ -65,12 +65,32 @@ class TaskOrder(Base, mixins.TimestampsMixin):
             raise TypeError("Could not set attachment with invalid type")
 
     @property
+    def is_draft(self):
+        return self.status == Status.DRAFT
+
+    @property
     def is_active(self):
         return self.status == Status.ACTIVE
 
     @property
+    def is_upcoming(self):
+        return self.status == Status.UPCOMING
+
+    @property
     def is_expired(self):
         return self.status == Status.EXPIRED
+
+    @property
+    def is_unsigned(self):
+        return self.status == Status.UNSIGNED
+
+    @property
+    def has_begun(self):
+        return Clock.today() >= self.start_date
+
+    @property
+    def has_ended(self):
+        return Clock.today() >= self.end_date
 
     @property
     def is_completed(self):
@@ -145,10 +165,6 @@ class TaskOrder(Base, mixins.TimestampsMixin):
     @property
     def portfolio_name(self):
         return self.portfolio.name
-
-    @property
-    def is_pending(self):
-        return self.status == Status.PENDING
 
     def to_dictionary(self):
         return {

@@ -6,8 +6,14 @@
 
 {% block portfolio_content %}
 
-{% macro ViewLink(task_order, text="Edit") %}
-  <a href="{{ url_for('task_orders.view_task_order', task_order_id=task_order.id) }}" class="usa-button">
+{% macro TaskOrderReviewButton(task_order, text="Edit", secondary=False, modal=None) %}
+  <a href="{{ url_for('task_orders.review_task_order', task_order_id=task_order.id, modal=modal) }}" class="usa-button {{ 'usa-button-secondary' if secondary else '' }}">
+    {{ text }}
+  </a>
+{% endmacro %}
+
+{% macro TaskOrderEditButton(task_order, text="Edit", secondary=False) %}
+  <a href="{{ url_for('task_orders.edit', portfolio_id=task_order.portfolio_id, task_order_id=task_order.id) }}" class="usa-button {{ 'usa-button-secondary' if secondary else '' }}">
     {{ text }}
   </a>
 {% endmacro %}
@@ -18,24 +24,49 @@
 
 {% macro TaskOrderDate(task_order) %}
   <span class="datetime">
-    {% if task_order.is_active %}
-      Began {{ TaskOrderDateTime(task_order.start_date) }} &nbsp;&nbsp;|&nbsp;&nbsp; Ends {{ TaskOrderDateTime(task_order.end_date) }}
-    {% elif task_order.is_expired %}
-      Started {{ TaskOrderDateTime(task_order.start_date) }} &nbsp;&nbsp;|&nbsp;&nbsp; Ended {{ TaskOrderDateTime(task_order.end_date) }}
+    <!-- Draft: {Begins, Began} start_date -->
+    <!-- Everything else: {Starts, Started} start_date | {Ends, Ended} end_date -->
+
+    {% if task_order.is_draft %}
+      {% if task_order.has_begun %}
+        Started on
+      {% else %}
+        Starts on
+      {% endif %}
+      {{ TaskOrderDateTime(task_order.time_created) }}
     {% else %}
-      Started {{ TaskOrderDateTime(task_order.start_date) }}
+      {% if task_order.has_begun %}
+        Began
+      {% else %}
+        Begins
+      {% endif %}
+      {{ TaskOrderDateTime(task_order.start_date) }}
+    {% endif %}
+
+    {% if not task_order.is_draft %}
+      &nbsp;&nbsp;|&nbsp;&nbsp;
+
+      {% if task_order.has_ended %}
+        Ended
+      {% else %}
+        Ends
+      {% endif %}
+
+      {{ TaskOrderDateTime(task_order.end_date) }}
     {% endif %}
   </span>
 {% endmacro %}
 
 {% macro TaskOrderActions(task_order) %}
   <div class="task-order-card__buttons">
-    {% if task_order.is_pending %}
-      {{ ViewLink(task_order, text="Edit") }}
-    {% elif task_order.is_active %}
-      {{ ViewLink(task_order, text="Modify") }}
+    {% if task_order.is_draft %}
+      {{ TaskOrderEditButton(task_order, text="Edit") }}
+    {% elif task_order.is_expired %}
+      {{ TaskOrderReviewButton(task_order, text="View") }}
+    {% elif task_order.is_unsigned %}
+      {{ TaskOrderReviewButton(task_order, text="Sign", secondary=True, modal="submit-to-1") }}
+      {{ TaskOrderReviewButton(task_order, text="View") }}
     {% else %}
-      {{ ViewLink(task_order, text="View") }}
     {% endif %}
   </div>
 {% endmacro %}
