@@ -108,12 +108,13 @@
 
     <to-form inline-template v-bind:initial-clin-count="{{ form.clins.data | length }}">
       <div class="task-order task_order__form">
-        {% include "fragments/flash.html" %}
           <p class="section-description">
             {{ "task_orders.new.form_help_text" | translate }}
           </p>
 
           <hr>
+
+          {% include "fragments/flash.html" %}
 
           <div class="row">
             <div class="col">

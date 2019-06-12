@@ -88,6 +88,7 @@
 
 .task-order {
   margin-top: $gap * 4;
+  width: 900px;
 
   hr {
     border: 0;
@@ -102,7 +103,6 @@
 
   .col {
     flex-grow: 1;
-    max-width: 610px;
   }
 
   .h1,
@@ -120,7 +120,7 @@
     flex-grow: unset;
     margin-left: $gap * 6;
     margin-top: $gap * 3;
-    width: 33.77%;
+    width: 35%;
     height: fit-content;
     background-color: $color-gray-lightest;
   }
@@ -140,6 +140,10 @@
 
     .usa-form-group-year {
       margin-right: 0.4rem;
+    }
+
+    .usa-alert {
+      margin: 1.5em 0;
     }
   }
 
