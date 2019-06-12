@@ -6,8 +6,14 @@
 
 {% block portfolio_content %}
 
-{% macro TaskOrderAction(task_order, text="Edit", route="review_task_order", secondary=False, modal=None) %}
-  <a href="{{ url_for('task_orders.' + route, task_order_id=task_order.id, modal=modal) }}" class="usa-button {{ 'usa-button-secondary' if secondary else '' }}">
+{% macro TaskOrderReviewButton(task_order, text="Edit", secondary=False, modal=None) %}
+  <a href="{{ url_for('task_orders.review_task_order', task_order_id=task_order.id, modal=modal) }}" class="usa-button {{ 'usa-button-secondary' if secondary else '' }}">
+    {{ text }}
+  </a>
+{% endmacro %}
+
+{% macro TaskOrderEditButton(task_order, text="Edit", secondary=False) %}
+  <a href="{{ url_for('task_orders.edit', portfolio_id=task_order.portfolio_id, task_order_id=task_order.id) }}" class="usa-button {{ 'usa-button-secondary' if secondary else '' }}">
     {{ text }}
   </a>
 {% endmacro %}
@@ -54,12 +60,12 @@
 {% macro TaskOrderActions(task_order) %}
   <div class="task-order-card__buttons">
     {% if task_order.is_draft %}
-      {{ TaskOrderAction(task_order, text="Edit") }}
+      {{ TaskOrderEditButton(task_order, text="Edit") }}
     {% elif task_order.is_expired %}
-      {{ TaskOrderAction(task_order, text="View") }}
+      {{ TaskOrderReviewButton(task_order, text="View") }}
     {% elif task_order.is_unsigned %}
-      {{ TaskOrderAction(task_order, text="Sign", secondary=True, modal="submit-to-1") }}
-      {{ TaskOrderAction(task_order, text="View") }}
+      {{ TaskOrderReviewButton(task_order, text="Sign", secondary=True, modal="submit-to-1") }}
+      {{ TaskOrderReviewButton(task_order, text="View") }}
     {% else %}
     {% endif %}
   </div>
