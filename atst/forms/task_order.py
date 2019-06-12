@@ -41,6 +41,7 @@ class TaskOrderForm(BaseForm):
     )
     pdf = FileField(
         None,
+        description="Your file may not exceed 50MB",
         validators=[
             FileAllowed(["pdf"], translate("forms.task_order.file_format_not_allowed")),
             FileLength(message=translate("forms.validators.file_length")),
