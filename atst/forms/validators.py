@@ -1,7 +1,10 @@
+from datetime import datetime
 import re
+
+from werkzeug.datastructures import FileStorage
 from wtforms.validators import ValidationError, StopValidation
 import pendulum
-from datetime import datetime
+
 from atst.utils.localization import translate
 
 
@@ -103,7 +106,7 @@ def RequiredIf(criteria_function, message=translate("forms.validators.is_require
 
 def FileLength(max_length=50000000, message=None):
     def _file_length(_form, field):
-        if field.data is None:
+        if field.data is None or not isinstance(field.data, FileStorage):
             return True
 
         content = field.data.read()

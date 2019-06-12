@@ -145,7 +145,7 @@ def test_task_orders_update_pdf(
 def test_task_orders_update_delete_pdf(client, user_session, portfolio, pdf_upload):
     user_session(portfolio.owner)
     task_order = TaskOrderFactory.create(pdf=pdf_upload)
-    data = {"number": "0123456789", "pdf": None}
+    data = {"number": "0123456789", "pdf": ""}
     response = client.post(
         url_for(
             "task_orders.update", portfolio_id=portfolio.id, task_order_id=task_order.id
