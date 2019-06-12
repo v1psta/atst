@@ -83,7 +83,29 @@
     }
 
     .usa-input {
-      margin: $gap 0;
+      margin-top: $gap;
+      margin-bottom: $gap;
+    }
+
+    .form-row {
+      margin-bottom: 0;
+
+      .usa-input {
+        margin-left: $gap;
+        margin-right: $gap;
+      }
+
+      .form-col:first-child {
+        .usa-input {
+          margin-left: 0;
+        }
+      }
+
+      .form-col:last-child {
+        .usa-input {
+          margin-right: 0;
+        }
+      }
     }
 
     .task-order__loa-fieldset {
@@ -105,21 +127,17 @@
     }
 
     button.icon-link {
-      padding: $gap * 3 0 0;
+      margin-top: 0;
+      margin-left: 0;
+      padding-left: 0;
+
+      &.icon-link__add-another-clin {
+        margin-top: $gap * 3;
+      }
     }
 
     .task-order__pdf-help-text {
       margin-bottom: 4 * $gap;
-    }
-  }
-
-  .row.row__form-fields {
-    .col {
-      margin-left: $gap;
-    }
-
-    .col:first-child {
-      margin-left: 0;
     }
   }
 

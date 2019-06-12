@@ -60,11 +60,11 @@
     v-bind:initial-loa-count="{{ fields.loas.data | length }}"
     inline-template>
     <div>
-      <div class="row row__form-fields">
-        <div class="col">
+      <div class="form-row">
+        <div class="form-col form-col--two-thirds">
           {{ OptionsInput(fields.jedi_clin_type) }}
         </div>
-        <div class="col">
+        <div class="form-col form-col--third">
           {{ TextInput(fields.number) }}
         </div>
       </div>
@@ -144,8 +144,8 @@
                 <hr v-if="clinIndex !== 0">
                 <clin-fields v-bind:initial-clin-index='clinIndex' inline-template>
                   <div>
-                    <div class="row row__form-fields">
-                      <div class="col">
+                    <div class="form-row">
+                      <div class="form-col form-col--two-thirds">
                         <div class="usa-input">
                           <fieldset data-ally-disabled="true" class="usa-input__choices">
                               <legend>
@@ -162,7 +162,7 @@
                           </fieldset>
                         </div>
                       </div>
-                      <div class="col">
+                      <div class="form-col form-col--third">
                         <textinput :name="'clins-' + clinIndex + '-number'" inline-template>
                           <div class="usa-input">
                             <label :for="name">
@@ -357,7 +357,7 @@
               </div>
 
               <button
-                class="icon-link"
+                class="icon-link icon-link__add-another-clin"
                 v-on:click="addClin"
                 type="button">
                 {{ Icon('plus') }}
