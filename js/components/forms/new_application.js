@@ -1,5 +1,6 @@
 import FormMixin from '../../mixins/form'
 import textinput from '../text_input'
+import * as R from "ramda"
 
 const createEnvironment = name => ({ name })
 
@@ -35,12 +36,12 @@ export default {
           message: 'Provide at least one environment name.',
         },
         {
-          func: this.envNamesAreUnique,
-          message: 'Environment names must be unique.',
-        },
-        {
           func: this.environmentsHaveNames,
           message: 'Environment names cannot be empty.',
+        },
+        {
+          func: this.envNamesAreUnique,
+          message: 'Environment names must be unique.',
         },
       ],
       errors: [],
@@ -66,13 +67,12 @@ export default {
     },
 
     validate: function() {
-      this.errors = this.validations
-        .map(validation => {
-          if (!validation.func()) {
-            return validation.message
-          }
-        })
-        .filter(Boolean)
+      // Only take first error message
+      this.errors = R.pipe(
+        R.map((validation) => !validation.func() ? validation.message : undefined),
+        R.filter(Boolean),
+        R.take(1)
+      )(this.validations)
     },
 
     hasEnvironments: function() {
