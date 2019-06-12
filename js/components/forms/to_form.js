@@ -6,6 +6,7 @@ import FormMixin from '../../mixins/form'
 import optionsinput from '../options_input'
 import SemiCollapsibleText from '../semi_collapsible_text'
 import textinput from '../text_input'
+import TotalsBox from '../totals_box'
 import uploadinput from '../upload_input'
 
 export default {
@@ -19,6 +20,7 @@ export default {
     optionsinput,
     SemiCollapsibleText,
     textinput,
+    TotalsBox,
     uploadinput,
   },
 
@@ -33,13 +35,26 @@ export default {
     return {
       clins,
       clinIndex,
+      totalClinAmount: 0,
+      additionalObligatedAmount: 0,
     }
+  },
+
+  mounted: function() {
+    this.$root.$on('clin-change', this.calculateClinAmounts)
   },
 
   methods: {
     addClin: function(event) {
       ++this.clins
       ++this.clinIndex
+    },
+
+    calculateClinAmounts: function (event) {
+      this.totalClinAmount += parseFloat(event.amount - this.totalClinAmount)
+      if (event.clinType.includes('1') || event.clinType.includes('3')) {
+        this.additionalObligatedAmount += parseFloat(event.amount - this.additionalObligatedAmount)
+      }
     },
   },
 
