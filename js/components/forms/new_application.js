@@ -1,6 +1,6 @@
 import FormMixin from '../../mixins/form'
 import textinput from '../text_input'
-import * as R from "ramda"
+import * as R from 'ramda'
 
 const createEnvironment = name => ({ name })
 
@@ -69,7 +69,9 @@ export default {
     validate: function() {
       // Only take first error message
       this.errors = R.pipe(
-        R.map((validation) => !validation.func() ? validation.message : undefined),
+        R.map(validation =>
+          !validation.func() ? validation.message : undefined
+        ),
         R.filter(Boolean),
         R.take(1)
       )(this.validations)
