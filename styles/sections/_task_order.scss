@@ -125,9 +125,21 @@
     background-color: $color-gray-lightest;
   }
 
-  .task-order__form {
+  &.task_order__form {
     .totals-box {
       margin-top: 0;
+    }
+
+    .icon {
+      left: 100%;
+    }
+
+    .usa-input--validation--dollars input {
+      max-width: unset;
+    }
+
+    .usa-form-group-year {
+      margin-right: 0.4rem;
     }
   }
 

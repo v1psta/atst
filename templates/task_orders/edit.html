@@ -91,7 +91,7 @@
     {% set action = url_for("task_orders.update", portfolio_id=portfolio.id) %}
     {% set review_action = url_for("task_orders.update", portfolio_id=portfolio.id, review=True) %}
   {% endif %}
-  <form id="new-task-order" class="task_order__form" action='{{ action }}' method="POST" autocomplete="off" enctype="multipart/form-data">
+  <form id="new-task-order" action='{{ action }}' method="POST" autocomplete="off" enctype="multipart/form-data">
     {{ form.csrf_token }}
 
     {% call StickyCTA(text="Add Funding") %}
@@ -107,7 +107,7 @@
     {% endcall %}
 
     <to-form inline-template v-bind:initial-clin-count="{{ form.clins.data | length }}">
-      <div class="task-order">
+      <div class="task-order task_order__form">
         {% include "fragments/flash.html" %}
           {{ SemiCollapsibleText(paragraph="task_orders.new.form_help_text" | translate) }}
 
