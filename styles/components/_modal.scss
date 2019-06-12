@@ -224,4 +224,10 @@ body {
   .usa-input .checkbox {
     margin-left: 3rem;
   }
+
+  input[type="checkbox"] {
+    + label::before {
+      margin-left: -3rem;
+    }
+  }
 }
