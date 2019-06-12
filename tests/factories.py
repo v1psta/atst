@@ -30,7 +30,7 @@ def random_phone_number():
 
 
 def random_task_order_number():
-    return "-".join([str(random.randint(100, 999)) for _ in range(4)])
+    return "".join(random.choices(string.digits, k=10))
 
 
 def random_past_date(year_min=1, year_max=5):
@@ -261,7 +261,7 @@ class AttachmentFactory(Base):
     class Meta:
         model = Attachment
 
-    filename = factory.Faker("domain_word")
+    filename = factory.Faker("file_name", extension="pdf")
     object_name = factory.LazyFunction(lambda *args: uuid4().hex)
 
 
@@ -293,8 +293,10 @@ class CLINFactory(Base):
     number = factory.LazyFunction(random_task_order_number)
     start_date = datetime.date.today()
     end_date = factory.LazyFunction(random_future_date)
-    obligated_amount = random.randint(100, 999999)
-    jedi_clin_type = random.choice(list(clin.JEDICLINType))
+    obligated_amount = factory.LazyFunction(lambda *args: random.randint(100, 999999))
+    jedi_clin_type = factory.LazyFunction(
+        lambda *args: random.choice(list(clin.JEDICLINType))
+    )
 
 
 class NotificationRecipientFactory(Base):

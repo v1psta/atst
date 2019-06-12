@@ -4,6 +4,7 @@ import sys
 from datetime import timedelta, date, timedelta
 import random
 from faker import Faker
+from werkzeug.datastructures import FileStorage
 
 parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 sys.path.append(parent_dir)
@@ -164,18 +165,32 @@ def add_task_orders_to_portfolio(portfolio):
     today = date.today()
     future = today + timedelta(days=100)
     yesterday = today - timedelta(days=1)
+    five_days = timedelta(days=5)
 
-    draft_to = TaskOrderFactory.build(portfolio=portfolio, pdf=None)
-    unsigned_to = TaskOrderFactory.build(portfolio=portfolio)
-    upcoming_to = TaskOrderFactory.build(portfolio=portfolio, signed_at=yesterday)
-    expired_to = TaskOrderFactory.build(portfolio=portfolio, signed_at=yesterday)
-    active_to = TaskOrderFactory.build(portfolio=portfolio, signed_at=yesterday)
+    with open("tests/fixtures/sample.pdf", "rb") as fp:
+        pdf = FileStorage(fp, content_type="application/pdf")
+
+        draft_to = TaskOrderFactory.build(portfolio=portfolio, pdf=None)
+        unsigned_to = TaskOrderFactory.build(portfolio=portfolio, pdf=pdf)
+        upcoming_to = TaskOrderFactory.build(
+            portfolio=portfolio, signed_at=yesterday, pdf=pdf
+        )
+        expired_to = TaskOrderFactory.build(
+            portfolio=portfolio, signed_at=yesterday, pdf=pdf
+        )
+        active_to = TaskOrderFactory.build(
+            portfolio=portfolio, signed_at=yesterday, pdf=pdf
+        )
 
     clins = [
-        CLINFactory.build(task_order=unsigned_to, start_date=today, end_date=today),
-        CLINFactory.build(task_order=upcoming_to, start_date=future, end_date=future),
         CLINFactory.build(
-            task_order=expired_to, start_date=yesterday, end_date=yesterday
+            task_order=unsigned_to, start_date=(today - five_days), end_date=today
+        ),
+        CLINFactory.build(
+            task_order=upcoming_to, start_date=future, end_date=(today + five_days)
+        ),
+        CLINFactory.build(
+            task_order=expired_to, start_date=(today - five_days), end_date=yesterday
         ),
         CLINFactory.build(task_order=active_to, start_date=yesterday, end_date=future),
     ]
