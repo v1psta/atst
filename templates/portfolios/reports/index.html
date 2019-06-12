@@ -74,7 +74,7 @@
                       -
                   {% endif %}
                 </div>
-                <a href='{{ url_for("task_orders.view_task_order", task_order_id=task_order.id) }}' class='icon-link'>
+                <a href='{{ url_for("task_orders.review_task_order", task_order_id=task_order.id) }}' class='icon-link'>
                   {{ Icon('cog') }}
                   Manage Task Order
                 </a>

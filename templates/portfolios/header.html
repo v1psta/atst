@@ -27,7 +27,7 @@
       icon='funding',
       text='navigation.portfolio_navigation.breadcrumbs.funding' | translate,
       url=url_for("task_orders.portfolio_funding", portfolio_id=portfolio.id),
-      active=request.url_rule.endpoint in ["task_orders.portfolio_funding", "task_orders.view_task_order", "task_orders.review_task_order"],
+      active=request.url_rule.endpoint in ["task_orders.portfolio_funding", "task_orders.review_task_order"],
     ) }}
     {{ Link(
       icon='applications',
