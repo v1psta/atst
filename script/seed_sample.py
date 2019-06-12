@@ -164,6 +164,7 @@ def add_task_orders_to_portfolio(portfolio):
     today = date.today()
     future = today + timedelta(days=100)
     yesterday = today - timedelta(days=1)
+    five_days = timedelta(days=5)
 
     draft_to = TaskOrderFactory.build(portfolio=portfolio, pdf=None)
     unsigned_to = TaskOrderFactory.build(portfolio=portfolio)
@@ -172,10 +173,14 @@ def add_task_orders_to_portfolio(portfolio):
     active_to = TaskOrderFactory.build(portfolio=portfolio, signed_at=yesterday)
 
     clins = [
-        CLINFactory.build(task_order=unsigned_to, start_date=today, end_date=today),
-        CLINFactory.build(task_order=upcoming_to, start_date=future, end_date=future),
         CLINFactory.build(
-            task_order=expired_to, start_date=yesterday, end_date=yesterday
+            task_order=unsigned_to, start_date=(today - five_days), end_date=today
+        ),
+        CLINFactory.build(
+            task_order=upcoming_to, start_date=future, end_date=(today + five_days)
+        ),
+        CLINFactory.build(
+            task_order=expired_to, start_date=(today - five_days), end_date=yesterday
         ),
         CLINFactory.build(task_order=active_to, start_date=yesterday, end_date=future),
     ]

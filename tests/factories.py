@@ -30,7 +30,7 @@ def random_phone_number():
 
 
 def random_task_order_number():
-    return "-".join([str(random.randint(100, 999)) for _ in range(4)])
+    return "".join(random.choices(string.digits, k=10))
 
 
 def random_past_date(year_min=1, year_max=5):
@@ -261,7 +261,7 @@ class AttachmentFactory(Base):
     class Meta:
         model = Attachment
 
-    filename = factory.Faker("domain_word")
+    filename = factory.Faker("file_name", extension="pdf")
     object_name = factory.LazyFunction(lambda *args: uuid4().hex)
 
 
