@@ -51,7 +51,6 @@
     input[type="checkbox"] {
       + label::before {
         box-shadow: 0 0 0 2px $state-color;
-        margin-left: -3rem;
       }
     }
   }
