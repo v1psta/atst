@@ -77,6 +77,25 @@
     .usa-alert {
       margin: 1.5em 0;
     }
+
+    .task-order__loa-fieldset {
+      .usa-input {
+        margin: 0;
+      }
+
+      input {
+        margin: $gap 0;
+        max-width: unset;
+      }
+
+      input:first-child {
+        margin-top: 0;
+      }
+
+      input:last-child {
+        margin-bottom: 0;
+      }
+    }
   }
 
   .row.row__form-fields {

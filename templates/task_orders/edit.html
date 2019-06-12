@@ -13,8 +13,7 @@
 {% macro LOAInput() %}
   <div v-for="loa in loas">
     <textinput :name="'clins-' + clinIndex + '-loas-' + loaIndex(loa)" inline-template>
-      <div>
-
+      <div class="usa-input usa-input--validation--anything">
         <masked-input
           v-on:input='onInput'
           v-on:blur='onBlur'
@@ -70,12 +69,21 @@
         </div>
       </div>
 
-      <div>Line of accounting (43 characters)</div>
-      {% for loa in fields.loas %}
-        {{ TextInput(loa, showLabel=False) }}
-      {% endfor %}
+      <div class="usa-input">
+        <fieldset class="usa-input__choices task-order__loa-fieldset">
+          <legend>
+            <div class="usa-input__title">
+              Line of accounting (43 characters)
+            </div>
+          </legend>
+          {% for loa in fields.loas %}
+            {{ TextInput(loa, showLabel=False) }}
+          {% endfor %}
 
-      {{ LOAInput() }}
+          {{ LOAInput() }}
+        </fieldset>
+      </div>
+
       {{ DatePicker(fields.start_date) }}
       {{ DatePicker(fields.end_date) }}
       {{ TextInput(fields.obligated_amount, validation='dollars') }}
@@ -190,8 +198,16 @@
                       </div>
                     </div>
 
-                    <div>Line of accounting (43 characters)</div>
-                    {{ LOAInput() }}
+                    <div class="usa-input">
+                      <fieldset class="usa-input__choices task-order__loa-fieldset">
+                        <legend>
+                          <div class="usa-input__title">
+                            Line of accounting (43 characters)
+                          </div>
+                        </legend>
+                        {{ LOAInput() }}
+                      </fieldset>
+                    </div>
 
                     <date-selector :name-tag="'clins-' + clinIndex + '-start_date'" inline-template>
                       <fieldset class="usa-input date-picker" v-bind:class="{ 'usa-input--success': isDateValid }">
