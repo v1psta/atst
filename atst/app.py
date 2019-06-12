@@ -24,7 +24,6 @@ from atst.domain.authz import Authorization
 from atst.domain.csp import make_csp_provider
 from atst.domain.portfolios import Portfolios
 from atst.models.permissions import Permissions
-from atst.eda_client import MockEDAClient
 from atst.utils import mailer
 from atst.utils.form_cache import FormCache
 from atst.utils.json import CustomJSONEncoder
@@ -61,7 +60,6 @@ def make_app(config):
 
     make_flask_callbacks(app)
     register_filters(app)
-    make_eda_client(app)
     make_csp_provider(app)
     make_crl_validator(app)
     make_mailer(app)
@@ -233,10 +231,6 @@ def make_crl_validator(app):
             logger=app.logger,
             crl_update_func=app.csp.crls.sync_crls,
         )
-
-
-def make_eda_client(app):
-    app.eda_client = MockEDAClient()
 
 
 def make_mailer(app):
