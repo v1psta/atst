@@ -41,6 +41,8 @@ common:
   hide: Hide
   manage: manage
   members: Members
+  'yes': 'Yes'
+  'no': 'No'
   officer_helpers:
     underscore_to_friendly:
       contracting_officer: Contracting Officer
@@ -606,6 +608,19 @@ requests:
     questions_title_text: Questions related to JEDI Cloud migration
     rationalization_software_systems_tooltip: Rationalization is the DoD process to determine whether the application should move to the cloud.
 task_orders:
+  review:
+    review_your_task_order: Review your task order
+    funding_summary: Funding summary
+    task_order_number: Task order number - 10 digit found in your system of record
+    check_paragraph: Check to make sure the information you entered is correct. After submission, you will confirm this task order was signed by a contracting officer. Thereafter, you will be informed as soon as CCPO completes their review.
+    supporting_document:
+      title: Supporting document
+    clins:
+      amount: Amount
+      obligated: Obligated
+      pop_start: PoP Start
+      pop_end: PoP End
+      loa: LOA
   form:
     draft_alert_title: Your information has been saved
     draft_alert_message: You can return to the Task Order Builder to enter missing information. Once you are finished, you’ll be ready to submit this request.
@@ -731,6 +746,11 @@ task_orders:
       security: '<strong>Security Officer ({security_officer})</strong> completes a Security Requirements Document. <a href="#">Send a reminder</a>'
       sign: '<strong>Contracting Officer ({contracting_officer})</strong> verifies funding to unlock cloud services.'
     whats_next: Here are the remaining steps to get your task order approved.
+JEDICLINType:
+  JEDI_CLIN_1: 'CLIN 1:'
+  JEDI_CLIN_2: 'CLIN 2: Classified Cloud Services - 0002'
+  JEDI_CLIN_3: 'CLIN 3:'
+  JEDI_CLIN_4: 'CLIN 4:'
 testing:
   example_string: Hello World
   example_with_variables: 'Hello, {name}!'

@@ -28,6 +28,15 @@ class CLIN(Base, mixins.TimestampsMixin):
     obligated_amount = Column(Numeric(scale=2), nullable=False)
     jedi_clin_type = Column(SQLAEnum(JEDICLINType, native_enum=False), nullable=False)
 
+    #
+    # NOTE: For now obligated CLINS are CLIN 1 + CLIN 3
+    #
+    def is_obligated(self):
+        return self.jedi_clin_type in [
+            JEDICLINType.JEDI_CLIN_1,
+            JEDICLINType.JEDI_CLIN_3,
+        ]
+
     def to_dictionary(self):
         return {
             c.name: getattr(self, c.name)
