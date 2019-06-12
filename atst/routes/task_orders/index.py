@@ -10,19 +10,6 @@ from atst.models.task_order import Status as TaskOrderStatus
 from atst.utils.flash import formatted_flash as flash
 
 
-@task_orders_bp.route("/task_orders/<task_order_id>")
-@user_can(Permissions.VIEW_TASK_ORDER_DETAILS, message="view task order details")
-def view_task_order(task_order_id):
-    task_order = TaskOrders.get(task_order_id)
-    to_form_complete = TaskOrders.all_sections_complete(task_order)
-    return render_template(
-        "portfolios/task_orders/show.html",
-        task_order=task_order,
-        to_form_complete=to_form_complete,
-        user=g.current_user,
-    )
-
-
 @task_orders_bp.route("/task_orders/<task_order_id>/review")
 @user_can(Permissions.VIEW_TASK_ORDER_DETAILS, message="review task order details")
 def review_task_order(task_order_id):

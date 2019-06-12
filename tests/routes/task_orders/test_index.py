@@ -123,13 +123,3 @@ class TestPortfolioFunding:
             _, context = templates[0]
             assert context["funding_end_date"] is expiring_to.end_date
             assert context["funded"] == False
-
-    def test_user_can_only_access_to_in_their_portfolio(
-        self, app, user_session, portfolio
-    ):
-        other_task_order = TaskOrderFactory.create()
-        user_session(portfolio.owner)
-        response = app.test_client().get(
-            url_for("task_orders.view_task_order", task_order_id=other_task_order.id)
-        )
-        assert response.status_code == 404

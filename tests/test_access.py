@@ -428,36 +428,6 @@ def test_applications_update_environments(post_url_assert_status):
     post_url_assert_status(rando, url, 404)
 
 
-# task_orders.view_task_order
-def test_task_orders_view_task_order_access(get_url_assert_status):
-    ccpo = user_with(PermissionSets.VIEW_PORTFOLIO_FUNDING)
-    owner = user_with()
-    rando = user_with()
-
-    portfolio = PortfolioFactory.create(owner=owner)
-    task_order = TaskOrderFactory.create(portfolio=portfolio)
-
-    url = url_for("task_orders.view_task_order", task_order_id=task_order.id)
-    get_url_assert_status(owner, url, 200)
-    get_url_assert_status(ccpo, url, 200)
-    get_url_assert_status(rando, url, 404)
-
-
-# task_orders.download_summary
-def test_task_orders_download_summary_access(get_url_assert_status):
-    ccpo = user_with(PermissionSets.VIEW_PORTFOLIO_FUNDING)
-    owner = user_with()
-    rando = user_with()
-
-    portfolio = PortfolioFactory.create(owner=owner)
-    task_order = TaskOrderFactory.create(portfolio=portfolio)
-
-    url = url_for("task_orders.download_summary", task_order_id=task_order.id)
-    get_url_assert_status(owner, url, 200)
-    get_url_assert_status(ccpo, url, 200)
-    get_url_assert_status(rando, url, 404)
-
-
 # task_orders.download_task_order_pdf
 def test_task_orders_download_task_order_pdf_access(get_url_assert_status, monkeypatch):
     monkeypatch.setattr(
