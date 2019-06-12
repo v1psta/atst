@@ -47,17 +47,26 @@
   }
 }
 
-.semi-collapsed {
-  overflow: hidden;
-  height: 5.1rem;
+.section-description {
+  font-size: $lead-font-size;
 }
 
 .more {
-  margin-top: -4.4rem;
-  padding-left: 1.25rem;
-  background-color: $color-offwhite;
-  position: relative;
   cursor: pointer;
+  margin-left: 1rem;
+
+  .icon {
+    width: 1rem;
+    margin: 0 0 0 0.5rem;
+
+    svg * {
+      fill: $color-blue;
+    }
+
+    svg > path {
+      transform: translate(0,5px);
+    }
+  }
 }
 
 .green {
