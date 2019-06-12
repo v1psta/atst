@@ -56,8 +56,10 @@ def update(portfolio_id=None, task_order_id=None):
         else:
             task_order = TaskOrders.create(g.current_user, portfolio_id, **form.data)
 
-        if http_request.args.get('review'):
-            return redirect(url_for("task_orders.review_task_order", task_order_id=task_order.id))
+        if http_request.args.get("review"):
+            return redirect(
+                url_for("task_orders.review_task_order", task_order_id=task_order.id)
+            )
 
         flash("task_order_draft")
 
