@@ -100,7 +100,7 @@
     <div class="task-order">
       {% include "fragments/flash.html" %}
         {% if task_order_id %}
-          {% set action = url_for("task_orders.update", portfolio_id=portfolio.id, task_order_id=task_order_id) %}
+          {% set action = url_for("task_orders.update", task_order_id=task_order_id) %}
         {% else %}
           {% set action = url_for("task_orders.update", portfolio_id=portfolio.id) %}
         {% endif %}

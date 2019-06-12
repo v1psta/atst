@@ -42,8 +42,7 @@ class UnclassifiedCLINForm(CLINForm):
 
 class TaskOrderForm(BaseForm):
     number = StringField(
-        label=translate("forms.task_order.number_description"),
-        validators=[Required()],
+        label=translate("forms.task_order.number_description"), validators=[Required()]
     )
     pdf = FileField(
         None,

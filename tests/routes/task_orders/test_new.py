@@ -68,13 +68,7 @@ def test_task_orders_update(client, user_session, portfolio):
 
 def test_task_orders_edit_existing_to(client, user_session, task_order):
     user_session(task_order.creator)
-    response = client.get(
-        url_for(
-            "task_orders.edit",
-            portfolio_id=task_order.portfolio_id,
-            task_order_id=task_order.id,
-        )
-    )
+    response = client.get(url_for("task_orders.edit", task_order_id=task_order.id))
     assert response.status_code == 200
 
 
@@ -90,12 +84,7 @@ def test_task_orders_update_existing_to(client, user_session, task_order):
         "clins-0-loas-0": "123123123123",
     }
     response = client.post(
-        url_for(
-            "task_orders.update",
-            portfolio_id=task_order.portfolio_id,
-            task_order_id=task_order.id,
-        ),
-        data=form_data,
+        url_for("task_orders.update", task_order_id=task_order.id), data=form_data
     )
     assert response.status_code == 302
     assert task_order.number == "0123456789"
@@ -115,12 +104,9 @@ def test_task_orders_update_invalid_data(client, user_session, portfolio):
 def test_task_orders_update(client, user_session, portfolio, pdf_upload):
     user_session(portfolio.owner)
     data = {"number": "0123456789", "pdf": pdf_upload}
-    task_order = TaskOrderFactory.create(number="0987654321")
+    task_order = TaskOrderFactory.create(number="0987654321", portfolio=portfolio)
     response = client.post(
-        url_for(
-            "task_orders.update", portfolio_id=portfolio.id, task_order_id=task_order.id
-        ),
-        data=data,
+        url_for("task_orders.update", task_order_id=task_order.id), data=data
     )
     assert response.status_code == 302
     assert task_order.number == data["number"]
@@ -130,13 +116,10 @@ def test_task_orders_update_pdf(
     client, user_session, portfolio, pdf_upload, pdf_upload2
 ):
     user_session(portfolio.owner)
-    task_order = TaskOrderFactory.create(pdf=pdf_upload)
+    task_order = TaskOrderFactory.create(pdf=pdf_upload, portfolio=portfolio)
     data = {"number": "0123456789", "pdf": pdf_upload2}
     response = client.post(
-        url_for(
-            "task_orders.update", portfolio_id=portfolio.id, task_order_id=task_order.id
-        ),
-        data=data,
+        url_for("task_orders.update", task_order_id=task_order.id), data=data
     )
     assert response.status_code == 302
     assert task_order.pdf.filename == pdf_upload2.filename
@@ -144,13 +127,10 @@ def test_task_orders_update_pdf(
 
 def test_task_orders_update_delete_pdf(client, user_session, portfolio, pdf_upload):
     user_session(portfolio.owner)
-    task_order = TaskOrderFactory.create(pdf=pdf_upload)
+    task_order = TaskOrderFactory.create(pdf=pdf_upload, portfolio=portfolio)
     data = {"number": "0123456789", "pdf": ""}
     response = client.post(
-        url_for(
-            "task_orders.update", portfolio_id=portfolio.id, task_order_id=task_order.id
-        ),
-        data=data,
+        url_for("task_orders.update", task_order_id=task_order.id), data=data
     )
     assert response.status_code == 302
     assert task_order.pdf is None
@@ -167,9 +147,7 @@ def test_task_order_form_shows_errors(client, user_session, task_order):
     funding_data.update({"clin_01": "one milllllion dollars"})
 
     response = client.post(
-        url_for(
-            "task_orders.update", portfolio_id=portfolio.id, task_order_id=task_order.id
-        ),
+        url_for("task_orders.update", task_order_id=task_order.id),
         data=funding_data,
         follow_redirects=False,
     )
