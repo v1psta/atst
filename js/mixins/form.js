@@ -15,7 +15,6 @@ export default {
     handleFieldChange: function(event) {
       const { value, name, valid, parent_uid, watch } = event
       if (typeof this.fields[name] !== undefined) {
-        this[name] = value
         this.fields[name] = valid
         if (parent_uid === this._uid || watch) {
           this.changed = true
