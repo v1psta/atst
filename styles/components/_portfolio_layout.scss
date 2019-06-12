@@ -554,20 +554,18 @@
     flex-direction: row-reverse;
   }
 
-  .defense-row {
-    .admin-title {
-      padding: 0 0 0.4rem 0;
-      margin-top: 0;
-      font-size: 1.7rem;
-      font-weight: 700;
-      max-width: 45em;
-      position: relative;
-      clear: both;
-    }
+  .admin-title {
+    padding: 0 0 0.4rem 0;
+    margin-top: 0;
+    font-size: 1.7rem;
+    font-weight: 700;
+    max-width: 45em;
+    position: relative;
+    clear: both;
+  }
 
-    .admin-content {
-      margin-bottom: 2rem;
-    }
+  .admin-content {
+    margin-bottom: 2rem;
   }
 }
 
