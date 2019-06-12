@@ -58,6 +58,10 @@
   }
 
   &.task_order__form {
+    hr {
+      margin-top: 2rem;
+    }
+
     .totals-box {
       margin-top: 0;
     }
@@ -66,7 +70,7 @@
       left: 100%;
     }
 
-    .usa-input--validation--dollars input {
+    input {
       max-width: unset;
     }
 
@@ -89,7 +93,6 @@
 
       input {
         margin: $gap 0;
-        max-width: unset;
       }
 
       input:first-child {
@@ -99,6 +102,10 @@
       input:last-child {
         margin-bottom: 0;
       }
+    }
+
+    button.icon-link {
+      padding: $gap * 3 0 0;
     }
 
     .task-order__pdf-help-text {
