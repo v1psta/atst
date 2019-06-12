@@ -84,29 +84,31 @@
 {% endmacro %}
 
 {% block portfolio_content %}
-  {% call StickyCTA(text="Add Funding") %}
-    <span class="action-group">
-      <input type="submit" tabindex="0" value="Review task order" form="new-task-order" class="usa-button usa-button-primary">
-      <input type="submit" tabindex="0" value="Save" form="new-task-order" class="usa-button usa-button-secondary">
-      <a
-        href="{{ cancel_url }}"
-        class="action-group__action icon-link">
-        {{ "common.cancel" | translate }}
-      </a>
-    </span>
-  {% endcall %}
+  {% if task_order_id %}
+    {% set action = url_for("task_orders.update", task_order_id=task_order_id) %}
+    {% set review_action = url_for("task_orders.update", task_order_id=task_order_id, review=True) %}
+  {% else %}
+    {% set action = url_for("task_orders.update", portfolio_id=portfolio.id) %}
+    {% set review_action = url_for("task_orders.update", portfolio_id=portfolio.id, review=True) %}
+  {% endif %}
+  <form id="new-task-order" class="task_order__form" action='{{ action }}' method="POST" autocomplete="off" enctype="multipart/form-data">
+    {{ form.csrf_token }}
 
-  <to-form inline-template v-bind:initial-clin-count="{{ form.clins.data | length }}">
-    <div class="task-order">
-      {% include "fragments/flash.html" %}
-        {% if task_order_id %}
-          {% set action = url_for("task_orders.update", task_order_id=task_order_id) %}
-        {% else %}
-          {% set action = url_for("task_orders.update", portfolio_id=portfolio.id) %}
-        {% endif %}
-        <form id="new-task-order" class="task_order__form" action='{{ action }}' method="POST" autocomplete="off" enctype="multipart/form-data">
-          {{ form.csrf_token }}
+    {% call StickyCTA(text="Add Funding") %}
+      <span class="action-group">
+        <input type="submit" formaction="{{ review_action }}" tabindex="0" value="Review task order" form="new-task-order" class="usa-button usa-button-primary">
+        <input type="submit" tabindex="0" value="Save" form="new-task-order" class="usa-button usa-button-secondary">
+        <a
+          href="{{ cancel_url }}"
+          class="action-group__action icon-link">
+          {{ "common.cancel" | translate }}
+        </a>
+      </span>
+    {% endcall %}
 
+    <to-form inline-template v-bind:initial-clin-count="{{ form.clins.data | length }}">
+      <div class="task-order">
+        {% include "fragments/flash.html" %}
           {{ SemiCollapsibleText(paragraph="task_orders.new.form_help_text" | translate) }}
 
           <hr>
@@ -352,8 +354,8 @@
           </div>
           {{ TotalsBox(task_order=task_order) }}
         </div>
-      </form>
-    </div>
-  </to-form>
+      </div>
+    </to-form>
+  </form>
 
 {% endblock %}
