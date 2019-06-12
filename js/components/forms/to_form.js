@@ -2,6 +2,7 @@ import ClinFields from '../clin_fields'
 import DateSelector from '../date_selector'
 import FormMixin from '../../mixins/form'
 import optionsinput from '../options_input'
+import SemiCollapsibleText from '../semi_collapsible_text'
 import textinput from '../text_input'
 import uploadinput from '../upload_input'
 
@@ -14,6 +15,7 @@ export default {
     ClinFields,
     DateSelector,
     optionsinput,
+    SemiCollapsibleText,
     textinput,
     uploadinput,
   },

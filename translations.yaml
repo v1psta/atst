@@ -302,7 +302,7 @@ forms:
       military: Military
       other: Other <em class='description'>(E.g. University or other partner)</em>
     dev_team_other_label: Development Team Other
-    end_date_label: End Date
+    end_date_label: End of period of performance (PoP)
     file_format_not_allowed: Only PDF or PNG files can be uploaded.
     first_step_title: Overview
     ko_invite_label: Invite contracting officer to Task Order Builder
@@ -330,7 +330,7 @@ forms:
     skip_invite_description: |
       <i>An invitation won't actually be sent until you click Done on the Review page. You can skip this for now and invite them later.</i>
     so_invite_label: Invite Security Officer to Task Order Builder
-    start_date_label: Start Date
+    start_date_label: Start of period of performance (PoP)
     team_experience:
       built_1: Built, migrated, or consulted on 1-2 applications
       built_3: Built, migrated, or consulted on 3-5 applications

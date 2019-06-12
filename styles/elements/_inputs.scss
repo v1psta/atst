@@ -157,7 +157,7 @@
   .usa-input__choices {
     // checkbox & radio sets
     legend {
-      padding: 0 0 $gap 0;
+      padding: 0 0 ($gap / 2) 0;
 
       @include h4;
 

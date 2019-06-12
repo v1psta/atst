@@ -515,9 +515,7 @@ def test_task_orders_update_access(post_url_assert_status):
 
     task_order = TaskOrderFactory.create(portfolio=portfolio)
 
-    url = url_for(
-        "task_orders.update", portfolio_id=portfolio.id, task_order_id=task_order.id
-    )
+    url = url_for("task_orders.update", task_order_id=task_order.id)
     post_url_assert_status(owner, url, 302)
     post_url_assert_status(ccpo, url, 302)
     post_url_assert_status(rando, url, 404)

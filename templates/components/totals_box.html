@@ -1,14 +1,19 @@
-{% macro TotalsBox(task_order) -%}
+{% macro TotalsBox(task_order=None, obligated_funds=0, contract_amount=0) -%}
 
   <div class="col totals-box">
+    {% if task_order %}
+      {% set obligated_funds = task_order.total_obligated_funds %}
+      {% set contract_amount = task_order.total_contract_amount %}
+    {% endif %}
+
     <div class="h4">Total obligated funds</div>
-    <div class="h3">{{ task_order.total_obligated_funds | dollars }}</div>
+    <div class="h3">{{ obligated_funds | dollars }}</div>
     <div>This is the funding allocated to cloud services. It may be 100% or a portion of the total task order budget.</div>
 
     <hr>
 
     <div class="h4">Total contract amount</div>
-    <div class="h3">{{ task_order.total_contract_amount | dollars }}</div>
+    <div class="h3">{{ contract_amount | dollars }}</div>
     <div>This is the value of all funds obligated for this contract, including -- but not limited to -- funds obligated for the cloud.</div>
 
   </div>

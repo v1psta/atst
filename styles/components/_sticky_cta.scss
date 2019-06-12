@@ -36,4 +36,19 @@
 
 .sticky-cta-buttons {
   display: flex;
+
+  .action-group {
+    margin: 0;
+
+    a.action-group__action.icon-link {
+      width: auto;
+    }
+
+    input {
+      margin: $gap $gap * 1.5 $gap 0;
+      width: 19rem;
+      height: 3.2rem;
+      font-size: $small-font-size;
+    }
+  }
 }
