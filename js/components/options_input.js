@@ -17,7 +17,7 @@ export default {
       type: Boolean,
       default: false,
     },
-    optional: Boolean
+    optional: Boolean,
   },
 
   created: function() {
@@ -46,7 +46,7 @@ export default {
         value: e.target.value,
         name: this.name,
         watch: this.watch,
-        valid: this.showValid
+        valid: this.showValid,
       })
     },
   },
