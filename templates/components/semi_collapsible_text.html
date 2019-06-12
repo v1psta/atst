@@ -1,14 +1,28 @@
 {% from "components/icon.html" import Icon %}
 
-{% macro SemiCollapsibleText(paragraph) -%}
+{% macro SemiCollapsibleText(first_half=None, second_half=None) -%}
 
   <semi-collapsible-text inline-template>
     <div>
-      <p v-bind:class="{ 'semi-collapsed' : !open }">
-        {{ paragraph }}
+      {% if first_half is none %}
+       {% set first_half="Aenean lacinia bibendum nulla sed consectetur. Sed posuere consectetur est at lobortis. Fusce dapibus an, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo." %}
+      {% endif %}
+      {% if second_half is none %}
+       {% set second_half="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip." %}
+      {% endif %}
+      <p class="section-description" v-if="open">
+        {{ first_half }}
+        {{ second_half }}
+        <a v-on:click='toggle' v-show="open" class="more">
+          Less{{ Icon('caret_up') }}
+        </a>
       </p>
-      <a v-on:click='toggle' v-show="!open" class="right more">More{{ Icon('caret_down') }}</a>
-      <a v-on:click='toggle' v-show="open" class="right more">Less{{ Icon('caret_up') }}</a>
+      <p class="section-description" v-else>
+        {{ first_half }}
+        <a v-on:click='toggle' class="more">
+          More{{ Icon('caret_down') }}
+        </a>
+      </p>
     </div>
   </semi-collapsible-text>
 
