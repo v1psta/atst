@@ -1,20 +1,11 @@
 from sqlalchemy.orm.exc import NoResultFound
 
 from atst.database import db
-from atst.models.portfolio_role import (
-    PortfolioRole,
-    Status as PortfolioRoleStatus,
-    MEMBER_STATUSES,
-)
+from atst.models.portfolio_role import PortfolioRole, Status as PortfolioRoleStatus
 from atst.models.user import User
 
 from .permission_sets import PermissionSets
 from .exceptions import NotFoundError
-
-
-MEMBER_STATUS_CHOICES = [
-    dict(name=key, display_name=value) for key, value in MEMBER_STATUSES.items()
-]
 
 
 class PortfolioRoles(object):
@@ -38,34 +29,6 @@ class PortfolioRoles(object):
             return db.session.query(PortfolioRole).filter(PortfolioRole.id == id_).one()
         except NoResultFound:
             raise NotFoundError("portfolio_role")
-
-    @classmethod
-    def _get_active_portfolio_role(cls, portfolio_id, user_id):
-        try:
-            return (
-                db.session.query(PortfolioRole)
-                .join(User)
-                .filter(User.id == user_id, PortfolioRole.portfolio_id == portfolio_id)
-                .filter(PortfolioRole.status == PortfolioRoleStatus.ACTIVE)
-                .one()
-            )
-        except NoResultFound:
-            return None
-
-    @classmethod
-    def _get_portfolio_role(cls, user, portfolio_id):
-        try:
-            existing_portfolio_role = (
-                db.session.query(PortfolioRole)
-                .filter(
-                    PortfolioRole.user == user,
-                    PortfolioRole.portfolio_id == portfolio_id,
-                )
-                .one()
-            )
-            return existing_portfolio_role
-        except NoResultFound:
-            raise NotFoundError("portfolio role")
 
     @classmethod
     def add(cls, user, portfolio_id, permission_sets=None):
