@@ -164,15 +164,6 @@ def test_can_create_portfolios_with_matching_names():
     PortfolioFactory.create(name=portfolio_name)
 
 
-def test_able_to_revoke_portfolio_access_for_active_member():
-    portfolio = PortfolioFactory.create()
-    portfolio_role = PortfolioRoleFactory.create(
-        portfolio=portfolio, status=PortfolioRoleStatus.ACTIVE
-    )
-    Portfolios.revoke_access(portfolio.id, portfolio_role.id)
-    assert Portfolios.for_user(portfolio_role.user) == []
-
-
 def test_can_revoke_access():
     portfolio = PortfolioFactory.create()
     owner_role = portfolio.roles[0]
@@ -182,14 +173,6 @@ def test_can_revoke_access():
 
     assert Portfolios.can_revoke_access_for(portfolio, portfolio_role)
     assert not Portfolios.can_revoke_access_for(portfolio, owner_role)
-
-
-def test_unable_to_revoke_owner_portfolio_access():
-    portfolio = PortfolioFactory.create()
-    owner_portfolio_role = portfolio.roles[0]
-
-    with pytest.raises(PortfolioError):
-        Portfolios.revoke_access(portfolio.id, owner_portfolio_role.id)
 
 
 def test_disabled_members_dont_show_up(session):

@@ -3,7 +3,6 @@ from atst.domain.permission_sets import PermissionSets
 from atst.domain.authz import Authorization
 from atst.domain.portfolio_roles import PortfolioRoles
 from atst.domain.invitations import PortfolioInvitations
-from atst.domain.environments import Environments
 from atst.models import Permissions, PortfolioRole, PortfolioRoleStatus
 
 from .query import PortfoliosQuery
@@ -116,18 +115,3 @@ class Portfolios(object):
             portfolio_role.user != portfolio.owner
             and portfolio_role.status == PortfolioRoleStatus.ACTIVE
         )
-
-    @classmethod
-    def revoke_access(cls, portfolio_id, portfolio_role_id):
-        portfolio = PortfoliosQuery.get(portfolio_id)
-        portfolio_role = PortfolioRoles.get_by_id(portfolio_role_id)
-
-        if not Portfolios.can_revoke_access_for(portfolio, portfolio_role):
-            raise PortfolioError("cannot revoke portfolio access for this user")
-
-        portfolio_role.status = PortfolioRoleStatus.DISABLED
-        for environment in portfolio.all_environments:
-            Environments.revoke_access(environment, portfolio_role.user)
-        PortfoliosQuery.add_and_commit(portfolio_role)
-
-        return portfolio_role
