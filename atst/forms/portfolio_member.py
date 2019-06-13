@@ -61,12 +61,6 @@ class MembersPermissionsForm(BaseForm):
     members_permissions = FieldList(FormField(PermissionsForm))
 
 
-class EditForm(PermissionsForm):
-    # This form also accepts a field for each environment in each application
-    #  that the user is a member of
-    pass
-
-
 class NewForm(BaseForm):
     user_data = FormField(BaseNewMemberForm)
     permission_sets = FormField(PermissionsForm)
