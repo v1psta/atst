@@ -8,6 +8,7 @@
 {% block content %}
 
 <main class="usa-section usa-content">
+  {% include "fragments/flash.html" %}
   <h1>New Portfolio Form</h1>
   <base-form inline-template>
     <form id="portfolio-create" action="{{ url_for('portfolios.create_portfolio') }}" method="POST">
