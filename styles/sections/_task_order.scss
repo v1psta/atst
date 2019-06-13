@@ -74,6 +74,17 @@
       max-width: unset;
     }
 
+    .usa-input__title, .usa-input__title-inline {
+      font-weight: $font-normal;
+    }
+
+    .date-picker {
+      .usa-input__title {
+        font-weight: $font-bold;
+        margin-bottom: $gap;
+      }
+    }
+
     .usa-form-group-year {
       margin-right: 0.4rem;
     }
