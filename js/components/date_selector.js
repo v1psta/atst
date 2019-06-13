@@ -20,6 +20,10 @@ export default {
     mindate: { type: String },
     maxdate: { type: String },
     nameTag: { type: String },
+    watch: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   data: function() {
@@ -138,7 +142,11 @@ export default {
 
   methods: {
     _emitChange: function(name, value, valid) {
-      emitEvent('field-change', this, { value, name })
+      emitEvent('field-change', this, {
+        value: value,
+        name: name,
+        watch: this.watch,
+      })
     },
   },
 
