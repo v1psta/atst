@@ -27,6 +27,22 @@ def _translations_file():
     return yaml.safe_load(f)
 
 
+def all_keys():
+    translations = _translations_file()
+    keys = []
+
+    def _recursive_key_lookup(chain):
+        results = getattr_path(translations, chain)
+        if isinstance(results, str):
+            keys.append(chain)
+        else:
+            [_recursive_key_lookup(".".join([chain, result])) for result in results]
+
+    [_recursive_key_lookup(key) for key in translations]
+
+    return keys
+
+
 def translate(key, variables=None):
     translations = _translations_file()
     value = getattr_path(translations, key)
