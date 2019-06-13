@@ -10,6 +10,7 @@
     key='{{ field.name }}'
     v-bind:watch='{{ watch | string | lower }}'
     v-bind:optional={{ optional|lower }}
+    v-bind:null-option="'{{ field.default }}'"
     >
     <div
       v-bind:class="['usa-input', { 'usa-input--error': showError, 'usa-input--success': showValid }]">
