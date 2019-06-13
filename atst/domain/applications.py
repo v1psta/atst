@@ -1,5 +1,3 @@
-from sqlalchemy.orm.exc import NoResultFound
-
 from . import BaseDomainClass
 from atst.database import db
 from atst.domain.application_roles import ApplicationRoles
@@ -43,17 +41,6 @@ class Applications(BaseDomainClass):
             .filter(ApplicationRole.status == ApplicationRoleStatus.ACTIVE)
             .all()
         )
-
-    @classmethod
-    def get_all(cls, portfolio):
-        try:
-            applications = (
-                db.session.query(Application).filter_by(portfolio_id=portfolio.id).all()
-            )
-        except NoResultFound:
-            raise NotFoundError("applications")
-
-        return applications
 
     @classmethod
     def update(cls, application, new_data):
