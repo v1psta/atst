@@ -1,6 +1,6 @@
 import re
 import datetime
-from atst.utils.localization import translate, translate_duration
+from atst.utils.localization import translate
 from flask import current_app as app, render_template
 from jinja2 import contextfilter
 from jinja2.exceptions import TemplateNotFound
@@ -17,16 +17,6 @@ def dollars(value):
     except ValueError:
         numberValue = 0
     return "${:,.2f}".format(numberValue)
-
-
-def justDollars(value):
-    raw = dollars(value)
-    return raw.split(".")[0]
-
-
-def justCents(value):
-    raw = dollars(value)
-    return raw.split(".")[1]
 
 
 def usPhone(number):
@@ -74,27 +64,15 @@ def renderAuditEvent(event):
         return render_template("audit_log/events/default.html", event=event)
 
 
-def normalizeOrder(title):
-    # reorders titles from "Army, Department of the" to "Department of the Army"
-    text = title.split(", ")
-    reordered_text = text[0:-1]
-    reordered_text.insert(0, text[-1])
-    return " ".join(reordered_text)
-
-
 def register_filters(app):
     app.jinja_env.filters["iconSvg"] = iconSvg
     app.jinja_env.filters["dollars"] = dollars
-    app.jinja_env.filters["justDollars"] = justDollars
-    app.jinja_env.filters["justCents"] = justCents
     app.jinja_env.filters["usPhone"] = usPhone
     app.jinja_env.filters["findFilter"] = findFilter
     app.jinja_env.filters["formattedDate"] = formattedDate
     app.jinja_env.filters["dateFromString"] = dateFromString
     app.jinja_env.filters["pageWindow"] = pageWindow
     app.jinja_env.filters["renderAuditEvent"] = renderAuditEvent
-    app.jinja_env.filters["normalizeOrder"] = normalizeOrder
-    app.jinja_env.filters["translateDuration"] = translate_duration
 
     @contextfilter
     def translateWithoutCache(context, *kwargs):

@@ -35,11 +35,6 @@ class CLINForm(FlaskForm):
     loas = FieldList(StringField())
 
 
-class UnclassifiedCLINForm(CLINForm):
-    # TODO: overwrite jedi_clin_type to only include the unclassified options
-    pass
-
-
 class TaskOrderForm(BaseForm):
     number = StringField(
         label=translate("forms.task_order.number_description"), validators=[Required()]

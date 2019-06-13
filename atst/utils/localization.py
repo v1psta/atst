@@ -1,7 +1,5 @@
 import yaml
 from functools import lru_cache
-import math
-from gettext import ngettext
 from flask import current_app as app
 from atst.utils import getattr_path
 
@@ -40,14 +38,3 @@ def translate(key, variables=None):
         raise LocalizationInvalidKeyError(key, variables)
 
     return value.format(**variables).replace("\n", "")
-
-
-def translate_duration(duration_in_months):
-    duration = []
-    years = math.floor(duration_in_months / 12)
-    months = duration_in_months % 12
-    if years > 0:
-        duration.append("{} {}".format(years, ngettext("year", "years", years)))
-    if months > 0:
-        duration.append("{} {}".format(months, ngettext("month", "months", months)))
-    return (", ").join(duration)
