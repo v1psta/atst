@@ -63,6 +63,8 @@
         {% for environment_data in new_member_form.environment_roles %}
           <optionsinput inline-template
             v-bind:initial-value="'{{ environment_data.role.data | string }}'"
+            v-bind:name="'{{ environment_data.name | string }}'"
+            v-bind:optional="true"
           >
             <div class="usa-input">
               <fieldset data-ally-disabled="true" class="usa-input__choices">
