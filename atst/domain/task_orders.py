@@ -7,10 +7,6 @@ from atst.models.task_order import TaskOrder, SORT_ORDERING
 from . import BaseDomainClass
 
 
-class TaskOrderError(Exception):
-    pass
-
-
 class TaskOrders(BaseDomainClass):
     model = TaskOrder
     resource_name = "task_order"
