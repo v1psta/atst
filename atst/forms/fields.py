@@ -1,4 +1,4 @@
-from wtforms.fields import FormField, SelectField as SelectField_
+from wtforms.fields import SelectField as SelectField_
 
 
 class SelectField(SelectField_):
