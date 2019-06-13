@@ -18,12 +18,17 @@ export default {
       default: false,
     },
     optional: Boolean,
+    nullOption: {
+      type: String,
+      default: ''
+    }
   },
 
   created: function() {
     emitEvent('field-mount', this, {
       optional: this.optional,
       name: this.name,
+      valid: this._isValid(this.value)
     })
   },
 
@@ -41,13 +46,18 @@ export default {
     onInput: function(e) {
       this.showError = false
       this.showValid = true
+      this.value = e.target.value
 
       emitEvent('field-change', this, {
         value: e.target.value,
         name: this.name,
         watch: this.watch,
-        valid: this.showValid,
+        valid: this._isValid(e.target.value)
       })
     },
+
+    _isValid: function(value) {
+      return this.optional || value !== this.nullOption
+    }
   },
 }

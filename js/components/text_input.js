@@ -70,6 +70,7 @@ export default {
     emitEvent('field-mount', this, {
       optional: this.optional,
       name: this.name,
+      valid: this._isValid(this.value)
     })
   },
 
@@ -103,15 +104,7 @@ export default {
 
     //
     _checkIfValid: function({ value, invalidate = false }) {
-      // Validate the value
-      let valid = this._validate(value)
-
-      if (!this.modified && this.initialErrors && this.initialErrors.length) {
-        valid = false
-      } else if (this.optional && value === '') {
-        valid = true
-      }
-
+      const valid = this._isValid(value)
       if (this.modified) {
         this.validationError = inputValidations[this.validation].validationError
       }
@@ -144,5 +137,19 @@ export default {
     _validate: function(value) {
       return inputValidations[this.validation].match.test(this._rawValue(value))
     },
+
+    _isValid: function(value) {
+      let valid = this._validate(value)
+
+      if (!this.modified && this.initialErrors && this.initialErrors.length) {
+        valid = false
+      } else if (this.optional && value === '') {
+        valid = true
+      } else if (!this.optional && value === '') {
+        valid = false
+      }
+
+      return valid
+    }
   },
 }
