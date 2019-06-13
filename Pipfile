@@ -27,8 +27,6 @@ werkzeug = "~= 0.14.1"
 [dev-packages]
 bandit = "*"
 pytest = "~= 3.8.2"
-ipython = "*"
-ipdb = "*"
 pylint = "*"
 black = "*"
 pytest-watch = "*"
