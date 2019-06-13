@@ -29,14 +29,6 @@ class Environments(object):
         return environments
 
     @classmethod
-    def add_member(cls, environment, application_role, role):
-        environment_user = EnvironmentRoles.create(
-            application_role=application_role, environment=environment, role=role
-        )
-        db.session.add(environment_user)
-        return environment
-
-    @classmethod
     def update(cls, environment, name=None):
         if name is not None:
             environment.name = name
