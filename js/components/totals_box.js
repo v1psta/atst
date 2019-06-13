@@ -5,18 +5,16 @@ export default {
 
   props: {
     name: String,
-    additionalObligated: Number,
-    additionalContractAmount: Number,
+    obligated: Number,
+    contractAmount: Number,
   },
 
-  data: function() {
-    return {
-      obligated: formatDollars(
-        this.additionalObligated
-      ),
-      contractAmount: formatDollars(
-        this.additionalContractAmount
-      ),
-    }
+  computed: {
+    formattedObligated: function () {
+      return formatDollars(this.obligated)
+    },
+    formattedContractAmount: function () {
+      return formatDollars(this.contractAmount)
+    },
   },
 }

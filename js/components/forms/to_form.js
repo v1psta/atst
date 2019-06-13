@@ -26,6 +26,8 @@ export default {
 
   props: {
     initialClinCount: Number,
+    initialObligated: Number,
+    initialTotal: Number,
   },
 
   data: function() {
@@ -35,8 +37,8 @@ export default {
     return {
       clins,
       clinIndex,
-      totalClinAmount: 0,
-      additionalObligatedAmount: 0,
+      obligated: this.initialObligated || 0,
+      total: this.initialTotal || 0,
     }
   },
 
@@ -51,9 +53,9 @@ export default {
     },
 
     calculateClinAmounts: function (event) {
-      this.totalClinAmount += parseFloat(event.amount - this.totalClinAmount)
+      this.total += parseFloat(event.amount - this.total)
       if (event.clinType.includes('1') || event.clinType.includes('3')) {
-        this.additionalObligatedAmount += parseFloat(event.amount - this.additionalObligatedAmount)
+        this.obligated += parseFloat(event.amount - this.obligated)
       }
     },
   },
