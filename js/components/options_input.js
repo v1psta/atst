@@ -20,15 +20,15 @@ export default {
     optional: Boolean,
     nullOption: {
       type: String,
-      default: ''
-    }
+      default: '',
+    },
   },
 
   created: function() {
     emitEvent('field-mount', this, {
       optional: this.optional,
       name: this.name,
-      valid: this._isValid(this.value)
+      valid: this._isValid(this.value),
     })
   },
 
@@ -52,12 +52,12 @@ export default {
         value: e.target.value,
         name: this.name,
         watch: this.watch,
-        valid: this._isValid(e.target.value)
+        valid: this._isValid(e.target.value),
       })
     },
 
     _isValid: function(value) {
       return this.optional || value !== this.nullOption
-    }
+    },
   },
 }

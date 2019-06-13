@@ -70,7 +70,7 @@ export default {
     emitEvent('field-mount', this, {
       optional: this.optional,
       name: this.name,
-      valid: this._isValid(this.value)
+      valid: this._isValid(this.value),
     })
   },
 
@@ -150,6 +150,6 @@ export default {
       }
 
       return valid
-    }
+    },
   },
 }
