@@ -320,11 +320,11 @@
                     </date-selector>
 
                     <textinput :name="'clins-' + clinIndex + '-obligated_amount'" validation="dollars" inline-template>
-                      <div>
+                      <div class="usa-input usa-input--validation--dollars noMaxWidth">
                         <label :for="name">
+                          <div class="usa-input__title">Funds obligated for cloud</div>
                           <span v-show='showError'>{{ Icon('alert',classes="icon-validation") }}</span>
                           <span v-show='showValid'>{{ Icon('ok',classes="icon-validation") }}</span>
-                          <div class="usa-input__title">Funds obligated for cloud</div>
                         </label>
 
                         <masked-input
