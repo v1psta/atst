@@ -108,10 +108,3 @@ class Portfolios(object):
             portfolio.name = new_data["name"]
 
         PortfoliosQuery.add_and_commit(portfolio)
-
-    @classmethod
-    def can_revoke_access_for(cls, portfolio, portfolio_role):
-        return (
-            portfolio_role.user != portfolio.owner
-            and portfolio_role.status == PortfolioRoleStatus.ACTIVE
-        )

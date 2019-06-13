@@ -164,17 +164,6 @@ def test_can_create_portfolios_with_matching_names():
     PortfolioFactory.create(name=portfolio_name)
 
 
-def test_can_revoke_access():
-    portfolio = PortfolioFactory.create()
-    owner_role = portfolio.roles[0]
-    portfolio_role = PortfolioRoleFactory.create(
-        portfolio=portfolio, status=PortfolioRoleStatus.ACTIVE
-    )
-
-    assert Portfolios.can_revoke_access_for(portfolio, portfolio_role)
-    assert not Portfolios.can_revoke_access_for(portfolio, owner_role)
-
-
 def test_disabled_members_dont_show_up(session):
     portfolio = PortfolioFactory.create()
     PortfolioRoleFactory.create(portfolio=portfolio, status=PortfolioRoleStatus.ACTIVE)
