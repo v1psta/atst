@@ -30,11 +30,6 @@ MESSAGES = {
         "message_template": "You have successfully deleted {{ user_name }} from {{ application_name }}",
         "category": "success",
     },
-    "environment_access_changed": {
-        "title_template": "User access successfully changed.",
-        "message_template": "",
-        "category": "success",
-    },
     "environment_added": {
         "title_template": translate("flash.success"),
         "message_template": """
@@ -51,11 +46,6 @@ MESSAGES = {
         "title_template": "There were some errors",
         "message_template": "<p>Please see below.</p>",
         "category": "error",
-    },
-    "invitation_resent": {
-        "title_template": "Invitation resent",
-        "message_template": "The {{ officer_type }} has been resent instructions to join this portfolio.",
-        "category": "success",
     },
     "logged_out": {
         "title_template": translate("flash.logged_out"),
@@ -76,13 +66,6 @@ MESSAGES = {
         """,
         "category": "success",
     },
-    "new_portfolio": {
-        "title_template": "Portfolio created!",
-        "message_template": """
-             <p>You are now ready to create applications and environments within the JEDI Cloud.</p>
-        """,
-        "category": "success",
-    },
     "new_portfolio_member": {
         "title_template": translate("flash.success"),
         "message_template": """
@@ -90,24 +73,10 @@ MESSAGES = {
         """,
         "category": "success",
     },
-    "portfolio_member_dod_id_error": {
-        "title_template": "CAC ID Error",
-        "message_template": """
-            The member attempted to accept this invite, but their CAC ID did not match the CAC ID you specified on the invite. Please confirm that the DoD ID is accurate.
-        """,
-        "category": "error",
-    },
     "portfolio_member_removed": {
         "title_template": translate("flash.deleted_member"),
         "message_template": """
             {{ "flash.delete_member_success" | translate({ "member_name": member_name }) }}
-        """,
-        "category": "success",
-    },
-    "portfolio_role_updated": {
-        "title_template": "Portfolio role updated successfully",
-        "message_template": """
-          <p>{{ member_name }}'s role  was successfully updated to {{ updated_role }}</p>
         """,
         "category": "success",
     },
@@ -137,42 +106,10 @@ MESSAGES = {
         """,
         "category": "error",
     },
-    "task_order_congrats": {
-        "title_template": translate("flash.congrats"),
-        "message_template": translate("flash.new_portfolio"),
-        "actions": """
-            {% from "components/icon.html" import Icon %}
-            <div class='alert__actions'>
-              <a href='{{ url_for("applications.portfolio_applications", portfolio_id=portfolio.id) }}' class='icon-link'>
-                {{ Icon('shield') }}
-                <span>{{ "flash.portfolio_home" | translate }}</span>
-              </a>
-              <a href='#next-steps' class='icon-link'>
-                {{ Icon('arrow-down') }}
-                <span>{{ "flash.next_steps" | translate }}</span>
-              </a>
-            </div>
-        """,
-        "category": "success",
-    },
     "task_order_draft": {
         "title_template": translate("task_orders.form.draft_alert_title"),
         "message_template": translate("task_orders.form.draft_alert_message"),
         "category": "warning",
-    },
-    "task_order_incomplete": {
-        "title_template": "Task Order Incomplete",
-        "message_template": """
-        You must complete your task order form before submitting.
-        """,
-        "category": "error",
-    },
-    "task_order_signed": {
-        "title_template": "Task Order Signed",
-        "message_template": """
-        <p>Task order has been signed successfully</p>
-        """,
-        "category": "success",
     },
     "task_order_submitted": {
         "title_template": "Your Task Order has been uploaded successfully.",
