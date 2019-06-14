@@ -1,5 +1,5 @@
 import pytest
-from atst.utils.localization import translate, LocalizationInvalidKeyError
+from atst.utils.localization import all_keys, translate, LocalizationInvalidKeyError
 
 
 def test_looking_up_existing_key():
@@ -22,3 +22,9 @@ def test_with_variables():
 def test_looking_up_non_existent_key():
     with pytest.raises(LocalizationInvalidKeyError):
         translate("testing.an.invalid_key")
+
+
+def test_all_keys():
+    assert "testing.example_with_variables" in all_keys()
+    assert "testing.nested.example" in all_keys()
+    assert not "testing.nested.missing" in all_keys()

@@ -12,9 +12,7 @@ audit_log:
       change: '{from} to {to}'
       changes: 'Changes:'
       details: 'Details:'
-  header_title: Activity History
 base_public:
-  header_title: JEDI Cloud
   login: Log in
   title_tag: JEDI Cloud
 home:
@@ -29,7 +27,6 @@ home:
   reports_descrip: enim ad minim veniam, quis nostrud exercitation ullamco
   admin_descrip: aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
 common:
-  back: Back
   cancel: Cancel
   close: Close
   confirm: Confirm
@@ -38,21 +35,11 @@ common:
   deactivate: Deactivate
   delete_confirm: 'Please type the word {word} to confirm:'
   edit: Edit
-  hide: Hide
-  manage: manage
   members: Members
   'yes': 'Yes'
   'no': 'No'
-  officer_helpers:
-    underscore_to_friendly:
-      contracting_officer: Contracting Officer
-      contracting_officer_representative: Contracting Officer Representative
-      security_officer: Security Officer
   response_label: Response required
   save: Save
-  save_and_continue: Save & continue
-  show: Show
-  sign: Sign
   undo: Undo
   view: View
   resource_names:
@@ -96,8 +83,6 @@ flash:
   updated_application_team_settings: 'You have updated the {application_name} team settings.'
   logged_out: Logged out
 footer:
-  about_link_text: Joint Enterprise Defense Infrastructure
-  browser_support: JEDI Cloud supported on these web browsers
   jedi_help_link_text: Need help?  Click here!
   login: 'Last login:'
 forms:
@@ -111,101 +96,20 @@ forms:
     dod_id: 'Select new primary point of contact:'
   environments:
     name_label: Environment Name
-  ccpo_review:
-    comment_description: Provide instructions or notes for additional information that is necessary to approve the request here. The requestor may then re-submit the updated request or initiate contact outside of AT-AT if further discussion is required. <strong>This message will be shared with the person making the JEDI request.</strong>.
-    comment_label: Instructions or comments
-    email_mao_label: Mission Owner email (optional)
-    fname_ccpo_label: First Name (optional)
-    fname_mao_label: First Name (optional)
-    lname_ccpo_label: Last Name (optional)
-    lname_mao_label: Last Name (optional)
-    phone_ext_mao_label: Extension (optional)
-    phone_mao_label: Mission Owner phone number (optional)
-  dd_254:
-    certifying_official:
-      description: '(Last, First, Middle Initial)'
-      label: Name of Certifying Official
-    certifying_official_address:
-      description: (Include ZIP Code)
-      label: Address
-    certifying_official_phone:
-      description: (Include Area Code)
-      label: Telephone
-    certifying_official_title:
-      label: Title
-    required_distribution:
-      label: Required Distribution by the Certifying Official
-  edit_member:
-    portfolio_role_label: Portfolio Role
   edit_user:
-    citizenship_description: What is your citizenship status?
     date_latest_training_description: |
       To complete the training, you can find it in
       <a class="icon-link" href="https://iatraining.disa.mil/eta/disa_cac2018/launchPage.htm" target="_blank">
         Information Assurance Cyber Awareness Challenge
       </a> website.
     date_latest_training_label: Latest information assurance (IA) training completion date
-    designation_description: What is your designation within the DoD?
     designation_label: Designation of person
     email_label: Email address
     first_name_label: First name
     last_name_label: Last name
     phone_number_label: Phone number
     service_branch_label: Service branch or agency
-  exceptions:
-    message: Form validation failed.
-  financial:
-    ba_code_description: 'BA Code is used to identify the purposes, applications, or types of activities financed by the appropriation fund. <br/><em>It should be two digits, followed by an optional letter.</em>'
-    ba_code_label: Program Budget Activity (BA) Code
-    clin_0001_description: 'Review your task order document, the amounts for each CLIN must match exactly here'
-    clin_0001_label: <dl><dt>CLIN 0001</dt> - <dd>Unclassified IaaS and PaaS Amount</dd></dl>
-    clin_0003_description: 'Review your task order document, the amounts for each CLIN must match exactly here'
-    clin_0003_label: <dl><dt>CLIN 0003</dt> - <dd>Unclassified Cloud Support Package</dd></dl>
-    clin_1001_description: 'Review your task order document, the amounts for each CLIN must match exactly here"'
-    clin_1001_label: <dl><dt>CLIN 1001</dt> - <dd>Unclassified IaaS and PaaS Amount <br> OPTION PERIOD 1</dd></dl>
-    clin_1003_description: 'Review your task order document, the amounts for each CLIN must match exactly here'
-    clin_1003_label: <dl><dt>CLIN 1003</dt> - <dd>Unclassified Cloud Support Package <br> OPTION PERIOD 1</dd></dl>
-    clin_2001_description: 'Review your task order document, the amounts for each CLIN must match exactly here'
-    clin_2001_label: <dl><dt>CLIN 2001</dt> - <dd>Unclassified IaaS and PaaS Amount <br> OPTION PERIOD 2</dd></dl>
-    clin_2003_description: 'Review your task order document, the amounts for each CLIN must match exactly here'
-    clin_2003_label: <dl><dt>CLIN 2003</dt> - <dd>Unclassified Cloud Support Package <br> OPTION PERIOD 2</dd></dl>
-    email_co_label: KO Email
-    email_cor_label: COR Email
-    expiration_date_description: Please enter the expiration date for the task order
-    expiration_date_label: Task order expiration date
-    fname_co_label: KO First Name
-    fname_cor_label: COR First Name
-    funding_type_description: What is the source of funding?
-    funding_type_other_label: 'If other, please specify'
-    lname_co_label: KO Last Name
-    lname_cor_label: COR Last Name
-    number_description: Include the original task order number (including the 000X at the end). Do not include any modification numbers. Note that there may be a lag between approving a task order and when it becomes available in our system.
-    number_label: Task order number associated with this request
-    office_co_label: KO Office
-    office_cor_label: COR Office
-    pdf_allowed_description: Only PDF documents can be uploaded.
-    pdf_label: Upload a copy of your task order
-    pe_id_description: 'PE numbers help the Department of Defense identify which offices'' budgets are contributing towards this resource use. <br/><em>It should be 7 digits followed by 1-3 letters, and should have a zero as the first and third digits.</em>'
-    pe_id_label: Program Element Number
-    treasury_code_description: 'Program Treasury Code (or Appropriations Code) identifies resource types. <br/> <em>It should be a four digit or six digit number, optionally prefixed by one or more zeros.</em>'
-    treasury_code_label: Program Treasury Code
-    uii_ids_description: 'If you have more than one UII, place each one on a new line.'
-    uii_ids_label: Unique Item Identifier (UII)s related to your application(s) if you already have them.
-  internal_comment:
-    text_description: Add comments or notes for internal CCPO reference and follow-up here. <strong>These comments <em>will not</em> be visible to the person making the JEDI request.</strong>
-    text_label: CCPO Internal Notes
-  ko_review:
-    custom_clauses_description: This will put a pause on the CSP access once the contracting officer signs until the CCPO reviews that language to make sure it is legal.
-    custom_clauses_label: Task order custom clauses (optional)
-    end_date_label: Period of performance end date
-    invalid_date: Must be a date in the future.
-    loa: 'Line of accounting (LOA) &#35;1'
-    pdf_description: Upload a PDF of the task order that you entered in your system of record for your organization.
-    pdf_label: Upload a copy of your task order document
-    start_date_label: Period of performance start date
-    to_number: Task order number
   new_member:
-    access: Access Level
     app_mgmt: App management
     dod_id_label: DoD ID
     email_label: Email address
@@ -214,49 +118,7 @@ forms:
     last_name_label: Last name
     phone_number_label: Phone number (optional)
     portfolio_mgmt: Portfolio management
-    portfolio_role_description: 'The portfolio role controls whether a member is permitted to organize a portfolio into applications and environments, add members to this portfolio, and view billing information.'
-    portfolio_role_label: Portfolio Role
     reporting: Reporting
-  new_request:
-    am_poc_label: I am the Portfolio Owner
-    average_daily_traffic_description: What is the average daily traffic you expect the systems under this cloud contract to use?
-    average_daily_traffic_gb_description: What is the average daily traffic you expect the systems under this cloud contract to use?
-    average_daily_traffic_gb_label: Average Daily Traffic (GB)
-    average_daily_traffic_label: Average Daily Traffic (Number of Requests)
-    cloud_native_description: Are your software systems being developed cloud native?
-    data_transfers_description: How much data is being transferred to the cloud?
-    dod_component_description: Identify the DoD component that is requesting access to the JEDI cloud
-    dod_component_label: DoD Component
-    dodid_poc_label: DoD ID
-    dollar_value_description: What is your total expected budget for this JEDI cloud Request?
-    dollar_value_label: Total Spend
-    email_poc_label: Email Address
-    engineering_assessment_description: Have you completed an engineering assessment of your systems for cloud readiness?
-    estimated_monthly_spend_description: 'Use the <a href="/jedi-csp-calculator" target="_blank" class="icon-link">JEDI CSP Calculator</a> to estimate your <b>monthly</b> cloud resource usage and enter the dollar amount below. Note these estimates are for initial approval only. After the request is approved, you will be asked to provide a valid task order number with specific CLIN amounts for cloud services.'
-    estimated_monthly_spend_label: Estimated Monthly Spend
-    expected_completion_date_description: When do you expect to complete your migration to the JEDI cloud?
-    fname_poc_label: First Name
-    jedi_migration_description: Are you using the JEDI cloud to migrate existing systems?
-    jedi_migration_label: JEDI Migration
-    jedi_usage_description: Your answer will help us provide tangible examples to DoD leadership how and why commercial cloud resources are accelerating the Department's missions
-    jedi_usage_label: JEDI Usage
-    lname_poc_label: Last Name
-    name_description: This name serves as a reference for your initial request and the associated portfolio that will be created once this request is approved. You may edit this name later.
-    name_label: Name Your Request
-    name_length_validation_message: Request names must be at least 4 and not more than 100 characters
-    num_software_systems_description: Estimate the number of software systems that will be supported by this JEDI cloud access request
-    num_software_systems_label: Number of Software Systems
-    number_user_sessions_description: How many user sessions do you expect on these systems each day?
-    organization_providing_assistance_description: 'If you are receiving migration assistance, what is the type of organization providing assistance?'
-    rationalization_software_systems_description: Have you completed a “rationalization” of your software systems to move to the cloud?
-    reviewed_label: I have reviewed this data and it is correct.
-    start_date_date_range_validation_message: Must be a date in the future.
-    start_date_label: When do you expect to start using the JEDI cloud (not for billing purposes)?
-    technical_support_team_description: Are you working with a technical support team experienced in cloud migrations?
-  officers:
-    contracting_officer_invite: Invite contracting officer to Task Order Builder
-    contracting_officer_representative_invite: Invite COR to Task Order Builder
-    security_officer_invite: Invite Security Officer to Task Order Builder
   portfolio:
     name_label: Portfolio name
     name_length_validation_message: Portfolio names can be between 4-100 characters
@@ -268,9 +130,7 @@ forms:
       label: App migration
       none: Not planning to migrate any applications
       not_sure: Not sure
-      not_sure_help: Not sure? Check in with the technical lead on your team to help figure out your migration needs.
       on_premise: 'Yes, migrating from an on-premise data center'
-    basic_intro: 'The first step of obtaining funding for cloud access is to provide more information about how you intend to  use these funds. Before you can submit your task order, you’ll have to complete all sections, but while you’re working on it, you can skip around the form, once you’ve supplied the portfolio name and DoD component.'
     clin_01_label: 'CLIN 01 : Unclassified'
     clin_02_label: 'CLIN 02: Classified'
     clin_03_label: 'CLIN 03: Unclassified'
@@ -286,9 +146,6 @@ forms:
       storage: Storage
       tactical_edge: Tactical edge access
     complexity_other_label: Project Complexity Other
-    cor_invite_label: Invite COR to Task Order Builder
-    csp_estimate_description: Upload a PDF or screenshot of your usage estimate from the calculator.
-    csp_estimate_label: Upload a copy of your CSP cost estimate research
     defense_component_label: Department of Defense component
     dev_team:
       civilians: Government civilians
@@ -300,32 +157,15 @@ forms:
     dev_team_other_label: Development Team Other
     end_date_label: End of period of performance (PoP)
     file_format_not_allowed: Only PDF or PNG files can be uploaded.
-    first_step_title: Overview
-    ko_invite_label: Invite contracting officer to Task Order Builder
     native_apps:
       description: Do you plan to develop any applications in the cloud?
       label: Native apps
       'no': 'No, not planning to develop natively in the cloud'
       not_sure: 'Not sure, unsure if planning to develop natively in the cloud'
-      'yes': 'Yes, planning to develop natively in the cloud'
       not_sure_help: Not sure? Talk to your technical lead about where and how they plan on developing your application.
     number_description: Task order number (10 digit number from your system of record)
-    number_label: Add your task order
-    oversight_am_cor_label: I am the Contracting Officer Representative (COR) for this task order
-    oversight_dod_id_label: DoD ID
-    oversight_email_label: Email
-    oversight_first_name_label: First Name
-    oversight_last_name_label: Last Name
-    oversight_phone_label: Phone Number
-    performance_length:
-      label: Period of performance length
-    portfolio_name_description: Your portfolio is where the information on all of your applications for one specific project lives. This will include all corresponding funding and reporting information. You can add additional task orders to your portfolio later, but you have to have at least one task order to get started. You should name your portfolio something simple and straightforward that makes it easy for you to remember where your data lives.
-    portfolio_name_label: Portfolio name
     scope_description: 'What do you plan to do on the cloud? Some examples might include migrating an existing application or creating a prototype. You don’t need to include a detailed plan of execution, but should list key requirements. This section will be reviewed by your contracting officer, but won’t be sent to the CCPO. <p>Not sure how to describe your scope? <a href="#">Read some examples</a> to get some inspiration.</p>'
     scope_label: Cloud project scope
-    skip_invite_description: |
-      <i>An invitation won't actually be sent until you click Done on the Review page. You can skip this for now and invite them later.</i>
-    so_invite_label: Invite Security Officer to Task Order Builder
     start_date_label: Start of period of performance (PoP)
     team_experience:
       built_1: Built, migrated, or consulted on 1-2 applications
@@ -335,8 +175,6 @@ forms:
       label: Team experience
       none: No previous experience
       planned: Researched or planned a cloud build or migration
-    unclassified_clin_02_label: 'CLIN 02: Classified (available soon)'
-    unclassified_clin_04_label: 'CLIN 04: Classified (available soon)'
   validators:
     is_number_message: Please enter a valid number.
     is_required: This field is required.
@@ -351,7 +189,6 @@ fragments:
     subtitle: Portfolio deactivation is available only if there are no applications in the portfolio.
   edit_application_form:
     explain: AT-AT allows you to create multiple applications within a portfolio. Each application can then be broken down into its own customizable environments.
-    new_application_title: Add a new application
   edit_environment_team_form:
     delete_environment_title: Are you sure you want to delete this environment?
     add_new_member_text: Need to add someone new to the team?
@@ -360,24 +197,7 @@ fragments:
     no_members: Currently no members are in this role
     no_access: No Access
   edit_user_form:
-    date_last_training_tooltip: When was the last time you completed the IA training? <br> Information Assurance (IA) training is an important step in cyber awareness.
     save_details_button: Save
-  ko_review_message:
-    bullet_1: Make sure the information below matches the final task order and is accurate and up-to-date
-    bullet_2: Upload your task order (TO) document
-    bullet_3: Add both the task order (TO) and line(s) of accounting (LOA) numbers
-    title: Steps
-  pending_ccpo_acceptance_alert:
-    learn_more_link_text: Learn more about the JEDI cloud task order and the financial verification process.
-    paragraph_1: The CCPO will review and respond to your request in 3 business days. You’ll be notified via email or phone. Please note if your request is for over $1M of JEDI cloud resources it will require a manual review by the CCPO.
-    paragraph_2: 'While your request is being reviewed, your next step is to create a task order (TO) associated with the JEDI cloud. Please contact a Contracting Officer, Contracting Officer Representative (COR), or a Financial Manager to help with this step.'
-  pending_ccpo_approval_modal:
-    paragraph_1: The CCPO will review and respond to your Financial Verification submission in 3 business days. You will be notified via email or phone.
-    paragraph_2: Once the financial verification is approved you will be invited to create your JEDI Portfolio and set-up your applications. Click here for more details.
-  pending_financial_verification:
-    learn_more_link_text: Learn more about the JEDI cloud task order and the financial verification process.
-    paragraph_1: 'The next step is to create a task order associated with JEDI cloud.  Please contact a Contracting Officer, Contracting Officer Representative (COR), or a Financial Manager to help with this step.'
-    paragraph_2: 'Once the task order has been created, you will be asked to provide details about the task order in the Financial Verification step.'
   portfolio_admin:
     none: Not Selected
   ppoc:
@@ -403,30 +223,17 @@ login:
   title_tag: Sign in | JEDI cloud
 navigation:
   portfolio_navigation:
-    activity_log: Activity log
-    add_new_application_label: Add new application
-    add_new_member_label: Add new member
-    applications: Applications
     breadcrumbs:
       admin: Admin
       funding: Funding
       reports: Reports
       applications: Applications
-    budget_report: Budget Report
-    portfolio_admin: Portfolio Administration
-    portfolio_funding: Funding
-    portfolio_settings: Portfolio Settings
   topbar:
     jedi_cloud_link_text: JEDI
     logout_link_title: Log out of JEDI cloud
-    named_portfolio: 'Portfolio {portfolio}'
-    no_other_active_portfolios: You have no other active JEDI portfolios.
-    other_active_portfolios: Other Active Portfolios
-    request_portfolio_link_text: Request a new JEDI portfolio
 portfolios:
   admin:
     activity_log_title: Activity log
-    add_member: Add a new member
     add_new_member: Add a new member
     alert_header: Are you sure you want to delete this member?
     alert_message: 'The member will be removed from the portfolio, but their log history will be retained.'
@@ -466,8 +273,6 @@ portfolios:
     environments_heading: Application environments
     existing_application_title: '{application_name} Application Settings'
     new_application_title: New Application
-    no_applications: This portfolio doesn’t have any applications yet
-    no_members: There are currently no members in this portfolio
     settings_heading: Application Settings
     team_management:
       subheading: Team Management
@@ -479,17 +284,13 @@ portfolios:
         title: There are currently no team members for this application.
       environments: Environments
       section:
-        members_count: 'Members ({members_count})'
         table:
           delete_access: Delete Access
           environment_management: Environment Management
-          environments: Environments
-          name: Name
           team_management: Team Management
         title: '{application_name} Team'
       subheading: Team Settings
       title: '{application_name} Team Settings'
-      user: User
       add_to_environment: Add to existing environment
     team_text: Team
     update_button_text: Save
@@ -514,96 +315,6 @@ portfolios:
       name: Name
       portfolio_mgmt: Portfolio management
       reporting: Reporting
-  task_orders:
-    available_budget_help_description: The available budget shown includes the available budget of all active task orders
-requests:
-  _new:
-    new_request: New Request
-  approval:
-    add_comment: Add a comment
-    approve_comments_or_notes_description: Provide any comments or notes regarding the approval of this request. <strong>This message will be shared with the person making the JEDI request.</strong>
-    approve_comments_or_notes_label: Approval comments or notes
-    authorizing_officials_paragraph: Provide the name of the key officials for both parties that have authorized this request to move forward. <strong>This section is not visible to the person making the request. It is only viewable by CCPO staff.</strong>
-    authorizing_officials_title: Authorizing Officials
-    ccpo_approval_on_behalf_of: 'CCPO approval on behalf of:'
-    ccpo_authorizing_official_title: CCPO Authorizing Official
-    ccpo_internal_comments: CCPO Internal Comments
-    ccpo_review_activity: CCPO Review Activity
-    mission_authorizing_official_title: Mission Authorizing Official
-    mission_owner_approval_on_behalf_of: 'Mission Owner approval on behalf of:'
-    no_ccpo_approval_request_changes: No CCPO approvals or request changes have been recorded yet.
-    no_ccpo_comments: No CCPO comments have been recorded yet.
-    ready_for_approval: Ready for approval
-    request_revisions: Request revisions
-    request_title: 'Request: {displayname}'
-    review_request: Review this Request
-    revision_instructions_or_notes_label: Revision instructions or notes
-    save_notes: Save Notes
-  financial_verification:
-    contracting_officer_information_title: Contracting Officer Information
-    contracting_officer_representative_information_title: Contracting Officer Representative (COR) Information
-    draft_saved: Draft saved
-    enter_task_order_manually_link_text: Enter Task Order information manually
-    expiration_date_placeholder: Please enter the expiration date for the task order only and do not include options that you may choose to exercise in the future.
-    financial_verification_title: Financial Verification
-    manually_enter_task_information_description: 'Additional fields are displayed below, where you can manually enter financial information as documented in your Task Order.'
-    manually_enter_task_information_help_label: Learn more about the JEDI Cloud Task Order and the Financial Verification process.
-    manually_enter_task_information_label: Manually enter Task Order information
-    number_placeholder: A Contracting Officer will likely be the best source for this number.
-    pending_financial_verification: Pending Financial Verification
-    permissions_paragraph: 'In order to get you access to the JEDI Cloud, we will need you to enter the details below that will help us verify and account for your Task Order.'
-    request_title: 'Request: {displayname}'
-    some_errors_label: There were some errors
-    task_order_not_found_eda_description: 'We could not find your Task Order in our system of record, EDA. Please confirm that you have entered it correctly.'
-    task_order_not_found_eda_label: Task Order not found in EDA
-    uui_ids_placeholder: A Unique Item Identifer is a unique code that helps the Department of Defense track and report on where and how digital assets are stored. <br>Not all applications have an existing UII number assigned.
-  index:
-    action_required: Action Required
-    all_filter: All
-    approved_requests: Approved Requests
-    filter_by_dod_component: Filter by DoD Component
-    filter_by_status: Filter by status
-    filter_requests_by_dod_component: Filter requests by DoD component
-    filter_requests_by_status_label: Filter requests by status
-    financial_verification_submitted_title: Financial Verification submitted!
-    no_portfolios_action_label: Create a new JEDI Cloud Request
-    no_portfolios_label: You currently have no JEDI Cloud portfolios.
-    no_portfolios_sub_message: A JEDI Cloud Portfolio is where you manage your applications and control user access to those applications.
-    no_requests_found: No requests found.
-    pending_ccpo_action: Pending CCPO Action
-    request_submitted_title: Request submitted!
-    requests_in_progress: Requests in progress
-    search_button_text: Search
-    search_by_name: Search requests by name
-    try_different_search: Please try a different search.
-  review_menu:
-    financial_verification_information_link_text: Financial Verification Information
-    request_information_link_text: Request Information
-  screen-1:
-    additional_plan_details_title: Please provide additional details regarding your planned usage.
-    approximate_annual_spend_paragraph: |
-      <p>
-        So this means you are spending approximately
-        <span class="label label--info">!{{ annualSpendStr }}</span>
-        annually
-      </p>
-    average_daily_traffic_gb_tooltip: GB uploaded is the gigabyte amount of data traffic that is being transferred to your systems
-    average_daily_traffic_tooltip: Requests are the client-to-server network traffic that is being transferred to your systems
-    cloud_native_tooltip: 'Cloud native is architecting and designing your application to use all the benefits of the commercial cloud. Specifically, designing applications so that they are decoupled from a physical resource.'
-    cloud_readiness_title_text: Cloud Readiness
-    dollar_value_tooltip: You may specify a different Total Spend amount to cover other JEDI Cloud services that the JEDI Cloud cost calculator was not able to estimate. Examples may include support packages from the cloud service provider.
-    engineering_assessment_tooltip: An engineering assessment is an evaluation to convert your application architecture from on-premises to using the commercial cloud
-    estimated_monthly_spend_tooltip: Refer to financial verification step help docs
-    financial_usage_title: Financial Usage
-    form_instructions: |
-      <p>We’d like to know a little about how you plan to use JEDI Cloud services to process your request. Please answer the following questions to the best of your ability. Note that the CCPO does not directly help with migrating systems to JEDI Cloud. These questions are for learning about your cloud readiness and financial usage of the JEDI Cloud; your estimates will not be used for any department level reporting.</p>
-      <p><em>All fields are required, unless specified optional.</em></p>
-    general_title_text: General
-    jedi_migration_tooltip: 'Cloud migration is the process of moving data, applications or other business elements from an organization''s onsite computers/data centers to the cloud, or moving them from one cloud environment to another.'
-    jedi_usage_placeholder: Briefly describe how you are expecting to use the JEDI Cloud. e.g. We are migrating XYZ application to the cloud so that...
-    num_software_systems_tooltip: 'A software system can be any code that you plan to host on cloud infrastructure. For example, it could be a custom-developed web application, or a large ERP system.'
-    questions_title_text: Questions related to JEDI Cloud migration
-    rationalization_software_systems_tooltip: Rationalization is the DoD process to determine whether the application should move to the cloud.
 task_orders:
   review:
     review_your_task_order: Review your task order
@@ -621,128 +332,14 @@ task_orders:
   form:
     draft_alert_title: Your information has been saved
     draft_alert_message: You can return to the Task Order Builder to enter missing information. Once you are finished, you’ll be ready to submit this request.
-  invitations:
-    contracting_officer:
-      add_button_text: Add / Invite contracting officer
-      description: You'll need a signature from your contracting officer. You might want to work with your program Financial Manager to get your TO documents moving in the right direction.
-      edit_title: Edit KO
-      invite_button_text: Invite KO
-      title: Contracting officer information
-    contracting_officer_representative:
-      add_button_text: Add / Invite COR
-      description: Your COR may assist in submitting the task order documents within their official system of record.
-      edit_title: Edit COR
-      invite_button_text: Invite COR
-      title: Contracting officer representative (COR) information
-    dod_id_label: DoD ID
-    edit_text: A new invitation email will be sent when new information is saved.
-    resend_btn: Resend
-    resend_confirmation_message: Are you sure you'd like to resend this invitation?
-    security_officer:
-      add_button_text: Add / Invite Security Officer
-      description: 'Your security officer will need to answer some security configuration questions in order to generate a DD-254 document, then digitally sign.'
-      edit_title: Edit security officer
-      invite_button_text: Invite security officer
-      title: Security officer information
-  ko_review:
-    message: Grant your team access to the cloud by verifying the task order info below.
-    review_title: Task Order Builder
-    task_order_information: Task order information
-    title: Verify task order information
   new:
     form_help_text: Before you can begin work in the cloud, you'll need to complete the information below and upload your approved task order for reference by the CCPO.
     app_info:
-      basic_info_title: Basic information
-      details_description: 'Provide a few more details about the work you will be doing. The CCPO will use this section for reporting purposes, but it won’t be included in the final task order.'
-      market_research_paragraph: 'The JEDI Cloud Computing Program Office (CCPO) has completed the market research requirements for all related task orders. The Department of Defense CIO has approved this research.<br /><a href="#">View JEDI market research memo</a>'
-      market_research_title: Market research
       project_title: Project details
-      sample_scope: |
-        Not sure how to describe your scope? <a href="#">Read some examples</a> to get some inspiration.
-      section_title: Overview
       subtitle: Who will be involved in the work funded by this task order?
       team_title: Your team
-    funding:
-      cloud_calculations_paragraph: Enter the results of your cloud usage calculations below.
-      cloud_calculations_title: Cloud usage calculations
-      cloud_offerings_paragraph: Infrastructure as a Service (IaaS) and Platform as a Service (PaaS) offerings
-      cloud_offerings_title: Cloud offerings
-      estimate_usage_description: Calculate how much your cloud usage will cost. A technical representative from your team should help you complete this calculation. These calculations will become your CLINs.
-      estimate_usage_paragraph: 'This is only an estimation tool to help you make an informed evaluation of what you expect to use. While you''re tied to the dollar amount you specify in your task order, you''re not obligated by the resources you indicate in the calculator.'
-      estimate_usage_title: Cloud usage estimate
-      performance_period_description: Choose the length of time your task order covers.
-      performance_period_paragraph: Consider starting with a shorter period of performance (PoP)—three to six months. After your task order is approved and funds are obligated, that money is committed to the cloud service provider—meaning that even if you don’t wind up needing all of the money you requested in your task order, you won’t be able to retrieve unspent funds. Submitting smaller, more manageable task orders (with smaller, more manageable budgets) allows you to avoid over-obligating funds. You’ll be notified when your period of performance is nearing its end, in time to request your next set of funds through a new task order.
-      performance_period_title: Period of performance
-      section_title: Funding
-      subtitle: In order to complete your task order, you need to add detailed information about your proposed period of performance and the amount of funds you’re requesting.
-      support_assistance_paragraph: 'Technical guidance from the cloud service provider, including architecture, configuration of IaaS and PaaS, integration, troubleshooting assistance, and other services.'
-      support_assistance_title: Cloud support and assistance
-      total: 'Total task order value:'
-    get_started:
-      button: Let's get started!
-      intro: 'Your portfolio is where you can organize all your JEDI cloud applications, funding information, and reporting in one place. It’s also where you can begin the process of securing funds for your new cloud project.'
-      intro2: 'To get started, you’ll need to prepare your first task order, which you’ll then submit separately through your organization’s system of record. There are some important steps you’ll need to complete for any task order, including:'
-      intro3: 'It should only take about half an hour to complete the task order process from start to finish. Need to know more? You’ll be able to get help at each step along the way. If you’re unable to complete your task order in one session, your work will be saved, and you can continue when you’re ready.'
-      intro4: 'Not looking to create a whole new portfolio? If you’d like to add a new task order to an existing portfolio, select that portfolio from the list at the left and follow the instructions.'
-      team_header: 'Before you begin, you’ll need to assemble your team'
-      title: Let's get started
-    oversight:
-      cor_info_paragraph: Your contracting specialist, or contracting officer representative, manages the task order documents within their official system of record. They will also need to co-sign your DD-254, along with your security officer (below). Once you invite them to the task order, they will be able to log in to access any necessary information.
-      cor_info_title: Contracting officer representative (COR) information
-      dod_id_tooltip: The DoD ID is needed to verify the identity of the indicated officer or representative.
-      ko_info_paragraph: Your contracting officer will decide whether to approve this task order. After you invite them to see your draft, they will need to download the necessary documents, enter the information into their official system of record and put their warrant to it, and then return to this interface to re-upload the approved documents, complete with their digital signature. In some cases, a contracting specialist or contracting officer representative may handle some of the data entry between this system and the contracting system of record.
-      ko_info_title: Contracting officer information
-      section_title: Oversight
-      skip_ko_label: Skip for now (We'll remind you to enter one later)
-      so_info_paragraph: Your Security Officer will answer some security configuration questions in order to generate a DD-254 for this task order. Once this has been generated, they will sign and submit within their system of record after obtaining a co-signature from the contracting specialist (above).
-      so_info_title: Security officer information
-    review:
-      app_info: Overview
-      classified_inactive: (Available soon)
-      clin_1: 'CLIN #1: Unclassified Cloud'
-      clin_2: 'CLIN #2: Classified Cloud'
-      clin_3: 'CLIN #3: Unclassified Cloud'
-      clin_4: 'CLIN #4: Classified Cloud'
-      complexity: Project complexity
-      cor: Contracting Officer Representative (COR)
-      dod: DoD component
-      dod_id: 'DoD ID:'
-      funding: Funding
-      invited: Invited
-      ko: Contracting Officer
-      not_invited: Not yet invited
-      not_uploaded: Not uploaded
-      oversight: Oversight
-      pending_to: Pending TO completion
-      performance_period: Period of performance
-      portfolio: Portfolio
-      reporting: Reporting
-      scope: Scope (statement of work)
-      section_title: Review Your Task Order
-      so: Security Officer
-      team: Development team
-      to_value: Task order value
-      usage_est_link: View usage estimate
   sign:
     digital_signature_description: 'I acknowledge that I have read and fully understand the DoD CCPO JEDI agreements and completed all the necessary steps, as detailed in the Federal Acquisition Regulation (FAR).'
-    digital_signature_label: Digital Signature
-    level_of_warrant_description: This is a dollar value indicating that you have permission to sign any task order under this max value.
-    level_of_warrant_label: Level of Warrant
-    task_order_builder_title: Task Order Builder
-    title: Sign Task Order
-    unlimited_level_of_warrant_description: Unlimited Level of Warrant funds
-    verify_warrant_level_paragraph: Verify your level of warrant and provide your digital signature to authorize this task order.
-  so_review:
-    certification: Certification
-    title: DD-254 Information
-  view:
-    steps:
-      draft: '<strong>Primary Point of Contact ({contact})</strong> completes initial task order form.'
-      record: '<strong>Contracting Officer ({contracting_officer}) or Contracting Officer Representative ({contracting_officer_representative})</strong> records task order information. <a href="#">Send a reminder</a>'
-      record_description: 'Obtain a funding document and file a task order in the appropriate system of record. Once this is complete, come back here and record the task order information.'
-      security: '<strong>Security Officer ({security_officer})</strong> completes a Security Requirements Document. <a href="#">Send a reminder</a>'
-      sign: '<strong>Contracting Officer ({contracting_officer})</strong> verifies funding to unlock cloud services.'
-    whats_next: Here are the remaining steps to get your task order approved.
 JEDICLINType:
   JEDI_CLIN_1: 'CLIN 1:'
   JEDI_CLIN_2: 'CLIN 2: Classified Cloud Services - 0002'
