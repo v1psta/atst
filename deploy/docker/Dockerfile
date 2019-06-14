@@ -1,0 +1,95 @@
+FROM python:3.7.3-alpine3.9 AS builder
+
+RUN mkdir -p /install/.venv
+WORKDIR /install
+
+# Install basic Alpine packages
+RUN apk update && \
+      apk --no-cache add \
+        build-base \
+        curl \
+        ca-certificates \
+        docker \
+        git \
+        gzip \
+        libffi \
+        libffi-dev \
+        libsass \
+        libsass-dev \
+        linux-headers \
+        nodejs \
+        openssh-client \
+        openssl \
+        openssl-dev \
+        pcre-dev \
+        postgresql-dev \
+        rsync \
+        sudo \
+        tar \
+        util-linux \
+        yarn
+
+COPY . .
+
+# Install app dependencies
+RUN pip install pipenv uwsgi && \
+      PIPENV_VENV_IN_PROJECT=1 pipenv install && \
+      yarn install && \
+      yarn build
+
+## NEW IMAGE
+FROM python:3.7.3-alpine3.9
+
+### Very low chance of changing
+###############################
+# Overridable default config
+ARG APP_DIR=/opt/atat/atst
+
+# Environment variables
+ENV APP_DIR "${APP_DIR}"
+ENV TZ UTC
+
+# Create application directory
+RUN set -x ; \
+  mkdir -p ${APP_DIR}
+
+# Set working dir
+WORKDIR ${APP_DIR}
+
+# Add group
+RUN addgroup -g 8000 -S "atat" && \
+  adduser -u 8010 -D -S -G "atat" "atst"
+
+# Install basic Alpine packages
+RUN apk update && \
+      apk --no-cache add \
+      dumb-init \
+      postgresql-client \
+      postgresql-dev \
+      postgresql-libs \
+      uwsgi-logfile
+
+COPY --from=builder /install/.venv/ ./.venv/
+COPY --from=builder /install/alembic/ ./alembic/
+COPY --from=builder /install/alembic.ini .
+COPY --from=builder /install/app.py .
+COPY --from=builder /install/atst/ ./atst/
+COPY --from=builder /install/config/ ./config/
+COPY --from=builder /install/templates/ ./templates/
+COPY --from=builder /install/translations.yaml .
+COPY --from=builder /install/static/ ./static/
+COPY --from=builder /install/uwsgi.ini .
+COPY --from=builder /usr/local/bin/uwsgi /usr/local/bin/uwsgi
+
+# Use dumb-init for proper signal handling
+ENTRYPOINT ["/usr/bin/dumb-init", "--"]
+
+# Default command is to launch the server
+CMD ["uwsgi", "--ini", "uwsgi.ini"]
+
+RUN mkdir /var/run/uwsgi && \
+      chown -R atst:atat /var/run/uwsgi && \
+      chown -R atst:atat "${APP_DIR}"
+
+# Run as the unprivileged APP user
+USER atst
