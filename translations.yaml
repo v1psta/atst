@@ -274,9 +274,6 @@ portfolios:
     existing_application_title: '{application_name} Application Settings'
     new_application_title: New Application
     settings_heading: Application Settings
-    team_management:
-      subheading: Team Management
-      title: '{application_name} Team Management'
     team_settings:
       blank_slate:
         action_label: Invite a new team member
