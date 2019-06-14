@@ -3,8 +3,8 @@ import { emitEvent } from '../lib/emitters'
 import optionsinput from './options_input'
 import textinput from './text_input'
 
-const JEDI_CLIN_TYPE = "jedi_clin_type"
-const OBLIGATED_AMOUNT = "obligated_amount"
+const JEDI_CLIN_TYPE = 'jedi_clin_type'
+const OBLIGATED_AMOUNT = 'obligated_amount'
 
 export default {
   name: 'clin-fields',
@@ -22,6 +22,10 @@ export default {
       default: 0,
     },
     initialClinType: String,
+    initialAmount: {
+      type: Number,
+      default: 0,
+    },
   },
 
   data: function() {
@@ -40,6 +44,14 @@ export default {
     this.$root.$on('field-change', this.handleFieldChange)
   },
 
+  created: function() {
+    emitEvent('clin-change', this, {
+      id: this._uid,
+      clinType: this.clinType,
+      amount: this.initialAmount,
+    })
+  },
+
   methods: {
     addLoa: function(event) {
       ++this.loas
@@ -56,12 +68,12 @@ export default {
         }
         else if (event.name.includes(OBLIGATED_AMOUNT)) {
           emitEvent('clin-change', this, {
+            id: this._uid,
             clinType: this.clinType,
-            amount: event.value,
+            amount: parseFloat(event.value),
           })
         }
       }
-
     },
   },
 }

@@ -10,10 +10,10 @@ export default {
   },
 
   computed: {
-    formattedObligated: function () {
+    formattedObligated: function() {
       return formatDollars(this.obligated)
     },
-    formattedContractAmount: function () {
+    formattedContractAmount: function() {
       return formatDollars(this.contractAmount)
     },
   },

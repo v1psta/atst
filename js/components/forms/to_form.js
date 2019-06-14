@@ -39,6 +39,7 @@ export default {
       clinIndex,
       obligated: this.initialObligated || 0,
       total: this.initialTotal || 0,
+      clinChildren: {},
     }
   },
 
@@ -52,11 +53,24 @@ export default {
       ++this.clinIndex
     },
 
-    calculateClinAmounts: function (event) {
-      this.total += parseFloat(event.amount - this.total)
-      if (event.clinType.includes('1') || event.clinType.includes('3')) {
-        this.obligated += parseFloat(event.amount - this.obligated)
+    calculateClinAmounts: function(event) {
+      this.clinChildren[event.id] = {
+        amount: event.amount,
+        type: event.clinType,
       }
+
+      let newTotal = 0
+      let newObligated = 0
+      Object.values(this.clinChildren).forEach(
+        function(clin) {
+          newTotal += clin.amount
+          if (clin.type.includes('1', '3')) {
+            newObligated += clin.amount
+          }
+        }
+      )
+      this.total = newTotal
+      this.obligated = newObligated
     },
   },
 
