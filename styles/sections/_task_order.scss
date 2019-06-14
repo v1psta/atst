@@ -59,7 +59,7 @@
 
   &.task_order__form {
     hr {
-      margin-top: 2rem;
+      margin-top: 1.5rem;
     }
 
     .totals-box {
@@ -68,6 +68,9 @@
 
     .icon {
       left: 100%;
+      &.icon--question {
+        @include icon-color($color-blue);
+      }
     }
 
     input {
@@ -142,9 +145,11 @@
       margin-top: 0;
       margin-left: 0;
       padding-left: 0;
+      font-size: $base-font-size;
 
       &.icon-link__add-another-clin {
-        margin-top: $gap * 3;
+        margin-top: 0;
+        margin-bottom: 0;
       }
     }
 
