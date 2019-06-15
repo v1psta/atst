@@ -9,6 +9,8 @@
     v-bind:initial-errors='true'
   {% endif %}
   v-bind:watch='{{ watch | string | lower }}'
+  name='{{ field.name }}'
+  :optional='false'
   >
   <div>
     <div v-show="hasAttachment" class="uploaded-file">

@@ -27,6 +27,8 @@ export default {
     handleFieldMount: function(event) {
       const { name, optional, valid } = event
       this.fields[name] = optional || valid
+      const formValid = this.validateForm()
+      this.invalid = !formValid
     },
 
     validateForm: function() {

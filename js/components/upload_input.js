@@ -17,6 +17,7 @@ export default {
   },
 
   props: {
+    name: String,
     initialData: {
       type: String,
     },
@@ -26,6 +27,10 @@ export default {
     watch: {
       type: Boolean,
       default: false,
+    },
+    optional: {
+      type: Boolean,
+      default: true,
     },
   },
 
@@ -38,6 +43,14 @@ export default {
     }
   },
 
+  created: function() {
+    emitEvent('field-mount', this, {
+      optional: this.optional,
+      name: this.name,
+      valid: this.hasAttachment,
+    })
+  },
+
   methods: {
     addAttachment: function(e) {
       this.attachment = e.target.value
@@ -48,6 +61,7 @@ export default {
         value: e.target.value,
         name: this.name,
         watch: this.watch,
+        valid: this.hasAttachment,
       })
     },
     removeAttachment: function(e) {

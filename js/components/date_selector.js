@@ -24,6 +24,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    optional: {
+      type: Boolean,
+      default: true,
+    },
   },
 
   data: function() {
@@ -33,6 +37,14 @@ export default {
       year: this.initialyear,
       name: this.nameTag,
     }
+  },
+
+  created: function() {
+    emitEvent('field-mount', this, {
+      optional: this.optional,
+      name: this.name,
+      valid: this.isDateValid,
+    })
   },
 
   watch: {
@@ -84,7 +96,7 @@ export default {
     isYearValid: function() {
       // Emit a change event
       var valid = parseInt(this.year) >= 1
-      this._emitChange('year', this.year, valid)
+      // this._emitChange('year', this.year, valid)
       return valid
     },
 
@@ -106,9 +118,9 @@ export default {
 
     isDateValid: function() {
       return (
-        this.day &&
-        this.month &&
-        this.year &&
+        !!this.day &&
+        !!this.month &&
+        !!this.year &&
         this.isDayValid &&
         this.isMonthValid &&
         this.isYearValid &&
@@ -141,12 +153,18 @@ export default {
   },
 
   methods: {
-    _emitChange: function(name, value, valid) {
+    onInput: function(e) {
+      console.log('emitting event')
       emitEvent('field-change', this, {
-        value: value,
-        name: name,
+        value: e.target.value,
+        name: this.name,
         watch: this.watch,
+        valid: this.isDateValid,
       })
+    },
+
+    _emitChange: function(name, value, valid) {
+      emitEvent('field-change', this, { value, name })
     },
   },
 

@@ -6,15 +6,18 @@
   description=field.description,
   mindate=None,
   maxdate=None,
-  watch=False) -%}
+  watch=False,
+  optional=True) -%}
 
 <date-selector
   {% if maxdate %}maxdate="{{ maxdate.strftime("%Y-%m-%d") }}"{% endif %}
   {% if mindate %}mindate="{{ mindate.strftime("%Y-%m-%d") }}"{% endif %}
+  name-tag='{{ field.name }}'
   initialmonth="{{ field.data.month }}"
   initialday="{{ field.data.day }}"
   initialyear="{{ field.data.year }}"
   v-bind:watch='{{ watch | string | lower }}'
+  :optional='{{ optional | string | lower }}'
   inline-template>
 
     <fieldset class="usa-input date-picker" v-bind:class="{ 'usa-input--success': isDateValid }">
@@ -29,7 +32,7 @@
       </legend>
 
       <div class="date-picker-component">
-        <input name="{{ field.name }}" v-bind:value="formattedDate" type="hidden" />
+        <input name="{{ field.name }}" v-bind:value="formattedDate" v-on:change="onInput" type="hidden" />
 
         <div class="usa-form-group usa-form-group-month">
           <label>Month</label>
@@ -54,6 +57,7 @@
             v-bind:class="{ 'usa-input-error': (day && !isDayValid) }"
             v-bind:max="daysMaxCalculation"
             v-model="day"
+            v-on:change="onInput"
           />
         </div>
 
@@ -66,6 +70,7 @@
             v-model="year"
             {% if maxdate %}max="{{ maxdate.year }}"{% endif %}
             {% if mindate %}min="{{ mindate.year }}"{% endif %}
+            v-on:change="onInput"
           />
 
         </div>
