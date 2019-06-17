@@ -200,10 +200,11 @@
 
     .accordion-table__item-content {
       .icon-link {
-        padding-right: 0;
-        padding-left: 0;
-        white-space: nowrap;
         align-items: baseline;
+        padding-left: 0;
+        padding-right: 0;
+        padding-top: 1rem;
+        white-space: nowrap;
       }
     }
   }
