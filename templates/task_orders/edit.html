@@ -59,6 +59,8 @@
   <clin-fields
     v-bind:initial-clin-index='{{ index }}'
     v-bind:initial-loa-count="{{ fields.loas.data | length }}"
+    v-bind:initial-clin-type="'{{ fields.jedi_clin_type.data }}'"
+    v-bind:initial-amount='{{ fields.obligated_amount.data }}'
     inline-template>
     <div>
       <div class="form-row">
@@ -102,7 +104,15 @@
   {% endif %}
   <form id="new-task-order" action='{{ action }}' method="POST" autocomplete="off" enctype="multipart/form-data">
     {{ form.csrf_token }}
-    <to-form inline-template v-bind:initial-clin-count="{{ form.clins.data | length }}">
+
+    {% set obligated = task_order.total_obligated_funds if task_order else 0 %}
+    {% set total = task_order.total_contract_amount if task_order else 0 %}
+
+    <to-form
+      inline-template
+      v-bind:initial-obligated='{{ obligated }}'
+      v-bind:initial-total='{{ total }}'
+      v-bind:initial-clin-count="{{ form.clins.data | length }}">
       <div>
         {% call StickyCTA(text="Add Funding") %}
           <span class="action-group">
@@ -150,7 +160,10 @@
 
                 <div v-for="clin in clins">
                   <hr v-if="clinIndex !== 0">
-                  <clin-fields v-bind:initial-clin-index='clinIndex' inline-template>
+                  <clin-fields
+                    v-bind:initial-clin-index='clinIndex'
+                    v-bind:initial-clin-type="'JEDICLINType.JEDI_CLIN_1'"
+                    inline-template>
                     <div>
                       <div class="form-row">
                         <div class="form-col form-col--two-thirds">
@@ -205,6 +218,7 @@
                               </template>
                             </div>
                           </textinput>
+
                         </div>
                       </div>
 
@@ -382,8 +396,27 @@
                 </div>
               {{ UploadInput(form.pdf, watch=True) }}
             </div>
-            {{ TotalsBox(task_order=task_order) }}
+
+            <totals-box
+            inline-template
+            v-bind:obligated='obligated'
+            v-bind:contract-amount='total'
+            >
+              <div class="col totals-box">
+                <div class="h4">Total obligated funds</div>
+                <div class="h3" v-html="formattedObligated"></div>
+                <div>This is the funding allocated to cloud services. It may be 100% or a portion of the total task order budget.</div>
+
+                <hr>
+
+                <div class="h4">Total contract amount</div>
+                <div class="h3" v-html="formattedContractAmount"></div>
+                <div>This is the value of all funds obligated for this contract, including -- but not limited to -- funds obligated for the cloud.</div>
+              </div>
+            </totals-box>
+
           </div>
+
         </div>
       </div>
     </to-form>
