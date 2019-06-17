@@ -18,6 +18,10 @@ body {
   .modal__container {
     height: 100vh;
     max-height: 100vh;
+
+    .usa-input .usa-input__choices label {
+      max-width: 62rem;
+    }
   }
 
   .modal__dialog {
