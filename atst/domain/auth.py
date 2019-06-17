@@ -1,7 +1,6 @@
 from flask import g, redirect, url_for, session, request
 
 from atst.domain.users import Users
-from atst.utils.flash import formatted_flash
 
 
 UNPROTECTED_ROUTES = [
@@ -61,7 +60,6 @@ def logout():
     if session.get("user_id"):  # pragma: no branch
         del session["user_id"]
         del session["last_login"]
-        formatted_flash("logged_out")
 
 
 def _unprotected_route(request):

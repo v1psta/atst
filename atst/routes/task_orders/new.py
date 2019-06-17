@@ -66,5 +66,4 @@ def update(portfolio_id=None, task_order_id=None):
 
         return redirect(url_for("task_orders.edit", task_order_id=task_order.id))
     else:
-        flash("form_errors")
         return render_task_orders_edit(portfolio_id, task_order_id, form), 400
