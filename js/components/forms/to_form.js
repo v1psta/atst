@@ -61,14 +61,12 @@ export default {
 
       let newTotal = 0
       let newObligated = 0
-      Object.values(this.clinChildren).forEach(
-        function(clin) {
-          newTotal += clin.amount
-          if (clin.type.includes('1', '3')) {
-            newObligated += clin.amount
-          }
+      Object.values(this.clinChildren).forEach(function(clin) {
+        newTotal += clin.amount
+        if (clin.type.includes('1', '3')) {
+          newObligated += clin.amount
         }
-      )
+      })
       this.total = newTotal
       this.obligated = newObligated
     },

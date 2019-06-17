@@ -37,6 +37,7 @@ export default {
       indexOffset: this.initialLoaCount,
       loas: loas,
       clinType: this.initialClinType,
+      amount: this.initialAmount || 0,
     }
   },
 
@@ -61,17 +62,22 @@ export default {
       return index + this.indexOffset - 1
     },
 
+    clinChangeEvent: function() {
+      emitEvent('clin-change', this, {
+        id: this._uid,
+        clinType: this.clinType,
+        amount: this.amount,
+      })
+    },
+
     handleFieldChange: function(event) {
       if (this._uid === event.parent_uid) {
         if (event.name.includes(JEDI_CLIN_TYPE)) {
           this.clinType = event.value
-        }
-        else if (event.name.includes(OBLIGATED_AMOUNT)) {
-          emitEvent('clin-change', this, {
-            id: this._uid,
-            clinType: this.clinType,
-            amount: parseFloat(event.value),
-          })
+          this.clinChangeEvent()
+        } else if (event.name.includes(OBLIGATED_AMOUNT)) {
+          this.amount = parseFloat(event.value)
+          this.clinChangeEvent()
         }
       }
     },
