@@ -21,12 +21,12 @@ class CLIN(Base, mixins.TimestampsMixin):
     task_order_id = Column(ForeignKey("task_orders.id"), nullable=False)
     task_order = relationship("TaskOrder")
 
-    number = Column(String, nullable=False)
-    loas = Column(ARRAY(String), server_default="{}", nullable=False)
-    start_date = Column(Date, nullable=False)
-    end_date = Column(Date, nullable=False)
-    obligated_amount = Column(Numeric(scale=2), nullable=False)
-    jedi_clin_type = Column(SQLAEnum(JEDICLINType, native_enum=False), nullable=False)
+    number = Column(String, nullable=True)
+    loas = Column(ARRAY(String), server_default="{}", nullable=True)
+    start_date = Column(Date, nullable=True)
+    end_date = Column(Date, nullable=True)
+    obligated_amount = Column(Numeric(scale=2), nullable=True)
+    jedi_clin_type = Column(SQLAEnum(JEDICLINType, native_enum=False), nullable=True)
 
     #
     # NOTE: For now obligated CLINS are CLIN 1 + CLIN 3

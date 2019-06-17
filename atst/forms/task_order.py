@@ -7,7 +7,7 @@ from wtforms.fields import (
     StringField,
 )
 from wtforms.fields.html5 import DateField
-from wtforms.validators import Required
+from wtforms.validators import Required, Optional
 from flask_wtf.file import FileAllowed
 from flask_wtf import FlaskForm
 
@@ -30,18 +30,20 @@ class CLINForm(FlaskForm):
         "CLIN type", choices=JEDI_CLIN_TYPES, coerce=coerce_enum
     )
 
-    number = StringField(label="CLIN", validators=[Required()])
+    number = StringField(label="CLIN", validators=[Optional()])
     start_date = DateField(
         translate("forms.task_order.start_date_label"),
         format="%m/%d/%Y",
-        validators=[Required()],
+        validators=[Optional()],
     )
     end_date = DateField(
         translate("forms.task_order.end_date_label"),
         format="%m/%d/%Y",
-        validators=[Required()],
+        validators=[Optional()],
     )
-    obligated_amount = DecimalField(label="Funds obligated for cloud")
+    obligated_amount = DecimalField(
+        label="Funds obligated for cloud", validators=[Optional()]
+    )
     loas = FieldList(StringField())
 
 

@@ -14,12 +14,15 @@ from atst.utils.flash import formatted_flash as flash
 @user_can(Permissions.VIEW_TASK_ORDER_DETAILS, message="review task order details")
 def review_task_order(task_order_id):
     task_order = TaskOrders.get(task_order_id)
-    signature_form = SignatureForm()
-    return render_template(
-        "portfolios/task_orders/review.html",
-        task_order=task_order,
-        signature_form=signature_form,
-    )
+    if task_order.is_draft:
+        return redirect(url_for("task_orders.edit", task_order_id=task_order.id))
+    else:
+        signature_form = SignatureForm()
+        return render_template(
+            "portfolios/task_orders/review.html",
+            task_order=task_order,
+            signature_form=signature_form,
+        )
 
 
 @task_orders_bp.route("/task_orders/<task_order_id>/submit", methods=["POST"])

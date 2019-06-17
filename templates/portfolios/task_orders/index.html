@@ -13,7 +13,7 @@
 {% endmacro %}
 
 {% macro TaskOrderEditButton(task_order, text="Edit", secondary=False) %}
-  <a href="{{ url_for('task_orders.edit', portfolio_id=task_order.portfolio_id, task_order_id=task_order.id) }}" class="usa-button {{ 'usa-button-secondary' if secondary else '' }}">
+  <a href="{{ url_for('task_orders.edit', task_order_id=task_order.id) }}" class="usa-button {{ 'usa-button-secondary' if secondary else '' }}">
     {{ text }}
   </a>
 {% endmacro %}

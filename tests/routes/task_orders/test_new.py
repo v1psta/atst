@@ -108,8 +108,8 @@ def test_task_orders_update(client, user_session, portfolio, pdf_upload):
     response = client.post(
         url_for("task_orders.update", task_order_id=task_order.id), data=data
     )
-    assert response.status_code == 302
     assert task_order.number == data["number"]
+    assert response.status_code == 400
 
 
 def test_task_orders_update_pdf(
@@ -121,8 +121,8 @@ def test_task_orders_update_pdf(
     response = client.post(
         url_for("task_orders.update", task_order_id=task_order.id), data=data
     )
-    assert response.status_code == 302
     assert task_order.pdf.filename == pdf_upload2.filename
+    assert response.status_code == 400
 
 
 def test_task_orders_update_delete_pdf(client, user_session, portfolio, pdf_upload):
@@ -132,8 +132,19 @@ def test_task_orders_update_delete_pdf(client, user_session, portfolio, pdf_uplo
     response = client.post(
         url_for("task_orders.update", task_order_id=task_order.id), data=data
     )
-    assert response.status_code == 302
     assert task_order.pdf is None
+    assert response.status_code == 400
+
+
+def test_cannot_get_to_review_screen_with_incomplete_data(
+    client, user_session, portfolio
+):
+    user_session(portfolio.owner)
+    data = {"number": "0123456789"}
+    response = client.post(
+        url_for("task_orders.update", portfolio_id=portfolio.id, review=True), data=data
+    )
+    assert response.status_code == 400
 
 
 @pytest.mark.skip(reason="Update after implementing new TO form")

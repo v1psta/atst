@@ -121,6 +121,9 @@
               type="submit"
               formaction="{{ review_action }}"
               tabindex="0"
+              {% if task_order and task_order.is_draft  %}
+              disabled="disabled"
+              {% endif %}
               :disabled="invalid"
               value="Review task order"
               form="new-task-order"
