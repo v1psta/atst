@@ -30,7 +30,6 @@ import BudgetChart from './components/charts/budget_chart'
 import SpendTable from './components/tables/spend_table'
 import EnvironmentsTable from './components/tables/application_environments'
 import TaskOrderList from './components/tables/task_order_list.js'
-import MembersList from './components/members_list'
 import LocalDatetime from './components/local_datetime'
 import ConfirmationPopover from './components/confirmation_popover'
 import { isNotInVerticalViewport } from './lib/viewport'
@@ -69,7 +68,6 @@ const app = new Vue({
     SpendTable,
     EnvironmentsTable,
     TaskOrderList,
-    MembersList,
     LocalDatetime,
     EditEnvironmentRole,
     EditApplicationRoles,
