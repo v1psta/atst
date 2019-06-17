@@ -31,6 +31,7 @@ export default {
       type: Boolean,
       default: false,
     },
+    optional: Boolean,
   },
 
   data: function() {
@@ -124,7 +125,7 @@ export default {
       // Emit a change event
       emitEvent('field-change', this, {
         value: this._rawValue(value),
-        valid,
+        valid: this._isValid(value),
         name: this.name,
         watch: this.watch,
       })

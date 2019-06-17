@@ -87,8 +87,8 @@
         </fieldset>
       </div>
 
-      {{ DatePicker(fields.start_date, watch=True) }}
-      {{ DatePicker(fields.end_date, watch=True) }}
+      {{ DatePicker(fields.start_date, watch=True, optional=False) }}
+      {{ DatePicker(fields.end_date, watch=True, optional=False) }}
       {{ TextInput(fields.obligated_amount, validation='dollars', watch=True) }}
     </div>
   </clin-fields>
@@ -117,7 +117,14 @@
         {% call StickyCTA(text="Add Funding") %}
           <span class="action-group">
             <!-- todo: implement the review button -->
-            <input type="submit" formaction="{{ review_action }}" tabindex="0" value="Review task order" form="new-task-order" class="usa-button usa-button-primary">
+            <input
+              type="submit"
+              formaction="{{ review_action }}"
+              tabindex="0"
+              :disabled="invalid"
+              value="Review task order"
+              form="new-task-order"
+              class="usa-button usa-button-primary">
             <input
               type="submit"
               class="usa-button usa-button-secondary"
@@ -145,7 +152,7 @@
             <div class="row">
               <div class="col">
                 <div class="h1">Add your task order</div>
-                {{ TextInput(form.number, validation='taskOrderNumber') }}
+                {{ TextInput(form.number, validation='taskOrderNumber', optional=False) }}
 
                 <hr>
 
@@ -167,7 +174,7 @@
                     <div>
                       <div class="form-row">
                         <div class="form-col form-col--two-thirds">
-                          <optionsinput :name="'clins-' + clinIndex + '-jedi_clin_type'" :watch='true' inline-template>
+                          <optionsinput :name="'clins-' + clinIndex + '-jedi_clin_type'" :watch='true' :optional='false' inline-template>
                             <div class="usa-input">
                               <fieldset data-ally-disabled="true" class="usa-input__choices" v-on:change="onInput">
                                   <legend>
@@ -233,7 +240,7 @@
                         </fieldset>
                       </div>
 
-                      <date-selector :name-tag="'clins-' + clinIndex + '-start_date'" :watch='true' inline-template>
+                      <date-selector :name-tag="'clins-' + clinIndex + '-start_date'" :watch='true' :optional='false' inline-template>
                         <fieldset class="usa-input date-picker" v-bind:class="{ 'usa-input--success': isDateValid }">
                           <legend>
                             <div class="usa-input__title">
@@ -242,7 +249,7 @@
                           </legend>
 
                           <div class="date-picker-component">
-                            <input :name="name" v-bind:value="formattedDate" type="hidden" />
+                            <input :name="name" v-bind:value="formattedDate" v-on:change="onInput" type="hidden" />
 
                             <div class="usa-form-group usa-form-group-month">
                               <label>Month</label>
@@ -254,6 +261,7 @@
                                 type="number"
                                 v-bind:class="{ 'usa-input-error': (month && !isMonthValid) }"
                                 v-model="month"
+                                v-on:change="onInput"
                               />
                             </div>
 
@@ -267,6 +275,7 @@
                                 v-bind:class="{ 'usa-input-error': (day && !isDayValid) }"
                                 v-bind:max="daysMaxCalculation"
                                 v-model="day"
+                                v-on:change="onInput"
                               />
                             </div>
 
@@ -277,6 +286,7 @@
                                 maxlength="4"
                                 type="number"
                                 v-model="year"
+                                v-on:change="onInput"
                               />
 
                             </div>
@@ -288,7 +298,7 @@
                         </fieldset>
                       </date-selector>
 
-                      <date-selector :name-tag="'clins-' + clinIndex + '-end_date'" :watch='true' inline-template>
+                      <date-selector :name-tag="'clins-' + clinIndex + '-end_date'" :watch='true' :optional='false' inline-template>
                         <fieldset class="usa-input date-picker" v-bind:class="{ 'usa-input--success': isDateValid }">
                           <legend>
                             <div class="usa-input__title">
@@ -297,7 +307,7 @@
                           </legend>
 
                           <div class="date-picker-component">
-                            <input :name="name" v-bind:value="formattedDate" type="hidden" />
+                            <input :name="name" v-bind:value="formattedDate" v-on:change="onInput" type="hidden" />
 
                             <div class="usa-form-group usa-form-group-month">
                               <label>Month</label>
@@ -309,6 +319,7 @@
                                 type="number"
                                 v-bind:class="{ 'usa-input-error': (month && !isMonthValid) }"
                                 v-model="month"
+                                v-on:change="onInput"
                               />
                             </div>
 
@@ -322,6 +333,7 @@
                                 v-bind:class="{ 'usa-input-error': (day && !isDayValid) }"
                                 v-bind:max="daysMaxCalculation"
                                 v-model="day"
+                                v-on:change="onInput"
                               />
                             </div>
 
@@ -332,6 +344,7 @@
                                 maxlength="4"
                                 type="number"
                                 v-model="year"
+                                v-on:change="onInput"
                               />
 
                             </div>
