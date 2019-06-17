@@ -75,24 +75,6 @@ class TestListItemsUnique:
             validator(dummy_form, dummy_field)
 
 
-class TestRequiredIf:
-    def test_RequiredIf_requires_field_if_arg_is_truthy(self, dummy_form, dummy_field):
-        validator = RequiredIf(lambda form: True)
-        dummy_field.data = None
-
-        with pytest.raises(ValidationError):
-            validator(dummy_form, dummy_field)
-
-    def test_RequiredIf_does_not_require_field_if_arg_is_falsy(
-        self, dummy_form, dummy_field
-    ):
-        validator = RequiredIf(lambda form: False)
-        dummy_field.data = None
-
-        with pytest.raises(StopValidation):
-            validator(dummy_form, dummy_field)
-
-
 class TestFileLength:
     def test_FileLength(self, dummy_form, dummy_field, pdf_upload):
         validator = FileLength(max_length=1)
