@@ -21,7 +21,6 @@ requests = "*"
 apache-libcloud = "*"
 lockfile = "*"
 "flask-rq2" = "*"
-simplejson = "*"
 werkzeug = "~= 0.14.1"
 
 [dev-packages]
