@@ -28,8 +28,16 @@
   .links {
     justify-content: flex-start;
 
+    .icon-link {
+      padding: $gap ($gap * 4);
+    }
+
     .icon-link:first-child {
       padding-left: 0;
+    }
+
+    .icon-link:last-child {
+      padding-right: 0;
     }
 
     .icon-link:hover {
