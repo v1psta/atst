@@ -22,6 +22,12 @@
   }
 }
 
+#modal--add-app-mem {
+  input[type="checkbox"] + label::before {
+    margin-left: 0;
+  }
+}
+
 .app-team-settings-link {
   font-size: $small-font-size;
   font-weight: $font-normal;
@@ -97,6 +103,8 @@
 .environment-roles-new {
   margin-top: 5 * $gap;
   margin-bottom: 8 * $gap;
+
+  text-align: left;
 
   .usa-input {
     margin: 2rem 0 2rem 0;
