@@ -1,1 +1,21 @@
-<svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="plus-circle" class="svg-inline--fa fa-plus-circle fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm144 276c0 6.6-5.4 12-12 12h-92v92c0 6.6-5.4 12-12 12h-56c-6.6 0-12-5.4-12-12v-92h-92c-6.6 0-12-5.4-12-12v-56c0-6.6 5.4-12 12-12h92v-92c0-6.6 5.4-12 12-12h56c6.6 0 12 5.4 12 12v92h92c6.6 0 12 5.4 12 12v56z"></path></svg>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 55.2 (78181) - https://sketchapp.com -->
+    <title>UI element / Icons / Plus / White</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Wizard_Services" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="c5-Add-Services" transform="translate(-285.000000, -1059.000000)" fill="#0071BC">
+            <g id="Group-3" transform="translate(285.000000, 1035.000000)">
+                <g id="Group-2" transform="translate(0.000000, 21.000000)">
+                    <g id="UI-element-/-Icons-/-Plus-/-White" transform="translate(0.000000, 3.000000)">
+                        <g id="Group">
+                            <path d="M8,16 C3.589,16 0,12.411 0,8 C0,3.589 3.589,0 8,0 C12.411,0 16,3.589 16,8 C16,12.411 12.411,16 8,16 Z M8,2 C4.691,2 2,4.691 2,8 C2,11.309 4.691,14 8,14 C11.309,14 14,11.309 14,8 C14,4.691 11.309,2 8,2 Z" id="Style"></path>
+                            <path d="M8,12 C7.448,12 7,11.4891429 7,10.8571429 L7,5.14285714 C7,4.512 7.448,4 8,4 C8.552,4 9,4.512 9,5.14285714 L9,10.8571429 C9,11.4891429 8.552,12 8,12 Z" id="Path"></path>
+                            <path d="M8,12 C7.448,12 7,11.4891429 7,10.8571429 L7,5.14285714 C7,4.512 7.448,4 8,4 C8.552,4 9,4.512 9,5.14285714 L9,10.8571429 C9,11.4891429 8.552,12 8,12 Z" id="Path" transform="translate(8.000000, 8.000000) rotate(-270.000000) translate(-8.000000, -8.000000) "></path>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
