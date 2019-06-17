@@ -106,12 +106,6 @@
 
   text-align: left;
 
-  input[type="checkbox"] {
-    + label::before {
-      margin-left: -3rem;
-    }
-  }
-
   .usa-input {
     margin: 2rem 0 2rem 0;
 
