@@ -5,7 +5,8 @@
   label=field.label | striptags,
   description=field.description,
   mindate=None,
-  maxdate=None) -%}
+  maxdate=None,
+  watch=False) -%}
 
 <date-selector
   {% if maxdate %}maxdate="{{ maxdate.strftime("%Y-%m-%d") }}"{% endif %}
@@ -13,6 +14,7 @@
   initialmonth="{{ field.data.month }}"
   initialday="{{ field.data.day }}"
   initialyear="{{ field.data.year }}"
+  v-bind:watch='{{ watch | string | lower }}'
   inline-template>
 
     <fieldset class="usa-input date-picker" v-bind:class="{ 'usa-input--success': isDateValid }">

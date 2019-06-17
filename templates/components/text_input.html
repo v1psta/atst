@@ -15,7 +15,8 @@
   classes='',
   noMaxWidth=False,
   optional=False,
-  showLabel=True) -%}
+  showLabel=True,
+  watch=False) -%}
 
   <textinput
     v-cloak
@@ -27,6 +28,7 @@
     {% if field.errors %}v-bind:initial-errors='{{ field.errors | list }}'{% endif %}
     v-bind:optional={{ optional|lower }}
     key='{{ field.name }}'
+    :watch='{{ watch | string | lower }}'
     inline-template>
 
     <div

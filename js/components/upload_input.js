@@ -1,6 +1,7 @@
 import createNumberMask from 'text-mask-addons/dist/createNumberMask'
 import { conformToMask } from 'vue-text-mask'
 
+import { emitEvent } from '../lib/emitters'
 import FormMixin from '../mixins/form'
 import textinput from './text_input'
 import optionsinput from './options_input'
@@ -22,6 +23,10 @@ export default {
     initialErrors: {
       type: Boolean,
     },
+    watch: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   data: function() {
@@ -38,6 +43,12 @@ export default {
       this.attachment = e.target.value
       this.showErrors = false
       this.changed = true
+
+      emitEvent('field-change', this, {
+        value: e.target.value,
+        name: this.name,
+        watch: this.watch,
+      })
     },
     removeAttachment: function(e) {
       e.preventDefault()
@@ -47,6 +58,12 @@ export default {
       }
       this.showErrors = false
       this.changed = true
+
+      emitEvent('field-change', this, {
+        value: e.target.value,
+        name: this.name,
+        watch: this.watch,
+      })
     },
   },
 

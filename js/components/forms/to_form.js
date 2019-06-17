@@ -1,3 +1,5 @@
+import stickybits from 'stickybits'
+
 import ClinFields from '../clin_fields'
 import DateSelector from '../date_selector'
 import FormMixin from '../../mixins/form'
@@ -38,6 +40,14 @@ export default {
     addClin: function(event) {
       ++this.clins
       ++this.clinIndex
+    },
+  },
+
+  directives: {
+    sticky: {
+      inserted: el => {
+        stickybits(el)
+      },
     },
   },
 }

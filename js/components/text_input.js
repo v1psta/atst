@@ -27,6 +27,10 @@ export default {
     paragraph: String,
     noMaxWidth: String,
     optional: Boolean,
+    watch: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   data: function() {
@@ -122,6 +126,7 @@ export default {
         value: this._rawValue(value),
         valid,
         name: this.name,
+        watch: this.watch,
       })
     },
 

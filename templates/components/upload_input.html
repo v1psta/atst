@@ -1,6 +1,6 @@
 {% from "components/icon.html" import Icon %}
 
-{% macro UploadInput(field, show_label=False) -%}
+{% macro UploadInput(field, show_label=False, watch=False) -%}
 <uploadinput
   inline-template
   {% if not field.errors %}
@@ -8,6 +8,7 @@
   {% else %}
     v-bind:initial-errors='true'
   {% endif %}
+  v-bind:watch='{{ watch | string | lower }}'
   >
   <div>
     <div v-show="hasAttachment" class="uploaded-file">
