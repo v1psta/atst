@@ -2,7 +2,7 @@ from datetime import datetime
 import re
 
 from werkzeug.datastructures import FileStorage
-from wtforms.validators import ValidationError, StopValidation
+from wtforms.validators import ValidationError
 import pendulum
 
 from atst.utils.localization import translate
@@ -81,27 +81,6 @@ def ListItemsUnique(message=translate("forms.validators.list_items_unique_messag
             raise ValidationError(message)
 
     return _list_items_unique
-
-
-def RequiredIf(criteria_function, message=translate("forms.validators.is_required")):
-    """ A validator which makes a field required only if another field
-        has a truthy value
-        Args:
-            criteria_function (function): calling this function on form results
-                in a boolean value that we want to check against;
-                if it's True, we require the field
-            message (str): an optional message to display if the field is
-                required but hasNone value
-    """
-
-    def _required_if(form, field):
-        if criteria_function(form):
-            if field.data is None:
-                raise ValidationError(message)
-        else:
-            raise StopValidation()
-
-    return _required_if
 
 
 def FileLength(max_length=50000000, message=None):
