@@ -4,6 +4,7 @@ from atst.utils.localization import translate
 from flask import render_template
 from jinja2 import contextfilter
 from jinja2.exceptions import TemplateNotFound
+from urllib.parse import urlparse, urlunparse, parse_qs, urlencode
 
 
 def iconSvg(name):
@@ -17,6 +18,17 @@ def dollars(value):
     except ValueError:
         numberValue = 0
     return "${:,.2f}".format(numberValue)
+
+
+def with_extra_params(url, **params):
+    """
+    Takes an existing url and safely appends additional query parms.
+    """
+    parsed_url = urlparse(url)
+    parsed_params = parse_qs(parsed_url.query)
+    new_params = {**parsed_params, **params}
+    parsed_url = parsed_url._replace(query=urlencode(new_params))
+    return urlunparse(parsed_url)
 
 
 def usPhone(number):
@@ -63,6 +75,7 @@ def register_filters(app):
     app.jinja_env.filters["dateFromString"] = dateFromString
     app.jinja_env.filters["pageWindow"] = pageWindow
     app.jinja_env.filters["renderAuditEvent"] = renderAuditEvent
+    app.jinja_env.filters["withExtraParams"] = with_extra_params
 
     @contextfilter
     def translateWithoutCache(context, *kwargs):

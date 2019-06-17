@@ -11,7 +11,7 @@
     {% set button_class = button_class + "usa-button-secondary" %}
   {% endif %}
 
-    <a id="{{ label }}" type="button" class="{{ button_class }}" href="{{ url if not disabled else 'null' }}">{{ label }}</a>
+    <a id="{{ label }}" type="button" class="{{ button_class }}" href="{{ url |withExtraParams(page=i) if not disabled else 'null' }}">{{ label }}</a>
 {%- endmacro %}
 
 {% macro Pagination(pagination, url) -%}
