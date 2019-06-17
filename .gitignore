@@ -55,3 +55,6 @@ coverage
 
 # selenium testing
 browserstacklocal
+
+# python config
+.python-version
