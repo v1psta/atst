@@ -1,3 +1,5 @@
+import random
+
 from flask import (
     Blueprint,
     request,
@@ -11,8 +13,8 @@ import pendulum
 from . import redirect_after_login_url, current_user_setup
 from atst.domain.users import Users
 from atst.domain.permission_sets import PermissionSets
+from atst.forms.data import SERVICE_BRANCHES
 from atst.queue import queue
-from tests.factories import random_service_branch
 from atst.utils import pick
 
 bp = Blueprint("dev", __name__)
@@ -30,6 +32,11 @@ _ALL_PERMS = [
     PermissionSets.PORTFOLIO_POC,
     PermissionSets.VIEW_AUDIT_LOG,
 ]
+
+
+def random_service_branch():
+    return random.choice([k for k, v in SERVICE_BRANCHES if k])  # nosec
+
 
 _DEV_USERS = {
     "sam": {
