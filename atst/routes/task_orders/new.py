@@ -14,7 +14,7 @@ def render_task_orders_edit(portfolio_id=None, task_order_id=None, form=None):
     if task_order_id:
         task_order = TaskOrders.get(task_order_id)
         portfolio_id = task_order.portfolio_id
-        render_args["form"] = form or TaskOrderForm(**task_order.to_dictionary())
+        render_args["form"] = form or TaskOrderForm(obj=task_order)
         render_args["task_order_id"] = task_order_id
         render_args["task_order"] = task_order
     else:

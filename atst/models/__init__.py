@@ -8,7 +8,7 @@ from .application_invitation import ApplicationInvitation
 from .application_role import ApplicationRole, Status as ApplicationRoleStatus
 from .attachment import Attachment
 from .audit_event import AuditEvent
-from .clin import CLIN
+from .clin import CLIN, JEDICLINType
 from .environment import Environment
 from .environment_role import EnvironmentRole, CSPRole
 from .notification_recipient import NotificationRecipient
