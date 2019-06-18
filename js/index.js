@@ -31,7 +31,6 @@ import SpendTable from './components/tables/spend_table'
 import EnvironmentsTable from './components/tables/application_environments'
 import TaskOrderList from './components/tables/task_order_list.js'
 import LocalDatetime from './components/local_datetime'
-import ConfirmationPopover from './components/confirmation_popover'
 import { isNotInVerticalViewport } from './lib/viewport'
 import DateSelector from './components/date_selector'
 import SidenavToggler from './components/sidenav_toggler'
@@ -73,7 +72,6 @@ const app = new Vue({
     EditEnvironmentRole,
     EditApplicationRoles,
     MultiStepModalForm,
-    ConfirmationPopover,
     funding,
     uploadinput,
     DateSelector,
