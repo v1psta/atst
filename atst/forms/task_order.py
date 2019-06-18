@@ -18,8 +18,18 @@ from atst.forms.validators import FileLength
 from atst.utils.localization import translate
 
 
+def coerce_enum(enum_inst):
+    if getattr(enum_inst, "value", None):
+        return enum_inst.value
+    else:
+        return enum_inst
+
+
 class CLINForm(FlaskForm):
-    jedi_clin_type = SelectField("CLIN type", choices=JEDI_CLIN_TYPES)
+    jedi_clin_type = SelectField(
+        "CLIN type", choices=JEDI_CLIN_TYPES, coerce=coerce_enum
+    )
+
     number = StringField(label="CLIN", validators=[Required()])
     start_date = DateField(
         translate("forms.task_order.start_date_label"),
