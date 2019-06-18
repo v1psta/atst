@@ -50,6 +50,11 @@ components:
   modal:
     destructive_message: You will no longer be able to access this {resource}
     destructive_title: Warning! This action is permanent
+  totals_box:
+    obligated_funds: Funds obligated for cloud
+    obligated_text: This is the funding allocated to cloud services. It may be 100% or a portion of the total task order budget.
+    total_amount: Total contract amount
+    total_text: This is the value of all funds obligated for this contract, including -- but not limited to -- funds obligated for the cloud.
   usa_header:
     flag_image_alt: U.S. Flag
     official_message: An official website of the United States government

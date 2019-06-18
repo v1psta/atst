@@ -414,20 +414,20 @@
             </div>
 
             <totals-box
-            inline-template
-            v-bind:obligated='obligated'
-            v-bind:contract-amount='total'
-            >
+              inline-template
+              v-bind:obligated='obligated'
+              v-bind:contract-amount='total'
+              >
               <div class="col totals-box">
-                <div class="h4">Total obligated funds</div>
+                <div class="h4">{{ 'components.totals_box.obligated_funds' | translate }}</div>
                 <div class="h3" v-html="formattedObligated"></div>
-                <div>This is the funding allocated to cloud services. It may be 100% or a portion of the total task order budget.</div>
+                <div>{{ 'components.totals_box.obligated_text' | translate }}</div>
 
                 <hr>
 
-                <div class="h4">Total contract amount</div>
+                <div class="h4">{{ 'components.totals_box.total_amount' | translate }}</div>
                 <div class="h3" v-html="formattedContractAmount"></div>
-                <div>This is the value of all funds obligated for this contract, including -- but not limited to -- funds obligated for the cloud.</div>
+                <div>{{ 'components.totals_box.total_text' | translate }}</div>
               </div>
             </totals-box>
 
