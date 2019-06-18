@@ -20,10 +20,8 @@ def render_task_orders_edit(portfolio_id=None, task_order_id=None, form=None):
     else:
         render_args["form"] = form or TaskOrderForm()
 
-    render_args["cancel_url"] = (
-        http_request.referrer
-        if http_request.referrer
-        else url_for("task_orders.portfolio_funding", portfolio_id=portfolio_id)
+    render_args["cancel_url"] = url_for(
+        "task_orders.portfolio_funding", portfolio_id=portfolio_id
     )
 
     return render_template("task_orders/edit.html", **render_args)
