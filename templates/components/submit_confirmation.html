@@ -14,7 +14,14 @@
           ) }}
         </label>
         <div v-on:change="toggleValid" class="checkbox">
-          {{ CheckboxInput(field=form.signature) }}
+          <div class='usa-input'>
+            <fieldset data-ally-disabled="true" class="usa-input__choices">
+              <legend>
+                {{ form.signature(**{"v-model": "checked"}) }}
+                {{ form.signature.label | safe }}
+              </legend>
+            </fieldset>
+          </div>
         </div>
       </div>
       <div class="action-group">
@@ -24,7 +31,7 @@
             {{ submit_text }}
           </button>
         </form>
-        <button v-on:click="$root.closeModal('{{ modal_id }}')" class="usa-button usa-button-secondary">{{ "common.cancel" | translate }}</button>
+        <button v-on:click="handleClose" class="usa-button usa-button-secondary">{{ "common.cancel" | translate }}</button>
       </div>
     </div>
   </submit-confirmation>
