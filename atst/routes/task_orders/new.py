@@ -57,13 +57,14 @@ def update(portfolio_id=None, task_order_id=None):
         else:
             task_order = TaskOrders.create(g.current_user, portfolio_id, **form.data)
 
-        if http_request.args.get("review"):
+        if task_order.is_completed and http_request.args.get("review"):
             return redirect(
                 url_for("task_orders.review_task_order", task_order_id=task_order.id)
             )
 
         flash("task_order_draft")
 
-        return redirect(url_for("task_orders.edit", task_order_id=task_order.id))
-    else:
-        return render_task_orders_edit(portfolio_id, task_order_id, form), 400
+        if task_order.is_completed:
+            return redirect(url_for("task_orders.edit", task_order_id=task_order.id))
+
+    return render_task_orders_edit(portfolio_id, task_order_id, form), 400

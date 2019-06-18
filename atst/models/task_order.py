@@ -86,11 +86,11 @@ class TaskOrder(Base, mixins.TimestampsMixin):
 
     @property
     def has_begun(self):
-        return Clock.today() >= self.start_date
+        return self.start_date is not None and Clock.today() >= self.start_date
 
     @property
     def has_ended(self):
-        return Clock.today() >= self.end_date
+        return self.start_date is not None and Clock.today() >= self.end_date
 
     @property
     def is_completed(self):
@@ -133,7 +133,7 @@ class TaskOrder(Base, mixins.TimestampsMixin):
     def total_obligated_funds(self):
         total = 0
         for clin in self.clins:
-            if clin.jedi_clin_type in [
+            if clin.obligated_amount is not None and clin.jedi_clin_type in [
                 JEDICLINType.JEDI_CLIN_1,
                 JEDICLINType.JEDI_CLIN_3,
             ]:
@@ -144,7 +144,8 @@ class TaskOrder(Base, mixins.TimestampsMixin):
     def total_contract_amount(self):
         total = 0
         for clin in self.clins:
-            total += clin.obligated_amount
+            if clin.obligated_amount is not None:
+                total += clin.obligated_amount
         return total
 
     @property
