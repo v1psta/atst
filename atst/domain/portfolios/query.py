@@ -48,6 +48,7 @@ class PortfoliosQuery(Query):
                     ),
                 )
             )
+            .filter(Portfolio.deleted == False)
             .order_by(Portfolio.name.asc())
             .all()
         )
