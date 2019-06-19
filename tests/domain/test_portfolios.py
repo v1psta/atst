@@ -219,3 +219,9 @@ def test_delete_failure_with_applications():
         Portfolios.delete(portfolio=portfolio)
 
     assert not portfolio.deleted
+
+
+def test_for_user_does_not_include_deleted_portfolios():
+    user = UserFactory.create()
+    PortfolioFactory.create(owner=user, deleted=True)
+    assert len(Portfolios.for_user(user)) == 0
