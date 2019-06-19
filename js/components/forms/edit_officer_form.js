@@ -1,7 +1,6 @@
 import FormMixin from '../../mixins/form'
 import checkboxinput from '../checkbox_input'
 import textinput from '../text_input'
-import ConfirmationPopover from '../confirmation_popover'
 
 export default {
   name: 'edit-officer-form',
@@ -11,7 +10,6 @@ export default {
   components: {
     checkboxinput,
     textinput,
-    ConfirmationPopover,
   },
 
   props: {
