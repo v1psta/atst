@@ -66,6 +66,24 @@ def test_task_orders_update(client, user_session, portfolio):
     assert task_order.pdf.filename == pdf_upload.filename
 
 
+def test_task_orders_save_incomplete(client, user_session, portfolio):
+    user_session(portfolio.owner)
+    form_data = {
+        "number": "0123456789",
+        "clins-0-jedi_clin_type": "JEDI_CLIN_1",
+        "clins-0-clin_number": "12312",
+    }
+    response = client.post(
+        url_for("task_orders.update", portfolio_id=portfolio.id), data=form_data
+    )
+    assert response.status_code == 302
+    task_order = portfolio.task_orders[0]
+    expected_url = url_for(
+        "task_orders.edit", task_order_id=task_order.id, _external=True
+    )
+    assert response.location == expected_url
+
+
 def test_task_orders_edit_existing_to(client, user_session, task_order):
     user_session(task_order.creator)
     response = client.get(url_for("task_orders.edit", task_order_id=task_order.id))
@@ -109,7 +127,7 @@ def test_task_orders_update(client, user_session, portfolio, pdf_upload):
         url_for("task_orders.update", task_order_id=task_order.id), data=data
     )
     assert task_order.number == data["number"]
-    assert response.status_code == 400
+    assert response.status_code == 302
 
 
 def test_task_orders_update_pdf(
@@ -122,7 +140,7 @@ def test_task_orders_update_pdf(
         url_for("task_orders.update", task_order_id=task_order.id), data=data
     )
     assert task_order.pdf.filename == pdf_upload2.filename
-    assert response.status_code == 400
+    assert response.status_code == 302
 
 
 def test_task_orders_update_delete_pdf(client, user_session, portfolio, pdf_upload):
@@ -133,7 +151,7 @@ def test_task_orders_update_delete_pdf(client, user_session, portfolio, pdf_uplo
         url_for("task_orders.update", task_order_id=task_order.id), data=data
     )
     assert task_order.pdf is None
-    assert response.status_code == 400
+    assert response.status_code == 302
 
 
 def test_cannot_get_to_review_screen_with_incomplete_data(
