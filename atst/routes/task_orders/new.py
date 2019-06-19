@@ -38,6 +38,8 @@ def edit(portfolio_id=None, task_order_id=None):
 @task_orders_bp.route("/task_orders/<task_order_id>", methods=["POST"])
 @user_can(Permissions.CREATE_TASK_ORDER, message="create new task order")
 def update(portfolio_id=None, task_order_id=None):
+    # TODO: I think saving and incomplete TO and saving a finished one should
+    # be different routes. It would make the route functions more readable.
     form_data = {**http_request.form, **http_request.files}
 
     form = None
@@ -55,14 +57,18 @@ def update(portfolio_id=None, task_order_id=None):
         else:
             task_order = TaskOrders.create(g.current_user, portfolio_id, **form.data)
 
+        # TO is finished and user can review and submit
         if task_order.is_completed and http_request.args.get("review"):
             return redirect(
                 url_for("task_orders.review_task_order", task_order_id=task_order.id)
             )
-
-        flash("task_order_draft")
-
-        if task_order.is_completed:
+        # User is trying to review and submit but the TO is not finished
+        elif http_request.args.get("review"):
+            return render_task_orders_edit(portfolio_id, task_order_id, form), 400
+        # User is saving valid but incomplete TO state
+        else:
+            flash("task_order_draft")
             return redirect(url_for("task_orders.edit", task_order_id=task_order.id))
 
-    return render_task_orders_edit(portfolio_id, task_order_id, form), 400
+    else:
+        return render_task_orders_edit(portfolio_id, task_order_id, form), 400
