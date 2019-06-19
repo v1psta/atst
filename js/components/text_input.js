@@ -103,7 +103,8 @@ export default {
       this.value = e.target.value.trim()
 
       if (this.validation === 'dollars') {
-        this.value = formatDollars(this._rawValue(e.target.value))
+        let value = Number.isNaN(e.target.value) ? '0' : e.target.value
+        this.value = formatDollars(this._rawValue(value))
       }
     },
 

@@ -359,7 +359,12 @@
                         </fieldset>
                       </date-selector>
 
-                      <textinput :name="'clins-' + clinIndex + '-obligated_amount'" validation="dollars" :watch='true' inline-template>
+                      <textinput
+                        v-cloak
+                        inline-template
+                        :name="'clins-' + clinIndex + '-obligated_amount'"
+                        validation="dollars"
+                        :watch='true'>
                         <div class="usa-input usa-input--validation--dollars noMaxWidth">
                           <label :for="name">
                             <div class="usa-input__title">Funds obligated for cloud</div>
@@ -376,7 +381,7 @@
                             v-bind:pipe='pipe'
                             v-bind:keep-char-positions='keepCharPositions'
                             v-bind:aria-invalid='showError'
-                            v-bind:show-mask='true'
+                            v-bind:show-mask='false'
                             type='text'
                             :id='name'
                             ref='input'>

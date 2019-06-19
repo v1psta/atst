@@ -11,10 +11,16 @@ export default {
 
   computed: {
     formattedObligated: function() {
-      return formatDollars(this.obligated)
+      return formatDollars(this._filterNaN(this.obligated))
     },
     formattedContractAmount: function() {
-      return formatDollars(this.contractAmount)
+      return formatDollars(this._filterNaN(this.contractAmount))
+    },
+  },
+
+  methods: {
+    _filterNaN: function(value) {
+      return Number.isNaN(value) ? 0 : value
     },
   },
 }
