@@ -21,8 +21,8 @@ def get_environments_obj_for_app(application):
             "id": env.id,
             "name": env.name,
             "edit_form": EditEnvironmentForm(obj=env),
-            "member_count": len(env.users),
-            "members": [user.full_name for user in env.users],
+            "member_count": len(env.roles),
+            "members": [env_role.application_role.user_name for env_role in env.roles],
         }
         environments_obj.append(env_data)
 
