@@ -1,15 +1,7 @@
 import pytest
 from flask import url_for, get_flashed_messages
 
-from tests.factories import (
-    UserFactory,
-    PortfolioFactory,
-    PortfolioRoleFactory,
-    EnvironmentRoleFactory,
-    EnvironmentFactory,
-    ApplicationFactory,
-    ApplicationRoleFactory,
-)
+from tests.factories import *
 
 from atst.domain.applications import Applications
 from atst.domain.environment_roles import EnvironmentRoles
@@ -102,7 +94,8 @@ def test_edit_application_environments_obj(app, client, user_session):
     env_role1 = EnvironmentRoleFactory.create(
         application_role=app_role1, environment=env, role=CSPRole.BASIC_ACCESS.value
     )
-    app_role2 = ApplicationRoleFactory.create(application=application)
+    app_role2 = ApplicationRoleFactory.create(application=application, user=None)
+    invite = ApplicationInvitationFactory.create(role=app_role2)
     env_role2 = EnvironmentRoleFactory.create(
         application_role=app_role2, environment=env, role=CSPRole.NETWORK_ADMIN.value
     )
