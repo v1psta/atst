@@ -165,7 +165,7 @@ def test_cannot_get_to_review_screen_with_incomplete_data(
     assert response.status_code == 400
 
 
-@pytest.mark.skip(reason="Update after implementing new TO form")
+@pytest.mark.skip(reason="Update after implementing errors on TO form")
 def test_task_order_form_shows_errors(client, user_session, task_order):
     creator = task_order.creator
     user_session(creator)
@@ -184,18 +184,3 @@ def test_task_order_form_shows_errors(client, user_session, task_order):
     body = response.data.decode()
     assert "There were some errors" in body
     assert "Not a valid decimal" in body
-
-
-@pytest.mark.skip(reason="Update after implementing new TO form")
-def test_task_order_review_when_complete(client, user_session, task_order):
-    pass
-
-
-@pytest.mark.skip(reason="Update after implementing new TO form")
-def test_task_order_review_when_not_complete(client, user_session, task_order):
-    pass
-
-
-@pytest.mark.skip(reason="Update after implementing new TO form")
-def test_task_order_review_and_sign(client, user_session, task_order):
-    pass
