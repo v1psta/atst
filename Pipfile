@@ -22,6 +22,7 @@ apache-libcloud = "*"
 lockfile = "*"
 "flask-rq2" = "*"
 werkzeug = "~= 0.14.1"
+PyYAML = "*"
 
 [dev-packages]
 bandit = "*"
@@ -41,7 +42,7 @@ blinker = "*"
 pytest-mock = "*"
 
 [requires]
-python_version = "3.6.6"
+python_version = "3.7.3"
 
 [pipenv]
 allow_prereleases = true

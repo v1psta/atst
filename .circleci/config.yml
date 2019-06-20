@@ -13,7 +13,7 @@ defaults:
 jobs:
   app_setup:
     docker:
-      - image: circleci/python:3.6.6-stretch-node
+      - image: circleci/python:3.7.3-stretch-node
         environment: *appEnvironment
       - image: circleci/postgres:9.6.5-alpine-ram
       - image: circleci/redis:4-alpine3.8
@@ -61,7 +61,7 @@ jobs:
 
   test:
     docker:
-      - image: circleci/python:3.6.6-stretch-node
+      - image: circleci/python:3.7.3-stretch-node
         environment: *appEnvironment
       - image: circleci/postgres:9.6.5-alpine-ram
       - image: circleci/redis:4-alpine3.8
