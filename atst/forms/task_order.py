@@ -27,10 +27,14 @@ def coerce_enum(enum_inst):
 
 class CLINForm(FlaskForm):
     jedi_clin_type = SelectField(
-        "CLIN type", choices=JEDI_CLIN_TYPES, coerce=coerce_enum
+        translate("task_orders.form.clin_type_label"),
+        choices=JEDI_CLIN_TYPES,
+        coerce=coerce_enum,
     )
 
-    number = StringField(label="CLIN", validators=[Optional()])
+    number = StringField(
+        label=translate("task_orders.form.clin_number_label"), validators=[Optional()]
+    )
     start_date = DateField(
         translate("forms.task_order.start_date_label"),
         format="%m/%d/%Y",
@@ -42,7 +46,8 @@ class CLINForm(FlaskForm):
         validators=[Optional()],
     )
     obligated_amount = DecimalField(
-        label="Funds obligated for cloud", validators=[Optional()]
+        label=translate("task_orders.form.obligated_funds_label"),
+        validators=[Optional()],
     )
     loas = FieldList(StringField())
 
@@ -53,7 +58,7 @@ class TaskOrderForm(BaseForm):
     )
     pdf = FileField(
         None,
-        description="Your file may not exceed 50MB",
+        description=translate("task_orders.form.supporting_docs_size_limit"),
         validators=[
             FileAllowed(["pdf"], translate("forms.task_order.file_format_not_allowed")),
             FileLength(message=translate("forms.validators.file_length")),

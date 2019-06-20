@@ -47,6 +47,10 @@ common:
   choose_role: Choose a role
   name: Name
 components:
+  date_selector:
+    day: Day
+    month: Month
+    year: Year
   modal:
     destructive_message: You will no longer be able to access this {resource}
     destructive_title: Warning! This action is permanent
@@ -332,8 +336,24 @@ task_orders:
       pop_end: PoP End
       loa: LOA
   form:
+    add_clin: Add another CLIN or Sub-CLIN
+    add_loa: Add another line of accounting
+    add_to_header: Add your task order
+    clin_number_label: CLIN
+    clin_type_label: CLIN type
+    cloud_funding_header: Add the summary of cloud funding
+    cloud_funding_text: Data must match with what is in your uploaded document.
     draft_alert_title: Your information has been saved
     draft_alert_message: You can return to the Task Order Builder to enter missing information. Once you are finished, you’ll be ready to submit this request.
+    loa_label: 'Line of accounting (43 characters)'
+    obligated_funds_label: Funds obligated for cloud
+    pop_end: 'End of period of performance (PoP)'
+    pop_start: 'Start of period of performance (PoP)'
+    review_button: Review task order
+    supporting_docs_header: Upload your supporting documentation
+    supporting_docs_size_limit: Your file may not exceed 1MB
+    supporting_docs_text: Upload a single PDF containing all relevant information.
+    sticky_header_text: Add Funding
   new:
     form_help_text: Before you can begin work in the cloud, you'll need to complete the information below and upload your approved task order for reference by the CCPO.
     app_info:

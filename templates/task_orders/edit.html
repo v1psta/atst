@@ -40,13 +40,12 @@
     </textinput>
   </div>
 
-  <!-- TODO: Update icon to match designs -->
   <button
     class="icon-link"
     v-on:click="addLoa"
     type="button">
     {{ Icon('plus') }}
-    <span>Add another line of accounting</span>
+    <span>{{ 'task_orders.form.add_loa' | translate }}</span>
   </button>
 
 {% endmacro %}
@@ -76,7 +75,7 @@
         <fieldset class="usa-input__choices task-order__loa-fieldset">
           <legend>
             <div class="usa-input__title">
-              Line of accounting (43 characters)
+              {{ 'task_orders.form.loa_label' | translate }}
             </div>
           </legend>
           {% for loa in fields.loas %}
@@ -114,7 +113,7 @@
       v-bind:initial-total='{{ total }}'
       v-bind:initial-clin-count="{{ form.clins.data | length }}">
       <div>
-        {% call StickyCTA(text="Add Funding") %}
+        {% call StickyCTA(text=('task_orders.form.sticky_header_text' | translate )) %}
           <span class="action-group">
             <!-- todo: implement the review button -->
             <input
@@ -125,7 +124,7 @@
               disabled="disabled"
               {% endif %}
               :disabled="invalid"
-              value="Review task order"
+              value="{{ 'task_orders.form.review_button' | translate }}"
               form="new-task-order"
               class="usa-button usa-button-primary">
             <input
@@ -154,14 +153,14 @@
 
             <div class="row">
               <div class="col">
-                <div class="h1">Add your task order</div>
+                <div class="h1">{{ 'task_orders.form.add_to_header' | translate }}</div>
                 {{ TextInput(form.number, validation='taskOrderNumber', optional=False) }}
 
                 <hr>
 
-                <div class="h3">Add the summary of cloud funding</div>
+                <div class="h3">{{ 'task_orders.form.cloud_funding_header' | translate }}</div>
                 <div>
-                  Data must match with what is in your uploaded document.
+                  {{ 'task_orders.form.cloud_funding_text' | translate }}
                 </div>
 
                 {% for clin in form.clins %}
@@ -182,7 +181,7 @@
                               <fieldset data-ally-disabled="true" class="usa-input__choices" v-on:change="onInput">
                                   <legend>
                                     <div class="usa-input__title">
-                                      CLIN type
+                                      {{ 'task_orders.form.clin_type_label' | translate }}
                                     </div>
                                   </legend>
                                   <select :id='name' :name='name'>
@@ -201,7 +200,7 @@
                               <label :for="name">
                                 <span v-show='showError'>{{ Icon('alert',classes="icon-validation") }}</span>
                                 <span v-show='showValid'>{{ Icon('ok',classes="icon-validation") }}</span>
-                                <div class="usa-input__title">CLIN</div>
+                                <div class="usa-input__title">{{ 'task_orders.form.clin_number_label' | translate }}</div>
                               </label>
 
                               <masked-input
@@ -236,7 +235,7 @@
                         <fieldset class="usa-input__choices task-order__loa-fieldset">
                           <legend>
                             <div class="usa-input__title">
-                              Line of accounting (43 characters)
+                              {{ 'task_orders.form.loa_label' | translate }}
                             </div>
                           </legend>
                           {{ LOAInput() }}
@@ -247,7 +246,7 @@
                         <fieldset class="usa-input date-picker" v-bind:class="{ 'usa-input--success': isDateValid }">
                           <legend>
                             <div class="usa-input__title">
-                              Start of period of performance (PoP)
+                              {{ 'task_orders.form.pop_start' | translate }}
                             </div>
                           </legend>
 
@@ -255,7 +254,7 @@
                             <input :name="name" v-bind:value="formattedDate" v-on:change="onInput" type="hidden" />
 
                             <div class="usa-form-group usa-form-group-month">
-                              <label>Month</label>
+                              <label>{{ 'components.date_selector.month' | translate }}</label>
                               <input
                                 name="date-month"
                                 max="12"
@@ -269,7 +268,7 @@
                             </div>
 
                             <div class="usa-form-group usa-form-group-day">
-                              <label>Day</label>
+                              <label>{{ 'components.date_selector.day' | translate }}</label>
                               <input
                                 name="date-day"
                                 maxlength="2"
@@ -283,7 +282,7 @@
                             </div>
 
                             <div class="usa-form-group usa-form-group-year">
-                              <label>Year</label>
+                              <label>{{ 'components.date_selector.year' | translate }}</label>
                               <input
                                 name="date-year"
                                 maxlength="4"
@@ -305,7 +304,7 @@
                         <fieldset class="usa-input date-picker" v-bind:class="{ 'usa-input--success': isDateValid }">
                           <legend>
                             <div class="usa-input__title">
-                              End of period of performance (PoP)
+                              {{ 'task_orders.form.pop_end' | translate }}
                             </div>
                           </legend>
 
@@ -313,7 +312,7 @@
                             <input :name="name" v-bind:value="formattedDate" v-on:change="onInput" type="hidden" />
 
                             <div class="usa-form-group usa-form-group-month">
-                              <label>Month</label>
+                              <label>{{ 'components.date_selector.month' | translate }}</label>
                               <input
                                 name="date-month"
                                 max="12"
@@ -327,7 +326,7 @@
                             </div>
 
                             <div class="usa-form-group usa-form-group-day">
-                              <label>Day</label>
+                              <label>{{ 'components.date_selector.day' | translate }}</label>
                               <input
                                 name="date-day"
                                 maxlength="2"
@@ -341,7 +340,7 @@
                             </div>
 
                             <div class="usa-form-group usa-form-group-year">
-                              <label>Year</label>
+                              <label>{{ 'components.date_selector.year' | translate }}</label>
                               <input
                                 name="date-year"
                                 maxlength="4"
@@ -367,7 +366,7 @@
                         :watch='true'>
                         <div class="usa-input usa-input--validation--dollars noMaxWidth">
                           <label :for="name">
-                            <div class="usa-input__title">Funds obligated for cloud</div>
+                            <div class="usa-input__title">{{ 'task_orders.form.obligated_funds_label' | translate }}</div>
                             <span v-show='showError'>{{ Icon('alert',classes="icon-validation") }}</span>
                             <span v-show='showValid'>{{ Icon('ok',classes="icon-validation") }}</span>
                           </label>
@@ -401,19 +400,18 @@
                   </clin-fields>
                 </div>
 
-                <!-- TODO: Update icon to match designs -->
                 <button
                   class="icon-link icon-link__add-another-clin"
                   v-on:click="addClin"
                   type="button">
                   {{ Icon('plus') }}
-                  <span>Add another CLIN or Sub-CLIN</span>
+                  <span>{{ 'task_orders.form.add_clin' | translate }}</span>
                 </button>
 
                 <hr>
-                <div class="h3">Upload your supporting documentation</div>
+                <div class="h3">{{ 'task_orders.form.supporting_docs_header' | translate }}</div>
                 <div class="task-order__pdf-help-text">
-                  Upload a single PDF containing all relevant information. {{ Icon('question')}}
+                  {{ 'task_orders.form.supporting_docs_text' | translate }} {{ Icon('question')}}
                 </div>
               {{ UploadInput(form.pdf, watch=True) }}
             </div>
