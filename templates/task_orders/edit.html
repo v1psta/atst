@@ -57,9 +57,9 @@
 
   <clin-fields
     v-bind:initial-clin-index='{{ index }}'
-    v-bind:initial-loa-count="{{ fields.loas.data | length }}"
+    v-bind:initial-loa-count="{{ fields.loas.data | length or 0 }}"
     v-bind:initial-clin-type="'{{ fields.jedi_clin_type.data }}'"
-    v-bind:initial-amount='{{ fields.obligated_amount.data }}'
+    v-bind:initial-amount='{{ fields.obligated_amount.data or 0 }}'
     inline-template>
     <div>
       <div class="form-row">
@@ -115,7 +115,6 @@
       <div>
         {% call StickyCTA(text=('task_orders.form.sticky_header_text' | translate )) %}
           <span class="action-group">
-            <!-- todo: implement the review button -->
             <input
               type="submit"
               formaction="{{ review_action }}"
