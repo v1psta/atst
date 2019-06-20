@@ -448,60 +448,7 @@ def test_task_orders_download_task_order_pdf_access(get_url_assert_status, monke
     get_url_assert_status(rando, url, 404)
 
 
-# task_orders.edit
-@pytest.mark.skip(reason="Update after new TO form implemented")
-def test_task_orders_new_access(get_url_assert_status):
-    ccpo = user_with(PermissionSets.EDIT_PORTFOLIO_FUNDING)
-    owner = user_with()
-    rando = user_with()
-    portfolio = PortfolioFactory.create(owner=owner)
-
-    url = url_for("task_orders.edit", portfolio_id=portfolio.id)
-    get_url_assert_status(owner, url, 200)
-    get_url_assert_status(ccpo, url, 200)
-    get_url_assert_status(rando, url, 404)
-
-
-# task_orders.record_signature
-@pytest.mark.skip(reason="Update after TO signature is reimplemented")
-def test_task_orders_record_signature_access(post_url_assert_status, monkeypatch):
-    ccpo = UserFactory.create_ccpo()
-    owner = user_with()
-    rando = user_with()
-
-    portfolio = PortfolioFactory.create(owner=owner)
-    task_order = TaskOrderFactory.create(portfolio=portfolio)
-    monkeypatch.setattr(
-        "atst.routes.task_orders.signing.find_unsigned_ko_to", lambda *a: task_order
-    )
-
-    url = url_for("task_orders.record_signature", task_order_id=task_order.id)
-    post_url_assert_status(owner, url, 404)
-    post_url_assert_status(ccpo, url, 404)
-    post_url_assert_status(rando, url, 404)
-
-
-# task_orders.signature_requested
-@pytest.mark.skip(reason="Update after TO signature is reimplemented")
-def test_task_orders_signature_requested_access(get_url_assert_status, monkeypatch):
-    ccpo = UserFactory.create_ccpo()
-    owner = user_with()
-    rando = user_with()
-
-    portfolio = PortfolioFactory.create(owner=owner)
-    task_order = TaskOrderFactory.create(portfolio=portfolio)
-    monkeypatch.setattr(
-        "atst.routes.task_orders.signing.find_unsigned_ko_to", lambda *a: task_order
-    )
-
-    url = url_for("task_orders.record_signature", task_order_id=task_order.id)
-    get_url_assert_status(owner, url, 404)
-    get_url_assert_status(ccpo, url, 404)
-    get_url_assert_status(rando, url, 404)
-
-
 # task_orders.update
-@pytest.mark.skip(reason="Update after TO form is fixed")
 def test_task_orders_update_access(post_url_assert_status):
     ccpo = user_with(PermissionSets.EDIT_PORTFOLIO_FUNDING)
     owner = user_with()
