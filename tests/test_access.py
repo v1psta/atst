@@ -102,9 +102,9 @@ def get_url_assert_status(client, user_session):
 
 @pytest.fixture
 def post_url_assert_status(client, user_session):
-    def _get_url_assert_status(user, url, status):
+    def _get_url_assert_status(user, url, status, data=None):
         user_session(user)
-        resp = client.post(url)
+        resp = client.post(url, data=data)
         assert resp.status_code == status
 
     return _get_url_assert_status
@@ -454,23 +454,24 @@ def test_task_orders_update_access(post_url_assert_status):
     owner = user_with()
     rando = user_with()
     portfolio = PortfolioFactory.create(owner=owner)
+    data = {"number": 1234567890}
 
     url = url_for("task_orders.update", portfolio_id=portfolio.id)
-    post_url_assert_status(owner, url, 200)
-    post_url_assert_status(ccpo, url, 200)
-    post_url_assert_status(rando, url, 200)
+    post_url_assert_status(owner, url, 302, data=data)
+    post_url_assert_status(ccpo, url, 302, data=data)
+    post_url_assert_status(rando, url, 404, data=data)
 
     task_order = TaskOrderFactory.create(portfolio=portfolio)
 
     url = url_for("task_orders.update", task_order_id=task_order.id)
-    post_url_assert_status(owner, url, 302)
-    post_url_assert_status(ccpo, url, 302)
-    post_url_assert_status(rando, url, 404)
+    post_url_assert_status(owner, url, 302, data=data)
+    post_url_assert_status(ccpo, url, 302, data=data)
+    post_url_assert_status(rando, url, 404, data=data)
 
     url = url_for("task_orders.update", portfolio_id=portfolio.id)
-    post_url_assert_status(owner, url, 302)
-    post_url_assert_status(ccpo, url, 302)
-    post_url_assert_status(rando, url, 404)
+    post_url_assert_status(owner, url, 302, data=data)
+    post_url_assert_status(ccpo, url, 302, data=data)
+    post_url_assert_status(rando, url, 404, data=data)
 
 
 def test_applications_application_team_access(get_url_assert_status):
