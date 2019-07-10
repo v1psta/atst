@@ -3,12 +3,15 @@ from urllib.parse import urlparse
 import pytest
 from datetime import datetime
 from flask import session, url_for
+from cryptography.hazmat.primitives.serialization import Encoding
+
 from .mocks import DOD_SDN_INFO, DOD_SDN, FIXTURE_EMAIL_ADDRESS
 from atst.domain.users import Users
 from atst.domain.permission_sets import PermissionSets
 from atst.domain.exceptions import NotFoundError
 from atst.domain.authnid.crl import CRLInvalidException
 from atst.domain.auth import UNPROTECTED_ROUTES
+from atst.domain.authnid.crl import CRLCache
 from .factories import UserFactory
 
 
@@ -131,24 +134,57 @@ def test_unprotected_routes_set_user_if_logged_in(client, app, user_session):
     assert user.full_name in resp.data.decode()
 
 
-# this implicitly relies on the test config and test CRL in tests/fixtures/crl
+@pytest.fixture
+def swap_crl_cache(
+    app, ca_key, ca_file, crl_file, make_crl, serialize_pki_object_to_disk
+):
+    original = app.crl_cache
+
+    def _swap_crl_cache(new_cache=None):
+        if new_cache:
+            app.crl_cache = new_cache
+        else:
+            crl = make_crl(ca_key)
+            serialize_pki_object_to_disk(crl, crl_file, encoding=Encoding.DER)
+            app.crl_cache = CRLCache(ca_file, crl_locations=[crl_file])
+
+    yield _swap_crl_cache
+
+    app.crl_cache = original
 
 
-def test_crl_validation_on_login(client):
-    good_cert = open("ssl/client-certs/atat.mil.crt").read()
-    bad_cert = open("ssl/client-certs/bad-atat.mil.crt").read()
+def test_crl_validation_on_login(
+    app,
+    client,
+    ca_key,
+    ca_file,
+    crl_file,
+    rsa_key,
+    make_x509,
+    make_crl,
+    serialize_pki_object_to_disk,
+    swap_crl_cache,
+):
+    good_cert = make_x509(rsa_key(), signer_key=ca_key, cn="luke")
+    bad_cert = make_x509(rsa_key(), signer_key=ca_key, cn="darth")
+
+    crl = make_crl(ca_key, expired_serials=[bad_cert.serial_number])
+    serialize_pki_object_to_disk(crl, crl_file, encoding=Encoding.DER)
+
+    cache = CRLCache(ca_file, crl_locations=[crl_file])
+    swap_crl_cache(cache)
 
     # bad cert is on the test CRL
-    resp = _login(client, cert=bad_cert)
+    resp = _login(client, cert=bad_cert.public_bytes(Encoding.PEM).decode())
     assert resp.status_code == 401
     assert "user_id" not in session
 
     # good cert is not on the test CRL, passes
-    resp = _login(client, cert=good_cert)
+    resp = _login(client, cert=good_cert.public_bytes(Encoding.PEM).decode())
     assert session["user_id"]
 
 
-def test_creates_new_user_on_login(monkeypatch, client):
+def test_creates_new_user_on_login(monkeypatch, client, ca_key):
     monkeypatch.setattr(
         "atst.domain.authnid.AuthenticationContext.authenticate", lambda *args: True
     )
@@ -166,14 +202,17 @@ def test_creates_new_user_on_login(monkeypatch, client):
     assert user.email == FIXTURE_EMAIL_ADDRESS
 
 
-def test_creates_new_user_without_email_on_login(monkeypatch, client):
-    cert_file = open("ssl/client-certs/atat.mil.crt").read()
+def test_creates_new_user_without_email_on_login(
+    client, ca_key, rsa_key, make_x509, swap_crl_cache
+):
+    cert = make_x509(rsa_key(), signer_key=ca_key, cn=DOD_SDN)
+    swap_crl_cache()
 
     # ensure user does not exist
     with pytest.raises(NotFoundError):
         Users.get_by_dod_id(DOD_SDN_INFO["dod_id"])
 
-    resp = _login(client, cert=cert_file)
+    resp = _login(client, cert=cert.public_bytes(Encoding.PEM).decode())
 
     user = Users.get_by_dod_id(DOD_SDN_INFO["dod_id"])
     assert user.first_name == DOD_SDN_INFO["first_name"]

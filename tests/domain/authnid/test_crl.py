@@ -62,16 +62,27 @@ def test_can_build_crl_list_with_missing_crls():
     assert len(cache.crl_cache.keys()) == 0
 
 
-def test_can_validate_certificate():
-    cache = CRLCache(
-        "ssl/server-certs/ca-chain.pem",
-        crl_locations=["ssl/client-certs/client-ca.der.crl"],
-    )
-    good_cert = open("ssl/client-certs/atat.mil.crt", "rb").read()
-    bad_cert = open("ssl/client-certs/bad-atat.mil.crt", "rb").read()
-    assert cache.crl_check(good_cert)
+def test_crl_validation_on_login(
+    app,
+    client,
+    ca_key,
+    ca_file,
+    crl_file,
+    rsa_key,
+    make_x509,
+    make_crl,
+    serialize_pki_object_to_disk,
+):
+    good_cert = make_x509(rsa_key(), signer_key=ca_key, cn="luke")
+    bad_cert = make_x509(rsa_key(), signer_key=ca_key, cn="darth")
+
+    crl = make_crl(ca_key, expired_serials=[bad_cert.serial_number])
+    serialize_pki_object_to_disk(crl, crl_file, encoding=Encoding.DER)
+
+    cache = CRLCache(ca_file, crl_locations=[crl_file])
+    assert cache.crl_check(good_cert.public_bytes(Encoding.PEM).decode())
     with pytest.raises(CRLRevocationException):
-        cache.crl_check(bad_cert)
+        cache.crl_check(bad_cert.public_bytes(Encoding.PEM).decode())
 
 
 def test_can_dynamically_update_crls(
