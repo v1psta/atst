@@ -33,10 +33,13 @@ const WrapperComponent = {
     name: 'WrapperComponent',
     components: { checkboxinput },
     template: testTemplate,
+    props: {
+        initialChecked: Boolean,
+    },
     data: function () {
         return {
             name: 'testCheck',
-            initialChecked: true
+            initialchecked: this.initialChecked
         }
     }
 }
@@ -50,7 +53,7 @@ describe('CheckboxInput Renders Correctly', () => {
             }
         })
 
-        wrapper.vm.$children[0].$data.isChecked = true
+        // wrapper.vm.$children[0].$data.isChecked = true
 
         expect(wrapper.find('.usa-input input').element.checked).toBe(true)
     })

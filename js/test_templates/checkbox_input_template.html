@@ -2,14 +2,14 @@
     name='testVal'
     inline-template
     key='testVal'
-    v-bind:initial-checked='false'
+    v-bind:initial-checked='initialchecked'
     >
     <div>
       <div class='usa-input  '>
 
         <fieldset data-ally-disabled="true" v-on:change="onInput" class="usa-input__choices ">
           <legend>
-            <input id="testVal" name="testVal" type="checkbox" v-model="isChecked" value="y">
+            <input checked id="testVal" name="testVal" type="checkbox" v-model="isChecked" value="initialchecked">
             <label for="testVal">Hooray!</label>
 
             
