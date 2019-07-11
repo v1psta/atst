@@ -231,6 +231,20 @@ SVG markup should be cleaned an minified, [Svgsus](http://www.svgs.us/) works we
 
 ## Deployment
 
+### Docker build
+
+For testing the Docker build, the repo includes a `docker-compose.yml` that will run the app container with an NGINX server in front of it. To run it, you will need `docker` and `docker-compose` installed, then:
+
+```
+docker-compose up
+```
+
+The app will be available on http://localhost:8080.
+
+The build assumes that you have redis and postgres running on their usual ports on your host machine; it does not pull images for those services. The docker-compose build is not suitable for development because it does not mount or reload working files.
+
+### Dev login
+
 The `/login-dev` endpoint is protected by HTTP basic auth when deployed. This can be configured for NGINX following the instructions [here](https://docs.nginx.com/nginx/admin-guide/security-controls/configuring-http-basic-authentication/). The following config should added within the main server block for the site:
 
 ```nginx
