@@ -113,6 +113,7 @@
       action_label='Add a New Task Order',
       action_href=url_for('task_orders.edit', portfolio_id=portfolio.id),
       icon='cloud',
+      add_perms=user_can(permissions.CREATE_TASK_ORDER)
     ) }}
   {% endif %}
 </div>
