@@ -1,4 +1,8 @@
-version: 2.0
+version: 2.1
+
+orbs:
+    aws-ecr: circleci/aws-ecr@4.0.1
+    azure-acr: circleci/azure-acr@0.1.1
 
 defaults:
   appEnvironment: &appEnvironment
@@ -74,6 +78,7 @@ jobs:
           name: "Run Tests"
           command: ./script/cibuild
 
+
 workflows:
   version: 2
   run-tests:
@@ -82,3 +87,15 @@ workflows:
       - test:
           requires:
             - app_setup
+      - aws-ecr/build_and_push_image:
+          repo: atat
+          tag: "${CIRCLE_SHA1}"
+          requires:
+            - test
+      - azure-acr/build_and_push_image:
+          login-server-name: "${AZURE_SERVER_NAME}"
+          registry-name: pwatat
+          repo: atat
+          tag: "${CIRCLE_SHA1}"
+          requires:
+            - test
