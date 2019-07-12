@@ -1,16 +1,16 @@
 <checkboxinput
-    name='testVal'
+    name='datafield'
     inline-template
-    key='testVal'
-    v-bind:initial-checked='initialchecked'
+    key='datafield'
+    v-bind:initial-checked='initialvalue'
     >
     <div>
       <div class='usa-input  '>
 
         <fieldset data-ally-disabled="true" v-on:change="onInput" class="usa-input__choices ">
           <legend>
-            <input checked id="testVal" name="testVal" type="checkbox" v-model="isChecked" value="initialchecked">
-            <label for="testVal">Hooray!</label>
+            <input checked id="datafield" name="datafield" type="checkbox" v-model="isChecked" value="initialvalue">
+            <label for="datafield">initialvalue value</label>
 
             
           </legend>
