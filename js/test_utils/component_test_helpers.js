@@ -16,24 +16,25 @@ to be passed as a prop to checkboxinput at mount time
     v-bind:initial-checked='initialvalue'
     >
 */
-const makeTestWrapper = ({components, templatePath}) => {
-    const templateString = fs.readFileSync(`js/test_templates/${templatePath}`, 'utf-8')
+const makeTestWrapper = ({ components, templatePath }) => {
+  const templateString = fs.readFileSync(
+    `js/test_templates/${templatePath}`,
+    'utf-8'
+  )
 
-    const WrapperComponent = {
-        name: 'WrapperComponent',
-        components,
-        template: templateString,
-        props: ['initialData'],
-        data: function() {
-            return {
-                initialvalue: this.initialData
-            }
-        }
-    }
+  const WrapperComponent = {
+    name: 'WrapperComponent',
+    components,
+    template: templateString,
+    props: ['initialData'],
+    data: function() {
+      return {
+        initialvalue: this.initialData,
+      }
+    },
+  }
 
-    return WrapperComponent
+  return WrapperComponent
 }
 
-export {
-    makeTestWrapper
-}
+export { makeTestWrapper }
