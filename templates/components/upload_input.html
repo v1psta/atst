@@ -39,6 +39,7 @@
           id="{{ field.name }}"
           name="{{ field.name }}"
           aria-label="Task Order Upload"
+          v-bind:value="attachment"
           type="file">
       </div>
       {% for error in field.errors %}
