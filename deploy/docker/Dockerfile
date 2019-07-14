@@ -35,6 +35,7 @@ COPY . .
 RUN pip install pipenv uwsgi && \
       PIPENV_VENV_IN_PROJECT=1 pipenv install && \
       yarn install && \
+      cp -r ./node_modules/uswds/src/fonts ./static/ && \
       yarn build
 
 ## NEW IMAGE
