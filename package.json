@@ -39,6 +39,9 @@
     "prettier": "^1.16.1",
     "vue-template-compiler": "2.5.15"
   },
+  "resolutions": {
+    "parcel-bundler/**/lodash": "^4.17.13"
+  },
   "browserslist": [
     "last 3 version",
     "> 5%",
