@@ -97,7 +97,7 @@
 
 {% call StickyCTA(text="Funding") %}
     {% if user_can(permissions.CREATE_TASK_ORDER) %}
-      <a href="{{ url_for("task_orders.edit", portfolio_id=portfolio.id) }}" class="usa-button usa-button-primary" type="submit">Start a new task order</a>
+      <a href="{{ url_for("task_orders.add_to_pdf", portfolio_id=portfolio.id) }}" class="usa-button usa-button-primary" type="submit">Start a new task order</a>
     {% endif %}
 {% endcall %}
 

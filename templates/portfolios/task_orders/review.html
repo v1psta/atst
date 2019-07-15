@@ -22,7 +22,7 @@
   {% endcall %}
 
   {% call StickyCTA(text="Review Funding") %}
-      <a href="{{ url_for("task_orders.edit", task_order_id=task_order.id) }}" class="usa-button usa-button-secondary" type="submit">Edit</a>
+      <a href="{{ url_for("task_orders.add_to_pdf", task_order_id=task_order.id) }}" class="usa-button usa-button-secondary" type="submit">Edit</a>
       <a v-on:click="openModal('submit-to-1')" class="usa-button usa-button-primary" type="submit">Submit task order</a>
   {% endcall %}
 
