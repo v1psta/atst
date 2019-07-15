@@ -28,7 +28,8 @@
       action_label='Add a new application' if can_create_applications else None,
       action_href=url_for('applications.new', portfolio_id=portfolio.id) if can_create_applications else None,
       icon='cloud',
-      sub_message=None if can_create_applications else 'Please contact your JEDI Cloud portfolio administrator to set up a new application.'
+      sub_message=None if can_create_applications else 'Please contact your JEDI Cloud portfolio administrator to set up a new application.',
+      add_perms=can_create_applications
     ) }}
 
   {% else %}
@@ -54,7 +55,7 @@
                   <a
                     href="{{ url_for('applications.team', application_id=application.id) }}"
                     class='icon-link'>
-                      <span>{{ "portfolios.applications.team_text" | translate }} ({{ application.users | length }})</span>
+                      <span>{{ "portfolios.applications.team_text" | translate }} ({{ application.members | length }})</span>
                     </a>
                     <div class='separator'></div>
                   {% endif %}
