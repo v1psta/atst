@@ -8,6 +8,7 @@
 {% set action = url_for("task_orders.update_clins", task_order_id=task_order_id) %}
 {% set next_button_text = "Next: Review Funding" %}
 {% set previous_button_link = url_for("task_orders.add_number", task_order_id=task_order_id) %}
+{% set step = "3" %}
 
 {% macro LOAInput() %}
   <div v-for="loa in loas">

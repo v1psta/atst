@@ -7,7 +7,7 @@
     <form id="to_form" action='{{ action }}' method="POST" autocomplete="off" enctype="multipart/form-data">
       {{ form.csrf_token }}
 
-      {% call StickyCTA(text=('task_orders.form.sticky_header_text' | translate )) %}
+      {% call StickyCTA(text=('task_orders.form.sticky_header_text' | translate({"step": step}) )) %}
         <span class="action-group">
           {% block next_button %}
             <input

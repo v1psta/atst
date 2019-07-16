@@ -5,6 +5,7 @@
 {% set action = url_for("task_orders.update_number", task_order_id=task_order_id) %}
 {% set next_button_text = "Next: Add Base CLIN" %}
 {% set previous_button_link = url_for("task_orders.add_pdf", task_order_id=task_order_id) %}
+{% set step = "2" %}
 
 {% block to_builder_form_field %}
   <div class="h1">
