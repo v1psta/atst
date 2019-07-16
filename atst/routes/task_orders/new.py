@@ -27,21 +27,9 @@ def render_task_orders_edit(template, portfolio_id=None, task_order_id=None, for
     return render_template(template, **render_args)
 
 
-@task_orders_bp.route("/portfolios/<portfolio_id>/task_orders/step_1")
-@task_orders_bp.route("/task_orders/<task_order_id>/step_1")
-@user_can(Permissions.CREATE_TASK_ORDER, message="view new task order form")
-def add_to_pdf(portfolio_id=None, task_order_id=None):
-    return render_task_orders_edit(
-        "task_orders/step_1.html", portfolio_id, task_order_id
-    )
-
-
-@task_orders_bp.route("/portfolios/<portfolio_id>/task_orders/step-1", methods=["POST"])
-@task_orders_bp.route("/task_orders/<task_order_id>/step_1", methods=["POST"])
-@user_can(Permissions.CREATE_TASK_ORDER, message="view new task order form")
-def upload_to_pdf(portfolio_id=None, task_order_id=None):
-    form_data = {**http_request.form, **http_request.files}
-    # todo: pass in route for step 2
+def update_task_order(
+    form_data, next_page, current_template, portfolio_id=None, task_order_id=None
+):
     form = None
     if task_order_id:
         task_order = TaskOrders.get(task_order_id)
@@ -57,18 +45,62 @@ def upload_to_pdf(portfolio_id=None, task_order_id=None):
         else:
             task_order = TaskOrders.create(g.current_user, portfolio_id, **form.data)
 
-        return redirect(
-            url_for(
-                "task_orders.portfolio_funding", portfolio_id=task_order.portfolio_id
-            )
-        )
+        return redirect(url_for(next_page, task_order_id=task_order.id))
     else:
         return (
             render_task_orders_edit(
-                "task_orders/step_1.html", portfolio_id, task_order_id, form
+                current_template, portfolio_id, task_order_id, form
             ),
             400,
         )
+
+
+@task_orders_bp.route("/portfolios/<portfolio_id>/task_orders/step_1")
+@task_orders_bp.route("/task_orders/<task_order_id>/step_1")
+@user_can(Permissions.CREATE_TASK_ORDER, message="view new task order form")
+def add_to_pdf(portfolio_id=None, task_order_id=None):
+    return render_task_orders_edit(
+        "task_orders/step_1.html",
+        portfolio_id=portfolio_id,
+        task_order_id=task_order_id,
+    )
+
+
+@task_orders_bp.route("/portfolios/<portfolio_id>/task_orders/step-1", methods=["POST"])
+@task_orders_bp.route("/task_orders/<task_order_id>/step_1", methods=["POST"])
+@user_can(Permissions.CREATE_TASK_ORDER, message="view new task order form")
+def upload_to_pdf(portfolio_id=None, task_order_id=None):
+    form_data = {**http_request.form, **http_request.files}
+    next_page = "task_orders.add_to_number"
+    current_template = "task_orders/step_1.html"
+
+    return update_task_order(
+        form_data,
+        next_page,
+        current_template,
+        portfolio_id=portfolio_id,
+        task_order_id=task_order_id,
+    )
+
+
+@task_orders_bp.route("/task_orders/<task_order_id>/step_2")
+@user_can(Permissions.CREATE_TASK_ORDER, message="view new task order form")
+def add_to_number(task_order_id):
+    return render_task_orders_edit(
+        "task_orders/step_2.html", task_order_id=task_order_id
+    )
+
+
+@task_orders_bp.route("/task_orders/<task_order_id>/step_2", methods=["POST"])
+@user_can(Permissions.CREATE_TASK_ORDER, message="view new task order form")
+def update_to_number(task_order_id):
+    form_data = {**http_request.form}
+    next_page = "task_orders.add_to_pdf"
+    current_template = "task_orders/step_2.html"
+
+    return update_task_order(
+        form_data, next_page, current_template, task_order_id=task_order_id
+    )
 
 
 @task_orders_bp.route("/portfolios/<portfolio_id>/task_orders/new")

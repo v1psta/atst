@@ -53,6 +53,26 @@ def test_task_orders_upload_to_pdf(
     assert task_order.pdf.filename == pdf_upload.filename
 
 
+def test_task_orders_add_to_number(client, user_session, task_order):
+    user_session(task_order.creator)
+    response = client.get(
+        url_for("task_orders.add_to_number", task_order_id=task_order.id)
+    )
+    assert response.status_code == 200
+
+
+def test_task_orders_update_to_number(client, user_session, task_order):
+    user_session(task_order.creator)
+    form_data = {"number": "1234567890"}
+    response = client.post(
+        url_for("task_orders.update_to_number", task_order_id=task_order.id),
+        data=form_data,
+    )
+
+    assert response.status_code == 302
+    assert task_order.number == "1234567890"
+
+
 def test_task_orders_save_incomplete(client, user_session, portfolio):
     user_session(portfolio.owner)
     form_data = {
@@ -90,6 +110,27 @@ def test_task_orders_upload_to_pdf_existing_to(
     )
     assert response.status_code == 302
     assert task_order.pdf.filename == pdf_upload.filename
+
+
+def test_task_orders_add_to_number_existing_to(client, user_session, task_order):
+    user_session(task_order.creator)
+    response = client.get(
+        url_for("task_orders.add_to_number", task_order_id=task_order.id)
+    )
+    assert response.status_code == 200
+
+
+def test_task_orders_update_to_number_existing_to(client, user_session, task_order):
+    user_session(task_order.creator)
+    form_data = {"number": "0000000000"}
+    original_number = task_order.number
+    response = client.post(
+        url_for("task_orders.upload_to_pdf", task_order_id=task_order.id),
+        data=form_data,
+    )
+    assert response.status_code == 302
+    assert task_order.number == "0000000000"
+    assert task_order.number != original_number
 
 
 def test_task_orders_update_existing_to(client, user_session, task_order):
