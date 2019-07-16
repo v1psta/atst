@@ -1,0 +1,379 @@
+{% extends "portfolios/base.html" %}
+
+{% from 'components/date_picker.html' import DatePicker %}
+{% from 'components/icon.html' import Icon %}
+{% from "components/sticky_cta.html" import StickyCTA %}
+{% from 'components/text_input.html' import TextInput %}
+
+{% macro LOAInput() %}
+  <div v-for="loa in loas">
+    <textinput :name="'clins-' + clinIndex + '-loas-' + loaIndex(loa)" :watch='true' inline-template>
+      <div class="usa-input usa-input--validation--anything">
+        <masked-input
+          v-on:input='onInput'
+          v-on:blur='onBlur'
+          v-on:change='onChange'
+          v-bind:value='value'
+          v-bind:mask='mask'
+          v-bind:pipe='pipe'
+          v-bind:keep-char-positions='keepCharPositions'
+          v-bind:aria-invalid='showError'
+          type='text'
+          :id='name'
+          ref='input'>
+        </masked-input>
+
+        <input type='hidden' v-bind:value='rawValue' :name='name' />
+
+        <template v-if='showError'>
+          <span class='usa-input__message' v-html='validationError'></span>
+        </template>
+        <template v-else>
+          <span class='usa-input__message'></span>
+        </template>
+      </div>
+    </textinput>
+  </div>
+
+  <button
+    class="icon-link"
+    v-on:click="addLoa"
+    type="button">
+    {{ Icon('plus') }}
+    <span>{{ 'task_orders.form.add_loa' | translate }}</span>
+  </button>
+{% endmacro %}
+
+{% macro CLINFields(fields, index) %}
+  {% if index != 0 %}
+    <hr>
+  {% endif %}
+
+  <clin-fields
+    v-bind:initial-clin-index='{{ index }}'
+    v-bind:initial-loa-count="{{ fields.loas.data | length or 0 }}"
+    v-bind:initial-clin-type="'{{ fields.jedi_clin_type.data }}'"
+    v-bind:initial-amount='{{ fields.obligated_amount.data or 0 }}'
+    inline-template>
+    <div>
+      <div class="form-row">
+        <div class="form-col form-col--two-thirds">
+          {{ OptionsInput(fields.jedi_clin_type, watch=True) }}
+        </div>
+        <div class="form-col form-col--third">
+          {{ TextInput(fields.number, watch=True) }}
+        </div>
+      </div>
+
+      <div class="usa-input">
+        <fieldset class="usa-input__choices task-order__loa-fieldset">
+          <legend>
+            <div class="usa-input__title">
+              {{ 'task_orders.form.loa_label' | translate }}
+            </div>
+          </legend>
+          {% for loa in fields.loas %}
+            {{ TextInput(loa, showLabel=False, watch=True) }}
+          {% endfor %}
+
+          {{ LOAInput() }}
+        </fieldset>
+      </div>
+
+      {{ DatePicker(fields.start_date, watch=True, optional=False) }}
+      {{ DatePicker(fields.end_date, watch=True, optional=False) }}
+      {{ TextInput(fields.obligated_amount, validation='dollars', watch=True) }}
+    </div>
+  </clin-fields>
+{% endmacro %}
+
+
+{% block portfolio_content %}
+  {% set action = url_for("task_orders.update_clins", task_order_id=task_order_id) %}
+
+  <to-form
+    inline-template
+    v-bind:initial-clin-count="{{ form.clins.data | length }}">
+    <form id="upload-to-pdf" action='{{ action }}' method="POST" autocomplete="off" enctype="multipart/form-data">
+      {{ form.csrf_token }}
+
+      {% call StickyCTA(text=('task_orders.form.sticky_header_text' | translate )) %}
+        <span class="action-group">
+          <input
+            type="submit"
+            formaction="{{ action }}"
+            tabindex="0"
+            :disabled="!changed"
+            value="Next: Review Funding"
+            form="upload-to-pdf"
+            class="usa-button usa-button-primary">
+          <input
+            type="button"
+            class="usa-button usa-button-secondary"
+            tabindex="0"
+            value="Previous"
+            form="upload-to-pdf"/>
+          <a
+            href="{{ cancel_url }}"
+            class="action-group__action icon-link">
+            {{ "common.cancel" | translate }}
+          </a>
+        </span>
+      {% endcall %}
+
+      {% include "fragments/flash.html" %}
+
+      <div class="h3">
+        {{ 'task_orders.form.cloud_funding_header' | translate }}
+      </div>
+      <div>
+        {{ 'task_orders.form.cloud_funding_text' | translate }}
+      </div>
+
+      {% for clin in form.clins %}
+        {{ CLINFields(clin, index=loop.index - 1) }}
+      {% endfor %}
+
+      <div v-for="clin in clins">
+        <hr v-if="clinIndex !== 0">
+        <clin-fields
+          v-bind:initial-clin-index='clinIndex'
+          v-bind:initial-clin-type="'JEDI_CLIN_1'"
+          inline-template>
+          <div>
+            <div class="form-row">
+              <div class="form-col form-col--two-thirds">
+                <optionsinput :name="'clins-' + clinIndex + '-jedi_clin_type'" :watch='true' :optional='false' inline-template>
+                  <div class="usa-input">
+                    <fieldset data-ally-disabled="true" class="usa-input__choices" v-on:change="onInput">
+                        <legend>
+                          <div class="usa-input__title">
+                            {{ 'task_orders.form.clin_type_label' | translate }}
+                          </div>
+                        </legend>
+                        <select :id='name' :name='name'>
+                          <option value="JEDI_CLIN_1">{{ "forms.task_order.clin_01_label" | translate }}</option>
+                          <option value="JEDI_CLIN_2">{{ "forms.task_order.clin_02_label" | translate }}</option>
+                          <option value="JEDI_CLIN_3">{{ "forms.task_order.clin_03_label" | translate }}</option>
+                          <option value="JEDI_CLIN_4">{{ "forms.task_order.clin_04_label" | translate }}</option>
+                        </select>
+                    </fieldset>
+                  </div>
+                </optionsinput>
+              </div>
+              <div class="form-col form-col--third">
+                <textinput :name="'clins-' + clinIndex + '-number'" :watch='true' inline-template>
+                  <div class="usa-input">
+                    <label :for="name">
+                      <span v-show='showError'>{{ Icon('alert',classes="icon-validation") }}</span>
+                      <span v-show='showValid'>{{ Icon('ok',classes="icon-validation") }}</span>
+                      <div class="usa-input__title">{{ 'task_orders.form.clin_number_label' | translate }}</div>
+                    </label>
+
+                    <masked-input
+                      v-on:input='onInput'
+                      v-on:blur='onBlur'
+                      v-on:change='onChange'
+                      v-bind:value='value'
+                      v-bind:mask='mask'
+                      v-bind:pipe='pipe'
+                      v-bind:keep-char-positions='keepCharPositions'
+                      v-bind:aria-invalid='showError'
+                      type='text'
+                      :id='name'
+                      ref='input'>
+                    </masked-input>
+
+                    <input type='hidden' v-bind:value='rawValue' :name='name' />
+
+                    <template v-if='showError'>
+                      <span class='usa-input__message' v-html='validationError'></span>
+                    </template>
+                    <template v-else>
+                      <span class='usa-input__message'></span>
+                    </template>
+                  </div>
+                </textinput>
+
+              </div>
+            </div>
+
+            <div class="usa-input">
+              <fieldset class="usa-input__choices task-order__loa-fieldset">
+                <legend>
+                  <div class="usa-input__title">
+                    {{ 'task_orders.form.loa_label' | translate }}
+                  </div>
+                </legend>
+                {{ LOAInput() }}
+              </fieldset>
+            </div>
+
+            <date-selector :name-tag="'clins-' + clinIndex + '-start_date'" :watch='true' :optional='false' inline-template>
+              <fieldset class="usa-input date-picker" v-bind:class="{ 'usa-input--success': isDateValid }">
+                <legend>
+                  <div class="usa-input__title">
+                    {{ 'task_orders.form.pop_start' | translate }}
+                  </div>
+                </legend>
+
+                <div class="date-picker-component">
+                  <input :name="name" v-bind:value="formattedDate" v-on:change="onInput" type="hidden" />
+
+                  <div class="usa-form-group usa-form-group-month">
+                    <label>{{ 'components.date_selector.month' | translate }}</label>
+                    <input
+                      name="date-month"
+                      max="12"
+                      maxlength="2"
+                      min="1"
+                      type="number"
+                      v-bind:class="{ 'usa-input-error': (month && !isMonthValid) }"
+                      v-model="month"
+                      v-on:change="onInput"
+                    />
+                  </div>
+
+                  <div class="usa-form-group usa-form-group-day">
+                    <label>{{ 'components.date_selector.day' | translate }}</label>
+                    <input
+                      name="date-day"
+                      maxlength="2"
+                      min="1"
+                      type="number"
+                      v-bind:class="{ 'usa-input-error': (day && !isDayValid) }"
+                      v-bind:max="daysMaxCalculation"
+                      v-model="day"
+                      v-on:change="onInput"
+                    />
+                  </div>
+
+                  <div class="usa-form-group usa-form-group-year">
+                    <label>{{ 'components.date_selector.year' | translate }}</label>
+                    <input
+                      name="date-year"
+                      maxlength="4"
+                      type="number"
+                      v-model="year"
+                      v-on:change="onInput"
+                    />
+
+                  </div>
+
+                  <div class="usa-form-group-date-ok" v-if="isDateValid">
+                    {{ Icon("ok", classes="icon--green") }}
+                  </div>
+                </div>
+              </fieldset>
+            </date-selector>
+
+            <date-selector :name-tag="'clins-' + clinIndex + '-end_date'" :watch='true' :optional='false' inline-template>
+              <fieldset class="usa-input date-picker" v-bind:class="{ 'usa-input--success': isDateValid }">
+                <legend>
+                  <div class="usa-input__title">
+                    {{ 'task_orders.form.pop_end' | translate }}
+                  </div>
+                </legend>
+
+                <div class="date-picker-component">
+                  <input :name="name" v-bind:value="formattedDate" v-on:change="onInput" type="hidden" />
+
+                  <div class="usa-form-group usa-form-group-month">
+                    <label>{{ 'components.date_selector.month' | translate }}</label>
+                    <input
+                      name="date-month"
+                      max="12"
+                      maxlength="2"
+                      min="1"
+                      type="number"
+                      v-bind:class="{ 'usa-input-error': (month && !isMonthValid) }"
+                      v-model="month"
+                      v-on:change="onInput"
+                    />
+                  </div>
+
+                  <div class="usa-form-group usa-form-group-day">
+                    <label>{{ 'components.date_selector.day' | translate }}</label>
+                    <input
+                      name="date-day"
+                      maxlength="2"
+                      min="1"
+                      type="number"
+                      v-bind:class="{ 'usa-input-error': (day && !isDayValid) }"
+                      v-bind:max="daysMaxCalculation"
+                      v-model="day"
+                      v-on:change="onInput"
+                    />
+                  </div>
+
+                  <div class="usa-form-group usa-form-group-year">
+                    <label>{{ 'components.date_selector.year' | translate }}</label>
+                    <input
+                      name="date-year"
+                      maxlength="4"
+                      type="number"
+                      v-model="year"
+                      v-on:change="onInput"
+                    />
+
+                  </div>
+
+                  <div class="usa-form-group-date-ok" v-if="isDateValid">
+                    {{ Icon("ok", classes="icon--green") }}
+                  </div>
+                </div>
+              </fieldset>
+            </date-selector>
+
+            <textinput
+              v-cloak
+              inline-template
+              :name="'clins-' + clinIndex + '-obligated_amount'"
+              validation="dollars"
+              :watch='true'>
+              <div class="usa-input usa-input--validation--dollars noMaxWidth">
+                <label :for="name">
+                  <div class="usa-input__title">{{ 'task_orders.form.obligated_funds_label' | translate }}</div>
+                  <span v-show='showError'>{{ Icon('alert',classes="icon-validation") }}</span>
+                  <span v-show='showValid'>{{ Icon('ok',classes="icon-validation") }}</span>
+                </label>
+
+                <masked-input
+                  v-on:input='onInput'
+                  v-on:blur='onBlur'
+                  v-on:change='onChange'
+                  v-bind:value='value'
+                  v-bind:mask='mask'
+                  v-bind:pipe='pipe'
+                  v-bind:keep-char-positions='keepCharPositions'
+                  v-bind:aria-invalid='showError'
+                  v-bind:show-mask='false'
+                  type='text'
+                  :id='name'
+                  ref='input'>
+                </masked-input>
+
+                <input type='hidden' v-bind:value='rawValue' :name='name' />
+
+                <template v-if='showError'>
+                  <span class='usa-input__message' v-html='validationError'></span>
+                </template>
+                <template v-else>
+                  <span class='usa-input__message'></span>
+                </template>
+              </div>
+            </textinput>
+          </div>
+        </clin-fields>
+      </div>
+
+      <button
+        class="icon-link icon-link__add-another-clin"
+        v-on:click="addClin"
+        type="button">
+        {{ Icon('plus') }}
+        <span>{{ 'task_orders.form.add_clin' | translate }}</span>
+      </button>
+    </form>
+  </to-form>
+{% endblock %}

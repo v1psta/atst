@@ -18,7 +18,6 @@ from tests.factories import (
 def task_order():
     user = UserFactory.create()
     portfolio = PortfolioFactory.create(owner=user)
-    attachment = Attachment(filename="sample_attachment", object_name="sample")
 
     return TaskOrderFactory.create(creator=user, portfolio=portfolio)
 
@@ -73,6 +72,42 @@ def test_task_orders_update_to_number(client, user_session, task_order):
     assert task_order.number == "1234567890"
 
 
+def test_task_orders_add_clins(client, user_session, task_order):
+    user_session(task_order.creator)
+    response = client.get(url_for("task_orders.add_clins", task_order_id=task_order.id))
+    assert response.status_code == 200
+
+
+def test_task_orders_update_clins(client, user_session, task_order):
+    user_session(task_order.creator)
+    form_data = {
+        "clins-0-jedi_clin_type": "JEDI_CLIN_1",
+        "clins-0-clin_number": "12312",
+        "clins-0-start_date": "01/01/2020",
+        "clins-0-end_date": "01/01/2021",
+        "clins-0-obligated_amount": "5000",
+        "clins-0-loas-0": "123123123123",
+        "clins-0-loas-1": "345345234",
+        "clins-1-jedi_clin_type": "JEDI_CLIN_1",
+        "clins-1-number": "12312",
+        "clins-1-start_date": "01/01/2020",
+        "clins-1-end_date": "01/01/2021",
+        "clins-1-obligated_amount": "5000",
+        "clins-1-loas-0": "78979087",
+    }
+    response = client.post(
+        url_for("task_orders.update_to_number", task_order_id=task_order.id),
+        data=form_data,
+    )
+
+    assert response.status_code == 302
+    assert len(task_order.clins) == 2
+
+
+def test_task_orders_new_flow():
+    pass
+
+
 def test_task_orders_save_incomplete(client, user_session, portfolio):
     user_session(portfolio.owner)
     form_data = {
@@ -100,24 +135,19 @@ def test_task_orders_add_to_pdf_existing_to(client, user_session, task_order):
 
 
 def test_task_orders_upload_to_pdf_existing_to(
-    client, user_session, task_order, pdf_upload
+    client, user_session, task_order, pdf_upload, pdf_upload2
 ):
+    task_order.pdf = pdf_upload
+    assert task_order.pdf.filename == pdf_upload.filename
+
     user_session(task_order.creator)
-    form_data = {"pdf": pdf_upload}
+    form_data = {"pdf": pdf_upload2}
     response = client.post(
         url_for("task_orders.upload_to_pdf", task_order_id=task_order.id),
         data=form_data,
     )
     assert response.status_code == 302
-    assert task_order.pdf.filename == pdf_upload.filename
-
-
-def test_task_orders_add_to_number_existing_to(client, user_session, task_order):
-    user_session(task_order.creator)
-    response = client.get(
-        url_for("task_orders.add_to_number", task_order_id=task_order.id)
-    )
-    assert response.status_code == 200
+    assert task_order.pdf.filename == pdf_upload2.filename
 
 
 def test_task_orders_update_to_number_existing_to(client, user_session, task_order):
@@ -131,6 +161,46 @@ def test_task_orders_update_to_number_existing_to(client, user_session, task_ord
     assert response.status_code == 302
     assert task_order.number == "0000000000"
     assert task_order.number != original_number
+
+
+def test_task_orders_update_clins_existing_to(client, user_session, task_order):
+    clin_list = [
+        {
+            "jedi_clin_type": "JEDI_CLIN_1",
+            "number": "12312",
+            "start_date": "01/01/2020",
+            "end_date": "01/01/2021",
+            "obligated_amount": "5000",
+            "loas": ["123123123123", "345345234"],
+        },
+        {
+            "jedi_clin_type": "JEDI_CLIN_1",
+            "number": "12312",
+            "start_date": "01/01/2020",
+            "end_date": "01/01/2021",
+            "obligated_amount": "5000",
+            "loas": ["78979087"],
+        },
+    ]
+    TaskOrders.create_clins(task_order.id, clin_list)
+    assert len(task_order.clins) == 2
+
+    user_session(task_order.creator)
+    form_data = {
+        "clins-0-jedi_clin_type": "JEDI_CLIN_1",
+        "clins-0-clin_number": "12312",
+        "clins-0-start_date": "01/01/2020",
+        "clins-0-end_date": "01/01/2021",
+        "clins-0-obligated_amount": "5000",
+        "clins-0-loas-0": "123123123123",
+    }
+    response = client.post(
+        url_for("task_orders.update_to_number", task_order_id=task_order.id),
+        data=form_data,
+    )
+
+    assert response.status_code == 302
+    assert len(task_order.clins) == 1
 
 
 def test_task_orders_update_existing_to(client, user_session, task_order):
