@@ -32,16 +32,17 @@ class TaskOrders(BaseDomainClass):
         task_order = TaskOrders.get(task_order_id)
         task_order.pdf = pdf
 
-        for clin in task_order.clins:
-            db.session.delete(clin)
+        if len(clins) > 0:
+            for clin in task_order.clins:
+                db.session.delete(clin)
+
+            TaskOrders.create_clins(task_order_id, clins)
 
         if number != task_order.number:
             task_order.number = number
             db.session.add(task_order)
 
         db.session.commit()
-        TaskOrders.create_clins(task_order_id, clins)
-
         return task_order
 
     @classmethod
