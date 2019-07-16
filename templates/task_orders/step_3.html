@@ -1,10 +1,13 @@
-{% extends "portfolios/base.html" %}
+{% extends "task_orders/builder_base.html" %}
 
 {% from 'components/date_picker.html' import DatePicker %}
 {% from 'components/icon.html' import Icon %}
 {% from 'components/options_input.html' import OptionsInput %}
-{% from "components/sticky_cta.html" import StickyCTA %}
 {% from 'components/text_input.html' import TextInput %}
+
+{% set action = url_for("task_orders.update_clins", task_order_id=task_order_id) %}
+{% set next_button_text = "Next: Review Funding" %}
+{% set previous_button_link = url_for("task_orders.add_number", task_order_id=task_order_id) %}
 
 {% macro LOAInput() %}
   <div v-for="loa in loas">
@@ -89,41 +92,12 @@
 {% endmacro %}
 
 
-{% block portfolio_content %}
-  {% set action = url_for("task_orders.update_clins", task_order_id=task_order_id) %}
+{% block to_builder_form_field %}
 
   <to-form
     inline-template
     v-bind:initial-clin-count="{{ form.clins.data | length }}">
-    <form id="upload-to-pdf" action='{{ action }}' method="POST" autocomplete="off" enctype="multipart/form-data">
-      {{ form.csrf_token }}
-
-      {% call StickyCTA(text=('task_orders.form.sticky_header_text' | translate )) %}
-        <span class="action-group">
-          <input
-            type="submit"
-            formaction="{{ action }}"
-            tabindex="0"
-            :disabled="!changed"
-            value="Next: Review Funding"
-            form="upload-to-pdf"
-            class="usa-button usa-button-primary">
-          <input
-            type="button"
-            class="usa-button usa-button-secondary"
-            tabindex="0"
-            value="Previous"
-            form="upload-to-pdf"/>
-          <a
-            href="{{ cancel_url }}"
-            class="action-group__action icon-link">
-            {{ "common.cancel" | translate }}
-          </a>
-        </span>
-      {% endcall %}
-
-      {% include "fragments/flash.html" %}
-
+      <div>
       <div class="h3">
         {{ 'task_orders.form.cloud_funding_header' | translate }}
       </div>
@@ -375,6 +349,6 @@
         {{ Icon('plus') }}
         <span>{{ 'task_orders.form.add_clin' | translate }}</span>
       </button>
-    </form>
+    </div>
   </to-form>
 {% endblock %}

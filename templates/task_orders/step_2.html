@@ -1,47 +1,15 @@
-{% extends "portfolios/base.html" %}
+{% extends "task_orders/builder_base.html" %}
 
-{% from "components/sticky_cta.html" import StickyCTA %}
 {% from 'components/text_input.html' import TextInput %}
 
-{% block portfolio_content %}
-  {% set action = url_for("task_orders.update_number", task_order_id=task_order_id) %}
+{% set action = url_for("task_orders.update_number", task_order_id=task_order_id) %}
+{% set next_button_text = "Next: Add Base CLIN" %}
+{% set previous_button_link = url_for("task_orders.add_pdf", task_order_id=task_order_id) %}
 
-  <base-form inline-template>
-    <form id="upload-to-pdf" action='{{ action }}' method="POST" autocomplete="off" enctype="multipart/form-data">
-      {{ form.csrf_token }}
+{% block to_builder_form_field %}
+  <div class="h1">
+    {{ 'task_orders.form.add_to_header' | translate }}
+  </div>
 
-      {% call StickyCTA(text=('task_orders.form.sticky_header_text' | translate )) %}
-        <span class="action-group">
-          <input
-            type="submit"
-            formaction="{{ action }}"
-            tabindex="0"
-            :disabled="!changed"
-            value="Next: Add Base CLIN"
-            form="upload-to-pdf"
-            class="usa-button usa-button-primary">
-          <input
-            type="button"
-            class="usa-button usa-button-secondary"
-            tabindex="0"
-            value="Previous"
-            form="upload-to-pdf"/>
-          <a
-            href="{{ cancel_url }}"
-            class="action-group__action icon-link">
-            {{ "common.cancel" | translate }}
-          </a>
-        </span>
-      {% endcall %}
-
-      {% include "fragments/flash.html" %}
-
-      <div class="h1">
-        {{ 'task_orders.form.add_to_header' | translate }}
-      </div>
-
-      {{ TextInput(form.number, validation='taskOrderNumber', optional=False) }}
-
-    </form>
-  </base-form>
+  {{ TextInput(form.number, validation='taskOrderNumber', optional=False) }}
 {% endblock %}

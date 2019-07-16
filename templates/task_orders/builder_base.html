@@ -1,0 +1,40 @@
+{% extends "portfolios/base.html" %}
+
+{% from "components/sticky_cta.html" import StickyCTA %}
+
+{% block portfolio_content %}
+  <base-form inline-template>
+    <form id="to_form" action='{{ action }}' method="POST" autocomplete="off" enctype="multipart/form-data">
+      {{ form.csrf_token }}
+
+      {% call StickyCTA(text=('task_orders.form.sticky_header_text' | translate )) %}
+        <span class="action-group">
+          {% block next_button %}
+            <input
+              type="submit"
+              tabindex="0"
+              :disabled="!changed"
+              value="{{ next_button_text }}"
+              form="to_form"
+              class="usa-button usa-button-primary">
+          {% endblock %}
+
+          <a class="usa-button usa-button-secondary" href="{{ previous_button_link }}">
+            Previous
+          </a>
+
+          <a
+            href="{{ cancel_url }}"
+            class="action-group__action icon-link">
+            {{ "common.cancel" | translate }}
+          </a>
+        </span>
+      {% endcall %}
+
+      {% include "fragments/flash.html" %}
+
+      {% block to_builder_form_field %}{% endblock %}
+
+    </form>
+  </base-form>
+{% endblock %}

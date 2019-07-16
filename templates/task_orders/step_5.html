@@ -1,50 +1,21 @@
-{% extends "portfolios/base.html" %}
+{% extends "task_orders/builder_base.html" %}
 
 {% from "components/alert.html" import Alert %}
 {% from "components/checkbox_input.html" import CheckboxInput %}
-{% from "components/sticky_cta.html" import StickyCTA %}
 
-{% block portfolio_content %}
-  {% set action = url_for("task_orders.submit_task_order", task_order_id=task_order_id) %}
+{% set action = url_for("task_orders.submit_task_order", task_order_id=task_order_id) %}
+{% set next_button_text = "Next: Confirm & Submit" %}
+{% set previous_button_link = url_for("task_orders.review", task_order_id=task_order_id) %}
 
-  <base-form inline-template>
-    <form id="upload-to-pdf" action='{{ action }}' method="POST" autocomplete="off" enctype="multipart/form-data">
-      {{ form.csrf_token }}
+{% block to_builder_form_field %}
+  <div>
+    <h1>Signature confirmation: <em>Task Order #{{task_order.number}}</em></h1>
+  </div>
 
-      {% call StickyCTA(text=('task_orders.form.sticky_header_text' | translate )) %}
-        <span class="action-group">
-          <input
-            type="submit"
-            formaction="{{ action }}"
-            tabindex="0"
-            :disabled="!changed"
-            value="Next: Confirm & Submit"
-            form="upload-to-pdf"
-            class="usa-button usa-button-primary">
-          <input
-            type="button"
-            class="usa-button usa-button-secondary"
-            tabindex="0"
-            value="Previous"
-            form="upload-to-pdf"/>
-          <a
-            href="{{ cancel_url }}"
-            class="action-group__action icon-link">
-            {{ "common.cancel" | translate }}
-          </a>
-        </span>
-      {% endcall %}
+  {% call Alert('',
+    message="All task orders require a Contracting Officer signature."
+  ) %}
 
-      <div>
-        <h1>Signature confirmation: <em>Task Order #{{task_order.number}}</em></h1>
-      </div>
-
-      {% call Alert('',
-        message="All task orders require a Contracting Officer signature."
-      ) %}
-
-        {{ CheckboxInput(form.signature) }}
-      {% endcall %}
-    </form>
-  </base-form>
+    {{ CheckboxInput(form.signature) }}
+  {% endcall %}
 {% endblock %}
