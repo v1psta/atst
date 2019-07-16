@@ -4,7 +4,7 @@ services:
   backend:
     build:
       context: .
-      dockerfile: ./deploy/docker/Dockerfile
+      dockerfile: ./Dockerfile
     volumes:
       - ./ssl:/opt/atat/atst/ssl
       - ./config:/opt/atst/atst/config

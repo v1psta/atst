@@ -1,0 +1,22 @@
+#  update: Bring an existing application up-to-date
+#
+
+# Load update functions
+source ./script/include/update_functions.inc.sh
+
+## Set option defaults
+# If MIGRATE_DB is not set, set it to "false"
+if [ -z "${MIGRATE_DB+is_set}" ]; then
+  MIGRATE_DB="false"
+fi
+
+## Main
+# Update dependencies
+source ./script/bootstrap
+
+# Update database schema
+if [ "${MIGRATE_DB}" = "true" ]; then
+  migrate_db
+fi
+
+seed_db
