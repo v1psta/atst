@@ -6,9 +6,9 @@
 
 {% block portfolio_content %}
   {% if task_order_id %}
-    {% set action = url_for("task_orders.upload_to_pdf", task_order_id=task_order_id) %}
+    {% set action = url_for("task_orders.upload_pdf", task_order_id=task_order_id) %}
   {% else %}
-    {% set action = url_for("task_orders.upload_to_pdf", portfolio_id=portfolio.id) %}
+    {% set action = url_for("task_orders.upload_pdf", portfolio_id=portfolio.id) %}
   {% endif %}
 
   <base-form inline-template>

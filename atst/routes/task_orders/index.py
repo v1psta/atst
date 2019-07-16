@@ -15,7 +15,7 @@ from atst.utils.flash import formatted_flash as flash
 def review_task_order(task_order_id):
     task_order = TaskOrders.get(task_order_id)
     if task_order.is_draft:
-        return redirect(url_for("task_orders.add_to_pdf", task_order_id=task_order.id))
+        return redirect(url_for("task_orders.add_pdf", task_order_id=task_order.id))
     else:
         signature_form = SignatureForm()
         return render_template(
