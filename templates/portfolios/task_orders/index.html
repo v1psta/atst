@@ -13,7 +13,7 @@
 {% endmacro %}
 
 {% macro TaskOrderEditButton(task_order, text="Edit", secondary=False) %}
-  <a href="{{ url_for('task_orders.edit', task_order_id=task_order.id) }}" class="usa-button {{ 'usa-button-secondary' if secondary else '' }}">
+  <a href="{{ url_for('task_orders.add_pdf', task_order_id=task_order.id) }}" class="usa-button {{ 'usa-button-secondary' if secondary else '' }}">
     {{ text }}
   </a>
 {% endmacro %}
@@ -111,7 +111,7 @@
     {{ EmptyState(
       'This portfolio doesn’t have any active or pending task orders.',
       action_label='Add a New Task Order',
-      action_href=url_for('task_orders.edit', portfolio_id=portfolio.id),
+      action_href=url_for('task_orders.add_pdf', portfolio_id=portfolio.id),
       icon='cloud',
       add_perms=user_can(permissions.CREATE_TASK_ORDER)
     ) }}

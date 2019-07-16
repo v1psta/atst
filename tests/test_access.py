@@ -448,30 +448,67 @@ def test_task_orders_download_task_order_pdf_access(get_url_assert_status, monke
     get_url_assert_status(rando, url, 404)
 
 
-# task_orders.update
-def test_task_orders_update_access(post_url_assert_status):
+# task_orders.add_pdf
+# task_orders.add_number
+# task_orders.add_clins
+# task_orders.review
+# task_orders.confirm_signature
+def test_task_orders_new_get_routes(get_url_assert_status):
+    get_routes = [
+        "task_orders.add_pdf",
+        "task_orders.add_number",
+        "task_orders.add_clins",
+        "task_orders.review",
+        "task_orders.confirm_signature",
+    ]
+
     ccpo = user_with(PermissionSets.EDIT_PORTFOLIO_FUNDING)
     owner = user_with()
     rando = user_with()
+
     portfolio = PortfolioFactory.create(owner=owner)
-    data = {"number": 1234567890}
+    task_order = TaskOrderFactory.create(portfolio=portfolio, creator=owner)
 
-    url = url_for("task_orders.update", portfolio_id=portfolio.id)
-    post_url_assert_status(owner, url, 302, data=data)
-    post_url_assert_status(ccpo, url, 302, data=data)
-    post_url_assert_status(rando, url, 404, data=data)
+    for route in get_routes:
+        url = url_for(route, task_order_id=task_order.id)
 
-    task_order = TaskOrderFactory.create(portfolio=portfolio)
+        get_url_assert_status(ccpo, url, 200)
+        get_url_assert_status(owner, url, 200)
+        get_url_assert_status(rando, url, 404)
 
-    url = url_for("task_orders.update", task_order_id=task_order.id)
-    post_url_assert_status(owner, url, 302, data=data)
-    post_url_assert_status(ccpo, url, 302, data=data)
-    post_url_assert_status(rando, url, 404, data=data)
 
-    url = url_for("task_orders.update", portfolio_id=portfolio.id)
-    post_url_assert_status(owner, url, 302, data=data)
-    post_url_assert_status(ccpo, url, 302, data=data)
-    post_url_assert_status(rando, url, 404, data=data)
+# task_orders.upload_pdf
+# task_orders.update_number
+# task_orders.update_clins
+def test_task_orders_new_post_routes(post_url_assert_status):
+    post_routes = [
+        ("task_orders.upload_pdf", {"pdf": ""}),
+        ("task_orders.update_number", {"number": "1234567890"}),
+        (
+            "task_orders.update_clins",
+            {
+                "clins-0-jedi_clin_type": "JEDI_CLIN_1",
+                "clins-0-clin_number": "12312",
+                "clins-0-start_date": "01/01/2020",
+                "clins-0-end_date": "01/01/2021",
+                "clins-0-obligated_amount": "5000",
+                "clins-0-loas-0": "123123123123",
+            },
+        ),
+    ]
+
+    ccpo = user_with(PermissionSets.EDIT_PORTFOLIO_FUNDING)
+    owner = user_with()
+    rando = user_with()
+
+    portfolio = PortfolioFactory.create(owner=owner)
+    task_order = TaskOrderFactory.create(portfolio=portfolio, creator=owner)
+
+    for route, data in post_routes:
+        url = url_for(route, task_order_id=task_order.id)
+        post_url_assert_status(owner, url, 302, data=data)
+        post_url_assert_status(ccpo, url, 302, data=data)
+        post_url_assert_status(rando, url, 404, data=data)
 
 
 def test_applications_application_team_access(get_url_assert_status):

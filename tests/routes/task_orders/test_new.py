@@ -115,29 +115,9 @@ def test_task_orders_confirm_signature(client, user_session, task_order):
     assert response.status_code == 200
 
 
-def test_task_orders_new_flow():
-    pass
-
-
-def test_task_orders_save_incomplete(client, user_session, portfolio):
-    user_session(portfolio.owner)
-    form_data = {
-        "number": "0123456789",
-        "clins-0-jedi_clin_type": "JEDI_CLIN_1",
-        "clins-0-clin_number": "12312",
-    }
-    response = client.post(
-        url_for("task_orders.update", portfolio_id=portfolio.id), data=form_data
-    )
-    assert response.status_code == 302
-    task_order = portfolio.task_orders[0]
-    expected_url = url_for(
-        "task_orders.edit", task_order_id=task_order.id, _external=True
-    )
-    assert response.location == expected_url
-
-
-def test_task_orders_add_pdf_existing_to(client, user_session, task_order):
+def test_task_orders_form_step_one_add_pdf_existing_to(
+    client, user_session, task_order
+):
     user_session(task_order.creator)
     response = client.get(url_for("task_orders.add_pdf", task_order_id=task_order.id))
     assert response.status_code == 200
@@ -156,6 +136,17 @@ def test_task_orders_upload_pdf_existing_to(
     )
     assert response.status_code == 302
     assert task_order.pdf.filename == pdf_upload2.filename
+
+
+def test_task_orders_upload_pdf_delete_pdf(client, user_session, portfolio, pdf_upload):
+    user_session(portfolio.owner)
+    task_order = TaskOrderFactory.create(pdf=pdf_upload, portfolio=portfolio)
+    data = {"pdf": ""}
+    response = client.post(
+        url_for("task_orders.upload_pdf", task_order_id=task_order.id), data=data
+    )
+    assert task_order.pdf is None
+    assert response.status_code == 302
 
 
 def test_task_orders_update_number_existing_to(client, user_session, task_order):
@@ -210,24 +201,6 @@ def test_task_orders_update_clins_existing_to(client, user_session, task_order):
     assert len(task_order.clins) == 1
 
 
-def test_task_orders_update_existing_to(client, user_session, task_order):
-    user_session(task_order.creator)
-    form_data = {
-        "number": "0123456789",
-        "clins-0-jedi_clin_type": "JEDI_CLIN_1",
-        "clins-0-number": "12312",
-        "clins-0-start_date": "01/01/2020",
-        "clins-0-end_date": "01/01/2021",
-        "clins-0-obligated_amount": "5000",
-        "clins-0-loas-0": "123123123123",
-    }
-    response = client.post(
-        url_for("task_orders.update", task_order_id=task_order.id), data=form_data
-    )
-    assert response.status_code == 302
-    assert task_order.number == "0123456789"
-
-
 @pytest.mark.skip(reason="Reevaluate how form handles invalid data")
 def test_task_orders_update_invalid_data(client, user_session, portfolio):
     user_session(portfolio.owner)
@@ -240,41 +213,7 @@ def test_task_orders_update_invalid_data(client, user_session, portfolio):
     assert "There were some errors" in response.data.decode()
 
 
-def test_task_orders_update(client, user_session, portfolio, pdf_upload):
-    user_session(portfolio.owner)
-    data = {"number": "0123456789", "pdf": pdf_upload}
-    task_order = TaskOrderFactory.create(number="0987654321", portfolio=portfolio)
-    response = client.post(
-        url_for("task_orders.update", task_order_id=task_order.id), data=data
-    )
-    assert task_order.number == data["number"]
-    assert response.status_code == 302
-
-
-def test_task_orders_update_pdf(
-    client, user_session, portfolio, pdf_upload, pdf_upload2
-):
-    user_session(portfolio.owner)
-    task_order = TaskOrderFactory.create(pdf=pdf_upload, portfolio=portfolio)
-    data = {"number": "0123456789", "pdf": pdf_upload2}
-    response = client.post(
-        url_for("task_orders.update", task_order_id=task_order.id), data=data
-    )
-    assert task_order.pdf.filename == pdf_upload2.filename
-    assert response.status_code == 302
-
-
-def test_task_orders_update_delete_pdf(client, user_session, portfolio, pdf_upload):
-    user_session(portfolio.owner)
-    task_order = TaskOrderFactory.create(pdf=pdf_upload, portfolio=portfolio)
-    data = {"number": "0123456789", "pdf": ""}
-    response = client.post(
-        url_for("task_orders.update", task_order_id=task_order.id), data=data
-    )
-    assert task_order.pdf is None
-    assert response.status_code == 302
-
-
+@pytest.mark.skip(reason="Reevaluate if user can see review page w/ incomplete TO")
 def test_cannot_get_to_review_screen_with_incomplete_data(
     client, user_session, portfolio
 ):
