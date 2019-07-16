@@ -115,11 +115,19 @@ def add_clins(task_order_id):
 @user_can(Permissions.CREATE_TASK_ORDER, message="view new task order form")
 def update_clins(task_order_id):
     form_data = {**http_request.form}
-    next_page = "task_orders.review_task_order"
+    next_page = "task_orders.review"
     current_template = "task_orders/step_3.html"
 
     return update_task_order(
         form_data, next_page, current_template, task_order_id=task_order_id
+    )
+
+
+@task_orders_bp.route("/task_orders/<task_order_id>/step_4")
+@user_can(Permissions.CREATE_TASK_ORDER, message="view new task order form")
+def review(task_order_id):
+    return render_task_orders_edit(
+        "task_orders/step_4.html", task_order_id=task_order_id
     )
 
 

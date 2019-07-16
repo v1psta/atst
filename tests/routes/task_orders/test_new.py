@@ -101,6 +101,12 @@ def test_task_orders_update_clins(client, user_session, task_order):
     assert len(task_order.clins) == 2
 
 
+def test_task_orders_review(client, user_session, task_order):
+    user_session(task_order.creator)
+    response = client.get(url_for("task_orders.review", task_order_id=task_order.id))
+    assert response.status_code == 200
+
+
 def test_task_orders_new_flow():
     pass
 
