@@ -8,13 +8,13 @@
 {% block portfolio_content %}
   {% set action = url_for("task_orders.update_number", task_order_id=task_order_id) %}
 
-  <div id="upload-to-pdf" action='{{ action }}' method="POST" autocomplete="off" enctype="multipart/form-data">
+  <div id="upload-to-pdf">
     {{ form.csrf_token }}
 
     {% call StickyCTA(text=('task_orders.form.sticky_header_text' | translate )) %}
       <span class="action-group">
         <a
-          href="{{ url_for('task_orders.add_pdf', task_order_id=task_order_id)}}"
+          href="{{ url_for('task_orders.confirm_signature', task_order_id=task_order_id)}}"
           class="usa-button usa-button-primary">
           Next: Submit Task Order
         </a>

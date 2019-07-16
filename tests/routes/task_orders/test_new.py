@@ -107,6 +107,14 @@ def test_task_orders_review(client, user_session, task_order):
     assert response.status_code == 200
 
 
+def test_task_orders_confirm_signature(client, user_session, task_order):
+    user_session(task_order.creator)
+    response = client.get(
+        url_for("task_orders.confirm_signature", task_order_id=task_order.id)
+    )
+    assert response.status_code == 200
+
+
 def test_task_orders_new_flow():
     pass
 

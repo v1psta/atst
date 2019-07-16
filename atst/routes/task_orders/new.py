@@ -3,7 +3,7 @@ from flask import g, redirect, render_template, request as http_request, url_for
 from . import task_orders_bp
 from atst.domain.authz.decorator import user_can_access_decorator as user_can
 from atst.domain.task_orders import TaskOrders
-from atst.forms.task_order import TaskOrderForm
+from atst.forms.task_order import TaskOrderForm, SignatureForm
 from atst.models.permissions import Permissions
 from atst.utils.flash import formatted_flash as flash
 
@@ -128,6 +128,14 @@ def update_clins(task_order_id):
 def review(task_order_id):
     return render_task_orders_edit(
         "task_orders/step_4.html", task_order_id=task_order_id
+    )
+
+
+@task_orders_bp.route("/task_orders/<task_order_id>/step_5")
+@user_can(Permissions.CREATE_TASK_ORDER, message="view new task order form")
+def confirm_signature(task_order_id):
+    return render_task_orders_edit(
+        "task_orders/step_5.html", task_order_id=task_order_id, form=SignatureForm()
     )
 
 
