@@ -26,7 +26,7 @@
     overflow: inherit;
   }
 
-  .portfolio-header__name {
+  &__name {
     @include h1;
     h1 {
       margin: ($gap * 2) $gap ($gap * 2) $gap;
@@ -34,7 +34,7 @@
     }
   }
 
-  .portfolio-header__budget {
+  &__budget {
     font-size: $small-font-size;
     align-items: center;
 
@@ -47,8 +47,19 @@
       padding: 0;
     }
 
-    .portfolio-header__budget--dollars {
+    &--dollars {
       font-size: $h2-font-size;
+      font-weight: bold;
+    }
+
+    &--amount {
+      white-space: nowrap;
+    }
+
+    &--cents {
+      font-size: 2rem;
+      margin-top: 0.75rem;
+      margin-left: -0.7rem;
       font-weight: bold;
     }
   }
@@ -74,7 +85,7 @@
         }
       }
 
-      .icon-link--icon {
+      &--icon {
         text-align: center;
       }
 
@@ -91,23 +102,6 @@
 
   .column-right {
     margin-left: -0.4rem;
-  }
-
-  .portfolio-header__budget--amount {
-    white-space: nowrap;
-  }
-
-  .portfolio-header__budget--cents {
-    font-size: 2rem;
-    margin-top: 0.75rem;
-    margin-left: -0.7rem;
-    font-weight: bold;
-  }
-
-  .portfolio-funding__header--funded-through {
-    flex-grow: 1;
-    text-align: left;
-    font-weight: bold;
   }
 
   .unfunded {
@@ -333,12 +327,12 @@
 }
 
 .portfolio-applications {
-  .portfolio-applications__header {
-    .portfolio-applications__header--title {
+  &__header {
+    &--title {
       @include subheading;
     }
 
-    .portfolio-applications__header--actions {
+    &--actions {
       color: $color-blue;
       font-size: $small-font-size;
       .icon {
@@ -356,7 +350,7 @@
       }
     }
 
-    .application-list-item {
+    &-item {
       box-shadow: $box-shadow;
       border-radius: 5px;
       margin-bottom: 6 * $gap;
@@ -365,7 +359,7 @@
         max-width: 95%;
       }
 
-      .application-list-item__environment__csp_link {
+      &__environment__csp_link {
         font-size: $small-font-size;
         font-weight: normal;
         &:hover {
@@ -382,6 +376,12 @@
 
   .panel {
     @include shadow-panel;
+  }
+
+  &__header--funded-through {
+    flex-grow: 1;
+    text-align: left;
+    font-weight: bold;
   }
 
   .subheading {
@@ -410,11 +410,11 @@
       margin-right: 2 * $gap;
     }
 
-    .pending-task-order__started {
+    &__started {
       flex-grow: 1;
     }
 
-    .pending-task-order__value {
+    &__value {
       text-align: right;
     }
   }
@@ -517,10 +517,10 @@
 }
 
 .portfolio-reports {
-  .portfolio-reports__header {
+  &__header {
     margin-bottom: 4 * $gap;
 
-    .portfolio-reports__header--title {
+    &__header--title {
       @include subheading;
     }
   }
@@ -573,43 +573,45 @@
   }
 }
 
-.member-list__name {
-  margin-top: 1rem;
-}
-
-.member-list__role-select {
-  overflow: auto;
-  margin: 1.6rem -3.2rem -1.6rem -3.2rem;
-  padding: 2rem 3.2rem 2rem 5rem;
-  background: $color-gray-cool-light;
-  border-top: 1px solid $color-gray-lighter;
-
-  > label {
-    font-weight: $font-bold;
-    margin: 0;
+.member-list {
+  &__name {
+    margin-top: 1rem;
   }
 
-  > label:first-child + ul.member-list____role-select__radio {
-    display: flex;
+  &__role-select {
+    overflow: auto;
+    margin: 1.6rem -3.2rem -1.6rem -3.2rem;
+    padding: 2rem 3.2rem 2rem 5rem;
     background: $color-gray-cool-light;
+    border-top: 1px solid $color-gray-lighter;
 
-    li {
-      border-bottom: none;
+    > label {
+      font-weight: $font-bold;
+      margin: 0;
+    }
 
-      label {
-        margin-top: 1rem;
-        margin-left: 2rem;
+    > label:first-child + ul.member-list____role-select__radio {
+      display: flex;
+      background: $color-gray-cool-light;
+
+      li {
+        border-bottom: none;
+
+        label {
+          margin-top: 1rem;
+          margin-left: 2rem;
+        }
+      }
+
+      li:first-child > label {
+        margin-left: 0;
       }
     }
 
-    li:first-child > label {
-      margin-left: 0;
+    button {
+      font-size: $small-font-size;
+      float: right;
+      margin-right: 0;
     }
-  }
-
-  button {
-    font-size: $small-font-size;
-    float: right;
-    margin-right: 0;
   }
 }

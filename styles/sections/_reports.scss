@@ -5,7 +5,7 @@
     flex-wrap: wrap;
   }
 
-  .funding-summary-row__col {
+  &__col {
     hr {
       margin: (2 * $gap) 0;
       border-bottom: 1px solid $color-gray-lightest;
@@ -65,7 +65,7 @@
           }
         }
 
-        .spend-summary__budget {
+        &__budget {
           @include ie-only {
             margin: $gap 0 0 0;
           }
@@ -94,7 +94,7 @@
           margin: ($gap * 2) 0 0;
         }
 
-        .spend-summary__spent {
+        &__spent {
           margin: (2 * $gap) 0;
           display: flex;
           flex-direction: column;

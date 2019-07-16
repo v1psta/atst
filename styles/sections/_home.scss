@@ -30,27 +30,27 @@
 
     .icon-link {
       padding: $gap ($gap * 4);
-    }
 
-    .icon-link:first-child {
-      padding-left: 0;
-    }
-
-    .icon-link:last-child {
-      padding-right: 0;
-    }
-
-    .icon-link:hover {
-      background-color: transparent;
-      color: $color-gray-dark;
-
-      .svg * {
-        fill: $color-gray-dark;
+      &:first-child {
+        padding-left: 0;
       }
-    }
 
-    .icon-link.active:hover {
-      color: $color-blue;
+      &:last-child {
+        padding-right: 0;
+      }
+
+      &:hover {
+        background-color: transparent;
+        color: $color-gray-dark;
+
+        .svg * {
+          fill: $color-gray-dark;
+        }
+      }
+
+      &.active:hover {
+        color: $color-blue;
+      }
     }
   }
 }
@@ -81,7 +81,7 @@
       color: $color-primary;
     }
 
-    .home-container__logo {
+    &__logo {
       margin: $gap * 2;
 
       img {
@@ -93,11 +93,11 @@
       }
     }
 
-    .home-container__body {
+    &__body {
       padding-left: $gap * 2;
     }
 
-    .home-container__list {
+    &__list {
       ol {
         list-style: none;
         counter-reset: home-counter;

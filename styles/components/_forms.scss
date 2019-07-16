@@ -31,27 +31,27 @@
     justify-content: flex-start;
 
     .form-col {
-      &.form-col--half {
+      &--half {
         flex-basis: 50%;
       }
 
-      &.form-col--third {
+      &--third {
         flex-basis: 33.33%;
       }
 
-      &.form-col--two-thirds {
+      &--two-thirds {
         flex-basis: 66.66%;
       }
 
-      &.form-col--sixth {
+      &--sixth {
         flex-basis: 16.66%;
       }
 
-      &.form-col--quarter {
+      &--quarter {
         flex-basis: 25%;
       }
 
-      &.form-col--three-quarters {
+      &--three-quarters {
         flex-basis: 75%;
       }
 
@@ -160,14 +160,14 @@
     }
   }
 
-  input.usa-input-error:focus {
-    border-color: $color-red !important;
-    box-shadow: none;
-  }
-
   input.usa-input-error {
     padding-left: 11px;
     right: 0;
+
+    &:focus {
+      border-color: $color-red !important;
+      box-shadow: none;
+    }
   }
 
   .usa-form-group-date-ok {
@@ -191,7 +191,7 @@
 .input__inline-fields {
   margin: 1rem 0;
 
-  &.input__inline-fields--indented {
+  &--indented {
     margin-left: $gap * 4;
   }
 

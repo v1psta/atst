@@ -2,7 +2,7 @@
   background-color: $color-blue-darkest;
   border-bottom: 1px solid $color-black;
 
-  .topbar__navigation {
+  &__navigation {
     display: flex;
     flex-direction: row;
     align-items: stretch;
@@ -16,28 +16,24 @@
       padding: 0 ($gap * 2);
       text-decoration: none;
 
-      .topbar__link-label {
+      &-label {
         @include h5;
-
         text-decoration: underline;
+        padding-left: $gap;
+        text-decoration: none;
       }
 
-      .topbar__link-icon {
+      &-icon {
         margin-left: $gap;
 
         @include icon-color($color-white);
       }
 
-      &.topbar__link--home {
+      &--home {
         padding-left: $gap / 2;
-
-        .topbar__link-label {
-          padding-left: $gap;
-          text-decoration: none;
-        }
       }
 
-      &.topbar__link--shield {
+      &--shield {
         width: $icon-bar-width;
         justify-content: center;
         padding: 0;
@@ -78,11 +74,11 @@
     .topbar__link {
       color: $color-white;
 
-      .topbar__link-icon {
+      &-icon {
         @include icon-style-inverted;
       }
 
-      &.topbar__link--home {
+      &--home {
         padding-left: $gap;
       }
 

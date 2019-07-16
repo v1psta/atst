@@ -1,24 +1,26 @@
-.application-edit__env-list-item {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-end;
+.application-edit__env {
+  &-list-item {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
 
-  .usa-input {
-    margin: 0 ($gap * 4) 0 0;
-    flex-grow: 2;
-  }
+    &-block {
+      flex-grow: 1;
+    }
 
-  .application-edit__env-list-item-block {
-    flex-grow: 1;
-  }
+    &__remover {
+      @include icon-link;
+      @include icon-link-vertical;
+      @include icon-link-color($color-red, $color-red-lightest);
 
-  .application-edit__env-list-item__remover {
-    @include icon-link;
-    @include icon-link-vertical;
-    @include icon-link-color($color-red, $color-red-lightest);
+      margin-bottom: 0;
+      margin-right: -$gap;
+    }
 
-    margin-bottom: 0;
-    margin-right: -$gap;
+    .usa-input {
+      margin: 0 ($gap * 4) 0 0;
+      flex-grow: 2;
+    }
   }
 }
 
@@ -39,6 +41,30 @@
 
 .environment-roles {
   padding: 0 ($gap * 3) ($gap * 3);
+
+  &-new {
+    margin-top: 5 * $gap;
+    margin-bottom: 8 * $gap;
+    text-align: left;
+
+    .usa-input {
+      margin: 2rem 0 2rem 0;
+
+      .usa-input__title-inline {
+        line-height: $hit-area;
+        font-size: $lead-font-size;
+        padding: 0;
+      }
+    }
+
+    &__head {
+      font-weight: $font-bold;
+    }
+  }
+
+  .form-row {
+    margin: 0;
+  }
 }
 
 .environment-role {
@@ -48,7 +74,7 @@
     margin-bottom: $gap / 4;
   }
 
-  .environment-role__users {
+  &__users {
     background-color: $color-gray-lightest;
     padding: ($gap * 1.2) ($gap * 0.6);
     font-size: $small-font-size;
@@ -66,15 +92,7 @@
       position: relative;
       height: 3.6rem;
 
-      &.unassigned {
-        border: solid 1px $color-gray-light;
-      }
-
-      .icon-link {
-        padding: 0;
-      }
-
-      .environment-role__user-field {
+      &-field {
         position: absolute;
         background-color: $color-white;
         margin-top: $gap * 2;
@@ -93,6 +111,14 @@
           }
         }
       }
+
+      &.unassigned {
+        border: solid 1px $color-gray-light;
+      }
+
+      .icon-link {
+        padding: 0;
+      }
     }
 
     .environment-role__no-user {
@@ -102,34 +128,6 @@
       height: 3.6rem;
     }
   }
-}
-
-.environment-roles-new {
-  margin-top: 5 * $gap;
-  margin-bottom: 8 * $gap;
-
-  text-align: left;
-
-  .usa-input {
-    margin: 2rem 0 2rem 0;
-
-    .usa-input__title-inline {
-      line-height: $hit-area;
-    }
-
-    legend {
-      font-size: $lead-font-size;
-      padding: 0;
-    }
-  }
-
-  .form-row {
-    margin: 0;
-  }
-}
-
-.environment-roles-new__head {
-  font-weight: $font-bold;
 }
 
 .environment-name--gray {

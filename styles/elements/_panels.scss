@@ -58,7 +58,7 @@
   @include panel-margin;
   @include shadow-panel;
 
-  .panel__content {
+  &__content {
     margin: ($gap * 2) 0;
     padding: 0 ($gap * 2);
 
@@ -68,11 +68,11 @@
     }
   }
 
-  .panel__body {
+  &__body {
     margin-right: $gap * 2;
   }
 
-  .panel__heading {
+  &__heading {
     padding: $gap * 2;
 
     @include media($medium-screen) {
@@ -112,8 +112,12 @@
     }
   }
 
-  .panel__footer {
+  &__footer {
     padding: 3 * $gap;
+  }
+
+  &__actions {
+    @include panel-actions;
   }
 
   hr {
@@ -121,8 +125,4 @@
     border-bottom: 1px dashed $color-gray-light;
     margin: ($gap * 4) ($site-margins * -4);
   }
-}
-
-.panel__actions {
-  @include panel-actions;
 }

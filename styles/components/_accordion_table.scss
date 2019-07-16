@@ -12,7 +12,7 @@
     padding-left: 0;
   }
 
-  .accordion-table__head {
+  &__head {
     padding: $gap ($gap * 2);
     font-size: $small-font-size;
     font-weight: 700;
@@ -37,38 +37,12 @@
     }
   }
 
-  .accordion-table__item-content {
-    padding: ($gap * 2);
-
-    .usa-input {
-      margin: 0;
-
-      .icon-validation {
-        left: 135%;
-      }
-    }
-
-    #name {
-      max-width: none;
-      border-color: black;
-    }
-
-    .usa-alert {
-      margin: 2.5rem 0;
-    }
-
-    select {
-      border: none;
-      font-weight: $font-normal;
-    }
-  }
-
   .new-env {
     margin-top: 5rem;
     padding: 0 5rem;
   }
 
-  .accordion-table__items {
+  &__items {
     margin: 0;
 
     li {
@@ -91,33 +65,71 @@
           border-bottom: 1px solid $color-gray-lighter;
         }
       }
+    }
 
-      .accordion-table__item__action-group {
-        padding: 1rem 3.2rem;
-        background-color: $color-gray-lightest;
+    th,
+    td,
+    tr {
+      border-bottom: 1px dashed $color-gray-lightest;
+    }
 
-        button,
-        a {
-          margin: 0;
-          font-size: $small-font-size;
+    th[scope="rowgroup"] {
+      position: relative;
+    }
+  }
+
+  &__item {
+    &-content {
+      padding: ($gap * 2);
+
+      .usa-input {
+        margin: 0;
+
+        .icon-validation {
+          left: 135%;
         }
+      }
 
-        .icon-link {
-          padding-top: 0.5rem;
-          float: none;
-        }
+      #name {
+        max-width: none;
+        border-color: black;
+      }
 
-        > *:first-child {
-          padding-left: 0;
-        }
+      .usa-alert {
+        margin: 2.5rem 0;
+      }
 
-        > *:last-child {
-          float: right;
-        }
+      select {
+        border: none;
+        font-weight: $font-normal;
       }
     }
 
-    .accordion-table__item__toggler {
+    &__action-group {
+      padding: 1rem 3.2rem;
+      background-color: $color-gray-lightest;
+
+      button,
+      a {
+        margin: 0;
+        font-size: $small-font-size;
+      }
+
+      .icon-link {
+        padding-top: 0.5rem;
+        float: none;
+      }
+
+      > *:first-child {
+        padding-left: 0;
+      }
+
+      > *:last-child {
+        float: right;
+      }
+    }
+
+    &__toggler {
       @include icon-link-color($color-blue, $color-gray-lightest);
 
       float: right;
@@ -146,21 +158,15 @@
       }
     }
 
-    th,
-    td,
-    tr {
-      border-bottom: 1px dashed $color-gray-lightest;
-    }
-
-    th[scope="rowgroup"] {
-      position: relative;
-    }
-
-    .accordion-table__item__expanded {
+    &__expanded {
       font-size: $small-font-size;
       font-weight: $font-normal;
       background-color: $color-gray-lightest;
       padding: ($gap * 2) ($gap * 4);
+
+      .col--grow {
+        font-weight: $font-normal;
+      }
 
       th,
       td {
@@ -172,11 +178,11 @@
         border-bottom: 1px dashed $color-white;
       }
 
-      .accordion-table__item__expanded_first {
+      &_first {
         float: left;
       }
 
-      .accordion-table__item__expanded-role {
+      &-role {
         .icon-link {
           padding: 0;
           vertical-align: text-top;
@@ -192,19 +198,21 @@
 
 .application-list {
   .accordion-table {
-    .accordion-table__item__toggler {
-      text-align: right;
-      padding-right: 0;
-      padding-left: 0;
-    }
-
-    .accordion-table__item-content {
-      .icon-link {
-        align-items: baseline;
-        padding-left: 0;
+    &__item {
+      &__toggler {
+        text-align: right;
         padding-right: 0;
-        padding-top: 1rem;
-        white-space: nowrap;
+        padding-left: 0;
+      }
+
+      &-content {
+        .icon-link {
+          align-items: baseline;
+          padding-left: 0;
+          padding-right: 0;
+          padding-top: 1rem;
+          white-space: nowrap;
+        }
       }
     }
   }

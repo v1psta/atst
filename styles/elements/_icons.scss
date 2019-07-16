@@ -49,40 +49,40 @@
   @include icon-size(16);
   @include icon-style-default;
 
-  &.icon--tiny {
+  &--tiny {
     @include icon-size(10);
   }
 
-  &.icon--large {
+  &--large {
     @include icon-size(24);
   }
 
-  &.icon--remove,
-  &.icon--red {
+  &--remove,
+  &--red {
     @include icon-color($color-red);
   }
 
-  &.icon--green {
+  &--green {
     @include icon-color($color-green);
   }
 
-  &.icon--gray {
+  &--gray {
     @include icon-color($color-gray);
   }
 
-  &.icon--blue {
+  &--blue {
     @include icon-color($color-blue-darker);
   }
 
-  &.icon--medium {
+  &--medium {
     @include icon-size(12);
   }
 
-  &.icon--gold {
+  &--gold {
     @include icon-color($color-gold-dark);
   }
 
-  &.icon--circle {
+  &--circle {
     svg {
       border-radius: 100%;
       border-style: solid;

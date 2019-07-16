@@ -14,11 +14,11 @@
   color: $color-gray-dark;
   font-size: 1.5rem;
 
-  .app-footer__info {
+  &__info {
     flex-grow: 1;
     padding-left: 0.8rem;
 
-    .app-footer__info__link {
+    &__link {
       margin: (-$gap * 2) (-$gap);
       font-weight: normal;
 

@@ -18,23 +18,23 @@
   border-radius: $gap / 2;
   white-space: nowrap;
 
-  &.label--info {
+  &--info {
     background-color: $color-primary;
   }
 
-  &.label--warning {
+  &--warning {
     background-color: $color-gold;
   }
 
-  &.label--error {
+  &--error {
     background-color: $color-red;
   }
 
-  &.label--success {
+  &--success {
     background-color: $color-green;
   }
 
-  &.label--purple {
+  &--purple {
     background-color: $color-purple;
   }
 }

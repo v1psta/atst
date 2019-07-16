@@ -15,7 +15,7 @@
     @include icon-color($color-gray-light);
   }
 
-  .empty-state__message {
+  &__message {
     @include h2;
 
     line-height: 1.2;
@@ -27,7 +27,7 @@
     }
   }
 
-  .empty-state__sub-message {
+  &__sub-message {
     @include h4;
 
     color: $color-gray;
