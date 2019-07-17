@@ -2,7 +2,9 @@ version: 2.1
 
 orbs:
     aws-ecr: circleci/aws-ecr@4.0.1
+    aws-eks: circleci/aws-eks@0.1.0
     azure-acr: circleci/azure-acr@0.1.1
+    azure-aks: circleci/azure-aks@0.2.0
 
 defaults:
   appEnvironment: &appEnvironment
@@ -83,6 +85,45 @@ workflows:
       - test:
           requires:
             - app_setup
+      - azure-acr/build_and_push_image:
+          login-server-name: "${AZURE_SERVER_NAME}"
+          registry-name: pwatat
+          repo: atat
+          tag: "${CIRCLE_SHA1}"
+          requires:
+            - test
+          filters:
+            branches:
+              only:
+                - master
+      - azure-aks/update-container-image:
+          cluster-name: atat-cluster
+          container-image-updates: "atst=${AZURE_SERVER_NAME}/atat:${CIRCLE_SHA1}"
+          namespace: atat
+          resource-name: deployment.apps/atst
+          resource-group: atat
+          # uncomment below for debugging
+          # show-kubectl-command: true
+          requires:
+            - azure-acr/build_and_push_image
+          filters:
+            branches:
+              only:
+                - master
+      - azure-aks/update-container-image:
+          cluster-name: atat-cluster
+          container-image-updates: "atst-worker=${AZURE_SERVER_NAME}/atat:${CIRCLE_SHA1}"
+          namespace: atat
+          resource-name: deployment.apps/atst-worker
+          resource-group: atat
+          # uncomment below for debugging
+          # show-kubectl-command: true
+          requires:
+            - azure-acr/build_and_push_image
+          filters:
+            branches:
+              only:
+                - master
       - aws-ecr/build_and_push_image:
           repo: atat
           tag: "${CIRCLE_SHA1}"
@@ -92,13 +133,30 @@ workflows:
             branches:
               only:
                 - master
-      - azure-acr/build_and_push_image:
-          login-server-name: "${AZURE_SERVER_NAME}"
-          registry-name: pwatat
-          repo: atat
-          tag: "${CIRCLE_SHA1}"
+      - aws-eks/update-container-image:
+          cluster-name: atat
+          container-image-updates: "atst=${AWS_ECR_ACCOUNT_URL}/atat:${CIRCLE_SHA1}"
+          namespace: atat
+          resource-name: deployment.apps/atst
+          aws-region: "${AWS_REGION}"
+          # uncomment below for debugging
+          # show-kubectl-command: true
           requires:
-            - test
+            - aws-ecr/build_and_push_image
+          filters:
+            branches:
+              only:
+                - master
+      - aws-eks/update-container-image:
+          cluster-name: atat
+          container-image-updates: "atst-worker=${AWS_ECR_ACCOUNT_URL}/atat:${CIRCLE_SHA1}"
+          namespace: atat
+          resource-name: deployment.apps/atst-worker
+          aws-region: "${AWS_REGION}"
+          # uncomment below for debugging
+          # show-kubectl-command: true
+          requires:
+            - aws-ecr/build_and_push_image
           filters:
             branches:
               only:
