@@ -44,6 +44,18 @@ export default {
     },
   },
 
+  computed: {
+    canSave: function() {
+      if (!this.invalid) {
+        return true
+      } else if (this.changed && !this.invalid) {
+        return true
+      } else {
+        return false
+      }
+    },
+  },
+
   data: function() {
     return {
       changed: this.hasChanges,
