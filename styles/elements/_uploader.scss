@@ -6,6 +6,7 @@
     border: 1px solid black;
     padding: 0;
     display: block;
+    cursor: pointer;
 
     .upload-button {
       padding: 1rem 1.5rem;
@@ -22,10 +23,9 @@
   }
 
   input {
-    opacity: 0;
+    display: none;
     position: absolute;
     top: 0;
-    cursor: pointer;
   }
 }
 
