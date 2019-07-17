@@ -19,11 +19,20 @@ export default {
     }
   },
 
+  created: function() {
+    emitEvent('field-mount', this, {
+      optional: this.optional,
+      name: this.name,
+      valid: this.isChecked,
+    })
+  },
+
   methods: {
     onInput: function(e) {
       emitEvent('field-change', this, {
         value: e.target.checked,
         name: this.name,
+        valid: this.isChecked,
       })
     },
   },
