@@ -13,7 +13,7 @@
 {% endmacro %}
 
 {% macro TaskOrderEditButton(task_order, text="Edit", secondary=False) %}
-  <a href="{{ url_for('task_orders.add_pdf', task_order_id=task_order.id) }}" class="usa-button {{ 'usa-button-secondary' if secondary else '' }}">
+  <a href="{{ url_for('task_orders.form_step_one_add_pdf', task_order_id=task_order.id) }}" class="usa-button {{ 'usa-button-secondary' if secondary else '' }}">
     {{ text }}
   </a>
 {% endmacro %}
@@ -97,7 +97,7 @@
 
 {% call StickyCTA(text="Funding") %}
     {% if user_can(permissions.CREATE_TASK_ORDER) %}
-      <a href="{{ url_for("task_orders.add_pdf", portfolio_id=portfolio.id) }}" class="usa-button usa-button-primary" type="submit">Start a new task order</a>
+      <a href="{{ url_for("task_orders.form_step_one_add_pdf", portfolio_id=portfolio.id) }}" class="usa-button usa-button-primary" type="submit">Start a new task order</a>
     {% endif %}
 {% endcall %}
 
@@ -111,7 +111,7 @@
     {{ EmptyState(
       'This portfolio doesn’t have any active or pending task orders.',
       action_label='Add a New Task Order',
-      action_href=url_for('task_orders.add_pdf', portfolio_id=portfolio.id),
+      action_href=url_for('task_orders.form_step_one_add_pdf', portfolio_id=portfolio.id),
       icon='cloud',
       add_perms=user_can(permissions.CREATE_TASK_ORDER)
     ) }}

@@ -5,9 +5,9 @@
 {% from 'components/options_input.html' import OptionsInput %}
 {% from 'components/text_input.html' import TextInput %}
 
-{% set action = url_for("task_orders.update_clins", task_order_id=task_order_id) %}
+{% set action = url_for("task_orders.submit_form_step_three_add_clins", task_order_id=task_order_id) %}
 {% set next_button_text = "Next: Review Funding" %}
-{% set previous_button_link = url_for("task_orders.add_number", task_order_id=task_order_id) %}
+{% set previous_button_link = url_for("task_orders.form_step_two_add_number", task_order_id=task_order_id) %}
 {% set step = "3" %}
 
 {% macro LOAInput() %}

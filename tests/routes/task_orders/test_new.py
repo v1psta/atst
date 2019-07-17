@@ -32,9 +32,11 @@ def user():
     return UserFactory.create()
 
 
-def test_task_orders_add_pdf(client, user_session, portfolio):
+def test_task_orders_form_step_one_add_pdf(client, user_session, portfolio):
     user_session(portfolio.owner)
-    response = client.get(url_for("task_orders.add_pdf", portfolio_id=portfolio.id))
+    response = client.get(
+        url_for("task_orders.form_step_one_add_pdf", portfolio_id=portfolio.id)
+    )
     assert response.status_code == 200
 
 
@@ -42,7 +44,8 @@ def test_task_orders_upload_pdf(client, user_session, portfolio, pdf_upload, ses
     user_session(portfolio.owner)
     form_data = {"pdf": pdf_upload}
     response = client.post(
-        url_for("task_orders.upload_pdf", portfolio_id=portfolio.id), data=form_data
+        url_for("task_orders.submit_form_step_one_add_pdf", portfolio_id=portfolio.id),
+        data=form_data,
     )
 
     assert response.status_code == 302
@@ -50,19 +53,21 @@ def test_task_orders_upload_pdf(client, user_session, portfolio, pdf_upload, ses
     assert task_order.pdf.filename == pdf_upload.filename
 
 
-def test_task_orders_add_number(client, user_session, task_order):
+def test_task_orders_form_step_two_add_number(client, user_session, task_order):
     user_session(task_order.creator)
     response = client.get(
-        url_for("task_orders.add_number", task_order_id=task_order.id)
+        url_for("task_orders.form_step_two_add_number", task_order_id=task_order.id)
     )
     assert response.status_code == 200
 
 
-def test_task_orders_update_number(client, user_session, task_order):
+def test_task_orders_submit_form_step_two_add_number(client, user_session, task_order):
     user_session(task_order.creator)
     form_data = {"number": "1234567890"}
     response = client.post(
-        url_for("task_orders.update_number", task_order_id=task_order.id),
+        url_for(
+            "task_orders.submit_form_step_two_add_number", task_order_id=task_order.id
+        ),
         data=form_data,
     )
 
@@ -70,13 +75,15 @@ def test_task_orders_update_number(client, user_session, task_order):
     assert task_order.number == "1234567890"
 
 
-def test_task_orders_add_clins(client, user_session, task_order):
+def test_task_orders_form_step_three_add_clins(client, user_session, task_order):
     user_session(task_order.creator)
-    response = client.get(url_for("task_orders.add_clins", task_order_id=task_order.id))
+    response = client.get(
+        url_for("task_orders.form_step_three_add_clins", task_order_id=task_order.id)
+    )
     assert response.status_code == 200
 
 
-def test_task_orders_update_clins(client, user_session, task_order):
+def test_task_orders_submit_form_step_three_add_clins(client, user_session, task_order):
     user_session(task_order.creator)
     form_data = {
         "clins-0-jedi_clin_type": "JEDI_CLIN_1",
@@ -94,23 +101,30 @@ def test_task_orders_update_clins(client, user_session, task_order):
         "clins-1-loas-0": "78979087",
     }
     response = client.post(
-        url_for("task_orders.update_clins", task_order_id=task_order.id), data=form_data
+        url_for(
+            "task_orders.submit_form_step_three_add_clins", task_order_id=task_order.id
+        ),
+        data=form_data,
     )
 
     assert response.status_code == 302
     assert len(task_order.clins) == 2
 
 
-def test_task_orders_review(client, user_session, task_order):
+def test_task_orders_form_step_four_review(client, user_session, task_order):
     user_session(task_order.creator)
-    response = client.get(url_for("task_orders.review", task_order_id=task_order.id))
+    response = client.get(
+        url_for("task_orders.form_step_four_review", task_order_id=task_order.id)
+    )
     assert response.status_code == 200
 
 
-def test_task_orders_confirm_signature(client, user_session, task_order):
+def test_task_orders_form_step_five_confirm_signature(client, user_session, task_order):
     user_session(task_order.creator)
     response = client.get(
-        url_for("task_orders.confirm_signature", task_order_id=task_order.id)
+        url_for(
+            "task_orders.form_step_five_confirm_signature", task_order_id=task_order.id
+        )
     )
     assert response.status_code == 200
 
@@ -119,7 +133,9 @@ def test_task_orders_form_step_one_add_pdf_existing_to(
     client, user_session, task_order
 ):
     user_session(task_order.creator)
-    response = client.get(url_for("task_orders.add_pdf", task_order_id=task_order.id))
+    response = client.get(
+        url_for("task_orders.form_step_one_add_pdf", task_order_id=task_order.id)
+    )
     assert response.status_code == 200
 
 
@@ -132,29 +148,41 @@ def test_task_orders_upload_pdf_existing_to(
     user_session(task_order.creator)
     form_data = {"pdf": pdf_upload2}
     response = client.post(
-        url_for("task_orders.upload_pdf", task_order_id=task_order.id), data=form_data
+        url_for(
+            "task_orders.submit_form_step_one_add_pdf", task_order_id=task_order.id
+        ),
+        data=form_data,
     )
     assert response.status_code == 302
     assert task_order.pdf.filename == pdf_upload2.filename
 
 
-def test_task_orders_upload_pdf_delete_pdf(client, user_session, portfolio, pdf_upload):
+def test_task_orders_submit_form_step_one_add_pdf_delete_pdf(
+    client, user_session, portfolio, pdf_upload
+):
     user_session(portfolio.owner)
     task_order = TaskOrderFactory.create(pdf=pdf_upload, portfolio=portfolio)
     data = {"pdf": ""}
     response = client.post(
-        url_for("task_orders.upload_pdf", task_order_id=task_order.id), data=data
+        url_for(
+            "task_orders.submit_form_step_one_add_pdf", task_order_id=task_order.id
+        ),
+        data=data,
     )
     assert task_order.pdf is None
     assert response.status_code == 302
 
 
-def test_task_orders_update_number_existing_to(client, user_session, task_order):
+def test_task_orders_submit_form_step_two_add_number_existing_to(
+    client, user_session, task_order
+):
     user_session(task_order.creator)
     form_data = {"number": "0000000000"}
     original_number = task_order.number
     response = client.post(
-        url_for("task_orders.update_number", task_order_id=task_order.id),
+        url_for(
+            "task_orders.submit_form_step_two_add_number", task_order_id=task_order.id
+        ),
         data=form_data,
     )
     assert response.status_code == 302
@@ -162,7 +190,9 @@ def test_task_orders_update_number_existing_to(client, user_session, task_order)
     assert task_order.number != original_number
 
 
-def test_task_orders_update_clins_existing_to(client, user_session, task_order):
+def test_task_orders_submit_form_step_three_add_clins_existing_to(
+    client, user_session, task_order
+):
     clin_list = [
         {
             "jedi_clin_type": "JEDI_CLIN_1",
@@ -194,7 +224,10 @@ def test_task_orders_update_clins_existing_to(client, user_session, task_order):
         "clins-0-loas-0": "123123123123",
     }
     response = client.post(
-        url_for("task_orders.update_clins", task_order_id=task_order.id), data=form_data
+        url_for(
+            "task_orders.submit_form_step_three_add_clins", task_order_id=task_order.id
+        ),
+        data=form_data,
     )
 
     assert response.status_code == 302

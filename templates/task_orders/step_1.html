@@ -5,9 +5,9 @@
 {% from 'components/upload_input.html' import UploadInput %}
 
 {% if task_order_id %}
-  {% set action = url_for("task_orders.upload_pdf", task_order_id=task_order_id) %}
+  {% set action = url_for("task_orders.submit_form_step_one_add_pdf", task_order_id=task_order_id) %}
 {% else %}
-  {% set action = url_for("task_orders.upload_pdf", portfolio_id=portfolio.id) %}
+  {% set action = url_for("task_orders.submit_form_step_one_add_pdf", portfolio_id=portfolio.id) %}
 {% endif %}
 
 {% set next_button_text = "Next: Add TO Number" %}

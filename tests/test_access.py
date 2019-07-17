@@ -448,18 +448,18 @@ def test_task_orders_download_task_order_pdf_access(get_url_assert_status, monke
     get_url_assert_status(rando, url, 404)
 
 
-# task_orders.add_pdf
-# task_orders.add_number
-# task_orders.add_clins
-# task_orders.review
-# task_orders.confirm_signature
+# task_orders.form_step_one_add_pdf
+# task_orders.form_step_two_add_number
+# task_orders.form_step_three_add_clins
+# task_orders.form_step_four_review
+# task_orders.form_step_five_confirm_signature
 def test_task_orders_new_get_routes(get_url_assert_status):
     get_routes = [
-        "task_orders.add_pdf",
-        "task_orders.add_number",
-        "task_orders.add_clins",
-        "task_orders.review",
-        "task_orders.confirm_signature",
+        "task_orders.form_step_one_add_pdf",
+        "task_orders.form_step_two_add_number",
+        "task_orders.form_step_three_add_clins",
+        "task_orders.form_step_four_review",
+        "task_orders.form_step_five_confirm_signature",
     ]
 
     ccpo = user_with(PermissionSets.EDIT_PORTFOLIO_FUNDING)
@@ -477,15 +477,15 @@ def test_task_orders_new_get_routes(get_url_assert_status):
         get_url_assert_status(rando, url, 404)
 
 
-# task_orders.upload_pdf
-# task_orders.update_number
-# task_orders.update_clins
+# task_orders.submit_form_step_one_add_pdf
+# task_orders.submit_form_step_two_add_number
+# task_orders.submit_form_step_three_add_clins
 def test_task_orders_new_post_routes(post_url_assert_status):
     post_routes = [
-        ("task_orders.upload_pdf", {"pdf": ""}),
-        ("task_orders.update_number", {"number": "1234567890"}),
+        ("task_orders.submit_form_step_one_add_pdf", {"pdf": ""}),
+        ("task_orders.submit_form_step_two_add_number", {"number": "1234567890"}),
         (
-            "task_orders.update_clins",
+            "task_orders.submit_form_step_three_add_clins",
             {
                 "clins-0-jedi_clin_type": "JEDI_CLIN_1",
                 "clins-0-clin_number": "12312",

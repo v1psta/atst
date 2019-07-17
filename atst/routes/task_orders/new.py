@@ -57,7 +57,7 @@ def update_task_order(
 @task_orders_bp.route("/portfolios/<portfolio_id>/task_orders/step_1")
 @task_orders_bp.route("/task_orders/<task_order_id>/step_1")
 @user_can(Permissions.CREATE_TASK_ORDER, message="view new task order form")
-def add_pdf(portfolio_id=None, task_order_id=None):
+def form_step_one_add_pdf(portfolio_id=None, task_order_id=None):
     return render_task_orders_edit(
         "task_orders/step_1.html",
         portfolio_id=portfolio_id,
@@ -68,9 +68,9 @@ def add_pdf(portfolio_id=None, task_order_id=None):
 @task_orders_bp.route("/portfolios/<portfolio_id>/task_orders/step-1", methods=["POST"])
 @task_orders_bp.route("/task_orders/<task_order_id>/step_1", methods=["POST"])
 @user_can(Permissions.CREATE_TASK_ORDER, message="view new task order form")
-def upload_pdf(portfolio_id=None, task_order_id=None):
+def submit_form_step_one_add_pdf(portfolio_id=None, task_order_id=None):
     form_data = {**http_request.form, **http_request.files}
-    next_page = "task_orders.add_number"
+    next_page = "task_orders.form_step_two_add_number"
     current_template = "task_orders/step_1.html"
 
     return update_task_order(
@@ -84,7 +84,7 @@ def upload_pdf(portfolio_id=None, task_order_id=None):
 
 @task_orders_bp.route("/task_orders/<task_order_id>/step_2")
 @user_can(Permissions.CREATE_TASK_ORDER, message="view new task order form")
-def add_number(task_order_id):
+def form_step_two_add_number(task_order_id):
     return render_task_orders_edit(
         "task_orders/step_2.html", task_order_id=task_order_id
     )
@@ -92,9 +92,9 @@ def add_number(task_order_id):
 
 @task_orders_bp.route("/task_orders/<task_order_id>/step_2", methods=["POST"])
 @user_can(Permissions.CREATE_TASK_ORDER, message="view new task order form")
-def update_number(task_order_id):
+def submit_form_step_two_add_number(task_order_id):
     form_data = {**http_request.form}
-    next_page = "task_orders.add_clins"
+    next_page = "task_orders.form_step_three_add_clins"
     current_template = "task_orders/step_2.html"
 
     return update_task_order(
@@ -104,7 +104,7 @@ def update_number(task_order_id):
 
 @task_orders_bp.route("/task_orders/<task_order_id>/step_3")
 @user_can(Permissions.CREATE_TASK_ORDER, message="view new task order form")
-def add_clins(task_order_id):
+def form_step_three_add_clins(task_order_id):
     return render_task_orders_edit(
         "task_orders/step_3.html", task_order_id=task_order_id
     )
@@ -112,9 +112,9 @@ def add_clins(task_order_id):
 
 @task_orders_bp.route("/task_orders/<task_order_id>/step_3", methods=["POST"])
 @user_can(Permissions.CREATE_TASK_ORDER, message="view new task order form")
-def update_clins(task_order_id):
+def submit_form_step_three_add_clins(task_order_id):
     form_data = {**http_request.form}
-    next_page = "task_orders.review"
+    next_page = "task_orders.form_step_four_review"
     current_template = "task_orders/step_3.html"
 
     return update_task_order(
@@ -124,7 +124,7 @@ def update_clins(task_order_id):
 
 @task_orders_bp.route("/task_orders/<task_order_id>/step_4")
 @user_can(Permissions.CREATE_TASK_ORDER, message="view new task order form")
-def review(task_order_id):
+def form_step_four_review(task_order_id):
     return render_task_orders_edit(
         "task_orders/step_4.html", task_order_id=task_order_id
     )
@@ -132,7 +132,7 @@ def review(task_order_id):
 
 @task_orders_bp.route("/task_orders/<task_order_id>/step_5")
 @user_can(Permissions.CREATE_TASK_ORDER, message="view new task order form")
-def confirm_signature(task_order_id):
+def form_step_five_confirm_signature(task_order_id):
     return render_task_orders_edit(
         "task_orders/step_5.html", task_order_id=task_order_id, form=SignatureForm()
     )

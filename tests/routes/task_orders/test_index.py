@@ -52,7 +52,8 @@ def test_review_task_order_draft(client, user_session, task_order):
     )
     assert response.status_code == 302
     assert (
-        url_for("task_orders.add_pdf", task_order_id=task_order.id) in response.location
+        url_for("task_orders.form_step_one_add_pdf", task_order_id=task_order.id)
+        in response.location
     )
 
 
