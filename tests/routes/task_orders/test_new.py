@@ -1,12 +1,15 @@
 import pytest
 from flask import url_for
+from datetime import timedelta, date
 
 from atst.domain.permission_sets import PermissionSets
 from atst.domain.task_orders import TaskOrders
+from atst.models.task_order import Status as TaskOrderStatus
 from atst.models import Attachment, TaskOrder
 from atst.utils.localization import translate
 
 from tests.factories import (
+    CLINFactory,
     PortfolioFactory,
     PortfolioRoleFactory,
     TaskOrderFactory,
@@ -232,6 +235,32 @@ def test_task_orders_submit_form_step_three_add_clins_existing_to(
 
     assert response.status_code == 302
     assert len(task_order.clins) == 1
+
+
+def test_submit_task_order(client, user_session, task_order):
+    user_session(task_order.portfolio.owner)
+    response = client.post(
+        url_for("task_orders.submit_task_order", task_order_id=task_order.id)
+    )
+    assert response.status_code == 302
+
+    active_start_date = date.today() - timedelta(days=1)
+    active_task_order = TaskOrderFactory(portfolio=task_order.portfolio)
+    CLINFactory(task_order=active_task_order, start_date=active_start_date)
+    assert active_task_order.status == TaskOrderStatus.UNSIGNED
+    response = client.post(
+        url_for("task_orders.submit_task_order", task_order_id=active_task_order.id)
+    )
+    assert active_task_order.status == TaskOrderStatus.ACTIVE
+
+    upcoming_start_date = date.today() + timedelta(days=1)
+    upcoming_task_order = TaskOrderFactory(portfolio=task_order.portfolio)
+    CLINFactory(task_order=upcoming_task_order, start_date=upcoming_start_date)
+    assert upcoming_task_order.status == TaskOrderStatus.UNSIGNED
+    response = client.post(
+        url_for("task_orders.submit_task_order", task_order_id=upcoming_task_order.id)
+    )
+    assert upcoming_task_order.status == TaskOrderStatus.UPCOMING
 
 
 @pytest.mark.skip(reason="Reevaluate how form handles invalid data")

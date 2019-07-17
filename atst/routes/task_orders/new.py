@@ -5,6 +5,7 @@ from atst.domain.authz.decorator import user_can_access_decorator as user_can
 from atst.domain.task_orders import TaskOrders
 from atst.forms.task_order import TaskOrderForm, SignatureForm
 from atst.models.permissions import Permissions
+from atst.utils.flash import formatted_flash as flash
 
 
 def render_task_orders_edit(template, portfolio_id=None, task_order_id=None, form=None):
@@ -54,8 +55,8 @@ def update_task_order(
         )
 
 
-@task_orders_bp.route("/portfolios/<portfolio_id>/task_orders/step_1")
-@task_orders_bp.route("/task_orders/<task_order_id>/step_1")
+@task_orders_bp.route("/portfolios/<portfolio_id>/task_orders/form/step_1")
+@task_orders_bp.route("/task_orders/<task_order_id>/form/step_1")
 @user_can(Permissions.CREATE_TASK_ORDER, message="view new task order form")
 def form_step_one_add_pdf(portfolio_id=None, task_order_id=None):
     return render_task_orders_edit(
@@ -65,8 +66,10 @@ def form_step_one_add_pdf(portfolio_id=None, task_order_id=None):
     )
 
 
-@task_orders_bp.route("/portfolios/<portfolio_id>/task_orders/step-1", methods=["POST"])
-@task_orders_bp.route("/task_orders/<task_order_id>/step_1", methods=["POST"])
+@task_orders_bp.route(
+    "/portfolios/<portfolio_id>/task_orders/form/step-1", methods=["POST"]
+)
+@task_orders_bp.route("/task_orders/<task_order_id>/form/step_1", methods=["POST"])
 @user_can(Permissions.CREATE_TASK_ORDER, message="view new task order form")
 def submit_form_step_one_add_pdf(portfolio_id=None, task_order_id=None):
     form_data = {**http_request.form, **http_request.files}
@@ -82,7 +85,7 @@ def submit_form_step_one_add_pdf(portfolio_id=None, task_order_id=None):
     )
 
 
-@task_orders_bp.route("/task_orders/<task_order_id>/step_2")
+@task_orders_bp.route("/task_orders/<task_order_id>/form/step_2")
 @user_can(Permissions.CREATE_TASK_ORDER, message="view new task order form")
 def form_step_two_add_number(task_order_id):
     return render_task_orders_edit(
@@ -90,7 +93,7 @@ def form_step_two_add_number(task_order_id):
     )
 
 
-@task_orders_bp.route("/task_orders/<task_order_id>/step_2", methods=["POST"])
+@task_orders_bp.route("/task_orders/<task_order_id>/form/step_2", methods=["POST"])
 @user_can(Permissions.CREATE_TASK_ORDER, message="view new task order form")
 def submit_form_step_two_add_number(task_order_id):
     form_data = {**http_request.form}
@@ -102,7 +105,7 @@ def submit_form_step_two_add_number(task_order_id):
     )
 
 
-@task_orders_bp.route("/task_orders/<task_order_id>/step_3")
+@task_orders_bp.route("/task_orders/<task_order_id>/form/step_3")
 @user_can(Permissions.CREATE_TASK_ORDER, message="view new task order form")
 def form_step_three_add_clins(task_order_id):
     return render_task_orders_edit(
@@ -110,7 +113,7 @@ def form_step_three_add_clins(task_order_id):
     )
 
 
-@task_orders_bp.route("/task_orders/<task_order_id>/step_3", methods=["POST"])
+@task_orders_bp.route("/task_orders/<task_order_id>/form/step_3", methods=["POST"])
 @user_can(Permissions.CREATE_TASK_ORDER, message="view new task order form")
 def submit_form_step_three_add_clins(task_order_id):
     form_data = {**http_request.form}
@@ -122,7 +125,7 @@ def submit_form_step_three_add_clins(task_order_id):
     )
 
 
-@task_orders_bp.route("/task_orders/<task_order_id>/step_4")
+@task_orders_bp.route("/task_orders/<task_order_id>/form/step_4")
 @user_can(Permissions.CREATE_TASK_ORDER, message="view new task order form")
 def form_step_four_review(task_order_id):
     return render_task_orders_edit(
@@ -130,9 +133,22 @@ def form_step_four_review(task_order_id):
     )
 
 
-@task_orders_bp.route("/task_orders/<task_order_id>/step_5")
+@task_orders_bp.route("/task_orders/<task_order_id>/form/step_5")
 @user_can(Permissions.CREATE_TASK_ORDER, message="view new task order form")
 def form_step_five_confirm_signature(task_order_id):
     return render_task_orders_edit(
         "task_orders/step_5.html", task_order_id=task_order_id, form=SignatureForm()
+    )
+
+
+@task_orders_bp.route("/task_orders/<task_order_id>/submit", methods=["POST"])
+@user_can(Permissions.CREATE_TASK_ORDER, "submit task order")
+def submit_task_order(task_order_id):
+    task_order = TaskOrders.get(task_order_id)
+    TaskOrders.sign(task_order=task_order, signer_dod_id=g.current_user.dod_id)
+
+    flash("task_order_submitted", task_order=task_order)
+
+    return redirect(
+        url_for("task_orders.portfolio_funding", portfolio_id=task_order.portfolio_id)
     )
