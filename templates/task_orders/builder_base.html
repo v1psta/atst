@@ -19,9 +19,11 @@
               class="usa-button usa-button-primary">
           {% endblock %}
 
-          <a class="usa-button usa-button-secondary" href="{{ previous_button_link }}">
-            Previous
-          </a>
+          {% if step != "1" %}
+            <a class="usa-button usa-button-secondary" href="{{ previous_button_link }}">
+              Previous
+            </a>
+          {% endif %}
 
           <a
             href="{{ cancel_url }}"
