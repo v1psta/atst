@@ -26,6 +26,18 @@ def task_order():
 
 
 @pytest.fixture
+def completed_task_order():
+    portfolio = PortfolioFactory.create()
+    task_order = TaskOrderFactory.create(
+        creator=portfolio.owner,
+        portfolio=portfolio,
+        create_clins=["1234567890123456789012345678901234567890123"],
+    )
+
+    return task_order
+
+
+@pytest.fixture
 def portfolio():
     return PortfolioFactory.create()
 
@@ -114,22 +126,49 @@ def test_task_orders_submit_form_step_three_add_clins(client, user_session, task
     assert len(task_order.clins) == 2
 
 
-def test_task_orders_form_step_four_review(client, user_session, task_order):
-    user_session(task_order.creator)
+def test_task_orders_form_step_four_review(client, user_session, completed_task_order):
+    user_session(completed_task_order.creator)
     response = client.get(
-        url_for("task_orders.form_step_four_review", task_order_id=task_order.id)
+        url_for(
+            "task_orders.form_step_four_review", task_order_id=completed_task_order.id
+        )
     )
     assert response.status_code == 200
 
 
-def test_task_orders_form_step_five_confirm_signature(client, user_session, task_order):
+def test_task_orders_form_step_four_review_incomplete_to(
+    client, user_session, task_order
+):
+    user_session(task_order.creator)
+    response = client.get(
+        url_for("task_orders.form_step_four_review", task_order_id=task_order.id)
+    )
+    assert response.status_code == 404
+
+
+def test_task_orders_form_step_five_confirm_signature(
+    client, user_session, completed_task_order
+):
+    user_session(completed_task_order.creator)
+    response = client.get(
+        url_for(
+            "task_orders.form_step_five_confirm_signature",
+            task_order_id=completed_task_order.id,
+        )
+    )
+    assert response.status_code == 200
+
+
+def test_task_orders_form_step_five_confirm_signature_incomplete_to(
+    client, user_session, task_order
+):
     user_session(task_order.creator)
     response = client.get(
         url_for(
             "task_orders.form_step_five_confirm_signature", task_order_id=task_order.id
         )
     )
-    assert response.status_code == 200
+    assert response.status_code == 404
 
 
 def test_task_orders_form_step_one_add_pdf_existing_to(
@@ -273,18 +312,6 @@ def test_task_orders_update_invalid_data(client, user_session, portfolio):
     assert response.status_code == 400
     assert num_task_orders == len(portfolio.task_orders)
     assert "There were some errors" in response.data.decode()
-
-
-@pytest.mark.skip(reason="Reevaluate if user can see review page w/ incomplete TO")
-def test_cannot_get_to_review_screen_with_incomplete_data(
-    client, user_session, portfolio
-):
-    user_session(portfolio.owner)
-    data = {"number": "0123456789"}
-    response = client.post(
-        url_for("task_orders.update", portfolio_id=portfolio.id, review=True), data=data
-    )
-    assert response.status_code == 400
 
 
 @pytest.mark.skip(reason="Update after implementing errors on TO form")
