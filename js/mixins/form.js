@@ -50,9 +50,11 @@ export default {
 
   computed: {
     canSave: function() {
-      if (!this.invalid) {
+      const formValid = !this.invalid
+
+      if (formValid) {
         return true
-      } else if (this.changed && !this.invalid) {
+      } else if (this.changed && formValid) {
         return true
       } else {
         return false
