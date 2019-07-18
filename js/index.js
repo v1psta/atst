@@ -35,7 +35,6 @@ import { isNotInVerticalViewport } from './lib/viewport'
 import DateSelector from './components/date_selector'
 import SidenavToggler from './components/sidenav_toggler'
 import BaseForm from './components/forms/base_form'
-import SubmitConfirmation from './components/submit_confirmation'
 import DeleteConfirmation from './components/delete_confirmation'
 import NewEnvironment from './components/forms/new_environment'
 import EnvironmentRole from './components/environment_role'
@@ -79,7 +78,6 @@ const app = new Vue({
     SidenavToggler,
     BaseForm,
     DeleteConfirmation,
-    SubmitConfirmation,
     nestedcheckboxinput,
     NewEnvironment,
     EnvironmentRole,

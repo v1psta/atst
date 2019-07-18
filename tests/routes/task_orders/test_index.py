@@ -51,30 +51,7 @@ def test_review_task_order_draft(client, user_session, task_order):
         url_for("task_orders.review_task_order", task_order_id=task_order.id)
     )
     assert response.status_code == 302
-    assert url_for("task_orders.edit", task_order_id=task_order.id) in response.location
-
-
-def test_submit_task_order(client, user_session, task_order):
-    user_session(task_order.portfolio.owner)
-    response = client.post(
-        url_for("task_orders.submit_task_order", task_order_id=task_order.id)
+    assert (
+        url_for("task_orders.form_step_one_add_pdf", task_order_id=task_order.id)
+        in response.location
     )
-    assert response.status_code == 302
-
-    active_start_date = date.today() - timedelta(days=1)
-    active_task_order = TaskOrderFactory(portfolio=task_order.portfolio)
-    CLINFactory(task_order=active_task_order, start_date=active_start_date)
-    assert active_task_order.status == TaskOrderStatus.UNSIGNED
-    response = client.post(
-        url_for("task_orders.submit_task_order", task_order_id=active_task_order.id)
-    )
-    assert active_task_order.status == TaskOrderStatus.ACTIVE
-
-    upcoming_start_date = date.today() + timedelta(days=1)
-    upcoming_task_order = TaskOrderFactory(portfolio=task_order.portfolio)
-    CLINFactory(task_order=upcoming_task_order, start_date=upcoming_start_date)
-    assert upcoming_task_order.status == TaskOrderStatus.UNSIGNED
-    response = client.post(
-        url_for("task_orders.submit_task_order", task_order_id=upcoming_task_order.id)
-    )
-    assert upcoming_task_order.status == TaskOrderStatus.UPCOMING

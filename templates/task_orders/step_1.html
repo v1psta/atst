@@ -1,0 +1,28 @@
+{% extends "task_orders/builder_base.html" %}
+
+{% from 'components/icon.html' import Icon %}
+{% from "components/sticky_cta.html" import StickyCTA %}
+{% from 'components/upload_input.html' import UploadInput %}
+
+{% if task_order_id %}
+  {% set action = url_for("task_orders.submit_form_step_one_add_pdf", task_order_id=task_order_id) %}
+{% else %}
+  {% set action = url_for("task_orders.submit_form_step_one_add_pdf", portfolio_id=portfolio.id) %}
+{% endif %}
+
+{% set next_button_text = "Next: Add TO Number" %}
+{% set previous_button_link = cancel_url %}
+{% set step = "1" %}
+
+
+{% block to_builder_form_field %}
+  <div class="h3">
+    {{ 'task_orders.form.supporting_docs_header' | translate }}
+  </div>
+
+  <div class="task-order__pdf-help-text">
+    {{ 'task_orders.form.supporting_docs_text' | translate }} {{ Icon('question')}}
+  </div>
+
+  {{ UploadInput(form.pdf, watch=True) }}
+{% endblock %}

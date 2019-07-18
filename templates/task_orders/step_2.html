@@ -1,0 +1,16 @@
+{% extends "task_orders/builder_base.html" %}
+
+{% from 'components/text_input.html' import TextInput %}
+
+{% set action = url_for("task_orders.submit_form_step_two_add_number", task_order_id=task_order_id) %}
+{% set next_button_text = "Next: Add Base CLIN" %}
+{% set previous_button_link = url_for("task_orders.form_step_one_add_pdf", task_order_id=task_order_id) %}
+{% set step = "2" %}
+
+{% block to_builder_form_field %}
+  <div class="h1">
+    {{ 'task_orders.form.add_to_header' | translate }}
+  </div>
+
+  {{ TextInput(form.number, validation='taskOrderNumber', optional=False) }}
+{% endblock %}

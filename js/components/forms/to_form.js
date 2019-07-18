@@ -1,5 +1,3 @@
-import stickybits from 'stickybits'
-
 import ClinFields from '../clin_fields'
 import DateSelector from '../date_selector'
 import FormMixin from '../../mixins/form'
@@ -69,14 +67,6 @@ export default {
       })
       this.total = newTotal
       this.obligated = newObligated
-    },
-  },
-
-  directives: {
-    sticky: {
-      inserted: el => {
-        stickybits(el)
-      },
     },
   },
 }

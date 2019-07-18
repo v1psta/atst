@@ -53,9 +53,7 @@ class CLINForm(FlaskForm):
 
 
 class TaskOrderForm(BaseForm):
-    number = StringField(
-        label=translate("forms.task_order.number_description"), validators=[Required()]
-    )
+    number = StringField(label=translate("forms.task_order.number_description"))
     pdf = FileField(
         None,
         description=translate("task_orders.form.supporting_docs_size_limit"),

@@ -7,7 +7,6 @@ from atst.domain.task_orders import TaskOrders
 from atst.forms.task_order import SignatureForm
 from atst.models import Permissions
 from atst.models.task_order import Status as TaskOrderStatus
-from atst.utils.flash import formatted_flash as flash
 
 
 @task_orders_bp.route("/task_orders/<task_order_id>/review")
@@ -15,7 +14,9 @@ from atst.utils.flash import formatted_flash as flash
 def review_task_order(task_order_id):
     task_order = TaskOrders.get(task_order_id)
     if task_order.is_draft:
-        return redirect(url_for("task_orders.edit", task_order_id=task_order.id))
+        return redirect(
+            url_for("task_orders.form_step_one_add_pdf", task_order_id=task_order.id)
+        )
     else:
         signature_form = SignatureForm()
         return render_template(
@@ -23,20 +24,6 @@ def review_task_order(task_order_id):
             task_order=task_order,
             signature_form=signature_form,
         )
-
-
-@task_orders_bp.route("/task_orders/<task_order_id>/submit", methods=["POST"])
-@user_can(Permissions.CREATE_TASK_ORDER, "submit task order")
-def submit_task_order(task_order_id):
-
-    task_order = TaskOrders.get(task_order_id)
-    TaskOrders.sign(task_order=task_order, signer_dod_id=g.current_user.dod_id)
-
-    flash("task_order_submitted", task_order=task_order)
-
-    return redirect(
-        url_for("task_orders.portfolio_funding", portfolio_id=task_order.portfolio.id)
-    )
 
 
 @task_orders_bp.route("/portfolios/<portfolio_id>/task_orders")
