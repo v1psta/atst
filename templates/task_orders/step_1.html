@@ -2,6 +2,7 @@
 
 {% from 'components/icon.html' import Icon %}
 {% from "components/sticky_cta.html" import StickyCTA %}
+{% from "task_orders/form_header.html" import TOFormStepHeader %}
 {% from 'components/upload_input.html' import UploadInput %}
 
 {% if task_order_id %}
@@ -16,13 +17,6 @@
 
 
 {% block to_builder_form_field %}
-  <div class="h3">
-    {{ 'task_orders.form.supporting_docs_header' | translate }}
-  </div>
-
-  <div class="task-order__pdf-help-text">
-    {{ 'task_orders.form.supporting_docs_text' | translate }} {{ Icon('question')}}
-  </div>
-
+  {{ TOFormStepHeader('task_orders.form.supporting_docs_header' | translate, 'task_orders.form.supporting_docs_text' | translate) }}
   {{ UploadInput(form.pdf, watch=True) }}
 {% endblock %}

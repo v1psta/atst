@@ -339,6 +339,8 @@ task_orders:
     add_clin: Add another CLIN or Sub-CLIN
     add_loa: Add another line of accounting
     add_to_header: Add your task order
+    base_clin_title: Add Base CLIN
+    base_clin_description: Next, continue to refer to your document to locate your CLINs (Contract Line Item Numbers). CLINs are how you break the contract down by the commodities being procured (labor hours of services, funding for travel, quantity product A, etc.).
     clin_number_label: CLIN
     clin_type_label: CLIN type
     cloud_funding_header: Add the summary of cloud funding

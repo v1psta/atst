@@ -4,6 +4,7 @@
 {% from 'components/icon.html' import Icon %}
 {% from 'components/options_input.html' import OptionsInput %}
 {% from 'components/text_input.html' import TextInput %}
+{% from 'task_orders/form_header.html' import TOFormStepHeader %}
 
 {% set action = url_for("task_orders.submit_form_step_three_add_clins", task_order_id=task_order_id) %}
 {% set next_button_text = "Next: Review Funding" %}
@@ -99,16 +100,11 @@
     inline-template
     v-bind:initial-clin-count="{{ form.clins.data | length }}">
       <div>
-      <div class="h3">
-        {{ 'task_orders.form.cloud_funding_header' | translate }}
-      </div>
-      <div>
-        {{ 'task_orders.form.cloud_funding_text' | translate }}
-      </div>
+        {{ TOFormStepHeader('task_orders.form.base_clin_title' | translate, 'task_orders.form.base_clin_description' | translate, task_order.number) }}
 
-      {% for clin in form.clins %}
-        {{ CLINFields(clin, index=loop.index - 1) }}
-      {% endfor %}
+        {% for clin in form.clins %}
+          {{ CLINFields(clin, index=loop.index - 1) }}
+        {% endfor %}
 
       <div v-for="clin in clins">
         <hr v-if="clinIndex !== 0">
