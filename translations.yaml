@@ -172,7 +172,7 @@ forms:
       'no': 'No, not planning to develop natively in the cloud'
       not_sure: 'Not sure, unsure if planning to develop natively in the cloud'
       not_sure_help: Not sure? Talk to your technical lead about where and how they plan on developing your application.
-    number_description: Task order number (10 digit number from your system of record)
+    number_description: Task order number (13 digit number from your system of record)
     scope_description: 'What do you plan to do on the cloud? Some examples might include migrating an existing application or creating a prototype. You don’t need to include a detailed plan of execution, but should list key requirements. This section will be reviewed by your contracting officer, but won’t be sent to the CCPO. <p>Not sure how to describe your scope? <a href="#">Read some examples</a> to get some inspiration.</p>'
     scope_label: Cloud project scope
     start_date_label: Start of period of performance (PoP)
