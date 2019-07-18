@@ -1,6 +1,10 @@
 export default {
   props: {
     initialSelectedSection: String,
+    hasChanges: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   mounted: function() {
@@ -44,18 +48,25 @@ export default {
     },
   },
 
+  computed: {
+    canSave: function() {
+      const formValid = !this.invalid
+
+      if (formValid) {
+        return true
+      } else if (this.changed && formValid) {
+        return true
+      } else {
+        return false
+      }
+    },
+  },
+
   data: function() {
     return {
       changed: this.hasChanges,
       fields: {},
       invalid: true,
     }
-  },
-
-  props: {
-    hasChanges: {
-      type: Boolean,
-      default: false,
-    },
   },
 }
