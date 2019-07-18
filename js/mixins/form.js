@@ -1,6 +1,10 @@
 export default {
   props: {
     initialSelectedSection: String,
+    hasChanges: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   mounted: function() {
@@ -62,12 +66,5 @@ export default {
       fields: {},
       invalid: true,
     }
-  },
-
-  props: {
-    hasChanges: {
-      type: Boolean,
-      default: false,
-    },
   },
 }
