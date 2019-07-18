@@ -57,7 +57,7 @@ def update_task_order(
 
 @task_orders_bp.route("/portfolios/<portfolio_id>/task_orders/form/step_1")
 @task_orders_bp.route("/task_orders/<task_order_id>/form/step_1")
-@user_can(Permissions.CREATE_TASK_ORDER, message="view new task order form")
+@user_can(Permissions.CREATE_TASK_ORDER, message="view task order form")
 def form_step_one_add_pdf(portfolio_id=None, task_order_id=None):
     return render_task_orders_edit(
         "task_orders/step_1.html",
@@ -70,7 +70,7 @@ def form_step_one_add_pdf(portfolio_id=None, task_order_id=None):
     "/portfolios/<portfolio_id>/task_orders/form/step-1", methods=["POST"]
 )
 @task_orders_bp.route("/task_orders/<task_order_id>/form/step_1", methods=["POST"])
-@user_can(Permissions.CREATE_TASK_ORDER, message="view new task order form")
+@user_can(Permissions.CREATE_TASK_ORDER, message="update task order form")
 def submit_form_step_one_add_pdf(portfolio_id=None, task_order_id=None):
     form_data = {**http_request.form, **http_request.files}
     next_page = "task_orders.form_step_two_add_number"
@@ -86,7 +86,7 @@ def submit_form_step_one_add_pdf(portfolio_id=None, task_order_id=None):
 
 
 @task_orders_bp.route("/task_orders/<task_order_id>/form/step_2")
-@user_can(Permissions.CREATE_TASK_ORDER, message="view new task order form")
+@user_can(Permissions.CREATE_TASK_ORDER, message="view task order form")
 def form_step_two_add_number(task_order_id):
     return render_task_orders_edit(
         "task_orders/step_2.html", task_order_id=task_order_id
@@ -94,7 +94,7 @@ def form_step_two_add_number(task_order_id):
 
 
 @task_orders_bp.route("/task_orders/<task_order_id>/form/step_2", methods=["POST"])
-@user_can(Permissions.CREATE_TASK_ORDER, message="view new task order form")
+@user_can(Permissions.CREATE_TASK_ORDER, message="update task order form")
 def submit_form_step_two_add_number(task_order_id):
     form_data = {**http_request.form}
     next_page = "task_orders.form_step_three_add_clins"
@@ -106,7 +106,7 @@ def submit_form_step_two_add_number(task_order_id):
 
 
 @task_orders_bp.route("/task_orders/<task_order_id>/form/step_3")
-@user_can(Permissions.CREATE_TASK_ORDER, message="view new task order form")
+@user_can(Permissions.CREATE_TASK_ORDER, message="view task order form")
 def form_step_three_add_clins(task_order_id):
     return render_task_orders_edit(
         "task_orders/step_3.html", task_order_id=task_order_id
@@ -114,7 +114,7 @@ def form_step_three_add_clins(task_order_id):
 
 
 @task_orders_bp.route("/task_orders/<task_order_id>/form/step_3", methods=["POST"])
-@user_can(Permissions.CREATE_TASK_ORDER, message="view new task order form")
+@user_can(Permissions.CREATE_TASK_ORDER, message="update task order form")
 def submit_form_step_three_add_clins(task_order_id):
     form_data = {**http_request.form}
     next_page = "task_orders.form_step_four_review"
@@ -126,7 +126,7 @@ def submit_form_step_three_add_clins(task_order_id):
 
 
 @task_orders_bp.route("/task_orders/<task_order_id>/form/step_4")
-@user_can(Permissions.CREATE_TASK_ORDER, message="view new task order form")
+@user_can(Permissions.CREATE_TASK_ORDER, message="view task order form")
 def form_step_four_review(task_order_id):
     return render_task_orders_edit(
         "task_orders/step_4.html", task_order_id=task_order_id
@@ -134,7 +134,7 @@ def form_step_four_review(task_order_id):
 
 
 @task_orders_bp.route("/task_orders/<task_order_id>/form/step_5")
-@user_can(Permissions.CREATE_TASK_ORDER, message="view new task order form")
+@user_can(Permissions.CREATE_TASK_ORDER, message="view task order form")
 def form_step_five_confirm_signature(task_order_id):
     return render_task_orders_edit(
         "task_orders/step_5.html", task_order_id=task_order_id, form=SignatureForm()
