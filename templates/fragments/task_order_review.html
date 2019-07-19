@@ -3,15 +3,25 @@
 {% from "components/totals_box.html" import TotalsBox %}
 
 
-<div class="task-order">
+<div class="task-order__review">
   <div class="form-row">
     <div class="form-col">
-      <div class="h1">
+      <div class="h2">
         {{ "task_orders.review.review_your_task_order" | translate }}
       </div>
 
+      <div class="h3">
+        Approved Task Order
+      </div>
+      <a class="icon-link icon-link--download" href="{{ url_for('task_orders.download_task_order_pdf', task_order_id=task_order.id) }}">
+        {{ Icon('check-circle-solid') }}
+        {{ task_order.pdf.filename }}
+      </a>
+
+      <hr>
+
       <div class="col task-order__details">
-        <div class="h4">
+        <div class="h3">
           {{ "task_orders.review.task_order_number" | translate }}
         </div>
         <div>{{task_order.number}}</div>
@@ -61,18 +71,6 @@
             </tbody>
           </table>
         {% endfor %}
-
-        <hr>
-
-        <div class="h3">
-          {{ "task_orders.review.supporting_document.title" | translate }}
-        </div>
-        <div class="h4">
-          <a class="icon-link icon-link--download" href="{{ url_for('task_orders.download_task_order_pdf', task_order_id=task_order.id) }}">
-            {{ Icon('check-circle-solid') }}
-            {{ task_order.pdf.filename }}
-          </a>
-        </div>
       </div>
     </div>
     <div class="form-col">

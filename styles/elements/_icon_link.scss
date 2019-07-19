@@ -83,7 +83,9 @@
   }
 
   &.icon-link--download {
-    @include icon-link-color($color-black) .icon {
+    font-weight: $font-normal;
+    padding-left: 0;
+    .icon {
       @include icon-color($color-green);
     }
   }
