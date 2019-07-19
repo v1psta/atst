@@ -1,0 +1,19 @@
+{% macro TOFormStepHeader(title, description, to_number=None) %}
+  <div class="column">
+    <div class="form-row">
+      <div class="form-col form-col--two-thirds">
+        <div class="h2">
+          {{ title }}
+        </div>
+      </div>
+      <div class="form-col form-col--third">
+        {% if to_number %}
+          <strong>Task Order Number:</strong> {{ to_number }}
+        {% endif %}
+      </div>
+    </div>
+    <div class="form-row">
+      {{ description }}
+    </div>
+  </div>
+{% endmacro %}

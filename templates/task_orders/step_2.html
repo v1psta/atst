@@ -1,6 +1,7 @@
 {% extends "task_orders/builder_base.html" %}
 
 {% from 'components/text_input.html' import TextInput %}
+{% from "task_orders/form_header.html" import TOFormStepHeader %}
 
 {% set action = url_for("task_orders.submit_form_step_two_add_number", task_order_id=task_order_id) %}
 {% set next_button_text = "Next: Add Base CLIN" %}
@@ -8,9 +9,6 @@
 {% set step = "2" %}
 
 {% block to_builder_form_field %}
-  <div class="h1">
-    {{ 'task_orders.form.add_to_header' | translate }}
-  </div>
-
+  {{ TOFormStepHeader('task_orders.form.add_to_header' | translate, "Lorem ipsem")}}
   {{ TextInput(form.number, validation='taskOrderNumber', optional=False) }}
 {% endblock %}
