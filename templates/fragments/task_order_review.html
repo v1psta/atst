@@ -4,82 +4,79 @@
 
 
 <div class="task-order">
-  {{ SemiCollapsibleText() }}
-
-  <hr>
-
-  <div class="h1">
-    {{ "task_orders.review.review_your_task_order" | translate }}
-  </div>
-  <p>
-    {{ "task_orders.review.check_paragraph" | translate }}
-  </p>
-  <div class="row">
-    <div class="col task-order__details">
-      <div class="h4">
-        {{ "task_orders.review.task_order_number" | translate }}
-      </div>
-      <div>{{task_order.number}}</div>
-
-      <hr>
-
-      <div class="h3">
-        {{ "task_orders.review.funding_summary" | translate }}
+  <div class="form-row">
+    <div class="form-col">
+      <div class="h1">
+        {{ "task_orders.review.review_your_task_order" | translate }}
       </div>
 
-      {% for clin in task_order.clins %}
-        <div>
-          {{ "{}".format(clin.jedi_clin_type) | translate}}
+      <div class="col task-order__details">
+        <div class="h4">
+          {{ "task_orders.review.task_order_number" | translate }}
         </div>
-        <table class="fixed-table-wrapper">
-          <thead>
-            <tr>
-              <th>{{ "task_orders.review.clins.amount" | translate }}</th>
-              <th>{{ "task_orders.review.clins.obligated" | translate }}</th>
-              <th>{{ "task_orders.review.clins.pop_start" | translate }}</th>
-              <th>{{ "task_orders.review.clins.pop_end" | translate }}</th>
-              <th>{{ "task_orders.review.clins.loa" | translate }}</th>
-            </tr>
-          </thead>
+        <div>{{task_order.number}}</div>
 
-          <tbody>
-            <tr>
-              <td>{{ clin.obligated_amount | dollars }}</td>
-              <td>
-                {% if clin.is_obligated() %}
-                  {{ "common.yes" | translate }}
-                {% else %}
-                  {{ "common.no" | translate }}
-                {% endif %}
-              </td>
-              <td>{{ clin.start_date | formattedDate }}</td>
-              <td>{{ clin.end_date | formattedDate }}</td>
-              <td>
-                {% for loa in clin.loas %}
-                  <span title='{{ loa }}'>
-                    {{ loa }}
-                  </span>
-                  <br />
-                {% endfor %}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      {% endfor %}
+        <hr>
 
-      <hr>
+        <div class="h3">
+          {{ "task_orders.review.funding_summary" | translate }}
+        </div>
 
-      <div class="h3">
-        {{ "task_orders.review.supporting_document.title" | translate }}
-      </div>
-      <div class="h4">
-        <a class="icon-link icon-link--download" href="{{ url_for('task_orders.download_task_order_pdf', task_order_id=task_order.id) }}">
-          {{ Icon('check-circle-solid') }}
-          {{ task_order.pdf.filename }}
-        </a>
+        {% for clin in task_order.clins %}
+          <div>
+            {{ "{}".format(clin.jedi_clin_type) | translate}}
+          </div>
+          <table class="fixed-table-wrapper">
+            <thead>
+              <tr>
+                <th>{{ "task_orders.review.clins.amount" | translate }}</th>
+                <th>{{ "task_orders.review.clins.obligated" | translate }}</th>
+                <th>{{ "task_orders.review.clins.pop_start" | translate }}</th>
+                <th>{{ "task_orders.review.clins.pop_end" | translate }}</th>
+                <th>{{ "task_orders.review.clins.loa" | translate }}</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td>{{ clin.obligated_amount | dollars }}</td>
+                <td>
+                  {% if clin.is_obligated() %}
+                    {{ "common.yes" | translate }}
+                  {% else %}
+                    {{ "common.no" | translate }}
+                  {% endif %}
+                </td>
+                <td>{{ clin.start_date | formattedDate }}</td>
+                <td>{{ clin.end_date | formattedDate }}</td>
+                <td>
+                  {% for loa in clin.loas %}
+                    <span title='{{ loa }}'>
+                      {{ loa }}
+                    </span>
+                    <br />
+                  {% endfor %}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        {% endfor %}
+
+        <hr>
+
+        <div class="h3">
+          {{ "task_orders.review.supporting_document.title" | translate }}
+        </div>
+        <div class="h4">
+          <a class="icon-link icon-link--download" href="{{ url_for('task_orders.download_task_order_pdf', task_order_id=task_order.id) }}">
+            {{ Icon('check-circle-solid') }}
+            {{ task_order.pdf.filename }}
+          </a>
+        </div>
       </div>
     </div>
-  {{ TotalsBox(task_order=task_order) }}
-
+    <div class="form-col">
+      {{ TotalsBox(task_order=task_order) }}
+    </div>
   </div>
 </div>

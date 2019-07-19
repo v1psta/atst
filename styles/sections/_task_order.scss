@@ -53,19 +53,14 @@
     margin-top: $gap * 2;
   }
 
-  .task-order__details {
-    max-width: 65%;
-  }
-
   .totals-box {
     padding: $gap * 4;
     padding-top: $gap * 2;
     flex-grow: unset;
     margin-left: $gap * 6;
-    margin-top: $gap * 3;
-    width: 35%;
     display: table;
     background-color: $color-gray-lightest;
+    min-width: 350px;
   }
 
   &.task_order__form {
