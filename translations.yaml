@@ -323,6 +323,7 @@ portfolios:
       reporting: Reporting
 task_orders:
   review:
+    pdf_title: Approved Task Order
     review_your_task_order: Review your task order
     funding_summary: Task Order Summary
     task_order_number: Task Order Number
