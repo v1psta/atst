@@ -467,7 +467,11 @@ def test_task_orders_new_get_routes(get_url_assert_status):
     rando = user_with()
 
     portfolio = PortfolioFactory.create(owner=owner)
-    task_order = TaskOrderFactory.create(portfolio=portfolio, creator=owner)
+    task_order = TaskOrderFactory.create(
+        creator=owner,
+        portfolio=portfolio,
+        create_clins=["1234567890123456789012345678901234567890123"],
+    )
 
     for route in get_routes:
         url = url_for(route, task_order_id=task_order.id)

@@ -2,6 +2,7 @@ from flask import g, redirect, render_template, request as http_request, url_for
 
 from . import task_orders_bp
 from atst.domain.authz.decorator import user_can_access_decorator as user_can
+from atst.domain.exceptions import NoAccessError
 from atst.domain.task_orders import TaskOrders
 from atst.forms.task_order import TaskOrderForm, SignatureForm
 from atst.models.permissions import Permissions
@@ -128,6 +129,11 @@ def submit_form_step_three_add_clins(task_order_id):
 @task_orders_bp.route("/task_orders/<task_order_id>/form/step_4")
 @user_can(Permissions.CREATE_TASK_ORDER, message="view task order form")
 def form_step_four_review(task_order_id):
+    task_order = TaskOrders.get(task_order_id)
+
+    if task_order.is_completed == False:
+        raise NoAccessError("task order form review")
+
     return render_task_orders_edit(
         "task_orders/step_4.html", task_order_id=task_order_id
     )
@@ -136,6 +142,11 @@ def form_step_four_review(task_order_id):
 @task_orders_bp.route("/task_orders/<task_order_id>/form/step_5")
 @user_can(Permissions.CREATE_TASK_ORDER, message="view task order form")
 def form_step_five_confirm_signature(task_order_id):
+    task_order = TaskOrders.get(task_order_id)
+
+    if task_order.is_completed == False:
+        raise NoAccessError("task order form signature")
+
     return render_task_orders_edit(
         "task_orders/step_5.html", task_order_id=task_order_id, form=SignatureForm()
     )
