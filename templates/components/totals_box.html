@@ -1,6 +1,6 @@
 {% macro TotalsBox(task_order=None, obligated_funds=0, contract_amount=0) -%}
 
-  <div class="col totals-box">
+  <div class="totals-box">
     {% if task_order %}
       {% set obligated_funds = task_order.total_obligated_funds %}
       {% set contract_amount = task_order.total_contract_amount %}

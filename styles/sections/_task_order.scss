@@ -24,7 +24,7 @@
 
   hr {
     border: 0;
-    border-bottom: 1px solid $color-gray-light;
+    border-bottom: 1px solid $color-gray-lighter;
     margin-top: $gap * 4;
     margin-bottom: $gap * 4;
   }
@@ -53,19 +53,20 @@
     margin-top: $gap * 2;
   }
 
-  .task-order__details {
-    max-width: 65%;
-  }
+  .task-order__review {
+    .h2 {
+      margin-bottom: $gap * 4;
+    }
 
-  .totals-box {
-    padding: $gap * 4;
-    padding-top: $gap * 2;
-    flex-grow: unset;
-    margin-left: $gap * 6;
-    margin-top: $gap * 3;
-    width: 35%;
-    display: table;
-    background-color: $color-gray-lightest;
+    .totals-box {
+      padding: $gap * 4;
+      padding-top: $gap * 2;
+      flex-grow: unset;
+      margin-left: $gap * 6;
+      display: table;
+      background-color: $color-gray-lightest;
+      min-width: 350px;
+    }
   }
 
   .usa-input__title,

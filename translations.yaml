@@ -323,9 +323,10 @@ portfolios:
       reporting: Reporting
 task_orders:
   review:
+    pdf_title: Approved Task Order
     review_your_task_order: Review your task order
-    funding_summary: Funding summary
-    task_order_number: Task order number - 10 digit found in your system of record
+    funding_summary: Task Order Summary
+    task_order_number: Task Order Number
     check_paragraph: Check to make sure the information you entered is correct. After submission, you will confirm this task order was signed by a contracting officer. Thereafter, you will be informed as soon as CCPO completes their review.
     supporting_document:
       title: Supporting document
@@ -366,7 +367,7 @@ task_orders:
   sign:
     digital_signature_description: 'I acknowledge that I have read and fully understand the DoD CCPO JEDI agreements and completed all the necessary steps, as detailed in the Federal Acquisition Regulation (FAR).'
 JEDICLINType:
-  JEDI_CLIN_1: 'CLIN 1:'
+  JEDI_CLIN_1: 'Base CLIN 0001: Unclassified IaaS and PaaS'
   JEDI_CLIN_2: 'CLIN 2: Classified Cloud Services - 0002'
   JEDI_CLIN_3: 'CLIN 3:'
   JEDI_CLIN_4: 'CLIN 4:'
