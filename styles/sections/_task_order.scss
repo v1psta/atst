@@ -58,6 +58,14 @@
       margin-bottom: $gap * 4;
     }
 
+  .task-order__number {
+    text-align: right;
+  }
+
+  .task-order__details {
+    max-width: 65%;
+  }
+
     .totals-box {
       padding: $gap * 4;
       padding-top: $gap * 2;
