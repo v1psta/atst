@@ -57,7 +57,7 @@
     inline-template>
     <div class="card">
       <div class="h3">
-        Base CLIN Information
+        {{ 'task_orders.form.base_clin_title' | translate }}
       </div>
       <div class="form-row">
         <div class="form-col form-col--two-thirds">
@@ -317,7 +317,7 @@
     inline-template
     v-bind:initial-clin-count="{{ form.clins.data | length }}">
     <div>
-      {{ TOFormStepHeader('task_orders.form.base_clin_title' | translate, 'task_orders.form.base_clin_description' | translate, task_order.number) }}
+      {{ TOFormStepHeader('task_orders.form.clin_title' | translate, 'task_orders.form.clin_description' | translate, task_order.number) }}
 
       {% for clin in form.clins %}
         {{ CLINFields(clin, index=loop.index - 1) }}
