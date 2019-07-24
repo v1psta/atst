@@ -357,6 +357,11 @@ task_orders:
     supporting_docs_header: Upload your supporting documentation
     supporting_docs_size_limit: Your file may not exceed 1MB
     supporting_docs_text: Upload a single PDF containing all relevant information.
+    step_5:
+      title: Confirm Signature
+      description: Finally, plase confirm that your uploaded document representing the information you've entered contains the required signature from your Contracting Officer. You will be informed as soon as CCPO completes their review.
+      alert_message: All task orders require a Contracting Officer signature.
+      next_button: 'Next: Confirm & Submit'
     sticky_header_text: 'Add Funding ({step} of 5)'
   new:
     form_help_text: Before you can begin work in the cloud, you'll need to complete the information below and upload your approved task order for reference by the CCPO.
@@ -365,7 +370,7 @@ task_orders:
       subtitle: Who will be involved in the work funded by this task order?
       team_title: Your team
   sign:
-    digital_signature_description: 'I acknowledge that I have read and fully understand the DoD CCPO JEDI agreements and completed all the necessary steps, as detailed in the Federal Acquisition Regulation (FAR).'
+    digital_signature_description: I acknowledge that the uploaded task order contains the required KO signature.
 JEDICLINType:
   JEDI_CLIN_1: 'Base CLIN 0001: Unclassified IaaS and PaaS'
   JEDI_CLIN_2: 'CLIN 2: Classified Cloud Services - 0002'

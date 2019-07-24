@@ -5,15 +5,15 @@
 {% from 'task_orders/form_header.html' import TOFormStepHeader %}
 
 {% set action = url_for("task_orders.submit_task_order", task_order_id=task_order_id) %}
-{% set next_button_text = "Next: Confirm & Submit" %}
+{% set next_button_text = 'task_orders.form.step_5.next_button' | translate %}
 {% set previous_button_link = url_for("task_orders.form_step_four_review", task_order_id=task_order_id) %}
 {% set step = "5" %}
 
 {% block to_builder_form_field %}
-  {{ TOFormStepHeader("Signature confirmation", "Lorem ipsem", task_order_number) }}
+  {{ TOFormStepHeader('task_orders.form.step_5.title' | translate, 'task_orders.form.step_5.description' | translate, task_order.number) }}
 
   {% call Alert('',
-    message="All task orders require a Contracting Officer signature."
+    message="task_orders.form.step_5.alert_message" | translate
   ) %}
     {{ CheckboxInput(form.signature) }}
   {% endcall %}
