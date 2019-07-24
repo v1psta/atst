@@ -84,8 +84,9 @@
       margin: 0 $gap 0 0;
     }
 
-    span.icon.icon--ok.icon-validation {
-      left: 47.5em;
+    .usa-input--validation--dollars label span.icon.icon--ok.icon-validation {
+      left: auto;
+      right: -$gap * 9;
     }
 
     .form-row {

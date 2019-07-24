@@ -200,6 +200,11 @@
                     {{ Icon("ok", classes="icon--green") }}
                   </div>
                 </div>
+                <p class="usa-input-error-message" v-bind:class="{ 'form-has-errors': !isWithinDateRange }">
+                  {% if maxdate and mindate %}Date must be between {{mindate.strftime("%m/%d/%Y")}} and {{maxdate.strftime("%m/%d/%Y")}}{% endif %}
+                  {% if maxdate and not mindate %}Date must be before or on {{maxdate.strftime("%m/%d/%Y")}}{% endif %}
+                  {% if mindate and not maxdate %}Date must be after or on {{mindate.strftime("%m/%d/%Y")}}{% endif %}
+                </p>
               </fieldset>
             </date-selector>
           </div>
@@ -259,6 +264,11 @@
                     {{ Icon("ok", classes="icon--green") }}
                   </div>
                 </div>
+                <p class="usa-input-error-message" v-bind:class="{ 'form-has-errors': !isWithinDateRange }">
+                  {% if maxdate and mindate %}Date must be between {{mindate.strftime("%m/%d/%Y")}} and {{maxdate.strftime("%m/%d/%Y")}}{% endif %}
+                  {% if maxdate and not mindate %}Date must be before or on {{maxdate.strftime("%m/%d/%Y")}}{% endif %}
+                  {% if mindate and not maxdate %}Date must be after or on {{mindate.strftime("%m/%d/%Y")}}{% endif %}
+                </p>
               </fieldset>
             </date-selector>
           </div>
@@ -274,7 +284,7 @@
           :name="'clins-' + clinIndex + '-obligated_amount'"
           validation="dollars"
           :watch='true'>
-          <div class="usa-input usa-input--validation--dollars noMaxWidth">
+          <div class="usa-input usa-input--validation--dollars">
             <label :for="name">
               <div class="usa-input__title">{{ 'task_orders.form.obligated_funds_label' | translate }}</div>
               <span v-show='showError'>{{ Icon('alert',classes="icon-validation") }}</span>
