@@ -314,6 +314,10 @@
       padding-bottom: 0;
       padding-top: 0;
     }
+
+    input#delete-application {
+      margin-top: $gap * 3;
+    }
   }
 
   .activity-log {
