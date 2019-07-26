@@ -82,6 +82,10 @@
 
     .usa-input {
       margin: 0 $gap 0 0;
+
+      input {
+        max-width: -webkit-fill-available;
+      }
     }
 
     .usa-input--validation--dollars label span.icon.icon--ok.icon-validation {
@@ -91,10 +95,6 @@
 
     .form-row {
       margin: 0;
-    }
-
-    .usa-input input {
-      max-width: -webkit-fill-available;
     }
 
     select {
@@ -118,14 +118,14 @@
 
       input {
         margin: $gap 0;
-      }
 
-      input:first-child {
-        margin-top: 0;
-      }
+        &:first-child {
+          margin-top: 0;
+        }
 
-      input:last-child {
-        margin-bottom: 0;
+        &:last-child {
+          margin-bottom: 0;
+        }
       }
     }
   }
