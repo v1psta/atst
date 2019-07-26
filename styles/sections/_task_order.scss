@@ -84,11 +84,11 @@
       margin: 0 $gap 0 0;
 
       input {
-        max-width: -webkit-fill-available;
+        max-width: none;
       }
     }
 
-    .usa-input--validation--dollars label span.icon.icon--ok.icon-validation {
+    .usa-input--validation--dollars label span.icon {
       left: auto;
       right: -$gap * 9;
     }
