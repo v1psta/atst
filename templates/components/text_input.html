@@ -16,7 +16,8 @@
   noMaxWidth=False,
   optional=True,
   showLabel=True,
-  watch=False) -%}
+  watch=False,
+  show_validation=True) -%}
 
   <textinput
     v-cloak
@@ -101,12 +102,14 @@
         {% endif %}
       />
 
-      <template v-if='showError'>
-        <span class='usa-input__message' v-html='validationError'></span>
-      </template>
-      <template v-else>
-        <span class='usa-input__message'></span>
-      </template>
+      {% if show_validation %}
+        <template v-if='showError'>
+          <span class='usa-input__message' v-html='validationError'></span>
+        </template>
+        <template v-else>
+          <span class='usa-input__message'></span>
+        </template>
+      {% endif %}
 
     </div>
   </textinput>

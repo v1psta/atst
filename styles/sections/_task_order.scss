@@ -58,6 +58,14 @@
       margin-bottom: $gap * 4;
     }
 
+    .task-order__number {
+      text-align: right;
+    }
+
+    .task-order__details {
+      max-width: 65%;
+    }
+
     .totals-box {
       padding: $gap * 4;
       padding-top: $gap * 2;
@@ -66,6 +74,59 @@
       display: table;
       background-color: $color-gray-lightest;
       min-width: 350px;
+    }
+  }
+
+  .card {
+    padding: ($gap * 5);
+
+    .usa-input {
+      margin: 0 $gap 0 0;
+
+      input {
+        max-width: none;
+      }
+    }
+
+    .usa-input--validation--dollars label span.icon {
+      left: auto;
+      right: -$gap * 9;
+    }
+
+    .form-row {
+      margin: 0;
+    }
+
+    select {
+      max-width: -webkit-fill-available;
+      font-weight: bold;
+    }
+
+    button {
+      margin-bottom: $gap * 3;
+    }
+
+    .task-order__loa-fieldset {
+      .usa-input__title {
+        padding: 0 0 0.4rem 0;
+        font-size: 1.7rem;
+      }
+
+      .usa-input {
+        margin: 0;
+      }
+
+      input {
+        margin: $gap 0;
+
+        &:first-child {
+          margin-top: 0;
+        }
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
     }
   }
 
@@ -132,24 +193,6 @@
         .usa-input {
           margin-right: 0;
         }
-      }
-    }
-
-    .task-order__loa-fieldset {
-      .usa-input {
-        margin: 0;
-      }
-
-      input {
-        margin: $gap 0;
-      }
-
-      input:first-child {
-        margin-top: 0;
-      }
-
-      input:last-child {
-        margin-bottom: 0;
       }
     }
 
