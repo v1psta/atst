@@ -2,16 +2,13 @@ import pytest
 from flask import url_for
 from datetime import timedelta, date
 
-from atst.domain.permission_sets import PermissionSets
 from atst.domain.task_orders import TaskOrders
 from atst.models.task_order import Status as TaskOrderStatus
-from atst.models import Attachment, TaskOrder
-from atst.utils.localization import translate
+from atst.models import TaskOrder
 
 from tests.factories import (
     CLINFactory,
     PortfolioFactory,
-    PortfolioRoleFactory,
     TaskOrderFactory,
     UserFactory,
 )
@@ -324,6 +321,15 @@ def test_task_orders_edit_redirects_to_latest_incomplete_step(
     response = client.get(url_for("task_orders.edit", task_order_id=task_order.id))
 
     assert expected_step in response.location
+
+
+def test_can_cancel_edit_and_save_task_order(client, user_session, task_order, session):
+    user_session(task_order.portfolio.owner)
+    response = client.post(url_for("task_orders.cancel_edit", task_order_id=task_order.id, save=True), data={"number": "0123456789012"})
+    assert response.status_code == 302
+
+    updated_task_order = session.query(TaskOrder).get(task_order.id)
+    assert updated_task_order.number == "0123456789012"
 
 
 @pytest.mark.skip(reason="Reevaluate how form handles invalid data")

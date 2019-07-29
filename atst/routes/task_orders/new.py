@@ -115,6 +115,30 @@ def submit_form_step_one_add_pdf(portfolio_id=None, task_order_id=None):
     )
 
 
+@task_orders_bp.route("/task_orders/<task_order_id>/form/cancel", methods=["POST"])
+@user_can(Permissions.CREATE_TASK_ORDER, message="view task order form")
+def cancel_edit(task_order_id):
+    save = http_request.args.get("save", False)
+    if save:
+        form_data = {**http_request.form}
+        form = None
+        if task_order_id:
+            task_order = TaskOrders.get(task_order_id)
+            form = TaskOrderForm(form_data, obj=task_order)
+        else:
+            form = TaskOrderForm(form_data)
+
+        if form.validate():
+            task_order = None
+            if task_order_id:
+                task_order = TaskOrders.update(task_order_id, **form.data)
+                portfolio_id = task_order.portfolio_id
+            else:
+                task_order = TaskOrders.create(g.current_user, portfolio_id, **form.data)
+
+    return redirect(url_for("task_orders.portfolio_funding", portfolio_id=portfolio_id))
+
+
 @task_orders_bp.route("/task_orders/<task_order_id>/form/step_2")
 @user_can(Permissions.CREATE_TASK_ORDER, message="view task order form")
 def form_step_two_add_number(task_order_id):
