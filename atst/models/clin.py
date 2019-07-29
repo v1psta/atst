@@ -37,6 +37,19 @@ class CLIN(Base, mixins.TimestampsMixin):
             JEDICLINType.JEDI_CLIN_3,
         ]
 
+    @property
+    def is_completed(self):
+        return all(
+            [
+                self.number,
+                self.start_date,
+                self.end_date,
+                self.obligated_amount,
+                self.jedi_clin_type,
+                len(self.loas),
+            ]
+        )
+
     def to_dictionary(self):
         return {
             c.name: getattr(self, c.name)

@@ -46,6 +46,12 @@ def test_task_order_completed():
     assert not TaskOrderFactory.create(number=None).is_completed
 
 
+def test_task_order_clins_are_completed():
+    assert TaskOrderFactory.create(clins=[CLINFactory.create()]).clins_are_completed
+    assert not TaskOrderFactory.create().clins_are_completed
+    assert not TaskOrderFactory.create(clins=[]).clins_are_completed
+
+
 class TestTaskOrderStatus:
     @patch("atst.models.TaskOrder.is_completed", new_callable=PropertyMock)
     @patch("atst.models.TaskOrder.is_signed", new_callable=PropertyMock)

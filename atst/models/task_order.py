@@ -93,8 +93,12 @@ class TaskOrder(Base, mixins.TimestampsMixin):
         return self.start_date is not None and Clock.today() >= self.end_date
 
     @property
+    def clins_are_completed(self):
+        return all([len(self.clins), (clin.is_completed for clin in self.clins)])
+
+    @property
     def is_completed(self):
-        return all([self.pdf, self.number, len(self.clins)])
+        return all([self.pdf, self.number, self.clins_are_completed])
 
     @property
     def is_signed(self):
