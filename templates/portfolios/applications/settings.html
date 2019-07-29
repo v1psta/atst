@@ -13,53 +13,66 @@
 
   <div class='subheading'>{{ 'portfolios.applications.settings_heading' | translate }}</div>
 
-  <form method="POST" action="{{ url_for('applications.update', application_id=application.id) }}">
+  {% if user_can(permissions.EDIT_APPLICATION) %}
+    <form method="POST" action="{{ url_for('applications.update', application_id=application.id) }}">
+      <div class="panel">
+        <div class="panel__content">
+          {{ application_form.csrf_token }}
+          <p>
+            {{ "fragments.edit_application_form.explain" | translate }}
+          </p>
+          <div class="form-row">
+            <div class="form-col form-col--two-thirds">
+              {{ TextInput(application_form.name) }}
+              {{ TextInput(application_form.description, paragraph=True) }}
+            </div>
+            <div class="form-col form-col--third">
+              {% if user_can(permissions.DELETE_APPLICATION) %}
+                <div class="usa-input">
+                  <input
+                    id="delete-application"
+                    type="button"
+                    v-on:click="openModal('delete-application')"
+                    class='usa-button button-danger-outline'
+                    value="{{ 'portfolios.applications.delete.button' | translate }}"
+                    >
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        <div class="panel__footer">
+          <div class="action-group">
+            <button class="usa-button usa-button-primary" tabindex="0" type="submit">{{ 'portfolios.applications.update_button_text' | translate }}</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  {% else %}
     <div class="panel">
       <div class="panel__content">
-
-        {{ application_form.csrf_token }}
         <p>
           {{ "fragments.edit_application_form.explain" | translate }}
         </p>
         <div class="form-row">
-          <div class="form-col form-col--two-thirds">
-            {{ TextInput(application_form.name) }}
-          </div>
-          <div class="form-col form-col--third">
-            {% if user_can(permissions.DELETE_APPLICATION) %}
-            <div class="usa-input">
-              <label for="delete-application">
-                <div class="usa-input__title">
-                  &nbsp;
-                </div>
-              </label>
-              <input
-                id="delete-application"
-                type="button"
-                v-on:click="openModal('delete-application')"
-                class='usa-button button-danger-outline'
-                value="{{ "portfolios.applications.delete.button" | translate }}"
-              >
+          <div class="form-col">
+            <div class="usa-input usa-input__title">
+              {{ application_form.name.label() }}
+              {{ application_form.name.data }}
             </div>
-            {% endif %}
           </div>
         </div>
         <div class="form-row">
-          <div class="form-col form-col--two-thirds">
-            {{ TextInput(application_form.description, paragraph=True) }}
+          <div class="form-col">
+            <div class="usa-input usa-input__title">
+              {{ application_form.description.label() }}
+              {{ application_form.description.data }}
+            </div>
           </div>
-          <div class="form-col form-col--third">
-            &nbsp;
-          </div>
-        </div>
-      </div>
-      <div class="panel__footer">
-        <div class="action-group">
-          <button class="usa-button usa-button-primary" tabindex="0" type="submit">{{ 'portfolios.applications.update_button_text' | translate }}</button>
         </div>
       </div>
     </div>
-  </form>
+  {% endif %}
 
   <div id="application-environments">
     <div class="accordion-table responsive-table-wrapper panel">
