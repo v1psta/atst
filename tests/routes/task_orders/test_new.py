@@ -307,7 +307,7 @@ def test_task_orders_submit_task_order(client, user_session, task_order):
 @pytest.mark.parametrize(
     "to_factory_args,expected_step",
     [
-        ({"pdf": None, "number": "", "clins": []}, "step_1"),
+        ({"_pdf": None, "number": "", "clins": []}, "step_1"),
         ({"number": "", "clins": []}, "step_2"),
         ({"number": "1234567890123", "clins": []}, "step_3"),
         ({"number": "1234567890123", "create_clins": [1]}, "step_4"),
@@ -316,7 +316,9 @@ def test_task_orders_submit_task_order(client, user_session, task_order):
 def test_task_orders_edit_redirects_to_latest_incomplete_step(
     client, user_session, portfolio, to_factory_args, expected_step
 ):
-    task_order = TaskOrderFactory.create(**to_factory_args)
+    task_order = TaskOrderFactory.create(
+        portfolio=portfolio, creator=portfolio.owner, **to_factory_args
+    )
     user_session(portfolio.owner)
 
     response = client.get(url_for("task_orders.edit", task_order_id=task_order.id))
