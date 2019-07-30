@@ -22,10 +22,15 @@ def render_task_orders_edit(template, portfolio_id=None, task_order_id=None, for
         render_args["form"] = form or TaskOrderForm()
 
     render_args["cancel_save_url"] = url_for(
-        "task_orders.cancel_edit", task_order_id=task_order_id, portfolio_id=portfolio_id, save=True
+        "task_orders.cancel_edit",
+        task_order_id=task_order_id,
+        portfolio_id=portfolio_id,
+        save=True,
     )
     render_args["cancel_discard_url"] = url_for(
-        "task_orders.cancel_edit", task_order_id=task_order_id, portfolio_id=portfolio_id
+        "task_orders.cancel_edit",
+        task_order_id=task_order_id,
+        portfolio_id=portfolio_id,
     )
 
     return render_template(template, **render_args)

@@ -37,8 +37,10 @@
       {% call Modal(name='cancel', dismissable=True) %}
         <div class="task-order__modal-cancel">
           <h1>Do you want to save this draft?</h1>
-          <button formaction="{{ cancel_discard_url }}" class="usa-button usa-button-primary" type="submit">No, delete it</button>
-          <button formaction="{{ cancel_save_url }}" class="usa-button usa-button-primary" type="submit">Yes, save for later</button>
+          <div class="task-order__modal-cancel_buttons">
+            <button formaction="{{ cancel_discard_url }}" class="usa-button usa-button-primary" type="submit">No, delete it</button>
+            <button formaction="{{ cancel_save_url }}" class="usa-button usa-button-primary" type="submit">Yes, save for later</button>
+          </div>
         </div>
       {% endcall %}
 
