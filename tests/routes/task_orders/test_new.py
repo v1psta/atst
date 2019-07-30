@@ -329,6 +329,14 @@ def test_can_cancel_edit_and_save_task_order(client, user_session, task_order, s
     updated_task_order = session.query(TaskOrder).get(task_order.id)
     assert updated_task_order.number == "7896564324567"
 
+def test_cancel_can_create_new_to(client, user_session, portfolio):
+    user_session(portfolio.owner)
+    response = client.post(
+        url_for("task_orders.cancel_edit", portfolio_id=portfolio.id),
+        data={"number": "7643906432984"},
+    )
+    assert response.status_code == 302
+
 
 def test_cancel_edit_does_not_save_invalid_form_input(client, user_session, session):
     task_order = TaskOrderFactory.create()
