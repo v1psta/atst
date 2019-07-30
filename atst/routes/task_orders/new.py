@@ -134,7 +134,9 @@ def cancel_edit(task_order_id):
                 task_order = TaskOrders.update(task_order_id, **form.data)
                 portfolio_id = task_order.portfolio_id
             else:
-                task_order = TaskOrders.create(g.current_user, portfolio_id, **form.data)
+                task_order = TaskOrders.create(
+                    g.current_user, portfolio_id, **form.data
+                )
 
     return redirect(url_for("task_orders.portfolio_funding", portfolio_id=portfolio_id))
 
