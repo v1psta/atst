@@ -123,7 +123,9 @@ def submit_form_step_one_add_pdf(portfolio_id=None, task_order_id=None):
     )
 
 
-@task_orders_bp.route("/portfolios/<portfolio_id>/task_orders/form/cancel", methods=["POST"])
+@task_orders_bp.route(
+    "/portfolios/<portfolio_id>/task_orders/form/cancel", methods=["POST"]
+)
 @task_orders_bp.route("/task_orders/<task_order_id>/form/cancel", methods=["POST"])
 @user_can(Permissions.CREATE_TASK_ORDER, message="cancel task order form")
 def cancel_edit(task_order_id=None, portfolio_id=None):
