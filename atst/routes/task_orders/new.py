@@ -57,6 +57,7 @@ def update_task_order(
 
 
 @task_orders_bp.route("/task_orders/<task_order_id>/edit")
+@user_can(Permissions.CREATE_TASK_ORDER, message="edit task order form")
 def edit(task_order_id):
     task_order = TaskOrders.get(task_order_id)
 
