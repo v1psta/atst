@@ -14,9 +14,7 @@ from atst.models.task_order import Status as TaskOrderStatus
 def review_task_order(task_order_id):
     task_order = TaskOrders.get(task_order_id)
     if task_order.is_draft:
-        return redirect(
-            url_for("task_orders.edit", task_order_id=task_order.id)
-        )
+        return redirect(url_for("task_orders.edit", task_order_id=task_order.id))
     else:
         signature_form = SignatureForm()
         return render_template(

@@ -79,7 +79,9 @@ def edit(task_order_id):
             url_for("task_orders.form_step_four_review", task_order_id=task_order_id)
         )
     else:
-        return redirect(url_for("task_orders.form_step_one_add_pdf", task_order_id=task_order_id))
+        return redirect(
+            url_for("task_orders.form_step_one_add_pdf", task_order_id=task_order_id)
+        )
 
 
 @task_orders_bp.route("/portfolios/<portfolio_id>/task_orders/form/step_1")
