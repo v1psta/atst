@@ -1,6 +1,6 @@
 {% from "components/icon.html" import Icon %}
 
-{% macro UploadInput(field, show_label=False, watch=False) -%}
+{% macro UploadInput(field, show_label=False, watch=False, token="", object_name="") -%}
 <uploadinput
   inline-template
   {% if not field.errors %}
@@ -11,6 +11,8 @@
   v-bind:watch='{{ watch | string | lower }}'
   name='{{ field.name }}'
   :optional='false'
+  v-bind:token='{{ token | tojson }}'
+  v-bind:object-name='"{{ object_name | string }}"'
   >
   <div>
     <div v-show="hasAttachment" class="uploaded-file">
