@@ -48,7 +48,9 @@ spec:
           image: nginx:alpine
           ports:
             - containerPort: 8442
-              name: http
+              name: main
+            - containerPort: 8443
+              name: auth
           volumeMounts:
             - name: nginx-config
               mountPath: "/etc/nginx/conf.d/atst.conf"
@@ -137,12 +139,31 @@ kind: Service
 metadata:
   labels:
     app: atst
-  name: atst
+  name: atst-main
   namespace: atat
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
 spec:
   ports:
   - port: 80
     targetPort: 8442
+  selector:
+    role: web
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: atst
+  name: atst-auth
+  namespace: atat
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+spec:
+  ports:
+  - port: 80
+    targetPort: 8443
   selector:
     role: web
   type: LoadBalancer
