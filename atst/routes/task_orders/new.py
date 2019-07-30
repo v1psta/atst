@@ -60,7 +60,11 @@ def update_task_order(
 def edit(task_order_id):
     task_order = TaskOrders.get(task_order_id)
 
-    if not task_order.number:
+    if not task_order.pdf:
+        return redirect(
+            url_for("task_orders.form_step_one_add_pdf", task_order_id=task_order_id)
+        )
+    elif not task_order.number:
         return redirect(
             url_for("task_orders.form_step_two_add_number", task_order_id=task_order_id)
         )
