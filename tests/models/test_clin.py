@@ -16,3 +16,8 @@ def test_is_obligated():
 
     clin_4 = CLINFactory.create(jedi_clin_type=JEDICLINType.JEDI_CLIN_4)
     assert not clin_4.is_obligated()
+
+
+def test_is_completed():
+    assert CLINFactory.create().is_completed
+    assert not CLINFactory.create(loas=[]).is_completed

@@ -297,6 +297,7 @@ class CLINFactory(Base):
     jedi_clin_type = factory.LazyFunction(
         lambda *args: random.choice(list(clin.JEDICLINType))
     )
+    loas = factory.LazyFunction(random_loa_numbers)
 
 
 class NotificationRecipientFactory(Base):
