@@ -15,27 +15,29 @@ table.atat-table {
 
   th,
   td {
-    &.table-cell--align-right {
-      text-align: right;
-    }
+    &.table-cell {
+      &--align-right {
+        text-align: right;
+      }
 
-    &.table-cell--align-center {
-      text-align: center;
-    }
+      &--align-center {
+        text-align: center;
+      }
 
-    &.table-cell--shrink {
-      width: 1%;
-    }
+      &--shrink {
+        width: 1%;
+      }
 
-    &.table-cell--expand {
-      width: 100%;
-    }
+      &--expand {
+        width: 100%;
+      }
 
-    &.table-cell--hide-small {
-      display: none;
+      &--hide-small {
+        display: none;
 
-      @include media($medium-screen) {
-        display: table-cell;
+        @include media($medium-screen) {
+          display: table-cell;
+        }
       }
     }
   }
@@ -109,7 +111,7 @@ table.atat-table {
 
   @include panel-margin;
 
-  .responsive-table-wrapper__header {
+  &__header {
     @include panel-base;
     @include panel-theme-default;
 
@@ -122,7 +124,7 @@ table.atat-table {
     align-items: center;
     padding: $gap * 2;
 
-    .responsive-table-wrapper__title {
+    &__title {
       @include h4;
 
       font-size: $lead-font-size;

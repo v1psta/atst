@@ -2,20 +2,22 @@
   margin-top: 6 * $gap;
 }
 
-.task-order-card .label {
-  font-size: $small-font-size;
-  margin-right: 2 * $gap;
-  min-width: 7rem;
-  display: flex;
-  justify-content: space-around;
-}
+.task-order-card {
+  &__buttons .usa-button {
+    min-width: 10rem;
+  }
 
-.task-order-card__buttons .usa-button {
-  min-width: 10rem;
-}
+  &__buttons .usa-button-secondary {
+    min-width: 14rem;
+  }
 
-.task-order-card__buttons .usa-button-secondary {
-  min-width: 14rem;
+  .label {
+    font-size: $small-font-size;
+    margin-right: 2 * $gap;
+    min-width: 7rem;
+    display: flex;
+    justify-content: space-around;
+  }
 }
 
 .task-order {
@@ -60,10 +62,6 @@
 
     .task-order__number {
       text-align: right;
-    }
-
-    .task-order__details {
-      max-width: 65%;
     }
 
     .totals-box {
@@ -225,21 +223,23 @@
     width: 100%;
   }
 
-  .label--pending,
-  .label--started {
-    background-color: $color-gold;
-  }
+  .label {
+    &--pending,
+    &--started {
+      background-color: $color-gold;
+    }
 
-  .label--active {
-    background-color: $color-green;
-  }
+    &--active {
+      background-color: $color-green;
+    }
 
-  .label--expired {
-    background-color: $color-red;
+    &--expired {
+      background-color: $color-red;
+    }
   }
 
   .task-order-document-link {
-    .task-order-document-link__icon {
+    &__icon {
       padding-top: 0.5rem;
     }
 

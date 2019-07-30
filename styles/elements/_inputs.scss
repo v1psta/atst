@@ -85,7 +85,7 @@
     }
   }
 
-  .usa-input__title {
+  &__title {
     display: flex;
     align-items: center;
 
@@ -100,7 +100,7 @@
     }
   }
 
-  .usa-input__help {
+  &__help {
     @include h5;
 
     font-weight: normal;
@@ -112,7 +112,7 @@
     }
   }
 
-  .usa-input__coming-soon {
+  &__coming-soon {
     @include h5;
 
     font-weight: normal;
@@ -153,7 +153,7 @@
     color: grey;
   }
 
-  .usa-input__choices {
+  &__choices {
     // checkbox & radio sets
     legend {
       padding: 0 0 ($gap / 2) 0;
@@ -210,7 +210,7 @@
     }
   }
 
-  .usa-input__message {
+  &__message {
     @include h5;
 
     display: inline-block;
@@ -354,7 +354,7 @@ select {
   display: flex;
   flex-direction: row;
 
-  .phone-input__phone {
+  &__phone {
     margin-right: $gap * 4;
 
     .usa-input {
@@ -370,7 +370,7 @@ select {
     }
   }
 
-  .phone-input__extension {
+  &__extension {
     margin-left: $gap * 4;
 
     .usa-input {

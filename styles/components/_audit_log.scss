@@ -1,22 +1,24 @@
-.audit-log__item {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  justify-content: flex-start;
+.audit-log {
+  &__item {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
 
-  .audit-log__item__timestamp {
-    @include small-label;
+    &__timestamp {
+      @include small-label;
 
-    width: 6rem;
-    flex-shrink: 0;
-    margin-right: $gap * 2;
+      width: 6rem;
+      flex-shrink: 0;
+      margin-right: $gap * 2;
 
-    @include media($medium-screen) {
-      width: 12rem;
+      @include media($medium-screen) {
+        width: 12rem;
+      }
     }
   }
 
-  .audit-log__item__name {
+  &__name {
     margin-top: 0;
     margin-bottom: $gap;
   }

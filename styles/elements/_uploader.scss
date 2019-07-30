@@ -38,14 +38,14 @@
     }
   }
 
-  .uploaded-file__name {
+  &__name {
     vertical-align: middle;
     margin-left: 0.5rem;
     font-weight: $font-bold;
     text-decoration: underline;
   }
 
-  .uploaded-file__remove {
+  &__remove {
     vertical-align: middle;
     margin-left: 2rem;
     font-size: $small-font-size;

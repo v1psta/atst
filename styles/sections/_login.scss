@@ -10,17 +10,17 @@
       text-align: center;
       margin: ($gap * 5) 0 ($gap * 10);
 
-      .login-banner__heading {
+      &__heading {
         @include h1;
       }
 
-      .login-banner__logo {
+      &__logo {
         display: block;
         max-width: 25rem;
         margin: ($gap * 2) auto;
       }
 
-      .login-banner__button {
+      &__button {
         margin-right: 0;
       }
     }

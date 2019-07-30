@@ -1,5 +1,5 @@
 .application-list-item {
-  .application-list-item__environment {
+  &__environment {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -9,12 +9,12 @@
       margin: 0;
     }
 
-    .application-list-item__environment__link {
+    &__link {
       @include icon-link;
       @include icon-link-large;
     }
 
-    .application-list-item__environment__members {
+    &__members {
       display: flex;
       flex-direction: row;
       align-items: center;

@@ -66,31 +66,33 @@
 
   text-decoration: underline;
 
-  &.icon-link--vertical {
+  &--vertical {
     @include icon-link-vertical;
   }
 
-  &.icon-link--large {
+  &--large {
     @include icon-link-large;
   }
 
-  &.icon-link--danger {
+  &--danger {
     @include icon-link-color($color-red, $color-red-lightest);
   }
 
-  &.icon-link--default {
+  &--default {
     @include icon-link-color($color-black-light, $color-gray-lightest);
   }
 
-  &.icon-link--download {
+  &--download {
+    @include icon-link-color($color-black);
     font-weight: $font-normal;
     padding-left: 0;
+
     .icon {
       @include icon-color($color-green);
     }
   }
 
-  &.icon-link--disabled {
+  &--disabled {
     opacity: 0.3;
     text-decoration: none;
     pointer-events: none;
@@ -101,7 +103,7 @@
     }
   }
 
-  &.icon-link--left {
+  &--left {
     padding-left: 0;
   }
 }

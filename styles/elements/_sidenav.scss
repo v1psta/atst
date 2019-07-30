@@ -5,6 +5,7 @@
 
 .sidenav-container {
   position: relative;
+  box-shadow: $box-shadow;
 
   .global-navigation.sidenav {
     height: 100%;
@@ -16,9 +17,8 @@
     }
 
     width: 25rem;
-    box-shadow: $box-shadow;
 
-    .sidenav__title {
+    &__title {
       @include sidenav__header;
 
       font-size: $h3-font-size;
@@ -28,7 +28,7 @@
       opacity: 0.54;
     }
 
-    .sidenav__toggle {
+    &__toggle {
       @include sidenav__header;
 
       font-size: $small-font-size;
@@ -55,7 +55,7 @@
       }
     }
 
-    .sidenav__divider--small {
+    &__divider--small {
       display: block;
       width: 4 * $gap;
       border: 1px solid #d6d7d9;
@@ -63,13 +63,13 @@
       margin-bottom: $gap;
     }
 
-    .sidenav__text {
+    &__text {
       margin: 2 * $gap;
       color: $color-gray;
       font-style: italic;
     }
 
-    .sidenav__link {
+    &__link {
       display: block;
       padding: $gap ($gap * 2);
       color: $color-black;
@@ -78,16 +78,16 @@
       overflow: hidden;
       text-overflow: ellipsis;
 
-      .sidenav__link-icon {
+      &-icon {
         margin-left: -($gap * 0.5);
       }
 
-      &.sidenav__link--disabled {
+      &--disabled {
         color: $color-shadow;
         pointer-events: none;
       }
 
-      &.sidenav__link--add {
+      &--add {
         color: $color-blue;
         font-size: $small-font-size;
 
@@ -97,7 +97,7 @@
         }
       }
 
-      &.sidenav__link--active {
+      &--active {
         @include h4;
 
         color: $color-primary;
@@ -110,7 +110,7 @@
 
         position: relative;
 
-        .sidenav__link-active_indicator .icon {
+        &_indicator .icon {
           @include icon-color($color-primary);
 
           position: absolute;
@@ -179,7 +179,7 @@
     }
   }
 
-  .sidenav--minimized {
+  &--minimized {
     @extend .sidenav;
 
     width: 10rem;
