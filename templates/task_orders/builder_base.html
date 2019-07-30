@@ -37,8 +37,8 @@
       {% call Modal(name='cancel', dismissable=True) %}
         <div class="task-order__modal-cancel">
           <h1>Do you want to save this draft?</h1>
-          <a href="{{ cancel_discard_url }}" class="action-group__action icon-link">No, delete it</a>
-          <a href="{{ cancel_save_url }}" class="action-group__action icon-link">Yes, save for later</a>
+          <button formaction="{{ cancel_discard_url }}" class="usa-button usa-button-primary" type="submit">No, delete it</button>
+          <button formaction="{{ cancel_save_url }}" class="usa-button usa-button-primary" type="submit">Yes, save for later</button>
         </div>
       {% endcall %}
 
