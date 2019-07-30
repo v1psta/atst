@@ -307,7 +307,7 @@ def test_task_orders_submit_task_order(client, user_session, task_order):
 @pytest.mark.parametrize(
     "to_factory_args,expected_step",
     [
-        ({"number": None, "clins": []}, "step_2"),
+        ({"number": "", "clins": []}, "step_2"),
         ({"number": "1234567890123", "clins": []}, "step_3"),
         ({"number": "1234567890123", "create_clins": [1]}, "step_4"),
     ],
