@@ -21,7 +21,10 @@ def render_task_orders_edit(template, portfolio_id=None, task_order_id=None, for
     else:
         render_args["form"] = form or TaskOrderForm()
 
-    render_args["cancel_url"] = url_for(
+    render_args["cancel_save_url"] = url_for(
+        "task_orders.portfolio_funding", portfolio_id=portfolio_id, save=True
+    )
+    render_args["cancel_discard_url"] = url_for(
         "task_orders.portfolio_funding", portfolio_id=portfolio_id
     )
 
@@ -116,7 +119,7 @@ def submit_form_step_one_add_pdf(portfolio_id=None, task_order_id=None):
 
 
 @task_orders_bp.route("/task_orders/<task_order_id>/form/cancel", methods=["POST"])
-@user_can(Permissions.CREATE_TASK_ORDER, message="view task order form")
+@user_can(Permissions.CREATE_TASK_ORDER, message="cancel task order form")
 def cancel_edit(task_order_id):
     save = http_request.args.get("save", False)
     if save:
@@ -132,13 +135,14 @@ def cancel_edit(task_order_id):
             task_order = None
             if task_order_id:
                 task_order = TaskOrders.update(task_order_id, **form.data)
-                portfolio_id = task_order.portfolio_id
             else:
                 task_order = TaskOrders.create(
                     g.current_user, portfolio_id, **form.data
                 )
 
-    return redirect(url_for("task_orders.portfolio_funding", portfolio_id=portfolio_id))
+    return redirect(
+        url_for("task_orders.portfolio_funding", portfolio_id=g.portfolio.id)
+    )
 
 
 @task_orders_bp.route("/task_orders/<task_order_id>/form/step_2")

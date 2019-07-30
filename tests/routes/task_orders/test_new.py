@@ -322,12 +322,40 @@ def test_can_cancel_edit_and_save_task_order(client, user_session, task_order, s
     user_session(task_order.portfolio.owner)
     response = client.post(
         url_for("task_orders.cancel_edit", task_order_id=task_order.id, save=True),
-        data={"number": "0123456789012"},
+        data={"number": "7896564324567"},
     )
     assert response.status_code == 302
 
     updated_task_order = session.query(TaskOrder).get(task_order.id)
-    assert updated_task_order.number == "0123456789012"
+    assert updated_task_order.number == "7896564324567"
+
+
+def test_cancel_edit_does_not_save_invalid_form_input(client, user_session, session):
+    task_order = TaskOrderFactory.create()
+    user_session(task_order.portfolio.owner)
+    response = client.post(
+        url_for("task_orders.cancel_edit", task_order_id=task_order.id, save=True),
+        data={"clins": "not really clins"},
+    )
+    assert response.status_code == 302
+
+    # CLINs should be unchanged
+    updated_task_order = session.query(TaskOrder).get(task_order.id)
+    assert updated_task_order.clins == task_order.clins
+
+
+def test_cancel_edit_without_saving(client, user_session, session):
+    task_order = TaskOrderFactory.create(number=None)
+    user_session(task_order.portfolio.owner)
+    response = client.post(
+        url_for("task_orders.cancel_edit", task_order_id=task_order.id),
+        data={"number": "7643906432984"},
+    )
+    assert response.status_code == 302
+
+    # TO number should be unchanged
+    updated_task_order = session.query(TaskOrder).get(task_order.id)
+    assert updated_task_order.number is None
 
 
 @pytest.mark.skip(reason="Reevaluate how form handles invalid data")
