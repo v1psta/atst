@@ -304,6 +304,25 @@ def test_task_orders_submit_task_order(client, user_session, task_order):
     assert upcoming_task_order.status == TaskOrderStatus.UPCOMING
 
 
+@pytest.mark.parametrize(
+    "to_factory_args,expected_step",
+    [
+        ({"number": None, "clins": []}, "step_2"),
+        ({"number": "1234567890123", "clins": []}, "step_3"),
+        ({"number": "1234567890123", "create_clins": [1]}, "step_4"),
+    ],
+)
+def test_task_orders_edit_redirects_to_latest_incomplete_step(
+    client, user_session, portfolio, to_factory_args, expected_step
+):
+    task_order = TaskOrderFactory.create(**to_factory_args)
+    user_session(portfolio.owner)
+
+    response = client.get(url_for("task_orders.edit", task_order_id=task_order.id))
+
+    assert expected_step in response.location
+
+
 @pytest.mark.skip(reason="Reevaluate how form handles invalid data")
 def test_task_orders_update_invalid_data(client, user_session, portfolio):
     user_session(portfolio.owner)
