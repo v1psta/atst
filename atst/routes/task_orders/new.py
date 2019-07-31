@@ -56,6 +56,35 @@ def update_task_order(
         )
 
 
+@task_orders_bp.route("/task_orders/<task_order_id>/edit")
+@user_can(Permissions.CREATE_TASK_ORDER, message="edit task order form")
+def edit(task_order_id):
+    task_order = TaskOrders.get(task_order_id)
+
+    if not task_order.pdf:
+        return redirect(
+            url_for("task_orders.form_step_one_add_pdf", task_order_id=task_order_id)
+        )
+    elif not task_order.number:
+        return redirect(
+            url_for("task_orders.form_step_two_add_number", task_order_id=task_order_id)
+        )
+    elif not task_order.clins_are_completed:
+        return redirect(
+            url_for(
+                "task_orders.form_step_three_add_clins", task_order_id=task_order_id
+            )
+        )
+    elif task_order.is_completed:
+        return redirect(
+            url_for("task_orders.form_step_four_review", task_order_id=task_order_id)
+        )
+    else:
+        return redirect(
+            url_for("task_orders.form_step_one_add_pdf", task_order_id=task_order_id)
+        )
+
+
 @task_orders_bp.route("/portfolios/<portfolio_id>/task_orders/form/step_1")
 @task_orders_bp.route("/task_orders/<task_order_id>/form/step_1")
 @user_can(Permissions.CREATE_TASK_ORDER, message="view task order form")
