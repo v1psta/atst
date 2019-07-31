@@ -21,7 +21,7 @@ requests = "*"
 apache-libcloud = "*"
 lockfile = "*"
 "flask-rq2" = "*"
-werkzeug = "~= 0.14.1"
+werkzeug = "*"
 PyYAML = "*"
 
 [dev-packages]
