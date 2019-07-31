@@ -57,6 +57,9 @@ spec:
               subPath: atst.conf
             - name: uwsgi-socket-dir
               mountPath: "/var/run/uwsgi"
+            - name: nginx-htpasswd
+              mountPath: "/etc/nginx/.htpasswd"
+              subPath: .htpasswd
       volumes:
         - name: atst-config
           secret:
@@ -81,6 +84,13 @@ spec:
         - name: uwsgi-socket-dir
           emptyDir:
             medium: Memory
+        - name: nginx-htpasswd
+          secret:
+            secretName: atst-nginx-htpasswd
+            items:
+            - key: htpasswd
+              path: .htpasswd
+              mode: 0640
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
