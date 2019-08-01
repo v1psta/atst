@@ -51,6 +51,16 @@ class CLINForm(FlaskForm):
     )
     loas = FieldList(StringField())
 
+    def validate(self, *args, **kwargs):
+        valid = super().validate(*args, **kwargs)
+        if self.start_date.data > self.end_date.data:
+            self.start_date.errors.append(
+                translate("forms.task_order.start_date_error")
+            )
+            return False
+        else:
+            return valid
+
 
 class TaskOrderForm(BaseForm):
     number = StringField(label=translate("forms.task_order.number_description"))
