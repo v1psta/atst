@@ -41,6 +41,16 @@ class Attachment(Base, mixins.TimestampsMixin):
         return attachment
 
     @classmethod
+    def get_or_create(cls, object_name, params):
+        try:
+            return db.session.query(Attachment).filter_by(object_name=object_name).one()
+        except NoResultFound:
+            new_attachment = cls(**params)
+            db.session.add(new_attachment)
+            db.session.commit()
+            return new_attachment
+
+    @classmethod
     def get(cls, id_):
         try:
             return db.session.query(Attachment).filter_by(id=id_).one()

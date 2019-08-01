@@ -438,9 +438,7 @@ def test_task_orders_download_task_order_pdf_access(get_url_assert_status, monke
     rando = user_with()
 
     portfolio = PortfolioFactory.create(owner=owner)
-    task_order = TaskOrderFactory.create(
-        portfolio=portfolio, pdf=AttachmentFactory.create()
-    )
+    task_order = TaskOrderFactory.create(portfolio=portfolio)
 
     url = url_for("task_orders.download_task_order_pdf", task_order_id=task_order.id)
     get_url_assert_status(owner, url, 200)

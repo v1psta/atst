@@ -7,10 +7,13 @@ import boto3
 
 
 def build_uploader(config):
-    if config["CSP"] == "aws":
+    csp = config.get("CSP")
+    if csp == "aws":
         return AwsUploader(config)
-    elif config["CSP"] == "azure":
+    elif csp == "azure":
         return AzureUploader(config)
+    else:
+        return MockUploader(config)
 
 
 class Uploader:
@@ -19,6 +22,14 @@ class Uploader:
 
     def object_name(self):
         return str(uuid4())
+
+
+class MockUploader(Uploader):
+    def __init__(self, config):
+        self.config = config
+
+    def get_token(self):
+        return ({}, self.object_name())
 
 
 class AzureUploader(Uploader):

@@ -2,20 +2,17 @@ from wtforms.fields import (
     BooleanField,
     DecimalField,
     FieldList,
-    FileField,
     FormField,
     StringField,
-    HiddenField
+    HiddenField,
 )
 from wtforms.fields.html5 import DateField
 from wtforms.validators import Required, Optional
-from flask_wtf.file import FileAllowed
 from flask_wtf import FlaskForm
 
 from .data import JEDI_CLIN_TYPES
 from .fields import SelectField
 from .forms import BaseForm
-from atst.forms.validators import FileLength
 from atst.utils.localization import translate
 
 
@@ -70,7 +67,11 @@ class AttachmentForm(BaseForm):
 
 class TaskOrderForm(BaseForm):
     number = StringField(label=translate("forms.task_order.number_description"))
-    pdf = FormField(AttachmentForm, label=translate("task_orders.form.supporting_docs_size_limit"), description=translate("task_orders.form.supporting_docs_size_limit"))
+    pdf = FormField(
+        AttachmentForm,
+        label=translate("task_orders.form.supporting_docs_size_limit"),
+        description=translate("task_orders.form.supporting_docs_size_limit"),
+    )
     clins = FieldList(FormField(CLINForm))
 
 
