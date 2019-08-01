@@ -59,14 +59,15 @@
 
 {% macro TaskOrderActions(task_order) %}
   <div class="task-order-card__buttons">
-    {% if task_order.is_draft %}
+    {% if task_order.is_draft and user_can(permissions.EDIT_TASK_ORDER_DETAILS) %}
       {{ TaskOrderEditButton(task_order, text="Edit") }}
     {% elif task_order.is_expired %}
       {{ TaskOrderReviewButton(task_order, text="View") }}
     {% elif task_order.is_unsigned %}
-      {{ TaskOrderReviewButton(task_order, text="Sign", secondary=True, modal="submit-to-1") }}
+      {% if user_can(permissions.EDIT_TASK_ORDER_DETAILS) %}
+        {{ TaskOrderReviewButton(task_order, text="Sign", secondary=True, modal="submit-to-1") }}
+      {% endif %}
       {{ TaskOrderReviewButton(task_order, text="View") }}
-    {% else %}
     {% endif %}
   </div>
 {% endmacro %}
