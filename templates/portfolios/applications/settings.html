@@ -80,7 +80,7 @@
         {% include "fragments/flash.html" %}
       {% endif %}
 
-      {% if user_can(permissions.EDIT_APPLICATION) %}
+      {% if user_can(permissions.EDIT_ENVIRONMENT) %}
         {% include "fragments/applications/edit_environments.html" %}
 
         {% if user_can(permissions.CREATE_ENVIRONMENT) %}
