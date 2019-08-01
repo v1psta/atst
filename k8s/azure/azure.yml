@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: atat-test
+  name: atat
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
@@ -10,7 +10,7 @@ metadata:
   labels:
     app: atst
   name: atst
-  namespace: atat-test
+  namespace: atat
 spec:
   selector:
     matchLabels:
@@ -28,10 +28,10 @@ spec:
         fsGroup: 101
       containers:
         - name: atst
-          image: registry.atat.code.mil:443/atst-prod:575cfce5
+          image: pwatat.azurecr.io/atat:884d95ada21a5097f5c07f305d8e4e24d0f2a03f
           resources:
             requests:
-               memory: "2500Mi"
+               memory: "500Mi"
           envFrom:
           - configMapRef:
               name: atst-envvars
@@ -39,40 +39,24 @@ spec:
             - name: atst-config
               mountPath: "/opt/atat/atst/atst-overrides.ini"
               subPath: atst-overrides.ini
-            - name: uwsgi-config
-              mountPath: "/opt/atat/atst/uwsgi-config.ini"
-              subPath: uwsgi-config.ini
+            - name: nginx-client-ca-bundle
+              mountPath: "/opt/atat/atst/ssl/server-certs/ca-chain.pem"
+              subPath: client-ca-bundle.pem
             - name: uwsgi-socket-dir
               mountPath: "/var/run/uwsgi"
-        - name: atst-nginx
+        - name: nginx
           image: nginx:alpine
           ports:
             - containerPort: 8442
-              name: http
+              name: main
             - containerPort: 8443
-              name: https
+              name: auth
           volumeMounts:
-            - name: nginx-auth-tls
-              mountPath: "/etc/ssl/private"
-            - name: nginx-client-ca-bundle
-              mountPath: "/etc/ssl/client-ca-bundle.pem"
-              subPath: client-ca-bundle.pem
             - name: nginx-config
               mountPath: "/etc/nginx/conf.d/atst.conf"
               subPath: atst.conf
-            - name: nginx-config
-              mountPath: "/etc/nginx/conf.d/00json_log.conf"
-              subPath: 00json_log.conf
-            - name: nginx-dhparam
-              mountPath: "/etc/ssl/dhparam.pem"
-              subPath: dhparam.pem
-            - name: nginx-htpasswd
-              mountPath: "/etc/nginx/.htpasswd"
-              subPath: .htpasswd
             - name: uwsgi-socket-dir
               mountPath: "/var/run/uwsgi"
-      imagePullSecrets:
-        - name: regcred
       volumes:
         - name: atst-config
           secret:
@@ -81,16 +65,6 @@ spec:
             - key: override.ini
               path: atst-overrides.ini
               mode: 0644
-        - name: nginx-auth-tls
-          secret:
-            secretName: atst-auth-test-ingress-tls
-            items:
-            - key: tls.crt
-              path: auth.atat.crt
-              mode: 0644
-            - key: tls.key
-              path: auth.atat.key
-              mode: 0640
         - name: nginx-client-ca-bundle
           secret:
             secretName: nginx-client-ca-bundle
@@ -104,29 +78,6 @@ spec:
             items:
             - key: nginx-config
               path: atst.conf
-            - key: nginx-json-log-config
-              path: 00json_log.conf
-        - name: nginx-dhparam
-          secret:
-            secretName: dhparam-4096
-            items:
-            - key: dhparam.pem
-              path: dhparam.pem
-              mode: 0640
-        - name: nginx-htpasswd
-          secret:
-            secretName: atst-nginx-htpasswd
-            items:
-            - key: htpasswd
-              path: .htpasswd
-              mode: 0640
-        - name: uwsgi-config
-          configMap:
-            name: atst-config
-            items:
-            - key: uwsgi-config
-              path: uwsgi-config.ini
-              mode: 0644
         - name: uwsgi-socket-dir
           emptyDir:
             medium: Memory
@@ -137,7 +88,7 @@ metadata:
   labels:
     app: atst
   name: atst-worker
-  namespace: atat-test
+  namespace: atat
 spec:
   selector:
     matchLabels:
@@ -155,8 +106,13 @@ spec:
         fsGroup: 101
       containers:
         - name: atst-worker
-          image: registry.atat.code.mil:443/atst-prod:575cfce5
-          args: ["/bin/bash", "-c", "/opt/atat/atst/script/rq_worker"]
+          image: pwatat.azurecr.io/atat:884d95ada21a5097f5c07f305d8e4e24d0f2a03f
+          args: [
+            "/opt/atat/atst/.venv/bin/python",
+            "/opt/atat/atst/.venv/bin/flask",
+            "rq",
+            "worker"
+          ]
           resources:
             requests:
                memory: "500Mi"
@@ -169,8 +125,6 @@ spec:
             - name: atst-config
               mountPath: "/opt/atat/atst/atst-overrides.ini"
               subPath: atst-overrides.ini
-      imagePullSecrets:
-        - name: regcred
       volumes:
         - name: atst-config
           secret:
@@ -185,15 +139,16 @@ kind: Service
 metadata:
   labels:
     app: atst
-  name: atst
-  namespace: atat-test
+  name: atst-main
+  namespace: atat
 spec:
+  loadBalancerIP: 13.92.235.6
   ports:
-  - name: http
-    port: 80
+  - port: 80
     targetPort: 8442
   selector:
     role: web
+  type: LoadBalancer
 ---
 apiVersion: v1
 kind: Service
@@ -201,36 +156,12 @@ metadata:
   labels:
     app: atst
   name: atst-auth
-  namespace: atat-test
+  namespace: atat
 spec:
-  type: NodePort
+  loadBalancerIP: 23.100.24.41
   ports:
-  - name: https
-    protocol: TCP
-    nodePort: 32711
-    port: 8443
+  - port: 80
+    targetPort: 8443
   selector:
     role: web
----
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  name: atst
-  namespace: atat-test
-  annotations:
-    kubernetes.io/tls-acme: "true"
-    kubernetes.io/ingress.class: "nginx"
-    nginx.ingress.kubernetes.io/proxy-body-size: 10m
-spec:
-  tls:
-  - secretName: atst-test-ingress-tls
-    hosts:
-    - test.atat.code.mil
-  rules:
-  - host: test.atat.code.mil
-    http:
-      paths:
-      - path: /
-        backend:
-          serviceName: atst
-          servicePort: 80
+  type: LoadBalancer

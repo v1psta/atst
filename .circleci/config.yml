@@ -2,7 +2,10 @@ version: 2.1
 
 orbs:
     aws-ecr: circleci/aws-ecr@4.0.1
+    aws-eks: circleci/aws-eks@0.1.0
     azure-acr: circleci/azure-acr@0.1.1
+    azure-aks: circleci/azure-aks@0.2.0
+    kubernetes: circleci/kubernetes@0.3.0
 
 defaults:
   appEnvironment: &appEnvironment
@@ -13,6 +16,27 @@ defaults:
     REDIS_URI: redis://localhost:6379
     PIP_VERSION: 18.*
     CRL_STORAGE_PROVIDER: CLOUDFILES
+
+commands:
+  migration_setup:
+    parameters:
+      container_image:
+        type: string
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Setup Environment Variables
+          command: |
+            echo 'export CONTAINER_IMAGE="<< parameters.container_image >>"' >> $BASH_ENV
+      - run: sudo apt-get update
+      - run: sudo apt-get install gettext
+      - kubernetes/install
+  migration_apply:
+    steps:
+      - run:
+          command: ./script/cluster_migration
+          name: Apply Migrations and Seed Roles
 
 jobs:
   app_setup:
@@ -74,6 +98,27 @@ jobs:
           name: "Run Tests"
           command: ./script/cibuild
 
+  aws-migration:
+    executor: aws-eks/python3
+    steps:
+      - migration_setup:
+          container_image: "$AWS_ECR_ACCOUNT_URL/atat:$CIRCLE_SHA1"
+      - aws-eks/update-kubeconfig-with-authenticator:
+          cluster-name: atat
+          aws-region: "${AWS_REGION}"
+      - migration_apply
+
+  azure-migration:
+    executor: azure-aks/default
+    steps:
+      - migration_setup:
+          container_image: "$AZURE_SERVER_NAME/atat:$CIRCLE_SHA1"
+      - azure-aks/update-kubeconfig-with-credentials:
+          cluster-name: atat-cluster
+          install-kubectl: true
+          perform-login: true
+          resource-group: atat
+      - migration_apply
 
 workflows:
   version: 2
@@ -83,6 +128,52 @@ workflows:
       - test:
           requires:
             - app_setup
+      - azure-acr/build_and_push_image:
+          login-server-name: "${AZURE_SERVER_NAME}"
+          registry-name: pwatat
+          repo: atat
+          tag: "${CIRCLE_SHA1}"
+          requires:
+            - test
+          filters:
+            branches:
+              only:
+                - master
+      - azure-migration:
+          requires:
+            - azure-acr/build_and_push_image
+          filters:
+            branches:
+              only:
+                - master
+      - azure-aks/update-container-image:
+          cluster-name: atat-cluster
+          container-image-updates: "atst=${AZURE_SERVER_NAME}/atat:${CIRCLE_SHA1}"
+          namespace: atat
+          resource-name: deployment.apps/atst
+          resource-group: atat
+          # uncomment below for debugging
+          # show-kubectl-command: true
+          requires:
+            - azure-migration
+          filters:
+            branches:
+              only:
+                - master
+      - azure-aks/update-container-image:
+          cluster-name: atat-cluster
+          container-image-updates: "atst-worker=${AZURE_SERVER_NAME}/atat:${CIRCLE_SHA1}"
+          namespace: atat
+          resource-name: deployment.apps/atst-worker
+          resource-group: atat
+          # uncomment below for debugging
+          # show-kubectl-command: true
+          requires:
+            - azure-migration
+          filters:
+            branches:
+              only:
+                - master
       - aws-ecr/build_and_push_image:
           repo: atat
           tag: "${CIRCLE_SHA1}"
@@ -92,13 +183,37 @@ workflows:
             branches:
               only:
                 - master
-      - azure-acr/build_and_push_image:
-          login-server-name: "${AZURE_SERVER_NAME}"
-          registry-name: pwatat
-          repo: atat
-          tag: "${CIRCLE_SHA1}"
+      - aws-migration:
           requires:
-            - test
+            - aws-ecr/build_and_push_image
+          filters:
+            branches:
+              only:
+                - master
+      - aws-eks/update-container-image:
+          cluster-name: atat
+          container-image-updates: "atst=${AWS_ECR_ACCOUNT_URL}/atat:${CIRCLE_SHA1}"
+          namespace: atat
+          resource-name: deployment.apps/atst
+          aws-region: "${AWS_REGION}"
+          # uncomment below for debugging
+          # show-kubectl-command: true
+          requires:
+            - aws-migration
+          filters:
+            branches:
+              only:
+                - master
+      - aws-eks/update-container-image:
+          cluster-name: atat
+          container-image-updates: "atst-worker=${AWS_ECR_ACCOUNT_URL}/atat:${CIRCLE_SHA1}"
+          namespace: atat
+          resource-name: deployment.apps/atst-worker
+          aws-region: "${AWS_REGION}"
+          # uncomment below for debugging
+          # show-kubectl-command: true
+          requires:
+            - aws-migration
           filters:
             branches:
               only:

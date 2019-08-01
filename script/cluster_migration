@@ -1,0 +1,34 @@
+#!/bin/sh
+
+if [ -z "${K8S_CONTEXT+is_set}" ]; then
+  K8S_CMD="kubectl"
+else
+  K8S_CMD="kubectl --context=$K8S_CONTEXT"
+fi
+
+if [ -z "${MIGRATION_TIMEOUT+is_set}" ]; then
+  MIGRATION_TIMEOUT=120s
+fi
+
+echo "Creating job..."
+envsubst < k8s/shared/migration.yaml | $K8S_CMD -n atat apply -f -
+
+echo "Wait for job to finish or timeout..."
+JOB_SUCCESS=$(${K8S_CMD} -n atat wait --for=condition=complete --timeout=${MIGRATION_TIMEOUT} job/migration)
+
+delete_job () {
+  echo "Deleting job..."
+  $K8S_CMD -n atat delete job migration
+}
+
+if echo "$JOB_SUCCESS" | grep -q "condition met"; then
+  echo "Job ran successfully."
+  delete_job
+  exit 0
+else
+  POD_NAME=$(${K8S_CMD} -n atat get pods -l job-name=migration -o=jsonpath='{.items[0].metadata.name}')
+  echo "Job failed:"
+  $K8S_CMD -n atat log $POD_NAME
+  delete_job
+  exit 1
+fi

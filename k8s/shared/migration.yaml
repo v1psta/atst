@@ -1,0 +1,42 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: migration
+  namespace: atat
+spec:
+  ttlSecondsAfterFinished: 100
+  backoffLimit: 2
+  template:
+    spec:
+      containers:
+      - name: migration
+        image: $CONTAINER_IMAGE
+        command: [
+          "/bin/sh", "-c"
+        ]
+        args:
+          - |
+              /opt/atat/atst/.venv/bin/python \
+              /opt/atat/atst/.venv/bin/alembic \
+              upgrade head \
+              && \
+              /opt/atat/atst/.venv/bin/python \
+              /opt/atat/atst/script/seed_roles.py
+        envFrom:
+        - configMapRef:
+            name: atst-envvars
+        - configMapRef:
+            name: atst-worker-envvars
+        volumeMounts:
+          - name: atst-config
+            mountPath: "/opt/atat/atst/atst-overrides.ini"
+            subPath: atst-overrides.ini
+      volumes:
+        - name: atst-config
+          secret:
+            secretName: atst-config-ini
+            items:
+            - key: override.ini
+              path: atst-overrides.ini
+              mode: 0644
+      restartPolicy: Never
