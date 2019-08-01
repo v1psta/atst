@@ -76,13 +76,13 @@
               {% for environment in application.environments %}
                 <li class='accordion__item application-list-item__environment'>
                   <div class='application-list-item__environment__name'>
-                    <span>{{ environment.name }}</span>
+                    <span>{{ environment.displayname }}</span>
                   </div>
-
-                  <a href='{{ url_for("applications.access_environment", environment_id=environment.id)}}' target='_blank' rel='noopener noreferrer' class='application-list-item__environment__csp_link icon-link'>
-                    <span>{{ "portfolios.applications.csp_console_text" | translate }}</span>
-                  </a>
-
+                  {% if g.current_user in environment.users %}
+                    <a href='{{ url_for("applications.access_environment", environment_id=environment.id)}}' target='_blank' rel='noopener noreferrer' class='application-list-item__environment__csp_link icon-link'>
+                      <span>{{ "portfolios.applications.csp_console_text" | translate }}</span>
+                    </a>
+                  {% endif %}
                 </li>
               {% endfor %}
             </ul>
