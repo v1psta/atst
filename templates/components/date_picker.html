@@ -44,6 +44,7 @@
             type="number"
             v-bind:class="{ 'usa-input-error': (month && !isMonthValid) }"
             v-model="month"
+            v-on:change="onInput"
           />
         </div>
 
@@ -79,12 +80,6 @@
           {{ Icon("ok", classes="icon--green") }}
         </div>
       </div>
-
-      <p class="usa-input-error-message" v-bind:class='{% if field.errors %}"form-has-errors"{% endif %}'>
-        {% if field.errors %}
-          {{ field.errors[0] }}
-        {% endif %}
-      </p>
     </fieldset>
   </date-selector>
 

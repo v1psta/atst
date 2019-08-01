@@ -5,6 +5,8 @@ import textinput from './text_input'
 
 const JEDI_CLIN_TYPE = 'jedi_clin_type'
 const OBLIGATED_AMOUNT = 'obligated_amount'
+const START_DATE = 'start_date'
+const END_DATE = 'end_date'
 
 export default {
   name: 'clin-fields',
@@ -26,11 +28,22 @@ export default {
       type: Number,
       default: 0,
     },
+    initialStartDate: {
+      type: String,
+      default: null,
+    },
+    initialEndDate: {
+      type: String,
+      default: null,
+    },
   },
 
   data: function() {
     const loas = this.initialLoaCount == 0 ? 1 : 0
     const indexOffset = this.initialLoaCount
+    const start = new Date(this.initialStartDate)
+    const end = new Date(this.initialEndDate)
+    const popValidation = !this.initialStartDate ? false : start < end
 
     return {
       clinIndex: this.initialClinIndex,
@@ -38,6 +51,10 @@ export default {
       loas: loas,
       clinType: this.initialClinType,
       amount: this.initialAmount || 0,
+      startDate: start,
+      endDate: end,
+      popValid: popValidation,
+      showPopError: !popValidation,
     }
   },
 
@@ -70,6 +87,10 @@ export default {
       })
     },
 
+    checkPopValid: function() {
+      return this.startDate < this.endDate
+    },
+
     handleFieldChange: function(event) {
       if (this._uid === event.parent_uid) {
         if (event.name.includes(JEDI_CLIN_TYPE)) {
@@ -78,6 +99,14 @@ export default {
         } else if (event.name.includes(OBLIGATED_AMOUNT)) {
           this.amount = parseFloat(event.value)
           this.clinChangeEvent()
+        } else if (event.name.includes(START_DATE)) {
+          this.startDate = new Date(event.value)
+          this.popValid = this.checkPopValid()
+          this.showPopError = !this.popValid
+        } else if (event.name.includes(END_DATE)) {
+          this.endDate = new Date(event.value)
+          this.popValid = this.checkPopValid()
+          this.showPopError = !this.popValid
         }
       }
     },

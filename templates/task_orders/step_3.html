@@ -50,6 +50,8 @@
       v-bind:initial-loa-count="{{ fields.loas.data | length or 0 }}"
       v-bind:initial-clin-type="'{{ fields.jedi_clin_type.data }}'"
       v-bind:initial-amount='{{ fields.obligated_amount.data or 0 }}'
+      v-bind:initial-start-date="'{{ fields.start_date.data | string }}'"
+      v-bind:initial-end-date="'{{ fields.end_date.data | string }}'"
     {% else %}
       v-bind:initial-clin-index='clinIndex'
       v-bind:initial-clin-type="'JEDI_CLIN_1'"
@@ -201,11 +203,6 @@
                     {{ Icon("ok", classes="icon--green") }}
                   </div>
                 </div>
-                <p class="usa-input-error-message" v-bind:class="{ 'form-has-errors': !isWithinDateRange }">
-                  {% if maxdate and mindate %}Date must be between {{mindate.strftime("%m/%d/%Y")}} and {{maxdate.strftime("%m/%d/%Y")}}{% endif %}
-                  {% if maxdate and not mindate %}Date must be before or on {{maxdate.strftime("%m/%d/%Y")}}{% endif %}
-                  {% if mindate and not maxdate %}Date must be after or on {{mindate.strftime("%m/%d/%Y")}}{% endif %}
-                </p>
               </fieldset>
             </date-selector>
           </div>
@@ -265,15 +262,21 @@
                     {{ Icon("ok", classes="icon--green") }}
                   </div>
                 </div>
-                <p class="usa-input-error-message" v-bind:class="{ 'form-has-errors': !isWithinDateRange }">
-                  {% if maxdate and mindate %}Date must be between {{mindate.strftime("%m/%d/%Y")}} and {{maxdate.strftime("%m/%d/%Y")}}{% endif %}
-                  {% if maxdate and not mindate %}Date must be before or on {{maxdate.strftime("%m/%d/%Y")}}{% endif %}
-                  {% if mindate and not maxdate %}Date must be after or on {{mindate.strftime("%m/%d/%Y")}}{% endif %}
-                </p>
               </fieldset>
             </date-selector>
           </div>
         {% endif %}
+      </div>
+      <div class="form-row">
+        <p class="usa-input-error-message form-has-errors">
+          <template v-if='showPopError'>
+            {% if fields and fields.start_date.errors %}
+              {{ fields.start_date.errors[0] }}
+            {% else %}
+              {{ "forms.task_order.start_date_error" | translate }}
+            {% endif %}
+          </template>
+        </p>
       </div>
 
       {% if fields %}
