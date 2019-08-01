@@ -67,6 +67,8 @@ export default {
         await this.uploader.upload(file, this.objectName)
         this.attachment = e.target.value
         this.showErrors = false
+        this.$refs.attachmentFilename.value = file.name
+        this.$refs.attachmentObjectName.value = this.objectName
       } catch (err) {
         console.log(err)
         this.showErrors = true

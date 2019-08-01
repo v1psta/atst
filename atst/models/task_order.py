@@ -9,6 +9,7 @@ from werkzeug.datastructures import FileStorage
 from atst.models import Attachment, Base, mixins, types
 from atst.models.clin import JEDICLINType
 from atst.utils.clock import Clock
+from atst.database import db
 
 
 class Status(Enum):
@@ -55,6 +56,11 @@ class TaskOrder(Base, mixins.TimestampsMixin):
         self._pdf = self._set_attachment(new_pdf, "_pdf")
 
     def _set_attachment(self, new_attachment, attribute):
+        if isinstance(new_attachment, dict):
+            attachment = Attachment(**new_attachment)
+            db.session.add(attachment)
+            db.session.commit
+            return attachment
         if isinstance(new_attachment, Attachment):
             return new_attachment
         elif isinstance(new_attachment, FileStorage):

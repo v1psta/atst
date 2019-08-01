@@ -5,6 +5,7 @@ from wtforms.fields import (
     FileField,
     FormField,
     StringField,
+    HiddenField
 )
 from wtforms.fields.html5 import DateField
 from wtforms.validators import Required, Optional
@@ -62,17 +63,14 @@ class CLINForm(FlaskForm):
             return valid
 
 
+class AttachmentForm(BaseForm):
+    filename = HiddenField(id="attachment_filename")
+    object_name = HiddenField(id="attachment_object_name")
+
+
 class TaskOrderForm(BaseForm):
     number = StringField(label=translate("forms.task_order.number_description"))
-    pdf = FileField(
-        None,
-        description=translate("task_orders.form.supporting_docs_size_limit"),
-        validators=[
-            FileAllowed(["pdf"], translate("forms.task_order.file_format_not_allowed")),
-            FileLength(message=translate("forms.validators.file_length")),
-        ],
-        render_kw={"accept": ".pdf,application/pdf"},
-    )
+    pdf = FormField(AttachmentForm, label=translate("task_orders.form.supporting_docs_size_limit"), description=translate("task_orders.form.supporting_docs_size_limit"))
     clins = FieldList(FormField(CLINForm))
 
 

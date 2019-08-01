@@ -114,7 +114,7 @@ def form_step_one_add_pdf(portfolio_id=None, task_order_id=None):
 @task_orders_bp.route("/task_orders/<task_order_id>/form/step_1", methods=["POST"])
 @user_can(Permissions.CREATE_TASK_ORDER, message="update task order form")
 def submit_form_step_one_add_pdf(portfolio_id=None, task_order_id=None):
-    form_data = {**http_request.form, **http_request.files}
+    form_data = {**http_request.form}
     next_page = "task_orders.form_step_two_add_number"
     current_template = "task_orders/step_1.html"
 
