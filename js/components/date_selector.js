@@ -51,18 +51,24 @@ export default {
     month(newMonth, oldMonth) {
       if (!!newMonth && newMonth.length > 2) {
         this.month = oldMonth
+      } else {
+        this.month = newMonth
       }
     },
 
     day(newDay, oldDay) {
       if (!!newDay && newDay.length > 2) {
         this.day = oldDay
+      } else {
+        this.day = newDay
       }
     },
 
     year(newYear, oldYear) {
       if (!!newYear && newYear.length > 4) {
         this.year = oldYear
+      } else {
+        this.year = newYear
       }
     },
   },
@@ -96,7 +102,7 @@ export default {
     isYearValid: function() {
       // Emit a change event
       var valid = parseInt(this.year) >= 1
-      // this._emitChange('year', this.year, valid)
+      this._emitChange('year', this.year, valid)
       return valid
     },
 
@@ -154,9 +160,8 @@ export default {
 
   methods: {
     onInput: function(e) {
-      console.log('emitting event')
       emitEvent('field-change', this, {
-        value: e.target.value,
+        value: this.formattedDate,
         name: this.name,
         watch: this.watch,
         valid: this.isDateValid,
