@@ -47,8 +47,12 @@ spec:
         - name: nginx
           image: nginx:alpine
           ports:
+            - containerPort: 8342
+              name: main-upgrade
             - containerPort: 8442
               name: main
+            - containerPort: 8343
+              name: auth-upgrade
             - containerPort: 8443
               name: auth
           volumeMounts:
@@ -169,8 +173,12 @@ metadata:
     service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
 spec:
   ports:
+  - port: 80
+    targetPort: 8342
+    name: http
   - port: 443
     targetPort: 8442
+    name: https
   selector:
     role: web
   type: LoadBalancer
@@ -186,8 +194,12 @@ metadata:
     service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
 spec:
   ports:
+  - port: 80
+    targetPort: 8343
+    name: http
   - port: 443
     targetPort: 8443
+    name: https
   selector:
     role: web
   type: LoadBalancer

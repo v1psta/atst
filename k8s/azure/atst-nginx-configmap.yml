@@ -7,6 +7,16 @@ metadata:
 data:
   nginx-config: |-
     server {
+        listen 8342;
+        server_name azure.atat.code.mil;
+        return 301 https://$host$request_uri;
+    }
+    server {
+        listen 8343;
+        server_name auth-azure.atat.code.mil;
+        return 301 https://$host$request_uri;
+    }
+    server {
         server_name azure.atat.code.mil;
         # access_log /var/log/nginx/access.log json;
         listen 8442 ssl;
