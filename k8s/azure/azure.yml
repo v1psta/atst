@@ -60,6 +60,10 @@ spec:
             - name: nginx-htpasswd
               mountPath: "/etc/nginx/.htpasswd"
               subPath: .htpasswd
+            - name: tls
+              mountPath: "/etc/ssl/private"
+            - name: nginx-client-ca-bundle
+              mountPath: "/etc/ssl/"
       volumes:
         - name: atst-config
           secret:
@@ -90,6 +94,16 @@ spec:
             items:
             - key: htpasswd
               path: .htpasswd
+              mode: 0640
+        - name: tls
+          secret:
+            secretName: azure-atat-code-mil-tls
+            items:
+            - key: tls.crt
+              path: atat.crt
+              mode: 0644
+            - key: tls.key
+              path: atat.key
               mode: 0640
 ---
 apiVersion: extensions/v1beta1
@@ -154,7 +168,7 @@ metadata:
 spec:
   loadBalancerIP: 13.92.235.6
   ports:
-  - port: 80
+  - port: 443
     targetPort: 8442
   selector:
     role: web
@@ -170,7 +184,7 @@ metadata:
 spec:
   loadBalancerIP: 23.100.24.41
   ports:
-  - port: 80
+  - port: 443
     targetPort: 8443
   selector:
     role: web
