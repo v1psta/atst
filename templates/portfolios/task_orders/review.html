@@ -8,5 +8,7 @@
       <a href="{{ url_for('task_orders.edit', task_order_id=task_order.id) }}" class="usa-button usa-button-secondary" type="submit">Edit</a>
   {% endcall %}
 
-  {% include "fragments/task_order_review.html" %}
+  <div class="task-order">
+    {% include "fragments/task_order_review.html" %}
+  </div>
 {% endblock %}
