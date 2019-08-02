@@ -44,6 +44,7 @@ export default {
     const start = new Date(this.initialStartDate)
     const end = new Date(this.initialEndDate)
     const popValidation = !this.initialStartDate ? false : start < end
+    const showPopValidation = !this.initialStartDate ? false : !popValidation
 
     return {
       clinIndex: this.initialClinIndex,
@@ -54,7 +55,7 @@ export default {
       startDate: start,
       endDate: end,
       popValid: popValidation,
-      showPopError: !popValidation,
+      showPopError: showPopValidation,
     }
   },
 
