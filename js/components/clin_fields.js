@@ -42,8 +42,12 @@ export default {
   data: function() {
     const loas = this.initialLoaCount == 0 ? 1 : 0
     const indexOffset = this.initialLoaCount
-    const start = new Date(this.initialStartDate)
-    const end = new Date(this.initialEndDate)
+    const start = !!this.initialStartDate
+      ? new Date(this.initialStartDate)
+      : undefined
+    const end = !!this.initialEndDate
+      ? new Date(this.initialEndDate)
+      : undefined
     const popValidation = !this.initialStartDate ? false : start < end
     const showPopValidation = !this.initialStartDate ? false : !popValidation
 
@@ -99,8 +103,12 @@ export default {
     },
 
     validatePop: function() {
-      this.popValid = this.checkPopValid()
-      this.showPopError = !this.popValid
+      if (!!this.startDate && !!this.endDate) {
+        // only want to update popValid and showPopError if both dates are filled in
+        this.popValid = this.checkPopValid()
+        this.showPopError = !this.popValid
+      }
+
       emitEvent('field-change', this, {
         name: POP,
         valid: this.checkPopValid(),
@@ -116,10 +124,10 @@ export default {
           this.amount = parseFloat(event.value)
           this.clinChangeEvent()
         } else if (event.name.includes(START_DATE)) {
-          this.startDate = new Date(event.value)
+          if (!!event.value) this.startDate = new Date(event.value)
           this.validatePop()
         } else if (event.name.includes(END_DATE)) {
-          this.endDate = new Date(event.value)
+          if (!!event.value) this.endDate = new Date(event.value)
           this.validatePop()
         }
       }
