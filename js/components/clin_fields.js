@@ -7,6 +7,7 @@ const JEDI_CLIN_TYPE = 'jedi_clin_type'
 const OBLIGATED_AMOUNT = 'obligated_amount'
 const START_DATE = 'start_date'
 const END_DATE = 'end_date'
+const POP = 'period_of_performance'
 
 export default {
   name: 'clin-fields',
@@ -69,6 +70,11 @@ export default {
       clinType: this.clinType,
       amount: this.initialAmount,
     })
+    emitEvent('field-mount', this, {
+      optional: false,
+      name: POP,
+      valid: this.checkPopValid(),
+    })
   },
 
   methods: {
@@ -92,6 +98,15 @@ export default {
       return this.startDate < this.endDate
     },
 
+    validatePop: function() {
+      this.popValid = this.checkPopValid()
+      this.showPopError = !this.popValid
+      emitEvent('field-change', this, {
+        name: POP,
+        valid: this.checkPopValid(),
+      })
+    },
+
     handleFieldChange: function(event) {
       if (this._uid === event.parent_uid) {
         if (event.name.includes(JEDI_CLIN_TYPE)) {
@@ -102,12 +117,10 @@ export default {
           this.clinChangeEvent()
         } else if (event.name.includes(START_DATE)) {
           this.startDate = new Date(event.value)
-          this.popValid = this.checkPopValid()
-          this.showPopError = !this.popValid
+          this.validatePop()
         } else if (event.name.includes(END_DATE)) {
           this.endDate = new Date(event.value)
-          this.popValid = this.checkPopValid()
-          this.showPopError = !this.popValid
+          this.validatePop()
         }
       }
     },
