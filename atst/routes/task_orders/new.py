@@ -139,7 +139,7 @@ def cancel_edit(task_order_id=None, portfolio_id=None):
         else:
             form = TaskOrderForm(form_data)
 
-        if form.validate():
+        if form.validate(flash_invalid=False):
             task_order = None
             if task_order_id:
                 task_order = TaskOrders.update(task_order_id, **form.data)

@@ -1,5 +1,5 @@
 import pytest
-from flask import url_for
+from flask import url_for, get_flashed_messages
 from datetime import timedelta, date
 
 from atst.domain.task_orders import TaskOrders
@@ -342,15 +342,32 @@ def test_cancel_can_create_new_to(client, user_session, portfolio):
 def test_cancel_edit_does_not_save_invalid_form_input(client, user_session, session):
     task_order = TaskOrderFactory.create()
     user_session(task_order.portfolio.owner)
+    bad_data = {"clins-0-jedi_clin_type": "foo"}
     response = client.post(
         url_for("task_orders.cancel_edit", task_order_id=task_order.id, save=True),
-        data={"clins": "not really clins"},
+        data=bad_data,
     )
     assert response.status_code == 302
 
     # CLINs should be unchanged
     updated_task_order = session.query(TaskOrder).get(task_order.id)
     assert updated_task_order.clins == task_order.clins
+
+
+def test_cancel_edit_on_invalid_input_does_not_flash(
+    app, client, user_session, session
+):
+    task_order = TaskOrderFactory.create()
+    user_session(task_order.portfolio.owner)
+
+    bad_data = {"clins-0-jedi_clin_type": "foo"}
+
+    response = client.post(
+        url_for("task_orders.cancel_edit", task_order_id=task_order.id, save=True),
+        data=bad_data,
+    )
+
+    assert len(get_flashed_messages()) == 0
 
 
 def test_cancel_edit_without_saving(client, user_session, session):

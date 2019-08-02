@@ -30,9 +30,9 @@ class BaseForm(FlaskForm):
                     _data[field] = None
         return _data
 
-    def validate(self, *args, **kwargs):
+    def validate(self, *args, flash_invalid=True, **kwargs):
         valid = super().validate(*args, **kwargs)
-        if not valid:
+        if not valid and flash_invalid:
             flash("form_errors")
         return valid
 
