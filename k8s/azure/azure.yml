@@ -60,6 +60,12 @@ spec:
             - name: nginx-htpasswd
               mountPath: "/etc/nginx/.htpasswd"
               subPath: .htpasswd
+            - name: acme-challenge
+              mountPath: "/usr/share/nginx/html/.well-known/acme-challenge/ZZbEjGqx60E5KW9TNZcqyfq4nA8rjD7ay5uP_xxJc9s"
+              subPath: ZZbEjGqx60E5KW9TNZcqyfq4nA8rjD7ay5uP_xxJc9s
+            - name: acme-auth-challenge
+              mountPath: "/usr/share/nginx/html/.well-known/acme-challenge/8pnDhGRBpK28GmYSivrt2CyZLTTL66JhrlL6i5nYbU8"
+              subPath: 8pnDhGRBpK28GmYSivrt2CyZLTTL66JhrlL6i5nYbU8
       volumes:
         - name: atst-config
           secret:
@@ -91,6 +97,20 @@ spec:
             - key: htpasswd
               path: .htpasswd
               mode: 0640
+        - name: acme-challenge
+          secret:
+            secretName: acme
+            items:
+            - key: ZZbEjGqx60E5KW9TNZcqyfq4nA8rjD7ay5uP_xxJc9s
+              path: ZZbEjGqx60E5KW9TNZcqyfq4nA8rjD7ay5uP_xxJc9s
+              mode: 0666
+        - name: acme-auth-challenge
+          secret:
+            secretName: acme-auth
+            items:
+            - key: 8pnDhGRBpK28GmYSivrt2CyZLTTL66JhrlL6i5nYbU8
+              path: 8pnDhGRBpK28GmYSivrt2CyZLTTL66JhrlL6i5nYbU8
+              mode: 0666
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment

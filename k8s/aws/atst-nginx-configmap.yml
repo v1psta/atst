@@ -14,6 +14,10 @@ data:
         # if ($http_x_forwarded_proto != 'https') {
         #     return 301 https://$host$request_uri;
         # }
+        root /usr/share/nginx/html;
+        location /.well-known/acme-challenge/ {
+          try_files $uri =404;
+        }
         location /login-redirect {
             return 301 https://auth-aws.atat.code.mil$request_uri;
         }
@@ -41,6 +45,10 @@ data:
         server_name auth-aws.atat.code.mil;
         listen 8443;
         listen [::]:8443 ipv6only=on;
+        root /usr/share/nginx/html;
+        location /.well-known/acme-challenge/ {
+          try_files $uri =404;
+        }
         # SSL server certificate and private key
         # ssl_certificate /etc/ssl/private/auth.atat.crt;
         # ssl_certificate_key /etc/ssl/private/auth.atat.key;
