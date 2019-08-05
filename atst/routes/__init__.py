@@ -135,7 +135,8 @@ def activity_history():
 @bp.route("/ccpo-users")
 @user_can(Permissions.VIEW_CCPO_USER, message="view ccpo users")
 def ccpo_users():
-    return render_template("ccpo/users.html")
+    users = Users.get_ccpo_users()
+    return render_template("ccpo/users.html", users=users)
 
 
 @bp.route("/about")
