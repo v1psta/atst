@@ -1,0 +1,42 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: crls
+  namespace: atat
+spec:
+  schedule: "0 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: crls
+            image: $CONTAINER_IMAGE
+            command: [
+              "/bin/sh", "-c"
+            ]
+            args: [
+              "/opt/atat/atst/script/sync-crls"
+            ]
+            envFrom:
+            - configMapRef:
+                name: atst-envvars
+            - configMapRef:
+                name: atst-worker-envvars
+            volumeMounts:
+              - name: atst-config
+                mountPath: "/opt/atat/atst/atst-overrides.ini"
+                subPath: atst-overrides.ini
+              - name: crls-vol
+                mountPath: "/opt/atat/atst/crls"
+          volumes:
+            - name: atst-config
+              secret:
+                secretName: atst-config-ini
+                items:
+                - key: override.ini
+                  path: atst-overrides.ini
+                  mode: 0644
+            - name: crls-vol
+              persistentVolumeClaim:
+                claimName: crls-vol-claim
