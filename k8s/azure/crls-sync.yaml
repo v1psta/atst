@@ -1,4 +1,4 @@
-apiVersion: batch/v1
+apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
   name: crls
@@ -9,14 +9,15 @@ spec:
     spec:
       template:
         spec:
+          restartPolicy: OnFailure
           containers:
           - name: crls
-            image: $CONTAINER_IMAGE
+            image: pwatat.azurecr.io/atat:8f1c8b5633ca70168837c885010e7d66d93562dc
             command: [
               "/bin/sh", "-c"
             ]
             args: [
-              "/opt/atat/atst/script/sync-crls"
+              "/opt/atat/atst/script/sync-crls",
             ]
             envFrom:
             - configMapRef:

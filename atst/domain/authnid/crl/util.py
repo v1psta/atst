@@ -1,8 +1,8 @@
-import requests
 import re
 import os
+
 import pendulum
-from html.parser import HTMLParser
+import requests
 
 MODIFIED_TIME_BUFFER = 15 * 60
 

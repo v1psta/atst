@@ -1,10 +1,11 @@
-#!/bin/bash
+#!/bin/sh
 
 # script/sync-crls: update the DOD CRLs and place them where authnid expects them
 set -e
 cd "$(dirname "$0")/.."
 
 mkdir -p crl-tmp crls
-pipenv run python ./atst/domain/authnid/crl/util.py crl-tmp crls
+# need to adjust this command
+./.venv/bin/python ./atst/domain/authnid/crl/util.py crl-tmp crls
 cp -r crl-tmp/* crls/
 rm -rf crl-tmp
