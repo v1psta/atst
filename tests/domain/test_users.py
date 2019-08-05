@@ -74,3 +74,14 @@ def test_update_user_with_last_login():
     last_login = new_user.last_login
     Users.update_last_login(new_user)
     assert new_user.last_login > last_login
+
+
+def test_get_ccpo_users():
+    ccpo_1 = UserFactory.create_ccpo()
+    ccpo_2 = UserFactory.create_ccpo()
+    rando = UserFactory.create()
+
+    ccpo_users = Users.get_ccpo_users()
+    assert ccpo_1 in ccpo_users
+    assert ccpo_2 in ccpo_users
+    assert rando not in ccpo_users
