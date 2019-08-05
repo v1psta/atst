@@ -29,10 +29,6 @@ class MockUploader(Uploader):
         self.config = config
 
     def get_token(self):
-        """
-        Generates a pre-authenticated token and object name which we'll use to
-        upload the file to the CSP.
-        """
         return ({}, self.object_name())
 
 
@@ -41,6 +37,13 @@ class AzureUploader(Uploader):
         self.config = config
 
     def get_token(self):
+        """
+        Generates an Azure SAS token for pre-authorizing a file upload.
+
+        Returns a tuple in the following format: (token_dict, object_name), where
+            - token_dict has a `token` key which contains the SAS token as a string
+            - object_name is a string
+        """
         account = CloudStorageAccount(
             account_name=self.config["AZURE_ACCOUNT_NAME"],
             account_key=self.config["AZURE_STORAGE_KEY"],
@@ -60,6 +63,14 @@ class AwsUploader(Uploader):
         self.config = config
 
     def get_token(self):
+        """
+        Generates an AWS presigned post for pre-authorizing a file upload.
+
+        Returns a tuple in the following format: (token_dict, object_name), where
+            - token_dict contains several fields that will be passed directly into the
+              form before being sent to S3
+            - object_name is a string
+        """
         s3_client = boto3.client(
             "s3",
             aws_access_key_id=self.config["AWS_ACCESS_KEY_ID"],
