@@ -31,6 +31,7 @@ _ALL_PERMS = [
     PermissionSets.EDIT_PORTFOLIO_ADMIN,
     PermissionSets.PORTFOLIO_POC,
     PermissionSets.VIEW_AUDIT_LOG,
+    PermissionSets.EDIT_CCPO_USERS,
 ]
 
 

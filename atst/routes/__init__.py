@@ -132,6 +132,12 @@ def activity_history():
     return render_template("audit_log/audit_log.html", audit_events=audit_events)
 
 
+@bp.route("/ccpo-users")
+@user_can(Permissions.VIEW_CCPO_USER, message="view ccpo users")
+def ccpo_users():
+    return render_template("ccpo/users.html")
+
+
 @bp.route("/about")
 def about():
     return render_template("about.html")
