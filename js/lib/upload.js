@@ -71,4 +71,13 @@ class MockUploader {
   }
 }
 
-export const buildUploader = token => new MockUploader(token)
+export const buildUploader = token => {
+  const cloudProvider = process.env.CLOUD_PROVIDER || "mock"
+  if (cloudProvider === "aws") {
+    return new AwsUploader(token)
+  } else if (cloudProvider === "azure") {
+    return new AzureUploader(token)
+  } else {
+    return new MockUploader(token)
+  }
+}
