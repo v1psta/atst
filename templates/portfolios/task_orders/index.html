@@ -6,16 +6,10 @@
 
 {% block portfolio_content %}
 
-{% macro TaskOrderReviewButton(task_order, text="Edit", secondary=False, modal=None) %}
-  <a href="{{ url_for('task_orders.review_task_order', task_order_id=task_order.id, modal=modal) }}" class="usa-button {{ 'usa-button-secondary' if secondary else '' }}">
-    {{ text }}
-  </a>
-{% endmacro %}
-
-{% macro TaskOrderEditButton(task_order, text="Edit", secondary=False) %}
-  <a href="{{ url_for('task_orders.edit', task_order_id=task_order.id) }}" class="usa-button {{ 'usa-button-secondary' if secondary else '' }}">
-    {{ text }}
-  </a>
+{% macro TaskOrderButton(task_order, route, text="Edit", secondary=False) %}
+<a href="{{ url_for(route, task_order_id=task_order.id) }}" class="usa-button {{ 'usa-button-secondary' if secondary else '' }}">
+  {{ text }}
+</a>
 {% endmacro %}
 
 {% macro TaskOrderDateTime(dt, className="") %}
@@ -60,14 +54,14 @@
 {% macro TaskOrderActions(task_order) %}
   <div class="task-order-card__buttons">
     {% if task_order.is_draft and user_can(permissions.EDIT_TASK_ORDER_DETAILS) %}
-      {{ TaskOrderEditButton(task_order, text="Edit") }}
+      {{ TaskOrderButton(task_order, "task_orders.edit")}}
     {% elif task_order.is_expired %}
-      {{ TaskOrderReviewButton(task_order, text="View") }}
+      {{ TaskOrderButton(task_order, "task_orders.review_task_order", text="View") }}
     {% elif task_order.is_unsigned %}
       {% if user_can(permissions.EDIT_TASK_ORDER_DETAILS) %}
-        {{ TaskOrderReviewButton(task_order, text="Sign", secondary=True, modal="submit-to-1") }}
+        {{ TaskOrderButton(task_order, "task_orders.form_step_four_review", text="Sign", secondary=True) }}
       {% endif %}
-      {{ TaskOrderReviewButton(task_order, text="View") }}
+      {{ TaskOrderButton(task_order, "task_orders.review_task_order", text="View") }}
     {% endif %}
   </div>
 {% endmacro %}
@@ -88,7 +82,7 @@
           <h3>Task Order #{{ task_order.number }}</h3>
         </div>
         <div class="card__body">
-          <b>Obligated amount: </b>${{ task_order.total_obligated_funds }}
+          <b>Obligated amount: </b>{{ task_order.total_obligated_funds | dollars }}
         </div>
       </div>
     {% endfor %}
