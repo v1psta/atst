@@ -29,6 +29,10 @@ class MockUploader(Uploader):
         self.config = config
 
     def get_token(self):
+        """
+        Generates a pre-authenticated token and object name which we'll use to
+        upload the file to the CSP.
+        """
         return ({}, self.object_name())
 
 
@@ -38,12 +42,13 @@ class AzureUploader(Uploader):
 
     def get_token(self):
         account = CloudStorageAccount(
-            account_name="atat", account_key=self.config["AZURE_STORAGE_KEY"]
+            account_name=self.config["AZURE_ACCOUNT_NAME"],
+            account_key=self.config["AZURE_STORAGE_KEY"],
         )
         bbs = account.create_block_blob_service()
         object_name = self.object_name()
         sas_token = bbs.generate_container_shared_access_signature(
-            "task-order-pdfs",
+            self.config["AZURE_TO_BUCKET_NAME"],
             ContainerPermissions.WRITE,
             datetime.utcnow() + timedelta(minutes=15),
         )

@@ -11,7 +11,7 @@ const WrapperComponent = makeTestWrapper({
   templatePath: 'checkbox_input_template.html',
   data: function() {
     return { initialvalue: this.initialData }
-  }
+  },
 })
 
 describe('CheckboxInput Renders Correctly', () => {

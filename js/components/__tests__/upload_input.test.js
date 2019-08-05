@@ -9,7 +9,7 @@ const UploadWrapper = makeTestWrapper({
   templatePath: 'upload_input_template.html',
   data: function() {
     return { initialvalue: this.initialData.initialvalue, token: this.token }
-  }
+  },
 })
 
 const UploadErrorWrapper = makeTestWrapper({
@@ -17,14 +17,14 @@ const UploadErrorWrapper = makeTestWrapper({
   templatePath: 'upload_input_error_template.html',
   data: function() {
     return { initialvalue: null, token: null }
-  }
+  },
 })
 
 describe('UploadInput Test', () => {
   it('should show input and button when no attachment present', () => {
     const wrapper = mount(UploadWrapper, {
       propsData: {
-        initialData: { initialvalue: null, token: "token" },
+        initialData: { initialvalue: null, token: 'token' },
       },
     })
 
@@ -35,7 +35,7 @@ describe('UploadInput Test', () => {
   it('should show file name and hide input', () => {
     const wrapper = mount(UploadWrapper, {
       propsData: {
-        initialData: { initialvalue: "somepdf.pdf", token: "token" }
+        initialData: { initialvalue: 'somepdf.pdf', token: 'token' },
       },
     })
 
@@ -49,8 +49,8 @@ describe('UploadInput Test', () => {
   it('should correctly display error treatment', () => {
     const wrapper = mount(UploadErrorWrapper, {
       propsData: {
-        initialData: { initialvalue: "somepdf.pdf", token: "token" }
-      }
+        initialData: { initialvalue: 'somepdf.pdf', token: 'token' },
+      },
     })
 
     const messageArea = wrapper.find('.usa-input__message')
