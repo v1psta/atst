@@ -61,4 +61,14 @@ class AwsUploader {
   }
 }
 
-export const buildUploader = token => new AzureUploader(token)
+class MockUploader {
+  constructor(token) {
+    this.token = token
+  }
+
+  async upload(file, objectName) {
+    return Promise.resolve({})
+  }
+}
+
+export const buildUploader = token => new MockUploader(token)
