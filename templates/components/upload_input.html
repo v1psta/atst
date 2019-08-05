@@ -46,8 +46,8 @@
           <input type="hidden" name="{{ field.filename.name }}" id="{{ field.filename.name }}" ref="attachmentFilename">
           <input type="hidden" name="{{ field.object_name.name }}" id="{{ field.object_name.name }}" ref="attachmentObjectName">
       </div>
-      {% for error in field.errors %}
-        <span v-show="showErrors" class="usa-input__message">{{error}}</span>
+      {% for error, error_message in field.errors.items() %}
+        <span v-show="showErrors" class="usa-input__message">{{error_message}}</span>
       {% endfor %}
     </div>
   </div>

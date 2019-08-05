@@ -4,8 +4,10 @@
     v-bind:initial-data='initialvalue'
   
   v-bind:watch='false'
-  name='datafield'
+  name='pdf'
   :optional='false'
+  v-bind:token='token'
+  v-bind:object-name='"object_name"'
   >
   <div>
     <div v-show="hasAttachment" class="uploaded-file">
@@ -19,7 +21,7 @@
       
       
       <div v-if="!hideInput" class="upload-widget">
-        <label class="upload-label" for="datafield">
+        <label class="upload-label" for="pdf">
           <span class="upload-button">
             Browse
           </span>
@@ -29,10 +31,13 @@
           v-on:change="addAttachment"
           ref="attachmentInput"
           accept=""
-          id="datafield"
-          name="datafield"
+          id="pdf"
+          name="pdf"
           aria-label="Task Order Upload"
+          v-bind:value="attachment"
           type="file">
+          <input type="hidden" name="pdf-filename" id="pdf-filename" ref="attachmentFilename">
+          <input type="hidden" name="pdf-object_name" id="pdf-object_name" ref="attachmentObjectName">
       </div>
       
     </div>
