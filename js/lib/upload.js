@@ -1,13 +1,16 @@
 import Azure from 'azure-storage'
 
 class AzureUploader {
-  constructor(sasToken) {
+  constructor(accountName, containerName, sasToken) {
+    this.accountName = accountName
+    this.containerName = containerName
     this.sasToken = sasToken.token
   }
 
   async upload(file, objectName) {
+    console.log(this)
     const blobService = Azure.createBlobServiceWithSas(
-      'https://atat.blob.core.windows.net',
+      `https://${this.accountName}.blob.core.windows.net`,
       this.sasToken
     )
     const fileReader = new FileReader()
@@ -23,7 +26,7 @@ class AzureUploader {
     return new Promise((resolve, reject) => {
       fileReader.addEventListener('load', function(f) {
         blobService.createBlockBlobFromText(
-          'task-order-pdfs',
+          this.containerName,
           `${objectName}.pdf`,
           f.target.result,
           options,
@@ -76,7 +79,11 @@ export const buildUploader = token => {
   if (cloudProvider === 'aws') {
     return new AwsUploader(token)
   } else if (cloudProvider === 'azure') {
-    return new AzureUploader(token)
+    return new AzureUploader(
+      process.env.AZURE_ACCOUNT_NAME,
+      process.env.AZURE_CONTAINER_NAME,
+      token
+    )
   } else {
     return new MockUploader(token)
   }
