@@ -34,7 +34,10 @@ class MockUploader(Uploader):
 
 class AzureUploader(Uploader):
     def __init__(self, config):
-        self.config = config
+        self.account_name = config["AZURE_ACCOUNT_NAME"]
+        self.storage_key = config["AZURE_STORAGE_KEY"]
+        self.container_name = config["AZURE_TO_BUCKET_NAME"]
+        self.timeout = timedelta(seconds=config["PERMANENT_SESSION_LIFETIME"])
 
     def get_token(self):
         """
@@ -45,22 +48,26 @@ class AzureUploader(Uploader):
             - object_name is a string
         """
         account = CloudStorageAccount(
-            account_name=self.config["AZURE_ACCOUNT_NAME"],
-            account_key=self.config["AZURE_STORAGE_KEY"],
+            account_name=self.account_name, account_key=self.storage_key
         )
         bbs = account.create_block_blob_service()
         object_name = self.object_name()
         sas_token = bbs.generate_container_shared_access_signature(
-            self.config["AZURE_TO_BUCKET_NAME"],
+            self.container_name,
             ContainerPermissions.WRITE,
-            protocol="https"
+            datetime.utcnow() + self.timeout,
+            protocol="https",
         )
         return ({"token": sas_token}, object_name)
 
 
 class AwsUploader(Uploader):
     def __init__(self, config):
-        self.config = config
+        self.access_key_id = config["AWS_ACCESS_KEY_ID"]
+        self.secret_key = config["AWS_SECRET_KEY"]
+        self.region_name = config["AWS_REGION_NAME"]
+        self.bucket_name = config["AWS_BUCKET_NAME"]
+        self.timeout_secs = config["PERMANENT_SESSION_LIFETIME"]
 
     def get_token(self):
         """
@@ -73,15 +80,15 @@ class AwsUploader(Uploader):
         """
         s3_client = boto3.client(
             "s3",
-            aws_access_key_id=self.config["AWS_ACCESS_KEY_ID"],
-            aws_secret_access_key=self.config["AWS_SECRET_KEY"],
+            aws_access_key_id=self.access_key_id,
+            aws_secret_access_key=self.secret_key,
             config=boto3.session.Config(
-                signature_version="s3v4", region_name=self.config["AWS_REGION_NAME"]
+                signature_version="s3v4", region_name=self.region_name
             ),
         )
         object_name = self.object_name()
         presigned_post = s3_client.generate_presigned_post(
-            self.config["AWS_BUCKET_NAME"],
+            self.bucket_name,
             object_name,
             ExpiresIn=3600,
             Conditions=[
