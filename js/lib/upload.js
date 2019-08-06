@@ -27,7 +27,7 @@ class AzureUploader {
       fileReader.addEventListener('load', f => {
         blobService.createBlockBlobFromText(
           this.containerName,
-          `${objectName}.pdf`,
+          `${objectName}`,
           f.target.result,
           options,
           function(err, result) {

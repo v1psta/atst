@@ -1,5 +1,5 @@
 from azure.storage.common import CloudStorageAccount
-from azure.storage.blob import ContainerPermissions
+from azure.storage.blob import BlobPermissions
 from datetime import datetime, timedelta
 from uuid import uuid4
 
@@ -52,10 +52,11 @@ class AzureUploader(Uploader):
         )
         bbs = account.create_block_blob_service()
         object_name = self.object_name()
-        sas_token = bbs.generate_container_shared_access_signature(
+        sas_token = bbs.generate_blob_shared_access_signature(
             self.container_name,
-            ContainerPermissions.WRITE,
-            datetime.utcnow() + self.timeout,
+            object_name,
+            permission=BlobPermissions.CREATE,
+            expiry=datetime.utcnow() + self.timeout,
             protocol="https",
         )
         return ({"token": sas_token}, object_name)
