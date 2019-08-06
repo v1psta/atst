@@ -135,10 +135,10 @@ workflows:
           tag: "${CIRCLE_SHA1}"
           requires:
             - test
-          filters:
-            branches:
-              only:
-                - master
+          # filters:
+          #   branches:
+          #     only:
+          #       - master
       - azure-migration:
           requires:
             - azure-acr/build_and_push_image
@@ -179,10 +179,10 @@ workflows:
           tag: "${CIRCLE_SHA1}"
           requires:
             - test
-          filters:
-            branches:
-              only:
-                - master
+          # filters:
+          #   branches:
+          #     only:
+          #       - master
       - aws-migration:
           requires:
             - aws-ecr/build_and_push_image
