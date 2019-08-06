@@ -35,10 +35,24 @@
     margin-top: 1rem;
     table-layout: fixed;
 
-    td {
-      overflow: hidden;
+    th {
       white-space: nowrap;
-      text-overflow: ellipsis;
+      word-wrap: normal;
+      padding: 0.8rem;
+
+      &.task-order__clin-amount {
+        width: 25%;
+      }
+    }
+
+    td {
+      padding: 0.8rem;
+
+      &.task-order__loa {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
     }
   }
 
