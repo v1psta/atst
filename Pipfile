@@ -25,7 +25,6 @@ werkzeug = "*"
 PyYAML = "*"
 azure-storage = "*"
 azure-storage-common = "*"
-azure-storage-file = "*"
 boto3 = "*"
 
 [dev-packages]
