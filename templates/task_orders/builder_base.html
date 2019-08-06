@@ -1,6 +1,7 @@
 {% extends "portfolios/base.html" %}
 
 {% from "components/sticky_cta.html" import StickyCTA %}
+{% from "components/modal.html" import Modal %}
 
 {% block portfolio_content %}
   <base-form inline-template>
@@ -26,11 +27,21 @@
           {% endif %}
 
           <a
-            href="{{ cancel_url }}"
+            v-on:click="openModal('cancel')"
             class="action-group__action icon-link">
             {{ "common.cancel" | translate }}
           </a>
         </span>
+      {% endcall %}
+
+      {% call Modal(name='cancel', dismissable=True) %}
+        <div class="task-order__modal-cancel">
+          <h1>Do you want to save this draft?</h1>
+          <div class="task-order__modal-cancel_buttons">
+            <button formaction="{{ cancel_discard_url }}" class="usa-button usa-button-primary" type="submit">No, delete it</button>
+            <button formaction="{{ cancel_save_url }}" class="usa-button usa-button-primary" type="submit">Yes, save for later</button>
+          </div>
+        </div>
       {% endcall %}
 
       {% include "fragments/flash.html" %}
