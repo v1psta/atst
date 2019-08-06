@@ -1,4 +1,5 @@
 import Azure from 'azure-storage'
+import 'whatwg-fetch'
 
 class AzureUploader {
   constructor(accountName, containerName, sasToken) {
