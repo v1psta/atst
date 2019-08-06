@@ -55,15 +55,18 @@
                     <span>{{ "portfolios.applications.team_text" | translate }} ({{ application.members | length }})</span>
                   </a>
                   <div class='separator'></div>
-                  <a class='icon-link triangle-box' v-on:click="toggleSection('{{ section_name }}')">
+                  {% set has_environments = 0 < (application.environments|length) %}
+                  <a class='icon-link triangle-box' v-on:click="toggleSection('{{ section_name }}')" disabled="{{ not has_environments }}">
                     <span>Environments ({{ application.environments|length }})</span>
-                    <span v-if="selectedSection === '{{ section_name }}'">
-                      {{ Icon('caret_up') }}
-                    </span>
-                    <span v-else>
-                      {{ Icon('caret_down') }}
-                    </span>
-                    <div class="triangle-up" v-if="selectedSection === '{{ section_name }}'"></div>
+                    {% if has_environments %}
+                      <span v-if="selectedSection === '{{ section_name }}'">
+                        {{ Icon('caret_up') }}
+                      </span>
+                      <span v-else>
+                        {{ Icon('caret_down') }}
+                      </span>
+                      <div class="triangle-up" v-if="selectedSection === '{{ section_name }}'"></div>
+                    {% endif %}
                   </a>
                 </div>
               </div>
