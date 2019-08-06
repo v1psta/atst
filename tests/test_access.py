@@ -120,6 +120,16 @@ def test_atst_activity_history_access(get_url_assert_status):
     get_url_assert_status(rando, url, 404)
 
 
+# atst.ccpo_users
+def test_atst_ccpo_users_access(get_url_assert_status):
+    ccpo = user_with(PermissionSets.MANAGE_CCPO_USERS)
+    rando = user_with()
+
+    url = url_for("atst.ccpo_users")
+    get_url_assert_status(ccpo, url, 200)
+    get_url_assert_status(rando, url, 404)
+
+
 # applications.access_environment
 def test_applications_access_environment_access(get_url_assert_status):
     dev = UserFactory.create()

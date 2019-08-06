@@ -1,5 +1,9 @@
 class Permissions(object):
+    # ccpo permissions
     VIEW_AUDIT_LOG = "view_audit_log"
+    VIEW_CCPO_USER = "view_ccpo_user"
+    EDIT_CCPO_USER = "edit_ccpo_user"
+    DELETE_CCPO_USER = "delete_ccpo_user"
 
     # base portfolio perms
     VIEW_PORTFOLIO = "view_portfolio"

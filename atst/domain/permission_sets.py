@@ -17,6 +17,7 @@ class PermissionSets(object):
     EDIT_PORTFOLIO_ADMIN = "edit_portfolio_admin"
     PORTFOLIO_POC = "portfolio_poc"
     VIEW_AUDIT_LOG = "view_audit_log"
+    MANAGE_CCPO_USERS = "manage_ccpo_users"
 
     VIEW_APPLICATION = "view_application"
     EDIT_APPLICATION_ENVIRONMENTS = "edit_application_environments"
@@ -56,7 +57,17 @@ ATAT_PERMISSION_SETS = [
         "display_name": "View Audit Log",
         "description": "",
         "permissions": [Permissions.VIEW_AUDIT_LOG],
-    }
+    },
+    {
+        "name": PermissionSets.MANAGE_CCPO_USERS,
+        "display_name": "View Audit Log",
+        "description": "",
+        "permissions": [
+            Permissions.VIEW_CCPO_USER,
+            Permissions.EDIT_CCPO_USER,
+            Permissions.DELETE_CCPO_USER,
+        ],
+    },
 ]
 
 _PORTFOLIO_BASIC_PERMISSION_SETS = [

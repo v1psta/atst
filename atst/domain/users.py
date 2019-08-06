@@ -29,6 +29,10 @@ class Users(object):
         return user
 
     @classmethod
+    def get_ccpo_users(cls):
+        return db.session.query(User).filter(User.permission_sets != None).all()
+
+    @classmethod
     def create(cls, dod_id, permission_sets=None, **kwargs):
         if permission_sets:
             permission_sets = PermissionSets.get_many(permission_sets)
