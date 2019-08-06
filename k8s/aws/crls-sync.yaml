@@ -1,0 +1,43 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: crls
+  namespace: atat
+spec:
+  schedule: "0 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+          - name: crls
+            image: 904153757533.dkr.ecr.us-east-2.amazonaws.com/atat:8f1c8b5633ca70168837c885010e7d66d93562dc
+            command: [
+              "/bin/sh", "-c"
+            ]
+            args: [
+              "/opt/atat/atst/script/sync-crls",
+            ]
+            envFrom:
+            - configMapRef:
+                name: atst-envvars
+            - configMapRef:
+                name: atst-worker-envvars
+            volumeMounts:
+              - name: atst-config
+                mountPath: "/opt/atat/atst/atst-overrides.ini"
+                subPath: atst-overrides.ini
+              - name: crls-vol
+                mountPath: "/opt/atat/atst/crls"
+          volumes:
+            - name: atst-config
+              secret:
+                secretName: atst-config-ini
+                items:
+                - key: override.ini
+                  path: atst-overrides.ini
+                  mode: 0644
+            - name: crls-vol
+              persistentVolumeClaim:
+                claimName: efs

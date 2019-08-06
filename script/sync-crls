@@ -1,14 +1,11 @@
-#! .venv/bin/python
-# Add root application dir to the python path
-import os
-import sys
+#!/bin/sh
 
-parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-sys.path.append(parent_dir)
+# script/sync-crls: update the DOD CRLs and place them where authnid expects them
+set -e
+cd "$(dirname "$0")/.."
 
-from atst.app import make_config, make_app
-
-if __name__ == "__main__":
-    config = make_config({"DISABLE_CRL_CHECK": True})
-    app = make_app(config)
-    app.csp.crls.sync_crls()
+mkdir -p crl-tmp crls
+# need to adjust this command
+./.venv/bin/python ./atst/domain/authnid/crl/util.py crl-tmp crls
+cp -r crl-tmp/* crls/
+rm -rf crl-tmp
