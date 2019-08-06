@@ -24,6 +24,8 @@
           {% include "fragments/dod_login.html" %}
         </div>
 
+        {{ Alert(message=("login.csp_disclaimer" | translate), level="warning") }}
+
         {% with %}
           {% set category_filter=["success", "info", "warning"] %}
           {% include "fragments/flash.html" %}
