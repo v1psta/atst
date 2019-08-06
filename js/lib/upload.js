@@ -8,7 +8,6 @@ class AzureUploader {
   }
 
   async upload(file, objectName) {
-    console.log(this)
     const blobService = Azure.createBlobServiceWithSas(
       `https://${this.accountName}.blob.core.windows.net`,
       this.sasToken
@@ -24,7 +23,7 @@ class AzureUploader {
     }
 
     return new Promise((resolve, reject) => {
-      fileReader.addEventListener('load', function(f) {
+      fileReader.addEventListener('load', f => {
         blobService.createBlockBlobFromText(
           this.containerName,
           `${objectName}.pdf`,
