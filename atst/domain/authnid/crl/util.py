@@ -4,6 +4,11 @@ import os
 import pendulum
 import requests
 
+
+class CRLNotFoundError(Exception):
+    pass
+
+
 MODIFIED_TIME_BUFFER = 15 * 60
 
 
@@ -54,9 +59,9 @@ CRL_LIST = [
     "http://crl.disa.mil/crl/DODEMAILCA_51.crl",
     "http://crl.disa.mil/crl/DODEMAILCA_52.crl",
     "http://crl.disa.mil/crl/DODEMAILCA_59.crl",
-    "http://crl.disa.mil/crl/DODINTEROPERABILITYROOTCA1.crl ",
-    "http://crl.disa.mil/crl/DODINTEROPERABILITYROOTCA2.crl ",
-    "http://crl.disa.mil/crl/USDODCCEBINTEROPERABILITYROOTCA1.crl ",
+    "http://crl.disa.mil/crl/DODINTEROPERABILITYROOTCA1.crl",
+    "http://crl.disa.mil/crl/DODINTEROPERABILITYROOTCA2.crl",
+    "http://crl.disa.mil/crl/USDODCCEBINTEROPERABILITYROOTCA1.crl",
     "http://crl.disa.mil/crl/USDODCCEBINTEROPERABILITYROOTCA2.crl",
     "http://crl.disa.mil/crl/DODNIPRINTERNALNPEROOTCA1.crl",
     "http://crl.disa.mil/crl/DODNPEROOTCA1.crl",
@@ -92,6 +97,9 @@ def write_crl(out_dir, target_dir, crl_location):
         options["headers"] = {"If-Modified-Since": mod_time}
 
     with requests.get(crl_location, **options) as response:
+        if response.status_code > 399:
+            raise CRLNotFoundError()
+
         if response.status_code == 304:
             return False
 
@@ -108,6 +116,15 @@ def remove_bad_crl(out_dir, crl_location):
     os.remove(crl)
 
 
+def log_error(logger, crl_location):
+    if logger:
+        logger.error(
+            "Error downloading {}, removing file and continuing anyway".format(
+                crl_location
+            )
+        )
+
+
 def refresh_crls(out_dir, target_dir, logger):
     for crl_location in CRL_LIST:
         logger.info("updating CRL from {}".format(crl_location))
@@ -117,13 +134,10 @@ def refresh_crls(out_dir, target_dir, logger):
             else:
                 logger.info("no updates for CRL from {}".format(crl_location))
         except requests.exceptions.ChunkedEncodingError:
-            if logger:
-                logger.error(
-                    "Error downloading {}, removing file and continuing anyway".format(
-                        crl_location
-                    )
-                )
+            log_error(logger, crl_location)
             remove_bad_crl(out_dir, crl_location)
+        except CRLNotFoundError:
+            log_error(logger, crl_location)
 
 
 if __name__ == "__main__":
