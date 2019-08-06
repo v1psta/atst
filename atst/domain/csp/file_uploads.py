@@ -53,7 +53,7 @@ class AzureUploader(Uploader):
         sas_token = bbs.generate_container_shared_access_signature(
             self.config["AZURE_TO_BUCKET_NAME"],
             ContainerPermissions.WRITE,
-            datetime.utcnow() + timedelta(minutes=15),
+            protocol="https"
         )
         return ({"token": sas_token}, object_name)
 
