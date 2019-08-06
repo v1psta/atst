@@ -6,6 +6,9 @@ class Uploader:
     def generate_token(self):
         pass
 
+    def generate_download_link(self, object_name, filename):
+        pass
+
     def object_name(self):
         return str(uuid4())
 
@@ -16,6 +19,9 @@ class MockUploader(Uploader):
 
     def get_token(self):
         return ({}, self.object_name())
+
+    def generate_download_link(self, object_name, filename):
+        return ""
 
 
 class AzureUploader(Uploader):
@@ -52,6 +58,21 @@ class AzureUploader(Uploader):
             protocol="https",
         )
         return ({"token": sas_token}, object_name)
+
+    def generate_download_link(self, object_name, filename):
+        account = CloudStorageAccount(
+            account_name=self.account_name, account_key=self.storage_key
+        )
+        bbs = account.create_block_blob_service()
+        sas_token = bbs.generate_blob_shared_access_signature(
+            self.container_name,
+            object_name,
+            permission=BlobPermissions.READ,
+            expiry=datetime.utcnow() + self.timeout,
+            content_disposition=f"attachment; filename={filename}",
+            protocol="https"
+        )
+        return bbs.make_blob_url(self.container_name, object_name, protocol="https", sas_token=sas_token)
 
 
 class AwsUploader(Uploader):
