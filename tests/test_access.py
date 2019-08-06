@@ -122,7 +122,7 @@ def test_atst_activity_history_access(get_url_assert_status):
 
 # atst.ccpo_users
 def test_atst_ccpo_users_access(get_url_assert_status):
-    ccpo = user_with(PermissionSets.EDIT_CCPO_USERS)
+    ccpo = user_with(PermissionSets.MANAGE_CCPO_USERS)
     rando = user_with()
 
     url = url_for("atst.ccpo_users")
