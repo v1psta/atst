@@ -17,8 +17,8 @@ from atst.utils.flash import formatted_flash as flash
 
 
 def render_task_orders_edit(template, portfolio_id=None, task_order_id=None, form=None):
-    result = current_app.uploader.get_token()
-    render_args = {"token": result[0], "object_name": result[1]}
+    (token, object_name) = current_app.uploader.get_token()
+    render_args = {"token": token, "object_name": object_name}
 
     if task_order_id:
         task_order = TaskOrders.get(task_order_id)
