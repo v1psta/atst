@@ -33,7 +33,7 @@ class CRLInterface:
 
     def _log(self, message, level=logging.INFO):
         if self.logger:
-            self.logger.log(level, message, extras={"tags": ["authorization", "crl"]})
+            self.logger.log(level, message, extra={"tags": ["authorization", "crl"]})
 
     def crl_check(self, cert):
         raise NotImplementedError()
