@@ -108,7 +108,7 @@ class AwsUploader(Uploader):
         presigned_post = s3_client.generate_presigned_post(
             self.bucket_name,
             object_name,
-            ExpiresIn=3600,
+            ExpiresIn=self.timeout_secs,
             Conditions=[
                 ("eq", "$Content-Type", "application/pdf"),
                 ("starts-with", "$x-amz-meta-filename", ""),
@@ -116,3 +116,14 @@ class AwsUploader(Uploader):
             Fields={"Content-Type": "application/pdf", "x-amz-meta-filename": ""},
         )
         return (presigned_post, object_name)
+
+    def generate_download_link(self, object_name, filename):
+        s3_client = boto3.client(
+            "s3",
+            aws_access_key_id=self.access_key_id,
+            aws_secret_access_key=self.secret_key,
+            config=boto3.session.Config(
+                signature_version="s3v4", region_name=self.region_name
+            ),
+        )
+        return s3_client.generate_presigned_url("get_object", Params={"Bucket": self.bucket_name, "Key": object_name, "ResponseContentDisposition": f"attachment; filename={filename}"}, ExpiresIn=self.timeout_secs)
