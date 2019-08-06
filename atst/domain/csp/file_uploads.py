@@ -70,9 +70,11 @@ class AzureUploader(Uploader):
             permission=BlobPermissions.READ,
             expiry=datetime.utcnow() + self.timeout,
             content_disposition=f"attachment; filename={filename}",
-            protocol="https"
+            protocol="https",
         )
-        return bbs.make_blob_url(self.container_name, object_name, protocol="https", sas_token=sas_token)
+        return bbs.make_blob_url(
+            self.container_name, object_name, protocol="https", sas_token=sas_token
+        )
 
 
 class AwsUploader(Uploader):
@@ -126,4 +128,12 @@ class AwsUploader(Uploader):
                 signature_version="s3v4", region_name=self.region_name
             ),
         )
-        return s3_client.generate_presigned_url("get_object", Params={"Bucket": self.bucket_name, "Key": object_name, "ResponseContentDisposition": f"attachment; filename={filename}"}, ExpiresIn=self.timeout_secs)
+        return s3_client.generate_presigned_url(
+            "get_object",
+            Params={
+                "Bucket": self.bucket_name,
+                "Key": object_name,
+                "ResponseContentDisposition": f"attachment; filename={filename}",
+            },
+            ExpiresIn=self.timeout_secs,
+        )

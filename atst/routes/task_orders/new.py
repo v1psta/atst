@@ -17,7 +17,9 @@ from atst.models.permissions import Permissions
 from atst.utils.flash import formatted_flash as flash
 
 
-def render_task_orders_edit(template, portfolio_id=None, task_order_id=None, form=None, extra_args=None):
+def render_task_orders_edit(
+    template, portfolio_id=None, task_order_id=None, form=None, extra_args=None
+):
     render_args = extra_args or {}
 
     if task_order_id:
@@ -228,15 +230,16 @@ def form_step_four_review(task_order_id):
     extra_args = {
         "token": token,
         "object_name": object_name,
-        "pdf_download_url": current_app.uploader.generate_download_link(task_order.pdf.object_name, task_order.pdf.filename)
+        "pdf_download_url": current_app.uploader.generate_download_link(
+            task_order.pdf.object_name, task_order.pdf.filename
+        ),
     }
 
     if task_order.is_completed == False:
         raise NoAccessError("task order form review")
 
     return render_task_orders_edit(
-        "task_orders/step_4.html", task_order_id=task_order_id,
-        extra_args=extra_args,
+        "task_orders/step_4.html", task_order_id=task_order_id, extra_args=extra_args
     )
 
 
