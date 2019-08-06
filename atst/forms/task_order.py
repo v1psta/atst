@@ -63,6 +63,7 @@ class CLINForm(FlaskForm):
 class AttachmentForm(BaseForm):
     filename = HiddenField(id="attachment_filename")
     object_name = HiddenField(id="attachment_object_name")
+    accept = ".pdf,application/pdf"
 
 
 class TaskOrderForm(BaseForm):
