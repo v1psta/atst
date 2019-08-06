@@ -1,9 +1,5 @@
-from azure.storage.common import CloudStorageAccount
-from azure.storage.blob import BlobPermissions
 from datetime import datetime, timedelta
 from uuid import uuid4
-
-import boto3
 
 
 def build_uploader(config):
@@ -39,6 +35,11 @@ class AzureUploader(Uploader):
         self.container_name = config["AZURE_TO_BUCKET_NAME"]
         self.timeout = timedelta(seconds=config["PERMANENT_SESSION_LIFETIME"])
 
+        from azure.storage.common import CloudStorageAccount
+        from azure.storage.blob import BlobPermissions
+        self.CloudStorageAccount = CloudStorageAccount
+        self.BlobPermissions = BlobPermissions
+
     def get_token(self):
         """
         Generates an Azure SAS token for pre-authorizing a file upload.
@@ -47,7 +48,7 @@ class AzureUploader(Uploader):
             - token_dict has a `token` key which contains the SAS token as a string
             - object_name is a string
         """
-        account = CloudStorageAccount(
+        account = self.CloudStorageAccount(
             account_name=self.account_name, account_key=self.storage_key
         )
         bbs = account.create_block_blob_service()
@@ -55,7 +56,7 @@ class AzureUploader(Uploader):
         sas_token = bbs.generate_blob_shared_access_signature(
             self.container_name,
             object_name,
-            permission=BlobPermissions.CREATE,
+            permission=self.BlobPermissions.CREATE,
             expiry=datetime.utcnow() + self.timeout,
             protocol="https",
         )
@@ -70,6 +71,9 @@ class AwsUploader(Uploader):
         self.bucket_name = config["AWS_BUCKET_NAME"]
         self.timeout_secs = config["PERMANENT_SESSION_LIFETIME"]
 
+        import boto3
+        self.boto3 = boto3
+
     def get_token(self):
         """
         Generates an AWS presigned post for pre-authorizing a file upload.
@@ -79,7 +83,7 @@ class AwsUploader(Uploader):
               form before being sent to S3
             - object_name is a string
         """
-        s3_client = boto3.client(
+        s3_client = self.boto3.client(
             "s3",
             aws_access_key_id=self.access_key_id,
             aws_secret_access_key=self.secret_key,
