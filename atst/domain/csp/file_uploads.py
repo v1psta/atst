@@ -37,6 +37,7 @@ class AzureUploader(Uploader):
 
         from azure.storage.common import CloudStorageAccount
         from azure.storage.blob import BlobPermissions
+
         self.CloudStorageAccount = CloudStorageAccount
         self.BlobPermissions = BlobPermissions
 
@@ -72,6 +73,7 @@ class AwsUploader(Uploader):
         self.timeout_secs = config["PERMANENT_SESSION_LIFETIME"]
 
         import boto3
+
         self.boto3 = boto3
 
     def get_token(self):
