@@ -64,6 +64,7 @@ ATAT_PERMISSION_SETS = [
         "description": "",
         "permissions": [
             Permissions.VIEW_CCPO_USER,
+            Permissions.CREATE_CCPO_USER,
             Permissions.EDIT_CCPO_USER,
             Permissions.DELETE_CCPO_USER,
         ],

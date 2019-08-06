@@ -24,10 +24,12 @@ from atst.domain.common import Paginator
 from atst.domain.portfolios import Portfolios
 from atst.domain.authz.decorator import user_can_access_decorator as user_can
 from atst.models.permissions import Permissions
+from atst.utils.context_processors import atat as atat_context_processor
 from atst.utils.flash import formatted_flash as flash
 
 
 bp = Blueprint("atst", __name__)
+bp.context_processor(atat_context_processor)
 
 
 @bp.route("/")

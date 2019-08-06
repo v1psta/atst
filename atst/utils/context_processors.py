@@ -119,3 +119,10 @@ def portfolio():
         "funding_end_date": funding_end_date,
         "funded": funded,
     }
+
+
+def atat():
+    return {
+        "permissions": Permissions,
+        "user_can": user_can_view,
+    }
