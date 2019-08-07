@@ -122,7 +122,4 @@ def portfolio():
 
 
 def atat():
-    return {
-        "permissions": Permissions,
-        "user_can": user_can_view,
-    }
+    return {"permissions": Permissions, "user_can": user_can_view}

@@ -154,7 +154,7 @@ def add_new_ccpo_user():
 @user_can(Permissions.CREATE_CCPO_USER, message="create ccpo user")
 def submit_add_new_ccpo_user():
     try:
-        new_user = Users.get_by_dod_id(request.form['dod_id'])
+        new_user = Users.get_by_dod_id(request.form["dod_id"])
         form = CCPOUserForm(obj=new_user)
     except NotFoundError:
         new_user = None
@@ -166,9 +166,9 @@ def submit_add_new_ccpo_user():
 @bp.route("/ccpo-users/confirm-new", methods=["POST"])
 @user_can(Permissions.CREATE_CCPO_USER, message="create ccpo user")
 def confirm_new_ccpo_user():
-    new_user = Users.get_by_dod_id(request.form['dod_id'])
-    # give new perms here
-    # flash w/ success message
+    user = Users.get_by_dod_id(request.form["dod_id"])
+    Users.update_ccpo_permissions(user, add_perms=True)
+    flash("ccpo_user_added", user_name=user.full_name)
     return redirect(url_for("atst.ccpo_users"))
 
 

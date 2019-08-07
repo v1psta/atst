@@ -30,6 +30,11 @@ MESSAGES = {
         "message_template": "You have successfully deleted {{ user_name }} from {{ application_name }}",
         "category": "success",
     },
+    "ccpo_user_added": {
+        "title_template": translate("flash.success"),
+        "message_template": "You have successfully given {{ user_name }} CCPO permissions.",
+        "category": "success",
+    },
     "environment_added": {
         "title_template": translate("flash.success"),
         "message_template": """
