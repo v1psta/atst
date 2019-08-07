@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% from "components/alert.html" import Alert %}
+{% from "components/text_input.html" import TextInput %}
+
+{% block content %}
+  {% set ccpo_user_form = "add-ccpo-user-form" %}
+
+  {% call Alert('Confirm new CCPO user') %}
+
+    <form id="{{ ccpo_user_form }}" action="{{ url_for('atst.confirm_new_ccpo_user') }}" method="POST">
+      {{ form.csrf_token }}
+      <input type="hidden" name="dod_id" value="{{ form.dod_id.data }}">
+      <div>
+        <p>
+          Please confirm that the user details below match the user being given CCPO permissions.
+        </p>
+        <p>
+          {{ new_user.full_name }}
+        </p>
+        <p>
+          {{ new_user.email }}
+        </p>
+      </div>
+      <div class='action-group'>
+        <input
+            type='submit'
+            v-bind:disabled="invalid"
+            class='action-group__action usa-button'
+            value='Confirm and Add User'>
+        <a class='action-group__action icon-link icon-link--default' href="{{ url_for('atst.ccpo_users') }}">{{ "common.cancel" | translate }}</a>
+      </div>
+    </form>
+  {% endcall %}
+{% endblock %}

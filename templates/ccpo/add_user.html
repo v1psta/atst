@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% from "components/text_input.html" import TextInput %}
+
+{% block content %}
+  {% set ccpo_user_form = "add-ccpo-user-form" %}
+
+  <form id="{{ ccpo_user_form }}" action="{{ url_for('atst.submit_add_new_ccpo_user') }}" method="POST">
+    {{ form.csrf_token }}
+    <div class="modal__form--header">
+      <h1>Add new CCPO user</h1>
+    </div>
+    <div class='form-row'>
+      <div class='form-col'>
+        {{ TextInput(form.dod_id, validation='dodId') }}
+      </div>
+    </div>
+    <div class='action-group'>
+      <input
+          type='submit'
+          v-bind:disabled="invalid"
+          class='action-group__action usa-button'
+          value='Next'>
+      <a class='action-group__action icon-link icon-link--default' href="{{ url_for('atst.ccpo_users') }}">{{ "common.cancel" | translate }}</a>
+    </div>
+  </form>
+{% endblock %}
