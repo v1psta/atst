@@ -171,4 +171,6 @@ def test_delete_task_order_with_clins(session):
     task_order = TaskOrderFactory.create(create_clins=[1, 2, 3])
     TaskOrders.delete(task_order.id)
 
-    print(session.query(TaskOrder).filter_by(id=task_order.id).exists())
+    assert not session.query(
+        session.query(TaskOrder).filter_by(id=task_order.id).exists()
+    ).scalar()
