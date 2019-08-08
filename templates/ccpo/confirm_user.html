@@ -5,11 +5,8 @@
 
 {% block content %}
   {% if new_user %}
-    {% set ccpo_user_form = "add-ccpo-user-form" %}
-
     {% call Alert('Confirm new CCPO user') %}
-
-      <form id="{{ ccpo_user_form }}" action="{{ url_for('atst.confirm_new_ccpo_user') }}" method="POST">
+      <form id="add-ccpo-user-form" action="{{ url_for('atst.confirm_new_ccpo_user') }}" method="POST">
         {{ form.csrf_token }}
         <input type="hidden" name="dod_id" value="{{ form.dod_id.data }}">
         <div>
@@ -35,13 +32,11 @@
     {% endcall %}
   {% else %}
     {% call Alert('User not found') %}
-      <div>
-        To add someone as a CCPO user, they must already have an ATAT account.
-        <div class='action-group'>
-          <a class='action-group__action icon-link icon-link--default' href="{{ url_for('atst.ccpo_users') }}">
-            Return to list of CCPO users
-          </a>
-        </div>
+      To add someone as a CCPO user, they must already have an ATAT account.
+      <div class='action-group'>
+        <a class='action-group__action icon-link icon-link--default' href="{{ url_for('atst.ccpo_users') }}">
+          Return to list of CCPO users
+        </a>
       </div>
     {% endcall %}
   {% endif %}
