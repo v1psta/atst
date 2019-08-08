@@ -75,6 +75,5 @@ class TaskOrders(BaseDomainClass):
     @classmethod
     def delete(cls, task_order_id):
         task_order = TaskOrders.get(task_order_id)
-        if task_order:
-            db.session.delete(task_order)
-            db.session.commit()
+        db.session.delete(task_order)
+        db.session.commit()
