@@ -79,7 +79,7 @@ class AwsUploader(Uploader):
             "s3",
             aws_access_key_id=self.access_key_id,
             aws_secret_access_key=self.secret_key,
-            config=boto3.session.Config(
+            config=self.boto3.session.Config(
                 signature_version="s3v4", region_name=self.region_name
             ),
         )
