@@ -4,7 +4,6 @@ from enum import Enum
 from sqlalchemy import Column, DateTime, ForeignKey, String
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import relationship
-from werkzeug.datastructures import FileStorage
 
 from atst.models import Attachment, Base, mixins, types
 from atst.models.clin import JEDICLINType
@@ -57,8 +56,6 @@ class TaskOrder(Base, mixins.TimestampsMixin):
     def _set_attachment(self, new_attachment, attribute):
         if isinstance(new_attachment, Attachment):
             return new_attachment
-        elif isinstance(new_attachment, FileStorage):
-            return Attachment.attach(new_attachment, "task_order", self.id)
         elif isinstance(new_attachment, dict):
             if new_attachment["filename"] and new_attachment["object_name"]:
                 attachment = Attachment.get_or_create(

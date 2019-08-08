@@ -87,7 +87,7 @@ def test_task_orders_submit_form_step_one_add_pdf_existing_to(client, user_sessi
 
 
 def test_task_orders_submit_form_step_one_add_pdf_delete_pdf(
-    client, user_session, portfolio, pdf_upload
+    client, user_session, portfolio
 ):
     user_session(portfolio.owner)
     task_order = TaskOrderFactory.create(portfolio=portfolio)

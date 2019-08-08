@@ -157,12 +157,9 @@ class TestPDF:
 
         assert to.pdf_attachment_id == attachment.id
 
-    def test_setting_pdf_with_file_storage(self):
+    def test_setting_pdf_with_dictionary(self):
         to = TaskOrder()
-        with open(PDF_FILENAME, "rb") as fp:
-            fs = FileStorage(fp, content_type="application/pdf")
-            to.pdf = fs
-
+        to.pdf = {"filename": PDF_FILENAME, "object_name": "123456"}
         assert to.pdf is not None
         assert to.pdf.filename == PDF_FILENAME
 

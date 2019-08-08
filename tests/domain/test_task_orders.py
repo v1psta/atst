@@ -75,7 +75,7 @@ def test_task_order_sorting():
     assert TaskOrders.sort(task_orders) == task_orders
 
 
-def test_create_adds_clins(pdf_upload):
+def test_create_adds_clins():
     portfolio = PortfolioFactory.create()
     clins = [
         {
@@ -100,12 +100,12 @@ def test_create_adds_clins(pdf_upload):
         portfolio_id=portfolio.id,
         number="0123456789",
         clins=clins,
-        pdf=pdf_upload,
+        pdf={"filename": "sample.pdf", "object_name": "1234567"},
     )
     assert len(task_order.clins) == 2
 
 
-def test_update_adds_clins(pdf_upload):
+def test_update_adds_clins():
     task_order = TaskOrderFactory.create(number="1231231234")
     to_number = task_order.number
     clins = [
@@ -131,13 +131,13 @@ def test_update_adds_clins(pdf_upload):
         portfolio_id=task_order.portfolio_id,
         number="0000000000",
         clins=clins,
-        pdf=pdf_upload,
+        pdf={"filename": "sample.pdf", "object_name": "1234567"},
     )
     assert task_order.number != to_number
     assert len(task_order.clins) == 2
 
 
-def test_update_does_not_duplicate_clins(pdf_upload):
+def test_update_does_not_duplicate_clins():
     task_order = TaskOrderFactory.create(
         number="3453453456", create_clins=["123", "456"]
     )
@@ -160,7 +160,10 @@ def test_update_does_not_duplicate_clins(pdf_upload):
         },
     ]
     task_order = TaskOrders.update(
-        task_order_id=task_order.id, number="0000000000", clins=clins, pdf=pdf_upload
+        task_order_id=task_order.id,
+        number="0000000000",
+        clins=clins,
+        pdf={"filename": "sample.pdf", "object_name": "1234567"},
     )
     assert len(task_order.clins) == 2
     for clin in task_order.clins:
