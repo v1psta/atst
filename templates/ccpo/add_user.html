@@ -3,7 +3,7 @@
 {% from "components/text_input.html" import TextInput %}
 
 {% block content %}
-  <form id="add-ccpo-user-form" action="{{ url_for('atst.submit_add_new_ccpo_user') }}" method="POST">
+  <form id="add-ccpo-user-form" action="{{ url_for('ccpo.submit_add_new_ccpo_user') }}" method="POST">
     {{ form.csrf_token }}
     <h1>Add new CCPO user</h1>
     <div class='form-row'>
@@ -17,7 +17,7 @@
               v-bind:disabled="invalid"
               class='action-group__action usa-button'
               value='Next'>
-          <a class='action-group__action icon-link icon-link--default' href="{{ url_for('atst.ccpo_users') }}">{{ "common.cancel" | translate }}</a>
+          <a class='action-group__action icon-link icon-link--default' href="{{ url_for('ccpo.ccpo_users') }}">{{ "common.cancel" | translate }}</a>
         </div>
       </div>
     </div>

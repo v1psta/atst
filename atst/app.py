@@ -18,6 +18,7 @@ from atst.routes.applications import applications_bp
 from atst.routes.dev import bp as dev_routes
 from atst.routes.users import bp as user_routes
 from atst.routes.errors import make_error_pages
+from atst.routes.ccpo import bp as ccpo_routes
 from atst.domain.authnid.crl import CRLCache, NoOpCRLCache
 from atst.domain.auth import apply_authentication
 from atst.domain.authz import Authorization
@@ -78,6 +79,7 @@ def make_app(config):
     app.register_blueprint(task_orders_bp)
     app.register_blueprint(applications_bp)
     app.register_blueprint(user_routes)
+    app.register_blueprint(ccpo_routes)
 
     if ENV != "prod":
         app.register_blueprint(dev_routes)

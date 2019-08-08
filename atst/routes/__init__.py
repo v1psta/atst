@@ -128,50 +128,6 @@ def logout():
     return response
 
 
-@bp.route("/activity-history")
-@user_can(Permissions.VIEW_AUDIT_LOG, message="view activity log")
-def activity_history():
-    pagination_opts = Paginator.get_pagination_opts(request)
-    audit_events = AuditLog.get_all_events(pagination_opts)
-    return render_template("audit_log/audit_log.html", audit_events=audit_events)
-
-
-@bp.route("/ccpo-users")
-@user_can(Permissions.VIEW_CCPO_USER, message="view ccpo users")
-def ccpo_users():
-    users = Users.get_ccpo_users()
-    return render_template("ccpo/users.html", users=users)
-
-
-@bp.route("/ccpo-users/new")
-@user_can(Permissions.CREATE_CCPO_USER, message="create ccpo user")
-def add_new_ccpo_user():
-    form = CCPOUserForm()
-    return render_template("ccpo/add_user.html", form=form)
-
-
-@bp.route("/ccpo-users/new", methods=["POST"])
-@user_can(Permissions.CREATE_CCPO_USER, message="create ccpo user")
-def submit_add_new_ccpo_user():
-    try:
-        new_user = Users.get_by_dod_id(request.form["dod_id"])
-        form = CCPOUserForm(obj=new_user)
-    except NotFoundError:
-        new_user = None
-        form = CCPOUserForm()
-
-    return render_template("ccpo/confirm_user.html", new_user=new_user, form=form)
-
-
-@bp.route("/ccpo-users/confirm-new", methods=["POST"])
-@user_can(Permissions.CREATE_CCPO_USER, message="create ccpo user")
-def confirm_new_ccpo_user():
-    user = Users.get_by_dod_id(request.form["dod_id"])
-    Users.update_ccpo_permissions(user, add_perms=True)
-    flash("ccpo_user_added", user_name=user.full_name)
-    return redirect(url_for("atst.ccpo_users"))
-
-
 @bp.route("/about")
 def about():
     return render_template("about.html")
