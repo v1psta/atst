@@ -58,3 +58,7 @@ browserstacklocal
 
 # python config
 .python-version
+
+# configuration files
+override.ini
+atst-overrides.ini
