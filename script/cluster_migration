@@ -11,7 +11,7 @@ if [ -z "${MIGRATION_TIMEOUT+is_set}" ]; then
 fi
 
 echo "Creating job..."
-envsubst < k8s/shared/migration.yaml | $K8S_CMD -n atat apply -f -
+envsubst < deploy/shared/migration.yaml | $K8S_CMD -n atat apply -f -
 
 echo "Wait for job to finish or timeout..."
 JOB_SUCCESS=$(${K8S_CMD} -n atat wait --for=condition=complete --timeout=${MIGRATION_TIMEOUT} job/migration)
