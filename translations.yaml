@@ -103,6 +103,8 @@ forms:
     name_label: Name
   assign_ppoc:
     dod_id: 'Select new primary point of contact:'
+  ccpo_user:
+    user_not_found: "User not found"
   environments:
     name_label: Environment Name
   edit_user:

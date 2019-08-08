@@ -31,7 +31,7 @@
       </form>
     {% endcall %}
   {% else %}
-    {% call Alert('User not found') %}
+    {% call Alert('forms.ccpo_user.user_not_found' | translate) %}
       To add someone as a CCPO user, they must already have an ATAT account.
       <div class='action-group'>
         <a class='action-group__action icon-link icon-link--default' href="{{ url_for('ccpo.ccpo_users') }}">
