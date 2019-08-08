@@ -344,8 +344,7 @@ def test_cancel_edit_causes_to_to_be_deleted(client, user_session, session):
     assert response.status_code == 302
 
     # TO should be deleted
-    updated_task_order = session.query(TaskOrder).get(task_order.id)
-    assert updated_task_order is None
+    assert session.query(TaskOrder).get(task_order.id) is None
 
 
 def test_cancel_edit_and_save_with_invalid_input_does_not_flash(
