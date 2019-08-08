@@ -28,7 +28,7 @@ def test_submit_add_new_ccpo_user(user_session, client):
     response = client.post(
         url_for("ccpo.submit_add_new_ccpo_user"), data={"dod_id": random_dod_id}
     )
-    assert translate("forms.ccpo_user.user_not_found") in response.data.decode()
+    assert translate("ccpo.form.user_not_found_title") in response.data.decode()
 
 
 def test_confirm_new_ccpo_user(user_session, client):
