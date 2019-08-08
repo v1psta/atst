@@ -159,8 +159,7 @@ def cancel_edit(task_order_id=None, portfolio_id=None):
                     g.current_user, portfolio_id, **form.data
                 )
     elif not save and task_order_id:
-        if task_order_id:
-            TaskOrders.delete(task_order_id)
+        TaskOrders.delete(task_order_id)
 
     return redirect(
         url_for("task_orders.portfolio_funding", portfolio_id=g.portfolio.id)
