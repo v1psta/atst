@@ -1,11 +1,13 @@
 from sqlalchemy import and_, String, ForeignKey, Column, Date, Boolean, Table, TIMESTAMP
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.event import listen
 
 from atst.models import Base, ApplicationRole, types, mixins
 from atst.models.permissions import Permissions
 from atst.models.portfolio_invitation import PortfolioInvitation
 from atst.models.application_invitation import ApplicationInvitation
+from atst.models.mixins.auditable import record_permission_sets_updates
 
 
 users_permission_sets = Table(
@@ -118,3 +120,6 @@ class User(
             for c in self.__table__.columns
             if c.name not in ["id"]
         }
+
+
+listen(User.permission_sets, "bulk_replace", record_permission_sets_updates, raw=True)

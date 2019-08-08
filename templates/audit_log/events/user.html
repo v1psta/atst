@@ -1,4 +1,11 @@
 {% extends "audit_log/events/_base.html" %}
 
 {% block content %}
+  {% if event.changed_state and 'permission_sets' in event.changed_state.keys() %}
+    {% if event.changed_state['permission_sets'][1] == [] %}
+      CCPO superuser access removed
+    {% else %}
+      CCPO superuser access granted
+    {% endif %}
+  {% endif %}
 {% endblock %}
