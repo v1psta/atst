@@ -2,16 +2,6 @@ from datetime import datetime, timedelta
 from uuid import uuid4
 
 
-def build_uploader(config):
-    csp = config.get("CSP")
-    if csp == "aws":
-        return AwsUploader(config)
-    elif csp == "azure":
-        return AzureUploader(config)
-    else:
-        return MockUploader(config)
-
-
 class Uploader:
     def generate_token(self):
         pass

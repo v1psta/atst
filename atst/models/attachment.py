@@ -1,11 +1,10 @@
 from sqlalchemy import Column, String
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm.exc import NoResultFound
-from flask import current_app as app
 
 from atst.models import Base, types, mixins
 from atst.database import db
-from atst.domain.exceptions import NotFoundError, UploadError
+from atst.domain.exceptions import NotFoundError
 
 
 class AttachmentError(Exception):
@@ -20,25 +19,6 @@ class Attachment(Base, mixins.TimestampsMixin):
     object_name = Column(String, unique=True, nullable=False)
     resource = Column(String)
     resource_id = Column(UUID(as_uuid=True), index=True)
-
-    @classmethod
-    def attach(cls, fyle, resource=None, resource_id=None):
-        try:
-            object_name = app.csp.files.upload(fyle)
-        except UploadError as e:
-            raise AttachmentError("Could not add attachment. " + str(e))
-
-        attachment = Attachment(
-            filename=fyle.filename,
-            object_name=object_name,
-            resource=resource,
-            resource_id=resource_id,
-        )
-
-        db.session.add(attachment)
-        db.session.commit()
-
-        return attachment
 
     @classmethod
     def get_or_create(cls, object_name, params):
