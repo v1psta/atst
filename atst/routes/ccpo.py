@@ -56,3 +56,12 @@ def confirm_new_user():
     Users.give_ccpo_perms(user)
     flash("ccpo_user_added", user_name=user.full_name)
     return redirect(url_for("ccpo.users"))
+
+
+@bp.route("/ccpo-users/remove-access/<user_id>", methods=["POST"])
+@user_can(Permissions.DELETE_CCPO_USER, message="remove ccpo user")
+def remove_access(user_id):
+    user = Users.get(user_id)
+    # update user to remove perms
+    # flash alert to confirm removing ccpo perms
+    return redirect(url_for("ccpo.users"))

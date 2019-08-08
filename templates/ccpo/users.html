@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 
+{% from "components/alert.html" import Alert %}
+{% from "components/delete_confirmation.html" import DeleteConfirmation %}
 {% from "components/icon.html" import Icon %}
+{% from "components/modal.html" import Modal %}
 
 {% block content %}
   <div class='col'>
@@ -20,10 +23,21 @@
       </thead>
       <tbody>
         {% for user in users %}
+          {% set modal_id = "disable_ccpo_user_{}".format(user.dod_id) %}
+          {% set disable_button_class = 'button-danger-outline' %}
+          {% if user == g.current_user %}
+            {% set disable_button_class = "usa-button-disabled" %}
+          {% endif %}
+
           <tr>
             <td>{{ user.full_name }}</td>
             <td>{{ user.email }}</td>
             <td>{{ user.dod_id }}</td>
+            <td>
+              <a v-on:click="openModal('{{ modal_id }}')" class='usa-button {{ disable_button_class }}'>
+                Disable
+              </a>
+            </td>
           </tr>
         {% endfor %}
       </tbody>
@@ -36,4 +50,42 @@
     </a>
   {% endif %}
 
+  {% if user_can(permissions.DELETE_CCPO_USER) %}
+    {% for user in users %}
+      {% set modal_id = "disable_ccpo_user_{}".format(user.dod_id) %}
+      {% set confirmation_text = 'remove' %}
+      {% call Modal(name=modal_id) %}
+        {{
+          Alert(
+            title=("components.modal.destructive_title" | translate),
+            message="Confirm removing CCPO superuser access from {}".format(user.full_name),
+            level="warning"
+          )
+        }}
+
+        <delete-confirmation inline-template name="{{ modal_id }}" key="{{ modal_id }}" confirmation-text="{{ confirmation_text }}">
+          <div>
+            <div class="usa-input">
+              <label for="{{ modal_id }}-deleted-text">
+                <span class="usa-input__help">
+                  {{ "common.delete_confirm" | translate({"word": confirmation_text.upper()}) }}
+                </span>
+              </label>
+              <input id="{{ modal_id }}-deleted-text" v-model="deleteText">
+            </div>
+            <div class="action-group">
+              <form method="POST" action="{{ url_for('ccpo.remove_ccpo_access', user_id=user.id)}}">
+                <button class="usa-button button-danger" v-bind:disabled="!valid">
+                  Remove Access
+                </button>
+              </form>
+              <div class="action-group">
+                <a v-on:click="deleteText = ''; $root.closeModal('{{ modal_id }}')" class="action-group__action icon-link icon-link--default">{{ "common.cancel" | translate }}</a>
+              </div>
+            </div>
+          </div>
+        </delete-confirmation>
+      {% endcall %}
+    {% endfor %}
+  {% endif %}
 {% endblock %}
