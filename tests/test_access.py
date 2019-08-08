@@ -130,6 +130,37 @@ def test_atst_ccpo_users_access(get_url_assert_status):
     get_url_assert_status(rando, url, 404)
 
 
+# atst.add_new_ccpo_user
+def test_atst_add_new_ccpo_user_access(get_url_assert_status):
+    ccpo = user_with(PermissionSets.MANAGE_CCPO_USERS)
+    rando = user_with()
+
+    url = url_for("atst.add_new_ccpo_user")
+    get_url_assert_status(ccpo, url, 200)
+    get_url_assert_status(rando, url, 404)
+
+
+# atst.submit_add_new_ccpo_user
+def test_atst_submit_add_new_ccpo_user_access(post_url_assert_status):
+    ccpo = user_with(PermissionSets.MANAGE_CCPO_USERS)
+    rando = user_with()
+
+    url = url_for("atst.submit_add_new_ccpo_user")
+    post_url_assert_status(ccpo, url, 200, data={"dod_id": "1234567890"})
+    post_url_assert_status(rando, url, 404, data={"dod_id": "1234567890"})
+
+
+# atst.confirm_new_ccpo_user
+def test_atst_confirm_new_ccpo_user_access(post_url_assert_status):
+    ccpo = user_with(PermissionSets.MANAGE_CCPO_USERS)
+    rando = user_with()
+    user = UserFactory.create()
+
+    url = url_for("atst.confirm_new_ccpo_user")
+    post_url_assert_status(ccpo, url, 302, data={"dod_id": user.dod_id})
+    post_url_assert_status(rando, url, 404, data={"dod_id": user.dod_id})
+
+
 # applications.access_environment
 def test_applications_access_environment_access(get_url_assert_status):
     dev = UserFactory.create()
