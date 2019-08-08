@@ -161,6 +161,17 @@ def test_ccpo_confirm_new_user_access(post_url_assert_status):
     post_url_assert_status(rando, url, 404, data={"dod_id": user.dod_id})
 
 
+# ccpo.remove_access
+def test_ccpo_remove_access(post_url_assert_status):
+    ccpo = user_with(PermissionSets.MANAGE_CCPO_USERS)
+    rando = user_with()
+    user = UserFactory.create_ccpo()
+
+    url = url_for("ccpo.remove_access", user_id=user.id)
+    post_url_assert_status(rando, url, 404)
+    post_url_assert_status(ccpo, url, 302)
+
+
 # applications.access_environment
 def test_applications_access_environment_access(get_url_assert_status):
     dev = UserFactory.create()

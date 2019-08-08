@@ -40,6 +40,11 @@ MESSAGES = {
         "message_template": translate("ccpo.form.user_not_found_text"),
         "category": "info",
     },
+    "ccpo_user_removed": {
+        "title_template": translate("flash.success"),
+        "message_template": "You have successfully removed {{ user_name }}'s CCPO permissions.",
+        "category": "success",
+    },
     "environment_added": {
         "title_template": translate("flash.success"),
         "message_template": """

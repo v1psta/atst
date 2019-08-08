@@ -62,6 +62,6 @@ def confirm_new_user():
 @user_can(Permissions.DELETE_CCPO_USER, message="remove ccpo user")
 def remove_access(user_id):
     user = Users.get(user_id)
-    # update user to remove perms
-    # flash alert to confirm removing ccpo perms
+    Users.revoke_ccpo_perms(user)
+    flash("ccpo_user_removed", user_name=user.full_name)
     return redirect(url_for("ccpo.users"))
