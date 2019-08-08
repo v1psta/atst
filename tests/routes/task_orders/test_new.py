@@ -334,22 +334,21 @@ def test_cancel_can_create_new_to(client, user_session, portfolio):
     assert response.status_code == 302
 
 
-def test_cancel_edit_does_not_save_invalid_form_input(client, user_session, session):
+def test_cancel_edit_causes_to_to_be_deleted(client, user_session, session):
     task_order = TaskOrderFactory.create()
     user_session(task_order.portfolio.owner)
-    bad_data = {"clins-0-jedi_clin_type": "foo"}
     response = client.post(
-        url_for("task_orders.cancel_edit", task_order_id=task_order.id, save=True),
-        data=bad_data,
+        url_for("task_orders.cancel_edit", task_order_id=task_order.id, save=False),
+        data={},
     )
     assert response.status_code == 302
 
-    # CLINs should be unchanged
+    # TO should be deleted
     updated_task_order = session.query(TaskOrder).get(task_order.id)
-    assert updated_task_order.clins == task_order.clins
+    assert updated_task_order is None
 
 
-def test_cancel_edit_on_invalid_input_does_not_flash(
+def test_cancel_edit_and_save_with_invalid_input_does_not_flash(
     app, client, user_session, session
 ):
     task_order = TaskOrderFactory.create()
@@ -363,20 +362,6 @@ def test_cancel_edit_on_invalid_input_does_not_flash(
     )
 
     assert len(get_flashed_messages()) == 0
-
-
-def test_cancel_edit_without_saving(client, user_session, session):
-    task_order = TaskOrderFactory.create(number=None)
-    user_session(task_order.portfolio.owner)
-    response = client.post(
-        url_for("task_orders.cancel_edit", task_order_id=task_order.id),
-        data={"number": "7643906432984"},
-    )
-    assert response.status_code == 302
-
-    # TO number should be unchanged
-    updated_task_order = session.query(TaskOrder).get(task_order.id)
-    assert updated_task_order.number is None
 
 
 @pytest.mark.skip(reason="Reevaluate how form handles invalid data")
