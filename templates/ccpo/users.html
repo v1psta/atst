@@ -19,6 +19,9 @@
           <th>{{ "common.name" | translate }}</th>
           <th>{{ "common.email" | translate }}</th>
           <th>{{ "common.dod_id" | translate }}</th>
+          {% if user_can(permissions.DELETE_CCPO_USER) %}
+            <th></th>
+          {% endif %}
         </tr>
       </thead>
       <tbody>
@@ -33,11 +36,13 @@
             <td>{{ user.full_name }}</td>
             <td>{{ user.email }}</td>
             <td>{{ user.dod_id }}</td>
-            <td>
-              <a v-on:click="openModal('{{ modal_id }}')" class='usa-button {{ disable_button_class }}'>
-                {{ "common.disable" | translate }}
-              </a>
-            </td>
+            {% if user_can(permissions.DELETE_CCPO_USER) %}
+              <td>
+                <a v-on:click="openModal('{{ modal_id }}')" class='usa-button {{ disable_button_class }}'>
+                  {{ "common.disable" | translate }}
+                </a>
+              </td>
+            {% endif %}
           </tr>
         {% endfor %}
       </tbody>
