@@ -37,6 +37,9 @@ ccpo:
     return_link: Return to list of CCPO users
     user_not_found_title: User not found
     user_not_found_text: To add someone as a CCPO user, they must already have an ATAT account.
+  disable_user:
+    alert_message: "Confirm removing CCPO superuser access from {user_name}"
+    remove_button: Remove Access
 common:
   cancel: Cancel
   close: Close
@@ -46,6 +49,7 @@ common:
   deactivate: Deactivate
   delete_confirm: 'Please type the word {word} to confirm:'
   dod_id: DoD ID
+  disable: Disable
   edit: Edit
   email: Email
   members: Members

@@ -35,7 +35,7 @@
             <td>{{ user.dod_id }}</td>
             <td>
               <a v-on:click="openModal('{{ modal_id }}')" class='usa-button {{ disable_button_class }}'>
-                Disable
+                {{ "common.disable" | translate }}
               </a>
             </td>
           </tr>
@@ -58,7 +58,7 @@
         {{
           Alert(
             title=("components.modal.destructive_title" | translate),
-            message="Confirm removing CCPO superuser access from {}".format(user.full_name),
+            message=("ccpo.disable_user.alert_message" | translate("user_name": user.full_name)),
             level="warning"
           )
         }}
@@ -76,7 +76,7 @@
             <div class="action-group">
               <form method="POST" action="{{ url_for('ccpo.remove_ccpo_access', user_id=user.id)}}">
                 <button class="usa-button button-danger" v-bind:disabled="!valid">
-                  Remove Access
+                  {{ 'ccpo.disable_user.remove_button' | translate }}
                 </button>
               </form>
               <div class="action-group">
