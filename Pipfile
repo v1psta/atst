@@ -23,6 +23,9 @@ lockfile = "*"
 "flask-rq2" = "*"
 werkzeug = "*"
 PyYAML = "*"
+azure-storage = "*"
+azure-storage-common = "*"
+boto3 = "*"
 
 [dev-packages]
 bandit = "*"

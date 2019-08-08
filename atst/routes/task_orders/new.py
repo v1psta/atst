@@ -1,4 +1,11 @@
-from flask import g, redirect, render_template, request as http_request, url_for
+from flask import (
+    g,
+    redirect,
+    render_template,
+    request as http_request,
+    url_for,
+    current_app,
+)
 
 from . import task_orders_bp
 from atst.domain.authz.decorator import user_can_access_decorator as user_can
@@ -10,7 +17,8 @@ from atst.utils.flash import formatted_flash as flash
 
 
 def render_task_orders_edit(template, portfolio_id=None, task_order_id=None, form=None):
-    render_args = {}
+    (token, object_name) = current_app.uploader.get_token()
+    render_args = {"token": token, "object_name": object_name}
 
     if task_order_id:
         task_order = TaskOrders.get(task_order_id)
@@ -110,7 +118,7 @@ def form_step_one_add_pdf(portfolio_id=None, task_order_id=None):
 @task_orders_bp.route("/task_orders/<task_order_id>/form/step_1", methods=["POST"])
 @user_can(Permissions.CREATE_TASK_ORDER, message="update task order form")
 def submit_form_step_one_add_pdf(portfolio_id=None, task_order_id=None):
-    form_data = {**http_request.form, **http_request.files}
+    form_data = {**http_request.form}
     next_page = "task_orders.form_step_two_add_number"
     current_template = "task_orders/step_1.html"
 

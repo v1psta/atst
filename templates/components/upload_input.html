@@ -1,16 +1,18 @@
 {% from "components/icon.html" import Icon %}
 
-{% macro UploadInput(field, show_label=False, watch=False) -%}
+{% macro UploadInput(field, show_label=False, watch=False, token="", object_name="") -%}
 <uploadinput
   inline-template
   {% if not field.errors %}
-    v-bind:initial-data='{{ field.data | tojson }}'
+    v-bind:initial-data='{{ field.filename.data | tojson }}'
   {% else %}
     v-bind:initial-errors='true'
   {% endif %}
   v-bind:watch='{{ watch | string | lower }}'
   name='{{ field.name }}'
   :optional='false'
+  v-bind:token='{{ token | tojson }}'
+  v-bind:object-name='"{{ object_name | string }}"'
   >
   <div>
     <div v-show="hasAttachment" class="uploaded-file">
@@ -41,9 +43,11 @@
           aria-label="Task Order Upload"
           v-bind:value="attachment"
           type="file">
+          <input type="hidden" name="{{ field.filename.name }}" id="{{ field.filename.name }}" ref="attachmentFilename">
+          <input type="hidden" name="{{ field.object_name.name }}" id="{{ field.object_name.name }}" ref="attachmentObjectName">
       </div>
-      {% for error in field.errors %}
-        <span v-show="showErrors" class="usa-input__message">{{error}}</span>
+      {% for error, error_message in field.errors.items() %}
+        <span v-show="showErrors" class="usa-input__message">{{error_message}}</span>
       {% endfor %}
     </div>
   </div>

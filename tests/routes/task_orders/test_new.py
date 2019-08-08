@@ -9,6 +9,10 @@ from atst.models import TaskOrder
 from tests.factories import CLINFactory, PortfolioFactory, TaskOrderFactory, UserFactory
 
 
+def build_pdf_form_data(filename="sample.pdf", object_name="object_name"):
+    return {"pdf-filename": filename, "pdf-object_name": object_name}
+
+
 @pytest.fixture
 def task_order():
     user = UserFactory.create()
@@ -47,19 +51,16 @@ def test_task_orders_form_step_one_add_pdf(client, user_session, portfolio):
     assert response.status_code == 200
 
 
-def test_task_orders_submit_form_step_one_add_pdf(
-    client, user_session, portfolio, pdf_upload, session
-):
+def test_task_orders_submit_form_step_one_add_pdf(client, user_session, portfolio):
     user_session(portfolio.owner)
-    form_data = {"pdf": pdf_upload}
     response = client.post(
         url_for("task_orders.submit_form_step_one_add_pdf", portfolio_id=portfolio.id),
-        data=form_data,
+        data=build_pdf_form_data(),
     )
 
     assert response.status_code == 302
     task_order = portfolio.task_orders[0]
-    assert task_order.pdf.filename == pdf_upload.filename
+    assert task_order.pdf.filename == "sample.pdf"
 
 
 def test_task_orders_form_step_one_add_pdf_existing_to(
@@ -72,35 +73,29 @@ def test_task_orders_form_step_one_add_pdf_existing_to(
     assert response.status_code == 200
 
 
-def test_task_orders_submit_form_step_one_add_pdf_existing_to(
-    client, user_session, task_order, pdf_upload, pdf_upload2
-):
-    task_order.pdf = pdf_upload
-    assert task_order.pdf.filename == pdf_upload.filename
-
+def test_task_orders_submit_form_step_one_add_pdf_existing_to(client, user_session):
+    task_order = TaskOrderFactory.create()
     user_session(task_order.creator)
-    form_data = {"pdf": pdf_upload2}
     response = client.post(
         url_for(
             "task_orders.submit_form_step_one_add_pdf", task_order_id=task_order.id
         ),
-        data=form_data,
+        data=build_pdf_form_data(),
     )
     assert response.status_code == 302
-    assert task_order.pdf.filename == pdf_upload2.filename
+    assert task_order.pdf.filename == "sample.pdf"
 
 
 def test_task_orders_submit_form_step_one_add_pdf_delete_pdf(
     client, user_session, portfolio, pdf_upload
 ):
     user_session(portfolio.owner)
-    task_order = TaskOrderFactory.create(pdf=pdf_upload, portfolio=portfolio)
-    data = {"pdf": ""}
+    task_order = TaskOrderFactory.create(portfolio=portfolio)
     response = client.post(
         url_for(
             "task_orders.submit_form_step_one_add_pdf", task_order_id=task_order.id
         ),
-        data=data,
+        data=build_pdf_form_data(filename="", object_name=""),
     )
     assert task_order.pdf is None
     assert response.status_code == 302

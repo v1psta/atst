@@ -30,6 +30,7 @@ from atst.utils.json import CustomJSONEncoder
 from atst.queue import queue
 from atst.utils.notification_sender import NotificationSender
 from atst.utils.session_limiter import SessionLimiter
+from atst.domain.csp.file_uploads import build_uploader
 
 from logging.config import dictConfig
 from atst.utils.logging import JsonFormatter, RequestContextFilter
@@ -78,6 +79,7 @@ def make_app(config):
     app.register_blueprint(task_orders_bp)
     app.register_blueprint(applications_bp)
     app.register_blueprint(user_routes)
+    app.uploader = build_uploader(app.config)
 
     if ENV != "prod":
         app.register_blueprint(dev_routes)

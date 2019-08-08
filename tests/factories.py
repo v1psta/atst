@@ -269,7 +269,9 @@ class TaskOrderFactory(Base):
     class Meta:
         model = TaskOrder
 
-    portfolio = factory.SubFactory(PortfolioFactory)
+    portfolio = factory.SubFactory(
+        PortfolioFactory, owner=factory.SelfAttribute("..creator")
+    )
     number = factory.LazyFunction(random_task_order_number)
     creator = factory.SubFactory(UserFactory)
     _pdf = factory.SubFactory(AttachmentFactory)

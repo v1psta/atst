@@ -6,6 +6,8 @@ import FormMixin from '../mixins/form'
 import textinput from './text_input'
 import optionsinput from './options_input'
 
+import { buildUploader } from '../lib/upload'
+
 export default {
   name: 'uploadinput',
 
@@ -18,6 +20,12 @@ export default {
 
   props: {
     name: String,
+    token: {
+      type: Object,
+    },
+    objectName: {
+      type: String,
+    },
     initialData: {
       type: String,
     },
@@ -44,6 +52,7 @@ export default {
   },
 
   created: function() {
+    this.uploader = buildUploader(this.token)
     emitEvent('field-mount', this, {
       optional: this.optional,
       name: this.name,
@@ -52,9 +61,19 @@ export default {
   },
 
   methods: {
-    addAttachment: function(e) {
-      this.attachment = e.target.value
-      this.showErrors = false
+    addAttachment: async function(e) {
+      const file = e.target.files[0]
+      try {
+        await this.uploader.upload(file, this.objectName)
+        this.attachment = e.target.value
+        this.showErrors = false
+        this.$refs.attachmentFilename.value = file.name
+        this.$refs.attachmentObjectName.value = this.objectName
+      } catch (err) {
+        console.log(err)
+        this.showErrors = true
+      }
+
       this.changed = true
 
       emitEvent('field-change', this, {

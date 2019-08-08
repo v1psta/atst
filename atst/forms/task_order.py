@@ -2,19 +2,17 @@ from wtforms.fields import (
     BooleanField,
     DecimalField,
     FieldList,
-    FileField,
     FormField,
     StringField,
+    HiddenField,
 )
 from wtforms.fields.html5 import DateField
 from wtforms.validators import Required, Optional
-from flask_wtf.file import FileAllowed
 from flask_wtf import FlaskForm
 
 from .data import JEDI_CLIN_TYPES
 from .fields import SelectField
 from .forms import BaseForm
-from atst.forms.validators import FileLength
 from atst.utils.localization import translate
 
 
@@ -66,16 +64,18 @@ class CLINForm(FlaskForm):
             return valid
 
 
+class AttachmentForm(BaseForm):
+    filename = HiddenField(id="attachment_filename")
+    object_name = HiddenField(id="attachment_object_name")
+    accept = ".pdf,application/pdf"
+
+
 class TaskOrderForm(BaseForm):
     number = StringField(label=translate("forms.task_order.number_description"))
-    pdf = FileField(
-        None,
+    pdf = FormField(
+        AttachmentForm,
+        label=translate("task_orders.form.supporting_docs_size_limit"),
         description=translate("task_orders.form.supporting_docs_size_limit"),
-        validators=[
-            FileAllowed(["pdf"], translate("forms.task_order.file_format_not_allowed")),
-            FileLength(message=translate("forms.validators.file_length")),
-        ],
-        render_kw={"accept": ".pdf,application/pdf"},
     )
     clins = FieldList(FormField(CLINForm))
 
