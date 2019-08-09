@@ -68,7 +68,6 @@ export default {
       const response = await this.uploader.upload(file, this.objectName)
       if (response.ok) {
         this.attachment = e.target.value
-        this.showErrors = false
         this.$refs.attachmentFilename.value = file.name
         this.$refs.attachmentObjectName.value = this.objectName
       } else {

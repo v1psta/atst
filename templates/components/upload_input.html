@@ -44,10 +44,10 @@
           <input type="hidden" name="{{ field.object_name.name }}" id="{{ field.object_name.name }}" ref="attachmentObjectName">
       </div>
       <template v-if="uploadError">
-        <span v-show="showErrors" class="usa-input__message">!{uploadError}</span>
+        <span class="usa-input__message">There was an error uploading your file. Please try again. If you encounter repeated problems uploading this file, please contact CCPO.</span>
       </template>
       {% for error, error_messages in field.errors.items() %}
-        <span v-show="showErrors" class="usa-input__message">{{error_messages[0]}}.</span>
+        <span class="usa-input__message">{{error_messages[0]}}</span>
       {% endfor %}
     </div>
   </div>
