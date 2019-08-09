@@ -43,6 +43,7 @@ selenium = "*"
 honcho = "*"
 blinker = "*"
 pytest-mock = "*"
+detect-secrets = "*"
 
 [requires]
 python_version = "3.7.3"

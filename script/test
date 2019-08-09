@@ -24,5 +24,8 @@ RUN_JS_TESTS="true"
 # Check python formatting
 source ./script/format check
 
+# Check for secrets
+./script/detect_secrets
+
 # Run the shared test script
 source ./script/include/run_test

@@ -256,3 +256,38 @@ location /login-dev {
 ```
 
 The location block will require the same proxy pass configuration as other location blocks for the app.
+
+## Secrets Detection
+
+This project uses [detect-secrets](https://github.com/Yelp/detect-secrets) to help prevent secrets from being checked into source control. Secret detection is run automatically as part of `script/test` and can be run separately with `script/detect_secrets`.
+
+If you need to check in a file that raises false positives from `detect-secrets`, you can add it to the whitelist. Run:
+
+```
+pipenv run detect-secrets scan --update .secrets.baseline
+```
+
+and then:
+
+```
+pipenv run detect-secrets audit .secrets.baseline
+```
+
+The audit will open an interactive prompt where you can whitelist the file. This is useful if you're checking in an entire file that looks like or is a secret (like a sample PKI file).
+
+Alternatively, you can add a `# pragma: allowlist secret` comment to the line that raised the false positive. See the [detect-secret](https://github.com/Yelp/detect-secrets#inline-allowlisting) docs for more information.
+
+It's recommended that you add a pre-commit hook to invoke `script/detect_secrets`. Add the example below or something equivalent to `.git/hooks/pre-commit`:
+
+```
+#!/usr/bin/env bash
+
+if ./script/detect_secrets staged; then
+  echo "secrets check passed"
+else
+  echo -e "**SECRETS DETECTED**"
+  exit 1
+fi
+```
+
+Also note that if the line number of a previously whitelisted secret changes, the whitelist file, `.secrets.baseline`, will be updated and needs to be committed.
