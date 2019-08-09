@@ -146,7 +146,7 @@ def test_ccpo_submit_new_user_access(post_url_assert_status):
     rando = user_with()
 
     url = url_for("ccpo.submit_new_user")
-    post_url_assert_status(ccpo, url, 200, data={"dod_id": "1234567890"})
+    post_url_assert_status(ccpo, url, 302, data={"dod_id": "1234567890"})
     post_url_assert_status(rando, url, 404, data={"dod_id": "1234567890"})
 
 

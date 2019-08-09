@@ -43,8 +43,8 @@ def submit_new_user():
         new_user = Users.get_by_dod_id(request.form["dod_id"])
         form = CCPOUserForm(obj=new_user)
     except NotFoundError:
-        new_user = None
-        form = CCPOUserForm()
+        flash("ccpo_user_not_found")
+        return redirect(url_for("ccpo.users"))
 
     return render_template("ccpo/confirm_user.html", new_user=new_user, form=form)
 

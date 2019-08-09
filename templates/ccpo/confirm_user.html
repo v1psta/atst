@@ -30,15 +30,5 @@
         </a>
       </div>
     </form>
-  {% else %}
-    <h3>{{ 'ccpo.form.user_not_found_title' | translate }}</h3>
-    <p>
-      {{ "ccpo.form.user_not_found_text" | translate }}
-    </p>
-    <div class='action-group'>
-      <a class='action-group__action icon-link icon-link--default' href="{{ url_for('ccpo.users') }}">
-        {{ "ccpo.form.return_link" | translate }}
-      </a>
-    </div>
   {% endif %}
 {% endblock %}

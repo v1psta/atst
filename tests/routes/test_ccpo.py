@@ -24,11 +24,11 @@ def test_submit_new_user(user_session, client):
     )
     assert new_user.email in response.data.decode()
 
-    # give person with out ATAT account CCPO permissions
+    # give person without ATAT account CCPO permissions
     response = client.post(
         url_for("ccpo.submit_new_user"), data={"dod_id": random_dod_id}
     )
-    assert translate("ccpo.form.user_not_found_title") in response.data.decode()
+    assert url_for("ccpo.users") in response.location
 
 
 def test_confirm_new_user(user_session, client):

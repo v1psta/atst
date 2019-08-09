@@ -35,6 +35,11 @@ MESSAGES = {
         "message_template": "You have successfully given {{ user_name }} CCPO permissions.",
         "category": "success",
     },
+    "ccpo_user_not_found": {
+        "title_template": translate("ccpo.form.user_not_found_title"),
+        "message_template": translate("ccpo.form.user_not_found_text"),
+        "category": "info",
+    },
     "environment_added": {
         "title_template": translate("flash.success"),
         "message_template": """
