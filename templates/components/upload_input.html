@@ -30,9 +30,6 @@
           <span class="upload-button">
             Browse
           </span>
-          {% if field.errors %}
-            <span v-show="showErrors">{{ Icon('alert',classes="icon-validation") }}</span>
-          {% endif %}
         </label>
         <input
           v-on:change="addAttachment"
@@ -46,8 +43,11 @@
           <input type="hidden" name="{{ field.filename.name }}" id="{{ field.filename.name }}" ref="attachmentFilename">
           <input type="hidden" name="{{ field.object_name.name }}" id="{{ field.object_name.name }}" ref="attachmentObjectName">
       </div>
-      {% for error, error_message in field.errors.items() %}
-        <span v-show="showErrors" class="usa-input__message">{{error_message}}</span>
+      <template v-if="uploadError">
+        <span v-show="showErrors" class="usa-input__message">!{uploadError}</span>
+      </template>
+      {% for error, error_messages in field.errors.items() %}
+        <span v-show="showErrors" class="usa-input__message">{{error_messages[0]}}.</span>
       {% endfor %}
     </div>
   </div>
