@@ -7,6 +7,7 @@ from atst.models.task_order import Status as TaskOrderStatus
 from atst.models import TaskOrder
 
 from tests.factories import CLINFactory, PortfolioFactory, TaskOrderFactory, UserFactory
+from tests.utils import captured_templates
 
 
 def build_pdf_form_data(filename="sample.pdf", object_name="object_name"):
@@ -99,6 +100,42 @@ def test_task_orders_submit_form_step_one_add_pdf_delete_pdf(
     )
     assert task_order.pdf is None
     assert response.status_code == 302
+
+
+def test_task_orders_submit_form_step_one_validates_filename(
+    app, client, user_session, portfolio
+):
+    user_session(portfolio.owner)
+    with captured_templates(app) as templates:
+        client.post(
+            url_for(
+                "task_orders.submit_form_step_one_add_pdf", portfolio_id=portfolio.id
+            ),
+            data={"pdf-filename": "a" * 1024},
+            follow_redirects=True,
+        )
+
+        _, context = templates[-1]
+
+        assert "filename" in context["form"].pdf.errors
+
+
+def test_task_orders_submit_form_step_one_validates_object_name(
+    app, client, user_session, portfolio
+):
+    user_session(portfolio.owner)
+    with captured_templates(app) as templates:
+        client.post(
+            url_for(
+                "task_orders.submit_form_step_one_add_pdf", portfolio_id=portfolio.id
+            ),
+            data={"pdf-object_name": "a" * 41},
+            follow_redirects=True,
+        )
+
+        _, context = templates[-1]
+
+        assert "object_name" in context["form"].pdf.errors
 
 
 def test_task_orders_form_step_two_add_number(client, user_session, task_order):
