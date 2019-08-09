@@ -53,6 +53,6 @@ def submit_add_new_ccpo_user():
 @user_can(Permissions.CREATE_CCPO_USER, message="create ccpo user")
 def confirm_new_ccpo_user():
     user = Users.get_by_dod_id(request.form["dod_id"])
-    Users.update_ccpo_permissions(user, add_perms=True)
+    Users.give_ccpo_perms(user)
     flash("ccpo_user_added", user_name=user.full_name)
     return redirect(url_for("ccpo.ccpo_users"))

@@ -88,13 +88,15 @@ class Users(object):
         return user
 
     @classmethod
-    def update_ccpo_permissions(cls, user, add_perms=False):
-        if add_perms:
-            permission_sets = PermissionSets.get_all()
-        else:
-            permission_sets = []
+    def give_ccpo_perms(cls, user):
+        user.permission_sets = PermissionSets.get_all()
+        db.session.add(user)
+        db.session.commit()
+        return user
 
-        user.permission_sets = permission_sets
+    @classmethod
+    def revoke_ccpo_perms(cls, user):
+        user.permission_sets = []
         db.session.add(user)
         db.session.commit()
         return user
