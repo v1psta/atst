@@ -11,11 +11,13 @@ from flask import (
 import pendulum
 
 from . import redirect_after_login_url, current_user_setup
+from atst.domain.exceptions import AlreadyExistsError, NotFoundError
 from atst.domain.users import Users
 from atst.domain.permission_sets import PermissionSets
 from atst.forms.data import SERVICE_BRANCHES
 from atst.queue import queue
 from atst.utils import pick
+
 
 bp = Blueprint("dev", __name__)
 
@@ -110,28 +112,72 @@ _DEV_USERS = {
 }
 
 
+class IncompleteInfoError(Exception):
+    @property
+    def message(self):
+        return "You must provide each of: first_name, last_name and dod_id"
+
+
 @bp.route("/login-dev")
 def login_dev():
-    role = request.args.get("username", "amanda")
-    user_data = _DEV_USERS[role]
-    user = Users.get_or_create_by_dod_id(
-        user_data["dod_id"],
-        **pick(
-            [
-                "permission_sets",
-                "first_name",
-                "last_name",
-                "email",
-                "service_branch",
-                "phone_number",
-                "citizenship",
-                "designation",
-                "date_latest_training",
-            ],
-            user_data,
-        ),
-    )
+    dod_id = request.args.get("dod_id", None)
+
+    if dod_id is not None:
+        user = Users.get_by_dod_id(dod_id)
+    else:
+        role = request.args.get("username", "amanda")
+        user_data = _DEV_USERS[role]
+        user = Users.get_or_create_by_dod_id(
+            user_data["dod_id"],
+            **pick(
+                [
+                    "permission_sets",
+                    "first_name",
+                    "last_name",
+                    "email",
+                    "service_branch",
+                    "phone_number",
+                    "citizenship",
+                    "designation",
+                    "date_latest_training",
+                ],
+                user_data,
+            ),
+        )
+
     current_user_setup(user)
+    return redirect(redirect_after_login_url())
+
+
+@bp.route("/dev-new-user")
+def dev_new_user():
+    first_name = request.args.get("first_name", None)
+    last_name = request.args.get("last_name", None)
+    dod_id = request.args.get("dod_id", None)
+
+    if None in [first_name, last_name, dod_id]:
+        raise IncompleteInfoError()
+
+    try:
+        Users.get_by_dod_id(dod_id)
+        raise AlreadyExistsError("User with dod_id {}".format(dod_id))
+    except NotFoundError:
+        pass
+
+    new_user = {
+        "first_name": first_name,
+        "last_name": last_name,
+        "email": "{}@example.com".format(first_name),
+        "service_branch": random_service_branch(),
+        "phone_number": "1234567890",
+        "citizenship": "United States",
+        "designation": "Military",
+        "date_latest_training": pendulum.date(2018, 1, 1),
+    }
+
+    created_user = Users.create(dod_id, **new_user)
+
+    current_user_setup(created_user)
     return redirect(redirect_after_login_url())
 
 
