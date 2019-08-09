@@ -74,6 +74,9 @@ class AttachmentForm(BaseForm):
     object_name = HiddenField(id="attachment_object_name", validators=[Length(max=40)])
     accept = ".pdf,application/pdf"
 
+    def validate(self, *args, **kwargs):
+        return super().validate(*args, **{**kwargs, "flash_invalid": False})
+
 
 class TaskOrderForm(BaseForm):
     number = StringField(label=translate("forms.task_order.number_description"))
