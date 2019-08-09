@@ -71,3 +71,9 @@ class TaskOrders(BaseDomainClass):
         by_time_created = sorted(task_orders, key=lambda to: to.time_created)
         by_status = sorted(by_time_created, key=lambda to: SORT_ORDERING.get(to.status))
         return by_status
+
+    @classmethod
+    def delete(cls, task_order_id):
+        task_order = TaskOrders.get(task_order_id)
+        db.session.delete(task_order)
+        db.session.commit()
