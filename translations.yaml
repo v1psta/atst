@@ -26,6 +26,17 @@ home:
   applications_descrip: ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
   reports_descrip: enim ad minim veniam, quis nostrud exercitation ullamco
   admin_descrip: aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
+ccpo:
+  users_title: CCPO Users
+  add_user: Add new CCPO user
+  form:
+    add_user_title: Add new CCPO user
+    confirm_user_title: Confirm new CCPO user
+    confirm_user_text: Please confirm that the user details below match the user being given CCPO permissions.
+    confirm_button: Confirm and Add User
+    return_link: Return to list of CCPO users
+    user_not_found_title: User not found
+    user_not_found_text: To add someone as a CCPO user, they must already have an ATAT account.
 common:
   cancel: Cancel
   close: Close
@@ -34,8 +45,12 @@ common:
   delete: Delete
   deactivate: Deactivate
   delete_confirm: 'Please type the word {word} to confirm:'
+  dod_id: DoD ID
   edit: Edit
+  email: Email
   members: Members
+  name: Name
+  next: Next
   'yes': 'Yes'
   'no': 'No'
   response_label: Response required
@@ -45,7 +60,6 @@ common:
   resource_names:
     environments: Environments
   choose_role: Choose a role
-  name: Name
 components:
   date_selector:
     day: Day

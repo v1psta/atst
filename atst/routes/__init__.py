@@ -18,12 +18,7 @@ from werkzeug.exceptions import NotFound
 
 from atst.domain.users import Users
 from atst.domain.authnid import AuthenticationContext
-from atst.domain.audit_log import AuditLog
 from atst.domain.auth import logout as _logout
-from atst.domain.common import Paginator
-from atst.domain.portfolios import Portfolios
-from atst.domain.authz.decorator import user_can_access_decorator as user_can
-from atst.models.permissions import Permissions
 from atst.utils.flash import formatted_flash as flash
 
 
@@ -122,21 +117,6 @@ def logout():
     response.set_cookie("expandSidenav", "", expires=0)
     flash("logged_out")
     return response
-
-
-@bp.route("/activity-history")
-@user_can(Permissions.VIEW_AUDIT_LOG, message="view activity log")
-def activity_history():
-    pagination_opts = Paginator.get_pagination_opts(request)
-    audit_events = AuditLog.get_all_events(pagination_opts)
-    return render_template("audit_log/audit_log.html", audit_events=audit_events)
-
-
-@bp.route("/ccpo-users")
-@user_can(Permissions.VIEW_CCPO_USER, message="view ccpo users")
-def ccpo_users():
-    users = Users.get_ccpo_users()
-    return render_template("ccpo/users.html", users=users)
 
 
 @bp.route("/about")

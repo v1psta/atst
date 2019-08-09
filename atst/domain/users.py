@@ -88,6 +88,20 @@ class Users(object):
         return user
 
     @classmethod
+    def give_ccpo_perms(cls, user):
+        user.permission_sets = PermissionSets.get_all()
+        db.session.add(user)
+        db.session.commit()
+        return user
+
+    @classmethod
+    def revoke_ccpo_perms(cls, user):
+        user.permission_sets = []
+        db.session.add(user)
+        db.session.commit()
+        return user
+
+    @classmethod
     def update_last_login(cls, user):
         user.last_login = datetime.now()
         db.session.add(user)

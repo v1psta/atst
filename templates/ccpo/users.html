@@ -1,27 +1,39 @@
 {% extends "base.html" %}
 
+{% from "components/icon.html" import Icon %}
+
 {% block content %}
-<div class='col'>
-  <div class="h2">
-    CCPO Users
-  </div>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Email</th>
-        <th>DoD ID</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for user in users %}
+  <div class='col'>
+    <div class="h2">
+      {{ "ccpo.users_title" | translate }}
+    </div>
+
+    {% include "fragments/flash.html" %}
+
+    <table>
+      <thead>
         <tr>
-          <td>{{ user.full_name }}</td>
-          <td>{{ user.email }}</td>
-          <td>{{ user.dod_id }}</td>
+          <th>{{ "common.name" | translate }}</th>
+          <th>{{ "common.email" | translate }}</th>
+          <th>{{ "common.dod_id" | translate }}</th>
         </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-</div>
+      </thead>
+      <tbody>
+        {% for user in users %}
+          <tr>
+            <td>{{ user.full_name }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.dod_id }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% if user_can(permissions.CREATE_CCPO_USER) %}
+    <a class="icon-link" href="{{ url_for('ccpo.add_new_user')}}">
+      {{ "ccpo.add_user" | translate }} {{ Icon("plus") }}
+    </a>
+  {% endif %}
+
 {% endblock %}
