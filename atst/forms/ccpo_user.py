@@ -9,5 +9,5 @@ from atst.utils.localization import translate
 class CCPOUserForm(FlaskForm):
     dod_id = StringField(
         translate("forms.new_member.dod_id_label"),
-        validators=[Required(), Length(min=10), IsNumber()],
+        validators=[Required(), Length(min=10, max=10), IsNumber()],
     )
