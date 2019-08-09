@@ -1,0 +1,13 @@
+#!/bin/sh
+
+if [ -z "${CSP+is_set}" ]; then
+  CSP=mock
+fi
+
+if [ $CSP = "aws" ]; then
+  echo "CLOUD_PROVIDER=aws" > .env
+elif [ $CSP = "azure" ]; then
+  echo "CLOUD_PROVIDER=azure\nAZURE_ACCOUNT_NAME=atat\nAZURE_CONTAINER_NAME=task-order-pdfs" > .env
+else
+  echo "CLOUD_PROVIDER=mock" > .env
+fi

@@ -11,3 +11,4 @@ data:
   UWSGI_CONFIG_FULLPATH: /opt/atat/atst/uwsgi.ini
   CRL_STORAGE_PROVIDER: CLOUDFILES
   LOG_JSON: "true"
+  CSP: azure

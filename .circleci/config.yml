@@ -129,6 +129,7 @@ workflows:
           requires:
             - app_setup
       - azure-acr/build_and_push_image:
+          extra-build-args: "--build-arg CSP=azure"
           login-server-name: "${AZURE_SERVER_NAME}"
           registry-name: pwatat
           repo: atat
@@ -175,6 +176,7 @@ workflows:
               only:
                 - master
       - aws-ecr/build_and_push_image:
+          extra-build-args: "--build-arg CSP=aws"
           repo: atat
           tag: "${CIRCLE_SHA1}"
           requires:

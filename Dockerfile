@@ -1,5 +1,7 @@
 FROM python:3.7.3-alpine3.9 AS builder
 
+ARG CSP
+
 RUN mkdir -p /install/.venv
 WORKDIR /install
 
@@ -32,10 +34,11 @@ RUN apk update && \
 COPY . .
 
 # Install app dependencies
-RUN pip install pipenv uwsgi && \
+RUN ./script/write_dotenv && \
+      pip install pipenv uwsgi && \
       PIPENV_VENV_IN_PROJECT=1 pipenv install && \
       yarn install && \
-      cp -r ./node_modules/uswds/src/fonts ./static/ && \
+      cp -rf ./node_modules/uswds/src/fonts ./static/ && \
       yarn build
 
 ## NEW IMAGE
