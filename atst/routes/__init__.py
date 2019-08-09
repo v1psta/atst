@@ -18,20 +18,11 @@ from werkzeug.exceptions import NotFound
 
 from atst.domain.users import Users
 from atst.domain.authnid import AuthenticationContext
-from atst.domain.audit_log import AuditLog
 from atst.domain.auth import logout as _logout
-from atst.domain.common import Paginator
-from atst.domain.exceptions import NotFoundError
-from atst.domain.portfolios import Portfolios
-from atst.domain.authz.decorator import user_can_access_decorator as user_can
-from atst.forms.ccpo_user import CCPOUserForm
-from atst.models.permissions import Permissions
-from atst.utils.context_processors import atat as atat_context_processor
 from atst.utils.flash import formatted_flash as flash
 
 
 bp = Blueprint("atst", __name__)
-bp.context_processor(atat_context_processor)
 
 
 @bp.route("/")
