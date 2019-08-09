@@ -28,9 +28,6 @@ home:
   admin_descrip: aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
 ccpo:
   users_title: CCPO Users
-  name_heading: Name
-  email_heading: Email
-  dod_id_heading: DoD ID
   add_user: Add new CCPO user
   form:
     add_user_title: Add new CCPO user
@@ -48,8 +45,11 @@ common:
   delete: Delete
   deactivate: Deactivate
   delete_confirm: 'Please type the word {word} to confirm:'
+  dod_id: DoD ID
   edit: Edit
+  email: Email
   members: Members
+  name: Name
   next: Next
   'yes': 'Yes'
   'no': 'No'
@@ -60,7 +60,6 @@ common:
   resource_names:
     environments: Environments
   choose_role: Choose a role
-  name: Name
 components:
   date_selector:
     day: Day
