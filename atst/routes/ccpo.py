@@ -24,21 +24,21 @@ def activity_history():
 
 @bp.route("/ccpo-users")
 @user_can(Permissions.VIEW_CCPO_USER, message="view ccpo users")
-def ccpo_users():
+def users():
     users = Users.get_ccpo_users()
     return render_template("ccpo/users.html", users=users)
 
 
 @bp.route("/ccpo-users/new")
 @user_can(Permissions.CREATE_CCPO_USER, message="create ccpo user")
-def add_new_ccpo_user():
+def add_new_user():
     form = CCPOUserForm()
     return render_template("ccpo/add_user.html", form=form)
 
 
 @bp.route("/ccpo-users/new", methods=["POST"])
 @user_can(Permissions.CREATE_CCPO_USER, message="create ccpo user")
-def submit_add_new_ccpo_user():
+def submit_new_user():
     try:
         new_user = Users.get_by_dod_id(request.form["dod_id"])
         form = CCPOUserForm(obj=new_user)
@@ -51,8 +51,8 @@ def submit_add_new_ccpo_user():
 
 @bp.route("/ccpo-users/confirm-new", methods=["POST"])
 @user_can(Permissions.CREATE_CCPO_USER, message="create ccpo user")
-def confirm_new_ccpo_user():
+def confirm_new_user():
     user = Users.get_by_dod_id(request.form["dod_id"])
     Users.give_ccpo_perms(user)
     flash("ccpo_user_added", user_name=user.full_name)
-    return redirect(url_for("ccpo.ccpo_users"))
+    return redirect(url_for("ccpo.users"))

@@ -6,7 +6,7 @@
 {% block content %}
   {% if new_user %}
     {% call Alert('ccpo.form.confirm_user_title' | translate) %}
-      <form id="add-ccpo-user-form" action="{{ url_for('ccpo.confirm_new_ccpo_user') }}" method="POST">
+      <form id="add-ccpo-user-form" action="{{ url_for('ccpo.confirm_new_user') }}" method="POST">
         {{ form.csrf_token }}
         <input type="hidden" name="dod_id" value="{{ form.dod_id.data }}">
         <div>
@@ -26,7 +26,7 @@
               v-bind:disabled="invalid"
               class='action-group__action usa-button'
               value='{{ "ccpo.form.confirm_button" | translate }}'>
-          <a class='action-group__action icon-link icon-link--default' href="{{ url_for('ccpo.ccpo_users') }}">
+          <a class='action-group__action icon-link icon-link--default' href="{{ url_for('ccpo.users') }}">
             {{ "common.cancel" | translate }}
           </a>
         </div>
@@ -38,7 +38,7 @@
         {{ "ccpo.form.user_not_found_text" | translate }}
       </p>
       <div class='action-group'>
-        <a class='action-group__action icon-link icon-link--default' href="{{ url_for('ccpo.ccpo_users') }}">
+        <a class='action-group__action icon-link icon-link--default' href="{{ url_for('ccpo.users') }}">
           {{ "ccpo.form.return_link" | translate }}
         </a>
       </div>

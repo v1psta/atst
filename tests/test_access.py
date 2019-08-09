@@ -120,43 +120,43 @@ def test_atst_activity_history_access(get_url_assert_status):
     get_url_assert_status(rando, url, 404)
 
 
-# ccpo.ccpo_users
-def test_ccpo_ccpo_users_access(get_url_assert_status):
+# ccpo.users
+def test_ccpo_users_access(get_url_assert_status):
     ccpo = user_with(PermissionSets.MANAGE_CCPO_USERS)
     rando = user_with()
 
-    url = url_for("ccpo.ccpo_users")
+    url = url_for("ccpo.users")
     get_url_assert_status(ccpo, url, 200)
     get_url_assert_status(rando, url, 404)
 
 
-# ccpo.add_new_ccpo_user
-def test_ccpo_add_new_ccpo_user_access(get_url_assert_status):
+# ccpo.add_new_user
+def test_ccpo_add_new_user_access(get_url_assert_status):
     ccpo = user_with(PermissionSets.MANAGE_CCPO_USERS)
     rando = user_with()
 
-    url = url_for("ccpo.add_new_ccpo_user")
+    url = url_for("ccpo.add_new_user")
     get_url_assert_status(ccpo, url, 200)
     get_url_assert_status(rando, url, 404)
 
 
-# ccpo.submit_add_new_ccpo_user
-def test_ccpo_submit_add_new_ccpo_user_access(post_url_assert_status):
+# ccpo.submit_new_user
+def test_ccpo_submit_new_user_access(post_url_assert_status):
     ccpo = user_with(PermissionSets.MANAGE_CCPO_USERS)
     rando = user_with()
 
-    url = url_for("ccpo.submit_add_new_ccpo_user")
+    url = url_for("ccpo.submit_new_user")
     post_url_assert_status(ccpo, url, 200, data={"dod_id": "1234567890"})
     post_url_assert_status(rando, url, 404, data={"dod_id": "1234567890"})
 
 
-# ccpo.confirm_new_ccpo_user
-def test_ccpo_confirm_new_ccpo_user_access(post_url_assert_status):
+# ccpo.confirm_new_user
+def test_ccpo_confirm_new_user_access(post_url_assert_status):
     ccpo = user_with(PermissionSets.MANAGE_CCPO_USERS)
     rando = user_with()
     user = UserFactory.create()
 
-    url = url_for("ccpo.confirm_new_ccpo_user")
+    url = url_for("ccpo.confirm_new_user")
     post_url_assert_status(ccpo, url, 302, data={"dod_id": user.dod_id})
     post_url_assert_status(rando, url, 404, data={"dod_id": user.dod_id})
 
