@@ -164,16 +164,7 @@ def dev_new_user():
     except NotFoundError:
         pass
 
-    new_user = {
-        "first_name": first_name,
-        "last_name": last_name,
-        "email": "{}@example.com".format(first_name),
-        "service_branch": random_service_branch(),
-        "phone_number": "1234567890",
-        "citizenship": "United States",
-        "designation": "Military",
-        "date_latest_training": pendulum.date(2018, 1, 1),
-    }
+    new_user = {"first_name": first_name, "last_name": last_name}
 
     created_user = Users.create(dod_id, **new_user)
 
