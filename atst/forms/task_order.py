@@ -71,7 +71,12 @@ class AttachmentForm(BaseForm):
             Length(max=100, message="Filename may be no longer than 100 characters.")
         ],
     )
-    object_name = HiddenField(id="attachment_object_name", validators=[Length(max=40)])
+    object_name = HiddenField(
+        id="attachment_object_name",
+        validators=[
+            Length(max=40, message="Object name may be no longer than 40 characters.")
+        ],
+    )
     accept = ".pdf,application/pdf"
 
     def validate(self, *args, **kwargs):
