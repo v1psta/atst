@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 
+{% from "components/alert.html" import Alert %}
+{% from "components/delete_confirmation.html" import DeleteConfirmation %}
 {% from "components/icon.html" import Icon %}
+{% from "components/modal.html" import Modal %}
 
 {% block content %}
   <div class='col'>
@@ -16,14 +19,30 @@
           <th>{{ "common.name" | translate }}</th>
           <th>{{ "common.email" | translate }}</th>
           <th>{{ "common.dod_id" | translate }}</th>
+          {% if user_can(permissions.DELETE_CCPO_USER) %}
+            <th></th>
+          {% endif %}
         </tr>
       </thead>
       <tbody>
-        {% for user in users %}
+        {% for user, form in users_info %}
+          {% set modal_id = "disable_ccpo_user_{}".format(user.dod_id) %}
+          {% set disable_button_class = 'button-danger-outline' %}
+          {% if user == g.current_user %}
+            {% set disable_button_class = "usa-button-disabled" %}
+          {% endif %}
+
           <tr>
             <td>{{ user.full_name }}</td>
             <td>{{ user.email }}</td>
             <td>{{ user.dod_id }}</td>
+            {% if user_can(permissions.DELETE_CCPO_USER) %}
+              <td>
+                <a v-on:click="openModal('{{ modal_id }}')" class='usa-button {{ disable_button_class }}'>
+                  {{ "common.disable" | translate }}
+                </a>
+              </td>
+            {% endif %}
           </tr>
         {% endfor %}
       </tbody>
@@ -36,4 +55,27 @@
     </a>
   {% endif %}
 
+  {% if user_can(permissions.DELETE_CCPO_USER) %}
+    {% for user, form in users_info %}
+      {% set modal_id = "disable_ccpo_user_{}".format(user.dod_id) %}
+      {% call Modal(name=modal_id) %}
+        {{
+          Alert(
+            title=("components.modal.destructive_title" | translate),
+            message=("ccpo.disable_user.alert_message" | translate({"user_name": user.full_name})),
+            level="warning"
+          )
+        }}
+        {{
+          DeleteConfirmation(
+            modal_id=modal_id,
+            delete_text='Remove Access',
+            delete_action=(url_for('ccpo.remove_access', user_id=user.id)),
+            form=form,
+            confirmation_text='remove'
+          )
+        }}
+      {% endcall %}
+    {% endfor %}
+  {% endif %}
 {% endblock %}

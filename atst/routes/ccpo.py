@@ -26,7 +26,8 @@ def activity_history():
 @user_can(Permissions.VIEW_CCPO_USER, message="view ccpo users")
 def users():
     users = Users.get_ccpo_users()
-    return render_template("ccpo/users.html", users=users)
+    users_info = [(user, CCPOUserForm(obj=user)) for user in users]
+    return render_template("ccpo/users.html", users_info=users_info)
 
 
 @bp.route("/ccpo-users/new")
@@ -55,4 +56,13 @@ def confirm_new_user():
     user = Users.get_by_dod_id(request.form["dod_id"])
     Users.give_ccpo_perms(user)
     flash("ccpo_user_added", user_name=user.full_name)
+    return redirect(url_for("ccpo.users"))
+
+
+@bp.route("/ccpo-users/remove-access/<user_id>", methods=["POST"])
+@user_can(Permissions.DELETE_CCPO_USER, message="remove ccpo user")
+def remove_access(user_id):
+    user = Users.get(user_id)
+    Users.revoke_ccpo_perms(user)
+    flash("ccpo_user_removed", user_name=user.full_name)
     return redirect(url_for("ccpo.users"))
