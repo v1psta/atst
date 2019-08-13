@@ -6,6 +6,7 @@ from atst.domain.users import Users
 UNPROTECTED_ROUTES = [
     "atst.root",
     "dev.login_dev",
+    "dev.dev_new_user",
     "atst.login_redirect",
     "atst.logout",
     "atst.unauthorized",
