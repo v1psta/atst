@@ -25,7 +25,9 @@
         </tr>
       </thead>
       <tbody>
-        {% for user, form in data.items() %}
+        {% for user_data in data %}
+          {% set user = user_data[0] %}
+          {% set form = user_data[1] %}
           {% set modal_id = "disable_ccpo_user_{}".format(user.dod_id) %}
           {% set disable_button_class = 'button-danger-outline' %}
           {% if user == g.current_user %}
@@ -56,7 +58,9 @@
   {% endif %}
 
   {% if user_can(permissions.DELETE_CCPO_USER) %}
-    {% for user, form in data.items() %}
+    {% for user_data in data %}
+      {% set user = user_data[0] %}
+      {% set form = user_data[1] %}
       {% set modal_id = "disable_ccpo_user_{}".format(user.dod_id) %}
       {% call Modal(name=modal_id) %}
         {{

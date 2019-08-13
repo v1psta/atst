@@ -26,9 +26,7 @@ def activity_history():
 @user_can(Permissions.VIEW_CCPO_USER, message="view ccpo users")
 def users():
     users = Users.get_ccpo_users()
-    data = {}
-    for user in users:
-        data[user] = CCPOUserForm(obj=user)
+    data = [(user, CCPOUserForm(obj=user)) for user in users]
     return render_template("ccpo/users.html", data=data)
 
 
