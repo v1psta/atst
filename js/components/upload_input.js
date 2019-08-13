@@ -72,7 +72,7 @@ export default {
         this.$refs.attachmentObjectName.value = this.objectName
       } else {
         this.showErrors = true
-        this.uploadError = 'Your file failed to upload. Please try again later.'
+        this.uploadError = true
       }
 
       this.changed = true
@@ -91,6 +91,7 @@ export default {
         this.$refs.attachmentInput.value = null
       }
       this.showErrors = false
+      this.uploadError = false
       this.changed = true
 
       emitEvent('field-change', this, {
