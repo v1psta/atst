@@ -26,8 +26,8 @@ def activity_history():
 @user_can(Permissions.VIEW_CCPO_USER, message="view ccpo users")
 def users():
     users = Users.get_ccpo_users()
-    data = [(user, CCPOUserForm(obj=user)) for user in users]
-    return render_template("ccpo/users.html", data=data)
+    users_info = [(user, CCPOUserForm(obj=user)) for user in users]
+    return render_template("ccpo/users.html", users_info=users_info)
 
 
 @bp.route("/ccpo-users/new")
