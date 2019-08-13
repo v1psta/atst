@@ -70,7 +70,7 @@ class MockUploader {
   }
 
   async upload(file, objectName) {
-    return Promise.resolve({})
+    return Promise.resolve({ ok: true })
   }
 }
 
