@@ -5,6 +5,7 @@ from datetime import timedelta, date, timedelta
 import random
 from faker import Faker
 from werkzeug.datastructures import FileStorage
+from uuid import uuid4
 
 parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 sys.path.append(parent_dir)
@@ -30,9 +31,9 @@ from atst.routes.dev import _DEV_USERS as DEV_USERS
 
 from tests.factories import (
     random_service_branch,
-    random_task_order_number,
     TaskOrderFactory,
     CLINFactory,
+    AttachmentFactory
 )
 
 fake = Faker()
@@ -167,20 +168,19 @@ def add_task_orders_to_portfolio(portfolio):
     yesterday = today - timedelta(days=1)
     five_days = timedelta(days=5)
 
-    with open("tests/fixtures/sample.pdf", "rb") as fp:
-        pdf = FileStorage(fp, content_type="application/pdf")
+    pdf = {"filename": "sample_task_order.pdf", "object_name": str(uuid4())}
 
-        draft_to = TaskOrderFactory.build(portfolio=portfolio, pdf=None)
-        unsigned_to = TaskOrderFactory.build(portfolio=portfolio, pdf=pdf)
-        upcoming_to = TaskOrderFactory.build(
-            portfolio=portfolio, signed_at=yesterday, pdf=pdf
-        )
-        expired_to = TaskOrderFactory.build(
-            portfolio=portfolio, signed_at=yesterday, pdf=pdf
-        )
-        active_to = TaskOrderFactory.build(
-            portfolio=portfolio, signed_at=yesterday, pdf=pdf
-        )
+    draft_to = TaskOrderFactory.build(portfolio=portfolio, pdf=None)
+    unsigned_to = TaskOrderFactory.build(portfolio=portfolio, pdf=pdf)
+    upcoming_to = TaskOrderFactory.build(
+        portfolio=portfolio, signed_at=yesterday, pdf=pdf
+    )
+    expired_to = TaskOrderFactory.build(
+        portfolio=portfolio, signed_at=yesterday, pdf=pdf
+    )
+    active_to = TaskOrderFactory.build(
+        portfolio=portfolio, signed_at=yesterday, pdf=pdf
+    )
 
     clins = [
         CLINFactory.build(
