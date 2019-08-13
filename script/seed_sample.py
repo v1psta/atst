@@ -33,7 +33,7 @@ from tests.factories import (
     random_service_branch,
     TaskOrderFactory,
     CLINFactory,
-    AttachmentFactory
+    AttachmentFactory,
 )
 
 fake = Faker()
