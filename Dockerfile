@@ -36,7 +36,7 @@ COPY . .
 # Install app dependencies
 RUN ./script/write_dotenv && \
       pip install pipenv uwsgi && \
-      PIPENV_VENV_IN_PROJECT=1 pipenv install && \
+      PIPENV_VENV_IN_PROJECT=1 pipenv sync && \
       yarn install && \
       cp -rf ./node_modules/uswds/src/fonts ./static/ && \
       yarn build
