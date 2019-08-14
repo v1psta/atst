@@ -74,7 +74,9 @@ class AttachmentForm(BaseForm):
     object_name = HiddenField(
         id="attachment_object_name",
         validators=[
-            Length(max=40, message=translate("forms.attachment.object_name.length_error"))
+            Length(
+                max=40, message=translate("forms.attachment.object_name.length_error")
+            )
         ],
     )
     accept = ".pdf,application/pdf"
