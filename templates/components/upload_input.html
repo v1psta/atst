@@ -44,7 +44,7 @@
           <input type="hidden" name="{{ field.object_name.name }}" id="{{ field.object_name.name }}" ref="attachmentObjectName">
       </div>
       <template v-if="uploadError">
-        <span class="usa-input__message">There was an error uploading your file. Please try again. If you encounter repeated problems uploading this file, please contact CCPO.</span>
+        <span class="usa-input__message">{{ "forms.task_order.upload_error" | translate }}</span>
       </template>
       {% for error, error_messages in field.errors.items() %}
         <span class="usa-input__message">{{error_messages[0]}}</span>
