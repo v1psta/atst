@@ -19,6 +19,13 @@ class EnvironmentForm(FlaskForm):
         filters=[lambda x: None if x == "None" else x],
     )
 
+    @property
+    def data(self):
+        _data = super().data
+        if "role" in _data and _data["role"] == NO_ACCESS:
+            _data["role"] = None
+        return _data
+
 
 class PermissionsForm(FlaskForm):
     perms_env_mgmt = BooleanField(
