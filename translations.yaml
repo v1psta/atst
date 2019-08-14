@@ -149,7 +149,13 @@ forms:
   portfolio:
     name_label: Portfolio name
     name_length_validation_message: Portfolio names can be between 4-100 characters
+  attachment:
+    object_name:
+      length_error: Object name may be no longer than 40 characters.
+    filename:
+      length_error: Filename may be no longer than 100 characters.
   task_order:
+    upload_error: There was an error uploading your file. Please try again. If you encounter repeated problems uploading this file, please contact CCPO.
     app_migration:
       both: 'Yes, migrating from both an on-premise data center <strong>and</strong> another cloud provider'
       cloud: 'Yes, migrating from another cloud provider'

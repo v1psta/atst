@@ -48,6 +48,7 @@ export default {
       attachment: this.initialData || null,
       showErrors: this.initialErrors,
       changed: false,
+      uploadError: null,
     }
   },
 
@@ -63,15 +64,15 @@ export default {
   methods: {
     addAttachment: async function(e) {
       const file = e.target.files[0]
-      try {
-        await this.uploader.upload(file, this.objectName)
+
+      const response = await this.uploader.upload(file, this.objectName)
+      if (response.ok) {
         this.attachment = e.target.value
-        this.showErrors = false
         this.$refs.attachmentFilename.value = file.name
         this.$refs.attachmentObjectName.value = this.objectName
-      } catch (err) {
-        console.log(err)
+      } else {
         this.showErrors = true
+        this.uploadError = true
       }
 
       this.changed = true
@@ -90,6 +91,7 @@ export default {
         this.$refs.attachmentInput.value = null
       }
       this.showErrors = false
+      this.uploadError = false
       this.changed = true
 
       emitEvent('field-change', this, {

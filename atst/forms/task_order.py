@@ -7,7 +7,7 @@ from wtforms.fields import (
     HiddenField,
 )
 from wtforms.fields.html5 import DateField
-from wtforms.validators import Required, Optional
+from wtforms.validators import Required, Optional, Length
 from flask_wtf import FlaskForm
 
 from .data import JEDI_CLIN_TYPES
@@ -65,9 +65,24 @@ class CLINForm(FlaskForm):
 
 
 class AttachmentForm(BaseForm):
-    filename = HiddenField(id="attachment_filename")
-    object_name = HiddenField(id="attachment_object_name")
+    filename = HiddenField(
+        id="attachment_filename",
+        validators=[
+            Length(max=100, message=translate("forms.attachment.filename.length_error"))
+        ],
+    )
+    object_name = HiddenField(
+        id="attachment_object_name",
+        validators=[
+            Length(
+                max=40, message=translate("forms.attachment.object_name.length_error")
+            )
+        ],
+    )
     accept = ".pdf,application/pdf"
+
+    def validate(self, *args, **kwargs):
+        return super().validate(*args, **{**kwargs, "flash_invalid": False})
 
 
 class TaskOrderForm(BaseForm):
