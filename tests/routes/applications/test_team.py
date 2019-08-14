@@ -118,8 +118,9 @@ def test_update_team_environment_roles(client, user_session):
 def test_update_team_revoke_environment_access(client, user_session, db, session):
     application = ApplicationFactory.create()
     owner = application.portfolio.owner
+    user = UserFactory.create()
     app_role = ApplicationRoleFactory.create(
-        application=application, permission_sets=[]
+        application=application, user=user, permission_sets=[]
     )
     environment = EnvironmentFactory.create(application=application)
     env_role = EnvironmentRoleFactory.create(
@@ -127,6 +128,8 @@ def test_update_team_revoke_environment_access(client, user_session, db, session
         environment=environment,
         role=CSPRole.BASIC_ACCESS.value,
     )
+    assert user in environment.users
+
     user_session(owner)
     response = client.post(
         url_for("applications.update_team", application_id=application.id),
@@ -143,6 +146,7 @@ def test_update_team_revoke_environment_access(client, user_session, db, session
     assert response.status_code == 302
     env_role_exists = db.exists().where(EnvironmentRole.id == env_role.id)
     assert not session.query(env_role_exists).scalar()
+    assert user not in environment.users
 
 
 def test_create_member(client, user_session, session):
@@ -152,6 +156,7 @@ def test_create_member(client, user_session, session):
         environments=[{"name": "Naboo"}, {"name": "Endor"}]
     )
     env = application.environments[0]
+    env_1 = application.environments[1]
 
     user_session(application.portfolio.owner)
 
@@ -163,8 +168,11 @@ def test_create_member(client, user_session, session):
             "user_data-dod_id": user.dod_id,
             "user_data-email": user.email,
             "environment_roles-0-environment_id": env.id,
-            "environment_roles-0-environment_name": env.name,
             "environment_roles-0-role": "Basic Access",
+            "environment_roles-0-environment_name": env.name,
+            "environment_roles-1-environment_id": env_1.id,
+            "environment_roles-1-role": NO_ACCESS,
+            "environment_roles-1-environment_name": env_1.name,
             "permission_sets-perms_env_mgmt": True,
             "permission_sets-perms_team_mgmt": True,
             "permission_sets-perms_del_env": True,
