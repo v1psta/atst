@@ -382,7 +382,7 @@ task_orders:
       title: Confirm Signature
       description: Finally, plase confirm that your uploaded document representing the information you've entered contains the required signature from your Contracting Officer. You will be informed as soon as CCPO completes their review.
       alert_message: All task orders require a Contracting Officer signature.
-      next_button: 'Next: Confirm & Submit'
+      next_button: 'Confirm & Submit'
     sticky_header_text: 'Add Funding ({step} of 5)'
   new:
     form_help_text: Before you can begin work in the cloud, you'll need to complete the information below and upload your approved task order for reference by the CCPO.
