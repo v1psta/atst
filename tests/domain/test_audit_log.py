@@ -5,6 +5,7 @@ from atst.domain.audit_log import AuditLog
 from atst.domain.exceptions import UnauthorizedError
 from atst.domain.permission_sets import PermissionSets
 from atst.domain.portfolios import Portfolios
+from atst.domain.users import Users
 from atst.models.portfolio_role import Status as PortfolioRoleStatus
 from tests.factories import (
     ApplicationFactory,
@@ -117,3 +118,12 @@ def test_get_application_events():
 
     resource_types = [event.resource_type for event in events]
     assert "portfolio" not in resource_types
+
+
+def test_get_all_includes_ccpo_user_changes():
+    user = UserFactory.create()
+    initial_audit_log = AuditLog.get_all_events()
+    Users.give_ccpo_perms(user)
+    Users.revoke_ccpo_perms(user)
+
+    assert len(AuditLog.get_all_events()) == len(initial_audit_log) + 2
