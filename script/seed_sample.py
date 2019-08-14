@@ -1,7 +1,7 @@
 # Add root application dir to the python path
 import os
 import sys
-from datetime import timedelta, date, timedelta
+from datetime import timedelta, date
 import random
 from faker import Faker
 from werkzeug.datastructures import FileStorage
@@ -168,18 +168,19 @@ def add_task_orders_to_portfolio(portfolio):
     yesterday = today - timedelta(days=1)
     five_days = timedelta(days=5)
 
-    pdf = {"filename": "sample_task_order.pdf", "object_name": str(uuid4())}
+    def build_pdf():
+        return {"filename": "sample_task_order.pdf", "object_name": str(uuid4())}
 
     draft_to = TaskOrderFactory.build(portfolio=portfolio, pdf=None)
-    unsigned_to = TaskOrderFactory.build(portfolio=portfolio, pdf=pdf)
+    unsigned_to = TaskOrderFactory.build(portfolio=portfolio, pdf=build_pdf())
     upcoming_to = TaskOrderFactory.build(
-        portfolio=portfolio, signed_at=yesterday, pdf=pdf
+        portfolio=portfolio, signed_at=yesterday, pdf=build_pdf()
     )
     expired_to = TaskOrderFactory.build(
-        portfolio=portfolio, signed_at=yesterday, pdf=pdf
+        portfolio=portfolio, signed_at=yesterday, pdf=build_pdf()
     )
     active_to = TaskOrderFactory.build(
-        portfolio=portfolio, signed_at=yesterday, pdf=pdf
+        portfolio=portfolio, signed_at=yesterday, pdf=build_pdf()
     )
 
     clins = [

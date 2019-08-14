@@ -1,6 +1,7 @@
 import pytest
 from flask import url_for, get_flashed_messages
 from datetime import timedelta, date
+from uuid import uuid4
 
 from atst.domain.task_orders import TaskOrders
 from atst.models.task_order import Status as TaskOrderStatus
@@ -10,8 +11,8 @@ from tests.factories import CLINFactory, PortfolioFactory, TaskOrderFactory, Use
 from tests.utils import captured_templates
 
 
-def build_pdf_form_data(filename="sample.pdf", object_name="object_name"):
-    return {"pdf-filename": filename, "pdf-object_name": object_name}
+def build_pdf_form_data(filename="sample.pdf", object_name=None):
+    return {"pdf-filename": filename, "pdf-object_name": object_name or uuid4()}
 
 
 @pytest.fixture
