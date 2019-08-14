@@ -156,7 +156,8 @@ def get_users():
 def add_members_to_portfolio(portfolio):
     for user_data in PORTFOLIO_USERS:
         invite = Portfolios.invite(portfolio, portfolio.owner, user_data)
-        user = Users.get_or_create_by_dod_id(user_data["dod_id"])
+        profile = {k: user_data[k] for k in user_data if k != "dod_id"}
+        user = Users.get_or_create_by_dod_id(user_data["dod_id"], **profile)
         PortfolioRoles.enable(invite.role, user)
 
     db.session.commit()
