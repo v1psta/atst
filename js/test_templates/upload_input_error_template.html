@@ -25,14 +25,6 @@
           <span class="upload-button">
             Browse
           </span>
-          
-            <span v-show="showErrors">
-      <span class="icon icon--alert icon-validation" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="#fdb81e">
-  <path d="M8 16c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8zM8 2C4.691 2 2 4.691 2 8s2.691 6 6 6 6-2.691 6-6-2.691-6-6-6zm0 8c-.552 0-1-.447-1-1V4c0-.552.448-1 1-1s1 .448 1 1v5c0 .553-.448 1-1 1zm0 3c-.26 0-.52-.11-.71-.29-.18-.19-.29-.45-.29-.71 0-.271.11-.521.29-.71.38-.37 1.05-.37 1.42 0 .18.189.29.45.29.71s-.11.52-.29.71c-.19.18-.45.29-.71.29z"/>
-</svg>
-</span>
-  </span>
-          
         </label>
         <input
           v-on:change="addAttachment"
@@ -46,8 +38,11 @@
           <input type="hidden" name="pdf-filename" id="pdf-filename" ref="attachmentFilename">
           <input type="hidden" name="pdf-object_name" id="pdf-object_name" ref="attachmentObjectName">
       </div>
+      <template v-if="uploadError">
+        <span class="usa-input__message">There was an error uploading your file. Please try again. If you encounter repeated problems uploading this file, please contact CCPO.</span>
+      </template>
       
-        <span v-show="showErrors" class="usa-input__message">[&#39;Test Error Message&#39;]</span>
+        <span class="usa-input__message">Test Error Message</span>
       
     </div>
   </div>
