@@ -64,12 +64,12 @@ export default {
   methods: {
     addAttachment: async function(e) {
       const file = e.target.files[0]
-
       const response = await this.uploader.upload(file, this.objectName)
       if (response.ok) {
         this.attachment = e.target.value
         this.$refs.attachmentFilename.value = file.name
         this.$refs.attachmentObjectName.value = this.objectName
+        this.$refs.attachmentInput.disabled = true
       } else {
         this.showErrors = true
         this.uploadError = true
@@ -89,6 +89,7 @@ export default {
       this.attachment = null
       if (this.$refs.attachmentInput) {
         this.$refs.attachmentInput.value = null
+        this.$refs.attachmentInput.disabled = false
       }
       this.showErrors = false
       this.uploadError = false
