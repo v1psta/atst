@@ -35,6 +35,7 @@ class PortfoliosQuery(Query):
                                     ApplicationRole.status
                                     == ApplicationRoleStatus.ACTIVE
                                 )
+                                .filter(ApplicationRole.deleted == False)
                                 .subquery()
                             )
                         )

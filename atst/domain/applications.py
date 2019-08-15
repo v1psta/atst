@@ -63,6 +63,7 @@ class Applications(BaseDomainClass):
 
         for role in application.roles:
             role.deleted = True
+            role.status = ApplicationRoleStatus.DISABLED
             db.session.add(role)
 
         db.session.add(application)
