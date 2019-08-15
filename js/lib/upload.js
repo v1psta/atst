@@ -32,9 +32,9 @@ class AzureUploader {
           options,
           function(err, result) {
             if (err) {
-              reject(err)
+              resolve({ok: false})
             } else {
-              resolve(result)
+              resolve({ok: true})
             }
           }
         )
