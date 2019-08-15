@@ -98,6 +98,10 @@
       cursor: default;
       margin: 0 0 0 ($gap / 2);
     }
+
+    &__view-only {
+      margin: 0;
+    }
   }
 
   &__help {
