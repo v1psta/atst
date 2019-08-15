@@ -107,6 +107,7 @@
     &__action-group {
       padding: 1rem 3.2rem;
       background-color: $color-gray-lightest;
+      text-align: right;
 
       button,
       a {
@@ -117,10 +118,6 @@
       .icon-link {
         padding-top: 0.5rem;
         float: none;
-      }
-
-      > *:last-child {
-        float: right;
       }
     }
 
