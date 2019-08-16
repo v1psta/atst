@@ -18,6 +18,9 @@ body {
   &__container {
     height: 100vh;
     max-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 
     .usa-input .usa-input__choices label {
       max-width: 62rem;
