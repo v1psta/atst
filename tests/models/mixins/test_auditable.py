@@ -51,3 +51,9 @@ def test_logging_audit_event_on_update(mock_logger):
     assert event_log["action"] == "update"
 
     assert "update" in mock_logger.extras[1]["tags"]
+
+
+def test_does_not_log_user_update_when_updating_last_login(mock_logger):
+    user = UserFactory.create()
+    Users.update_last_login(user)
+    assert "Audit Event update" not in mock_logger.messages
