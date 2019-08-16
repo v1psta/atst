@@ -110,7 +110,7 @@ export default {
     clearErrors: function() {
       this.uploadError = false
       this.sizeError = false
-    }
+    },
   },
 
   computed: {
@@ -126,7 +126,11 @@ export default {
       return this.hasInitialData && !this.changed
     },
     showErrors: function() {
-      return (!this.changed && this.initialErrors) || this.uploadError || this.sizeError
-    }
+      return (
+        (!this.changed && this.initialErrors) ||
+        this.uploadError ||
+        this.sizeError
+      )
+    },
   },
 }
