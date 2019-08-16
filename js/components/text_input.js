@@ -31,7 +31,7 @@ export default {
       type: Boolean,
       default: false,
     },
-    optional: Boolean,
+    insetForm: Boolean,
   },
 
   data: function() {
@@ -58,7 +58,11 @@ export default {
 
   mounted: function() {
     if (this.value) {
-      this._checkIfValid({ value: this.value, invalidate: true })
+      this._checkIfValid({
+        value: this.value,
+        invalidate: true,
+        showValidationIcon: !this.insetForm,
+      })
 
       if (this.mask && this.validation !== 'email') {
         const mask =
@@ -109,7 +113,11 @@ export default {
     },
 
     //
-    _checkIfValid: function({ value, invalidate = false }) {
+    _checkIfValid: function({
+      value,
+      invalidate = false,
+      showValidationIcon = true,
+    }) {
       const valid = this._isValid(value)
       if (this.modified) {
         this.validationError = inputValidations[this.validation].validationError
@@ -121,7 +129,10 @@ export default {
       } else if (invalidate) {
         this.showError = true
       }
-      this.showValid = this.value != '' && valid
+
+      if (showValidationIcon) {
+        this.showValid = this.value != '' && valid
+      }
 
       // Emit a change event
       emitEvent('field-change', this, {
