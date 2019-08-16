@@ -11,8 +11,6 @@
   v-bind:watch='{{ watch | string | lower }}'
   name='{{ field.name }}'
   :optional='false'
-  v-bind:token='{{ token | tojson }}'
-  v-bind:object-name='"{{ object_name | string }}"'
   >
   <div>
     <div v-show="hasAttachment" class="uploaded-file">

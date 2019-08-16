@@ -13,6 +13,7 @@ UNPROTECTED_ROUTES = [
     "atst.helpdocs",
     "static",
     "atst.about",
+    "atst.upload_token",
 ]
 
 

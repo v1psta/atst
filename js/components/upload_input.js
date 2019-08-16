@@ -20,12 +20,6 @@ export default {
 
   props: {
     name: String,
-    token: {
-      type: Object,
-    },
-    objectName: {
-      type: String,
-    },
     initialData: {
       type: String,
     },
@@ -52,8 +46,7 @@ export default {
     }
   },
 
-  created: function() {
-    this.uploader = buildUploader(this.token)
+  created: async function() {
     emitEvent('field-mount', this, {
       optional: this.optional,
       name: this.name,
@@ -71,13 +64,12 @@ export default {
         return
       }
 
-      const response = await this.uploader.upload(file, this.objectName)
-
+      const uploader = await this.getUploader()
+      const response = await uploader.upload(file, this.objectName)
       if (response.ok) {
         this.attachment = e.target.value
         this.$refs.attachmentFilename.value = file.name
-        this.$refs.attachmentObjectName.value = this.objectName
-        this.$refs.attachmentInput.disabled = true
+        this.$refs.attachmentObjectName.value = response.objectName
       } else {
         this.uploadError = true
       }
@@ -110,6 +102,11 @@ export default {
     clearErrors: function() {
       this.uploadError = false
       this.sizeError = false
+    },
+    getUploader: async function() {
+      return fetch('/upload-token')
+        .then(response => response.json())
+        .then(({ token }) => buildUploader(token))
     },
   },
 

@@ -9,6 +9,7 @@ from flask import (
     request,
     make_response,
     current_app as app,
+    jsonify,
 )
 
 from jinja2.exceptions import TemplateNotFound
@@ -39,6 +40,14 @@ def root():
         flash("login_next")
 
     return render_template("login.html", redirect_url=redirect_url)
+
+
+@bp.route("/upload-token")
+def upload_token():
+    (token, object_name) = app.csp.files.get_token()
+    render_args = {"token": token, "objectName": object_name}
+
+    return jsonify(render_args)
 
 
 @bp.route("/help")

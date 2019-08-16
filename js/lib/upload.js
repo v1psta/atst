@@ -34,7 +34,7 @@ class AzureUploader {
             if (err) {
               resolve({ ok: false })
             } else {
-              resolve({ ok: true })
+              resolve({ ok: true, objectName })
             }
           }
         )
@@ -57,10 +57,12 @@ class AwsUploader {
     form.append('file', file)
     form.set('x-amz-meta-filename', file.name)
 
-    return fetch(this.presignedPost.url, {
+    const response = await fetch(this.presignedPost.url, {
       method: 'POST',
       body: form,
     })
+
+    return { ok: response.ok, objectName }
   }
 }
 
@@ -70,7 +72,7 @@ class MockUploader {
   }
 
   async upload(file, objectName) {
-    return Promise.resolve({ ok: true })
+    return Promise.resolve({ ok: true, objectName })
   }
 }
 
