@@ -156,6 +156,7 @@ forms:
       length_error: Filename may be no longer than 100 characters.
   task_order:
     upload_error: There was an error uploading your file. Please try again. If you encounter repeated problems uploading this file, please contact CCPO.
+    size_error: The file you have selected is too large. Please choose a file no larger than 64MB.
     app_migration:
       both: 'Yes, migrating from both an on-premise data center <strong>and</strong> another cloud provider'
       cloud: 'Yes, migrating from another cloud provider'

@@ -46,9 +46,9 @@ export default {
     return {
       hasInitialData: !!this.initialData,
       attachment: this.initialData || null,
-      showErrors: this.initialErrors,
       changed: false,
-      uploadError: null,
+      uploadError: false,
+      sizeError: false,
     }
   },
 
@@ -63,15 +63,22 @@ export default {
 
   methods: {
     addAttachment: async function(e) {
+      this.clearErrors()
+
       const file = e.target.files[0]
+      if (file.size > 64000000) {
+        this.sizeError = true
+        return
+      }
+
       const response = await this.uploader.upload(file, this.objectName)
+
       if (response.ok) {
         this.attachment = e.target.value
         this.$refs.attachmentFilename.value = file.name
         this.$refs.attachmentObjectName.value = this.objectName
         this.$refs.attachmentInput.disabled = true
       } else {
-        this.showErrors = true
         this.uploadError = true
       }
 
@@ -91,8 +98,7 @@ export default {
         this.$refs.attachmentInput.value = null
         this.$refs.attachmentInput.disabled = false
       }
-      this.showErrors = false
-      this.uploadError = false
+      this.clearErrors()
       this.changed = true
 
       emitEvent('field-change', this, {
@@ -101,6 +107,10 @@ export default {
         watch: this.watch,
       })
     },
+    clearErrors: function() {
+      this.uploadError = false
+      this.sizeError = false
+    }
   },
 
   computed: {
@@ -115,5 +125,8 @@ export default {
     hideInput: function() {
       return this.hasInitialData && !this.changed
     },
+    showErrors: function() {
+      return (!this.changed && this.initialErrors) || this.uploadError || this.sizeError
+    }
   },
 }
