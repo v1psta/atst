@@ -8,15 +8,15 @@
   </div>
   <div class='form-row'>
     <div class='form-col form-col--half'>
-      {{ TextInput(new_member_form.user_data.first_name, validation='requiredField') }}
+      {{ TextInput(new_member_form.user_data.first_name, validation='requiredField', optional=False) }}
     </div>
     <div class='form-col form-col--half'>
-      {{ TextInput(new_member_form.user_data.last_name, validation='requiredField') }}
+      {{ TextInput(new_member_form.user_data.last_name, validation='requiredField', optional=False) }}
     </div>
   </div>
   <div class='form-row'>
     <div class='form-col form-col--half'>
-      {{ TextInput(new_member_form.user_data.email, validation='email') }}
+      {{ TextInput(new_member_form.user_data.email, validation='email', optional=False) }}
     </div>
     <div class='form-col form-col--half'>
       {{ TextInput(new_member_form.user_data.phone_number, validation='usPhone', optional=True) }}
@@ -24,7 +24,7 @@
   </div>
   <div class='form-row'>
     <div class='form-col form-col--half'>
-      {{ TextInput(new_member_form.user_data.dod_id, validation='dodId') }}
+      {{ TextInput(new_member_form.user_data.dod_id, validation='dodId', optional=False) }}
     </div>
     <div class='form-col form-col--half'>
     </div>

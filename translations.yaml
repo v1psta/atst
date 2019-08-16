@@ -325,7 +325,6 @@ portfolios:
       title: '{application_name} Team Settings'
       add_to_environment: Add to existing environment
     team_text: Team
-    update_button_text: Save
     members:
       new:
         assign_roles: Assign Member Environments and Roles

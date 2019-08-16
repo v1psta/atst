@@ -21,23 +21,23 @@
   </div>
   <div class='form-row'>
     <div class='form-col form-col--half'>
-      {{ TextInput(member_form.user_data.first_name, validation='requiredField') }}
+      {{ TextInput(member_form.user_data.first_name, validation='requiredField', optional=False) }}
     </div>
     <div class='form-col form-col--half'>
-      {{ TextInput(member_form.user_data.last_name, validation='requiredField') }}
-    </div>
-  </div>
-  <div class='form-row'>
-    <div class='form-col form-col--half'>
-      {{ TextInput(member_form.user_data.email, validation='email') }}
-    </div>
-    <div class='form-col form-col--half'>
-      {{ TextInput(member_form.user_data.phone_number, validation='usPhone', optional=True) }}
+      {{ TextInput(member_form.user_data.last_name, validation='requiredField', optional=False) }}
     </div>
   </div>
   <div class='form-row'>
     <div class='form-col form-col--half'>
-      {{ TextInput(member_form.user_data.dod_id, validation='dodId') }}
+      {{ TextInput(member_form.user_data.email, validation='email', optional=False) }}
+    </div>
+    <div class='form-col form-col--half'>
+      {{ TextInput(member_form.user_data.phone_number, validation='usPhone') }}
+    </div>
+  </div>
+  <div class='form-row'>
+    <div class='form-col form-col--half'>
+      {{ TextInput(member_form.user_data.dod_id, validation='dodId', optional=False) }}
     </div>
     <div class='form-col form-col--half'>
     </div>

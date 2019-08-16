@@ -43,7 +43,7 @@
           </p>
           <div class="form-row">
             <div class="form-col form-col--two-thirds">
-              {{ TextInput(form.name) }}
+              {{ TextInput(form.name, optional=False) }}
             </div>
             <div class="form-col form-col--third">
               &nbsp;
@@ -51,7 +51,7 @@
           </div>
           <div class="form-row">
             <div class="form-col form-col--two-thirds">
-              {{ TextInput(form.description, paragraph=True) }}
+              {{ TextInput(form.description, paragraph=True, optional=False) }}
             </div>
             <div class="form-col form-col--third">
               &nbsp;
