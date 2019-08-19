@@ -17,7 +17,7 @@
               {{ portfolio_form.csrf_token }}
               <div class='form-row'>
                 <div class='form-col form-col--half'>
-                  {{ TextInput(portfolio_form.name, validation="portfolioName") }}
+                  {{ TextInput(portfolio_form.name, validation="portfolioName", inset_form=True) }}
                 </div>
                 <div class='edit-portfolio-name action-group'>
                   {{ SaveButton(text='Save', additional_classes='usa-button-big') }}
