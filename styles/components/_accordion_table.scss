@@ -49,6 +49,7 @@
       font-weight: $font-bold;
       border-bottom: 1px solid $color-gray-lightest;
       margin: 0;
+      list-style-type: none;
 
       .icon-link--large {
         padding-top: $gap * 0.5;
@@ -107,6 +108,7 @@
     &__action-group {
       padding: 1rem 3.2rem;
       background-color: $color-gray-lightest;
+      text-align: right;
 
       button,
       a {
@@ -117,14 +119,6 @@
       .icon-link {
         padding-top: 0.5rem;
         float: none;
-      }
-
-      > *:first-child {
-        padding-left: 0;
-      }
-
-      > *:last-child {
-        float: right;
       }
     }
 
