@@ -1,6 +1,8 @@
 import pytest
 from sqlalchemy.exc import InternalError
+from datetime import datetime
 
+from atst.database import db
 from atst.domain.users import Users
 from atst.models.user import User
 
@@ -42,5 +44,7 @@ def test_deleted_application_roles_are_ignored(session):
 
 def test_does_not_log_user_update_when_updating_last_login(mock_logger):
     user = UserFactory.create()
-    Users.update_last_login(user)
+    user.last_login = datetime.now()
+    db.session.add(user)
+    db.session.commit()
     assert "Audit Event update" not in mock_logger.messages
