@@ -22,7 +22,7 @@ def test_environment_form_default_no_access():
     assert form.data == {
         "environment_id": 123,
         "environment_name": "testing",
-        "role": NO_ACCESS,
+        "role": None,
     }
 
 
