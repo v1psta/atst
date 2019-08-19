@@ -383,7 +383,7 @@ task_orders:
     pop_start: 'Period of Performance (PoP) start date'
     review_button: Review task order
     supporting_docs_header: Upload your supporting documentation
-    supporting_docs_size_limit: Your file may not exceed 1MB
+    supporting_docs_size_limit: Your file may not exceed 64MB
     supporting_docs_text: Upload a single PDF containing all relevant information.
     step_5:
       title: Confirm Signature
