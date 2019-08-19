@@ -156,6 +156,7 @@ forms:
       length_error: Filename may be no longer than 100 characters.
   task_order:
     upload_error: There was an error uploading your file. Please try again. If you encounter repeated problems uploading this file, please contact CCPO.
+    size_error: The file you have selected is too large. Please choose a file no larger than 64MB.
     app_migration:
       both: 'Yes, migrating from both an on-premise data center <strong>and</strong> another cloud provider'
       cloud: 'Yes, migrating from another cloud provider'
@@ -381,7 +382,7 @@ task_orders:
     pop_start: 'Period of Performance (PoP) start date'
     review_button: Review task order
     supporting_docs_header: Upload your supporting documentation
-    supporting_docs_size_limit: Your file may not exceed 1MB
+    supporting_docs_size_limit: Your file may not exceed 64MB
     supporting_docs_text: Upload a single PDF containing all relevant information.
     step_5:
       title: Confirm Signature
