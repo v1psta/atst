@@ -225,3 +225,18 @@ def test_for_user_does_not_include_deleted_portfolios():
     user = UserFactory.create()
     PortfolioFactory.create(owner=user, deleted=True)
     assert len(Portfolios.for_user(user)) == 0
+
+
+def test_for_user_does_not_include_deleted_application_roles():
+    user1 = UserFactory.create()
+    user2 = UserFactory.create()
+    portfolio = PortfolioFactory.create()
+    app = ApplicationFactory.create(portfolio=portfolio)
+    ApplicationRoleFactory.create(
+        status=ApplicationRoleStatus.ACTIVE, user=user1, application=app
+    )
+    assert len(Portfolios.for_user(user1)) == 1
+    ApplicationRoleFactory.create(
+        status=ApplicationRoleStatus.ACTIVE, user=user2, application=app, deleted=True
+    )
+    assert len(Portfolios.for_user(user2)) == 0
