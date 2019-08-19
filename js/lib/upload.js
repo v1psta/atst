@@ -2,13 +2,14 @@ import Azure from 'azure-storage'
 import 'whatwg-fetch'
 
 class AzureUploader {
-  constructor(accountName, containerName, sasToken) {
+  constructor(accountName, containerName, sasToken, objectName) {
     this.accountName = accountName
     this.containerName = containerName
     this.sasToken = sasToken.token
+    this.objectName = objectName
   }
 
-  async upload(file, objectName) {
+  async upload(file) {
     const blobService = Azure.createBlobServiceWithSas(
       `https://${this.accountName}.blob.core.windows.net`,
       this.sasToken
@@ -27,14 +28,14 @@ class AzureUploader {
       fileReader.addEventListener('load', f => {
         blobService.createBlockBlobFromText(
           this.containerName,
-          `${objectName}`,
+          `${this.objectName}`,
           f.target.result,
           options,
           function(err, result) {
             if (err) {
               resolve({ ok: false })
             } else {
-              resolve({ ok: true, objectName })
+              resolve({ ok: true, objectName: this.objectName })
             }
           }
         )
@@ -45,11 +46,12 @@ class AzureUploader {
 }
 
 class AwsUploader {
-  constructor(presignedPost) {
+  constructor(presignedPost, objectName) {
     this.presignedPost = presignedPost
+    this.objectName = objectName
   }
 
-  async upload(file, objectName) {
+  async upload(file) {
     const form = new FormData()
     Object.entries(this.presignedPost.fields).forEach(([k, v]) => {
       form.append(k, v)
@@ -62,31 +64,34 @@ class AwsUploader {
       body: form,
     })
 
-    return { ok: response.ok, objectName }
+    return { ok: response.ok, objectName: this.objectName }
   }
 }
 
 class MockUploader {
-  constructor(token) {
+  constructor(token, objectName) {
     this.token = token
+    this.objectName = objectName
+    console.log("built MockUploader")
   }
 
   async upload(file, objectName) {
-    return Promise.resolve({ ok: true, objectName })
+    return Promise.resolve({ ok: true, objectName: this.objectName })
   }
 }
 
-export const buildUploader = token => {
+export const buildUploader = (token, objectName) => {
   const cloudProvider = process.env.CLOUD_PROVIDER || 'mock'
   if (cloudProvider === 'aws') {
-    return new AwsUploader(token)
+    return new AwsUploader(token, objectName)
   } else if (cloudProvider === 'azure') {
     return new AzureUploader(
       process.env.AZURE_ACCOUNT_NAME,
       process.env.AZURE_CONTAINER_NAME,
-      token
+      token,
+      objectName
     )
   } else {
-    return new MockUploader(token)
+    return new MockUploader(token, objectName)
   }
 }

@@ -106,7 +106,7 @@ export default {
     getUploader: async function() {
       return fetch('/upload-token', { credentials: "include" })
         .then(response => response.json())
-        .then(({ token }) => buildUploader(token))
+        .then(({ token, objectName }) => buildUploader(token, objectName))
     },
   },
 
