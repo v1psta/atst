@@ -7,7 +7,11 @@ from atst.models import Base, ApplicationRole, types, mixins
 from atst.models.permissions import Permissions
 from atst.models.portfolio_invitation import PortfolioInvitation
 from atst.models.application_invitation import ApplicationInvitation
-from atst.models.mixins.auditable import record_permission_sets_updates
+from atst.models.mixins.auditable import (
+    AuditableMixin,
+    ACTION_UPDATE,
+    record_permission_sets_updates,
+)
 
 
 users_permission_sets = Table(
@@ -120,6 +124,12 @@ class User(
             for c in self.__table__.columns
             if c.name not in ["id"]
         }
+
+    @staticmethod
+    def audit_update(mapper, connection, target):
+        changes = AuditableMixin.get_changes(target)
+        if changes and not "last_login" in changes:
+            target.create_audit_event(connection, target, ACTION_UPDATE)
 
 
 listen(User.permission_sets, "bulk_replace", record_permission_sets_updates, raw=True)

@@ -54,8 +54,7 @@ class AuditableMixin(object):
 
     @staticmethod
     def audit_update(mapper, connection, target):
-        changes = AuditableMixin.get_changes(target)
-        if changes and not "last_login" in changes:
+        if AuditableMixin.get_changes(target):
             target.create_audit_event(connection, target, ACTION_UPDATE)
 
     def get_changes(self):
