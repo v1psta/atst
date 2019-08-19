@@ -104,7 +104,7 @@ export default {
       this.sizeError = false
     },
     getUploader: async function() {
-      return fetch('/upload-token')
+      return fetch('/upload-token', { credentials: "include" })
         .then(response => response.json())
         .then(({ token }) => buildUploader(token))
     },

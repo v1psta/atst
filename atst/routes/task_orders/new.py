@@ -4,7 +4,6 @@ from flask import (
     render_template,
     request as http_request,
     url_for,
-    current_app,
 )
 
 from . import task_orders_bp
