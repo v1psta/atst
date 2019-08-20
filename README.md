@@ -127,11 +127,16 @@ For example `/login-dev?username=amanda`.
 In development mode, there is a `DEV Login` button available on the home page
 that will automatically log you in as Amanda.
 
+Additionally, this endpoint can be used to log into any real users in the dev environments by providing their DoD ID:
+`/login-dev?dod_id=1234567890123`
+
 When in development mode, you can create new users by passing first name, last name, and DoD ID query parameters to `/dev-new-user` like so:
 ```
 /dev-new-user?first_name=Harrold&last_name=Henderson&dod_id=1234567890123
 ```
 And it will create the new user, sign in as them, and load their profile page to fill out the rest of the details.
+
+Once this user is created, you can log in as them again the future using the DoD ID dev login endpoint documented above.
 
 ### Seeding the database
 
