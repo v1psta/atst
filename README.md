@@ -127,6 +127,12 @@ For example `/login-dev?username=amanda`.
 In development mode, there is a `DEV Login` button available on the home page
 that will automatically log you in as Amanda.
 
+When in development mode, you can create new users by passing first name, last name, and DoD ID query parameters to `/dev-new-user` like so:
+```
+/dev-new-user?first_name=Harrold&last_name=Henderson&dod_id=1234567890123
+```
+And it will create the new user, sign in as them, and load their profile page to fill out the rest of the details.
+
 ### Seeding the database
 
 We have a helper script that will seed the database with requests, portfolios and
