@@ -64,13 +64,13 @@ openssl genrsa -out root-ca/ca.key 2048
 openssl req -config root-ca/openssl.conf -new -x509 -days 3650 -key root-ca/ca.key -sha256 -extensions v3_req -out root-ca/ca.crt -subj '/CN=Root-ca'
 
 openssl genrsa -out intermediate/intermediate.key 2048
-openssl req -config intermediate/openssl.conf -sha256 -new -key intermediate/intermediate.key -out intermediate/intermediate.csr -subj '/CN=Interm.'
+openssl req -config intermediate/openssl.conf -sha256 -new -days 3650 -key intermediate/intermediate.key -out intermediate/intermediate.csr -subj '/CN=Interm.'
 openssl ca -batch -config root-ca/openssl.conf -keyfile root-ca/ca.key -cert root-ca/ca.crt -extensions v3_req -notext -md sha256 -in intermediate/intermediate.csr -out intermediate/intermediate.crt
 
-openssl req -new -keyout client.key -out client.request -days 365 -nodes -subj "/CN=client.example.com" -newkey rsa:2048
+openssl req -new -keyout client.key -out client.request -days 3650 -nodes -subj "/CN=client.example.com" -newkey rsa:2048
 openssl ca -batch -config root-ca/openssl.conf -keyfile intermediate/intermediate.key -cert intermediate/intermediate.crt -out client.crt -infiles client.request
 
-openssl ca -gencrl -keyfile intermediate/intermediate.key -cert intermediate/intermediate.crt -out intermediate.pem.crl -config intermediate/openssl.conf
+openssl ca -gencrl -keyfile intermediate/intermediate.key -crldays 3649 -cert intermediate/intermediate.crt -out intermediate.pem.crl -config intermediate/openssl.conf
 openssl crl -inform pem -outform der -in intermediate.pem.crl -out intermediate.crl
 
 cat intermediate/intermediate.crt root-ca/ca.crt >> ca-chain.pem
