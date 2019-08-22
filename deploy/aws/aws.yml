@@ -142,9 +142,10 @@ spec:
           image: 904153757533.dkr.ecr.us-east-2.amazonaws.com/atat:884d95ada21a5097f5c07f305d8e4e24d0f2a03f
           args: [
             "/opt/atat/atst/.venv/bin/python",
-            "/opt/atat/atst/.venv/bin/flask",
-            "rq",
-            "worker"
+            "/opt/atat/atst/.venv/bin/celery",
+            "-A",
+            "celery_worker.celery",
+            "worker",
           ]
           resources:
             requests:
