@@ -1,10 +1,4 @@
-from flask import (
-    g,
-    redirect,
-    render_template,
-    request as http_request,
-    url_for,
-)
+from flask import g, redirect, render_template, request as http_request, url_for
 
 from . import task_orders_bp
 from atst.domain.authz.decorator import user_can_access_decorator as user_can

@@ -72,7 +72,6 @@ class MockUploader {
   constructor(token, objectName) {
     this.token = token
     this.objectName = objectName
-    console.log("built MockUploader")
   }
 
   async upload(file, objectName) {
