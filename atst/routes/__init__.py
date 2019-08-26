@@ -21,6 +21,8 @@ from atst.domain.users import Users
 from atst.domain.authnid import AuthenticationContext
 from atst.domain.auth import logout as _logout
 from atst.utils.flash import formatted_flash as flash
+from atst.models.permissions import Permissions
+from atst.domain.authz.decorator import user_can_access_decorator as user_can
 
 
 bp = Blueprint("atst", __name__)
@@ -43,6 +45,7 @@ def root():
 
 
 @bp.route("/upload-token")
+@user_can(Permissions.CREATE_TASK_ORDER, message="edit task order form")
 def upload_token():
     (token, object_name) = app.csp.files.get_token()
     render_args = {"token": token, "objectName": object_name}
