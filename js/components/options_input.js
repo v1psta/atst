@@ -22,7 +22,6 @@ export default {
       type: String,
       default: '',
     },
-    insetForm: Boolean,
   },
 
   created: function() {
@@ -37,7 +36,7 @@ export default {
     const showError = (this.initialErrors && this.initialErrors.length) || false
     return {
       showError: showError,
-      showValid: !this.insetForm && (!showError && !!this.initialValue),
+      showValid: false,
       validationError: this.initialErrors.join(' '),
       value: this.initialValue,
     }

@@ -9,8 +9,7 @@
   show_validation=True,
   disabled=False,
   watch=False,
-  optional=True,
-  inset_form=False) -%}
+  optional=True) -%}
   <optionsinput
     name='{{ field.name }}'
     inline-template
@@ -20,7 +19,6 @@
     v-bind:watch='{{ watch | string | lower }}'
     v-bind:optional={{ optional|lower }}
     v-bind:null-option="'{{ field.default }}'"
-    v-bind:inset-form={{ inset_form|lower }}
     >
     <div
       v-bind:class="['usa-input', { 'usa-input--error': showError, 'usa-input--success': showValid }]">
