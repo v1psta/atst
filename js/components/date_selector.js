@@ -28,7 +28,6 @@ export default {
       type: Boolean,
       default: true,
     },
-    insetForm: Boolean,
   },
 
   data: function() {
@@ -37,7 +36,7 @@ export default {
       month: this.initialmonth,
       year: this.initialyear,
       name: this.nameTag,
-      showValidation: !this.insetForm,
+      showValidation: false,
     }
   },
 
