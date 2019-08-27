@@ -78,8 +78,13 @@
 
         </div>
 
-        <div class="usa-form-group-date-ok" v-if="isDateValid">
-          {{ Icon("ok", classes="icon--green") }}
+        <div v-if="showValidation">
+          <div class="usa-form-group-date-ok" v-if="isDateValid">
+            {{ Icon("ok", classes="icon--green") }}
+          </div>
+          <div class="usa-form-group-date-ok" v-else>
+            {{ Icon("alert", classes="icon--red")}}
+          </div>
         </div>
       </div>
     </fieldset>
