@@ -31,7 +31,6 @@ export default {
       type: Boolean,
       default: false,
     },
-    insetForm: Boolean,
   },
 
   data: function() {
@@ -61,7 +60,7 @@ export default {
       this._checkIfValid({
         value: this.value,
         invalidate: true,
-        showValidationIcon: !this.insetForm,
+        showValidationIcon: false,
       })
 
       if (this.mask && this.validation !== 'email') {
