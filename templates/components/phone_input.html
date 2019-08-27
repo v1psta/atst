@@ -3,10 +3,10 @@
 {% macro PhoneInput(phone_number, phone_ext, placeholder_phone="") %}
   <div class='phone-input'>
       <div class='phone-input__phone'>
-        {{ TextInput(phone_number, placeholder=placeholder_phone, validation='usPhone') }}
+        {{ TextInput(phone_number, placeholder=placeholder_phone, validation='usPhone', inset_form=True) }}
       </div>
       <div class='phone-input__extension'>
-        {{ TextInput(phone_ext, validation='phoneExt')}}
+        {{ TextInput(phone_ext, validation='phoneExt', inset_form=True)}}
       </div>
   </div>
 {%- endmacro %}

@@ -7,7 +7,8 @@
   mindate=None,
   maxdate=None,
   watch=False,
-  optional=True) -%}
+  optional=True,
+  inset_form=False) -%}
 
 <date-selector
   {% if maxdate %}maxdate="{{ maxdate.strftime("%Y-%m-%d") }}"{% endif %}
@@ -18,9 +19,10 @@
   initialyear="{{ field.data.year }}"
   v-bind:watch='{{ watch | string | lower }}'
   :optional='{{ optional | string | lower }}'
+  v-bind:inset-form={{ inset_form|lower }}
   inline-template>
 
-    <fieldset class="usa-input date-picker" v-bind:class="{ 'usa-input--success': isDateValid }">
+    <fieldset class="usa-input date-picker" v-bind:class="{ 'usa-input--success': isDateValid && showValidation }">
       <legend>
         <div class="usa-input__title">
           {{ label }}

@@ -11,24 +11,24 @@
       <div class='panel__content'>
         <div class='form-row'>
           <div class='form-col form-col--half'>
-            {{ TextInput(form.first_name, validation='requiredField') }}
+            {{ TextInput(form.first_name, validation='requiredField', inset_form=True) }}
           </div>
 
           <div class='form-col form-col--half'>
-            {{ TextInput(form.last_name, validation='requiredField') }}
+            {{ TextInput(form.last_name, validation='requiredField', inset_form=True) }}
           </div>
         </div>
 
-        {{ TextInput(form.email, validation='email') }}
+        {{ TextInput(form.email, validation='email', inset_form=True) }}
         {{ PhoneInput(form.phone_number, form.phone_ext) }}
 
-        {{ OptionsInput(form.service_branch) }}
-        {{ OptionsInput(form.citizenship) }}
-        {{ OptionsInput(form.designation) }}
+        {{ OptionsInput(form.service_branch, inset_form=True) }}
+        {{ OptionsInput(form.citizenship, inset_form=True) }}
+        {{ OptionsInput(form.designation, inset_form=True) }}
 
 
         <div class="usa-input">
-          {{ DatePicker(form.date_latest_training, mindate=mindate, maxdate=maxdate) }}
+          {{ DatePicker(form.date_latest_training, mindate=mindate, maxdate=maxdate, inset_form=True) }}
         </div>
       </div>
     </div>

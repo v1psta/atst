@@ -28,6 +28,7 @@ export default {
       type: Boolean,
       default: true,
     },
+    insetForm: Boolean,
   },
 
   data: function() {
@@ -36,6 +37,7 @@ export default {
       month: this.initialmonth,
       year: this.initialyear,
       name: this.nameTag,
+      showValidation: !this.insetForm,
     }
   },
 
@@ -160,6 +162,8 @@ export default {
 
   methods: {
     onInput: function(e) {
+      this.showValidation = true
+
       emitEvent('field-change', this, {
         value: this.formattedDate,
         name: this.name,
