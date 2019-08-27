@@ -43,7 +43,9 @@
             <header class='accordion__header row'>
               <div class='col col-grow'>
                 <h3 class='icon-link accordion__title' v-on:click="toggleSection('{{ section_name }}')">{{ application.name }}</h3>
-                <span class='accordion__description'>{{ application.description }}</span>
+                <p class='accordion__description'>
+                  {{ application.description }}
+                </p>
                 <div class='accordion__actions'>
                   <a class='icon-link' href='{{ url_for("applications.settings", application_id=application.id) }}'>
                     <span>{{ "portfolios.applications.app_settings_text" | translate }}</span>

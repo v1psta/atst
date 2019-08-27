@@ -27,7 +27,9 @@
         </div>
 
         {% if description %}
-          <span class='usa-input__help'>{{ description | safe }}</span>
+          <p class='usa-input__help'>
+            {{ description | safe }}
+          </p>
         {% endif %}
       </legend>
 
