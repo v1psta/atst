@@ -275,7 +275,7 @@ This project uses [detect-secrets](https://github.com/Yelp/detect-secrets) to he
 If you need to check in a file that raises false positives from `detect-secrets`, you can add it to the whitelist. Run:
 
 ```
-pipenv run detect-secrets scan --update .secrets.baseline
+pipenv run detect-secrets scan --no-aws-key-scan --no-stripe-scan --no-slack-scan --no-artifactory-scan --update .secrets.baseline
 ```
 
 and then:
