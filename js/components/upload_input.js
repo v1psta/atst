@@ -1,6 +1,3 @@
-import createNumberMask from 'text-mask-addons/dist/createNumberMask'
-import { conformToMask } from 'vue-text-mask'
-
 import { emitEvent } from '../lib/emitters'
 import FormMixin from '../mixins/form'
 import textinput from './text_input'
@@ -68,7 +65,7 @@ export default {
       }
 
       const uploader = await this.getUploader()
-      const response = await uploader.upload(file, this.objectName)
+      const response = await uploader.upload(file)
       if (response.ok) {
         this.attachment = e.target.value
         this.$refs.attachmentFilename.value = file.name
