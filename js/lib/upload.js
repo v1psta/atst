@@ -31,7 +31,7 @@ class AzureUploader {
           `${this.objectName}`,
           f.target.result,
           options,
-          function(err, result) {
+          (err, result) => {
             if (err) {
               resolve({ ok: false })
             } else {
