@@ -35,6 +35,7 @@
           v-bind:value="attachment"
           type="file">
           <input type="hidden" name="pdf-filename" id="pdf-filename" ref="attachmentFilename">
+          <input type="hidden" name="pdf-object_name" id="pdf-object_name" ref="attachmentObjectName">
       </div>
       <template v-if="uploadError">
         <span class="usa-input__message">There was an error uploading your file. Please try again. If you encounter repeated problems uploading this file, please contact CCPO.</span>
