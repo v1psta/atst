@@ -1,4 +1,12 @@
-from flask import g, redirect, render_template, request as http_request, url_for
+from flask import (
+    g,
+    redirect,
+    render_template,
+    request as http_request,
+    url_for,
+    current_app as app,
+    jsonify,
+)
 
 from . import task_orders_bp
 from atst.domain.authz.decorator import user_can_access_decorator as user_can
@@ -62,6 +70,16 @@ def update_task_order(
             ),
             400,
         )
+
+
+@task_orders_bp.route("/task_orders/<portfolio_id>/upload-token")
+@user_can(Permissions.CREATE_TASK_ORDER, message="edit task order form")
+def upload_token(portfolio_id):
+    print(app.csp)
+    (token, object_name) = app.csp.files.get_token()
+    render_args = {"token": token, "objectName": object_name}
+
+    return jsonify(render_args)
 
 
 @task_orders_bp.route("/task_orders/<task_order_id>/edit")

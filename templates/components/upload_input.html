@@ -1,6 +1,6 @@
 {% from "components/icon.html" import Icon %}
 
-{% macro UploadInput(field, show_label=False, watch=False, token="", object_name="") -%}
+{% macro UploadInput(field, portfolio_id, show_label=False, watch=False, token="", object_name="") -%}
 <uploadinput
   inline-template
   {% if not field.errors %}
@@ -9,6 +9,7 @@
     v-bind:initial-errors='true'
   {% endif %}
   v-bind:watch='{{ watch | string | lower }}'
+  v-bind:portfolio-id="'{{ portfolio_id }}'"
   name='{{ field.name }}'
   :optional='false'
   >

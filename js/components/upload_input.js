@@ -34,6 +34,9 @@ export default {
       type: Boolean,
       default: true,
     },
+    portfolioId: {
+      type: String,
+    },
   },
 
   data: function() {
@@ -104,7 +107,9 @@ export default {
       this.sizeError = false
     },
     getUploader: async function() {
-      return fetch('/upload-token', { credentials: 'include' })
+      return fetch(`/task_orders/${this.portfolioId}/upload-token`, {
+        credentials: 'include',
+      })
         .then(response => response.json())
         .then(({ token, objectName }) => buildUploader(token, objectName))
     },
