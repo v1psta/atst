@@ -75,7 +75,6 @@ def update_task_order(
 @task_orders_bp.route("/task_orders/<portfolio_id>/upload-token")
 @user_can(Permissions.CREATE_TASK_ORDER, message="edit task order form")
 def upload_token(portfolio_id):
-    print(app.csp)
     (token, object_name) = app.csp.files.get_token()
     render_args = {"token": token, "objectName": object_name}
 
