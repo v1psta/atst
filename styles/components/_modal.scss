@@ -218,6 +218,7 @@ body {
   &.wide {
     .modal__dialog {
       max-width: 90rem;
+      width: 100%;
     }
 
     .modal__body {
