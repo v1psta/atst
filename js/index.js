@@ -130,8 +130,12 @@ const app = new Vue({
 
   directives: {
     sticky: {
-      inserted: el => {
-        stickybits(el)
+      inserted: (el, binding) => {
+        var customAttributes
+        if (binding.expression) {
+          customAttributes = JSON.parse(binding.expression)
+        }
+        stickybits(el, customAttributes)
       },
     },
   },

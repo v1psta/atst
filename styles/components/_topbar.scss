@@ -1,6 +1,12 @@
 .topbar {
   background-color: $color-blue-darkest;
   border-bottom: 1px solid $color-black;
+  z-index: 16;
+  height: 48px;
+
+  &.js-is-sticky {
+    width: 100%;
+  }
 
   &__navigation {
     display: flex;
