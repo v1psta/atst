@@ -234,9 +234,8 @@ def submit_form_step_three_add_clins(task_order_id):
 def form_step_four_review(task_order_id):
     task_order = TaskOrders.get(task_order_id)
 
-    (token, object_name) = current_app.uploader.get_token()
     extra_args = {
-        "pdf_download_url": current_app.uploader.generate_download_link(
+        "pdf_download_url": app.csp.files.generate_download_link(
             task_order.pdf.object_name, task_order.pdf.filename
         )
     }
