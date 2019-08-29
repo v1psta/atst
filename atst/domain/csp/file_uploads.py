@@ -6,10 +6,10 @@ class Uploader:
     def generate_token(self):
         pass
 
-    def generate_download_link(self, object_name, filename):
+    def generate_download_link(self, object_name, filename) -> (dict, str):
         pass
 
-    def object_name(self):
+    def object_name(self) -> str:
         return str(uuid4())
 
 
@@ -60,14 +60,14 @@ class AzureUploader(Uploader):
         return ({"token": sas_token}, object_name)
 
     def generate_download_link(self, object_name, filename):
-        account = CloudStorageAccount(
+        account = self.CloudStorageAccount(
             account_name=self.account_name, account_key=self.storage_key
         )
         bbs = account.create_block_blob_service()
         sas_token = bbs.generate_blob_shared_access_signature(
             self.container_name,
             object_name,
-            permission=BlobPermissions.READ,
+            permission=self.BlobPermissions.READ,
             expiry=datetime.utcnow() + self.timeout,
             content_disposition=f"attachment; filename={filename}",
             protocol="https",
@@ -120,11 +120,11 @@ class AwsUploader(Uploader):
         return (presigned_post, object_name)
 
     def generate_download_link(self, object_name, filename):
-        s3_client = boto3.client(
+        s3_client = self.boto3.client(
             "s3",
             aws_access_key_id=self.access_key_id,
             aws_secret_access_key=self.secret_key,
-            config=boto3.session.Config(
+            config=self.boto3.session.Config(
                 signature_version="s3v4", region_name=self.region_name
             ),
         )
