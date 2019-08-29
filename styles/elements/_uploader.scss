@@ -43,6 +43,11 @@
     margin-left: 0.5rem;
     font-weight: $font-bold;
     text-decoration: underline;
+    color: $color-black-light !important;
+
+    &:hover {
+      color: $color-black-light;
+    }
   }
 
   &__remove {
