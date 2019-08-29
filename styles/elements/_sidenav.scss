@@ -6,6 +6,8 @@
 .sidenav-container {
   position: relative;
   box-shadow: $box-shadow;
+  width: 19.2%;
+  min-width: 25rem;
 
   .global-navigation.sidenav {
     height: 100%;
@@ -15,8 +17,6 @@
     @include media($large-screen) {
       margin: 0px;
     }
-
-    width: 25rem;
 
     &__title {
       @include sidenav__header;
