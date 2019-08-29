@@ -8,7 +8,8 @@ const UploadWrapper = makeTestWrapper({
   components: { uploadinput },
   templatePath: 'upload_input_template.html',
   data: function() {
-    return { initialvalue: this.initialData.initialvalue, token: this.token }
+    const { filename, objectName } = this.initialData
+    return { filename, objectName }
   },
 })
 
@@ -16,7 +17,7 @@ const UploadErrorWrapper = makeTestWrapper({
   components: { uploadinput },
   templatePath: 'upload_input_error_template.html',
   data: function() {
-    return { initialvalue: null, token: null }
+    return { filename: null, objectName: null }
   },
 })
 
@@ -24,7 +25,7 @@ describe('UploadInput Test', () => {
   it('should show input and button when no attachment present', () => {
     const wrapper = mount(UploadWrapper, {
       propsData: {
-        initialData: { initialvalue: null, token: 'token' },
+        initialData: {},
       },
     })
 
@@ -35,21 +36,24 @@ describe('UploadInput Test', () => {
   it('should show file name and hide input', () => {
     const wrapper = mount(UploadWrapper, {
       propsData: {
-        initialData: { initialvalue: 'somepdf.pdf', token: 'token' },
+        initialData: {
+          filename: 'somepdf.pdf',
+          objectName: 'abcd',
+        },
       },
     })
 
     const fileInput = wrapper.find('input[type=file]').element
-    const fileNameSpan = wrapper.find('.uploaded-file__name')
+    const fileNameLink = wrapper.find('.uploaded-file__name')
 
     expect(fileInput).toBe(undefined)
-    expect(fileNameSpan.html()).toContain('somepdf.pdf')
+    expect(fileNameLink.html()).toContain('somepdf.pdf')
   })
 
   it('should correctly display error treatment', () => {
     const wrapper = mount(UploadErrorWrapper, {
       propsData: {
-        initialData: { initialvalue: 'somepdf.pdf', token: 'token' },
+        initialData: { initialvalue: 'somepdf.pdf', objectName: 'abcd' },
       },
     })
 

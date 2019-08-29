@@ -17,8 +17,11 @@ export default {
 
   props: {
     name: String,
-    initialData: {
-      type: Object,
+    filename: {
+      type: String,
+    },
+    objectName: {
+      type: String,
     },
     initialErrors: {
       type: Boolean,
@@ -38,8 +41,8 @@ export default {
 
   data: function() {
     return {
-      hasInitialData: !!this.initialData,
-      attachment: this.initialData.filename || null,
+      hasInitialData: false,
+      attachment: this.filename || null,
       changed: false,
       uploadError: false,
       sizeError: false,
@@ -54,9 +57,12 @@ export default {
       valid: this.hasAttachment,
     })
 
+    this.hasInitialData = !!this.filename
     if (this.hasInitialData) {
-      const { filename, objectName } = this.initialData
-      this.downloadLink = await this.getDownloadLink(filename, objectName)
+      this.downloadLink = await this.getDownloadLink(
+        this.filename,
+        this.objectName
+      )
     }
   },
 

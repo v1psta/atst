@@ -15,8 +15,8 @@ class InitialValueForm(Form):
 
 
 class TaskOrderPdfForm(Form):
-    filename = StringField(default="initialvalue")
-    object_name = StringField()
+    filename = StringField(default="filename")
+    object_name = StringField(default="objectName")
 
     errorfield = StringField(
         label="error", validators=[InputRequired(message="Test Error Message")]
