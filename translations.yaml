@@ -361,10 +361,8 @@ task_orders:
       obligated: Obligated
       pop_start: PoP Start
       pop_end: PoP End
-      loa: LOA
   form:
     add_clin: Enter another CLIN
-    add_loa: Enter another line of accounting
     add_to_header: Add your task order
     add_to_description: Now, refer to your document to find the 13-digit task order number. It should be located at lorem ipsum dolar. From now on we'll refer to this portion of funding by the recorded task order number.
     clin_title: Enter CLINs
@@ -376,7 +374,6 @@ task_orders:
     cloud_funding_text: Data must match with what is in your uploaded document.
     draft_alert_title: Your information has been saved
     draft_alert_message: You can return to the Task Order Builder to enter missing information. Once you are finished, you’ll be ready to submit this request.
-    loa_label: 'Enter line of accounting (43 characters)'
     obligated_funds_label: Enter obligated funds for Base CLIN
     pop_end: 'Period of Performance (PoP) end date'
     pop_start: 'Period of Performance (PoP) start date'

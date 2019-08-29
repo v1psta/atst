@@ -56,7 +56,6 @@ class TaskOrders(BaseDomainClass):
             clin = CLIN(
                 task_order_id=task_order_id,
                 number=clin_data["number"],
-                loas=clin_data["loas"],
                 start_date=clin_data["start_date"],
                 end_date=clin_data["end_date"],
                 obligated_amount=clin_data["obligated_amount"],

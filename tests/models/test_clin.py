@@ -20,4 +20,3 @@ def test_is_obligated():
 
 def test_is_completed():
     assert CLINFactory.create().is_completed
-    assert not CLINFactory.create(loas=[]).is_completed

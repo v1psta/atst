@@ -47,7 +47,6 @@ class CLINForm(FlaskForm):
         label=translate("task_orders.form.obligated_funds_label"),
         validators=[Optional()],
     )
-    loas = FieldList(StringField())
 
     def validate(self, *args, **kwargs):
         valid = super().validate(*args, **kwargs)

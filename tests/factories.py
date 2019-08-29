@@ -41,10 +41,6 @@ def random_future_date(year_min=1, year_max=5):
     return _random_date(year_min, year_max, operator.add)
 
 
-def random_loa_numbers():
-    return ["".join(random.choices(string.digits, k=43))]
-
-
 def _random_date(year_min, year_max, operation):
     if year_min == year_max:
         inc = year_min
@@ -299,7 +295,6 @@ class CLINFactory(Base):
     jedi_clin_type = factory.LazyFunction(
         lambda *args: random.choice(list(clin.JEDICLINType))
     )
-    loas = factory.LazyFunction(random_loa_numbers)
 
 
 class NotificationRecipientFactory(Base):

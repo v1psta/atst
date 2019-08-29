@@ -1,6 +1,5 @@
 from enum import Enum
 from sqlalchemy import Column, Date, Enum as SQLAEnum, ForeignKey, Numeric, String
-from sqlalchemy.dialects.postgresql import ARRAY
 from sqlalchemy.orm import relationship
 
 from atst.models import Base, mixins, types
@@ -22,7 +21,6 @@ class CLIN(Base, mixins.TimestampsMixin):
     task_order = relationship("TaskOrder")
 
     number = Column(String, nullable=True)
-    loas = Column(ARRAY(String), server_default="{}", nullable=True)
     start_date = Column(Date, nullable=True)
     end_date = Column(Date, nullable=True)
     obligated_amount = Column(Numeric(scale=2), nullable=True)
@@ -46,7 +44,6 @@ class CLIN(Base, mixins.TimestampsMixin):
                 self.end_date,
                 self.obligated_amount,
                 self.jedi_clin_type,
-                len(self.loas),
             ]
         )
 

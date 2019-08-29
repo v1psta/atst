@@ -20,10 +20,6 @@ export default {
 
   props: {
     initialClinIndex: Number,
-    initialLoaCount: {
-      type: Number,
-      default: 0,
-    },
     initialClinType: String,
     initialAmount: {
       type: Number,
@@ -40,8 +36,6 @@ export default {
   },
 
   data: function() {
-    const loas = this.initialLoaCount == 0 ? 1 : 0
-    const indexOffset = this.initialLoaCount
     const start = !!this.initialStartDate
       ? new Date(this.initialStartDate)
       : undefined
@@ -53,8 +47,6 @@ export default {
 
     return {
       clinIndex: this.initialClinIndex,
-      indexOffset: this.initialLoaCount,
-      loas: loas,
       clinType: this.initialClinType,
       amount: this.initialAmount || 0,
       startDate: start,
@@ -82,14 +74,6 @@ export default {
   },
 
   methods: {
-    addLoa: function(event) {
-      ++this.loas
-    },
-
-    loaIndex: function(index) {
-      return index + this.indexOffset - 1
-    },
-
     clinChangeEvent: function() {
       emitEvent('clin-change', this, {
         id: this._uid,
