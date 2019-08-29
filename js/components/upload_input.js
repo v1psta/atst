@@ -104,7 +104,7 @@ export default {
       this.sizeError = false
     },
     getUploader: async function() {
-      return fetch(`/task_orders/${this.portfolioId}/upload-token`, {
+      return fetch(`/task_orders/${this.portfolioId}/upload_token`, {
         credentials: 'include',
       })
         .then(response => response.json())
