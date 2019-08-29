@@ -6,7 +6,7 @@ from atst.domain.exceptions import AlreadyExistsError
 from atst.domain.invitations import PortfolioInvitations
 from atst.domain.portfolios import Portfolios
 from atst.models import Permissions
-from atst.queue import queue
+from atst.jobs import send_mail
 from atst.utils.flash import formatted_flash as flash
 from atst.utils.localization import translate
 import atst.forms.portfolio_member as member_forms
@@ -16,7 +16,7 @@ def send_portfolio_invitation(invitee_email, inviter_name, token):
     body = render_template(
         "emails/portfolio/invitation.txt", owner=inviter_name, token=token
     )
-    queue.send_mail(
+    send_mail.delay(
         [invitee_email],
         translate("email.portfolio_invite", {"inviter_name": inviter_name}),
         body,

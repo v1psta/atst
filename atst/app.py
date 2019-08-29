@@ -25,10 +25,10 @@ from atst.domain.authz import Authorization
 from atst.domain.csp import make_csp_provider
 from atst.domain.portfolios import Portfolios
 from atst.models.permissions import Permissions
+from atst.queue import celery, update_celery
 from atst.utils import mailer
 from atst.utils.form_cache import FormCache
 from atst.utils.json import CustomJSONEncoder
-from atst.queue import queue
 from atst.utils.notification_sender import NotificationSender
 from atst.utils.session_limiter import SessionLimiter
 
@@ -59,13 +59,14 @@ def make_app(config):
     app.config.update(config)
     app.config.update({"SESSION_REDIS": app.redis})
 
+    update_celery(celery, app)
+
     make_flask_callbacks(app)
     register_filters(app)
     make_csp_provider(app, config.get("CSP", "mock"))
     make_crl_validator(app)
     make_mailer(app)
     make_notification_sender(app)
-    queue.init_app(app)
 
     db.init_app(app)
     csrf.init_app(app)
@@ -149,6 +150,7 @@ def map_config(config):
     return {
         **config["default"],
         "ENV": config["default"]["ENVIRONMENT"],
+        "BROKER_URL": config["default"]["REDIS_URI"],
         "DEBUG": config["default"].getboolean("DEBUG"),
         "SQLALCHEMY_ECHO": config["default"].getboolean("SQLALCHEMY_ECHO"),
         "CLASSIFIED": config["default"].getboolean("CLASSIFIED"),
@@ -248,7 +250,7 @@ def make_mailer(app):
 
 
 def make_notification_sender(app):
-    app.notification_sender = NotificationSender(queue)
+    app.notification_sender = NotificationSender()
 
 
 def make_session_limiter(app, session, config):

@@ -1,10 +1,11 @@
 import uuid
+from unittest.mock import Mock
+
 from flask import url_for
 
 from atst.domain.permission_sets import PermissionSets
 from atst.models import CSPRole
 from atst.forms.data import ENV_ROLE_NO_ACCESS as NO_ACCESS
-from atst.queue import queue
 
 from tests.factories import *
 
@@ -149,8 +150,9 @@ def test_update_team_revoke_environment_access(client, user_session, db, session
     assert user not in environment.users
 
 
-def test_create_member(client, user_session, session):
-    queue_length = len(queue.get_queue())
+def test_create_member(monkeypatch, client, user_session, session):
+    job_mock = Mock()
+    monkeypatch.setattr("atst.jobs.send_mail.delay", job_mock)
     user = UserFactory.create()
     application = ApplicationFactory.create(
         environments=[{"name": "Naboo"}, {"name": "Endor"}]
@@ -198,7 +200,7 @@ def test_create_member(client, user_session, session):
     )
     assert invitation.role.application == application
 
-    assert len(queue.get_queue()) == queue_length + 1
+    assert job_mock.called
 
 
 def test_remove_member_success(client, user_session):

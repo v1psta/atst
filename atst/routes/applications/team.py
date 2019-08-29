@@ -14,7 +14,7 @@ from atst.forms.team import TeamForm
 from atst.models import Permissions
 from atst.utils.flash import formatted_flash as flash
 from atst.utils.localization import translate
-from atst.queue import queue
+from atst.jobs import send_mail
 
 
 def get_form_permission_value(member, edit_perm_set):
@@ -129,7 +129,7 @@ def send_application_invitation(invitee_email, inviter_name, token):
     body = render_template(
         "emails/application/invitation.txt", owner=inviter_name, token=token
     )
-    queue.send_mail(
+    send_mail.delay(
         [invitee_email],
         translate("email.application_invite", {"inviter_name": inviter_name}),
         body,

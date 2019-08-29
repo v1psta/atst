@@ -4,8 +4,10 @@
 
 set -e
 
+WORKER="pipenv run celery -A celery_worker.celery worker --loglevel=info"
+
 if [[ `command -v entr` ]]; then
-  find atst | entr -r flask rq worker
+  find atst | entr -r $WORKER
 else
-  flask rq worker
+  $WORKER
 fi

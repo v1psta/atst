@@ -15,7 +15,7 @@ from atst.domain.exceptions import AlreadyExistsError, NotFoundError
 from atst.domain.users import Users
 from atst.domain.permission_sets import PermissionSets
 from atst.forms.data import SERVICE_BRANCHES
-from atst.queue import queue
+from atst.jobs import send_mail
 from atst.utils import pick
 
 
@@ -174,7 +174,7 @@ def dev_new_user():
 
 @bp.route("/test-email")
 def test_email():
-    queue.send_mail(
+    send_mail.delay(
         [request.args.get("to")], request.args.get("subject"), request.args.get("body")
     )
 

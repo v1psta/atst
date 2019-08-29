@@ -9,7 +9,6 @@ from collections import OrderedDict
 
 from atst.app import make_app, make_config
 from atst.database import db as _db
-from atst.queue import queue as atst_queue
 import tests.factories as factories
 from tests.mocks import PDF_FILENAME, PDF_FILENAME2
 from tests.utils import FakeLogger, FakeNotificationSender
@@ -156,12 +155,6 @@ def extended_financial_verification_data(pdf_upload):
         "clin_2003": "7000",
         "legacy_task_order": pdf_upload,
     }
-
-
-@pytest.fixture(scope="function", autouse=True)
-def queue():
-    yield atst_queue
-    atst_queue.get_queue().empty()
 
 
 @pytest.fixture

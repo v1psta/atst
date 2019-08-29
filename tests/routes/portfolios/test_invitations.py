@@ -1,10 +1,11 @@
 import datetime
+from unittest.mock import Mock
+
 from flask import url_for
 
 from atst.domain.portfolios import Portfolios
 from atst.models import InvitationStatus, PortfolioRoleStatus
 from atst.domain.permission_sets import PermissionSets
-from atst.queue import queue
 
 from tests.factories import *
 
@@ -183,7 +184,11 @@ def test_user_can_only_revoke_invites_in_their_portfolio(client, user_session):
     assert not invite.is_revoked
 
 
-def test_user_can_only_resend_invites_in_their_portfolio(client, user_session, queue):
+def test_user_can_only_resend_invites_in_their_portfolio(
+    monkeypatch, client, user_session
+):
+    job_mock = Mock()
+    monkeypatch.setattr("atst.jobs.send_mail.delay", job_mock)
     portfolio = PortfolioFactory.create()
     other_portfolio = PortfolioFactory.create()
     user = UserFactory.create()
@@ -206,10 +211,12 @@ def test_user_can_only_resend_invites_in_their_portfolio(client, user_session, q
     )
 
     assert response.status_code == 404
-    assert len(queue.get_queue()) == 0
+    assert not job_mock.called
 
 
-def test_resend_invitation_sends_email(client, user_session, queue):
+def test_resend_invitation_sends_email(monkeypatch, client, user_session):
+    job_mock = Mock()
+    monkeypatch.setattr("atst.jobs.send_mail.delay", job_mock)
     user = UserFactory.create()
     portfolio = PortfolioFactory.create()
     ws_role = PortfolioRoleFactory.create(
@@ -227,12 +234,14 @@ def test_resend_invitation_sends_email(client, user_session, queue):
         )
     )
 
-    assert len(queue.get_queue()) == 1
+    assert job_mock.called
 
 
 def test_existing_member_invite_resent_to_email_submitted_in_form(
-    client, user_session, queue
+    monkeypatch, client, user_session
 ):
+    job_mock = Mock()
+    monkeypatch.setattr("atst.jobs.send_mail.delay", job_mock)
     portfolio = PortfolioFactory.create()
     user = UserFactory.create()
     ws_role = PortfolioRoleFactory.create(
@@ -253,10 +262,10 @@ def test_existing_member_invite_resent_to_email_submitted_in_form(
         )
     )
 
-    send_mail_job = queue.get_queue().jobs[0]
     assert user.email != "example@example.com"
-    assert send_mail_job.func.__func__.__name__ == "_send_mail"
-    assert send_mail_job.args[0] == ["example@example.com"]
+    ordered_args, _unordered_args = job_mock.call_args
+    recipients, _subject, _message = ordered_args
+    assert recipients[0] == "example@example.com"
 
 
 _DEFAULT_PERMS_FORM_DATA = {
@@ -278,11 +287,12 @@ def test_user_with_permission_has_add_member_link(client, user_session):
     )
 
 
-def test_invite_member(client, user_session, session):
+def test_invite_member(monkeypatch, client, user_session, session):
+    job_mock = Mock()
+    monkeypatch.setattr("atst.jobs.send_mail.delay", job_mock)
     user_data = UserFactory.dictionary()
     portfolio = PortfolioFactory.create()
     user_session(portfolio.owner)
-    queue_length = len(queue.get_queue())
 
     response = client.post(
         url_for("portfolios.invite_member", portfolio_id=portfolio.id),
@@ -307,5 +317,5 @@ def test_invite_member(client, user_session, session):
     )
     assert invitation.role.portfolio == portfolio
 
-    assert len(queue.get_queue()) == queue_length + 1
+    assert job_mock.called
     assert len(invitation.role.permission_sets) == 5
