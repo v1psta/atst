@@ -78,6 +78,7 @@ COPY --from=builder /install/alembic/ ./alembic/
 COPY --from=builder /install/alembic.ini .
 COPY --from=builder /install/app.py .
 COPY --from=builder /install/atst/ ./atst/
+COPY --from=builder /install/celery_worker.py ./celery_worker.py
 COPY --from=builder /install/config/ ./config/
 COPY --from=builder /install/templates/ ./templates/
 COPY --from=builder /install/translations.yaml .
