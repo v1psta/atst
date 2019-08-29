@@ -28,13 +28,7 @@ dictConfig({"version": 1, "handlers": {"wsgi": {"class": "logging.NullHandler"}}
 
 @pytest.fixture(scope="session")
 def app(request):
-    upload_dir = TemporaryDirectory()
-
     config = make_config()
-    config.update(
-        {"STORAGE_CONTAINER": upload_dir.name, "CRL_STORAGE_PROVIDER": "LOCAL"}
-    )
-
     _app = make_app(config)
 
     ctx = _app.app_context()
@@ -42,9 +36,25 @@ def app(request):
 
     yield _app
 
-    upload_dir.cleanup()
+    ctx.pop()
+
+
+@pytest.fixture(scope="function")
+def no_debug_app(request):
+    config = make_config(direct_config={"DEBUG": False})
+    _app = make_app(config)
+
+    ctx = _app.app_context()
+    ctx.push()
+
+    yield _app
 
     ctx.pop()
+
+
+@pytest.fixture(scope="function")
+def no_debug_client(no_debug_app):
+    yield no_debug_app.test_client()
 
 
 def apply_migrations():

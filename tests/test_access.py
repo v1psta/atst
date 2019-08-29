@@ -12,6 +12,9 @@ from atst.models import CSPRole, PortfolioRoleStatus, ApplicationRoleStatus
 
 from tests.factories import *
 
+
+from atst.app import make_config, make_app
+
 _NO_ACCESS_CHECK_REQUIRED = _NO_LOGIN_REQUIRED + [
     "applications.accept_invitation",  # available to all users; access control is built into invitation logic
     "atst.catch_all",  # available to all users
@@ -90,21 +93,39 @@ def user_with(*perm_sets_names):
     return UserFactory.create(permission_sets=PermissionSets.get_many(perm_sets_names))
 
 
+@pytest.fixture(scope="session")
+def app(request):
+    config = make_config(direct_config={"DEBUG": False})
+    _app = make_app(config)
+
+    ctx = _app.app_context()
+    ctx.push()
+
+    yield _app
+
+    ctx.pop()
+
+
+@pytest.fixture(scope="session")
+def client(app):
+    yield app.test_client()
+
+
 @pytest.fixture
-def get_url_assert_status(client, user_session):
+def get_url_assert_status(no_debug_client, user_session):
     def _get_url_assert_status(user, url, status):
         user_session(user)
-        resp = client.get(url)
+        resp = no_debug_client.get(url)
         assert resp.status_code == status
 
     return _get_url_assert_status
 
 
 @pytest.fixture
-def post_url_assert_status(client, user_session):
+def post_url_assert_status(no_debug_client, user_session):
     def _get_url_assert_status(user, url, status, data=None):
         user_session(user)
-        resp = client.post(url, data=data)
+        resp = no_debug_client.post(url, data=data)
         assert resp.status_code == status
 
     return _get_url_assert_status

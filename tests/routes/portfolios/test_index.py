@@ -1,4 +1,5 @@
 from flask import url_for
+import pytest
 
 from tests.factories import (
     random_future_date,
@@ -9,7 +10,7 @@ from tests.factories import (
     UserFactory,
 )
 from atst.utils.localization import translate
-from atst.domain.portfolios import Portfolios
+from atst.domain.portfolios import Portfolios, PortfolioDeletionApplicationsExistError
 from atst.domain.portfolios.query import PortfoliosQuery
 
 
@@ -128,7 +129,7 @@ def test_delete_portfolio_success(client, user_session):
     assert len(Portfolios.for_user(user=owner)) == 0
 
 
-def test_delete_portfolio_failure(client, user_session):
+def test_delete_portfolio_failure(no_debug_client, user_session):
     portfolio = PortfolioFactory.create()
     application = ApplicationFactory.create(portfolio=portfolio)
     owner = portfolio.owner
@@ -136,7 +137,7 @@ def test_delete_portfolio_failure(client, user_session):
 
     assert len(Portfolios.for_user(user=owner)) == 1
 
-    response = client.post(
+    response = no_debug_client.post(
         url_for("portfolios.delete_portfolio", portfolio_id=portfolio.id)
     )
 

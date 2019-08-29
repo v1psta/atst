@@ -1,6 +1,8 @@
 import pytest
 from flask import url_for
-from copy import copy
+
+from atst.app import make_config, make_app
+
 from tests.factories import UserFactory
 
 
@@ -24,14 +26,28 @@ def test_csrf_error(csrf_enabled_app, client):
     assert "Log in required" in body
 
 
-def test_errors_generate_notifications(app, client, user_session, notification_sender):
-    user_session(UserFactory.create())
-    new_app = copy(app)
+@pytest.fixture
+def blowup_app(notification_sender):
+    _blowup_app = make_app(make_config(direct_config={"DEBUG": False}))
+    _blowup_app.notification_sender = notification_sender
 
-    @new_app.route("/throw")
+    @_blowup_app.route("/throw")
     def throw():
         raise ValueError()
 
-    new_app.test_client().get("/throw")
+    yield _blowup_app
+
+
+@pytest.fixture
+def blowup_client(blowup_app):
+    yield blowup_app.test_client()
+
+
+def test_errors_generate_notifications(
+    blowup_client, client, user_session, notification_sender
+):
+    user_session(UserFactory.create())
+
+    blowup_client.get("/throw")
 
     notification_sender.send.assert_called_once()
