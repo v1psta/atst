@@ -1,84 +1,144 @@
 from uuid import uuid4
 
+from atst.models.environment_role import CSPRole
+
 
 class CloudProviderInterface:
-    def create_application(self, name):  # pragma: no cover
-        """Create an application in the cloud with the provided name. Returns
-        the ID of the created object.
+    def get_auth(self, auth_credentials):
+        """Validate credentials and create auth object
+
+        Arguments:
+            auth_credentials -- Object containing credentials
+
+        Returns:
+            object: An object to be passed into subsequent calls
         """
         raise NotImplementedError()
 
-    def delete_application(self, cloud_id):  # pragma: no cover
-        """Delete an application in the cloud with the provided cloud_id. Returns
-        True for success or raises an error.
+    def create_environment(self, auth, user):
+        """Create a new environment in the CSP.
+
+        Arguments:
+            auth -- Object representing authorization for the CSP
+            user -- ATAT user authorizing the environment creation
+
+        Returns:
+            string: ID of created environment
         """
         raise NotImplementedError()
 
-    def create_user(self, user):  # pragma: no cover
-        """Create an account in the CSP for specified user. Returns the ID of
-        the created user.
+    def create_atat_admin_user(self, auth, csp_environment_id):
+        """Creates a new, programmatic user in the CSP. Grants this user full permissions to administer
+        the CSP. Returns a dictionary containing user details, including user's API credentials.
+
+        Arguments:
+            auth -- Object representing authorization for the CSP
+            csp_environment_id -- ID of the CSP Environment the admin user should be created in
+
+        Returns:
+            object: Object representing new remote admin user, including credentials
         """
         raise NotImplementedError()
 
-    def create_role(self, environment_role):  # pragma: no cover
-        """Takes an `atst.model.EnvironmentRole` object and allows the
-        specified user access to the specified cloud entity.
+    def create_environment_baseline_roles(self, auth, csp_environment_id):
+        """Provision the baseline set of roles that align with the available
+        environment roles in the ATAT system.
 
-        This _does not_ return a token, but is intended to perform any necessary
-        setup to allow a token to be generated in the future (for example,
-        add the user to the cloud entity in some fashion).
+        Arguments:
+            auth -- Object representing authorization for the CSP
+            csp_environment_id -- ID of the CSP Environment to provision roles against.
+
+        Returns:
+            dict: Returns dict of role name => csp role IDs.
         """
         raise NotImplementedError()
 
-    def delete_role(self, environment_role):  # pragma: no cover
-        """Takes an `atst.model.EnvironmentRole` object and performs any action
-        necessary in the CSP to remove the specified user from the specified
-        environment. This method does not return anything.
+    def create_or_update_user(self, auth, user_info, csp_role_id):
+        """Creates a user or updates an existing user's role.
+
+        Arguments:
+            auth -- Object representing authorization for the CSP
+            user_info -- object containing user data, if it has a csp_user_id
+                         it will try to update a user with that id
+            csp_role_id -- The id of the role the user should be given in the CSP
+
+        Raises:
+            NotImplementedError: [description]
         """
         raise NotImplementedError()
 
-    def get_access_token(self, environment_role):  # pragma: no cover
-        """Takes an `atst.model.EnvironmentRole` object and returns a federated
-        access token that gives the specified user access to the specified
-        environment with the proper permissions.
+    def suspend_user(self, auth, csp_user_id):
+        """Revoke all privileges for a user. Used to prevent user access while a full
+        delete is being processed.
+
+        Arguments:
+            auth -- Object representing authorization for the CSP
+            csp_user_id -- CSP internal user identifier
+
+        Returns:
+            None
         """
         raise NotImplementedError()
 
-    def calculator_url(self):  # pragma: no cover
-        """Returns a URL for the CSP's estimate calculator."""
+    def delete_user(self, auth, csp_user_id):
+        """Given the csp-internal id for a user, initiate user deletion.
+
+        Arguments:
+            auth -- Object representing authorization for the CSP
+            csp_user_id -- CSP internal user identifier
+
+        Returns:
+            None
+
+        Raises:
+            TBDException: Some part of user deletion failed
+        """
+        raise NotImplementedError()
+
+    def get_calculator_url(self):
+        """Returns the calculator url for the CSP.
+        This will likely be a static property elsewhere once a CSP is chosen.
+        """
+        raise NotImplementedError()
+
+    def get_environment_login_url(self, environment):
+        """Returns the login url for a given environment
+        This may move to be a computed property on the Environment domain object
+        """
         raise NotImplementedError()
 
 
 class MockCloudProvider(CloudProviderInterface):
-    def create_application(self, name):
-        """Returns an id that represents what would be an application in the
-        cloud."""
+    def get_auth(self, auth_credentials):
+        return {}
+
+    def create_environment(self, auth, user):
         return uuid4().hex
 
-    def delete_application(self, name):
-        """Returns an id that represents what would be an application in the
-        cloud."""
-        return True
+    def create_atat_admin_user(self, auth, csp_environment_id):
+        return {"id": uuid4().hex, "credentials": {}}
 
-    def create_user(self, user):
-        """Returns an id that represents what would be an user in the cloud."""
-        return uuid4().hex
+    def create_environment_baseline_roles(self, auth, csp_environment_id):
+        return {
+            CSPRole.BASIC_ACCESS: uuid4().hex,
+            CSPRole.NETWORK_ADMIN: uuid4().hex,
+            CSPRole.BUSINESS_READ: uuid4().hex,
+            CSPRole.TECHNICAL_READ: uuid4().hex,
+        }
 
-    def create_role(self, environment_role):
-        # Currently, there is nothing to mock out, so just do nothing.
+    def create_or_update_user(self, auth, environment_role):
+        return {"id": uuid4().hex}
+
+    def suspend_user(self, auth, csp_user_id):
         pass
 
-    def delete_role(self, environment_role):
-        # Currently nothing to do.
+    def delete_user(self, auth, csp_user_id):
         pass
 
-    def get_access_token(self, environment_role):
-        # for now, just create a mock token using the user and environment
-        # cloud IDs and the name of the role in the environment
-        user_id = environment_role.application_role.user.cloud_id or ""
-        env_id = environment_role.environment.cloud_id or ""
-        role_details = environment_role.role
-        return "::".join([user_id, env_id, role_details])
-
-    def calculator_url(self):
+    def get_calculator_url(self):
         return "https://www.rackspace.com/en-us/calculator"
+
+    def get_environment_login_url(self, environment):
+        """Returns the login url for a given environment
+        """
+        return "https://www.mycloud.com/my-env-login"

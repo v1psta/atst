@@ -15,13 +15,6 @@ from tests.factories import (
 )
 
 
-def test_create_environments():
-    application = ApplicationFactory.create()
-    environments = Environments.create_many(application, ["Staging", "Production"])
-    for env in environments:
-        assert env.cloud_id is not None
-
-
 def test_update_env_role():
     env_role = EnvironmentRoleFactory.create(role=CSPRole.BASIC_ACCESS.value)
     new_role = CSPRole.TECHNICAL_READ.value

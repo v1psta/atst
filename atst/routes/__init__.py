@@ -131,4 +131,4 @@ def csp_environment_access():
 
 @bp.route("/jedi-csp-calculator")
 def jedi_csp_calculator():
-    return redirect(app.csp.cloud.calculator_url())
+    return redirect(app.csp.cloud.get_calculator_url())
