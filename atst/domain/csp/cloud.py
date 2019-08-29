@@ -69,7 +69,7 @@ class CloudProviderInterface:
             csp_user_id -- CSP internal user identifier
 
         Returns:
-            None
+            bool -- True on success
         """
         raise NotImplementedError()
 
@@ -81,7 +81,7 @@ class CloudProviderInterface:
             csp_user_id -- CSP internal user identifier
 
         Returns:
-            None
+            bool -- True on success
 
         Raises:
             TBDException: Some part of user deletion failed
