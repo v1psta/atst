@@ -84,6 +84,18 @@ def upload_token(portfolio_id):
     return jsonify(render_args)
 
 
+@task_orders_bp.route("/task_orders/<portfolio_id>/download_link")
+@user_can(Permissions.CREATE_TASK_ORDER, message="edit task order form")
+def download_link(portfolio_id):
+    filename = http_request.args.get("filename")
+    object_name = http_request.args.get("objectName")
+    render_args = {
+        "downloadLink": app.csp.files.generate_download_link(object_name, filename)
+    }
+
+    return jsonify(render_args)
+
+
 @task_orders_bp.route("/task_orders/<task_order_id>/edit")
 @user_can(Permissions.CREATE_TASK_ORDER, message="edit task order form")
 def edit(task_order_id):
@@ -117,14 +129,10 @@ def edit(task_order_id):
 @task_orders_bp.route("/task_orders/<task_order_id>/form/step_1")
 @user_can(Permissions.CREATE_TASK_ORDER, message="view task order form")
 def form_step_one_add_pdf(portfolio_id=None, task_order_id=None):
-    (token, object_name) = current_app.uploader.get_token()
-    extra_args = {"token": token, "object_name": object_name}
-
     return render_task_orders_edit(
         "task_orders/step_1.html",
         portfolio_id=portfolio_id,
         task_order_id=task_order_id,
-        extra_args=extra_args,
     )
 
 
@@ -228,11 +236,9 @@ def form_step_four_review(task_order_id):
 
     (token, object_name) = current_app.uploader.get_token()
     extra_args = {
-        "token": token,
-        "object_name": object_name,
         "pdf_download_url": current_app.uploader.generate_download_link(
             task_order.pdf.object_name, task_order.pdf.filename
-        ),
+        )
     }
 
     if task_order.is_completed == False:

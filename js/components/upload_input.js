@@ -18,7 +18,7 @@ export default {
   props: {
     name: String,
     initialData: {
-      type: String,
+      type: Object,
     },
     initialErrors: {
       type: Boolean,
@@ -39,10 +39,11 @@ export default {
   data: function() {
     return {
       hasInitialData: !!this.initialData,
-      attachment: this.initialData || null,
+      attachment: this.initialData.filename || null,
       changed: false,
       uploadError: false,
       sizeError: false,
+      downloadLink: '',
     }
   },
 
@@ -52,6 +53,11 @@ export default {
       name: this.name,
       valid: this.hasAttachment,
     })
+
+    if (this.hasInitialData) {
+      const { filename, objectName } = this.initialData
+      this.downloadLink = await this.getDownloadLink(filename, objectName)
+    }
   },
 
   methods: {
@@ -70,6 +76,10 @@ export default {
         this.attachment = e.target.value
         this.$refs.attachmentFilename.value = file.name
         this.$refs.attachmentObjectName.value = response.objectName
+        this.downloadLink = await this.getDownloadLink(
+          file.name,
+          response.objectName
+        )
       } else {
         this.uploadError = true
       }
@@ -109,6 +119,15 @@ export default {
       })
         .then(response => response.json())
         .then(({ token, objectName }) => buildUploader(token, objectName))
+    },
+    getDownloadLink: async function(filename, objectName) {
+      const { downloadLink } = await fetch(
+        `/task_orders/${
+          this.portfolioId
+        }/download_link?filename=${filename}&objectName=${objectName}`,
+        { credentials: 'include' }
+      ).then(r => r.json())
+      return downloadLink
     },
   },
 
