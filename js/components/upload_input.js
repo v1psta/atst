@@ -41,7 +41,7 @@ export default {
 
   data: function() {
     return {
-      hasInitialData: false,
+      hasInitialData: !!this.filename,
       attachment: this.filename || null,
       changed: false,
       uploadError: false,
@@ -57,7 +57,6 @@ export default {
       valid: this.hasAttachment,
     })
 
-    this.hasInitialData = !!this.filename
     if (this.hasInitialData) {
       this.downloadLink = await this.getDownloadLink(
         this.filename,
