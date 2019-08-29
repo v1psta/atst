@@ -188,7 +188,7 @@ def remove_member(portfolio_id, portfolio_role_id):
     # roles they might have?
     PortfolioRoles.disable(portfolio_role=portfolio_role)
 
-    flash("portfolio_member_removed", member_name=portfolio_role.user.full_name)
+    flash("portfolio_member_removed", member_name=portfolio_role.full_name)
 
     return redirect(
         url_for(
