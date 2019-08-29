@@ -4,10 +4,9 @@
     v-bind:initial-errors='true'
   
   v-bind:watch='false'
+  v-bind:portfolio-id="''"
   name='pdf'
   :optional='false'
-  v-bind:token='token'
-  v-bind:object-name='"object_name"'
   >
   <div>
     <div v-show="hasAttachment" class="uploaded-file">
@@ -40,6 +39,9 @@
       </div>
       <template v-if="uploadError">
         <span class="usa-input__message">There was an error uploading your file. Please try again. If you encounter repeated problems uploading this file, please contact CCPO.</span>
+      </template>
+      <template v-if="sizeError">
+        <span class="usa-input__message">The file you have selected is too large. Please choose a file no larger than 64MB.</span>
       </template>
       
         <span class="usa-input__message">Test Error Message</span>

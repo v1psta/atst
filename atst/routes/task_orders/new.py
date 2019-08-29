@@ -4,7 +4,8 @@ from flask import (
     render_template,
     request as http_request,
     url_for,
-    current_app,
+    current_app as app,
+    jsonify,
 )
 
 from . import task_orders_bp
@@ -17,9 +18,7 @@ from atst.utils.flash import formatted_flash as flash
 
 
 def render_task_orders_edit(template, portfolio_id=None, task_order_id=None, form=None):
-    (token, object_name) = current_app.csp.files.get_token()
-    render_args = {"token": token, "object_name": object_name}
-
+    render_args = {}
     if task_order_id:
         task_order = TaskOrders.get(task_order_id)
         portfolio_id = task_order.portfolio_id
@@ -71,6 +70,15 @@ def update_task_order(
             ),
             400,
         )
+
+
+@task_orders_bp.route("/task_orders/<portfolio_id>/upload-token")
+@user_can(Permissions.CREATE_TASK_ORDER, message="edit task order form")
+def upload_token(portfolio_id):
+    (token, object_name) = app.csp.files.get_token()
+    render_args = {"token": token, "objectName": object_name}
+
+    return jsonify(render_args)
 
 
 @task_orders_bp.route("/task_orders/<task_order_id>/edit")

@@ -74,15 +74,11 @@ def test_make_checkbox_input_template(checkbox_input_macro, initial_value_form):
 
 
 def test_make_upload_input_template(upload_input_macro, task_order_form):
-    rendered_upload_macro = upload_input_macro(
-        task_order_form.pdf, token="token", object_name="object_name"
-    )
+    rendered_upload_macro = upload_input_macro(task_order_form.pdf)
     write_template(rendered_upload_macro, "upload_input_template.html")
 
 
 def test_make_upload_input_error_template(upload_input_macro, task_order_form):
     task_order_form.validate()
-    rendered_upload_macro = upload_input_macro(
-        task_order_form.pdf, token="token", object_name="object_name"
-    )
+    rendered_upload_macro = upload_input_macro(task_order_form.pdf)
     write_template(rendered_upload_macro, "upload_input_error_template.html")

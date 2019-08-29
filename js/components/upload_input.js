@@ -1,6 +1,3 @@
-import createNumberMask from 'text-mask-addons/dist/createNumberMask'
-import { conformToMask } from 'vue-text-mask'
-
 import { emitEvent } from '../lib/emitters'
 import FormMixin from '../mixins/form'
 import textinput from './text_input'
@@ -20,12 +17,6 @@ export default {
 
   props: {
     name: String,
-    token: {
-      type: Object,
-    },
-    objectName: {
-      type: String,
-    },
     initialData: {
       type: String,
     },
@@ -40,6 +31,9 @@ export default {
       type: Boolean,
       default: true,
     },
+    portfolioId: {
+      type: String,
+    },
   },
 
   data: function() {
@@ -52,8 +46,7 @@ export default {
     }
   },
 
-  created: function() {
-    this.uploader = buildUploader(this.token)
+  created: async function() {
     emitEvent('field-mount', this, {
       optional: this.optional,
       name: this.name,
@@ -71,13 +64,12 @@ export default {
         return
       }
 
-      const response = await this.uploader.upload(file, this.objectName)
-
+      const uploader = await this.getUploader()
+      const response = await uploader.upload(file)
       if (response.ok) {
         this.attachment = e.target.value
         this.$refs.attachmentFilename.value = file.name
-        this.$refs.attachmentObjectName.value = this.objectName
-        this.$refs.attachmentInput.disabled = true
+        this.$refs.attachmentObjectName.value = response.objectName
       } else {
         this.uploadError = true
       }
@@ -110,6 +102,13 @@ export default {
     clearErrors: function() {
       this.uploadError = false
       this.sizeError = false
+    },
+    getUploader: async function() {
+      return fetch(`/task_orders/${this.portfolioId}/upload-token`, {
+        credentials: 'include',
+      })
+        .then(response => response.json())
+        .then(({ token, objectName }) => buildUploader(token, objectName))
     },
   },
 

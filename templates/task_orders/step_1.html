@@ -14,8 +14,7 @@
 {% set next_button_text = "Next: Add TO Number" %}
 {% set step = "1" %}
 
-
 {% block to_builder_form_field %}
   {{ TOFormStepHeader('task_orders.form.supporting_docs_header' | translate, 'task_orders.form.supporting_docs_text' | translate) }}
-  {{ UploadInput(form.pdf, watch=True, token=token, object_name=object_name) }}
+  {{ UploadInput(form.pdf, portfolio.id, watch=True) }}
 {% endblock %}
