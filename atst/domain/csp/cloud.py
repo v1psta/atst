@@ -4,22 +4,11 @@ from atst.models.environment_role import CSPRole
 
 
 class CloudProviderInterface:
-    def get_auth(self, auth_credentials):
-        """Validate credentials and create auth object
-
-        Arguments:
-            auth_credentials -- Object containing credentials
-
-        Returns:
-            object: An object to be passed into subsequent calls
-        """
-        raise NotImplementedError()
-
-    def create_environment(self, auth, user):
+    def create_environment(self, auth_credentials, user):
         """Create a new environment in the CSP.
 
         Arguments:
-            auth -- Object representing authorization for the CSP
+            auth_credentials -- Object containing CSP account credentials
             user -- ATAT user authorizing the environment creation
 
         Returns:
@@ -27,12 +16,12 @@ class CloudProviderInterface:
         """
         raise NotImplementedError()
 
-    def create_atat_admin_user(self, auth, csp_environment_id):
+    def create_atat_admin_user(self, auth_credentials, csp_environment_id):
         """Creates a new, programmatic user in the CSP. Grants this user full permissions to administer
         the CSP. Returns a dictionary containing user details, including user's API credentials.
 
         Arguments:
-            auth -- Object representing authorization for the CSP
+            auth_credentials -- Object containing CSP account credentials
             csp_environment_id -- ID of the CSP Environment the admin user should be created in
 
         Returns:
@@ -40,11 +29,11 @@ class CloudProviderInterface:
         """
         raise NotImplementedError()
 
-    def create_environment_baseline(self, auth, csp_environment_id):
+    def create_environment_baseline(self, auth_credentials, csp_environment_id):
         """Provision the necessary baseline entities (such as roles) in the given environment
 
         Arguments:
-            auth -- Object representing authorization for the CSP
+            auth_credentials -- Object containing CSP account credentials
             csp_environment_id -- ID of the CSP Environment to provision roles against.
 
         Returns:
@@ -52,11 +41,11 @@ class CloudProviderInterface:
         """
         raise NotImplementedError()
 
-    def create_or_update_user(self, auth, user_info, csp_role_id):
+    def create_or_update_user(self, auth_credentials, user_info, csp_role_id):
         """Creates a user or updates an existing user's role.
 
         Arguments:
-            auth -- Object representing authorization for the CSP
+            auth_credentials -- Object containing CSP account credentials
             user_info -- object containing user data, if it has a csp_user_id
                          it will try to update a user with that id
             csp_role_id -- The id of the role the user should be given in the CSP
@@ -66,12 +55,12 @@ class CloudProviderInterface:
         """
         raise NotImplementedError()
 
-    def suspend_user(self, auth, csp_user_id):
+    def suspend_user(self, auth_credentials, csp_user_id):
         """Revoke all privileges for a user. Used to prevent user access while a full
         delete is being processed.
 
         Arguments:
-            auth -- Object representing authorization for the CSP
+            auth_credentials -- Object containing CSP account credentials
             csp_user_id -- CSP internal user identifier
 
         Returns:
@@ -79,11 +68,11 @@ class CloudProviderInterface:
         """
         raise NotImplementedError()
 
-    def delete_user(self, auth, csp_user_id):
+    def delete_user(self, auth_credentials, csp_user_id):
         """Given the csp-internal id for a user, initiate user deletion.
 
         Arguments:
-            auth -- Object representing authorization for the CSP
+            auth_credentials -- Object containing CSP account credentials
             csp_user_id -- CSP internal user identifier
 
         Returns:
@@ -108,16 +97,13 @@ class CloudProviderInterface:
 
 
 class MockCloudProvider(CloudProviderInterface):
-    def get_auth(self, auth_credentials):
-        return {}
-
-    def create_environment(self, auth, user):
+    def create_environment(self, auth_credentials, user):
         return uuid4().hex
 
-    def create_atat_admin_user(self, auth, csp_environment_id):
+    def create_atat_admin_user(self, auth_credentials, csp_environment_id):
         return {"id": uuid4().hex, "credentials": {}}
 
-    def create_environment_baseline(self, auth, csp_environment_id):
+    def create_environment_baseline(self, auth_credentials, csp_environment_id):
         return {
             CSPRole.BASIC_ACCESS: uuid4().hex,
             CSPRole.NETWORK_ADMIN: uuid4().hex,
@@ -125,13 +111,13 @@ class MockCloudProvider(CloudProviderInterface):
             CSPRole.TECHNICAL_READ: uuid4().hex,
         }
 
-    def create_or_update_user(self, auth, environment_role):
+    def create_or_update_user(self, auth_credentials, environment_role):
         return {"id": uuid4().hex}
 
-    def suspend_user(self, auth, csp_user_id):
+    def suspend_user(self, auth_credentials, csp_user_id):
         pass
 
-    def delete_user(self, auth, csp_user_id):
+    def delete_user(self, auth_credentials, csp_user_id):
         pass
 
     def get_calculator_url(self):
