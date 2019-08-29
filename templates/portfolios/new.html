@@ -14,7 +14,7 @@
     <form id="portfolio-create" action="{{ url_for('portfolios.create_portfolio') }}" method="POST">
       {{ form.csrf_token }}
 
-      {{ TextInput(form.name) }}
+      {{ TextInput(form.name, optional=False) }}
       {{ OptionsInput(form.defense_component, optional=False) }}
       {{ TextInput(form.description, paragraph=True) }}
 

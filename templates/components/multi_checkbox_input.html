@@ -1,7 +1,7 @@
 {% from "components/icon.html" import Icon %}
 {% from "components/tooltip.html" import Tooltip %}
 
-{% macro MultiCheckboxInput(field, other_input_field=None, tooltip=None, inline=False) -%}
+{% macro MultiCheckboxInput(field, other_input_field=None, tooltip=None, inline=False, optional=True) -%}
   <multicheckboxinput
     v-cloak
     name='{{ field.name }}'
@@ -24,6 +24,10 @@
         <legend>
           <div class="usa-input__title">
             {{ field.label | striptags}}
+            {% if optional %}
+              &nbsp;
+              <span class="usa-input-label-helper">(optional)</span>
+            {% endif %}
             {% if tooltip %}{{ Tooltip(tooltip) }}{% endif %}
             {% if not field.description %}
               {{ validation_icons }}

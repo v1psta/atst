@@ -22,9 +22,9 @@
         {{ TextInput(form.email, validation='email', optional=False) }}
         {{ PhoneInput(form.phone_number, form.phone_ext, phone_optional=False) }}
 
-        {{ OptionsInput(form.service_branch) }}
-        {{ OptionsInput(form.citizenship) }}
-        {{ OptionsInput(form.designation) }}
+        {{ OptionsInput(form.service_branch, optional=False) }}
+        {{ OptionsInput(form.citizenship, optional=False) }}
+        {{ OptionsInput(form.designation, optional=False) }}
 
 
         <div class="usa-input">

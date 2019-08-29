@@ -40,6 +40,10 @@
         <label for={{field.name}}>
           <div class="usa-input__title">
             {{ label }}
+            {% if optional %}
+              &nbsp;
+              <span class="usa-input-label-helper">(optional)</span>
+            {% endif %}
             {% if tooltip and not disabled %}
               {{ Tooltip(tooltip, tooltip_title) }}
             {% endif %}
