@@ -40,16 +40,15 @@ class CloudProviderInterface:
         """
         raise NotImplementedError()
 
-    def create_environment_baseline_roles(self, auth, csp_environment_id):
-        """Provision the baseline set of roles that align with the available
-        environment roles in the ATAT system.
+    def create_environment_baseline(self, auth, csp_environment_id):
+        """Provision the necessary baseline entities (such as roles) in the given environment
 
         Arguments:
             auth -- Object representing authorization for the CSP
             csp_environment_id -- ID of the CSP Environment to provision roles against.
 
         Returns:
-            dict: Returns dict of role name => csp role IDs.
+            dict: Returns dict that associates the resource identities with their ATAT representations.
         """
         raise NotImplementedError()
 
@@ -118,7 +117,7 @@ class MockCloudProvider(CloudProviderInterface):
     def create_atat_admin_user(self, auth, csp_environment_id):
         return {"id": uuid4().hex, "credentials": {}}
 
-    def create_environment_baseline_roles(self, auth, csp_environment_id):
+    def create_environment_baseline(self, auth, csp_environment_id):
         return {
             CSPRole.BASIC_ACCESS: uuid4().hex,
             CSPRole.NETWORK_ADMIN: uuid4().hex,
