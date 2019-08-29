@@ -18,7 +18,7 @@ class CloudProviderInterface:
 
     def create_atat_admin_user(self, auth_credentials, csp_environment_id):
         """Creates a new, programmatic user in the CSP. Grants this user full permissions to administer
-        the CSP. Returns a dictionary containing user details, including user's API credentials.
+        the CSP.
 
         Arguments:
             auth_credentials -- Object containing CSP account credentials
@@ -26,6 +26,11 @@ class CloudProviderInterface:
 
         Returns:
             object: Object representing new remote admin user, including credentials
+            Something like:
+            {
+                "user_id": string,
+                "credentials": dict, # structure TBD based on csp
+            }
         """
         raise NotImplementedError()
 
