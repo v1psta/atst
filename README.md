@@ -161,6 +161,33 @@ When the `DEBUG` environment variable is enabled and the app environment is not
 set to production, sent email messages are available at the `/messages` endpoint.
 Emails are not sent in development and test modes.
 
+### File Uploads and Downloads
+
+Testing file uploads and downloads locally requires a few configuration options.
+
+In the flask config (`config/base.ini`, perhaps):
+
+```
+CSP=<aws | azure | mock>
+
+AWS_REGION_NAME=""
+AWS_ACCESS_KEY=""
+AWS_SECRET_KEY=""
+AWS_BUCKET_NAME=""
+
+AZURE_STORAGE_KEY=""
+AZURE_ACCOUNT_NAME=""
+AZURE_TO_BUCKET_NAME=""
+```
+
+There are also some build-time configuration that are used by parcel. Add these to `.env.local`, and run `rm -r .cache/` before running `yarn build`:
+
+```
+CLOUD_PROVIDER=<aws | azure | mock>
+AZURE_ACCOUNT_NAME=""
+AZURE_CONTAINER_NAME=""
+```
+
 ## Testing
 
 Tests require a test database:
