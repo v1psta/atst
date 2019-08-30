@@ -11,43 +11,10 @@
 {% set previous_button_link = url_for("task_orders.form_step_two_add_number", task_order_id=task_order_id) %}
 {% set step = "3" %}
 
-{% macro LOAInput() %}
-  <div v-for="loa in loas">
-    <textinput :name="'clins-' + clinIndex + '-loas-' + loaIndex(loa)" :watch='true' inline-template>
-      <div class="usa-input usa-input--validation--anything">
-        <masked-input
-          v-on:input='onInput'
-          v-on:blur='onBlur'
-          v-on:change='onChange'
-          v-bind:value='value'
-          v-bind:mask='mask'
-          v-bind:pipe='pipe'
-          v-bind:keep-char-positions='keepCharPositions'
-          v-bind:aria-invalid='showError'
-          type='text'
-          :id='name'
-          ref='input'>
-        </masked-input>
-
-        <input type='hidden' v-bind:value='rawValue' :name='name' />
-      </div>
-    </textinput>
-  </div>
-
-  <button
-    class="icon-link"
-    v-on:click="addLoa"
-    type="button">
-    {{ Icon('plus') }}
-    <span>{{ 'task_orders.form.add_loa' | translate }}</span>
-  </button>
-{% endmacro %}
-
 {% macro CLINFields(fields=None, index=None) %}
   <clin-fields
     {% if fields %}
       v-bind:initial-clin-index='{{ index }}'
-      v-bind:initial-loa-count="{{ fields.loas.data | length or 0 }}"
       v-bind:initial-clin-type="'{{ fields.jedi_clin_type.data }}'"
       v-bind:initial-amount='{{ fields.obligated_amount.data or 0 }}'
       v-bind:initial-start-date="'{{ fields.start_date.data | string }}'"
@@ -124,19 +91,6 @@
           {% endif %}
         </div>
       </div>
-
-      <fieldset class="task-order__loa-fieldset">
-        <legend>
-          <div class="usa-input__title">
-            {{ 'task_orders.form.loa_label' | translate }}
-          </div>
-        </legend>
-        {% for loa in fields.loas %}
-          {{ TextInput(loa, showLabel=False, watch=True, show_validation=False) }}
-        {% endfor %}
-
-        {{ LOAInput() }}
-      </fieldset>
 
       <div class="form-row">
         {% if fields %}

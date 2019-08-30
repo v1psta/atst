@@ -194,14 +194,11 @@ def test_task_orders_submit_form_step_three_add_clins(client, user_session, task
         "clins-0-start_date": "01/01/2020",
         "clins-0-end_date": "01/01/2021",
         "clins-0-obligated_amount": "5000",
-        "clins-0-loas-0": "123123123123",
-        "clins-0-loas-1": "345345234",
         "clins-1-jedi_clin_type": "JEDI_CLIN_1",
         "clins-1-number": "12312",
         "clins-1-start_date": "01/01/2020",
         "clins-1-end_date": "01/01/2021",
         "clins-1-obligated_amount": "5000",
-        "clins-1-loas-0": "78979087",
     }
     response = client.post(
         url_for(
@@ -224,7 +221,6 @@ def test_task_orders_submit_form_step_three_add_clins_existing_to(
             "start_date": "01/01/2020",
             "end_date": "01/01/2021",
             "obligated_amount": "5000",
-            "loas": ["123123123123", "345345234"],
         },
         {
             "jedi_clin_type": "JEDI_CLIN_1",
@@ -232,7 +228,6 @@ def test_task_orders_submit_form_step_three_add_clins_existing_to(
             "start_date": "01/01/2020",
             "end_date": "01/01/2021",
             "obligated_amount": "5000",
-            "loas": ["78979087"],
         },
     ]
     TaskOrders.create_clins(task_order.id, clin_list)
@@ -245,7 +240,6 @@ def test_task_orders_submit_form_step_three_add_clins_existing_to(
         "clins-0-start_date": "01/01/2020",
         "clins-0-end_date": "01/01/2021",
         "clins-0-obligated_amount": "5000",
-        "clins-0-loas-0": "123123123123",
     }
     response = client.post(
         url_for(

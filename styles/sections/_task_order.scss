@@ -47,12 +47,6 @@
 
     td {
       padding: 0.8rem;
-
-      &.task-order__loa {
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-      }
     }
   }
 
@@ -116,29 +110,6 @@
 
     button {
       margin-bottom: $gap * 3;
-    }
-
-    .task-order__loa-fieldset {
-      .usa-input__title {
-        padding: 0 0 0.4rem 0;
-        font-size: 1.7rem;
-      }
-
-      .usa-input {
-        margin: 0;
-      }
-
-      input {
-        margin: $gap 0;
-
-        &:first-child {
-          margin-top: 0;
-        }
-
-        &:last-child {
-          margin-bottom: 0;
-        }
-      }
     }
   }
 

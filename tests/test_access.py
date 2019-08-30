@@ -546,7 +546,6 @@ def test_task_orders_new_post_routes(post_url_assert_status):
                 "clins-0-start_date": "01/01/2020",
                 "clins-0-end_date": "01/01/2021",
                 "clins-0-obligated_amount": "5000",
-                "clins-0-loas-0": "123123123123",
             },
         ),
     ]

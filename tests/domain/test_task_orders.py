@@ -84,7 +84,6 @@ def test_create_adds_clins():
             "start_date": date(2020, 1, 1),
             "end_date": date(2021, 1, 1),
             "obligated_amount": Decimal("5000"),
-            "loas": ["123123123123", "345345234"],
         },
         {
             "jedi_clin_type": "JEDI_CLIN_1",
@@ -92,7 +91,6 @@ def test_create_adds_clins():
             "start_date": date(2020, 1, 1),
             "end_date": date(2021, 1, 1),
             "obligated_amount": Decimal("5000"),
-            "loas": ["78979087"],
         },
     ]
     task_order = TaskOrders.create(
@@ -115,7 +113,6 @@ def test_update_adds_clins():
             "start_date": date(2020, 1, 1),
             "end_date": date(2021, 1, 1),
             "obligated_amount": Decimal("5000"),
-            "loas": ["123123123123", "345345234"],
         },
         {
             "jedi_clin_type": "JEDI_CLIN_1",
@@ -123,7 +120,6 @@ def test_update_adds_clins():
             "start_date": date(2020, 1, 1),
             "end_date": date(2021, 1, 1),
             "obligated_amount": Decimal("5000"),
-            "loas": ["78979087"],
         },
     ]
     task_order = TaskOrders.create(
@@ -148,7 +144,6 @@ def test_update_does_not_duplicate_clins():
             "start_date": date(2020, 1, 1),
             "end_date": date(2021, 1, 1),
             "obligated_amount": Decimal("5000"),
-            "loas": ["123123123123", "345345234"],
         },
         {
             "jedi_clin_type": "JEDI_CLIN_1",
@@ -156,7 +151,6 @@ def test_update_does_not_duplicate_clins():
             "start_date": date(2020, 1, 1),
             "end_date": date(2021, 1, 1),
             "obligated_amount": Decimal("5000"),
-            "loas": ["78979087"],
         },
     ]
     task_order = TaskOrders.update(
