@@ -74,6 +74,7 @@ describe('UploadInput Test', () => {
 
     component.setMethods({
       getUploader: async () => new MockUploader('token', 'objectName'),
+      getDownloadLink: async (_f, _o) => 'downloadLink',
     })
 
     component.vm.addAttachment(event).then(() => {
