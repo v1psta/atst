@@ -7,7 +7,7 @@
   box-shadow: $box-shadow;
   overflow: hidden;
   position: relative;
-  top: 68px;
+  top: 76px;
   width: 25rem;
 
   &--minimized {
@@ -49,23 +49,23 @@
       }
     }
 
-    .sidenav__list--padded {
-      margin: (4 * $gap) 0;
-      position: fixed;
-      overflow-y: scroll;
-      top: 98px;
-      bottom: 35px;
-      left: 0;
-      width: 25rem;
+    ul {
+      &.sidenav__list--padded {
+        margin: ( 4 * $gap) 0;
+        position: fixed;
+        overflow-y: scroll;
+        top: 106px;
+        bottom: 35px;
+        left: 0;
+        width: 25rem;
+      }
 
-      ul {
-        list-style: none;
-        padding: 0;
+      list-style: none;
+      padding: 0;
 
-        li {
-          margin: 0;
-          display: block;
-        }
+      li {
+        margin: 0;
+        display: block;
       }
     }
 
