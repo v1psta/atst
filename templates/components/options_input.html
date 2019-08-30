@@ -1,7 +1,15 @@
 {% from "components/icon.html" import Icon %}
 {% from "components/tooltip.html" import Tooltip %}
 
-{% macro OptionsInput(field, tooltip, inline=False, label=True, show_validation=True, disabled=False, watch=False, optional=True) -%}
+{% macro OptionsInput(
+  field,
+  tooltip,
+  inline=False,
+  label=True,
+  show_validation=True,
+  disabled=False,
+  watch=False,
+  optional=True) -%}
   <optionsinput
     name='{{ field.name }}'
     inline-template

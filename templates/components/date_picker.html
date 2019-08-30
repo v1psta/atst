@@ -20,7 +20,7 @@
   :optional='{{ optional | string | lower }}'
   inline-template>
 
-    <fieldset class="usa-input date-picker" v-bind:class="{ 'usa-input--success': isDateValid }">
+    <fieldset class="usa-input date-picker" v-bind:class="{ 'usa-input--success': isDateValid && showValidation }">
       <legend>
         <div class="usa-input__title">
           {{ label }}
@@ -76,8 +76,13 @@
 
         </div>
 
-        <div class="usa-form-group-date-ok" v-if="isDateValid">
-          {{ Icon("ok", classes="icon--green") }}
+        <div v-if="showValidation">
+          <div class="usa-form-group-date-ok" v-if="isDateValid">
+            {{ Icon("ok", classes="icon--green") }}
+          </div>
+          <div class="usa-form-group-date-ok" v-else>
+            {{ Icon("alert", classes="icon--red")}}
+          </div>
         </div>
       </div>
     </fieldset>

@@ -17,8 +17,7 @@
   optional=True,
   showLabel=True,
   watch=False,
-  show_validation=True,
-  inset_form=False) -%}
+  show_validation=True) -%}
 
   <textinput
     v-cloak
@@ -29,7 +28,6 @@
     {% if initial_value or field.data is not none %}initial-value='{{ initial_value or field.data }}'{% endif %}
     {% if field.errors %}v-bind:initial-errors='{{ field.errors | list }}'{% endif %}
     v-bind:optional={{ optional|lower }}
-    v-bind:inset-form={{ inset_form|lower }}
     key='{{ field.name }}'
     :watch='{{ watch | string | lower }}'
     inline-template>

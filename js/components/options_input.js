@@ -36,7 +36,7 @@ export default {
     const showError = (this.initialErrors && this.initialErrors.length) || false
     return {
       showError: showError,
-      showValid: !showError && !!this.initialValue,
+      showValid: false,
       validationError: this.initialErrors.join(' '),
       value: this.initialValue,
     }

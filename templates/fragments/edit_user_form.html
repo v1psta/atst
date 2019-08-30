@@ -11,16 +11,16 @@
       <div class='panel__content'>
         <div class='form-row'>
           <div class='form-col form-col--half'>
-            {{ TextInput(form.first_name, validation='requiredField') }}
+            {{ TextInput(form.first_name, validation='requiredField', optional=False) }}
           </div>
 
           <div class='form-col form-col--half'>
-            {{ TextInput(form.last_name, validation='requiredField') }}
+            {{ TextInput(form.last_name, validation='requiredField', optional=False) }}
           </div>
         </div>
 
-        {{ TextInput(form.email, validation='email') }}
-        {{ PhoneInput(form.phone_number, form.phone_ext) }}
+        {{ TextInput(form.email, validation='email', optional=False) }}
+        {{ PhoneInput(form.phone_number, form.phone_ext, phone_optional=False) }}
 
         {{ OptionsInput(form.service_branch) }}
         {{ OptionsInput(form.citizenship) }}

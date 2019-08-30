@@ -31,7 +31,6 @@ export default {
       type: Boolean,
       default: false,
     },
-    insetForm: Boolean,
   },
 
   data: function() {
@@ -61,7 +60,7 @@ export default {
       this._checkIfValid({
         value: this.value,
         invalidate: true,
-        showValidationIcon: !this.insetForm,
+        showValidationIcon: false,
       })
 
       if (this.mask && this.validation !== 'email') {
@@ -102,6 +101,8 @@ export default {
 
     onBlur: function(e) {
       if (!(this.optional && e.target.value === '')) {
+        this._checkIfValid({ value: e.target.value.trim(), invalidate: true })
+      } else if (this.modified && !this.optional) {
         this._checkIfValid({ value: e.target.value.trim(), invalidate: true })
       }
       this.value = e.target.value.trim()

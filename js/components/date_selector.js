@@ -36,6 +36,7 @@ export default {
       month: this.initialmonth,
       year: this.initialyear,
       name: this.nameTag,
+      showValidation: false,
     }
   },
 
@@ -160,6 +161,8 @@ export default {
 
   methods: {
     onInput: function(e) {
+      this.showValidation = true
+
       emitEvent('field-change', this, {
         value: this.formattedDate,
         name: this.name,
