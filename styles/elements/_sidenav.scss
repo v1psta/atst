@@ -8,24 +8,19 @@
   overflow: hidden;
   position: relative;
   top: 68px;
+  width: 25rem;
 
-  &__toggler {
-    width: 25rem;
-
-    &--minimized {
-      @extend .sidenav-container__toggler;
-      width: 10rem;
-    }
+  &--minimized {
+    @extend .sidenav-container;
+    width: 10rem;
   }
 
   &__fixed {
     position: fixed;
-    overflow: scroll;
   }
 
   .sidenav {
     width: 25rem;
-    overflow: scroll;
 
     @include media($large-screen) {
       margin: 0px;
@@ -54,17 +49,23 @@
       }
     }
 
-    ul {
-      &.sidenav__list--padded {
-        margin: (4 * $gap) 0;
-      }
+    .sidenav__list--padded {
+      margin: (4 * $gap) 0;
+      position: fixed;
+      overflow-y: scroll;
+      top: 98px;
+      bottom: 35px;
+      left: 0;
+      width: 25rem;
 
-      list-style: none;
-      padding: 0;
+      ul {
+        list-style: none;
+        padding: 0;
 
-      li {
-        margin: 0;
-        display: block;
+        li {
+          margin: 0;
+          display: block;
+        }
       }
     }
 

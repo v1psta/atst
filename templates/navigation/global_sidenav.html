@@ -2,9 +2,9 @@
 {% from "components/sidenav_item.html" import SidenavItem %}
 
 
-<div v-cloak is="SidenavToggler" class="sidenav-container">
+<div v-cloak is="SidenavToggler">
   <template slot-scope='props'>
-    <div v-bind:class="{'sidenav-container__toggler': props.isVisible, 'sidenav-container__toggler--minimized': !props.isVisible}">
+    <div v-bind:class="{'sidenav-container': props.isVisible, 'sidenav-container--minimized': !props.isVisible}">
       <div class="sidenav-container__fixed">
         <div v-bind:class="{'global-navigation': true, 'sidenav': props.isVisible, 'sidenav--minimized': !props.isVisible}">
           <a href="#" v-on:click="props.toggle" class="sidenav__toggle">
@@ -19,18 +19,20 @@
           </a>
           <div v-if="props.isVisible">
             <div class="sidenav__title">Portfolios</div>
-            <ul class="sidenav__list--padded">
-              {% if portfolios %}
-                {% for other_portfolio in portfolios|sort(attribute='name') %}
-                  {{ SidenavItem(other_portfolio.name,
-                    href=url_for("applications.portfolio_applications", portfolio_id=other_portfolio.id),
-                    active=(other_portfolio.id | string) == request.view_args.get('portfolio_id')
-                    ) }}
-                {% endfor %}
-              {% else %}
-                <li><span class="sidenav__text">You have no portfolios yet</span></li>
-              {% endif %}
-            </ul>
+            <div class="sidenav__list--padded">
+              <ul>
+                {% if portfolios %}
+                  {% for other_portfolio in portfolios|sort(attribute='name') %}
+                    {{ SidenavItem(other_portfolio.name,
+                      href=url_for("applications.portfolio_applications", portfolio_id=other_portfolio.id),
+                      active=(other_portfolio.id | string) == request.view_args.get('portfolio_id')
+                      ) }}
+                  {% endfor %}
+                {% else %}
+                  <li><span class="sidenav__text">You have no portfolios yet</span></li>
+                {% endif %}
+              </ul>
+            </div>
           </div>
         </div>
       </div>
