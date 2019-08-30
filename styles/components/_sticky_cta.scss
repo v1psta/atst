@@ -9,7 +9,7 @@
   }
 
   &.js-is-sticky {
-    width: 80.8%;
+    width: calc(100% - 25rem);
   }
 
   .sticky-cta-container {

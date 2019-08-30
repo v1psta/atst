@@ -5,17 +5,30 @@
 
 .sidenav-container {
   box-shadow: $box-shadow;
+  overflow: hidden;
+  position: relative;
+  top: 68px;
 
-  .sidenav {
-    @include media($large-screen) {
-      margin: 0px;
-    }
-
+  &__toggler {
     width: 25rem;
 
-    &.js-is-sticky {
-      width: 19.2%;
-      min-width: 25rem;
+    &--minimized {
+      @extend .sidenav-container__toggler;
+      width: 10rem;
+    }
+  }
+
+  &__fixed {
+    position: fixed;
+    overflow: scroll;
+  }
+
+  .sidenav {
+    width: 25rem;
+    overflow: scroll;
+
+    @include media($large-screen) {
+      margin: 0px;
     }
 
     &__title {
@@ -184,9 +197,5 @@
 
     width: 10rem;
     margin: 0px;
-
-    &.js-is-sticky {
-      width: 10rem;
-    }
   }
 }

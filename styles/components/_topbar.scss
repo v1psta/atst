@@ -2,11 +2,10 @@
   background-color: $color-blue-darkest;
   border-bottom: 1px solid $color-black;
   height: 48px;
-
-  &.js-is-sticky {
-    width: 100%;
-    z-index: 16;
-  }
+  position: fixed;
+  top: 20px;
+  width: 100%;
+  z-index: 10;
 
   &__navigation {
     display: flex;

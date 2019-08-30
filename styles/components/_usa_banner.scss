@@ -3,6 +3,9 @@
   align-items: center;
   padding: ($gap / 2) $gap;
   z-index: 15;
+  position: fixed;
+  height: 20px;
+  width: 100%;
 
   img {
     flex-grow: 0;
