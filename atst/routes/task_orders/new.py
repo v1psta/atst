@@ -85,7 +85,7 @@ def upload_token(portfolio_id):
 
 
 @task_orders_bp.route("/task_orders/<portfolio_id>/download_link")
-@user_can(Permissions.CREATE_TASK_ORDER, message="edit task order form")
+@user_can(Permissions.VIEW_TASK_ORDER_DETAILS, message="view task order download link")
 def download_link(portfolio_id):
     filename = http_request.args.get("filename")
     object_name = http_request.args.get("objectName")
