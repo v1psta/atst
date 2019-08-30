@@ -23,7 +23,9 @@
       {% if show_label %}
         {{ field.label }}
       {% endif %}
-      {{ field.description }}
+      <p>
+        {{ field.description }}
+      </p>
       <div v-if="!hideInput" class="upload-widget">
         <label class="upload-label" for="{{ field.name }}">
           <span class="upload-button">

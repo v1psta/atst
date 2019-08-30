@@ -16,7 +16,9 @@
         <div class="usa-input__title">{{ field.label | striptags }}</div>
 
         {% if field.description %}
-          <span class='usa-input__help'>{{ field.description | safe }}</span>
+          <p class='usa-input__help'>
+            {{ field.description | safe }}
+          </p>
         {% endif %}
 
         <span v-show='showError'>{{ Icon('alert',classes="icon-validation") }}</span>

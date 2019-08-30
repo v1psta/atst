@@ -18,7 +18,9 @@
             {{ label | safe }}
 
             {% if field.description %}
-            <span class='usa-input__help'>{{ field.description | safe }}</span>
+              <p class='usa-input__help'>
+                {{ field.description | safe }}
+              </p>
             {% endif %}
           </legend>
         </fieldset>

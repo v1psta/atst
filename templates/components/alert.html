@@ -31,7 +31,9 @@
       {% endif %}
 
       {% if message %}
-        <div class='usa-alert-text'>{{ message | safe }}</div>
+        <p class='usa-alert-text'>
+          {{ message | safe }}
+        </p>
       {% endif %}
 
       {% if caller %}
