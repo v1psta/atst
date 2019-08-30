@@ -19,15 +19,18 @@ body {
   display: flex;
   flex-wrap: nowrap;
   flex-grow: 1;
-  margin-bottom: $footer-height;
+  padding-bottom: $footer-height * 2.5;
 
   .global-panel-container {
     margin: $gap;
     flex-grow: 1;
     -ms-flex-negative: 1;
+    top: $usa-banner-height + $topbar-height;
+    position: relative;
 
     @include media($medium-screen) {
       margin: $gap * 2;
+      top: $usa-banner-height + $topbar-height;
     }
   }
 }

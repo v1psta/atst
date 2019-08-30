@@ -1,14 +1,16 @@
 .sticky-cta {
   margin-left: -$gap * 4;
+  margin-right: -$gap * 5;
   z-index: 10;
 
   @include media($medium-screen) {
     margin-left: -$gap * 5;
-    margin-right: -$gap * 3;
+    margin-right: -$gap * 5;
   }
 
   &.js-is-sticky {
-    width: 80.8%;
+    width: calc(100% - 25rem);
+    top: $usa-banner-height + $topbar-height;
   }
 
   .sticky-cta-container {
@@ -18,7 +20,7 @@
     background-color: $color-gray-lightest;
     border-top: 1px solid $color-gray-lighter;
     border-bottom: 1px solid $color-gray-lighter;
-    padding: 0 $gap * 2 0 $gap * 5;
+    padding: 0 $gap * 5 0 $gap * 5;
     box-shadow: $box-shadow;
 
     .usa-button {

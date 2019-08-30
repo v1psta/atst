@@ -4,19 +4,27 @@
 }
 
 .sidenav-container {
-  position: relative;
   box-shadow: $box-shadow;
+  overflow: hidden;
+  position: relative;
+  top: $topbar-height + $usa-banner-height;
+  width: $sidenav-expanded-width;
 
-  .global-navigation.sidenav {
-    height: 100%;
+  &--minimized {
+    @extend .sidenav-container;
+    width: $sidenav-collapsed-width;
+  }
+
+  &__fixed {
+    position: fixed;
   }
 
   .sidenav {
+    width: $sidenav-expanded-width;
+
     @include media($large-screen) {
       margin: 0px;
     }
-
-    width: 25rem;
 
     &__title {
       @include sidenav__header;
@@ -43,7 +51,16 @@
 
     ul {
       &.sidenav__list--padded {
-        margin: (4 * $gap) 0;
+        margin-top: 4 * $gap;
+        margin-bottom: $footer-height;
+        padding-bottom: $gap;
+        position: fixed;
+        overflow-y: scroll;
+        top: $topbar-height + $usa-banner-height + 4rem;
+        bottom: 0;
+        left: 0;
+        width: $sidenav-expanded-width;
+        background-color: $color-white;
       }
 
       list-style: none;
@@ -182,7 +199,7 @@
   &--minimized {
     @extend .sidenav;
 
-    width: 10rem;
+    width: $sidenav-collapsed-width;
     margin: 0px;
   }
 }

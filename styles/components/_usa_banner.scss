@@ -3,6 +3,9 @@
   align-items: center;
   padding: ($gap / 2) $gap;
   z-index: 15;
+  position: fixed;
+  height: $usa-banner-height;
+  width: 100%;
 
   img {
     flex-grow: 0;

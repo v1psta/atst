@@ -15,12 +15,6 @@
     <div class='portfolio-header__name'>
       <h1>{{ portfolio.name }}</h1>
     </div>
-    <div class='row'>
-      <div class='column-left'></div>
-        <div class='column-right portfolio-funding__header--funded-through {{ "funded" if funding_end_date is not none and funded else "unfunded"}}'>
-
-        </div>
-      </div>
   </div>
   <div class='row links'>
     {% if user_can(permissions.VIEW_PORTFOLIO_FUNDING) %}

@@ -1,6 +1,11 @@
 .topbar {
   background-color: $color-blue-darkest;
   border-bottom: 1px solid $color-black;
+  height: $topbar-height;
+  position: fixed;
+  top: $usa-banner-height;
+  width: 100%;
+  z-index: 10;
 
   &__navigation {
     display: flex;
