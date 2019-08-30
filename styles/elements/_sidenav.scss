@@ -51,13 +51,16 @@
 
     ul {
       &.sidenav__list--padded {
-        margin: ( 4 * $gap) 0;
+        margin-top: 4 * $gap;
+        margin-bottom: $footer-height;
+        padding-bottom: $gap;
         position: fixed;
         overflow-y: scroll;
         top: $topbar-height + $usa-banner-height + 4rem;
-        bottom: $footer-height;
+        bottom: 0;
         left: 0;
         width: $sidenav-expanded-width;
+        background-color: $color-white;
       }
 
       list-style: none;

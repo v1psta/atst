@@ -19,7 +19,7 @@ body {
   display: flex;
   flex-wrap: nowrap;
   flex-grow: 1;
-  margin-bottom: $footer-height;
+  padding-bottom: $footer-height * 2.5;
 
   .global-panel-container {
     margin: $gap;
