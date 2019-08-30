@@ -4,7 +4,7 @@
 
 <div v-cloak is="SidenavToggler" class="sidenav-container">
   <template slot-scope='props'>
-    <div v-bind:class="{'global-navigation': true, 'sidenav': props.isVisible, 'sidenav--minimized': !props.isVisible}">
+    <div v-sticky='{ "stickyBitStickyOffset": 48 }' v-bind:class="{'global-navigation': true, 'sidenav': props.isVisible, 'sidenav--minimized': !props.isVisible}">
       <a href="#" v-on:click="props.toggle" class="sidenav__toggle">
         <template v-if="props.isVisible">
           {{ Icon('angle-double-left-solid', classes="toggle-arrows icon--blue") }}
