@@ -81,6 +81,8 @@ export default {
         this.attachment = e.target.value
         this.$refs.attachmentFilename.value = file.name
         this.$refs.attachmentObjectName.value = response.objectName
+        this.$refs.attachmentInput.disabled = true
+
         this.downloadLink = await this.getDownloadLink(
           file.name,
           response.objectName
