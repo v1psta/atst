@@ -43,6 +43,14 @@ class AzureUploader {
       fileReader.readAsText(file)
     })
   }
+
+  downloadUrl(objectName) {
+    const blobService = Azure.createBlobServiceWithSas(
+      `https://${this.accountName}.blob.core.windows.net`,
+      this.sasToken
+    )
+    return blobService.getUrl(this.containerName, objectName, this.sasToken)
+  }
 }
 
 class AwsUploader {
@@ -58,6 +66,7 @@ class AwsUploader {
     })
     form.append('file', file)
     form.set('x-amz-meta-filename', file.name)
+    form.set('Content-Type', 'application/pdf')
 
     const response = await fetch(this.presignedPost.url, {
       method: 'POST',

@@ -4,7 +4,8 @@
 <uploadinput
   inline-template
   {% if not field.errors %}
-    v-bind:initial-data='{{ field.filename.data | tojson }}'
+    v-bind:filename='{{ field.filename.data | tojson }}'
+    v-bind:object-name='{{ field.object_name.data | tojson }}'
   {% else %}
     v-bind:initial-errors='true'
   {% endif %}
@@ -16,7 +17,7 @@
   <div>
     <div v-show="hasAttachment" class="uploaded-file">
       {{ Icon("check-circle-solid") }}
-      <span class="uploaded-file__name" v-html="baseName"></span>
+      <a class="uploaded-file__name" v-html="baseName" v-bind:href="downloadLink"></a>
       <a href="#" class="uploaded-file__remove" v-on:click="removeAttachment">Remove</a>
     </div>
     <div v-show="hasAttachment === false" v-bind:class='{ "usa-input": true, "usa-input--error": showErrors }'>

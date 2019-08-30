@@ -6,7 +6,10 @@ class Uploader:
     def generate_token(self):
         pass
 
-    def object_name(self):
+    def generate_download_link(self, object_name, filename) -> (dict, str):
+        pass
+
+    def object_name(self) -> str:
         return str(uuid4())
 
 
@@ -16,6 +19,9 @@ class MockUploader(Uploader):
 
     def get_token(self):
         return ({}, self.object_name())
+
+    def generate_download_link(self, object_name, filename):
+        return ""
 
 
 class AzureUploader(Uploader):
@@ -53,6 +59,23 @@ class AzureUploader(Uploader):
         )
         return ({"token": sas_token}, object_name)
 
+    def generate_download_link(self, object_name, filename):
+        account = self.CloudStorageAccount(
+            account_name=self.account_name, account_key=self.storage_key
+        )
+        bbs = account.create_block_blob_service()
+        sas_token = bbs.generate_blob_shared_access_signature(
+            self.container_name,
+            object_name,
+            permission=self.BlobPermissions.READ,
+            expiry=datetime.utcnow() + self.timeout,
+            content_disposition=f"attachment; filename={filename}",
+            protocol="https",
+        )
+        return bbs.make_blob_url(
+            self.container_name, object_name, protocol="https", sas_token=sas_token
+        )
+
 
 class AwsUploader(Uploader):
     def __init__(self, config):
@@ -87,7 +110,7 @@ class AwsUploader(Uploader):
         presigned_post = s3_client.generate_presigned_post(
             self.bucket_name,
             object_name,
-            ExpiresIn=3600,
+            ExpiresIn=self.timeout_secs,
             Conditions=[
                 ("eq", "$Content-Type", "application/pdf"),
                 ("starts-with", "$x-amz-meta-filename", ""),
@@ -95,3 +118,22 @@ class AwsUploader(Uploader):
             Fields={"Content-Type": "application/pdf", "x-amz-meta-filename": ""},
         )
         return (presigned_post, object_name)
+
+    def generate_download_link(self, object_name, filename):
+        s3_client = self.boto3.client(
+            "s3",
+            aws_access_key_id=self.access_key_id,
+            aws_secret_access_key=self.secret_key,
+            config=self.boto3.session.Config(
+                signature_version="s3v4", region_name=self.region_name
+            ),
+        )
+        return s3_client.generate_presigned_url(
+            "get_object",
+            Params={
+                "Bucket": self.bucket_name,
+                "Key": object_name,
+                "ResponseContentDisposition": f"attachment; filename={filename}",
+            },
+            ExpiresIn=self.timeout_secs,
+        )

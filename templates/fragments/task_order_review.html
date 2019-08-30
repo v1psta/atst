@@ -13,7 +13,7 @@
       <div class="h3">
         {{ 'task_orders.review.pdf_title' | translate }}
       </div>
-      <a class="icon-link icon-link--download" href="{{ url_for('task_orders.download_task_order_pdf', task_order_id=task_order.id) }}">
+      <a class="icon-link icon-link--download" href="{{ pdf_download_url }}">
         {{ Icon('check-circle-solid') }}
         {{ task_order.pdf.filename }}
       </a>

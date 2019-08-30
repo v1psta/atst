@@ -17,7 +17,10 @@ export default {
 
   props: {
     name: String,
-    initialData: {
+    filename: {
+      type: String,
+    },
+    objectName: {
       type: String,
     },
     initialErrors: {
@@ -38,11 +41,12 @@ export default {
 
   data: function() {
     return {
-      hasInitialData: !!this.initialData,
-      attachment: this.initialData || null,
+      hasInitialData: !!this.filename,
+      attachment: this.filename || null,
       changed: false,
       uploadError: false,
       sizeError: false,
+      downloadLink: '',
     }
   },
 
@@ -52,6 +56,13 @@ export default {
       name: this.name,
       valid: this.hasAttachment,
     })
+
+    if (this.hasInitialData) {
+      this.downloadLink = await this.getDownloadLink(
+        this.filename,
+        this.objectName
+      )
+    }
   },
 
   methods: {
@@ -70,6 +81,10 @@ export default {
         this.attachment = e.target.value
         this.$refs.attachmentFilename.value = file.name
         this.$refs.attachmentObjectName.value = response.objectName
+        this.downloadLink = await this.getDownloadLink(
+          file.name,
+          response.objectName
+        )
       } else {
         this.uploadError = true
       }
@@ -104,11 +119,20 @@ export default {
       this.sizeError = false
     },
     getUploader: async function() {
-      return fetch(`/task_orders/${this.portfolioId}/upload-token`, {
+      return fetch(`/task_orders/${this.portfolioId}/upload_token`, {
         credentials: 'include',
       })
         .then(response => response.json())
         .then(({ token, objectName }) => buildUploader(token, objectName))
+    },
+    getDownloadLink: async function(filename, objectName) {
+      const { downloadLink } = await fetch(
+        `/task_orders/${
+          this.portfolioId
+        }/download_link?filename=${filename}&objectName=${objectName}`,
+        { credentials: 'include' }
+      ).then(r => r.json())
+      return downloadLink
     },
   },
 

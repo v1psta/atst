@@ -17,8 +17,11 @@ from atst.models.permissions import Permissions
 from atst.utils.flash import formatted_flash as flash
 
 
-def render_task_orders_edit(template, portfolio_id=None, task_order_id=None, form=None):
-    render_args = {}
+def render_task_orders_edit(
+    template, portfolio_id=None, task_order_id=None, form=None, extra_args=None
+):
+    render_args = extra_args or {}
+
     if task_order_id:
         task_order = TaskOrders.get(task_order_id)
         portfolio_id = task_order.portfolio_id
@@ -72,11 +75,23 @@ def update_task_order(
         )
 
 
-@task_orders_bp.route("/task_orders/<portfolio_id>/upload-token")
+@task_orders_bp.route("/task_orders/<portfolio_id>/upload_token")
 @user_can(Permissions.CREATE_TASK_ORDER, message="edit task order form")
 def upload_token(portfolio_id):
     (token, object_name) = app.csp.files.get_token()
     render_args = {"token": token, "objectName": object_name}
+
+    return jsonify(render_args)
+
+
+@task_orders_bp.route("/task_orders/<portfolio_id>/download_link")
+@user_can(Permissions.VIEW_TASK_ORDER_DETAILS, message="view task order download link")
+def download_link(portfolio_id):
+    filename = http_request.args.get("filename")
+    object_name = http_request.args.get("objectName")
+    render_args = {
+        "downloadLink": app.csp.files.generate_download_link(object_name, filename)
+    }
 
     return jsonify(render_args)
 
@@ -219,11 +234,17 @@ def submit_form_step_three_add_clins(task_order_id):
 def form_step_four_review(task_order_id):
     task_order = TaskOrders.get(task_order_id)
 
+    extra_args = {
+        "pdf_download_url": app.csp.files.generate_download_link(
+            task_order.pdf.object_name, task_order.pdf.filename
+        )
+    }
+
     if task_order.is_completed == False:
         raise NoAccessError("task order form review")
 
     return render_task_orders_edit(
-        "task_orders/step_4.html", task_order_id=task_order_id
+        "task_orders/step_4.html", task_order_id=task_order_id, extra_args=extra_args
     )
 
 
