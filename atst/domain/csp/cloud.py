@@ -51,8 +51,8 @@ class CloudProviderInterface:
 
         Arguments:
             auth_credentials -- Object containing CSP account credentials
-            user_info -- object containing user data, if it has a csp_user_id
-                         it will try to update a user with that id
+            user_info -- instance of EnvironmentRole containing user data
+                         if it has a csp_user_id it will try to update that user
             csp_role_id -- The id of the role the user should be given in the CSP
 
         Raises:
