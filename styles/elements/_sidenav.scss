@@ -7,12 +7,12 @@
   box-shadow: $box-shadow;
   overflow: hidden;
   position: relative;
-  top: 76px;
-  width: 25rem;
+  top: $topbar-height + $usa-banner-height;
+  width: $sidenav-expanded-width;
 
   &--minimized {
     @extend .sidenav-container;
-    width: 10rem;
+    width: $sidenav-collapsed-width;
   }
 
   &__fixed {
@@ -20,7 +20,7 @@
   }
 
   .sidenav {
-    width: 25rem;
+    width: $sidenav-expanded-width;
 
     @include media($large-screen) {
       margin: 0px;
@@ -54,10 +54,10 @@
         margin: ( 4 * $gap) 0;
         position: fixed;
         overflow-y: scroll;
-        top: 106px;
-        bottom: 35px;
+        top: $topbar-height + $usa-banner-height + 4rem;
+        bottom: $footer-height;
         left: 0;
-        width: 25rem;
+        width: $sidenav-expanded-width;
       }
 
       list-style: none;
@@ -196,7 +196,7 @@
   &--minimized {
     @extend .sidenav;
 
-    width: 10rem;
+    width: $sidenav-collapsed-width;
     margin: 0px;
   }
 }

@@ -25,12 +25,12 @@ body {
     margin: $gap;
     flex-grow: 1;
     -ms-flex-negative: 1;
-    top: 68px;
+    top: $usa-banner-height + $topbar-height;
     position: relative;
 
     @include media($medium-screen) {
       margin: $gap * 2;
-      top: 68px;
+      top: $usa-banner-height + $topbar-height;
     }
   }
 }

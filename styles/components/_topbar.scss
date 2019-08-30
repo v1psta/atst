@@ -1,9 +1,9 @@
 .topbar {
   background-color: $color-blue-darkest;
   border-bottom: 1px solid $color-black;
-  height: 48px;
+  height: $topbar-height;
   position: fixed;
-  top: 28px;
+  top: $usa-banner-height;
   width: 100%;
   z-index: 10;
 
