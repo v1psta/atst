@@ -23,9 +23,8 @@
       <fieldset data-ally-disabled="true" v-on:change="onInput" class="usa-input__choices {% if inline %}usa-input__choices--inline{% endif %}">
         <legend>
           <div class="usa-input__title">
-            {{ field.label | striptags}}
+            {{ field.label | striptags }}
             {% if optional %}
-              &nbsp;
               <span class="usa-input-label-helper">(optional)</span>
             {% endif %}
             {% if tooltip %}{{ Tooltip(tooltip) }}{% endif %}
