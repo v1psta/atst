@@ -120,6 +120,24 @@
         color: $color-gray;
         margin-bottom: 1rem;
       }
+
+      .usa-alert {
+        padding: $gap * 0.5;
+        margin: 0 0 $gap;
+        background-size: 3rem;
+        background-position-x: 1.5rem;
+        background-position-y: 1.25rem;
+
+        &-body {
+          padding-left: 5rem;
+          padding-right: $gap * 2;
+        }
+
+        &-text {
+          font-weight: 550;
+          margin-bottom: 0.5rem;
+        }
+      }
     }
   }
 
@@ -255,7 +273,7 @@
 }
 
 .clin-card {
-  width: 65rem;
+  width: 70rem;
 
   &__title.h4 {
     margin-top: 0;

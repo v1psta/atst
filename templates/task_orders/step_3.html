@@ -1,5 +1,6 @@
 {% extends "task_orders/builder_base.html" %}
 
+{% from 'components/alert.html' import Alert %}
 {% from 'components/date_picker.html' import DatePicker %}
 {% from 'components/icon.html' import Icon %}
 {% from 'components/options_input.html' import OptionsInput %}
@@ -169,7 +170,7 @@
           </div>
           <div class="form-row">
             <div class="form-col">
-              {{ DatePicker(fields.end_date, watch=True, optional=False) }}
+              {{ DatePicker(fields.end_date, watch=True, optional=False, date_alert=True) }}
             </div>
           </div>
         {% else %}
@@ -244,6 +245,9 @@
                     <div class="usa-input__title">
                       {{ 'task_orders.form.pop_end' | translate }}
                     </div>
+
+                    {{ Alert(message="A CLIN's period of performance must end before September 14, 2022.") }}
+
                     <p class='usa-input__help'>
                       For example: 07 04 1776
                     </p>

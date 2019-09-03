@@ -1,3 +1,4 @@
+{% from "components/alert.html" import Alert %}
 {% from "components/icon.html" import Icon %}
 
 {% macro DatePicker(
@@ -7,7 +8,8 @@
   mindate=None,
   maxdate=None,
   watch=False,
-  optional=True) -%}
+  optional=True,
+  date_alert=False) -%}
 
 <date-selector
   {% if maxdate %}maxdate="{{ maxdate.strftime("%Y-%m-%d") }}"{% endif %}
@@ -25,6 +27,10 @@
         <div class="usa-input__title">
           {{ label }}
         </div>
+
+        {% if date_alert %}
+          {{ Alert(message="A CLIN's period of performance must end before September 14, 2022.") }}
+        {% endif %}
 
         {% if description %}
           <p class='usa-input__help'>
