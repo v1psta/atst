@@ -19,21 +19,18 @@
       v-bind:initial-amount='{{ fields.obligated_amount.data or 0 }}'
       v-bind:initial-start-date="'{{ fields.start_date.data | string }}'"
       v-bind:initial-end-date="'{{ fields.end_date.data | string }}'"
+      v-bind:initial-clin-number="'{{ fields.number.data | string }}'"
     {% else %}
       v-bind:initial-clin-index='clinIndex'
       v-bind:initial-clin-type="'JEDI_CLIN_1'"
     {% endif %}
     inline-template>
     <div class="clin-card">
-      <div class="card__title h4">
-        {{ 'task_orders.form.base_clin_title' | translate }}
-      </div>
+      <div class="card__title h4" v-html='clinTitle'></div>
       <div class="card">
         <div class="form-row">
-          <div class="form-col">
-            <div class="h4">
-              CLIN Details
-            </div>
+          <div class="h4 clin-card__title">
+            CLIN Details
           </div>
         </div>
         <div class="form-row">
@@ -41,8 +38,9 @@
             {% if fields %}
               {{ TextInput(fields.number, watch=True) }}
             {% else %}
-              <textinput :name="'clins-' + clinIndex + '-number'" :watch='true' inline-template>
-                <div class="usa-input">
+              <textinput :name="'clins-' + clinIndex + '-number'" :watch='true'
+              inline-template>
+                <div v-bind:class="['usa-input usa-input--validation--' + validation, { 'usa-input--error': showError, 'usa-input--success': showValid, 'usa-input--validation--paragraph': paragraph, 'no-max-width': noMaxWidth }]">
                   <label :for="name">
                     <span v-show='showError'>{{ Icon('alert',classes="icon-validation") }}</span>
                     <span v-show='showValid'>{{ Icon('ok',classes="icon-validation") }}</span>
@@ -82,7 +80,7 @@
               {{ OptionsInput(fields.jedi_clin_type, watch=True, show_validation=False) }}
             {% else %}
               <optionsinput :name="'clins-' + clinIndex + '-jedi_clin_type'" :watch='true' :optional='false' inline-template>
-                <div class="usa-input">
+                <div v-bind:class="['usa-input', { 'usa-input--error': showError, 'usa-input--success': showValid }]">
                   <fieldset data-ally-disabled="true" class="usa-input__choices" v-on:change="onInput">
                       <legend>
                         <div class="usa-input__title">
@@ -103,7 +101,7 @@
         </div>
         <hr>
         <div class="form-row">
-          <div class="h4">
+          <div class="h4 clin-card__title">
               CLIN Funding
           </div>
         </div>
@@ -159,7 +157,7 @@
         {% endif %}
         <hr>
         <div class="form-row">
-          <div class="h4">
+          <div class="h4 clin-card__title">
             Period of Performance
           </div>
         </div>

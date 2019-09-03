@@ -84,7 +84,7 @@
   }
 
   .card {
-    padding: ($gap * 5);
+    padding: ($gap * 4) ($gap * 5);
 
     .usa-input {
       margin: 0 $gap 0 0;
@@ -100,7 +100,7 @@
     }
 
     .form-row {
-      margin-top: 0;
+      margin: 0;
     }
 
     select {
@@ -246,4 +246,9 @@
 
 .clin-card {
   width: 65rem;
+
+  &__title.h4 {
+    margin-top: 0;
+    padding-bottom: $gap * 2.5;
+  }
 }
