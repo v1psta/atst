@@ -65,8 +65,8 @@ class AwsUploader {
       form.append(k, v)
     })
     form.append('file', file)
-    form.set('x-amz-meta-filename', file.name)
-    form.set('Content-Type', 'application/pdf')
+    form.append('x-amz-meta-filename', file.name)
+    form.append('Content-Type', 'application/pdf')
 
     const response = await fetch(this.presignedPost.url, {
       method: 'POST',
