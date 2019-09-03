@@ -30,6 +30,6 @@ def access_environment(environment_id):
     env_role = EnvironmentRoles.get_by_user_and_environment(
         g.current_user.id, environment_id
     )
-    token = app.csp.cloud.get_access_token(env_role)
+    login_url = app.csp.cloud.get_environment_login_url(env_role.environment)
 
-    return redirect(url_for("atst.csp_environment_access", token=token))
+    return redirect(url_for("atst.csp_environment_access", login_url=login_url))

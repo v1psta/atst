@@ -1,4 +1,3 @@
-from flask import current_app as app
 from sqlalchemy.orm.exc import NoResultFound
 
 from atst.database import db
@@ -13,7 +12,6 @@ class Environments(object):
     @classmethod
     def create(cls, application, name):
         environment = Environment(application=application, name=name)
-        environment.cloud_id = app.csp.cloud.create_application(environment.name)
         db.session.add(environment)
         db.session.commit()
         return environment
@@ -101,6 +99,6 @@ class Environments(object):
         if commit:
             db.session.commit()
 
-        app.csp.cloud.delete_application(environment.cloud_id)
+        # TODO: How do we work around environment deletion being a largely manual process in the CSPs
 
         return environment

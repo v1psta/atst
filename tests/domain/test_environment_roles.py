@@ -1,5 +1,4 @@
 import pytest
-from unittest.mock import MagicMock
 
 from atst.domain.environment_roles import EnvironmentRoles
 
@@ -19,10 +18,6 @@ def environment(application_role):
 
 
 def test_create(application_role, environment, monkeypatch):
-    mock_create_role = MagicMock()
-    monkeypatch.setattr(
-        "atst.domain.environment_roles.app.csp.cloud.create_role", mock_create_role
-    )
 
     environment_role = EnvironmentRoles.create(
         application_role, environment, "network admin"
@@ -30,7 +25,6 @@ def test_create(application_role, environment, monkeypatch):
     assert environment_role.application_role == application_role
     assert environment_role.environment == environment
     assert environment_role.role == "network admin"
-    mock_create_role.assert_called_with(environment_role)
 
 
 def test_get(application_role, environment):
@@ -55,16 +49,10 @@ def test_get_by_user_and_environment(application_role, environment):
 
 
 def test_delete(application_role, environment, monkeypatch):
-    mock_delete_role = MagicMock()
-    monkeypatch.setattr(
-        "atst.domain.environment_roles.app.csp.cloud.delete_role", mock_delete_role
-    )
-
-    environment_role = EnvironmentRoleFactory.create(
+    EnvironmentRoleFactory.create(
         application_role=application_role, environment=environment
     )
     assert EnvironmentRoles.delete(application_role.id, environment.id)
-    mock_delete_role.assert_called_with(environment_role)
     assert not EnvironmentRoles.delete(application_role.id, environment.id)
 
 
