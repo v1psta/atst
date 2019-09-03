@@ -107,20 +107,20 @@
         </div>
         {% if fields %}
           <div class="form-row">
-            <div class="form-column">
+            <div class="form-col">
               {{ TextInput(fields.obligated_amount, validation='dollars', watch=True) }}
             </div>
           </div>
         {% else %}
           <div class="form-row">
-            <div class="form-column">
+            <div class="form-col">
               <textinput
                 v-cloak
                 inline-template
                 :name="'clins-' + clinIndex + '-obligated_amount'"
                 validation="dollars"
                 :watch='true'>
-                <div class="usa-input usa-input--validation--dollars">
+                <div v-bind:class="['usa-input usa-input--validation--' + validation, { 'usa-input--error': showError, 'usa-input--success': showValid, 'usa-input--validation--paragraph': paragraph, 'no-max-width': noMaxWidth }]">
                   <label :for="name">
                     <div class="usa-input__title">{{ 'task_orders.form.obligated_funds_label' | translate }}</div>
                     <span v-show='showError'>{{ Icon('alert',classes="icon-validation") }}</span>
