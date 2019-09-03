@@ -77,7 +77,7 @@ class AwsUploader {
   }
 }
 
-class MockUploader {
+export class MockUploader {
   constructor(token, objectName) {
     this.token = token
     this.objectName = objectName

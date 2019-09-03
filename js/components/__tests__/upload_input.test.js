@@ -1,6 +1,7 @@
 import { mount } from '@vue/test-utils'
 
 import uploadinput from '../upload_input'
+import { MockUploader } from '../../lib/upload'
 
 import { makeTestWrapper } from '../../test_utils/component_test_helpers'
 
@@ -59,5 +60,41 @@ describe('UploadInput Test', () => {
 
     const messageArea = wrapper.find('.usa-input__message')
     expect(messageArea.html()).toContain('Test Error Message')
+  })
+
+  it('should disable the file input when a file is uploaded', done => {
+    const wrapper = mount(UploadErrorWrapper, {
+      propsData: {
+        initialData: {},
+      },
+    })
+
+    const component = wrapper.find(uploadinput)
+    const event = { target: { value: '', files: [{ name: '' }] } }
+
+    component.setMethods({
+      getUploader: async () => new MockUploader('token', 'objectName'),
+      getDownloadLink: async (_f, _o) => 'downloadLink',
+    })
+
+    component.vm.addAttachment(event).then(() => {
+      expect(component.vm.$refs.attachmentInput.disabled).toBe(true)
+      done()
+    })
+  })
+
+  it('should enable the file input when the attachment is removed', () => {
+    const wrapper = mount(UploadErrorWrapper, {
+      propsData: {
+        initialData: { filename: 'filename.pdf', objectName: 'abcd' },
+      },
+    })
+
+    const event = { preventDefault: () => {}, target: { value: 'val' } }
+    const component = wrapper.find(uploadinput)
+
+    component.vm.removeAttachment(event)
+
+    expect(component.vm.$refs.attachmentInput.disabled).toBe(false)
   })
 })
