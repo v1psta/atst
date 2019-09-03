@@ -35,13 +35,13 @@ class CLINForm(FlaskForm):
     )
     start_date = DateField(
         translate("task_orders.form.pop_start"),
-        description="For example: 07 04 1776",
+        description=translate("task_orders.form.pop_example"),
         format="%m/%d/%Y",
         validators=[Optional()],
     )
     end_date = DateField(
         translate("task_orders.form.pop_end"),
-        description="For example: 07 04 1776",
+        description=translate("task_orders.form.pop_example"),
         format="%m/%d/%Y",
         validators=[Optional()],
     )

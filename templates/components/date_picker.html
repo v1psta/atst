@@ -9,7 +9,7 @@
   maxdate=None,
   watch=False,
   optional=True,
-  date_alert=False) -%}
+  pop_end_alert=False) -%}
 
 <date-selector
   {% if maxdate %}maxdate="{{ maxdate.strftime("%Y-%m-%d") }}"{% endif %}
@@ -28,8 +28,8 @@
           {{ label }}
         </div>
 
-        {% if date_alert %}
-          {{ Alert(message="A CLIN's period of performance must end before September 14, 2022.") }}
+        {% if pop_end_alert %}
+          {{ Alert(message="task_orders.form.pop_end_alert" | translate) }}
         {% endif %}
 
         {% if description %}

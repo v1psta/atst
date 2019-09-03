@@ -8,7 +8,7 @@
 {% from 'task_orders/form_header.html' import TOFormStepHeader %}
 
 {% set action = url_for("task_orders.submit_form_step_three_add_clins", task_order_id=task_order_id) %}
-{% set next_button_text = "Next: Review Funding" %}
+{% set next_button_text = "task_orders.form.step_3.next_button" | translate %}
 {% set previous_button_link = url_for("task_orders.form_step_two_add_number", task_order_id=task_order_id) %}
 {% set step = "3" %}
 
@@ -31,7 +31,7 @@
       <div class="card">
         <div class="form-row">
           <div class="h4 clin-card__title">
-            CLIN Details
+            {{ 'task_orders.form.clin_details' | translate }}
           </div>
         </div>
         <div class="form-row">
@@ -103,7 +103,7 @@
         <hr>
         <div class="form-row">
           <div class="h4 clin-card__title">
-              CLIN Funding
+              {{ 'task_orders.form.clin_funding' | translate }}
           </div>
         </div>
         {% if fields %}
@@ -159,7 +159,7 @@
         <hr>
         <div class="form-row">
           <div class="h4 clin-card__title">
-            Period of Performance
+            {{ 'task_orders.form.pop' | translate }}
           </div>
         </div>
         {% if fields %}
@@ -170,7 +170,7 @@
           </div>
           <div class="form-row">
             <div class="form-col">
-              {{ DatePicker(fields.end_date, watch=True, optional=False, date_alert=True) }}
+              {{ DatePicker(fields.end_date, watch=True, optional=False, pop_end_alert=True) }}
             </div>
           </div>
         {% else %}
@@ -183,7 +183,7 @@
                       {{ 'task_orders.form.pop_start' | translate }}
                     </div>
                     <p class='usa-input__help'>
-                      For example: 07 04 1776
+                      {{ 'task_orders.form.pop_example' | translate }}
                     </p>
                   </legend>
 
@@ -249,7 +249,7 @@
                     {{ Alert(message="A CLIN's period of performance must end before September 14, 2022.") }}
 
                     <p class='usa-input__help'>
-                      For example: 07 04 1776
+                      {{ 'task_orders.form.pop_example' | translate }}
                     </p>
                   </legend>
 
