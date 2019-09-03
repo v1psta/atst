@@ -55,8 +55,8 @@ class CloudProviderInterface:
                          if it has a csp_user_id it will try to update that user
             csp_role_id -- The id of the role the user should be given in the CSP
 
-        Raises:
-            NotImplementedError: [description]
+        Returns:
+            string: Returns the interal csp_user_id of the created/updated user account
         """
         raise NotImplementedError()
 
