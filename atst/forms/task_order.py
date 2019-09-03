@@ -41,6 +41,7 @@ class CLINForm(FlaskForm):
     )
     end_date = DateField(
         translate("task_orders.form.pop_end"),
+        description="For example: 07 04 1776",
         format="%m/%d/%Y",
         validators=[Optional()],
     )

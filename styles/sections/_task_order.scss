@@ -84,7 +84,7 @@
   }
 
   .card {
-    padding: ($gap * 4) ($gap * 5);
+    padding: ($gap * 4) ($gap * 5) 0;
 
     .usa-input {
       margin: 0 $gap 0 0;
@@ -105,6 +105,21 @@
 
     button {
       margin-bottom: $gap * 3;
+    }
+
+    .date-picker {
+      padding-bottom: $gap * 3;
+
+      .usa-input__title {
+        padding-bottom: $gap;
+        font-weight: $font-bold;
+      }
+
+      .usa-input__help {
+        font-style: italic;
+        color: $color-gray;
+        margin-bottom: 1rem;
+      }
     }
   }
 

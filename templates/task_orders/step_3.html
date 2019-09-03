@@ -176,7 +176,7 @@
           <div class="form-row">
             <div class="form-col">
               <date-selector :name-tag="'clins-' + clinIndex + '-start_date'" :watch='true' :optional='false' inline-template>
-                <fieldset class="usa-input date-picker" v-bind:class="{ 'usa-input--success': isDateValid }">
+                <fieldset class="usa-input date-picker" v-bind:class="{ 'usa-input--success': isDateValid && showValidation }">
                   <legend>
                     <div class="usa-input__title">
                       {{ 'task_orders.form.pop_start' | translate }}
@@ -239,7 +239,7 @@
           <div class="form-row">
             <div class="form-col">
               <date-selector :name-tag="'clins-' + clinIndex + '-end_date'" :watch='true' :optional='false' inline-template>
-                <fieldset class="usa-input date-picker" v-bind:class="{ 'usa-input--success': isDateValid }">
+                <fieldset class="usa-input date-picker" v-bind:class="{ 'usa-input--success': isDateValid && showValidation }">
                   <legend>
                     <div class="usa-input__title">
                       {{ 'task_orders.form.pop_end' | translate }}
