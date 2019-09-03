@@ -52,6 +52,25 @@ def test_task_order_clins_are_completed():
     assert not TaskOrderFactory.create(clins=[]).clins_are_completed
 
 
+def test_clin_sorting():
+    task_order = TaskOrderFactory.create(
+        clins=[
+            CLINFactory.create(number="0002"),
+            CLINFactory.create(number="0001"),
+            CLINFactory.create(number="1001"),
+            CLINFactory.create(number="1002"),
+            CLINFactory.create(number="2001"),
+        ]
+    )
+    assert [clin.number for clin in task_order.sorted_clins] == [
+        "0001",
+        "1001",
+        "2001",
+        "0002",
+        "1002",
+    ]
+
+
 class TestTaskOrderStatus:
     @patch("atst.models.TaskOrder.is_completed", new_callable=PropertyMock)
     @patch("atst.models.TaskOrder.is_signed", new_callable=PropertyMock)
