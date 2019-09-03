@@ -73,10 +73,10 @@ components:
     destructive_message: You will no longer be able to access this {resource}
     destructive_title: Warning! This action is permanent
   totals_box:
-    obligated_funds: Funds obligated for cloud
-    obligated_text: This is the funding allocated to cloud services. It may be 100% or a portion of the total task order budget.
-    total_amount: Total contract amount
-    total_text: This is the value of all funds obligated for this contract, including -- but not limited to -- funds obligated for the cloud.
+    obligated_funds: Total Obligated Funds
+    obligated_text: This amount strictly calculates Base CLINs, and may represent 100% of your total task order budget, or just a portion if you also have Optional Base or Optional CLINs.
+    total_amount: Total Possible Task Order Funds
+    total_text: This amount represents the total value of all Base and Option CLINs, including any extensions listed within your task order.
   usa_header:
     flag_image_alt: U.S. Flag
     official_message: An official website of the United States government
@@ -350,17 +350,19 @@ portfolios:
 task_orders:
   review:
     pdf_title: Approved Task Order
-    review_your_task_order: Review your task order
-    funding_summary: Task Order Summary
+    review_your_funding: Review your funding
+    funding_summary: CLIN Summary
     task_order_number: Task Order Number
     check_paragraph: Check to make sure the information you entered is correct. After submission, you will confirm this task order was signed by a contracting officer. Thereafter, you will be informed as soon as CCPO completes their review.
     supporting_document:
       title: Supporting document
     clins:
-      amount: Amount
-      obligated: Obligated
-      pop_start: PoP Start
-      pop_end: PoP End
+      number: TO CLIN
+      type: CLIN Type
+      idiq_clin_description: Description (IDIQ CLIN)
+      pop: PoP
+      amount: CLIN Value
+      obligated: Amount Obligated
   form:
     add_clin: Enter another CLIN
     add_to_header: Add your task order
@@ -386,7 +388,7 @@ task_orders:
       description: Finally, plase confirm that your uploaded document representing the information you've entered contains the required signature from your Contracting Officer. You will be informed as soon as CCPO completes their review.
       alert_message: All task orders require a Contracting Officer signature.
       next_button: 'Confirm & Submit'
-    sticky_header_text: 'Add Funding ({step} of 5)'
+    sticky_header_text: 'Add Task Order (step {step} of 5)'
   new:
     form_help_text: Before you can begin work in the cloud, you'll need to complete the information below and upload your approved task order for reference by the CCPO.
     app_info:
@@ -396,10 +398,10 @@ task_orders:
   sign:
     digital_signature_description: I acknowledge that the uploaded task order contains the required KO signature.
 JEDICLINType:
-  JEDI_CLIN_1: 'Base CLIN 0001: Unclassified IaaS and PaaS'
-  JEDI_CLIN_2: 'CLIN 2: Classified Cloud Services - 0002'
-  JEDI_CLIN_3: 'CLIN 3:'
-  JEDI_CLIN_4: 'CLIN 4:'
+  JEDI_CLIN_1: 'Unclassified IaaS and PaaS (IDIQ CLIN 0001)'
+  JEDI_CLIN_2: 'Classified IaaS and PaaS (IDIQ CLIN 0002)'
+  JEDI_CLIN_3: 'Unclassified Cloud Support Package (IDIQ CLIN 0003)'
+  JEDI_CLIN_4: 'Classified Cloud Support Package (IDIQ CLIN 0004)'
 testing:
   example_string: Hello World
   example_with_variables: 'Hello, {name}!'
