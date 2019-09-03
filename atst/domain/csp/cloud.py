@@ -1,10 +1,16 @@
+from typing import Dict
 from uuid import uuid4
 
 from atst.models.environment_role import CSPRole
+from atst.models.user import User
+from atst.models.environment import Environment
+from atst.models.environment_role import EnvironmentRole
 
 
 class CloudProviderInterface:
-    def create_environment(self, auth_credentials, user, environment):
+    def create_environment(
+        self, auth_credentials: Dict, user: User, environment: Environment
+    ) -> str:
         """Create a new environment in the CSP.
 
         Arguments:
@@ -17,7 +23,9 @@ class CloudProviderInterface:
         """
         raise NotImplementedError()
 
-    def create_atat_admin_user(self, auth_credentials, csp_environment_id):
+    def create_atat_admin_user(
+        self, auth_credentials: Dict, csp_environment_id: str
+    ) -> Dict:
         """Creates a new, programmatic user in the CSP. Grants this user full permissions to administer
         the CSP.
 
@@ -35,7 +43,9 @@ class CloudProviderInterface:
         """
         raise NotImplementedError()
 
-    def create_environment_baseline(self, auth_credentials, csp_environment_id):
+    def create_environment_baseline(
+        self, auth_credentials: Dict, csp_environment_id: str
+    ) -> Dict:
         """Provision the necessary baseline entities (such as roles) in the given environment
 
         Arguments:
@@ -47,7 +57,9 @@ class CloudProviderInterface:
         """
         raise NotImplementedError()
 
-    def create_or_update_user(self, auth_credentials, user_info, csp_role_id):
+    def create_or_update_user(
+        self, auth_credentials: Dict, user_info: EnvironmentRole, csp_role_id: str
+    ) -> str:
         """Creates a user or updates an existing user's role.
 
         Arguments:
@@ -61,7 +73,7 @@ class CloudProviderInterface:
         """
         raise NotImplementedError()
 
-    def suspend_user(self, auth_credentials, csp_user_id):
+    def suspend_user(self, auth_credentials: Dict, csp_user_id: str) -> bool:
         """Revoke all privileges for a user. Used to prevent user access while a full
         delete is being processed.
 
@@ -74,7 +86,7 @@ class CloudProviderInterface:
         """
         raise NotImplementedError()
 
-    def delete_user(self, auth_credentials, csp_user_id):
+    def delete_user(self, auth_credentials: Dict, csp_user_id: str) -> bool:
         """Given the csp-internal id for a user, initiate user deletion.
 
         Arguments:
@@ -89,13 +101,13 @@ class CloudProviderInterface:
         """
         raise NotImplementedError()
 
-    def get_calculator_url(self):
+    def get_calculator_url(self) -> str:
         """Returns the calculator url for the CSP.
         This will likely be a static property elsewhere once a CSP is chosen.
         """
         raise NotImplementedError()
 
-    def get_environment_login_url(self, environment):
+    def get_environment_login_url(self, environment) -> str:
         """Returns the login url for a given environment
         This may move to be a computed property on the Environment domain object
         """
@@ -103,7 +115,7 @@ class CloudProviderInterface:
 
 
 class MockCloudProvider(CloudProviderInterface):
-    def create_environment(self, auth_credentials, user):
+    def create_environment(self, auth_credentials, user, environment):
         return uuid4().hex
 
     def create_atat_admin_user(self, auth_credentials, csp_environment_id):
@@ -117,7 +129,7 @@ class MockCloudProvider(CloudProviderInterface):
             CSPRole.TECHNICAL_READ: uuid4().hex,
         }
 
-    def create_or_update_user(self, auth_credentials, environment_role):
+    def create_or_update_user(self, auth_credentials, user_info, csp_role_id):
         return {"id": uuid4().hex}
 
     def suspend_user(self, auth_credentials, csp_user_id):
