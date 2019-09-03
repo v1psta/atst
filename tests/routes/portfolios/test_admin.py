@@ -1,5 +1,5 @@
 from flask import url_for
-from unittest.mock import Mock
+from unittest.mock import MagicMock
 
 from atst.domain.permission_sets import PermissionSets
 from atst.domain.portfolio_roles import PortfolioRoles
@@ -129,7 +129,7 @@ def test_rerender_admin_page_if_member_perms_form_does_not_validate(
         "members_permissions-0-perms_portfolio_mgmt": "view_portfolio_admin",
     }
 
-    mock_route = Mock()
+    mock_route = MagicMock(return_value=("", 200, {}))
     monkeypatch.setattr("atst.routes.portfolios.admin.render_admin_page", mock_route)
     client.post(
         url_for("portfolios.edit_members", portfolio_id=portfolio.id), data=form_data

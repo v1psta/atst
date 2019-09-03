@@ -1,3 +1,5 @@
+from unittest.mock import Mock
+
 import pytest
 
 from atst.domain.permission_sets import PermissionSets
@@ -33,15 +35,14 @@ def test_get_resources_from_context():
 
 
 @pytest.fixture
-def set_g(request_ctx):
+def set_g(monkeypatch):
+    _g = Mock()
+    monkeypatch.setattr("atst.utils.context_processors.g", _g)
+
     def _set_g(attr, val):
-        setattr(request_ctx.g, attr, val)
+        setattr(_g, attr, val)
 
     yield _set_g
-
-    setattr(request_ctx.g, "application", None)
-    setattr(request_ctx.g, "portfolio", None)
-    setattr(request_ctx.g, "current_user", None)
 
 
 def test_user_can_view(set_g):
@@ -77,4 +78,5 @@ def test_portfolio_no_user(set_g):
 def test_portfolio_with_user(set_g):
     user = UserFactory.create()
     set_g("current_user", user)
+    set_g("portfolio", None)
     assert portfolio_context() != {}
