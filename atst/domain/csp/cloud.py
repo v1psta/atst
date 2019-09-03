@@ -4,12 +4,13 @@ from atst.models.environment_role import CSPRole
 
 
 class CloudProviderInterface:
-    def create_environment(self, auth_credentials, user):
+    def create_environment(self, auth_credentials, user, environment):
         """Create a new environment in the CSP.
 
         Arguments:
             auth_credentials -- Object containing CSP account credentials
             user -- ATAT user authorizing the environment creation
+            environment -- ATAT Environment model
 
         Returns:
             string: ID of created environment
