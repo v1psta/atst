@@ -27,7 +27,16 @@
     {% endif %}
     inline-template>
     <div class="clin-card">
-      <div class="card__title h4" v-html='clinTitle'></div>
+      <div class="card__title">
+        <span class="h4" v-html='clinTitle'></span>
+        <button
+          v-if='$parent.clins > 0'
+          class="icon-link icon-link__remove-clin"
+          v-on:click="$parent.removeClin(clinIndex)"
+          type="button">
+          {{ Icon(name='x') }}
+        </button>
+      </div>
       <div class="card">
         <div class="form-row">
           <div class="h4 clin-card__title">

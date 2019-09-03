@@ -51,6 +51,12 @@ export default {
       ++this.clinIndex
     },
 
+    removeClin: function(clinIndex) {
+      if (this.clins > 0) {
+        console.log('removed CLIN')
+      }
+    },
+
     calculateClinAmounts: function(event) {
       this.clinChildren[event.id] = {
         amount: event.amount,
