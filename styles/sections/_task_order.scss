@@ -100,7 +100,7 @@
     }
 
     .form-row {
-      margin: 0;
+      margin-top: 0;
     }
 
     select {
@@ -242,4 +242,8 @@
 .task-order__modal-cancel_buttons {
   display: flex;
   justify-content: center;
+}
+
+.clin-card {
+  width: 65rem;
 }
