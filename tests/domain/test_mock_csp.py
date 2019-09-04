@@ -9,5 +9,6 @@ def mock_csp():
 
 
 def test_create_environment(mock_csp: MockCloudProvider):
-    environment_id = mock_csp.create_environment({}, {}, {})
+    credentials = mock_csp._auth_credentials()
+    environment_id = mock_csp.create_environment(credentials, {}, {})
     assert isinstance(environment_id, str)

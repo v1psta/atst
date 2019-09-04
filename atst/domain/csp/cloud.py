@@ -7,6 +7,10 @@ from atst.models.environment import Environment
 from atst.models.environment_role import EnvironmentRole
 
 
+class GeneralCSPException(Exception):
+    pass
+
+
 class CloudProviderInterface:
     def create_environment(
         self, auth_credentials: Dict, user: User, environment: Environment
@@ -117,10 +121,11 @@ class CloudProviderInterface:
 class MockCloudProvider(CloudProviderInterface):
 
     # TODO: All of these constants
-    AUTH_EXCEPTION = ValueError("Could not authenticate.")
-    NETWORK_EXCEPTION = ValueError("Network failure.")
+    AUTH_EXCEPTION = GeneralCSPException("Authentication failure.")
+    NETWORK_EXCEPTION = GeneralCSPException("Network failure.")
 
     NETWORK_FAILURE_PCT = 12
+    ENV_CREATE_FAILURE_PCT = 12
 
     def __init__(self, with_delay=True, with_failure=True):
         from time import sleep
@@ -133,7 +138,11 @@ class MockCloudProvider(CloudProviderInterface):
 
     def create_environment(self, auth_credentials, user, environment):
         self._delay(1, 5)
+        self._authorize(auth_credentials)
+
+        self._delay(1, 5)
         self._maybe_throw(self.NETWORK_FAILURE_PCT, self.NETWORK_EXCEPTION)
+        self._maybe_throw(self.ENV_CREATE_FAILURE_PCT, GeneralCSPException("Could not create environment."))
 
         return self._id()
 
@@ -181,5 +190,5 @@ class MockCloudProvider(CloudProviderInterface):
         return {"username": "mock-cloud", "pass": "shh"}
 
     def _authorize(self, credentials):
-        if credentials != _auth_credentials():
+        if credentials != self._auth_credentials():
             raise self.AUTH_EXCEPTION
