@@ -115,7 +115,24 @@ class CloudProviderInterface:
 
 
 class MockCloudProvider(CloudProviderInterface):
+    AUTH_EXCEPTION = ValueError("Could not authenticate.")
+    NETWORK_EXCEPTION = ValueError("Network failure.")
+
+    NETWORK_FAILURE_PCT = 12
+
+    def __init__(self, with_delay=True, with_failure=True):
+        from time import sleep
+        import random
+
+        self._with_delay = with_delay
+        self._with_failure = with_failure
+        self._sleep = sleep
+        self._random = random
+
     def create_environment(self, auth_credentials, user, environment):
+        self._delay(1, 5)
+        self._maybe_throw(self.NETWORK_FAILURE_PCT, self.NETWORK_EXCEPTION)
+
         return self._id()
 
     def create_atat_admin_user(self, auth_credentials, csp_environment_id):
@@ -148,3 +165,20 @@ class MockCloudProvider(CloudProviderInterface):
 
     def _id(self):
         return uuid4().hex
+
+    def _delay(self, min_secs, max_secs):
+        if self._with_delay:
+            duration = self._random.randrange(min_secs, max_secs)
+            self._sleep(duration)
+
+    def _maybe_throw(self, pct, exc):
+        if self._with_failure and self._random.randrange(0, 100) < pct:
+            raise exc
+
+    def _auth_credentials(self):
+        return {"username": "mock-cloud", "pass": "shh"}
+
+    def _authorize(self, credentials):
+        if credentials != _auth_credentials():
+            # TODO: Real exception
+            raise self.AUTH_EXCEPTION
