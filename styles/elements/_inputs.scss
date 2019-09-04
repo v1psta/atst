@@ -86,7 +86,6 @@
   }
 
   &__title {
-    display: flex;
     align-items: center;
 
     &-inline {
@@ -378,8 +377,7 @@ select {
     margin-left: $gap * 4;
 
     .usa-input {
-      input,
-      label {
+      input {
         max-width: 12rem;
       }
 

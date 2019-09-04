@@ -143,7 +143,7 @@ forms:
     first_name_label: First name
     funding: Funding
     last_name_label: Last name
-    phone_number_label: Phone number (optional)
+    phone_number_label: Phone number
     portfolio_mgmt: Portfolio management
     reporting: Reporting
   portfolio:
