@@ -4,7 +4,6 @@ from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.event import listen
 
 from atst.models import Base, ApplicationRole, types, mixins
-from atst.models.permissions import Permissions
 from atst.models.portfolio_invitation import PortfolioInvitation
 from atst.models.application_invitation import ApplicationInvitation
 from atst.models.mixins.auditable import (
@@ -98,10 +97,6 @@ class User(
         return "{} {}".format(self.first_name, self.last_name)
 
     @property
-    def has_portfolios(self):
-        return (Permissions.VIEW_PORTFOLIO in self.permissions) or self.portfolio_roles
-
-    @property
     def displayname(self):
         return self.full_name
 
@@ -114,8 +109,8 @@ class User(
         return None
 
     def __repr__(self):
-        return "<User(name='{}', dod_id='{}', email='{}', has_portfolios='{}', id='{}')>".format(
-            self.full_name, self.dod_id, self.email, self.has_portfolios, self.id
+        return "<User(name='{}', dod_id='{}', email='{}', id='{}')>".format(
+            self.full_name, self.dod_id, self.email, self.id
         )
 
     def to_dictionary(self):
