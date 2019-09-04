@@ -165,10 +165,10 @@ forms:
       none: Not planning to migrate any applications
       not_sure: Not sure
       on_premise: 'Yes, migrating from an on-premise data center'
-    clin_01_label: '0001: Unclassified IaaS and PaaS'
-    clin_02_label: '0002'
-    clin_03_label: '0003'
-    clin_04_label: '0004'
+    clin_01_label: 'IaaS/PaaS (IDIQ CLIN 0001)'
+    clin_02_label: 'IDIQ CLIN 0002'
+    clin_03_label: 'IDIQ CLIN 0003'
+    clin_04_label: 'IDIQ CLIN 0004'
     complexity:
       conus: CONUS access
       data_analytics: Data analytics
@@ -189,7 +189,6 @@ forms:
       military: Military
       other: Other <em class='description'>(E.g. University or other partner)</em>
     dev_team_other_label: Development Team Other
-    end_date_label: End of period of performance (PoP)
     file_format_not_allowed: Only PDF or PNG files can be uploaded.
     native_apps:
       description: Do you plan to develop any applications in the cloud?
@@ -201,7 +200,6 @@ forms:
     scope_description: 'What do you plan to do on the cloud? Some examples might include migrating an existing application or creating a prototype. You don’t need to include a detailed plan of execution, but should list key requirements. This section will be reviewed by your contracting officer, but won’t be sent to the CCPO. <p>Not sure how to describe your scope? <a href="#">Read some examples</a> to get some inspiration.</p>'
     scope_label: Cloud project scope
     start_date_error: PoP start date must be before end date.
-    start_date_label: Start of period of performance (PoP)
     team_experience:
       built_1: Built, migrated, or consulted on 1-2 applications
       built_3: Built, migrated, or consulted on 3-5 applications
@@ -362,25 +360,32 @@ task_orders:
       pop_start: PoP Start
       pop_end: PoP End
   form:
-    add_clin: Enter another CLIN
+    add_clin: Add another CLIN
     add_to_header: Add your task order
     add_to_description: Now, refer to your document to find the 13-digit task order number. It should be located at lorem ipsum dolar. From now on we'll refer to this portion of funding by the recorded task order number.
-    clin_title: Enter CLINs
-    clin_description: "Continue to refer to your TO to locate your Contract Line Item Numbers (CLINs). You must add CLINs one at a time, and select a corresponding ID/IQ description for each."
-    base_clin_title: Base CLIN Information
-    clin_number_label: Enter task order CLIN
-    clin_type_label: "Select ID/IQ CLIN description"
+    base_clin_title: CLIN
+    clin_title: Enter Contract Line Items
+    clin_description: "Refer to your task order to locate your Contract Line Item Numbers (CLINs)."
+    clin_details: CLIN Details
+    clin_funding: CLIN Funding
+    clin_number_label: CLIN Number
+    clin_type_label: Corresponding IDIQ CLIN
     cloud_funding_header: Add the summary of cloud funding
     cloud_funding_text: Data must match with what is in your uploaded document.
     draft_alert_title: Your information has been saved
     draft_alert_message: You can return to the Task Order Builder to enter missing information. Once you are finished, you’ll be ready to submit this request.
-    obligated_funds_label: Enter obligated funds for Base CLIN
-    pop_end: 'Period of Performance (PoP) end date'
-    pop_start: 'Period of Performance (PoP) start date'
+    obligated_funds_label: Obligated Funds
+    pop: Period of Performance
+    pop_end: End Date
+    pop_end_alert: "A CLIN's period of performance must end before September 14, 2022."
+    pop_example: "For example: 07 04 1776"
+    pop_start: Start Date
     review_button: Review task order
     supporting_docs_header: Upload your supporting documentation
     supporting_docs_size_limit: Your file may not exceed 64MB
     supporting_docs_text: Upload a single PDF containing all relevant information.
+    step_3:
+      next_button: 'Next: Review Task Order'
     step_5:
       title: Confirm Signature
       description: Finally, plase confirm that your uploaded document representing the information you've entered contains the required signature from your Contracting Officer. You will be informed as soon as CCPO completes their review.

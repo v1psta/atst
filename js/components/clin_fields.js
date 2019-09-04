@@ -8,6 +8,7 @@ const OBLIGATED_AMOUNT = 'obligated_amount'
 const START_DATE = 'start_date'
 const END_DATE = 'end_date'
 const POP = 'period_of_performance'
+const NUMBER = 'number'
 
 export default {
   name: 'clin-fields',
@@ -33,6 +34,10 @@ export default {
       type: String,
       default: null,
     },
+    initialClinNumber: {
+      type: String,
+      default: null,
+    },
   },
 
   data: function() {
@@ -44,6 +49,9 @@ export default {
       : undefined
     const popValidation = !this.initialStartDate ? false : start < end
     const showPopValidation = !this.initialStartDate ? false : !popValidation
+    const clinNumber = !!this.initialClinNumber
+      ? this.initialClinNumber
+      : undefined
 
     return {
       clinIndex: this.initialClinIndex,
@@ -53,6 +61,7 @@ export default {
       endDate: end,
       popValid: popValidation,
       showPopError: showPopValidation,
+      clinNumber: clinNumber,
     }
   },
 
@@ -113,7 +122,19 @@ export default {
         } else if (event.name.includes(END_DATE)) {
           if (!!event.value) this.endDate = new Date(event.value)
           this.validatePop()
+        } else if (event.name.includes(NUMBER)) {
+          this.clinNumber = event.value
         }
+      }
+    },
+  },
+
+  computed: {
+    clinTitle: function() {
+      if (!!this.clinNumber) {
+        return `CLIN ${this.clinNumber}`
+      } else {
+        return `CLIN`
       }
     },
   },

@@ -50,6 +50,13 @@
     }
   }
 
+  &__header {
+    .h2,
+    p {
+      margin-bottom: $gap * 0.5;
+    }
+  }
+
   .col {
     flex-grow: 1;
   }
@@ -84,19 +91,15 @@
   }
 
   .card {
-    padding: ($gap * 5);
+    padding: ($gap * 4) ($gap * 5) 0;
 
     .usa-input {
       margin: 0 $gap 0 0;
-
-      input {
-        max-width: none;
-      }
+      width: 45rem;
     }
 
-    .usa-input--validation--dollars label span.icon {
-      left: auto;
-      right: -$gap * 9;
+    fieldset.date-picker {
+      width: auto;
     }
 
     .form-row {
@@ -110,6 +113,39 @@
 
     button {
       margin-bottom: $gap * 3;
+    }
+
+    .date-picker {
+      padding-bottom: $gap * 3;
+
+      .usa-input__title {
+        padding-bottom: $gap;
+        font-weight: $font-bold;
+      }
+
+      .usa-input__help {
+        font-style: italic;
+        color: $color-gray;
+        margin-bottom: 1rem;
+      }
+
+      .usa-alert {
+        padding: $gap * 0.5;
+        margin: 0 0 $gap;
+        background-size: 3rem;
+        background-position-x: 1.5rem;
+        background-position-y: 1.25rem;
+
+        &-body {
+          padding-left: 5rem;
+          padding-right: $gap * 2;
+        }
+
+        &-text {
+          font-weight: 550;
+          margin-bottom: 0.5rem;
+        }
+      }
     }
   }
 
@@ -242,4 +278,13 @@
 .task-order__modal-cancel_buttons {
   display: flex;
   justify-content: center;
+}
+
+.clin-card {
+  width: 62rem;
+
+  &__title.h4 {
+    margin-top: 0;
+    padding-bottom: $gap * 2.5;
+  }
 }

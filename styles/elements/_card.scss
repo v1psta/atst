@@ -16,6 +16,11 @@
     }
   }
 
+  &__title {
+    padding: $gap * 2;
+    background-color: $color-gray-lightest;
+  }
+
   &__header h3 {
     margin-top: 0;
   }
