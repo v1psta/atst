@@ -123,7 +123,7 @@ export default {
           if (!!event.value) this.endDate = new Date(event.value)
           this.validatePop()
         } else if (event.name.includes(NUMBER)) {
-          if (!!event.value) this.clinNumber = event.value
+          this.clinNumber = event.value
         }
       }
     },
