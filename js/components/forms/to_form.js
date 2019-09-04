@@ -31,14 +31,6 @@ export default {
       type: Number,
       default: null,
     },
-    initialObligated: {
-      type: Number,
-      default: null,
-    },
-    initialTotal: {
-      type: Number,
-      default: null,
-    },
   },
 
   data: function() {
@@ -48,14 +40,10 @@ export default {
     return {
       clins,
       clinIndex,
-      obligated: this.initialObligated || 0,
-      total: this.initialTotal || 0,
-      clinChildren: {},
     }
   },
 
   mounted: function() {
-    this.$root.$on('clin-change', this.calculateClinAmounts)
     this.$root.$on('remove-clin', this.handleRemoveClin)
   },
 
@@ -74,24 +62,6 @@ export default {
       }
 
       this.validateForm()
-    },
-
-    calculateClinAmounts: function(event) {
-      this.clinChildren[event.id] = {
-        amount: event.amount,
-        type: event.clinType,
-      }
-
-      let newTotal = 0
-      let newObligated = 0
-      Object.values(this.clinChildren).forEach(function(clin) {
-        newTotal += clin.amount
-        if (clin.type.includes('1') || clin.type.includes('3')) {
-          newObligated += clin.amount
-        }
-      })
-      this.total = newTotal
-      this.obligated = newObligated
     },
   },
 
