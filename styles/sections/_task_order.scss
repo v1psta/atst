@@ -84,6 +84,7 @@
     .usa-input {
       margin: 0 $gap 0 0;
       width: 45rem;
+      min-width: 45rem;
     }
 
     fieldset.date-picker {
