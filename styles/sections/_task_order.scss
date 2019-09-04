@@ -95,10 +95,7 @@
 
     .usa-input {
       margin: 0 $gap 0 0;
-
-      input {
-        max-width: none;
-      }
+      width: 45rem;
     }
 
     .form-row {
@@ -280,7 +277,7 @@
 }
 
 .clin-card {
-  width: 70rem;
+  width: 62rem;
 
   &__title.h4 {
     margin-top: 0;
