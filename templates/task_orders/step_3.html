@@ -46,7 +46,7 @@
         <div class="form-row">
           <div class="form-col">
             {% if fields %}
-              {{ TextInput(fields.number, watch=True) }}
+              {{ TextInput(fields.number, watch=True, optional=False) }}
             {% else %}
               <textinput :name="'clins-' + clinIndex + '-number'" :watch='true'
               inline-template>
@@ -87,7 +87,7 @@
         <div class="form-row">
           <div class="form-col">
             {% if fields %}
-              {{ OptionsInput(fields.jedi_clin_type, watch=True, show_validation=False) }}
+              {{ OptionsInput(fields.jedi_clin_type, watch=True, show_validation=False, optional=False) }}
             {% else %}
               <optionsinput :name="'clins-' + clinIndex + '-jedi_clin_type'" :watch='true' :optional='false' inline-template>
                 <div v-bind:class="['usa-input', { 'usa-input--error': showError, 'usa-input--success': showValid }]">
@@ -118,7 +118,7 @@
         {% if fields %}
           <div class="form-row">
             <div class="form-col">
-              {{ TextInput(fields.obligated_amount, validation='dollars', watch=True) }}
+              {{ TextInput(fields.obligated_amount, validation='dollars', watch=True, optional=False) }}
             </div>
           </div>
         {% else %}
