@@ -1,5 +1,6 @@
 import DateSelector from './date_selector'
 import { emitEvent } from '../lib/emitters'
+import Modal from '../mixins/modal'
 import optionsinput from './options_input'
 import textinput from './text_input'
 
@@ -18,6 +19,8 @@ export default {
     optionsinput,
     textinput,
   },
+
+  mixins: [Modal],
 
   props: {
     initialClinIndex: Number,
@@ -134,6 +137,7 @@ export default {
       emitEvent('remove-clin', this, {
         clinIndex: this.clinIndex,
       })
+      this.closeModal('remove_clin')
     },
   },
 
@@ -144,6 +148,10 @@ export default {
       } else {
         return `CLIN`
       }
+    },
+
+    removeModalId: function() {
+      return `remove-clin-${this.clinIndex}`
     },
   },
 }
