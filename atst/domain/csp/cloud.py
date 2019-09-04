@@ -115,6 +115,8 @@ class CloudProviderInterface:
 
 
 class MockCloudProvider(CloudProviderInterface):
+
+    # TODO: All of these constants
     AUTH_EXCEPTION = ValueError("Could not authenticate.")
     NETWORK_EXCEPTION = ValueError("Network failure.")
 
@@ -180,5 +182,4 @@ class MockCloudProvider(CloudProviderInterface):
 
     def _authorize(self, credentials):
         if credentials != _auth_credentials():
-            # TODO: Real exception
             raise self.AUTH_EXCEPTION
