@@ -1,3 +1,6 @@
+import stickybits from 'stickybits'
+
+import checkboxinput from '../checkbox_input'
 import ClinFields from '../clin_fields'
 import DateSelector from '../date_selector'
 import FormMixin from '../../mixins/form'
@@ -13,6 +16,7 @@ export default {
   mixins: [FormMixin],
 
   components: {
+    checkboxinput,
     ClinFields,
     DateSelector,
     optionsinput,
@@ -23,9 +27,18 @@ export default {
   },
 
   props: {
-    initialClinCount: Number,
-    initialObligated: Number,
-    initialTotal: Number,
+    initialClinCount: {
+      type: Number,
+      default: null,
+    },
+    initialObligated: {
+      type: Number,
+      default: null,
+    },
+    initialTotal: {
+      type: Number,
+      default: null,
+    },
   },
 
   data: function() {
@@ -73,6 +86,18 @@ export default {
       })
       this.total = newTotal
       this.obligated = newObligated
+    },
+  },
+
+  directives: {
+    sticky: {
+      inserted: (el, binding) => {
+        var customAttributes
+        if (binding.expression) {
+          customAttributes = JSON.parse(binding.expression)
+        }
+        stickybits(el, customAttributes)
+      },
     },
   },
 }

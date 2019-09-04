@@ -333,27 +333,23 @@
 
 
 {% block to_builder_form_field %}
-  <to-form
-    inline-template
-    v-bind:initial-clin-count="{{ form.clins.data | length }}">
-    <div>
-      {{ TOFormStepHeader('task_orders.form.clin_title' | translate, 'task_orders.form.clin_description' | translate, task_order.number) }}
+  <div>
+    {{ TOFormStepHeader('task_orders.form.clin_title' | translate, 'task_orders.form.clin_description' | translate, task_order.number) }}
 
-      {% for clin in form.clins %}
-        {{ CLINFields(clin, index=loop.index - 1) }}
-      {% endfor %}
+    {% for clin in form.clins %}
+      {{ CLINFields(clin, index=loop.index - 1) }}
+    {% endfor %}
 
-      <div v-for="clin in clins">
-        {{ CLINFields() }}
-      </div>
-
-      <button
-        class="icon-link icon-link__add-another-clin"
-        v-on:click="addClin"
-        type="button">
-        {{ Icon('plus') }}
-        <span>{{ 'task_orders.form.add_clin' | translate }}</span>
-      </button>
+    <div v-for="clin in clins">
+      {{ CLINFields() }}
     </div>
-  </to-form>
+
+    <button
+      class="icon-link icon-link__add-another-clin"
+      v-on:click="addClin"
+      type="button">
+      {{ Icon('plus') }}
+      <span>{{ 'task_orders.form.add_clin' | translate }}</span>
+    </button>
+  </div>
 {% endblock %}
