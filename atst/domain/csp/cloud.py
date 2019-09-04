@@ -124,8 +124,9 @@ class MockCloudProvider(CloudProviderInterface):
     AUTH_EXCEPTION = GeneralCSPException("Authentication failure.")
     NETWORK_EXCEPTION = GeneralCSPException("Network failure.")
 
-    NETWORK_FAILURE_PCT = 12
+    NETWORK_FAILURE_PCT = 7
     ENV_CREATE_FAILURE_PCT = 12
+    ATAT_ADMIN_CREATE_FAILURE_PCT = 12
 
     def __init__(self, with_delay=True, with_failure=True):
         from time import sleep
@@ -137,19 +138,39 @@ class MockCloudProvider(CloudProviderInterface):
         self._random = random
 
     def create_environment(self, auth_credentials, user, environment):
-        self._delay(1, 5)
         self._authorize(auth_credentials)
 
         self._delay(1, 5)
         self._maybe_throw(self.NETWORK_FAILURE_PCT, self.NETWORK_EXCEPTION)
-        self._maybe_throw(self.ENV_CREATE_FAILURE_PCT, GeneralCSPException("Could not create environment."))
+        self._maybe_throw(
+            self.ENV_CREATE_FAILURE_PCT,
+            GeneralCSPException("Could not create environment."),
+        )
 
         return self._id()
 
     def create_atat_admin_user(self, auth_credentials, csp_environment_id):
+        self._authorize(auth_credentials)
+
+        self._delay(1, 5)
+        self._maybe_throw(self.NETWORK_FAILURE_PCT, self.NETWORK_EXCEPTION)
+        self._maybe_throw(
+            self.ATAT_ADMIN_CREATE_FAILURE_PCT,
+            GeneralCSPException("Could not create admin user."),
+        )
+
         return {"id": self._id(), "credentials": {}}
 
     def create_environment_baseline(self, auth_credentials, csp_environment_id):
+        self._authorize(auth_credentials)
+
+        self._delay(1, 5)
+        self._maybe_throw(self.NETWORK_FAILURE_PCT, self.NETWORK_EXCEPTION)
+        self._maybe_throw(
+            self.ATAT_ADMIN_CREATE_FAILURE_PCT,
+            GeneralCSPException("Could not create environment baseline."),
+        )
+
         return {
             CSPRole.BASIC_ACCESS: self._id(),
             CSPRole.NETWORK_ADMIN: self._id(),
@@ -158,13 +179,22 @@ class MockCloudProvider(CloudProviderInterface):
         }
 
     def create_or_update_user(self, auth_credentials, user_info, csp_role_id):
+        self._authorize(auth_credentials)
+
+        self._delay(1, 5)
+        self._maybe_throw(self.NETWORK_FAILURE_PCT, self.NETWORK_EXCEPTION)
+        self._maybe_throw(
+            self.ATAT_ADMIN_CREATE_FAILURE_PCT,
+            GeneralCSPException("Could not create user."),
+        )
+
         return {"id": self._id()}
 
     def suspend_user(self, auth_credentials, csp_user_id):
-        pass
+        return self._maybe(12)
 
     def delete_user(self, auth_credentials, csp_user_id):
-        pass
+        return self._maybe(12)
 
     def get_calculator_url(self):
         return "https://www.rackspace.com/en-us/calculator"
@@ -182,13 +212,18 @@ class MockCloudProvider(CloudProviderInterface):
             duration = self._random.randrange(min_secs, max_secs)
             self._sleep(duration)
 
+    def _maybe(self, pct):
+        return not self._with_failure or self._random.randrange(0, 100) < pct
+
     def _maybe_throw(self, pct, exc):
-        if self._with_failure and self._random.randrange(0, 100) < pct:
+        if self._with_failure and self._maybe(pct):
             raise exc
 
+    @property
     def _auth_credentials(self):
         return {"username": "mock-cloud", "pass": "shh"}
 
     def _authorize(self, credentials):
-        if credentials != self._auth_credentials():
+        self._delay(1, 5)
+        if credentials != self._auth_credentials:
             raise self.AUTH_EXCEPTION
