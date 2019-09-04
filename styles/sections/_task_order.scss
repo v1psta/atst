@@ -258,7 +258,10 @@
       padding: 0;
       right: $gap * 1.5;
       position: absolute;
-      color: $color-gray;
+
+      .icon > svg * {
+        fill: $color-gray;
+      }
     }
   }
 }
