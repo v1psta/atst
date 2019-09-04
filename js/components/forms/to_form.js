@@ -42,8 +42,8 @@ export default {
   },
 
   data: function() {
-    const clins = this.initialClinCount == 0 ? 1 : 0
-    const clinIndex = this.initialClinCount == 0 ? 0 : this.initialClinCount - 1
+    const clins = !this.initialClinCount ? 1 : 0
+    const clinIndex = !this.initialClinCount ? 0 : this.initialClinCount - 1
 
     return {
       clins,
@@ -67,7 +67,13 @@ export default {
 
     handleRemoveClin: function(event) {
       --this.clinIndex
-      console.log('removed clin')
+      for (var field in this.fields) {
+        if (field.includes('-' + event.clinIndex + '-')) {
+          delete this.fields[field]
+        }
+      }
+
+      this.validateForm()
     },
 
     calculateClinAmounts: function(event) {

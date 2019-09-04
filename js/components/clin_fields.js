@@ -78,7 +78,7 @@ export default {
     })
     emitEvent('field-mount', this, {
       optional: false,
-      name: POP + "-" + this.clinIndex,
+      name: 'clins-' + this.clinIndex + '-' + POP,
       valid: this.checkPopValid(),
     })
   },
@@ -104,7 +104,7 @@ export default {
       }
 
       emitEvent('field-change', this, {
-        name: POP + "-" + this.clinIndex,
+        name: 'clins-' + this.clinIndex + '-' + POP,
         valid: this.checkPopValid(),
       })
     },
