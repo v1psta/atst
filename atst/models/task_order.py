@@ -47,6 +47,10 @@ class TaskOrder(Base, mixins.TimestampsMixin):
         "CLIN", back_populates="task_order", cascade="all, delete-orphan"
     )
 
+    @property
+    def sorted_clins(self):
+        return sorted(self.clins, key=lambda clin: (clin.number[1:], clin.number[0]))
+
     @hybrid_property
     def pdf(self):
         return self._pdf

@@ -7,7 +7,10 @@
   <div class="form-row">
     <div class="form-col">
       <div class="h2">
-        {{ "task_orders.review.review_your_task_order" | translate }}
+        {{ "task_orders.review.review_your_funding" | translate }}
+      </div>
+      <div>
+        {{ TotalsBox(task_order=task_order) }}
       </div>
 
       <div class="h3">
@@ -32,40 +35,36 @@
           {{ "task_orders.review.funding_summary" | translate }}
         </div>
 
-        {% for clin in task_order.clins %}
-          <div>
-            {{ "{}".format(clin.jedi_clin_type) | translate}}
-          </div>
+        
           <table class="fixed-table-wrapper">
             <thead>
               <tr>
-                <th class="task-order__clin-amount">{{ "task_orders.review.clins.amount" | translate }}</th>
-                <th>{{ "task_orders.review.clins.obligated" | translate }}</th>
-                <th>{{ "task_orders.review.clins.pop_start" | translate }}</th>
-                <th>{{ "task_orders.review.clins.pop_end" | translate }}</th>
+                <th>{{ "task_orders.review.clins.number" | translate }}</th>
+                <th>{{ "task_orders.review.clins.type" | translate }}</th>
+                <th>{{ "task_orders.review.clins.idiq_clin_description" | translate }}</th>
+                <th>{{ "task_orders.review.clins.pop" | translate }}</th>
+                <th class="task-order__amount">{{ "task_orders.review.clins.amount" | translate }}</th>
+                <th class="task-order__amount">{{ "task_orders.review.clins.obligated" | translate }}</th>
               </tr>
             </thead>
 
             <tbody>
+              {% for clin in task_order.sorted_clins %}
               <tr>
-                <td>{{ clin.obligated_amount | dollars }}</td>
+                <td>{{ clin.number }}</td>
+                <td>{{ clin.type }}</td>
+                <td>{{ "{}".format(clin.jedi_clin_type) | translate}}</td>
                 <td>
-                  {% if clin.is_obligated() %}
-                    {{ "common.yes" | translate }}
-                  {% else %}
-                    {{ "common.no" | translate }}
-                  {% endif %}
+                 {{ clin.start_date | formattedDate }} -  {{ clin.end_date | formattedDate }}
                 </td>
-                <td>{{ clin.start_date | formattedDate }}</td>
-                <td>{{ clin.end_date | formattedDate }}</td>
+                {# TODO: Swap in total CLIN amount #}
+                <td class="task-order__amount">$123,456,789.00</td>
+                <td class="task-order__amount">{{ clin.obligated_amount | dollars }}</td>
               </tr>
+              {% endfor %}
             </tbody>
           </table>
-        {% endfor %}
       </div>
-    </div>
-    <div class="form-col">
-      {{ TotalsBox(task_order=task_order) }}
     </div>
   </div>
 </div>

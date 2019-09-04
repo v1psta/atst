@@ -36,6 +36,10 @@ class CLIN(Base, mixins.TimestampsMixin):
         ]
 
     @property
+    def type(self):
+        return "Base" if self.number[0] == "0" else "Option"
+
+    @property
     def is_completed(self):
         return all(
             [

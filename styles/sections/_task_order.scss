@@ -24,29 +24,21 @@
   margin-top: $gap * 4;
   width: 900px;
 
+  &__amount {
+    text-align: right;
+  }
+
   hr {
     border: 0;
-    border-bottom: 1px solid $color-gray-lighter;
     margin-top: $gap * 4;
     margin-bottom: $gap * 4;
   }
 
   table {
     margin-top: 1rem;
-    table-layout: fixed;
 
     th {
       white-space: nowrap;
-      word-wrap: normal;
-      padding: 0.8rem;
-
-      &.task-order__clin-amount {
-        width: 25%;
-      }
-    }
-
-    td {
-      padding: 0.8rem;
     }
   }
 
@@ -80,12 +72,8 @@
     }
 
     .totals-box {
-      padding: $gap * 4;
-      padding-top: $gap * 2;
       flex-grow: unset;
-      margin-left: $gap * 6;
       display: table;
-      background-color: $color-gray-lightest;
       min-width: 350px;
     }
   }
