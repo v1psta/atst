@@ -56,6 +56,7 @@ export default {
 
   mounted: function() {
     this.$root.$on('clin-change', this.calculateClinAmounts)
+    this.$root.$on('remove-clin', this.handleRemoveClin)
   },
 
   methods: {
@@ -64,10 +65,9 @@ export default {
       ++this.clinIndex
     },
 
-    removeClin: function(clinIndex) {
-      if (this.clins > 0) {
-        console.log('removed CLIN')
-      }
+    handleRemoveClin: function(event) {
+      --this.clinIndex
+      console.log('removed clin')
     },
 
     calculateClinAmounts: function(event) {

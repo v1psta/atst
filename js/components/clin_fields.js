@@ -62,6 +62,7 @@ export default {
       popValid: popValidation,
       showPopError: showPopValidation,
       clinNumber: clinNumber,
+      showClin: true,
     }
   },
 
@@ -77,7 +78,7 @@ export default {
     })
     emitEvent('field-mount', this, {
       optional: false,
-      name: POP,
+      name: POP + "-" + this.clinIndex,
       valid: this.checkPopValid(),
     })
   },
@@ -103,7 +104,7 @@ export default {
       }
 
       emitEvent('field-change', this, {
-        name: POP,
+        name: POP + "-" + this.clinIndex,
         valid: this.checkPopValid(),
       })
     },
@@ -126,6 +127,13 @@ export default {
           this.clinNumber = event.value
         }
       }
+    },
+
+    removeClin: function() {
+      this.showClin = false
+      emitEvent('remove-clin', this, {
+        clinIndex: this.clinIndex,
+      })
     },
   },
 

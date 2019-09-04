@@ -26,13 +26,13 @@
       v-bind:initial-clin-type="'JEDI_CLIN_1'"
     {% endif %}
     inline-template>
-    <div class="clin-card">
+    <div class="clin-card" v-if="showClin">
       <div class="card__title">
         <span class="h4" v-html='clinTitle'></span>
         <button
-          v-if='$parent.clins > 0'
+          v-if='$parent.clinIndex > 0'
           class="icon-link icon-link__remove-clin"
-          v-on:click="$parent.removeClin(clinIndex)"
+          v-on:click="removeClin()"
           type="button">
           {{ Icon(name='x') }}
         </button>
