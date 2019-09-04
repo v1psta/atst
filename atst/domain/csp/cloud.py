@@ -116,21 +116,21 @@ class CloudProviderInterface:
 
 class MockCloudProvider(CloudProviderInterface):
     def create_environment(self, auth_credentials, user, environment):
-        return uuid4().hex
+        return self._id()
 
     def create_atat_admin_user(self, auth_credentials, csp_environment_id):
-        return {"id": uuid4().hex, "credentials": {}}
+        return {"id": self._id(), "credentials": {}}
 
     def create_environment_baseline(self, auth_credentials, csp_environment_id):
         return {
-            CSPRole.BASIC_ACCESS: uuid4().hex,
-            CSPRole.NETWORK_ADMIN: uuid4().hex,
-            CSPRole.BUSINESS_READ: uuid4().hex,
-            CSPRole.TECHNICAL_READ: uuid4().hex,
+            CSPRole.BASIC_ACCESS: self._id(),
+            CSPRole.NETWORK_ADMIN: self._id(),
+            CSPRole.BUSINESS_READ: self._id(),
+            CSPRole.TECHNICAL_READ: self._id(),
         }
 
     def create_or_update_user(self, auth_credentials, user_info, csp_role_id):
-        return {"id": uuid4().hex}
+        return {"id": self._id()}
 
     def suspend_user(self, auth_credentials, csp_user_id):
         pass
@@ -145,3 +145,6 @@ class MockCloudProvider(CloudProviderInterface):
         """Returns the login url for a given environment
         """
         return "https://www.mycloud.com/my-env-login"
+
+    def _id(self):
+        return uuid4().hex
