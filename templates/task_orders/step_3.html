@@ -170,7 +170,9 @@
           </div>
           <div class="form-row">
             <div class="form-col">
-              {{ DatePicker(fields.end_date, watch=True, optional=False, pop_end_alert=True) }}
+              {% call DatePicker(fields.end_date, watch=True, optional=False) %}
+                {{ Alert(message="task_orders.form.pop_end_alert" | translate) }}
+              {% endcall %}
             </div>
           </div>
         {% else %}

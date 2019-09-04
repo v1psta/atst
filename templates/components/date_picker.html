@@ -8,8 +8,7 @@
   mindate=None,
   maxdate=None,
   watch=False,
-  optional=True,
-  pop_end_alert=False) -%}
+  optional=True) -%}
 
 <date-selector
   {% if maxdate %}maxdate="{{ maxdate.strftime("%Y-%m-%d") }}"{% endif %}
@@ -28,8 +27,8 @@
           {{ label }}
         </div>
 
-        {% if pop_end_alert %}
-          {{ Alert(message="task_orders.form.pop_end_alert" | translate) }}
+        {% if caller %}
+          {{ caller() }}
         {% endif %}
 
         {% if description %}
