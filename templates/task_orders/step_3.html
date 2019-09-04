@@ -334,19 +334,19 @@
             <div class='modal__dialog' role='dialog' aria-modal='true'>
               <div class='modal__body'>
                 <div class="task-order__modal-cancel">
-                  <h1>Do you want to remove <span v-html='clinTitle'></span>?</h1>
+                  <h1 v-html='"{{ 'task_orders.form.clin_remove_text' | translate }}" + clinTitle + "?"'></h1>
                   <div class="task-order__modal-cancel_buttons">
                     <button
                       v-on:click='closeModal(removeModalId)'
                       class="usa-button usa-button-primary"
                       type="button">
-                      No, go back
+                      {{ 'task_orders.form.clin_remove_cancel' | translate }}
                     </button>
                     <button
                       v-on:click="removeClin()"
                       class="usa-button usa-button-primary"
                       type="button">
-                      Yes, remove CLIN
+                      {{ 'task_orders.form.clin_remove_confirm' | translate }}
                     </button>
                   </div>
                 </div>
