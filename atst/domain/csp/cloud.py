@@ -191,9 +191,11 @@ class MockCloudProvider(CloudProviderInterface):
         return {"id": self._id()}
 
     def suspend_user(self, auth_credentials, csp_user_id):
+        self._maybe_throw(self.NETWORK_FAILURE_PCT, self.NETWORK_EXCEPTION)
         return self._maybe(12)
 
     def delete_user(self, auth_credentials, csp_user_id):
+        self._maybe_throw(self.NETWORK_FAILURE_PCT, self.NETWORK_EXCEPTION)
         return self._maybe(12)
 
     def get_calculator_url(self):
