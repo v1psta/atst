@@ -4,6 +4,7 @@ from atst.domain.csp import MockCloudProvider
 
 CREDENTIALS = MockCloudProvider()._auth_credentials
 
+
 @pytest.fixture
 def mock_csp():
     return MockCloudProvider(with_delay=False, with_failure=False)
