@@ -4,8 +4,6 @@ import Modal from '../mixins/modal'
 import optionsinput from './options_input'
 import textinput from './text_input'
 
-const JEDI_CLIN_TYPE = 'jedi_clin_type'
-const OBLIGATED_AMOUNT = 'obligated_amount'
 const START_DATE = 'start_date'
 const END_DATE = 'end_date'
 const POP = 'period_of_performance'
@@ -24,11 +22,6 @@ export default {
 
   props: {
     initialClinIndex: Number,
-    initialClinType: String,
-    initialAmount: {
-      type: Number,
-      default: 0,
-    },
     initialStartDate: {
       type: String,
       default: null,
@@ -58,8 +51,6 @@ export default {
 
     return {
       clinIndex: this.initialClinIndex,
-      clinType: this.initialClinType,
-      amount: this.initialAmount || 0,
       startDate: start,
       endDate: end,
       popValid: popValidation,
@@ -74,11 +65,6 @@ export default {
   },
 
   created: function() {
-    emitEvent('clin-change', this, {
-      id: this._uid,
-      clinType: this.clinType,
-      amount: this.initialAmount,
-    })
     emitEvent('field-mount', this, {
       optional: false,
       name: 'clins-' + this.clinIndex + '-' + POP,
@@ -87,14 +73,6 @@ export default {
   },
 
   methods: {
-    clinChangeEvent: function() {
-      emitEvent('clin-change', this, {
-        id: this._uid,
-        clinType: this.clinType,
-        amount: this.amount,
-      })
-    },
-
     checkPopValid: function() {
       return this.startDate < this.endDate
     },
@@ -114,13 +92,7 @@ export default {
 
     handleFieldChange: function(event) {
       if (this._uid === event.parent_uid) {
-        if (event.name.includes(JEDI_CLIN_TYPE)) {
-          this.clinType = event.value
-          this.clinChangeEvent()
-        } else if (event.name.includes(OBLIGATED_AMOUNT)) {
-          this.amount = parseFloat(event.value)
-          this.clinChangeEvent()
-        } else if (event.name.includes(START_DATE)) {
+        if (event.name.includes(START_DATE)) {
           if (!!event.value) this.startDate = new Date(event.value)
           this.validatePop()
         } else if (event.name.includes(END_DATE)) {
