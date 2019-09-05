@@ -141,8 +141,8 @@ class MockCloudProvider(CloudProviderInterface):
         self._authorize(auth_credentials)
 
         self._delay(1, 5)
-        self._maybe_throw(self.NETWORK_FAILURE_PCT, self.NETWORK_EXCEPTION)
-        self._maybe_throw(
+        self._maybe_raise(self.NETWORK_FAILURE_PCT, self.NETWORK_EXCEPTION)
+        self._maybe_raise(
             self.ENV_CREATE_FAILURE_PCT,
             GeneralCSPException("Could not create environment."),
         )
@@ -153,8 +153,8 @@ class MockCloudProvider(CloudProviderInterface):
         self._authorize(auth_credentials)
 
         self._delay(1, 5)
-        self._maybe_throw(self.NETWORK_FAILURE_PCT, self.NETWORK_EXCEPTION)
-        self._maybe_throw(
+        self._maybe_raise(self.NETWORK_FAILURE_PCT, self.NETWORK_EXCEPTION)
+        self._maybe_raise(
             self.ATAT_ADMIN_CREATE_FAILURE_PCT,
             GeneralCSPException("Could not create admin user."),
         )
@@ -165,8 +165,8 @@ class MockCloudProvider(CloudProviderInterface):
         self._authorize(auth_credentials)
 
         self._delay(1, 5)
-        self._maybe_throw(self.NETWORK_FAILURE_PCT, self.NETWORK_EXCEPTION)
-        self._maybe_throw(
+        self._maybe_raise(self.NETWORK_FAILURE_PCT, self.NETWORK_EXCEPTION)
+        self._maybe_raise(
             self.ATAT_ADMIN_CREATE_FAILURE_PCT,
             GeneralCSPException("Could not create environment baseline."),
         )
@@ -182,8 +182,8 @@ class MockCloudProvider(CloudProviderInterface):
         self._authorize(auth_credentials)
 
         self._delay(1, 5)
-        self._maybe_throw(self.NETWORK_FAILURE_PCT, self.NETWORK_EXCEPTION)
-        self._maybe_throw(
+        self._maybe_raise(self.NETWORK_FAILURE_PCT, self.NETWORK_EXCEPTION)
+        self._maybe_raise(
             self.ATAT_ADMIN_CREATE_FAILURE_PCT,
             GeneralCSPException("Could not create user."),
         )
@@ -191,11 +191,11 @@ class MockCloudProvider(CloudProviderInterface):
         return {"id": self._id()}
 
     def suspend_user(self, auth_credentials, csp_user_id):
-        self._maybe_throw(self.NETWORK_FAILURE_PCT, self.NETWORK_EXCEPTION)
+        self._maybe_raise(self.NETWORK_FAILURE_PCT, self.NETWORK_EXCEPTION)
         return self._maybe(12)
 
     def delete_user(self, auth_credentials, csp_user_id):
-        self._maybe_throw(self.NETWORK_FAILURE_PCT, self.NETWORK_EXCEPTION)
+        self._maybe_raise(self.NETWORK_FAILURE_PCT, self.NETWORK_EXCEPTION)
         return self._maybe(12)
 
     def get_calculator_url(self):
@@ -217,7 +217,7 @@ class MockCloudProvider(CloudProviderInterface):
     def _maybe(self, pct):
         return not self._with_failure or self._random.randrange(0, 100) < pct
 
-    def _maybe_throw(self, pct, exc):
+    def _maybe_raise(self, pct, exc):
         if self._with_failure and self._maybe(pct):
             raise exc
 
