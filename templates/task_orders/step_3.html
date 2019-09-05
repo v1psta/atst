@@ -16,8 +16,6 @@
   <clin-fields
     {% if fields %}
       v-bind:initial-clin-index='{{ index }}'
-      v-bind:initial-clin-type="'{{ fields.jedi_clin_type.data }}'"
-      v-bind:initial-amount='{{ fields.obligated_amount.data or 0 }}'
       v-bind:initial-start-date="'{{ fields.start_date.data | string }}'"
       v-bind:initial-end-date="'{{ fields.end_date.data | string }}'"
       v-bind:initial-clin-number="'{{ fields.number.data | string }}'"
@@ -26,8 +24,17 @@
       v-bind:initial-clin-type="'JEDI_CLIN_1'"
     {% endif %}
     inline-template>
-    <div class="clin-card">
-      <div class="card__title h4" v-html='clinTitle'></div>
+    <div class="clin-card" v-if="showClin">
+      <div class="card__title">
+        <span class="h4" v-html='clinTitle'></span>
+        <button
+          v-if='$parent.clinIndex > 0'
+          class="icon-link icon-link__remove-clin"
+          v-on:click="openModal(removeModalId)"
+          type="button">
+          {{ Icon(name='x') }}
+        </button>
+      </div>
       <div class="card">
         <div class="form-row">
           <div class="h4 clin-card__title">
@@ -37,7 +44,7 @@
         <div class="form-row">
           <div class="form-col">
             {% if fields %}
-              {{ TextInput(fields.number, watch=True) }}
+              {{ TextInput(fields.number, watch=True, optional=False) }}
             {% else %}
               <textinput :name="'clins-' + clinIndex + '-number'" :watch='true'
               inline-template>
@@ -78,7 +85,7 @@
         <div class="form-row">
           <div class="form-col">
             {% if fields %}
-              {{ OptionsInput(fields.jedi_clin_type, watch=True, show_validation=False) }}
+              {{ OptionsInput(fields.jedi_clin_type, watch=True, show_validation=False, optional=False) }}
             {% else %}
               <optionsinput :name="'clins-' + clinIndex + '-jedi_clin_type'" :watch='true' :optional='false' inline-template>
                 <div v-bind:class="['usa-input', { 'usa-input--error': showError, 'usa-input--success': showValid }]">
@@ -109,7 +116,7 @@
         {% if fields %}
           <div class="form-row">
             <div class="form-col">
-              {{ TextInput(fields.obligated_amount, validation='dollars', watch=True) }}
+              {{ TextInput(fields.obligated_amount, validation='dollars', watch=True, optional=False) }}
             </div>
           </div>
         {% else %}
@@ -318,33 +325,64 @@
           </p>
         </div>
       </div>
+
+      <div v-show="$root.activeModal === removeModalId" v-cloak>
+        <div :id='"modal--" + removeModalId' class='modal modal--dismissable'>
+          <div class='modal__container'>
+            <div class='modal__dialog' role='dialog' aria-modal='true'>
+              <div class='modal__body'>
+                <div class="task-order__modal-cancel">
+                  <h1 v-html='"{{ 'task_orders.form.clin_remove_text' | translate }}" + clinTitle + "?"'></h1>
+                  <div class="task-order__modal-cancel_buttons">
+                    <button
+                      v-on:click='closeModal(removeModalId)'
+                      class="usa-button usa-button-primary"
+                      type="button">
+                      {{ 'task_orders.form.clin_remove_cancel' | translate }}
+                    </button>
+                    <button
+                      v-on:click="removeClin()"
+                      class="usa-button usa-button-primary"
+                      type="button">
+                      {{ 'task_orders.form.clin_remove_confirm' | translate }}
+                    </button>
+                  </div>
+                </div>
+
+                <button type='button' class='icon-link modal__dismiss' v-on:click='closeModal(removeModalId)'>
+                  {{ Icon('x') }}
+                  <span>
+                    {{ "common.close" | translate }}
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </clin-fields>
 {% endmacro %}
 
 
 {% block to_builder_form_field %}
-  <to-form
-    inline-template
-    v-bind:initial-clin-count="{{ form.clins.data | length }}">
-    <div>
-      {{ TOFormStepHeader('task_orders.form.clin_title' | translate, 'task_orders.form.clin_description' | translate, task_order.number) }}
+  <div>
+    {{ TOFormStepHeader('task_orders.form.clin_title' | translate, 'task_orders.form.clin_description' | translate, task_order.number) }}
 
-      {% for clin in form.clins %}
-        {{ CLINFields(clin, index=loop.index - 1) }}
-      {% endfor %}
+    {% for clin in form.clins %}
+      {{ CLINFields(clin, index=loop.index - 1) }}
+    {% endfor %}
 
-      <div v-for="clin in clins">
-        {{ CLINFields() }}
-      </div>
-
-      <button
-        class="icon-link icon-link__add-another-clin"
-        v-on:click="addClin"
-        type="button">
-        {{ Icon('plus') }}
-        <span>{{ 'task_orders.form.add_clin' | translate }}</span>
-      </button>
+    <div v-for="clin in clins">
+      {{ CLINFields() }}
     </div>
-  </to-form>
+
+    <button
+      class="icon-link icon-link__add-another-clin"
+      v-on:click="addClin"
+      type="button">
+      {{ Icon('plus') }}
+      <span>{{ 'task_orders.form.add_clin' | translate }}</span>
+    </button>
+  </div>
 {% endblock %}

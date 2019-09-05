@@ -372,6 +372,9 @@ task_orders:
     clin_funding: CLIN Funding
     clin_number_label: CLIN Number
     clin_type_label: Corresponding IDIQ CLIN
+    clin_remove_text: 'Do you want to remove '
+    clin_remove_confirm: Yes, remove CLIN
+    clin_remove_cancel: No, go back
     cloud_funding_header: Add the summary of cloud funding
     cloud_funding_text: Data must match with what is in your uploaded document.
     draft_alert_title: Your information has been saved

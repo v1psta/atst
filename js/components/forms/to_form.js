@@ -1,3 +1,6 @@
+import stickybits from 'stickybits'
+
+import checkboxinput from '../checkbox_input'
 import ClinFields from '../clin_fields'
 import DateSelector from '../date_selector'
 import FormMixin from '../../mixins/form'
@@ -13,6 +16,7 @@ export default {
   mixins: [FormMixin],
 
   components: {
+    checkboxinput,
     ClinFields,
     DateSelector,
     optionsinput,
@@ -23,26 +27,24 @@ export default {
   },
 
   props: {
-    initialClinCount: Number,
-    initialObligated: Number,
-    initialTotal: Number,
+    initialClinCount: {
+      type: Number,
+      default: null,
+    },
   },
 
   data: function() {
-    const clins = this.initialClinCount == 0 ? 1 : 0
-    const clinIndex = this.initialClinCount == 0 ? 0 : this.initialClinCount - 1
+    const clins = !this.initialClinCount ? 1 : 0
+    const clinIndex = !this.initialClinCount ? 0 : this.initialClinCount - 1
 
     return {
       clins,
       clinIndex,
-      obligated: this.initialObligated || 0,
-      total: this.initialTotal || 0,
-      clinChildren: {},
     }
   },
 
   mounted: function() {
-    this.$root.$on('clin-change', this.calculateClinAmounts)
+    this.$root.$on('remove-clin', this.handleRemoveClin)
   },
 
   methods: {
@@ -51,22 +53,27 @@ export default {
       ++this.clinIndex
     },
 
-    calculateClinAmounts: function(event) {
-      this.clinChildren[event.id] = {
-        amount: event.amount,
-        type: event.clinType,
+    handleRemoveClin: function(event) {
+      --this.clinIndex
+      for (var field in this.fields) {
+        if (field.includes('-' + event.clinIndex + '-')) {
+          delete this.fields[field]
+        }
       }
 
-      let newTotal = 0
-      let newObligated = 0
-      Object.values(this.clinChildren).forEach(function(clin) {
-        newTotal += clin.amount
-        if (clin.type.includes('1') || clin.type.includes('3')) {
-          newObligated += clin.amount
+      this.validateForm()
+    },
+  },
+
+  directives: {
+    sticky: {
+      inserted: (el, binding) => {
+        var customAttributes
+        if (binding.expression) {
+          customAttributes = JSON.parse(binding.expression)
         }
-      })
-      this.total = newTotal
-      this.obligated = newObligated
+        stickybits(el, customAttributes)
+      },
     },
   },
 }
