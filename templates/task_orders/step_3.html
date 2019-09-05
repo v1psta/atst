@@ -314,15 +314,9 @@
           </div>
         {% endif %}
         <div class="form-row">
-          <p class="usa-input-error-message form-has-errors">
-            <template v-if='showPopError'>
-              {% if fields and fields.start_date.errors %}
-                {{ fields.start_date.errors[0] }}
-              {% else %}
-                {{ "forms.task_order.start_date_error" | translate }}
-              {% endif %}
-            </template>
-          </p>
+          <div class="usa-input-error-message form-has-errors" v-for="error in popErrors" :key="error">
+            <div v-html='error'></div>
+          </div>
         </div>
       </div>
 
