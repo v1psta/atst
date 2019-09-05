@@ -320,3 +320,12 @@ def notification_sender(app):
     yield app.notification_sender
 
     app.notification_sender = real_notification_sender
+
+
+# This is the only effective means I could find to disable logging. Setting a
+# `celery_enable_logging` fixture to return False should work according to the
+# docs, but doesn't:
+# https://docs.celeryproject.org/en/latest/userguide/testing.html#celery-enable-logging-override-to-enable-logging-in-embedded-workers
+@pytest.fixture(scope="function")
+def celery_worker_parameters():
+    return {"loglevel": "FATAL"}
