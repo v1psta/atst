@@ -59,6 +59,7 @@ common:
   'no': 'No'
   response_label: Response required
   save: Save
+  save_changes: Save Changes
   undo: Undo
   view: View
   resource_names:
@@ -308,6 +309,8 @@ portfolios:
     existing_application_title: '{application_name} Application Settings'
     new_application_title: New Application
     settings_heading: Application Settings
+    settings:
+      name_description: Name and Description
     team_settings:
       blank_slate:
         action_label: Invite a new team member
