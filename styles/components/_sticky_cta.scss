@@ -4,7 +4,6 @@
   z-index: 10;
 
   @include media($medium-screen) {
-    margin-left: -$gap * 5;
     margin-right: -$gap * 5;
   }
 
@@ -52,5 +51,11 @@
         font-size: $small-font-size;
       }
     }
+  }
+
+  &-return-link {
+    padding-top: 1.6rem;
+    font-size: $small-font-size;
+    font-weight: $font-bold;
   }
 }
