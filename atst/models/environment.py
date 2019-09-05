@@ -1,5 +1,6 @@
 from sqlalchemy import Column, ForeignKey, String
 from sqlalchemy.orm import relationship
+from sqlalchemy.dialects.postgresql import JSONB
 
 from atst.models import Base
 from atst.models.types import Id
@@ -18,6 +19,8 @@ class Environment(
     application = relationship("Application")
 
     cloud_id = Column(String)
+    root_user_info = Column(JSONB)
+    baseline_info = Column(JSONB)
 
     job_failures = relationship("EnvironmentJobFailure")
 

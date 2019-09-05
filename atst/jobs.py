@@ -1,8 +1,11 @@
 from flask import current_app as app
 
-from atst.queue import celery
 from atst.database import db
+from atst.queue import celery
 from atst.models import EnvironmentJobFailure, EnvironmentRoleJobFailure
+from atst.domain.csp.cloud import CloudProviderInterface, GeneralCSPException
+from atst.domain.environments import Environments
+from atst.domain.users import Users
 
 
 class RecordEnvironmentFailure(celery.Task):
@@ -38,3 +41,79 @@ def send_notification_mail(recipients, subject, body):
         )
     )
     app.mailer.send(recipients, subject, body)
+
+
+def do_create_environment(
+    csp: CloudProviderInterface, environment_id=None, atat_user_id=None
+):
+    environment = Environments.get(environment_id)
+
+    if environment.cloud_id is not None:
+        # TODO: Return value for this?
+        return
+
+    user = Users.get(atat_user_id)
+
+    # we'll need to do some checking in this job for cases where it's retrying
+    # when a failure occured after some successful steps
+    # (e.g. if environment.cloud_id is not None, then we can skip first step)
+
+    # credentials either from a given user or pulled from config?
+    # if using global creds, do we need to log what user authorized action?
+    atat_root_creds = csp.root_creds()
+
+    # user is needed because baseline root account in the environment will
+    # be assigned to the requesting user, open question how to handle duplicate
+    # email addresses across new environments
+    csp_environment_id = csp.create_environment(atat_root_creds, user, environment)
+    environment.cloud_id = csp_environment_id
+    db.session.add(environment)
+    db.session.commit()
+
+
+def do_create_atat_admin_user(csp: CloudProviderInterface, environment_id=None):
+    environment = Environments.get(environment_id)
+    atat_root_creds = csp.root_creds()
+
+    atat_remote_root_user = csp.create_atat_admin_user(
+        atat_root_creds, environment.cloud_id
+    )
+    environment.root_user_info = atat_remote_root_user
+    db.session.add(environment)
+    db.session.commit()
+
+
+def do_create_environment_baseline(csp: CloudProviderInterface, environment_id=None):
+    environment = Environments.get(environment_id)
+
+    # ASAP switch to use remote root user for provisioning
+    atat_remote_root_creds = environment.root_user_info["credentials"]
+
+    baseline_info = csp.create_environment_baseline(
+        atat_remote_root_creds, environment.cloud_id
+    )
+    environment.baseline_info = baseline_info
+    db.session.add(environment)
+    db.session.commit()
+
+
+def do_work(fn, task, csp, **kwargs):
+    try:
+        fn(csp, **kwargs)
+    except GeneralCSPException as e:
+        raise task.retry(exc=e)
+
+
+@celery.task(bind=True)
+def create_environment(self, environment_id=None, atat_user_id=None):
+    do_work(do_create_environment, self, app.csp.cloud, **kwargs)
+
+
+@celery.task(bind=True)
+def create_atat_admin_user(self, environment_id=None):
+    do_work(do_create_atat_admin_user, self, app.csp.cloud, **kwargs)
+
+
+@celery.task(bind=True)
+def create_environment_baseline(self, environment_id=None):
+    do_work(do_create_environment_baseline, self, app.csp.cloud, **kwargs)
