@@ -5,7 +5,6 @@ applications_bp = Blueprint("applications", __name__)
 from . import index
 from . import new
 from . import settings
-from . import team
 from . import invitations
 from atst.domain.environment_roles import EnvironmentRoles
 from atst.domain.exceptions import UnauthorizedError
