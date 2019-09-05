@@ -291,6 +291,7 @@ class CLINFactory(Base):
     number = factory.LazyFunction(random_task_order_number)
     start_date = datetime.date.today()
     end_date = factory.LazyFunction(random_future_date)
+    total_amount = factory.LazyFunction(lambda *args: random.randint(100, 999999))
     obligated_amount = factory.LazyFunction(lambda *args: random.randint(100, 999999))
     jedi_clin_type = factory.LazyFunction(
         lambda *args: random.choice(list(clin.JEDICLINType))

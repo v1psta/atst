@@ -47,6 +47,10 @@ class CLINForm(FlaskForm):
         format="%m/%d/%Y",
         validators=[Optional()],
     )
+    total_amount = DecimalField(
+        label=translate("task_orders.form.total_funds_label"),
+        validators=[Optional()],
+    )
     obligated_amount = DecimalField(
         label=translate("task_orders.form.obligated_funds_label"),
         validators=[Optional()],
