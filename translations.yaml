@@ -311,6 +311,7 @@ portfolios:
     settings_heading: Application Settings
     settings:
       name_description: Name and Description
+      team_members: Team Members
     team_settings:
       blank_slate:
         action_label: Invite a new team member
@@ -323,7 +324,6 @@ portfolios:
           environment_management: Environment Management
           team_management: Team Management
         title: '{application_name} Team'
-      subheading: Team Settings
       title: '{application_name} Team Settings'
       add_to_environment: Add to existing environment
     team_text: Team
@@ -335,6 +335,15 @@ portfolios:
         manage_envs: 'Allow member to <strong>add</strong> and <strong>rename environments</strong> within the application.'
         delete_envs: 'Allow member to <strong>delete environments</strong> within the application.'
         manage_team: 'Allow member to <strong>add, update,</strong> and <strong>remove members</strong> from the application team.'
+      perms_team_mgmt:
+        view_application: View Team
+        edit_application_team: Edit Team
+      perms_env_mgmt:
+        view_application: View Environments
+        edit_application_environments: Edit Environments
+      perms_del_env:
+        view_application: ""
+        delete_application_environments: Delete Application
   index:
     empty:
       start_button: Start a new JEDI portfolio

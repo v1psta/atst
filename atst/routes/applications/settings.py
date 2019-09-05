@@ -94,8 +94,8 @@ def get_form_permission_value(member, edit_perm_set):
         return PermissionSets.VIEW_APPLICATION
 
 
-def get_team_form(application):
-    team_data = []
+def get_members_data(application):
+    members_data = []
     for member in application.members:
         permission_sets = {
             "perms_team_mgmt": get_form_permission_value(
@@ -117,7 +117,7 @@ def get_team_form(application):
             }
             for role in roles
         ]
-        team_data.append(
+        members_data.append(
             {
                 "role_id": member.id,
                 "user_name": member.user_name,
@@ -126,7 +126,7 @@ def get_team_form(application):
             }
         )
 
-    return TeamForm(data={"members": team_data})
+    return members_data
 
 
 def get_new_member_form(application):
@@ -144,8 +144,8 @@ def render_settings_page(application, **kwargs):
     new_env_form = EditEnvironmentForm()
     pagination_opts = Paginator.get_pagination_opts(http_request)
     audit_events = AuditLog.get_application_events(application, pagination_opts)
-    team_form = get_team_form(application)
     new_member_form = get_new_member_form(application)
+    members = get_members_data(application)
 
     if "application_form" not in kwargs:
         kwargs["application_form"] = ApplicationForm(
@@ -159,8 +159,8 @@ def render_settings_page(application, **kwargs):
         members_form=members_form,
         new_env_form=new_env_form,
         audit_events=audit_events,
-        team_form=team_form,
         new_member_form=new_member_form,
+        members=members,
         **kwargs,
     )
 

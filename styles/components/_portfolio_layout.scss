@@ -139,6 +139,9 @@
     }
 
     table {
+      margin: 0;
+      width: 100%;
+
       thead {
         th:first-child {
           padding-left: 3 * $gap;
@@ -282,6 +285,13 @@
   .application-content {
     .subheading {
       @include subheading;
+      position: relative;
+
+      .icon-link {
+        position: absolute;
+        right: 0;
+        top: 0;
+      }
     }
 
     .panel {
