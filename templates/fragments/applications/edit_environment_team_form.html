@@ -4,12 +4,6 @@
 
 {% for env_form in members_form.envs %}
   {% if env_form.env_id.data == env['id'] %}
-    <div class='app-team-settings-link'>
-      {{ 'fragments.edit_environment_team_form.add_new_member_text' | translate }}
-      <a href='{{ url_for("applications.team", application_id=application.id) }}'>
-        {{ 'fragments.edit_environment_team_form.add_new_member_link' | translate }}
-      </a>
-    </div>
     <form
       action="{{ url_for('applications.update_env_roles', environment_id=env['id']) }}"
       method="post">

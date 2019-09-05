@@ -80,13 +80,6 @@ def render_team_page(application):
     )
 
 
-@applications_bp.route("/applications/<application_id>/team")
-@user_can(Permissions.VIEW_APPLICATION, message="view portfolio applications")
-def team(application_id):
-    application = Applications.get(resource_id=application_id)
-    return render_team_page(application)
-
-
 @applications_bp.route("/application/<application_id>/team", methods=["POST"])
 @user_can(Permissions.EDIT_APPLICATION_MEMBER, message="update application member")
 def update_team(application_id):
@@ -115,7 +108,7 @@ def update_team(application_id):
 
         return redirect(
             url_for(
-                "applications.team",
+                "applications.settings",
                 application_id=application_id,
                 fragment="application-members",
                 _anchor="application-members",
@@ -172,7 +165,7 @@ def create_member(application_id):
 
     return redirect(
         url_for(
-            "applications.team",
+            "applications.settings",
             application_id=application_id,
             fragment="application-members",
             _anchor="application-members",
@@ -197,7 +190,7 @@ def remove_member(application_id, application_role_id):
 
     return redirect(
         url_for(
-            "applications.team",
+            "applications.settings",
             _anchor="application-members",
             application_id=g.application.id,
             fragment="application-members",

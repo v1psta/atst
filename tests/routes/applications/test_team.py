@@ -10,16 +10,6 @@ from atst.forms.data import ENV_ROLE_NO_ACCESS as NO_ACCESS
 from tests.factories import *
 
 
-def test_application_team(client, user_session):
-    portfolio = PortfolioFactory.create()
-    application = ApplicationFactory.create(portfolio=portfolio)
-
-    user_session(portfolio.owner)
-
-    response = client.get(url_for("applications.team", application_id=application.id))
-    assert response.status_code == 200
-
-
 def test_update_team_permissions(client, user_session):
     application = ApplicationFactory.create()
     owner = application.portfolio.owner
@@ -183,7 +173,7 @@ def test_create_member(monkeypatch, client, user_session, session):
 
     assert response.status_code == 302
     expected_url = url_for(
-        "applications.team",
+        "applications.settings",
         application_id=application.id,
         fragment="application-members",
         _anchor="application-members",
@@ -220,7 +210,7 @@ def test_remove_member_success(client, user_session):
 
     assert response.status_code == 302
     assert response.location == url_for(
-        "applications.team",
+        "applications.settings",
         _anchor="application-members",
         _external=True,
         application_id=application.id,
@@ -244,7 +234,7 @@ def test_remove_new_member_success(client, user_session):
 
     assert response.status_code == 302
     assert response.location == url_for(
-        "applications.team",
+        "applications.settings",
         _anchor="application-members",
         _external=True,
         application_id=application.id,

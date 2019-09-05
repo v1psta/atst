@@ -585,20 +585,6 @@ def test_task_orders_new_post_routes(post_url_assert_status):
         post_url_assert_status(rando, url, 404, data=data)
 
 
-def test_applications_application_team_access(get_url_assert_status):
-    ccpo = UserFactory.create_ccpo()
-    rando = UserFactory.create()
-
-    portfolio = PortfolioFactory.create()
-    application = ApplicationFactory.create(portfolio=portfolio)
-
-    url = url_for("applications.team", application_id=application.id)
-
-    get_url_assert_status(ccpo, url, 200)
-    get_url_assert_status(portfolio.owner, url, 200)
-    get_url_assert_status(rando, url, 404)
-
-
 def test_portfolio_delete_access(post_url_assert_status):
     rando = UserFactory.create()
     owner = UserFactory.create()
