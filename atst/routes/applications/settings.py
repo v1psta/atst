@@ -5,12 +5,16 @@ from atst.domain.environments import Environments
 from atst.domain.applications import Applications
 from atst.domain.audit_log import AuditLog
 from atst.domain.common import Paginator
+from atst.domain.environment_roles import EnvironmentRoles
 from atst.forms.app_settings import AppEnvRolesForm
 from atst.forms.application import ApplicationForm, EditEnvironmentForm
+from atst.forms.application_member import NewForm as NewMemberForm
 from atst.forms.data import ENV_ROLE_NO_ACCESS as NO_ACCESS
+from atst.forms.team import TeamForm
 from atst.domain.authz.decorator import user_can_access_decorator as user_can
 from atst.models.environment_role import CSPRole
 from atst.models.permissions import Permissions
+from atst.domain.permission_sets import PermissionSets
 from atst.utils.flash import formatted_flash as flash
 
 
@@ -79,12 +83,65 @@ def data_for_app_env_roles_form(application):
     return {"envs": nested_data}
 
 
+def get_form_permission_value(member, edit_perm_set):
+    if member.has_permission_set(edit_perm_set):
+        return edit_perm_set
+    else:
+        return PermissionSets.VIEW_APPLICATION
+
+
+def get_team_form(application):
+    team_data = []
+    for member in application.members:
+        permission_sets = {
+            "perms_team_mgmt": get_form_permission_value(
+                member, PermissionSets.EDIT_APPLICATION_TEAM
+            ),
+            "perms_env_mgmt": get_form_permission_value(
+                member, PermissionSets.EDIT_APPLICATION_ENVIRONMENTS
+            ),
+            "perms_del_env": get_form_permission_value(
+                member, PermissionSets.DELETE_APPLICATION_ENVIRONMENTS
+            ),
+        }
+        roles = EnvironmentRoles.get_for_application_member(member.id)
+        environment_roles = [
+            {
+                "environment_id": str(role.environment.id),
+                "environment_name": role.environment.name,
+                "role": role.role,
+            }
+            for role in roles
+        ]
+        team_data.append(
+            {
+                "role_id": member.id,
+                "user_name": member.user_name,
+                "permission_sets": permission_sets,
+                "environment_roles": environment_roles,
+            }
+        )
+
+    return TeamForm(data={"members": team_data})
+
+
+def get_new_member_form(application):
+    env_roles = [
+        {"environment_id": e.id, "environment_name": e.name}
+        for e in application.environments
+    ]
+
+    return NewMemberForm(data={"environment_roles": env_roles})
+
+
 def render_settings_page(application, **kwargs):
     environments_obj = get_environments_obj_for_app(application=application)
     members_form = AppEnvRolesForm(data=data_for_app_env_roles_form(application))
     new_env_form = EditEnvironmentForm()
     pagination_opts = Paginator.get_pagination_opts(http_request)
     audit_events = AuditLog.get_application_events(application, pagination_opts)
+    team_form = get_team_form(application)
+    new_member_form = get_new_member_form(application)
 
     if "application_form" not in kwargs:
         kwargs["application_form"] = ApplicationForm(
@@ -98,6 +155,8 @@ def render_settings_page(application, **kwargs):
         members_form=members_form,
         new_env_form=new_env_form,
         audit_events=audit_events,
+        team_form=team_form,
+        new_member_form=new_member_form,
         **kwargs,
     )
 
