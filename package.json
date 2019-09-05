@@ -18,6 +18,7 @@
     "azure-storage": "^2.10.3",
     "babel-polyfill": "^6.26.0",
     "date-fns": "^1.29.0",
+    "moment": "^2.24.0",
     "ramda": "^0.25.0",
     "stickybits": "^3.6.6",
     "svg-innerhtml": "^1.1.0",

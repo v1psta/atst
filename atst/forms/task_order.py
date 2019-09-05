@@ -67,19 +67,25 @@ class CLINForm(FlaskForm):
             and self.start_date.data > self.end_date.data
         ):
             self.start_date.errors.append(
-                translate("forms.task_order.start_date_error")
+                translate("forms.task_order.pop_errors.date_order")
             )
             valid = False
 
         if self.start_date.data and self.start_date.data <= CONTRACT_START_DATE:
             self.start_date.errors.append(
-                "PoP start date must be on or after {}.".format(CONTRACT_START_DATE)
+                translate(
+                    "forms.task_order.pop_errors.start",
+                    {"date": CONTRACT_START_DATE.strftime("%b %d, %Y")},
+                )
             )
             valid = False
 
         if self.end_date.data and self.end_date.data >= CONTRACT_END_DATE:
             self.end_date.errors.append(
-                "PoP end date must be before or on {}.".format(CONTRACT_END_DATE)
+                translate(
+                    "forms.task_order.pop_errors.end",
+                    {"date": CONTRACT_END_DATE.strftime("%b %d, %Y")},
+                )
             )
             valid = False
 

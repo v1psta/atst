@@ -314,8 +314,8 @@
           </div>
         {% endif %}
         <div class="form-row">
-          <div class="usa-input-error-message form-has-errors" v-for="error in popErrors" :key="error">
-            <div v-html='error'></div>
+          <div class="usa-input-error-message form-has-errors">
+            <p v-for="error in popErrors" :key="error" v-html='error'></p>
           </div>
         </div>
       </div>
