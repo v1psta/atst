@@ -1,5 +1,5 @@
 import * as R from 'ramda'
-import moment from 'moment'
+import { format } from 'date-fns'
 
 import DateSelector from './date_selector'
 import { emitEvent } from '../lib/emitters'
@@ -71,15 +71,17 @@ export default {
         },
         {
           func: this.popStartsAfterContract,
-          message: `PoP start date must be on or after ${moment(
-            CONTRACT_START_DATE
-          ).format('MMM D, YYYY')}.`,
+          message: `PoP start date must be on or after ${format(
+            CONTRACT_START_DATE,
+            'MMM D, YYYY'
+          )}.`,
         },
         {
           func: this.popEndsBeforeContract,
-          message: `PoP end date must be before or on ${moment(
-            CONTRACT_END_DATE
-          ).format('MMM D, YYYY')}.`,
+          message: `PoP end date must be before or on ${format(
+            CONTRACT_END_DATE,
+            'MMM D, YYYY'
+          )}.`,
         },
       ],
     }
