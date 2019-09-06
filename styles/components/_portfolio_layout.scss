@@ -322,6 +322,34 @@
     input#delete-application {
       margin-top: $gap * 3;
     }
+
+    .accordion-table__item-content.form-row {
+      margin-bottom: 0;
+      margin-top: 0;
+      padding-bottom: 0;
+    }
+
+    li.accordion-table__item__expanded {
+      height: auto;
+    }
+
+    .environment-list__item {
+      position: relative;
+      height: 7rem;
+    }
+
+    span.accordion-table__item__toggler.icon-link {
+      font-size: $small-font-size;
+      font-weight: $font-normal;
+      position: absolute;
+      left: -$gap * 1.25;
+      bottom: 0;
+    }
+
+    a.application-list-item__environment__csp_link.icon-link {
+      font-size: $small-font-size;
+      font-weight: $font-normal;
+    }
   }
 
   .activity-log {

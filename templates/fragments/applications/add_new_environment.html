@@ -28,15 +28,9 @@
         </div>
       </form>
     </div>
-
-    <div v-else class="panel__footer">
-      <div class="action-group">
-        <a class='icon-link' v-on:click="toggle">
-          {{ "portfolios.applications.add_environment" | translate }}
-          {{ Icon('plus') }}
-        </a>
-      </div>
-    </div>
+    <a class='icon-link' v-on:click="toggle">
+      {{ Icon('plus') }}
+      {{ "portfolios.applications.add_environment" | translate }}
+    </a>
   </div>
 </new-environment>
-
