@@ -62,6 +62,8 @@ export default {
       startDate: start,
       endDate: end,
       popValid: popValidation,
+      startDateValid: false,
+      endDateValid: false,
       clinNumber: clinNumber,
       popErrors: [],
       validations: [
@@ -124,11 +126,17 @@ export default {
     },
 
     popStartsAfterContract: function() {
-      return this.startDate >= CONTRACT_START_DATE
+      if (this.startDateValid) {
+        return this.startDate >= CONTRACT_START_DATE
+      }
+      return true
     },
 
     popEndsBeforeContract: function() {
-      return this.endDate <= CONTRACT_END_DATE
+      if (this.endDateValid) {
+        return this.endDate <= CONTRACT_END_DATE
+      }
+      return true
     },
 
     popDateOrder: function() {
@@ -142,9 +150,11 @@ export default {
       if (this._uid === event.parent_uid) {
         if (event.name.includes(START_DATE)) {
           if (!!event.value) this.startDate = new Date(event.value)
+          if (!!event.valid) this.startDateValid = event.valid
           this.validatePop()
         } else if (event.name.includes(END_DATE)) {
           if (!!event.value) this.endDate = new Date(event.value)
+          if (!!event.valid) this.endDateValid = event.valid
           this.validatePop()
         } else if (event.name.includes(NUMBER)) {
           this.clinNumber = event.value
