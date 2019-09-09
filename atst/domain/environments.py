@@ -1,7 +1,7 @@
 from sqlalchemy.orm.exc import NoResultFound
 
 from atst.database import db
-from atst.models.environment import Environment
+from atst.models import Environment, Application, Portfolio, TaskOrder, CLIN
 from atst.domain.environment_roles import EnvironmentRoles
 from atst.domain.application_roles import ApplicationRoles
 
@@ -102,3 +102,17 @@ class Environments(object):
         # TODO: How do we work around environment deletion being a largely manual process in the CSPs
 
         return environment
+
+    @classmethod
+    def get_environments_pending_creation(cls, now) -> [str]:
+        query = (
+            db.session.query(Environment.id)
+            .join(Application)
+            .join(Portfolio)
+            .join(TaskOrder)
+            .join(CLIN)
+            .filter(CLIN.start_date <= now)
+            .filter(CLIN.end_date > now)
+            .filter(Environment.cloud_id == None)
+        )
+        return [environment_id for (environment_id,) in query.all()]

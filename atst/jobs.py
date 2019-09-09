@@ -120,21 +120,9 @@ def create_environment_baseline(self, environment_id=None):
     do_work(do_create_environment_baseline, self, app.csp.cloud, **kwargs)
 
 
-def environments_to_create(now):
-    query = (
-        db.session.query(Environment.id)
-        .join(Application)
-        .join(Portfolio)
-        .join(TaskOrder)
-        .join(CLIN)
-        .filter(CLIN.start_date <= now)
-        .filter(CLIN.end_date > now)
-        .filter(Environment.cloud_id == None)
-    )
-    return [environment_id for (environment_id,) in query.all()]
-
-
 @celery.task(bind=True)
 def dispatch_create_environment(self):
-    for environment_id in environments_to_create(pendulum.now()):
+    for environment_id in Environments.get_environments_pending_creation(
+        pendulum.now()
+    ):
         create_environment.delay(environment_id=environment_id, atat_user_id="TODO")

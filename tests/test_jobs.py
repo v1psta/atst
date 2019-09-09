@@ -5,6 +5,8 @@ from atst.jobs import RecordEnvironmentFailure, RecordEnvironmentRoleFailure
 from tests.factories import EnvironmentFactory, EnvironmentRoleFactory, UserFactory
 from uuid import uuid4
 from unittest.mock import Mock
+
+from atst.models import Environment
 from tests.factories import (
     UserFactory,
     PortfolioFactory,
@@ -59,6 +61,7 @@ def test_environment_role_job_failure(celery_app, celery_worker):
 now = pendulum.now()
 yesterday = now.subtract(days=1)
 tomorrow = now.add(days=1)
+from atst.domain.environments import Environments
 
 
 @pytest.fixture(autouse=True, scope="function")
@@ -109,40 +112,3 @@ def test_create_environment_baseline(csp, session):
     updated_environment = session.query(Environment).get(environment_id)
 
     assert updated_environment.baseline_info
-
-
-def create_portfolio_with_clins(start_and_end_dates):
-    return PortfolioFactory.create(
-        applications=[
-            {
-                "name": "Mos Eisley",
-                "description": "Where Han shot first",
-                "environments": [{"name": "thebar"}],
-            }
-        ],
-        task_orders=[
-            TaskOrderFactory.create(
-                clins=[
-                    CLINFactory.create(start_date=start_date, end_date=end_date)
-                    for (start_date, end_date) in start_and_end_dates
-                ]
-            )
-        ],
-    )
-
-
-def test_dispatch_query_with_expired_clins(session):
-    create_portfolio_with_clins([(yesterday, yesterday)])
-    assert len(environments_to_create(pendulum.now())) == 0
-
-
-def test_dispatch_query_with_active_clins(session):
-    portfolio = create_portfolio_with_clins([(yesterday, tomorrow)])
-    environments_to_create(pendulum.now()) == [
-        portfolio.applications[0].environments[0].id
-    ]
-
-
-def test_dispatch_query_with_future_clins(session):
-    create_portfolio_with_clins([(tomorrow, tomorrow)])
-    assert len(environments_to_create(pendulum.now())) == 0

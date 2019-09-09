@@ -1,4 +1,5 @@
 import pytest
+import pendulum
 
 from atst.domain.environments import Environments
 from atst.domain.environment_roles import EnvironmentRoles
@@ -7,11 +8,12 @@ from atst.models.environment_role import CSPRole
 
 from tests.factories import (
     ApplicationFactory,
-    UserFactory,
     PortfolioFactory,
     EnvironmentFactory,
     EnvironmentRoleFactory,
     ApplicationRoleFactory,
+    TaskOrderFactory,
+    CLINFactory,
 )
 
 
@@ -132,3 +134,42 @@ def test_update_environment():
     assert environment.name is not "name 2"
     Environments.update(environment, name="name 2")
     assert environment.name == "name 2"
+
+
+class TestGetEnvironmentsPendingCreate:
+    NOW = pendulum.now()
+    YESTERDAY = NOW.subtract(days=1)
+    TOMORROW = NOW.add(days=1)
+
+    def create_portfolio_with_clins(self, start_and_end_dates):
+        return PortfolioFactory.create(
+            applications=[
+                {
+                    "name": "Mos Eisley",
+                    "description": "Where Han shot first",
+                    "environments": [{"name": "thebar"}],
+                }
+            ],
+            task_orders=[
+                TaskOrderFactory.create(
+                    clins=[
+                        CLINFactory.create(start_date=start_date, end_date=end_date)
+                        for (start_date, end_date) in start_and_end_dates
+                    ]
+                )
+            ],
+        )
+
+    def test_with_expired_clins(self, session):
+        self.create_portfolio_with_clins([(self.YESTERDAY, self.YESTERDAY)])
+        assert len(Environments.get_environments_pending_creation(self.NOW)) == 0
+
+    def test_with_active_clins(self, session):
+        portfolio = self.create_portfolio_with_clins([(self.YESTERDAY, self.TOMORROW)])
+        Environments.get_environments_pending_creation(self.NOW) == [
+            portfolio.applications[0].environments[0].id
+        ]
+
+    def test_with_future_clins(self, session):
+        self.create_portfolio_with_clins([(self.TOMORROW, self.TOMORROW)])
+        assert len(Environments.get_environments_pending_creation(self.NOW)) == 0
