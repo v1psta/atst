@@ -16,6 +16,8 @@
   <clin-fields
     {% if fields %}
       v-bind:initial-clin-index='{{ index }}'
+      v-bind:initial-total='{{ fields.total_amount.data or 0 }}'
+      v-bind:initial-obligated='{{ fields.obligated_amount.data or 0 }}'
       v-bind:initial-start-date="'{{ fields.start_date.data | string }}'"
       v-bind:initial-end-date="'{{ fields.end_date.data | string }}'"
       v-bind:initial-clin-number="'{{ fields.number.data | string }}'"
