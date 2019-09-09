@@ -12,7 +12,6 @@ from atst.forms.app_settings import AppEnvRolesForm
 from atst.forms.application import ApplicationForm, EditEnvironmentForm
 from atst.forms.application_member import NewForm as NewMemberForm
 from atst.forms.data import ENV_ROLE_NO_ACCESS as NO_ACCESS
-from atst.forms.team import TeamForm
 from atst.domain.authz.decorator import user_can_access_decorator as user_can
 from atst.models.environment_role import CSPRole
 from atst.models.permissions import Permissions
@@ -338,44 +337,6 @@ def delete_environment(environment_id):
             fragment="application-environments",
         )
     )
-
-
-@applications_bp.route("/application/<application_id>/team", methods=["POST"])
-@user_can(Permissions.EDIT_APPLICATION_MEMBER, message="update application member")
-def update_team(application_id):
-    application = Applications.get(application_id)
-    form = TeamForm(http_request.form)
-
-    if form.validate():
-        for member_form in form.members:
-            app_role = ApplicationRoles.get_by_id(member_form.role_id.data)
-            new_perms = [
-                perm
-                for perm in member_form.data["permission_sets"]
-                if perm != PermissionSets.VIEW_APPLICATION
-            ]
-            ApplicationRoles.update_permission_sets(app_role, new_perms)
-
-            for environment_role_form in member_form.environment_roles:
-                environment = Environments.get(
-                    environment_role_form.environment_id.data
-                )
-                Environments.update_env_role(
-                    environment, app_role, environment_role_form.data.get("role")
-                )
-
-        flash("updated_application_team_settings", application_name=application.name)
-
-        return redirect(
-            url_for(
-                "applications.settings",
-                application_id=application_id,
-                fragment="application-members",
-                _anchor="application-members",
-            )
-        )
-    else:
-        return (render_settings_page(application), 400)
 
 
 @applications_bp.route("/application/<application_id>/members/new", methods=["POST"])
