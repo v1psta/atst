@@ -32,6 +32,14 @@
   .input__inline-fields {
     text-align: left;
   }
+
+  .form-row {
+    margin-top: 0;
+
+    .usa-input {
+      margin: 0;
+    }
+  }
 }
 
 .app-team-settings-link {

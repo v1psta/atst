@@ -1,33 +1,27 @@
 {% from "components/icon.html" import Icon %}
 {% from "components/text_input.html" import TextInput %}
 {% from "components/checkbox_input.html" import CheckboxInput %}
+{% from "components/phone_input.html" import PhoneInput %}
 
 {% macro MemberStepOne(new_member_form) %}
   <div class="modal__form--header">
-    <h1>Invite new member</h1>
+    <h1>{{ Icon('avatar') }} Add Member</h1>
+    <hr>
   </div>
   <div class='form-row'>
-    <div class='form-col form-col--half'>
-      {{ TextInput(new_member_form.user_data.first_name, validation='requiredField', optional=False) }}
-    </div>
-    <div class='form-col form-col--half'>
-      {{ TextInput(new_member_form.user_data.last_name, validation='requiredField', optional=False) }}
-    </div>
+    {{ TextInput(new_member_form.user_data.first_name, validation='requiredField', optional=False) }}
   </div>
   <div class='form-row'>
-    <div class='form-col form-col--half'>
-      {{ TextInput(new_member_form.user_data.email, validation='email', optional=False) }}
-    </div>
-    <div class='form-col form-col--half'>
-      {{ TextInput(new_member_form.user_data.phone_number, validation='usPhone', optional=True) }}
-    </div>
+    {{ TextInput(new_member_form.user_data.last_name, validation='requiredField', optional=False) }}
   </div>
   <div class='form-row'>
-    <div class='form-col form-col--half'>
-      {{ TextInput(new_member_form.user_data.dod_id, validation='dodId', optional=False) }}
-    </div>
-    <div class='form-col form-col--half'>
-    </div>
+    {{ TextInput(new_member_form.user_data.email, validation='email', optional=False) }}
+  </div>
+  <div class="form-row">
+    {{ PhoneInput(new_member_form.user_data.phone_number, new_member_form.user_data.phone_ext)}}
+  </div>
+  <div class='form-row'>
+    {{ TextInput(new_member_form.user_data.dod_id, validation='dodId', optional=False) }}
   </div>
   <div class='action-group'>
     <input
