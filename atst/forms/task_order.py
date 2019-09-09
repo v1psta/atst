@@ -54,10 +54,10 @@ class CLINForm(FlaskForm):
 
     def validate(self, *args, **kwargs):
         valid = super().validate(*args, **kwargs)
-        CONTRACT_START_DATE = datetime.strptime(
+        contract_start = datetime.strptime(
             app.config.get("CONTRACT_START_DATE"), "%Y-%m-%d"
         ).date()
-        CONTRACT_END_DATE = datetime.strptime(
+        contract_end = datetime.strptime(
             app.config.get("CONTRACT_END_DATE"), "%Y-%m-%d"
         ).date()
 
@@ -71,20 +71,20 @@ class CLINForm(FlaskForm):
             )
             valid = False
 
-        if self.start_date.data and self.start_date.data <= CONTRACT_START_DATE:
+        if self.start_date.data and self.start_date.data <= contract_start:
             self.start_date.errors.append(
                 translate(
                     "forms.task_order.pop_errors.start",
-                    {"date": CONTRACT_START_DATE.strftime("%b %d, %Y")},
+                    {"date": contract_start.strftime("%b %d, %Y")},
                 )
             )
             valid = False
 
-        if self.end_date.data and self.end_date.data >= CONTRACT_END_DATE:
+        if self.end_date.data and self.end_date.data >= contract_end:
             self.end_date.errors.append(
                 translate(
                     "forms.task_order.pop_errors.end",
-                    {"date": CONTRACT_END_DATE.strftime("%b %d, %Y")},
+                    {"date": contract_end.strftime("%b %d, %Y")},
                 )
             )
             valid = False
