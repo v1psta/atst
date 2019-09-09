@@ -25,6 +25,8 @@
 }
 
 #modal--add-app-mem {
+  text-align: left;
+
   input[type="checkbox"] + label::before {
     margin-left: 0;
   }
@@ -38,6 +40,22 @@
 
     .usa-input {
       margin: 0;
+      width: 45rem;
+
+      input,
+      label,
+      .usa-input__message {
+        max-width: unset;
+      }
+
+      label .icon-validation {
+        left: unset;
+        right: -$gap * 4;
+      }
+
+      &--validation--phoneExt {
+        width: 18rem;
+      }
     }
   }
 }
