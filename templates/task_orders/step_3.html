@@ -23,6 +23,8 @@
       v-bind:initial-clin-index='clinIndex'
       v-bind:initial-clin-type="'JEDI_CLIN_1'"
     {% endif %}
+    v-bind:contract-start="'{{ contract_start | string }}'"
+    v-bind:contract-end="'{{ contract_end | string }}'"
     inline-template>
     <div class="clin-card" v-if="showClin">
       <div class="card__title">
@@ -169,6 +171,7 @@
             {{ 'task_orders.form.pop' | translate }}
           </div>
         </div>
+        {% set contract_end_formatted = contract_end | dateFromString(formatter="%Y-%m-%d") | formattedDate(formatter="%B %d, %Y") %}
         {% if fields %}
           <div class="form-row">
             <div class="form-col">
@@ -178,7 +181,7 @@
           <div class="form-row">
             <div class="form-col">
               {% call DatePicker(fields.end_date, watch=True, optional=False) %}
-                {{ Alert(message="task_orders.form.pop_end_alert" | translate) }}
+                {{ Alert(message="task_orders.form.pop_end_alert" | translate({'end_date': contract_end_formatted})) }}
               {% endcall %}
             </div>
           </div>
@@ -255,7 +258,7 @@
                       {{ 'task_orders.form.pop_end' | translate }}
                     </div>
 
-                    {{ Alert(message="A CLIN's period of performance must end before September 14, 2022.") }}
+                    {{ Alert(message="task_orders.form.pop_end_alert" | translate({'end_date': contract_end_formatted})) }}
 
                     <p class='usa-input__help'>
                       {{ 'task_orders.form.pop_example' | translate }}

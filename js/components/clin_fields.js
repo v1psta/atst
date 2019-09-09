@@ -12,12 +12,6 @@ const END_DATE = 'end_date'
 const POP = 'period_of_performance'
 const NUMBER = 'number'
 
-const fs = require('fs')
-const ini = require('ini')
-const config = ini.parse(fs.readFileSync('./config/base.ini', 'utf-8'))
-const CONTRACT_START_DATE = new Date(config.default.CONTRACT_START_DATE)
-const CONTRACT_END_DATE = new Date(config.default.CONTRACT_END_DATE)
-
 export default {
   name: 'clin-fields',
 
@@ -43,6 +37,14 @@ export default {
       type: String,
       default: null,
     },
+    contractStart: {
+      type: String,
+      required: true,
+    },
+    contractEnd: {
+      type: String,
+      required: true,
+    },
   },
 
   data: function() {
@@ -56,6 +58,8 @@ export default {
     const clinNumber = !!this.initialClinNumber
       ? this.initialClinNumber
       : undefined
+    const contractStartDate = new Date(this.contractStart)
+    const contractEndDate = new Date(this.contractEnd)
 
     return {
       clinIndex: this.initialClinIndex,
@@ -64,6 +68,8 @@ export default {
       popValid: popValidation,
       startDateValid: false,
       endDateValid: false,
+      contractStartDate: contractStartDate,
+      contractEndDate: contractEndDate,
       clinNumber: clinNumber,
       showClin: true,
       popErrors: [],
@@ -75,14 +81,14 @@ export default {
         {
           func: this.popStartsAfterContract,
           message: `PoP start date must be on or after ${format(
-            CONTRACT_START_DATE,
+            contractStartDate,
             'MMM D, YYYY'
           )}.`,
         },
         {
           func: this.popEndsBeforeContract,
           message: `PoP end date must be before or on ${format(
-            CONTRACT_END_DATE,
+            contractEndDate,
             'MMM D, YYYY'
           )}.`,
         },
@@ -128,14 +134,14 @@ export default {
 
     popStartsAfterContract: function() {
       if (this.startDateValid) {
-        return this.startDate >= CONTRACT_START_DATE
+        return this.startDate >= this.contractStartDate
       }
       return true
     },
 
     popEndsBeforeContract: function() {
       if (this.endDateValid) {
-        return this.endDate <= CONTRACT_END_DATE
+        return this.endDate <= this.contractEndDate
       }
       return true
     },

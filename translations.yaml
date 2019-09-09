@@ -385,7 +385,7 @@ task_orders:
     obligated_funds_label: Obligated Funds
     pop: Period of Performance
     pop_end: End Date
-    pop_end_alert: "A CLIN's period of performance must end before September 14, 2022."
+    pop_end_alert: "A CLIN's period of performance must end before {end_date}."
     pop_example: "For example: 07 04 1776"
     pop_start: Start Date
     review_button: Review task order

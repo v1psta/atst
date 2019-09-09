@@ -7,6 +7,7 @@ from flask import (
     current_app as app,
     jsonify,
 )
+from datetime import datetime
 
 from . import task_orders_bp
 from atst.domain.authz.decorator import user_can_access_decorator as user_can
@@ -21,6 +22,9 @@ def render_task_orders_edit(
     template, portfolio_id=None, task_order_id=None, form=None, extra_args=None
 ):
     render_args = extra_args or {}
+
+    render_args["contract_start"] = app.config.get("CONTRACT_START_DATE")
+    render_args["contract_end"] = app.config.get("CONTRACT_END_DATE")
 
     if task_order_id:
         task_order = TaskOrders.get(task_order_id)
