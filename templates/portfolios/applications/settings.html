@@ -103,7 +103,7 @@
 
       {% set new_member_modal_name = "add-app-mem" %}
       {% if user_can(permissions.CREATE_APPLICATION_MEMBER) %}
-        <a class="icon-link modal-link" v-on:click="openModal('{{ new_member_modal_name }}')">
+        <a class="icon-link modal-link icon-link__add" v-on:click="openModal('{{ new_member_modal_name }}')">
           {{ Icon("plus") }}
           {{ "portfolios.applications.add_member" | translate }}
         </a>
