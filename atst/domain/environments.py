@@ -129,3 +129,13 @@ class Environments(object):
             .filter(Environment.root_user_info == text("'null'"))
         )
         return [environment_id for (environment_id,) in query.all()]
+
+    @classmethod
+    def get_environments_pending_baseline_creation(cls, now) -> [str]:
+        query = (
+            cls.base_provision_query(now)
+            .filter(Environment.cloud_id != None)
+            .filter(Environment.root_user_info != text("'null'"))
+            .filter(Environment.baseline_info == text("'null'"))
+        )
+        return [environment_id for (environment_id,) in query.all()]
