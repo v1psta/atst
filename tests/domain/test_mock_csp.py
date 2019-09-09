@@ -2,12 +2,12 @@ import pytest
 
 from atst.domain.csp import MockCloudProvider
 
-CREDENTIALS = MockCloudProvider()._auth_credentials
+CREDENTIALS = MockCloudProvider(config={})._auth_credentials
 
 
 @pytest.fixture
 def mock_csp():
-    return MockCloudProvider(with_delay=False, with_failure=False)
+    return MockCloudProvider(config={}, with_delay=False, with_failure=False)
 
 
 def test_create_environment(mock_csp: MockCloudProvider):

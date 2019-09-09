@@ -12,6 +12,9 @@ class GeneralCSPException(Exception):
 
 
 class CloudProviderInterface:
+    def root_creds() -> Dict:
+        raise NotImplementedError()
+
     def create_environment(
         self, auth_credentials: Dict, user: User, environment: Environment
     ) -> str:
@@ -128,7 +131,7 @@ class MockCloudProvider(CloudProviderInterface):
     ENV_CREATE_FAILURE_PCT = 12
     ATAT_ADMIN_CREATE_FAILURE_PCT = 12
 
-    def __init__(self, with_delay=True, with_failure=True):
+    def __init__(self, config, with_delay=True, with_failure=True):
         from time import sleep
         import random
 
@@ -136,6 +139,9 @@ class MockCloudProvider(CloudProviderInterface):
         self._with_failure = with_failure
         self._sleep = sleep
         self._random = random
+
+    def root_creds(self):
+        return self._auth_credentials
 
     def create_environment(self, auth_credentials, user, environment):
         self._authorize(auth_credentials)
@@ -159,7 +165,7 @@ class MockCloudProvider(CloudProviderInterface):
             GeneralCSPException("Could not create admin user."),
         )
 
-        return {"id": self._id(), "credentials": {}}
+        return {"id": self._id(), "credentials": self._auth_credentials}
 
     def create_environment_baseline(self, auth_credentials, csp_environment_id):
         self._authorize(auth_credentials)
@@ -172,10 +178,10 @@ class MockCloudProvider(CloudProviderInterface):
         )
 
         return {
-            CSPRole.BASIC_ACCESS: self._id(),
-            CSPRole.NETWORK_ADMIN: self._id(),
-            CSPRole.BUSINESS_READ: self._id(),
-            CSPRole.TECHNICAL_READ: self._id(),
+            CSPRole.BASIC_ACCESS.value: self._id(),
+            CSPRole.NETWORK_ADMIN.value: self._id(),
+            CSPRole.BUSINESS_READ.value: self._id(),
+            CSPRole.TECHNICAL_READ.value: self._id(),
         }
 
     def create_or_update_user(self, auth_credentials, user_info, csp_role_id):
