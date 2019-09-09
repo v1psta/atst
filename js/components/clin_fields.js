@@ -65,6 +65,7 @@ export default {
       startDateValid: false,
       endDateValid: false,
       clinNumber: clinNumber,
+      showClin: true,
       popErrors: [],
       validations: [
         {
