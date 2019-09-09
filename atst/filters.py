@@ -1,6 +1,5 @@
 import re
 import datetime
-import inflect
 from atst.utils.localization import translate
 from flask import render_template
 from jinja2 import contextfilter
@@ -68,14 +67,6 @@ def renderAuditEvent(event):
         return render_template("audit_log/events/default.html", event=event)
 
 
-def numberToWords(integer):
-    return inflect.engine().number_to_words(integer)
-
-
-def pluralize(word, number):
-    return inflect.engine().plural(word, number)
-
-
 def register_filters(app):
     app.jinja_env.filters["iconSvg"] = iconSvg
     app.jinja_env.filters["dollars"] = dollars
@@ -85,8 +76,6 @@ def register_filters(app):
     app.jinja_env.filters["pageWindow"] = pageWindow
     app.jinja_env.filters["renderAuditEvent"] = renderAuditEvent
     app.jinja_env.filters["withExtraParams"] = with_extra_params
-    app.jinja_env.filters["numberToWords"] = numberToWords
-    app.jinja_env.filters["pluralize"] = pluralize
 
     @contextfilter
     def translateWithoutCache(context, *kwargs):

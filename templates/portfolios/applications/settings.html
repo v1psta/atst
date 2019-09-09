@@ -252,7 +252,11 @@
 
   {% if user_can(permissions.DELETE_APPLICATION) %}
     {% set env_count = application.environments | length %}
-    {% set pluralized_env = "environment" | pluralize(env_count) %}
+    {% if env_count == 1 %}
+      {% set pluralized_env = "environment" %}
+    {% else %}
+      {% set pluralized_env = "environments" %}
+    {% endif %}
 
     <div class='subheading'>
       {{ "portfolios.applications.delete.subheading" | translate }}
@@ -262,7 +266,7 @@
       <div class="panel__content">
         <div class="form-row">
           <div class="form-col form-col--two-thirds">
-            {{ "portfolios.applications.delete.panel_text" | translate({"name": application.name, "env_count": env_count | numberToWords, "pluralized_env": pluralized_env}) | safe }}
+            {{ "portfolios.applications.delete.panel_text" | translate({"name": application.name, "env_count": env_count , "pluralized_env": pluralized_env}) | safe }}
           </div>
           <div class="form-col form-col--third">
             <div class="usa-input">
