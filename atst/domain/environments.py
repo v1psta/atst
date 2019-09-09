@@ -1,3 +1,4 @@
+from sqlalchemy import text
 from sqlalchemy.orm.exc import NoResultFound
 
 from atst.database import db
@@ -104,8 +105,8 @@ class Environments(object):
         return environment
 
     @classmethod
-    def get_environments_pending_creation(cls, now) -> [str]:
-        query = (
+    def base_provision_query(cls, now):
+        return (
             db.session.query(Environment.id)
             .join(Application)
             .join(Portfolio)
@@ -113,6 +114,18 @@ class Environments(object):
             .join(CLIN)
             .filter(CLIN.start_date <= now)
             .filter(CLIN.end_date > now)
-            .filter(Environment.cloud_id == None)
+        )
+
+    @classmethod
+    def get_environments_pending_creation(cls, now) -> [str]:
+        query = cls.base_provision_query(now).filter(Environment.cloud_id == None)
+        return [environment_id for (environment_id,) in query.all()]
+
+    @classmethod
+    def get_environments_pending_atat_user_creation(cls, now) -> [str]:
+        query = (
+            cls.base_provision_query(now)
+            .filter(Environment.cloud_id != None)
+            .filter(Environment.root_user_info == text("'null'"))
         )
         return [environment_id for (environment_id,) in query.all()]

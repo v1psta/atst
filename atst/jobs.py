@@ -126,3 +126,11 @@ def dispatch_create_environment(self):
         pendulum.now()
     ):
         create_environment.delay(environment_id=environment_id, atat_user_id="TODO")
+
+
+@celery.task(bind=True)
+def dispatch_create_atat_admin_user(self):
+    for environment_id in Environments.get_environments_pending_atat_user_creation(
+        pendulum.now()
+    ):
+        create_atat_admin_user.delay(environment_id=environment_id, atat_user_id="TODO")
