@@ -7,7 +7,7 @@ from wtforms.fields import (
     HiddenField,
 )
 from wtforms.fields.html5 import DateField
-from wtforms.validators import Required, Optional, Length
+from wtforms.validators import Required, Optional, Length, NumberRange
 from flask_wtf import FlaskForm
 from datetime import datetime
 
@@ -49,11 +49,21 @@ class CLINForm(FlaskForm):
     )
     total_amount = DecimalField(
         label=translate("task_orders.form.total_funds_label"),
-        validators=[Optional()],
+        validators=[
+            Optional(),
+            NumberRange(
+                0, 1000000000, "dollar amount must be from $0.00 to $1,000,000,000.00"
+            ),
+        ],
     )
     obligated_amount = DecimalField(
         label=translate("task_orders.form.obligated_funds_label"),
-        validators=[Optional()],
+        validators=[
+            Optional(),
+            NumberRange(
+                0, 1000000000, "dollar amount must be from $0.00 to $1,000,000,000.00"
+            ),
+        ],
     )
 
     def validate(self, *args, **kwargs):
@@ -90,6 +100,12 @@ class CLINForm(FlaskForm):
                     "forms.task_order.pop_errors.end",
                     {"date": contract_end.strftime("%b %d, %Y")},
                 )
+            )
+            valid = False
+
+        if self.total_amount.data < self.obligated_amount.data:
+            self.obligated_amount.errors.append(
+                translate("forms.task_order.obligated_amount")
             )
             valid = False
 
