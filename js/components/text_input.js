@@ -159,7 +159,6 @@ export default {
 
     _isValid: function(value) {
       let valid = this._validate(value)
-
       if (!this.modified && this.initialErrors && this.initialErrors.length) {
         valid = false
       } else if (this.optional && value === '') {

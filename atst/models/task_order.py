@@ -6,7 +6,6 @@ from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import relationship
 
 from atst.models import Attachment, Base, mixins, types
-from atst.models.clin import JEDICLINType
 from atst.utils.clock import Clock
 
 
@@ -148,10 +147,7 @@ class TaskOrder(Base, mixins.TimestampsMixin):
     def total_obligated_funds(self):
         total = 0
         for clin in self.clins:
-            if clin.obligated_amount is not None and clin.jedi_clin_type in [
-                JEDICLINType.JEDI_CLIN_1,
-                JEDICLINType.JEDI_CLIN_3,
-            ]:
+            if clin.obligated_amount is not None:
                 total += clin.obligated_amount
         return total
 
@@ -159,8 +155,8 @@ class TaskOrder(Base, mixins.TimestampsMixin):
     def total_contract_amount(self):
         total = 0
         for clin in self.clins:
-            if clin.obligated_amount is not None:
-                total += clin.obligated_amount
+            if clin.total_amount is not None:
+                total += clin.total_amount
         return total
 
     @property
