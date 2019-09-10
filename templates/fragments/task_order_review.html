@@ -43,7 +43,7 @@
                 <th>{{ "task_orders.review.clins.type" | translate }}</th>
                 <th>{{ "task_orders.review.clins.idiq_clin_description" | translate }}</th>
                 <th>{{ "task_orders.review.clins.pop" | translate }}</th>
-                <th class="task-order__amount">{{ "task_orders.review.clins.amount" | translate }}</th>
+                <th class="task-order__amount">{{ "task_orders.review.clins.total_amount" | translate }}</th>
                 <th class="task-order__amount">{{ "task_orders.review.clins.obligated" | translate }}</th>
               </tr>
             </thead>
@@ -58,7 +58,7 @@
                  {{ clin.start_date | formattedDate }} -  {{ clin.end_date | formattedDate }}
                 </td>
                 {# TODO: Swap in total CLIN amount #}
-                <td class="task-order__amount">$123,456,789.00</td>
+                <td class="task-order__amount">{{ clin.total_amount | dollars }}</td>
                 <td class="task-order__amount">{{ clin.obligated_amount | dollars }}</td>
               </tr>
               {% endfor %}
