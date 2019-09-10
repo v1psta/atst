@@ -9,11 +9,13 @@ from wtforms.fields import (
 from wtforms.fields.html5 import DateField
 from wtforms.validators import Required, Optional, Length
 from flask_wtf import FlaskForm
+from datetime import datetime
 
 from .data import JEDI_CLIN_TYPES
 from .fields import SelectField
 from .forms import BaseForm
 from atst.utils.localization import translate
+from flask import current_app as app
 
 
 def coerce_enum(enum_inst):
@@ -52,17 +54,42 @@ class CLINForm(FlaskForm):
 
     def validate(self, *args, **kwargs):
         valid = super().validate(*args, **kwargs)
+        contract_start = datetime.strptime(
+            app.config.get("CONTRACT_START_DATE"), "%Y-%m-%d"
+        ).date()
+        contract_end = datetime.strptime(
+            app.config.get("CONTRACT_END_DATE"), "%Y-%m-%d"
+        ).date()
+
         if (
             self.start_date.data
             and self.end_date.data
             and self.start_date.data > self.end_date.data
         ):
             self.start_date.errors.append(
-                translate("forms.task_order.start_date_error")
+                translate("forms.task_order.pop_errors.date_order")
             )
-            return False
-        else:
-            return valid
+            valid = False
+
+        if self.start_date.data and self.start_date.data <= contract_start:
+            self.start_date.errors.append(
+                translate(
+                    "forms.task_order.pop_errors.start",
+                    {"date": contract_start.strftime("%b %d, %Y")},
+                )
+            )
+            valid = False
+
+        if self.end_date.data and self.end_date.data >= contract_end:
+            self.end_date.errors.append(
+                translate(
+                    "forms.task_order.pop_errors.end",
+                    {"date": contract_end.strftime("%b %d, %Y")},
+                )
+            )
+            valid = False
+
+        return valid
 
 
 class AttachmentForm(BaseForm):

@@ -22,6 +22,9 @@ def render_task_orders_edit(
 ):
     render_args = extra_args or {}
 
+    render_args["contract_start"] = app.config.get("CONTRACT_START_DATE")
+    render_args["contract_end"] = app.config.get("CONTRACT_END_DATE")
+
     if task_order_id:
         task_order = TaskOrders.get(task_order_id)
         portfolio_id = task_order.portfolio_id

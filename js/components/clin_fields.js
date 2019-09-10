@@ -1,3 +1,6 @@
+import * as R from 'ramda'
+import { format } from 'date-fns'
+
 import DateSelector from './date_selector'
 import { emitEvent } from '../lib/emitters'
 import Modal from '../mixins/modal'
@@ -34,6 +37,14 @@ export default {
       type: String,
       default: null,
     },
+    contractStart: {
+      type: String,
+      required: true,
+    },
+    contractEnd: {
+      type: String,
+      required: true,
+    },
   },
 
   data: function() {
@@ -44,19 +55,44 @@ export default {
       ? new Date(this.initialEndDate)
       : undefined
     const popValidation = !this.initialStartDate ? false : start < end
-    const showPopValidation = !this.initialStartDate ? false : !popValidation
     const clinNumber = !!this.initialClinNumber
       ? this.initialClinNumber
       : undefined
+    const contractStartDate = new Date(this.contractStart)
+    const contractEndDate = new Date(this.contractEnd)
 
     return {
       clinIndex: this.initialClinIndex,
       startDate: start,
       endDate: end,
       popValid: popValidation,
-      showPopError: showPopValidation,
+      startDateValid: false,
+      endDateValid: false,
+      contractStartDate: contractStartDate,
+      contractEndDate: contractEndDate,
       clinNumber: clinNumber,
       showClin: true,
+      popErrors: [],
+      validations: [
+        {
+          func: this.popDateOrder,
+          message: 'PoP start date must be before end date.',
+        },
+        {
+          func: this.popStartsAfterContract,
+          message: `PoP start date must be on or after ${format(
+            contractStartDate,
+            'MMM D, YYYY'
+          )}.`,
+        },
+        {
+          func: this.popEndsBeforeContract,
+          message: `PoP end date must be before or on ${format(
+            contractEndDate,
+            'MMM D, YYYY'
+          )}.`,
+        },
+      ],
     }
   },
 
@@ -74,29 +110,58 @@ export default {
 
   methods: {
     checkPopValid: function() {
-      return this.startDate < this.endDate
+      return (
+        this.popDateOrder() &&
+        this.popStartsAfterContract() &&
+        this.popEndsBeforeContract()
+      )
     },
 
     validatePop: function() {
-      if (!!this.startDate && !!this.endDate) {
-        // only want to update popValid and showPopError if both dates are filled in
-        this.popValid = this.checkPopValid()
-        this.showPopError = !this.popValid
-      }
-
+      this.popValid = this.checkPopValid()
       emitEvent('field-change', this, {
         name: 'clins-' + this.clinIndex + '-' + POP,
-        valid: this.checkPopValid(),
+        valid: this.popValid,
       })
+
+      this.popErrors = R.pipe(
+        R.map(validation =>
+          !validation.func() ? validation.message : undefined
+        ),
+        R.filter(Boolean)
+      )(this.validations)
+    },
+
+    popStartsAfterContract: function() {
+      if (this.startDateValid) {
+        return this.startDate >= this.contractStartDate
+      }
+      return true
+    },
+
+    popEndsBeforeContract: function() {
+      if (this.endDateValid) {
+        return this.endDate <= this.contractEndDate
+      }
+      return true
+    },
+
+    popDateOrder: function() {
+      if (!!this.startDate && !!this.endDate) {
+        return this.startDate < this.endDate
+      }
+      return true
     },
 
     handleFieldChange: function(event) {
       if (this._uid === event.parent_uid) {
         if (event.name.includes(START_DATE)) {
           if (!!event.value) this.startDate = new Date(event.value)
+          if (!!event.valid) this.startDateValid = event.valid
           this.validatePop()
         } else if (event.name.includes(END_DATE)) {
           if (!!event.value) this.endDate = new Date(event.value)
+          if (!!event.valid) this.endDateValid = event.valid
           this.validatePop()
         } else if (event.name.includes(NUMBER)) {
           this.clinNumber = event.value
