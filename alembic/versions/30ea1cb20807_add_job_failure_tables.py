@@ -1,7 +1,7 @@
 """add job failure tables
 
 Revision ID: 30ea1cb20807
-Revises: 4a3122ffe898
+Revises: 0ee5a34a1b84
 Create Date: 2019-09-06 06:56:25.685805
 
 """
@@ -11,7 +11,7 @@ from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
 revision = '30ea1cb20807' # pragma: allowlist secret
-down_revision = '4a3122ffe898' # pragma: allowlist secret
+down_revision = '0ee5a34a1b84' # pragma: allowlist secret
 branch_labels = None
 depends_on = None
 
