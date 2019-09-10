@@ -188,6 +188,12 @@ class TestGetEnvironmentsPendingCreate(EnvQueryTest):
         self.create_portfolio_with_clins([(self.TOMORROW, self.TOMORROW)])
         assert len(Environments.get_environments_pending_creation(self.NOW)) == 0
 
+    def test_with_already_provisioned_env(self, session):
+        self.create_portfolio_with_clins(
+            [(self.YESTERDAY, self.TOMORROW)], env_data={"cloud_id": uuid4().hex}
+        )
+        assert len(Environments.get_environments_pending_creation(self.NOW)) == 0
+
 
 class TestGetEnvironmentsPendingAtatUserCreation(EnvQueryTest):
     def test_with_provisioned_environment(self):
