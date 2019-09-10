@@ -18,7 +18,7 @@
           type='button'
           v-on:click="previous()"
           class='action-group__action usa-button usa-button-secondary'
-          value='Previous'>
+          value='{{ "common.previous" | translate }}'>
     {% endif %}
     <a class='action-group__action icon-link icon-link--default' v-on:click="closeModal('{{ new_port_mem }}')">{{ "common.cancel" | translate }}</a>
   </div>
@@ -31,10 +31,10 @@
         v-on:click="next()"
         v-bind:disabled="invalid"
         class='action-group__action usa-button'
-        value='Next'>
+        value='{{ "portfolios.applications.members.form.next_button" | translate }}'>
   {% endset %}
 
-  {% call MemberFormTemplate(title="Add Member", next_button=next_button, previous=False) %}
+  {% call MemberFormTemplate(title="portfolios.applications.members.form.add_member"|translate, next_button=next_button, previous=False) %}
     <div class='form-row'>
       {{ TextInput(new_member_form.user_data.first_name, validation='requiredField', optional=False) }}
     </div>
@@ -58,18 +58,18 @@
       type="submit"
       class='action-group__action usa-button'
       form="add-app-mem"
-      value='Add Member'>
+      value='{{ "portfolios.applications.members.form.add_member" | translate}}'>
   {% endset %}
 
-  {% call MemberFormTemplate(title="Set Permissions and Roles", next_button=next_button) %}
-    <h4>Project Permissions</h4>
+  {% call MemberFormTemplate(title="portfolios.applications.members.form.step_2_title"|translate, next_button=next_button) %}
+    <h4>{{ "portfolios.applications.members.form.project_perms" | translate }}</h4>
     <div class="application-perms">
       {{ CheckboxInput(new_member_form.permission_sets.perms_team_mgmt, classes="input__inline-fields") }}
       {{ CheckboxInput(new_member_form.permission_sets.perms_env_mgmt, classes="input__inline-fields") }}
       {{ CheckboxInput(new_member_form.permission_sets.perms_del_env, classes="input__inline-fields") }}
     </div>
     <div class="environment-roles-new">
-      <h4>Environment Access</h4>
+      <h4>{{ "portfolios.applications.members.form.env_access" | translate }}</h4>
       <hr>
       {% for environment_data in new_member_form.environment_roles %}
         <optionsinput inline-template
