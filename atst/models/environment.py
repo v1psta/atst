@@ -18,6 +18,9 @@ class Environment(
     application_id = Column(ForeignKey("applications.id"), nullable=False)
     application = relationship("Application")
 
+    creator_role_id = Column(ForeignKey("application_roles.id"), nullable=False)
+    creator = relationship("ApplicationRole")
+
     cloud_id = Column(String)
     root_user_info = Column(JSONB)
     baseline_info = Column(JSONB)
