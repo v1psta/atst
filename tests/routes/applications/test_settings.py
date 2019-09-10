@@ -15,7 +15,6 @@ from atst.domain.exceptions import NotFoundError
 from atst.models.environment_role import CSPRole
 from atst.models.portfolio_role import Status as PortfolioRoleStatus
 from atst.forms.application import EditEnvironmentForm
-from atst.forms.app_settings import AppEnvRolesForm
 from atst.forms.data import ENV_ROLE_NO_ACCESS as NO_ACCESS
 
 from tests.utils import captured_templates
@@ -112,7 +111,6 @@ def test_edit_application_environments_obj(app, client, user_session):
         assert response.status_code == 200
         _, context = templates[-1]
 
-        assert isinstance(context["members_form"], AppEnvRolesForm)
         env_obj = context["environments_obj"][0]
         assert env_obj["name"] == env.name
         assert env_obj["id"] == env.id
@@ -152,50 +150,6 @@ def test_data_for_app_env_roles_form(app, client, user_session):
 
         assert response.status_code == 200
         _, context = templates[-1]
-
-        members_form = context["members_form"]
-        assert isinstance(members_form, AppEnvRolesForm)
-        assert members_form.data == {
-            "envs": [
-                {
-                    "env_id": env.id,
-                    "team_roles": [
-                        {
-                            "role": NO_ACCESS,
-                            "members": [
-                                {
-                                    "application_role_id": str(app_role0.id),
-                                    "user_name": app_role0.user_name,
-                                    "role_name": None,
-                                }
-                            ],
-                        },
-                        {
-                            "role": CSPRole.BASIC_ACCESS.value,
-                            "members": [
-                                {
-                                    "application_role_id": str(app_role1.id),
-                                    "user_name": app_role1.user_name,
-                                    "role_name": CSPRole.BASIC_ACCESS.value,
-                                }
-                            ],
-                        },
-                        {
-                            "role": CSPRole.NETWORK_ADMIN.value,
-                            "members": [
-                                {
-                                    "application_role_id": str(app_role2.id),
-                                    "user_name": app_role2.user_name,
-                                    "role_name": CSPRole.NETWORK_ADMIN.value,
-                                }
-                            ],
-                        },
-                        {"role": CSPRole.BUSINESS_READ.value, "members": []},
-                        {"role": CSPRole.TECHNICAL_READ.value, "members": []},
-                    ],
-                }
-            ]
-        }
 
 
 def test_user_with_permission_can_update_application(client, user_session):
@@ -251,55 +205,6 @@ def test_user_without_permission_cannot_update_application(client, user_session)
     assert response.status_code == 404
     assert application.name == "Great Application"
     assert application.description == "Cool stuff happening here!"
-
-
-def test_update_team_env_roles(client, user_session):
-    environment = EnvironmentFactory.create()
-    application = environment.application
-    app_role_1 = ApplicationRoleFactory.create(application=application)
-    env_role_1 = EnvironmentRoleFactory.create(
-        environment=environment,
-        role=CSPRole.BASIC_ACCESS.value,
-        application_role=app_role_1,
-    )
-    app_role_2 = ApplicationRoleFactory.create(application=application)
-    env_role_2 = EnvironmentRoleFactory.create(
-        environment=environment,
-        role=CSPRole.BASIC_ACCESS.value,
-        application_role=app_role_2,
-    )
-    app_role_3 = ApplicationRoleFactory.create(application=application)
-    env_role_3 = EnvironmentRoleFactory.create(
-        environment=environment,
-        role=CSPRole.BASIC_ACCESS.value,
-        application_role=app_role_3,
-    )
-
-    app_role_4 = ApplicationRoleFactory.create(application=application)
-    form_data = {
-        "envs-0-env_id": environment.id,
-        "envs-0-team_roles-0-members-0-application_role_id": app_role_4.id,
-        "envs-0-team_roles-0-members-0-role_name": CSPRole.TECHNICAL_READ.value,
-        "envs-0-team_roles-1-members-0-application_role_id": app_role_1.id,
-        "envs-0-team_roles-1-members-0-role_name": CSPRole.NETWORK_ADMIN.value,
-        "envs-0-team_roles-1-members-1-application_role_id": app_role_2.id,
-        "envs-0-team_roles-1-members-1-role_name": CSPRole.BASIC_ACCESS.value,
-        "envs-0-team_roles-1-members-2-application_role_id": app_role_3.id,
-        "envs-0-team_roles-1-members-2-role_name": NO_ACCESS,
-    }
-
-    user_session(application.portfolio.owner)
-    response = client.post(
-        url_for("applications.update_env_roles", environment_id=environment.id),
-        data=form_data,
-        follow_redirects=True,
-    )
-
-    assert response.status_code == 200
-    assert env_role_1.role == CSPRole.NETWORK_ADMIN.value
-    assert env_role_2.role == CSPRole.BASIC_ACCESS.value
-    assert not EnvironmentRoles.get(app_role_3.id, environment.id)
-    assert EnvironmentRoles.get(app_role_4.id, environment.id)
 
 
 def test_user_can_only_access_apps_in_their_portfolio(client, user_session):

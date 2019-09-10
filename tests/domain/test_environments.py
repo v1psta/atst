@@ -53,51 +53,6 @@ def test_update_env_role_no_change():
     )
 
 
-def test_update_env_roles_by_environment():
-    environment = EnvironmentFactory.create()
-    app_role_1 = ApplicationRoleFactory.create(application=environment.application)
-    env_role_1 = EnvironmentRoleFactory.create(
-        application_role=app_role_1,
-        environment=environment,
-        role=CSPRole.BASIC_ACCESS.value,
-    )
-    app_role_2 = ApplicationRoleFactory.create(application=environment.application)
-    env_role_2 = EnvironmentRoleFactory.create(
-        application_role=app_role_2,
-        environment=environment,
-        role=CSPRole.NETWORK_ADMIN.value,
-    )
-    app_role_3 = ApplicationRoleFactory.create(application=environment.application)
-    env_role_3 = EnvironmentRoleFactory.create(
-        application_role=app_role_3,
-        environment=environment,
-        role=CSPRole.TECHNICAL_READ.value,
-    )
-
-    team_roles = [
-        {
-            "application_role_id": app_role_1.id,
-            "user_name": app_role_1.user_name,
-            "role_name": CSPRole.BUSINESS_READ.value,
-        },
-        {
-            "application_role_id": app_role_2.id,
-            "user_name": app_role_2.user_name,
-            "role_name": CSPRole.NETWORK_ADMIN.value,
-        },
-        {
-            "application_role_id": app_role_3.id,
-            "user_name": app_role_3.user_name,
-            "role_name": None,
-        },
-    ]
-
-    Environments.update_env_roles_by_environment(environment.id, team_roles)
-    assert env_role_1.role == CSPRole.BUSINESS_READ.value
-    assert env_role_2.role == CSPRole.NETWORK_ADMIN.value
-    assert not EnvironmentRoles.get(app_role_3.id, environment.id)
-
-
 def test_get_excludes_deleted():
     env = EnvironmentFactory.create(
         deleted=True, application=ApplicationFactory.create()

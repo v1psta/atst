@@ -3,7 +3,6 @@ from sqlalchemy.orm.exc import NoResultFound
 from atst.database import db
 from atst.models.environment import Environment
 from atst.domain.environment_roles import EnvironmentRoles
-from atst.domain.application_roles import ApplicationRoles
 
 from .exceptions import NotFoundError
 
@@ -71,17 +70,6 @@ class Environments(object):
             db.session.commit()
 
         return updated
-
-    @classmethod
-    def update_env_roles_by_environment(cls, environment_id, team_roles):
-        environment = Environments.get(environment_id)
-
-        for member in team_roles:
-            new_role = member["role_name"]
-            app_role = ApplicationRoles.get_by_id(member["application_role_id"])
-            Environments.update_env_role(
-                environment=environment, application_role=app_role, new_role=new_role
-            )
 
     @classmethod
     def revoke_access(cls, environment, target_user):
