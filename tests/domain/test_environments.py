@@ -21,7 +21,9 @@ from tests.factories import (
 @pytest.mark.skip(reason="Reinstate and update once jobs api is up")
 def test_create_environments():
     application = ApplicationFactory.create()
-    environments = Environments.create_many(application, ["Staging", "Production"])
+    environments = Environments.create_many(
+        application.portfolio.owner, application, ["Staging", "Production"]
+    )
     for env in environments:
         assert env.cloud_id is not None
 

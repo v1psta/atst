@@ -11,17 +11,17 @@ from .exceptions import NotFoundError
 
 class Environments(object):
     @classmethod
-    def create(cls, application, name):
-        environment = Environment(application=application, name=name)
+    def create(cls, user, application, name):
+        environment = Environment(application=application, name=name, creator=user)
         db.session.add(environment)
         db.session.commit()
         return environment
 
     @classmethod
-    def create_many(cls, application, names):
+    def create_many(cls, user, application, names):
         environments = []
         for name in names:
-            environment = Environments.create(application, name)
+            environment = Environments.create(user, application, name)
             environments.append(environment)
 
         db.session.add_all(environments)

@@ -71,6 +71,7 @@ def test_update_environment_failure(client, user_session):
 def test_application_settings(client, user_session):
     portfolio = PortfolioFactory.create()
     application = Applications.create(
+        portfolio.owner,
         portfolio,
         "Snazzy Application",
         "A new application for me and my friends",
@@ -86,6 +87,7 @@ def test_application_settings(client, user_session):
 def test_edit_application_environments_obj(app, client, user_session):
     portfolio = PortfolioFactory.create()
     application = Applications.create(
+        portfolio.owner,
         portfolio,
         "Snazzy Application",
         "A new application for me and my friends",
@@ -127,6 +129,7 @@ def test_edit_application_environments_obj(app, client, user_session):
 def test_data_for_app_env_roles_form(app, client, user_session):
     portfolio = PortfolioFactory.create()
     application = Applications.create(
+        portfolio.owner,
         portfolio,
         "Snazzy Application",
         "A new application for me and my friends",

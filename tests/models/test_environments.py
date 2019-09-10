@@ -12,7 +12,11 @@ def test_add_user_to_environment():
 
     portfolio = PortfolioFactory.create(owner=owner)
     application = Applications.create(
-        portfolio, "my test application", "It's mine.", ["dev", "staging", "prod"]
+        portfolio.owner,
+        portfolio,
+        "my test application",
+        "It's mine.",
+        ["dev", "staging", "prod"],
     )
     dev_environment = application.environments[0]
 

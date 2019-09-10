@@ -1,4 +1,4 @@
-from flask import redirect, render_template, request as http_request, url_for
+from flask import redirect, render_template, request as http_request, url_for, g
 
 from . import applications_bp
 from atst.domain.applications import Applications
@@ -24,6 +24,7 @@ def create(portfolio_id):
     if form.validate():
         application_data = form.data
         Applications.create(
+            g.current_user,
             portfolio,
             application_data["name"],
             application_data["description"],

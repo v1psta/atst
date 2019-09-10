@@ -18,8 +18,11 @@ class Environment(
     application_id = Column(ForeignKey("applications.id"), nullable=False)
     application = relationship("Application")
 
-    creator_role_id = Column(ForeignKey("application_roles.id"), nullable=False)
-    creator = relationship("ApplicationRole")
+    # User user.id as the foreign key here beacuse the Environment creator may
+    # not have an application role. We may need to revisit this if we receive any
+    # requirements around tracking an environment's custodian.
+    creator_id = Column(ForeignKey("users.id"), nullable=False)
+    creator = relationship("User")
 
     cloud_id = Column(String)
     root_user_info = Column(JSONB)
