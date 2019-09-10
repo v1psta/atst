@@ -59,6 +59,7 @@ common:
   'no': 'No'
   response_label: Response required
   save: Save
+  save_changes: Save Changes
   undo: Undo
   view: View
   resource_names:
@@ -283,13 +284,15 @@ portfolios:
     portfolio_name: Portfolio name
   applications:
     add_application_text: Add a new application
-    add_environment: Add new environment
+    add_environment: Create an Environment
+    add_member: Add a New Team Member
     add_another_environment: Add another environment
     app_settings_text: App settings
     create_button_text: Create
     create_new_env: Create a new environment.
     create_new_env_info: Creating an environment gives you access to the Cloud Service Provider. This environment will function within the constraints of the task order, and any costs will be billed against the portfolio.
     csp_console_text: CSP console
+    csp_link: Cloud Service Provider Link
     remove_member:
       alert:
         message: '{user_name} will no longer be able to access this application or any of its environments'
@@ -300,6 +303,8 @@ portfolios:
         message: You will lose access to this application and all environments will be removed from the CSP. Your reporting and activity will still be accessible.
       button: Delete application
       header: Are you sure you want to delete this application?
+      panel_text: 'Deleting {name} will delete this application along with all {env_count} {pluralized_env}. <strong>This cannot be undone.</strong>'
+      subheading: Delete Application
     enter_env_name: "Enter environment name:"
     environments:
       name: Name
@@ -309,8 +314,12 @@ portfolios:
     environments_description: Each environment created within an application is logically separated from one another for easier management and security.
     environments_heading: Application environments
     existing_application_title: '{application_name} Application Settings'
+    member_count: '{count} members'
     new_application_title: New Application
     settings_heading: Application Settings
+    settings:
+      name_description: Name and Description
+      team_members: Team Members
     team_settings:
       blank_slate:
         action_label: Invite a new team member
@@ -323,7 +332,6 @@ portfolios:
           environment_management: Environment Management
           team_management: Team Management
         title: '{application_name} Team'
-      subheading: Team Settings
       title: '{application_name} Team Settings'
       add_to_environment: Add to existing environment
     team_text: Team
@@ -335,6 +343,15 @@ portfolios:
         manage_envs: 'Allow member to <strong>add</strong> and <strong>rename environments</strong> within the application.'
         delete_envs: 'Allow member to <strong>delete environments</strong> within the application.'
         manage_team: 'Allow member to <strong>add, update,</strong> and <strong>remove members</strong> from the application team.'
+      perms_team_mgmt:
+        view_application: View Team
+        edit_application_team: Edit Team
+      perms_env_mgmt:
+        view_application: View Environments
+        edit_application_environments: Edit Environments
+      perms_del_env:
+        view_application: ""
+        delete_application_environments: Delete Application
   index:
     empty:
       start_button: Start a new JEDI portfolio

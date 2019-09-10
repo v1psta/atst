@@ -18,25 +18,17 @@
         </div>
         <div class="panel__footer">
           <div class="action-group">
-            <div class='action-group-cancel'>
-              <a class='action-group-cancel__action icon-link icon-link--default' v-on:click="toggle">
-                {{ "common.cancel" | translate }}
-              </a>
-              {{ SaveButton(text=('common.save' | translate), element="input", form="add-new-env") }}
-            </div>
+            {{ SaveButton(text=('common.save' | translate), element="input", form="add-new-env") }}
+            <a class='action-group__action icon-link icon-link--default' v-on:click="toggle">
+              {{ "common.cancel" | translate }}
+            </a>
           </div>
         </div>
       </form>
     </div>
-
-    <div v-else class="panel__footer">
-      <div class="action-group">
-        <a class='icon-link' v-on:click="toggle">
-          {{ "portfolios.applications.add_environment" | translate }}
-          {{ Icon('plus') }}
-        </a>
-      </div>
-    </div>
+    <a class='icon-link icon-link__add' v-on:click="toggle">
+      {{ Icon('plus') }}
+      {{ "portfolios.applications.add_environment" | translate }}
+    </a>
   </div>
 </new-environment>
-

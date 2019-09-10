@@ -1,5 +1,7 @@
 import pytest
+import uuid
 from flask import url_for, get_flashed_messages
+from unittest.mock import Mock
 
 from tests.factories import *
 
@@ -424,3 +426,122 @@ def test_delete_environment(client, user_session):
     assert environment.name in message["message"]
     # deletes environment
     assert len(application.environments) == 0
+
+
+def test_create_member(monkeypatch, client, user_session, session):
+    job_mock = Mock()
+    monkeypatch.setattr("atst.jobs.send_mail.delay", job_mock)
+    user = UserFactory.create()
+    application = ApplicationFactory.create(
+        environments=[{"name": "Naboo"}, {"name": "Endor"}]
+    )
+    env = application.environments[0]
+    env_1 = application.environments[1]
+
+    user_session(application.portfolio.owner)
+
+    response = client.post(
+        url_for("applications.create_member", application_id=application.id),
+        data={
+            "user_data-first_name": user.first_name,
+            "user_data-last_name": user.last_name,
+            "user_data-dod_id": user.dod_id,
+            "user_data-email": user.email,
+            "environment_roles-0-environment_id": env.id,
+            "environment_roles-0-role": "Basic Access",
+            "environment_roles-0-environment_name": env.name,
+            "environment_roles-1-environment_id": env_1.id,
+            "environment_roles-1-role": NO_ACCESS,
+            "environment_roles-1-environment_name": env_1.name,
+            "permission_sets-perms_env_mgmt": True,
+            "permission_sets-perms_team_mgmt": True,
+            "permission_sets-perms_del_env": True,
+        },
+    )
+
+    assert response.status_code == 302
+    expected_url = url_for(
+        "applications.settings",
+        application_id=application.id,
+        fragment="application-members",
+        _anchor="application-members",
+        _external=True,
+    )
+    assert response.location == expected_url
+    assert len(application.roles) == 1
+    environment_roles = application.roles[0].environment_roles
+    assert len(environment_roles) == 1
+    assert environment_roles[0].environment == env
+
+    invitation = (
+        session.query(ApplicationInvitation).filter_by(dod_id=user.dod_id).one()
+    )
+    assert invitation.role.application == application
+
+    assert job_mock.called
+
+
+def test_remove_member_success(client, user_session):
+    user = UserFactory.create()
+    application = ApplicationFactory.create()
+    application_role = ApplicationRoleFactory.create(application=application, user=user)
+
+    user_session(application.portfolio.owner)
+
+    response = client.post(
+        url_for(
+            "applications.remove_member",
+            application_id=application.id,
+            application_role_id=application_role.id,
+        )
+    )
+
+    assert response.status_code == 302
+    assert response.location == url_for(
+        "applications.settings",
+        _anchor="application-members",
+        _external=True,
+        application_id=application.id,
+        fragment="application-members",
+    )
+
+
+def test_remove_new_member_success(client, user_session):
+    application = ApplicationFactory.create()
+    application_role = ApplicationRoleFactory.create(application=application, user=None)
+
+    user_session(application.portfolio.owner)
+
+    response = client.post(
+        url_for(
+            "applications.remove_member",
+            application_id=application.id,
+            application_role_id=application_role.id,
+        )
+    )
+
+    assert response.status_code == 302
+    assert response.location == url_for(
+        "applications.settings",
+        _anchor="application-members",
+        _external=True,
+        application_id=application.id,
+        fragment="application-members",
+    )
+
+
+def test_remove_member_failure(client, user_session):
+    user = UserFactory.create()
+    application = ApplicationFactory.create()
+
+    user_session(application.portfolio.owner)
+
+    response = client.post(
+        url_for(
+            "applications.remove_member",
+            application_id=application.id,
+            application_role_id=uuid.uuid4(),
+        )
+    )
+
+    assert response.status_code == 404

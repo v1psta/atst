@@ -139,6 +139,9 @@
     }
 
     table {
+      margin: 0;
+      width: 100%;
+
       thead {
         th:first-child {
           padding-left: 3 * $gap;
@@ -282,6 +285,13 @@
   .application-content {
     .subheading {
       @include subheading;
+      position: relative;
+
+      .icon-link__add {
+        position: absolute;
+        right: 0;
+        top: 0;
+      }
     }
 
     .panel {
@@ -311,6 +321,34 @@
 
     input#delete-application {
       margin-top: $gap * 3;
+    }
+
+    .accordion-table__item-content.form-row {
+      margin-bottom: 0;
+      margin-top: 0;
+      padding-bottom: 0;
+    }
+
+    li.accordion-table__item__expanded {
+      height: auto;
+    }
+
+    .environment-list__item {
+      position: relative;
+      height: 7rem;
+    }
+
+    span.accordion-table__item__toggler.icon-link {
+      font-size: $small-font-size;
+      font-weight: $font-normal;
+      position: absolute;
+      left: -$gap * 1.25;
+      bottom: 0;
+    }
+
+    a.application-list-item__environment__csp_link.icon-link {
+      font-size: $small-font-size;
+      font-weight: $font-normal;
     }
   }
 
