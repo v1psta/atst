@@ -169,6 +169,12 @@ def map_config(config):
         "LIMIT_CONCURRENT_SESSIONS": config.getboolean(
             "default", "LIMIT_CONCURRENT_SESSIONS"
         ),
+        # Store the celery task results in a database table (celery_taskmeta)
+        "CELERY_RESULT_BACKEND": "db+{}".format(config.get("default", "DATABASE_URI")),
+        # Do not automatically delete results (by default, Celery will do this
+        # with a Beat job once a day)
+        "CELERY_RESULT_EXPIRES": 0,
+        "CELERY_RESULT_EXTENDED": True,
     }
 
 

@@ -19,6 +19,8 @@ class Environment(
 
     cloud_id = Column(String)
 
+    job_failures = relationship("EnvironmentJobFailure")
+
     @property
     def users(self):
         return {r.application_role.user for r in self.roles}
