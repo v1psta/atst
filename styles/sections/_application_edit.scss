@@ -35,6 +35,24 @@
     text-align: left;
   }
 
+  .input__inline-fields {
+    padding: $gap * 2;
+    border: 1px solid $color-gray-lighter;
+
+    &.checked {
+      border: 1px solid $color-blue;
+    }
+
+    label {
+      font-weight: $font-bold;
+    }
+
+    p.usa-input__help {
+      margin-bottom: 0;
+      padding-left: 3rem;
+    }
+  }
+
   .form-row {
     margin-top: 0;
 

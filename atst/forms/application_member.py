@@ -29,13 +29,19 @@ class EnvironmentForm(FlaskForm):
 
 class PermissionsForm(FlaskForm):
     perms_env_mgmt = BooleanField(
-        translate("portfolios.applications.members.new.manage_envs"), default=False
+        label="Manage Environments",
+        default=False,
+        description="Add and rename project environments, assign environment access roles to team members."
     )
     perms_team_mgmt = BooleanField(
-        translate("portfolios.applications.members.new.manage_team"), default=False
+        label="Edit Team",
+        default=False,
+        description="Add and remove team members."
     )
     perms_del_env = BooleanField(
-        translate("portfolios.applications.members.new.delete_envs"), default=False
+        label="Delete Application",
+        default=False,
+        description="Delete this application."
     )
 
     @property

@@ -40,10 +40,11 @@
   </div>
 
   <h4>Project Permissions</h4>
-  {{ CheckboxInput(new_member_form.permission_sets.perms_team_mgmt, classes="input__inline-fields") }}
-  {{ CheckboxInput(new_member_form.permission_sets.perms_env_mgmt, classes="input__inline-fields") }}
-  {{ CheckboxInput(new_member_form.permission_sets.perms_del_env, classes="input__inline-fields") }}
-
+  <div class="application-perms">
+    {{ CheckboxInput(new_member_form.permission_sets.perms_team_mgmt, classes="input__inline-fields") }}
+    {{ CheckboxInput(new_member_form.permission_sets.perms_env_mgmt, classes="input__inline-fields") }}
+    {{ CheckboxInput(new_member_form.permission_sets.perms_del_env, classes="input__inline-fields") }}
+  </div>
   <div class="environment-roles-new">
     <h4>Environment Access</h4>
     <hr>
