@@ -3,6 +3,7 @@
 {% from "components/sticky_cta.html" import StickyCTA %}
 
 {% block portfolio_header %}
+  {% include "portfolios/header.html" %}
   {% if application %}
     {{ StickyCTA(text=application.name, return_link_url=url_for('applications.portfolio_applications', portfolio_id=application.portfolio_id), return_link_text="BACK TO APPLICATIONS") }}
   {% endif %}
