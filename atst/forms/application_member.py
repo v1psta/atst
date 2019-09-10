@@ -29,13 +29,25 @@ class EnvironmentForm(FlaskForm):
 
 class PermissionsForm(FlaskForm):
     perms_env_mgmt = BooleanField(
-        translate("portfolios.applications.members.new.manage_envs"), default=False
+        translate("portfolios.applications.members.form.env_mgmt.label"),
+        default=False,
+        description=translate(
+            "portfolios.applications.members.form.env_mgmt.description"
+        ),
     )
     perms_team_mgmt = BooleanField(
-        translate("portfolios.applications.members.new.manage_team"), default=False
+        translate("portfolios.applications.members.form.team_mgmt.label"),
+        default=False,
+        description=translate(
+            "portfolios.applications.members.form.team_mgmt.description"
+        ),
     )
     perms_del_env = BooleanField(
-        translate("portfolios.applications.members.new.delete_envs"), default=False
+        translate("portfolios.applications.members.form.del_env.label"),
+        default=False,
+        description=translate(
+            "portfolios.applications.members.form.del_env.description"
+        ),
     )
 
     @property

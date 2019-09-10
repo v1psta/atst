@@ -10,7 +10,7 @@
     v-bind:initial-checked='{{ field.data|string|lower }}'
     >
     <div>
-      <div class='usa-input {{ classes }} {% if field.errors %}usa-input--error{% endif %}'>
+      <div class='usa-input {{ classes }} {% if field.errors %}usa-input--error{% endif %}' v-bind:class="[{ 'checked': isChecked }]">
 
         <fieldset data-ally-disabled="true" v-on:change="onInput" class="usa-input__choices {% if inline %}usa-input__choices--inline{% endif %}">
           <legend>
@@ -25,9 +25,6 @@
           </legend>
         </fieldset>
       </div>
-      {% if caller %}
-        {{ caller() }}
-      {% endif %}
     </div>
   </checkboxinput>
 {%- endmacro %}

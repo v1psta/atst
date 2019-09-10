@@ -57,6 +57,7 @@ common:
   next: Next
   'yes': 'Yes'
   'no': 'No'
+  previous: Previous
   response_label: Response required
   save: Save
   save_changes: Save Changes
@@ -336,6 +337,21 @@ portfolios:
       add_to_environment: Add to existing environment
     team_text: Team
     members:
+      form:
+        env_mgmt:
+          label: Manage Environments
+          description: Add and rename project environments, assign environment access roles to team members.
+        team_mgmt:
+          label: Edit Team
+          description: Add and remove team members.
+        del_env:
+          label: Delete Application
+          description: Delete this application.
+        env_access: Environment Access
+        next_button: "Next: Permissions"
+        project_perms: Project Permissions
+        step_2_title: Set Permissions and Roles
+        add_member: Add Member
       new:
         assign_roles: Assign Member Environments and Roles
         learn_more: Learn more about these roles

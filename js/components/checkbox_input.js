@@ -1,12 +1,7 @@
 import { emitEvent } from '../lib/emitters'
-import nestedcheckboxinput from './nested_checkbox_input'
 
 export default {
   name: 'checkboxinput',
-
-  components: {
-    nestedcheckboxinput,
-  },
 
   props: {
     name: String,
