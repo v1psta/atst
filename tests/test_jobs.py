@@ -1,27 +1,19 @@
 import pendulum
 import pytest
-
-from atst.jobs import RecordEnvironmentFailure, RecordEnvironmentRoleFailure
-from tests.factories import EnvironmentFactory, EnvironmentRoleFactory, UserFactory
 from uuid import uuid4
 from unittest.mock import Mock
 
 from atst.models import Environment
-from tests.factories import (
-    UserFactory,
-    PortfolioFactory,
-    CLINFactory,
-    TaskOrderFactory,
-    EnvironmentFactory
-)
 from atst.domain.csp.cloud import MockCloudProvider
 from atst.jobs import (
+    RecordEnvironmentFailure,
+    RecordEnvironmentRoleFailure,
     do_create_environment,
     do_create_atat_admin_user,
     do_create_environment_baseline,
-    environments_to_create,
 )
-from atst.models import Environment
+from tests.factories import EnvironmentFactory, EnvironmentRoleFactory, UserFactory
+
 
 def test_environment_job_failure(celery_app, celery_worker):
     @celery_app.task(bind=True, base=RecordEnvironmentFailure)
@@ -57,6 +49,7 @@ def test_environment_role_job_failure(celery_app, celery_worker):
     assert role.job_failures
     job_failure = role.job_failures[0]
     assert job_failure.task == task
+
 
 now = pendulum.now()
 yesterday = now.subtract(days=1)

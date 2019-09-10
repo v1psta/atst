@@ -6,7 +6,6 @@ from atst.models import EnvironmentJobFailure, EnvironmentRoleJobFailure
 from atst.domain.csp.cloud import CloudProviderInterface, GeneralCSPException
 from atst.domain.environments import Environments
 from atst.domain.users import Users
-from atst.models import Application, Portfolio, TaskOrder, CLIN, Environment
 
 
 class RecordEnvironmentFailure(celery.Task):
