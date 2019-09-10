@@ -4,7 +4,7 @@
 
 set -e
 
-WORKER="pipenv run celery -A celery_worker.celery worker --loglevel=info"
+WORKER="pipenv run celery -A celery_worker.celery worker --loglevel=info -B"
 
 if [[ `command -v entr` ]]; then
   find atst | entr -r $WORKER
