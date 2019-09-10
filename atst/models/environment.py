@@ -1,6 +1,7 @@
 from sqlalchemy import Column, ForeignKey, String
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import JSONB
+from enum import Enum
 
 from atst.models import Base
 from atst.models.types import Id
@@ -30,6 +31,10 @@ class Environment(
 
     job_failures = relationship("EnvironmentJobFailure")
 
+    class ProvisioningStatus(Enum):
+        PENDING = "pending"
+        COMPLETED = "completed"
+
     @property
     def users(self):
         return {r.application_role.user for r in self.roles}
@@ -49,6 +54,17 @@ class Environment(
     @property
     def portfolio_id(self):
         return self.application.portfolio_id
+
+    @property
+    def provisioning_status(self) -> ProvisioningStatus:
+        if (
+            self.cloud_id is None
+            or self.root_user_info is None
+            or self.baseline_info is None
+        ):
+            return self.ProvisioningStatus.PENDING
+        else:
+            return self.ProvisioningStatus.COMPLETED
 
     def __repr__(self):
         return "<Environment(name='{}', num_users='{}', application='{}', portfolio='{}', id='{}')>".format(
