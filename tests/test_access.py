@@ -541,7 +541,7 @@ def test_task_orders_new_get_routes(get_url_assert_status):
     task_order = TaskOrderFactory.create(
         creator=owner,
         portfolio=portfolio,
-        create_clins=["1234567890123456789012345678901234567890123"],
+        create_clins=[{"number": "1234567890123456789012345678901234567890123"}],
     )
 
     for route in get_routes:

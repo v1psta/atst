@@ -1,4 +1,5 @@
 from flask import current_app as app
+import pendulum
 
 from atst.database import db
 from atst.queue import celery
@@ -121,15 +122,23 @@ def create_environment_baseline(self, environment_id=None):
 
 @celery.task(bind=True)
 def dispatch_create_environment(self):
-    for environment_id in Environments.get_environments_pending_creation(
-        pendulum.now()
-    ):
-        create_environment.delay(environment_id=environment_id, atat_user_id="TODO")
+    for environment in Environments.get_environments_pending_creation(pendulum.now()):
+        create_environment.delay(
+            environment_id=environment.id, atat_user_id=environment.creator_id
+        )
 
 
 @celery.task(bind=True)
 def dispatch_create_atat_admin_user(self):
-    for environment_id in Environments.get_environments_pending_atat_user_creation(
+    for environment in Environments.get_environments_pending_atat_user_creation(
         pendulum.now()
     ):
-        create_atat_admin_user.delay(environment_id=environment_id, atat_user_id="TODO")
+        create_atat_admin_user.delay(environment_id=environment.id)
+
+
+@celery.task(bind=True)
+def dispatch_create_environment_baseline(self):
+    for environment in Environments.get_environments_pending_baseline_creation(
+        pendulum.now()
+    ):
+        create_environment_baseline.delay(environment_id=environment.id)

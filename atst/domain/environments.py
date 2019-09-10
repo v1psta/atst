@@ -1,5 +1,7 @@
 from sqlalchemy import text
 from sqlalchemy.orm.exc import NoResultFound
+from sqlalchemy.orm import load_only
+from typing import List
 
 from atst.database import db
 from atst.models import Environment, Application, Portfolio, TaskOrder, CLIN
@@ -107,35 +109,44 @@ class Environments(object):
     @classmethod
     def base_provision_query(cls, now):
         return (
-            db.session.query(Environment.id)
+            db.session.query(Environment)
             .join(Application)
             .join(Portfolio)
             .join(TaskOrder)
             .join(CLIN)
             .filter(CLIN.start_date <= now)
             .filter(CLIN.end_date > now)
+            # select only these columns
+            .options(load_only("id", "creator_id"))
         )
 
     @classmethod
-    def get_environments_pending_creation(cls, now) -> [str]:
-        query = cls.base_provision_query(now).filter(Environment.cloud_id == None)
-        return [environment_id for (environment_id,) in query.all()]
+    def get_environments_pending_creation(cls, now) -> List[Environment]:
+        """
+        Any environment with an active CLIN that doesn't yet have a `cloud_id`.
+        """
+        return cls.base_provision_query(now).filter(Environment.cloud_id == None).all()
 
     @classmethod
-    def get_environments_pending_atat_user_creation(cls, now) -> [str]:
-        query = (
+    def get_environments_pending_atat_user_creation(cls, now) -> List[Environment]:
+        """
+        Any environment with an active CLIN that has a cloud_id but no `root_user_info`.
+        """
+        return (
             cls.base_provision_query(now)
             .filter(Environment.cloud_id != None)
             .filter(Environment.root_user_info == text("'null'"))
-        )
-        return [environment_id for (environment_id,) in query.all()]
+        ).all()
 
     @classmethod
-    def get_environments_pending_baseline_creation(cls, now) -> [str]:
-        query = (
+    def get_environments_pending_baseline_creation(cls, now) -> List[Environment]:
+        """
+        Any environment with an active CLIN that has a `cloud_id` and `root_user_info`
+        but no `baseline_info`.
+        """
+        return (
             cls.base_provision_query(now)
             .filter(Environment.cloud_id != None)
             .filter(Environment.root_user_info != text("'null'"))
             .filter(Environment.baseline_info == text("'null'"))
-        )
-        return [environment_id for (environment_id,) in query.all()]
+        ).all()
