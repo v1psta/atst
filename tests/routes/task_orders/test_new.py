@@ -29,7 +29,7 @@ def completed_task_order():
     task_order = TaskOrderFactory.create(
         creator=portfolio.owner,
         portfolio=portfolio,
-        create_clins=["1234567890123456789012345678901234567890123"],
+        create_clins=[{"number": "1234567890123456789012345678901234567890123"}],
     )
 
     return task_order

@@ -163,12 +163,12 @@ class EnvQueryTest:
                 }
             ],
             task_orders=[
-                TaskOrderFactory.create(
-                    clins=[
-                        CLINFactory.create(start_date=start_date, end_date=end_date)
+                {
+                    "create_clins": [
+                        {"start_date": start_date, "end_date": end_date}
                         for (start_date, end_date) in start_and_end_dates
                     ]
-                )
+                }
             ],
         )
 

@@ -118,12 +118,18 @@ class PortfolioFactory(Base):
         with_applications = kwargs.pop("applications", [])
         owner = kwargs.pop("owner", UserFactory.create())
         members = kwargs.pop("members", [])
+        with_task_orders = kwargs.pop("task_orders", [])
 
         portfolio = super()._create(model_class, *args, **kwargs)
 
         applications = [
             ApplicationFactory.create(portfolio=portfolio, **p)
             for p in with_applications
+        ]
+
+        task_orders = [
+            TaskOrderFactory.create(portfolio=portfolio, **to)
+            for to in with_task_orders
         ]
 
         PortfolioRoleFactory.create(
@@ -154,6 +160,7 @@ class PortfolioFactory(Base):
             )
 
         portfolio.applications = applications
+        portfolio.task_orders = task_orders
         return portfolio
 
 
@@ -279,7 +286,7 @@ class TaskOrderFactory(Base):
         task_order = super()._create(model_class, *args, **kwargs)
 
         for clin in create_clins:
-            CLINFactory.create(task_order=task_order, number=clin)
+            CLINFactory.create(task_order=task_order, **clin)
 
         return task_order
 
