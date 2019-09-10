@@ -21,6 +21,7 @@ class NewForm(FlaskForm):
         translate("forms.new_member.phone_number_label"),
         validators=[Optional(), PhoneNumber()],
     )
+    phone_ext = StringField("Extension")
     dod_id = StringField(
         translate("forms.new_member.dod_id_label"),
         validators=[Required(), Length(min=10), IsNumber()],

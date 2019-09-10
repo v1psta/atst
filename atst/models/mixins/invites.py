@@ -49,6 +49,7 @@ class InvitesMixin(object):
     first_name = Column(String)
     last_name = Column(String)
     phone_number = Column(String)
+    phone_ext = Column(String)
 
     def __repr__(self):
         role_id = self.role.id if self.role else None
