@@ -71,3 +71,43 @@ class NewForm(BaseForm):
     user_data = FormField(BaseNewMemberForm)
     permission_sets = FormField(PermissionsForm)
     environment_roles = FieldList(FormField(EnvironmentForm))
+
+
+class UpdatePermissionsForm(FlaskForm):
+    perms_team_mgmt = SelectField(
+        translate("portfolios.applications.members.new.manage_team"),
+        choices=[
+            (PermissionSets.VIEW_APPLICATION, "View"),
+            (PermissionSets.EDIT_APPLICATION_TEAM, "Edit"),
+        ],
+    )
+    perms_env_mgmt = SelectField(
+        translate("portfolios.applications.members.new.manage_envs"),
+        choices=[
+            (PermissionSets.VIEW_APPLICATION, "View"),
+            (PermissionSets.EDIT_APPLICATION_ENVIRONMENTS, "Edit"),
+        ],
+    )
+    perms_del_env = SelectField(
+        choices=[
+            (PermissionSets.VIEW_APPLICATION, "No"),
+            (PermissionSets.DELETE_APPLICATION_ENVIRONMENTS, "Yes"),
+        ]
+    )
+
+    @property
+    def data(self):
+        _data = super().data
+        _data.pop("csrf_token", None)
+        permission_sets = []
+        for field in _data:
+            if _data[field] is not None:
+                permission_sets.append(_data[field])
+
+        return permission_sets
+
+
+class UpdateMemberForm(BaseForm):
+    member_role_id = HiddenField()
+    permission_sets = FormField(UpdatePermissionsForm)
+    environment_roles = FieldList(FormField(EnvironmentForm))

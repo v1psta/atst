@@ -1,5 +1,6 @@
 from wtforms.validators import ValidationError
 
+from atst.domain.permission_sets import PermissionSets
 from atst.forms.data import ENV_ROLES, ENV_ROLE_NO_ACCESS as NO_ACCESS
 from atst.forms.application_member import *
 
@@ -34,3 +35,21 @@ def test_environment_form_invalid():
     }
     form = EnvironmentForm(data=form_data)
     assert not form.validate()
+
+
+def test_update_member_form():
+    form_data = {
+        "member_role_id": 123,
+        "permission_sets": {
+            "perms_team_mgmt": PermissionSets.EDIT_APPLICATION_TEAM,
+            "perms_env_mgmt": PermissionSets.VIEW_APPLICATION,
+            "perms_del_env": PermissionSets.VIEW_APPLICATION,
+        },
+        "environment_roles": {
+            "environment_id": 123,
+            "environment_name": "testing",
+            "role": ENV_ROLES[0][0],
+        },
+    }
+    form = UpdateMemberForm(data=form_data)
+    assert form.validate()
