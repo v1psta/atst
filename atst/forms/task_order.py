@@ -103,9 +103,13 @@ class CLINForm(FlaskForm):
             )
             valid = False
 
-        if self.total_amount.data < self.obligated_amount.data:
+        if (
+            self.total_amount.data
+            and self.obligated_amount.data
+            and self.total_amount.data < self.obligated_amount.data
+        ):
             self.obligated_amount.errors.append(
-                translate("forms.task_order.obligated_amount")
+                translate("forms.task_order.obligated_amount_error")
             )
             valid = False
 
