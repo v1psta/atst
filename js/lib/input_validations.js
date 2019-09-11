@@ -34,6 +34,13 @@ export default {
     unmask: ['$', ','],
     validationError: 'Please enter a dollar amount',
   },
+  clinDollars: {
+    mask: createNumberMask({ prefix: '$', allowDecimal: true }),
+    match: /^-?\d+\.?\d*$/,
+    unmask: ['$', ','],
+    validationError:
+      'Please enter a dollar amount between $0.00 and $1,000,000,000.00',
+  },
   email: {
     mask: emailMask,
     match: /^.+@[^.].*\.[a-zA-Z]{2,10}$/,
