@@ -10,6 +10,7 @@ from wtforms.fields.html5 import DateField
 from wtforms.validators import Required, Optional, Length, NumberRange
 from flask_wtf import FlaskForm
 from datetime import datetime
+from numbers import Number
 
 from .data import JEDI_CLIN_TYPES
 from .fields import SelectField
@@ -50,19 +51,21 @@ class CLINForm(FlaskForm):
     total_amount = DecimalField(
         label=translate("task_orders.form.total_funds_label"),
         validators=[
-            Optional(),
             NumberRange(
-                0, 1000000000, "dollar amount must be from $0.00 to $1,000,000,000.00"
-            ),
+                0,
+                1000000000,
+                translate("forms.task_order.clin_funding_errors.funding_range_error"),
+            )
         ],
     )
     obligated_amount = DecimalField(
         label=translate("task_orders.form.obligated_funds_label"),
         validators=[
-            Optional(),
             NumberRange(
-                0, 1000000000, "dollar amount must be from $0.00 to $1,000,000,000.00"
-            ),
+                0,
+                1000000000,
+                translate("forms.task_order.clin_funding_errors.funding_range_error"),
+            )
         ],
     )
 
@@ -104,12 +107,12 @@ class CLINForm(FlaskForm):
             valid = False
 
         if (
-            self.total_amount.data
-            and self.obligated_amount.data
+            isinstance(self.total_amount.data, Number)
+            and isinstance(self.obligated_amount.data, Number)
             and self.total_amount.data < self.obligated_amount.data
         ):
             self.obligated_amount.errors.append(
-                translate("forms.task_order.obligated_amount_error")
+                translate("forms.task_order.clin_funding_errors.obligated_amount_error")
             )
             valid = False
 
