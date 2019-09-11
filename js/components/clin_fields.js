@@ -252,7 +252,17 @@ export default {
     },
     percentObligated: function() {
       const percentage = (this.obligatedAmount / this.totalAmount) * 100
-      return !!percentage ? `${percentage.toFixed(1)}%` : '0%'
+      if (!!percentage) {
+        if (percentage > 0 && percentage < 1) {
+          return '<1%'
+        } else if (percentage > 99 && percentage < 100) {
+          return '>99%'
+        } else {
+          return `${percentage.toFixed(0)}%`
+        }
+      } else {
+        return '0%'
+      }
     },
 
     removeModalId: function() {
