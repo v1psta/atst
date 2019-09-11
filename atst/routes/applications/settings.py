@@ -8,7 +8,6 @@ from atst.domain.application_roles import ApplicationRoles
 from atst.domain.audit_log import AuditLog
 from atst.domain.common import Paginator
 from atst.domain.environment_roles import EnvironmentRoles
-from atst.forms.app_settings import AppEnvRolesForm
 from atst.forms.application import ApplicationForm, EditEnvironmentForm
 from atst.forms.application_member import NewForm as NewMemberForm
 from atst.forms.data import ENV_ROLE_NO_ACCESS as NO_ACCESS
@@ -139,7 +138,6 @@ def get_new_member_form(application):
 
 def render_settings_page(application, **kwargs):
     environments_obj = get_environments_obj_for_app(application=application)
-    members_form = AppEnvRolesForm(data=data_for_app_env_roles_form(application))
     new_env_form = EditEnvironmentForm()
     pagination_opts = Paginator.get_pagination_opts(http_request)
     audit_events = AuditLog.get_application_events(application, pagination_opts)
@@ -155,7 +153,6 @@ def render_settings_page(application, **kwargs):
         "portfolios/applications/settings.html",
         application=application,
         environments_obj=environments_obj,
-        members_form=members_form,
         new_env_form=new_env_form,
         audit_events=audit_events,
         new_member_form=new_member_form,
@@ -263,47 +260,6 @@ def update(application_id):
         )
     else:
         return render_settings_page(application=application, application_form=form)
-
-
-@applications_bp.route("/environments/<environment_id>/roles", methods=["POST"])
-@user_can(Permissions.ASSIGN_ENVIRONMENT_MEMBER, message="update environment roles")
-def update_env_roles(environment_id):
-    environment = Environments.get(environment_id)
-    application = environment.application
-    form = AppEnvRolesForm(formdata=http_request.form)
-
-    if form.validate():
-        env_data = []
-        for env in form.envs.data:
-            if env["env_id"] == str(environment.id):
-                for role in env["team_roles"]:
-                    env_data = env_data + role["members"]
-
-        Environments.update_env_roles_by_environment(
-            environment_id=environment_id, team_roles=env_data
-        )
-
-        flash("application_environment_members_updated")
-
-        return redirect(
-            url_for(
-                "applications.settings",
-                application_id=application.id,
-                fragment="application-environments",
-                _anchor="application-environments",
-                active_toggler=environment.id,
-                active_toggler_section="members",
-            )
-        )
-    else:
-        return (
-            render_settings_page(
-                application=application,
-                active_toggler=environment.id,
-                active_toggler_section="edit",
-            ),
-            400,
-        )
 
 
 @applications_bp.route("/applications/<application_id>/delete", methods=["POST"])

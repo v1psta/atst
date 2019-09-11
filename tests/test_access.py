@@ -235,43 +235,6 @@ def test_applications_create_access(post_url_assert_status):
     post_url_assert_status(rando, url, 404)
 
 
-# applications.update_env_roles
-def test_applications_update_team_env_roles(post_url_assert_status):
-    ccpo = UserFactory.create_ccpo()
-    owner = user_with()
-    app_admin = user_with()
-    rando = user_with()
-    app_member = UserFactory.create()
-
-    portfolio = PortfolioFactory.create(
-        owner=owner, applications=[{"name": "mos eisley"}]
-    )
-    application = portfolio.applications[0]
-    environment = EnvironmentFactory.create(application=application)
-
-    ApplicationRoleFactory.create(
-        user=app_admin,
-        application=application,
-        permission_sets=PermissionSets.get_many(
-            [
-                PermissionSets.VIEW_APPLICATION,
-                PermissionSets.EDIT_APPLICATION_ENVIRONMENTS,
-                PermissionSets.EDIT_APPLICATION_TEAM,
-                PermissionSets.DELETE_APPLICATION_ENVIRONMENTS,
-            ]
-        ),
-    )
-    ApplicationRoleFactory.create(user=app_member, application=application)
-    ApplicationRoleFactory.create(user=ccpo, application=application)
-    ApplicationRoleFactory.create(user=owner, application=application)
-
-    url = url_for("applications.update_env_roles", environment_id=environment.id)
-    post_url_assert_status(ccpo, url, 302)
-    post_url_assert_status(owner, url, 302)
-    post_url_assert_status(app_admin, url, 302)
-    post_url_assert_status(rando, url, 404)
-
-
 # portfolios.invite_member
 def test_portfolios_invite_member_access(post_url_assert_status):
     ccpo = user_with(PermissionSets.EDIT_PORTFOLIO_ADMIN)
