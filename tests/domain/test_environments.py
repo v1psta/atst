@@ -13,19 +13,16 @@ from tests.factories import (
     EnvironmentFactory,
     EnvironmentRoleFactory,
     ApplicationRoleFactory,
-    TaskOrderFactory,
-    CLINFactory,
 )
 
 
-@pytest.mark.skip(reason="Reinstate and update once jobs api is up")
 def test_create_environments():
     application = ApplicationFactory.create()
     environments = Environments.create_many(
         application.portfolio.owner, application, ["Staging", "Production"]
     )
     for env in environments:
-        assert env.cloud_id is not None
+        assert env.cloud_id is None
 
 
 def test_update_env_role():
