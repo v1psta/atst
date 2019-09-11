@@ -55,7 +55,7 @@
 
           <input type='hidden' v-bind:value='rawValue' :name='name' />
           <template v-if='!fundingValid'>
-            <span class='usa-input__message'>Obligated amount must be less than or equal to the total amount</span>
+            <span class='usa-input__message'>{{ "forms.task_order.obligated_amount_error" | translate }}</span>
           </template>
           <template v-else-if='showError'>
             <span class='usa-input__message' v-html='validationError'></span>
