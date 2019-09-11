@@ -28,7 +28,7 @@ spec:
         fsGroup: 101
       containers:
         - name: atst
-          image: 904153757533.dkr.ecr.us-east-2.amazonaws.com/atat:4d14326ba77f1b3287b3c436a2d9be064bf4fba3
+          image: 904153757533.dkr.ecr.us-east-2.amazonaws.com/atat:latest
           resources:
             requests:
                memory: "500Mi"
@@ -139,7 +139,7 @@ spec:
         fsGroup: 101
       containers:
         - name: atst-worker
-          image: 904153757533.dkr.ecr.us-east-2.amazonaws.com/atat:4d14326ba77f1b3287b3c436a2d9be064bf4fba3
+          image: 904153757533.dkr.ecr.us-east-2.amazonaws.com/atat:latest
           args: [
             "/opt/atat/atst/.venv/bin/python",
             "/opt/atat/atst/.venv/bin/celery",

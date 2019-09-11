@@ -1,9 +1,9 @@
 version: 2.1
 
 orbs:
-    aws-ecr: circleci/aws-ecr@4.0.1
+    aws-ecr: circleci/aws-ecr@6.3.0
     aws-eks: circleci/aws-eks@0.1.0
-    azure-acr: circleci/azure-acr@0.1.1
+    azure-acr: circleci/azure-acr@0.1.2
     azure-aks: circleci/azure-aks@0.2.0
     kubernetes: circleci/kubernetes@0.3.0
 
@@ -120,6 +120,21 @@ jobs:
           resource-group: atat
       - migration_apply
 
+  # the azure-acr orb doesn't allow for multiple tags in the
+  # build-and-push-image step, so instead we wrap our own job around it and run
+  # some additional Docker commands
+  azure-build-and-push-image:
+    executor: azure-acr/default
+    steps:
+      - azure-acr/build-and-push-image:
+          extra-build-args: "--build-arg CSP=azure"
+          login-server-name: "${AZURE_SERVER_NAME}"
+          registry-name: pwatat
+          repo: atat
+          tag: "${CIRCLE_SHA1}"
+      - run: "docker tag ${AZURE_SERVER_NAME}/atat:${CIRCLE_SHA1}  ${AZURE_SERVER_NAME}/atat:latest"
+      - run: "docker push ${AZURE_SERVER_NAME}/atat:latest"
+
 workflows:
   version: 2
   run-tests:
@@ -128,12 +143,7 @@ workflows:
       - test:
           requires:
             - app_setup
-      - azure-acr/build_and_push_image:
-          extra-build-args: "--build-arg CSP=azure"
-          login-server-name: "${AZURE_SERVER_NAME}"
-          registry-name: pwatat
-          repo: atat
-          tag: "${CIRCLE_SHA1}"
+      - azure-build-and-push-image:
           requires:
             - test
           filters:
@@ -142,7 +152,7 @@ workflows:
                 - master
       - azure-migration:
           requires:
-            - azure-acr/build_and_push_image
+            - azure-build-and-push-image
           filters:
             branches:
               only:
@@ -175,10 +185,10 @@ workflows:
             branches:
               only:
                 - master
-      - aws-ecr/build_and_push_image:
+      - aws-ecr/build-and-push-image:
           extra-build-args: "--build-arg CSP=aws"
           repo: atat
-          tag: "${CIRCLE_SHA1}"
+          tag: "${CIRCLE_SHA1},latest"
           requires:
             - test
           filters:
@@ -187,7 +197,7 @@ workflows:
                 - master
       - aws-migration:
           requires:
-            - aws-ecr/build_and_push_image
+            - aws-ecr/build-and-push-image
           filters:
             branches:
               only:

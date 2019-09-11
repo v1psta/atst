@@ -12,7 +12,7 @@ spec:
           restartPolicy: OnFailure
           containers:
           - name: crls
-            image: pwatat.azurecr.io/atat:8f1c8b5633ca70168837c885010e7d66d93562dc
+            image: pwatat.azurecr.io/atat:latest
             command: [
               "/bin/sh", "-c"
             ]
