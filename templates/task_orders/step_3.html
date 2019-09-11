@@ -5,6 +5,7 @@
 {% from 'components/icon.html' import Icon %}
 {% from 'components/options_input.html' import OptionsInput %}
 {% from 'components/text_input.html' import TextInput %}
+{% from "components/clin_dollar_amount.html" import CLINDollarAmount %}
 {% from 'task_orders/form_header.html' import TOFormStepHeader %}
 
 {% set action = url_for("task_orders.submit_form_step_three_add_clins", task_order_id=task_order_id) %}
@@ -117,56 +118,15 @@
               {{ 'task_orders.form.clin_funding' | translate }}
           </div>
         </div>
+        
         {% if fields %}
-          <div class="form-row">
-            <div class="form-col">
-              {{ TextInput(fields.obligated_amount, validation='dollars', watch=True, optional=False) }}
-            </div>
-          </div>
+        {{ CLINDollarAmount("total", field=fields.total_amount) }}
+        {{ CLINDollarAmount("obligated", field=fields.obligated_amount, funding_validation=True) }}
         {% else %}
-          <div class="form-row">
-            <div class="form-col">
-              <textinput
-                v-cloak
-                inline-template
-                :name="'clins-' + clinIndex + '-obligated_amount'"
-                validation="dollars"
-                :watch='true'>
-                <div v-bind:class="['usa-input usa-input--validation--' + validation, { 'usa-input--error': showError, 'usa-input--success': showValid, 'usa-input--validation--paragraph': paragraph, 'no-max-width': noMaxWidth }]">
-                  <label :for="name">
-                    <div class="usa-input__title">{{ 'task_orders.form.obligated_funds_label' | translate }}</div>
-                    <span v-show='showError'>{{ Icon('alert',classes="icon-validation") }}</span>
-                    <span v-show='showValid'>{{ Icon('ok',classes="icon-validation") }}</span>
-                  </label>
-
-                  <masked-input
-                    v-on:input='onInput'
-                    v-on:blur='onBlur'
-                    v-on:change='onChange'
-                    v-bind:value='value'
-                    v-bind:mask='mask'
-                    v-bind:pipe='pipe'
-                    v-bind:keep-char-positions='keepCharPositions'
-                    v-bind:aria-invalid='showError'
-                    v-bind:show-mask='false'
-                    type='text'
-                    :id='name'
-                    ref='input'>
-                  </masked-input>
-
-                  <input type='hidden' v-bind:value='rawValue' :name='name' />
-
-                  <template v-if='showError'>
-                    <span class='usa-input__message' v-html='validationError'></span>
-                  </template>
-                  <template v-else>
-                    <span class='usa-input__message'></span>
-                  </template>
-                </div>
-              </textinput>
-            </div>
-          </div>
+        {{ CLINDollarAmount("total") }}
+        {{ CLINDollarAmount("obligated", funding_validation=True) }}
         {% endif %}
+        
         <hr>
         <div class="form-row">
           <div class="h4 clin-card__title">

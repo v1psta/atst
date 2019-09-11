@@ -1,0 +1,70 @@
+{% from 'components/icon.html' import Icon %}
+
+{% macro CLINDollarAmount(type, field=None, funding_validation=False) -%} 
+ <div class="form-row">
+    <div class="form-col">
+      <clindollaramount
+        v-cloak
+        inline-template
+        {% if funding_validation %}
+          :funding-valid='fundingValid'
+        {% else %}
+          :funding-valid='true'
+        {% endif %}
+        {% if field %}
+          name='{{ field.name }}'
+          {% if field.data is not none %}initial-value='{{ field.data }}'{% endif %}
+          {% if field.errors %}v-bind:initial-errors='{{ field.errors | list }}'{% endif %}
+          key='{{ field.name }}'
+        {% else %}
+          :name="'clins-' + clinIndex + '-' + '{{ type }}' + '_amount'"
+          :key="'clins-' + clinIndex + '-' + '{{ type }}' + '_amount'"
+        {% endif  %}
+
+        validation="clinDollars"
+        :watch='true'>
+        <div v-bind:class="['usa-input usa-input--validation--dollars', { 'usa-input--error': showError, 'usa-input--success': showValid}]">
+          {% if field %}
+          <label for='{{ field.name }}'> 
+          {% else %}
+          <label :for='name'>
+          {% endif  %}
+
+            {% if type=="obligated" %} 
+            <div class="usa-input__title">{{ 'task_orders.form.obligated_funds_label' | translate }}</div>
+            {% else %}
+            <div class="usa-input__title">{{ 'task_orders.form.total_funds_label' | translate }}</div>
+            {% endif %}
+            <span v-show='showError'>{{ Icon('alert',classes="icon-validation") }}</span>
+            <span v-show='showValid'>{{ Icon('ok',classes="icon-validation") }}</span>
+          </label>
+
+          <masked-input
+            v-on:input='onInput'
+            v-on:blur='onBlur'
+            v-on:change='onChange'
+            v-bind:value='value'
+            v-bind:mask='mask'
+            v-bind:pipe='pipe'
+            v-bind:keep-char-positions='keepCharPositions'
+            v-bind:aria-invalid='showError'
+            type='text'
+            :id='name'
+            ref='input'>
+          </masked-input>
+
+          <input type='hidden' v-bind:value='rawValue' :name='name' />
+          <template v-if='!fundingValid'>
+            <span class='usa-input__message'>Obligated amount must be less than or equal to the total amount</span>
+          </template>
+          <template v-else-if='showError'>
+            <span class='usa-input__message' v-html='validationError'></span>
+          </template>
+          <template v-else>
+            <span class='usa-input__message'></span>
+          </template>
+        </div>
+      </clindollaramount>
+    </div>
+  </div>
+  {%- endmacro %}
