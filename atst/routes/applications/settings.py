@@ -9,7 +9,7 @@ from atst.domain.audit_log import AuditLog
 from atst.domain.common import Paginator
 from atst.domain.environment_roles import EnvironmentRoles
 from atst.forms.application import ApplicationForm, EditEnvironmentForm
-from atst.forms.application_member import NewForm as MemberForm, UpdateMemberForm
+from atst.forms.application_member import NewForm as MemberForm, UpdateMemberForm, PermissionsForm
 from atst.forms.data import ENV_ROLE_NO_ACCESS as NO_ACCESS
 from atst.domain.authz.decorator import user_can_access_decorator as user_can
 from atst.models.environment_role import CSPRole
@@ -86,29 +86,14 @@ def data_for_app_env_roles_form(application):
     return {"envs": nested_data}
 
 
-def get_form_permission_value(member, edit_perm_set):
-    if member.has_permission_set(edit_perm_set):
-        return edit_perm_set
-    else:
-        return PermissionSets.VIEW_APPLICATION
-
-
 def get_members_data(application):
     members_data = []
     for member in application.members:
-        perms_team_mgmt = get_form_permission_value(
-            member, PermissionSets.EDIT_APPLICATION_TEAM
-        )
-        perms_env_mgmt = get_form_permission_value(
-            member, PermissionSets.EDIT_APPLICATION_ENVIRONMENTS
-        )
-        perms_del_env = get_form_permission_value(
-            member, PermissionSets.DELETE_APPLICATION_ENVIRONMENTS
-        )
         permission_sets = {
-            "perms_team_mgmt": perms_team_mgmt,
-            "perms_env_mgmt": perms_env_mgmt,
-            "perms_del_env": perms_del_env,
+            "perms_team_mgmt": "True",
+            # "perms_team_mgmt": bool(member.has_permission_set(PermissionSets.EDIT_APPLICATION_TEAM)),
+            "perms_env_mgmt": bool(member.has_permission_set(PermissionSets.EDIT_APPLICATION_ENVIRONMENTS)),
+            "perms_del_env": bool(member.has_permission_set(PermissionSets.DELETE_APPLICATION_ENVIRONMENTS)),
         }
         roles = EnvironmentRoles.get_for_application_member(member.id)
         environment_roles = [
@@ -121,17 +106,16 @@ def get_members_data(application):
         ]
         form_data = {
             "environment_roles": environment_roles,
-            "permission_sets": { "perms_env_mgmt": 'selected' },
+            "permission_sets": permission_sets,
         }
-        # ['edit_application_environments', 'edit_application_team', 'delete_application_environments']
-        # ['edit_application_team']
-
-        # {'perms_team_mgmt': 'edit_application_team', 'perms_env_mgmt': 'view_application', 'perms_del_env': 'view_application'}
-        form = UpdateMemberForm(data=form_data)
+        perms_form = PermissionsForm(data=permission_sets)
+        form = UpdateMemberForm(environment_roles=environment_roles)
+        form.permission_sets = perms_form
         members_data.append(
             {
                 "role_id": member.id,
                 "user_name": member.user_name,
+                # remove these keys and use form
                 "permission_sets": permission_sets,
                 "environment_roles": environment_roles,
                 "role_status": member.status.value,
