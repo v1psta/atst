@@ -108,6 +108,5 @@ class UpdatePermissionsForm(FlaskForm):
 
 
 class UpdateMemberForm(BaseForm):
-    member_role_id = HiddenField()
-    permission_sets = FormField(UpdatePermissionsForm)
+    permission_sets = FormField(PermissionsForm)
     environment_roles = FieldList(FormField(EnvironmentForm))
