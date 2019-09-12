@@ -18,6 +18,8 @@ from .forms import BaseForm
 from atst.utils.localization import translate
 from flask import current_app as app
 
+MAX_CLIN_AMOUNT = 1000000000
+
 
 def coerce_enum(enum_inst):
     if getattr(enum_inst, "value", None):
@@ -53,7 +55,7 @@ class CLINForm(FlaskForm):
         validators=[
             NumberRange(
                 0,
-                1000000000,
+                MAX_CLIN_AMOUNT,
                 translate("forms.task_order.clin_funding_errors.funding_range_error"),
             )
         ],
@@ -63,7 +65,7 @@ class CLINForm(FlaskForm):
         validators=[
             NumberRange(
                 0,
-                1000000000,
+                MAX_CLIN_AMOUNT,
                 translate("forms.task_order.clin_funding_errors.funding_range_error"),
             )
         ],
