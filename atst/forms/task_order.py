@@ -7,7 +7,7 @@ from wtforms.fields import (
     HiddenField,
 )
 from wtforms.fields.html5 import DateField
-from wtforms.validators import Required, Optional, Length, NumberRange
+from wtforms.validators import Required, Optional, Length, NumberRange, ValidationError
 from flask_wtf import FlaskForm
 from datetime import datetime
 from numbers import Number
@@ -26,6 +26,17 @@ def coerce_enum(enum_inst):
         return enum_inst.value
     else:
         return enum_inst
+
+
+def validate_funding(form, field):
+    if (
+        isinstance(form.total_amount.data, Number)
+        and isinstance(field.data, Number)
+        and form.total_amount.data < field.data
+    ):
+        raise ValidationError(
+            translate("forms.task_order.clin_funding_errors.obligated_amount_error")
+        )
 
 
 class CLINForm(FlaskForm):
@@ -63,11 +74,12 @@ class CLINForm(FlaskForm):
     obligated_amount = DecimalField(
         label=translate("task_orders.form.obligated_funds_label"),
         validators=[
+            validate_funding,
             NumberRange(
                 0,
                 MAX_CLIN_AMOUNT,
                 translate("forms.task_order.clin_funding_errors.funding_range_error"),
-            )
+            ),
         ],
     )
 
@@ -105,16 +117,6 @@ class CLINForm(FlaskForm):
                     "forms.task_order.pop_errors.end",
                     {"date": contract_end.strftime("%b %d, %Y")},
                 )
-            )
-            valid = False
-
-        if (
-            isinstance(self.total_amount.data, Number)
-            and isinstance(self.obligated_amount.data, Number)
-            and self.total_amount.data < self.obligated_amount.data
-        ):
-            self.obligated_amount.errors.append(
-                translate("forms.task_order.clin_funding_errors.obligated_amount_error")
             )
             valid = False
 
