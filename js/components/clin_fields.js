@@ -68,8 +68,8 @@ export default {
       : undefined
     const fundingValidation =
       this.initialObligated && this.initialTotal
-        ? false
-        : this.initialObligated <= this.initialTotal
+        ? this.initialObligated <= this.initialTotal
+        : true
     const popValidation = !this.initialStartDate ? false : start < end
     const clinNumber = !!this.initialClinNumber
       ? this.initialClinNumber
@@ -118,6 +118,7 @@ export default {
 
   mounted: function() {
     this.$root.$on('field-change', this.handleFieldChange)
+    this.validateFunding()
   },
 
   created: function() {
@@ -130,16 +131,6 @@ export default {
       optional: false,
       name: 'clins-' + this.clinIndex + '-' + POP,
       valid: this.checkPopValid(),
-    })
-    emitEvent('field-mount', this, {
-      optional: false,
-      name: TOTAL_AMOUNT,
-      valid: this.checkFundingValid(),
-    })
-    emitEvent('field-mount', this, {
-      optional: false,
-      name: OBLIGATED_AMOUNT,
-      valid: this.checkFundingValid(),
     })
   },
 
@@ -204,11 +195,6 @@ export default {
       if (this.totalAmount && this.obligatedAmount) {
         this.fundingValid = this.checkFundingValid()
       }
-
-      emitEvent('field-change', this, {
-        name: OBLIGATED_AMOUNT,
-        valid: this.checkFundingValid(),
-      })
     },
 
     handleFieldChange: function(event) {
