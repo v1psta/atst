@@ -363,3 +363,13 @@ def remove_member(application_id, application_role_id):
             fragment="application-members",
         )
     )
+
+
+@applications_bp.route(
+    "/applications/<application_id>/members/<application_role_id>/update",
+    methods=["POST"],
+)
+@user_can(Permissions.EDIT_APPLICATION_MEMBER, message="update application member")
+def update_member(application_id, application_role_id):
+    import ipdb; ipdb.set_trace()
+    pass

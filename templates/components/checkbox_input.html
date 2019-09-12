@@ -18,6 +18,7 @@
           <legend>
             {{ field(id=id, checked=True, **{"v-model": "isChecked"}) }}
             {{ field.label(for=id) | safe }}
+            {{ field.data }}
 
             {% if field.description %}
               <p class='usa-input__help'>
