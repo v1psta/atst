@@ -23,7 +23,7 @@
 
         validation="clinDollars"
         :watch='true'>
-        <div v-bind:class="['usa-input usa-input--validation--dollars', { 'usa-input--error': showError, 'usa-input--success': showValid}]">
+        <div v-bind:class="['usa-input usa-input--validation--dollars', { 'usa-input--error': showFundingError, 'usa-input--success': showFundingValid}]">
           {% if field %}
           <label for='{{ field.name }}'> 
           {% else %}
@@ -35,8 +35,8 @@
             {% else %}
             <div class="usa-input__title">{{ 'task_orders.form.total_funds_label' | translate }}</div>
             {% endif %}
-            <span v-show='showError'>{{ Icon('alert',classes="icon-validation") }}</span>
-            <span v-show='showValid'>{{ Icon('ok',classes="icon-validation") }}</span>
+            <span v-show='showFundingError'>{{ Icon('alert',classes="icon-validation") }}</span>
+            <span v-show='showFundingValid'>{{ Icon('ok',classes="icon-validation") }}</span>
           </label>
 
           <masked-input
