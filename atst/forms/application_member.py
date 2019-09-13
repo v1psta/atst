@@ -51,22 +51,6 @@ class PermissionsForm(Form):
         ),
     )
 
-    @property
-    def data(self):
-        _data = super().data
-        perm_sets = []
-
-        if _data["perms_env_mgmt"]:
-            perm_sets.append(PermissionSets.EDIT_APPLICATION_ENVIRONMENTS)
-
-        if _data["perms_team_mgmt"]:
-            perm_sets.append(PermissionSets.EDIT_APPLICATION_TEAM)
-
-        if _data["perms_del_env"]:
-            perm_sets.append(PermissionSets.DELETE_APPLICATION_ENVIRONMENTS)
-
-        return perm_sets
-
 
 class NewForm(BaseForm):
     user_data = FormField(BaseNewMemberForm)

@@ -131,6 +131,21 @@ def send_application_invitation(invitee_email, inviter_name, token):
     )
 
 
+def perm_sets_obj_to_list(perms_obj):
+    perm_sets = []
+
+    if perms_obj["perms_env_mgmt"]:
+        perm_sets.append(PermissionSets.EDIT_APPLICATION_ENVIRONMENTS)
+
+    if perms_obj["perms_team_mgmt"]:
+        perm_sets.append(PermissionSets.EDIT_APPLICATION_TEAM)
+
+    if perms_obj["perms_del_env"]:
+        perm_sets.append(PermissionSets.DELETE_APPLICATION_ENVIRONMENTS)
+
+    return perm_sets
+
+
 @applications_bp.route("/applications/<application_id>/settings")
 @user_can(Permissions.VIEW_APPLICATION, message="view application edit form")
 def settings(application_id):
@@ -270,7 +285,7 @@ def create_member(application_id):
                 application=application,
                 inviter=g.current_user,
                 user_data=form.user_data.data,
-                permission_sets_names=form.permission_sets.data,
+                permission_sets_names=perm_sets_obj_to_list(form.permission_sets.data),
                 environment_roles_data=form.environment_roles.data,
             )
 
