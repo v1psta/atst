@@ -44,6 +44,7 @@ honcho = "*"
 blinker = "*"
 pytest-mock = "*"
 detect-secrets = "*"
+beautifulsoup4 = "*"
 
 [requires]
 python_version = "3.7.3"

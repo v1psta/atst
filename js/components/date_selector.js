@@ -172,7 +172,7 @@ export default {
     },
 
     _emitChange: function(name, value, valid) {
-      emitEvent('field-change', this, { value, name })
+      emitEvent('field-change', this, { value, name, valid })
     },
   },
 
