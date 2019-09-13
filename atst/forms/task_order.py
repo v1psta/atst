@@ -7,9 +7,10 @@ from wtforms.fields import (
     HiddenField,
 )
 from wtforms.fields.html5 import DateField
-from wtforms.validators import Required, Optional, Length
+from wtforms.validators import Required, Optional, Length, NumberRange, ValidationError
 from flask_wtf import FlaskForm
 from datetime import datetime
+from numbers import Number
 
 from .data import JEDI_CLIN_TYPES
 from .fields import SelectField
@@ -17,12 +18,25 @@ from .forms import BaseForm
 from atst.utils.localization import translate
 from flask import current_app as app
 
+MAX_CLIN_AMOUNT = 1000000000
+
 
 def coerce_enum(enum_inst):
     if getattr(enum_inst, "value", None):
         return enum_inst.value
     else:
         return enum_inst
+
+
+def validate_funding(form, field):
+    if (
+        isinstance(form.total_amount.data, Number)
+        and isinstance(field.data, Number)
+        and form.total_amount.data < field.data
+    ):
+        raise ValidationError(
+            translate("forms.task_order.clin_funding_errors.obligated_amount_error")
+        )
 
 
 class CLINForm(FlaskForm):
@@ -47,9 +61,26 @@ class CLINForm(FlaskForm):
         format="%m/%d/%Y",
         validators=[Optional()],
     )
+    total_amount = DecimalField(
+        label=translate("task_orders.form.total_funds_label"),
+        validators=[
+            NumberRange(
+                0,
+                MAX_CLIN_AMOUNT,
+                translate("forms.task_order.clin_funding_errors.funding_range_error"),
+            )
+        ],
+    )
     obligated_amount = DecimalField(
         label=translate("task_orders.form.obligated_funds_label"),
-        validators=[Optional()],
+        validators=[
+            validate_funding,
+            NumberRange(
+                0,
+                MAX_CLIN_AMOUNT,
+                translate("forms.task_order.clin_funding_errors.funding_range_error"),
+            ),
+        ],
     )
 
     def validate(self, *args, **kwargs):

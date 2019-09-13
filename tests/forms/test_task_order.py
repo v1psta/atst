@@ -72,3 +72,34 @@ def test_clin_form_pop_dates_within_contract_dates():
     )
     valid_clin_form = CLINForm(obj=valid_clin)
     assert valid_clin_form.validate()
+
+
+def test_clin_form_obligated_greater_than_total():
+    invalid_clin = factories.CLINFactory.create(
+        total_amount=0,
+        obligated_amount=1,
+        start_date=datetime.date(2019, 9, 15),
+        end_date=datetime.date(2020, 9, 14),
+    )
+    invalid_clin_form = CLINForm(obj=invalid_clin)
+    assert not invalid_clin_form.validate()
+    assert (
+        translate("forms.task_order.clin_funding_errors.obligated_amount_error")
+    ) in invalid_clin_form.obligated_amount.errors
+
+
+def test_clin_form_dollar_amounts_out_of_range():
+    invalid_clin = factories.CLINFactory.create(
+        total_amount=-1,
+        obligated_amount=1000000001,
+        start_date=datetime.date(2019, 9, 15),
+        end_date=datetime.date(2020, 9, 14),
+    )
+    invalid_clin_form = CLINForm(obj=invalid_clin)
+    assert not invalid_clin_form.validate()
+    assert (
+        translate("forms.task_order.clin_funding_errors.funding_range_error")
+    ) in invalid_clin_form.total_amount.errors
+    assert (
+        translate("forms.task_order.clin_funding_errors.funding_range_error")
+    ) in invalid_clin_form.obligated_amount.errors

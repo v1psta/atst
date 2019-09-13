@@ -152,19 +152,23 @@ class TestBudget:
 
         assert (
             to.total_contract_amount
-            == clin1.obligated_amount + clin2.obligated_amount + clin3.obligated_amount
+            == clin1.total_amount + clin2.total_amount + clin3.total_amount
         )
 
     def test_total_obligated_funds(self):
         to = TaskOrder()
-        clin4 = CLINFactory(task_order=to, jedi_clin_type=JEDICLINType.JEDI_CLIN_4)
         assert to.total_obligated_funds == 0
 
         clin1 = CLINFactory(task_order=to, jedi_clin_type=JEDICLINType.JEDI_CLIN_1)
         clin2 = CLINFactory(task_order=to, jedi_clin_type=JEDICLINType.JEDI_CLIN_2)
         clin3 = CLINFactory(task_order=to, jedi_clin_type=JEDICLINType.JEDI_CLIN_3)
+        clin4 = CLINFactory(task_order=to, jedi_clin_type=JEDICLINType.JEDI_CLIN_4)
         assert (
-            to.total_obligated_funds == clin1.obligated_amount + clin3.obligated_amount
+            to.total_obligated_funds
+            == clin1.obligated_amount
+            + clin2.obligated_amount
+            + clin3.obligated_amount
+            + clin4.obligated_amount
         )
 
 

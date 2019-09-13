@@ -23,6 +23,7 @@ class CLIN(Base, mixins.TimestampsMixin):
     number = Column(String, nullable=True)
     start_date = Column(Date, nullable=True)
     end_date = Column(Date, nullable=True)
+    total_amount = Column(Numeric(scale=2), nullable=True)
     obligated_amount = Column(Numeric(scale=2), nullable=True)
     jedi_clin_type = Column(SQLAEnum(JEDICLINType, native_enum=False), nullable=True)
 
@@ -46,6 +47,7 @@ class CLIN(Base, mixins.TimestampsMixin):
                 self.number,
                 self.start_date,
                 self.end_date,
+                self.total_amount,
                 self.obligated_amount,
                 self.jedi_clin_type,
             ]

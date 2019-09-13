@@ -205,6 +205,9 @@ forms:
       start: PoP start date must be on or after {date}.
     scope_description: 'What do you plan to do on the cloud? Some examples might include migrating an existing application or creating a prototype. You don’t need to include a detailed plan of execution, but should list key requirements. This section will be reviewed by your contracting officer, but won’t be sent to the CCPO. <p>Not sure how to describe your scope? <a href="#">Read some examples</a> to get some inspiration.</p>'
     scope_label: Cloud project scope
+    clin_funding_errors:
+      obligated_amount_error: Obligated amount must be less than or equal to total amount
+      funding_range_error: Dollar amount must be from $0.00 to $1,000,000,000.00
     team_experience:
       built_1: Built, migrated, or consulted on 1-2 applications
       built_3: Built, migrated, or consulted on 3-5 applications
@@ -395,7 +398,7 @@ task_orders:
       type: CLIN Type
       idiq_clin_description: Description (IDIQ CLIN)
       pop: PoP
-      amount: CLIN Value
+      total_amount: CLIN Value
       obligated: Amount Obligated
   form:
     add_clin: Add another CLIN
@@ -406,7 +409,7 @@ task_orders:
     clin_description: "Refer to your task order to locate your Contract Line Item Numbers (CLINs)."
     clin_details: CLIN Details
     clin_funding: CLIN Funding
-    clin_number_label: CLIN Number
+    clin_number_label: CLIN
     clin_type_label: Corresponding IDIQ CLIN
     clin_remove_text: 'Do you want to remove '
     clin_remove_confirm: Yes, remove CLIN
@@ -415,6 +418,7 @@ task_orders:
     cloud_funding_text: Data must match with what is in your uploaded document.
     draft_alert_title: Your information has been saved
     draft_alert_message: You can return to the Task Order Builder to enter missing information. Once you are finished, you’ll be ready to submit this request.
+    total_funds_label: Total CLIN Value
     obligated_funds_label: Obligated Funds
     pop: Period of Performance
     pop_end: End Date

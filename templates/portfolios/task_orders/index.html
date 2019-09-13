@@ -82,6 +82,9 @@
           <h3>Task Order #{{ task_order.number }}</h3>
         </div>
         <div class="card__body">
+          <b>Total amount: </b>{{ task_order.total_contract_amount | dollars }}
+        </div>
+        <div class="card__body">
           <b>Obligated amount: </b>{{ task_order.total_obligated_funds | dollars }}
         </div>
       </div>

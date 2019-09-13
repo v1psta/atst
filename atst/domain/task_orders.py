@@ -58,6 +58,7 @@ class TaskOrders(BaseDomainClass):
                 number=clin_data["number"],
                 start_date=clin_data["start_date"],
                 end_date=clin_data["end_date"],
+                total_amount=clin_data["total_amount"],
                 obligated_amount=clin_data["obligated_amount"],
                 jedi_clin_type=clin_data["jedi_clin_type"],
             )
