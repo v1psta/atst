@@ -129,9 +129,9 @@
                 {% set team_mgmt = "perms_team_mgmt-{}".format(member.role_id) %}
                 {% set env_mgmt = "perms_env_mgmt-{}".format(member.role_id) %}
                 {% set del_env = "perms_del_env-{}".format(member.role_id) %}
-                {{ CheckboxInput(member.form.permission_sets.perms_team_mgmt, classes="input__inline-fields", key=team_mgmt, id=team_mgmt) }}
-                {{ CheckboxInput(member.form.permission_sets.perms_env_mgmt, classes="input__inline-fields", key=env_mgmt, id=env_mgmt) }}
-                {{ CheckboxInput(member.form.permission_sets.perms_del_env, classes="input__inline-fields", key=del_env, id=del_env) }}
+                {{ CheckboxInput(member.form.perms_team_mgmt, classes="input__inline-fields", key=team_mgmt, id=team_mgmt) }}
+                {{ CheckboxInput(member.form.perms_env_mgmt, classes="input__inline-fields", key=env_mgmt, id=env_mgmt) }}
+                {{ CheckboxInput(member.form.perms_del_env, classes="input__inline-fields", key=del_env, id=del_env) }}
               </div>
               <div class="environment-roles-new">
                 <h4>{{ "portfolios.applications.members.form.env_access" | translate }}</h4>

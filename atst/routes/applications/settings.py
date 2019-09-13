@@ -9,11 +9,8 @@ from atst.domain.audit_log import AuditLog
 from atst.domain.common import Paginator
 from atst.domain.environment_roles import EnvironmentRoles
 from atst.forms.application import ApplicationForm, EditEnvironmentForm
-from atst.forms.application_member import (
-    NewForm as NewMemberForm,
-    UpdateMemberForm,
-    PermissionsForm,
-)
+from atst.forms.application_member import NewForm as NewMemberForm, UpdateMemberForm
+from atst.forms.data import ENV_ROLE_NO_ACCESS as NO_ACCESS
 from atst.domain.authz.decorator import user_can_access_decorator as user_can
 from atst.models.permissions import Permissions
 from atst.domain.permission_sets import PermissionSets
@@ -62,18 +59,29 @@ def get_members_data(application):
             }
             for role in roles
         ]
-        form_data = {
-            "environment_roles": environment_roles,
-            "permission_sets": permission_sets,
-        }
-        perms_form = PermissionsForm(data=permission_sets)
-        form = UpdateMemberForm(environment_roles=environment_roles)
-        form.permission_sets = perms_form
+
+        env_roles_form_data = []
+        for env in application.environments:
+            env_data = {
+                "environment_id": str(env.id),
+                "environment_name": env.name,
+                "role": NO_ACCESS,
+            }
+            env_role = EnvironmentRoles.get_by_user_and_environment(
+                member.user_id, env.id
+            )
+            if env_role:
+                env_data["role"] = env_role.role
+
+            env_roles_form_data.append(env_data)
+
+        form = UpdateMemberForm(
+            environment_roles=env_roles_form_data, **permission_sets
+        )
         members_data.append(
             {
                 "role_id": member.id,
                 "user_name": member.user_name,
-                # remove these keys and use form
                 "permission_sets": permission_sets,
                 "environment_roles": environment_roles,
                 "role_status": member.status.value,
@@ -348,7 +356,10 @@ def update_member(application_id, application_role_id):
     form = UpdateMemberForm(http_request.form)
 
     if form.validate():
-        new_perm_sets_names = perm_sets_obj_to_list(form.permission_sets.data)
+        perm_sets = {
+            key: value for key, value in form.data.items() if key != "environment_roles"
+        }
+        new_perm_sets_names = perm_sets_obj_to_list(perm_sets)
         ApplicationRoles.update_permission_sets(app_role, new_perm_sets_names)
 
         for env_role in form.environment_roles:

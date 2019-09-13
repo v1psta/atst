@@ -39,12 +39,9 @@ def test_environment_form_invalid():
 
 def test_update_member_form():
     form_data = {
-        "member_role_id": 123,
-        "permission_sets": {
-            "perms_team_mgmt": True,
-            "perms_env_mgmt": False,
-            "perms_del_env": False,
-        },
+        "perms_team_mgmt": True,
+        "perms_env_mgmt": False,
+        "perms_del_env": False,
         "environment_roles": {
             "environment_id": 123,
             "environment_name": "testing",
@@ -53,3 +50,6 @@ def test_update_member_form():
     }
     form = UpdateMemberForm(data=form_data)
     assert form.validate()
+    assert form.perms_team_mgmt.data
+    assert not form.perms_env_mgmt.data
+    assert not form.perms_del_env.data

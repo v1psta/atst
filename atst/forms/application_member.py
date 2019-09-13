@@ -1,3 +1,4 @@
+from flask_wtf import FlaskForm
 from wtforms.fields import FormField, FieldList, HiddenField, BooleanField
 from wtforms import Form
 
@@ -26,7 +27,7 @@ class EnvironmentForm(Form):
         return _data
 
 
-class PermissionsForm(Form):
+class PermissionsForm(FlaskForm):
     perms_env_mgmt = BooleanField(
         translate("portfolios.applications.members.form.env_mgmt.label"),
         default=False,
@@ -56,6 +57,12 @@ class NewForm(BaseForm):
     environment_roles = FieldList(FormField(EnvironmentForm))
 
 
-class UpdateMemberForm(BaseForm):
-    permission_sets = FormField(PermissionsForm)
+class UpdateMemberForm(PermissionsForm):
+    # permission_sets = FormField(PermissionsForm)
     environment_roles = FieldList(FormField(EnvironmentForm))
+
+    @property
+    def data(self):
+        _data = super().data
+        _data.pop("csrf_token", None)
+        return _data

@@ -488,9 +488,9 @@ def test_update_member(client, user_session):
             "environment_roles-2-environment_id": env_2.id,
             "environment_roles-2-role": CSPRole.NETWORK_ADMIN.value,
             "environment_roles-2-environment_name": env_2.name,
-            "permission_sets-perms_env_mgmt": True,
-            "permission_sets-perms_team_mgmt": True,
-            "permission_sets-perms_del_env": True,
+            "perms_env_mgmt": True,
+            "perms_team_mgmt": True,
+            "perms_del_env": True,
         },
     )
 
