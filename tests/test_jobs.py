@@ -14,6 +14,9 @@ from atst.jobs import (
     dispatch_create_environment,
     dispatch_create_atat_admin_user,
     dispatch_create_environment_baseline,
+    create_environment,
+    claim_for_update,
+    ClaimFailedException,
 )
 from tests.factories import (
     EnvironmentFactory,
@@ -21,6 +24,9 @@ from tests.factories import (
     UserFactory,
     PortfolioFactory,
 )
+
+from threading import Thread
+from time import sleep
 
 
 def test_environment_job_failure(celery_app, celery_worker):
@@ -73,7 +79,7 @@ def csp():
 def test_create_environment_job(session, csp):
     user = UserFactory.create()
     environment = EnvironmentFactory.create()
-    do_create_environment(csp, environment.id, user.id)
+    do_create_environment(csp, environment.id)
 
     environment_id = environment.id
     del environment
@@ -86,7 +92,7 @@ def test_create_environment_job(session, csp):
 def test_create_environment_job_is_idempotent(csp, session):
     user = UserFactory.create()
     environment = EnvironmentFactory.create(cloud_id=uuid4().hex)
-    do_create_environment(csp, environment.id, user.id)
+    do_create_environment(csp, environment.id)
 
     csp.create_environment.assert_not_called()
 
@@ -196,3 +202,91 @@ def test_dispatch_create_environment_baseline(session, monkeypatch):
     dispatch_create_environment_baseline.run()
 
     mock.delay.assert_called_once_with(environment_id=environment.id)
+
+
+def test_create_environment_no_dupes(session, celery_app, celery_worker):
+    portfolio = PortfolioFactory.create(
+        applications=[
+            {
+                "environments": [
+                    {
+                        "cloud_id": uuid4().hex,
+                        "root_user_info": {},
+                        "baseline_info": None,
+                    }
+                ]
+            }
+        ],
+        task_orders=[
+            {
+                "create_clins": [
+                    {
+                        "start_date": pendulum.now().subtract(days=1),
+                        "end_date": pendulum.now().add(days=1),
+                    }
+                ]
+            }
+        ],
+    )
+    environment = portfolio.applications[0].environments[0]
+
+    create_environment.run(environment_id=environment.id)
+    environment = session.query(Environment).get(environment.id)
+    first_cloud_id = environment.cloud_id
+
+    create_environment.run(environment_id=environment.id)
+    environment = session.query(Environment).get(environment.id)
+
+    assert environment.cloud_id == first_cloud_id
+    assert environment.claimed_at == None
+
+
+def test_claim(session):
+    portfolio = PortfolioFactory.create(
+        applications=[
+            {
+                "environments": [
+                    {
+                        "cloud_id": uuid4().hex,
+                        "root_user_info": {},
+                        "baseline_info": None,
+                    }
+                ]
+            }
+        ],
+        task_orders=[
+            {
+                "create_clins": [
+                    {
+                        "start_date": pendulum.now().subtract(days=1),
+                        "end_date": pendulum.now().add(days=1),
+                    }
+                ]
+            }
+        ],
+    )
+    environment = portfolio.applications[0].environments[0]
+
+    events = []
+
+    class FirstThread(Thread):
+        def run(self):
+            with claim_for_update(environment):
+                events.append("first")
+
+    class SecondThread(Thread):
+        def run(self):
+            try:
+                with claim_for_update(environment):
+                    events.append("second")
+            except Exception:
+                pass
+
+    t1 = FirstThread()
+    t2 = SecondThread()
+    t1.start()
+    t2.start()
+    t1.join()
+    t2.join()
+
+    assert events == ["first"]

@@ -1,11 +1,13 @@
-from sqlalchemy import Column, ForeignKey, String
+from sqlalchemy import Column, ForeignKey, String, TIMESTAMP
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import JSONB
 from enum import Enum
+import contextlib
 
 from atst.models import Base
 from atst.models.types import Id
 from atst.models import mixins
+from atst.database import db
 
 
 class Environment(
@@ -28,6 +30,8 @@ class Environment(
     cloud_id = Column(String)
     root_user_info = Column(JSONB)
     baseline_info = Column(JSONB)
+
+    claimed_at = Column(TIMESTAMP(timezone=True))
 
     job_failures = relationship("EnvironmentJobFailure")
 

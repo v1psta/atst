@@ -1,12 +1,16 @@
 from flask import current_app as app
 import pendulum
+from celery.utils.log import get_task_logger
+from sqlalchemy import func, orm, sql
+from sqlalchemy import update
 
 from atst.database import db
 from atst.queue import celery
 from atst.models import EnvironmentJobFailure, EnvironmentRoleJobFailure
 from atst.domain.csp.cloud import CloudProviderInterface, GeneralCSPException
 from atst.domain.environments import Environments
-from atst.domain.users import Users
+
+logger = get_task_logger(__name__)
 
 
 class RecordEnvironmentFailure(celery.Task):
@@ -44,32 +48,64 @@ def send_notification_mail(recipients, subject, body):
     app.mailer.send(recipients, subject, body)
 
 
-def do_create_environment(
-    csp: CloudProviderInterface, environment_id=None, atat_user_id=None
-):
+from contextlib import contextmanager
+
+
+class ClaimFailedException(Exception):
+    pass
+
+
+@contextmanager
+def claim_for_update(resource):
+    rows_updated = (
+        db.session.query(resource.__class__)
+        .filter_by(id=resource.id, claimed_at=None)
+        .update({"claimed_at": func.now()}, synchronize_session="fetch")
+    )
+    if rows_updated < 1:
+        raise ClaimFailedException(
+            f"Could not acquire claim for {resource.__class__.__name__} {resource.id}."
+        )
+
+    claimed = db.session.query(resource.__class__).filter_by(id=resource.id).one()
+
+    try:
+        yield claimed
+    finally:
+        db.session.query(resource.__class__).filter(
+            resource.__class__.id == resource.id
+        ).filter(resource.__class__.claimed_at != None).update(
+            {"claimed_at": sql.null()}, synchronize_session="fetch"
+        )
+
+
+def do_create_environment(csp: CloudProviderInterface, environment_id=None):
+    logger.info(environment_id)
     environment = Environments.get(environment_id)
 
-    if environment.cloud_id is not None:
-        # TODO: Return value for this?
-        return
+    with claim_for_update(environment) as environment:
 
-    user = Users.get(atat_user_id)
+        if environment.cloud_id is not None:
+            # TODO: Return value for this?
+            return
 
-    # we'll need to do some checking in this job for cases where it's retrying
-    # when a failure occured after some successful steps
-    # (e.g. if environment.cloud_id is not None, then we can skip first step)
+        user = environment.creator
 
-    # credentials either from a given user or pulled from config?
-    # if using global creds, do we need to log what user authorized action?
-    atat_root_creds = csp.root_creds()
+        # we'll need to do some checking in this job for cases where it's retrying
+        # when a failure occured after some successful steps
+        # (e.g. if environment.cloud_id is not None, then we can skip first step)
 
-    # user is needed because baseline root account in the environment will
-    # be assigned to the requesting user, open question how to handle duplicate
-    # email addresses across new environments
-    csp_environment_id = csp.create_environment(atat_root_creds, user, environment)
-    environment.cloud_id = csp_environment_id
-    db.session.add(environment)
-    db.session.commit()
+        # credentials either from a given user or pulled from config?
+        # if using global creds, do we need to log what user authorized action?
+        atat_root_creds = csp.root_creds()
+
+        # user is needed because baseline root account in the environment will
+        # be assigned to the requesting user, open question how to handle duplicate
+        # email addresses across new environments
+        csp_environment_id = csp.create_environment(atat_root_creds, user, environment)
+        environment.cloud_id = csp_environment_id
+        db.session.add(environment)
+        db.session.commit()
 
 
 def do_create_atat_admin_user(csp: CloudProviderInterface, environment_id=None):
@@ -107,17 +143,24 @@ def do_work(fn, task, csp, **kwargs):
 
 @celery.task(bind=True)
 def create_environment(self, environment_id=None, atat_user_id=None):
-    do_work(do_create_environment, self, app.csp.cloud, **kwargs)
+    do_work(do_create_environment, self, app.csp.cloud, environment_id=environment_id)
 
 
 @celery.task(bind=True)
 def create_atat_admin_user(self, environment_id=None):
-    do_work(do_create_atat_admin_user, self, app.csp.cloud, **kwargs)
+    do_work(
+        do_create_atat_admin_user, self, app.csp.cloud, environment_id=environment_id
+    )
 
 
 @celery.task(bind=True)
 def create_environment_baseline(self, environment_id=None):
-    do_work(do_create_environment_baseline, self, app.csp.cloud, **kwargs)
+    do_work(
+        do_create_environment_baseline,
+        self,
+        app.csp.cloud,
+        environment_id=environment_id,
+    )
 
 
 @celery.task(bind=True)
