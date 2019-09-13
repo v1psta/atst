@@ -9,7 +9,11 @@ from atst.domain.audit_log import AuditLog
 from atst.domain.common import Paginator
 from atst.domain.environment_roles import EnvironmentRoles
 from atst.forms.application import ApplicationForm, EditEnvironmentForm
-from atst.forms.application_member import NewForm as MemberForm, UpdateMemberForm, PermissionsForm
+from atst.forms.application_member import (
+    NewForm as NewMemberForm,
+    UpdateMemberForm,
+    PermissionsForm,
+)
 from atst.forms.data import ENV_ROLE_NO_ACCESS as NO_ACCESS
 from atst.domain.authz.decorator import user_can_access_decorator as user_can
 from atst.models.environment_role import CSPRole
@@ -35,65 +39,21 @@ def get_environments_obj_for_app(application):
     return environments_obj
 
 
-def data_for_app_env_roles_form(application):
-    # this whole thing can be deleted when #1067 is rebased/merged! (and check other fns here)
-    csp_roles = [role.value for role in CSPRole]
-    csp_roles.insert(0, NO_ACCESS)
-    # dictionary for sorting application members by environments
-    # and roles within those environments
-    environments_dict = {
-        e.id: {role_name: [] for role_name in csp_roles}
-        for e in application.environments
-    }
-    for member in application.members:
-        env_ids = set(environments_dict.keys())
-        for env_role in member.environment_roles:
-            role_members_list = environments_dict[env_role.environment_id][
-                env_role.role
-            ]
-            role_members_list.append(
-                {
-                    "application_role_id": str(member.id),
-                    "user_name": member.user_name,
-                    "role_name": env_role.role,
-                }
-            )
-            env_ids.remove(env_role.environment_id)
-
-        # any leftover environment IDs are ones the app member
-        # does not have access to
-        for env_id in env_ids:
-            role_members_list = environments_dict[env_id][NO_ACCESS]
-            role_members_list.append(
-                {
-                    "application_role_id": str(member.id),
-                    "user_name": member.user_name,
-                    "role_name": NO_ACCESS,
-                }
-            )
-
-    # transform the data into the shape the form needs
-    nested_data = [
-        {
-            "env_id": env_id,
-            "team_roles": [
-                {"role": role, "members": members} for role, members in roles.items()
-            ],
-        }
-        for env_id, roles in environments_dict.items()
-    ]
-
-    return {"envs": nested_data}
-
-
 def get_members_data(application):
     members_data = []
     for member in application.members:
         permission_sets = {
-            "perms_team_mgmt": "True",
-            # "perms_team_mgmt": bool(member.has_permission_set(PermissionSets.EDIT_APPLICATION_TEAM)),
-            "perms_env_mgmt": bool(member.has_permission_set(PermissionSets.EDIT_APPLICATION_ENVIRONMENTS)),
-            "perms_del_env": bool(member.has_permission_set(PermissionSets.DELETE_APPLICATION_ENVIRONMENTS)),
+            "perms_team_mgmt": bool(
+                member.has_permission_set(PermissionSets.EDIT_APPLICATION_TEAM)
+            ),
+            "perms_env_mgmt": bool(
+                member.has_permission_set(PermissionSets.EDIT_APPLICATION_ENVIRONMENTS)
+            ),
+            "perms_del_env": bool(
+                member.has_permission_set(
+                    PermissionSets.DELETE_APPLICATION_ENVIRONMENTS
+                )
+            ),
         }
         roles = EnvironmentRoles.get_for_application_member(member.id)
         environment_roles = [
@@ -132,7 +92,7 @@ def get_new_member_form(application):
         for e in application.environments
     ]
 
-    return MemberForm(data={"environment_roles": env_roles})
+    return NewMemberForm(data={"environment_roles": env_roles})
 
 
 def render_settings_page(application, **kwargs):
@@ -302,7 +262,7 @@ def delete_environment(environment_id):
 )
 def create_member(application_id):
     application = Applications.get(application_id)
-    form = MemberForm(http_request.form)
+    form = NewMemberForm(http_request.form)
 
     if form.validate():
         try:
@@ -371,5 +331,4 @@ def remove_member(application_id, application_role_id):
 )
 @user_can(Permissions.EDIT_APPLICATION_MEMBER, message="update application member")
 def update_member(application_id, application_role_id):
-    import ipdb; ipdb.set_trace()
-    pass
+    return redirect(url_for("applications.settings", application_id=g.application.id))

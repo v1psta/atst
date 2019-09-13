@@ -41,9 +41,9 @@ def test_update_member_form():
     form_data = {
         "member_role_id": 123,
         "permission_sets": {
-            "perms_team_mgmt": PermissionSets.EDIT_APPLICATION_TEAM,
-            "perms_env_mgmt": PermissionSets.VIEW_APPLICATION,
-            "perms_del_env": PermissionSets.VIEW_APPLICATION,
+            "perms_team_mgmt": True,
+            "perms_env_mgmt": False,
+            "perms_del_env": False,
         },
         "environment_roles": {
             "environment_id": 123,

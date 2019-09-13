@@ -91,11 +91,11 @@
         </a>
         {{ MultiStepModalForm(
             name=new_member_modal_name,
-            form=member.form,
+            form=new_member_form,
             form_action=url_for("applications.create_member", application_id=application.id),
             steps=[
-              member_steps.MemberStepOne(member.form),
-              member_steps.MemberStepTwo(member.form, application)
+              member_steps.MemberStepOne(new_member_form),
+              member_steps.MemberStepTwo(new_member_form, application)
             ],
           ) }}
       {% endif %}
@@ -122,9 +122,9 @@
         {% for member in members %}
           {% set modal_name = "edit_member-{}".format(loop.index) %}
           {% call Modal(modal_name, dismissable=True) %}
-          <form id='{{ modal_name }}' method="POST" action="{{ url_for('applications.update_member', application_id=application.id, application_role_id=member.role_id) }}">
-            {{ member.form.csrf_token() }}
-            <h4>{{ "portfolios.applications.members.form.project_perms" | translate }}</h4>
+            <form id='{{ modal_name }}' method="POST" action="{{ url_for('applications.update_member', application_id=application.id, application_role_id=member.role_id) }}">
+              {{ member.form.csrf_token }}
+              <h4>{{ "portfolios.applications.members.form.project_perms" | translate }}</h4>
               <div class="application-perms">
                 {% set team_mgmt = "perms_team_mgmt-{}".format(member.role_id) %}
                 {% set env_mgmt = "perms_env_mgmt-{}".format(member.role_id) %}

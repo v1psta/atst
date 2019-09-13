@@ -35,7 +35,6 @@ class PermissionsForm(Form):
         description=translate(
             "portfolios.applications.members.form.env_mgmt.description"
         ),
-        false_values=(False, "False", 'false', ''),
     )
     perms_team_mgmt = BooleanField(
         translate("portfolios.applications.members.form.team_mgmt.label"),
@@ -43,7 +42,6 @@ class PermissionsForm(Form):
         description=translate(
             "portfolios.applications.members.form.team_mgmt.description"
         ),
-        false_values=(False, "False", 'false', ''),
     )
     perms_del_env = BooleanField(
         translate("portfolios.applications.members.form.del_env.label"),
