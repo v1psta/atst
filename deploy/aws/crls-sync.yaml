@@ -12,7 +12,7 @@ spec:
           restartPolicy: OnFailure
           containers:
           - name: crls
-            image: 904153757533.dkr.ecr.us-east-2.amazonaws.com/atat:8f1c8b5633ca70168837c885010e7d66d93562dc
+            image: 904153757533.dkr.ecr.us-east-2.amazonaws.com/atat:latest
             command: [
               "/bin/sh", "-c"
             ]

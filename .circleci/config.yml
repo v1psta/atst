@@ -1,9 +1,9 @@
 version: 2.1
 
 orbs:
-    aws-ecr: circleci/aws-ecr@4.0.1
+    aws-ecr: circleci/aws-ecr@6.3.0
     aws-eks: circleci/aws-eks@0.1.0
-    azure-acr: circleci/azure-acr@0.1.1
+    azure-acr: circleci/azure-acr@0.1.2
     azure-aks: circleci/azure-aks@0.2.0
     kubernetes: circleci/kubernetes@0.3.0
 
@@ -102,7 +102,7 @@ jobs:
     executor: aws-eks/python3
     steps:
       - migration_setup:
-          container_image: "$AWS_ECR_ACCOUNT_URL/atat:$CIRCLE_SHA1"
+          container_image: "$AWS_ECR_ACCOUNT_URL/atat:atat-$CIRCLE_SHA1"
       - aws-eks/update-kubeconfig-with-authenticator:
           cluster-name: atat
           aws-region: "${AWS_REGION}"
@@ -112,13 +112,28 @@ jobs:
     executor: azure-aks/default
     steps:
       - migration_setup:
-          container_image: "$AZURE_SERVER_NAME/atat:$CIRCLE_SHA1"
+          container_image: "$AZURE_SERVER_NAME/atat:atat-$CIRCLE_SHA1"
       - azure-aks/update-kubeconfig-with-credentials:
           cluster-name: atat-cluster
           install-kubectl: true
           perform-login: true
           resource-group: atat
       - migration_apply
+
+  # the azure-acr orb doesn't allow for multiple tags in the
+  # build-and-push-image step, so instead we wrap our own job around it and run
+  # some additional Docker commands
+  azure-build-and-push-image:
+    executor: azure-acr/default
+    steps:
+      - azure-acr/build-and-push-image:
+          extra-build-args: "--build-arg CSP=azure"
+          login-server-name: "${AZURE_SERVER_NAME}"
+          registry-name: pwatat
+          repo: atat
+          tag: "atat-${CIRCLE_SHA1}"
+      - run: "docker tag ${AZURE_SERVER_NAME}/atat:atat-${CIRCLE_SHA1}  ${AZURE_SERVER_NAME}/atat:latest"
+      - run: "docker push ${AZURE_SERVER_NAME}/atat:latest"
 
 workflows:
   version: 2
@@ -128,12 +143,7 @@ workflows:
       - test:
           requires:
             - app_setup
-      - azure-acr/build_and_push_image:
-          extra-build-args: "--build-arg CSP=azure"
-          login-server-name: "${AZURE_SERVER_NAME}"
-          registry-name: pwatat
-          repo: atat
-          tag: "${CIRCLE_SHA1}"
+      - azure-build-and-push-image:
           requires:
             - test
           filters:
@@ -142,14 +152,14 @@ workflows:
                 - master
       - azure-migration:
           requires:
-            - azure-acr/build_and_push_image
+            - azure-build-and-push-image
           filters:
             branches:
               only:
                 - master
       - azure-aks/update-container-image:
           cluster-name: atat-cluster
-          container-image-updates: "atst=${AZURE_SERVER_NAME}/atat:${CIRCLE_SHA1}"
+          container-image-updates: "atst=${AZURE_SERVER_NAME}/atat:atat-${CIRCLE_SHA1}"
           namespace: atat
           resource-name: deployment.apps/atst
           resource-group: atat
@@ -163,7 +173,7 @@ workflows:
                 - master
       - azure-aks/update-container-image:
           cluster-name: atat-cluster
-          container-image-updates: "atst-worker=${AZURE_SERVER_NAME}/atat:${CIRCLE_SHA1}"
+          container-image-updates: "atst-worker=${AZURE_SERVER_NAME}/atat:atat-${CIRCLE_SHA1}"
           namespace: atat
           resource-name: deployment.apps/atst-worker
           resource-group: atat
@@ -175,10 +185,10 @@ workflows:
             branches:
               only:
                 - master
-      - aws-ecr/build_and_push_image:
+      - aws-ecr/build-and-push-image:
           extra-build-args: "--build-arg CSP=aws"
           repo: atat
-          tag: "${CIRCLE_SHA1}"
+          tag: "atat-${CIRCLE_SHA1},latest"
           requires:
             - test
           filters:
@@ -187,14 +197,14 @@ workflows:
                 - master
       - aws-migration:
           requires:
-            - aws-ecr/build_and_push_image
+            - aws-ecr/build-and-push-image
           filters:
             branches:
               only:
                 - master
       - aws-eks/update-container-image:
           cluster-name: atat
-          container-image-updates: "atst=${AWS_ECR_ACCOUNT_URL}/atat:${CIRCLE_SHA1}"
+          container-image-updates: "atst=${AWS_ECR_ACCOUNT_URL}/atat:atat-${CIRCLE_SHA1}"
           namespace: atat
           resource-name: deployment.apps/atst
           aws-region: "${AWS_REGION}"
@@ -208,7 +218,7 @@ workflows:
                 - master
       - aws-eks/update-container-image:
           cluster-name: atat
-          container-image-updates: "atst-worker=${AWS_ECR_ACCOUNT_URL}/atat:${CIRCLE_SHA1}"
+          container-image-updates: "atst-worker=${AWS_ECR_ACCOUNT_URL}/atat:atat-${CIRCLE_SHA1}"
           namespace: atat
           resource-name: deployment.apps/atst-worker
           aws-region: "${AWS_REGION}"
