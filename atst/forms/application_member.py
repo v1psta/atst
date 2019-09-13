@@ -1,11 +1,9 @@
-from flask_wtf import FlaskForm
 from wtforms.fields import FormField, FieldList, HiddenField, BooleanField
 from wtforms import Form
 
 from .forms import BaseForm
 from .member import NewForm as BaseNewMemberForm
 from .data import ENV_ROLES, ENV_ROLE_NO_ACCESS as NO_ACCESS
-from atst.domain.permission_sets import PermissionSets
 from atst.forms.fields import SelectField
 from atst.utils.localization import translate
 

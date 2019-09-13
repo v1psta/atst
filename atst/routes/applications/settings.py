@@ -14,9 +14,7 @@ from atst.forms.application_member import (
     UpdateMemberForm,
     PermissionsForm,
 )
-from atst.forms.data import ENV_ROLE_NO_ACCESS as NO_ACCESS
 from atst.domain.authz.decorator import user_can_access_decorator as user_can
-from atst.models.environment_role import CSPRole
 from atst.models.permissions import Permissions
 from atst.domain.permission_sets import PermissionSets
 from atst.utils.flash import formatted_flash as flash
@@ -346,4 +344,27 @@ def remove_member(application_id, application_role_id):
 )
 @user_can(Permissions.EDIT_APPLICATION_MEMBER, message="update application member")
 def update_member(application_id, application_role_id):
-    return redirect(url_for("applications.settings", application_id=g.application.id))
+    app_role = ApplicationRoles.get_by_id(application_role_id)
+    form = UpdateMemberForm(http_request.form)
+
+    if form.validate():
+        new_perm_sets_names = perm_sets_obj_to_list(form.permission_sets.data)
+        ApplicationRoles.update_permission_sets(app_role, new_perm_sets_names)
+
+        for env_role in form.environment_roles:
+            environment = Environments.get(env_role.environment_id.data)
+            Environments.update_env_role(environment, app_role, env_role.data["role"])
+
+        flash("application_member_updated", user_name=app_role.user_name)
+    else:
+        pass
+        # TODO: flash error message
+
+    return redirect(
+        url_for(
+            "applications.settings",
+            application_id=application_id,
+            fragment="application-members",
+            _anchor="application-members",
+        )
+    )

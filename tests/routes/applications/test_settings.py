@@ -13,6 +13,7 @@ from atst.domain.permission_sets import PermissionSets
 from atst.domain.portfolios import Portfolios
 from atst.domain.exceptions import NotFoundError
 from atst.models.environment_role import CSPRole
+from atst.models.permissions import Permissions
 from atst.models.portfolio_role import Status as PortfolioRoleStatus
 from atst.forms.application import EditEnvironmentForm
 from atst.forms.data import ENV_ROLE_NO_ACCESS as NO_ACCESS
@@ -453,3 +454,65 @@ def test_remove_member_failure(client, user_session):
     )
 
     assert response.status_code == 404
+
+
+def test_update_member(client, user_session):
+    role = PermissionSets.get(PermissionSets.EDIT_APPLICATION_TEAM)
+    app_role = ApplicationRoleFactory.create(permission_sets=[role])
+    application = app_role.application
+    env = EnvironmentFactory.create(application=application)
+    env_1 = EnvironmentFactory.create(application=application)
+    env_2 = EnvironmentFactory.create(application=application)
+    EnvironmentRoleFactory.create(
+        environment=env, application_role=app_role, role=CSPRole.BASIC_ACCESS.value
+    )
+    EnvironmentRoleFactory.create(
+        environment=env_1, application_role=app_role, role=CSPRole.BASIC_ACCESS.value
+    )
+
+    user_session(application.portfolio.owner)
+
+    response = client.post(
+        url_for(
+            "applications.update_member",
+            application_id=application.id,
+            application_role_id=app_role.id,
+        ),
+        data={
+            "environment_roles-0-environment_id": env.id,
+            "environment_roles-0-role": CSPRole.TECHNICAL_READ.value,
+            "environment_roles-0-environment_name": env.name,
+            "environment_roles-1-environment_id": env_1.id,
+            "environment_roles-1-role": NO_ACCESS,
+            "environment_roles-1-environment_name": env_1.name,
+            "environment_roles-2-environment_id": env_2.id,
+            "environment_roles-2-role": CSPRole.NETWORK_ADMIN.value,
+            "environment_roles-2-environment_name": env_2.name,
+            "permission_sets-perms_env_mgmt": True,
+            "permission_sets-perms_team_mgmt": True,
+            "permission_sets-perms_del_env": True,
+        },
+    )
+
+    assert response.status_code == 302
+    expected_url = url_for(
+        "applications.settings",
+        application_id=application.id,
+        fragment="application-members",
+        _anchor="application-members",
+        _external=True,
+    )
+    assert response.location == expected_url
+    assert len(application.roles) == 1
+    assert bool(app_role.has_permission_set(PermissionSets.EDIT_APPLICATION_TEAM))
+    assert bool(
+        app_role.has_permission_set(PermissionSets.EDIT_APPLICATION_ENVIRONMENTS)
+    )
+    assert bool(
+        app_role.has_permission_set(PermissionSets.DELETE_APPLICATION_ENVIRONMENTS)
+    )
+
+    environment_roles = application.roles[0].environment_roles
+    assert len(environment_roles) == 2
+    assert environment_roles[0].environment in [env, env_2]
+    assert environment_roles[1].environment in [env, env_2]
