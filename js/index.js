@@ -5,7 +5,6 @@ import ally from 'ally.js'
 import classes from '../styles/atat.scss'
 import Vue from 'vue/dist/vue'
 import VTooltip from 'v-tooltip'
-import stickybits from 'stickybits'
 
 import dodlogin from './components/dodlogin'
 import levelofwarrant from './components/levelofwarrant'
@@ -41,12 +40,14 @@ import SemiCollapsibleText from './components/semi_collapsible_text'
 import TotalsBox from './components/totals_box'
 import ToForm from './components/forms/to_form'
 import ClinFields from './components/clin_fields'
+import StickyMixin from './mixins/sticky'
 
 Vue.config.productionTip = false
 
 Vue.use(VTooltip)
 
 Vue.mixin(Modal)
+Vue.mixin(StickyMixin)
 
 const app = new Vue({
   el: '#app-root',
@@ -125,16 +126,4 @@ const app = new Vue({
     })
   },
   delimiters: ['!{', '}'],
-
-  directives: {
-    sticky: {
-      inserted: (el, binding) => {
-        var customAttributes
-        if (binding.expression) {
-          customAttributes = JSON.parse(binding.expression)
-        }
-        stickybits(el, customAttributes)
-      },
-    },
-  },
 })

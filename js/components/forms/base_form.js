@@ -1,9 +1,9 @@
 import ally from 'ally.js'
-import stickybits from 'stickybits'
 
 import DateSelector from '../date_selector'
 import FormMixin from '../../mixins/form'
 import Modal from '../../mixins/modal'
+import StickyMixin from '../../mixins/sticky'
 import MultiStepModalForm from './multi_step_modal_form'
 import checkboxinput from '../checkbox_input'
 import levelofwarrant from '../levelofwarrant'
@@ -31,16 +31,5 @@ export default {
     toggler,
     uploadinput,
   },
-  mixins: [FormMixin],
-  directives: {
-    sticky: {
-      inserted: (el, binding) => {
-        var customAttributes
-        if (binding.expression) {
-          customAttributes = JSON.parse(binding.expression)
-        }
-        stickybits(el, customAttributes)
-      },
-    },
-  },
+  mixins: [FormMixin, StickyMixin],
 }

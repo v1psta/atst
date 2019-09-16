@@ -1,11 +1,10 @@
-import stickybits from 'stickybits'
-
 import checkboxinput from '../checkbox_input'
 import ClinFields from '../clin_fields'
 import DateSelector from '../date_selector'
 import FormMixin from '../../mixins/form'
 import optionsinput from '../options_input'
 import SemiCollapsibleText from '../semi_collapsible_text'
+import StickyMixin from '../../mixins/sticky'
 import textinput from '../text_input'
 import TotalsBox from '../totals_box'
 import uploadinput from '../upload_input'
@@ -13,7 +12,7 @@ import uploadinput from '../upload_input'
 export default {
   name: 'to-form',
 
-  mixins: [FormMixin],
+  mixins: [FormMixin, StickyMixin],
 
   components: {
     checkboxinput,
@@ -62,18 +61,6 @@ export default {
       }
 
       this.validateForm()
-    },
-  },
-
-  directives: {
-    sticky: {
-      inserted: (el, binding) => {
-        var customAttributes
-        if (binding.expression) {
-          customAttributes = JSON.parse(binding.expression)
-        }
-        stickybits(el, customAttributes)
-      },
     },
   },
 }
