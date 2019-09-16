@@ -2,6 +2,7 @@ import pendulum
 import pytest
 from uuid import uuid4
 from unittest.mock import Mock
+from threading import Thread
 
 from atst.models import Environment
 from atst.domain.csp.cloud import MockCloudProvider
@@ -24,8 +25,6 @@ from tests.factories import (
     UserFactory,
     PortfolioFactory,
 )
-
-from threading import Thread
 
 
 def test_environment_job_failure(celery_app, celery_worker):
@@ -239,7 +238,7 @@ def test_create_environment_no_dupes(session, celery_app, celery_worker):
     assert environment.claimed_at == None
 
 
-def test_claim(session):
+def test_claim_for_update(session):
     portfolio = PortfolioFactory.create(
         applications=[
             {
@@ -265,19 +264,21 @@ def test_claim(session):
     )
     environment = portfolio.applications[0].environments[0]
 
-    events = []
+    satisfied_claims = []
 
+    # Two threads that race to acquire a claim on the same environment.
+    # SecondThread's claim will be rejected, which will result in a ClaimFailedException.
     class FirstThread(Thread):
         def run(self):
             with claim_for_update(environment):
-                events.append("first")
+                satisfied_claims.append("FirstThread")
 
     class SecondThread(Thread):
         def run(self):
             try:
                 with claim_for_update(environment):
-                    events.append("second")
-            except Exception:
+                    satisfied_claims.append("SecondThread")
+            except ClaimFailedException:
                 pass
 
     t1 = FirstThread()
@@ -287,4 +288,4 @@ def test_claim(session):
     t1.join()
     t2.join()
 
-    assert events == ["first"]
+    assert satisfied_claims == ["FirstThread"]
