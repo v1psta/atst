@@ -194,6 +194,7 @@
         <ul class="accordion-table__items">
           {% for env in environments_obj %}
             {% set edit_form = env['edit_form'] %}
+            {% set testing_env_name = 'qa' %}
             <toggler inline-template>
               <li class="accordion-table__item">
                 <div class="accordion-table__item-content form-row">
@@ -202,19 +203,24 @@
                       <span>
                         {{ env['name'] }}
                       </span>
-                      <span class="icon-link">
-                        {% set edit_environment_button %}
-                          {{ Icon('edit') }}
-                        {% endset %}
+                      {% if env['name'].lower() == testing_env_name %}
+                        <span class='label'>PROCESSING</span>
+                      {% endif %}
+                      {% if env['name'].lower() != testing_env_name %}
+                        <span class="icon-link">
+                          {% set edit_environment_button %}
+                            {{ Icon('edit') }}
+                          {% endset %}
 
-                        {{
-                        ToggleButton(
-                          open_html=edit_environment_button,
-                          close_html=edit_environment_button,
-                          section_name="edit"
-                          )
-                        }}
-                      </span>
+                          {{
+                          ToggleButton(
+                            open_html=edit_environment_button,
+                            close_html=edit_environment_button,
+                            section_name="edit"
+                            )
+                          }}
+                        </span>
+                      {% endif %}
                       <span class="accordion-table__item__toggler icon-link">
                         {% set members_button = "portfolios.applications.member_count" | translate({'count': env['member_count']}) %}
                         {{
@@ -228,9 +234,13 @@
                     </div>
                   </div>
                   <div class="form-col form-col--third">
-                    <a href='{{ url_for("applications.access_environment", environment_id=env.id)}}' target='_blank' rel='noopener noreferrer' class='application-list-item__environment__csp_link icon-link'>
-                      <span>{{ "portfolios.applications.csp_link" | translate }} {{ Icon('link', classes="icon--tiny") }}</span>
-                    </a>
+                    {% if env['name'].lower() == testing_env_name %}
+                      <em>Cloud service provider link unavailable</em>
+                    {% else %}
+                      <a href='{{ url_for("applications.access_environment", environment_id=env.id)}}' target='_blank' rel='noopener noreferrer' class='application-list-item__environment__csp_link icon-link'>
+                        <span>{{ "portfolios.applications.csp_link" | translate }} {{ Icon('link', classes="icon--tiny") }}</span>
+                      </a>
+                    {% endif %}
                   </div>
                 </div>
 
