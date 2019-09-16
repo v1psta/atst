@@ -51,24 +51,26 @@ class ClaimFailedException(Exception):
 
 @contextmanager
 def claim_for_update(resource):
+    Model = resource.__class__
+
     rows_updated = (
-        db.session.query(resource.__class__)
+        db.session.query(Model)
         .filter_by(id=resource.id, claimed_at=None)
         .update({"claimed_at": func.now()}, synchronize_session=False)
     )
     if rows_updated < 1:
         raise ClaimFailedException(
-            f"Could not acquire claim for {resource.__class__.__name__} {resource.id}."
+            f"Could not acquire claim for {Model.__name__} {resource.id}."
         )
 
-    claimed = db.session.query(resource.__class__).filter_by(id=resource.id).one()
+    claimed = db.session.query(Model).filter_by(id=resource.id).one()
 
     try:
         yield claimed
     finally:
-        db.session.query(resource.__class__).filter(
-            resource.__class__.id == resource.id
-        ).filter(resource.__class__.claimed_at != None).update(
+        db.session.query(Model).filter(
+            Model.id == resource.id
+        ).filter(Model.claimed_at != None).update(
             {"claimed_at": sql.null()}, synchronize_session=False
         )
 
