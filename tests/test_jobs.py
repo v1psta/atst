@@ -26,7 +26,6 @@ from tests.factories import (
 )
 
 from threading import Thread
-from time import sleep
 
 
 def test_environment_job_failure(celery_app, celery_worker):
@@ -68,7 +67,6 @@ def test_environment_role_job_failure(celery_app, celery_worker):
 now = pendulum.now()
 yesterday = now.subtract(days=1)
 tomorrow = now.add(days=1)
-from atst.domain.environments import Environments
 
 
 @pytest.fixture(autouse=True, scope="function")
