@@ -68,15 +68,12 @@ def claim_for_update(resource):
     try:
         yield claimed
     finally:
-        db.session.query(Model).filter(
-            Model.id == resource.id
-        ).filter(Model.claimed_at != None).update(
-            {"claimed_at": sql.null()}, synchronize_session=False
-        )
+        db.session.query(Model).filter(Model.id == resource.id).filter(
+            Model.claimed_at != None
+        ).update({"claimed_at": sql.null()}, synchronize_session=False)
 
 
 def do_create_environment(csp: CloudProviderInterface, environment_id=None):
-    logger.info(environment_id)
     environment = Environments.get(environment_id)
 
     with claim_for_update(environment) as environment:
