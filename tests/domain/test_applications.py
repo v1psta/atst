@@ -21,7 +21,7 @@ from tests.factories import (
 def test_create_application_with_multiple_environments():
     portfolio = PortfolioFactory.create()
     application = Applications.create(
-        portfolio, "My Test Application", "Test", ["dev", "prod"]
+        portfolio.owner, portfolio, "My Test Application", "Test", ["dev", "prod"]
     )
 
     assert application.portfolio == portfolio

@@ -227,7 +227,9 @@ def new_environment(application_id):
     env_form = EditEnvironmentForm(formdata=http_request.form)
 
     if env_form.validate():
-        Environments.create(application=application, name=env_form.name.data)
+        Environments.create(
+            g.current_user, application=application, name=env_form.name.data
+        )
 
         flash("environment_added", environment_name=env_form.data["name"])
 

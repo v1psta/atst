@@ -29,7 +29,7 @@ def completed_task_order():
     task_order = TaskOrderFactory.create(
         creator=portfolio.owner,
         portfolio=portfolio,
-        create_clins=["1234567890123456789012345678901234567890123"],
+        create_clins=[{"number": "1234567890123456789012345678901234567890123"}],
     )
 
     return task_order
@@ -334,7 +334,7 @@ def test_task_orders_submit_task_order(client, user_session, task_order):
         ({"_pdf": None, "number": "", "clins": []}, "step_1"),
         ({"number": "", "clins": []}, "step_2"),
         ({"number": "1234567890123", "clins": []}, "step_3"),
-        ({"number": "1234567890123", "create_clins": [1]}, "step_4"),
+        ({"number": "1234567890123", "create_clins": [{"number": 1}]}, "step_4"),
     ],
 )
 def test_task_orders_edit_redirects_to_latest_incomplete_step(

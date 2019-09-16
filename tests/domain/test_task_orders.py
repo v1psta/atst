@@ -139,7 +139,7 @@ def test_update_adds_clins():
 
 def test_update_does_not_duplicate_clins():
     task_order = TaskOrderFactory.create(
-        number="3453453456", create_clins=["123", "456"]
+        number="3453453456", create_clins=[{"number": "123"}, {"number": "456"}]
     )
     clins = [
         {
@@ -171,7 +171,9 @@ def test_update_does_not_duplicate_clins():
 
 
 def test_delete_task_order_with_clins(session):
-    task_order = TaskOrderFactory.create(create_clins=[1, 2, 3])
+    task_order = TaskOrderFactory.create(
+        create_clins=[{"number": 1}, {"number": 2}, {"number": 3}]
+    )
     TaskOrders.delete(task_order.id)
 
     assert not session.query(

@@ -1,4 +1,6 @@
 import pytest
+import pendulum
+from uuid import uuid4
 
 from atst.domain.environments import Environments
 from atst.domain.environment_roles import EnvironmentRoles
@@ -7,7 +9,6 @@ from atst.models.environment_role import CSPRole
 
 from tests.factories import (
     ApplicationFactory,
-    UserFactory,
     PortfolioFactory,
     EnvironmentFactory,
     EnvironmentRoleFactory,
@@ -15,12 +16,13 @@ from tests.factories import (
 )
 
 
-@pytest.mark.skip(reason="Reinstate and update once jobs api is up")
 def test_create_environments():
     application = ApplicationFactory.create()
-    environments = Environments.create_many(application, ["Staging", "Production"])
+    environments = Environments.create_many(
+        application.portfolio.owner, application, ["Staging", "Production"]
+    )
     for env in environments:
-        assert env.cloud_id is not None
+        assert env.cloud_id is None
 
 
 def test_update_env_role():
@@ -87,3 +89,125 @@ def test_update_environment():
     assert environment.name is not "name 2"
     Environments.update(environment, name="name 2")
     assert environment.name == "name 2"
+
+
+class EnvQueryTest:
+    @property
+    def NOW(self):
+        return pendulum.now()
+
+    @property
+    def YESTERDAY(self):
+        return self.NOW.subtract(days=1)
+
+    @property
+    def TOMORROW(self):
+        return self.NOW.add(days=1)
+
+    def create_portfolio_with_clins(self, start_and_end_dates, env_data=None):
+        env_data = env_data or {}
+        return PortfolioFactory.create(
+            applications=[
+                {
+                    "name": "Mos Eisley",
+                    "description": "Where Han shot first",
+                    "environments": [{"name": "thebar", **env_data}],
+                }
+            ],
+            task_orders=[
+                {
+                    "create_clins": [
+                        {"start_date": start_date, "end_date": end_date}
+                        for (start_date, end_date) in start_and_end_dates
+                    ]
+                }
+            ],
+        )
+
+
+class TestGetEnvironmentsPendingCreate(EnvQueryTest):
+    def test_with_expired_clins(self, session):
+        self.create_portfolio_with_clins([(self.YESTERDAY, self.YESTERDAY)])
+        assert len(Environments.get_environments_pending_creation(self.NOW)) == 0
+
+    def test_with_active_clins(self, session):
+        portfolio = self.create_portfolio_with_clins([(self.YESTERDAY, self.TOMORROW)])
+        Environments.get_environments_pending_creation(self.NOW) == [
+            portfolio.applications[0].environments[0].id
+        ]
+
+    def test_with_future_clins(self, session):
+        self.create_portfolio_with_clins([(self.TOMORROW, self.TOMORROW)])
+        assert len(Environments.get_environments_pending_creation(self.NOW)) == 0
+
+    def test_with_already_provisioned_env(self, session):
+        self.create_portfolio_with_clins(
+            [(self.YESTERDAY, self.TOMORROW)], env_data={"cloud_id": uuid4().hex}
+        )
+        assert len(Environments.get_environments_pending_creation(self.NOW)) == 0
+
+
+class TestGetEnvironmentsPendingAtatUserCreation(EnvQueryTest):
+    def test_with_provisioned_environment(self):
+        self.create_portfolio_with_clins(
+            [(self.YESTERDAY, self.TOMORROW)],
+            {"cloud_id": uuid4().hex, "root_user_info": {}},
+        )
+        assert (
+            len(Environments.get_environments_pending_atat_user_creation(self.NOW)) == 0
+        )
+
+    def test_with_unprovisioned_environment(self):
+        self.create_portfolio_with_clins(
+            [(self.YESTERDAY, self.TOMORROW)],
+            {"cloud_id": uuid4().hex, "root_user_info": None},
+        )
+        assert (
+            len(Environments.get_environments_pending_atat_user_creation(self.NOW)) == 1
+        )
+
+    def test_with_unprovisioned_expired_clins_environment(self):
+        self.create_portfolio_with_clins(
+            [(self.YESTERDAY, self.YESTERDAY)],
+            {"cloud_id": uuid4().hex, "root_user_info": None},
+        )
+        assert (
+            len(Environments.get_environments_pending_atat_user_creation(self.NOW)) == 0
+        )
+
+
+class TestGetEnvironmentsPendingBaselineCreation(EnvQueryTest):
+    def test_with_provisioned_environment(self):
+        self.create_portfolio_with_clins(
+            [(self.YESTERDAY, self.TOMORROW)],
+            {
+                "cloud_id": uuid4().hex,
+                "root_user_info": {"foo": "bar"},
+                "baseline_info": {"foo": "bar"},
+            },
+        )
+        assert (
+            len(Environments.get_environments_pending_baseline_creation(self.NOW)) == 0
+        )
+
+    def test_with_unprovisioned_environment(self):
+        self.create_portfolio_with_clins(
+            [(self.YESTERDAY, self.TOMORROW)],
+            {
+                "cloud_id": uuid4().hex,
+                "root_user_info": {"foo": "bar"},
+                "baseline_info": None,
+            },
+        )
+        assert (
+            len(Environments.get_environments_pending_baseline_creation(self.NOW)) == 1
+        )
+
+    def test_with_unprovisioned_expired_clins_environment(self):
+        self.create_portfolio_with_clins(
+            [(self.YESTERDAY, self.YESTERDAY)],
+            {"cloud_id": uuid4().hex, "root_user_info": {"foo": "bar"}},
+        )
+        assert (
+            len(Environments.get_environments_pending_baseline_creation(self.NOW)) == 0
+        )

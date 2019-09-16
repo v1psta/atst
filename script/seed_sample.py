@@ -220,6 +220,7 @@ def add_applications_to_portfolio(portfolio):
     applications = random_applications()
     for application_data in applications:
         application = Applications.create(
+            portfolio.owner,
             portfolio=portfolio,
             name=application_data["name"],
             description=application_data["description"],
@@ -278,7 +279,7 @@ def create_demo_portfolio(name, data):
             portfolio=portfolio, name=mock_application.name, description=""
         )
         env_names = [env.name for env in mock_application.environments]
-        envs = Environments.create_many(application, env_names)
+        envs = Environments.create_many(portfolio.owner, application, env_names)
         db.session.add(application)
         db.session.commit()
 

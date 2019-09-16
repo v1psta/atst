@@ -1,5 +1,7 @@
 from sqlalchemy import Column, ForeignKey, String
 from sqlalchemy.orm import relationship
+from sqlalchemy.dialects.postgresql import JSONB
+from enum import Enum
 
 from atst.models import Base
 from atst.models.types import Id
@@ -17,9 +19,21 @@ class Environment(
     application_id = Column(ForeignKey("applications.id"), nullable=False)
     application = relationship("Application")
 
+    # User user.id as the foreign key here beacuse the Environment creator may
+    # not have an application role. We may need to revisit this if we receive any
+    # requirements around tracking an environment's custodian.
+    creator_id = Column(ForeignKey("users.id"), nullable=False)
+    creator = relationship("User")
+
     cloud_id = Column(String)
+    root_user_info = Column(JSONB)
+    baseline_info = Column(JSONB)
 
     job_failures = relationship("EnvironmentJobFailure")
+
+    class ProvisioningStatus(Enum):
+        PENDING = "pending"
+        COMPLETED = "completed"
 
     @property
     def users(self):
@@ -40,6 +54,17 @@ class Environment(
     @property
     def portfolio_id(self):
         return self.application.portfolio_id
+
+    @property
+    def provisioning_status(self) -> ProvisioningStatus:
+        if (
+            self.cloud_id is None
+            or self.root_user_info is None
+            or self.baseline_info is None
+        ):
+            return self.ProvisioningStatus.PENDING
+        else:
+            return self.ProvisioningStatus.COMPLETED
 
     def __repr__(self):
         return "<Environment(name='{}', num_users='{}', application='{}', portfolio='{}', id='{}')>".format(

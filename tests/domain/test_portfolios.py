@@ -71,7 +71,11 @@ def test_update_portfolio_role_role(portfolio, portfolio_owner):
 
 def test_scoped_portfolio_for_admin_missing_view_apps_perms(portfolio_owner, portfolio):
     Applications.create(
-        portfolio, "My Application 2", "My application 2", ["dev", "staging", "prod"]
+        portfolio.owner,
+        portfolio,
+        "My Application 2",
+        "My application 2",
+        ["dev", "staging", "prod"],
     )
     restricted_admin = UserFactory.create()
     PortfolioRoleFactory.create(
@@ -90,7 +94,11 @@ def test_scoped_portfolio_returns_all_applications_for_portfolio_admin(
 ):
     for _ in range(5):
         Applications.create(
-            portfolio, "My Application", "My application", ["dev", "staging", "prod"]
+            portfolio.owner,
+            portfolio,
+            "My Application",
+            "My application",
+            ["dev", "staging", "prod"],
         )
 
     admin = UserFactory.create()
@@ -109,7 +117,11 @@ def test_scoped_portfolio_returns_all_applications_for_portfolio_owner(
 ):
     for _ in range(5):
         Applications.create(
-            portfolio, "My Application", "My application", ["dev", "staging", "prod"]
+            portfolio.owner,
+            portfolio,
+            "My Application",
+            "My application",
+            ["dev", "staging", "prod"],
         )
 
     scoped_portfolio = Portfolios.get(portfolio_owner, portfolio.id)

@@ -19,13 +19,13 @@ class Applications(BaseDomainClass):
     resource_name = "application"
 
     @classmethod
-    def create(cls, portfolio, name, description, environment_names):
+    def create(cls, user, portfolio, name, description, environment_names):
         application = Application(
             portfolio=portfolio, name=name, description=description
         )
         db.session.add(application)
 
-        Environments.create_many(application, environment_names)
+        Environments.create_many(user, application, environment_names)
 
         db.session.commit()
         return application
