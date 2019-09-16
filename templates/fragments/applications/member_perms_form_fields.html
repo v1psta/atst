@@ -1,7 +1,7 @@
 {% from "components/checkbox_input.html" import CheckboxInput %}
 
 {% macro MemberPermsFields(app_perms_form, env_roles_form, new=False, member_role_id=None) %}
-  <div class="">
+  <div class="form-content--app-mem">
     <h4>{{ "portfolios.applications.members.form.project_perms" | translate }}</h4>
     <div class="application-perms">
       {% if new %}
@@ -18,7 +18,7 @@
       {{ CheckboxInput(app_perms_form.perms_env_mgmt, classes="input__inline-fields", key=env_mgmt, id=env_mgmt) }}
       {{ CheckboxInput(app_perms_form.perms_del_env, classes="input__inline-fields", key=del_env, id=del_env) }}
     </div>
-    <div class="environment-roles-new">
+    <div class="environment_roles environment-roles-new">
       <h4>{{ "portfolios.applications.members.form.env_access" | translate }}</h4>
       <hr>
       {% for environment_data in env_roles_form %}
