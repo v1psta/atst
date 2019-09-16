@@ -4,6 +4,7 @@
 {% from "components/delete_confirmation.html" import DeleteConfirmation %}
 {% from "components/icon.html" import Icon %}
 {% import "fragments/applications/new_member_modal_content.html" as member_steps %}
+{% from "fragments/applications/member_perms_form_fields.html" import MemberPermsFields %}
 {% from "components/modal.html" import Modal %}
 {% from "components/multi_step_modal_form.html" import MultiStepModalForm %}
 {% from "components/pagination.html" import Pagination %}
@@ -124,44 +125,7 @@
           {% call Modal(modal_name, dismissable=True) %}
             <form id='{{ modal_name }}' method="POST" action="{{ url_for('applications.update_member', application_id=application.id, application_role_id=member.role_id) }}">
               {{ member.form.csrf_token }}
-              <h4>{{ "portfolios.applications.members.form.project_perms" | translate }}</h4>
-              <div class="application-perms">
-                {% set team_mgmt = "perms_team_mgmt-{}".format(member.role_id) %}
-                {% set env_mgmt = "perms_env_mgmt-{}".format(member.role_id) %}
-                {% set del_env = "perms_del_env-{}".format(member.role_id) %}
-                {{ CheckboxInput(member.form.perms_team_mgmt, classes="input__inline-fields", key=team_mgmt, id=team_mgmt) }}
-                {{ CheckboxInput(member.form.perms_env_mgmt, classes="input__inline-fields", key=env_mgmt, id=env_mgmt) }}
-                {{ CheckboxInput(member.form.perms_del_env, classes="input__inline-fields", key=del_env, id=del_env) }}
-              </div>
-              <div class="environment-roles-new">
-                <h4>{{ "portfolios.applications.members.form.env_access" | translate }}</h4>
-                <hr>
-                {% for environment_data in member.form.environment_roles %}
-                  <optionsinput inline-template
-                    v-bind:initial-value="'{{ environment_data.role.data | string }}'"
-                    v-bind:name="'{{ environment_data.name | string }}'"
-                    v-bind:optional="true">
-                    <div class="usa-input">
-                      <fieldset data-ally-disabled="true" class="usa-input__choices">
-                        <div class="form-row">
-                          <div class="form-col form-col--two-thirds">
-                            <legend>
-                              <div v-bind:class='["usa-input__title-inline", {"environment-name--gray": value === "None" }]'>
-                                {{ environment_data.environment_name.data }}
-                              </div>
-                            </legend>
-                          </div>
-                          <div class="form-col form-col--third">
-                            {{ environment_data.role(**{"v-model": "value"}) }}
-                          </div>
-                        </div>
-                      </fieldset>
-                    </div>
-                  </optionsinput>
-                  {{ environment_data.environment_id() }}
-                  <hr>
-                {% endfor %}
-              </div>
+              {{ MemberPermsFields(app_perms_form=member.form, env_roles_form=member.form.environment_roles, member_role_id=member.role_id) }}
               <input
                 type="submit"
                 class='action-group__action usa-button'

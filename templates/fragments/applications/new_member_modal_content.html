@@ -2,6 +2,7 @@
 {% from "components/text_input.html" import TextInput %}
 {% from "components/checkbox_input.html" import CheckboxInput %}
 {% from "components/phone_input.html" import PhoneInput %}
+{% from "fragments/applications/member_perms_form_fields.html" import MemberPermsFields %}
 
 {% macro MemberFormTemplate(title, next_button, previous=True) %}
   <div class="modal__form--header">
@@ -63,41 +64,6 @@
   {% endset %}
 
   {% call MemberFormTemplate(title="portfolios.applications.members.form.step_2_title"|translate, next_button=next_button) %}
-  <h4>{{ "portfolios.applications.members.form.project_perms" | translate }}</h4>
-  <div class="application-perms">
-    {{ CheckboxInput(member_form.permission_sets.perms_team_mgmt, classes="input__inline-fields") }}
-    {{ CheckboxInput(member_form.permission_sets.perms_env_mgmt, classes="input__inline-fields") }}
-    {{ CheckboxInput(member_form.permission_sets.perms_del_env, classes="input__inline-fields") }}
-  </div>
-  <div class="environment-roles-new">
-    <h4>{{ "portfolios.applications.members.form.env_access" | translate }}</h4>
-    <hr>
-    {% for environment_data in member_form.environment_roles %}
-      <optionsinput inline-template
-        v-bind:initial-value="'{{ environment_data.role.data | string }}'"
-        v-bind:name="'{{ environment_data.name | string }}'"
-        v-bind:optional="true"
-      >
-        <div class="usa-input">
-          <fieldset data-ally-disabled="true" class="usa-input__choices">
-            <div class="form-row">
-              <div class="form-col form-col--two-thirds">
-                <legend>
-                  <div v-bind:class='["usa-input__title-inline", {"environment-name--gray": value === "None" }]'>
-                    {{ environment_data.environment_name.data }}
-                  </div>
-                </legend>
-              </div>
-              <div class="form-col form-col--third">
-                {{ environment_data.role(**{"v-model": "value"}) }}
-              </div>
-            </div>
-          </fieldset>
-        </div>
-      </optionsinput>
-      {{ environment_data.environment_id() }}
-      <hr>
-    {% endfor %}
-  </div>
+    {{ MemberPermsFields(app_perms_form=member_form.permission_sets, env_roles_form=member_form.environment_roles) }}
   {% endcall %}
 {% endmacro %}
