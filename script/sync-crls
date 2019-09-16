@@ -5,7 +5,8 @@ set -e
 cd "$(dirname "$0")/.."
 
 mkdir -p crl-tmp crls
-# need to adjust this command
 ./.venv/bin/python ./atst/domain/authnid/crl/util.py crl-tmp crls
-cp -r crl-tmp/* crls/
+if [ "$(ls -A crl-tmp)" ]; then
+  cp -r crl-tmp/* crls/
+fi
 rm -rf crl-tmp
