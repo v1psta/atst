@@ -1,16 +1,13 @@
 from flask import current_app as app
 import pendulum
-from celery.utils.log import get_task_logger
-from sqlalchemy import func, orm, sql
-from sqlalchemy import update
+from sqlalchemy import func, sql
+from contextlib import contextmanager
 
 from atst.database import db
 from atst.queue import celery
 from atst.models import EnvironmentJobFailure, EnvironmentRoleJobFailure
 from atst.domain.csp.cloud import CloudProviderInterface, GeneralCSPException
 from atst.domain.environments import Environments
-
-logger = get_task_logger(__name__)
 
 
 class RecordEnvironmentFailure(celery.Task):
@@ -48,9 +45,6 @@ def send_notification_mail(recipients, subject, body):
     app.mailer.send(recipients, subject, body)
 
 
-from contextlib import contextmanager
-
-
 class ClaimFailedException(Exception):
     pass
 
@@ -60,7 +54,7 @@ def claim_for_update(resource):
     rows_updated = (
         db.session.query(resource.__class__)
         .filter_by(id=resource.id, claimed_at=None)
-        .update({"claimed_at": func.now()}, synchronize_session="fetch")
+        .update({"claimed_at": func.now()}, synchronize_session=False)
     )
     if rows_updated < 1:
         raise ClaimFailedException(
@@ -75,7 +69,7 @@ def claim_for_update(resource):
         db.session.query(resource.__class__).filter(
             resource.__class__.id == resource.id
         ).filter(resource.__class__.claimed_at != None).update(
-            {"claimed_at": sql.null()}, synchronize_session="fetch"
+            {"claimed_at": sql.null()}, synchronize_session=False
         )
 
 

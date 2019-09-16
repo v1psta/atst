@@ -2,12 +2,10 @@ from sqlalchemy import Column, ForeignKey, String, TIMESTAMP
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import JSONB
 from enum import Enum
-import contextlib
 
 from atst.models import Base
 from atst.models.types import Id
 from atst.models import mixins
-from atst.database import db
 
 
 class Environment(
