@@ -121,12 +121,21 @@
               <th>Member</th>
               <th>Project Permissions</th>
               <th>Environment Access</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
             {% for member in members %}
               <tr>
-                <td>{{ member.user_name }}</td>
+                <td>
+                  <p>
+                    {{ member.user_name }}
+                  </p>
+                  {% if member.role_status == 'pending' %}
+                    <span class='label label--purple'>INVITE PENDING</span>
+                  {% endif %}
+                </td>
+
                 <td>
                   {% for perm, value in member.permission_sets.items() %}
                     {{ ("portfolios.applications.members.{}.{}".format(perm, value)) | translate }}<br>
@@ -136,6 +145,16 @@
                   {% for env in member.environment_roles %}
                     {{ env.environment_name }}{% if not env == member.environment_roles[-1]%},{% endif %}
                   {% endfor %}
+                </td>
+                <td>
+                  {% if member.role_status == 'pending' %}
+                    <p>
+                      <a href="#">Resend Invite</a>
+                    </p>
+                    <p>
+                      <a href="#">Revoke Invite</a>
+                    </p>
+                  {% endif %}
                 </td>
               </tr>
             {% endfor %}
