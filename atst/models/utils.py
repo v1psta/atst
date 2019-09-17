@@ -28,7 +28,7 @@ def claim_for_update(resource, minutes=30):
         .filter(
             and_(
                 Model.id == resource.id,
-                or_(Model.claimed_until == None, Model.claimed_until < func.now()),
+                or_(Model.claimed_until == None, Model.claimed_until <= func.now()),
             )
         )
         .update({"claimed_until": claim_until}, synchronize_session="fetch")

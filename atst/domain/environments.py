@@ -1,4 +1,4 @@
-from sqlalchemy import text
+from sqlalchemy import text, func, or_
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.orm import load_only
 from typing import List
@@ -104,6 +104,12 @@ class Environments(object):
             .join(CLIN)
             .filter(CLIN.start_date <= now)
             .filter(CLIN.end_date > now)
+            .filter(
+                or_(
+                    Environment.claimed_until == None,
+                    Environment.claimed_until <= func.now(),
+                )
+            )
             # select only these columns
             .options(load_only("id", "creator_id"))
         )
