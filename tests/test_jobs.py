@@ -227,14 +227,19 @@ def test_create_environment_no_dupes(session, celery_app, celery_worker):
     )
     environment = portfolio.applications[0].environments[0]
 
+    # create_environment is run twice on the same environment
     create_environment.run(environment_id=environment.id)
-    environment = session.query(Environment).get(environment.id)
+    session.refresh(environment)
+
     first_cloud_id = environment.cloud_id
 
     create_environment.run(environment_id=environment.id)
-    environment = session.query(Environment).get(environment.id)
+    session.refresh(environment)
 
+    # The environment's cloud_id was not overwritten in the second run
     assert environment.cloud_id == first_cloud_id
+
+    # The environment's claim was released
     assert environment.claimed_until == None
 
 
@@ -267,7 +272,7 @@ def test_claim_for_update(session):
     satisfied_claims = []
 
     # Two threads that race to acquire a claim on the same environment.
-    # SecondThread's claim will be rejected, which will result in a ClaimFailedException.
+    # SecondThread's claim will be rejected, resulting in a ClaimFailedException.
     class FirstThread(Thread):
         def run(self):
             with claim_for_update(environment):
@@ -293,5 +298,5 @@ def test_claim_for_update(session):
     # Only FirstThread acquired a claim and wrote to satisfied_claims
     assert satisfied_claims == ["FirstThread"]
 
-    # The claim is released as soon as work is done
+    # The claim is released
     assert environment.claimed_until is None
