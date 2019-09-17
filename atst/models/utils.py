@@ -21,7 +21,7 @@ def claim_for_update(resource, minutes=30):
                 or_(Model.claimed_until == None, Model.claimed_until < func.now()),
             )
         )
-        .update({"claimed_until": claim_until}, synchronize_session=False)
+        .update({"claimed_until": claim_until}, synchronize_session="fetch")
     )
     if rows_updated < 1:
         raise ClaimFailedException(resource)
@@ -33,4 +33,4 @@ def claim_for_update(resource, minutes=30):
     finally:
         db.session.query(Model).filter(Model.id == resource.id).filter(
             Model.claimed_until != None
-        ).update({"claimed_until": sql.null()}, synchronize_session=False)
+        ).update({"claimed_until": sql.null()}, synchronize_session="fetch")
