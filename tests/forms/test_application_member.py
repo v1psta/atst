@@ -42,11 +42,6 @@ def test_update_member_form():
         "perms_team_mgmt": True,
         "perms_env_mgmt": False,
         "perms_del_env": False,
-        "environment_roles": {
-            "environment_id": 123,
-            "environment_name": "testing",
-            "role": ENV_ROLES[0][0],
-        },
     }
     form = UpdateMemberForm(data=form_data)
     assert form.validate()

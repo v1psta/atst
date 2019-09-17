@@ -58,7 +58,6 @@ class NewForm(BaseForm):
 
 
 class UpdateMemberForm(PermissionsForm):
-    # permission_sets = FormField(PermissionsForm)
     environment_roles = FieldList(FormField(EnvironmentForm))
 
     @property
