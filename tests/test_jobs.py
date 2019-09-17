@@ -235,7 +235,7 @@ def test_create_environment_no_dupes(session, celery_app, celery_worker):
     environment = session.query(Environment).get(environment.id)
 
     assert environment.cloud_id == first_cloud_id
-    assert environment.claimed_at == None
+    assert environment.claimed_until == None
 
 
 def test_claim_for_update(session):

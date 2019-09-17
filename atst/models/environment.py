@@ -29,7 +29,7 @@ class Environment(
     root_user_info = Column(JSONB)
     baseline_info = Column(JSONB)
 
-    claimed_at = Column(TIMESTAMP(timezone=True))
+    claimed_until = Column(TIMESTAMP(timezone=True))
 
     job_failures = relationship("EnvironmentJobFailure")
 

@@ -1,4 +1,4 @@
-from sqlalchemy import func, sql
+from sqlalchemy import func, sql, Interval, and_, or_
 from contextlib import contextmanager
 
 from atst.database import db
@@ -6,13 +6,22 @@ from atst.domain.exceptions import ClaimFailedException
 
 
 @contextmanager
-def claim_for_update(resource):
+def claim_for_update(resource, minutes=30):
     Model = resource.__class__
+
+    claim_until = func.now() + func.cast(
+        sql.functions.concat(minutes, " MINUTES"), Interval
+    )
 
     rows_updated = (
         db.session.query(Model)
-        .filter_by(id=resource.id, claimed_at=None)
-        .update({"claimed_at": func.now()}, synchronize_session=False)
+        .filter(
+            and_(
+                Model.id == resource.id,
+                or_(Model.claimed_until == None, Model.claimed_until < func.now()),
+            )
+        )
+        .update({"claimed_until": claim_until}, synchronize_session=False)
     )
     if rows_updated < 1:
         raise ClaimFailedException(resource)
@@ -23,5 +32,5 @@ def claim_for_update(resource):
         yield claimed
     finally:
         db.session.query(Model).filter(Model.id == resource.id).filter(
-            Model.claimed_at != None
-        ).update({"claimed_at": sql.null()}, synchronize_session=False)
+            Model.claimed_until != None
+        ).update({"claimed_until": sql.null()}, synchronize_session=False)
