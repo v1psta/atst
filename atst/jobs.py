@@ -74,28 +74,31 @@ def do_create_environment(csp: CloudProviderInterface, environment_id=None):
 
 def do_create_atat_admin_user(csp: CloudProviderInterface, environment_id=None):
     environment = Environments.get(environment_id)
-    atat_root_creds = csp.root_creds()
 
-    atat_remote_root_user = csp.create_atat_admin_user(
-        atat_root_creds, environment.cloud_id
-    )
-    environment.root_user_info = atat_remote_root_user
-    db.session.add(environment)
-    db.session.commit()
+    with claim_for_update(environment) as environment:
+        atat_root_creds = csp.root_creds()
+
+        atat_remote_root_user = csp.create_atat_admin_user(
+            atat_root_creds, environment.cloud_id
+        )
+        environment.root_user_info = atat_remote_root_user
+        db.session.add(environment)
+        db.session.commit()
 
 
 def do_create_environment_baseline(csp: CloudProviderInterface, environment_id=None):
     environment = Environments.get(environment_id)
 
-    # ASAP switch to use remote root user for provisioning
-    atat_remote_root_creds = environment.root_user_info["credentials"]
+    with claim_for_update(environment) as environment:
+        # ASAP switch to use remote root user for provisioning
+        atat_remote_root_creds = environment.root_user_info["credentials"]
 
-    baseline_info = csp.create_environment_baseline(
-        atat_remote_root_creds, environment.cloud_id
-    )
-    environment.baseline_info = baseline_info
-    db.session.add(environment)
-    db.session.commit()
+        baseline_info = csp.create_environment_baseline(
+            atat_remote_root_creds, environment.cloud_id
+        )
+        environment.baseline_info = baseline_info
+        db.session.add(environment)
+        db.session.commit()
 
 
 def do_work(fn, task, csp, **kwargs):
