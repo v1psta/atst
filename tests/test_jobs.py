@@ -138,9 +138,7 @@ def test_dispatch_create_environment(session, monkeypatch):
 
     dispatch_create_environment.run()
 
-    mock.delay.assert_called_once_with(
-        environment_id=environment.id, atat_user_id=environment.creator_id
-    )
+    mock.delay.assert_called_once_with(environment_id=environment.id)
 
 
 def test_dispatch_create_atat_admin_user(session, monkeypatch):

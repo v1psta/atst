@@ -109,7 +109,7 @@ def do_work(fn, task, csp, **kwargs):
 
 
 @celery.task(bind=True)
-def create_environment(self, environment_id=None, atat_user_id=None):
+def create_environment(self, environment_id=None):
     do_work(do_create_environment, self, app.csp.cloud, environment_id=environment_id)
 
 
@@ -132,23 +132,23 @@ def create_environment_baseline(self, environment_id=None):
 
 @celery.task(bind=True)
 def dispatch_create_environment(self):
-    for environment in Environments.get_environments_pending_creation(pendulum.now()):
-        create_environment.delay(
-            environment_id=environment.id, atat_user_id=environment.creator_id
-        )
+    for environment_id in Environments.get_environments_pending_creation(
+        pendulum.now()
+    ):
+        create_environment.delay(environment_id=environment_id)
 
 
 @celery.task(bind=True)
 def dispatch_create_atat_admin_user(self):
-    for environment in Environments.get_environments_pending_atat_user_creation(
+    for environment_id in Environments.get_environments_pending_atat_user_creation(
         pendulum.now()
     ):
-        create_atat_admin_user.delay(environment_id=environment.id)
+        create_atat_admin_user.delay(environment_id=environment_id)
 
 
 @celery.task(bind=True)
 def dispatch_create_environment_baseline(self):
-    for environment in Environments.get_environments_pending_baseline_creation(
+    for environment_id in Environments.get_environments_pending_baseline_creation(
         pendulum.now()
     ):
-        create_environment_baseline.delay(environment_id=environment.id)
+        create_environment_baseline.delay(environment_id=environment_id)
