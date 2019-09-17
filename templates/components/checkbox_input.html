@@ -4,12 +4,14 @@
   inline=False,
   classes="",
   key=field.name,
-  id=field.name) -%}
+  id=field.name,
+  optional=False) -%}
   <checkboxinput
     name='{{ field.name }}'
     inline-template
     key='{{ key }}'
     v-bind:initial-checked='{{ field.data|string|lower }}'
+    v-bind:optional={{ optional|lower }}
     >
     <div>
       <div class='usa-input {{ classes }} {% if field.errors %}usa-input--error{% endif %}' v-bind:class="[{ 'checked': isChecked }]">

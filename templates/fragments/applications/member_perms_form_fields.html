@@ -14,9 +14,9 @@
         {% set del_env = "perms_del_env-{}".format(member_role_id) %}
       {% endif %}
 
-      {{ CheckboxInput(app_perms_form.perms_team_mgmt, classes="input__inline-fields", key=team_mgmt, id=team_mgmt) }}
-      {{ CheckboxInput(app_perms_form.perms_env_mgmt, classes="input__inline-fields", key=env_mgmt, id=env_mgmt) }}
-      {{ CheckboxInput(app_perms_form.perms_del_env, classes="input__inline-fields", key=del_env, id=del_env) }}
+      {{ CheckboxInput(app_perms_form.perms_team_mgmt, classes="input__inline-fields", key=team_mgmt, id=team_mgmt, optional=True) }}
+      {{ CheckboxInput(app_perms_form.perms_env_mgmt, classes="input__inline-fields", key=env_mgmt, id=env_mgmt, optional=True) }}
+      {{ CheckboxInput(app_perms_form.perms_del_env, classes="input__inline-fields", key=del_env, id=del_env, optional=True) }}
     </div>
     <div class="environment_roles environment-roles-new">
       <h4>{{ "portfolios.applications.members.form.env_access" | translate }}</h4>
@@ -25,9 +25,10 @@
         <optionsinput inline-template
           v-bind:initial-value="'{{ environment_data.role.data | string }}'"
           v-bind:name="'{{ environment_data.name | string }}'"
-          v-bind:optional="true">
+          v-bind:optional="true"
+          v-bind:watch="true">
           <div class="usa-input">
-            <fieldset data-ally-disabled="true" class="usa-input__choices">
+            <fieldset data-ally-disabled="true" v-on:change="onInput" class="usa-input__choices">
               <div class="form-row">
                 <div class="form-col form-col--two-thirds">
                   <legend>

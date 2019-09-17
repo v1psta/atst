@@ -127,17 +127,16 @@
               <h1>{{ Icon('avatar') }} {{ member.user_name }}</h1>
               <hr>
             </div>
-            <form id='{{ modal_name }}' method="POST" action="{{ url_for('applications.update_member', application_id=application.id, application_role_id=member.role_id) }}">
-              {{ member.form.csrf_token }}
-              {{ MemberPermsFields(app_perms_form=member.form, env_roles_form=member.form.environment_roles, member_role_id=member.role_id) }}
-              <div class="action-group">
-                <input
-                  type="submit"
-                  class='action-group__action usa-button'
-                  value='Update'>
-                <a class='action-group__action usa-button usa-button-secondary' v-on:click="closeModal('{{ modal_name }}')">{{ "common.cancel" | translate }}</a>
-              </div>
-            </form>
+            <base-form inline-template>
+              <form id='{{ modal_name }}' method="POST" action="{{ url_for('applications.update_member', application_id=application.id, application_role_id=member.role_id) }}">
+                {{ member.form.csrf_token }}
+                {{ MemberPermsFields(app_perms_form=member.form, env_roles_form=member.form.environment_roles, member_role_id=member.role_id) }}
+                <div class="action-group">
+                  {{ SaveButton(text='Update', element='input', additional_classes='action-group__action') }}
+                  <a class='action-group__action usa-button usa-button-secondary' v-on:click="closeModal('{{ modal_name }}')">{{ "common.cancel" | translate }}</a>
+                </div>
+              </form>
+            </base-form>
           {% endcall %}
         {% endfor %}
         <table>

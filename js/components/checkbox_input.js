@@ -6,6 +6,7 @@ export default {
   props: {
     name: String,
     initialChecked: Boolean,
+    optional: Boolean,
   },
 
   data: function() {
@@ -18,7 +19,7 @@ export default {
     emitEvent('field-mount', this, {
       optional: this.optional,
       name: this.name,
-      valid: this.isChecked,
+      valid: this.optional || this.isChecked,
     })
   },
 
@@ -27,7 +28,7 @@ export default {
       emitEvent('field-change', this, {
         value: e.target.checked,
         name: this.name,
-        valid: this.isChecked,
+        valid: this.optional || this.isChecked,
       })
     },
   },
