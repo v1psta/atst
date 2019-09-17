@@ -121,6 +121,7 @@ def get_members_data(application):
                 "user_name": member.user_name,
                 "permission_sets": permission_sets,
                 "environment_roles": environment_roles,
+                "role_status": member.status.value,
             }
         )
 
