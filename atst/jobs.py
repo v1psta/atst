@@ -1,13 +1,12 @@
 from flask import current_app as app
 import pendulum
-from sqlalchemy import func, sql
-from contextlib import contextmanager
 
 from atst.database import db
 from atst.queue import celery
 from atst.models import EnvironmentJobFailure, EnvironmentRoleJobFailure
 from atst.domain.csp.cloud import CloudProviderInterface, GeneralCSPException
 from atst.domain.environments import Environments
+from atst.models.utils import claim_for_update
 
 
 class RecordEnvironmentFailure(celery.Task):
@@ -43,34 +42,6 @@ def send_notification_mail(recipients, subject, body):
         )
     )
     app.mailer.send(recipients, subject, body)
-
-
-class ClaimFailedException(Exception):
-    pass
-
-
-@contextmanager
-def claim_for_update(resource):
-    Model = resource.__class__
-
-    rows_updated = (
-        db.session.query(Model)
-        .filter_by(id=resource.id, claimed_at=None)
-        .update({"claimed_at": func.now()}, synchronize_session=False)
-    )
-    if rows_updated < 1:
-        raise ClaimFailedException(
-            f"Could not acquire claim for {Model.__name__} {resource.id}."
-        )
-
-    claimed = db.session.query(Model).filter_by(id=resource.id).one()
-
-    try:
-        yield claimed
-    finally:
-        db.session.query(Model).filter(Model.id == resource.id).filter(
-            Model.claimed_at != None
-        ).update({"claimed_at": sql.null()}, synchronize_session=False)
 
 
 def do_create_environment(csp: CloudProviderInterface, environment_id=None):

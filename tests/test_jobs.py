@@ -16,9 +16,9 @@ from atst.jobs import (
     dispatch_create_atat_admin_user,
     dispatch_create_environment_baseline,
     create_environment,
-    claim_for_update,
-    ClaimFailedException,
 )
+from atst.models.utils import claim_for_update
+from atst.domain.exceptions import ClaimFailedException
 from tests.factories import (
     EnvironmentFactory,
     EnvironmentRoleFactory,
