@@ -475,11 +475,13 @@ def test_remove_member_failure(client, user_session):
 
 def test_update_member(client, user_session):
     role = PermissionSets.get(PermissionSets.EDIT_APPLICATION_TEAM)
+    # create an app role with only edit team perms
     app_role = ApplicationRoleFactory.create(permission_sets=[role])
     application = app_role.application
     env = EnvironmentFactory.create(application=application)
     env_1 = EnvironmentFactory.create(application=application)
     env_2 = EnvironmentFactory.create(application=application)
+    # add user to two of the environments: env and env_1
     EnvironmentRoleFactory.create(
         environment=env, application_role=app_role, role=CSPRole.BASIC_ACCESS.value
     )
@@ -488,7 +490,8 @@ def test_update_member(client, user_session):
     )
 
     user_session(application.portfolio.owner)
-
+    # update the user's app permissions to have edit team and env perms
+    # update user's role in env, remove user from env_1, and add user to env_2
     response = client.post(
         url_for(
             "applications.update_member",
@@ -520,7 +523,9 @@ def test_update_member(client, user_session):
         _external=True,
     )
     assert response.location == expected_url
+    # make sure new application role was not created
     assert len(application.roles) == 1
+    # check that new app perms were added
     assert bool(app_role.has_permission_set(PermissionSets.EDIT_APPLICATION_TEAM))
     assert bool(
         app_role.has_permission_set(PermissionSets.EDIT_APPLICATION_ENVIRONMENTS)
@@ -530,6 +535,8 @@ def test_update_member(client, user_session):
     )
 
     environment_roles = application.roles[0].environment_roles
+    # make sure that old env role was deleted and there are only 2 env roles
     assert len(environment_roles) == 2
+    # check that the user has roles in the correct envs
     assert environment_roles[0].environment in [env, env_2]
     assert environment_roles[1].environment in [env, env_2]
