@@ -7,6 +7,13 @@ MESSAGES = {
         "message_template": "Portfolio '{{portfolio_name}}' has been deleted",
         "category": "success",
     },
+    "application_created": {
+        "title_template": translate("flash.success"),
+        "message_template": """
+            {{ "flash.application.created" | translate({"application_name": application_name}) }}
+        """,
+        "category": "success",
+    },
     "application_deleted": {
         "title_template": translate("flash.success"),
         "message_template": """
