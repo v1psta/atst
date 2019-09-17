@@ -26,11 +26,24 @@ class OperationInProgressException(GeneralCSPException):
         )
 
 
-class AuthorizationException(GeneralCSPException):
+class AuthenticationException(GeneralCSPException):
     """Throw this for instances when there is a problem with the auth credentials:
     * Missing credentials
     * Incorrect credentials
-    * Credentials not authorized for current action? (should this be it's own error?)
+    * Other credential problems
+    """
+
+    def __init__(self, auth_error):
+        self.auth_error = auth_error
+
+    @property
+    def message(self):
+        return "An error occurred with authentication: {}".format(self.auth_error)
+
+
+class AuthorizationException(GeneralCSPException):
+    """Throw this for instances when the current credentials are not authorized
+    for the current action.
     """
 
     def __init__(self, auth_error):
@@ -161,7 +174,8 @@ class CloudProviderInterface:
             string: ID of created environment
 
         Raises:
-            AuthorizationException: Problem with the credentials
+            AuthenticationException: Problem with the credentials
+            AuthorizationException: Credentials not authorized for current action(s)
             ConnectionException: Issue with the CSP API connection
             UnknownServerException: Unknown issue on the CSP side
             EnvironmentExistsException: Environment already exists and has been created
@@ -188,7 +202,8 @@ class CloudProviderInterface:
             }
 
         Raises:
-            AuthorizationException: Problem with the credentials
+            AuthenticationException: Problem with the credentials
+            AuthorizationException: Credentials not authorized for current action(s)
             ConnectionException: Issue with the CSP API connection
             UnknownServerException: Unknown issue on the CSP side
             UserProvisioningError: Problem creating the root user
@@ -207,7 +222,8 @@ class CloudProviderInterface:
         Returns:
             dict: Returns dict that associates the resource identities with their ATAT representations.
         Raises:
-            AuthorizationException: Problem with the credentials
+            AuthenticationException: Problem with the credentials
+            AuthorizationException: Credentials not authorized for current action(s)
             ConnectionException: Issue with the CSP API connection
             UnknownServerException: Unknown issue on the CSP side
             BaselineProvisionException: Specific issue occurred with some aspect of baseline setup
@@ -229,7 +245,8 @@ class CloudProviderInterface:
             string: Returns the interal csp_user_id of the created/updated user account
 
         Raises:
-            AuthorizationException: Problem with the credentials
+            AuthenticationException: Problem with the credentials
+            AuthorizationException: Credentials not authorized for current action(s)
             ConnectionException: Issue with the CSP API connection
             UnknownServerException: Unknown issue on the CSP side
             UserProvisioningError: User couldn't be created
@@ -249,7 +266,8 @@ class CloudProviderInterface:
             bool -- True on success
 
         Raises:
-            AuthorizationException: Problem with the credentials
+            AuthenticationException: Problem with the credentials
+            AuthorizationException: Credentials not authorized for current action(s)
             ConnectionException: Issue with the CSP API connection
             UnknownServerException: Unknown issue on the CSP side
             UserModificationException: User couldn't be modified
@@ -267,7 +285,8 @@ class CloudProviderInterface:
             bool -- True on success
 
         Raises:
-            AuthorizationException: Problem with the credentials
+            AuthenticationException: Problem with the credentials
+            AuthorizationException: Credentials not authorized for current action(s)
             ConnectionException: Issue with the CSP API connection
             UnknownServerException: Unknown issue on the CSP side
             UserModificationException: User couldn't be modified
