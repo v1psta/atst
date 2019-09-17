@@ -74,7 +74,6 @@ def csp():
 
 
 def test_create_environment_job(session, csp):
-    user = UserFactory.create()
     environment = EnvironmentFactory.create()
     do_create_environment(csp, environment.id)
 
@@ -87,7 +86,6 @@ def test_create_environment_job(session, csp):
 
 
 def test_create_environment_job_is_idempotent(csp, session):
-    user = UserFactory.create()
     environment = EnvironmentFactory.create(cloud_id=uuid4().hex)
     do_create_environment(csp, environment.id)
 
