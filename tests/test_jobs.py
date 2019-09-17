@@ -76,13 +76,9 @@ def csp():
 def test_create_environment_job(session, csp):
     environment = EnvironmentFactory.create()
     do_create_environment(csp, environment.id)
+    session.refresh(environment)
 
-    environment_id = environment.id
-    del environment
-
-    updated_environment = session.query(Environment).get(environment_id)
-
-    assert updated_environment.cloud_id
+    assert environment.cloud_id
 
 
 def test_create_environment_job_is_idempotent(csp, session):
@@ -95,12 +91,9 @@ def test_create_environment_job_is_idempotent(csp, session):
 def test_create_atat_admin_user(csp, session):
     environment = EnvironmentFactory.create(cloud_id="something")
     do_create_atat_admin_user(csp, environment.id)
+    session.refresh(environment)
 
-    environment_id = environment.id
-    del environment
-    updated_environment = session.query(Environment).get(environment_id)
-
-    assert updated_environment.root_user_info
+    assert environment.root_user_info
 
 
 def test_create_environment_baseline(csp, session):
@@ -108,12 +101,9 @@ def test_create_environment_baseline(csp, session):
         root_user_info={"credentials": csp.root_creds()}
     )
     do_create_environment_baseline(csp, environment.id)
+    session.refresh(environment)
 
-    environment_id = environment.id
-    del environment
-    updated_environment = session.query(Environment).get(environment_id)
-
-    assert updated_environment.baseline_info
+    assert environment.baseline_info
 
 
 def test_dispatch_create_environment(session, monkeypatch):
