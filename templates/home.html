@@ -24,7 +24,7 @@
 
     <h1>{{ "home.head" | translate }}</h1>
 
-    {{ SemiCollapsibleText() }}
+    {{ SemiCollapsibleText(first_half=("home.about_cloud.part1"|translate), second_half=("home.about_cloud.part2"|translate)) }}
 
     <div class="your-project">
       <h2 class="h3">{{ "home.your_project" | translate }}</h2>
@@ -94,8 +94,8 @@
       </toggler>
 
     </div>
+    <img id='jedi-heirarchy' src="/static/img/JEDIhierarchyDiagram.png" alt="JEDI heirarchy diagram">
   </div>
 </main>
 
 {% endblock %}
-
