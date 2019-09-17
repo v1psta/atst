@@ -11,6 +11,138 @@ class GeneralCSPException(Exception):
     pass
 
 
+class OperationInProgressException(GeneralCSPException):
+    """Throw this for instances when the CSP reports that the current entity is already
+    being operated on/created/deleted/etc
+    """
+
+    def __init__(self, operation_desc):
+        self.operation_desc = operation_desc
+
+    @property
+    def message(self):
+        return "An operation for this entity is already in progress: {}".format(
+            self.operation_desc
+        )
+
+
+class AuthorizationException(GeneralCSPException):
+    """Throw this for instances when there is a problem with the auth credentials:
+    * Missing credentials
+    * Incorrect credentials
+    * Credentials not authorized for current action? (should this be it's own error?)
+    """
+
+    def __init__(self, auth_error):
+        self.auth_error = auth_error
+
+    @property
+    def message(self):
+        return "An error occurred with authorization: {}".format(self.auth_error)
+
+
+class ConnectionException(GeneralCSPException):
+    """A general problem with the connection, timeouts or unresolved endpoints
+    """
+
+    def __init__(self, connection_error):
+        self.connection_error = connection_error
+
+    @property
+    def message(self):
+        return "Could not connect to cloud provider: {}".format(self.connection_error)
+
+
+class UnknownServerException(GeneralCSPException):
+    """An error occured on the CSP side (5xx) and we don't know why
+    """
+
+    def __init__(self, server_error):
+        self.server_error = server_error
+
+    @property
+    def message(self):
+        return "A server error occured: {}".format(self.server_error)
+
+
+class EnvironmentExistsException(GeneralCSPException):
+    """If the environment you're attempting to provision either already exists
+    or is in the process of being created, throw this exception
+    """
+
+    def __init__(self, env_identifier):
+        self.env_identifier = env_identifier
+
+    @property
+    def message(self):
+        return "The environment {} already exists or is already being created".format(
+            self.env_identifier
+        )
+
+
+class EnvironmentCreationException(GeneralCSPException):
+    """If there was an error in creating the environment
+    """
+
+    def __init__(self, env_identifier, reason):
+        self.env_identifier = env_identifier
+        self.reason = reason
+
+    @property
+    def message(self):
+        return "The envionment {} couldn't be created: {}".format(
+            self.env_identifier, self.reason
+        )
+
+
+class UserProvisioningError(GeneralCSPException):
+    """Failed to provision a user
+    """
+
+    def __init__(self, env_identifier, user_identifier, reason):
+        self.env_identifier = env_identifier
+        self.user_identifier = user_identifier
+        self.reason = reason
+
+    @property
+    def message(self):
+        return "Failed to create user {} for environment {}: {}".format(
+            self.user_identifier, self.env_identifier, self.reason
+        )
+
+
+class UserRemovalException(GeneralCSPException):
+    """Failed to remove a user
+    """
+
+    def __init__(self, env_identifier, user_identifier, reason):
+        self.env_identifier = env_identifier
+        self.user_identifier = user_identifier
+        self.reason = reason
+
+    @property
+    def message(self):
+        return "Failed to remove user {} for environment {}: {}".format(
+            self.user_identifier, self.env_identifier, self.reason
+        )
+
+
+class BaselineProvisionException(GeneralCSPException):
+    """If there's any issues standing up whatever is required
+    for an environment baseline
+    """
+
+    def __init__(self, env_identifier, reason):
+        self.env_identifier = env_identifier
+        self.reason = reason
+
+    @property
+    def message(self):
+        return "Could not complete baseline provisioning for environment ({}): {}".format(
+            self.env_identifier, self.reason
+        )
+
+
 class CloudProviderInterface:
     def root_creds() -> Dict:
         raise NotImplementedError()
@@ -27,6 +159,13 @@ class CloudProviderInterface:
 
         Returns:
             string: ID of created environment
+
+        Raises:
+            AuthorizationException: Problem with the credentials
+            ConnectionException: Issue with the CSP API connection
+            UnknownServerException: Unknown issue on the CSP side
+            EnvironmentExistsException: Environment already exists and has been created
+            OperationInProgressException: Envrionment creation already in progress
         """
         raise NotImplementedError()
 
@@ -47,6 +186,12 @@ class CloudProviderInterface:
                 "user_id": string,
                 "credentials": dict, # structure TBD based on csp
             }
+
+        Raises:
+            AuthorizationException: Problem with the credentials
+            ConnectionException: Issue with the CSP API connection
+            UnknownServerException: Unknown issue on the CSP side
+            UserProvisioningError: Problem creating the root user
         """
         raise NotImplementedError()
 
@@ -61,6 +206,11 @@ class CloudProviderInterface:
 
         Returns:
             dict: Returns dict that associates the resource identities with their ATAT representations.
+        Raises:
+            AuthorizationException: Problem with the credentials
+            ConnectionException: Issue with the CSP API connection
+            UnknownServerException: Unknown issue on the CSP side
+            BaselineProvisionException: Specific issue occurred with some aspect of baseline setup
         """
         raise NotImplementedError()
 
@@ -77,6 +227,13 @@ class CloudProviderInterface:
 
         Returns:
             string: Returns the interal csp_user_id of the created/updated user account
+
+        Raises:
+            AuthorizationException: Problem with the credentials
+            ConnectionException: Issue with the CSP API connection
+            UnknownServerException: Unknown issue on the CSP side
+            UserProvisioningError: User couldn't be created
+            UserModificationException: User couldn't be modified
         """
         raise NotImplementedError()
 
@@ -90,6 +247,12 @@ class CloudProviderInterface:
 
         Returns:
             bool -- True on success
+
+        Raises:
+            AuthorizationException: Problem with the credentials
+            ConnectionException: Issue with the CSP API connection
+            UnknownServerException: Unknown issue on the CSP side
+            UserModificationException: User couldn't be modified
         """
         raise NotImplementedError()
 
@@ -104,7 +267,11 @@ class CloudProviderInterface:
             bool -- True on success
 
         Raises:
-            TBDException: Some part of user deletion failed
+            AuthorizationException: Problem with the credentials
+            ConnectionException: Issue with the CSP API connection
+            UnknownServerException: Unknown issue on the CSP side
+            UserModificationException: User couldn't be modified
+            UserRemovalException: User couldn't be removed
         """
         raise NotImplementedError()
 
