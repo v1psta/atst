@@ -128,9 +128,7 @@
             {% for member in members %}
               <tr>
                 <td>
-                  <p>
-                    {{ member.user_name }}
-                  </p>
+                  {{ member.user_name }}<br>
                   {% if member.role_status == 'pending' %}
                     <span class='label label--purple'>INVITE PENDING</span>
                   {% endif %}
@@ -148,12 +146,8 @@
                 </td>
                 <td>
                   {% if member.role_status == 'pending' %}
-                    <p>
-                      <a href="#">Resend Invite</a>
-                    </p>
-                    <p>
-                      <a href="#">Revoke Invite</a>
-                    </p>
+                    <a href="#">Resend Invite</a><br>
+                    <a href="#">Revoke Invite</a>
                   {% endif %}
                 </td>
               </tr>
