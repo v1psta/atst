@@ -78,21 +78,6 @@ class UnknownServerException(GeneralCSPException):
         return "A server error occured: {}".format(self.server_error)
 
 
-class EnvironmentExistsException(GeneralCSPException):
-    """If the environment you're attempting to provision either already exists
-    or is in the process of being created, throw this exception
-    """
-
-    def __init__(self, env_identifier):
-        self.env_identifier = env_identifier
-
-    @property
-    def message(self):
-        return "The environment {} already exists or is already being created".format(
-            self.env_identifier
-        )
-
-
 class EnvironmentCreationException(GeneralCSPException):
     """If there was an error in creating the environment
     """
