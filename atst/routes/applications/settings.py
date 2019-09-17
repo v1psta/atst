@@ -34,47 +34,61 @@ def get_environments_obj_for_app(application):
     return environments_obj
 
 
+def filter_perm_sets_data(member):
+    perm_sets_data = {
+        "perms_team_mgmt": bool(
+            member.has_permission_set(PermissionSets.EDIT_APPLICATION_TEAM)
+        ),
+        "perms_env_mgmt": bool(
+            member.has_permission_set(PermissionSets.EDIT_APPLICATION_ENVIRONMENTS)
+        ),
+        "perms_del_env": bool(
+            member.has_permission_set(PermissionSets.DELETE_APPLICATION_ENVIRONMENTS)
+        ),
+    }
+
+    return perm_sets_data
+
+
+def filter_env_roles_data(roles):
+    env_role_data = [
+        {
+            "environment_id": str(role.environment.id),
+            "environment_name": role.environment.name,
+            "role": role.role,
+        }
+        for role in roles
+    ]
+
+    return env_role_data
+
+
+def filter_env_roles_form_data(member, environments):
+    env_roles_form_data = []
+    for env in environments:
+        env_data = {
+            "environment_id": str(env.id),
+            "environment_name": env.name,
+            "role": NO_ACCESS,
+        }
+        env_role = EnvironmentRoles.get_by_user_and_environment(member.user_id, env.id)
+        if env_role:
+            env_data["role"] = env_role.role
+
+        env_roles_form_data.append(env_data)
+
+    return env_roles_form_data
+
+
 def get_members_data(application):
     members_data = []
     for member in application.members:
-        permission_sets = {
-            "perms_team_mgmt": bool(
-                member.has_permission_set(PermissionSets.EDIT_APPLICATION_TEAM)
-            ),
-            "perms_env_mgmt": bool(
-                member.has_permission_set(PermissionSets.EDIT_APPLICATION_ENVIRONMENTS)
-            ),
-            "perms_del_env": bool(
-                member.has_permission_set(
-                    PermissionSets.DELETE_APPLICATION_ENVIRONMENTS
-                )
-            ),
-        }
+        permission_sets = filter_perm_sets_data(member)
         roles = EnvironmentRoles.get_for_application_member(member.id)
-        environment_roles = [
-            {
-                "environment_id": str(role.environment.id),
-                "environment_name": role.environment.name,
-                "role": role.role,
-            }
-            for role in roles
-        ]
-
-        env_roles_form_data = []
-        for env in application.environments:
-            env_data = {
-                "environment_id": str(env.id),
-                "environment_name": env.name,
-                "role": NO_ACCESS,
-            }
-            env_role = EnvironmentRoles.get_by_user_and_environment(
-                member.user_id, env.id
-            )
-            if env_role:
-                env_data["role"] = env_role.role
-
-            env_roles_form_data.append(env_data)
-
+        environment_roles = filter_env_roles_data(roles)
+        env_roles_form_data = filter_env_roles_form_data(
+            member, application.environments
+        )
         form = UpdateMemberForm(
             environment_roles=env_roles_form_data, **permission_sets
         )
