@@ -16,6 +16,9 @@ base_public:
   login: Log in
   title_tag: JEDI Cloud
 home:
+  about_cloud:
+    part1: Procuring portfolio-level cloud services via a JEDI Cloud Task Order provides numerous benefits.
+    part2: Portfolio purchases allow for centralized management of task orders, which reduces administrative workload on individual programs or other sub-component activities.
   add_portfolio_button_text: Add New Portfolio
   new_portfolio: New Portfolio
   get_started: Get Started
