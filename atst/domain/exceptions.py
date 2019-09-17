@@ -44,3 +44,12 @@ class NoAccessError(Exception):
     @property
     def message(self):
         return "Route for {} cannot be accessed".format(self.resource_name)
+
+
+class ClaimFailedException(Exception):
+    def __init__(self, resource):
+        self.resource = resource
+        message = (
+            f"Could not acquire claim for {resource.__class__.__name__} {resource.id}."
+        )
+        super().__init__(message)

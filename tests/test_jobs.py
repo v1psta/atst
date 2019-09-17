@@ -2,6 +2,7 @@ import pendulum
 import pytest
 from uuid import uuid4
 from unittest.mock import Mock
+from threading import Thread
 
 from atst.models import Environment
 from atst.domain.csp.cloud import MockCloudProvider
@@ -14,7 +15,10 @@ from atst.jobs import (
     dispatch_create_environment,
     dispatch_create_atat_admin_user,
     dispatch_create_environment_baseline,
+    create_environment,
 )
+from atst.models.utils import claim_for_update
+from atst.domain.exceptions import ClaimFailedException
 from tests.factories import (
     EnvironmentFactory,
     EnvironmentRoleFactory,
@@ -62,7 +66,6 @@ def test_environment_role_job_failure(celery_app, celery_worker):
 now = pendulum.now()
 yesterday = now.subtract(days=1)
 tomorrow = now.add(days=1)
-from atst.domain.environments import Environments
 
 
 @pytest.fixture(autouse=True, scope="function")
@@ -71,22 +74,16 @@ def csp():
 
 
 def test_create_environment_job(session, csp):
-    user = UserFactory.create()
     environment = EnvironmentFactory.create()
-    do_create_environment(csp, environment.id, user.id)
+    do_create_environment(csp, environment.id)
+    session.refresh(environment)
 
-    environment_id = environment.id
-    del environment
-
-    updated_environment = session.query(Environment).get(environment_id)
-
-    assert updated_environment.cloud_id
+    assert environment.cloud_id
 
 
 def test_create_environment_job_is_idempotent(csp, session):
-    user = UserFactory.create()
     environment = EnvironmentFactory.create(cloud_id=uuid4().hex)
-    do_create_environment(csp, environment.id, user.id)
+    do_create_environment(csp, environment.id)
 
     csp.create_environment.assert_not_called()
 
@@ -94,12 +91,9 @@ def test_create_environment_job_is_idempotent(csp, session):
 def test_create_atat_admin_user(csp, session):
     environment = EnvironmentFactory.create(cloud_id="something")
     do_create_atat_admin_user(csp, environment.id)
+    session.refresh(environment)
 
-    environment_id = environment.id
-    del environment
-    updated_environment = session.query(Environment).get(environment_id)
-
-    assert updated_environment.root_user_info
+    assert environment.root_user_info
 
 
 def test_create_environment_baseline(csp, session):
@@ -107,12 +101,9 @@ def test_create_environment_baseline(csp, session):
         root_user_info={"credentials": csp.root_creds()}
     )
     do_create_environment_baseline(csp, environment.id)
+    session.refresh(environment)
 
-    environment_id = environment.id
-    del environment
-    updated_environment = session.query(Environment).get(environment_id)
-
-    assert updated_environment.baseline_info
+    assert environment.baseline_info
 
 
 def test_dispatch_create_environment(session, monkeypatch):
@@ -135,9 +126,7 @@ def test_dispatch_create_environment(session, monkeypatch):
 
     dispatch_create_environment.run()
 
-    mock.delay.assert_called_once_with(
-        environment_id=environment.id, atat_user_id=environment.creator_id
-    )
+    mock.delay.assert_called_once_with(environment_id=environment.id)
 
 
 def test_dispatch_create_atat_admin_user(session, monkeypatch):
@@ -196,3 +185,104 @@ def test_dispatch_create_environment_baseline(session, monkeypatch):
     dispatch_create_environment_baseline.run()
 
     mock.delay.assert_called_once_with(environment_id=environment.id)
+
+
+def test_create_environment_no_dupes(session, celery_app, celery_worker):
+    portfolio = PortfolioFactory.create(
+        applications=[
+            {
+                "environments": [
+                    {
+                        "cloud_id": uuid4().hex,
+                        "root_user_info": {},
+                        "baseline_info": None,
+                    }
+                ]
+            }
+        ],
+        task_orders=[
+            {
+                "create_clins": [
+                    {
+                        "start_date": pendulum.now().subtract(days=1),
+                        "end_date": pendulum.now().add(days=1),
+                    }
+                ]
+            }
+        ],
+    )
+    environment = portfolio.applications[0].environments[0]
+
+    # create_environment is run twice on the same environment
+    create_environment.run(environment_id=environment.id)
+    session.refresh(environment)
+
+    first_cloud_id = environment.cloud_id
+
+    create_environment.run(environment_id=environment.id)
+    session.refresh(environment)
+
+    # The environment's cloud_id was not overwritten in the second run
+    assert environment.cloud_id == first_cloud_id
+
+    # The environment's claim was released
+    assert environment.claimed_until == None
+
+
+def test_claim_for_update(session):
+    portfolio = PortfolioFactory.create(
+        applications=[
+            {
+                "environments": [
+                    {
+                        "cloud_id": uuid4().hex,
+                        "root_user_info": {},
+                        "baseline_info": None,
+                    }
+                ]
+            }
+        ],
+        task_orders=[
+            {
+                "create_clins": [
+                    {
+                        "start_date": pendulum.now().subtract(days=1),
+                        "end_date": pendulum.now().add(days=1),
+                    }
+                ]
+            }
+        ],
+    )
+    environment = portfolio.applications[0].environments[0]
+
+    satisfied_claims = []
+
+    # Two threads that race to acquire a claim on the same environment.
+    # SecondThread's claim will be rejected, resulting in a ClaimFailedException.
+    class FirstThread(Thread):
+        def run(self):
+            with claim_for_update(environment):
+                satisfied_claims.append("FirstThread")
+
+    class SecondThread(Thread):
+        def run(self):
+            try:
+                with claim_for_update(environment):
+                    satisfied_claims.append("SecondThread")
+            except ClaimFailedException:
+                pass
+
+    t1 = FirstThread()
+    t2 = SecondThread()
+    t1.start()
+    t2.start()
+    t1.join()
+    t2.join()
+
+    session.refresh(environment)
+
+    # Only FirstThread acquired a claim and wrote to satisfied_claims
+    assert satisfied_claims == ["FirstThread"]
+
+    # The claim is released
+    assert environment.claimed_until is None

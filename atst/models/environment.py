@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey, String
+from sqlalchemy import Column, ForeignKey, String, TIMESTAMP
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import JSONB
 from enum import Enum
@@ -28,6 +28,8 @@ class Environment(
     cloud_id = Column(String)
     root_user_info = Column(JSONB)
     baseline_info = Column(JSONB)
+
+    claimed_until = Column(TIMESTAMP(timezone=True))
 
     job_failures = relationship("EnvironmentJobFailure")
 
