@@ -288,4 +288,10 @@ def test_claim_for_update(session):
     t1.join()
     t2.join()
 
+    session.refresh(environment)
+
+    # Only FirstThread acquired a claim and wrote to satisfied_claims
     assert satisfied_claims == ["FirstThread"]
+
+    # The claim is released as soon as work is done
+    assert environment.claimed_until is None
