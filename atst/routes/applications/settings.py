@@ -166,6 +166,12 @@ def perm_sets_obj_to_list(perms_obj):
     return perm_sets
 
 
+def get_perms_set_form_data(form_data):
+    return {
+        key: value for key, value in form_data.items() if key != "environment_roles"
+    }
+
+
 @applications_bp.route("/applications/<application_id>/settings")
 @user_can(Permissions.VIEW_APPLICATION, message="view application edit form")
 def settings(application_id):
@@ -301,11 +307,12 @@ def create_member(application_id):
 
     if form.validate():
         try:
+            perm_sets = get_perms_set_form_data(form.data)
             invite = Applications.invite(
                 application=application,
                 inviter=g.current_user,
                 user_data=form.user_data.data,
-                permission_sets_names=perm_sets_obj_to_list(form.permission_sets.data),
+                permission_sets_names=perm_sets_obj_to_list(perm_sets),
                 environment_roles_data=form.environment_roles.data,
             )
 
@@ -370,9 +377,7 @@ def update_member(application_id, application_role_id):
     form = UpdateMemberForm(http_request.form)
 
     if form.validate():
-        perm_sets = {
-            key: value for key, value in form.data.items() if key != "environment_roles"
-        }
+        perm_sets = get_perms_set_form_data(form.data)
         new_perm_sets_names = perm_sets_obj_to_list(perm_sets)
         ApplicationRoles.update_permission_sets(app_role, new_perm_sets_names)
 

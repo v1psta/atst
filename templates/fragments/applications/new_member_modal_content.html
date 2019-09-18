@@ -64,6 +64,6 @@
   {% endset %}
 
   {% call MemberFormTemplate(title="portfolios.applications.members.form.step_2_title"|translate, next_button=next_button) %}
-    {{ MemberPermsFields(app_perms_form=member_form.permission_sets, env_roles_form=member_form.environment_roles) }}
+    {{ MemberPermsFields(form=member_form) }}
   {% endcall %}
 {% endmacro %}

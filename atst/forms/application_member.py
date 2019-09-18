@@ -50,18 +50,17 @@ class PermissionsForm(FlaskForm):
         ),
     )
 
-
-class NewForm(BaseForm):
-    user_data = FormField(BaseNewMemberForm)
-    permission_sets = FormField(PermissionsForm)
-    environment_roles = FieldList(FormField(EnvironmentForm))
-
-
-class UpdateMemberForm(PermissionsForm):
-    environment_roles = FieldList(FormField(EnvironmentForm))
-
     @property
     def data(self):
         _data = super().data
         _data.pop("csrf_token", None)
         return _data
+
+
+class NewForm(PermissionsForm):
+    user_data = FormField(BaseNewMemberForm)
+    environment_roles = FieldList(FormField(EnvironmentForm))
+
+
+class UpdateMemberForm(PermissionsForm):
+    environment_roles = FieldList(FormField(EnvironmentForm))

@@ -1,27 +1,27 @@
 {% from "components/checkbox_input.html" import CheckboxInput %}
 
-{% macro MemberPermsFields(app_perms_form, env_roles_form, new=False, member_role_id=None) %}
+{% macro MemberPermsFields(form, new=False, member_role_id=None) %}
   <div class="form-content--app-mem">
     <h4>{{ "portfolios.applications.members.form.project_perms" | translate }}</h4>
     <div class="application-perms">
       {% if new %}
-        {% set team_mgmt = app_perms_form.perms_team_mgmt.name %}
-        {% set env_mgmt = app_perms_form.perms_env_mgmt.name %}
-        {% set del_env = app_perms_form.perms_del_env.name %}
+        {% set team_mgmt = form.perms_team_mgmt.name %}
+        {% set env_mgmt = form.perms_env_mgmt.name %}
+        {% set del_env = form.perms_del_env.name %}
       {% else %}
         {% set team_mgmt = "perms_team_mgmt-{}".format(member_role_id) %}
         {% set env_mgmt = "perms_env_mgmt-{}".format(member_role_id) %}
         {% set del_env = "perms_del_env-{}".format(member_role_id) %}
       {% endif %}
 
-      {{ CheckboxInput(app_perms_form.perms_team_mgmt, classes="input__inline-fields", key=team_mgmt, id=team_mgmt, optional=True) }}
-      {{ CheckboxInput(app_perms_form.perms_env_mgmt, classes="input__inline-fields", key=env_mgmt, id=env_mgmt, optional=True) }}
-      {{ CheckboxInput(app_perms_form.perms_del_env, classes="input__inline-fields", key=del_env, id=del_env, optional=True) }}
+      {{ CheckboxInput(form.perms_team_mgmt, classes="input__inline-fields", key=team_mgmt, id=team_mgmt, optional=True) }}
+      {{ CheckboxInput(form.perms_env_mgmt, classes="input__inline-fields", key=env_mgmt, id=env_mgmt, optional=True) }}
+      {{ CheckboxInput(form.perms_del_env, classes="input__inline-fields", key=del_env, id=del_env, optional=True) }}
     </div>
     <div class="environment_roles environment-roles-new">
       <h4>{{ "portfolios.applications.members.form.env_access" | translate }}</h4>
       <hr>
-      {% for environment_data in env_roles_form %}
+      {% for environment_data in form.environment_roles %}
         <optionsinput inline-template
           v-bind:initial-value="'{{ environment_data.role.data | string }}'"
           v-bind:name="'{{ environment_data.name | string }}'"
