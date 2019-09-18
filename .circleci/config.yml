@@ -185,6 +185,20 @@ workflows:
             branches:
               only:
                 - master
+      - azure-aks/update-container-image:
+          cluster-name: atat-cluster
+          container-image-updates: "atst-beat=${AZURE_SERVER_NAME}/atat:atat-${CIRCLE_SHA1}"
+          namespace: atat
+          resource-name: deployment.apps/atst-beat
+          resource-group: atat
+          # uncomment below for debugging
+          # show-kubectl-command: true
+          requires:
+            - azure-migration
+          filters:
+            branches:
+              only:
+                - master
       - aws-ecr/build-and-push-image:
           extra-build-args: "--build-arg CSP=aws"
           repo: atat
@@ -221,6 +235,20 @@ workflows:
           container-image-updates: "atst-worker=${AWS_ECR_ACCOUNT_URL}/atat:atat-${CIRCLE_SHA1}"
           namespace: atat
           resource-name: deployment.apps/atst-worker
+          aws-region: "${AWS_REGION}"
+          # uncomment below for debugging
+          # show-kubectl-command: true
+          requires:
+            - aws-migration
+          filters:
+            branches:
+              only:
+                - master
+      - aws-eks/update-container-image:
+          cluster-name: atat
+          container-image-updates: "atst-beat=${AWS_ECR_ACCOUNT_URL}/atat:atat-${CIRCLE_SHA1}"
+          namespace: atat
+          resource-name: deployment.apps/atst-beat
           aws-region: "${AWS_REGION}"
           # uncomment below for debugging
           # show-kubectl-command: true
