@@ -3,8 +3,8 @@ import pytest
 from uuid import uuid4
 from unittest.mock import Mock
 from threading import Thread
+from time import sleep
 
-from atst.models import Environment
 from atst.domain.csp.cloud import MockCloudProvider
 from atst.jobs import (
     RecordEnvironmentFailure,
@@ -19,12 +19,7 @@ from atst.jobs import (
 )
 from atst.models.utils import claim_for_update
 from atst.domain.exceptions import ClaimFailedException
-from tests.factories import (
-    EnvironmentFactory,
-    EnvironmentRoleFactory,
-    UserFactory,
-    PortfolioFactory,
-)
+from tests.factories import EnvironmentFactory, EnvironmentRoleFactory, PortfolioFactory
 
 
 def test_environment_job_failure(celery_app, celery_worker):
@@ -262,6 +257,7 @@ def test_claim_for_update(session):
     class FirstThread(Thread):
         def run(self):
             with claim_for_update(environment):
+                sleep(0.1)  # doing some work
                 satisfied_claims.append("FirstThread")
 
     class SecondThread(Thread):
