@@ -6,8 +6,10 @@ from unittest.mock import Mock
 from tests.factories import *
 
 from atst.domain.applications import Applications
+from atst.domain.application_roles import ApplicationRoles
 from atst.domain.environment_roles import EnvironmentRoles
 from atst.domain.environments import Environments
+from atst.domain.environment_roles import EnvironmentRoles
 from atst.domain.common import Paginator
 from atst.domain.permission_sets import PermissionSets
 from atst.domain.portfolios import Portfolios
@@ -16,6 +18,7 @@ from atst.models.environment_role import CSPRole
 from atst.models.permissions import Permissions
 from atst.models.portfolio_role import Status as PortfolioRoleStatus
 from atst.forms.application import EditEnvironmentForm
+from atst.forms.application_member import UpdateMemberForm
 from atst.forms.data import ENV_ROLE_NO_ACCESS as NO_ACCESS
 
 from tests.utils import captured_templates
@@ -125,27 +128,23 @@ def test_edit_application_environments_obj(app, client, user_session):
         assert isinstance(context["audit_events"], Paginator)
 
 
-def test_data_for_app_env_roles_form(app, client, user_session):
-    portfolio = PortfolioFactory.create()
-    application = Applications.create(
-        portfolio.owner,
-        portfolio,
-        "Snazzy Application",
-        "A new application for me and my friends",
-        {"env"},
+def test_get_members_data(app, client, user_session):
+    user = UserFactory.create()
+    application = ApplicationFactory.create(
+        environments=[
+            {
+                "name": "testing",
+                "members": [{"user": user, "role_name": CSPRole.BASIC_ACCESS.value}],
+            }
+        ]
     )
-    env = application.environments[0]
-    app_role0 = ApplicationRoleFactory.create(application=application)
-    app_role1 = ApplicationRoleFactory.create(application=application)
-    env_role1 = EnvironmentRoleFactory.create(
-        application_role=app_role1, environment=env, role=CSPRole.BASIC_ACCESS.value
-    )
-    app_role2 = ApplicationRoleFactory.create(application=application)
-    env_role2 = EnvironmentRoleFactory.create(
-        application_role=app_role2, environment=env, role=CSPRole.NETWORK_ADMIN.value
+    environment = application.environments[0]
+    app_role = ApplicationRoles.get(user_id=user.id, application_id=application.id)
+    env_role = EnvironmentRoles.get(
+        application_role_id=app_role.id, environment_id=environment.id
     )
 
-    user_session(portfolio.owner)
+    user_session(application.portfolio.owner)
 
     with captured_templates(app) as templates:
         response = app.test_client().get(
@@ -154,6 +153,24 @@ def test_data_for_app_env_roles_form(app, client, user_session):
 
         assert response.status_code == 200
         _, context = templates[-1]
+
+        member = context["members"][0]
+        assert member["role_id"] == app_role.id
+        assert member["user_name"] == user.full_name
+        assert member["permission_sets"] == {
+            "perms_team_mgmt": False,
+            "perms_env_mgmt": False,
+            "perms_del_env": False,
+        }
+        assert member["environment_roles"] == [
+            {
+                "environment_id": str(environment.id),
+                "environment_name": environment.name,
+                "role": env_role.role,
+            }
+        ]
+        assert member["role_status"]
+        assert isinstance(member["form"], UpdateMemberForm)
 
 
 def test_user_with_permission_can_update_application(client, user_session):
