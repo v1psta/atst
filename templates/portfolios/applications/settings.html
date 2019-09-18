@@ -4,12 +4,17 @@
 {% from "components/delete_confirmation.html" import DeleteConfirmation %}
 {% from "components/icon.html" import Icon %}
 {% import "fragments/applications/new_member_modal_content.html" as member_steps %}
+{% from "fragments/applications/member_perms_form_fields.html" import MemberPermsFields %}
 {% from "components/modal.html" import Modal %}
 {% from "components/multi_step_modal_form.html" import MultiStepModalForm %}
 {% from "components/pagination.html" import Pagination %}
 {% from "components/save_button.html" import SaveButton %}
 {% from "components/text_input.html" import TextInput %}
 {% from "components/toggle_list.html" import ToggleButton, ToggleSection %}
+{% from "components/icon.html" import Icon %}
+{% from "components/text_input.html" import TextInput %}
+{% from "components/checkbox_input.html" import CheckboxInput %}
+{% from "components/phone_input.html" import PhoneInput %}
 
 {% set secondary_breadcrumb = 'portfolios.applications.existing_application_title' | translate({ "application_name": application.name }) %}
 
@@ -115,6 +120,25 @@
         {% if g.matchesPath("application-members") %}
           {% include "fragments/flash.html" %}
         {% endif %}
+        {% for member in members %}
+          {% set modal_name = "edit_member-{}".format(loop.index) %}
+          {% call Modal(modal_name) %}
+            <div class="modal__form--header">
+              <h1>{{ Icon('avatar') }} {{ member.user_name }}</h1>
+              <hr>
+            </div>
+            <base-form inline-template>
+              <form id='{{ modal_name }}' method="POST" action="{{ url_for('applications.update_member', application_id=application.id, application_role_id=member.role_id) }}">
+                {{ member.form.csrf_token }}
+                {{ MemberPermsFields(form=member.form, member_role_id=member.role_id) }}
+                <div class="action-group">
+                  {{ SaveButton(text='Update', element='input', additional_classes='action-group__action') }}
+                  <a class='action-group__action usa-button usa-button-secondary' v-on:click="closeModal('{{ modal_name }}')">{{ "common.cancel" | translate }}</a>
+                </div>
+              </form>
+            </base-form>
+          {% endcall %}
+        {% endfor %}
         <table>
           <thead>
             <tr>
@@ -126,12 +150,18 @@
           </thead>
           <tbody>
             {% for member in members %}
+              {% set modal_name = "edit_member-{}".format(loop.index) %}
               <tr>
                 <td>
-                  {{ member.user_name }}<br>
+                  {{ member.user_name }}
+                  <a class="icon-link" v-on:click="openModal('{{ modal_name }}')">
+                    {{ Icon('edit') }}
+                  </a>
+                  <br>
                   {% if member.role_status == 'pending' %}
                     <span class='label label--purple'>INVITE PENDING</span>
                   {% endif %}
+
                 </td>
 
                 <td>

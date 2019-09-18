@@ -24,7 +24,8 @@
   }
 }
 
-#modal--add-app-mem {
+#modal--add-app-mem,
+.form-content--app-mem {
   text-align: left;
 
   input[type="checkbox"] + label::before {
@@ -98,10 +99,18 @@
         margin-top: $gap;
         margin-left: $gap;
       }
+
+      .form-row {
+        margin: 0;
+      }
     }
 
     &__head {
       font-weight: $font-bold;
+    }
+
+    hr {
+      margin: 0.5em;
     }
   }
 

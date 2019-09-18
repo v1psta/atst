@@ -464,6 +464,24 @@ def test_applications_update_environments(post_url_assert_status):
     post_url_assert_status(rando, url, 404)
 
 
+# applications.update_member
+def test_applications_update_member(post_url_assert_status):
+    ccpo = UserFactory.create_ccpo()
+    rando = UserFactory.create()
+
+    application_role = ApplicationRoleFactory.create()
+    application = application_role.application
+
+    url = url_for(
+        "applications.update_member",
+        application_id=application.id,
+        application_role_id=application_role.id,
+    )
+    post_url_assert_status(application.portfolio.owner, url, 302)
+    post_url_assert_status(ccpo, url, 302)
+    post_url_assert_status(rando, url, 404)
+
+
 # task_orders.download_task_order_pdf
 def test_task_orders_download_task_order_pdf_access(get_url_assert_status, monkeypatch):
     monkeypatch.setattr(

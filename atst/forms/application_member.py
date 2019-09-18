@@ -1,15 +1,15 @@
 from flask_wtf import FlaskForm
 from wtforms.fields import FormField, FieldList, HiddenField, BooleanField
+from wtforms import Form
 
-from .forms import BaseForm
 from .member import NewForm as BaseNewMemberForm
 from .data import ENV_ROLES, ENV_ROLE_NO_ACCESS as NO_ACCESS
-from atst.domain.permission_sets import PermissionSets
 from atst.forms.fields import SelectField
+from atst.domain.permission_sets import PermissionSets
 from atst.utils.localization import translate
 
 
-class EnvironmentForm(FlaskForm):
+class EnvironmentForm(Form):
     environment_id = HiddenField()
     environment_name = HiddenField()
     role = SelectField(
@@ -53,6 +53,7 @@ class PermissionsForm(FlaskForm):
     @property
     def data(self):
         _data = super().data
+        _data.pop("csrf_token", None)
         perm_sets = []
 
         if _data["perms_env_mgmt"]:
@@ -64,10 +65,14 @@ class PermissionsForm(FlaskForm):
         if _data["perms_del_env"]:
             perm_sets.append(PermissionSets.DELETE_APPLICATION_ENVIRONMENTS)
 
-        return perm_sets
+        _data["permission_sets"] = perm_sets
+        return _data
 
 
-class NewForm(BaseForm):
+class NewForm(PermissionsForm):
     user_data = FormField(BaseNewMemberForm)
-    permission_sets = FormField(PermissionsForm)
+    environment_roles = FieldList(FormField(EnvironmentForm))
+
+
+class UpdateMemberForm(PermissionsForm):
     environment_roles = FieldList(FormField(EnvironmentForm))

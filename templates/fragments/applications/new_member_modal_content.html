@@ -2,6 +2,7 @@
 {% from "components/text_input.html" import TextInput %}
 {% from "components/checkbox_input.html" import CheckboxInput %}
 {% from "components/phone_input.html" import PhoneInput %}
+{% from "fragments/applications/member_perms_form_fields.html" import MemberPermsFields %}
 
 {% macro MemberFormTemplate(title, next_button, previous=True) %}
   <div class="modal__form--header">
@@ -24,7 +25,7 @@
   </div>
 {% endmacro %}
 
-{% macro MemberStepOne(new_member_form) %}
+{% macro MemberStepOne(member_form) %}
   {% set next_button %}
     <input
         type='button'
@@ -36,24 +37,24 @@
 
   {% call MemberFormTemplate(title="portfolios.applications.members.form.add_member"|translate, next_button=next_button, previous=False) %}
     <div class='form-row'>
-      {{ TextInput(new_member_form.user_data.first_name, validation='requiredField', optional=False) }}
+      {{ TextInput(member_form.user_data.first_name, validation='requiredField', optional=False) }}
     </div>
     <div class='form-row'>
-      {{ TextInput(new_member_form.user_data.last_name, validation='requiredField', optional=False) }}
+      {{ TextInput(member_form.user_data.last_name, validation='requiredField', optional=False) }}
     </div>
     <div class='form-row'>
-      {{ TextInput(new_member_form.user_data.email, validation='email', optional=False) }}
+      {{ TextInput(member_form.user_data.email, validation='email', optional=False) }}
     </div>
     <div class="form-row">
-      {{ PhoneInput(new_member_form.user_data.phone_number, new_member_form.user_data.phone_ext)}}
+      {{ PhoneInput(member_form.user_data.phone_number, member_form.user_data.phone_ext)}}
     </div>
     <div class='form-row'>
-      {{ TextInput(new_member_form.user_data.dod_id, validation='dodId', optional=False) }}
+      {{ TextInput(member_form.user_data.dod_id, validation='dodId', optional=False) }}
     </div>
     <a href="#">How do I find the DoD ID?</a>
   {% endcall %}
 {% endmacro %}
-{% macro MemberStepTwo(new_member_form, application) %}
+{% macro MemberStepTwo(member_form, application) %}
   {% set next_button %}
     <input
       type="submit"
@@ -63,41 +64,6 @@
   {% endset %}
 
   {% call MemberFormTemplate(title="portfolios.applications.members.form.step_2_title"|translate, next_button=next_button) %}
-    <h4>{{ "portfolios.applications.members.form.project_perms" | translate }}</h4>
-    <div class="application-perms">
-      {{ CheckboxInput(new_member_form.permission_sets.perms_team_mgmt, classes="input__inline-fields") }}
-      {{ CheckboxInput(new_member_form.permission_sets.perms_env_mgmt, classes="input__inline-fields") }}
-      {{ CheckboxInput(new_member_form.permission_sets.perms_del_env, classes="input__inline-fields") }}
-    </div>
-    <div class="environment-roles-new">
-      <h4>{{ "portfolios.applications.members.form.env_access" | translate }}</h4>
-      <hr>
-      {% for environment_data in new_member_form.environment_roles %}
-        <optionsinput inline-template
-          v-bind:initial-value="'{{ environment_data.role.data | string }}'"
-          v-bind:name="'{{ environment_data.name | string }}'"
-          v-bind:optional="true"
-        >
-          <div class="usa-input">
-            <fieldset data-ally-disabled="true" class="usa-input__choices">
-              <div class="form-row">
-                <div class="form-col form-col--two-thirds">
-                  <legend>
-                    <div v-bind:class='["usa-input__title-inline", {"environment-name--gray": value === "None" }]'>
-                      {{ environment_data.environment_name.data }}
-                    </div>
-                  </legend>
-                </div>
-                <div class="form-col form-col--third">
-                  {{ environment_data.role(**{"v-model": "value"}) }}
-                </div>
-              </div>
-            </fieldset>
-          </div>
-        </optionsinput>
-        {{ environment_data.environment_id() }}
-        <hr>
-      {% endfor %}
-    </div>
+    {{ MemberPermsFields(form=member_form) }}
   {% endcall %}
 {% endmacro %}

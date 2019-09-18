@@ -7,11 +7,6 @@ MESSAGES = {
         "message_template": "Portfolio '{{portfolio_name}}' has been deleted",
         "category": "success",
     },
-    "application_environment_members_updated": {
-        "title_template": "Application environment members updated",
-        "message_template": "Application environment members have been updated",
-        "category": "success",
-    },
     "application_deleted": {
         "title_template": translate("flash.success"),
         "message_template": """
@@ -28,6 +23,11 @@ MESSAGES = {
     "application_member_removed": {
         "title_template": "Team member removed from application",
         "message_template": "You have successfully deleted {{ user_name }} from {{ application_name }}",
+        "category": "success",
+    },
+    "application_member_updated": {
+        "title_template": "Team member updated",
+        "message_template": "You have successfully updated the permissions for {{ user_name }}",
         "category": "success",
     },
     "ccpo_user_added": {

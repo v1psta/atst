@@ -2,20 +2,24 @@
   field,
   label=field.label,
   inline=False,
-  classes="") -%}
+  classes="",
+  key=field.name,
+  id=field.name,
+  optional=False) -%}
   <checkboxinput
     name='{{ field.name }}'
     inline-template
-    key='{{ field.name }}'
+    key='{{ key }}'
     v-bind:initial-checked='{{ field.data|string|lower }}'
+    v-bind:optional={{ optional|lower }}
     >
     <div>
       <div class='usa-input {{ classes }} {% if field.errors %}usa-input--error{% endif %}' v-bind:class="[{ 'checked': isChecked }]">
 
         <fieldset data-ally-disabled="true" v-on:change="onInput" class="usa-input__choices {% if inline %}usa-input__choices--inline{% endif %}">
           <legend>
-            {{ field(**{"v-model": "isChecked"}) }}
-            {{ label | safe }}
+            {{ field(id=id, checked=True, **{"v-model": "isChecked"}) }}
+            {{ field.label(for=id) | safe }}
 
             {% if field.description %}
               <p class='usa-input__help'>

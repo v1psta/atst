@@ -6,15 +6,19 @@ from unittest.mock import Mock
 from tests.factories import *
 
 from atst.domain.applications import Applications
+from atst.domain.application_roles import ApplicationRoles
 from atst.domain.environment_roles import EnvironmentRoles
 from atst.domain.environments import Environments
+from atst.domain.environment_roles import EnvironmentRoles
 from atst.domain.common import Paginator
 from atst.domain.permission_sets import PermissionSets
 from atst.domain.portfolios import Portfolios
 from atst.domain.exceptions import NotFoundError
 from atst.models.environment_role import CSPRole
+from atst.models.permissions import Permissions
 from atst.models.portfolio_role import Status as PortfolioRoleStatus
 from atst.forms.application import EditEnvironmentForm
+from atst.forms.application_member import UpdateMemberForm
 from atst.forms.data import ENV_ROLE_NO_ACCESS as NO_ACCESS
 
 from tests.utils import captured_templates
@@ -124,27 +128,23 @@ def test_edit_application_environments_obj(app, client, user_session):
         assert isinstance(context["audit_events"], Paginator)
 
 
-def test_data_for_app_env_roles_form(app, client, user_session):
-    portfolio = PortfolioFactory.create()
-    application = Applications.create(
-        portfolio.owner,
-        portfolio,
-        "Snazzy Application",
-        "A new application for me and my friends",
-        {"env"},
+def test_get_members_data(app, client, user_session):
+    user = UserFactory.create()
+    application = ApplicationFactory.create(
+        environments=[
+            {
+                "name": "testing",
+                "members": [{"user": user, "role_name": CSPRole.BASIC_ACCESS.value}],
+            }
+        ]
     )
-    env = application.environments[0]
-    app_role0 = ApplicationRoleFactory.create(application=application)
-    app_role1 = ApplicationRoleFactory.create(application=application)
-    env_role1 = EnvironmentRoleFactory.create(
-        application_role=app_role1, environment=env, role=CSPRole.BASIC_ACCESS.value
-    )
-    app_role2 = ApplicationRoleFactory.create(application=application)
-    env_role2 = EnvironmentRoleFactory.create(
-        application_role=app_role2, environment=env, role=CSPRole.NETWORK_ADMIN.value
+    environment = application.environments[0]
+    app_role = ApplicationRoles.get(user_id=user.id, application_id=application.id)
+    env_role = EnvironmentRoles.get(
+        application_role_id=app_role.id, environment_id=environment.id
     )
 
-    user_session(portfolio.owner)
+    user_session(application.portfolio.owner)
 
     with captured_templates(app) as templates:
         response = app.test_client().get(
@@ -153,6 +153,24 @@ def test_data_for_app_env_roles_form(app, client, user_session):
 
         assert response.status_code == 200
         _, context = templates[-1]
+
+        member = context["members"][0]
+        assert member["role_id"] == app_role.id
+        assert member["user_name"] == user.full_name
+        assert member["permission_sets"] == {
+            "perms_team_mgmt": False,
+            "perms_env_mgmt": False,
+            "perms_del_env": False,
+        }
+        assert member["environment_roles"] == [
+            {
+                "environment_id": str(environment.id),
+                "environment_name": environment.name,
+                "role": env_role.role,
+            }
+        ]
+        assert member["role_status"]
+        assert isinstance(member["form"], UpdateMemberForm)
 
 
 def test_user_with_permission_can_update_application(client, user_session):
@@ -361,9 +379,9 @@ def test_create_member(monkeypatch, client, user_session, session):
             "environment_roles-1-environment_id": env_1.id,
             "environment_roles-1-role": NO_ACCESS,
             "environment_roles-1-environment_name": env_1.name,
-            "permission_sets-perms_env_mgmt": True,
-            "permission_sets-perms_team_mgmt": True,
-            "permission_sets-perms_del_env": True,
+            "perms_env_mgmt": True,
+            "perms_team_mgmt": True,
+            "perms_del_env": True,
         },
     )
 
@@ -453,3 +471,72 @@ def test_remove_member_failure(client, user_session):
     )
 
     assert response.status_code == 404
+
+
+def test_update_member(client, user_session):
+    role = PermissionSets.get(PermissionSets.EDIT_APPLICATION_TEAM)
+    # create an app role with only edit team perms
+    app_role = ApplicationRoleFactory.create(permission_sets=[role])
+    application = app_role.application
+    env = EnvironmentFactory.create(application=application)
+    env_1 = EnvironmentFactory.create(application=application)
+    env_2 = EnvironmentFactory.create(application=application)
+    # add user to two of the environments: env and env_1
+    EnvironmentRoleFactory.create(
+        environment=env, application_role=app_role, role=CSPRole.BASIC_ACCESS.value
+    )
+    EnvironmentRoleFactory.create(
+        environment=env_1, application_role=app_role, role=CSPRole.BASIC_ACCESS.value
+    )
+
+    user_session(application.portfolio.owner)
+    # update the user's app permissions to have edit team and env perms
+    # update user's role in env, remove user from env_1, and add user to env_2
+    response = client.post(
+        url_for(
+            "applications.update_member",
+            application_id=application.id,
+            application_role_id=app_role.id,
+        ),
+        data={
+            "environment_roles-0-environment_id": env.id,
+            "environment_roles-0-role": CSPRole.TECHNICAL_READ.value,
+            "environment_roles-0-environment_name": env.name,
+            "environment_roles-1-environment_id": env_1.id,
+            "environment_roles-1-role": NO_ACCESS,
+            "environment_roles-1-environment_name": env_1.name,
+            "environment_roles-2-environment_id": env_2.id,
+            "environment_roles-2-role": CSPRole.NETWORK_ADMIN.value,
+            "environment_roles-2-environment_name": env_2.name,
+            "perms_env_mgmt": True,
+            "perms_team_mgmt": True,
+            "perms_del_env": True,
+        },
+    )
+
+    assert response.status_code == 302
+    expected_url = url_for(
+        "applications.settings",
+        application_id=application.id,
+        fragment="application-members",
+        _anchor="application-members",
+        _external=True,
+    )
+    assert response.location == expected_url
+    # make sure new application role was not created
+    assert len(application.roles) == 1
+    # check that new app perms were added
+    assert bool(app_role.has_permission_set(PermissionSets.EDIT_APPLICATION_TEAM))
+    assert bool(
+        app_role.has_permission_set(PermissionSets.EDIT_APPLICATION_ENVIRONMENTS)
+    )
+    assert bool(
+        app_role.has_permission_set(PermissionSets.DELETE_APPLICATION_ENVIRONMENTS)
+    )
+
+    environment_roles = application.roles[0].environment_roles
+    # make sure that old env role was deleted and there are only 2 env roles
+    assert len(environment_roles) == 2
+    # check that the user has roles in the correct envs
+    assert environment_roles[0].environment in [env, env_2]
+    assert environment_roles[1].environment in [env, env_2]
