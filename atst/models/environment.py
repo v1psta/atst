@@ -68,6 +68,10 @@ class Environment(
         else:
             return self.ProvisioningStatus.COMPLETED
 
+    @property
+    def is_pending(self):
+        return self.provisioning_status == self.ProvisioningStatus.PENDING
+
     def __repr__(self):
         return "<Environment(name='{}', num_users='{}', application='{}', portfolio='{}', id='{}')>".format(
             self.name,
