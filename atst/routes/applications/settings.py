@@ -151,27 +151,6 @@ def send_application_invitation(invitee_email, inviter_name, token):
     )
 
 
-def perm_sets_obj_to_list(perms_obj):
-    perm_sets = []
-
-    if perms_obj["perms_env_mgmt"]:
-        perm_sets.append(PermissionSets.EDIT_APPLICATION_ENVIRONMENTS)
-
-    if perms_obj["perms_team_mgmt"]:
-        perm_sets.append(PermissionSets.EDIT_APPLICATION_TEAM)
-
-    if perms_obj["perms_del_env"]:
-        perm_sets.append(PermissionSets.DELETE_APPLICATION_ENVIRONMENTS)
-
-    return perm_sets
-
-
-def get_perms_set_form_data(form_data):
-    return {
-        key: value for key, value in form_data.items() if key != "environment_roles"
-    }
-
-
 @applications_bp.route("/applications/<application_id>/settings")
 @user_can(Permissions.VIEW_APPLICATION, message="view application edit form")
 def settings(application_id):
@@ -307,12 +286,11 @@ def create_member(application_id):
 
     if form.validate():
         try:
-            perm_sets = get_perms_set_form_data(form.data)
             invite = Applications.invite(
                 application=application,
                 inviter=g.current_user,
                 user_data=form.user_data.data,
-                permission_sets_names=perm_sets_obj_to_list(perm_sets),
+                permission_sets_names=form.data["permission_sets"],
                 environment_roles_data=form.environment_roles.data,
             )
 
@@ -377,9 +355,7 @@ def update_member(application_id, application_role_id):
     form = UpdateMemberForm(http_request.form)
 
     if form.validate():
-        perm_sets = get_perms_set_form_data(form.data)
-        new_perm_sets_names = perm_sets_obj_to_list(perm_sets)
-        ApplicationRoles.update_permission_sets(app_role, new_perm_sets_names)
+        ApplicationRoles.update_permission_sets(app_role, form.data["permission_sets"])
 
         for env_role in form.environment_roles:
             environment = Environments.get(env_role.environment_id.data)

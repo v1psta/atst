@@ -2,10 +2,10 @@ from flask_wtf import FlaskForm
 from wtforms.fields import FormField, FieldList, HiddenField, BooleanField
 from wtforms import Form
 
-from .forms import BaseForm
 from .member import NewForm as BaseNewMemberForm
 from .data import ENV_ROLES, ENV_ROLE_NO_ACCESS as NO_ACCESS
 from atst.forms.fields import SelectField
+from atst.domain.permission_sets import PermissionSets
 from atst.utils.localization import translate
 
 
@@ -54,6 +54,18 @@ class PermissionsForm(FlaskForm):
     def data(self):
         _data = super().data
         _data.pop("csrf_token", None)
+        perm_sets = []
+
+        if _data["perms_env_mgmt"]:
+            perm_sets.append(PermissionSets.EDIT_APPLICATION_ENVIRONMENTS)
+
+        if _data["perms_team_mgmt"]:
+            perm_sets.append(PermissionSets.EDIT_APPLICATION_TEAM)
+
+        if _data["perms_del_env"]:
+            perm_sets.append(PermissionSets.DELETE_APPLICATION_ENVIRONMENTS)
+
+        _data["permission_sets"] = perm_sets
         return _data
 
 
