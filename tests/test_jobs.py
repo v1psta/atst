@@ -16,10 +16,16 @@ from atst.jobs import (
     dispatch_create_atat_admin_user,
     dispatch_create_environment_baseline,
     create_environment,
+    do_create_user,
 )
 from atst.models.utils import claim_for_update
 from atst.domain.exceptions import ClaimFailedException
 from tests.factories import EnvironmentFactory, EnvironmentRoleFactory, PortfolioFactory
+
+
+@pytest.fixture(autouse=True, scope="function")
+def csp():
+    return Mock(wraps=MockCloudProvider({}, with_delay=False, with_failure=False))
 
 
 def test_environment_job_failure(celery_app, celery_worker):
@@ -61,11 +67,6 @@ def test_environment_role_job_failure(celery_app, celery_worker):
 now = pendulum.now()
 yesterday = now.subtract(days=1)
 tomorrow = now.add(days=1)
-
-
-@pytest.fixture(autouse=True, scope="function")
-def csp():
-    return Mock(wraps=MockCloudProvider({}, with_delay=False, with_failure=False))
 
 
 def test_create_environment_job(session, csp):
@@ -291,3 +292,15 @@ def test_claim_for_update(session):
 
     # The claim is released
     assert environment.claimed_until is None
+
+
+def test_create_user(csp, session):
+    environment = EnvironmentFactory.create(
+        root_user_info={"credentials": MockCloudProvider({})._auth_credentials}
+    )
+    environment_role = EnvironmentRoleFactory.create(environment=environment)
+    do_create_user(csp, environment_role_id=environment_role.id)
+
+    session.refresh(environment_role)
+
+    assert environment_role.csp_user_id

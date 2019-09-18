@@ -1,5 +1,5 @@
 from enum import Enum
-from sqlalchemy import Index, ForeignKey, Column, String
+from sqlalchemy import Index, ForeignKey, Column, String, TIMESTAMP
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
@@ -32,6 +32,9 @@ class EnvironmentRole(
     application_role = relationship("ApplicationRole")
 
     job_failures = relationship("EnvironmentRoleJobFailure")
+
+    csp_user_id = Column(String())
+    claimed_until = Column(TIMESTAMP(timezone=True))
 
     def __repr__(self):
         return "<EnvironmentRole(role='{}', user='{}', environment='{}', id='{}')>".format(

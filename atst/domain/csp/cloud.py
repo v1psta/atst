@@ -194,7 +194,7 @@ class MockCloudProvider(CloudProviderInterface):
             GeneralCSPException("Could not create user."),
         )
 
-        return {"id": self._id()}
+        return self._id()
 
     def suspend_user(self, auth_credentials, csp_user_id):
         self._maybe_raise(self.NETWORK_FAILURE_PCT, self.NETWORK_EXCEPTION)
