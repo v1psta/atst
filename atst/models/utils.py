@@ -47,3 +47,4 @@ def claim_for_update(resource, minutes=30):
         db.session.query(Model).filter(Model.id == resource.id).filter(
             Model.claimed_until != None
         ).update({"claimed_until": None}, synchronize_session="fetch")
+        db.session.commit()

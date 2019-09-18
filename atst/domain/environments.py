@@ -1,4 +1,4 @@
-from sqlalchemy import text, func, or_
+from sqlalchemy import func, or_
 from sqlalchemy.orm.exc import NoResultFound
 from typing import List
 from uuid import UUID
@@ -130,7 +130,7 @@ class Environments(object):
         results = (
             cls.base_provision_query(now)
             .filter(Environment.cloud_id != None)
-            .filter(Environment.root_user_info == text("'null'"))
+            .filter(Environment.root_user_info == None)
         ).all()
         return [id_ for id_, in results]
 
@@ -143,7 +143,7 @@ class Environments(object):
         results = (
             cls.base_provision_query(now)
             .filter(Environment.cloud_id != None)
-            .filter(Environment.root_user_info != text("'null'"))
-            .filter(Environment.baseline_info == text("'null'"))
+            .filter(Environment.root_user_info != None)
+            .filter(Environment.baseline_info == None)
         ).all()
         return [id_ for id_, in results]

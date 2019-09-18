@@ -26,8 +26,8 @@ class Environment(
     creator = relationship("User")
 
     cloud_id = Column(String)
-    root_user_info = Column(JSONB)
-    baseline_info = Column(JSONB)
+    root_user_info = Column(JSONB(none_as_null=True))
+    baseline_info = Column(JSONB(none_as_null=True))
 
     claimed_until = Column(TIMESTAMP(timezone=True))
 
