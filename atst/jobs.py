@@ -108,19 +108,19 @@ def do_work(fn, task, csp, **kwargs):
         raise task.retry(exc=e)
 
 
-@celery.task(bind=True)
+@celery.task(bind=True, base=RecordEnvironmentFailure)
 def create_environment(self, environment_id=None):
     do_work(do_create_environment, self, app.csp.cloud, environment_id=environment_id)
 
 
-@celery.task(bind=True)
+@celery.task(bind=True, base=RecordEnvironmentFailure)
 def create_atat_admin_user(self, environment_id=None):
     do_work(
         do_create_atat_admin_user, self, app.csp.cloud, environment_id=environment_id
     )
 
 
-@celery.task(bind=True)
+@celery.task(bind=True, base=RecordEnvironmentFailure)
 def create_environment_baseline(self, environment_id=None):
     do_work(
         do_create_environment_baseline,
