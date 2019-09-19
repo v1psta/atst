@@ -5,7 +5,20 @@ celery = Celery(__name__)
 
 def update_celery(celery, app):
     celery.conf.update(app.config)
-    celery.conf.CELERYBEAT_SCHEDULE = {}
+    celery.conf.CELERYBEAT_SCHEDULE = {
+        "beat-dispatch_create_environment": {
+            "task": "atst.jobs.dispatch_create_environment",
+            "schedule": 60,
+        },
+        "beat-dispatch_create_atat_admin_user": {
+            "task": "atst.jobs.dispatch_create_atat_admin_user",
+            "schedule": 60,
+        },
+        "beat-dispatch_create_environment_baseline": {
+            "task": "atst.jobs.dispatch_create_environment_baseline",
+            "schedule": 60,
+        },
+    }
 
     class ContextTask(celery.Task):
         def __call__(self, *args, **kwargs):

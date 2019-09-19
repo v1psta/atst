@@ -25,6 +25,7 @@ def get_environments_obj_for_app(application):
         env_data = {
             "id": env.id,
             "name": env.name,
+            "pending": env.is_pending,
             "edit_form": EditEnvironmentForm(obj=env),
             "member_count": len(env.roles),
             "members": [env_role.application_role.user_name for env_role in env.roles],

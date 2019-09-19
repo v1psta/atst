@@ -29,9 +29,6 @@ spec:
       containers:
         - name: atst
           image: 904153757533.dkr.ecr.us-east-2.amazonaws.com/atat:latest
-          resources:
-            requests:
-               memory: "500Mi"
           envFrom:
           - configMapRef:
               name: atst-envvars
@@ -148,9 +145,57 @@ spec:
             "worker",
             "--loglevel=info"
           ]
-          resources:
-            requests:
-               memory: "500Mi"
+          envFrom:
+          - configMapRef:
+              name: atst-envvars
+          - configMapRef:
+              name: atst-worker-envvars
+          volumeMounts:
+            - name: atst-config
+              mountPath: "/opt/atat/atst/atst-overrides.ini"
+              subPath: atst-overrides.ini
+      volumes:
+        - name: atst-config
+          secret:
+            secretName: atst-config-ini
+            items:
+            - key: override.ini
+              path: atst-overrides.ini
+              mode: 0644
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: atst
+  name: atst-beat
+  namespace: atat
+spec:
+  selector:
+    matchLabels:
+      role: beat
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: atst
+        role: beat
+    spec:
+      securityContext:
+        fsGroup: 101
+      containers:
+        - name: atst-beat
+          image: 904153757533.dkr.ecr.us-east-2.amazonaws.com/atat:latest
+          args: [
+            "/opt/atat/atst/.venv/bin/python",
+            "/opt/atat/atst/.venv/bin/celery",
+            "-A",
+            "celery_worker.celery",
+            "beat",
+            "--loglevel=info"
+          ]
           envFrom:
           - configMapRef:
               name: atst-envvars
