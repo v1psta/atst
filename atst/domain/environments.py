@@ -104,6 +104,7 @@ class Environments(object):
             .join(CLIN)
             .filter(CLIN.start_date <= now)
             .filter(CLIN.end_date > now)
+            .filter(Environment.deleted == False)
             .filter(
                 or_(
                     Environment.claimed_until == None,

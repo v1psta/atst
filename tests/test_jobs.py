@@ -102,8 +102,10 @@ def test_create_environment_baseline(csp, session):
 
 
 def test_dispatch_create_environment(session, monkeypatch):
+    # Given that I have a portfolio with an active CLIN and two environments,
+    # one of which is deleted
     portfolio = PortfolioFactory.create(
-        applications=[{"environments": [{}]}],
+        applications=[{"environments": [{}, {}]}],
         task_orders=[
             {
                 "create_clins": [
@@ -115,13 +117,20 @@ def test_dispatch_create_environment(session, monkeypatch):
             }
         ],
     )
+    [e1, e2] = portfolio.applications[0].environments
+    e2.deleted = True
+    session.add(e2)
+    session.commit()
+
     mock = Mock()
     monkeypatch.setattr("atst.jobs.create_environment", mock)
-    environment = portfolio.applications[0].environments[0]
 
+    # When dispatch_create_environment is called
     dispatch_create_environment.run()
 
-    mock.delay.assert_called_once_with(environment_id=environment.id)
+    # It should cause the create_environment task to be called once with the
+    # non-deleted environment
+    mock.delay.assert_called_once_with(environment_id=e1.id)
 
 
 def test_dispatch_create_atat_admin_user(session, monkeypatch):
