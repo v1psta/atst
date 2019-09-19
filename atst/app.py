@@ -49,8 +49,8 @@ def make_app(config):
 
     app = Flask(
         __name__,
-        template_folder=parent_dir.child("templates").absolute(),
-        static_folder=parent_dir.child("static").absolute(),
+        template_folder=str(object=parent_dir.child("templates").absolute()),
+        static_folder=str(object=parent_dir.child("static").absolute()),
     )
     app.json_encoder = CustomJSONEncoder
     make_redis(app, config)
