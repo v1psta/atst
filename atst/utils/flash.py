@@ -77,7 +77,7 @@ MESSAGES = {
     "new_application_member": {
         "title_template": translate("flash.success"),
         "message_template": """
-          <p>{{ "flash.new_application_member" | translate({ "user_name": user_name }) }}</p>
+          <p>{{ "flash.new_application_member" | translate({ "user_name": user_name, "application_name": application_name }) }}</p>
         """,
         "category": "success",
     },
