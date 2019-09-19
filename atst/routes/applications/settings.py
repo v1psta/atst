@@ -300,7 +300,11 @@ def create_member(application_id):
                 token=invite.token,
             )
 
-            flash("new_application_member", user_name=invite.user_name)
+            flash(
+                "new_application_member",
+                user_name=invite.user_name,
+                application_name=application.name,
+            )
 
         except AlreadyExistsError:
             return render_template(

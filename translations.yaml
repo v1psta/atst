@@ -111,7 +111,7 @@ flash:
   new_ppoc_message: 'You have successfully added {ppoc_name} as the primary point of contact. You are no longer the PPoC.'
   new_ppoc_title: Primary point of contact updated
   success: Success!
-  new_application_member: 'You have successfully invited {user_name} to the team.'
+  new_application_member: '{user_name} has been added to {application_name}. They will not have access until they accept the invitation e-mailed to them and CSP processing is complete.'
   updated_application_team_settings: 'You have updated the {application_name} team settings.'
   logged_out: Logged out
 footer:
