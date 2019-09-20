@@ -17,6 +17,7 @@ from atst.jobs import (
     dispatch_create_environment_baseline,
     create_environment,
     dispatch_provision_user,
+    do_provision_user,
 )
 from atst.models.utils import claim_for_update
 from atst.domain.exceptions import ClaimFailedException
@@ -322,3 +323,29 @@ def test_dispatch_provision_user(csp, session, celery_app, celery_worker, monkey
 
     # I expect it to dispatch only one call, to EnvironmentRole C
     mock.delay.assert_called_once_with(environment_role_id=er_c.id)
+
+
+def test_do_provision_user(csp, session):
+    # Given that I have an EnvironmentRole with a provisioned environment
+    credentials = MockCloudProvider(())._auth_credentials
+    provisioned_environment = EnvironmentFactory.create(
+        cloud_id="cloud_id",
+        root_user_info={"credentials": credentials},
+        baseline_info={},
+    )
+    environment_role = EnvironmentRoleFactory.create(
+        environment=provisioned_environment,
+        status=EnvironmentRole.Status.PENDING,
+        role="my_role",
+    )
+
+    # When I call the user provisoning task
+    do_provision_user(csp=csp, environment_role_id=environment_role.id)
+
+    session.refresh(environment_role)
+    # I expect that the CSP create_or_update_user method will be called
+    csp.create_or_update_user.assert_called_once_with(
+        credentials, environment_role, "my_role"
+    )
+    # I expect that the EnvironmentRole now has a csp_user_id
+    assert environment_role.csp_user_id
