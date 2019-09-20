@@ -391,8 +391,13 @@ def revoke_invite(application_id, application_role_id):
     app_role = ApplicationRoles.get_by_id(application_role_id)
     invite = app_role.latest_invitation
 
-    if invite.is_revokable:
+    if invite.is_pending:
         ApplicationInvitations.revoke(invite.token)
+        flash(
+            "application_invite_revoked",
+            user_name=app_role.user_name,
+            application_name=g.application.name,
+        )
 
     return redirect(
         url_for(
