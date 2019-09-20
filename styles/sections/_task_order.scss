@@ -274,6 +274,10 @@
 .task-order__modal-cancel_buttons {
   display: flex;
   justify-content: center;
+
+  button {
+    margin-top: 0;
+  }
 }
 
 .clin-card {
