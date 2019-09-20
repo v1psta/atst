@@ -1,5 +1,5 @@
 from enum import Enum
-from sqlalchemy import Index, ForeignKey, Column, String, TIMESTAMP
+from sqlalchemy import Index, ForeignKey, Column, String, TIMESTAMP, Enum as SQLAEnum
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
@@ -35,6 +35,13 @@ class EnvironmentRole(
 
     csp_user_id = Column(String())
     claimed_until = Column(TIMESTAMP(timezone=True))
+
+    class Status(Enum):
+        PENDING = "pending"
+        COMPLETED = "completed"
+        PENDING_DELETE = "pending_delete"
+
+    status = Column(SQLAEnum(Status, native_enum=False), default=Status.PENDING)
 
     def __repr__(self):
         return "<EnvironmentRole(role='{}', user='{}', environment='{}', id='{}')>".format(

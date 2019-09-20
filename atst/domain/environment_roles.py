@@ -1,7 +1,7 @@
 from sqlalchemy.orm.exc import NoResultFound
 
 from atst.database import db
-from atst.models import EnvironmentRole, ApplicationRole
+from atst.models import EnvironmentRole, ApplicationRole, Environment
 from atst.domain.exceptions import NotFoundError
 from uuid import UUID
 from typing import List
@@ -73,7 +73,10 @@ class EnvironmentRoles(object):
     def get_environment_roles_pending_creation(cls) -> List[UUID]:
         results = (
             db.session.query(EnvironmentRole.id)
-            # TODO
-            .filter(EnvironmentRole.status == "PENDING").all()
+            .join(Environment)
+            .filter(Environment.deleted == False)
+            .filter(Environment.baseline_info != None)
+            .filter(EnvironmentRole.status == EnvironmentRole.Status.PENDING)
+            .all()
         )
         return [id_ for id_, in results]

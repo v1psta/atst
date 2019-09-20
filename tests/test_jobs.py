@@ -16,11 +16,12 @@ from atst.jobs import (
     dispatch_create_atat_admin_user,
     dispatch_create_environment_baseline,
     create_environment,
-    do_create_user,
+    dispatch_provision_user,
 )
 from atst.models.utils import claim_for_update
 from atst.domain.exceptions import ClaimFailedException
 from tests.factories import EnvironmentFactory, EnvironmentRoleFactory, PortfolioFactory
+from atst.models import EnvironmentRole
 
 
 @pytest.fixture(autouse=True, scope="function")
@@ -294,13 +295,30 @@ def test_claim_for_update(session):
     assert environment.claimed_until is None
 
 
-def test_create_user(csp, session):
-    environment = EnvironmentFactory.create(
-        root_user_info={"credentials": MockCloudProvider({})._auth_credentials}
+def test_dispatch_provision_user(csp, session, celery_app, celery_worker, monkeypatch):
+    # Given that I have three environment roles:
+    #   (A) one of which has a completed status
+    #   (B) one of which has an environment that has not been provisioned
+    #   (C) one of which is pending and has a provisioned environment
+    provisioned_environment = EnvironmentFactory.create(
+        cloud_id="cloud_id", root_user_info={}, baseline_info={}
     )
-    environment_role = EnvironmentRoleFactory.create(environment=environment)
-    do_create_user(csp, environment_role_id=environment_role.id)
+    unprovisioned_environment = EnvironmentFactory.create()
+    _er_a = EnvironmentRoleFactory.create(
+        environment=provisioned_environment, status=EnvironmentRole.Status.COMPLETED
+    )
+    _er_b = EnvironmentRoleFactory.create(
+        environment=unprovisioned_environment, status=EnvironmentRole.Status.PENDING
+    )
+    er_c = EnvironmentRoleFactory.create(
+        environment=provisioned_environment, status=EnvironmentRole.Status.PENDING
+    )
 
-    session.refresh(environment_role)
+    mock = Mock()
+    monkeypatch.setattr("atst.jobs.provision_user", mock)
 
-    assert environment_role.csp_user_id
+    # When I dispatch the user provisioning task
+    dispatch_provision_user.run()
+
+    # I expect it to dispatch only one call, to EnvironmentRole C
+    mock.delay.assert_called_once_with(environment_role_id=er_c.id)

@@ -102,14 +102,14 @@ def do_create_environment_baseline(csp: CloudProviderInterface, environment_id=N
         db.session.commit()
 
 
-def do_create_user(csp: CloudProviderInterface, environment_role_id=None):
+def do_provision_user(csp: CloudProviderInterface, environment_role_id=None):
     environment_role = EnvironmentRoles.get_by_id(environment_role_id)
 
     with claim_for_update(environment_role) as environment_role:
-        credentials = environment_role.environment.root_user_info["credentials"]
+        credentials = environment_role.environment.csp_credentials
 
         csp_user_id = csp.create_or_update_user(
-            credentials, environment_role, "role_id"
+            credentials, environment_role, environment_role.role
         )
         environment_role.csp_user_id = csp_user_id
         db.session.add(environment_role)
@@ -146,9 +146,9 @@ def create_environment_baseline(self, environment_id=None):
 
 
 @celery.task(bind=True)
-def create_user(self, environment_role_id=None):
+def provision_user(self, environment_role_id=None):
     do_work(
-        do_create_user, self, app.csp.cloud, environment_role_id=environment_role_id
+        do_provision_user, self, app.csp.cloud, environment_role_id=environment_role_id
     )
 
 
@@ -181,4 +181,4 @@ def dispatch_provision_user(self):
     for (
         environment_role_id
     ) in EnvironmentRoles.get_environment_roles_pending_creation():
-        create_user.delay(environment_role_id=environment_role_id)
+        provision_user.delay(environment_role_id=environment_role_id)
