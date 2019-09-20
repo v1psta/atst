@@ -27,6 +27,7 @@
 
     .icon {
       @include icon-size(12);
+      bottom: -1px;
     }
   }
 }
