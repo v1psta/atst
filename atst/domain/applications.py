@@ -2,7 +2,6 @@ from . import BaseDomainClass
 from flask import g
 from atst.database import db
 from atst.domain.application_roles import ApplicationRoles
-from atst.domain.environment_roles import EnvironmentRoles
 from atst.domain.environments import Environments
 from atst.domain.exceptions import NotFoundError
 from atst.domain.invitations import ApplicationInvitations
@@ -122,13 +121,4 @@ class Applications(BaseDomainClass):
 
     @classmethod
     def remove_member(cls, application_role):
-        application_role.status = ApplicationRoleStatus.DISABLED
-        application_role.deleted = True
-
-        for env in application_role.application.environments:
-            EnvironmentRoles.delete(
-                application_role_id=application_role.id, environment_id=env.id
-            )
-
-        db.session.add(application_role)
-        db.session.commit()
+        ApplicationRoles.disable(application_role)
