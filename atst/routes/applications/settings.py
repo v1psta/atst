@@ -8,6 +8,7 @@ from atst.domain.application_roles import ApplicationRoles
 from atst.domain.audit_log import AuditLog
 from atst.domain.common import Paginator
 from atst.domain.environment_roles import EnvironmentRoles
+from atst.domain.invitations import ApplicationInvitations
 from atst.forms.application_member import NewForm as NewMemberForm, UpdateMemberForm
 from atst.forms.application import NameAndDescriptionForm, EditEnvironmentForm
 from atst.forms.data import ENV_ROLE_NO_ACCESS as NO_ACCESS
@@ -370,6 +371,28 @@ def update_member(application_id, application_role_id):
     else:
         pass
         # TODO: flash error message
+
+    return redirect(
+        url_for(
+            "applications.settings",
+            application_id=application_id,
+            fragment="application-members",
+            _anchor="application-members",
+        )
+    )
+
+
+@applications_bp.route(
+    "/applications/<application_id>/members/<application_role_id>/revoke_invite",
+    methods=["POST"],
+)
+@user_can(Permissions.DELETE_APPLICATION_MEMBER, message="revoke appliction invitation")
+def revoke_invite(application_id, application_role_id):
+    app_role = ApplicationRoles.get_by_id(application_role_id)
+    invite = app_role.latest_invitation
+
+    if invite.is_revokable:
+        ApplicationInvitations.revoke(invite.token)
 
     return redirect(
         url_for(

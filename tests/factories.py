@@ -259,6 +259,7 @@ class ApplicationInvitationFactory(Base):
     email = factory.Faker("email")
     status = InvitationStatus.PENDING
     expiration_time = PortfolioInvitations.current_expiration_time()
+    role = factory.SubFactory(ApplicationRoleFactory)
 
 
 class AttachmentFactory(Base):

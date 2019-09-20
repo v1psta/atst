@@ -70,3 +70,16 @@ class ApplicationRoles(object):
         db.session.commit()
 
         return application_role
+
+    @classmethod
+    def _update_status(cls, application_role, new_status):
+        application_role.status = new_status
+        db.session.add(application_role)
+        db.session.commit()
+
+        return application_role
+
+    @classmethod
+    def disable(cls, application_role):
+        application_role.deleted = True
+        return cls._update_status(application_role, ApplicationRoleStatus.DISABLED)
