@@ -18,8 +18,8 @@
       <div class="form-row">
         <div class="form-col">
           <date-selector
-            :mindate="minStartDate"
-            :maxdate="maxStartDate"
+            :mindate="initialMinStartDate"
+            :maxdate="maxStartProp"
             {% if start_field %}
               name-tag='{{ start_field.name }}'
               initialmonth="{{ start_field.data.month }}"
@@ -105,8 +105,8 @@
       <div class="form-row">
         <div class="form-col">
           <date-selector
-            :mindate="minEndDate"
-            :maxdate="maxEndDate"
+            :mindate="minEndProp"
+            :maxdate="initialMaxEndDate"
             {% if end_field %}
               name-tag='{{ end_field.name }}'
               initialmonth="{{ end_field.data.month }}"
@@ -174,7 +174,7 @@
                       />
                   </div>
 
-                <div v-if="showValidation && isDateComplete">
+                <div v-if="showValidation">
                   <div class="usa-form-group-date-ok" v-if="isDateValid">
                     {{ Icon("ok", classes="icon--green") }}
                   </div>
