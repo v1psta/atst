@@ -8,8 +8,8 @@ from atst.domain.application_roles import ApplicationRoles
 from atst.domain.audit_log import AuditLog
 from atst.domain.common import Paginator
 from atst.domain.environment_roles import EnvironmentRoles
-from atst.forms.application import ApplicationForm, EditEnvironmentForm
 from atst.forms.application_member import NewForm as NewMemberForm, UpdateMemberForm
+from atst.forms.application import NameAndDescriptionForm, EditEnvironmentForm
 from atst.forms.data import ENV_ROLE_NO_ACCESS as NO_ACCESS
 from atst.domain.authz.decorator import user_can_access_decorator as user_can
 from atst.models.permissions import Permissions
@@ -125,7 +125,7 @@ def render_settings_page(application, **kwargs):
     members = get_members_data(application)
 
     if "application_form" not in kwargs:
-        kwargs["application_form"] = ApplicationForm(
+        kwargs["application_form"] = NameAndDescriptionForm(
             name=application.name, description=application.description
         )
 
@@ -229,7 +229,7 @@ def new_environment(application_id):
 @user_can(Permissions.EDIT_APPLICATION, message="update application")
 def update(application_id):
     application = Applications.get(application_id)
-    form = ApplicationForm(http_request.form)
+    form = NameAndDescriptionForm(http_request.form)
     if form.validate():
         application_data = form.data
         Applications.update(application, application_data)
