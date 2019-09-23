@@ -14,6 +14,7 @@
 
   p {
     margin: 0;
+    max-width: none;
   }
 
   button.icon-tooltip {
@@ -26,6 +27,7 @@
 
     .icon {
       @include icon-size(12);
+      bottom: -1px;
     }
   }
 }
