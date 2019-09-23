@@ -1,0 +1,51 @@
+{% extends "portfolios/applications/base.html" %}
+
+{% from "components/alert.html" import Alert %}
+{% from "components/text_input.html" import TextInput %}
+{% from 'components/save_button.html' import SaveButton %}
+
+{% set secondary_breadcrumb = 'portfolios.applications.new_application_title' | translate %}
+
+  {% if application_id %}
+    {% set action = url_for('applications.update_new_application_step_1', portfolio_id=portfolio.id, application_id=application_id) %}
+  {% else %}
+    {% set action = url_for('applications.create_new_application_step_1', portfolio_id=portfolio.id, application_id=application_id) %}
+  {% endif %}
+
+  
+{% block application_content %}
+
+  {% include "fragments/flash.html" %}
+
+  <div class='subheading'>{{ 'portfolios.applications.settings_heading' | translate }}</div>
+
+  <application-name-and-description inline-template v-bind:initial-data='{{ form.data|tojson }}'>
+    <form method="POST" action="{{ action }}" v-on:submit="handleSubmit">
+      <div class="panel">
+        <div class="panel__content">
+          {{ form.csrf_token }}
+          <p>
+            {{ "fragments.edit_application_form.explain" | translate }}
+          </p>
+          <div class="form-row">
+            <div class="form-col form-col--two-thirds">
+              {{ TextInput(form.name, optional=False) }}
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-col form-col--two-thirds">
+              {{ TextInput(form.description, paragraph=True, optional=False) }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+        <span class="action-group">
+          {% block next_button %}
+            {{ SaveButton(text=('portfolios.applications.next_button_text' | translate)) }}
+          {% endblock %}
+        </span>
+    </form>
+  </application-name-and-description>
+
+{% endblock %}
