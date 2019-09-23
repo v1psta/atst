@@ -257,6 +257,12 @@ fragments:
     update_btn: Update
     update_ppoc_confirmation_title: Confirmation
     update_ppoc_title: Update primary point of contact
+invites:
+  revoke:
+    button: Revoke Invite
+    modal_heading: 'Do you want to revoke the invite for {user_name}?'
+    submit: Yes, revoke it
+    cancel: No, do not revoke it
 login:
   ccpo_logo_alt_text: Cloud Computing Program Office Logo
   certificate_selection:
