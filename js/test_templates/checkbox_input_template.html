@@ -3,9 +3,10 @@
     inline-template
     key='datafield'
     v-bind:initial-checked='initialvalue'
+    v-bind:optional=false
     >
     <div>
-      <div class='usa-input  '>
+      <div class='usa-input  ' v-bind:class="[{ 'checked': isChecked }]">
 
         <fieldset data-ally-disabled="true" v-on:change="onInput" class="usa-input__choices ">
           <legend>
@@ -16,6 +17,5 @@
           </legend>
         </fieldset>
       </div>
-      
     </div>
   </checkboxinput>

@@ -1,9 +1,17 @@
 import pytest
 
+from bs4 import BeautifulSoup
 from wtforms.widgets import CheckboxInput
 from wtforms.fields import StringField
-from wtforms.validators import InputRequired, URL
+from wtforms.validators import InputRequired
 from wtforms import Form, FormField
+
+from atst.forms.task_order import TaskOrderForm
+from atst.models import Permissions
+from atst.routes.task_orders.new import render_task_orders_edit
+from atst.utils.context_processors import user_can_view
+
+from tests import factories
 
 
 class InitialValueForm(Form):
@@ -82,3 +90,35 @@ def test_make_upload_input_error_template(upload_input_macro, task_order_form):
     task_order_form.validate()
     rendered_upload_macro = upload_input_macro(task_order_form.pdf)
     write_template(rendered_upload_macro, "upload_input_error_template.html")
+
+
+def test_make_task_order_step3_template(app, request_ctx):
+    request_ctx.g.current_user = factories.UserFactory.create()
+    request_ctx.g.application = None
+    request_ctx.g.portfolio = None
+    # hard-code the portfolio ID so it does not change the fragment every time
+    # this is run
+    portfolio = factories.PortfolioFactory.create(
+        id="e4edf994-04f4-4aaa-ba30-39507e1068a8"
+    )
+    # hard-code the TO number for the same reason
+    task_order = factories.TaskOrderFactory.create(
+        portfolio=portfolio, number="1234567890123"
+    )
+    task_order_form = TaskOrderForm(obj=task_order)
+    step3 = render_task_orders_edit(
+        "task_orders/step_3.html",
+        form=task_order_form,
+        portfolio_id=task_order.portfolio_id,
+        extra_args={
+            "portfolio": task_order.portfolio,
+            "permissions": Permissions,
+            "user_can": user_can_view,
+            "task_order": task_order,
+            "contract_start": app.config.get("CONTRACT_START_DATE"),
+            "contract_end": app.config.get("CONTRACT_END_DATE"),
+        },
+    )
+    dom = BeautifulSoup(step3, "html.parser")
+    to_form = dom.find("to-form")
+    write_template(str(to_form), "to_form.html")
