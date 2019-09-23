@@ -21,13 +21,20 @@ export default {
   },
 
   data: function() {
+    var start = new Date(this.initialStartDate)
+    var end = new Date(this.initialEndDate)
+    var contractStart = new Date(this.initialMinStartDate)
+    var contractEnd = new Date(this.initialMaxEndDate)
+
     return {
-      startDate: new Date(this.initialStartDate),
-      endDate: new Date(this.initialEndDate),
+      startDate: start,
+      endDate: end,
       startValid: false,
       endValid: false,
-      minStartDate: new Date(this.initialMinStartDate),
-      maxEndDate: new Date(this.initialMaxEndDate),
+      maxStartDate: this.calcMaxStartDate(end, contractEnd),
+      minEndDate: this.calcMinEndDate(start, contractStart),
+      contractStart: contractStart,
+      contractEnd: contractEnd,
     }
   },
 
@@ -40,36 +47,40 @@ export default {
       if (event.name.includes(START_DATE)) {
         if (!!event.value) this.startDate = new Date(event.value)
         if (!!event.valid) this.startValid = event.valid
+        if (this.startValid)
+          this.minEndDate = this.calcMinEndDate(this.startDate)
       } else if (event.name.includes(END_DATE)) {
         if (!!event.value) this.endDate = new Date(event.value)
         if (!!event.valid) this.endValid = event.valid
+        if (this.endValid)
+          this.maxStartDate = this.calcMaxStartDate(this.endDate)
       }
     },
 
-    maxStartDate: function() {
-      if (this.endDate < new Date(this.initialMaxEndDate)) {
-        return this.endDate
+    calcMaxStartDate: function(date, end = this.contractEnd) {
+      if (date < end) {
+        return date
       } else {
-        return this.initialMaxEndDate
+        return end
       }
     },
 
-    minEndDate: function() {
-      if (this.startDate > new Date(this.initialMinStartDate)) {
-        return this.startDate
+    calcMinEndDate: function(date, start = this.contractStart) {
+      if (date > start) {
+        return date
       } else {
-        return this.initialMinEndDate
+        return start
       }
     },
   },
 
   computed: {
     maxStartProp: function() {
-      return format(this.maxStartDate(), 'YYYY-MM-DD')
+      return format(this.maxStartDate, 'YYYY-MM-DD')
     },
 
     minEndProp: function() {
-      return format(this.minEndDate(), 'YYYY-MM-DD')
-    }
-  }
+      return format(this.minEndDate, 'YYYY-MM-DD')
+    },
+  },
 }
