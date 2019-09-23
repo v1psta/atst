@@ -93,7 +93,7 @@ class EnvironmentCreationException(GeneralCSPException):
         )
 
 
-class UserProvisioningError(GeneralCSPException):
+class UserProvisioningException(GeneralCSPException):
     """Failed to provision a user
     """
 
@@ -113,15 +113,14 @@ class UserRemovalException(GeneralCSPException):
     """Failed to remove a user
     """
 
-    def __init__(self, env_identifier, user_identifier, reason):
-        self.env_identifier = env_identifier
-        self.user_identifier = user_identifier
+    def __init__(self, user_csp_id, reason):
+        self.user_csp_id = user_csp_id
         self.reason = reason
 
     @property
     def message(self):
-        return "Failed to remove user {} for environment {}: {}".format(
-            self.user_identifier, self.env_identifier, self.reason
+        return "Failed to suspend or delete user {}: {}".format(
+            self.user_csp_id, self.reason
         )
 
 
@@ -164,7 +163,6 @@ class CloudProviderInterface:
             ConnectionException: Issue with the CSP API connection
             UnknownServerException: Unknown issue on the CSP side
             EnvironmentExistsException: Environment already exists and has been created
-            OperationInProgressException: Envrionment creation already in progress
         """
         raise NotImplementedError()
 
@@ -191,7 +189,7 @@ class CloudProviderInterface:
             AuthorizationException: Credentials not authorized for current action(s)
             ConnectionException: Issue with the CSP API connection
             UnknownServerException: Unknown issue on the CSP side
-            UserProvisioningError: Problem creating the root user
+            UserProvisioningException: Problem creating the root user
         """
         raise NotImplementedError()
 
@@ -234,8 +232,7 @@ class CloudProviderInterface:
             AuthorizationException: Credentials not authorized for current action(s)
             ConnectionException: Issue with the CSP API connection
             UnknownServerException: Unknown issue on the CSP side
-            UserProvisioningError: User couldn't be created
-            UserModificationException: User couldn't be modified
+            UserProvisioningException: User couldn't be created or modified
         """
         raise NotImplementedError()
 
@@ -255,7 +252,7 @@ class CloudProviderInterface:
             AuthorizationException: Credentials not authorized for current action(s)
             ConnectionException: Issue with the CSP API connection
             UnknownServerException: Unknown issue on the CSP side
-            UserModificationException: User couldn't be modified
+            UserRemovalException: User couldn't be suspended
         """
         raise NotImplementedError()
 
@@ -274,7 +271,6 @@ class CloudProviderInterface:
             AuthorizationException: Credentials not authorized for current action(s)
             ConnectionException: Issue with the CSP API connection
             UnknownServerException: Unknown issue on the CSP side
-            UserModificationException: User couldn't be modified
             UserRemovalException: User couldn't be removed
         """
         raise NotImplementedError()
@@ -295,12 +291,16 @@ class CloudProviderInterface:
 class MockCloudProvider(CloudProviderInterface):
 
     # TODO: All of these constants
-    AUTH_EXCEPTION = GeneralCSPException("Authentication failure.")
-    NETWORK_EXCEPTION = GeneralCSPException("Network failure.")
+    AUTHENTICATION_EXCEPTION = AuthenticationException("Authentication failure.")
+    AUTHORIZATION_EXCEPTION = AuthorizationException("Not authorized.")
+    NETWORK_EXCEPTION = ConnectionException("Network failure.")
+    SERVER_EXCEPTION = UnknownServerException("Not our fault.")
 
+    SERVER_FAILURE_PCT = 1
     NETWORK_FAILURE_PCT = 7
     ENV_CREATE_FAILURE_PCT = 12
     ATAT_ADMIN_CREATE_FAILURE_PCT = 12
+    UNAUTHORIZED_RATE = 2
 
     def __init__(self, config, with_delay=True, with_failure=True):
         from time import sleep
@@ -319,10 +319,14 @@ class MockCloudProvider(CloudProviderInterface):
 
         self._delay(1, 5)
         self._maybe_raise(self.NETWORK_FAILURE_PCT, self.NETWORK_EXCEPTION)
+        self._maybe_raise(self.SERVER_FAILURE_PCT, self.SERVER_EXCEPTION)
         self._maybe_raise(
             self.ENV_CREATE_FAILURE_PCT,
-            GeneralCSPException("Could not create environment."),
+            EnvironmentCreationException(
+                environment.id, "Could not create environment."
+            ),
         )
+        self._maybe_raise(self.UNAUTHORIZED_RATE, self.AUTHORIZATION_EXCEPTION)
 
         return self._id()
 
@@ -331,10 +335,15 @@ class MockCloudProvider(CloudProviderInterface):
 
         self._delay(1, 5)
         self._maybe_raise(self.NETWORK_FAILURE_PCT, self.NETWORK_EXCEPTION)
+        self._maybe_raise(self.SERVER_FAILURE_PCT, self.SERVER_EXCEPTION)
         self._maybe_raise(
             self.ATAT_ADMIN_CREATE_FAILURE_PCT,
-            GeneralCSPException("Could not create admin user."),
+            UserProvisioningException(
+                csp_environment_id, "atat_admin", "Could not create admin user."
+            ),
         )
+
+        self._maybe_raise(self.UNAUTHORIZED_RATE, self.AUTHORIZATION_EXCEPTION)
 
         return {"id": self._id(), "credentials": self._auth_credentials}
 
@@ -343,11 +352,15 @@ class MockCloudProvider(CloudProviderInterface):
 
         self._delay(1, 5)
         self._maybe_raise(self.NETWORK_FAILURE_PCT, self.NETWORK_EXCEPTION)
+        self._maybe_raise(self.SERVER_FAILURE_PCT, self.SERVER_EXCEPTION)
         self._maybe_raise(
             self.ATAT_ADMIN_CREATE_FAILURE_PCT,
-            GeneralCSPException("Could not create environment baseline."),
+            BaselineProvisionException(
+                csp_environment_id, "Could not create environment baseline."
+            ),
         )
 
+        self._maybe_raise(self.UNAUTHORIZED_RATE, self.AUTHORIZATION_EXCEPTION)
         return {
             CSPRole.BASIC_ACCESS.value: self._id(),
             CSPRole.NETWORK_ADMIN.value: self._id(),
@@ -360,19 +373,42 @@ class MockCloudProvider(CloudProviderInterface):
 
         self._delay(1, 5)
         self._maybe_raise(self.NETWORK_FAILURE_PCT, self.NETWORK_EXCEPTION)
+        self._maybe_raise(self.SERVER_FAILURE_PCT, self.SERVER_EXCEPTION)
         self._maybe_raise(
             self.ATAT_ADMIN_CREATE_FAILURE_PCT,
-            GeneralCSPException("Could not create user."),
+            UserProvisioningException(
+                user_info.environment.id,
+                user_info.application_role.user_id,
+                "Could not create user.",
+            ),
         )
 
+        self._maybe_raise(self.UNAUTHORIZED_RATE, self.AUTHORIZATION_EXCEPTION)
         return self._id()
 
     def suspend_user(self, auth_credentials, csp_user_id):
+        self._authorize(auth_credentials)
         self._maybe_raise(self.NETWORK_FAILURE_PCT, self.NETWORK_EXCEPTION)
+        self._maybe_raise(self.SERVER_FAILURE_PCT, self.SERVER_EXCEPTION)
+
+        self._maybe_raise(
+            self.ATAT_ADMIN_CREATE_FAILURE_PCT,
+            UserRemovalException(csp_user_id, "Could not suspend user."),
+        )
+
         return self._maybe(12)
 
     def delete_user(self, auth_credentials, csp_user_id):
+        self._authorize(auth_credentials)
         self._maybe_raise(self.NETWORK_FAILURE_PCT, self.NETWORK_EXCEPTION)
+        self._maybe_raise(self.SERVER_FAILURE_PCT, self.SERVER_EXCEPTION)
+
+        self._maybe_raise(
+            self.ATAT_ADMIN_CREATE_FAILURE_PCT,
+            UserRemovalException(csp_user_id, "Could not delete user."),
+        )
+
+        self._maybe_raise(self.UNAUTHORIZED_RATE, self.AUTHORIZATION_EXCEPTION)
         return self._maybe(12)
 
     def get_calculator_url(self):
@@ -405,4 +441,4 @@ class MockCloudProvider(CloudProviderInterface):
     def _authorize(self, credentials):
         self._delay(1, 5)
         if credentials != self._auth_credentials:
-            raise self.AUTH_EXCEPTION
+            raise self.AUTHENTICATION_EXCEPTION
