@@ -260,14 +260,16 @@ def test_claim_for_update(session):
     environment = portfolio.applications[0].environments[0]
 
     satisfied_claims = []
+    exceptions = []
 
-    # Two threads that race to acquire a claim on the same environment.
-    # SecondThread's claim will be rejected, resulting in a ClaimFailedException.
+    # Two threads race to do work on environment and check out the lock
     class FirstThread(Thread):
         def run(self):
-            with claim_for_update(environment):
-                sleep(0.1)  # doing some work
-                satisfied_claims.append("FirstThread")
+            try:
+                with claim_for_update(environment):
+                    satisfied_claims.append("FirstThread")
+            except ClaimFailedException:
+                exceptions.append("FirstThread")
 
     class SecondThread(Thread):
         def run(self):
@@ -275,7 +277,7 @@ def test_claim_for_update(session):
                 with claim_for_update(environment):
                     satisfied_claims.append("SecondThread")
             except ClaimFailedException:
-                pass
+                exceptions.append("SecondThread")
 
     t1 = FirstThread()
     t2 = SecondThread()
@@ -286,8 +288,14 @@ def test_claim_for_update(session):
 
     session.refresh(environment)
 
-    # Only FirstThread acquired a claim and wrote to satisfied_claims
-    assert satisfied_claims == ["FirstThread"]
+    assert len(satisfied_claims) == 1
+    assert len(exceptions) == 1
+
+    if satisfied_claims == ["FirstThread"]:
+        assert exceptions == ["SecondThread"]
+    else:
+        assert satisfied_claims == ["SecondThread"]
+        assert exceptions == ["FirstThread"]
 
     # The claim is released
     assert environment.claimed_until is None
