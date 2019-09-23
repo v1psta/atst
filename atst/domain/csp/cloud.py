@@ -1,5 +1,6 @@
 from typing import Dict
 from uuid import uuid4
+import json
 
 from atst.models.environment_role import CSPRole
 from atst.models.user import User
@@ -442,3 +443,174 @@ class MockCloudProvider(CloudProviderInterface):
         self._delay(1, 5)
         if credentials != self._auth_credentials:
             raise self.AUTHENTICATION_EXCEPTION
+
+
+class AWSCloudProvider(CloudProviderInterface):
+    def __init__(self, config):
+        self.config = config
+
+        self.access_key_id = config["AWS_ACCESS_KEY_ID"]
+        self.secret_key = config["AWS_SECRET_KEY"]
+        self.region_name = config["AWS_REGION_NAME"]
+
+        # TODO
+        self.root_account_username = None
+        self.root_account_policy_name = None
+
+        import boto3
+
+        self.boto3 = boto3
+
+    def root_creds():
+        return {"username": self.access_key_id, "password": self.secret_key}
+
+    def create_environment(
+        self, auth_credentials: Dict, user: User, environment: Environment
+    ):
+        org_client = self._get_client("organizations")
+
+        # Create an account. Requires organizations:CreateAccount permission
+        # TODO: Good that we're providing RoleName, but we may want to salt it
+        account_request = org_client.create_account(
+            Email=user.email,
+            AccountName=account_name,  # TODO
+            RoleName=role_name,  # TODO
+            IamUserAccessToBilling="DENY",
+        )
+
+        # Configuration for our CreateAccount Waiter.
+        # A waiter is a boto3 helper which can be configured to poll a given status
+        # endpoint until it succeeds or fails. boto3 has many built in waiters, but none
+        # for the organizations service so we're building our own here.
+        waiter_config = {
+            "version": 2,
+            "waiters": {
+                "AccountCreated": {
+                    "operation": "DescribeCreateAccountStatus",
+                    "delay": 20,
+                    "maxAttempts": 10,
+                    "acceptors": [
+                        {
+                            "matcher": "path",
+                            "expected": "SUCCEEDED",
+                            "argument": "CreateAccountStatus.State",
+                            "state": "success",
+                        },
+                        {
+                            "matcher": "path",
+                            "expected": "IN_PROGRESS",
+                            "argument": "CreateAccountStatus.State",
+                            "state": "retry",
+                        },
+                        {
+                            "matcher": "path",
+                            "expected": "FAILED",
+                            "argument": "CreateAccountStatus.State",
+                            "state": "failure",
+                        },
+                    ],
+                }
+            },
+        }
+        waiter_model = WaiterModel(waiter_config)
+        account_waiter = create_waiter_with_client(
+            "AccountCreated", waiter_model, org_client
+        )
+
+        try:
+            # Poll until the CreateAccount request either succeeds or fails.
+            account_waiter.wait(
+                CreateAccountRequestId=account_request["CreateAccountStatus"]["Id"]
+            )
+        except WaiterError:
+            raise ValueError("Failed to create account.")  # TODO
+
+        # We need to re-fetch this since the Waiter throws away the success response for some reason.
+        created_account_status = org_client.describe_create_account_status(
+            CreateAccountRequestId=account_request["CreateAccountStatus"]["Id"]
+        )
+        account_id = created_account_status["CreateAccountStatus"]["AccountId"]
+
+        return account_id
+
+    def create_atat_admin_user(
+        self, auth_credentials: Dict, csp_environment_id: str
+    ) -> Dict:
+        """
+        Create an IAM user within a given account.
+        """
+
+        # Create a policy which allows user to assume a role within the account.
+        # Another async call.
+        iam_client = self._client("iam")
+        iam_client.put_user_policy(
+            UserName=self.root_account_username,
+            PolicyName=self.root_account_policy_name,
+            PolicyDocument=self._policy(account_id),
+        )
+
+        # TODO: Not sure how to wait for this policy to be created. Hardcoding a role ARN for now.
+        # Possibilities:
+        #   - construct ARN ourselves (should be deterministic) and poll for it, possiblity with a waiter
+        #   - poll a list_roles endpoint and search for the role name
+        role_arn = "arn:aws:iam::513325237903:role/atat-master-control-center"
+        sts_client = self._client("sts")
+        assumed_role_object = sts_client.assume_role(
+            RoleArn=role_arn, RoleSessionName="AssumeRoleSession1"
+        )
+
+        # From the response that contains the assumed role, get the temporary
+        # credentials that can be used to make subsequent API calls
+        credentials = assumed_role_object["Credentials"]
+
+        # Use the temporary credentials that AssumeRole returns to make a new connection to IAM
+        iam_client = boto3.client(
+            "iam",
+            aws_access_key_id=credentials["AccessKeyId"],
+            aws_secret_access_key=credentials["SecretAccessKey"],
+            aws_session_token=credentials["SessionToken"],
+        )
+
+        # Create the user with a PermissionBoundary
+        permission_boundary_arn = "arn:aws:iam::aws:policy/AlexaForBusinessDeviceSetup"
+        user = iam_client.create_user(
+            UserName=self.root_account_username,
+            PermissionsBoundary=permission_boundary_arn,
+            Tags=[{"Key": "foo", "Value": "bar"}],
+        )
+        return user
+
+    def _get_client(self, service: str):
+        """
+        A helper for creating a client of a given AWS service.
+        """
+        return self.boto3.client(
+            service,
+            aws_access_key_id=(self.access_key_id),
+            aws_secret_access_key=(self.secret_key),
+            region_name=self.region_name,
+        )
+
+    def _policy(self, account_id: str) -> Dict:
+        policy_dict = json.loads(
+            """
+        {
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                "Effect": "Allow",
+                "Action": [
+                    "sts:AssumeRole"
+                ],
+                "Resource": [
+                    "arn:aws:iam::{}:role/atat-master-control-center"
+                ]
+                }
+            ]
+        }
+        """
+        )
+        policy_dict["Statement"][0]["Resource"][0] = policy_dict["Statement"][0][
+            "Resource"
+        ][0].format(account_id)
+        return json.dumps(policy_dict)
