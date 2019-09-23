@@ -21,8 +21,13 @@ from atst.jobs import (
 )
 from atst.models.utils import claim_for_update
 from atst.domain.exceptions import ClaimFailedException
-from tests.factories import EnvironmentFactory, EnvironmentRoleFactory, PortfolioFactory
-from atst.models import EnvironmentRole
+from tests.factories import (
+    EnvironmentFactory,
+    EnvironmentRoleFactory,
+    PortfolioFactory,
+    ApplicationRoleFactory,
+)
+from atst.models import EnvironmentRole, ApplicationRoleStatus
 
 
 @pytest.fixture(autouse=True, scope="function")
@@ -300,7 +305,8 @@ def test_dispatch_provision_user(csp, session, celery_app, celery_worker, monkey
     # Given that I have three environment roles:
     #   (A) one of which has a completed status
     #   (B) one of which has an environment that has not been provisioned
-    #   (C) one of which is pending and has a provisioned environment
+    #   (C) one of which is pending, has a provisioned environment but an inactive application role
+    #   (D) one of which is pending, has a provisioned environment and has an active application role
     provisioned_environment = EnvironmentFactory.create(
         cloud_id="cloud_id", root_user_info={}, baseline_info={}
     )
@@ -311,8 +317,15 @@ def test_dispatch_provision_user(csp, session, celery_app, celery_worker, monkey
     _er_b = EnvironmentRoleFactory.create(
         environment=unprovisioned_environment, status=EnvironmentRole.Status.PENDING
     )
-    er_c = EnvironmentRoleFactory.create(
-        environment=provisioned_environment, status=EnvironmentRole.Status.PENDING
+    _er_c = EnvironmentRoleFactory.create(
+        environment=unprovisioned_environment,
+        status=EnvironmentRole.Status.PENDING,
+        application_role=ApplicationRoleFactory(status=ApplicationRoleStatus.PENDING),
+    )
+    er_d = EnvironmentRoleFactory.create(
+        environment=provisioned_environment,
+        status=EnvironmentRole.Status.PENDING,
+        application_role=ApplicationRoleFactory(status=ApplicationRoleStatus.ACTIVE),
     )
 
     mock = Mock()
@@ -321,8 +334,8 @@ def test_dispatch_provision_user(csp, session, celery_app, celery_worker, monkey
     # When I dispatch the user provisioning task
     dispatch_provision_user.run()
 
-    # I expect it to dispatch only one call, to EnvironmentRole C
-    mock.delay.assert_called_once_with(environment_role_id=er_c.id)
+    # I expect it to dispatch only one call, to EnvironmentRole D
+    mock.delay.assert_called_once_with(environment_role_id=er_d.id)
 
 
 def test_do_provision_user(csp, session):

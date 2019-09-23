@@ -1,7 +1,13 @@
 from sqlalchemy.orm.exc import NoResultFound
 
 from atst.database import db
-from atst.models import EnvironmentRole, ApplicationRole, Environment
+from atst.models import (
+    EnvironmentRole,
+    ApplicationRole,
+    Environment,
+    ApplicationInvitation,
+    ApplicationRoleStatus,
+)
 from atst.domain.exceptions import NotFoundError
 from uuid import UUID
 from typing import List
@@ -74,9 +80,11 @@ class EnvironmentRoles(object):
         results = (
             db.session.query(EnvironmentRole.id)
             .join(Environment)
+            .join(ApplicationRole)
             .filter(Environment.deleted == False)
             .filter(Environment.baseline_info != None)
             .filter(EnvironmentRole.status == EnvironmentRole.Status.PENDING)
+            .filter(ApplicationRole.status == ApplicationRoleStatus.ACTIVE)
             .all()
         )
         return [id_ for id_, in results]
