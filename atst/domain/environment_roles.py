@@ -5,7 +5,6 @@ from atst.models import (
     EnvironmentRole,
     ApplicationRole,
     Environment,
-    ApplicationInvitation,
     ApplicationRoleStatus,
 )
 from atst.domain.exceptions import NotFoundError
