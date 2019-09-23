@@ -243,6 +243,8 @@ export default {
           return '<1%'
         } else if (percentage > 99 && percentage < 100) {
           return '>99%'
+        } else if (percentage > 100) {
+          return '>100%'
         } else {
           return `${percentage.toFixed(0)}%`
         }
