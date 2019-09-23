@@ -134,37 +134,6 @@ def test_for_user():
     assert len(user_applications) == 2
 
 
-def test_remove_member():
-    application = ApplicationFactory.create()
-    user = UserFactory.create()
-    member_role = ApplicationRoleFactory.create(application=application, user=user)
-    environment = EnvironmentFactory.create(application=application)
-    environment_role = EnvironmentRoleFactory.create(
-        application_role=member_role, environment=environment
-    )
-
-    assert member_role == ApplicationRoles.get(
-        user_id=user.id, application_id=application.id
-    )
-
-    Applications.remove_member(member_role)
-
-    assert (
-        ApplicationRoles.get(user_id=user.id, application_id=application.id).status
-        == ApplicationRoleStatus.DISABLED
-    )
-
-    #
-    # TODO: Why does above raise NotFoundError and this returns None
-    #
-    assert (
-        EnvironmentRoles.get(
-            application_role_id=member_role.id, environment_id=environment.id
-        )
-        is None
-    )
-
-
 def test_invite():
     application = ApplicationFactory.create()
     env1 = EnvironmentFactory.create(application=application)

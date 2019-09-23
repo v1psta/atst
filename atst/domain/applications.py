@@ -118,7 +118,3 @@ class Applications(BaseDomainClass):
         db.session.commit()
 
         return invitation
-
-    @classmethod
-    def remove_member(cls, application_role):
-        ApplicationRoles.disable(application_role)

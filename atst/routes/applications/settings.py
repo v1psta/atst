@@ -333,7 +333,7 @@ def create_member(application_id):
 @user_can(Permissions.DELETE_APPLICATION_MEMBER, message="remove application member")
 def remove_member(application_id, application_role_id):
     application_role = ApplicationRoles.get_by_id(application_role_id)
-    Applications.remove_member(application_role)
+    ApplicationRoles.disable(application_role)
 
     flash(
         "application_member_removed",

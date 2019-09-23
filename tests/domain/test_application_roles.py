@@ -66,3 +66,21 @@ def test_get_by_id():
 
     with pytest.raises(NotFoundError):
         ApplicationRoles.get_by_id(app_role.id)
+
+
+def test_disable():
+    application = ApplicationFactory.create()
+    user = UserFactory.create()
+    member_role = ApplicationRoleFactory.create(application=application, user=user)
+    environment = EnvironmentFactory.create(application=application)
+    environment_role = EnvironmentRoleFactory.create(
+        application_role=member_role, environment=environment
+    )
+    assert member_role == ApplicationRoles.get(
+        user_id=user.id, application_id=application.id
+    )
+    ApplicationRoles.disable(member_role)
+    assert (
+        ApplicationRoles.get(user_id=user.id, application_id=application.id).status
+        == ApplicationRoleStatus.DISABLED
+    )
