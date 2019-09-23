@@ -7,6 +7,7 @@ import Modal from '../mixins/modal'
 import optionsinput from './options_input'
 import textinput from './text_input'
 import clindollaramount from './clin_dollar_amount'
+import PopDateRange from './pop_date_range'
 
 const TOTAL_AMOUNT = 'total_amount'
 const OBLIGATED_AMOUNT = 'obligated_amount'
@@ -23,6 +24,7 @@ export default {
     optionsinput,
     textinput,
     clindollaramount,
+    PopDateRange,
   },
 
   mixins: [Modal],

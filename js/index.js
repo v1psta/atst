@@ -32,6 +32,7 @@ import NewEnvironment from './components/forms/new_environment'
 import SemiCollapsibleText from './components/semi_collapsible_text'
 import ToForm from './components/forms/to_form'
 import ClinFields from './components/clin_fields'
+import PopDateRange from './components/pop_date_range'
 
 Vue.config.productionTip = false
 
@@ -65,6 +66,7 @@ const app = new Vue({
     SemiCollapsibleText,
     ToForm,
     ClinFields,
+    PopDateRange,
   },
 
   mounted: function() {

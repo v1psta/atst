@@ -4,6 +4,7 @@
 {% from 'components/icon.html' import Icon %}
 {% from 'components/options_input.html' import OptionsInput %}
 {% from 'components/text_input.html' import TextInput %}
+{% from 'components/pop_date_range.html' import PopDateRange %}
 
 {% macro CLINFields(contract_start, contract_end, fields=None, index=None) %}
   <clin-fields
@@ -130,148 +131,9 @@
         </div>
         {% set contract_end_formatted = contract_end | dateFromString(formatter="%Y-%m-%d") | formattedDate(formatter="%B %d, %Y") %}
         {% if fields %}
-          <div class="form-row">
-            <div class="form-col">
-              {{ DatePicker(fields.start_date, watch=True, optional=False) }}
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="form-col">
-              {% call DatePicker(fields.end_date, watch=True, optional=False) %}
-                {{ Alert(message="task_orders.form.pop_end_alert" | translate({'end_date': contract_end_formatted})) }}
-              {% endcall %}
-            </div>
-          </div>
+          {{ PopDateRange(start_field=fields.start_date, end_field=fields.end_date, watch=True, optional=False, mindate=contract_start | dateFromString(formatter="%Y-%m-%d"), maxdate=contract_end | dateFromString(formatter="%Y-%m-%d")) }}
         {% else %}
-          <div class="form-row">
-            <div class="form-col">
-              <date-selector :name-tag="'clins-' + clinIndex + '-start_date'" :watch='true' :optional='false' inline-template>
-                <fieldset class="usa-input date-picker" v-bind:class="{ 'usa-input--success': isDateValid && showValidation }">
-                  <legend>
-                    <div class="usa-input__title">
-                      {{ 'task_orders.form.pop_start' | translate }}
-                    </div>
-                    <p class='usa-input__help'>
-                      {{ 'task_orders.form.pop_example' | translate }}
-                    </p>
-                  </legend>
-
-                  <div class="date-picker-component">
-                    <input :name="name" v-bind:value="formattedDate" v-on:change="onInput" type="hidden" />
-
-                    <div class="usa-form-group usa-form-group-month">
-                      <label>{{ 'components.date_selector.month' | translate }}</label>
-                      <input
-                        name="date-month"
-                        max="12"
-                        maxlength="2"
-                        min="1"
-                        type="number"
-                        v-bind:class="{ 'usa-input-error': (month && !isMonthValid) }"
-                        v-model="month"
-                        v-on:change="onInput"
-                        />
-                    </div>
-
-                    <div class="usa-form-group usa-form-group-day">
-                      <label>{{ 'components.date_selector.day' | translate }}</label>
-                      <input
-                        name="date-day"
-                        maxlength="2"
-                        min="1"
-                        type="number"
-                        v-bind:class="{ 'usa-input-error': (day && !isDayValid) }"
-                        v-bind:max="daysMaxCalculation"
-                        v-model="day"
-                        v-on:change="onInput"
-                        />
-                    </div>
-
-                    <div class="usa-form-group usa-form-group-year">
-                      <label>{{ 'components.date_selector.year' | translate }}</label>
-                      <input
-                        name="date-year"
-                        maxlength="4"
-                        type="number"
-                        v-model="year"
-                        v-on:change="onInput"
-                        />
-                    </div>
-
-                    <div class="usa-form-group-date-ok" v-if="isDateValid">
-                      {{ Icon("ok", classes="icon--green") }}
-                    </div>
-                  </div>
-                </fieldset>
-              </date-selector>
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="form-col">
-              <date-selector :name-tag="'clins-' + clinIndex + '-end_date'" :watch='true' :optional='false' inline-template>
-                <fieldset class="usa-input date-picker" v-bind:class="{ 'usa-input--success': isDateValid && showValidation }">
-                  <legend>
-                    <div class="usa-input__title">
-                      {{ 'task_orders.form.pop_end' | translate }}
-                    </div>
-
-                    {{ Alert(message="task_orders.form.pop_end_alert" | translate({'end_date': contract_end_formatted})) }}
-
-                    <p class='usa-input__help'>
-                      {{ 'task_orders.form.pop_example' | translate }}
-                    </p>
-                  </legend>
-
-                  <div class="date-picker-component">
-                    <input :name="name" v-bind:value="formattedDate" v-on:change="onInput" type="hidden" />
-
-                      <div class="usa-form-group usa-form-group-month">
-                        <label>{{ 'components.date_selector.month' | translate }}</label>
-                        <input
-                          name="date-month"
-                          max="12"
-                          maxlength="2"
-                          min="1"
-                          type="number"
-                          v-bind:class="{ 'usa-input-error': (month && !isMonthValid) }"
-                          v-model="month"
-                          v-on:change="onInput"
-                          />
-                      </div>
-
-                      <div class="usa-form-group usa-form-group-day">
-                        <label>{{ 'components.date_selector.day' | translate }}</label>
-                        <input
-                          name="date-day"
-                          maxlength="2"
-                          min="1"
-                          type="number"
-                          v-bind:class="{ 'usa-input-error': (day && !isDayValid) }"
-                          v-bind:max="daysMaxCalculation"
-                          v-model="day"
-                          v-on:change="onInput"
-                          />
-                      </div>
-
-                      <div class="usa-form-group usa-form-group-year">
-                        <label>{{ 'components.date_selector.year' | translate }}</label>
-                        <input
-                          name="date-year"
-                          maxlength="4"
-                          type="number"
-                          v-model="year"
-                          v-on:change="onInput"
-                          />
-                      </div>
-
-                    <div class="usa-form-group-date-ok" v-if="isDateValid">
-                      {{ Icon("ok", classes="icon--green") }}
-                    </div>
-                  </div>
-                </fieldset>
-              </date-selector>
-            </div>
-          </div>
+          {{ PopDateRange(watch=True, optional=False, mindate=contract_start | dateFromString(formatter="%Y-%m-%d"), maxdate=contract_end | dateFromString(formatter="%Y-%m-%d")) }}
         {% endif %}
         <div class="form-row">
           <div class="usa-input-error-message form-has-errors">
