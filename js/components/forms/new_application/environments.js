@@ -1,11 +1,11 @@
-import FormMixin from '../../mixins/form'
-import textinput from '../text_input'
+import FormMixin from '../../../mixins/form'
+import textinput from '../../text_input'
 import * as R from 'ramda'
 
 const createEnvironment = name => ({ name })
 
 export default {
-  name: 'new-application',
+  name: 'application-environments',
 
   mixins: [FormMixin],
 
@@ -18,7 +18,6 @@ export default {
       type: Object,
       default: () => ({}),
     },
-    modalName: String,
   },
 
   data: function() {
@@ -47,16 +46,18 @@ export default {
       errors: [],
       environments,
       name,
-      readyToSubmit: false,
+      changed: true,
     }
   },
 
   mounted: function() {
     this.$root.$on('onEnvironmentAdded', this.addEnvironment)
+    this.validate()
   },
 
   methods: {
-    addEnvironment: function(event) {
+    addEnvironment: function(_event) {
+      this.changed = false
       this.environments.push(createEnvironment(''))
     },
 
@@ -64,6 +65,7 @@ export default {
       if (this.environments.length > 1) {
         this.environments.splice(index, 1)
       }
+      this.validate()
     },
 
     validate: function() {
@@ -75,6 +77,7 @@ export default {
         R.filter(Boolean),
         R.take(1)
       )(this.validations)
+      this.invalid = this.errors.length > 0
     },
 
     hasEnvironments: function() {
@@ -99,34 +102,9 @@ export default {
       return names.every((n, index) => names.indexOf(n) === index)
     },
 
-    handleSubmit: function(event) {
-      if (!this.readyToSubmit) {
-        event.preventDefault()
-        this.validateAndOpenModal()
-      }
-    },
-
-    handleCancelSubmit: function() {
-      this.readyToSubmit = false
-      this.closeModal(this.modalName)
-    },
-
-    validateAndOpenModal: function() {
-      let isValid = this.$children.reduce((previous, newVal) => {
-        // display textInput error if it is not valid
-        if (!newVal.showValid) {
-          newVal.showError = true
-        }
-
-        return newVal.showValid && previous
-      }, true)
+    onInput: function(e) {
+      this.changed = true
       this.validate()
-      isValid = this.errors.length == 0 && isValid
-
-      if (isValid) {
-        this.readyToSubmit = true
-        this.openModal(this.modalName)
-      }
     },
   },
 }

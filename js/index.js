@@ -17,7 +17,8 @@ import EditOfficerForm from './components/forms/edit_officer_form'
 import poc from './components/forms/poc'
 import oversight from './components/forms/oversight'
 import toggler from './components/toggler'
-import NewApplication from './components/forms/new_application'
+import ApplicationNameAndDescription from './components/forms/new_application/name_and_description'
+import ApplicationEnvironments from './components/forms/new_application/environments'
 import { EditEnvironmentRole } from './components/forms/edit_environment_role'
 import EditApplicationRoles from './components/forms/edit_application_roles'
 import MultiStepModalForm from './components/forms/multi_step_modal_form'
@@ -60,7 +61,8 @@ const app = new Vue({
     checkboxinput,
     poc,
     oversight,
-    NewApplication,
+    ApplicationNameAndDescription,
+    ApplicationEnvironments,
     selector,
     BudgetChart,
     SpendTable,
