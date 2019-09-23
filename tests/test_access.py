@@ -222,17 +222,105 @@ def test_applications_access_environment_access(get_url_assert_status):
     get_url_assert_status(ccpo, url, 404)
 
 
-# applications.create
-def test_applications_create_access(post_url_assert_status):
+# applications.view_new_application_step_1
+def test_applications_get_application_step_1(get_url_assert_status):
     ccpo = user_with(PermissionSets.EDIT_PORTFOLIO_APPLICATION_MANAGEMENT)
     owner = user_with()
     rando = user_with()
     portfolio = PortfolioFactory.create(owner=owner)
 
-    url = url_for("applications.create", portfolio_id=portfolio.id)
-    post_url_assert_status(ccpo, url, 200)
-    post_url_assert_status(owner, url, 200)
-    post_url_assert_status(rando, url, 404)
+    url = url_for("applications.view_new_application_step_1", portfolio_id=portfolio.id)
+    get_url_assert_status(ccpo, url, 200)
+    get_url_assert_status(owner, url, 200)
+    get_url_assert_status(rando, url, 404)
+
+
+# applications.view_new_application_step_1
+def test_applications_get_application_step_1_update(get_url_assert_status):
+    ccpo = user_with(PermissionSets.EDIT_PORTFOLIO_APPLICATION_MANAGEMENT)
+    owner = user_with()
+    rando = user_with()
+    portfolio = PortfolioFactory.create(owner=owner)
+    application = ApplicationFactory.create(portfolio=portfolio)
+
+    url = url_for(
+        "applications.view_new_application_step_1",
+        portfolio_id=portfolio.id,
+        application_id=application.id,
+    )
+    get_url_assert_status(ccpo, url, 200)
+    get_url_assert_status(owner, url, 200)
+    get_url_assert_status(rando, url, 404)
+
+
+# applications.create_or_update_new_application_step_1
+def test_applications_post_application_step_1(post_url_assert_status):
+    ccpo = user_with(PermissionSets.EDIT_PORTFOLIO_APPLICATION_MANAGEMENT)
+    owner = user_with()
+    rando = user_with()
+    portfolio = PortfolioFactory.create(owner=owner)
+    application = ApplicationFactory.create(portfolio=portfolio)
+    step_1_form_data = {
+        "name": "Test Application",
+        "description": "This is only a test",
+    }
+
+    url = url_for(
+        "applications.create_new_application_step_1", portfolio_id=portfolio.id
+    )
+    post_url_assert_status(ccpo, url, 302, data=step_1_form_data)
+    post_url_assert_status(owner, url, 302, data=step_1_form_data)
+    post_url_assert_status(rando, url, 404, data=step_1_form_data)
+
+    url = url_for(
+        "applications.update_new_application_step_1",
+        portfolio_id=portfolio.id,
+        application_id=application.id,
+    )
+    post_url_assert_status(ccpo, url, 302, data=step_1_form_data)
+    post_url_assert_status(owner, url, 302, data=step_1_form_data)
+    post_url_assert_status(rando, url, 404, data=step_1_form_data)
+
+
+# applications.view_new_application_step_2
+def test_applications_get_application_step_2(get_url_assert_status):
+    ccpo = user_with(PermissionSets.EDIT_PORTFOLIO_APPLICATION_MANAGEMENT)
+    owner = user_with()
+    rando = user_with()
+    portfolio = PortfolioFactory.create(owner=owner)
+    application = ApplicationFactory.create(portfolio=portfolio)
+
+    url = url_for(
+        "applications.view_new_application_step_2",
+        portfolio_id=portfolio.id,
+        application_id=application.id,
+    )
+    get_url_assert_status(ccpo, url, 200)
+    get_url_assert_status(owner, url, 200)
+    get_url_assert_status(rando, url, 404)
+
+
+# applications.update_new_application_step_2
+def test_applications_post_application_step_2(post_url_assert_status):
+    ccpo = user_with(PermissionSets.EDIT_PORTFOLIO_APPLICATION_MANAGEMENT)
+    owner = user_with()
+    rando = user_with()
+    portfolio = PortfolioFactory.create(owner=owner)
+    application = ApplicationFactory.create(portfolio=portfolio)
+    step_2_form_data = {
+        "environment_names-0": "development",
+        "environment_names-1": "staging",
+        "environment_names-2": "production",
+    }
+
+    url = url_for(
+        "applications.update_new_application_step_1",
+        portfolio_id=portfolio.id,
+        application_id=application.id,
+    )
+    post_url_assert_status(ccpo, url, 302, data=step_2_form_data)
+    post_url_assert_status(owner, url, 302, data=step_2_form_data)
+    post_url_assert_status(rando, url, 404, data=step_2_form_data)
 
 
 # portfolios.invite_member
@@ -319,7 +407,9 @@ def test_applications_new_access(get_url_assert_status):
     rando = user_with()
     portfolio = PortfolioFactory.create(owner=owner)
 
-    url = url_for("applications.new", portfolio_id=portfolio.id)
+    url = url_for(
+        "applications.create_new_application_step_1", portfolio_id=portfolio.id
+    )
     get_url_assert_status(ccpo, url, 200)
     get_url_assert_status(owner, url, 200)
     get_url_assert_status(rando, url, 404)
