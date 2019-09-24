@@ -383,3 +383,126 @@ class MockCloudProvider(CloudProviderInterface):
         self._delay(1, 5)
         if self._with_authorization and credentials != self._auth_credentials:
             raise self.AUTHENTICATION_EXCEPTION
+
+
+AZURE_ENVIRONMENT = "AZURE_PUBLIC_CLOUD" # TBD
+AZURE_SKU_ID = "?"  # probably a static sku specific to ATAT/JEDI
+SUBSCRIPTION_ID_REGEX = re.compile(
+    "subscriptions\/([0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})",
+    re.I,
+)
+
+class AzureCloudProvider(CloudProviderInterface):
+    def __init__(self, config):
+        self.config = config
+
+        self.client_id = config["AZURE_CLIENT_ID"]
+        self.secret_key = config["AZURE_SECRET_KEY"]
+        self.tenant_id = config["AZURE_TENANT_ID"]
+
+        import azure.mgmt as mgmt
+        import azure.graphrbac as graphrbac
+        import azure.common.credentials as credentials
+
+        self.azure_mgmt = mgmt
+        self.azure_graph = graphrbac
+        self.azure_credentials = credentials
+
+    def root_creds(self):
+        return {
+            "client_id": self.client_id,
+            "secret_key": self.secret_key,
+            "tenant_id": self.tenant_id,
+        }
+
+    def create_environment(
+        self, auth_credentials: Dict, user: User, environment: Environment
+    ):
+        credentials = self._get_credential_obj(self.root_creds())
+        sub_client = self.azure_mgmt.subscription.SubscriptionClient(credentials)
+
+        display_name = (
+            f"{environment.application.name}_{environment.name}_{environment.id}"
+        )  # proposed format
+
+        billing_profile_id = "?"  # something chained from environment?
+        sku_id = AZURE_SKU_ID
+        body = self.azure_mgmt.subscription.models.ModernSubscriptionCreationParameters(
+            display_name, billing_profile_id, sku_id
+        )
+
+        # These 2 seem like something that might be worthwhile to allow tiebacks to
+        # TOs filed for the environment
+        billing_account_name = "?"
+        invoice_section_name = "?"
+        sub_creation_operation = sub_client.subscription_factory.create_subscription(
+            billing_account_name, invoice_section_name, body
+        )
+
+        # the resulting object from this process is a link to the new subscription
+        # not a subscription model, so we'll have to unpack the ID
+        new_sub = sub_creation_operation.result()
+
+        subscription_id = self._extract_subscription_id(new_sub.subscription_link)
+        if subscription_id:
+            return subscription_id
+        else:
+            # troublesome error, subscription should exist at this point
+            # but we just don't have a valid ID
+            pass
+
+    def create_atat_admin_user(
+        self, auth_credentials: Dict, csp_environment_id: str
+    ) -> Dict:
+        root_creds = self.root_creds()
+        credentials = self._get_credential_obj(root_creds)
+
+        self.azure_mgmt.
+
+        sub_client = self.azure_mgmt.subscription.SubscriptionClient(credentials)
+        subscription: self.azure_mgmt.subscription.models.Subscription = sub_client.subscriptions.get(
+            csp_environment_id
+        )
+
+        # how do we scope the graph client to the new subscription rather than
+        # the cloud0 subscription? tenant id seems to be separate from subscription id
+        graph_client = self.azure_graph.GraphRbacManagementClient(
+            credentials, root_creds.get("tenant_id")
+        app_create_param = self.azure_graph.models.ApplicationCreateParameters(
+            display_name=app_display_name
+        )
+        app: self.azure_graph.models.Application = graph_client.applications.create(
+            app_create_param
+        )
+
+        self.azure_graph.models.
+
+        # create a new service principle for the new application, which should be scoped
+        # to the new subscription
+        app_id = app.app_id
+        sp_create_params = self.azure_graph.models.ServicePrincipalCreateParameters(
+            app_id=app_id, account_enabled=True
+        )
+
+        service_principal = graph_client.service_principals.create(sp_create_params)
+
+        return {
+            "csp_user_id": service_principal.object_id,
+            "credentials": service_principal.password_credentials,
+        }
+
+    def _extract_subscription_id(self, subscription_url):
+        sub_id_match = SUBSCRIPTION_ID_REGEX.match(subscription_url)
+
+        if sub_id_match:
+            return sub_id_match.group(1)
+
+    def _get_credential_obj(self, creds, resource="https://graph.windows.net"):
+        return self.azure_credentials.ServicePrincipalCredentials(
+            client_id=creds.get("client_id"),
+            secret=creds.get("secret_key"),
+            tenant=creds.get("tenant_id"),
+            resource=resource,
+            cloud_environment=AZURE_ENVIRONMENT,
+        )
+

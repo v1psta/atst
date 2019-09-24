@@ -25,6 +25,7 @@ PyYAML = "*"
 azure-storage = "*"
 azure-storage-common = "*"
 celery = "*"
+azure-mgmt-subscription = "*"
 
 [dev-packages]
 bandit = "*"
