@@ -5,6 +5,7 @@
 {% from "components/icon.html" import Icon %}
 {% import "applications/fragments/new_member_modal_content.html" as member_steps %}
 {% from "applications/fragments/member_perms_form_fields.html" import MemberPermsFields %}
+{% from "portfolios/applications/fragments/members.html" import MemberManagementTemplate %}
 {% from "components/modal.html" import Modal %}
 {% from "components/multi_step_modal_form.html" import MultiStepModalForm %}
 {% from "components/pagination.html" import Pagination %}
@@ -73,150 +74,11 @@
     </div>
   {% endif %}
 
-  {% if not application.members %}
-    {% set user_can_invite = user_can(permissions.CREATE_APPLICATION_MEMBER) %}
-
-    <div class='empty-state'>
-      <p class='empty-state__message'>{{ ("portfolios.applications.team_settings.blank_slate.title" | translate) }}</p>
-
-      {{ Icon('avatar') }}
-
-      {% if not user_can_invite %}
-        <p class='empty-state__sub-message'>{{ ("portfolios.applications.team_settings.blank_slate.sub_message" | translate) }}</p>
-      {% endif %}
-
-      {% if user_can_invite %}
-        {% set new_member_modal_name = "add-app-mem" %}
-        <a class="usa-button usa-button-big" v-on:click="openModal('{{ new_member_modal_name }}')">
-          {{ "portfolios.applications.team_settings.blank_slate.action_label" | translate }}
-        </a>
-        {{ MultiStepModalForm(
-            name=new_member_modal_name,
-            form=new_member_form,
-            form_action=url_for("applications.create_member", application_id=application.id),
-            steps=[
-              member_steps.MemberStepOne(new_member_form),
-              member_steps.MemberStepTwo(new_member_form, application)
-            ],
-          ) }}
-      {% endif %}
-    </div>
-
-  {% else %}
-    <div class='subheading'>
-      {{ 'portfolios.applications.settings.team_members' | translate }}
-
-      {% set new_member_modal_name = "add-app-mem" %}
-      {% if user_can(permissions.CREATE_APPLICATION_MEMBER) %}
-        <a class="icon-link modal-link icon-link__add" v-on:click="openModal('{{ new_member_modal_name }}')">
-          {{ Icon("plus") }}
-          {{ "portfolios.applications.add_member" | translate }}
-        </a>
-      {% endif %}
-    </div>
-
-    <section class="member-list application-list" id="application-members">
-      <div class='responsive-table-wrapper panel'>
-        {% if g.matchesPath("application-members") %}
-          {% include "fragments/flash.html" %}
-        {% endif %}
-        {% for member in members %}
-          {% set modal_name = "edit_member-{}".format(loop.index) %}
-          {% call Modal(modal_name) %}
-            <div class="modal__form--header">
-              <h1>{{ Icon('avatar') }} {{ member.user_name }}</h1>
-              <hr>
-            </div>
-            <base-form inline-template>
-              <form id='{{ modal_name }}' method="POST" action="{{ url_for('applications.update_member', application_id=application.id, application_role_id=member.role_id) }}">
-                {{ member.form.csrf_token }}
-                {{ MemberPermsFields(form=member.form, member_role_id=member.role_id) }}
-                <div class="action-group">
-                  {{ SaveButton(text='Update', element='input', additional_classes='action-group__action') }}
-                  <a class='action-group__action usa-button usa-button-secondary' v-on:click="closeModal('{{ modal_name }}')">{{ "common.cancel" | translate }}</a>
-                </div>
-              </form>
-            </base-form>
-          {% endcall %}
-
-          {% if user_can(permissions.DELETE_APPLICATION_MEMBER) and member.role_status == 'pending' %}
-            {% set revoke_invite_modal = "revoke_invite_{}".format(member.role_id) %}
-            {% call Modal(name=revoke_invite_modal, dismissable=True) %}
-              <div class="task-order__modal-cancel">
-                <form method="post" action="{{ url_for('applications.revoke_invite', application_id=application.id, application_role_id=member.role_id) }}">
-                  {{ member.form.csrf_token }}
-                  <h1>{{ "invites.revoke.modal_heading" | translate({'user_name': member.user_name}) }}</h1>
-                  <div class="task-order__modal-cancel_buttons">
-                    <button class="usa-button usa-button-primary" type="submit">{{ "invites.revoke.submit" | translate }}</button>
-                    <button type='button' v-on:click='closeModal("{{revoke_invite_modal}}")' class="usa-button usa-button-primary">{{ "invites.revoke.cancel" | translate }}</button>
-                  </div>
-                </form>
-              </div>
-            {% endcall %}
-          {% endif %}
-        {% endfor %}
-        <table>
-          <thead>
-            <tr>
-              <th>Member</th>
-              <th>Project Permissions</th>
-              <th>Environment Access</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for member in members %}
-              {% set modal_name = "edit_member-{}".format(loop.index) %}
-              <tr>
-                <td>
-                  {{ member.user_name }}
-                  <a class="icon-link" v-on:click="openModal('{{ modal_name }}')">
-                    {{ Icon('edit') }}
-                  </a>
-                  <br>
-                  {% if member.role_status == 'pending' %}
-                    <span class='label label--purple'>INVITE PENDING</span>
-                  {% endif %}
-
-                </td>
-
-                <td>
-                  {% for perm, value in member.permission_sets.items() %}
-                    {{ ("portfolios.applications.members.{}.{}".format(perm, value)) | translate }}<br>
-                  {% endfor %}
-                </td>
-                <td>
-                  {% for env in member.environment_roles %}
-                    {{ env.environment_name }}{% if not env == member.environment_roles[-1]%},{% endif %}
-                  {% endfor %}
-                </td>
-                <td>
-                  {% if user_can(permissions.DELETE_APPLICATION_MEMBER) and member.role_status == 'pending' %}
-                    {% set revoke_invite_modal = "revoke_invite_{}".format(member.role_id) %}
-                    <a href="#">Resend Invite</a><br>
-                    <a v-on:click='openModal("{{ revoke_invite_modal }}")'>{{ 'invites.revoke.button' | translate }}</a>
-                  {% endif %}
-                </td>
-              </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-
-      {% if user_can(permissions.CREATE_APPLICATION_MEMBER) %}
-        {% import "applications/fragments/new_member_modal_content.html" as member_steps %}
-        {{ MultiStepModalForm(
-            name=new_member_modal_name,
-            form=new_member_form,
-            form_action=url_for("applications.create_member", application_id=application.id),
-            steps=[
-              member_steps.MemberStepOne(new_member_form),
-              member_steps.MemberStepTwo(new_member_form, application)
-            ],
-          ) }}
-      {% endif %}
-    </section>
-  {% endif %}
+  {{ MemberManagementTemplate(
+    application, 
+    members, 
+    new_member_form,
+    user_can(permissions.CREATE_APPLICATION_MEMBER)) }}
 
   <div class='subheading'>
     {{ 'common.resource_names.environments' | translate }}

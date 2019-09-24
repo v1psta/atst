@@ -1,0 +1,142 @@
+{% from "components/alert.html" import Alert %}
+{% from "components/icon.html" import Icon %}
+{% import "fragments/applications/new_member_modal_content.html" as member_steps %}
+{% from "fragments/applications/member_perms_form_fields.html" import MemberPermsFields %}
+{% from "components/modal.html" import Modal %}
+{% from "components/multi_step_modal_form.html" import MultiStepModalForm %}
+{% from "components/save_button.html" import SaveButton %}
+
+{% macro MemberManagementTemplate(
+  application, 
+  members,
+  new_member_form, 
+  user_can_create_app_member=False
+) %}
+
+  {% if not application.members %}
+    <div class='empty-state'>
+      <p class='empty-state__message'>{{ ("portfolios.applications.team_settings.blank_slate.title" | translate) }}</p>
+
+      {{ Icon('avatar') }}
+
+      {% if not user_can_create_app_member %}
+        <p class='empty-state__sub-message'>{{ ("portfolios.applications.team_settings.blank_slate.sub_message" | translate) }}</p>
+      {% endif %}
+
+      {% if user_can_create_app_member %}
+        {% set new_member_modal_name = "add-app-mem" %}
+        <a class="usa-button usa-button-big" v-on:click="openModal('{{ new_member_modal_name }}')">
+          {{ "portfolios.applications.team_settings.blank_slate.action_label" | translate }}
+        </a>
+        {{ MultiStepModalForm(
+            name=new_member_modal_name,
+            form=new_member_form,
+            form_action=url_for("applications.create_member", application_id=application.id),
+            steps=[
+              member_steps.MemberStepOne(new_member_form),
+              member_steps.MemberStepTwo(new_member_form, application)
+            ],
+          ) }}
+      {% endif %}
+    </div>
+
+  {% else %}
+    <div class='subheading'>
+      {{ 'portfolios.applications.settings.team_members' | translate }}
+
+      {% set new_member_modal_name = "add-app-mem" %}
+      {% if user_can_create_app_member %}
+        <a class="icon-link modal-link icon-link__add" v-on:click="openModal('{{ new_member_modal_name }}')">
+          {{ Icon("plus") }}
+          {{ "portfolios.applications.add_member" | translate }}
+        </a>
+      {% endif %}
+    </div>
+
+    <section class="member-list application-list" id="application-members">
+      <div class='responsive-table-wrapper panel'>
+        {% if g.matchesPath("application-members") %}
+          {% include "fragments/flash.html" %}
+        {% endif %}
+        {% for member in members %}
+          {% set modal_name = "edit_member-{}".format(loop.index) %}
+          {% call Modal(modal_name) %}
+            <div class="modal__form--header">
+              <h1>{{ Icon('avatar') }} {{ member.user_name }}</h1>
+              <hr>
+            </div>
+            <base-form inline-template>
+              <form id='{{ modal_name }}' method="POST" action="{{ url_for('applications.update_member', application_id=application.id, application_role_id=member.role_id) }}">
+                {{ member.form.csrf_token }}
+                {{ MemberPermsFields(form=member.form, member_role_id=member.role_id) }}
+                <div class="action-group">
+                  {{ SaveButton(text='Update', element='input', additional_classes='action-group__action') }}
+                  <a class='action-group__action usa-button usa-button-secondary' v-on:click="closeModal('{{ modal_name }}')">{{ "common.cancel" | translate }}</a>
+                </div>
+              </form>
+            </base-form>
+          {% endcall %}
+        {% endfor %}
+        <table>
+          <thead>
+            <tr>
+              <th>Member</th>
+              <th>Project Permissions</th>
+              <th>Environment Access</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for member in members %}
+              {% set modal_name = "edit_member-{}".format(loop.index) %}
+              <tr>
+                <td>
+                  {{ member.user_name }}
+                  <a class="icon-link" v-on:click="openModal('{{ modal_name }}')">
+                    {{ Icon('edit') }}
+                  </a>
+                  <br>
+                  {% if member.role_status == 'pending' %}
+                    <span class='label label--purple'>INVITE PENDING</span>
+                  {% endif %}
+
+                </td>
+
+                <td>
+                  {% for perm, value in member.permission_sets.items() %}
+                    {{ ("portfolios.applications.members.{}.{}".format(perm, value)) | translate }}<br>
+                  {% endfor %}
+                </td>
+                <td>
+                  {% for env in member.environment_roles %}
+                    {{ env.environment_name }}{% if not env == member.environment_roles[-1]%},{% endif %}
+                  {% endfor %}
+                </td>
+                <td>
+                  {% if member.role_status == 'pending' %}
+                    <a href="#">Resend Invite</a><br>
+                    <a href="#">Revoke Invite</a>
+                  {% endif %}
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      {% if user_can_create_app_member %}
+        {% import "fragments/applications/new_member_modal_content.html" as member_steps %}
+        {{ MultiStepModalForm(
+            name=new_member_modal_name,
+            form=new_member_form,
+            form_action=url_for("applications.create_member", application_id=application.id),
+            steps=[
+              member_steps.MemberStepOne(new_member_form),
+              member_steps.MemberStepTwo(new_member_form, application)
+            ],
+          ) }}
+      {% endif %}
+    </section>
+  {% endif %}
+
+{% endmacro %}
