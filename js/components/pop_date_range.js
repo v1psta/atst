@@ -46,14 +46,16 @@ export default {
     handleDateChange: function(event) {
       if (event.name.includes(START_DATE)) {
         if (!!event.value) this.startDate = new Date(event.value)
-        if (!!event.valid) this.startValid = event.valid
-        if (this.startValid)
+        if (event.valid != undefined) this.startValid = event.valid
+        if (this.startValid) {
           this.minEndDate = this.calcMinEndDate(this.startDate)
+        }
       } else if (event.name.includes(END_DATE)) {
         if (!!event.value) this.endDate = new Date(event.value)
-        if (!!event.valid) this.endValid = event.valid
-        if (this.endValid)
+        if (event.valid != undefined) this.endValid = event.valid
+        if (this.endValid) {
           this.maxStartDate = this.calcMaxStartDate(this.endDate)
+        }
       }
     },
 

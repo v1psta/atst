@@ -44,7 +44,7 @@
               </legend>
 
               <div class="date-picker-component">
-                <input name="name" v-bind:value="formattedDate" v-on:change="onInput" type="hidden" />
+                <input :name="name" v-bind:value="formattedDate" v-on:change="onInput" type="hidden" />
 
                 <div class="usa-form-group usa-form-group-month">
                   <label>{{ 'components.date_selector.month' | translate }}</label>
