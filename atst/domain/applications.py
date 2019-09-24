@@ -1,4 +1,5 @@
 from . import BaseDomainClass
+from flask import g
 from atst.database import db
 from atst.domain.application_roles import ApplicationRoles
 from atst.domain.environment_roles import EnvironmentRoles
@@ -26,7 +27,7 @@ class Applications(BaseDomainClass):
         db.session.add(application)
 
         if environment_names:
-        Environments.create_many(user, application, environment_names)
+            Environments.create_many(user, application, environment_names)
 
         db.session.commit()
         return application
