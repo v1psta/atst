@@ -1,4 +1,5 @@
 from . import BaseDomainClass
+from flask import g
 from atst.database import db
 from atst.domain.application_roles import ApplicationRoles
 from atst.domain.environment_roles import EnvironmentRoles
@@ -19,13 +20,14 @@ class Applications(BaseDomainClass):
     resource_name = "application"
 
     @classmethod
-    def create(cls, user, portfolio, name, description, environment_names):
+    def create(cls, user, portfolio, name, description, environment_names=None):
         application = Application(
             portfolio=portfolio, name=name, description=description
         )
         db.session.add(application)
 
-        Environments.create_many(user, application, environment_names)
+        if environment_names:
+            Environments.create_many(user, application, environment_names)
 
         db.session.commit()
         return application
@@ -48,7 +50,10 @@ class Applications(BaseDomainClass):
             application.name = new_data["name"]
         if "description" in new_data:
             application.description = new_data["description"]
-
+        if "environment_names" in new_data:
+            Environments.create_many(
+                g.current_user, application, new_data["environment_names"]
+            )
         db.session.add(application)
         db.session.commit()
 

@@ -11,7 +11,7 @@ class EditEnvironmentForm(BaseForm):
     )
 
 
-class ApplicationForm(BaseForm):
+class NameAndDescriptionForm(BaseForm):
     name = StringField(
         label=translate("forms.application.name_label"), validators=[Required()]
     )
@@ -20,7 +20,7 @@ class ApplicationForm(BaseForm):
     )
 
 
-class NewApplicationForm(ApplicationForm):
+class EnvironmentsForm(BaseForm):
     environment_names = FieldList(
         StringField(label=translate("forms.application.environment_names_label")),
         validators=[

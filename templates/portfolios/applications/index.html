@@ -13,7 +13,7 @@
     <div class='portfolio-applications__header--title col col--grow'>Applications</div>
     <div class='portfolio-applications__header--actions col'>
       {% if can_create_applications %}
-        <a class='icon-link' href='{{ url_for('applications.new', portfolio_id=portfolio.id) }}'>
+        <a class='icon-link' href='{{ url_for('applications.view_new_application_step_1', portfolio_id=portfolio.id) }}'>
           {{ 'portfolios.applications.add_application_text' | translate }}
           {{ Icon("plus", classes="sidenav__link-icon") }}
         </a>
@@ -26,7 +26,7 @@
     {{ EmptyState(
       'This portfolio doesn’t have any applications',
       action_label='Add a new application' if can_create_applications else None,
-      action_href=url_for('applications.new', portfolio_id=portfolio.id) if can_create_applications else None,
+      action_href=url_for('applications.create_new_application_step_1', portfolio_id=portfolio.id) if can_create_applications else None,
       icon='cloud',
       sub_message=None if can_create_applications else 'Please contact your JEDI Cloud portfolio administrator to set up a new application.',
       add_perms=can_create_applications

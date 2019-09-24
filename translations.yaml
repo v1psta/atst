@@ -101,6 +101,7 @@ email:
   portfolio_invite: "{inviter_name} has invited you to a JEDI cloud portfolio"
 flash:
   application:
+    created: 'You have successfully created the {application_name} application.'
     deleted: 'You have successfully deleted the {application_name} application. To view the retained activity log, visit the portfolio administration page.'
   delete_member_success: 'You have successfully deleted {member_name} from the portfolio.'
   deleted_member: Portfolio member deleted
@@ -296,6 +297,7 @@ portfolios:
     add_another_environment: Add another environment
     app_settings_text: App settings
     create_button_text: Create
+    next_button_text: "Next: Environments"
     create_new_env: Create a new environment.
     create_new_env_info: Creating an environment gives you access to the Cloud Service Provider. This environment will function within the constraints of the task order, and any costs will be billed against the portfolio.
     csp_console_text: CSP console

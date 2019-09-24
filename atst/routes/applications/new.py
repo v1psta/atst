@@ -3,35 +3,130 @@ from flask import redirect, render_template, request as http_request, url_for, g
 from . import applications_bp
 from atst.domain.applications import Applications
 from atst.domain.portfolios import Portfolios
-from atst.forms.application import NewApplicationForm
+from atst.forms.application import NameAndDescriptionForm, EnvironmentsForm
 from atst.domain.authz.decorator import user_can_access_decorator as user_can
 from atst.models.permissions import Permissions
+from atst.utils.flash import formatted_flash as flash
+
+
+def get_new_application_form(form_data, form_class, application_id=None):
+    if application_id:
+        application = Applications.get(application_id)
+        return form_class(form_data, obj=application)
+    else:
+        return form_class(form_data)
+
+
+def render_new_application_form(
+    template, form_class, portfolio_id=None, application_id=None, form=None
+):
+    render_args = {"application_id": application_id}
+    if application_id:
+        application = Applications.get(application_id)
+        render_args["form"] = form or form_class(obj=application)
+    else:
+        render_args["form"] = form or form_class()
+
+    return render_template(template, **render_args)
 
 
 @applications_bp.route("/portfolios/<portfolio_id>/applications/new")
+@applications_bp.route(
+    "/portfolios/<portfolio_id>/applications/<application_id>/step_1"
+)
 @user_can(Permissions.CREATE_APPLICATION, message="view create new application form")
-def new(portfolio_id):
-    form = NewApplicationForm()
-    return render_template("portfolios/applications/new.html", form=form)
+def view_new_application_step_1(portfolio_id, application_id=None):
+    return render_new_application_form(
+        "portfolios/applications/new/step_1.html",
+        NameAndDescriptionForm,
+        portfolio_id=portfolio_id,
+        application_id=application_id,
+    )
 
 
-@applications_bp.route("/portfolios/<portfolio_id>/applications", methods=["POST"])
-@user_can(Permissions.CREATE_APPLICATION, message="create new application")
-def create(portfolio_id):
+@applications_bp.route(
+    "/portfolios/<portfolio_id>/applications/new",
+    endpoint="create_new_application_step_1",
+    methods=["POST"],
+)
+@applications_bp.route(
+    "/portfolios/<portfolio_id>/applications/<application_id>/step_1",
+    endpoint="update_new_application_step_1",
+    methods=["POST"],
+)
+@user_can(Permissions.CREATE_APPLICATION, message="view create new application form")
+def create_or_update_new_application_step_1(portfolio_id, application_id=None):
     portfolio = Portfolios.get_for_update(portfolio_id)
-    form = NewApplicationForm(http_request.form)
+    form = get_new_application_form(
+        {**http_request.form}, NameAndDescriptionForm, application_id
+    )
 
     if form.validate():
-        application_data = form.data
-        Applications.create(
-            g.current_user,
-            portfolio,
-            application_data["name"],
-            application_data["description"],
-            application_data["environment_names"],
-        )
+        application = None
+        if application_id:
+            application = Applications.get(application_id)
+            application = Applications.update(application, form.data)
+        else:
+            application = Applications.create(g.current_user, portfolio, **form.data)
         return redirect(
-            url_for("applications.portfolio_applications", portfolio_id=portfolio_id)
+            url_for(
+                "applications.update_new_application_step_2",
+                portfolio_id=portfolio_id,
+                application_id=application.id,
+            )
         )
     else:
-        return render_template("portfolios/applications/new.html", form=form)
+        return (
+            render_new_application_form(
+                "portfolios/applications/new/step_1.html",
+                NameAndDescriptionForm,
+                portfolio_id,
+                application_id,
+                form,
+            ),
+            400,
+        )
+
+
+@applications_bp.route(
+    "/portfolios/<portfolio_id>/applications/<application_id>/step_2"
+)
+@user_can(Permissions.CREATE_APPLICATION, message="view create new application form")
+def view_new_application_step_2(portfolio_id, application_id):
+    return render_new_application_form(
+        "portfolios/applications/new/step_2.html",
+        EnvironmentsForm,
+        portfolio_id=portfolio_id,
+        application_id=application_id,
+    )
+
+
+@applications_bp.route(
+    "/portfolios/<portfolio_id>/applications/<application_id>/step_2", methods=["POST"]
+)
+@user_can(Permissions.CREATE_APPLICATION, message="view create new application form")
+def update_new_application_step_2(portfolio_id, application_id):
+    form = get_new_application_form(
+        {**http_request.form}, EnvironmentsForm, application_id
+    )
+    if form.validate():
+        application = Applications.get(application_id)
+        application = Applications.update(application, form.data)
+        flash("application_created", application_name=application.name)
+        return redirect(
+            url_for(
+                "applications.portfolio_applications",
+                portfolio_id=application.portfolio_id,
+            )
+        )
+    else:
+        return (
+            render_new_application_form(
+                "portfolios/applications/new/step_2.html",
+                EnvironmentsForm,
+                portfolio_id,
+                application_id,
+                form,
+            ),
+            400,
+        )

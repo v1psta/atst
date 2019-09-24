@@ -3,7 +3,6 @@
 {% from "components/alert.html" import Alert %}
 {% from "components/icon.html" import Icon %}
 {% from "components/modal.html" import Modal %}
-{% from "components/text_input.html" import TextInput %}
 {% from 'components/save_button.html' import SaveButton %}
 
 {% set secondary_breadcrumb = 'portfolios.applications.new_application_title' | translate %}
@@ -14,50 +13,11 @@
   {% include "fragments/flash.html" %}
 
   <div class='subheading'>{{ 'portfolios.applications.settings_heading' | translate }}</div>
-
-  <new-application inline-template v-bind:initial-data='{{ form.data|tojson }}' modal-name='{{ modalName }}'>
-    <form method="POST" action="{{ url_for('applications.create', portfolio_id=portfolio.id) }}" v-on:submit="handleSubmit">
+  <application-environments inline-template v-bind:initial-data='{{ form.data|tojson }}'>
+    <form method="POST" action="{{ url_for('applications.view_new_application_step_2', portfolio_id=portfolio.id, application_id=application_id) }}" v-on:submit="handleSubmit">
       <div class="panel">
         <div class="panel__content">
-
-          {% call Modal(name=modalName, dismissable=False) %}
-            <h1>Create application !{ name }</h1>
-
-            <p>
-            When you click <em>{{ 'portfolios.applications.create_button_text' | translate }}</em>, the environments
-            <span v-for="(environment, index) in environments">
-              <strong>!{environment.name}</strong><template v-if="index < (environments.length - 1)">, </template>
-            </span>
-            will be created as individual cloud resource groups under <strong>!{ name }</strong> application.
-            </p>
-
-            <div class='action-group'>
-              <button autofocus type='submit' class='action-group__action usa-button' tabindex='0'>{{ 'portfolios.applications.create_button_text' | translate }}</button>
-              <button type='button' v-on:click="handleCancelSubmit" class='icon-link action-group__action' tabindex='0'>Cancel</button>
-            </div>
-          {% endcall %}
-
           {{ form.csrf_token }}
-          <p>
-            {{ "fragments.edit_application_form.explain" | translate }}
-          </p>
-          <div class="form-row">
-            <div class="form-col form-col--two-thirds">
-              {{ TextInput(form.name, optional=False) }}
-            </div>
-            <div class="form-col form-col--third">
-              &nbsp;
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="form-col form-col--two-thirds">
-              {{ TextInput(form.description, paragraph=True, optional=False) }}
-            </div>
-            <div class="form-col form-col--third">
-              &nbsp;
-            </div>
-          </div>
-
           <div> {# this extra div prevents this bug: https://www.pivotaltracker.com/story/show/160768940 #}
             <div v-cloak v-for="title in errors" :key="title">
               {{ Alert(message=None, level="error", vue_template=True) }}
@@ -76,7 +36,7 @@
               <li v-for="(environment, i) in environments" class="application-edit__env-list-item">
                 <div class="usa-input">
                   <label :for="'environment_names-' + i">Environment Name</label>
-                  <input type="text" :id="'environment_names-' + i" v-model="environment.name" placeholder="e.g. Development, Staging, Production"/> <input type="hidden" :name="'environment_names-' + i" v-model="environment.name"/>
+                  <input type="text" :id="'environment_names-' + i" v-model="environment.name" @input="onInput" placeholder="e.g. Development, Staging, Production"/> <input type="hidden" :name="'environment_names-' + i" v-model="environment.name"/>
                 </div>
                 <div class="application-edit__env-list-item-block">
                   <button v-on:click="removeEnvironment(i)" v-if="environments.length > 1" type="button" class="application-edit__env-list-item__remover">
@@ -98,14 +58,15 @@
               </button>
             </div>
           </div>
-
         </div>
       </div>
 
-      <div class="action-group">
-        {{ SaveButton(text=('portfolios.applications.create_button_text' | translate)) }}
-      </div>
+      <span class="action-group">
+        {% block next_button %}
+          {{ SaveButton(text=('portfolios.applications.create_button_text' | translate)) }}
+        {% endblock %}
+      </span>
     </form>
-  </new-application>
+  </application-environments>
 
 {% endblock %}

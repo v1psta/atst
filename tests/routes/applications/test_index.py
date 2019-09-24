@@ -44,7 +44,7 @@ def test_user_with_permission_has_add_application_link(client, user_session):
         url_for("applications.portfolio_applications", portfolio_id=portfolio.id)
     )
     assert (
-        url_for("applications.create", portfolio_id=portfolio.id)
+        url_for("applications.create_new_application_step_1", portfolio_id=portfolio.id)
         in response.data.decode()
     )
 
@@ -58,7 +58,7 @@ def test_user_without_permission_has_no_add_application_link(client, user_sessio
         url_for("applications.portfolio_applications", portfolio_id=portfolio.id)
     )
     assert (
-        url_for("applications.create", portfolio_id=portfolio.id)
+        url_for("applications.create_new_application_step_1", portfolio_id=portfolio.id)
         not in response.data.decode()
     )
 
