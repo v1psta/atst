@@ -102,7 +102,9 @@ export default {
 
     isYearValid: function() {
       // Emit a change event
-      var valid = parseInt(this.year) >= 1
+      var minYear = new Date(this.mindate).getFullYear()
+      var maxYear = new Date(this.maxdate).getFullYear()
+      var valid = this.year >= minYear && this.year <= maxYear
       this._emitChange('year', this.year, valid)
       return valid
     },
@@ -135,6 +137,15 @@ export default {
       )
     },
 
+    isDateComplete: function() {
+      return (
+        !!this.day &&
+        !!this.month &&
+        !!this.year &&
+        this.year > 999
+      )
+    },
+
     daysMaxCalculation: function() {
       switch (parseInt(this.month)) {
         case 2: // February
@@ -161,7 +172,7 @@ export default {
 
   methods: {
     onInput: function(e) {
-      this.showValidation = true
+      if (this.isDateComplete) this.showValidation = true
 
       emitEvent('field-change', this, {
         value: this.formattedDate,
