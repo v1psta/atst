@@ -11,6 +11,135 @@ class GeneralCSPException(Exception):
     pass
 
 
+class OperationInProgressException(GeneralCSPException):
+    """Throw this for instances when the CSP reports that the current entity is already
+    being operated on/created/deleted/etc
+    """
+
+    def __init__(self, operation_desc):
+        self.operation_desc = operation_desc
+
+    @property
+    def message(self):
+        return "An operation for this entity is already in progress: {}".format(
+            self.operation_desc
+        )
+
+
+class AuthenticationException(GeneralCSPException):
+    """Throw this for instances when there is a problem with the auth credentials:
+    * Missing credentials
+    * Incorrect credentials
+    * Other credential problems
+    """
+
+    def __init__(self, auth_error):
+        self.auth_error = auth_error
+
+    @property
+    def message(self):
+        return "An error occurred with authentication: {}".format(self.auth_error)
+
+
+class AuthorizationException(GeneralCSPException):
+    """Throw this for instances when the current credentials are not authorized
+    for the current action.
+    """
+
+    def __init__(self, auth_error):
+        self.auth_error = auth_error
+
+    @property
+    def message(self):
+        return "An error occurred with authorization: {}".format(self.auth_error)
+
+
+class ConnectionException(GeneralCSPException):
+    """A general problem with the connection, timeouts or unresolved endpoints
+    """
+
+    def __init__(self, connection_error):
+        self.connection_error = connection_error
+
+    @property
+    def message(self):
+        return "Could not connect to cloud provider: {}".format(self.connection_error)
+
+
+class UnknownServerException(GeneralCSPException):
+    """An error occured on the CSP side (5xx) and we don't know why
+    """
+
+    def __init__(self, server_error):
+        self.server_error = server_error
+
+    @property
+    def message(self):
+        return "A server error occured: {}".format(self.server_error)
+
+
+class EnvironmentCreationException(GeneralCSPException):
+    """If there was an error in creating the environment
+    """
+
+    def __init__(self, env_identifier, reason):
+        self.env_identifier = env_identifier
+        self.reason = reason
+
+    @property
+    def message(self):
+        return "The envionment {} couldn't be created: {}".format(
+            self.env_identifier, self.reason
+        )
+
+
+class UserProvisioningException(GeneralCSPException):
+    """Failed to provision a user
+    """
+
+    def __init__(self, env_identifier, user_identifier, reason):
+        self.env_identifier = env_identifier
+        self.user_identifier = user_identifier
+        self.reason = reason
+
+    @property
+    def message(self):
+        return "Failed to create user {} for environment {}: {}".format(
+            self.user_identifier, self.env_identifier, self.reason
+        )
+
+
+class UserRemovalException(GeneralCSPException):
+    """Failed to remove a user
+    """
+
+    def __init__(self, user_csp_id, reason):
+        self.user_csp_id = user_csp_id
+        self.reason = reason
+
+    @property
+    def message(self):
+        return "Failed to suspend or delete user {}: {}".format(
+            self.user_csp_id, self.reason
+        )
+
+
+class BaselineProvisionException(GeneralCSPException):
+    """If there's any issues standing up whatever is required
+    for an environment baseline
+    """
+
+    def __init__(self, env_identifier, reason):
+        self.env_identifier = env_identifier
+        self.reason = reason
+
+    @property
+    def message(self):
+        return "Could not complete baseline provisioning for environment ({}): {}".format(
+            self.env_identifier, self.reason
+        )
+
+
 class CloudProviderInterface:
     def root_creds() -> Dict:
         raise NotImplementedError()
@@ -27,6 +156,13 @@ class CloudProviderInterface:
 
         Returns:
             string: ID of created environment
+
+        Raises:
+            AuthenticationException: Problem with the credentials
+            AuthorizationException: Credentials not authorized for current action(s)
+            ConnectionException: Issue with the CSP API connection
+            UnknownServerException: Unknown issue on the CSP side
+            EnvironmentExistsException: Environment already exists and has been created
         """
         raise NotImplementedError()
 
@@ -47,6 +183,13 @@ class CloudProviderInterface:
                 "user_id": string,
                 "credentials": dict, # structure TBD based on csp
             }
+
+        Raises:
+            AuthenticationException: Problem with the credentials
+            AuthorizationException: Credentials not authorized for current action(s)
+            ConnectionException: Issue with the CSP API connection
+            UnknownServerException: Unknown issue on the CSP side
+            UserProvisioningException: Problem creating the root user
         """
         raise NotImplementedError()
 
@@ -61,6 +204,12 @@ class CloudProviderInterface:
 
         Returns:
             dict: Returns dict that associates the resource identities with their ATAT representations.
+        Raises:
+            AuthenticationException: Problem with the credentials
+            AuthorizationException: Credentials not authorized for current action(s)
+            ConnectionException: Issue with the CSP API connection
+            UnknownServerException: Unknown issue on the CSP side
+            BaselineProvisionException: Specific issue occurred with some aspect of baseline setup
         """
         raise NotImplementedError()
 
@@ -77,6 +226,13 @@ class CloudProviderInterface:
 
         Returns:
             string: Returns the interal csp_user_id of the created/updated user account
+
+        Raises:
+            AuthenticationException: Problem with the credentials
+            AuthorizationException: Credentials not authorized for current action(s)
+            ConnectionException: Issue with the CSP API connection
+            UnknownServerException: Unknown issue on the CSP side
+            UserProvisioningException: User couldn't be created or modified
         """
         raise NotImplementedError()
 
@@ -90,6 +246,13 @@ class CloudProviderInterface:
 
         Returns:
             bool -- True on success
+
+        Raises:
+            AuthenticationException: Problem with the credentials
+            AuthorizationException: Credentials not authorized for current action(s)
+            ConnectionException: Issue with the CSP API connection
+            UnknownServerException: Unknown issue on the CSP side
+            UserRemovalException: User couldn't be suspended
         """
         raise NotImplementedError()
 
@@ -104,7 +267,11 @@ class CloudProviderInterface:
             bool -- True on success
 
         Raises:
-            TBDException: Some part of user deletion failed
+            AuthenticationException: Problem with the credentials
+            AuthorizationException: Credentials not authorized for current action(s)
+            ConnectionException: Issue with the CSP API connection
+            UnknownServerException: Unknown issue on the CSP side
+            UserRemovalException: User couldn't be removed
         """
         raise NotImplementedError()
 
@@ -124,12 +291,16 @@ class CloudProviderInterface:
 class MockCloudProvider(CloudProviderInterface):
 
     # TODO: All of these constants
-    AUTH_EXCEPTION = GeneralCSPException("Authentication failure.")
-    NETWORK_EXCEPTION = GeneralCSPException("Network failure.")
+    AUTHENTICATION_EXCEPTION = AuthenticationException("Authentication failure.")
+    AUTHORIZATION_EXCEPTION = AuthorizationException("Not authorized.")
+    NETWORK_EXCEPTION = ConnectionException("Network failure.")
+    SERVER_EXCEPTION = UnknownServerException("Not our fault.")
 
+    SERVER_FAILURE_PCT = 1
     NETWORK_FAILURE_PCT = 7
     ENV_CREATE_FAILURE_PCT = 12
     ATAT_ADMIN_CREATE_FAILURE_PCT = 12
+    UNAUTHORIZED_RATE = 2
 
     def __init__(self, config, with_delay=True, with_failure=True):
         from time import sleep
@@ -148,10 +319,14 @@ class MockCloudProvider(CloudProviderInterface):
 
         self._delay(1, 5)
         self._maybe_raise(self.NETWORK_FAILURE_PCT, self.NETWORK_EXCEPTION)
+        self._maybe_raise(self.SERVER_FAILURE_PCT, self.SERVER_EXCEPTION)
         self._maybe_raise(
             self.ENV_CREATE_FAILURE_PCT,
-            GeneralCSPException("Could not create environment."),
+            EnvironmentCreationException(
+                environment.id, "Could not create environment."
+            ),
         )
+        self._maybe_raise(self.UNAUTHORIZED_RATE, self.AUTHORIZATION_EXCEPTION)
 
         return self._id()
 
@@ -160,10 +335,15 @@ class MockCloudProvider(CloudProviderInterface):
 
         self._delay(1, 5)
         self._maybe_raise(self.NETWORK_FAILURE_PCT, self.NETWORK_EXCEPTION)
+        self._maybe_raise(self.SERVER_FAILURE_PCT, self.SERVER_EXCEPTION)
         self._maybe_raise(
             self.ATAT_ADMIN_CREATE_FAILURE_PCT,
-            GeneralCSPException("Could not create admin user."),
+            UserProvisioningException(
+                csp_environment_id, "atat_admin", "Could not create admin user."
+            ),
         )
+
+        self._maybe_raise(self.UNAUTHORIZED_RATE, self.AUTHORIZATION_EXCEPTION)
 
         return {"id": self._id(), "credentials": self._auth_credentials}
 
@@ -172,11 +352,15 @@ class MockCloudProvider(CloudProviderInterface):
 
         self._delay(1, 5)
         self._maybe_raise(self.NETWORK_FAILURE_PCT, self.NETWORK_EXCEPTION)
+        self._maybe_raise(self.SERVER_FAILURE_PCT, self.SERVER_EXCEPTION)
         self._maybe_raise(
             self.ATAT_ADMIN_CREATE_FAILURE_PCT,
-            GeneralCSPException("Could not create environment baseline."),
+            BaselineProvisionException(
+                csp_environment_id, "Could not create environment baseline."
+            ),
         )
 
+        self._maybe_raise(self.UNAUTHORIZED_RATE, self.AUTHORIZATION_EXCEPTION)
         return {
             CSPRole.BASIC_ACCESS.value: self._id(),
             CSPRole.NETWORK_ADMIN.value: self._id(),
@@ -189,19 +373,42 @@ class MockCloudProvider(CloudProviderInterface):
 
         self._delay(1, 5)
         self._maybe_raise(self.NETWORK_FAILURE_PCT, self.NETWORK_EXCEPTION)
+        self._maybe_raise(self.SERVER_FAILURE_PCT, self.SERVER_EXCEPTION)
         self._maybe_raise(
             self.ATAT_ADMIN_CREATE_FAILURE_PCT,
-            GeneralCSPException("Could not create user."),
+            UserProvisioningException(
+                user_info.environment.id,
+                user_info.application_role.user_id,
+                "Could not create user.",
+            ),
         )
 
+        self._maybe_raise(self.UNAUTHORIZED_RATE, self.AUTHORIZATION_EXCEPTION)
         return self._id()
 
     def suspend_user(self, auth_credentials, csp_user_id):
+        self._authorize(auth_credentials)
         self._maybe_raise(self.NETWORK_FAILURE_PCT, self.NETWORK_EXCEPTION)
+        self._maybe_raise(self.SERVER_FAILURE_PCT, self.SERVER_EXCEPTION)
+
+        self._maybe_raise(
+            self.ATAT_ADMIN_CREATE_FAILURE_PCT,
+            UserRemovalException(csp_user_id, "Could not suspend user."),
+        )
+
         return self._maybe(12)
 
     def delete_user(self, auth_credentials, csp_user_id):
+        self._authorize(auth_credentials)
         self._maybe_raise(self.NETWORK_FAILURE_PCT, self.NETWORK_EXCEPTION)
+        self._maybe_raise(self.SERVER_FAILURE_PCT, self.SERVER_EXCEPTION)
+
+        self._maybe_raise(
+            self.ATAT_ADMIN_CREATE_FAILURE_PCT,
+            UserRemovalException(csp_user_id, "Could not delete user."),
+        )
+
+        self._maybe_raise(self.UNAUTHORIZED_RATE, self.AUTHORIZATION_EXCEPTION)
         return self._maybe(12)
 
     def get_calculator_url(self):
@@ -234,4 +441,4 @@ class MockCloudProvider(CloudProviderInterface):
     def _authorize(self, credentials):
         self._delay(1, 5)
         if credentials != self._auth_credentials:
-            raise self.AUTH_EXCEPTION
+            raise self.AUTHENTICATION_EXCEPTION
