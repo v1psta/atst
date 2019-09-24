@@ -135,11 +135,6 @@
         {% else %}
           {{ PopDateRange(watch=True, optional=False, mindate=contract_start | dateFromString(formatter="%Y-%m-%d"), maxdate=contract_end | dateFromString(formatter="%Y-%m-%d")) }}
         {% endif %}
-        <div class="form-row">
-          <div class="usa-input-error-message form-has-errors">
-            <p v-for="error in popErrors" :key="error" v-html='error'></p>
-          </div>
-        </div>
       </div>
 
       <div v-show="$root.activeModal === removeModalId" v-cloak>

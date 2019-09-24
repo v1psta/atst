@@ -41,6 +41,13 @@
                 <p class='usa-input__help'>
                   {{ "task_orders.form.pop_example" | translate | safe }}
                 </p>
+
+                <div v-if='minError' class="usa-input-error-message">
+                  PoP start date must be on or after {{ mindate |  formattedDate(formatter="%B %d, %Y") }}.
+                </div>
+                <div v-if='maxError' class="usa-input-error-message">
+                  PoP start date must be before end date.
+                </div>
               </legend>
 
               <div class="date-picker-component">
@@ -130,6 +137,13 @@
                 <p class='usa-input__help'>
                   {{ 'task_orders.form.pop_example' | translate }}
                 </p>
+
+                <div v-if='minError' class="usa-input-error-message">
+                  PoP end date must be after start date.
+                </div>
+                <div v-if='maxError' class="usa-input-error-message">
+                  PoP end date must be on or after {{ maxdate |  formattedDate(formatter="%B %d, %Y") }}.
+                </div>
               </legend>
 
               <div class="date-picker-component">

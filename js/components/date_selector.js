@@ -170,6 +170,22 @@ export default {
           return 31
       }
     },
+
+    minError: function() {
+      if (this.isDateComplete) {
+        return new Date(this.mindate) > new Date(this.formattedDate)
+      }
+
+      return false
+    },
+
+    maxError: function() {
+      if (this.isDateComplete) {
+        return new Date(this.maxdate) < new Date(this.formattedDate)
+      }
+
+      return false
+    },
   },
 
   methods: {

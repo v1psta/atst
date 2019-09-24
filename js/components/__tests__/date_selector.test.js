@@ -214,4 +214,40 @@ describe('DateSelector', () => {
       expect(component.isDateComplete).toEqual(false)
     })
   })
+
+  describe('minError', () => {
+    it('returns true if the date is before mindate', () => {
+      component.mindate = new Date("2020-01-01")
+      component.day = 1
+      component.month = 1
+      component.year = 2000
+      expect(component.minError).toEqual(true)
+    })
+
+    it('returns fals if the date is after mindate', () => {
+      component.mindate = new Date("2020-01-01")
+      component.day = 1
+      component.month = 1
+      component.year = 2025
+      expect(component.minError).toEqual(false)
+    })
+  })
+
+  describe('maxError', () => {
+    it('returns true if the date is after maxdate', () => {
+      component.maxdate = new Date("2020-01-01")
+      component.day = 1
+      component.month = 1
+      component.year = 2025
+      expect(component.maxError).toEqual(true)
+    })
+
+    it('returns false if the date is before maxdate', () => {
+      component.maxdate = new Date("2020-01-01")
+      component.day = 1
+      component.month = 1
+      component.year = 2005
+      expect(component.maxError).toEqual(false)
+    })
+  })
 })
