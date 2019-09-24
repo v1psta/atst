@@ -1,11 +1,12 @@
 import pytest
 
 from bs4 import BeautifulSoup
-from wtforms.widgets import CheckboxInput
+from wtforms import Form, FormField
 from wtforms.fields import StringField
 from wtforms.validators import InputRequired
-from wtforms import Form, FormField
+from wtforms.widgets import CheckboxInput
 
+from atst.forms.task_order import CLINForm
 from atst.forms.task_order import TaskOrderForm
 from atst.models import Permissions
 from atst.routes.task_orders.new import render_task_orders_edit
@@ -92,7 +93,7 @@ def test_make_upload_input_error_template(upload_input_macro, task_order_form):
     write_template(rendered_upload_macro, "upload_input_error_template.html")
 
 
-def test_make_task_order_step3_template(app, request_ctx):
+def test_make_task_order_with_clin_form_template(app, request_ctx):
     request_ctx.g.current_user = factories.UserFactory.create()
     request_ctx.g.application = None
     request_ctx.g.portfolio = None
@@ -122,3 +123,15 @@ def test_make_task_order_step3_template(app, request_ctx):
     dom = BeautifulSoup(step3, "html.parser")
     to_form = dom.find("to-form")
     write_template(str(to_form), "to_form.html")
+
+
+def test_make_clin_fields(env, app):
+    step3_template = env.get_template("components/clin_fields.html")
+    clin_fields_macro = getattr(step3_template.module, "CLINFields")
+    clin_fields = clin_fields_macro(
+        app.config.get("CONTRACT_START_DATE"),
+        app.config.get("CONTRACT_END_DATE"),
+        CLINForm(),
+        0,
+    )
+    write_template(clin_fields, "clin_fields.html")

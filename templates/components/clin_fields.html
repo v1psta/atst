@@ -1,0 +1,319 @@
+{% from "components/clin_dollar_amount.html" import CLINDollarAmount %}
+{% from 'components/alert.html' import Alert %}
+{% from 'components/date_picker.html' import DatePicker %}
+{% from 'components/icon.html' import Icon %}
+{% from 'components/options_input.html' import OptionsInput %}
+{% from 'components/text_input.html' import TextInput %}
+
+{% macro CLINFields(contract_start, contract_end, fields=None, index=None) %}
+  <clin-fields
+    {% if fields %}
+      v-bind:initial-clin-index='{{ index }}'
+      v-bind:initial-total='{{ fields.total_amount.data or 0 }}'
+      v-bind:initial-obligated='{{ fields.obligated_amount.data or 0 }}'
+      v-bind:initial-start-date="'{{ fields.start_date.data | string }}'"
+      v-bind:initial-end-date="'{{ fields.end_date.data | string }}'"
+      v-bind:initial-clin-number="'{{ fields.number.data | string }}'"
+    {% else %}
+      v-bind:initial-clin-index='clinIndex'
+      v-bind:initial-clin-type="'JEDI_CLIN_1'"
+    {% endif %}
+    v-bind:contract-start="'{{ contract_start | string }}'"
+    v-bind:contract-end="'{{ contract_end | string }}'"
+    inline-template>
+    <div class="clin-card" v-if="showClin">
+      <div class="card__title">
+        <span class="h4" v-html='clinTitle'></span>
+        <button
+          v-if='clinIndex > 0'
+          class="icon-link icon-link__remove-clin"
+          v-on:click="openModal(removeModalId)"
+          type="button">
+          {{ Icon(name='x') }}
+        </button>
+      </div>
+      <div class="card">
+        <div class="form-row">
+          <div class="h4 clin-card__title">
+            {{ 'task_orders.form.clin_details' | translate }}
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-col">
+            {% if fields %}
+              {{ TextInput(fields.number, watch=True, optional=False) }}
+            {% else %}
+              <textinput :name="'clins-' + clinIndex + '-number'" :watch='true'
+              inline-template>
+                <div v-bind:class="['usa-input usa-input--validation--' + validation, { 'usa-input--error': showError, 'usa-input--success': showValid, 'usa-input--validation--paragraph': paragraph, 'no-max-width': noMaxWidth }]">
+                  <label :for="name">
+                    <span v-show='showError'>{{ Icon('alert',classes="icon-validation") }}</span>
+                    <span v-show='showValid'>{{ Icon('ok',classes="icon-validation") }}</span>
+                    <div class="usa-input__title">{{ 'task_orders.form.clin_number_label' | translate }}</div>
+                  </label>
+
+                  <masked-input
+                    v-on:input='onInput'
+                    v-on:blur='onBlur'
+                    v-on:change='onChange'
+                    v-bind:value='value'
+                    v-bind:mask='mask'
+                    v-bind:pipe='pipe'
+                    v-bind:keep-char-positions='keepCharPositions'
+                    v-bind:aria-invalid='showError'
+                    type='text'
+                    :id='name'
+                    ref='input'>
+                  </masked-input>
+
+                  <input type='hidden' v-bind:value='rawValue' :name='name' />
+
+                  <template v-if='showError'>
+                    <span class='usa-input__message' v-html='validationError'></span>
+                  </template>
+                  <template v-else>
+                    <span class='usa-input__message'></span>
+                  </template>
+                </div>
+              </textinput>
+            {% endif %}
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-col">
+            {% if fields %}
+              {{ OptionsInput(fields.jedi_clin_type, watch=True, show_validation=False, optional=False) }}
+            {% else %}
+              <optionsinput :name="'clins-' + clinIndex + '-jedi_clin_type'" :watch='true' :optional='false' inline-template>
+                <div v-bind:class="['usa-input', { 'usa-input--error': showError, 'usa-input--success': showValid }]">
+                  <fieldset data-ally-disabled="true" class="usa-input__choices" v-on:change="onInput">
+                      <legend>
+                        <div class="usa-input__title">
+                          {{ 'task_orders.form.clin_type_label' | translate }}
+                        </div>
+                      </legend>
+                      <select :id='name' :name='name'>
+                        <option value="JEDI_CLIN_1">{{ "forms.task_order.clin_01_label" | translate }}</option>
+                        <option value="JEDI_CLIN_2">{{ "forms.task_order.clin_02_label" | translate }}</option>
+                        <option value="JEDI_CLIN_3">{{ "forms.task_order.clin_03_label" | translate }}</option>
+                        <option value="JEDI_CLIN_4">{{ "forms.task_order.clin_04_label" | translate }}</option>
+                      </select>
+                  </fieldset>
+                </div>
+              </optionsinput>
+            {% endif %}
+          </div>
+        </div>
+        <hr>
+        <div class="form-row">
+          <div class="h4 clin-card__title">
+              {{ 'task_orders.form.clin_funding' | translate }}
+          </div>
+        </div>
+
+        {% if fields %}
+        {{ CLINDollarAmount("total", field=fields.total_amount) }}
+        {{ CLINDollarAmount("obligated", field=fields.obligated_amount, funding_validation=True) }}
+        {% else %}
+        {{ CLINDollarAmount("total") }}
+        {{ CLINDollarAmount("obligated", funding_validation=True) }}
+        {% endif %}
+
+        <div class="h5 clin-card__title">Percent Obligated</div>
+        <p id="percent-obligated" v-html='percentObligated'></p>
+
+        <hr>
+        <div class="form-row">
+          <div class="h4 clin-card__title">
+            {{ 'task_orders.form.pop' | translate }}
+          </div>
+        </div>
+        {% set contract_end_formatted = contract_end | dateFromString(formatter="%Y-%m-%d") | formattedDate(formatter="%B %d, %Y") %}
+        {% if fields %}
+          <div class="form-row">
+            <div class="form-col">
+              {{ DatePicker(fields.start_date, watch=True, optional=False) }}
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-col">
+              {% call DatePicker(fields.end_date, watch=True, optional=False) %}
+                {{ Alert(message="task_orders.form.pop_end_alert" | translate({'end_date': contract_end_formatted})) }}
+              {% endcall %}
+            </div>
+          </div>
+        {% else %}
+          <div class="form-row">
+            <div class="form-col">
+              <date-selector :name-tag="'clins-' + clinIndex + '-start_date'" :watch='true' :optional='false' inline-template>
+                <fieldset class="usa-input date-picker" v-bind:class="{ 'usa-input--success': isDateValid && showValidation }">
+                  <legend>
+                    <div class="usa-input__title">
+                      {{ 'task_orders.form.pop_start' | translate }}
+                    </div>
+                    <p class='usa-input__help'>
+                      {{ 'task_orders.form.pop_example' | translate }}
+                    </p>
+                  </legend>
+
+                  <div class="date-picker-component">
+                    <input :name="name" v-bind:value="formattedDate" v-on:change="onInput" type="hidden" />
+
+                    <div class="usa-form-group usa-form-group-month">
+                      <label>{{ 'components.date_selector.month' | translate }}</label>
+                      <input
+                        name="date-month"
+                        max="12"
+                        maxlength="2"
+                        min="1"
+                        type="number"
+                        v-bind:class="{ 'usa-input-error': (month && !isMonthValid) }"
+                        v-model="month"
+                        v-on:change="onInput"
+                        />
+                    </div>
+
+                    <div class="usa-form-group usa-form-group-day">
+                      <label>{{ 'components.date_selector.day' | translate }}</label>
+                      <input
+                        name="date-day"
+                        maxlength="2"
+                        min="1"
+                        type="number"
+                        v-bind:class="{ 'usa-input-error': (day && !isDayValid) }"
+                        v-bind:max="daysMaxCalculation"
+                        v-model="day"
+                        v-on:change="onInput"
+                        />
+                    </div>
+
+                    <div class="usa-form-group usa-form-group-year">
+                      <label>{{ 'components.date_selector.year' | translate }}</label>
+                      <input
+                        name="date-year"
+                        maxlength="4"
+                        type="number"
+                        v-model="year"
+                        v-on:change="onInput"
+                        />
+                    </div>
+
+                    <div class="usa-form-group-date-ok" v-if="isDateValid">
+                      {{ Icon("ok", classes="icon--green") }}
+                    </div>
+                  </div>
+                </fieldset>
+              </date-selector>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-col">
+              <date-selector :name-tag="'clins-' + clinIndex + '-end_date'" :watch='true' :optional='false' inline-template>
+                <fieldset class="usa-input date-picker" v-bind:class="{ 'usa-input--success': isDateValid && showValidation }">
+                  <legend>
+                    <div class="usa-input__title">
+                      {{ 'task_orders.form.pop_end' | translate }}
+                    </div>
+
+                    {{ Alert(message="task_orders.form.pop_end_alert" | translate({'end_date': contract_end_formatted})) }}
+
+                    <p class='usa-input__help'>
+                      {{ 'task_orders.form.pop_example' | translate }}
+                    </p>
+                  </legend>
+
+                  <div class="date-picker-component">
+                    <input :name="name" v-bind:value="formattedDate" v-on:change="onInput" type="hidden" />
+
+                      <div class="usa-form-group usa-form-group-month">
+                        <label>{{ 'components.date_selector.month' | translate }}</label>
+                        <input
+                          name="date-month"
+                          max="12"
+                          maxlength="2"
+                          min="1"
+                          type="number"
+                          v-bind:class="{ 'usa-input-error': (month && !isMonthValid) }"
+                          v-model="month"
+                          v-on:change="onInput"
+                          />
+                      </div>
+
+                      <div class="usa-form-group usa-form-group-day">
+                        <label>{{ 'components.date_selector.day' | translate }}</label>
+                        <input
+                          name="date-day"
+                          maxlength="2"
+                          min="1"
+                          type="number"
+                          v-bind:class="{ 'usa-input-error': (day && !isDayValid) }"
+                          v-bind:max="daysMaxCalculation"
+                          v-model="day"
+                          v-on:change="onInput"
+                          />
+                      </div>
+
+                      <div class="usa-form-group usa-form-group-year">
+                        <label>{{ 'components.date_selector.year' | translate }}</label>
+                        <input
+                          name="date-year"
+                          maxlength="4"
+                          type="number"
+                          v-model="year"
+                          v-on:change="onInput"
+                          />
+                      </div>
+
+                    <div class="usa-form-group-date-ok" v-if="isDateValid">
+                      {{ Icon("ok", classes="icon--green") }}
+                    </div>
+                  </div>
+                </fieldset>
+              </date-selector>
+            </div>
+          </div>
+        {% endif %}
+        <div class="form-row">
+          <div class="usa-input-error-message form-has-errors">
+            <p v-for="error in popErrors" :key="error" v-html='error'></p>
+          </div>
+        </div>
+      </div>
+
+      <div v-show="$root.activeModal === removeModalId" v-cloak>
+        <div :id='"modal--" + removeModalId' class='modal modal--dismissable'>
+          <div class='modal__container'>
+            <div class='modal__dialog' role='dialog' aria-modal='true'>
+              <div class='modal__body'>
+                <div class="task-order__modal-cancel">
+                  <h1 v-html='"{{ 'task_orders.form.clin_remove_text' | translate }}" + clinTitle + "?"'></h1>
+                  <div class="task-order__modal-cancel_buttons">
+                    <button
+                      v-on:click='closeModal(removeModalId)'
+                      class="usa-button usa-button-primary"
+                      type="button">
+                      {{ 'task_orders.form.clin_remove_cancel' | translate }}
+                    </button>
+                    <button
+                      v-on:click="removeClin()"
+                      class="usa-button usa-button-primary"
+                      type="button">
+                      {{ 'task_orders.form.clin_remove_confirm' | translate }}
+                    </button>
+                  </div>
+                </div>
+
+                <button type='button' class='icon-link modal__dismiss' v-on:click='closeModal(removeModalId)'>
+                  {{ Icon('x') }}
+                  <span>
+                    {{ "common.close" | translate }}
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </clin-fields>
+{% endmacro %}
