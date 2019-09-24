@@ -49,7 +49,10 @@ class Applications(BaseDomainClass):
             application.name = new_data["name"]
         if "description" in new_data:
             application.description = new_data["description"]
-
+        if "environment_names" in new_data:
+            Environments.create_many(
+                g.current_user, application, new_data["environment_names"]
+            )
         db.session.add(application)
         db.session.commit()
 
