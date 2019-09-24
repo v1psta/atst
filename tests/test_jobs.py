@@ -16,10 +16,23 @@ from atst.jobs import (
     dispatch_create_atat_admin_user,
     dispatch_create_environment_baseline,
     create_environment,
+    dispatch_provision_user,
+    do_provision_user,
 )
 from atst.models.utils import claim_for_update
 from atst.domain.exceptions import ClaimFailedException
-from tests.factories import EnvironmentFactory, EnvironmentRoleFactory, PortfolioFactory
+from tests.factories import (
+    EnvironmentFactory,
+    EnvironmentRoleFactory,
+    PortfolioFactory,
+    ApplicationRoleFactory,
+)
+from atst.models import EnvironmentRole, ApplicationRoleStatus
+
+
+@pytest.fixture(autouse=True, scope="function")
+def csp():
+    return Mock(wraps=MockCloudProvider({}, with_delay=False, with_failure=False))
 
 
 def test_environment_job_failure(celery_app, celery_worker):
@@ -61,11 +74,6 @@ def test_environment_role_job_failure(celery_app, celery_worker):
 now = pendulum.now()
 yesterday = now.subtract(days=1)
 tomorrow = now.add(days=1)
-
-
-@pytest.fixture(autouse=True, scope="function")
-def csp():
-    return Mock(wraps=MockCloudProvider({}, with_delay=False, with_failure=False))
 
 
 def test_create_environment_job(session, csp):
@@ -299,3 +307,66 @@ def test_claim_for_update(session):
 
     # The claim is released
     assert environment.claimed_until is None
+
+
+def test_dispatch_provision_user(csp, session, celery_app, celery_worker, monkeypatch):
+    # Given that I have three environment roles:
+    #   (A) one of which has a completed status
+    #   (B) one of which has an environment that has not been provisioned
+    #   (C) one of which is pending, has a provisioned environment but an inactive application role
+    #   (D) one of which is pending, has a provisioned environment and has an active application role
+    provisioned_environment = EnvironmentFactory.create(
+        cloud_id="cloud_id", root_user_info={}, baseline_info={}
+    )
+    unprovisioned_environment = EnvironmentFactory.create()
+    _er_a = EnvironmentRoleFactory.create(
+        environment=provisioned_environment, status=EnvironmentRole.Status.COMPLETED
+    )
+    _er_b = EnvironmentRoleFactory.create(
+        environment=unprovisioned_environment, status=EnvironmentRole.Status.PENDING
+    )
+    _er_c = EnvironmentRoleFactory.create(
+        environment=unprovisioned_environment,
+        status=EnvironmentRole.Status.PENDING,
+        application_role=ApplicationRoleFactory(status=ApplicationRoleStatus.PENDING),
+    )
+    er_d = EnvironmentRoleFactory.create(
+        environment=provisioned_environment,
+        status=EnvironmentRole.Status.PENDING,
+        application_role=ApplicationRoleFactory(status=ApplicationRoleStatus.ACTIVE),
+    )
+
+    mock = Mock()
+    monkeypatch.setattr("atst.jobs.provision_user", mock)
+
+    # When I dispatch the user provisioning task
+    dispatch_provision_user.run()
+
+    # I expect it to dispatch only one call, to EnvironmentRole D
+    mock.delay.assert_called_once_with(environment_role_id=er_d.id)
+
+
+def test_do_provision_user(csp, session):
+    # Given that I have an EnvironmentRole with a provisioned environment
+    credentials = MockCloudProvider(())._auth_credentials
+    provisioned_environment = EnvironmentFactory.create(
+        cloud_id="cloud_id",
+        root_user_info={"credentials": credentials},
+        baseline_info={},
+    )
+    environment_role = EnvironmentRoleFactory.create(
+        environment=provisioned_environment,
+        status=EnvironmentRole.Status.PENDING,
+        role="my_role",
+    )
+
+    # When I call the user provisoning task
+    do_provision_user(csp=csp, environment_role_id=environment_role.id)
+
+    session.refresh(environment_role)
+    # I expect that the CSP create_or_update_user method will be called
+    csp.create_or_update_user.assert_called_once_with(
+        credentials, environment_role, "my_role"
+    )
+    # I expect that the EnvironmentRole now has a csp_user_id
+    assert environment_role.csp_user_id

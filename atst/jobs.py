@@ -6,6 +6,7 @@ from atst.queue import celery
 from atst.models import EnvironmentJobFailure, EnvironmentRoleJobFailure
 from atst.domain.csp.cloud import CloudProviderInterface, GeneralCSPException
 from atst.domain.environments import Environments
+from atst.domain.environment_roles import EnvironmentRoles
 from atst.models.utils import claim_for_update
 
 
@@ -101,6 +102,20 @@ def do_create_environment_baseline(csp: CloudProviderInterface, environment_id=N
         db.session.commit()
 
 
+def do_provision_user(csp: CloudProviderInterface, environment_role_id=None):
+    environment_role = EnvironmentRoles.get_by_id(environment_role_id)
+
+    with claim_for_update(environment_role) as environment_role:
+        credentials = environment_role.environment.csp_credentials
+
+        csp_user_id = csp.create_or_update_user(
+            credentials, environment_role, environment_role.role
+        )
+        environment_role.csp_user_id = csp_user_id
+        db.session.add(environment_role)
+        db.session.commit()
+
+
 def do_work(fn, task, csp, **kwargs):
     try:
         fn(csp, **kwargs)
@@ -131,6 +146,13 @@ def create_environment_baseline(self, environment_id=None):
 
 
 @celery.task(bind=True)
+def provision_user(self, environment_role_id=None):
+    do_work(
+        do_provision_user, self, app.csp.cloud, environment_role_id=environment_role_id
+    )
+
+
+@celery.task(bind=True)
 def dispatch_create_environment(self):
     for environment_id in Environments.get_environments_pending_creation(
         pendulum.now()
@@ -152,3 +174,11 @@ def dispatch_create_environment_baseline(self):
         pendulum.now()
     ):
         create_environment_baseline.delay(environment_id=environment_id)
+
+
+@celery.task(bind=True)
+def dispatch_provision_user(self):
+    for (
+        environment_role_id
+    ) in EnvironmentRoles.get_environment_roles_pending_creation():
+        provision_user.delay(environment_role_id=environment_role_id)

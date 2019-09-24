@@ -1,5 +1,15 @@
+from sqlalchemy.orm.exc import NoResultFound
+
 from atst.database import db
-from atst.models import EnvironmentRole, ApplicationRole
+from atst.models import (
+    EnvironmentRole,
+    ApplicationRole,
+    Environment,
+    ApplicationRoleStatus,
+)
+from atst.domain.exceptions import NotFoundError
+from uuid import UUID
+from typing import List
 
 
 class EnvironmentRoles(object):
@@ -21,6 +31,15 @@ class EnvironmentRoles(object):
             .one_or_none()
         )
         return existing_env_role
+
+    @classmethod
+    def get_by_id(cls, id_) -> EnvironmentRole:
+        try:
+            return (
+                db.session.query(EnvironmentRole).filter(EnvironmentRole.id == id_)
+            ).one()
+        except NoResultFound:
+            raise NotFoundError(cls.resource_name)
 
     @classmethod
     def get_by_user_and_environment(cls, user_id, environment_id):
@@ -54,3 +73,17 @@ class EnvironmentRoles(object):
             .filter(EnvironmentRole.deleted != True)
             .all()
         )
+
+    @classmethod
+    def get_environment_roles_pending_creation(cls) -> List[UUID]:
+        results = (
+            db.session.query(EnvironmentRole.id)
+            .join(Environment)
+            .join(ApplicationRole)
+            .filter(Environment.deleted == False)
+            .filter(Environment.baseline_info != None)
+            .filter(EnvironmentRole.status == EnvironmentRole.Status.PENDING)
+            .filter(ApplicationRole.status == ApplicationRoleStatus.ACTIVE)
+            .all()
+        )
+        return [id_ for id_, in results]

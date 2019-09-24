@@ -27,8 +27,8 @@ def test_create_environment_baseline(mock_csp: MockCloudProvider):
 
 
 def test_create_or_update_user(mock_csp: MockCloudProvider):
-    user_dict = mock_csp.create_or_update_user(CREDENTIALS, {}, "csp_role_id")
-    assert isinstance(user_dict["id"], str)
+    csp_user_id = mock_csp.create_or_update_user(CREDENTIALS, {}, "csp_role_id")
+    assert isinstance(csp_user_id, str)
 
 
 def test_suspend_user(mock_csp: MockCloudProvider):

@@ -84,3 +84,11 @@ class Environment(
     @property
     def history(self):
         return self.get_changes()
+
+    @property
+    def csp_credentials(self):
+        return (
+            self.root_user_info.get("credentials")
+            if self.root_user_info is not None
+            else None
+        )
