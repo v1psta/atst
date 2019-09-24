@@ -102,9 +102,16 @@ export default {
 
     isYearValid: function() {
       // Emit a change event
-      var minYear = new Date(this.mindate).getFullYear()
-      var maxYear = new Date(this.maxdate).getFullYear()
-      var valid = this.year >= minYear && this.year <= maxYear
+      var valid
+      var minYear = this.mindate ? new Date(this.mindate).getFullYear() : null
+      var maxYear = this.maxdate ? new Date(this.maxdate).getFullYear() : null
+
+      if (minYear && maxYear) {
+        valid = this.year >= minYear && this.year <= maxYear
+      } else {
+        valid = parseInt(this.year) >= 1
+      }
+
       this._emitChange('year', this.year, valid)
       return valid
     },
@@ -138,12 +145,7 @@ export default {
     },
 
     isDateComplete: function() {
-      return (
-        !!this.day &&
-        !!this.month &&
-        !!this.year &&
-        this.year > 999
-      )
+      return !!this.day && !!this.month && !!this.year && this.year > 999
     },
 
     daysMaxCalculation: function() {

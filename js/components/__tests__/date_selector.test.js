@@ -163,6 +163,20 @@ describe('DateSelector', () => {
       component.year = new Date().getFullYear()
       expect(component.isYearValid).toEqual(true)
     })
+
+    it('returns true when year is between min and max years', () => {
+      component.year = new Date('2019-01-01').getFullYear()
+      component.mindate = new Date('2018-01-01')
+      component.maxdate = new Date('2019-12-31')
+      expect(component.isYearValid).toEqual(true)
+    })
+
+    it('returns false when year is outside of min and max years', () => {
+      component.year = new Date('2020-01-01').getFullYear()
+      component.mindate = new Date('2018-01-01')
+      component.maxdate = new Date('2019-01-01')
+      expect(component.isYearValid).toEqual(false)
+    })
   })
 
   describe('formattedDate', () => {
@@ -182,6 +196,22 @@ describe('DateSelector', () => {
       component.year = 1988
 
       expect(component.formattedDate).toEqual('01/22/1988')
+    })
+  })
+
+  describe('isDateComplete', () => {
+    it('returns true if all fields are completed', () => {
+      component.day = 22
+      component.month = 1
+      component.year = 1988
+      expect(component.isDateComplete).toEqual(true)
+    })
+
+    it('returns false if all fields are not completed', () => {
+      component.day = 22
+      component.month = 1
+      component.year = 19
+      expect(component.isDateComplete).toEqual(false)
     })
   })
 })
