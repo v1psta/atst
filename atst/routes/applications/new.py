@@ -37,7 +37,7 @@ def render_new_application_form(
 @user_can(Permissions.CREATE_APPLICATION, message="view create new application form")
 def view_new_application_step_1(portfolio_id, application_id=None):
     return render_new_application_form(
-        "portfolios/applications/new/step_1.html",
+        "applications/new/step_1.html",
         NameAndDescriptionForm,
         portfolio_id=portfolio_id,
         application_id=application_id,
@@ -78,7 +78,7 @@ def create_or_update_new_application_step_1(portfolio_id, application_id=None):
     else:
         return (
             render_new_application_form(
-                "portfolios/applications/new/step_1.html",
+                "applications/new/step_1.html",
                 NameAndDescriptionForm,
                 portfolio_id,
                 application_id,
@@ -94,7 +94,7 @@ def create_or_update_new_application_step_1(portfolio_id, application_id=None):
 @user_can(Permissions.CREATE_APPLICATION, message="view create new application form")
 def view_new_application_step_2(portfolio_id, application_id):
     return render_new_application_form(
-        "portfolios/applications/new/step_2.html",
+        "applications/new/step_2.html",
         EnvironmentsForm,
         portfolio_id=portfolio_id,
         application_id=application_id,
@@ -122,7 +122,7 @@ def update_new_application_step_2(portfolio_id, application_id):
     else:
         return (
             render_new_application_form(
-                "portfolios/applications/new/step_2.html",
+                "applications/new/step_2.html",
                 EnvironmentsForm,
                 portfolio_id,
                 application_id,

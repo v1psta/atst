@@ -23,4 +23,4 @@ def has_portfolio_applications(_user, portfolio=None, **_kwargs):
     message="view portfolio applications",
 )
 def portfolio_applications(portfolio_id):
-    return render_template("portfolios/applications/index.html")
+    return render_template("applications/index.html")

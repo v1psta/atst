@@ -18,7 +18,7 @@ def review_task_order(task_order_id):
     else:
         signature_form = SignatureForm()
         return render_template(
-            "portfolios/task_orders/review.html",
+            "task_orders/review.html",
             task_order=task_order,
             signature_form=signature_form,
         )
@@ -37,7 +37,5 @@ def portfolio_funding(portfolio_id):
         TaskOrderStatus.UNSIGNED: "purple",
     }
     return render_template(
-        "portfolios/task_orders/index.html",
-        task_orders=task_orders,
-        label_colors=label_colors,
+        "task_orders/index.html", task_orders=task_orders, label_colors=label_colors
     )

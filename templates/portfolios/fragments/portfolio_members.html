@@ -47,9 +47,9 @@
 
             <tbody>
               {% if user_can(permissions.EDIT_PORTFOLIO_USERS) %}
-                {% include "fragments/admin/members_edit.html" %}
+                {% include "portfolios/fragments/members_edit.html" %}
               {% elif user_can(permissions.VIEW_PORTFOLIO_USERS) %}
-                {% include "fragments/admin/members_view.html" %}
+                {% include "portfolios/fragments/members_view.html" %}
               {% endif %}
             </tbody>
 
@@ -73,7 +73,7 @@
         </div>
       </form>
       {% if user_can(permissions.CREATE_PORTFOLIO_USERS) %}
-        {% include "fragments/admin/add_new_portfolio_member.html" %}
+        {% include "portfolios/fragments/add_new_portfolio_member.html" %}
       {% endif %}
 
       {% if user_can(permissions.EDIT_PORTFOLIO_USERS) %}
