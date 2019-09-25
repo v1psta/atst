@@ -34,6 +34,7 @@
             {% endif %}
             v-bind:watch='{{ watch | string | lower }}'
             :optional='{{ optional | string | lower }}'
+            v-on:date-change='handleDateChange'
             inline-template>
 
             <fieldset :name="name" class="usa-input date-picker" v-bind:class="{ 'usa-input--success': isDateValid && isDateComplete, 'usa-input--error': !isDateValid && isDateComplete }">
@@ -128,6 +129,7 @@
             {% endif %}
             v-bind:watch='{{ watch | string | lower }}'
             :optional='{{ optional | string | lower }}'
+            v-on:date-change='handleDateChange'
             inline-template>
 
             <fieldset :name="name" class="usa-input date-picker" v-bind:class="{ 'usa-input--success': isDateValid && isDateComplete, 'usa-input--error': !isDateValid && isDateComplete }">

@@ -203,7 +203,7 @@
 <div>
 <div class="form-row">
 <div class="form-col">
-<date-selector :maxdate="maxStartProp" :mindate="initialMinStartDate" :name-tag="'clins-' + clinIndex + '-start_date'" :optional="false" inline-template="" v-bind:watch="true">
+<date-selector :maxdate="maxStartProp" :mindate="initialMinStartDate" :name-tag="'clins-' + clinIndex + '-start_date'" :optional="false" inline-template="" v-bind:watch="true" v-on:date-change="handleDateChange">
 <fieldset :name="name" class="usa-input date-picker" v-bind:class="{ 'usa-input--success': isDateValid &amp;&amp; isDateComplete, 'usa-input--error': !isDateValid &amp;&amp; isDateComplete }">
 <legend>
 <div class="usa-input__title">
@@ -251,7 +251,7 @@
 </div>
 <div class="form-row">
 <div class="form-col">
-<date-selector :maxdate="initialMaxEndDate" :mindate="minEndProp" :name-tag="'clins-' + clinIndex + '-end_date'" :optional="false" inline-template="" v-bind:watch="true">
+<date-selector :maxdate="initialMaxEndDate" :mindate="minEndProp" :name-tag="'clins-' + clinIndex + '-end_date'" :optional="false" inline-template="" v-bind:watch="true" v-on:date-change="handleDateChange">
 <fieldset :name="name" class="usa-input date-picker" v-bind:class="{ 'usa-input--success': isDateValid &amp;&amp; isDateComplete, 'usa-input--error': !isDateValid &amp;&amp; isDateComplete }">
 <legend>
 <div class="usa-input__title">

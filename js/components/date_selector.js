@@ -195,6 +195,12 @@ export default {
         watch: this.watch,
         valid: this.isDateValid,
       })
+
+      this.$emit('date-change', {
+        value: this.formattedDate,
+        name: this.name,
+        valid: this.isDateValid,
+      })
     },
 
     _emitChange: function(name, value, valid) {

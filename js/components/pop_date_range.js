@@ -44,10 +44,6 @@ export default {
     }
   },
 
-  mounted: function() {
-    this.$root.$on('field-change', this.handleDateChange)
-  },
-
   methods: {
     handleDateChange: function(event) {
       if (event.name.includes(START_DATE)) {
