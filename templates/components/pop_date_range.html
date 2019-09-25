@@ -1,11 +1,15 @@
 {% from 'components/alert.html' import Alert %}
 {% from 'components/icon.html' import Icon %}
 
-{% macro PopDateRange(start_field=None, end_field=None, mindate=mindate, maxdate=maxdate, watch=False, optional=True) %}
+{% macro PopDateRange(start_field=None, end_field=None, mindate=mindate, maxdate=maxdate, watch=False, optional=True, index=None) %}
   <pop-date-range
-    initial-min-start-date="{{ mindate.strftime('%Y-%m-%d') }}"
-    initial-max-end-date="{{ maxdate.strftime('%Y-%m-%d') }}"
-    :clin-index="clinIndex"
+    initial-min-start-date="{{ mindate }}"
+    initial-max-end-date="{{ maxdate }}"
+    {% if index %}
+      v-bind:clin-index="{{ index }}"
+    {% else %}
+      v-bind:clin-index="clinIndex"
+    {% endif %}
     {% if start_field %}
       initial-start-date="{{ start_field.data }}"
     {% endif %}
@@ -43,7 +47,7 @@
                 </p>
 
                 <div v-if='minError' class="usa-input-error-message">
-                  PoP start date must be on or after {{ mindate |  formattedDate(formatter="%B %d, %Y") }}.
+                  PoP start date must be on or after {{ mindate | dateFromString(formatter="%Y-%m-%d") |  formattedDate(formatter="%B %d, %Y") }}.
                 </div>
                 <div v-if='maxError' class="usa-input-error-message">
                   PoP start date must be before end date.
@@ -84,7 +88,7 @@
                 <div class="usa-form-group usa-form-group-year">
                   <label>{{ 'components.date_selector.year' | translate }}</label>
                   <input
-                    id="date-year"
+                    name="date-year"
                     maxlength="4"
                     type="number"
                     v-model="year"
@@ -142,7 +146,7 @@
                   PoP end date must be after start date.
                 </div>
                 <div v-if='maxError' class="usa-input-error-message">
-                  PoP end date must be on or after {{ maxdate |  formattedDate(formatter="%B %d, %Y") }}.
+                  PoP end date must be on or after {{ maxdate | dateFromString(formatter="%Y-%m-%d") |  formattedDate(formatter="%B %d, %Y") }}.
                 </div>
               </legend>
 

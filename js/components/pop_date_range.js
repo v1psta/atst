@@ -15,14 +15,20 @@ export default {
   props: {
     initialMinStartDate: String,
     initialMaxEndDate: String,
-    initialStartDate: String,
-    initialEndDate: String,
+    initialStartDate: {
+      type: String,
+      default: null,
+    },
+    initialEndDate: {
+      type: String,
+      default: null,
+    },
     clinIndex: Number,
   },
 
   data: function() {
-    var start = new Date(this.initialStartDate)
-    var end = new Date(this.initialEndDate)
+    var start = !!this.initialStartDate ? new Date(this.initialStartDate) : null
+    var end = !!this.initialEndDate ? new Date(this.initialEndDate) : null
     var contractStart = new Date(this.initialMinStartDate)
     var contractEnd = new Date(this.initialMaxEndDate)
 
@@ -60,7 +66,7 @@ export default {
     },
 
     calcMaxStartDate: function(date, end = this.contractEnd) {
-      if (date < end) {
+      if (!!date && date < end) {
         return date
       } else {
         return end
@@ -68,7 +74,7 @@ export default {
     },
 
     calcMinEndDate: function(date, start = this.contractStart) {
-      if (date > start) {
+      if (!!date && date > start) {
         return date
       } else {
         return start
