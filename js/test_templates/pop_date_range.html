@@ -29,7 +29,7 @@
             :optional='true'
             inline-template>
 
-            <fieldset :name="name" class="usa-input date-picker" v-bind:class="{ 'usa-input--success': isDateValid && showValidation, 'usa-input--error': !isDateValid && showValidation }">
+            <fieldset :name="name" class="usa-input date-picker" v-bind:class="{ 'usa-input--success': isDateValid && isDateComplete, 'usa-input--error': !isDateValid && isDateComplete }">
               <legend>
                 <div class="usa-input__title">
                   Start Date
@@ -92,7 +92,7 @@
 
                 </div>
 
-                <div v-if="showValidation">
+                <div v-if="isDateComplete">
                   <div class="usa-form-group-date-ok" v-if="isDateValid">
                     
       <span class="icon icon--ok icon--green" aria-hidden="true"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="check-circle" class="svg-inline--fa fa-check-circle fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.628 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"></path></svg></span>
@@ -128,12 +128,12 @@
             :optional='true'
             inline-template>
 
-            <fieldset :name="name" class="usa-input date-picker" v-bind:class="{ 'usa-input--success': isDateValid && showValidation, 'usa-input--error': !isDateValid && showValidation }">
+            <fieldset :name="name" class="usa-input date-picker" v-bind:class="{ 'usa-input--success': isDateValid && isDateComplete, 'usa-input--error': !isDateValid && isDateComplete }">
               <legend>
                 <div class="usa-input__title">
                   End Date
                 </div>
-
+                
                 
   
 
@@ -144,7 +144,7 @@
 
       
         <p class='usa-alert-text'>
-          A CLIN's period of performance must end before .
+          A CLIN's period of performance must end before September 14, 2022.
         </p>
       
 
@@ -210,7 +210,7 @@
                       />
                   </div>
 
-                <div v-if="showValidation">
+                <div v-if="isDateComplete">
                   <div class="usa-form-group-date-ok" v-if="isDateValid">
                     
       <span class="icon icon--ok icon--green" aria-hidden="true"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="check-circle" class="svg-inline--fa fa-check-circle fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.628 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"></path></svg></span>
