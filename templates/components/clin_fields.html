@@ -128,8 +128,6 @@
             {{ 'task_orders.form.pop' | translate }}
           </div>
         </div>
-        {% set contract_start_formatted = contract_start | dateFromString(formatter="%Y-%m-%d") %}
-        {% set contract_end_formatted = contract_end | dateFromString(formatter="%Y-%m-%d") %}
         {% if fields %}
           {{ PopDateRange(start_field=fields.start_date, end_field=fields.end_date, watch=True, optional=False, mindate=contract_start, maxdate=contract_end) }}
         {% else %}

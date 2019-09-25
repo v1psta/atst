@@ -48,7 +48,7 @@
                 </p>
 
                 <div v-if='minError' class="usa-input-error-message">
-                  PoP start date must be on or after {{ mindate | dateFromString(formatter="%Y-%m-%d") |  formattedDate(formatter="%B %d, %Y") }}.
+                  PoP start date must be on or after {{ mindate | formattedDate(formatter="%B %d, %Y") }}.
                 </div>
                 <div v-if='maxError' class="usa-input-error-message">
                   PoP start date must be before end date.
@@ -137,7 +137,7 @@
                 <div class="usa-input__title">
                   {{ 'task_orders.form.pop_end' | translate }}
                 </div>
-                {% set formatted_end_date = maxdate | dateFromString(formatter="%Y-%m-%d") |  formattedDate(formatter="%B %d, %Y") %}
+                {% set formatted_end_date = maxdate |  formattedDate(formatter="%B %d, %Y") %}
                 {{ Alert(message="task_orders.form.pop_end_alert" | translate({'end_date': formatted_end_date })) }}
 
                 <p class='usa-input__help'>
@@ -148,7 +148,7 @@
                   PoP end date must be after start date.
                 </div>
                 <div v-if='maxError' class="usa-input-error-message">
-                  PoP end date must be on or after {{ maxdate | dateFromString(formatter="%Y-%m-%d") |  formattedDate(formatter="%B %d, %Y") }}.
+                  PoP end date must be on or after {{ formatted_end_date }}.
                 </div>
               </legend>
 

@@ -38,12 +38,8 @@ def test_clin_form_start_date_before_end_date():
 
 
 def test_clin_form_pop_dates_within_contract_dates():
-    CONTRACT_START_DATE = datetime.datetime.strptime(
-        app.config.get("CONTRACT_START_DATE"), "%Y-%m-%d"
-    ).date()
-    CONTRACT_END_DATE = datetime.datetime.strptime(
-        app.config.get("CONTRACT_END_DATE"), "%Y-%m-%d"
-    ).date()
+    CONTRACT_START_DATE = app.config.get("CONTRACT_START_DATE")
+    CONTRACT_END_DATE = app.config.get("CONTRACT_END_DATE")
 
     invalid_start = CONTRACT_START_DATE - relativedelta(months=1)
     invalid_end = CONTRACT_END_DATE + relativedelta(months=1)

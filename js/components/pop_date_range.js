@@ -46,7 +46,7 @@ export default {
           this.minEndDate = this.calcMinEndDate(date)
         }
       } else if (event.name.includes(END_DATE)) {
-        if (event.valid != undefined && event.valid ) {
+        if (event.valid != undefined && event.valid) {
           var date = new Date(event.value)
           this.maxStartDate = this.calcMaxStartDate(date)
         }
