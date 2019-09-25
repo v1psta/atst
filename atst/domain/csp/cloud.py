@@ -642,12 +642,14 @@ class AWSCloudProvider(CloudProviderInterface):
         """
         A helper for creating a client of a given AWS service.
         """
-
-        # TODO: Use credentials param, default to root creds
+        credentials = credentials or {
+            "aws_access_key_id": self.access_key_id,
+            "aws_secret_access_key": self.secret_key,
+        }
         return self.boto3.client(
             service,
-            aws_access_key_id=(self.access_key_id),
-            aws_secret_access_key=(self.secret_key),
+            aws_access_key_id=credentials["aws_access_key_id"],
+            aws_secret_access_key=credentials["aws_secret_access_key"],
             region_name=self.region_name,
         )
 
