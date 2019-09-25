@@ -452,6 +452,7 @@ class AWSCloudProvider(CloudProviderInterface):
         self.access_key_id = config["AWS_ACCESS_KEY_ID"]
         self.secret_key = config["AWS_SECRET_KEY"]
         self.region_name = config["AWS_REGION_NAME"]
+        self.role_access_org_name = "OrganizationAccountAccessRole" # TODO
 
         # TODO
         self.root_account_username = None
@@ -473,8 +474,8 @@ class AWSCloudProvider(CloudProviderInterface):
         # TODO: Good that we're providing RoleName, but we may want to salt it
         account_request = org_client.create_account(
             Email=user.email,
-            AccountName=account_name,  # TODO
-            RoleName=role_name,  # TODO
+            AccountName=account_name,  # TODO: {portfolio_name-application_name-environment_name}? or something random
+            RoleName=self.org_access_role_name,
             IamUserAccessToBilling="DENY",
         )
 
