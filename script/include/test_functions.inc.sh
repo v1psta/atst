@@ -19,6 +19,11 @@ run_python_unit_tests() {
   return $?
 }
 
+run_python_render_vue_component() {
+  run_command "python -m pytest tests/render_vue_component.py --no-cov --no-print-logs --tb=no -q --disable-warnings"
+  return $?
+}
+
 run_javascript_tests() {
   run_command "yarn test:coverage"
   return $?

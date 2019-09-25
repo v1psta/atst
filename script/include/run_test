@@ -45,5 +45,6 @@ if [ "${RUN_PYTHON_TESTS}" = "true" ]; then
 fi
 
 if [ "${RUN_JS_TESTS}" = "true" ]; then
+  run_python_render_vue_component
   run_javascript_tests
 fi

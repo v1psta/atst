@@ -15,7 +15,7 @@
       <div class="card__title">
         <span class="h4" v-html='clinTitle'></span>
         <button
-          v-if='$parent.clinIndex > 0'
+          v-if='clinIndex > 0'
           class="icon-link icon-link__remove-clin"
           v-on:click="openModal(removeModalId)"
           type="button">

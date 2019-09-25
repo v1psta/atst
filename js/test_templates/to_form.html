@@ -60,7 +60,7 @@
 <div class="clin-card" v-if="showClin">
 <div class="card__title">
 <span class="h4" v-html="clinTitle"></span>
-<button class="icon-link icon-link__remove-clin" type="button" v-if="$parent.clinIndex &gt; 0" v-on:click="openModal(removeModalId)">
+<button class="icon-link icon-link__remove-clin" type="button" v-if="clinIndex &gt; 0" v-on:click="openModal(removeModalId)">
 <span aria-hidden="true" class="icon icon--x"><svg viewbox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M2 2l12 12M14 15c-.256 0-.512-.098-.707-.293l-12-12c-.391-.391-.391-1.023 0-1.414s1.023-.391 1.414 0l12 12c.391.391.391 1.023 0 1.414-.195.195-.451.293-.707.293zm0-13L2 14"></path><path d="M2 15c-.256 0-.512-.098-.707-.293-.391-.391-.391-1.023 0-1.414l12-12c.391-.391 1.023-.391 1.414 0s.391 1.023 0 1.414l-12 12C2.512 14.902 2.256 15 2 15z"></path></svg>
 </span>
 </button>
@@ -192,7 +192,7 @@
 </div>
 </div>
 <div class="h5 clin-card__title">Percent Obligated</div>
-<p v-html="percentObligated"></p>
+<p id="percent-obligated" v-html="percentObligated"></p>
 <hr/>
 <div class="form-row">
 <div class="h4 clin-card__title">
