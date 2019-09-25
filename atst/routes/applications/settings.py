@@ -73,8 +73,9 @@ def filter_env_roles_form_data(member, environments):
             "environment_name": env.name,
             "role": NO_ACCESS,
         }
-        env_role = EnvironmentRoles.get_by_user_and_environment(member.user_id, env.id)
-        if env_role:
+        env_roles_set = set(env.roles).intersection(set(member.environment_roles))
+        if len(env_roles_set) == 1:
+            (env_role,) = env_roles_set
             env_data["role"] = env_role.role
 
         env_roles_form_data.append(env_data)
