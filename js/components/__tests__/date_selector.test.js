@@ -217,7 +217,7 @@ describe('DateSelector', () => {
 
   describe('minError', () => {
     it('returns true if the date is before mindate', () => {
-      component.mindate = new Date("2020-01-01")
+      component.mindate = new Date('2020-01-01')
       component.day = 1
       component.month = 1
       component.year = 2000
@@ -225,7 +225,7 @@ describe('DateSelector', () => {
     })
 
     it('returns fals if the date is after mindate', () => {
-      component.mindate = new Date("2020-01-01")
+      component.mindate = new Date('2020-01-01')
       component.day = 1
       component.month = 1
       component.year = 2025
@@ -235,7 +235,7 @@ describe('DateSelector', () => {
 
   describe('maxError', () => {
     it('returns true if the date is after maxdate', () => {
-      component.maxdate = new Date("2020-01-01")
+      component.maxdate = new Date('2020-01-01')
       component.day = 1
       component.month = 1
       component.year = 2025
@@ -243,7 +243,7 @@ describe('DateSelector', () => {
     })
 
     it('returns false if the date is before maxdate', () => {
-      component.maxdate = new Date("2020-01-01")
+      component.maxdate = new Date('2020-01-01')
       component.day = 1
       component.month = 1
       component.year = 2005

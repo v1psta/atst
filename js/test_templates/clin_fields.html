@@ -344,7 +344,7 @@
             :optional='false'
             inline-template>
 
-            <fieldset class="usa-input date-picker" v-bind:class="{ 'usa-input--success': isDateValid && showValidation, 'usa-input--error': !isDateValid && showValidation }">
+            <fieldset :name="name" class="usa-input date-picker" v-bind:class="{ 'usa-input--success': isDateValid && showValidation, 'usa-input--error': !isDateValid && showValidation }">
               <legend>
                 <div class="usa-input__title">
                   Start Date
@@ -443,7 +443,7 @@
             :optional='false'
             inline-template>
 
-            <fieldset class="usa-input date-picker" v-bind:class="{ 'usa-input--success': isDateValid && showValidation, 'usa-input--error': !isDateValid && showValidation }">
+            <fieldset :name="name" class="usa-input date-picker" v-bind:class="{ 'usa-input--success': isDateValid && showValidation, 'usa-input--error': !isDateValid && showValidation }">
               <legend>
                 <div class="usa-input__title">
                   End Date

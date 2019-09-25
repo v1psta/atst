@@ -135,3 +135,17 @@ def test_make_clin_fields(env, app):
         0,
     )
     write_template(clin_fields, "clin_fields.html")
+
+
+def test_make_pop_date_range(env, app):
+    pop_date_range_template = env.get_template("components/pop_date_range.html")
+    pop_date_range_macro = getattr(pop_date_range_template.module, "PopDateRange")
+    form = CLINForm()
+    pop_date_range = pop_date_range_macro(
+        start_field=form.start_date,
+        end_field=form.end_date,
+        mindate=app.config.get("CONTRACT_START_DATE"),
+        maxdate=app.config.get("CONTRACT_END_DATE"),
+        index=1,
+    )
+    write_template(pop_date_range, "pop_date_range.html")
