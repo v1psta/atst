@@ -6,7 +6,6 @@ import FormMixin from '../../mixins/form'
 import Modal from '../../mixins/modal'
 import MultiStepModalForm from './multi_step_modal_form'
 import checkboxinput from '../checkbox_input'
-import levelofwarrant from '../levelofwarrant'
 import multicheckboxinput from '../multi_checkbox_input'
 import optionsinput from '../options_input'
 import SemiCollapsibleText from '../semi_collapsible_text'
@@ -22,7 +21,6 @@ export default {
     Modal,
     MultiStepModalForm,
     checkboxinput,
-    levelofwarrant,
     multicheckboxinput,
     optionsinput,
     SemiCollapsibleText,
