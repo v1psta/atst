@@ -53,3 +53,19 @@ reset_db() {
   # Seed database data
   seed_db
 }
+
+output_divider() {
+  if tty -s; then
+    echo "$( tput bold )$( tput smul )$( tput setaf 6 )${1}$( tput sgr 0)"
+  else
+    echo $1
+  fi
+}
+
+warning() {
+  if tty -s; then
+    echo "$( tput bold )$( tput setaf 1 )${1}$( tput sgr 0)"
+  else
+    echo $1
+  fi
+}
