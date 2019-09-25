@@ -135,8 +135,8 @@
                 <div class="usa-input__title">
                   {{ 'task_orders.form.pop_end' | translate }}
                 </div>
-
-                {{ Alert(message="task_orders.form.pop_end_alert" | translate({'end_date': contract_end_formatted})) }}
+                {% set formatted_end_date = maxdate | dateFromString(formatter="%Y-%m-%d") |  formattedDate(formatter="%B %d, %Y") %}
+                {{ Alert(message="task_orders.form.pop_end_alert" | translate({'end_date': formatted_end_date })) }}
 
                 <p class='usa-input__help'>
                   {{ 'task_orders.form.pop_example' | translate }}
