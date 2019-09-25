@@ -7,6 +7,8 @@ from atst.models.user import User
 from atst.models.environment import Environment
 from atst.models.environment_role import EnvironmentRole
 
+from botocore.exceptions import ClientError
+
 
 class GeneralCSPException(Exception):
     pass
@@ -628,13 +630,18 @@ class AWSCloudProvider(CloudProviderInterface):
         created_policies = []
 
         for policy in self.BASELINE_POLICIES:
-            created_policy = client.create_policy(
-                PolicyName=policy["name"],
-                Path=policy["path"],
-                PolicyDocument=json.loads(policy["document"]),
-                Description=policy["description"],
-            )
-            created_policies.append(created_policy)
+            try:
+                response = client.create_policy(
+                    PolicyName=policy["name"],
+                    Path=policy["path"],
+                    PolicyDocument=json.dumps(policy["document"]),
+                    Description=policy["description"],
+                )
+                created_policies.append({policy["name"]: response["Policy"]["Arn"]})
+            except client.exceptions.EntityAlreadyExistsException:
+                # Policy already exists. We can determine its ARN based on the account id and policy path / name.
+                policy_arn = f"arn:aws:iam:{csp_environment_id}:policy{policy['path']}{policy['name']}"
+                created_policies.append({policy["name"]: policy_arn})
 
         return {"policies": created_policies}
 
