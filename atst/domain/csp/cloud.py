@@ -446,13 +446,37 @@ class MockCloudProvider(CloudProviderInterface):
 
 
 class AWSCloudProvider(CloudProviderInterface):
+    BASELINE_POLICIES = [
+        {
+            "name": "BillingReadOnly",
+            "path": "/atat/billing-read-only/",
+            "document": {
+                "Version": "2012-10-17",
+                "Statement": [
+                    {
+                        "Sid": "VisualEditor0",
+                        "Effect": "Allow",
+                        "Action": [
+                            "aws-portal:ViewPaymentMethods",
+                            "aws-portal:ViewAccount",
+                            "aws-portal:ViewBilling",
+                            "aws-portal:ViewUsage",
+                        ],
+                        "Resource": "*",
+                    }
+                ],
+            },
+            "description": "View billing information.",
+        }
+    ]
+
     def __init__(self, config):
         self.config = config
 
         self.access_key_id = config["AWS_ACCESS_KEY_ID"]
         self.secret_key = config["AWS_SECRET_KEY"]
         self.region_name = config["AWS_REGION_NAME"]
-        self.role_access_org_name = "OrganizationAccountAccessRole" # TODO
+        self.role_access_org_name = "OrganizationAccountAccessRole"  # TODO
 
         # TODO
         self.root_account_username = None
@@ -547,7 +571,7 @@ class AWSCloudProvider(CloudProviderInterface):
         iam_client.put_user_policy(
             UserName=self.root_account_username,
             PolicyName=self.root_account_policy_name,
-            PolicyDocument=self._policy(account_id),
+            PolicyDocument=self._inline_org_management_policy(account_id),
         )
 
         # TODO: Not sure how to wait for this policy to be created. Hardcoding a role ARN for now.
@@ -581,10 +605,45 @@ class AWSCloudProvider(CloudProviderInterface):
         )
         return user
 
-    def _get_client(self, service: str):
+    def create_environment_baseline(
+        self, auth_credentials: Dict, csp_environment_id: str
+    ) -> Dict:
+        """Provision the necessary baseline entities (such as roles) in the given environment
+
+        Arguments:
+            auth_credentials -- Object containing CSP account credentials
+            csp_environment_id -- ID of the CSP Environment to provision roles against.
+
+        Returns:
+            dict: Returns dict that associates the resource identities with their ATAT representations.
+        Raises:
+            AuthenticationException: Problem with the credentials
+            AuthorizationException: Credentials not authorized for current action(s)
+            ConnectionException: Issue with the CSP API connection
+            UnknownServerException: Unknown issue on the CSP side
+            BaselineProvisionException: Specific issue occurred with some aspect of baseline setup
+        """
+
+        client = self._get_client("iam", credentials=auth_credentials)
+        created_policies = []
+
+        for policy in self.BASELINE_POLICIES:
+            created_policy = client.create_policy(
+                PolicyName=policy["name"],
+                Path=policy["path"],
+                PolicyDocument=json.loads(policy["document"]),
+                Description=policy["description"],
+            )
+            created_policies.append(created_policy)
+
+        return {"policies": created_policies}
+
+    def _get_client(self, service: str, credentials=None):
         """
         A helper for creating a client of a given AWS service.
         """
+
+        # TODO: Use credentials param, default to root creds
         return self.boto3.client(
             service,
             aws_access_key_id=(self.access_key_id),
@@ -592,7 +651,7 @@ class AWSCloudProvider(CloudProviderInterface):
             region_name=self.region_name,
         )
 
-    def _policy(self, account_id: str) -> Dict:
+    def _inline_org_management_policy(self, account_id: str) -> Dict:
         policy_dict = json.loads(
             """
         {
