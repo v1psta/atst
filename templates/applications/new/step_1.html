@@ -1,4 +1,4 @@
-{% extends "portfolios/applications/base.html" %}
+{% extends "applications/base.html" %}
 
 {% from "components/alert.html" import Alert %}
 {% from "components/text_input.html" import TextInput %}
@@ -12,7 +12,7 @@
     {% set action = url_for('applications.create_new_application_step_1', portfolio_id=portfolio.id, application_id=application_id) %}
   {% endif %}
 
-  
+
 {% block application_content %}
 
   {% include "fragments/flash.html" %}

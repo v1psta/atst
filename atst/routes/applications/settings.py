@@ -130,7 +130,7 @@ def render_settings_page(application, **kwargs):
         )
 
     return render_template(
-        "portfolios/applications/settings.html",
+        "applications/settings.html",
         application=application,
         environments_obj=environments_obj,
         new_env_form=new_env_form,
