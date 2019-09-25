@@ -7,7 +7,7 @@ from atst.models.user import User
 from atst.models.environment import Environment
 from atst.models.environment_role import EnvironmentRole
 
-from botocore.exceptions import ClientError
+from botocore.waiter import WaiterModel, create_waiter_with_client, WaiterError
 
 
 class GeneralCSPException(Exception):
@@ -496,12 +496,14 @@ class AWSCloudProvider(CloudProviderInterface):
     ):
         org_client = self._get_client("organizations")
 
+        account_name = uuid4().hex
+
         # Create an account. Requires organizations:CreateAccount permission
         # TODO: Good that we're providing RoleName, but we may want to salt it
         account_request = org_client.create_account(
             Email=user.email,
             AccountName=account_name,  # TODO: {portfolio_name-application_name-environment_name}? or something random
-            RoleName=self.org_access_role_name,
+            RoleName=self.role_access_org_name,
             IamUserAccessToBilling="DENY",
         )
 
