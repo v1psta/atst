@@ -1,8 +1,6 @@
-import { EditEnvironmentRole } from './forms/edit_environment_role'
 import FormMixin from '../mixins/form'
 import optionsinput from './options_input'
 import textinput from './text_input'
-import EnvironmentRole from './environment_role'
 
 export default {
   name: 'toggler',
@@ -17,11 +15,9 @@ export default {
   },
 
   components: {
-    EditEnvironmentRole,
     optionsinput,
     textinput,
     optionsinput,
-    EnvironmentRole,
     toggler: this,
   },
 

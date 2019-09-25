@@ -7,7 +7,6 @@ import FormMixin from '../../mixins/form'
 import optionsinput from '../options_input'
 import SemiCollapsibleText from '../semi_collapsible_text'
 import textinput from '../text_input'
-import TotalsBox from '../totals_box'
 import uploadinput from '../upload_input'
 
 export default {
@@ -22,7 +21,6 @@ export default {
     optionsinput,
     SemiCollapsibleText,
     textinput,
-    TotalsBox,
     uploadinput,
   },
 
