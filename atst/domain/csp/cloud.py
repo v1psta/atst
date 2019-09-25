@@ -481,8 +481,8 @@ class AWSCloudProvider(CloudProviderInterface):
         self.role_access_org_name = "OrganizationAccountAccessRole"  # TODO
 
         # TODO
-        self.root_account_username = None
-        self.root_account_policy_name = None
+        self.root_account_username = "atat"
+        self.root_account_policy_name = "atat-policy"
 
         import boto3
 
@@ -571,19 +571,19 @@ class AWSCloudProvider(CloudProviderInterface):
 
         # Create a policy which allows user to assume a role within the account.
         # Another async call.
-        iam_client = self._client("iam")
+        iam_client = self._get_client("iam")
         iam_client.put_user_policy(
             UserName=self.root_account_username,
-            PolicyName=self.root_account_policy_name,
-            PolicyDocument=self._inline_org_management_policy(account_id),
+            PolicyName=f"{self.root_account_policy_name}-{csp_environment_id}",
+            PolicyDocument=self._inline_org_management_policy(csp_environment_id),
         )
 
         # TODO: Not sure how to wait for this policy to be created. Hardcoding a role ARN for now.
         # Possibilities:
         #   - construct ARN ourselves (should be deterministic) and poll for it, possiblity with a waiter
         #   - poll a list_roles endpoint and search for the role name
-        role_arn = "arn:aws:iam::513325237903:role/atat-master-control-center"
-        sts_client = self._client("sts")
+        role_arn = f"arn:aws:iam::{csp_environment_id}:role/{self.root_account_policy_name}"
+        sts_client = self._get_client("sts", credentials=auth_credentials)
         assumed_role_object = sts_client.assume_role(
             RoleArn=role_arn, RoleSessionName="AssumeRoleSession1"
         )
@@ -674,7 +674,7 @@ class AWSCloudProvider(CloudProviderInterface):
                     "sts:AssumeRole"
                 ],
                 "Resource": [
-                    "arn:aws:iam::{}:role/atat-master-control-center"
+                    "arn:aws:iam::{}:role/{}"
                 ]
                 }
             ]
@@ -683,5 +683,5 @@ class AWSCloudProvider(CloudProviderInterface):
         )
         policy_dict["Statement"][0]["Resource"][0] = policy_dict["Statement"][0][
             "Resource"
-        ][0].format(account_id)
+        ][0].format(account_id, self.root_account_policy_name)
         return json.dumps(policy_dict)
