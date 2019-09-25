@@ -1,0 +1,12 @@
+{% extends "portfolios/applications/base.html" %}
+
+{% from "portfolios/applications/fragments/members.html" import MemberManagementTemplate %}
+{% set secondary_breadcrumb = 'portfolios.applications.new_application_title' | translate %}
+
+{% block application_content %}
+    {{ MemberManagementTemplate(
+    application, 
+    members, 
+    new_member_form,
+    user_can(permissions.CREATE_APPLICATION_MEMBER)) }}
+{% endblock %}

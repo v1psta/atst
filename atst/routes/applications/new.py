@@ -7,6 +7,7 @@ from atst.forms.application import NameAndDescriptionForm, EnvironmentsForm
 from atst.domain.authz.decorator import user_can_access_decorator as user_can
 from atst.models.permissions import Permissions
 from atst.utils.flash import formatted_flash as flash
+from atst.routes.applications.settings import get_members_data, get_new_member_form
 
 
 def get_new_application_form(form_data, form_class, application_id=None):
@@ -130,3 +131,19 @@ def update_new_application_step_2(portfolio_id, application_id):
             ),
             400,
         )
+
+
+@applications_bp.route("/applications/<application_id>/step_3")
+@user_can(Permissions.CREATE_APPLICATION, message="view create new application form")
+def view_new_application_step_3(application_id):
+    application = Applications.get(application_id)
+    members = get_members_data(application)
+    new_member_form = get_new_member_form(application)
+
+    return render_template(
+        "portfolios/applications/new/step_3.html",
+        application_id=application_id,
+        application=application,
+        members=members,
+        new_member_form=new_member_form,
+    )
