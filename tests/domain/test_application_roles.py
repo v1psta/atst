@@ -1,6 +1,7 @@
 import pytest
 
 from atst.domain.application_roles import ApplicationRoles
+from atst.domain.environment_roles import EnvironmentRoles
 from atst.domain.exceptions import NotFoundError
 from atst.domain.permission_sets import PermissionSets
 from atst.models import ApplicationRoleStatus
@@ -68,19 +69,19 @@ def test_get_by_id():
         ApplicationRoles.get_by_id(app_role.id)
 
 
-def test_disable():
+def test_disable(session):
     application = ApplicationFactory.create()
     user = UserFactory.create()
-    member_role = ApplicationRoleFactory.create(application=application, user=user)
+    member_role = ApplicationRoleFactory.create(
+        application=application, user=user, status=ApplicationRoleStatus.ACTIVE
+    )
     environment = EnvironmentFactory.create(application=application)
     environment_role = EnvironmentRoleFactory.create(
         application_role=member_role, environment=environment
     )
-    assert member_role == ApplicationRoles.get(
-        user_id=user.id, application_id=application.id
-    )
+    assert member_role.status == ApplicationRoleStatus.ACTIVE
+
     ApplicationRoles.disable(member_role)
-    assert (
-        ApplicationRoles.get(user_id=user.id, application_id=application.id).status
-        == ApplicationRoleStatus.DISABLED
-    )
+    session.refresh(member_role)
+    assert member_role.status == ApplicationRoleStatus.DISABLED
+    assert not EnvironmentRoles.get_by_user_and_environment(user.id, environment.id)
