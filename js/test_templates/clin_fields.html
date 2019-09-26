@@ -311,8 +311,6 @@
           </div>
         </div>
         
-        
-        
           
   <pop-date-range
     initial-min-start-date="2019-09-14"
@@ -340,7 +338,6 @@
               initialday=""
               initialyear=""
             
-            v-bind:watch='true'
             :optional='false'
             v-on:date-change='handleDateChange'
             inline-template>
@@ -401,8 +398,8 @@
                     maxlength="4"
                     type="number"
                     v-model="year"
-                    max=""
-                    min=""
+                    max="2022"
+                    min="2019"
                     v-on:change="onInput"
                   />
 
@@ -440,7 +437,6 @@
               initialday=""
               initialyear=""
             
-            v-bind:watch='true'
             :optional='false'
             v-on:date-change='handleDateChange'
             inline-template>

@@ -129,9 +129,9 @@
           </div>
         </div>
         {% if fields %}
-          {{ PopDateRange(start_field=fields.start_date, end_field=fields.end_date, watch=True, optional=False, mindate=contract_start, maxdate=contract_end) }}
+          {{ PopDateRange(start_field=fields.start_date, end_field=fields.end_date, optional=False, mindate=contract_start, maxdate=contract_end) }}
         {% else %}
-          {{ PopDateRange(watch=True, optional=False, mindate=contract_start, maxdate=contract_end) }}
+          {{ PopDateRange(optional=False, mindate=contract_start, maxdate=contract_end) }}
         {% endif %}
       </div>
 

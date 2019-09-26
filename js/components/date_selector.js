@@ -20,10 +20,6 @@ export default {
     mindate: { type: String },
     maxdate: { type: String },
     nameTag: { type: String },
-    watch: {
-      type: Boolean,
-      default: false,
-    },
     optional: {
       type: Boolean,
       default: true,
@@ -201,7 +197,6 @@ export default {
       emitEvent('field-change', this, {
         value: this.formattedDate,
         name: this.name,
-        watch: this.watch,
         valid: this.isDateValid,
       })
 

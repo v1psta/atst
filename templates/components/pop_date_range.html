@@ -1,7 +1,7 @@
 {% from 'components/alert.html' import Alert %}
 {% from 'components/icon.html' import Icon %}
 
-{% macro PopDateRange(start_field=None, end_field=None, mindate=mindate, maxdate=maxdate, watch=False, optional=True, index=None) %}
+{% macro PopDateRange(start_field=None, end_field=None, mindate=mindate, maxdate=maxdate, optional=True, index=None) %}
   <pop-date-range
     initial-min-start-date="{{ mindate }}"
     initial-max-end-date="{{ maxdate }}"
@@ -32,7 +32,6 @@
             {% else %}
               :name-tag="'clins-' + clinIndex + '-start_date'"
             {% endif %}
-            v-bind:watch='{{ watch | string | lower }}'
             :optional='{{ optional | string | lower }}'
             v-on:date-change='handleDateChange'
             inline-template>
@@ -127,7 +126,6 @@
             {% else %}
               :name-tag="'clins-' + clinIndex + '-end_date'"
             {% endif %}
-            v-bind:watch='{{ watch | string | lower }}'
             :optional='{{ optional | string | lower }}'
             v-on:date-change='handleDateChange'
             inline-template>
