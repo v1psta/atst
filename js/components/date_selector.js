@@ -88,14 +88,12 @@ export default {
     isMonthValid: function() {
       let _month = parseInt(this.month)
       let valid = _month >= 0 && _month <= 12
-      this._emitChange('month', this.month, valid)
       return valid
     },
 
     isDayValid: function() {
       let _day = parseInt(this.day)
       let valid = _day >= 0 && _day <= this.daysMaxCalculation
-      this._emitChange('day', this.day, valid)
       return valid
     },
 
@@ -111,7 +109,6 @@ export default {
         valid = parseInt(this.year) >= 1
       }
 
-      this._emitChange('year', this.year, valid)
       return valid
     },
 
@@ -213,10 +210,6 @@ export default {
         name: this.name,
         valid: this.isDateValid,
       })
-    },
-
-    _emitChange: function(name, value, valid) {
-      emitEvent('field-change', this, { value, name, valid })
     },
   },
 
