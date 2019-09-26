@@ -14,6 +14,7 @@ from atst.domain.common import Paginator
 from atst.domain.permission_sets import PermissionSets
 from atst.domain.portfolios import Portfolios
 from atst.domain.exceptions import NotFoundError
+from atst.models.application_role import Status as ApplicationRoleStatus
 from atst.models.environment_role import CSPRole
 from atst.models.permissions import Permissions
 from atst.models.portfolio_role import Status as PortfolioRoleStatus
@@ -540,3 +541,21 @@ def test_update_member(client, user_session):
     # check that the user has roles in the correct envs
     assert environment_roles[0].environment in [env, env_2]
     assert environment_roles[1].environment in [env, env_2]
+
+
+def test_revoke_invite(client, user_session):
+    invite = ApplicationInvitationFactory.create()
+    app_role = invite.role
+    application = app_role.application
+
+    user_session(application.portfolio.owner)
+    response = client.post(
+        url_for(
+            "applications.revoke_invite",
+            application_id=application.id,
+            application_role_id=app_role.id,
+        )
+    )
+
+    assert invite.is_revoked
+    assert app_role.status == ApplicationRoleStatus.DISABLED

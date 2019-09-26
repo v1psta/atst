@@ -1,6 +1,7 @@
 from sqlalchemy.orm.exc import NoResultFound
 
 from atst.database import db
+from atst.domain.environment_roles import EnvironmentRoles
 from atst.models import ApplicationRole, ApplicationRoleStatus
 from .permission_sets import PermissionSets
 from .exceptions import NotFoundError
@@ -70,3 +71,24 @@ class ApplicationRoles(object):
         db.session.commit()
 
         return application_role
+
+    @classmethod
+    def _update_status(cls, application_role, new_status):
+        application_role.status = new_status
+        db.session.add(application_role)
+        db.session.commit()
+
+        return application_role
+
+    @classmethod
+    def disable(cls, application_role):
+        cls._update_status(application_role, ApplicationRoleStatus.DISABLED)
+        application_role.deleted = True
+
+        for env in application_role.application.environments:
+            EnvironmentRoles.delete(
+                application_role_id=application_role.id, environment_id=env.id
+            )
+
+        db.session.add(application_role)
+        db.session.commit()

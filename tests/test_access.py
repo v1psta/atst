@@ -572,6 +572,24 @@ def test_applications_update_member(post_url_assert_status):
     post_url_assert_status(rando, url, 404)
 
 
+# applications.revoke_invite
+def test_applications_revoke_invite(post_url_assert_status):
+    ccpo = UserFactory.create_ccpo()
+    rando = UserFactory.create()
+    application = ApplicationFactory.create()
+
+    for user, status in [(ccpo, 302), (application.portfolio.owner, 302), (rando, 404)]:
+        app_role = ApplicationRoleFactory.create()
+        invite = ApplicationInvitationFactory.create(role=app_role)
+
+        url = url_for(
+            "applications.revoke_invite",
+            application_id=application.id,
+            application_role_id=app_role.id,
+        )
+        post_url_assert_status(user, url, status)
+
+
 # task_orders.download_task_order_pdf
 def test_task_orders_download_task_order_pdf_access(get_url_assert_status, monkeypatch):
     monkeypatch.setattr(

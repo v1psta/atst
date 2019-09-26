@@ -27,6 +27,16 @@ MESSAGES = {
         "message_template": "Application environments have been updated",
         "category": "success",
     },
+    "application_invite_error": {
+        "title_template": "Application invitation error",
+        "message_template": "There was an error processing the invitation for {{ user_name }} from {{ application_name }}",
+        "category": "error",
+    },
+    "application_invite_revoked": {
+        "title_template": "Application invitation revoked",
+        "message_template": "You have successfully revoked the invite for {{ user_name }} from {{ application_name }}",
+        "category": "success",
+    },
     "application_member_removed": {
         "title_template": "Team member removed from application",
         "message_template": "You have successfully deleted {{ user_name }} from {{ application_name }}",

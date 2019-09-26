@@ -138,6 +138,22 @@
               </form>
             </base-form>
           {% endcall %}
+
+          {% if user_can(permissions.DELETE_APPLICATION_MEMBER) and member.role_status == 'pending' %}
+            {% set revoke_invite_modal = "revoke_invite_{}".format(member.role_id) %}
+            {% call Modal(name=revoke_invite_modal, dismissable=True) %}
+              <div class="task-order__modal-cancel">
+                <form method="post" action="{{ url_for('applications.revoke_invite', application_id=application.id, application_role_id=member.role_id) }}">
+                  {{ member.form.csrf_token }}
+                  <h1>{{ "invites.revoke.modal_heading" | translate({'user_name': member.user_name}) }}</h1>
+                  <div class="task-order__modal-cancel_buttons">
+                    <button class="usa-button usa-button-primary" type="submit">{{ "invites.revoke.submit" | translate }}</button>
+                    <button type='button' v-on:click='closeModal("{{revoke_invite_modal}}")' class="usa-button usa-button-primary">{{ "invites.revoke.cancel" | translate }}</button>
+                  </div>
+                </form>
+              </div>
+            {% endcall %}
+          {% endif %}
         {% endfor %}
         <table>
           <thead>
@@ -175,9 +191,10 @@
                   {% endfor %}
                 </td>
                 <td>
-                  {% if member.role_status == 'pending' %}
+                  {% if user_can(permissions.DELETE_APPLICATION_MEMBER) and member.role_status == 'pending' %}
+                    {% set revoke_invite_modal = "revoke_invite_{}".format(member.role_id) %}
                     <a href="#">Resend Invite</a><br>
-                    <a href="#">Revoke Invite</a>
+                    <a v-on:click='openModal("{{ revoke_invite_modal }}")'>{{ 'invites.revoke.button' | translate }}</a>
                   {% endif %}
                 </td>
               </tr>

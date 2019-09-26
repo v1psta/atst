@@ -22,6 +22,7 @@ from atst.domain.csp.reports import MockReportingProvider
 from atst.domain.environments import Environments
 from atst.domain.environment_roles import EnvironmentRoles
 from atst.domain.exceptions import AlreadyExistsError, NotFoundError
+from atst.domain.invitations import ApplicationInvitations
 from atst.domain.permission_sets import PermissionSets, APPLICATION_PERMISSION_SETS
 from atst.domain.portfolio_roles import PortfolioRoles
 from atst.domain.portfolios import Portfolios
@@ -243,6 +244,10 @@ def add_applications_to_portfolio(portfolio):
                 user=user,
                 application=application,
                 permission_set_names=[PermissionSets.EDIT_APPLICATION_TEAM],
+            )
+
+            ApplicationInvitations.create(
+                portfolio.owner, app_role, user_data, commit=True
             )
 
             user_environments = random.sample(
