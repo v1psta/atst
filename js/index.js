@@ -22,7 +22,6 @@ import Modal from './mixins/modal'
 import selector from './components/selector'
 import BudgetChart from './components/charts/budget_chart'
 import SpendTable from './components/tables/spend_table'
-import EnvironmentsTable from './components/tables/application_environments'
 import LocalDatetime from './components/local_datetime'
 import { isNotInVerticalViewport } from './lib/viewport'
 import DateSelector from './components/date_selector'
@@ -30,7 +29,6 @@ import SidenavToggler from './components/sidenav_toggler'
 import BaseForm from './components/forms/base_form'
 import DeleteConfirmation from './components/delete_confirmation'
 import NewEnvironment from './components/forms/new_environment'
-import EnvironmentRole from './components/environment_role'
 import SemiCollapsibleText from './components/semi_collapsible_text'
 import ToForm from './components/forms/to_form'
 import ClinFields from './components/clin_fields'
@@ -56,7 +54,6 @@ const app = new Vue({
     selector,
     BudgetChart,
     SpendTable,
-    EnvironmentsTable,
     LocalDatetime,
     MultiStepModalForm,
     uploadinput,
@@ -65,7 +62,6 @@ const app = new Vue({
     BaseForm,
     DeleteConfirmation,
     NewEnvironment,
-    EnvironmentRole,
     SemiCollapsibleText,
     ToForm,
     ClinFields,
