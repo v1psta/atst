@@ -102,8 +102,8 @@ export default {
     isYearValid: function() {
       // Emit a change event
       let valid
-      let minYear = this.mindate ? new Date(this.mindate).getFullYear() : null
-      let maxYear = this.maxdate ? new Date(this.maxdate).getFullYear() : null
+      let minYear = this.mindate ? this.minDateParsed.getFullYear() : null
+      let maxYear = this.maxdate ? this.maxDateParsed.getFullYear() : null
 
       if (minYear && maxYear) {
         valid = this.year >= minYear && this.year <= maxYear
@@ -172,7 +172,7 @@ export default {
 
     minError: function() {
       if (this.isDateComplete) {
-        return new Date(this.mindate) > new Date(this.formattedDate)
+        return this.minDateParsed > this.dateParsed
       }
 
       return false
@@ -180,10 +180,22 @@ export default {
 
     maxError: function() {
       if (this.isDateComplete) {
-        return new Date(this.maxdate) < new Date(this.formattedDate)
+        return this.maxDateParsed < this.dateParsed
       }
 
       return false
+    },
+
+    maxDateParsed: function() {
+      return new Date(this.maxdate)
+    },
+
+    minDateParsed: function() {
+      return new Date(this.mindate)
+    },
+
+    dateParsed: function() {
+      return new Date(this.formattedDate)
     },
   },
 
