@@ -6,9 +6,6 @@ source "$(dirname "${0}")"/../script/include/global_header.inc.sh
 
 export FLASK_ENV=test
 
-# create upload directory for app
-mkdir uploads | true
-
 # Enable database resetting
 RESET_DB="true"
 
@@ -22,9 +19,11 @@ RUN_PYTHON_TESTS="true"
 RUN_JS_TESTS="true"
 
 # Check python formatting
+output_divider "Run formatting check"
 source ./script/format check
 
 # Check for secrets
+output_divider "Run detect secrets"
 ./script/detect_secrets
 
 # Run the shared test script
