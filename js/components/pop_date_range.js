@@ -27,45 +27,51 @@ export default {
   },
 
   data: function() {
-    var start = !!this.initialStartDate ? new Date(this.initialStartDate) : null
-    var end = !!this.initialEndDate ? new Date(this.initialEndDate) : null
-    var contractStart = new Date(this.initialMinStartDate)
-    var contractEnd = new Date(this.initialMaxEndDate)
+    let start = !!this.initialStartDate
+      ? new Date(this.initialStartDate)
+      : false
+    let contractStart = new Date(this.initialMinStartDate)
+    let minEndDate = start && start > contractStart ? start : contractStart
 
+    let end = !!this.initialEndDate ? new Date(this.initialEndDate) : false
+    let contractEnd = new Date(this.initialMaxEndDate)
+    let maxStartDate = end && end < contractEnd ? end : contractEnd
+
+    // the maxStartDate and minEndDate change based on user input:
+    // the latest date the start can be is the PoP end date
+    // the earliest date the end can be is the PoP start date
+    // if the form is initialized with out a PoP, the maxStartDate and minEndDate
+    // default to the contract dates
     return {
-      maxStartDate: this.calcMaxStartDate(end, contractEnd),
-      minEndDate: this.calcMinEndDate(start, contractStart),
+      maxStartDate: maxStartDate,
+      minEndDate: minEndDate,
     }
   },
 
   methods: {
     handleDateChange: function(event) {
-      if (event.name.includes(START_DATE)) {
-        if (event.valid != undefined && event.valid) {
-          var date = new Date(event.value)
-          this.minEndDate = this.calcMinEndDate(date)
-        }
-      } else if (event.name.includes(END_DATE)) {
-        if (event.valid != undefined && event.valid) {
-          var date = new Date(event.value)
-          this.maxStartDate = this.calcMaxStartDate(date)
-        }
+      if (event.name.includes(START_DATE) && event.valid) {
+        let date = new Date(event.value)
+        this.minEndDate = this.calcMinEndDate(date)
+      } else if (event.name.includes(END_DATE) && event.valid) {
+        let date = new Date(event.value)
+        this.maxStartDate = this.calcMaxStartDate(date)
       }
     },
 
-    calcMaxStartDate: function(date, end = this.maxStartDate) {
-      if (!!date && date < end) {
+    calcMaxStartDate: function(date) {
+      if (!!date && date < this.maxStartDate) {
         return date
       } else {
-        return end
+        return this.maxStartDate
       }
     },
 
-    calcMinEndDate: function(date, start = this.minEndDate) {
-      if (!!date && date > start) {
+    calcMinEndDate: function(date) {
+      if (!!date && date > this.minEndDate) {
         return date
       } else {
-        return start
+        return this.minEndDate
       }
     },
   },
