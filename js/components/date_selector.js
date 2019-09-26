@@ -2,7 +2,7 @@ import Vue from 'vue'
 import { getDaysInMonth } from 'date-fns'
 import { emitEvent } from '../lib/emitters'
 
-var paddedNumber = function(number) {
+let paddedNumber = function(number) {
   if ((number + '').length === 1) {
     return `0${number}`
   } else {
@@ -86,24 +86,24 @@ export default {
     },
 
     isMonthValid: function() {
-      var _month = parseInt(this.month)
-      var valid = _month >= 0 && _month <= 12
+      let _month = parseInt(this.month)
+      let valid = _month >= 0 && _month <= 12
       this._emitChange('month', this.month, valid)
       return valid
     },
 
     isDayValid: function() {
-      var _day = parseInt(this.day)
-      var valid = _day >= 0 && _day <= this.daysMaxCalculation
+      let _day = parseInt(this.day)
+      let valid = _day >= 0 && _day <= this.daysMaxCalculation
       this._emitChange('day', this.day, valid)
       return valid
     },
 
     isYearValid: function() {
       // Emit a change event
-      var valid
-      var minYear = this.mindate ? new Date(this.mindate).getFullYear() : null
-      var maxYear = this.maxdate ? new Date(this.maxdate).getFullYear() : null
+      let valid
+      let minYear = this.mindate ? new Date(this.mindate).getFullYear() : null
+      let maxYear = this.maxdate ? new Date(this.maxdate).getFullYear() : null
 
       if (minYear && maxYear) {
         valid = this.year >= minYear && this.year <= maxYear
