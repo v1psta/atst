@@ -482,7 +482,7 @@ class AWSCloudProvider(CloudProviderInterface):
 
         # TODO
         self.root_account_username = "atat"
-        self.root_account_policy_name = "atat-policy"
+        self.root_account_policy_name = "OrganizationAccountAccessRole"
 
         import boto3
 
@@ -494,6 +494,7 @@ class AWSCloudProvider(CloudProviderInterface):
     def create_environment(
         self, auth_credentials: Dict, user: User, environment: Environment
     ):
+        # TODO: Make credential structure uniform accross CSPs
         org_client = self._get_client("organizations")
 
         account_name = uuid4().hex
@@ -503,8 +504,7 @@ class AWSCloudProvider(CloudProviderInterface):
         account_request = org_client.create_account(
             Email=user.email,
             AccountName=account_name,  # TODO: {portfolio_name-application_name-environment_name}? or something random
-            RoleName=self.role_access_org_name,
-            IamUserAccessToBilling="DENY",
+            IamUserAccessToBilling="ALLOW",
         )
 
         # Configuration for our CreateAccount Waiter.
@@ -574,7 +574,7 @@ class AWSCloudProvider(CloudProviderInterface):
         iam_client = self._get_client("iam")
         iam_client.put_user_policy(
             UserName=self.root_account_username,
-            PolicyName=f"{self.root_account_policy_name}-{csp_environment_id}",
+            PolicyName=f"assume-role-{self.root_account_policy_name}-{csp_environment_id}",
             PolicyDocument=self._inline_org_management_policy(csp_environment_id),
         )
 
@@ -595,7 +595,7 @@ class AWSCloudProvider(CloudProviderInterface):
         credentials = assumed_role_object["Credentials"]
 
         # Use the temporary credentials that AssumeRole returns to make a new connection to IAM
-        iam_client = boto3.client(
+        iam_client = self.boto3.client(
             "iam",
             aws_access_key_id=credentials["AccessKeyId"],
             aws_secret_access_key=credentials["SecretAccessKey"],
@@ -604,12 +604,33 @@ class AWSCloudProvider(CloudProviderInterface):
 
         # Create the user with a PermissionBoundary
         permission_boundary_arn = "arn:aws:iam::aws:policy/AlexaForBusinessDeviceSetup"
-        user = iam_client.create_user(
-            UserName=self.root_account_username,
-            PermissionsBoundary=permission_boundary_arn,
-            Tags=[{"Key": "foo", "Value": "bar"}],
-        )
-        return user
+        try:
+            user = iam_client.create_user(
+                UserName=self.root_account_username,
+                PermissionsBoundary=permission_boundary_arn,
+                Tags=[{"Key": "foo", "Value": "bar"}],
+            )["User"]
+        except iam_client.exceptions.EntityAlreadyExistsException as _exc:
+            # TODO: Find user, iterate through existing access keys and revoke them.
+            print("This user already exists")
+            user = iam_client.get_user(UserName=self.root_account_username)["User"]
+
+        access_key = iam_client.create_access_key(UserName=self.root_account_username)[
+            "AccessKey"
+        ]
+        credentials = {
+            "key": access_key["AccessKeyId"],
+            "secret_key": access_key["SecretAccessKey"],
+        }
+
+        # TODO: Create real policies in account.
+
+        return {
+            "id": user["UserId"],
+            "username": user["UserName"],
+            "resource_id": user["Arn"],
+            "credentials": credentials,
+        }
 
     def create_environment_baseline(
         self, auth_credentials: Dict, csp_environment_id: str
