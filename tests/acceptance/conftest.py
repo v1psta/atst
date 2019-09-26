@@ -9,14 +9,6 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from .browsers import BROWSERSTACK_CONFIG
 
 
-@pytest.fixture(scope="function", autouse=True)
-def session(db, request):
-    """
-    Override base test session
-    """
-    pass
-
-
 class DriverCollection(Mapping):
     """
     Allows access to drivers with dictionary syntax. Keeps track of which ones
