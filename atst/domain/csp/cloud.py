@@ -582,7 +582,9 @@ class AWSCloudProvider(CloudProviderInterface):
         # Possibilities:
         #   - construct ARN ourselves (should be deterministic) and poll for it, possiblity with a waiter
         #   - poll a list_roles endpoint and search for the role name
-        role_arn = f"arn:aws:iam::{csp_environment_id}:role/{self.root_account_policy_name}"
+        role_arn = (
+            f"arn:aws:iam::{csp_environment_id}:role/{self.root_account_policy_name}"
+        )
         sts_client = self._get_client("sts", credentials=auth_credentials)
         assumed_role_object = sts_client.assume_role(
             RoleArn=role_arn, RoleSessionName="AssumeRoleSession1"
