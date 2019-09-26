@@ -1,19 +1,25 @@
 {% extends "error_base.html" %}
 
+{% from "components/icon.html" import Icon %}
+
 {% block content %}
 
-<main class="usa-section usa-content">
-
-{% if message %}
-    <h1>{{ message }}</h1>
-{% else %}
-    <h1>An error occurred.</h1>
-{% endif %}
-
-{% if g.current_user %}
-  <p>Return <a href="{{ url_for("atst.home") }}">home</a>.</p>
-{% endif %}
-
+<main class="usa-section usa-content error-page">
+    <div class="panel__heading">
+      {{ Icon('cloud', classes="icon--red icon--large")}}
+      <hr>
+      <h1>{{ code }} - {{ message }}</h1>
+      <p>{{ submessage }}</p>
+    </div>
+    <hr>
+    <div class="panel__body">
+      <p>
+        {{ more_info }}
+      </p>
+      <p>
+        <a href="#">More lorem</a>
+      </p>
+    </div>
 </main>
 
 {% endblock %}

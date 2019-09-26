@@ -55,6 +55,7 @@ common:
   disable: Disable
   edit: Edit
   email: Email
+  lorem: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
   members: Members
   name: Name
   next: Next
@@ -96,6 +97,9 @@ components:
           The <strong>https://</strong> ensures that you are connecting to the official website and that any information you provide is encrypted and transmitted securely.
         </p>
       title: Here’s how you know
+errors:
+  not_found: Page Not Found
+  not_found_sub: Looks like that page does not exist!
 email:
   application_invite: "{inviter_name} has invited you to a JEDI cloud application"
   portfolio_invite: "{inviter_name} has invited you to a JEDI cloud portfolio"
