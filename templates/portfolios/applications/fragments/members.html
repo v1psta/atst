@@ -9,9 +9,13 @@
 {% macro MemberManagementTemplate(
   application, 
   members,
-  new_member_form, 
+  new_member_form,
+  action,
   user_can_create_app_member=False
 ) %}
+
+  
+  {% include "fragments/flash.html" %}
 
   {% if not application.members %}
     <div class='empty-state'>
@@ -31,7 +35,7 @@
         {{ MultiStepModalForm(
             name=new_member_modal_name,
             form=new_member_form,
-            form_action=url_for("applications.create_member", application_id=application.id),
+            form_action=url_for(action, application_id=application.id),
             steps=[
               member_steps.MemberStepOne(new_member_form),
               member_steps.MemberStepTwo(new_member_form, application)
@@ -55,9 +59,6 @@
 
     <section class="member-list application-list" id="application-members">
       <div class='responsive-table-wrapper panel'>
-        {% if g.matchesPath("application-members") %}
-          {% include "fragments/flash.html" %}
-        {% endif %}
         {% for member in members %}
           {% set modal_name = "edit_member-{}".format(loop.index) %}
           {% call Modal(modal_name) %}
@@ -129,7 +130,7 @@
         {{ MultiStepModalForm(
             name=new_member_modal_name,
             form=new_member_form,
-            form_action=url_for("applications.create_member", application_id=application.id),
+            form_action=url_for(action, application_id=application.id),
             steps=[
               member_steps.MemberStepOne(new_member_form),
               member_steps.MemberStepTwo(new_member_form, application)
