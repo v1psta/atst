@@ -1,7 +1,13 @@
+
 {% extends "portfolios/applications/base.html" %}
 
 {% from "portfolios/applications/fragments/members.html" import MemberManagementTemplate %}
 {% set secondary_breadcrumb = 'portfolios.applications.new_application_title' | translate %}
+
+{% block portfolio_header %}
+  {% include "portfolios/header.html" %}
+  {{ StickyCTA(text=application.name) }}
+{% endblock %}
 
 {% block application_content %}
     {{ MemberManagementTemplate(
@@ -10,4 +16,11 @@
     new_member_form,
     "applications.update_new_application_step_3",
     user_can(permissions.CREATE_APPLICATION_MEMBER)) }}
+
+    <span class="action-group">
+      <a class="usa-button" href="{{ url_for('applications.settings', application_id=application_id) }}">  
+        Return to Application Settings
+      </a>
+    </span>
 {% endblock %}
+

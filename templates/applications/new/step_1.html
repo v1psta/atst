@@ -12,12 +12,14 @@
     {% set action = url_for('applications.create_new_application_step_1', portfolio_id=portfolio.id, application_id=application_id) %}
   {% endif %}
 
-
+{% block portfolio_header %}
+  {% include "portfolios/header.html" %}
+  {{ StickyCTA(text="Name and Describe New Application") }}
+{% endblock %}
+  
 {% block application_content %}
 
   {% include "fragments/flash.html" %}
-
-  <div class='subheading'>{{ 'portfolios.applications.settings_heading' | translate }}</div>
 
   <application-name-and-description inline-template v-bind:initial-data='{{ form.data|tojson }}'>
     <form method="POST" action="{{ action }}" v-on:submit="handleSubmit">
@@ -42,7 +44,7 @@
 
         <span class="action-group">
           {% block next_button %}
-            {{ SaveButton(text=('portfolios.applications.next_button_text' | translate)) }}
+            {{ SaveButton(text=('portfolios.applications.new.step_1_button_text' | translate)) }}
           {% endblock %}
         </span>
     </form>
