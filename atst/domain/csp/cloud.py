@@ -457,8 +457,6 @@ class AzureCloudProvider(CloudProviderInterface):
         root_creds = self.root_creds()
         credentials = self._get_credential_obj(root_creds)
 
-        self.azure_mgmt.
-
         sub_client = self.azure_mgmt.subscription.SubscriptionClient(credentials)
         subscription: self.azure_mgmt.subscription.models.Subscription = sub_client.subscriptions.get(
             csp_environment_id
@@ -468,14 +466,16 @@ class AzureCloudProvider(CloudProviderInterface):
         # the cloud0 subscription? tenant id seems to be separate from subscription id
         graph_client = self.azure_graph.GraphRbacManagementClient(
             credentials, root_creds.get("tenant_id")
+        )
+
+        # assuming the graph_client is scoped to the new subscription, create an application
+        app_display_name = "?"
         app_create_param = self.azure_graph.models.ApplicationCreateParameters(
             display_name=app_display_name
         )
         app: self.azure_graph.models.Application = graph_client.applications.create(
             app_create_param
         )
-
-        self.azure_graph.models.
 
         # create a new service principle for the new application, which should be scoped
         # to the new subscription
