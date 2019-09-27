@@ -125,7 +125,7 @@ def update_new_application_step_2(portfolio_id, application_id):
     if form.validate():
         application = Applications.get(application_id)
         application = Applications.update(application, form.data)
-        flash("application_created", application_name=application.name)
+        flash("application_environments_updated")
         return redirect(
             url_for(
                 "applications.update_new_application_step_3",
