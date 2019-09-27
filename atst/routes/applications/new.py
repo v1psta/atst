@@ -29,6 +29,7 @@ def render_new_application_form(
     if application_id:
         application = Applications.get(application_id)
         render_args["form"] = form or form_class(obj=application)
+        render_args["application"] = application
     else:
         render_args["form"] = form or form_class()
 
