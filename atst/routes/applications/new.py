@@ -98,12 +98,19 @@ def create_or_update_new_application_step_1(portfolio_id, application_id=None):
 )
 @user_can(Permissions.CREATE_APPLICATION, message="view create new application form")
 def view_new_application_step_2(portfolio_id, application_id):
-    return render_new_application_form(
-        "applications/new/step_2.html",
-        EnvironmentsForm,
-        portfolio_id=portfolio_id,
-        application_id=application_id,
-    )
+    application = Applications.get(application_id)
+    render_args = {
+        "form": EnvironmentsForm(
+            data={
+                "environment_names": [
+                    environment.name for environment in application.environments
+                ]
+            }
+        ),
+        "application": application,
+    }
+
+    return render_template("portfolios/applications/new/step_2.html", **render_args)
 
 
 @applications_bp.route(
@@ -120,8 +127,8 @@ def update_new_application_step_2(portfolio_id, application_id):
         flash("application_created", application_name=application.name)
         return redirect(
             url_for(
-                "applications.portfolio_applications",
-                portfolio_id=application.portfolio_id,
+                "applications.update_new_application_step_3",
+                application_id=application_id,
             )
         )
     else:
