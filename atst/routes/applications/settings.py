@@ -154,9 +154,9 @@ def send_application_invitation(invitee_email, inviter_name, token):
     )
 
 
-def handle_create_member(application_id, http_request):
+def handle_create_member(application_id, form_data):
     application = Applications.get(application_id)
-    form = NewMemberForm(http_request.form)
+    form = NewMemberForm(form_data)
 
     if form.validate():
         try:
@@ -319,7 +319,7 @@ def delete_environment(environment_id):
     Permissions.CREATE_APPLICATION_MEMBER, message="create new application member"
 )
 def create_member(application_id):
-    handle_create_member(application_id, http_request)
+    handle_create_member(application_id, http_request.form)
     return redirect(
         url_for(
             "applications.settings",
