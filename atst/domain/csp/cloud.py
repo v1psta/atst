@@ -478,9 +478,9 @@ class AWSCloudProvider(CloudProviderInterface):
         self.access_key_id = config["AWS_ACCESS_KEY_ID"]
         self.secret_key = config["AWS_SECRET_KEY"]
         self.region_name = config["AWS_REGION_NAME"]
-        self.role_access_org_name = "OrganizationAccountAccessRole"  # TODO
 
-        # TODO
+        # TODO: Discuss these values.
+        self.role_access_org_name = "OrganizationAccountAccessRole"
         self.root_account_username = "atat"
         self.root_account_policy_name = "OrganizationAccountAccessRole"
 
@@ -500,13 +500,11 @@ class AWSCloudProvider(CloudProviderInterface):
 
         org_client = self._get_client("organizations")
 
-        account_name = uuid4().hex
-
         # Create an account. Requires organizations:CreateAccount permission
-        # TODO: Good that we're providing RoleName, but we may want to salt it
         account_request = org_client.create_account(
             Email=user.email,
-            AccountName=account_name,  # TODO: {portfolio_name-application_name-environment_name}? or something random
+            # TODO: Is a uuid fine here, or do we want something human-readable?
+            AccountName=uuid4().hex,
             IamUserAccessToBilling="ALLOW",
         )
 
@@ -555,6 +553,8 @@ class AWSCloudProvider(CloudProviderInterface):
                 CreateAccountRequestId=account_request["CreateAccountStatus"]["Id"]
             )
         except WaiterError:
+            # TODO: Possible failure reasons:
+            # 'ACCOUNT_LIMIT_EXCEEDED'|'EMAIL_ALREADY_EXISTS'|'INVALID_ADDRESS'|'INVALID_EMAIL'|'CONCURRENT_ACCOUNT_MODIFICATION'|'INTERNAL_FAILURE'
             raise EnvironmentCreationException(
                 environment.id, "Failed to create account."
             )
@@ -583,10 +583,6 @@ class AWSCloudProvider(CloudProviderInterface):
             PolicyDocument=self._inline_org_management_policy(csp_environment_id),
         )
 
-        # TODO: Not sure how to wait for this policy to be created. Hardcoding a role ARN for now.
-        # Possibilities:
-        #   - construct ARN ourselves (should be deterministic) and poll for it, possiblity with a waiter
-        #   - poll a list_roles endpoint and search for the role name
         role_arn = (
             f"arn:aws:iam::{csp_environment_id}:role/{self.root_account_policy_name}"
         )
@@ -617,7 +613,6 @@ class AWSCloudProvider(CloudProviderInterface):
             )["User"]
         except iam_client.exceptions.EntityAlreadyExistsException as _exc:
             # TODO: Find user, iterate through existing access keys and revoke them.
-            print("This user already exists")
             user = iam_client.get_user(UserName=self.root_account_username)["User"]
 
         access_key = iam_client.create_access_key(UserName=self.root_account_username)[
