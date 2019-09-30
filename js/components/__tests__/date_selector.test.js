@@ -163,6 +163,20 @@ describe('DateSelector', () => {
       component.year = new Date().getFullYear()
       expect(component.isYearValid).toEqual(true)
     })
+
+    it('returns true when year is between min and max years', () => {
+      component.year = new Date('2019-01-01').getFullYear()
+      component.mindate = new Date('2018-01-01')
+      component.maxdate = new Date('2019-12-31')
+      expect(component.isYearValid).toEqual(true)
+    })
+
+    it('returns false when year is outside of min and max years', () => {
+      component.year = new Date('2020-01-01').getFullYear()
+      component.mindate = new Date('2018-01-01')
+      component.maxdate = new Date('2019-01-01')
+      expect(component.isYearValid).toEqual(false)
+    })
   })
 
   describe('formattedDate', () => {
@@ -182,6 +196,58 @@ describe('DateSelector', () => {
       component.year = 1988
 
       expect(component.formattedDate).toEqual('01/22/1988')
+    })
+  })
+
+  describe('isDateComplete', () => {
+    it('returns true if all fields are completed', () => {
+      component.day = 22
+      component.month = 1
+      component.year = 1988
+      expect(component.isDateComplete).toEqual(true)
+    })
+
+    it('returns false if all fields are not completed', () => {
+      component.day = 22
+      component.month = 1
+      component.year = 19
+      expect(component.isDateComplete).toEqual(false)
+    })
+  })
+
+  describe('minError', () => {
+    it('returns true if the date is before mindate', () => {
+      component.mindate = new Date('2020-01-01')
+      component.day = 1
+      component.month = 1
+      component.year = 2000
+      expect(component.minError).toEqual(true)
+    })
+
+    it('returns fals if the date is after mindate', () => {
+      component.mindate = new Date('2020-01-01')
+      component.day = 1
+      component.month = 1
+      component.year = 2025
+      expect(component.minError).toEqual(false)
+    })
+  })
+
+  describe('maxError', () => {
+    it('returns true if the date is after maxdate', () => {
+      component.maxdate = new Date('2020-01-01')
+      component.day = 1
+      component.month = 1
+      component.year = 2025
+      expect(component.maxError).toEqual(true)
+    })
+
+    it('returns false if the date is before maxdate', () => {
+      component.maxdate = new Date('2020-01-01')
+      component.day = 1
+      component.month = 1
+      component.year = 2005
+      expect(component.maxError).toEqual(false)
     })
   })
 })

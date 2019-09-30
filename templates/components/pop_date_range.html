@@ -1,0 +1,210 @@
+{% from 'components/alert.html' import Alert %}
+{% from 'components/icon.html' import Icon %}
+
+{% macro PopDateRange(start_field=None, end_field=None, mindate=mindate, maxdate=maxdate, optional=True, index=None) %}
+  <pop-date-range
+    initial-min-start-date="{{ mindate }}"
+    initial-max-end-date="{{ maxdate }}"
+    {% if index %}
+      v-bind:clin-index="{{ index }}"
+    {% else %}
+      v-bind:clin-index="clinIndex"
+    {% endif %}
+    {% if start_field %}
+      initial-start-date="{{ start_field.data }}"
+    {% endif %}
+    {% if end_field %}
+      initial-end-date="{{ end_field.data }}"
+    {% endif %}
+    inline-template>
+
+    <div>
+      <div class="form-row">
+        <div class="form-col">
+          <date-selector
+            :mindate="initialMinStartDate"
+            :maxdate="maxStartProp"
+            {% if start_field %}
+              name-tag='{{ start_field.name }}'
+              initialmonth="{{ start_field.data.month }}"
+              initialday="{{ start_field.data.day }}"
+              initialyear="{{ start_field.data.year }}"
+            {% else %}
+              :name-tag="'clins-' + clinIndex + '-start_date'"
+            {% endif %}
+            :optional='{{ optional | string | lower }}'
+            v-on:date-change='handleDateChange'
+            inline-template>
+
+            <fieldset :name="name" class="usa-input date-picker" v-bind:class="{ 'usa-input--success': isDateValid && isDateComplete, 'usa-input--error': !isDateValid && isDateComplete }">
+              <legend>
+                <div class="usa-input__title">
+                  {{ "task_orders.form.pop_start" | translate }}
+                </div>
+
+                <p class='usa-input__help'>
+                  {{ "task_orders.form.pop_example" | translate | safe }}
+                </p>
+
+                <div v-if='minError' class="usa-input-error-message">
+                  PoP start date must be on or after {{ mindate | formattedDate(formatter="%B %d, %Y") }}.
+                </div>
+                <div v-if='maxError' class="usa-input-error-message">
+                  PoP start date must be before end date.
+                </div>
+              </legend>
+
+              <div class="date-picker-component">
+                <input :name="name" v-bind:value="formattedDate" v-on:change="onInput" type="hidden" />
+
+                <div class="usa-form-group usa-form-group-month">
+                  <label>{{ 'components.date_selector.month' | translate }}</label>
+                  <input
+                    name="date-month"
+                    max="12"
+                    maxlength="2"
+                    min="1"
+                    type="number"
+                    v-bind:class="{ 'usa-input-error': (month && !isMonthValid) }"
+                    v-model="month"
+                    v-on:change="onInput"
+                  />
+                </div>
+
+                <div class="usa-form-group usa-form-group-day">
+                  <label>{{ 'components.date_selector.day' | translate }}</label>
+                  <input
+                    name="date-day"
+                    maxlength="2"
+                    min="1"
+                    type="number"
+                    v-bind:class="{ 'usa-input-error': (day && !isDayValid) }"
+                    v-bind:max="daysMaxCalculation"
+                    v-model="day"
+                    v-on:change="onInput"
+                  />
+                </div>
+
+                <div class="usa-form-group usa-form-group-year">
+                  <label>{{ 'components.date_selector.year' | translate }}</label>
+                  <input
+                    name="date-year"
+                    maxlength="4"
+                    type="number"
+                    v-model="year"
+                    {% if maxdate %}max="{{ maxdate.year }}"{% endif %}
+                    {% if mindate %}min="{{ mindate.year }}"{% endif %}
+                    v-on:change="onInput"
+                  />
+
+                </div>
+
+                <div v-if="isDateComplete">
+                  <div class="usa-form-group-date-ok" v-if="isDateValid">
+                    {{ Icon("ok", classes="icon--green") }}
+                  </div>
+                  <div class="usa-form-group-date-ok" v-else>
+                    {{ Icon("alert", classes="icon--red")}}
+                  </div>
+                </div>
+              </div>
+            </fieldset>
+          </date-selector>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-col">
+          <date-selector
+            :mindate="minEndProp"
+            :maxdate="initialMaxEndDate"
+            {% if end_field %}
+              name-tag='{{ end_field.name }}'
+              initialmonth="{{ end_field.data.month }}"
+              initialday="{{ end_field.data.day }}"
+              initialyear="{{ end_field.data.year }}"
+            {% else %}
+              :name-tag="'clins-' + clinIndex + '-end_date'"
+            {% endif %}
+            :optional='{{ optional | string | lower }}'
+            v-on:date-change='handleDateChange'
+            inline-template>
+
+            <fieldset :name="name" class="usa-input date-picker" v-bind:class="{ 'usa-input--success': isDateValid && isDateComplete, 'usa-input--error': !isDateValid && isDateComplete }">
+              <legend>
+                <div class="usa-input__title">
+                  {{ 'task_orders.form.pop_end' | translate }}
+                </div>
+                {% set formatted_end_date = maxdate |  formattedDate(formatter="%B %d, %Y") %}
+                {{ Alert(message="task_orders.form.pop_end_alert" | translate({'end_date': formatted_end_date })) }}
+
+                <p class='usa-input__help'>
+                  {{ 'task_orders.form.pop_example' | translate }}
+                </p>
+
+                <div v-if='minError' class="usa-input-error-message">
+                  PoP end date must be after start date.
+                </div>
+                <div v-if='maxError' class="usa-input-error-message">
+                  PoP end date must be on or after {{ formatted_end_date }}.
+                </div>
+              </legend>
+
+              <div class="date-picker-component">
+                <input :name="name" v-bind:value="formattedDate" v-on:change="onInput" type="hidden" />
+
+                  <div class="usa-form-group usa-form-group-month">
+                    <label>{{ 'components.date_selector.month' | translate }}</label>
+                    <input
+                      name="date-month"
+                      max="12"
+                      maxlength="2"
+                      min="1"
+                      type="number"
+                      v-bind:class="{ 'usa-input-error': (month && !isMonthValid) }"
+                      v-model="month"
+                      v-on:change="onInput"
+                      />
+                  </div>
+
+                  <div class="usa-form-group usa-form-group-day">
+                    <label>{{ 'components.date_selector.day' | translate }}</label>
+                    <input
+                      name="date-day"
+                      maxlength="2"
+                      min="1"
+                      type="number"
+                      v-bind:class="{ 'usa-input-error': (day && !isDayValid) }"
+                      v-bind:max="daysMaxCalculation"
+                      v-model="day"
+                      v-on:change="onInput"
+                      />
+                  </div>
+
+                  <div class="usa-form-group usa-form-group-year">
+                    <label>{{ 'components.date_selector.year' | translate }}</label>
+                    <input
+                      name="date-year"
+                      maxlength="4"
+                      type="number"
+                      v-model="year"
+                      v-on:change="onInput"
+                      />
+                  </div>
+
+                <div v-if="isDateComplete">
+                  <div class="usa-form-group-date-ok" v-if="isDateValid">
+                    {{ Icon("ok", classes="icon--green") }}
+                  </div>
+                  <div class="usa-form-group-date-ok" v-else>
+                    {{ Icon("alert", classes="icon--red")}}
+                  </div>
+                </div>
+              </div>
+            </fieldset>
+          </date-selector>
+        </div>
+      </div>
+    </div>
+  </pop-date-range>
+{% endmacro %}

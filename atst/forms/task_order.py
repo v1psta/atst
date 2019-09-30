@@ -9,7 +9,6 @@ from wtforms.fields import (
 from wtforms.fields.html5 import DateField
 from wtforms.validators import Required, Optional, Length, NumberRange, ValidationError
 from flask_wtf import FlaskForm
-from datetime import datetime
 from numbers import Number
 
 from .data import JEDI_CLIN_TYPES
@@ -85,12 +84,8 @@ class CLINForm(FlaskForm):
 
     def validate(self, *args, **kwargs):
         valid = super().validate(*args, **kwargs)
-        contract_start = datetime.strptime(
-            app.config.get("CONTRACT_START_DATE"), "%Y-%m-%d"
-        ).date()
-        contract_end = datetime.strptime(
-            app.config.get("CONTRACT_END_DATE"), "%Y-%m-%d"
-        ).date()
+        contract_start = app.config.get("CONTRACT_START_DATE")
+        contract_end = app.config.get("CONTRACT_END_DATE")
 
         if (
             self.start_date.data

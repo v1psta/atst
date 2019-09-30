@@ -2,7 +2,7 @@ import Vue from 'vue'
 import { getDaysInMonth } from 'date-fns'
 import { emitEvent } from '../lib/emitters'
 
-var paddedNumber = function(number) {
+let paddedNumber = function(number) {
   if ((number + '').length === 1) {
     return `0${number}`
   } else {
@@ -20,10 +20,6 @@ export default {
     mindate: { type: String },
     maxdate: { type: String },
     nameTag: { type: String },
-    watch: {
-      type: Boolean,
-      default: false,
-    },
     optional: {
       type: Boolean,
       default: true,
@@ -36,7 +32,6 @@ export default {
       month: this.initialmonth,
       year: this.initialyear,
       name: this.nameTag,
-      showValidation: false,
     }
   },
 
@@ -87,23 +82,29 @@ export default {
     },
 
     isMonthValid: function() {
-      var _month = parseInt(this.month)
-      var valid = _month >= 0 && _month <= 12
-      this._emitChange('month', this.month, valid)
+      let _month = parseInt(this.month)
+      let valid = _month >= 0 && _month <= 12
       return valid
     },
 
     isDayValid: function() {
-      var _day = parseInt(this.day)
-      var valid = _day >= 0 && _day <= this.daysMaxCalculation
-      this._emitChange('day', this.day, valid)
+      let _day = parseInt(this.day)
+      let valid = _day >= 0 && _day <= this.daysMaxCalculation
       return valid
     },
 
     isYearValid: function() {
       // Emit a change event
-      var valid = parseInt(this.year) >= 1
-      this._emitChange('year', this.year, valid)
+      let valid
+      let minYear = this.mindate ? this.minDateParsed.getFullYear() : null
+      let maxYear = this.maxdate ? this.maxDateParsed.getFullYear() : null
+
+      if (minYear && maxYear) {
+        valid = this.year >= minYear && this.year <= maxYear
+      } else {
+        valid = parseInt(this.year) >= 1
+      }
+
       return valid
     },
 
@@ -135,6 +136,10 @@ export default {
       )
     },
 
+    isDateComplete: function() {
+      return !!this.day && !!this.month && !!this.year && this.year > 999
+    },
+
     daysMaxCalculation: function() {
       switch (parseInt(this.month)) {
         case 2: // February
@@ -157,22 +162,49 @@ export default {
           return 31
       }
     },
+
+    minError: function() {
+      if (this.isDateComplete) {
+        return this.minDateParsed > this.dateParsed
+      }
+
+      return false
+    },
+
+    maxError: function() {
+      if (this.isDateComplete) {
+        return this.maxDateParsed < this.dateParsed
+      }
+
+      return false
+    },
+
+    maxDateParsed: function() {
+      return new Date(this.maxdate)
+    },
+
+    minDateParsed: function() {
+      return new Date(this.mindate)
+    },
+
+    dateParsed: function() {
+      return new Date(this.formattedDate)
+    },
   },
 
   methods: {
     onInput: function(e) {
-      this.showValidation = true
-
       emitEvent('field-change', this, {
         value: this.formattedDate,
         name: this.name,
-        watch: this.watch,
         valid: this.isDateValid,
       })
-    },
 
-    _emitChange: function(name, value, valid) {
-      emitEvent('field-change', this, { value, name, valid })
+      this.$emit('date-change', {
+        value: this.formattedDate,
+        name: this.name,
+        valid: this.isDateValid,
+      })
     },
   },
 

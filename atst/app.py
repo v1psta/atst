@@ -2,6 +2,7 @@ import os
 import re
 import pathlib
 from configparser import ConfigParser
+from datetime import datetime
 from flask import Flask, request, g, session
 from flask_session import Session
 import redis
@@ -175,6 +176,12 @@ def map_config(config):
         # with a Beat job once a day)
         "CELERY_RESULT_EXPIRES": 0,
         "CELERY_RESULT_EXTENDED": True,
+        "CONTRACT_START_DATE": datetime.strptime(
+            config.get("default", "CONTRACT_START_DATE"), "%Y-%m-%d"
+        ).date(),
+        "CONTRACT_END_DATE": datetime.strptime(
+            config.get("default", "CONTRACT_END_DATE"), "%Y-%m-%d"
+        ).date(),
     }
 
 
