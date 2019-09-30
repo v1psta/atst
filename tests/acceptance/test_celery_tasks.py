@@ -3,21 +3,27 @@ import pytest
 from celery.platforms import detached
 import threading
 
-from atst.queue import BEAT_SCHEDULE, celery
+from atst.queue import celery
 
 from tests import factories
 
 
 @pytest.fixture(scope="session")
 def celery_config():
-    return dict(celery.conf)
+    conf = dict(celery.conf)
+    conf["CELERYBEAT_SCHEDULE"]["beat-dispatch_create_environment"]["schedule"] = 1
+    return conf
+
+
+import tempfile
 
 
 @pytest.fixture(scope="function")
 def celery_beat(celery_app):
+    tmp = tempfile.NamedTemporaryFile()
     beat_kwargs = {
         "app": celery_app,
-        "schedule": "celerybeat-schedule",
+        "schedule": tmp.name,
         "max_interval": None,
         "scheduler": "celery.beat:PersistentScheduler",
         "loglevel": "fatal",
@@ -26,24 +32,12 @@ def celery_beat(celery_app):
     # schedule, etc
     beat = celery_app.Beat(**beat_kwargs)
 
-    t = threading.Thread(target=beat.run)
+    t = threading.Thread(target=beat.run, daemon=True)
     t.start()
 
     yield beat
 
-    from celery.worker import state
-
-    state.should_terminate = 0
     t.join(10)
-    state.should_terminate = None
-
-
-# @pytest.fixture(scope='session')
-# def celery_worker_parameters(celery_config):
-#     return {
-#         "beat": True,
-#         **celery_config
-#     }
 
 
 def test_environment_provisioning(app, session, celery_beat, celery_worker):
