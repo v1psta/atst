@@ -48,3 +48,18 @@ def test_create_atat_admin_when_user_already_exists(mock_aws):
 
     iam_client = mock_aws.boto3.client("iam")
     iam_client.get_user.assert_any_call(UserName="atat")
+
+
+def test_create_environment_baseline_succeeds(mock_aws):
+    baseline_info = mock_aws.create_environment_baseline(
+        AUTH_CREDENTIALS, "csp_environment_id"
+    )
+    assert {"policies": [{"BillingReadOnly": "policy-arn"}]} == baseline_info
+
+
+@pytest.mark.mock_boto3({"iam.create_policy.already_exists": True})
+def test_create_environment_baseline_when_policy_already_exists(mock_aws):
+    baseline_info = mock_aws.create_environment_baseline(
+        AUTH_CREDENTIALS, "csp_environment_id"
+    )
+    assert "policies" in baseline_info

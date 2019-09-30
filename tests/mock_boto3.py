@@ -54,6 +54,12 @@ def mock_boto_organizations(_config=None, **kwargs):
 
 def mock_boto_iam(_config=None, **kwargs):
     user_already_exists = _config.get("iam.create_user.already_exists", False)
+    policy_already_exists = _config.get("iam.create_policy.already_exists", False)
+
+    def _raise_entity_already_exists(**kwargs):
+        raise real_iam_client.exceptions.EntityAlreadyExistsException(
+            {"Error": {}}, "operation-name"
+        )
 
     import boto3
 
@@ -66,13 +72,7 @@ def mock_boto_iam(_config=None, **kwargs):
     mock.put_user_policy = Mock(return_value={"ResponseMetadata": {}})
 
     if user_already_exists:
-
-        def _raise(**kwargs):
-            raise real_iam_client.exceptions.EntityAlreadyExistsException(
-                {"Error": {}}, "operation-name"
-            )
-
-        mock.create_user = Mock(side_effect=_raise)
+        mock.create_user = Mock(side_effect=_raise_entity_already_exists)
     else:
         mock.create_user = Mock(
             return_value={
@@ -98,6 +98,11 @@ def mock_boto_iam(_config=None, **kwargs):
             }
         }
     )
+
+    if policy_already_exists:
+        mock.create_policy = Mock(side_effect=_raise_entity_already_exists)
+    else:
+        mock.create_policy = Mock(return_value={"Policy": {"Arn": "policy-arn"}})
 
     return mock
 
