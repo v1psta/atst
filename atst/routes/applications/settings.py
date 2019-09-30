@@ -12,6 +12,7 @@ from atst.domain.invitations import ApplicationInvitations
 from atst.forms.application_member import NewForm as NewMemberForm, UpdateMemberForm
 from atst.forms.application import NameAndDescriptionForm, EditEnvironmentForm
 from atst.forms.data import ENV_ROLE_NO_ACCESS as NO_ACCESS
+from atst.forms.member import NewForm as MemberForm
 from atst.domain.authz.decorator import user_can_access_decorator as user_can
 from atst.models.permissions import Permissions
 from atst.domain.permission_sets import PermissionSets
@@ -403,6 +404,49 @@ def revoke_invite(application_id, application_role_id):
             "application_invite_revoked",
             user_name=app_role.user_name,
             application_name=g.application.name,
+        )
+    else:
+        flash(
+            "application_invite_error",
+            user_name=app_role.user_name,
+            application_name=g.application.name,
+        )
+
+    return redirect(
+        url_for(
+            "applications.settings",
+            application_id=application_id,
+            fragment="application-members",
+            _anchor="application-members",
+        )
+    )
+
+
+@applications_bp.route(
+    "/applications/<application_id>/members/<application_role_id>/resend_invite",
+    methods=["POST"],
+)
+@user_can(Permissions.EDIT_APPLICATION_MEMBER, message="resend application invitation")
+def resend_invite(application_id, application_role_id):
+    app_role = ApplicationRoles.get_by_id(application_role_id)
+    invite = app_role.latest_invitation
+    form = MemberForm(http_request.form)
+
+    if form.validate():
+        new_invite = ApplicationInvitations.resend(
+            g.current_user, invite.token, form.data
+        )
+
+        send_application_invitation(
+            invitee_email=new_invite.email,
+            inviter_name=g.current_user.full_name,
+            token=new_invite.token,
+        )
+
+        flash(
+            "application_invite_resent",
+            user_name=new_invite.user_name,
+            application_name=app_role.application.name,
         )
     else:
         flash(

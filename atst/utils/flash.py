@@ -39,6 +39,11 @@ MESSAGES = {
         "message_template": "There was an error processing the invitation for {{ user_name }} from {{ application_name }}",
         "category": "error",
     },
+    "application_invite_resent": {
+        "title_template": "Application invitation revoked",
+        "message_template": "You have successfully resent the invite for {{ user_name }} from {{ application_name }}",
+        "category": "success",
+    },
     "application_invite_revoked": {
         "title_template": "Application invitation revoked",
         "message_template": "You have successfully revoked the invite for {{ user_name }} from {{ application_name }}",
