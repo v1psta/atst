@@ -472,7 +472,7 @@ class AWSCloudProvider(CloudProviderInterface):
         }
     ]
 
-    def __init__(self, config):
+    def __init__(self, config, boto3=None):
         self.config = config
 
         self.access_key_id = config["AWS_ACCESS_KEY_ID"]
@@ -484,9 +484,12 @@ class AWSCloudProvider(CloudProviderInterface):
         self.root_account_username = "atat"
         self.root_account_policy_name = "OrganizationAccountAccessRole"
 
-        import boto3
+        if boto3:
+            self.boto3 = boto3
+        else:
+            import boto3
 
-        self.boto3 = boto3
+            self.boto3 = boto3
 
     def root_creds():
         return {"username": self.access_key_id, "password": self.secret_key}
@@ -494,7 +497,7 @@ class AWSCloudProvider(CloudProviderInterface):
     def create_environment(
         self, auth_credentials: Dict, user: User, environment: Environment
     ):
-        # TODO: Make credential structure uniform accross CSPs
+
         org_client = self._get_client("organizations")
 
         account_name = uuid4().hex
@@ -552,7 +555,9 @@ class AWSCloudProvider(CloudProviderInterface):
                 CreateAccountRequestId=account_request["CreateAccountStatus"]["Id"]
             )
         except WaiterError:
-            raise ValueError("Failed to create account.")  # TODO
+            raise EnvironmentCreationException(
+                environment.id, "Failed to create account."
+            )
 
         # We need to re-fetch this since the Waiter throws away the success response for some reason.
         created_account_status = org_client.describe_create_account_status(
