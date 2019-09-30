@@ -1,8 +1,5 @@
 {% from "components/icon.html" import Icon %}
-{% from "components/text_input.html" import TextInput %}
-{% from "components/checkbox_input.html" import CheckboxInput %}
-{% from "components/phone_input.html" import PhoneInput %}
-{% from "applications/fragments/member_perms_form_fields.html" import MemberPermsFields %}
+{% import "applications/fragments/member_form_fields.html" as member_fields %}
 
 {% macro MemberFormTemplate(title, next_button, previous=True) %}
   <div class="modal__form--header">
@@ -36,22 +33,7 @@
   {% endset %}
 
   {% call MemberFormTemplate(title="portfolios.applications.members.form.add_member"|translate, next_button=next_button, previous=False) %}
-    <div class='form-row'>
-      {{ TextInput(member_form.user_data.first_name, validation='requiredField', optional=False) }}
-    </div>
-    <div class='form-row'>
-      {{ TextInput(member_form.user_data.last_name, validation='requiredField', optional=False) }}
-    </div>
-    <div class='form-row'>
-      {{ TextInput(member_form.user_data.email, validation='email', optional=False) }}
-    </div>
-    <div class="form-row">
-      {{ PhoneInput(member_form.user_data.phone_number, member_form.user_data.phone_ext)}}
-    </div>
-    <div class='form-row'>
-      {{ TextInput(member_form.user_data.dod_id, validation='dodId', optional=False) }}
-    </div>
-    <a href="#">How do I find the DoD ID?</a>
+    {{ member_fields.InfoFields(member_form.user_data) }}
   {% endcall %}
 {% endmacro %}
 {% macro MemberStepTwo(member_form, application) %}
@@ -64,6 +46,6 @@
   {% endset %}
 
   {% call MemberFormTemplate(title="portfolios.applications.members.form.step_2_title"|translate, next_button=next_button) %}
-    {{ MemberPermsFields(form=member_form) }}
+    {{ member_fields.PermsFields(form=member_form) }}
   {% endcall %}
 {% endmacro %}

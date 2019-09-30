@@ -96,6 +96,13 @@ def get_members_data(application):
         form = UpdateMemberForm(
             environment_roles=env_roles_form_data, **permission_sets
         )
+        update_invite_form = None
+
+        if member.latest_invitation and member.latest_invitation.can_resend:
+            update_invite_form = MemberForm(obj=member.latest_invitation)
+        else:
+            update_invite_form = MemberForm()
+
         members_data.append(
             {
                 "role_id": member.id,
@@ -104,6 +111,7 @@ def get_members_data(application):
                 "environment_roles": environment_roles,
                 "role_status": member.status.value,
                 "form": form,
+                "update_invite_form": update_invite_form,
             }
         )
 
