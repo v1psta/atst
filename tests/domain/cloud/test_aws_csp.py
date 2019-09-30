@@ -20,3 +20,31 @@ def test_create_environment_raises_x_when_account_creation_fails(mock_aws):
     environment = EnvironmentFactory.create()
     with pytest.raises(EnvironmentCreationException):
         mock_aws.create_environment(AUTH_CREDENTIALS, environment.creator, environment)
+
+
+def test_create_atat_admin_user_succeeds(mock_aws):
+    root_user_info = mock_aws.create_atat_admin_user(
+        AUTH_CREDENTIALS, "csp_environment_id"
+    )
+    assert {
+        "id": "user-id",
+        "username": "user-name",
+        "resource_id": "user-arn",
+        "credentials": {"key": "access-key-id", "secret_key": "secret-access-key"},
+    } == root_user_info
+
+
+@pytest.mark.mock_boto3({"iam.create_user.already_exists": True})
+def test_create_atat_admin_when_user_already_exists(mock_aws):
+    root_user_info = mock_aws.create_atat_admin_user(
+        AUTH_CREDENTIALS, "csp_environment_id"
+    )
+    assert {
+        "id": "user-id",
+        "username": "user-name",
+        "resource_id": "user-arn",
+        "credentials": {"key": "access-key-id", "secret_key": "secret-access-key"},
+    } == root_user_info
+
+    iam_client = mock_aws.boto3.client("iam")
+    iam_client.get_user.assert_any_call(UserName="atat")
