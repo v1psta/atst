@@ -50,7 +50,6 @@ body {
 
   &__body {
     background-color: $color-white;
-    padding: $gap * 2;
     width: 100%;
     border-radius: 5px;
     overflow-y: auto;
@@ -58,10 +57,6 @@ body {
 
     @include ie-only {
       max-height: calc(100vh - #{$gap * 8});
-    }
-
-    @include media($medium-screen) {
-      padding: $gap * 2.5 $gap * 5;
     }
 
     h1,
@@ -120,6 +115,29 @@ body {
           margin: 0;
         }
       }
+    }
+
+    &--header,
+    &--content {
+      padding: $gap * 2;
+
+      @include media($medium-screen) {
+        padding: $gap * 2.5 $gap * 5;
+      }
+    }
+
+    &--footer {
+      background-color: $color-gray-lightest;
+      padding: $gap * 2;
+
+      .action-group {
+        margin: 0;
+      }
+    }
+
+    hr {
+      border-bottom: 1px solid $color-gray-lighter;
+      margin: 0;
     }
   }
 
@@ -222,8 +240,11 @@ body {
     }
 
     .modal__body {
-      padding-left: 4rem;
-      padding-right: 4rem;
+      &--header,
+      &--content {
+        padding-left: 4rem;
+        padding-right: 4rem;
+      }
     }
   }
 

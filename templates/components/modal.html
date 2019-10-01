@@ -1,21 +1,41 @@
 {% from "components/icon.html" import Icon %}
 
-{% macro Modal(name, dismissable=False, classes="") -%}
+{% macro Modal(name, form_action, header, submit_button, previous_button=False, dismissable=False, classes="") -%}
   <div v-show="$root.activeModal === '{{name}}'" v-cloak>
     <div id='modal--{{name}}' class='modal {% if dismissable %}modal--dismissable{% endif%} {{ classes }}'>
       <div class='modal__container'>
         <div class='modal__dialog' role='dialog' aria-modal='true'>
           <div class='modal__body'>
-            {{ caller() }}
+            <div class="modal__body--header">
+              <h1>{{ header }}</h1>
+            </div>
+            <hr>
+            <form method="post" action="{{ form_action }}">
+              <div class="modal__body--content">
+                {{ caller() }}
+              </div>
 
-            {% if dismissable %}
-              <button type='button' class='icon-link modal__dismiss' v-on:click='closeModal("{{name}}")'>
-                {{ Icon('x') }}
-                <span>
-                  {{ "common.close" | translate }}
-                </span>
-              </button>
-            {% endif %}
+              {% if dismissable -%}
+                <button type='button' class='icon-link modal__dismiss' v-on:click='closeModal("{{name}}")'>
+                  {{ Icon('x') }}
+                  <span>
+                    {{ "common.close" | translate }}
+                  </span>
+                </button>
+              {%- endif %}
+
+              <div class="modal__body--footer">
+                <div class="action-group">
+                  {{ submit_button }}
+                  {% if previous_button -%}
+                    {{ previous_button }}
+                    <a class='action-group__action icon-link icon-link--default' v-on:click="closeModal('{{name}}')">{{ "common.cancel" | translate }}</a>
+                  {% else %}
+                    <button type='button' v-on:click='closeModal("{{name}}")' class="usa-button usa-button-secondary">{{ "common.cancel" | translate }}</button>
+                  {%- endif %}
+                </div>
+              </div>
+            </form>
           </div>
         </div>
       </div>
