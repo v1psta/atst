@@ -2,23 +2,25 @@
   max-width: 475px;
   margin: auto;
 
-  .panel__heading {
-    text-align: center;
-    padding: $gap 0;
+  .panel {
+    &__heading {
+      text-align: center;
+      padding: $gap 0;
 
-    hr {
-      width: 100%;
-      border: 1px solid $color-red;
+      hr {
+        width: 100%;
+        border: 1px solid $color-red;
+      }
+
+      h1 {
+        margin-bottom: $gap;
+      }
     }
 
-    h1 {
-      margin-bottom: $gap;
+    &__body {
+      padding: $gap * 2;
+      margin: 0;
     }
-  }
-
-  .panel__body {
-    padding: $gap * 2;
-    margin: 0;
   }
 
   .icon {
