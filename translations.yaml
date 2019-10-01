@@ -302,8 +302,10 @@ portfolios:
     add_member: Add a New Team Member
     add_another_environment: Add another environment
     app_settings_text: App settings
-    create_button_text: Create
-    next_button_text: "Next: Environments"
+    new:
+      step_1_button_text: "Save and Add Environments"
+      step_2_button_text: "Save and Add Members"
+      step_3_button_text: Save Application
     create_new_env: Create a new environment.
     create_new_env_info: Creating an environment gives you access to the Cloud Service Provider. This environment will function within the constraints of the task order, and any costs will be billed against the portfolio.
     csp_console_text: CSP console

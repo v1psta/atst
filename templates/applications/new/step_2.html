@@ -7,14 +7,17 @@
 
 {% set secondary_breadcrumb = 'portfolios.applications.new_application_title' | translate %}
 
+{% block portfolio_header %}
+  {{ StickyCTA(text=application.name) }}
+{% endblock %}
+
 {% block application_content %}
 
   {% set modalName = "newApplicationConfirmation" %}
   {% include "fragments/flash.html" %}
 
-  <div class='subheading'>{{ 'portfolios.applications.settings_heading' | translate }}</div>
   <application-environments inline-template v-bind:initial-data='{{ form.data|tojson }}'>
-    <form method="POST" action="{{ url_for('applications.view_new_application_step_2', portfolio_id=portfolio.id, application_id=application_id) }}" v-on:submit="handleSubmit">
+    <form method="POST" action="{{ url_for('applications.update_new_application_step_2', portfolio_id=portfolio.id, application_id=application.id) }}" v-on:submit="handleSubmit">
       <div class="panel">
         <div class="panel__content">
           {{ form.csrf_token }}
@@ -63,7 +66,7 @@
 
       <span class="action-group">
         {% block next_button %}
-          {{ SaveButton(text=('portfolios.applications.create_button_text' | translate)) }}
+          {{ SaveButton(text=('portfolios.applications.new.step_2_button_text' | translate)) }}
         {% endblock %}
       </span>
     </form>

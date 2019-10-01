@@ -73,8 +73,9 @@ def filter_env_roles_form_data(member, environments):
             "environment_name": env.name,
             "role": NO_ACCESS,
         }
-        env_role = EnvironmentRoles.get_by_user_and_environment(member.user_id, env.id)
-        if env_role:
+        env_roles_set = set(env.roles).intersection(set(member.environment_roles))
+        if len(env_roles_set) == 1:
+            (env_role,) = env_roles_set
             env_data["role"] = env_role.role
 
         env_roles_form_data.append(env_data)
@@ -151,6 +152,41 @@ def send_application_invitation(invitee_email, inviter_name, token):
         translate("email.application_invite", {"inviter_name": inviter_name}),
         body,
     )
+
+
+def handle_create_member(application_id, form_data):
+    application = Applications.get(application_id)
+    form = NewMemberForm(form_data)
+
+    if form.validate():
+        try:
+            invite = Applications.invite(
+                application=application,
+                inviter=g.current_user,
+                user_data=form.user_data.data,
+                permission_sets_names=form.data["permission_sets"],
+                environment_roles_data=form.environment_roles.data,
+            )
+
+            send_application_invitation(
+                invitee_email=invite.email,
+                inviter_name=g.current_user.full_name,
+                token=invite.token,
+            )
+
+            flash(
+                "new_application_member",
+                user_name=invite.user_name,
+                application_name=application.name,
+            )
+
+        except AlreadyExistsError:
+            return render_template(
+                "error.html", message="There was an error processing your request."
+            )
+    else:
+        pass
+        # TODO: flash error message
 
 
 @applications_bp.route("/applications/<application_id>/settings")
@@ -283,39 +319,7 @@ def delete_environment(environment_id):
     Permissions.CREATE_APPLICATION_MEMBER, message="create new application member"
 )
 def create_member(application_id):
-    application = Applications.get(application_id)
-    form = NewMemberForm(http_request.form)
-
-    if form.validate():
-        try:
-            invite = Applications.invite(
-                application=application,
-                inviter=g.current_user,
-                user_data=form.user_data.data,
-                permission_sets_names=form.data["permission_sets"],
-                environment_roles_data=form.environment_roles.data,
-            )
-
-            send_application_invitation(
-                invitee_email=invite.email,
-                inviter_name=g.current_user.full_name,
-                token=invite.token,
-            )
-
-            flash(
-                "new_application_member",
-                user_name=invite.user_name,
-                application_name=application.name,
-            )
-
-        except AlreadyExistsError:
-            return render_template(
-                "error.html", message="There was an error processing your request."
-            )
-    else:
-        pass
-        # TODO: flash error message
-
+    handle_create_member(application_id, http_request.form)
     return redirect(
         url_for(
             "applications.settings",

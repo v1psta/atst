@@ -21,6 +21,7 @@ from atst.models.portfolio_role import Status as PortfolioRoleStatus
 from atst.forms.application import EditEnvironmentForm
 from atst.forms.application_member import UpdateMemberForm
 from atst.forms.data import ENV_ROLE_NO_ACCESS as NO_ACCESS
+from atst.routes.applications.settings import filter_env_roles_form_data
 
 from tests.utils import captured_templates
 
@@ -559,3 +560,28 @@ def test_revoke_invite(client, user_session):
 
     assert invite.is_revoked
     assert app_role.status == ApplicationRoleStatus.DISABLED
+
+
+def test_filter_environment_roles():
+    application_role = ApplicationRoleFactory.create(user=None)
+    application_role2 = ApplicationRoleFactory.create(
+        user=None, application=application_role.application
+    )
+    application_role3 = ApplicationRoleFactory.create(
+        user=None, application=application_role.application
+    )
+
+    environment = EnvironmentFactory.create(application=application_role.application)
+
+    EnvironmentRoleFactory.create(
+        environment=environment, application_role=application_role
+    )
+    EnvironmentRoleFactory.create(
+        environment=environment, application_role=application_role2
+    )
+
+    environment_data = filter_env_roles_form_data(application_role, [environment])
+    assert environment_data[0]["role"] != "No Access"
+
+    environment_data = filter_env_roles_form_data(application_role3, [environment])
+    assert environment_data[0]["role"] == "No Access"
