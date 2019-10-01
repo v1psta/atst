@@ -26,25 +26,10 @@ def notify(e, message, code):
         current_app.notification_sender.send(message)
 
 
-def handle_error(
-    e,
-    message=translate("errors.not_found"),
-    code=404,
-    submessage=translate("errors.not_found_sub"),
-    more_info=translate("common.lorem"),
-):
+def handle_error(e, message=translate("errors.not_found"), code=404):
     log_error(e)
     notify(e, message, code)
-    return (
-        render_template(
-            "error.html",
-            message=message,
-            code=code,
-            submessage=submessage,
-            more_info=more_info,
-        ),
-        code,
-    )
+    return (render_template("error.html", message=message, code=code), code)
 
 
 def make_error_pages(app):
