@@ -45,6 +45,8 @@ export default {
     return {
       maxStartDate: maxStartDate,
       minEndDate: minEndDate,
+      contractStart: contractStart,
+      contractEnd: contractEnd,
     }
   },
 
@@ -60,7 +62,7 @@ export default {
     },
 
     calcMaxStartDate: function(date) {
-      if (!!date && date < this.maxStartDate) {
+      if (!!date && date < this.contractEnd) {
         return date
       } else {
         return this.maxStartDate
@@ -68,7 +70,7 @@ export default {
     },
 
     calcMinEndDate: function(date) {
-      if (!!date && date > this.minEndDate) {
+      if (!!date && date > this.contractStart) {
         return date
       } else {
         return this.minEndDate
