@@ -1,43 +1,40 @@
 import pendulum
 import pytest
-from celery.platforms import detached
 import threading
+import tempfile
 
-from atst.queue import celery
+from atst.queue import update_celery
 
 from tests import factories
 
 
-@pytest.fixture(scope="session")
-def celery_config():
-    conf = dict(celery.conf)
-    conf["CELERYBEAT_SCHEDULE"]["beat-dispatch_create_environment"]["schedule"] = 1
-    return conf
-
-
-import tempfile
+@pytest.fixture()
+def integration_celery_app(app, celery_app):
+    celery = update_celery(celery_app, app)
+    celery.conf["CELERYBEAT_SCHEDULE"]["beat-dispatch_create_environment"][
+        "schedule"
+    ] = 1
+    return celery
 
 
 @pytest.fixture(scope="function")
-def celery_beat(celery_app):
-    tmp = tempfile.NamedTemporaryFile()
-    beat_kwargs = {
-        "app": celery_app,
-        "schedule": tmp.name,
-        "max_interval": None,
-        "scheduler": "celery.beat:PersistentScheduler",
-        "loglevel": "fatal",
-    }
-    # the beat worker still doesn't have the right config; doesn't get beat
-    # schedule, etc
-    beat = celery_app.Beat(**beat_kwargs)
+def celery_beat(integration_celery_app):
+    with tempfile.NamedTemporaryFile() as tmp:
+        beat_kwargs = {
+            "app": integration_celery_app,
+            "schedule": tmp.name,
+            "max_interval": None,
+            "scheduler": "celery.beat:PersistentScheduler",
+            "loglevel": "info",
+        }
+        beat = integration_celery_app.Beat(**beat_kwargs)
 
-    t = threading.Thread(target=beat.run, daemon=True)
-    t.start()
+        t = threading.Thread(target=beat.run, daemon=True)
+        t.start()
 
-    yield beat
+        yield beat
 
-    t.join(10)
+        t.join(2)
 
 
 def test_environment_provisioning(app, session, celery_beat, celery_worker):
