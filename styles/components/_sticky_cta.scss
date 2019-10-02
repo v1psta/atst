@@ -2,6 +2,11 @@
   margin-left: -$gap * 4;
   margin-right: -$gap * 5;
   z-index: 10;
+  background-color: $color-gray-lightest;
+  border-top: 1px solid $color-gray-lighter;
+  border-bottom: 1px solid $color-gray-lighter;
+  padding: 0 $gap * 5 0 $gap * 5;
+  box-shadow: $box-shadow;
 
   @include media($medium-screen) {
     margin-right: -$gap * 5;
@@ -16,12 +21,6 @@
     display: flex;
     align-items: center;
 
-    background-color: $color-gray-lightest;
-    border-top: 1px solid $color-gray-lighter;
-    border-bottom: 1px solid $color-gray-lighter;
-    padding: 0 $gap * 5 0 $gap * 5;
-    box-shadow: $box-shadow;
-
     .usa-button {
       margin: $gap $gap * 1.5 $gap 0;
       width: 20rem;
@@ -32,6 +31,12 @@
 
   &-text {
     flex-grow: 1;
+    display: flex;
+    align-items: baseline;
+  }
+  &-context {
+    color: $color-gray;
+    margin-left: $gap;
   }
 
   &-buttons {

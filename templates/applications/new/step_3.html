@@ -6,7 +6,7 @@
 
 {% block portfolio_header %}
   {% include "portfolios/header.html" %}
-  {{ StickyCTA(text=application.name) }}
+  {{ StickyCTA(text=('portfolios.applications.new.step_3_header' | translate({"application_name": application.name}) ), context="Step 3 of 3") }}
 {% endblock %}
 
 {% block application_content %}

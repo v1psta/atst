@@ -8,7 +8,8 @@
 {% set secondary_breadcrumb = 'portfolios.applications.new_application_title' | translate %}
 
 {% block portfolio_header %}
-  {{ StickyCTA(text=application.name) }}
+  {% include "portfolios/header.html" %}
+  {{ StickyCTA(text=('portfolios.applications.new.step_2_header' | translate({"application_name": application.name}) ), context="Step 2 of 3") }}
 {% endblock %}
 
 {% block application_content %}
