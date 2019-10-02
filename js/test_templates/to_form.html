@@ -23,9 +23,13 @@
 <div class="modal__container">
 <div aria-modal="true" class="modal__dialog" role="dialog">
 <div class="modal__body">
+<!-- Use these elements in caller for modal to be styled properly -->
+<!-- h1 for header text -->
+<!-- hr -->
+<!-- div class='action-group' for buttons -->
 <div class="task-order__modal-cancel">
 <h1>Do you want to save this draft?</h1>
-<div class="task-order__modal-cancel_buttons">
+<div class="action-group">
 <button class="usa-button usa-button-primary" formaction="/portfolios/e4edf994-04f4-4aaa-ba30-39507e1068a8/task_orders/form/cancel?save=False" type="submit">No, delete it</button>
 <button class="usa-button usa-button-primary" formaction="/portfolios/e4edf994-04f4-4aaa-ba30-39507e1068a8/task_orders/form/cancel?save=True" type="submit">Yes, save for later</button>
 </div>
@@ -33,9 +37,6 @@
 <button class="icon-link modal__dismiss" type="button" v-on:click='closeModal("cancel")'>
 <span aria-hidden="true" class="icon icon--x"><svg viewbox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M2 2l12 12M14 15c-.256 0-.512-.098-.707-.293l-12-12c-.391-.391-.391-1.023 0-1.414s1.023-.391 1.414 0l12 12c.391.391.391 1.023 0 1.414-.195.195-.451.293-.707.293zm0-13L2 14"></path><path d="M2 15c-.256 0-.512-.098-.707-.293-.391-.391-.391-1.023 0-1.414l12-12c.391-.391 1.023-.391 1.414 0s.391 1.023 0 1.414l-12 12C2.512 14.902 2.256 15 2 15z"></path></svg>
 </span>
-<span>
-                  Close
-                </span>
 </button>
 </div>
 </div>
