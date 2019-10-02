@@ -107,6 +107,7 @@ email:
 flash:
   application:
     created: 'You have successfully created the {application_name} application.'
+    updated: 'You have successfully updated the {application_name} application.'
     deleted: 'You have successfully deleted the {application_name} application. To view the retained activity log, visit the portfolio administration page.'
   delete_member_success: 'You have successfully deleted {member_name} from the portfolio.'
   deleted_member: Portfolio member deleted

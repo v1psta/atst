@@ -69,9 +69,11 @@ def create_or_update_new_application_step_1(portfolio_id=None, application_id=No
         if application_id:
             application = Applications.get(application_id)
             application = Applications.update(application, form.data)
+            flash("application_updated", application_name=application.name)
         else:
             portfolio = Portfolios.get_for_update(portfolio_id)
             application = Applications.create(g.current_user, portfolio, **form.data)
+            flash("application_created", application_name=application.name)
         return redirect(
             url_for(
                 "applications.update_new_application_step_2",
