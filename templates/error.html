@@ -9,7 +9,13 @@
       {{ Icon('cloud', classes="icon--red icon--large")}}
       <hr>
       <h1>{{ code }} - {{ message }}</h1>
-      <p>{{ "errors.not_found_sub" | translate }}</p>
+      <p>
+        {% if code == 404 -%}
+          {{ "errors.not_found_sub" | translate }}
+        {% else %}
+          {{ "errors.default_sub" | translate }}
+        {%- endif %}
+      </p>
     </div>
     <hr>
     <div class="panel__body">
