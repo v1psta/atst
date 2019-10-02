@@ -503,7 +503,6 @@ class AWSCloudProvider(CloudProviderInterface):
         # Create an account. Requires organizations:CreateAccount permission
         account_request = org_client.create_account(
             Email=user.email,
-            # TODO: Is a uuid fine here, or do we want something human-readable?
             AccountName=uuid4().hex,
             IamUserAccessToBilling="ALLOW",
         )
