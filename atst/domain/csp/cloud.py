@@ -475,6 +475,9 @@ class AWSCloudProvider(CloudProviderInterface):
     ]
     MAX_CREATE_ACCOUNT_ATTEMPTS = 10
 
+    # Placeholder permission boundary for root user
+    PERMISSION_BOUNDARY_ARN = "arn:aws:iam::aws:policy/AlexaForBusinessDeviceSetup"
+
     def __init__(self, config, boto3=None):
         self.config = config
 
@@ -598,11 +601,10 @@ class AWSCloudProvider(CloudProviderInterface):
         iam_client = self._get_client("iam", credentials=credentials)
 
         # Create the user with a PermissionBoundary
-        permission_boundary_arn = "arn:aws:iam::aws:policy/AlexaForBusinessDeviceSetup"
         try:
             user = iam_client.create_user(
                 UserName=self.root_account_username,
-                PermissionsBoundary=permission_boundary_arn,
+                PermissionsBoundary=self.PERMISSION_BOUNDARY_ARN,
                 Tags=[{"Key": "foo", "Value": "bar"}],
             )["User"]
         except iam_client.exceptions.EntityAlreadyExistsException as _exc:
