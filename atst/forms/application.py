@@ -1,6 +1,6 @@
 from .forms import BaseForm
 from wtforms.fields import StringField, TextAreaField, FieldList
-from wtforms.validators import Required
+from wtforms.validators import Required, Optional
 from atst.forms.validators import ListItemRequired, ListItemsUnique
 from atst.utils.localization import translate
 
@@ -16,7 +16,9 @@ class NameAndDescriptionForm(BaseForm):
         label=translate("forms.application.name_label"), validators=[Required()]
     )
     description = TextAreaField(
-        label=translate("forms.application.description_label"), validators=[Required()]
+        label=translate("forms.application.description_label"),
+        validators=[Optional()],
+        filters=[lambda x: x or None],
     )
 
 
