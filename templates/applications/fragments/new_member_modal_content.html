@@ -16,7 +16,7 @@
           class='action-group__action usa-button usa-button-secondary'
           value='{{ "common.previous" | translate }}'>
     {% endif %}
-    <a class='action-group__action icon-link icon-link--default' v-on:click="closeModal('{{ new_port_mem }}')">{{ "common.cancel" | translate }}</a>
+    <a class='action-group__action' v-on:click="closeModal('{{ new_port_mem }}')">{{ "common.cancel" | translate }}</a>
   </div>
 {% endmacro %}
 
