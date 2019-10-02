@@ -492,8 +492,8 @@ class AWSCloudProvider(CloudProviderInterface):
 
             self.boto3 = boto3
 
-    def root_creds():
-        return {"username": self.access_key_id, "password": self.secret_key}
+    def root_creds(self):
+        return {"AccessKeyId": self.access_key_id, "SecretAccessKey": self.secret_key}
 
     def create_environment(
         self, auth_credentials: Dict, user: User, environment: Environment
@@ -503,9 +503,7 @@ class AWSCloudProvider(CloudProviderInterface):
 
         # Create an account. Requires organizations:CreateAccount permission
         account_request = org_client.create_account(
-            Email=user.email,
-            AccountName=uuid4().hex,
-            IamUserAccessToBilling="ALLOW",
+            Email=user.email, AccountName=uuid4().hex, IamUserAccessToBilling="ALLOW"
         )
 
         # Configuration for our CreateAccount Waiter.
@@ -618,8 +616,8 @@ class AWSCloudProvider(CloudProviderInterface):
             "AccessKey"
         ]
         credentials = {
-            "key": access_key["AccessKeyId"],
-            "secret_key": access_key["SecretAccessKey"],
+            "AccessKeyId": access_key["AccessKeyId"],
+            "SecretAccessKey": access_key["SecretAccessKey"],
         }
 
         # TODO: Create real policies in account.
@@ -674,13 +672,13 @@ class AWSCloudProvider(CloudProviderInterface):
         A helper for creating a client of a given AWS service.
         """
         credentials = credentials or {
-            "aws_access_key_id": self.access_key_id,
-            "aws_secret_access_key": self.secret_key,
+            "AccessKeyId": self.access_key_id,
+            "SecretAccessKey": self.secret_key,
         }
         return self.boto3.client(
             service,
-            aws_access_key_id=credentials["aws_access_key_id"],
-            aws_secret_access_key=credentials["aws_secret_access_key"],
+            aws_access_key_id=credentials["AccessKeyId"],
+            aws_secret_access_key=credentials["SecretAccessKey"],
             region_name=self.region_name,
         )
 

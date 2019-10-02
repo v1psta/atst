@@ -1,6 +1,11 @@
 import pytest
 
 from atst.domain.csp.cloud import EnvironmentCreationException
+from atst.jobs import (
+    do_create_environment,
+    do_create_atat_admin_user,
+    do_create_environment_baseline,
+)
 
 # pylint: disable=unused-import
 from tests.mock_boto3 import mock_aws, mock_boto3, AUTH_CREDENTIALS
@@ -63,3 +68,27 @@ def test_create_environment_baseline_when_policy_already_exists(mock_aws):
         AUTH_CREDENTIALS, "csp_environment_id"
     )
     assert "policies" in baseline_info
+
+
+def test_aws_provision_environment(mock_aws, session):
+    environment = EnvironmentFactory.create()
+
+    do_create_environment(mock_aws, environment_id=environment.id)
+    do_create_atat_admin_user(mock_aws, environment_id=environment.id)
+    do_create_environment_baseline(mock_aws, environment_id=environment.id)
+
+    session.refresh(environment)
+
+    assert "account-id" == environment.cloud_id
+    assert {
+        "id": "user-id",
+        "username": "user-name",
+        "credentials": {
+            "AccessKeyId": "access-key-id",
+            "SecretAccessKey": "secret-access-key",
+        },
+        "resource_id": "user-arn",
+    } == environment.root_user_info
+    assert {
+        "policies": [{"BillingReadOnly": "policy-arn"}]
+    } == environment.baseline_info
