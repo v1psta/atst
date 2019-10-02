@@ -50,18 +50,13 @@ body {
 
   &__body {
     background-color: $color-white;
-    padding: $gap * 2;
+    padding: $gap * 1.5;
     width: 100%;
-    border-radius: 5px;
     overflow-y: auto;
     -ms-overflow-style: scrollbar;
 
     @include ie-only {
       max-height: calc(100vh - #{$gap * 8});
-    }
-
-    @include media($medium-screen) {
-      padding: $gap * 2.5 $gap * 5;
     }
 
     h1,
@@ -120,6 +115,17 @@ body {
           margin: 0;
         }
       }
+    }
+
+    .action-group {
+      background-color: $color-gray-lightest;
+      padding: $gap * 2;
+      margin: 0 (-$gap * 1.5) (-$gap * 1.5);
+    }
+
+    hr {
+      border-bottom: 1px solid $color-gray-lighter;
+      margin: 0 (-$gap * 1.5);
     }
   }
 
