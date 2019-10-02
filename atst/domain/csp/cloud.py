@@ -575,7 +575,6 @@ class AWSCloudProvider(CloudProviderInterface):
         """
 
         # Create a policy which allows user to assume a role within the account.
-        # Another async call.
         iam_client = self._get_client("iam")
         iam_client.put_user_policy(
             UserName=self.root_account_username,
