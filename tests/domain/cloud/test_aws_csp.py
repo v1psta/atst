@@ -35,7 +35,10 @@ def test_create_atat_admin_user_succeeds(mock_aws):
         "id": "user-id",
         "username": "user-name",
         "resource_id": "user-arn",
-        "credentials": {"key": "access-key-id", "secret_key": "secret-access-key"},
+        "credentials": {
+            "AccessKeyId": "access-key-id",
+            "SecretAccessKey": "secret-access-key",
+        },
     } == root_user_info
 
 
@@ -48,7 +51,10 @@ def test_create_atat_admin_when_user_already_exists(mock_aws):
         "id": "user-id",
         "username": "user-name",
         "resource_id": "user-arn",
-        "credentials": {"key": "access-key-id", "secret_key": "secret-access-key"},
+        "credentials": {
+            "AccessKeyId": "access-key-id",
+            "SecretAccessKey": "secret-access-key",
+        },
     } == root_user_info
 
     iam_client = mock_aws.boto3.client("iam")
