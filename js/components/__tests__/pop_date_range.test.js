@@ -20,13 +20,13 @@ describe('PopDateRange Test', () => {
   const component = new Vue(PopDateRange)
 
   it('should calculate the max start date', () => {
-    component.maxStartDate = new Date('2020-01-01')
+    component.contractEnd = new Date('2020-01-01')
     const date = new Date('2019-12-31')
     expect(component.calcMaxStartDate(date)).toEqual(date)
   })
 
   it('should calculate the min end date', () => {
-    component.minEndDate = new Date('2020-01-01')
+    component.contractStart = new Date('2020-01-01')
     const date = new Date('2020-02-02')
     expect(component.calcMinEndDate(date)).toEqual(date)
   })
