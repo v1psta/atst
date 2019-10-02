@@ -74,6 +74,11 @@ def test_all_protected_routes_have_access_control(
     )
     monkeypatch.setattr("atst.app.assign_resources", lambda *a: None)
 
+    # monkeypatch the error handler
+    monkeypatch.setattr(
+        "atst.routes.errors.handle_error", lambda *a, **k: ("error", 500)
+    )
+
     # patch the internal function the access decorator uses so that
     # we can check that it was called
     mocker.patch("atst.domain.authz.decorator.check_access")

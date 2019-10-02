@@ -11,6 +11,7 @@ from atst.domain.invitations import (
 from atst.domain.authnid.crl import CRLInvalidException
 from atst.domain.portfolios import PortfolioError
 from atst.utils.flash import formatted_flash as flash
+from atst.utils.localization import translate
 
 NO_NOTIFY_STATUS_CODES = set([404, 401])
 
@@ -25,10 +26,10 @@ def notify(e, message, code):
         current_app.notification_sender.send(message)
 
 
-def handle_error(e, message="Not Found", code=404):
+def handle_error(e, message=translate("errors.not_found"), code=404):
     log_error(e)
     notify(e, message, code)
-    return render_template("error.html", message=message), code
+    return (render_template("error.html", message=message, code=code), code)
 
 
 def make_error_pages(app):
