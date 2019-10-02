@@ -14,7 +14,7 @@
             message=("portfolios.applications.create_new_env_info" | translate )
           ) }}
           <div class="h4">{{ "portfolios.applications.enter_env_name" | translate }}</div>
-            {{ TextInput(new_env_form.name, label="", validation="requiredField") }}
+            {{ TextInput(new_env_form.name, label="", validation="requiredField", optional=False) }}
         </div>
         <div class="panel__footer">
           <div class="action-group">
