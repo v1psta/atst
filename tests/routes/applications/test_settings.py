@@ -87,6 +87,13 @@ def test_application_settings(client, user_session):
         url_for("applications.settings", application_id=application.id)
     )
     assert response.status_code == 200
+    # the assertion below is a quick check to prevent regressions -- this ensures that
+    # the correct URL for creating a member for an application is _somewhere_ in
+    # the settings page.
+    assert (
+        url_for("applications.create_member", application_id=application.id)
+        in response.data.decode()
+    )
 
 
 def test_edit_application_environments_obj(app, client, user_session):
