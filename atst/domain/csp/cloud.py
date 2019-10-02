@@ -448,6 +448,7 @@ class MockCloudProvider(CloudProviderInterface):
 
 
 class AWSCloudProvider(CloudProviderInterface):
+    # These are standins that will be replaced with "real" policies once we know what they are.
     BASELINE_POLICIES = [
         {
             "name": "BillingReadOnly",
