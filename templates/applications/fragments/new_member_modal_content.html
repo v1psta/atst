@@ -2,10 +2,8 @@
 {% import "applications/fragments/member_form_fields.html" as member_fields %}
 
 {% macro MemberFormTemplate(title, next_button, previous=True) %}
-  <div class="modal__form--header">
-    <h1>{{ Icon('avatar') }} {{ title }}</h1>
-    <hr>
-  </div>
+  <hr>
+  <h1>{{ Icon('avatar') }} {{ title }}</h1>
 
   {{ caller() }}
 

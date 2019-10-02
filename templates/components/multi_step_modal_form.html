@@ -28,12 +28,12 @@
 {% macro MultiStepModalForm(name, form, form_action, steps, dismissable=False) -%}
   {% set step_count = steps|length %}
   <multi-step-modal-form inline-template :steps={{ step_count }}>
-    {% call Modal(name=name, dismissable=dismissable, classes="wide") %}
+    {% call Modal(name=name, dismissable=dismissable) %}
       <form id="{{ name }}" action="{{ form_action }}" method="POST" v-on:submit="handleSubmit">
         {{ form.csrf_token }}
         <div v-if="$root.activeModal === '{{ name }}'">
           {% for step in steps %}
-            <div class="modal__form" v-show="step === {{ loop.index0 }}">
+            <div v-show="step === {{ loop.index0 }}">
               {{ FormSteps(step_count, loop.index) }}
               {{ step }}
             </div>

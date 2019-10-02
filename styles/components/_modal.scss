@@ -127,6 +127,10 @@ body {
       border-bottom: 1px solid $color-gray-lighter;
       margin: 0 (-$gap * 1.5);
     }
+
+    .form-row {
+      margin: 0;
+    }
   }
 
   &__dismiss {
