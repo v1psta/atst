@@ -59,6 +59,8 @@
     {% for user, form in users_info %}
       {% set modal_id = "disable_ccpo_user_{}".format(user.dod_id) %}
       {% call Modal(name=modal_id) %}
+        <h1>Disable CCPO User</h1>
+        <hr>
         {{
           Alert(
             title=("components.modal.destructive_title" | translate),

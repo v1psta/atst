@@ -120,7 +120,7 @@ body {
     .action-group {
       background-color: $color-gray-lightest;
       padding: $gap * 2;
-      margin: 0 (-$gap * 1.5) (-$gap * 1.5);
+      margin: ($gap * 5) (-$gap * 1.5) (-$gap * 1.5);
     }
 
     hr {
