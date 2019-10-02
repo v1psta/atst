@@ -137,7 +137,6 @@ body {
     position: absolute;
     top: $gap;
     right: $gap;
-    width: 8rem;
 
     @include media($medium-screen) {
       top: $gap * 2;
@@ -249,5 +248,11 @@ body {
     + label::before {
       margin-left: -3rem;
     }
+  }
+}
+
+.modal--dismissable {
+  .modal__body {
+    padding-top: $gap * 3.5;
   }
 }

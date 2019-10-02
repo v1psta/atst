@@ -16,9 +16,6 @@
             {% if dismissable %}
               <button type='button' class='icon-link modal__dismiss' v-on:click='closeModal("{{name}}")'>
                 {{ Icon('x') }}
-                <span>
-                  {{ "common.close" | translate }}
-                </span>
               </button>
             {% endif %}
           </div>
