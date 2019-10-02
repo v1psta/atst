@@ -472,6 +472,7 @@ class AWSCloudProvider(CloudProviderInterface):
             "description": "View billing information.",
         }
     ]
+    MAX_CREATE_ACCOUNT_ATTEMPTS = 10
 
     def __init__(self, config, boto3=None):
         self.config = config
@@ -516,7 +517,7 @@ class AWSCloudProvider(CloudProviderInterface):
                 "AccountCreated": {
                     "operation": "DescribeCreateAccountStatus",
                     "delay": 20,
-                    "maxAttempts": 10,
+                    "maxAttempts": self.MAX_CREATE_ACCOUNT_ATTEMPTS,
                     "acceptors": [
                         {
                             "matcher": "path",
