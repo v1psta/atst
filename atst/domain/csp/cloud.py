@@ -1,6 +1,7 @@
 from typing import Dict
 from uuid import uuid4
 import json
+from jinja2 import Template
 
 from atst.models.environment_role import CSPRole
 from atst.models.user import User
@@ -692,7 +693,7 @@ class AWSCloudProvider(CloudProviderInterface):
         )
 
     def _inline_org_management_policy(self, account_id: str) -> Dict:
-        policy_dict = json.loads(
+        policy_template = Template(
             """
         {
             "Version": "2012-10-17",
@@ -703,14 +704,13 @@ class AWSCloudProvider(CloudProviderInterface):
                     "sts:AssumeRole"
                 ],
                 "Resource": [
-                    "arn:aws:iam::{}:role/{}"
+                    "arn:aws:iam::{{ account_id }}:role/{{ role_name }}"
                 ]
                 }
             ]
         }
         """
         )
-        policy_dict["Statement"][0]["Resource"][0] = policy_dict["Statement"][0][
-            "Resource"
-        ][0].format(account_id, self.root_account_policy_name)
-        return json.dumps(policy_dict)
+        return policy_template.render(
+            account_id=account_id, role_name=self.root_account_policy_name
+        )
