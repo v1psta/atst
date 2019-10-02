@@ -22,7 +22,14 @@
 <div class="modal modal--dismissable" id="modal--cancel">
 <div class="modal__container">
 <div aria-modal="true" class="modal__dialog" role="dialog">
+<base-form inline-template="">
 <div class="modal__body">
+<div class="modal__body--header">
+<h1></h1>
+</div>
+<hr/>
+<form action="" id="cancel" method="post">
+<div class="modal__body--content">
 <div class="task-order__modal-cancel">
 <h1>Do you want to save this draft?</h1>
 <div class="task-order__modal-cancel_buttons">
@@ -30,14 +37,22 @@
 <button class="usa-button usa-button-primary" formaction="/portfolios/e4edf994-04f4-4aaa-ba30-39507e1068a8/task_orders/form/cancel?save=True" type="submit">Yes, save for later</button>
 </div>
 </div>
+</div>
 <button class="icon-link modal__dismiss" type="button" v-on:click='closeModal("cancel")'>
 <span aria-hidden="true" class="icon icon--x"><svg viewbox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M2 2l12 12M14 15c-.256 0-.512-.098-.707-.293l-12-12c-.391-.391-.391-1.023 0-1.414s1.023-.391 1.414 0l12 12c.391.391.391 1.023 0 1.414-.195.195-.451.293-.707.293zm0-13L2 14"></path><path d="M2 15c-.256 0-.512-.098-.707-.293-.391-.391-.391-1.023 0-1.414l12-12c.391-.391 1.023-.391 1.414 0s.391 1.023 0 1.414l-12 12C2.512 14.902 2.256 15 2 15z"></path></svg>
 </span>
 <span>
-                  Close
-                </span>
+                      Close
+                    </span>
 </button>
+<div class="modal__body--footer">
+<div class="action-group">
+<button class="usa-button usa-button-secondary" type="button" v-on:click='closeModal("cancel")'>Cancel</button>
 </div>
+</div>
+</form>
+</div>
+</base-form>
 </div>
 </div>
 </div>

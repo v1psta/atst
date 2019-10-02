@@ -5,6 +5,7 @@ import checkboxinput from '../checkbox_input'
 import Selector from '../selector'
 import Modal from '../../mixins/modal'
 import toggler from '../toggler'
+import BaseForm from './base_form'
 
 export default {
   name: 'multi-step-modal-form',
@@ -18,6 +19,7 @@ export default {
     textinput,
     optionsinput,
     checkboxinput,
+    BaseForm,
   },
 
   props: {

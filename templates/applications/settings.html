@@ -122,21 +122,21 @@
         {% endif %}
         {% for member in members %}
           {% set modal_name = "edit_member-{}".format(loop.index) %}
-          {% call Modal(modal_name) %}
-            <div class="modal__form--header">
-              <h1>{{ Icon('avatar') }} {{ member.user_name }}</h1>
-              <hr>
-            </div>
-            <base-form inline-template>
-              <form id='{{ modal_name }}' method="POST" action="{{ url_for('applications.update_member', application_id=application.id, application_role_id=member.role_id) }}">
+          {% set header %}
+            {{ Icon('avatar') }} {{ member.user_name }}
+          {% endset %}
+          {% set edit_mem_submit %}
+            {{ SaveButton(text='Update', element='input', additional_classes='action-group__action') }}
+          {% endset %}
+
+          {% call Modal(
+            name=modal_name,
+            form_action=url_for('applications.update_member', application_id=application.id, application_role_id=member.role_id),
+            header=header,
+            submit_button=edit_mem_submit
+          ) %}
                 {{ member.form.csrf_token }}
                 {{ MemberPermsFields(form=member.form, member_role_id=member.role_id) }}
-                <div class="action-group">
-                  {{ SaveButton(text='Update', element='input', additional_classes='action-group__action') }}
-                  <a class='action-group__action usa-button usa-button-secondary' v-on:click="closeModal('{{ modal_name }}')">{{ "common.cancel" | translate }}</a>
-                </div>
-              </form>
-            </base-form>
           {% endcall %}
 
           {% if user_can(permissions.DELETE_APPLICATION_MEMBER) and member.role_status == 'pending' %}

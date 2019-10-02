@@ -2,6 +2,7 @@ import ally from 'ally.js'
 import stickybits from 'stickybits'
 
 import DateSelector from '../date_selector'
+import DeleteConfirmation from '../delete_confirmation'
 import FormMixin from '../../mixins/form'
 import Modal from '../../mixins/modal'
 import MultiStepModalForm from './multi_step_modal_form'
@@ -18,6 +19,7 @@ export default {
   name: 'base-form',
   components: {
     DateSelector,
+    DeleteConfirmation,
     Modal,
     MultiStepModalForm,
     checkboxinput,

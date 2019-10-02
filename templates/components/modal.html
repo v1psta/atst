@@ -5,38 +5,40 @@
     <div id='modal--{{name}}' class='modal {% if dismissable %}modal--dismissable{% endif%} {{ classes }}'>
       <div class='modal__container'>
         <div class='modal__dialog' role='dialog' aria-modal='true'>
-          <div class='modal__body'>
-            <div class="modal__body--header">
-              <h1>{{ header }}</h1>
-            </div>
-            <hr>
-            <form method="post" action="{{ form_action }}">
-              <div class="modal__body--content">
-                {{ caller() }}
+          <base-form inline-template>
+            <div class='modal__body'>
+              <div class="modal__body--header">
+                <h1>{{ header }}</h1>
               </div>
-
-              {% if dismissable -%}
-                <button type='button' class='icon-link modal__dismiss' v-on:click='closeModal("{{name}}")'>
-                  {{ Icon('x') }}
-                  <span>
-                    {{ "common.close" | translate }}
-                  </span>
-                </button>
-              {%- endif %}
-
-              <div class="modal__body--footer">
-                <div class="action-group">
-                  {{ submit_button }}
-                  {% if previous_button -%}
-                    {{ previous_button }}
-                    <a class='action-group__action icon-link icon-link--default' v-on:click="closeModal('{{name}}')">{{ "common.cancel" | translate }}</a>
-                  {% else %}
-                    <button type='button' v-on:click='closeModal("{{name}}")' class="usa-button usa-button-secondary">{{ "common.cancel" | translate }}</button>
-                  {%- endif %}
+              <hr>
+              <form id='{{ name }}' method="post" action="{{ form_action }}">
+                <div class="modal__body--content">
+                  {{ caller() }}
                 </div>
-              </div>
-            </form>
-          </div>
+
+                {% if dismissable -%}
+                  <button type='button' class='icon-link modal__dismiss' v-on:click='closeModal("{{name}}")'>
+                    {{ Icon('x') }}
+                    <span>
+                      {{ "common.close" | translate }}
+                    </span>
+                  </button>
+                {%- endif %}
+
+                <div class="modal__body--footer">
+                  <div class="action-group">
+                    {{ submit_button }}
+                    {% if previous_button -%}
+                      {{ previous_button }}
+                      <a class='action-group__action icon-link icon-link--default' v-on:click="closeModal('{{name}}')">{{ "common.cancel" | translate }}</a>
+                    {% else %}
+                      <button type='button' v-on:click='closeModal("{{name}}")' class="usa-button usa-button-secondary">{{ "common.cancel" | translate }}</button>
+                    {%- endif %}
+                  </div>
+                </div>
+              </form>
+            </div>
+          </base-form>
         </div>
       </div>
     </div>
