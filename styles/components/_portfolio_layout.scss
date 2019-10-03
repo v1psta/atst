@@ -157,7 +157,6 @@
     }
 
     input.usa-button.usa-button-primary {
-      margin: 0;
       width: 9rem;
       height: 4rem;
     }
@@ -588,5 +587,15 @@
       float: right;
       margin-right: 0;
     }
+  }
+}
+
+#modal--add-port-mem {
+  .modal__body {
+    width: 55rem;
+  }
+
+  .form-col:last-child {
+    margin-right: $gap * 3;
   }
 }
