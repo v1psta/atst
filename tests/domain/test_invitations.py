@@ -11,6 +11,7 @@ from atst.domain.invitations import (
     WrongUserError,
 )
 from atst.models import InvitationStatus
+from atst.models.portfolio_role import Status as PortfolioRoleStatus
 
 from tests.factories import (
     PortfolioFactory,
@@ -31,6 +32,7 @@ def test_create_invitation():
     assert invite.inviter == portfolio.owner
     assert invite.status == InvitationStatus.PENDING
     assert re.match(r"^[\w\-_]+$", invite.token)
+    assert invite.role.status == PortfolioRoleStatus.PENDING
 
 
 def test_accept_invitation():
@@ -43,6 +45,7 @@ def test_accept_invitation():
     assert invite.is_pending
     accepted_invite = PortfolioInvitations.accept(user, invite.token)
     assert accepted_invite.is_accepted
+    assert accepted_invite.role.is_active
 
 
 def test_accept_expired_invitation():
@@ -61,6 +64,7 @@ def test_accept_expired_invitation():
         PortfolioInvitations.accept(user, invite.token)
 
     assert invite.is_rejected
+    assert invite.role.status == PortfolioRoleStatus.PENDING
 
 
 def test_accept_rejected_invite():
@@ -72,6 +76,7 @@ def test_accept_rejected_invite():
     )
     with pytest.raises(InvitationError):
         PortfolioInvitations.accept(user, invite.token)
+    assert invite.role.status == PortfolioRoleStatus.PENDING
 
 
 def test_accept_revoked_invite():
@@ -83,6 +88,7 @@ def test_accept_revoked_invite():
     )
     with pytest.raises(InvitationError):
         PortfolioInvitations.accept(user, invite.token)
+    assert invite.role.status == PortfolioRoleStatus.PENDING
 
 
 def test_wrong_user_accepts_invitation():
@@ -93,6 +99,7 @@ def test_wrong_user_accepts_invitation():
     invite = PortfolioInvitationFactory.create(role=role, dod_id=user.dod_id)
     with pytest.raises(WrongUserError):
         PortfolioInvitations.accept(wrong_user, invite.token)
+    assert invite.role.status == PortfolioRoleStatus.PENDING
 
 
 def test_user_cannot_accept_invitation_accepted_by_wrong_user():
@@ -105,6 +112,7 @@ def test_user_cannot_accept_invitation_accepted_by_wrong_user():
         PortfolioInvitations.accept(wrong_user, invite.token)
     with pytest.raises(InvitationError):
         PortfolioInvitations.accept(user, invite.token)
+    assert invite.role.status == PortfolioRoleStatus.PENDING
 
 
 def test_accept_invitation_twice():
@@ -115,6 +123,7 @@ def test_accept_invitation_twice():
     PortfolioInvitations.accept(user, invite.token)
     with pytest.raises(InvitationError):
         PortfolioInvitations.accept(user, invite.token)
+    assert invite.role.is_active
 
 
 def test_revoke_invitation():
@@ -125,6 +134,7 @@ def test_revoke_invitation():
     assert invite.is_pending
     PortfolioInvitations.revoke(invite.token)
     assert invite.is_revoked
+    assert invite.role.status == PortfolioRoleStatus.PENDING
 
 
 def test_resend_invitation(session):

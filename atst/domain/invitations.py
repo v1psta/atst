@@ -143,10 +143,3 @@ class PortfolioInvitations(BaseInvitations):
 class ApplicationInvitations(BaseInvitations):
     model = ApplicationInvitation
     role_domain_class = ApplicationRoles
-
-    @classmethod
-    def _update_status(cls, invite, new_status):
-        invite = super()._update_status(invite, new_status)
-        ApplicationRoles.disable(invite.role)
-
-        return invite
