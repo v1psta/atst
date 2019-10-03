@@ -7,14 +7,14 @@
 {% set secondary_breadcrumb = 'portfolios.applications.new_application_title' | translate %}
 
   {% if application_id %}
-    {% set action = url_for('applications.update_new_application_step_1', portfolio_id=portfolio.id, application_id=application_id) %}
+    {% set action = url_for('applications.update_new_application_step_1', application_id=application_id) %}
   {% else %}
     {% set action = url_for('applications.create_new_application_step_1', portfolio_id=portfolio.id, application_id=application_id) %}
   {% endif %}
 
 {% block portfolio_header %}
   {% include "portfolios/header.html" %}
-  {{ StickyCTA(text="Name and Describe New Application", context="Step 1 of 3") }}
+  {{ StickyCTA(text=('portfolios.applications.new.step_1_header' | translate | safe), context="Step 1 of 3") }}
 {% endblock %}
   
 {% block application_content %}
@@ -23,31 +23,32 @@
 
   <application-name-and-description inline-template v-bind:initial-data='{{ form.data|tojson }}'>
     <form method="POST" action="{{ action }}" v-on:submit="handleSubmit">
-      <div class="panel">
         <div class="panel__content">
           {{ form.csrf_token }}
-          <p>
-            {{ "fragments.edit_application_form.explain" | translate }}
-          </p>
           <div class="form-row">
             <div class="form-col form-col--two-thirds">
               {{ TextInput(form.name, optional=False) }}
+              {{ ('portfolios.applications.new.step_1_form_help_text.description' | translate | safe) }}
             </div>
           </div>
+          <hr class="panel__break">
           <div class="form-row">
             <div class="form-col form-col--two-thirds">
               {{ TextInput(form.description, paragraph=True, optional=True) }}
-            </div>
+              {{ ('portfolios.applications.new.step_1_form_help_text.description' | translate | safe) }}
             </div>
           </div>
         </div>
-      </div>
+      
 
-        <span class="action-group">
-          {% block next_button %}
-            {{ SaveButton(text=('portfolios.applications.new.step_1_button_text' | translate)) }}
-          {% endblock %}
-        </span>
+      <span class="action-group">
+        {% block next_button %}
+          {{ SaveButton(text=('portfolios.applications.new.step_1_button_text' | translate)) }}
+        {% endblock %}
+        <a class="usa-button usa-button-secondary" href="{{ url_for('applications.portfolio_applications', portfolio_id=portfolio.id) }}">
+          Cancel
+        </a>
+      </span>
     </form>
   </application-name-and-description>
 
