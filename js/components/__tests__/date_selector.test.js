@@ -250,4 +250,33 @@ describe('DateSelector', () => {
       expect(component.maxError).toEqual(false)
     })
   })
+
+  describe('outsideRange', () => {
+    it('should return true if the date is before the minrange', () => {
+      component.minrange = '2020-01-01'
+      component.maxrange = '2025-01-01'
+      component.day = 1
+      component.month = 1
+      component.year = 2005
+      expect(component.outsideRange).toEqual(true)
+    })
+
+    it('should return true if the date is after the maxrange', () => {
+      component.minrange = '2020-01-01'
+      component.maxrange = '2025-01-01'
+      component.day = 1
+      component.month = 1
+      component.year = 2030
+      expect(component.outsideRange).toEqual(true)
+    })
+
+    it('should return false if the date is betwen minrange and maxrange', () => {
+      component.minrange = '2020-01-01'
+      component.maxrange = '2025-01-01'
+      component.day = 1
+      component.month = 1
+      component.year = 2022
+      expect(component.outsideRange).toEqual(false)
+    })
+  })
 })

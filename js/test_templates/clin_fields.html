@@ -332,6 +332,8 @@
           <date-selector
             :mindate="initialMinStartDate"
             :maxdate="maxStartProp"
+            :minrange='initialMinStartDate'
+            :maxrange='initialMaxEndDate'
             
               name-tag='start_date'
               initialmonth=""
@@ -352,10 +354,13 @@
                   For example: 07 04 1776
                 </p>
 
+                <div v-if='outsideRange && !minError' class="usa-input-error-message">
+                  PoP start date must be before or on September 14, 2022.
+                </div>
                 <div v-if='minError' class="usa-input-error-message">
                   PoP start date must be on or after September 14, 2019.
                 </div>
-                <div v-if='maxError' class="usa-input-error-message">
+                <div v-if='maxError && !outsideRange' class="usa-input-error-message">
                   PoP start date must be before end date.
                 </div>
               </legend>
@@ -431,6 +436,8 @@
           <date-selector
             :mindate="minEndProp"
             :maxdate="initialMaxEndDate"
+            :minrange='initialMinStartDate'
+            :maxrange='initialMaxEndDate'
             
               name-tag='end_date'
               initialmonth=""
@@ -473,11 +480,14 @@
                   For example: 07 04 1776
                 </p>
 
-                <div v-if='minError' class="usa-input-error-message">
+                <div v-if='outsideRange && !maxError' class="usa-input-error-message">
+                  PoP end date must be on or after September 14, 2019.
+                </div>
+                <div v-if='minError && !outsideRange' class="usa-input-error-message">
                   PoP end date must be after start date.
                 </div>
                 <div v-if='maxError' class="usa-input-error-message">
-                  PoP end date must be on or after September 14, 2022.
+                  PoP end date must be before or on September 14, 2022.
                 </div>
               </legend>
 

@@ -24,6 +24,8 @@
           <date-selector
             :mindate="initialMinStartDate"
             :maxdate="maxStartProp"
+            :minrange='initialMinStartDate'
+            :maxrange='initialMaxEndDate'
             {% if start_field %}
               name-tag='{{ start_field.name }}'
               initialmonth="{{ start_field.data.month }}"
@@ -46,10 +48,13 @@
                   {{ "task_orders.form.pop_example" | translate | safe }}
                 </p>
 
+                <div v-if='outsideRange && !minError' class="usa-input-error-message">
+                  PoP start date must be before or on {{ maxdate | formattedDate(formatter="%B %d, %Y") }}.
+                </div>
                 <div v-if='minError' class="usa-input-error-message">
                   PoP start date must be on or after {{ mindate | formattedDate(formatter="%B %d, %Y") }}.
                 </div>
-                <div v-if='maxError' class="usa-input-error-message">
+                <div v-if='maxError && !outsideRange' class="usa-input-error-message">
                   PoP start date must be before end date.
                 </div>
               </legend>
@@ -118,6 +123,8 @@
           <date-selector
             :mindate="minEndProp"
             :maxdate="initialMaxEndDate"
+            :minrange='initialMinStartDate'
+            :maxrange='initialMaxEndDate'
             {% if end_field %}
               name-tag='{{ end_field.name }}'
               initialmonth="{{ end_field.data.month }}"
@@ -142,11 +149,14 @@
                   {{ 'task_orders.form.pop_example' | translate }}
                 </p>
 
-                <div v-if='minError' class="usa-input-error-message">
+                <div v-if='outsideRange && !maxError' class="usa-input-error-message">
+                  PoP end date must be on or after {{ mindate | formattedDate(formatter="%B %d, %Y") }}.
+                </div>
+                <div v-if='minError && !outsideRange' class="usa-input-error-message">
                   PoP end date must be after start date.
                 </div>
                 <div v-if='maxError' class="usa-input-error-message">
-                  PoP end date must be on or after {{ formatted_end_date }}.
+                  PoP end date must be before or on {{ formatted_end_date }}.
                 </div>
               </legend>
 

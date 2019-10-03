@@ -19,6 +19,8 @@ export default {
     initialyear: { type: String },
     mindate: { type: String },
     maxdate: { type: String },
+    minrange: { type: String },
+    maxrange: { type: String },
     nameTag: { type: String },
     optional: {
       type: Boolean,
@@ -179,12 +181,29 @@ export default {
       return false
     },
 
+    outsideRange: function() {
+      if (!!this.maxrange && !!this.minrange && this.isDateComplete) {
+        return (
+          this.dateParsed < this.minRangeParsed ||
+          this.dateParsed > this.maxRangeParsed
+        )
+      }
+    },
+
     maxDateParsed: function() {
       return new Date(this.maxdate)
     },
 
     minDateParsed: function() {
       return new Date(this.mindate)
+    },
+
+    maxRangeParsed: function() {
+      return new Date(this.maxrange)
+    },
+
+    minRangeParsed: function() {
+      return new Date(this.minrange)
     },
 
     dateParsed: function() {

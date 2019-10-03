@@ -50,13 +50,13 @@ def test_clin_form_pop_dates_within_contract_dates():
     assert not clin_form.validate()
     assert (
         translate(
-            "forms.task_order.pop_errors.start",
+            "forms.task_order.pop_errors.start_pre_contract",
             {"date": CONTRACT_START_DATE.strftime("%b %d, %Y")},
         )
     ) in clin_form.start_date.errors
     assert (
         translate(
-            "forms.task_order.pop_errors.end",
+            "forms.task_order.pop_errors.end_past_contract",
             {"date": CONTRACT_END_DATE.strftime("%b %d, %Y")},
         )
     ) in clin_form.end_date.errors

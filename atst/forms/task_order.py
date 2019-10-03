@@ -91,6 +91,8 @@ class CLINForm(FlaskForm):
             self.start_date.data
             and self.end_date.data
             and self.start_date.data > self.end_date.data
+            and self.start_date.data <= contract_end
+            and self.end_date.data >= contract_start
         ):
             self.start_date.errors.append(
                 translate("forms.task_order.pop_errors.date_order")
@@ -100,7 +102,7 @@ class CLINForm(FlaskForm):
         if self.start_date.data and self.start_date.data <= contract_start:
             self.start_date.errors.append(
                 translate(
-                    "forms.task_order.pop_errors.start",
+                    "forms.task_order.pop_errors.start_pre_contract",
                     {"date": contract_start.strftime("%b %d, %Y")},
                 )
             )
@@ -109,8 +111,26 @@ class CLINForm(FlaskForm):
         if self.end_date.data and self.end_date.data >= contract_end:
             self.end_date.errors.append(
                 translate(
-                    "forms.task_order.pop_errors.end",
+                    "forms.task_order.pop_errors.end_past_contract",
                     {"date": contract_end.strftime("%b %d, %Y")},
+                )
+            )
+            valid = False
+
+        if self.start_date.data and self.start_date.data > contract_end:
+            self.start_date.errors.append(
+                translate(
+                    "forms.task_order.pop_errors.start_past_contract",
+                    {"date": contract_end.strftime("%b %d, %Y")},
+                )
+            )
+            valid = False
+
+        if self.end_date.data and self.end_date.data < contract_start:
+            self.end_date.errors.append(
+                translate(
+                    "forms.task_order.pop_errors.end_pre_contract",
+                    {"date": contract_start.strftime("%b %d, %Y")},
                 )
             )
             valid = False
