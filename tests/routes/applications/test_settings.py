@@ -566,7 +566,6 @@ def test_revoke_invite(client, user_session):
     )
 
     assert invite.is_revoked
-    assert app_role.status == ApplicationRoleStatus.DISABLED
 
 
 def test_filter_environment_roles():
