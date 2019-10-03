@@ -337,6 +337,7 @@ portfolios:
             </p>
           </div>
       step_2_header: Add Environments to {application_name}
+      step_2_description: "Production, Staging, Testing, and Development environments are included by default. However, you can add, edit, and delete environments based on the needs of your Project."
       step_2_button_text: "Save and Add Members"
       step_3_header: Invite Members to {application_name}
       step_3_button_text: Save Application
@@ -362,8 +363,7 @@ portfolios:
       delete:
         button: Delete environment
       edit_name: Edit name
-    environments_description: Each environment created within an application is logically separated from one another for easier management and security.
-    environments_heading: Application environments
+    environments_heading: Project Environments
     existing_application_title: '{application_name} Application Settings'
     member_count: '{count} members'
     new_application_title: New Application
