@@ -81,14 +81,9 @@
     "applications.create_member",
     user_can(permissions.CREATE_APPLICATION_MEMBER)) }}
 
-  <div class='subheading'>
+  <div class="subheading">    
     {{ 'common.resource_names.environments' | translate }}
-
-    {% if user_can(permissions.CREATE_ENVIRONMENT) %}
-      {% include "applications/fragments/add_new_environment.html" %}
-    {% endif %}
   </div>
-
   <div class="panel">
     {% if g.matchesPath("application-environments") %}
       {% include "fragments/flash.html" %}
@@ -178,8 +173,13 @@
         </ul>
       </div>
     </div>
+    {% if user_can(permissions.CREATE_ENVIRONMENT) %}
+      <div class='subheading'>
+      {% include "applications/fragments/add_new_environment.html" %}
+      </div>
+    {% endif %}
   </div>
-
+  
   <hr>
 
   {% if user_can(permissions.DELETE_APPLICATION) %}
