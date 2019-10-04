@@ -9,6 +9,7 @@ import redis
 from unipath import Path
 from flask_wtf.csrf import CSRFProtect
 import json
+from enum import Enum
 
 from atst.database import db
 from atst.assets import environment as assets_environment
@@ -150,7 +151,7 @@ def set_default_headers(app):  # pragma: no cover
 
 def map_config(config):
     def sqlalchemy_dumps(dct):
-        def _default(self, obj):
+        def _default(obj):
             if isinstance(obj, Enum):
                 return obj.name
             else:

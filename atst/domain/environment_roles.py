@@ -87,3 +87,17 @@ class EnvironmentRoles(object):
             .all()
         )
         return [id_ for id_, in results]
+
+    @classmethod
+    def get_environment_roles_pending_deletion(cls) -> List[UUID]:
+        results = (
+            db.session.query(EnvironmentRole.id)
+            .join(Environment)
+            .join(ApplicationRole)
+            .filter(Environment.deleted == False)
+            .filter(Environment.baseline_info != None)
+            .filter(EnvironmentRole.status == EnvironmentRole.Status.PENDING_DELETE)
+            .filter(ApplicationRole.status == ApplicationRoleStatus.ACTIVE)
+            .all()
+        )
+        return [id_ for id_, in results]

@@ -18,6 +18,7 @@ from atst.jobs import (
     dispatch_provision_user,
     do_provision_user,
     do_delete_user,
+    dispatch_delete_user,
 )
 from atst.models.utils import claim_for_update
 from atst.domain.exceptions import ClaimFailedException
@@ -391,3 +392,46 @@ def test_do_delete_user(csp, session):
     session.refresh(environment_role)
 
     assert environment_role.status == EnvironmentRole.Status.DELETED
+
+
+def test_dispatch_delete_user(csp, session, monkeypatch):
+    # Given that I have three environment roles:
+    #   (A) one of which has a completed status
+    #   (B) one of which has an environment that has not been provisioned
+    #   (C) one of which is pending, has a provisioned environment but an inactive application role
+    #   (D) one of which is pending, has a provisioned environment and has an active application role
+    #   (E) one of which is pending delete, has a provisioned environment and has an active application role
+    provisioned_environment = EnvironmentFactory.create(
+        cloud_id="cloud_id", root_user_info={}, baseline_info={}
+    )
+    unprovisioned_environment = EnvironmentFactory.create()
+    _er_a = EnvironmentRoleFactory.create(
+        environment=provisioned_environment, status=EnvironmentRole.Status.COMPLETED
+    )
+    _er_b = EnvironmentRoleFactory.create(
+        environment=unprovisioned_environment, status=EnvironmentRole.Status.PENDING
+    )
+    _er_c = EnvironmentRoleFactory.create(
+        environment=unprovisioned_environment,
+        status=EnvironmentRole.Status.PENDING,
+        application_role=ApplicationRoleFactory(status=ApplicationRoleStatus.PENDING),
+    )
+    _er_d = EnvironmentRoleFactory.create(
+        environment=unprovisioned_environment,
+        status=EnvironmentRole.Status.PENDING_DELETE,
+        application_role=ApplicationRoleFactory(status=ApplicationRoleStatus.PENDING),
+    )
+    er_e = EnvironmentRoleFactory.create(
+        environment=provisioned_environment,
+        status=EnvironmentRole.Status.PENDING_DELETE,
+        application_role=ApplicationRoleFactory(status=ApplicationRoleStatus.ACTIVE),
+    )
+
+    mock = Mock()
+    monkeypatch.setattr("atst.jobs.delete_user", mock)
+
+    # When I dispatch the user deletion task
+    dispatch_delete_user.run()
+
+    # I expect it to dispatch only one call, to EnvironmentRole E
+    mock.delay.assert_called_once_with(environment_role_id=er_e.id)

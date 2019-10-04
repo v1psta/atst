@@ -170,6 +170,13 @@ def provision_user(self, environment_role_id=None):
 
 
 @celery.task(bind=True)
+def delete_user(self, environment_role_id=None):
+    do_work(
+        do_delete_user, self, app.csp.cloud, environment_role_id=environment_role_id
+    )
+
+
+@celery.task(bind=True)
 def dispatch_create_environment(self):
     for environment_id in Environments.get_environments_pending_creation(
         pendulum.now()
@@ -199,3 +206,11 @@ def dispatch_provision_user(self):
         environment_role_id
     ) in EnvironmentRoles.get_environment_roles_pending_creation():
         provision_user.delay(environment_role_id=environment_role_id)
+
+
+@celery.task(bind=True)
+def dispatch_delete_user(self):
+    for (
+        environment_role_id
+    ) in EnvironmentRoles.get_environment_roles_pending_deletion():
+        delete_user.delay(environment_role_id=environment_role_id)
