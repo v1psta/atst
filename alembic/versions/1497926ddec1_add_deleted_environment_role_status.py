@@ -17,7 +17,6 @@ depends_on = None
 
 
 def upgrade():
-    # op.alter_column("environment_roles", "status", new_column_name="status_old")
     op.alter_column(
         "environment_roles",
         "status",
@@ -30,17 +29,9 @@ def upgrade():
             native_enum=False,
         ),
         existing_type=sa.Enum(
-            "PENDING",
-            "COMPLETED",
-            "PENDING_DELETE",
-            name="status",
-            native_enum=False,
+            "PENDING", "COMPLETED", "PENDING_DELETE", name="status", native_enum=False
         ),
     )
-
-    # conn = op.get_bind()
-    # conn.execute("UPDATE environment_roles SET status = status_old")
-    # op.drop_column("environment_roles", "status_old")
 
 
 def downgrade():
@@ -51,16 +42,11 @@ def downgrade():
         SET status = (CASE WHEN status = 'DELETED' THEN 'PENDING_DELETE' ELSE status END)
         """
     )
-
     op.alter_column(
         "environment_roles",
         "status",
         type_=sa.Enum(
-            "PENDING",
-            "COMPLETED",
-            "PENDING_DELETE",
-            name="status",
-            native_enum=False,
+            "PENDING", "COMPLETED", "PENDING_DELETE", name="status", native_enum=False
         ),
         existing_type=sa.Enum(
             "PENDING",
