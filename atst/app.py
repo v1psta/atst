@@ -8,6 +8,7 @@ from flask_session import Session
 import redis
 from unipath import Path
 from flask_wtf.csrf import CSRFProtect
+import json
 
 from atst.database import db
 from atst.assets import environment as assets_environment
@@ -148,6 +149,15 @@ def set_default_headers(app):  # pragma: no cover
 
 
 def map_config(config):
+    def sqlalchemy_dumps(dct):
+        def _default(self, obj):
+            if isinstance(obj, Enum):
+                return obj.name
+            else:
+                raise TypeError()
+
+        return json.dumps(dct, default=_default)
+
     return {
         **config["default"],
         "ENV": config["default"]["ENVIRONMENT"],
@@ -158,6 +168,7 @@ def map_config(config):
         "PORT": int(config["default"]["PORT"]),
         "SQLALCHEMY_DATABASE_URI": config["default"]["DATABASE_URI"],
         "SQLALCHEMY_TRACK_MODIFICATIONS": False,
+        "SQLALCHEMY_ENGINE_OPTIONS": {"json_serializer": sqlalchemy_dumps},
         "WTF_CSRF_ENABLED": config.getboolean("default", "WTF_CSRF_ENABLED"),
         "PERMANENT_SESSION_LIFETIME": config.getint(
             "default", "PERMANENT_SESSION_LIFETIME"

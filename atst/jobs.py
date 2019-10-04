@@ -3,7 +3,11 @@ import pendulum
 
 from atst.database import db
 from atst.queue import celery
-from atst.models import EnvironmentJobFailure, EnvironmentRoleJobFailure
+from atst.models import (
+    EnvironmentJobFailure,
+    EnvironmentRoleJobFailure,
+    EnvironmentRole,
+)
 from atst.domain.csp.cloud import CloudProviderInterface, GeneralCSPException
 from atst.domain.environments import Environments
 from atst.domain.environment_roles import EnvironmentRoles
@@ -112,6 +116,19 @@ def do_provision_user(csp: CloudProviderInterface, environment_role_id=None):
             credentials, environment_role, environment_role.role
         )
         environment_role.csp_user_id = csp_user_id
+        environment_role.status = EnvironmentRole.Status.COMPLETED
+        db.session.add(environment_role)
+        db.session.commit()
+
+
+def do_delete_user(csp: CloudProviderInterface, environment_role_id=None):
+    environment_role = EnvironmentRoles.get_by_id(environment_role_id)
+
+    with claim_for_update(environment_role) as environment_role:
+        credentials = environment_role.environment.csp_credentials
+
+        csp.delete_user(credentials, environment_role.csp_user_id)
+        environment_role.status = EnvironmentRole.Status.DELETED
         db.session.add(environment_role)
         db.session.commit()
 

@@ -3,7 +3,6 @@ import pytest
 from uuid import uuid4
 from unittest.mock import Mock
 from threading import Thread
-from time import sleep
 
 from atst.domain.csp.cloud import MockCloudProvider
 from atst.jobs import (
@@ -18,6 +17,7 @@ from atst.jobs import (
     create_environment,
     dispatch_provision_user,
     do_provision_user,
+    do_delete_user,
 )
 from atst.models.utils import claim_for_update
 from atst.domain.exceptions import ClaimFailedException
@@ -370,3 +370,24 @@ def test_do_provision_user(csp, session):
     )
     # I expect that the EnvironmentRole now has a csp_user_id
     assert environment_role.csp_user_id
+
+
+def test_do_delete_user(csp, session):
+    credentials = MockCloudProvider(())._auth_credentials
+    provisioned_environment = EnvironmentFactory.create(
+        cloud_id="cloud_id",
+        root_user_info={"credentials": credentials},
+        baseline_info={},
+    )
+
+    environment_role = EnvironmentRoleFactory.create(
+        environment=provisioned_environment,
+        status=EnvironmentRole.Status.PENDING_DELETE,
+        role="my_role",
+    )
+
+    do_delete_user(csp=csp, environment_role_id=environment_role.id)
+
+    session.refresh(environment_role)
+
+    assert environment_role.status == EnvironmentRole.Status.DELETED
