@@ -311,7 +311,7 @@ def test_claim_for_update(session):
 
 
 def test_dispatch_provision_user(csp, session, celery_app, celery_worker, monkeypatch):
-    # Given that I have three environment roles:
+    # Given that I have four environment roles:
     #   (A) one of which has a completed status
     #   (B) one of which has an environment that has not been provisioned
     #   (C) one of which is pending, has a provisioned environment but an inactive application role
@@ -395,7 +395,7 @@ def test_do_delete_user(csp, session):
 
 
 def test_dispatch_delete_user(csp, session, monkeypatch):
-    # Given that I have three environment roles:
+    # Given that I have five environment roles:
     #   (A) one of which has a completed status
     #   (B) one of which has an environment that has not been provisioned
     #   (C) one of which is pending, has a provisioned environment but an inactive application role
