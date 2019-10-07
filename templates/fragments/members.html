@@ -77,7 +77,7 @@
 
         {%- if member.role_status == 'pending' %}
           {% set resend_invite_modal = "resend_invite-{}".format(member.role_id) %}
-          {% call Modal(resend_invite_modal) %}
+          {% call Modal(resend_invite_modal, classes="form-content--app-mem") %}
             <div class="modal__form--header">
               <h1>Verify Member Information</h1>
               <hr>
