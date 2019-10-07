@@ -78,9 +78,9 @@
     members,
     new_member_form,
     "applications.create_member",
-    user_can(permissions.CREATE_APPLICATION_MEMBER),
-    user_can(permissions.EDIT_APPLICATION_MEMBER),
-    user_can(permissions.DELETE_APPLICATION_MEMBER),
+    user_can_create_app_member=user_can(permissions.CREATE_APPLICATION_MEMBER),
+    user_can_edit_app_member=user_can(permissions.EDIT_APPLICATION_MEMBER),
+    user_can_delete_app_member=user_can(permissions.DELETE_APPLICATION_MEMBER),
   ) }}
 
   <div class="subheading">    
