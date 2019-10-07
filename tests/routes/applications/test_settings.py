@@ -598,7 +598,9 @@ def test_filter_environment_roles():
         # need to set the time created to yesterday, otherwise the original invite and resent
         # invite have the same time_created and then we can't rely on time to order the invites
         yesterday = datetime.date.today() - datetime.timedelta(days=1)
-        invite = ApplicationInvitationFactory.create(user=user, time_created=yesterday)
+        invite = ApplicationInvitationFactory.create(
+            user=user, time_created=yesterday, email="original@example.com"
+        )
         app_role = invite.role
         application = app_role.application
 
