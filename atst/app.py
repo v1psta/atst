@@ -8,8 +8,6 @@ from flask_session import Session
 import redis
 from unipath import Path
 from flask_wtf.csrf import CSRFProtect
-import json
-from enum import Enum
 
 from atst.database import db
 from atst.assets import environment as assets_environment
@@ -31,7 +29,7 @@ from atst.models.permissions import Permissions
 from atst.queue import celery, update_celery
 from atst.utils import mailer
 from atst.utils.form_cache import FormCache
-from atst.utils.json import CustomJSONEncoder
+from atst.utils.json import CustomJSONEncoder, sqlalchemy_dumps
 from atst.utils.notification_sender import NotificationSender
 from atst.utils.session_limiter import SessionLimiter
 
@@ -150,15 +148,6 @@ def set_default_headers(app):  # pragma: no cover
 
 
 def map_config(config):
-    def sqlalchemy_dumps(dct):
-        def _default(obj):
-            if isinstance(obj, Enum):
-                return obj.name
-            else:
-                raise TypeError()
-
-        return json.dumps(dct, default=_default)
-
     return {
         **config["default"],
         "ENV": config["default"]["ENVIRONMENT"],
