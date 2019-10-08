@@ -15,10 +15,16 @@
 ) %}
 
   
-  {% include "fragments/flash.html" %}
+  {% if g.matchesPath("application-members") %}
+      {% include "fragments/flash.html" %}
+  {% endif %}
 
+  <div class="subheading">
+    {{ 'portfolios.applications.settings.team_members' | translate }}
+  </div>
+  <div class="panel">
   {% if not application.members %}
-    <div class='empty-state'>
+    <div class='empty-state panel__content'>
       <p class='empty-state__message'>{{ ("portfolios.applications.team_settings.blank_slate.title" | translate) }}</p>
 
       {{ Icon('avatar') }}
@@ -45,21 +51,9 @@
     </div>
 
   {% else %}
-    <div class='subheading'>
-      {{ 'portfolios.applications.settings.team_members' | translate }}
-
-      {% set new_member_modal_name = "add-app-mem" %}
-      {% if user_can_create_app_member %}
-        <a class="icon-link modal-link icon-link__add" v-on:click="openModal('{{ new_member_modal_name }}')">
-          {{ Icon("plus") }}
-          {{ "portfolios.applications.add_member" | translate }}
-        </a>
-      {% endif %}
-    </div>
-
-    <section class="member-list application-list" id="application-members">
-      <div class='responsive-table-wrapper panel'>
-        {% for member in members %}
+    {% set new_member_modal_name = "add-app-mem" %}
+    
+    {% for member in members %}
           {% set modal_name = "edit_member-{}".format(loop.index) %}
           {% call Modal(modal_name) %}
             <div class="modal__form--header">
@@ -78,11 +72,15 @@
             </base-form>
           {% endcall %}
         {% endfor %}
-        <table>
+
+    
+    <section class="member-list application-list" id="application-members">
+      <div class='responsive-table-wrapper'>
+        <table class="atat-table">
           <thead>
             <tr>
               <th>Member</th>
-              <th>Project Permissions</th>
+              <th>Application Permissions</th>
               <th>Environment Access</th>
               <th></th>
             </tr>
@@ -92,7 +90,7 @@
               {% set modal_name = "edit_member-{}".format(loop.index) %}
               <tr>
                 <td>
-                  {{ member.user_name }}
+                  <strong>{{ member.user_name }}</strong>
                   <a class="icon-link" v-on:click="openModal('{{ modal_name }}')">
                     {{ Icon('edit') }}
                   </a>
@@ -123,6 +121,11 @@
             {% endfor %}
           </tbody>
         </table>
+        {% if user_can_create_app_member %}
+          <a class="usa-button usa-button-secondary create-member" v-on:click="openModal('{{ new_member_modal_name }}')">
+            {{ "portfolios.applications.add_member" | translate }}
+          </a>
+        {% endif %}
       </div>
 
       {% if user_can_create_app_member %}
@@ -139,5 +142,6 @@
       {% endif %}
     </section>
   {% endif %}
+  </div>
 
 {% endmacro %}

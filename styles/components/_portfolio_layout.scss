@@ -138,85 +138,22 @@
       color: $color-gray;
     }
 
+    .responsive-table-wrapper {
+      padding-bottom: $gap * 3;
+      margin-bottom: 0;
+    }
+
     table {
-      margin: 0;
-      width: 100%;
+      min-width: 100%;
+      margin-top: 0;
+    }
 
-      thead {
-        th:first-child {
-          padding-left: 3 * $gap;
-        }
-
-        tr:first-child {
-          padding: 0 2 * $gap 0 5 * $gap;
-        }
-
-        td {
-          font-weight: bold;
-          font-size: 1.4rem;
-          border-top: 0;
-        }
-      }
-
-      th {
-        background-color: $color-gray-lightest;
-        padding: $gap 2 * $gap;
-        border-top: none;
-        border-bottom: none;
-        color: $color-gray;
-      }
-
-      td:first-child {
-        padding: 2 * $gap 2 * $gap 2 * $gap 5 * $gap;
-      }
-
-      tbody {
-        td {
-          border-bottom: 1px solid $color-gray-lightest;
-          font-size: 1.6rem;
-          border-top: 0;
-          padding: 3 * $gap 2 * $gap;
-
-          .usa-button-disabled {
-            color: $color-gray-medium;
-            background-color: $color-gray-lightest;
-            box-shadow: inset 0 0 0 1px $color-gray-medium;
-          }
-
-          button {
-            padding: 0;
-            margin: 0;
-            font-size: 1.5rem;
-            width: 11rem;
-            height: 3rem;
-          }
-        }
-
-        .name {
-          font-weight: bold;
-
-          .you {
-            font-size: 1.2rem;
-          }
-        }
-
-        .usa-input.usa-input--success {
-          margin: 0;
-        }
-
-        select {
-          border: none;
-        }
-      }
-
-      .add-member-link {
-        text-align: right;
-      }
-
-      .usa-button-primary .usa-button {
-        padding: 2 * $gap;
-        float: right;
-      }
+    a.create-member {
+      display: inherit;
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 50%;
+      margin-top: 3rem;
     }
 
     input.usa-button.usa-button-primary {

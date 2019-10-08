@@ -120,9 +120,10 @@
     @include panel-actions;
   }
 
-  hr {
+  hr,
+  &__break {
     border: 0;
-    border-bottom: 1px dashed $color-gray-light;
+    border-bottom: 1px solid $color-gray-light;
     margin: ($gap * 4) ($site-margins * -4);
   }
 }

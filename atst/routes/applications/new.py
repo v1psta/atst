@@ -37,11 +37,9 @@ def render_new_application_form(
 
 
 @applications_bp.route("/portfolios/<portfolio_id>/applications/new")
-@applications_bp.route(
-    "/portfolios/<portfolio_id>/applications/<application_id>/step_1"
-)
+@applications_bp.route("/applications/<application_id>/new/step_1")
 @user_can(Permissions.CREATE_APPLICATION, message="view create new application form")
-def view_new_application_step_1(portfolio_id, application_id=None):
+def view_new_application_step_1(portfolio_id=None, application_id=None):
     return render_new_application_form(
         "applications/new/step_1.html",
         NameAndDescriptionForm,
@@ -56,13 +54,12 @@ def view_new_application_step_1(portfolio_id, application_id=None):
     methods=["POST"],
 )
 @applications_bp.route(
-    "/portfolios/<portfolio_id>/applications/<application_id>/step_1",
+    "/applications/<application_id>/new/step_1",
     endpoint="update_new_application_step_1",
     methods=["POST"],
 )
 @user_can(Permissions.CREATE_APPLICATION, message="view create new application form")
-def create_or_update_new_application_step_1(portfolio_id, application_id=None):
-    portfolio = Portfolios.get_for_update(portfolio_id)
+def create_or_update_new_application_step_1(portfolio_id=None, application_id=None):
     form = get_new_application_form(
         {**http_request.form}, NameAndDescriptionForm, application_id
     )
@@ -72,12 +69,14 @@ def create_or_update_new_application_step_1(portfolio_id, application_id=None):
         if application_id:
             application = Applications.get(application_id)
             application = Applications.update(application, form.data)
+            flash("application_updated", application_name=application.name)
         else:
+            portfolio = Portfolios.get_for_update(portfolio_id)
             application = Applications.create(g.current_user, portfolio, **form.data)
+            flash("application_created", application_name=application.name)
         return redirect(
             url_for(
                 "applications.update_new_application_step_2",
-                portfolio_id=portfolio_id,
                 application_id=application.id,
             )
         )
@@ -94,11 +93,9 @@ def create_or_update_new_application_step_1(portfolio_id, application_id=None):
         )
 
 
-@applications_bp.route(
-    "/portfolios/<portfolio_id>/applications/<application_id>/step_2"
-)
+@applications_bp.route("/applications/<application_id>/new/step_2")
 @user_can(Permissions.CREATE_APPLICATION, message="view create new application form")
-def view_new_application_step_2(portfolio_id, application_id):
+def view_new_application_step_2(application_id):
     application = Applications.get(application_id)
     render_args = {
         "form": EnvironmentsForm(
@@ -114,11 +111,9 @@ def view_new_application_step_2(portfolio_id, application_id):
     return render_template("applications/new/step_2.html", **render_args)
 
 
-@applications_bp.route(
-    "/portfolios/<portfolio_id>/applications/<application_id>/step_2", methods=["POST"]
-)
+@applications_bp.route("/applications/<application_id>/new/step_2", methods=["POST"])
 @user_can(Permissions.CREATE_APPLICATION, message="view create new application form")
-def update_new_application_step_2(portfolio_id, application_id):
+def update_new_application_step_2(application_id):
     form = get_new_application_form(
         {**http_request.form}, EnvironmentsForm, application_id
     )
@@ -137,15 +132,14 @@ def update_new_application_step_2(portfolio_id, application_id):
             render_new_application_form(
                 "applications/new/step_2.html",
                 EnvironmentsForm,
-                portfolio_id,
-                application_id,
-                form,
+                application_id=application_id,
+                form=form,
             ),
             400,
         )
 
 
-@applications_bp.route("/applications/<application_id>/step_3")
+@applications_bp.route("/applications/<application_id>/new/step_3")
 @user_can(Permissions.CREATE_APPLICATION, message="view create new application form")
 def view_new_application_step_3(application_id):
     application = Applications.get(application_id)
@@ -161,7 +155,7 @@ def view_new_application_step_3(application_id):
     )
 
 
-@applications_bp.route("/applications/<application_id>/step_3", methods=["POST"])
+@applications_bp.route("/applications/<application_id>/new/step_3", methods=["POST"])
 @user_can(Permissions.CREATE_APPLICATION, message="view create new application form")
 def update_new_application_step_3(application_id):
 

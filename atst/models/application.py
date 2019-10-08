@@ -15,7 +15,7 @@ class Application(
 
     id = Id()
     name = Column(String, nullable=False)
-    description = Column(String, nullable=False)
+    description = Column(String)
 
     portfolio_id = Column(ForeignKey("portfolios.id"), nullable=False)
     portfolio = relationship("Portfolio")

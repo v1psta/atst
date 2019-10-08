@@ -14,6 +14,13 @@ MESSAGES = {
         """,
         "category": "success",
     },
+    "application_updated": {
+        "title_template": translate("flash.success"),
+        "message_template": """
+            {{ "flash.application.updated" | translate({"application_name": application_name}) }}
+        """,
+        "category": "success",
+    },
     "application_deleted": {
         "title_template": translate("flash.success"),
         "message_template": """

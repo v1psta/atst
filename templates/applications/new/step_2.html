@@ -8,68 +8,74 @@
 {% set secondary_breadcrumb = 'portfolios.applications.new_application_title' | translate %}
 
 {% block portfolio_header %}
-  {{ StickyCTA(text=application.name) }}
+  {% include "portfolios/header.html" %}
+  {{ StickyCTA(text=('portfolios.applications.new.step_2_header' | translate({"application_name": application.name}) ), context="Step 2 of 3") }}
 {% endblock %}
 
 {% block application_content %}
 
   {% set modalName = "newApplicationConfirmation" %}
   {% include "fragments/flash.html" %}
-
-  <application-environments inline-template v-bind:initial-data='{{ form.data|tojson }}'>
-    <form method="POST" action="{{ url_for('applications.update_new_application_step_2', portfolio_id=portfolio.id, application_id=application.id) }}" v-on:submit="handleSubmit">
-      <div class="panel">
-        <div class="panel__content">
-          {{ form.csrf_token }}
-          <div> {# this extra div prevents this bug: https://www.pivotaltracker.com/story/show/160768940 #}
-            <div v-cloak v-for="title in errors" :key="title">
-              {{ Alert(message=None, level="error", vue_template=True) }}
+  <div class="panel__content">
+    <p>
+      {{ 'portfolios.applications.new.step_2_description' | translate }}
+    </p>
+    <hr class="panel__break">
+    <application-environments inline-template v-bind:initial-data='{{ form.data|tojson }}'>
+      <form method="POST" action="{{ url_for('applications.update_new_application_step_2', portfolio_id=portfolio.id, application_id=application.id) }}" v-on:submit="handleSubmit">
+        <div class="subheading">{{ 'portfolios.applications.environments_heading' | translate }}</div>
+        <div class="panel">
+          <div class="panel__content">
+            {{ form.csrf_token }}
+            <div> {# this extra div prevents this bug: https://www.pivotaltracker.com/story/show/160768940 #}
+              <div v-cloak v-for="title in errors" :key="title">
+                {{ Alert(message=None, level="error", vue_template=True) }}
+              </div>
             </div>
-          </div>
-
-          <div class="application-list-item">
-            <header>
-              <h2 class="block-list__title">{{ 'portfolios.applications.environments_heading' | translate }}</h2>
-              <p>
-                {{ 'portfolios.applications.environments_description' | translate }}
-              </p>
-            </header>
-
-            <ul>
-              <li v-for="(environment, i) in environments" class="application-edit__env-list-item">
-                <div class="usa-input">
-                  <label :for="'environment_names-' + i">Environment Name</label>
-                  <input type="text" :id="'environment_names-' + i" v-model="environment.name" @input="onInput" placeholder="e.g. Development, Staging, Production"/> <input type="hidden" :name="'environment_names-' + i" v-model="environment.name"/>
-                </div>
-                <div class="application-edit__env-list-item-block">
-                  <button v-on:click="removeEnvironment(i)" v-if="environments.length > 1" type="button" class="application-edit__env-list-item__remover">
-                    {{ Icon('trash') }}
-                    <span>Remove</span>
-                  </button>
-                </div>
-              </li>
-            </ul>
-
-            <div class="block-list__footer">
-              <button
-                v-on:click="addEnvironment"
-                class="icon-link"
-                tabindex="0"
-                type="button">
-                {{ 'portfolios.applications.add_another_environment' | translate }}
-                {{ Icon("plus") }}
-              </button>
-            </div>
-          </div>
+  
+            <div class="application-list-item">
+              <ul>
+                <li v-for="(environment, i) in environments" class="application-edit__env-list-item">
+                  <div class="usa-input">
+                    <label :for="'environment_names-' + i">Environment Name</label>
+                    <input type="text" :id="'environment_names-' + i" v-model="environment.name" @input="onInput" placeholder="e.g. Development, Staging, Production"/> <input type="hidden" :name="'environment_names-' + i" v-model="environment.name"/>
+                  </div>
+                  <div class="application-edit__env-list-item-block">
+                    <button v-on:click="removeEnvironment(i)" v-if="environments.length > 1" type="button" class="application-edit__env-list-item__remover">
+                      {{ Icon('trash') }}
+                      <span>Remove</span>
+                    </button>
+                  </div>
+                </li>
+              </ul>
+  
+              <div class="block-list__footer">
+                <button
+                  v-on:click="addEnvironment"
+                  class="icon-link"
+                  tabindex="0"
+                  type="button">
+                  {{ 'portfolios.applications.add_another_environment' | translate }}
+                  {{ Icon("plus") }}
+                </button>
+              </div>
+          </div>    
         </div>
-      </div>
-
-      <span class="action-group">
-        {% block next_button %}
-          {{ SaveButton(text=('portfolios.applications.new.step_2_button_text' | translate)) }}
-        {% endblock %}
-      </span>
-    </form>
-  </application-environments>
+      </div>    
+  
+        <span class="action-group">
+          {% block next_button %}
+            {{ SaveButton(text=('portfolios.applications.new.step_2_button_text' | translate)) }}
+          {% endblock %}
+          <a class="usa-button usa-button-secondary" href="{{ url_for('applications.view_new_application_step_1', application_id=application.id) }}">
+            Previous
+          </a>
+          <a href="{{ url_for('applications.portfolio_applications', portfolio_id=portfolio.id) }}">
+            Cancel
+          </a>
+        </span>
+      </form>
+    </application-environments>
+  </div>
 
 {% endblock %}
