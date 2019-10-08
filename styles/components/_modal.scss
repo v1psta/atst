@@ -129,7 +129,7 @@ body {
 
     hr {
       border-bottom: 1px solid $color-gray-lighter;
-      margin: 0 (-$gap * 1.5);
+      margin: 0 (-$gap * 1.5) ($gap * 3);
     }
 
     .form-row {
