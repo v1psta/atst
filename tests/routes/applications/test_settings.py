@@ -1,4 +1,3 @@
-import pytest
 import uuid
 from flask import url_for, get_flashed_messages
 from unittest.mock import Mock
@@ -9,16 +8,10 @@ from tests.factories import *
 from atst.domain.applications import Applications
 from atst.domain.application_roles import ApplicationRoles
 from atst.domain.environment_roles import EnvironmentRoles
-from atst.domain.environments import Environments
-from atst.domain.environment_roles import EnvironmentRoles
 from atst.domain.common import Paginator
 from atst.domain.permission_sets import PermissionSets
-from atst.domain.portfolios import Portfolios
-from atst.domain.exceptions import NotFoundError
-from atst.models.application_role import Status as ApplicationRoleStatus
 from atst.models.environment_role import CSPRole
 from atst.models.permissions import Permissions
-from atst.models.portfolio_role import Status as PortfolioRoleStatus
 from atst.forms.application import EditEnvironmentForm
 from atst.forms.application_member import UpdateMemberForm
 from atst.forms.data import ENV_ROLE_NO_ACCESS as NO_ACCESS
@@ -483,7 +476,7 @@ def test_remove_member_failure(client, user_session):
     assert response.status_code == 404
 
 
-def test_update_member(client, user_session):
+def test_update_member(client, user_session, session):
     role = PermissionSets.get(PermissionSets.EDIT_APPLICATION_TEAM)
     # create an app role with only edit team perms
     app_role = ApplicationRoleFactory.create(permission_sets=[role])
@@ -543,13 +536,6 @@ def test_update_member(client, user_session):
     assert bool(
         app_role.has_permission_set(PermissionSets.DELETE_APPLICATION_ENVIRONMENTS)
     )
-
-    environment_roles = application.roles[0].environment_roles
-    # make sure that old env role was deleted and there are only 2 env roles
-    assert len(environment_roles) == 2
-    # check that the user has roles in the correct envs
-    assert environment_roles[0].environment in [env, env_2]
-    assert environment_roles[1].environment in [env, env_2]
 
 
 def test_revoke_invite(client, user_session):

@@ -56,7 +56,17 @@ class EnvironmentRoles(object):
 
     @classmethod
     def delete(cls, application_role_id, environment_id):
-        existing_env_role = EnvironmentRoles.get(application_role_id, environment_id)
+        existing_env_role = (
+            db.session.query(EnvironmentRole)
+            .join(ApplicationRole)
+            .filter(
+                ApplicationRole.id == application_role_id,
+                EnvironmentRole.environment_id == environment_id,
+                EnvironmentRole.status != EnvironmentRole.Status.PENDING_DELETE,
+            )
+            .one_or_none()
+        )
+
         if existing_env_role:
             existing_env_role.status = EnvironmentRole.Status.PENDING_DELETE
             existing_env_role.role = "deleted"
