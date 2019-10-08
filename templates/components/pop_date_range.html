@@ -2,6 +2,8 @@
 {% from 'components/icon.html' import Icon %}
 
 {% macro PopDateRange(start_field=None, end_field=None, mindate=mindate, maxdate=maxdate, optional=True, index=None) %}
+  {% set formatted_end = maxdate | formattedDate(formatter="%B %d, %Y") %}
+  {% set formatted_start = mindate | formattedDate(formatter="%B %d, %Y") %}
   <pop-date-range
     initial-min-start-date="{{ mindate }}"
     initial-max-end-date="{{ maxdate }}"
@@ -49,13 +51,13 @@
                 </p>
 
                 <div v-if='outsideRange && !minError' class="usa-input-error-message">
-                  PoP start date must be before or on {{ maxdate | formattedDate(formatter="%B %d, %Y") }}.
+                  {{ "forms.task_order.pop_errors.start_past_contract" | translate({"date": formatted_end}) }}
                 </div>
                 <div v-if='minError' class="usa-input-error-message">
-                  PoP start date must be on or after {{ mindate | formattedDate(formatter="%B %d, %Y") }}.
+                  {{ "forms.task_order.pop_errors.start_pre_contract" | translate({"date": formatted_start}) }}
                 </div>
                 <div v-if='maxError && !outsideRange' class="usa-input-error-message">
-                  PoP start date must be before end date.
+                  {{ "forms.task_order.pop_errors.date_order" | translate }}
                 </div>
               </legend>
 
@@ -142,21 +144,20 @@
                 <div class="usa-input__title">
                   {{ 'task_orders.form.pop_end' | translate }}
                 </div>
-                {% set formatted_end_date = maxdate |  formattedDate(formatter="%B %d, %Y") %}
-                {{ Alert(message="task_orders.form.pop_end_alert" | translate({'end_date': formatted_end_date })) }}
+                {{ Alert(message="task_orders.form.pop_end_alert" | translate({'end_date': formatted_end })) }}
 
                 <p class='usa-input__help'>
                   {{ 'task_orders.form.pop_example' | translate }}
                 </p>
 
                 <div v-if='outsideRange && !maxError' class="usa-input-error-message">
-                  PoP end date must be on or after {{ mindate | formattedDate(formatter="%B %d, %Y") }}.
+                  {{ "forms.task_order.pop_errors.end_pre_contract" | translate({"date": formatted_start}) }}
                 </div>
                 <div v-if='minError && !outsideRange' class="usa-input-error-message">
-                  PoP end date must be after start date.
+                  {{ "forms.task_order.pop_errors.date_order" | translate }}
                 </div>
                 <div v-if='maxError' class="usa-input-error-message">
-                  PoP end date must be before or on {{ formatted_end_date }}.
+                  {{ "forms.task_order.pop_errors.end_past_contract" | translate({"date": formatted_end}) }}
                 </div>
               </legend>
 
