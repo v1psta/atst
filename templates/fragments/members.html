@@ -98,17 +98,17 @@
 
       {% if user_can_delete_app_member and member.role_status == 'pending' -%}
         {% set revoke_invite_modal = "revoke_invite_{}".format(member.role_id) %}
-        {% call Modal(name=revoke_invite_modal, dismissable=True) %}
-          <div class="task-order__modal-cancel">
-            <form method="post" action="{{ url_for('applications.revoke_invite', application_id=application.id, application_role_id=member.role_id) }}">
-              {{ member.form.csrf_token }}
-              <h1>{{ "invites.revoke.modal_heading" | translate({'user_name': member.user_name}) }}</h1>
-              <div class="task-order__modal-cancel_buttons">
-                <button class="usa-button usa-button-primary" type="submit">{{ "invites.revoke.submit" | translate }}</button>
-                <button type='button' v-on:click='closeModal("{{revoke_invite_modal}}")' class="usa-button usa-button-primary">{{ "invites.revoke.cancel" | translate }}</button>
-              </div>
-            </form>
-          </div>
+        {% call Modal(name=revoke_invite_modal) %}
+          <form method="post" action="{{ url_for('applications.revoke_invite', application_id=application.id, application_role_id=member.role_id) }}">
+            {{ member.form.csrf_token }}
+            <h1>{{ "invites.revoke" | translate }}</h1>
+            <hr>
+            {{ "invites.revoke_modal_text" | translate({"application": application.name}) }}
+            <div class="action-group">
+              <button class="action-group__action usa-button usa-button-primary" type="submit">{{ "invites.revoke" | translate }}</button>
+              <button class='action-group__action usa-button usa-button-secondary' v-on:click='closeModal("{{revoke_invite_modal}}")' type="button">{{ "common.cancel" | translate }}</button>
+            </div>
+          </form>
         {% endcall %}
       {%- endif %}
     {% endfor %}
@@ -156,7 +156,7 @@
                     {% set resend_invite_modal = "resend_invite-{}".format(member.role_id) %}
                     <a v-on:click='openModal("{{ resend_invite_modal }}")'>Resend Invite</a><br>
                     {% if user_can_delete_app_member -%}
-                      <a v-on:click='openModal("{{ revoke_invite_modal }}")'>{{ 'invites.revoke.button' | translate }}</a>
+                      <a v-on:click='openModal("{{ revoke_invite_modal }}")'>{{ 'invites.revoke' | translate }}</a>
                     {%- endif %}
                   {%- endif %}
                 </td>
