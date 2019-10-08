@@ -210,6 +210,7 @@ forms:
     number_description: Task order number (13 digits)
     pop_errors:
       date_order: PoP start date must be before end date.
+      range: Date must be between {start} and {end}.
       end_past_contract: PoP end date must be before or on {date}.
       end_pre_contract: PoP end date must be after or on {date}.
       start_past_contract: PoP start date must be before or on {date}.

@@ -38,6 +38,22 @@ def validate_funding(form, field):
         )
 
 
+def validate_date_in_range(form, field):
+    contract_start = app.config.get("CONTRACT_START_DATE")
+    contract_end = app.config.get("CONTRACT_END_DATE")
+
+    if field.data and (field.data < contract_start or field.data > contract_end):
+        raise ValidationError(
+            translate(
+                "forms.task_order.pop_errors.range",
+                {
+                    "start": contract_start.strftime("%b %d, %Y"),
+                    "end": contract_end.strftime("%b %d, %Y"),
+                },
+            )
+        )
+
+
 class CLINForm(FlaskForm):
     jedi_clin_type = SelectField(
         translate("task_orders.form.clin_type_label"),
@@ -52,13 +68,13 @@ class CLINForm(FlaskForm):
         translate("task_orders.form.pop_start"),
         description=translate("task_orders.form.pop_example"),
         format="%m/%d/%Y",
-        validators=[Optional()],
+        validators=[validate_date_in_range],
     )
     end_date = DateField(
         translate("task_orders.form.pop_end"),
         description=translate("task_orders.form.pop_example"),
         format="%m/%d/%Y",
-        validators=[Optional()],
+        validators=[validate_date_in_range],
     )
     total_amount = DecimalField(
         label=translate("task_orders.form.total_funds_label"),
@@ -84,54 +100,14 @@ class CLINForm(FlaskForm):
 
     def validate(self, *args, **kwargs):
         valid = super().validate(*args, **kwargs)
-        contract_start = app.config.get("CONTRACT_START_DATE")
-        contract_end = app.config.get("CONTRACT_END_DATE")
 
         if (
             self.start_date.data
             and self.end_date.data
             and self.start_date.data > self.end_date.data
-            and self.start_date.data <= contract_end
-            and self.end_date.data >= contract_start
         ):
             self.start_date.errors.append(
                 translate("forms.task_order.pop_errors.date_order")
-            )
-            valid = False
-
-        if self.start_date.data and self.start_date.data <= contract_start:
-            self.start_date.errors.append(
-                translate(
-                    "forms.task_order.pop_errors.start_pre_contract",
-                    {"date": contract_start.strftime("%b %d, %Y")},
-                )
-            )
-            valid = False
-
-        if self.end_date.data and self.end_date.data >= contract_end:
-            self.end_date.errors.append(
-                translate(
-                    "forms.task_order.pop_errors.end_past_contract",
-                    {"date": contract_end.strftime("%b %d, %Y")},
-                )
-            )
-            valid = False
-
-        if self.start_date.data and self.start_date.data > contract_end:
-            self.start_date.errors.append(
-                translate(
-                    "forms.task_order.pop_errors.start_past_contract",
-                    {"date": contract_end.strftime("%b %d, %Y")},
-                )
-            )
-            valid = False
-
-        if self.end_date.data and self.end_date.data < contract_start:
-            self.end_date.errors.append(
-                translate(
-                    "forms.task_order.pop_errors.end_pre_contract",
-                    {"date": contract_start.strftime("%b %d, %Y")},
-                )
             )
             valid = False
 

@@ -47,17 +47,24 @@ def test_clin_form_pop_dates_within_contract_dates():
         start_date=invalid_start, end_date=invalid_end
     )
     clin_form = CLINForm(obj=invalid_clin)
+
     assert not clin_form.validate()
     assert (
         translate(
-            "forms.task_order.pop_errors.start_pre_contract",
-            {"date": CONTRACT_START_DATE.strftime("%b %d, %Y")},
+            "forms.task_order.pop_errors.range",
+            {
+                "start": CONTRACT_START_DATE.strftime("%b %d, %Y"),
+                "end": CONTRACT_END_DATE.strftime("%b %d, %Y"),
+            },
         )
     ) in clin_form.start_date.errors
     assert (
         translate(
-            "forms.task_order.pop_errors.end_past_contract",
-            {"date": CONTRACT_END_DATE.strftime("%b %d, %Y")},
+            "forms.task_order.pop_errors.range",
+            {
+                "start": CONTRACT_START_DATE.strftime("%b %d, %Y"),
+                "end": CONTRACT_END_DATE.strftime("%b %d, %Y"),
+            },
         )
     ) in clin_form.end_date.errors
 
