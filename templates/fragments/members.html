@@ -58,7 +58,7 @@
     {% for member in members %}
       {%- if user_can_edit_app_member %}
         {% set modal_name = "edit_member-{}".format(loop.index) %}
-        {% call Modal(modal_name) %}
+        {% call Modal(modal_name, classes="form-content--app-mem") %}
           <div class="modal__form--header">
             <h1>{{ Icon('avatar') }} {{ member.user_name }}</h1>
             <hr>
