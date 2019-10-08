@@ -45,7 +45,8 @@
         {% block next_button %}
           {{ SaveButton(text=('portfolios.applications.new.step_1_button_text' | translate)) }}
         {% endblock %}
-        <a class="usa-button usa-button-secondary" href="{{ url_for('applications.portfolio_applications', portfolio_id=portfolio.id) }}">
+        <button disabled class="usa-button usa-button-secondary">Previous</button>
+        <a href="{{ url_for('applications.portfolio_applications', portfolio_id=portfolio.id) }}">
           Cancel
         </a>
       </span>
