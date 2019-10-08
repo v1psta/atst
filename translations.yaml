@@ -309,13 +309,13 @@ portfolios:
     add_another_environment: Add another environment
     app_settings_text: App settings
     new:
-      step_1_header: Name and Describe New Project
+      step_1_header: Name and Describe New Application
       step_1_button_text: "Save and Add Environments"
       step_1_form_help_text:
         name: |
           <div style="margin-top: -3rem;">
             <p>
-              The name of your project should be intuitive and easily recognizable for all of your team members.
+              The name of your application should be intuitive and easily recognizable for all of your team members.
             </p>
             <p>
               <strong>Writer's Block? A naming example includes:</strong>
@@ -327,7 +327,7 @@ portfolios:
         description: |
           <div style="margin-top: -3rem;">
             <p>
-              Add a brief one to two sentence description of your project. You should be able to reference your TO Description of Work.
+              Add a brief one to two sentence description of your application. You should be able to reference your TO Description of Work.
             </p>
             <p>
               <strong>Writer's Block? A naming example includes:</strong>
@@ -337,7 +337,7 @@ portfolios:
             </p>
           </div>
       step_2_header: Add Environments to {application_name}
-      step_2_description: "Production, Staging, Testing, and Development environments are included by default. However, you can add, edit, and delete environments based on the needs of your Project."
+      step_2_description: "Production, Staging, Testing, and Development environments are included by default. However, you can add, edit, and delete environments based on the needs of your Application."
       step_2_button_text: "Save and Add Members"
       step_3_header: Invite Members to {application_name}
       step_3_description: "To proceed, you will need each member's email address and DOD ID. Within this section, you will also assign application-level permissions and environment-level roles for each member."
@@ -364,7 +364,7 @@ portfolios:
       delete:
         button: Delete environment
       edit_name: Edit name
-    environments_heading: Project Environments
+    environments_heading: Application Environments
     existing_application_title: '{application_name} Application Settings'
     member_count: '{count} members'
     new_application_title: New Application
