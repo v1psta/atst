@@ -130,7 +130,10 @@ def update_new_application_step_2(application_id):
     else:
         return (
             render_new_application_form(
-                "applications/new/step_2.html", EnvironmentsForm, application_id, form
+                "applications/new/step_2.html",
+                EnvironmentsForm,
+                application_id=application_id,
+                form=form,
             ),
             400,
         )
