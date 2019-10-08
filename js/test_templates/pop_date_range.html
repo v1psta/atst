@@ -1,16 +1,18 @@
 
+  
+  
   <pop-date-range
     initial-min-start-date="2019-09-14"
     initial-max-end-date="2022-09-14"
-
+    
       v-bind:clin-index="1"
-
-
+    
+    
       initial-start-date="None"
-
-
+    
+    
       initial-end-date="None"
-
+    
     inline-template>
 
     <div>
@@ -21,12 +23,12 @@
             :maxdate="maxStartProp"
             :minrange='initialMinStartDate'
             :maxrange='initialMaxEndDate'
-
+            
               name-tag='start_date'
               initialmonth=""
               initialday=""
               initialyear=""
-
+            
             :optional='true'
             v-on:date-change='handleDateChange'
             inline-template>
@@ -42,7 +44,6 @@
                 </p>
 
                 <div v-if='outsideRange && !minError' class="usa-input-error-message">
-                  {{ ""}}
                   PoP start date must be before or on September 14, 2022.
                 </div>
                 <div v-if='minError' class="usa-input-error-message">
@@ -100,17 +101,17 @@
 
                 <div v-if="isDateComplete">
                   <div class="usa-form-group-date-ok" v-if="isDateValid">
-
+                    
       <span class="icon icon--ok icon--green" aria-hidden="true"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="check-circle" class="svg-inline--fa fa-check-circle fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.628 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"></path></svg></span>
-
+  
                   </div>
                   <div class="usa-form-group-date-ok" v-else>
-
+                    
       <span class="icon icon--alert icon--red" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="#fdb81e">
   <path d="M8 16c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8zM8 2C4.691 2 2 4.691 2 8s2.691 6 6 6 6-2.691 6-6-2.691-6-6-6zm0 8c-.552 0-1-.447-1-1V4c0-.552.448-1 1-1s1 .448 1 1v5c0 .553-.448 1-1 1zm0 3c-.26 0-.52-.11-.71-.29-.18-.19-.29-.45-.29-.71 0-.271.11-.521.29-.71.38-.37 1.05-.37 1.42 0 .18.189.29.45.29.71s-.11.52-.29.71c-.19.18-.45.29-.71.29z"/>
 </svg>
 </span>
-
+  
                   </div>
                 </div>
               </div>
@@ -126,12 +127,12 @@
             :maxdate="initialMaxEndDate"
             :minrange='initialMinStartDate'
             :maxrange='initialMaxEndDate'
-
+            
               name-tag='end_date'
               initialmonth=""
               initialday=""
               initialyear=""
-
+            
             :optional='true'
             v-on:date-change='handleDateChange'
             inline-template>
@@ -141,26 +142,25 @@
                 <div class="usa-input__title">
                   End Date
                 </div>
-
-
-
+                
+  
 
   <div class='usa-alert usa-alert-info' role='alert' aria-live='polite'>
 
     <div class='usa-alert-body'>
+      
 
-
-
+      
         <p class='usa-alert-text'>
           A CLIN's period of performance must end before September 14, 2022.
         </p>
+      
 
+      
 
+      
 
-
-
-
-
+      
     </div>
   </div>
 
@@ -169,10 +169,10 @@
                 </p>
 
                 <div v-if='outsideRange && !maxError' class="usa-input-error-message">
-                  PoP end date must be on or after September 14, 2019.
+                  PoP end date must be after or on September 14, 2019.
                 </div>
                 <div v-if='minError && !outsideRange' class="usa-input-error-message">
-                  PoP end date must be after start date.
+                  PoP start date must be before end date.
                 </div>
                 <div v-if='maxError' class="usa-input-error-message">
                   PoP end date must be before or on September 14, 2022.
@@ -223,17 +223,17 @@
 
                 <div v-if="isDateComplete">
                   <div class="usa-form-group-date-ok" v-if="isDateValid">
-
+                    
       <span class="icon icon--ok icon--green" aria-hidden="true"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="check-circle" class="svg-inline--fa fa-check-circle fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.628 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"></path></svg></span>
-
+  
                   </div>
                   <div class="usa-form-group-date-ok" v-else>
-
+                    
       <span class="icon icon--alert icon--red" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="#fdb81e">
   <path d="M8 16c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8zM8 2C4.691 2 2 4.691 2 8s2.691 6 6 6 6-2.691 6-6-2.691-6-6-6zm0 8c-.552 0-1-.447-1-1V4c0-.552.448-1 1-1s1 .448 1 1v5c0 .553-.448 1-1 1zm0 3c-.26 0-.52-.11-.71-.29-.18-.19-.29-.45-.29-.71 0-.271.11-.521.29-.71.38-.37 1.05-.37 1.42 0 .18.189.29.45.29.71s-.11.52-.29.71c-.19.18-.45.29-.71.29z"/>
 </svg>
 </span>
-
+  
                   </div>
                 </div>
               </div>
