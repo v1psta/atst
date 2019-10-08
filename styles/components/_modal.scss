@@ -157,8 +157,14 @@ body {
     min-width: 17rem;
   }
 
-  .usa-input .checkbox {
-    margin-left: 3rem;
+  .usa-input {
+    .checkbox {
+      margin-left: 3rem;
+    }
+
+    &__title {
+      font-weight: $font-normal;
+    }
   }
 
   input[type="checkbox"] {

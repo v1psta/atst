@@ -88,7 +88,7 @@
                 {{ member_fields.InfoFields(member.update_invite_form) }}
                 <div class="action-group">
                   {{ SaveButton(text='Resend Invite', element='input', additional_classes='action-group__action') }}
-                  <a class='action-group__action usa-button usa-button-secondary' v-on:click="closeModal('{{ resend_invite_modal }}')">{{ "common.cancel" | translate }}</a>
+                  <a class='action-group__action' v-on:click="closeModal('{{ resend_invite_modal }}')">{{ "common.cancel" | translate }}</a>
                 </div>
               </form>
             </base-form>
