@@ -129,6 +129,7 @@ def do_delete_user(csp: CloudProviderInterface, environment_role_id=None):
 
         csp.delete_user(credentials, environment_role.csp_user_id)
         environment_role.status = EnvironmentRole.Status.DELETED
+        environment_role.deleted = True
         db.session.add(environment_role)
         db.session.commit()
 

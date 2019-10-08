@@ -392,6 +392,7 @@ def test_do_delete_user(csp, session):
     session.refresh(environment_role)
 
     assert environment_role.status == EnvironmentRole.Status.DELETED
+    assert environment_role.deleted == True
 
 
 def test_dispatch_delete_user(csp, session, monkeypatch):
