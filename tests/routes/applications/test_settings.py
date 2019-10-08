@@ -2,6 +2,7 @@ import pytest
 import uuid
 from flask import url_for, get_flashed_messages
 from unittest.mock import Mock
+import datetime
 
 from tests.factories import *
 
@@ -591,3 +592,35 @@ def test_filter_environment_roles():
 
     environment_data = filter_env_roles_form_data(application_role3, [environment])
     assert environment_data[0]["role"] == "No Access"
+
+    def test_resend_invite(client, user_session, session):
+        user = UserFactory.create()
+        # need to set the time created to yesterday, otherwise the original invite and resent
+        # invite have the same time_created and then we can't rely on time to order the invites
+        yesterday = datetime.date.today() - datetime.timedelta(days=1)
+        invite = ApplicationInvitationFactory.create(
+            user=user, time_created=yesterday, email="original@example.com"
+        )
+        app_role = invite.role
+        application = app_role.application
+
+        user_session(application.portfolio.owner)
+        response = client.post(
+            url_for(
+                "applications.resend_invite",
+                application_id=application.id,
+                application_role_id=app_role.id,
+            ),
+            data={
+                "first_name": user.first_name,
+                "last_name": user.last_name,
+                "dod_id": user.dod_id,
+                "email": "an_email@example.com",
+            },
+        )
+
+        session.refresh(app_role)
+        assert response.status_code == 302
+        assert invite.is_revoked
+        assert app_role.status == ApplicationRoleStatus.PENDING
+        assert app_role.latest_invitation.email == "an_email@example.com"

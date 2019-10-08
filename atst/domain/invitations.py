@@ -117,22 +117,21 @@ class BaseInvitations(object):
         return cls._update_status(invite, InvitationStatus.REVOKED)
 
     @classmethod
-    def resend(cls, inviter, token):
+    def resend(cls, inviter, token, user_info=None):
         previous_invitation = cls._get(token)
         cls._update_status(previous_invitation, InvitationStatus.REVOKED)
 
-        return cls.create(
-            inviter,
-            previous_invitation.role,
-            {
+        if not user_info:
+            user_info = {
                 "email": previous_invitation.email,
                 "dod_id": previous_invitation.dod_id,
                 "first_name": previous_invitation.first_name,
                 "last_name": previous_invitation.last_name,
-                "phone_number": previous_invitation.last_name,
-            },
-            commit=True,
-        )
+                "phone_number": previous_invitation.phone_number,
+                "phone_ext": previous_invitation.phone_ext,
+            }
+
+        return cls.create(inviter, previous_invitation.role, user_info, commit=True)
 
 
 class PortfolioInvitations(BaseInvitations):
