@@ -27,7 +27,7 @@
       {% if vue_template %}
         <h3 class='usa-alert-heading' v-html='title'></h3>
       {% elif title %}
-        <h3 class='usa-alert-heading'>{{title}}</h3>
+        <h3 class='usa-alert-heading'>{{ title | safe }}</h3>
       {% endif %}
 
       {% if message %}
