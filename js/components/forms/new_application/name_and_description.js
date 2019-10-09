@@ -10,6 +10,10 @@ export default {
   components: {
     textinput,
   },
+  created: function() {
+    this.$root.$on('field-change', this.handleFieldChange)
+    if (this.initialData) this.changed = true
+  },
 
   data: function() {
     return {
