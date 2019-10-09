@@ -106,7 +106,7 @@ email:
   portfolio_invite: "{inviter_name} has invited you to a JEDI cloud portfolio"
 flash:
   application:
-    created: 'You have successfully created the {application_name} application.'
+    created: '{application_name} has been successfully created. You may continue on to provision environments and assign team members now, or come back and complete these tasks at a later time.'
     updated: 'You have successfully updated the {application_name} application.'
     deleted: 'You have successfully deleted the {application_name} application. To view the retained activity log, visit the portfolio administration page.'
   delete_member_success: 'You have successfully deleted {member_name} from the portfolio.'
@@ -118,7 +118,9 @@ flash:
   new_ppoc_message: 'You have successfully added {ppoc_name} as the primary point of contact. You are no longer the PPoC.'
   new_ppoc_title: Primary point of contact updated
   success: Success!
-  new_application_member: '{user_name} has been added to {application_name}. They will not have access until they accept the invitation e-mailed to them and CSP processing is complete.'
+  new_application_member: 
+    title: "{user_name}'s invitation has been sent"
+    message: "{user_name}'s access to this Application is pending until they sign in for the first time."
   updated_application_team_settings: 'You have updated the {application_name} team settings.'
   logged_out: Logged out
 footer:
@@ -310,12 +312,12 @@ portfolios:
     app_settings_text: App settings
     new:
       step_1_header: Name and Describe New Application
-      step_1_button_text: "Save and Add Environments"
+      step_1_button_text: "Next: Add Environments"
       step_1_form_help_text:
         name: |
           <div style="margin-top: -3rem;">
             <p>
-              The name of your application should be intuitive and easily recognizable for all of your team members.
+              The name of your Application should be intuitive and easily recognizable for all of your team members.
             </p>
             <p>
               <strong>Writer's Block? A naming example includes:</strong>
@@ -330,7 +332,7 @@ portfolios:
               Add a brief one to two sentence description of your application. You should be able to reference your TO Description of Work.
             </p>
             <p>
-              <strong>Writer's Block? A naming example includes:</strong>
+              <strong>Writer's Block? A description example includes:</strong>
               <ul>
                 <li>Build security applications for FOB Clark</li>
               </ul>
@@ -338,9 +340,9 @@ portfolios:
           </div>
       step_2_header: Add Environments to {application_name}
       step_2_description: "Production, Staging, Testing, and Development environments are included by default. However, you can add, edit, and delete environments based on the needs of your Application."
-      step_2_button_text: "Save and Add Members"
+      step_2_button_text: "Next: Add Members"
       step_3_header: Invite Members to {application_name}
-      step_3_description: "To proceed, you will need each member's email address and DOD ID. Within this section, you will also assign application-level permissions and environment-level roles for each member."
+      step_3_description: "To proceed, you will need each member's email address and DOD ID. Within this section, you will also assign Application-level permissions and environment-level roles for each member."
       step_3_button_text: Save Application
     create_new_env: Create a new environment.
     create_new_env_info: Creating an environment gives you access to the Cloud Service Provider. This environment will function within the constraints of the task order, and any costs will be billed against the portfolio.
