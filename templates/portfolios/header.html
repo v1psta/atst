@@ -18,7 +18,14 @@
     </div>
   </div>
   <div class='row links'>
-    {% if user_can(permissions.VIEW_PORTFOLIO_FUNDING) %}
+    {% if user_can(permissions.VIEW_PORTFOLIO_ADMIN) %}
+      {{ Link(
+        icon='cog',
+        text='navigation.portfolio_navigation.breadcrumbs.admin' | translate,
+        url=url_for("portfolios.admin", portfolio_id=portfolio.id),
+        active=request.url_rule.endpoint == "portfolios.admin",
+      ) }}
+    {% endif %}{% if user_can(permissions.VIEW_PORTFOLIO_FUNDING) %}
       {{ Link(
         icon='funding',
         text='navigation.portfolio_navigation.breadcrumbs.funding' | translate,
@@ -40,13 +47,6 @@
         active=request.url_rule.endpoint == "portfolios.reports",
       ) }}
     {% endif %}
-    {% if user_can(permissions.VIEW_PORTFOLIO_ADMIN) %}
-      {{ Link(
-        icon='cog',
-        text='navigation.portfolio_navigation.breadcrumbs.admin' | translate,
-        url=url_for("portfolios.admin", portfolio_id=portfolio.id),
-        active=request.url_rule.endpoint == "portfolios.admin",
-      ) }}
-    {% endif %}
+
   </div>
 </div>

@@ -283,8 +283,8 @@ login:
 navigation:
   portfolio_navigation:
     breadcrumbs:
-      admin: Admin
-      funding: Funding
+      admin: Settings
+      funding: Task Orders
       reports: Reports
       applications: Applications
   topbar:
