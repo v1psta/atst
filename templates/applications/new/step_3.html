@@ -11,31 +11,30 @@
 
 {% block application_content %}
   {% include "fragments/flash.html" %}
-  <div class="panel__content">
-    <p>
-      {{ ('portfolios.applications.new.step_3_description' | translate) }}
-    </p>
-    <hr>
-
-    {{ MemberManagementTemplate(
-      application, 
-      members, 
-      new_member_form,
-      "applications.update_new_application_step_3",
-      user_can(permissions.CREATE_APPLICATION_MEMBER)) }}
-      
+  <p>
+    {{ ('portfolios.applications.new.step_3_description' | translate) }}
+  </p>
+  <hr class="panel__break">
   
-      <span class="action-group">
-        <a class="usa-button" href="{{ url_for('applications.settings', application_id=application_id) }}">  
-          Return to Application Settings
-        </a>
-        <a class="usa-button usa-button-secondary" href="{{ url_for('applications.view_new_application_step_2', application_id=application.id) }}">
-          Previous
-        </a>
-        <a href="{{ url_for('applications.portfolio_applications', portfolio_id=portfolio.id) }}">
-          Cancel
-        </a>
-      </span>
-  </div>
+  {{ MemberManagementTemplate(
+    application, 
+    members, 
+    new_member_form,
+    "applications.update_new_application_step_3",
+    user_can(permissions.CREATE_APPLICATION_MEMBER)) }}
+    
+
+    <span class="action-group">
+      <a class="usa-button" href="{{ url_for('applications.settings', application_id=application_id) }}">  
+        Return to Application Settings
+      </a>
+      <a class="usa-button usa-button-secondary" href="{{ url_for('applications.view_new_application_step_2', application_id=application.id) }}">
+        Previous
+      </a>
+      <a href="{{ url_for('applications.portfolio_applications', portfolio_id=portfolio.id) }}">
+        Cancel
+      </a>
+    </span>
+  
 {% endblock %}
 
