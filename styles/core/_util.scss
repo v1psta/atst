@@ -80,3 +80,9 @@
 p {
   max-width: 80ch;
 }
+
+hr {
+  border: 0;
+  border-bottom: 1px solid $color-gray-light;
+  margin: ($gap * 3) ($site-margins * -4);
+}
