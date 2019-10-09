@@ -312,6 +312,8 @@
         </div>
         
           
+  
+  
   <pop-date-range
     initial-min-start-date="2019-09-14"
     initial-max-end-date="2022-09-14"
@@ -454,7 +456,6 @@
                   End Date
                 </div>
                 
-                
   
 
   <div class='usa-alert usa-alert-info' role='alert' aria-live='polite'>
@@ -481,10 +482,10 @@
                 </p>
 
                 <div v-if='outsideRange && !maxError' class="usa-input-error-message">
-                  PoP end date must be on or after September 14, 2019.
+                  PoP end date must be after or on September 14, 2019.
                 </div>
                 <div v-if='minError && !outsideRange' class="usa-input-error-message">
-                  PoP end date must be after start date.
+                  PoP start date must be before end date.
                 </div>
                 <div v-if='maxError' class="usa-input-error-message">
                   PoP end date must be before or on September 14, 2022.

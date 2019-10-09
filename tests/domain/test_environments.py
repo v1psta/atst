@@ -5,7 +5,7 @@ from uuid import uuid4
 from atst.domain.environments import Environments
 from atst.domain.environment_roles import EnvironmentRoles
 from atst.domain.exceptions import NotFoundError
-from atst.models.environment_role import CSPRole
+from atst.models.environment_role import CSPRole, EnvironmentRole
 
 from tests.factories import (
     ApplicationFactory,
@@ -35,15 +35,15 @@ def test_update_env_role():
     assert env_role.role == new_role
 
 
-def test_update_env_role_no_access():
+def test_update_env_role_no_access(session):
     env_role = EnvironmentRoleFactory.create(role=CSPRole.BASIC_ACCESS.value)
 
     assert Environments.update_env_role(
         env_role.environment, env_role.application_role, None
     )
-    assert not EnvironmentRoles.get(
-        env_role.application_role.id, env_role.environment.id
-    )
+
+    session.refresh(env_role)
+    assert env_role.status == EnvironmentRole.Status.PENDING_DELETE
 
 
 def test_update_env_role_no_change():

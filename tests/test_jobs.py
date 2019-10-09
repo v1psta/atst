@@ -3,7 +3,6 @@ import pytest
 from uuid import uuid4
 from unittest.mock import Mock
 from threading import Thread
-from time import sleep
 
 from atst.domain.csp.cloud import MockCloudProvider
 from atst.jobs import (
@@ -18,6 +17,8 @@ from atst.jobs import (
     create_environment,
     dispatch_provision_user,
     do_provision_user,
+    do_delete_user,
+    dispatch_delete_user,
 )
 from atst.models.utils import claim_for_update
 from atst.domain.exceptions import ClaimFailedException
@@ -310,7 +311,7 @@ def test_claim_for_update(session):
 
 
 def test_dispatch_provision_user(csp, session, celery_app, celery_worker, monkeypatch):
-    # Given that I have three environment roles:
+    # Given that I have four environment roles:
     #   (A) one of which has a completed status
     #   (B) one of which has an environment that has not been provisioned
     #   (C) one of which is pending, has a provisioned environment but an inactive application role
@@ -370,3 +371,68 @@ def test_do_provision_user(csp, session):
     )
     # I expect that the EnvironmentRole now has a csp_user_id
     assert environment_role.csp_user_id
+
+
+def test_do_delete_user(csp, session):
+    credentials = MockCloudProvider(())._auth_credentials
+    provisioned_environment = EnvironmentFactory.create(
+        cloud_id="cloud_id",
+        root_user_info={"credentials": credentials},
+        baseline_info={},
+    )
+
+    environment_role = EnvironmentRoleFactory.create(
+        environment=provisioned_environment,
+        status=EnvironmentRole.Status.PENDING_DELETE,
+        role="my_role",
+    )
+
+    do_delete_user(csp=csp, environment_role_id=environment_role.id)
+
+    session.refresh(environment_role)
+
+    assert environment_role.status == EnvironmentRole.Status.DELETED
+    assert environment_role.deleted == True
+
+
+def test_dispatch_delete_user(csp, session, monkeypatch):
+    # Given that I have five environment roles:
+    #   (A) one of which has a completed status
+    #   (B) one of which has an environment that has not been provisioned
+    #   (C) one of which is pending, has a provisioned environment but an inactive application role
+    #   (D) one of which is pending, has a provisioned environment and has an active application role
+    #   (E) one of which is pending delete, has a provisioned environment and has an active application role
+    provisioned_environment = EnvironmentFactory.create(
+        cloud_id="cloud_id", root_user_info={}, baseline_info={}
+    )
+    unprovisioned_environment = EnvironmentFactory.create()
+    _er_a = EnvironmentRoleFactory.create(
+        environment=provisioned_environment, status=EnvironmentRole.Status.COMPLETED
+    )
+    _er_b = EnvironmentRoleFactory.create(
+        environment=unprovisioned_environment, status=EnvironmentRole.Status.PENDING
+    )
+    _er_c = EnvironmentRoleFactory.create(
+        environment=unprovisioned_environment,
+        status=EnvironmentRole.Status.PENDING,
+        application_role=ApplicationRoleFactory(status=ApplicationRoleStatus.PENDING),
+    )
+    _er_d = EnvironmentRoleFactory.create(
+        environment=unprovisioned_environment,
+        status=EnvironmentRole.Status.PENDING_DELETE,
+        application_role=ApplicationRoleFactory(status=ApplicationRoleStatus.PENDING),
+    )
+    er_e = EnvironmentRoleFactory.create(
+        environment=provisioned_environment,
+        status=EnvironmentRole.Status.PENDING_DELETE,
+        application_role=ApplicationRoleFactory(status=ApplicationRoleStatus.ACTIVE),
+    )
+
+    mock = Mock()
+    monkeypatch.setattr("atst.jobs.delete_user", mock)
+
+    # When I dispatch the user deletion task
+    dispatch_delete_user.run()
+
+    # I expect it to dispatch only one call, to EnvironmentRole E
+    mock.delay.assert_called_once_with(environment_role_id=er_e.id)

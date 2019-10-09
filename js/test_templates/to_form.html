@@ -271,10 +271,10 @@
                   For example: 07 04 1776
                 </p>
 <div class="usa-input-error-message" v-if="outsideRange &amp;&amp; !maxError">
-                  PoP end date must be on or after September 14, 2019.
+                  PoP end date must be after or on September 14, 2019.
                 </div>
 <div class="usa-input-error-message" v-if="minError &amp;&amp; !outsideRange">
-                  PoP end date must be after start date.
+                  PoP start date must be before end date.
                 </div>
 <div class="usa-input-error-message" v-if="maxError">
                   PoP end date must be before or on September 14, 2022.

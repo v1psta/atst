@@ -83,5 +83,6 @@ def test_disable(session):
 
     ApplicationRoles.disable(member_role)
     session.refresh(member_role)
+    session.refresh(environment_role)
     assert member_role.status == ApplicationRoleStatus.DISABLED
-    assert not EnvironmentRoles.get_by_user_and_environment(user.id, environment.id)
+    assert environment_role.status == EnvironmentRole.Status.PENDING_DELETE
