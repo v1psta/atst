@@ -8,9 +8,9 @@ MESSAGES = {
         "category": "success",
     },
     "application_created": {
-        "title_template": translate("flash.success"),
+        "title_template": translate("flash.application.created.title"),
         "message_template": """
-            {{ "flash.application.created" | translate({"application_name": application_name}) }}
+            {{ "flash.application.created.message" | translate({"application_name": application_name}) }}
         """,
         "category": "success",
     },
