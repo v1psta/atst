@@ -29,8 +29,14 @@
   &__name {
     @include h1;
     h1 {
-      margin: ($gap * 2) $gap ($gap * 2) $gap;
+      margin: 0 $gap ($gap * 2) 0;
       font-size: 3.5rem;
+    }
+
+    p {
+      font-size: $small-font-size;
+      margin: 0 0 (-$gap * 0.5);
+      color: $color-gray-medium;
     }
   }
 

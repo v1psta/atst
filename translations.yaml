@@ -424,6 +424,7 @@ portfolios:
     empty:
       start_button: Start a new JEDI portfolio
       title: You have no apps yet
+  header: PORTFOLIO
   members:
     archive_button: Delete member
     permissions:
