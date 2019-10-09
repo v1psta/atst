@@ -34,6 +34,10 @@
 
   .input__inline-fields {
     text-align: left;
+
+    .usa-input__choices label {
+      font-weight: $font-bold;
+    }
   }
 
   .input__inline-fields {
