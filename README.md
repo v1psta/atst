@@ -220,30 +220,37 @@ To generate coverage reports for the Javascript tests:
 
     yarn test:coverage
 
-### Selenium Tests
+### Ghost Inspector Tests
 
-Selenium tests rely on BrowserStack. In order to run the Selenium tests
-locally, you need BrowserStack credentials. The user email and key can
-be found on the account settings page. To run the selenium tests:
+AT-AT uses [Ghost Inpsector](https://app.ghostinspector.com/) for
+integration testing. These tests do not run locally as part of the
+regular test suite but do run in CI. To run them locally, you will
+need the following:
 
-```
-BROWSERSTACK_TOKEN=<token> BROWSERSTACK_EMAIL=<email> ./script/selenium_test
-```
+- [docker](https://docs.docker.com/v17.12/install/)
+- [circleci CLI tool](https://circleci.com/docs/2.0/local-cli/#installation)
+- the prerequisite variable information listed [here](https://ghostinspector.com/docs/integration/circle-ci/)
 
-The selenium tests are in `tests/acceptance`. This directory is ignored by
-pytest for normal test runs.
-
-The `selenium_test` script manages the setup of a separate database and
-launching the BrowserStackLocal client. If you already have the client running
-locally, you can run the selenium tests with:
+The version of our CircleCI config (2.1) is incompatible with the
+`circleci` tool. First run:
 
 ```
-BROWSERSTACK_TOKEN=<token> BROWSERSTACK_EMAIL=<email> pipenv run pytest tests/acceptance
+circleci config process .circleci/config.yml > local-ci.yml
 ```
 
-The BrowserStack email is the one associated with the account. The token is
-available in the BrowserStack profile information page. Go to the dashboard,
-then "Account" > "Settings", then the token is under "Local Testing".
+Then run the job:
+
+```
+circleci local execute -e GI_SUITE=<SUITE_ID> -e GI_API_KEY=<API KEY> -e NGROK_TOKEN=<NGROK TOKEN> --job integration-tests -c local-ci.yml
+```
+
+If the job fails and you want to re-run it, you may receive errors
+about running docker containers or the network already existing.
+Some version of the following should reset your local docker state:
+
+```
+docker container stop redis postgres test-atat; docker container rm redis postgres test-atat ; docker network rm atat
+```
 
 ## Notes
 

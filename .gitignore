@@ -52,9 +52,11 @@ ssl/client-certs/*.srl
 # je coverage output
 coverage
 
-
-# selenium testing
+# BrowserStack
 browserstacklocal
+
+# decompiled CircleCI yaml
+local-ci.yml
 
 # python config
 .python-version
