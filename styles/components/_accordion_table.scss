@@ -1,30 +1,17 @@
-.float-right {
-  float: right;
-}
-
 .accordion-table {
   .usa-alert {
     margin: $gap * 2;
-    margin-bottom: 0;
   }
 
   ul {
     padding-left: 0;
+    margin: 0;
 
     li {
       list-style-type: none;
       margin: 0;
+      border-bottom: 1px solid $color-gray-lighter;
     }
-  }
-
-  &__head {
-    padding: $gap ($gap * 2);
-    font-size: $small-font-size;
-    font-weight: 700;
-    color: $color-gray;
-    background-color: $color-gray-lightest;
-    border-bottom: 1px solid $color-gray-lightest;
-    border-top: none;
   }
 
   thead th {
@@ -42,38 +29,8 @@
     }
   }
 
-  .new-env {
-    margin-top: 5rem;
-    padding: 0 5rem;
-  }
-
   &__items {
     margin: 0;
-
-    .accordion-table__item {
-      font-weight: $font-bold;
-      border-bottom: 1px solid $color-gray-lightest;
-      padding: $gap 0;
-
-      &:first-child {
-        padding-top: 0;
-      }
-
-      .icon-link--large {
-        padding-top: $gap * 0.5;
-        padding-bottom: $gap * 0.5;
-      }
-
-      ul {
-        margin-top: 0;
-        margin-bottom: 0;
-        background-color: $color-gray-lightest;
-
-        li {
-          border-bottom: 1px solid $color-gray-lighter;
-        }
-      }
-    }
 
     th,
     td,
@@ -87,8 +44,15 @@
   }
 
   &__item {
+    border-bottom: 1px solid $color-gray-lightest;
+    padding: $gap 0;
+
+    &:first-child {
+      padding-top: 0;
+    }
+
     &-content {
-      padding: ($gap * 2);
+      font-weight: $font-bold;
 
       .usa-input {
         margin: 0;
@@ -98,35 +62,8 @@
         }
       }
 
-      #name {
-        max-width: none;
-        border-color: black;
-      }
-
       .usa-alert {
         margin: 2.5rem 0;
-      }
-
-      select {
-        border: none;
-        font-weight: $font-normal;
-      }
-    }
-
-    &__action-group {
-      padding: 1rem 3.2rem;
-      background-color: $color-gray-lightest;
-      text-align: right;
-
-      button,
-      a {
-        margin: 0;
-        font-size: $small-font-size;
-      }
-
-      .icon-link {
-        padding-top: 0.5rem;
-        float: none;
       }
     }
 
@@ -170,35 +107,6 @@
 
         &:last-child {
           border-bottom: none;
-        }
-
-        .col--grow {
-          font-weight: $font-normal;
-        }
-
-        th,
-        td {
-          .icon-link {
-            font-weight: $font-normal;
-            font-size: $base-font-size;
-          }
-
-          border-bottom: 1px dashed $color-white;
-        }
-
-        &_first {
-          float: left;
-        }
-
-        &-role {
-          .icon-link {
-            padding: 0;
-            vertical-align: text-top;
-
-            .icon {
-              margin: 0 0 0 0.25rem;
-            }
-          }
         }
       }
     }
