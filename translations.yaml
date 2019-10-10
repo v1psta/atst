@@ -127,11 +127,11 @@ footer:
   login: 'Last login:'
 forms:
   application:
-    description_label: Description
+    description_label: Application Description
     environment_names_label: Environment Name
     environment_names_required_validation_message: Provide at least one environment name.
     environment_names_unique_validation_message: Environment names must be unique.
-    name_label: Name
+    name_label: Application Name
   assign_ppoc:
     dod_id: 'Select new primary point of contact:'
   environments:
@@ -371,7 +371,7 @@ portfolios:
     new_application_title: New Application
     settings_heading: Application Settings
     settings:
-      name_description: Name and Description
+      name_description: Application name and description
       team_members: Team Members
     team_settings:
       blank_slate:

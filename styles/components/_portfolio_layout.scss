@@ -136,7 +136,7 @@
 }
 
 .portfolio-content {
-  margin: 1 * $gap $gap 0 $gap;
+  margin: (4 * $gap) $gap 0 $gap;
 
   .panel {
     @include shadow-panel;
@@ -146,11 +146,6 @@
     .panel {
       @include shadow-panel;
       padding-bottom: 0;
-    }
-
-    .subheading {
-      font-size: 1.4rem;
-      color: $color-gray;
     }
 
     .responsive-table-wrapper {
