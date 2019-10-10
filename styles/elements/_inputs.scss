@@ -57,12 +57,8 @@
 }
 
 .usa-input {
-  margin: ($gap * 4) ($gap * 2) ($gap * 4) 0;
+  margin: ($gap * 2) 0;
   max-width: 75rem;
-
-  @include media($medium-screen) {
-    margin: ($gap * 4) 0;
-  }
 
   label {
     padding: 0 0 ($gap / 2) 0;
@@ -363,6 +359,8 @@ select {
     margin-right: $gap * 4;
 
     .usa-input {
+      margin: 0;
+
       input,
       label,
       .usa-input__message {
@@ -379,6 +377,8 @@ select {
     margin-left: $gap * 4;
 
     .usa-input {
+      margin: 0;
+
       input {
         max-width: 12rem;
       }

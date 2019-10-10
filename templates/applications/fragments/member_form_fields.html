@@ -52,20 +52,13 @@
 {% endmacro %}
 
 {% macro InfoFields(member_form) %}
-  <div class='form-row'>
-    {{ TextInput(member_form.first_name, validation='requiredField', optional=False) }}
+  <div class="application-member__user-info">
+
   </div>
-  <div class='form-row'>
-    {{ TextInput(member_form.last_name, validation='requiredField', optional=False) }}
-  </div>
-  <div class='form-row'>
-    {{ TextInput(member_form.email, validation='email', optional=False) }}
-  </div>
-  <div class="form-row">
-    {{ PhoneInput(member_form.phone_number, member_form.phone_ext)}}
-  </div>
-  <div class='form-row'>
-    {{ TextInput(member_form.dod_id, validation='dodId', optional=False) }}
-  </div>
+  {{ TextInput(member_form.first_name, validation='requiredField', optional=False) }}
+  {{ TextInput(member_form.last_name, validation='requiredField', optional=False) }}
+  {{ TextInput(member_form.email, validation='email', optional=False) }}
+  {{ PhoneInput(member_form.phone_number, member_form.phone_ext)}}
+  {{ TextInput(member_form.dod_id, validation='dodId', optional=False) }}
   <a href="#">How do I find the DoD ID?</a>
 {% endmacro %}

@@ -314,7 +314,7 @@ portfolios:
       step_1_button_text: "Save and Add Environments"
       step_1_form_help_text:
         name: |
-          <div style="margin-top: -3rem;">
+          <div>
             <p>
               The name of your application should be intuitive and easily recognizable for all of your team members.
             </p>
@@ -326,7 +326,7 @@ portfolios:
             </p>
           </div>
         description: |
-          <div style="margin-top: -3rem;">
+          <div>
             <p>
               Add a brief one to two sentence description of your application. You should be able to reference your TO Description of Work.
             </p>
