@@ -1,5 +1,5 @@
-{% macro ToggleButton(action, open_html, close_html, section_name) %}
-  <span v-on:click="toggleSection('{{ section_name }}')" class="accordion-table__item__toggler">
+{% macro ToggleButton(action, open_html, close_html, section_name, classes="") %}
+  <span v-on:click="toggleSection('{{ section_name }}')" class="accordion-table__item__toggler {{ classes }}">
     <span v-if="selectedSection === '{{ section_name }}'">
       {{ close_html }}
     </span>
@@ -10,7 +10,7 @@
 {% endmacro %}
 
 {% macro ToggleSection(section_name, classes="") %}
-  <div v-show="selectedSection === '{{ section_name }}'" class='{{ classes }}'>
+  <div v-show="selectedSection === '{{ section_name }}'" class='accordion-table__item-toggle-content {{ classes }}'>
     {{ caller() }}
   </div>
 {% endmacro %}

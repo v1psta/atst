@@ -76,49 +76,43 @@
             {% set edit_form = env['edit_form'] %}
             <toggler inline-template>
               <li class="accordion-table__item">
-                <div class="accordion-table__item-content form-row">
-                  <div class="form-col form-col--two-thirds">
-                    <div class="environment-list__item">
-                      <span>
-                        {{ env['name'] }}
-                      </span>
-                      {% set members_button = "portfolios.applications.member_count" | translate({'count': env['member_count']}) %}
-                      {{
-                        ToggleButton(
-                          open_html=members_button,
-                          close_html=members_button,
-                          section_name="members"
-                        )
-                      }}
-                      <br>
-                      {% if env['pending'] -%}
-                        <span class='usa-label'>PROCESSING</span>
-                      {% else %}
-                        <a href='{{ url_for("applications.access_environment", environment_id=env.id)}}' target='_blank' rel='noopener noreferrer' class='application-list-item__environment__csp_link icon-link'>
-                          <span>{{ "portfolios.applications.csp_link" | translate }} {{ Icon('link', classes="icon--tiny") }}</span>
-                        </a>
-                      {%- endif %}
-                    </div>
-                  </div>
-                  <div class="form-col form-col--third">
-                      {% set edit_environment_button %}
-                        <span>Edit</span>
-                      {% endset %}
-
-                      {{
+                <div class="accordion-table__item-content">
+                  <div class="environment-list__item">
+                    <span>
+                      {{ env['name'] }}
+                    </span>
+                    {% set members_button = "portfolios.applications.member_count" | translate({'count': env['member_count']}) %}
+                    {{
                       ToggleButton(
-                        open_html=edit_environment_button,
-                        close_html=edit_environment_button,
-                        section_name="edit"
-                        )
-                      }}
+                        open_html=members_button,
+                        close_html=members_button,
+                        section_name="members",
+                        classes="environment-list__item__members"
+                      )
+                    }}
+                    {% set edit_environment_button = "Edit" %}
+                    {{
+                    ToggleButton(
+                      open_html=edit_environment_button,
+                      close_html=edit_environment_button,
+                      section_name="edit"
+                      )
+                    }}
+                    <br>
+                    {% if env['pending'] -%}
+                      <span class='usa-label'>PROCESSING</span>
+                    {% else %}
+                      <a href='{{ url_for("applications.access_environment", environment_id=env.id)}}' target='_blank' rel='noopener noreferrer' class='application-list-item__environment__csp_link'>
+                        <span>{{ "portfolios.applications.csp_link" | translate }} {{ Icon('link', classes="icon--tiny") }}</span>
+                      </a>
+                    {%- endif %}
                   </div>
                 </div>
 
                 {% call ToggleSection(section_name="members") %}
                   <ul>
                     {% for member in env['members'] %}
-                    <li class="accordion-table__item__expanded">
+                    <li class="accordion-table__item-toggle-content__expanded">
                       {{ member }}
                     </li>
                     {% endfor %}
@@ -127,7 +121,7 @@
 
                 {% call ToggleSection(section_name="edit") %}
                   <ul>
-                    <li class="accordion-table__item__expanded">
+                    <li class="accordion-table__item-toggle-content__expanded">
                       <form action="{{ url_for('applications.update_environment', environment_id=env['id']) }}" method="post" v-on:submit="handleSubmit">
                         {{ edit_form.csrf_token }}
                         {{ TextInput(edit_form.name, validation='requiredField') }}

@@ -270,25 +270,26 @@
       margin-top: $gap * 3;
     }
 
-    .accordion-table__item-content.form-row {
-      margin-bottom: 0;
-      margin-top: 0;
-      padding: 0;
-    }
-
     li.accordion-table__item__expanded {
       height: auto;
     }
 
-    span.accordion-table__item__toggler.icon-link {
+    a.application-list-item__environment__csp_link {
       font-size: $small-font-size;
       font-weight: $font-normal;
-      float: unset;
+
+      .icon {
+        @include icon-color($color-blue);
+      }
     }
 
-    a.application-list-item__environment__csp_link.icon-link {
-      font-size: $small-font-size;
+    span.accordion-table__item__toggler {
       font-weight: $font-normal;
+
+      &.environment-list__item__members {
+        float: unset;
+        font-size: $small-font-size;
+      }
     }
   }
 

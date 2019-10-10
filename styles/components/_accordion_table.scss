@@ -10,6 +10,11 @@
 
   ul {
     padding-left: 0;
+
+    li {
+      list-style-type: none;
+      margin: 0;
+    }
   }
 
   &__head {
@@ -45,11 +50,14 @@
   &__items {
     margin: 0;
 
-    li {
+    .accordion-table__item {
       font-weight: $font-bold;
       border-bottom: 1px solid $color-gray-lightest;
-      margin: 0;
-      list-style-type: none;
+      padding: $gap 0;
+
+      &:first-child {
+        padding-top: 0;
+      }
 
       .icon-link--large {
         padding-top: $gap * 0.5;
@@ -151,37 +159,45 @@
       }
     }
 
-    &__expanded {
-      font-size: $small-font-size;
-      font-weight: $font-normal;
-      background-color: $color-gray-lightest;
-      padding: ($gap * 2) ($gap * 4);
+    &-toggle-content {
+      margin-top: $gap;
 
-      .col--grow {
+      &__expanded {
+        font-size: $small-font-size;
         font-weight: $font-normal;
-      }
+        background-color: $color-gray-lightest;
+        padding: $gap;
 
-      th,
-      td {
-        .icon-link {
-          font-weight: $font-normal;
-          font-size: $base-font-size;
+        &:last-child {
+          border-bottom: none;
         }
 
-        border-bottom: 1px dashed $color-white;
-      }
+        .col--grow {
+          font-weight: $font-normal;
+        }
 
-      &_first {
-        float: left;
-      }
+        th,
+        td {
+          .icon-link {
+            font-weight: $font-normal;
+            font-size: $base-font-size;
+          }
 
-      &-role {
-        .icon-link {
-          padding: 0;
-          vertical-align: text-top;
+          border-bottom: 1px dashed $color-white;
+        }
 
-          .icon {
-            margin: 0 0 0 0.25rem;
+        &_first {
+          float: left;
+        }
+
+        &-role {
+          .icon-link {
+            padding: 0;
+            vertical-align: text-top;
+
+            .icon {
+              margin: 0 0 0 0.25rem;
+            }
           }
         }
       }
@@ -207,14 +223,6 @@
           white-space: nowrap;
         }
       }
-    }
-  }
-}
-
-#application-environments {
-  .row {
-    & > .col:first-child {
-      flex-grow: 5;
     }
   }
 }
