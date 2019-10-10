@@ -100,7 +100,7 @@
                     }}
                     <br>
                     {% if env['pending'] -%}
-                      <span class='usa-label'>PROCESSING</span>
+                      <span class='usa-label label--below'>{{Icon('exchange')}} CHANGES PENDING</span>
                     {% else %}
                       <a href='{{ url_for("applications.access_environment", environment_id=env.id)}}' target='_blank' rel='noopener noreferrer' class='application-list-item__environment__csp_link'>
                         <span>{{ "portfolios.applications.csp_link" | translate }} {{ Icon('link', classes="icon--tiny") }}</span>
