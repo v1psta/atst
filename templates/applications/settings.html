@@ -64,14 +64,12 @@
     user_can_delete_app_member=user_can(permissions.DELETE_APPLICATION_MEMBER),
   ) }}
 
-  <div class="subheading">    
-    {{ 'common.resource_names.environments' | translate }}
-  </div>
-  <div class="panel">
+  <h3>{{ 'common.resource_names.environments' | translate }}</h3>
+  <section class="panel" id="application-environments">
     {% if g.matchesPath("application-environments") %}
       {% include "fragments/flash.html" %}
     {% endif %}
-    <div class="panel__content">
+    <div class="panel__content panel__content">
       <div class="accordion-table accordion-table-list">
         <ul class="accordion-table__items">
           {% for env in environments_obj %}
@@ -84,44 +82,36 @@
                       <span>
                         {{ env['name'] }}
                       </span>
-                      {% if env['pending'] %}
+                      {% set members_button = "portfolios.applications.member_count" | translate({'count': env['member_count']}) %}
+                      {{
+                        ToggleButton(
+                          open_html=members_button,
+                          close_html=members_button,
+                          section_name="members"
+                        )
+                      }}
+                      <br>
+                      {% if env['pending'] -%}
                         <span class='usa-label'>PROCESSING</span>
-                      {% endif %}
-                      {% if env['pending'] %}
-                        <span class="icon-link">
-                          {% set edit_environment_button %}
-                            {{ Icon('edit') }}
-                          {% endset %}
-
-                          {{
-                          ToggleButton(
-                            open_html=edit_environment_button,
-                            close_html=edit_environment_button,
-                            section_name="edit"
-                            )
-                          }}
-                        </span>
-                      {% endif %}
-                      <span class="accordion-table__item__toggler icon-link">
-                        {% set members_button = "portfolios.applications.member_count" | translate({'count': env['member_count']}) %}
-                        {{
-                          ToggleButton(
-                            open_html=members_button,
-                            close_html=members_button,
-                            section_name="members"
-                          )
-                        }}
-                      </span>
+                      {% else %}
+                        <a href='{{ url_for("applications.access_environment", environment_id=env.id)}}' target='_blank' rel='noopener noreferrer' class='application-list-item__environment__csp_link icon-link'>
+                          <span>{{ "portfolios.applications.csp_link" | translate }} {{ Icon('link', classes="icon--tiny") }}</span>
+                        </a>
+                      {%- endif %}
                     </div>
                   </div>
                   <div class="form-col form-col--third">
-                    {% if env['pending'] %}
-                      <em>Cloud service provider link unavailable</em>
-                    {% else %}
-                      <a href='{{ url_for("applications.access_environment", environment_id=env.id)}}' target='_blank' rel='noopener noreferrer' class='application-list-item__environment__csp_link icon-link'>
-                        <span>{{ "portfolios.applications.csp_link" | translate }} {{ Icon('link', classes="icon--tiny") }}</span>
-                      </a>
-                    {% endif %}
+                      {% set edit_environment_button %}
+                        <span>Edit</span>
+                      {% endset %}
+
+                      {{
+                      ToggleButton(
+                        open_html=edit_environment_button,
+                        close_html=edit_environment_button,
+                        section_name="edit"
+                        )
+                      }}
                   </div>
                 </div>
 
@@ -161,8 +151,8 @@
       {% include "applications/fragments/add_new_environment.html" %}
       </div>
     {% endif %}
-  </div>
-  
+  </section>
+
   <hr>
 
   {% if user_can(permissions.DELETE_APPLICATION) %}
