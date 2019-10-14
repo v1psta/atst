@@ -12,6 +12,7 @@ from atst.domain.csp.cloud import CloudProviderInterface, GeneralCSPException
 from atst.domain.environments import Environments
 from atst.domain.environment_roles import EnvironmentRoles
 from atst.models.utils import claim_for_update
+from atst.utils.localization import translate
 
 
 class RecordEnvironmentFailure(celery.Task):
@@ -91,6 +92,10 @@ def do_create_atat_admin_user(csp: CloudProviderInterface, environment_id=None):
         db.session.commit()
 
 
+def render_email(template_path, context):
+    return app.jinja_env.get_template(template_path).render(context)
+
+
 def do_create_environment_baseline(csp: CloudProviderInterface, environment_id=None):
     environment = Environments.get(environment_id)
 
@@ -102,6 +107,12 @@ def do_create_environment_baseline(csp: CloudProviderInterface, environment_id=N
             atat_remote_root_creds, environment.cloud_id
         )
         environment.baseline_info = baseline_info
+        body = render_email(
+            "emails/application/environment_ready.txt", {"environment": environment}
+        )
+        app.mailer.send(
+            [environment.creator.email], translate("email.environment_ready"), body
+        )
         db.session.add(environment)
         db.session.commit()
 

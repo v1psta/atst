@@ -100,7 +100,7 @@ def test_create_atat_admin_user(csp, session):
     assert environment.root_user_info
 
 
-def test_create_environment_baseline(csp, session):
+def test_create_environment_baseline(csp, session, app):
     environment = EnvironmentFactory.create(
         root_user_info={"credentials": csp.root_creds()}
     )
@@ -108,6 +108,7 @@ def test_create_environment_baseline(csp, session):
     session.refresh(environment)
 
     assert environment.baseline_info
+    assert len(app.mailer.messages) > 0
 
 
 def test_dispatch_create_environment(session, monkeypatch):

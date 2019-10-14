@@ -104,6 +104,7 @@ errors:
 email:
   application_invite: "{inviter_name} has invited you to a JEDI cloud application"
   portfolio_invite: "{inviter_name} has invited you to a JEDI cloud portfolio"
+  environment_ready: JEDI cloud environment ready
 flash:
   application:
     created: 'You have successfully created the {application_name} application.'
