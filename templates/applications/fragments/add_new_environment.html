@@ -26,8 +26,7 @@
         </div>
       </form>
     </div>
-    <a class='icon-link icon-link__add' v-on:click="toggle">
-      {{ Icon('plus') }}
+    <a class="usa-button usa-button-secondary add-new-button" v-on:click="openModal('{{ new_member_modal_name }}')">
       {{ "portfolios.applications.add_environment" | translate }}
     </a>
   </div>

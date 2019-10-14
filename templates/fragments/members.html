@@ -165,7 +165,7 @@
           </tbody>
         </table>
         {% if user_can_create_app_member %}
-          <a class="usa-button usa-button-secondary create-member" v-on:click="openModal('{{ new_member_modal_name }}')">
+          <a class="usa-button usa-button-secondary add-new-button" v-on:click="openModal('{{ new_member_modal_name }}')">
             {{ "portfolios.applications.add_member" | translate }}
           </a>
         {% endif %}
