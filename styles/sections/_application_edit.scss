@@ -27,6 +27,10 @@
 .form-content--app-mem {
   text-align: left;
 
+  .modal__body {
+    min-width: 75rem;
+  }
+
   input[type="checkbox"] + label::before {
     margin-left: 0;
   }
