@@ -22,10 +22,6 @@ def update_celery(celery, app):
             "task": "atst.jobs.dispatch_provision_user",
             "schedule": 60,
         },
-        "beat-dispatch_delete_user": {
-            "task": "atst.jobs.dispatch_delete_user",
-            "schedule": 60,
-        },
     }
 
     class ContextTask(celery.Task):

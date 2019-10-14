@@ -85,4 +85,4 @@ def test_disable(session):
     session.refresh(member_role)
     session.refresh(environment_role)
     assert member_role.status == ApplicationRoleStatus.DISABLED
-    assert environment_role.status == EnvironmentRole.Status.PENDING_DELETE
+    assert environment_role.deleted

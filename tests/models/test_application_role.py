@@ -1,4 +1,5 @@
 from atst.domain.permission_sets import PermissionSets
+from atst.domain.environment_roles import EnvironmentRoles
 from atst.models.audit_event import AuditEvent
 
 from tests.factories import *
@@ -53,4 +54,4 @@ def test_environment_roles():
         environment=environment2, application_role=application_role, deleted=True
     )
 
-    assert application_role.environment_roles == [environment_role1]
+    assert not EnvironmentRoles.get_by_user_and_environment(user.id, environment2.id)
