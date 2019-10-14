@@ -223,6 +223,16 @@
     }
   }
 
+  #add-new-env {
+    padding: $gap * 2;
+
+    .new-env {
+      width: 50%;
+      max-width: 30em;
+      padding-top: $gap * 4;
+    }
+  }
+
   .application-content {
     margin-top: $gap * 4;
 
