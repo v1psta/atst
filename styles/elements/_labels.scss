@@ -44,8 +44,6 @@
   }
 
   .icon {
-    @include icon-color($color-white)
-    @include icon-size(12)
-    margin: 0;
+    @include icon-color($color-white) @include icon-size(12) margin: 0;
   }
 }

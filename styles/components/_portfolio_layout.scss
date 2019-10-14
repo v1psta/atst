@@ -239,7 +239,7 @@
 
     .panel {
       @include shadow-panel;
-      padding-bottom: 0;
+      padding-bottom: 2rem;
     }
 
     .application-list-item {
