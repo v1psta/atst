@@ -219,6 +219,8 @@
   }
 
   .application-content {
+    margin-top: $gap * 4;
+
     .subheading {
       @include subheading;
       position: relative;

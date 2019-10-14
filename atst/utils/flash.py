@@ -8,9 +8,9 @@ MESSAGES = {
         "category": "success",
     },
     "application_created": {
-        "title_template": translate("flash.success"),
+        "title_template": translate("flash.application.created.title"),
         "message_template": """
-            {{ "flash.application.created" | translate({"application_name": application_name}) }}
+            {{ "flash.application.created.message" | translate({"application_name": application_name}) }}
         """,
         "category": "success",
     },
@@ -104,9 +104,9 @@ MESSAGES = {
         "category": "warning",
     },
     "new_application_member": {
-        "title_template": translate("flash.success"),
+        "title_template": """{{ "flash.new_application_member.title" | translate({ "user_name": user_name }) }}""",
         "message_template": """
-          <p>{{ "flash.new_application_member" | translate({ "user_name": user_name, "application_name": application_name }) }}</p>
+          <p>{{ "flash.new_application_member.message" | translate({ "user_name": user_name }) }}</p>
         """,
         "category": "success",
     },
