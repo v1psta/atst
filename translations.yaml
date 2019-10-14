@@ -131,11 +131,11 @@ footer:
   login: 'Last login:'
 forms:
   application:
-    description_label: Description
+    description_label: Application Description
     environment_names_label: Environment Name
     environment_names_required_validation_message: Provide at least one environment name.
     environment_names_unique_validation_message: Environment names must be unique.
-    name_label: Name
+    name_label: Application Name
   assign_ppoc:
     dod_id: 'Select new primary point of contact:'
   environments:
@@ -287,8 +287,8 @@ login:
 navigation:
   portfolio_navigation:
     breadcrumbs:
-      admin: Admin
-      funding: Funding
+      admin: Settings
+      funding: Task Orders
       reports: Reports
       applications: Applications
   topbar:
@@ -318,7 +318,7 @@ portfolios:
       step_1_button_text: "Next: Add Environments"
       step_1_form_help_text:
         name: |
-          <div style="margin-top: -3rem;">
+          <div>
             <p>
               The name of your Application should be intuitive and easily recognizable for all of your team members.
             </p>
@@ -330,7 +330,7 @@ portfolios:
             </p>
           </div>
         description: |
-          <div style="margin-top: -3rem;">
+          <div>
             <p>
               Add a brief one to two sentence description of your application. You should be able to reference your TO Description of Work.
             </p>
@@ -375,7 +375,7 @@ portfolios:
     new_application_title: New Application
     settings_heading: Application Settings
     settings:
-      name_description: Name and Description
+      name_description: Application name and description
       team_members: Team Members
     team_settings:
       blank_slate:
@@ -428,6 +428,7 @@ portfolios:
     empty:
       start_button: Start a new JEDI portfolio
       title: You have no apps yet
+  header: PORTFOLIO
   members:
     archive_button: Delete member
     permissions:

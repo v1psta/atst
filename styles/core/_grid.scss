@@ -44,4 +44,9 @@
     flex-grow: 1;
     padding-right: $spacing-small;
   }
+
+  &.col--half {
+    width: 50%;
+    max-width: 30em;
+  }
 }
