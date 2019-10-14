@@ -8,7 +8,6 @@
       padding: $gap 0;
 
       hr {
-        width: 100%;
         border: 1px solid $color-red;
       }
 
@@ -20,16 +19,16 @@
     &__body {
       padding: $gap * 2;
       margin: 0;
+
+      hr {
+        width: 80%;
+        margin: auto;
+        margin-bottom: $gap * 3;
+      }
     }
   }
 
   .icon {
     @include icon-size(60);
-  }
-
-  hr {
-    margin-bottom: $gap * 4;
-    width: 80%;
-    border: 0.5px solid $color-gray-light;
   }
 }

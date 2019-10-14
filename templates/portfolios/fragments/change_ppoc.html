@@ -6,9 +6,8 @@
 {% from "components/options_input.html" import OptionsInput %}
 
 {% set step_one %}
-  <div class="modal__form--header">
-    <h1>{{ "fragments.ppoc.update_ppoc_title" | translate }}</h1>
-  </div>
+  <hr>
+  <h1>{{ "fragments.ppoc.update_ppoc_title" | translate }}</h1>
 
   {{
     Alert(
@@ -43,28 +42,25 @@
 {% endset %}
 
 {% set step_two %}
-  <div class="modal__form--padded">
-    <div class="modal__form--header">
-      <h1>{{ "fragments.ppoc.update_ppoc_confirmation_title" | translate }}</h1>
-    </div>
+  <hr>
+  <h1>{{ "fragments.ppoc.update_ppoc_confirmation_title" | translate }}</h1>
 
-    {{
-      Alert(
-        level="info",
-        title=("fragments.ppoc.confirm_alert.title" | translate),
-      )
-    }}
+  {{
+    Alert(
+      level="info",
+      title=("fragments.ppoc.confirm_alert.title" | translate),
+    )
+  }}
 
-    <div class='action-group'>
-      <input
-        type="submit"
-        class='action-group__action usa-button'
-        form="change-ppoc-form"
-        value='{{ "common.confirm" | translate }}'>
-      <a class='action-group__action icon-link icon-link--default' v-on:click="closeModal('change-ppoc-form')">
-        {{ "common.cancel" | translate }}
-      </a>
-    </div>
+  <div class='action-group'>
+    <input
+      type="submit"
+      class='action-group__action usa-button'
+      form="change-ppoc-form"
+      value='{{ "common.confirm" | translate }}'>
+    <a class='action-group__action icon-link icon-link--default' v-on:click="closeModal('change-ppoc-form')">
+      {{ "common.cancel" | translate }}
+    </a>
   </div>
 {% endset %}
 

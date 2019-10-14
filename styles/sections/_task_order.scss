@@ -29,10 +29,8 @@
   }
 
   hr {
-    border: 0;
-    margin-top: $gap * 4;
-    margin-bottom: $gap * 4;
-    border-bottom: 1px solid $color-gray-lighter;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   table {
@@ -139,77 +137,6 @@
     }
   }
 
-  .usa-input__title,
-  .usa-input__title-inline {
-    font-weight: $font-normal;
-  }
-
-  &.task_order__form {
-    hr {
-      margin-top: 1.5rem;
-    }
-
-    .totals-box {
-      margin-top: 0;
-    }
-
-    .icon {
-      left: 100%;
-      &.icon--question {
-        @include icon-color($color-blue);
-      }
-    }
-
-    input {
-      max-width: unset;
-    }
-
-    .date-picker {
-      .usa-input__title {
-        font-weight: $font-bold;
-        margin-bottom: $gap;
-      }
-    }
-
-    .usa-form-group-year {
-      margin-right: 0.4rem;
-    }
-
-    .usa-alert {
-      margin: 1.5em 0;
-    }
-
-    .usa-input {
-      margin-top: $gap;
-      margin-bottom: $gap;
-    }
-
-    .form-row {
-      margin-bottom: 0;
-
-      .usa-input {
-        margin-left: $gap;
-        margin-right: $gap;
-      }
-
-      .form-col:first-child {
-        .usa-input {
-          margin-left: 0;
-        }
-      }
-
-      .form-col:last-child {
-        .usa-input {
-          margin-right: 0;
-        }
-      }
-    }
-
-    .task-order__pdf-help-text {
-      margin-bottom: 4 * $gap;
-    }
-  }
-
   .panel {
     @include shadow-panel;
   }
@@ -269,15 +196,6 @@
 
 .task-order__modal-cancel {
   text-align: center;
-}
-
-.task-order__modal-cancel_buttons {
-  display: flex;
-  justify-content: center;
-
-  button {
-    margin-top: 0;
-  }
 }
 
 .clin-card {

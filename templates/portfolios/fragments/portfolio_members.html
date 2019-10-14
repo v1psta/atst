@@ -81,6 +81,7 @@
           {% set modal_id = "portfolio_id_{}_user_id_{}".format(portfolio.id, subform.member_id.data) %}
           {% call Modal(name=modal_id, dismissable=False) %}
             <h1>{{ "portfolios.admin.alert_header" | translate }}</h1>
+            <hr>
             {{
               Alert(
                 title="portfolios.admin.alert_title" | translate,
@@ -88,16 +89,14 @@
                 level="warning"
               )
             }}
-            <div class="panel__footer">
-              <div class="action-group">
-                <form method="POST" action="{{ url_for('portfolios.remove_member', portfolio_id=portfolio.id, portfolio_role_id=subform.member_id.data)}}">
-                  {{ member_perms_form.csrf_token }}
-                  <button class="usa-button usa-button-danger">
-                    {{ "portfolios.members.archive_button" | translate }}
-                  </button>
-                </form>
-                <a v-on:click="closeModal('{{ modal_id }}')" class="action-group__action icon-link icon-link--default">{{ "common.cancel" | translate }}</a>
-              </div>
+            <div class="action-group">
+              <form method="POST" action="{{ url_for('portfolios.remove_member', portfolio_id=portfolio.id, portfolio_role_id=subform.member_id.data)}}">
+                {{ member_perms_form.csrf_token }}
+                <button class="usa-button usa-button-danger">
+                  {{ "portfolios.members.archive_button" | translate }}
+                </button>
+              </form>
+              <a v-on:click="closeModal('{{ modal_id }}')" class="action-group__action icon-link icon-link--default">{{ "common.cancel" | translate }}</a>
             </div>
           {% endcall %}
         {% endfor %}

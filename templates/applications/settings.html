@@ -6,7 +6,6 @@
 {% import "applications/fragments/new_member_modal_content.html" as member_steps %}
 {% from "fragments/members.html" import MemberManagementTemplate %}
 {% from "components/modal.html" import Modal %}
-{% from "components/multi_step_modal_form.html" import MultiStepModalForm %}
 {% from "components/pagination.html" import Pagination %}
 {% from "components/save_button.html" import SaveButton %}
 {% from "components/text_input.html" import TextInput %}
@@ -219,7 +218,7 @@
 
     {% call Modal(name="delete-application") %}
       <h1>{{ "portfolios.applications.delete.header" | translate }}</h1>
-
+      <hr>
       {{
         Alert(
           title=("components.modal.destructive_title" | translate),

@@ -2,10 +2,8 @@
 {% import "applications/fragments/member_form_fields.html" as member_fields %}
 
 {% macro MemberFormTemplate(title, next_button, previous=True) %}
-  <div class="modal__form--header">
-    <h1>{{ Icon('avatar') }} {{ title }}</h1>
-    <hr>
-  </div>
+  <hr>
+  <h1>{{ Icon('avatar') }} {{ title }}</h1>
 
   {{ caller() }}
 
@@ -18,7 +16,7 @@
           class='action-group__action usa-button usa-button-secondary'
           value='{{ "common.previous" | translate }}'>
     {% endif %}
-    <a class='action-group__action icon-link icon-link--default' v-on:click="closeModal('{{ new_port_mem }}')">{{ "common.cancel" | translate }}</a>
+    <a class='action-group__action' v-on:click="closeModal('{{ new_port_mem }}')">{{ "common.cancel" | translate }}</a>
   </div>
 {% endmacro %}
 

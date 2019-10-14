@@ -16,9 +16,7 @@
             {{ delete_text }}
           </button>
         </form>
-        <div class="action-group">
-          <a v-on:click="deleteText = ''; $root.closeModal('{{ modal_id }}')" class="action-group__action icon-link icon-link--default">{{ "common.cancel" | translate }}</a>
-        </div>
+        <a v-on:click="deleteText = ''; $root.closeModal('{{ modal_id }}')" class="action-group__action icon-link icon-link--default">{{ "common.cancel" | translate }}</a>
       </div>
     </div>
   </delete-confirmation>

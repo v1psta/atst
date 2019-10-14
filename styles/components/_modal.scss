@@ -50,18 +50,13 @@ body {
 
   &__body {
     background-color: $color-white;
-    padding: $gap * 2;
+    padding: $gap * 1.5;
     width: 100%;
-    border-radius: 5px;
     overflow-y: auto;
     -ms-overflow-style: scrollbar;
 
     @include ie-only {
       max-height: calc(100vh - #{$gap * 8});
-    }
-
-    @include media($medium-screen) {
-      padding: $gap * 2.5 $gap * 5;
     }
 
     h1,
@@ -121,13 +116,22 @@ body {
         }
       }
     }
+
+    .action-group {
+      background-color: $color-gray-lightest;
+      padding: $gap * 2;
+      margin: ($gap * 5) (-$gap * 1.5) (-$gap * 1.5);
+    }
+
+    .form-row {
+      margin: 0;
+    }
   }
 
   &__dismiss {
     position: absolute;
     top: $gap;
     right: $gap;
-    width: 8rem;
 
     @include media($medium-screen) {
       top: $gap * 2;
@@ -140,104 +144,25 @@ body {
     }
   }
 
-  &--dissmissable {
-    .modal__body {
-      > :first-child {
-        margin-right: 8rem;
-      }
-    }
-  }
-
-  &__form {
-    &--header {
-      margin-bottom: 4rem;
-      text-align: left;
-
-      h1 {
-        margin-bottom: 0;
-      }
-
-      .icon-link {
-        padding-top: 0.5rem;
-        padding-left: 0;
-        margin-left: 0;
-      }
-    }
-
-    &--padded {
-      padding-left: 5%;
-      padding-right: 5%;
-
-      .usa-input .usa-input__choices select {
-        max-width: 100%;
-      }
-    }
-
-    .progress-menu ul {
-      width: 40%;
-      margin-left: 30%;
-      font-size: 2rem;
-
-      &__item::before {
-        width: 2.8rem;
-        height: 2.8rem;
-        margin-left: -1.25rem;
-      }
-
-      &__item--complete::before {
-        content: url("#{$asset-path}/icons/checkmark-alt.svg");
-        padding-top: 0.4rem;
-      }
-    }
-
-    .form-row {
-      margin-top: 0;
-      margin-bottom: 0;
-
-      .form-col {
-        .usa-input {
-          margin-bottom: 1.5rem;
-        }
-      }
-    }
-
-    .icon-link--default {
-      font-size: 1.7rem;
-    }
-
-    .usa-button {
-      margin-left: 2rem;
-
-      &[type="button"]:disabled {
-        background-color: $color-gray-lighter;
-        opacity: inherit;
-      }
-    }
-  }
-
-  &.wide {
-    .modal__dialog {
-      max-width: 90rem;
-      width: 100%;
-    }
-
-    .modal__body {
-      padding-left: 4rem;
-      padding-right: 4rem;
-    }
-  }
-
   .usa-button {
     min-width: 17rem;
   }
 
-  .usa-input .checkbox {
-    margin-left: 3rem;
+  .usa-input {
+    .checkbox {
+      margin-left: 3rem;
+    }
   }
 
   input[type="checkbox"] {
     + label::before {
       margin-left: -3rem;
     }
+  }
+}
+
+.modal--dismissable {
+  .modal__body {
+    padding-top: $gap * 3.5;
   }
 }

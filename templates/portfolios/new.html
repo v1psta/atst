@@ -11,7 +11,7 @@
   {% include "fragments/flash.html" %}
   <h1>New Portfolio Form</h1>
   <base-form inline-template>
-    <form id="portfolio-create" action="{{ url_for('portfolios.create_portfolio') }}" method="POST">
+    <form class="panel__content" id="portfolio-create" action="{{ url_for('portfolios.create_portfolio') }}" method="POST">
       {{ form.csrf_token }}
 
       {{ TextInput(form.name, optional=False) }}

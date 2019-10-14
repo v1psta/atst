@@ -34,6 +34,10 @@
 
   .input__inline-fields {
     text-align: left;
+
+    .usa-input__choices label {
+      font-weight: $font-bold;
+    }
   }
 
   .input__inline-fields {
@@ -77,11 +81,6 @@
       }
     }
   }
-
-  hr {
-    border: none;
-    border-bottom: 1px solid $color-gray-lighter;
-  }
 }
 
 .environment-roles {
@@ -110,7 +109,7 @@
     }
 
     hr {
-      margin: 0.5em;
+      margin: 0.5em 0;
     }
   }
 
