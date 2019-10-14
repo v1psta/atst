@@ -30,6 +30,50 @@ envsubst < deploy/aws/storage-class.yml | kubectl apply -f -
 
 When applying configuration changes, be careful not to over-write the storage class configuration without the environment variable substituted.
 
+#### Fluentd Configuration
+
+For the Fluentd/CloudWatch integration to work for logging purposes, you will need to add an additional policy to the worker nodes' role. What follows is adapted from the [EKS Workshop](https://eksworkshop.com/logging/prereqs/).
+
+If you used eksctl to provision the EKS cluster, there will be a CloudFormation stack associated with the cluster. The node instances within the cluster will have a role associated to define their permissions. You need the name of the role. To get it using the AWS CLI, run:
+
+```
+export ROLE_NAME=$(aws --profile=dds --region us-east-2 cloudformation describe-stacks --stack-name eksctl-atat-nodegroup-standard-workers | jq -r '.Stacks[].Outputs[] | select(.OutputKey=="InstanceRoleARN") | .OutputValue' | cut -f2 -d/)
+```
+
+(This assumes that you have [`jq`](https://stedolan.github.io/jq/) available to parse the JSON response.)
+
+Run `echo $ROLE_NAME` to check that the previous command worked.
+
+Create a file called `k8s-logs-policy.json` and add the following content:
+
+```
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": [
+                "logs:DescribeLogGroups",
+                "logs:DescribeLogStreams",
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents"
+            ],
+            "Resource": "*",
+            "Effect": "Allow"
+        }
+    ]
+}
+```
+
+This is the new policy that allows the nodes to aggregate logs. To apply it, run the following with the AWS CLI:
+
+```
+aws iam put-role-policy --role-name $ROLE_NAME --policy-name Logs-Policy-For-Worker --policy-document file://./k8s-logs-policy.json
+```
+
+(This command assumes you are executing it in the same directory as the policy JSON file; adjust the path as needed.)
+
+
 ### Apply the config to an Azure cluster
 
 To apply the configuration to a new cluster, run:
