@@ -142,3 +142,9 @@ class PortfolioInvitations(BaseInvitations):
 class ApplicationInvitations(BaseInvitations):
     model = ApplicationInvitation
     role_domain_class = ApplicationRoles
+
+    @classmethod
+    def revoke(cls, token):
+        invite = super().revoke(token)
+        ApplicationRoles.disable(invite.role)
+        return invite
