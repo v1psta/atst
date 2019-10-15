@@ -90,7 +90,7 @@
                 {{ member.update_invite_form.csrf_token }}
                 {{ member_fields.InfoFields(member.update_invite_form) }}
                 <div class="action-group">
-                  {{ SaveButton(text='Resend Invite', element='input', additional_classes='action-group__action') }}
+                  <input type="submit" class="usa-button usa-button-primary action-group__action" tabindex="0" value="Resend Invite" />
                   <a class='action-group__action' v-on:click="closeModal('{{ resend_invite_modal }}')">{{ "common.cancel" | translate }}</a>
                 </div>
               </form>
