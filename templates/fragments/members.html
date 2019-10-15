@@ -17,13 +17,16 @@
 ) %}
 
 
+
+
+  <div class="subheading"  id="application-members">
+    {{ 'portfolios.applications.settings.team_members' | translate }}
+  </div>
+
   {% if g.matchesPath("application-members") %}
       {% include "fragments/flash.html" %}
   {% endif %}
 
-  <div class="subheading">
-    {{ 'portfolios.applications.settings.team_members' | translate }}
-  </div>
   <div class="panel">
   {% if not application.members %}
     <div class='empty-state panel__content'>
@@ -113,7 +116,7 @@
       {%- endif %}
     {% endfor %}
 
-    <section class="member-list application-list" id="application-members">
+    <section class="member-list application-list">
       <div class='responsive-table-wrapper'>
         <table class="atat-table">
           <thead>

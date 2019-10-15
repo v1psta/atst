@@ -40,7 +40,7 @@ MESSAGES = {
         "category": "error",
     },
     "application_invite_resent": {
-        "title_template": "Application invitation revoked",
+        "title_template": "Application invitation resent",
         "message_template": "You have successfully resent the invite for {{ user_name }} from {{ application_name }}",
         "category": "success",
     },
