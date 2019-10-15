@@ -10,6 +10,7 @@ from atst.domain.application_roles import ApplicationRoles
 from atst.domain.environment_roles import EnvironmentRoles
 from atst.domain.common import Paginator
 from atst.domain.permission_sets import PermissionSets
+from atst.models.application_role import Status as ApplicationRoleStatus
 from atst.models.environment_role import CSPRole
 from atst.models.permissions import Permissions
 from atst.forms.application import EditEnvironmentForm
@@ -553,6 +554,8 @@ def test_revoke_invite(client, user_session):
     )
 
     assert invite.is_revoked
+    assert app_role.status == ApplicationRoleStatus.DISABLED
+    assert app_role.deleted
 
 
 def test_filter_environment_roles():

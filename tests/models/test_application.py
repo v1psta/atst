@@ -1,3 +1,5 @@
+from atst.domain.application_roles import ApplicationRoles
+from atst.models import ApplicationRoleStatus
 from atst.models import AuditEvent
 
 from tests.factories import (
@@ -14,6 +16,22 @@ def test_application_environments_excludes_deleted():
     EnvironmentFactory.create(application=app, deleted=True)
     assert len(app.environments) == 1
     assert app.environments[0].id == env.id
+
+
+def test_application_members_excludes_deleted(session):
+    app = ApplicationFactory.create()
+    member_role = ApplicationRoleFactory.create(
+        application=app, status=ApplicationRoleStatus.ACTIVE
+    )
+    disabled_role = ApplicationRoleFactory.create(
+        application=app, status=ApplicationRoleStatus.DISABLED
+    )
+    disabled_role.deleted = True
+    session.add(disabled_role)
+    session.commit()
+
+    assert len(app.members) == 1
+    assert app.members[0].id == member_role.id
 
 
 def test_audit_event_for_application_deletion(session):
