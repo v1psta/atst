@@ -18,7 +18,6 @@
     }
 
     .usa-input {
-      margin: 0 ($gap * 4) 0 0;
       flex-grow: 2;
     }
   }
@@ -27,6 +26,10 @@
 #modal--add-app-mem,
 .form-content--app-mem {
   text-align: left;
+
+  .modal__body {
+    min-width: 75rem;
+  }
 
   input[type="checkbox"] + label::before {
     margin-left: 0;
@@ -58,11 +61,8 @@
     }
   }
 
-  .form-row {
-    margin-top: 0;
-
+  .application-member__user-info {
     .usa-input {
-      margin: 0;
       width: 45rem;
 
       input,

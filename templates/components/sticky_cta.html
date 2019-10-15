@@ -1,14 +1,7 @@
 {% from 'components/icon.html' import Icon %}
 
-{% macro StickyCTA(text, context=None, return_link_url=None, return_link_text=None) -%}
+{% macro StickyCTA(text, context=None) -%}
   <div class="sticky-cta" v-sticky='{ "stickyBitStickyOffset": 76 }'>
-    {% if return_link_url and return_link_text %}
-    <div class="sticky-cta-return-link">
-      <a href="{{ return_link_url }}">
-        {{ Icon('caret_left', classes="icon--tiny icon--blue") }} {{ return_link_text}}
-      </a>
-    </div>
-    {% endif %}
     <div class="sticky-cta-container">
       <div class="sticky-cta-text">
         <h3>{{ text }}</h3>

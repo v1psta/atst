@@ -29,3 +29,24 @@
     }
   }
 }
+
+.action-group-footer {
+  @extend .action-group;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-top: $gap;
+  padding-bottom: $gap;
+
+  position: fixed;
+  bottom: $footer-height;
+  background: white;
+  right: 0;
+  padding-right: $gap * 4;
+  border-top: 1px solid $color-gray-light;
+  width: 100%;
+  z-index: 1;
+}

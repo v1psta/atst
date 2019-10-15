@@ -29,8 +29,14 @@
   &__name {
     @include h1;
     h1 {
-      margin: ($gap * 2) $gap ($gap * 2) $gap;
+      margin: 0 $gap ($gap * 2) 0;
       font-size: 3.5rem;
+    }
+
+    p {
+      font-size: $small-font-size;
+      margin: 0 0 (-$gap * 0.5);
+      color: $color-gray-medium;
     }
   }
 
@@ -69,17 +75,26 @@
     font-size: $small-font-size;
 
     .icon-link {
-      padding: 0.8rem 1.6rem;
+      padding: $gap;
+      border-radius: 0;
+      color: $color-blue-darkest;
 
-      color: $color-gray;
-      opacity: 0.3;
+      &:hover {
+        background-color: $color-aqua-lightest;
+      }
+
       .icon {
-        @include icon-color($color-gray);
+        @include icon-color($color-blue-darkest);
       }
 
       &.active {
-        opacity: 1;
         color: $color-blue;
+        background-color: $color-gray-lightest;
+
+        &:hover {
+          background-color: $color-aqua-lightest;
+        }
+
         .icon {
           @include icon-color($color-blue);
         }
@@ -121,7 +136,7 @@
 }
 
 .portfolio-content {
-  margin: 1 * $gap $gap 0 $gap;
+  margin: (4 * $gap) $gap 0 $gap;
 
   .panel {
     @include shadow-panel;
@@ -131,11 +146,6 @@
     .panel {
       @include shadow-panel;
       padding-bottom: 0;
-    }
-
-    .subheading {
-      font-size: 1.4rem;
-      color: $color-gray;
     }
 
     .responsive-table-wrapper {
@@ -219,6 +229,8 @@
   }
 
   .application-content {
+    margin-top: $gap * 4;
+
     .subheading {
       @include subheading;
       position: relative;
@@ -247,7 +259,6 @@
 
     textarea {
       max-height: 9rem;
-      max-width: none;
     }
 
     .panel__footer {

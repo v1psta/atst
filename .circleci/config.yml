@@ -135,6 +135,67 @@ jobs:
       - run: "docker tag ${AZURE_SERVER_NAME}/atat:atat-${CIRCLE_SHA1}  ${AZURE_SERVER_NAME}/atat:latest"
       - run: "docker push ${AZURE_SERVER_NAME}/atat:latest"
 
+  integration-tests:
+    docker:
+    - image: docker:17.05.0-ce-git
+    steps:
+    - setup_remote_docker:
+        version: 18.06.0-ce
+    - checkout
+    - run:
+        name: Set up temporary docker network
+        command: docker network create atat
+    - run:
+        name: Build image
+        command: docker build . -t atat:latest
+    - run:
+        name: Get storage containers
+        command: docker pull postgres:latest && docker pull redis:latest
+    - run:
+        name: Start redis
+        command: docker run -d --network atat --link redis:redis -p 6379:6379 --name redis redis:latest
+    - run:
+        name: Start postgres
+        command: docker run -d --network atat --link postgres:postgres -p 5432:5432 --name postgres postgres:latest
+    - run:
+        name: Start application container
+        command: |
+          docker run -d \
+          -e DISABLE_CRL_CHECK=true \
+          -e PGHOST=postgres \
+          -e REDIS_URI=redis://redis:6379 \
+          -p 8000:8000 \
+          --network atat \
+          --name test-atat \
+          atat:latest \
+          uwsgi \
+          --callable app \
+          --module app \
+          --plugin python3 \
+          --virtualenv /opt/atat/atst/.venv \
+          --http-socket :8000
+    - run:
+        name: Wait for containers
+        command: sleep 3
+    - run:
+        name: Create database
+        command: docker exec postgres createdb -U postgres atat
+    - run:
+        name: Apply migrations
+        command: docker exec test-atat .venv/bin/python .venv/bin/alembic upgrade head
+    - run:
+        name: Execute Ghost Inspector test suite
+        command: |
+          docker pull ghostinspector/test-runner-standalone:latest
+          docker run \
+            -e NGROK_TOKEN=$NGROK_TOKEN \
+            -e GI_API_KEY=$GI_API_KEY \
+            -e GI_SUITE=$GI_SUITE \
+            -e GI_PARAMS_JSON='{}' \
+            -e APP_PORT="test-atat:8000" \
+            --network atat \
+            ghostinspector/test-runner-standalone:latest
+
 workflows:
   version: 2
   run-tests:
@@ -143,9 +204,12 @@ workflows:
       - test:
           requires:
             - app_setup
-      - azure-build-and-push-image:
+      - integration-tests:
           requires:
             - test
+      - azure-build-and-push-image:
+          requires:
+            - integration-tests
           filters:
             branches:
               only:
@@ -204,7 +268,7 @@ workflows:
           repo: atat
           tag: "atat-${CIRCLE_SHA1},latest"
           requires:
-            - test
+            - integration-tests
           filters:
             branches:
               only:

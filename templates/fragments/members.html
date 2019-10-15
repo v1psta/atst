@@ -17,13 +17,16 @@
 ) %}
 
 
+
+
+  <div class="subheading"  id="application-members">
+    {{ 'portfolios.applications.settings.team_members' | translate }}
+  </div>
+
   {% if g.matchesPath("application-members") %}
       {% include "fragments/flash.html" %}
   {% endif %}
 
-  <div class="subheading">
-    {{ 'portfolios.applications.settings.team_members' | translate }}
-  </div>
   <div class="panel">
   {% if not application.members %}
     <div class='empty-state panel__content'>
@@ -87,7 +90,7 @@
                 {{ member.update_invite_form.csrf_token }}
                 {{ member_fields.InfoFields(member.update_invite_form) }}
                 <div class="action-group">
-                  {{ SaveButton(text='Resend Invite', element='input', additional_classes='action-group__action') }}
+                  <input type="submit" class="usa-button usa-button-primary action-group__action" tabindex="0" value="Resend Invite" />
                   <a class='action-group__action' v-on:click="closeModal('{{ resend_invite_modal }}')">{{ "common.cancel" | translate }}</a>
                 </div>
               </form>
@@ -113,7 +116,7 @@
       {%- endif %}
     {% endfor %}
 
-    <section class="member-list application-list" id="application-members">
+    <section class="member-list application-list">
       <div class='responsive-table-wrapper'>
         <table class="atat-table">
           <thead>

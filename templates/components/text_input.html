@@ -15,6 +15,7 @@
   classes='',
   noMaxWidth=False,
   optional=True,
+  showOptional=True,
   showLabel=True,
   watch=False,
   show_validation=True) -%}
@@ -40,7 +41,7 @@
         <label for={{field.name}}>
           <div class="usa-input__title">
             {{ label }}
-            {% if optional %}
+            {% if optional and showOptional %}
               <span class="usa-input-label-helper">(optional)</span>
             {% endif %}
             {% if tooltip and not disabled %}
@@ -108,12 +109,7 @@
       />
 
       {% if show_validation %}
-        <template v-if='showError'>
-          <span class='usa-input__message' v-html='validationError'></span>
-        </template>
-        <template v-else>
-          <span class='usa-input__message'></span>
-        </template>
+        <span v-if='showError' class='usa-input__message' v-html='validationError'></span>
       {% endif %}
 
     </div>

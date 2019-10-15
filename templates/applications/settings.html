@@ -19,58 +19,40 @@
 
 {% block application_content %}
 
-  <div class='subheading'>{{ 'portfolios.applications.settings.name_description' | translate }}</div>
+  <h3>{{ 'portfolios.applications.settings.name_description' | translate }}</h3>
 
   {% if user_can(permissions.EDIT_APPLICATION) %}
     <base-form inline-template>
-      <form method="POST" action="{{ url_for('applications.update', application_id=application.id) }}">
-        <div class="panel">
-          <div class="panel__content">
-            {{ application_form.csrf_token }}
-            <div class="form-row">
-              <div class="form-col form-col--two-thirds">
-                {{ TextInput(application_form.name, optional=False) }}
-                {{ TextInput(application_form.description, paragraph=True, optional=True) }}
-              </div>
-            </div>
-          </div>
-          <div class="panel__footer">
-            <div class="action-group">
-              {{ SaveButton('common.save_changes'|translate) }}
-            </div>
-          </div>
+      <form method="POST" action="{{ url_for('applications.update', application_id=application.id) }}" class="col col--half">
+        {{ application_form.csrf_token }}
+        {{ TextInput(application_form.name, optional=False) }}
+        {{ TextInput(application_form.description, paragraph=True, optional=True, showOptional=False) }}
+        <div class="action-group action-group--tight">
+          {{ SaveButton('common.save_changes'|translate) }}
         </div>
       </form>
     </base-form>
   {% else %}
-    <div class="panel">
-      <div class="panel__content">
-        <p>
-          {{ "fragments.edit_application_form.explain" | translate }}
-        </p>
-        <div class="form-row">
-          <div class="form-col">
-            <div class="usa-input usa-input__title__view-only">
-              {{ application_form.name.label() }}
-            </div>
-            <p>
-              {{ application_form.name.data }}
-            </p>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-col">
-            <div class="usa-input usa-input__title__view-only">
-              {{ application_form.description.label() }}
-            </div>
-            <p>
-              {{ application_form.description.data }}
-            </p>
-          </div>
-        </div>
+    <!-- TODO: use new spacing styling to add in bottom margin here -->
+    <div class="">
+      <p>
+        {{ "fragments.edit_application_form.explain" | translate }}
+      </p>
+      <div class="usa-input usa-input__title__view-only">
+        {{ application_form.name.label() }}
       </div>
+      <p>
+        {{ application_form.name.data }}
+      </p>
+      <div class="usa-input usa-input__title__view-only">
+        {{ application_form.description.label() }}
+      </div>
+      <p>
+        {{ application_form.description.data }}
+      </p>
     </div>
   {% endif %}
+  <hr>
 
   {{ MemberManagementTemplate(
     application,
