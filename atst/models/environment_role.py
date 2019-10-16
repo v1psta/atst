@@ -40,7 +40,6 @@ class EnvironmentRole(
         PENDING = "pending"
         COMPLETED = "completed"
         PENDING_DELETE = "pending_delete"
-        DELETED = "deleted"
 
     status = Column(SQLAEnum(Status, native_enum=False), default=Status.PENDING)
 

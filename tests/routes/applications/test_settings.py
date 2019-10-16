@@ -538,6 +538,13 @@ def test_update_member(client, user_session, session):
         app_role.has_permission_set(PermissionSets.DELETE_APPLICATION_ENVIRONMENTS)
     )
 
+    environment_roles = application.roles[0].environment_roles
+    # make sure that old env role was deleted and there are only 2 env roles
+    assert len(environment_roles) == 2
+    # check that the user has roles in the correct envs
+    assert environment_roles[0].environment in [env, env_2]
+    assert environment_roles[1].environment in [env, env_2]
+
 
 def test_revoke_invite(client, user_session):
     invite = ApplicationInvitationFactory.create()

@@ -27,6 +27,7 @@ class EnvironmentRoles(object):
             .filter(
                 EnvironmentRole.application_role_id == application_role_id,
                 EnvironmentRole.environment_id == environment_id,
+                EnvironmentRole.deleted == False,
             )
             .one_or_none()
         )
@@ -49,6 +50,7 @@ class EnvironmentRoles(object):
             .filter(
                 ApplicationRole.user_id == user_id,
                 EnvironmentRole.environment_id == environment_id,
+                EnvironmentRole.deleted == False,
             )
             .one_or_none()
         )
@@ -56,20 +58,12 @@ class EnvironmentRoles(object):
 
     @classmethod
     def delete(cls, application_role_id, environment_id):
-        existing_env_role = (
-            db.session.query(EnvironmentRole)
-            .join(ApplicationRole)
-            .filter(
-                ApplicationRole.id == application_role_id,
-                EnvironmentRole.environment_id == environment_id,
-                EnvironmentRole.status != EnvironmentRole.Status.PENDING_DELETE,
-            )
-            .one_or_none()
-        )
+        existing_env_role = EnvironmentRoles.get(application_role_id, environment_id)
 
         if existing_env_role:
-            existing_env_role.status = EnvironmentRole.Status.PENDING_DELETE
-            existing_env_role.role = "deleted"
+            # TODO: Implement suspension
+            existing_env_role.deleted = True
+            db.session.add(existing_env_role)
             db.session.commit()
             return True
         else:
@@ -93,20 +87,6 @@ class EnvironmentRoles(object):
             .filter(Environment.deleted == False)
             .filter(Environment.baseline_info != None)
             .filter(EnvironmentRole.status == EnvironmentRole.Status.PENDING)
-            .filter(ApplicationRole.status == ApplicationRoleStatus.ACTIVE)
-            .all()
-        )
-        return [id_ for id_, in results]
-
-    @classmethod
-    def get_environment_roles_pending_deletion(cls) -> List[UUID]:
-        results = (
-            db.session.query(EnvironmentRole.id)
-            .join(Environment)
-            .join(ApplicationRole)
-            .filter(Environment.deleted == False)
-            .filter(Environment.baseline_info != None)
-            .filter(EnvironmentRole.status == EnvironmentRole.Status.PENDING_DELETE)
             .filter(ApplicationRole.status == ApplicationRoleStatus.ACTIVE)
             .all()
         )

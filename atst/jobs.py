@@ -132,19 +132,6 @@ def do_provision_user(csp: CloudProviderInterface, environment_role_id=None):
         db.session.commit()
 
 
-def do_delete_user(csp: CloudProviderInterface, environment_role_id=None):
-    environment_role = EnvironmentRoles.get_by_id(environment_role_id)
-
-    with claim_for_update(environment_role) as environment_role:
-        credentials = environment_role.environment.csp_credentials
-
-        csp.delete_user(credentials, environment_role.csp_user_id)
-        environment_role.status = EnvironmentRole.Status.DELETED
-        environment_role.deleted = True
-        db.session.add(environment_role)
-        db.session.commit()
-
-
 def do_work(fn, task, csp, **kwargs):
     try:
         fn(csp, **kwargs)
@@ -182,13 +169,6 @@ def provision_user(self, environment_role_id=None):
 
 
 @celery.task(bind=True)
-def delete_user(self, environment_role_id=None):
-    do_work(
-        do_delete_user, self, app.csp.cloud, environment_role_id=environment_role_id
-    )
-
-
-@celery.task(bind=True)
 def dispatch_create_environment(self):
     for environment_id in Environments.get_environments_pending_creation(
         pendulum.now()
@@ -218,11 +198,3 @@ def dispatch_provision_user(self):
         environment_role_id
     ) in EnvironmentRoles.get_environment_roles_pending_creation():
         provision_user.delay(environment_role_id=environment_role_id)
-
-
-@celery.task(bind=True)
-def dispatch_delete_user(self):
-    for (
-        environment_role_id
-    ) in EnvironmentRoles.get_environment_roles_pending_deletion():
-        delete_user.delay(environment_role_id=environment_role_id)

@@ -35,15 +35,16 @@ def test_update_env_role():
     assert env_role.role == new_role
 
 
-def test_update_env_role_no_access(session):
+def test_update_env_role_no_access():
     env_role = EnvironmentRoleFactory.create(role=CSPRole.BASIC_ACCESS.value)
 
     assert Environments.update_env_role(
         env_role.environment, env_role.application_role, None
     )
 
-    session.refresh(env_role)
-    assert env_role.status == EnvironmentRole.Status.PENDING_DELETE
+    assert not EnvironmentRoles.get(
+        env_role.application_role.id, env_role.environment.id
+    )
 
 
 def test_update_env_role_no_change():
