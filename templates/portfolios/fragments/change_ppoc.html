@@ -21,7 +21,8 @@
     <div class='form-col form-col--half'>
       {{
         OptionsInput(
-          assign_ppoc_form.role_id
+          assign_ppoc_form.role_id,
+          optional=False
         )
       }}
     </div>
@@ -65,9 +66,10 @@
 {% endset %}
 
 <div class="flex-reverse-row">
-  <a class="usa-button-primary" v-on:click="openModal('change-ppoc-form')">
+  {% set disable_ppoc_button = 1 == portfolio.members |length %}
+  <button type="button" class="usa-button usa-button-primary" v-on:click="openModal('change-ppoc-form')" {% if disable_ppoc_button %}disabled{% endif %}>
     {{ "fragments.ppoc.update_btn" | translate }}
-  </a>
+  </button>
   {{
     MultiStepModalForm(
       'change-ppoc-form',
