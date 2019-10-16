@@ -9,6 +9,7 @@ data:
   FLASK_ENV: dev
   OVERRIDE_CONFIG_FULLPATH: /opt/atat/atst/atst-overrides.ini
   UWSGI_CONFIG_FULLPATH: /opt/atat/atst/uwsgi.ini
-  CRL_STORAGE_PROVIDER: CLOUDFILES
   LOG_JSON: "true"
   CSP: aws
+  PGSSLMODE: verify-full
+  PGSSLROOTCERT: /opt/atat/atst/ssl/pgsslrootcert.crt

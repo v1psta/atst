@@ -43,6 +43,9 @@ spec:
               mountPath: "/var/run/uwsgi"
             - name: crls-vol
               mountPath: "/opt/atat/atst/crls"
+            - name: pgsslrootcert
+              mountPath: "/opt/atat/atst/ssl/pgsslrootcert.crt"
+              subPath: pgsslrootcert.crt
         - name: nginx
           image: nginx:alpine
           ports:
@@ -111,6 +114,13 @@ spec:
         - name: crls-vol
           persistentVolumeClaim:
             claimName: efs
+        - name: pgsslrootcert
+          configMap:
+            name: pgsslrootcert
+            items:
+            - key: cert
+              path: pgsslrootcert.crt
+              mode: 0666
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
@@ -154,6 +164,9 @@ spec:
             - name: atst-config
               mountPath: "/opt/atat/atst/atst-overrides.ini"
               subPath: atst-overrides.ini
+            - name: pgsslrootcert
+              mountPath: "/opt/atat/atst/ssl/pgsslrootcert.crt"
+              subPath: pgsslrootcert.crt
       volumes:
         - name: atst-config
           secret:
@@ -162,6 +175,13 @@ spec:
             - key: override.ini
               path: atst-overrides.ini
               mode: 0644
+        - name: pgsslrootcert
+          configMap:
+            name: pgsslrootcert
+            items:
+            - key: cert
+              path: pgsslrootcert.crt
+              mode: 0666
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
@@ -205,6 +225,9 @@ spec:
             - name: atst-config
               mountPath: "/opt/atat/atst/atst-overrides.ini"
               subPath: atst-overrides.ini
+            - name: pgsslrootcert
+              mountPath: "/opt/atat/atst/ssl/pgsslrootcert.crt"
+              subPath: pgsslrootcert.crt
       volumes:
         - name: atst-config
           secret:
@@ -213,6 +236,13 @@ spec:
             - key: override.ini
               path: atst-overrides.ini
               mode: 0644
+        - name: pgsslrootcert
+          configMap:
+            name: pgsslrootcert
+            items:
+            - key: cert
+              path: pgsslrootcert.crt
+              mode: 0666
 ---
 apiVersion: v1
 kind: Service
