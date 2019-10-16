@@ -49,6 +49,7 @@ fi
 
 if [ "${RUN_JS_TESTS}" = "true" ]; then
   output_divider "Render Vue components"
+  mkdir js/test_templates | true
   run_python_render_vue_component
   output_divider "Run JavaScript unit test suite"
   run_javascript_tests
