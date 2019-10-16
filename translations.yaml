@@ -377,6 +377,7 @@ portfolios:
     settings:
       name_description: Application name and description
       team_members: Team Members
+      environments: Application Environments
     team_settings:
       blank_slate:
         action_label: Invite a new team member

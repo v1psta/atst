@@ -4,7 +4,8 @@
  * @source https://github.com/uswds/uswds/blob/develop/src/stylesheets/elements/_labels.scss
  */
 
-.label {
+.label,
+.usa-label {
   @include h5;
 
   display: inline-block;
@@ -15,7 +16,7 @@
   vertical-align: middle;
   margin: 0 $gap;
   padding: 0 $gap;
-  border-radius: $gap / 2;
+  border-radius: $gap / 3;
   white-space: nowrap;
 
   &--info {
@@ -36,5 +37,13 @@
 
   &--purple {
     background-color: $color-purple;
+  }
+
+  &--below {
+    margin-left: 0;
+  }
+
+  .icon {
+    @include icon-color($color-white) @include icon-size(12) margin: 0;
   }
 }

@@ -1,0 +1,101 @@
+{% from "components/icon.html" import Icon %}
+{% from 'components/save_button.html' import SaveButton %}
+{% from "components/text_input.html" import TextInput %}
+{% from "components/toggle_list.html" import ToggleButton, ToggleSection %}
+
+{% macro EnvironmentManagementTemplate(
+  application,
+  environments_obj,
+  new_env_form,
+  user_can_create_environment
+) %}
+
+  <h3>{{ "portfolios.applications.settings.environments" | translate }}</h3>
+  <section class="panel" id="application-environments">
+    {% if g.matchesPath("application-environments") -%}
+      {% include "fragments/flash.html" %}
+    {%- endif %}
+    {% if 0 == environments_obj | length -%}
+      <div class="empty-state panel__content">
+        <p class="empty-state__message">
+          This Application has no environments
+        </p>
+      </div>
+    {% else %}
+      <div class="panel__content">
+        <div class="accordion-table accordion-table-list">
+          <ul class="accordion-table__items">
+            {% for env in environments_obj %}
+              {% set edit_form = env['edit_form'] %}
+              <toggler inline-template>
+                <li class="accordion-table__item">
+                  <div class="accordion-table__item-content">
+                    <div class="environment-list__item">
+                      <span>
+                        {{ env['name'] }}
+                      </span>
+                      {% set members_button = "portfolios.applications.member_count" | translate({'count': env['member_count']}) %}
+                      {{
+                        ToggleButton(
+                          open_html=members_button,
+                          close_html=members_button,
+                          section_name="members",
+                          classes="environment-list__item__members"
+                        )
+                      }}
+                      {% set edit_environment_button = "Edit" %}
+                      {{
+                      ToggleButton(
+                        open_html=edit_environment_button,
+                        close_html=edit_environment_button,
+                        section_name="edit"
+                        )
+                      }}
+                      <br>
+                      {% if env['pending'] -%}
+                        <span class='usa-label label--below'>{{Icon('exchange')}} CHANGES PENDING</span>
+                      {% else %}
+                        <a href='{{ url_for("applications.access_environment", environment_id=env.id)}}' target='_blank' rel='noopener noreferrer' class='application-list-item__environment__csp_link'>
+                          <span>{{ "portfolios.applications.csp_link" | translate }} {{ Icon('link', classes="icon--tiny") }}</span>
+                        </a>
+                      {%- endif %}
+                    </div>
+                  </div>
+
+                  {% call ToggleSection(section_name="members") %}
+                    <ul>
+                      {% for member in env['members'] %}
+                      <li class="accordion-table__item-toggle-content__expanded">
+                        {{ member }}
+                      </li>
+                      {% endfor %}
+                    </ul>
+                  {% endcall %}
+
+                  {% call ToggleSection(section_name="edit") %}
+                    <ul>
+                      <li class="accordion-table__item-toggle-content__expanded">
+                        <form action="{{ url_for('applications.update_environment', environment_id=env['id']) }}" method="post" v-on:submit="handleSubmit">
+                          {{ edit_form.csrf_token }}
+                          {{ TextInput(edit_form.name, validation='requiredField') }}
+                          {{
+                            SaveButton(
+                              text=("common.save" | translate)
+                            )
+                          }}
+                        </form>
+                      </li>
+                    </ul>
+                  {% endcall %}
+                </li>
+              </toggler>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    {%- endif %}
+    {% if user_can_create_environment -%}
+      {% include "applications/fragments/add_new_environment.html" %}
+    {%- endif %}
+  </section>
+{% endmacro %}
