@@ -158,7 +158,10 @@ def map_config(config):
         "PORT": int(config["default"]["PORT"]),
         "SQLALCHEMY_DATABASE_URI": config["default"]["DATABASE_URI"],
         "SQLALCHEMY_TRACK_MODIFICATIONS": False,
-        "SQLALCHEMY_ENGINE_OPTIONS": {"json_serializer": sqlalchemy_dumps},
+        "SQLALCHEMY_ENGINE_OPTIONS": {
+            "json_serializer": sqlalchemy_dumps,
+            "connect_args": {"sslmode": config["default"]["PGSSLMODE"]},
+        },
         "WTF_CSRF_ENABLED": config.getboolean("default", "WTF_CSRF_ENABLED"),
         "PERMANENT_SESSION_LIFETIME": config.getint(
             "default", "PERMANENT_SESSION_LIFETIME"
