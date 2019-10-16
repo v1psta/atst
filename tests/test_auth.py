@@ -89,16 +89,17 @@ def protected_routes(app):
 
 
 def test_protected_routes_redirect_to_login(client, app):
+    server_name = app.config.get("SERVER_NAME") or "localhost"
     for rule, protected_route in protected_routes(app):
         if "GET" in rule.methods:
             resp = client.get(protected_route)
             assert resp.status_code == 302
-            assert "http://localhost/" in resp.headers["Location"]
+            assert server_name in resp.headers["Location"]
 
         if "POST" in rule.methods:
             resp = client.post(protected_route)
             assert resp.status_code == 302
-            assert "http://localhost/" in resp.headers["Location"]
+            assert server_name in resp.headers["Location"]
 
 
 def test_get_protected_route_encodes_redirect(client):
