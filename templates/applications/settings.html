@@ -117,7 +117,7 @@
 
   <hr>
 
-  {% if user_can(permissions.VIEW_APPLICATION_ACTIVITY_LOG) %}
+  {% if user_can(permissions.VIEW_APPLICATION_ACTIVITY_LOG) and config.get("AUDIT_LOG_FEATURE_TOGGLE", False) %}
     {% include "fragments/audit_events_log.html" %}
     {{ Pagination(audit_events, url=url_for('applications.settings', application_id=application.id)) }}
   {% endif %}
