@@ -31,6 +31,9 @@ spec:
           - name: atst-config
             mountPath: "/opt/atat/atst/atst-overrides.ini"
             subPath: atst-overrides.ini
+          - name: pgsslrootcert
+            mountPath: "/opt/atat/atst/ssl/pgsslrootcert.crt"
+            subPath: pgsslrootcert.crt
       volumes:
         - name: atst-config
           secret:
@@ -39,4 +42,11 @@ spec:
             - key: override.ini
               path: atst-overrides.ini
               mode: 0644
+        - name: pgsslrootcert
+          configMap:
+            name: pgsslrootcert
+            items:
+            - key: cert
+              path: pgsslrootcert.crt
+              mode: 0666
       restartPolicy: Never
