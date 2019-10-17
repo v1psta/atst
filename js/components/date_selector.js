@@ -34,6 +34,7 @@ export default {
       month: this.initialmonth,
       year: this.initialyear,
       name: this.nameTag,
+      showError: false,
     }
   },
 
@@ -128,6 +129,7 @@ export default {
     },
 
     isDateValid: function() {
+      // if changes, then go through list?
       return (
         !!this.day &&
         !!this.month &&
@@ -229,7 +231,18 @@ export default {
         name: this.name,
         valid: this.isDateValid,
       })
+
+      this.showError = true
     },
+
+    onBlur: function() {
+      this.showError = true
+      console.log('in on blur')
+    },
+
+    onFocus: function(e) {
+      console.log(e)
+    }
   },
 
   render: function(createElement) {

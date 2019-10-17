@@ -40,6 +40,7 @@
             v-on:date-change='handleDateChange'
             inline-template>
 
+            <!-- defaults to date invalid.... -->
             <fieldset :name="name" class="usa-input date-picker" v-bind:class="{ 'usa-input--success': isDateValid && isDateComplete, 'usa-input--error': !isDateValid && isDateComplete }">
               <legend>
                 <div class="usa-input__title">
@@ -59,9 +60,12 @@
                 <div v-if='maxError && !outsideRange' class="usa-input-error-message">
                   {{ "forms.task_order.pop_errors.date_order" | translate }}
                 </div>
+                <div v-if='!isDateValid && showError' class="usa-input-error-message">
+                  Required Field
+                </div>
               </legend>
 
-              <div class="date-picker-component">
+              <div class="date-picker-component" @blur.capture='onBlur' @focus.capture='onFocus'>
                 <input :name="name" v-bind:value="formattedDate" v-on:change="onInput" type="hidden" />
 
                 <div class="usa-form-group usa-form-group-month">
@@ -103,16 +107,6 @@
                     {% if mindate %}min="{{ mindate.year }}"{% endif %}
                     v-on:change="onInput"
                   />
-
-                </div>
-
-                <div v-if="isDateComplete">
-                  <div class="usa-form-group-date-ok" v-if="isDateValid">
-                    {{ Icon("ok", classes="icon--green") }}
-                  </div>
-                  <div class="usa-form-group-date-ok" v-else>
-                    {{ Icon("alert", classes="icon--red")}}
-                  </div>
                 </div>
               </div>
             </fieldset>
@@ -164,52 +158,43 @@
               <div class="date-picker-component">
                 <input :name="name" v-bind:value="formattedDate" v-on:change="onInput" type="hidden" />
 
-                  <div class="usa-form-group usa-form-group-month">
-                    <label>{{ 'components.date_selector.month' | translate }}</label>
-                    <input
-                      name="date-month"
-                      max="12"
-                      maxlength="2"
-                      min="1"
-                      type="number"
-                      v-bind:class="{ 'usa-input-error': (month && !isMonthValid) }"
-                      v-model="month"
-                      v-on:change="onInput"
-                      />
-                  </div>
+                <div class="usa-form-group usa-form-group-month">
+                  <label>{{ 'components.date_selector.month' | translate }}</label>
+                  <input
+                    name="date-month"
+                    max="12"
+                    maxlength="2"
+                    min="1"
+                    type="number"
+                    v-bind:class="{ 'usa-input-error': (month && !isMonthValid) }"
+                    v-model="month"
+                    v-on:change="onInput"
+                    />
+                </div>
 
-                  <div class="usa-form-group usa-form-group-day">
-                    <label>{{ 'components.date_selector.day' | translate }}</label>
-                    <input
-                      name="date-day"
-                      maxlength="2"
-                      min="1"
-                      type="number"
-                      v-bind:class="{ 'usa-input-error': (day && !isDayValid) }"
-                      v-bind:max="daysMaxCalculation"
-                      v-model="day"
-                      v-on:change="onInput"
-                      />
-                  </div>
+                <div class="usa-form-group usa-form-group-day">
+                  <label>{{ 'components.date_selector.day' | translate }}</label>
+                  <input
+                    name="date-day"
+                    maxlength="2"
+                    min="1"
+                    type="number"
+                    v-bind:class="{ 'usa-input-error': (day && !isDayValid) }"
+                    v-bind:max="daysMaxCalculation"
+                    v-model="day"
+                    v-on:change="onInput"
+                    />
+                </div>
 
-                  <div class="usa-form-group usa-form-group-year">
-                    <label>{{ 'components.date_selector.year' | translate }}</label>
-                    <input
-                      name="date-year"
-                      maxlength="4"
-                      type="number"
-                      v-model="year"
-                      v-on:change="onInput"
-                      />
-                  </div>
-
-                <div v-if="isDateComplete">
-                  <div class="usa-form-group-date-ok" v-if="isDateValid">
-                    {{ Icon("ok", classes="icon--green") }}
-                  </div>
-                  <div class="usa-form-group-date-ok" v-else>
-                    {{ Icon("alert", classes="icon--red")}}
-                  </div>
+                <div class="usa-form-group usa-form-group-year">
+                  <label>{{ 'components.date_selector.year' | translate }}</label>
+                  <input
+                    name="date-year"
+                    maxlength="4"
+                    type="number"
+                    v-model="year"
+                    v-on:change="onInput"
+                    />
                 </div>
               </div>
             </fieldset>
