@@ -28,7 +28,7 @@ if echo "$JOB_SUCCESS" | grep -q "condition met"; then
 else
   POD_NAME=$(${K8S_CMD} -n atat get pods -l job-name=migration -o=jsonpath='{.items[0].metadata.name}')
   echo "Job failed:"
-  $K8S_CMD -n atat log $POD_NAME
+  $K8S_CMD -n atat logs $POD_NAME
   delete_job
   exit 1
 fi
