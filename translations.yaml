@@ -361,7 +361,7 @@ portfolios:
         message: You will lose access to this application and all environments will be removed from the CSP. Your reporting and activity will still be accessible.
       button: Delete application
       header: Are you sure you want to delete this application?
-      panel_text: 'Deleting {name} will delete this application along with all {env_count} {pluralized_env}. <strong>This cannot be undone.</strong>'
+      text: "If you delete {application_name}, all environments will be gone forever.<br>This action can not be undone."
       subheading: Delete Application
     enter_env_name: "Enter environment name:"
     environments:
