@@ -150,6 +150,9 @@ def set_default_headers(app):  # pragma: no cover
 def map_config(config):
     return {
         **config["default"],
+        "AUDIT_LOG_FEATURE_TOGGLE": config["default"].getboolean(
+            "AUDIT_LOG_FEATURE_TOGGLE"
+        ),
         "ENV": config["default"]["ENVIRONMENT"],
         "BROKER_URL": config["default"]["REDIS_URI"],
         "DEBUG": config["default"].getboolean("DEBUG"),
