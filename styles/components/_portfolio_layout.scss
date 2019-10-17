@@ -138,11 +138,6 @@
 .portfolio-content {
   margin: (4 * $gap) $gap 0 $gap;
 
-  .panel {
-    @include shadow-panel;
-    padding-bottom: $gap * 3;
-  }
-
   a.add-new-button {
     display: inherit;
     margin-left: auto;
@@ -154,11 +149,6 @@
   .member-list {
     .responsive-table-wrapper {
       margin-bottom: 0;
-    }
-
-    table {
-      min-width: 100%;
-      margin-top: 0;
     }
 
     input.usa-button.usa-button-primary {
@@ -250,6 +240,20 @@
     .panel {
       @include shadow-panel;
       padding-bottom: 2rem;
+
+      table {
+        thead,
+        tbody {
+          tr {
+            th,
+            td {
+              &:last-child {
+                border-left: none;
+              }
+            }
+          }
+        }
+      }
     }
 
     .application-list-item {

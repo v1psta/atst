@@ -6,7 +6,6 @@
 
 table.atat-table {
   @include panel-margin;
-
   min-width: 100%;
 
   @include ie-only {
@@ -42,42 +41,24 @@ table.atat-table {
     }
   }
 
+  tbody,
   thead {
-    tr th {
-      .sorting-direction {
-        position: inherit;
-        margin-right: -16px;
-        width: 16px;
-
-        .icon {
-          height: 14px;
-          width: 16px;
-          margin: 0;
-        }
-      }
-    }
-  }
-
-  tbody {
     tr {
       th,
       td {
-        @include block-list-item;
-
+        background-color: $color-white;
+        margin: 0;
+        padding: $gap * 2;
+        border: 1px solid $color-gray-light;
         display: table-cell;
         white-space: nowrap;
-        border-bottom-style: solid;
-        border-top: none;
+
+        &:first-child {
+          border-left: none;
+        }
 
         &:last-child {
-          border-bottom-style: dashed;
-        }
-      }
-
-      &:last-child {
-        td,
-        th {
-          border-bottom-style: solid;
+          border-right: none;
         }
       }
     }
@@ -87,17 +68,10 @@ table.atat-table {
     tr {
       th,
       td {
-        @include block-list-header;
-        display: table-cell;
-        white-space: nowrap;
-        color: black;
+        background-color: $color-gray-lightest;
+        padding: 1rem 1.5rem;
+        border-top: none;
       }
-    }
-  }
-
-  @at-root .panel #{&} {
-    &:last-child {
-      margin-bottom: 0;
     }
   }
 }

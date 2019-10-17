@@ -46,7 +46,6 @@
 }
 
 @mixin shadow-panel {
-  padding: ($gap / 2) 0;
   box-shadow: $box-shadow;
   border-top: none;
   border-bottom: none;
@@ -59,8 +58,7 @@
   @include shadow-panel;
 
   &__content {
-    margin: ($gap * 2) 0;
-    padding: 0 ($gap * 2);
+    padding: $gap * 2;
   }
 
   &__body {
@@ -109,9 +107,5 @@
 
   &__footer {
     padding: 3 * $gap;
-  }
-
-  &__actions {
-    @include panel-actions;
   }
 }
