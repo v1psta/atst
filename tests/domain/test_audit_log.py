@@ -29,6 +29,7 @@ def developer():
     return UserFactory.create()
 
 
+@pytest.mark.audit_log
 def test_paginate_audit_log():
     user = UserFactory.create()
     for _ in range(100):
@@ -38,6 +39,7 @@ def test_paginate_audit_log():
     assert len(events) == 25
 
 
+@pytest.mark.audit_log
 def test_paginate_ws_audit_log():
     portfolio = PortfolioFactory.create()
     application = ApplicationFactory.create(portfolio=portfolio)
@@ -52,6 +54,7 @@ def test_paginate_ws_audit_log():
     assert len(events) == 25
 
 
+@pytest.mark.audit_log
 def test_portfolio_audit_log_only_includes_current_portfolio_events():
     owner = UserFactory.create()
     portfolio = PortfolioFactory.create(owner=owner)
@@ -69,6 +72,7 @@ def test_portfolio_audit_log_only_includes_current_portfolio_events():
         )
 
 
+@pytest.mark.audit_log
 def test_get_portfolio_events_includes_app_and_env_events():
     owner = UserFactory.create()
     # add portfolio level events
@@ -120,6 +124,7 @@ def test_get_application_events():
     assert "portfolio" not in resource_types
 
 
+@pytest.mark.audit_log
 def test_get_all_includes_ccpo_user_changes():
     user = UserFactory.create()
     initial_audit_log = AuditLog.get_all_events()

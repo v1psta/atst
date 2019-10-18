@@ -137,6 +137,7 @@ def post_url_assert_status(no_debug_client, user_session):
 
 
 # ccpo.activity_history
+@pytest.mark.audit_log
 def test_atst_activity_history_access(get_url_assert_status):
     ccpo = user_with(PermissionSets.VIEW_AUDIT_LOG)
     rando = user_with()

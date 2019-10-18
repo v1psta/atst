@@ -32,6 +32,7 @@ def test_add_user_to_environment():
     assert developer in dev_environment.users
 
 
+@pytest.mark.audit_log
 def test_audit_event_for_environment_deletion(session):
     env = EnvironmentFactory.create(application=ApplicationFactory.create())
     env.deleted = True

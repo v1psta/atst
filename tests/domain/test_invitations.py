@@ -148,6 +148,7 @@ def test_resend_invitation(session):
     assert second_invite.is_pending
 
 
+@pytest.mark.audit_log
 def test_audit_event_for_accepted_invite():
     portfolio = PortfolioFactory.create()
     user = UserFactory.create()

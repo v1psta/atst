@@ -1,3 +1,5 @@
+import pytest
+
 from atst.domain.application_roles import ApplicationRoles
 from atst.models import ApplicationRoleStatus
 from atst.models import AuditEvent
@@ -34,6 +36,7 @@ def test_application_members_excludes_deleted(session):
     assert app.members[0].id == member_role.id
 
 
+@pytest.mark.audit_log
 def test_audit_event_for_application_deletion(session):
     app = ApplicationFactory.create()
     app.deleted = True
