@@ -1,4 +1,11 @@
-from flask import Blueprint, render_template, redirect, url_for, request
+from flask import (
+    Blueprint,
+    render_template,
+    redirect,
+    url_for,
+    request,
+    current_app as app,
+)
 from atst.domain.users import Users
 from atst.domain.audit_log import AuditLog
 from atst.domain.common import Paginator
@@ -17,9 +24,12 @@ bp.context_processor(atat_context_processor)
 @bp.route("/activity-history")
 @user_can(Permissions.VIEW_AUDIT_LOG, message="view activity log")
 def activity_history():
-    pagination_opts = Paginator.get_pagination_opts(request)
-    audit_events = AuditLog.get_all_events(pagination_opts)
-    return render_template("audit_log/audit_log.html", audit_events=audit_events)
+    if app.config.get("AUDIT_LOG_FEATURE_TOGGLE", False):
+        pagination_opts = Paginator.get_pagination_opts(request)
+        audit_events = AuditLog.get_all_events(pagination_opts)
+        return render_template("audit_log/audit_log.html", audit_events=audit_events)
+    else:
+        return redirect("/")
 
 
 @bp.route("/ccpo-users")
