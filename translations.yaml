@@ -310,7 +310,7 @@ portfolios:
   applications:
     add_application_text: Add a new application
     add_environment: Create an Environment
-    add_member: Add a New Team Member
+    add_member: Add Team Member
     add_another_environment: Add another environment
     app_settings_text: App settings
     new:
@@ -376,13 +376,9 @@ portfolios:
     settings_heading: Application Settings
     settings:
       name_description: Application name and description
-      team_members: Team Members
+      team_members: Application Team
       environments: Application Environments
     team_settings:
-      blank_slate:
-        action_label: Invite a new team member
-        sub_message: Please contact your JEDI Cloud portfolio administrator to invite new members.
-        title: There are currently no team members for this application.
       environments: Environments
       section:
         table:
@@ -394,6 +390,7 @@ portfolios:
       add_to_environment: Add to existing environment
     team_text: Team
     members:
+      blank_slate: This Application has no members
       form:
         env_mgmt:
           label: Manage Environments
