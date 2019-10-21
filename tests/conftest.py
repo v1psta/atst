@@ -42,11 +42,11 @@ def app(request):
 def skip_audit_log(request):
     """
     Conditionally skip tests marked with 'audit_log' based on the 
-    AUDIT_LOG_FEATURE_TOGGLE config value.
+    USE_AUDIT_LOG config value.
     """
     config = make_config()
     if request.node.get_closest_marker("audit_log"):
-        use_audit_log = config.get("AUDIT_LOG_FEATURE_TOGGLE", False)
+        use_audit_log = config.get("USE_AUDIT_LOG", False)
         if not use_audit_log:
             pytest.skip("audit log feature flag disabled")
 

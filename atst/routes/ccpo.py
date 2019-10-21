@@ -24,7 +24,7 @@ bp.context_processor(atat_context_processor)
 @bp.route("/activity-history")
 @user_can(Permissions.VIEW_AUDIT_LOG, message="view activity log")
 def activity_history():
-    if app.config.get("AUDIT_LOG_FEATURE_TOGGLE", False):
+    if app.config.get("USE_AUDIT_LOG", False):
         pagination_opts = Paginator.get_pagination_opts(request)
         audit_events = AuditLog.get_all_events(pagination_opts)
         return render_template("audit_log/audit_log.html", audit_events=audit_events)

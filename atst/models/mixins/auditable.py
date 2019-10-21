@@ -37,7 +37,7 @@ class AuditableMixin(object):
             },
         )
 
-        if app.config.get("AUDIT_LOG_FEATURE_TOGGLE", False):
+        if app.config.get("USE_AUDIT_LOG", False):
             audit_event = AuditEvent(**log_data)
             audit_event.save(connection)
 
