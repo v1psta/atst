@@ -1,4 +1,5 @@
 {% from "components/icon.html" import Icon %}
+{% from "components/label.html" import Label %}
 {% from 'components/save_button.html' import SaveButton %}
 {% from "components/text_input.html" import TextInput %}
 {% from "components/toggle_list.html" import ToggleButton, ToggleSection %}
@@ -51,7 +52,7 @@
                       }}
                       <br>
                       {% if env['pending'] -%}
-                        <span class='usa-label label--below'>{{Icon('exchange')}} CHANGES PENDING</span>
+                        {{ Label('exchange', 'Changes Pending', classes='label--below')}}
                       {% else %}
                         <a href='{{ url_for("applications.access_environment", environment_id=env.id)}}' target='_blank' rel='noopener noreferrer' class='application-list-item__environment__csp_link'>
                           <span>{{ "portfolios.applications.csp_link" | translate }} {{ Icon('link', classes="icon--tiny") }}</span>
