@@ -184,6 +184,9 @@ jobs:
         name: Apply migrations
         command: docker exec test-atat .venv/bin/python .venv/bin/alembic upgrade head
     - run:
+        name: Apply the default permission sets
+        command: docker exec test-atat .venv/bin/python script/seed_roles.py
+    - run:
         name: Execute Ghost Inspector test suite
         command: |
           docker pull ghostinspector/test-runner-standalone:latest
