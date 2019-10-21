@@ -38,6 +38,19 @@ def app(request):
     ctx.pop()
 
 
+@pytest.fixture(autouse=True)
+def skip_audit_log(request):
+    """
+    Conditionally skip tests marked with 'audit_log' based on the 
+    USE_AUDIT_LOG config value.
+    """
+    config = make_config()
+    if request.node.get_closest_marker("audit_log"):
+        use_audit_log = config.get("USE_AUDIT_LOG", False)
+        if not use_audit_log:
+            pytest.skip("audit log feature flag disabled")
+
+
 @pytest.fixture(scope="function")
 def no_debug_app(request):
     config = make_config(direct_config={"DEBUG": False})

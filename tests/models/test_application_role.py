@@ -1,3 +1,5 @@
+import pytest
+
 from atst.domain.permission_sets import PermissionSets
 from atst.domain.environment_roles import EnvironmentRoles
 from atst.models.audit_event import AuditEvent
@@ -5,6 +7,7 @@ from atst.models.audit_event import AuditEvent
 from tests.factories import *
 
 
+@pytest.mark.audit_log
 def test_has_application_role_history(session):
     owner = UserFactory.create()
     user = UserFactory.create()

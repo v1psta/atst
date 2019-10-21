@@ -12,6 +12,7 @@ from tests.factories import *
 from atst.domain.portfolio_roles import PortfolioRoles
 
 
+@pytest.mark.audit_log
 def test_has_no_portfolio_role_history(session):
     owner = UserFactory.create()
     user = UserFactory.create()
@@ -29,6 +30,7 @@ def test_has_no_portfolio_role_history(session):
     assert not create_event.changed_state
 
 
+@pytest.mark.audit_log
 def test_has_portfolio_role_history(session):
     owner = UserFactory.create()
     user = UserFactory.create()
@@ -56,6 +58,7 @@ def test_has_portfolio_role_history(session):
     assert set(new_state) == PortfolioRoles.DEFAULT_PORTFOLIO_PERMISSION_SETS
 
 
+@pytest.mark.audit_log
 def test_has_portfolio_status_history(session):
     owner = UserFactory.create()
     user = UserFactory.create()
@@ -82,6 +85,7 @@ def test_has_portfolio_status_history(session):
     assert changed_events[0].changed_state["status"][1] == "active"
 
 
+@pytest.mark.audit_log
 def test_has_no_env_role_history(session):
     owner = UserFactory.create()
     user = UserFactory.create()
@@ -104,6 +108,7 @@ def test_has_no_env_role_history(session):
     assert not create_event.changed_state
 
 
+@pytest.mark.audit_log
 def test_has_env_role_history(session):
     user = UserFactory.create()
     application = ApplicationFactory.create()

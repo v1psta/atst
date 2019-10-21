@@ -17,24 +17,29 @@ class AuditableMixin(object):
         if changed_state is None:
             changed_state = resource.history if action == ACTION_UPDATE else None
 
-        audit_event = AuditEvent(
-            user_id=user_id,
-            portfolio_id=resource.portfolio_id,
-            application_id=resource.application_id,
-            resource_type=resource.resource_type,
-            resource_id=resource.id,
-            display_name=resource.displayname,
-            action=action,
-            changed_state=changed_state,
-            event_details=resource.event_details,
-        )
+        log_data = {
+            "user_id": user_id,
+            "portfolio_id": resource.portfolio_id,
+            "application_id": resource.application_id,
+            "resource_type": resource.resource_type,
+            "resource_id": resource.id,
+            "display_name": resource.displayname,
+            "action": action,
+            "changed_state": changed_state,
+            "event_details": resource.event_details,
+        }
 
         app.logger.info(
             "Audit Event {}".format(action),
-            extra={"audit_event": audit_event.log, "tags": ["audit_event", action]},
+            extra={
+                "audit_event": {key: str(value) for key, value in log_data.items()},
+                "tags": ["audit_event", action],
+            },
         )
-        audit_event.save(connection)
-        return audit_event
+
+        if app.config.get("USE_AUDIT_LOG", False):
+            audit_event = AuditEvent(**log_data)
+            audit_event.save(connection)
 
     @classmethod
     def __declare_last__(cls):
