@@ -12,9 +12,9 @@
   new_member_form,
   action) %}
 
-  <div class="subheading"  id="application-members">
+  <h3  id="application-members">
     {{ 'portfolios.applications.settings.team_members' | translate }}
-  </div>
+  </h3>
 
   {% if g.matchesPath("application-members") %}
       {% include "fragments/flash.html" %}
@@ -143,7 +143,7 @@
                 </td>
                 <td>
                   {% for env in member.environment_roles %}
-                    {{ env.environment_name }}{% if not env == member.environment_roles[-1]%},{% endif %}
+                    {{ env.environment_name }}<br>
                   {% endfor %}
                 </td>
                 <td>
