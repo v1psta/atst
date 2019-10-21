@@ -165,16 +165,16 @@ describe('DateSelector', () => {
     })
 
     it('returns true when year is between min and max years', () => {
-      component.year = new Date('2019-01-01').getFullYear()
-      component.mindate = new Date('2018-01-01')
-      component.maxdate = new Date('2019-12-31')
+      component.year = '2019'
+      component.mindate = '2018-01-01'
+      component.maxdate = '2019-12-31'
       expect(component.isYearValid).toEqual(true)
     })
 
     it('returns false when year is outside of min and max years', () => {
-      component.year = new Date('2020-01-01').getFullYear()
-      component.mindate = new Date('2018-01-01')
-      component.maxdate = new Date('2019-01-01')
+      component.year = '2020'
+      component.mindate = '2018-01-01'
+      component.maxdate = '2019-01-01'
       expect(component.isYearValid).toEqual(false)
     })
   })

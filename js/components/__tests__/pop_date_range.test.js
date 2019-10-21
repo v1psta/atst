@@ -102,4 +102,62 @@ describe('PopDateRange Test', () => {
     expect(startDateField.classes()).toEqual(expect.not.arrayContaining(error))
     expect(endDateField.classes()).toEqual(expect.arrayContaining(error))
   })
+
+  it('should add an error to the end date if it is the same as start date', () => {
+    const wrapper = mount(PopDateRangeWrapper, {
+      propsData: {
+        initialData: {},
+      },
+    })
+
+    const error = ['usa-input--error']
+    var startDateField = wrapper.find('fieldset[name="start_date"]')
+    var endDateField = wrapper.find('fieldset[name="end_date"]')
+
+    // set valid date range
+    startDateField.find('input[name="date-month"]').setValue('01')
+    startDateField.find('input[name="date-day"]').setValue('01')
+    startDateField.find('input[name="date-year"]').setValue('2020')
+
+    endDateField.find('input[name="date-month"]').setValue('01')
+    endDateField.find('input[name="date-day"]').setValue('01')
+    endDateField.find('input[name="date-year"]').setValue('2020')
+
+    // manually trigger the change event in the hidden fields
+    startDateField.find('input[name="start_date"]').trigger('change')
+    endDateField.find('input[name="end_date"]').trigger('change')
+
+    // check that end date has error class
+    expect(startDateField.classes()).toEqual(expect.not.arrayContaining(error))
+    expect(endDateField.classes()).toEqual(expect.arrayContaining(error))
+  })
+
+  it('should add an error to the start date if it is the same as end date', () => {
+    const wrapper = mount(PopDateRangeWrapper, {
+      propsData: {
+        initialData: {},
+      },
+    })
+
+    const error = ['usa-input--error']
+    var startDateField = wrapper.find('fieldset[name="start_date"]')
+    var endDateField = wrapper.find('fieldset[name="end_date"]')
+
+    // set valid date range
+    startDateField.find('input[name="date-month"]').setValue('01')
+    startDateField.find('input[name="date-day"]').setValue('01')
+    startDateField.find('input[name="date-year"]').setValue('2020')
+
+    endDateField.find('input[name="date-month"]').setValue('01')
+    endDateField.find('input[name="date-day"]').setValue('01')
+    endDateField.find('input[name="date-year"]').setValue('2020')
+
+    // manually trigger the change event in the hidden fields
+    endDateField.find('input[name="end_date"]').trigger('change')
+    startDateField.find('input[name="start_date"]').trigger('change')
+
+    // check that start date has error class
+    expect(startDateField.classes()).toEqual(expect.arrayContaining(error))
+    expect(endDateField.classes()).toEqual(expect.not.arrayContaining(error))
+  })
 })

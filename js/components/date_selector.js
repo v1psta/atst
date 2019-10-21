@@ -96,10 +96,9 @@ export default {
     },
 
     isYearValid: function() {
-      // Emit a change event
       let valid
-      let minYear = this.mindate ? this.minDateParsed.getFullYear() : null
-      let maxYear = this.maxdate ? this.maxDateParsed.getFullYear() : null
+      let minYear = this.mindate ? parseInt(this.mindate) : null
+      let maxYear = this.maxdate ? parseInt(this.maxdate) : null
 
       if (minYear && maxYear) {
         valid = this.year >= minYear && this.year <= maxYear
@@ -111,15 +110,17 @@ export default {
     },
 
     isWithinDateRange: function() {
-      let _mindate = this.mindate ? Date.parse(this.mindate) : null
-      let _maxdate = this.maxdate ? Date.parse(this.maxdate) : null
-      let _dateTimestamp = Date.UTC(this.year, this.month - 1, this.day)
-
-      if (_mindate !== null && _mindate >= _dateTimestamp) {
+      if (
+        this.minDateParsed !== null &&
+        this.minDateParsed >= this.dateParsed
+      ) {
         return false
       }
 
-      if (_maxdate !== null && _maxdate <= _dateTimestamp) {
+      if (
+        this.maxDateParsed !== null &&
+        this.maxDateParsed <= this.dateParsed
+      ) {
         return false
       }
 
@@ -167,7 +168,7 @@ export default {
 
     minError: function() {
       if (this.isDateComplete) {
-        return this.minDateParsed > this.dateParsed
+        return this.minDateParsed >= this.dateParsed
       }
 
       return false
@@ -175,7 +176,7 @@ export default {
 
     maxError: function() {
       if (this.isDateComplete) {
-        return this.maxDateParsed < this.dateParsed
+        return this.maxDateParsed <= this.dateParsed
       }
 
       return false
@@ -191,23 +192,27 @@ export default {
     },
 
     maxDateParsed: function() {
-      return new Date(this.maxdate)
+      let _maxdate = this.maxdate ? Date.parse(this.maxdate) : null
+      return _maxdate
     },
 
     minDateParsed: function() {
-      return new Date(this.mindate)
+      let _mindate = this.mindate ? Date.parse(this.mindate) : null
+      return _mindate
     },
 
     maxRangeParsed: function() {
-      return new Date(this.maxrange)
+      let _maxrange = this.maxrange ? Date.parse(this.maxrange) : null
+      return _maxrange
     },
 
     minRangeParsed: function() {
-      return new Date(this.minrange)
+      let _minrange = this.minrange ? Date.parse(this.minrange) : null
+      return _minrange
     },
 
     dateParsed: function() {
-      return new Date(this.formattedDate)
+      return Date.UTC(this.year, this.month - 1, this.day)
     },
   },
 
