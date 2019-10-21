@@ -52,6 +52,7 @@ table.atat-table {
         border: 1px solid $color-gray-lighter;
         display: table-cell;
         white-space: nowrap;
+        vertical-align: top;
 
         &:first-child {
           border-left: none;

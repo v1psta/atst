@@ -242,16 +242,8 @@
       padding-bottom: 2rem;
 
       table {
-        thead,
-        tbody {
-          tr {
-            th,
-            td {
-              &:last-child {
-                border-left: none;
-              }
-            }
-          }
+        .form-row {
+          margin: 0;
         }
       }
     }
