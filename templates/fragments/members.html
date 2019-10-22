@@ -10,14 +10,7 @@
   application,
   members,
   new_member_form,
-  action,
-  user_can_create_app_member=False,
-  user_can_edit_app_member=False,
-  user_can_delete_app_member=False
-) %}
-
-
-
+  action) %}
 
   <div class="subheading"  id="application-members">
     {{ 'portfolios.applications.settings.team_members' | translate }}
@@ -34,11 +27,11 @@
 
       {{ Icon('avatar') }}
 
-      {% if not user_can_create_app_member %}
+      {% if not user_can(permissions.CREATE_APPLICATION_MEMBER) %}
         <p class='empty-state__sub-message'>{{ ("portfolios.applications.team_settings.blank_slate.sub_message" | translate) }}</p>
       {% endif %}
 
-      {% if user_can_create_app_member %}
+      {% if user_can(permissions.CREATE_APPLICATION_MEMBER) %}
         {% set new_member_modal_name = "add-app-mem" %}
         <a class="usa-button usa-button-big" v-on:click="openModal('{{ new_member_modal_name }}')">
           {{ "portfolios.applications.team_settings.blank_slate.action_label" | translate }}
@@ -59,7 +52,7 @@
     {% set new_member_modal_name = "add-app-mem" %}
 
     {% for member in members %}
-      {%- if user_can_edit_app_member %}
+      {%- if user_can(permissions.EDIT_APPLICATION_MEMBER) %}
         {% set modal_name = "edit_member-{}".format(loop.index) %}
         {% call Modal(modal_name, classes="form-content--app-mem") %}
           <div class="modal__form--header">
@@ -99,7 +92,7 @@
         {% endif -%}
       {% endif -%}
 
-      {% if user_can_delete_app_member and member.role_status == 'pending' -%}
+      {% if user_can(permissions.DELETE_APPLICATION_MEMBER) and member.role_status == 'pending' -%}
         {% set revoke_invite_modal = "revoke_invite_{}".format(member.role_id) %}
         {% call Modal(name=revoke_invite_modal) %}
           <form method="post" action="{{ url_for('applications.revoke_invite', application_id=application.id, application_role_id=member.role_id) }}">
@@ -158,7 +151,7 @@
                     {% set revoke_invite_modal = "revoke_invite_{}".format(member.role_id) %}
                     {% set resend_invite_modal = "resend_invite-{}".format(member.role_id) %}
                     <a v-on:click='openModal("{{ resend_invite_modal }}")'>Resend Invite</a><br>
-                    {% if user_can_delete_app_member -%}
+                    {% if user_can(permissions.DELETE_APPLICATION_MEMBER) -%}
                       <a v-on:click='openModal("{{ revoke_invite_modal }}")'>{{ 'invites.revoke' | translate }}</a>
                     {%- endif %}
                   {%- endif %}
@@ -167,14 +160,14 @@
             {% endfor %}
           </tbody>
         </table>
-        {% if user_can_create_app_member %}
+        {% if user_can(permissions.CREATE_APPLICATION_MEMBER) %}
           <a class="usa-button usa-button-secondary add-new-button" v-on:click="openModal('{{ new_member_modal_name }}')">
             {{ "portfolios.applications.add_member" | translate }}
           </a>
         {% endif %}
       </div>
 
-      {% if user_can_create_app_member %}
+      {% if user_can(permissions.CREATE_APPLICATION_MEMBER) %}
         {{ MultiStepModalForm(
             name=new_member_modal_name,
             form=new_member_form,

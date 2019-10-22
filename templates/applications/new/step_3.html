@@ -2,7 +2,7 @@
 {% extends "applications/base.html" %}
 
 
-{% from "fragments/members.html" import MemberManagementTemplate %}
+{% from "fragments/members.html" import MemberManagementTemplate with context %}
 {% set secondary_breadcrumb = 'portfolios.applications.new_application_title' | translate %}
 
 {% block portfolio_header %}
@@ -19,13 +19,9 @@
   
   {{ MemberManagementTemplate(
     application, 
-    members, 
+    members,
     new_member_form,
-    "applications.update_new_application_step_3",
-    user_can_create_app_member=user_can(permissions.CREATE_APPLICATION_MEMBER),
-    user_can_edit_app_member=user_can(permissions.EDIT_APPLICATION_MEMBER),
-    user_can_delete_app_member=user_can(permissions.DELETE_APPLICATION_MEMBER),
-    ) }}
+    "applications.update_new_application_step_3") }}
     
 
   <span class="action-group-footer">

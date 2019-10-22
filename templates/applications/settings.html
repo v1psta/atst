@@ -3,7 +3,7 @@
 {% from "components/alert.html" import Alert %}
 {% from "components/delete_confirmation.html" import DeleteConfirmation %}
 {% from "fragments/environments.html" import EnvironmentManagementTemplate %}
-{% from "fragments/members.html" import MemberManagementTemplate %}
+{% from "fragments/members.html" import MemberManagementTemplate with context %}
 {% from "components/modal.html" import Modal %}
 {% from "components/pagination.html" import Pagination %}
 {% from "components/save_button.html" import SaveButton %}
@@ -52,11 +52,7 @@
     application,
     members,
     new_member_form,
-    "applications.create_member",
-    user_can_create_app_member=user_can(permissions.CREATE_APPLICATION_MEMBER),
-    user_can_edit_app_member=user_can(permissions.EDIT_APPLICATION_MEMBER),
-    user_can_delete_app_member=user_can(permissions.DELETE_APPLICATION_MEMBER),
-  ) }}
+    "applications.create_member") }}
 
   {{ EnvironmentManagementTemplate(
     application,
