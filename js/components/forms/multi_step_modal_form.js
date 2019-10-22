@@ -2,7 +2,6 @@ import FormMixin from '../../mixins/form'
 import textinput from '../text_input'
 import optionsinput from '../options_input'
 import checkboxinput from '../checkbox_input'
-import Selector from '../selector'
 import Modal from '../../mixins/modal'
 import toggler from '../toggler'
 
@@ -14,7 +13,6 @@ export default {
   components: {
     toggler,
     Modal,
-    Selector,
     textinput,
     optionsinput,
     checkboxinput,

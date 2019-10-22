@@ -19,7 +19,6 @@ import ApplicationEnvironments from './components/forms/new_application/environm
 import MultiStepModalForm from './components/forms/multi_step_modal_form'
 import uploadinput from './components/upload_input'
 import Modal from './mixins/modal'
-import selector from './components/selector'
 import BudgetChart from './components/charts/budget_chart'
 import SpendTable from './components/tables/spend_table'
 import LocalDatetime from './components/local_datetime'
@@ -52,7 +51,6 @@ const app = new Vue({
     poc,
     ApplicationNameAndDescription,
     ApplicationEnvironments,
-    selector,
     BudgetChart,
     SpendTable,
     LocalDatetime,
