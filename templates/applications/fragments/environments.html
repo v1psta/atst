@@ -6,9 +6,7 @@
 {% macro EnvironmentManagementTemplate(
   application,
   environments_obj,
-  new_env_form,
-  user_can_create_environment
-) %}
+  new_env_form) %}
 
   <h3>{{ "portfolios.applications.settings.environments" | translate }}</h3>
   <section class="panel" id="application-environments">
@@ -94,7 +92,7 @@
         </div>
       </div>
     {%- endif %}
-    {% if user_can_create_environment -%}
+    {% if user_can(permissions.CREATE_ENVIRONMENT) -%}
       {% include "applications/fragments/add_new_environment.html" %}
     {%- endif %}
   </section>

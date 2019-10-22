@@ -57,9 +57,7 @@
   {{ EnvironmentManagementTemplate(
     application,
     environments_obj,
-    new_env_form,
-    user_can_create_environment=user_can(permissions.CREATE_ENVIRONMENT)
-  ) }}
+    new_env_form) }}
 
   {% if user_can(permissions.DELETE_APPLICATION) %}
     {% set env_count = application.environments | length %}
