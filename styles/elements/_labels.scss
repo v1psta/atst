@@ -18,6 +18,7 @@
   padding: 0 $gap;
   border-radius: $gap / 3;
   white-space: nowrap;
+  text-transform: uppercase;
 
   &--info {
     background-color: $color-primary;

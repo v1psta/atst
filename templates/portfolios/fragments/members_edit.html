@@ -30,10 +30,9 @@
       <a v-on:click="openModal('{{ modal_id }}')" class='usa-button {{ archive_button_class }}'>
         {{ "portfolios.members.archive_button" | translate }}
       </a>
+      {% if not ppoc %}
+        {{ subform.member_id() }}
+      {% endif %}
     </td>
-
-    {% if not ppoc %}
-      {{ subform.member_id() }}
-    {% endif %}
   </tr>
 {% endfor %}

@@ -1,5 +1,6 @@
 {% from "components/alert.html" import Alert %}
 {% from "components/icon.html" import Icon %}
+{% from "components/label.html" import Label %}
 {% import "applications/fragments/new_member_modal_content.html" as member_steps %}
 {% import "applications/fragments/member_form_fields.html" as member_fields %}
 {% from "components/modal.html" import Modal %}
@@ -12,9 +13,9 @@
   new_member_form,
   action) %}
 
-  <div class="subheading"  id="application-members">
+  <h3  id="application-members">
     {{ 'portfolios.applications.settings.team_members' | translate }}
-  </div>
+  </h3>
 
   {% if g.matchesPath("application-members") %}
       {% include "fragments/flash.html" %}
@@ -23,33 +24,11 @@
   <div class="panel">
   {% if not application.members %}
     <div class='empty-state panel__content'>
-      <p class='empty-state__message'>{{ ("portfolios.applications.team_settings.blank_slate.title" | translate) }}</p>
-
-      {{ Icon('avatar') }}
-
-      {% if not user_can(permissions.CREATE_APPLICATION_MEMBER) %}
-        <p class='empty-state__sub-message'>{{ ("portfolios.applications.team_settings.blank_slate.sub_message" | translate) }}</p>
-      {% endif %}
-
-      {% if user_can(permissions.CREATE_APPLICATION_MEMBER) %}
-        {% set new_member_modal_name = "add-app-mem" %}
-        <a class="usa-button usa-button-big" v-on:click="openModal('{{ new_member_modal_name }}')">
-          {{ "portfolios.applications.team_settings.blank_slate.action_label" | translate }}
-        </a>
-        {{ MultiStepModalForm(
-            name=new_member_modal_name,
-            form=new_member_form,
-            form_action=url_for(action, application_id=application.id),
-            steps=[
-              member_steps.MemberStepOne(new_member_form),
-              member_steps.MemberStepTwo(new_member_form, application)
-            ],
-          ) }}
-      {% endif %}
+      <p class='empty-state__message'>
+        {{ ("portfolios.applications.members.blank_slate" | translate) }}
+      </p>
     </div>
-
   {% else %}
-    {% set new_member_modal_name = "add-app-mem" %}
 
     {% for member in members %}
       {%- if user_can(permissions.EDIT_APPLICATION_MEMBER) %}
@@ -114,10 +93,9 @@
         <table class="atat-table">
           <thead>
             <tr>
-              <th>Member</th>
+              <th>Name</th>
               <th>Application Permissions</th>
               <th>Environment Access</th>
-              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -131,7 +109,7 @@
                   </a>
                   <br>
                   {% if member.role_status == 'pending' %}
-                    <span class='label label--purple'>INVITE PENDING</span>
+                    {{ Label('envelope', 'invite pending', 'success', classes='label--below') }}
                   {% endif %}
 
                 </td>
@@ -142,43 +120,46 @@
                   {% endfor %}
                 </td>
                 <td>
-                  {% for env in member.environment_roles %}
-                    {{ env.environment_name }}{% if not env == member.environment_roles[-1]%},{% endif %}
-                  {% endfor %}
-                </td>
-                <td>
-                  {% if member.role_status == 'pending' -%}
-                    {% set revoke_invite_modal = "revoke_invite_{}".format(member.role_id) %}
-                    {% set resend_invite_modal = "resend_invite-{}".format(member.role_id) %}
-                    <a v-on:click='openModal("{{ resend_invite_modal }}")'>Resend Invite</a><br>
-                    {% if user_can(permissions.DELETE_APPLICATION_MEMBER) -%}
-                      <a v-on:click='openModal("{{ revoke_invite_modal }}")'>{{ 'invites.revoke' | translate }}</a>
-                    {%- endif %}
-                  {%- endif %}
+                  <div class="form-row">
+                    <div class="form-col form-col--two-thirds">
+                      {% for env in member.environment_roles %}
+                        {{ env.environment_name }}<br>
+                      {% endfor %}
+                    </div>
+                    <div class="form-col form-col--one-third">
+                      {% if member.role_status == 'pending' -%}
+                        {% set revoke_invite_modal = "revoke_invite_{}".format(member.role_id) %}
+                        {% set resend_invite_modal = "resend_invite-{}".format(member.role_id) %}
+                        <a v-on:click='openModal("{{ resend_invite_modal }}")'>Resend Invite</a><br>
+                        {% if user_can_delete_app_member -%}
+                          <a v-on:click='openModal("{{ revoke_invite_modal }}")'>{{ 'invites.revoke' | translate }}</a>
+                        {%- endif %}
+                      {%- endif %}
+                    </div>
+                  </div>
                 </td>
               </tr>
             {% endfor %}
           </tbody>
         </table>
-        {% if user_can(permissions.CREATE_APPLICATION_MEMBER) %}
-          <a class="usa-button usa-button-secondary add-new-button" v-on:click="openModal('{{ new_member_modal_name }}')">
-            {{ "portfolios.applications.add_member" | translate }}
-          </a>
-        {% endif %}
       </div>
-
-      {% if user_can(permissions.CREATE_APPLICATION_MEMBER) %}
-        {{ MultiStepModalForm(
-            name=new_member_modal_name,
-            form=new_member_form,
-            form_action=url_for(action, application_id=application.id),
-            steps=[
-              member_steps.MemberStepOne(new_member_form),
-              member_steps.MemberStepTwo(new_member_form, application)
-            ],
-          ) }}
-      {% endif %}
     </section>
+  {% endif %}
+  {% if user_can(permissions.CREATE_APPLICATION_MEMBER) %}
+    {% set new_member_modal_name = "add-app-mem" %}
+    <a class="usa-button usa-button-secondary add-new-button" v-on:click="openModal('{{ new_member_modal_name }}')">
+      {{ "portfolios.applications.add_member" | translate }}
+    </a>
+
+    {{ MultiStepModalForm(
+        name=new_member_modal_name,
+        form=new_member_form,
+        form_action=url_for(action, application_id=application.id),
+        steps=[
+          member_steps.MemberStepOne(new_member_form),
+          member_steps.MemberStepTwo(new_member_form, application)
+        ],
+      ) }}
   {% endif %}
   </div>
 

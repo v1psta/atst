@@ -2,7 +2,7 @@
 {% extends "applications/base.html" %}
 
 
-{% from "fragments/members.html" import MemberManagementTemplate with context %}
+{% from "applications/fragments/members.html" import MemberManagementTemplate with context %}
 {% set secondary_breadcrumb = 'portfolios.applications.new_application_title' | translate %}
 
 {% block portfolio_header %}
@@ -16,16 +16,16 @@
     {{ ('portfolios.applications.new.step_3_description' | translate) }}
   </p>
   <hr class="panel__break">
-  
+
   {{ MemberManagementTemplate(
-    application, 
+    application,
     members,
     new_member_form,
     "applications.update_new_application_step_3") }}
-    
+
 
   <span class="action-group-footer">
-    <a class="usa-button" href="{{ url_for('applications.settings', application_id=application_id) }}">  
+    <a class="usa-button" href="{{ url_for('applications.settings', application_id=application_id) }}">
       Return to Application Settings
     </a>
     <a class="usa-button usa-button-secondary" href="{{ url_for('applications.view_new_application_step_2', application_id=application.id) }}">
@@ -35,6 +35,5 @@
       Cancel
     </a>
   </span>
-  
-{% endblock %}
 
+{% endblock %}

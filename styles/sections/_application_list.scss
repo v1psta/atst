@@ -37,28 +37,4 @@
       left: 4px;
     }
   }
-
-  table {
-    thead {
-      td {
-        font-weight: bold;
-        font-size: 1.4rem;
-        border-top: 0;
-      }
-    }
-
-    tbody {
-      th {
-        font-weight: bold;
-        font-size: 1.6rem;
-      }
-
-      td {
-        font-size: 1.6rem;
-        border-bottom: 1px solid $color-gray-lightest;
-        border-top: 0;
-        padding: (3 * $gap) (2 * $gap);
-      }
-    }
-  }
 }
