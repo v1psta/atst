@@ -10,7 +10,7 @@
       <h1>{{ "ccpo.form.add_user_title" | translate }}</h1>
       <div class='form-row'>
         <div class='form-col form-col--two-thirds'>
-          {{ TextInput(form.dod_id, validation='dodId') }}
+          {{ TextInput(form.dod_id, validation='dodId', optional=False) }}
         </div>
         <div class="form-col form-col--third">
           <div class='action-group'>
