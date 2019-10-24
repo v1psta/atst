@@ -11,7 +11,7 @@ This is the user-facing web application for ATAT.
 ### System Requirements
 ATST uses the [Scripts to Rule Them All](https://github.com/github/scripts-to-rule-them-all)
 pattern for setting up and running the project. The scripts are located in the
-`scripts` directory and use script fragments in the
+`script` directory and use script fragments in the
 [scriptz](https://github.com/dod-ccpo/scriptz) repository that are shared across
 ATAT repositories.
 
