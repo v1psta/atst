@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "a736295b3c9c21285eb6c83c331fa7f40651c67c8baf70377db7329b7f74e7c6"
+            "sha256": "3e1d71e50dafe3cd2aec48615fba53e12c35761459a6c6cf7e4a3df30502f4ee"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -57,6 +57,14 @@
             ],
             "index": "pypi",
             "version": "==0.61.1"
+        },
+        "azure-mgmt-authorization": {
+            "hashes": [
+                "sha256:31e875a34ac2c5d6fefe77b4a8079a8b2bdbe9edb957e47e8b44222fb212d6a7",
+                "sha256:9d64295cf4210ec14e98fb024a6b4d79d68ef50cdb3804f0b53f8567e52d847f"
+            ],
+            "index": "pypi",
+            "version": "==0.60.0"
         },
         "azure-mgmt-subscription": {
             "hashes": [
@@ -336,6 +344,7 @@
                 "sha256:63db9f646fffc9244b332090e679d1e5f283ac491ee0cc321f5116f9450deb4a",
                 "sha256:fecb6a72a3eb5483e4deff38210d26ae42d3f6d488a7a275bd2423a1a014b22c"
             ],
+            "index": "pypi",
             "version": "==0.6.2"
         },
         "oauthlib": {
@@ -1073,6 +1082,15 @@
             ],
             "index": "pypi",
             "version": "==2.22.0"
+        },
+        "rope": {
+            "hashes": [
+                "sha256:6b728fdc3e98a83446c27a91fc5d56808a004f8beab7a31ab1d7224cecc7d969",
+                "sha256:c5c5a6a87f7b1a2095fb311135e2a3d1f194f5ecb96900fdd0a9100881f48aaf",
+                "sha256:f0dcf719b63200d492b85535ebe5ea9b29e0d0b8aebeb87fe03fc1a65924fdaf"
+            ],
+            "index": "pypi",
+            "version": "==0.14.0"
         },
         "selenium": {
             "hashes": [
