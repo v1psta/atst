@@ -114,3 +114,15 @@ class EnvironmentRoles(object):
         db.session.commit()
 
         return environment_role
+
+    @classmethod
+    def get_for_update(cls, application_role_id, environment_id):
+        existing_env_role = (
+            db.session.query(EnvironmentRole)
+            .filter(
+                EnvironmentRole.application_role_id == application_role_id,
+                EnvironmentRole.environment_id == environment_id,
+            )
+            .one_or_none()
+        )
+        return existing_env_role

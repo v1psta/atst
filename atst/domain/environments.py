@@ -52,22 +52,22 @@ class Environments(object):
     def update_env_role(cls, environment, application_role, new_role):
         updated = False
 
+        env_role = EnvironmentRoles.get_for_update(application_role.id, environment.id)
+        if env_role and env_role.role != new_role and not env_role.deleted:
+            env_role.role = new_role
+            updated = True
+            db.session.add(env_role)
+        elif not env_role:
+            env_role = EnvironmentRoles.create(
+                application_role=application_role,
+                environment=environment,
+                role=new_role,
+            )
+            updated = True
+            db.session.add(env_role)
+
         if new_role is None:
             updated = EnvironmentRoles.delete(application_role.id, environment.id)
-        else:
-            env_role = EnvironmentRoles.get(application_role.id, environment.id)
-            if env_role and env_role.role != new_role:
-                env_role.role = new_role
-                updated = True
-                db.session.add(env_role)
-            elif not env_role:
-                env_role = EnvironmentRoles.create(
-                    application_role=application_role,
-                    environment=environment,
-                    role=new_role,
-                )
-                updated = True
-                db.session.add(env_role)
 
         if updated:
             db.session.commit()

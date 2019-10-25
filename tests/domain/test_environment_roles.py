@@ -91,3 +91,14 @@ def test_disable_completed(application_role, environment):
     environment_role = EnvironmentRoles.disable(environment_role.id)
 
     assert environment_role.status == EnvironmentRole.Status.DISABLED
+
+
+def test_get_for_update():
+    app_role = ApplicationRoleFactory.create()
+    env = EnvironmentFactory.create(application=app_role.application)
+    EnvironmentRoleFactory.create(application_role=app_role, environment=env, deleted=True)
+    role = EnvironmentRoles.get_for_update(app_role.id, env.id)
+    assert role
+    assert role.application_role == app_role
+    assert role.environment == env
+    assert role.deleted
