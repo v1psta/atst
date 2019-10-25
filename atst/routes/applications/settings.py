@@ -77,12 +77,16 @@ def filter_env_roles_form_data(member, environments):
             "environment_id": str(env.id),
             "environment_name": env.name,
             "role": NO_ACCESS,
-            "deleted": env.deleted,
+            "deleted": False,
         }
-        env_roles_set = set(env.roles).intersection(set(member.environment_roles))
+        env_roles_set = set(env.roles).intersection(
+            set(EnvironmentRoles.get_all_for_application_member(member.id))
+        )
+
         if len(env_roles_set) == 1:
             (env_role,) = env_roles_set
             env_data["role"] = env_role.role
+            env_data["deleted"] = env_role.deleted
 
         env_roles_form_data.append(env_data)
 

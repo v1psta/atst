@@ -3,45 +3,30 @@
 {% from "components/phone_input.html" import PhoneInput %}
 
 {% macro EnvRoleInput(field, member_role_id=None) %}
-  {% if field.role.data == "No Access" and not field.deleted.data -%}
-    <optionsinput inline-template
-      v-bind:initial-value="'{{ field.role.data | string }}'"
-      v-bind:name="'{{ field.name | string }}{% if member_role_id %}-{{ member_role_id }}{% endif %}'"
-      v-bind:optional="true"
-      v-bind:watch="true">
-      <div class="usa-input">
-        <fieldset data-ally-disabled="true" v-on:change="onInput" class="usa-input__choices">
-          <div class="form-row">
-            <div class="form-col form-col--two-thirds">
-              <legend>
-                <div v-bind:class='["usa-input__title-inline", {"environment-name--gray": value === "None" }]'>
-                  {{ field.environment_name.data }}
-                </div>
-                <p class="usa-input__help">
-                  {{ field.role.data }}
-                </p>
-              </legend>
-            </div>
-            <div class="form-col form-col--third">
-              {{ field.role(**{"v-model": "value", "id": "{}-{}".format(field.role.name, member_role_id)}) }}
-            </div>
-          </div>
-        </fieldset>
+  {% set role = field.role.data if not field.deleted.data else "Access Suspended" %}
+  <div class="form-row usa-input">
+    <div class="form-col form-col--two-thirds">
+      <div class="{% if field.deleted.data or field.role.data == 'No Access' %}env-role__no-access{% endif %}">
+        <div v-bind:class='["usa-input__title-inline", {"environment-name--gray": value === "None" }]'>
+          {{ field.environment_name.data }}
+        </div>
+        <p class="usa-input__help">
+          {{ role }}
+        </p>
       </div>
-    </optionsinput>
-  {% elif field.role.data != "No Access" and not field.deleted.data -%}
-    <div class="form-row">
-      <div class="form-col form-col--two-thirds">
-        <legend>
-          <div v-bind:class='["usa-input__title-inline", {"environment-name--gray": value === "None" }]'>
-            {{ field.environment_name.data }}
-          </div>
-          <p class="usa-input__help">
-            {{ field.role.data }}
-          </p>
-        </legend>
-      </div>
-      <div class="form-col form-col--third">
+    </div>
+    <div class="form-col form-col--third">
+      {% if field.role.data == "No Access" and not field.deleted.data -%}
+        <optionsinput inline-template
+          v-bind:initial-value="'{{ field.role.data | string }}'"
+          v-bind:name="'{{ field.name | string }}{% if member_role_id %}-{{ member_role_id }}{% endif %}'"
+          v-bind:optional="true"
+          v-bind:watch="true">
+          <fieldset data-ally-disabled="true" v-on:change="onInput" class="usa-input__choices">
+            {{ field.role(**{"v-model": "value", "id": "{}-{}".format(field.role.name, member_role_id)}) }}
+          </fieldset>
+        </optionsinput>
+      {% elif field.role.data != "No Access" and not field.deleted.data -%}
         <checkboxinput
           name="'{{ field.deleted.name | string }}-{% if member_role_id %}-{{ member_role_id }}{% endif %}'"
           inline-template
@@ -49,23 +34,22 @@
           v-bind:initial-checked='{{ field.deleted.data|string|lower }}'
           v-bind:optional="true"
           >
-          <div>
-            <div class='usa-input' v-bind:class="[{ 'checked': isChecked }]">
-
-              <fieldset data-ally-disabled="true" v-on:change="onInput" class="usa-input__choices {% if inline %}usa-input__choices--inline{% endif %}">
-                <legend>
-                  {% set id = "{}-{}".format(field.deleted.name, member_role_id) %}
-                  {{ field.deleted(id=id, checked=True, **{"v-model": "isChecked"}) }}
-                  {{ field.deleted.label(for=id) | safe }}
-                </legend>
-              </fieldset>
-            </div>
-          </div>
+          <fieldset data-ally-disabled="true" v-on:change="onInput" class="usa-input__choices {% if inline %}usa-input__choices--inline{% endif %}">
+            <legend>
+              {% set id = "{}-{}".format(field.deleted.name, member_role_id) %}
+              {{ field.deleted(id=id, checked=True, **{"v-model": "isChecked"}) }}
+              {{ field.deleted.label(for=id) | safe }}
+            </legend>
+          </fieldset>
         </checkboxinput>
-      </div>
+      {% elif field.deleted.data -%}
+        <p class="usa-input__help">
+          Suspended access cannot be modified.
+        </p>
+      {%- endif %}
+      {{ field.environment_id() }}
     </div>
-  {%- endif %}
-  {{ field.environment_id() }}
+  </div>
 {% endmacro %}
 
 {% macro PermsFields(form, new=False, member_role_id=None) %}

@@ -93,12 +93,21 @@ def test_disable_completed(application_role, environment):
     assert environment_role.status == EnvironmentRole.Status.DISABLED
 
 
-def test_get_for_update():
-    app_role = ApplicationRoleFactory.create()
-    env = EnvironmentFactory.create(application=app_role.application)
-    EnvironmentRoleFactory.create(application_role=app_role, environment=env, deleted=True)
-    role = EnvironmentRoles.get_for_update(app_role.id, env.id)
+def test_get_for_update(application_role, environment):
+    EnvironmentRoleFactory.create(
+        application_role=application_role, environment=environment, deleted=True
+    )
+    role = EnvironmentRoles.get_for_update(application_role.id, environment.id)
     assert role
-    assert role.application_role == app_role
-    assert role.environment == env
+    assert role.application_role == application_role
+    assert role.environment == environment
     assert role.deleted
+
+
+def test_get_all_for_application_member(application_role, environment):
+    EnvironmentRoleFactory.create(
+        application_role=application_role, environment=environment, deleted=True
+    )
+
+    roles = EnvironmentRoles.get_all_for_application_member(application_role.id)
+    assert len(roles) == 1

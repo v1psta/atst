@@ -61,9 +61,7 @@ def test_update_env_role_no_change():
 
 def test_update_env_role_deleted_role():
     env_role = EnvironmentRoleFactory.create(role=CSPRole.BASIC_ACCESS.value)
-    Environments.update_env_role(
-        env_role.environment, env_role.application_role, None
-    )
+    Environments.update_env_role(env_role.environment, env_role.application_role, None)
     assert not Environments.update_env_role(
         env_role.environment, env_role.application_role, CSPRole.TECHNICAL_READ.value
     )

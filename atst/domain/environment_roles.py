@@ -126,3 +126,11 @@ class EnvironmentRoles(object):
             .one_or_none()
         )
         return existing_env_role
+
+    @classmethod
+    def get_all_for_application_member(cls, application_role_id):
+        return (
+            db.session.query(EnvironmentRole)
+            .filter(EnvironmentRole.application_role_id == application_role_id)
+            .all()
+        )

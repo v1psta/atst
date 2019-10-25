@@ -92,15 +92,21 @@
     text-align: left;
 
     .usa-input {
-      margin: $gap 0 $gap 0;
+      margin: $gap * 2;
 
-      .usa-input__title-inline {
-        margin-top: $gap;
-        margin-left: $gap;
+      &__title-inline {
+        font-weight: $font-bold;
       }
 
-      .form-row {
-        margin: 0;
+      &__help {
+        margin-bottom: 0;
+      }
+
+      .env-role__no-access {
+        .usa-input__title-inline,
+        .usa-input__help {
+          color: $color-gray;
+        }
       }
     }
 
