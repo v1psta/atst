@@ -393,18 +393,21 @@ portfolios:
       blank_slate: This Application has no members
       form:
         env_mgmt:
-          label: Manage Environments
-          description: Add and rename project environments, assign environment access roles to team members.
+          label: Manage Application Environments
+          description: Add and rename Environments, assign Environment access roles to team members.
         team_mgmt:
-          label: Edit Team
+          label: Edit Application Team
           description: Add and remove team members.
         del_env:
           label: Delete Application
           description: Delete this application.
-        env_access: Environment Access
+        env_access: 
+          title: Environment Roles
+          description: Additional role controls are available in the CSP console. <a href="#"> Learn More </a>
         next_button: "Next: Permissions"
-        project_perms: Project Permissions
-        step_2_title: Set Permissions and Roles
+        app_perms:
+          title: Application Permissions
+          description: Application permissions allow users to provision and modify applications and teams. <a href="#"> Learn More </a>
         add_member: Add Member
       new:
         assign_roles: Assign Member Environments and Roles
