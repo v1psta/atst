@@ -1,9 +1,9 @@
 {% from "components/icon.html" import Icon %}
 {% import "applications/fragments/member_form_fields.html" as member_fields %}
 
-{% macro MemberFormTemplate(title, next_button, previous=True) %}
+{% macro MemberFormTemplate(title=None, next_button=None, previous=True) %}
   <hr>
-  <h1>{{ Icon('avatar') }} {{ title }}</h1>
+  {% if title %} <h1>{{ title }}</h1> {% endif %}
 
   {{ caller() }}
 
@@ -43,7 +43,7 @@
       value='{{ "portfolios.applications.members.form.add_member" | translate}}'>
   {% endset %}
 
-  {% call MemberFormTemplate(title="portfolios.applications.members.form.step_2_title"|translate, next_button=next_button) %}
+  {% call MemberFormTemplate(next_button=next_button) %}
     {{ member_fields.PermsFields(form=member_form) }}
   {% endcall %}
 {% endmacro %}
