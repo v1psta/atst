@@ -185,14 +185,13 @@ def remove_member(portfolio_id, portfolio_role_id):
         raise UnauthorizedError(
             g.current_user, "you can't delete the portfolios PPoC from the portfolio"
         )
+
     if (
         portfolio_role.latest_invitation
         and portfolio_role.status == PortfolioRoleStatus.PENDING
     ):
         PortfolioInvitations.revoke(portfolio_role.latest_invitation.token)
     else:
-        # TODO: should this cascade and disable any application and environment
-        # roles they might have?
         PortfolioRoles.disable(portfolio_role=portfolio_role)
 
     flash("portfolio_member_removed", member_name=portfolio_role.full_name)
