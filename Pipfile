@@ -24,7 +24,6 @@ werkzeug = "*"
 PyYAML = "*"
 azure-storage = "*"
 azure-storage-common = "*"
-boto3 = "*"
 celery = "*"
 
 [dev-packages]
