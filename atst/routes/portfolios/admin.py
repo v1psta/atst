@@ -3,6 +3,8 @@ from flask import render_template, request as http_request, g, redirect, url_for
 from . import portfolios_bp
 from atst.domain.portfolios import Portfolios
 from atst.domain.portfolio_roles import PortfolioRoles
+from atst.models.portfolio_role import Status as PortfolioRoleStatus
+from atst.domain.invitations import PortfolioInvitations
 from atst.domain.permission_sets import PermissionSets
 from atst.domain.audit_log import AuditLog
 from atst.domain.common import Paginator
@@ -183,10 +185,15 @@ def remove_member(portfolio_id, portfolio_role_id):
         raise UnauthorizedError(
             g.current_user, "you can't delete the portfolios PPoC from the portfolio"
         )
-
-    # TODO: should this cascade and disable any application and environment
-    # roles they might have?
-    PortfolioRoles.disable(portfolio_role=portfolio_role)
+    if (
+        portfolio_role.latest_invitation
+        and portfolio_role.status == PortfolioRoleStatus.PENDING
+    ):
+        PortfolioInvitations.revoke(portfolio_role.latest_invitation.token)
+    else:
+        # TODO: should this cascade and disable any application and environment
+        # roles they might have?
+        PortfolioRoles.disable(portfolio_role=portfolio_role)
 
     flash("portfolio_member_removed", member_name=portfolio_role.full_name)
 
