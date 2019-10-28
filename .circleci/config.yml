@@ -1,81 +1,96 @@
 version: 2.1
 
-orbs:
-    azure-acr: circleci/azure-acr@0.1.2
-    azure-aks: circleci/azure-aks@0.2.0
-    kubernetes: circleci/kubernetes@0.3.0
-
-defaults:
-  appEnvironment: &appEnvironment
-    KEEP_EXISTING_VENV: true
-    PGHOST: localhost
-    PGUSER: postgres
-    PGDATABASE: circle_test
-    REDIS_URI: redis://localhost:6379
-    PIP_VERSION: 18.*
-
 commands:
-  migration_setup:
-    parameters:
-      container_image:
-        type: string
+  cache_docker_image:
     steps:
-      - attach_workspace:
-          at: .
       - run:
-          name: Setup Environment Variables
+          name: Save the docker images to a cache
           command: |
-            echo 'export CONTAINER_IMAGE="<< parameters.container_image >>"' >> $BASH_ENV
-      - run: sudo apt-get update
-      - run: sudo apt-get install gettext
-      - kubernetes/install
-  migration_apply:
+            mkdir -p docker-cache
+            docker save -o docker-cache/atat.tar atat:latest
+            docker save -o docker-cache/builder.tar atat:builder
+      - save_cache:
+          key: docker-cache-{{ .Branch }}-{{ .Revision }}
+          paths:
+            - docker-cache
+  restore_docker_image:
+    steps:
+      - restore_cache:
+          keys:
+            - docker-cache-{{ .Branch }}-{{ .Revision }}
+      - run:
+          name: Restore Docker image from cache
+          command: |
+            docker load < docker-cache/atat.tar
+            docker load < docker-cache/builder.tar
+  setup_datastores:
+    parameters:
+      pgdatabase:
+        type: string
+        default: atat_test
+      container_env:
+        type: string
+        default: -e PGHOST=postgres -e REDIS_URI=redis://redis:6379
     steps:
       - run:
-          command: ./script/cluster_migration
-          name: Apply Migrations and Seed Roles
+          name: Set up temporary docker network
+          command: docker network create atat
+      - run:
+          name: Start redis
+          command: docker run -d --network atat --link redis:redis -p 6379:6379 --name redis circleci/redis:4-alpine3.8
+      - run:
+          name: Start postgres
+          command: docker run -d --network atat --link postgres:postgres -p 5432:5432 --name postgres circleci/postgres:10-alpine-ram
+      - run:
+          name: Wait for containers
+          command: sleep 3
+      - run:
+          name: Create database
+          command: "docker exec postgres createdb -U postgres << parameters.pgdatabase >>"
+      - run:
+          name: Apply migrations
+          command: docker run --network atat -e PGDATABASE=<< parameters.pgdatabase >> << parameters.container_env >> atat:builder .venv/bin/python .venv/bin/alembic upgrade head
+      - run:
+          name: Apply the default permission sets
+          command: docker run --network atat -e PGDATABASE=<< parameters.pgdatabase >> << parameters.container_env >> atat:builder .venv/bin/python script/seed_roles.py
 
 jobs:
+  docker-build:
+    docker:
+      - image: docker:18.06.0-ce-git
+    steps:
+      - checkout
+      - setup_remote_docker:
+          docker_layer_caching: true
+          version: 18.06.0-ce
+      - run:
+          name: Build image
+          command: |
+            docker build . --target builder --build-arg CSP=azure -f ./Dockerfile -t atat:builder
+            docker build . --build-arg CSP=azure -f ./Dockerfile -t atat:latest
+      - cache_docker_image
+
   test:
     docker:
-      - image: circleci/python:3.7.3-stretch-node
-        environment: *appEnvironment
+      - image: docker:18.06.0-ce-git
       - image: circleci/postgres:10-alpine-ram
       - image: circleci/redis:4-alpine3.8
     steps:
-      - checkout
-      - run: sudo apt-get update
-      - run: sudo apt-get install postgresql-client
-      - attach_workspace:
-          at: .
-      - run: ./script/setup
-      - save_cache:
-          name: "Save Cache: Pipenv References"
-          paths:
-            - ~/.local/share
-          key: pipenv-v1-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
-      - save_cache:
-          name: "Save Cache: Python Venv"
-          paths:
-            - ./.venv
-          key: venv-v1-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
-      - save_cache:
-          name: "Save Cache: Yarn"
-          paths:
-            - ~/.cache/yarn
-          key: yarn-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
-      - save_cache:
-          name: "Save Cache: Node Modules"
-          paths:
-            - ./node_modules
-          key: node-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
+      - setup_remote_docker:
+          docker_layer_caching: true
+          version: 18.06.0-ce
+      - restore_docker_image
+      - setup_datastores:
+          pgdatabase: atat_test
       - run:
-          name: "Run Tests"
-          command: ./script/cibuild
-      - persist_to_workspace:
-          root: .
-          paths:
-            - .
+          name: Run CI tests
+          command: |
+            docker run \
+              -e PGHOST=postgres \
+              -e REDIS_URI=redis://redis:6379 \
+              --network atat \
+              atat:builder \
+              /bin/sh -c "pipenv install --dev && /bin/sh script/cibuild"
 
   integration-tests:
     docker:
@@ -83,25 +98,12 @@ jobs:
       - image: circleci/postgres:10-alpine-ram
       - image: circleci/redis:4-alpine3.8
     steps:
-      - attach_workspace:
-          at: .
       - setup_remote_docker:
+          docker_layer_caching: true
           version: 18.06.0-ce
-      - run:
-          name: Remove existing font symlink
-          command: rm static/fonts
-      - run:
-          name: Set up temporary docker network
-          command: docker network create atat
-      - run:
-          name: Build image
-          command: docker build . -t atat:latest
-      - run:
-          name: Start redis
-          command: docker run -d --network atat --link redis:redis -p 6379:6379 --name redis circleci/redis:4-alpine3.8
-      - run:
-          name: Start postgres
-          command: docker run -d --network atat --link postgres:postgres -p 5432:5432 --name postgres circleci/postgres:10-alpine-ram
+      - restore_docker_image
+      - setup_datastores:
+          pgdatabase: atat
       - run:
           name: Start application container
           command: |
@@ -112,25 +114,17 @@ jobs:
             -p 8000:8000 \
             --network atat \
             --name test-atat \
-            atat:latest \
-            uwsgi \
-            --callable app \
-            --module app \
-            --plugin python3 \
-            --virtualenv /opt/atat/atst/.venv \
-            --http-socket :8000
-      - run:
-          name: Wait for containers
-          command: sleep 3
-      - run:
-          name: Create database
-          command: docker exec postgres createdb -U postgres atat
-      - run:
-          name: Apply migrations
-          command: docker exec test-atat .venv/bin/python .venv/bin/alembic upgrade head
-      - run:
-          name: Apply the default permission sets
-          command: docker exec test-atat .venv/bin/python script/seed_roles.py
+            atat:builder \
+            /bin/sh -c "
+              echo CLOUD_PROVIDER=mock > .env &&\
+              yarn build &&\
+              uwsgi \
+              --callable app \
+              --module app \
+              --plugin python3 \
+              --virtualenv /install/.venv \
+              --http-socket :8000
+            "
       - run:
           name: Execute Ghost Inspector test suite
           command: |
@@ -144,93 +138,90 @@ jobs:
               --network atat \
               ghostinspector/test-runner-standalone:latest
 
-  azure-migration:
-    executor: azure-aks/default
+  deploy:
+    docker:
+      - image: docker:18.06.0-ce-git
+        environment:
+          AZURE_REGISTRY: pwatat
+          RESOURCE_GROUP: atat
+          CLUSTER_NAME: atat-cluster
     steps:
-      - migration_setup:
-          container_image: "$AZURE_SERVER_NAME/atat:atat-$CIRCLE_SHA1"
-      - azure-aks/update-kubeconfig-with-credentials:
-          cluster-name: atat-cluster
-          install-kubectl: true
-          perform-login: true
-          resource-group: atat
-      - migration_apply
-
-  # the azure-acr orb doesn't allow for multiple tags in the
-  # build-and-push-image step, so instead we wrap our own job around it and run
-  # some additional Docker commands
-  azure-build-and-push-image:
-    executor: azure-acr/default
-    steps:
-      - azure-acr/build-and-push-image:
-          extra-build-args: "--build-arg CSP=azure"
-          login-server-name: "${AZURE_SERVER_NAME}"
-          registry-name: pwatat
-          repo: atat
-          tag: "atat-${CIRCLE_SHA1}"
-      - run: "docker tag ${AZURE_SERVER_NAME}/atat:atat-${CIRCLE_SHA1}  ${AZURE_SERVER_NAME}/atat:latest"
-      - run: "docker push ${AZURE_SERVER_NAME}/atat:latest"
+      - checkout
+      - setup_remote_docker:
+          docker_layer_caching: true
+          version: 18.06.0-ce
+      - restore_docker_image
+      - run:
+          name: Install Azure CLI
+          command: |
+            apk update
+            apk add bash py-pip
+            apk add --virtual=build \
+              linux-headers gcc libffi-dev musl-dev openssl-dev python-dev make
+            pip --no-cache-dir install -U pip
+            pip --no-cache-dir install azure-cli
+            apk del --purge build
+      - run:
+          name: Login to Azure CLI
+          command: |
+            az login \
+              --service-principal \
+              --tenant $AZURE_SP_TENANT \
+              --password $AZURE_SP_PASSWORD \
+              --username $AZURE_SP
+            echo "Successfully logged in to Azure CLI."
+            az acr login --name $AZURE_REGISTRY
+      - run:
+          name: Install kubectl
+          command: |
+            apk add curl
+            export KUBECTL_VERSION=$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)
+            curl -LO https://storage.googleapis.com/kubernetes-release/release/$KUBECTL_VERSION/bin/linux/amd64/kubectl
+            chmod +x ./kubectl
+            mv ./kubectl /usr/local/bin
+      - run:
+          name: Configure kubectl
+          command: |
+            apk add libssl1.0
+            az aks get-credentials --name ${CLUSTER_NAME} --resource-group ${RESOURCE_GROUP}
+      - run:
+          name: Tag images
+          command: |
+            docker tag atat:latest ${AZURE_SERVER_NAME}/atat:atat-${CIRCLE_SHA1}
+            docker tag atat:latest ${AZURE_SERVER_NAME}/atat:latest
+      - run:
+          name: Push image
+          command: |
+            docker push ${AZURE_SERVER_NAME}/atat:atat-${CIRCLE_SHA1}
+            docker push ${AZURE_SERVER_NAME}/atat:latest
+      - run:
+          name: Add gettext package
+          command: apk add gettext
+      - run:
+          command: CONTAINER_IMAGE=${AZURE_SERVER_NAME}/atat:atat-${CIRCLE_SHA1} /bin/sh ./script/cluster_migration
+          name: Apply Migrations and Seed Roles
+      - run:
+          name: Update Kubernetes cluster
+          command: |
+            kubectl set image deployment.apps/atst atst=${AZURE_SERVER_NAME}/atat:atat-${CIRCLE_SHA1} --namespace=atat
+            kubectl set image deployment.apps/atst-worker atst-worker=${AZURE_SERVER_NAME}/atat:atat-${CIRCLE_SHA1} --namespace=atat
+            kubectl set image deployment.apps/atst-beat atst-beat=${AZURE_SERVER_NAME}/atat:atat-${CIRCLE_SHA1} --namespace=atat
 
 workflows:
   version: 2
   run-tests:
     jobs:
-      - test
+      - docker-build
+      - test:
+          requires:
+            - docker-build
       - integration-tests:
           requires:
+            - docker-build
+      - deploy:
+          requires:
             - test
-      - azure-build-and-push-image:
-          requires:
             - integration-tests
-          filters:
-            branches:
-              only:
-                - master
-      - azure-migration:
-          requires:
-            - azure-build-and-push-image
-          filters:
-            branches:
-              only:
-                - master
-      - azure-aks/update-container-image:
-          cluster-name: atat-cluster
-          container-image-updates: "atst=${AZURE_SERVER_NAME}/atat:atat-${CIRCLE_SHA1}"
-          namespace: atat
-          resource-name: deployment.apps/atst
-          resource-group: atat
-          # uncomment below for debugging
-          # show-kubectl-command: true
-          requires:
-            - azure-migration
-          filters:
-            branches:
-              only:
-                - master
-      - azure-aks/update-container-image:
-          cluster-name: atat-cluster
-          container-image-updates: "atst-worker=${AZURE_SERVER_NAME}/atat:atat-${CIRCLE_SHA1}"
-          namespace: atat
-          resource-name: deployment.apps/atst-worker
-          resource-group: atat
-          # uncomment below for debugging
-          # show-kubectl-command: true
-          requires:
-            - azure-migration
-          filters:
-            branches:
-              only:
-                - master
-      - azure-aks/update-container-image:
-          cluster-name: atat-cluster
-          container-image-updates: "atst-beat=${AZURE_SERVER_NAME}/atat:atat-${CIRCLE_SHA1}"
-          namespace: atat
-          resource-name: deployment.apps/atst-beat
-          resource-group: atat
-          # uncomment below for debugging
-          # show-kubectl-command: true
-          requires:
-            - azure-migration
           filters:
             branches:
               only:

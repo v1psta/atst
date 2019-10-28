@@ -1,6 +1,7 @@
 FROM python:3.7.3-alpine3.9 AS builder
 
 ARG CSP
+ENV TZ UTC
 
 RUN mkdir -p /install/.venv
 WORKDIR /install
@@ -51,7 +52,6 @@ ARG APP_DIR=/opt/atat/atst
 
 # Environment variables
 ENV APP_DIR "${APP_DIR}"
-ENV TZ UTC
 
 # Create application directory
 RUN set -x ; \
