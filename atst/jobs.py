@@ -77,6 +77,13 @@ def do_create_environment(csp: CloudProviderInterface, environment_id=None):
         db.session.add(environment)
         db.session.commit()
 
+        body = render_email(
+            "emails/application/environment_ready.txt", {"environment": environment}
+        )
+        app.mailer.send(
+            [environment.creator.email], translate("email.environment_ready"), body
+        )
+
 
 def do_create_atat_admin_user(csp: CloudProviderInterface, environment_id=None):
     environment = Environments.get(environment_id)
@@ -94,27 +101,6 @@ def do_create_atat_admin_user(csp: CloudProviderInterface, environment_id=None):
 
 def render_email(template_path, context):
     return app.jinja_env.get_template(template_path).render(context)
-
-
-def do_create_environment_baseline(csp: CloudProviderInterface, environment_id=None):
-    environment = Environments.get(environment_id)
-
-    with claim_for_update(environment) as environment:
-        # ASAP switch to use remote root user for provisioning
-        atat_remote_root_creds = environment.root_user_info["credentials"]
-
-        baseline_info = csp.create_environment_baseline(
-            atat_remote_root_creds, environment.cloud_id
-        )
-        environment.baseline_info = baseline_info
-        body = render_email(
-            "emails/application/environment_ready.txt", {"environment": environment}
-        )
-        app.mailer.send(
-            [environment.creator.email], translate("email.environment_ready"), body
-        )
-        db.session.add(environment)
-        db.session.commit()
 
 
 def do_provision_user(csp: CloudProviderInterface, environment_role_id=None):
@@ -151,16 +137,6 @@ def create_atat_admin_user(self, environment_id=None):
     )
 
 
-@celery.task(bind=True, base=RecordEnvironmentFailure)
-def create_environment_baseline(self, environment_id=None):
-    do_work(
-        do_create_environment_baseline,
-        self,
-        app.csp.cloud,
-        environment_id=environment_id,
-    )
-
-
 @celery.task(bind=True)
 def provision_user(self, environment_role_id=None):
     do_work(
@@ -182,14 +158,6 @@ def dispatch_create_atat_admin_user(self):
         pendulum.now()
     ):
         create_atat_admin_user.delay(environment_id=environment_id)
-
-
-@celery.task(bind=True)
-def dispatch_create_environment_baseline(self):
-    for environment_id in Environments.get_environments_pending_baseline_creation(
-        pendulum.now()
-    ):
-        create_environment_baseline.delay(environment_id=environment_id)
 
 
 @celery.task(bind=True)

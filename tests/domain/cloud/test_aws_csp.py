@@ -1,11 +1,7 @@
 import pytest
 
 from atst.domain.csp.cloud import EnvironmentCreationException
-from atst.jobs import (
-    do_create_environment,
-    do_create_atat_admin_user,
-    do_create_environment_baseline,
-)
+from atst.jobs import do_create_environment, do_create_atat_admin_user
 
 # pylint: disable=unused-import
 from tests.mock_boto3 import mock_aws, mock_boto3, AUTH_CREDENTIALS
@@ -61,27 +57,11 @@ def test_create_atat_admin_when_user_already_exists(mock_aws):
     iam_client.get_user.assert_any_call(UserName="atat")
 
 
-def test_create_environment_baseline_succeeds(mock_aws):
-    baseline_info = mock_aws.create_environment_baseline(
-        AUTH_CREDENTIALS, "csp_environment_id"
-    )
-    assert {"policies": [{"BillingReadOnly": "policy-arn"}]} == baseline_info
-
-
-@pytest.mark.mock_boto3({"iam.create_policy.already_exists": True})
-def test_create_environment_baseline_when_policy_already_exists(mock_aws):
-    baseline_info = mock_aws.create_environment_baseline(
-        AUTH_CREDENTIALS, "csp_environment_id"
-    )
-    assert "policies" in baseline_info
-
-
 def test_aws_provision_environment(mock_aws, session):
     environment = EnvironmentFactory.create()
 
     do_create_environment(mock_aws, environment_id=environment.id)
     do_create_atat_admin_user(mock_aws, environment_id=environment.id)
-    do_create_environment_baseline(mock_aws, environment_id=environment.id)
 
     session.refresh(environment)
 

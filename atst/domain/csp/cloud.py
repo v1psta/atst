@@ -197,26 +197,6 @@ class CloudProviderInterface:
         """
         raise NotImplementedError()
 
-    def create_environment_baseline(
-        self, auth_credentials: Dict, csp_environment_id: str
-    ) -> Dict:
-        """Provision the necessary baseline entities (such as roles) in the given environment
-
-        Arguments:
-            auth_credentials -- Object containing CSP account credentials
-            csp_environment_id -- ID of the CSP Environment to provision roles against.
-
-        Returns:
-            dict: Returns dict that associates the resource identities with their ATAT representations.
-        Raises:
-            AuthenticationException: Problem with the credentials
-            AuthorizationException: Credentials not authorized for current action(s)
-            ConnectionException: Issue with the CSP API connection
-            UnknownServerException: Unknown issue on the CSP side
-            BaselineProvisionException: Specific issue occurred with some aspect of baseline setup
-        """
-        raise NotImplementedError()
-
     def create_or_update_user(
         self, auth_credentials: Dict, user_info: EnvironmentRole, csp_role_id: str
     ) -> str:
@@ -330,9 +310,21 @@ class MockCloudProvider(CloudProviderInterface):
                 environment.id, "Could not create environment."
             ),
         )
+
+        csp_environment_id = self._id()
+
+        self._delay(1, 5)
+        self._maybe_raise(self.NETWORK_FAILURE_PCT, self.NETWORK_EXCEPTION)
+        self._maybe_raise(self.SERVER_FAILURE_PCT, self.SERVER_EXCEPTION)
+        self._maybe_raise(
+            self.ATAT_ADMIN_CREATE_FAILURE_PCT,
+            BaselineProvisionException(
+                csp_environment_id, "Could not create environment baseline."
+            ),
+        )
         self._maybe_raise(self.UNAUTHORIZED_RATE, self.AUTHORIZATION_EXCEPTION)
 
-        return self._id()
+        return csp_environment_id
 
     def create_atat_admin_user(self, auth_credentials, csp_environment_id):
         self._authorize(auth_credentials)
@@ -350,27 +342,6 @@ class MockCloudProvider(CloudProviderInterface):
         self._maybe_raise(self.UNAUTHORIZED_RATE, self.AUTHORIZATION_EXCEPTION)
 
         return {"id": self._id(), "credentials": self._auth_credentials}
-
-    def create_environment_baseline(self, auth_credentials, csp_environment_id):
-        self._authorize(auth_credentials)
-
-        self._delay(1, 5)
-        self._maybe_raise(self.NETWORK_FAILURE_PCT, self.NETWORK_EXCEPTION)
-        self._maybe_raise(self.SERVER_FAILURE_PCT, self.SERVER_EXCEPTION)
-        self._maybe_raise(
-            self.ATAT_ADMIN_CREATE_FAILURE_PCT,
-            BaselineProvisionException(
-                csp_environment_id, "Could not create environment baseline."
-            ),
-        )
-
-        self._maybe_raise(self.UNAUTHORIZED_RATE, self.AUTHORIZATION_EXCEPTION)
-        return {
-            CSPRole.BASIC_ACCESS.value: self._id(),
-            CSPRole.NETWORK_ADMIN.value: self._id(),
-            CSPRole.BUSINESS_READ.value: self._id(),
-            CSPRole.TECHNICAL_READ.value: self._id(),
-        }
 
     def create_or_update_user(self, auth_credentials, user_info, csp_role_id):
         self._authorize(auth_credentials)

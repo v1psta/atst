@@ -10,10 +10,8 @@ from atst.jobs import (
     RecordEnvironmentRoleFailure,
     do_create_environment,
     do_create_atat_admin_user,
-    do_create_environment_baseline,
     dispatch_create_environment,
     dispatch_create_atat_admin_user,
-    dispatch_create_environment_baseline,
     create_environment,
     dispatch_provision_user,
     do_provision_user,
@@ -162,39 +160,6 @@ def test_dispatch_create_atat_admin_user(session, monkeypatch):
     environment = portfolio.applications[0].environments[0]
 
     dispatch_create_atat_admin_user.run()
-
-    mock.delay.assert_called_once_with(environment_id=environment.id)
-
-
-def test_dispatch_create_environment_baseline(session, monkeypatch):
-    portfolio = PortfolioFactory.create(
-        applications=[
-            {
-                "environments": [
-                    {
-                        "cloud_id": uuid4().hex,
-                        "root_user_info": {},
-                        "baseline_info": None,
-                    }
-                ]
-            }
-        ],
-        task_orders=[
-            {
-                "create_clins": [
-                    {
-                        "start_date": pendulum.now().subtract(days=1),
-                        "end_date": pendulum.now().add(days=1),
-                    }
-                ]
-            }
-        ],
-    )
-    mock = Mock()
-    monkeypatch.setattr("atst.jobs.create_environment_baseline", mock)
-    environment = portfolio.applications[0].environments[0]
-
-    dispatch_create_environment_baseline.run()
 
     mock.delay.assert_called_once_with(environment_id=environment.id)
 
