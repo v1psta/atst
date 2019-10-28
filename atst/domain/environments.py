@@ -56,20 +56,20 @@ class Environments(object):
         if env_role and env_role.role != new_role and not env_role.deleted:
             env_role.role = new_role
             updated = True
-            db.session.add(env_role)
-        elif not env_role:
+        elif not env_role and new_role:
             env_role = EnvironmentRoles.create(
                 application_role=application_role,
                 environment=environment,
                 role=new_role,
             )
             updated = True
-            db.session.add(env_role)
 
-        if new_role is None:
+        if env_role and not new_role:
+            env_role.role = None
             updated = EnvironmentRoles.delete(application_role.id, environment.id)
 
         if updated:
+            db.session.add(env_role)
             db.session.commit()
 
         return updated
