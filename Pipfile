@@ -45,6 +45,7 @@ blinker = "*"
 pytest-mock = "*"
 detect-secrets = "*"
 beautifulsoup4 = "*"
+mypy = "*"
 
 [requires]
 python_version = "3.7.3"

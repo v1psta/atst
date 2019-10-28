@@ -145,7 +145,7 @@ class BaselineProvisionException(GeneralCSPException):
 
 
 class CloudProviderInterface:
-    def root_creds() -> Dict:
+    def root_creds(self) -> Dict:
         raise NotImplementedError()
 
     def create_environment(
@@ -713,6 +713,7 @@ class AWSCloudProvider(CloudProviderInterface):
         }
         """
         )
-        return policy_template.render(
+        rendered = policy_template.render(
             account_id=account_id, role_name=self.root_account_policy_name
         )
+        return json.loads(rendered)

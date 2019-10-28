@@ -70,3 +70,5 @@ celerybeat-schedule
 
 # templates created for JS tests
 js/test_templates
+
+.mypy_cache/
