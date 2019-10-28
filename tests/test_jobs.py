@@ -96,17 +96,6 @@ def test_create_atat_admin_user(csp, session):
     assert environment.root_user_info
 
 
-def test_create_environment_baseline(csp, session, app):
-    environment = EnvironmentFactory.create(
-        root_user_info={"credentials": csp.root_creds()}
-    )
-    do_create_environment_baseline(csp, environment.id)
-    session.refresh(environment)
-
-    assert environment.baseline_info
-    assert len(app.mailer.messages) > 0
-
-
 def test_dispatch_create_environment(session, monkeypatch):
     # Given that I have a portfolio with an active CLIN and two environments,
     # one of which is deleted

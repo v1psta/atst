@@ -4,7 +4,6 @@ import alembic.config
 import alembic.command
 from logging.config import dictConfig
 from werkzeug.datastructures import FileStorage
-from tempfile import TemporaryDirectory
 from collections import OrderedDict
 
 from atst.app import make_app, make_config
@@ -41,7 +40,7 @@ def app(request):
 @pytest.fixture(autouse=True)
 def skip_audit_log(request):
     """
-    Conditionally skip tests marked with 'audit_log' based on the 
+    Conditionally skip tests marked with 'audit_log' based on the
     USE_AUDIT_LOG config value.
     """
     config = make_config()
