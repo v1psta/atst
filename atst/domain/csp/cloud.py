@@ -386,12 +386,16 @@ class MockCloudProvider(CloudProviderInterface):
             raise self.AUTHENTICATION_EXCEPTION
 
 
-AZURE_ENVIRONMENT = "AZURE_PUBLIC_CLOUD" # TBD
+AZURE_ENVIRONMENT = "AZURE_PUBLIC_CLOUD"  # TBD
 AZURE_SKU_ID = "?"  # probably a static sku specific to ATAT/JEDI
 SUBSCRIPTION_ID_REGEX = re.compile(
     "subscriptions\/([0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})",
     re.I,
 )
+
+# This needs to be a fully pathed role definition identifier, not just a UUID
+REMOTE_ROOT_ROLE_DEF_ID = "/providers/Microsoft.Authorization/roleDefinitions/00000000-0000-4000-8000-000000000000"
+
 
 class AzureCloudProvider(CloudProviderInterface):
     def __init__(self, config):
@@ -401,28 +405,22 @@ class AzureCloudProvider(CloudProviderInterface):
         self.secret_key = config["AZURE_SECRET_KEY"]
         self.tenant_id = config["AZURE_TENANT_ID"]
 
-        from azure.mgmt import subscription
+        from azure.mgmt import subscription, authorization
         import azure.graphrbac as graphrbac
         import azure.common.credentials as credentials
         from msrestazure.azure_cloud import AZURE_PUBLIC_CLOUD
 
         self.azure_subscription = subscription
+        self.azure_authorization = authorization
         self.azure_graph = graphrbac
         self.azure_credentials = credentials
         # may change to a JEDI cloud
         self.azure_cloud = AZURE_PUBLIC_CLOUD
 
-    def root_creds(self):
-        return {
-            "client_id": self.client_id,
-            "secret_key": self.secret_key,
-            "tenant_id": self.tenant_id,
-        }
-
     def create_environment(
         self, auth_credentials: Dict, user: User, environment: Environment
     ):
-        credentials = self._get_credential_obj(self.root_creds())
+        credentials = self._get_credential_obj(self._root_creds)
         sub_client = self.azure_mgmt.subscription.SubscriptionClient(credentials)
 
         display_name = (
@@ -464,27 +462,49 @@ class AzureCloudProvider(CloudProviderInterface):
     def create_atat_admin_user(
         self, auth_credentials: Dict, csp_environment_id: str
     ) -> Dict:
-        root_creds = self.root_creds()
-        credentials = self._get_credential_obj(
-            root_creds, resource="https://management.azure.com"
-        )
+        root_creds = self._root_creds
+        credentials = self._get_credential_obj(root_creds)
 
         sub_client = self.azure_subscription.SubscriptionClient(credentials)
         subscription: self.azure_subscription.models.Subscription = sub_client.subscriptions.get(
             csp_environment_id
         )
 
-        from azure.common.credentials import ServicePrincipalCredentials
+        managment_principal = self._get_management_service_principal()
 
-        graph_creds = ServicePrincipalCredentials(
-            client_id=self.client_id,
-            secret=self.secret_key,
-            tenant=self.tenant_id,
-            cloud_environment=self.azure_cloud,
-            # we really should be using graph.microsoft.com, but i'm getting
-            # "expired token" errors for that
-            # resource = "https://graph.microsoft.com"
-            resource="https://graph.windows.net",
+        auth_client = self.azure_authorization.AuthorizationManagementClient(
+            credentials,
+            # TODO: Determine which subscription this needs to point at
+            # Once we're in a multi-sub environment
+            subscription.id,
+        )
+
+        # Create role assignment for
+        role_assignment_id = uuid.uuid4()
+        role_assignment_create_params = auth_client.role_assignments.models.RoleAssignmentCreateParameters(
+            role_definition_id=REMOTE_ROOT_ROLE_DEF_ID,
+            principal_id=managment_principal.id,
+        )
+
+        self.azure_authorization.models.RoleAssignment = auth_client.role_assignments.create(
+            scope=f"/subscriptions/{subscription.id}/",
+            role_assignment_name=role_assignment_id,
+            parameters=role_assignment_create_params,
+        )
+
+        return {
+            "csp_user_id": service_principal.object_id,
+            "credentials": service_principal.password_credentials,
+            "role_name": role_assignment_id,
+        }
+
+    def _get_management_service_principal(self):
+        # we really should be using graph.microsoft.com, but i'm getting
+        # "expired token" errors for that
+        # graph_resource = "https://graph.microsoft.com"
+        graph_resource = "https://graph.windows.net"
+        graph_creds = self._get_credential_obj(
+            self._root_creds, resource=graph_resource
         )
         # I needed to set permissions for the graph.windows.net API before I
         # could get this to work.
@@ -492,11 +512,13 @@ class AzureCloudProvider(CloudProviderInterface):
         # how do we scope the graph client to the new subscription rather than
         # the cloud0 subscription? tenant id seems to be separate from subscription id
         graph_client = self.azure_graph.GraphRbacManagementClient(
-            graph_creds, root_creds.get("tenant_id")
+            graph_creds, self._root_creds.get("tenant_id")
         )
 
-        # assuming the graph_client is scoped to the new subscription, create an application
-        app_display_name = "?"
+        # do we need to create a new application to manage each subscripition
+        # or should we manage access to each subscription from a single service
+        # principal with multiple role assignments?
+        app_display_name = "?"  # name should reflect the subscription it exists
         app_create_param = self.azure_graph.models.ApplicationCreateParameters(
             display_name=app_display_name
         )
@@ -519,10 +541,7 @@ class AzureCloudProvider(CloudProviderInterface):
 
         service_principal = graph_client.service_principals.create(sp_create_params)
 
-        return {
-            "csp_user_id": service_principal.object_id,
-            "credentials": service_principal.password_credentials,
-        }
+        return service_principal
 
     def _extract_subscription_id(self, subscription_url):
         sub_id_match = SUBSCRIPTION_ID_REGEX.match(subscription_url)
@@ -530,7 +549,7 @@ class AzureCloudProvider(CloudProviderInterface):
         if sub_id_match:
             return sub_id_match.group(1)
 
-    def _get_credential_obj(self, creds, resource="https://graph.windows.net"):
+    def _get_credential_obj(self, creds, resource=None):
         return self.azure_credentials.ServicePrincipalCredentials(
             client_id=creds.get("client_id"),
             secret=creds.get("secret_key"),
@@ -538,3 +557,11 @@ class AzureCloudProvider(CloudProviderInterface):
             resource=resource,
             cloud_environment=self.azure_cloud,
         )
+
+    @property
+    def _root_creds(self):
+        return {
+            "client_id": self.client_id,
+            "secret_key": self.secret_key,
+            "tenant_id": self.tenant_id,
+        }
