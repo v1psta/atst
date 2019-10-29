@@ -134,7 +134,7 @@ def test_revoke_invitation():
     assert invite.is_pending
     PortfolioInvitations.revoke(invite.token)
     assert invite.is_revoked
-    assert invite.role.status == PortfolioRoleStatus.PENDING
+    assert invite.role.status == PortfolioRoleStatus.DISABLED
 
 
 def test_resend_invitation(session):

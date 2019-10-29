@@ -114,7 +114,9 @@ class BaseInvitations(object):
     @classmethod
     def revoke(cls, token):
         invite = cls._get(token)
-        return cls._update_status(invite, InvitationStatus.REVOKED)
+        invite = cls._update_status(invite, InvitationStatus.REVOKED)
+        cls.role_domain_class.disable(invite.role)
+        return invite
 
     @classmethod
     def resend(cls, inviter, token, user_info=None):
@@ -142,9 +144,3 @@ class PortfolioInvitations(BaseInvitations):
 class ApplicationInvitations(BaseInvitations):
     model = ApplicationInvitation
     role_domain_class = ApplicationRoles
-
-    @classmethod
-    def revoke(cls, token):
-        invite = super().revoke(token)
-        ApplicationRoles.disable(invite.role)
-        return invite
