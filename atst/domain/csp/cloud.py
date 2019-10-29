@@ -431,9 +431,7 @@ class AzureCloudProvider(CloudProviderInterface):
         credentials = self._get_credential_obj(self._root_creds)
         sub_client = self.sdk.subscription.SubscriptionClient(credentials)
 
-        display_name = (
-            f"{environment.application.name}_{environment.name}_{environment.id}"
-        )  # proposed format
+        display_name = f"{environment.application.name}_{environment.name}_{environment.id}"  # proposed format
 
         billing_profile_id = "?"  # something chained from environment?
         sku_id = AZURE_SKU_ID
