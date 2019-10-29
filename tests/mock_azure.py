@@ -19,9 +19,7 @@ AUTH_CREDENTIALS = {
 def mock_subscription():
     from azure.mgmt import subscription
 
-    sub_mock = Mock(spec=subscription)
-
-    return sub_mock
+    return Mock(spec=subscription)
 
 
 def mock_authorization():
@@ -39,8 +37,7 @@ def mock_graphrbac():
 def mock_credentials():
     import azure.common.credentials as credentials
 
-    cred_mock = Mock(spec=credentials)
-    return cred_mock
+    return Mock(spec=credentials)
 
 
 class MockAzureSDK(object):

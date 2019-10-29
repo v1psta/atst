@@ -488,21 +488,21 @@ class AzureCloudProvider(CloudProviderInterface):
         )
 
         # Create role assignment for
-        role_assignment_id = uuid.uuid4()
+        role_assignment_id = str(uuid4())
         role_assignment_create_params = auth_client.role_assignments.models.RoleAssignmentCreateParameters(
             role_definition_id=REMOTE_ROOT_ROLE_DEF_ID,
             principal_id=managment_principal.id,
         )
 
-        self.sdk.authorization.models.RoleAssignment = auth_client.role_assignments.create(
+        auth_client.role_assignments.create(
             scope=f"/subscriptions/{subscription.id}/",
             role_assignment_name=role_assignment_id,
             parameters=role_assignment_create_params,
         )
 
         return {
-            "csp_user_id": service_principal.object_id,
-            "credentials": service_principal.password_credentials,
+            "csp_user_id": managment_principal.object_id,
+            "credentials": managment_principal.password_credentials,
             "role_name": role_assignment_id,
         }
 
