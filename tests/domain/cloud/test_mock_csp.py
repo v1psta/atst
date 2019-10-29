@@ -36,9 +36,5 @@ def test_create_or_update_user(mock_csp: MockCloudProvider):
     assert isinstance(csp_user_id, str)
 
 
-def test_suspend_user(mock_csp: MockCloudProvider):
-    assert mock_csp.suspend_user(CREDENTIALS, "csp_user_id")
-
-
-def test_delete_user(mock_csp: MockCloudProvider):
-    assert mock_csp.delete_user(CREDENTIALS, "csp_user_id")
+def test_disable_user(mock_csp: MockCloudProvider):
+    assert mock_csp.disable_user(CREDENTIALS, "csp_user_id")

@@ -6,7 +6,10 @@ from .reports import MockReportingProvider
 class MockCSP:
     def __init__(self, app, test_mode=False):
         self.cloud = MockCloudProvider(
-            app.config, with_delay=(not test_mode), with_failure=(not test_mode)
+            app.config,
+            with_delay=(not test_mode),
+            with_failure=(not test_mode),
+            with_authorization=(not test_mode),
         )
         self.files = MockUploader(app)
         self.reports = MockReportingProvider()

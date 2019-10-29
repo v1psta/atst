@@ -76,3 +76,15 @@ def test_get_for_application_member_does_not_return_deleted(
 
     roles = EnvironmentRoles.get_for_application_member(application_role.id)
     assert len(roles) == 0
+
+
+def test_disable_completed(application_role, environment):
+    environment_role = EnvironmentRoleFactory.create(
+        application_role=application_role,
+        environment=environment,
+        status=EnvironmentRole.Status.COMPLETED,
+    )
+
+    environment_role = EnvironmentRoles.disable(environment_role.id)
+
+    assert environment_role.status == EnvironmentRole.Status.DISABLED

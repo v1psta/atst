@@ -215,7 +215,7 @@ class CloudProviderInterface:
         """
         raise NotImplementedError()
 
-    def suspend_user(self, auth_credentials: Dict, csp_user_id: str) -> bool:
+    def disable_user(self, auth_credentials: Dict, csp_user_id: str) -> bool:
         """Revoke all privileges for a user. Used to prevent user access while a full
         delete is being processed.
 
@@ -232,25 +232,6 @@ class CloudProviderInterface:
             ConnectionException: Issue with the CSP API connection
             UnknownServerException: Unknown issue on the CSP side
             UserRemovalException: User couldn't be suspended
-        """
-        raise NotImplementedError()
-
-    def delete_user(self, auth_credentials: Dict, csp_user_id: str) -> bool:
-        """Given the csp-internal id for a user, initiate user deletion.
-
-        Arguments:
-            auth_credentials -- Object containing CSP account credentials
-            csp_user_id -- CSP internal user identifier
-
-        Returns:
-            bool -- True on success
-
-        Raises:
-            AuthenticationException: Problem with the credentials
-            AuthorizationException: Credentials not authorized for current action(s)
-            ConnectionException: Issue with the CSP API connection
-            UnknownServerException: Unknown issue on the CSP side
-            UserRemovalException: User couldn't be removed
         """
         raise NotImplementedError()
 
@@ -281,12 +262,15 @@ class MockCloudProvider(CloudProviderInterface):
     ATAT_ADMIN_CREATE_FAILURE_PCT = 12
     UNAUTHORIZED_RATE = 2
 
-    def __init__(self, config, with_delay=True, with_failure=True):
+    def __init__(
+        self, config, with_delay=True, with_failure=True, with_authorization=True
+    ):
         from time import sleep
         import random
 
         self._with_delay = with_delay
         self._with_failure = with_failure
+        self._with_authorization = with_authorization
         self._sleep = sleep
         self._random = random
 
@@ -356,29 +340,16 @@ class MockCloudProvider(CloudProviderInterface):
         self._maybe_raise(self.UNAUTHORIZED_RATE, self.AUTHORIZATION_EXCEPTION)
         return self._id()
 
-    def suspend_user(self, auth_credentials, csp_user_id):
+    def disable_user(self, auth_credentials, csp_user_id):
         self._authorize(auth_credentials)
         self._maybe_raise(self.NETWORK_FAILURE_PCT, self.NETWORK_EXCEPTION)
         self._maybe_raise(self.SERVER_FAILURE_PCT, self.SERVER_EXCEPTION)
 
         self._maybe_raise(
             self.ATAT_ADMIN_CREATE_FAILURE_PCT,
-            UserRemovalException(csp_user_id, "Could not suspend user."),
+            UserRemovalException(csp_user_id, "Could not disable user."),
         )
 
-        return self._maybe(12)
-
-    def delete_user(self, auth_credentials, csp_user_id):
-        self._authorize(auth_credentials)
-        self._maybe_raise(self.NETWORK_FAILURE_PCT, self.NETWORK_EXCEPTION)
-        self._maybe_raise(self.SERVER_FAILURE_PCT, self.SERVER_EXCEPTION)
-
-        self._maybe_raise(
-            self.ATAT_ADMIN_CREATE_FAILURE_PCT,
-            UserRemovalException(csp_user_id, "Could not delete user."),
-        )
-
-        self._maybe_raise(self.UNAUTHORIZED_RATE, self.AUTHORIZATION_EXCEPTION)
         return self._maybe(12)
 
     def get_calculator_url(self):
@@ -410,5 +381,5 @@ class MockCloudProvider(CloudProviderInterface):
 
     def _authorize(self, credentials):
         self._delay(1, 5)
-        if credentials != self._auth_credentials:
+        if self._with_authorization and credentials != self._auth_credentials:
             raise self.AUTHENTICATION_EXCEPTION
