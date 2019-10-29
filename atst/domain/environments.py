@@ -134,17 +134,3 @@ class Environments(object):
             .filter(Environment.root_user_info == None)
         ).all()
         return [id_ for id_, in results]
-
-    @classmethod
-    def get_environments_pending_baseline_creation(cls, now) -> List[UUID]:
-        """
-        Any environment with an active CLIN that has a `cloud_id` and `root_user_info`
-        but no `baseline_info`.
-        """
-        results = (
-            cls.base_provision_query(now)
-            .filter(Environment.cloud_id != None)
-            .filter(Environment.root_user_info != None)
-            .filter(Environment.baseline_info == None)
-        ).all()
-        return [id_ for id_, in results]

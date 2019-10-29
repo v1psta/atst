@@ -1,14 +1,9 @@
 from typing import Dict
 from uuid import uuid4
-import json
-from jinja2 import Template
 
-from atst.models.environment_role import CSPRole
 from atst.models.user import User
 from atst.models.environment import Environment
 from atst.models.environment_role import EnvironmentRole
-
-from botocore.waiter import WaiterModel, create_waiter_with_client, WaiterError
 
 
 class GeneralCSPException(Exception):
@@ -197,26 +192,6 @@ class CloudProviderInterface:
         """
         raise NotImplementedError()
 
-    def create_environment_baseline(
-        self, auth_credentials: Dict, csp_environment_id: str
-    ) -> Dict:
-        """Provision the necessary baseline entities (such as roles) in the given environment
-
-        Arguments:
-            auth_credentials -- Object containing CSP account credentials
-            csp_environment_id -- ID of the CSP Environment to provision roles against.
-
-        Returns:
-            dict: Returns dict that associates the resource identities with their ATAT representations.
-        Raises:
-            AuthenticationException: Problem with the credentials
-            AuthorizationException: Credentials not authorized for current action(s)
-            ConnectionException: Issue with the CSP API connection
-            UnknownServerException: Unknown issue on the CSP side
-            BaselineProvisionException: Specific issue occurred with some aspect of baseline setup
-        """
-        raise NotImplementedError()
-
     def create_or_update_user(
         self, auth_credentials: Dict, user_info: EnvironmentRole, csp_role_id: str
     ) -> str:
@@ -330,9 +305,21 @@ class MockCloudProvider(CloudProviderInterface):
                 environment.id, "Could not create environment."
             ),
         )
+
+        csp_environment_id = self._id()
+
+        self._delay(1, 5)
+        self._maybe_raise(self.NETWORK_FAILURE_PCT, self.NETWORK_EXCEPTION)
+        self._maybe_raise(self.SERVER_FAILURE_PCT, self.SERVER_EXCEPTION)
+        self._maybe_raise(
+            self.ATAT_ADMIN_CREATE_FAILURE_PCT,
+            BaselineProvisionException(
+                csp_environment_id, "Could not create environment baseline."
+            ),
+        )
         self._maybe_raise(self.UNAUTHORIZED_RATE, self.AUTHORIZATION_EXCEPTION)
 
-        return self._id()
+        return csp_environment_id
 
     def create_atat_admin_user(self, auth_credentials, csp_environment_id):
         self._authorize(auth_credentials)
@@ -350,27 +337,6 @@ class MockCloudProvider(CloudProviderInterface):
         self._maybe_raise(self.UNAUTHORIZED_RATE, self.AUTHORIZATION_EXCEPTION)
 
         return {"id": self._id(), "credentials": self._auth_credentials}
-
-    def create_environment_baseline(self, auth_credentials, csp_environment_id):
-        self._authorize(auth_credentials)
-
-        self._delay(1, 5)
-        self._maybe_raise(self.NETWORK_FAILURE_PCT, self.NETWORK_EXCEPTION)
-        self._maybe_raise(self.SERVER_FAILURE_PCT, self.SERVER_EXCEPTION)
-        self._maybe_raise(
-            self.ATAT_ADMIN_CREATE_FAILURE_PCT,
-            BaselineProvisionException(
-                csp_environment_id, "Could not create environment baseline."
-            ),
-        )
-
-        self._maybe_raise(self.UNAUTHORIZED_RATE, self.AUTHORIZATION_EXCEPTION)
-        return {
-            CSPRole.BASIC_ACCESS.value: self._id(),
-            CSPRole.NETWORK_ADMIN.value: self._id(),
-            CSPRole.BUSINESS_READ.value: self._id(),
-            CSPRole.TECHNICAL_READ.value: self._id(),
-        }
 
     def create_or_update_user(self, auth_credentials, user_info, csp_role_id):
         self._authorize(auth_credentials)
@@ -446,274 +412,3 @@ class MockCloudProvider(CloudProviderInterface):
         self._delay(1, 5)
         if credentials != self._auth_credentials:
             raise self.AUTHENTICATION_EXCEPTION
-
-
-class AWSCloudProvider(CloudProviderInterface):
-    # These are standins that will be replaced with "real" policies once we know what they are.
-    BASELINE_POLICIES = [
-        {
-            "name": "BillingReadOnly",
-            "path": "/atat/billing-read-only/",
-            "document": {
-                "Version": "2012-10-17",
-                "Statement": [
-                    {
-                        "Sid": "VisualEditor0",
-                        "Effect": "Allow",
-                        "Action": [
-                            "aws-portal:ViewPaymentMethods",
-                            "aws-portal:ViewAccount",
-                            "aws-portal:ViewBilling",
-                            "aws-portal:ViewUsage",
-                        ],
-                        "Resource": "*",
-                    }
-                ],
-            },
-            "description": "View billing information.",
-        }
-    ]
-    MAX_CREATE_ACCOUNT_ATTEMPTS = 10
-
-    # Placeholder permission boundary for root user
-    PERMISSION_BOUNDARY_ARN = "arn:aws:iam::aws:policy/AlexaForBusinessDeviceSetup"
-
-    def __init__(self, config, boto3=None):
-        self.config = config
-
-        self.access_key_id = config["AWS_ACCESS_KEY_ID"]
-        self.secret_key = config["AWS_SECRET_KEY"]
-        self.region_name = config["AWS_REGION_NAME"]
-
-        # TODO: Discuss these values.
-        self.role_access_org_name = "OrganizationAccountAccessRole"
-        self.root_account_username = "atat"
-        self.root_account_policy_name = "OrganizationAccountAccessRole"
-
-        if boto3:
-            self.boto3 = boto3
-        else:
-            import boto3
-
-            self.boto3 = boto3
-
-    def root_creds(self):
-        return {"AccessKeyId": self.access_key_id, "SecretAccessKey": self.secret_key}
-
-    def create_environment(
-        self, auth_credentials: Dict, user: User, environment: Environment
-    ):
-
-        org_client = self._get_client("organizations")
-
-        # Create an account. Requires organizations:CreateAccount permission
-        account_request = org_client.create_account(
-            Email=user.email, AccountName=uuid4().hex, IamUserAccessToBilling="ALLOW"
-        )
-
-        # Configuration for our CreateAccount Waiter.
-        # A waiter is a boto3 helper which can be configured to poll a given status
-        # endpoint until it succeeds or fails. boto3 has many built in waiters, but none
-        # for the organizations service so we're building our own here.
-        waiter_config = {
-            "version": 2,
-            "waiters": {
-                "AccountCreated": {
-                    "operation": "DescribeCreateAccountStatus",
-                    "delay": 20,
-                    "maxAttempts": self.MAX_CREATE_ACCOUNT_ATTEMPTS,
-                    "acceptors": [
-                        {
-                            "matcher": "path",
-                            "expected": "SUCCEEDED",
-                            "argument": "CreateAccountStatus.State",
-                            "state": "success",
-                        },
-                        {
-                            "matcher": "path",
-                            "expected": "IN_PROGRESS",
-                            "argument": "CreateAccountStatus.State",
-                            "state": "retry",
-                        },
-                        {
-                            "matcher": "path",
-                            "expected": "FAILED",
-                            "argument": "CreateAccountStatus.State",
-                            "state": "failure",
-                        },
-                    ],
-                }
-            },
-        }
-        waiter_model = WaiterModel(waiter_config)
-        account_waiter = create_waiter_with_client(
-            "AccountCreated", waiter_model, org_client
-        )
-
-        try:
-            # Poll until the CreateAccount request either succeeds or fails.
-            account_waiter.wait(
-                CreateAccountRequestId=account_request["CreateAccountStatus"]["Id"]
-            )
-        except WaiterError:
-            # TODO: Possible failure reasons:
-            # 'ACCOUNT_LIMIT_EXCEEDED'|'EMAIL_ALREADY_EXISTS'|'INVALID_ADDRESS'|'INVALID_EMAIL'|'CONCURRENT_ACCOUNT_MODIFICATION'|'INTERNAL_FAILURE'
-            raise EnvironmentCreationException(
-                environment.id, "Failed to create account."
-            )
-
-        # We need to re-fetch this since the Waiter throws away the success response for some reason.
-        created_account_status = org_client.describe_create_account_status(
-            CreateAccountRequestId=account_request["CreateAccountStatus"]["Id"]
-        )
-        account_id = created_account_status["CreateAccountStatus"]["AccountId"]
-
-        return account_id
-
-    def create_atat_admin_user(
-        self, auth_credentials: Dict, csp_environment_id: str
-    ) -> Dict:
-        """
-        Create an IAM user within a given account.
-        """
-
-        # Create a policy which allows user to assume a role within the account.
-        iam_client = self._get_client("iam")
-        iam_client.put_user_policy(
-            UserName=self.root_account_username,
-            PolicyName=f"assume-role-{self.root_account_policy_name}-{csp_environment_id}",
-            PolicyDocument=self._inline_org_management_policy(csp_environment_id),
-        )
-
-        role_arn = (
-            f"arn:aws:iam::{csp_environment_id}:role/{self.root_account_policy_name}"
-        )
-        sts_client = self._get_client("sts", credentials=auth_credentials)
-        assumed_role_object = sts_client.assume_role(
-            RoleArn=role_arn, RoleSessionName="AssumeRoleSession1"
-        )
-
-        # From the response that contains the assumed role, get the temporary
-        # credentials that can be used to make subsequent API calls
-        credentials = assumed_role_object["Credentials"]
-
-        # Use the temporary credentials that AssumeRole returns to make a new connection to IAM
-        iam_client = self._get_client("iam", credentials=credentials)
-
-        # Create the user with a PermissionBoundary
-        try:
-            user = iam_client.create_user(
-                UserName=self.root_account_username,
-                PermissionsBoundary=self.PERMISSION_BOUNDARY_ARN,
-                Tags=[{"Key": "foo", "Value": "bar"}],
-            )["User"]
-        except iam_client.exceptions.EntityAlreadyExistsException as _exc:
-            # TODO: Find user, iterate through existing access keys and revoke them.
-            user = iam_client.get_user(UserName=self.root_account_username)["User"]
-
-        access_key = iam_client.create_access_key(UserName=self.root_account_username)[
-            "AccessKey"
-        ]
-        credentials = {
-            "AccessKeyId": access_key["AccessKeyId"],
-            "SecretAccessKey": access_key["SecretAccessKey"],
-        }
-
-        # TODO: Create real policies in account.
-
-        return {
-            "id": user["UserId"],
-            "username": user["UserName"],
-            "resource_id": user["Arn"],
-            "credentials": credentials,
-        }
-
-    def create_environment_baseline(
-        self, auth_credentials: Dict, csp_environment_id: str
-    ) -> Dict:
-        """Provision the necessary baseline entities (such as roles) in the given environment
-
-        Arguments:
-            auth_credentials -- Object containing CSP account credentials
-            csp_environment_id -- ID of the CSP Environment to provision roles against.
-
-        Returns:
-            dict: Returns dict that associates the resource identities with their ATAT representations.
-        Raises:
-            AuthenticationException: Problem with the credentials
-            AuthorizationException: Credentials not authorized for current action(s)
-            ConnectionException: Issue with the CSP API connection
-            UnknownServerException: Unknown issue on the CSP side
-            BaselineProvisionException: Specific issue occurred with some aspect of baseline setup
-        """
-
-        client = self._get_client("iam", credentials=auth_credentials)
-        created_policies = []
-
-        for policy in self.BASELINE_POLICIES:
-            try:
-                response = client.create_policy(
-                    PolicyName=policy["name"],
-                    Path=policy["path"],
-                    PolicyDocument=json.dumps(policy["document"]),
-                    Description=policy["description"],
-                )
-                created_policies.append({policy["name"]: response["Policy"]["Arn"]})
-            except client.exceptions.EntityAlreadyExistsException:
-                # Policy already exists. We can determine its ARN based on the account id and policy path / name.
-                policy_arn = f"arn:aws:iam:{csp_environment_id}:policy{policy['path']}{policy['name']}"
-                created_policies.append({policy["name"]: policy_arn})
-
-        return {"policies": created_policies}
-
-    def _get_client(self, service: str, credentials=None):
-        """
-        A helper for creating a client of a given AWS service.
-
-        If `credentials` aren't provided, the configured root credentials will be used.
-
-        `credentials` format:
-        {
-            "AccessKeyId": "access-key-id",
-            "SecretAccessKey": "secret-access-key",
-            "SessionToken": "session-token"             # optional
-        }
-        """
-
-        credentials = credentials or {}
-        credential_kwargs = {
-            "aws_access_key_id": credentials.get("AccessKeyId", self.access_key_id),
-            "aws_secret_access_key": credentials.get(
-                "SecretAccessKey", self.secret_key
-            ),
-        }
-        if "SessionToken" in credentials:
-            credential_kwargs["aws_session_token"] = credentials["SessionToken"]
-
-        return self.boto3.client(
-            service, region_name=self.region_name, **credential_kwargs
-        )
-
-    def _inline_org_management_policy(self, account_id: str) -> Dict:
-        policy_template = Template(
-            """
-        {
-            "Version": "2012-10-17",
-            "Statement": [
-                {
-                "Effect": "Allow",
-                "Action": [
-                    "sts:AssumeRole"
-                ],
-                "Resource": [
-                    "arn:aws:iam::{{ account_id }}:role/{{ role_name }}"
-                ]
-                }
-            ]
-        }
-        """
-        )
-        rendered = policy_template.render(
-            account_id=account_id, role_name=self.root_account_policy_name
-        )
-        return json.loads(rendered)

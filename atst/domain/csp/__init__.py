@@ -1,5 +1,5 @@
 from .cloud import MockCloudProvider
-from .file_uploads import AwsUploader, AzureUploader, MockUploader
+from .file_uploads import AzureUploader, MockUploader
 from .reports import MockReportingProvider
 
 
@@ -19,17 +19,8 @@ class AzureCSP:
         self.reports = MockReportingProvider()
 
 
-class AwsCSP:
-    def __init__(self, app):
-        self.cloud = MockCloudProvider(app.config)
-        self.files = AwsUploader(app.config)
-        self.reports = MockReportingProvider()
-
-
 def make_csp_provider(app, csp=None):
-    if csp == "aws":
-        app.csp = AwsCSP(app)
-    elif csp == "azure":
+    if csp == "azure":
         app.csp = AzureCSP(app)
     elif csp == "mock-test":
         app.csp = MockCSP(app, test_mode=True)
