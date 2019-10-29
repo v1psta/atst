@@ -53,30 +53,6 @@ class AzureUploader {
   }
 }
 
-class AwsUploader {
-  constructor(presignedPost, objectName) {
-    this.presignedPost = presignedPost
-    this.objectName = objectName
-  }
-
-  async upload(file) {
-    const form = new FormData()
-    Object.entries(this.presignedPost.fields).forEach(([k, v]) => {
-      form.append(k, v)
-    })
-    form.append('file', file)
-    form.set('x-amz-meta-filename', file.name)
-    form.set('Content-Type', 'application/pdf')
-
-    const response = await fetch(this.presignedPost.url, {
-      method: 'POST',
-      body: form,
-    })
-
-    return { ok: response.ok, objectName: this.objectName }
-  }
-}
-
 export class MockUploader {
   constructor(token, objectName) {
     this.token = token
@@ -90,9 +66,7 @@ export class MockUploader {
 
 export const buildUploader = (token, objectName) => {
   const cloudProvider = process.env.CLOUD_PROVIDER || 'mock'
-  if (cloudProvider === 'aws') {
-    return new AwsUploader(token, objectName)
-  } else if (cloudProvider === 'azure') {
+  if (cloudProvider === 'azure') {
     return new AzureUploader(
       process.env.AZURE_ACCOUNT_NAME,
       process.env.AZURE_CONTAINER_NAME,
