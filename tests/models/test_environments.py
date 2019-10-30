@@ -54,19 +54,15 @@ def test_audit_event_for_environment_deletion(session):
     "env_data,expected_status",
     [
         [
-            {"cloud_id": None, "root_user_info": None, "baseline_info": None},
+            {"cloud_id": None, "root_user_info": None},
             Environment.ProvisioningStatus.PENDING,
         ],
         [
-            {"cloud_id": 1, "root_user_info": None, "baseline_info": None},
+            {"cloud_id": 1, "root_user_info": None},
             Environment.ProvisioningStatus.PENDING,
         ],
         [
-            {"cloud_id": 1, "root_user_info": {}, "baseline_info": None},
-            Environment.ProvisioningStatus.PENDING,
-        ],
-        [
-            {"cloud_id": 1, "root_user_info": {}, "baseline_info": {}},
+            {"cloud_id": 1, "root_user_info": {}},
             Environment.ProvisioningStatus.COMPLETED,
         ],
     ],
