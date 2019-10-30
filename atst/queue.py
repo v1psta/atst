@@ -14,10 +14,6 @@ def update_celery(celery, app):
             "task": "atst.jobs.dispatch_create_atat_admin_user",
             "schedule": 60,
         },
-        "beat-dispatch_create_environment_baseline": {
-            "task": "atst.jobs.dispatch_create_environment_baseline",
-            "schedule": 60,
-        },
         "beat-dispatch_provision_user": {
             "task": "atst.jobs.dispatch_provision_user",
             "schedule": 60,
