@@ -156,15 +156,7 @@ def test_dispatch_create_atat_admin_user(session, monkeypatch):
 def test_create_environment_no_dupes(session, celery_app, celery_worker):
     portfolio = PortfolioFactory.create(
         applications=[
-            {
-                "environments": [
-                    {
-                        "cloud_id": uuid4().hex,
-                        "root_user_info": {},
-                        "baseline_info": None,
-                    }
-                ]
-            }
+            {"environments": [{"cloud_id": uuid4().hex, "root_user_info": {}}]}
         ],
         task_orders=[
             {
@@ -198,15 +190,7 @@ def test_create_environment_no_dupes(session, celery_app, celery_worker):
 def test_claim_for_update(session):
     portfolio = PortfolioFactory.create(
         applications=[
-            {
-                "environments": [
-                    {
-                        "cloud_id": uuid4().hex,
-                        "root_user_info": {},
-                        "baseline_info": None,
-                    }
-                ]
-            }
+            {"environments": [{"cloud_id": uuid4().hex, "root_user_info": {}}]}
         ],
         task_orders=[
             {
@@ -270,7 +254,7 @@ def test_dispatch_provision_user(csp, session, celery_app, celery_worker, monkey
     #   (C) one of which is pending, has a provisioned environment but an inactive application role
     #   (D) one of which is pending, has a provisioned environment and has an active application role
     provisioned_environment = EnvironmentFactory.create(
-        cloud_id="cloud_id", root_user_info={}, baseline_info={}
+        cloud_id="cloud_id", root_user_info={}
     )
     unprovisioned_environment = EnvironmentFactory.create()
     _er_a = EnvironmentRoleFactory.create(
@@ -304,9 +288,7 @@ def test_do_provision_user(csp, session):
     # Given that I have an EnvironmentRole with a provisioned environment
     credentials = MockCloudProvider(())._auth_credentials
     provisioned_environment = EnvironmentFactory.create(
-        cloud_id="cloud_id",
-        root_user_info={"credentials": credentials},
-        baseline_info={},
+        cloud_id="cloud_id", root_user_info={"credentials": credentials}
     )
     environment_role = EnvironmentRoleFactory.create(
         environment=provisioned_environment,

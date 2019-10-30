@@ -86,7 +86,6 @@ class EnvironmentRoles(object):
             .join(Environment)
             .join(ApplicationRole)
             .filter(Environment.deleted == False)
-            .filter(Environment.baseline_info != None)
             .filter(EnvironmentRole.status == EnvironmentRole.Status.PENDING)
             .filter(ApplicationRole.status == ApplicationRoleStatus.ACTIVE)
             .all()
