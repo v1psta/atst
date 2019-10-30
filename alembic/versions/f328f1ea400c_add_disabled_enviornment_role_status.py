@@ -17,6 +17,14 @@ depends_on = None
 
 
 def upgrade():
+    conn = op.get_bind()
+    conn.execute(
+        """
+        UPDATE environment_roles
+        SET status = (CASE WHEN status = 'PENDING_DELETE' THEN 'COMPLETED' ELSE status END)
+        """
+    )
+
     op.alter_column(
         "environment_roles",
         "status",
