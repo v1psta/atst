@@ -1,4 +1,5 @@
 from sqlalchemy.orm.exc import NoResultFound
+from flask import current_app as app
 
 from atst.database import db
 from atst.models import (
@@ -91,3 +92,16 @@ class EnvironmentRoles(object):
             .all()
         )
         return [id_ for id_, in results]
+
+    @classmethod
+    def disable(cls, environment_role_id):
+        environment_role = EnvironmentRoles.get_by_id(environment_role_id)
+
+        credentials = environment_role.environment.csp_credentials
+        app.csp.cloud.disable_user(credentials, environment_role.csp_user_id)
+
+        environment_role.status = EnvironmentRole.Status.DISABLED
+        db.session.add(environment_role)
+        db.session.commit()
+
+        return environment_role
