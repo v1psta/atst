@@ -1,10 +1,8 @@
 import pytest
-from unittest.mock import Mock
 
 from uuid import uuid4
 
-from atst.domain.csp.cloud import EnvironmentCreationException, AzureCloudProvider
-from atst.jobs import do_create_environment, do_create_atat_admin_user
+from atst.domain.csp.cloud import AzureCloudProvider
 
 from tests.mock_azure import mock_azure, AUTH_CREDENTIALS
 from tests.factories import EnvironmentFactory

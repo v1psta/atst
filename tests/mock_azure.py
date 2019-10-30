@@ -55,4 +55,3 @@ class MockAzureSDK(object):
 @pytest.fixture(scope="function")
 def mock_azure():
     return AzureCloudProvider(AZURE_CONFIG, azure_sdk_provider=MockAzureSDK())
-
