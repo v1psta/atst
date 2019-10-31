@@ -1,12 +1,12 @@
-{% macro SaveButton(text, element="button", additional_classes="", form=None, disable_on_initial_render=True) -%}
+{% macro SaveButton(text="common.save" | translate, element="button", additional_classes="", form=None, disable_on_initial_render=True) -%}
   {% set class = "usa-button usa-button-primary" + additional_classes %}
   {% set disabled = "!changed || invalid" if disable_on_initial_render else "invalid"%}
-  
+
   {% if element == "button" %}
     <button type="submit" class="{{ class }}" tabindex="0" v-bind:disabled='{{ disabled }}' {{ form_attr }} >
       {{ text }}
     </button>
   {% elif element == 'input' %}
-    <input type="submit" class="{{ class }}" tabindex="0" v-bind:disabled="invalid" value='{{ disabled }}' {% if form %}form="{{ form }}"{% endif %} />
+    <input type="submit" class="{{ class }}" tabindex="0" v-bind:disabled='{{ disabled }}' value='{{ text }}' {% if form %}form="{{ form }}"{% endif %} />
   {% endif %}
 {%- endmacro %}
