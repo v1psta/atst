@@ -2,7 +2,9 @@ from enum import Enum
 from sqlalchemy import Column, Date, Enum as SQLAEnum, ForeignKey, Numeric, String
 from sqlalchemy.orm import relationship
 
-from atst.models import Base, mixins, types
+from atst.models.base import Base
+import atst.models.mixins as mixins
+import atst.models.types as types
 
 
 class JEDICLINType(Enum):

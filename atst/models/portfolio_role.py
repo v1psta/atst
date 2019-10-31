@@ -4,8 +4,9 @@ from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy.event import listen
 
-from atst.models import Base, mixins
-from .types import Id
+from atst.models.base import Base
+import atst.models.types as types
+import atst.models.mixins as mixins
 
 from atst.utils import first_or_none
 from atst.models.mixins.auditable import record_permission_sets_updates
@@ -41,7 +42,7 @@ class PortfolioRole(
 ):
     __tablename__ = "portfolio_roles"
 
-    id = Id()
+    id = types.Id()
     portfolio_id = Column(
         UUID(as_uuid=True), ForeignKey("portfolios.id"), index=True, nullable=False
     )

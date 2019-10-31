@@ -3,7 +3,9 @@ from sqlalchemy import Index, ForeignKey, Column, String, TIMESTAMP, Enum as SQL
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
-from atst.models import Base, types, mixins
+from atst.models.base import Base
+import atst.models.mixins as mixins
+import atst.models.types as types
 
 
 class CSPRole(Enum):

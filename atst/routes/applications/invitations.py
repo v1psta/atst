@@ -1,6 +1,6 @@
 from flask import redirect, url_for, g
 
-from . import applications_bp
+from .blueprint import applications_bp
 from atst.domain.invitations import ApplicationInvitations
 
 

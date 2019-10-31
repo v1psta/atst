@@ -1,7 +1,7 @@
 from sqlalchemy import Column, ForeignKey
 
-from atst.models import Base
-from atst.models import mixins
+from atst.models.base import Base
+import atst.models.mixins as mixins
 
 
 class EnvironmentJobFailure(Base, mixins.JobFailureMixin):

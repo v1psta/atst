@@ -1,6 +1,6 @@
 from flask import render_template
 
-from . import applications_bp
+from .blueprint import applications_bp
 from atst.domain.authz.decorator import user_can_access_decorator as user_can
 from atst.models.permissions import Permissions
 

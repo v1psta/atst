@@ -2,7 +2,8 @@ from sqlalchemy import String, Column, ForeignKey, inspect
 from sqlalchemy.dialects.postgresql import UUID, JSONB
 from sqlalchemy.orm import relationship
 
-from atst.models import Base, types
+from atst.models.base import Base
+import atst.models.types as types
 from atst.models.mixins.timestamps import TimestampsMixin
 
 

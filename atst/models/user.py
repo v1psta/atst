@@ -1,9 +1,11 @@
-from sqlalchemy import and_, String, ForeignKey, Column, Date, Boolean, Table, TIMESTAMP
+from sqlalchemy import String, ForeignKey, Column, Date, Boolean, Table, TIMESTAMP
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.event import listen
 
-from atst.models import Base, ApplicationRole, types, mixins
+from atst.models.base import Base
+import atst.models.types as types
+import atst.models.mixins as mixins
 from atst.models.portfolio_invitation import PortfolioInvitation
 from atst.models.application_invitation import ApplicationInvitation
 from atst.models.mixins.auditable import (
@@ -35,9 +37,7 @@ class User(
     application_roles = relationship(
         "ApplicationRole",
         backref="user",
-        primaryjoin=and_(
-            ApplicationRole.user_id == id, ApplicationRole.deleted == False
-        ),
+        primaryjoin="and_(ApplicationRole.user_id == User.id, ApplicationRole.deleted == False)",
     )
 
     portfolio_invitations = relationship(

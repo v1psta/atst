@@ -2,11 +2,13 @@ from sqlalchemy import Column, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship, backref
 
-from atst.models import Base
-from atst.models.mixins import TimestampsMixin, AuditableMixin, InvitesMixin
+from atst.models.base import Base
+import atst.models.mixins as mixins
 
 
-class PortfolioInvitation(Base, TimestampsMixin, InvitesMixin, AuditableMixin):
+class PortfolioInvitation(
+    Base, mixins.TimestampsMixin, mixins.InvitesMixin, mixins.AuditableMixin
+):
     __tablename__ = "portfolio_invitations"
 
     portfolio_role_id = Column(

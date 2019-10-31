@@ -1,18 +1,14 @@
-from flask import Blueprint, current_app as app, g, redirect, url_for
-
-applications_bp = Blueprint("applications", __name__)
+from flask import current_app as app, g, redirect, url_for
 
 from . import index
 from . import new
 from . import settings
 from . import invitations
+from .blueprint import applications_bp
 from atst.domain.environment_roles import EnvironmentRoles
 from atst.domain.exceptions import UnauthorizedError
 from atst.domain.authz.decorator import user_can_access_decorator as user_can
 from atst.models.permissions import Permissions
-from atst.utils.context_processors import portfolio as portfolio_context_processor
-
-applications_bp.context_processor(portfolio_context_processor)
 
 
 def wrap_environment_role_lookup(user, environment_id=None, **kwargs):

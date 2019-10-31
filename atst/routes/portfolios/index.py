@@ -2,7 +2,7 @@ from datetime import date, timedelta
 
 from flask import redirect, render_template, url_for, request as http_request, g
 
-from . import portfolios_bp
+from .blueprint import portfolios_bp
 from atst.forms.portfolio import PortfolioCreationForm
 from atst.domain.reports import Reports
 from atst.domain.portfolios import Portfolios

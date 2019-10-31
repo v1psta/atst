@@ -1,7 +1,7 @@
 from sqlalchemy import and_, Column, ForeignKey, String
 from sqlalchemy.orm import relationship, synonym
 
-from atst.models import Base
+from atst.models.base import Base
 from atst.models.application_role import ApplicationRole
 from atst.models.environment import Environment
 from atst.models import mixins
