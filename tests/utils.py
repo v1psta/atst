@@ -1,6 +1,7 @@
 from flask import template_rendered
 from contextlib import contextmanager
 from unittest.mock import Mock
+from OpenSSL import crypto
 
 from atst.utils.notification_sender import NotificationSender
 
@@ -43,3 +44,10 @@ class FakeLogger:
 
 
 FakeNotificationSender = lambda: Mock(spec=NotificationSender)
+
+
+def parse_for_issuer_and_next_update(crl):
+    with open(crl, "rb") as crl_file:
+        parsed = crypto.load_crl(crypto.FILETYPE_ASN1, crl_file.read())
+        next_update = parsed.to_cryptography().next_update
+        return (parsed.get_issuer().der(), next_update)
