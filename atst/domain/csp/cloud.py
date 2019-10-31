@@ -1,4 +1,5 @@
 from typing import Dict
+import re
 from uuid import uuid4
 
 from atst.models.user import User
@@ -383,3 +384,190 @@ class MockCloudProvider(CloudProviderInterface):
         self._delay(1, 5)
         if self._with_authorization and credentials != self._auth_credentials:
             raise self.AUTHENTICATION_EXCEPTION
+
+
+AZURE_ENVIRONMENT = "AZURE_PUBLIC_CLOUD"  # TBD
+AZURE_SKU_ID = "?"  # probably a static sku specific to ATAT/JEDI
+SUBSCRIPTION_ID_REGEX = re.compile(
+    "subscriptions\/([0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})",
+    re.I,
+)
+
+# This needs to be a fully pathed role definition identifier, not just a UUID
+REMOTE_ROOT_ROLE_DEF_ID = "/providers/Microsoft.Authorization/roleDefinitions/00000000-0000-4000-8000-000000000000"
+
+
+class AzureSDKProvider(object):
+    def __init__(self):
+        from azure.mgmt import subscription, authorization
+        import azure.graphrbac as graphrbac
+        import azure.common.credentials as credentials
+        from msrestazure.azure_cloud import AZURE_PUBLIC_CLOUD
+
+        self.subscription = subscription
+        self.authorization = authorization
+        self.graphrbac = graphrbac
+        self.credentials = credentials
+        # may change to a JEDI cloud
+        self.cloud = AZURE_PUBLIC_CLOUD
+
+
+class AzureCloudProvider(CloudProviderInterface):
+    def __init__(self, config, azure_sdk_provider=None):
+        self.config = config
+
+        self.client_id = config["AZURE_CLIENT_ID"]
+        self.secret_key = config["AZURE_SECRET_KEY"]
+        self.tenant_id = config["AZURE_TENANT_ID"]
+
+        if azure_sdk_provider is None:
+            self.sdk = AzureSDKProvider()
+        else:
+            self.sdk = azure_sdk_provider
+
+    def create_environment(
+        self, auth_credentials: Dict, user: User, environment: Environment
+    ):
+        credentials = self._get_credential_obj(self._root_creds)
+        sub_client = self.sdk.subscription.SubscriptionClient(credentials)
+
+        display_name = f"{environment.application.name}_{environment.name}_{environment.id}"  # proposed format
+
+        billing_profile_id = "?"  # something chained from environment?
+        sku_id = AZURE_SKU_ID
+        # we want to set AT-AT as an owner here
+        # we could potentially associate subscriptions with "management groups" per DOD component
+        body = self.sdk.subscription.models.ModernSubscriptionCreationParameters(
+            display_name,
+            billing_profile_id,
+            sku_id,
+            # owner=<AdPrincipal: for AT-AT user>
+        )
+
+        # These 2 seem like something that might be worthwhile to allow tiebacks to
+        # TOs filed for the environment
+        billing_account_name = "?"
+        invoice_section_name = "?"
+        # We may also want to create billing sections in the enrollment account
+        sub_creation_operation = sub_client.subscription_factory.create_subscription(
+            billing_account_name, invoice_section_name, body
+        )
+
+        # the resulting object from this process is a link to the new subscription
+        # not a subscription model, so we'll have to unpack the ID
+        new_sub = sub_creation_operation.result()
+
+        subscription_id = self._extract_subscription_id(new_sub.subscription_link)
+        if subscription_id:
+            return subscription_id
+        else:
+            # troublesome error, subscription should exist at this point
+            # but we just don't have a valid ID
+            pass
+
+    def create_atat_admin_user(
+        self, auth_credentials: Dict, csp_environment_id: str
+    ) -> Dict:
+        root_creds = self._root_creds
+        credentials = self._get_credential_obj(root_creds)
+
+        sub_client = self.sdk.subscription.SubscriptionClient(credentials)
+        subscription: self.sdk.subscription.models.Subscription = sub_client.subscriptions.get(
+            csp_environment_id
+        )
+
+        managment_principal = self._get_management_service_principal()
+
+        auth_client = self.sdk.authorization.AuthorizationManagementClient(
+            credentials,
+            # TODO: Determine which subscription this needs to point at
+            # Once we're in a multi-sub environment
+            subscription.id,
+        )
+
+        # Create role assignment for
+        role_assignment_id = str(uuid4())
+        role_assignment_create_params = auth_client.role_assignments.models.RoleAssignmentCreateParameters(
+            role_definition_id=REMOTE_ROOT_ROLE_DEF_ID,
+            principal_id=managment_principal.id,
+        )
+
+        auth_client.role_assignments.create(
+            scope=f"/subscriptions/{subscription.id}/",
+            role_assignment_name=role_assignment_id,
+            parameters=role_assignment_create_params,
+        )
+
+        return {
+            "csp_user_id": managment_principal.object_id,
+            "credentials": managment_principal.password_credentials,
+            "role_name": role_assignment_id,
+        }
+
+    def _get_management_service_principal(self):
+        # we really should be using graph.microsoft.com, but i'm getting
+        # "expired token" errors for that
+        # graph_resource = "https://graph.microsoft.com"
+        graph_resource = "https://graph.windows.net"
+        graph_creds = self._get_credential_obj(
+            self._root_creds, resource=graph_resource
+        )
+        # I needed to set permissions for the graph.windows.net API before I
+        # could get this to work.
+
+        # how do we scope the graph client to the new subscription rather than
+        # the cloud0 subscription? tenant id seems to be separate from subscription id
+        graph_client = self.sdk.graphrbac.GraphRbacManagementClient(
+            graph_creds, self._root_creds.get("tenant_id")
+        )
+
+        # do we need to create a new application to manage each subscripition
+        # or should we manage access to each subscription from a single service
+        # principal with multiple role assignments?
+        app_display_name = "?"  # name should reflect the subscription it exists
+        app_create_param = self.sdk.graphrbac.models.ApplicationCreateParameters(
+            display_name=app_display_name
+        )
+
+        # we need the appropriate perms here:
+        # https://docs.microsoft.com/en-us/graph/api/application-post-applications?view=graph-rest-beta&tabs=http
+        # https://docs.microsoft.com/en-us/graph/permissions-reference#microsoft-graph-permission-names
+        # set app perms in app registration portal
+        # https://docs.microsoft.com/en-us/graph/auth-v2-service#2-configure-permissions-for-microsoft-graph
+        app: self.sdk.graphrbac.models.Application = graph_client.applications.create(
+            app_create_param
+        )
+
+        # create a new service principle for the new application, which should be scoped
+        # to the new subscription
+        app_id = app.app_id
+        sp_create_params = self.sdk.graphrbac.models.ServicePrincipalCreateParameters(
+            app_id=app_id, account_enabled=True
+        )
+
+        service_principal = graph_client.service_principals.create(sp_create_params)
+
+        return service_principal
+
+    def _extract_subscription_id(self, subscription_url):
+        sub_id_match = SUBSCRIPTION_ID_REGEX.match(subscription_url)
+
+        if sub_id_match:
+            return sub_id_match.group(1)
+
+    def _get_credential_obj(self, creds, resource=None):
+        return self.sdk.credentials.ServicePrincipalCredentials(
+            client_id=creds.get("client_id"),
+            secret=creds.get("secret_key"),
+            tenant=creds.get("tenant_id"),
+            resource=resource,
+            cloud_environment=self.sdk.cloud,
+        )
+
+    @property
+    def _root_creds(self):
+        return {
+            "client_id": self.client_id,
+            "secret_key": self.secret_key,
+            "tenant_id": self.tenant_id,
+        }

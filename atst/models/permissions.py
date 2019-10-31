@@ -30,8 +30,8 @@ class Permissions(object):
     CREATE_TASK_ORDER = "create_task_order"  # create a new TO
     VIEW_TASK_ORDER_DETAILS = "view_task_order_details"  # individual TO page
     EDIT_TASK_ORDER_DETAILS = (
-        "edit_task_order_details"
-    )  # edit TO that has not been finalized
+        "edit_task_order_details"  # edit TO that has not been finalized
+    )
 
     # reporting
     VIEW_PORTFOLIO_REPORTS = "view_portfolio_reports"

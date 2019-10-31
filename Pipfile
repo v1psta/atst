@@ -25,6 +25,10 @@ PyYAML = "*"
 azure-storage = "*"
 azure-storage-common = "*"
 celery = "*"
+azure-mgmt-subscription = "*"
+azure-graphrbac = "*"
+msrestazure = "*"
+azure-mgmt-authorization = "*"
 
 [dev-packages]
 bandit = "*"
@@ -45,6 +49,7 @@ pytest-mock = "*"
 detect-secrets = "*"
 beautifulsoup4 = "*"
 mypy = "*"
+rope = "*"
 
 [requires]
 python_version = "3.7.3"
