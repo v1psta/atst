@@ -18,7 +18,7 @@ class EnvironmentForm(Form):
         default=NO_ACCESS,
         filters=[lambda x: NO_ACCESS if x == "None" else x],
     )
-    deleted = BooleanField("Revoke Access", default=False)
+    disabled = BooleanField("Revoke Access", default=False)
 
     @property
     def data(self):

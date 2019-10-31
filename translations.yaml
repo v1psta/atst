@@ -404,7 +404,10 @@ portfolios:
         env_access:
           title: Environment Roles
           table_header: Environment Access
+          edit_description: Add or revoke Environment access.
           description: Additional role controls are available in the CSP console. <a href="#"> Learn More </a>
+          revoke_warning: Save changes to revoke access, <strong>this can not be undone.</strong>
+          suspended: Suspended access cannot be modified.
         next_button: "Next: Permissions"
         app_perms:
           title: Application Permissions

@@ -54,8 +54,6 @@ def test_delete(application_role, environment, monkeypatch):
         application_role=application_role, environment=environment
     )
     assert EnvironmentRoles.delete(application_role.id, environment.id)
-    assert env_role.status == EnvironmentRole.Status.DISABLED
-    assert env_role.deleted
     assert not EnvironmentRoles.delete(application_role.id, environment.id)
 
 
@@ -102,12 +100,3 @@ def test_get_for_update(application_role, environment):
     assert role.application_role == application_role
     assert role.environment == environment
     assert role.deleted
-
-
-def test_get_all_for_application_member(application_role, environment):
-    EnvironmentRoleFactory.create(
-        application_role=application_role, environment=environment, deleted=True
-    )
-
-    roles = EnvironmentRoles.get_all_for_application_member(application_role.id)
-    assert len(roles) == 1

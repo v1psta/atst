@@ -4,7 +4,14 @@ from typing import List
 from uuid import UUID
 
 from atst.database import db
-from atst.models import Environment, Application, Portfolio, TaskOrder, CLIN
+from atst.models import (
+    Environment,
+    Application,
+    Portfolio,
+    TaskOrder,
+    CLIN,
+    EnvironmentRole,
+)
 from atst.domain.environment_roles import EnvironmentRoles
 
 from .exceptions import NotFoundError
@@ -53,7 +60,11 @@ class Environments(object):
         updated = False
 
         env_role = EnvironmentRoles.get_for_update(application_role.id, environment.id)
-        if env_role and env_role.role != new_role and not env_role.deleted:
+        if (
+            env_role
+            and env_role.role != new_role
+            and env_role.status != EnvironmentRole.Status.DISABLED
+        ):
             env_role.role = new_role
             updated = True
         elif not env_role and new_role:
@@ -65,8 +76,8 @@ class Environments(object):
             updated = True
 
         if env_role and not new_role:
-            env_role.role = None
-            updated = EnvironmentRoles.delete(application_role.id, environment.id)
+            EnvironmentRoles.disable(env_role.id)
+            updated = True
 
         if updated:
             db.session.add(env_role)

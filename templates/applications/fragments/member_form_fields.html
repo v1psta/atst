@@ -3,30 +3,30 @@
 {% from "components/text_input.html" import TextInput %}
 {% from "components/phone_input.html" import PhoneInput %}
 
-{% macro EnvRoleInput(field, member_role_id=None) %}
-  {% set role = field.role.data if not field.deleted.data else "Access Suspended" %}
-  {% if field.role.data != "No Access" and not field.deleted.data -%}
+{% macro EnvRoleInput(sub_form, member_role_id=None) %}
+  {% set role = sub_form.role.data if not sub_form.disabled.data else "Access Suspended" %}
+  {% if sub_form.role.data != "No Access" and not sub_form.disabled.data -%}
     <checkboxinput
-      name="'{{ field.deleted.name | string }}-{% if member_role_id %}-{{ member_role_id }}{% endif %}'"
+      name="'{{ sub_form.disabled.name | string }}-{% if member_role_id %}-{{ member_role_id }}{% endif %}'"
       inline-template
-      key="'{{ field.deleted.name | string }}-{% if member_role_id %}-{{ member_role_id }}{% endif %}'"
-      v-bind:initial-checked='{{ field.deleted.data|string|lower }}'
+      key="'{{ sub_form.disabled.name | string }}-{% if member_role_id %}-{{ member_role_id }}{% endif %}'"
+      v-bind:initial-checked='{{ sub_form.disabled.data|string|lower }}'
       v-bind:optional="true"
       >
       <fieldset data-ally-disabled="true" v-on:change="onInput" class="usa-input__choices revoke-button">
-        {% set id = "{}-{}".format(field.deleted.name, member_role_id) %}
+        {% set id = "{}-{}".format(sub_form.disabled.name, member_role_id) %}
         <div class="form-row" v-if="!isChecked">
           <div class="form-col form-col--two-thirds">
             <div class="usa-input__title-inline">
-              {{ field.environment_name.data }}
+              {{ sub_form.environment_name.data }}
             </div>
-            <p class="usa-input__help">
+            <div class="usa-input__help">
               {{ role }}
-            </p>
+            </div>
           </div>
           <div class="form-col form-col--third">
-            {{ field.deleted(id=id, checked=True, **{"v-model": "isChecked"}) }}
-            {{ field.deleted.label(for=id, class="usa-button button-danger-outline") | safe }}
+            {{ sub_form.disabled(id=id, checked=True, **{"v-model": "isChecked"}) }}
+            {{ sub_form.disabled.label(for=id, class="usa-button button-danger-outline") | safe }}
           </div>
         </div>
         <div v-else>
@@ -34,14 +34,14 @@
             <div class="form-row">
               <div class="form-col form-col--two-thirds">
                 <div class="usa-input__title-inline">
-                  {{ field.environment_name.data }}
+                  {{ sub_form.environment_name.data }}
                 </div>
                 <p class="usa-input__help">
-                  Save changes to revoke access, <strong>this can not be undone.</strong>
+                  {{ "portfolios.applications.members.form.env_access.revoke_warning" | translate | safe }}
                 </p>
               </div>
               <div class="form-col form-col--third">
-                {{ field.deleted(id=id, checked=True, **{"v-model": "isChecked"}) }}
+                {{ sub_form.disabled(id=id, checked=True, **{"v-model": "isChecked"}) }}
                 <label for="{{ id }}" class="link">Undo</label>
               </div>
             </div>
@@ -51,11 +51,10 @@
     </checkboxinput>
   {% else %}
     <div class="form-row">
-      <!-- refactor this into its own macro? -->
       <div class="form-col form-col--two-thirds">
-        <div class="usa-input {% if field.deleted.data or field.role.data == 'No Access' %}env-role__no-access{% endif %}">
+        <div class="usa-input {% if sub_form.disabled.data or sub_form.role.data == 'No Access' %}env-role__no-access{% endif %}">
           <div class='usa-input__title-inline'>
-            {{ field.environment_name.data }}
+            {{ sub_form.environment_name.data }}
           </div>
           <p class="usa-input__help">
             {{ role }}
@@ -63,22 +62,22 @@
         </div>
       </div>
       <div class="form-col form-col--third">
-        {% if field.role.data == "No Access" and not field.deleted.data -%}
+        {% if sub_form.role.data == "No Access" and not sub_form.disabled.data -%}
           <optionsinput inline-template
-            v-bind:initial-value="'{{ field.role.data | string }}'"
-            v-bind:name="'{{ field.name | string }}{% if member_role_id %}-{{ member_role_id }}{% endif %}'"
+            v-bind:initial-value="'{{ sub_form.role.data | string }}'"
+            v-bind:name="'{{ sub_form.name | string }}{% if member_role_id %}-{{ member_role_id }}{% endif %}'"
             v-bind:optional="true"
             v-bind:watch="true">
             <fieldset data-ally-disabled="true" v-on:change="onInput" class="usa-input__choices">
-              {{ field.role(**{"v-model": "value", "id": "{}-{}".format(field.role.name, member_role_id)}) }}
+              {{ sub_form.role(**{"v-model": "value", "id": "{}-{}".format(sub_form.role.name, member_role_id)}) }}
             </fieldset>
           </optionsinput>
-        {% elif field.deleted.data -%}
+        {% elif sub_form.disabled.data -%}
           <p class="usa-input__help">
-            Suspended access cannot be modified.
+            {{ "portfolios.applications.members.form.env_access.suspended" | translate }}
           </p>
         {%- endif %}
-        {{ field.environment_id() }}
+        {{ sub_form.environment_id() }}
       </div>
     </div>
   {% endif %}
@@ -105,7 +104,12 @@
   <hr>
   <div class="environment_roles environment-roles-new">
     <h2>{{ "portfolios.applications.members.form.env_access.title" | translate }}</h2>
-    <p class='usa-input__help subtitle'>{{ "portfolios.applications.members.form.env_access.description" | translate | safe }}</p>
+    <p class='usa-input__help subtitle'>
+      {% if not new -%}
+        {{ "portfolios.applications.members.form.env_access.edit_description" | translate }}
+      {%- endif %}
+      {{ "portfolios.applications.members.form.env_access.description" | translate | safe }}
+    </p>
     <hr>
     {% for environment_data in form.environment_roles %}
       {{ EnvRoleInput(environment_data, member_role_id) }}

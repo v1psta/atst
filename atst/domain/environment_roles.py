@@ -73,7 +73,6 @@ class EnvironmentRoles(object):
         if existing_env_role:
             # TODO: Implement suspension
             existing_env_role.deleted = True
-            cls._update_status(existing_env_role, EnvironmentRole.Status.DISABLED)
             db.session.add(existing_env_role)
             db.session.commit()
             return True
@@ -126,11 +125,3 @@ class EnvironmentRoles(object):
             .one_or_none()
         )
         return existing_env_role
-
-    @classmethod
-    def get_all_for_application_member(cls, application_role_id):
-        return (
-            db.session.query(EnvironmentRole)
-            .filter(EnvironmentRole.application_role_id == application_role_id)
-            .all()
-        )

@@ -45,6 +45,6 @@
   {% endset %}
 
   {% call MemberFormTemplate(next_button=next_button) %}
-    {{ member_fields.PermsFields(form=member_form) }}
+    {{ member_fields.PermsFields(form=member_form, new=True) }}
   {% endcall %}
 {% endmacro %}

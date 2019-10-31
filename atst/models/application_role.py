@@ -1,5 +1,5 @@
 from enum import Enum
-from sqlalchemy import and_, Index, ForeignKey, Column, Enum as SQLAEnum, Table
+from sqlalchemy import Index, ForeignKey, Column, Enum as SQLAEnum, Table
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy.event import listen
@@ -8,7 +8,6 @@ from atst.utils import first_or_none
 from atst.models.base import Base
 import atst.models.mixins as mixins
 import atst.models.types as types
-from atst.models.environment_role import EnvironmentRole
 from atst.models.mixins.auditable import record_permission_sets_updates
 
 
@@ -55,9 +54,7 @@ class ApplicationRole(
 
     environment_roles = relationship(
         "EnvironmentRole",
-        primaryjoin=and_(
-            EnvironmentRole.application_role_id == id, EnvironmentRole.deleted == False
-        ),
+        primaryjoin="and_(EnvironmentRole.application_role_id == ApplicationRole.id, EnvironmentRole.deleted == False)",
     )
 
     @property

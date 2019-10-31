@@ -46,7 +46,6 @@ def test_update_env_role_no_access():
         env_role.application_role.id, env_role.environment.id
     )
     assert env_role.role is None
-    assert env_role.deleted
     assert env_role.status == EnvironmentRole.Status.DISABLED
 
 
@@ -66,7 +65,6 @@ def test_update_env_role_deleted_role():
         env_role.environment, env_role.application_role, CSPRole.TECHNICAL_READ.value
     )
     assert env_role.role is None
-    assert env_role.deleted
     assert env_role.status == EnvironmentRole.Status.DISABLED
 
 
