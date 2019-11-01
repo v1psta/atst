@@ -6,6 +6,7 @@
 {% from "components/modal.html" import Modal %}
 {% from "components/multi_step_modal_form.html" import MultiStepModalForm %}
 {% from "components/save_button.html" import SaveButton %}
+{% from "components/toggle_list.html" import ToggleButton, ToggleSection %}
 
 {% macro MemberManagementTemplate(
   application,
@@ -90,67 +91,82 @@
 
     <section class="member-list application-list">
       <div class='responsive-table-wrapper'>
-        <table class="atat-table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Application Permissions</th>
-              <th class="env_role">Environment Access</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for member in members %}
-              {% set modal_name = "edit_member-{}".format(loop.index) %}
+        <toggler inline-template>
+          <table class="atat-table">
+            <thead>
               <tr>
-                <td>
-                  <strong>{{ member.user_name }}</strong>
-                  <a class="icon-link" v-on:click="openModal('{{ modal_name }}')">
-                    {{ Icon('edit') }}
-                  </a>
-                  <br>
-                  {% if member.role_status == 'pending' %}
-                    {{ Label('envelope', 'invite pending', 'success', classes='label--below') }}
-                  {% endif %}
-
-                </td>
-
-                <td>
-                  {% for perm, value in member.permission_sets.items() %}
-                    <div>
-                      {{ ("portfolios.applications.members.{}.{}".format(perm, value)) | translate }}
-                    </div>
-                  {% endfor %}
-                </td>
-                <td>
-                  <div class="form-row">
-                    <div class="form-col form-col--two-thirds">
-                      {% for env in member.environment_roles %}
-                        <div class="row">
-                          <span class="env-role__environment">
-                            {{ env.environment_name }}
-                          </span>
-                          <span class="env-role__role">
-                            : {{ env.role }}
-                          </span>
-                        </div>
-                      {% endfor %}
-                    </div>
-                    <div class="form-col form-col--one-third">
-                      {% if member.role_status == 'pending' -%}
-                        {% set revoke_invite_modal = "revoke_invite_{}".format(member.role_id) %}
-                        {% set resend_invite_modal = "resend_invite-{}".format(member.role_id) %}
-                        <a v-on:click='openModal("{{ resend_invite_modal }}")'>Resend Invite</a><br>
-                        {% if user_can(permissions.DELETE_APPLICATION_MEMBER) -%}
-                          <a v-on:click='openModal("{{ revoke_invite_modal }}")'>{{ 'invites.revoke' | translate }}</a>
-                        {%- endif %}
-                      {%- endif %}
-                    </div>
-                  </div>
-                </td>
+                <th>Name</th>
+                <th>Application Permissions</th>
+                <th class="env_role--th">Environment Access</th>
               </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {% for member in members %}
+                {% set perms_modal = "edit_member-{}".format(loop.index) %}
+                <tr>
+                  <td>
+                    <strong>{{ member.user_name }}</strong>
+                    {% if member.role_status == 'pending' %}
+                      <br>
+                      {{ Label('envelope', 'invite pending', 'success', classes='label--below') }}
+                    {% endif %}
+
+                  </td>
+
+                  <td>
+                    {% for perm, value in member.permission_sets.items() %}
+                      <div>
+                        {{ ("portfolios.applications.members.{}.{}".format(perm, value)) | translate }}
+                      </div>
+                    {% endfor %}
+                  </td>
+                  <td class="env_role--td">
+                    {% for env in member.environment_roles %}
+                      <div class="row">
+                        <span class="env-role__environment">
+                          {{ env.environment_name }}
+                        </span>
+                        <span class="env-role__role">
+                          : {{ env.role }}
+                        </span>
+                      </div>
+                    {% endfor %}
+                    <div class="app-member-menu">
+                      {% set toggle_button -%}
+                        {{ Icon('ellipsis')}}
+                      {%- endset %}
+                      {% set section = "app_member_edit-{}".format(member.role_id) %}
+
+                      {{
+                        ToggleButton(
+                          open_html=toggle_button,
+                          close_html=toggle_button,
+                          section_name=section,
+                          active_style=True
+                        )
+                      }}
+                      {% call ToggleSection(section_name=section, classes="app-member-menu__toggle") %}
+                        {% if user_can(permissions.EDIT_APPLICATION_MEMBER) -%}
+                          <a v-on:click="openModal('{{ perms_modal }}')">
+                            Edit Roles and Permissions
+                          </a>
+                        {%- endif %}
+                        {% if member.role_status == 'pending' -%}
+                          {% set revoke_invite_modal = "revoke_invite_{}".format(member.role_id) %}
+                          {% set resend_invite_modal = "resend_invite-{}".format(member.role_id) %}
+                          <a v-on:click='openModal("{{ resend_invite_modal }}")'>Resend Invite</a>
+                          {% if user_can(permissions.DELETE_APPLICATION_MEMBER) -%}
+                            <a v-on:click='openModal("{{ revoke_invite_modal }}")'>{{ 'invites.revoke' | translate }}</a>
+                          {%- endif %}
+                        {%- endif %}
+                      {% endcall %}
+                    </div>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </toggler>
       </div>
     </section>
   {% endif %}

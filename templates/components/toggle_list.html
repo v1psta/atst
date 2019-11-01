@@ -1,9 +1,9 @@
-{% macro ToggleButton(action, open_html, close_html, section_name, classes="") %}
-  <span v-on:click="toggleSection('{{ section_name }}')" class="accordion-table__item__toggler {{ classes }}">
-    <span v-if="selectedSection === '{{ section_name }}'">
+{% macro ToggleButton(action, open_html, close_html, section_name, classes="", active_style=False) %}
+  <span v-on:click="toggleSection('{{ section_name }}')">
+    <span v-if="selectedSection === '{{ section_name }}'" class="accordion-table__item__toggler {{ classes }}{% if active_style -%} accordion-table__item__toggler--active{%- endif %}">
       {{ close_html }}
     </span>
-    <span v-else>
+    <span v-else class="accordion-table__item__toggler {{ classes }}">
       {{ open_html }}
     </span>
   </span>
