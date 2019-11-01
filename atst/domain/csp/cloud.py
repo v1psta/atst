@@ -472,9 +472,7 @@ class AzureCloudProvider(CloudProviderInterface):
         credentials = self._get_credential_obj(root_creds)
 
         sub_client = self.sdk.subscription.SubscriptionClient(credentials)
-        subscription: self.sdk.subscription.models.Subscription = sub_client.subscriptions.get(
-            csp_environment_id
-        )
+        subscription = sub_client.subscriptions.get(csp_environment_id)
 
         managment_principal = self._get_management_service_principal()
 
