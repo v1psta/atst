@@ -220,12 +220,20 @@ To generate coverage reports for the Javascript tests:
 
     yarn test:coverage
 
-### Ghost Inspector Tests
+### UI Test Automation
 
-AT-AT uses [Ghost Inpsector](https://app.ghostinspector.com/) for
-integration testing. These tests do not run locally as part of the
-regular test suite but do run in CI. To run them locally, you will
-need the following:
+AT-AT uses [Ghost Inpsector](https://app.ghostinspector.com/), a testing PaaS
+for UI test automation and as a form of integration testing.
+These tests do not run locally as part of the regular test suite,
+but they do run in CI.
+
+Ghost Inspector was developed to make it easier to create, maintain, and
+execute UI tests than vanilla Selenium. Ghost Inspector tests and steps can
+be exported to files that the Selenium IDE can import. We export these tests/steps
+regularly and archive them with the AT-AT codebase in the `uitests` directory.
+
+To run the Ghost Inspector tests against a local instance of AT-AT,
+you will need the following:
 
 - [docker](https://docs.docker.com/v17.12/install/)
 - [circleci CLI tool](https://circleci.com/docs/2.0/local-cli/#installation)
