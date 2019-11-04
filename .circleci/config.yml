@@ -228,6 +228,7 @@ jobs:
             kubectl set image deployment.apps/atst atst=${AZURE_SERVER_NAME}/atat:atat-${CIRCLE_SHA1} --namespace=atat
             kubectl set image deployment.apps/atst-worker atst-worker=${AZURE_SERVER_NAME}/atat:atat-${CIRCLE_SHA1} --namespace=atat
             kubectl set image deployment.apps/atst-beat atst-beat=${AZURE_SERVER_NAME}/atat:atat-${CIRCLE_SHA1} --namespace=atat
+            kubectl set image cronjobs.batch/crls crls=${AZURE_SERVER_NAME}/atat:atat-${CIRCLE_SHA1} --namespace=atat
 
 workflows:
   version: 2
