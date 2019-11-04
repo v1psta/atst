@@ -1,6 +1,8 @@
 from sqlalchemy import String, Column
 
-from atst.models import Base, types, mixins
+from atst.models.base import Base
+import atst.models.types as types
+import atst.models.mixins as mixins
 
 
 class NotificationRecipient(Base, mixins.TimestampsMixin):

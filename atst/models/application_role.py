@@ -5,10 +5,11 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.event import listen
 
 from atst.utils import first_or_none
-from atst.models import Base, mixins
+from atst.models.base import Base
+import atst.models.mixins as mixins
+import atst.models.types as types
 from atst.models.environment_role import EnvironmentRole
 from atst.models.mixins.auditable import record_permission_sets_updates
-from .types import Id
 
 
 class Status(Enum):
@@ -36,7 +37,7 @@ class ApplicationRole(
 ):
     __tablename__ = "application_roles"
 
-    id = Id()
+    id = types.Id()
     application_id = Column(
         UUID(as_uuid=True), ForeignKey("applications.id"), index=True, nullable=False
     )

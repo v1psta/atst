@@ -2,7 +2,7 @@ from sqlalchemy import select
 
 from atst.jobs import send_notification_mail
 from atst.database import db
-from atst.models import NotificationRecipient
+from atst.models.notification_recipient import NotificationRecipient
 
 
 class NotificationSender(object):

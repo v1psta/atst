@@ -2,7 +2,9 @@ from sqlalchemy import Column, String
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm.exc import NoResultFound
 
-from atst.models import Base, types, mixins
+from atst.models.base import Base
+import atst.models.mixins as mixins
+import atst.models.types as types
 from atst.database import db
 from atst.domain.exceptions import NotFoundError
 

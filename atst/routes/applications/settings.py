@@ -1,6 +1,6 @@
 from flask import redirect, render_template, request as http_request, url_for, g
 
-from . import applications_bp
+from .blueprint import applications_bp
 from atst.domain.exceptions import AlreadyExistsError
 from atst.domain.environments import Environments
 from atst.domain.applications import Applications

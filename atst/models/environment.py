@@ -3,9 +3,9 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import JSONB
 from enum import Enum
 
-from atst.models import Base
-from atst.models.types import Id
-from atst.models import mixins
+from atst.models.base import Base
+import atst.models.mixins as mixins
+import atst.models.types as types
 
 
 class Environment(
@@ -13,7 +13,7 @@ class Environment(
 ):
     __tablename__ = "environments"
 
-    id = Id()
+    id = types.Id()
     name = Column(String, nullable=False)
 
     application_id = Column(ForeignKey("applications.id"), nullable=False)

@@ -1,6 +1,6 @@
 from flask import redirect, render_template, request as http_request, url_for, g
 
-from . import applications_bp
+from .blueprint import applications_bp
 from atst.domain.applications import Applications
 from atst.domain.portfolios import Portfolios
 from atst.forms.application import NameAndDescriptionForm, EnvironmentsForm

@@ -1,6 +1,6 @@
 from flask import g, render_template, url_for, redirect
 
-from . import task_orders_bp
+from .blueprint import task_orders_bp
 from atst.domain.authz.decorator import user_can_access_decorator as user_can
 from atst.domain.portfolios import Portfolios
 from atst.domain.task_orders import TaskOrders

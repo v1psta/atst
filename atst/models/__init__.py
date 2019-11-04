@@ -1,8 +1,4 @@
-from sqlalchemy.ext.declarative import declarative_base
-
-Base = declarative_base()
-
-
+from .base import Base
 from .application import Application
 from .application_invitation import ApplicationInvitation
 from .application_role import ApplicationRole, Status as ApplicationRoleStatus

@@ -8,7 +8,7 @@ from flask import (
     jsonify,
 )
 
-from . import task_orders_bp
+from .blueprint import task_orders_bp
 from atst.domain.authz.decorator import user_can_access_decorator as user_can
 from atst.domain.exceptions import NoAccessError
 from atst.domain.task_orders import TaskOrders

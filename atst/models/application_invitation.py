@@ -2,11 +2,13 @@ from sqlalchemy import Column, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship, backref
 
-from atst.models import Base
-from atst.models.mixins import TimestampsMixin, AuditableMixin, InvitesMixin
+from atst.models.base import Base
+import atst.models.mixins as mixins
 
 
-class ApplicationInvitation(Base, TimestampsMixin, AuditableMixin, InvitesMixin):
+class ApplicationInvitation(
+    Base, mixins.TimestampsMixin, mixins.AuditableMixin, mixins.InvitesMixin
+):
     __tablename__ = "application_invitations"
 
     application_role_id = Column(

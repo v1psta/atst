@@ -1,7 +1,8 @@
 from sqlalchemy.orm.exc import NoResultFound
 
 from atst.database import db
-from atst.models import PermissionSet, Permissions
+from atst.models.permissions import Permissions
+from atst.models.permission_set import PermissionSet
 from .exceptions import NotFoundError
 
 

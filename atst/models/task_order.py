@@ -5,7 +5,10 @@ from sqlalchemy import Column, DateTime, ForeignKey, String
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import relationship
 
-from atst.models import Attachment, Base, mixins, types
+from atst.models.base import Base
+import atst.models.types as types
+import atst.models.mixins as mixins
+from atst.models.attachment import Attachment
 from atst.utils.clock import Clock
 
 
