@@ -91,7 +91,9 @@ export default {
       if (this.environments.length > 1) {
         // only want to display this error if we have multiple envs and one or
         // more do not have names
-        return this.environments.every(e => e.name !== '')
+        return this.environments.every(
+          e => !e.name.match(/^\s+$/) && e.name !== ''
+        )
       } else {
         return true
       }
