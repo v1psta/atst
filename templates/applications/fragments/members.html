@@ -57,12 +57,12 @@
               <h1>Verify Member Information</h1>
               <hr>
             </div>
-            <base-form inline-template>
+            <base-form inline-template :enable-save="true">
               <form id='{{ resend_invite_modal }}' method="POST" action="{{ url_for('applications.resend_invite', application_id=application.id, application_role_id=member.role_id) }}">
                 {{ member.update_invite_form.csrf_token }}
                 {{ member_fields.InfoFields(member.update_invite_form) }}
                 <div class="action-group">
-                {{ SaveButton(text="Resend Invite", disable_on_initial_render=False)}}
+                {{ SaveButton(text="Resend Invite")}}
                   <a class='action-group__action' v-on:click="closeModal('{{ resend_invite_modal }}')">{{ "common.cancel" | translate }}</a>
                 </div>
               </form>

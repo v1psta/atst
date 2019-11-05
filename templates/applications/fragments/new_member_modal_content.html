@@ -25,7 +25,7 @@
     <input
         type='button'
         v-on:click="next()"
-        v-bind:disabled="invalid"
+        v-bind:disabled="!canSave"
         class='action-group__action usa-button'
         value='{{ "portfolios.applications.members.form.next_button" | translate }}'>
   {% endset %}
@@ -40,6 +40,7 @@
       type="submit"
       class='action-group__action usa-button'
       form="add-app-mem"
+      v-bind:disabled="!canSave"
       value='{{ "portfolios.applications.members.form.add_member" | translate}}'>
   {% endset %}
 

@@ -22,7 +22,7 @@
         {{ TextInput(application_form.name, optional=False) }}
         {{ TextInput(application_form.description, paragraph=True, optional=True, showOptional=False) }}
         <div class="action-group action-group--tight">
-          {{ SaveButton('common.save_changes'|translate) }}
+          {{ SaveButton(text='common.save_changes'|translate) }}
         </div>
       </form>
     </base-form>

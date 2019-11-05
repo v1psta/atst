@@ -5,6 +5,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    enableSave: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   mounted: function() {
@@ -52,9 +56,9 @@ export default {
     canSave: function() {
       const formValid = !this.invalid
 
-      if (formValid) {
+      if (this.changed && formValid) {
         return true
-      } else if (this.changed && formValid) {
+      } else if (this.enableSave && formValid) {
         return true
       } else {
         return false
