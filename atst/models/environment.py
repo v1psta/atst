@@ -32,6 +32,12 @@ class Environment(
 
     job_failures = relationship("EnvironmentJobFailure")
 
+    roles = relationship(
+        "EnvironmentRole",
+        back_populates="environment",
+        primaryjoin="and_(EnvironmentRole.environment_id == Environment.id, EnvironmentRole.deleted == False)",
+    )
+
     class ProvisioningStatus(Enum):
         PENDING = "pending"
         COMPLETED = "completed"

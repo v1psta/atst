@@ -24,7 +24,7 @@ class EnvironmentRole(
     environment_id = Column(
         UUID(as_uuid=True), ForeignKey("environments.id"), nullable=False
     )
-    environment = relationship("Environment", backref="roles")
+    environment = relationship("Environment")
 
     role = Column(String())
 

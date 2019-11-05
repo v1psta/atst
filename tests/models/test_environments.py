@@ -3,6 +3,7 @@ import pytest
 from atst.models import AuditEvent
 from atst.models.environment_role import CSPRole
 from atst.domain.applications import Applications
+from atst.domain.environment_roles import EnvironmentRoles
 
 from tests.factories import *
 
@@ -70,3 +71,19 @@ def test_audit_event_for_environment_deletion(session):
 def test_environment_provisioning_status(env_data, expected_status):
     environment = EnvironmentFactory.create(**env_data)
     assert environment.provisioning_status == expected_status
+
+
+def test_environment_roles_do_not_include_deleted():
+    member_list = [
+        {"role_name": CSPRole.BASIC_ACCESS.value},
+        {"role_name": CSPRole.BASIC_ACCESS.value},
+        {"role_name": CSPRole.BASIC_ACCESS.value},
+    ]
+    env = EnvironmentFactory.create(members=member_list)
+    role_1 = env.roles[0]
+    role_2 = env.roles[1]
+
+    EnvironmentRoles.delete(role_1.application_role_id, env.id)
+    EnvironmentRoles.disable(role_2.id)
+
+    assert len(env.roles) == 2
