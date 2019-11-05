@@ -149,6 +149,11 @@
   .member-list {
     .responsive-table-wrapper {
       margin-bottom: 0;
+
+      table.atat-table {
+        table-layout: fixed;
+        width: 100%;
+      }
     }
 
     input.usa-button.usa-button-primary {
@@ -207,9 +212,31 @@
       margin: 4rem;
     }
 
-    .member-list__subhead {
-      font-weight: $font-normal;
-      font-size: $base-font-size;
+    .env_role {
+      width: 50%;
+    }
+
+    .form-col--two-thirds {
+      width: 66.66%;
+      flex-basis: unset;
+    }
+
+    .row {
+      display: flex;
+      padding-right: $gap;
+
+      .env-role__environment {
+        min-width: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-weight: $font-bold;
+      }
+
+      .env-role__role {
+        white-space: nowrap;
+        display: inline-block;
+      }
     }
   }
 
