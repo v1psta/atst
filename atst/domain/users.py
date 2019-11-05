@@ -30,7 +30,12 @@ class Users(object):
 
     @classmethod
     def get_ccpo_users(cls):
-        return db.session.query(User).filter(User.permission_sets != None).all()
+        return (
+            db.session.query(User)
+            .filter(User.permission_sets != None)
+            .order_by(User.last_name)
+            .all()
+        )
 
     @classmethod
     def create(cls, dod_id, permission_sets=None, **kwargs):
