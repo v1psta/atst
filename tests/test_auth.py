@@ -1,3 +1,4 @@
+import os
 from urllib.parse import urlparse
 
 import pytest
@@ -147,7 +148,8 @@ def swap_crl_cache(
         else:
             crl = make_crl(ca_key)
             serialize_pki_object_to_disk(crl, crl_file, encoding=Encoding.DER)
-            app.crl_cache = CRLCache(ca_file, crl_locations=[crl_file])
+            crl_dir = os.path.dirname(crl_file)
+            app.crl_cache = CRLCache(ca_file, crl_dir)
 
     yield _swap_crl_cache
 
@@ -172,7 +174,8 @@ def test_crl_validation_on_login(
     crl = make_crl(ca_key, expired_serials=[bad_cert.serial_number])
     serialize_pki_object_to_disk(crl, crl_file, encoding=Encoding.DER)
 
-    cache = CRLCache(ca_file, crl_locations=[crl_file])
+    crl_dir = os.path.dirname(crl_file)
+    cache = CRLCache(ca_file, crl_dir)
     swap_crl_cache(cache)
 
     # bad cert is on the test CRL

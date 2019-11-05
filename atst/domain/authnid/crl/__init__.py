@@ -1,11 +1,13 @@
-import sys
 import os
 import re
 import hashlib
 import logging
-from flask import current_app as app
-from datetime import datetime
+
 from OpenSSL import crypto, SSL
+from datetime import datetime
+from flask import current_app as app
+
+from .util import load_crl_locations_cache, serialize_crl_locations_cache
 
 # error codes from OpenSSL: https://github.com/openssl/openssl/blob/2c75f03b39de2fa7d006bc0f0d7c58235a54d9bb/include/openssl/x509_vfy.h#L111
 CRL_EXPIRED_ERROR_CODE = 12
@@ -70,12 +72,12 @@ class CRLCache(CRLInterface):
     def __init__(
         self,
         root_location,
-        crl_locations=[],
+        crl_dir,
         store_class=crypto.X509Store,
         logger=None,
         crl_update_func=None,
     ):
-        self._crl_locations = crl_locations
+        self._crl_dir = crl_dir
         self.logger = logger
         self.store_class = store_class
         self.certificate_authorities = {}
@@ -96,16 +98,10 @@ class CRLCache(CRLInterface):
         return [match.group(0) for match in self._PEM_RE.finditer(root_str)]
 
     def _build_crl_cache(self):
-        self.crl_cache = {}
-        for crl_location in self._crl_locations:
-            crl = self._load_crl(crl_location)
-            if crl:
-                issuer_der = crl.get_issuer().der()
-                expires = crl.to_cryptography().next_update
-                self.crl_cache[issuer_der] = {
-                    "location": crl_location,
-                    "expires": expires,
-                }
+        try:
+            self.crl_cache = load_crl_locations_cache(self._crl_dir)
+        except FileNotFoundError:
+            self.crl_cache = serialize_crl_locations_cache(self._crl_dir)
 
     def _load_crl(self, crl_location):
         with open(crl_location, "rb") as crl_file:

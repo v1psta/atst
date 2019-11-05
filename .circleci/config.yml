@@ -138,6 +138,28 @@ jobs:
               --network atat \
               ghostinspector/test-runner-standalone:latest
 
+  test-crl-parser:
+    docker:
+      - image: docker:18.06.0-ce-git
+      - image: circleci/postgres:10-alpine-ram
+      - image: circleci/redis:4-alpine3.8
+    steps:
+      - setup_remote_docker:
+          docker_layer_caching: true
+          version: 18.06.0-ce
+      - restore_docker_image
+      - setup_datastores:
+          pgdatabase: atat_test
+      - run:
+          name: Sync CRLs and run CRL test
+          command: |
+            docker run \
+              -e PGHOST=postgres \
+              -e REDIS_URI=redis://redis:6379 \
+              --network atat \
+              atat:builder \
+              /bin/sh -c "pipenv install --dev && /bin/sh script/sync-crls && pipenv run pytest --no-cov tests/check_crl_parse.py"
+
   deploy:
     docker:
       - image: docker:18.06.0-ce-git
@@ -206,6 +228,7 @@ jobs:
             kubectl set image deployment.apps/atst atst=${AZURE_SERVER_NAME}/atat:atat-${CIRCLE_SHA1} --namespace=atat
             kubectl set image deployment.apps/atst-worker atst-worker=${AZURE_SERVER_NAME}/atat:atat-${CIRCLE_SHA1} --namespace=atat
             kubectl set image deployment.apps/atst-beat atst-beat=${AZURE_SERVER_NAME}/atat:atat-${CIRCLE_SHA1} --namespace=atat
+            kubectl set image cronjobs.batch/crls crls=${AZURE_SERVER_NAME}/atat:atat-${CIRCLE_SHA1} --namespace=atat
 
 workflows:
   version: 2
@@ -226,3 +249,17 @@ workflows:
             branches:
               only:
                 - master
+
+  test-crl-parser:
+    triggers:
+      - schedule:
+          cron: "0 4 * * *"
+          filters:
+            branches:
+              only:
+                - master
+    jobs:
+      - docker-build
+      - test-crl-parser:
+          requires:
+            - docker-build

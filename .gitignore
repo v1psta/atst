@@ -39,6 +39,7 @@ config/dev.ini
 /crls
 /crl-tmp
 *.bk
+crl_locations.json
 
 # test CA config
 ssl/client-certs/*.srl
