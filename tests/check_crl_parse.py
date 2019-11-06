@@ -7,7 +7,9 @@ from tests.utils import parse_for_issuer_and_next_update
 
 
 CRL_DIR = "crls"
-_CRLS = ["{}/{}".format(CRL_DIR, file_) for file_ in os.listdir(CRL_DIR)]
+_CRLS = [
+    "{}/{}".format(CRL_DIR, file_) for file_ in os.listdir(CRL_DIR) if ".crl" in file_
+]
 
 
 @pytest.mark.parametrize("crl_path", _CRLS)
