@@ -16,7 +16,10 @@ from atst.models.permissions import Permissions
 from atst.forms.application import EditEnvironmentForm
 from atst.forms.application_member import UpdateMemberForm
 from atst.forms.data import ENV_ROLE_NO_ACCESS as NO_ACCESS
-from atst.routes.applications.settings import filter_env_roles_form_data
+from atst.routes.applications.settings import (
+    filter_env_roles_form_data,
+    get_environments_obj_for_app,
+)
 
 from tests.utils import captured_templates
 
@@ -130,6 +133,19 @@ def test_edit_application_environments_obj(app, client, user_session):
             == [app_role1.user_name, app_role2.user_name].sort()
         )
         assert isinstance(context["audit_events"], Paginator)
+
+
+def test_get_environments_obj_for_app(app, client, user_session):
+    application = ApplicationFactory.create(
+        environments=[{"name": "Naboo"}, {"name": "Endor"}, {"name": "Hoth"}]
+    )
+    environments_obj = get_environments_obj_for_app(application)
+
+    assert [environment["name"] for environment in environments_obj] == [
+        "Endor",
+        "Hoth",
+        "Naboo",
+    ]
 
 
 def test_get_members_data(app, client, user_session):
