@@ -62,24 +62,6 @@ Notes:
 - Be careful not to check the override.ini file into source control.
 - Be careful not to overwrite one CSP cluster's config with the other's. This will break everything.
 
-### nginx-client-ca-bundle
-
-(NOTE: This really doesn't need to be a secret since these are public certs. A good change would be to convert it to a k8s configmap.)
-
-This is the PEM certificate file of the DoD Certificate Authority certs. This must be available for CAC authentication.
-
-A local copy of the certs are stored in the repo at `ssl/client-certs/ca-chain.pem`. It can be updated by running `script/sync-dod-certs`. When creating a new cluster, you can copy the cert file to the repo root:
-
-```
-cp ssl/client-certs/ca-chain.pem client-ca-bundle.pem
-```
-
-and then create a new secret from it:
-
-```
-kubectl -n atat create secret generic nginx-client-ca-bundle --from-file=./client-ca-bundle.pem
-```
-
 ### nginx-htpasswd
 
 If the site is running in dev mode, the `/login-dev` endpoint is available. This endpoint is protected by basic HTTP auth. To create a new password file, run:
