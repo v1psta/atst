@@ -15,7 +15,7 @@ spec:
   selector:
     matchLabels:
       role: web
-  replicas: 1
+  replicas: 4
   strategy:
     type: RollingUpdate
   template:
@@ -28,7 +28,7 @@ spec:
         fsGroup: 101
       containers:
         - name: atst
-          image: pwatat.azurecr.io/atat:latest
+          image: $CONTAINER_IMAGE
           envFrom:
           - configMapRef:
               name: atst-envvars
@@ -133,7 +133,7 @@ spec:
   selector:
     matchLabels:
       role: worker
-  replicas: 1
+  replicas: 2
   strategy:
     type: RollingUpdate
   template:
@@ -146,7 +146,7 @@ spec:
         fsGroup: 101
       containers:
         - name: atst-worker
-          image: pwatat.azurecr.io/atat:latest
+          image: $CONTAINER_IMAGE
           args: [
             "/opt/atat/atst/.venv/bin/python",
             "/opt/atat/atst/.venv/bin/celery",
@@ -207,7 +207,7 @@ spec:
         fsGroup: 101
       containers:
         - name: atst-beat
-          image: pwatat.azurecr.io/atat:latest
+          image: $CONTAINER_IMAGE
           args: [
             "/opt/atat/atst/.venv/bin/python",
             "/opt/atat/atst/.venv/bin/celery",

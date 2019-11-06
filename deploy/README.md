@@ -1,86 +1,35 @@
 # Kubernetes Deployment Configuration
 
-This folder contains Kubernetes deployment configuration for AWS and Azure. The following assumes that you have `kubectl` installed and configured with permissions to a cluster in one of the two CSPs.
+This folder contains Kubernetes deployment configuration for Azure. The following assumes that you have `kubectl` installed and configured with permissions to a Kubernetes cluster.
 
 ## Applying K8s configuration
 
-Note that the images specified in the config are out-of-date. CI/CD updates them automatically within the clusters. Be careful when applying new config that you don't rotate the image to an older copy that is out-of-date.
+Applying the K8s config relies on a combination of kustomize and envsubst. Kustomize comes packaged with kubectl v0.14 and higher. envsubst is part of the gettext package. It can be installed with `brew install gettext` for MacOS users.
 
-Depending on how your `kubectl` config is set up, these commands may need to be adjusted. If you have configuration for both clusters, you may need to specify the `kubectl` context for each command with the `--context` flag (something like `kubectl --context=aws [etc.]` or `kubectl --context=azure [etc.]`).
+The production configuration (azure.atat.code.mil, currently) is reflected in the configuration found in the `deploy/azure` directory. Configuration for a staging environment relies on kustomize to overwrite the production config with values appropriate for that environment. You can find more information about using kustomize [here](https://kubernetes.io/docs/tasks/manage-kubernetes-objects/kustomization/). Kustomize does not manage templating, and certain values need to be templated. These include:
 
-### Apply the config to an AWS cluster
+- CONTAINER_IMAGE: the ATAT container image to use
+- PORT_PREFIX: "8" for production, "9" for staging
+- MAIN_DOMAIN: the host domain for the environment
+- AUTH_DOMAIN: the host domain for the authentication endpoint for the environment
 
-Applying the AWS configuration requires that you have an Elastic File Storage (EFS) volume available to your EC2 node instances. The EFS ID should be set as an environment variable before you apply the AWS config:
+We use envsubst to substitute values for these variables.
 
-```
-export EFSID=my-efs-volume-id
-```
-
-First apply all the config:
-
-```
-kubectl apply -f deploy/aws/
-```
-
-Then apply the storage class config using `envsubst`:
+To apply config to the main environment, you should first do a diff to determine whether your new config introduces unexpected changes:
 
 ```
-envsubst < deploy/aws/storage-class.yml | kubectl apply -f -
+kubectl kustomize deploy/azure | CONTAINER_IMAGE=myregistry.io/atat-some-commit-sha PORT_PREFIX=8 MAIN_DOMAIN=azure.atat.code.mil AUTH_DOMAIN=auth-azure.atat.code.mil envsubst '$CONTAINER_IMAGE $PORT_PREFIX $MAIN_DOMAIN $AUTH_DOMAIN' | kubectl diff -f -
 ```
 
-When applying configuration changes, be careful not to over-write the storage class configuration without the environment variable substituted.
+Here, `kubectl kustomize` assembles the config and streams it to STDOUT. We specify environment variables for envsubst to use and pass the names of those env vars as a string argument to envsubst. This is important, because envsubst will override NGINX variables in the NGINX config if you don't limit its scope. Finally, we pipe the result from envsubst to `kubectl diff`, which reports a list of differences. Note that some values tracked by K8s internally might have changed, such as [`generation`](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.16/#objectmeta-v1-meta). This is fine and expected.
 
-#### Fluentd Configuration
-
-For the Fluentd/CloudWatch integration to work for logging purposes, you will need to add an additional policy to the worker nodes' role. What follows is adapted from the [EKS Workshop](https://eksworkshop.com/logging/prereqs/).
-
-If you used eksctl to provision the EKS cluster, there will be a CloudFormation stack associated with the cluster. The node instances within the cluster will have a role associated to define their permissions. You need the name of the role. To get it using the AWS CLI, run:
+If you are satisfied with the output from the diff, you can apply the new config the same way:
 
 ```
-export ROLE_NAME=$(aws --profile=dds --region us-east-2 cloudformation describe-stacks --stack-name eksctl-atat-nodegroup-standard-workers | jq -r '.Stacks[].Outputs[] | select(.OutputKey=="InstanceRoleARN") | .OutputValue' | cut -f2 -d/)
+kubectl kustomize deploy/azure | CONTAINER_IMAGE=myregistry.io/atat-some-commit-sha PORT_PREFIX=8 MAIN_DOMAIN=azure.atat.code.mil AUTH_DOMAIN=auth-azure.atat.code.mil envsubst '$CONTAINER_IMAGE $PORT_PREFIX $MAIN_DOMAIN $AUTH_DOMAIN' | kubectl apply -f -
 ```
 
-(This assumes that you have [`jq`](https://stedolan.github.io/jq/) available to parse the JSON response.)
-
-Run `echo $ROLE_NAME` to check that the previous command worked.
-
-Create a file called `k8s-logs-policy.json` and add the following content:
-
-```
-{
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Action": [
-                "logs:DescribeLogGroups",
-                "logs:DescribeLogStreams",
-                "logs:CreateLogGroup",
-                "logs:CreateLogStream",
-                "logs:PutLogEvents"
-            ],
-            "Resource": "*",
-            "Effect": "Allow"
-        }
-    ]
-}
-```
-
-This is the new policy that allows the nodes to aggregate logs. To apply it, run the following with the AWS CLI:
-
-```
-aws iam put-role-policy --role-name $ROLE_NAME --policy-name Logs-Policy-For-Worker --policy-document file://./k8s-logs-policy.json
-```
-
-(This command assumes you are executing it in the same directory as the policy JSON file; adjust the path as needed.)
-
-
-### Apply the config to an Azure cluster
-
-To apply the configuration to a new cluster, run:
-
-```
-kubectl apply -f deploy/azure/
-```
+**Note:** Depending on how your `kubectl` config is set up, these commands may need to be adjusted. If you have configuration for multiple clusters, you may need to specify the `kubectl` context for each command with the `--context` flag (something like `kubectl --context=my-cluster [etc.]` or `kubectl --context=azure [etc.]`).
 
 ## Secrets and Configuration
 

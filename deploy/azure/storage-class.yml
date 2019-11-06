@@ -32,15 +32,3 @@ subjects:
 - kind: ServiceAccount
   name: persistent-volume-binder
   namespace: kube-system
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: crls-vol-claim
-spec:
-  accessModes:
-    - ReadWriteMany
-  storageClassName: azurefile
-  resources:
-    requests:
-      storage: 1Gi

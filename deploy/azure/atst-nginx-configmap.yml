@@ -7,20 +7,20 @@ metadata:
 data:
   nginx-config: |-
     server {
-        listen 8342;
-        server_name azure.atat.code.mil;
+        listen ${PORT_PREFIX}342;
+        server_name ${MAIN_DOMAIN};
         return 301 https://$host$request_uri;
     }
     server {
-        listen 8343;
-        server_name auth-azure.atat.code.mil;
+        listen ${PORT_PREFIX}343;
+        server_name ${AUTH_DOMAIN};
         return 301 https://$host$request_uri;
     }
     server {
-        server_name azure.atat.code.mil;
+        server_name ${MAIN_DOMAIN};
         # access_log /var/log/nginx/access.log json;
-        listen 8442 ssl;
-        listen [::]:8442 ssl ipv6only=on;
+        listen ${PORT_PREFIX}442 ssl;
+        listen [::]:${PORT_PREFIX}442 ssl ipv6only=on;
         ssl_certificate /etc/ssl/private/atat.crt;
         ssl_certificate_key /etc/ssl/private/atat.key;
         location /login-redirect {
@@ -47,9 +47,9 @@ data:
     }
     server {
         # access_log /var/log/nginx/access.log json;
-        server_name auth-azure.atat.code.mil;
-        listen 8443 ssl;
-        listen [::]:8443 ssl ipv6only=on;
+        server_name ${AUTH_DOMAIN};
+        listen ${PORT_PREFIX}443 ssl;
+        listen [::]:${PORT_PREFIX}443 ssl ipv6only=on;
         ssl_certificate /etc/ssl/private/atat.crt;
         ssl_certificate_key /etc/ssl/private/atat.key;
         # Request and validate client certificate

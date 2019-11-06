@@ -1,0 +1,15 @@
+namespace: staging
+bases:
+  - ../../azure/
+resources:
+  - namespace.yml
+patchesStrategicMerge:
+  - replica_count.yml
+  - ports.yml
+patchesJson6902:
+  - target:
+      group: extensions
+      version: v1beta1
+      kind: Deployment
+      name: atst
+    path: json_ports.yml
