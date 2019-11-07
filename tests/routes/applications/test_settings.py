@@ -18,6 +18,7 @@ from atst.forms.application_member import UpdateMemberForm
 from atst.forms.data import ENV_ROLE_NO_ACCESS as NO_ACCESS
 from atst.routes.applications.settings import (
     filter_env_roles_form_data,
+    filter_env_roles_data,
     get_environments_obj_for_app,
 )
 
@@ -636,3 +637,21 @@ def test_filter_environment_roles():
         assert invite.is_revoked
         assert app_role.status == ApplicationRoleStatus.PENDING
         assert app_role.latest_invitation.email == "an_email@example.com"
+
+
+def test_filter_env_roles_data():
+    env_a = EnvironmentFactory.create(name="a")
+    env_b = EnvironmentFactory.create(name="b")
+    env_c = EnvironmentFactory.create(name="c")
+
+    env_role_a = EnvironmentRoleFactory.create(environment=env_a)
+    env_role_b = EnvironmentRoleFactory.create(environment=env_b)
+    env_role_c = EnvironmentRoleFactory.create(environment=env_c)
+
+    env_role_data = filter_env_roles_data([env_role_b, env_role_c, env_role_a])
+
+    # test that the environments are sorted in alphabetical order by name. Since
+    # we're just testing if the names are sorted, in this case we don't need to
+    # ensure that the environment roles and environments are associated with the
+    # same application.
+    assert [env["environment_name"] for env in env_role_data] == ["a", "b", "c"]

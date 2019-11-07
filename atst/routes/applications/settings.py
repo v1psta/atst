@@ -57,16 +57,17 @@ def filter_perm_sets_data(member):
 
 
 def filter_env_roles_data(roles):
-    env_role_data = [
-        {
-            "environment_id": str(role.environment.id),
-            "environment_name": role.environment.name,
-            "role": role.role,
-        }
-        for role in roles
-    ]
-
-    return env_role_data
+    return sorted(
+        [
+            {
+                "environment_id": str(role.environment.id),
+                "environment_name": role.environment.name,
+                "role": role.role,
+            }
+            for role in roles
+        ],
+        key=lambda env: env["environment_name"],
+    )
 
 
 def filter_env_roles_form_data(member, environments):
