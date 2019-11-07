@@ -39,6 +39,7 @@ RUN ./script/write_dotenv && \
       pip install pipenv uwsgi && \
       PIPENV_VENV_IN_PROJECT=1 pipenv sync && \
       yarn install && \
+      rm -r ./static/fonts/ &> /dev/null || true && \
       cp -rf ./node_modules/uswds/src/fonts ./static/ && \
       yarn build
 
