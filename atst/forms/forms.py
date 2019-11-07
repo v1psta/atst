@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
 from flask import current_app, request as http_request
+import re
 
 from atst.utils.flash import formatted_flash as flash
 
@@ -38,4 +39,8 @@ class BaseForm(FlaskForm):
 
     @classmethod
     def remove_empty_string(cls, value):
-        return value or None
+        # only return strings that contain non whitespace characters
+        if value and re.search(r"\S", value):
+            return value.strip()
+        else:
+            return None

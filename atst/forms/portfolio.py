@@ -78,7 +78,6 @@ class PortfolioCreationForm(BaseForm):
         description=translate("forms.task_order.complexity.description"),
         choices=APPLICATION_COMPLEXITY,
         default=None,
-        filters=[BaseForm.remove_empty_string],
         widget=ListWidget(prefix_label=False),
         option_widget=CheckboxInput(),
     )
@@ -94,7 +93,6 @@ class PortfolioCreationForm(BaseForm):
         description=translate("forms.task_order.dev_team.description"),
         choices=DEV_TEAM,
         default=None,
-        filters=[BaseForm.remove_empty_string],
         widget=ListWidget(prefix_label=False),
         option_widget=CheckboxInput(),
     )

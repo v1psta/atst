@@ -7,24 +7,31 @@ from atst.utils.localization import translate
 
 class EditEnvironmentForm(BaseForm):
     name = StringField(
-        label=translate("forms.environments.name_label"), validators=[Required()]
+        label=translate("forms.environments.name_label"),
+        validators=[Required()],
+        filters=[BaseForm.remove_empty_string],
     )
 
 
 class NameAndDescriptionForm(BaseForm):
     name = StringField(
-        label=translate("forms.application.name_label"), validators=[Required()]
+        label=translate("forms.application.name_label"),
+        validators=[Required()],
+        filters=[BaseForm.remove_empty_string],
     )
     description = TextAreaField(
         label=translate("forms.application.description_label"),
         validators=[Optional()],
-        filters=[lambda x: x or None],
+        filters=[BaseForm.remove_empty_string],
     )
 
 
 class EnvironmentsForm(BaseForm):
     environment_names = FieldList(
-        StringField(label=translate("forms.application.environment_names_label")),
+        StringField(
+            label=translate("forms.application.environment_names_label"),
+            filters=[BaseForm.remove_empty_string],
+        ),
         validators=[
             ListItemRequired(
                 message=translate(

@@ -1,5 +1,5 @@
 import pytest
-from wtforms.fields import RadioField
+from wtforms.fields import RadioField, FieldList, StringField
 from werkzeug.datastructures import ImmutableMultiDict
 
 from atst.forms.forms import BaseForm
@@ -13,6 +13,12 @@ class FormWithChoices(BaseForm):
             ("dark", "Dark Side"),
             ("neutral", "Chaotic Neutral"),
         ],
+    )
+
+
+class FormWithList(BaseForm):
+    list = FieldList(
+        StringField("a very fancy list", filters=[BaseForm.remove_empty_string])
     )
 
 
@@ -34,3 +40,17 @@ class TestBaseForm:
         form_data_3 = ImmutableMultiDict({"force_side": "dark"})
         form_3 = FormWithChoices(form_data_3, obj=self.obj)
         assert form_3.data["force_side"] is "dark"
+
+    @pytest.mark.parametrize(
+        "form_data",
+        [["testing", "", "QA"], ["testing", "    ", "QA"], ["testing", None, "QA"]],
+    )
+    def test_blank_list_items_removed(self, form_data):
+        form = FormWithList(list=form_data)
+        assert form.validate(flash_invalid=False)
+        assert not form.data == ["testing", "QA"]
+
+    def test_remove_empty_string_clips_whitespace(self):
+        form = FormWithList(list=[" QA", "  testing   "])
+        assert form.validate(flash_invalid=False)
+        assert form.list.data == ["QA", "testing"]
