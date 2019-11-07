@@ -4,7 +4,7 @@
 {% from "components/modal.html" import Modal %}
 
 {% block portfolio_content %}
-  <to-form inline-template {% if form.clins %}v-bind:initial-clin-count="{{ form.clins.data | length }}"{% endif %}>
+  <to-form inline-template {% if form.clins %}v-bind:initial-clin-count="{{ form.clins.data | length }}"{% endif %} :enable-save="true">
     <form id="to_form" action='{{ action }}' method="POST" autocomplete="off" enctype="multipart/form-data">
       {{ form.csrf_token }}
 

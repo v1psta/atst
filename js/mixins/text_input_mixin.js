@@ -53,6 +53,10 @@ export default {
     rawValue: function() {
       return this._rawValue(this.value)
     },
+
+    valid: function() {
+      return this._isValid(this.value)
+    },
   },
 
   mounted: function() {
@@ -136,6 +140,10 @@ export default {
       }
 
       // Emit a change event
+      this.$parent.$emit('field-change', {
+        value: this._rawValue(value),
+        name: this.name,
+      })
       emitEvent('field-change', this, {
         value: this._rawValue(value),
         valid: this._isValid(value),

@@ -1,19 +1,7 @@
-import { emitEvent } from '../lib/emitters'
-import FormMixin from '../mixins/form'
-import textinput from './text_input'
-import optionsinput from './options_input'
-
 import { buildUploader } from '../lib/upload'
 
 export default {
   name: 'uploadinput',
-
-  mixins: [FormMixin],
-
-  components: {
-    textinput,
-    optionsinput,
-  },
 
   props: {
     name: String,
@@ -25,14 +13,7 @@ export default {
     },
     initialErrors: {
       type: Boolean,
-    },
-    watch: {
-      type: Boolean,
       default: false,
-    },
-    optional: {
-      type: Boolean,
-      default: true,
     },
     portfolioId: {
       type: String,
@@ -51,12 +32,6 @@ export default {
   },
 
   created: async function() {
-    emitEvent('field-mount', this, {
-      optional: this.optional,
-      name: this.name,
-      valid: this.hasAttachment,
-    })
-
     if (this.hasInitialData) {
       this.downloadLink = await this.getDownloadLink(
         this.filename,
@@ -93,12 +68,7 @@ export default {
 
       this.changed = true
 
-      emitEvent('field-change', this, {
-        value: e.target.value,
-        name: this.name,
-        watch: this.watch,
-        valid: this.hasAttachment,
-      })
+      this.$parent.$emit('field-change')
     },
     removeAttachment: function(e) {
       e.preventDefault()
@@ -110,11 +80,7 @@ export default {
       this.clearErrors()
       this.changed = true
 
-      emitEvent('field-change', this, {
-        value: e.target.value,
-        name: this.name,
-        watch: this.watch,
-      })
+      this.$parent.$emit('field-change')
     },
     clearErrors: function() {
       this.uploadError = false
@@ -144,9 +110,6 @@ export default {
         return this.attachment.split(/[\\/]/).pop()
       }
     },
-    hasAttachment: function() {
-      return !!this.attachment
-    },
     hideInput: function() {
       return this.hasInitialData && !this.changed
     },
@@ -156,6 +119,9 @@ export default {
         this.uploadError ||
         this.sizeError
       )
+    },
+    valid: function() {
+      return !!this.attachment
     },
   },
 }

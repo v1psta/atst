@@ -2,10 +2,7 @@ import stickybits from 'stickybits'
 
 import checkboxinput from '../checkbox_input'
 import ClinFields from '../clin_fields'
-import DateSelector from '../date_selector'
-import FormMixin from '../../mixins/form'
-import optionsinput from '../options_input'
-import SemiCollapsibleText from '../semi_collapsible_text'
+import FormMixin from '../../mixins/form_mixin'
 import textinput from '../text_input'
 import uploadinput from '../upload_input'
 
@@ -17,9 +14,6 @@ export default {
   components: {
     checkboxinput,
     ClinFields,
-    DateSelector,
-    optionsinput,
-    SemiCollapsibleText,
     textinput,
     uploadinput,
   },
@@ -58,8 +52,6 @@ export default {
           delete this.fields[field]
         }
       }
-
-      this.validateForm()
     },
   },
 

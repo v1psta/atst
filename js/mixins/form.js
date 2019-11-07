@@ -13,10 +13,12 @@ export default {
 
   mounted: function() {
     this.$root.$on('field-change', this.handleFieldChange)
+    this.$on('field-change', this.handleFieldChange)
   },
 
   created: function() {
     this.$root.$on('field-mount', this.handleFieldMount)
+    this.$on('field-mount', this.handleFieldMount)
   },
 
   methods: {

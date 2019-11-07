@@ -1,5 +1,4 @@
 import { emitEvent } from '../lib/emitters'
-import Modal from '../mixins/modal'
 import optionsinput from './options_input'
 import textinput from './text_input'
 import clindollaramount from './clin_dollar_amount'
@@ -18,8 +17,6 @@ export default {
     clindollaramount,
     PopDateRange,
   },
-
-  mixins: [Modal],
 
   props: {
     initialClinIndex: Number,
@@ -54,11 +51,13 @@ export default {
       totalAmount: this.initialTotal || 0,
       obligatedAmount: this.initialObligated || 0,
       fundingValid: fundingValidation,
+      removed: false,
     }
   },
 
   mounted: function() {
-    this.$root.$on('field-change', this.handleFieldChange)
+    this.$on('field-change', this.handleFieldChange)
+    this.handleFieldChange()
     this.validateFunding()
   },
 
@@ -90,17 +89,16 @@ export default {
     },
 
     handleFieldChange: function(event) {
-      if (this._uid === event.parent_uid) {
-        if (event.name.includes(TOTAL_AMOUNT)) {
-          this.totalAmount = parseFloat(event.value)
-          this.validateFunding()
-        } else if (event.name.includes(OBLIGATED_AMOUNT)) {
-          this.obligatedAmount = parseFloat(event.value)
-          this.validateFunding()
-        } else if (event.name.includes(NUMBER)) {
-          this.clinNumber = event.value
-        }
+      if (event && event.name.includes(TOTAL_AMOUNT)) {
+        this.totalAmount = parseFloat(event.value)
+        this.validateFunding()
+      } else if (event && event.name.includes(OBLIGATED_AMOUNT)) {
+        this.obligatedAmount = parseFloat(event.value)
+        this.validateFunding()
+      } else if (event && event.name.includes(NUMBER)) {
+        this.clinNumber = event.value
       }
+      this.$parent.$emit('field-change')
     },
 
     removeClin: function() {
@@ -108,6 +106,8 @@ export default {
       emitEvent('remove-clin', this, {
         clinIndex: this.clinIndex,
       })
+      this.removed = true
+      this.handleFieldChange()
       this.closeModal('remove_clin')
     },
   },
@@ -139,6 +139,16 @@ export default {
 
     removeModalId: function() {
       return `remove-clin-${this.clinIndex}`
+    },
+
+    valid: function() {
+      if (this.removed) {
+        // the nested component is still mounted, so valid needs to be true or the
+        // save button will never become active
+        return true
+      } else {
+        return this.$children.every(child => child.valid)
+      }
     },
   },
 }

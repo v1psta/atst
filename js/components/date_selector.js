@@ -210,6 +210,10 @@ export default {
     dateParsed: function() {
       return Date.UTC(this.year, this.month - 1, this.day)
     },
+
+    valid: function() {
+      return this.isDateValid
+    },
   },
 
   methods: {
@@ -220,7 +224,7 @@ export default {
         valid: this.isDateValid,
       })
 
-      this.$emit('date-change', {
+      this.$parent.$emit('field-change', {
         value: this.formattedDate,
         name: this.name,
         valid: this.isDateValid,
