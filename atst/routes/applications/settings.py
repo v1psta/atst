@@ -22,19 +22,22 @@ from atst.jobs import send_mail
 
 
 def get_environments_obj_for_app(application):
-    environments_obj = []
-    for env in application.environments:
-        env_data = {
-            "id": env.id,
-            "name": env.name,
-            "pending": env.is_pending,
-            "edit_form": EditEnvironmentForm(obj=env),
-            "member_count": len(env.roles),
-            "members": [env_role.application_role.user_name for env_role in env.roles],
-        }
-        environments_obj.append(env_data)
-
-    return environments_obj
+    return sorted(
+        [
+            {
+                "id": env.id,
+                "name": env.name,
+                "pending": env.is_pending,
+                "edit_form": EditEnvironmentForm(obj=env),
+                "member_count": len(env.roles),
+                "members": [
+                    env_role.application_role.user_name for env_role in env.roles
+                ],
+            }
+            for env in application.environments
+        ],
+        key=lambda env: env["name"],
+    )
 
 
 def filter_perm_sets_data(member):
@@ -54,16 +57,17 @@ def filter_perm_sets_data(member):
 
 
 def filter_env_roles_data(roles):
-    env_role_data = [
-        {
-            "environment_id": str(role.environment.id),
-            "environment_name": role.environment.name,
-            "role": role.role,
-        }
-        for role in roles
-    ]
-
-    return env_role_data
+    return sorted(
+        [
+            {
+                "environment_id": str(role.environment.id),
+                "environment_name": role.environment.name,
+                "role": role.role,
+            }
+            for role in roles
+        ],
+        key=lambda env: env["environment_name"],
+    )
 
 
 def filter_env_roles_form_data(member, environments):
