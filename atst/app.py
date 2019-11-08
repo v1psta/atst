@@ -246,11 +246,11 @@ def make_crl_validator(app):
     if app.config.get("DISABLE_CRL_CHECK"):
         app.crl_cache = NoOpCRLCache(logger=app.logger)
     else:
-        app.crl_cache = CRLCache(
-            app.config["CA_CHAIN"],
-            app.config["CRL_STORAGE_CONTAINER"],
-            logger=app.logger,
-        )
+        crl_dir = app.config["CRL_STORAGE_CONTAINER"]
+        if not os.path.isdir(crl_dir):
+            os.makedirs(crl_dir, exist_ok=True)
+
+        app.crl_cache = CRLCache(app.config["CA_CHAIN"], crl_dir, logger=app.logger,)
 
 
 def make_mailer(app):
