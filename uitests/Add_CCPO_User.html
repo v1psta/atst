@@ -12,7 +12,7 @@
 <meta name="ghost-inspector-globalStepDelay" content="250" />
 <meta name="ghost-inspector-maxWaitDelay" content="15000" />
 <meta name="ghost-inspector-maxAjaxDelay" content="10000" />
-<meta name="ghost-inspector-viewportSize" content="1280x800" />
+<meta name="ghost-inspector-viewportSize" content="1920x1080" />
 <meta name="ghost-inspector-screenshotTarget" content="" />
 <meta name="ghost-inspector-screenshotExclusions" content="div.global-navigation" />
 <meta name="ghost-inspector-screenshotCompareEnabled" content="true" />
@@ -239,6 +239,51 @@
 <td>assertText</td>
 <td>css=.usa-alert.usa-alert-success > .usa-alert-body > .usa-alert-text</td>
 <td>*You have successfully given Brandon Buchannan CCPO permissions.*</td>
+</tr>
+<tr>
+<td>waitForPageToLoad</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>waitForElementPresent</td>
+<td>css=.col > table > tbody > tr:nth-of-type(1) > td:nth-of-type(1)</td>
+<td></td>
+</tr>
+<tr>
+<td>assertText</td>
+<td>css=.col > table > tbody > tr:nth-of-type(1) > td:nth-of-type(1)</td>
+<td>*Brandon Buchannan*</td>
+</tr>
+<tr>
+<td>waitForPageToLoad</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>waitForElementPresent</td>
+<td>css=a.usa-button.button-danger-outline</td>
+<td></td>
+</tr>
+<tr>
+<td>assertElementPresent</td>
+<td>css=a.usa-button.button-danger-outline</td>
+<td></td>
+</tr>
+<tr>
+<td>waitForPageToLoad</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>waitForElementPresent</td>
+<td>css=.global-panel-container > div:nth-of-type(2) > .modal > .modal__container > .modal__dialog > .modal__body > div:nth-of-type(2) > .action-group > a.action-group__action.icon-link.icon-link--default</td>
+<td></td>
+</tr>
+<tr>
+<td>assertElementPresent</td>
+<td>css=.global-panel-container > div:nth-of-type(2) > .modal > .modal__container > .modal__dialog > .modal__body > div:nth-of-type(2) > .action-group > a.action-group__action.icon-link.icon-link--default</td>
+<td></td>
 </tr>
 </tbody>
 </table>
