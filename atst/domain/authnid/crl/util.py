@@ -1,4 +1,3 @@
-from datetime import datetime
 import json
 import os
 import re
@@ -19,161 +18,230 @@ MODIFIED_TIME_BUFFER = 15 * 60
 
 
 CRL_LIST = [
-    "http://crl.disa.mil/crl/DODROOTCA2.crl",
-    "http://crl.disa.mil/crl/DODROOTCA3.crl",
-    "http://crl.disa.mil/crl/DODROOTCA4.crl",
-    "http://crl.disa.mil/crl/DODROOTCA5.crl",
-    "http://crl.disa.mil/crl/DODIDCA_33.crl",
-    "http://crl.disa.mil/crl/DODIDCA_34.crl",
-    "http://crl.disa.mil/crl/DODIDSWCA_35.crl",
-    "http://crl.disa.mil/crl/DODIDSWCA_36.crl",
-    "http://crl.disa.mil/crl/DODIDSWCA_37.crl",
-    "http://crl.disa.mil/crl/DODIDSWCA_38.crl",
-    "http://crl.disa.mil/crl/DODIDCA_39.crl",
-    "http://crl.disa.mil/crl/DODIDCA_40.crl",
-    "http://crl.disa.mil/crl/DODIDCA_41.crl",
-    "http://crl.disa.mil/crl/DODIDCA_42.crl",
-    "http://crl.disa.mil/crl/DODIDCA_43.crl",
-    "http://crl.disa.mil/crl/DODIDCA_44.crl",
-    "http://crl.disa.mil/crl/DODIDSWCA_45.crl",
-    "http://crl.disa.mil/crl/DODIDSWCA_46.crl",
-    "http://crl.disa.mil/crl/DODIDSWCA_47.crl",
-    "http://crl.disa.mil/crl/DODIDSWCA_48.crl",
-    "http://crl.disa.mil/crl/DODIDCA_49.crl",
-    "http://crl.disa.mil/crl/DODIDCA_50.crl",
-    "http://crl.disa.mil/crl/DODIDCA_51.crl",
-    "http://crl.disa.mil/crl/DODIDCA_52.crl",
-    "http://crl.disa.mil/crl/DODIDCA_59.crl",
-    "http://crl.disa.mil/crl/DODSWCA_53.crl",
-    "http://crl.disa.mil/crl/DODSWCA_54.crl",
-    "http://crl.disa.mil/crl/DODSWCA_55.crl",
-    "http://crl.disa.mil/crl/DODSWCA_56.crl",
-    "http://crl.disa.mil/crl/DODSWCA_57.crl",
-    "http://crl.disa.mil/crl/DODSWCA_58.crl",
-    "http://crl.disa.mil/crl/DODSWCA_60.crl",
-    "http://crl.disa.mil/crl/DODSWCA_61.crl",
-    "http://crl.disa.mil/crl/DODEMAILCA_33.crl",
-    "http://crl.disa.mil/crl/DODEMAILCA_34.crl",
-    "http://crl.disa.mil/crl/DODEMAILCA_39.crl",
-    "http://crl.disa.mil/crl/DODEMAILCA_40.crl",
-    "http://crl.disa.mil/crl/DODEMAILCA_41.crl",
-    "http://crl.disa.mil/crl/DODEMAILCA_42.crl",
-    "http://crl.disa.mil/crl/DODEMAILCA_43.crl",
-    "http://crl.disa.mil/crl/DODEMAILCA_44.crl",
-    "http://crl.disa.mil/crl/DODEMAILCA_49.crl",
-    "http://crl.disa.mil/crl/DODEMAILCA_50.crl",
-    "http://crl.disa.mil/crl/DODEMAILCA_51.crl",
-    "http://crl.disa.mil/crl/DODEMAILCA_52.crl",
-    "http://crl.disa.mil/crl/DODEMAILCA_59.crl",
-    "http://crl.disa.mil/crl/DODINTEROPERABILITYROOTCA1.crl",
-    "http://crl.disa.mil/crl/DODINTEROPERABILITYROOTCA2.crl",
-    "http://crl.disa.mil/crl/USDODCCEBINTEROPERABILITYROOTCA1.crl",
-    "http://crl.disa.mil/crl/USDODCCEBINTEROPERABILITYROOTCA2.crl",
-    "http://crl.disa.mil/crl/DODNIPRINTERNALNPEROOTCA1.crl",
-    "http://crl.disa.mil/crl/DODNPEROOTCA1.crl",
-    "http://crl.disa.mil/crl/DMDNSIGNINGCA_1.crl",
-    "http://crl.disa.mil/crl/DODWCFROOTCA1.crl",
+    (
+        "https://crl.gds.disa.mil/crl/DODROOTCA2.crl",
+        "305b310b300906035504061302555331183016060355040a130f552e532e20476f7665726e6d656e74310c300a060355040b1303446f44310c300a060355040b1303504b49311630140603550403130d446f4420526f6f742043412032",  # pragma: allowlist secret
+    ),
+    (
+        "https://crl.gds.disa.mil/crl/DODROOTCA3.crl",
+        "305b310b300906035504061302555331183016060355040a130f552e532e20476f7665726e6d656e74310c300a060355040b1303446f44310c300a060355040b1303504b49311630140603550403130d446f4420526f6f742043412033",  # pragma: allowlist secret
+    ),
+    (
+        "https://crl.gds.disa.mil/crl/DODROOTCA4.crl",
+        "305b310b300906035504061302555331183016060355040a130f552e532e20476f7665726e6d656e74310c300a060355040b1303446f44310c300a060355040b1303504b49311630140603550403130d446f4420526f6f742043412034",  # pragma: allowlist secret
+    ),
+    (
+        "https://crl.gds.disa.mil/crl/DODROOTCA5.crl",
+        "305b310b300906035504061302555331183016060355040a130f552e532e20476f7665726e6d656e74310c300a060355040b1303446f44310c300a060355040b1303504b49311630140603550403130d446f4420526f6f742043412035",  # pragma: allowlist secret
+    ),
+    (
+        "https://crl.gds.disa.mil/crl/DODIDCA_33.crl",
+        "305a310b300906035504061302555331183016060355040a130f552e532e20476f7665726e6d656e74310c300a060355040b1303446f44310c300a060355040b1303504b49311530130603550403130c444f442049442043412d3333",  # pragma: allowlist secret
+    ),
+    (
+        "https://crl.gds.disa.mil/crl/DODIDCA_34.crl",
+        "305a310b300906035504061302555331183016060355040a130f552e532e20476f7665726e6d656e74310c300a060355040b1303446f44310c300a060355040b1303504b49311530130603550403130c444f442049442043412d3334",  # pragma: allowlist secret
+    ),
+    (
+        "https://crl.gds.disa.mil/crl/DODIDSWCA_35.crl",
+        "305d310b300906035504061302555331183016060355040a130f552e532e20476f7665726e6d656e74310c300a060355040b1303446f44310c300a060355040b1303504b49311830160603550403130f444f442049442053572043412d3335",  # pragma: allowlist secret
+    ),
+    (
+        "https://crl.gds.disa.mil/crl/DODIDSWCA_36.crl",
+        "305d310b300906035504061302555331183016060355040a130f552e532e20476f7665726e6d656e74310c300a060355040b1303446f44310c300a060355040b1303504b49311830160603550403130f444f442049442053572043412d3336",  # pragma: allowlist secret
+    ),
+    (
+        "https://crl.gds.disa.mil/crl/DODIDSWCA_37.crl",
+        "305d310b300906035504061302555331183016060355040a130f552e532e20476f7665726e6d656e74310c300a060355040b1303446f44310c300a060355040b1303504b49311830160603550403130f444f442049442053572043412d3337",  # pragma: allowlist secret
+    ),
+    (
+        "https://crl.gds.disa.mil/crl/DODIDSWCA_38.crl",
+        "305d310b300906035504061302555331183016060355040a130f552e532e20476f7665726e6d656e74310c300a060355040b1303446f44310c300a060355040b1303504b49311830160603550403130f444f442049442053572043412d3338",  # pragma: allowlist secret
+    ),
+    (
+        "https://crl.gds.disa.mil/crl/DODIDCA_39.crl",
+        "305a310b300906035504061302555331183016060355040a130f552e532e20476f7665726e6d656e74310c300a060355040b1303446f44310c300a060355040b1303504b49311530130603550403130c444f442049442043412d3339",  # pragma: allowlist secret
+    ),
+    (
+        "https://crl.gds.disa.mil/crl/DODIDCA_40.crl",
+        "305a310b300906035504061302555331183016060355040a130f552e532e20476f7665726e6d656e74310c300a060355040b1303446f44310c300a060355040b1303504b49311530130603550403130c444f442049442043412d3430",  # pragma: allowlist secret
+    ),
+    (
+        "https://crl.gds.disa.mil/crl/DODIDCA_41.crl",
+        "305a310b300906035504061302555331183016060355040a130f552e532e20476f7665726e6d656e74310c300a060355040b1303446f44310c300a060355040b1303504b49311530130603550403130c444f442049442043412d3431",  # pragma: allowlist secret
+    ),
+    (
+        "https://crl.gds.disa.mil/crl/DODIDCA_42.crl",
+        "305a310b300906035504061302555331183016060355040a130f552e532e20476f7665726e6d656e74310c300a060355040b1303446f44310c300a060355040b1303504b49311530130603550403130c444f442049442043412d3432",  # pragma: allowlist secret
+    ),
+    (
+        "https://crl.gds.disa.mil/crl/DODIDCA_43.crl",
+        "305a310b300906035504061302555331183016060355040a130f552e532e20476f7665726e6d656e74310c300a060355040b1303446f44310c300a060355040b1303504b49311530130603550403130c444f442049442043412d3433",  # pragma: allowlist secret
+    ),
+    (
+        "https://crl.gds.disa.mil/crl/DODIDCA_44.crl",
+        "305a310b300906035504061302555331183016060355040a130f552e532e20476f7665726e6d656e74310c300a060355040b1303446f44310c300a060355040b1303504b49311530130603550403130c444f442049442043412d3434",  # pragma: allowlist secret
+    ),
+    (
+        "https://crl.gds.disa.mil/crl/DODIDSWCA_45.crl",
+        "305d310b300906035504061302555331183016060355040a130f552e532e20476f7665726e6d656e74310c300a060355040b1303446f44310c300a060355040b1303504b49311830160603550403130f444f442049442053572043412d3435",  # pragma: allowlist secret
+    ),
+    (
+        "https://crl.gds.disa.mil/crl/DODIDSWCA_46.crl",
+        "305d310b300906035504061302555331183016060355040a130f552e532e20476f7665726e6d656e74310c300a060355040b1303446f44310c300a060355040b1303504b49311830160603550403130f444f442049442053572043412d3436",  # pragma: allowlist secret
+    ),
+    (
+        "https://crl.gds.disa.mil/crl/DODIDSWCA_47.crl",
+        "305d310b300906035504061302555331183016060355040a130f552e532e20476f7665726e6d656e74310c300a060355040b1303446f44310c300a060355040b1303504b49311830160603550403130f444f442049442053572043412d3437",  # pragma: allowlist secret
+    ),
+    (
+        "https://crl.gds.disa.mil/crl/DODIDSWCA_48.crl",
+        "305d310b300906035504061302555331183016060355040a130f552e532e20476f7665726e6d656e74310c300a060355040b1303446f44310c300a060355040b1303504b49311830160603550403130f444f442049442053572043412d3438",  # pragma: allowlist secret
+    ),
+    (
+        "https://crl.gds.disa.mil/crl/DODIDCA_49.crl",
+        "305a310b300906035504061302555331183016060355040a0c0f552e532e20476f7665726e6d656e74310c300a060355040b0c03446f44310c300a060355040b0c03504b493115301306035504030c0c444f442049442043412d3439",  # pragma: allowlist secret
+    ),
+    (
+        "https://crl.gds.disa.mil/crl/DODIDCA_50.crl",
+        "305a310b300906035504061302555331183016060355040a0c0f552e532e20476f7665726e6d656e74310c300a060355040b0c03446f44310c300a060355040b0c03504b493115301306035504030c0c444f442049442043412d3530",  # pragma: allowlist secret
+    ),
+    (
+        "https://crl.gds.disa.mil/crl/DODIDCA_51.crl",
+        "305a310b300906035504061302555331183016060355040a0c0f552e532e20476f7665726e6d656e74310c300a060355040b0c03446f44310c300a060355040b0c03504b493115301306035504030c0c444f442049442043412d3531",  # pragma: allowlist secret
+    ),
+    (
+        "https://crl.gds.disa.mil/crl/DODIDCA_52.crl",
+        "305a310b300906035504061302555331183016060355040a0c0f552e532e20476f7665726e6d656e74310c300a060355040b0c03446f44310c300a060355040b0c03504b493115301306035504030c0c444f442049442043412d3532",  # pragma: allowlist secret
+    ),
+    (
+        "https://crl.gds.disa.mil/crl/DODIDCA_59.crl",
+        "305a310b300906035504061302555331183016060355040a130f552e532e20476f7665726e6d656e74310c300a060355040b1303446f44310c300a060355040b1303504b49311530130603550403130c444f442049442043412d3539",  # pragma: allowlist secret
+    ),
+    (
+        "https://crl.gds.disa.mil/crl/DODSWCA_53.crl",
+        "305a310b300906035504061302555331183016060355040a0c0f552e532e20476f7665726e6d656e74310c300a060355040b0c03446f44310c300a060355040b0c03504b493115301306035504030c0c444f442053572043412d3533",  # pragma: allowlist secret
+    ),
+    (
+        "https://crl.gds.disa.mil/crl/DODSWCA_54.crl",
+        "305a310b300906035504061302555331183016060355040a0c0f552e532e20476f7665726e6d656e74310c300a060355040b0c03446f44310c300a060355040b0c03504b493115301306035504030c0c444f442053572043412d3534",  # pragma: allowlist secret
+    ),
+    (
+        "https://crl.gds.disa.mil/crl/DODSWCA_55.crl",
+        "305a310b300906035504061302555331183016060355040a0c0f552e532e20476f7665726e6d656e74310c300a060355040b0c03446f44310c300a060355040b0c03504b493115301306035504030c0c444f442053572043412d3535",  # pragma: allowlist secret
+    ),
+    (
+        "https://crl.gds.disa.mil/crl/DODSWCA_56.crl",
+        "305a310b300906035504061302555331183016060355040a0c0f552e532e20476f7665726e6d656e74310c300a060355040b0c03446f44310c300a060355040b0c03504b493115301306035504030c0c444f442053572043412d3536",  # pragma: allowlist secret
+    ),
+    (
+        "https://crl.gds.disa.mil/crl/DODSWCA_57.crl",
+        "305a310b300906035504061302555331183016060355040a130f552e532e20476f7665726e6d656e74310c300a060355040b1303446f44310c300a060355040b1303504b49311530130603550403130c444f442053572043412d3537",  # pragma: allowlist secret
+    ),
+    (
+        "https://crl.gds.disa.mil/crl/DODSWCA_58.crl",
+        "305a310b300906035504061302555331183016060355040a130f552e532e20476f7665726e6d656e74310c300a060355040b1303446f44310c300a060355040b1303504b49311530130603550403130c444f442053572043412d3538",  # pragma: allowlist secret
+    ),
+    (
+        "https://crl.gds.disa.mil/crl/DODSWCA_60.crl",
+        "305a310b300906035504061302555331183016060355040a130f552e532e20476f7665726e6d656e74310c300a060355040b1303446f44310c300a060355040b1303504b49311530130603550403130c444f442053572043412d3630",  # pragma: allowlist secret
+    ),
+    (
+        "https://crl.gds.disa.mil/crl/DODSWCA_61.crl",
+        "305a310b300906035504061302555331183016060355040a130f552e532e20476f7665726e6d656e74310c300a060355040b1303446f44310c300a060355040b1303504b49311530130603550403130c444f442053572043412d3631",  # pragma: allowlist secret
+    ),
+    (
+        "https://crl.gds.disa.mil/crl/DODEMAILCA_33.crl",
+        "305d310b300906035504061302555331183016060355040a130f552e532e20476f7665726e6d656e74310c300a060355040b1303446f44310c300a060355040b1303504b49311830160603550403130f444f4420454d41494c2043412d3333",  # pragma: allowlist secret
+    ),
+    (
+        "https://crl.gds.disa.mil/crl/DODEMAILCA_34.crl",
+        "305d310b300906035504061302555331183016060355040a130f552e532e20476f7665726e6d656e74310c300a060355040b1303446f44310c300a060355040b1303504b49311830160603550403130f444f4420454d41494c2043412d3334",  # pragma: allowlist secret
+    ),
+    (
+        "https://crl.gds.disa.mil/crl/DODEMAILCA_39.crl",
+        "305d310b300906035504061302555331183016060355040a130f552e532e20476f7665726e6d656e74310c300a060355040b1303446f44310c300a060355040b1303504b49311830160603550403130f444f4420454d41494c2043412d3339",  # pragma: allowlist secret
+    ),
+    (
+        "https://crl.gds.disa.mil/crl/DODEMAILCA_40.crl",
+        "305d310b300906035504061302555331183016060355040a130f552e532e20476f7665726e6d656e74310c300a060355040b1303446f44310c300a060355040b1303504b49311830160603550403130f444f4420454d41494c2043412d3430",  # pragma: allowlist secret
+    ),
+    (
+        "https://crl.gds.disa.mil/crl/DODEMAILCA_41.crl",
+        "305d310b300906035504061302555331183016060355040a130f552e532e20476f7665726e6d656e74310c300a060355040b1303446f44310c300a060355040b1303504b49311830160603550403130f444f4420454d41494c2043412d3431",  # pragma: allowlist secret
+    ),
+    (
+        "https://crl.gds.disa.mil/crl/DODEMAILCA_42.crl",
+        "305d310b300906035504061302555331183016060355040a130f552e532e20476f7665726e6d656e74310c300a060355040b1303446f44310c300a060355040b1303504b49311830160603550403130f444f4420454d41494c2043412d3432",  # pragma: allowlist secret
+    ),
+    (
+        "https://crl.gds.disa.mil/crl/DODEMAILCA_43.crl",
+        "305d310b300906035504061302555331183016060355040a130f552e532e20476f7665726e6d656e74310c300a060355040b1303446f44310c300a060355040b1303504b49311830160603550403130f444f4420454d41494c2043412d3433",  # pragma: allowlist secret
+    ),
+    (
+        "https://crl.gds.disa.mil/crl/DODEMAILCA_44.crl",
+        "305d310b300906035504061302555331183016060355040a130f552e532e20476f7665726e6d656e74310c300a060355040b1303446f44310c300a060355040b1303504b49311830160603550403130f444f4420454d41494c2043412d3434",  # pragma: allowlist secret
+    ),
+    (
+        "https://crl.gds.disa.mil/crl/DODEMAILCA_49.crl",
+        "305d310b300906035504061302555331183016060355040a0c0f552e532e20476f7665726e6d656e74310c300a060355040b0c03446f44310c300a060355040b0c03504b493118301606035504030c0f444f4420454d41494c2043412d3439",  # pragma: allowlist secret
+    ),
+    (
+        "https://crl.gds.disa.mil/crl/DODEMAILCA_50.crl",
+        "305d310b300906035504061302555331183016060355040a0c0f552e532e20476f7665726e6d656e74310c300a060355040b0c03446f44310c300a060355040b0c03504b493118301606035504030c0f444f4420454d41494c2043412d3530",  # pragma: allowlist secret
+    ),
+    (
+        "https://crl.gds.disa.mil/crl/DODEMAILCA_51.crl",
+        "305d310b300906035504061302555331183016060355040a0c0f552e532e20476f7665726e6d656e74310c300a060355040b0c03446f44310c300a060355040b0c03504b493118301606035504030c0f444f4420454d41494c2043412d3531",  # pragma: allowlist secret
+    ),
+    (
+        "https://crl.gds.disa.mil/crl/DODEMAILCA_52.crl",
+        "305d310b300906035504061302555331183016060355040a0c0f552e532e20476f7665726e6d656e74310c300a060355040b0c03446f44310c300a060355040b0c03504b493118301606035504030c0f444f4420454d41494c2043412d3532",  # pragma: allowlist secret
+    ),
+    (
+        "https://crl.gds.disa.mil/crl/DODEMAILCA_59.crl",
+        "305d310b300906035504061302555331183016060355040a130f552e532e20476f7665726e6d656e74310c300a060355040b1303446f44310c300a060355040b1303504b49311830160603550403130f444f4420454d41494c2043412d3539",  # pragma: allowlist secret
+    ),
+    (
+        "https://crl.gds.disa.mil/crl/DODINTEROPERABILITYROOTCA1.crl",
+        "306c310b300906035504061302555331183016060355040a130f552e532e20476f7665726e6d656e74310c300a060355040b1303446f44310c300a060355040b1303504b49312730250603550403131e446f4420496e7465726f7065726162696c69747920526f6f742043412031",  # pragma: allowlist secret
+    ),
+    (
+        "https://crl.gds.disa.mil/crl/DODINTEROPERABILITYROOTCA2.crl",
+        "306c310b300906035504061302555331183016060355040a130f552e532e20476f7665726e6d656e74310c300a060355040b1303446f44310c300a060355040b1303504b49312730250603550403131e446f4420496e7465726f7065726162696c69747920526f6f742043412032",  # pragma: allowlist secret
+    ),
+    (
+        "https://crl.gds.disa.mil/crl/USDODCCEBINTEROPERABILITYROOTCA1.crl",
+        "3074310b300906035504061302555331183016060355040a130f552e532e20476f7665726e6d656e74310c300a060355040b1303446f44310c300a060355040b1303504b49312f302d06035504031326555320446f44204343454220496e7465726f7065726162696c69747920526f6f742043412031",  # pragma: allowlist secret
+    ),
+    (
+        "https://crl.gds.disa.mil/crl/USDODCCEBINTEROPERABILITYROOTCA2.crl",
+        "3074310b300906035504061302555331183016060355040a130f552e532e20476f7665726e6d656e74310c300a060355040b1303446f44310c300a060355040b1303504b49312f302d06035504031326555320446f44204343454220496e7465726f7065726162696c69747920526f6f742043412032",  # pragma: allowlist secret
+    ),
+    (
+        "https://crl.gds.disa.mil/crl/DODNIPRINTERNALNPEROOTCA1.crl",
+        "3075310b300906035504061302555331183016060355040a130f552e532e20476f7665726e6d656e74310c300a060355040b1303446f4431143012060355040b130b496e7465726e616c4e5045312830260603550403131f446f44204e49505220496e7465726e616c204e504520526f6f742043412031",  # pragma: allowlist secret
+    ),
+    (
+        "https://crl.gds.disa.mil/crl/DODNPEROOTCA1.crl",
+        "305f310b300906035504061302555331183016060355040a130f552e532e20476f7665726e6d656e74310c300a060355040b1303446f44310c300a060355040b1303504b49311a301806035504031311446f44204e504520526f6f742043412031",  # pragma: allowlist secret
+    ),
+    (
+        "https://crl.gds.disa.mil/crl/DMDNSIGNINGCA_1.crl",
+        "305f310b300906035504061302555331183016060355040a130f552e532e20476f7665726e6d656e74310c300a060355040b1303446f44310c300a060355040b1303504b49311a301806035504031311444d444e205369676e696e672043412d31",  # pragma: allowlist secret
+    ),
+    (
+        "https://crl.gds.disa.mil/crl/DODWCFROOTCA1.crl",
+        "3063310b300906035504061302555331183016060355040a130f552e532e20476f7665726e6d656e74310c300a060355040b1303446f443110300e060355040b130757434620504b49311a301806035504031311446f442057434620526f6f742043412031",  # pragma: allowlist secret
+    ),
 ]
-
-
-def scan_for_issuer_and_next_update(crl):
-    """
-    Scans a CRL file byte-by-byte to find the issuer and nextUpdate fields.
-
-    Per RFC 5280, the issuer is the fourth ASN1 sequence element to occur in a
-    DER-encoded CRL file (https://tools.ietf.org/html/rfc5280#section-5.1).
-    This function takes a brute-force approach and scans the file until if find
-    the fourth sequence, then begins collecting that and the following bytes to
-    construct the issuer. It stop doing this when it finds \x17, which begins
-    the thisUpdate field. It then scans for the next UTCTime element (the next
-    occurrence of \x17) and grabs the 13 following bytes. It parses the ASN1
-    UTCTime byte string to derive a datetime object.
-
-    :param crl:
-        The path to a CRL file on-disk.
-
-    :return:
-        A two-element tuple. The first element is the raw DER bytes of the
-        issuer, the second is the parsed Python datetime object for nextUpdate.
-    """
-    with open(crl, "rb") as f:
-        byte = f.read(1)
-        sequences = 0
-        issuer_finished = False
-        issuer = b""
-        while byte:
-            if not issuer_finished:
-                if byte == b"0" and sequences < 4:
-                    sequences += 1
-
-                if byte == b"\x17" and sequences == 4:
-                    issuer_finished = True
-
-                if sequences == 4 and not issuer_finished:
-                    issuer += byte
-            else:
-                if byte == b"\x17":
-                    byte_str = f.read(13)
-                    next_update = datetime.strptime(
-                        byte_str[1:].decode(), "%y%m%d%H%M%S"
-                    )
-                    return (issuer, next_update)
-
-            byte = f.read(1)
-
-        raise CRLParseError("CRL could not be scanned.")
-
-
-def build_crl_locations_cache(crl_locations, logger=None):
-    crl_cache = {}
-    for crl_location in crl_locations:
-        try:
-            issuer_der, next_update = scan_for_issuer_and_next_update(crl_location)
-            crl_cache[issuer_der] = {"location": crl_location, "expires": next_update}
-        except CRLParseError:
-            if logger:
-                logger.warning(
-                    "CRL could not be scanned for caching: {}".format(crl_location)
-                )
-            continue
-
-    return crl_cache
 
 
 JSON_CACHE = "crl_locations.json"
 
 
-def _serialize_cache_items(cache):
-    return {
-        der.hex(): {
-            k: v.timestamp() if hasattr(v, "timestamp") else v
-            for (k, v) in data.items()
-        }
-        for (der, data) in cache.items()
-    }
-
-
 def _deserialize_cache_items(cache):
-    return {
-        bytes.fromhex(der): {
-            k: datetime.fromtimestamp(v) if isinstance(v, float) else v
-            for (k, v) in data.items()
-        }
-        for (der, data) in cache.items()
-    }
-
-
-def serialize_crl_locations_cache(crl_dir, logger=None):
-    crl_locations = [
-        "{}/{}".format(crl_dir, crl_path) for crl_path in os.listdir(crl_dir)
-    ]
-    location_cache = build_crl_locations_cache(crl_locations, logger=logger)
-    json_location = "{}/{}".format(crl_dir, JSON_CACHE)
-    with open(json_location, "w") as json_file:
-        json_ready = _serialize_cache_items(location_cache)
-        json.dump(json_ready, json_file)
-
-    return location_cache
+    return {bytes.fromhex(der): data for (der, data) in cache.items()}
 
 
 def load_crl_locations_cache(crl_dir):
@@ -181,6 +249,20 @@ def load_crl_locations_cache(crl_dir):
     with open(json_location, "r") as json_file:
         cache = json.load(json_file)
         return _deserialize_cache_items(cache)
+
+
+def serialize_crl_locations_cache(crl_dir, crl_list=CRL_LIST):
+    crl_cache = {}
+    for crl_uri, crl_issuer in crl_list:
+        crl_path = crl_local_path(crl_dir, crl_uri)
+        if os.path.isfile(crl_path):
+            crl_cache[crl_issuer] = crl_path
+
+    json_location = "{}/{}".format(crl_dir, JSON_CACHE)
+    with open(json_location, "w") as json_file:
+        json.dump(crl_cache, json_file)
+
+    return {bytes.fromhex(k): v for k, v in crl_cache.items()}
 
 
 def crl_local_path(out_dir, crl_location):
@@ -214,14 +296,14 @@ def write_crl(out_dir, target_dir, crl_location):
             raise CRLNotFoundError()
 
         if response.status_code == 304:
-            return False
+            return (False, existing)
 
         with open(crl, "wb") as crl_file:
             for chunk in response.iter_content(chunk_size=1024):
                 if chunk:
                     crl_file.write(chunk)
 
-    return True
+    return (True, existing)
 
 
 def remove_bad_crl(out_dir, crl_location):
@@ -238,19 +320,32 @@ def log_error(logger, crl_location):
         )
 
 
-def refresh_crls(out_dir, target_dir, logger):
-    for crl_location in CRL_LIST:
-        logger.info("updating CRL from {}".format(crl_location))
-        try:
-            if write_crl(out_dir, target_dir, crl_location):
-                logger.info("successfully synced CRL from {}".format(crl_location))
-            else:
-                logger.info("no updates for CRL from {}".format(crl_location))
-        except requests.exceptions.ChunkedEncodingError:
-            log_error(logger, crl_location)
-            remove_bad_crl(out_dir, crl_location)
-        except CRLNotFoundError:
-            log_error(logger, crl_location)
+def refresh_crl(out_dir, target_dir, crl_uri, logger):
+    logger.info("updating CRL from {}".format(crl_uri))
+    try:
+        was_updated, crl_path = write_crl(out_dir, target_dir, crl_uri)
+        if was_updated:
+            logger.info("successfully synced CRL from {}".format(crl_uri))
+        else:
+            logger.info("no updates for CRL from {}".format(crl_uri))
+
+        return crl_path
+    except requests.exceptions.ChunkedEncodingError:
+        log_error(logger, crl_uri)
+        remove_bad_crl(out_dir, crl_uri)
+    except CRLNotFoundError:
+        log_error(logger, crl_uri)
+
+
+def sync_crls(tmp_location, final_location):
+    crl_cache = {}
+    for crl_uri, crl_issuer in CRL_LIST:
+        crl_path = refresh_crl(tmp_location, final_location, crl_uri, logger)
+        crl_cache[crl_issuer] = crl_path
+
+    json_location = "{}/{}".format(final_location, JSON_CACHE)
+    with open(json_location, "w") as json_file:
+        json.dump(crl_cache, json_file)
 
 
 if __name__ == "__main__":
@@ -265,8 +360,7 @@ if __name__ == "__main__":
     try:
         tmp_location = sys.argv[1]
         final_location = sys.argv[2]
-        refresh_crls(tmp_location, final_location, logger)
-        serialize_crl_locations_cache(tmp_location, logger=logger)
+        sync_crls(tmp_location, final_location)
     except Exception as err:
         logger.exception("Fatal error encountered, stopping")
         sys.exit(1)

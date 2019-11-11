@@ -1,7 +1,10 @@
-from flask import template_rendered
 from contextlib import contextmanager
+import os
 from unittest.mock import Mock
+
 from OpenSSL import crypto
+from cryptography.hazmat.backends import default_backend
+from flask import template_rendered
 
 from atst.utils.notification_sender import NotificationSender
 
@@ -49,5 +52,10 @@ FakeNotificationSender = lambda: Mock(spec=NotificationSender)
 def parse_for_issuer_and_next_update(crl):
     with open(crl, "rb") as crl_file:
         parsed = crypto.load_crl(crypto.FILETYPE_ASN1, crl_file.read())
-        next_update = parsed.to_cryptography().next_update
-        return (parsed.get_issuer().der(), next_update)
+        return parsed.get_issuer().der()
+
+
+def make_crl_list(x509_obj, x509_path):
+    issuer = x509_obj.issuer.public_bytes(default_backend())
+    filename = os.path.basename(x509_path)
+    return [(filename, issuer.hex())]

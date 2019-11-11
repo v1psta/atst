@@ -14,16 +14,14 @@ from atst.domain.authnid.crl import (
     NoOpCRLCache,
 )
 from atst.domain.authnid.crl.util import (
-    scan_for_issuer_and_next_update,
-    build_crl_locations_cache,
-    serialize_crl_locations_cache,
     load_crl_locations_cache,
+    serialize_crl_locations_cache,
     CRLParseError,
     JSON_CACHE,
 )
 
 from tests.mocks import FIXTURE_EMAIL_ADDRESS, DOD_CN
-from tests.utils import FakeLogger, parse_for_issuer_and_next_update
+from tests.utils import FakeLogger, parse_for_issuer_and_next_update, make_crl_list
 
 
 class MockX509Store:
@@ -43,14 +41,13 @@ class MockX509Store:
 
 def test_can_build_crl_list(crl_file, ca_key, ca_file, make_crl, tmpdir):
     crl = make_crl(ca_key)
-    dir_ = os.path.dirname(crl_file)
-    serialize_crl_locations_cache(dir_)
-    cache = CRLCache(ca_file, dir_, store_class=MockX509Store)
     issuer_der = crl.issuer.public_bytes(default_backend())
+    dir_ = os.path.dirname(crl_file)
+    serialize_crl_locations_cache(dir_, crl_list=[(str(crl_file), issuer_der.hex())])
+    cache = CRLCache(ca_file, dir_, store_class=MockX509Store)
     assert len(cache.crl_cache.keys()) == 1
     assert issuer_der in cache.crl_cache
-    assert cache.crl_cache[issuer_der]["location"] == crl_file
-    assert cache.crl_cache[issuer_der]["expires"] == crl.next_update
+    assert cache.crl_cache[issuer_der] == crl_file
 
 
 def test_can_build_trusted_root_list(app):
@@ -81,7 +78,8 @@ def test_crl_validation_on_login(
     serialize_pki_object_to_disk(crl, crl_file, encoding=Encoding.DER)
     crl_dir = os.path.dirname(crl_file)
 
-    cache = CRLCache(ca_file, crl_dir)
+    crl_list = make_crl_list(good_cert, crl_file)
+    cache = CRLCache(ca_file, crl_dir, crl_list=crl_list)
     assert cache.crl_check(good_cert.public_bytes(Encoding.PEM).decode())
     with pytest.raises(CRLRevocationException):
         cache.crl_check(bad_cert.public_bytes(Encoding.PEM).decode())
@@ -97,9 +95,10 @@ def test_can_dynamically_update_crls(
     serialize_pki_object_to_disk,
 ):
     crl_dir = os.path.dirname(crl_file)
-    cache = CRLCache(ca_file, crl_dir)
     client_cert = make_x509(rsa_key(), signer_key=ca_key, cn="chewbacca")
     client_pem = client_cert.public_bytes(Encoding.PEM)
+    crl_list = make_crl_list(client_cert, crl_file)
+    cache = CRLCache(ca_file, crl_dir, crl_list=crl_list)
     assert cache.crl_check(client_pem)
 
     revoked_crl = make_crl(ca_key, expired_serials=[client_cert.serial_number])
@@ -147,7 +146,8 @@ def test_expired_crl_raises_CRLInvalidException_with_failover_config_false(
     client_cert = make_x509(rsa_key(), signer_key=ca_key, cn="chewbacca")
     client_pem = client_cert.public_bytes(Encoding.PEM)
     crl_dir = os.path.dirname(expired_crl_file)
-    crl_cache = CRLCache(ca_file, crl_dir)
+    crl_list = make_crl_list(client_cert, expired_crl_file)
+    crl_cache = CRLCache(ca_file, crl_dir, crl_list=crl_list)
     with pytest.raises(CRLInvalidException):
         crl_cache.crl_check(client_pem)
 
@@ -158,72 +158,13 @@ def test_expired_crl_passes_with_failover_config_true(
     client_cert = make_x509(rsa_key(), signer_key=ca_key, cn="chewbacca")
     client_pem = client_cert.public_bytes(Encoding.PEM)
     crl_dir = os.path.dirname(expired_crl_file)
-    crl_cache = CRLCache(ca_file, crl_dir)
+    crl_list = make_crl_list(client_cert, expired_crl_file)
+    crl_cache = CRLCache(ca_file, crl_dir, crl_list=crl_list)
 
     assert crl_cache.crl_check(client_pem)
 
 
-def test_updates_expired_certs(
-    rsa_key, ca_file, expired_crl_file, crl_file, ca_key, make_x509
-):
-    """
-    Given a CRLCache object with an expired CRL and a function for updating the
-    CRLs, the CRLCache should run the update function before checking a
-    certificate that requires the expired CRL.
-    """
-    client_cert = make_x509(rsa_key(), signer_key=ca_key, cn="chewbacca")
-    client_pem = client_cert.public_bytes(Encoding.PEM)
-
-    def _crl_update_func():
-        shutil.copyfile(crl_file, expired_crl_file)
-
-    crl_dir = os.path.dirname(expired_crl_file)
-    crl_cache = CRLCache(ca_file, crl_dir, crl_update_func=_crl_update_func)
-    crl_cache.crl_check(client_pem)
-
-
-def test_scan_for_issuer_and_next_update(crl_file):
-    parsed = parse_for_issuer_and_next_update(crl_file)
-    scanned = scan_for_issuer_and_next_update(crl_file)
-    assert parsed == scanned
-
-
-@pytest.fixture
-def bad_crl(tmpdir):
-    bad_file = tmpdir.join("bad.crl")
-    with open(bad_file, "wb") as bad:
-        bad.write(b"definitely not a crl")
-
-    return bad_file
-
-
-def test_scan_for_issuer_and_next_update_with_bad_data(bad_crl):
-    with pytest.raises(CRLParseError):
-        scan_for_issuer_and_next_update(bad_crl)
-
-
-def test_build_crl_locations_cache(crl_file):
-    issuer_der, next_update = parse_for_issuer_and_next_update(crl_file)
-    cache = build_crl_locations_cache([crl_file])
-    assert cache == {issuer_der: {"location": crl_file, "expires": next_update}}
-
-
-def test_build_crl_locations_cache_with_bad_data(crl_file, bad_crl):
-    logger = FakeLogger()
-    issuer_der, next_update = parse_for_issuer_and_next_update(crl_file)
-    cache = build_crl_locations_cache([crl_file, bad_crl], logger=logger)
-    assert cache == {issuer_der: {"location": crl_file, "expires": next_update}}
-    assert logger.messages
-    assert str(bad_crl) in logger.messages[0]
-
-
-def test_serialize_crl_locations_cache(crl_file, bad_crl):
-    dir_ = os.path.dirname(crl_file)
-    serialize_crl_locations_cache(dir_)
-    assert os.path.isfile("{}/{}".format(dir_, JSON_CACHE))
-
-
-def test_load_crl_locations_cache(crl_file, bad_crl):
+def test_load_crl_locations_cache(crl_file):
     dir_ = os.path.dirname(crl_file)
     serialize_crl_locations_cache(dir_)
     cache = load_crl_locations_cache(dir_)

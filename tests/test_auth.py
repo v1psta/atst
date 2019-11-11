@@ -6,14 +6,16 @@ from datetime import datetime
 from flask import session, url_for
 from cryptography.hazmat.primitives.serialization import Encoding
 
-from .mocks import DOD_SDN_INFO, DOD_SDN, FIXTURE_EMAIL_ADDRESS
 from atst.domain.users import Users
 from atst.domain.permission_sets import PermissionSets
 from atst.domain.exceptions import NotFoundError
 from atst.domain.authnid.crl import CRLInvalidException
 from atst.domain.auth import UNPROTECTED_ROUTES
 from atst.domain.authnid.crl import CRLCache
+
 from .factories import UserFactory
+from .mocks import DOD_SDN_INFO, DOD_SDN, FIXTURE_EMAIL_ADDRESS
+from .utils import make_crl_list
 
 
 MOCK_USER = {"id": "438567dd-25fa-4d83-a8cc-8aa8366cb24a"}
@@ -149,7 +151,8 @@ def swap_crl_cache(
             crl = make_crl(ca_key)
             serialize_pki_object_to_disk(crl, crl_file, encoding=Encoding.DER)
             crl_dir = os.path.dirname(crl_file)
-            app.crl_cache = CRLCache(ca_file, crl_dir)
+            crl_list = make_crl_list(crl, crl_file)
+            app.crl_cache = CRLCache(ca_file, crl_dir, crl_list=crl_list)
 
     yield _swap_crl_cache
 
@@ -175,7 +178,8 @@ def test_crl_validation_on_login(
     serialize_pki_object_to_disk(crl, crl_file, encoding=Encoding.DER)
 
     crl_dir = os.path.dirname(crl_file)
-    cache = CRLCache(ca_file, crl_dir)
+    crl_list = make_crl_list(good_cert, crl_file)
+    cache = CRLCache(ca_file, crl_dir, crl_list=crl_list)
     swap_crl_cache(cache)
 
     # bad cert is on the test CRL
