@@ -25,6 +25,7 @@ class Application(
         primaryjoin=and_(
             Environment.application_id == id, Environment.deleted == False
         ),
+        order_by="Environment.name",
     )
     roles = relationship(
         "ApplicationRole",

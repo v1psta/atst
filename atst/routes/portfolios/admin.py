@@ -52,7 +52,10 @@ def serialize_member_form_data(member):
 
 
 def get_members_data(portfolio):
-    members = [serialize_member_form_data(member) for member in portfolio.members]
+    members = sorted(
+        [serialize_member_form_data(member) for member in portfolio.members],
+        key=lambda member: member["member_name"],
+    )
     for member in members:
         if member["member_id"] == portfolio.owner_role.id:
             ppoc = member

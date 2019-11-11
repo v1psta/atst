@@ -30,9 +30,9 @@ def get_environments_obj_for_app(application):
                 "pending": env.is_pending,
                 "edit_form": EditEnvironmentForm(obj=env),
                 "member_count": len(env.roles),
-                "members": [
-                    env_role.application_role.user_name for env_role in env.roles
-                ],
+                "members": sorted(
+                    [env_role.application_role.user_name for env_role in env.roles]
+                ),
             }
             for env in application.environments
         ],
@@ -100,12 +100,11 @@ def get_members_data(application):
         form = UpdateMemberForm(
             environment_roles=env_roles_form_data, **permission_sets
         )
-        update_invite_form = None
-
-        if member.latest_invitation and member.latest_invitation.can_resend:
-            update_invite_form = MemberForm(obj=member.latest_invitation)
-        else:
-            update_invite_form = MemberForm()
+        update_invite_form = (
+            MemberForm(obj=member.latest_invitation)
+            if member.latest_invitation and member.latest_invitation.can_resend
+            else MemberForm()
+        )
 
         members_data.append(
             {
@@ -119,14 +118,17 @@ def get_members_data(application):
             }
         )
 
-    return members_data
+    return sorted(members_data, key=lambda member: member["user_name"])
 
 
 def get_new_member_form(application):
-    env_roles = [
-        {"environment_id": e.id, "environment_name": e.name}
-        for e in application.environments
-    ]
+    env_roles = sorted(
+        [
+            {"environment_id": e.id, "environment_name": e.name}
+            for e in application.environments
+        ],
+        key=lambda role: role["environment_name"],
+    )
 
     return NewMemberForm(data={"environment_roles": env_roles})
 
