@@ -342,7 +342,7 @@ portfolios:
             </p>
           </div>
       step_2_header: Add Environments to {application_name}
-      step_2_description: "Production, Staging, Testing, and Development environments are included by default. However, you can add, edit, and delete environments based on the needs of your Application."
+      step_2_description: Development, Testing, Staging, and Production environments are included by default. However, you can add, edit, and delete environments based on the needs of your Application. 
       step_2_button_text: "Next: Add Members"
       step_3_header: Add Members to {application_name}
       step_3_description: "To proceed, you will need each member's email address and DOD ID. Within this section, you will also assign Application-level permissions and environment-level roles for each member."
