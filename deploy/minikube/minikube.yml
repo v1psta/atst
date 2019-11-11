@@ -69,12 +69,9 @@ spec:
               path: atst-overrides.ini
               mode: 0644
         - name: nginx-client-ca-bundle
-          secret:
-            secretName: nginx-client-ca-bundle
-            items:
-            - key: client-ca-bundle.pem
-              path: client-ca-bundle.pem
-              mode: 0666
+          configMap:
+            name: nginx-client-ca-bundle
+            defaultMode: 0666
         - name: nginx-config
           configMap:
             name: atst-nginx
