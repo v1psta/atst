@@ -84,21 +84,19 @@ export default {
     },
 
     isMonthValid: function() {
-      let _month = parseInt(this.month)
-      let valid = _month >= 0 && _month <= 12
-      return valid
+      const month = parseInt(this.month)
+      return month >= 1 && month <= 12
     },
 
     isDayValid: function() {
-      let _day = parseInt(this.day)
-      let valid = _day >= 0 && _day <= this.daysMaxCalculation
-      return valid
+      const day = parseInt(this.day)
+      return day >= 1 && day <= this.daysMaxCalculation
     },
 
     isYearValid: function() {
       let valid
-      let minYear = this.mindate ? parseInt(this.mindate) : null
-      let maxYear = this.maxdate ? parseInt(this.maxdate) : null
+      const minYear = this.mindate ? parseInt(this.mindate) : null
+      const maxYear = this.maxdate ? parseInt(this.maxdate) : null
 
       if (minYear && maxYear) {
         valid = this.year >= minYear && this.year <= maxYear
@@ -151,14 +149,12 @@ export default {
           } else {
             return 29
           }
-          break
 
         case 4: // April
         case 6: // June
         case 9: // September
         case 11: // November
           return 30
-          break
 
         default:
           // All other months, or null, go with 31
