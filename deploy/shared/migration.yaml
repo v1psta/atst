@@ -2,7 +2,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: migration
-  namespace: atat
+  namespace: $K8S_NAMESPACE
 spec:
   ttlSecondsAfterFinished: 100
   backoffLimit: 2
