@@ -94,6 +94,10 @@
         border-right: 10px solid transparent;
         border-bottom: 10px solid $color-blue-light;
       }
+
+      &--active {
+        background-color: $color-gray-lightest;
+      }
     }
 
     &-toggle-content {

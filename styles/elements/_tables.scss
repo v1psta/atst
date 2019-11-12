@@ -12,6 +12,8 @@ table.atat-table {
     border-collapse: separate;
   }
 
+  background: $color-white;
+
   th,
   td {
     &.table-cell {
@@ -46,7 +48,7 @@ table.atat-table {
     tr {
       th,
       td {
-        background-color: $color-white;
+        background: none;
         margin: 0;
         padding: $gap * 2;
         border: 1px solid $color-gray-lighter;

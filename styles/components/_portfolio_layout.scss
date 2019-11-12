@@ -149,6 +149,7 @@
   .member-list {
     .responsive-table-wrapper {
       margin-bottom: 0;
+      overflow: visible;
 
       table.atat-table {
         table-layout: fixed;
@@ -213,12 +214,13 @@
     }
 
     .env_role {
-      width: 50%;
-    }
+      &--th {
+        width: 50%;
+      }
 
-    .form-col--two-thirds {
-      width: 66.66%;
-      flex-basis: unset;
+      &--td {
+        position: relative;
+      }
     }
 
     .row {
@@ -236,6 +238,47 @@
       .env-role__role {
         white-space: nowrap;
         display: inline-block;
+        margin-right: $gap * 6;
+      }
+    }
+
+    .app-member-menu {
+      position: absolute;
+      top: $gap;
+      right: $gap * 2;
+
+      .accordion-table__item__toggler {
+        padding: $gap / 3;
+        border: 1px solid $color-gray-lighter;
+        border-radius: 3px;
+        cursor: pointer;
+
+        .icon {
+          margin: $gap / 2;
+        }
+      }
+
+      &__toggle {
+        position: absolute;
+        right: 0;
+        top: 30px;
+        background-color: $color-white;
+        border: 1px solid $color-gray-light;
+        z-index: 1;
+        margin-top: 0;
+
+        a {
+          display: block;
+          padding: $gap;
+          border-bottom: 1px solid $color-gray-lighter;
+          text-decoration: none;
+          color: $color-black;
+          cursor: pointer;
+
+          &:last-child {
+            border-bottom: 0;
+          }
+        }
       }
     }
   }
