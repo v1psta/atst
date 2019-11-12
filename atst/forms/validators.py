@@ -65,10 +65,12 @@ def Name(message=translate("forms.validators.name_message")):
 
 def ListItemRequired(
     message=translate("forms.validators.list_item_required_message"),
-    empty_values=("", None),
+    empty_values=[None],
 ):
     def _list_item_required(form, field):
-        non_empty_values = [v for v in field.data if v not in empty_values]
+        non_empty_values = [
+            v for v in field.data if (v not in empty_values and re.search(r"\S", v))
+        ]
         if len(non_empty_values) == 0:
             raise ValidationError(message)
 

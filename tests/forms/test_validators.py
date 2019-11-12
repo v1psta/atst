@@ -85,3 +85,20 @@ class TestFileLength:
 
         dummy_field.data = "random string"
         assert validator(dummy_form, dummy_field)
+
+
+class TestListItemRequired:
+    @pytest.mark.parametrize("valid", [[" a", ""], ["a ", ""], ["a", ""]])
+    def test_ListItemRequired(self, valid, dummy_form, dummy_field):
+        validator = ListItemRequired()
+        dummy_field.data = valid
+        validator(dummy_form, dummy_field)
+
+    @pytest.mark.parametrize("invalid", [[""], ["    "], [None], []])
+    def test_ListItemRequired_rejects_blank_names(
+        self, invalid, dummy_form, dummy_field
+    ):
+        validator = ListItemRequired()
+        dummy_field.data = invalid
+        with pytest.raises(ValidationError):
+            validator(dummy_form, dummy_field)
