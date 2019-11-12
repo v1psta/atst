@@ -8,7 +8,7 @@ from wtforms.fields import (
 from wtforms.validators import Length, Optional
 from wtforms.widgets import ListWidget, CheckboxInput
 
-from .forms import BaseForm
+from .forms import BaseForm, remove_empty_string
 from atst.utils.localization import translate
 
 from .data import (
@@ -49,7 +49,7 @@ class PortfolioCreationForm(BaseForm):
         translate("forms.task_order.defense_component_label"),
         choices=SERVICE_BRANCHES,
         default="",
-        filters=[BaseForm.remove_empty_string],
+        filters=[remove_empty_string],
     )
 
     description = TextAreaField(
@@ -85,7 +85,7 @@ class PortfolioCreationForm(BaseForm):
     complexity_other = StringField(
         translate("forms.task_order.complexity_other_label"),
         default=None,
-        filters=[BaseForm.remove_empty_string],
+        filters=[remove_empty_string],
     )
 
     dev_team = SelectMultipleField(
@@ -100,7 +100,7 @@ class PortfolioCreationForm(BaseForm):
     dev_team_other = StringField(
         translate("forms.task_order.dev_team_other_label"),
         default=None,
-        filters=[BaseForm.remove_empty_string],
+        filters=[remove_empty_string],
     )
 
     team_experience = RadioField(

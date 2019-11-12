@@ -2,7 +2,7 @@ import pytest
 from wtforms.fields import RadioField, FieldList, StringField
 from werkzeug.datastructures import ImmutableMultiDict
 
-from atst.forms.forms import BaseForm
+from atst.forms.forms import BaseForm, remove_empty_string
 
 
 class FormWithChoices(BaseForm):
@@ -17,8 +17,8 @@ class FormWithChoices(BaseForm):
 
 
 class FormWithList(BaseForm):
-    list = FieldList(
-        StringField("a very fancy list", filters=[BaseForm.remove_empty_string])
+    fancy_list = FieldList(
+        StringField("a very fancy list", filters=[remove_empty_string])
     )
 
 
@@ -46,11 +46,11 @@ class TestBaseForm:
         [["testing", "", "QA"], ["testing", "    ", "QA"], ["testing", None, "QA"]],
     )
     def test_blank_list_items_removed(self, form_data):
-        form = FormWithList(list=form_data)
+        form = FormWithList(fancy_list=form_data)
         assert form.validate(flash_invalid=False)
         assert not form.data == ["testing", "QA"]
 
     def test_remove_empty_string_clips_whitespace(self):
-        form = FormWithList(list=[" QA", "  testing   "])
+        form = FormWithList(fancy_list=[" QA", "  testing   "])
         assert form.validate(flash_invalid=False)
-        assert form.list.data == ["QA", "testing"]
+        assert form.fancy_list.data == ["QA", "testing"]

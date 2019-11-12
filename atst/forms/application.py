@@ -1,4 +1,4 @@
-from .forms import BaseForm
+from .forms import BaseForm, remove_empty_string
 from wtforms.fields import StringField, TextAreaField, FieldList
 from wtforms.validators import Required, Optional
 from atst.forms.validators import ListItemRequired, ListItemsUnique
@@ -9,7 +9,7 @@ class EditEnvironmentForm(BaseForm):
     name = StringField(
         label=translate("forms.environments.name_label"),
         validators=[Required()],
-        filters=[BaseForm.remove_empty_string],
+        filters=[remove_empty_string],
     )
 
 
@@ -17,12 +17,12 @@ class NameAndDescriptionForm(BaseForm):
     name = StringField(
         label=translate("forms.application.name_label"),
         validators=[Required()],
-        filters=[BaseForm.remove_empty_string],
+        filters=[remove_empty_string],
     )
     description = TextAreaField(
         label=translate("forms.application.description_label"),
         validators=[Optional()],
-        filters=[BaseForm.remove_empty_string],
+        filters=[remove_empty_string],
     )
 
 
@@ -30,7 +30,7 @@ class EnvironmentsForm(BaseForm):
     environment_names = FieldList(
         StringField(
             label=translate("forms.application.environment_names_label"),
-            filters=[BaseForm.remove_empty_string],
+            filters=[remove_empty_string],
         ),
         validators=[
             ListItemRequired(
