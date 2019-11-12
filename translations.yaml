@@ -107,7 +107,7 @@ email:
   environment_ready: JEDI cloud environment ready
 flash:
   application:
-    created: 
+    created:
       title: Application Saved
       message: '{application_name} has been successfully created. You may continue on to provision environments and assign team members now, or come back and complete these tasks at a later time.'
     updated: 'You have successfully updated the {application_name} application.'
@@ -121,7 +121,7 @@ flash:
   new_ppoc_message: 'You have successfully added {ppoc_name} as the primary point of contact. You are no longer the PPoC.'
   new_ppoc_title: Primary point of contact updated
   success: Success!
-  new_application_member: 
+  new_application_member:
     title: "{user_name}'s invitation has been sent"
     message: "{user_name}'s access to this Application is pending until they sign in for the first time."
   updated_application_team_settings: 'You have updated the {application_name} team settings.'
@@ -342,7 +342,7 @@ portfolios:
             </p>
           </div>
       step_2_header: Add Environments to {application_name}
-      step_2_description: Development, Testing, Staging, and Production environments are included by default. However, you can add, edit, and delete environments based on the needs of your Application. 
+      step_2_description: Development, Testing, Staging, and Production environments are included by default. However, you can add, edit, and delete environments based on the needs of your Application.
       step_2_button_text: "Next: Add Members"
       step_3_header: Add Members to {application_name}
       step_3_description: "To proceed, you will need each member's email address and DOD ID. Within this section, you will also assign Application-level permissions and environment-level roles for each member."
@@ -401,14 +401,18 @@ portfolios:
         del_env:
           label: Delete Application
           description: Delete this application.
-        env_access: 
+        env_access:
           title: Environment Roles
+          table_header: Environment Access
           description: Additional role controls are available in the CSP console. <a href="#"> Learn More </a>
         next_button: "Next: Permissions"
         app_perms:
           title: Application Permissions
           description: Application permissions allow users to provision and modify applications and teams. <a href="#"> Learn More </a>
         add_member: Add Member
+      menu:
+        edit: Edit Roles and Permissions
+        resend: Resend Invite
       new:
         assign_roles: Assign Member Environments and Roles
         learn_more: Learn more about these roles
@@ -416,6 +420,7 @@ portfolios:
         manage_envs: 'Allow member to <strong>add</strong> and <strong>rename environments</strong> within the application.'
         delete_envs: 'Allow member to <strong>delete environments</strong> within the application.'
         manage_team: 'Allow member to <strong>add, update,</strong> and <strong>remove members</strong> from the application team.'
+        verify: Verify Member Information
       perms_team_mgmt:
         'False': View Team
         'True': Edit Team

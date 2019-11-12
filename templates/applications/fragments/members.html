@@ -55,7 +55,7 @@
           {% set resend_invite_modal = "resend_invite-{}".format(member.role_id) %}
           {% call Modal(resend_invite_modal, classes="form-content--app-mem") %}
             <div class="modal__form--header">
-              <h1>Verify Member Information</h1>
+              <h1>{{ "portfolios.applications.members.new.verify" | translate }}</h1>
               <hr>
             </div>
             <base-form inline-template :enable-save="true">
@@ -95,9 +95,9 @@
           <table class="atat-table">
             <thead>
               <tr>
-                <th>Name</th>
-                <th>Application Permissions</th>
-                <th class="env_role--th">Environment Access</th>
+                <th>{{ "common.name" | translate }}</th>
+                <th>{{ "portfolios.applications.members.form.app_perms.title" | translate }}</th>
+                <th class="env_role--th">{{ 'portfolios.applications.members.form.env_access.table_header' | translate }}</th>
               </tr>
             </thead>
             <tbody>
@@ -148,13 +148,15 @@
                       {% call ToggleSection(section_name=section, classes="app-member-menu__toggle") %}
                         {% if user_can(permissions.EDIT_APPLICATION_MEMBER) -%}
                           <a v-on:click="openModal('{{ perms_modal }}')">
-                            Edit Roles and Permissions
+                            {{ "portfolios.applications.members.menu.edit" | translate }}
                           </a>
                         {%- endif %}
                         {% if member.role_status == 'pending' -%}
                           {% set revoke_invite_modal = "revoke_invite_{}".format(member.role_id) %}
                           {% set resend_invite_modal = "resend_invite-{}".format(member.role_id) %}
-                          <a v-on:click='openModal("{{ resend_invite_modal }}")'>Resend Invite</a>
+                          <a v-on:click='openModal("{{ resend_invite_modal }}")'>
+                            {{ "portfolios.applications.members.menu.resend" | translate }}
+                          </a>
                           {% if user_can(permissions.DELETE_APPLICATION_MEMBER) -%}
                             <a v-on:click='openModal("{{ revoke_invite_modal }}")'>{{ 'invites.revoke' | translate }}</a>
                           {%- endif %}
