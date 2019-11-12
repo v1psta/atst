@@ -14,7 +14,7 @@ from atst.models import (
 )
 from atst.domain.environment_roles import EnvironmentRoles
 
-from .exceptions import NotFoundError
+from .exceptions import NotFoundError, DisabledError
 
 
 class Environments(object):
@@ -57,33 +57,31 @@ class Environments(object):
 
     @classmethod
     def update_env_role(cls, environment, application_role, new_role):
-        updated = False
-
         env_role = EnvironmentRoles.get_for_update(application_role.id, environment.id)
+        if env_role and (
+            env_role.status == EnvironmentRole.Status.DISABLED or env_role.deleted
+        ):
+            raise DisabledError("environment_role", env_role.id)
+
         if (
             env_role
             and env_role.role != new_role
             and env_role.status != EnvironmentRole.Status.DISABLED
         ):
             env_role.role = new_role
-            updated = True
+            db.session.add(env_role)
         elif not env_role and new_role:
             env_role = EnvironmentRoles.create(
                 application_role=application_role,
                 environment=environment,
                 role=new_role,
             )
-            updated = True
+            db.session.add(env_role)
 
         if env_role and not new_role:
             EnvironmentRoles.disable(env_role.id)
-            updated = True
 
-        if updated:
-            db.session.add(env_role)
-            db.session.commit()
-
-        return updated
+        db.session.commit()
 
     @classmethod
     def revoke_access(cls, environment, target_user):
