@@ -11,56 +11,30 @@ export default {
     },
   },
 
-  mounted: function() {
-    this.$root.$on('field-change', this.handleFieldChange)
-    this.$on('field-change', this.handleFieldChange)
+  data: function() {
+    return {
+      changed: this.hasChanges,
+      valid: false,
+    }
   },
 
-  created: function() {
-    this.$root.$on('field-mount', this.handleFieldMount)
-    this.$on('field-mount', this.handleFieldMount)
+  mounted: function() {
+    this.$on('field-change', this.handleFieldChange)
+    this.valid = this.validateFields()
   },
 
   methods: {
     handleFieldChange: function(event) {
-      const { value, name, valid, parent_uid, watch } = event
-      if (typeof this.fields[name] !== undefined) {
-        this.fields[name] = valid
-        if (parent_uid === this._uid || watch) {
-          this.changed = true
-        }
-      }
-
-      this.validateForm()
+      this.valid = this.validateFields()
+      this.changed = true
     },
 
-    handleChildFieldChange: function(event) {
-      // need to temporarily use this function because we will no longer be passing
-      // parent_uid or watch from the child components
-      const { name, valid } = event
-      if (typeof this.fields[name] !== 'undefined') {
-        this.fields[name] = valid
-        this.changed = true
-      }
-
-      this.validateForm()
-    },
-
-    handleFieldMount: function(event) {
-      const { name, optional, valid } = event
-      this.fields[name] = optional || valid
-      const formValid = this.validateForm()
-      this.invalid = !formValid
-    },
-
-    validateForm: function() {
-      const valid = !Object.values(this.fields).some(field => field === false)
-      this.invalid = !valid
-      return valid
+    validateFields: function() {
+      return this.$children.every(child => child.valid)
     },
 
     handleSubmit: function(event) {
-      if (this.invalid) {
+      if (!this.valid) {
         event.preventDefault()
       }
     },
@@ -68,23 +42,13 @@ export default {
 
   computed: {
     canSave: function() {
-      const formValid = !this.invalid
-
-      if (this.changed && formValid) {
+      if (this.changed && this.valid) {
         return true
-      } else if (this.enableSave && formValid) {
+      } else if (this.enableSave && this.valid) {
         return true
       } else {
         return false
       }
     },
-  },
-
-  data: function() {
-    return {
-      changed: this.hasChanges,
-      fields: {},
-      invalid: true,
-    }
   },
 }

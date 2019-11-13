@@ -2,7 +2,7 @@ import stickybits from 'stickybits'
 
 import checkboxinput from '../checkbox_input'
 import ClinFields from '../clin_fields'
-import FormMixin from '../../mixins/form_mixin'
+import FormMixin from '../../mixins/form'
 import textinput from '../text_input'
 import uploadinput from '../upload_input'
 

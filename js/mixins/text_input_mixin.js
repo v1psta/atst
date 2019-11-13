@@ -1,7 +1,6 @@
 import MaskedInput, { conformToMask } from 'vue-text-mask'
 import inputValidations from '../lib/input_validations'
 import { formatDollars } from '../lib/dollars'
-import { emitEvent } from '../lib/emitters'
 
 export default {
   name: 'textinput',
@@ -78,14 +77,6 @@ export default {
     }
   },
 
-  created: function() {
-    emitEvent('field-mount', this, {
-      optional: this.optional,
-      name: this.name,
-      valid: this._isValid(this.value),
-    })
-  },
-
   methods: {
     // When user types a character
     onInput: function(e) {
@@ -143,12 +134,6 @@ export default {
       this.$parent.$emit('field-change', {
         value: this._rawValue(value),
         name: this.name,
-      })
-      emitEvent('field-change', this, {
-        value: this._rawValue(value),
-        valid: this._isValid(value),
-        name: this.name,
-        watch: this.watch,
       })
     },
 

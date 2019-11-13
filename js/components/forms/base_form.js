@@ -2,7 +2,7 @@ import ally from 'ally.js'
 import stickybits from 'stickybits'
 
 import DateSelector from '../date_selector'
-import FormMixin from '../../mixins/form_mixin'
+import FormMixin from '../../mixins/form'
 import Modal from '../../mixins/modal'
 import MultiStepModalForm from './multi_step_modal_form'
 import checkboxinput from '../checkbox_input'
