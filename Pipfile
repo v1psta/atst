@@ -50,6 +50,8 @@ detect-secrets = "*"
 beautifulsoup4 = "*"
 mypy = "*"
 rope = "*"
+pyquery = "*"
+locustio = "*"
 
 [requires]
 python_version = "3.7.3"
