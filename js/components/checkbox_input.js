@@ -1,3 +1,5 @@
+import { emitFieldChange } from '../lib/emitters'
+
 export default {
   name: 'checkboxinput',
 
@@ -15,7 +17,7 @@ export default {
 
   methods: {
     onInput: function() {
-      this.$parent.$emit('field-change')
+      emitFieldChange(this)
     },
   },
 

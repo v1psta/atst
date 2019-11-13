@@ -1,3 +1,5 @@
+import { emitFieldChange } from '../lib/emitters'
+
 export default {
   name: 'multicheckboxinput',
 
@@ -32,7 +34,7 @@ export default {
 
   methods: {
     onInput: function(e) {
-      this.$parent.$emit('field-change')
+      emitFieldChange(this)
       this.showError = false
       this.showValid = true
     },

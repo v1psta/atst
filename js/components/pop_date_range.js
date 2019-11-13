@@ -1,5 +1,5 @@
 import { format } from 'date-fns'
-
+import { emitFieldChange } from '../lib/emitters'
 import DateSelector from './date_selector'
 
 const START_DATE = 'start_date'
@@ -63,7 +63,7 @@ export default {
         let date = new Date(event.value)
         this.maxStartDate = this.calcMaxStartDate(date)
       }
-      this.$parent.$emit('field-change')
+      emitFieldChange(this)
     },
 
     calcMaxStartDate: function(date) {

@@ -1,4 +1,4 @@
-import { emitEvent } from '../lib/emitters'
+import { emitFieldChange, emitEvent } from '../lib/emitters'
 import optionsinput from './options_input'
 import textinput from './text_input'
 import clindollaramount from './clin_dollar_amount'
@@ -98,7 +98,7 @@ export default {
       } else if (event && event.name.includes(NUMBER)) {
         this.clinNumber = event.value
       }
-      this.$parent.$emit('field-change')
+      emitFieldChange(this)
     },
 
     removeClin: function() {

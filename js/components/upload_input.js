@@ -1,4 +1,5 @@
 import { buildUploader } from '../lib/upload'
+import { emitFieldChange } from '../lib/emitters'
 
 export default {
   name: 'uploadinput',
@@ -68,7 +69,7 @@ export default {
 
       this.changed = true
 
-      this.$parent.$emit('field-change')
+      emitFieldChange(this)
     },
     removeAttachment: function(e) {
       e.preventDefault()
@@ -80,7 +81,7 @@ export default {
       this.clearErrors()
       this.changed = true
 
-      this.$parent.$emit('field-change')
+      emitFieldChange(this)
     },
     clearErrors: function() {
       this.uploadError = false

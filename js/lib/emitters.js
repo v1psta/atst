@@ -4,3 +4,7 @@ export const emitEvent = (event_type, el, data) => {
     parent_uid: el.$parent && el.$parent._uid,
   })
 }
+
+export const emitFieldChange = (el, data = null) => {
+  el.$parent.$emit('field-change', data)
+}
