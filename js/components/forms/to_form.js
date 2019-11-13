@@ -36,7 +36,7 @@ export default {
   },
 
   mounted: function() {
-    this.$root.$on('remove-clin', this.handleRemoveClin)
+    this.$on('remove-clin', this.handleRemoveClin)
   },
 
   methods: {
