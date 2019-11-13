@@ -1,4 +1,4 @@
-import FormMixin from '../../mixins/form'
+import FormMixin from '../../mixins/form_mixin'
 import textinput from '../text_input'
 import optionsinput from '../options_input'
 import checkboxinput from '../checkbox_input'
@@ -25,23 +25,16 @@ export default {
   data: function() {
     return {
       step: 0,
-      fields: {},
-      invalid: true,
     }
   },
 
-  created: function() {
-    this.$root.$on('field-mount', this.handleFieldMount)
-  },
-
   mounted: function() {
-    this.$root.$on('field-change', this.handleValidChange)
     this.$root.$on('modalOpen', this.handleModalOpen)
   },
 
   methods: {
     next: function() {
-      if (this._checkIsValid()) {
+      if (this.validateFields()) {
         this.step += 1
       }
     },
@@ -49,26 +42,9 @@ export default {
       this.step -= 1
     },
     goToStep: function(step) {
-      if (this._checkIsValid()) {
+      if (this.validateFields()) {
         this.step = step
       }
-    },
-    handleValidChange: function(event) {
-      const { name, valid, parent_uid } = event
-      // check that this field is in the modal and not on some other form
-      if (parent_uid === this._uid) {
-        this.fields[name] = valid
-        this._checkIsValid()
-      }
-    },
-    _checkIsValid: function() {
-      const valid = !Object.values(this.fields).some(field => field === false)
-      this.invalid = !valid
-      return valid
-    },
-    handleFieldMount: function(event) {
-      const { name, optional } = event
-      this.fields[name] = optional
     },
     handleModalOpen: function(_bool) {
       this.step = 0
@@ -77,12 +53,10 @@ export default {
       return this.step === this.steps - 1
     },
     handleSubmit: function(e) {
-      if (this.invalid || !this._onLastPage()) {
+      if (!this.validateFields() || !this._onLastPage()) {
         e.preventDefault()
         this.next()
       }
     },
   },
-
-  computed: {},
 }

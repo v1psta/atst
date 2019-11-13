@@ -45,7 +45,7 @@
     <input
         type='button'
         v-on:click="next()"
-        v-bind:disabled="invalid"
+        v-bind:disabled="!canSave"
         class='action-group__action usa-button usa-button-primary'
         value='Next'>
     <a class='action-group__action' v-on:click="closeModal('{{ new_port_mem }}')">Cancel</a>

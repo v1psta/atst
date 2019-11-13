@@ -32,7 +32,7 @@
     <input
         type='button'
         v-on:click="next()"
-        v-bind:disabled="invalid"
+        v-bind:disabled="!canSave"
         class='action-group__action usa-button'
         value='{{ "fragments.ppoc.assign_user_button_text" | translate }}'>
     <a class='action-group__action icon-link icon-link--default' v-on:click="closeModal('change-ppoc-form')">
