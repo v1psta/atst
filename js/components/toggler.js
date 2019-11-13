@@ -1,11 +1,9 @@
-import FormMixin from '../mixins/form'
 import optionsinput from './options_input'
 import textinput from './text_input'
+import BaseForm from './forms/base_form'
 
 export default {
   name: 'toggler',
-
-  mixins: [FormMixin],
 
   props: {
     initialSelectedSection: {
@@ -18,6 +16,7 @@ export default {
     optionsinput,
     textinput,
     optionsinput,
+    BaseForm,
     toggler: this,
   },
 
