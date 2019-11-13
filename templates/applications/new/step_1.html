@@ -16,12 +16,12 @@
   {% include "portfolios/header.html" %}
   {{ StickyCTA(text=('portfolios.applications.new.step_1_header' | translate | safe), context="Step 1 of 3") }}
 {% endblock %}
-  
+
 {% block application_content %}
 
   {% include "fragments/flash.html" %}
 
-  <application-name-and-description inline-template v-bind:initial-data='{{ form.data|tojson }}'>
+  <base-form inline-template :enable-save="true">
     <form method="POST" action="{{ action }}" v-on:submit="handleSubmit">
       {{ form.csrf_token }}
       <div class="form-row">
@@ -43,12 +43,11 @@
         {% block next_button %}
           {{ SaveButton(text=('portfolios.applications.new.step_1_button_text' | translate)) }}
         {% endblock %}
-        <button disabled class="usa-button usa-button-secondary">Previous</button>
         <a href="{{ url_for('applications.portfolio_applications', portfolio_id=portfolio.id) }}">
           Cancel
         </a>
       </span>
     </form>
-  </application-name-and-description>
+  </base-form>
 
 {% endblock %}

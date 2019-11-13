@@ -51,7 +51,6 @@ export default {
   },
 
   mounted: function() {
-    this.$root.$on('onEnvironmentAdded', this.addEnvironment)
     this.validate()
   },
 

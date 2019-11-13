@@ -14,7 +14,6 @@ import textinput from './components/text_input'
 import checkboxinput from './components/checkbox_input'
 import poc from './components/forms/poc'
 import toggler from './components/toggler'
-import ApplicationNameAndDescription from './components/forms/new_application/name_and_description'
 import ApplicationEnvironments from './components/forms/new_application/environments'
 import MultiStepModalForm from './components/forms/multi_step_modal_form'
 import uploadinput from './components/upload_input'
@@ -49,7 +48,6 @@ const app = new Vue({
     textinput,
     checkboxinput,
     poc,
-    ApplicationNameAndDescription,
     ApplicationEnvironments,
     BudgetChart,
     SpendTable,
