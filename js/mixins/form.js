@@ -37,8 +37,8 @@ export default {
     handleChildFieldChange: function(event) {
       // need to temporarily use this function because we will no longer be passing
       // parent_uid or watch from the child components
-      const { value, name, valid } = event
-      if (typeof this.fields[name] !== undefined) {
+      const { name, valid } = event
+      if (typeof this.fields[name] !== 'undefined') {
         this.fields[name] = valid
         this.changed = true
       }
