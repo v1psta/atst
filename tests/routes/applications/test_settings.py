@@ -129,10 +129,14 @@ def test_edit_application_environments_obj(app, client, user_session):
         assert env_obj["name"] == env.name
         assert env_obj["id"] == env.id
         assert isinstance(env_obj["edit_form"], EditEnvironmentForm)
-        assert (
-            env_obj["members"].sort()
-            == [app_role1.user_name, app_role2.user_name].sort()
-        )
+        assert {
+            "user_name": app_role1.user_name,
+            "status": env_role1.status.value,
+        } in env_obj["members"]
+        assert {
+            "user_name": app_role2.user_name,
+            "status": env_role2.status.value,
+        } in env_obj["members"]
         assert isinstance(context["audit_events"], Paginator)
 
 
@@ -503,10 +507,10 @@ def test_update_member(client, user_session, session):
     env_1 = EnvironmentFactory.create(application=application)
     env_2 = EnvironmentFactory.create(application=application)
     # add user to two of the environments: env and env_1
-    EnvironmentRoleFactory.create(
+    updated_role = EnvironmentRoleFactory.create(
         environment=env, application_role=app_role, role=CSPRole.BASIC_ACCESS.value
     )
-    EnvironmentRoleFactory.create(
+    suspended_role = EnvironmentRoleFactory.create(
         environment=env_1, application_role=app_role, role=CSPRole.BASIC_ACCESS.value
     )
 
@@ -524,8 +528,8 @@ def test_update_member(client, user_session, session):
             "environment_roles-0-role": CSPRole.TECHNICAL_READ.value,
             "environment_roles-0-environment_name": env.name,
             "environment_roles-1-environment_id": env_1.id,
-            "environment_roles-1-role": NO_ACCESS,
             "environment_roles-1-environment_name": env_1.name,
+            "environment_roles-1-disabled": "True",
             "environment_roles-2-environment_id": env_2.id,
             "environment_roles-2-role": CSPRole.NETWORK_ADMIN.value,
             "environment_roles-2-environment_name": env_2.name,
@@ -556,11 +560,10 @@ def test_update_member(client, user_session, session):
     )
 
     environment_roles = application.roles[0].environment_roles
-    # make sure that old env role was deleted and there are only 2 env roles
-    assert len(environment_roles) == 2
     # check that the user has roles in the correct envs
-    assert environment_roles[0].environment in [env, env_2]
-    assert environment_roles[1].environment in [env, env_2]
+    assert len(environment_roles) == 3
+    assert updated_role.role == CSPRole.TECHNICAL_READ.value
+    assert suspended_role.status == EnvironmentRole.Status.DISABLED
 
 
 def test_revoke_invite(client, user_session):

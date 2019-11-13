@@ -64,8 +64,9 @@
                   {% call ToggleSection(section_name="members") %}
                     <ul>
                       {% for member in env['members'] %}
+                      {% set status = ": Access Suspended" if member['status'] == 'disabled' %}
                       <li class="accordion-table__item-toggle-content__expanded">
-                        {{ member }}
+                        {{ member['user_name'] }}{{ status }}
                       </li>
                       {% endfor %}
                     </ul>

@@ -16,8 +16,9 @@ class EnvironmentForm(Form):
         environment_name,
         choices=ENV_ROLES,
         default=NO_ACCESS,
-        filters=[lambda x: None if x == "None" else x],
+        filters=[lambda x: NO_ACCESS if x == "None" else x],
     )
+    disabled = BooleanField("Revoke Access", default=False)
 
     @property
     def data(self):

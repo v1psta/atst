@@ -91,16 +91,52 @@
     margin-bottom: 8 * $gap;
     text-align: left;
 
-    .usa-input {
-      margin: $gap 0 $gap 0;
+    .form-row {
+      margin: $gap * 2;
+    }
 
-      .usa-input__title-inline {
-        margin-top: $gap;
-        margin-left: $gap;
+    .usa-alert {
+      margin: -0.5em 0;
+      padding: $gap;
+      background-image: unset;
+
+      &-body {
+        padding: 0;
+        width: 100%;
+        display: unset;
+      }
+    }
+
+    .usa-input {
+      &__title-inline {
+        font-weight: $font-bold;
       }
 
-      .form-row {
-        margin: 0;
+      &__help {
+        margin-bottom: 0;
+      }
+
+      &.env-role__no-access {
+        .usa-input__title-inline,
+        .usa-input__help {
+          color: $color-gray;
+        }
+      }
+
+      &__choices {
+        &.revoke-button label {
+          padding: 1rem 2rem;
+
+          &::before {
+            display: none;
+          }
+
+          &.link {
+            color: $color-blue;
+            text-decoration: underline;
+            text-align: right;
+          }
+        }
       }
     }
 
@@ -112,15 +148,69 @@
       margin: 0.5em 0;
     }
   }
-
-  .form-row {
-    margin: 0;
-  }
 }
 
-.environment-name--gray {
-  font-weight: $font-normal;
-  color: $color-gray-medium;
+.environment-role {
+  padding: ($gap * 2) 0;
+
+  h4 {
+    margin-bottom: $gap / 4;
+  }
+
+  &__users {
+    background-color: $color-gray-lightest;
+    padding: ($gap * 1.2) ($gap * 0.6);
+    font-size: $small-font-size;
+    display: flex;
+    flex-wrap: wrap;
+
+    .environment-role__user {
+      background-color: $color-white;
+      border-radius: 0.5rem;
+      padding: ($gap / 2) $gap;
+      border: solid 2px $color-blue;
+      margin: $gap;
+      white-space: nowrap;
+      width: 20rem;
+      position: relative;
+      height: 3.6rem;
+
+      &-field {
+        position: absolute;
+        background-color: $color-white;
+        margin-top: $gap * 2;
+        padding: $gap;
+        left: -0.1rem;
+        border: solid 1px $color-gray-light;
+        width: 20rem;
+        z-index: 3;
+
+        .usa-input {
+          margin: 0;
+
+          li {
+            background-color: $color-white;
+            border: none;
+          }
+        }
+      }
+
+      &.unassigned {
+        border: solid 1px $color-gray-light;
+      }
+
+      .icon-link {
+        padding: 0;
+      }
+    }
+
+    .environment-role__no-user {
+      margin: $gap;
+      padding: ($gap / 2) $gap;
+      font-weight: $font-normal;
+      height: 3.6rem;
+    }
+  }
 }
 
 .application-list-item {

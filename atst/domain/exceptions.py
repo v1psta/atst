@@ -53,3 +53,13 @@ class ClaimFailedException(Exception):
             f"Could not acquire claim for {resource.__class__.__name__} {resource.id}."
         )
         super().__init__(message)
+
+
+class DisabledError(Exception):
+    def __init__(self, resource_name, resource_id=None):
+        self.resource_name = resource_name
+        self.resource_id = resource_id
+
+    @property
+    def message(self):
+        return f"Cannot update disabled {self.resource_name} {self.resource_id}."

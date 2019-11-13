@@ -14,6 +14,7 @@ from atst.forms.application import NameAndDescriptionForm, EditEnvironmentForm
 from atst.forms.data import ENV_ROLE_NO_ACCESS as NO_ACCESS
 from atst.forms.member import NewForm as MemberForm
 from atst.domain.authz.decorator import user_can_access_decorator as user_can
+from atst.models.environment_role import EnvironmentRole
 from atst.models.permissions import Permissions
 from atst.domain.permission_sets import PermissionSets
 from atst.utils.flash import formatted_flash as flash
@@ -31,7 +32,14 @@ def get_environments_obj_for_app(application):
                 "edit_form": EditEnvironmentForm(obj=env),
                 "member_count": len(env.roles),
                 "members": sorted(
-                    [env_role.application_role.user_name for env_role in env.roles]
+                    [
+                        {
+                            "user_name": env_role.application_role.user_name,
+                            "status": env_role.status.value,
+                        }
+                        for env_role in env.roles
+                    ],
+                    key=lambda env_role: env_role["user_name"],
                 ),
             }
             for env in application.environments
@@ -77,11 +85,14 @@ def filter_env_roles_form_data(member, environments):
             "environment_id": str(env.id),
             "environment_name": env.name,
             "role": NO_ACCESS,
+            "disabled": False,
         }
         env_roles_set = set(env.roles).intersection(set(member.environment_roles))
+
         if len(env_roles_set) == 1:
             (env_role,) = env_roles_set
             env_data["role"] = env_role.role
+            env_data["disabled"] = env_role.status == EnvironmentRole.Status.DISABLED
 
         env_roles_form_data.append(env_data)
 
@@ -373,14 +384,21 @@ def remove_member(application_id, application_role_id):
 @user_can(Permissions.EDIT_APPLICATION_MEMBER, message="update application member")
 def update_member(application_id, application_role_id):
     app_role = ApplicationRoles.get_by_id(application_role_id)
-    form = UpdateMemberForm(http_request.form)
+    application = Applications.get(application_id)
+    existing_env_roles_data = filter_env_roles_form_data(
+        app_role, application.environments
+    )
+    form = UpdateMemberForm(
+        formdata=http_request.form, environment_roles=existing_env_roles_data
+    )
 
     if form.validate():
         ApplicationRoles.update_permission_sets(app_role, form.data["permission_sets"])
 
         for env_role in form.environment_roles:
             environment = Environments.get(env_role.environment_id.data)
-            Environments.update_env_role(environment, app_role, env_role.data["role"])
+            new_role = None if env_role.disabled.data else env_role.data["role"]
+            Environments.update_env_role(environment, app_role, new_role)
 
         flash("application_member_updated", user_name=app_role.user_name)
     else:

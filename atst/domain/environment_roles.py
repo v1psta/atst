@@ -29,6 +29,7 @@ class EnvironmentRoles(object):
                 EnvironmentRole.application_role_id == application_role_id,
                 EnvironmentRole.environment_id == environment_id,
                 EnvironmentRole.deleted == False,
+                EnvironmentRole.status != EnvironmentRole.Status.DISABLED,
             )
             .one_or_none()
         )
@@ -56,6 +57,14 @@ class EnvironmentRoles(object):
             .one_or_none()
         )
         return existing_env_role
+
+    @classmethod
+    def _update_status(cls, environment_role, new_status):
+        environment_role.status = new_status
+        db.session.add(environment_role)
+        db.session.commit()
+
+        return environment_role
 
     @classmethod
     def delete(cls, application_role_id, environment_id):
@@ -104,3 +113,15 @@ class EnvironmentRoles(object):
         db.session.commit()
 
         return environment_role
+
+    @classmethod
+    def get_for_update(cls, application_role_id, environment_id):
+        existing_env_role = (
+            db.session.query(EnvironmentRole)
+            .filter(
+                EnvironmentRole.application_role_id == application_role_id,
+                EnvironmentRole.environment_id == environment_id,
+            )
+            .one_or_none()
+        )
+        return existing_env_role

@@ -4,7 +4,7 @@ from uuid import uuid4
 
 from atst.domain.environments import Environments
 from atst.domain.environment_roles import EnvironmentRoles
-from atst.domain.exceptions import NotFoundError
+from atst.domain.exceptions import NotFoundError, DisabledError
 from atst.models.environment_role import CSPRole, EnvironmentRole
 
 from tests.factories import (
@@ -28,8 +28,7 @@ def test_create_environments():
 def test_update_env_role():
     env_role = EnvironmentRoleFactory.create(role=CSPRole.BASIC_ACCESS.value)
     new_role = CSPRole.TECHNICAL_READ.value
-
-    assert Environments.update_env_role(
+    Environments.update_env_role(
         env_role.environment, env_role.application_role, new_role
     )
     assert env_role.role == new_role
@@ -37,23 +36,27 @@ def test_update_env_role():
 
 def test_update_env_role_no_access():
     env_role = EnvironmentRoleFactory.create(role=CSPRole.BASIC_ACCESS.value)
-
-    assert Environments.update_env_role(
-        env_role.environment, env_role.application_role, None
-    )
+    Environments.update_env_role(env_role.environment, env_role.application_role, None)
 
     assert not EnvironmentRoles.get(
         env_role.application_role.id, env_role.environment.id
     )
+    assert env_role.role is None
+    assert env_role.status == EnvironmentRole.Status.DISABLED
 
 
-def test_update_env_role_no_change():
+def test_update_env_role_disabled_role():
     env_role = EnvironmentRoleFactory.create(role=CSPRole.BASIC_ACCESS.value)
-    new_role = CSPRole.BASIC_ACCESS.value
+    Environments.update_env_role(env_role.environment, env_role.application_role, None)
 
-    assert not Environments.update_env_role(
-        env_role.environment, env_role.application_role, new_role
-    )
+    with pytest.raises(DisabledError):
+        Environments.update_env_role(
+            env_role.environment,
+            env_role.application_role,
+            CSPRole.TECHNICAL_READ.value,
+        )
+    assert env_role.role is None
+    assert env_role.status == EnvironmentRole.Status.DISABLED
 
 
 def test_get_excludes_deleted():

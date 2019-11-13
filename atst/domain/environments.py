@@ -4,10 +4,17 @@ from typing import List
 from uuid import UUID
 
 from atst.database import db
-from atst.models import Environment, Application, Portfolio, TaskOrder, CLIN
+from atst.models import (
+    Environment,
+    Application,
+    Portfolio,
+    TaskOrder,
+    CLIN,
+    EnvironmentRole,
+)
 from atst.domain.environment_roles import EnvironmentRoles
 
-from .exceptions import NotFoundError
+from .exceptions import NotFoundError, DisabledError
 
 
 class Environments(object):
@@ -50,29 +57,31 @@ class Environments(object):
 
     @classmethod
     def update_env_role(cls, environment, application_role, new_role):
-        updated = False
+        env_role = EnvironmentRoles.get_for_update(application_role.id, environment.id)
+        if env_role and (
+            env_role.status == EnvironmentRole.Status.DISABLED or env_role.deleted
+        ):
+            raise DisabledError("environment_role", env_role.id)
 
-        if new_role is None:
-            updated = EnvironmentRoles.delete(application_role.id, environment.id)
-        else:
-            env_role = EnvironmentRoles.get(application_role.id, environment.id)
-            if env_role and env_role.role != new_role:
-                env_role.role = new_role
-                updated = True
-                db.session.add(env_role)
-            elif not env_role:
-                env_role = EnvironmentRoles.create(
-                    application_role=application_role,
-                    environment=environment,
-                    role=new_role,
-                )
-                updated = True
-                db.session.add(env_role)
+        if (
+            env_role
+            and env_role.role != new_role
+            and env_role.status != EnvironmentRole.Status.DISABLED
+        ):
+            env_role.role = new_role
+            db.session.add(env_role)
+        elif not env_role and new_role:
+            env_role = EnvironmentRoles.create(
+                application_role=application_role,
+                environment=environment,
+                role=new_role,
+            )
+            db.session.add(env_role)
 
-        if updated:
-            db.session.commit()
+        if env_role and not new_role:
+            EnvironmentRoles.disable(env_role.id)
 
-        return updated
+        db.session.commit()
 
     @classmethod
     def revoke_access(cls, environment, target_user):
