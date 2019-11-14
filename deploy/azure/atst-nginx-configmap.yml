@@ -41,6 +41,9 @@ data:
         listen [::]:${PORT_PREFIX}442 ssl ipv6only=on;
         ssl_certificate /etc/ssl/private/atat.crt;
         ssl_certificate_key /etc/ssl/private/atat.key;
+        # additional SSL/TLS settings
+        include /etc/nginx/snippets/ssl.conf
+
         location /login-redirect {
             return 301 https://auth-azure.atat.code.mil$request_uri;
         }
@@ -75,8 +78,9 @@ data:
         ssl_verify_client on;
         ssl_verify_depth 10;
         ssl_client_certificate /etc/ssl/client-ca-bundle.pem;
-        # Guard against HTTPS -> HTTP downgrade
-        add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; always";
+        # additional SSL/TLS settings
+        include /etc/nginx/snippets/ssl.conf
+
         location / {
             return 301 https://azure.atat.code.mil$request_uri;
         }

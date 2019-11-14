@@ -30,8 +30,8 @@ spec:
         - name: atst
           image: $CONTAINER_IMAGE
           envFrom:
-          - configMapRef:
-              name: atst-envvars
+            - configMapRef:
+                name: atst-envvars
           volumeMounts:
             - name: atst-config
               mountPath: "/opt/atat/atst/atst-overrides.ini"
@@ -74,14 +74,16 @@ spec:
               mountPath: "/etc/ssl/"
             - name: acme
               mountPath: "/usr/share/nginx/html/.well-known/acme-challenge/"
+            - name: snippets
+              mountPath: "/etc/nginx/snippets/"
       volumes:
         - name: atst-config
           secret:
             secretName: atst-config-ini
             items:
-            - key: override.ini
-              path: atst-overrides.ini
-              mode: 0644
+              - key: override.ini
+                path: atst-overrides.ini
+                mode: 0644
         - name: nginx-client-ca-bundle
           configMap:
             name: nginx-client-ca-bundle
@@ -96,19 +98,19 @@ spec:
           secret:
             secretName: atst-nginx-htpasswd
             items:
-            - key: htpasswd
-              path: .htpasswd
-              mode: 0640
+              - key: htpasswd
+                path: .htpasswd
+                mode: 0640
         - name: tls
           secret:
             secretName: azure-atat-code-mil-tls
             items:
-            - key: tls.crt
-              path: atat.crt
-              mode: 0644
-            - key: tls.key
-              path: atat.key
-              mode: 0640
+              - key: tls.crt
+                path: atat.crt
+                mode: 0644
+              - key: tls.key
+                path: atat.key
+                mode: 0640
         - name: crls-vol
           persistentVolumeClaim:
             claimName: crls-vol-claim
@@ -116,9 +118,9 @@ spec:
           configMap:
             name: pgsslrootcert
             items:
-            - key: cert
-              path: pgsslrootcert.crt
-              mode: 0666
+              - key: cert
+                path: pgsslrootcert.crt
+                mode: 0666
         - name: acme
           configMap:
             name: acme-challenges
@@ -128,9 +130,12 @@ spec:
             name: uwsgi-config
             defaultMode: 0666
             items:
-            - key: uwsgi.ini
-              path: uwsgi.ini
-              mode: 0644
+              - key: uwsgi.ini
+                path: uwsgi.ini
+                mode: 0644
+        - name: snippets
+          configMap:
+            name: nginx-snippets
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
@@ -157,19 +162,20 @@ spec:
       containers:
         - name: atst-worker
           image: $CONTAINER_IMAGE
-          args: [
-            "/opt/atat/atst/.venv/bin/python",
-            "/opt/atat/atst/.venv/bin/celery",
-            "-A",
-            "celery_worker.celery",
-            "worker",
-            "--loglevel=info"
-          ]
+          args:
+            [
+              "/opt/atat/atst/.venv/bin/python",
+              "/opt/atat/atst/.venv/bin/celery",
+              "-A",
+              "celery_worker.celery",
+              "worker",
+              "--loglevel=info",
+            ]
           envFrom:
-          - configMapRef:
-              name: atst-envvars
-          - configMapRef:
-              name: atst-worker-envvars
+            - configMapRef:
+                name: atst-envvars
+            - configMapRef:
+                name: atst-worker-envvars
           volumeMounts:
             - name: atst-config
               mountPath: "/opt/atat/atst/atst-overrides.ini"
@@ -182,16 +188,16 @@ spec:
           secret:
             secretName: atst-config-ini
             items:
-            - key: override.ini
-              path: atst-overrides.ini
-              mode: 0644
+              - key: override.ini
+                path: atst-overrides.ini
+                mode: 0644
         - name: pgsslrootcert
           configMap:
             name: pgsslrootcert
             items:
-            - key: cert
-              path: pgsslrootcert.crt
-              mode: 0666
+              - key: cert
+                path: pgsslrootcert.crt
+                mode: 0666
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
@@ -218,19 +224,20 @@ spec:
       containers:
         - name: atst-beat
           image: $CONTAINER_IMAGE
-          args: [
-            "/opt/atat/atst/.venv/bin/python",
-            "/opt/atat/atst/.venv/bin/celery",
-            "-A",
-            "celery_worker.celery",
-            "beat",
-            "--loglevel=info"
-          ]
+          args:
+            [
+              "/opt/atat/atst/.venv/bin/python",
+              "/opt/atat/atst/.venv/bin/celery",
+              "-A",
+              "celery_worker.celery",
+              "beat",
+              "--loglevel=info",
+            ]
           envFrom:
-          - configMapRef:
-              name: atst-envvars
-          - configMapRef:
-              name: atst-worker-envvars
+            - configMapRef:
+                name: atst-envvars
+            - configMapRef:
+                name: atst-worker-envvars
           volumeMounts:
             - name: atst-config
               mountPath: "/opt/atat/atst/atst-overrides.ini"
@@ -243,16 +250,16 @@ spec:
           secret:
             secretName: atst-config-ini
             items:
-            - key: override.ini
-              path: atst-overrides.ini
-              mode: 0644
+              - key: override.ini
+                path: atst-overrides.ini
+                mode: 0644
         - name: pgsslrootcert
           configMap:
             name: pgsslrootcert
             items:
-            - key: cert
-              path: pgsslrootcert.crt
-              mode: 0666
+              - key: cert
+                path: pgsslrootcert.crt
+                mode: 0666
 ---
 apiVersion: v1
 kind: Service
@@ -264,12 +271,12 @@ metadata:
 spec:
   loadBalancerIP: 13.92.235.6
   ports:
-  - port: 80
-    targetPort: 8342
-    name: http
-  - port: 443
-    targetPort: 8442
-    name: https
+    - port: 80
+      targetPort: 8342
+      name: http
+    - port: 443
+      targetPort: 8442
+      name: https
   selector:
     role: web
   type: LoadBalancer
@@ -284,12 +291,12 @@ metadata:
 spec:
   loadBalancerIP: 23.100.24.41
   ports:
-  - port: 80
-    targetPort: 8343
-    name: http
-  - port: 443
-    targetPort: 8443
-    name: https
+    - port: 80
+      targetPort: 8343
+      name: http
+    - port: 443
+      targetPort: 8443
+      name: https
   selector:
     role: web
   type: LoadBalancer
