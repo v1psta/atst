@@ -12,4 +12,6 @@ kind: ConfigMap
 metadata:
   name: atst-envvars
 data:
+  ASSETS_URL: https://atat-cdn-staging.azureedge.net/
   CELERY_DEFAULT_QUEUE: celery-staging
+  STATIC_URL: https://atat-cdn-staging.azureedge.net/static/
