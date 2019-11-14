@@ -5,8 +5,9 @@ metadata:
   name: atst-worker-envvars
   namespace: atat
 data:
-  TZ: UTC
+  CELERY_DEFAULT_QUEUE: celery-master
   DISABLE_CRL_CHECK: "True"
-  SERVER_NAME: azure.atat.code.mil
   PGSSLMODE: verify-full
   PGSSLROOTCERT: /opt/atat/atst/ssl/pgsslrootcert.crt
+  SERVER_NAME: azure.atat.code.mil
+  TZ: UTC

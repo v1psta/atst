@@ -6,6 +6,7 @@ resources:
 patchesStrategicMerge:
   - replica_count.yml
   - ports.yml
+  - envvars.yml
 patchesJson6902:
   - target:
       group: extensions
