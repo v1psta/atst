@@ -1,0 +1,14 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: atst-worker-envvars
+data:
+  CELERY_DEFAULT_QUEUE: celery-staging
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: atst-envvars
+data:
+  CELERY_DEFAULT_QUEUE: celery-staging
