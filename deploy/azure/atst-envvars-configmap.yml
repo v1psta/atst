@@ -5,12 +5,14 @@ metadata:
   name: atst-envvars
   namespace: atat
 data:
-  CSP: azure
+  ASSETS_URL: https://atat-cdn.azureedge.net/
   CELERY_DEFAULT_QUEUE: celery-master
+  CSP: azure
   FLASK_ENV: dev
   LOG_JSON: "true"
   OVERRIDE_CONFIG_FULLPATH: /opt/atat/atst/atst-overrides.ini
   PGSSLMODE: verify-full
   PGSSLROOTCERT: /opt/atat/atst/ssl/pgsslrootcert.crt
+  STATIC_URL: https://atat-cdn.azureedge.net/static/
   TZ: UTC
   UWSGI_CONFIG_FULLPATH: /opt/atat/atst/uwsgi.ini
