@@ -70,6 +70,8 @@ spec:
               mountPath: "/etc/ssl/private"
             - name: nginx-client-ca-bundle
               mountPath: "/etc/ssl/"
+            - name: acme
+              mountPath: "/usr/share/nginx/html/.well-known/acme-challenge/"
       volumes:
         - name: atst-config
           secret:
@@ -118,6 +120,10 @@ spec:
             - key: cert
               path: pgsslrootcert.crt
               mode: 0666
+        - name: acme
+          configMap:
+            name: acme-challenges
+            defaultMode: 0666
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
