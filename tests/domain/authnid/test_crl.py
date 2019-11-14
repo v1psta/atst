@@ -126,8 +126,25 @@ def test_throws_error_for_missing_issuer(app):
     assert DOD_CN in message
 
 
+FIXTURE_CRL_CACHE = "tests/fixtures/chain/crl_locations.json"
+
+
+def setup_function(test_multistep_certificate_chain):
+    if os.path.isfile(FIXTURE_CRL_CACHE):
+        os.remove(FIXTURE_CRL_CACHE)
+
+
 def test_multistep_certificate_chain():
-    cache = CRLCache("tests/fixtures/chain/ca-chain.pem", "tests/fixtures/chain/")
+    issuer = None
+    fixture_crl = "tests/fixtures/chain/intermediate.crl"
+    with open(fixture_crl, "rb") as crl_file:
+        crl = crypto.load_crl(crypto.FILETYPE_ASN1, crl_file.read())
+        issuer = crl.get_issuer().der()
+
+    crl_list = [(fixture_crl, issuer.hex())]
+    cache = CRLCache(
+        "tests/fixtures/chain/ca-chain.pem", "tests/fixtures/chain/", crl_list=crl_list
+    )
     cert = open("tests/fixtures/chain/client.crt", "rb").read()
     assert cache.crl_check(cert)
 
