@@ -14,7 +14,7 @@
 <meta name="ghost-inspector-maxAjaxDelay" content="10000" />
 <meta name="ghost-inspector-viewportSize" content="1920x1080" />
 <meta name="ghost-inspector-screenshotTarget" content="" />
-<meta name="ghost-inspector-screenshotExclusions" content="div.global-navigation" />
+<meta name="ghost-inspector-screenshotExclusions" content="div.global-navigation, time" />
 <meta name="ghost-inspector-screenshotCompareEnabled" content="true" />
 <meta name="ghost-inspector-screenshotCompareThreshold" content="0.05" />
 </head>
@@ -1288,12 +1288,42 @@ Imported from: AT-AT CI - New App Step 3-->
 </tr>
 <tr>
 <td>waitForElementPresent</td>
-<td>css=.form-col > a:nth-of-type(2)</td>
+<td>css=svg.svg-inline--fa.fa-ellipsis-h</td>
 <td></td>
 </tr>
 <tr>
 <td>click</td>
-<td>css=.form-col > a:nth-of-type(2)</td>
+<td>css=svg.svg-inline--fa.fa-ellipsis-h</td>
+<td></td>
+</tr>
+<tr>
+<td>waitForPageToLoad</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>waitForElementPresent</td>
+<td>css=.accordion-table__item-toggle-content > a:nth-of-type(3)</td>
+<td></td>
+</tr>
+<tr>
+<td>assertText</td>
+<td>css=.accordion-table__item-toggle-content > a:nth-of-type(3)</td>
+<td>*Revoke Invite*</td>
+</tr>
+<tr>
+<td>waitForPageToLoad</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>waitForElementPresent</td>
+<td>css=.accordion-table__item-toggle-content > a:nth-of-type(3)</td>
+<td></td>
+</tr>
+<tr>
+<td>click</td>
+<td>css=.accordion-table__item-toggle-content > a:nth-of-type(3)</td>
 <td></td>
 </tr>
 <tr>

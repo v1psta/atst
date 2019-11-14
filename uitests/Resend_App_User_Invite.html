@@ -14,7 +14,7 @@
 <meta name="ghost-inspector-maxAjaxDelay" content="10000" />
 <meta name="ghost-inspector-viewportSize" content="1920x1080" />
 <meta name="ghost-inspector-screenshotTarget" content="" />
-<meta name="ghost-inspector-screenshotExclusions" content="div.global-navigation" />
+<meta name="ghost-inspector-screenshotExclusions" content="div.global-navigation, time" />
 <meta name="ghost-inspector-screenshotCompareEnabled" content="true" />
 <meta name="ghost-inspector-screenshotCompareThreshold" content="0.05" />
 </head>
@@ -1288,12 +1288,42 @@ Imported from: AT-AT CI - New App Step 3-->
 </tr>
 <tr>
 <td>waitForElementPresent</td>
-<td>css=table.atat-table > tbody > tr:nth-of-type(1) > td:nth-of-type(3) > .form-row > .form-col.form-col--one-third > a:nth-of-type(1)</td>
+<td>css=svg.svg-inline--fa.fa-ellipsis-h</td>
 <td></td>
 </tr>
 <tr>
 <td>click</td>
-<td>css=table.atat-table > tbody > tr:nth-of-type(1) > td:nth-of-type(3) > .form-row > .form-col.form-col--one-third > a:nth-of-type(1)</td>
+<td>css=svg.svg-inline--fa.fa-ellipsis-h</td>
+<td></td>
+</tr>
+<tr>
+<td>waitForPageToLoad</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>waitForElementPresent</td>
+<td>css=.accordion-table__item-toggle-content > a:nth-of-type(2)</td>
+<td></td>
+</tr>
+<tr>
+<td>assertText</td>
+<td>css=.accordion-table__item-toggle-content > a:nth-of-type(2)</td>
+<td>*Resend Invite*</td>
+</tr>
+<tr>
+<td>waitForPageToLoad</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>waitForElementPresent</td>
+<td>css=.accordion-table__item-toggle-content > a:nth-of-type(2)</td>
+<td></td>
+</tr>
+<tr>
+<td>click</td>
+<td>css=.accordion-table__item-toggle-content > a:nth-of-type(2)</td>
 <td></td>
 </tr>
 <tr>
@@ -1333,13 +1363,58 @@ Imported from: AT-AT CI - New App Step 3-->
 </tr>
 <tr>
 <td>waitForElementPresent</td>
-<td>css=.action-group > button[type="submit"].usa-button.usa-button-primary</td>
+<td>css=.panel > div:nth-of-type(2) > .modal.form-content--app-mem > .modal__container > .modal__dialog > .modal__body > form[action] > .action-group > button[type="submit"]</td>
 <td></td>
 </tr>
 <tr>
 <td>assertText</td>
-<td>css=.action-group > button[type="submit"].usa-button.usa-button-primary</td>
+<td>css=.panel > div:nth-of-type(2) > .modal.form-content--app-mem > .modal__container > .modal__dialog > .modal__body > form[action] > .action-group > button[type="submit"]</td>
 <td>*Resend Invite*</td>
+</tr>
+<tr>
+<td>waitForPageToLoad</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>waitForElementPresent</td>
+<td>css=.panel > div:nth-of-type(2) > .modal.form-content--app-mem > .modal__container > .modal__dialog > .modal__body > form[action] > .action-group > button[type="submit"]</td>
+<td></td>
+</tr>
+<tr>
+<td>click</td>
+<td>css=.panel > div:nth-of-type(2) > .modal.form-content--app-mem > .modal__container > .modal__dialog > .modal__body > form[action] > .action-group > button[type="submit"]</td>
+<td></td>
+</tr>
+<tr>
+<td>waitForPageToLoad</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>waitForElementPresent</td>
+<td>css=.usa-alert.usa-alert-success > .usa-alert-body > h3.usa-alert-heading</td>
+<td></td>
+</tr>
+<tr>
+<td>assertText</td>
+<td>css=.usa-alert.usa-alert-success > .usa-alert-body > h3.usa-alert-heading</td>
+<td>*Application invitation resent*</td>
+</tr>
+<tr>
+<td>waitForPageToLoad</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>waitForElementPresent</td>
+<td>css=.usa-alert.usa-alert-success > .usa-alert-body > .usa-alert-text</td>
+<td></td>
+</tr>
+<tr>
+<td>assertText</td>
+<td>css=.usa-alert.usa-alert-success > .usa-alert-body > .usa-alert-text</td>
+<td>*You have successfully resent the invite for Brandon Buchannan*</td>
 </tr>
 </tbody>
 </table>
