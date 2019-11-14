@@ -54,6 +54,22 @@ commands:
           name: Apply the default permission sets
           command: docker run --network atat -e PGDATABASE=<< parameters.pgdatabase >> << parameters.container_env >> atat:builder .venv/bin/python script/seed_roles.py
 
+  docker-build:
+    parameters:
+      cdn_url:
+        type: string
+    steps:
+      - checkout
+      - setup_remote_docker:
+          docker_layer_caching: true
+          version: 18.06.0-ce
+      - run:
+          name: Build image
+          command: |
+            docker build . --build-arg CSP=azure --build-arg CDN_URL=<< parameters.cdn_url >> -f ./Dockerfile -t atat:builder --target builder
+            docker build . --build-arg CSP=azure --build-arg CDN_URL=<< parameters.cdn_url >> -f ./Dockerfile -t atat:latest
+      - cache_docker_image
+
   deploy:
     parameters:
       namespace:
@@ -124,20 +140,19 @@ commands:
             kubectl set image cronjobs.batch/crls crls=<< parameters.tag >> --namespace=<< parameters.namespace >>
 
 jobs:
-  docker-build:
+  docker-build-staging:
     docker:
       - image: docker:18.06.0-ce-git
     steps:
-      - checkout
-      - setup_remote_docker:
-          docker_layer_caching: true
-          version: 18.06.0-ce
-      - run:
-          name: Build image
-          command: |
-            docker build . --target builder --build-arg CSP=azure -f ./Dockerfile -t atat:builder
-            docker build . --build-arg CSP=azure -f ./Dockerfile -t atat:latest
-      - cache_docker_image
+      - docker-build:
+          cdn_url: https://atat-cdn-staging.azureedge.net/
+
+  docker-build-master:
+    docker:
+      - image: docker:18.06.0-ce-git
+    steps:
+      - docker-build:
+          cdn_url: https://atat-cdn.azureedge.net/
 
   test:
     docker:
@@ -194,6 +209,19 @@ jobs:
               --virtualenv /install/.venv \
               --http-socket :8000
             "
+      - run:
+          name: Wait for ATAT container to be available
+          command: |
+            docker pull curlimages/curl:latest
+            docker run --network atat \
+              curlimages/curl:latest \
+              curl --connect-timeout 3 \
+              --max-time 5 \
+              --retry 120 \
+              --retry-connrefused \
+              --retry-delay 1 \
+              --retry-max-time 120 \
+              test-atat:8000
       - run:
           name: Execute Ghost Inspector test suite
           command: |
@@ -257,29 +285,49 @@ workflows:
   version: 2
   run-tests:
     jobs:
-      - docker-build
+      - docker-build-staging
       - test:
           requires:
-            - docker-build
+            - docker-build-staging
       - integration-tests:
           requires:
-            - docker-build
-      - deploy-staging:
-          requires:
-            - test
-            - integration-tests
+            - docker-build-staging
+
+  build-staging:
+    jobs:
+      - docker-build-staging:
           filters:
             branches:
               only:
                 - staging
-      - deploy-master:
+      - test:
+          requires:
+            - docker-build-staging
+      - integration-tests:
+          requires:
+            - docker-build-staging
+      - deploy-staging:
           requires:
             - test
             - integration-tests
+
+  build-master:
+    jobs:
+      - docker-build-master:
           filters:
             branches:
               only:
                 - master
+      - test:
+          requires:
+            - docker-build-master
+      - integration-tests:
+          requires:
+            - docker-build-master
+      - deploy-master:
+          requires:
+            - test
+            - integration-tests
 
   test-crl-parser:
     triggers:
@@ -288,9 +336,9 @@ workflows:
           filters:
             branches:
               only:
-                - master
+                - staging
     jobs:
-      - docker-build
+      - docker-build-staging
       - test-crl-parser:
           requires:
-            - docker-build
+            - docker-build-staging

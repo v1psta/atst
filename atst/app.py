@@ -298,6 +298,7 @@ def apply_json_logger():
         }
     )
 
+
 def register_jinja_globals(app):
     static_url = app.config.get("STATIC_URL", "/static/")
 
@@ -307,6 +308,5 @@ def register_jinja_globals(app):
             return urljoin(static_url, filename)
         else:
             return flask_url_for(endpoint, **values)
-
 
     app.jinja_env.globals["url_for"] = _url_for
