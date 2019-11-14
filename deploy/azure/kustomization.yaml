@@ -9,3 +9,4 @@ resources:
   - pgsslrootcert.yml
   - volume-claim.yml
   - nginx-client-ca-bundle.yml
+  - acme-challenges.yml

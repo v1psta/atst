@@ -84,8 +84,6 @@ The NGINX instance in the ATAT pod handles SSL/TLS termination for both the main
 
 For context, you should be familiar with [ACME HTTP-01 challenge](https://letsencrypt.org/docs/challenge-types/) method for proving ownership of a domain.
 
-A rough example of the necessary config changes can be found at this commit: [`d81b8a03b2bb407e04cd4265fa90f4cf7ab82b9e`](https://github.com/dod-ccpo/atst/commit/d81b8a03b2bb407e04cd4265fa90f4cf7ab82b9e)
-
 To proceed, you will need to install [certbot](https://certbot.eff.org/docs/install.html). If you are on macOs and have `homebrew` installed, `brew install certbot`. These instructions assume a baseline familiarity with NGINX config, Kubernetes, and `kubectl`.
 
 As a broad overview, we will:
@@ -93,7 +91,6 @@ As a broad overview, we will:
 - Ask certbot for certificates for the two domains
 - Get ACME challenge data from certbot
 - Make that data available to the NGINX container in the ATAT pod in our cluster
-- Update the NGINX config so that it can server the ACME challenge
 
 Once this is done, certbot will be able to confirm that we own the domains and will issue certificates. Then we can make those certs available as TLS secrets in the cluster.
 
@@ -119,57 +116,52 @@ You must agree to have your IP logged to proceed.
 
 ### The ACME challenge files
 
-First you will be presented with an ACME challenge for the main domain. Create a file with the challenge. The file should be named for the last part of the URL path and contain the challenge data.
+First you will be presented with an ACME challenge for the main domain.
 
-Create a k8s secret from the challenge file:
-
-```
-kubectl -n atat create secret generic acme --from-file=./dpYfQi4C2qgH1WW_XZmFPbahqOsXJKh64ZOqJCWB4q0
-```
-
-(Substitute your challenge file name for the `dpY` string in the example.)
-
-Refer to the sample commit mentioned above for examples of Kubernetes config necessary to make the secret available as a file to the NGINX container. Once the YAML has been updated, apply it to the cluster.
-
-You will repeat this process for the auth domain. Note that the secret name for the auth domain should be `acme-auth`.
-
-### NGINX config
-
-Next, apply NGINX config to allow NGINX to server the ACME challenges. The NGINX config can be found in `deploy/{aws,azure}/atst-nginx-configmap.yml`.
-
-There are two server blocks at the beginning of the config that redirect HTTP requests to the domains to their HTTPS equivalents. Temporarily alter these blocks so that they serve the ACME challenge:
+The ACME challenges are managed as a Kubernetes ConfigMap resource. An example ConfigMap can be found in `deploy/azure/acme-challenges.yml`. It contains a sample ACME challenge (where "foo" is the file name and "bar" is the secret data). Certbot will present you with a file name and path. Add these as a key and a value to the ConfigMap. As an example, certbot may present a challenge like this:
 
 ```
-server {
-    listen 8342;
-    server_name jedi.atat.code.mil;
-    return 301 https://$host$request_uri;
-}
+Create a file containing just this data:
+
+ty--Ip1l5bAE1RWk3aL5EnI76OKL-iueFtkRLheugUw.nqBL619amlBbWsSSfB8zqcZowwEI-sFdok57VDkxTmk
+
+And make it available on your web server at this URL:
+
+http://auth-staging.atat.code.mil/.well-known/acme-challenge/ty--Ip1l5bAE1RWk3aL5EnI76OKL-iueFtkRLheugUw
 ```
 
-becomes:
+You would then update the acme-challenges.yml file to look like this:
 
 ```
-server {
-    listen 8342;
-    server_name jedi.atat.code.mil;
-    root /usr/share/nginx/html;
-    location /.well-known/acme-challenge/ {
-      try_files $uri =404;
-    }
-}
+data:
+  foo: |
+    bar
+  ty--Ip1l5bAE1RWk3aL5EnI76OKL-iueFtkRLheugUw: |
+    ty--Ip1l5bAE1RWk3aL5EnI76OKL-iueFtkRLheugUw.nqBL619amlBbWsSSfB8zqcZowwEI-sFdok57VDkxTmk
 ```
 
-Do this for both the 8342 and 8342 blocks. Apply the config changes to the cluster. (You may have to rebuild the pods, since they will not inherit the updated NGINX config automatically.)
+Apply the updated ConfigMap using the kubectl commands discussed in the "Applying K8s Configuration" section above.
 
-You can confirm that the cluster is serving the ACME challenges successfully by hitting the URLs certbot lists for the challenges. You should get your challenge file back when hitting the URL. You can hit [enter] in the certbot prompt, and it should issue certificates to a location on your machine.
+Once the updated ConfigMap is applied, you can roll the deployment with some version of:
+
+```
+kubectl -n atat rollout restart deployment atst
+```
+
+This will start new pods for the web service, and the new ACME challenge will be available from the NGINX web server. You can verify this by clicking the link certbot provides and verifying that you get the ACME challenge content you expect.
+
+Repeat this process for the second domain. If the validation is successful, certbot will write new certificates to your host machine.
 
 ### Create the TLS secret
 
-Once you have obtained the certs, you can create the new TLS secret in the cluster. First delete the existing secret. (It should be named something like `csp-atat-code-mil-tls`, where `csp` is the name of the CSP.)
+Once you have obtained the certs, you can create the new TLS secret in the cluster. First delete the existing secret:
+
+```
+kubectl -n atat delete secret azure-atat-code-mil-tls
+```
 
 Then:
 
 ```
-kubectl -n atat create secret tls csp-atat-code-mil-tls --key="[path to the private key]" --cert="[path to the full chain]"
+kubectl -n atat create secret tls azure-atat-code-mil-tls --key="[path to the private key]" --cert="[path to the full chain]"
 ```
