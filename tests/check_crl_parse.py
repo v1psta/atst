@@ -1,19 +1,16 @@
 import os
 import pytest
 
-from atst.domain.authnid.crl.util import scan_for_issuer_and_next_update
+from atst.domain.authnid.crl.util import crl_local_path, CRL_LIST
 
 from tests.utils import parse_for_issuer_and_next_update
 
 
 CRL_DIR = "crls"
-_CRLS = [
-    "{}/{}".format(CRL_DIR, file_) for file_ in os.listdir(CRL_DIR) if ".crl" in file_
-]
 
 
-@pytest.mark.parametrize("crl_path", _CRLS)
-def test_crl_scan_against_parse(crl_path):
+@pytest.mark.parametrize("crl_uri, issuer", CRL_LIST)
+def test_crl_scan_against_parse(crl_uri, issuer):
+    crl_path = crl_local_path(CRL_DIR, crl_uri)
     parsed_der = parse_for_issuer_and_next_update(crl_path)
-    scanned_der = scan_for_issuer_and_next_update(crl_path)
-    assert parsed_der == scanned_der
+    assert issuer == parsed_der.hex()
