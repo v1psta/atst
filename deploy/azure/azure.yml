@@ -62,8 +62,7 @@ spec:
               name: auth
           volumeMounts:
             - name: nginx-config
-              mountPath: "/etc/nginx/conf.d/atst.conf"
-              subPath: atst.conf
+              mountPath: "/etc/nginx/conf.d/"
             - name: uwsgi-socket-dir
               mountPath: "/var/run/uwsgi"
             - name: nginx-htpasswd
@@ -90,9 +89,6 @@ spec:
         - name: nginx-config
           configMap:
             name: atst-nginx
-            items:
-            - key: nginx-config
-              path: atst.conf
         - name: uwsgi-socket-dir
           emptyDir:
             medium: Memory
