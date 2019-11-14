@@ -563,7 +563,7 @@ def test_update_member(client, user_session, session):
     # check that the user has roles in the correct envs
     assert len(environment_roles) == 3
     assert updated_role.role == CSPRole.TECHNICAL_READ.value
-    assert suspended_role.status == EnvironmentRole.Status.DISABLED
+    assert suspended_role.disabled
 
 
 def test_revoke_invite(client, user_session):

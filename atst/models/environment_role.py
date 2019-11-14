@@ -67,6 +67,10 @@ class EnvironmentRole(
         return self.role
 
     @property
+    def disabled(self):
+        return self.status == EnvironmentRole.Status.DISABLED
+
+    @property
     def event_details(self):
         return {
             "updated_user_name": self.application_role.user_name,

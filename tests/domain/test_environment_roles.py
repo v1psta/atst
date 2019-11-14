@@ -88,7 +88,7 @@ def test_disable_completed(application_role, environment):
 
     environment_role = EnvironmentRoles.disable(environment_role.id)
 
-    assert environment_role.status == EnvironmentRole.Status.DISABLED
+    assert environment_role.disabled
 
 
 def test_get_for_update(application_role, environment):

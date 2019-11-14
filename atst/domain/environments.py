@@ -10,7 +10,6 @@ from atst.models import (
     Portfolio,
     TaskOrder,
     CLIN,
-    EnvironmentRole,
 )
 from atst.domain.environment_roles import EnvironmentRoles
 
@@ -58,16 +57,11 @@ class Environments(object):
     @classmethod
     def update_env_role(cls, environment, application_role, new_role):
         env_role = EnvironmentRoles.get_for_update(application_role.id, environment.id)
-        if env_role and (
-            env_role.status == EnvironmentRole.Status.DISABLED or env_role.deleted
-        ):
+
+        if env_role and new_role and (env_role.disabled or env_role.deleted):
             raise DisabledError("environment_role", env_role.id)
 
-        if (
-            env_role
-            and env_role.role != new_role
-            and env_role.status != EnvironmentRole.Status.DISABLED
-        ):
+        if env_role and env_role.role != new_role and not env_role.disabled:
             env_role.role = new_role
             db.session.add(env_role)
         elif not env_role and new_role:
@@ -78,7 +72,7 @@ class Environments(object):
             )
             db.session.add(env_role)
 
-        if env_role and not new_role:
+        if env_role and not new_role and not env_role.disabled:
             EnvironmentRoles.disable(env_role.id)
 
         db.session.commit()

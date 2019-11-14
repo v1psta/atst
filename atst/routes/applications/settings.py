@@ -14,7 +14,6 @@ from atst.forms.application import NameAndDescriptionForm, EditEnvironmentForm
 from atst.forms.data import ENV_ROLE_NO_ACCESS as NO_ACCESS
 from atst.forms.member import NewForm as MemberForm
 from atst.domain.authz.decorator import user_can_access_decorator as user_can
-from atst.models.environment_role import EnvironmentRole
 from atst.models.permissions import Permissions
 from atst.domain.permission_sets import PermissionSets
 from atst.utils.flash import formatted_flash as flash
@@ -92,7 +91,7 @@ def filter_env_roles_form_data(member, environments):
         if len(env_roles_set) == 1:
             (env_role,) = env_roles_set
             env_data["role"] = env_role.role
-            env_data["disabled"] = env_role.status == EnvironmentRole.Status.DISABLED
+            env_data["disabled"] = env_role.disabled
 
         env_roles_form_data.append(env_data)
 
