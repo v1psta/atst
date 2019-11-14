@@ -10,15 +10,19 @@ if [ -z "${MIGRATION_TIMEOUT+is_set}" ]; then
   MIGRATION_TIMEOUT=120s
 fi
 
+if [ -z "${K8S_NAMESPACE+is_set}" ]; then
+  K8S_NAMESPACE=atat
+fi
+
 echo "Creating job..."
-envsubst < deploy/shared/migration.yaml | $K8S_CMD -n atat apply -f -
+envsubst < deploy/shared/migration.yaml | $K8S_CMD -n ${K8S_NAMESPACE} apply -f -
 
 echo "Wait for job to finish or timeout..."
-JOB_SUCCESS=$(${K8S_CMD} -n atat wait --for=condition=complete --timeout=${MIGRATION_TIMEOUT} job/migration)
+JOB_SUCCESS=$(${K8S_CMD} -n ${K8S_NAMESPACE} wait --for=condition=complete --timeout=${MIGRATION_TIMEOUT} job/migration)
 
 delete_job () {
   echo "Deleting job..."
-  $K8S_CMD -n atat delete job migration
+  $K8S_CMD -n ${K8S_NAMESPACE} delete job migration
 }
 
 if echo "$JOB_SUCCESS" | grep -q "condition met"; then
@@ -26,9 +30,9 @@ if echo "$JOB_SUCCESS" | grep -q "condition met"; then
   delete_job
   exit 0
 else
-  POD_NAME=$(${K8S_CMD} -n atat get pods -l job-name=migration -o=jsonpath='{.items[0].metadata.name}')
+  POD_NAME=$(${K8S_CMD} -n ${K8S_NAMESPACE} get pods -l job-name=migration -o=jsonpath='{.items[0].metadata.name}')
   echo "Job failed:"
-  $K8S_CMD -n atat logs $POD_NAME
+  $K8S_CMD -n ${K8S_NAMESPACE} logs $POD_NAME
   delete_job
   exit 1
 fi
