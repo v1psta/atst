@@ -1,0 +1,36 @@
+{% macro Accordion(title, id) %}
+<accordion inline-template>
+  <li>
+    <template v-if="isVisible">
+      <button
+        v-on:click="toggle($event)" 
+        class="usa-accordion-button"
+        aria-controls="{{ id }}"
+        aria-expanded="true"
+      >
+        {{ title }}
+      </button>
+    </template>
+    <template v-else>
+      <button
+        v-on:click="toggle($event)" 
+        class="usa-accordion-button"
+        aria-expanded="false"
+        aria-controls="{{ id }}"
+      >
+        {{ title }}
+      </button>
+    </template>
+    <template v-if="isVisible">
+      <div id="{{ id }}" class="usa-accordion-content" aria-hidden="false">
+        {{ caller() }}
+      </div>
+    </template>
+    <template v-else>
+      <div id="{{ id }}" class="usa-accordion-content" aria-hidden="true">
+        {{ caller() }}
+      </div>
+    </template>
+  </li>
+</accordion>
+{% endmacro %}

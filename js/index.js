@@ -30,6 +30,7 @@ import SemiCollapsibleText from './components/semi_collapsible_text'
 import ToForm from './components/forms/to_form'
 import ClinFields from './components/clin_fields'
 import PopDateRange from './components/pop_date_range'
+import Accordion from './components/accordion'
 
 Vue.config.productionTip = false
 
@@ -40,6 +41,7 @@ Vue.mixin(Modal)
 const app = new Vue({
   el: '#app-root',
   components: {
+    Accordion,
     dodlogin,
     toggler,
     optionsinput,
