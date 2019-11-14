@@ -6,14 +6,19 @@ from locust import HttpLocust, TaskSequence, seq_task
 
 from pyquery import PyQuery as pq
 
-username = os.getenv("ATAT_BA_USERNAME", "")
-password = os.getenv("ATAT_BA_PASSWORD", "")
+# Provide username/password for basic auth
+USERNAME = os.getenv("ATAT_BA_USERNAME", "")
+PASSWORD = os.getenv("ATAT_BA_PASSWORD", "")
 
+# Ability to disable SSL verification for bad cert situations
+DISABLE_VERIFY = os.getenv("DISABLE_VERIFY", "true").lower() == "true"
+
+# Alpha numerics for random entity names
 LETTERS = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890"
 
 
 def login(l):
-    l.client.get("/login-dev", auth=(username, password))
+    l.client.get("/login-dev", auth=(USERNAME, PASSWORD))
 
 
 def logout(l):
@@ -123,7 +128,7 @@ def create_portfolio(l):
 
 class UserBehavior(TaskSequence):
     def on_start(self):
-        self.client.verify = False
+        self.client.verify = not DISABLE_VERIFY
         login(self)
 
     @seq_task(1)
@@ -154,5 +159,5 @@ class WebsiteUser(HttpLocust):
 
 if __name__ == "__main__":
     # if run as the main file, will spin up a single locust
-    # and run through the sequence as it
     WebsiteUser().run()
+
