@@ -42,14 +42,16 @@
                           classes="environment-list__item__members"
                         )
                       }}
-                      {% set edit_environment_button = "Edit" %}
-                      {{
-                      ToggleButton(
-                        open_html=edit_environment_button,
-                        close_html=edit_environment_button,
-                        section_name="edit"
-                        )
-                      }}
+                      {% if user_can(permissions.EDIT_ENVIRONMENT) -%}
+                        {% set edit_environment_button = "Edit" %}
+                        {{
+                        ToggleButton(
+                          open_html=edit_environment_button,
+                          close_html=edit_environment_button,
+                          section_name="edit"
+                          )
+                        }}
+                      {%- endif %}
                       <br>
                       {% if env['pending'] -%}
                         {{ Label('exchange', 'Changes Pending', classes='label--below')}}
@@ -72,21 +74,23 @@
                     </ul>
                   {% endcall %}
 
-                  {% call ToggleSection(section_name="edit") %}
-                    <ul>
-                      <li class="accordion-table__item-toggle-content__expanded">
-                        <form action="{{ url_for('applications.update_environment', environment_id=env['id']) }}" method="post" v-on:submit="handleSubmit">
-                          {{ edit_form.csrf_token }}
-                          {{ TextInput(edit_form.name, validation='requiredField', optional=False) }}
-                          {{
-                            SaveButton(
-                              text=("common.save" | translate)
-                            )
-                          }}
-                        </form>
-                      </li>
-                    </ul>
-                  {% endcall %}
+                  {% if user_can(permissions.EDIT_ENVIRONMENT) -%}
+                    {% call ToggleSection(section_name="edit") %}
+                      <ul>
+                        <li class="accordion-table__item-toggle-content__expanded">
+                          <form action="{{ url_for('applications.update_environment', environment_id=env['id']) }}" method="post" v-on:submit="handleSubmit">
+                            {{ edit_form.csrf_token }}
+                            {{ TextInput(edit_form.name, validation='requiredField', optional=False) }}
+                            {{
+                              SaveButton(
+                                text=("common.save" | translate)
+                              )
+                            }}
+                          </form>
+                        </li>
+                      </ul>
+                    {% endcall %}
+                  {%- endif %}
                 </li>
               </toggler>
             {% endfor %}
