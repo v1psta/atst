@@ -37,7 +37,6 @@
               :name-tag="'clins-' + clinIndex + '-start_date'"
             {% endif %}
             :optional='{{ optional | string | lower }}'
-            v-on:date-change='handleDateChange'
             inline-template>
 
             <fieldset :name="name" class="usa-input date-picker" v-bind:class="{ 'usa-input--success': isDateValid && isDateComplete, 'usa-input--error': !isDateValid && isDateComplete }">
@@ -136,7 +135,6 @@
               :name-tag="'clins-' + clinIndex + '-end_date'"
             {% endif %}
             :optional='{{ optional | string | lower }}'
-            v-on:date-change='handleDateChange'
             inline-template>
 
             <fieldset :name="name" class="usa-input date-picker" v-bind:class="{ 'usa-input--success': isDateValid && isDateComplete, 'usa-input--error': !isDateValid && isDateComplete }">

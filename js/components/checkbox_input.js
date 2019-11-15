@@ -25,11 +25,18 @@ export default {
 
   methods: {
     onInput: function(e) {
+      this.$parent.$emit('field-change')
       emitEvent('field-change', this, {
         value: e.target.checked,
         name: this.name,
         valid: this.optional || this.isChecked,
       })
+    },
+  },
+
+  computed: {
+    valid: function() {
+      return this.optional || this.isChecked
     },
   },
 }

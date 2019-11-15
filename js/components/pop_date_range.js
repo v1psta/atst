@@ -50,8 +50,12 @@ export default {
     }
   },
 
+  mounted: function() {
+    this.$on('field-change', this.handleFieldChange)
+  },
+
   methods: {
-    handleDateChange: function(event) {
+    handleFieldChange: function(event) {
       if (event.name.includes(START_DATE) && event.valid) {
         let date = new Date(event.value)
         this.minEndDate = this.calcMinEndDate(date)
@@ -59,6 +63,7 @@ export default {
         let date = new Date(event.value)
         this.maxStartDate = this.calcMaxStartDate(date)
       }
+      this.$parent.$emit('field-change')
     },
 
     calcMaxStartDate: function(date) {
@@ -85,6 +90,10 @@ export default {
 
     minEndProp: function() {
       return format(this.minEndDate, 'YYYY-MM-DD')
+    },
+
+    valid: function() {
+      return this.$children.every(child => child.valid)
     },
   },
 }

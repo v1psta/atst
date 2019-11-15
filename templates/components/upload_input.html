@@ -1,6 +1,6 @@
 {% from "components/icon.html" import Icon %}
 
-{% macro UploadInput(field, portfolio_id, show_label=False, watch=False) -%}
+{% macro UploadInput(field, portfolio_id, show_label=False) -%}
 <uploadinput
   inline-template
   {% if not field.errors %}
@@ -9,18 +9,16 @@
   {% else %}
     v-bind:initial-errors='true'
   {% endif %}
-  v-bind:watch='{{ watch | string | lower }}'
   v-bind:portfolio-id="'{{ portfolio_id }}'"
   name='{{ field.name }}'
-  :optional='false'
   >
   <div>
-    <div v-show="hasAttachment" class="uploaded-file">
+    <div v-show="valid" class="uploaded-file">
       {{ Icon("ok") }}
       <a class="uploaded-file__name" v-html="baseName" v-bind:href="downloadLink"></a>
       <a href="#" class="uploaded-file__remove" v-on:click="removeAttachment">Remove</a>
     </div>
-    <div v-show="hasAttachment === false" v-bind:class='{ "usa-input": true, "usa-input--error": showErrors }'>
+    <div v-show="valid === false" v-bind:class='{ "usa-input": true, "usa-input--error": showErrors }'>
       {% if show_label %}
         {{ field.label }}
       {% endif %}
@@ -28,7 +26,7 @@
         {{ field.description }}
       </p>
       <div v-if="!hideInput" class="upload-widget">
-        <label class="upload-label" for="{{ field.name }}">
+        <label class="upload-label" :for="name">
           <span class="upload-button">
             Browse
           </span>
@@ -37,8 +35,8 @@
           v-on:change="addAttachment"
           ref="attachmentInput"
           accept="{{ field.accept }}"
-          id="{{ field.name }}"
-          name="{{ field.name }}"
+          :id="name"
+          :name="name"
           aria-label="Task Order Upload"
           v-bind:value="attachment"
           type="file">

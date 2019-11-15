@@ -1,10 +1,7 @@
 import { emitEvent } from '../lib/emitters'
-import FormMixin from '../mixins/form'
 
 export default {
   name: 'optionsinput',
-
-  mixins: [FormMixin],
 
   props: {
     name: String,
@@ -48,6 +45,7 @@ export default {
       this.showValid = true
       this.value = e.target.value
 
+      this.$parent.$emit('field-change')
       emitEvent('field-change', this, {
         value: e.target.value,
         name: this.name,
@@ -58,6 +56,12 @@ export default {
 
     _isValid: function(value) {
       return this.optional || value !== this.nullOption
+    },
+  },
+
+  computed: {
+    valid: function() {
+      return this._isValid(this.value)
     },
   },
 }

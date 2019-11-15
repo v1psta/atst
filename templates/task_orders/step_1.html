@@ -16,5 +16,5 @@
 
 {% block to_builder_form_field %}
   {{ TOFormStepHeader('task_orders.form.supporting_docs_header' | translate, 'task_orders.form.supporting_docs_text' | translate) }}
-  {{ UploadInput(form.pdf, portfolio.id, watch=True) }}
+  {{ UploadInput(form.pdf, portfolio.id) }}
 {% endblock %}
