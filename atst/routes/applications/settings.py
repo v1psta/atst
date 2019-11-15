@@ -210,6 +210,30 @@ def handle_create_member(application_id, form_data):
         # TODO: flash error message
 
 
+def handle_update_member(application_id, application_role_id, form_data):
+    app_role = ApplicationRoles.get_by_id(application_role_id)
+    application = Applications.get(application_id)
+    existing_env_roles_data = filter_env_roles_form_data(
+        app_role, application.environments
+    )
+    form = UpdateMemberForm(
+        formdata=form_data, environment_roles=existing_env_roles_data
+    )
+
+    if form.validate():
+        ApplicationRoles.update_permission_sets(app_role, form.data["permission_sets"])
+
+        for env_role in form.environment_roles:
+            environment = Environments.get(env_role.environment_id.data)
+            new_role = None if env_role.disabled.data else env_role.data["role"]
+            Environments.update_env_role(environment, app_role, new_role)
+
+        flash("application_member_updated", user_name=app_role.user_name)
+    else:
+        pass
+        # TODO: flash error message
+
+
 @applications_bp.route("/applications/<application_id>/settings")
 @user_can(Permissions.VIEW_APPLICATION, message="view application edit form")
 def settings(application_id):
@@ -382,27 +406,8 @@ def remove_member(application_id, application_role_id):
 )
 @user_can(Permissions.EDIT_APPLICATION_MEMBER, message="update application member")
 def update_member(application_id, application_role_id):
-    app_role = ApplicationRoles.get_by_id(application_role_id)
-    application = Applications.get(application_id)
-    existing_env_roles_data = filter_env_roles_form_data(
-        app_role, application.environments
-    )
-    form = UpdateMemberForm(
-        formdata=http_request.form, environment_roles=existing_env_roles_data
-    )
 
-    if form.validate():
-        ApplicationRoles.update_permission_sets(app_role, form.data["permission_sets"])
-
-        for env_role in form.environment_roles:
-            environment = Environments.get(env_role.environment_id.data)
-            new_role = None if env_role.disabled.data else env_role.data["role"]
-            Environments.update_env_role(environment, app_role, new_role)
-
-        flash("application_member_updated", user_name=app_role.user_name)
-    else:
-        pass
-        # TODO: flash error message
+    handle_update_member(application_id, application_role_id, http_request.form)
 
     return redirect(
         url_for(
