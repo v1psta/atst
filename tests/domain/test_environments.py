@@ -42,21 +42,26 @@ def test_update_env_role_no_access():
         env_role.application_role.id, env_role.environment.id
     )
     assert env_role.role is None
-    assert env_role.status == EnvironmentRole.Status.DISABLED
+    assert env_role.disabled
 
 
 def test_update_env_role_disabled_role():
     env_role = EnvironmentRoleFactory.create(role=CSPRole.BASIC_ACCESS.value)
     Environments.update_env_role(env_role.environment, env_role.application_role, None)
 
+    # An exception should be raised when a new role is passed to Environments.update_env_role
     with pytest.raises(DisabledError):
         Environments.update_env_role(
             env_role.environment,
             env_role.application_role,
             CSPRole.TECHNICAL_READ.value,
         )
+
     assert env_role.role is None
-    assert env_role.status == EnvironmentRole.Status.DISABLED
+    assert env_role.disabled
+
+    # An exception should not be raised when no new role is passed
+    Environments.update_env_role(env_role.environment, env_role.application_role, None)
 
 
 def test_get_excludes_deleted():
