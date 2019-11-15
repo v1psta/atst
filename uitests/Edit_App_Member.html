@@ -12,9 +12,9 @@
 <meta name="ghost-inspector-globalStepDelay" content="250" />
 <meta name="ghost-inspector-maxWaitDelay" content="15000" />
 <meta name="ghost-inspector-maxAjaxDelay" content="10000" />
-<meta name="ghost-inspector-viewportSize" content="1280x800" />
+<meta name="ghost-inspector-viewportSize" content="1920x1080" />
 <meta name="ghost-inspector-screenshotTarget" content="" />
-<meta name="ghost-inspector-screenshotExclusions" content="div.global-navigation" />
+<meta name="ghost-inspector-screenshotExclusions" content="div.global-navigation, time" />
 <meta name="ghost-inspector-screenshotCompareEnabled" content="true" />
 <meta name="ghost-inspector-screenshotCompareThreshold" content="0.05" />
 </head>
@@ -427,6 +427,26 @@ Imported from: AT-AT CI - New Portfolio-->
 <td>click</td>
 <td>css=#team_experience > li:nth-of-type(5) > label</td>
 <td></td>
+</tr>
+<tr>
+<td>waitForPageToLoad</td>
+<td></td>
+<td></td>
+</tr>
+<!--Imported from: AT-AT CI - Application Settings
+Imported from: AT-AT CI - New App Step 3
+Imported from: AT-AT CI - New App Step 2
+Imported from: AT-AT CI - New App Step 1
+Imported from: AT-AT CI - New Portfolio-->
+<tr>
+<td>waitForElementPresent</td>
+<td>css=input[type="submit"]</td>
+<td></td>
+</tr>
+<tr>
+<td>assertText</td>
+<td>css=input[type="submit"]</td>
+<td>Save</td>
 </tr>
 <tr>
 <td>waitForPageToLoad</td>
@@ -1268,12 +1288,42 @@ Imported from: AT-AT CI - New App Step 3-->
 </tr>
 <tr>
 <td>waitForElementPresent</td>
-<td>css=svg.svg-inline--fa.fa-edit > path</td>
+<td>css=svg.svg-inline--fa.fa-ellipsis-h</td>
 <td></td>
 </tr>
 <tr>
 <td>click</td>
-<td>css=svg.svg-inline--fa.fa-edit > path</td>
+<td>css=svg.svg-inline--fa.fa-ellipsis-h</td>
+<td></td>
+</tr>
+<tr>
+<td>waitForPageToLoad</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>waitForElementPresent</td>
+<td>css=.accordion-table__item-toggle-content > a:nth-of-type(1)</td>
+<td></td>
+</tr>
+<tr>
+<td>assertText</td>
+<td>css=.accordion-table__item-toggle-content > a:nth-of-type(1)</td>
+<td>*Edit Roles and Permissions*</td>
+</tr>
+<tr>
+<td>waitForPageToLoad</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>waitForElementPresent</td>
+<td>css=.accordion-table__item-toggle-content > a:nth-of-type(1)</td>
+<td></td>
+</tr>
+<tr>
+<td>click</td>
+<td>css=.accordion-table__item-toggle-content > a:nth-of-type(1)</td>
 <td></td>
 </tr>
 <tr>
@@ -1287,8 +1337,23 @@ Imported from: AT-AT CI - New App Step 3-->
 <td></td>
 </tr>
 <tr>
-<td>assertElementPresent</td>
+<td>assertText</td>
 <td>css=.panel > div:nth-of-type(1) > .modal.form-content--app-mem > .modal__container > .modal__dialog > .modal__body > .modal__form--header > h1</td>
+<td>*Manage Brandon Buchannan's Access*</td>
+</tr>
+<tr>
+<td>waitForPageToLoad</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>waitForElementPresent</td>
+<td>css=.application-perms > div:nth-of-type(1) > .usa-input.input__inline-fields > fieldset.usa-input__choices > legend > label</td>
+<td></td>
+</tr>
+<tr>
+<td>click</td>
+<td>css=.application-perms > div:nth-of-type(1) > .usa-input.input__inline-fields > fieldset.usa-input__choices > legend > label</td>
 <td></td>
 </tr>
 <tr>
@@ -1298,13 +1363,13 @@ Imported from: AT-AT CI - New App Step 3-->
 </tr>
 <tr>
 <td>waitForElementPresent</td>
-<td>css=form#edit_member-1 > h2</td>
+<td>css=.application-perms > div:nth-of-type(2) > .usa-input.input__inline-fields > fieldset.usa-input__choices > legend > label</td>
 <td></td>
 </tr>
 <tr>
-<td>assertText</td>
-<td>css=form#edit_member-1 > h2</td>
-<td>*Application Permissions*</td>
+<td>click</td>
+<td>css=.application-perms > div:nth-of-type(2) > .usa-input.input__inline-fields > fieldset.usa-input__choices > legend > label</td>
+<td></td>
 </tr>
 <tr>
 <td>waitForPageToLoad</td>
@@ -1313,13 +1378,58 @@ Imported from: AT-AT CI - New App Step 3-->
 </tr>
 <tr>
 <td>waitForElementPresent</td>
-<td>css=.environment_roles > h2</td>
+<td>css=.application-perms > div:nth-of-type(3) > .usa-input.input__inline-fields > fieldset.usa-input__choices > legend > label</td>
+<td></td>
+</tr>
+<tr>
+<td>click</td>
+<td>css=.application-perms > div:nth-of-type(3) > .usa-input.input__inline-fields > fieldset.usa-input__choices > legend > label</td>
+<td></td>
+</tr>
+<tr>
+<td>waitForPageToLoad</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>waitForElementPresent</td>
+<td>css=input[type="submit"]</td>
+<td></td>
+</tr>
+<tr>
+<td>click</td>
+<td>css=input[type="submit"]</td>
+<td></td>
+</tr>
+<tr>
+<td>waitForPageToLoad</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>waitForElementPresent</td>
+<td>css=.usa-alert.usa-alert-success > .usa-alert-body > h3.usa-alert-heading</td>
 <td></td>
 </tr>
 <tr>
 <td>assertText</td>
-<td>css=.environment_roles > h2</td>
-<td>*Environment Roles*</td>
+<td>css=.usa-alert.usa-alert-success > .usa-alert-body > h3.usa-alert-heading</td>
+<td>*Team member updated*</td>
+</tr>
+<tr>
+<td>waitForPageToLoad</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>waitForElementPresent</td>
+<td>css=.usa-alert.usa-alert-success > .usa-alert-body > .usa-alert-text</td>
+<td></td>
+</tr>
+<tr>
+<td>assertText</td>
+<td>css=.usa-alert.usa-alert-success > .usa-alert-body > .usa-alert-text</td>
+<td>*You have successfully updated the permissions for Brandon Buchannan*</td>
 </tr>
 </tbody>
 </table>
