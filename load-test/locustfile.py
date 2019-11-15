@@ -29,6 +29,11 @@ def get_index(l):
     l.client.get("/")
 
 
+def get_csrf_token(response):
+    d = pq(response.text)
+    return d("#csrf_token").val()
+
+
 def get_portfolios(l):
     response = l.client.get("/portfolios")
     d = pq(response.text)
@@ -71,7 +76,7 @@ def get_app(l):
         l.client.get(app_link)
     else:
         portfolio_id = choice(l.locust.portfolio_links).split("/")[-2]
-        update_app_registry(l, portfolio_id, create_new_app(l, portfolio_id))
+        update_app_registry(l, portfolio_id, [create_new_app(l, portfolio_id)])
 
 
 def pick_app(l):
@@ -80,24 +85,26 @@ def pick_app(l):
 
 
 def create_new_app(l, portfolio_id):
+    create_app_url = f"/portfolios/{portfolio_id}/applications/new"
+    new_app_form = l.client.get(create_app_url)
+
     create_app_body = {
         "name": f"Load Test Created - {''.join(choices(LETTERS, k=5))}",
         "description": "Description",
+        "csrf_token": get_csrf_token(new_app_form),
     }
 
-    create_app_url = f"/portfolios/{portfolio_id}/applications/new"
-
     create_app_response = l.client.post(create_app_url, create_app_body)
-
-    application_id = create_app_response.url.split("/")[-3]
 
     create_environments_body = {
         "environment_names-0": "Development",
         "environment_names-1": "Testing",
         "environment_names-2": "Staging",
         "environment_names-3": "Production",
+        "csrf_token": get_csrf_token(create_app_response),
     }
 
+    application_id = create_app_response.url.split("/")[-3]
     create_environments_url = (
         f"/applications/{application_id}/new/step_2?portfolio_id={portfolio_id}"
     )
@@ -108,6 +115,7 @@ def create_new_app(l, portfolio_id):
 
 
 def create_portfolio(l):
+    new_portfolio_form = l.client.get("/portfolios/new")
     new_portfolio_body = {
         "name": f"Load Test Created - {''.join(choices(LETTERS, k=5))}",
         "defense_component": "Army, Department of the",
@@ -119,6 +127,7 @@ def create_portfolio(l):
         "dev_team": "civilians",
         "dev_team_other": "",
         "team_experience": "none",
+        "csrf_token": get_csrf_token(new_portfolio_form),
     }
 
     response = l.client.post("/portfolios", new_portfolio_body)
