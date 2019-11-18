@@ -1,5 +1,5 @@
 import os
-from random import choice, choices, randint
+from random import choice, choices, randrange
 from urllib.parse import urlparse
 
 from locust import HttpLocust, TaskSequence, seq_task
@@ -15,6 +15,9 @@ DISABLE_VERIFY = os.getenv("DISABLE_VERIFY", "true").lower() == "true"
 
 # Alpha numerics for random entity names
 LETTERS = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890"
+
+NEW_PORTFOLIO_CHANCE = 10
+NEW_APPLICATION_CHANCE = 10
 
 
 def login(l):
@@ -43,7 +46,7 @@ def get_portfolios(l):
             ".global-panel-container .atat-table tbody tr td:first-child a"
         ).items()
     ]
-    force_new_portfolio = randint(0, 10) > 9
+    force_new_portfolio = randrange(0, 100) < NEW_PORTFOLIO_CHANCE
     if len(portfolio_links) == 0 or force_new_portfolio:
         portfolio_links += [create_portfolio(l)]
 
@@ -71,7 +74,7 @@ def update_app_registry(l, portfolio_id, app_links):
 
 def get_app(l):
     app_link = pick_app(l)
-    force_new_app = randint(0, 10) > 9
+    force_new_app = randrange(0, 100) < NEW_APPLICATION_CHANCE
     if app_link is not None and not force_new_app:
         l.client.get(app_link)
     else:
