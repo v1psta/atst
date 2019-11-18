@@ -157,6 +157,10 @@ def view_new_application_step_3(application_id):
 
 
 @applications_bp.route("/applications/<application_id>/new/step_3", methods=["POST"])
+@applications_bp.route(
+    "/applications/<application_id>/new/step_3/member/<application_role_id>",
+    methods=["POST"],
+)
 @user_can(Permissions.CREATE_APPLICATION, message="view create new application form")
 def update_new_application_step_3(application_id, application_role_id=None):
     if application_role_id:

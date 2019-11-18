@@ -2,6 +2,8 @@ import uuid
 from flask import url_for, get_flashed_messages
 from unittest.mock import Mock
 import datetime
+from werkzeug.datastructures import ImmutableMultiDict
+import pytest
 
 from tests.factories import *
 
@@ -20,6 +22,8 @@ from atst.routes.applications.settings import (
     filter_env_roles_form_data,
     filter_env_roles_data,
     get_environments_obj_for_app,
+    handle_create_member,
+    handle_update_member,
 )
 
 from tests.utils import captured_templates
@@ -658,3 +662,89 @@ def test_filter_env_roles_data():
     # ensure that the environment roles and environments are associated with the
     # same application.
     assert [env["environment_name"] for env in env_role_data] == ["a", "b", "c"]
+
+
+@pytest.fixture
+def set_g(monkeypatch):
+    _g = Mock()
+    monkeypatch.setattr("atst.app.g", _g)
+    monkeypatch.setattr("atst.routes.applications.settings.g", _g)
+
+    def _set_g(attr, val):
+        setattr(_g, attr, val)
+
+    yield _set_g
+
+
+def test_handle_create_member(monkeypatch, set_g, session):
+    user = UserFactory.create()
+    application = ApplicationFactory.create(
+        environments=[{"name": "Naboo"}, {"name": "Endor"}]
+    )
+    (env, env_1) = application.environments
+
+    job_mock = Mock()
+    monkeypatch.setattr("atst.jobs.send_mail.delay", job_mock)
+    set_g("current_user", application.portfolio.owner)
+    set_g("portfolio", application.portfolio)
+    set_g("application", application)
+
+    form_data = ImmutableMultiDict(
+        {
+            "user_data-first_name": user.first_name,
+            "user_data-last_name": user.last_name,
+            "user_data-dod_id": user.dod_id,
+            "user_data-email": user.email,
+            "environment_roles-0-environment_id": env.id,
+            "environment_roles-0-role": "Basic Access",
+            "environment_roles-0-environment_name": env.name,
+            "environment_roles-1-environment_id": env_1.id,
+            "environment_roles-1-role": NO_ACCESS,
+            "environment_roles-1-environment_name": env_1.name,
+            "perms_env_mgmt": True,
+            "perms_team_mgmt": True,
+            "perms_del_env": True,
+        }
+    )
+    handle_create_member(application.id, form_data)
+
+    assert len(application.roles) == 1
+    environment_roles = application.roles[0].environment_roles
+    assert len(environment_roles) == 1
+    assert environment_roles[0].environment == env
+    invitation = (
+        session.query(ApplicationInvitation).filter_by(dod_id=user.dod_id).one()
+    )
+    assert invitation.role.application == application
+    assert job_mock.called
+
+
+def test_handle_update_member(set_g):
+    user = UserFactory.create()
+    application = ApplicationFactory.create(
+        environments=[{"name": "Naboo"}, {"name": "Endor"}]
+    )
+    (env, env_1) = application.environments
+    app_role = ApplicationRoleFactory(application=application)
+    set_g("current_user", application.portfolio.owner)
+    set_g("portfolio", application.portfolio)
+    set_g("application", application)
+
+    form_data = ImmutableMultiDict(
+        {
+            "environment_roles-0-environment_id": env.id,
+            "environment_roles-0-role": "Basic Access",
+            "environment_roles-0-environment_name": env.name,
+            "environment_roles-1-environment_id": env_1.id,
+            "environment_roles-1-role": NO_ACCESS,
+            "environment_roles-1-environment_name": env_1.name,
+            "perms_env_mgmt": True,
+            "perms_team_mgmt": True,
+            "perms_del_env": True,
+        }
+    )
+    handle_update_member(application.id, app_role.id, form_data)
+
+    assert len(application.roles) == 1
+    assert len(app_role.environment_roles) == 1
+    assert app_role.environment_roles[0].environment == env

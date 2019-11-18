@@ -1,6 +1,11 @@
 from flask import url_for
 
-from tests.factories import PortfolioFactory, ApplicationFactory, UserFactory
+from tests.factories import (
+    PortfolioFactory,
+    ApplicationFactory,
+    UserFactory,
+    ApplicationRoleFactory,
+)
 from unittest.mock import Mock
 from atst.forms.data import ENV_ROLE_NO_ACCESS as NO_ACCESS
 from atst.models.application_invitation import ApplicationInvitation
@@ -109,7 +114,7 @@ def test_get_members(client, session, user_session):
     assert response.status_code == 200
 
 
-def test_post_member(monkeypatch, client, user_session, session):
+def test_post_new_member(monkeypatch, client, user_session, session):
     job_mock = Mock()
     monkeypatch.setattr("atst.jobs.send_mail.delay", job_mock)
     user = UserFactory.create()
@@ -121,7 +126,9 @@ def test_post_member(monkeypatch, client, user_session, session):
     user_session(application.portfolio.owner)
 
     response = client.post(
-        url_for("applications.create_member", application_id=application.id),
+        url_for(
+            "applications.update_new_application_step_3", application_id=application.id
+        ),
         data={
             "user_data-first_name": user.first_name,
             "user_data-last_name": user.last_name,
@@ -141,10 +148,8 @@ def test_post_member(monkeypatch, client, user_session, session):
 
     assert response.status_code == 302
     expected_url = url_for(
-        "applications.settings",
+        "applications.view_new_application_step_3",
         application_id=application.id,
-        fragment="application-members",
-        _anchor="application-members",
         _external=True,
     )
     assert response.location == expected_url
@@ -159,3 +164,43 @@ def test_post_member(monkeypatch, client, user_session, session):
     assert invitation.role.application == application
 
     assert job_mock.called
+
+
+def test_post_update_member(client, user_session):
+    user = UserFactory.create()
+    application = ApplicationFactory.create(
+        environments=[{"name": "Naboo"}, {"name": "Endor"}]
+    )
+    (env, env_1) = application.environments
+    app_role = ApplicationRoleFactory(application=application)
+
+    user_session(application.portfolio.owner)
+    response = client.post(
+        url_for(
+            "applications.update_new_application_step_3",
+            application_id=application.id,
+            application_role_id=app_role.id,
+        ),
+        data={
+            "environment_roles-0-environment_id": env.id,
+            "environment_roles-0-role": "Basic Access",
+            "environment_roles-0-environment_name": env.name,
+            "environment_roles-1-environment_id": env_1.id,
+            "environment_roles-1-role": NO_ACCESS,
+            "environment_roles-1-environment_name": env_1.name,
+            "perms_env_mgmt": True,
+            "perms_team_mgmt": True,
+            "perms_del_env": True,
+        },
+    )
+
+    assert response.status_code == 302
+    expected_url = url_for(
+        "applications.view_new_application_step_3",
+        application_id=application.id,
+        _external=True,
+    )
+    assert response.location == expected_url
+    assert len(application.roles) == 1
+    assert len(app_role.environment_roles) == 1
+    assert app_role.environment_roles[0].environment == env
