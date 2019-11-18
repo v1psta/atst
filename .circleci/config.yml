@@ -145,14 +145,14 @@ jobs:
       - image: docker:18.06.0-ce-git
     steps:
       - docker-build:
-          cdn_url: https://atat-cdn-staging.azureedge.net/
+          cdn_url: https://atat-cdn-staging.azureedge.net/static/assets
 
   docker-build-master:
     docker:
       - image: docker:18.06.0-ce-git
     steps:
       - docker-build:
-          cdn_url: https://atat-cdn.azureedge.net/
+          cdn_url: https://atat-cdn.azureedge.net/static/assets
 
   test:
     docker:

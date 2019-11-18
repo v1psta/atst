@@ -6,6 +6,7 @@ metadata:
 data:
   CELERY_DEFAULT_QUEUE: celery-staging
   SERVER_NAME: staging.atat.code.mil
+  FLASK_ENV: staging
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -14,4 +15,5 @@ metadata:
 data:
   ASSETS_URL: https://atat-cdn-staging.azureedge.net/
   CELERY_DEFAULT_QUEUE: celery-staging
+  FLASK_ENV: staging
   STATIC_URL: https://atat-cdn-staging.azureedge.net/static/
