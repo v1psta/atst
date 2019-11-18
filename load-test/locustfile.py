@@ -111,7 +111,11 @@ def create_new_app(l, portfolio_id):
         "csrf_token": get_csrf_token(new_app_form),
     }
 
-    create_app_response = l.client.post(create_app_url, create_app_body)
+    create_app_response = l.client.post(
+        create_app_url,
+        create_app_body,
+        headers={"Referer": l.parent.host + create_app_url},
+    )
     application_id = extract_id(create_app_response.url)
 
     create_environments_body = {
@@ -122,11 +126,13 @@ def create_new_app(l, portfolio_id):
         "csrf_token": get_csrf_token(create_app_response),
     }
 
-    create_environments_url = (
-        f"/applications/{application_id}/new/step_2?portfolio_id={portfolio_id}"
-    )
+    create_environments_url = f"/applications/{application_id}/new/step_2"
 
-    l.client.post(create_environments_url, create_environments_body)
+    l.client.post(
+        create_environments_url + f"?portfolio_id={portfolio_id}",
+        create_environments_body,
+        headers={"Referer": l.parent.host + create_environments_url},
+    )
 
     return f"/applications/{application_id}/settings"
 
@@ -147,7 +153,11 @@ def create_portfolio(l):
         "csrf_token": get_csrf_token(new_portfolio_form),
     }
 
-    response = l.client.post("/portfolios", new_portfolio_body)
+    response = l.client.post(
+        "/portfolios",
+        new_portfolio_body,
+        headers={"Referer": l.parent.host + "/portfolios"},
+    )
 
     return urlparse(response.url).path
 
