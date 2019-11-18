@@ -11,7 +11,7 @@ from atst.database import db
 from atst.app import make_config, make_app
 
 
-def remove_sample_data():
+def reset_database():
     conn = db.engine.connect()
 
     meta = sqlalchemy.MetaData(bind=conn, reflect=True)
@@ -32,4 +32,4 @@ if __name__ == "__main__":
     config = make_config({"DISABLE_CRL_CHECK": True, "DEBUG": False})
     app = make_app(config)
     with app.app_context():
-        remove_sample_data()
+        reset_database()
