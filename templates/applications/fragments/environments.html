@@ -78,15 +78,17 @@
                     {% call ToggleSection(section_name="edit") %}
                       <ul>
                         <li class="accordion-table__item-toggle-content__expanded">
-                          <form action="{{ url_for('applications.update_environment', environment_id=env['id']) }}" method="post" v-on:submit="handleSubmit">
-                            {{ edit_form.csrf_token }}
-                            {{ TextInput(edit_form.name, validation='requiredField', optional=False) }}
-                            {{
-                              SaveButton(
-                                text=("common.save" | translate)
-                              )
-                            }}
-                          </form>
+                          <base-form inline-template>
+                            <form action="{{ url_for('applications.update_environment', environment_id=env['id']) }}" method="post" v-on:submit="handleSubmit">
+                              {{ edit_form.csrf_token }}
+                              {{ TextInput(edit_form.name, validation='requiredField', optional=False) }}
+                              {{
+                                SaveButton(
+                                  text=("common.save" | translate)
+                                )
+                              }}
+                            </form>
+                          </base-form>
                         </li>
                       </ul>
                     {% endcall %}

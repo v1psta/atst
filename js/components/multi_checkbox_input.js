@@ -1,14 +1,5 @@
-import optionsinput from '../components/options_input'
-import textinput from '../components/text_input'
-import { emitEvent } from '../lib/emitters'
-
 export default {
   name: 'multicheckboxinput',
-
-  components: {
-    optionsinput,
-    textinput,
-  },
 
   props: {
     name: String,
@@ -41,15 +32,18 @@ export default {
 
   methods: {
     onInput: function(e) {
-      emitEvent('field-change', this, {
-        value: e.target.value,
-        name: this.name,
-      })
+      this.$parent.$emit('field-change')
       this.showError = false
       this.showValid = true
     },
     otherToggle: function() {
       this.otherChecked = !this.otherChecked
+    },
+  },
+
+  computed: {
+    valid: function() {
+      return this.showValid
     },
   },
 }
