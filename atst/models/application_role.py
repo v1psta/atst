@@ -102,6 +102,14 @@ class ApplicationRole(
             "portfolio": self.application.portfolio.name,
         }
 
+    @property
+    def is_pending(self):
+        return self.status == Status.PENDING
+
+    @property
+    def is_active(self):
+        return self.status == Status.ACTIVE
+
 
 Index(
     "application_role_user_application",

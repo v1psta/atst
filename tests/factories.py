@@ -202,7 +202,7 @@ class EnvironmentFactory(Base):
         for member in with_members:
             user = member.get("user", UserFactory.create())
             application_role = ApplicationRoleFactory.create(
-                application=environment.application, user=user
+                application=environment.application, user=user, invite=True
             )
             role_name = member["role_name"]
             EnvironmentRoleFactory.create(
@@ -232,6 +232,16 @@ class ApplicationRoleFactory(Base):
     user = factory.SubFactory(UserFactory)
     status = ApplicationRoleStatus.PENDING
     permission_sets = factory.LazyFunction(base_application_permission_sets)
+
+    @classmethod
+    def _create(cls, model_class, *args, **kwargs):
+        with_invite = kwargs.pop("invite", False)
+        app_role = super()._create(model_class, *args, **kwargs)
+
+        if with_invite:
+            ApplicationInvitationFactory.create(role=app_role)
+
+        return app_role
 
 
 class EnvironmentRoleFactory(Base):

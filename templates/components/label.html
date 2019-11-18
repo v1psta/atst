@@ -1,8 +1,8 @@
 {% from "components/icon.html" import Icon %}
 
-{% macro Label(icon_name, text, type=None, classes="") -%}
+{% macro Label(icon, text, type=None, classes="") -%}
 
   <span class='label {% if type %}label--{{ type }}{% endif %} {{ classes }}'>
-    {{ Icon(icon_name) }} {{ text }}
+    {{ Icon(icon) }} {{ text }}
   </span>
 {%- endmacro %}
