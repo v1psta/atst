@@ -17,7 +17,6 @@ import ApplicationEnvironments from './components/forms/new_application/environm
 import MultiStepModalForm from './components/forms/multi_step_modal_form'
 import uploadinput from './components/upload_input'
 import Modal from './mixins/modal'
-import BudgetChart from './components/charts/budget_chart'
 import SpendTable from './components/tables/spend_table'
 import LocalDatetime from './components/local_datetime'
 import { isNotInVerticalViewport } from './lib/viewport'
@@ -49,7 +48,6 @@ const app = new Vue({
     textinput,
     checkboxinput,
     ApplicationEnvironments,
-    BudgetChart,
     SpendTable,
     LocalDatetime,
     MultiStepModalForm,
