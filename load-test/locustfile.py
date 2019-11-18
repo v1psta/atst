@@ -1,4 +1,5 @@
 import os
+import re
 from random import choice, choices, randrange
 from urllib.parse import urlparse
 
@@ -37,6 +38,19 @@ def get_csrf_token(response):
     return d("#csrf_token").val()
 
 
+def extract_id(path):
+    entity_id_matcher = re.compile(
+        ".*\/?(?:portfolios|applications)\/([0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}).*",
+        re.I,
+    )
+
+    entity_id_match = entity_id_matcher.match(path)
+
+    assert entity_id_match is not None, f"Could not find id in {path}"
+    if entity_id_match:
+        return entity_id_match.group(1)
+
+
 def get_portfolios(l):
     response = l.client.get("/portfolios")
     d = pq(response.text)
@@ -62,7 +76,7 @@ def get_portfolio(l):
         for p in d(".application-list .accordion__actions a:first-child").items()
     ]
     if len(application_links) > 0:
-        portfolio_id = portfolio_link.split("/")[-2]
+        portfolio_id = extract_id(portfolio_link)
         update_app_registry(l, portfolio_id, application_links)
 
 
@@ -78,7 +92,7 @@ def get_app(l):
     if app_link is not None and not force_new_app:
         l.client.get(app_link)
     else:
-        portfolio_id = choice(l.locust.portfolio_links).split("/")[-2]
+        portfolio_id = extract_id(choice(l.locust.portfolio_links))
         update_app_registry(l, portfolio_id, [create_new_app(l, portfolio_id)])
 
 
@@ -98,6 +112,7 @@ def create_new_app(l, portfolio_id):
     }
 
     create_app_response = l.client.post(create_app_url, create_app_body)
+    application_id = extract_id(create_app_response.url)
 
     create_environments_body = {
         "environment_names-0": "Development",
@@ -107,7 +122,6 @@ def create_new_app(l, portfolio_id):
         "csrf_token": get_csrf_token(create_app_response),
     }
 
-    application_id = create_app_response.url.split("/")[-3]
     create_environments_url = (
         f"/applications/{application_id}/new/step_2?portfolio_id={portfolio_id}"
     )
