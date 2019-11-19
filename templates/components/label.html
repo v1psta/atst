@@ -1,8 +1,19 @@
 {% from "components/icon.html" import Icon %}
 
-{% macro Label(icon, text, type=None, classes="") -%}
+{% macro Label(type=None, classes="") -%}
+  {% set label_info = {
+      "invite_pending": {"icon": "envelope", "text": "invite pending", "color": "success",},
+      "invite_expired": {"icon": "envelope", "text": "invite expired", "color": "error",},
+      "changes_pending": {
+          "icon": "exchange",
+          "text": "changes pending",
+          "color": "default",
+      },
+  } %}
 
-  <span class='label {% if type %}label--{{ type }}{% endif %} {{ classes }}'>
-    {{ Icon(icon) }} {{ text }}
-  </span>
+  {% if type -%}
+    <span class='label label--{{ label_info[type]["color"] }} {{ classes }}'>
+      {{ Icon(label_info[type]["icon"]) }} {{ label_info[type]["text"] }}
+    </span>
+  {%- endif %}
 {%- endmacro %}

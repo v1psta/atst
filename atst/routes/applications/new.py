@@ -153,7 +153,6 @@ def view_new_application_step_3(application_id):
         application=application,
         members=members,
         new_member_form=new_member_form,
-        label_info=LABEL_INFO,
     )
 
 

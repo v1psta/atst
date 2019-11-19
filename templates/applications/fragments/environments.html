@@ -54,7 +54,7 @@
                       {%- endif %}
                       <br>
                       {% if env['pending'] -%}
-                        {{ Label('exchange', 'Changes Pending', classes='label--below')}}
+                        {{ Label(type="changes_pending", classes='label--below')}}
                       {% else %}
                         <a href='{{ url_for("applications.access_environment", environment_id=env.id)}}' target='_blank' rel='noopener noreferrer' class='application-list-item__environment__csp_link'>
                           <span>{{ "portfolios.applications.csp_link" | translate }} {{ Icon('link', classes="icon--tiny") }}</span>

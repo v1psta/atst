@@ -33,6 +33,8 @@
   {% else %}
 
     {% for member in members %}
+      {% set invite_pending = member.role_status == 'invite_pending' %}
+      {% set invite_expired = member.role_status == 'invite_expired' %}
       {%- if user_can(permissions.EDIT_APPLICATION_MEMBER) %}
         {% set modal_name = "edit_member-{}".format(loop.index) %}
         {% call Modal(modal_name, classes="form-content--app-mem") %}
@@ -52,7 +54,7 @@
           </base-form>
         {% endcall %}
 
-        {%- if member.role_status == 'pending' or member.role_status == 'expired' %}
+        {%- if invite_pending or invite_expired %}
           {% set resend_invite_modal = "resend_invite-{}".format(member.role_id) %}
           {% call Modal(resend_invite_modal, classes="form-content--app-mem") %}
             <div class="modal__form--header">
@@ -73,7 +75,7 @@
         {% endif -%}
       {% endif -%}
 
-      {% if user_can(permissions.DELETE_APPLICATION_MEMBER) and (member.role_status == 'pending' or member.role_status == 'expired') -%}
+      {% if user_can(permissions.DELETE_APPLICATION_MEMBER) and (invite_pending or invite_expired) -%}
         {% set revoke_invite_modal = "revoke_invite_{}".format(member.role_id) %}
         {% call Modal(name=revoke_invite_modal) %}
           <form method="post" action="{{ url_for('applications.revoke_invite', application_id=application.id, application_role_id=member.role_id) }}">
@@ -104,13 +106,13 @@
             <tbody>
               {% for member in members %}
                 {% set perms_modal = "edit_member-{}".format(loop.index) %}
+                {% set invite_pending = member.role_status == 'invite_pending' %}
+                {% set invite_expired = member.role_status == 'invite_expired' %}
                 <tr>
                   <td>
                     <strong>{{ member.user_name }}</strong>
                     <br>
-                    {% if label_info[member.role_status] -%}
-                      {{ Label(classes='label--below', **label_info[member.role_status]) }}
-                    {%- endif %}
+                    {{ Label(type=member.role_status, classes='label--below') }}
                   </td>
 
                   <td>
@@ -150,7 +152,7 @@
                           <a v-on:click="openModal('{{ perms_modal }}')">
                             {{ "portfolios.applications.members.menu.edit" | translate }}
                           </a>
-                          {% if member.role_status == 'pending' or member.role_status == 'expired' -%}
+                          {% if invite_pending or invite_expired -%}
                             {% set revoke_invite_modal = "revoke_invite_{}".format(member.role_id) %}
                             {% set resend_invite_modal = "resend_invite-{}".format(member.role_id) %}
                             <a v-on:click='openModal("{{ resend_invite_modal }}")'>
