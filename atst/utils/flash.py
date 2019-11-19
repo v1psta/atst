@@ -54,6 +54,11 @@ MESSAGES = {
         "message_template": "You have successfully deleted {{ user_name }} from {{ application_name }}",
         "category": "success",
     },
+    "application_member_update_error": {
+        "title_template": "{{ user_name }} could not be updated",
+        "message_template": "An unexpected problem occurred with your request, please try again. If the problem persists, contact an administrator.",
+        "category": "error",
+    },
     "application_member_updated": {
         "title_template": "Team member updated",
         "message_template": "You have successfully updated the permissions for {{ user_name }}",
