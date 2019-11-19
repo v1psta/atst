@@ -56,11 +56,6 @@ def home():
     return render_template("home.html")
 
 
-@bp.route("/styleguide")
-def styleguide():
-    return render_template("styleguide.html")
-
-
 @bp.route("/<path:path>")
 def catch_all(path):
     try:

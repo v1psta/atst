@@ -21,7 +21,6 @@ _NO_ACCESS_CHECK_REQUIRED = _NO_LOGIN_REQUIRED + [
     "atst.csp_environment_access",  # internal redirect
     "atst.home",  # available to all users
     "atst.jedi_csp_calculator",  # internal redirect
-    "atst.styleguide",  # dev reference
     "dev.messages",  # dev tool
     "dev.test_email",  # dev tool
     "portfolios.accept_invitation",  # available to all users; access control is built into invitation logic
