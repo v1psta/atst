@@ -58,3 +58,24 @@ def test_environment_roles():
     )
 
     assert not EnvironmentRoles.get_by_user_and_environment(user.id, environment2.id)
+
+
+def test_display_status():
+    app_role_expired_invite = ApplicationRoleFactory.create()
+    yesterday = datetime.date.today() - datetime.timedelta(days=1)
+    ApplicationInvitationFactory.create(
+        role=app_role_expired_invite, expiration_time=yesterday
+    )
+    assert app_role_expired_invite.display_status == "expired"
+
+    app_role_pending = ApplicationRoleFactory.create()
+    invite = ApplicationInvitationFactory.create(
+        role=app_role_pending, user=app_role_pending.user
+    )
+    assert app_role_pending.display_status == "pending"
+
+    app_role_active = ApplicationRoleFactory.create(status=ApplicationRoleStatus.ACTIVE)
+    assert app_role_active.display_status == "active"
+
+    env_role_pending = EnvironmentRoleFactory.create(application_role=app_role_active)
+    assert env_role_pending.application_role.display_status == "env_changes_pending"

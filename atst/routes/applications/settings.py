@@ -111,20 +111,6 @@ def filter_env_roles_form_data(member, environments):
     return env_roles_form_data
 
 
-def get_app_role_status(app_role):
-    status = app_role.status.value
-
-    if app_role.is_pending and app_role.latest_invitation.is_expired:
-        status = "expired"
-
-    if app_role.is_active and any(
-        env_role.is_pending for env_role in app_role.environment_roles
-    ):
-        status = "env_changes_pending"
-
-    return status
-
-
 def get_members_data(application):
     members_data = []
     for member in application.members:
@@ -149,7 +135,7 @@ def get_members_data(application):
                 "user_name": member.user_name,
                 "permission_sets": permission_sets,
                 "environment_roles": environment_roles,
-                "role_status": get_app_role_status(member),
+                "role_status": member.display_status,
                 "form": form,
                 "update_invite_form": update_invite_form,
             }

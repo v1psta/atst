@@ -23,8 +23,11 @@ from atst.routes.applications.settings import (
     filter_env_roles_form_data,
     filter_env_roles_data,
     get_environments_obj_for_app,
+<<<<<<< HEAD
     handle_create_member,
     handle_update_member,
+=======
+>>>>>>> Move display status logic to be a property of an ApplicationRole
 )
 
 from tests.utils import captured_templates
