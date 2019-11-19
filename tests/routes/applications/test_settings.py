@@ -110,13 +110,11 @@ def test_edit_application_environments_obj(app, client, user_session):
         {"env"},
     )
     env = application.environments[0]
-    app_role1 = ApplicationRoleFactory.create(application=application, invite=True)
+    app_role1 = ApplicationRoleFactory.create(application=application)
     env_role1 = EnvironmentRoleFactory.create(
         application_role=app_role1, environment=env, role=CSPRole.BASIC_ACCESS.value
     )
-    app_role2 = ApplicationRoleFactory.create(
-        application=application, user=None, invite=True
-    )
+    app_role2 = ApplicationRoleFactory.create(application=application, user=None)
     env_role2 = EnvironmentRoleFactory.create(
         application_role=app_role2, environment=env, role=CSPRole.NETWORK_ADMIN.value
     )

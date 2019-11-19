@@ -202,7 +202,7 @@ class EnvironmentFactory(Base):
         for member in with_members:
             user = member.get("user", UserFactory.create())
             application_role = ApplicationRoleFactory.create(
-                application=environment.application, user=user, invite=True
+                application=environment.application, user=user
             )
             role_name = member["role_name"]
             EnvironmentRoleFactory.create(
@@ -235,7 +235,7 @@ class ApplicationRoleFactory(Base):
 
     @classmethod
     def _create(cls, model_class, *args, **kwargs):
-        with_invite = kwargs.pop("invite", False)
+        with_invite = kwargs.pop("invite", True)
         app_role = super()._create(model_class, *args, **kwargs)
 
         if with_invite:
@@ -269,7 +269,7 @@ class ApplicationInvitationFactory(Base):
     email = factory.Faker("email")
     status = InvitationStatus.PENDING
     expiration_time = PortfolioInvitations.current_expiration_time()
-    role = factory.SubFactory(ApplicationRoleFactory)
+    role = factory.SubFactory(ApplicationRoleFactory, invite=False)
 
 
 class AttachmentFactory(Base):
