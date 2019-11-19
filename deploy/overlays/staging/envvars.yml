@@ -14,6 +14,7 @@ metadata:
   name: atst-envvars
 data:
   ASSETS_URL: https://atat-cdn-staging.azureedge.net/
+  CDN_ORIGIN: https://staging.atat.code.mil
   CELERY_DEFAULT_QUEUE: celery-staging
   FLASK_ENV: staging
   STATIC_URL: https://atat-cdn-staging.azureedge.net/static/

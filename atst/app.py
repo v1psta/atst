@@ -137,6 +137,7 @@ def set_default_headers(app):  # pragma: no cover
         response.headers["X-Content-Type-Options"] = "nosniff"
         response.headers["X-Frame-Options"] = "SAMEORIGIN"
         response.headers["X-XSS-Protection"] = "1; mode=block"
+        response.headers["Access-Control-Allow-Origin"] = app.config.get("CDN_ORIGIN")
 
         if ENV == "dev":
             response.headers[

@@ -7,6 +7,7 @@ metadata:
 data:
   ASSETS_URL: https://atat-cdn.azureedge.net/
   CELERY_DEFAULT_QUEUE: celery-master
+  CDN_ORIGIN: https://azure.atat.code.mil
   CSP: azure
   FLASK_ENV: dev
   LOG_JSON: "true"
