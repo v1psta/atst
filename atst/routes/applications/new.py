@@ -11,6 +11,7 @@ from atst.routes.applications.settings import (
     get_members_data,
     get_new_member_form,
     handle_create_member,
+    handle_update_member,
 )
 
 
@@ -156,10 +157,16 @@ def view_new_application_step_3(application_id):
 
 
 @applications_bp.route("/applications/<application_id>/new/step_3", methods=["POST"])
+@applications_bp.route(
+    "/applications/<application_id>/new/step_3/member/<application_role_id>",
+    methods=["POST"],
+)
 @user_can(Permissions.CREATE_APPLICATION, message="view create new application form")
-def update_new_application_step_3(application_id):
-
-    handle_create_member(application_id, http_request.form)
+def update_new_application_step_3(application_id, application_role_id=None):
+    if application_role_id:
+        handle_update_member(application_id, application_role_id, http_request.form)
+    else:
+        handle_create_member(application_id, http_request.form)
 
     return redirect(
         url_for(

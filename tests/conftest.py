@@ -5,6 +5,7 @@ import alembic.command
 from logging.config import dictConfig
 from werkzeug.datastructures import FileStorage
 from collections import OrderedDict
+from unittest.mock import Mock
 
 from atst.app import make_app, make_config
 from atst.database import db as _db

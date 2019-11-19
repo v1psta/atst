@@ -12,7 +12,8 @@
   application,
   members,
   new_member_form,
-  action) %}
+  action_new,
+  action_update) %}
 
   <h3  id="application-members">
     {{ 'portfolios.applications.settings.team_members' | translate }}
@@ -40,7 +41,7 @@
             <hr>
           </div>
           <base-form inline-template>
-            <form id='{{ modal_name }}' method="POST" action="{{ url_for('applications.update_member', application_id=application.id, application_role_id=member.role_id) }}">
+            <form id='{{ modal_name }}' method="POST" action="{{ url_for(action_update, application_id=application.id, application_role_id=member.role_id,) }}">
               {{ member.form.csrf_token }}
               {{ member_fields.PermsFields(form=member.form, member_role_id=member.role_id) }}
               <div class="action-group">
@@ -181,7 +182,7 @@
     {{ MultiStepModalForm(
         name=new_member_modal_name,
         form=new_member_form,
-        form_action=url_for(action, application_id=application.id),
+        form_action=url_for(action_new, application_id=application.id),
         steps=[
           member_steps.MemberStepOne(new_member_form),
           member_steps.MemberStepTwo(new_member_form, application)
