@@ -5,6 +5,7 @@ metadata:
   name: atst-worker-envvars
 data:
   CELERY_DEFAULT_QUEUE: celery-staging
+  SERVER_NAME: staging.atat.code.mil
 ---
 apiVersion: v1
 kind: ConfigMap
