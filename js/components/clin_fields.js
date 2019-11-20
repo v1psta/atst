@@ -1,4 +1,4 @@
-import { emitEvent } from '../lib/emitters'
+import { emitFieldChange } from '../lib/emitters'
 import optionsinput from './options_input'
 import textinput from './text_input'
 import clindollaramount from './clin_dollar_amount'
@@ -61,23 +61,7 @@ export default {
     this.validateFunding()
   },
 
-  created: function() {
-    emitEvent('clin-change', this, {
-      id: this._uid,
-      obligatedAmount: this.initialObligated,
-      totalAmount: this.initialTotal,
-    })
-  },
-
   methods: {
-    clinChangeEvent: function() {
-      emitEvent('clin-change', this, {
-        id: this._uid,
-        obligatedAmount: this.initialObligated,
-        totalAmount: this.initialTotal,
-      })
-    },
-
     checkFundingValid: function() {
       return this.obligatedAmount <= this.totalAmount
     },
@@ -98,12 +82,12 @@ export default {
       } else if (event && event.name.includes(NUMBER)) {
         this.clinNumber = event.value
       }
-      this.$parent.$emit('field-change')
+      emitFieldChange(this)
     },
 
     removeClin: function() {
       this.showClin = false
-      emitEvent('remove-clin', this, {
+      this.$parent.$emit('remove-clin', this, {
         clinIndex: this.clinIndex,
       })
       this.removed = true

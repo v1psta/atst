@@ -1,4 +1,4 @@
-import { emitEvent } from '../lib/emitters'
+import { emitFieldChange } from '../lib/emitters'
 
 export default {
   name: 'optionsinput',
@@ -21,14 +21,6 @@ export default {
     },
   },
 
-  created: function() {
-    emitEvent('field-mount', this, {
-      optional: this.optional,
-      name: this.name,
-      valid: this._isValid(this.value),
-    })
-  },
-
   data: function() {
     const showError = (this.initialErrors && this.initialErrors.length) || false
     return {
@@ -40,18 +32,8 @@ export default {
   },
 
   methods: {
-    onInput: function(e) {
-      this.showError = false
-      this.showValid = true
-      this.value = e.target.value
-
-      this.$parent.$emit('field-change')
-      emitEvent('field-change', this, {
-        value: e.target.value,
-        name: this.name,
-        watch: this.watch,
-        valid: this._isValid(e.target.value),
-      })
+    onInput: function() {
+      emitFieldChange(this)
     },
 
     _isValid: function(value) {
