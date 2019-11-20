@@ -66,6 +66,15 @@ class Portfolio(
         return len(self.task_orders)
 
     @property
+    def active_clins(self):
+        return [
+            clin
+            for task_order in self.task_orders
+            for clin in task_order.clins
+            if clin.is_active
+        ]
+
+    @property
     def members(self):
         return (
             db.session.query(PortfolioRole)
