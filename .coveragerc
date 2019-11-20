@@ -1,3 +1,17 @@
 [run]
-omit = atst/routes/dev.py
+omit =
+  atst/routes/dev.py
+  atst/domain/audit_log.py
+  atst/models/mixins/auditable.py
+  atst/models/audit_event.py
 branch = True
+
+[report]
+exclude_lines =
+  pragma: no cover
+  if app.config.get("USE_AUDIT_LOG", False)
+  def event_details
+  def history
+  def resource_type
+  def renderAuditEvent
+  def activity_history
