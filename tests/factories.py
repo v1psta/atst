@@ -289,6 +289,7 @@ class TaskOrderFactory(Base):
     )
     number = factory.LazyFunction(random_task_order_number)
     creator = factory.SubFactory(UserFactory)
+    signed_at = None
     _pdf = factory.SubFactory(AttachmentFactory)
 
     @classmethod
