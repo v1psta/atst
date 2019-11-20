@@ -1,27 +1,22 @@
 from atst.domain.reports import Reports
-
-from tests.factories import PortfolioFactory
-
-
-def test_portfolio_totals():
-    portfolio = PortfolioFactory.create()
-    report = Reports.portfolio_totals(portfolio)
-    assert report == {"budget": 0, "spent": 0}
+from tests.factories import *
 
 
-# this is sketched in until we do real reporting
+# this is sketched out until we do real reporting
 def test_monthly_totals():
-    portfolio = PortfolioFactory.create()
-    monthly = Reports.monthly_totals(portfolio)
-
-    assert not monthly["environments"]
-    assert not monthly["applications"]
-    assert not monthly["portfolio"]
+    pass
 
 
-# this is sketched in until we do real reporting
-def test_cumulative_budget():
-    portfolio = PortfolioFactory.create()
-    months = Reports.cumulative_budget(portfolio)
+# this is sketched out until we do real reporting
+def test_current_obligated_funds():
+    pass
 
-    assert len(months["months"]) >= 12
+
+# this is sketched out until we do real reporting
+def test_expired_task_orders():
+    pass
+
+
+# this is sketched out until we do real reporting
+def test_obligated_funds_by_JEDI_clin():
+    pass

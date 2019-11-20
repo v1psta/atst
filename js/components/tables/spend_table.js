@@ -6,11 +6,9 @@ export default {
 
   props: {
     applications: Object,
-    portfolio: Object,
     environments: Object,
     currentMonthIndex: String,
     prevMonthIndex: String,
-    twoMonthsAgoIndex: String,
   },
 
   data: function() {
@@ -39,10 +37,6 @@ export default {
 
     formatDollars: function(value) {
       return formatDollars(value, false)
-    },
-
-    round: function(value) {
-      return Math.round(value)
     },
   },
 }

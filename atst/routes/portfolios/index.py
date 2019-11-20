@@ -46,34 +46,24 @@ def create_portfolio():
 def reports(portfolio_id):
     portfolio = Portfolios.get(g.current_user, portfolio_id)
     today = date.today()
-    month = http_request.args.get("month", today.month)
-    year = http_request.args.get("year", today.year)
-    current_month = date(int(year), int(month), 15)
+    current_month = date(int(today.year), int(today.month), 15)
     prev_month = current_month - timedelta(days=28)
-    two_months_ago = prev_month - timedelta(days=28)
-
-    task_order = next(
-        (task_order for task_order in portfolio.task_orders if task_order.is_active),
-        None,
+    # wrapped in str() because the sum of obligated funds returns a Decimal object
+    total_portfolio_value = str(
+        sum(
+            task_order.total_obligated_funds
+            for task_order in portfolio.active_task_orders
+        )
     )
-    expiration_date = task_order and task_order.end_date
-    if expiration_date:
-        remaining_difference = expiration_date - today
-        remaining_days = remaining_difference.days
-    else:
-        remaining_days = None
-
     return render_template(
         "portfolios/reports/index.html",
-        cumulative_budget=Reports.cumulative_budget(portfolio),
-        portfolio_totals=Reports.portfolio_totals(portfolio),
+        portfolio=portfolio,
+        total_portfolio_value=total_portfolio_value,
+        current_obligated_funds=Reports.obligated_funds_by_JEDI_clin(portfolio),
+        expired_task_orders=Reports.expired_task_orders(portfolio),
         monthly_totals=Reports.monthly_totals(portfolio),
-        task_order=task_order,
         current_month=current_month,
         prev_month=prev_month,
-        two_months_ago=two_months_ago,
-        expiration_date=expiration_date,
-        remaining_days=remaining_days,
     )
 
 

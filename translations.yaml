@@ -449,6 +449,14 @@ portfolios:
       name: Name
       portfolio_mgmt: Portfolio management
       reporting: Reporting
+  reports:
+    empty_state:
+      message: Nothing to report.
+      sub_message:
+        can_create_applications: This portfolio has no cloud environments set up, so there is no spending data to report. Create an application with some cloud environments to get started.
+        cannot_create_applications: This portfolio has no cloud environments set up, so there is no spending data to report. Contact the portfolio owner to set up some cloud environments.
+      action_label: 'Add a new application'
+
 task_orders:
   review:
     pdf_title: Approved Task Order

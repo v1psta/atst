@@ -114,7 +114,7 @@ class Portfolio(
                 for task_order in self.task_orders
                 if task_order.is_active
             ),
-            default=None,
+            default=0,
         )
 
     @property
