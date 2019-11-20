@@ -280,7 +280,6 @@ login:
     learn_more: Learn more
     message: 'When you are prompted to select a certificate, please select Email Certificate from the provided choices.'
     title: Certificate Selection
-  csp_disclaimer: This is one of two sites being used for both Azure and AWS integration. The URLs and hosting environments are being managed without knowledge of or input to the JEDI source selection and should not be considered an endorsement of any cloud vendor.
   h1_title: Access the JEDI cloud
   login_button: Sign in with CAC
   title_tag: Sign in | JEDI cloud
