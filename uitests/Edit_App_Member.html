@@ -82,15 +82,16 @@ Imported from: AT-AT CI - Login Brandon-->
 </tr>
 <!--Imported from: AT-AT CI - Application Settings
 Imported from: AT-AT CI - New App Step 3
-Imported from: AT-AT CI - Login Brandon-->
+Imported from: AT-AT CI - Login Brandon
+11/19/19 17:10 Temporarily making optional until Leigh's PR#1197 merges-->
 <tr>
 <td>waitForElementPresent</td>
-<td>css=.col > .usa-alert.usa-alert-info:nth-of-type(3) > .usa-alert-body > h3.usa-alert-heading</td>
+<td>css=.col > .usa-alert.usa-alert-info:nth-of-type(2) > .usa-alert-body > h3.usa-alert-heading</td>
 <td></td>
 </tr>
 <tr>
-<td>assertText</td>
-<td>css=.col > .usa-alert.usa-alert-info:nth-of-type(3) > .usa-alert-body > h3.usa-alert-heading</td>
+<td>verifyText</td>
+<td>css=.col > .usa-alert.usa-alert-info:nth-of-type(2) > .usa-alert-body > h3.usa-alert-heading</td>
 <td>*Logged out*</td>
 </tr>
 <tr>
@@ -1430,6 +1431,36 @@ Imported from: AT-AT CI - New App Step 3-->
 <td>assertText</td>
 <td>css=.usa-alert.usa-alert-success > .usa-alert-body > .usa-alert-text</td>
 <td>*You have successfully updated the permissions for Brandon Buchannan*</td>
+</tr>
+<tr>
+<td>waitForPageToLoad</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>waitForElementPresent</td>
+<td>css=table.atat-table > tbody > tr:nth-of-type(1) > td:nth-of-type(2) > div:nth-of-type(1)</td>
+<td></td>
+</tr>
+<tr>
+<td>assertText</td>
+<td>css=table.atat-table > tbody > tr:nth-of-type(1) > td:nth-of-type(2) > div:nth-of-type(1)</td>
+<td>*View Team*</td>
+</tr>
+<tr>
+<td>waitForPageToLoad</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>waitForElementPresent</td>
+<td>css=table.atat-table > tbody > tr:nth-of-type(1) > td:nth-of-type(2) > div:nth-of-type(2)</td>
+<td></td>
+</tr>
+<tr>
+<td>assertText</td>
+<td>css=table.atat-table > tbody > tr:nth-of-type(1) > td:nth-of-type(2) > div:nth-of-type(2)</td>
+<td>*View Environments*</td>
 </tr>
 </tbody>
 </table>
