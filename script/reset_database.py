@@ -6,7 +6,9 @@ parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 sys.path.append(parent_dir)
 
 import sqlalchemy
+from alembic import config as alembic_config
 
+from seed_roles import seed_roles
 from atst.database import db
 from atst.app import make_config, make_app
 
@@ -17,15 +19,15 @@ def reset_database():
     meta = sqlalchemy.MetaData(bind=conn, reflect=True)
     trans = conn.begin()
 
-    retained_tables = ["alembic_version", "permission_sets"]
-
-    for t in meta.sorted_tables:
-        if str(t) not in retained_tables:
-            conn.execute("ALTER TABLE {} DISABLE trigger ALL;".format(t))
-            conn.execute(t.delete())
-            conn.execute("ALTER TABLE {} ENABLE trigger ALL;".format(t))
-
+    # drop all tables
+    meta.drop_all()
     trans.commit()
+
+    # rerun the migrations
+    alembic_config.main(argv=["upgrade", "head"])
+
+    # seed the permission sets
+    seed_roles()
 
 
 if __name__ == "__main__":
