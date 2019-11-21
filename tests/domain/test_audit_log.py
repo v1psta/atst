@@ -101,6 +101,7 @@ def test_get_portfolio_events_includes_app_and_env_events():
     assert "environment_role" in resource_types
 
 
+@pytest.mark.audit_log
 def test_get_application_events():
     # add in some portfolio level events
     portfolio = PortfolioFactory.create()
