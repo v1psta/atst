@@ -10,7 +10,7 @@ data:
   CELERY_DEFAULT_QUEUE: celery-master
   CDN_ORIGIN: https://azure.atat.code.mil
   CSP: azure
-  FLASK_ENV: dev
+  FLASK_ENV: master
   LOG_JSON: "true"
   OVERRIDE_CONFIG_FULLPATH: /opt/atat/atst/atst-overrides.ini
   PGSSLMODE: verify-full

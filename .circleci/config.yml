@@ -285,7 +285,12 @@ workflows:
   version: 2
   run-tests:
     jobs:
-      - docker-build-staging
+      - docker-build-staging:
+          filters:
+            branches:
+              ignore:
+                - staging
+                - master
       - test:
           requires:
             - docker-build-staging
