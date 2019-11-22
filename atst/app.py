@@ -128,6 +128,7 @@ def make_flask_callbacks(app):
 
 def set_default_headers(app):  # pragma: no cover
     static_url = app.config.get("STATIC_URL")
+    blob_storage_url = app.config.get("BLOB_STORAGE_URL")
 
     @app.after_request
     def _set_security_headers(response):
@@ -146,7 +147,7 @@ def set_default_headers(app):  # pragma: no cover
         else:
             response.headers[
                 "Content-Security-Policy"
-            ] = f"default-src 'self' 'unsafe-eval' 'unsafe-inline' {static_url}"
+            ] = f"default-src 'self' 'unsafe-eval' 'unsafe-inline' {blob_storage_url} {static_url}"
 
         return response
 

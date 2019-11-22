@@ -6,6 +6,7 @@ metadata:
   namespace: atat
 data:
   ASSETS_URL: https://atat-cdn.azureedge.net/
+  BLOB_STORAGE_URL: https://atat.blob.core.windows.net/
   CELERY_DEFAULT_QUEUE: celery-master
   CDN_ORIGIN: https://azure.atat.code.mil
   CSP: azure
