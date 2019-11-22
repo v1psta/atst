@@ -115,17 +115,15 @@ class ApplicationRole(
         if (
             self.is_pending
             and self.latest_invitation
-            and self.latest_invitation.is_pending
-        ):
-            return "invite_pending"
-
-        elif (
-            self.is_pending
-            and self.latest_invitation
             and self.latest_invitation.is_expired
         ):
             return "invite_expired"
-
+        elif (
+            self.is_pending
+            and self.latest_invitation
+            and self.latest_invitation.is_pending
+        ):
+            return "invite_pending"
         elif self.is_active and any(
             env_role.is_pending for env_role in self.environment_roles
         ):
