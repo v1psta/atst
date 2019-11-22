@@ -32,14 +32,25 @@ class JsonFormatter(logging.Formatter):
         ("dod_edipi", lambda r: r.__dict__.get("dod_edipi")),
         ("severity", lambda r: r.levelname),
         ("tags", lambda r: r.__dict__.get("tags")),
-        ("message", lambda r: r.msg),
         ("audit_event", lambda r: r.__dict__.get("audit_event")),
     ]
 
-    def format(self, record):
-        message_dict = {"source": "atst"}
+    def __init__(self, *args, source="atst", **kwargs):
+        self.source = source
+        super().__init__(self)
+
+    def format(self, record, *args, **kwargs):
+        message_dict = {"source": self.source}
+
         for field, func in self._DEFAULT_RECORD_FIELDS:
-            message_dict[field] = func(record)
+            result = func(record)
+            if result:
+                message_dict[field] = result
+
+        if record.args:
+            message_dict["message"] = record.msg % record.args
+        else:
+            message_dict["message"] = record.msg
 
         if record.__dict__.get("exc_info") is not None:
             message_dict["details"] = {
