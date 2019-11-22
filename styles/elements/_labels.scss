@@ -20,6 +20,10 @@
   white-space: nowrap;
   text-transform: uppercase;
 
+  &--default {
+    background-color: $color-gray-dark;
+  }
+
   &--info {
     background-color: $color-primary;
   }

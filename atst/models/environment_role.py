@@ -71,6 +71,10 @@ class EnvironmentRole(
         return self.status == EnvironmentRole.Status.DISABLED
 
     @property
+    def is_pending(self):
+        return self.status == EnvironmentRole.Status.PENDING
+
+    @property
     def event_details(self):
         return {
             "updated_user_name": self.application_role.user_name,

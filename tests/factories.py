@@ -233,6 +233,16 @@ class ApplicationRoleFactory(Base):
     status = ApplicationRoleStatus.PENDING
     permission_sets = factory.LazyFunction(base_application_permission_sets)
 
+    @classmethod
+    def _create(cls, model_class, *args, **kwargs):
+        with_invite = kwargs.pop("invite", True)
+        app_role = super()._create(model_class, *args, **kwargs)
+
+        if with_invite:
+            ApplicationInvitationFactory.create(role=app_role)
+
+        return app_role
+
 
 class EnvironmentRoleFactory(Base):
     class Meta:
@@ -259,7 +269,7 @@ class ApplicationInvitationFactory(Base):
     email = factory.Faker("email")
     status = InvitationStatus.PENDING
     expiration_time = PortfolioInvitations.current_expiration_time()
-    role = factory.SubFactory(ApplicationRoleFactory)
+    role = factory.SubFactory(ApplicationRoleFactory, invite=False)
 
 
 class AttachmentFactory(Base):

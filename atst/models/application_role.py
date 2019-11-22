@@ -102,6 +102,37 @@ class ApplicationRole(
             "portfolio": self.application.portfolio.name,
         }
 
+    @property
+    def is_pending(self):
+        return self.status == Status.PENDING
+
+    @property
+    def is_active(self):
+        return self.status == Status.ACTIVE
+
+    @property
+    def display_status(self):
+        if (
+            self.is_pending
+            and self.latest_invitation
+            and self.latest_invitation.is_pending
+        ):
+            return "invite_pending"
+
+        elif (
+            self.is_pending
+            and self.latest_invitation
+            and self.latest_invitation.is_expired
+        ):
+            return "invite_expired"
+
+        elif self.is_active and any(
+            env_role.is_pending for env_role in self.environment_roles
+        ):
+            return "changes_pending"
+
+        return None
+
 
 Index(
     "application_role_user_application",

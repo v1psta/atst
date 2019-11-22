@@ -10,10 +10,11 @@ from tests.factories import *
 from atst.domain.applications import Applications
 from atst.domain.application_roles import ApplicationRoles
 from atst.domain.environment_roles import EnvironmentRoles
+from atst.domain.invitations import ApplicationInvitations
 from atst.domain.common import Paginator
 from atst.domain.permission_sets import PermissionSets
 from atst.models.application_role import Status as ApplicationRoleStatus
-from atst.models.environment_role import CSPRole
+from atst.models.environment_role import CSPRole, EnvironmentRole
 from atst.models.permissions import Permissions
 from atst.forms.application import EditEnvironmentForm
 from atst.forms.application_member import UpdateMemberForm
@@ -114,7 +115,6 @@ def test_edit_application_environments_obj(app, client, user_session):
         application_role=app_role1, environment=env, role=CSPRole.BASIC_ACCESS.value
     )
     app_role2 = ApplicationRoleFactory.create(application=application, user=None)
-    invite = ApplicationInvitationFactory.create(role=app_role2)
     env_role2 = EnvironmentRoleFactory.create(
         application_role=app_role2, environment=env, role=CSPRole.NETWORK_ADMIN.value
     )
@@ -165,7 +165,7 @@ def test_get_members_data(app, client, user_session):
                 "name": "testing",
                 "members": [{"user": user, "role_name": CSPRole.BASIC_ACCESS.value}],
             }
-        ]
+        ],
     )
     environment = application.environments[0]
     app_role = ApplicationRoles.get(user_id=user.id, application_id=application.id)
