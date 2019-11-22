@@ -10,6 +10,7 @@ class RequestContextFilter(logging.Filter):
         if has_request_context():
             if getattr(g, "current_user", None):
                 record.user_id = str(g.current_user.id)
+                record.dod_edipi = g.current_user.dod_id
 
             if request.environ.get("HTTP_X_REQUEST_ID"):
                 record.request_id = request.environ.get("HTTP_X_REQUEST_ID")
@@ -28,6 +29,7 @@ class JsonFormatter(logging.Formatter):
         ("version", lambda r: 1),
         ("request_id", lambda r: r.__dict__.get("request_id")),
         ("user_id", lambda r: r.__dict__.get("user_id")),
+        ("dod_edipi", lambda r: r.__dict__.get("dod_edipi")),
         ("severity", lambda r: r.levelname),
         ("tags", lambda r: r.__dict__.get("tags")),
         ("message", lambda r: r.msg),
