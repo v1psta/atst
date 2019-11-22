@@ -6,6 +6,7 @@ from atst.domain.environments import Environments
 from atst.domain.applications import Applications
 from atst.domain.application_roles import ApplicationRoles
 from atst.domain.audit_log import AuditLog
+from atst.domain.csp.cloud import GeneralCSPException
 from atst.domain.common import Paginator
 from atst.domain.environment_roles import EnvironmentRoles
 from atst.domain.invitations import ApplicationInvitations
@@ -221,14 +222,22 @@ def handle_update_member(application_id, application_role_id, form_data):
     )
 
     if form.validate():
-        ApplicationRoles.update_permission_sets(app_role, form.data["permission_sets"])
+        try:
+            ApplicationRoles.update_permission_sets(
+                app_role, form.data["permission_sets"]
+            )
 
-        for env_role in form.environment_roles:
-            environment = Environments.get(env_role.environment_id.data)
-            new_role = None if env_role.disabled.data else env_role.data["role"]
-            Environments.update_env_role(environment, app_role, new_role)
+            for env_role in form.environment_roles:
+                environment = Environments.get(env_role.environment_id.data)
+                new_role = None if env_role.disabled.data else env_role.data["role"]
+                Environments.update_env_role(environment, app_role, new_role)
 
-        flash("application_member_updated", user_name=app_role.user_name)
+            flash("application_member_updated", user_name=app_role.user_name)
+
+        except GeneralCSPException:
+            flash(
+                "application_member_update_error", user_name=app_role.user_name,
+            )
     else:
         pass
         # TODO: flash error message
