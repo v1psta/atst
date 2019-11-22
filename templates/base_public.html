@@ -10,7 +10,7 @@
   {% assets "css" %}
     <link rel="stylesheet" href="{{ ASSET_URL }}" type="text/css">
   {% endassets %}
-  <link rel="icon" type="image/x-icon" href="/static/img/favicon.ico">
+  <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/favicon.ico') }} " />
 </head>
 <body>
 

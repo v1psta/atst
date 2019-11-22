@@ -1,6 +1,7 @@
 FROM python:3.7.3-alpine3.9 AS builder
 
 ARG CSP
+ARG CDN_URL=/static/assets/
 ENV TZ UTC
 
 RUN mkdir -p /install/.venv
@@ -41,7 +42,7 @@ RUN ./script/write_dotenv && \
       yarn install && \
       rm -r ./static/fonts/ &> /dev/null || true && \
       cp -rf ./node_modules/uswds/src/fonts ./static/ && \
-      yarn build
+      yarn build-prod
 
 ## NEW IMAGE
 FROM python:3.7.3-alpine3.9

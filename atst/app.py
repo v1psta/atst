@@ -2,11 +2,12 @@ import os
 import re
 from configparser import ConfigParser
 from datetime import datetime
-from flask import Flask, request, g, session
+from flask import Flask, request, g, session, url_for as flask_url_for
 from flask_session import Session
 import redis
 from unipath import Path
 from flask_wtf.csrf import CSRFProtect
+from urllib.parse import urljoin
 
 from atst.database import db
 from atst.assets import environment as assets_environment
@@ -63,6 +64,7 @@ def make_app(config):
 
     make_flask_callbacks(app)
     register_filters(app)
+    register_jinja_globals(app)
     make_csp_provider(app, config.get("CSP", "mock"))
     make_crl_validator(app)
     make_mailer(app)
@@ -125,6 +127,8 @@ def make_flask_callbacks(app):
 
 
 def set_default_headers(app):  # pragma: no cover
+    static_url = app.config.get("STATIC_URL")
+
     @app.after_request
     def _set_security_headers(response):
         response.headers[
@@ -133,6 +137,7 @@ def set_default_headers(app):  # pragma: no cover
         response.headers["X-Content-Type-Options"] = "nosniff"
         response.headers["X-Frame-Options"] = "SAMEORIGIN"
         response.headers["X-XSS-Protection"] = "1; mode=block"
+        response.headers["Access-Control-Allow-Origin"] = app.config.get("CDN_ORIGIN")
 
         if ENV == "dev":
             response.headers[
@@ -141,7 +146,7 @@ def set_default_headers(app):  # pragma: no cover
         else:
             response.headers[
                 "Content-Security-Policy"
-            ] = "default-src 'self' 'unsafe-eval' 'unsafe-inline'"
+            ] = f"default-src 'self' 'unsafe-eval' 'unsafe-inline' {static_url}"
 
         return response
 
@@ -293,3 +298,16 @@ def apply_json_logger():
             "root": {"level": "INFO", "handlers": ["wsgi"]},
         }
     )
+
+
+def register_jinja_globals(app):
+    static_url = app.config.get("STATIC_URL", "/static/")
+
+    def _url_for(endpoint, **values):
+        if endpoint == "static":
+            filename = values["filename"]
+            return urljoin(static_url, filename)
+        else:
+            return flask_url_for(endpoint, **values)
+
+    app.jinja_env.globals["url_for"] = _url_for
