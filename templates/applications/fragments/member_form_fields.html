@@ -66,8 +66,7 @@
           <optionsinput inline-template
             v-bind:initial-value="'{{ sub_form.role.data | string }}'"
             v-bind:name="'{{ sub_form.name | string }}{% if member_role_id %}-{{ member_role_id }}{% endif %}'"
-            v-bind:optional="true"
-            v-bind:watch="true">
+            v-bind:optional="true">
             <fieldset data-ally-disabled="true" v-on:change="onInput" class="usa-input__choices">
               {{ sub_form.role(**{"v-model": "value", "id": "{}-{}".format(sub_form.role.name, member_role_id)}) }}
             </fieldset>

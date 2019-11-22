@@ -10,10 +10,6 @@ export default {
       default: () => [],
     },
     initialValue: String,
-    watch: {
-      type: Boolean,
-      default: false,
-    },
     optional: Boolean,
     nullOption: {
       type: String,

@@ -8,7 +8,6 @@
   label=True,
   show_validation=True,
   disabled=False,
-  watch=False,
   optional=True) -%}
   <optionsinput
     name='{{ field.name }}'
@@ -16,7 +15,6 @@
     {% if field.errors %}v-bind:initial-errors='{{ field.errors | list }}'{% endif %}
     {% if field.data and field.data != "None" %}v-bind:initial-value="'{{ field.data }}'"{% endif %}
     key='{{ field.name }}'
-    v-bind:watch='{{ watch | string | lower }}'
     v-bind:optional={{ optional|lower }}
     v-bind:null-option="'{{ field.default }}'"
     >
