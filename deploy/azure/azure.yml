@@ -149,7 +149,7 @@ spec:
               keyvaultobjectnames: "dhparam4096"
               keyvaultobjectaliases: "dhparam.pem"
               keyvaultobjecttypes: secret
-              tenantid: "b5ab0e1e-09f8-4258-afb7-fb17654bc5b3"
+              tenantid: $TENANT_ID
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment

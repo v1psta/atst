@@ -14,6 +14,7 @@ The production configuration (azure.atat.code.mil, currently) is reflected in th
 - AUTH_DOMAIN: The host domain for the authentication endpoint for the environment.
 - KV_MI_ID: the fully qualified id (path) of the managed identity for the key vault (instructions on retrieving this are down in section on [Setting up FlexVol](#configuring-the-identity)). Example: /subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/RESOURCE_GROUP_NAME/providers/Microsoft.ManagedIdentity/userAssignedIdentities/MANAGED_IDENTITY_NAME
 - KV_MI_CLIENT_ID: The client id of the managed identity for the key vault. This is a GUID.
+- TENANT_ID: The id of the active directory tenant in which the cluster and it's associated users exist. This is a GUID.
 
 We use envsubst to substitute values for these variables. There is a wrapper script (script/k8s_config) that will output the compiled configuration, using a combination of kustomize and envsubst.
 
