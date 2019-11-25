@@ -23,6 +23,7 @@ spec:
       labels:
         app: atst
         role: web
+        aadpodidbinding: atat-kv-id-binding
     spec:
       securityContext:
         fsGroup: 101
@@ -76,6 +77,9 @@ spec:
               mountPath: "/usr/share/nginx/html/.well-known/acme-challenge/"
             - name: snippets
               mountPath: "/etc/nginx/snippets/"
+            - name: nginx-dhparam-secret
+              mountPath: "/etc/ssl/"
+              readOnly: true
       volumes:
         - name: atst-config
           secret:
@@ -136,6 +140,16 @@ spec:
         - name: snippets
           configMap:
             name: nginx-snippets
+        - name: nginx-dhparam-secret
+          flexVolume:
+            driver: "azure/kv"
+            options:
+              usepodidentity: "true"
+              keyvaultname: "atat-vault-test"
+              keyvaultobjectnames: "dhparam4096"
+              keyvaultobjectaliases: "dhparam.pem"
+              keyvaultobjecttypes: secret
+              tenantid: "b5ab0e1e-09f8-4258-afb7-fb17654bc5b3"
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
