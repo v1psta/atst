@@ -1,0 +1,45 @@
+#!/bin/bash
+
+# script/k8s_update: Compiles the Kubernetes configuration for a given
+# directory. Expects that the SETTINGS listed are all set as environment
+# variables.
+set -e
+
+# Expected settings. Script will error if these are not provided.
+SETTINGS=(
+  CONTAINER_IMAGE
+  PORT_PREFIX
+  MAIN_DOMAIN
+  AUTH_DOMAIN
+  KV_MI_ID
+  KV_MI_CLIENT_ID
+)
+
+# Loop all expected settings. Track ones that are missing and build
+# concatenated list for envsubst. If any are missing, exit.
+MISSING_SETTINGS=()
+CONCAT_SETTINGS=""
+for envvar in "${SETTINGS[@]}"; do
+  CONCAT_SETTINGS="${CONCAT_SETTINGS} \$${envvar}"
+  if [ -z "${!envvar}" ]; then
+    MISSING_SETTINGS+=(${envvar})
+  fi
+done
+
+if [[ ${#MISSING_SETTINGS[@]} > 0 ]]; then
+  >&2 echo "The following variables need to be set:"
+  for missing in "${MISSING_SETTINGS[@]}"; do
+    >&2 echo $missing
+  done
+  exit 1
+fi
+
+# Check that a directory is provided as a command line argument.
+if [ "$#" -ne 1 ] || ! [ -d $1 ]; then
+  >&2 echo "You must provide a Kubernetes configuration directory."
+  exit 1
+fi
+
+# Use Kustomize to compile Kubernetes configuration and pipe to envsubst to
+# substitute the templated values.
+kubectl kustomize $1 | envsubst "'${CONCAT_SETTINGS}'"
