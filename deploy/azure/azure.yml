@@ -77,7 +77,7 @@ spec:
               mountPath: "/usr/share/nginx/html/.well-known/acme-challenge/"
             - name: snippets
               mountPath: "/etc/nginx/snippets/"
-            - name: nginx-dhparam-secret
+            - name: nginx-secret
               mountPath: "/etc/ssl/"
               readOnly: true
       volumes:
@@ -140,7 +140,7 @@ spec:
         - name: snippets
           configMap:
             name: nginx-snippets
-        - name: nginx-dhparam-secret
+        - name: nginx-secret
           flexVolume:
             driver: "azure/kv"
             options:
