@@ -30,6 +30,7 @@ import ToForm from './components/forms/to_form'
 import ClinFields from './components/clin_fields'
 import PopDateRange from './components/pop_date_range'
 import Accordion from './components/accordion'
+import ToggleMenu from './components/toggle_menu'
 
 Vue.config.productionTip = false
 
@@ -61,6 +62,7 @@ const app = new Vue({
     ToForm,
     ClinFields,
     PopDateRange,
+    ToggleMenu,
   },
 
   mounted: function() {
