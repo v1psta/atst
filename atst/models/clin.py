@@ -1,6 +1,7 @@
 from enum import Enum
 from sqlalchemy import Column, Date, Enum as SQLAEnum, ForeignKey, Numeric, String
 from sqlalchemy.orm import relationship
+from datetime import date
 
 from atst.models.base import Base
 import atst.models.mixins as mixins
@@ -61,3 +62,7 @@ class CLIN(Base, mixins.TimestampsMixin):
             for c in self.__table__.columns
             if c.name not in ["id"]
         }
+
+    @property
+    def is_active(self):
+        return self.start_date <= date.today() <= self.end_date

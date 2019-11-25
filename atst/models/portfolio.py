@@ -66,6 +66,58 @@ class Portfolio(
         return len(self.task_orders)
 
     @property
+    def active_clins(self):
+        return [
+            clin
+            for task_order in self.task_orders
+            for clin in task_order.clins
+            if clin.is_active
+        ]
+
+    @property
+    def active_task_orders(self):
+        return [task_order for task_order in self.task_orders if task_order.is_active]
+
+    @property
+    def funding_duration(self):
+        """
+        Return the earliest period of performance start date and latest period
+        of performance end date for all active task orders in a portfolio.
+        @return: (datetime.date or None, datetime.date or None)  
+        """
+        start_dates = (
+            task_order.start_date
+            for task_order in self.task_orders
+            if task_order.is_active
+        )
+
+        end_dates = (
+            task_order.end_date
+            for task_order in self.task_orders
+            if task_order.is_active
+        )
+
+        earliest_pop_start_date = min(start_dates, default=None)
+        latest_pop_end_date = max(end_dates, default=None)
+
+        return (earliest_pop_start_date, latest_pop_end_date)
+
+    @property
+    def days_to_funding_expiration(self):
+        """
+        Returns the number of days between today and the lastest period performance
+        end date of all active Task Orders
+        """
+        return max(
+            (
+                task_order.days_to_expiration
+                for task_order in self.task_orders
+                if task_order.is_active
+            ),
+            default=0,
+        )
+
+    @property
     def members(self):
         return (
             db.session.query(PortfolioRole)
