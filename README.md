@@ -220,6 +220,48 @@ To generate coverage reports for the Javascript tests:
 
     yarn test:coverage
 
+## Configuration
+
+- `ASSETS_URL`: URL to host which serves static assets (such as a CDN).
+- `BLOB_STORAGE_URL`: URL to Azure blob storage container.
+- `CAC_URL`: URL for the CAC authentication route.
+- `CA_CHAIN`: Path to the CA chain file.
+- `CDN_ORIGIN`: URL for the origin host for asset files.
+- `CELERY_DEFAULT_QUEUE`:
+- `CLASSIFIED`: Boolean specifying if we're running in a classified environment.
+- `CONTRACT_END_DATE`: String specifying the end date of the JEDI contract. Used for task order validation. Example: 2019-09-14
+- `CONTRACT_START_DATE`: String specifying the start date of the JEDI contract. Used for task order validation. Example: 2019-09-14.
+- `CRL_FAIL_OPEN`: Boolean specifying if expired CRLs should fail open, rather than closed.
+- `CRL_STORAGE_CONTAINER`: Path to a directory where the CRL cache will be stored.
+- `CSP`: String specifying the cloud service provider to use. Acceptable values: "azure", "mock", "mock-csp".
+- `DEBUG`: Boolean. A truthy value enables Flask's debug mode. https://flask.palletsprojects.com/en/1.1.x/config/#DEBUG
+- `DISABLE_CRL_CHECK`: Boolean specifying if CRL check should be bypassed.
+- `ENVIRONMENT`: String specifying the current environment. Acceptable values: "dev", "prod".
+- `LIMIT_CONCURRENT_SESSIONS`: Boolean specifying if users should be allowed only one active session at a time.
+- `LOG_JSON`: Boolean specifying whether app should log in a json format.
+- `PERMANENT_SESSION_LIFETIME`: Integer specifying how many seconds a user's session can stay valid for. https://flask.palletsprojects.com/en/1.1.x/config/#PERMANENT_SESSION_LIFETIME
+- `PE_NUMBER_CSV_URL`:
+- `PGAPPNAME`:
+- `PGDATABASE`: String specifying the name of the postgres database.
+- `PGHOST`: String specifying the hostname of the postgres database.
+- `PGPASSWORD`: String specifying the password of the postgres database.
+- `PGPORT`: Integer specifying the port number of the postgres database.
+- `PGSSLMODE`: String specifying the ssl mode to use when connecting to the postgres database. https://www.postgresql.org/docs/9.1/libpq-ssl.html
+- `PGSSLROOTCERT`: Path to the root SSL certificate for the postgres database.
+- `PGUSER`: String specifying the username to use when connecting to the postgres database.
+- `PORT`: Integer specifying the port to bind to when running the flask server.
+- `REDIS_URI`: URI for the redis server.
+- `RQ_QUEUES`:
+- `SECRET_KEY`: String key which will be used to sign the session cookie. Should be a long string of random bytes. https://flask.palletsprojects.com/en/1.1.x/config/#SECRET_KEY
+- `SERVER_NAME`: Hostname for ATAT.
+- `SESSION_COOKIE_NAME`: String value specifying the name to use for the session cookie. https://flask.palletsprojects.com/en/1.1.x/config/#SESSION_COOKIE_NAME
+- `SESSION_TYPE`: String value specifying the cookie storage backend. https://pythonhosted.org/Flask-Session/
+- `SESSION_USE_SIGNER`: Boolean value specifying if the cookie sid should be signed.
+- `SQLALCHEMY_ECHO`: Boolean value specifying if SQLAlchemy should log queries to stdout.
+- `STATIC_URL`: URL specifying where static assets are hosted.
+- `USE_AUDIT_LOG`: Boolean value describing if ATAT should write to the audit log. Set to "false" by default for performance reasons.
+- `WTF_CSRF_ENABLED`: Boolean value specifying if WTForms should protect against CSRF. Should be set to "true" unless running automated tests.
+
 ### UI Test Automation
 
 AT-AT uses [Ghost Inpsector](https://app.ghostinspector.com/), a testing PaaS
