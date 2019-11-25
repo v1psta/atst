@@ -236,9 +236,17 @@ class ApplicationRoleFactory(Base):
     @classmethod
     def _create(cls, model_class, *args, **kwargs):
         with_invite = kwargs.pop("invite", True)
-        app_role = super()._create(model_class, *args, **kwargs)
+        app_role = model_class(*args, **kwargs)
 
-        if with_invite:
+        if with_invite and app_role.user:
+            ApplicationInvitationFactory.create(
+                role=app_role,
+                dod_id=app_role.user.dod_id,
+                first_name=app_role.user.first_name,
+                last_name=app_role.user.last_name,
+                email=app_role.user.email,
+            )
+        elif with_invite:
             ApplicationInvitationFactory.create(role=app_role)
 
         return app_role
@@ -260,6 +268,14 @@ class PortfolioInvitationFactory(Base):
     email = factory.Faker("email")
     status = InvitationStatus.PENDING
     expiration_time = PortfolioInvitations.current_expiration_time()
+    dod_id = factory.LazyFunction(random_dod_id)
+    first_name = factory.Faker("first_name")
+    last_name = factory.Faker("last_name")
+
+    @classmethod
+    def _create(cls, model_class, *args, **kwargs):
+        inviter_id = kwargs.pop("inviter_id", UserFactory.create().id)
+        return super()._create(model_class, inviter_id=inviter_id, *args, **kwargs)
 
 
 class ApplicationInvitationFactory(Base):
@@ -270,6 +286,14 @@ class ApplicationInvitationFactory(Base):
     status = InvitationStatus.PENDING
     expiration_time = PortfolioInvitations.current_expiration_time()
     role = factory.SubFactory(ApplicationRoleFactory, invite=False)
+    dod_id = factory.LazyFunction(random_dod_id)
+    first_name = factory.Faker("first_name")
+    last_name = factory.Faker("last_name")
+
+    @classmethod
+    def _create(cls, model_class, *args, **kwargs):
+        inviter_id = kwargs.pop("inviter_id", UserFactory.create().id)
+        return super()._create(model_class, inviter_id=inviter_id, *args, **kwargs)
 
 
 class AttachmentFactory(Base):
@@ -284,11 +308,8 @@ class TaskOrderFactory(Base):
     class Meta:
         model = TaskOrder
 
-    portfolio = factory.SubFactory(
-        PortfolioFactory, owner=factory.SelfAttribute("..creator")
-    )
+    portfolio = factory.SubFactory(PortfolioFactory)
     number = factory.LazyFunction(random_task_order_number)
-    creator = factory.SubFactory(UserFactory)
     signed_at = None
     _pdf = factory.SubFactory(AttachmentFactory)
 

@@ -11,10 +11,8 @@ class TaskOrders(BaseDomainClass):
     resource_name = "task_order"
 
     @classmethod
-    def create(cls, creator, portfolio_id, number, clins, pdf):
-        task_order = TaskOrder(
-            portfolio_id=portfolio_id, creator=creator, number=number, pdf=pdf
-        )
+    def create(cls, portfolio_id, number, clins, pdf):
+        task_order = TaskOrder(portfolio_id=portfolio_id, number=number, pdf=pdf)
         db.session.add(task_order)
         db.session.commit()
 

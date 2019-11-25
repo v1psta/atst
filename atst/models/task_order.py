@@ -33,11 +33,8 @@ class TaskOrder(Base, mixins.TimestampsMixin):
 
     id = types.Id()
 
-    portfolio_id = Column(ForeignKey("portfolios.id"))
+    portfolio_id = Column(ForeignKey("portfolios.id"), nullable=False)
     portfolio = relationship("Portfolio")
-
-    user_id = Column(ForeignKey("users.id"))
-    creator = relationship("User", foreign_keys="TaskOrder.user_id")
 
     pdf_attachment_id = Column(ForeignKey("attachments.id"))
     _pdf = relationship("Attachment", foreign_keys=[pdf_attachment_id])

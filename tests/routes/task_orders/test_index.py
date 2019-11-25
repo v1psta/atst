@@ -30,7 +30,7 @@ def task_order():
     portfolio = PortfolioFactory.create(owner=user)
     attachment = Attachment(filename="sample_attachment", object_name="sample")
 
-    return TaskOrderFactory.create(creator=user, portfolio=portfolio)
+    return TaskOrderFactory.create(portfolio=portfolio)
 
 
 def test_review_task_order_not_draft(client, user_session, task_order):
