@@ -8,27 +8,28 @@ Applying the K8s config relies on a combination of kustomize and envsubst. Kusto
 
 The production configuration (azure.atat.code.mil, currently) is reflected in the configuration found in the `deploy/azure` directory. Configuration for a staging environment relies on kustomize to overwrite the production config with values appropriate for that environment. You can find more information about using kustomize [here](https://kubernetes.io/docs/tasks/manage-kubernetes-objects/kustomization/). Kustomize does not manage templating, and certain values need to be templated. These include:
 
-- CONTAINER_IMAGE: the ATAT container image to use
-- PORT_PREFIX: "8" for production, "9" for staging
-- MAIN_DOMAIN: the host domain for the environment
-- AUTH_DOMAIN: the host domain for the authentication endpoint for the environment
-- KV_MI_ID: the fully qualified id (path) of the managed identity for the key vault (instructions on retrieving this are down in section on [Setting up FlexVol](#configuring-the-identity))
-- KV_MI_CLIENT_ID: the client id of the managed identity for the key vault
+- CONTAINER_IMAGE: The ATAT container image to use.
+- PORT_PREFIX: "8" for production, "9" for staging.
+- MAIN_DOMAIN: The host domain for the environment.
+- AUTH_DOMAIN: The host domain for the authentication endpoint for the environment.
+- KV_MI_ID: the fully qualified id (path) of the managed identity for the key vault (instructions on retrieving this are down in section on [Setting up FlexVol](#configuring-the-identity)). Example: /subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/RESOURCE_GROUP_NAME/providers/Microsoft.ManagedIdentity/userAssignedIdentities/MANAGED_IDENTITY_NAME
+- KV_MI_CLIENT_ID: The client id of the managed identity for the key vault. This is a GUID.
 
-We use envsubst to substitute values for these variables.
+We use envsubst to substitute values for these variables. There is a wrapper script (script/k8s_config) that will output the compiled configuration, using a combination of kustomize and envsubst.
 
-To apply config to the main environment, you should first do a diff to determine whether your new config introduces unexpected changes:
+To apply config to the main environment, you should first do a diff to determine whether your new config introduces unexpected changes. These examples assume that all the relevant environment variables listed above have been set:
 
 ```
-kubectl kustomize deploy/azure | CONTAINER_IMAGE=myregistry.io/atat-some-commit-sha PORT_PREFIX=8 MAIN_DOMAIN=azure.atat.code.mil AUTH_DOMAIN=auth-azure.atat.code.mil KV_MI_ID=/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/RESOURCE_GROUP_NAME/providers/Microsoft.ManagedIdentity/userAssignedIdentities/MANAGED_IDENTITY_NAME KV_MI_CLIENT_ID=00000000-0000-0000-0000-000000000000 envsubst '$CONTAINER_IMAGE $PORT_PREFIX $MAIN_DOMAIN $AUTH_DOMAIN $KV_MI_ID $KV_MI_CLIENT_ID' | kubectl diff -f -
+./script/k8s_config deploy/azure | kubectl diff -f -
 ```
 
 Here, `kubectl kustomize` assembles the config and streams it to STDOUT. We specify environment variables for envsubst to use and pass the names of those env vars as a string argument to envsubst. This is important, because envsubst will override NGINX variables in the NGINX config if you don't limit its scope. Finally, we pipe the result from envsubst to `kubectl diff`, which reports a list of differences. Note that some values tracked by K8s internally might have changed, such as [`generation`](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.16/#objectmeta-v1-meta). This is fine and expected.
 
 If you are satisfied with the output from the diff, you can apply the new config the same way:
 
+
 ```
-kubectl kustomize deploy/azure | CONTAINER_IMAGE=myregistry.io/atat-some-commit-sha PORT_PREFIX=8 MAIN_DOMAIN=azure.atat.code.mil AUTH_DOMAIN=auth-azure.atat.code.mil KV_MI_ID=/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/RESOURCE_GROUP_NAME/providers/Microsoft.ManagedIdentity/userAssignedIdentities/MANAGED_IDENTITY_NAME KV_MI_CLIENT_ID=00000000-0000-0000-0000-000000000000 envsubst '$CONTAINER_IMAGE $PORT_PREFIX $MAIN_DOMAIN $AUTH_DOMAIN $KV_MI_ID $KV_MI_CLIENT_ID' | kubectl apply -f -
+./script/k8s_config deploy/azure | kubectl apply -f -
 ```
 
 **Note:** Depending on how your `kubectl` config is set up, these commands may need to be adjusted. If you have configuration for multiple clusters, you may need to specify the `kubectl` context for each command with the `--context` flag (something like `kubectl --context=my-cluster [etc.]` or `kubectl --context=azure [etc.]`).
