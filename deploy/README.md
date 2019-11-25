@@ -28,7 +28,7 @@ Here, `kubectl kustomize` assembles the config and streams it to STDOUT. We spec
 If you are satisfied with the output from the diff, you can apply the new config the same way:
 
 ```
-kubectl kustomize deploy/azure | CONTAINER_IMAGE=myregistry.io/atat-some-commit-sha PORT_PREFIX=8 MAIN_DOMAIN=azure.atat.code.mil AUTH_DOMAIN=auth-azure.atat.code.mil envsubst '$CONTAINER_IMAGE $PORT_PREFIX $MAIN_DOMAIN $AUTH_DOMAIN' | kubectl apply -f -
+kubectl kustomize deploy/azure | CONTAINER_IMAGE=myregistry.io/atat-some-commit-sha PORT_PREFIX=8 MAIN_DOMAIN=azure.atat.code.mil AUTH_DOMAIN=auth-azure.atat.code.mil KV_MI_ID=/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/RESOURCE_GROUP_NAME/providers/Microsoft.ManagedIdentity/userAssignedIdentities/MANAGED_IDENTITY_NAME KV_MI_CLIENT_ID=00000000-0000-0000-0000-000000000000 envsubst '$CONTAINER_IMAGE $PORT_PREFIX $MAIN_DOMAIN $AUTH_DOMAIN $KV_MI_ID $KV_MI_CLIENT_ID' | kubectl apply -f -
 ```
 
 **Note:** Depending on how your `kubectl` config is set up, these commands may need to be adjusted. If you have configuration for multiple clusters, you may need to specify the `kubectl` context for each command with the `--context` flag (something like `kubectl --context=my-cluster [etc.]` or `kubectl --context=azure [etc.]`).
