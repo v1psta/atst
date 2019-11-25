@@ -1,7 +1,7 @@
 namespace: atat
 resources:
   - azure.yml
-  - atst-configmap.yml
+  - uwsgi-config.yml
   - atst-envvars-configmap.yml
   - atst-nginx-configmap.yml
   - atst-worker-envvars-configmap.yml
