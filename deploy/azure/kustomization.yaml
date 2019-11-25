@@ -10,3 +10,4 @@ resources:
   - volume-claim.yml
   - nginx-client-ca-bundle.yml
   - acme-challenges.yml
+  - aadpodidentity.yml
