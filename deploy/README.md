@@ -218,3 +218,45 @@ Example values:
 
 5. The file `deploy/azure/aadpodidentity.yml` is templated via Kustomize, so you'll need to include clientId (as `KV_MI_CLIENT_ID`) and id (as `KV_MI_ID`) of the managed identity as part of the call to Kustomize.
 
+## Using the FlexVol
+
+There are 3 steps to using the FlexVol to access secrets from KeyVault
+
+1. For the resource in which you would like to mount a FlexVol, add a metadata label with the selector from `aadpodidentity.yml`
+    ```
+    metadata:
+      labels:
+        app: atst
+        role: web
+        aadpodidbinding: atat-kv-id-binding
+    ```
+
+2. Register the FlexVol as a mount and specifiy which secrets you want to mount, along with the file name they should have. The `keyvaultobjectnames`, `keyvaultobjectaliases`, and `keyvaultobjecttypes` correspond to one another, positionally. They are passed as semicolon delimited strings, examples below.
+
+    ```
+    - name: volume-of-secrets
+      flexVolume:
+        driver: "azure/kv"
+        options:
+          usepodidentity: "true"
+          keyvaultname: "<NAME OF KEY VAULT>"
+          keyvaultobjectnames: "mysecret;mykey;mycert"
+          keyvaultobjectaliases: "mysecret.pem;mykey.txt;mycert.crt"
+          keyvaultobjecttypes: "secret;key;cert"
+          tenantid: $TENANT_ID
+    ```
+
+3. Tell the resource where to mount your new volume, using the same name that you specified for the volume above.
+    ```
+    - name: nginx-secret
+      mountPath: "/usr/secrets/"
+      readOnly: true
+    ```
+
+4. Once applied, the directory specified in the `mountPath` argument will contain the files you specified in the flexVolume. In our case, you would be able to do this:
+    ```
+    $ kubectl exec -it CONTAINER_NAME -c atst ls /usr/secrets
+    mycert.crt
+    mykey.txt
+    mysecret.pem
+    ```
