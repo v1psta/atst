@@ -14,6 +14,7 @@ export default {
       default: () => [],
     },
     initialOtherValue: String,
+    optional: Boolean,
   },
 
   data: function() {
@@ -45,7 +46,7 @@ export default {
 
   computed: {
     valid: function() {
-      return this.showValid
+      return this.optional || this.showValid
     },
   },
 }

@@ -27,10 +27,6 @@ export default {
     paragraph: String,
     noMaxWidth: String,
     optional: Boolean,
-    watch: {
-      type: Boolean,
-      default: false,
-    },
   },
 
   data: function() {

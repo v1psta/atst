@@ -1,6 +1,6 @@
 {% from 'components/icon.html' import Icon %}
 
-{% macro CLINDollarAmount(type, field=None, funding_validation=False) -%} 
+{% macro CLINDollarAmount(type, field=None, funding_validation=False) -%}
  <div class="form-row">
     <div class="form-col">
       <clindollaramount
@@ -21,16 +21,15 @@
           :key="'clins-' + clinIndex + '-' + '{{ type }}' + '_amount'"
         {% endif  %}
 
-        validation="clinDollars"
-        :watch='true'>
+        validation="clinDollars">
         <div v-bind:class="['usa-input usa-input--validation--dollars', { 'usa-input--error': showFundingError, 'usa-input--success': showFundingValid}]">
           {% if field %}
-          <label for='{{ field.name }}'> 
+          <label for='{{ field.name }}'>
           {% else %}
           <label :for='name'>
           {% endif  %}
 
-            {% if type=="obligated" %} 
+            {% if type=="obligated" %}
             <div class="usa-input__title">{{ 'task_orders.form.obligated_funds_label' | translate }}</div>
             {% else %}
             <div class="usa-input__title">{{ 'task_orders.form.total_funds_label' | translate }}</div>
