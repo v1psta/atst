@@ -234,7 +234,7 @@ To generate coverage reports for the Javascript tests:
 - `CRL_STORAGE_CONTAINER`: Path to a directory where the CRL cache will be stored.
 - `CSP`: String specifying the cloud service provider to use. Acceptable values: "azure", "mock", "mock-csp".
 - `DEBUG`: Boolean. A truthy value enables Flask's debug mode. https://flask.palletsprojects.com/en/1.1.x/config/#DEBUG
-- `DISABLE_CRL_CHECK`: Boolean specifying if CRL check should be bypassed.
+- `DISABLE_CRL_CHECK`: Boolean specifying if CRL check should be bypassed. Useful for instances of the application container that are not serving HTTP requests, such as Celery workers.
 - `ENVIRONMENT`: String specifying the current environment. Acceptable values: "dev", "prod".
 - `LIMIT_CONCURRENT_SESSIONS`: Boolean specifying if users should be allowed only one active session at a time.
 - `LOG_JSON`: Boolean specifying whether app should log in a json format.
