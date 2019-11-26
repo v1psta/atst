@@ -140,19 +140,20 @@ commands:
             kubectl set image cronjobs.batch/crls crls=<< parameters.tag >> --namespace=<< parameters.namespace >>
 
 jobs:
-  docker-build-staging:
+  docker-build:
     docker:
       - image: docker:18.06.0-ce-git
     steps:
-      - docker-build:
-          cdn_url: https://atat-cdn-staging.azureedge.net/static/assets
-
-  docker-build-master:
-    docker:
-      - image: docker:18.06.0-ce-git
-    steps:
-      - docker-build:
-          cdn_url: https://atat-cdn.azureedge.net/static/assets
+      - checkout
+      - setup_remote_docker:
+          docker_layer_caching: true
+          version: 18.06.0-ce
+      - run:
+          name: Build image
+          command: |
+            docker build . --build-arg CSP=azure -f ./Dockerfile -t atat:builder --target builder
+            docker build . --build-arg CSP=azure -f ./Dockerfile -t atat:latest
+      - cache_docker_image
 
   test:
     docker:
@@ -285,54 +286,29 @@ workflows:
   version: 2
   run-tests:
     jobs:
-      - docker-build-staging:
-          filters:
-            branches:
-              ignore:
-                - staging
-                - master
+      - docker-build
       - test:
           requires:
-            - docker-build-staging
+            - docker-build
       - integration-tests:
           requires:
-            - docker-build-staging
-
-  build-staging:
-    jobs:
-      - docker-build-staging:
-          filters:
-            branches:
-              only:
-                - staging
-      - test:
-          requires:
-            - docker-build-staging
-      - integration-tests:
-          requires:
-            - docker-build-staging
+            - docker-build
       - deploy-staging:
           requires:
             - test
             - integration-tests
-
-  build-master:
-    jobs:
-      - docker-build-master:
           filters:
             branches:
               only:
-                - master
-      - test:
-          requires:
-            - docker-build-master
-      - integration-tests:
-          requires:
-            - docker-build-master
+                - staging
       - deploy-master:
           requires:
             - test
             - integration-tests
+          filters:
+            branches:
+              only:
+                - master
 
   test-crl-parser:
     triggers:
@@ -343,7 +319,7 @@ workflows:
               only:
                 - staging
     jobs:
-      - docker-build-staging
+      - docker-build
       - test-crl-parser:
           requires:
-            - docker-build-staging
+            - docker-build
