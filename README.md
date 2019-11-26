@@ -239,8 +239,6 @@ To generate coverage reports for the Javascript tests:
 - `LIMIT_CONCURRENT_SESSIONS`: Boolean specifying if users should be allowed only one active session at a time.
 - `LOG_JSON`: Boolean specifying whether app should log in a json format.
 - `PERMANENT_SESSION_LIFETIME`: Integer specifying how many seconds a user's session can stay valid for. https://flask.palletsprojects.com/en/1.1.x/config/#PERMANENT_SESSION_LIFETIME
-- `PE_NUMBER_CSV_URL`:
-- `PGAPPNAME`:
 - `PGDATABASE`: String specifying the name of the postgres database.
 - `PGHOST`: String specifying the hostname of the postgres database.
 - `PGPASSWORD`: String specifying the password of the postgres database.
