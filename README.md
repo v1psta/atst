@@ -246,7 +246,7 @@ To generate coverage reports for the Javascript tests:
 - `PGSSLMODE`: String specifying the ssl mode to use when connecting to the postgres database. https://www.postgresql.org/docs/9.1/libpq-ssl.html
 - `PGSSLROOTCERT`: Path to the root SSL certificate for the postgres database.
 - `PGUSER`: String specifying the username to use when connecting to the postgres database.
-- `PORT`: Integer specifying the port to bind to when running the flask server.
+- `PORT`: Integer specifying the port to bind to when running the flask server. Used only for local development.
 - `REDIS_URI`: URI for the redis server.
 - `RQ_QUEUES`:
 - `SECRET_KEY`: String key which will be used to sign the session cookie. Should be a long string of random bytes. https://flask.palletsprojects.com/en/1.1.x/config/#SECRET_KEY
