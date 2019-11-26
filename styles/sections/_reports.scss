@@ -1,62 +1,90 @@
-.reporting-section-header {
-  display: flex;
-  align-items: baseline;
-  &__header {
-    margin-right: $gap;
-  }
-  &__subheader {
-    @include small-copy;
-  }
-}
-
-.jedi-clin-funding {
-  padding-top: $gap * 3;
-  padding-bottom: $gap * 3;
-
-  &__clin-wrapper {
-    border-bottom: 1px solid $color-gray-light;
+.portfolio-reports {
+  .estimate-warning {
+    margin-top: $gap * 3;
     margin-bottom: $gap * 3;
-    padding-bottom: $gap * 3;
-  }
-  > div:nth-last-child(2) {
-    margin-bottom: 0;
   }
 
-  &__header {
-    margin: 0;
-  }
-
-  &__subheader {
-    @include small-copy;
-    margin: 0;
-  }
-
-  &__meter {
-    margin: 10px 0;
-    -moz-transform: scale(-1, 1);
-    -webkit-transform: scale(-1, 1);
-    -o-transform: scale(-1, 1);
-    -ms-transform: scale(-1, 1);
-    transform: scale(-1, 1);
-    width: 100%;
-
-    &-values {
-      display: flex;
+  .reporting-section-header {
+    display: flex;
+    align-items: baseline;
+    &__header {
+      margin-right: $gap;
     }
-  }
-
-  &__meta {
-    &--remaining {
-      margin-left: auto;
-      text-align: right;
-    }
-    &-header {
+    &__subheader {
       @include small-copy;
+    }
+  }
+
+  .jedi-clin-funding {
+    padding-top: $gap * 3;
+    padding-bottom: $gap * 3;
+
+    &__clin-wrapper {
+      border-bottom: 1px solid $color-gray-light;
+      margin-bottom: $gap * 3;
+      padding-bottom: $gap * 3;
+    }
+    > div:nth-last-child(2) {
       margin-bottom: 0;
     }
-    &-value {
-      margin-bottom: 0;
-      line-height: 1.2;
+
+    &__header {
+      margin: 0;
+    }
+
+    &__subheader {
+      @include small-copy;
+      margin: 0;
+    }
+
+    &__meter {
+      margin: 10px 0;
+      -moz-transform: scale(-1, 1);
+      -webkit-transform: scale(-1, 1);
+      -o-transform: scale(-1, 1);
+      -ms-transform: scale(-1, 1);
+      transform: scale(-1, 1);
+      width: 100%;
+
+      &-values {
+        display: flex;
+      }
+    }
+
+    &__meta {
+      &--remaining {
+        margin-left: auto;
+        text-align: right;
+      }
+      &-header {
+        @include small-copy;
+        margin-bottom: 0;
+      }
+      &-value {
+        margin-bottom: 0;
+        line-height: 1.2;
+      }
+    }
+  }
+
+  .reporting-summary-item {
+    border-right: 1px solid $color-gray-light;
+    margin-right: $gap * 3;
+    padding-right: $gap * 3;
+    &:last-child {
+      border-right: none;
+      margin-right: 0;
+      padding-right: 0;
+    }
+    &__header {
+      margin: 0;
+      &-icon {
+        margin: 0;
+        padding: 0;
+      }
+    }
+    &__value {
+      font-size: $lead-font-size;
     }
   }
 }

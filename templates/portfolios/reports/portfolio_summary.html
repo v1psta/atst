@@ -3,34 +3,34 @@
 
 
 <section class="row">
-  <div class='col col--grow'>
-    <p>
-      Total Portfolio Value
-      {{Tooltip(("common.lorem" | translate), title="")}}
-    </p>
-    <p>{{ total_portfolio_value | dollars }}</p>
+  <div class='col col--grow reporting-summary-item'>
+    <h5 class="reporting-summary-item__header">
+      <span class="reporting-summary-item__header-text">Total Portfolio Value</span>
+      {{Tooltip(("common.lorem" | translate), title="", classes="reporting-summary-item__header-icon")}}
+    </h5>
+    <p class="reporting-summary-item__value">{{ total_portfolio_value | dollars }}</p>
   </div>
-  <div class='col col--grow'>
-    <p>
-      Funding Duration
-      {{Tooltip(("common.lorem" | translate), title="")}}
-    </p>
+  <div class='col col--grow reporting-summary-item'>
+    <h5 class="reporting-summary-item__header">
+      <span class="reporting-summary-item__header-text">Funding Duration</span>
+      {{Tooltip(("common.lorem" | translate), title="", classes="reporting-summary-item__header-icon")}}
+    </h5>
     {% set earliest_pop_start_date, latest_pop_end_date = portfolio.funding_duration %}
     {% if earliest_pop_start_date and latest_pop_end_date  %}
-      <p>
+      <p class="reporting-summary-item__value" >
         {{ earliest_pop_start_date | formattedDate(formatter="%B %d, %Y") }}
         - 
         {{ latest_pop_end_date | formattedDate(formatter="%B %d, %Y") }}
       </p>
     {% else %}
-      <p> - </p>
+      <p class="reporting-summary-item__value"> - </p>
     {% endif %}
   </div>
-  <div class='col col--grow'>
-    <p>
-      Days Remaining
-      {{Tooltip(("common.lorem" | translate), title="")}}
-    </p>
-    <p>{{ portfolio.days_to_funding_expiration }} days</p>
+  <div class='col col--grow reporting-summary-item'>
+    <h5 class="reporting-summary-item__header">
+      <span class="reporting-summary-item__header-text">Days Remaining</span>
+      {{Tooltip(("common.lorem" | translate), title="", classes="reporting-summary-item__header-icon")}}
+    </h5>
+    <p class="reporting-summary-item__value">{{ portfolio.days_to_funding_expiration }} days</p>
   </div>
 </section>
