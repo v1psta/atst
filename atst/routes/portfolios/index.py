@@ -1,4 +1,4 @@
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 
 from flask import redirect, render_template, url_for, request as http_request, g
 
@@ -64,6 +64,7 @@ def reports(portfolio_id):
         monthly_totals=Reports.monthly_totals(portfolio),
         current_month=current_month,
         prev_month=prev_month,
+        now=datetime.now(),  # mocked datetime of reporting data retrival
     )
 
 
