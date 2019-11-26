@@ -228,7 +228,6 @@ To generate coverage reports for the Javascript tests:
 - `CA_CHAIN`: Path to the CA chain file.
 - `CDN_ORIGIN`: URL for the origin host for asset files.
 - `CELERY_DEFAULT_QUEUE`: String specifying the name of the queue that background tasks will be added to.
-- `CLASSIFIED`: Boolean specifying if we're running in a classified environment.
 - `CONTRACT_END_DATE`: String specifying the end date of the JEDI contract. Used for task order validation. Example: 2019-09-14
 - `CONTRACT_START_DATE`: String specifying the start date of the JEDI contract. Used for task order validation. Example: 2019-09-14.
 - `CRL_FAIL_OPEN`: Boolean specifying if expired CRLs should fail open, rather than closed.

@@ -160,7 +160,6 @@ def map_config(config):
         "BROKER_URL": config["default"]["REDIS_URI"],
         "DEBUG": config["default"].getboolean("DEBUG"),
         "SQLALCHEMY_ECHO": config["default"].getboolean("SQLALCHEMY_ECHO"),
-        "CLASSIFIED": config["default"].getboolean("CLASSIFIED"),
         "PORT": int(config["default"]["PORT"]),
         "SQLALCHEMY_DATABASE_URI": config["default"]["DATABASE_URI"],
         "SQLALCHEMY_TRACK_MODIFICATIONS": False,
