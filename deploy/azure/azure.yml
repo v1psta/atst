@@ -146,8 +146,8 @@ spec:
             options:
               usepodidentity: "true"
               keyvaultname: "atat-vault-test"
-              keyvaultobjectnames: "dhparam4096"
-              keyvaultobjectaliases: "dhparam.pem"
+              keyvaultobjectnames: "dhparam4096;staging-cert"
+              keyvaultobjectaliases: "dhparam.pem;atat.crt"
               keyvaultobjecttypes: secret
               tenantid: $TENANT_ID
 ---
