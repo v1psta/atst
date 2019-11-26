@@ -182,10 +182,6 @@ forms:
       none: Not planning to migrate any applications
       not_sure: Not sure
       on_premise: 'Yes, migrating from an on-premise data center'
-    clin_01_label: 'IaaS/PaaS (IDIQ CLIN 0001)'
-    clin_02_label: 'IDIQ CLIN 0002'
-    clin_03_label: 'IDIQ CLIN 0003'
-    clin_04_label: 'IDIQ CLIN 0004'
     complexity:
       conus: CONUS access
       data_analytics: Data analytics
@@ -519,10 +515,10 @@ task_orders:
   sign:
     digital_signature_description: I acknowledge that the uploaded task order contains the required KO signature.
 JEDICLINType:
-  JEDI_CLIN_1: 'Unclassified IaaS and PaaS (IDIQ CLIN 0001)'
-  JEDI_CLIN_2: 'Classified IaaS and PaaS (IDIQ CLIN 0002)'
-  JEDI_CLIN_3: 'Unclassified Cloud Support Package (IDIQ CLIN 0003)'
-  JEDI_CLIN_4: 'Classified Cloud Support Package (IDIQ CLIN 0004)'
+  JEDI_CLIN_1: 'IDIQ CLIN 0001 Unclassified IaaS/PaaS'
+  JEDI_CLIN_2: 'IDIQ CLIN 0002 Classified IaaS/PaaS'
+  JEDI_CLIN_3: 'IDIQ CLIN 0003 Unclassified Cloud Support Package'
+  JEDI_CLIN_4: 'IDIQ CLIN 0004 Classified Cloud Support Package'
 testing:
   example_string: Hello World
   example_with_variables: 'Hello, {name}!'

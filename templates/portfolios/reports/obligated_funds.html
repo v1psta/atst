@@ -11,7 +11,7 @@
         {% set remaining_funds = (funds["obligated_funds"] - funds["expended_funds"]) %}
         <div class="jedi-clin-funding__clin-wrapper">
           <h3 class="h5 jedi-clin-funding__header">
-            {{ JEDI_clin }}
+            {{ "JEDICLINType.{}".format(JEDI_clin) | translate }}
           </h3>
           <p class="jedi-clin-funding__subheader">Total obligated amount: {{ funds["obligated_funds"] | dollars }}</p>
           <meter class="jedi-clin-funding__meter" value='{{remaining_funds}}' min='0' max='{{ funds["obligated_funds"] }}' title='{{ JEDI_clin }}'>
