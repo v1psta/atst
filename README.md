@@ -248,7 +248,6 @@ To generate coverage reports for the Javascript tests:
 - `PGUSER`: String specifying the username to use when connecting to the postgres database.
 - `PORT`: Integer specifying the port to bind to when running the flask server. Used only for local development.
 - `REDIS_URI`: URI for the redis server.
-- `RQ_QUEUES`:
 - `SECRET_KEY`: String key which will be used to sign the session cookie. Should be a long string of random bytes. https://flask.palletsprojects.com/en/1.1.x/config/#SECRET_KEY
 - `SERVER_NAME`: Hostname for ATAT.
 - `SESSION_COOKIE_NAME`: String value specifying the name to use for the session cookie. https://flask.palletsprojects.com/en/1.1.x/config/#SESSION_COOKIE_NAME
