@@ -255,7 +255,7 @@ To generate coverage reports for the Javascript tests:
 - `SESSION_USE_SIGNER`: Boolean value specifying if the cookie sid should be signed.
 - `SQLALCHEMY_ECHO`: Boolean value specifying if SQLAlchemy should log queries to stdout.
 - `STATIC_URL`: URL specifying where static assets are hosted.
-- `USE_AUDIT_LOG`: Boolean value describing if ATAT should write to the audit log. Set to "false" by default for performance reasons.
+- `USE_AUDIT_LOG`: Boolean value describing if ATAT should write to the audit log table in the database. Set to "false" by default for performance reasons.
 - `WTF_CSRF_ENABLED`: Boolean value specifying if WTForms should protect against CSRF. Should be set to "true" unless running automated tests.
 
 ### UI Test Automation
