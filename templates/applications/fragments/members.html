@@ -94,61 +94,55 @@
 
     <section class="member-list application-list">
       <div class='responsive-table-wrapper'>
-        <toggler inline-template>
-          <table class="atat-table">
-            <thead>
+        <table class="atat-table">
+          <thead>
+            <tr>
+              <th>{{ "common.name" | translate }}</th>
+              <th>{{ "portfolios.applications.members.form.app_perms.title" | translate }}</th>
+              <th class="env_role--th">{{ 'portfolios.applications.members.form.env_access.table_header' | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for member in members %}
+              {% set perms_modal = "edit_member-{}".format(loop.index) %}
+              {% set invite_pending = member.role_status == 'invite_pending' %}
+              {% set invite_expired = member.role_status == 'invite_expired' %}
               <tr>
-                <th>{{ "common.name" | translate }}</th>
-                <th>{{ "portfolios.applications.members.form.app_perms.title" | translate }}</th>
-                <th class="env_role--th">{{ 'portfolios.applications.members.form.env_access.table_header' | translate }}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for member in members %}
-                {% set perms_modal = "edit_member-{}".format(loop.index) %}
-                {% set invite_pending = member.role_status == 'invite_pending' %}
-                {% set invite_expired = member.role_status == 'invite_expired' %}
-                <tr>
-                  <td>
-                    <strong>{{ member.user_name }}</strong>
-                    <br>
-                    {{ Label(type=member.role_status, classes='label--below') }}
-                  </td>
+                <td>
+                  <strong>{{ member.user_name }}</strong>
+                  <br>
+                  {{ Label(type=member.role_status, classes='label--below') }}
+                </td>
 
-                  <td>
-                    {% for perm, value in member.permission_sets.items() %}
-                      <div>
-                        {{ ("portfolios.applications.members.{}.{}".format(perm, value)) | translate }}
-                      </div>
-                    {% endfor %}
-                  </td>
-                  <td class="env_role--td">
-                    {% for env in member.environment_roles %}
-                      <div class="row">
-                        <span class="env-role__environment">
-                          {{ env.environment_name }}
-                        </span>
-                        <span class="env-role__role">
-                          : {{ env.role }}
-                        </span>
-                      </div>
-                    {% endfor %}
-                    {% if user_can(permissions.EDIT_APPLICATION_MEMBER) -%}
+                <td>
+                  {% for perm, value in member.permission_sets.items() %}
+                    <div>
+                      {{ ("portfolios.applications.members.{}.{}".format(perm, value)) | translate }}
+                    </div>
+                  {% endfor %}
+                </td>
+                <td class="env_role--td">
+                  {% for env in member.environment_roles %}
+                    <div class="row">
+                      <span class="env-role__environment">
+                        {{ env.environment_name }}
+                      </span>
+                      <span class="env-role__role">
+                        : {{ env.role }}
+                      </span>
+                    </div>
+                  {% endfor %}
+                  {% if user_can(permissions.EDIT_APPLICATION_MEMBER) -%}
+                    <toggle-menu inline-template v-cloak>
                       <div class="app-member-menu">
-                        {% set toggle_button -%}
+                        <span v-if="isVisible" class="accordion-table__item__toggler accordion-table__item__toggler--active">
                           {{ Icon('ellipsis')}}
-                        {%- endset %}
-                        {% set section = "app_member_edit-{}".format(member.role_id) %}
+                        </span>
+                        <span v-else class="accordion-table__item__toggler">
+                          {{ Icon('ellipsis')}}
+                        </span>
 
-                        {{
-                          ToggleButton(
-                            open_html=toggle_button,
-                            close_html=toggle_button,
-                            section_name=section,
-                            active_style=True
-                          )
-                        }}
-                        {% call ToggleSection(section_name=section, classes="app-member-menu__toggle") %}
+                        <div v-show="isVisible" class="accordion-table__item-toggle-content app-member-menu__toggle">
                           <a v-on:click="openModal('{{ perms_modal }}')">
                             {{ "portfolios.applications.members.menu.edit" | translate }}
                           </a>
@@ -162,15 +156,15 @@
                               <a v-on:click='openModal("{{ revoke_invite_modal }}")'>{{ 'invites.revoke' | translate }}</a>
                             {%- endif %}
                           {%- endif %}
-                        {% endcall %}
+                        </div>
                       </div>
-                    {%- endif %}
-                  </td>
-                </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </toggler>
+                    </toggle-menu>
+                  {%- endif %}
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
       </div>
     </section>
   {% endif %}
