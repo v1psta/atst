@@ -1,7 +1,7 @@
 from itertools import groupby
-from atst.utils.localization import translate
 import pendulum
 from decimal import Decimal
+from collections import OrderedDict
 
 
 class ReportingInterface:
@@ -295,13 +295,16 @@ class MockReportingProvider(ReportingInterface):
                 portfolio.active_clins, lambda clin: clin.jedi_clin_type
             ):
                 obligated_funds = sum(clin.obligated_amount for clin in clins)
-                return_dict[translate(f"JEDICLINType.{jedi_clin.value}")] = {
+                return_dict[jedi_clin.value] = {
                     "obligated_funds": obligated_funds,
                     "expended_funds": (
                         obligated_funds * Decimal(self.MOCK_PERCENT_EXPENDED_FUNDS)
                     ),
                 }
-            return return_dict
+            return OrderedDict(
+                # 0 index for dict item, -1 for last digit of 4 digit CLIN, e.g. 0001
+                sorted(return_dict.items(), key=lambda clin: clin[0][-1])
+            )
         return {}
 
     def get_expired_task_orders(self, portfolio):

@@ -6,6 +6,7 @@
 {% block portfolio_content %}
   {{ StickyCTA("Reports") }}
   <div class="portfolio-reports col col--grow">
+    <p class="row estimate-warning">{{ "portfolios.reports.estimate_warning" | translate }}</p>
     {% include "portfolios/reports/portfolio_summary.html" %}
     <hr>
     {% include "portfolios/reports/obligated_funds.html" %}

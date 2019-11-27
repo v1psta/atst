@@ -102,3 +102,7 @@ dl {
   font-weight: $font-bold;
   color: $color-black;
 }
+
+@mixin small-copy {
+  font-size: $small-font-size;
+}

@@ -1,8 +1,8 @@
 {% from "components/icon.html" import Icon %}
 
-{% macro Tooltip(message,title='Help') -%}
+{% macro Tooltip(message,title='Help', classes="") %}
 
-  <button type="button" tabindex="0" class="icon-tooltip" v-tooltip.top="{content: '{{message}}', container: false}">
+  <button type="button" tabindex="0" class="icon-tooltip {{classes}}" v-tooltip.top="{content: '{{message}}', container: false}">
     {{ Icon('help') }}<span>{{ title }}</span>
   </button>
 
