@@ -174,8 +174,6 @@ def map_config(config):
         "PERMANENT_SESSION_LIFETIME": config.getint(
             "default", "PERMANENT_SESSION_LIFETIME"
         ),
-        "RQ_REDIS_URL": config["default"]["REDIS_URI"],
-        "RQ_QUEUES": [config["default"]["RQ_QUEUES"]],
         "DISABLE_CRL_CHECK": config.getboolean("default", "DISABLE_CRL_CHECK"),
         "CRL_FAIL_OPEN": config.getboolean("default", "CRL_FAIL_OPEN"),
         "LOG_JSON": config.getboolean("default", "LOG_JSON"),
