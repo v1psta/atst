@@ -283,6 +283,10 @@
           &:last-child {
             border-bottom: 0;
           }
+
+          &:hover {
+            background-color: $color-aqua-lightest;
+          }
         }
       }
     }
