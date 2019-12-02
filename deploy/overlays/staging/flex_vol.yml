@@ -10,3 +10,4 @@ spec:
           flexVolume:
             options:
               keyvaultname: "atat-vault-test"
+              keyvaultobjectnames: "dhparam4096;staging-cert"

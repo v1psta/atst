@@ -7,7 +7,7 @@ patchesStrategicMerge:
   - replica_count.yml
   - ports.yml
   - envvars.yml
-  - vault_name.yml
+  - flex_vol.yml
 patchesJson6902:
   - target:
       group: extensions
