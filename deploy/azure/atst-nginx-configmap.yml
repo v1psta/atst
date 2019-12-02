@@ -42,7 +42,7 @@ data:
         ssl_certificate /etc/ssl/atat.crt;
         ssl_certificate_key /etc/ssl/atat.crt;
         # additional SSL/TLS settings
-        include /etc/nginx/snippets/ssl.conf
+        include /etc/nginx/snippets/ssl.conf;
 
         location /login-redirect {
             return 301 https://auth-azure.atat.code.mil$request_uri;
@@ -79,7 +79,7 @@ data:
         ssl_verify_depth 10;
         ssl_client_certificate /etc/ssl/client-ca-bundle.pem;
         # additional SSL/TLS settings
-        include /etc/nginx/snippets/ssl.conf
+        include /etc/nginx/snippets/ssl.conf;
 
         location / {
             return 301 https://azure.atat.code.mil$request_uri;
