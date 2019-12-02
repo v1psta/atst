@@ -138,7 +138,7 @@ spec:
               keyvaultname: "atat-vault-test"
               keyvaultobjectnames: "dhparam4096;staging-cert"
               keyvaultobjectaliases: "dhparam.pem;atat.crt"
-              keyvaultobjecttypes: secret
+              keyvaultobjecttypes: "secret;cert"
               tenantid: $TENANT_ID
 ---
 apiVersion: extensions/v1beta1
