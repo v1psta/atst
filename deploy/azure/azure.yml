@@ -70,14 +70,14 @@ spec:
               mountPath: "/etc/nginx/.htpasswd"
               subPath: .htpasswd
             - name: nginx-client-ca-bundle
-              mountPath: "/etc/ssl/"
+              mountPath: "/etc/ssl/client-ca-bundle.pem"
+              subPath: "client-ca-bundle.pem"
             - name: acme
               mountPath: "/usr/share/nginx/html/.well-known/acme-challenge/"
             - name: snippets
               mountPath: "/etc/nginx/snippets/"
             - name: nginx-secret
               mountPath: "/etc/ssl/"
-              readOnly: true
       volumes:
         - name: atst-config
           secret:
@@ -89,7 +89,10 @@ spec:
         - name: nginx-client-ca-bundle
           configMap:
             name: nginx-client-ca-bundle
-            defaultMode: 0666
+            defaultMode: 0444
+            items:
+              - key: "client-ca-bundle.pem"
+                path: "client-ca-bundle.pem"
         - name: nginx-config
           configMap:
             name: atst-nginx
@@ -134,9 +137,9 @@ spec:
             options:
               usepodidentity: "true"
               keyvaultname: "atat-vault-test"
-              keyvaultobjectnames: "dhparam4096;master-cert"
-              keyvaultobjectaliases: "dhparam.pem;atat.crt"
-              keyvaultobjecttypes: "secret;cert"
+              keyvaultobjectnames: "dhparam4096;master-cert;master-cert"
+              keyvaultobjectaliases: "dhparam.pem;atat.key;atat.crt"
+              keyvaultobjecttypes: "secret;secret;secret"
               tenantid: $TENANT_ID
 ---
 apiVersion: extensions/v1beta1

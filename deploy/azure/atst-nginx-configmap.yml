@@ -40,7 +40,7 @@ data:
         listen ${PORT_PREFIX}442 ssl;
         listen [::]:${PORT_PREFIX}442 ssl ipv6only=on;
         ssl_certificate /etc/ssl/atat.crt;
-        ssl_certificate_key /etc/ssl/atat.crt;
+        ssl_certificate_key /etc/ssl/atat.key;
         # additional SSL/TLS settings
         include /etc/nginx/snippets/ssl.conf;
 
@@ -73,7 +73,7 @@ data:
         listen ${PORT_PREFIX}443 ssl;
         listen [::]:${PORT_PREFIX}443 ssl ipv6only=on;
         ssl_certificate /etc/ssl/atat.crt;
-        ssl_certificate_key /etc/ssl/atat.crt;
+        ssl_certificate_key /etc/ssl/atat.key;
         # Request and validate client certificate
         ssl_verify_client on;
         ssl_verify_depth 10;
