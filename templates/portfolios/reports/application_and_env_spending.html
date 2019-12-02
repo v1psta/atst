@@ -59,9 +59,13 @@
                   <span v-html='formatDollars(application["total_spend_to_date"])'></span>
                 </td>
               </tr>
-              <tr v-for='(environment, envName) in environments[name]' v-show='application.isVisible'>
+              <tr 
+                v-for='(environment, envName, index) in environments[name]' 
+                v-show='application.isVisible'
+                v-bind:class="[ index == Object.keys(environments[name]).length -1 ? 'reporting-spend-table__env-row--last' : '']"
+              >
                 <td>
-                  <span v-html='envName'></span>
+                  <span class="reporting-spend-table__env-row-label" v-html='envName'></span>
                 </td>
                 <td class="table-cell--align-right">
                   <span v-html='formatDollars(environment[currentMonthIndex] || 0)'></span>

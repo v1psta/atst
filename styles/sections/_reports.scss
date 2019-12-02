@@ -87,4 +87,32 @@
       font-size: $lead-font-size;
     }
   }
+
+  .reporting-expended-funding {
+    &__header {
+      margin: 0;
+    }
+    &__content {
+      padding: 0;
+      border-top: 1px solid $color-gray-lighter;
+    }
+  }
+
+  .reporting-spend-table {
+    &__env-row {
+      &-label {
+        margin-left: $gap * 5;
+      }
+      &--last {
+        & > td {
+          border-bottom: 1px solid black;
+        }
+        &:last-of-type {
+          & > td {
+            border-bottom: none;
+          }
+        }
+      }
+    }
+  }
 }

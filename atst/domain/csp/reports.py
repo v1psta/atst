@@ -308,20 +308,37 @@ class MockReportingProvider(ReportingInterface):
         return {}
 
     def get_expired_task_orders(self, portfolio):
-        return [
-            {
-                "id": task_order.id,
-                "number": task_order.number,
+        def sorted_task_orders(to_list):
+            return sorted(to_list, key=lambda to: to["number"])
+
+        def sorted_clins(clin_list):
+            return sorted(clin_list, key=lambda clin: clin["number"])
+
+        def serialize_clin(clin):
+            return {
+                "number": clin.number,
+                "jedi_clin_type": clin.jedi_clin_type,
                 "period_of_performance": {
-                    "start_date": task_order.start_date,
-                    "end_date": task_order.end_date,
+                    "start_date": clin.start_date,
+                    "end_date": clin.end_date,
                 },
-                "total_obligated_funds": task_order.total_obligated_funds,
+                "total_value": clin.total_amount,
+                "total_obligated_funds": clin.obligated_amount,
                 "expended_funds": (
-                    task_order.total_obligated_funds
-                    * Decimal(self.MOCK_PERCENT_EXPENDED_FUNDS)
+                    clin.obligated_amount * Decimal(self.MOCK_PERCENT_EXPENDED_FUNDS)
                 ),
             }
-            for task_order in portfolio.task_orders
-            if task_order.is_expired
-        ]
+
+        return sorted_task_orders(
+            [
+                {
+                    "id": task_order.id,
+                    "number": task_order.number,
+                    "clins": sorted_clins(
+                        [serialize_clin(clin) for clin in task_order.clins]
+                    ),
+                }
+                for task_order in portfolio.task_orders
+                if task_order.is_expired
+            ]
+        )

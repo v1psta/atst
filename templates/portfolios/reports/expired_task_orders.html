@@ -1,34 +1,51 @@
 {% from "components/accordion.html" import Accordion %}
+{% from "components/icon.html" import Icon %}
 
 
 <section>
   <div class="usa-accordion">      
-    {% call Accordion("Expired Task Orders", "expired_task_orders", "h3") %}
-      {% for task_order in expired_task_orders %}
-        <a href="{{ url_for("task_orders.review_task_order", task_order_id=task_order["id"]) }}">
-          Task Order {{ task_order["number"] }}
-        </a>
-        <div>
-          <p>Period of Performance</p>
-          <p>
-            {{ task_order["period_of_performance"].start_date | formattedDate(formatter="%B %d, %Y") }}
-            - 
-            {{ task_order["period_of_performance"].end_date | formattedDate(formatter="%B %d, %Y") }}
-          </p>
-        </div>
-        <div>
-          <p>Total Obligated</p>
-          <p>{{ task_order["total_obligated_funds"] | dollars }}</p>
-        </div>
-        <div>
-          <p>Total Expended</p>
-          <p>{{ task_order["expended_funds"] | dollars }}</p>
-        </div>
-        <div>
-          <p>Total Unused</p>
-          <p>{{ (task_order["total_obligated_funds"] - task_order["expended_funds"]) | dollars }}</p>
-        </div>
-      {% endfor %}
+    {% call Accordion(
+      "Expired funding", 
+      "expired_funding", 
+      heading_classes="reporting-expended-funding__header",
+      content_tag="table",
+      content_classes="atat-table reporting-expended-funding__content") %}
+        <thead>
+          <tr>
+            <th>TO CLIN</th>
+            <th>PoP</th>
+            <th>CLIN Value</th>
+            <th>Amount Obligated</th>
+            <th>Amount Unspent</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for task_order in expired_task_orders %}
+          <tr>
+            <td colspan="5">
+              <span class="h4 reporting-expended-funding__header">Task Order</span> <a href="{{ url_for("task_orders.review_task_order", task_order_id=task_order.id) }}">
+                {{ task_order.number }} {{ Icon("caret_right", classes="icon--tiny icon--blue" ) }}
+              </a>
+            </td>
+          </tr>
+          {% for clin in task_order.clins %}
+            <tr>
+              <td>
+                <div class="h4 reporting-expended-funding__header">{{ clin.number }}</div>
+                <div>{{ ("{}".format(clin.jedi_clin_type) | translate)[15:] }}</div>
+              </td>
+              <td>
+                {{ clin.period_of_performance.start_date | formattedDate(formatter="%b %d, %Y") }}
+                - 
+                {{ clin.period_of_performance.end_date | formattedDate(formatter="%b %d, %Y") }}
+              </td>
+              <td>{{ clin.total_value | dollars }}</td>
+              <td>{{ clin.total_obligated_funds | dollars }}</td>
+              <td>{{ (clin.total_obligated_funds - clin.expended_funds) | dollars }}</td>
+            <tr>
+          {% endfor %}
+        {% endfor %}  
+        </tbody>
     {% endcall %}
   </div>
 </section>
