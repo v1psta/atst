@@ -160,7 +160,6 @@ def map_config(config):
         "BROKER_URL": config["default"]["REDIS_URI"],
         "DEBUG": config["default"].getboolean("DEBUG"),
         "SQLALCHEMY_ECHO": config["default"].getboolean("SQLALCHEMY_ECHO"),
-        "CLASSIFIED": config["default"].getboolean("CLASSIFIED"),
         "PORT": int(config["default"]["PORT"]),
         "SQLALCHEMY_DATABASE_URI": config["default"]["DATABASE_URI"],
         "SQLALCHEMY_TRACK_MODIFICATIONS": False,
@@ -175,8 +174,6 @@ def map_config(config):
         "PERMANENT_SESSION_LIFETIME": config.getint(
             "default", "PERMANENT_SESSION_LIFETIME"
         ),
-        "RQ_REDIS_URL": config["default"]["REDIS_URI"],
-        "RQ_QUEUES": [config["default"]["RQ_QUEUES"]],
         "DISABLE_CRL_CHECK": config.getboolean("default", "DISABLE_CRL_CHECK"),
         "CRL_FAIL_OPEN": config.getboolean("default", "CRL_FAIL_OPEN"),
         "LOG_JSON": config.getboolean("default", "LOG_JSON"),

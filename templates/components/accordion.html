@@ -1,0 +1,23 @@
+{% macro Accordion(title, id, heading_level="h2") %}
+<accordion inline-template>
+  <div>
+    <{{heading_level}}>
+      <button
+        v-on:click="toggle($event)" 
+        class="usa-accordion-button"
+        aria-controls="{{ id }}"
+        v-bind:aria-expanded= "isVisible ? 'true' : 'false'"
+      >
+        {{ title }}
+      </button>
+    </{{heading_level}}>
+    <div 
+      id="{{ id }}" 
+      class="usa-accordion-content" 
+      v-bind:aria-hidden="isVisible ? 'false' : 'true'"
+    >
+      {{ caller() }}
+    </div>
+  </div>
+</accordion>
+{% endmacro %}

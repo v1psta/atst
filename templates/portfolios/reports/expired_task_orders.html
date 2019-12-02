@@ -1,0 +1,34 @@
+{% from "components/accordion.html" import Accordion %}
+
+
+<section>
+  <div class="usa-accordion">      
+    {% call Accordion("Expired Task Orders", "expired_task_orders", "h3") %}
+      {% for task_order in expired_task_orders %}
+        <a href="{{ url_for("task_orders.review_task_order", task_order_id=task_order["id"]) }}">
+          Task Order {{ task_order["number"] }}
+        </a>
+        <div>
+          <p>Period of Performance</p>
+          <p>
+            {{ task_order["period_of_performance"].start_date | formattedDate(formatter="%B %d, %Y") }}
+            - 
+            {{ task_order["period_of_performance"].end_date | formattedDate(formatter="%B %d, %Y") }}
+          </p>
+        </div>
+        <div>
+          <p>Total Obligated</p>
+          <p>{{ task_order["total_obligated_funds"] | dollars }}</p>
+        </div>
+        <div>
+          <p>Total Expended</p>
+          <p>{{ task_order["expended_funds"] | dollars }}</p>
+        </div>
+        <div>
+          <p>Total Unused</p>
+          <p>{{ (task_order["total_obligated_funds"] - task_order["expended_funds"]) | dollars }}</p>
+        </div>
+      {% endfor %}
+    {% endcall %}
+  </div>
+</section>

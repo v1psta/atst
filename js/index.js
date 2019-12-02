@@ -17,7 +17,6 @@ import ApplicationEnvironments from './components/forms/new_application/environm
 import MultiStepModalForm from './components/forms/multi_step_modal_form'
 import uploadinput from './components/upload_input'
 import Modal from './mixins/modal'
-import BudgetChart from './components/charts/budget_chart'
 import SpendTable from './components/tables/spend_table'
 import LocalDatetime from './components/local_datetime'
 import { isNotInVerticalViewport } from './lib/viewport'
@@ -30,6 +29,8 @@ import SemiCollapsibleText from './components/semi_collapsible_text'
 import ToForm from './components/forms/to_form'
 import ClinFields from './components/clin_fields'
 import PopDateRange from './components/pop_date_range'
+import Accordion from './components/accordion'
+import ToggleMenu from './components/toggle_menu'
 
 Vue.config.productionTip = false
 
@@ -40,6 +41,7 @@ Vue.mixin(Modal)
 const app = new Vue({
   el: '#app-root',
   components: {
+    Accordion,
     dodlogin,
     toggler,
     optionsinput,
@@ -47,7 +49,6 @@ const app = new Vue({
     textinput,
     checkboxinput,
     ApplicationEnvironments,
-    BudgetChart,
     SpendTable,
     LocalDatetime,
     MultiStepModalForm,
@@ -61,6 +62,7 @@ const app = new Vue({
     ToForm,
     ClinFields,
     PopDateRange,
+    ToggleMenu,
   },
 
   mounted: function() {

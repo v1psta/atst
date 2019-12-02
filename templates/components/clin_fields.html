@@ -41,10 +41,9 @@
         <div class="form-row">
           <div class="form-col">
             {% if fields %}
-              {{ TextInput(fields.number, watch=True, optional=False) }}
+              {{ TextInput(fields.number, optional=False) }}
             {% else %}
-              <textinput :name="'clins-' + clinIndex + '-number'" :watch='true'
-              inline-template>
+              <textinput :name="'clins-' + clinIndex + '-number'" inline-template>
                 <div v-bind:class="['usa-input usa-input--validation--' + validation, { 'usa-input--error': showError, 'usa-input--success': showValid, 'usa-input--validation--paragraph': paragraph, 'no-max-width': noMaxWidth }]">
                   <label :for="name">
                     <span v-show='showError'>{{ Icon('alert',classes="icon-validation") }}</span>
@@ -82,9 +81,9 @@
         <div class="form-row">
           <div class="form-col">
             {% if fields %}
-              {{ OptionsInput(fields.jedi_clin_type, watch=True, show_validation=False, optional=False) }}
+              {{ OptionsInput(fields.jedi_clin_type, show_validation=False, optional=False) }}
             {% else %}
-              <optionsinput :name="'clins-' + clinIndex + '-jedi_clin_type'" :watch='true' :optional='false' inline-template>
+              <optionsinput :name="'clins-' + clinIndex + '-jedi_clin_type'" :optional='false' inline-template>
                 <div v-bind:class="['usa-input', { 'usa-input--error': showError, 'usa-input--success': showValid }]">
                   <fieldset data-ally-disabled="true" class="usa-input__choices" v-on:change="onInput">
                       <legend>
@@ -93,10 +92,10 @@
                         </div>
                       </legend>
                       <select :id='name' :name='name'>
-                        <option value="JEDI_CLIN_1">{{ "forms.task_order.clin_01_label" | translate }}</option>
-                        <option value="JEDI_CLIN_2">{{ "forms.task_order.clin_02_label" | translate }}</option>
-                        <option value="JEDI_CLIN_3">{{ "forms.task_order.clin_03_label" | translate }}</option>
-                        <option value="JEDI_CLIN_4">{{ "forms.task_order.clin_04_label" | translate }}</option>
+                        <option value="JEDI_CLIN_1">{{ "JEDICLINType.JEDI_CLIN_1" | translate }}</option>
+                        <option value="JEDI_CLIN_2">{{ "JEDICLINType.JEDI_CLIN_2" | translate }}</option>
+                        <option value="JEDI_CLIN_3">{{ "JEDICLINType.JEDI_CLIN_3" | translate }}</option>
+                        <option value="JEDI_CLIN_4">{{ "JEDICLINType.JEDI_CLIN_4" | translate }}</option>
                       </select>
                   </fieldset>
                 </div>

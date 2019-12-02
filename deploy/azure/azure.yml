@@ -46,6 +46,9 @@ spec:
             - name: pgsslrootcert
               mountPath: "/opt/atat/atst/ssl/pgsslrootcert.crt"
               subPath: pgsslrootcert.crt
+            - name: uwsgi-config
+              mountPath: "/opt/atat/atst/uwsgi.ini"
+              subPath: uwsgi.ini
         - name: nginx
           image: nginx:alpine
           ports:
@@ -124,6 +127,14 @@ spec:
           configMap:
             name: acme-challenges
             defaultMode: 0666
+        - name: uwsgi-config
+          configMap:
+            name: uwsgi-config
+            defaultMode: 0666
+            items:
+            - key: uwsgi.ini
+              path: uwsgi.ini
+              mode: 0644
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment

@@ -110,7 +110,6 @@ def test_portfolio_reports_with_mock_portfolio(client, user_session):
     response = client.get(url_for("portfolios.reports", portfolio_id=portfolio.id))
     assert response.status_code == 200
     assert portfolio.name in response.data.decode()
-    assert "$251,626.00 Total spend to date" in response.data.decode()
 
 
 def test_delete_portfolio_success(client, user_session):

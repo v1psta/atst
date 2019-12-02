@@ -1,0 +1,44 @@
+{% from "components/icon.html" import Icon %}
+
+<section>
+  <header class="reporting-section-header">
+    <h2 class="reporting-section-header__header">Current Obligated funds</h2>
+    <span class="reporting-section-header__subheader">As of {{ now | formattedDate(formatter="%B %d, %Y at %H:%M")  }}</span>
+  </header>
+  <div class='panel'>
+    <div class='panel__content jedi-clin-funding'>
+      {% for JEDI_clin, funds in current_obligated_funds.items() %}
+        {% set remaining_funds = (funds["obligated_funds"] - funds["expended_funds"]) %}
+        <div class="jedi-clin-funding__clin-wrapper">
+          <h3 class="h5 jedi-clin-funding__header">
+            {{ "JEDICLINType.{}".format(JEDI_clin) | translate }}
+          </h3>
+          <p class="jedi-clin-funding__subheader">Total obligated amount: {{ funds["obligated_funds"] | dollars }}</p>
+          <meter class="jedi-clin-funding__meter" value='{{remaining_funds}}' min='0' max='{{ funds["obligated_funds"] }}' title='{{ JEDI_clin }}'>
+            <div class='jedi-clin-funding__meter-fallback' style='width:{{ (funds["expended_funds"] / funds["obligated_funds"]) * 100 }}%;'></div>
+          </meter>
+          <div class="jedi-clin-funding__meter-values">
+            <div class="jedi-clin-funding__meta">
+              <p class="jedi-clin-funding__meta-header">Funds expended:</p>
+              <p class="h3 jedi-clin-funding__meta-value">{{ funds["expended_funds"] | dollars }}</p>
+            </div>
+            <div class="jedi-clin-funding__meta jedi-clin-funding__meta--remaining">
+              <p class="jedi-clin-funding__meta-header">Remaining funds:</p>
+              <p class="h3 jedi-clin-funding__meta-value">{{ remaining_funds | dollars }}</p>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+      <div class="jedi-clin-funding__active-task-orders">
+        <h3 class="h4">
+          Active Task Orders
+        </h3>
+        {% for task_order in portfolio.active_task_orders %}
+          <a href="{{ url_for("task_orders.review_task_order", task_order_id=task_order.id) }}">
+          {{ task_order.number }} {{ Icon("caret_right", classes="icon--tiny icon--blue" ) }}
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>

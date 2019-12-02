@@ -1,6 +1,7 @@
 from itertools import groupby
-from collections import OrderedDict
 import pendulum
+from decimal import Decimal
+from collections import OrderedDict
 
 
 class ReportingInterface:
@@ -35,14 +36,16 @@ def generate_sample_dates(_max=8):
     current = pendulum.now()
     sample_dates = []
     for _i in range(_max):
-        current = current.subtract(months=1)
         sample_dates.append(current.strftime("%m/%Y"))
+        current = current.subtract(months=1)
 
     reversed(sample_dates)
     return sample_dates
 
 
 class MockReportingProvider(ReportingInterface):
+    MOCK_PERCENT_EXPENDED_FUNDS = 0.75
+
     FIXTURE_MONTHS = generate_sample_dates()
 
     MONTHLY_SPEND_BY_ENVIRONMENT = {
@@ -163,25 +166,8 @@ class MockReportingProvider(ReportingInterface):
         "FM_Prod": {FIXTURE_MONTHS[0]: 5686},
     }
 
-    CUMULATIVE_BUDGET_A_WING = {
-        FIXTURE_MONTHS[7]: {"spend": 9857, "cumulative": 9857},
-        FIXTURE_MONTHS[6]: {"spend": 7881, "cumulative": 17738},
-        FIXTURE_MONTHS[5]: {"spend": 14010, "cumulative": 31748},
-        FIXTURE_MONTHS[4]: {"spend": 43510, "cumulative": 75259},
-        FIXTURE_MONTHS[3]: {"spend": 41725, "cumulative": 116_984},
-        FIXTURE_MONTHS[2]: {"spend": 41328, "cumulative": 158_312},
-        FIXTURE_MONTHS[1]: {"spend": 47491, "cumulative": 205_803},
-        FIXTURE_MONTHS[0]: {"spend": 36028, "cumulative": 241_831},
-    }
-
-    CUMULATIVE_BUDGET_B_WING = {
-        FIXTURE_MONTHS[1]: {"spend": 4838, "cumulative": 4838},
-        FIXTURE_MONTHS[0]: {"spend": 14500, "cumulative": 19338},
-    }
-
     REPORT_FIXTURE_MAP = {
         "A-Wing": {
-            "cumulative": CUMULATIVE_BUDGET_A_WING,
             "applications": [
                 MockApplication("LC04", ["Integ", "PreProd", "Prod"]),
                 MockApplication("SF18", ["Integ", "PreProd", "Prod"]),
@@ -202,7 +188,6 @@ class MockReportingProvider(ReportingInterface):
             "budget": 500_000,
         },
         "B-Wing": {
-            "cumulative": CUMULATIVE_BUDGET_B_WING,
             "applications": [
                 MockApplication("NP02", ["Integ", "PreProd", "Prod"]),
                 MockApplication("FM", ["Integ", "Prod"]),
@@ -210,28 +195,6 @@ class MockReportingProvider(ReportingInterface):
             "budget": 70000,
         },
     }
-
-    def _sum_monthly_spend(self, data):
-        return sum(
-            [
-                spend
-                for application in data
-                for env in application.environments
-                for spend in self.MONTHLY_SPEND_BY_ENVIRONMENT[env.id].values()
-            ]
-        )
-
-    def get_budget(self, portfolio):
-        if portfolio.name in self.REPORT_FIXTURE_MAP:
-            return self.REPORT_FIXTURE_MAP[portfolio.name]["budget"]
-        return 0
-
-    def get_total_spending(self, portfolio):
-        if portfolio.name in self.REPORT_FIXTURE_MAP:
-            return self._sum_monthly_spend(
-                self.REPORT_FIXTURE_MAP[portfolio.name]["applications"]
-            )
-        return 0
 
     def _rollup_application_totals(self, data):
         application_totals = {}
@@ -270,7 +233,14 @@ class MockReportingProvider(ReportingInterface):
             { "01/2018": 79.85, "02/2018": 86.54 }
 
         """
-        return self.MONTHLY_SPEND_BY_ENVIRONMENT.get(environment_id, {})
+        environment_monthly_totals = self.MONTHLY_SPEND_BY_ENVIRONMENT.get(
+            environment_id, {}
+        ).copy()
+
+        environment_monthly_totals["total_spend_to_date"] = sum(
+            monthly_total for monthly_total in environment_monthly_totals.values()
+        )
+        return environment_monthly_totals
 
     def monthly_totals(self, portfolio):
         """Return month totals rolled up by environment, application, and portfolio.
@@ -309,19 +279,49 @@ class MockReportingProvider(ReportingInterface):
             "portfolio": portfolio_totals,
         }
 
-    def cumulative_budget(self, portfolio):
+    def get_obligated_funds_by_JEDI_clin(self, portfolio):
+        """
+        Returns a dictionary of obligated funds and spending per JEDI CLIN
+        {
+            JEDI_CLIN: {
+                obligated_funds,
+                expended_funds
+            }
+        }
+        """
         if portfolio.name in self.REPORT_FIXTURE_MAP:
-            budget_months = self.REPORT_FIXTURE_MAP[portfolio.name]["cumulative"]
-        else:
-            budget_months = {}
+            return_dict = {}
+            for jedi_clin, clins in groupby(
+                portfolio.active_clins, lambda clin: clin.jedi_clin_type
+            ):
+                obligated_funds = sum(clin.obligated_amount for clin in clins)
+                return_dict[jedi_clin.value] = {
+                    "obligated_funds": obligated_funds,
+                    "expended_funds": (
+                        obligated_funds * Decimal(self.MOCK_PERCENT_EXPENDED_FUNDS)
+                    ),
+                }
+            return OrderedDict(
+                # 0 index for dict item, -1 for last digit of 4 digit CLIN, e.g. 0001
+                sorted(return_dict.items(), key=lambda clin: clin[0][-1])
+            )
+        return {}
 
-        end = pendulum.now()
-        start = end.subtract(months=12)
-        period = pendulum.period(start, end)
-
-        all_months = OrderedDict()
-        for t in period.range("months"):
-            month_str = "{month:02d}/{year}".format(month=t.month, year=t.year)
-            all_months[month_str] = budget_months.get(month_str, None)
-
-        return {"months": all_months}
+    def get_expired_task_orders(self, portfolio):
+        return [
+            {
+                "id": task_order.id,
+                "number": task_order.number,
+                "period_of_performance": {
+                    "start_date": task_order.start_date,
+                    "end_date": task_order.end_date,
+                },
+                "total_obligated_funds": task_order.total_obligated_funds,
+                "expended_funds": (
+                    task_order.total_obligated_funds
+                    * Decimal(self.MOCK_PERCENT_EXPENDED_FUNDS)
+                ),
+            }
+            for task_order in portfolio.task_orders
+            if task_order.is_expired
+        ]

@@ -8,25 +8,28 @@ Applying the K8s config relies on a combination of kustomize and envsubst. Kusto
 
 The production configuration (azure.atat.code.mil, currently) is reflected in the configuration found in the `deploy/azure` directory. Configuration for a staging environment relies on kustomize to overwrite the production config with values appropriate for that environment. You can find more information about using kustomize [here](https://kubernetes.io/docs/tasks/manage-kubernetes-objects/kustomization/). Kustomize does not manage templating, and certain values need to be templated. These include:
 
-- CONTAINER_IMAGE: the ATAT container image to use
-- PORT_PREFIX: "8" for production, "9" for staging
-- MAIN_DOMAIN: the host domain for the environment
-- AUTH_DOMAIN: the host domain for the authentication endpoint for the environment
+- CONTAINER_IMAGE: The ATAT container image to use.
+- PORT_PREFIX: "8" for production, "9" for staging.
+- MAIN_DOMAIN: The host domain for the environment.
+- AUTH_DOMAIN: The host domain for the authentication endpoint for the environment.
+- KV_MI_ID: the fully qualified id (path) of the managed identity for the key vault (instructions on retrieving this are down in section on [Setting up FlexVol](#configuring-the-identity)). Example: /subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/RESOURCE_GROUP_NAME/providers/Microsoft.ManagedIdentity/userAssignedIdentities/MANAGED_IDENTITY_NAME
+- KV_MI_CLIENT_ID: The client id of the managed identity for the key vault. This is a GUID.
 
-We use envsubst to substitute values for these variables.
+We use envsubst to substitute values for these variables. There is a wrapper script (script/k8s_config) that will output the compiled configuration, using a combination of kustomize and envsubst.
 
-To apply config to the main environment, you should first do a diff to determine whether your new config introduces unexpected changes:
+To apply config to the main environment, you should first do a diff to determine whether your new config introduces unexpected changes. These examples assume that all the relevant environment variables listed above have been set:
 
 ```
-kubectl kustomize deploy/azure | CONTAINER_IMAGE=myregistry.io/atat-some-commit-sha PORT_PREFIX=8 MAIN_DOMAIN=azure.atat.code.mil AUTH_DOMAIN=auth-azure.atat.code.mil envsubst '$CONTAINER_IMAGE $PORT_PREFIX $MAIN_DOMAIN $AUTH_DOMAIN' | kubectl diff -f -
+./script/k8s_config deploy/azure | kubectl diff -f -
 ```
 
 Here, `kubectl kustomize` assembles the config and streams it to STDOUT. We specify environment variables for envsubst to use and pass the names of those env vars as a string argument to envsubst. This is important, because envsubst will override NGINX variables in the NGINX config if you don't limit its scope. Finally, we pipe the result from envsubst to `kubectl diff`, which reports a list of differences. Note that some values tracked by K8s internally might have changed, such as [`generation`](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.16/#objectmeta-v1-meta). This is fine and expected.
 
 If you are satisfied with the output from the diff, you can apply the new config the same way:
 
+
 ```
-kubectl kustomize deploy/azure | CONTAINER_IMAGE=myregistry.io/atat-some-commit-sha PORT_PREFIX=8 MAIN_DOMAIN=azure.atat.code.mil AUTH_DOMAIN=auth-azure.atat.code.mil envsubst '$CONTAINER_IMAGE $PORT_PREFIX $MAIN_DOMAIN $AUTH_DOMAIN' | kubectl apply -f -
+./script/k8s_config deploy/azure | kubectl apply -f -
 ```
 
 **Note:** Depending on how your `kubectl` config is set up, these commands may need to be adjusted. If you have configuration for multiple clusters, you may need to specify the `kubectl` context for each command with the `--context` flag (something like `kubectl --context=my-cluster [etc.]` or `kubectl --context=azure [etc.]`).
@@ -165,3 +168,52 @@ Then:
 ```
 kubectl -n atat create secret tls azure-atat-code-mil-tls --key="[path to the private key]" --cert="[path to the full chain]"
 ```
+
+---
+
+# Setting Up FlexVol for Secrets
+
+## Preparing Azure Environment
+
+A Key Vault will need to be created. Save it's full id (the full path) for use later.
+
+## Preparing Cluster
+
+The 2 following k8s configs will need to be applied to the cluster. They do not need to be namespaced, the latter will create a `kv` namespace for itself.
+```
+kubectl apply -f deploy/azure/keyvault/deployment-rbac.yaml
+kubectl apply -f deploy/azure/keyvault/kv-flex-vol-installer.yaml
+```
+
+## Configuring The Identity
+
+1. Creat the identity in a resource group that is able to manage the cluster (`RESOURCE_GROUP_NAME`). You'll also determine a name for the identity (`MANAGED_IDENTITY_NAME`) that you'll use to refer to the identity later:
+
+    `az identity create -g <RESOURCE_GROUP_NAME> -n <MANAGED_IDENTITY_NAME> -o json`
+
+2. From the resulting JSON, we'll need to use: `id`, `clientId` and `principalId` for subsequent commands and configuration.
+Example values:
+    ```
+    id: "/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/RESOURCE_GROUP_NAME/providers/Microsoft.ManagedIdentity/userAssignedIdentities/MANAGED_IDENTITY_NAME"
+    clientId: 00000000-0000-0000-0000-000000000000
+    principalId: 00000000-0000-0000-0000-000000000000
+    ```
+
+    > You can recover these values later by running the following command. Verify you are looking at the correct identity by making sure the end of the first line (id) is the same as the name you provided above. If you want the full details of the identity, leave off the last section.
+    >
+    >`az identity list -g <RESOURCE_GROUP_NAME> | jq '.[] | select(.type == "Microsoft.ManagedIdentity/userAssignedIdentities") | .id, .clientId, principalId'`
+
+3. Assign the new identity two roles: Managed Identity Operator (for itself) and Reader (of the vault). The `VAULT_ID` can be found in the azure portal.
+
+    ```
+    az role assignment create --role "Managed Identity Operator" --assignee <principalId> --scope <id>
+    az role assignment create --role Reader --assignee <principalId> --scope <VAULT_ID>
+    ```
+
+4. Grant the identity get permissions for each of the types of values the vault can store, Keys, Secrets, and Certificates:
+    ```
+    az keyvault set-policy -n <VAULT_NAME> --spn <clientId> --key-permissions get --secret-permissions get --certificate-permissions get
+    ```
+
+5. The file `deploy/azure/aadpodidentity.yml` is templated via Kustomize, so you'll need to include clientId (as `KV_MI_CLIENT_ID`) and id (as `KV_MI_ID`) of the managed identity as part of the call to Kustomize.
+

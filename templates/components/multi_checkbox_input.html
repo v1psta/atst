@@ -11,6 +11,7 @@
     {% if other_input_field and other_input_field.data and other_input_field.data != "None" %}
       initial-other-value="{{ other_input_field.data }}"
     {% endif %}
+    v-bind:optional={{ optional|lower }}
     key='{{ field.name }}'>
     <div
       v-bind:class="['usa-input', { 'usa-input--error': showError, 'usa-input--success': showValid }]">
