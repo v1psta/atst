@@ -69,8 +69,6 @@ spec:
             - name: nginx-htpasswd
               mountPath: "/etc/nginx/.htpasswd"
               subPath: .htpasswd
-            - name: tls
-              mountPath: "/etc/ssl/private"
             - name: nginx-client-ca-bundle
               mountPath: "/etc/ssl/"
             - name: acme
