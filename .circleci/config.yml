@@ -293,6 +293,11 @@ workflows:
       - integration-tests:
           requires:
             - docker-build
+          filters:
+            branches:
+              only:
+                - staging
+                - master
       - deploy-staging:
           requires:
             - test
