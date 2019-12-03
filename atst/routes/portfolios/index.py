@@ -11,16 +11,6 @@ from atst.domain.authz.decorator import user_can_access_decorator as user_can
 from atst.utils.flash import formatted_flash as flash
 
 
-@portfolios_bp.route("/portfolios")
-def portfolios():
-    portfolios = Portfolios.for_user(g.current_user)
-
-    if portfolios:
-        return render_template("portfolios/index.html", page=5, portfolios=portfolios)
-    else:
-        return render_template("portfolios/blank_slate.html")
-
-
 @portfolios_bp.route("/portfolios/new")
 def new_portfolio():
     form = PortfolioCreationForm()
