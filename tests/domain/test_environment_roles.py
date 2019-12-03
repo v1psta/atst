@@ -110,6 +110,23 @@ def test_disable_checks_env_provisioning_status(session):
     assert env_role2.disabled
 
 
+def test_disable_checks_env_role_provisioning_status():
+    environment = EnvironmentFactory.create(
+        cloud_id="cloud-id", root_user_info={"credentials": "credentials"}
+    )
+    env_role1 = EnvironmentRoleFactory.create(environment=environment)
+    assert not env_role1.csp_user_id
+    env_role1 = EnvironmentRoles.disable(env_role1.id)
+    assert env_role1.disabled
+
+    env_role2 = EnvironmentRoleFactory.create(
+        environment=environment, csp_user_id="123456"
+    )
+    assert env_role2.csp_user_id
+    env_role2 = EnvironmentRoles.disable(env_role2.id)
+    assert env_role2.disabled
+
+
 def test_get_for_update(application_role, environment):
     EnvironmentRoleFactory.create(
         application_role=application_role, environment=environment, deleted=True
