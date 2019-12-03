@@ -111,7 +111,8 @@
       message="Upload your approved Task Order here. You are required to confirm you have the appropriate signature. You will have the ability to add additional approved Task Orders with more funding to this Portfolio in the future.",
       button_link=url_for('task_orders.form_step_one_add_pdf', portfolio_id=portfolio.id),
       button_text="Add Task Order",
-      view_only_text="Contact your portfolio administrator to add a Task Order."
+      view_only_text="Contact your portfolio administrator to add a Task Order.",
+      user_can_create=user_can(permissions.CREATE_TASK_ORDER),
     ) }}
   {% endif %}
 </div>
