@@ -24,12 +24,11 @@
   {% if not portfolio.applications %}
 
     {{ EmptyState(
-      'This portfolio doesn’t have any applications',
-      action_label='Add a new application' if can_create_applications else None,
-      action_href=url_for('applications.create_new_application_step_1', portfolio_id=portfolio.id) if can_create_applications else None,
-      icon='cloud',
-      sub_message=None if can_create_applications else 'Please contact your JEDI Cloud portfolio administrator to set up a new application.',
-      add_perms=can_create_applications
+      header="You don't have any Applications yet",
+      message="You can manage multiple Applications within a single Portfolio as long as the funding sources are the same.",
+      button_text="Create Your First Application",
+      button_link=url_for("applications.view_new_application_step_1", portfolio_id=portfolio.id),
+      view_only_text="Contact your portfolio administrator to add an application."
     ) }}
 
   {% else %}

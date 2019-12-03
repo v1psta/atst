@@ -15,13 +15,13 @@
     %}
 
     {{ EmptyState(
-      ('portfolios.reports.empty_state.message' | translate),
-      action_label= ('portfolios.reports.empty_state.action_label' | translate) if can_create_applications else None,
-      action_href=url_for('applications.create_new_application_step_1', portfolio_id=portfolio.id) if can_create_applications else None,
-      icon='chart',
-      sub_message=message,
-      add_perms=can_create_applications
+      header='portfolios.reports.empty_state.message' | translate,
+      message=message,
+      button_text="Add a new application",
+      button_link=url_for("applications.view_new_application_step_1", portfolio_id=portfolio.id),
+      view_only_text="Contact your portfolio administrator to create an application."
     ) }}
+
   {% else %}
     <spend-table
       v-bind:applications='{{ monthly_totals['applications'] | tojson }}'
