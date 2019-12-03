@@ -18,8 +18,10 @@ class Portfolio(
     __tablename__ = "portfolios"
 
     id = types.Id()
-    name = Column(String)
-    defense_component = Column(String)  # Department of Defense Component
+    name = Column(String, nullable=False)
+    defense_component = Column(
+        String, nullable=False
+    )  # Department of Defense Component
 
     app_migration = Column(String)  # App Migration
     complexity = Column(ARRAY(String))  # Application Complexity

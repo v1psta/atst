@@ -9,6 +9,7 @@ from atst.domain.portfolios import (
 )
 from atst.domain.portfolio_roles import PortfolioRoles
 from atst.domain.applications import Applications
+from atst.domain.application_roles import ApplicationRoles
 from atst.domain.environments import Environments
 from atst.domain.permission_sets import PermissionSets, PORTFOLIO_PERMISSION_SETS
 from atst.models.application_role import Status as ApplicationRoleStatus

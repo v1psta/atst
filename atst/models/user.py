@@ -56,8 +56,8 @@ class User(
 
     email = Column(String)
     dod_id = Column(String, unique=True, nullable=False)
-    first_name = Column(String)
-    last_name = Column(String)
+    first_name = Column(String, nullable=False)
+    last_name = Column(String, nullable=False)
     phone_number = Column(String)
     phone_ext = Column(String)
     service_branch = Column(String)

@@ -46,7 +46,9 @@ class ApplicationRole(
         UUID(as_uuid=True), ForeignKey("users.id"), index=True, nullable=True
     )
 
-    status = Column(SQLAEnum(Status, native_enum=False), default=Status.PENDING)
+    status = Column(
+        SQLAEnum(Status, native_enum=False), default=Status.PENDING, nullable=False
+    )
 
     permission_sets = relationship(
         "PermissionSet", secondary=application_roles_permission_sets
