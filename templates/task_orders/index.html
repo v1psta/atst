@@ -93,9 +93,11 @@
 {% endmacro %}
 
 
-{% call StickyCTA(text="Task Orders") %}
+{% call StickyCTA(text="common.task_orders"|translate) %}
     {% if user_can(permissions.CREATE_TASK_ORDER) and task_orders %}
-      <a href="{{ url_for("task_orders.form_step_one_add_pdf", portfolio_id=portfolio.id) }}" class="usa-button usa-button-primary">Add New Task Order</a>
+      <a href="{{ url_for("task_orders.form_step_one_add_pdf", portfolio_id=portfolio.id) }}" class="usa-button usa-button-primary">
+        {{ "task_orders.add_new_button" | translate }}
+      </a>
     {% endif %}
 {% endcall %}
 
@@ -107,11 +109,11 @@
     {{ TaskOrderList(task_orders) }}
   {% else %}
     {{ EmptyState(
-      header="Add approved task orders",
-      message="Upload your approved Task Order here. You are required to confirm you have the appropriate signature. You will have the ability to add additional approved Task Orders with more funding to this Portfolio in the future.",
+      header="task_orders.empty_state.header"|translate,
+      message="task_orders.empty_state.message"|translate,
       button_link=url_for('task_orders.form_step_one_add_pdf', portfolio_id=portfolio.id),
-      button_text="Add Task Order",
-      view_only_text="Contact your portfolio administrator to add a Task Order.",
+      button_text="task_orders.empty_state.button_text"|translate,
+      view_only_text="task_orders.empty_state.view_only_text"|translate,
       user_can_create=user_can(permissions.CREATE_TASK_ORDER),
     ) }}
   {% endif %}

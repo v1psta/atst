@@ -17,9 +17,9 @@
     {{ EmptyState(
       header='portfolios.reports.empty_state.message' | translate,
       message=message,
-      button_text="Add a new application",
+      button_text="portfolios.applications.empty_state.button_text"|translate,
       button_link=url_for("applications.view_new_application_step_1", portfolio_id=portfolio.id),
-      view_only_text="Contact your portfolio administrator to create an application.",
+      view_only_text="portfolios.applications.empty_state.view_only_text"|translate,
       user_can_create=can_create_applications,
     ) }}
 

@@ -8,9 +8,11 @@
 
 {% block portfolio_content %}
 
-{% call StickyCTA(text="Applications") %}
+{% call StickyCTA(text="common.applications"|translate) %}
     {% if can_create_applications and portfolio.applications %}
-      <a href="{{ url_for("applications.view_new_application_step_1", portfolio_id=portfolio.id) }}" class="usa-button usa-button-primary">Create Application</a>
+      <a href="{{ url_for("applications.view_new_application_step_1", portfolio_id=portfolio.id) }}" class="usa-button usa-button-primary">
+        {{ "portfolios.applications.create_button"|translate }}
+      </a>
     {% endif %}
 {% endcall %}
 
@@ -20,11 +22,11 @@
   {% if not portfolio.applications %}
 
     {{ EmptyState(
-      header="You don't have any Applications yet",
-      message="You can manage multiple Applications within a single Portfolio as long as the funding sources are the same.",
-      button_text="Create Your First Application",
+      header="portfolios.applications.empty_state.header"|translate,
+      message="portfolios.applications.empty_state.message"|translate,
+      button_text="portfolios.applications.empty_state.button_text"|translate,
       button_link=url_for("applications.view_new_application_step_1", portfolio_id=portfolio.id),
-      view_only_text="Contact your portfolio administrator to add an application.",
+      view_only_text="portfolios.applications.empty_state.view_only_text"|translate,
       user_can_create=can_create_applications,
     ) }}
 
