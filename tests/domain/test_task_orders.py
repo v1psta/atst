@@ -96,7 +96,6 @@ def test_create_adds_clins():
         },
     ]
     task_order = TaskOrders.create(
-        creator=portfolio.owner,
         portfolio_id=portfolio.id,
         number="0123456789",
         clins=clins,
@@ -127,7 +126,6 @@ def test_update_adds_clins():
         },
     ]
     task_order = TaskOrders.create(
-        creator=task_order.creator,
         portfolio_id=task_order.portfolio_id,
         number="0000000000",
         clins=clins,

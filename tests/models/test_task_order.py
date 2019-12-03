@@ -76,7 +76,7 @@ class TestTaskOrderStatus:
     @patch("atst.models.TaskOrder.is_signed", new_callable=PropertyMock)
     def test_draft_status(self, is_signed, is_completed):
         # Given that I have a TO that is neither completed nor signed
-        to = TaskOrder()
+        to = TaskOrderFactory.create()
         is_signed.return_value = False
         is_completed.return_value = False
 
@@ -89,7 +89,7 @@ class TestTaskOrderStatus:
     def test_active_status(self, is_signed, is_completed, start_date, end_date):
         # Given that I have a signed TO and today is within its start_date and end_date
         today = pendulum.today().date()
-        to = TaskOrder()
+        to = TaskOrderFactory.create()
 
         start_date.return_value = today.subtract(days=1)
         end_date.return_value = today.add(days=1)
@@ -105,7 +105,7 @@ class TestTaskOrderStatus:
     @patch("atst.models.TaskOrder.is_signed", new_callable=PropertyMock)
     def test_upcoming_status(self, is_signed, is_completed, start_date, end_date):
         # Given that I have a signed TO and today is before its start_date
-        to = TaskOrder()
+        to = TaskOrderFactory.create()
         start_date.return_value = pendulum.today().add(days=1).date()
         end_date.return_value = pendulum.today().add(days=2).date()
         is_signed.return_value = True
@@ -120,7 +120,7 @@ class TestTaskOrderStatus:
     @patch("atst.models.TaskOrder.is_signed", new_callable=PropertyMock)
     def test_expired_status(self, is_signed, is_completed, end_date, start_date):
         # Given that I have a signed TO and today is after its expiration date
-        to = TaskOrder()
+        to = TaskOrderFactory.create()
         end_date.return_value = pendulum.today().subtract(days=1).date()
         start_date.return_value = pendulum.today().subtract(days=2).date()
         is_signed.return_value = True
@@ -143,7 +143,7 @@ class TestTaskOrderStatus:
 
 class TestBudget:
     def test_total_contract_amount(self):
-        to = TaskOrder()
+        to = TaskOrderFactory.create()
         assert to.total_contract_amount == 0
 
         clin1 = CLINFactory(task_order=to, jedi_clin_type=JEDICLINType.JEDI_CLIN_1)
@@ -156,7 +156,7 @@ class TestBudget:
         )
 
     def test_total_obligated_funds(self):
-        to = TaskOrder()
+        to = TaskOrderFactory.create()
         assert to.total_obligated_funds == 0
 
         clin1 = CLINFactory(task_order=to, jedi_clin_type=JEDICLINType.JEDI_CLIN_1)

@@ -20,14 +20,13 @@ def task_order():
     user = UserFactory.create()
     portfolio = PortfolioFactory.create(owner=user)
 
-    return TaskOrderFactory.create(creator=user, portfolio=portfolio)
+    return TaskOrderFactory.create(portfolio=portfolio)
 
 
 @pytest.fixture
 def completed_task_order():
     portfolio = PortfolioFactory.create()
     task_order = TaskOrderFactory.create(
-        creator=portfolio.owner,
         portfolio=portfolio,
         create_clins=[{"number": "1234567890123456789012345678901234567890123"}],
     )
@@ -68,7 +67,7 @@ def test_task_orders_submit_form_step_one_add_pdf(client, user_session, portfoli
 def test_task_orders_form_step_one_add_pdf_existing_to(
     client, user_session, task_order
 ):
-    user_session(task_order.creator)
+    user_session(task_order.portfolio.owner)
     response = client.get(
         url_for("task_orders.form_step_one_add_pdf", task_order_id=task_order.id)
     )
@@ -77,7 +76,7 @@ def test_task_orders_form_step_one_add_pdf_existing_to(
 
 def test_task_orders_submit_form_step_one_add_pdf_existing_to(client, user_session):
     task_order = TaskOrderFactory.create()
-    user_session(task_order.creator)
+    user_session(task_order.portfolio.owner)
     response = client.post(
         url_for(
             "task_orders.submit_form_step_one_add_pdf", task_order_id=task_order.id
@@ -140,7 +139,7 @@ def test_task_orders_submit_form_step_one_validates_object_name(
 
 
 def test_task_orders_form_step_two_add_number(client, user_session, task_order):
-    user_session(task_order.creator)
+    user_session(task_order.portfolio.owner)
     response = client.get(
         url_for("task_orders.form_step_two_add_number", task_order_id=task_order.id)
     )
@@ -148,7 +147,7 @@ def test_task_orders_form_step_two_add_number(client, user_session, task_order):
 
 
 def test_task_orders_submit_form_step_two_add_number(client, user_session, task_order):
-    user_session(task_order.creator)
+    user_session(task_order.portfolio.owner)
     form_data = {"number": "1234567890"}
     response = client.post(
         url_for(
@@ -164,7 +163,7 @@ def test_task_orders_submit_form_step_two_add_number(client, user_session, task_
 def test_task_orders_submit_form_step_two_add_number_existing_to(
     client, user_session, task_order
 ):
-    user_session(task_order.creator)
+    user_session(task_order.portfolio.owner)
     form_data = {"number": "0000000000"}
     original_number = task_order.number
     response = client.post(
@@ -179,7 +178,7 @@ def test_task_orders_submit_form_step_two_add_number_existing_to(
 
 
 def test_task_orders_form_step_three_add_clins(client, user_session, task_order):
-    user_session(task_order.creator)
+    user_session(task_order.portfolio.owner)
     response = client.get(
         url_for("task_orders.form_step_three_add_clins", task_order_id=task_order.id)
     )
@@ -187,7 +186,7 @@ def test_task_orders_form_step_three_add_clins(client, user_session, task_order)
 
 
 def test_task_orders_submit_form_step_three_add_clins(client, user_session, task_order):
-    user_session(task_order.creator)
+    user_session(task_order.portfolio.owner)
     form_data = {
         "clins-0-jedi_clin_type": "JEDI_CLIN_1",
         "clins-0-clin_number": "12312",
@@ -237,7 +236,7 @@ def test_task_orders_submit_form_step_three_add_clins_existing_to(
     TaskOrders.create_clins(task_order.id, clin_list)
     assert len(task_order.clins) == 2
 
-    user_session(task_order.creator)
+    user_session(task_order.portfolio.owner)
     form_data = {
         "clins-0-jedi_clin_type": "JEDI_CLIN_1",
         "clins-0-clin_number": "12312",
@@ -258,7 +257,7 @@ def test_task_orders_submit_form_step_three_add_clins_existing_to(
 
 
 def test_task_orders_form_step_four_review(client, user_session, completed_task_order):
-    user_session(completed_task_order.creator)
+    user_session(completed_task_order.portfolio.owner)
     response = client.get(
         url_for(
             "task_orders.form_step_four_review", task_order_id=completed_task_order.id
@@ -270,7 +269,7 @@ def test_task_orders_form_step_four_review(client, user_session, completed_task_
 def test_task_orders_form_step_four_review_incomplete_to(
     client, user_session, task_order
 ):
-    user_session(task_order.creator)
+    user_session(task_order.portfolio.owner)
     response = client.get(
         url_for("task_orders.form_step_four_review", task_order_id=task_order.id)
     )
@@ -280,7 +279,7 @@ def test_task_orders_form_step_four_review_incomplete_to(
 def test_task_orders_form_step_five_confirm_signature(
     client, user_session, completed_task_order
 ):
-    user_session(completed_task_order.creator)
+    user_session(completed_task_order.portfolio.owner)
     response = client.get(
         url_for(
             "task_orders.form_step_five_confirm_signature",
@@ -293,7 +292,7 @@ def test_task_orders_form_step_five_confirm_signature(
 def test_task_orders_form_step_five_confirm_signature_incomplete_to(
     client, user_session, task_order
 ):
-    user_session(task_order.creator)
+    user_session(task_order.portfolio.owner)
     response = client.get(
         url_for(
             "task_orders.form_step_five_confirm_signature", task_order_id=task_order.id
@@ -340,9 +339,7 @@ def test_task_orders_submit_task_order(client, user_session, task_order):
 def test_task_orders_edit_redirects_to_latest_incomplete_step(
     client, user_session, portfolio, to_factory_args, expected_step
 ):
-    task_order = TaskOrderFactory.create(
-        portfolio=portfolio, creator=portfolio.owner, **to_factory_args
-    )
+    task_order = TaskOrderFactory.create(portfolio=portfolio, **to_factory_args)
     user_session(portfolio.owner)
 
     response = client.get(url_for("task_orders.edit", task_order_id=task_order.id))
@@ -414,8 +411,7 @@ def test_task_orders_update_invalid_data(client, user_session, portfolio):
 
 @pytest.mark.skip(reason="Update after implementing errors on TO form")
 def test_task_order_form_shows_errors(client, user_session, task_order):
-    creator = task_order.creator
-    user_session(creator)
+    user_session(task_order.portfolio.owner)
 
     task_order_data = TaskOrderFactory.dictionary()
     funding_data = slice_data_for_section(task_order_data, "funding")

@@ -7,7 +7,7 @@ from wtforms.fields import (
     HiddenField,
 )
 from wtforms.fields.html5 import DateField
-from wtforms.validators import Required, Optional, Length, NumberRange, ValidationError
+from wtforms.validators import Required, Length, NumberRange, ValidationError
 from flask_wtf import FlaskForm
 from numbers import Number
 
@@ -61,9 +61,7 @@ class CLINForm(FlaskForm):
         coerce=coerce_enum,
     )
 
-    number = StringField(
-        label=translate("task_orders.form.clin_number_label"), validators=[Optional()]
-    )
+    number = StringField(label=translate("task_orders.form.clin_number_label"))
     start_date = DateField(
         translate("task_orders.form.pop_start"),
         description=translate("task_orders.form.pop_example"),

@@ -30,6 +30,8 @@ from atst.domain.users import Users
 
 from atst.routes.dev import _DEV_USERS as DEV_USERS
 
+from atst.utils import pick
+
 from tests.factories import (
     random_service_branch,
     TaskOrderFactory,
@@ -238,6 +240,7 @@ def add_applications_to_portfolio(portfolio):
                     None,
                     first_name=user_data["first_name"],
                     last_name=user_data["last_name"],
+                    email=user_data["email"],
                 )
 
             app_role = ApplicationRoles.create(
@@ -263,7 +266,23 @@ def add_applications_to_portfolio(portfolio):
 
 def create_demo_portfolio(name, data):
     try:
-        portfolio_owner = Users.get_or_create_by_dod_id("2345678901")  # Amanda
+        portfolio_owner = Users.get_or_create_by_dod_id(
+            "2345678901",
+            **pick(
+                [
+                    "permission_sets",
+                    "first_name",
+                    "last_name",
+                    "email",
+                    "service_branch",
+                    "phone_number",
+                    "citizenship",
+                    "designation",
+                    "date_latest_training",
+                ],
+                DEV_USERS["amanda"],
+            ),
+        )  # Amanda
         # auditor = Users.get_by_dod_id("3453453453")  # Sally
     except NotFoundError:
         print(

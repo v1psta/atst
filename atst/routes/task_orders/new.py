@@ -66,7 +66,7 @@ def update_task_order(
             task_order = TaskOrders.update(task_order_id, **form.data)
             portfolio_id = task_order.portfolio_id
         else:
-            task_order = TaskOrders.create(g.current_user, portfolio_id, **form.data)
+            task_order = TaskOrders.create(portfolio_id, **form.data)
 
         return redirect(url_for(next_page, task_order_id=task_order.id))
     else:
@@ -181,9 +181,7 @@ def cancel_edit(task_order_id=None, portfolio_id=None):
             if task_order_id:
                 task_order = TaskOrders.update(task_order_id, **form.data)
             else:
-                task_order = TaskOrders.create(
-                    g.current_user, portfolio_id, **form.data
-                )
+                task_order = TaskOrders.create(portfolio_id, **form.data)
     elif not save and task_order_id:
         TaskOrders.delete(task_order_id)
 
