@@ -93,9 +93,9 @@
 {% endmacro %}
 
 
-{% call StickyCTA(text="Funding") %}
-    {% if user_can(permissions.CREATE_TASK_ORDER) %}
-      <a href="{{ url_for("task_orders.form_step_one_add_pdf", portfolio_id=portfolio.id) }}" class="usa-button usa-button-primary" type="submit">Start a new task order</a>
+{% call StickyCTA(text="Task Orders") %}
+    {% if user_can(permissions.CREATE_TASK_ORDER) and task_orders %}
+      <a href="{{ url_for("task_orders.form_step_one_add_pdf", portfolio_id=portfolio.id) }}" class="usa-button usa-button-primary">Add New Task Order</a>
     {% endif %}
 {% endcall %}
 

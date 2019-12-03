@@ -1,5 +1,6 @@
 {% from "components/icon.html" import Icon %}
 {% from "components/empty_state.html" import EmptyState %}
+{% from "components/sticky_cta.html" import StickyCTA %}
 
 {% extends "portfolios/base.html" %}
 
@@ -7,19 +8,14 @@
 
 {% block portfolio_content %}
 
+{% call StickyCTA(text="Applications") %}
+    {% if can_create_applications and portfolio.applications %}
+      <a href="{{ url_for("applications.view_new_application_step_1", portfolio_id=portfolio.id) }}" class="usa-button usa-button-primary">Create Application</a>
+    {% endif %}
+{% endcall %}
+
 <div class='portfolio-applications'>
   {% include "fragments/flash.html" %}
-  <div class='portfolio-applications__header row'>
-    <div class='portfolio-applications__header--title col col--grow'>Applications</div>
-    <div class='portfolio-applications__header--actions col'>
-      {% if can_create_applications %}
-        <a class='icon-link' href='{{ url_for('applications.view_new_application_step_1', portfolio_id=portfolio.id) }}'>
-          {{ 'portfolios.applications.add_application_text' | translate }}
-          {{ Icon("plus", classes="sidenav__link-icon") }}
-        </a>
-      {% endif %}
-    </div>
-  </div>
 
   {% if not portfolio.applications %}
 
