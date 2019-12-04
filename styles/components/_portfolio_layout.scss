@@ -383,6 +383,8 @@
 }
 
 .portfolio-applications {
+  margin-top: $gap * 5;
+
   &__header {
     &--title {
       @include subheading;

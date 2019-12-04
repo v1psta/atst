@@ -1,28 +1,20 @@
 .empty-state {
-  text-align: center;
-  padding: 5rem ($gap * 2) 2rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  padding: $gap * 3;
   max-width: 100%;
+  background-color: $color-gray-lightest;
+  margin-top: $gap * 5;
 
-  > .icon {
-    @include icon-size(50);
-    @include icon-color($color-gray-light);
+  hr {
+    margin-left: -$gap * 3;
+    margin-right: -$gap * 3;
   }
 
-  &__message {
-    font-weight: $font-bold;
-  }
+  &__footer {
+    text-align: center;
 
-  &__sub-message {
-    @include h4;
-
-    color: $color-gray;
-    max-width: 100%;
-
-    @include media($large-screen) {
-      @include h3;
+    a.usa-button {
+      width: 60%;
+      display: inline-block;
     }
   }
 }

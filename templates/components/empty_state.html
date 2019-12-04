@@ -1,20 +1,14 @@
-{% from "components/icon.html" import Icon %}
-
-{% macro EmptyState(message, action_label, action_href, icon=None, sub_message=None, add_perms=True) -%}
-  <div class='empty-state'>
-    <p class='empty-state__message'>{{ message }}</p>
-
-    {% if icon %}
-      {{ Icon(icon) }}
-    {% endif %}
-
-    {% if sub_message %}
-      <p class='empty-state__sub-message'>{{ sub_message }}</p>
-    {% endif %}
-
-    {% if add_perms and (action_href and action_label) %}
-      <a href='{{ action_href }}' class='usa-button usa-button-big'>{{ action_label }}</a>
-    {% endif %}
-
+{% macro EmptyState(header, message, button_text, button_link, view_only_text, user_can_create=True) %}
+  <div class="empty-state">
+    <h3>{{ header }}</h3>
+    <p>{{ message }}</p>
+    <hr>
+    <div class="empty-state__footer">
+      {% if user_can_create %}
+        <a href="{{ button_link }}" class="usa-button usa-button-primary">{{ button_text }}</a>
+      {% else %}
+        <p>{{ view_only_text }}</p>
+      {% endif %}
+    </div>
   </div>
-{%- endmacro %}
+{% endmacro %}
