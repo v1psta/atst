@@ -30,7 +30,7 @@ commands:
         default: atat_test
       container_env:
         type: string
-        default: -e PGHOST=postgres -e REDIS_URI=redis://redis:6379
+        default: -e PGHOST=postgres -e REDIS_HOST=redis:6379
     steps:
       - run:
           name: Set up temporary docker network
@@ -172,7 +172,7 @@ jobs:
           command: |
             docker run \
               -e PGHOST=postgres \
-              -e REDIS_URI=redis://redis:6379 \
+              -e REDIS_HOST=redis:6379 \
               --network atat \
               atat:builder \
               /bin/sh -c "pipenv install --dev && /bin/sh script/cibuild"
