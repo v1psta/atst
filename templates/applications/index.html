@@ -37,20 +37,20 @@
         {% set section_name = "application-{}".format(application.id) %}
 
         <toggler inline-template>
-          <div class='accordion application-list-item'>
-            <header class='accordion__header row'>
+          <div class='application-list-item'>
+            <header class='row'>
               <div class='col col-grow'>
-                <h3 class='icon-link accordion__title' v-on:click="toggleSection('{{ section_name }}')">{{ application.name }}</h3>
-                <p class='accordion__description'>
+                <h3 class='icon-link' v-on:click="toggleSection('{{ section_name }}')">{{ application.name }}</h3>
+                <p class=''>
                   {{ application.description }}
                 </p>
-                <div class='accordion__actions'>
+                <div class=''>
                   <a class='icon-link' href='{{ url_for("applications.settings", application_id=application.id) }}'>
                     <span>{{ "portfolios.applications.app_settings_text" | translate }}</span>
                   </a>
                   <div class='separator'></div>
                   {% set has_environments = 0 < (application.environments|length) %}
-                  <a class='icon-link triangle-box' v-on:click="toggleSection('{{ section_name }}')" disabled="{{ not has_environments }}">
+                  <a class='icon-link' v-on:click="toggleSection('{{ section_name }}')" disabled="{{ not has_environments }}">
                     <span>Environments ({{ application.environments|length }})</span>
                     {% if has_environments %}
                       <span v-if="selectedSection === '{{ section_name }}'">
@@ -59,7 +59,7 @@
                       <span v-else>
                         {{ Icon('caret_down') }}
                       </span>
-                      <div class="triangle-up" v-if="selectedSection === '{{ section_name }}'"></div>
+                      <div class="" v-if="selectedSection === '{{ section_name }}'"></div>
                     {% endif %}
                   </a>
                 </div>
@@ -67,7 +67,7 @@
             </header>
             <ul v-show="selectedSection === '{{ section_name }}'">
               {% for environment in application.environments %}
-                <li class='accordion__item application-list-item__environment'>
+                <li class='application-list-item__environment'>
                   <div class='application-list-item__environment__name'>
                     <span>{{ environment.displayname }}</span>
                   </div>
