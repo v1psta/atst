@@ -223,19 +223,23 @@ def make_config(direct_config=None):
         config.read_dict({"default": direct_config})
 
     # Assemble DATABASE_URI value
-    database_uri = (
-        "postgres://"
-        + config.get("default", "PGUSER")
-        + ":"
-        + config.get("default", "PGPASSWORD")
-        + "@"
-        + config.get("default", "PGHOST")
-        + ":"
-        + config.get("default", "PGPORT")
-        + "/"
-        + config.get("default", "PGDATABASE")
+    database_uri = "postgres://{}:{}@{}:{}/{}".format(  # pragma: allowlist secret
+        config.get("default", "PGUSER"),
+        config.get("default", "PGPASSWORD"),
+        config.get("default", "PGHOST"),
+        config.get("default", "PGPORT"),
+        config.get("default", "PGDATABASE"),
     )
     config.set("default", "DATABASE_URI", database_uri)
+
+    # Assemble REDIS_URI value
+    redis_uri = "redis{}://{}:{}@{}".format(  # pragma: allowlist secret
+        ("s" if config["default"].getboolean("REDIS_TLS") else ""),
+        (config.get("default", "REDIS_USER") or ""),
+        (config.get("default", "REDIS_PASSWORD") or ""),
+        config.get("default", "REDIS_HOST"),
+    )
+    config.set("default", "REDIS_URI", redis_uri)
 
     return map_config(config)
 
