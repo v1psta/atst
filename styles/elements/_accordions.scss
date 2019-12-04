@@ -1,14 +1,11 @@
 .accordion {
+  @include shadow-panel;
+
   &__header {
     margin: 0;
   }
 
-  ul {
-    margin: 0;
-    list-style: none;
-
-    li {
-      background-color: $color-white;
-    }
+  &__content {
+    padding: 0 ($gap * 3) $gap;
   }
 }

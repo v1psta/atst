@@ -8,8 +8,8 @@
   content_tag="div",
   content_classes="") %}
   <accordion v-cloak inline-template>
-    <{{wrapper_tag}} class="{{ wrapper_classes }}">
-      <{{heading_tag}} class="{{ heading_classes }}">
+    <{{wrapper_tag}} class="usa-accordion accordion {{ wrapper_classes }}">
+      <{{heading_tag}} class="accordion__header {{ heading_classes }}">
         <button
           v-on:click="toggle($event)" 
           class="usa-accordion-button"
@@ -20,8 +20,8 @@
         </button>
       </{{heading_tag}}>
       <{{content_tag}}
-        id="{{ id }}" 
-        class="usa-accordion-content {{ content_classes }}"  
+        id="{{ id }}"
+        class="usa-accordion-content accordion__content {{ content_classes }}"
         v-bind:aria-hidden="isVisible ? 'false' : 'true'">
         {{ caller() }}
       </{{content_tag}}>

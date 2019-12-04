@@ -15,13 +15,35 @@
 {% macro TaskOrderList(task_orders, status) %}
   {% set status = "All Task Orders" %}
   <section class="task-order__list">
-    {% call Accordion(title=status, id=status, heading_tag="h4", content_tag="ul") %}
+    {% call Accordion(title=status, id=status, heading_tag="h4") %}
       {% for task_order in task_orders %}
-        <li class="">
-          <h4><a href="{{ url_for('task_orders.review_task_order', task_order_id=task_order.id) }}">Task Order #{{ task_order.number }}</a></h4>
-          <b>Total amount: </b>{{ task_order.total_contract_amount | dollars }}
-          <b>Obligated amount: </b>{{ task_order.total_obligated_funds | dollars }}
-        </li>
+        <div class="task-order__list--item">
+          <h4><a href="{{ url_for('task_orders.review_task_order', task_order_id=task_order.id) }}">Task Order #{{ task_order.number }} {{ Icon("caret_right", classes="icon--tiny icon--blue" ) }}</a></h4>
+          <div class="row">
+            <div class="col col--grow">
+              <h5>
+                Current Period of Performance
+              </h5>
+              <p>
+                {{ task_order.start_date | formattedDate(formatter="%b %d, %Y") }}
+                -
+                {{ task_order.end_date | formattedDate(formatter="%b %d, %Y") }}
+              </p>
+            </div>
+            <div class="col col--grow">
+              <h5>Total Value</h5>
+              <p>{{ task_order.total_contract_amount | dollars }}</p>
+            </div>
+            <div class="col col--grow">
+              <h5>Total Obligated</h5>
+              <p>{{ task_order.total_obligated_funds | dollars }}</p>
+            </div>
+            <div class="col col--grow">
+              <h5>Total Expended</h5>
+              <p>$0</p>
+            </div>
+          </div>
+        </div>
       {% endfor %}
     {% endcall %}
   </section>

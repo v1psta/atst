@@ -189,4 +189,28 @@
 .task-order__list {
   margin-top: $gap;
   margin-bottom: $gap;
+  max-width: $max-panel-width;
+
+  &--item {
+    border-bottom: 1px solid $color-gray-lightest;
+
+    &:last-child {
+      border-bottom: none;
+      padding-bottom: $gap;
+    }
+
+    .col {
+      padding-right: $gap * 2;
+    }
+
+    h4 {
+      margin: $gap * 2 0 $gap;
+    }
+
+    h5 {
+      font-size: 1rem;
+      color: $color-gray;
+      margin: 0;
+    }
+  }
 }
