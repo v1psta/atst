@@ -195,7 +195,7 @@ jobs:
             docker run -d \
             -e DISABLE_CRL_CHECK=true \
             -e PGHOST=postgres \
-            -e REDIS_URI=redis://redis:6379 \
+            -e REDIS_HOST=redis:6379 \
             -p 8000:8000 \
             --network atat \
             --name test-atat \
@@ -253,7 +253,7 @@ jobs:
           command: |
             docker run \
               -e PGHOST=postgres \
-              -e REDIS_URI=redis://redis:6379 \
+              -e REDIS_HOST=redis:6379 \
               --network atat \
               atat:builder \
               /bin/sh -c "pipenv install --dev && /bin/sh script/sync-crls && pipenv run pytest --no-cov tests/check_crl_parse.py"
