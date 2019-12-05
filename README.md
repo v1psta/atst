@@ -168,12 +168,7 @@ Testing file uploads and downloads locally requires a few configuration options.
 In the flask config (`config/base.ini`, perhaps):
 
 ```
-CSP=<aws | azure | mock>
-
-AWS_REGION_NAME=""
-AWS_ACCESS_KEY=""
-AWS_SECRET_KEY=""
-AWS_BUCKET_NAME=""
+CSP=< azure | mock>
 
 AZURE_STORAGE_KEY=""
 AZURE_ACCOUNT_NAME=""
@@ -183,7 +178,7 @@ AZURE_TO_BUCKET_NAME=""
 There are also some build-time configuration that are used by parcel. Add these to `.env.local`, and run `rm -r .cache/` before running `yarn build`:
 
 ```
-CLOUD_PROVIDER=<aws | azure | mock>
+CLOUD_PROVIDER=<azure | mock>
 AZURE_ACCOUNT_NAME=""
 AZURE_CONTAINER_NAME=""
 ```
@@ -223,6 +218,9 @@ To generate coverage reports for the Javascript tests:
 ## Configuration
 
 - `ASSETS_URL`: URL to host which serves static assets (such as a CDN).
+- `AZURE_ACCOUNT_NAME`: The name for the Azure blob storage account
+- `AZURE_STORAGE_KEY`: A valid secret key for the Azure blob storage account
+- `AZURE_TO_BUCKET_NAME`: The Azure blob storage container name for task order uploads
 - `BLOB_STORAGE_URL`: URL to Azure blob storage container.
 - `CAC_URL`: URL for the CAC authentication route.
 - `CA_CHAIN`: Path to the CA chain file.
@@ -238,6 +236,11 @@ To generate coverage reports for the Javascript tests:
 - `ENVIRONMENT`: String specifying the current environment. Acceptable values: "dev", "prod".
 - `LIMIT_CONCURRENT_SESSIONS`: Boolean specifying if users should be allowed only one active session at a time.
 - `LOG_JSON`: Boolean specifying whether app should log in a json format.
+- `MAIL_PASSWORD`: String. Password for the SMTP server.
+- `MAIL_PORT`: Integer. Port to use on the SMTP server.
+- `MAIL_SENDER`: String. Email address to send outgoing mail from.
+- `MAIL_SERVER`: The SMTP host
+- `MAIL_TLS`: Boolean. Use TLS to connect to the SMTP server.
 - `PERMANENT_SESSION_LIFETIME`: Integer specifying how many seconds a user's session can stay valid for. https://flask.palletsprojects.com/en/1.1.x/config/#PERMANENT_SESSION_LIFETIME
 - `PGDATABASE`: String specifying the name of the postgres database.
 - `PGHOST`: String specifying the hostname of the postgres database.
