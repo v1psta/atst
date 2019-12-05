@@ -50,6 +50,8 @@ spec:
             - name: uwsgi-config
               mountPath: "/opt/atat/atst/uwsgi.ini"
               subPath: uwsgi.ini
+            - name: flask-secret
+              mountPath: "/config"
         - name: nginx
           image: nginx:alpine
           ports:
@@ -141,6 +143,16 @@ spec:
               keyvaultobjectaliases: "dhparam.pem;atat.key;atat.crt"
               keyvaultobjecttypes: "secret;secret;secret"
               tenantid: $TENANT_ID
+        - name: flask-secret
+          flexVolume:
+            driver: "azure/kv"
+            options:
+              usepodidentity: "true"
+              keyvaultname: "atat-vault-test"
+              keyvaultobjectnames: "master-AZURE-STORAGE-KEY;master-MAIL-PASSWORD;master-PGPASSWORD;master-REDIS-PASSWORD;master-SECRET-KEY"
+              keyvaultobjectaliases: "AZURE_STORAGE_KEY;MAIL_PASSWORD;PGPASSWORD;REDIS_PASSWORD;SECRET_KEY"
+              keyvaultobjecttypes: "secret;secret;secret;secret;key"
+              tenantid: $TENANT_ID
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
@@ -161,6 +173,7 @@ spec:
       labels:
         app: atst
         role: worker
+        aadpodidbinding: atat-kv-id-binding
     spec:
       securityContext:
         fsGroup: 101
@@ -188,6 +201,8 @@ spec:
             - name: pgsslrootcert
               mountPath: "/opt/atat/atst/ssl/pgsslrootcert.crt"
               subPath: pgsslrootcert.crt
+            - name: flask-secret
+              mountPath: "/config"
       volumes:
         - name: atst-config
           secret:
@@ -203,6 +218,16 @@ spec:
               - key: cert
                 path: pgsslrootcert.crt
                 mode: 0666
+        - name: flask-secret
+          flexVolume:
+            driver: "azure/kv"
+            options:
+              usepodidentity: "true"
+              keyvaultname: "atat-vault-test"
+              keyvaultobjectnames: "master-AZURE-STORAGE-KEY;master-MAIL-PASSWORD;master-PGPASSWORD;master-REDIS-PASSWORD;master-SECRET-KEY"
+              keyvaultobjectaliases: "AZURE_STORAGE_KEY;MAIL_PASSWORD;PGPASSWORD;REDIS_PASSWORD;SECRET_KEY"
+              keyvaultobjecttypes: "secret;secret;secret;secret;key"
+              tenantid: $TENANT_ID
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
@@ -223,6 +248,7 @@ spec:
       labels:
         app: atst
         role: beat
+        aadpodidbinding: atat-kv-id-binding
     spec:
       securityContext:
         fsGroup: 101
@@ -250,6 +276,8 @@ spec:
             - name: pgsslrootcert
               mountPath: "/opt/atat/atst/ssl/pgsslrootcert.crt"
               subPath: pgsslrootcert.crt
+            - name: flask-secret
+              mountPath: "/config"
       volumes:
         - name: atst-config
           secret:
@@ -265,6 +293,16 @@ spec:
               - key: cert
                 path: pgsslrootcert.crt
                 mode: 0666
+        - name: flask-secret
+          flexVolume:
+            driver: "azure/kv"
+            options:
+              usepodidentity: "true"
+              keyvaultname: "atat-vault-test"
+              keyvaultobjectnames: "master-AZURE-STORAGE-KEY;master-MAIL-PASSWORD;master-PGPASSWORD;master-REDIS-PASSWORD;master-SECRET-KEY"
+              keyvaultobjectaliases: "AZURE_STORAGE_KEY;MAIL_PASSWORD;PGPASSWORD;REDIS_PASSWORD;SECRET_KEY"
+              keyvaultobjecttypes: "secret;secret;secret;secret;key"
+              tenantid: $TENANT_ID
 ---
 apiVersion: v1
 kind: Service
