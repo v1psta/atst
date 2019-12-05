@@ -30,7 +30,7 @@ QA lead monitors all failures on the CI suite and determines that such a change 
 the Ghost Inspector UI.
 
 3. If the (potentially) failing test will need to be reworked to account for functional changes, the test is moved from the CI
-suite to the "Holding" suite until the PR is merged. Then the test can be edited and returned to the CI suite. 
+suite to the "Holding" suite until the PR is merged. Then the test can be edited and returned to the CI suite.
 
 ## Running Ghost Inspector tests locally
 
@@ -38,26 +38,26 @@ To run the Ghost Inspector tests against a local instance of AT-AT,
 you will need the following:
 
 - [docker](https://docs.docker.com/v17.12/install/)
-- [circleci CLI tool](https://circleci.com/docs/2.0/local-cli/#installation)
-- the prerequisite variable information listed [here](https://ghostinspector.com/docs/integration/circle-ci/)
+- the prerequisite variable information listed [here](https://ghostinspector.com/docs/integration/circle-ci/): NGROK_TOKEN, GI_API_KEY, GI_SUITE
 
-The version of our CircleCI config (2.1) is incompatible with the
-`circleci` tool. First run:
+First you will need to build a copy of the container:
 
 ```
-circleci config process .circleci/config.yml > local-ci.yml
+docker build . --build-arg CSP=azure -f ./Dockerfile -t atat:builder --target builder
 ```
 
-Then run the job:
+This builds the first stage of the docker container, which is the one we need to run integration tests. You can tag the container whatever you want; in the example we've tagged it "atat:builder".
+
+Then you can run the integration tests script. You will need four environment variables set: the three mentioned previously and CONTAINER_IMAGE. You can either export them or set them inline in the command you use to run the script. In the example we'll set them inline:
 
 ```
-circleci local execute -e GI_SUITE=<SUITE_ID> -e GI_API_KEY=<API KEY> -e NGROK_TOKEN=<NGROK TOKEN> --job integration-tests -c local-ci.yml
+NGROK_TOKEN=<token> GI_API_KEY=<api key> GI_SUITE=<suite> CONTAINER_IMAGE=atat:builder ./script/integration_tests
 ```
 
-If the job fails and you want to re-run it, you may receive errors
-about running docker containers or the network already existing.
-Some version of the following should reset your local docker state:
+### Troubleshooting
 
-```
-docker container stop redis postgres test-atat; docker container rm redis postgres test-atat ; docker network rm atat
-```
+- If you get errors regarding ports being in use, make sure you don't have instances of the Flask app, Postgres, or Redis running locally using those ports.
+- If the curl command used to wait for the application container times out and fails, you can increase the timeout by setting a CONTAINER_TIMEOUT environment variable. It defaults to 200 in the script.
+- The curl command will print errors until it successfully connects to the application container. These are normal and expected. When it finally connects, it will print the ATAT home page HTML to STDOUT.
+- You may see errors like "No such container". The script attempts to clean up any previous incarnations of the containers before it starts, and it may print errors when it doesn't find them. This is fine.
+- The script is, for the most part, a series of docker commands, so try running the commands individually and debugging that way.
