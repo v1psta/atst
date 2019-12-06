@@ -136,3 +136,21 @@ def test_get_for_update(application_role, environment):
     assert role.application_role == application_role
     assert role.environment == environment
     assert role.deleted
+
+
+def test_for_user(application_role, environment):
+    portfolio = application_role.application.portfolio
+    user = application_role.user
+    # create roles for 2 environments
+    env_role = EnvironmentRoleFactory.create(
+        application_role=application_role, environment=environment
+    )
+    env_role1 = EnvironmentRoleFactory.create(application_role=application_role)
+    # create role for environment in a different app in same portfolio
+    app2 = ApplicationFactory.create(portfolio=portfolio)
+    app_role2 = ApplicationRoleFactory.create(application=app2, user=user)
+    env_role2 = EnvironmentRoleFactory.create(application_role=app_role2)
+    env_roles = EnvironmentRoles.for_user(user.id, portfolio.id)
+    assert len(env_roles) == 3
+    for role in [env_role, env_role1, env_role2]:
+        assert role in env_roles

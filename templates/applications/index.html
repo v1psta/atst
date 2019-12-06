@@ -52,11 +52,11 @@
             heading_tag="h4"
           ) %}
           {% for environment in application.environments %}
-            {{ environment.id }}
+            {% set env_access = environment_access[environment.id] %}
             <div class="accordion__content--list-item">
               <div class="row">
                 <div class="col col--grow">
-                  {% if g.current_user in environment.users %}
+                  {% if env_access %}
                     <a href='{{ url_for("applications.access_environment", environment_id=environment.id)}}' target='_blank' rel='noopener noreferrer'>
                       {{ environment.displayname }} {{ Icon('link', classes='icon--medium icon--primary') }}
                     </a>
@@ -64,9 +64,9 @@
                     {{ environment.displayname }}
                   {% endif %}
                 </div>
-                {% if g.current_user in environment.users %}
+                {% if env_access %}
                   <div class="col">
-                    Your env role here!
+                    {{ env_access }}
                   </div>
                 {% endif %}
               </div>
