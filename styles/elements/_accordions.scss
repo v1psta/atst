@@ -2,6 +2,7 @@
   @include shadow-panel;
   margin: $gap * 3 0;
   max-width: $max-panel-width;
+  background-color: $color-white;
 
   &__header {
     padding: $gap * 2 $gap * 3;
