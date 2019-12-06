@@ -1,17 +1,17 @@
 {% macro Accordion(
-  title, 
-  id, 
-  wrapper_tag="div", 
+  title,
+  id,
+  wrapper_tag="div",
   wrapper_classes="",
   heading_tag="h2",
   heading_classes="",
   content_tag="div",
   content_classes="") %}
   <accordion v-cloak inline-template>
-    <{{wrapper_tag}} class="usa-accordion accordion {{ wrapper_classes }}">
-      <{{heading_tag}} class="accordion__header {{ heading_classes }}">
+    <{{wrapper_tag}} class="usa-accordion {{ wrapper_classes }}">
+      <{{heading_tag}} class="accordion__button {{ heading_classes }}">
         <button
-          v-on:click="toggle($event)" 
+          v-on:click="toggle($event)"
           class="usa-accordion-button"
           aria-controls="{{ id }}"
           v-bind:aria-expanded= "isVisible ? 'true' : 'false'"
