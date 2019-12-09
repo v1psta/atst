@@ -35,13 +35,13 @@
                 <div>{{ ("{}".format(clin.jedi_clin_type) | translate)[15:] }}</div>
               </td>
               <td>
-                {{ clin.period_of_performance.start_date | formattedDate(formatter="%b %d, %Y") }}
+                {{ clin.start_date | formattedDate(formatter="%b %d, %Y") }}
                 - 
-                {{ clin.period_of_performance.end_date | formattedDate(formatter="%b %d, %Y") }}
+                {{ clin.end_date | formattedDate(formatter="%b %d, %Y") }}
               </td>
-              <td>{{ clin.total_value | dollars }}</td>
-              <td>{{ clin.total_obligated_funds | dollars }}</td>
-              <td>{{ (clin.total_obligated_funds - clin.expended_funds) | dollars }}</td>
+              <td>{{ clin.total_amount | dollars }}</td>
+              <td>{{ clin.obligated_amount | dollars }}</td>
+              <td>{{ 0 | dollars }}</td>
             <tr>
           {% endfor %}
         {% endfor %}  

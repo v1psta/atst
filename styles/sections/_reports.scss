@@ -16,6 +16,16 @@
   }
 
   .jedi-clin-funding {
+    $insufficient-gradient: repeating-linear-gradient(
+      45deg,
+      $color-secondary-dark,
+      $color-secondary-dark 10px,
+      $color-secondary-darkest 11px,
+      $color-secondary-darkest 14px
+    );
+
+    $graph-bar-height: 2rem;
+
     padding-top: $gap * 3;
     padding-bottom: $gap * 3;
 
@@ -37,14 +47,36 @@
       margin: 0;
     }
 
-    &__meter {
-      margin: 10px 0;
-      -moz-transform: scale(-1, 1);
-      -webkit-transform: scale(-1, 1);
-      -o-transform: scale(-1, 1);
-      -ms-transform: scale(-1, 1);
-      transform: scale(-1, 1);
+    &__graph {
       width: 100%;
+      height: $graph-bar-height;
+      margin-top: $gap * 2;
+      margin-bottom: $gap * 2;
+      display: flex;
+
+      &-bar {
+        height: 100%;
+        display: block;
+        float: left;
+        margin-right: $gap / 2;
+
+        &:last-child {
+          margin-right: 0;
+        }
+
+        &--invoiced {
+          background: $color-green;
+        }
+        &--estimated {
+          background: $color-green-lighter;
+        }
+        &--remaining {
+          background: $color-primary-darkest;
+        }
+        &--insufficient {
+          background: $insufficient-gradient;
+        }
+      }
 
       &-values {
         display: flex;
@@ -52,13 +84,32 @@
     }
 
     &__meta {
-      &--remaining {
-        margin-left: auto;
-        text-align: right;
-      }
+      margin-right: $gap * 5;
+
       &-header {
         @include small-copy;
         margin-bottom: 0;
+        display: flex;
+        align-items: center;
+      }
+
+      &-key {
+        height: $graph-bar-height;
+        width: $graph-bar-height;
+        margin-right: $gap / 2;
+
+        &--invoiced {
+          background: $color-green;
+        }
+        &--estimated {
+          background: $color-green-lighter;
+        }
+        &--remaining {
+          background: $color-primary-darkest;
+        }
+        &--insufficient {
+          background: $insufficient-gradient;
+        }
       }
       &-value {
         margin-bottom: 0;
