@@ -300,9 +300,9 @@ def create_demo_portfolio(name, data):
 
     for mock_application in data["applications"]:
         application = Application(
-            portfolio=portfolio, name=mock_application.name, description=""
+            portfolio=portfolio, name=mock_application["name"], description=""
         )
-        env_names = [env.name for env in mock_application.environments]
+        env_names = [env["name"] for env in mock_application["environments"]]
         envs = Environments.create_many(portfolio.owner, application, env_names)
         db.session.add(application)
         db.session.commit()
@@ -313,8 +313,8 @@ def seed_db():
     amanda = Users.get_by_dod_id("2345678901")
 
     # Create Portfolios for Amanda with mocked reporting data
-    create_demo_portfolio("A-Wing", MockReportingProvider.REPORT_FIXTURE_MAP["A-Wing"])
-    create_demo_portfolio("B-Wing", MockReportingProvider.REPORT_FIXTURE_MAP["B-Wing"])
+    create_demo_portfolio("A-Wing", MockReportingProvider.FIXTURE_SPEND_DATA["A-Wing"])
+    create_demo_portfolio("B-Wing", MockReportingProvider.FIXTURE_SPEND_DATA["B-Wing"])
 
     tie_interceptor = Portfolios.create(
         user=amanda,
