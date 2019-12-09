@@ -4,7 +4,7 @@
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="selenium.base" href="" />
-<title>Edit App Member</title>
+<title>Resend App Member Invite</title>
 <meta name="ghost-inspector-details" content="" />
 <meta name="ghost-inspector-browser" content="chrome" />
 <meta name="ghost-inspector-userAgent" content="" />
@@ -22,7 +22,7 @@
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
 <tr>
-<td rowspan="1" colspan="3">Edit App Member</td>
+<td rowspan="1" colspan="3">Resend App Member Invite</td>
 </tr>
 </thead>
 <tbody>
@@ -1203,13 +1203,13 @@ Imported from: AT-AT CI - New App Step 3-->
 </tr>
 <tr>
 <td>waitForElementPresent</td>
-<td>css=.accordion-table__item-toggle-content > a:nth-of-type(1)</td>
+<td>css=.accordion-table__item-toggle-content > a:nth-of-type(2)</td>
 <td></td>
 </tr>
 <tr>
 <td>assertText</td>
-<td>css=.accordion-table__item-toggle-content > a:nth-of-type(1)</td>
-<td>*Edit Roles and Permissions*</td>
+<td>css=.accordion-table__item-toggle-content > a:nth-of-type(2)</td>
+<td>*Resend Invite*</td>
 </tr>
 <tr>
 <td>waitForPageToLoad</td>
@@ -1218,12 +1218,12 @@ Imported from: AT-AT CI - New App Step 3-->
 </tr>
 <tr>
 <td>waitForElementPresent</td>
-<td>css=.accordion-table__item-toggle-content > a:nth-of-type(1)</td>
+<td>css=.accordion-table__item-toggle-content > a:nth-of-type(2)</td>
 <td></td>
 </tr>
 <tr>
 <td>click</td>
-<td>css=.accordion-table__item-toggle-content > a:nth-of-type(1)</td>
+<td>css=.accordion-table__item-toggle-content > a:nth-of-type(2)</td>
 <td></td>
 </tr>
 <tr>
@@ -1233,13 +1233,13 @@ Imported from: AT-AT CI - New App Step 3-->
 </tr>
 <tr>
 <td>waitForElementPresent</td>
-<td>css=.panel > div:nth-of-type(1) > .modal.form-content--app-mem > .modal__container > .modal__dialog > .modal__body > .modal__form--header > h1</td>
+<td>css=.panel > div:nth-of-type(2) > .modal.form-content--app-mem > .modal__container > .modal__dialog > .modal__body > .modal__form--header > h1</td>
 <td></td>
 </tr>
 <tr>
 <td>assertText</td>
-<td>css=.panel > div:nth-of-type(1) > .modal.form-content--app-mem > .modal__container > .modal__dialog > .modal__body > .modal__form--header > h1</td>
-<td>*Manage Brandon Buchannan's Access*</td>
+<td>css=.panel > div:nth-of-type(2) > .modal.form-content--app-mem > .modal__container > .modal__dialog > .modal__body > .modal__form--header > h1</td>
+<td>*Verify Member Information*</td>
 </tr>
 <tr>
 <td>waitForPageToLoad</td>
@@ -1248,72 +1248,42 @@ Imported from: AT-AT CI - New App Step 3-->
 </tr>
 <tr>
 <td>waitForElementPresent</td>
-<td>css=.application-perms > div:nth-of-type(1) > .usa-input.input__inline-fields > fieldset.usa-input__choices > legend > label</td>
+<td>css=.application-member__user-info > .usa-input.usa-input--validation--requiredField:nth-of-type(1) > input[id="first_name"][type="text"]</td>
+<td></td>
+</tr>
+<tr>
+<td>assertText</td>
+<td>css=.application-member__user-info > .usa-input.usa-input--validation--requiredField:nth-of-type(1) > input[id="first_name"][type="text"]</td>
+<td>*Brandon*</td>
+</tr>
+<tr>
+<td>waitForPageToLoad</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>waitForElementPresent</td>
+<td>css=.panel > div:nth-of-type(2) > .modal.form-content--app-mem > .modal__container > .modal__dialog > .modal__body > form[action] > .action-group > button[type="submit"]</td>
+<td></td>
+</tr>
+<tr>
+<td>assertText</td>
+<td>css=.panel > div:nth-of-type(2) > .modal.form-content--app-mem > .modal__container > .modal__dialog > .modal__body > form[action] > .action-group > button[type="submit"]</td>
+<td>*Resend Invite*</td>
+</tr>
+<tr>
+<td>waitForPageToLoad</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>waitForElementPresent</td>
+<td>css=.panel > div:nth-of-type(2) > .modal.form-content--app-mem > .modal__container > .modal__dialog > .modal__body > form[action] > .action-group > button[type="submit"]</td>
 <td></td>
 </tr>
 <tr>
 <td>click</td>
-<td>css=.application-perms > div:nth-of-type(1) > .usa-input.input__inline-fields > fieldset.usa-input__choices > legend > label</td>
-<td></td>
-</tr>
-<tr>
-<td>waitForPageToLoad</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>waitForElementPresent</td>
-<td>css=.application-perms > div:nth-of-type(2) > .usa-input.input__inline-fields > fieldset.usa-input__choices > legend > label</td>
-<td></td>
-</tr>
-<tr>
-<td>click</td>
-<td>css=.application-perms > div:nth-of-type(2) > .usa-input.input__inline-fields > fieldset.usa-input__choices > legend > label</td>
-<td></td>
-</tr>
-<tr>
-<td>waitForPageToLoad</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>waitForElementPresent</td>
-<td>css=.application-perms > div:nth-of-type(3) > .usa-input.input__inline-fields > fieldset.usa-input__choices > legend > label</td>
-<td></td>
-</tr>
-<tr>
-<td>click</td>
-<td>css=.application-perms > div:nth-of-type(3) > .usa-input.input__inline-fields > fieldset.usa-input__choices > legend > label</td>
-<td></td>
-</tr>
-<tr>
-<td>waitForPageToLoad</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>waitForElementPresent</td>
-<td>css=.environment_roles.environment-roles-new > .form-row:nth-of-type(1) > .form-col.form-col--third > fieldset.usa-input__choices > select[name="environment_roles-2-role"]</td>
-<td></td>
-</tr>
-<tr>
-<td>type</td>
-<td>css=.environment_roles.environment-roles-new > .form-row:nth-of-type(1) > .form-col.form-col--third > fieldset.usa-input__choices > select[name="environment_roles-2-role"]</td>
-<td>Business Read-only</td>
-</tr>
-<tr>
-<td>waitForPageToLoad</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>waitForElementPresent</td>
-<td>css=input[type="submit"]</td>
-<td></td>
-</tr>
-<tr>
-<td>click</td>
-<td>css=input[type="submit"]</td>
+<td>css=.panel > div:nth-of-type(2) > .modal.form-content--app-mem > .modal__container > .modal__dialog > .modal__body > form[action] > .action-group > button[type="submit"]</td>
 <td></td>
 </tr>
 <tr>
@@ -1329,7 +1299,7 @@ Imported from: AT-AT CI - New App Step 3-->
 <tr>
 <td>assertText</td>
 <td>css=.usa-alert.usa-alert-success > .usa-alert-body > h3.usa-alert-heading</td>
-<td>*Team member updated*</td>
+<td>*Application invitation resent*</td>
 </tr>
 <tr>
 <td>waitForPageToLoad</td>
@@ -1344,52 +1314,7 @@ Imported from: AT-AT CI - New App Step 3-->
 <tr>
 <td>assertText</td>
 <td>css=.usa-alert.usa-alert-success > .usa-alert-body > .usa-alert-text</td>
-<td>*You have successfully updated the permissions for Brandon Buchannan*</td>
-</tr>
-<tr>
-<td>waitForPageToLoad</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>waitForElementPresent</td>
-<td>css=table.atat-table > tbody > tr:nth-of-type(1) > td:nth-of-type(2) > div:nth-of-type(1)</td>
-<td></td>
-</tr>
-<tr>
-<td>assertText</td>
-<td>css=table.atat-table > tbody > tr:nth-of-type(1) > td:nth-of-type(2) > div:nth-of-type(1)</td>
-<td>*View Team*</td>
-</tr>
-<tr>
-<td>waitForPageToLoad</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>waitForElementPresent</td>
-<td>css=table.atat-table > tbody > tr:nth-of-type(1) > td:nth-of-type(2) > div:nth-of-type(2)</td>
-<td></td>
-</tr>
-<tr>
-<td>assertText</td>
-<td>css=table.atat-table > tbody > tr:nth-of-type(1) > td:nth-of-type(2) > div:nth-of-type(2)</td>
-<td>*View Environments*</td>
-</tr>
-<tr>
-<td>waitForPageToLoad</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>waitForElementPresent</td>
-<td>css=table.atat-table > tbody > tr:nth-of-type(1) > td.env_role--td > .row:nth-of-type(3) > .env-role__role</td>
-<td></td>
-</tr>
-<tr>
-<td>assertText</td>
-<td>css=table.atat-table > tbody > tr:nth-of-type(1) > td.env_role--td > .row:nth-of-type(3) > .env-role__role</td>
-<td>*Business Read-only*</td>
+<td>*You have successfully resent the invite for Brandon Buchannan*</td>
 </tr>
 </tbody>
 </table>

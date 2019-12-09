@@ -96,11 +96,31 @@ Imported from: AT-AT CI - Login Brandon-->
 </tr>
 <!--Imported from: AT-AT CI - New Portfolio Member
 Imported from: AT-AT CI - Portfolio Settings
-Imported from: AT-AT CI - New Portfolio-->
+Imported from: AT-AT CI - New Portfolio
+Imported from: AT-AT CI - login-->
 <tr>
 <td>open</td>
 <td>/login-dev</td>
 <td></td>
+</tr>
+<tr>
+<td>waitForPageToLoad</td>
+<td></td>
+<td></td>
+</tr>
+<!--Imported from: AT-AT CI - New Portfolio Member
+Imported from: AT-AT CI - Portfolio Settings
+Imported from: AT-AT CI - New Portfolio
+Imported from: AT-AT CI - login-->
+<tr>
+<td>waitForElementPresent</td>
+<td>css=.about-cloud > h1</td>
+<td></td>
+</tr>
+<tr>
+<td>assertText</td>
+<td>css=.about-cloud > h1</td>
+<td>About Cloud Services</td>
 </tr>
 <tr>
 <td>waitForPageToLoad</td>
@@ -173,24 +193,6 @@ Imported from: AT-AT CI - New Portfolio-->
 <td>type</td>
 <td>css=#defense_component</td>
 <td>Defense Logistics Agency</td>
-</tr>
-<tr>
-<td>waitForPageToLoad</td>
-<td></td>
-<td></td>
-</tr>
-<!--Imported from: AT-AT CI - New Portfolio Member
-Imported from: AT-AT CI - Portfolio Settings
-Imported from: AT-AT CI - New Portfolio-->
-<tr>
-<td>waitForElementPresent</td>
-<td>css=#defense_component > option:nth-of-type(14)</td>
-<td></td>
-</tr>
-<tr>
-<td>click</td>
-<td>css=#defense_component > option:nth-of-type(14)</td>
-<td></td>
 </tr>
 <tr>
 <td>waitForPageToLoad</td>
@@ -454,13 +456,13 @@ Imported from: AT-AT CI - Portfolio Settings
 Imported from: AT-AT CI - New Portfolio-->
 <tr>
 <td>waitForElementPresent</td>
-<td>css=.empty-state__message</td>
+<td>css=.empty-state h3</td>
 <td></td>
 </tr>
 <tr>
 <td>assertText</td>
-<td>css=.empty-state__message</td>
-<td>*This portfolio doesn’t have any applications*</td>
+<td>css=.empty-state h3</td>
+<td>*You don't have any Applications yet*</td>
 </tr>
 <tr>
 <td>waitForPageToLoad</td>
