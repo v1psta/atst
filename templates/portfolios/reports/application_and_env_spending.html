@@ -3,9 +3,6 @@
 
 <div>
   <h2>Funds Expended per Application and Environment</h2>
-  {% set current_month_index = current_month.strftime('%m/%Y') %}
-  {% set prev_month_index = prev_month.strftime('%m/%Y') %}
-
   {% if not portfolio.applications %}
 
     {% set can_create_applications = user_can(permissions.CREATE_APPLICATION) %}
