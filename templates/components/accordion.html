@@ -8,7 +8,7 @@
   content_tag="div",
   content_classes="") %}
   <accordion v-cloak inline-template>
-    <{{wrapper_tag}} class="usa-accordion {{ wrapper_classes }}">
+    <{{wrapper_tag}} class="{{ wrapper_classes }}">
       <{{heading_tag}} class="accordion__button {{ heading_classes }}">
         <button
           v-on:click="toggle($event)"
