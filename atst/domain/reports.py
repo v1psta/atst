@@ -25,12 +25,20 @@ class Reports:
             clin_spending[jedi_clin.name]["obligated"] = sum(
                 clin.obligated_amount for clin in clins
             )
-        return [
-            {
-                "name": clin,
-                "invoiced": clin_spending[clin].get("invoiced", 0),
-                "estimated": clin_spending[clin].get("estimated", 0),
-                "obligated": clin_spending[clin].get("obligated", 0),
-            }
-            for clin in sorted(clin_spending.keys())
-        ]
+
+        output = []
+        for clin in clin_spending.keys():
+            invoiced = clin_spending[clin].get("invoiced", 0)
+            estimated = clin_spending[clin].get("estimated", 0)
+            obligated = clin_spending[clin].get("obligated", 0)
+            remaining = obligated - (invoiced + estimated)
+            output.append(
+                {
+                    "name": clin,
+                    "invoiced": invoiced,
+                    "estimated": estimated,
+                    "obligated": obligated,
+                    "remaining": remaining,
+                }
+            )
+        return output

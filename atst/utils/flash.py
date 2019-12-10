@@ -96,6 +96,11 @@ MESSAGES = {
         "message_template": "<p>Please see below.</p>",
         "category": "error",
     },
+    "insufficient_funds": {
+        "title_template": "Insufficient Funds",
+        "message_template": "",
+        "category": "warning",
+    },
     "logged_out": {
         "title_template": translate("flash.logged_out"),
         "message_template": """

@@ -7,15 +7,14 @@
   </header>
   <div class='panel'>
     <div class='panel__content jedi-clin-funding'>
-      {% for JEDI_clin in current_obligated_funds %}
-        {% set remaining_funds = JEDI_clin.obligated - (JEDI_clin.invoiced + JEDI_clin.estimated) %}
+      {% for JEDI_clin in current_obligated_funds | sort(attribute='name')%}
         <div class="jedi-clin-funding__clin-wrapper">
           <h3 class="h5 jedi-clin-funding__header">
             {{ "JEDICLINType.{}".format(JEDI_clin.name) | translate }}
           </h3>
           <p class="jedi-clin-funding__subheader">Total obligated amount: {{ JEDI_clin.obligated | dollars }}</p>
           <div class="jedi-clin-funding__graph">
-            {% if remaining_funds < 0  %}
+            {% if JEDI_clin.remaining < 0  %}
               <span style="width:100%" class="jedi-clin-funding__graph-bar jedi-clin-funding__graph-bar--insufficient"></span>
             {% else %}
               {% set invoiced_width = (JEDI_clin.invoiced, JEDI_clin.obligated) | obligatedFundingGraphWidth %}
@@ -31,7 +30,7 @@
                       class="jedi-clin-funding__graph-bar jedi-clin-funding__graph-bar--estimated">
                 </span>
               {% endif %}
-              <span style="width:{{ (remaining_funds, JEDI_clin.obligated) | obligatedFundingGraphWidth }}%" 
+              <span style="width:{{ (JEDI_clin.remaining, JEDI_clin.obligated) | obligatedFundingGraphWidth }}%" 
                 class="jedi-clin-funding__graph-bar jedi-clin-funding__graph-bar--remaining">
               </span>
             {% endif %}
@@ -55,10 +54,10 @@
             </div>
             <div class="jedi-clin-funding__meta">
               <p class="jedi-clin-funding__meta-header">
-                <span class="jedi-clin-funding__meta-key jedi-clin-funding__meta-key--{{"remaining" if remaining_funds > 0 else "insufficient"}}"></span>
+                <span class="jedi-clin-funding__meta-key jedi-clin-funding__meta-key--{{"remaining" if JEDI_clin.remaining > 0 else "insufficient"}}"></span>
                 Remaining funds:
               </p>
-              <p class="h3 jedi-clin-funding__meta-value {% if remaining_funds < 0 %}text-danger{% endif %}">{{ remaining_funds | dollars }}</p>
+              <p class="h3 jedi-clin-funding__meta-value {% if JEDI_clin.remaining < 0 %}text-danger{% endif %}">{{ JEDI_clin.remaining | dollars }}</p>
             </div>
           </div>
         </div>
