@@ -1,13 +1,10 @@
 from collections import defaultdict
 import json
-import os
 from decimal import Decimal
 
 
 def load_fixture_data():
-    with open(
-        os.path.join(os.path.dirname(__file__), "fixture_spend_data.json"), "r"
-    ) as json_file:
+    with open("fixtures/fixture_spend_data.json") as json_file:
         return json.load(json_file)
 
 
