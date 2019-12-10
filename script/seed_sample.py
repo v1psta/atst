@@ -14,6 +14,7 @@ from atst.app import make_config, make_app
 from atst.database import db
 
 from atst.models.application import Application
+from atst.models.clin import JEDICLINType
 from atst.models.environment_role import CSPRole
 
 from atst.domain.application_roles import ApplicationRoles
@@ -199,7 +200,22 @@ def add_task_orders_to_portfolio(portfolio):
         CLINFactory.build(
             task_order=expired_to, start_date=(today - five_days), end_date=yesterday
         ),
-        CLINFactory.build(task_order=active_to, start_date=yesterday, end_date=future),
+        CLINFactory.build(
+            task_order=active_to,
+            start_date=yesterday,
+            end_date=future,
+            total_amount=1_000_000,
+            obligated_amount=500_000,
+            jedi_clin_type=JEDICLINType.JEDI_CLIN_1,
+        ),
+        CLINFactory.build(
+            task_order=active_to,
+            start_date=yesterday,
+            end_date=future,
+            total_amount=500_000,
+            obligated_amount=200_000,
+            jedi_clin_type=JEDICLINType.JEDI_CLIN_2,
+        ),
     ]
 
     task_orders = [draft_to, unsigned_to, upcoming_to, expired_to, active_to]
