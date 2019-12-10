@@ -37,35 +37,6 @@ If you are satisfied with the output from the diff, you can apply the new config
 
 ## Secrets and Configuration
 
-### atst-overrides.ini
-
-Production configuration values are provided to the ATAT Flask app by writing an `atst-overrides.ini` file to the running Docker container. This file is stored as a Kubernetes secret. It contains configuration information for the database connection, mailer, etc.
-
-To update the configuration, you can do the following:
-
-```
-kubectl -n atat get secret atst-config-ini -o=jsonpath='{.data.override\.ini}' | base64 --decode > override.ini
-```
-
-This base64 decodes the secret and writes it to a local file called `override.ini`. Make any necessary config changes to that file.
-
-To apply the new config, first delete the existing copy of the secret:
-
-```
-kubectl -n atat delete secret atst-config-ini
-```
-
-Then create a new copy of the secret from your updated copy:
-
-```
-kubectl -n atat create secret generic atst-config-ini --from-file=./override.ini
-```
-
-Notes:
-
-- Be careful not to check the override.ini file into source control.
-- Be careful not to overwrite one CSP cluster's config with the other's. This will break everything.
-
 ### nginx-htpasswd
 
 If the site is running in dev mode, the `/login-dev` endpoint is available. This endpoint is protected by basic HTTP auth. To create a new password file, run:
@@ -178,11 +149,32 @@ az keyvault secret set --vault-name <VAULT NAME> --name <NAME OF PARAM> --value 
 ```
 ---
 
+# Secrets Management
+
+Secrets, keys, and certificates are managed from Azure Key Vault. These items are mounted into the containers at runtime using the FlexVol implementation described below.
+
+The following are mounted into the NGINX container in the atst pod:
+
+- The TLS certs for the site
+- The DH parameter for TLS connections
+
+These are mounted into every instance of the Flask application container (the atst container, the celery worker, etc.):
+
+- The Azure storage key used to access blob storage (AZURE_STORAGE_KEY)
+- The password for the SMTP server used to send mail (MAIL_PASSWORD)
+- The Postgres database user password (PGPASSWORD)
+- The Redis user password (REDIS_PASSWORD)
+- The Flask secret key used for session signing and generating CSRF tokens (SECRET_KEY)
+
+Secrets should be added to Key Vault with the following naming pattern: [branch/environment]-[all-caps config setting name]. Note that Key Vault does not support underscores. Substitute hyphens. For example, the config setting for the SMTP server password is MAIL_SERVER. The corresponding secret name in Key Vault is "master-MAIL-SERVER" for the credential used in the primary environment.These secrets are mounted into the containers via FlexVol.
+
+To add or manage secrets, keys, and certificates in Key Vault, see the [documentation](https://docs.microsoft.com/en-us/azure/key-vault/quick-create-cli).
+
 # Setting Up FlexVol for Secrets
 
 ## Preparing Azure Environment
 
-A Key Vault will need to be created. Save it's full id (the full path) for use later.
+A Key Vault will need to be created. Save its full id (the full path) for use later.
 
 ## Preparing Cluster
 
