@@ -87,6 +87,7 @@ COPY --from=builder /install/translations.yaml .
 COPY --from=builder /install/script/seed_roles.py ./script/seed_roles.py
 COPY --from=builder /install/script/sync-crls ./script/sync-crls
 COPY --from=builder /install/static/ ./static/
+COPY --from=builder /install/fixtures/ ./fixtures
 COPY --from=builder /install/uwsgi.ini .
 COPY --from=builder /usr/local/bin/uwsgi /usr/local/bin/uwsgi
 
