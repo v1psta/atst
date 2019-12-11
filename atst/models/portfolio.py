@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String
+from sqlalchemy import Column, String, JSON
 from sqlalchemy.orm import relationship
 from sqlalchemy.types import ARRAY
 from itertools import chain
@@ -31,6 +31,8 @@ class Portfolio(
     dev_team_other = Column(String)
     native_apps = Column(String)  # Native Apps
     team_experience = Column(String)  # Team Experience
+
+    csp_data = Column(JSON, BasePortfolioCSPDetails)
 
     applications = relationship(
         "Application",
@@ -85,7 +87,7 @@ class Portfolio(
         """
         Return the earliest period of performance start date and latest period
         of performance end date for all active task orders in a portfolio.
-        @return: (datetime.date or None, datetime.date or None)  
+        @return: (datetime.date or None, datetime.date or None)
         """
         start_dates = (
             task_order.start_date

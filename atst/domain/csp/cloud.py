@@ -569,3 +569,4 @@ class AzureCloudProvider(CloudProviderInterface):
             "secret_key": self.secret_key,
             "tenant_id": self.tenant_id,
         }
+
