@@ -138,19 +138,26 @@ def test_get_for_update(application_role, environment):
     assert role.deleted
 
 
-def test_for_user(application_role, environment):
+def test_for_user(application_role):
     portfolio = application_role.application.portfolio
     user = application_role.user
-    # create roles for 2 environments
-    env_role = EnvironmentRoleFactory.create(
-        application_role=application_role, environment=environment
-    )
-    env_role1 = EnvironmentRoleFactory.create(application_role=application_role)
+    # create roles for 2 environments associated with application_role fixture
+    env_role_1 = EnvironmentRoleFactory.create(application_role=application_role)
+    env_role_2 = EnvironmentRoleFactory.create(application_role=application_role)
+
     # create role for environment in a different app in same portfolio
-    app2 = ApplicationFactory.create(portfolio=portfolio)
-    app_role2 = ApplicationRoleFactory.create(application=app2, user=user)
-    env_role2 = EnvironmentRoleFactory.create(application_role=app_role2)
+    application = ApplicationFactory.create(portfolio=portfolio)
+    env_role_3 = EnvironmentRoleFactory.create(
+        application_role=ApplicationRoleFactory.create(
+            application=application, user=user
+        )
+    )
+
+    # create role for environment for random user in app2
+    rando_app_role = ApplicationRoleFactory.create(application=application)
+    rando_env_role = EnvironmentRoleFactory.create(application_role=rando_app_role)
+
     env_roles = EnvironmentRoles.for_user(user.id, portfolio.id)
     assert len(env_roles) == 3
-    for role in [env_role, env_role1, env_role2]:
-        assert role in env_roles
+    assert env_roles == [env_role_1, env_role_2, env_role_3]
+    assert not rando_env_role in env_roles
