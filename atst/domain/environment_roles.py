@@ -3,9 +3,10 @@ from flask import current_app as app
 
 from atst.database import db
 from atst.models import (
-    EnvironmentRole,
-    ApplicationRole,
     Environment,
+    EnvironmentRole,
+    Application,
+    ApplicationRole,
     ApplicationRoleStatus,
 )
 from atst.domain.exceptions import NotFoundError
@@ -126,3 +127,15 @@ class EnvironmentRoles(object):
             .one_or_none()
         )
         return existing_env_role
+
+    @classmethod
+    def for_user(cls, user_id, portfolio_id):
+        return (
+            db.session.query(EnvironmentRole)
+            .join(ApplicationRole)
+            .join(Application)
+            .filter(Application.portfolio_id == portfolio_id)
+            .filter(ApplicationRole.application_id == Application.id)
+            .filter(ApplicationRole.user_id == user_id)
+            .all()
+        )

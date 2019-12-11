@@ -1,3 +1,4 @@
+{% from "components/accordion.html" import Accordion %}
 {% from "components/empty_state.html" import EmptyState %}
 {% from "components/icon.html" import Icon %}
 {% from "components/sticky_cta.html" import StickyCTA %}
@@ -6,89 +7,45 @@
 
 {% block portfolio_content %}
 
-{% macro TaskOrderButton(task_order, route, text="Edit", secondary=False) %}
-<a href="{{ url_for(route, task_order_id=task_order.id) }}" class="usa-button {{ 'usa-button-secondary' if secondary else '' }}">
-  {{ text }}
-</a>
-{% endmacro %}
-
 {% macro TaskOrderDateTime(dt, className="") %}
   <local-datetime timestamp="{{ dt }}" format="MMMM D, YYYY" class="{{ className }}"></local-datetime>
 {% endmacro %}
 
-{% macro TaskOrderDate(task_order) %}
-  <span class="datetime">
-    <!-- Draft: {Begins, Began} start_date -->
-    <!-- Everything else: {Starts, Started} start_date | {Ends, Ended} end_date -->
 
-    {% if task_order.is_draft %}
-      {% if task_order.has_begun %}
-        Started on
-      {% else %}
-        Starts on
-      {% endif %}
-      {{ TaskOrderDateTime(task_order.time_created) }}
-    {% else %}
-      {% if task_order.has_begun %}
-        Began
-      {% else %}
-        Begins
-      {% endif %}
-      {{ TaskOrderDateTime(task_order.start_date) }}
-    {% endif %}
-
-    {% if not task_order.is_draft %}
-      &nbsp;&nbsp;|&nbsp;&nbsp;
-
-      {% if task_order.has_ended %}
-        Ended
-      {% else %}
-        Ends
-      {% endif %}
-
-      {{ TaskOrderDateTime(task_order.end_date) }}
-    {% endif %}
-  </span>
-{% endmacro %}
-
-{% macro TaskOrderActions(task_order) %}
-  <div class="task-order-card__buttons">
-    {% if task_order.is_draft and user_can(permissions.EDIT_TASK_ORDER_DETAILS) %}
-      {{ TaskOrderButton(task_order, "task_orders.edit")}}
-    {% elif task_order.is_expired %}
-      {{ TaskOrderButton(task_order, "task_orders.review_task_order", text="View") }}
-    {% elif task_order.is_unsigned %}
-      {% if user_can(permissions.EDIT_TASK_ORDER_DETAILS) %}
-        {{ TaskOrderButton(task_order, "task_orders.form_step_four_review", text="Sign", secondary=True) }}
-      {% endif %}
-      {{ TaskOrderButton(task_order, "task_orders.review_task_order", text="View") }}
-    {% endif %}
-  </div>
-{% endmacro %}
-
-{% macro TaskOrderList(task_orders, label='success') %}
-  <div class="task-order-list">
-    {% for task_order in task_orders %}
-      <div class="card task-order-card">
-        <div class="card__status">
-          <span class='label label--{{ label_colors[task_order.status] }}'>{{ task_order.display_status }}</span>
-          {{ TaskOrderDate(task_order) }}
-          <span class="card__status-spacer"></span>
-          <span class="card__button">
-            {{ TaskOrderActions(task_order) }}
-          </span>
+{% macro TaskOrderList(task_orders, status) %}
+  {% set status = "All Task Orders" %}
+  <div class="accordion usa-accordion">
+    {% call Accordion(title=status, id=status, heading_tag="h4") %}
+      {% for task_order in task_orders %}
+        <div class="accordion__content--list-item">
+          <h4><a href="{{ url_for('task_orders.review_task_order', task_order_id=task_order.id) }}">Task Order #{{ task_order.number }} {{ Icon("caret_right", classes="icon--tiny icon--primary" ) }}</a></h4>
+          <div class="row">
+            <div class="col col--grow">
+              <h5>
+                Current Period of Performance
+              </h5>
+              <p>
+                {{ task_order.start_date | formattedDate(formatter="%b %d, %Y") }}
+                -
+                {{ task_order.end_date | formattedDate(formatter="%b %d, %Y") }}
+              </p>
+            </div>
+            <div class="col col--grow">
+              <h5>Total Value</h5>
+              <p>{{ task_order.total_contract_amount | dollars }}</p>
+            </div>
+            <div class="col col--grow">
+              <h5>Total Obligated</h5>
+              <p>{{ task_order.total_obligated_funds | dollars }}</p>
+            </div>
+            <div class="col col--grow">
+              <h5>Total Expended</h5>
+              <p>$0</p>
+            </div>
+          </div>
         </div>
-        <div class="card__header">
-          <h3>Task Order #{{ task_order.number }}</h3>
-        </div>
-        <div class="card__body">
-          <b>Total amount: </b>{{ task_order.total_contract_amount | dollars }}
-        </div>
-        <div class="card__body">
-          <b>Obligated amount: </b>{{ task_order.total_obligated_funds | dollars }}
-        </div>
-      </div>
-    {% endfor %}
+      {% endfor %}
+    {% endcall %}
   </div>
 {% endmacro %}
 

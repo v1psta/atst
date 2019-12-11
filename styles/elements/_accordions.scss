@@ -1,148 +1,50 @@
-.triangle-box {
-  position: relative;
-
-  .triangle-up {
-    $triangle-size: $gap * 1.5;
-
-    position: absolute;
-    width: 0;
-    height: 0;
-    border-left: $triangle-size solid transparent;
-    border-right: $triangle-size solid transparent;
-    border-bottom: $triangle-size solid $color-blue-light;
-    bottom: -4px;
-    right: 50%;
-  }
-}
-
 .accordion {
-  @include block-list;
-
-  box-shadow: 0 4px 10px 0 rgba(193, 193, 193, 0.5);
-  margin-bottom: 6 * $gap;
-
-  .icon-link {
-    margin: (-$gap) 0;
-  }
-
-  .icon-link,
-  .label {
-    &:first-child {
-      margin-left: -$gap;
-    }
-
-    &:last-child {
-      margin-right: -$gap;
-    }
-  }
+  @include shadow-panel;
+  margin: $gap * 3 0;
+  max-width: $max-panel-width;
 
   &__header {
-    @include block-list-header;
+    padding: $gap * 2 $gap * 3;
+    background-color: $color-white;
 
-    border-top: 3px solid $color-blue;
-    border-bottom: none;
-    box-shadow: 0 2px 4px 0 rgba(216, 218, 222, 0.58);
-
-    &.row {
-      background: $color-white;
-    }
-  }
-
-  &__title {
-    @include block-list__title;
-
-    color: $color-blue;
-
-    @include h3;
-
-    &.icon-link {
+    &-text {
       margin: 0;
-      display: block;
-      padding: 0 $gap;
-      text-decoration: none;
     }
   }
 
-  &__description {
-    @include block-list__description;
-
-    font-style: italic;
-    font-size: $small-font-size;
-    color: $color-gray;
+  &__button {
+    margin: 0;
   }
 
-  &__actions {
-    margin-top: $gap;
-    margin-bottom: $gap * 0.5;
-    display: flex;
-    flex-direction: row;
+  &__content {
+    padding: 0 ($gap * 3) $gap;
 
-    .icon-link {
-      font-size: $small-font-size;
+    &--list-item {
+      border-bottom: 1px solid $color-gray-lightest;
+      padding: $gap 0;
 
-      svg {
-        width: 1rem;
+      &:last-child {
+        border-bottom: none;
+        padding-bottom: $gap;
+      }
+
+      .col {
+        padding-right: $gap * 2;
+
+        &:last-child {
+          padding-right: 0;
+        }
+      }
+
+      h4 {
+        margin: $gap * 2 0 $gap;
+      }
+
+      h5 {
+        font-size: 1rem;
+        color: $color-gray;
+        margin: 0;
       }
     }
-
-    &__footer {
-      @include block-list__footer;
-
-      border-top: 0;
-    }
-  }
-
-  &__item {
-    @include block-list-item;
-
-    opacity: 0.75;
-    background-color: $color-blue-light;
-    border-bottom: 1px solid rgba($color-gray-light, 0.5);
-
-    &--selectable {
-      > div {
-        display: flex;
-        flex-direction: row-reverse;
-
-        @include ie-only {
-          width: 100%;
-        }
-
-        > label {
-          @include block-list-selectable-label;
-        }
-      }
-
-      > label {
-        @include block-list-selectable-label;
-      }
-
-      input:checked {
-        + label {
-          color: $color-primary;
-        }
-      }
-
-      @include ie-only {
-        dl {
-          width: 100%;
-          padding-left: $gap * 4;
-        }
-      }
-    }
-  }
-
-  .counter {
-    background-color: $color-cool-blue-light;
-    color: $color-white;
-    border-radius: 2px;
-    padding: ($gap / 2) $gap;
-    margin-left: $gap;
-  }
-
-  .separator {
-    border: 1px solid $color-gray-medium;
-    opacity: 0.75;
-    margin: 0 (0.5 * $gap);
   }
 }
