@@ -5,6 +5,7 @@ from flask import render_template
 from jinja2 import contextfilter
 from jinja2.exceptions import TemplateNotFound
 from urllib.parse import urlparse, urlunparse, parse_qs, urlencode
+from decimal import DivisionByZero as DivisionByZeroException
 
 
 def iconSvg(name):
@@ -36,6 +37,14 @@ def usPhone(number):
         return ""
     phone = re.sub(r"\D", "", number)
     return "+1 ({}) {} - {}".format(phone[0:3], phone[3:6], phone[6:])
+
+
+def obligatedFundingGraphWidth(values):
+    numerator, denominator = values
+    try:
+        return (numerator / denominator) * 100
+    except DivisionByZeroException:
+        return 0
 
 
 def formattedDate(value, formatter="%m/%d/%Y"):
@@ -76,6 +85,7 @@ def register_filters(app):
     app.jinja_env.filters["pageWindow"] = pageWindow
     app.jinja_env.filters["renderAuditEvent"] = renderAuditEvent
     app.jinja_env.filters["withExtraParams"] = with_extra_params
+    app.jinja_env.filters["obligatedFundingGraphWidth"] = obligatedFundingGraphWidth
 
     @contextfilter
     def translateWithoutCache(context, *kwargs):

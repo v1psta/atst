@@ -1,14 +1,12 @@
 import { set } from 'vue/dist/vue'
 import { formatDollars } from '../../lib/dollars'
+import { set as _set } from 'lodash'
 
 export default {
   name: 'spend-table',
 
   props: {
-    applications: Object,
-    environments: Object,
-    currentMonthIndex: String,
-    prevMonthIndex: String,
+    applications: Array,
   },
 
   data: function() {
@@ -18,20 +16,16 @@ export default {
   },
 
   created: function() {
-    Object.keys(this.applications).forEach(application => {
-      set(this.applicationsState[application], 'isVisible', false)
+    this.applicationsState.forEach(application => {
+      application.isVisible = false
     })
   },
 
   methods: {
-    toggle: function(e, applicationName) {
-      this.applicationsState = Object.assign(this.applicationsState, {
-        [applicationName]: Object.assign(
-          this.applicationsState[applicationName],
-          {
-            isVisible: !this.applicationsState[applicationName].isVisible,
-          }
-        ),
+    toggle: function(e, applicationIndex) {
+      set(this.applicationsState, applicationIndex, {
+        ...this.applicationsState[applicationIndex],
+        isVisible: !this.applicationsState[applicationIndex].isVisible,
       })
     },
 

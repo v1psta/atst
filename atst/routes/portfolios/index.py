@@ -1,4 +1,4 @@
-from datetime import date, datetime, timedelta
+from datetime import datetime
 
 from flask import redirect, render_template, url_for, request as http_request, g
 
@@ -35,9 +35,12 @@ def create_portfolio():
 @user_can(Permissions.VIEW_PORTFOLIO_REPORTS, message="view portfolio reports")
 def reports(portfolio_id):
     portfolio = Portfolios.get(g.current_user, portfolio_id)
-    today = date.today()
-    current_month = date(int(today.year), int(today.month), 15)
-    prev_month = current_month - timedelta(days=28)
+
+    current_obligated_funds = Reports.obligated_funds_by_JEDI_clin(portfolio)
+
+    if any(map(lambda clin: clin["remaining"] < 0, current_obligated_funds)):
+        flash("insufficient_funds")
+
     # wrapped in str() because the sum of obligated funds returns a Decimal object
     total_portfolio_value = str(
         sum(
@@ -49,12 +52,10 @@ def reports(portfolio_id):
         "portfolios/reports/index.html",
         portfolio=portfolio,
         total_portfolio_value=total_portfolio_value,
-        current_obligated_funds=Reports.obligated_funds_by_JEDI_clin(portfolio),
+        current_obligated_funds=current_obligated_funds,
         expired_task_orders=Reports.expired_task_orders(portfolio),
-        monthly_totals=Reports.monthly_totals(portfolio),
-        current_month=current_month,
-        prev_month=prev_month,
-        now=datetime.now(),  # mocked datetime of reporting data retrival
+        monthly_spending=Reports.monthly_spending(portfolio),
+        retrieved=datetime.now(),  # mocked datetime of reporting data retrival
     )
 
 
