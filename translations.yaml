@@ -203,6 +203,7 @@ forms:
         marine_corps: Marine Corps
         navy: Navy
         other: Other
+      validation_message: You must select at least one defense component.
       help_text: |
         <p>
           Select the DOD component(s) that will fund all Applications within this Portfolio.

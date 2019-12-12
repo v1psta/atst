@@ -42,6 +42,10 @@ class PortfolioCreationForm(BaseForm):
         widget=ListWidget(prefix_label=False),
         option_widget=CheckboxInput(),
         validators=[
-            InputRequired(message="You must select at least one defense component.")
+            InputRequired(
+                message=translate(
+                    "forms.portfolio.defense_component.validation_message"
+                )
+            )
         ],
     )
