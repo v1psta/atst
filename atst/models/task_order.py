@@ -172,7 +172,7 @@ class TaskOrder(Base, mixins.TimestampsMixin):
     @property
     def invoiced_funds(self):
         # TODO: implement this using reporting data from the CSP
-        return self.total_obligated_funds * 0.75
+        return self.total_obligated_funds * 75 / 100
 
     @property
     def display_status(self):

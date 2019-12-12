@@ -65,9 +65,7 @@ class TaskOrders(BaseDomainClass):
 
     @classmethod
     def sort_by_status(cls, task_orders):
-        by_status = {}
-        for status in SORT_ORDERING:
-            by_status[status.value] = []
+        by_status = {status.value: [] for status in SORT_ORDERING}
 
         for task_order in task_orders:
             by_status[task_order.display_status].append(task_order)
