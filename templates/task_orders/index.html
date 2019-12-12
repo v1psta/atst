@@ -1,4 +1,5 @@
 {% from "components/accordion.html" import Accordion %}
+{% from "components/accordion_list.html" import AccordionList %}
 {% from "components/empty_state.html" import EmptyState %}
 {% from "components/icon.html" import Icon %}
 {% from "components/sticky_cta.html" import StickyCTA %}
@@ -13,36 +14,44 @@
 
 
 {% macro TaskOrderList(task_orders, status) %}
-  {% set status = "All Task Orders" %}
-  <div class="accordion usa-accordion">
+  <div class="accordion">
     {% call Accordion(title=status, id=status, heading_tag="h4") %}
       {% for task_order in task_orders %}
+        {% set to_number %}
+          {% if task_order.number != "" %}
+            Task Order #{{ task_order.number }}
+          {% else %}
+            New Task Order
+          {% endif %}
+        {% endset %}
         <div class="accordion__content--list-item">
-          <h4><a href="{{ url_for('task_orders.review_task_order', task_order_id=task_order.id) }}">Task Order #{{ task_order.number }} {{ Icon("caret_right", classes="icon--tiny icon--primary" ) }}</a></h4>
-          <div class="row">
-            <div class="col col--grow">
-              <h5>
-                Current Period of Performance
-              </h5>
-              <p>
-                {{ task_order.start_date | formattedDate(formatter="%b %d, %Y") }}
-                -
-                {{ task_order.end_date | formattedDate(formatter="%b %d, %Y") }}
-              </p>
+          <h4><a href="{{ url_for('task_orders.review_task_order', task_order_id=task_order.id) }}">{{ to_number }} {{ Icon("caret_right", classes="icon--tiny icon--primary" ) }}</a></h4>
+          {% if status != 'Expired' -%}
+            <div class="row">
+              <div class="col col--grow">
+                <h5>
+                  Current Period of Performance
+                </h5>
+                <p>
+                  {{ task_order.start_date | formattedDate(formatter="%b %d, %Y") }}
+                  -
+                  {{ task_order.end_date | formattedDate(formatter="%b %d, %Y") }}
+                </p>
+              </div>
+              <div class="col col--grow">
+                <h5>Total Value</h5>
+                <p>{{ task_order.total_contract_amount | dollars }}</p>
+              </div>
+              <div class="col col--grow">
+                <h5>Total Obligated</h5>
+                <p>{{ task_order.total_obligated_funds | dollars }}</p>
+              </div>
+              <div class="col col--grow">
+                <h5>Total Expended</h5>
+                <p>{{ task_order.invoiced_funds | dollars }}</p>
+              </div>
             </div>
-            <div class="col col--grow">
-              <h5>Total Value</h5>
-              <p>{{ task_order.total_contract_amount | dollars }}</p>
-            </div>
-            <div class="col col--grow">
-              <h5>Total Obligated</h5>
-              <p>{{ task_order.total_obligated_funds | dollars }}</p>
-            </div>
-            <div class="col col--grow">
-              <h5>Total Expended</h5>
-              <p>$0</p>
-            </div>
-          </div>
+          {%- endif %}
         </div>
       {% endfor %}
     {% endcall %}
@@ -63,7 +72,11 @@
 <div class="portfolio-funding">
 
   {% if task_orders  %}
-    {{ TaskOrderList(task_orders) }}
+    {% call AccordionList() %}
+      {% for status, to_list in task_orders.items() %}
+        {{ TaskOrderList(to_list, status) }}
+      {% endfor %}
+    {% endcall %}
   {% else %}
     {{ EmptyState(
       header="task_orders.empty_state.header"|translate,
