@@ -142,6 +142,14 @@ class TaskOrderForm(BaseForm):
     )
     clins = FieldList(FormField(CLINForm))
 
+    @property
+    def data(self):
+        _data = super().data
+        if _data["number"] == "":
+            _data["number"] = None
+
+        return _data
+
 
 class SignatureForm(BaseForm):
     signature = BooleanField(

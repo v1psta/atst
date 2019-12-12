@@ -10,7 +10,7 @@ from flask import (
 
 from .blueprint import task_orders_bp
 from atst.domain.authz.decorator import user_can_access_decorator as user_can
-from atst.domain.exceptions import NoAccessError
+from atst.domain.exceptions import NoAccessError, AlreadyExistsError
 from atst.domain.task_orders import TaskOrders
 from atst.forms.task_order import TaskOrderForm, SignatureForm
 from atst.models.permissions import Permissions
@@ -50,7 +50,26 @@ def render_task_orders_edit(
     return render_template(template, **render_args)
 
 
-def update_task_order(
+def update_task_order(form, portfolio_id=None, task_order_id=None, flash_invalid=True):
+    if form.validate(flash_invalid=flash_invalid):
+        task_order = None
+        try:
+            if task_order_id:
+                task_order = TaskOrders.update(task_order_id, **form.data)
+                portfolio_id = task_order.portfolio_id
+            else:
+                task_order = TaskOrders.create(portfolio_id, **form.data)
+
+            return task_order
+
+        except AlreadyExistsError:
+            flash("task_order_number_error", to_number=form.data["number"])
+            return False
+    else:
+        return False
+
+
+def update_and_render_next(
     form_data, next_page, current_template, portfolio_id=None, task_order_id=None
 ):
     form = None
@@ -60,14 +79,8 @@ def update_task_order(
     else:
         form = TaskOrderForm(form_data)
 
-    if form.validate():
-        task_order = None
-        if task_order_id:
-            task_order = TaskOrders.update(task_order_id, **form.data)
-            portfolio_id = task_order.portfolio_id
-        else:
-            task_order = TaskOrders.create(portfolio_id, **form.data)
-
+    task_order = update_task_order(form, portfolio_id, task_order_id)
+    if task_order:
         return redirect(url_for(next_page, task_order_id=task_order.id))
     else:
         return (
@@ -149,7 +162,7 @@ def submit_form_step_one_add_pdf(portfolio_id=None, task_order_id=None):
     next_page = "task_orders.form_step_two_add_number"
     current_template = "task_orders/step_1.html"
 
-    return update_task_order(
+    return update_and_render_next(
         form_data,
         next_page,
         current_template,
@@ -176,12 +189,8 @@ def cancel_edit(task_order_id=None, portfolio_id=None):
         else:
             form = TaskOrderForm(form_data)
 
-        if form.validate(flash_invalid=False):
-            task_order = None
-            if task_order_id:
-                task_order = TaskOrders.update(task_order_id, **form.data)
-            else:
-                task_order = TaskOrders.create(portfolio_id, **form.data)
+        update_task_order(form, portfolio_id, task_order_id, flash_invalid=False)
+
     elif not save and task_order_id:
         TaskOrders.delete(task_order_id)
 
@@ -205,7 +214,7 @@ def submit_form_step_two_add_number(task_order_id):
     next_page = "task_orders.form_step_three_add_clins"
     current_template = "task_orders/step_2.html"
 
-    return update_task_order(
+    return update_and_render_next(
         form_data, next_page, current_template, task_order_id=task_order_id
     )
 
@@ -225,7 +234,7 @@ def submit_form_step_three_add_clins(task_order_id):
     next_page = "task_orders.form_step_four_review"
     current_template = "task_orders/step_3.html"
 
-    return update_task_order(
+    return update_and_render_next(
         form_data, next_page, current_template, task_order_id=task_order_id
     )
 
