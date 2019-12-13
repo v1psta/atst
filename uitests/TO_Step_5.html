@@ -473,13 +473,13 @@ Imported from: AT-AT CI - TO Step 2
 Imported from: AT-AT CI - TO Step 1-->
 <tr>
 <td>waitForElementPresent</td>
-<td>css=.empty-state h3</td>
+<td>css=.sticky-cta-text h3</td>
 <td></td>
 </tr>
 <tr>
 <td>assertText</td>
-<td>css=.empty-state h3</td>
-<td>*Add approved task orders*</td>
+<td>css=.sticky-cta-text h3</td>
+<td>*Task Orders*</td>
 </tr>
 <tr>
 <td>waitForPageToLoad</td>
@@ -643,7 +643,7 @@ Imported from: AT-AT CI - TO Step 2-->
 <tr>
 <td>type</td>
 <td>css=#number</td>
-<td>1234567890123</td>
+<td>${timestamp}</td>
 </tr>
 <tr>
 <td>waitForPageToLoad</td>
@@ -1045,9 +1045,9 @@ Imported from: AT-AT CI - TO Step 3-->
 <td></td>
 </tr>
 <tr>
-<td>assertText</td>
+<td>assertElementPresent</td>
 <td>css=.col.task-order__details > div:nth-of-type(2)</td>
-<td>*1234567890123*</td>
+<td></td>
 </tr>
 <tr>
 <td>waitForPageToLoad</td>
@@ -1116,16 +1116,6 @@ Imported from: AT-AT CI - TO Step 3-->
 <td></td>
 </tr>
 <tr>
-<td>captureEntirePageScreenshot</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>waitForPageToLoad</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
 <td>waitForElementPresent</td>
 <td>css=input[type="submit"]</td>
 <td></td>
@@ -1142,6 +1132,21 @@ Imported from: AT-AT CI - TO Step 3-->
 </tr>
 <tr>
 <td>waitForElementPresent</td>
+<td>css=h3.usa-alert-heading</td>
+<td></td>
+</tr>
+<tr>
+<td>assertText</td>
+<td>css=h3.usa-alert-heading</td>
+<td>*Your Task Order has been uploaded successfully.*</td>
+</tr>
+<tr>
+<td>waitForPageToLoad</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>waitForElementPresent</td>
 <td>css=.usa-alert-text</td>
 <td></td>
 </tr>
@@ -1149,6 +1154,36 @@ Imported from: AT-AT CI - TO Step 3-->
 <td>assertText</td>
 <td>css=.usa-alert-text</td>
 <td>*Your task order form for Tatooine Energy Maintenance Systems has been submitted.*</td>
+</tr>
+<tr>
+<td>waitForPageToLoad</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>waitForElementPresent</td>
+<td>css=.portfolio-funding</td>
+<td></td>
+</tr>
+<tr>
+<td>assertElementPresent</td>
+<td>css=.portfolio-funding</td>
+<td></td>
+</tr>
+<tr>
+<td>waitForPageToLoad</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>waitForElementPresent</td>
+<td>css=.action-group</td>
+<td></td>
+</tr>
+<tr>
+<td>assertElementPresent</td>
+<td>css=.action-group</td>
+<td></td>
 </tr>
 </tbody>
 </table>

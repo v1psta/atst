@@ -4,7 +4,7 @@
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="selenium.base" href="" />
-<title>Resend App User Invite</title>
+<title>Revoke Environment Access</title>
 <meta name="ghost-inspector-details" content="" />
 <meta name="ghost-inspector-browser" content="chrome" />
 <meta name="ghost-inspector-userAgent" content="" />
@@ -22,7 +22,7 @@
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
 <tr>
-<td rowspan="1" colspan="3">Resend App User Invite</td>
+<td rowspan="1" colspan="3">Revoke Environment Access</td>
 </tr>
 </thead>
 <tbody>
@@ -102,11 +102,33 @@ Imported from: AT-AT CI - Login Brandon-->
 Imported from: AT-AT CI - New App Step 3
 Imported from: AT-AT CI - New App Step 2
 Imported from: AT-AT CI - New App Step 1
-Imported from: AT-AT CI - New Portfolio-->
+Imported from: AT-AT CI - New Portfolio
+Imported from: AT-AT CI - login-->
 <tr>
 <td>open</td>
 <td>/login-dev</td>
 <td></td>
+</tr>
+<tr>
+<td>waitForPageToLoad</td>
+<td></td>
+<td></td>
+</tr>
+<!--Imported from: AT-AT CI - Application Settings
+Imported from: AT-AT CI - New App Step 3
+Imported from: AT-AT CI - New App Step 2
+Imported from: AT-AT CI - New App Step 1
+Imported from: AT-AT CI - New Portfolio
+Imported from: AT-AT CI - login-->
+<tr>
+<td>waitForElementPresent</td>
+<td>css=.about-cloud > h1</td>
+<td></td>
+</tr>
+<tr>
+<td>assertText</td>
+<td>css=.about-cloud > h1</td>
+<td>About Cloud Services</td>
 </tr>
 <tr>
 <td>waitForPageToLoad</td>
@@ -187,26 +209,6 @@ Imported from: AT-AT CI - New Portfolio-->
 <td>type</td>
 <td>css=#defense_component</td>
 <td>Defense Logistics Agency</td>
-</tr>
-<tr>
-<td>waitForPageToLoad</td>
-<td></td>
-<td></td>
-</tr>
-<!--Imported from: AT-AT CI - Application Settings
-Imported from: AT-AT CI - New App Step 3
-Imported from: AT-AT CI - New App Step 2
-Imported from: AT-AT CI - New App Step 1
-Imported from: AT-AT CI - New Portfolio-->
-<tr>
-<td>waitForElementPresent</td>
-<td>css=#defense_component > option:nth-of-type(14)</td>
-<td></td>
-</tr>
-<tr>
-<td>click</td>
-<td>css=#defense_component > option:nth-of-type(14)</td>
-<td></td>
 </tr>
 <tr>
 <td>waitForPageToLoad</td>
@@ -500,13 +502,13 @@ Imported from: AT-AT CI - New App Step 1
 Imported from: AT-AT CI - New Portfolio-->
 <tr>
 <td>waitForElementPresent</td>
-<td>css=.empty-state__message</td>
+<td>css=.empty-state h3</td>
 <td></td>
 </tr>
 <tr>
 <td>assertText</td>
-<td>css=.empty-state__message</td>
-<td>*This portfolio doesn’t have any applications*</td>
+<td>css=.empty-state h3</td>
+<td>*You don't have any Applications yet*</td>
 </tr>
 <tr>
 <td>waitForPageToLoad</td>
@@ -519,12 +521,12 @@ Imported from: AT-AT CI - New App Step 2
 Imported from: AT-AT CI - New App Step 1-->
 <tr>
 <td>waitForElementPresent</td>
-<td>css=a.usa-button.usa-button-big</td>
+<td>css=a.usa-button.usa-button-primary</td>
 <td></td>
 </tr>
 <tr>
 <td>click</td>
-<td>css=a.usa-button.usa-button-big</td>
+<td>css=a.usa-button.usa-button-primary</td>
 <td></td>
 </tr>
 <tr>
@@ -990,23 +992,6 @@ Imported from: AT-AT CI - New App Step 3-->
 Imported from: AT-AT CI - New App Step 3-->
 <tr>
 <td>waitForElementPresent</td>
-<td>css=[name=environment_roles-0-role] > option:nth-of-type(1)</td>
-<td></td>
-</tr>
-<tr>
-<td>click</td>
-<td>css=[name=environment_roles-0-role] > option:nth-of-type(1)</td>
-<td></td>
-</tr>
-<tr>
-<td>waitForPageToLoad</td>
-<td></td>
-<td></td>
-</tr>
-<!--Imported from: AT-AT CI - Application Settings
-Imported from: AT-AT CI - New App Step 3-->
-<tr>
-<td>waitForElementPresent</td>
 <td>css=[name=environment_roles-1-role]</td>
 <td></td>
 </tr>
@@ -1014,91 +999,6 @@ Imported from: AT-AT CI - New App Step 3-->
 <td>type</td>
 <td>css=[name=environment_roles-1-role]</td>
 <td>Network Admin</td>
-</tr>
-<tr>
-<td>waitForPageToLoad</td>
-<td></td>
-<td></td>
-</tr>
-<!--Imported from: AT-AT CI - Application Settings
-Imported from: AT-AT CI - New App Step 3-->
-<tr>
-<td>waitForElementPresent</td>
-<td>css=[name=environment_roles-1-role] > option:nth-of-type(2)</td>
-<td></td>
-</tr>
-<tr>
-<td>click</td>
-<td>css=[name=environment_roles-1-role] > option:nth-of-type(2)</td>
-<td></td>
-</tr>
-<tr>
-<td>waitForPageToLoad</td>
-<td></td>
-<td></td>
-</tr>
-<!--Imported from: AT-AT CI - Application Settings
-Imported from: AT-AT CI - New App Step 3-->
-<tr>
-<td>waitForElementPresent</td>
-<td>css=[name=environment_roles-2-role]</td>
-<td></td>
-</tr>
-<tr>
-<td>type</td>
-<td>css=[name=environment_roles-2-role]</td>
-<td>Business Read-only</td>
-</tr>
-<tr>
-<td>waitForPageToLoad</td>
-<td></td>
-<td></td>
-</tr>
-<!--Imported from: AT-AT CI - Application Settings
-Imported from: AT-AT CI - New App Step 3-->
-<tr>
-<td>waitForElementPresent</td>
-<td>css=[name=environment_roles-2-role] > option:nth-of-type(3)</td>
-<td></td>
-</tr>
-<tr>
-<td>click</td>
-<td>css=[name=environment_roles-2-role] > option:nth-of-type(3)</td>
-<td></td>
-</tr>
-<tr>
-<td>waitForPageToLoad</td>
-<td></td>
-<td></td>
-</tr>
-<!--Imported from: AT-AT CI - Application Settings
-Imported from: AT-AT CI - New App Step 3-->
-<tr>
-<td>waitForElementPresent</td>
-<td>css=[name=environment_roles-3-role]</td>
-<td></td>
-</tr>
-<tr>
-<td>type</td>
-<td>css=[name=environment_roles-3-role]</td>
-<td>Technical Read-only</td>
-</tr>
-<tr>
-<td>waitForPageToLoad</td>
-<td></td>
-<td></td>
-</tr>
-<!--Imported from: AT-AT CI - Application Settings
-Imported from: AT-AT CI - New App Step 3-->
-<tr>
-<td>waitForElementPresent</td>
-<td>css=[name=environment_roles-3-role] > option:nth-of-type(4)</td>
-<td></td>
-</tr>
-<tr>
-<td>click</td>
-<td>css=[name=environment_roles-3-role] > option:nth-of-type(4)</td>
-<td></td>
 </tr>
 <tr>
 <td>waitForPageToLoad</td>
@@ -1288,12 +1188,12 @@ Imported from: AT-AT CI - New App Step 3-->
 </tr>
 <tr>
 <td>waitForElementPresent</td>
-<td>css=svg.svg-inline--fa.fa-ellipsis-h</td>
+<td>css=svg.svg-inline--fa.fa-ellipsis-h.fa-w-16</td>
 <td></td>
 </tr>
 <tr>
 <td>click</td>
-<td>css=svg.svg-inline--fa.fa-ellipsis-h</td>
+<td>css=svg.svg-inline--fa.fa-ellipsis-h.fa-w-16</td>
 <td></td>
 </tr>
 <tr>
@@ -1303,27 +1203,12 @@ Imported from: AT-AT CI - New App Step 3-->
 </tr>
 <tr>
 <td>waitForElementPresent</td>
-<td>css=.accordion-table__item-toggle-content > a:nth-of-type(2)</td>
-<td></td>
-</tr>
-<tr>
-<td>assertText</td>
-<td>css=.accordion-table__item-toggle-content > a:nth-of-type(2)</td>
-<td>*Resend Invite*</td>
-</tr>
-<tr>
-<td>waitForPageToLoad</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>waitForElementPresent</td>
-<td>css=.accordion-table__item-toggle-content > a:nth-of-type(2)</td>
+<td>css=.accordion-table__item-toggle-content.app-member-menu__toggle > a:nth-of-type(1)</td>
 <td></td>
 </tr>
 <tr>
 <td>click</td>
-<td>css=.accordion-table__item-toggle-content > a:nth-of-type(2)</td>
+<td>css=.accordion-table__item-toggle-content.app-member-menu__toggle > a:nth-of-type(1)</td>
 <td></td>
 </tr>
 <tr>
@@ -1333,13 +1218,13 @@ Imported from: AT-AT CI - New App Step 3-->
 </tr>
 <tr>
 <td>waitForElementPresent</td>
-<td>css=.panel > div:nth-of-type(2) > .modal.form-content--app-mem > .modal__container > .modal__dialog > .modal__body > .modal__form--header > h1</td>
+<td>css=.panel > div:nth-of-type(1) > .modal.form-content--app-mem > .modal__container > .modal__dialog > .modal__body > .modal__form--header > h1</td>
 <td></td>
 </tr>
 <tr>
 <td>assertText</td>
-<td>css=.panel > div:nth-of-type(2) > .modal.form-content--app-mem > .modal__container > .modal__dialog > .modal__body > .modal__form--header > h1</td>
-<td>*Verify Member Information*</td>
+<td>css=.panel > div:nth-of-type(1) > .modal.form-content--app-mem > .modal__container > .modal__dialog > .modal__body > .modal__form--header > h1</td>
+<td>*Manage Brandon Buchannan's Access*</td>
 </tr>
 <tr>
 <td>waitForPageToLoad</td>
@@ -1348,42 +1233,12 @@ Imported from: AT-AT CI - New App Step 3-->
 </tr>
 <tr>
 <td>waitForElementPresent</td>
-<td>css=.application-member__user-info > .usa-input.usa-input--validation--requiredField:nth-of-type(1) > input[id="first_name"][type="text"]</td>
-<td></td>
-</tr>
-<tr>
-<td>assertText</td>
-<td>css=.application-member__user-info > .usa-input.usa-input--validation--requiredField:nth-of-type(1) > input[id="first_name"][type="text"]</td>
-<td>*Brandon*</td>
-</tr>
-<tr>
-<td>waitForPageToLoad</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>waitForElementPresent</td>
-<td>css=.panel > div:nth-of-type(2) > .modal.form-content--app-mem > .modal__container > .modal__dialog > .modal__body > form[action] > .action-group > button[type="submit"]</td>
-<td></td>
-</tr>
-<tr>
-<td>assertText</td>
-<td>css=.panel > div:nth-of-type(2) > .modal.form-content--app-mem > .modal__container > .modal__dialog > .modal__body > form[action] > .action-group > button[type="submit"]</td>
-<td>*Resend Invite*</td>
-</tr>
-<tr>
-<td>waitForPageToLoad</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>waitForElementPresent</td>
-<td>css=.panel > div:nth-of-type(2) > .modal.form-content--app-mem > .modal__container > .modal__dialog > .modal__body > form[action] > .action-group > button[type="submit"]</td>
+<td>css=.environment_roles.environment-roles-new > fieldset.usa-input__choices.revoke-button:nth-of-type(1) > .form-row > .form-col.form-col--third > label.usa-button.button-danger-outline</td>
 <td></td>
 </tr>
 <tr>
 <td>click</td>
-<td>css=.panel > div:nth-of-type(2) > .modal.form-content--app-mem > .modal__container > .modal__dialog > .modal__body > form[action] > .action-group > button[type="submit"]</td>
+<td>css=.environment_roles.environment-roles-new > fieldset.usa-input__choices.revoke-button:nth-of-type(1) > .form-row > .form-col.form-col--third > label.usa-button.button-danger-outline</td>
 <td></td>
 </tr>
 <tr>
@@ -1393,13 +1248,13 @@ Imported from: AT-AT CI - New App Step 3-->
 </tr>
 <tr>
 <td>waitForElementPresent</td>
-<td>css=.usa-alert.usa-alert-success > .usa-alert-body > h3.usa-alert-heading</td>
+<td>css=.usa-alert-text > .form-row > .form-col.form-col--two-thirds > .usa-input__help</td>
 <td></td>
 </tr>
 <tr>
 <td>assertText</td>
-<td>css=.usa-alert.usa-alert-success > .usa-alert-body > h3.usa-alert-heading</td>
-<td>*Application invitation resent*</td>
+<td>css=.usa-alert-text > .form-row > .form-col.form-col--two-thirds > .usa-input__help</td>
+<td>*Save changes to revoke access*</td>
 </tr>
 <tr>
 <td>waitForPageToLoad</td>
@@ -1408,13 +1263,58 @@ Imported from: AT-AT CI - New App Step 3-->
 </tr>
 <tr>
 <td>waitForElementPresent</td>
-<td>css=.usa-alert.usa-alert-success > .usa-alert-body > .usa-alert-text</td>
+<td>css=label.link</td>
+<td></td>
+</tr>
+<tr original-target="label.link,xpath=//label[contains(text(), "Undo")]">
+<td>click</td>
+<td>css=label.link</td>
+<td></td>
+</tr>
+<tr>
+<td>waitForPageToLoad</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>waitForElementPresent</td>
+<td>css=.environment_roles.environment-roles-new > fieldset.usa-input__choices.revoke-button:nth-of-type(1) > .form-row > .form-col.form-col--third > label.usa-button.button-danger-outline</td>
+<td></td>
+</tr>
+<tr>
+<td>click</td>
+<td>css=.environment_roles.environment-roles-new > fieldset.usa-input__choices.revoke-button:nth-of-type(1) > .form-row > .form-col.form-col--third > label.usa-button.button-danger-outline</td>
+<td></td>
+</tr>
+<tr>
+<td>waitForPageToLoad</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>waitForElementPresent</td>
+<td>css=.action-group > input[type="submit"].usa-button.usa-button-primary.action-group__action</td>
+<td></td>
+</tr>
+<tr>
+<td>click</td>
+<td>css=.action-group > input[type="submit"].usa-button.usa-button-primary.action-group__action</td>
+<td></td>
+</tr>
+<tr>
+<td>waitForPageToLoad</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>waitForElementPresent</td>
+<td>css=table.atat-table > tbody > tr:nth-of-type(1) > td.env_role--td > .row:nth-of-type(1) > .env-role__role</td>
 <td></td>
 </tr>
 <tr>
 <td>assertText</td>
-<td>css=.usa-alert.usa-alert-success > .usa-alert-body > .usa-alert-text</td>
-<td>*You have successfully resent the invite for Brandon Buchannan*</td>
+<td>css=table.atat-table > tbody > tr:nth-of-type(1) > td.env_role--td > .row:nth-of-type(1) > .env-role__role</td>
+<td>*None*</td>
 </tr>
 </tbody>
 </table>
