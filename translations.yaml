@@ -123,6 +123,8 @@ flash:
   new_ppoc_message: 'You have successfully added {ppoc_name} as the primary point of contact. You are no longer the PPoC.'
   new_ppoc_title: Primary point of contact updated
   success: Success!
+  task_order_number_error:
+    message: 'The TO number has already been entered for a JEDI task order #{to_number}. Please double-check the TO number you are entering. If you believe this is in error, please contact support@cloud.mil.'
   new_application_member:
     title: "{user_name}'s invitation has been sent"
     message: "{user_name}'s access to this Application is pending until they sign in for the first time."

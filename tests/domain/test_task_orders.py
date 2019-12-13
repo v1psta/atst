@@ -2,6 +2,7 @@ import pytest
 from datetime import date, timedelta
 from decimal import Decimal
 
+from atst.domain.exceptions import AlreadyExistsError
 from atst.domain.task_orders import TaskOrders
 from atst.models import Attachment
 from atst.models.task_order import TaskOrder, SORT_ORDERING, Status
@@ -154,3 +155,18 @@ def test_task_order_sort_by_status():
     assert len(sorted_by_status["Expired"]) == 2
     assert len(sorted_by_status["Unsigned"]) == 1
     assert list(sorted_by_status.keys()) == [status.value for status in SORT_ORDERING]
+
+
+def test_create_enforces_unique_number():
+    portfolio = PortfolioFactory.create()
+    number = "1234567890123"
+    assert TaskOrders.create(portfolio.id, number, [], None)
+    with pytest.raises(AlreadyExistsError):
+        TaskOrders.create(portfolio.id, number, [], None)
+
+
+def test_update_enforces_unique_number():
+    task_order = TaskOrderFactory.create()
+    dupe_task_order = TaskOrderFactory.create()
+    with pytest.raises(AlreadyExistsError):
+        TaskOrders.update(dupe_task_order.id, task_order.number, [], None)

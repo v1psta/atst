@@ -2,7 +2,7 @@ import datetime
 from dateutil.relativedelta import relativedelta
 from flask import current_app as app
 
-from atst.forms.task_order import CLINForm
+from atst.forms.task_order import CLINForm, TaskOrderForm
 from atst.models import JEDICLINType
 from atst.utils.localization import translate
 
@@ -106,3 +106,9 @@ def test_clin_form_dollar_amounts_out_of_range():
     assert (
         translate("forms.task_order.clin_funding_errors.funding_range_error")
     ) in invalid_clin_form.obligated_amount.errors
+
+
+def test_no_number():
+    http_request_form_data = {}
+    form = TaskOrderForm(http_request_form_data)
+    assert form.data["number"] is None

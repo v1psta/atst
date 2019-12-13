@@ -170,6 +170,26 @@ def test_task_orders_submit_form_step_two_add_number(client, user_session, task_
     assert task_order.number == "1234567890"
 
 
+def test_task_orders_submit_form_step_two_enforces_unique_number(
+    client, user_session, task_order, session
+):
+    number = "1234567890123"
+    dupe_task_order = TaskOrderFactory.create(number=number)
+    portfolio = task_order.portfolio
+    user_session(task_order.portfolio.owner)
+    form_data = {"number": number}
+    session.begin_nested()
+    response = client.post(
+        url_for(
+            "task_orders.submit_form_step_two_add_number", task_order_id=task_order.id
+        ),
+        data=form_data,
+    )
+    session.rollback()
+
+    assert response.status_code == 400
+
+
 def test_task_orders_submit_form_step_two_add_number_existing_to(
     client, user_session, task_order
 ):

@@ -19,7 +19,7 @@
       {% if task_orders|length > 0 %}
         {% for task_order in task_orders %}
           {% set to_number %}
-            {% if task_order.number != "" %}
+            {% if task_order.number != None %}
               Task Order #{{ task_order.number }}
             {% else %}
               New Task Order
