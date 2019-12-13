@@ -13,7 +13,7 @@ from numbers import Number
 
 from .data import JEDI_CLIN_TYPES
 from .fields import SelectField
-from .forms import BaseForm
+from .forms import BaseForm, remove_empty_string
 from atst.utils.localization import translate
 from flask import current_app as app
 
@@ -134,21 +134,16 @@ class AttachmentForm(BaseForm):
 
 
 class TaskOrderForm(BaseForm):
-    number = StringField(label=translate("forms.task_order.number_description"))
+    number = StringField(
+        label=translate("forms.task_order.number_description"),
+        filters=[remove_empty_string],
+    )
     pdf = FormField(
         AttachmentForm,
         label=translate("task_orders.form.supporting_docs_size_limit"),
         description=translate("task_orders.form.supporting_docs_size_limit"),
     )
     clins = FieldList(FormField(CLINForm))
-
-    @property
-    def data(self):
-        _data = super().data
-        if _data["number"] == "":
-            _data["number"] = None
-
-        return _data
 
 
 class SignatureForm(BaseForm):
