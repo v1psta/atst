@@ -56,7 +56,9 @@
           </div>
         {% endfor %}
       {% else %}
-        {{ "task_orders.status_empty_state" | translate({ 'status': status }) }}
+        <div class="accordion__content--empty">
+          {{ "task_orders.status_empty_state" | translate({ 'status': status }) }}
+        </div>
       {% endif %}
     {% endcall %}
   </div>
