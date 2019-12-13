@@ -152,5 +152,5 @@ def test_task_order_sort_by_status():
     assert len(sorted_by_status["Active"]) == 1
     assert len(sorted_by_status["Upcoming"]) == 1
     assert len(sorted_by_status["Expired"]) == 2
-    assert len(sorted_by_status["Not signed"]) == 1
+    assert len(sorted_by_status["Unsigned"]) == 1
     assert list(sorted_by_status.keys()) == [status.value for status in SORT_ORDERING]

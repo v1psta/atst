@@ -28,5 +28,8 @@ def review_task_order(task_order_id):
 def portfolio_funding(portfolio_id):
     portfolio = Portfolios.get(g.current_user, portfolio_id)
     task_orders = TaskOrders.sort_by_status(portfolio.task_orders)
+    to_count = len(portfolio.task_orders)
     # TODO: Get expended amount from the CSP
-    return render_template("task_orders/index.html", task_orders=task_orders)
+    return render_template(
+        "task_orders/index.html", task_orders=task_orders, to_count=to_count
+    )
