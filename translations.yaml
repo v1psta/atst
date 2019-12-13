@@ -529,6 +529,8 @@ task_orders:
       team_title: Your team
   sign:
     digital_signature_description: I acknowledge that the uploaded task order contains the required KO signature.
+  status_empty_state: 'This Portfolio has no {status} Task Orders.'
+  status_list_title: '{status} Task Orders'
 JEDICLINType:
   JEDI_CLIN_1: 'IDIQ CLIN 0001 Unclassified IaaS/PaaS'
   JEDI_CLIN_2: 'IDIQ CLIN 0002 Classified IaaS/PaaS'
