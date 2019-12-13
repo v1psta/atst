@@ -12,6 +12,7 @@ from atst.domain.application_roles import ApplicationRoles
 from atst.domain.environment_roles import EnvironmentRoles
 from atst.domain.invitations import ApplicationInvitations
 from atst.domain.common import Paginator
+from atst.domain.csp.cloud import GeneralCSPException
 from atst.domain.permission_sets import PermissionSets
 from atst.models.application_role import Status as ApplicationRoleStatus
 from atst.models.environment_role import CSPRole, EnvironmentRole
@@ -748,3 +749,41 @@ def test_handle_update_member(set_g):
     assert len(application.roles) == 1
     assert len(app_role.environment_roles) == 1
     assert app_role.environment_roles[0].environment == env
+
+
+def test_handle_update_member_with_error(set_g, monkeypatch, mock_logger):
+    exception = "An error occurred."
+
+    def _raise_csp_exception(*args, **kwargs):
+        raise GeneralCSPException(exception)
+
+    monkeypatch.setattr(
+        "atst.domain.environments.Environments.update_env_role", _raise_csp_exception
+    )
+
+    user = UserFactory.create()
+    application = ApplicationFactory.create(
+        environments=[{"name": "Naboo"}, {"name": "Endor"}]
+    )
+    (env, env_1) = application.environments
+    app_role = ApplicationRoleFactory(application=application)
+    set_g("current_user", application.portfolio.owner)
+    set_g("portfolio", application.portfolio)
+    set_g("application", application)
+
+    form_data = ImmutableMultiDict(
+        {
+            "environment_roles-0-environment_id": env.id,
+            "environment_roles-0-role": "Basic Access",
+            "environment_roles-0-environment_name": env.name,
+            "environment_roles-1-environment_id": env_1.id,
+            "environment_roles-1-role": NO_ACCESS,
+            "environment_roles-1-environment_name": env_1.name,
+            "perms_env_mgmt": True,
+            "perms_team_mgmt": True,
+            "perms_del_env": True,
+        }
+    )
+    handle_update_member(application.id, app_role.id, form_data)
+
+    assert mock_logger.messages[-1] == exception
