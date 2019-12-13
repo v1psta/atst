@@ -20,6 +20,7 @@ from atst.domain.permission_sets import PermissionSets
 from atst.utils.flash import formatted_flash as flash
 from atst.utils.localization import translate
 from atst.jobs import send_mail
+from atst.routes.errors import log_error
 
 
 def get_environments_obj_for_app(application):
@@ -234,7 +235,8 @@ def handle_update_member(application_id, application_role_id, form_data):
 
             flash("application_member_updated", user_name=app_role.user_name)
 
-        except GeneralCSPException:
+        except GeneralCSPException as exc:
+            log_error(exc)
             flash(
                 "application_member_update_error", user_name=app_role.user_name,
             )

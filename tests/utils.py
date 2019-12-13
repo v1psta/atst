@@ -40,6 +40,9 @@ class FakeLogger:
     def error(self, msg, *args, **kwargs):
         self._log("error", msg, *args, **kwargs)
 
+    def exception(self, msg, *args, **kwargs):
+        self._log("exception", msg, *args, **kwargs)
+
     def _log(self, _lvl, msg, *args, **kwargs):
         self.messages.append(msg)
         if "extra" in kwargs:
