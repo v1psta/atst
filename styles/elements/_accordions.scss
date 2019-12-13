@@ -46,5 +46,20 @@
         margin: 0;
       }
     }
+
+    &--empty {
+      font-weight: $font-bold;
+      color: $color-gray-dark;
+      padding: $gap * 8;
+      text-align: center;
+    }
+  }
+
+  &-list {
+    max-width: $max-panel-width;
+
+    &__collapse {
+      cursor: pointer;
+    }
   }
 }

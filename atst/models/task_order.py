@@ -1,5 +1,5 @@
-from datetime import timedelta
 from enum import Enum
+from decimal import Decimal
 
 from sqlalchemy import Column, DateTime, ForeignKey, String
 from sqlalchemy.ext.hybrid import hybrid_property
@@ -17,15 +17,16 @@ class Status(Enum):
     ACTIVE = "Active"
     UPCOMING = "Upcoming"
     EXPIRED = "Expired"
-    UNSIGNED = "Not signed"
+    UNSIGNED = "Unsigned"
 
 
-SORT_ORDERING = {
-    status: order
-    for (order, status) in enumerate(
-        [Status.DRAFT, Status.ACTIVE, Status.UPCOMING, Status.EXPIRED, Status.UNSIGNED]
-    )
-}
+SORT_ORDERING = [
+    Status.ACTIVE,
+    Status.DRAFT,
+    Status.UPCOMING,
+    Status.EXPIRED,
+    Status.UNSIGNED,
+]
 
 
 class TaskOrder(Base, mixins.TimestampsMixin):
@@ -131,12 +132,11 @@ class TaskOrder(Base, mixins.TimestampsMixin):
 
     @property
     def start_date(self):
-        return min((c.start_date for c in self.clins), default=self.time_created.date())
+        return min((c.start_date for c in self.clins), default=None)
 
     @property
     def end_date(self):
-        default_end_date = self.start_date + timedelta(days=1)
-        return max((c.end_date for c in self.clins), default=default_end_date)
+        return max((c.end_date for c in self.clins), default=None)
 
     @property
     def days_to_expiration(self):
@@ -169,6 +169,11 @@ class TaskOrder(Base, mixins.TimestampsMixin):
         # TODO: fix task order -- reimplement using CLINs
         # Faked for display purposes
         return 50
+
+    @property
+    def invoiced_funds(self):
+        # TODO: implement this using reporting data from the CSP
+        return self.total_obligated_funds * Decimal(0.75)
 
     @property
     def display_status(self):
