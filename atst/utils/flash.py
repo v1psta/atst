@@ -165,6 +165,11 @@ MESSAGES = {
         "message_template": translate("task_orders.form.draft_alert_message"),
         "category": "warning",
     },
+    "task_order_number_error": {
+        "title_template": "",
+        "message_template": """{{ 'flash.task_order_number_error.message' | translate({ 'to_number': to_number }) }}""",
+        "category": "error",
+    },
     "task_order_submitted": {
         "title_template": "Your Task Order has been uploaded successfully.",
         "message_template": """

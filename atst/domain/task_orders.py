@@ -1,9 +1,11 @@
 import datetime
+from sqlalchemy.exc import IntegrityError
 
 from atst.database import db
 from atst.models.clin import CLIN
 from atst.models.task_order import TaskOrder, SORT_ORDERING
 from . import BaseDomainClass
+from .exceptions import AlreadyExistsError
 
 
 class TaskOrders(BaseDomainClass):
@@ -14,7 +16,12 @@ class TaskOrders(BaseDomainClass):
     def create(cls, portfolio_id, number, clins, pdf):
         task_order = TaskOrder(portfolio_id=portfolio_id, number=number, pdf=pdf)
         db.session.add(task_order)
-        db.session.commit()
+
+        try:
+            db.session.commit()
+        except IntegrityError:
+            db.session.rollback()
+            raise AlreadyExistsError("task_order")
 
         TaskOrders.create_clins(task_order.id, clins)
 
@@ -35,7 +42,12 @@ class TaskOrders(BaseDomainClass):
             task_order.number = number
             db.session.add(task_order)
 
-        db.session.commit()
+        try:
+            db.session.commit()
+        except IntegrityError:
+            db.session.rollback()
+            raise AlreadyExistsError("task_order")
+
         return task_order
 
     @classmethod
