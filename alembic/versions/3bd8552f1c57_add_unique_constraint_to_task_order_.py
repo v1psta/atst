@@ -1,7 +1,7 @@
 """add unique constraint to task order number
 
 Revision ID: 3bd8552f1c57
-Revises: 67a2151d6269
+Revises: 802071bcd013
 Create Date: 2019-12-10 12:45:17.535973
 
 """
@@ -9,7 +9,7 @@ from alembic import op
 
 # revision identifiers, used by Alembic.
 revision = '3bd8552f1c57' # pragma: allowlist secret
-down_revision = '67a2151d6269' # pragma: allowlist secret
+down_revision = '802071bcd013' # pragma: allowlist secret
 branch_labels = None
 depends_on = None
 
