@@ -51,7 +51,7 @@ variable "sku_family" {
 variable "storage_mb" {
   type        = string
   description = "Size in MB of the storage used for the sql server"
-  default     = "5000"
+  default     = "5120"
 }
 
 
@@ -70,6 +70,31 @@ variable "storage_geo_redundant_backup" {
 variable "storage_auto_grow" {
   type        = string
   description = "Auto Grow? (Enabled/Disabled)"
+  default     = "Enabled"
+}
+
+variable "administrator_login" {
+  type        = string
+  description = "Administrator login"
+  default     = "sqladmindude" # FIXME - Remove with wrapper using KeyVault
+}
+
+variable "administrator_login_password" {
+  type        = string
+  description = "Administrator password"
+  default     = "eI0l7yswwtuhHpwzoVjwRKdAcuGNsg" # FIXME - Remove with wrapper using KeyVault
+}
+
+
+variable "postgres_version" {
+  type        = string
+  description = "Postgres version to use"
+  default     = "11"
+}
+
+variable "ssl_enforcement" {
+  type        = string
+  description = "Enforce SSL (Enabled/Disable)"
   default     = "Enabled"
 }
 
