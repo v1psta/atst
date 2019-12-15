@@ -14,6 +14,11 @@ variable "environment" {
 }
 
 variable "owner" {
-  type = string
+  type        = string
   description = "Owner of this environment"
+}
+
+variable "tenant_id" {
+  type        = string
+  description = "The Tenant ID"
 }

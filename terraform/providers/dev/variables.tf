@@ -54,3 +54,8 @@ variable "k8s_dns_prefix" {
   type    = string
   default = "atat"
 }
+
+variable "tenant_id" {
+  type    = string
+  default = "b5ab0e1e-09f8-4258-afb7-fb17654bc5b3"
+}
