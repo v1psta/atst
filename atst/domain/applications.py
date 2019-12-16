@@ -1,7 +1,4 @@
-from sqlalchemy.exc import IntegrityError
-
 from . import BaseDomainClass
-from .exceptions import AlreadyExistsError
 from flask import g
 from atst.database import db
 from atst.domain.application_roles import ApplicationRoles
@@ -14,7 +11,7 @@ from atst.models import (
     ApplicationRoleStatus,
     EnvironmentRole,
 )
-from atst.utils import first_or_none
+from atst.utils import first_or_none, update_or_raise_already_exists_error
 
 
 class Applications(BaseDomainClass):
@@ -31,12 +28,7 @@ class Applications(BaseDomainClass):
         if environment_names:
             Environments.create_many(user, application, environment_names)
 
-        try:
-            db.session.commit()
-        except IntegrityError:
-            db.session.rollback()
-            raise AlreadyExistsError("application")
-
+        update_or_raise_already_exists_error(message="application")
         return application
 
     @classmethod
@@ -61,14 +53,9 @@ class Applications(BaseDomainClass):
             Environments.create_many(
                 g.current_user, application, new_data["environment_names"]
             )
+
         db.session.add(application)
-
-        try:
-            db.session.commit()
-        except IntegrityError:
-            db.session.rollback()
-            raise AlreadyExistsError("application")
-
+        update_or_raise_already_exists_error(message="application")
         return application
 
     @classmethod
