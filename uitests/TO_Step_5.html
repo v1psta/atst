@@ -35,11 +35,33 @@
 Imported from: AT-AT CI - TO Step 3
 Imported from: AT-AT CI - TO Step 2
 Imported from: AT-AT CI - TO Step 1
-Imported from: AT-AT CI - New Portfolio-->
+Imported from: AT-AT CI - New Portfolio
+Imported from: AT-AT CI - login-->
 <tr>
 <td>open</td>
 <td>/login-dev</td>
 <td></td>
+</tr>
+<tr>
+<td>waitForPageToLoad</td>
+<td></td>
+<td></td>
+</tr>
+<!--Imported from: AT-AT CI - TO Step 4
+Imported from: AT-AT CI - TO Step 3
+Imported from: AT-AT CI - TO Step 2
+Imported from: AT-AT CI - TO Step 1
+Imported from: AT-AT CI - New Portfolio
+Imported from: AT-AT CI - login-->
+<tr>
+<td>waitForElementPresent</td>
+<td>css=.about-cloud > h1</td>
+<td></td>
+</tr>
+<tr>
+<td>assertText</td>
+<td>css=.about-cloud > h1</td>
+<td>About Cloud Services</td>
 </tr>
 <tr>
 <td>waitForPageToLoad</td>
@@ -120,26 +142,6 @@ Imported from: AT-AT CI - New Portfolio-->
 <td>type</td>
 <td>css=#defense_component</td>
 <td>Defense Logistics Agency</td>
-</tr>
-<tr>
-<td>waitForPageToLoad</td>
-<td></td>
-<td></td>
-</tr>
-<!--Imported from: AT-AT CI - TO Step 4
-Imported from: AT-AT CI - TO Step 3
-Imported from: AT-AT CI - TO Step 2
-Imported from: AT-AT CI - TO Step 1
-Imported from: AT-AT CI - New Portfolio-->
-<tr>
-<td>waitForElementPresent</td>
-<td>css=#defense_component > option:nth-of-type(14)</td>
-<td></td>
-</tr>
-<tr>
-<td>click</td>
-<td>css=#defense_component > option:nth-of-type(14)</td>
-<td></td>
 </tr>
 <tr>
 <td>waitForPageToLoad</td>
@@ -433,13 +435,13 @@ Imported from: AT-AT CI - TO Step 1
 Imported from: AT-AT CI - New Portfolio-->
 <tr>
 <td>waitForElementPresent</td>
-<td>css=.empty-state__message</td>
+<td>css=.empty-state h3</td>
 <td></td>
 </tr>
 <tr>
 <td>assertText</td>
-<td>css=.empty-state__message</td>
-<td>*This portfolio doesn’t have any applications*</td>
+<td>css=.empty-state h3</td>
+<td>*You don't have any Applications yet*</td>
 </tr>
 <tr>
 <td>waitForPageToLoad</td>
@@ -471,13 +473,13 @@ Imported from: AT-AT CI - TO Step 2
 Imported from: AT-AT CI - TO Step 1-->
 <tr>
 <td>waitForElementPresent</td>
-<td>css=.empty-state__message</td>
+<td>css=.sticky-cta-text h3</td>
 <td></td>
 </tr>
 <tr>
 <td>assertText</td>
-<td>css=.empty-state__message</td>
-<td>*This portfolio doesn’t have any active or pending task orders.*</td>
+<td>css=.sticky-cta-text h3</td>
+<td>*Task Orders*</td>
 </tr>
 <tr>
 <td>waitForPageToLoad</td>
@@ -490,12 +492,12 @@ Imported from: AT-AT CI - TO Step 2
 Imported from: AT-AT CI - TO Step 1-->
 <tr>
 <td>waitForElementPresent</td>
-<td>css=.usa-button.usa-button-big</td>
+<td>css=.usa-button.usa-button-primary</td>
 <td></td>
 </tr>
 <tr>
 <td>click</td>
-<td>css=.usa-button.usa-button-big</td>
+<td>css=.usa-button.usa-button-primary</td>
 <td></td>
 </tr>
 <tr>
@@ -554,6 +556,21 @@ Imported from: AT-AT CI - TO Step 1-->
 <td>type</td>
 <td>css=#pdf</td>
 <td>https://ghostinspector-prod.s3.amazonaws.com/uploads/726e1c95-2d16-4793-85d8-b4d3ae9cd35d.pdf</td>
+</tr>
+<tr>
+<td>waitForPageToLoad</td>
+<td></td>
+<td></td>
+</tr>
+<!--Imported from: AT-AT CI - TO Step 4
+Imported from: AT-AT CI - TO Step 3
+Imported from: AT-AT CI - TO Step 2
+Imported from: AT-AT CI - TO Step 1
+This is Ghost Inspector flow control. The test will wait until the file is uploaded, which in turn causes the button to be enabled (i.e., not disabled).-->
+<tr>
+<td>assertElementNotPresent</td>
+<td>css=input[type="submit"][disabled="disabled"]</td>
+<td></td>
 </tr>
 <tr>
 <td>waitForPageToLoad</td>
@@ -626,7 +643,7 @@ Imported from: AT-AT CI - TO Step 2-->
 <tr>
 <td>type</td>
 <td>css=#number</td>
-<td>1234567890123</td>
+<td>${timestamp}</td>
 </tr>
 <tr>
 <td>waitForPageToLoad</td>
@@ -730,23 +747,6 @@ Imported from: AT-AT CI - TO Step 3-->
 <td>type</td>
 <td>css=#clins-0-jedi_clin_type</td>
 <td>JEDI_CLIN_2</td>
-</tr>
-<tr>
-<td>waitForPageToLoad</td>
-<td></td>
-<td></td>
-</tr>
-<!--Imported from: AT-AT CI - TO Step 4
-Imported from: AT-AT CI - TO Step 3-->
-<tr>
-<td>waitForElementPresent</td>
-<td>css=#clins-0-jedi_clin_type > option:nth-of-type(2)</td>
-<td></td>
-</tr>
-<tr>
-<td>click</td>
-<td>css=#clins-0-jedi_clin_type > option:nth-of-type(2)</td>
-<td></td>
 </tr>
 <tr>
 <td>waitForPageToLoad</td>
@@ -1045,9 +1045,9 @@ Imported from: AT-AT CI - TO Step 3-->
 <td></td>
 </tr>
 <tr>
-<td>assertText</td>
+<td>assertElementPresent</td>
 <td>css=.col.task-order__details > div:nth-of-type(2)</td>
-<td>*1234567890123*</td>
+<td></td>
 </tr>
 <tr>
 <td>waitForPageToLoad</td>
@@ -1116,16 +1116,6 @@ Imported from: AT-AT CI - TO Step 3-->
 <td></td>
 </tr>
 <tr>
-<td>captureEntirePageScreenshot</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>waitForPageToLoad</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
 <td>waitForElementPresent</td>
 <td>css=input[type="submit"]</td>
 <td></td>
@@ -1142,6 +1132,21 @@ Imported from: AT-AT CI - TO Step 3-->
 </tr>
 <tr>
 <td>waitForElementPresent</td>
+<td>css=h3.usa-alert-heading</td>
+<td></td>
+</tr>
+<tr>
+<td>assertText</td>
+<td>css=h3.usa-alert-heading</td>
+<td>*Your Task Order has been uploaded successfully.*</td>
+</tr>
+<tr>
+<td>waitForPageToLoad</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>waitForElementPresent</td>
 <td>css=.usa-alert-text</td>
 <td></td>
 </tr>
@@ -1149,6 +1154,36 @@ Imported from: AT-AT CI - TO Step 3-->
 <td>assertText</td>
 <td>css=.usa-alert-text</td>
 <td>*Your task order form for Tatooine Energy Maintenance Systems has been submitted.*</td>
+</tr>
+<tr>
+<td>waitForPageToLoad</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>waitForElementPresent</td>
+<td>css=.portfolio-funding</td>
+<td></td>
+</tr>
+<tr>
+<td>assertElementPresent</td>
+<td>css=.portfolio-funding</td>
+<td></td>
+</tr>
+<tr>
+<td>waitForPageToLoad</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>waitForElementPresent</td>
+<td>css=.action-group</td>
+<td></td>
+</tr>
+<tr>
+<td>assertElementPresent</td>
+<td>css=.action-group</td>
+<td></td>
 </tr>
 </tbody>
 </table>

@@ -1,9 +1,11 @@
 import datetime
+from sqlalchemy.exc import IntegrityError
 
 from atst.database import db
 from atst.models.clin import CLIN
 from atst.models.task_order import TaskOrder, SORT_ORDERING
 from . import BaseDomainClass
+from .exceptions import AlreadyExistsError
 
 
 class TaskOrders(BaseDomainClass):
@@ -11,12 +13,15 @@ class TaskOrders(BaseDomainClass):
     resource_name = "task_order"
 
     @classmethod
-    def create(cls, creator, portfolio_id, number, clins, pdf):
-        task_order = TaskOrder(
-            portfolio_id=portfolio_id, creator=creator, number=number, pdf=pdf
-        )
+    def create(cls, portfolio_id, number, clins, pdf):
+        task_order = TaskOrder(portfolio_id=portfolio_id, number=number, pdf=pdf)
         db.session.add(task_order)
-        db.session.commit()
+
+        try:
+            db.session.commit()
+        except IntegrityError:
+            db.session.rollback()
+            raise AlreadyExistsError("task_order")
 
         TaskOrders.create_clins(task_order.id, clins)
 
@@ -37,7 +42,12 @@ class TaskOrders(BaseDomainClass):
             task_order.number = number
             db.session.add(task_order)
 
-        db.session.commit()
+        try:
+            db.session.commit()
+        except IntegrityError:
+            db.session.rollback()
+            raise AlreadyExistsError("task_order")
+
         return task_order
 
     @classmethod
@@ -66,10 +76,12 @@ class TaskOrders(BaseDomainClass):
             db.session.commit()
 
     @classmethod
-    def sort(cls, task_orders: [TaskOrder]) -> [TaskOrder]:
-        # Sorts a list of task orders on two keys: status (primary) and time_created (secondary)
-        by_time_created = sorted(task_orders, key=lambda to: to.time_created)
-        by_status = sorted(by_time_created, key=lambda to: SORT_ORDERING.get(to.status))
+    def sort_by_status(cls, task_orders):
+        by_status = {status.value: [] for status in SORT_ORDERING}
+
+        for task_order in task_orders:
+            by_status[task_order.display_status].append(task_order)
+
         return by_status
 
     @classmethod

@@ -200,44 +200,76 @@ def make_config(direct_config=None):
     ENV_CONFIG_FILENAME = os.path.join(
         os.path.dirname(__file__), "../config/", "{}.ini".format(ENV.lower())
     )
-    OVERRIDE_CONFIG_FILENAME = os.getenv("OVERRIDE_CONFIG_FULLPATH")
+    OVERRIDE_CONFIG_DIRECTORY = os.getenv("OVERRIDE_CONFIG_DIRECTORY")
 
     config = ConfigParser(allow_no_value=True)
     config.optionxform = str
 
     config_files = [BASE_CONFIG_FILENAME, ENV_CONFIG_FILENAME]
-    if OVERRIDE_CONFIG_FILENAME:
-        config_files.append(OVERRIDE_CONFIG_FILENAME)
 
     # ENV_CONFIG will override values in BASE_CONFIG.
     config.read(config_files)
 
+    if OVERRIDE_CONFIG_DIRECTORY:
+        apply_config_from_directory(OVERRIDE_CONFIG_DIRECTORY, config)
+
     # Check for ENV variables as a final source of overrides
-    for confsetting in config.options("default"):
-        env_override = os.getenv(confsetting.upper())
-        if env_override:
-            config.set("default", confsetting, env_override)
+    apply_config_from_environment(config)
 
     # override if a dictionary of options has been given
     if direct_config:
         config.read_dict({"default": direct_config})
 
     # Assemble DATABASE_URI value
-    database_uri = (
-        "postgres://"
-        + config.get("default", "PGUSER")
-        + ":"
-        + config.get("default", "PGPASSWORD")
-        + "@"
-        + config.get("default", "PGHOST")
-        + ":"
-        + config.get("default", "PGPORT")
-        + "/"
-        + config.get("default", "PGDATABASE")
+    database_uri = "postgres://{}:{}@{}:{}/{}".format(  # pragma: allowlist secret
+        config.get("default", "PGUSER"),
+        config.get("default", "PGPASSWORD"),
+        config.get("default", "PGHOST"),
+        config.get("default", "PGPORT"),
+        config.get("default", "PGDATABASE"),
     )
     config.set("default", "DATABASE_URI", database_uri)
 
+    # Assemble REDIS_URI value
+    redis_uri = "redis{}://{}:{}@{}".format(  # pragma: allowlist secret
+        ("s" if config["default"].getboolean("REDIS_TLS") else ""),
+        (config.get("default", "REDIS_USER") or ""),
+        (config.get("default", "REDIS_PASSWORD") or ""),
+        config.get("default", "REDIS_HOST"),
+    )
+    config.set("default", "REDIS_URI", redis_uri)
+
     return map_config(config)
+
+
+def apply_config_from_directory(config_dir, config, section="default"):
+    """
+    Loop files in a directory, check if the names correspond to
+    known config values, and apply the file contents as the value
+    for that setting if they do.
+    """
+    for confsetting in os.listdir(config_dir):
+        if confsetting in config.options(section):
+            full_path = os.path.join(config_dir, confsetting)
+            with open(full_path, "r") as conf_file:
+                config.set(section, confsetting, conf_file.read().strip())
+
+    return config
+
+
+def apply_config_from_environment(config, section="default"):
+    """
+    Loops all the configuration settins in a given section of a
+    config object and checks whether those settings also exist as
+    environment variables. If so, it applies the environment
+    variables value as the new configuration setting value.
+    """
+    for confsetting in config.options(section):
+        env_override = os.getenv(confsetting.upper())
+        if env_override:
+            config.set(section, confsetting, env_override)
+
+    return config
 
 
 def make_redis(app, config):

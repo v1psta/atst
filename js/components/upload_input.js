@@ -58,18 +58,18 @@ export default {
         this.$refs.attachmentFilename.value = file.name
         this.$refs.attachmentObjectName.value = response.objectName
         this.$refs.attachmentInput.disabled = true
+        emitFieldChange(this)
+        this.changed = true
 
         this.downloadLink = await this.getDownloadLink(
           file.name,
           response.objectName
         )
       } else {
+        emitFieldChange(this)
+        this.changed = true
         this.uploadError = true
       }
-
-      this.changed = true
-
-      emitFieldChange(this)
     },
     removeAttachment: function(e) {
       e.preventDefault()

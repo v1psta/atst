@@ -1,7 +1,8 @@
-from flask import render_template
+from flask import render_template, g
 
 from .blueprint import applications_bp
 from atst.domain.authz.decorator import user_can_access_decorator as user_can
+from atst.domain.environment_roles import EnvironmentRoles
 from atst.models.permissions import Permissions
 
 
@@ -23,4 +24,11 @@ def has_portfolio_applications(_user, portfolio=None, **_kwargs):
     message="view portfolio applications",
 )
 def portfolio_applications(portfolio_id):
-    return render_template("applications/index.html")
+    user_env_roles = EnvironmentRoles.for_user(g.current_user.id, portfolio_id)
+    environment_access = {
+        env_role.environment_id: env_role.role for env_role in user_env_roles
+    }
+
+    return render_template(
+        "applications/index.html", environment_access=environment_access
+    )

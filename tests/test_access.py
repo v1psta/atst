@@ -25,8 +25,7 @@ _NO_ACCESS_CHECK_REQUIRED = _NO_LOGIN_REQUIRED + [
     "dev.test_email",  # dev tool
     "portfolios.accept_invitation",  # available to all users; access control is built into invitation logic
     "portfolios.create_portfolio",  # create a portfolio
-    "portfolios.new_portfolio",  # all users can create a portfolio
-    "portfolios.portfolios",  # the portfolios list is scoped to the user separately
+    "portfolios.new_portfolio_step_1",  # all users can create a portfolio
     "task_orders.get_started",  # all users can start a new TO
     "users.update_user",  # available to all users
     "users.user",  # available to all users
@@ -487,7 +486,9 @@ def test_portfolios_resend_invitation_access(post_url_assert_status):
 
     portfolio = PortfolioFactory.create(owner=owner)
     prr = PortfolioRoleFactory.create(user=invitee, portfolio=portfolio)
-    invite = PortfolioInvitationFactory.create(user=UserFactory.create(), role=prr)
+    invite = PortfolioInvitationFactory.create(
+        user=UserFactory.create(), role=prr, inviter_id=owner.id
+    )
 
     url = url_for(
         "portfolios.resend_invitation",
@@ -651,7 +652,6 @@ def test_task_orders_new_get_routes(get_url_assert_status):
 
     portfolio = PortfolioFactory.create(owner=owner)
     task_order = TaskOrderFactory.create(
-        creator=owner,
         portfolio=portfolio,
         create_clins=[{"number": "1234567890123456789012345678901234567890123"}],
     )
@@ -689,7 +689,7 @@ def test_task_orders_new_post_routes(post_url_assert_status):
     rando = user_with()
 
     portfolio = PortfolioFactory.create(owner=owner)
-    task_order = TaskOrderFactory.create(portfolio=portfolio, creator=owner)
+    task_order = TaskOrderFactory.create(portfolio=portfolio)
 
     for route, data in post_routes:
         url = url_for(route, task_order_id=task_order.id)

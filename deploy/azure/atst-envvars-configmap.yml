@@ -6,15 +6,30 @@ metadata:
   namespace: atat
 data:
   ASSETS_URL: https://atat-cdn.azureedge.net/
+  AZURE_ACCOUNT_NAME: atat
+  AZURE_TO_BUCKET_NAME: task-order-pdfs
   BLOB_STORAGE_URL: https://atat.blob.core.windows.net/
-  CELERY_DEFAULT_QUEUE: celery-master
+  CAC_URL: https://auth-staging.atat.code.mil/login-redirect
   CDN_ORIGIN: https://azure.atat.code.mil
+  CELERY_DEFAULT_QUEUE: celery-master
   CSP: azure
+  DEBUG: "0"
   FLASK_ENV: master
   LOG_JSON: "true"
-  OVERRIDE_CONFIG_FULLPATH: /opt/atat/atst/atst-overrides.ini
+  MAIL_PORT: "587"
+  MAIL_SENDER: postmaster@atat.code.mil
+  MAIL_SERVER: smtp.mailgun.org
+  MAIL_TLS: "true"
+  OVERRIDE_CONFIG_DIRECTORY: /config
+  PGAPPNAME: atst
+  PGDATABASE: staging
+  PGHOST: atat-db.postgres.database.azure.com
+  PGPORT: "5432"
   PGSSLMODE: verify-full
   PGSSLROOTCERT: /opt/atat/atst/ssl/pgsslrootcert.crt
+  PGUSER: atat_master@atat-db
+  REDIS_HOST: atat.redis.cache.windows.net:6380
+  REDIS_TLS: "true"
   STATIC_URL: https://atat-cdn.azureedge.net/static/
   TZ: UTC
   UWSGI_CONFIG_FULLPATH: /opt/atat/atst/uwsgi.ini

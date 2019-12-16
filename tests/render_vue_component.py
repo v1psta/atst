@@ -1,10 +1,11 @@
 import pytest
 
 from bs4 import BeautifulSoup
+from flask import Markup
 from wtforms import Form, FormField
 from wtforms.fields import StringField
 from wtforms.validators import InputRequired
-from wtforms.widgets import CheckboxInput
+from wtforms.widgets import ListWidget, CheckboxInput
 
 from atst.forms.task_order import CLINForm
 from atst.forms.task_order import TaskOrderForm
@@ -57,6 +58,12 @@ def checkbox_input_macro(env):
 
 
 @pytest.fixture
+def multi_checkbox_input_macro(env):
+    multi_checkbox_template = env.get_template("components/multi_checkbox_input.html")
+    return getattr(multi_checkbox_template.module, "MultiCheckboxInput")
+
+
+@pytest.fixture
 def initial_value_form(scope="function"):
     return InitialValueForm()
 
@@ -80,6 +87,20 @@ def test_make_checkbox_input_template(checkbox_input_macro, initial_value_form):
     initial_value_form.datafield.widget = CheckboxInput()
     rendered_checkbox_macro = checkbox_input_macro(initial_value_form.datafield)
     write_template(rendered_checkbox_macro, "checkbox_input_template.html")
+
+
+def test_make_multi_checkbox_input_template(
+    multi_checkbox_input_macro, initial_value_form
+):
+    initial_value_form.datafield.widget = ListWidget()
+    initial_value_form.datafield.option_widget = CheckboxInput()
+    initial_value_form.datafield.choices = [("a", "A"), ("b", "B")]
+    rendered_multi_checkbox_input_macro = multi_checkbox_input_macro(
+        initial_value_form.datafield, optional=Markup("'optional'")
+    )
+    write_template(
+        rendered_multi_checkbox_input_macro, "multi_checkbox_input_template.html"
+    )
 
 
 def test_make_upload_input_template(upload_input_macro, task_order_form):

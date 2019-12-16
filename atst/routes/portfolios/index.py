@@ -1,4 +1,4 @@
-from datetime import date, datetime, timedelta
+from datetime import datetime
 
 from flask import redirect, render_template, url_for, request as http_request, g
 
@@ -11,21 +11,10 @@ from atst.domain.authz.decorator import user_can_access_decorator as user_can
 from atst.utils.flash import formatted_flash as flash
 
 
-@portfolios_bp.route("/portfolios")
-def portfolios():
-    portfolios = Portfolios.for_user(g.current_user)
-
-    if portfolios:
-        return render_template("portfolios/index.html", page=5, portfolios=portfolios)
-    else:
-        return render_template("portfolios/blank_slate.html")
-
-
 @portfolios_bp.route("/portfolios/new")
-def new_portfolio():
+def new_portfolio_step_1():
     form = PortfolioCreationForm()
-
-    return render_template("portfolios/new.html", form=form)
+    return render_template("portfolios/new/step_1.html", form=form)
 
 
 @portfolios_bp.route("/portfolios", methods=["POST"])
@@ -38,16 +27,19 @@ def create_portfolio():
             url_for("applications.portfolio_applications", portfolio_id=portfolio.id)
         )
     else:
-        return render_template("portfolios/new.html", form=form), 400
+        return render_template("portfolios/new/step_1.html", form=form), 400
 
 
 @portfolios_bp.route("/portfolios/<portfolio_id>/reports")
 @user_can(Permissions.VIEW_PORTFOLIO_REPORTS, message="view portfolio reports")
 def reports(portfolio_id):
     portfolio = Portfolios.get(g.current_user, portfolio_id)
-    today = date.today()
-    current_month = date(int(today.year), int(today.month), 15)
-    prev_month = current_month - timedelta(days=28)
+
+    current_obligated_funds = Reports.obligated_funds_by_JEDI_clin(portfolio)
+
+    if any(map(lambda clin: clin["remaining"] < 0, current_obligated_funds)):
+        flash("insufficient_funds")
+
     # wrapped in str() because the sum of obligated funds returns a Decimal object
     total_portfolio_value = str(
         sum(
@@ -59,12 +51,10 @@ def reports(portfolio_id):
         "portfolios/reports/index.html",
         portfolio=portfolio,
         total_portfolio_value=total_portfolio_value,
-        current_obligated_funds=Reports.obligated_funds_by_JEDI_clin(portfolio),
+        current_obligated_funds=current_obligated_funds,
         expired_task_orders=Reports.expired_task_orders(portfolio),
-        monthly_totals=Reports.monthly_totals(portfolio),
-        current_month=current_month,
-        prev_month=prev_month,
-        now=datetime.now(),  # mocked datetime of reporting data retrival
+        monthly_spending=Reports.monthly_spending(portfolio),
+        retrieved=datetime.now(),  # mocked datetime of reporting data retrival
     )
 
 

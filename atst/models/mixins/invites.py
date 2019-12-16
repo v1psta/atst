@@ -31,23 +31,29 @@ class InvitesMixin(object):
 
     @declared_attr
     def inviter_id(cls):
-        return Column(UUID(as_uuid=True), ForeignKey("users.id"), index=True)
+        return Column(
+            UUID(as_uuid=True), ForeignKey("users.id"), index=True, nullable=False
+        )
 
     @declared_attr
     def inviter(cls):
         return relationship("User", foreign_keys=[cls.inviter_id])
 
-    status = Column(SQLAEnum(Status, native_enum=False, default=Status.PENDING))
+    status = Column(
+        SQLAEnum(Status, native_enum=False, default=Status.PENDING, nullable=False)
+    )
 
-    expiration_time = Column(TIMESTAMP(timezone=True))
+    expiration_time = Column(TIMESTAMP(timezone=True), nullable=False)
 
-    token = Column(String, index=True, default=lambda: secrets.token_urlsafe())
+    token = Column(
+        String, index=True, default=lambda: secrets.token_urlsafe(), nullable=False
+    )
 
     email = Column(String, nullable=False)
 
-    dod_id = Column(String)
-    first_name = Column(String)
-    last_name = Column(String)
+    dod_id = Column(String, nullable=False)
+    first_name = Column(String, nullable=False)
+    last_name = Column(String, nullable=False)
     phone_number = Column(String)
     phone_ext = Column(String)
 

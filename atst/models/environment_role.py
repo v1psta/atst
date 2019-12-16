@@ -43,7 +43,9 @@ class EnvironmentRole(
         COMPLETED = "completed"
         DISABLED = "disabled"
 
-    status = Column(SQLAEnum(Status, native_enum=False), default=Status.PENDING)
+    status = Column(
+        SQLAEnum(Status, native_enum=False), default=Status.PENDING, nullable=False
+    )
 
     def __repr__(self):
         return "<EnvironmentRole(role='{}', user='{}', environment='{}', id='{}')>".format(

@@ -12,7 +12,10 @@ class ApplicationInvitation(
     __tablename__ = "application_invitations"
 
     application_role_id = Column(
-        UUID(as_uuid=True), ForeignKey("application_roles.id"), index=True
+        UUID(as_uuid=True),
+        ForeignKey("application_roles.id"),
+        index=True,
+        nullable=False,
     )
     role = relationship(
         "ApplicationRole",

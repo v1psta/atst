@@ -14,6 +14,7 @@ from atst.app import make_config, make_app
 from atst.database import db
 
 from atst.models.application import Application
+from atst.models.clin import JEDICLINType
 from atst.models.environment_role import CSPRole
 
 from atst.domain.application_roles import ApplicationRoles
@@ -29,6 +30,8 @@ from atst.domain.portfolios import Portfolios
 from atst.domain.users import Users
 
 from atst.routes.dev import _DEV_USERS as DEV_USERS
+
+from atst.utils import pick
 
 from tests.factories import (
     random_service_branch,
@@ -197,7 +200,22 @@ def add_task_orders_to_portfolio(portfolio):
         CLINFactory.build(
             task_order=expired_to, start_date=(today - five_days), end_date=yesterday
         ),
-        CLINFactory.build(task_order=active_to, start_date=yesterday, end_date=future),
+        CLINFactory.build(
+            task_order=active_to,
+            start_date=yesterday,
+            end_date=future,
+            total_amount=1_000_000,
+            obligated_amount=500_000,
+            jedi_clin_type=JEDICLINType.JEDI_CLIN_1,
+        ),
+        CLINFactory.build(
+            task_order=active_to,
+            start_date=yesterday,
+            end_date=future,
+            total_amount=500_000,
+            obligated_amount=200_000,
+            jedi_clin_type=JEDICLINType.JEDI_CLIN_2,
+        ),
     ]
 
     task_orders = [draft_to, unsigned_to, upcoming_to, expired_to, active_to]
@@ -238,6 +256,7 @@ def add_applications_to_portfolio(portfolio):
                     None,
                     first_name=user_data["first_name"],
                     last_name=user_data["last_name"],
+                    email=user_data["email"],
                 )
 
             app_role = ApplicationRoles.create(
@@ -263,7 +282,23 @@ def add_applications_to_portfolio(portfolio):
 
 def create_demo_portfolio(name, data):
     try:
-        portfolio_owner = Users.get_or_create_by_dod_id("2345678901")  # Amanda
+        portfolio_owner = Users.get_or_create_by_dod_id(
+            "2345678901",
+            **pick(
+                [
+                    "permission_sets",
+                    "first_name",
+                    "last_name",
+                    "email",
+                    "service_branch",
+                    "phone_number",
+                    "citizenship",
+                    "designation",
+                    "date_latest_training",
+                ],
+                DEV_USERS["amanda"],
+            ),
+        )  # Amanda
         # auditor = Users.get_by_dod_id("3453453453")  # Sally
     except NotFoundError:
         print(
@@ -281,9 +316,9 @@ def create_demo_portfolio(name, data):
 
     for mock_application in data["applications"]:
         application = Application(
-            portfolio=portfolio, name=mock_application.name, description=""
+            portfolio=portfolio, name=mock_application["name"], description=""
         )
-        env_names = [env.name for env in mock_application.environments]
+        env_names = [env["name"] for env in mock_application["environments"]]
         envs = Environments.create_many(portfolio.owner, application, env_names)
         db.session.add(application)
         db.session.commit()
@@ -294,8 +329,8 @@ def seed_db():
     amanda = Users.get_by_dod_id("2345678901")
 
     # Create Portfolios for Amanda with mocked reporting data
-    create_demo_portfolio("A-Wing", MockReportingProvider.REPORT_FIXTURE_MAP["A-Wing"])
-    create_demo_portfolio("B-Wing", MockReportingProvider.REPORT_FIXTURE_MAP["B-Wing"])
+    create_demo_portfolio("A-Wing", MockReportingProvider.FIXTURE_SPEND_DATA["A-Wing"])
+    create_demo_portfolio("B-Wing", MockReportingProvider.FIXTURE_SPEND_DATA["B-Wing"])
 
     tie_interceptor = Portfolios.create(
         user=amanda,

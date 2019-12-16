@@ -12,7 +12,7 @@ class PortfolioInvitation(
     __tablename__ = "portfolio_invitations"
 
     portfolio_role_id = Column(
-        UUID(as_uuid=True), ForeignKey("portfolio_roles.id"), index=True
+        UUID(as_uuid=True), ForeignKey("portfolio_roles.id"), index=True, nullable=False
     )
     role = relationship(
         "PortfolioRole",

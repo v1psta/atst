@@ -7,6 +7,11 @@ spec:
   ttlSecondsAfterFinished: 100
   backoffLimit: 2
   template:
+    metadata:
+      labels:
+        app: atst
+        role: migration
+        aadpodidbinding: atat-kv-id-binding
     spec:
       containers:
       - name: migration
@@ -28,20 +33,12 @@ spec:
         - configMapRef:
             name: atst-worker-envvars
         volumeMounts:
-          - name: atst-config
-            mountPath: "/opt/atat/atst/atst-overrides.ini"
-            subPath: atst-overrides.ini
           - name: pgsslrootcert
             mountPath: "/opt/atat/atst/ssl/pgsslrootcert.crt"
             subPath: pgsslrootcert.crt
+          - name: flask-secret
+            mountPath: "/config"
       volumes:
-        - name: atst-config
-          secret:
-            secretName: atst-config-ini
-            items:
-            - key: override.ini
-              path: atst-overrides.ini
-              mode: 0644
         - name: pgsslrootcert
           configMap:
             name: pgsslrootcert
@@ -49,4 +46,14 @@ spec:
             - key: cert
               path: pgsslrootcert.crt
               mode: 0666
+        - name: flask-secret
+          flexVolume:
+            driver: "azure/kv"
+            options:
+              usepodidentity: "true"
+              keyvaultname: "atat-vault-test"
+              keyvaultobjectnames: "master-AZURE-STORAGE-KEY;master-MAIL-PASSWORD;master-PGPASSWORD;master-REDIS-PASSWORD;master-SECRET-KEY"
+              keyvaultobjectaliases: "AZURE_STORAGE_KEY;MAIL_PASSWORD;PGPASSWORD;REDIS_PASSWORD;SECRET_KEY"
+              keyvaultobjecttypes: "secret;secret;secret;secret;key"
+              tenantid: $TENANT_ID
       restartPolicy: Never

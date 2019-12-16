@@ -105,13 +105,6 @@ def test_protected_routes_redirect_to_login(client, app):
             assert server_name in resp.headers["Location"]
 
 
-def test_get_protected_route_encodes_redirect(client):
-    portfolio_index = url_for("portfolios.portfolios")
-    response = client.get(portfolio_index)
-    redirect = url_for("atst.root", next=portfolio_index)
-    assert redirect in response.headers["Location"]
-
-
 def test_unprotected_routes_set_user_if_logged_in(client, app, user_session):
     user = UserFactory.create()
 

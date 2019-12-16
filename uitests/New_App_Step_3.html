@@ -74,15 +74,14 @@
 <td></td>
 <td></td>
 </tr>
-<!--Imported from: AT-AT CI - Login Brandon
-11/19/19 17:10 Temporarily making optional until Leigh's PR#1197 merges-->
+<!--Imported from: AT-AT CI - Login Brandon-->
 <tr>
 <td>waitForElementPresent</td>
 <td>css=.col > .usa-alert.usa-alert-info:nth-of-type(2) > .usa-alert-body > h3.usa-alert-heading</td>
 <td></td>
 </tr>
 <tr>
-<td>verifyText</td>
+<td>assertText</td>
 <td>css=.col > .usa-alert.usa-alert-info:nth-of-type(2) > .usa-alert-body > h3.usa-alert-heading</td>
 <td>*Logged out*</td>
 </tr>
@@ -93,11 +92,31 @@
 </tr>
 <!--Imported from: AT-AT CI - New App Step 2
 Imported from: AT-AT CI - New App Step 1
-Imported from: AT-AT CI - New Portfolio-->
+Imported from: AT-AT CI - New Portfolio
+Imported from: AT-AT CI - login-->
 <tr>
 <td>open</td>
 <td>/login-dev</td>
 <td></td>
+</tr>
+<tr>
+<td>waitForPageToLoad</td>
+<td></td>
+<td></td>
+</tr>
+<!--Imported from: AT-AT CI - New App Step 2
+Imported from: AT-AT CI - New App Step 1
+Imported from: AT-AT CI - New Portfolio
+Imported from: AT-AT CI - login-->
+<tr>
+<td>waitForElementPresent</td>
+<td>css=.about-cloud > h1</td>
+<td></td>
+</tr>
+<tr>
+<td>assertText</td>
+<td>css=.about-cloud > h1</td>
+<td>About Cloud Services</td>
 </tr>
 <tr>
 <td>waitForPageToLoad</td>
@@ -170,24 +189,6 @@ Imported from: AT-AT CI - New Portfolio-->
 <td>type</td>
 <td>css=#defense_component</td>
 <td>Defense Logistics Agency</td>
-</tr>
-<tr>
-<td>waitForPageToLoad</td>
-<td></td>
-<td></td>
-</tr>
-<!--Imported from: AT-AT CI - New App Step 2
-Imported from: AT-AT CI - New App Step 1
-Imported from: AT-AT CI - New Portfolio-->
-<tr>
-<td>waitForElementPresent</td>
-<td>css=#defense_component > option:nth-of-type(14)</td>
-<td></td>
-</tr>
-<tr>
-<td>click</td>
-<td>css=#defense_component > option:nth-of-type(14)</td>
-<td></td>
 </tr>
 <tr>
 <td>waitForPageToLoad</td>
@@ -451,13 +452,13 @@ Imported from: AT-AT CI - New App Step 1
 Imported from: AT-AT CI - New Portfolio-->
 <tr>
 <td>waitForElementPresent</td>
-<td>css=.empty-state__message</td>
+<td>css=.empty-state h3</td>
 <td></td>
 </tr>
 <tr>
 <td>assertText</td>
-<td>css=.empty-state__message</td>
-<td>*This portfolio doesn’t have any applications*</td>
+<td>css=.empty-state h3</td>
+<td>*You don't have any Applications yet*</td>
 </tr>
 <tr>
 <td>waitForPageToLoad</td>
@@ -468,12 +469,12 @@ Imported from: AT-AT CI - New Portfolio-->
 Imported from: AT-AT CI - New App Step 1-->
 <tr>
 <td>waitForElementPresent</td>
-<td>css=a.usa-button.usa-button-big</td>
+<td>css=a.usa-button.usa-button-primary</td>
 <td></td>
 </tr>
 <tr>
 <td>click</td>
-<td>css=a.usa-button.usa-button-big</td>
+<td>css=a.usa-button.usa-button-primary</td>
 <td></td>
 </tr>
 <tr>
@@ -885,21 +886,6 @@ Imported from: AT-AT CI - New App Step 1-->
 </tr>
 <tr>
 <td>waitForElementPresent</td>
-<td>css=[name=environment_roles-0-role] > option:nth-of-type(1)</td>
-<td></td>
-</tr>
-<tr>
-<td>click</td>
-<td>css=[name=environment_roles-0-role] > option:nth-of-type(1)</td>
-<td></td>
-</tr>
-<tr>
-<td>waitForPageToLoad</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>waitForElementPresent</td>
 <td>css=[name=environment_roles-1-role]</td>
 <td></td>
 </tr>
@@ -907,81 +893,6 @@ Imported from: AT-AT CI - New App Step 1-->
 <td>type</td>
 <td>css=[name=environment_roles-1-role]</td>
 <td>Network Admin</td>
-</tr>
-<tr>
-<td>waitForPageToLoad</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>waitForElementPresent</td>
-<td>css=[name=environment_roles-1-role] > option:nth-of-type(2)</td>
-<td></td>
-</tr>
-<tr>
-<td>click</td>
-<td>css=[name=environment_roles-1-role] > option:nth-of-type(2)</td>
-<td></td>
-</tr>
-<tr>
-<td>waitForPageToLoad</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>waitForElementPresent</td>
-<td>css=[name=environment_roles-2-role]</td>
-<td></td>
-</tr>
-<tr>
-<td>type</td>
-<td>css=[name=environment_roles-2-role]</td>
-<td>Business Read-only</td>
-</tr>
-<tr>
-<td>waitForPageToLoad</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>waitForElementPresent</td>
-<td>css=[name=environment_roles-2-role] > option:nth-of-type(3)</td>
-<td></td>
-</tr>
-<tr>
-<td>click</td>
-<td>css=[name=environment_roles-2-role] > option:nth-of-type(3)</td>
-<td></td>
-</tr>
-<tr>
-<td>waitForPageToLoad</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>waitForElementPresent</td>
-<td>css=[name=environment_roles-3-role]</td>
-<td></td>
-</tr>
-<tr>
-<td>type</td>
-<td>css=[name=environment_roles-3-role]</td>
-<td>Technical Read-only</td>
-</tr>
-<tr>
-<td>waitForPageToLoad</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>waitForElementPresent</td>
-<td>css=[name=environment_roles-3-role] > option:nth-of-type(4)</td>
-<td></td>
-</tr>
-<tr>
-<td>click</td>
-<td>css=[name=environment_roles-3-role] > option:nth-of-type(4)</td>
-<td></td>
 </tr>
 <tr>
 <td>waitForPageToLoad</td>

@@ -1,5 +1,8 @@
-{% from "components/icon.html" import Icon %}
+{% from "components/accordion.html" import Accordion %}
+{% from "components/accordion_list.html" import AccordionList %}
 {% from "components/empty_state.html" import EmptyState %}
+{% from "components/sticky_cta.html" import StickyCTA %}
+{% from "components/icon.html" import Icon %}
 
 {% extends "portfolios/base.html" %}
 
@@ -7,85 +10,74 @@
 
 {% block portfolio_content %}
 
+{% call StickyCTA(text="common.applications"|translate) %}
+    {% if can_create_applications and portfolio.applications %}
+      <a href="{{ url_for("applications.view_new_application_step_1", portfolio_id=portfolio.id) }}" class="usa-button usa-button-primary">
+        {{ "portfolios.applications.create_button"|translate }}
+      </a>
+    {% endif %}
+{% endcall %}
+
 <div class='portfolio-applications'>
   {% include "fragments/flash.html" %}
-  <div class='portfolio-applications__header row'>
-    <div class='portfolio-applications__header--title col col--grow'>Applications</div>
-    <div class='portfolio-applications__header--actions col'>
-      {% if can_create_applications %}
-        <a class='icon-link' href='{{ url_for('applications.view_new_application_step_1', portfolio_id=portfolio.id) }}'>
-          {{ 'portfolios.applications.add_application_text' | translate }}
-          {{ Icon("plus", classes="sidenav__link-icon") }}
-        </a>
-      {% endif %}
-    </div>
-  </div>
 
   {% if not portfolio.applications %}
 
     {{ EmptyState(
-      'This portfolio doesn’t have any applications',
-      action_label='Add a new application' if can_create_applications else None,
-      action_href=url_for('applications.create_new_application_step_1', portfolio_id=portfolio.id) if can_create_applications else None,
-      icon='cloud',
-      sub_message=None if can_create_applications else 'Please contact your JEDI Cloud portfolio administrator to set up a new application.',
-      add_perms=can_create_applications
+      header="portfolios.applications.empty_state.header"|translate,
+      message="portfolios.applications.empty_state.message"|translate,
+      button_text="portfolios.applications.empty_state.button_text"|translate,
+      button_link=url_for("applications.view_new_application_step_1", portfolio_id=portfolio.id),
+      view_only_text="portfolios.applications.empty_state.view_only_text"|translate,
+      user_can_create=can_create_applications,
     ) }}
 
   {% else %}
-
-    <div class='application-list'>
+    {% call AccordionList() %}
       {% for application in portfolio.applications|sort(attribute='name') %}
         {% set section_name = "application-{}".format(application.id) %}
-
-        <toggler inline-template>
-          <div class='accordion application-list-item'>
-            <header class='accordion__header row'>
-              <div class='col col-grow'>
-                <h3 class='icon-link accordion__title' v-on:click="toggleSection('{{ section_name }}')">{{ application.name }}</h3>
-                <p class='accordion__description'>
-                  {{ application.description }}
-                </p>
-                <div class='accordion__actions'>
-                  <a class='icon-link' href='{{ url_for("applications.settings", application_id=application.id) }}'>
-                    <span>{{ "portfolios.applications.app_settings_text" | translate }}</span>
-                  </a>
-                  <div class='separator'></div>
-                  {% set has_environments = 0 < (application.environments|length) %}
-                  <a class='icon-link triangle-box' v-on:click="toggleSection('{{ section_name }}')" disabled="{{ not has_environments }}">
-                    <span>Environments ({{ application.environments|length }})</span>
-                    {% if has_environments %}
-                      <span v-if="selectedSection === '{{ section_name }}'">
-                        {{ Icon('caret_up') }}
-                      </span>
-                      <span v-else>
-                        {{ Icon('caret_down') }}
-                      </span>
-                      <div class="triangle-up" v-if="selectedSection === '{{ section_name }}'"></div>
+        {% set title = "Environments ({})".format(application.environments|length) %}
+          <div class="accordion">
+            <div class="accordion__header">
+              <h3 class="accordion__header-text">
+                <a href='{{ url_for("applications.settings", application_id=application.id) }}'>
+                  {{ application.name }} {{ Icon("caret_right", classes="icon--tiny icon--primary") }}
+                </a>
+              </h3>
+              <p class="accordion__header-text">
+                {{ application.description }}
+              </p>
+            </div>
+            {% call Accordion(
+              title=title,
+              id=section_name,
+              heading_tag="h4"
+            ) %}
+            {% for environment in application.environments %}
+              {% set env_access = environment_access[environment.id] %}
+              <div class="accordion__content--list-item">
+                <div class="row">
+                  <div class="col col--grow">
+                    {% if env_access %}
+                      <a href='{{ url_for("applications.access_environment", environment_id=environment.id)}}' target='_blank' rel='noopener noreferrer'>
+                        {{ environment.displayname }} {{ Icon('link', classes='icon--medium icon--primary') }}
+                      </a>
+                    {% else %}
+                      {{ environment.displayname }}
                     {% endif %}
-                  </a>
+                  </div>
+                  {% if env_access %}
+                    <div class="col">
+                      {{ env_access }}
+                    </div>
+                  {% endif %}
                 </div>
               </div>
-            </header>
-            <ul v-show="selectedSection === '{{ section_name }}'">
-              {% for environment in application.environments %}
-                <li class='accordion__item application-list-item__environment'>
-                  <div class='application-list-item__environment__name'>
-                    <span>{{ environment.displayname }}</span>
-                  </div>
-                  {% if g.current_user in environment.users %}
-                    <a href='{{ url_for("applications.access_environment", environment_id=environment.id)}}' target='_blank' rel='noopener noreferrer' class='application-list-item__environment__csp_link icon-link'>
-                      <span>{{ "portfolios.applications.csp_console_text" | translate }}</span>
-                    </a>
-                  {% endif %}
-                </li>
-              {% endfor %}
-            </ul>
-          </div>
-        </toggler>
+            {% endfor %}
+          {% endcall %}
+        </div>
       {% endfor %}
-    </div>
-
+    {% endcall %}
   {% endif %}
 
 </div>

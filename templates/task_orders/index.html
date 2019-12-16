@@ -1,3 +1,5 @@
+{% from "components/accordion.html" import Accordion %}
+{% from "components/accordion_list.html" import AccordionList %}
 {% from "components/empty_state.html" import EmptyState %}
 {% from "components/icon.html" import Icon %}
 {% from "components/sticky_cta.html" import StickyCTA %}
@@ -6,96 +8,68 @@
 
 {% block portfolio_content %}
 
-{% macro TaskOrderButton(task_order, route, text="Edit", secondary=False) %}
-<a href="{{ url_for(route, task_order_id=task_order.id) }}" class="usa-button {{ 'usa-button-secondary' if secondary else '' }}">
-  {{ text }}
-</a>
-{% endmacro %}
-
 {% macro TaskOrderDateTime(dt, className="") %}
   <local-datetime timestamp="{{ dt }}" format="MMMM D, YYYY" class="{{ className }}"></local-datetime>
 {% endmacro %}
 
-{% macro TaskOrderDate(task_order) %}
-  <span class="datetime">
-    <!-- Draft: {Begins, Began} start_date -->
-    <!-- Everything else: {Starts, Started} start_date | {Ends, Ended} end_date -->
 
-    {% if task_order.is_draft %}
-      {% if task_order.has_begun %}
-        Started on
+{% macro TaskOrderList(task_orders, status) %}
+  <div class="accordion">
+    {% call Accordion(title=("task_orders.status_list_title"|translate({'status': status})), id=status, heading_tag="h4") %}
+      {% if task_orders|length > 0 %}
+        {% for task_order in task_orders %}
+          {% set to_number %}
+            {% if task_order.number != None %}
+              Task Order #{{ task_order.number }}
+            {% else %}
+              New Task Order
+            {% endif %}
+          {% endset %}
+          <div class="accordion__content--list-item">
+            <h4><a href="{{ url_for('task_orders.review_task_order', task_order_id=task_order.id) }}">{{ to_number }} {{ Icon("caret_right", classes="icon--tiny icon--primary" ) }}</a></h4>
+            {% if status != 'Expired' -%}
+              <div class="row">
+                <div class="col col--grow">
+                  <h5>
+                    Current Period of Performance
+                  </h5>
+                  <p>
+                    {{ task_order.start_date | formattedDate(formatter="%b %d, %Y") }}
+                    -
+                    {{ task_order.end_date | formattedDate(formatter="%b %d, %Y") }}
+                  </p>
+                </div>
+                <div class="col col--grow">
+                  <h5>Total Value</h5>
+                  <p>{{ task_order.total_contract_amount | dollars }}</p>
+                </div>
+                <div class="col col--grow">
+                  <h5>Total Obligated</h5>
+                  <p>{{ task_order.total_obligated_funds | dollars }}</p>
+                </div>
+                <div class="col col--grow">
+                  <h5>Total Expended</h5>
+                  <p>{{ task_order.invoiced_funds | dollars }}</p>
+                </div>
+              </div>
+            {%- endif %}
+          </div>
+        {% endfor %}
       {% else %}
-        Starts on
-      {% endif %}
-      {{ TaskOrderDateTime(task_order.time_created) }}
-    {% else %}
-      {% if task_order.has_begun %}
-        Began
-      {% else %}
-        Begins
-      {% endif %}
-      {{ TaskOrderDateTime(task_order.start_date) }}
-    {% endif %}
-
-    {% if not task_order.is_draft %}
-      &nbsp;&nbsp;|&nbsp;&nbsp;
-
-      {% if task_order.has_ended %}
-        Ended
-      {% else %}
-        Ends
-      {% endif %}
-
-      {{ TaskOrderDateTime(task_order.end_date) }}
-    {% endif %}
-  </span>
-{% endmacro %}
-
-{% macro TaskOrderActions(task_order) %}
-  <div class="task-order-card__buttons">
-    {% if task_order.is_draft and user_can(permissions.EDIT_TASK_ORDER_DETAILS) %}
-      {{ TaskOrderButton(task_order, "task_orders.edit")}}
-    {% elif task_order.is_expired %}
-      {{ TaskOrderButton(task_order, "task_orders.review_task_order", text="View") }}
-    {% elif task_order.is_unsigned %}
-      {% if user_can(permissions.EDIT_TASK_ORDER_DETAILS) %}
-        {{ TaskOrderButton(task_order, "task_orders.form_step_four_review", text="Sign", secondary=True) }}
-      {% endif %}
-      {{ TaskOrderButton(task_order, "task_orders.review_task_order", text="View") }}
-    {% endif %}
-  </div>
-{% endmacro %}
-
-{% macro TaskOrderList(task_orders, label='success') %}
-  <div class="task-order-list">
-    {% for task_order in task_orders %}
-      <div class="card task-order-card">
-        <div class="card__status">
-          <span class='label label--{{ label_colors[task_order.status] }}'>{{ task_order.display_status }}</span>
-          {{ TaskOrderDate(task_order) }}
-          <span class="card__status-spacer"></span>
-          <span class="card__button">
-            {{ TaskOrderActions(task_order) }}
-          </span>
+        <div class="accordion__content--empty">
+          {{ "task_orders.status_empty_state" | translate({ 'status': status }) }}
         </div>
-        <div class="card__header">
-          <h3>Task Order #{{ task_order.number }}</h3>
-        </div>
-        <div class="card__body">
-          <b>Total amount: </b>{{ task_order.total_contract_amount | dollars }}
-        </div>
-        <div class="card__body">
-          <b>Obligated amount: </b>{{ task_order.total_obligated_funds | dollars }}
-        </div>
-      </div>
-    {% endfor %}
+      {% endif %}
+    {% endcall %}
   </div>
 {% endmacro %}
 
 
-{% call StickyCTA(text="Funding") %}
-    {% if user_can(permissions.CREATE_TASK_ORDER) %}
-      <a href="{{ url_for("task_orders.form_step_one_add_pdf", portfolio_id=portfolio.id) }}" class="usa-button usa-button-primary" type="submit">Start a new task order</a>
+{% call StickyCTA(text="common.task_orders"|translate) %}
+    {% if user_can(permissions.CREATE_TASK_ORDER) and task_orders %}
+      <a href="{{ url_for("task_orders.form_step_one_add_pdf", portfolio_id=portfolio.id) }}" class="usa-button usa-button-primary">
+        {{ "task_orders.add_new_button" | translate }}
+      </a>
     {% endif %}
 {% endcall %}
 
@@ -103,15 +77,20 @@
 
 <div class="portfolio-funding">
 
-  {% if task_orders  %}
-    {{ TaskOrderList(task_orders) }}
+  {% if to_count > 0 %}
+    {% call AccordionList() %}
+      {% for status, to_list in task_orders.items() %}
+        {{ TaskOrderList(to_list, status) }}
+      {% endfor %}
+    {% endcall %}
   {% else %}
     {{ EmptyState(
-      'This portfolio doesn’t have any active or pending task orders.',
-      action_label='Add a New Task Order',
-      action_href=url_for('task_orders.form_step_one_add_pdf', portfolio_id=portfolio.id),
-      icon='cloud',
-      add_perms=user_can(permissions.CREATE_TASK_ORDER)
+      header="task_orders.empty_state.header"|translate,
+      message="task_orders.empty_state.message"|translate,
+      button_link=url_for('task_orders.form_step_one_add_pdf', portfolio_id=portfolio.id),
+      button_text="task_orders.empty_state.button_text"|translate,
+      view_only_text="task_orders.empty_state.view_only_text"|translate,
+      user_can_create=user_can(permissions.CREATE_TASK_ORDER),
     ) }}
   {% endif %}
 </div>

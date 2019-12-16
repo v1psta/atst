@@ -2,77 +2,11 @@ import pytest
 from datetime import date, timedelta
 from decimal import Decimal
 
+from atst.domain.exceptions import AlreadyExistsError
 from atst.domain.task_orders import TaskOrders
-from atst.models import Attachment, TaskOrder
+from atst.models import Attachment
+from atst.models.task_order import TaskOrder, SORT_ORDERING, Status
 from tests.factories import TaskOrderFactory, CLINFactory, PortfolioFactory
-
-
-def test_task_order_sorting():
-    """
-    Task orders should be listed first by status, and then by time_created.
-    """
-
-    today = date.today()
-    yesterday = today - timedelta(days=1)
-    future = today + timedelta(days=100)
-
-    task_orders = [
-        # Draft
-        TaskOrderFactory.create(pdf=None),
-        TaskOrderFactory.create(pdf=None),
-        TaskOrderFactory.create(pdf=None),
-        # Active
-        TaskOrderFactory.create(
-            signed_at=yesterday,
-            clins=[CLINFactory.create(start_date=yesterday, end_date=future)],
-        ),
-        TaskOrderFactory.create(
-            signed_at=yesterday,
-            clins=[CLINFactory.create(start_date=yesterday, end_date=future)],
-        ),
-        TaskOrderFactory.create(
-            signed_at=yesterday,
-            clins=[CLINFactory.create(start_date=yesterday, end_date=future)],
-        ),
-        # Upcoming
-        TaskOrderFactory.create(
-            signed_at=yesterday,
-            clins=[CLINFactory.create(start_date=future, end_date=future)],
-        ),
-        TaskOrderFactory.create(
-            signed_at=yesterday,
-            clins=[CLINFactory.create(start_date=future, end_date=future)],
-        ),
-        TaskOrderFactory.create(
-            signed_at=yesterday,
-            clins=[CLINFactory.create(start_date=future, end_date=future)],
-        ),
-        # Expired
-        TaskOrderFactory.create(
-            signed_at=yesterday,
-            clins=[CLINFactory.create(start_date=yesterday, end_date=yesterday)],
-        ),
-        TaskOrderFactory.create(
-            signed_at=yesterday,
-            clins=[CLINFactory.create(start_date=yesterday, end_date=yesterday)],
-        ),
-        TaskOrderFactory.create(
-            signed_at=yesterday,
-            clins=[CLINFactory.create(start_date=yesterday, end_date=yesterday)],
-        ),
-        # Unsigned
-        TaskOrderFactory.create(
-            clins=[CLINFactory.create(start_date=today, end_date=today)]
-        ),
-        TaskOrderFactory.create(
-            clins=[CLINFactory.create(start_date=today, end_date=today)]
-        ),
-        TaskOrderFactory.create(
-            clins=[CLINFactory.create(start_date=today, end_date=today)]
-        ),
-    ]
-
-    assert TaskOrders.sort(task_orders) == task_orders
 
 
 def test_create_adds_clins():
@@ -96,7 +30,6 @@ def test_create_adds_clins():
         },
     ]
     task_order = TaskOrders.create(
-        creator=portfolio.owner,
         portfolio_id=portfolio.id,
         number="0123456789",
         clins=clins,
@@ -127,7 +60,6 @@ def test_update_adds_clins():
         },
     ]
     task_order = TaskOrders.create(
-        creator=task_order.creator,
         portfolio_id=task_order.portfolio_id,
         number="0000000000",
         clins=clins,
@@ -179,3 +111,62 @@ def test_delete_task_order_with_clins(session):
     assert not session.query(
         session.query(TaskOrder).filter_by(id=task_order.id).exists()
     ).scalar()
+
+
+def test_task_order_sort_by_status():
+    today = date.today()
+    yesterday = today - timedelta(days=1)
+    future = today + timedelta(days=100)
+
+    initial_to_list = [
+        # Draft
+        TaskOrderFactory.create(pdf=None),
+        TaskOrderFactory.create(pdf=None),
+        TaskOrderFactory.create(pdf=None),
+        # Active
+        TaskOrderFactory.create(
+            signed_at=yesterday,
+            clins=[CLINFactory.create(start_date=yesterday, end_date=future)],
+        ),
+        # Upcoming
+        TaskOrderFactory.create(
+            signed_at=yesterday,
+            clins=[CLINFactory.create(start_date=future, end_date=future)],
+        ),
+        # Expired
+        TaskOrderFactory.create(
+            signed_at=yesterday,
+            clins=[CLINFactory.create(start_date=yesterday, end_date=yesterday)],
+        ),
+        TaskOrderFactory.create(
+            signed_at=yesterday,
+            clins=[CLINFactory.create(start_date=yesterday, end_date=yesterday)],
+        ),
+        # Unsigned
+        TaskOrderFactory.create(
+            clins=[CLINFactory.create(start_date=today, end_date=today)]
+        ),
+    ]
+
+    sorted_by_status = TaskOrders.sort_by_status(initial_to_list)
+    assert len(sorted_by_status["Draft"]) == 3
+    assert len(sorted_by_status["Active"]) == 1
+    assert len(sorted_by_status["Upcoming"]) == 1
+    assert len(sorted_by_status["Expired"]) == 2
+    assert len(sorted_by_status["Unsigned"]) == 1
+    assert list(sorted_by_status.keys()) == [status.value for status in SORT_ORDERING]
+
+
+def test_create_enforces_unique_number():
+    portfolio = PortfolioFactory.create()
+    number = "1234567890123"
+    assert TaskOrders.create(portfolio.id, number, [], None)
+    with pytest.raises(AlreadyExistsError):
+        TaskOrders.create(portfolio.id, number, [], None)
+
+
+def test_update_enforces_unique_number():
+    task_order = TaskOrderFactory.create()
+    dupe_task_order = TaskOrderFactory.create()
+    with pytest.raises(AlreadyExistsError):
+        TaskOrders.update(dupe_task_order.id, task_order.number, [], None)

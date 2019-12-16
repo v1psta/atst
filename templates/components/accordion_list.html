@@ -1,0 +1,11 @@
+{% macro AccordionList() %}
+  <accordion-list inline-template>
+    <div class="accordion-list usa-accordion">
+      <div class="action-group">
+        <a v-on:click="handleClick($event)" class="accordion-list__collapse">Collapse All</a>
+      </div>
+      <!-- caller iterates over accordion vue components or Accordion jinja macros -->
+      {{ caller() }}
+    </div>
+  </accordion-list>
+{% endmacro %}

@@ -7,13 +7,13 @@ from wtforms.fields import (
     HiddenField,
 )
 from wtforms.fields.html5 import DateField
-from wtforms.validators import Required, Optional, Length, NumberRange, ValidationError
+from wtforms.validators import Required, Length, NumberRange, ValidationError
 from flask_wtf import FlaskForm
 from numbers import Number
 
 from .data import JEDI_CLIN_TYPES
 from .fields import SelectField
-from .forms import BaseForm
+from .forms import BaseForm, remove_empty_string
 from atst.utils.localization import translate
 from flask import current_app as app
 
@@ -61,9 +61,7 @@ class CLINForm(FlaskForm):
         coerce=coerce_enum,
     )
 
-    number = StringField(
-        label=translate("task_orders.form.clin_number_label"), validators=[Optional()]
-    )
+    number = StringField(label=translate("task_orders.form.clin_number_label"))
     start_date = DateField(
         translate("task_orders.form.pop_start"),
         description=translate("task_orders.form.pop_example"),
@@ -136,7 +134,10 @@ class AttachmentForm(BaseForm):
 
 
 class TaskOrderForm(BaseForm):
-    number = StringField(label=translate("forms.task_order.number_description"))
+    number = StringField(
+        label=translate("forms.task_order.number_description"),
+        filters=[remove_empty_string],
+    )
     pdf = FormField(
         AttachmentForm,
         label=translate("task_orders.form.supporting_docs_size_limit"),

@@ -90,4 +90,8 @@
       padding: 2px;
     }
   }
+
+  &--primary {
+    @include icon-color($color-primary);
+  }
 }

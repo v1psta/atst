@@ -3,9 +3,10 @@ from flask import current_app as app
 
 from atst.database import db
 from atst.models import (
-    EnvironmentRole,
-    ApplicationRole,
     Environment,
+    EnvironmentRole,
+    Application,
+    ApplicationRole,
     ApplicationRoleStatus,
 )
 from atst.domain.exceptions import NotFoundError
@@ -105,8 +106,9 @@ class EnvironmentRoles(object):
     def disable(cls, environment_role_id):
         environment_role = EnvironmentRoles.get_by_id(environment_role_id)
 
-        credentials = environment_role.environment.csp_credentials
-        app.csp.cloud.disable_user(credentials, environment_role.csp_user_id)
+        if environment_role.csp_user_id and not environment_role.environment.is_pending:
+            credentials = environment_role.environment.csp_credentials
+            app.csp.cloud.disable_user(credentials, environment_role.csp_user_id)
 
         environment_role.status = EnvironmentRole.Status.DISABLED
         db.session.add(environment_role)
@@ -125,3 +127,15 @@ class EnvironmentRoles(object):
             .one_or_none()
         )
         return existing_env_role
+
+    @classmethod
+    def for_user(cls, user_id, portfolio_id):
+        return (
+            db.session.query(EnvironmentRole)
+            .join(ApplicationRole)
+            .join(Application)
+            .filter(Application.portfolio_id == portfolio_id)
+            .filter(ApplicationRole.application_id == Application.id)
+            .filter(ApplicationRole.user_id == user_id)
+            .all()
+        )

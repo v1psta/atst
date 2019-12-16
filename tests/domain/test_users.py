@@ -4,36 +4,41 @@ from uuid import uuid4
 
 from atst.domain.users import Users
 from atst.domain.exceptions import NotFoundError, AlreadyExistsError, UnauthorizedError
+from atst.utils import pick
 
 from tests.factories import UserFactory
 
 DOD_ID = "my_dod_id"
+REQUIRED_KWARGS = {"first_name": "Luke", "last_name": "Skywalker"}
 
 
 def test_create_user():
-    user = Users.create(DOD_ID)
+    user = Users.create(DOD_ID, **REQUIRED_KWARGS)
     assert user.dod_id == DOD_ID
 
 
 def test_create_user_with_existing_email():
-    Users.create(DOD_ID, email="thisusersemail@usersRus.com")
+    Users.create(DOD_ID, email="thisusersemail@usersRus.com", **REQUIRED_KWARGS)
     with pytest.raises(AlreadyExistsError):
         Users.create(DOD_ID, email="thisusersemail@usersRus.com")
 
 
 def test_create_user_with_nonexistent_permission_set():
     with pytest.raises(NotFoundError):
-        Users.create(DOD_ID, permission_sets=["nonexistent"])
+        Users.create(DOD_ID, permission_sets=["nonexistent"], **REQUIRED_KWARGS)
 
 
 def test_get_or_create_nonexistent_user():
-    user = Users.get_or_create_by_dod_id(DOD_ID)
+    user = Users.get_or_create_by_dod_id(DOD_ID, **REQUIRED_KWARGS)
     assert user.dod_id == DOD_ID
 
 
 def test_get_or_create_existing_user():
     fact_user = UserFactory.create()
-    user = Users.get_or_create_by_dod_id(fact_user.dod_id)
+    user = Users.get_or_create_by_dod_id(
+        fact_user.dod_id,
+        **pick(["first_name", "last_name"], fact_user.to_dictionary()),
+    )
     assert user == fact_user
 
 

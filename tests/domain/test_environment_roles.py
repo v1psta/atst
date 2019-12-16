@@ -91,6 +91,42 @@ def test_disable_completed(application_role, environment):
     assert environment_role.disabled
 
 
+def test_disable_checks_env_provisioning_status(session):
+    environment = EnvironmentFactory.create()
+    assert environment.is_pending
+    env_role1 = EnvironmentRoleFactory.create(environment=environment)
+    env_role1 = EnvironmentRoles.disable(env_role1.id)
+    assert env_role1.disabled
+
+    environment.cloud_id = "cloud-id"
+    environment.root_user_info = {"credentials": "credentials"}
+    session.add(environment)
+    session.commit()
+    session.refresh(environment)
+
+    assert not environment.is_pending
+    env_role2 = EnvironmentRoleFactory.create(environment=environment)
+    env_role2 = EnvironmentRoles.disable(env_role2.id)
+    assert env_role2.disabled
+
+
+def test_disable_checks_env_role_provisioning_status():
+    environment = EnvironmentFactory.create(
+        cloud_id="cloud-id", root_user_info={"credentials": "credentials"}
+    )
+    env_role1 = EnvironmentRoleFactory.create(environment=environment)
+    assert not env_role1.csp_user_id
+    env_role1 = EnvironmentRoles.disable(env_role1.id)
+    assert env_role1.disabled
+
+    env_role2 = EnvironmentRoleFactory.create(
+        environment=environment, csp_user_id="123456"
+    )
+    assert env_role2.csp_user_id
+    env_role2 = EnvironmentRoles.disable(env_role2.id)
+    assert env_role2.disabled
+
+
 def test_get_for_update(application_role, environment):
     EnvironmentRoleFactory.create(
         application_role=application_role, environment=environment, deleted=True
@@ -100,3 +136,28 @@ def test_get_for_update(application_role, environment):
     assert role.application_role == application_role
     assert role.environment == environment
     assert role.deleted
+
+
+def test_for_user(application_role):
+    portfolio = application_role.application.portfolio
+    user = application_role.user
+    # create roles for 2 environments associated with application_role fixture
+    env_role_1 = EnvironmentRoleFactory.create(application_role=application_role)
+    env_role_2 = EnvironmentRoleFactory.create(application_role=application_role)
+
+    # create role for environment in a different app in same portfolio
+    application = ApplicationFactory.create(portfolio=portfolio)
+    env_role_3 = EnvironmentRoleFactory.create(
+        application_role=ApplicationRoleFactory.create(
+            application=application, user=user
+        )
+    )
+
+    # create role for environment for random user in app2
+    rando_app_role = ApplicationRoleFactory.create(application=application)
+    rando_env_role = EnvironmentRoleFactory.create(application_role=rando_app_role)
+
+    env_roles = EnvironmentRoles.for_user(user.id, portfolio.id)
+    assert len(env_roles) == 3
+    assert env_roles == [env_role_1, env_role_2, env_role_3]
+    assert not rando_env_role in env_roles
