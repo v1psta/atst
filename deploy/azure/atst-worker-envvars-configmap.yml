@@ -16,6 +16,7 @@ data:
   MAIL_SERVER: smtp.mailgun.org
   MAIL_TLS: "true"
   OVERRIDE_CONFIG_DIRECTORY: /config
+  OVERRIDE_CONFIG_FULLPATH: /opt/atat/atst/atst-overrides.ini
   PGAPPNAME: atst
   PGDATABASE: staging
   PGHOST: atat-db.postgres.database.azure.com

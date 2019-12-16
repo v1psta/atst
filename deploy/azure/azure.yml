@@ -34,6 +34,9 @@ spec:
             - configMapRef:
                 name: atst-envvars
           volumeMounts:
+            - mountPath: /opt/atat/atst/atst-overrides.ini
+              name: atst-config
+              subPath: atst-overrides.ini
             - name: nginx-client-ca-bundle
               mountPath: "/opt/atat/atst/ssl/server-certs/ca-chain.pem"
               subPath: client-ca-bundle.pem
@@ -78,6 +81,14 @@ spec:
             - name: nginx-secret
               mountPath: "/etc/ssl/"
       volumes:
+        - name: atst-config
+          secret:
+            defaultMode: 420
+            items:
+             - key: override.ini
+               mode: 420
+               path: atst-overrides.ini
+            secretName: atst-config-ini
         - name: nginx-client-ca-bundle
           configMap:
             name: nginx-client-ca-bundle
@@ -185,12 +196,23 @@ spec:
             - configMapRef:
                 name: atst-worker-envvars
           volumeMounts:
+            - mountPath: /opt/atat/atst/atst-overrides.ini
+              name: atst-config
+              subPath: atst-overrides.ini
             - name: pgsslrootcert
               mountPath: "/opt/atat/atst/ssl/pgsslrootcert.crt"
               subPath: pgsslrootcert.crt
             - name: flask-secret
               mountPath: "/config"
       volumes:
+        - name: atst-config
+          secret:
+            defaultMode: 420
+            items:
+             - key: override.ini
+               mode: 420
+               path: atst-overrides.ini
+            secretName: atst-config-ini
         - name: pgsslrootcert
           configMap:
             name: pgsslrootcert
@@ -250,12 +272,23 @@ spec:
             - configMapRef:
                 name: atst-worker-envvars
           volumeMounts:
+            - mountPath: /opt/atat/atst/atst-overrides.ini
+              name: atst-config
+              subPath: atst-overrides.ini
             - name: pgsslrootcert
               mountPath: "/opt/atat/atst/ssl/pgsslrootcert.crt"
               subPath: pgsslrootcert.crt
             - name: flask-secret
               mountPath: "/config"
       volumes:
+        - name: atst-config
+          secret:
+            defaultMode: 420
+            items:
+             - key: override.ini
+               mode: 420
+               path: atst-overrides.ini
+            secretName: atst-config-ini
         - name: pgsslrootcert
           configMap:
             name: pgsslrootcert
