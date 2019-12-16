@@ -36,7 +36,7 @@ class Application(
     members = synonym("roles")
     __table_args__ = (
         UniqueConstraint(
-            "name", "portfolio_id", name="name_portfolio_id_unique_constraint"
+            "name", "portfolio_id", name="applications_name_portfolio_id_key"
         ),
     )
 
