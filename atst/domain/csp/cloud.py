@@ -530,7 +530,6 @@ class AzureCloudProvider(CloudProviderInterface):
     ):
         sub_client = self.sdk.subscription.SubscriptionClient(credentials)
 
-        display_name = f"{environment.application.name}_{environment.name}_{environment.id}"  # proposed format
         billing_profile_id = "?"  # where do we source this?
         sku_id = AZURE_SKU_ID
         # These 2 seem like something that might be worthwhile to allow tiebacks to
