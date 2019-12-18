@@ -665,34 +665,3 @@ def test_task_orders_new_post_routes(post_url_assert_status):
         post_url_assert_status(owner, url, 302, data=data)
         post_url_assert_status(ccpo, url, 302, data=data)
         post_url_assert_status(rando, url, 404, data=data)
-
-
-def test_portfolio_delete_access(post_url_assert_status):
-    rando = UserFactory.create()
-    owner = UserFactory.create()
-    ccpo = UserFactory.create_ccpo()
-
-    post_url_assert_status(
-        ccpo,
-        url_for(
-            "portfolios.delete_portfolio", portfolio_id=PortfolioFactory.create().id
-        ),
-        302,
-    )
-
-    post_url_assert_status(
-        owner,
-        url_for(
-            "portfolios.delete_portfolio",
-            portfolio_id=PortfolioFactory.create(owner=owner).id,
-        ),
-        302,
-    )
-
-    post_url_assert_status(
-        rando,
-        url_for(
-            "portfolios.delete_portfolio", portfolio_id=PortfolioFactory.create().id
-        ),
-        404,
-    )
