@@ -15,10 +15,10 @@ resource "azurerm_redis_cache" "redis" {
   minimum_tls_version = var.minimum_tls_version
 
   redis_configuration {
-      enable_authentication = var.enable_authentication
+    enable_authentication = var.enable_authentication
   }
   tags = {
-      environment = var.environment
-      owner = var.owner
+    environment = var.environment
+    owner       = var.owner
   }
 }

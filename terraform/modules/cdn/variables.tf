@@ -19,13 +19,13 @@ variable "owner" {
 }
 
 variable "sku" {
-    type = string
-    description = "SKU of which CDN to use"
-    default = "Standard_Verizon"
+  type        = string
+  description = "SKU of which CDN to use"
+  default     = "Standard_Verizon"
 }
 
 variable "origin_host_name" {
-    type = string
-    description = "Subdomain to use for the origin in requests to the CDN"
+  type        = string
+  description = "Subdomain to use for the origin in requests to the CDN"
 }
 
