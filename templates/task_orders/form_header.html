@@ -1,8 +1,10 @@
-{% macro TOFormStepHeader(title, description, to_number=None) %}
+{% macro TOFormStepHeader(description, title=None, to_number=None) %}
   <div class="task-order__header">
-    <div class="h2">
-      {{ title }}
-    </div>
+    {% if title -%}
+      <div class="h2">
+        {{ title }}
+      </div>
+    {%- endif %}
     {% if to_number %}
       <p>
         <strong>Task Order Number:</strong> {{ to_number }}
