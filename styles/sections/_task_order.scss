@@ -20,10 +20,7 @@
   }
 
   &__header {
-    .h2,
-    p {
-      margin-bottom: $gap * 0.5;
-    }
+    margin-bottom: $gap * 6;
   }
 
   .col {
@@ -154,6 +151,10 @@
         fill: $color-gray;
       }
     }
+  }
+
+  &__confirmation {
+    margin-left: $gap * 8;
   }
 }
 

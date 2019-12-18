@@ -11,8 +11,10 @@
 
 {% block to_builder_form_field %}
   {{ TOFormStepHeader('task_orders.form.step_5.description' | translate, to_number=task_order.number) }}
-  {{ CheckboxInput(form.signature) }}
-  {{ CheckboxInput(form.confirm) }}
+  <div class="task-order__confirmation">
+    {{ CheckboxInput(form.signature) }}
+    {{ CheckboxInput(form.confirm) }}
+  </div>
   <hr>
   <h5>
     {{ "task_orders.sign.acknowledge.title" | translate }}
