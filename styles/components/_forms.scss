@@ -1,7 +1,8 @@
 // Form Grid
 .form-row {
   margin: ($gap * 4) 0;
-  &--separated {
+
+  &--bordered {
     border-bottom: $color-gray-lighter 1px solid;
   }
 

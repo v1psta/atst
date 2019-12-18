@@ -116,6 +116,8 @@ flash:
     deleted: 'You have successfully deleted the {application_name} application. To view the retained activity log, visit the portfolio administration page.'
     name_error:
       message: 'The application name {name} has already been used in this portfolio. Please enter a unique name.'
+    env_name_error:
+      message: 'The environment name {name} has already been used in this application. Please enter a unique name.'
   delete_member_success: 'You have successfully deleted {member_name} from the portfolio.'
   deleted_member: Portfolio member deleted
   environment_added: 'The environment "{env_name}" has been added to the application.'
@@ -199,7 +201,7 @@ forms:
             </ul>
           </p>
         </div>
-    defense_component: 
+    defense_component:
       label: "Select DoD component(s) funding your Portfolio:"
       choices:
         air_force: Air Force
@@ -211,7 +213,7 @@ forms:
       help_text: |
         <p>
           Select the DOD component(s) that will fund all Applications within this Portfolio.
-          In JEDI, multiple DoD organizations can fund the same Portfolio.<br/> 
+          In JEDI, multiple DoD organizations can fund the same Portfolio.<br/>
           Select all that apply.<br/>
         </p>
   attachment:
@@ -523,10 +525,11 @@ task_orders:
       next_button: 'Next: Review Task Order'
     step_5:
       title: Confirm Signature
-      description: Finally, plase confirm that your uploaded document representing the information you've entered contains the required signature from your Contracting Officer. You will be informed as soon as CCPO completes their review.
+      description: Prior to submitting the Task Order, you must acknowledge, by marking the appropriate box below, that the uploaded Task Order is signed by an appropriate, duly warranted Contracting Officer who has the authority to execute the uploaded Task Order on your Agency’s behalf and has authorized you to upload the Task Order in accordance with Agency policy and procedures. You must further acknowledge, by marking the appropriate box below, that all information entered herein matches that of the submitted Task Order.
       alert_message: All task orders require a Contracting Officer signature.
       next_button: 'Confirm & Submit'
-    sticky_header_text: 'Add Task Order (step {step} of 5)'
+    sticky_header_text: 'Add Task Order'
+    sticky_header_context: 'Step {step} of 5'
   empty_state:
     header: Add approved task orders
     message: Upload your approved Task Order here. You are required to confirm you have the appropriate signature. You will have the ability to add additional approved Task Orders with more funding to this Portfolio in the future.
@@ -539,7 +542,11 @@ task_orders:
       subtitle: Who will be involved in the work funded by this task order?
       team_title: Your team
   sign:
-    digital_signature_description: I acknowledge that the uploaded task order contains the required KO signature.
+    digital_signature_description: I confirm the uploaded Task Order is signed by the appropriate, duly warranted Agency Contracting Officer who authorized me to upload the Task Order.
+    confirmation_description: I confirm that the information entered here in matches that of the submitted Task Order.
+    acknowledge:
+      title: Acknowledge Statement
+      text: I acknowledge, by executing the confirmation above and submitting this verification, that I am subject to potential penalties that may include fines, imprisonment, or both, under the U.S. law and regulations for any false statement or misrepresentation in association with this Task Order submission or on any accompanying documentation.
   status_empty_state: 'This Portfolio has no {status} Task Orders.'
   status_list_title: '{status} Task Orders'
 JEDICLINType:
