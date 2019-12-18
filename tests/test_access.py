@@ -538,10 +538,16 @@ def test_applications_update_access(post_url_assert_status):
     )
     app = portfolio.applications[0]
 
+    def _form_data():
+        return {
+            "name": "Test Application %s" % (random.randrange(1, 1000)),
+            "description": "This is only a test",
+        }
+
     url = url_for("applications.update", application_id=app.id)
-    post_url_assert_status(dev, url, 200)
-    post_url_assert_status(ccpo, url, 200)
-    post_url_assert_status(rando, url, 404)
+    post_url_assert_status(dev, url, 302, data=_form_data())
+    post_url_assert_status(ccpo, url, 302, data=_form_data())
+    post_url_assert_status(rando, url, 404, data=_form_data())
 
 
 # applications.update_environments

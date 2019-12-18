@@ -116,6 +116,8 @@ flash:
     deleted: 'You have successfully deleted the {application_name} application. To view the retained activity log, visit the portfolio administration page.'
     name_error:
       message: 'The application name {name} has already been used in this portfolio. Please enter a unique name.'
+    env_name_error:
+      message: 'The environment name {name} has already been used in this application. Please enter a unique name.'
   delete_member_success: 'You have successfully deleted {member_name} from the portfolio.'
   deleted_member: Portfolio member deleted
   environment_added: 'The environment "{env_name}" has been added to the application.'
@@ -526,7 +528,8 @@ task_orders:
       description: Prior to submitting the Task Order, you must acknowledge, by marking the appropriate box below, that the uploaded Task Order is signed by an appropriate, duly warranted Contracting Officer who has the authority to execute the uploaded Task Order on your Agency’s behalf and has authorized you to upload the Task Order in accordance with Agency policy and procedures. You must further acknowledge, by marking the appropriate box below, that all information entered herein matches that of the submitted Task Order.
       alert_message: All task orders require a Contracting Officer signature.
       next_button: 'Confirm & Submit'
-    sticky_header_text: 'Add Task Order (step {step} of 5)'
+    sticky_header_text: 'Add Task Order'
+    sticky_header_context: 'Step {step} of 5'
   empty_state:
     header: Add approved task orders
     message: Upload your approved Task Order here. You are required to confirm you have the appropriate signature. You will have the ability to add additional approved Task Orders with more funding to this Portfolio in the future.
