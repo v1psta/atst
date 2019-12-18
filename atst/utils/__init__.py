@@ -30,7 +30,7 @@ def pick(keys, dct):
     return {k: v for (k, v) in dct.items() if k in _keys}
 
 
-def update_or_raise_already_exists_error(message):
+def commit_or_raise_already_exists_error(message):
     try:
         db.session.commit()
     except IntegrityError:

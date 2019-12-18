@@ -12,7 +12,7 @@ from atst.models import (
     CLIN,
 )
 from atst.domain.environment_roles import EnvironmentRoles
-from atst.utils import update_or_raise_already_exists_error
+from atst.utils import commit_or_raise_already_exists_error
 
 from .exceptions import NotFoundError, DisabledError
 
@@ -22,7 +22,7 @@ class Environments(object):
     def create(cls, user, application, name):
         environment = Environment(application=application, name=name, creator=user)
         db.session.add(environment)
-        update_or_raise_already_exists_error(message="environment")
+        commit_or_raise_already_exists_error(message="environment")
         return environment
 
     @classmethod
@@ -40,7 +40,7 @@ class Environments(object):
         if name is not None:
             environment.name = name
             db.session.add(environment)
-            update_or_raise_already_exists_error(message="environment")
+            commit_or_raise_already_exists_error(message="environment")
             return environment
 
     @classmethod
