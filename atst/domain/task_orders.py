@@ -4,7 +4,7 @@ from atst.database import db
 from atst.models.clin import CLIN
 from atst.models.task_order import TaskOrder, SORT_ORDERING
 from . import BaseDomainClass
-from atst.utils import update_or_raise_already_exists_error
+from atst.utils import commit_or_raise_already_exists_error
 
 
 class TaskOrders(BaseDomainClass):
@@ -15,7 +15,7 @@ class TaskOrders(BaseDomainClass):
     def create(cls, portfolio_id, number, clins, pdf):
         task_order = TaskOrder(portfolio_id=portfolio_id, number=number, pdf=pdf)
         db.session.add(task_order)
-        update_or_raise_already_exists_error(message="task_order")
+        commit_or_raise_already_exists_error(message="task_order")
         TaskOrders.create_clins(task_order.id, clins)
         return task_order
 
@@ -34,7 +34,7 @@ class TaskOrders(BaseDomainClass):
             task_order.number = number
             db.session.add(task_order)
 
-        update_or_raise_already_exists_error(message="task_order")
+        commit_or_raise_already_exists_error(message="task_order")
         return task_order
 
     @classmethod

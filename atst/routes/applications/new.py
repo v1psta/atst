@@ -1,9 +1,7 @@
-from flask import redirect, render_template, request as http_request, url_for, g
+from flask import redirect, render_template, request as http_request, url_for
 
 from .blueprint import applications_bp
 from atst.domain.applications import Applications
-from atst.domain.exceptions import AlreadyExistsError
-from atst.domain.portfolios import Portfolios
 from atst.forms.application import NameAndDescriptionForm, EnvironmentsForm
 from atst.domain.authz.decorator import user_can_access_decorator as user_can
 from atst.models.permissions import Permissions
@@ -13,6 +11,7 @@ from atst.routes.applications.settings import (
     get_new_member_form,
     handle_create_member,
     handle_update_member,
+    handle_update_application,
 )
 
 
@@ -36,31 +35,6 @@ def render_new_application_form(
         render_args["form"] = form or form_class()
 
     return render_template(template, **render_args)
-
-
-def update_application(form, application_id=None, portfolio_id=None):
-    if form.validate():
-        application = None
-        try:
-            if application_id:
-                application = Applications.get(application_id)
-                application = Applications.update(application, form.data)
-                flash("application_updated", application_name=application.name)
-            else:
-                portfolio = Portfolios.get_for_update(portfolio_id)
-                application = Applications.create(
-                    g.current_user, portfolio, **form.data
-                )
-                flash("application_created", application_name=application.name)
-
-            return application
-
-        except AlreadyExistsError:
-            flash("application_name_error", name=form.data["name"])
-            return False
-
-    else:
-        return False
 
 
 @applications_bp.route("/portfolios/<portfolio_id>/applications/new")
@@ -90,7 +64,7 @@ def create_or_update_new_application_step_1(portfolio_id=None, application_id=No
     form = get_new_application_form(
         {**http_request.form}, NameAndDescriptionForm, application_id
     )
-    application = update_application(form, application_id, portfolio_id)
+    application = handle_update_application(form, application_id, portfolio_id)
 
     if application:
         return redirect(
