@@ -274,6 +274,23 @@ def test_user_without_permission_cannot_update_application(client, user_session)
     assert application.description == "Cool stuff happening here!"
 
 
+def test_update_application_enforces_unique_name(client, user_session, session):
+    portfolio = PortfolioFactory.create()
+    name = "Test Application"
+    application = ApplicationFactory.create(portfolio=portfolio, name=name)
+    dupe_application = ApplicationFactory.create(portfolio=portfolio)
+    user_session(portfolio.owner)
+
+    session.begin_nested()
+    response = client.post(
+        url_for("applications.update", application_id=dupe_application.id),
+        data={"name": name, "description": dupe_application.description},
+    )
+    session.rollback()
+
+    assert response.status_code == 400
+
+
 def test_user_can_only_access_apps_in_their_portfolio(client, user_session):
     portfolio = PortfolioFactory.create()
     other_portfolio = PortfolioFactory.create(

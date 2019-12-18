@@ -16,6 +16,7 @@ from atst.domain.csp.cloud import GeneralCSPException
 from atst.domain.common import Paginator
 from atst.domain.environment_roles import EnvironmentRoles
 from atst.domain.invitations import ApplicationInvitations
+from atst.domain.portfolios import Portfolios
 from atst.forms.application_member import NewForm as NewMemberForm, UpdateMemberForm
 from atst.forms.application import NameAndDescriptionForm, EditEnvironmentForm
 from atst.forms.data import ENV_ROLE_NO_ACCESS as NO_ACCESS
@@ -275,6 +276,29 @@ def handle_update_environment(form, application=None, environment=None):
         return False
 
 
+def handle_update_application(form, application_id=None, portfolio_id=None):
+    if form.validate():
+        application = None
+
+        try:
+            if application_id:
+                application = Applications.get(application_id)
+                application = Applications.update(application, form.data)
+                flash("application_updated", application_name=application.name)
+            else:
+                portfolio = Portfolios.get_for_update(portfolio_id)
+                application = Applications.create(
+                    g.current_user, portfolio, **form.data
+                )
+                flash("application_created", application_name=application.name)
+
+            return application
+
+        except AlreadyExistsError:
+            flash("application_name_error", name=form.data["name"])
+            return False
+
+
 @applications_bp.route("/applications/<application_id>/settings")
 @user_can(Permissions.VIEW_APPLICATION, message="view application edit form")
 def settings(application_id):
@@ -334,10 +358,9 @@ def new_environment(application_id):
 def update(application_id):
     application = Applications.get(application_id)
     form = NameAndDescriptionForm(http_request.form)
-    if form.validate():
-        application_data = form.data
-        Applications.update(application, application_data)
+    updated_application = handle_update_application(form, application_id)
 
+    if updated_application:
         return redirect(
             url_for(
                 "applications.portfolio_applications",
@@ -345,7 +368,10 @@ def update(application_id):
             )
         )
     else:
-        return render_settings_page(application=application, application_form=form)
+        return (
+            render_settings_page(application=application, show_flash=True),
+            400,
+        )
 
 
 @applications_bp.route("/applications/<application_id>/delete", methods=["POST"])
