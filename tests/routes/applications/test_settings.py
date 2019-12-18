@@ -288,41 +288,6 @@ def test_user_can_only_access_apps_in_their_portfolio(client, user_session):
     assert time_updated == other_application.time_updated
 
 
-def test_delete_application(client, user_session):
-    user = UserFactory.create()
-    port = PortfolioFactory.create(
-        owner=user,
-        applications=[
-            {
-                "name": "mos eisley",
-                "environments": [
-                    {"name": "bar"},
-                    {"name": "booth"},
-                    {"name": "band stage"},
-                ],
-            }
-        ],
-    )
-    application = port.applications[0]
-    user_session(user)
-
-    response = client.post(
-        url_for("applications.delete", application_id=application.id)
-    )
-    # appropriate response and redirect
-    assert response.status_code == 302
-    assert response.location == url_for(
-        "applications.portfolio_applications", portfolio_id=port.id, _external=True
-    )
-    # appropriate flash message
-    message = get_flashed_messages()[0]
-    assert "deleted" in message["message"]
-    assert application.name in message["message"]
-    # app and envs are soft deleted
-    assert len(port.applications) == 0
-    assert len(application.environments) == 0
-
-
 def test_new_environment(client, user_session):
     user = UserFactory.create()
     portfolio = PortfolioFactory(owner=user)

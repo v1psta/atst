@@ -337,21 +337,6 @@ def update(application_id):
         return render_settings_page(application=application, application_form=form)
 
 
-@applications_bp.route("/applications/<application_id>/delete", methods=["POST"])
-@user_can(Permissions.DELETE_APPLICATION, message="delete application")
-def delete(application_id):
-    application = Applications.get(application_id)
-    Applications.delete(application)
-
-    flash("application_deleted", application_name=application.name)
-
-    return redirect(
-        url_for(
-            "applications.portfolio_applications", portfolio_id=application.portfolio_id
-        )
-    )
-
-
 @applications_bp.route("/environments/<environment_id>/delete", methods=["POST"])
 @user_can(Permissions.DELETE_ENVIRONMENT, message="delete environment")
 def delete_environment(environment_id):
