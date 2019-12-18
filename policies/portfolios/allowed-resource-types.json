@@ -1,5 +1,5 @@
 {
-  "definitionPoint": "portfolio-parent",
+  "definitionPoint": "portfolio",
   "policyDefinition": {
     "properties": {
       "displayName": "Allowed resource types",

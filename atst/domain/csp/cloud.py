@@ -6,6 +6,7 @@ from atst.models.user import User
 from atst.models.application import Application
 from atst.models.environment import Environment
 from atst.models.environment_role import EnvironmentRole
+from .policy import AzurePolicyManager
 
 
 class GeneralCSPException(Exception):
@@ -428,6 +429,8 @@ class AzureCloudProvider(CloudProviderInterface):
             self.sdk = AzureSDKProvider()
         else:
             self.sdk = azure_sdk_provider
+
+        self.policy_manager = AzurePolicyManager(config["AZURE_POLICY_LOCATION"])
 
     def create_environment(
         self, auth_credentials: Dict, user: User, environment: Environment
