@@ -1,5 +1,3 @@
-{% from "components/icon.html" import Icon %}
-
 {% macro SidenavItem(label, href, active=False) -%}
   <li>
     <a class="sidenav__link {% if active %}sidenav__link--active{% endif %}" href="{{href}}" title="{{label}}">
