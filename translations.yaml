@@ -135,7 +135,6 @@ flash:
   updated_application_team_settings: 'You have updated the {application_name} team settings.'
   logged_out: Logged out
 footer:
-  jedi_help_link_text: Need help?  Click here!
   login: 'Last login:'
 forms:
   application:
