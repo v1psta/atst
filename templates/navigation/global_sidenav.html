@@ -7,29 +7,29 @@
     <div v-bind:class="{'sidenav-container': props.isVisible, 'sidenav-container--minimized': !props.isVisible}">
       <div class="sidenav-container__fixed">
         <div v-bind:class="{'sidenav': props.isVisible, 'sidenav--minimized': !props.isVisible}">
-          <a href="#" v-on:click="props.toggle" class="sidenav__toggle">
+          <div v-bind:class="{'sidenav__header': props.isVisible, 'sidenav__header--minimized': !props.isVisible}" class="row">
             <template v-if="props.isVisible">
-              {{ Icon('angle-double-left-solid', classes="toggle-arrows icon--blue") }}
-              Hide
+              <span class="sidenav__title col col--grow">My Portfolios</span>
+              <a href="#" v-on:click="props.toggle" class="sidenav__toggle col">
+                {{ Icon('angle-double-left-solid', classes="toggle-arrows icon--primary") }}
+                <span>Hide</span>
+              </a>
             </template>
             <template v-else>
-              Show
-              {{ Icon('angle-double-right-solid', classes="toggle-arrows icon--blue") }}
+              <a href="#" v-on:click="props.toggle" class="sidenav__toggle col">
+                <span>Show</span>
+                {{ Icon('angle-double-right-solid', classes="toggle-arrows icon--primary") }}
+              </a>
             </template>
-          </a>
+          </div>
           <div v-if="props.isVisible">
-            <div class="sidenav__title">Portfolios</div>
             <ul class="sidenav__list--padded">
-              {% if portfolios %}
-                {% for other_portfolio in portfolios|sort(attribute='name') %}
-                  {{ SidenavItem(other_portfolio.name,
-                    href=url_for("applications.portfolio_applications", portfolio_id=other_portfolio.id),
-                    active=(other_portfolio.id | string) == request.view_args.get('portfolio_id')
-                    ) }}
-                {% endfor %}
-              {% else %}
-                <li><span class="sidenav__text">You have no portfolios yet</span></li>
-              {% endif %}
+              {% for other_portfolio in portfolios|sort(attribute='name') %}
+                {{ SidenavItem(other_portfolio.name,
+                  href=url_for("applications.portfolio_applications", portfolio_id=other_portfolio.id),
+                  active=(other_portfolio.id | string) == request.view_args.get('portfolio_id')
+                  ) }}
+              {% endfor %}
             </ul>
           </div>
         </div>
