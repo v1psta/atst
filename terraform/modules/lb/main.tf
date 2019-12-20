@@ -19,4 +19,9 @@ resource "azurerm_lb" "lb" {
     name                 = "${var.name}-${var.environment}-ip"
     public_ip_address_id = azurerm_public_ip.lb.id
   }
+
+  tags = {
+    owner       = var.owner
+    environment = var.environment
+  }
 }
