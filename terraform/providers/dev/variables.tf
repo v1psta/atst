@@ -31,6 +31,12 @@ variable "networks" {
   }
 }
 
+variable "gateway_subnet" {
+  type    = string
+  default = "10.1.20.0/24"
+}
+
+
 variable "route_tables" {
   description = "Route tables and their default routes"
   type        = map
