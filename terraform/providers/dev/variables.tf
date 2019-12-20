@@ -7,6 +7,11 @@ variable "region" {
 
 }
 
+variable "backup_region" {
+  default = "westus2"
+}
+
+
 variable "owner" {
   default = "dev"
 }
