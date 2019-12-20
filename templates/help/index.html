@@ -12,7 +12,6 @@
         {{ SidenavItem("JEDI Cloud Help",
           href = url_for("atst.helpdocs"),
           active = not doc,
-          icon='help'
         )}}
 
         {% for doc_item in docs %}
@@ -21,7 +20,6 @@
           {{ SidenavItem(doc_item | title,
             href = url_for("atst.helpdocs", doc=doc_item),
             active = active,
-            subnav = subnav or None
           )}}
         {% endfor %}
 
