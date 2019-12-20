@@ -49,13 +49,13 @@ Imported from: AT-AT CI - New Portfolio
 Imported from: AT-AT CI - login-->
 <tr>
 <td>waitForElementPresent</td>
-<td>css=.about-cloud > h1</td>
+<td>css=.home__content > h1</td>
 <td></td>
 </tr>
 <tr>
 <td>assertText</td>
-<td>css=.about-cloud > h1</td>
-<td>About Cloud Services</td>
+<td>css=.home__content > h1</td>
+<td>JEDI Cloud Services</td>
 </tr>
 <tr>
 <td>waitForPageToLoad</td>
@@ -516,12 +516,28 @@ Ghost Inspector flow control because button tends to take a little while to beco
 <!--Imported from: AT-AT CI - Create New TO-->
 <tr>
 <td>waitForElementPresent</td>
-<td>css=fieldset.usa-input__choices > legend > label</td>
+<td>css=.task-order__confirmation > div:nth-of-type(1) > .usa-input > fieldset.usa-input__choices > legend > label</td>
 <td></td>
 </tr>
-<tr original-target="fieldset.usa-input__choices > legend > label,xpath=//label[contains(text(), "I acknowledge that the uploaded task order contains the required KO signature.")]">
+<tr original-target=".task-order__confirmation > div:nth-of-type(1) > .usa-input > fieldset.usa-input__choices > legend > label,xpath=//label[contains(text(), "I confirm the uploaded Task Order is signed by the appropriate")]">
 <td>click</td>
-<td>css=fieldset.usa-input__choices > legend > label</td>
+<td>css=.task-order__confirmation > div:nth-of-type(1) > .usa-input > fieldset.usa-input__choices > legend > label</td>
+<td></td>
+</tr>
+<tr>
+<td>waitForPageToLoad</td>
+<td></td>
+<td></td>
+</tr>
+<!--Imported from: AT-AT CI - Create New TO-->
+<tr>
+<td>waitForElementPresent</td>
+<td>css=.task-order__confirmation > div:nth-of-type(2) > .usa-input > fieldset.usa-input__choices > legend > label</td>
+<td></td>
+</tr>
+<tr original-target=".task-order__confirmation > div:nth-of-type(2) > .usa-input > fieldset.usa-input__choices > legend > label,xpath=//label[contains(text(), "I confirm that the information entered here in matches that of the submitted Task Order.")]">
+<td>click</td>
+<td>css=.task-order__confirmation > div:nth-of-type(2) > .usa-input > fieldset.usa-input__choices > legend > label</td>
 <td></td>
 </tr>
 <tr>
@@ -880,12 +896,28 @@ Ghost Inspector flow control because button tends to take a little while to beco
 <!--Imported from: AT-AT Holding - Add future TO-->
 <tr>
 <td>waitForElementPresent</td>
-<td>css=fieldset.usa-input__choices > legend > label</td>
+<td>css=.task-order__confirmation > div:nth-of-type(1) > .usa-input > fieldset.usa-input__choices > legend > label</td>
 <td></td>
 </tr>
-<tr original-target="fieldset.usa-input__choices > legend > label,xpath=//label[contains(text(), "I acknowledge that the uploaded task order contains the required KO signature.")]">
+<tr original-target=".task-order__confirmation > div:nth-of-type(1) > .usa-input > fieldset.usa-input__choices > legend > label,xpath=//label[contains(text(), "I confirm the uploaded Task Order is signed by the appropriate")]">
 <td>click</td>
-<td>css=fieldset.usa-input__choices > legend > label</td>
+<td>css=.task-order__confirmation > div:nth-of-type(1) > .usa-input > fieldset.usa-input__choices > legend > label</td>
+<td></td>
+</tr>
+<tr>
+<td>waitForPageToLoad</td>
+<td></td>
+<td></td>
+</tr>
+<!--Imported from: AT-AT Holding - Add future TO-->
+<tr>
+<td>waitForElementPresent</td>
+<td>css=.task-order__confirmation > div:nth-of-type(2) > .usa-input > fieldset.usa-input__choices > legend > label</td>
+<td></td>
+</tr>
+<tr original-target=".task-order__confirmation > div:nth-of-type(2) > .usa-input > fieldset.usa-input__choices > legend > label,xpath=//label[contains(text(), "I confirm that the information entered here in matches that of the submitted Task Order.")]">
+<td>click</td>
+<td>css=.task-order__confirmation > div:nth-of-type(2) > .usa-input > fieldset.usa-input__choices > legend > label</td>
 <td></td>
 </tr>
 <tr>

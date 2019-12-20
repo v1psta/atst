@@ -55,13 +55,13 @@ Imported from: AT-AT CI - New Portfolio
 Imported from: AT-AT CI - login-->
 <tr>
 <td>waitForElementPresent</td>
-<td>css=.about-cloud > h1</td>
+<td>css=.home__content > h1</td>
 <td></td>
 </tr>
 <tr>
 <td>assertText</td>
-<td>css=.about-cloud > h1</td>
-<td>About Cloud Services</td>
+<td>css=.home__content > h1</td>
+<td>JEDI Cloud Services</td>
 </tr>
 <tr>
 <td>waitForPageToLoad</td>
@@ -847,13 +847,13 @@ Imported from: AT-AT CI - TO Step 3-->
 </tr>
 <tr>
 <td>waitForElementPresent</td>
-<td>css=.h2</td>
+<td>css=span.sticky-cta-context</td>
 <td></td>
 </tr>
 <tr>
 <td>assertText</td>
-<td>css=.h2</td>
-<td>*Confirm Signature*</td>
+<td>css=span.sticky-cta-context</td>
+<td>*Step 5 of 5*</td>
 </tr>
 <tr>
 <td>waitForPageToLoad</td>
@@ -862,12 +862,97 @@ Imported from: AT-AT CI - TO Step 3-->
 </tr>
 <tr>
 <td>waitForElementPresent</td>
-<td>css=fieldset.usa-input__choices > legend > label</td>
+<td>css=.task-order__confirmation > div:nth-of-type(1) > .usa-input > fieldset.usa-input__choices > legend > label</td>
+<td></td>
+</tr>
+<tr original-target=".task-order__confirmation > div:nth-of-type(1) > .usa-input > fieldset.usa-input__choices > legend > label,xpath=//label[contains(text(), "I confirm the uploaded Task Order is signed by the appropriate")]">
+<td>click</td>
+<td>css=.task-order__confirmation > div:nth-of-type(1) > .usa-input > fieldset.usa-input__choices > legend > label</td>
 <td></td>
 </tr>
 <tr>
+<td>waitForPageToLoad</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>waitForElementPresent</td>
+<td>css=input[type="submit"][disabled="disabled"]</td>
+<td></td>
+</tr>
+<tr>
+<td>assertElementPresent</td>
+<td>css=input[type="submit"][disabled="disabled"]</td>
+<td></td>
+</tr>
+<tr>
+<td>waitForPageToLoad</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>waitForElementPresent</td>
+<td>css=.task-order__confirmation > div:nth-of-type(1) > .usa-input > fieldset.usa-input__choices > legend > label</td>
+<td></td>
+</tr>
+<tr original-target=".task-order__confirmation > div:nth-of-type(1) > .usa-input > fieldset.usa-input__choices > legend > label,xpath=//label[contains(text(), "I confirm the uploaded Task Order is signed by the appropriate")]">
 <td>click</td>
-<td>css=fieldset.usa-input__choices > legend > label</td>
+<td>css=.task-order__confirmation > div:nth-of-type(1) > .usa-input > fieldset.usa-input__choices > legend > label</td>
+<td></td>
+</tr>
+<tr>
+<td>waitForPageToLoad</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>waitForElementPresent</td>
+<td>css=.task-order__confirmation > div:nth-of-type(2) > .usa-input > fieldset.usa-input__choices > legend > label</td>
+<td></td>
+</tr>
+<tr original-target=".task-order__confirmation > div:nth-of-type(2) > .usa-input > fieldset.usa-input__choices > legend > label,xpath=//label[contains(text(), "I confirm that the information entered here in matches that of the submitted Task Order.")]">
+<td>click</td>
+<td>css=.task-order__confirmation > div:nth-of-type(2) > .usa-input > fieldset.usa-input__choices > legend > label</td>
+<td></td>
+</tr>
+<tr>
+<td>waitForPageToLoad</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>waitForElementPresent</td>
+<td>css=input[type="submit"][disabled="disabled"]</td>
+<td></td>
+</tr>
+<tr>
+<td>assertElementPresent</td>
+<td>css=input[type="submit"][disabled="disabled"]</td>
+<td></td>
+</tr>
+<tr>
+<td>waitForPageToLoad</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>waitForElementPresent</td>
+<td>css=.task-order__confirmation > div:nth-of-type(1) > .usa-input > fieldset.usa-input__choices > legend > label</td>
+<td></td>
+</tr>
+<tr original-target=".task-order__confirmation > div:nth-of-type(1) > .usa-input > fieldset.usa-input__choices > legend > label,xpath=//label[contains(text(), "I confirm the uploaded Task Order is signed by the appropriate")]">
+<td>click</td>
+<td>css=.task-order__confirmation > div:nth-of-type(1) > .usa-input > fieldset.usa-input__choices > legend > label</td>
+<td></td>
+</tr>
+<tr>
+<td>waitForPageToLoad</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>assertElementNotPresent</td>
+<td>css=input[type="submit"][disabled="disabled"]</td>
 <td></td>
 </tr>
 <tr>
