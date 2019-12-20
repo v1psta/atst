@@ -7,6 +7,11 @@ variable "region" {
 
 }
 
+variable "backup_region" {
+  default = "westus2"
+}
+
+
 variable "owner" {
   default = "dev"
 }
@@ -30,6 +35,12 @@ variable "networks" {
     private = "10.1.2.0/24,private" # k8s, postgres, redis, dns, ad
   }
 }
+
+variable "gateway_subnet" {
+  type    = string
+  default = "10.1.20.0/24"
+}
+
 
 variable "route_tables" {
   description = "Route tables and their default routes"

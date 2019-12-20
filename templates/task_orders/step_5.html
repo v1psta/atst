@@ -10,11 +10,16 @@
 {% set step = "5" %}
 
 {% block to_builder_form_field %}
-  {{ TOFormStepHeader('task_orders.form.step_5.title' | translate, 'task_orders.form.step_5.description' | translate, task_order.number) }}
-
-  {% call Alert('',
-    message="task_orders.form.step_5.alert_message" | translate
-  ) %}
+  {{ TOFormStepHeader('task_orders.form.step_5.description' | translate, to_number=task_order.number) }}
+  <div class="task-order__confirmation">
     {{ CheckboxInput(form.signature) }}
-  {% endcall %}
+    {{ CheckboxInput(form.confirm) }}
+  </div>
+  <hr>
+  <h5>
+    {{ "task_orders.sign.acknowledge.title" | translate }}
+  </h5>
+  <p>
+    {{ "task_orders.sign.acknowledge.text" | translate }}
+  </p>
 {% endblock %}

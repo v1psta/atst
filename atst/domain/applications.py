@@ -11,7 +11,7 @@ from atst.models import (
     ApplicationRoleStatus,
     EnvironmentRole,
 )
-from atst.utils import first_or_none, update_or_raise_already_exists_error
+from atst.utils import first_or_none, commit_or_raise_already_exists_error
 
 
 class Applications(BaseDomainClass):
@@ -28,7 +28,7 @@ class Applications(BaseDomainClass):
         if environment_names:
             Environments.create_many(user, application, environment_names)
 
-        update_or_raise_already_exists_error(message="application")
+        commit_or_raise_already_exists_error(message="application")
         return application
 
     @classmethod
@@ -55,7 +55,7 @@ class Applications(BaseDomainClass):
             )
 
         db.session.add(application)
-        update_or_raise_already_exists_error(message="application")
+        commit_or_raise_already_exists_error(message="application")
         return application
 
     @classmethod

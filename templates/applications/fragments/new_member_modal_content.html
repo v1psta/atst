@@ -2,7 +2,7 @@
 {% import "applications/fragments/member_form_fields.html" as member_fields %}
 
 {% macro MemberFormTemplate(title=None, next_button=None, previous=True) %}
-  <hr>
+  <hr class="full-width">
   {% if title %} <h1>{{ title }}</h1> {% endif %}
 
   {{ caller() }}
