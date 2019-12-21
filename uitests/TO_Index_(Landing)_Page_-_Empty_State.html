@@ -4,7 +4,7 @@
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="selenium.base" href="" />
-<title>New Portfolio - No optional fields</title>
+<title>TO Index (Landing) Page - Empty State</title>
 <meta name="ghost-inspector-details" content="" />
 <meta name="ghost-inspector-browser" content="chrome" />
 <meta name="ghost-inspector-userAgent" content="" />
@@ -16,13 +16,13 @@
 <meta name="ghost-inspector-screenshotTarget" content="" />
 <meta name="ghost-inspector-screenshotExclusions" content="div.global-navigation, time" />
 <meta name="ghost-inspector-screenshotCompareEnabled" content="true" />
-<meta name="ghost-inspector-screenshotCompareThreshold" content="0.05" />
+<meta name="ghost-inspector-screenshotCompareThreshold" content="0.02" />
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
 <tr>
-<td rowspan="1" colspan="3">New Portfolio - No optional fields</td>
+<td rowspan="1" colspan="3">TO Index (Landing) Page - Empty State</td>
 </tr>
 </thead>
 <tbody>
@@ -31,7 +31,8 @@
 <td></td>
 <td></td>
 </tr>
-<!--Imported from: AT-AT CI - login-->
+<!--Imported from: AT-AT CI - New Portfolio
+Imported from: AT-AT CI - login-->
 <tr>
 <td>open</td>
 <td>/login-dev</td>
@@ -42,28 +43,30 @@
 <td></td>
 <td></td>
 </tr>
-<!--Imported from: AT-AT CI - login-->
+<!--Imported from: AT-AT CI - New Portfolio
+Imported from: AT-AT CI - login-->
 <tr>
 <td>waitForElementPresent</td>
-<td>css=.about-cloud > h1</td>
+<td>css=.home__content > h1</td>
 <td></td>
 </tr>
 <tr>
 <td>assertText</td>
-<td>css=.about-cloud > h1</td>
-<td>About Cloud Services</td>
+<td>css=.home__content > h1</td>
+<td>JEDI Cloud Services</td>
 </tr>
 <tr>
 <td>waitForPageToLoad</td>
 <td></td>
 <td></td>
 </tr>
+<!--Imported from: AT-AT CI - New Portfolio-->
 <tr>
 <td>waitForElementPresent</td>
 <td>css=a[href="/portfolios/new"]</td>
 <td></td>
 </tr>
-<tr>
+<tr original-target="a[href="/portfolios/new"],xpath=//a[contains(text(), "Add New Portfolio")]">
 <td>click</td>
 <td>css=a[href="/portfolios/new"]</td>
 <td></td>
@@ -73,21 +76,39 @@
 <td></td>
 <td></td>
 </tr>
+<!--Imported from: AT-AT CI - New Portfolio-->
 <tr>
 <td>waitForElementPresent</td>
-<td>css=main.usa-section > h1</td>
+<td>css=.portfolio-header__name > h1</td>
 <td></td>
 </tr>
 <tr>
 <td>assertText</td>
-<td>css=main.usa-section > h1</td>
-<td>*New Portfolio Form*</td>
+<td>css=.portfolio-header__name > h1</td>
+<td>*New Portfolio*</td>
 </tr>
 <tr>
 <td>waitForPageToLoad</td>
 <td></td>
 <td></td>
 </tr>
+<!--Imported from: AT-AT CI - New Portfolio-->
+<tr>
+<td>waitForElementPresent</td>
+<td>css=.sticky-cta-text > h3</td>
+<td></td>
+</tr>
+<tr>
+<td>assertText</td>
+<td>css=.sticky-cta-text > h3</td>
+<td>*Create New Portfolio*</td>
+</tr>
+<tr>
+<td>waitForPageToLoad</td>
+<td></td>
+<td></td>
+</tr>
+<!--Imported from: AT-AT CI - New Portfolio-->
 <tr>
 <td>waitForElementPresent</td>
 <td>css=#name</td>
@@ -103,36 +124,23 @@
 <td></td>
 <td></td>
 </tr>
+<!--Imported from: AT-AT CI - New Portfolio-->
 <tr>
 <td>waitForElementPresent</td>
-<td>css=#defense_component</td>
+<td>css=fieldset.usa-input__choices > ul > li:nth-of-type(5) > label</td>
 <td></td>
 </tr>
-<tr>
-<td>type</td>
-<td>css=#defense_component</td>
-<td>Defense Logistics Agency</td>
+<tr original-target="fieldset.usa-input__choices > ul > li:nth-of-type(5) > label,xpath=//label[contains(text(), "Other")]">
+<td>click</td>
+<td>css=fieldset.usa-input__choices > ul > li:nth-of-type(5) > label</td>
+<td></td>
 </tr>
 <tr>
 <td>waitForPageToLoad</td>
 <td></td>
 <td></td>
 </tr>
-<tr>
-<td>waitForElementPresent</td>
-<td>css=input[type="submit"]</td>
-<td></td>
-</tr>
-<tr>
-<td>assertText</td>
-<td>css=input[type="submit"]</td>
-<td>Save</td>
-</tr>
-<tr>
-<td>waitForPageToLoad</td>
-<td></td>
-<td></td>
-</tr>
+<!--Imported from: AT-AT CI - New Portfolio-->
 <tr>
 <td>waitForElementPresent</td>
 <td>css=input[type="submit"]</td>
@@ -148,15 +156,16 @@
 <td></td>
 <td></td>
 </tr>
+<!--Imported from: AT-AT CI - New Portfolio-->
 <tr>
 <td>waitForElementPresent</td>
-<td>css=.portfolio-header__name > h1</td>
+<td>css=.empty-state > h3</td>
 <td></td>
 </tr>
 <tr>
 <td>assertText</td>
-<td>css=.portfolio-header__name > h1</td>
-<td>*Tatooine Energy Maintenance Systems*</td>
+<td>css=.empty-state > h3</td>
+<td>*You don't have any Applications yet*</td>
 </tr>
 <tr>
 <td>waitForPageToLoad</td>
@@ -165,13 +174,83 @@
 </tr>
 <tr>
 <td>waitForElementPresent</td>
-<td>css=.empty-state h3</td>
+<td>css=.icon--funding</td>
+<td></td>
+</tr>
+<tr>
+<td>click</td>
+<td>css=.icon--funding</td>
+<td></td>
+</tr>
+<tr>
+<td>waitForPageToLoad</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>pause</td>
+<td>5000</td>
+<td></td>
+</tr>
+<tr>
+<td>waitForPageToLoad</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>waitForElementPresent</td>
+<td>css=.sticky-cta-text > h3</td>
 <td></td>
 </tr>
 <tr>
 <td>assertText</td>
-<td>css=.empty-state h3</td>
-<td>*You don't have any Applications yet*</td>
+<td>css=.sticky-cta-text > h3</td>
+<td>*Task Orders*</td>
+</tr>
+<tr>
+<td>waitForPageToLoad</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>waitForElementPresent</td>
+<td>css=.empty-state > h3</td>
+<td></td>
+</tr>
+<tr>
+<td>assertText</td>
+<td>css=.empty-state > h3</td>
+<td>*Add approved task orders*</td>
+</tr>
+<tr>
+<td>waitForPageToLoad</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>waitForElementPresent</td>
+<td>css=.empty-state__footer > a.usa-button.usa-button-primary</td>
+<td></td>
+</tr>
+<tr>
+<td>assertElementPresent</td>
+<td>css=.empty-state__footer > a.usa-button.usa-button-primary</td>
+<td></td>
+</tr>
+<tr>
+<td>waitForPageToLoad</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>waitForElementPresent</td>
+<td>css=.sticky-cta-buttons > a.usa-button.usa-button-primary</td>
+<td></td>
+</tr>
+<tr>
+<td>assertElementPresent</td>
+<td>css=.sticky-cta-buttons > a.usa-button.usa-button-primary</td>
+<td></td>
 </tr>
 </tbody>
 </table>
