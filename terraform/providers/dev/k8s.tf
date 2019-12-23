@@ -9,10 +9,18 @@ module "k8s" {
   vnet_subnet_id = module.vpc.subnets #FIXME - output from module.vpc.subnets should be map
 }
 
-module "lb" {
-  source      = "../../modules/lb"
-  region      = var.region
-  name        = var.name
-  environment = var.environment
-  owner       = var.owner
-}
+#module "main_lb" {
+#  source      = "../../modules/lb"
+#  region      = var.region
+#  name        = "main-${var.name}"
+#  environment = var.environment
+#  owner       = var.owner
+#}
+
+#module "auth_lb" {
+#  source      = "../../modules/lb"
+#  region      = var.region
+#  name        = "auth-${var.name}"
+#  environment = var.environment
+#  owner       = var.owner
+#}
