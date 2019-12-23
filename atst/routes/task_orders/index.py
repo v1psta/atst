@@ -9,7 +9,7 @@ from atst.models import Permissions
 
 
 @task_orders_bp.route("/task_orders/<task_order_id>")
-@user_can(Permissions.VIEW_TASK_ORDER_DETAILS, message="review task order details")
+@user_can(Permissions.VIEW_TASK_ORDER_DETAILS, message="view task order details")
 def view_task_order(task_order_id):
     task_order = TaskOrders.get(task_order_id)
     if task_order.is_draft:
@@ -17,7 +17,7 @@ def view_task_order(task_order_id):
     else:
         signature_form = SignatureForm()
         return render_template(
-            "task_orders/review.html",
+            "task_orders/view.html",
             task_order=task_order,
             signature_form=signature_form,
         )
