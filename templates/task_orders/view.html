@@ -1,4 +1,5 @@
 {% from "components/sticky_cta.html" import StickyCTA %}
+{% from "task_orders/fragments/task_order_view.html" import TaskOrderView %}
 
 {% extends 'portfolios/base.html' %}
 
@@ -11,6 +12,6 @@
   {% endcall %}
 
   <div class="task-order">
-    {% include "task_orders/fragments/task_order_view.html" %}
+    {{ TaskOrderView(task_order, portfolio) }}
   </div>
 {% endblock %}

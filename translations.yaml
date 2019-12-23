@@ -531,7 +531,8 @@ task_orders:
       description: Prior to submitting the Task Order, you must acknowledge, by marking the appropriate box below, that the uploaded Task Order is signed by an appropriate, duly warranted Contracting Officer who has the authority to execute the uploaded Task Order on your Agency’s behalf and has authorized you to upload the Task Order in accordance with Agency policy and procedures. You must further acknowledge, by marking the appropriate box below, that all information entered herein matches that of the submitted Task Order.
       alert_message: All task orders require a Contracting Officer signature.
       next_button: 'Confirm & Submit'
-    sticky_header_text: 'Add Task Order'
+    sticky_header_text: 'Add a Task Order'
+    sticky_header_review_text: Review Changes
     sticky_header_context: 'Step {step} of 5'
   empty_state:
     header: Add approved task orders
