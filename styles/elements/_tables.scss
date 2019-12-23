@@ -53,7 +53,6 @@ table.atat-table {
         padding: $gap * 2;
         border: 1px solid $color-gray-lighter;
         display: table-cell;
-        white-space: nowrap;
         vertical-align: top;
 
         &:first-child {
@@ -62,6 +61,12 @@ table.atat-table {
 
         &:last-child {
           border-right: none;
+        }
+      }
+
+      &:last-child {
+        td {
+          border-bottom: none;
         }
       }
     }

@@ -36,22 +36,6 @@
     margin-top: $gap * 2;
   }
 
-  .task-order__review {
-    .h2 {
-      margin-bottom: $gap * 4;
-    }
-
-    .task-order__number {
-      text-align: right;
-    }
-
-    .totals-box {
-      flex-grow: unset;
-      display: table;
-      min-width: 350px;
-    }
-  }
-
   .card {
     padding: ($gap * 4) ($gap * 5) 0;
 
