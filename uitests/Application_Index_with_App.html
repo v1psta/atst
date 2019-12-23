@@ -4,7 +4,7 @@
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="selenium.base" href="" />
-<title>Revoke App Member Invite</title>
+<title>Application Index with App</title>
 <meta name="ghost-inspector-details" content="" />
 <meta name="ghost-inspector-browser" content="chrome" />
 <meta name="ghost-inspector-userAgent" content="" />
@@ -22,7 +22,7 @@
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
 <tr>
-<td rowspan="1" colspan="3">Revoke App Member Invite</td>
+<td rowspan="1" colspan="3">Application Index with App</td>
 </tr>
 </thead>
 <tbody>
@@ -566,12 +566,12 @@ Imported from: AT-AT CI - New Portfolio-->
 </tr>
 <tr>
 <td>waitForElementPresent</td>
-<td>css=svg.svg-inline--fa.fa-ellipsis-h</td>
+<td>css=.icon--applications</td>
 <td></td>
 </tr>
 <tr>
 <td>click</td>
-<td>css=svg.svg-inline--fa.fa-ellipsis-h</td>
+<td>css=.icon--applications</td>
 <td></td>
 </tr>
 <tr>
@@ -581,13 +581,13 @@ Imported from: AT-AT CI - New Portfolio-->
 </tr>
 <tr>
 <td>waitForElementPresent</td>
-<td>css=.accordion-table__item-toggle-content > a:nth-of-type(3)</td>
+<td>css=.sticky-cta-text > h3</td>
 <td></td>
 </tr>
 <tr>
 <td>assertText</td>
-<td>css=.accordion-table__item-toggle-content > a:nth-of-type(3)</td>
-<td>*Revoke Invite*</td>
+<td>css=.sticky-cta-text > h3</td>
+<td>*Applications*</td>
 </tr>
 <tr>
 <td>waitForPageToLoad</td>
@@ -596,12 +596,27 @@ Imported from: AT-AT CI - New Portfolio-->
 </tr>
 <tr>
 <td>waitForElementPresent</td>
-<td>css=.accordion-table__item-toggle-content > a:nth-of-type(3)</td>
+<td>css=.accordion-list</td>
 <td></td>
 </tr>
 <tr>
+<td>assertElementPresent</td>
+<td>css=.accordion-list</td>
+<td></td>
+</tr>
+<tr>
+<td>waitForPageToLoad</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>waitForElementPresent</td>
+<td>css=button.usa-accordion-button</td>
+<td></td>
+</tr>
+<tr original-target="button.usa-accordion-button,xpath=//button[contains(text(), "Environments (4)")]">
 <td>click</td>
-<td>css=.accordion-table__item-toggle-content > a:nth-of-type(3)</td>
+<td>css=button.usa-accordion-button</td>
 <td></td>
 </tr>
 <tr>
@@ -611,13 +626,13 @@ Imported from: AT-AT CI - New Portfolio-->
 </tr>
 <tr>
 <td>waitForElementPresent</td>
-<td>css=form[action] > h1</td>
+<td>css=.usa-accordion-content > .accordion__content--list-item:nth-of-type(1) > .row > .col.col--grow</td>
 <td></td>
 </tr>
 <tr>
 <td>assertText</td>
-<td>css=form[action] > h1</td>
-<td>*Revoke Invite*</td>
+<td>css=.usa-accordion-content > .accordion__content--list-item:nth-of-type(1) > .row > .col.col--grow</td>
+<td>*Development*</td>
 </tr>
 <tr>
 <td>waitForPageToLoad</td>
@@ -626,12 +641,57 @@ Imported from: AT-AT CI - New Portfolio-->
 </tr>
 <tr>
 <td>waitForElementPresent</td>
-<td>css=button[type="submit"].action-group__action</td>
+<td>css=.usa-accordion-content > .accordion__content--list-item:nth-of-type(2) > .row > .col.col--grow</td>
 <td></td>
 </tr>
 <tr>
+<td>assertText</td>
+<td>css=.usa-accordion-content > .accordion__content--list-item:nth-of-type(2) > .row > .col.col--grow</td>
+<td>*Production*</td>
+</tr>
+<tr>
+<td>waitForPageToLoad</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>waitForElementPresent</td>
+<td>css=.usa-accordion-content > .accordion__content--list-item:nth-of-type(3) > .row > .col.col--grow</td>
+<td></td>
+</tr>
+<tr>
+<td>assertText</td>
+<td>css=.usa-accordion-content > .accordion__content--list-item:nth-of-type(3) > .row > .col.col--grow</td>
+<td>*Staging*</td>
+</tr>
+<tr>
+<td>waitForPageToLoad</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>waitForElementPresent</td>
+<td>css=.usa-accordion-content > .accordion__content--list-item:nth-of-type(4) > .row > .col.col--grow</td>
+<td></td>
+</tr>
+<tr>
+<td>assertText</td>
+<td>css=.usa-accordion-content > .accordion__content--list-item:nth-of-type(4) > .row > .col.col--grow</td>
+<td>*Testing*</td>
+</tr>
+<tr>
+<td>waitForPageToLoad</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>waitForElementPresent</td>
+<td>css=button.usa-accordion-button</td>
+<td></td>
+</tr>
+<tr original-target="button.usa-accordion-button,xpath=//button[contains(text(), "Environments (4)")]">
 <td>click</td>
-<td>css=button[type="submit"].action-group__action</td>
+<td>css=button.usa-accordion-button</td>
 <td></td>
 </tr>
 <tr>
@@ -641,13 +701,13 @@ Imported from: AT-AT CI - New Portfolio-->
 </tr>
 <tr>
 <td>waitForElementPresent</td>
-<td>css=.usa-alert.usa-alert-success > .usa-alert-body > h3.usa-alert-heading</td>
+<td>css=button.usa-accordion-button</td>
 <td></td>
 </tr>
-<tr>
-<td>assertText</td>
-<td>css=.usa-alert.usa-alert-success > .usa-alert-body > h3.usa-alert-heading</td>
-<td>*Application invitation revoked*</td>
+<tr original-target="button.usa-accordion-button,xpath=//button[contains(text(), "Environments (4)")]">
+<td>click</td>
+<td>css=button.usa-accordion-button</td>
+<td></td>
 </tr>
 <tr>
 <td>waitForPageToLoad</td>
@@ -656,13 +716,28 @@ Imported from: AT-AT CI - New Portfolio-->
 </tr>
 <tr>
 <td>waitForElementPresent</td>
-<td>css=.usa-alert.usa-alert-success > .usa-alert-body > .usa-alert-text</td>
+<td>css=a.accordion-list__collapse</td>
+<td></td>
+</tr>
+<tr original-target="a.accordion-list__collapse,xpath=//a[contains(text(), "Collapse All")]">
+<td>click</td>
+<td>css=a.accordion-list__collapse</td>
 <td></td>
 </tr>
 <tr>
-<td>assertText</td>
-<td>css=.usa-alert.usa-alert-success > .usa-alert-body > .usa-alert-text</td>
-<td>*You have successfully revoked the invite for Brandon Buchannan from Starter Application*</td>
+<td>waitForPageToLoad</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>waitForElementPresent</td>
+<td>css=button.usa-accordion-button</td>
+<td></td>
+</tr>
+<tr original-target="button.usa-accordion-button,xpath=//button[contains(text(), "Environments (4)")]">
+<td>click</td>
+<td>css=button.usa-accordion-button</td>
+<td></td>
 </tr>
 </tbody>
 </table>
