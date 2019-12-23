@@ -15,11 +15,12 @@ resource "azurerm_kubernetes_cluster" "k8s" {
   }
 
   default_node_pool {
-    name            = "default"
-    vm_size         = "Standard_D1_v2"
-    os_disk_size_gb = 30
-    vnet_subnet_id  = var.vnet_subnet_id
-    node_count      = 1
+    name                  = "default"
+    vm_size               = "Standard_D1_v2"
+    os_disk_size_gb       = 30
+    vnet_subnet_id        = var.vnet_subnet_id
+    node_count            = 1
+    enable_node_public_ip = true # Nodes need a public IP for external resources. FIXME: Switch to NAT Gateway if its available in our subscription
   }
 
   lifecycle {
