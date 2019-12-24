@@ -47,13 +47,14 @@ variable "route_tables" {
   type        = map
   default = {
     public  = "Internet"
-    private = "VnetLocal"
+    private = "Internet"
+    #private = "VnetLocal"
   }
 }
 
 variable "dns_servers" {
   type    = list
-  default = ["10.1.2.4", "10.1.2.5"]
+  default = []
 }
 
 variable "k8s_node_size" {
