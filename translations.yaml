@@ -310,6 +310,7 @@ portfolios:
     alert_header: Are you sure you want to delete this member?
     alert_message: 'The member will be removed from the portfolio, but their log history will be retained.'
     alert_title: Warning! You  are about to delete a member from the portfolio.
+    defense_component_label: Department of Defense Component
     no_members: There are currently no members in this portfolio.
     permissions_info: Learn more about these permissions
     portfolio_members_subheading: These members have different levels of access to the portfolio.
