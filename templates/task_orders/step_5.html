@@ -10,7 +10,10 @@
 {% set step = "5" %}
 
 {% block to_builder_form_field %}
-  {{ TOFormStepHeader('task_orders.form.step_5.description' | translate, to_number=task_order.number) }}
+  {{ TOFormStepHeader(
+    description='task_orders.form.step_5.description' | translate,
+    to_number=task_order.number
+  ) }}
   <div class="task-order__confirmation">
     {{ CheckboxInput(form.signature) }}
     {{ CheckboxInput(form.confirm) }}

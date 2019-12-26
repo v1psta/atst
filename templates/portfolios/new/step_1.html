@@ -41,7 +41,7 @@
         {% block next_button %}
           {{ SaveButton(text=('common.save' | translate), form="portfolio-create", element="input") }}
         {% endblock %}
-        <a href="{{ url_for('applications.portfolio_applications', portfolio_id=portfolio.id) }}">
+        <a href="{{ url_for('atst.home') }}">
           Cancel
         </a>
       </form>

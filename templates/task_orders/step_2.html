@@ -9,6 +9,9 @@
 {% set step = "2" %}
 
 {% block to_builder_form_field %}
-  {{ TOFormStepHeader('task_orders.form.add_to_header' | translate, 'task_orders.form.add_to_description' | translate)}}
+  {{ TOFormStepHeader(
+    title='task_orders.form.add_to_header' | translate,
+    description='task_orders.form.add_to_description' | translate,
+  ) }}
   {{ TextInput(form.number, validation='taskOrderNumber', optional=False) }}
 {% endblock %}
