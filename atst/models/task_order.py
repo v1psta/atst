@@ -84,24 +84,8 @@ class TaskOrder(Base, mixins.TimestampsMixin):
         return self.status == Status.ACTIVE
 
     @property
-    def is_upcoming(self):
-        return self.status == Status.UPCOMING
-
-    @property
     def is_expired(self):
         return self.status == Status.EXPIRED
-
-    @property
-    def is_unsigned(self):
-        return self.status == Status.UNSIGNED
-
-    @property
-    def has_begun(self):
-        return self.start_date is not None and Clock.today() >= self.start_date
-
-    @property
-    def has_ended(self):
-        return self.start_date is not None and Clock.today() >= self.end_date
 
     @property
     def clins_are_completed(self):
@@ -145,30 +129,13 @@ class TaskOrder(Base, mixins.TimestampsMixin):
 
     @property
     def total_obligated_funds(self):
-        total = 0
-        for clin in self.clins:
-            if clin.obligated_amount is not None:
-                total += clin.obligated_amount
-        return total
+        return sum(
+            (clin.obligated_amount for clin in self.clins if clin.obligated_amount)
+        )
 
     @property
     def total_contract_amount(self):
-        total = 0
-        for clin in self.clins:
-            if clin.total_amount is not None:
-                total += clin.total_amount
-        return total
-
-    @property
-    # TODO delete when we delete task_order_review flow
-    def budget(self):
-        return 100000
-
-    @property
-    def balance(self):
-        # TODO: fix task order -- reimplement using CLINs
-        # Faked for display purposes
-        return 50
+        return sum((clin.total_amount for clin in self.clins if clin.total_amount))
 
     @property
     def invoiced_funds(self):
