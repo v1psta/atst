@@ -9,7 +9,7 @@ module "k8s" {
   vnet_subnet_id      = module.vpc.subnets #FIXME - output from module.vpc.subnets should be map
   enable_auto_scaling = true
   max_count           = 5
-  min_count           = 2
+  min_count           = 3
 }
 
 #module "main_lb" {
