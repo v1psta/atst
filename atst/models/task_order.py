@@ -9,7 +9,7 @@ from atst.models.base import Base
 import atst.models.types as types
 import atst.models.mixins as mixins
 from atst.models.attachment import Attachment
-from atst.utils.clock import Clock
+from pendulum import today
 
 
 class Status(Enum):
@@ -117,17 +117,17 @@ class TaskOrder(Base, mixins.TimestampsMixin):
 
     @property
     def status(self):
-        today = Clock.today()
+        todays_date = today(tz="UTC").date()
 
         if not self.is_completed and not self.is_signed:
             return Status.DRAFT
         elif self.is_completed and not self.is_signed:
             return Status.UNSIGNED
-        elif today < self.start_date:
+        elif todays_date < self.start_date:
             return Status.UPCOMING
-        elif today >= self.end_date:
+        elif todays_date > self.end_date:
             return Status.EXPIRED
-        elif self.start_date <= today < self.end_date:
+        elif self.start_date <= todays_date <= self.end_date:
             return Status.ACTIVE
 
     @property
@@ -141,7 +141,7 @@ class TaskOrder(Base, mixins.TimestampsMixin):
     @property
     def days_to_expiration(self):
         if self.end_date:
-            return (self.end_date - Clock.today()).days
+            return (self.end_date - today(tz="UTC").date()).days
 
     @property
     def total_obligated_funds(self):
