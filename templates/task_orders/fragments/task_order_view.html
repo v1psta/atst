@@ -79,7 +79,6 @@
             <td>
              {{ clin.start_date | formattedDate }} -  {{ clin.end_date | formattedDate }}
             </td>
-            {# TODO: Swap in total CLIN amount #}
             <td class="task-order__amount">{{ clin.total_amount | dollars }}</td>
             <td class="task-order__amount">{{ clin.obligated_amount | dollars }}</td>
           </tr>
