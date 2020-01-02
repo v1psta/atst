@@ -155,3 +155,16 @@
     padding-bottom: $gap * 2.5;
   }
 }
+
+table.clin-summary {
+  tbody,
+  thead {
+    tr {
+      &:last-child {
+        td {
+          border-bottom: none;
+        }
+      }
+    }
+  }
+}
