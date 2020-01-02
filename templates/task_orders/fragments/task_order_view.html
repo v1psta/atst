@@ -9,35 +9,35 @@
 
   <div>
     <section class="row">
-      <div class='col col--grow reporting-summary-item'>
-        <h4 class="reporting-summary-item__header">
-          <span class="reporting-summary-item__header-text">Total obligated funds</span>
-          {{ Tooltip(("task_orders.review.tooltip.obligated_funds" | translate), title="", classes="reporting-summary-item__header-icon") }}
+      <div class='col col--grow summary-item'>
+        <h4 class="summary-item__header">
+          <span class="summary-item__header-text">Total obligated funds</span>
+          {{ Tooltip(("task_orders.review.tooltip.obligated_funds" | translate), title="", classes="summary-item__header-icon") }}
         </h4>
-        <p class="reporting-summary-item__value--large">
+        <p class="summary-item__value--large">
           {{ obligated_funds | dollars }}
         </p>
       </div>
-      <div class='col col--grow reporting-summary-item'>
-        <h4 class="reporting-summary-item__header">
-          <span class="reporting-summary-item__header-text">Total Task Order value</span>
-          {{ Tooltip(("task_orders.review.tooltip.total_value" | translate), title="", classes="reporting-summary-item__header-icon") }}
+      <div class='col col--grow summary-item'>
+        <h4 class="summary-item__header">
+          <span class="summary-item__header-text">Total Task Order value</span>
+          {{ Tooltip(("task_orders.review.tooltip.total_value" | translate), title="", classes="summary-item__header-icon") }}
         </h4>
         {% set earliest_pop_start_date, latest_pop_end_date = portfolio.funding_duration %}
         {% if earliest_pop_start_date and latest_pop_end_date  %}
-          <p class="reporting-summary-item__value--large">
+          <p class="summary-item__value--large">
             {{ contract_amount | dollars }}
           </p>
         {% else %}
-          <p class="reporting-summary-item__value--large"> - </p>
+          <p class="summary-item__value--large"> - </p>
         {% endif %}
       </div>
-      <div class='col col--grow reporting-summary-item'>
-        <h4 class="reporting-summary-item__header">
-          <span class="reporting-summary-item__header-text">Total expended funds</span>
-          {{ Tooltip(("task_orders.review.tooltip.expended_funds" | translate), title="", classes="reporting-summary-item__header-icon") }}
+      <div class='col col--grow summary-item'>
+        <h4 class="summary-item__header">
+          <span class="summary-item__header-text">Total expended funds</span>
+          {{ Tooltip(("task_orders.review.tooltip.expended_funds" | translate), title="", classes="summary-item__header-icon") }}
         </h4>
-        <p class="reporting-summary-item__value--large">
+        <p class="summary-item__value--large">
           {{ expended_funds | dollars }}
         </p>
       </div>
