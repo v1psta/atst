@@ -9,7 +9,7 @@
       {{ form.csrf_token }}
 
       {{ StickyCTA(
-        text='task_orders.form.sticky_header_text' | translate,
+        text=sticky_cta_text,
         context=('task_orders.form.sticky_header_context' | translate({"step": step}) )) }}
 
       {% call Modal(name='cancel', dismissable=True) %}
