@@ -1,5 +1,5 @@
 {% macro SidenavItem(label, href, active=False) -%}
-  <li>
+  <li class="sidenav__item">
     <a class="sidenav__link {% if active %}sidenav__link--active{% endif %}" href="{{href}}" title="{{label}}">
       <span class="sidenav__link-label">
         {{label}}
