@@ -75,7 +75,7 @@
           <tr>
             <td>{{ clin.number }}</td>
             <td>{{ clin.type }}</td>
-            <td>{{ "{}".format(clin.jedi_clin_type) | translate}}</td>
+            <td>{{ "task_orders.review.clins.{}".format(clin.jedi_clin_type) | translate}}</td>
             <td>
              {{ clin.start_date | formattedDate }} -  {{ clin.end_date | formattedDate }}
             </td>
