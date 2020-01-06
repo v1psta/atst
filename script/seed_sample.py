@@ -34,7 +34,7 @@ from atst.routes.dev import _DEV_USERS as DEV_USERS
 from atst.utils import pick
 
 from tests.factories import (
-    random_service_branch,
+    random_defense_component,
     TaskOrderFactory,
     CLINFactory,
     AttachmentFactory,
@@ -308,7 +308,7 @@ def create_demo_portfolio(name, data):
 
     portfolio = Portfolios.create(
         user=portfolio_owner,
-        portfolio_attrs={"name": name, "defense_component": random_service_branch()},
+        portfolio_attrs={"name": name, "defense_component": random_defense_component()},
     )
 
     add_task_orders_to_portfolio(portfolio)
@@ -336,7 +336,7 @@ def seed_db():
         user=amanda,
         portfolio_attrs={
             "name": "TIE Interceptor",
-            "defense_component": random_service_branch(),
+            "defense_component": random_defense_component(),
         },
     )
     add_task_orders_to_portfolio(tie_interceptor)
@@ -347,7 +347,7 @@ def seed_db():
         user=amanda,
         portfolio_attrs={
             "name": "TIE Fighter",
-            "defense_component": random_service_branch(),
+            "defense_component": random_defense_component(),
         },
     )
     add_task_orders_to_portfolio(tie_fighter)
@@ -363,7 +363,7 @@ def seed_db():
             user=user,
             portfolio_attrs={
                 "name": ship,
-                "defense_component": random_service_branch(),
+                "defense_component": random_defense_component(),
             },
         )
         add_task_orders_to_portfolio(portfolio)

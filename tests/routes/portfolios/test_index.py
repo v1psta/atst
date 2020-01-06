@@ -34,7 +34,7 @@ def test_create_portfolio_success(client, user_session):
         data={
             "name": "My project name",
             "description": "My project description",
-            "defense_component": "army",
+            "defense_component": ["army"],
         },
     )
 
