@@ -24,6 +24,7 @@ Requirements:
 - Python pip
 - Python virtualenv # FIXME: Switch to `pipenv`
 - [azure cli](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest)
+- [powershell](https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell?view=powershell-6) See below
 
 # tfenv
 `tfenv` will allow you to install TF versions. For example.
@@ -37,6 +38,17 @@ _0.12.18 at time of writing_
 To select a version to use
 ```
 tfenv use 0.12.18
+```
+
+# Powershell
+Some things you need to use powershell. Specifically getting client profiles for the VPN.
+
+## Install powershell on Linux
+Powershell on recent versions of Ubuntu is available through snap.
+
+For Ubuntu 19.10
+```
+snap install powershell --classic
 ```
 
 # Running Terraform
@@ -82,3 +94,23 @@ terraform plan -target=module.vpc
 ```
 
 In the above example, this will only run a plan (plan/apply/destroy) on the specific module. This can be a module, or resource. You can get a list of module and resources by running `terraform show`.
+
+# VPN Setup
+[Configure OpenVPN clients for Azure VPN Gateway](https://docs.microsoft.com/en-us/azure/vpn-gateway/vpn-gateway-howto-openvpn-clients#before-you-begin)
+[About P2S VPN client profiles](https://docs.microsoft.com/en-us/azure/vpn-gateway/about-vpn-profile-download)
+[Configure a VPN client for P2S OpenVPN protocol connections: Azure AD authentication (Preview)](https://docs.microsoft.com/en-us/azure/vpn-gateway/openvpn-azure-ad-client)
+[Create an Azure Active Directory tenant for P2S OpenVPN protocol connections](https://docs.microsoft.com/en-us/azure/vpn-gateway/openvpn-azure-ad-tenant)
+
+The docs above should help with client configuration. The last doc (Create an Azure Active Directory..) is necessary to run the command to add the VPN app for AD.
+
+Copied here for convenience. Just enter this in your browser.
+```
+# For Public Azure - Government has a different URL, see doc above
+https://login.microsoftonline.com/common/oauth2/authorize?client_id=41b23e61-6c1e-4545-b367-cd054e0ed4b4&response_type=code&redirect_uri=https://portal.azure.com&nonce=1234&prompt=admin_consent
+```
+
+## Adding a client
+TODO
+
+## Downloading a client profile
+TODO
