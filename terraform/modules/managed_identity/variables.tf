@@ -22,3 +22,8 @@ variable "identity" {
   type        = string
   description = "Name of the managed identity to create"
 }
+
+variable "roles" {
+  type        = list
+  description = "List of roles by name"
+}
