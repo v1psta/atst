@@ -38,19 +38,33 @@ def filter_perm_sets_data(member):
     return perm_sets_data
 
 
-def filter_members_data(members_list):
+def filter_members_data(members_list, ppoc=False):
     members_data = []
     for member in members_list:
         permission_sets = filter_perm_sets_data(member)
-        members_data.append(
-            {
-                "role_id": member.id,
-                "user_name": member.user_name,
-                "permission_sets": filter_perm_sets_data(member),
-                "status": member.display_status,
-                "form": member_forms.PermissionsForm(permission_sets),
-            }
-        )
+        member_data = {
+            "role_id": member.id,
+            "user_name": member.user_name,
+            "permission_sets": filter_perm_sets_data(member),
+            "status": member.display_status,
+            "form": member_forms.PermissionsForm(permission_sets),
+        }
+
+        if not ppoc:
+            update_invite_form = (
+                member_forms.NewForm(user_data=member.latest_invitation)
+                if member.latest_invitation and member.latest_invitation.can_resend
+                else member_forms.NewForm()
+            )
+            invite_token = (
+                member.latest_invitation.token
+                if member.latest_invitation and member.latest_invitation.can_resend
+                else None
+            )
+            member_data["update_invite_form"] = update_invite_form
+            member_data["invite_token"] = invite_token
+
+        members_data.append(member_data)
 
     return sorted(members_data, key=lambda member: member["user_name"])
 
@@ -59,7 +73,7 @@ def render_admin_page(portfolio, form=None):
     pagination_opts = Paginator.get_pagination_opts(http_request)
     audit_events = AuditLog.get_portfolio_events(portfolio, pagination_opts)
     portfolio_form = PortfolioForm(obj=portfolio)
-    ppoc = filter_members_data([portfolio.owner_role])[0]
+    ppoc = filter_members_data([portfolio.owner_role], ppoc=True)[0]
     member_list = portfolio.members
     member_list.remove(portfolio.owner_role)
     assign_ppoc_form = member_forms.AssignPPOCForm()
