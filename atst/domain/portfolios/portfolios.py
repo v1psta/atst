@@ -107,4 +107,7 @@ class Portfolios(object):
         if "name" in new_data:
             portfolio.name = new_data["name"]
 
+        if "description" in new_data:
+            portfolio.description = new_data["description"]
+
         PortfoliosQuery.add_and_commit(portfolio)
