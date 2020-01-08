@@ -5,4 +5,6 @@ module "keyvault_reader_identity" {
   environment = var.environment
   region      = var.region
   identity    = "${var.name}-${var.environment}-vault-reader"
+  roles       = ["Reader", "Managed Identity Operator"]
+
 }
